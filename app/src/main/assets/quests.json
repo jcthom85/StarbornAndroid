@@ -1,0 +1,164 @@
+[
+  {
+    "id": "gather_broken_gear",
+    "title": "Gather the Broken Gear",
+    "summary": "Jed needs three busted devices rounded up before he can start repairs.",
+    "description": "Track down the broken projector from Schoolteacher Kasey, Maddie's industrial coffee grinder, and Ellie's arcade display. Once you have all three, return to Jed so he can start patching them up.",
+    "flavor": "Half the town runs on Jed's tinkering - time to feed his backlog.",
+    "giver": "Jed",
+    "hub_id": "w1_hub1",
+    "stages": [
+      {
+        "id": "collect_repairs",
+        "title": "Round Up the Repairs",
+        "description": "Collect each broken device so Jed can get them back in working order.",
+        "tasks": [
+          {
+            "id": "collect_projector",
+            "text": "Collect Schoolteacher Kasey's broken projector.",
+            "done": false
+          },
+          {
+            "id": "collect_grinder",
+            "text": "Collect Maddie's broken coffee grinder.",
+            "done": false
+          },
+          {
+            "id": "collect_display",
+            "text": "Collect Ellie's broken arcade display.",
+            "done": false
+          },
+          {
+            "id": "report_to_jed",
+            "text": "Talk to Jed once you have all three busted devices.",
+            "done": false
+          }
+        ]
+      },
+      {
+        "id": "repair_batch",
+        "title": "Patch the Gear",
+        "description": "Return the salvaged devices to their owners after Jed gets them running again.",
+        "tasks": [
+          {
+            "id": "return_projector",
+            "text": "Bring the repaired projector back to Schoolteacher Kasey.",
+            "done": false
+          },
+          {
+            "id": "return_grinder",
+            "text": "Deliver the fixed coffee grinder to Maddie.",
+            "done": false
+          },
+          {
+            "id": "return_display",
+            "text": "Give the mended arcade display to Ellie.",
+            "done": false
+          },
+          {
+            "id": "report_to_jed_finished",
+            "text": "Check back with Jed after the deliveries are complete.",
+            "done": false
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "talk_to_jed",
+    "title": "Talk to Jed",
+    "summary": "Jed wants a word about the next steps in Stellarium's repairs.",
+    "description": "Head to Jed's workshop and check in. He said he's found something interesting in the maintenance tunnels.",
+    "flavor": "If Jed looks excited, it's either a breakthrough or a catastrophe waiting to happen.",
+    "giver": "Jed",
+    "hub_id": "w1_hub1",
+    "stages": [
+      {
+        "id": "meet_jed",
+        "title": "Meet Jed",
+        "description": "Jed asked you to swing by his shop.",
+        "tasks": [
+          {
+            "id": "go_to_jed",
+            "text": "Find Jed in the workshop and hear him out.",
+            "done": false
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "q_mine_relay_scramble",
+    "title": "Relay Scramble",
+    "summary": "Relay fragments scattered in the Stellarium Mine hold the key to restoring the generator.",
+    "description": "Power fluctuations in the Stellarium Mine knocked apart a relay array. Jed thinks retrieving the fragments will stabilize the (barely legal) generator they're relying on.",
+    "flavor": "This mine was never meant to be safe. If the lights go out again, things will get worse.",
+    "giver": "Jed",
+    "hub_id": "w1_hub1",
+    "stages": [
+      {
+        "id": "stage_1",
+        "title": "Enter the Mine",
+        "description": "Make your way to the Stellarium Mine entrance and rendezvous with the scout team.",
+        "tasks": [
+          {
+            "id": "meet_mech",
+            "text": "Talk to Scout Mekk outside the mine entrance.",
+            "done": false
+          },
+          {
+            "id": "enter_mine",
+            "text": "Enter the mine tunnels and look for signs of the relay array.",
+            "done": false
+          }
+        ]
+      },
+      {
+        "id": "stage_2",
+        "title": "Secure the Fragments",
+        "description": "Recover the relay fragments held by hostile creatures.",
+        "tasks": [
+          {
+            "id": "defeat_ambush",
+            "text": "Defeat the collapse ambush and pick up any relay fragments you find.",
+            "done": false
+          },
+          {
+            "id": "defeat_drone_sweep",
+            "text": "Take down the drone sweep and search the area for salvage.",
+            "done": false
+          }
+        ]
+      },
+      {
+        "id": "stage_3",
+        "title": "Restore Power",
+        "description": "Bring the relay fragments to the Stellarium generator and power things back up.",
+        "tasks": [
+          {
+            "id": "install_relay",
+            "text": "Install the relay fragments into the Stellarium generator.",
+            "done": false
+          },
+          {
+            "id": "activate_generator",
+            "text": "Activate the generator and confirm the lights stay on.",
+            "done": false
+          }
+        ]
+      },
+      {
+        "id": "stage_4",
+        "title": "Report Back",
+        "description": "Return to Jed with the results of the relay scramble.",
+        "tasks": [
+          {
+            "id": "report_to_jed",
+            "text": "Go back to Jed and report the stabilized generator.",
+            "done": false
+          }
+        ]
+      }
+    ]
+  }
+]

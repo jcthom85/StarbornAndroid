@@ -1,0 +1,117 @@
+[
+    {
+        "name": "Pasha",
+        "aliases": [
+            "pasha",
+            "auctioneer"
+        ],
+        "dialogue": {},
+        "interactions": [
+            {
+                "label": "Talk",
+                "type": "talk",
+                "dialogue_id": "dlg_pasha_intro"
+            }
+        ]
+    },
+    {
+        "name": "Jed",
+        "role": "Mentor",
+        "description": "A tall, gruff man with a low voice. He is a tinkerer and helps run/oversee the mining town Rusthaven",
+        "id": "jed",
+        "aliases": [],
+        "dialogue": {},
+        "interactions": [
+            {
+                "label": "Talk",
+                "type": "talk",
+                "dialogue_id": "jed_default_talk"
+            }
+        ]
+    },
+    {
+        "name": "Maddie",
+        "aliases": [],
+        "dialogue": {},
+        "interactions": [
+            {
+                "label": "Talk",
+                "type": "talk",
+                "dialogue_id": "maddie_default_talk"
+            }
+        ]
+    },
+    {
+        "name": "Ollie",
+        "id": "ollie",
+        "aliases": [],
+        "dialogue": {},
+        "interactions": [
+            {
+                "label": "Talk",
+                "type": "talk",
+                "dialogue_id": "ollie_quest_prompt"
+            }
+        ]
+    },
+    {
+        "name": "Sam",
+        "aliases": [],
+        "dialogue": {},
+        "interactions": []
+    },
+    {
+        "name": "Ellie",
+        "aliases": [],
+        "dialogue": {},
+        "interactions": [
+            {
+                "label": "Talk",
+                "type": "talk",
+                "dialogue_id": "ellie_default_talk"
+            }
+        ]
+    },
+    {
+        "name": "man",
+        "aliases": [],
+        "dialogue": {},
+        "interactions": []
+    },
+    {
+        "name": "woman",
+        "aliases": [],
+        "dialogue": {},
+        "interactions": []
+    },
+    {
+        "name": "Nurse Megan",
+        "aliases": [],
+        "dialogue": {},
+        "interactions": []
+    },
+    {
+        "name": "Schoolteacher Kasey",
+        "aliases": [],
+        "dialogue": {},
+        "interactions": [
+            {
+                "label": "Talk",
+                "type": "talk",
+                "dialogue_id": "kasey_default_talk"
+            }
+        ]
+    },
+    {
+        "name": "Cameron",
+        "aliases": [],
+        "dialogue": {},
+        "interactions": []
+    },
+    {
+        "name": "Tyson",
+        "aliases": [],
+        "dialogue": {},
+        "interactions": []
+    }
+]

@@ -1,0 +1,17 @@
+[
+    {
+        "name": "Pasha",
+        "aliases": [
+            "pasha",
+            "auctioneer"
+        ],
+        "dialogue": {},
+        "interactions": [
+            {
+                "label": "Talk",
+                "type": "talk",
+                "dialogue_id": "dlg_pasha_intro"
+            }
+        ]
+    }
+]

@@ -1,0 +1,108 @@
+[
+    {
+        "id": "qpack_enc_collapse_ambush",
+        "name": "Collapsed Alcove Ambush",
+        "type": "ambush",
+        "description": "The disturbed tunnel has attracted a Collapse Wyrm. Aggressive and dangerous—treat as a mini-boss if provoked.",
+        "enemies": [
+            {
+                "enemy_id": "collapse_wyrm",
+                "quantity": 1
+            }
+        ],
+        "rewards": {
+            "xp": 320,
+            "loot_table": [
+                {
+                    "item_id": "beast meat",
+                    "chance": 0.8,
+                    "quantity_range": [
+                        1,
+                        3
+                    ]
+                },
+                {
+                    "item_id": "itm_relay_fragment",
+                    "chance": 0.6,
+                    "quantity_range": [
+                        1,
+                        2
+                    ]
+                }
+            ],
+            "events_on_victory": [
+                "evt_collapse_ambush_victory"
+            ]
+        },
+        "flags": {
+            "stealthable": false,
+            "boss_tier": "mini"
+        },
+        "room": "",
+        "player_starts": false,
+        "first_enter_only": false,
+        "pre_cinematic": "",
+        "post_cinematic": "",
+        "initiative_bonus": 0,
+        "preempt_damage_pct": 0,
+        "start_status": "",
+        "max_repeats": 0,
+        "once_per_save": false,
+        "respawn_cooldown_sec": 0,
+        "encounter_state_id": "",
+        "spoils_profile": "",
+        "modifiers": {
+            "enemy_hp_pct": 100,
+            "enemy_atk_pct": 100,
+            "enemy_speed_pct": 100
+        },
+        "waves": [
+            {
+                "members": [],
+                "delay_ms": 0,
+                "spawn_effect": ""
+            }
+        ],
+        "conditions": [],
+        "conditions_text": ""
+    },
+    {
+        "id": "qpack_enc_drone_sweep",
+        "name": "Drone Patrol Sweep",
+        "type": "patrol",
+        "description": "A measured sweep of ancient security drones. Normal difficulty when engaged head-on; easier if distracted by a Noise Maker.",
+        "enemies": [
+            {
+                "enemy_id": "drone_ancient",
+                "quantity": 3
+            }
+        ],
+        "rewards": {
+            "xp": 160,
+            "loot_table": [
+                {
+                    "item_id": "scrap_metal",
+                    "chance": 0.9,
+                    "quantity_range": [
+                        2,
+                        5
+                    ]
+                },
+                {
+                    "item_id": "itm_relay_fragment",
+                    "chance": 0.25,
+                    "quantity_range": [
+                        1,
+                        1
+                    ]
+                }
+            ],
+            "events_on_victory": [
+                "evt_drone_sweep_victory"
+            ]
+        },
+        "flags": {
+            "stealthable": true
+        }
+    }
+]

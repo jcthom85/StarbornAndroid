@@ -1,0 +1,558 @@
+[
+    {
+        "id": "burrower",
+        "name": "Burrower",
+        "tier": "elite",
+        "hp": 500,
+        "strength": 11,
+        "vitality": 10,
+        "agility": 0,
+        "focus": 4,
+        "luck": 0,
+        "speed": 6,
+        "element": "none",
+        "resistances": {
+            "fire": -20,
+            "ice": 30,
+            "lightning": 0,
+            "poison": 0,
+            "radiation": 0,
+            "psychic": 0,
+            "void": 0
+        },
+        "abilities": [],
+        "flavor": "The colony's colossal autonomous driller, berserk after the blast.",
+        "xp_reward": 300,
+        "credit_reward": 250,
+        "drops": [
+            {
+                "id": "scrap",
+                "chance": 1.0,
+                "qty_min": 1,
+                "qty_max": 1
+            },
+            {
+                "id": "lens",
+                "chance": 0.5,
+                "qty_min": 1,
+                "qty_max": 1
+            },
+            {
+                "id": "medkit+",
+                "chance": 0.4,
+                "qty_min": 1,
+                "qty_max": 1
+            }
+        ],
+    "description": "Guardian of the energy core.",
+        "portrait": "images/enemies/burrower_combat.png",
+        "sprite": [],
+        "attack": 10,
+        "ap_reward": 0
+    },
+    {
+        "id": "collapse_wyrm",
+        "name": "Collapse Wyrm",
+        "tier": "boss",
+        "hp": 520,
+        "strength": 12,
+        "vitality": 13,
+        "agility": 2,
+        "focus": 6,
+        "luck": 3,
+        "speed": 10,
+        "element": "radiation",
+        "resistances": {
+            "radiation": 30,
+            "ice": -30
+        },
+        "abilities": [
+            "burrow",
+            "unstable_pillars",
+            "radiant_spike"
+        ],
+        "flavor": "A crystalline silicon worm awakened by seismic charges, hungering for ore veins.",
+        "xp_reward": 320,
+        "credit_reward": 270,
+        "drops": [
+            {
+                "id": "beast meat",
+                "chance": 0.7,
+                "quantity": 3
+            },
+            {
+                "id": "vial of venom",
+                "chance": 0.5
+            }
+        ]
+    },
+    {
+        "id": "core_drill_behemoth",
+        "name": "Core-Drill Behemoth",
+        "tier": "elite",
+        "hp": 500,
+        "strength": 11,
+        "vitality": 10,
+        "agility": 0,
+        "focus": 4,
+        "luck": 0,
+        "speed": 6,
+        "element": "none",
+        "resistances": {
+            "fire": -20,
+            "ice": 30,
+            "lightning": 0,
+            "poison": 0,
+            "radiation": 0,
+            "psychic": 0,
+            "void": 0
+        },
+        "abilities": [
+            "drill_lunge",
+            "hydraulic_overheat",
+            "arm_detach"
+        ],
+        "flavor": "The colony's colossal autonomous driller, berserk after the blast.",
+        "xp_reward": 300,
+        "credit_reward": 250,
+        "drops": [
+            {
+                "id": "scrap",
+                "chance": 1.0,
+                "qty_min": 1,
+                "qty_max": 1
+            },
+            {
+                "id": "lens",
+                "chance": 0.5,
+                "qty_min": 1,
+                "qty_max": 1
+            },
+            {
+                "id": "medkit+",
+                "chance": 0.4,
+                "qty_min": 1,
+                "qty_max": 1
+            }
+        ],
+        "description": "The colony's colossal autonomous driller, berserk after the blast.",
+        "portrait": "images/enemies/core_drill_behemoth_combat.png",
+        "sprite": [],
+        "attack": 10,
+        "ap_reward": 0
+    },
+    {
+        "id": "drone_ancient",
+        "name": "Ancient Drone",
+        "hp": 30,
+        "strength": 3,
+        "vitality": 2,
+        "agility": 0,
+        "focus": 1,
+        "luck": 0,
+        "speed": 3,
+        "flavor": "An ancient drone covered in rust and moss, putters through the area.",
+        "behavior": "passive",
+        "xp_reward": 20,
+        "credit_reward": 15,
+        "drops": [
+            {
+                "id": "cryo-inductor",
+                "chance": 0.5
+            }
+        ]
+    },
+    {
+        "id": "flicker_mite",
+        "name": "Flicker-Mite",
+        "tier": "standard",
+        "hp": 10,
+        "strength": 2,
+        "vitality": 1,
+        "agility": 4,
+        "focus": 1,
+        "luck": 1,
+        "speed": 22,
+        "element": "lightning",
+        "resistances": {
+            "lightning": 20,
+            "ice": -30
+        },
+        "abilities": [
+            "static_burst",
+            "dim_glow"
+        ],
+        "flavor": "A cave firefly that overloads capacitors with its rapid flicker.",
+        "xp_reward": 14,
+        "credit_reward": 10,
+        "drops": [
+            {
+                "id": "power cell",
+                "chance": 0.25
+            }
+        ]
+    },
+    {
+        "id": "fume_bat",
+        "name": "Fume Bat",
+        "tier": "standard",
+        "hp": 16,
+        "strength": 3,
+        "vitality": 1,
+        "agility": 2,
+        "focus": 0,
+        "luck": 2,
+        "speed": 17,
+        "element": "fire",
+        "resistances": {
+            "fire": -20
+        },
+        "abilities": [
+            "sonic_shriek",
+            "volatile_swell"
+        ],
+        "flavor": "Gas-filled bat that ignites when startled – handle with care.",
+        "xp_reward": 16,
+        "credit_reward": 12,
+        "drops": [
+            {
+                "id": "fiery pepper",
+                "chance": 0.3
+            },
+            {
+                "id": "beast meat",
+                "chance": 0.4
+            }
+        ]
+    },
+    {
+        "id": "glimmer_worm",
+        "name": "Glimmer Worm",
+        "tier": "standard",
+        "hp": 12,
+        "strength": 3,
+        "vitality": 1,
+        "agility": 2,
+        "focus": 1,
+        "luck": 4,
+        "speed": 16,
+        "element": "none",
+        "resistances": {
+            "ice": -20
+        },
+        "abilities": [
+            "undermine",
+            "glimmer_dust"
+        ],
+        "flavor": "A silicon worm that tunnels underfoot, scattering blinding dust.",
+        "xp_reward": 15,
+        "credit_reward": 10,
+        "drops": [
+            {
+                "id": "herb",
+                "chance": 0.5
+            },
+            {
+                "id": "lettuce",
+                "chance": 0.5
+            }
+        ]
+    },
+    {
+        "id": "overseer_drone_mk2",
+        "name": "Overseer Drone MK-II",
+        "tier": "mini",
+        "hp": 140,
+        "strength": 7,
+        "vitality": 6,
+        "agility": 2,
+        "focus": 5,
+        "luck": 2,
+        "speed": 12,
+        "element": "none",
+        "resistances": {
+            "lightning": 20
+        },
+        "abilities": [
+            "suppressive_fire",
+            "barrier_field"
+        ],
+        "flavor": "An upgraded corporate riot drone deployed far too late to save anything.",
+        "xp_reward": 130,
+        "credit_reward": 110,
+        "drops": [
+            {
+                "id": "scrap",
+                "chance": 0.7,
+                "quantity": 2
+            },
+            {
+                "id": "wiring",
+                "chance": 0.5
+            },
+            {
+                "id": "power cell",
+                "chance": 0.5
+            }
+        ]
+    },
+    {
+        "id": "rockling",
+        "name": "Rockling Ooze",
+        "tier": "standard",
+        "hp": 23,
+        "strength": 2,
+        "vitality": 2,
+        "agility": 1,
+        "focus": 0,
+        "luck": 0,
+        "speed": 8,
+        "element": "none",
+        "resistances": {
+            "physical": 50
+        },
+        "abilities": [
+            "slide_slam",
+            "split"
+        ],
+        "flavor": "Semi-liquid ore sludge animated by psionic residue.",
+        "xp_reward": 18,
+        "credit_reward": 14,
+        "drops": [
+            {
+                "id": "scrap",
+                "chance": 0.5
+            }
+        ]
+    },
+    {
+        "id": "rusted_sentry",
+        "name": "Rusted Sentry",
+        "tier": "standard",
+        "hp": 25,
+        "strength": 4,
+        "vitality": 2,
+        "agility": 1,
+        "focus": 3,
+        "luck": 1,
+        "speed": 10,
+        "element": "none",
+        "resistances": {
+            "lightning": 20
+        },
+        "abilities": [
+            "triple_burst",
+            "overheat"
+        ],
+        "flavor": "A half-buried turret crawling on piston legs, desperate for coolant.",
+        "xp_reward": 20,
+        "credit_reward": 18,
+        "drops": [
+            {
+                "id": "scrap",
+                "chance": 0.6,
+                "quantity": 2
+            },
+            {
+                "id": "wiring",
+                "chance": 0.5
+            },
+            {
+                "id": "lens",
+                "chance": 0.2
+            }
+        ]
+    },
+    {
+        "id": "scav_biter_alpha",
+        "name": "\"Scav-Biter\" Alpha",
+        "tier": "mini",
+        "hp": 130,
+        "strength": 9,
+        "vitality": 5,
+        "agility": 3,
+        "focus": 2,
+        "luck": 5,
+        "speed": 14,
+        "element": "none",
+        "resistances": {
+            "poison": 50
+        },
+        "abilities": [
+            "alpha_howl",
+            "lightning_weakpoint"
+        ],
+        "flavor": "The sofa-sized mutant rat that leads its brood with toxic fangs.",
+        "xp_reward": 110,
+        "credit_reward": 90,
+        "drops": [
+            {
+                "id": "beast meat",
+                "chance": 0.8,
+                "quantity": 2
+            },
+            {
+                "id": "adrenaline",
+                "chance": 0.25
+            }
+        ]
+    },
+    {
+        "id": "scraphopper",
+        "name": "Scrap-Hopper",
+        "tier": "standard",
+        "hp": 20,
+        "strength": 3,
+        "vitality": 1,
+        "agility": 2,
+        "focus": 1,
+        "luck": 2,
+        "speed": 14,
+        "element": "lightning",
+        "resistances": {
+            "lightning": 20,
+            "ice": -20
+        },
+        "abilities": [
+            "arc_spark",
+            "self_repair"
+        ],
+        "flavor": "A twitchy Scrap-hopper forever looking for fresh wiring to chew.",
+        "xp_reward": 15,
+        "credit_reward": 12,
+        "drops": [
+            {
+                "id": "scrap",
+                "chance": 0.6
+            },
+            {
+                "id": "wiring",
+                "chance": 0.4
+            }
+        ]
+    },
+    {
+        "id": "security_drone",
+        "name": "Security Drone",
+        "hp": 20,
+        "strength": 2,
+        "vitality": 1,
+        "agility": 1,
+        "focus": 2,
+        "luck": 0,
+        "speed": 4,
+        "flavor": "A Security Drone hovers near the ceiling, red optic scanning the room.",
+        "behavior": "alertable",
+        "alert_delay": 3,
+        "xp_reward": 12,
+        "credit_reward": 8,
+        "drops": [
+            {
+                "id": "scrap",
+                "chance": 0.6
+            },
+            {
+                "id": "wiring",
+                "chance": 0.4
+            }
+        ]
+    },
+    {
+        "id": "slag_rat",
+        "name": "Slag Rat",
+        "tier": "standard",
+        "hp": 14,
+        "strength": 3,
+        "vitality": 1,
+        "agility": 3,
+        "focus": 2,
+        "luck": 3,
+        "speed": 18,
+        "element": "poison",
+        "resistances": {
+            "poison": 10,
+            "fire": -10
+        },
+        "abilities": [
+            "gnaw",
+            "toxic_bite"
+        ],
+        "flavor": "A Slag Rat is here, gnawing on molten ore.",
+        "xp_reward": 14,
+        "credit_reward": 10,
+        "drops": [
+            {
+                "id": "beast meat",
+                "chance": 0.5
+            }
+        ]
+    },
+    {
+        "id": "slag_slime",
+        "name": "Caustic Slag-Slime",
+        "tier": "standard",
+        "hp": 18,
+        "strength": 3,
+        "vitality": 1,
+        "agility": 1,
+        "focus": 2,
+        "luck": 1,
+        "speed": 9,
+        "element": "poison",
+        "resistances": {
+            "fire": 10
+        },
+        "abilities": [
+            "acid_splash",
+            "dissolve_armor"
+        ],
+        "flavor": "A corrosive puddle formed around the cracked reactor core.",
+        "xp_reward": 18,
+        "credit_reward": 15,
+        "drops": [
+            {
+                "id": "scrap",
+                "chance": 0.6
+            },
+            {
+                "id": "catalyst",
+                "chance": 0.3
+            }
+        ]
+    },
+    {
+        "id": "smelter_golem",
+        "name": "Smelter Golem",
+        "tier": "mini",
+        "hp": 160,
+        "strength": 7,
+        "vitality": 6,
+        "agility": 1,
+        "focus": 3,
+        "luck": 0,
+        "speed": 8,
+        "element": "fire",
+        "resistances": {
+            "fire": 30,
+            "ice": -30
+        },
+        "abilities": [
+            "slag_nova",
+            "ember_stride"
+        ],
+        "flavor": "A lumbering mass of molten slag animated by mag-fields.",
+        "xp_reward": 120,
+        "credit_reward": 100,
+        "drops": [
+            {
+                "id": "scrap",
+                "chance": 1.0,
+                "quantity": 3
+            },
+            {
+                "id": "fire grenade",
+                "chance": 0.3
+            }
+        ]
+    }
+]

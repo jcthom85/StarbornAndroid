@@ -1,0 +1,12 @@
+# Core game runtime
+kivy[base]
+pygame
+numpy
+Pillow
+plyer
+
+# Content and tooling support
+PyQt5
+Jinja2
+python-dotenv
+openai

@@ -1,0 +1,77 @@
+[
+    {
+        "id": "living",
+        "env": "spaceship",
+        "title": "Entrance to the Mine",
+        "background_image": "images/rooms/mine_2.png",
+        "description": "You are in the living room of what looks like a small spaceship's crew quarters. The metal walls hum faintly. A mechanic stands by a rusty console, wiping grease from their hands. Nearby, you spot Zeke, an old friend of Nova's, leaning against the viewport. Against the far wall is a sturdy Tinkering Table covered in tools and spare parts. Orion is in the corner making it weird.",
+        "npcs": [
+            "mechanic",
+            "zeke",
+            "orion"
+        ],
+        "items": [
+            "Utility Vest"
+        ],
+        "pos": [
+            0.0,
+            1.0
+        ],
+        "enemies": [],
+        "state": {},
+        "actions": [],
+        "connections": {
+            "south": "mines_1"
+        }
+    },
+    {
+        "id": "market_entrance",
+        "env": "market",
+        "title": "Marketplace Crossroads",
+        "background_image": "images/hubs/mining_colony.png",
+        "description": "You stand in the bustling heart of the colony's marketplace. The air is thick with the smell of sizzling street food and ozone. Shops line the dusty plaza. To the north, you see a sign depicting a sword and shield. To the east, a glowing sign reads 'General Wares'. To the south, a mannequin wears a gleaming chestplate. To the west, a vendor polishes a sparkling gem.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "state": {},
+        "actions": [],
+        "pos": [
+            0,
+            0
+        ]
+    },
+    {
+        "id": "novas_house_1",
+        "title": "novas_house 1",
+        "env": "novas_house",
+        "background_image": "",
+        "description": "",
+        "pos": [
+            0.0,
+            1.0
+        ],
+        "connections": {},
+        "items": [],
+        "npcs": [],
+        "enemies": [],
+        "actions": [],
+        "state": {}
+    },
+    {
+        "id": "novas_house_2",
+        "title": "novas_house 2",
+        "env": "novas_house",
+        "background_image": "",
+        "description": "",
+        "pos": [
+            0.0,
+            2.0
+        ],
+        "connections": {},
+        "items": [],
+        "npcs": [],
+        "enemies": [],
+        "actions": [],
+        "state": {}
+    }
+]

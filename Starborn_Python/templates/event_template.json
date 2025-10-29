@@ -1,0 +1,11 @@
+{
+  "id": "event_unique_id",
+  "type": "dialogue",
+  "trigger": {
+    "type": "on_interact",
+    "target": "npc_or_object_id"
+  },
+  "payload": {
+    "dialogue_id": "dialogue_tree_id"
+  }
+}

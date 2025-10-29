@@ -1,0 +1,183 @@
+[
+    {
+        "id": "camera_gallery",
+        "hub_id": "vfx_sandbox",
+        "title": "Camera Gallery",
+        "entry_room": "camera_gallery",
+        "icon_image": "images/nodes/camera_icon.png",
+        "pos_hint": {
+            "center_x": 0.62,
+            "center_y": 0.6
+        },
+        "size": [
+            256,
+            256
+        ],
+        "rooms": [
+            "camera_gallery",
+            "tilt_suite",
+            "zoom_lounge",
+            "zoom_room",
+            "pan_room"
+        ]
+    },
+    {
+        "id": "maintenance_tunnels",
+        "hub_id": "mining_colony",
+        "title": "Maintenance Tunnels",
+        "rooms": [
+            "maintenance_tunnels_1",
+            "maintenance_tunnels_2",
+            "maintenance_tunnels_3",
+            "maintenance_tunnels_4"
+        ],
+        "size": [
+            222,
+            222
+        ],
+        "pos_hint": {
+            "center_x": 0.7926,
+            "center_y": 0.1605
+        },
+        "discovered": true,
+        "entry_room": "maintenance_tunnels_1",
+        "icon_image": "images/nodes/maintenance_tunnels_1.png",
+        "title_gap": 40
+    },
+    {
+        "id": "market",
+        "hub_id": "mining_colony",
+        "title": "Trade Row",
+        "entry_room": "market_plaza",
+        "icon_image": "images/nodes/trade_row_1.png",
+        "pos_hint": {
+            "center_x": 0.7878,
+            "center_y": 0.5102
+        },
+        "size": [
+            266,
+            266
+        ],
+        "rooms": [
+            "market_plaza",
+            "market_1",
+            "market_2",
+            "market_3",
+            "market_4",
+            "market_5"
+        ],
+        "discovered": true,
+        "title_gap": 18
+    },
+    {
+        "id": "mines",
+        "hub_id": "mining_colony",
+        "title": "Stellarium Mine",
+        "entry_room": "living",
+        "icon_image": "images/nodes/stellarium_mine_1.png",
+        "pos_hint": {
+            "center_x": 0.2372,
+            "center_y": 0.2849
+        },
+        "size": [
+            275,
+            275
+        ],
+        "rooms": [
+            "living",
+            "mines_1",
+            "mines_2",
+            "mines_3",
+            "mines_4",
+            "mines_5",
+            "mines_6",
+            "mines_7",
+            "mines_8",
+            "mines_9",
+            "mines_10",
+            "mines_11",
+            "mines_12"
+        ],
+        "ai_room_autogen": true,
+        "discovered": true,
+        "title_gap": 30
+    },
+    {
+        "id": "text_studio",
+        "hub_id": "vfx_sandbox",
+        "title": "Text Studio",
+        "entry_room": "caption_studio",
+        "icon_image": "images/nodes/text_icon.png",
+        "pos_hint": {
+            "center_x": 0.5,
+            "center_y": 0.32
+        },
+        "size": [
+            256,
+            256
+        ],
+        "rooms": [
+            "caption_studio",
+            "narration_theatre",
+            "cinematic_text_hall"
+        ]
+    },
+    {
+        "id": "town",
+        "hub_id": "mining_colony",
+        "title": "Homestead Quarter",
+        "entry_room": "town_square",
+        "icon_image": "images/nodes/homestead_quarter_1.png",
+        "pos_hint": {
+            "center_x": 0.303468,
+            "center_y": 0.6535
+        },
+        "size": [
+            330,
+            330
+        ],
+        "rooms": [
+            "town_square",
+            "town_clinic",
+            "town_1",
+            "town_2",
+            "town_4",
+            "town_7",
+            "town_8",
+            "town_9",
+            "town_10",
+            "town_12"
+        ],
+        "discovered": true,
+        "title_gap": -14
+    },
+    {
+        "id": "vfx_lab",
+        "hub_id": "vfx_sandbox",
+        "title": "VFX Lab",
+        "entry_room": "vfx_stage",
+        "icon_image": "images/nodes/lab_icon.png",
+        "pos_hint": {
+            "center_x": 0.28,
+            "center_y": 0.62
+        },
+        "size": [
+            256,
+            256
+        ],
+        "rooms": [
+            "vfx_stage",
+            "wipe_lab",
+            "particles_bay",
+            "letterbox_room",
+            "flash_room",
+            "color_filter_room",
+            "flashback_room",
+            "speed_lines_room",
+            "ring_room",
+            "vignette_room",
+            "shake_room",
+            "fade_room"
+        ]
+    }
+]

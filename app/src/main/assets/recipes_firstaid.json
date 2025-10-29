@@ -1,0 +1,32 @@
+[
+  {
+    "id": "medkit",
+    "name": "Medkit",
+    "description": "A standard medical kit for field use.",
+    "ingredients": { "Synth-Gel": 2, "Sterile Bandages": 1 },
+    "minigame": {
+      "type": "timing_bar",
+      "difficulty": "medium"
+    },
+    "output": {
+      "perfect": "Medkit+",
+      "success": "Medkit",
+      "failure": "Sloppy Bandages"
+    }
+  },
+  {
+    "id": "adrenaline_shot",
+    "name": "Adrenaline Shot",
+    "description": "A rapid injection that temporarily boosts Agility.",
+    "ingredients": { "Synth-Gel": 1, "Chemical Catalyst": 1 },
+    "minigame": {
+      "type": "timing_bar",
+      "difficulty": "hard"
+    },
+    "output": {
+      "perfect": "Adrenaline Shot",
+      "success": "Adrenaline Shot",
+      "failure": null
+    }
+  }
+]

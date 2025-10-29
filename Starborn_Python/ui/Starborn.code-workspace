@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		}
+	],
+	"settings": {
+		"python-envs.defaultEnvManager": "ms-python.python:system",
+		"chatgpt.openOnStartup": true,
+		"geminicodeassist.updateChannel": "Insiders"
+	}
+}

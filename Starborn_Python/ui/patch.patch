@@ -1,0 +1,27 @@
+--- a/ui/menu_overlay.py
++++ b/ui/menu_overlay.py
+@@
+ class MenuOverlay(FloatLayout):
+     background_image = StringProperty("images/ui/starborn_menu_bg.png")
++    background_tex   = ObjectProperty(None, allownone=True)
+
+@@     def __init__(self, default_tab="map", *, title: str | None = None, **kwargs):
+         with self.canvas.before:
+-            Color(1, 1, 1, 1)
+-            self._bg = Rectangle(source=self.background_image,
+-                                 pos=self.pos, size=self.size)
++            Color(1, 1, 1, 1)
++            # prefer texture if provided, else fallback to source
++            self._bg = Rectangle(
++                texture=self.background_tex,
++                source=self.background_tex is None and self.background_image or None,
++                pos=self.pos, size=self.size
++            )
+
+         self.bind(
+             pos=lambda *_: setattr(self._bg, "pos", self.pos),
+             size=lambda *_: setattr(self._bg, "size", self.size),
+-            background_image=self._update_bg_source
++            background_image=self._update_bg_source,
++            background_tex=lambda _, tex: setattr(self._bg, "texture", tex)
+         )

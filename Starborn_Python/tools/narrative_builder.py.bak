@@ -1,0 +1,1401 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Starborn — Narrative Builder
+
+Unified authoring surface for narrative content:
+  • Browse quests, stages, and tasks in one place.
+  • Compose stage “beats” that link dialogue, events, cutscenes, and tutorial tasks.
+  • Create and edit dialogue/event/cutscene assets with focused popovers.
+  • Keep an optional flow map (narrative_flows.json) so related assets stay grouped.
+
+The builder keeps existing specialized editors intact; it focuses on rapid planning
+and lightweight editing so you can stay in the creative loop.
+"""
+from __future__ import annotations
+
+import json
+import os
+from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple
+
+from PyQt5.QtCore import Qt, QSize
+from PyQt5.QtWidgets import (
+    QApplication,
+    QDialog,
+    QDialogButtonBox,
+    QFileDialog,
+    QFormLayout,
+    QGridLayout,
+    QGroupBox,
+    QHBoxLayout,
+    QInputDialog,
+    QLabel,
+    QLineEdit,
+    QListWidget,
+    QListWidgetItem,
+    QMainWindow,
+    QMessageBox,
+    QPushButton,
+    QPlainTextEdit,
+    QSplitter,
+    QTableWidget,
+    QTableWidgetItem,
+    QTabWidget,
+    QTextEdit,
+    QVBoxLayout,
+    QWidget,
+    QMenu
+)
+
+from data_core import detect_project_root, json_load, json_save, unique_id
+from editor_bus import goto as studio_goto
+
+try:
+    # Reuse schema metadata from existing event editor if available.
+    from event_editor import TRIGGER_TYPES, ACTION_DEFS, ActionDialog as EventActionDialog
+except Exception:  # pragma: no cover - allow running without importing heavy editor
+    TRIGGER_TYPES = {}
+    ACTION_DEFS = {}
+
+narrative_flow_filename = "narrative_flows.json"
+
+
+def _read_json_list(path: Path) -> List[dict]:
+    if not path.exists():
+        return []
+    with path.open("r", encoding="utf-8") as f:
+        data = json.load(f)
+        if isinstance(data, list):
+            return data
+        if isinstance(data, dict):
+            return list(data.values())
+    return []
+
+
+def _read_json_dict(path: Path) -> Dict[str, Any]:
+    if not path.exists():
+        return {}
+    with path.open("r", encoding="utf-8") as f:
+        data = json.load(f)
+        if isinstance(data, dict):
+            return data
+        if isinstance(data, list):
+            # assume list of dicts with id field
+            out: Dict[str, Any] = {}
+            for row in data:
+                if isinstance(row, dict):
+                    rid = str(row.get("id") or row.get("name") or "").strip()
+                    if rid:
+                        out[rid] = row
+            return out
+    return {}
+
+
+def _sorted_ids(data: Dict[str, Any]) -> List[str]:
+    return sorted(data.keys(), key=str.lower)
+
+
+@dataclass
+class StageRef:
+    quest_id: str
+    stage_index: int
+
+
+@dataclass
+class FlowBeat:
+    beat_type: str  # dialogue/event/cutscene/tutorial/note
+    ref_id: str
+    label: str = ""
+    metadata: Dict[str, Any] = field(default_factory=dict)
+
+
+class DialogueDialog(QDialog):
+    def __init__(self, parent: QWidget, existing_ids: List[str], data: Optional[dict] = None):
+        super().__init__(parent)
+        self.setWindowTitle("Dialogue Beat")
+        self.resize(520, 420)
+        self._existing = set(existing_ids)
+        self._data = data or {}
+
+        layout = QVBoxLayout(self)
+        form = QFormLayout()
+
+        self.id_edit = QLineEdit(self._data.get("id", ""))
+        self.speaker_edit = QLineEdit(self._data.get("speaker", ""))
+        self.text_edit = QTextEdit()
+        self.text_edit.setPlainText(self._data.get("text", ""))
+        self.condition_edit = QLineEdit(self._data.get("condition", ""))
+        self.trigger_edit = QLineEdit(self._data.get("trigger", ""))
+        self.next_edit = QLineEdit(self._data.get("next", ""))
+
+        form.addRow("ID:", self.id_edit)
+        form.addRow("Speaker:", self.speaker_edit)
+        form.addRow(QLabel("Text:"))
+        form.addRow(self.text_edit)
+        form.addRow("Condition:", self.condition_edit)
+        form.addRow("Trigger:", self.trigger_edit)
+        form.addRow("Next ID:", self.next_edit)
+
+        layout.addLayout(form)
+
+        self.button_box = QDialogButtonBox(QDialogButtonBox.Save | QDialogButtonBox.Cancel)
+        self.button_box.accepted.connect(self._accept)
+        self.button_box.rejected.connect(self.reject)
+        layout.addWidget(self.button_box)
+
+    def _accept(self):
+        did = self.id_edit.text().strip()
+        if not did:
+            QMessageBox.warning(self, "Missing ID", "Dialogue ID is required.")
+            return
+        if did != self._data.get("id") and did in self._existing:
+            QMessageBox.warning(self, "Duplicate ID", f"Dialogue '{did}' already exists.")
+            return
+        text = self.text_edit.toPlainText().strip()
+        if not text:
+            QMessageBox.warning(self, "Missing Text", "Dialogue text cannot be empty.")
+            return
+        self._data = {
+            "id": did,
+            "speaker": self.speaker_edit.text().strip(),
+            "text": text,
+        }
+        if self.condition_edit.text().strip():
+            self._data["condition"] = self.condition_edit.text().strip()
+        if self.trigger_edit.text().strip():
+            self._data["trigger"] = self.trigger_edit.text().strip()
+        if self.next_edit.text().strip():
+            self._data["next"] = self.next_edit.text().strip()
+        self.accept()
+
+    def data(self) -> dict:
+        return dict(self._data)
+
+class CutsceneDialog(QDialog):
+    def __init__(self, parent: QWidget, existing_ids: List[str], scene_id: Optional[str] = None, steps: Optional[List[dict]] = None):
+        super().__init__(parent)
+        self.setWindowTitle("Cutscene Beat")
+        self.resize(580, 500)
+        self._existing = set(existing_ids)
+        self._scene_id = scene_id or ""
+        self._steps = steps or [{"type": "dialogue", "actor": "", "line": ""}]
+
+        layout = QVBoxLayout(self)
+        form = QFormLayout()
+        self.id_edit = QLineEdit(self._scene_id)
+        form.addRow("Scene ID:", self.id_edit)
+        layout.addLayout(form)
+
+        self.raw_edit = QPlainTextEdit()
+        self.raw_edit.setPlaceholderText("Enter list of steps as JSON array…")
+        self.raw_edit.setPlainText(json.dumps(self._steps, indent=2))
+        layout.addWidget(self.raw_edit, 1)
+
+        self.button_box = QDialogButtonBox(QDialogButtonBox.Save | QDialogButtonBox.Cancel)
+        self.button_box.accepted.connect(self._accept)
+        self.button_box.rejected.connect(self.reject)
+        layout.addWidget(self.button_box)
+
+    def _accept(self):
+        sid = self.id_edit.text().strip()
+        if not sid:
+            QMessageBox.warning(self, "Missing ID", "Scene ID is required.")
+            return
+        if sid != self._scene_id and sid in self._existing:
+            QMessageBox.warning(self, "Duplicate ID", f"Scene '{sid}' already exists.")
+            return
+        try:
+            parsed = json.loads(self.raw_edit.toPlainText() or "[]")
+            if not isinstance(parsed, list):
+                raise ValueError("Expected a JSON array of steps.")
+        except Exception as exc:
+            QMessageBox.warning(self, "Invalid JSON", f"Could not parse steps:\n{exc}")
+            return
+        self._scene_id = sid
+        self._steps = parsed
+        self.accept()
+
+    def data(self) -> Tuple[str, List[dict]]:
+        return self._scene_id, list(self._steps)
+
+
+class StageNotesDialog(QDialog):
+    def __init__(self, parent: QWidget, text: str):
+        super().__init__(parent)
+        self.setWindowTitle("Stage Notes")
+        self.resize(480, 360)
+        layout = QVBoxLayout(self)
+        self.edit = QTextEdit()
+        self.edit.setPlainText(text)
+        layout.addWidget(self.edit)
+        buttons = QDialogButtonBox(QDialogButtonBox.Save | QDialogButtonBox.Cancel)
+        buttons.accepted.connect(self.accept)
+        buttons.rejected.connect(self.reject)
+        layout.addWidget(buttons)
+
+    def value(self) -> str:
+        return self.edit.toPlainText()
+
+
+class NarrativeBuilder(QWidget):
+    def __init__(self, project_root: Optional[Path] = None):
+        super().__init__()
+        self.setWindowTitle("Starborn Narrative Builder")
+        self.resize(1400, 860)
+        self.project_root = detect_project_root(project_root)
+
+        self.quest_path = self.project_root / "quests.json"
+        self.dialogue_path = self.project_root / "dialogue.json"
+        self.events_path = self.project_root / "events.json"
+        self.cinematics_path = self.project_root / "cinematics.json"
+        self.flow_path = self.project_root / narrative_flow_filename
+
+        self.quests: List[dict] = []
+        self.dialogues: Dict[str, dict] = {}
+        self.events: Dict[str, dict] = {}
+        self.cinematics: Dict[str, List[dict]] = {}
+        self.flows: Dict[str, Dict[str, List[dict]]] = {}
+
+        self.current_quest_id: Optional[str] = None
+        self.current_stage_index: Optional[int] = None
+        self._updating_ui = False
+        self._dirty = False
+
+        self._load_all()
+        self._build_ui()
+        self._mark_dirty(False)
+        self._refresh_quest_list()
+
+    # ----------------------- data I/O -----------------------
+    def _load_all(self):
+        self.quests = json_load(self.quest_path, default=[]) or []
+        self.dialogues = _read_json_dict(self.dialogue_path)
+        events = json_load(self.events_path, default=[]) or []
+        self.events = {row["id"]: row for row in events if isinstance(row, dict) and row.get("id")}
+        self.cinematics = _read_json_dict(self.cinematics_path)
+        self.flows = json_load(self.flow_path, default={}) or {}
+
+    def _update_window_title(self):
+        quest = self._find_quest(self.current_quest_id)
+        window_title = "Starborn Narrative Builder"
+        if quest:
+            label = quest.get("title") or quest.get("id") or ""
+            if label:
+                window_title += f" — {label}"
+        if self._dirty:
+            window_title += " *"
+        self.setWindowTitle(window_title)
+        if hasattr(self, "save_btn"):
+            self.save_btn.setEnabled(self._dirty)
+
+    def _mark_dirty(self, dirty: bool = True):
+        self._dirty = dirty
+        self._update_window_title()
+
+    def _save_all(self):
+        try:
+            json_save(self.quest_path, self.quests, sort_obj=True, indent=2)
+            json_save(self.dialogue_path, [self.dialogues[k] for k in _sorted_ids(self.dialogues)], indent=2)
+            json_save(self.events_path, [self.events[k] for k in _sorted_ids(self.events)], indent=2)
+            json_save(self.cinematics_path, self.cinematics, indent=2)
+            json_save(self.flow_path, self.flows, indent=2)
+        except Exception as exc:
+            QMessageBox.critical(self, "Save failed", f"Could not save data:\n{exc}")
+            return
+        self._mark_dirty(False)
+        QMessageBox.information(self, "Saved", "Narrative content saved.")
+
+    # ------------------------ UI build ----------------------
+    def _build_ui(self):
+        layout = QHBoxLayout(self)
+        layout.setContentsMargins(6, 6, 6, 6)
+        splitter = QSplitter(Qt.Horizontal)
+        layout.addWidget(splitter)
+
+        # Left side: quests
+        left = QWidget()
+        left_layout = QVBoxLayout(left)
+        left_layout.addWidget(QLabel("Quests"))
+        self.quest_search = QLineEdit()
+        self.quest_search.setPlaceholderText("Search quests…")
+        self.quest_search.textChanged.connect(self._refresh_quest_list)
+        left_layout.addWidget(self.quest_search)
+        self.quest_list = QListWidget()
+        self.quest_list.currentItemChanged.connect(self._on_quest_selected)
+        left_layout.addWidget(self.quest_list, 1)
+
+        quest_buttons = QHBoxLayout()
+        self.add_quest_btn = QPushButton("New Quest")
+        self.add_quest_template_btn = QPushButton("New from Template")
+        self.dup_quest_btn = QPushButton("Duplicate")
+        self.del_quest_btn = QPushButton("Delete")
+        quest_buttons.addWidget(self.add_quest_btn)
+        quest_buttons.addWidget(self.add_quest_template_btn)
+        quest_buttons.addWidget(self.dup_quest_btn)
+        quest_buttons.addWidget(self.del_quest_btn)
+        left_layout.addLayout(quest_buttons)
+
+        self.add_quest_btn.clicked.connect(self._add_quest)
+        self.add_quest_template_btn.clicked.connect(self._add_quest_from_template)
+        self.dup_quest_btn.clicked.connect(self._duplicate_quest)
+        self.del_quest_btn.clicked.connect(self._delete_quest)
+
+        splitter.addWidget(left)
+        splitter.setStretchFactor(0, 0)
+
+        # Right side: details
+        right = QWidget()
+        right_layout = QVBoxLayout(right)
+        self.header_label = QLabel("Select a quest…")
+        right_layout.addWidget(self.header_label)
+
+        right_split = QSplitter(Qt.Vertical)
+        right_layout.addWidget(right_split, 1)
+
+        # Stage board
+        stage_widget = QWidget()
+        stage_layout = QVBoxLayout(stage_widget)
+        stage_header = QHBoxLayout()
+        stage_header.addWidget(QLabel("Stages / Beats"))
+        stage_header.addStretch(1)
+        self.stage_search = QLineEdit()
+        self.stage_search.setPlaceholderText("Search stages…")
+        self.stage_search.setClearButtonEnabled(True)
+        self.stage_search.setMaximumWidth(220)
+        self.stage_search.setToolTip("Filter by stage title, ID, notes, or task text.")
+        self.stage_search.textChanged.connect(self._refresh_stage_list)
+        stage_header.addWidget(self.stage_search)
+        stage_layout.addLayout(stage_header)
+
+        self.stage_list = QListWidget()
+        self.stage_list.setViewMode(QListWidget.ListMode)
+        self.stage_list.setSpacing(6)
+        self.stage_list.setUniformItemSizes(False)
+        self.stage_list.setWordWrap(True)
+        self.stage_list.setAlternatingRowColors(True)
+        self.stage_list.setResizeMode(QListWidget.Adjust)
+        self.stage_list.setMovement(QListWidget.Static)
+        self.stage_list.setSelectionMode(QListWidget.SingleSelection)
+        self.stage_list.currentItemChanged.connect(self._on_stage_selected)
+        stage_layout.addWidget(self.stage_list, 1)
+
+        stage_buttons = QHBoxLayout()
+        self.add_stage_btn = QPushButton("Add Stage")
+        self.dup_stage_btn = QPushButton("Duplicate")
+        self.del_stage_btn = QPushButton("Remove")
+        self.move_stage_left_btn = QPushButton("◀")
+        self.move_stage_right_btn = QPushButton("▶")
+        stage_buttons.addWidget(self.add_stage_btn)
+        stage_buttons.addWidget(self.dup_stage_btn)
+        stage_buttons.addWidget(self.del_stage_btn)
+        stage_buttons.addStretch(1)
+        stage_buttons.addWidget(self.move_stage_left_btn)
+        stage_buttons.addWidget(self.move_stage_right_btn)
+        stage_layout.addLayout(stage_buttons)
+
+        self.add_stage_btn.clicked.connect(self._add_stage)
+        self.dup_stage_btn.clicked.connect(self._duplicate_stage)
+        self.del_stage_btn.clicked.connect(self._delete_stage)
+        self.move_stage_left_btn.clicked.connect(lambda: self._move_stage(-1))
+        self.move_stage_right_btn.clicked.connect(lambda: self._move_stage(+1))
+
+        right_split.addWidget(stage_widget)
+        right_split.setStretchFactor(0, 0)
+
+        # Detail tabs
+        self.detail_tabs = QTabWidget()
+        self.detail_tabs.addTab(self._build_quest_tab(), "Quest")
+        self.detail_tabs.addTab(self._build_stage_tab(), "Stage")
+        self.detail_tabs.addTab(self._build_flow_tab(), "Flow Beats")
+        right_split.addWidget(self.detail_tabs)
+        right_split.setStretchFactor(1, 1)
+
+        # Footer actions
+        footer = QHBoxLayout()
+        self.open_loc_btn = QPushButton("Reveal Files…")
+        self.launch_editor_btn = QPushButton("Open Specialized Editor…")
+        self.save_btn = QPushButton("Save All")
+        self.save_btn.setShortcut("Ctrl+S")
+        self.save_btn.setToolTip("Save quests, dialogues, events, and flows (Ctrl+S)")
+        self.open_loc_btn.setToolTip("Browse the underlying narrative JSON files.")
+        self.launch_editor_btn.setToolTip("Open the detailed editor for the current quest or beat.")
+        footer.addWidget(self.open_loc_btn)
+        footer.addWidget(self.launch_editor_btn)
+        footer.addStretch(1)
+        footer.addWidget(self.save_btn)
+        right_layout.addLayout(footer)
+
+        self.open_loc_btn.clicked.connect(self._reveal_files)
+        self.launch_editor_btn.clicked.connect(self._launch_editor_picker)
+        self.save_btn.clicked.connect(self._save_all)
+
+        splitter.addWidget(right)
+        splitter.setStretchFactor(1, 1)
+
+    def _build_quest_tab(self) -> QWidget:
+        widget = QWidget()
+        layout = QFormLayout(widget)
+        self.quest_id_label = QLabel("-")
+        self.quest_title_edit = QLineEdit()
+        self.quest_summary_edit = QTextEdit()
+        self.quest_summary_edit.setPlaceholderText("High-level summary for the quest…")
+        self.quest_desc_edit = QTextEdit()
+        self.quest_desc_edit.setPlaceholderText("What happens in this quest?")
+        self.quest_flavor_edit = QTextEdit()
+        self.quest_flavor_edit.setPlaceholderText("Flavor text / voice direction…")
+        self.quest_giver_edit = QLineEdit()
+        self.quest_hub_edit = QLineEdit()
+        self.quest_node_edit = QLineEdit()
+
+        layout.addRow("Quest ID:", self.quest_id_label)
+        layout.addRow("Title:", self.quest_title_edit)
+        layout.addRow(QLabel("Summary:"))
+        layout.addRow(self.quest_summary_edit)
+        layout.addRow(QLabel("Description:"))
+        layout.addRow(self.quest_desc_edit)
+        layout.addRow(QLabel("Flavor:"))
+        layout.addRow(self.quest_flavor_edit)
+        layout.addRow("Giver:", self.quest_giver_edit)
+        layout.addRow("Hub ID:", self.quest_hub_edit)
+        layout.addRow("Node ID:", self.quest_node_edit)
+
+        self.quest_title_edit.textChanged.connect(self._quest_meta_changed)
+        self.quest_summary_edit.textChanged.connect(self._quest_meta_changed)
+        self.quest_desc_edit.textChanged.connect(self._quest_meta_changed)
+        self.quest_flavor_edit.textChanged.connect(self._quest_meta_changed)
+        self.quest_giver_edit.textChanged.connect(self._quest_meta_changed)
+        self.quest_hub_edit.textChanged.connect(self._quest_meta_changed)
+        self.quest_node_edit.textChanged.connect(self._quest_meta_changed)
+        return widget
+
+    def _build_stage_tab(self) -> QWidget:
+        widget = QWidget()
+        vbox = QVBoxLayout(widget)
+
+        form = QFormLayout()
+        self.stage_id_label = QLabel("-")
+        self.stage_title_edit = QLineEdit()
+        self.stage_title_edit.setPlaceholderText("Stage title (internal shorthand shown in tools).")
+        self.stage_desc_edit = QTextEdit()
+        self.stage_desc_edit.setPlaceholderText("Stage beats, what happens, tone…")
+
+        form.addRow("Stage ID:", self.stage_id_label)
+        form.addRow("Title:", self.stage_title_edit)
+        form.addRow(QLabel("Description:"))
+        form.addRow(self.stage_desc_edit)
+        vbox.addLayout(form)
+
+        # Task table
+        task_header = QHBoxLayout()
+        task_header.addWidget(QLabel("Tasks"))
+        self.manage_notes_btn = QPushButton("Notes…")
+        task_header.addStretch(1)
+        task_header.addWidget(self.manage_notes_btn)
+        vbox.addLayout(task_header)
+
+        self.task_table = QTableWidget(0, 4)
+        self.task_table.setHorizontalHeaderLabels(["Task ID", "Text", "Tutorial", "Auto-start Event"])
+        vbox.addWidget(self.task_table, 1)
+
+        task_buttons = QHBoxLayout()
+        self.add_task_btn = QPushButton("Add Task")
+        self.dup_task_btn = QPushButton("Duplicate")
+        self.del_task_btn = QPushButton("Remove")
+        task_buttons.addWidget(self.add_task_btn)
+        task_buttons.addWidget(self.dup_task_btn)
+        task_buttons.addWidget(self.del_task_btn)
+        task_buttons.addStretch(1)
+        vbox.addLayout(task_buttons)
+
+        self.stage_title_edit.textChanged.connect(self._stage_meta_changed)
+        self.stage_desc_edit.textChanged.connect(self._stage_meta_changed)
+        self.task_table.cellChanged.connect(self._task_table_changed)
+        self.add_task_btn.clicked.connect(self._add_task_row)
+        self.dup_task_btn.clicked.connect(self._duplicate_task_row)
+        self.del_task_btn.clicked.connect(self._delete_task_row)
+        self.manage_notes_btn.clicked.connect(self._edit_stage_notes)
+
+        return widget
+
+    def _build_flow_tab(self) -> QWidget:
+        widget = QWidget()
+        vbox = QVBoxLayout(widget)
+        vbox.addWidget(QLabel("Stage Beats"))
+        self.flow_list = QListWidget()
+        self.flow_list.setSelectionMode(QListWidget.SingleSelection)
+        self.flow_list.setAlternatingRowColors(True)
+        vbox.addWidget(self.flow_list, 1)
+
+        btn_row = QHBoxLayout()
+        
+        add_beat_btn = QPushButton("Add Beat…")
+        add_beat_menu = QMenu(self)
+        add_beat_menu.addAction("Dialogue", lambda: self._add_flow_beat("dialogue"))
+        add_beat_menu.addAction("Event", lambda: self._add_flow_beat("event"))
+        add_beat_menu.addAction("Cutscene", lambda: self._add_flow_beat("cutscene"))
+        add_beat_menu.addAction("Note", lambda: self._add_flow_beat("note"))
+        add_beat_btn.setMenu(add_beat_menu)
+
+        add_template_btn = QPushButton("New from Template…")
+        template_menu = QMenu(self)
+        template_menu.addAction("Event from Template", lambda: self._add_flow_beat_from_template("event"))
+        template_menu.addAction("Cutscene from Template", lambda: self._add_flow_beat_from_template("cutscene"))
+        add_template_btn.setMenu(template_menu)
+
+        self.remove_flow_btn = QPushButton("Remove")
+        self.edit_flow_btn = QPushButton("Edit")
+        self.move_flow_up_btn = QPushButton("▲")
+        self.move_flow_down_btn = QPushButton("▼")
+
+        btn_row.addWidget(add_beat_btn)
+        btn_row.addWidget(add_template_btn)
+        btn_row.addWidget(self.edit_flow_btn)
+        btn_row.addWidget(self.remove_flow_btn)
+        btn_row.addStretch(1)
+        btn_row.addWidget(self.move_flow_up_btn)
+        btn_row.addWidget(self.move_flow_down_btn)
+        vbox.addLayout(btn_row)
+
+        self.remove_flow_btn.clicked.connect(self._remove_flow_beat)
+        self.edit_flow_btn.clicked.connect(self._edit_flow_beat)
+        self.move_flow_up_btn.clicked.connect(lambda: self._move_flow(-1))
+        self.move_flow_down_btn.clicked.connect(lambda: self._move_flow(+1))
+        self.flow_list.itemDoubleClicked.connect(lambda _: self._edit_flow_beat())
+        self.flow_list.itemActivated.connect(lambda _: self._edit_flow_beat())
+
+        return widget
+
+    # ---------------------- quest helpers ---------------------
+    def _refresh_quest_list(self):
+        if self._updating_ui:
+            return
+        self._updating_ui = True
+        search = (self.quest_search.text() or "").strip().lower()
+        self.quest_list.clear()
+        for quest in self.quests:
+            title = quest.get("title", quest.get("id", ""))
+            if search and search not in (title or "").lower() and search not in quest.get("id", "").lower():
+                continue
+            item = QListWidgetItem(f"{quest.get('title', quest.get('id', ''))}")
+            item.setData(Qt.UserRole, quest.get("id"))
+            self.quest_list.addItem(item)
+            if quest.get("id") == self.current_quest_id:
+                self.quest_list.setCurrentItem(item)
+        self._updating_ui = False
+
+    def _find_quest(self, quest_id: Optional[str]) -> Optional[dict]:
+        if not quest_id:
+            return None
+        for quest in self.quests:
+            if quest.get("id") == quest_id:
+                return quest
+        return None
+
+    def _on_quest_selected(self, current: Optional[QListWidgetItem]):
+        if self._updating_ui:
+            return
+        quest_id = current.data(Qt.UserRole) if current else None
+        self.current_quest_id = quest_id
+        self.current_stage_index = None
+        self._refresh_stage_list()
+        self._populate_quest_fields()
+
+    def _populate_quest_fields(self):
+        quest = self._find_quest(self.current_quest_id)
+        self._updating_ui = True
+        if not quest:
+            self.header_label.setText("Select a quest…")
+            self.quest_id_label.setText("-")
+            self.quest_title_edit.setText("")
+            self.quest_summary_edit.setPlainText("")
+            self.quest_desc_edit.setPlainText("")
+            self.quest_flavor_edit.setPlainText("")
+            self.quest_giver_edit.setText("")
+            self.quest_hub_edit.setText("")
+            self.quest_node_edit.setText("")
+            self.stage_list.clear()
+            self._updating_ui = False
+            self._update_window_title()
+            return
+        self.header_label.setText(f"{quest.get('title', quest.get('id', 'Quest'))}")
+        self.quest_id_label.setText(quest.get("id", "-"))
+        self.quest_title_edit.setText(quest.get("title", ""))
+        self.quest_summary_edit.setPlainText(quest.get("summary", ""))
+        self.quest_desc_edit.setPlainText(quest.get("description", ""))
+        self.quest_flavor_edit.setPlainText(quest.get("flavor", ""))
+        self.quest_giver_edit.setText(quest.get("giver", ""))
+        self.quest_hub_edit.setText(quest.get("hub_id", ""))
+        self.quest_node_edit.setText(quest.get("node_id", ""))
+        self._updating_ui = False
+        self._update_window_title()
+
+    def _quest_meta_changed(self):
+        if self._updating_ui:
+            return
+        quest = self._find_quest(self.current_quest_id)
+        if not quest:
+            return
+        quest["title"] = self.quest_title_edit.text().strip()
+        quest["summary"] = self.quest_summary_edit.toPlainText().strip()
+        quest["description"] = self.quest_desc_edit.toPlainText().strip()
+        quest["flavor"] = self.quest_flavor_edit.toPlainText().strip()
+        quest["giver"] = self.quest_giver_edit.text().strip()
+        quest["hub_id"] = self.quest_hub_edit.text().strip()
+        quest["node_id"] = self.quest_node_edit.text().strip()
+        self._mark_dirty()
+        self._refresh_quest_list()
+
+    # ------------- quest CRUD --------------
+    def _add_quest(self):
+        new_id, ok = QInputDialog.getText(self, "New Quest", "Quest ID:", text="quest_new")
+        if not ok or not new_id.strip():
+            return
+        new_id = new_id.strip()
+        if any(q.get("id") == new_id for q in self.quests):
+            QMessageBox.warning(self, "Duplicate", f"Quest '{new_id}' already exists.")
+            return
+        quest = {
+            "id": new_id,
+            "title": new_id.replace("_", " ").title(),
+            "summary": "",
+            "description": "",
+            "flavor": "",
+            "giver": "",
+            "hub_id": "",
+            "node_id": "",
+            "stages": [],
+            "rewards": [],
+        }
+        self.current_stage_index = None
+        self._mark_dirty()
+        self._refresh_quest_list()
+        self._populate_quest_fields()
+
+    def _add_quest_from_template(self):
+        template_path, _ = QFileDialog.getOpenFileName(
+            self, "Select Quest Template", str(self.project_root / "templates"), "JSON Files (*.json)"
+        )
+        if not template_path:
+            return
+
+        try:
+            with open(template_path, "r", encoding="utf-8") as f:
+                template_data = json.load(f)
+        except Exception as e:
+            QMessageBox.critical(self, "Template Error", f"Failed to load or parse template:\n{e}")
+            return
+
+        new_id, ok = QInputDialog.getText(self, "New Quest from Template", "Enter new quest ID:")
+        if not ok or not new_id.strip():
+            return
+        new_id = new_id.strip()
+        if not new_id:
+            return
+        if any(q.get("id") == new_id for q in self.quests):
+            QMessageBox.warning(self, "ID Error", "Quest ID already exists.")
+            return
+
+        new_quest = json.loads(json.dumps(template_data))  # Deep copy
+        new_quest["id"] = new_id
+
+        self.quests.append(new_quest)
+        self.current_quest_id = new_id
+        self.current_stage_index = None
+        self._mark_dirty()
+        self._refresh_quest_list()
+        self._populate_quest_fields()
+
+    def _duplicate_quest(self):
+        quest = self._find_quest(self.current_quest_id)
+        if not quest:
+            return
+        clone = json.loads(json.dumps(quest))
+        clone_id = unique_id(f"{quest['id']}_copy", [q["id"] for q in self.quests])
+        clone["id"] = clone_id
+        clone["title"] = f"{quest.get('title', quest['id'])} (Copy)"
+        self.quests.append(clone)
+        self.current_quest_id = clone_id
+        self.current_stage_index = None
+        self._mark_dirty()
+        self._refresh_quest_list()
+        self._populate_quest_fields()
+
+    def _delete_quest(self):
+        quest = self._find_quest(self.current_quest_id)
+        if not quest:
+            return
+        if QMessageBox.question(self, "Delete quest", f"Delete quest '{quest.get('title', quest.get('id'))}'?") != QMessageBox.Yes:
+            return
+        self.quests = [q for q in self.quests if q.get("id") != quest.get("id")]
+        self.flows.pop(quest["id"], None)
+        if self.current_quest_id in self.flows:
+            self.flows.pop(self.current_quest_id, None)
+        self.current_quest_id = None
+        self.current_stage_index = None
+        self._mark_dirty()
+        self._refresh_quest_list()
+        self._populate_quest_fields()
+
+    # -------------------- stage helpers ----------------------
+    def _refresh_stage_list(self):
+        self.stage_list.clear()
+        quest = self._find_quest(self.current_quest_id)
+        if not quest:
+            return
+        stages = quest.get("stages", [])
+        search = ""
+        if hasattr(self, "stage_search") and self.stage_search:
+            search = (self.stage_search.text() or "").strip().lower()
+        selected_idx = self.current_stage_index
+        selected_item: Optional[QListWidgetItem] = None
+
+        for idx, stage in enumerate(stages):
+            tasks = stage.get("tasks", [])
+            haystack_parts = [
+                stage.get("title", ""),
+                stage.get("id", ""),
+                stage.get("description", ""),
+                stage.get("notes", ""),
+            ]
+            for task in tasks:
+                haystack_parts.extend([
+                    task.get("id", ""),
+                    task.get("text", ""),
+                    task.get("tutorial_id", ""),
+                    task.get("event_id", ""),
+                ])
+            haystack = " ".join(str(part) for part in haystack_parts).lower()
+            if search and search not in haystack:
+                continue
+
+            title = stage.get("title") or f"Stage {idx+1}"
+            stage_id = stage.get("id", "")
+            task_count = len(tasks)
+            notes_text = (stage.get("notes") or "").strip()
+            summary_line = ""
+            if stage.get("description"):
+                summary_line = stage["description"].strip().splitlines()[0]
+
+            meta_bits: List[str] = []
+            if stage_id:
+                meta_bits.append(stage_id)
+            if task_count:
+                meta_bits.append(f"{task_count} task{'s' if task_count != 1 else ''}")
+            if notes_text:
+                meta_bits.append("notes")
+
+            subtitle_bits = list(meta_bits)
+            if summary_line:
+                subtitle_bits.append(summary_line if len(summary_line) <= 80 else summary_line[:77] + "…")
+
+            text = f"{idx+1:02d} — {title}"
+            if subtitle_bits:
+                text += "\n" + " • ".join(subtitle_bits)
+
+            item = QListWidgetItem(text)
+            item.setData(Qt.UserRole, idx)
+            item.setSizeHint(QSize(0, 64 if subtitle_bits else 46))
+            item.setTextAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+
+            tooltip_lines = [
+                f"Stage ID: {stage_id or '(auto)'}",
+                f"Title: {title or '(untitled)'}",
+            ]
+            if task_count:
+                tooltip_lines.append(f"Tasks: {task_count}")
+            if summary_line:
+                tooltip_lines.append(f"Summary: {summary_line}")
+            if notes_text:
+                note_preview = notes_text.splitlines()[0]
+                tooltip_lines.append(
+                    f"Notes: {note_preview[:120] + '…' if len(note_preview) > 120 else note_preview}"
+                )
+            if tasks:
+                task_preview = [t.get("text", "").strip() for t in tasks if t.get("text")]
+                if task_preview:
+                    joined_preview = ", ".join(task_preview)
+                    tooltip_lines.append(
+                        f"First tasks: {joined_preview[:120] + '…' if len(joined_preview) > 120 else joined_preview}"
+                    )
+            item.setToolTip("\n".join(tooltip_lines))
+            if not tasks:
+                item.setForeground(Qt.gray)
+            if notes_text:
+                font = item.font()
+                font.setItalic(True)
+                item.setFont(font)
+            self.stage_list.addItem(item)
+            if selected_idx is not None and idx == selected_idx:
+                selected_item = item
+
+        if self.stage_list.count() == 0:
+            if self.current_stage_index is not None:
+                self.current_stage_index = None
+                self._populate_stage_fields()
+                self._populate_flow_list()
+            return
+
+        if selected_item is not None:
+            self.stage_list.setCurrentItem(selected_item)
+        else:
+            self.stage_list.setCurrentRow(0)
+
+    def _current_stage(self) -> Optional[dict]:
+        quest = self._find_quest(self.current_quest_id)
+        if not quest:
+            return None
+        stages = quest.setdefault("stages", [])
+        if self.current_stage_index is None:
+            return None
+        if 0 <= self.current_stage_index < len(stages):
+            return stages[self.current_stage_index]
+        return None
+
+    def _on_stage_selected(self, current: Optional[QListWidgetItem]):
+        if self._updating_ui:
+            return
+        if current is None:
+            self.current_stage_index = None
+        else:
+            self.current_stage_index = int(current.data(Qt.UserRole))
+        self._populate_stage_fields()
+        self._populate_flow_list()
+
+    def _populate_stage_fields(self):
+        stage = self._current_stage()
+        self._updating_ui = True
+        if not stage:
+            self.stage_id_label.setText("-")
+            self.stage_title_edit.setText("")
+            self.stage_desc_edit.setPlainText("")
+            self.task_table.setRowCount(0)
+            self._updating_ui = False
+            return
+        self.stage_id_label.setText(stage.get("id", f"s{self.current_stage_index or 0}"))
+        self.stage_title_edit.setText(stage.get("title", ""))
+        self.stage_desc_edit.setPlainText(stage.get("description", ""))
+
+        tasks = stage.get("tasks", [])
+        self.task_table.blockSignals(True)
+        self.task_table.setRowCount(0)
+        for task in tasks:
+            row = self.task_table.rowCount()
+            self.task_table.insertRow(row)
+            self.task_table.setItem(row, 0, QTableWidgetItem(task.get("id", "")))
+            self.task_table.setItem(row, 1, QTableWidgetItem(task.get("text", "")))
+            self.task_table.setItem(row, 2, QTableWidgetItem(task.get("tutorial_id", "")))
+            self.task_table.setItem(row, 3, QTableWidgetItem(task.get("event_id", "")))
+        self.task_table.blockSignals(False)
+        self._updating_ui = False
+
+    def _stage_meta_changed(self):
+        if self._updating_ui:
+            return
+        stage = self._current_stage()
+        if not stage:
+            return
+        stage["title"] = self.stage_title_edit.text().strip()
+        stage["description"] = self.stage_desc_edit.toPlainText().strip()
+        self._mark_dirty()
+        self._refresh_stage_list()
+
+    def _task_table_changed(self, row: int, column: int):
+        if self._updating_ui:
+            return
+        stage = self._current_stage()
+        if not stage:
+            return
+        tasks = stage.setdefault("tasks", [])
+        while len(tasks) <= row:
+            tasks.append({"id": f"task_{row+1}", "text": ""})
+        get_text = lambda c: (self.task_table.item(row, c).text().strip() if self.task_table.item(row, c) else "")
+        tasks[row]["id"] = get_text(0) or f"task_{row+1}"
+        tasks[row]["text"] = get_text(1)
+        if get_text(2):
+            tasks[row]["tutorial_id"] = get_text(2)
+        else:
+            tasks[row].pop("tutorial_id", None)
+        if get_text(3):
+            tasks[row]["event_id"] = get_text(3)
+        else:
+            tasks[row].pop("event_id", None)
+        self._mark_dirty()
+
+    def _add_task_row(self):
+        stage = self._current_stage()
+        if not stage:
+            return
+        row = self.task_table.rowCount()
+        self.task_table.insertRow(row)
+        new_id = unique_id("task", [self.task_table.item(r, 0).text() if self.task_table.item(r, 0) else "" for r in range(row)])
+        self.task_table.setItem(row, 0, QTableWidgetItem(new_id))
+        self.task_table.setItem(row, 1, QTableWidgetItem("Describe the objective…"))
+        self.task_table.setItem(row, 2, QTableWidgetItem(""))
+        self.task_table.setItem(row, 3, QTableWidgetItem(""))
+        stage.setdefault("tasks", []).append({"id": new_id, "text": "Describe the objective…"})
+        self._mark_dirty()
+
+    def _duplicate_task_row(self):
+        stage = self._current_stage()
+        if not stage:
+            return
+        row = self.task_table.currentRow()
+        if row < 0:
+            return
+        base_id = self.task_table.item(row, 0).text() if self.task_table.item(row, 0) else "task"
+        new_id = unique_id(base_id, [self.task_table.item(r, 0).text() if self.task_table.item(r, 0) else "" for r in range(self.task_table.rowCount())])
+        new_row = self.task_table.rowCount()
+        self.task_table.insertRow(new_row)
+        for col in range(4):
+            text = self.task_table.item(row, col).text() if self.task_table.item(row, col) else ""
+            if col == 0:
+                text = new_id
+            self.task_table.setItem(new_row, col, QTableWidgetItem(text))
+        tasks = stage.setdefault("tasks", [])
+        tasks.insert(new_row, {
+            "id": new_id,
+            "text": self.task_table.item(row, 1).text() if self.task_table.item(row, 1) else "",
+            "tutorial_id": self.task_table.item(row, 2).text() if self.task_table.item(row, 2) else "",
+            "event_id": self.task_table.item(row, 3).text() if self.task_table.item(row, 3) else "",
+        })
+        self._mark_dirty()
+
+    def _delete_task_row(self):
+        stage = self._current_stage()
+        if not stage:
+            return
+        row = self.task_table.currentRow()
+        if row < 0:
+            return
+        self.task_table.removeRow(row)
+        tasks = stage.setdefault("tasks", [])
+        if 0 <= row < len(tasks):
+            tasks.pop(row)
+        self._mark_dirty()
+
+    def _edit_stage_notes(self):
+        stage = self._current_stage()
+        if not stage:
+            return
+        notes = stage.get("notes", "")
+        dlg = StageNotesDialog(self, notes)
+        if dlg.exec_() == QDialog.Accepted:
+            text = dlg.value()
+            if text.strip():
+                stage["notes"] = text
+            else:
+                stage.pop("notes", None)
+            self._mark_dirty()
+
+    def _add_stage(self):
+        quest = self._find_quest(self.current_quest_id)
+        if not quest:
+            return
+        stages = quest.setdefault("stages", [])
+        new_idx = len(stages)
+        stage_id = unique_id("stage", [s.get("id", f"s{i}") for i, s in enumerate(stages)])
+        stage = {
+            "id": stage_id,
+            "title": f"Stage {new_idx + 1}",
+            "description": "",
+            "tasks": [],
+        }
+        stages.append(stage)
+        self.current_stage_index = new_idx
+        self._mark_dirty()
+        self._refresh_stage_list()
+        self.stage_list.setCurrentRow(new_idx)
+
+    def _duplicate_stage(self):
+        quest = self._find_quest(self.current_quest_id)
+        if not quest:
+            return
+        if self.current_stage_index is None:
+            return
+        stages = quest.setdefault("stages", [])
+        if not (0 <= self.current_stage_index < len(stages)):
+            return
+        clone_source = stages[self.current_stage_index]
+        clone = json.loads(json.dumps(clone_source))
+        source_id = clone_source.get("id", f"stage{self.current_stage_index}")
+        existing_ids = [s.get("id", "") for s in stages]
+        clone_id = unique_id(source_id, existing_ids)
+        clone["id"] = clone_id
+        stages.insert(self.current_stage_index + 1, clone)
+        self.current_stage_index += 1
+        flow_map = self.flows.setdefault(quest["id"], {})
+        stage_key = clone_id
+        flow_map[stage_key] = json.loads(json.dumps(flow_map.get(source_id, [])))
+        self._mark_dirty()
+        self._refresh_stage_list()
+        self.stage_list.setCurrentRow(self.current_stage_index)
+
+    def _delete_stage(self):
+        quest = self._find_quest(self.current_quest_id)
+        if not quest:
+            return
+        if self.current_stage_index is None:
+            return
+        stages = quest.setdefault("stages", [])
+        if not stages:
+            return
+        stage = stages[self.current_stage_index]
+        if QMessageBox.question(self, "Delete stage", f"Delete stage '{stage.get('title', stage.get('id'))}'?") != QMessageBox.Yes:
+            return
+        stage_id = stage.get("id")
+        stages.pop(self.current_stage_index)
+        if stage_id and quest["id"] in self.flows:
+            self.flows[quest["id"]].pop(stage_id, None)
+        if self.current_stage_index >= len(stages):
+            self.current_stage_index = len(stages) - 1 if stages else None
+        self._mark_dirty()
+        self._refresh_stage_list()
+        if self.current_stage_index is not None:
+            self.stage_list.setCurrentRow(self.current_stage_index)
+        else:
+            self._populate_stage_fields()
+            self._populate_flow_list()
+
+    def _move_stage(self, delta: int):
+        quest = self._find_quest(self.current_quest_id)
+        if not quest or self.current_stage_index is None:
+            return
+        stages = quest.setdefault("stages", [])
+        idx = self.current_stage_index
+        new_idx = idx + delta
+        if not (0 <= new_idx < len(stages)):
+            return
+        stages[idx], stages[new_idx] = stages[new_idx], stages[idx]
+        self.current_stage_index = new_idx
+        self._mark_dirty()
+        self._refresh_stage_list()
+        self.stage_list.setCurrentRow(new_idx)
+
+    # ---------------------- flow beats ------------------------
+    def _current_flow_key(self) -> Optional[Tuple[str, str]]:
+        quest = self._find_quest(self.current_quest_id)
+        stage = self._current_stage()
+        if not quest or not stage:
+            return None
+        return quest["id"], stage.get("id", "")
+
+    def _stage_flow(self) -> List[dict]:
+        key = self._current_flow_key()
+        if not key:
+            return []
+        quest_id, stage_id = key
+        quest_flow = self.flows.setdefault(quest_id, {})
+        return quest_flow.setdefault(stage_id, [])
+
+    def _populate_flow_list(self):
+        self.flow_list.clear()
+        key = self._current_flow_key()
+        if not key:
+            return
+        data = self._stage_flow()
+        for beat in data:
+            beat_type = (beat.get("type") or "").strip() or "note"
+            ref = beat.get("id", "")
+            label = beat.get("label") or ref or "(untitled)"
+            subtitle = ""
+            missing = False
+
+            if beat_type == "dialogue":
+                dialogue = self.dialogues.get(ref)
+                if dialogue:
+                    speaker = (dialogue.get("speaker") or "").strip()
+                    if speaker:
+                        subtitle = speaker
+                else:
+                    missing = True
+            elif beat_type == "event":
+                missing = ref not in self.events
+                if not missing:
+                    action = self.events[ref].get("actions", [])
+                    if action:
+                        subtitle = action[0].get("type", "")
+            elif beat_type == "cutscene":
+                missing = ref not in self.cinematics
+            elif beat_type == "note":
+                note_text = (beat.get("text") or "").strip()
+                if note_text and note_text != label:
+                    subtitle = note_text.splitlines()[0]
+
+            display = f"[{beat_type}] {label}"
+            if subtitle and subtitle.lower() != (label or "").lower():
+                display += f" — {subtitle}"
+
+            item = QListWidgetItem(display)
+            item.setData(Qt.UserRole, beat)
+
+            tooltip_lines = [
+                f"Type: {beat_type}",
+                f"ID: {ref or '(new)'}",
+            ]
+            if subtitle:
+                tooltip_lines.append(f"Detail: {subtitle}")
+            if missing:
+                tooltip_lines.append("Status: missing reference")
+                item.setForeground(Qt.red)
+            if beat_type == "note":
+                font = item.font()
+                font.setItalic(True)
+                item.setFont(font)
+            item.setToolTip("\n".join(tooltip_lines))
+            self.flow_list.addItem(item)
+
+    def _add_flow_beat(self, beat_type: str):
+        key = self._current_flow_key()
+        if not key:
+            return
+        flow = self._stage_flow()
+        new_index: Optional[int] = None
+        if beat_type == "dialogue":
+            dlg = DialogueDialog(self, list(self.dialogues.keys()))
+            if dlg.exec_() != QDialog.Accepted:
+                return
+            data = dlg.data()
+            self.dialogues[data["id"]] = data
+            beat = {"type": "dialogue", "id": data["id"], "label": data.get("speaker", "") or data["id"]}
+            flow.append(beat)
+            new_index = len(flow) - 1
+        elif beat_type == "event":
+            dlg = EventActionDialog(self.editor.resources, parent=self)
+            if dlg.exec_() != QDialog.Accepted:
+                return
+            data = dlg.data()
+            self.events[data["id"]] = self._translate_event_dialog(data)
+            beat = {"type": "event", "id": data["id"], "label": data.get("type", "")}
+            flow.append(beat)
+            new_index = len(flow) - 1
+        elif beat_type == "cutscene":
+            dlg = CutsceneDialog(self, list(self.cinematics.keys()))
+            if dlg.exec_() != QDialog.Accepted:
+                return
+            scene_id, steps = dlg.data()
+            self.cinematics[scene_id] = steps
+            beat = {"type": "cutscene", "id": scene_id, "label": scene_id}
+            flow.append(beat)
+            new_index = len(flow) - 1
+        elif beat_type == "note":
+            text, ok = QInputDialog.getMultiLineText(self, "Add Note", "Note:", "")
+            if not ok or not text.strip():
+                return
+            beat = {"type": "note", "id": unique_id("note", [b.get("id", "") for b in flow]), "label": text.strip()}
+            beat["text"] = text.strip()
+            flow.append(beat)
+            new_index = len(flow) - 1
+        else:
+            return
+        if new_index is None:
+            return
+        self._mark_dirty()
+        self._populate_flow_list()
+        self.flow_list.setCurrentRow(new_index)
+
+    def _add_flow_beat_from_template(self, beat_type: str):
+        key = self._current_flow_key()
+        if not key:
+            return
+
+        template_path, _ = QFileDialog.getOpenFileName(
+            self, f"Select {beat_type.title()} Template", str(self.project_root / "templates"), "JSON Files (*.json)"
+        )
+        if not template_path:
+            return
+
+        try:
+            with open(template_path, "r", encoding="utf-8") as f:
+                template_data = json.load(f)
+        except Exception as e:
+            QMessageBox.critical(self, "Template Error", f"Failed to load or parse template:\n{e}")
+            return
+
+        new_id, ok = QInputDialog.getText(self, f"New {beat_type.title()} from Template", f"Enter new {beat_type} ID:")
+        if not ok or not new_id.strip():
+            return
+        new_id = new_id.strip()
+
+        if beat_type == "event":
+            if new_id in self.events:
+                QMessageBox.warning(self, "ID Error", f"Event ID '{new_id}' already exists.")
+                return
+            new_beat_data = json.loads(json.dumps(template_data))
+            new_beat_data["id"] = new_id
+            self.events[new_id] = new_beat_data
+            label = new_id
+        elif beat_type == "cutscene":
+            if new_id in self.cinematics:
+                QMessageBox.warning(self, "ID Error", f"Cutscene ID '{new_id}' already exists.")
+                return
+            new_beat_data = json.loads(json.dumps(template_data))
+            # Cutscene templates might not have an ID in the root
+            self.cinematics[new_id] = new_beat_data.get("scenes", [])
+            label = new_id
+        else:
+            return
+
+        flow = self._stage_flow()
+        beat = {"type": beat_type, "id": new_id, "label": label}
+        flow.append(beat)
+        self._mark_dirty()
+        self._populate_flow_list()
+        self.flow_list.setCurrentRow(len(flow) - 1)
+
+    def _translate_event_dialog(self, data: dict) -> dict:
+        # Convert generic arg placeholders to more concrete structure when possible
+        evt = json.loads(json.dumps(data))
+        for action in evt.get("actions", []):
+            # Replace arg placeholders with known keys if ACTION_DEFS exists
+            if ACTION_DEFS and action.get("type") in ACTION_DEFS:
+                spec = ACTION_DEFS[action["type"]]
+                fields = spec.get("fields", [])
+                for idx, field in enumerate(fields):
+                    key = field[0]
+                    placeholder = action.pop(f"arg{idx+1}", None)
+                    if placeholder:
+                        action[key] = placeholder
+            else:
+                for idx in (1, 2, 3):
+                    placeholder = action.pop(f"arg{idx}", None)
+                    if placeholder:
+                        action.setdefault(f"arg{idx}", placeholder)
+        return evt
+
+    def _remove_flow_beat(self):
+        row = self.flow_list.currentRow()
+        if row < 0:
+            return
+        beats = self._stage_flow()
+        if 0 <= row < len(beats):
+            beats.pop(row)
+            self._mark_dirty()
+            self._populate_flow_list()
+            if self.flow_list.count():
+                self.flow_list.setCurrentRow(min(row, self.flow_list.count() - 1))
+
+    def _move_flow(self, delta: int):
+        row = self.flow_list.currentRow()
+        beats = self._stage_flow()
+        if row < 0 or not (0 <= row < len(beats)):
+            return
+        new_row = row + delta
+        if not (0 <= new_row < len(beats)):
+            return
+        beats[row], beats[new_row] = beats[new_row], beats[row]
+        self._mark_dirty()
+        self._populate_flow_list()
+        self.flow_list.setCurrentRow(new_row)
+
+    def _edit_flow_beat(self):
+        row = self.flow_list.currentRow()
+        beats = self._stage_flow()
+        if row < 0 or not (0 <= row < len(beats)):
+            return
+        beat = beats[row]
+        beat_type = beat.get("type")
+        ref_id = beat.get("id")
+        if beat_type == "dialogue":
+            existing = self.dialogues.get(ref_id, {})
+            dlg = DialogueDialog(self, list(self.dialogues.keys()), existing)
+            if dlg.exec_() == QDialog.Accepted:
+                data = dlg.data()
+                self.dialogues[data["id"]] = data
+                beat["id"] = data["id"]
+                beat["label"] = data.get("speaker", "") or data["id"]
+                # If ID changed, remove old entry
+                if data["id"] != ref_id:
+                    self.dialogues.pop(ref_id, None)
+        elif beat_type == "event":
+            existing = self.events.get(ref_id, {})
+            dlg = EventActionDialog(self.editor.resources, existing=existing, parent=self)
+            if dlg.exec_() == QDialog.Accepted:
+                data = dlg.data()
+                self.events[data["id"]] = self._translate_event_dialog(data)
+                beat["id"] = data["id"]
+                beat["label"] = data.get("type", "")
+                if data["id"] != ref_id:
+                    self.events.pop(ref_id, None)
+        elif beat_type == "cutscene":
+            existing_steps = self.cinematics.get(ref_id, [])
+            dlg = CutsceneDialog(self, list(self.cinematics.keys()), ref_id, existing_steps)
+            if dlg.exec_() == QDialog.Accepted:
+                scene_id, steps = dlg.data()
+                self.cinematics[scene_id] = steps
+                beat["id"] = scene_id
+                beat["label"] = scene_id
+                if scene_id != ref_id:
+                    self.cinematics.pop(ref_id, None)
+        elif beat_type == "note":
+            text, ok = QInputDialog.getMultiLineText(self, "Edit Note", "Note:", beat.get("text", ""))
+            if ok:
+                beat["text"] = text
+                beat["label"] = text.splitlines()[0] if text.strip() else beat.get("id", "")
+        self._mark_dirty()
+        self._populate_flow_list()
+        if 0 <= row < self.flow_list.count():
+            self.flow_list.setCurrentRow(row)
+
+    # -------------------- misc actions ------------------------
+    def _reveal_files(self):
+        QFileDialog.getOpenFileName(self, "Inspect narrative file", str(self.project_root), "JSON (*.json)")
+
+    def _launch_editor_picker(self):
+        menu = QMessageBox(self)
+        menu.setWindowTitle("Open detailed editor")
+        menu.setText("Choose which specialized editor to open.")
+        buttons: Dict[Any, Tuple[str, str]] = {}
+        quest = self._find_quest(self.current_quest_id)
+        if quest:
+            btn = menu.addButton("Quest Editor", QMessageBox.ActionRole)
+            buttons[btn] = ("quest", quest.get("id", ""))
+        row = self.flow_list.currentRow()
+        beats = self._stage_flow()
+        beat = beats[row] if 0 <= row < len(beats) else None
+        if beat:
+            beat_type = beat.get("type")
+            ident = beat.get("id", "")
+            if beat_type in ("dialogue", "event", "cutscene"):
+                btn = menu.addButton(f"{beat_type.title()} Editor", QMessageBox.ActionRole)
+                type_key = "cutscene" if beat_type == "cutscene" else beat_type
+                buttons[btn] = (type_key, ident)
+        menu.addButton(QMessageBox.Cancel)
+        menu.exec_()
+        chosen = menu.clickedButton()
+        if chosen in buttons:
+            type_key, ident = buttons[chosen]
+            if ident:
+                studio_goto(type_key, ident)
+
+    # -------------------- API for Studio ----------------------
+    def closeEvent(self, event):
+        if self._dirty:
+            reply = QMessageBox.question(self, "Unsaved changes", "Save changes before closing?", QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel)
+            if reply == QMessageBox.Cancel:
+                event.ignore()
+                return
+            if reply == QMessageBox.Yes:
+                self._save_all()
+        event.accept()
+
+
+def launch_from_studio(project_root: Optional[str] = None):
+    app = QApplication.instance() or QApplication([])
+    widget = NarrativeBuilder(Path(project_root) if project_root else None)
+    widget.show()
+    return widget
+
+
+def main():
+    os.environ.setdefault("STUDIO_MANAGED", "1")
+    app = QApplication.instance() or QApplication([])
+    root = detect_project_root(Path(__file__).parent)
+    view = NarrativeBuilder(root)
+    view.show()
+    app.exec_()
+
+
+if __name__ == "__main__":
+    main()

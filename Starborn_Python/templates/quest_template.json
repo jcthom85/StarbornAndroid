@@ -1,0 +1,35 @@
+{
+  "id": "quest_unique_id",
+  "title": "Quest Title",
+  "summary": "A brief, one-sentence summary of the quest's goal.",
+  "description": "A more detailed description of the quest's backstory and what the player needs to do. This can be shown in the journal.",
+  "giver": "npc_id",
+  "stages": [
+    {
+      "id": "stage_1",
+      "title": "First Step",
+      "description": "Description of what to do in this stage.",
+      "tasks": [
+        {
+          "id": "task_1_1",
+          "text": "Collect 5 Starshards."
+        },
+        {
+          "id": "task_1_2",
+          "text": "Return to the quest giver."
+        }
+      ]
+    }
+  ],
+  "rewards": [
+    {
+      "type": "item",
+      "id": "item_id",
+      "quantity": 1
+    },
+    {
+      "type": "experience",
+      "amount": 100
+    }
+  ]
+}

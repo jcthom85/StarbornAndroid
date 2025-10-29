@@ -1,0 +1,18 @@
+{
+    "mine": {
+        "env": "spaceship",
+        "background_image": "images/rooms/mine_2.png",
+        "description": "You are in the living room of what looks like a small spaceship's crew quarters. The metal walls hum faintly. A mechanic stands by a rusty console, wiping grease from their hands. Nearby, you spot Zeke, an old friend of Nova's, leaning against the viewport. Against the far wall is a sturdy Tinkering Table covered in tools and spare parts. Orion is in the corner making it weird.",
+        "npcs": [
+            "mechanic",
+            "zeke",
+            "orion"
+        ],
+        "items": [
+            "Utility Vest"
+        ],
+        "enemies": [],
+        "state": {},
+        "actions": []
+    }
+}

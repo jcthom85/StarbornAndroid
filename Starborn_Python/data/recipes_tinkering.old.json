@@ -1,0 +1,47 @@
+[
+  {
+    "id": "mod_power_lens_1",
+    "name": "Power Lens Mk. I",
+    "base": "Focusing Lens",
+    "components": ["Wiring Bundle"],
+    "result": "Power Lens Mk. I",
+    "description": "Replaces a standard lens to boost energy output.",
+    "success_message": "You assemble a crisp new Power Lens Mk. I."
+  },
+  {
+    "id": "mod_ergonomic_grip_1",
+    "name": "Ergonomic Grip",
+    "base": "Ballistic Weave",
+    "components": ["Scrap Metal", "Scrap Metal"],
+    "result": "Ergonomic Grip",
+    "description": "A custom-molded grip that improves weapon stability under pressure.",
+    "success_message": "You mold an Ergonomic Grip that feels perfect in the hand."
+  },
+  {
+    "id": "mod_armor_plating_1",
+    "name": "Armor Plating Mk. I",
+    "base": "Scrap Metal",
+    "components": [],
+    "result": "Armor Plating Mk. I",
+    "description": "Bolts an extra layer of ablative armor onto a vest.",
+    "success_message": "You bolt together Armor Plating Mk. I."
+  },
+  {
+    "id": "mod_insulated_lining_1",
+    "name": "Insulated Lining",
+    "base": "Ballistic Weave",
+    "components": ["Wiring Bundle"],
+    "result": "Insulated Lining",
+    "description": "Adds a layer of insulated fabric to protect against energy discharge.",
+    "success_message": "You stitch an Insulated Lining that hums with safety."
+  },
+  {
+    "id": "repair_cryo_inductor",
+    "name": "Functional Cryo-Inductor",
+    "base": "Cryo-Inductor",
+    "components": ["Scrap Metal"],
+    "result": "Functional Cryo-Inductor",
+    "description": "Repair the damaged Cryo-Inductor using scrap metal.",
+    "success_message": "The Cryo-Inductor whirs back to life!"
+  }
+]

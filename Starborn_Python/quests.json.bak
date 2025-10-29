@@ -1,0 +1,132 @@
+[
+  {
+    "id": "gather_broken_gear",
+    "title": "Gather the Broken Gear",
+    "summary": "Jed needs three busted devices rounded up before he can start repairs.",
+    "description": "Track down the broken projector from Schoolteacher Kasey, Maddie's industrial coffee grinder, and Ellie's arcade display. Once you have all three, return to Jed so he can start patching them up.",
+    "flavor": "Half the town runs on Jed's tinkering—time to feed his backlog.",
+    "giver": "Jed",
+    "hub_id": "w1_hub1",
+    "stages": [
+      {
+        "id": "collect_repairs",
+        "title": "Round Up the Repairs",
+        "description": "Collect each broken device so Jed can get them back in working order.",
+        "tasks": [
+          {
+            "id": "collect_projector",
+            "text": "Collect Schoolteacher Kasey's broken projector.",
+            "done": false
+          },
+          {
+            "id": "collect_grinder",
+            "text": "Collect Maddie's broken coffee grinder.",
+            "done": false
+          },
+          {
+            "id": "collect_display",
+            "text": "Collect Ellie's broken arcade display.",
+            "done": false
+          },
+          {
+            "id": "report_to_jed",
+            "text": "Talk to Jed once you have all three busted devices.",
+            "done": false
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 60
+      }
+    ]
+  },
+  {
+    "id": "return_repaired_gear",
+    "title": "Gear Return",
+    "summary": "Jed has finished the repairs, now it's time to return the gear.",
+    "description": "Jed has repaired the projector, coffee grinder, and arcade display. Return them to their owners around town.",
+    "flavor": "A good deed is its own reward. But a little extra XP doesn't hurt.",
+    "giver": "Jed",
+    "hub_id": "w1_hub1",
+    "stages": [
+      {
+        "id": "return_items",
+        "title": "Return the Repaired Items",
+        "description": "Return the repaired items to their respective owners.",
+        "tasks": [
+          {
+            "id": "return_projector",
+            "text": "Return the repaired projector to Schoolteacher Kasey.",
+            "done": false
+          },
+          {
+            "id": "return_grinder",
+            "text": "Return the repaired coffee grinder to Maddie.",
+            "done": false
+          },
+          {
+            "id": "return_display",
+            "text": "Return the repaired arcade display to Ellie.",
+            "done": false
+          }
+        ]
+      },
+      {
+        "id": "stage",
+        "title": "Stage 2",
+        "description": "W",
+        "tasks": []
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 100
+      }
+    ]
+  },
+  {
+    "id": "talk_to_jed",
+    "title": "Talk to Jed",
+    "summary": "Ollie needs you to check in with Jed before the mentor locks up for the night.",
+    "description": "Ollie flagged you down on the Main Road and reminded you that Jed hates waiting. Hustle down to Jed's stall, let him know you're back from scavenging, and see what he needs.",
+    "flavor": "Jed's temper is shorter than the daylight on Rusthaven—better not keep him stewing.",
+    "giver": "Ollie",
+    "hub_id": "w1_hub1",
+    "stages": [
+      {
+        "id": "hustle_to_jed",
+        "title": "Hustle to Jed",
+        "description": "Get off the Main Road and into Jed's Scrap & Salvage before he shutters for shift change.",
+        "tasks": [
+          {
+            "id": "navigate_main_road",
+            "text": "Head south from the Main Road toward the Town Square.",
+            "done": false,
+            "tutorial_id": "movement"
+          },
+          {
+            "id": "spot_jed_shop",
+            "text": "Find Jed's Scrap & Salvage stall in the market strip.",
+            "done": false
+          },
+          {
+            "id": "talk_to_jed_task",
+            "text": "Touch Jed's name and choose Talk to check in with him.",
+            "done": false,
+            "tutorial_id": "npc_talk"
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 25
+      }
+    ]
+  }
+]

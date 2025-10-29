@@ -1,0 +1,265 @@
+[
+    {
+        "name": "Basic Blaster",
+        "aliases": [
+            "blaster"
+        ],
+        "type": "weapon",
+        "value": 100,
+        "buy_price": 200,
+        "rarity": "common",
+        "equipment": {
+            "slot": "weapon",
+            "weapon_type": "pistol",
+            "damage_min": 6,
+            "damage_max": 12
+        }
+    },
+    {
+        "name": "Basic Jacket",
+        "description": "An everyday jacket.",
+        "aliases": [
+            "jacket"
+        ],
+        "type": "armor",
+        "value": 50,
+        "buy_price": 100,
+        "rarity": "common",
+        "equipment": {
+            "slot": "armor",
+            "defense": 5
+        }
+    },
+    {
+        "name": "Basic Slingshot",
+        "description": "Careful not to shoot yer eye out.",
+        "type": "weapon",
+        "value": 50,
+        "buy_price": 100,
+        "rarity": "common",
+        "equipment": {
+            "slot": "weapon",
+            "weapon_type": "pistol",
+            "damage_min": 5,
+            "damage_max": 7
+        }
+    },
+    {
+        "name": "Basic Vest",
+        "aliases": [
+            "vest"
+        ],
+        "type": "armor",
+        "value": 75,
+        "buy_price": 150,
+        "rarity": "common",
+        "equipment": {
+            "slot": "armor",
+            "defense": 8
+        }
+    },
+    {
+        "name": "Battery Pack",
+        "description": "A simple battery pack for providing a charge.",
+        "type": "component",
+        "value": 10,
+        "buy_price": 20,
+        "rarity": "common"
+    },
+    {
+        "name": "Black Coffee",
+        "description": "\t",
+        "aliases": [
+            "coffee"
+        ],
+        "type": "consumable",
+        "value": 25,
+        "buy_price": 50,
+        "rarity": "common",
+        "effect": {
+            "target": "any",
+            "restore_hp": 0,
+            "restore_rp": 0,
+            "damage": 0,
+            "buff_stat": {
+                "stat": "spd",
+                "value": 5,
+                "duration": 1
+            }
+        }
+    },
+    {
+        "name": "Broken Arcade Display",
+        "description": "The broken display of Sam & Ellie's arcade cabinet. Might just need a new filament.",
+        "aliases": [
+            "arcade display",
+            "display"
+        ],
+        "type": "misc",
+        "value": 0,
+        "buy_price": 0,
+        "unsellable": true,
+        "rarity": "common"
+    },
+    {
+        "name": "Broken Coffee Grinder",
+        "description": "A broken industrial coffee grinder. Maybe reinforcing this with some additional metal could fix it.",
+        "aliases": [
+            "coffee grinder"
+        ],
+        "type": "misc",
+        "value": 0,
+        "buy_price": 0,
+        "unsellable": false,
+        "rarity": "common"
+    },
+    {
+        "name": "Broken Projector",
+        "description": "A broken projector. It looks like this one is going to need a new circuit board.",
+        "type": "misc",
+        "value": 0,
+        "buy_price": 0,
+        "unsellable": true,
+        "rarity": "common"
+    },
+    {
+        "name": "Circuit Board",
+        "type": "component",
+        "value": 10,
+        "buy_price": 20,
+        "rarity": "common"
+    },
+    {
+        "name": "Communicator",
+        "type": "key_item",
+        "value": 0,
+        "buy_price": 0,
+        "rarity": "common"
+    },
+    {
+        "name": "Digital Watch",
+        "description": "Harnesses the power of time.",
+        "aliases": [
+            "watch"
+        ],
+        "type": "armor",
+        "value": 50,
+        "buy_price": 100,
+        "rarity": "common",
+        "equipment": {
+            "slot": "accessory",
+            "accuracy": 5
+        }
+    },
+    {
+        "name": "Ellie's Signature Sampler",
+        "description": "A little bit of everything from your friends at Sam & Ellie's Diner!",
+        "type": "consumable",
+        "value": 25,
+        "buy_price": 50,
+        "rarity": "uncommon",
+        "effect": {
+            "target": "party",
+            "restore_hp": 9999,
+            "restore_rp": 0,
+            "damage": 0
+        }
+    },
+    {
+        "name": "Gadget Belt",
+        "description": "Now all you need is a cape and a cowl.",
+        "aliases": [
+            "belt"
+        ],
+        "type": "armor",
+        "value": 50,
+        "buy_price": 100,
+        "rarity": "common",
+        "equipment": {
+            "slot": "accessory",
+            "crit_rate": 5.0
+        }
+    },
+    {
+        "name": "Keystone",
+        "description": "The Keystone emits a low hum.",
+        "type": "key_item",
+        "value": 0,
+        "buy_price": 0,
+        "rarity": "mythic"
+    },
+    {
+        "name": "Latte",
+        "description": "Who doesn't like a good latte?",
+        "type": "consumable",
+        "value": 50,
+        "buy_price": 100,
+        "rarity": "common",
+        "effect": {
+            "target": "any",
+            "restore_hp": 0,
+            "restore_rp": 0,
+            "damage": 0,
+            "buffs": [
+                {
+                    "stat": "spd",
+                    "value": 5,
+                    "duration": 1
+                },
+                {
+                    "stat": "focus",
+                    "value": 5,
+                    "duration": 1
+                }
+            ]
+        }
+    },
+    {
+        "name": "Medkit I",
+        "description": "A basic medkit.",
+        "aliases": [
+            "medkit"
+        ],
+        "type": "consumable",
+        "value": 25,
+        "buy_price": 50,
+        "effect": {
+            "restore_hp": 50,
+            "restore_rp": 0,
+            "damage": 0
+        }
+    },
+    {
+        "name": "Nano Filament",
+        "description": "A tiny filament.",
+        "type": "component",
+        "value": 10,
+        "buy_price": 20,
+        "rarity": "common"
+    },
+    {
+        "name": "Repaired Coffee Grinder",
+        "description": "Maddie's repaired industrial coffee grinder. Back to the grind with you!",
+        "type": "misc",
+        "value": 0,
+        "buy_price": 0,
+        "unsellable": true,
+        "rarity": "common"
+    },
+    {
+        "name": "Repaired Projector",
+        "description": "The school's repaired projector. Good as new.",
+        "type": "misc",
+        "value": 0,
+        "buy_price": 0,
+        "unsellable": true,
+        "rarity": "common"
+    },
+    {
+        "name": "Scrap Metal",
+        "type": "component",
+        "value": 10,
+        "buy_price": 20,
+        "rarity": "common"
+    }
+]

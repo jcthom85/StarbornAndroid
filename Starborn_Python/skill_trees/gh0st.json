@@ -1,0 +1,169 @@
+{
+  "character": "gh0st",
+  "branches": {
+    "Sniper": [
+      {
+        "id": "gh0st_scope",
+        "name": "Scope",
+        "pos": [1, 0],
+        "cost_ap": 1,
+        "requires": [],
+        "effect": { "type": "buff", "buff_type": "accuracy", "value": 10, "rp_cost": 0 }
+      },
+      {
+        "id": "gh0st_steady_aim",
+        "name": "Steady Aim",
+        "pos": [0, 1],
+        "cost_ap": 1,
+        "requires": ["gh0st_scope"],
+        "effect": { "type": "buff", "buff_type": "crit_chance", "value": 10, "rp_cost": 0 }
+      },
+      {
+        "id": "gh0st_headshot",
+        "name": "Headshot",
+        "pos": [2, 1],
+        "cost_ap": 1,
+        "requires": ["gh0st_scope"],
+        "effect": { "type": "damage", "mult": 1.5, "rp_cost": 8 }
+      },
+      {
+        "id": "gh0st_penetrating_shot",
+        "name": "Penetrating Shot",
+        "pos": [1, 2],
+        "cost_ap": 2,
+        "requires": ["gh0st_steady_aim", "gh0st_headshot"],
+        "effect": { "type": "damage", "mult": 1.2, "rp_cost": 10, "subtype": "piercing" }
+      },
+      {
+        "id": "gh0st_ambush",
+        "name": "Ambush",
+        "pos": [0, 3],
+        "cost_ap": 2,
+        "requires": ["gh0st_penetrating_shot"],
+        "effect": { "type": "damage", "mult": 2.0, "rp_cost": 12, "subtype": "first_strike" }
+      },
+      {
+        "id": "gh0st_crippling_shot",
+        "name": "Crippling Shot",
+        "pos": [2, 3],
+        "cost_ap": 2,
+        "requires": ["gh0st_penetrating_shot"],
+        "effect": { "type": "utility", "subtype": "debuff_speed", "value": -20, "rp_cost": 10 }
+      },
+      {
+        "id": "gh0st_kill_confirmed",
+        "name": "Kill Confirmed",
+        "pos": [1, 4],
+        "cost_ap": 3,
+        "requires": ["gh0st_ambush", "gh0st_crippling_shot"],
+        "effect": { "type": "buff", "buff_type": "attack", "value": 15, "rp_cost": 0, "subtype": "on_kill" }
+      },
+      {
+        "id": "gh0st_chain_shot",
+        "name": "Chain Shot",
+        "pos": [0, 5],
+        "cost_ap": 3,
+        "requires": ["gh0st_kill_confirmed"],
+        "effect": { "type": "damage", "mult": 0.8, "rp_cost": 15, "subtype": "multi_hit" }
+      },
+      {
+        "id": "gh0st_ghost_in_the_machine",
+        "name": "Ghost in the Machine",
+        "pos": [2, 5],
+        "cost_ap": 3,
+        "requires": ["gh0st_kill_confirmed"],
+        "effect": { "type": "utility", "subtype": "invisibility", "rp_cost": 20 }
+      },
+      {
+        "id": "gh0st_one_shot_one_kill",
+        "name": "One Shot, One Kill",
+        "pos": [1, 5],
+        "cost_ap": 5,
+        "requires": ["gh0st_chain_shot", "gh0st_ghost_in_the_machine"],
+        "effect": { "type": "damage", "mult": 5.0, "rp_cost": 30, "subtype": "execute" }
+      }
+    ],
+    "Sabotage": [
+      {
+        "id": "gh0st_dismantle",
+        "name": "Dismantle",
+        "pos": [1,0],
+        "cost_ap": 1,
+        "requires": [],
+        "effect": { "type": "utility", "subtype": "debuff_defense", "value": -10, "rp_cost": 5 }
+      },
+      {
+        "id": "gh0st_emp_grenade",
+        "name": "EMP Grenade",
+        "pos": [0,1],
+        "cost_ap": 1,
+        "requires": ["gh0st_dismantle"],
+        "effect": { "type": "utility", "subtype": "disable_mechanical", "rp_cost": 10 }
+      },
+      {
+        "id": "gh0st_viral_agent",
+        "name": "Viral Agent",
+        "pos": [2,1],
+        "cost_ap": 1,
+        "requires": ["gh0st_dismantle"],
+        "effect": { "type": "utility", "subtype": "dot_damage", "value": 5, "rp_cost": 8 }
+      },
+      {
+        "id": "gh0st_system_shock",
+        "name": "System Shock",
+        "pos": [1,2],
+        "cost_ap": 2,
+        "requires": ["gh0st_emp_grenade", "gh0st_viral_agent"],
+        "effect": { "type": "damage", "mult": 1.5, "rp_cost": 12, "subtype": "stun" }
+      },
+      {
+        "id": "gh0st_overload",
+        "name": "Overload",
+        "pos": [0,3],
+        "cost_ap": 2,
+        "requires": ["gh0st_system_shock"],
+        "effect": { "type": "damage", "mult": 2.0, "rp_cost": 15, "subtype": "aoe_mechanical" }
+      },
+      {
+        "id": "gh0st_logic_bomb",
+        "name": "Logic Bomb",
+        "pos": [2,3],
+        "cost_ap": 2,
+        "requires": ["gh0st_system_shock"],
+        "effect": { "type": "utility", "subtype": "debuff_attack", "value": -15, "rp_cost": 12 }
+      },
+      {
+        "id": "gh0st_meltdown",
+        "name": "Meltdown",
+        "pos": [1,4],
+        "cost_ap": 3,
+        "requires": ["gh0st_overload", "gh0st_logic_bomb"],
+        "effect": { "type": "damage", "mult": 2.5, "rp_cost": 20, "subtype": "dot_aoe" }
+      },
+      {
+        "id": "gh0st_cascade_failure",
+        "name": "Cascade Failure",
+        "pos": [0,5],
+        "cost_ap": 3,
+        "requires": ["gh0st_meltdown"],
+        "effect": { "type": "utility", "subtype": "spread_debuffs", "rp_cost": 18 }
+      },
+      {
+        "id": "gh0st_master_saboteur",
+        "name": "Master Saboteur",
+        "pos": [2,5],
+        "cost_ap": 3,
+        "requires": ["gh0st_meltdown"],
+        "effect": { "type": "buff", "buff_type": "debuff_duration", "value": 50, "rp_cost": 0 }
+      },
+      {
+        "id": "gh0st_total_system_failure",
+        "name": "Total System Failure",
+        "pos": [1,5],
+        "cost_ap": 5,
+        "requires": ["gh0st_cascade_failure", "gh0st_master_saboteur"],
+        "effect": { "type": "utility", "subtype": "instant_kill_mechanical", "rp_cost": 35 }
+      }
+    ]
+  }
+}

@@ -1,0 +1,1074 @@
+[
+  {
+    "id": "complete_tinkering_tutorial",
+    "description": "Fires after the player has repaired all three broken items for Jed.",
+    "trigger": {
+      "type": "player_action",
+      "action": "tinkering_tutorial_complete"
+    },
+    "actions": [
+      {
+        "type": "complete_quest",
+        "quest_id": "gather_broken_gear"
+      },
+      {
+        "type": "play_dialogue",
+        "dialogue_id": "jed_tinkering_complete"
+      },
+      {
+        "type": "start_quest",
+        "quest_id": "return_repaired_gear"
+      }
+    ],
+    "repeatable": false,
+    "notes": "This event bridges the 'gather' and 'return' quests for Jed's repairs."
+  },
+  {
+    "id": "enter_camera_gallery",
+    "description": "Camera moves demo.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "camera_gallery"
+    },
+    "actions": [
+      {
+        "type": "play_cinematic",
+        "scene_id": "camera_gallery_demo"
+      }
+    ]
+  },
+  {
+    "id": "enter_caption_studio",
+    "description": "Caption styles cycle.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "caption_studio"
+    },
+    "actions": [
+      {
+        "type": "play_cinematic",
+        "scene_id": "caption_cycle"
+      }
+    ]
+  },
+  {
+    "id": "enter_caption_studio_single",
+    "description": "Single caption demo.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "caption_studio"
+    },
+    "actions": [
+      {
+        "type": "play_cinematic",
+        "scene_id": "caption_demo"
+      }
+    ]
+  },
+  {
+    "id": "enter_cinematic_text_hall",
+    "description": "Cinematic text bar demo.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "cinematic_text_hall"
+    },
+    "actions": [
+      {
+        "type": "play_cinematic",
+        "scene_id": "cinematic_text_demo"
+      }
+    ]
+  },
+  {
+    "id": "enter_color_filter_room",
+    "description": "Color filter demo.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "color_filter_room"
+    },
+    "actions": [
+      {
+        "type": "play_cinematic",
+        "scene_id": "color_filter_demo"
+      }
+    ]
+  },
+  {
+    "id": "enter_fade_room",
+    "description": "Fade demo.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "fade_room"
+    },
+    "actions": [
+      {
+        "type": "play_cinematic",
+        "scene_id": "fade_demo"
+      }
+    ]
+  },
+  {
+    "id": "enter_flash_room",
+    "description": "Flash demo.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "flash_room"
+    },
+    "actions": [
+      {
+        "type": "play_cinematic",
+        "scene_id": "flash_demo"
+      }
+    ]
+  },
+  {
+    "id": "enter_flashback_room",
+    "description": "Flashback demo.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "flashback_room"
+    },
+    "actions": [
+      {
+        "type": "play_cinematic",
+        "scene_id": "flashback_demo"
+      }
+    ]
+  },
+  {
+    "id": "enter_letterbox_room",
+    "description": "Letterbox demo on entry.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "letterbox_room"
+    },
+    "actions": [
+      {
+        "type": "play_cinematic",
+        "scene_id": "letterbox_demo"
+      }
+    ]
+  },
+  {
+    "id": "enter_market_plaza_intro",
+    "description": "Short intro when entering the market plaza.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "market_plaza"
+    },
+    "actions": [
+      {
+        "type": "if_milestone_set",
+        "milestone": "ms_enable_market_plaza_intro",
+        "do": [
+          {
+            "type": "play_cinematic",
+            "scene_id": "market_plaza_intro"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "enter_narration_theatre",
+    "description": "Narration panel demo.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "narration_theatre"
+    },
+    "actions": [
+      {
+        "type": "play_cinematic",
+        "scene_id": "narration_demo"
+      }
+    ]
+  },
+  {
+    "id": "enter_pan_room",
+    "description": "Pan-only demo.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "pan_room"
+    },
+    "actions": [
+      {
+        "type": "play_cinematic",
+        "scene_id": "pan_only_demo"
+      }
+    ]
+  },
+  {
+    "id": "enter_particles_bay_demo",
+    "description": "Particles presets at the bay.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "particles_bay"
+    },
+    "actions": [
+      {
+        "type": "play_cinematic",
+        "scene_id": "particles_demo"
+      }
+    ]
+  },
+  {
+    "id": "enter_ring_room",
+    "description": "Ring demo.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "ring_room"
+    },
+    "actions": [
+      {
+        "type": "play_cinematic",
+        "scene_id": "ring_demo"
+      }
+    ]
+  },
+  {
+    "id": "enter_shake_room",
+    "description": "Shake demo.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "shake_room"
+    },
+    "actions": [
+      {
+        "type": "play_cinematic",
+        "scene_id": "shake_demo"
+      }
+    ]
+  },
+  {
+    "id": "enter_speed_lines_room",
+    "description": "Speed lines demo.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "speed_lines_room"
+    },
+    "actions": [
+      {
+        "type": "play_cinematic",
+        "scene_id": "speed_lines_demo"
+      }
+    ]
+  },
+  {
+    "id": "enter_tilt_suite",
+    "description": "Tilt test.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "tilt_suite"
+    },
+    "actions": [
+      {
+        "type": "play_cinematic",
+        "scene_id": "tilt_demo"
+      }
+    ]
+  },
+  {
+    "id": "enter_town_square_intro",
+    "description": "Short intro when entering the residential square.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "town_square"
+    },
+    "actions": [
+      {
+        "type": "if_milestone_set",
+        "milestone": "ms_enable_town_square_intro",
+        "do": [
+          {
+            "type": "play_cinematic",
+            "scene_id": "town_square_intro"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "enter_vfx_stage_showcase",
+    "description": "Auto-run VFX showcase when entering the VFX Stage.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "vfx_stage"
+    },
+    "actions": [
+      {
+        "type": "play_cinematic",
+        "scene_id": "vfx_stage_demo"
+      }
+    ]
+  },
+  {
+    "id": "enter_vignette_room",
+    "description": "Vignette demo.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "vignette_room"
+    },
+    "actions": [
+      {
+        "type": "play_cinematic",
+        "scene_id": "vignette_demo"
+      }
+    ]
+  },
+  {
+    "id": "enter_wipe_lab_demo",
+    "description": "Demonstrates bar wipe variants.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "wipe_lab"
+    },
+    "actions": [
+      {
+        "type": "play_cinematic",
+        "scene_id": "wipe_demo"
+      }
+    ]
+  },
+  {
+    "id": "enter_zoom_lounge",
+    "description": "Zoom and pan test.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "zoom_lounge"
+    },
+    "actions": [
+      {
+        "type": "play_cinematic",
+        "scene_id": "zoom_pan_demo"
+      }
+    ]
+  },
+  {
+    "id": "enter_zoom_room",
+    "description": "Zoom-only demo.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "zoom_room"
+    },
+    "actions": [
+      {
+        "type": "play_cinematic",
+        "scene_id": "zoom_only_demo"
+      }
+    ]
+  },
+  {
+    "id": "evt_collect_display_from_ellie",
+    "description": "Collect Ellie's arcade display.",
+    "trigger": {
+      "type": "talk_to",
+      "npc": "ellie"
+    },
+    "repeatable": true,
+    "actions": [
+      {
+        "type": "if_quest_active",
+        "quest_id": "gather_broken_gear",
+        "do": [
+          {
+            "type": "if_milestone_not_set",
+            "milestone": "ms_ellie_display_collected",
+            "do": [
+              {
+                "type": "give_item_to_player",
+                "item": "broken_arcade_display"
+              },
+              {
+                "type": "set_milestone",
+                "milestone": "ms_ellie_display_collected"
+              },
+              {
+                "type": "set_quest_task_done",
+                "quest_id": "gather_broken_gear",
+                "task_id": "collect_display"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_collect_grinder_from_maddie",
+    "description": "Collect Maddie's busted coffee grinder.",
+    "trigger": {
+      "type": "talk_to",
+      "npc": "maddie"
+    },
+    "repeatable": true,
+    "actions": [
+      {
+        "type": "if_quest_active",
+        "quest_id": "gather_broken_gear",
+        "do": [
+          {
+            "type": "if_milestone_not_set",
+            "milestone": "ms_maddie_grinder_collected",
+            "do": [
+              {
+                "type": "give_item_to_player",
+                "item": "broken_coffee_grinder"
+              },
+              {
+                "type": "set_milestone",
+                "milestone": "ms_maddie_grinder_collected"
+              },
+              {
+                "type": "set_quest_task_done",
+                "quest_id": "gather_broken_gear",
+                "task_id": "collect_grinder"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_collect_projector_from_kasey",
+    "description": "Collect Schoolteacher Kasey's busted projector.",
+    "trigger": {
+      "type": "talk_to",
+      "npc": "schoolteacher kasey"
+    },
+    "repeatable": true,
+    "actions": [
+      {
+        "type": "if_quest_active",
+        "quest_id": "gather_broken_gear",
+        "do": [
+          {
+            "type": "if_milestone_not_set",
+            "milestone": "ms_kasey_projector_collected",
+            "do": [
+              {
+                "type": "give_item_to_player",
+                "item": "broken_projector"
+              },
+              {
+                "type": "set_milestone",
+                "milestone": "ms_kasey_projector_collected"
+              },
+              {
+                "type": "set_quest_task_done",
+                "quest_id": "gather_broken_gear",
+                "task_id": "collect_projector"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_item_display_pickup",
+    "description": "Handles arcade display pickups that happen outside the conversation.",
+    "trigger": {
+      "type": "item_acquired",
+      "item": "broken_arcade_display"
+    },
+    "repeatable": true,
+    "actions": [
+      {
+        "type": "if_quest_active",
+        "quest_id": "gather_broken_gear",
+        "do": [
+          {
+            "type": "if_milestone_not_set",
+            "milestone": "ms_ellie_display_collected",
+            "do": [
+              {
+                "type": "set_milestone",
+                "milestone": "ms_ellie_display_collected"
+              },
+              {
+                "type": "set_quest_task_done",
+                "quest_id": "gather_broken_gear",
+                "task_id": "collect_display"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_item_grinder_pickup",
+    "description": "Handles grinder pickups that happen outside the conversation.",
+    "trigger": {
+      "type": "item_acquired",
+      "item": "broken_coffee_grinder"
+    },
+    "repeatable": true,
+    "actions": [
+      {
+        "type": "if_quest_active",
+        "quest_id": "gather_broken_gear",
+        "do": [
+          {
+            "type": "if_milestone_not_set",
+            "milestone": "ms_maddie_grinder_collected",
+            "do": [
+              {
+                "type": "set_milestone",
+                "milestone": "ms_maddie_grinder_collected"
+              },
+              {
+                "type": "set_quest_task_done",
+                "quest_id": "gather_broken_gear",
+                "task_id": "collect_grinder"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_item_projector_pickup",
+    "description": "Handles projector pickups that happen outside the conversation.",
+    "trigger": {
+      "type": "item_acquired",
+      "item": "broken_projector"
+    },
+    "repeatable": true,
+    "actions": [
+      {
+        "type": "if_quest_active",
+        "quest_id": "gather_broken_gear",
+        "do": [
+          {
+            "type": "if_milestone_not_set",
+            "milestone": "ms_kasey_projector_collected",
+            "do": [
+              {
+                "type": "set_milestone",
+                "milestone": "ms_kasey_projector_collected"
+              },
+              {
+                "type": "set_quest_task_done",
+                "quest_id": "gather_broken_gear",
+                "task_id": "collect_projector"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_jed_assign_repair_quest",
+    "description": "Jed wraps the intro quest and hands over the repair errand.",
+    "trigger": {
+      "type": "talk_to",
+      "npc": "jed"
+    },
+    "repeatable": true,
+    "actions": [
+      {
+        "type": "if_quest_active",
+        "quest_id": "talk_to_jed",
+        "do": [
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "talk_to_jed",
+            "task_id": "talk_to_jed_task"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_talked_to_jed"
+          },
+          {
+            "type": "complete_quest",
+            "quest_id": "talk_to_jed"
+          },
+          {
+            "type": "start_quest",
+            "quest_id": "gather_broken_gear"
+          }
+        ]
+      },
+      {
+        "type": "if_quest_active",
+        "quest_id": "gather_broken_gear",
+        "do": [
+          {
+            "type": "if_milestones_set",
+            "milestones": [
+              "ms_kasey_projector_collected",
+              "ms_maddie_grinder_collected",
+              "ms_ellie_display_collected"
+            ],
+            "do": [
+              {
+                "type": "if_milestone_not_set",
+                "milestone": "ms_repair_bundle_delivered",
+                "do": [
+                  {
+                    "type": "set_quest_task_done",
+                    "quest_id": "gather_broken_gear",
+                    "task_id": "report_to_jed"
+                  },
+                  {
+                    "type": "complete_quest",
+                    "quest_id": "gather_broken_gear"
+                  },
+                  {
+                    "type": "set_milestone",
+                    "milestone": "ms_repair_bundle_delivered"
+                  },
+                  {
+                    "type": "set_milestone",
+                    "milestone": "ms_tinkering_prompt_active"
+                  },
+                  {
+                    "type": "give_item_to_player",
+                    "item": "Scrap Metal",
+                    "quantity": 20
+                  },
+                  {
+                    "type": "give_item_to_player",
+                    "item": "Nano Filament",
+                    "quantity": 20
+                  },
+                  {
+                    "type": "give_item_to_player",
+                    "item": "Circuit Board",
+                    "quantity": 20
+                  },
+                  {
+                    "type": "play_cinematic",
+                    "scene_id": "scene_jed_tinkering_prompt"
+                  },
+                  {
+                    "type": "narrate",
+                    "text": "Tap the Tinkering Table to lay out the broken parts so Jed can walk you through the fix.",
+                    "tap_to_dismiss": true
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_talk_to_jed_find_shop",
+    "description": "Marks the objective when Nova reaches Jed's Scrap & Salvage.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "market_2"
+    },
+    "actions": [
+      {
+        "type": "if_quest_active",
+        "quest_id": "talk_to_jed",
+        "do": [
+          {
+            "type": "if_milestone_not_set",
+            "milestone": "ms_talk_to_jed_found_shop",
+            "do": [
+              {
+                "type": "set_quest_task_done",
+                "quest_id": "talk_to_jed",
+                "task_id": "spot_jed_shop"
+              },
+              {
+                "type": "set_milestone",
+                "milestone": "ms_talk_to_jed_found_shop"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_talk_to_jed_reach_square",
+    "description": "Marks the Town Square objective once the player leaves the Main Road.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "town_square"
+    },
+    "actions": [
+      {
+        "type": "wait_for_draw"
+      },
+      {
+        "type": "if_quest_active",
+        "quest_id": "talk_to_jed",
+        "do": [
+          {
+            "type": "if_milestone_not_set",
+            "milestone": "ms_talk_to_jed_reached_square",
+            "do": [
+              {
+                "type": "set_quest_task_done",
+                "quest_id": "talk_to_jed",
+                "task_id": "navigate_main_road"
+              },
+              {
+                "type": "set_milestone",
+                "milestone": "ms_talk_to_jed_reached_square"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_tinkering_tutorial_complete",
+    "description": "Wraps the tutorial once the arcade display is repaired.",
+    "trigger": {
+      "type": "player_action",
+      "action": "tinkering_craft",
+      "item_id": "broken_arcade_display"
+    },
+    "actions": [
+      {
+        "type": "if_milestone_set",
+        "milestone": "ms_tinkering_prompt_active",
+        "do": [
+          {
+            "type": "if_milestone_not_set",
+            "milestone": "ms_tinkering_tutorial_done",
+            "do": [
+              {
+                "type": "set_milestone",
+                "milestone": "ms_tinkering_tutorial_done"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_tinkering_tutorial_wrapup",
+    "description": "Plays Jed's final dialogue after the tinkering tutorial is complete and the screen has closed.",
+    "trigger": {
+      "type": "player_action",
+      "action": "tinkering_screen_closed"
+    },
+    "actions": [
+      {
+        "type": "play_dialogue",
+        "dialogue_id": "jed_tinkering_complete"
+      }
+    ]
+  },
+  {
+    "id": "evt_tinkering_tutorial_on_enter",
+    "description": "Runs Jed's tinkering tutorial once the bench is opened after his prompt.",
+    "trigger": {
+      "type": "player_action",
+      "action": "tinkering_screen_entered"
+    },
+    "actions": [
+      {
+        "type": "if_milestone_set",
+        "milestone": "ms_tinkering_prompt_active",
+        "do": [
+          {
+            "type": "if_milestone_not_set",
+            "milestone": "ms_tinkering_tutorial_done",
+            "do": [
+              {
+                "type": "system_tutorial",
+                "scene_id": "scene_tinkering_tutorial",
+                "context": "tinkering",
+                "on_complete": [
+                  {
+                    "type": "player_action",
+                    "action": "tinkering_tutorial_finished"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "Intro Communicator",
+    "description": "",
+    "trigger": {
+      "type": "enter_room",
+      "room": "town_9"
+    },
+    "actions": []
+  },
+  {
+    "id": "new_game_spawn_player_and_fade",
+    "description": "After the intro, this spawns the player in Nova's house (while the screen is black) and begins the long fade-in.",
+    "trigger": {
+      "type": "player_action",
+      "action": "new_game_spawn_player_and_fade"
+    },
+    "actions": [
+      {
+        "type": "set_room_state",
+        "room_id": "town_9",
+        "state_key": "light_on",
+        "value": false
+      },
+      {
+        "type": "begin_node",
+        "room_id": "town_9"
+      },
+      {
+        "type": "rebuild_ui"
+      },
+      {
+        "type": "wait_for_draw"
+      },
+      {
+        "type": "play_cinematic",
+        "scene_id": "new_game_fade_in"
+      }
+    ]
+  },
+  {
+    "id": "nova_house_light_toggle",
+    "description": "Toggle the lights in Nova's House.",
+    "trigger": {
+      "type": "player_action",
+      "action": "toggle_nova_house_light"
+    },
+    "actions": [
+      {
+        "room_id": "town_9",
+        "state_key": "light_on",
+        "type": "toggle_room_state"
+      }
+    ],
+    "repeatable": true,
+    "on_message": "You flip the switch. The lights come on.",
+    "off_message": "You flip the switch. The room goes dark."
+  },
+  {
+    "id": "ollie_first_meeting",
+    "description": "Ollie intercepts the player on the Main Road to start the first quest.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "town_8"
+    },
+    "actions": [
+      {
+        "type": "play_cinematic",
+        "scene_id": "ollie_intro_scene",
+        "on_complete": [
+          {
+            "type": "set_milestone",
+            "milestone": "ms_ollie_met"
+          }
+        ]
+      }
+    ],
+    "conditions": [
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_ollie_met"
+      }
+    ]
+  },
+  {
+    "id": "qpack_evt_collapse_ambush_victory",
+    "trigger": {
+      "type": "encounter_victory",
+      "encounter_id": "enc_collapse_ambush"
+    },
+    "actions": [
+      {
+        "type": "give_xp",
+        "xp": 320
+      },
+      {
+        "type": "spawn_item_on_ground",
+        "item_id": "itm_relay_fragment",
+        "quantity": 1,
+        "room_id": "living",
+        "note": "Wyrm chest contains a relay fragment held in a stony cradle."
+      },
+      {
+        "type": "advance_quest_if_active",
+        "quest_id": "q_mine_relay_scramble",
+        "to_stage_id": "q_mine_relay_scramble:stage_3",
+        "condition": "if_stage_eq:q_mine_relay_scramble:stage_2"
+      }
+    ]
+  },
+  {
+    "id": "qpack_evt_drone_sweep_victory",
+    "trigger": {
+      "type": "encounter_victory",
+      "encounter_id": "enc_drone_sweep"
+    },
+    "actions": [
+      {
+        "type": "give_xp",
+        "xp": 160
+      },
+      {
+        "type": "unlock_room_search",
+        "room_id": "living",
+        "note": "Victory reveals a tucked maintenance alcove with salvageable bits."
+      },
+      {
+        "type": "advance_quest_if_active",
+        "quest_id": "q_mine_relay_scramble",
+        "to_stage_id": "q_mine_relay_scramble:stage_3",
+        "condition": "if_stage_eq:q_mine_relay_scramble:stage_2"
+      }
+    ]
+  },
+  {
+    "id": "qpack_evt_relay_stage1_complete",
+    "trigger": {
+      "type": "quest_stage_complete",
+      "quest_id": "q_mine_relay_scramble",
+      "stage_id": "q_mine_relay_scramble:stage_1"
+    },
+    "actions": [
+      {
+        "type": "give_item",
+        "item_id": "itm_noise_maker",
+        "quantity": 1,
+        "to_player": true,
+        "note": "Gives a Noise Maker so the player can attempt a stealth bypass."
+      },
+      {
+        "type": "advance_quest",
+        "quest_id": "q_mine_relay_scramble",
+        "to_stage_id": "q_mine_relay_scramble:stage_2"
+      }
+    ]
+  },
+  {
+    "id": "qpack_evt_relay_stage2_complete",
+    "trigger": {
+      "type": "quest_stage_complete",
+      "quest_id": "q_mine_relay_scramble",
+      "stage_id": "q_mine_relay_scramble:stage_2"
+    },
+    "actions": [
+      {
+        "type": "spawn_encounter",
+        "encounter_id": "enc_collapse_ambush",
+        "room_id": "living",
+        "condition": "if_player_timed_trap_or_disturbs_alcove"
+      },
+      {
+        "type": "advance_quest",
+        "quest_id": "q_mine_relay_scramble",
+        "to_stage_id": "q_mine_relay_scramble:stage_3"
+      }
+    ]
+  },
+  {
+    "id": "qpack_evt_relay_stage3_complete",
+    "trigger": {
+      "type": "quest_stage_complete",
+      "quest_id": "q_mine_relay_scramble",
+      "stage_id": "q_mine_relay_scramble:stage_3"
+    },
+    "actions": [
+      {
+        "type": "give_item",
+        "item_id": "itm_stabilizer_plate",
+        "quantity": 1,
+        "to_player": true,
+        "note": "A salvaged stabilizer plate needed for final assembly."
+      },
+      {
+        "type": "advance_quest",
+        "quest_id": "q_mine_relay_scramble",
+        "to_stage_id": "q_mine_relay_scramble:stage_4"
+      }
+    ]
+  },
+  {
+    "id": "qpack_evt_relay_stage4_complete",
+    "trigger": {
+      "type": "quest_stage_complete",
+      "quest_id": "q_mine_relay_scramble",
+      "stage_id": "q_mine_relay_scramble:stage_4"
+    },
+    "actions": [
+      {
+        "type": "grant_reward",
+        "quest_id": "q_mine_relay_scramble",
+        "xp": 420,
+        "credits": 150,
+        "items": [
+          {
+            "item_id": "itm_relay_prototype",
+            "quantity": 1
+          }
+        ],
+        "ap": 1
+      },
+      {
+        "type": "trigger_cutscene",
+        "cutscene_id": "cs_relay_final"
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "q_mine_relay_scramble"
+      }
+    ]
+  },
+  {
+    "id": "qpack_evt_scout_reveal_hidden_fragment",
+    "trigger": {
+      "type": "npc_interaction",
+      "npc_id": "scout_mekk",
+      "interaction_type": "event"
+    },
+    "actions": [
+      {
+        "type": "reveal_hidden_item",
+        "item_id": "itm_relay_fragment",
+        "quantity": 1,
+        "room_id": "living",
+        "note": "Mekk points out a fragment tucked behind a weak panel."
+      }
+    ]
+  },
+  {
+    "id": "trigger_camera_test_in_tysons_room",
+    "description": "Plays the camera test cinematic upon entering Tyson's room.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "tyson's room"
+    },
+    "actions": [
+      {
+        "type": "play_cinematic",
+        "scene_id": "camera_test"
+      }
+    ]
+  },
+  {
+    "id": "trigger_vfx_showcase_in_shop",
+    "description": "Runs the full VFX showcase when the player enters the shop.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "shop"
+    },
+    "actions": [
+      {
+        "type": "play_cinematic",
+        "scene_id": "master_showcase"
+      }
+    ]
+  }
+]

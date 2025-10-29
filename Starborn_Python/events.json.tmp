@@ -1,0 +1,401 @@
+[
+    {
+        "id": "kitchen_light_toggle",
+        "description": "Keeps track of whether the kitchen lights are on or off.",
+        "trigger": {
+            "type": "player_action",
+            "action": "toggle_kitchen_light"
+        },
+        "actions": [
+            {
+                "type": "toggle_room_state",
+                "room_id": "kitchen",
+                "state_key": "light_on"
+            }
+        ],
+        "on_message": "You flick the switch. The lights hum to life.",
+        "off_message": "You flick the switch. The room goes dark."
+    },
+    {
+        "id": "enter_market_plaza_intro",
+        "description": "Short intro when entering the market plaza.",
+        "trigger": { "type": "enter_room", "room": "market_plaza" },
+        "actions": [ { "type": "play_cinematic", "scene_id": "market_plaza_intro" } ]
+    },
+    {
+        "id": "enter_town_square_intro",
+        "description": "Short intro when entering the residential square.",
+        "trigger": { "type": "enter_room", "room": "town_square" },
+        "actions": [ { "type": "play_cinematic", "scene_id": "town_square_intro" } ]
+    },
+    {
+        "id": "market_dock_lost_crate",
+        "description": "Spawn a Medkit at the loading dock as a lightweight pickup.",
+        "trigger": { "type": "enter_room", "room": "market_loading_dock" },
+        "actions": [ { "type": "spawn_item", "room_id": "market_loading_dock", "item": "Medkit" } ]
+    }
+    {
+        "id": "key_spawns_drone",
+        "description": "Small key triggers a two-drone ambush.",
+        "trigger": {
+            "type": "item_acquired",
+            "item": "small key"
+        },
+        "actions": [
+            {
+                "type": "start_battle",
+                "enemy_ids": [
+                    "security_drone",
+                    "security_drone"
+                ]
+            }
+        ]
+    },
+    {
+        "id": "drone_defeated_mechanic_dialogue",
+        "description": "Mechanic thanks you—and hints at a locked locker—after the drone is destroyed.",
+        "trigger": {
+            "type": "enemy_defeated",
+            "enemy": "security_drone"
+        },
+        "actions": [
+            {
+                "type": "update_npc_dialogue",
+                "npc": "mechanic",
+                "dialogue": "Great job taking down that drone! Now, if you find a small brass key, use it on the storage locker in the bedroom—I really need the wrench inside."
+            }
+        ]
+    },
+    {
+        "id": "start_find_wrench_on_talk",
+        "trigger": {
+            "type": "talk_to",
+            "npc": "mechanic"
+        },
+        "actions": [
+            {
+                "type": "if_quest_status_is",
+                "quest_id": "find_wrench",
+                "status": "inactive",
+                "do": [
+                    {
+                        "type": "start_quest",
+                        "quest_id": "find_wrench"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": "unlock_locker",
+        "trigger": {
+            "type": "player_action",
+            "action": "unlock_locker"
+        },
+        "actions": [
+            {
+                "type": "toggle_room_state",
+                "room_id": "bedroom",
+                "state_key": "locker_open"
+            },
+            {
+                "type": "spawn_item",
+                "room_id": "bedroom",
+                "item": "wrench"
+            }
+        ]
+    },
+    {
+        "id": "took_wrench",
+        "trigger": {
+            "type": "item_acquired",
+            "item": "wrench"
+        },
+        "actions": [
+            {
+                "type": "toggle_room_state",
+                "room_id": "bedroom",
+                "state_key": "wrench_taken"
+            }
+        ]
+    },
+    {
+        "id": "wrench_given_to_mechanic",
+        "trigger": {
+            "type": "item_given",
+            "item": "wrench",
+            "npc": "mechanic"
+        },
+        "actions": [
+            {
+                "type": "complete_quest",
+                "quest_id": "return_wrench"
+            },
+            {
+                "type": "update_npc_dialogue",
+                "npc": "mechanic",
+                "dialogue": "got_wrench"
+            },
+            {
+                "type": "give_item_to_player",
+                "item": "access code"
+            }
+        ]
+    },
+    {
+        "id": "reset_mechanic_after_all",
+        "trigger": {
+            "type": "complete_quest",
+            "quest_id": "return_wrench"
+        },
+        "actions": [
+            {
+                "type": "update_npc_dialogue",
+                "npc": "mechanic",
+                "dialogue": "after_all"
+            }
+        ]
+    },
+    {
+        "id": "pickup_wrench_completes_find",
+        "trigger": {
+            "type": "item_acquired",
+            "item": "wrench"
+        },
+        "actions": [
+            {
+                "type": "if_quest_active",
+                "quest_id": "find_wrench",
+                "do": [
+                    {
+                        "type": "complete_quest",
+                        "quest_id": "find_wrench"
+                    },
+                    {
+                        "type": "start_quest",
+                        "quest_id": "return_wrench"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": "trigger_camera_test_in_tysons_room",
+        "description": "Plays the camera test cinematic upon entering Tyson's room.",
+        "trigger": {
+            "type": "enter_room",
+            "room": "tyson's room"
+        },
+        "actions": [
+            {
+                "type": "play_cinematic",
+                "scene_id": "camera_test"
+            }
+        ]
+    },
+    {
+        "id": "trigger_vfx_showcase_in_shop",
+        "description": "Runs the full VFX showcase when the player enters the shop.",
+        "trigger": {
+            "type": "enter_room",
+            "room": "shop"
+        },
+        "actions": [
+            {
+                "type": "play_cinematic",
+                "scene_id": "master_showcase"
+            }
+        ]
+    },
+    {
+        "id": "pickup_datapad_starts_quest",
+        "description": "Acquiring the datapad begins the questline.",
+        "trigger": {
+            "type": "item_acquired",
+            "item": "Damaged Datapad"
+        },
+        "actions": [
+            {
+                "type": "start_quest",
+                "quest_id": "the_distress_beacon"
+            }
+        ]
+    },
+    {
+        "id": "ancient_drone_drops_inductor",
+        "description": "The old drone drops its core component upon defeat.",
+        "trigger": {
+            "type": "enemy_defeated",
+            "enemy": "drone_ancient"
+        },
+        "actions": [
+            {
+                "type": "give_item_to_player",
+                "item": "Cryo-Inductor"
+            }
+        ]
+    },
+    {
+        "id": "qpack_evt_relay_stage1_complete",
+        "trigger": {
+            "type": "quest_stage_complete",
+            "quest_id": "q_mine_relay_scramble",
+            "stage_id": "q_mine_relay_scramble:stage_1"
+        },
+        "actions": [
+            {
+                "type": "give_item",
+                "item_id": "itm_noise_maker",
+                "quantity": 1,
+                "to_player": true,
+                "note": "Gives a Noise Maker so the player can attempt a stealth bypass."
+            },
+            {
+                "type": "advance_quest",
+                "quest_id": "q_mine_relay_scramble",
+                "to_stage_id": "q_mine_relay_scramble:stage_2"
+            }
+        ]
+    },
+    {
+        "id": "qpack_evt_relay_stage2_complete",
+        "trigger": {
+            "type": "quest_stage_complete",
+            "quest_id": "q_mine_relay_scramble",
+            "stage_id": "q_mine_relay_scramble:stage_2"
+        },
+        "actions": [
+            {
+                "type": "spawn_encounter",
+                "encounter_id": "enc_collapse_ambush",
+                "room_id": "living",
+                "condition": "if_player_timed_trap_or_disturbs_alcove"
+            },
+            {
+                "type": "advance_quest",
+                "quest_id": "q_mine_relay_scramble",
+                "to_stage_id": "q_mine_relay_scramble:stage_3"
+            }
+        ]
+    },
+    {
+        "id": "qpack_evt_relay_stage3_complete",
+        "trigger": {
+            "type": "quest_stage_complete",
+            "quest_id": "q_mine_relay_scramble",
+            "stage_id": "q_mine_relay_scramble:stage_3"
+        },
+        "actions": [
+            {
+                "type": "give_item",
+                "item_id": "itm_stabilizer_plate",
+                "quantity": 1,
+                "to_player": true,
+                "note": "A salvaged stabilizer plate needed for final assembly."
+            },
+            {
+                "type": "advance_quest",
+                "quest_id": "q_mine_relay_scramble",
+                "to_stage_id": "q_mine_relay_scramble:stage_4"
+            }
+        ]
+    },
+    {
+        "id": "qpack_evt_relay_stage4_complete",
+        "trigger": {
+            "type": "quest_stage_complete",
+            "quest_id": "q_mine_relay_scramble",
+            "stage_id": "q_mine_relay_scramble:stage_4"
+        },
+        "actions": [
+            {
+                "type": "grant_reward",
+                "quest_id": "q_mine_relay_scramble",
+                "xp": 420,
+                "credits": 150,
+                "items": [
+                    {
+                        "item_id": "itm_relay_prototype",
+                        "quantity": 1
+                    }
+                ],
+                "ap": 1
+            },
+            {
+                "type": "trigger_cutscene",
+                "cutscene_id": "cs_relay_final"
+            },
+            {
+                "type": "complete_quest",
+                "quest_id": "q_mine_relay_scramble"
+            }
+        ]
+    },
+    {
+        "id": "qpack_evt_drone_sweep_victory",
+        "trigger": {
+            "type": "encounter_victory",
+            "encounter_id": "enc_drone_sweep"
+        },
+        "actions": [
+            {
+                "type": "give_xp",
+                "xp": 160
+            },
+            {
+                "type": "unlock_room_search",
+                "room_id": "living",
+                "note": "Victory reveals a tucked maintenance alcove with salvageable bits."
+            },
+            {
+                "type": "advance_quest_if_active",
+                "quest_id": "q_mine_relay_scramble",
+                "to_stage_id": "q_mine_relay_scramble:stage_3",
+                "condition": "if_stage_eq:q_mine_relay_scramble:stage_2"
+            }
+        ]
+    },
+    {
+        "id": "qpack_evt_collapse_ambush_victory",
+        "trigger": {
+            "type": "encounter_victory",
+            "encounter_id": "enc_collapse_ambush"
+        },
+        "actions": [
+            {
+                "type": "give_xp",
+                "xp": 320
+            },
+            {
+                "type": "spawn_item_on_ground",
+                "item_id": "itm_relay_fragment",
+                "quantity": 1,
+                "room_id": "living",
+                "note": "Wyrm chest contains a relay fragment held in a stony cradle."
+            },
+            {
+                "type": "advance_quest_if_active",
+                "quest_id": "q_mine_relay_scramble",
+                "to_stage_id": "q_mine_relay_scramble:stage_3",
+                "condition": "if_stage_eq:q_mine_relay_scramble:stage_2"
+            }
+        ]
+    },
+    {
+        "id": "qpack_evt_scout_reveal_hidden_fragment",
+        "trigger": {
+            "type": "npc_interaction",
+            "npc_id": "scout_mekk",
+            "interaction_type": "event"
+        },
+        "actions": [
+            {
+                "type": "reveal_hidden_item",
+                "item_id": "itm_relay_fragment",
+                "quantity": 1,
+                "room_id": "living",
+                "note": "Mekk points out a fragment tucked behind a weak panel."
+            }
+        ]
+    }
+]
