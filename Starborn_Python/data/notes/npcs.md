@@ -1,1 +1,0 @@
-add Jed to the room 'Jed's Scrap & Salvage'
