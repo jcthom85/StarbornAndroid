@@ -37,6 +37,35 @@ import com.example.starborn.domain.inventory.ItemUseResult
 import com.example.starborn.feature.inventory.InventoryViewModel
 import kotlinx.coroutines.flow.collectLatest
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.starborn.domain.model.Item
+
+private const val CATEGORY_ALL = "all"
+private const val CATEGORY_CONSUMABLES = "consumables"
+private const val CATEGORY_EQUIPMENT = "equipment"
+private const val CATEGORY_CRAFTING = "crafting"
+private const val CATEGORY_KEY_ITEMS = "key_items"
+private const val CATEGORY_OTHER = "other"
+
+private fun Item.categoryKey(): String {
+    val normalized = type.lowercase()
+    return when (normalized) {
+        "consumable", "medicine", "food", "drink", "tonic" -> CATEGORY_CONSUMABLES
+        "weapon", "armor", "shield", "accessory", "gear" -> CATEGORY_EQUIPMENT
+        "material", "ingredient", "component", "resource" -> CATEGORY_CRAFTING
+        "key", "key_item", "quest" -> CATEGORY_KEY_ITEMS
+        else -> CATEGORY_OTHER
+    }
+}
+
+private fun categoryLabel(key: String): String = when (key) {
+    CATEGORY_ALL -> "All"
+    CATEGORY_CONSUMABLES -> "Consumables"
+    CATEGORY_EQUIPMENT -> "Equipment"
+    CATEGORY_CRAFTING -> "Crafting"
+    CATEGORY_KEY_ITEMS -> "Key Items"
+    CATEGORY_OTHER -> "Other"
+    else -> key.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -96,16 +125,38 @@ private fun InventoryScreen(
     onUseItem: (String) -> Unit,
     onBack: () -> Unit
 ) {
-    var selectedType by remember(entries) { mutableStateOf<String?>(null) }
-    val types = remember(entries) {
-        entries.map { it.item.type.ifBlank { "other" } }.distinct().sorted()
+    var selectedCategory by remember(entries) { mutableStateOf(CATEGORY_ALL) }
+    val categories = remember(entries) {
+        val keys = entries.map { it.item.categoryKey() }.toSet()
+        buildList {
+            add(CATEGORY_ALL)
+            listOf(
+                CATEGORY_CONSUMABLES,
+                CATEGORY_EQUIPMENT,
+                CATEGORY_CRAFTING,
+                CATEGORY_KEY_ITEMS,
+                CATEGORY_OTHER
+            ).forEach { key -> if (key in keys) add(key) }
+        }
     }
-    val filtered = remember(entries, selectedType) {
-        selectedType?.let { type ->
-            entries.filter { it.item.type.equals(type, ignoreCase = true) }
-        } ?: entries
+    if (selectedCategory !in categories) {
+        selectedCategory = CATEGORY_ALL
     }
-    var selectedEntry by remember(filtered) { mutableStateOf(filtered.firstOrNull()) }
+    val filtered = remember(entries, selectedCategory) {
+        when (selectedCategory) {
+            CATEGORY_ALL -> entries
+            else -> entries.filter { it.item.categoryKey() == selectedCategory }
+        }
+    }
+    var selectedEntry by remember { mutableStateOf(filtered.firstOrNull()) }
+    LaunchedEffect(filtered) {
+        selectedEntry = when {
+            filtered.isEmpty() -> null
+            selectedEntry == null -> filtered.first()
+            filtered.none { it.item.id == selectedEntry?.item?.id } -> filtered.first()
+            else -> selectedEntry
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -137,49 +188,54 @@ private fun InventoryScreen(
                     .padding(innerPadding)
                     .padding(16.dp)
             ) {
-                if (types.size > 1) {
+                if (categories.size > 1) {
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        FilterChip(
-                            selected = selectedType == null,
-                            onClick = { selectedType = null },
-                            label = { Text("All") }
-                        )
-                        types.forEach { type ->
+                        categories.forEach { key ->
                             FilterChip(
-                                selected = selectedType.equals(type, ignoreCase = true),
-                                onClick = { selectedType = type },
-                                label = { Text(type.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }) }
+                                selected = selectedCategory == key,
+                                onClick = { selectedCategory = key },
+                                label = { Text(categoryLabel(key)) }
                             )
                         }
                     }
                     Spacer(modifier = Modifier.height(12.dp))
                 }
 
-                Row(modifier = Modifier.fillMaxSize()) {
-                    LazyColumn(
-                        modifier = Modifier.weight(1f)
+                if (filtered.isEmpty()) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        contentAlignment = Alignment.Center
                     ) {
-                        items(filtered, key = { it.item.id }) { entry ->
-                            InventoryListRow(
-                                entry = entry,
-                                selected = entry.item.id == selectedEntry?.item?.id,
-                                onClick = { selectedEntry = entry }
-                            )
-                        }
+                        Text("No items in this category", style = MaterialTheme.typography.bodyLarge)
                     }
-
-                    Spacer(modifier = Modifier.width(16.dp))
-
-                    selectedEntry?.let { entry ->
-                        Box(
-                            modifier = Modifier
-                                .weight(1f)
-                                .fillMaxHeight()
+                } else {
+                    Row(modifier = Modifier.fillMaxSize()) {
+                        LazyColumn(
+                            modifier = Modifier.weight(1f)
                         ) {
-                            InventoryDetail(
-                                entry = entry,
-                                onUseItem = onUseItem
-                            )
+                            items(filtered, key = { it.item.id }) { entry ->
+                                InventoryListRow(
+                                    entry = entry,
+                                    selected = entry.item.id == selectedEntry?.item?.id,
+                                    onClick = { selectedEntry = entry }
+                                )
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.width(16.dp))
+
+                        selectedEntry?.let { entry ->
+                            Box(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .fillMaxHeight()
+                            ) {
+                                InventoryDetail(
+                                    entry = entry,
+                                    onUseItem = onUseItem
+                                )
+                            }
                         }
                     }
                 }
@@ -234,8 +290,30 @@ private fun InventoryDetail(
                 Text("Rarity: $it", style = MaterialTheme.typography.bodyMedium)
             }
             Text("Type: ${entry.item.type}", style = MaterialTheme.typography.bodyMedium)
+            entry.item.value.takeIf { it > 0 }?.let {
+                Text("Value: $it", style = MaterialTheme.typography.bodyMedium)
+            }
+            entry.item.buyPrice?.let {
+                Text("Purchase Price: $it", style = MaterialTheme.typography.bodyMedium)
+            }
             entry.item.description?.takeIf { it.isNotBlank() }?.let {
                 Text(it, style = MaterialTheme.typography.bodyMedium)
+            }
+
+            entry.item.equipment?.let { equipment ->
+                Divider()
+                Text("Equipment", style = MaterialTheme.typography.titleMedium)
+                Text("Slot: ${equipment.slot}", style = MaterialTheme.typography.bodySmall)
+                equipment.weaponType?.let { Text("Weapon Type: $it", style = MaterialTheme.typography.bodySmall) }
+                equipment.damageMin?.let { min ->
+                    val max = equipment.damageMax ?: min
+                    Text("Damage: $min–$max", style = MaterialTheme.typography.bodySmall)
+                }
+                equipment.defense?.let { Text("Defense: $it", style = MaterialTheme.typography.bodySmall) }
+                equipment.hpBonus?.let { Text("HP Bonus: $it", style = MaterialTheme.typography.bodySmall) }
+                equipment.statMods?.takeIf { it.isNotEmpty() }?.forEach { (stat, value) ->
+                    Text("${stat.uppercase()}: ${if (value >= 0) "+" else ""}$value", style = MaterialTheme.typography.bodySmall)
+                }
             }
 
             entry.item.effect?.let { effect ->

@@ -44,9 +44,25 @@ class EventManager(
                 val roomId = (payload as? EventPayload.EnterRoom)?.roomId ?: state.roomId
                 trigger.roomId == null || trigger.roomId == roomId
             }
-            "player_action" -> payload is EventPayload.Action && payload.action == trigger.action
+            "player_action" -> {
+                val actionPayload = payload as? EventPayload.Action ?: return false
+                val actionMatches = trigger.action.isNullOrBlank() ||
+                    actionPayload.action.equals(trigger.action, ignoreCase = true)
+                if (!actionMatches) return false
+                val requiredItem = trigger.itemId ?: trigger.item
+                if (!requiredItem.isNullOrBlank()) {
+                    val payloadItem = actionPayload.itemId
+                    if (!requiredItem.equals(payloadItem, ignoreCase = true)) return false
+                }
+                true
+            }
             "quest_stage_complete" -> payload is EventPayload.QuestStage && payload.questId == trigger.questId
-            "encounter_victory" -> payload is EventPayload.EnemyVictory &&
+            "encounter_victory" -> matchesOutcome(trigger, payload, EventPayload.EncounterOutcome.Outcome.VICTORY)
+            "encounter_defeat" -> payload is EventPayload.EncounterOutcome &&
+                payload.outcome == EventPayload.EncounterOutcome.Outcome.DEFEAT &&
+                (trigger.enemies.isNullOrEmpty() || payload.enemyIds.any { it in trigger.enemies })
+            "encounter_retreat" -> payload is EventPayload.EncounterOutcome &&
+                payload.outcome == EventPayload.EncounterOutcome.Outcome.RETREAT &&
                 (trigger.enemies.isNullOrEmpty() || payload.enemyIds.any { it in trigger.enemies })
             "item_acquired" -> true // Inventory system pending
             else -> true
@@ -98,6 +114,7 @@ class EventManager(
                 "start_quest" -> {
                     val updated = action.startQuest?.let {
                         sessionStore.startQuest(it)
+                        eventHooks.onQuestStarted(it)
                         true
                     } ?: false
                     if (updated) eventHooks.onQuestUpdated()
@@ -106,10 +123,32 @@ class EventManager(
                 "complete_quest" -> {
                     val updated = action.completeQuest?.let {
                         sessionStore.completeQuest(it)
+                        eventHooks.onQuestCompleted(it)
                         true
                     } ?: false
                     if (updated) eventHooks.onQuestUpdated()
                     updated
+                }
+                "fail_quest" -> {
+                    val updated = action.questId?.let {
+                        sessionStore.failQuest(it)
+                        eventHooks.onQuestFailed(it, action.message)
+                        eventHooks.onQuestUpdated()
+                        true
+                    } ?: false
+                    updated
+                }
+                "track_quest" -> {
+                    action.questId?.let {
+                        sessionStore.setTrackedQuest(it)
+                        eventHooks.onQuestUpdated()
+                        true
+                    } ?: false
+                }
+                "untrack_quest" -> {
+                    sessionStore.setTrackedQuest(null)
+                    eventHooks.onQuestUpdated()
+                    true
                 }
                 "play_cinematic" -> {
                     action.sceneId?.let { eventHooks.onPlayCinematic(it) }
@@ -195,18 +234,13 @@ class EventManager(
                     action.onComplete?.let { executeActions(it, state) }
                     true
                 }
-                "play_cinematic" -> {
+                "play_cinematic", "trigger_cutscene" -> {
                     action.sceneId?.let { eventHooks.onPlayCinematic(it) }
                     action.onComplete?.let { executeActions(it, state) }
                     true
                 }
                 "unlock_room_search" -> {
                     eventHooks.onUnlockRoomSearch(action.roomId, action.note)
-                    true
-                }
-                "trigger_cutscene" -> {
-                    action.sceneId?.let { eventHooks.onPlayCinematic(it) }
-                    action.onComplete?.let { executeActions(it, state) }
                     true
                 }
                 "rebuild_ui", "wait_for_draw" -> true
@@ -224,7 +258,9 @@ class EventManager(
                     }
                 }
                 "player_action" -> {
-                    action.action?.let { handleTrigger("player_action", EventPayload.Action(it)) }
+                    action.action?.let { actionId ->
+                        handleTrigger("player_action", EventPayload.Action(actionId, action.itemId ?: action.item))
+                    }
                     true
                 }
                 else -> false
@@ -242,6 +278,20 @@ class EventManager(
         return branch?.let { executeActions(it, state) } ?: false
     }
 
+    private fun matchesOutcome(
+        trigger: EventTrigger,
+        payload: EventPayload,
+        expected: EventPayload.EncounterOutcome.Outcome
+    ): Boolean {
+        return when (payload) {
+            is EventPayload.EnemyVictory -> expected == EventPayload.EncounterOutcome.Outcome.VICTORY &&
+                (trigger.enemies.isNullOrEmpty() || payload.enemyIds.any { it in trigger.enemies })
+            is EventPayload.EncounterOutcome -> payload.outcome == expected &&
+                (trigger.enemies.isNullOrEmpty() || payload.enemyIds.any { it in trigger.enemies })
+            else -> false
+        }
+    }
+
     private fun toReward(action: EventAction): EventReward {
         val base = action.reward ?: EventReward()
         val xp = action.xp ?: base.xp
@@ -255,10 +305,20 @@ class EventManager(
 sealed interface EventPayload {
     data object Empty : EventPayload
     data class TalkTo(val npc: String) : EventPayload
-    data class Action(val action: String) : EventPayload
+    data class Action(val action: String, val itemId: String? = null) : EventPayload
     data class EnterRoom(val roomId: String) : EventPayload
     data class QuestStage(val questId: String) : EventPayload
     data class EnemyVictory(val enemyIds: List<String>) : EventPayload
+    data class EncounterOutcome(
+        val enemyIds: List<String>,
+        val outcome: Outcome
+    ) : EventPayload {
+        enum class Outcome {
+            VICTORY,
+            DEFEAT,
+            RETREAT
+        }
+    }
 }
 
 data class EventHooks(
@@ -277,6 +337,7 @@ data class EventHooks(
     val onQuestStageAdvanced: (questId: String?, stageId: String?) -> Unit = { _, _ -> },
     val onQuestStarted: (questId: String?) -> Unit = {},
     val onQuestCompleted: (questId: String?) -> Unit = {},
+    val onQuestFailed: (questId: String?, reason: String?) -> Unit = { _, _ -> },
     val onBeginNode: (roomId: String?) -> Unit = {},
     val onSystemTutorial: (sceneId: String?, context: String?) -> Unit = { _, _ -> },
     val onNarration: (message: String, tapToDismiss: Boolean) -> Unit = { _, _ -> },

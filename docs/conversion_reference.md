@@ -8,7 +8,7 @@ Authoring context: final turn of the prior CODEX session (context budget nearly 
 - **Objective**: Rebuild the full Python Starborn experience inside an Android Studio project using Kotlin (Jetpack Compose for UI).
 - **Current Kotlin repo**: `~/AndroidStudioProjects/Starborn` (this project).
 - **Original reference**: `~/AndroidStudioProjects/Starborn/Starborn_Python` (retain for parity checks; ignore `_old` / `.old` artifacts per user).
-- **Porting status**: Core data loading, session scaffolding, basic exploration loop, and inventory/crafting scaffolding exist. Large portions of gameplay logic (combat, dialogue depth, quests, cinematics, tutorials, minigames, shops, cutscenes) remain unimplemented or stubbed.
+- **Porting status**: Core data loading, session scaffolding with autosave, exploration/combat loops, inventory, and crafting scaffolds exist. Remaining gaps focus on advanced cinematics, authored minigames, shop narrative polish, and shader/audio fidelity.
 
 ---
 
@@ -33,7 +33,7 @@ docs/                 → Planning notes (inventory_crafting_plan, item_effect_h
 Starborn_Python/      → Original Kivy implementation
 ```
 
-Key entry point: `NavigationHost` (Compose) -> `MainMenuScreen` -> `ExplorationScreen`. Inventory and Combat routes exist, but only inventory is functional.
+Key entry point: `NavigationHost` (Compose) -> `MainMenuScreen` -> `ExplorationScreen`. Inventory flows are feature-complete; Combat route runs the prototype encounter loop.
 
 ---
 
@@ -42,100 +42,56 @@ Key entry point: `NavigationHost` (Compose) -> `MainMenuScreen` -> `ExplorationS
 |------|---------------|-------|
 | **JSON asset loading** | ✅ | Using Moshi with reflection factory; assets mirrored from Python (`rooms`, `events`, `items`, `recipes_*`, etc.). |
 | **Item repository & inventory service** | ✅ | Inventory state is flow-backed; supports add/remove/use; consumables & schematics produce `ItemUseResult`. |
-| **Crafting service** | ⚠️ Partial | Recipe data loads; `canCraft` & `craft*` functions implemented. Learned schematics now persist in `GameSessionStore` but no UI. |
-| **Session store** | ✅ Base | Tracks world/hub/room, quests, milestones, learned schematics. |
-| **Event system** | ⚠️ Partial | `EventManager` skeleton ported; many hooks log/snackbar but do not mutate gameplay state fully. |
-| **Dialogue service** | ⚠️ Partial | Basic dialogue progression; triggers mutate quests/milestones. No UI beyond exploration overlay. |
-| **Exploration UI** | ⚠️ Partial | Room display, NPC list, POIs, exits, status text; new snackbars for events. Most action handlers still "coming soon". |
+| **Crafting service** | ⚠️ Partial | Recipe data loads; cooking and first-aid flows now consume ingredients and resolve minigame outcomes. Fishing and advanced effect handling still pending. |
+| **Session store** | ✅ | Tracks world/hub/room, quests, milestones, learned schematics, inventory; autosave + slot system live. |
+| **Event system** | ⚠️ Partial | Core dispatch + milestone hooks wired; still tightening cinematic/tutorial sequencing and complex quest scripting. |
+| **Dialogue service** | ⚠️ Partial | Supports branching choices and trigger hooks; portraits/audio/cinematic sequencing still pending. |
+| **Exploration UI** | ⚠️ Partial | Layered HUD with direction ring, hotspot cards, minimap service glyphs, shop greetings, and FX bursts; cinematic playback and radial menu still pending. |
 | **Inventory UI** | ✅ | Filter chips, detail pane, "Use" flow; integrates with shared services. |
-| **Combat** | 🚧 | Placeholder screen only; exploration emits `EnterCombat` event. |
-| **Crafting/Tinkering UI** | 🚧 | Not started. |
-| **Minigames, Shops, Quests UI** | 🚧 | Not started. |
-| **Testing** | ⚠️ | New JVM tests cover inventory item effects & schematic persistence. Remaining systems untested. |
+| **Combat** | ⚠️ | Prototype battle loop now includes turn timeline, target selection, loot/XP routing, and reward tests; still missing cinematic FX, ally support scripting, and defeat/retreat cinematics. |
+| **Crafting/Tinkering UI** | ⚠️ Partial | Tinkering, tuned cooking/first-aid timing bars, and FX/audio hooks implemented; fishing UI still missing. |
+| **Minigames, Shops, Quests UI** | ⚠️ Partial | Shops support greetings with dialogue choices and trade flow; stock rotation, radial menu, and quest journal detail view still TODO. |
+| **Persistence UI** | ⚠️ Partial | Main menu surfaces autosave + manual slots with timestamps; cloud sync story outstanding. |
+| **Testing** | ⚠️ | JVM suite covers inventory/crafting/persistence; need combat/event integration tests and instrumentation smoke runs. |
 
 ---
 
-## 4. Latest Changes (end of previous session)
-1. **Learned schematic persistence**  
-   - Added `learnedSchematics` to `GameSessionState` (`app/.../GameSessionState.kt:11`).  
-   - `GameSessionStore` now stores/forgets schematics (`GameSessionStore.kt:50`).  
-   - `CraftingService.learnSchematic` writes to session store and avoids duplicates (`CraftingService.kt:33`).  
-   - Inventory/Exploration messaging differentiates already-known schematics (`InventoryViewModel.kt:44`, `ExplorationViewModel.kt:307`).
-
-2. **Inventory service refactor**  
-   - Introduced `ItemCatalog` interface so `InventoryService` doesn't require Android assets in tests (`domain/inventory/Inventory.kt`).  
-   - `ItemRepository` now implements `ItemCatalog` (`data/repository/ItemRepository.kt`).  
-   - Tests can provide simple fakes.
-
-3. **Exploration event surface**  
-   - Snackbar feedback for rewards, quests, item use, tutorials, etc. in `ExplorationScreen` (lines ~44-110).  
-   - `ExplorationEvent.ItemUsed` now carries the formatted message to reduce duplication.
-
-4. **Unit tests**  
-   - `InventoryServiceTest` validates consumable, buff, schematic flows with fake items.  
-   - `CraftingServiceTest` ensures schematic persistence semantics (no duplicate unlock).  
-   - Tests use pure Kotlin fakes; `./gradlew testDebugUnitTest` passes.
-
-5. **Navigation injection**  
-   - Inventory route now receives both `InventoryService` & `CraftingService` via `InventoryViewModelFactory` (`AppNavigation.kt:51`).  
-   - `AppServices` constructs services once and shares them across screens (`di/AppServices.kt:34-37`).
-
-6. **Room state tracking, loot, & travel gating**  
-   - `ExplorationViewModel` now retains per-room state flags, reacts to event-driven `set/toggle_room_state`, and mirrors updates in UI state (`ExplorationViewModel.kt`).  
-   - Travel honours `blocked_directions`: locks check requirements, consume keys, and unlock paths with feedback; enemy blocks now defer until encounters resolved.  
-   - Container actions and event-driven drops place items on the ground, surface status/snackbar cues, and let players collect loot via the exploration UI (`ExplorationScreen.kt`).
-
-7. **Event branching & tutorials hooks**  
-   - `EventManager` supports `else` branches for `if_*` actions plus new hooks for ground loot spawns, search unlocks, and chained cinematics/tutorial completions.  
-   - Player-facing feedback surfaces via new `ExplorationEvent` cases (loot/tutor/room search) and an in-game tutorial banner + quest log overlay, mirroring Python narrative beats.
-
-8. **Quest data & log UI**  
-   - Added `quests.json` asset and repository; quest log overlay shows quest titles, summaries, stage info, and auto-checking objectives as event hooks fire. Milestone changes trigger both toasts and a dismissible banner.
-
-9. **Tinkering screen**  
-   - New `TinkeringRoute` lists crafting recipes, crafts via `CraftingService`, and unlocks once `ms_tinkering_prompt_active` is set in exploration.
+## 4. Latest Changes (this session)
+1. **Exploration service pass**  
+   - Minimap renders hub services with glyphs, shop greetings use dialogue overlays, and crafting FX events drive on-screen bursts via `UiFxBus`.
+2. **Crafting timing overhaul**  
+   - Cooking/first-aid minigames use Python-derived presets, per-recipe overrides, and emit FX/audio cues with locale-aware difficulty handling.
+3. **Persistence metadata**  
+   - Slot info captures timestamps plus quest/milestone/ schematic migration; main menu displays save summaries with counts.
+4. **Navigation integration**  
+   - App navigation wires new crafting/shop routes, shares audio/FX services, and feeds combat results back into exploration.
+5. **Regression coverage**  
+   - Added Robolectric tests for legacy save import and slot metadata; `testDebugUnitTest` now covers persistence edge cases.
 
 ---
 
 ## 5. High-Priority TODOs
-1. **Complete Exploration event handling**  
-   - Replace remaining TODO placeholders (combat entry, cinematic playback, quest updates UI, etc.) in `ExplorationViewModel` & `ExplorationScreen`.  
-   - Align with Python event triggers in `Starborn_Python/game.py` (search for matching event names).
-
-2. **Combat system port**  
-   - Implement combat models, turn logic, UI; integrate with item effects (restorative/buff/damage) and inventory service.  
-   - Reference Python `combat_manager`, `battle_screen` etc. in original repo.
-
-3. **Crafting/Tinkering UI**  
-   - Build Compose screens for cooking/first aid/tinkering, hooking into `CraftingService`.  
-   - Reflect Python `ui/tinkering_screen.py`, `ui/cooking_screen.py` flows.  
-   - Ensure learned schematics gate recipe visibility (reads from `GameSessionStore.state`).
-
-4. **Persistent storage / saves**  
-   - Currently session data is in-memory only; decide on storage (DataStore/Room) aligning with Python's behavior.
-
-5. **Dialogue & quest parity**  
-   - Many quest hooks do not update UI or enforce conditions (see `ExplorationViewModel.onActionSelected`).  
-   - Need quest log screen, milestone tracking visuals, dialogue choices, etc.
-
-6. **World navigation & interactions**  
-   - Implement toggles, tinkering machines, room states, timed events per Python logic.  
-   - See TODO comment `ExplorationViewModel.kt` lines around 200-260 and `item_effect_handling.md` for guidance.
-
-7. **Testing expansion**  
-   - Add coverage for `InventoryService.consumeItems`, `CraftingService.craft*`, `EventManager` flows, navigation transitions.  
-   - Consider integration tests around `AppServices` to ensure shared instances behave.
+1. **Quest/tutorial runtime managers**  
+   - Implement scripted tutorial queue, milestone prompts, and quest journal detail view tied to dialogue triggers.
+2. **Minigame expansion**  
+   - Ship fishing/arcade loops leveraging timing presets; author failure tutorials for existing crafting stations.
+3. **Hub/radial interactions**  
+   - Build radial service menu, contextual hotspot art, and vendor branch scripting (smalltalk, rotating stock).
+4. **Audio layering**  
+   - Extend `AudioRouter` for ambience/music beds with fades, integrate asset catalog for future FX.
+5. **Combat polish**  
+   - Add ally support scripting, defeat/retreat cinematics, and expanded FX overlays.
+6. **Testing & CI**  
+   - Add integration coverage for quest/tutorial flows and automate `lint`/`test` in CI.
 
 ---
 
 ## 6. Known TODO Markers & Gaps
-- `feature/exploration/ui/ExplorationScreen.kt`: event handling now uses snackbars but still placeholders for cinematics/tutorial content.
-- `feature/exploration/viewmodel/ExplorationViewModel.kt`:  
-  - `onActionSelected` still returns "feature coming soon" (line ~300).  
-  - `ExplorationEvent` cases (combat resolution, spawn encounter) require implementations.  
-  - `useInventoryItem` damage/buff outcomes not wired into player/combat stats.
+- `feature/exploration/ui/ExplorationScreen.kt`: minimap glyphs and FX bursts live, but cinematic overlay and radial menu styling remain TODO.
+- `feature/exploration/viewmodel/ExplorationViewModel.kt`: quest/tutorial managers, fishing hooks, and radial menu support still TODO; review TODO markers for `TODO:` comments.
 - `docs/item_effect_handling.md`: outlines next steps for applying effects and crafting progress UI; still accurate.
-- `domain/crafting/CraftingService.kt`: learned schematics persisted but `tinkering/cooking/first aid` craft flows untested; future UI should leverage `CraftingOutcome` messaging.
+- `domain/crafting/CraftingService.kt`: integrate authored failure tutorials and add fishing recipes.
+- `feature/crafting/ui/*`: fishing minigame overlays pending; cooking/first-aid still using placeholder art.
 
 ---
 
@@ -154,11 +110,11 @@ Key entry point: `NavigationHost` (Compose) -> `MainMenuScreen` -> `ExplorationS
 ---
 
 ## 9. Suggested Next Steps for New Session
-1. Confirm Kotlin project still builds and launches to Exploration screen. Capture logs for TODO events.  
-2. Decide on immediate milestone (e.g., finish inventory integration with combat or start crafting UI).  
-3. Reference this document alongside `docs/remaining_parity.md` & `docs/inventory_crafting_plan.md` for deeper backlog context.  
-4. Keep `AppServices` singleton model consistent so learned schematics persist across screens.  
-5. Maintain separation between data (assets) and game logic so tests stay fast (use `ItemCatalog`/`CraftingRecipeSource` abstractions).
+1. Stand up quest/tutorial runtime managers and integrate them with dialogue triggers.  
+2. Implement fishing minigame UI/logic plus authored crafting failure tutorials.  
+3. Deliver radial service menu + vendor smalltalk/rotation scripting.  
+4. Extend AudioRouter with ambience/music layering and catalogue FX usage.  
+5. Expand integration/CI coverage and keep docs in sync as new systems land.
 
 ---
 
@@ -169,6 +125,7 @@ Key entry point: `NavigationHost` (Compose) -> `MainMenuScreen` -> `ExplorationS
 - `app/src/main/java/com/example/starborn/di/AppServices.kt` (shared services instantiation).  
 - `app/src/main/java/com/example/starborn/domain/crafting/CraftingService.kt` (schematic persistence).  
 - `app/src/main/java/com/example/starborn/domain/inventory/Inventory.kt` (item handling).  
+- `app/src/main/java/com/example/starborn/domain/leveling/` (LevelingData + LevelingManager handling XP → level curves).  
 - `app/src/test/java/com/example/starborn/domain/`... (new JVM tests).  
 - `docs/item_effect_handling.md`, `docs/inventory_crafting_plan.md`, `docs/remaining_parity.md` (design notes).  
 - `Starborn_Python/game.py` (source-of-truth mechanics).  

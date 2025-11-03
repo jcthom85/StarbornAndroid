@@ -19,15 +19,5 @@
             "Beast Meat": 1
         },
         "result": "Spicy Ramen"
-    },
-    {
-        "id": "fish_stew",
-        "name": "Fish Stew",
-        "description": "A simple and hearty fish stew.",
-        "ingredients": {
-            "Raw Fish": 2,
-            "Herb": 1
-        },
-        "result": "Fish Stew"
     }
 ]

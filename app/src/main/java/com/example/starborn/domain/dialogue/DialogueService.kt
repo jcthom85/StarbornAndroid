@@ -1,6 +1,7 @@
 package com.example.starborn.domain.dialogue
 
 import com.example.starborn.domain.model.DialogueLine
+import com.example.starborn.domain.model.DialogueOption
 import java.util.Locale
 
 class DialogueService(
@@ -31,28 +32,50 @@ class DialogueSession(
 
     fun advance(): DialogueLine? {
         val currentLine = current()
+        if (currentLine != null && choices().isNotEmpty()) {
+            return currentLine
+        }
         currentLine?.trigger?.let { triggerHandler.handleTrigger(it) }
 
-        var nextId = currentLine?.next
+        val nextLine = resolveNext(currentLine?.next)
+        currentId = nextLine?.id
+        return nextLine
+    }
+
+    fun isFinished(): Boolean = current() == null
+
+    fun choices(): List<DialogueOption> {
+        val line = current() ?: return emptyList()
+        val options = line.options ?: return emptyList()
+        return options.filter { option ->
+            conditionEvaluator.isConditionMet(option.condition)
+        }
+    }
+
+    fun choose(optionId: String): DialogueLine? {
+        val currentLine = current()
+        val choice = choices().firstOrNull { it.id.equals(optionId, ignoreCase = true) }
+            ?: return currentLine
+        currentLine?.trigger?.let { triggerHandler.handleTrigger(it) }
+        choice.trigger?.let { triggerHandler.handleTrigger(it) }
+        val nextLine = resolveNext(choice.next)
+        currentId = nextLine?.id
+        return nextLine
+    }
+
+    private fun resolveNext(startId: String?): DialogueLine? {
+        var nextId = startId
         while (nextId != null) {
-            val candidate = dialogueById[nextId]
-            if (candidate == null) {
-                currentId = null
-                return null
-            }
+            val candidate = dialogueById[nextId] ?: return null.also { currentId = null }
             if (conditionEvaluator.isConditionMet(candidate.condition)) {
-                currentId = candidate.id
                 return candidate
             }
-            // Skip candidate but trigger if defined
             candidate.trigger?.let { triggerHandler.handleTrigger(it) }
             nextId = candidate.next
         }
         currentId = null
         return null
     }
-
-    fun isFinished(): Boolean = current() == null
 }
 
 fun interface DialogueConditionEvaluator {

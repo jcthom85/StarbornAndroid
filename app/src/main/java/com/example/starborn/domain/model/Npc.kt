@@ -9,7 +9,8 @@ data class Npc(
     val interactions: List<Interaction>,
     val role: String? = null,
     val description: String? = null,
-    val id: String? = null
+    val id: String? = null,
+    val portrait: String? = null
 )
 
 data class Interaction(

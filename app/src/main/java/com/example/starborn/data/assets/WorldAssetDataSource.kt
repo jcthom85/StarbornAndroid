@@ -6,7 +6,10 @@ import com.example.starborn.domain.model.Npc
 import com.example.starborn.domain.model.Player
 import com.example.starborn.domain.model.Room
 import com.example.starborn.domain.model.Skill
+import com.example.starborn.domain.model.StatusDefinition
 import com.example.starborn.domain.model.World
+import com.example.starborn.domain.leveling.LevelingData
+import com.example.starborn.domain.leveling.ProgressionData
 
 class WorldAssetDataSource(
     private val assetReader: AssetJsonReader
@@ -25,4 +28,10 @@ class WorldAssetDataSource(
     fun loadNpcs(): List<Npc> = assetReader.readList("npcs.json")
 
     fun loadSkills(): List<Skill> = assetReader.readList("skills.json")
+
+    fun loadStatuses(): List<StatusDefinition> = assetReader.readList("statuses.json")
+
+    fun loadLevelingData(): LevelingData? = assetReader.readObject("leveling_data.json")
+
+    fun loadProgressionData(): ProgressionData? = assetReader.readObject("progression.json")
 }

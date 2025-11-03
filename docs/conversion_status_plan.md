@@ -1,6 +1,6 @@
 # Starborn Port – Status & Forward Plan (Session Hand-off)
 
-Context: Evaluation performed after completing Phase 1 (exploration parity, quest pipeline, tinkering screen). This document compares the Android/Kotlin project against the original Python/Kivy game (`~/AndroidStudioProjects/Starborn/Starborn_Python`) and outlines the next execution plan.
+Context: Evaluation captured after wrapping Phase 2C (progression systems, cooking/first-aid polish, shop greetings, autosave tooling). This document compares the Android/Kotlin project against the original Python/Kivy game (`~/AndroidStudioProjects/Starborn/Starborn_Python`) and outlines the next execution plan.
 
 ---
 
@@ -8,70 +8,73 @@ Context: Evaluation performed after completing Phase 1 (exploration parity, ques
 | Feature / System | Kotlin Status | Python Reference | Notes |
 |------------------|---------------|------------------|-------|
 | **Asset loading & repositories** | ✅ | `data/*.json`, `item_repository.py` | Moshi models cover rooms, items, events, characters; more schema verification needed. |
-| **Session management** | ✅ Base | `game_session.py`, `game.py` | `GameSessionStore` tracks room/world/player, quests, milestones, learned schematics. No persistence yet. |
-| **Event engine** | ⚠️ Partial | `event_manager.py` | Core trigger dispatch present; milestone/quest hooks implemented, but cinematics/tutorial system still basic. |
-| **Dialogue** | ⚠️ Partial | `dialogue_manager.py` | Dialogue service parses JSON and advances lines; lacks branching choices, portraits, audio cues. |
-| **Exploration loop** | ✅ Phase-1 parity | `game.py` (`ExplorationScreen`, `Bag`) | Room navigation, quest progression, loot drops, milestone/narration overlays, inventory/tinkering routing implemented. Hotspots/minimap still to do. |
-| **Inventory UI/logic** | ✅ First pass | `ui/bag_screen.py`, `game_objects.Bag` | List/detail/use flows working; equipment management and sorting TBD. |
-| **Crafting services/UI** | ⚠️ Partial | `crafting_manager.py`, `ui/tinkering_screen.py` | Recipe logic ready; tinkering Compose screen added. Cooking/first aid minigames still missing. |
-| **Combat** | 🚧 Not started | `combat_manager.py`, `ui/combat_screen.py` | Only navigation hook exists. Need domain model + Compose battle UI. |
+| **Session management** | ✅ | `game_session.py`, `game.py` | `GameSessionStore` now persists via DataStore with autosave cadence, slot management, and legacy import hook. |
+| **Event engine** | ⚠️ Partial | `event_manager.py` | Core trigger dispatch present; milestone/quest hooks implemented, but cinematic queueing and scripted tutorials still need parity passes. |
+| **Dialogue** | ⚠️ Partial | `dialogue_manager.py` | Dialogue service parses JSON, portraits/VO surface in Compose, and shop greetings leverage choice tags; cinematic sequencing + portrait alignment remain. |
+| **Exploration loop** | ✅ Phase-2C slice | `game.py` (`ExplorationScreen`, `Bag`) | Room navigation, quest progression, loot drops, minimap service glyphs, crafting/shop routing, milestone/narration overlays in place. Outstanding polish: art-driven hotspots and direction ring flourish. |
+| **Inventory UI/logic** | ✅ First pass | `ui/bag_screen.py`, `game_objects.Bag` | List/detail/use flows working; equipment management and advanced sorting TBD. |
+| **Crafting services/UI** | ⚠️ Partial | `crafting_manager.py`, `ui/tinkering_screen.py` | Tinkering plus tuned cooking/first-aid timing bars (with FX/audio hooks) implemented; authored failure tutorials and fishing loop still pending. |
+| **Combat** | ✅ Phase-2A parity | `combat_manager.py`, `ui/combat_screen.py` | Multi-party support, reward pipeline, FX overlays, support cues, and defeat/retreat cinematics all implemented. |
 | **Quests/Milestones/Tutorials** | ⚠️ Partial | `quest_manager.py`, `tutorial_manager.py` | Quest metadata loaded, objectives tracked, milestone banners in place. Tutorial system still basic; quest journal detail view TBD. |
-| **Shops, radial menu, minigames** | 🚧 Not started | `ui/shop_screen.py`, `ui/radial_menu.py`, etc. | No Kotlin equivalents yet. |
-| **Audio/theme/shaders** | 🚧 Not started | `sound_manager.py`, `theme_manager.py`, `vfx.py` | Android project currently silent with static backgrounds. |
-| **Persistence (Save/Load)** | 🚧 Not started | `save_system.py` | No save slots or serialization in Kotlin. |
-| **Tooling/tests** | ⚠️ Minimal | Python tools, pytest scripts | JVM tests cover inventory/crafting/event logic; combat/event integration tests still needed. |
+| **Shops, radial menu, minigames** | ⚠️ Partial | `ui/shop_screen.py`, `ui/radial_menu.py`, etc. | Shop flow includes greetings, dialogue choices, VO, and FX routing; fishing minigame now mirrors timing loop but radial menu/vendor scripting still upcoming. |
+| **Audio/theme/shaders** | ⚠️ Partial | `sound_manager.py`, `theme_manager.py`, `vfx.py` | AudioRouter now applies catalogue-driven fades/looping; ambience/music layering in place, shader-driven theming still pending. |
+| **Persistence (Save/Load)** | ⚠️ Partial | `save_system.py` | Autosave cadence, slot timestamps, legacy quest/milestone migration implemented; cloud backup story outstanding. |
+| **Tooling/tests** | ⚠️ Minimal | Python tools, pytest scripts | Added persistence regression tests; still need combat/event integration coverage and CI wiring. |
 
 ---
 
 ## 2. Key Deltas vs Python Implementation
 1. **Room actions & state mutations**  
-   - Python `ExplorationScreen` flips breakers, lights, etc., updating room state and unlocking exits. Kotlin now tracks state but lacks logic to re-evaluate blocked directions, spawn events, or update visuals. |
-2. **Inventory Integration**  
-   - Python handles pickups, loot tables, and contextual prompts; Kotlin needs event-driven item acquisition (currently mostly status messages). |
-3. **Combat Pipeline**  
-   - None of the Python combat stack (initiative, skills, FX) has been ported yet; blockers for mid-game parity. |
+   - Direction ring and hotspot overlays are live, but event-driven room art, blocked-exit cinematics, and automatic encounter spawns still trail the Python flow. |
+2. **Inventory integration**  
+   - Loot cards and ground item pickup flows are working; shop greetings and vendor VO now live, but contextual prompts for hub services still trail Python. |
+3. **Combat pipeline**  
+   - Turn order, targeting, and rewards are ported; cinematic FX, ally support scripting, and defeat/retreat story beats remain. |
 4. **Quest Flow & Tutorials**  
    - Python uses event hooks to start quests, pop tutorials, and manage cinematics. Kotlin stubs exist but require UI + logic to match original pacing. |
-5. **UI Fidelity**  
-   - Compose layouts are minimal; Python uses layered canvases, particle effects, and theming. Visual parity will demand significant Compose/AGSL work. |
+5. **UI fidelity**  
+   - Exploration HUD mirrors core layout, but minimap, particle FX, and shader-based theming still need Android counterparts. |
 6. **Persistence & Progression**  
    - Save slots, load on boot, and long-term progression (skills, XP curves) remain unimplemented. |
 
 ---
 
-## 3. Immediate Next Steps (Phase 2 Kickoff)
-1. **Combat foundations**
-   - Port combat domain models (stats, actions, turn queue, status effects) from Python.
-   - Build a `CombatViewModel` and Compose battle UI (timeline, action buttons).
-   - Wire `ExplorationEvent.EnterCombat` to launch the new screen and return results.
-2. **Crafting lineup expansion**
-   - Extend crafting UI to include ingredient availability, filtering, and feedback.
-   - Begin cooking/first-aid flow stubs that reuse crafting data.
-3. **Dialogue & cinematic polish**
-   - Add branching dialogue options and richer tutorial/cutscene handling using the new narration pipeline.
-4. **Testing/QA**
-   - Unit tests for combat calculations and quest progress.
-   - Integration tests that simulate event chains (breaker toggles, quest pickups).
+> Phase 2C milestone shipped: progression overlays, tuned cooking/first-aid loops, shop greetings with dialogue choices, minimap service glyphs, and autosave metadata/timestamps are live. Focus now shifts to Phase 3 systems and overlays.
 
-Deliverable: combat prototype battle + tuning so Phase 2 can iterate on combat/progression systems.
+### Current Session Highlights
+- Added runtime `MilestoneRuntimeManager` with DataStore-backed history, wiring milestone prompts/bands to Compose via `ExplorationViewModel`.
+- Expanded `QuestRuntimeManager` with tracked quest state, task logs, and quest journal summaries surfaced in the exploration HUD.
+- Upgraded tutorial runtime to support delayed scheduling/cancellation and mirrored the Python light-switch/swipe guidance flow in Kotlin.
+- Extended `GameSessionState`/proto schema to persist tracked/failed quests and milestone history; refreshed unit tests remain green.
+
+## 3. Immediate Next Steps (Phase 3 – Systems & Overlays)
+1. **Quest/tutorial runtime services**
+   - Promote scripted tutorials and milestone callbacks from stubs to full managers, wiring them into dialogue/effect queues.
+2. **Minigame expansion**  
+   - Fishing timing loop implemented with feedback; next: author failure/tutorial beats for cooking/first-aid and integrate remaining minigames.
+3. **Hub & radial menu polish**
+   - Implement radial service menu, contextual hotspot art, and vendor branch scripting (smalltalk, wares preview, rotating stock).
+4. **Audio layering & ambience**
+   - AudioRouter reads new catalogue metadata; next step is tightening cue coverage and routing per scene.
+
+Deliverable: Phase 3 milestone—system managers (quests/tutorials/milestones), fully authored hub interactions (shops, radial menu), expanded minigames (fishing + remaining side loops), and layered ambience/music playback.
 
 ---
 
-## 4. Near-Term Roadmap (Phase 2 Prep)
+## 4. Near-Term Roadmap
 | Sprint Goal | Tasks | Dependencies |
 |-------------|-------|--------------|
-| **Combat foundations** | - Port combat domain models (stats, actions, turn queue) from `combat_manager.py`.<br>- Build `CombatViewModel` + basic Compose UI mirroring initiative order.<br>- Wire exploration `EnterCombat` to start simulated battles. | Requires finalized item/skill data schema; ensure inventory consumables integrate. |
-| **Quest/Tutorial surfaces** | - Enhance quest journal (detail panel, objective markers).<br>- Port tutorial manager to display overlays (text + triggers). | Event hooks already firing; need richer UI. |
-| **Crafting UI expansion** | - Polish tinkering screen with available/locked recipes, resource checks.<br>- Prototype cooking/first-aid minigame stubs. | Requires expanded crafting data and UX. |
+| **Phase 3 – Systems & overlays** | - Implement quest/tutorial/milestone managers with queued prompts.<br>- Deliver fishing & ancillary minigames using timing presets.<br>- Build radial service menu, shop branch authoring, and ambience/music layering. | Requires updated narrative scripts, audio asset mapping, and final fishing specs. |
+| **Phase 4 – Visual & audio fidelity** | - Compose shader/VFX pass (vignette, weather, damage numbers).<br>- Scene theming & accessibility polish.<br>- Voiceover mixing, runtime audio settings, haptics. | Dependent on stabilized visual style guide and audio stems. |
 
 ---
 
 ## 5. Longer-Term Considerations
-- **Persistence**: choose data layer (Room/DataStore) to persist `GameSessionState`, inventory, and learned schematics. Adopt migration path for future updates.
-- **Visual Identity**: plan Compose theme/shader workstream—likely separate from core gameplay tasks to avoid blocking functionality. |
-- **Audio Architecture**: evaluate using ExoPlayer + SoundPool; map Python audio router to Android channels. |
-- **Tooling**: determine whether to port Python editors or create scripts to convert assets/build data. |
-- **QA & CI**: set up Git repository, CI workflows (Gradle lint/tests), and manual QA checklists early to catch regressions as systems grow. |
+- **Persistence**: add cloud/backup strategy once local slots stabilize; evaluate schema migration testing in CI.
+- **Visual Identity**: schedule shader/theming workstream (likely parallel to Phase 4 once art direction is locked). |
+- **Audio Architecture**: weigh ExoPlayer + SoundPool hybrid, integrate ambience cue definitions. |
+- **Tooling**: decide on Python → Kotlin asset converters vs. maintaining legacy editors. |
+- **QA & CI**: automate `./gradlew lint test` in CI; expand instrumentation smoke tests after mobile navigation solidifies. |
 
 ---
 

@@ -17,6 +17,20 @@ class InventoryService(
         _state.value = items.values.toList()
     }
 
+    fun snapshot(): Map<String, Int> = items.mapValues { it.value.quantity }.filterValues { it > 0 }
+
+    fun restore(entries: Map<String, Int>) {
+        itemCatalog.load()
+        items.clear()
+        entries.forEach { (id, quantity) ->
+            val normalizedQuantity = quantity.coerceAtLeast(0)
+            if (normalizedQuantity <= 0) return@forEach
+            val item = itemCatalog.findItem(id) ?: return@forEach
+            items[id] = InventoryEntry(item = item, quantity = normalizedQuantity)
+        }
+        publish()
+    }
+
     fun addItem(idOrAlias: String, quantity: Int = 1) {
         val item = itemCatalog.findItem(idOrAlias) ?: return
         val entry = items.getOrPut(item.id) { InventoryEntry(item, 0) }

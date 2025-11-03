@@ -19,7 +19,16 @@ class ExplorationViewModelFactory(
                 dialogueService = services.dialogueService,
                 inventoryService = services.inventoryService,
                 craftingService = services.craftingService,
+                cinematicService = services.cinematicService,
                 questRepository = services.questRepository,
+                questRuntimeManager = services.questRuntimeManager,
+                milestoneManager = services.milestoneManager,
+                audioRouter = services.audioRouter,
+                shopRepository = services.shopRepository,
+                levelingManager = services.levelingManager,
+                tutorialManager = services.tutorialManager,
+                promptManager = services.promptManager,
+                fishingService = services.fishingService,
                 eventDefinitions = services.events
             ) as T
         }

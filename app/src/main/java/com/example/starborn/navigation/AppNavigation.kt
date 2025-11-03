@@ -1,15 +1,23 @@
 package com.example.starborn.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import android.net.Uri
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.NavHostController
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import com.example.starborn.feature.combat.ui.CombatScreen
+import com.example.starborn.feature.combat.viewmodel.CombatViewModel
+import com.example.starborn.feature.combat.viewmodel.CombatViewModelFactory
 import com.example.starborn.feature.mainmenu.ui.MainMenuScreen
+import com.example.starborn.feature.mainmenu.MainMenuViewModel
+import com.example.starborn.feature.mainmenu.MainMenuViewModelFactory
 import com.example.starborn.feature.exploration.ui.ExplorationScreen
 import com.example.starborn.feature.inventory.InventoryViewModel
 import com.example.starborn.feature.inventory.InventoryViewModelFactory
@@ -19,6 +27,10 @@ import com.example.starborn.navigation.NavigationDestination.Exploration
 import com.example.starborn.navigation.NavigationDestination.MainMenu
 import com.example.starborn.navigation.NavigationDestination.Inventory
 import com.example.starborn.navigation.NavigationDestination.Tinkering
+import com.example.starborn.navigation.NavigationDestination.Cooking
+import com.example.starborn.navigation.NavigationDestination.FirstAid
+import com.example.starborn.navigation.NavigationDestination.Shop
+import com.example.starborn.navigation.NavigationDestination.Fishing
 import com.example.starborn.di.AppServices
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -27,6 +39,20 @@ import com.example.starborn.feature.exploration.viewmodel.ExplorationViewModelFa
 import com.example.starborn.feature.crafting.CraftingViewModel
 import com.example.starborn.feature.crafting.CraftingViewModelFactory
 import com.example.starborn.feature.crafting.ui.TinkeringRoute
+import com.example.starborn.navigation.CombatResultPayload
+import com.example.starborn.feature.shop.ShopViewModel
+import com.example.starborn.feature.shop.ShopViewModelFactory
+import com.example.starborn.feature.shop.ui.ShopRoute
+import com.example.starborn.feature.crafting.CookingViewModel
+import com.example.starborn.feature.crafting.CookingViewModelFactory
+import com.example.starborn.feature.crafting.FirstAidViewModel
+import com.example.starborn.feature.crafting.FirstAidViewModelFactory
+import com.example.starborn.feature.crafting.ui.CookingRoute
+import com.example.starborn.feature.crafting.ui.FirstAidRoute
+import com.example.starborn.feature.fishing.viewmodel.FishingResultPayload
+import com.example.starborn.feature.fishing.viewmodel.FishingViewModel
+import com.example.starborn.feature.fishing.viewmodel.FishingViewModelFactory
+import com.example.starborn.feature.fishing.ui.FishingRoute
 
 @Composable
 fun NavigationHost(navController: NavHostController = rememberNavController()) {
@@ -37,19 +63,109 @@ fun NavigationHost(navController: NavHostController = rememberNavController()) {
         startDestination = MainMenu.route
     ) {
         composable(MainMenu.route) {
-            MainMenuScreen(onStartGame = {
-                navController.navigate(Exploration.route)
-            })
+            val mainMenuViewModel: MainMenuViewModel = viewModel(factory = MainMenuViewModelFactory(services))
+            MainMenuScreen(
+                viewModel = mainMenuViewModel,
+                onStartGame = {
+                    navController.navigate(Exploration.route)
+                },
+                onSlotLoaded = {
+                    navController.navigate(Exploration.route)
+                }
+            )
         }
-        composable(Exploration.route) {
+        composable(Exploration.route) { backStackEntry ->
             val explorationViewModel: ExplorationViewModel = viewModel(factory = ExplorationViewModelFactory(services))
+            LaunchedEffect(backStackEntry) {
+                val victoryFlow = backStackEntry.savedStateHandle
+                    .getStateFlow("combat_victory", emptyList<String>())
+                val resultFlow = backStackEntry.savedStateHandle
+                    .getStateFlow("combat_result", CombatResultPayload.EMPTY)
+                val tinkeringClosedFlow = backStackEntry.savedStateHandle
+                    .getStateFlow("tinkering_closed", false)
+                val tinkeringCraftFlow = backStackEntry.savedStateHandle
+                    .getStateFlow("tinkering_craft", "")
+                val fishingResultFlow = backStackEntry.savedStateHandle
+                    .getStateFlow("fishing_result", null as FishingResultPayload?)
+
+                launch {
+                    victoryFlow.collect { defeatedIds ->
+                        if (defeatedIds.isNotEmpty()) {
+                            explorationViewModel.onCombatVictory(
+                                CombatResultPayload(
+                                    outcome = CombatResultPayload.Outcome.VICTORY,
+                                    enemyIds = defeatedIds
+                                )
+                            )
+                            backStackEntry.savedStateHandle["combat_victory"] = emptyList<String>()
+                        }
+                    }
+                }
+
+                launch {
+                    resultFlow.collect { result ->
+                        if (!result.isPlaceholder) {
+                            when (result.outcome) {
+                                CombatResultPayload.Outcome.VICTORY ->
+                                    explorationViewModel.onCombatVictory(result)
+                                CombatResultPayload.Outcome.DEFEAT ->
+                                    explorationViewModel.onCombatDefeat(result.enemyIds)
+                                CombatResultPayload.Outcome.RETREAT ->
+                                    explorationViewModel.onCombatRetreat(result.enemyIds)
+                            }
+                            backStackEntry.savedStateHandle["combat_result"] = CombatResultPayload.EMPTY
+                        }
+                    }
+                }
+
+                launch {
+                    tinkeringClosedFlow.collect { closed ->
+                        if (closed) {
+                            explorationViewModel.onTinkeringClosed()
+                            backStackEntry.savedStateHandle["tinkering_closed"] = false
+                        }
+                    }
+                }
+
+                launch {
+                    tinkeringCraftFlow.collect { craftedId ->
+                        if (!craftedId.isNullOrBlank()) {
+                            explorationViewModel.onTinkeringCrafted(craftedId)
+                            backStackEntry.savedStateHandle["tinkering_craft"] = ""
+                        }
+                    }
+                }
+
+                launch {
+                    fishingResultFlow.collect { payload ->
+                        if (payload != null) {
+                            explorationViewModel.onFishingResult(payload)
+                            backStackEntry.savedStateHandle["fishing_result"] = null
+                        }
+                    }
+                }
+            }
             ExplorationScreen(
-                onEnemySelected = { enemyId ->
-                    navController.navigate(Combat.create(enemyId))
+                viewModel = explorationViewModel,
+                audioCuePlayer = services.audioCuePlayer,
+                onEnemySelected = { enemyIds ->
+                    if (enemyIds.isNotEmpty()) {
+                        navController.navigate(Combat.create(enemyIds))
+                    }
                 },
                 onOpenInventory = { navController.navigate(Inventory.route) },
-                onOpenTinkering = { navController.navigate(Tinkering.route) },
-                viewModel = explorationViewModel
+                onOpenTinkering = {
+                    backStackEntry.savedStateHandle["tinkering_closed"] = false
+                    backStackEntry.savedStateHandle["tinkering_craft"] = ""
+                    navController.navigate(Tinkering.route)
+                },
+                onOpenCooking = { navController.navigate(Cooking.route) },
+                onOpenFirstAid = { navController.navigate(FirstAid.route) },
+                onOpenFishing = { zoneId -> navController.navigate(Fishing.create(zoneId)) },
+                onOpenShop = { shopId ->
+                    navController.navigate(Shop.create(shopId))
+                },
+                fxEvents = services.uiFxBus.fxEvents
             )
         }
         composable(Inventory.route) {
@@ -68,16 +184,109 @@ fun NavigationHost(navController: NavHostController = rememberNavController()) {
             val craftingViewModel: CraftingViewModel = viewModel(factory = CraftingViewModelFactory(services.craftingService))
             TinkeringRoute(
                 viewModel = craftingViewModel,
-                onBack = { navController.popBackStack() }
+                onBack = { navController.popBackStack() },
+                onCrafted = { result ->
+                    navController.previousBackStackEntry
+                        ?.savedStateHandle
+                        ?.set("tinkering_craft", result.itemId)
+                },
+                onClosed = {
+                    navController.previousBackStackEntry
+                        ?.savedStateHandle
+                        ?.set("tinkering_closed", true)
+                }
+            )
+        }
+        composable(Cooking.route) {
+            val cookingViewModel: CookingViewModel = viewModel(factory = CookingViewModelFactory(services))
+            CookingRoute(
+                viewModel = cookingViewModel,
+                onBack = { navController.popBackStack() },
+                onPlayAudio = { cue ->
+                    services.audioCuePlayer.execute(services.audioRouter.commandsForUi(cue))
+                },
+                onTriggerFx = services.uiFxBus::trigger
+            )
+        }
+        composable(FirstAid.route) {
+            val firstAidViewModel: FirstAidViewModel = viewModel(factory = FirstAidViewModelFactory(services))
+            FirstAidRoute(
+                viewModel = firstAidViewModel,
+                onBack = { navController.popBackStack() },
+                onPlayAudio = { cue ->
+                    services.audioCuePlayer.execute(services.audioRouter.commandsForUi(cue))
+                },
+                onTriggerFx = services.uiFxBus::trigger
             )
         }
         composable(
-            route = Combat.route,
-            arguments = listOf(navArgument("enemyId") { type = NavType.StringType })
+            route = Fishing.route,
+            arguments = listOf(
+                navArgument("zoneId") {
+                    type = NavType.StringType
+                    nullable = true
+                    defaultValue = null
+                }
+            )
         ) { backStackEntry ->
-            backStackEntry.arguments
-                ?.getString("enemyId")
-                ?.let { CombatScreen(navController, it) }
+            val zoneId = backStackEntry.arguments?.getString("zoneId")
+            if (zoneId != null) {
+                val fishingViewModel: FishingViewModel = viewModel(factory = FishingViewModelFactory(services.fishingService, zoneId))
+                FishingRoute(
+                    viewModel = fishingViewModel,
+                    onBack = { navController.popBackStack() },
+                    onFinish = { result ->
+                        if (result != null) {
+                            navController.previousBackStackEntry
+                                ?.savedStateHandle
+                                ?.set("fishing_result", result)
+                        }
+                        navController.popBackStack()
+                    }
+                )
+            } else {
+                navController.popBackStack()
+            }
+        }
+        composable(
+            route = Combat.route,
+            arguments = listOf(navArgument("enemyIds") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val encoded = backStackEntry.arguments?.getString("enemyIds")
+            val enemyIds = encoded
+                ?.let { Uri.decode(it) }
+                ?.split(',')
+                ?.mapNotNull { id -> id.takeIf { it.isNotBlank() } }
+                ?.distinct()
+                ?.ifEmpty { null }
+            if (enemyIds != null) {
+                val combatViewModel: CombatViewModel = viewModel(
+                    factory = CombatViewModelFactory(services, enemyIds)
+                )
+                CombatScreen(
+                    navController = navController,
+                    viewModel = combatViewModel,
+                    audioCuePlayer = services.audioCuePlayer
+                )
+            }
+        }
+        composable(
+            route = Shop.route,
+            arguments = listOf(navArgument("shopId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val encoded = backStackEntry.arguments?.getString("shopId")
+            val shopId = encoded?.let { Uri.decode(it) }
+            if (!shopId.isNullOrBlank()) {
+                val shopViewModel: ShopViewModel = viewModel(
+                    factory = ShopViewModelFactory(services, shopId)
+                )
+                ShopRoute(
+                    viewModel = shopViewModel,
+                    onBack = { navController.popBackStack() }
+                )
+            } else {
+                navController.popBackStack()
+            }
         }
     }
 }

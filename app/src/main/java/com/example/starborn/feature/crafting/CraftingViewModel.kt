@@ -24,6 +24,9 @@ class CraftingViewModel(
     private val _messages = MutableSharedFlow<String>()
     val messages: SharedFlow<String> = _messages.asSharedFlow()
 
+    private val _craftResults = MutableSharedFlow<CraftingOutcome.Success>()
+    val craftResults: SharedFlow<CraftingOutcome.Success> = _craftResults.asSharedFlow()
+
     init {
         loadRecipes()
     }
@@ -36,7 +39,10 @@ class CraftingViewModel(
         viewModelScope.launch {
             val outcome = craftingService.craftTinkering(id)
             val message = when (outcome) {
-                is CraftingOutcome.Success -> outcome.message ?: "Crafted ${outcome.itemId}."
+                is CraftingOutcome.Success -> {
+                    _craftResults.emit(outcome)
+                    outcome.message ?: "Crafted ${outcome.itemId}."
+                }
                 is CraftingOutcome.Failure -> outcome.message
             }
             _messages.emit(message ?: "Crafting complete.")

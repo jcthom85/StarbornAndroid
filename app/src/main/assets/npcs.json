@@ -21,6 +21,7 @@
         "id": "jed",
         "aliases": [],
         "dialogue": {},
+        "portrait": "images/npcs/pasha.png",
         "interactions": [
             {
                 "label": "Talk",
@@ -33,6 +34,7 @@
         "name": "Maddie",
         "aliases": [],
         "dialogue": {},
+        "portrait": "images/npcs/jed.png",
         "interactions": [
             {
                 "label": "Talk",
@@ -64,6 +66,7 @@
         "name": "Ellie",
         "aliases": [],
         "dialogue": {},
+        "portrait": "images/npcs/maddie.png",
         "interactions": [
             {
                 "label": "Talk",
@@ -94,6 +97,7 @@
         "name": "Schoolteacher Kasey",
         "aliases": [],
         "dialogue": {},
+        "portrait": "images/npcs/ollie.png",
         "interactions": [
             {
                 "label": "Talk",

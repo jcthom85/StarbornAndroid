@@ -19,30 +19,42 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.starborn.domain.model.TinkeringRecipe
 import com.example.starborn.feature.crafting.CraftingViewModel
-import com.example.starborn.feature.crafting.CraftingViewModelFactory
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.starborn.domain.crafting.CraftingOutcome
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TinkeringRoute(
     viewModel: CraftingViewModel,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    onCrafted: (CraftingOutcome.Success) -> Unit,
+    onClosed: () -> Unit
 ) {
     val recipes = viewModel.recipes.collectAsState()
     val snackbarHost = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
-        viewModel.messages.collectLatest { message ->
-            snackbarHost.showSnackbar(message)
+        launch {
+            viewModel.messages.collectLatest { message ->
+                snackbarHost.showSnackbar(message)
+            }
         }
+        launch {
+            viewModel.craftResults.collectLatest { onCrafted(it) }
+        }
+    }
+
+    androidx.compose.runtime.DisposableEffect(Unit) {
+        onDispose { onClosed() }
     }
 
     TinkeringScreen(

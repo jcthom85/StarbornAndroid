@@ -1471,5 +1471,128 @@
       }
     ],
     "repeatable": true
+  },
+  {
+    "id": "event_tutorial_encounter_defeat",
+    "description": "Show tutorial after the player loses a combat.",
+    "trigger": {
+      "type": "encounter_defeat"
+    },
+    "repeatable": false,
+    "actions": [
+      {
+        "type": "if_milestone_not_set",
+        "milestone": "ms_tutorial_encounter_defeat",
+        "do": [
+          {
+            "type": "show_message",
+            "message": "You were overwhelmed. Try using shields, items, or a different approach."
+          },
+          {
+            "type": "play_cinematic",
+            "scene_id": "scene_encounter_defeat_tip"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_tutorial_encounter_defeat"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "event_tutorial_encounter_retreat",
+    "description": "Provide guidance after the player retreats from combat.",
+    "trigger": {
+      "type": "encounter_retreat"
+    },
+    "repeatable": false,
+    "actions": [
+      {
+        "type": "if_milestone_not_set",
+        "milestone": "ms_tutorial_encounter_retreat",
+        "do": [
+          {
+            "type": "show_message",
+            "message": "Retreat successful. Restock or craft items before re-engaging."
+          },
+          {
+            "type": "play_cinematic",
+            "scene_id": "scene_encounter_retreat_tip"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_tutorial_encounter_retreat"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_player_fishing_success",
+    "description": "Handles the first successful catch and introduces fishing tutorials.",
+    "trigger": {
+      "type": "player_action",
+      "action": "fishing_success"
+    },
+    "repeatable": true,
+    "actions": [
+      {
+        "type": "if_milestone_not_set",
+        "milestone": "ms_fishing_first_catch",
+        "do": [
+          {
+            "type": "set_milestone",
+            "milestone": "ms_fishing_first_catch"
+          },
+          {
+            "type": "system_tutorial",
+            "scene_id": "fishing_basics",
+            "context": "Watch the timing bar and tap when the marker overlaps the highlighted zone."
+          },
+          {
+            "type": "show_message",
+            "message": "That catch will make a fine meal."
+          }
+        ],
+        "else": [
+          {
+            "type": "show_message",
+            "message": "You’re getting the hang of the timing."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_player_fishing_failed",
+    "description": "Offers gentle encouragement after a missed catch.",
+    "trigger": {
+      "type": "player_action",
+      "action": "fishing_failed"
+    },
+    "repeatable": true,
+    "actions": [
+      {
+        "type": "if_milestone_not_set",
+        "milestone": "ms_fishing_encouragement_shown",
+        "do": [
+          {
+            "type": "set_milestone",
+            "milestone": "ms_fishing_encouragement_shown"
+          },
+          {
+            "type": "show_message",
+            "message": "Patience. Cast again when you’re ready."
+          }
+        ],
+        "else": [
+          {
+            "type": "show_message",
+            "message": "Easy does it—try adjusting your timing."
+          }
+        ]
+      }
+    ]
   }
 ]

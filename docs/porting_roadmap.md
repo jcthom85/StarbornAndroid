@@ -12,11 +12,11 @@
 - Implement `DialogueService` and Compose `DialogueOverlay` using existing JSON; support triggers → EventEngine stub.
 - Deliver walking flow: load save → hub → node map → room transitions with dialogue popups and inventory pickup.
 
-## Phase 2 – Combat & Progression (Weeks 3-6)
-- Port combat domain (turn queue, stats, buffs, resistances) with deterministic unit tests.
-- Compose combat UI (timeline, actions, FX placeholders) and integrate `CombatEngine`.
-- Implement XP/AP rewards, leveling curves, loot drops, and victory/defeat flows.
-- Hook combat launches from room encounters and blocked exits.
+## Phase 2 – Encounter Loop & Exploration Shell (Weeks 3-6)
+- **2A Combat polish**: add turn timeline/FX overlays, multi-target selection, ally skills, status badges, and scripted defeat/retreat flows. Extend tests to cover DOT/buffs/loot. 
+- **2B Exploration overlays**: recreate direction markers, hotspot cards, dialogue choices, quest log panel, tutorial/milestone popups, and narration banners. Ensure room state toggles unlock exits and spawn encounters. 
+- **2C Progression kickoff**: design level-up ribbon/skill unlock overlays, storyboard hub/shop UX, and scope cooking/first-aid minigames alongside save-slot UI entry points.
+- **Data validation**: lock JSON schema for enemies/skills/dialogue choices; add regression tests for encounter + event chains.
 
 ## Phase 3 – Systems & Overlays (Weeks 6-9)
 - Quest/Milestone/Tutorial managers with Compose popups; connect to Dialogue/Event triggers.
@@ -41,8 +41,8 @@
 - Tooling integration: decide whether to port Python content generators or embed them as external steps.
 
 ## Immediate Next Sprint Backlog
-1. Scaffold `core`, `domain`, `data`, `ui`, `feature.mainmenu`, `feature.exploration`, `feature.combat` packages inside `app`.
-2. Implement Moshi models for Worlds/Hubs/Nodes/Rooms/Characters/Enemies/Skills, including adapters for optional fields.
-3. Prototype `GameSessionStore` (StateFlow + SavedStateHandle) and load initial world graph on app launch.
-4. Replace `StarbornUI()` placeholder with layered Compose structure showing room background + basic HUD.
-5. Add unit tests validating JSON parsing against sample assets (`worlds.json`, `rooms.json`, `enemies.json`).
+1. Ship quest/tutorial/milestone managers with queued overlays and dialogue triggers.
+2. Implement fishing minigame UI + logic using timing preset infrastructure; author failure tutorials for existing crafting stations.
+3. Build radial service menu and hub hotspot art, wiring shop smalltalk branches and rotating stock definitions.
+4. Extend `AudioRouter` with ambience/music layering, fade helpers, and author cue metadata.
+5. Expand JVM test suite (quest/milestone migration, dialogue branching) and stand up CI task for `lint` + `test`.

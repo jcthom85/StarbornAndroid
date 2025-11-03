@@ -40,12 +40,36 @@ class CraftingService(
     fun isSchematicLearned(schematicId: String): Boolean =
         schematicId.isNotBlank() && schematicId in sessionStore.state.value.learnedSchematics
 
-    fun craftCooking(recipeId: String): CraftingOutcome {
+    fun craftCooking(recipeId: String, outcome: MinigameResult = MinigameResult.SUCCESS): CraftingOutcome {
         val recipe = cookingRecipes.find { it.id == recipeId } ?: return CraftingOutcome.Failure("Unknown recipe")
         if (!canCraft(recipe)) return CraftingOutcome.Failure("Missing ingredients")
         if (!inventoryService.consumeItems(recipe.ingredients)) return CraftingOutcome.Failure("Unable to consume ingredients")
-        inventoryService.addItem(recipe.result, 1)
-        return CraftingOutcome.Success(recipe.result, message = "Cooked ${recipe.name}")
+        val minigame = recipe.minigame
+        return when (outcome) {
+            MinigameResult.FAILURE -> CraftingOutcome.Failure(
+                message = "The recipe went wrong. Try again.",
+                audioCue = minigame?.failureCue,
+                fxId = minigame?.failureFx
+            )
+            MinigameResult.SUCCESS -> {
+                inventoryService.addItem(recipe.result, 1)
+                CraftingOutcome.Success(
+                    itemId = recipe.result,
+                    message = "Cooked ${recipe.name}",
+                    audioCue = minigame?.successCue,
+                    fxId = minigame?.successFx
+                )
+            }
+            MinigameResult.PERFECT -> {
+                inventoryService.addItem(recipe.result, 1)
+                CraftingOutcome.Success(
+                    itemId = recipe.result,
+                    message = "Perfectly cooked ${recipe.name}!",
+                    audioCue = minigame?.perfectCue ?: minigame?.successCue,
+                    fxId = minigame?.successFx
+                )
+            }
+        }
     }
 
     fun craftTinkering(recipeId: String): CraftingOutcome {
@@ -62,22 +86,77 @@ class CraftingService(
         return CraftingOutcome.Success(recipe.result, "Crafted ${recipe.name}")
     }
 
-    fun craftFirstAid(recipeId: String): CraftingOutcome {
+    fun craftFirstAid(recipeId: String, outcome: MinigameResult = MinigameResult.SUCCESS): CraftingOutcome {
         val recipe = firstAidRecipes.find { it.id == recipeId } ?: return CraftingOutcome.Failure("Unknown recipe")
         if (!canCraft(recipe)) return CraftingOutcome.Failure("Missing ingredients")
         if (!inventoryService.consumeItems(recipe.ingredients)) return CraftingOutcome.Failure("Unable to consume ingredients")
-        val resultId = recipe.output.success
-        inventoryService.addItem(resultId, 1)
-        return CraftingOutcome.Success(resultId, "Prepared ${recipe.name}")
+        val minigame = recipe.minigame
+        return when (outcome) {
+            MinigameResult.FAILURE -> {
+                val failureId = recipe.output.failure
+                if (failureId.isNullOrBlank()) {
+                    CraftingOutcome.Failure(
+                        message = "The kit falls apart in your hands.",
+                        audioCue = minigame?.failureCue,
+                        fxId = minigame?.failureFx
+                    )
+                } else {
+                    inventoryService.addItem(failureId, 1)
+                    CraftingOutcome.Success(
+                        itemId = failureId,
+                        message = "You salvage $failureId from the failed attempt.",
+                        audioCue = minigame?.failureCue,
+                        fxId = minigame?.failureFx
+                    )
+                }
+            }
+            MinigameResult.SUCCESS -> {
+                val resultId = recipe.output.success
+                inventoryService.addItem(resultId, 1)
+                CraftingOutcome.Success(
+                    itemId = resultId,
+                    message = "Prepared ${recipe.name}",
+                    audioCue = minigame?.successCue,
+                    fxId = minigame?.successFx
+                )
+            }
+            MinigameResult.PERFECT -> {
+                val perfectId = recipe.output.perfect ?: recipe.output.success
+                inventoryService.addItem(perfectId, 1)
+                CraftingOutcome.Success(
+                    itemId = perfectId,
+                    message = "Perfectly prepared ${recipe.name}!",
+                    audioCue = minigame?.perfectCue ?: minigame?.successCue,
+                    fxId = minigame?.successFx
+                )
+            }
+        }
     }
+}
+
+enum class MinigameResult {
+    PERFECT,
+    SUCCESS,
+    FAILURE
 }
 
 sealed interface CraftingOutcome {
     val itemId: String?
     val message: String?
+    val audioCue: String?
+    val fxId: String?
 
-    data class Success(override val itemId: String, override val message: String?) : CraftingOutcome
-    data class Failure(override val message: String) : CraftingOutcome {
+    data class Success(
+        override val itemId: String,
+        override val message: String?,
+        override val audioCue: String? = null,
+        override val fxId: String? = null
+    ) : CraftingOutcome
+    data class Failure(
+        override val message: String,
+        override val audioCue: String? = null,
+        override val fxId: String? = null
+    ) : CraftingOutcome {
         override val itemId: String? = null
     }
 }

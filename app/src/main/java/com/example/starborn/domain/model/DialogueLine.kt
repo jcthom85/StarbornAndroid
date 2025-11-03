@@ -8,5 +8,17 @@ data class DialogueLine(
     val text: String,
     val next: String? = null,
     val condition: String? = null,
-    val trigger: String? = null
+    val trigger: String? = null,
+    val options: List<DialogueOption>? = null,
+    val portrait: String? = null,
+    @Json(name = "voice")
+    val voiceCue: String? = null
+)
+
+data class DialogueOption(
+    val id: String,
+    val text: String,
+    val next: String? = null,
+    val trigger: String? = null,
+    val condition: String? = null
 )

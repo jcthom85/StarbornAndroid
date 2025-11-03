@@ -1,12 +1,163 @@
 [
   {
-    "id": "nova_smoke_bomb",
-    "name": "Smoke Bomb",
-    "character": "nova",
-    "type": "active",
+    "id": "acid_splash",
+    "name": "Acid Splash",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Corrosive splash that applies poison.",
+    "combat_tags": [
+      "poison"
+    ],
+    "base_power": 70,
+    "scaling": "focus",
+    "cooldown": 2,
+    "status_applications": [
+      "poison"
+    ]
+  },
+  {
+    "id": "alpha_howl",
+    "name": "Alpha Howl",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Commanding howl that fortifies packmates.",
+    "combat_tags": [
+      "support"
+    ],
     "base_power": 0,
+    "scaling": "atk",
     "cooldown": 3,
-    "description": "Increases evasion by 15% for 2 turns."
+    "status_applications": [
+      "guard"
+    ]
+  },
+  {
+    "id": "arc_spark",
+    "name": "Arc Spark",
+    "character": "scraphopper",
+    "type": "enemy",
+    "description": "Arcing spark that shocks the target.",
+    "combat_tags": [
+      "shock"
+    ],
+    "base_power": 75,
+    "scaling": "focus",
+    "cooldown": 1,
+    "status_applications": [
+      "shock"
+    ]
+  },
+  {
+    "id": "arm_detach",
+    "name": "Arm Detach",
+    "character": "core_drill_behemoth",
+    "type": "enemy",
+    "description": "Detaches an arm for explosive damage.",
+    "combat_tags": [
+      "dmg",
+      "shock"
+    ],
+    "base_power": 120,
+    "scaling": "atk",
+    "cooldown": 3,
+    "status_applications": [
+      "shock"
+    ]
+  },
+  {
+    "id": "barrier_field",
+    "name": "Barrier Field",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Projects a defensive field.",
+    "combat_tags": [
+      "support"
+    ],
+    "base_power": 0,
+    "scaling": "focus",
+    "cooldown": 3,
+    "status_applications": [
+      "shield"
+    ]
+  },
+  {
+    "id": "burrow",
+    "name": "Burrow",
+    "character": "collapse_wyrm",
+    "type": "enemy",
+    "description": "Dives underground to avoid attacks.",
+    "combat_tags": [
+      "support"
+    ],
+    "base_power": 0,
+    "scaling": "atk",
+    "cooldown": 3,
+    "status_applications": [
+      "guard"
+    ]
+  },
+  {
+    "id": "dim_glow",
+    "name": "Dim Glow",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Dulls the target with draining light.",
+    "combat_tags": [
+      "weak"
+    ],
+    "base_power": 60,
+    "scaling": "focus",
+    "cooldown": 2,
+    "status_applications": [
+      "weak"
+    ]
+  },
+  {
+    "id": "dissolve_armor",
+    "name": "Dissolve Armor",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Acidic spray that weakens armor.",
+    "combat_tags": [
+      "poison",
+      "weak"
+    ],
+    "base_power": 75,
+    "scaling": "focus",
+    "cooldown": 3,
+    "status_applications": [
+      "weak"
+    ]
+  },
+  {
+    "id": "drill_lunge",
+    "name": "Drill Lunge",
+    "character": "core_drill_behemoth",
+    "type": "enemy",
+    "description": "Charges forward with drilling claws.",
+    "combat_tags": [
+      "dmg"
+    ],
+    "base_power": 130,
+    "scaling": "atk",
+    "cooldown": 2,
+    "status_applications": []
+  },
+  {
+    "id": "ember_stride",
+    "name": "Ember Stride",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Leaves burning embers in its wake.",
+    "combat_tags": [
+      "burn"
+    ],
+    "base_power": 90,
+    "scaling": "atk",
+    "cooldown": 2,
+    "status_applications": [
+      "burn"
+    ]
   },
   {
     "id": "gh0st_headshot",
@@ -21,7 +172,194 @@
     ],
     "base_power": 150,
     "scaling": "atk",
-    "cooldown": 1
+    "cooldown": 1,
+    "status_applications": []
+  },
+  {
+    "id": "glimmer_dust",
+    "name": "Glimmer Dust",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Irritating dust that lowers defenses.",
+    "combat_tags": [
+      "weak"
+    ],
+    "base_power": 0,
+    "scaling": "focus",
+    "cooldown": 3,
+    "status_applications": [
+      "weak"
+    ]
+  },
+  {
+    "id": "gnaw",
+    "name": "Gnaw",
+    "character": "slag_rat",
+    "type": "enemy",
+    "description": "A vicious bite attack.",
+    "combat_tags": [
+      "dmg"
+    ],
+    "base_power": 90,
+    "scaling": "atk",
+    "cooldown": 0,
+    "status_applications": []
+  },
+  {
+    "id": "hydraulic_overheat",
+    "name": "Hydraulic Overheat",
+    "character": "core_drill_behemoth",
+    "type": "enemy",
+    "description": "Overclocks systems raising power.",
+    "combat_tags": [
+      "support"
+    ],
+    "base_power": 0,
+    "scaling": "atk",
+    "cooldown": 3,
+    "status_applications": [
+      "guard"
+    ]
+  },
+  {
+    "id": "lightning_weakpoint",
+    "name": "Lightning Weakpoint",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Targets exposed weak points with electricity.",
+    "combat_tags": [
+      "shock"
+    ],
+    "base_power": 100,
+    "scaling": "atk",
+    "cooldown": 2,
+    "status_applications": [
+      "shock"
+    ]
+  },
+  {
+    "id": "nova_smoke_bomb",
+    "name": "Smoke Bomb",
+    "character": "nova",
+    "type": "active",
+    "base_power": 0,
+    "cooldown": 3,
+    "description": "Increases evasion by 15% for 2 turns.",
+    "combat_tags": [
+      "support"
+    ],
+    "status_applications": [
+      "shield"
+    ]
+  },
+  {
+    "id": "overheat",
+    "name": "Overheat",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Builds up heat to empower systems.",
+    "combat_tags": [
+      "support"
+    ],
+    "base_power": 0,
+    "scaling": "atk",
+    "cooldown": 3,
+    "status_applications": [
+      "guard"
+    ]
+  },
+  {
+    "id": "radiant_spike",
+    "name": "Radiant Spike",
+    "character": "collapse_wyrm",
+    "type": "enemy",
+    "description": "Radiation-charged spike that weakens foes.",
+    "combat_tags": [
+      "radiation",
+      "weak"
+    ],
+    "base_power": 120,
+    "scaling": "atk",
+    "cooldown": 3,
+    "status_applications": [
+      "weak"
+    ]
+  },
+  {
+    "id": "security_drone_emp_burst",
+    "name": "EMP Burst",
+    "character": "security_drone",
+    "type": "enemy",
+    "description": "Discharges an electric shock that can stun attackers.",
+    "combat_tags": [
+      "shock"
+    ],
+    "base_power": 90,
+    "scaling": "focus",
+    "cooldown": 2,
+    "status_applications": [
+      "shock"
+    ]
+  },
+  {
+    "id": "self_repair",
+    "name": "Self Repair",
+    "character": "scraphopper",
+    "type": "enemy",
+    "description": "Repairs structural damage.",
+    "combat_tags": [
+      "support"
+    ],
+    "base_power": 0,
+    "scaling": "focus",
+    "cooldown": 2,
+    "status_applications": []
+  },
+  {
+    "id": "slag_nova",
+    "name": "Slag Nova",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Explosive burst of molten slag.",
+    "combat_tags": [
+      "burn"
+    ],
+    "base_power": 110,
+    "scaling": "focus",
+    "cooldown": 3,
+    "status_applications": [
+      "burn"
+    ]
+  },
+  {
+    "id": "slag_rat_acid_spit",
+    "name": "Acid Spit",
+    "character": "slag_rat",
+    "type": "enemy",
+    "description": "Hurls corrosive bile that poisons the target.",
+    "combat_tags": [
+      "poison"
+    ],
+    "base_power": 80,
+    "scaling": "atk",
+    "cooldown": 2,
+    "status_applications": [
+      "poison"
+    ]
+  },
+  {
+    "id": "slide_slam",
+    "name": "Slide Slam",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Slides forward and slams into the target.",
+    "combat_tags": [
+      "dmg"
+    ],
+    "base_power": 95,
+    "scaling": "atk",
+    "cooldown": 1,
+    "status_applications": []
   },
   {
     "id": "slingshot",
@@ -34,6 +372,146 @@
       "dmg"
     ],
     "base_power": 100,
-    "scaling": "atk"
+    "scaling": "atk",
+    "status_applications": []
+  },
+  {
+    "id": "sonic_shriek",
+    "name": "Sonic Shriek",
+    "character": "fume_bat",
+    "type": "enemy",
+    "description": "Shrill cry that disorients foes.",
+    "combat_tags": [
+      "shock"
+    ],
+    "base_power": 80,
+    "scaling": "focus",
+    "cooldown": 2,
+    "status_applications": [
+      "shock"
+    ]
+  },
+  {
+    "id": "split",
+    "name": "Split",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Attempts to split and redirect damage.",
+    "combat_tags": [
+      "support"
+    ],
+    "base_power": 0,
+    "scaling": "atk",
+    "cooldown": 4,
+    "status_applications": [
+      "guard"
+    ]
+  },
+  {
+    "id": "static_burst",
+    "name": "Static Burst",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Releases stored static electricity.",
+    "combat_tags": [
+      "shock"
+    ],
+    "base_power": 85,
+    "scaling": "focus",
+    "cooldown": 2,
+    "status_applications": [
+      "shock"
+    ]
+  },
+  {
+    "id": "suppressive_fire",
+    "name": "Suppressive Fire",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Burst of covering fire to pin foes.",
+    "combat_tags": [
+      "dmg"
+    ],
+    "base_power": 90,
+    "scaling": "atk",
+    "cooldown": 2,
+    "status_applications": []
+  },
+  {
+    "id": "toxic_bite",
+    "name": "Toxic Bite",
+    "character": "slag_rat",
+    "type": "enemy",
+    "description": "Envenoms the target with toxic saliva.",
+    "combat_tags": [
+      "poison"
+    ],
+    "base_power": 70,
+    "scaling": "atk",
+    "cooldown": 2,
+    "status_applications": [
+      "poison"
+    ]
+  },
+  {
+    "id": "triple_burst",
+    "name": "Triple Burst",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Sequential burst shots.",
+    "combat_tags": [
+      "dmg"
+    ],
+    "base_power": 105,
+    "scaling": "atk",
+    "cooldown": 2,
+    "status_applications": []
+  },
+  {
+    "id": "undermine",
+    "name": "Undermine",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Undermines footing with a precision blast.",
+    "combat_tags": [
+      "weak"
+    ],
+    "base_power": 80,
+    "scaling": "focus",
+    "cooldown": 2,
+    "status_applications": [
+      "weak"
+    ]
+  },
+  {
+    "id": "unstable_pillars",
+    "name": "Unstable Pillars",
+    "character": "collapse_wyrm",
+    "type": "enemy",
+    "description": "Shakes the cavern with collapsing pillars.",
+    "combat_tags": [
+      "dmg",
+      "radiation"
+    ],
+    "base_power": 110,
+    "scaling": "atk",
+    "cooldown": 2,
+    "status_applications": []
+  },
+  {
+    "id": "volatile_swell",
+    "name": "Volatile Swell",
+    "character": "fume_bat",
+    "type": "enemy",
+    "description": "Charges up volatile gases to empower attacks.",
+    "combat_tags": [
+      "support"
+    ],
+    "base_power": 0,
+    "scaling": "atk",
+    "cooldown": 3,
+    "status_applications": [
+      "shield"
+    ]
   }
 ]

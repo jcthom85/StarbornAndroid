@@ -1,14 +1,14 @@
 # Starborn Port – Remaining Conversion Scope
 
 ## High-Priority Gameplay Systems
-- **Exploration interactions**: current Compose shell shows NPC/action lists but lacks dialogue popups, item pickup logic, inventory UI, and interactive map hotspots.
-- **Combat engine**: Kotlin ViewModel drives a stub loop; needs full turn logic (buffs, timing, resistances, elemental math), FX overlays, victory/defeat flows, rewards, and integration with leveling/AP credit systems.
-- **Dialogue & events**: Python `dialogue_manager.py`, `event_manager.py`, `cinematics.py`, `cutscene_runner.py`, and story JSON (dialogue/events/narrative flows) are not yet ported. Triggers, branching, quest hooks, and cinematic playback must be recreated.
-- **Quests/Milestones/Tutorials**: Managers from `quest_manager.py`, `milestone_manager.py`, `tutorial_manager.py` with their UI surfaces (quest popup, theme bands, tutorial overlays) remain unimplemented.
-- **Inventory/Crafting/Cooking/Tinkering/Fishing**: Feature screens and logic from `game.py`, `crafting_manager.py`, `ui/tinkering_screen.py`, `ui/cooking_screen.py`, `ui/fishing_screen.py`, etc., need Compose counterparts plus data services.
-- **Skill trees & leveling**: `skill_tree_manager.py`, `data/leveling_manager.py`, and the skill tree UI/minigame are missing. Need to port progression graphs, resonance, and talent unlock screens.
-- **Audio & theme management**: `sound_manager.py`, `audio_router.py`, `theme_manager.py`, `environment.py` drive ambience, music, SFX priorities, palette swaps, shaders; Kotlin only loads static assets today.
-- **Save/Load**: `save_system.py` provides autosave/manual slots with JSON migrations. Android needs a persistence layer (Room/DataStore) plus save-slot UI.
+- **Exploration overlays & interactions**: Direction ring, minimap highlights, hotspot tray, tutorial ribbons, blocked-exit cinematics, and quest journal detail pane are in place; remaining polish: hotspot art/icon passes and navigation breadcrumbs for zoomed-map view.
+- **Combat presentation**: FX, ally support cues, and defeat/retreat cinematics landed; polish burst timing, enemy telegraphs, and post-battle scripting to reach Kivy fidelity.
+- **Dialogue & scripted events**: Branching choices display quest/tutorial/milestone badges, portraits resolve via metadata, and voice cues fire; cinematic sequencing and portrait asset alignment still require work alongside scripted choreography (`cinematics.py`, `cutscene_runner.py`).
+- **Quests/Milestones/Tutorials**: Quest log detail pane, milestone history ribbon, and tutorial queue are active; scripted auto-prompts now leverage reusable tutorial scripts, and the milestone gallery is available from the services menu. Remaining work: polish journal integration and late-game tutorials.
+- **Inventory-adjacent systems**: Crafting/tinkering is live; cooking, first-aid, and fishing minigames now expose tuned timing flows with FX/audio cues. Shop loops still need rotating stock logic plus authored vendor dialogue branches.
+- **Skill trees & leveling**: `skill_tree_manager.py`, `data/leveling_manager.py`, and the associated UI/minigames are missing; need level-up ribbon, skill unlock panels, and resonance progression screens driven by `LevelingManager`.
+- **Audio & theme management**: `sound_manager.py`, `audio_router.py`, `theme_manager.py`, `environment.py` drive ambience, music, SFX priorities, palette swaps, shaders; Kotlin now plays spot cues but still lacks layered ambience/music mixing and theme swaps.
+- **Save/Load**: `save_system.py` provides autosave/manual slots with JSON migrations. Kotlin build now supports autosave cadence, legacy JSON import, and slot UI; remaining work covers quest/milestone migration fidelity and cloud/backup strategy.
 
 ## Supporting Infrastructure
 - **Shader/VFX layers**: Python uses custom shaders (`vfx.py`, `ui/weather_layer.py`, `ui/combat_fx.py`). Android needs AGSL/RenderEffect implementations and Compose-compatible layering.
