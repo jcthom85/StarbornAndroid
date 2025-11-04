@@ -291,15 +291,14 @@ fun ExplorationScreen(
         )
         val hasWeather = !currentRoom?.weather.isNullOrBlank()
         val vignetteIntensity = when {
-            isRoomDark -> 0.5f
-            hasWeather -> 0.3f
-            else -> 0.22f
+            isRoomDark -> 0.6f
+            hasWeather -> 0.4f
+            else -> 0.0f
         }
         VignetteOverlay(
             visible = uiState.settings.vignetteEnabled && vignetteIntensity > 0f,
             intensity = vignetteIntensity,
-            feather = 0.25f,
-            tint = Color.Black,
+            color = Color.Black,
             modifier = Modifier.fillMaxSize()
         )
         val actionHints = uiState.actionHints
@@ -668,210 +667,149 @@ private fun MinimapWidget(
     onLegend: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val shape = RoundedCornerShape(26.dp)
+    val clrBackground = Color(0.05f, 0.1f, 0.15f, 0.85f)
+    val clrBorder = Color(0.3f, 0.8f, 1.0f, 1.0f)
+    val clrBorderAccent = Color(0.6f, 0.9f, 1.0f, 0.8f)
+    val clrGrid = Color(0.3f, 0.8f, 1.0f, 0.15f)
+    val clrTile = Color(0.6f, 0.85f, 1.0f, 0.7f)
+    val clrTileGlow = Color(0.9f, 1.0f, 1.0f, 1.0f)
+    val clrPlayer = Color(1.0f, 0.9f, 0.3f, 1.0f)
+
+    val playerPulse = remember { Animatable(1f) }
+    LaunchedEffect(Unit) {
+        playerPulse.animateTo(
+            targetValue = 0.1f,
+            animationSpec = tween(durationMillis = 1200, easing = FastOutSlowInEasing)
+        )
+    }
+
     Surface(
-        modifier = modifier
-            .width(164.dp)
-            .height(164.dp)
-            .clip(shape)
-            .border(
-                width = 1.6.dp,
-                color = Color(0xFF63D7FF).copy(alpha = 0.85f),
-                shape = shape
-            ),
-        tonalElevation = 12.dp,
-        shadowElevation = 12.dp,
-        color = Color(0xE6101823)
+        modifier = modifier.clickable(onClick = onLegend),
+        color = Color.Transparent
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 14.dp, vertical = 12.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            Canvas(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-            ) {
-                val panelColor = Brush.linearGradient(
-                    listOf(
-                        Color(0xFF0A141F).copy(alpha = 0.92f),
-                        Color(0xFF061018).copy(alpha = 0.86f)
-                    )
+        Canvas(modifier = Modifier.fillMaxSize()) {
+            val w = size.width
+            val h = size.height
+            val base = minOf(w, h)
+            val cx = w / 2
+            val cy = h / 2
+
+            val g = base / 7
+            val pad = g / 2.7f
+            val step = g + pad
+            val radius = base * 0.15f
+            val padding = base * 0.1f
+
+            // Base Panel
+            drawRoundRect(
+                color = clrBackground,
+                size = size,
+                cornerRadius = CornerRadius(radius, radius)
+            )
+
+            // 3x3 Grid
+            val gridStartX = cx - 1.5f * step
+            val gridStartY = cy - 1.5f * step
+            for (i in 0..3) {
+                drawLine(
+                    color = clrGrid,
+                    start = Offset(gridStartX + i * step, gridStartY),
+                    end = Offset(gridStartX + i * step, gridStartY + 3 * step),
+                    strokeWidth = 1.dp.toPx()
                 )
-                val cornerRadius = size.minDimension * 0.14f
-                drawRoundRect(
-                    brush = panelColor,
-                    cornerRadius = CornerRadius(cornerRadius, cornerRadius)
+                drawLine(
+                    color = clrGrid,
+                    start = Offset(gridStartX, gridStartY + i * step),
+                    end = Offset(gridStartX + 3 * step, gridStartY + i * step),
+                    strokeWidth = 1.dp.toPx()
                 )
+            }
 
-                val state = minimap ?: return@Canvas
-                val gridCells = 3f
-                val cellSize = size.minDimension / gridCells
-                val centerX = size.width / 2f
-                val centerY = size.height / 2f
-                val directionVectors = mapOf(
-                    "north" to Offset(0f, -1f),
-                    "south" to Offset(0f, 1f),
-                    "east" to Offset(1f, 0f),
-                    "west" to Offset(-1f, 0f)
-                )
+            // Stylized Border
+            drawRoundRect(
+                color = clrBorder,
+                size = Size(w - 2, h - 2),
+                topLeft = Offset(1f, 1f),
+                cornerRadius = CornerRadius(radius, radius),
+                style = Stroke(width = 1.dp.toPx())
+            )
 
-                val gridStartX = centerX - cellSize * gridCells / 2f
-                val gridStartY = centerY - cellSize * gridCells / 2f
-                val gridColor = Color(0xFF58D1FF).copy(alpha = 0.18f)
-                for (i in 0..3) {
-                    val x = gridStartX + i * cellSize
-                    drawLine(
-                        color = gridColor,
-                        start = Offset(x, gridStartY),
-                        end = Offset(x, gridStartY + cellSize * gridCells),
-                        strokeWidth = cellSize * 0.02f
-                    )
-                    val y = gridStartY + i * cellSize
-                    drawLine(
-                        color = gridColor,
-                        start = Offset(gridStartX, y),
-                        end = Offset(gridStartX + cellSize * gridCells, y),
-                        strokeWidth = cellSize * 0.02f
-                    )
-                }
+            // Corner accent details
+            val cornerSize = padding * 1.5f
+            val accentStrokeWidth = 1.5f.dp.toPx()
+            // Top-left
+            drawLine(clrBorderAccent, Offset(padding, h - cornerSize), Offset(padding, h - padding), strokeWidth = accentStrokeWidth)
+            drawLine(clrBorderAccent, Offset(padding, h - padding), Offset(cornerSize, h - padding), strokeWidth = accentStrokeWidth)
+            // Top-right
+            drawLine(clrBorderAccent, Offset(w - cornerSize, h - padding), Offset(w - padding, h - padding), strokeWidth = accentStrokeWidth)
+            drawLine(clrBorderAccent, Offset(w - padding, h - padding), Offset(w - padding, h - cornerSize), strokeWidth = accentStrokeWidth)
+            // Bottom-left
+            drawLine(clrBorderAccent, Offset(padding, cornerSize), Offset(padding, padding), strokeWidth = accentStrokeWidth)
+            drawLine(clrBorderAccent, Offset(padding, padding), Offset(cornerSize, padding), strokeWidth = accentStrokeWidth)
+            // Bottom-right
+            drawLine(clrBorderAccent, Offset(w - padding, cornerSize), Offset(w - padding, padding), strokeWidth = accentStrokeWidth)
+            drawLine(clrBorderAccent, Offset(w - padding, padding), Offset(w - cornerSize, padding), strokeWidth = accentStrokeWidth)
 
-                fun withinViewport(cell: MinimapCellUi): Boolean {
-                    return abs(cell.offsetX) <= 1f && abs(cell.offsetY) <= 1f
-                }
+            minimap?.let { state ->
+                val cellsInViewport = state.cells.filter { abs(it.offsetX) <= 1 && abs(it.offsetY) <= 1 }
+                val idToCell = state.cells.associateBy { it.roomId }
 
-                // connection trails
-                state.cells.filter(::withinViewport).forEach { cell ->
-                    val cx = centerX + cell.offsetX * cellSize
-                    val cy = centerY - cell.offsetY * cellSize
-                    val strokeColor = if (cell.isCurrent) Color(0xFFFFE082) else Color(0xFF58D1FF)
-                    cell.connections.forEach { direction ->
-                        val vector = directionVectors[direction.lowercase(Locale.getDefault())] ?: return@forEach
-                        val endX = cx + vector.x * cellSize
-                        val endY = cy + vector.y * cellSize
-                        drawLine(
-                            color = strokeColor.copy(alpha = 0.55f),
-                            start = Offset(cx, cy),
-                            end = Offset(endX, endY),
-                            strokeWidth = cellSize * 0.06f,
-                            cap = StrokeCap.Round
-                        )
-                    }
-                }
-
-                state.cells.filter(::withinViewport).forEach { cell ->
-                    val cx = centerX + cell.offsetX * cellSize
-                    val cy = centerY - cell.offsetY * cellSize
-                    val tileRadius = cellSize * 0.32f
-                    val tileColor = when {
-                        cell.isCurrent -> Color(0xFFFFE082)
-                        cell.visited -> Color(0xFF5CC4FF)
-                        cell.discovered -> Color(0xFF1F2F3C)
-                        else -> Color(0x66061018)
-                    }
-                    drawRoundRect(
-                        color = tileColor.copy(alpha = if (cell.discovered || cell.visited || cell.isCurrent) 0.95f else 0.35f),
-                        topLeft = Offset(cx - tileRadius, cy - tileRadius),
-                        size = Size(tileRadius * 2f, tileRadius * 2f),
-                        cornerRadius = CornerRadius(tileRadius * 0.45f, tileRadius * 0.45f)
-                    )
-                    if (cell.isCurrent) {
-                        drawCircle(
-                            color = Color(0xFFFFF8E1),
-                            radius = tileRadius * 0.65f,
-                            center = Offset(cx, cy),
-                            style = Stroke(width = tileRadius * 0.28f)
-                        )
-                    }
-                    if (cell.services.isNotEmpty()) {
-                        val offsets = serviceOffsets(cell.services.size, tileRadius * 0.85f)
-                        cell.services.sortedBy { it.ordinal }.forEachIndexed { index, service ->
-                            drawServiceGlyph(
-                                service = service,
-                                centerX = cx + offsets[index].first,
-                                centerY = cy + offsets[index].second,
-                                size = tileRadius * 0.45f
-                            )
+                // --- Connection lines (only where rooms are truly connected) ---
+                cellsInViewport.forEach { cell ->
+                    // Only draw connections to east and north to avoid duplicates and redundant checks
+                    for (direction in setOf("east", "north")) {
+                        val connectedRoomId = cell.connections[direction]
+                        if (connectedRoomId != null) {
+                            val neighbor = idToCell[connectedRoomId]
+                            if (neighbor != null && abs(neighbor.offsetX) <= 1 && abs(neighbor.offsetY) <= 1) {
+                                val x1 = cx + cell.offsetX * step
+                                val y1 = cy + cell.offsetY * step
+                                val x2 = cx + neighbor.offsetX * step
+                                val y2 = cy + neighbor.offsetY * step
+                                drawLine(
+                                    color = clrGrid.copy(alpha = 0.6f),
+                                    start = Offset(x1, y1),
+                                    end = Offset(x2, y2),
+                                    strokeWidth = 1.dp.toPx()
+                                )
+                            }
                         }
                     }
-                    cell.pathHints.forEach { direction ->
-                        val vector = directionVectors[direction.lowercase(Locale.getDefault())] ?: return@forEach
-                        val indicatorCenter = Offset(
-                            x = cx + vector.x * tileRadius * 1.4f,
-                            y = cy + vector.y * tileRadius * 1.4f
-                        )
-                        drawCircle(
-                            color = Color(0xFFFFE082),
-                            radius = tileRadius * 0.35f,
-                            center = indicatorCenter
-                        )
-                    }
                 }
 
-                // corner accents
-                val accentColor = Color(0xFF63D7FF).copy(alpha = 0.75f)
-                val accentLength = size.minDimension * 0.18f
-                val inset = size.minDimension * 0.08f
-                fun accent(start: Offset, end: Offset) {
-                    drawLine(
-                        color = accentColor,
-                        start = start,
-                        end = end,
-                        strokeWidth = size.minDimension * 0.01f,
-                        cap = StrokeCap.Round
+                // Rooms
+                cellsInViewport.forEach { cell ->
+                    val px = cx - g / 2 + cell.offsetX * step
+                    val py = cy - g / 2 + cell.offsetY * step
+
+                    val isCurrent = cell.isCurrent
+                    val pipColor = if (isCurrent) clrTileGlow else clrTile
+                    val pipSize = g * if (isCurrent) 0.9f else 0.6f
+
+                    drawCircle(
+                        color = pipColor,
+                        radius = pipSize / 2,
+                        center = Offset(px + g / 2, py + g / 2)
                     )
                 }
-                accent(
-                    start = Offset(inset, inset + accentLength),
-                    end = Offset(inset, inset)
-                )
-                accent(
-                    start = Offset(inset, inset),
-                    end = Offset(inset + accentLength, inset)
-                )
-                accent(
-                    start = Offset(size.width - inset, inset + accentLength),
-                    end = Offset(size.width - inset, inset)
-                )
-                accent(
-                    start = Offset(size.width - inset - accentLength, inset),
-                    end = Offset(size.width - inset, inset)
-                )
-                accent(
-                    start = Offset(inset, size.height - inset - accentLength),
-                    end = Offset(inset, size.height - inset)
-                )
-                accent(
-                    start = Offset(inset, size.height - inset),
-                    end = Offset(inset + accentLength, size.height - inset)
-                )
-                accent(
-                    start = Offset(size.width - inset, size.height - inset - accentLength),
-                    end = Offset(size.width - inset, size.height - inset)
-                )
-                accent(
-                    start = Offset(size.width - inset - accentLength, size.height - inset),
-                    end = Offset(size.width - inset, size.height - inset)
-                )
             }
 
-            OutlinedButton(
-                onClick = onLegend,
-                enabled = minimap != null,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(
-                    text = "Legend",
-                    style = MinimapTextStyle
-                )
-            }
+            // Player Indicator
+            val playerSize = g * 0.6f
+            val glowSize = playerSize * (1 + playerPulse.value * 0.5f)
+            drawCircle(
+                color = clrPlayer.copy(alpha = 0.3f * (1 - playerPulse.value)),
+                radius = glowSize / 2,
+                center = Offset(cx, cy)
+            )
+
+            val hairLength = playerSize / 2
+            val lineWidth = 2.dp.toPx()
+            drawLine(clrPlayer, Offset(cx - hairLength, cy), Offset(cx + hairLength, cy), strokeWidth = lineWidth)
+            drawLine(clrPlayer, Offset(cx, cy - hairLength), Offset(cx, cy + hairLength), strokeWidth = lineWidth)
         }
     }
 }
-
 private fun serviceOffsets(count: Int, spacing: Float): List<Pair<Float, Float>> = when (count) {
     1 -> listOf(0f to 0f)
     2 -> listOf(-spacing to 0f, spacing to 0f)

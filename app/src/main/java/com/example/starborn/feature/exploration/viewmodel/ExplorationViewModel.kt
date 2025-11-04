@@ -578,7 +578,9 @@ class ExplorationViewModel(
             val dx = pos.first - currentPos.first
             val dy = pos.second - currentPos.second
             if (abs(dx) > 1 || abs(dy) > 1) return@mapNotNull null
-            val connections = room.connections.keys.map { it.lowercase(Locale.getDefault()) }.toSet()
+            val connections = room.connections.mapNotNull { (direction, targetId) ->
+                targetId?.let { direction.lowercase(Locale.getDefault()) to it }
+            }.toMap()
             val blocked = computeBlockedDirections(room)
             val pathHints = when (room.id) {
                 currentRoom.id -> openConnections.keys

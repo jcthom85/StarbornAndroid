@@ -133,7 +133,7 @@ data class MinimapCellUi(
     val isCurrent: Boolean,
     val hasEnemies: Boolean,
     val blockedDirections: Set<String>,
-    val connections: Set<String>,
+    val connections: Map<String, String>,
     val pathHints: Set<String> = emptySet(),
     val services: Set<MinimapService> = emptySet()
 )
