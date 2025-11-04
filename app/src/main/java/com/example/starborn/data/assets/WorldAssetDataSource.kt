@@ -2,6 +2,7 @@ package com.example.starborn.data.assets
 
 import com.example.starborn.domain.model.Enemy
 import com.example.starborn.domain.model.Hub
+import com.example.starborn.domain.model.HubNode
 import com.example.starborn.domain.model.Npc
 import com.example.starborn.domain.model.Player
 import com.example.starborn.domain.model.Room
@@ -18,6 +19,7 @@ class WorldAssetDataSource(
     fun loadWorlds(): List<World> = assetReader.readList("worlds.json")
 
     fun loadHubs(): List<Hub> = assetReader.readList("hubs.json")
+    fun loadHubNodes(): List<HubNode> = assetReader.readList("hub_nodes.json")
 
     fun loadRooms(): List<Room> = assetReader.readList("rooms.json")
 
@@ -34,4 +36,13 @@ class WorldAssetDataSource(
     fun loadLevelingData(): LevelingData? = assetReader.readObject("leveling_data.json")
 
     fun loadProgressionData(): ProgressionData? = assetReader.readObject("progression.json")
+
+    fun missingHubAssets(hubs: List<Hub>, nodes: List<HubNode>): List<String> {
+        val missing = mutableSetOf<String>()
+        hubs.mapNotNull { it.backgroundImage.takeIf { path -> path.isNotBlank() } }
+            .forEach { path -> if (!assetReader.assetExists(path)) missing += path }
+        nodes.mapNotNull { it.iconImage?.takeIf { path -> path.isNotBlank() } }
+            .forEach { path -> if (!assetReader.assetExists(path)) missing += path }
+        return missing.toList()
+    }
 }

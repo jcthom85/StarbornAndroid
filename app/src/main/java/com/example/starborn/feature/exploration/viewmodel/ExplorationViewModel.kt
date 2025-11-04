@@ -104,6 +104,8 @@ class ExplorationViewModel(
     private val promptManager: UIPromptManager,
     private val fishingService: FishingService,
     eventDefinitions: List<GameEvent>,
+    bootstrapCinematics: List<String> = emptyList(),
+    bootstrapActions: List<String> = emptyList(),
     private val dispatchers: DispatcherProvider = DefaultDispatcherProvider
 ) : ViewModel() {
 
@@ -116,6 +118,7 @@ class ExplorationViewModel(
 
     private var charactersById: Map<String, Player> = emptyMap()
     private var skillsById: Map<String, Skill> = emptyMap()
+    private val stageTutorialKeys: MutableSet<String> = mutableSetOf()
 
     init {
         inventoryService.loadItems()
@@ -223,6 +226,7 @@ class ExplorationViewModel(
             onMilestoneSet = { milestone ->
                 val message = formatMilestoneMessage(milestone)
                 milestoneManager.handleMilestone(milestone, message)
+                playUiCue("milestone_unlock")
                 postStatus(message)
             },
             onNarration = { message, tapToDismiss ->
@@ -263,6 +267,8 @@ class ExplorationViewModel(
     private var suppressNextStateMessage: Boolean = false
     private val levelUpQueue: ArrayDeque<LevelUpPrompt> = ArrayDeque()
     private val cinematicQueue: ArrayDeque<CinematicScene> = ArrayDeque()
+    private val bootstrapCinematicQueue: ArrayDeque<String> = ArrayDeque(bootstrapCinematics)
+    private val bootstrapActionQueue: ArrayDeque<String> = ArrayDeque(bootstrapActions)
     private var activeCinematic: CinematicScene? = null
     private var cinematicStepIndex: Int = 0
     private val milestoneMessages: Map<String, String> = mapOf(
@@ -278,6 +284,9 @@ class ExplorationViewModel(
     private val acknowledgedMilestones: MutableSet<String> = mutableSetOf()
     private val unlockedDirections: MutableMap<String, MutableSet<String>> = mutableMapOf()
     private var activeDialogueSession: DialogueSession? = null
+    private var userMusicVolume: Float = 1f
+    private var userSfxVolume: Float = 1f
+    private var isVignetteEnabled: Boolean = true
 
     private fun emitEvent(event: ExplorationEvent) {
         viewModelScope.launch(dispatchers.main) {
@@ -291,11 +300,23 @@ class ExplorationViewModel(
     }
 
     private fun playRoomAudio(hubId: String?, roomId: String?) {
-        emitAudioCommands(audioRouter.commandsForRoom(hubId, roomId))
+        val room = roomId?.let { roomsById[it] } ?: _uiState.value.currentRoom
+        val weatherId = room?.weather?.takeUnless { it.isBlank() }
+        val tags = buildSet {
+            room?.env?.takeIf { it.isNotBlank() }?.let { add(it.lowercase(Locale.getDefault())) }
+            weatherId?.takeIf { it.isNotBlank() }?.let { add(it.lowercase(Locale.getDefault())) }
+        }
+        emitAudioCommands(audioRouter.commandsForRoom(hubId, roomId, weatherId, tags))
     }
 
     private fun playUiCue(key: String) {
         emitAudioCommands(audioRouter.commandsForUi(key))
+    }
+
+    private fun hideQuickMenu() {
+        if (_uiState.value.isQuickMenuVisible) {
+            _uiState.update { it.copy(isQuickMenuVisible = false) }
+        }
     }
 
     fun onCombatVictory(result: CombatResultPayload) {
@@ -467,6 +488,7 @@ class ExplorationViewModel(
         if (activeCinematic == null) {
             activeCinematic = scene
             cinematicStepIndex = 0
+            emitAudioCommands(audioRouter.duckForCinematic())
             pushCinematicStep(scene, 0)
         } else {
             cinematicQueue.add(scene)
@@ -496,10 +518,23 @@ class ExplorationViewModel(
             activeCinematic = null
             cinematicStepIndex = 0
             _uiState.update { it.copy(cinematic = null) }
+            emitAudioCommands(audioRouter.restoreAfterCinematic())
         } else {
             activeCinematic = nextScene
             cinematicStepIndex = 0
             pushCinematicStep(nextScene, 0)
+        }
+    }
+
+    private fun processBootstrapQueues() {
+        if (bootstrapCinematicQueue.isEmpty() && bootstrapActionQueue.isEmpty()) return
+        viewModelScope.launch(dispatchers.main) {
+            while (bootstrapCinematicQueue.isNotEmpty()) {
+                startCinematic(bootstrapCinematicQueue.removeFirst())
+            }
+            while (bootstrapActionQueue.isNotEmpty()) {
+                triggerPlayerAction(bootstrapActionQueue.removeFirst())
+            }
         }
     }
 
@@ -679,10 +714,23 @@ class ExplorationViewModel(
         viewModelScope.launch(dispatchers.main) {
             var previousActive: Set<String> = questRuntimeManager.state.value.activeQuestIds
             var previousCompleted: Set<String> = questRuntimeManager.state.value.completedQuestIds
+            var previousStages: Map<String, String> = questRuntimeManager.state.value.stageProgress
             var firstEmission = true
             questRuntimeManager.state.collect { questState ->
                 val activeChanged = questState.activeQuestIds != previousActive
                 val completedChanged = questState.completedQuestIds != previousCompleted
+                val stageChanges = if (firstEmission) {
+                    emptyList()
+                } else {
+                    questState.stageProgress.mapNotNull { (questId, stageId) ->
+                        val previousStage = previousStages[questId]
+                        if (stageId != previousStage) {
+                            questId to stageId
+                        } else {
+                            null
+                        }
+                    }
+                }
                 _uiState.update { current ->
                     val relevantLogs = questState.recentLog.filter { entry ->
                         questState.trackedQuestId.isNullOrBlank() || entry.questId.equals(questState.trackedQuestId, ignoreCase = true)
@@ -703,8 +751,14 @@ class ExplorationViewModel(
                     postStatus("Quest log updated")
                     updateActionHints(_uiState.value.currentRoom)
                 }
+                if (!firstEmission) {
+                    stageChanges.forEach { (questId, stageId) ->
+                        scheduleQuestStageTutorials(questId, stageId)
+                    }
+                }
                 previousActive = questState.activeQuestIds
                 previousCompleted = questState.completedQuestIds
+                previousStages = questState.stageProgress
                 firstEmission = false
             }
         }
@@ -720,8 +774,48 @@ class ExplorationViewModel(
         loadInitialState()
     }
 
+    private fun scheduleQuestStageTutorials(questId: String, stageId: String) {
+        val quest = questRepository.questById(questId) ?: return
+        val stage = quest.stages.firstOrNull { it.id.equals(stageId, ignoreCase = true) } ?: return
+        stage.tasks.forEach { task ->
+            val tutorialId = task.tutorialId?.trim()?.lowercase(Locale.getDefault())
+            if (!tutorialId.isNullOrEmpty()) {
+                val key = listOf(questId, stageId, tutorialId).joinToString(":")
+                if (stageTutorialKeys.add(key)) {
+                    val scheduled = tutorialManager.playScript(tutorialId, allowDuplicates = false)
+                    if (!scheduled) {
+                        tutorialFallbackMessage(tutorialId)?.let { message ->
+                            tutorialManager.showOnce(
+                                key = key,
+                                message = message,
+                                context = stage.title.takeIf { it.isNotBlank() },
+                                metadata = mapOf(
+                                    "quest_id" to questId,
+                                    "stage_id" to stageId
+                                )
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun tutorialFallbackMessage(tutorialId: String): String? {
+        return when (tutorialId.lowercase(Locale.getDefault())) {
+            "movement" -> "Swipe in the highlighted direction to move between rooms."
+            "npc_talk" -> "Tap a character's name and choose Talk to start a conversation."
+            else -> null
+        }
+    }
+
     private fun loadInitialState() {
         viewModelScope.launch(dispatchers.io) {
+            val existingState = sessionStore.state.value
+            val preselectedWorldId = existingState.worldId
+            val preselectedHubId = existingState.hubId
+            val preselectedRoomId = existingState.roomId
+
             val worlds = worldAssets.loadWorlds()
             val hubs = worldAssets.loadHubs()
             val rooms = worldAssets.loadRooms().map { room ->
@@ -745,9 +839,18 @@ class ExplorationViewModel(
             initializeUnlockedDirections(rooms)
             initializeGroundItems(rooms)
             val player = players.firstOrNull()
-            val initialWorld = worlds.firstOrNull()
-            val initialHub = hubs.firstOrNull()
-            val initialRoom = rooms.find { it.id == "living" } ?: rooms.firstOrNull()
+            val initialWorld =
+                preselectedWorldId?.let { id -> worlds.firstOrNull { it.id == id } }
+                    ?: worlds.firstOrNull { it.id.equals("nova_prime", ignoreCase = true) }
+                    ?: worlds.firstOrNull()
+            val initialHub =
+                preselectedHubId?.let { id -> hubs.firstOrNull { it.id == id } }
+                    ?: initialWorld?.let { world -> hubs.firstOrNull { it.worldId == world.id } }
+                    ?: hubs.firstOrNull()
+            val initialRoom =
+                preselectedRoomId?.let { id -> roomsById[id] }
+                    ?: rooms.firstOrNull { it.id.equals("town_9", ignoreCase = true) }
+                    ?: rooms.firstOrNull()
 
             portraitBySpeaker.clear()
             players.forEach { character ->
@@ -771,7 +874,9 @@ class ExplorationViewModel(
                 markDiscovered(it)
             }
             blockedCinematicsShown.clear()
-            sessionStore.resetTutorialProgress()
+            if (preselectedRoomId.isNullOrBlank()) {
+                sessionStore.resetTutorialProgress()
+            }
             acknowledgedMilestones.clear()
 
             sessionStore.setWorld(initialWorld?.id)
@@ -814,17 +919,24 @@ class ExplorationViewModel(
                     completedQuests = sessionState.completedQuests,
                     completedMilestones = sessionState.completedMilestones,
                     partyStatus = partyStatus,
-                    progressionSummary = progressionSummary
+                    progressionSummary = progressionSummary,
+                    settings = SettingsUiState(
+                        musicVolume = userMusicVolume,
+                        sfxVolume = userSfxVolume,
+                        vignetteEnabled = isVignetteEnabled
+                    )
                 )
             }
             initialRoom?.let { handleRoomEntryTutorials(it) }
             playRoomAudio(initialHub?.id, initialRoom?.id)
             updateMinimap(initialRoom)
             initialRoom?.let { eventManager.handleTrigger("enter_room", EventPayload.EnterRoom(it.id)) }
+            processBootstrapQueues()
         }
     }
 
     fun travel(direction: String) {
+        hideQuickMenu()
         val currentRoom = _uiState.value.currentRoom ?: return
         val evaluation = evaluateDirection(currentRoom, direction, DirectionEvaluationMode.ATTEMPT)
         if (evaluation.blocked) {
@@ -872,6 +984,7 @@ class ExplorationViewModel(
     }
 
     fun onNpcInteraction(npcName: String) {
+        hideQuickMenu()
         val session = dialogueService.startDialogue(npcName)
         activeDialogueSession = session
         playUiCue("click")
@@ -938,33 +1051,11 @@ class ExplorationViewModel(
     }
 
     fun onActionSelected(action: RoomAction) {
+        hideQuickMenu()
         playUiCue("click")
         dismissBlockedPrompt()
         when (action) {
-            is ToggleAction -> {
-                val isActive = _uiState.value.roomState[action.stateKey] ?: false
-                val eventId = if (isActive) {
-                    action.actionEventOff?.takeIf { it.isNotBlank() }
-                } else {
-                    action.actionEventOn?.takeIf { it.isNotBlank() }
-                }
-                if (eventId != null) {
-                    val event = eventsById[eventId]
-                    val toggledOn = !isActive
-                    val message = when {
-                        toggledOn -> event?.onMessage
-                        else -> event?.offMessage
-                    } ?: action.popupTitle?.takeIf { it.isNotBlank() }
-                        ?: if (toggledOn) action.labelOff else action.labelOn
-                    pendingStateMessage = message
-                    suppressNextStateMessage = true
-                    triggerPlayerAction(eventId)
-                } else {
-                    val fallback = action.popupTitle?.takeIf { it.isNotBlank() }
-                        ?: if (isActive) action.labelOff else action.labelOn
-                    postStatus(fallback)
-                }
-            }
+            is ToggleAction -> showTogglePrompt(action)
             is ContainerAction -> handleContainerAction(action)
             is TinkeringAction -> handleTinkeringAction(
                 label = action.name,
@@ -977,6 +1068,80 @@ class ExplorationViewModel(
             is GenericAction -> handleGenericAction(action)
         }
         updateActionHints(_uiState.value.currentRoom)
+    }
+
+    private fun showTogglePrompt(action: ToggleAction) {
+        val stateKey = action.stateKey
+        if (stateKey.isBlank()) {
+            val fallback = action.popupTitle?.takeIf { it.isNotBlank() } ?: action.name
+            if (fallback.isNotBlank()) {
+                postStatus(fallback)
+            }
+            return
+        }
+        val currentState = _uiState.value.roomState[stateKey] ?: false
+        val title = action.popupTitle?.takeIf { it.isNotBlank() }
+            ?: action.name.ifBlank { formatStateKey(stateKey) }
+        val description = if (currentState) {
+            "$title is currently on."
+        } else {
+            "$title is currently off."
+        }
+        val eventOnId = action.actionEventOn?.takeIf { it.isNotBlank() }
+        val eventOffId = action.actionEventOff?.takeIf { it.isNotBlank() }
+        val prompt = TogglePromptUi(
+            title = title,
+            message = description,
+            isOn = currentState,
+            enableLabel = action.labelOn.ifBlank { "Turn on" },
+            disableLabel = action.labelOff.ifBlank { "Turn off" },
+            eventOn = eventOnId,
+            eventOff = eventOffId,
+            stateKey = stateKey,
+            roomId = _uiState.value.currentRoom?.id,
+            onMessage = eventOnId?.let { eventsById[it]?.onMessage },
+            offMessage = eventOffId?.let { eventsById[it]?.offMessage }
+        )
+        _uiState.update { it.copy(togglePrompt = prompt) }
+    }
+
+    fun onTogglePromptSelection(enable: Boolean) {
+        val prompt = _uiState.value.togglePrompt ?: return
+        val currentState = _uiState.value.roomState[prompt.stateKey] ?: false
+        if (enable == currentState) {
+            val message = if (enable) {
+                "${prompt.title} is already on."
+            } else {
+                "${prompt.title} is already off."
+            }
+            postStatus(message)
+            _uiState.update { it.copy(togglePrompt = null) }
+            return
+        }
+        val eventId = if (enable) prompt.eventOn else prompt.eventOff
+        if (!eventId.isNullOrBlank()) {
+            val event = eventsById[eventId]
+            val message = if (enable) {
+                prompt.onMessage ?: event?.onMessage ?: prompt.enableLabel
+            } else {
+                prompt.offMessage ?: event?.offMessage ?: prompt.disableLabel
+            }
+            pendingStateMessage = message
+            suppressNextStateMessage = true
+            triggerPlayerAction(eventId)
+        } else {
+            val roomId = prompt.roomId ?: _uiState.value.currentRoom?.id
+            val applied = setRoomStateValue(roomId, prompt.stateKey, enable)
+            if (applied != null) {
+                val message = if (enable) prompt.enableLabel else prompt.disableLabel
+                postStatus(message)
+            }
+        }
+        _uiState.update { it.copy(togglePrompt = null) }
+    }
+
+    fun dismissTogglePrompt() {
+        _uiState.update { it.copy(togglePrompt = null) }
     }
 
     fun clearStatusMessage() {
@@ -1033,7 +1198,7 @@ class ExplorationViewModel(
     fun openMinimapLegend() {
         viewModelScope.launch(dispatchers.main) {
             playUiCue("click")
-            _uiState.update { it.copy(isMinimapLegendVisible = true) }
+            _uiState.update { it.copy(isQuickMenuVisible = false, isMinimapLegendVisible = true) }
         }
     }
 
@@ -1047,7 +1212,7 @@ class ExplorationViewModel(
     fun openQuestLog() {
         viewModelScope.launch(dispatchers.main) {
             playUiCue("click")
-            _uiState.update { it.copy(isQuestLogVisible = true) }
+            _uiState.update { it.copy(isQuickMenuVisible = false, isQuestLogVisible = true) }
         }
     }
 
@@ -1061,7 +1226,7 @@ class ExplorationViewModel(
     fun openMilestoneGallery() {
         viewModelScope.launch(dispatchers.main) {
             playUiCue("click")
-            _uiState.update { it.copy(isMilestoneGalleryVisible = true) }
+            _uiState.update { it.copy(isQuickMenuVisible = false, isMilestoneGalleryVisible = true) }
         }
     }
 
@@ -1073,101 +1238,63 @@ class ExplorationViewModel(
     }
 
 
-    fun openServicesMenu() {
+    private var lastMenuTab: MenuTab = MenuTab.INVENTORY
+
+    fun toggleQuickMenu() {
         viewModelScope.launch(dispatchers.main) {
-            val menu = buildServicesMenu()
-            if (menu != null) {
-                playUiCue("click")
-                _uiState.update { it.copy(radialMenu = menu) }
-            } else {
-                postStatus("No services available here.")
-            }
+            val nextVisible = !_uiState.value.isQuickMenuVisible
+            playUiCue(if (nextVisible) "click" else "cancel")
+            _uiState.update { it.copy(isQuickMenuVisible = nextVisible) }
         }
     }
 
-    fun dismissServicesMenu() {
+    fun openMenuOverlay(defaultTab: MenuTab? = null) {
+        viewModelScope.launch(dispatchers.main) {
+            playUiCue("click")
+            val tab = defaultTab ?: lastMenuTab
+            lastMenuTab = tab
+            _uiState.update { it.copy(isQuickMenuVisible = false, isMenuOverlayVisible = true, menuTab = tab) }
+        }
+    }
+
+    fun closeMenuOverlay() {
         viewModelScope.launch(dispatchers.main) {
             playUiCue("cancel")
-            _uiState.update { it.copy(radialMenu = null) }
+            _uiState.update { it.copy(isMenuOverlayVisible = false) }
         }
     }
 
-    fun selectRadialMenuItem(id: String): RadialMenuAction {
-        playUiCue("confirm")
-        _uiState.update { it.copy(radialMenu = null) }
-        return when {
-            id == "inventory" -> RadialMenuAction.Inventory
-            id == "questlog" -> {
-                openQuestLog()
-                RadialMenuAction.None
-            }
-            id.startsWith("shop:") -> {
-                val shopId = id.substringAfter(':')
-                emitEvent(ExplorationEvent.OpenShop(shopId))
-                RadialMenuAction.None
-            }
-            id.startsWith("tinker:") -> {
-                val shopId = id.substringAfter(':').ifBlank { null }
-                emitEvent(ExplorationEvent.OpenTinkering(shopId))
-                RadialMenuAction.None
-            }
-            id.startsWith("cook:") -> {
-                val stationId = id.substringAfter(':').ifBlank { null }
-                emitEvent(ExplorationEvent.OpenCooking(stationId))
-                RadialMenuAction.None
-            }
-            id.startsWith("firstaid:") -> {
-                val stationId = id.substringAfter(':').ifBlank { null }
-                emitEvent(ExplorationEvent.OpenFirstAid(stationId))
-                RadialMenuAction.None
-            }
-            id.startsWith("fish:") -> {
-                val zoneId = id.substringAfter(':').ifBlank { null }
-                emitEvent(ExplorationEvent.OpenFishing(zoneId))
-                RadialMenuAction.None
-            }
-            id == "milestones" -> {
-                openMilestoneGallery()
-                RadialMenuAction.None
-            }
-            else -> RadialMenuAction.None
-        }
+    fun selectMenuTab(tab: MenuTab) {
+        lastMenuTab = tab
+        _uiState.update { it.copy(menuTab = tab) }
     }
 
-    private fun buildServicesMenu(): RadialMenuUi? {
-        val actions = _uiState.value.actions
-        val hints = _uiState.value.actionHints
-        val items = mutableListOf<RadialMenuItemUi>()
-        fun addUnique(id: String, label: String, description: String? = null) {
-            if (items.none { it.id == id }) {
-                items += RadialMenuItemUi(id = id, label = label, description = description)
-            }
+    fun updateMusicVolume(volume: Float) {
+        val clamped = volume.coerceIn(0f, 1f)
+        if (abs(clamped - userMusicVolume) < 0.001f) return
+        userMusicVolume = clamped
+        _uiState.update { state ->
+            state.copy(settings = state.settings.copy(musicVolume = clamped))
         }
-        addUnique("inventory", "Inventory")
-        addUnique("questlog", "Quest Log")
-        addUnique("milestones", "Milestones", "History")
-        actions.forEach { action ->
-            if (hints[action.actionKey()]?.locked == true) return@forEach
-            when (action) {
-                is ShopAction -> action.shopId?.let { addUnique("shop:${it}", action.name, "Shop") }
-                is TinkeringAction -> addUnique("tinker:${action.shopId.orEmpty()}", action.name, "Tinkering")
-                is CookingAction -> addUnique("cook:${action.stationId.orEmpty()}", action.name, "Cooking")
-                is FirstAidAction -> addUnique("firstaid:${action.stationId.orEmpty()}", action.name, "First Aid")
-                is GenericAction -> {
-                    val type = action.type.lowercase(Locale.getDefault())
-                    if (type.contains("fish")) {
-                        val zone = action.zoneId ?: _uiState.value.currentRoom?.id
-                        addUnique("fish:${zone.orEmpty()}", action.name, "Fishing")
-                    }
-                }
-                else -> Unit
-            }
+        emitEvent(ExplorationEvent.AudioSettingsChanged(userMusicVolume, userSfxVolume))
+    }
+
+    fun updateSfxVolume(volume: Float) {
+        val clamped = volume.coerceIn(0f, 1f)
+        if (abs(clamped - userSfxVolume) < 0.001f) return
+        userSfxVolume = clamped
+        _uiState.update { state ->
+            state.copy(settings = state.settings.copy(sfxVolume = clamped))
         }
-        if (items.isEmpty()) return null
-        return RadialMenuUi(
-            title = _uiState.value.currentRoom?.title?.let { "${it} Services" } ?: "Services",
-            items = items
-        )
+        emitEvent(ExplorationEvent.AudioSettingsChanged(userMusicVolume, userSfxVolume))
+    }
+
+    fun setVignetteEnabled(enabled: Boolean) {
+        if (isVignetteEnabled == enabled) return
+        isVignetteEnabled = enabled
+        _uiState.update { state ->
+            state.copy(settings = state.settings.copy(vignetteEnabled = enabled))
+        }
     }
     fun engageEnemy(enemyId: String) {
         val roomEnemies = _uiState.value.currentRoom?.enemies.orEmpty()
@@ -1267,6 +1394,7 @@ class ExplorationViewModel(
     }
 
     fun collectGroundItem(itemId: String) {
+        hideQuickMenu()
         val roomId = _uiState.value.currentRoom?.id ?: return
         val items = roomGroundItems[roomId] ?: return
         val quantity = items[itemId] ?: return
@@ -1290,6 +1418,7 @@ class ExplorationViewModel(
     }
 
     fun collectAllGroundItems() {
+        hideQuickMenu()
         val roomId = _uiState.value.currentRoom?.id ?: return
         val items = roomGroundItems[roomId] ?: return
         if (items.isEmpty()) return
@@ -2172,8 +2301,10 @@ class ExplorationViewModel(
                     popupTitle = action["popup_title"].asStringOrNull(),
                     labelOn = action["label_on"].asStringOrNull() ?: "Toggle On",
                     labelOff = action["label_off"].asStringOrNull() ?: "Toggle Off",
-                    actionEventOn = action["action_event_on"].asStringOrNull()?.takeIf { it.isNotBlank() },
+                    actionEventOn = action["action_event_on"].asStringOrNull()?.takeIf { it.isNotBlank() }
+                        ?: action["action_event"].asStringOrNull()?.takeIf { it.isNotBlank() },
                     actionEventOff = action["action_event_off"].asStringOrNull()?.takeIf { it.isNotBlank() }
+                        ?: action["action_event"].asStringOrNull()?.takeIf { it.isNotBlank() }
                 )
                 "container" -> ContainerAction(
                     name = name,
@@ -2254,12 +2385,6 @@ private fun QuestLogEntry.toUiEntry(questRepository: QuestRepository): QuestLogE
 
 private fun TutorialEntry.toUiPrompt(): TutorialPrompt = TutorialPrompt(this)
 
-sealed interface RadialMenuAction {
-    object None : RadialMenuAction
-    object Inventory : RadialMenuAction
-    object Milestones : RadialMenuAction
-}
-
 sealed interface ExplorationEvent {
     data class EnterCombat(val enemyIds: List<String>) : ExplorationEvent
     data class PlayCinematic(val sceneId: String) : ExplorationEvent
@@ -2287,6 +2412,7 @@ sealed interface ExplorationEvent {
         val message: String
     ) : ExplorationEvent
     data class AudioCommands(val commands: List<AudioCommand>) : ExplorationEvent
+    data class AudioSettingsChanged(val musicVolume: Float, val sfxVolume: Float) : ExplorationEvent
 }
 
 private fun Any?.asStringOrNull(): String? = when (this) {

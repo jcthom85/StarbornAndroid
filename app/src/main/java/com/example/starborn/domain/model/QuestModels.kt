@@ -13,7 +13,8 @@ data class Quest(
     val giver: String? = null,
     @Json(name = "hub_id")
     val hubId: String? = null,
-    val stages: List<QuestStage> = emptyList()
+    val stages: List<QuestStage> = emptyList(),
+    val rewards: List<QuestReward> = emptyList()
 )
 
 @JsonClass(generateAdapter = true)
@@ -28,5 +29,15 @@ data class QuestStage(
 data class QuestTask(
     val id: String,
     val text: String,
-    val done: Boolean = false
+    val done: Boolean = false,
+    @Json(name = "tutorial_id")
+    val tutorialId: String? = null
+)
+
+@JsonClass(generateAdapter = true)
+data class QuestReward(
+    val type: String,
+    val amount: Int? = null,
+    @Json(name = "item_id")
+    val itemId: String? = null
 )

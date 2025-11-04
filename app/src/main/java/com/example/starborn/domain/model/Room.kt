@@ -9,6 +9,7 @@ data class Room(
     val title: String,
     @Json(name = "background_image")
     val backgroundImage: String,
+    val weather: String? = null,
     val description: String,
     val npcs: List<String>,
     val items: List<String>,

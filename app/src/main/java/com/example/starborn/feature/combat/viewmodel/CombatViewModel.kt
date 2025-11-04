@@ -25,6 +25,7 @@ import com.example.starborn.domain.leveling.LevelUpSummary
 import com.example.starborn.domain.leveling.LevelingManager
 import com.example.starborn.domain.leveling.ProgressionData
 import com.example.starborn.domain.leveling.SkillUnlockSummary
+import com.example.starborn.domain.model.Room
 import com.example.starborn.domain.model.Enemy
 import com.example.starborn.domain.model.Player
 import com.example.starborn.domain.model.Skill
@@ -64,6 +65,8 @@ class CombatViewModel(
     private val combatFxEvents = MutableSharedFlow<CombatFxEvent>(extraBufferCapacity = 16)
     val fxEvents: SharedFlow<CombatFxEvent> = combatFxEvents.asSharedFlow()
     private val pendingLevelUps = mutableListOf<LevelUpSummary>()
+    val environmentId: String?
+    val weatherId: String?
 
     private val _state = MutableStateFlow<CombatState?>(null)
     val state: StateFlow<CombatState?> = _state.asStateFlow()
@@ -77,6 +80,7 @@ class CombatViewModel(
         val players = worldAssets.loadCharacters()
         val allEnemies = worldAssets.loadEnemies()
         val allSkills = worldAssets.loadSkills()
+        val rooms = worldAssets.loadRooms()
 
         val partyIds = sessionStore.state.value.partyMembers
         val resolvedParty = (if (partyIds.isEmpty()) players.take(1) else partyIds.mapNotNull { id ->
@@ -86,6 +90,11 @@ class CombatViewModel(
         playerParty = resolvedParty
         player = playerParty.firstOrNull()
         enemies = enemyIds.mapNotNull { id -> allEnemies.find { it.id == id } }
+
+        val currentRoomId = sessionStore.state.value.roomId
+        val currentRoom: Room? = currentRoomId?.let { id -> rooms.firstOrNull { it.id == id } }
+        environmentId = currentRoom?.env
+        weatherId = currentRoom?.weather
 
         playerSkillsById = playerParty.associate { member ->
             member.id to allSkills.filter { it.character == member.id }

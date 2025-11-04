@@ -22,6 +22,7 @@ class EventManager(
             if (!event.repeatable && event.id in state.completedMilestones) {
                 continue
             }
+            if (!conditionsSatisfied(event.conditions, state)) continue
             if (!matchesTrigger(event.trigger, payload, state)) continue
             if (executeActions(event.actions, state)) {
                 // Mark completion for non-repeatable events
@@ -42,7 +43,8 @@ class EventManager(
             "npc_interaction" -> payload is EventPayload.TalkTo && payload.npc.equals(trigger.npc, true)
             "enter_room" -> {
                 val roomId = (payload as? EventPayload.EnterRoom)?.roomId ?: state.roomId
-                trigger.roomId == null || trigger.roomId == roomId
+                val triggerRoom = trigger.roomId ?: trigger.room
+                triggerRoom == null || triggerRoom == roomId
             }
             "player_action" -> {
                 val actionPayload = payload as? EventPayload.Action ?: return false
@@ -150,9 +152,11 @@ class EventManager(
                     eventHooks.onQuestUpdated()
                     true
                 }
-                "play_cinematic" -> {
-                    action.sceneId?.let { eventHooks.onPlayCinematic(it) }
-                    true
+                "play_cinematic", "trigger_cutscene" -> {
+                    val sceneId = action.sceneId
+                    sceneId?.let { eventHooks.onPlayCinematic(it) }
+                    action.onComplete?.let { executeActions(it, state) }
+                    sceneId != null || action.onComplete != null
                 }
                 "show_message" -> {
                     action.message?.let { eventHooks.onMessage(it) }
@@ -234,11 +238,6 @@ class EventManager(
                     action.onComplete?.let { executeActions(it, state) }
                     true
                 }
-                "play_cinematic", "trigger_cutscene" -> {
-                    action.sceneId?.let { eventHooks.onPlayCinematic(it) }
-                    action.onComplete?.let { executeActions(it, state) }
-                    true
-                }
                 "unlock_room_search" -> {
                     eventHooks.onUnlockRoomSearch(action.roomId, action.note)
                     true
@@ -267,6 +266,26 @@ class EventManager(
             } || executed
         }
         return executed
+    }
+
+    private fun conditionsSatisfied(
+        conditions: List<com.example.starborn.domain.model.EventCondition>,
+        state: GameSessionState
+    ): Boolean {
+        if (conditions.isEmpty()) return true
+        return conditions.all { condition ->
+            when (condition.type.lowercase()) {
+                "milestone_not_set" -> {
+                    val milestone = condition.milestone
+                    milestone.isNullOrBlank() || milestone !in state.completedMilestones
+                }
+                "milestone_set" -> {
+                    val milestone = condition.milestone
+                    milestone.isNullOrBlank() || milestone in state.completedMilestones
+                }
+                else -> true
+            }
+        }
     }
 
     private fun executeConditionalBranch(

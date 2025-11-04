@@ -29,7 +29,9 @@ class ExplorationViewModelFactory(
                 tutorialManager = services.tutorialManager,
                 promptManager = services.promptManager,
                 fishingService = services.fishingService,
-                eventDefinitions = services.events
+                eventDefinitions = services.events,
+                bootstrapCinematics = services.drainPendingCinematics(),
+                bootstrapActions = services.drainPendingPlayerActions()
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")

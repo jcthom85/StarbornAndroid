@@ -60,4 +60,14 @@ class AssetJsonReader(
         }
         return adapter.fromJson(json).orEmpty()
     }
+
+    fun assetExists(path: String): Boolean {
+        if (path.isBlank()) return false
+        return try {
+            context.assets.open(path).use { }
+            true
+        } catch (io: IOException) {
+            false
+        }
+    }
 }

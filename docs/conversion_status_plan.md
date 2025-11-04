@@ -42,29 +42,31 @@ Context: Evaluation captured after wrapping Phase 2C (progression systems, coo
 > Phase 2C milestone shipped: progression overlays, tuned cooking/first-aid loops, shop greetings with dialogue choices, minimap service glyphs, and autosave metadata/timestamps are live. Focus now shifts to Phase 3 systems and overlays.
 
 ### Current Session Highlights
-- Added runtime `MilestoneRuntimeManager` with DataStore-backed history, wiring milestone prompts/bands to Compose via `ExplorationViewModel`.
-- Expanded `QuestRuntimeManager` with tracked quest state, task logs, and quest journal summaries surfaced in the exploration HUD.
-- Upgraded tutorial runtime to support delayed scheduling/cancellation and mirrored the Python light-switch/swipe guidance flow in Kotlin.
-- Extended `GameSessionState`/proto schema to persist tracked/failed quests and milestone history; refreshed unit tests remain green.
+- Exploration HUD now mirrors the Python layout: service tray, animated quick menu, quest journal overlay, and milestone timeline landed in Compose.
+- Audio layering reads per-room weather/env data and blends hub music + ambience via the `AudioRouter`.
+- Hub navigation now features hotspot art, per-node subtitles, and a pulse animation that highlights the selected destination.
+- Minimap adds breadcrumb lines, path hints, and current-room rings to match the zoomed-map UX from Python.
+- Exploration now renders an AGSL-driven vignette overlay with a radial-gradient fallback, giving rooms the same edge shading as the Python build.
+- Settings menu exposes music/SFX volume sliders and a vignette toggle, piping straight into the runtime audio mixer and room shading.
+- Weather-aware overlays and theme bands now render in both exploration and combat, adapting palettes per environment and weather tags while keeping pre-Tiramisu devices on gradient fallbacks.
+- `GameSessionStore` honors pre-selected world/hub/room when returning from the hub; tests/build are green again.
 
-## 3. Immediate Next Steps (Phase 3 – Systems & Overlays)
-1. **Quest/tutorial runtime services**
-   - Promote scripted tutorials and milestone callbacks from stubs to full managers, wiring them into dialogue/effect queues.
-2. **Minigame expansion**  
-   - Fishing timing loop implemented with feedback; next: author failure/tutorial beats for cooking/first-aid and integrate remaining minigames.
-3. **Hub & radial menu polish**
-   - Implement radial service menu, contextual hotspot art, and vendor branch scripting (smalltalk, wares preview, rotating stock).
-4. **Audio layering & ambience**
-   - AudioRouter reads new catalogue metadata; next step is tightening cue coverage and routing per scene.
+## 3. Immediate Next Steps (Phase 4 – Visual & Audio Fidelity)
+1. **Shader & VFX pass**
+   - Port vignette, weather layers, and combat FX using AGSL/RenderEffect so ambience matches the Python build.
+2. **UI theming & accessibility**
+   - Finalise theme bands, high-contrast mode, and touchscreen affordances for combat/exploration overlays.
+3. **Audio polish & mixing**
+   - Integrate voiceover routing, refine combat stingers/palette swaps, and surface haptics once VO stems arrive.
 
-Deliverable: Phase 3 milestone—system managers (quests/tutorials/milestones), fully authored hub interactions (shops, radial menu), expanded minigames (fishing + remaining side loops), and layered ambience/music playback.
+Deliverable: Phase 4 milestone — visual identity lock-in, accessibility polish, and full audio mixing controls ready for content finalisation.
 
 ---
 
 ## 4. Near-Term Roadmap
 | Sprint Goal | Tasks | Dependencies |
 |-------------|-------|--------------|
-| **Phase 3 – Systems & overlays** | - Implement quest/tutorial/milestone managers with queued prompts.<br>- Deliver fishing & ancillary minigames using timing presets.<br>- Build radial service menu, shop branch authoring, and ambience/music layering. | Requires updated narrative scripts, audio asset mapping, and final fishing specs. |
+| **Phase 3 – Systems & overlays** *(complete)* | Complete: event parity, hub hotspots, minimap breadcrumbs, and runtime services shipped. | — |
 | **Phase 4 – Visual & audio fidelity** | - Compose shader/VFX pass (vignette, weather, damage numbers).<br>- Scene theming & accessibility polish.<br>- Voiceover mixing, runtime audio settings, haptics. | Dependent on stabilized visual style guide and audio stems. |
 
 ---

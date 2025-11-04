@@ -46,8 +46,12 @@ data class ExplorationUiState(
     val pendingShopId: String? = null,
     val prompt: UIPrompt? = null,
     val milestoneHistory: List<MilestoneEvent> = emptyList(),
-    val radialMenu: RadialMenuUi? = null,
-    val isMilestoneGalleryVisible: Boolean = false
+    val isMilestoneGalleryVisible: Boolean = false,
+    val isQuickMenuVisible: Boolean = false,
+    val isMenuOverlayVisible: Boolean = false,
+    val menuTab: MenuTab = MenuTab.INVENTORY,
+    val togglePrompt: TogglePromptUi? = null,
+    val settings: SettingsUiState = SettingsUiState()
 )
 
 data class NarrationPrompt(
@@ -158,6 +162,26 @@ data class ActionHintUi(
     val message: String?
 )
 
+data class TogglePromptUi(
+    val title: String,
+    val message: String,
+    val isOn: Boolean,
+    val enableLabel: String,
+    val disableLabel: String,
+    val eventOn: String?,
+    val eventOff: String?,
+    val stateKey: String,
+    val roomId: String?,
+    val onMessage: String?,
+    val offMessage: String?
+)
+
+data class SettingsUiState(
+    val musicVolume: Float = 1f,
+    val sfxVolume: Float = 1f,
+    val vignetteEnabled: Boolean = true
+)
+
 data class PartyStatusUi(
     val members: List<PartyMemberStatusUi> = emptyList()
 )
@@ -224,13 +248,18 @@ enum class ShopDialogueAction {
     LEAVE
 }
 
-data class RadialMenuUi(
-    val title: String,
-    val items: List<RadialMenuItemUi>
-)
+enum class MenuTab {
+    INVENTORY,
+    JOURNAL,
+    MAP,
+    STATS,
+    SETTINGS;
 
-data class RadialMenuItemUi(
-    val id: String,
-    val label: String,
-    val description: String? = null
-)
+    fun label(): String = when (this) {
+        INVENTORY -> "Inventory"
+        JOURNAL -> "Journal"
+        MAP -> "Map"
+        STATS -> "Stats"
+        SETTINGS -> "Settings"
+    }
+}

@@ -2,6 +2,7 @@ package com.example.starborn.data.repository
 
 import com.example.starborn.data.assets.WorldAssetDataSource
 import com.example.starborn.domain.model.Hub
+import com.example.starborn.domain.model.HubNode
 import com.example.starborn.domain.model.Room
 import com.example.starborn.domain.model.World
 import com.example.starborn.domain.repository.WorldRepository
@@ -19,4 +20,6 @@ class AssetWorldRepository(
     override suspend fun getHubs(): List<Hub> = assetDataSource.loadHubs()
 
     override suspend fun getRooms(): List<Room> = assetDataSource.loadRooms()
+
+    override suspend fun getHubNodes(): List<HubNode> = assetDataSource.loadHubNodes()
 }

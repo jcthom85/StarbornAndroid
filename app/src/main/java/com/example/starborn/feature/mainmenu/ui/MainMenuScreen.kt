@@ -77,7 +77,10 @@ fun MainMenuScreen(
                 Text("Load Game")
             }
             Spacer(modifier = Modifier.padding(8.dp))
-            Button(onClick = onStartGame) {
+            Button(onClick = {
+                viewModel.startNewGame()
+                onStartGame()
+            }) {
                 Text("Start Game")
             }
         }

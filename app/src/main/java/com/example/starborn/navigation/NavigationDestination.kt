@@ -4,6 +4,7 @@ import android.net.Uri
 
 sealed class NavigationDestination(val route: String) {
     data object MainMenu : NavigationDestination("main_menu")
+    data object Hub : NavigationDestination("hub")
     data object Exploration : NavigationDestination("exploration")
     data object Combat : NavigationDestination("combat/{enemyIds}") {
         fun create(enemyIds: List<String>): String {

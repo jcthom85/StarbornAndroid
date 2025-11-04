@@ -57,6 +57,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
+import java.util.ArrayDeque
 import java.io.File
 
 class AppServices(context: Context) {
@@ -93,6 +94,8 @@ class AppServices(context: Context) {
     val uiFxBus = UiFxBus()
     val fishingService = FishingService(fishingDataSource, inventoryService)
     val tutorialScripts = TutorialScriptRepository(assetReader)
+    private val bootstrapCinematics: ArrayDeque<String> = ArrayDeque()
+    private val bootstrapPlayerActions: ArrayDeque<String> = ArrayDeque()
 
     private val persistenceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private val runtimeScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
@@ -186,6 +189,48 @@ class AppServices(context: Context) {
         inventoryService.restore(imported.inventory)
         return true
     }
+
+    fun startNewGame() {
+        bootstrapCinematics.clear()
+        bootstrapPlayerActions.clear()
+        promptManager.dismissCurrent()
+        tutorialManager.cancelAllScheduled()
+        milestoneManager.clearHistory()
+
+        val defaultPlayer = runCatching { worldDataSource.loadCharacters().firstOrNull() }.getOrNull()
+        val playerId = defaultPlayer?.id
+        val baseLevel = defaultPlayer?.level ?: 1
+        val baseXp = defaultPlayer?.xp ?: 0
+        val seedState = GameSessionState(
+            worldId = "nova_prime",
+            hubId = "mining_colony",
+            roomId = null,
+            playerId = playerId,
+            playerLevel = baseLevel,
+            playerXp = baseXp,
+            partyMembers = playerId?.let { listOf(it) } ?: emptyList(),
+            partyMemberLevels = playerId?.let { mapOf(it to baseLevel) } ?: emptyMap(),
+            partyMemberXp = playerId?.let { mapOf(it to baseXp) } ?: emptyMap()
+        )
+        sessionStore.restore(seedState)
+        sessionStore.resetTutorialProgress()
+        inventoryService.restore(emptyMap())
+        questRuntimeManager.resetAll()
+
+        val introSceneId = when {
+            cinematicService.scene("intro_prologue") != null -> "intro_prologue"
+            cinematicService.scene("new_game_intro") != null -> "new_game_intro"
+            else -> null
+        }
+        introSceneId?.let { bootstrapCinematics.add(it) }
+        bootstrapPlayerActions.add("new_game_spawn_player_and_fade")
+    }
+
+    fun drainPendingCinematics(): List<String> =
+        bootstrapCinematics.toList().also { bootstrapCinematics.clear() }
+
+    fun drainPendingPlayerActions(): List<String> =
+        bootstrapPlayerActions.toList().also { bootstrapPlayerActions.clear() }
 
     private fun scheduleAutosave(state: GameSessionState) {
         autosaveJob?.cancel()

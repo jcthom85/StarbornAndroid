@@ -8,6 +8,7 @@ data class GameEvent(
     val trigger: EventTrigger,
     val repeatable: Boolean = false,
     val actions: List<EventAction>,
+    val conditions: List<EventCondition> = emptyList(),
     @Json(name = "on_message")
     val onMessage: String? = null,
     @Json(name = "off_message")
@@ -18,6 +19,8 @@ data class GameEvent(
 data class EventTrigger(
     val type: String,
     val npc: String? = null,
+    @Json(name = "room")
+    val room: String? = null,
     @Json(name = "room_id")
     val roomId: String? = null,
     @Json(name = "quest_id")
@@ -81,6 +84,11 @@ data class EventAction(
     val elseDo: List<EventAction>? = null,
     @Json(name = "to_stage_id")
     val toStageId: String? = null
+)
+
+data class EventCondition(
+    val type: String,
+    val milestone: String? = null
 )
 
 data class EventReward(

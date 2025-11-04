@@ -25,6 +25,7 @@ import com.example.starborn.feature.inventory.ui.InventoryRoute
 import com.example.starborn.navigation.NavigationDestination.Combat
 import com.example.starborn.navigation.NavigationDestination.Exploration
 import com.example.starborn.navigation.NavigationDestination.MainMenu
+import com.example.starborn.navigation.NavigationDestination.Hub
 import com.example.starborn.navigation.NavigationDestination.Inventory
 import com.example.starborn.navigation.NavigationDestination.Tinkering
 import com.example.starborn.navigation.NavigationDestination.Cooking
@@ -53,6 +54,9 @@ import com.example.starborn.feature.fishing.viewmodel.FishingResultPayload
 import com.example.starborn.feature.fishing.viewmodel.FishingViewModel
 import com.example.starborn.feature.fishing.viewmodel.FishingViewModelFactory
 import com.example.starborn.feature.fishing.ui.FishingRoute
+import com.example.starborn.feature.hub.ui.HubScreen
+import com.example.starborn.feature.hub.viewmodel.HubViewModel
+import com.example.starborn.feature.hub.viewmodel.HubViewModelFactory
 
 @Composable
 fun NavigationHost(navController: NavHostController = rememberNavController()) {
@@ -67,10 +71,31 @@ fun NavigationHost(navController: NavHostController = rememberNavController()) {
             MainMenuScreen(
                 viewModel = mainMenuViewModel,
                 onStartGame = {
-                    navController.navigate(Exploration.route)
+                    navController.navigate(Hub.route)
                 },
                 onSlotLoaded = {
-                    navController.navigate(Exploration.route)
+                    navController.navigate(Hub.route)
+                }
+            )
+        }
+        composable(Hub.route) {
+            val hubViewModel: HubViewModel = viewModel(
+                factory = HubViewModelFactory(
+                    services.worldDataSource,
+                    services.sessionStore
+                )
+            )
+            HubScreen(
+                viewModel = hubViewModel,
+                onEnterNode = { node ->
+                    navController.navigate(Exploration.route) {
+                        popUpTo(Hub.route) { inclusive = false }
+                    }
+                },
+                onSkipToExploration = {
+                    navController.navigate(Exploration.route) {
+                        popUpTo(Hub.route) { inclusive = false }
+                    }
                 }
             )
         }

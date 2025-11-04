@@ -74,6 +74,9 @@ import com.example.starborn.domain.audio.AudioCuePlayer
 import com.example.starborn.domain.inventory.InventoryEntry
 import com.example.starborn.navigation.CombatResultPayload
 import com.example.starborn.domain.leveling.LevelUpSummary
+import com.example.starborn.ui.vfx.ThemeBandOverlay
+import com.example.starborn.ui.vfx.VignetteOverlay
+import com.example.starborn.ui.vfx.WeatherOverlay
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.UUID
@@ -312,6 +315,26 @@ fun CombatScreen(
         }
 
         Box(modifier = Modifier.fillMaxSize()) {
+            WeatherOverlay(
+                weatherId = viewModel.weatherId,
+                modifier = Modifier.fillMaxSize()
+            )
+            VignetteOverlay(
+                visible = true,
+                intensity = 0.62f,
+                feather = 0.24f,
+                tint = Color.Black,
+                modifier = Modifier.fillMaxSize()
+            )
+            ThemeBandOverlay(
+                env = viewModel.environmentId ?: "combat",
+                weather = viewModel.weatherId,
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .padding(horizontal = 24.dp, vertical = 16.dp)
+                    .fillMaxWidth(0.9f)
+                    .height(72.dp)
+            )
             Column(
                 modifier = Modifier
                     .fillMaxSize()

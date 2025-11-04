@@ -1,12 +1,19 @@
 package com.example.starborn.feature.exploration.ui
 
+import android.graphics.BitmapFactory
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,91 +24,139 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.IntOffset
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.Slider
+import androidx.compose.material3.Switch
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.painter.BitmapPainter
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.starborn.R
 import com.example.starborn.domain.audio.AudioCuePlayer
 import com.example.starborn.domain.inventory.ItemUseResult
+import com.example.starborn.domain.milestone.MilestoneEvent
 import com.example.starborn.domain.model.CookingAction
 import com.example.starborn.domain.model.EventReward
 import com.example.starborn.domain.model.FirstAidAction
+import com.example.starborn.domain.model.Room
 import com.example.starborn.domain.model.RoomAction
 import com.example.starborn.domain.model.ShopAction
 import com.example.starborn.domain.model.TinkeringAction
+import com.example.starborn.domain.model.GenericAction
 import com.example.starborn.domain.model.actionKey
 import com.example.starborn.domain.model.serviceTag
+import com.example.starborn.domain.quest.QuestLogEntry
+import com.example.starborn.domain.tutorial.TutorialEntry
+import com.example.starborn.ui.vfx.ThemeBandOverlay
+import com.example.starborn.ui.vfx.VignetteOverlay
+import com.example.starborn.ui.vfx.WeatherOverlay
 import com.example.starborn.feature.exploration.viewmodel.ActionHintUi
 import com.example.starborn.feature.exploration.viewmodel.BlockedPrompt
 import com.example.starborn.feature.exploration.viewmodel.CinematicUiState
-import com.example.starborn.feature.exploration.viewmodel.ExplorationEvent
-import com.example.starborn.feature.exploration.viewmodel.ExplorationUiState
-import com.example.starborn.feature.exploration.viewmodel.ExplorationViewModel
 import com.example.starborn.feature.exploration.viewmodel.CombatOutcomeUi
 import com.example.starborn.feature.exploration.viewmodel.DialogueChoiceUi
 import com.example.starborn.feature.exploration.viewmodel.DialogueUi
+import com.example.starborn.feature.exploration.viewmodel.ExplorationEvent
+import com.example.starborn.feature.exploration.viewmodel.ExplorationUiState
+import com.example.starborn.feature.exploration.viewmodel.ExplorationViewModel
 import com.example.starborn.feature.exploration.viewmodel.LevelUpPrompt
+import com.example.starborn.feature.exploration.viewmodel.MenuTab
+import com.example.starborn.feature.exploration.viewmodel.MilestoneBandUi
 import com.example.starborn.feature.exploration.viewmodel.MinimapCellUi
 import com.example.starborn.feature.exploration.viewmodel.MinimapService
 import com.example.starborn.feature.exploration.viewmodel.MinimapUiState
 import com.example.starborn.feature.exploration.viewmodel.NarrationPrompt
+import com.example.starborn.feature.exploration.viewmodel.PartyStatusUi
+import com.example.starborn.feature.exploration.viewmodel.ProgressionSummaryUi
 import com.example.starborn.feature.exploration.viewmodel.QuestLogEntryUi
 import com.example.starborn.feature.exploration.viewmodel.QuestSummaryUi
-import com.example.starborn.feature.exploration.viewmodel.ShopDialogueChoiceUi
 import com.example.starborn.feature.exploration.viewmodel.ShopDialogueAction
+import com.example.starborn.feature.exploration.viewmodel.ShopDialogueChoiceUi
 import com.example.starborn.feature.exploration.viewmodel.ShopDialogueLineUi
 import com.example.starborn.feature.exploration.viewmodel.ShopGreetingUi
-import com.example.starborn.feature.exploration.viewmodel.MilestoneBandUi
-import com.example.starborn.feature.exploration.viewmodel.RadialMenuAction
-import com.example.starborn.feature.exploration.viewmodel.RadialMenuUi
-import com.example.starborn.feature.exploration.viewmodel.ProgressionSummaryUi
-import com.example.starborn.domain.milestone.MilestoneEvent
-import com.example.starborn.domain.quest.QuestLogEntry
-import com.example.starborn.domain.tutorial.TutorialEntry
-import java.util.Locale
+import com.example.starborn.feature.exploration.viewmodel.TogglePromptUi
+import com.example.starborn.feature.exploration.viewmodel.SettingsUiState
+import android.text.format.DateUtils
+import java.util.LinkedHashSet
 import kotlin.math.PI
+import kotlin.math.abs
 import kotlin.math.cos
-import kotlin.math.min
 import kotlin.math.roundToInt
 import kotlin.math.sin
+import kotlin.text.buildString
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import java.util.Locale
+import com.example.starborn.ui.theme.MinimapTextStyle
+
+
+
+
 @Composable
 fun ExplorationScreen(
     viewModel: ExplorationViewModel,
@@ -119,13 +174,12 @@ fun ExplorationScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle(initialValue = ExplorationUiState())
     val snackbarHostState = remember { SnackbarHostState() }
     val fxBursts = remember { mutableStateListOf<UiFxBurst>() }
-    val scope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
         viewModel.events.collect { event ->
             when (event) {
                 is ExplorationEvent.EnterCombat -> onEnemySelected(event.enemyIds)
-                is ExplorationEvent.PlayCinematic -> snackbarHostState.showSnackbar("Cinematic ${event.sceneId} queued")
+                is ExplorationEvent.PlayCinematic -> Unit
                 is ExplorationEvent.ShowMessage -> snackbarHostState.showSnackbar(event.message)
                 is ExplorationEvent.RewardGranted -> snackbarHostState.showSnackbar(formatRewardMessage(event.reward))
                 is ExplorationEvent.ItemGranted -> snackbarHostState.showSnackbar("Received ${event.quantity} x ${event.itemName}")
@@ -146,6 +200,10 @@ fun ExplorationScreen(
                 is ExplorationEvent.OpenShop -> onOpenShop(event.shopId)
                 is ExplorationEvent.CombatOutcome -> snackbarHostState.showSnackbar(event.message)
                 is ExplorationEvent.AudioCommands -> audioCuePlayer.execute(event.commands)
+                is ExplorationEvent.AudioSettingsChanged -> {
+                    audioCuePlayer.setUserMusicGain(event.musicVolume)
+                    audioCuePlayer.setUserSfxGain(event.sfxVolume)
+                }
             }
         }
     }
@@ -159,205 +217,363 @@ fun ExplorationScreen(
         }
     }
 
-    Box(modifier = modifier.fillMaxSize()) {
+    val swipeThresholdPx = with(LocalDensity.current) { 72.dp.toPx() }
+    var dragDelta by remember { mutableStateOf(Offset.Zero) }
+
+    val backgroundPainter = rememberRoomBackgroundPainter(uiState.currentRoom?.backgroundImage)
+
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .pointerInput(uiState.availableConnections, uiState.blockedDirections) {
+                detectDragGestures(
+                    onDragStart = { dragDelta = Offset.Zero },
+                    onDrag = { _, dragAmount -> dragDelta += dragAmount },
+                    onDragEnd = {
+                        val dx = dragDelta.x
+                        val dy = dragDelta.y
+                        val absDx = abs(dx)
+                        val absDy = abs(dy)
+                        var direction: String? = null
+                        if (absDx > absDy && absDx > swipeThresholdPx) {
+                            direction = if (dx < 0f) "west" else "east"
+                        } else if (absDy > swipeThresholdPx) {
+                            direction = if (dy < 0f) "north" else "south"
+                        }
+                        direction?.let { dir ->
+                            val targetDir = uiState.availableConnections.keys.firstOrNull { key ->
+                                key.equals(dir, ignoreCase = true)
+                            }
+                            val blocked = uiState.blockedDirections.any { it.equals(dir, ignoreCase = true) }
+                            if (targetDir != null && !blocked) {
+                                viewModel.travel(targetDir)
+                            }
+                        }
+                    }
+                )
+            }
+    ) {
         Image(
-            painter = painterResource(id = R.drawable.main_menu_background),
+            painter = backgroundPainter,
             contentDescription = null,
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
         )
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(24.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            HeaderRow(
-                roomTitle = uiState.currentRoom?.title ?: "Unknown area",
-                onInventory = onOpenInventory,
-                onTinkering = { onOpenTinkering(null) },
-                onCooking = { onOpenCooking(null) },
-                onFirstAid = { onOpenFirstAid(null) },
-                onFishing = { onOpenFishing(uiState.currentRoom?.id) },
-                onServices = { viewModel.openServicesMenu() },
-                summarisedProgress = uiState.progressionSummary
+        val currentRoom = uiState.currentRoom
+        val isRoomDark = remember(currentRoom, uiState.roomState) {
+            when {
+                uiState.roomState["dark"] == true -> true
+                uiState.roomState["light_on"] == false -> true
+                else -> currentRoom?.dark == true
+            }
+        }
+        val baseRoomDescription = remember(currentRoom, uiState.roomState, isRoomDark) {
+            currentRoom?.let { room ->
+                if (isRoomDark && !room.descriptionDark.isNullOrBlank()) room.descriptionDark else room.description
+            }
+        }
+
+        val darknessAlpha by animateFloatAsState(
+            targetValue = if (isRoomDark) 0.82f else 0f,
+            animationSpec = tween(durationMillis = 320)
+        )
+        if (darknessAlpha > 0.01f) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color(0xFF050B18).copy(alpha = darknessAlpha))
             )
+        }
+        WeatherOverlay(
+            weatherId = currentRoom?.weather,
+            modifier = Modifier.fillMaxSize()
+        )
+        val hasWeather = !currentRoom?.weather.isNullOrBlank()
+        val vignetteIntensity = when {
+            isRoomDark -> 0.5f
+            hasWeather -> 0.3f
+            else -> 0.22f
+        }
+        VignetteOverlay(
+            visible = uiState.settings.vignetteEnabled && vignetteIntensity > 0f,
+            intensity = vignetteIntensity,
+            feather = 0.25f,
+            tint = Color.Black,
+            modifier = Modifier.fillMaxSize()
+        )
+        val actionHints = uiState.actionHints
+        val inlinePlan = remember(baseRoomDescription, uiState.actions, actionHints) {
+            buildInlineActionPlan(
+                description = baseRoomDescription,
+                actions = uiState.actions,
+                hints = actionHints
+            )
+        }
+        val inlineActionKeys = inlinePlan?.inlineKeys ?: emptySet()
+        val remainingActions = remember(uiState.actions, inlineActionKeys) {
+            uiState.actions.filterNot { inlineActionKeys.contains(it.actionKey()) }
+        }
 
-            Row(
-                modifier = Modifier.fillMaxSize(),
-                horizontalArrangement = Arrangement.spacedBy(20.dp)
-            ) {
-                Column(
-                    modifier = Modifier
-                        .weight(2f)
-                        .fillMaxHeight(),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    uiState.currentRoom?.let { room ->
-                        SectionCard(title = room.title.ifBlank { "Current Area" }) {
-                            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                                Text(
-                                    text = room.description,
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = Color.White.copy(alpha = 0.92f)
+        val serviceQuickActions = remember(uiState.actions, uiState.actionHints, currentRoom?.id) {
+            val unique = LinkedHashSet<String>()
+            val items = mutableListOf<QuickMenuAction>()
+            uiState.actions.forEach { action ->
+                val hint = uiState.actionHints[action.actionKey()]
+                if (hint?.locked == true) return@forEach
+                when (action) {
+                    is ShopAction -> {
+                        val shopId = action.shopId ?: return@forEach
+                        if (unique.add("shop:$shopId")) {
+                            val label = action.name.takeIf { it.isNotBlank() } ?: "Shop"
+                            items += QuickMenuAction(
+                                iconRes = R.drawable.shop_icon,
+                                label = label,
+                                roomAction = action
+                            )
+                        }
+                    }
+                    is TinkeringAction -> {
+                        val key = "tinkering:${action.shopId.orEmpty()}"
+                        if (unique.add(key)) {
+                            val label = action.name.takeIf { it.isNotBlank() } ?: "Tinkering"
+                            items += QuickMenuAction(
+                                iconRes = R.drawable.tinkering_icon,
+                                label = label,
+                                roomAction = action
+                            )
+                        }
+                    }
+                    is CookingAction -> {
+                        val key = "cooking:${action.stationId.orEmpty()}"
+                        if (unique.add(key)) {
+                            val label = action.name.takeIf { it.isNotBlank() } ?: "Cooking"
+                            items += QuickMenuAction(
+                                iconRes = R.drawable.cooking_icon,
+                                label = label,
+                                roomAction = action
+                            )
+                        }
+                    }
+                    is FirstAidAction -> {
+                        val key = "firstaid:${action.stationId.orEmpty()}"
+                        if (unique.add(key)) {
+                            val label = action.name.takeIf { it.isNotBlank() } ?: "First Aid"
+                            items += QuickMenuAction(
+                                iconRes = R.drawable.firstaid_icon,
+                                label = label,
+                                roomAction = action
+                            )
+                        }
+                    }
+                    is GenericAction -> {
+                        val type = action.type.lowercase(Locale.getDefault())
+                        if (type.contains("fish")) {
+                            val zone = action.zoneId ?: currentRoom?.id.orEmpty()
+                            val key = "fish:$zone"
+                            if (unique.add(key)) {
+                                val label = action.name.takeIf { it.isNotBlank() } ?: "Fishing"
+                                items += QuickMenuAction(
+                                    iconRes = R.drawable.fishing_icon,
+                                    label = label,
+                                    roomAction = action
                                 )
-                                if (room.state.isNotEmpty()) {
-                                    val stateSummary = room.state.entries.joinToString(separator = " · ") { (key, value) ->
-                                        val flag = (value as? Boolean) ?: false
-                                        "${key.replace('_', ' ')}: ${if (flag) "ON" else "off"}"
-                                    }
-                                    Text(
-                                        text = stateSummary,
-                                        style = MaterialTheme.typography.bodySmall,
-                                        color = Color.White.copy(alpha = 0.7f)
-                                    )
-                                }
                             }
                         }
                     }
-
-                    MinimapWidget(
-                        minimap = uiState.minimap,
-                        onLegend = { viewModel.openMinimapLegend() },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-
-                    if (uiState.actions.isNotEmpty()) {
-                        SectionCard(title = "Points of Interest") {
-                            LazyColumn(
-                                verticalArrangement = Arrangement.spacedBy(8.dp)
-                            ) {
-                                items(uiState.actions) { action ->
-                                    val hint = uiState.actionHints[action.actionKey()]
-                                    val service = action.serviceTag()
-                                    val label = buildString {
-                                        append(action.name)
-                                        if (service != null) append(" · $service")
-                                    }
-                                    val subtitle = hint?.message
-                                    Button(
-                                        onClick = { viewModel.onActionSelected(action) },
-                                        enabled = hint?.locked != true,
-                                        modifier = Modifier.fillMaxWidth()
-                                    ) {
-                                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                            Text(label)
-                                            subtitle?.let {
-                                                Text(
-                                                    text = it,
-                                                    style = MaterialTheme.typography.labelSmall,
-                                                    color = Color.White.copy(alpha = 0.75f)
-                                                )
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    if (uiState.groundItems.isNotEmpty()) {
-                        SectionCard(title = "Items Nearby") {
-                            LazyColumn(
-                                verticalArrangement = Arrangement.spacedBy(6.dp)
-                            ) {
-                                items(uiState.groundItems.toList()) { (itemId, quantity) ->
-                                    Row(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        horizontalArrangement = Arrangement.SpaceBetween,
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        Text(text = "$itemId ×$quantity", color = Color.White)
-                                        Button(onClick = { viewModel.collectGroundItem(itemId) }) {
-                                            Text("Take")
-                                        }
-                                    }
-                                }
-                                item {
-                                    Button(onClick = { viewModel.collectAllGroundItems() }) {
-                                        Text("Take All")
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    else -> Unit
                 }
+            }
+            items
+        }
 
-                Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight(),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    uiState.statusMessage?.let { message ->
-                        SectionCard(title = "Status") {
-                            Text(text = message, color = Color.White)
-                        }
-                    }
-
-                    val partyMembers = uiState.partyStatus.members
-                    if (partyMembers.isNotEmpty()) {
-                        SectionCard(title = "Party") {
-                            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                                partyMembers.forEach { member ->
-                                    Column {
-                                        Text(
-                                            text = "${member.name} · Lv ${member.level}",
-                                            style = MaterialTheme.typography.labelLarge,
-                                            color = Color.White
-                                        )
-                                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                            member.hpLabel?.let {
-                                                Text(
-                                                    text = "HP: $it",
-                                                    style = MaterialTheme.typography.bodySmall,
-                                                    color = Color.White.copy(alpha = 0.8f)
-                                                )
-                                            }
-                                            member.rpLabel?.let {
-                                                Text(
-                                                    text = "RP: $it",
-                                                    style = MaterialTheme.typography.bodySmall,
-                                                    color = Color.White.copy(alpha = 0.8f)
-                                                )
-                                            }
-                                            Text(
-                                                text = "XP: ${member.xpLabel}",
-                                                style = MaterialTheme.typography.bodySmall,
-                                                color = Color.White.copy(alpha = 0.7f)
-                                            )
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    val trackedQuest = uiState.questLogActive.firstOrNull { it.id == uiState.trackedQuestId }
-                    val hasQuestData = trackedQuest != null ||
-                        uiState.questLogActive.isNotEmpty() ||
-                        uiState.questLogCompleted.isNotEmpty() ||
-                        uiState.failedQuests.isNotEmpty() ||
-                        uiState.questLogEntries.isNotEmpty()
-                    if (hasQuestData) {
-                        QuestSummaryCard(
-                            trackedQuest = trackedQuest,
-                            activeQuests = uiState.questLogActive,
-                            completedQuests = uiState.questLogCompleted,
-                            failedQuests = uiState.failedQuests,
-                            questLog = uiState.questLogEntries
+        val quickMenuActions = remember(serviceQuickActions, uiState.milestoneHistory) {
+            buildList {
+                addAll(serviceQuickActions)
+                add(
+                    QuickMenuAction(
+                        iconRes = R.drawable.inventory_icon,
+                        label = "Inventory",
+                        tab = MenuTab.INVENTORY
+                    )
+                )
+                add(
+                    QuickMenuAction(
+                        iconRes = R.drawable.journal_icon,
+                        label = "Journal",
+                        tab = MenuTab.JOURNAL
+                    )
+                )
+                add(
+                    QuickMenuAction(
+                        iconRes = R.drawable.stats_icon,
+                        label = "Stats",
+                        tab = MenuTab.STATS
+                    )
+                )
+                add(
+                    QuickMenuAction(
+                        iconRes = R.drawable.settings_icon,
+                        label = "Settings",
+                        tab = MenuTab.SETTINGS
+                    )
+                )
+                if (uiState.milestoneHistory.isNotEmpty()) {
+                    add(
+                        QuickMenuAction(
+                            iconRes = R.drawable.milestone_icon,
+                            label = "Milestones",
+                            command = QuickMenuCommand.SHOW_MILESTONES
                         )
-                    }
-
-                    val recentMilestones = uiState.milestoneHistory.takeLast(5).asReversed()
-                    if (recentMilestones.isNotEmpty()) {
-                        MilestoneHistoryCard(recentMilestones)
-                    }
+                    )
                 }
             }
         }
 
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 24.dp, vertical = 24.dp)
+        ) {
+            ThemeBandOverlay(
+                env = currentRoom?.env,
+                weather = currentRoom?.weather,
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .fillMaxWidth()
+                    .height(96.dp)
+            )
+            Column(
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .widthIn(max = 320.dp),
+                verticalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                Text(
+                    text = uiState.currentRoom?.title ?: "Unknown area",
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = Color.White
+                )
+                val progress = uiState.progressionSummary
+                Text(
+                    text = buildString {
+                        append("Level ${progress.playerLevel}")
+                        append(" • ${progress.creditsLabel}")
+                        progress.xpToNextLabel?.let { append(" • $it") }
+                    },
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color.White.copy(alpha = 0.75f)
+                )
+                HorizontalDivider(
+                    modifier = Modifier
+                        .padding(top = 8.dp)
+                        .fillMaxWidth(0.5f),
+                    color = Color.White.copy(alpha = 0.35f)
+                )
+            }
+
+            MinimapWidget(
+                minimap = uiState.minimap,
+                onLegend = { viewModel.openMinimapLegend() },
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .width(184.dp)
+                    .height(184.dp)
+            )
+
+            RoomDescriptionPanel(
+                currentRoom = currentRoom,
+                description = baseRoomDescription,
+                plan = inlinePlan,
+                isDark = isRoomDark,
+                onAction = { action -> viewModel.onActionSelected(action) },
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .fillMaxWidth(0.8f)
+                    .heightIn(min = 240.dp, max = 480.dp)
+            )
+
+            if (remainingActions.isNotEmpty()) {
+                ActionListPanel(
+                    actions = remainingActions,
+                    actionHints = uiState.actionHints,
+                    onAction = { action -> viewModel.onActionSelected(action) },
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(bottom = 120.dp)
+                )
+            }
+
+            if (uiState.groundItems.isNotEmpty()) {
+                GroundItemsPanel(
+                    items = uiState.groundItems,
+                    onCollect = { itemId -> viewModel.collectGroundItem(itemId) },
+                    onCollectAll = { viewModel.collectAllGroundItems() },
+                    modifier = Modifier
+                        .align(Alignment.BottomStart)
+                        .padding(bottom = 120.dp)
+                )
+            }
+
+            if (serviceQuickActions.isNotEmpty()) {
+                ServiceActionTray(
+                    actions = serviceQuickActions,
+                    onAction = { quick ->
+                        quick.roomAction?.let { viewModel.onActionSelected(it) }
+                    },
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 72.dp)
+                )
+            }
+
+            uiState.statusMessage?.let { message ->
+                StatusMessageChip(
+                    message = message,
+                    onDismiss = { viewModel.clearStatusMessage() },
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .padding(top = 96.dp)
+                )
+            }
+
+            Column(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Button(onClick = { viewModel.toggleQuickMenu() }) {
+                    Text(if (uiState.isQuickMenuVisible) "Close" else "Menu")
+                }
+            }
+
+            if (uiState.isQuickMenuVisible && quickMenuActions.isNotEmpty()) {
+                QuickMenuOverlay(
+                    actions = quickMenuActions,
+                    onDismiss = { viewModel.toggleQuickMenu() },
+                    onSelect = { action ->
+                        when {
+                            action.roomAction != null -> viewModel.onActionSelected(action.roomAction)
+                            action.command == QuickMenuCommand.SHOW_MILESTONES -> viewModel.openMilestoneGallery()
+                            action.tab != null -> viewModel.openMenuOverlay(action.tab)
+                        }
+                    },
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .zIndex(1f),
+                    anchorSpacing = 104.dp
+                )
+            }
+        }
+        uiState.togglePrompt?.let { prompt ->
+            TogglePromptDialog(
+                prompt = prompt,
+                onSelect = { enable -> viewModel.onTogglePromptSelection(enable) },
+                onDismiss = { viewModel.dismissTogglePrompt() },
+                modifier = Modifier.align(Alignment.Center)
+            )
+        }
         uiState.activeDialogue?.let { dialogue ->
             DialogueOverlay(
                 dialogue = dialogue,
@@ -380,17 +596,41 @@ fun ExplorationScreen(
             )
         }
 
-        uiState.radialMenu?.let { menu ->
-            RadialMenuOverlay(
-                menu = menu,
-                onSelect = { id ->
-                    when (viewModel.selectRadialMenuItem(id)) {
-                        RadialMenuAction.Inventory -> onOpenInventory()
-                        RadialMenuAction.Milestones -> Unit
-                        RadialMenuAction.None -> Unit
-                    }
-                },
-                onDismiss = { viewModel.dismissServicesMenu() }
+            if (uiState.isMenuOverlayVisible) {
+                MenuOverlay(
+                    selectedTab = uiState.menuTab,
+                    onSelectTab = { viewModel.selectMenuTab(it) },
+                    onClose = { viewModel.closeMenuOverlay() },
+                    onOpenInventory = {
+                        viewModel.closeMenuOverlay()
+                        onOpenInventory()
+                    },
+                    onOpenJournal = {
+                        viewModel.closeMenuOverlay()
+                        viewModel.openQuestLog()
+                    },
+                    onOpenMap = {
+                        viewModel.closeMenuOverlay()
+                        viewModel.openMinimapLegend()
+                    },
+                    settings = uiState.settings,
+                    onMusicVolumeChange = { viewModel.updateMusicVolume(it) },
+                    onSfxVolumeChange = { viewModel.updateSfxVolume(it) },
+                    onToggleVignette = { viewModel.setVignetteEnabled(it) },
+                    partyStatus = uiState.partyStatus,
+                    minimap = uiState.minimap
+                )
+            }
+
+        if (uiState.isQuestLogVisible) {
+            QuestJournalOverlay(
+                trackedQuest = uiState.questLogActive.firstOrNull { it.id == uiState.trackedQuestId },
+                activeQuests = uiState.questLogActive,
+                completedQuests = uiState.questLogCompleted,
+                failedQuests = uiState.failedQuests,
+                questLog = uiState.questLogEntries,
+                onClose = { viewModel.closeQuestLog() },
+                modifier = Modifier.align(Alignment.Center)
             )
         }
 
@@ -423,108 +663,210 @@ fun ExplorationScreen(
 }
 
 @Composable
-private fun HeaderRow(
-    roomTitle: String,
-    onInventory: () -> Unit,
-    onTinkering: () -> Unit,
-    onCooking: () -> Unit,
-    onFirstAid: () -> Unit,
-    onFishing: () -> Unit,
-    onServices: () -> Unit,
-    summarisedProgress: ProgressionSummaryUi
-) {
-    Column(
-        modifier = Modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        Text(
-            text = roomTitle,
-            style = MaterialTheme.typography.headlineSmall,
-            color = Color.White
-        )
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Button(onClick = onInventory) { Text("Inventory") }
-            Button(onClick = onTinkering) { Text("Tinkering") }
-            Button(onClick = onCooking) { Text("Cooking") }
-            Button(onClick = onFirstAid) { Text("First Aid") }
-            Button(onClick = onFishing) { Text("Fishing") }
-            Button(onClick = onServices) { Text("Services") }
-        }
-        Text(
-            text = buildString {
-                append("Level ${summarisedProgress.playerLevel}")
-                append(" • ${summarisedProgress.creditsLabel}")
-                summarisedProgress.xpToNextLabel?.let { append(" • $it") }
-            },
-            style = MaterialTheme.typography.bodySmall,
-            color = Color.White.copy(alpha = 0.75f)
-        )
-    }
-}
-
-@Composable
 private fun MinimapWidget(
     minimap: MinimapUiState?,
     onLegend: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val shape = RoundedCornerShape(26.dp)
     Surface(
         modifier = modifier
-            .border(1.dp, Color.White.copy(alpha = 0.2f))
-            .padding(12.dp),
-        color = Color.Black.copy(alpha = 0.55f)
+            .width(164.dp)
+            .height(164.dp)
+            .clip(shape)
+            .border(
+                width = 1.6.dp,
+                color = Color(0xFF63D7FF).copy(alpha = 0.85f),
+                shape = shape
+            ),
+        tonalElevation = 12.dp,
+        shadowElevation = 12.dp,
+        color = Color(0xE6101823)
     ) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 14.dp, vertical = 12.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text("Local Map", color = Color.White, fontWeight = FontWeight.SemiBold)
-                Button(onClick = onLegend) { Text("Legend") }
-            }
             Canvas(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(160.dp)
-                    .background(Color.Black.copy(alpha = 0.2f))
+                    .weight(1f)
             ) {
+                val panelColor = Brush.linearGradient(
+                    listOf(
+                        Color(0xFF0A141F).copy(alpha = 0.92f),
+                        Color(0xFF061018).copy(alpha = 0.86f)
+                    )
+                )
+                val cornerRadius = size.minDimension * 0.14f
+                drawRoundRect(
+                    brush = panelColor,
+                    cornerRadius = CornerRadius(cornerRadius, cornerRadius)
+                )
+
                 val state = minimap ?: return@Canvas
-                val cellSize = size.minDimension / 4f
+                val gridCells = 3f
+                val cellSize = size.minDimension / gridCells
                 val centerX = size.width / 2f
                 val centerY = size.height / 2f
-                state.cells.forEach { cell ->
+                val directionVectors = mapOf(
+                    "north" to Offset(0f, -1f),
+                    "south" to Offset(0f, 1f),
+                    "east" to Offset(1f, 0f),
+                    "west" to Offset(-1f, 0f)
+                )
+
+                val gridStartX = centerX - cellSize * gridCells / 2f
+                val gridStartY = centerY - cellSize * gridCells / 2f
+                val gridColor = Color(0xFF58D1FF).copy(alpha = 0.18f)
+                for (i in 0..3) {
+                    val x = gridStartX + i * cellSize
+                    drawLine(
+                        color = gridColor,
+                        start = Offset(x, gridStartY),
+                        end = Offset(x, gridStartY + cellSize * gridCells),
+                        strokeWidth = cellSize * 0.02f
+                    )
+                    val y = gridStartY + i * cellSize
+                    drawLine(
+                        color = gridColor,
+                        start = Offset(gridStartX, y),
+                        end = Offset(gridStartX + cellSize * gridCells, y),
+                        strokeWidth = cellSize * 0.02f
+                    )
+                }
+
+                fun withinViewport(cell: MinimapCellUi): Boolean {
+                    return abs(cell.offsetX) <= 1f && abs(cell.offsetY) <= 1f
+                }
+
+                // connection trails
+                state.cells.filter(::withinViewport).forEach { cell ->
                     val cx = centerX + cell.offsetX * cellSize
                     val cy = centerY - cell.offsetY * cellSize
-                    val baseColor = when {
-                        cell.isCurrent -> Color(0xFFFFD54F)
-                        cell.visited -> Color(0xFF64B5F6)
-                        cell.discovered -> Color(0xFF1F2F3C)
-                        else -> Color(0xFF0A0F14)
+                    val strokeColor = if (cell.isCurrent) Color(0xFFFFE082) else Color(0xFF58D1FF)
+                    cell.connections.forEach { direction ->
+                        val vector = directionVectors[direction.lowercase(Locale.getDefault())] ?: return@forEach
+                        val endX = cx + vector.x * cellSize
+                        val endY = cy + vector.y * cellSize
+                        drawLine(
+                            color = strokeColor.copy(alpha = 0.55f),
+                            start = Offset(cx, cy),
+                            end = Offset(endX, endY),
+                            strokeWidth = cellSize * 0.06f,
+                            cap = StrokeCap.Round
+                        )
                     }
-                    drawRect(
-                        color = baseColor,
-                        topLeft = androidx.compose.ui.geometry.Offset(cx - cellSize / 2f, cy - cellSize / 2f),
-                        size = androidx.compose.ui.geometry.Size(cellSize * 0.9f, cellSize * 0.9f)
+                }
+
+                state.cells.filter(::withinViewport).forEach { cell ->
+                    val cx = centerX + cell.offsetX * cellSize
+                    val cy = centerY - cell.offsetY * cellSize
+                    val tileRadius = cellSize * 0.32f
+                    val tileColor = when {
+                        cell.isCurrent -> Color(0xFFFFE082)
+                        cell.visited -> Color(0xFF5CC4FF)
+                        cell.discovered -> Color(0xFF1F2F3C)
+                        else -> Color(0x66061018)
+                    }
+                    drawRoundRect(
+                        color = tileColor.copy(alpha = if (cell.discovered || cell.visited || cell.isCurrent) 0.95f else 0.35f),
+                        topLeft = Offset(cx - tileRadius, cy - tileRadius),
+                        size = Size(tileRadius * 2f, tileRadius * 2f),
+                        cornerRadius = CornerRadius(tileRadius * 0.45f, tileRadius * 0.45f)
                     )
+                    if (cell.isCurrent) {
+                        drawCircle(
+                            color = Color(0xFFFFF8E1),
+                            radius = tileRadius * 0.65f,
+                            center = Offset(cx, cy),
+                            style = Stroke(width = tileRadius * 0.28f)
+                        )
+                    }
                     if (cell.services.isNotEmpty()) {
-                        val offsets = serviceOffsets(cell.services.size, cellSize * 0.25f)
+                        val offsets = serviceOffsets(cell.services.size, tileRadius * 0.85f)
                         cell.services.sortedBy { it.ordinal }.forEachIndexed { index, service ->
                             drawServiceGlyph(
                                 service = service,
                                 centerX = cx + offsets[index].first,
                                 centerY = cy + offsets[index].second,
-                                size = cellSize * 0.18f
+                                size = tileRadius * 0.45f
                             )
                         }
                     }
+                    cell.pathHints.forEach { direction ->
+                        val vector = directionVectors[direction.lowercase(Locale.getDefault())] ?: return@forEach
+                        val indicatorCenter = Offset(
+                            x = cx + vector.x * tileRadius * 1.4f,
+                            y = cy + vector.y * tileRadius * 1.4f
+                        )
+                        drawCircle(
+                            color = Color(0xFFFFE082),
+                            radius = tileRadius * 0.35f,
+                            center = indicatorCenter
+                        )
+                    }
                 }
+
+                // corner accents
+                val accentColor = Color(0xFF63D7FF).copy(alpha = 0.75f)
+                val accentLength = size.minDimension * 0.18f
+                val inset = size.minDimension * 0.08f
+                fun accent(start: Offset, end: Offset) {
+                    drawLine(
+                        color = accentColor,
+                        start = start,
+                        end = end,
+                        strokeWidth = size.minDimension * 0.01f,
+                        cap = StrokeCap.Round
+                    )
+                }
+                accent(
+                    start = Offset(inset, inset + accentLength),
+                    end = Offset(inset, inset)
+                )
+                accent(
+                    start = Offset(inset, inset),
+                    end = Offset(inset + accentLength, inset)
+                )
+                accent(
+                    start = Offset(size.width - inset, inset + accentLength),
+                    end = Offset(size.width - inset, inset)
+                )
+                accent(
+                    start = Offset(size.width - inset - accentLength, inset),
+                    end = Offset(size.width - inset, inset)
+                )
+                accent(
+                    start = Offset(inset, size.height - inset - accentLength),
+                    end = Offset(inset, size.height - inset)
+                )
+                accent(
+                    start = Offset(inset, size.height - inset),
+                    end = Offset(inset + accentLength, size.height - inset)
+                )
+                accent(
+                    start = Offset(size.width - inset, size.height - inset - accentLength),
+                    end = Offset(size.width - inset, size.height - inset)
+                )
+                accent(
+                    start = Offset(size.width - inset - accentLength, size.height - inset),
+                    end = Offset(size.width - inset, size.height - inset)
+                )
+            }
+
+            OutlinedButton(
+                onClick = onLegend,
+                enabled = minimap != null,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = "Legend",
+                    style = MinimapTextStyle
+                )
             }
         }
     }
@@ -590,67 +932,1069 @@ private fun DrawScope.drawServiceGlyph(service: MinimapService, centerX: Float, 
 }
 
 @Composable
-private fun RadialMenuOverlay(
-    menu: RadialMenuUi,
-    onSelect: (String) -> Unit,
-    onDismiss: () -> Unit
+private fun MenuOverlay(
+    selectedTab: MenuTab,
+    onSelectTab: (MenuTab) -> Unit,
+    onClose: () -> Unit,
+    onOpenInventory: () -> Unit,
+    onOpenJournal: () -> Unit,
+    onOpenMap: () -> Unit,
+    settings: SettingsUiState,
+    onMusicVolumeChange: (Float) -> Unit,
+    onSfxVolumeChange: (Float) -> Unit,
+    onToggleVignette: (Boolean) -> Unit,
+    partyStatus: PartyStatusUi,
+    minimap: MinimapUiState?
 ) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Black.copy(alpha = 0.55f))
-            .padding(32.dp)
+    Dialog(onDismissRequest = onClose, properties = DialogProperties(usePlatformDefaultWidth = false)) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.65f))
+        ) {
+            Surface(
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .fillMaxWidth(0.94f)
+                    .padding(horizontal = 16.dp),
+                shape = RoundedCornerShape(20.dp),
+                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.96f)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .padding(20.dp)
+                        .fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Menu",
+                            style = MaterialTheme.typography.titleLarge,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        Text(
+                            text = "Close",
+                            style = MaterialTheme.typography.labelLarge,
+                            color = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier
+                                .clickable { onClose() }
+                                .padding(4.dp)
+                        )
+                    }
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .horizontalScroll(rememberScrollState()),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        MenuTab.values().forEach { tab ->
+                            if (tab == selectedTab) {
+                                Button(onClick = { onSelectTab(tab) }) {
+                                    Text(tab.label())
+                                }
+                            } else {
+                                OutlinedButton(onClick = { onSelectTab(tab) }) {
+                                    Text(tab.label())
+                                }
+                            }
+                        }
+                    }
+
+                    MenuTabContent(
+                        tab = selectedTab,
+                        settings = settings,
+                        partyStatus = partyStatus,
+                        minimap = minimap,
+                        onClose = onClose,
+                        onOpenInventory = onOpenInventory,
+                        onOpenJournal = onOpenJournal,
+                        onOpenMap = onOpenMap,
+                        onMusicVolumeChange = onMusicVolumeChange,
+                        onSfxVolumeChange = onSfxVolumeChange,
+                        onToggleVignette = onToggleVignette
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun MenuTabContent(
+    tab: MenuTab,
+    settings: SettingsUiState,
+    partyStatus: PartyStatusUi,
+    minimap: MinimapUiState?,
+    onClose: () -> Unit,
+    onOpenInventory: () -> Unit,
+    onOpenJournal: () -> Unit,
+    onOpenMap: () -> Unit,
+    onMusicVolumeChange: (Float) -> Unit,
+    onSfxVolumeChange: (Float) -> Unit,
+    onToggleVignette: (Boolean) -> Unit
+) {
+    when (tab) {
+        MenuTab.INVENTORY -> {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                Text(
+                    text = "Manage your gear, consumables, and equipment.",
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Button(onClick = {
+                    onClose()
+                    onOpenInventory()
+                }) {
+                    Text("Open Inventory")
+                }
+            }
+        }
+        MenuTab.JOURNAL -> {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                Text(
+                    text = "Review active quests and milestones.",
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Button(onClick = {
+                    onClose()
+                    onOpenJournal()
+                }) {
+                    Text("Open Journal")
+                }
+            }
+        }
+        MenuTab.MAP -> {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                if (minimap != null) {
+                    MinimapWidget(
+                        minimap = minimap,
+                        onLegend = { },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .heightIn(min = 180.dp)
+                    )
+                } else {
+                    Text(
+                        text = "Map data unavailable in this area.",
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                }
+                Button(onClick = {
+                    onClose()
+                    onOpenMap()
+                }) {
+                    Text("Show Map Legend")
+                }
+            }
+        }
+        MenuTab.STATS -> {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                if (partyStatus.members.isEmpty()) {
+                    Text(
+                        text = "Party roster pending.",
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                } else {
+                    partyStatus.members.forEach { member ->
+                        Column {
+                            Text(
+                                text = "${member.name} · Lv ${member.level}",
+                                style = MaterialTheme.typography.labelLarge,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                            Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                                member.hpLabel?.let {
+                                    Text("HP: $it", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                }
+                                member.rpLabel?.let {
+                                    Text("RP: $it", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                }
+                                Text("XP: ${member.xpLabel}", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        MenuTab.SETTINGS -> {
+            Column(verticalArrangement = Arrangement.spacedBy(18.dp)) {
+                Text(
+                    text = "Audio",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(
+                        text = "Music Volume: ${ (settings.musicVolume * 100).roundToInt() }%",
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Slider(
+                        value = settings.musicVolume,
+                        onValueChange = onMusicVolumeChange,
+                        valueRange = 0f..1f
+                    )
+                }
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(
+                        text = "Effects Volume: ${ (settings.sfxVolume * 100).roundToInt() }%",
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Slider(
+                        value = settings.sfxVolume,
+                        onValueChange = onSfxVolumeChange,
+                        valueRange = 0f..1f
+                    )
+                }
+                HorizontalDivider()
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Column {
+                        Text(
+                            text = "Light Vignette",
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        Text(
+                            text = if (settings.vignetteEnabled) "Enabled" else "Disabled",
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
+                    Switch(
+                        checked = settings.vignetteEnabled,
+                        onCheckedChange = onToggleVignette
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun RoomDescription(
+    plan: InlineActionPlan?,
+    description: String?,
+    isDark: Boolean,
+    onAction: (RoomAction) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    if (description.isNullOrBlank()) {
+        Text(
+            text = "No description available.",
+            style = MaterialTheme.typography.bodyLarge,
+            color = Color.White.copy(alpha = 0.85f),
+            textAlign = TextAlign.Start,
+            modifier = modifier
+        )
+        return
+    }
+    if (plan == null) {
+        Text(
+            text = description,
+            style = MaterialTheme.typography.bodyLarge,
+            color = Color.White.copy(alpha = 0.92f),
+            textAlign = TextAlign.Start,
+            modifier = modifier
+        )
+        return
+    }
+
+    val defaultColor = Color.White.copy(alpha = 0.92f)
+    val highlightColor = if (isDark) Color(0xFF7BE8FF) else MaterialTheme.colorScheme.primary.copy(alpha = 0.9f)
+    val disabledColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.45f)
+
+    val annotatedText = remember(plan, highlightColor, disabledColor) {
+        buildAnnotatedString {
+            append(plan.description)
+            plan.segments.forEach { segment ->
+                addStyle(
+                    SpanStyle(
+                        color = if (segment.locked) disabledColor else highlightColor,
+                        fontWeight = FontWeight.SemiBold,
+                        textDecoration = if (segment.locked) TextDecoration.None else TextDecoration.Underline
+                    ),
+                    start = segment.start,
+                    end = segment.end
+                )
+                addStringAnnotation(
+                    tag = ACTION_TAG,
+                    annotation = segment.actionId,
+                    start = segment.start,
+                    end = segment.end
+                )
+            }
+        }
+    }
+    val actionLookup = remember(plan) {
+        plan.segments.associateBy { it.actionId }
+    }
+    val bodyStyle = MaterialTheme.typography.bodyLarge.copy(color = defaultColor, textAlign = TextAlign.Start)
+    ClickableText(
+        text = annotatedText,
+        modifier = modifier,
+        style = bodyStyle
+    ) { offset ->
+        annotatedText.getStringAnnotations(ACTION_TAG, offset, offset).firstOrNull()?.let { annotation ->
+            val segment = actionLookup[annotation.item] ?: return@ClickableText
+            if (!segment.locked) {
+                onAction(segment.action)
+            }
+        }
+    }
+}
+
+private data class QuickMenuAction(
+    val iconRes: Int,
+    val label: String,
+    val tab: MenuTab? = null,
+    val roomAction: RoomAction? = null,
+    val command: QuickMenuCommand? = null
+)
+
+private enum class QuickMenuCommand {
+    SHOW_MILESTONES
+}
+
+@Composable
+private fun ServiceActionTray(
+    actions: List<QuickMenuAction>,
+    onAction: (QuickMenuAction) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val serviceActions = remember(actions) { actions.filter { it.roomAction != null } }
+    if (serviceActions.isEmpty()) return
+
+    Surface(
+        modifier = modifier,
+        color = Color(0xE60D1C2C),
+        shape = RoundedCornerShape(28.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(horizontal = 20.dp, vertical = 14.dp),
+            horizontalArrangement = Arrangement.spacedBy(18.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            serviceActions.forEach { action ->
+                Surface(
+                    modifier = Modifier
+                        .widthIn(min = 76.dp)
+                        .clip(RoundedCornerShape(18.dp))
+                        .clickable { onAction(action) },
+                    color = Color.White.copy(alpha = 0.08f)
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .padding(horizontal = 12.dp, vertical = 10.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        Image(
+                            painter = painterResource(action.iconRes),
+                            contentDescription = action.label,
+                            modifier = Modifier.size(32.dp)
+                        )
+                        Text(
+                            text = action.label,
+                            style = MaterialTheme.typography.labelSmall.copy(fontSize = 13.sp),
+                            color = Color.White,
+                            textAlign = TextAlign.Center,
+                            maxLines = 1
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun QuickMenuOverlay(
+    actions: List<QuickMenuAction>,
+    onDismiss: () -> Unit,
+    onSelect: (QuickMenuAction) -> Unit,
+    modifier: Modifier = Modifier,
+    anchorSpacing: Dp = 96.dp,
+    radius: Dp = 168.dp,
+    angleRange: Float = 140f
+) {
+    val density = LocalDensity.current
+    val interactionSource = remember { MutableInteractionSource() }
+    val expansion = remember { Animatable(0f) }
+    val angles = remember(actions.size, angleRange) {
+        computeQuickMenuAngles(actions.size, angleRange)
+    }
+
+    LaunchedEffect(actions) {
+        expansion.snapTo(0f)
+        expansion.animateTo(
+            targetValue = 1f,
+            animationSpec = tween(durationMillis = 220, easing = FastOutSlowInEasing)
+        )
+    }
+
+    Box(modifier = modifier.fillMaxSize()) {
+        Box(
+            modifier = Modifier
+                .matchParentSize()
+                .clickable(
+                    interactionSource = interactionSource,
+                    indication = null
+                ) { onDismiss() }
+        )
+
+        Box(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = anchorSpacing)
+        ) {
+            val radiusPx = with(density) { radius.toPx() }
+            actions.forEachIndexed { index, action ->
+                val angleRad = Math.toRadians(angles.getOrElse(index) { 270f }.toDouble())
+                val offsetX = (cos(angleRad) * radiusPx * expansion.value).roundToInt()
+                val offsetY = (sin(angleRad) * radiusPx * expansion.value).roundToInt()
+                Surface(
+                    modifier = Modifier
+                        .size(96.dp)
+                        .offset { IntOffset(offsetX, offsetY) }
+                        .graphicsLayer(alpha = expansion.value)
+                        .zIndex(1f),
+                    shape = CircleShape,
+                    color = Color(0xFF0D1C2C).copy(alpha = 0.95f)
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .clickable { onSelect(action) }
+                            .padding(horizontal = 12.dp, vertical = 10.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        Image(
+                            painter = painterResource(action.iconRes),
+                            contentDescription = action.label,
+                            modifier = Modifier.size(48.dp)
+                        )
+                        Text(
+                            text = action.label,
+                            color = Color.White,
+                            style = MaterialTheme.typography.labelSmall.copy(fontSize = 13.sp),
+                            textAlign = TextAlign.Center,
+                            maxLines = 1
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+private fun computeQuickMenuAngles(
+    count: Int,
+    angleRange: Float,
+    centerAngle: Float = 270f
+): List<Float> {
+    if (count <= 0) return emptyList()
+    if (count == 1) return listOf(centerAngle)
+    val start = centerAngle - angleRange / 2f
+    val step = angleRange / (count - 1)
+    return List(count) { index -> start + step * index }
+}
+
+private data class InlineActionSegment(
+    val actionId: String,
+    val action: RoomAction,
+    val start: Int,
+    val end: Int,
+    val locked: Boolean
+)
+
+private data class InlineActionPlan(
+    val description: String,
+    val segments: List<InlineActionSegment>
+) {
+    val inlineKeys: Set<String> = segments.mapTo(linkedSetOf()) { it.actionId }
+}
+
+private const val ACTION_TAG = "action"
+
+@Composable
+private fun QuestJournalOverlay(
+    trackedQuest: QuestSummaryUi?,
+    activeQuests: List<QuestSummaryUi>,
+    completedQuests: List<QuestSummaryUi>,
+    failedQuests: Set<String>,
+    questLog: List<QuestLogEntryUi>,
+    onClose: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val otherActive = remember(trackedQuest, activeQuests) {
+        activeQuests.filterNot { it.id == trackedQuest?.id }
+    }
+    val recentLog = remember(questLog) {
+        questLog.sortedByDescending { it.timestamp }.take(12)
+    }
+
+    val totalCount = activeQuests.size + completedQuests.size + failedQuests.size
+
+    Surface(
+        modifier = modifier
+            .fillMaxWidth(0.9f)
+            .fillMaxHeight(0.8f),
+        shape = RoundedCornerShape(32.dp),
+        color = Color(0xF0102030)
     ) {
         Column(
-            modifier = Modifier.align(Alignment.Center),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(24.dp)
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(24.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Text(
-                text = menu.title,
-                style = MaterialTheme.typography.titleMedium,
-                color = Color.White
-            )
-            BoxWithConstraints(
-                modifier = Modifier.size(280.dp)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                val density = LocalDensity.current
-                val smallerSide = if (maxWidth < maxHeight) maxWidth else maxHeight
-                val radiusDp = (smallerSide / 2f) - 56.dp
-                val safeRadiusPx = with(density) { (if (radiusDp > 32.dp) radiusDp else 32.dp).toPx() }
-                Box(modifier = Modifier.fillMaxSize()) {
-                    val itemCount = menu.items.size.coerceAtLeast(1)
-                    menu.items.forEachIndexed { index, item ->
-                        val angle = (-90.0 + index * (360.0 / itemCount)) * (PI / 180.0)
-                        val offsetX = (cos(angle) * safeRadiusPx).roundToInt()
-                        val offsetY = (sin(angle) * safeRadiusPx).roundToInt()
-                        FilledTonalButton(
-                            onClick = { onSelect(item.id) },
-                            modifier = Modifier
-                                .align(Alignment.Center)
-                                .offset { IntOffset(offsetX, offsetY) }
-                        ) {
-                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Text(item.label, textAlign = TextAlign.Center)
-                                item.description?.let { desc ->
+                Text(
+                    text = "Quest Journal",
+                    style = MaterialTheme.typography.titleLarge,
+                    color = Color.White
+                )
+                Text(
+                    text = "$totalCount quests",
+                    style = MaterialTheme.typography.bodySmall.copy(fontSize = 13.sp),
+                    color = Color.White.copy(alpha = 0.7f)
+                )
+                Text(
+                    text = "Close",
+                    color = Color.White.copy(alpha = 0.85f),
+                    style = MaterialTheme.typography.labelLarge,
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(12.dp))
+                        .clickable { onClose() }
+                        .padding(horizontal = 8.dp, vertical = 4.dp)
+                )
+            }
+
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(18.dp)
+    ) {
+                trackedQuest?.let { quest ->
+                    item {
+                        SectionCard(title = "Tracked Quest") {
+                            QuestSummaryDetails(quest, emphasize = true)
+                        }
+                    }
+                }
+
+                if (recentLog.isNotEmpty()) {
+                    item {
+                        SectionCard(title = "Recent Updates") {
+                            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                recentLog.forEach { entry ->
+                                    QuestLogEntryRow(entry)
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (otherActive.isNotEmpty()) {
+                    item {
+                        SectionCard(title = "Active Quests") {
+                            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                otherActive.forEach { quest ->
+                                    QuestSummaryDetails(quest)
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (completedQuests.isNotEmpty()) {
+                    item {
+                        SectionCard(title = "Completed Quests") {
+                            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                                completedQuests.take(8).forEach { quest ->
                                     Text(
-                                        desc,
-                                        style = MaterialTheme.typography.labelSmall,
-                                        color = Color.White.copy(alpha = 0.7f)
+                                        text = "• ${quest.title}",
+                                        style = MaterialTheme.typography.bodySmall.copy(fontSize = 14.sp),
+                                        color = Color.White.copy(alpha = 0.85f)
+                                    )
+                                }
+                                if (completedQuests.size > 8) {
+                                    Text(
+                                        text = "+${completedQuests.size - 8} more",
+                                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 12.sp),
+                                        color = Color.White.copy(alpha = 0.6f)
                                     )
                                 }
                             }
                         }
                     }
-                    FilledTonalButton(
-                        onClick = onDismiss,
-                        modifier = Modifier.align(Alignment.Center)
-                    ) {
-                        Text("Close")
+                }
+
+                if (failedQuests.isNotEmpty()) {
+                    item {
+                        SectionCard(title = "Failed Quests") {
+                            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                                failedQuests.take(8).forEach { questId ->
+                                    Text(
+                                        text = "• $questId",
+                                        style = MaterialTheme.typography.bodySmall.copy(fontSize = 14.sp),
+                                        color = MaterialTheme.colorScheme.error.copy(alpha = 0.85f)
+                                    )
+                                }
+                                if (failedQuests.size > 8) {
+                                    Text(
+                                        text = "+${failedQuests.size - 8} more",
+                                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 12.sp),
+                                        color = MaterialTheme.colorScheme.error.copy(alpha = 0.6f)
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun QuestSummaryDetails(
+    quest: QuestSummaryUi,
+    emphasize: Boolean = false
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+        Text(
+            text = quest.title,
+            style = if (emphasize) MaterialTheme.typography.titleMedium else MaterialTheme.typography.bodyLarge,
+            color = Color.White
+        )
+        quest.summary.takeIf { it.isNotBlank() }?.let { summary ->
+            Text(
+                text = summary,
+                style = MaterialTheme.typography.bodySmall.copy(fontSize = 14.sp),
+                color = Color.White.copy(alpha = 0.8f)
+            )
+        }
+        Text(
+            text = "Stage ${quest.stageIndex + 1} of ${quest.totalStages}",
+            style = MaterialTheme.typography.labelSmall.copy(fontSize = 12.sp),
+            color = Color.White.copy(alpha = 0.7f)
+        )
+        quest.stageTitle?.takeIf { it.isNotBlank() }?.let { stageTitle ->
+            Text(
+                text = stageTitle,
+                style = MaterialTheme.typography.bodySmall.copy(fontSize = 14.sp),
+                color = Color.White.copy(alpha = 0.75f)
+            )
+        }
+        quest.stageDescription?.takeIf { it.isNotBlank() }?.let { desc ->
+            Text(
+                text = desc,
+                style = MaterialTheme.typography.bodySmall.copy(fontSize = 13.sp),
+                color = Color.White.copy(alpha = 0.7f)
+            )
+        }
+        if (quest.objectives.isNotEmpty()) {
+            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                quest.objectives.forEach { objective ->
+                    Text(
+                        text = "• $objective",
+                        style = MaterialTheme.typography.bodySmall.copy(fontSize = 13.sp),
+                        color = Color.White.copy(alpha = 0.9f)
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun QuestLogEntryRow(entry: QuestLogEntryUi) {
+    val timeLabel = remember(entry.timestamp) {
+        DateUtils.getRelativeTimeSpanString(
+            entry.timestamp,
+            System.currentTimeMillis(),
+            DateUtils.MINUTE_IN_MILLIS,
+            DateUtils.FORMAT_ABBREV_RELATIVE
+        ).toString()
+    }
+    Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+        Text(
+            text = entry.message,
+            style = MaterialTheme.typography.bodySmall.copy(fontSize = 14.sp),
+            color = Color.White
+        )
+        val subtitle = buildString {
+            entry.stageTitle?.takeIf { it.isNotBlank() }?.let { append(it) }
+            if (isNotEmpty()) append(" • ")
+            append(timeLabel)
+        }
+        Text(
+            text = subtitle,
+            style = MaterialTheme.typography.labelSmall.copy(fontSize = 12.sp),
+            color = Color.White.copy(alpha = 0.65f)
+        )
+    }
+}
+
+@Composable
+private fun MilestoneTimelineRow(event: MilestoneEvent) {
+    val relativeTime = remember(event.timestamp) {
+        DateUtils.getRelativeTimeSpanString(
+            event.timestamp,
+            System.currentTimeMillis(),
+            DateUtils.MINUTE_IN_MILLIS,
+            DateUtils.FORMAT_ABBREV_RELATIVE
+        ).toString()
+    }
+    Surface(
+        color = Color.White.copy(alpha = 0.06f),
+        shape = RoundedCornerShape(20.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 14.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = Icons.Filled.EmojiEvents,
+                contentDescription = null,
+                tint = Color(0xFFFFD54F),
+                modifier = Modifier.size(28.dp)
+            )
+            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Text(
+                    text = event.title.ifBlank { "Milestone ${event.id}" },
+                    style = MaterialTheme.typography.bodyLarge.copy(fontSize = 16.sp),
+                    color = Color.White
+                )
+                Text(
+                    text = event.message,
+                    style = MaterialTheme.typography.bodySmall.copy(fontSize = 13.sp),
+                    color = Color.White.copy(alpha = 0.8f)
+                )
+            }
+            Text(
+                text = relativeTime,
+                style = MaterialTheme.typography.labelSmall.copy(fontSize = 11.sp),
+                color = Color.White.copy(alpha = 0.65f)
+            )
+        }
+    }
+}
+
+@Composable
+private fun RoomDescriptionPanel(
+    currentRoom: Room?,
+    description: String?,
+    plan: InlineActionPlan?,
+    isDark: Boolean,
+    onAction: (RoomAction) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    if (currentRoom == null && description.isNullOrBlank()) return
+    Surface(
+        modifier = modifier,
+        color = Color.Black.copy(alpha = 0.65f),
+        shape = RoundedCornerShape(18.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 24.dp, vertical = 18.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            RoomDescription(
+                plan = plan,
+                description = description,
+                isDark = isDark,
+                onAction = onAction,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+    }
+}
+
+@Composable
+private fun ActionListPanel(
+    actions: List<RoomAction>,
+    actionHints: Map<String, ActionHintUi>,
+    onAction: (RoomAction) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        modifier = modifier,
+        color = Color.Black.copy(alpha = 0.65f),
+        shape = RoundedCornerShape(18.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .widthIn(min = 220.dp, max = 320.dp)
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 20.dp, vertical = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            Text(
+                text = "Points of Interest",
+                color = Color.White,
+                style = MaterialTheme.typography.titleSmall.copy(fontSize = 18.sp)
+            )
+            actions.forEach { action ->
+                val hint = actionHints[action.actionKey()]
+                val locked = hint?.locked == true
+                Button(
+                    onClick = { onAction(action) },
+                    enabled = !locked,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(
+                            action.name.ifBlank { "Interact" },
+                            style = MaterialTheme.typography.bodyLarge.copy(fontSize = 16.sp),
+                            color = Color.White
+                        )
+                        val subtitle = hint?.message?.takeIf { it.isNotBlank() }
+                            ?: action.serviceTag()
+                        subtitle?.let {
+                            Text(
+                                text = it,
+                                style = MaterialTheme.typography.labelSmall.copy(fontSize = 14.sp),
+                                color = Color.White.copy(alpha = 0.75f)
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun GroundItemsPanel(
+    items: Map<String, Int>,
+    onCollect: (String) -> Unit,
+    onCollectAll: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    if (items.isEmpty()) return
+    Surface(
+        modifier = modifier,
+        color = Color.Black.copy(alpha = 0.65f),
+        shape = RoundedCornerShape(18.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .widthIn(min = 220.dp, max = 320.dp)
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 20.dp, vertical = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            Text(
+                text = "Items Nearby",
+                color = Color.White,
+                style = MaterialTheme.typography.titleSmall.copy(fontSize = 18.sp)
+            )
+            items.toList().forEach { (itemId, quantity) ->
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "$itemId ×$quantity",
+                        color = Color.White,
+                        style = MaterialTheme.typography.bodyLarge.copy(fontSize = 16.sp),
+                        modifier = Modifier.weight(1f)
+                    )
+            Button(onClick = { onCollect(itemId) }) {
+                Text("Take", style = MaterialTheme.typography.bodyMedium.copy(fontSize = 14.sp))
+            }
+        }
+    }
+    Button(
+        onClick = onCollectAll,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Text("Take All", style = MaterialTheme.typography.bodyMedium.copy(fontSize = 14.sp))
+    }
+        }
+    }
+}
+
+@Composable
+private fun TogglePromptDialog(
+    prompt: TogglePromptUi,
+    onSelect: (Boolean) -> Unit,
+    onDismiss: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        modifier = modifier,
+        title = { Text(prompt.title) },
+        text = { Text(prompt.message) },
+        confirmButton = {
+            Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                TextButton(
+                    onClick = { onSelect(true) },
+                    enabled = !prompt.isOn
+                ) {
+                    Text(prompt.enableLabel)
+                }
+                TextButton(
+                    onClick = { onSelect(false) },
+                    enabled = prompt.isOn
+                ) {
+                    Text(prompt.disableLabel)
+                }
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Cancel")
+            }
+        }
+    )
+}
+
+@Composable
+private fun StatusMessageChip(
+    message: String,
+    onDismiss: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        modifier = modifier,
+        color = Color.Black.copy(alpha = 0.75f),
+        shape = RoundedCornerShape(20.dp)
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Text(
+                text = message,
+                color = Color.White,
+                style = MaterialTheme.typography.bodyLarge.copy(fontSize = 16.sp),
+                modifier = Modifier.weight(1f)
+            )
+            Text(
+                text = "Dismiss",
+                color = Color.White.copy(alpha = 0.85f),
+                style = MaterialTheme.typography.labelMedium.copy(fontSize = 14.sp),
+                modifier = Modifier
+                    .clickable { onDismiss() }
+                    .padding(4.dp)
+            )
+        }
+    }
+}
+
+private fun buildInlineActionPlan(
+    description: String?,
+    actions: List<RoomAction>,
+    hints: Map<String, ActionHintUi>
+): InlineActionPlan? {
+    if (description.isNullOrBlank() || actions.isEmpty()) return null
+    val lower = description.lowercase(Locale.getDefault())
+    val segments = mutableListOf<InlineActionSegment>()
+    val occupied = mutableListOf<IntRange>()
+
+    actions.forEach { action ->
+        val baseName = action.name
+        if (baseName.isBlank()) return@forEach
+        val variants = buildList {
+            add(baseName)
+            val normalizedDash = baseName.replace('-', ' ')
+            if (normalizedDash != baseName) add(normalizedDash)
+            val normalizedApostrophe = baseName.replace('’', '\'')
+            if (normalizedApostrophe != baseName) add(normalizedApostrophe)
+        }
+            .map { variant -> variant to variant.lowercase(Locale.getDefault()) }
+            .distinctBy { it.second }
+            .sortedByDescending { it.first.length }
+
+        var matchedRange: IntRange? = null
+        var searchLength = 0
+
+        for ((variantOriginal, variantLower) in variants) {
+            var searchIndex = 0
+            while (searchIndex <= lower.length - variantLower.length) {
+                val index = lower.indexOf(variantLower, searchIndex)
+                if (index < 0) break
+                val rangeCandidate = index until index + variantLower.length
+                if (occupied.none { rangesOverlap(it, rangeCandidate) }) {
+                    matchedRange = rangeCandidate
+                    searchLength = variantLower.length
+                    break
+                }
+                searchIndex = index + 1
+            }
+            if (matchedRange != null) break
+        }
+
+        if (matchedRange != null) {
+            occupied += matchedRange
+            val key = action.actionKey()
+            val locked = hints[key]?.locked == true
+            segments += InlineActionSegment(
+                actionId = key,
+                action = action,
+                start = matchedRange.first,
+                end = matchedRange.first + searchLength,
+                locked = locked
+            )
+        }
+    }
+    if (segments.isEmpty()) return null
+    segments.sortBy { it.start }
+    return InlineActionPlan(description = description, segments = segments)
+}
+
+private fun rangesOverlap(a: IntRange, b: IntRange): Boolean =
+    a.first < b.last && b.first < a.last
+
+@Composable
+private fun rememberRoomBackgroundPainter(imagePath: String?): Painter {
+    val context = LocalContext.current
+    val defaultPainter = painterResource(R.drawable.main_menu_background)
+    if (imagePath.isNullOrBlank()) return defaultPainter
+
+    val (resId, assetPainter) = remember(imagePath) {
+        val resourceName = imagePath
+            .substringAfterLast('/')
+            .substringBeforeLast('.')
+            .lowercase(Locale.getDefault())
+        val resolvedId = context.resources.getIdentifier(resourceName, "drawable", context.packageName)
+        runCatching {
+            context.assets.open(imagePath).use { stream ->
+                BitmapFactory.decodeStream(stream)?.let { bitmap ->
+                    BitmapPainter(bitmap.asImageBitmap())
+                }
+            }
+        }.getOrNull().let { resolvedPainter ->
+            resolvedId to resolvedPainter
+        }
+    }
+    return when {
+        resId != 0 -> painterResource(resId)
+        assetPainter != null -> assetPainter
+        else -> defaultPainter
     }
 }
 
@@ -804,6 +2148,9 @@ private fun MilestoneGalleryOverlay(
     history: List<MilestoneEvent>,
     onClose: () -> Unit
 ) {
+    val ordered = remember(history) { history.sortedByDescending { it.timestamp } }
+    val total = ordered.size
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -812,41 +2159,58 @@ private fun MilestoneGalleryOverlay(
     ) {
         Surface(
             modifier = Modifier.align(Alignment.Center),
-            tonalElevation = 4.dp
+            color = Color(0xF0102030),
+            shape = RoundedCornerShape(32.dp)
         ) {
             Column(
                 modifier = Modifier
-                    .widthIn(max = 420.dp)
-                    .padding(20.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                    .widthIn(max = 440.dp)
+                    .padding(horizontal = 24.dp, vertical = 20.dp),
+                verticalArrangement = Arrangement.spacedBy(18.dp)
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("Milestone Gallery", style = MaterialTheme.typography.titleMedium)
-                    Button(onClick = onClose) { Text("Close") }
+                    Column {
+                        Text(
+                            text = "Milestone Gallery",
+                            style = MaterialTheme.typography.titleLarge,
+                            color = Color.White
+                        )
+                        Text(
+                            text = if (total == 0) "No milestones yet" else "$total milestone${if (total == 1) "" else "s"}",
+                            style = MaterialTheme.typography.bodySmall.copy(fontSize = 13.sp),
+                            color = Color.White.copy(alpha = 0.7f)
+                        )
+                    }
+                    Text(
+                        text = "Close",
+                        color = Color.White.copy(alpha = 0.85f),
+                        style = MaterialTheme.typography.labelLarge,
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(12.dp))
+                            .clickable { onClose() }
+                            .padding(horizontal = 8.dp, vertical = 4.dp)
+                    )
                 }
-                if (history.isEmpty()) {
-                    Text("No milestones recorded yet.", style = MaterialTheme.typography.bodyMedium)
+
+                if (ordered.isEmpty()) {
+                    Text(
+                        text = "No milestones recorded yet.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.White.copy(alpha = 0.85f)
+                    )
                 } else {
-                    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                        history.asReversed().forEachIndexed { index, event ->
-                            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                                Text(
-                                    event.title.ifBlank { "Milestone ${event.id}" },
-                                    style = MaterialTheme.typography.bodyMedium
-                                )
-                                Text(
-                                    event.message,
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = Color.White.copy(alpha = 0.8f)
-                                )
-                            }
-                            if (index != history.lastIndex) {
-                                HorizontalDivider(color = Color.White.copy(alpha = 0.12f))
-                            }
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .heightIn(max = 480.dp),
+                        verticalArrangement = Arrangement.spacedBy(14.dp)
+                    ) {
+                        items(ordered) { event ->
+                            MilestoneTimelineRow(event)
                         }
                     }
                 }

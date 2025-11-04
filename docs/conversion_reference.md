@@ -42,43 +42,41 @@ Key entry point: `NavigationHost` (Compose) -> `MainMenuScreen` -> `ExplorationS
 |------|---------------|-------|
 | **JSON asset loading** | ✅ | Using Moshi with reflection factory; assets mirrored from Python (`rooms`, `events`, `items`, `recipes_*`, etc.). |
 | **Item repository & inventory service** | ✅ | Inventory state is flow-backed; supports add/remove/use; consumables & schematics produce `ItemUseResult`. |
-| **Crafting service** | ⚠️ Partial | Recipe data loads; cooking and first-aid flows now consume ingredients and resolve minigame outcomes. Fishing and advanced effect handling still pending. |
+| **Crafting service** | ⚠️ Partial | Recipe data loads; cooking/first-aid minigames resolve correctly, and fishing catches now apply rod/lure tuning plus name-aware messaging. Advanced effect handling still pending. |
 | **Session store** | ✅ | Tracks world/hub/room, quests, milestones, learned schematics, inventory; autosave + slot system live. |
 | **Event system** | ⚠️ Partial | Core dispatch + milestone hooks wired; still tightening cinematic/tutorial sequencing and complex quest scripting. |
 | **Dialogue service** | ⚠️ Partial | Supports branching choices and trigger hooks; portraits/audio/cinematic sequencing still pending. |
 | **Exploration UI** | ⚠️ Partial | Layered HUD with direction ring, hotspot cards, minimap service glyphs, shop greetings, and FX bursts; cinematic playback and radial menu still pending. |
 | **Inventory UI** | ✅ | Filter chips, detail pane, "Use" flow; integrates with shared services. |
 | **Combat** | ⚠️ | Prototype battle loop now includes turn timeline, target selection, loot/XP routing, and reward tests; still missing cinematic FX, ally support scripting, and defeat/retreat cinematics. |
-| **Crafting/Tinkering UI** | ⚠️ Partial | Tinkering, tuned cooking/first-aid timing bars, and FX/audio hooks implemented; fishing UI still missing. |
-| **Minigames, Shops, Quests UI** | ⚠️ Partial | Shops support greetings with dialogue choices and trade flow; stock rotation, radial menu, and quest journal detail view still TODO. |
+| **Crafting/Tinkering UI** | ⚠️ Partial | Tinkering, cooking, first-aid, and fishing Compose screens are live with timing meters; needs bespoke art/layout polish. |
+| **Minigames, Shops, Quests UI** | ⚠️ Partial | Direction ring overlay and services radial menu exist; still author hotspot art, vendor scripting, and quest journal detail view. |
 | **Persistence UI** | ⚠️ Partial | Main menu surfaces autosave + manual slots with timestamps; cloud sync story outstanding. |
 | **Testing** | ⚠️ | JVM suite covers inventory/crafting/persistence; need combat/event integration tests and instrumentation smoke runs. |
 
 ---
 
 ## 4. Latest Changes (this session)
-1. **Exploration service pass**  
-   - Minimap renders hub services with glyphs, shop greetings use dialogue overlays, and crafting FX events drive on-screen bursts via `UiFxBus`.
-2. **Crafting timing overhaul**  
-   - Cooking/first-aid minigames use Python-derived presets, per-recipe overrides, and emit FX/audio cues with locale-aware difficulty handling.
-3. **Persistence metadata**  
-   - Slot info captures timestamps plus quest/milestone/ schematic migration; main menu displays save summaries with counts.
-4. **Navigation integration**  
-   - App navigation wires new crafting/shop routes, shares audio/FX services, and feeds combat results back into exploration.
-5. **Regression coverage**  
-   - Added Robolectric tests for legacy save import and slot metadata; `testDebugUnitTest` now covers persistence edge cases.
+1. **Exploration overlay polish**  
+   - Added Compose direction-ring overlay tied to live travel checks and refreshed hotspot handling while keeping minimap/service glyphs.
+2. **Fishing tuning pass**  
+   - Weighted catches now respect lure rarity and rod power, emit item-aware messaging, and quantity floors align with minigame grades.
+3. **Event follow-up fix**  
+   - `play_cinematic` actions once again execute chained `on_complete` actions; covered by a new unit test in `domain/event`.
+4. **Minigame coverage**  
+   - Fishing service tests expanded to assert rod scaling and messaging; failure flows retain zero-quantity outcomes when appropriate.
 
 ---
 
 ## 5. High-Priority TODOs
-1. **Quest/tutorial runtime managers**  
-   - Implement scripted tutorial queue, milestone prompts, and quest journal detail view tied to dialogue triggers.
-2. **Minigame expansion**  
-   - Ship fishing/arcade loops leveraging timing presets; author failure tutorials for existing crafting stations.
-3. **Hub/radial interactions**  
-   - Build radial service menu, contextual hotspot art, and vendor branch scripting (smalltalk, rotating stock).
+1. **Quest/tutorial parity & tests**  
+   - Audit quest stage/task data against Python, flesh out scripted tutorial triggers, and add JVM coverage for quest journaling.
+2. **Hotspot & cinematic polish**  
+   - Bring in art-driven hotspot overlays, blocked-exit cinematics, and richer radial menu styling to match Kivy behaviour.
+3. **Minigame authoring**  
+   - Finish cooking/first-aid failure tutorials, add remaining side minigames, and surface contextual dialogues/audio cues.
 4. **Audio layering**  
-   - Extend `AudioRouter` for ambience/music beds with fades, integrate asset catalog for future FX.
+   - Extend `AudioRouter` for ambience/music fades, cue metadata, and VO routing.
 5. **Combat polish**  
    - Add ally support scripting, defeat/retreat cinematics, and expanded FX overlays.
 6. **Testing & CI**  
@@ -87,8 +85,8 @@ Key entry point: `NavigationHost` (Compose) -> `MainMenuScreen` -> `ExplorationS
 ---
 
 ## 6. Known TODO Markers & Gaps
-- `feature/exploration/ui/ExplorationScreen.kt`: minimap glyphs and FX bursts live, but cinematic overlay and radial menu styling remain TODO.
-- `feature/exploration/viewmodel/ExplorationViewModel.kt`: quest/tutorial managers, fishing hooks, and radial menu support still TODO; review TODO markers for `TODO:` comments.
+- `feature/exploration/ui/ExplorationScreen.kt`: direction ring overlay is functional; cinematic overlay and art-directed hotspot styling remain TODO.
+- `feature/exploration/viewmodel/ExplorationViewModel.kt`: quest/tutorial timing scripts and cinematic queuing still need parity verification; review TODO markers.
 - `docs/item_effect_handling.md`: outlines next steps for applying effects and crafting progress UI; still accurate.
 - `domain/crafting/CraftingService.kt`: integrate authored failure tutorials and add fishing recipes.
 - `feature/crafting/ui/*`: fishing minigame overlays pending; cooking/first-aid still using placeholder art.
