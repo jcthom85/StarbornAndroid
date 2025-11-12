@@ -6,9 +6,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -23,6 +24,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.starborn.domain.model.TinkeringRecipe
 import com.example.starborn.feature.crafting.CraftingViewModel
@@ -37,7 +39,9 @@ fun TinkeringRoute(
     viewModel: CraftingViewModel,
     onBack: () -> Unit,
     onCrafted: (CraftingOutcome.Success) -> Unit,
-    onClosed: () -> Unit
+    onClosed: () -> Unit,
+    highContrastMode: Boolean,
+    largeTouchTargets: Boolean
 ) {
     val recipes = viewModel.recipes.collectAsState()
     val snackbarHost = remember { SnackbarHostState() }
@@ -61,7 +65,9 @@ fun TinkeringRoute(
         recipes = recipes.value,
         snackbarHostState = snackbarHost,
         onCraft = viewModel::craft,
-        onBack = onBack
+        onBack = onBack,
+        highContrastMode = highContrastMode,
+        largeTouchTargets = largeTouchTargets
     )
 }
 
@@ -71,18 +77,27 @@ private fun TinkeringScreen(
     recipes: List<TinkeringRecipe>,
     snackbarHostState: SnackbarHostState,
     onCraft: (String) -> Unit,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    highContrastMode: Boolean,
+    largeTouchTargets: Boolean
 ) {
+    val buttonMinHeight = if (largeTouchTargets) 52.dp else 0.dp
+    val containerColor = if (highContrastMode) Color(0xFF050B12) else MaterialTheme.colorScheme.background
+
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text("Tinkering Table") },
                 navigationIcon = {
-                    Button(onClick = onBack) { Text("Back") }
+                    Button(
+                        onClick = onBack,
+                        modifier = Modifier.heightIn(min = buttonMinHeight)
+                    ) { Text("Back") }
                 }
             )
         },
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        containerColor = containerColor
     ) { innerPadding ->
         if (recipes.isEmpty()) {
             Column(
@@ -104,7 +119,12 @@ private fun TinkeringScreen(
                 contentPadding = PaddingValues(16.dp)
             ) {
                 items(recipes, key = { it.id }) { recipe ->
-                    TinkeringRecipeCard(recipe = recipe, onCraft = onCraft)
+                    TinkeringRecipeCard(
+                        recipe = recipe,
+                        onCraft = onCraft,
+                        highContrastMode = highContrastMode,
+                        largeTouchTargets = largeTouchTargets
+                    )
                     Spacer(modifier = Modifier.height(12.dp))
                 }
             }
@@ -115,14 +135,18 @@ private fun TinkeringScreen(
 @Composable
 private fun TinkeringRecipeCard(
     recipe: TinkeringRecipe,
-    onCraft: (String) -> Unit
+    onCraft: (String) -> Unit,
+    highContrastMode: Boolean,
+    largeTouchTargets: Boolean
 ) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
-        Text(recipe.name, style = MaterialTheme.typography.titleMedium)
+        val titleColor = if (highContrastMode) Color.White else MaterialTheme.colorScheme.onSurface
+        val bodyColor = if (highContrastMode) Color.White.copy(alpha = 0.8f) else MaterialTheme.colorScheme.onSurfaceVariant
+        Text(recipe.name, style = MaterialTheme.typography.titleMedium, color = titleColor)
         recipe.description?.takeIf { it.isNotBlank() }?.let {
-            Text(it, style = MaterialTheme.typography.bodySmall)
+            Text(it, style = MaterialTheme.typography.bodySmall, color = bodyColor)
         }
         Spacer(modifier = Modifier.height(4.dp))
         val ingredients = buildString {
@@ -131,9 +155,12 @@ private fun TinkeringRecipeCard(
                 append(" | Components: ${recipe.components.joinToString()}")
             }
         }
-        Text(ingredients, style = MaterialTheme.typography.labelMedium)
+        Text(ingredients, style = MaterialTheme.typography.labelMedium, color = bodyColor)
         Spacer(modifier = Modifier.height(8.dp))
-        Button(onClick = { onCraft(recipe.id) }) {
+        Button(
+            onClick = { onCraft(recipe.id) },
+            modifier = Modifier.heightIn(min = if (largeTouchTargets) 52.dp else 0.dp)
+        ) {
             Text("Craft")
         }
     }
@@ -157,6 +184,8 @@ fun TinkeringScreenPreview() {
         recipes = dummy,
         snackbarHostState = SnackbarHostState(),
         onCraft = {},
-        onBack = {}
+        onBack = {},
+        highContrastMode = false,
+        largeTouchTargets = false
     )
 }

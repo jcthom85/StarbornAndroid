@@ -1,11 +1,14 @@
 package com.example.starborn.feature.exploration.viewmodel
 
+import com.example.starborn.data.local.Theme
+import com.example.starborn.data.local.ThemeStyle
 import com.example.starborn.domain.model.Hub
 import com.example.starborn.domain.model.Room
 import com.example.starborn.domain.model.RoomAction
 import com.example.starborn.domain.model.World
 import com.example.starborn.domain.prompt.UIPrompt
 import com.example.starborn.domain.milestone.MilestoneEvent
+import com.example.starborn.domain.quest.QuestLogEntryType
 
 data class ExplorationUiState(
     val isLoading: Boolean = true,
@@ -40,18 +43,28 @@ data class ExplorationUiState(
     val levelUpPrompt: LevelUpPrompt? = null,
     val cinematic: CinematicUiState? = null,
     val minimap: MinimapUiState? = null,
+    val fullMap: FullMapUiState? = null,
+    val theme: Theme? = null,
+    val themeStyle: ThemeStyle? = null,
+    val mineGeneratorOnline: Boolean = false,
+    val darkCapableRooms: Set<String> = emptySet(),
     val isMinimapLegendVisible: Boolean = false,
     val isQuestLogVisible: Boolean = false,
+    val isFullMapVisible: Boolean = false,
     val shopGreeting: ShopGreetingUi? = null,
     val pendingShopId: String? = null,
     val prompt: UIPrompt? = null,
     val milestoneHistory: List<MilestoneEvent> = emptyList(),
     val isMilestoneGalleryVisible: Boolean = false,
-    val isQuickMenuVisible: Boolean = false,
     val isMenuOverlayVisible: Boolean = false,
     val menuTab: MenuTab = MenuTab.INVENTORY,
     val togglePrompt: TogglePromptUi? = null,
-    val settings: SettingsUiState = SettingsUiState()
+    val settings: SettingsUiState = SettingsUiState(),
+    val inventoryPreview: List<InventoryPreviewItemUi> = emptyList(),
+    val equippedItems: Map<String, String> = emptyMap(),
+    val skillTreeOverlay: SkillTreeOverlayUi? = null,
+    val partyMemberDetails: PartyMemberDetailsUi? = null,
+    val eventAnnouncement: EventAnnouncementUi? = null
 )
 
 data class NarrationPrompt(
@@ -97,7 +110,23 @@ data class QuestLogEntryUi(
     val message: String,
     val stageId: String?,
     val stageTitle: String?,
-    val timestamp: Long
+    val timestamp: Long,
+    val type: QuestLogEntryType,
+    val questTitle: String?
+)
+
+data class EventAnnouncementUi(
+    val id: Long,
+    val title: String?,
+    val message: String,
+    val accentColor: Long
+)
+
+data class InventoryPreviewItemUi(
+    val id: String,
+    val name: String,
+    val quantity: Int,
+    val type: String
 )
 
 data class CinematicUiState(
@@ -124,10 +153,16 @@ data class MinimapUiState(
     val cells: List<MinimapCellUi>
 )
 
+data class FullMapUiState(
+    val cells: List<MinimapCellUi>
+)
+
 data class MinimapCellUi(
     val roomId: String,
     val offsetX: Int,
     val offsetY: Int,
+    val gridX: Int,
+    val gridY: Int,
     val visited: Boolean,
     val discovered: Boolean,
     val isCurrent: Boolean,
@@ -194,8 +229,28 @@ data class PartyMemberStatusUi(
     val xpLabel: String,
     val hpLabel: String?,
     val rpLabel: String?,
+    val hpProgress: Float? = null,
+    val rpProgress: Float? = null,
     val portraitPath: String?,
     val unlockedSkills: List<String>
+)
+
+data class PartyMemberDetailsUi(
+    val id: String,
+    val name: String,
+    val level: Int,
+    val xpLabel: String,
+    val hpLabel: String?,
+    val focusLabel: String?,
+    val portraitPath: String?,
+    val primaryStats: List<CharacterStatValueUi>,
+    val combatStats: List<CharacterStatValueUi>,
+    val unlockedSkills: List<String>
+)
+
+data class CharacterStatValueUi(
+    val label: String,
+    val value: String
 )
 
 data class ProgressionSummaryUi(
@@ -218,6 +273,37 @@ data class SkillUnlockUi(
 data class StatChangeUi(
     val label: String,
     val value: String
+)
+
+data class SkillTreeOverlayUi(
+    val characterId: String,
+    val characterName: String,
+    val portraitPath: String?,
+    val availableAp: Int,
+    val apInvested: Int,
+    val branches: List<SkillTreeBranchUi>
+)
+
+data class SkillTreeBranchUi(
+    val id: String,
+    val title: String,
+    val nodes: List<SkillTreeNodeUi>
+)
+
+data class SkillTreeNodeUi(
+    val id: String,
+    val name: String,
+    val costAp: Int,
+    val row: Int,
+    val column: Int,
+    val status: com.example.starborn.feature.exploration.skilltree.SkillNodeStatus,
+    val description: String?,
+    val requirements: List<SkillTreeRequirementUi>
+)
+
+data class SkillTreeRequirementUi(
+    val id: String,
+    val label: String
 )
 
 data class ShopGreetingUi(

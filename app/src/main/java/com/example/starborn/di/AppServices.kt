@@ -10,6 +10,9 @@ import com.example.starborn.data.assets.EventAssetDataSource
 import com.example.starborn.data.assets.FishingAssetDataSource
 import com.example.starborn.data.assets.ItemAssetDataSource
 import com.example.starborn.data.assets.MilestoneAssetDataSource
+import com.example.starborn.data.assets.ThemeAssetDataSource
+import com.example.starborn.data.assets.ThemeStyleAssetDataSource
+import com.example.starborn.data.repository.ThemeRepository
 import com.example.starborn.data.assets.WorldAssetDataSource
 import com.example.starborn.data.repository.ItemRepository
 import com.example.starborn.data.assets.QuestAssetDataSource
@@ -21,6 +24,7 @@ import com.example.starborn.domain.audio.AudioBindings
 import com.example.starborn.domain.audio.AudioCatalog
 import com.example.starborn.domain.audio.AudioCuePlayer
 import com.example.starborn.domain.audio.AudioRouter
+import com.example.starborn.domain.audio.VoiceoverController
 import com.example.starborn.domain.cinematic.CinematicService
 import com.example.starborn.domain.combat.CombatEngine
 import com.example.starborn.domain.combat.StatusRegistry
@@ -48,6 +52,8 @@ import com.example.starborn.domain.quest.QuestRuntimeManager
 import com.example.starborn.domain.prompt.UIPromptManager
 import com.example.starborn.domain.tutorial.TutorialRuntimeManager
 import com.example.starborn.domain.tutorial.TutorialScriptRepository
+import com.example.starborn.data.local.UserSettingsStore
+import com.example.starborn.domain.theme.EnvironmentThemeManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -61,10 +67,13 @@ import java.util.ArrayDeque
 import java.io.File
 
 class AppServices(context: Context) {
+    private val appContext = context.applicationContext
     private val moshi = MoshiProvider.instance
     private val assetReader = AssetJsonReader(context, moshi)
 
     val worldDataSource = WorldAssetDataSource(assetReader)
+    private val themeDataSource = ThemeAssetDataSource(assetReader)
+    private val themeStyleDataSource = ThemeStyleAssetDataSource(assetReader)
     private val dialogueDataSource = DialogueAssetDataSource(assetReader)
     private val eventDataSource = EventAssetDataSource(assetReader)
     val itemRepository = ItemRepository(ItemAssetDataSource(assetReader))
@@ -76,6 +85,11 @@ class AppServices(context: Context) {
     val questRepository: QuestRepository = QuestRepository(QuestAssetDataSource(assetReader)).apply { load() }
     val shopRepository: ShopRepository = ShopRepository(shopDataSource).apply { load() }
     val milestoneRepository: MilestoneRepository = MilestoneRepository(milestoneDataSource).apply { load() }
+    val themeRepository: ThemeRepository = ThemeRepository(
+        themeDataSource,
+        themeStyleDataSource
+    ).apply { load() }
+    val environmentThemeManager = EnvironmentThemeManager(themeRepository)
 
     val inventoryService = InventoryService(itemRepository).apply { loadItems() }
     val sessionStore = GameSessionStore()
@@ -94,11 +108,18 @@ class AppServices(context: Context) {
     val uiFxBus = UiFxBus()
     val fishingService = FishingService(fishingDataSource, inventoryService)
     val tutorialScripts = TutorialScriptRepository(assetReader)
+    val userSettingsStore = UserSettingsStore(appContext)
     private val bootstrapCinematics: ArrayDeque<String> = ArrayDeque()
     private val bootstrapPlayerActions: ArrayDeque<String> = ArrayDeque()
 
     private val persistenceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private val runtimeScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+    val voiceoverController = VoiceoverController(
+        audioRouter = audioRouter,
+        dispatchCommands = audioCuePlayer::execute,
+        scope = runtimeScope,
+        dispatcher = Dispatchers.Main
+    )
     private var autosaveJob: Job? = null
     private var lastAutosaveTimestamp: Long = 0L
 
@@ -152,8 +173,13 @@ class AppServices(context: Context) {
     }
 
     suspend fun loadSlot(slot: Int): Boolean {
-        val info = sessionPersistence.slotInfo(slot) ?: return false
-        val state = info.state
+        var info = sessionPersistence.slotInfo(slot)
+        if (info == null || info.state.needsFallbackImport()) {
+            if (importLegacySlotFromAssets(slot)) {
+                info = sessionPersistence.slotInfo(slot)
+            }
+        }
+        val state = info?.state ?: return false
         sessionStore.restore(state)
         inventoryService.restore(state.inventory)
         return true
@@ -163,9 +189,15 @@ class AppServices(context: Context) {
         sessionPersistence.clearSlot(slot)
     }
 
-    suspend fun slotState(slot: Int): GameSessionState? = sessionPersistence.slotInfo(slot)?.state
+    suspend fun slotState(slot: Int): GameSessionState? = slotInfo(slot)?.state
 
-    suspend fun slotInfo(slot: Int): GameSessionSlotInfo? = sessionPersistence.slotInfo(slot)
+    suspend fun slotInfo(slot: Int): GameSessionSlotInfo? {
+        var info = sessionPersistence.slotInfo(slot)
+        if ((info == null || info.state.needsFallbackImport()) && importLegacySlotFromAssets(slot)) {
+            info = sessionPersistence.slotInfo(slot)
+        }
+        return info
+    }
 
     suspend fun loadAutosave(): Boolean {
         val info = sessionPersistence.autosaveInfo() ?: return false
@@ -188,6 +220,31 @@ class AppServices(context: Context) {
         sessionStore.restore(imported)
         inventoryService.restore(imported.inventory)
         return true
+    }
+
+    private suspend fun importLegacySlotFromAssets(slot: Int): Boolean {
+        val assetName = "save$slot.json"
+        if (!assetReader.assetExists(assetName)) return false
+        val cacheFile = File(appContext.cacheDir, "legacy_slot_$slot.json")
+        return try {
+            appContext.assets.open(assetName).use { input ->
+                cacheFile.outputStream().use { output -> input.copyTo(output) }
+            }
+            val imported = sessionPersistence.importLegacySave(cacheFile, itemRepository) ?: return false
+            sessionPersistence.writeSlot(slot, imported)
+            true
+        } catch (t: Throwable) {
+            false
+        } finally {
+            cacheFile.delete()
+        }
+    }
+
+    private fun GameSessionState.needsFallbackImport(): Boolean {
+        val isPartyEmpty = playerId.isNullOrBlank() && partyMembers.isEmpty()
+        val noProgress = worldId.isNullOrBlank() && hubId.isNullOrBlank() && roomId.isNullOrBlank()
+        val noInventory = inventory.isEmpty() && playerCredits == 0
+        return isPartyEmpty && noProgress && noInventory
     }
 
     fun startNewGame() {

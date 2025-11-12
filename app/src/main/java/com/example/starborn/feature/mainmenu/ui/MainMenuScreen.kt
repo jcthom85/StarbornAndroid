@@ -10,13 +10,18 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -129,95 +134,126 @@ private fun LoadGameDialog(
         Surface(
             modifier = Modifier
                 .padding(24.dp)
-                .fillMaxWidth(0.85f),
+                .fillMaxWidth(0.9f)
+                .fillMaxHeight(0.85f),
             color = Color(0xFF1C2A33).copy(alpha = 0.95f)
         ) {
             Column(
-                modifier = Modifier.padding(24.dp),
+                modifier = Modifier
+                    .padding(20.dp)
+                    .fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                Text(text = "Select Save Slot", color = Color.White)
-                slots.forEach { summary ->
-                    Surface(tonalElevation = 2.dp) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            verticalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            val slotLabel = if (summary.isAutosave) "Autosave" else "Slot ${summary.slot}"
-                            Text(
-                                text = slotLabel,
-                                color = Color.White,
-                                style = MaterialTheme.typography.titleSmall
-                            )
-                            Text(text = summary.title, color = Color.White)
-                            Text(
-                                text = summary.subtitle,
-                                color = Color.White.copy(alpha = 0.7f),
-                                style = MaterialTheme.typography.bodySmall
-                            )
-                            summary.state?.let { state ->
-                                Text(
-                                    text = buildString {
-                                        append("Quests: ${state.activeQuests.size} active")
-                                        if (state.completedQuests.isNotEmpty()) {
-                                            append(" / ${state.completedQuests.size} completed")
-                                        }
-                                    },
-                                    color = Color.White.copy(alpha = 0.7f),
-                                    style = MaterialTheme.typography.bodySmall
-                                )
-                                if (state.completedMilestones.isNotEmpty()) {
-                                    Text(
-                                        text = "Milestones: ${state.completedMilestones.size}",
-                                        color = Color.White.copy(alpha = 0.6f),
-                                        style = MaterialTheme.typography.bodySmall
-                                    )
-                                }
-                            }
-                            summary.savedAtMillis?.let { savedAt ->
-                                val savedLabel = runCatching {
-                                    java.time.Instant.ofEpochMilli(savedAt)
-                                        .atZone(java.time.ZoneId.systemDefault())
-                                        .format(java.time.format.DateTimeFormatter.ofPattern("MMM d • HH:mm"))
-                                }.getOrNull()
-                                if (savedLabel != null) {
-                                Text(
-                                        text = "Saved: $savedLabel",
-                                    color = Color.White.copy(alpha = 0.6f),
-                                    style = MaterialTheme.typography.bodySmall
-                                )
-                            }
-                            }
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp)
-                            ) {
-                                if (!summary.isAutosave) {
-                                    Button(onClick = { onSave(summary.slot) }) {
-                                        Text(if (summary.isEmpty) "Save" else "Overwrite")
-                                    }
-                                }
-                                Button(
-                                    onClick = { onLoad(summary.slot) },
-                                    enabled = !summary.isEmpty
-                                ) {
-                                    Text(if (summary.isAutosave) "Load Autosave" else "Load")
-                                }
-                                Button(
-                                    onClick = { onDelete(summary.slot) },
-                                    enabled = !summary.isEmpty
-                                ) {
-                                    Text(if (summary.isAutosave) "Clear" else "Delete")
-                                }
-                            }
-                        }
+                Text(
+                    text = "Select Save Slot",
+                    color = Color.White,
+                    style = MaterialTheme.typography.titleMedium
+                )
+                LazyColumn(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    items(slots) { summary ->
+                        SaveSlotCard(
+                            summary = summary,
+                            onLoad = onLoad,
+                            onSave = onSave,
+                            onDelete = onDelete
+                        )
                     }
                 }
                 HorizontalDivider(color = Color.White.copy(alpha = 0.2f))
-                Button(onClick = onDismiss, modifier = Modifier.align(Alignment.End)) {
-                    Text("Close")
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    TextButton(onClick = onDismiss) {
+                        Text("Close")
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun SaveSlotCard(
+    summary: SaveSlotSummary,
+    onLoad: (Int) -> Unit,
+    onSave: (Int) -> Unit,
+    onDelete: (Int) -> Unit
+) {
+    Surface(
+        tonalElevation = 2.dp,
+        color = Color(0xFF243441),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 12.dp, vertical = 10.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            val slotLabel = if (summary.isAutosave) "Autosave" else "Slot ${summary.slot}"
+            Text(
+                text = slotLabel,
+                color = Color.White,
+                style = MaterialTheme.typography.titleSmall
+            )
+            Text(text = summary.title, color = Color.White, maxLines = 1)
+            Text(
+                text = summary.subtitle,
+                color = Color.White.copy(alpha = 0.7f),
+                style = MaterialTheme.typography.bodySmall,
+                maxLines = 1
+            )
+            summary.state?.let { state ->
+                Text(
+                    text = "Quests: ${state.activeQuests.size} active" +
+                        if (state.completedQuests.isNotEmpty()) " / ${state.completedQuests.size} completed" else "",
+                    color = Color.White.copy(alpha = 0.7f),
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+            summary.savedAtMillis?.let { savedAt ->
+                val savedLabel = runCatching {
+                    java.time.Instant.ofEpochMilli(savedAt)
+                        .atZone(java.time.ZoneId.systemDefault())
+                        .format(java.time.format.DateTimeFormatter.ofPattern("MMM d • HH:mm"))
+                }.getOrNull()
+                if (savedLabel != null) {
+                    Text(
+                        text = "Saved: $savedLabel",
+                        color = Color.White.copy(alpha = 0.6f),
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
+            }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                if (!summary.isAutosave) {
+                    OutlinedButton(
+                        onClick = { onSave(summary.slot) },
+                        enabled = summary.isEmpty || !summary.isEmpty
+                    ) {
+                        Text(if (summary.isEmpty) "Save" else "Overwrite")
+                    }
+                }
+                OutlinedButton(
+                    onClick = { onLoad(summary.slot) },
+                    enabled = !summary.isEmpty
+                ) {
+                    Text(if (summary.isAutosave) "Load Autosave" else "Load")
+                }
+                OutlinedButton(
+                    onClick = { onDelete(summary.slot) },
+                    enabled = !summary.isEmpty && !summary.isAutosave
+                ) {
+                    Text("Delete")
                 }
             }
         }

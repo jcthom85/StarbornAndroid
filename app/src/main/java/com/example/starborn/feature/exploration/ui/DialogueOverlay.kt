@@ -32,6 +32,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import com.example.starborn.feature.exploration.viewmodel.DialogueChoiceUi
 import com.example.starborn.feature.exploration.viewmodel.DialogueUi
 import java.util.Locale
@@ -73,7 +74,8 @@ fun DialogueOverlay(
         color = Color.Black.copy(alpha = 0.82f),
         contentColor = Color.White,
         shadowElevation = 12.dp,
-        tonalElevation = 6.dp
+        tonalElevation = 6.dp,
+        shape = RoundedCornerShape(28.dp)
     ) {
         Column(
             modifier = Modifier

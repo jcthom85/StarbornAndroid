@@ -989,13 +989,6 @@
         "xp": 320
       },
       {
-        "type": "spawn_item_on_ground",
-        "item_id": "itm_relay_fragment",
-        "quantity": 1,
-        "room_id": "living",
-        "note": "Wyrm chest contains a relay fragment held in a stony cradle."
-      },
-      {
         "type": "advance_quest_if_active",
         "quest_id": "q_mine_relay_scramble",
         "to_stage_id": "q_mine_relay_scramble:stage_3",
@@ -1400,6 +1393,72 @@
         "room_id": "mines_12",
         "state_key": "light_on",
         "value": false
+      },
+      {
+        "type": "set_room_state",
+        "room_id": "mines_1",
+        "state_key": "dark",
+        "value": true
+      },
+      {
+        "type": "set_room_state",
+        "room_id": "mines_3",
+        "state_key": "dark",
+        "value": true
+      },
+      {
+        "type": "set_room_state",
+        "room_id": "mines_4",
+        "state_key": "dark",
+        "value": true
+      },
+      {
+        "type": "set_room_state",
+        "room_id": "mines_5",
+        "state_key": "dark",
+        "value": true
+      },
+      {
+        "type": "set_room_state",
+        "room_id": "mines_6",
+        "state_key": "dark",
+        "value": true
+      },
+      {
+        "type": "set_room_state",
+        "room_id": "mines_7",
+        "state_key": "dark",
+        "value": true
+      },
+      {
+        "type": "set_room_state",
+        "room_id": "mines_8",
+        "state_key": "dark",
+        "value": true
+      },
+      {
+        "type": "set_room_state",
+        "room_id": "mines_9",
+        "state_key": "dark",
+        "value": true
+      },
+      {
+        "type": "set_room_state",
+        "room_id": "mines_10",
+        "state_key": "dark",
+        "value": true
+      },
+      {
+        "type": "set_room_state",
+        "room_id": "mines_11",
+        "state_key": "dark",
+        "value": true
+      },
+      {
+        "type": "set_room_state",
+        "room_id": "mines_12",
+        "state_key": "dark",
+        "value": true
       }
     ],
     "repeatable": true
@@ -1558,7 +1617,7 @@
         "else": [
           {
             "type": "show_message",
-            "message": "You’re getting the hang of the timing."
+            "message": "You\u2019re getting the hang of the timing."
           }
         ]
       }
@@ -1583,13 +1642,13 @@
           },
           {
             "type": "show_message",
-            "message": "Patience. Cast again when you’re ready."
+            "message": "Patience. Cast again when you\u2019re ready."
           }
         ],
         "else": [
           {
             "type": "show_message",
-            "message": "Easy does it—try adjusting your timing."
+            "message": "Easy does it\u2014try adjusting your timing."
           }
         ]
       }

@@ -441,10 +441,6 @@
         "enemies": [],
         "actions": [],
         "blocked_directions": {
-            "north": {
-                "type": "enemy",
-                "enemy_id": "burrower"
-            }
         },
         "state": {
             "dark": true,
@@ -566,22 +562,10 @@
         "items": [],
         "npcs": [],
         "enemies": [],
-        "actions": [
-            {
-                "type": "toggle",
-                "name": "breaker lever",
-                "state_key": "breaker_on",
-                "popup_title": "Breaker Lever",
-                "label_on": "Flip Lever On",
-                "label_off": "Flip Lever Off",
-                "action_event_on": "evt_breaker_e_on",
-                "action_event_off": "evt_breaker_e_off"
-            }
-        ],
+        "actions": [],
         "state": {
             "dark": true,
-            "light_on": false,
-            "breaker_on": false
+            "light_on": false
         },
         "item_flavor": {},
         "enemy_flavor": {},
@@ -688,22 +672,10 @@
         "items": [],
         "npcs": [],
         "enemies": [],
-        "actions": [
-            {
-                "type": "toggle",
-                "name": "breaker lever",
-                "state_key": "breaker_on",
-                "popup_title": "Breaker Lever",
-                "label_on": "Flip ON",
-                "label_off": "Flip OFF",
-                "action_event_on": "evt_breaker_w_on",
-                "action_event_off": "evt_breaker_w_off"
-            }
-        ],
+        "actions": [],
         "state": {
             "dark": true,
-            "light_on": false,
-            "breaker_on": false
+            "light_on": false
         },
         "item_flavor": {},
         "enemy_flavor": {},
@@ -1064,8 +1036,7 @@
         },
         "items": [],
         "npcs": [
-            "Ellie",
-            "man"
+            "Ellie"
         ],
         "enemies": [],
         "actions": [],
@@ -1117,6 +1088,7 @@
         "title": "Kitchen",
         "env": "town",
         "background_image": "images/rooms/world_1/kitchen_sam_and_ellies_1.png",
+        "weather": "cave_drip",
         "description": "The diner's kitchen is a cramped but efficient space, filled with the clatter of pans and the sizzle of the grill. A pot of something that smells suspiciously like chili bubbles on the stove. Sam is doing a crossword puzzle at the break table.",
         "pos": [
             2,
@@ -1140,6 +1112,7 @@
         "title": "School",
         "env": "town",
         "background_image": "images/rooms/world_1/school_1.png",
+        "weather": "snow",
         "description": "A single-room schoolhouse with scuffed desks and a holographic star chart on the wall. Children's drawings of alien creatures and spaceships are taped to the windows. Schoolteacher Kasey is currently addressing the children.",
         "pos": [
             -1,
@@ -1164,6 +1137,7 @@
         "title": "Playground",
         "env": "town",
         "background_image": "images/rooms/world_1/playground_1.png",
+        "weather": "storm",
         "description": "A small playground with a rusty swing set and a slide that looks like it was salvaged from a starship's escape chute. A testament to the colonists' ability to make do.",
         "pos": [
             -1,
@@ -1252,8 +1226,6 @@
         "background_image": "images/rooms/916test.png",
         "description": "A clean, well-lit clinic with a single medical bed and a cabinet full of supplies. The air smells of antiseptic and a faint, floral scent.",
         "npcs": [
-            "Doctor Sera",
-            "Nurse Megan"
         ],
         "items": [],
         "enemies": [],
@@ -1277,7 +1249,6 @@
         "background_image": "images/rooms/world_1/town_center_1.png",
         "description": "A patch of dusty ground that serves as the town's communal heart. A faded mural on one wall depicts the colony's founding, and a few hardy-looking benches offer a place to rest.",
         "npcs": [
-            "Juno"
         ],
         "items": [],
         "enemies": [],

@@ -5,12 +5,18 @@ import androidx.lifecycle.viewModelScope
 import com.example.starborn.core.DefaultDispatcherProvider
 import com.example.starborn.core.DispatcherProvider
 import com.example.starborn.data.assets.WorldAssetDataSource
+import com.example.starborn.data.local.Theme
+import com.example.starborn.data.local.ThemeStyle
+import com.example.starborn.data.local.UserSettingsStore
 import com.example.starborn.data.repository.QuestRepository
 import com.example.starborn.data.repository.ShopRepository
+import com.example.starborn.data.repository.ThemeRepository
 import com.example.starborn.domain.audio.AudioCommand
 import com.example.starborn.domain.audio.AudioCueType
 import com.example.starborn.domain.audio.AudioRouter
+import com.example.starborn.domain.audio.VoiceoverController
 import com.example.starborn.domain.cinematic.CinematicScene
+import com.example.starborn.domain.combat.CombatFormulas
 import com.example.starborn.domain.cinematic.CinematicService
 import com.example.starborn.domain.crafting.CraftingOutcome
 import com.example.starborn.domain.crafting.CraftingService
@@ -42,6 +48,8 @@ import com.example.starborn.domain.model.RoomAction
 import com.example.starborn.domain.model.ShopAction
 import com.example.starborn.domain.model.ShopDefinition
 import com.example.starborn.domain.model.Skill
+import com.example.starborn.domain.model.SkillTreeDefinition
+import com.example.starborn.domain.model.SkillTreeNode
 import com.example.starborn.domain.model.TinkeringAction
 import com.example.starborn.domain.model.ToggleAction
 import com.example.starborn.domain.model.actionKey
@@ -50,14 +58,18 @@ import com.example.starborn.domain.prompt.TutorialPrompt
 import com.example.starborn.domain.quest.QuestJournalEntry
 import com.example.starborn.domain.quest.QuestLogEntry
 import com.example.starborn.domain.quest.QuestRuntimeManager
+import com.example.starborn.domain.session.GameSessionState
 import com.example.starborn.domain.session.GameSessionStore
+import com.example.starborn.domain.session.GameSaveRepository
 import com.example.starborn.domain.tutorial.TutorialEntry
 import com.example.starborn.domain.tutorial.TutorialRuntimeManager
+import com.example.starborn.domain.theme.EnvironmentThemeManager
 import com.example.starborn.feature.fishing.viewmodel.FishingResultPayload
 import com.example.starborn.navigation.CombatResultPayload
 import java.util.Locale
 import kotlin.collections.ArrayDeque
 import kotlin.math.abs
+import kotlin.math.max
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -70,6 +82,11 @@ import kotlinx.coroutines.launch
 
 private const val DEFAULT_PORTRAIT = "communicator_portrait"
 private const val MILESTONE_BAND_LIMIT = 3
+private const val FULL_MAP_COLUMNS = 16
+private const val FULL_MAP_ROWS = 8
+private const val EVENT_ANNOUNCEMENT_ACCENT = 0xFF7BE4FF
+private const val STELLARIUM_GENERATOR_ROOM_ID = "mines_2"
+private const val STELLARIUM_ENV_ID = "mine"
 
 private data class ShopDialogueSession(
     val shopId: String,
@@ -98,11 +115,16 @@ class ExplorationViewModel(
     private val questRuntimeManager: QuestRuntimeManager,
     private val milestoneManager: MilestoneRuntimeManager,
     private val audioRouter: AudioRouter,
+    private val voiceoverController: VoiceoverController,
     private val shopRepository: ShopRepository,
+    private val themeRepository: ThemeRepository,
+    private val environmentThemeManager: EnvironmentThemeManager,
     private val levelingManager: LevelingManager,
     private val tutorialManager: TutorialRuntimeManager,
     private val promptManager: UIPromptManager,
     private val fishingService: FishingService,
+    private val saveRepository: GameSaveRepository,
+    private val userSettingsStore: UserSettingsStore,
     eventDefinitions: List<GameEvent>,
     bootstrapCinematics: List<String> = emptyList(),
     bootstrapActions: List<String> = emptyList(),
@@ -118,6 +140,7 @@ class ExplorationViewModel(
 
     private var charactersById: Map<String, Player> = emptyMap()
     private var skillsById: Map<String, Skill> = emptyMap()
+    private var skillTreesByCharacter: Map<String, SkillTreeDefinition> = emptyMap()
     private val stageTutorialKeys: MutableSet<String> = mutableSetOf()
 
     init {
@@ -144,7 +167,6 @@ class ExplorationViewModel(
                 val applied = setRoomStateValue(roomId, stateKey, value)
                 if (applied != null) {
                     val targetRoom = roomId ?: _uiState.value.currentRoom?.id
-                    postStatus(formatRoomStateStatus(stateKey, applied))
                     emitEvent(ExplorationEvent.RoomStateChanged(targetRoom, stateKey, applied))
                 }
             },
@@ -152,7 +174,6 @@ class ExplorationViewModel(
                 val newValue = toggleRoomStateValue(roomId, stateKey)
                 if (newValue != null) {
                     val targetRoom = roomId ?: _uiState.value.currentRoom?.id
-                    postStatus(formatRoomStateStatus(stateKey, newValue))
                     emitEvent(ExplorationEvent.RoomStateChanged(targetRoom, stateKey, newValue))
                 }
             },
@@ -227,7 +248,7 @@ class ExplorationViewModel(
                 val message = formatMilestoneMessage(milestone)
                 milestoneManager.handleMilestone(milestone, message)
                 playUiCue("milestone_unlock")
-                postStatus(message)
+                announceMilestoneEvent(milestone, message)
             },
             onNarration = { message, tapToDismiss ->
                 showNarration(message, tapToDismiss)
@@ -248,12 +269,16 @@ class ExplorationViewModel(
     )
 
     private var roomsById: Map<String, Room> = emptyMap()
+    private var themeByRoomId: Map<String, Theme?> = emptyMap()
+    private var themeStyleByRoomId: Map<String, ThemeStyle?> = emptyMap()
     private val roomStates: MutableMap<String, MutableMap<String, Boolean>> = mutableMapOf()
     private val roomGroundItems: MutableMap<String, MutableMap<String, Int>> = mutableMapOf()
     private val visitedRooms: MutableSet<String> = mutableSetOf()
     private val discoveredRooms: MutableSet<String> = mutableSetOf()
     private val blockedCinematicsShown: MutableSet<String> = mutableSetOf()
-    private var roomsByPosition: Map<Pair<Int, Int>, Room> = emptyMap()
+    private var roomsByEnvironment: Map<String, List<Room>> = emptyMap()
+    private var roomsByNodeId: Map<String, List<Room>> = emptyMap()
+    private var nodeIdByRoomId: Map<String, String> = emptyMap()
     private val portraitBySpeaker: MutableMap<String, String> = mutableMapOf()
     private val portraitOverrides: Map<String, String> = mapOf(
         "pasha" to DEFAULT_PORTRAIT,
@@ -284,9 +309,12 @@ class ExplorationViewModel(
     private val acknowledgedMilestones: MutableSet<String> = mutableSetOf()
     private val unlockedDirections: MutableMap<String, MutableSet<String>> = mutableMapOf()
     private var activeDialogueSession: DialogueSession? = null
+    private var darkCapableRoomIds: Set<String> = emptySet()
     private var userMusicVolume: Float = 1f
     private var userSfxVolume: Float = 1f
     private var isVignetteEnabled: Boolean = true
+    private val eventAnnouncementQueue: ArrayDeque<EventAnnouncementUi> = ArrayDeque()
+    private var nextEventAnnouncementId: Long = 0L
 
     private fun emitEvent(event: ExplorationEvent) {
         viewModelScope.launch(dispatchers.main) {
@@ -313,18 +341,49 @@ class ExplorationViewModel(
         emitAudioCommands(audioRouter.commandsForUi(key))
     }
 
-    private fun hideQuickMenu() {
-        if (_uiState.value.isQuickMenuVisible) {
-            _uiState.update { it.copy(isQuickMenuVisible = false) }
+    private fun shouldSuppressStateAnnouncement(stateKey: String?): Boolean =
+        stateKey?.equals("light_on", ignoreCase = true) == true
+
+    private fun enqueueEventAnnouncement(
+        title: String?,
+        message: String,
+        accentColor: Long = EVENT_ANNOUNCEMENT_ACCENT
+    ) {
+        viewModelScope.launch(dispatchers.main) {
+            val announcement = EventAnnouncementUi(
+                id = ++nextEventAnnouncementId,
+                title = title?.takeIf { it.isNotBlank() },
+                message = message,
+                accentColor = accentColor
+            )
+            if (_uiState.value.eventAnnouncement == null) {
+                _uiState.update { it.copy(eventAnnouncement = announcement) }
+            } else {
+                eventAnnouncementQueue.addLast(announcement)
+            }
         }
     }
 
-    fun onCombatVictory(result: CombatResultPayload) {
-        val enemyIds = result.enemyIds
+    fun dismissEventAnnouncement() {
+        viewModelScope.launch(dispatchers.main) {
+            val next = if (eventAnnouncementQueue.isNotEmpty()) eventAnnouncementQueue.removeFirst() else null
+            _uiState.update { it.copy(eventAnnouncement = next) }
+        }
+    }
+
+    private fun announceMilestoneEvent(milestoneId: String, message: String) {
+        val title = when (milestoneId) {
+            "ms_mine_power_on" -> null
+            else -> formatMilestoneLabel(milestoneId)
+        }
+        enqueueEventAnnouncement(title, message)
+    }
+
+    private fun removeEnemiesFromCurrentRoom(enemyIds: List<String>) {
         if (enemyIds.isEmpty()) return
         val currentRoom = _uiState.value.currentRoom
         if (currentRoom != null && currentRoom.enemies.isNotEmpty()) {
-            val remaining = currentRoom.enemies.filterNot { it in enemyIds }
+            val remaining = currentRoom.enemies.filterNot { enemyIds.contains(it) }
             if (remaining.size != currentRoom.enemies.size) {
                 val updatedRoom = currentRoom.copy(enemies = remaining)
                 roomsById = roomsById + (updatedRoom.id to updatedRoom)
@@ -336,6 +395,15 @@ class ExplorationViewModel(
                 }
             }
         }
+    }
+
+    fun onCombatVictoryEnemiesCleared(enemyIds: List<String>) {
+        removeEnemiesFromCurrentRoom(enemyIds)
+    }
+
+    fun onCombatVictory(result: CombatResultPayload) {
+        val enemyIds = result.enemyIds
+        removeEnemiesFromCurrentRoom(enemyIds)
         eventManager.handleTrigger(
             type = "encounter_victory",
             payload = EventPayload.EncounterOutcome(
@@ -426,9 +494,15 @@ class ExplorationViewModel(
         playRoomAudio(sessionStore.state.value.hubId, _uiState.value.currentRoom?.id)
     }
 
+    fun showStatusMessage(message: String) {
+        postStatus(message)
+    }
+
     private fun postStatus(message: String) {
+        val trimmed = message.trim()
+        if (trimmed.isEmpty()) return
         viewModelScope.launch(dispatchers.main) {
-            _uiState.update { it.copy(statusMessage = message) }
+            _uiState.update { it.copy(statusMessage = trimmed) }
         }
     }
 
@@ -561,7 +635,8 @@ class ExplorationViewModel(
     private fun updateMinimap(currentRoom: Room?) {
         currentRoom?.let { markDiscovered(it) }
         val minimap = currentRoom?.let { buildMinimapState(it) }
-        _uiState.update { it.copy(minimap = minimap) }
+        val fullMap = currentRoom?.let { buildFullMapState(it) }
+        _uiState.update { it.copy(minimap = minimap, fullMap = fullMap) }
     }
 
     private fun buildMinimapState(currentRoom: Room): MinimapUiState {
@@ -574,10 +649,13 @@ class ExplorationViewModel(
             normalized to dest
         }.toMap()
 
-        val cells = roomsByPosition.mapNotNull { (pos, room) ->
+        val roomsInContext = roomsForMaps(currentRoom)
+        val cells = roomsInContext.mapNotNull { room ->
+            val pos = roomPosition(room)
             val dx = pos.first - currentPos.first
             val dy = pos.second - currentPos.second
             if (abs(dx) > 1 || abs(dy) > 1) return@mapNotNull null
+            if (!visitedRooms.contains(room.id) && room.id != currentRoom.id) return@mapNotNull null
             val connections = room.connections.mapNotNull { (direction, targetId) ->
                 targetId?.let { direction.lowercase(Locale.getDefault()) to it }
             }.toMap()
@@ -602,6 +680,8 @@ class ExplorationViewModel(
                 roomId = room.id,
                 offsetX = dx,
                 offsetY = dy,
+                gridX = pos.first,
+                gridY = pos.second,
                 visited = visitedRooms.contains(room.id),
                 discovered = discoveredRooms.contains(room.id),
                 isCurrent = room.id == currentRoom.id,
@@ -615,11 +695,60 @@ class ExplorationViewModel(
         return MinimapUiState(cells = cells)
     }
 
+    private fun buildFullMapState(currentRoom: Room): FullMapUiState {
+        val currentPos = roomPosition(currentRoom)
+        val roomsInContext = roomsForMaps(currentRoom)
+        val cells = roomsInContext.mapNotNull { room ->
+            if (!visitedRooms.contains(room.id) && room.id != currentRoom.id) return@mapNotNull null
+            val pos = roomPosition(room)
+            val connections = room.connections.mapNotNull { (direction, targetId) ->
+                targetId?.let { direction.lowercase(Locale.getDefault()) to it }
+            }.toMap()
+            val blocked = computeBlockedDirections(room)
+            val services = parseActions(room).mapNotNull { action ->
+                when (action) {
+                    is ShopAction -> MinimapService.SHOP
+                    is CookingAction -> MinimapService.COOKING
+                    is FirstAidAction -> MinimapService.FIRST_AID
+                    is TinkeringAction -> MinimapService.TINKERING
+                    else -> null
+                }
+            }.toSet()
+            MinimapCellUi(
+                roomId = room.id,
+                offsetX = pos.first - currentPos.first,
+                offsetY = pos.second - currentPos.second,
+                gridX = pos.first,
+                gridY = pos.second,
+                visited = visitedRooms.contains(room.id),
+                discovered = discoveredRooms.contains(room.id),
+                isCurrent = room.id == currentRoom.id,
+                hasEnemies = room.enemies.isNotEmpty(),
+                blockedDirections = blocked,
+                connections = connections,
+                services = services
+            )
+        }
+        return FullMapUiState(cells = cells)
+    }
+
     private fun roomPosition(room: Room): Pair<Int, Int> {
         val x = room.pos.getOrNull(0) ?: 0
         val y = room.pos.getOrNull(1) ?: 0
         return x to y
     }
+
+    private fun roomsForMaps(anchor: Room): List<Room> {
+        val nodeId = nodeIdByRoomId[anchor.id]
+        val rooms = when {
+            nodeId != null -> roomsByNodeId[nodeId].orEmpty()
+            else -> roomsByEnvironment[environmentKey(anchor.env)].orEmpty()
+        }
+        return if (rooms.isNotEmpty()) rooms else listOf(anchor)
+    }
+
+    private fun environmentKey(env: String?): String =
+        env?.takeIf { it.isNotBlank() }?.lowercase(Locale.getDefault()) ?: "__default"
 
     private fun buildDialogueUi(line: DialogueLine?): DialogueUi? {
         if (line == null) return null
@@ -688,14 +817,36 @@ class ExplorationViewModel(
                     charactersById = charactersById,
                     levelingManager = levelingManager
                 )
-                _uiState.update {
-                    it.copy(
+                _uiState.update { current ->
+                    val overlay = current.skillTreeOverlay?.characterId?.let { characterId ->
+                        buildSkillTreeOverlay(characterId, newState)
+                    }
+                    current.copy(
                         completedMilestones = newState.completedMilestones,
                         partyStatus = partyStatus,
-                        progressionSummary = progressionSummary
+                        progressionSummary = progressionSummary,
+                        equippedItems = newState.equippedItems,
+                        skillTreeOverlay = overlay
                     )
                 }
                 updateActionHints(_uiState.value.currentRoom)
+            }
+        }
+
+        viewModelScope.launch(dispatchers.main) {
+            inventoryService.state.collect { entries ->
+                val preview = entries
+                    .sortedBy { it.item.name.lowercase(Locale.getDefault()) }
+                    .take(8)
+                    .map { entry ->
+                        InventoryPreviewItemUi(
+                            id = entry.item.id,
+                            name = entry.item.name,
+                            quantity = entry.quantity,
+                            type = entry.item.type
+                        )
+                    }
+                _uiState.update { it.copy(inventoryPreview = preview) }
             }
         }
 
@@ -709,6 +860,22 @@ class ExplorationViewModel(
                         milestoneHistory = history,
                         milestoneBands = bands
                     )
+                }
+            }
+        }
+
+        viewModelScope.launch(dispatchers.main) {
+            environmentThemeManager.state.collect { themeState ->
+                val environmentId = themeState.environmentId
+                if (!environmentId.isNullOrBlank()) {
+                    val resolvedTheme = themeState.theme ?: themeRepository.getTheme(environmentId)
+                    val resolvedStyle = themeState.style ?: themeRepository.getStyle(environmentId)
+                    _uiState.update {
+                        it.copy(
+                            theme = resolvedTheme ?: it.theme,
+                            themeStyle = resolvedStyle ?: it.themeStyle
+                        )
+                    }
                 }
             }
         }
@@ -803,6 +970,22 @@ class ExplorationViewModel(
         }
     }
 
+    private fun buildSkillTreeOverlay(
+        characterId: String,
+        sessionState: GameSessionState
+    ): SkillTreeOverlayUi? {
+        val tree = skillTreesByCharacter[characterId] ?: return null
+        val character = charactersById[characterId]
+        return buildSkillTreeOverlayUi(tree, character, sessionState)
+    }
+
+    private fun findSkillNode(characterId: String, nodeId: String): SkillTreeNode? =
+        skillTreesByCharacter[characterId]
+            ?.branches
+            ?.values
+            ?.flatten()
+            ?.firstOrNull { it.id == nodeId }
+
     private fun tutorialFallbackMessage(tutorialId: String): String? {
         return when (tutorialId.lowercase(Locale.getDefault())) {
             "movement" -> "Swipe in the highlighted direction to move between rooms."
@@ -820,6 +1003,7 @@ class ExplorationViewModel(
 
             val worlds = worldAssets.loadWorlds()
             val hubs = worldAssets.loadHubs()
+            val nodes = worldAssets.loadHubNodes()
             val rooms = worldAssets.loadRooms().map { room ->
                 val envPrefix = room.id.substringBefore('_', room.env)
                 if (envPrefix.isNotBlank() && envPrefix != room.env) {
@@ -830,14 +1014,26 @@ class ExplorationViewModel(
             }
             val players = worldAssets.loadCharacters()
             val skills = worldAssets.loadSkills()
+            val skillTrees = worldAssets.loadSkillTrees()
             val npcs = worldAssets.loadNpcs()
 
             charactersById = players.associateBy { it.id }
             skillsById = skills.associateBy { it.id }
+            skillTreesByCharacter = skillTrees.associateBy { it.character }
 
             roomsById = rooms.associateBy { it.id }
-            roomsByPosition = rooms.associateBy { roomPosition(it) }
+            themeByRoomId = rooms.associate { it.id to themeRepository.getTheme(it.env) }
+            themeStyleByRoomId = rooms.associate { it.id to themeRepository.getStyle(it.env) }
+            darkCapableRoomIds = rooms.filter { room ->
+                room.dark == true || booleanValueOf(room.state["dark"]) == true
+            }.map { it.id }.toSet()
+            roomsByEnvironment = rooms.groupBy { environmentKey(it.env) }
+            nodeIdByRoomId = nodes.flatMap { node -> node.rooms.map { it to node.id } }.toMap()
+            roomsByNodeId = nodes.associate { node ->
+                node.id to node.rooms.mapNotNull { roomId -> roomsById[roomId] }
+            }
             initializeRoomStates(rooms)
+            sanitizeDarkStates()
             initializeUnlockedDirections(rooms)
             initializeGroundItems(rooms)
             val player = players.firstOrNull()
@@ -853,6 +1049,10 @@ class ExplorationViewModel(
                 preselectedRoomId?.let { id -> roomsById[id] }
                     ?: rooms.firstOrNull { it.id.equals("town_9", ignoreCase = true) }
                     ?: rooms.firstOrNull()
+            val initialThemeId = initialRoom?.env
+            val initialTheme = initialRoom?.let { themeByRoomId[it.id] }
+            val initialThemeStyle = initialRoom?.let { themeStyleByRoomId[it.id] }
+            environmentThemeManager.apply(initialThemeId, initialRoom?.weather)
 
             portraitBySpeaker.clear()
             players.forEach { character ->
@@ -880,6 +1080,8 @@ class ExplorationViewModel(
                 sessionStore.resetTutorialProgress()
             }
             acknowledgedMilestones.clear()
+            eventAnnouncementQueue.clear()
+            nextEventAnnouncementId = 0L
 
             sessionStore.setWorld(initialWorld?.id)
             sessionStore.setHub(initialHub?.id)
@@ -920,8 +1122,12 @@ class ExplorationViewModel(
                     activeQuests = sessionState.activeQuests,
                     completedQuests = sessionState.completedQuests,
                     completedMilestones = sessionState.completedMilestones,
+                    theme = initialTheme,
+                    themeStyle = initialThemeStyle,
+                    darkCapableRooms = darkCapableRoomIds,
                     partyStatus = partyStatus,
                     progressionSummary = progressionSummary,
+                    mineGeneratorOnline = isMineGeneratorOnline(),
                     settings = SettingsUiState(
                         musicVolume = userMusicVolume,
                         sfxVolume = userSfxVolume,
@@ -938,7 +1144,6 @@ class ExplorationViewModel(
     }
 
     fun travel(direction: String) {
-        hideQuickMenu()
         val currentRoom = _uiState.value.currentRoom ?: return
         val evaluation = evaluateDirection(currentRoom, direction, DirectionEvaluationMode.ATTEMPT)
         if (evaluation.blocked) {
@@ -952,6 +1157,9 @@ class ExplorationViewModel(
 
         val nextRoomId = getConnection(currentRoom, direction) ?: return
         val nextRoom = roomsById[nextRoomId] ?: return
+        val nextTheme = themeByRoomId[nextRoom.id]
+        val nextThemeStyle = themeStyleByRoomId[nextRoom.id]
+        environmentThemeManager.apply(nextRoom.env, nextRoom.weather)
 
         sessionStore.setRoom(nextRoom.id)
         visitedRooms.add(nextRoom.id)
@@ -975,6 +1183,8 @@ class ExplorationViewModel(
                 activeDialogue = null,
                 activeQuests = sessionState.activeQuests,
                 completedQuests = sessionState.completedQuests,
+                theme = nextTheme,
+                themeStyle = nextThemeStyle,
                 statusMessage = null
             )
         }
@@ -986,7 +1196,6 @@ class ExplorationViewModel(
     }
 
     fun onNpcInteraction(npcName: String) {
-        hideQuickMenu()
         val session = dialogueService.startDialogue(npcName)
         activeDialogueSession = session
         playUiCue("click")
@@ -1053,7 +1262,6 @@ class ExplorationViewModel(
     }
 
     fun onActionSelected(action: RoomAction) {
-        hideQuickMenu()
         playUiCue("click")
         dismissBlockedPrompt()
         when (action) {
@@ -1068,6 +1276,7 @@ class ExplorationViewModel(
             is CookingAction -> handleCookingAction(action)
             is FirstAidAction -> handleFirstAidAction(action)
             is GenericAction -> handleGenericAction(action)
+            else -> Unit
         }
         updateActionHints(_uiState.value.currentRoom)
     }
@@ -1128,15 +1337,22 @@ class ExplorationViewModel(
             } else {
                 prompt.offMessage ?: event?.offMessage ?: prompt.disableLabel
             }
-            pendingStateMessage = message
-            suppressNextStateMessage = true
+            if (!shouldSuppressStateAnnouncement(prompt.stateKey)) {
+                pendingStateMessage = message
+                suppressNextStateMessage = true
+            } else {
+                pendingStateMessage = null
+                suppressNextStateMessage = false
+            }
             triggerPlayerAction(eventId)
         } else {
             val roomId = prompt.roomId ?: _uiState.value.currentRoom?.id
             val applied = setRoomStateValue(roomId, prompt.stateKey, enable)
             if (applied != null) {
-                val message = if (enable) prompt.enableLabel else prompt.disableLabel
-                postStatus(message)
+                if (!shouldSuppressStateAnnouncement(prompt.stateKey)) {
+                    val message = if (enable) prompt.enableLabel else prompt.disableLabel
+                    postStatus(message)
+                }
             }
         }
         _uiState.update { it.copy(togglePrompt = null) }
@@ -1200,7 +1416,7 @@ class ExplorationViewModel(
     fun openMinimapLegend() {
         viewModelScope.launch(dispatchers.main) {
             playUiCue("click")
-            _uiState.update { it.copy(isQuickMenuVisible = false, isMinimapLegendVisible = true) }
+            _uiState.update { it.copy(isMinimapLegendVisible = true) }
         }
     }
 
@@ -1211,10 +1427,27 @@ class ExplorationViewModel(
         }
     }
 
+    fun openFullMapOverlay() {
+        viewModelScope.launch(dispatchers.main) {
+            val room = _uiState.value.currentRoom ?: return@launch
+            playUiCue("click")
+            val fullMap = buildFullMapState(room)
+            _uiState.update { it.copy(isFullMapVisible = true, fullMap = fullMap) }
+        }
+    }
+
+    fun closeFullMapOverlay() {
+        viewModelScope.launch(dispatchers.main) {
+            playUiCue("click")
+            _uiState.update { it.copy(isFullMapVisible = false) }
+        }
+    }
+
+
     fun openQuestLog() {
         viewModelScope.launch(dispatchers.main) {
             playUiCue("click")
-            _uiState.update { it.copy(isQuickMenuVisible = false, isQuestLogVisible = true) }
+            _uiState.update { it.copy(isQuestLogVisible = true) }
         }
     }
 
@@ -1228,7 +1461,7 @@ class ExplorationViewModel(
     fun openMilestoneGallery() {
         viewModelScope.launch(dispatchers.main) {
             playUiCue("click")
-            _uiState.update { it.copy(isQuickMenuVisible = false, isMilestoneGalleryVisible = true) }
+            _uiState.update { it.copy(isMilestoneGalleryVisible = true) }
         }
     }
 
@@ -1242,28 +1475,175 @@ class ExplorationViewModel(
 
     private var lastMenuTab: MenuTab = MenuTab.INVENTORY
 
-    fun toggleQuickMenu() {
-        viewModelScope.launch(dispatchers.main) {
-            val nextVisible = !_uiState.value.isQuickMenuVisible
-            playUiCue(if (nextVisible) "click" else "cancel")
-            _uiState.update { it.copy(isQuickMenuVisible = nextVisible) }
-        }
-    }
-
     fun openMenuOverlay(defaultTab: MenuTab? = null) {
         viewModelScope.launch(dispatchers.main) {
-            playUiCue("click")
+            playUiCue("menu_open")
             val tab = defaultTab ?: lastMenuTab
             lastMenuTab = tab
-            _uiState.update { it.copy(isQuickMenuVisible = false, isMenuOverlayVisible = true, menuTab = tab) }
+            _uiState.update { it.copy(isMenuOverlayVisible = true, menuTab = tab) }
         }
     }
 
     fun closeMenuOverlay() {
         viewModelScope.launch(dispatchers.main) {
-            playUiCue("cancel")
+            playUiCue("menu_close")
             _uiState.update { it.copy(isMenuOverlayVisible = false) }
         }
+    }
+
+    fun openSkillTree(characterId: String) {
+        viewModelScope.launch(dispatchers.main) {
+            val overlay = buildSkillTreeOverlay(characterId, sessionStore.state.value)
+            if (overlay != null) {
+                playUiCue("menu_open")
+                _uiState.update { it.copy(skillTreeOverlay = overlay) }
+            } else {
+                val name = charactersById[characterId]?.name ?: "that character"
+                postStatus("Skill data unavailable for $name.")
+            }
+        }
+    }
+
+    fun closeSkillTreeOverlay() {
+        viewModelScope.launch(dispatchers.main) {
+            _uiState.update { it.copy(skillTreeOverlay = null) }
+        }
+    }
+
+    fun openPartyMemberDetails(characterId: String) {
+        viewModelScope.launch(dispatchers.main) {
+            val character = charactersById[characterId] ?: run {
+                postStatus("Unable to show details for that character.")
+                return@launch
+            }
+            val sessionState = sessionStore.state.value
+            val xp = sessionState.partyMemberXp[character.id]
+                ?: sessionState.playerXp.takeIf { character.id == sessionState.playerId }
+                ?: character.xp
+            val level = sessionState.partyMemberLevels[character.id]
+                ?: sessionState.playerLevel.takeIf { character.id == sessionState.playerId }
+                ?: character.level
+            val (startXp, nextXp) = levelingManager.levelBounds(level)
+            val xpLabel = buildString {
+                append(xp)
+                append(" XP")
+                nextXp?.let { next ->
+                    val toNext = max(next - xp, 0)
+                    append(" • ")
+                    append(toNext)
+                    append(" to next")
+                }
+            }
+            val maxHp = character.hp.coerceAtLeast(0)
+            val currentHp = (sessionState.partyMemberHp[character.id] ?: maxHp).coerceAtLeast(0)
+            val hpLabel = if (maxHp > 0) "$currentHp / $maxHp HP" else null
+            val maxFocus = character.focus.coerceAtLeast(0)
+            val currentFocus = (sessionState.partyMemberRp[character.id] ?: maxFocus).coerceAtLeast(0)
+            val focusLabel = if (maxFocus > 0) "$currentFocus / $maxFocus Focus" else null
+
+            val primaryStats = listOf(
+                CharacterStatValueUi("Strength", character.strength.toString()),
+                CharacterStatValueUi("Vitality", character.vitality.toString()),
+                CharacterStatValueUi("Agility", character.agility.toString()),
+                CharacterStatValueUi("Focus", character.focus.toString()),
+                CharacterStatValueUi("Luck", character.luck.toString())
+            )
+            val combatStats = listOf(
+                CharacterStatValueUi("Attack", CombatFormulas.attackPower(character.strength).toString()),
+                CharacterStatValueUi("Defense", CombatFormulas.defensePower(character.vitality).toString()),
+                CharacterStatValueUi(
+                    "Speed",
+                    String.format(Locale.getDefault(), "%.1f", CombatFormulas.speed(0, character.agility))
+                ),
+                CharacterStatValueUi(
+                    "Accuracy",
+                    String.format(Locale.getDefault(), "%.1f%%", CombatFormulas.accuracy(character.focus))
+                ),
+                CharacterStatValueUi(
+                    "Evasion",
+                    String.format(Locale.getDefault(), "%.1f%%", CombatFormulas.evasion(character.agility))
+                ),
+                CharacterStatValueUi(
+                    "Crit Rate",
+                    String.format(Locale.getDefault(), "%.1f%%", CombatFormulas.critChance(character.focus))
+                ),
+                CharacterStatValueUi(
+                    "Resistance",
+                    CombatFormulas.generalResistance(character.focus).toString()
+                )
+            )
+            val unlockedSkillNames = sessionState.unlockedSkills
+                .mapNotNull { skillId ->
+                    skillsById[skillId]?.takeIf { it.character == character.id }?.name
+                }
+                .sortedBy { it.lowercase(Locale.getDefault()) }
+
+            playUiCue("menu_open")
+            _uiState.update {
+                it.copy(
+                    partyMemberDetails = PartyMemberDetailsUi(
+                        id = character.id,
+                        name = character.name,
+                        level = level,
+                        xpLabel = xpLabel,
+                        hpLabel = hpLabel,
+                        focusLabel = focusLabel,
+                        portraitPath = character.miniIconPath,
+                        primaryStats = primaryStats,
+                        combatStats = combatStats,
+                        unlockedSkills = unlockedSkillNames
+                    )
+                )
+            }
+        }
+    }
+
+    fun closePartyMemberDetails() {
+        viewModelScope.launch(dispatchers.main) {
+            _uiState.update { it.copy(partyMemberDetails = null) }
+        }
+    }
+
+    fun unlockSkillNode(nodeId: String) {
+        viewModelScope.launch(dispatchers.main) {
+            val overlay = _uiState.value.skillTreeOverlay ?: return@launch
+            val branchNode = overlay.branches
+                .flatMap { it.nodes }
+                .firstOrNull { it.id == nodeId } ?: return@launch
+            val status = branchNode.status
+            if (status.unlocked) {
+                postStatus("${branchNode.name} already learned.")
+                return@launch
+            }
+            if (!status.canPurchase) {
+                val unmetLabels = status.unmetRequirements.mapNotNull { unmetId ->
+                    branchNode.requirements.firstOrNull { it.id == unmetId }?.label
+                }
+                val message = when {
+                    !status.hasEnoughAp -> "Not enough Ability Points."
+                    !status.meetsTierRequirement -> "Invest ${status.requiredApForTier} AP into this tree to reach the next tier."
+                    unmetLabels.isNotEmpty() -> "Requires ${unmetLabels.joinToString(", ")}."
+                    else -> "Cannot unlock ${branchNode.name} yet."
+                }
+                postStatus(message)
+                return@launch
+            }
+            val definition = findSkillNode(overlay.characterId, nodeId) ?: return@launch
+            val cost = definition.costAp.coerceAtLeast(0)
+            if (!sessionStore.spendAp(cost)) {
+                postStatus("Not enough Ability Points.")
+                return@launch
+            }
+            sessionStore.unlockSkill(definition.id)
+            playUiCue("confirm")
+            postStatus("Learned ${branchNode.name}")
+            val refreshed = buildSkillTreeOverlay(overlay.characterId, sessionStore.state.value)
+            _uiState.update { it.copy(skillTreeOverlay = refreshed) }
+        }
+    }
+
+    fun onMenuActionInvoked() {
+        playUiCue("menu_action")
     }
 
     fun selectMenuTab(tab: MenuTab) {
@@ -1396,7 +1776,6 @@ class ExplorationViewModel(
     }
 
     fun collectGroundItem(itemId: String) {
-        hideQuickMenu()
         val roomId = _uiState.value.currentRoom?.id ?: return
         val items = roomGroundItems[roomId] ?: return
         val quantity = items[itemId] ?: return
@@ -1420,7 +1799,6 @@ class ExplorationViewModel(
     }
 
     fun collectAllGroundItems() {
-        hideQuickMenu()
         val roomId = _uiState.value.currentRoom?.id ?: return
         val items = roomGroundItems[roomId] ?: return
         if (items.isEmpty()) return
@@ -1482,19 +1860,91 @@ class ExplorationViewModel(
     private fun setRoomStateValue(
         roomIdOrNull: String?,
         stateKey: String?,
-        value: Boolean
+        value: Boolean,
+        notify: Boolean = true
     ): Boolean? {
         val stateKeySafe = stateKey?.takeUnless { it.isBlank() } ?: return null
         val roomId = roomIdOrNull ?: _uiState.value.currentRoom?.id ?: return null
-        val states = roomStates.getOrPut(roomId) { mutableMapOf() }
-        states[stateKeySafe] = value
-        updateRoomModelState(roomId, stateKeySafe, value)
+        val changed = applyRoomStateValue(roomId, stateKeySafe, value)
+        if (!changed) return value
         reevaluateBlockedDirections(roomId, silent = true)
-        onRoomStateChanged(roomId, stateKeySafe, value)
-        emitStateStatusIfNeeded(stateKeySafe, value)
-        updateActionHints(_uiState.value.currentRoom)
+        if (notify) {
+            onRoomStateChanged(roomId, stateKeySafe, value)
+            emitStateStatusIfNeeded(stateKeySafe, value)
+            updateActionHints(_uiState.value.currentRoom)
+        }
+        if (
+            notify &&
+            stateKeySafe.equals("power_on", ignoreCase = true) &&
+            roomId.equals(STELLARIUM_GENERATOR_ROOM_ID, ignoreCase = true)
+        ) {
+            updateMineLighting(powerOn = value)
+        }
         return value
     }
+
+    private fun applyRoomStateValue(
+        roomId: String,
+        stateKey: String,
+        value: Boolean
+    ): Boolean {
+        if (stateKey.equals("dark", ignoreCase = true) || stateKey.equals("light_on", ignoreCase = true)) {
+            if (!isDarkCapableRoom(roomId)) {
+                return false
+            }
+        }
+        val states = roomStates.getOrPut(roomId) { mutableMapOf() }
+        if (states[stateKey] == value) return false
+        states[stateKey] = value
+        updateRoomModelState(roomId, stateKey, value)
+        return true
+    }
+
+    private fun isDarkCapableRoom(roomId: String?): Boolean =
+        roomId != null && darkCapableRoomIds.contains(roomId)
+
+    private fun sanitizeDarkStates() {
+        val updated = roomsById.toMutableMap()
+        roomsById.forEach { (roomId, room) ->
+            if (!isDarkCapableRoom(roomId)) {
+                val states = roomStates[roomId] ?: return@forEach
+                var changed = false
+                if (states.remove("dark") != null) changed = true
+                if (states.remove("light_on") != null) changed = true
+                if (changed) {
+                    val newState = room.state.toMutableMap()
+                    newState.remove("dark")
+                    newState.remove("light_on")
+                    updated[roomId] = room.copy(state = newState)
+                }
+            }
+        }
+        roomsById = updated
+    }
+
+    private fun updateMineLighting(powerOn: Boolean) {
+        val generatorEnv = roomsById[STELLARIUM_GENERATOR_ROOM_ID]?.env ?: return
+        val targetEnvKey = environmentKey(generatorEnv)
+        val currentRoom = _uiState.value.currentRoom
+
+        roomsById.values
+            .filter { room ->
+                environmentKey(room.env) == targetEnvKey &&
+                    darkCapableRoomIds.contains(room.id)
+            }
+            .forEach { room ->
+                setRoomStateValue(room.id, "dark", !powerOn, notify = false)
+                setRoomStateValue(room.id, "light_on", powerOn, notify = false)
+            }
+
+        if (currentRoom != null && environmentKey(currentRoom.env) == targetEnvKey) {
+            updateActionHints(currentRoom)
+        }
+        _uiState.update { it.copy(mineGeneratorOnline = powerOn) }
+    }
+
+    private fun isMineGeneratorOnline(): Boolean =
+        roomStates[STELLARIUM_GENERATOR_ROOM_ID]?.get("power_on") == true
 
     private fun toggleRoomStateValue(
         roomIdOrNull: String?,
@@ -1546,12 +1996,6 @@ class ExplorationViewModel(
         else -> null
     }
 
-    private fun formatRoomStateStatus(stateKey: String, value: Boolean): String {
-        val label = formatStateKey(stateKey)
-        val stateText = if (value) "enabled" else "disabled"
-        return "$label $stateText"
-    }
-
     private fun formatStateKey(stateKey: String): String =
         stateKey.replace('_', ' ').replaceFirstChar { char ->
             if (char.isLowerCase()) char.titlecase(Locale.getDefault()) else char.toString()
@@ -1573,7 +2017,6 @@ class ExplorationViewModel(
             suppressNextStateMessage = false
             return
         }
-        postStatus(formatRoomStateStatus(stateKey, value))
     }
 
     private fun markDiscovered(room: Room) {
@@ -2376,12 +2819,15 @@ private fun QuestJournalEntry.toUiSummary(): QuestSummaryUi = QuestSummaryUi(
 private fun QuestLogEntry.toUiEntry(questRepository: QuestRepository): QuestLogEntryUi {
     val quest = questRepository.questById(questId)
     val stage = stageId?.let { id -> quest?.stages?.firstOrNull { it.id == id } }
+    val resolvedTitle = questTitle ?: quest?.title
     return QuestLogEntryUi(
         questId = questId,
         message = message,
         stageId = stageId,
         stageTitle = stage?.title,
-        timestamp = timestamp
+        timestamp = timestamp,
+        type = type,
+        questTitle = resolvedTitle
     )
 }
 

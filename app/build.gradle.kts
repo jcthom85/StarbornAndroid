@@ -71,9 +71,11 @@ dependencies {
     implementation("com.squareup.moshi:moshi-kotlin:1.15.1")
     implementation(libs.androidx.datastore)
     implementation(libs.androidx.datastore.core)
+    implementation(libs.androidx.datastore.preferences)
     implementation(libs.protobuf.javalite)
     implementation(libs.androidx.media3.exoplayer)
     implementation(libs.androidx.media3.datasource)
+    implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
 }
 
 protobuf {

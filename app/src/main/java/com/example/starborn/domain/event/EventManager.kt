@@ -19,7 +19,8 @@ class EventManager(
         val candidates = eventsByTriggerType[type.lowercase()].orEmpty()
         val state = sessionStore.state.value
         for (event in candidates) {
-            if (!event.repeatable && event.id in state.completedMilestones) {
+            val completionKey = completionKeyFor(event.id)
+            if (!event.repeatable && completionKey in state.completedMilestones) {
                 continue
             }
             if (!conditionsSatisfied(event.conditions, state)) continue
@@ -27,7 +28,7 @@ class EventManager(
             if (executeActions(event.actions, state)) {
                 // Mark completion for non-repeatable events
                 if (!event.repeatable) {
-                    sessionStore.setMilestone("evt_completed_${event.id}")
+                    sessionStore.setMilestone(completionKey)
                 }
             }
         }
@@ -319,6 +320,7 @@ class EventManager(
         val items = action.rewardItems ?: base.items
         return EventReward(xp = xp, credits = credits, ap = ap, items = items)
     }
+    private fun completionKeyFor(eventId: String): String = "evt_completed_$eventId"
 }
 
 sealed interface EventPayload {

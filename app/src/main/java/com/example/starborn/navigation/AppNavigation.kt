@@ -2,6 +2,8 @@ package com.example.starborn.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import android.net.Uri
 import androidx.navigation.NavType
@@ -22,6 +24,8 @@ import com.example.starborn.feature.exploration.ui.ExplorationScreen
 import com.example.starborn.feature.inventory.InventoryViewModel
 import com.example.starborn.feature.inventory.InventoryViewModelFactory
 import com.example.starborn.feature.inventory.ui.InventoryRoute
+import com.example.starborn.feature.inventory.ui.InventoryTab
+import com.example.starborn.feature.inventory.ui.InventoryLaunchOptions
 import com.example.starborn.navigation.NavigationDestination.Combat
 import com.example.starborn.navigation.NavigationDestination.Exploration
 import com.example.starborn.navigation.NavigationDestination.MainMenu
@@ -57,11 +61,16 @@ import com.example.starborn.feature.fishing.ui.FishingRoute
 import com.example.starborn.feature.hub.ui.HubScreen
 import com.example.starborn.feature.hub.viewmodel.HubViewModel
 import com.example.starborn.feature.hub.viewmodel.HubViewModelFactory
+import com.example.starborn.data.local.UserSettings
+import java.util.Locale
 
 @Composable
 fun NavigationHost(navController: NavHostController = rememberNavController()) {
     val context = LocalContext.current
     val services = remember { AppServices(context) }
+    val userSettings by services.userSettingsStore.settings.collectAsState(initial = UserSettings())
+    val sessionState by services.sessionStore.state.collectAsState()
+    val environmentThemeState by services.environmentThemeManager.state.collectAsState()
     NavHost(
         navController = navController,
         startDestination = MainMenu.route
@@ -116,12 +125,7 @@ fun NavigationHost(navController: NavHostController = rememberNavController()) {
                 launch {
                     victoryFlow.collect { defeatedIds ->
                         if (defeatedIds.isNotEmpty()) {
-                            explorationViewModel.onCombatVictory(
-                                CombatResultPayload(
-                                    outcome = CombatResultPayload.Outcome.VICTORY,
-                                    enemyIds = defeatedIds
-                                )
-                            )
+                            explorationViewModel.onCombatVictoryEnemiesCleared(defeatedIds)
                             backStackEntry.savedStateHandle["combat_victory"] = emptyList<String>()
                         }
                     }
@@ -178,7 +182,20 @@ fun NavigationHost(navController: NavHostController = rememberNavController()) {
                         navController.navigate(Combat.create(enemyIds))
                     }
                 },
-                onOpenInventory = { navController.navigate(Inventory.route) },
+                onOpenInventory = { options ->
+                    val tabParam = options.initialTab?.name?.lowercase(Locale.getDefault())
+                    val slotParam = options.focusSlot?.lowercase(Locale.getDefault())
+                    val queryParts = buildList {
+                        tabParam?.let { add("tab=${Uri.encode(it)}") }
+                        slotParam?.let { add("slot=${Uri.encode(it)}") }
+                    }
+                    val destination = if (queryParts.isEmpty()) {
+                        Inventory.route
+                    } else {
+                        "${Inventory.route}?${queryParts.joinToString("&")}"
+                    }
+                    navController.navigate(destination)
+                },
                 onOpenTinkering = {
                     backStackEntry.savedStateHandle["tinkering_closed"] = false
                     backStackEntry.savedStateHandle["tinkering_craft"] = ""
@@ -193,16 +210,43 @@ fun NavigationHost(navController: NavHostController = rememberNavController()) {
                 fxEvents = services.uiFxBus.fxEvents
             )
         }
-        composable(Inventory.route) {
+        composable(
+            route = "${Inventory.route}?tab={tab}&slot={slot}",
+            arguments = listOf(
+                navArgument("tab") {
+                    type = NavType.StringType
+                    nullable = true
+                    defaultValue = null
+                },
+                navArgument("slot") {
+                    type = NavType.StringType
+                    nullable = true
+                    defaultValue = null
+                }
+            )
+        ) { backStackEntry ->
             val inventoryViewModel: InventoryViewModel = viewModel(
                 factory = InventoryViewModelFactory(
                     services.inventoryService,
-                    services.craftingService
+                    services.craftingService,
+                    services.sessionStore
                 )
             )
+            val tabArg = backStackEntry.arguments?.getString("tab")
+            val slotArg = backStackEntry.arguments?.getString("slot")
+            val initialTab = tabArg?.let { arg ->
+                InventoryTab.values().firstOrNull { it.name.equals(arg, ignoreCase = true) }
+            }
+            val initialSlot = slotArg?.takeIf { it.isNotBlank() }?.lowercase(Locale.getDefault())
             InventoryRoute(
                 viewModel = inventoryViewModel,
-                onBack = { navController.popBackStack() }
+                onBack = { navController.popBackStack() },
+                highContrastMode = userSettings.highContrastMode,
+                largeTouchTargets = userSettings.largeTouchTargets,
+                theme = environmentThemeState.theme,
+                credits = sessionState.playerCredits,
+                initialTab = initialTab,
+                focusSlot = initialSlot
             )
         }
         composable(Tinkering.route) {
@@ -219,7 +263,9 @@ fun NavigationHost(navController: NavHostController = rememberNavController()) {
                     navController.previousBackStackEntry
                         ?.savedStateHandle
                         ?.set("tinkering_closed", true)
-                }
+                },
+                highContrastMode = userSettings.highContrastMode,
+                largeTouchTargets = userSettings.largeTouchTargets
             )
         }
         composable(Cooking.route) {
@@ -230,7 +276,9 @@ fun NavigationHost(navController: NavHostController = rememberNavController()) {
                 onPlayAudio = { cue ->
                     services.audioCuePlayer.execute(services.audioRouter.commandsForUi(cue))
                 },
-                onTriggerFx = services.uiFxBus::trigger
+                onTriggerFx = services.uiFxBus::trigger,
+                highContrastMode = userSettings.highContrastMode,
+                largeTouchTargets = userSettings.largeTouchTargets
             )
         }
         composable(FirstAid.route) {
@@ -241,7 +289,9 @@ fun NavigationHost(navController: NavHostController = rememberNavController()) {
                 onPlayAudio = { cue ->
                     services.audioCuePlayer.execute(services.audioRouter.commandsForUi(cue))
                 },
-                onTriggerFx = services.uiFxBus::trigger
+                onTriggerFx = services.uiFxBus::trigger,
+                highContrastMode = userSettings.highContrastMode,
+                largeTouchTargets = userSettings.largeTouchTargets
             )
         }
         composable(
@@ -267,7 +317,9 @@ fun NavigationHost(navController: NavHostController = rememberNavController()) {
                                 ?.set("fishing_result", result)
                         }
                         navController.popBackStack()
-                    }
+                    },
+                    highContrastMode = userSettings.highContrastMode,
+                    largeTouchTargets = userSettings.largeTouchTargets
                 )
             } else {
                 navController.popBackStack()
@@ -291,7 +343,11 @@ fun NavigationHost(navController: NavHostController = rememberNavController()) {
                 CombatScreen(
                     navController = navController,
                     viewModel = combatViewModel,
-                    audioCuePlayer = services.audioCuePlayer
+                    audioCuePlayer = services.audioCuePlayer,
+                    suppressFlashes = userSettings.disableFlashes,
+                    suppressScreenshake = userSettings.disableScreenshake,
+                    highContrastMode = userSettings.highContrastMode,
+                    largeTouchTargets = userSettings.largeTouchTargets
                 )
             }
         }
@@ -307,7 +363,10 @@ fun NavigationHost(navController: NavHostController = rememberNavController()) {
                 )
                 ShopRoute(
                     viewModel = shopViewModel,
-                    onBack = { navController.popBackStack() }
+                    onBack = { navController.popBackStack() },
+                    highContrastMode = userSettings.highContrastMode,
+                    largeTouchTargets = userSettings.largeTouchTargets,
+                    voiceoverController = services.voiceoverController
                 )
             } else {
                 navController.popBackStack()

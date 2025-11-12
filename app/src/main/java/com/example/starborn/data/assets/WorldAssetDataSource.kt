@@ -7,6 +7,8 @@ import com.example.starborn.domain.model.Npc
 import com.example.starborn.domain.model.Player
 import com.example.starborn.domain.model.Room
 import com.example.starborn.domain.model.Skill
+import com.example.starborn.domain.model.SkillTreeDefinition
+import com.example.starborn.domain.model.SkillTreeNode
 import com.example.starborn.domain.model.StatusDefinition
 import com.example.starborn.domain.model.World
 import com.example.starborn.domain.leveling.LevelingData
@@ -37,6 +39,31 @@ class WorldAssetDataSource(
 
     fun loadProgressionData(): ProgressionData? = assetReader.readObject("progression.json")
 
+    fun loadSkillTrees(): List<SkillTreeDefinition> {
+        val assetManager = assetReader.context.assets
+        val files = runCatching { assetManager.list(SKILL_TREE_DIR) }.getOrNull().orEmpty()
+        if (files.isEmpty()) return emptyList()
+        val adapter = assetReader.moshi.adapter(SkillTreeDefinition::class.java)
+        val trees = mutableListOf<SkillTreeDefinition>()
+        files.filter { it.endsWith(".json") }.forEach { name ->
+            val path = "$SKILL_TREE_DIR/$name"
+            val definition = runCatching {
+                assetManager.open(path).bufferedReader().use { reader ->
+                    adapter.fromJson(reader.readText())
+                }
+            }.getOrNull()
+            if (definition != null) {
+                trees += definition
+            }
+        }
+        return trees
+    }
+
+    fun loadSkillNodes(): Map<String, SkillTreeNode> =
+        loadSkillTrees()
+            .flatMap { tree -> tree.branches.values.flatten() }
+            .associateBy { node -> node.id }
+
     fun missingHubAssets(hubs: List<Hub>, nodes: List<HubNode>): List<String> {
         val missing = mutableSetOf<String>()
         hubs.mapNotNull { it.backgroundImage.takeIf { path -> path.isNotBlank() } }
@@ -44,5 +71,9 @@ class WorldAssetDataSource(
         nodes.mapNotNull { it.iconImage?.takeIf { path -> path.isNotBlank() } }
             .forEach { path -> if (!assetReader.assetExists(path)) missing += path }
         return missing.toList()
+    }
+
+    companion object {
+        private const val SKILL_TREE_DIR = "skill_trees"
     }
 }

@@ -85,6 +85,18 @@ data class ContainerAction(
     val popupTitle: String? = null
 ) : RoomAction
 
+data class NpcAction(
+    override val name: String,
+    val npcKey: String,
+    val interactionLabel: String
+) : RoomAction
+
+data class EnemyAction(
+    override val name: String,
+    val enemyId: String,
+    val label: String = "Enemy"
+) : RoomAction
+
 data class GenericAction(
     override val name: String,
     val type: String,
@@ -103,6 +115,8 @@ fun RoomAction.actionKey(): String = when (this) {
     is FirstAidAction -> listOf("first_aid", stationId, actionEvent, name).joinToString(":")
     is ShopAction -> listOf("shop", shopId, actionEvent, name).joinToString(":")
     is ContainerAction -> listOf("container", stateKey, actionEvent, name).joinToString(":")
+    is NpcAction -> listOf("npc", npcKey, interactionLabel, name).joinToString(":")
+    is EnemyAction -> listOf("enemy", enemyId, label, name).joinToString(":")
     is GenericAction -> listOf("generic", type, actionEvent, zoneId, name).joinToString(":")
 }
 
@@ -111,5 +125,7 @@ fun RoomAction.serviceTag(): String? = when (this) {
     is CookingAction -> "Cooking"
     is FirstAidAction -> "First Aid"
     is ShopAction -> "Shop"
+    is NpcAction -> interactionLabel
+    is EnemyAction -> label
     else -> null
 }

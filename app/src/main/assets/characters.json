@@ -3,7 +3,7 @@
         "id": "nova",
         "name": "Nova",
         "level": 1, "xp": 0, "hp": 500,
-        "strength": 70, "vitality": 6, "agility": 80, "focus": 6, "luck": 7,
+        "strength": 10, "vitality": 6, "agility": 10, "focus": 6, "luck": 7,
         "skills": ["quick_shot"],
         "mini_icon_path": "images/characters/nova_portrait.png"
     },

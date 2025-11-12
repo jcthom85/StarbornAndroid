@@ -19,6 +19,8 @@ class CombatViewModelFactory(
                 levelingManager = services.levelingManager,
                 progressionData = services.progressionData,
                 audioRouter = services.audioRouter,
+                themeRepository = services.themeRepository,
+                environmentThemeManager = services.environmentThemeManager,
                 enemyIds = enemyIds
             ) as T
         }

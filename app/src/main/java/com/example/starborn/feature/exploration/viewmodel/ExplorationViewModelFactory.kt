@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.starborn.di.AppServices
+import com.example.starborn.domain.session.GameSaveRepository
 
 class ExplorationViewModelFactory(
     private val services: AppServices
@@ -13,6 +14,7 @@ class ExplorationViewModelFactory(
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ExplorationViewModel::class.java)) {
+            val saveRepository = GameSaveRepository(services)
             return ExplorationViewModel(
                 worldAssets = services.worldDataSource,
                 sessionStore = services.sessionStore,
@@ -24,12 +26,17 @@ class ExplorationViewModelFactory(
                 questRuntimeManager = services.questRuntimeManager,
                 milestoneManager = services.milestoneManager,
                 audioRouter = services.audioRouter,
+                voiceoverController = services.voiceoverController,
                 shopRepository = services.shopRepository,
+                themeRepository = services.themeRepository,
+                environmentThemeManager = services.environmentThemeManager,
                 levelingManager = services.levelingManager,
                 tutorialManager = services.tutorialManager,
                 promptManager = services.promptManager,
                 fishingService = services.fishingService,
+                saveRepository = saveRepository,
                 eventDefinitions = services.events,
+                userSettingsStore = services.userSettingsStore,
                 bootstrapCinematics = services.drainPendingCinematics(),
                 bootstrapActions = services.drainPendingPlayerActions()
             ) as T

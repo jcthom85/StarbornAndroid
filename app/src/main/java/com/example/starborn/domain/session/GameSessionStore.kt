@@ -1,5 +1,6 @@
 package com.example.starborn.domain.session
 
+import java.util.Locale
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -133,6 +134,20 @@ class GameSessionStore {
         _state.update { it.copy(playerAp = it.playerAp + amount) }
     }
 
+    fun spendAp(amount: Int): Boolean {
+        if (amount <= 0) return true
+        var success = false
+        _state.update { state ->
+            if (state.playerAp >= amount) {
+                success = true
+                state.copy(playerAp = state.playerAp - amount)
+            } else {
+                state
+            }
+        }
+        return success
+    }
+
     fun addCredits(amount: Int) {
         if (amount <= 0) return
         _state.update { it.copy(playerCredits = it.playerCredits + amount) }
@@ -184,6 +199,19 @@ class GameSessionStore {
     fun forgetSchematic(schematicId: String) {
         if (schematicId.isBlank()) return
         _state.update { it.copy(learnedSchematics = it.learnedSchematics - schematicId) }
+    }
+
+    fun setEquippedItem(slotId: String, itemId: String?) {
+        if (slotId.isBlank()) return
+        val normalizedSlot = slotId.lowercase(Locale.getDefault())
+        _state.update { state ->
+            val updated = if (itemId.isNullOrBlank()) {
+                state.equippedItems - normalizedSlot
+            } else {
+                state.equippedItems + (normalizedSlot to itemId)
+            }
+            state.copy(equippedItems = updated)
+        }
     }
 
     fun unlockSkill(skillId: String) {
@@ -350,5 +378,49 @@ class GameSessionStore {
                 partyMemberRp = rpMap
             )
         }
+    }
+
+    fun setResonanceBounds(min: Int, max: Int, startBase: Int = _state.value.resonanceStartBase) {
+        val clampedMin = min.coerceAtLeast(0)
+        val clampedMax = max.coerceAtLeast(clampedMin)
+        val clampedStart = startBase.coerceIn(clampedMin, clampedMax)
+        _state.update {
+            it.copy(
+                resonanceMin = clampedMin,
+                resonanceMax = clampedMax,
+                resonanceStartBase = clampedStart,
+                resonance = it.resonance.coerceIn(clampedMin, clampedMax)
+            )
+        }
+    }
+
+    fun resetResonanceToStart(): Int {
+        var result = 0
+        _state.update {
+            val start = it.resonanceStartBase.coerceIn(it.resonanceMin, it.resonanceMax)
+            result = start
+            it.copy(resonance = start)
+        }
+        return result
+    }
+
+    fun changeResonance(delta: Int): Int {
+        var result = 0
+        _state.update {
+            val updated = (it.resonance + delta).coerceIn(it.resonanceMin, it.resonanceMax)
+            result = updated
+            it.copy(resonance = updated)
+        }
+        return result
+    }
+
+    fun setResonance(value: Int): Int {
+        var result = 0
+        _state.update {
+            val clamped = value.coerceIn(it.resonanceMin, it.resonanceMax)
+            result = clamped
+            it.copy(resonance = clamped)
+        }
+        return result
     }
 }

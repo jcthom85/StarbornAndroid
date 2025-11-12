@@ -95,6 +95,8 @@ class InventoryService(
         return itemCatalog.findItem(idOrAlias)?.name ?: idOrAlias
     }
 
+    fun itemDetail(idOrAlias: String): Item? = itemCatalog.findItem(idOrAlias)
+
     private fun hasItemDirect(itemId: String): Boolean =
         items[itemId]?.quantity?.let { it > 0 } ?: false
 

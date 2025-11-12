@@ -44,12 +44,22 @@ Context: Evaluation captured after wrapping Phase 2C (progression systems, coo
 ### Current Session Highlights
 - Exploration HUD now mirrors the Python layout: service tray, animated quick menu, quest journal overlay, and milestone timeline landed in Compose.
 - Audio layering reads per-room weather/env data and blends hub music + ambience via the `AudioRouter`.
+- Voiceover routing is now centralized through a reusable controller: exploration dialogue, shop greetings, and smalltalk clips queue through the same duck/restore logic, with catalog metadata providing gain/fade/duration hints.
 - Hub navigation now features hotspot art, per-node subtitles, and a pulse animation that highlights the selected destination.
 - Minimap adds breadcrumb lines, path hints, and current-room rings to match the zoomed-map UX from Python.
 - Exploration now renders an AGSL-driven vignette overlay with a radial-gradient fallback, giving rooms the same edge shading as the Python build.
 - Settings menu exposes music/SFX volume sliders and a vignette toggle, piping straight into the runtime audio mixer and room shading.
+- Settings now persist via a new DataStore-backed `UserSettingsStore`, and the disable flashes/screenshake toggles drive the exploration/combat FX layers (lightning, crafting bursts, and damage shakes respect accessibility).
+- Accessibility toggles (high-contrast + large touch targets) propagate through inventory, shop, cooking, first-aid, tinkering, and fishing screens so secondary workflows share the same contrast palettes and ≥52 dp hit targets.
+- Quest journal overlay has been rebuilt to match the Python MenuOverlay: filter tabs (Active/Completed/Failed), detailed pane with objectives/logs, and inline track/untrack controls.
+- Map tab now offers both the legend panel and a full pan/zoom map overlay rendered from minimap data.
+- Save/Load buttons open a slot selector overlay wired to `GameSessionPersistence`, so manual saves and loads are functional again.
 - Weather-aware overlays and theme bands now render in both exploration and combat, adapting palettes per environment and weather tags while keeping pre-Tiramisu devices on gradient fallbacks.
 - `GameSessionStore` honors pre-selected world/hub/room when returning from the hub; tests/build are green again.
+- Victory flow now matches Python: the in-combat two-step dialog (spoils then level-ups) is the only reward surface, and the exploration layer no longer spams post-combat banners/snackbars.
+- Generator-style toggle actions execute immediately when tapped (no confirmation dialog) and apply their events/state changes on the spot.
+- Combat log flavor text is back to single-line animated callouts timed with attack FX, and the inline action menu replaces the old bottom buttons when a player becomes ready.
+- Target selection relies on a glow/pulse overlay instead of brackets, ATB/HP bars only show blue/red pairs, and the resonance bar respects min/max from the session store.
 
 ## 3. Immediate Next Steps (Phase 4 – Visual & Audio Fidelity)
 1. **Shader & VFX pass**

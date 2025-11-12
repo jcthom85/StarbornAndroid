@@ -3,6 +3,7 @@ package com.example.starborn.data.repository
 import com.example.starborn.data.assets.ItemAssetDataSource
 import com.example.starborn.domain.inventory.ItemCatalog
 import com.example.starborn.domain.model.Item
+import java.util.Locale
 
 class ItemRepository(
     private val dataSource: ItemAssetDataSource
@@ -14,11 +15,19 @@ class ItemRepository(
         val items = dataSource.loadItems()
         itemsById.clear()
         aliasMap.clear()
+        val whitespaceRegex = Regex("\\s+")
         items.forEach { item ->
             itemsById[item.id] = item
-            aliasMap[item.id.lowercase()] = item.id
+            aliasMap[item.id.lowercase(Locale.getDefault())] = item.id
             item.aliases.forEach { alias ->
-                aliasMap[alias.lowercase()] = item.id
+                aliasMap[alias.lowercase(Locale.getDefault())] = item.id
+            }
+            val name = item.name.trim()
+            if (name.isNotBlank()) {
+                val lower = name.lowercase(Locale.getDefault())
+                aliasMap[lower] = item.id
+                val underscored = lower.replace(whitespaceRegex, "_")
+                aliasMap[underscored] = item.id
             }
         }
     }

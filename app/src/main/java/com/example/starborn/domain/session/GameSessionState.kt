@@ -23,7 +23,12 @@ data class GameSessionState(
     val unlockedSkills: Set<String> = emptySet(),
     val partyMembers: List<String> = emptyList(),
     val inventory: Map<String, Int> = emptyMap(),
+    val equippedItems: Map<String, String> = emptyMap(),
     val tutorialSeen: Set<String> = emptySet(),
     val tutorialCompleted: Set<String> = emptySet(),
-    val tutorialRoomsSeen: Set<String> = emptySet()
+    val tutorialRoomsSeen: Set<String> = emptySet(),
+    val resonance: Int = 0,
+    val resonanceMin: Int = 0,
+    val resonanceMax: Int = 100,
+    val resonanceStartBase: Int = 0
 )

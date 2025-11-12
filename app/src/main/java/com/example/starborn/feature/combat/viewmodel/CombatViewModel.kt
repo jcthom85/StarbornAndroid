@@ -1,12 +1,17 @@
 package com.example.starborn.feature.combat.viewmodel
 
+import android.os.SystemClock
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.starborn.data.assets.WorldAssetDataSource
+import com.example.starborn.data.local.Theme
+import com.example.starborn.data.repository.ThemeRepository
 import com.example.starborn.domain.audio.AudioCommand
 import com.example.starborn.domain.audio.AudioRouter
 import com.example.starborn.domain.combat.CombatAction
 import com.example.starborn.domain.combat.CombatActionProcessor
 import com.example.starborn.domain.combat.CombatEngine
+import com.example.starborn.domain.combat.CombatFormulas
 import com.example.starborn.domain.combat.CombatOutcome
 import com.example.starborn.domain.combat.CombatReward
 import com.example.starborn.domain.combat.CombatSetup
@@ -25,18 +30,31 @@ import com.example.starborn.domain.leveling.LevelUpSummary
 import com.example.starborn.domain.leveling.LevelingManager
 import com.example.starborn.domain.leveling.ProgressionData
 import com.example.starborn.domain.leveling.SkillUnlockSummary
-import com.example.starborn.domain.model.Room
+import com.example.starborn.domain.model.BuffEffect
 import com.example.starborn.domain.model.Enemy
 import com.example.starborn.domain.model.Player
+import com.example.starborn.domain.model.Room
 import com.example.starborn.domain.model.Skill
+import com.example.starborn.domain.model.SkillTreeNode
 import com.example.starborn.domain.model.StatusDefinition
 import com.example.starborn.domain.session.GameSessionStore
+import com.example.starborn.domain.theme.EnvironmentThemeManager
+import kotlin.math.max
+import kotlin.random.Random
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
+import java.util.UUID
 
 class CombatViewModel(
     worldAssets: WorldAssetDataSource,
@@ -47,6 +65,8 @@ class CombatViewModel(
     private val levelingManager: LevelingManager,
     private val progressionData: ProgressionData,
     private val audioRouter: AudioRouter,
+    private val themeRepository: ThemeRepository,
+    private val environmentThemeManager: EnvironmentThemeManager,
     enemyIds: List<String>
 ) : ViewModel() {
 
@@ -59,7 +79,9 @@ class CombatViewModel(
     private val enemyCombatants: List<Combatant>
     private val playerIdList: List<String>
     private val enemyIdList: List<String>
+    private val readyQueue = mutableListOf<String>()
     private val skillById: Map<String, Skill>
+    private val skillNodesById: Map<String, SkillTreeNode>
     private val actionProcessor: CombatActionProcessor
     private val enemyCooldowns: MutableMap<String, Int> = mutableMapOf()
     private val combatFxEvents = MutableSharedFlow<CombatFxEvent>(extraBufferCapacity = 16)
@@ -67,14 +89,34 @@ class CombatViewModel(
     private val pendingLevelUps = mutableListOf<LevelUpSummary>()
     val environmentId: String?
     val weatherId: String?
+    val theme: Theme?
+    val roomBackground: String?
+    private val resonanceMin: Int
+    val resonanceMax: Int
+    private val _resonance = MutableStateFlow(0)
+    val resonance: StateFlow<Int> = _resonance.asStateFlow()
+    val resonanceMinBound: Int get() = resonanceMin
+    private val timedPromptLock = Any()
+    private var timedPromptDeferred: CompletableDeferred<Boolean>? = null
+    private val _timedPrompt = MutableStateFlow<TimedPromptState?>(null)
+    val timedPrompt: StateFlow<TimedPromptState?> = _timedPrompt.asStateFlow()
+    private val _awaitingAction = MutableStateFlow<String?>(null)
+    val awaitingAction: StateFlow<String?> = _awaitingAction.asStateFlow()
+    private val _combatMessage = MutableStateFlow<String?>(null)
+    val combatMessage: StateFlow<String?> = _combatMessage.asStateFlow()
 
     private val _state = MutableStateFlow<CombatState?>(null)
     val state: StateFlow<CombatState?> = _state.asStateFlow()
     val combatState: CombatState? get() = _state.value
+    private var enemyTurnJob: Job? = null
     val encounterEnemyIds: List<String> get() = enemyIdList
     private val _selectedEnemies = MutableStateFlow<Set<String>>(emptySet())
     val selectedEnemies: StateFlow<Set<String>> = _selectedEnemies.asStateFlow()
     val inventory: StateFlow<List<InventoryEntry>> = inventoryService.state
+
+    private val _atbMeters = MutableStateFlow<Map<String, Float>>(emptyMap())
+    val atbMeters: StateFlow<Map<String, Float>> = _atbMeters.asStateFlow()
+    private var atbJob: Job? = null
 
     init {
         val players = worldAssets.loadCharacters()
@@ -82,7 +124,8 @@ class CombatViewModel(
         val allSkills = worldAssets.loadSkills()
         val rooms = worldAssets.loadRooms()
 
-        val partyIds = sessionStore.state.value.partyMembers
+        val sessionSnapshot = sessionStore.state.value
+        val partyIds = sessionSnapshot.partyMembers
         val resolvedParty = (if (partyIds.isEmpty()) players.take(1) else partyIds.mapNotNull { id ->
             players.find { it.id == id }
         }).ifEmpty { players.take(1) }
@@ -91,10 +134,13 @@ class CombatViewModel(
         player = playerParty.firstOrNull()
         enemies = enemyIds.mapNotNull { id -> allEnemies.find { it.id == id } }
 
-        val currentRoomId = sessionStore.state.value.roomId
+        val currentRoomId = sessionSnapshot.roomId
         val currentRoom: Room? = currentRoomId?.let { id -> rooms.firstOrNull { it.id == id } }
         environmentId = currentRoom?.env
         weatherId = currentRoom?.weather
+        theme = environmentId?.let { themeRepository.getTheme(it) }
+        roomBackground = currentRoom?.backgroundImage
+        environmentThemeManager.apply(environmentId, weatherId)
 
         playerSkillsById = playerParty.associate { member ->
             member.id to allSkills.filter { it.character == member.id }
@@ -105,7 +151,11 @@ class CombatViewModel(
         playerIdList = playerCombatants.map { it.id }
         enemyIdList = enemyCombatants.map { it.id }
 
+        readyQueue.clear()
+        initializeAtbMeters()
+
         skillById = allSkills.associateBy { it.id }
+        skillNodesById = worldAssets.loadSkillNodes()
         actionProcessor = CombatActionProcessor(
             engine = combatEngine,
             statusRegistry = statusRegistry,
@@ -113,37 +163,55 @@ class CombatViewModel(
             consumeItem = { itemId -> inventoryService.useItem(itemId) }
         )
 
+        resonanceMin = sessionSnapshot.resonanceMin
+        resonanceMax = sessionSnapshot.resonanceMax
+        _resonance.value = sessionStore.resetResonanceToStart()
+
         if (playerCombatants.isNotEmpty() && enemyCombatants.isNotEmpty()) {
-            _state.value = combatEngine.beginEncounter(
+            val seeded = combatEngine.beginEncounter(
                 CombatSetup(
                     playerParty = playerCombatants,
                     enemyParty = enemyCombatants
                 )
-            ).autoResolveEnemyTurns()
+            )
+            _state.value = seeded
             playBattleCue("start")
+            startAtbTicker()
         }
         refreshSelection(_state.value)
     }
 
-    fun playerAttack() {
-        updateState { current ->
-            val attackerId = resolveActivePlayerId(current) ?: return@updateState current
-            val targetId = resolveEnemyTargets(current).firstOrNull() ?: return@updateState current
-            playUiCue("confirm")
-            val action = CombatAction.BasicAttack(attackerId, targetId)
-            val resolved = actionProcessor.execute(current, action, ::victoryReward)
-            val withRewards = resolved.applyOutcomeResults(current)
-            withRewards.autoResolveEnemyTurns()
+    fun playerAttack(targetIdOverride: String? = null) {
+        val attackerId = _awaitingAction.value ?: return
+        val snapshot = _state.value ?: return
+        val attackerState = snapshot.combatants[attackerId]
+        if (attackerState?.isAlive != true) {
+            clearAwaitingAction(attackerId)
+            return
         }
+        val targetId = targetIdOverride ?: resolveEnemyTargets(snapshot).firstOrNull() ?: return
+        playUiCue("confirm")
+        executePlayerAttack(attackerId, targetId)
     }
 
-    fun useSkill(skill: Skill) {
+    fun useSkill(skill: Skill, explicitTargets: List<String>? = null) {
+        val attackerId = _awaitingAction.value ?: return
+        var executed = false
         updateState { current ->
-            val attackerId = resolveActivePlayerId(current) ?: return@updateState current
+            val attackerState = current.combatants[attackerId] ?: return@updateState current
+            if (!attackerState.isAlive) {
+                clearAwaitingAction(attackerId)
+                return@updateState current
+            }
             if (skillsForPlayer(attackerId).none { it.id == skill.id }) return@updateState current
-            val targets = resolveSkillTargets(skill, current, attackerId)
-                .ifEmpty { resolveEnemyTargets(current) }
+            val targets = explicitTargets?.takeIf { it.isNotEmpty() }
+                ?: resolveSkillTargets(skill, current, attackerId).ifEmpty { resolveEnemyTargets(current) }
             if (targets.isEmpty()) return@updateState current
+            val cost = resolveSkillCost(skill.id)
+            if (!spendResonance(cost)) {
+                playUiCue("error")
+                return@updateState current.appendResonanceFailure(attackerId)
+            }
             playUiCue("confirm")
             val action = CombatAction.SkillUse(attackerId, skill.id, targets)
             val supportTargets = if (isSupportSkill(skill)) {
@@ -162,42 +230,98 @@ class CombatViewModel(
                     )
                 )
             }
-            withRewards.autoResolveEnemyTurns()
+            executed = true
+            withRewards
+        }
+        if (executed) {
+            clearAwaitingAction(attackerId)
+            concludeActorTurn(attackerId)
         }
     }
 
-    fun useItem(entry: InventoryEntry) {
+    private fun executePlayerAttack(attackerId: String, targetId: String) {
+        var executed = false
         updateState { current ->
-            val attackerId = resolveActivePlayerId(current) ?: return@updateState current
-            val targetId = when {
+            val attackerState = current.combatants[attackerId] ?: return@updateState current
+            val targetState = current.combatants[targetId] ?: return@updateState current
+            val action = CombatAction.BasicAttack(attackerId, targetId)
+            val resolved = actionProcessor.execute(current, action, ::victoryReward)
+            executed = true
+            resolved.applyOutcomeResults(current)
+        }
+        if (executed) {
+            clearAwaitingAction(attackerId)
+            concludeActorTurn(attackerId)
+        } else {
+            removeFromReadyQueue(attackerId)
+            updateActiveActorFromQueue()
+        }
+    }
+
+    fun useItem(entry: InventoryEntry, targetId: String? = null) {
+        val attackerId = _awaitingAction.value ?: return
+        var executed = false
+        updateState { current ->
+            val attackerState = current.combatants[attackerId] ?: return@updateState current
+            if (!attackerState.isAlive) {
+                clearAwaitingAction(attackerId)
+                return@updateState current
+            }
+            val resolvedTarget = targetId ?: when {
                 entry.item.effect?.damage?.let { it > 0 } == true -> resolveEnemyTargets(current).firstOrNull()
                 else -> null
             }
             playUiCue("confirm")
-            val action = CombatAction.ItemUse(attackerId, entry.item.id, targetId)
+            val action = CombatAction.ItemUse(attackerId, entry.item.id, resolvedTarget)
             val resolved = actionProcessor.execute(current, action, ::victoryReward)
-            val withRewards = resolved.applyOutcomeResults(current)
-            withRewards.autoResolveEnemyTurns()
+            executed = true
+            resolved.applyOutcomeResults(current)
+        }
+        if (executed) {
+            clearAwaitingAction(attackerId)
+            concludeActorTurn(attackerId)
         }
     }
 
     fun defend() {
+        val attackerId = _awaitingAction.value ?: return
+        var executed = false
         updateState { current ->
-            val attackerId = resolveActivePlayerId(current) ?: return@updateState current
+            val attackerState = current.combatants[attackerId] ?: return@updateState current
+            if (!attackerState.isAlive) {
+                clearAwaitingAction(attackerId)
+                return@updateState current
+            }
             playUiCue("confirm")
             val action = CombatAction.Defend(attackerId)
             val resolved = actionProcessor.execute(current, action, ::victoryReward)
-            resolved.applyOutcomeResults(current).autoResolveEnemyTurns()
+            executed = true
+            resolved.applyOutcomeResults(current)
+        }
+        if (executed) {
+            clearAwaitingAction(attackerId)
+            concludeActorTurn(attackerId)
         }
     }
 
     fun attemptRetreat() {
+        val attackerId = _awaitingAction.value ?: return
+        var executed = false
         updateState { current ->
-            val attackerId = resolveActivePlayerId(current) ?: return@updateState current
+            val attackerState = current.combatants[attackerId] ?: return@updateState current
+            if (!attackerState.isAlive) {
+                clearAwaitingAction(attackerId)
+                return@updateState current
+            }
             playUiCue("confirm")
             val action = CombatAction.Flee(attackerId)
             val resolved = actionProcessor.execute(current, action, ::victoryReward)
+            executed = true
             resolved.applyOutcomeResults(current)
+        }
+        if (executed) {
+            clearAwaitingAction(attackerId)
+            concludeActorTurn(attackerId)
         }
     }
 
@@ -251,21 +375,6 @@ class CombatViewModel(
             .mapNotNull { combatants[it] }
             .firstOrNull { it.isAlive }
 
-    private fun CombatState.autoResolveEnemyTurns(): CombatState {
-        var working = this
-        while (working.outcome == null) {
-            val active = working.activeCombatant ?: break
-            if (active.combatant.side != CombatSide.ENEMY) break
-            tickEnemyCooldowns()
-            val beforeAction = working
-            val action = selectEnemyAction(beforeAction, active)
-            val resolved = actionProcessor.execute(beforeAction, action, ::victoryReward)
-            registerEnemyActionCooldown(action)
-            working = resolved.applyOutcomeResults(beforeAction)
-        }
-        return working
-    }
-
     private fun selectEnemyAction(state: CombatState, enemyState: CombatantState): CombatAction {
         val skills = enemyState.combatant.skills
         val candidates = skills.mapNotNull { id ->
@@ -289,6 +398,23 @@ class CombatViewModel(
             CombatAction.Defend(enemyState.combatant.id)
         } else {
             CombatAction.BasicAttack(enemyState.combatant.id, targetId)
+        }
+    }
+
+    private fun guardableTargetsFor(action: CombatAction): List<String> =
+        when (action) {
+            is CombatAction.BasicAttack -> listOf(action.targetId)
+            is CombatAction.SkillUse -> action.targetIds
+            is CombatAction.ItemUse -> listOfNotNull(action.targetId)
+            else -> emptyList()
+        }.filter { it in playerIdList }
+
+    private fun guardPromptMessage(targetIds: List<String>, state: CombatState): String {
+        val names = targetIds.mapNotNull { id -> state.combatants[id]?.combatant?.name }.distinct()
+        return when {
+            names.isEmpty() -> "Guard!"
+            names.size == 1 -> "Guard ${names.first()}!"
+            else -> "Guard the party!"
         }
     }
 
@@ -332,6 +458,8 @@ class CombatViewModel(
         _state.value = updated
         processNewLogEntries(current, updated)
         refreshSelection(updated)
+        pruneReadyActors(updated)
+        updateActiveActorFromQueue(updated)
     }
 
     private fun processNewLogEntries(previous: CombatState, updated: CombatState) {
@@ -341,7 +469,11 @@ class CombatViewModel(
         newEntries.forEach { entry ->
             when (entry) {
                 is CombatLogEntry.ActionQueued -> {
+                    resetAtbMeter(entry.actorId)
                     combatFxEvents.tryEmit(CombatFxEvent.TurnQueued(entry.actorId))
+                    if (entry.actorId in playerIdList) {
+                        _combatMessage.value = null
+                    }
                 }
                 is CombatLogEntry.Damage -> {
                     combatFxEvents.tryEmit(
@@ -353,10 +485,14 @@ class CombatViewModel(
                             critical = entry.critical
                         )
                     )
+                    if (entry.amount > 0 && shouldAwardResonance(entry, updated)) {
+                        awardResonanceFromDamage(entry.amount)
+                    }
                     val targetState = updated.combatants[entry.targetId]
                     if (targetState?.isAlive == false) {
                         combatFxEvents.tryEmit(CombatFxEvent.Knockout(entry.targetId))
                     }
+                    setCombatMessage(entry, updated)
                 }
                 is CombatLogEntry.Heal -> {
                     combatFxEvents.tryEmit(
@@ -366,6 +502,7 @@ class CombatViewModel(
                             amount = entry.amount
                         )
                     )
+                    setCombatMessage(entry, updated)
                 }
                 is CombatLogEntry.StatusApplied -> {
                     combatFxEvents.tryEmit(
@@ -375,6 +512,7 @@ class CombatViewModel(
                             stacks = entry.stacks
                         )
                     )
+                    setCombatMessage(entry, updated)
                 }
                 is CombatLogEntry.Outcome -> {
                     val outcomeType = when (entry.result) {
@@ -392,10 +530,248 @@ class CombatViewModel(
                             outcome = outcomeType
                         )
                     )
+                    setCombatMessage(entry, updated)
+                    if (updated.outcome != null) {
+                        readyQueue.clear()
+                        enemyTurnJob?.cancel()
+                        enemyTurnJob = null
+                        cancelTimedPrompt()
+                        _awaitingAction.value = null
+                    }
                 }
+                is CombatLogEntry.StatusExpired,
+                is CombatLogEntry.TurnSkipped -> setCombatMessage(entry, updated)
                 else -> Unit
             }
         }
+    }
+
+    private fun initializeAtbMeters() {
+        val initial = (playerCombatants + enemyCombatants).associate { combatant ->
+            val seed = if (combatant.side == CombatSide.PLAYER || combatant.side == CombatSide.ALLY) {
+                Random.nextDouble(0.4, 0.8)
+            } else {
+                Random.nextDouble(0.2, 0.6)
+            }
+            combatant.id to seed.toFloat()
+        }
+        _atbMeters.value = initial
+    }
+
+    private fun startAtbTicker() {
+        if (atbJob != null) return
+        atbJob = viewModelScope.launch {
+            var last = SystemClock.elapsedRealtime()
+            while (isActive) {
+                delay(50)
+                val now = SystemClock.elapsedRealtime()
+                val delta = (now - last) / 1000f
+                last = now
+                advanceAtb(delta)
+            }
+        }
+    }
+
+    private fun advanceAtb(deltaSeconds: Float) {
+        val currentState = _state.value ?: return
+        if (currentState.outcome != null) return
+        val meters = _atbMeters.value.toMutableMap()
+        currentState.turnOrder.forEach { slot ->
+            val id = slot.combatantId
+            val combatantState = currentState.combatants[id] ?: return@forEach
+            if (!combatantState.isAlive) {
+                meters[id] = 0f
+                removeFromReadyQueue(id)
+                return@forEach
+            }
+            if (readyQueue.contains(id)) {
+                meters[id] = 1f
+                return@forEach
+            }
+            val speed = combatantState.combatant.stats.speed.coerceAtLeast(1)
+            val gain = deltaSeconds * speed / ATB_SPEED_SCALE
+            val current = meters.getOrElse(id) { 0f }
+            val next = (current + gain).coerceIn(0f, 1f)
+            meters[id] = next
+            if (next >= 0.999f) {
+                readyQueue.add(id)
+                meters[id] = 1f
+                markAwaitingActionCandidate(id)
+                updateActiveActorFromQueue()
+            }
+        }
+        _atbMeters.value = meters
+        tryProcessEnemyTurns()
+    }
+
+    private fun resetAtbMeter(id: String) {
+        _atbMeters.update { existing ->
+            if (existing.isEmpty()) existing else existing + (id to 0f)
+        }
+    }
+
+    private fun markAwaitingActionCandidate(actorId: String) {
+        if (_awaitingAction.value != null) return
+        if (actorId in playerIdList && readyQueue.firstOrNull() == actorId) {
+            val alive = _state.value?.combatants?.get(actorId)?.isAlive != false
+            if (alive) {
+                _awaitingAction.value = actorId
+            }
+        }
+    }
+
+    private fun clearAwaitingAction(actorId: String) {
+        if (_awaitingAction.value == actorId) {
+            _awaitingAction.value = null
+            assignNextAwaitingAction()
+        }
+    }
+
+    private fun assignNextAwaitingAction() {
+        if (_awaitingAction.value != null) return
+        val next = readyQueue.firstOrNull()
+        if (next != null && next in playerIdList) {
+            if (_state.value?.combatants?.get(next)?.isAlive == true) {
+                _awaitingAction.value = next
+            }
+        }
+    }
+
+    private fun setCombatMessage(entry: CombatLogEntry, state: CombatState) {
+        val message = describeEntry(entry, state)
+        if (!message.isNullOrBlank()) {
+            _combatMessage.value = message
+        }
+    }
+
+    private fun concludeActorTurn(actorId: String) {
+        removeFromReadyQueue(actorId, updateActive = false)
+        resetAtbMeter(actorId)
+        updateActiveActorFromQueue()
+        tryProcessEnemyTurns()
+    }
+
+    private fun removeFromReadyQueue(actorId: String, updateActive: Boolean = true) {
+        val index = readyQueue.indexOf(actorId)
+        if (index >= 0) {
+            readyQueue.removeAt(index)
+            if (actorId in playerIdList && _awaitingAction.value == actorId) {
+                _awaitingAction.value = null
+                if (!updateActive) {
+                    assignNextAwaitingAction()
+                }
+            }
+            if (updateActive && index == 0) {
+                updateActiveActorFromQueue()
+            } else if (!updateActive && _awaitingAction.value == null) {
+                assignNextAwaitingAction()
+            }
+        }
+    }
+
+    private fun updateActiveActorFromQueue(stateOverride: CombatState? = null) {
+        val state = stateOverride ?: _state.value ?: return
+        val head = readyQueue.firstOrNull() ?: return
+        val idx = state.turnOrder.indexOfFirst { it.combatantId == head }
+        if (idx >= 0 && state.activeTurnIndex != idx) {
+            _state.value = state.copy(activeTurnIndex = idx)
+        }
+    }
+
+    private fun pruneReadyActors(state: CombatState) {
+        if (readyQueue.isEmpty()) return
+        val iterator = readyQueue.listIterator()
+        var removed = false
+        while (iterator.hasNext()) {
+            val id = iterator.next()
+            val alive = state.combatants[id]?.isAlive == true
+            if (!alive || state.outcome != null) {
+                iterator.remove()
+                resetAtbMeter(id)
+                if (_awaitingAction.value == id) {
+                    _awaitingAction.value = null
+                }
+                removed = true
+            }
+        }
+        if (state.outcome != null) {
+            readyQueue.clear()
+            enemyTurnJob?.cancel()
+            enemyTurnJob = null
+            cancelTimedPrompt()
+            _awaitingAction.value = null
+        } else if (removed) {
+            updateActiveActorFromQueue(state)
+            assignNextAwaitingAction()
+        }
+    }
+
+    private fun tryProcessEnemyTurns() {
+        val state = _state.value ?: return
+        if (state.outcome != null) return
+        if (enemyTurnJob?.isActive == true) return
+        val head = readyQueue.firstOrNull() ?: return
+        if (head !in enemyIdList) return
+        enemyTurnJob = viewModelScope.launch {
+            executeEnemyTurn(head)
+        }
+    }
+
+    private suspend fun executeEnemyTurn(enemyId: String) {
+        val snapshot = _state.value
+        val enemyStateSnapshot = snapshot?.combatants?.get(enemyId)
+        if (snapshot == null || enemyStateSnapshot == null || !enemyStateSnapshot.isAlive) {
+            removeFromReadyQueue(enemyId)
+            updateActiveActorFromQueue()
+            enemyTurnJob = null
+            tryProcessEnemyTurns()
+            return
+        }
+        val action = selectEnemyAction(snapshot, enemyStateSnapshot)
+        val guardTargets = guardableTargetsFor(action).filter { id ->
+            snapshot.combatants[id]?.isAlive == true
+        }
+        val guardMessage = guardTargets.takeIf { it.isNotEmpty() }?.let { guardPromptMessage(it, snapshot) }
+        val guardSuccess = if (guardMessage != null) {
+            awaitTimedWindow(
+                type = TimedWindowType.Defense(guardTargets),
+                message = guardMessage,
+                durationMs = TIMED_GUARD_WINDOW_MS
+            )
+        } else {
+            false
+        }
+
+        var acted = false
+        updateState { current ->
+            val enemyState = current.combatants[enemyId] ?: return@updateState current
+            if (!enemyState.isAlive) return@updateState current
+            tickEnemyCooldowns()
+            var working = current
+            if (guardSuccess) {
+                guardTargets.forEach { targetId ->
+                    if (current.combatants[targetId]?.isAlive == true) {
+                        working = combatEngine.applyBuffs(
+                            working,
+                            targetId,
+                            listOf(BuffEffect(stat = "defense", value = TIMED_GUARD_DEF_BONUS, duration = 1))
+                        )
+                    }
+                }
+            }
+            val resolved = actionProcessor.execute(working, action, ::victoryReward)
+            registerEnemyActionCooldown(action)
+            acted = true
+            resolved.applyOutcomeResults(current)
+        }
+        if (acted) {
+            concludeActorTurn(enemyId)
+        } else {
+            removeFromReadyQueue(enemyId)
+            updateActiveActorFromQueue()
+        }
+        enemyTurnJob = null
+        tryProcessEnemyTurns()
     }
 
     private fun Player.toCombatant(): Combatant =
@@ -404,8 +780,8 @@ class CombatViewModel(
             name = name,
             side = CombatSide.PLAYER,
             stats = StatBlock(
-                maxHp = hp,
-                maxRp = hp,
+                maxHp = CombatFormulas.maxHp(hp, vitality),
+                maxRp = CombatFormulas.maxHp(hp, vitality),
                 strength = strength,
                 vitality = vitality,
                 agility = agility,
@@ -423,8 +799,8 @@ class CombatViewModel(
             name = name,
             side = CombatSide.ENEMY,
             stats = StatBlock(
-                maxHp = hp,
-                maxRp = vitality,
+                maxHp = CombatFormulas.maxHp(hp, vitality),
+                maxRp = vitality.coerceAtLeast(1),
                 strength = strength,
                 vitality = vitality,
                 agility = agility,
@@ -453,7 +829,7 @@ class CombatViewModel(
         val dropAccumulator = mutableMapOf<String, Int>()
         enemies.forEach { enemy ->
             xpTotal += enemy.xpReward
-            apTotal += enemy.apReward
+            apTotal += enemy.apReward ?: 0
             creditsTotal += enemy.creditReward
             enemy.drops.forEach { drop ->
                 val qty = (drop.quantity ?: drop.qtyMax ?: drop.qtyMin ?: 1).coerceAtLeast(1)
@@ -630,7 +1006,16 @@ class CombatViewModel(
         }
     }
 
-    private fun determineSkillTargeting(skill: Skill): SkillTargeting {
+    fun targetRequirementFor(skill: Skill): TargetRequirement {
+        return when (determineSkillTargeting(skill)) {
+            SkillTargeting.SINGLE_ENEMY -> TargetRequirement.ENEMY
+            SkillTargeting.ALL_ALLIES -> TargetRequirement.NONE
+            SkillTargeting.ALL_ENEMIES -> TargetRequirement.NONE
+            SkillTargeting.SELF -> TargetRequirement.NONE
+        }
+    }
+
+private fun determineSkillTargeting(skill: Skill): SkillTargeting {
         val statusDefs = skillStatusDefinitions(skill)
         val hasSelf = statusDefs.any { it.target.equals("self", true) }
         val hasAlly = statusDefs.any { it.target.equals("ally", true) }
@@ -689,6 +1074,99 @@ class CombatViewModel(
         }
     }
 
+    private fun spendResonance(cost: Int): Boolean {
+        if (cost <= 0) return true
+        val current = sessionStore.state.value.resonance
+        if (current < cost) return false
+        val updated = sessionStore.changeResonance(-cost)
+        _resonance.value = updated
+        return true
+    }
+
+    private fun awardResonanceFromDamage(amount: Int) {
+        if (amount <= 0) return
+        val gain = max(1, amount / 10)
+        val updated = sessionStore.changeResonance(gain)
+        _resonance.value = updated
+    }
+
+    fun itemDisplayName(itemId: String): String =
+        inventoryService.itemDisplayName(itemId)
+
+    fun registerTimedPromptTap() {
+        val deferred = synchronized(timedPromptLock) { timedPromptDeferred }
+        deferred?.complete(true)
+    }
+
+    private suspend fun awaitTimedWindow(
+        type: TimedWindowType,
+        message: String,
+        durationMs: Long
+    ): Boolean {
+        if (_state.value?.outcome != null) return false
+        val prompt = TimedPromptState(
+            id = UUID.randomUUID().toString(),
+            message = message,
+            durationMillis = durationMs,
+            type = type
+        )
+        val deferred = CompletableDeferred<Boolean>()
+        synchronized(timedPromptLock) {
+            timedPromptDeferred?.complete(false)
+            timedPromptDeferred = deferred
+            _timedPrompt.value = prompt
+        }
+        val result = withTimeoutOrNull(durationMs) { deferred.await() } ?: false
+        synchronized(timedPromptLock) {
+            if (timedPromptDeferred === deferred) {
+                timedPromptDeferred = null
+                if (_timedPrompt.value?.id == prompt.id) {
+                    _timedPrompt.value = null
+                }
+            }
+        }
+        return result
+    }
+
+    private fun cancelTimedPrompt() {
+        val pending: CompletableDeferred<Boolean>?
+        synchronized(timedPromptLock) {
+            pending = timedPromptDeferred
+            timedPromptDeferred = null
+            _timedPrompt.value = null
+        }
+        pending?.complete(false)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        cancelTimedPrompt()
+    }
+
+    private fun resolveSkillCost(skillId: String): Int =
+        skillNodesById[skillId]?.effect?.rpCost?.coerceAtLeast(0) ?: 0
+
+    private fun CombatState.appendResonanceFailure(actorId: String): CombatState =
+        copy(
+            log = log + CombatLogEntry.TurnSkipped(
+                turn = round,
+                actorId = actorId,
+                reason = "can't focus enough resonance"
+            )
+        )
+
+    private fun shouldAwardResonance(
+        entry: CombatLogEntry.Damage,
+        state: CombatState
+    ): Boolean {
+        if (entry.sourceId.startsWith(STATUS_SOURCE_PREFIX)) return false
+        val source = state.combatants[entry.sourceId] ?: return false
+        val target = state.combatants[entry.targetId] ?: return false
+        val friendly = source.combatant.side == CombatSide.PLAYER || source.combatant.side == CombatSide.ALLY
+        val hostile = target.combatant.side == CombatSide.ENEMY
+        return friendly && hostile
+    }
+
     private fun playUiCue(key: String) {
         emitAudio(audioRouter.commandsForUi(key))
     }
@@ -708,4 +1186,76 @@ class CombatViewModel(
         ALL_ENEMIES,
         ALL_ALLIES
     }
+
+    private fun describeEntry(entry: CombatLogEntry, state: CombatState): String? =
+        when (entry) {
+            is CombatLogEntry.Damage -> {
+                val targetName = state.combatants[entry.targetId]?.combatant?.name ?: entry.targetId
+                if (entry.sourceId.startsWith(STATUS_SOURCE_PREFIX)) {
+                    val statusLabel = entry.sourceId.removePrefix(STATUS_SOURCE_PREFIX).replace('_', ' ')
+                    "$targetName reels from ${statusLabel.trim()} (${entry.amount})"
+                } else {
+                    val sourceName = state.combatants[entry.sourceId]?.combatant?.name ?: entry.sourceId
+                    if (entry.amount <= 0 || entry.element == "miss") {
+                        "$sourceName whiffs past $targetName"
+                    } else {
+                        "$sourceName hits $targetName for ${entry.amount}"
+                    }
+                }
+            }
+            is CombatLogEntry.Heal -> {
+                val sourceName = state.combatants[entry.sourceId]?.combatant?.name ?: entry.sourceId
+                val targetName = state.combatants[entry.targetId]?.combatant?.name ?: entry.targetId
+                "$sourceName restores ${entry.amount} HP to $targetName"
+            }
+            is CombatLogEntry.StatusApplied -> {
+                val targetName = state.combatants[entry.targetId]?.combatant?.name ?: entry.targetId
+                "${entry.statusId.uppercase()} wraps around $targetName"
+            }
+            is CombatLogEntry.StatusExpired -> {
+                val targetName = state.combatants[entry.targetId]?.combatant?.name ?: entry.targetId
+                "${entry.statusId.uppercase()} dissipates from $targetName"
+            }
+            is CombatLogEntry.TurnSkipped -> {
+                val actorName = state.combatants[entry.actorId]?.combatant?.name ?: entry.actorId
+                "$actorName ${entry.reason}"
+            }
+            is CombatLogEntry.ActionQueued -> {
+                val actorName = state.combatants[entry.actorId]?.combatant?.name ?: entry.actorId
+                "$actorName lines up an action"
+            }
+            is CombatLogEntry.Outcome -> when (entry.result) {
+                is CombatOutcome.Victory -> "All foes defeated!"
+                is CombatOutcome.Defeat -> "Party overwhelmed..."
+                CombatOutcome.Retreat -> "Retreat successful."
+            }
+        }
+
+    data class TimedPromptState(
+        val id: String,
+        val message: String,
+        val durationMillis: Long,
+        val type: TimedWindowType,
+        val startedAt: Long = SystemClock.elapsedRealtime()
+    )
+
+    sealed interface TimedWindowType {
+        data class Offense(val actorId: String, val targetId: String) : TimedWindowType
+        data class Defense(val targetIds: List<String>) : TimedWindowType
+    }
+
+    companion object {
+        private const val STATUS_SOURCE_PREFIX = "status_"
+        private const val ATB_SPEED_SCALE = 90f
+        private const val TIMED_GUARD_WINDOW_MS = 700L
+        private const val TIMED_GUARD_DEF_BONUS = 10
+    }
+}
+
+
+enum class TargetRequirement {
+    NONE,
+    ENEMY,
+    ALLY,
+    ANY
 }
