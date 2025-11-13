@@ -185,7 +185,7 @@
         "title_options": {
             "underline_adjust": 30
         },
-        "env": "maintenance_tunnels",
+        "env": "town",
         "background_image": "images/rooms/world_1/service_access_1.png",
         "description": "A narrow service door from the mines opens into cable trays and humming conduit. Chalk marks point the way to the elevator bay.",
         "pos": [
@@ -221,7 +221,7 @@
     {
         "id": "maintenance_tunnels_2",
         "title": "Elevator Bay",
-        "env": "maintenance_tunnels",
+        "env": "market",
         "background_image": "images/rooms/world_1/elevator_bay_1.png",
         "description": "A freight elevator waits behind scuffed mesh doors. The elevator call button flickers beside a dented control panel.",
         "pos": [
@@ -370,8 +370,7 @@
         },
         "items": [],
         "npcs": [
-            "Maddie",
-            "woman"
+            "Maddie"
         ],
         "enemies": [],
         "actions": [],

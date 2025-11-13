@@ -100,11 +100,6 @@ fun NavigationHost(navController: NavHostController = rememberNavController()) {
                     navController.navigate(Exploration.route) {
                         popUpTo(Hub.route) { inclusive = false }
                     }
-                },
-                onSkipToExploration = {
-                    navController.navigate(Exploration.route) {
-                        popUpTo(Hub.route) { inclusive = false }
-                    }
                 }
             )
         }
@@ -207,6 +202,7 @@ fun NavigationHost(navController: NavHostController = rememberNavController()) {
                 onOpenShop = { shopId ->
                     navController.navigate(Shop.create(shopId))
                 },
+                onReturnToHub = { navController.popBackStack() },
                 fxEvents = services.uiFxBus.fxEvents
             )
         }

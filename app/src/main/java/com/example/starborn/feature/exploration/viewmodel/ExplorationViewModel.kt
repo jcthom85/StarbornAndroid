@@ -87,6 +87,11 @@ private const val FULL_MAP_ROWS = 8
 private const val EVENT_ANNOUNCEMENT_ACCENT = 0xFF7BE4FF
 private const val STELLARIUM_GENERATOR_ROOM_ID = "mines_2"
 private const val STELLARIUM_ENV_ID = "mine"
+private const val STELLARIUM_GENERATOR_ON_EVENT = "evt_mine_power_on"
+private const val STELLARIUM_GENERATOR_OFF_EVENT = "evt_mine_power_off"
+private const val STELLARIUM_GENERATOR_ON_MESSAGE_FALLBACK = "The Stellarium generator roars to life."
+private const val STELLARIUM_GENERATOR_OFF_MESSAGE = "The Stellarium generator winds down into silence."
+private const val STELLARIUM_GENERATOR_OFF_ACCENT = 0xFFFF5252
 
 private data class ShopDialogueSession(
     val shopId: String,
@@ -310,6 +315,7 @@ class ExplorationViewModel(
     private val unlockedDirections: MutableMap<String, MutableSet<String>> = mutableMapOf()
     private var activeDialogueSession: DialogueSession? = null
     private var darkCapableRoomIds: Set<String> = emptySet()
+    private var entryRoomIds: Set<String> = emptySet()
     private var userMusicVolume: Float = 1f
     private var userSfxVolume: Float = 1f
     private var isVignetteEnabled: Boolean = true
@@ -372,11 +378,8 @@ class ExplorationViewModel(
     }
 
     private fun announceMilestoneEvent(milestoneId: String, message: String) {
-        val title = when (milestoneId) {
-            "ms_mine_power_on" -> null
-            else -> formatMilestoneLabel(milestoneId)
-        }
-        enqueueEventAnnouncement(title, message)
+        if (!acknowledgedMilestones.add(milestoneId)) return
+        postStatus(message)
     }
 
     private fun removeEnemiesFromCurrentRoom(enemyIds: List<String>) {
@@ -390,7 +393,8 @@ class ExplorationViewModel(
                 _uiState.update {
                     it.copy(
                         currentRoom = updatedRoom,
-                        enemies = remaining
+                        enemies = remaining,
+                        canReturnToHub = canReturnToHub(updatedRoom)
                     )
                 }
             }
@@ -427,11 +431,6 @@ class ExplorationViewModel(
         }
         postStatus(outcomeMessage)
         enqueueLevelUps(result.levelUps)
-        showCombatOutcome(
-            outcome = CombatResultPayload.Outcome.VICTORY,
-            enemyIds = enemyIds,
-            message = outcomeMessage
-        )
         emitEvent(
             ExplorationEvent.CombatOutcome(
                 outcome = CombatResultPayload.Outcome.VICTORY,
@@ -453,11 +452,6 @@ class ExplorationViewModel(
         val message = "Overwhelmed by the enemy. Regroup and recover."
         postStatus(message)
         refreshCurrentRoomBlockedDirections()
-        showCombatOutcome(
-            outcome = CombatResultPayload.Outcome.DEFEAT,
-            enemyIds = enemyIds,
-            message = message
-        )
         emitEvent(
             ExplorationEvent.CombatOutcome(
                 outcome = CombatResultPayload.Outcome.DEFEAT,
@@ -479,11 +473,6 @@ class ExplorationViewModel(
         val message = "Retreated from combat."
         postStatus(message)
         refreshCurrentRoomBlockedDirections()
-        showCombatOutcome(
-            outcome = CombatResultPayload.Outcome.RETREAT,
-            enemyIds = enemyIds,
-            message = message
-        )
         emitEvent(
             ExplorationEvent.CombatOutcome(
                 outcome = CombatResultPayload.Outcome.RETREAT,
@@ -529,26 +518,6 @@ class ExplorationViewModel(
 
     fun dismissLevelUpPrompt() {
         promoteNextLevelUp()
-    }
-
-    private fun showCombatOutcome(
-        outcome: CombatResultPayload.Outcome,
-        enemyIds: List<String>,
-        message: String
-    ) {
-        _uiState.update {
-            it.copy(
-                combatOutcome = CombatOutcomeUi(
-                    outcome = outcome,
-                    enemyIds = enemyIds,
-                    message = message
-                )
-            )
-        }
-    }
-
-    fun dismissCombatOutcome() {
-        _uiState.update { it.copy(combatOutcome = null) }
     }
 
     private fun startCinematic(sceneId: String?) {
@@ -1004,10 +973,17 @@ class ExplorationViewModel(
             val worlds = worldAssets.loadWorlds()
             val hubs = worldAssets.loadHubs()
             val nodes = worldAssets.loadHubNodes()
+            entryRoomIds = nodes.mapNotNull { node ->
+                node.entryRoom.takeIf { it.isNotBlank() }
+            }.toSet()
             val rooms = worldAssets.loadRooms().map { room ->
-                val envPrefix = room.id.substringBefore('_', room.env)
-                if (envPrefix.isNotBlank() && envPrefix != room.env) {
-                    room.copy(env = envPrefix)
+                if (room.env.isBlank()) {
+                    val derivedEnv = room.id.substringBefore('_', room.id)
+                    if (derivedEnv.isNotBlank()) {
+                        room.copy(env = derivedEnv)
+                    } else {
+                        room
+                    }
                 } else {
                     room
                 }
@@ -1125,6 +1101,7 @@ class ExplorationViewModel(
                     theme = initialTheme,
                     themeStyle = initialThemeStyle,
                     darkCapableRooms = darkCapableRoomIds,
+                    canReturnToHub = canReturnToHub(initialRoom),
                     partyStatus = partyStatus,
                     progressionSummary = progressionSummary,
                     mineGeneratorOnline = isMineGeneratorOnline(),
@@ -1185,7 +1162,8 @@ class ExplorationViewModel(
                 completedQuests = sessionState.completedQuests,
                 theme = nextTheme,
                 themeStyle = nextThemeStyle,
-                statusMessage = null
+                statusMessage = null,
+                canReturnToHub = canReturnToHub(nextRoom)
             )
         }
         activeDialogueSession = null
@@ -1265,7 +1243,7 @@ class ExplorationViewModel(
         playUiCue("click")
         dismissBlockedPrompt()
         when (action) {
-            is ToggleAction -> showTogglePrompt(action)
+            is ToggleAction -> handleToggleAction(action)
             is ContainerAction -> handleContainerAction(action)
             is TinkeringAction -> handleTinkeringAction(
                 label = action.name,
@@ -1281,7 +1259,7 @@ class ExplorationViewModel(
         updateActionHints(_uiState.value.currentRoom)
     }
 
-    private fun showTogglePrompt(action: ToggleAction) {
+    private fun handleToggleAction(action: ToggleAction) {
         val stateKey = action.stateKey
         if (stateKey.isBlank()) {
             val fallback = action.popupTitle?.takeIf { it.isNotBlank() } ?: action.name
@@ -1291,29 +1269,60 @@ class ExplorationViewModel(
             return
         }
         val currentState = _uiState.value.roomState[stateKey] ?: false
+        val targetState = !currentState
         val title = action.popupTitle?.takeIf { it.isNotBlank() }
             ?: action.name.ifBlank { formatStateKey(stateKey) }
-        val description = if (currentState) {
-            "$title is currently on."
+        val enableLabel = action.labelOn.ifBlank { "Turn on" }
+        val disableLabel = action.labelOff.ifBlank { "Turn off" }
+        val eventId = if (targetState) {
+            action.actionEventOn?.takeIf { it.isNotBlank() }
         } else {
-            "$title is currently off."
+            action.actionEventOff?.takeIf { it.isNotBlank() }
         }
-        val eventOnId = action.actionEventOn?.takeIf { it.isNotBlank() }
-        val eventOffId = action.actionEventOff?.takeIf { it.isNotBlank() }
-        val prompt = TogglePromptUi(
-            title = title,
-            message = description,
-            isOn = currentState,
-            enableLabel = action.labelOn.ifBlank { "Turn on" },
-            disableLabel = action.labelOff.ifBlank { "Turn off" },
-            eventOn = eventOnId,
-            eventOff = eventOffId,
-            stateKey = stateKey,
-            roomId = _uiState.value.currentRoom?.id,
-            onMessage = eventOnId?.let { eventsById[it]?.onMessage },
-            offMessage = eventOffId?.let { eventsById[it]?.offMessage }
-        )
-        _uiState.update { it.copy(togglePrompt = prompt) }
+        if (eventId != null) {
+            val event = eventsById[eventId]
+            val message = if (targetState) {
+                event?.onMessage ?: enableLabel
+            } else {
+                event?.offMessage ?: disableLabel
+            }
+            if (!shouldSuppressStateAnnouncement(stateKey)) {
+                pendingStateMessage = message
+                suppressNextStateMessage = true
+            } else {
+                pendingStateMessage = null
+                suppressNextStateMessage = false
+            }
+            triggerPlayerAction(eventId)
+        } else {
+            val roomId = _uiState.value.currentRoom?.id
+            val applied = setRoomStateValue(roomId, stateKey, targetState)
+            if (applied != null && !shouldSuppressStateAnnouncement(stateKey)) {
+                val message = if (targetState) enableLabel else disableLabel
+                postStatus(message)
+            }
+        }
+        showGeneratorAnnouncementIfNeeded(action, targetState, title)
+    }
+
+    private fun showGeneratorAnnouncementIfNeeded(action: ToggleAction, targetState: Boolean, title: String) {
+        if (!isStellariumGeneratorToggle(action)) return
+        val message = if (targetState) {
+            milestoneMessages["ms_mine_power_on"] ?: STELLARIUM_GENERATOR_ON_MESSAGE_FALLBACK
+        } else {
+            STELLARIUM_GENERATOR_OFF_MESSAGE
+        }
+        val accentColor = if (targetState) EVENT_ANNOUNCEMENT_ACCENT else STELLARIUM_GENERATOR_OFF_ACCENT
+        enqueueEventAnnouncement(title, message, accentColor)
+    }
+
+    private fun isStellariumGeneratorToggle(action: ToggleAction): Boolean {
+        val titleContainsGenerator = action.popupTitle?.contains("generator", ignoreCase = true) == true
+        val nameContainsGenerator = action.name.contains("generator", ignoreCase = true)
+        val eventOnMatches = action.actionEventOn?.equals(STELLARIUM_GENERATOR_ON_EVENT, ignoreCase = true) == true
+        val eventOffMatches = action.actionEventOff?.equals(STELLARIUM_GENERATOR_OFF_EVENT, ignoreCase = true) == true
+        return action.stateKey.equals("power_on", ignoreCase = true) &&
+            (titleContainsGenerator || nameContainsGenerator || eventOnMatches || eventOffMatches)
     }
 
     fun onTogglePromptSelection(enable: Boolean) {
@@ -1413,17 +1422,17 @@ class ExplorationViewModel(
         }
     }
 
-    fun openMinimapLegend() {
+    fun openMapLegend() {
         viewModelScope.launch(dispatchers.main) {
             playUiCue("click")
-            _uiState.update { it.copy(isMinimapLegendVisible = true) }
+            _uiState.update { it.copy(isMapLegendVisible = true) }
         }
     }
 
-    fun closeMinimapLegend() {
+    fun closeMapLegend() {
         viewModelScope.launch(dispatchers.main) {
             playUiCue("click")
-            _uiState.update { it.copy(isMinimapLegendVisible = false) }
+            _uiState.update { it.copy(isMapLegendVisible = false) }
         }
     }
 
@@ -1488,6 +1497,19 @@ class ExplorationViewModel(
         viewModelScope.launch(dispatchers.main) {
             playUiCue("menu_close")
             _uiState.update { it.copy(isMenuOverlayVisible = false) }
+        }
+    }
+
+    fun requestReturnToHub() {
+        viewModelScope.launch(dispatchers.main) {
+            val currentRoom = _uiState.value.currentRoom
+            if (!canReturnToHub(currentRoom)) {
+                playUiCue("error")
+                postStatus("You can only return to the hub from the node entrance.")
+                return@launch
+            }
+            playUiCue("menu_action")
+            emitEvent(ExplorationEvent.ReturnToHub)
         }
     }
 
@@ -1946,6 +1968,9 @@ class ExplorationViewModel(
     private fun isMineGeneratorOnline(): Boolean =
         roomStates[STELLARIUM_GENERATOR_ROOM_ID]?.get("power_on") == true
 
+    private fun canReturnToHub(room: Room?): Boolean =
+        room?.id?.let { entryRoomIds.contains(it) } == true
+
     private fun toggleRoomStateValue(
         roomIdOrNull: String?,
         stateKey: String?
@@ -1975,7 +2000,8 @@ class ExplorationViewModel(
                 it.copy(
                     currentRoom = updatedRoom,
                     roomState = snapshot,
-                    blockedDirections = computeBlockedDirections(updatedRoom)
+                    blockedDirections = computeBlockedDirections(updatedRoom),
+                    canReturnToHub = canReturnToHub(updatedRoom)
                 )
             }
         }
@@ -2570,10 +2596,12 @@ class ExplorationViewModel(
             val currentRoom = roomsById[roomId]
             val blocked = computeBlockedDirections(currentRoom)
             _uiState.update {
+                val resolvedRoom = currentRoom ?: it.currentRoom
                 it.copy(
-                    currentRoom = currentRoom ?: it.currentRoom,
+                    currentRoom = resolvedRoom,
                     blockedDirections = blocked,
-                    roomState = getRoomStateSnapshot(roomId)
+                    roomState = getRoomStateSnapshot(roomId),
+                    canReturnToHub = canReturnToHub(resolvedRoom)
                 )
             }
             currentRoom?.let { updateMinimap(it) }
@@ -2724,9 +2752,11 @@ class ExplorationViewModel(
             val updatedRoom = roomsById[roomId]
             val blocked = computeBlockedDirections(updatedRoom)
             _uiState.update {
+                val resolvedRoom = updatedRoom ?: it.currentRoom
                 it.copy(
-                    currentRoom = updatedRoom ?: it.currentRoom,
-                    blockedDirections = blocked
+                    currentRoom = resolvedRoom,
+                    blockedDirections = blocked,
+                    canReturnToHub = canReturnToHub(resolvedRoom)
                 )
             }
         }
@@ -2861,6 +2891,7 @@ sealed interface ExplorationEvent {
     ) : ExplorationEvent
     data class AudioCommands(val commands: List<AudioCommand>) : ExplorationEvent
     data class AudioSettingsChanged(val musicVolume: Float, val sfxVolume: Float) : ExplorationEvent
+    data object ReturnToHub : ExplorationEvent
 }
 
 private fun Any?.asStringOrNull(): String? = when (this) {

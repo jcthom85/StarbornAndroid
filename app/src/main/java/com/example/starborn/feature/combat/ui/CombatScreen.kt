@@ -79,7 +79,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.starborn.domain.combat.CombatOutcome
-import com.example.starborn.domain.combat.CombatSide
 import com.example.starborn.domain.combat.CombatState
 import com.example.starborn.domain.combat.ActiveBuff
 import com.example.starborn.domain.combat.StatusEffect
@@ -90,6 +89,9 @@ import com.example.starborn.domain.model.Skill
 import com.example.starborn.feature.combat.viewmodel.CombatViewModel
 import com.example.starborn.feature.combat.viewmodel.CombatViewModel.TimedPromptState
 import com.example.starborn.feature.combat.viewmodel.CombatFxEvent
+import com.example.starborn.feature.combat.ui.animations.CombatSide
+import com.example.starborn.feature.combat.ui.animations.LungeAxis
+import com.example.starborn.feature.combat.ui.animations.Lungeable
 import com.example.starborn.feature.combat.viewmodel.TargetRequirement
 import com.example.starborn.ui.dialogs.SkillsDialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -198,6 +200,10 @@ fun CombatScreen(
     val inventoryEntries by viewModel.inventory.collectAsStateWithLifecycle()
     val resonance by viewModel.resonance.collectAsStateWithLifecycle()
     val atbMeters by viewModel.atbMeters.collectAsStateWithLifecycle()
+    val lungeActorId by viewModel.lungeActorId.collectAsStateWithLifecycle(null)
+    val lungeToken by viewModel.lungeToken.collectAsStateWithLifecycle(0L)
+    val missLungeActorId by viewModel.missLungeActorId.collectAsStateWithLifecycle(null)
+    val missLungeToken by viewModel.missLungeToken.collectAsStateWithLifecycle(0L)
     val timedPromptState by viewModel.timedPrompt.collectAsStateWithLifecycle()
     val awaitingActionId by viewModel.awaitingAction.collectAsStateWithLifecycle()
     val combatMessage by viewModel.combatMessage.collectAsStateWithLifecycle()
@@ -640,7 +646,13 @@ fun CombatScreen(
                                 viewModel.toggleEnemyTarget(it)
                             }
                         },
-                        atbMeters = atbMeters
+                        atbMeters = atbMeters,
+                        lungeActorId = lungeActorId,
+                        lungeToken = lungeToken,
+                        missLungeActorId = missLungeActorId,
+                        missLungeToken = missLungeToken,
+                        onLungeFinished = viewModel::onLungeFinished,
+                        onMissLungeFinished = viewModel::onMissLungeFinished
                     )
                     CombatLogPanel(
                         flavorLine = combatMessage,
@@ -664,7 +676,13 @@ fun CombatScreen(
                             handleAllyTap(memberId)
                         } else null,
                         victoryEmotes = victoryEmotes,
-                        atbMeters = atbMeters
+                        atbMeters = atbMeters,
+                        lungeActorId = lungeActorId,
+                        lungeToken = lungeToken,
+                        missLungeActorId = missLungeActorId,
+                        missLungeToken = missLungeToken,
+                        onLungeFinished = viewModel::onLungeFinished,
+                        onMissLungeFinished = viewModel::onMissLungeFinished
                     )
                 }
                 if (playerParty.isNotEmpty()) {
@@ -724,7 +742,13 @@ private fun PartyRoster(
     supportFx: List<SupportFxUi>,
     onMemberTap: ((String) -> Unit)? = null,
     victoryEmotes: Boolean = false,
-    atbMeters: Map<String, Float> = emptyMap()
+    atbMeters: Map<String, Float> = emptyMap(),
+    lungeActorId: String?,
+    lungeToken: Long,
+    missLungeActorId: String?,
+    missLungeToken: Long,
+    onLungeFinished: (Long) -> Unit,
+    onMissLungeFinished: (Long) -> Unit
 ) {
     if (party.isEmpty()) return
     val rows = party.chunked(2)
@@ -748,8 +772,10 @@ private fun PartyRoster(
                     val supportHighlights = supportFx.filter { member.id in it.targetIds }
                     val cardShape = RoundedCornerShape(22.dp)
                     val isAlive = memberState?.isAlive != false
+                    val memberLungeToken = if (member.id == lungeActorId) lungeToken else null
                     val portraitPath = when {
                         !isAlive -> "images/characters/emotes/${member.id}_down.png"
+                        memberLungeToken != null -> "images/characters/emotes/${member.id}_angry.png"
                         victoryEmotes -> "images/characters/emotes/${member.id}_cool.png"
                         else -> member.miniIconPath
                     }
@@ -762,12 +788,12 @@ private fun PartyRoster(
                     } else {
                         baseModifier
                     }
-                    val attackImpulse = rememberAttackImpulse(member.id, combatState.log)
-                    val attackShiftPx = with(density) { 14.dp.toPx() * attackImpulse }
+                    val damageShake = rememberDamageShake(member.id, combatState.log)
+                    val memberMissToken = if (member.id == missLungeActorId) missLungeToken else null
                     Box(
                         modifier = interactiveModifier
                             .graphicsLayer {
-                                translationY = -attackShiftPx
+                                translationX = damageShake * with(density) { 6.dp.toPx() }
                             }
                             .padding(horizontal = 4.dp)
                     ) {
@@ -800,12 +826,30 @@ private fun PartyRoster(
                                         .background(Color(0xFF1C1F24)),
                                     contentAlignment = Alignment.Center
                                 ) {
-                                    Image(
-                                        painter = portraitPainter,
-                                        contentDescription = member.name,
-                                        modifier = Modifier.fillMaxSize(),
-                                        contentScale = ContentScale.Crop
-                                    )
+                                    Lungeable(
+                                        side = CombatSide.PLAYER,
+                                        triggerToken = memberLungeToken,
+                                        axis = LungeAxis.Y,
+                                        directionSign = 1f,
+                                        modifier = Modifier.matchParentSize(),
+                                        onFinished = { memberLungeToken?.let(onLungeFinished) }
+                                    ) {
+                                        Lungeable(
+                                            side = CombatSide.PLAYER,
+                                            triggerToken = memberMissToken,
+                                            axis = LungeAxis.X,
+                                            directionSign = -1f,
+                                            modifier = Modifier.matchParentSize(),
+                                            onFinished = { memberMissToken?.let(onMissLungeFinished) }
+                                        ) {
+                                            Image(
+                                                painter = portraitPainter,
+                                                contentDescription = member.name,
+                                                modifier = Modifier.matchParentSize(),
+                                                contentScale = ContentScale.Crop
+                                            )
+                                        }
+                                    }
                                 }
                             }
                             Text(
@@ -866,7 +910,13 @@ private fun EnemyRoster(
     knockoutFx: List<KnockoutFxUi>,
     onEnemyTap: (String) -> Unit,
     onEnemyLongPress: (String) -> Unit,
-    atbMeters: Map<String, Float> = emptyMap()
+    atbMeters: Map<String, Float> = emptyMap(),
+    lungeActorId: String?,
+    lungeToken: Long,
+    missLungeActorId: String?,
+    missLungeToken: Long,
+    onLungeFinished: (Long) -> Unit,
+    onMissLungeFinished: (Long) -> Unit
 ) {
     if (enemies.isEmpty()) return
     val density = LocalDensity.current
@@ -882,6 +932,7 @@ private fun EnemyRoster(
             val isActive = activeId == enemy.id
             val isSelected = enemy.id in selectedEnemyIds
             val flash = rememberDamageFlash(enemy.id, combatState.log)
+            val damageShake = rememberDamageShake(enemy.id, combatState.log)
             val selectionGlow = remember { Animatable(0f) }
             LaunchedEffect(isSelected) {
                 if (isSelected) {
@@ -900,15 +951,14 @@ private fun EnemyRoster(
             )
             val shape = RoundedCornerShape(28.dp)
             val atbProgress = atbMeters[enemy.id] ?: 0f
-
-            val attackImpulse = rememberAttackImpulse(enemy.id, combatState.log)
-            val attackShiftPx = with(density) { 14.dp.toPx() * attackImpulse }
+            val enemyLungeToken = if (enemy.id == lungeActorId) lungeToken else null
+            val enemyMissToken = if (enemy.id == missLungeActorId) missLungeToken else null
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier
                     .graphicsLayer {
-                        translationY = attackShiftPx
+                        translationX = damageShake * with(density) { 6.dp.toPx() }
                     }
                     .widthIn(min = 150.dp)
                     .combinedClickable(
@@ -954,35 +1004,33 @@ private fun EnemyRoster(
                                 .background(Color.Black.copy(alpha = 0.18f * flash))
                         )
                     }
-                    if (selectionAlpha > 0f) {
-                        Box(
-                            modifier = Modifier
-                                .matchParentSize()
-                                .border(
-                                    width = 2.dp,
-                                    color = Color.White.copy(alpha = selectionAlpha),
-                                    shape = shape
-                                )
-                        )
-                    }
-                    Canvas(
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .padding(bottom = 12.dp)
-                            .width(110.dp)
-                            .height(28.dp)
-                    ) {
-                        drawOval(color = Color.Black.copy(alpha = 0.45f))
-                    }
-                    Image(
-                        painter = painter,
-                        contentDescription = enemy.name,
-                        contentScale = ContentScale.Fit,
+                    Lungeable(
+                        side = CombatSide.ENEMY,
+                        triggerToken = enemyLungeToken,
+                        axis = LungeAxis.Y,
+                        directionSign = 1f,
                         modifier = Modifier
                             .align(Alignment.Center)
                             .padding(bottom = 12.dp)
-                            .size(130.dp)
-                    )
+                            .size(130.dp),
+                        onFinished = { enemyLungeToken?.let(onLungeFinished) }
+                    ) {
+                        Lungeable(
+                            side = CombatSide.ENEMY,
+                            triggerToken = enemyMissToken,
+                            axis = LungeAxis.X,
+                            directionSign = -1f,
+                            modifier = Modifier.matchParentSize(),
+                            onFinished = { enemyMissToken?.let(onMissLungeFinished) }
+                        ) {
+                            Image(
+                                painter = painter,
+                                contentDescription = enemy.name,
+                                contentScale = ContentScale.Fit,
+                                modifier = Modifier.matchParentSize()
+                            )
+                        }
+                    }
                     CombatFxOverlay(
                         damageFx = damageFx.filter { it.targetId == enemy.id },
                         healFx = healFx.filter { it.targetId == enemy.id },
@@ -1024,18 +1072,20 @@ private fun rememberDamageFlash(
 }
 
 @Composable
-private fun rememberAttackImpulse(
-    sourceId: String,
+private fun rememberDamageShake(
+    targetId: String,
     log: List<com.example.starborn.domain.combat.CombatLogEntry>
 ): Float {
-    val lastAttack = log.lastOrNull { entry ->
-        entry is com.example.starborn.domain.combat.CombatLogEntry.Damage && entry.sourceId == sourceId
+    val damageIndex = log.indexOfLast {
+        it is com.example.starborn.domain.combat.CombatLogEntry.Damage && it.targetId == targetId
     }
+    val lastIndex = remember { mutableStateOf(-1) }
     val anim = remember { Animatable(0f) }
-    LaunchedEffect(lastAttack) {
-        if (lastAttack != null) {
+    LaunchedEffect(damageIndex) {
+        if (damageIndex >= 0 && damageIndex > lastIndex.value) {
+            lastIndex.value = damageIndex
             anim.snapTo(1f)
-            anim.animateTo(0f, tween(durationMillis = 260, easing = EaseOutBack))
+            anim.animateTo(0f, animationSpec = tween(durationMillis = 320, easing = EaseOutBack))
         }
     }
     return anim.value

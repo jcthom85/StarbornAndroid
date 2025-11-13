@@ -112,6 +112,14 @@ class CombatViewModel(
     val encounterEnemyIds: List<String> get() = enemyIdList
     private val _selectedEnemies = MutableStateFlow<Set<String>>(emptySet())
     val selectedEnemies: StateFlow<Set<String>> = _selectedEnemies.asStateFlow()
+    private val _lungeActorId = MutableStateFlow<String?>(null)
+    val lungeActorId: StateFlow<String?> = _lungeActorId.asStateFlow()
+    private val _lungeToken = MutableStateFlow(0L)
+    val lungeToken: StateFlow<Long> = _lungeToken.asStateFlow()
+    private val _missLungeActorId = MutableStateFlow<String?>(null)
+    val missLungeActorId: StateFlow<String?> = _missLungeActorId.asStateFlow()
+    private val _missLungeToken = MutableStateFlow(0L)
+    val missLungeToken: StateFlow<Long> = _missLungeToken.asStateFlow()
     val inventory: StateFlow<List<InventoryEntry>> = inventoryService.state
 
     private val _atbMeters = MutableStateFlow<Map<String, Float>>(emptyMap())
@@ -239,12 +247,24 @@ class CombatViewModel(
         }
     }
 
+    private fun maybeTriggerAttackLunge(action: CombatAction) {
+        if (action is CombatAction.BasicAttack) {
+            triggerAttackLunge(action.actorId)
+        }
+    }
+
+    private fun triggerMissLunge(targetId: String) {
+        _missLungeToken.value = _missLungeToken.value + 1
+        _missLungeActorId.value = targetId
+    }
+
     private fun executePlayerAttack(attackerId: String, targetId: String) {
         var executed = false
+        val action = CombatAction.BasicAttack(attackerId, targetId)
+        maybeTriggerAttackLunge(action)
         updateState { current ->
             val attackerState = current.combatants[attackerId] ?: return@updateState current
             val targetState = current.combatants[targetId] ?: return@updateState current
-            val action = CombatAction.BasicAttack(attackerId, targetId)
             val resolved = actionProcessor.execute(current, action, ::victoryReward)
             executed = true
             resolved.applyOutcomeResults(current)
@@ -255,6 +275,23 @@ class CombatViewModel(
         } else {
             removeFromReadyQueue(attackerId)
             updateActiveActorFromQueue()
+        }
+    }
+
+    private fun triggerAttackLunge(actorId: String) {
+        _lungeToken.value = _lungeToken.value + 1
+        _lungeActorId.value = actorId
+    }
+
+    fun onLungeFinished(token: Long) {
+        if (_lungeToken.value == token) {
+            _lungeActorId.value = null
+        }
+    }
+
+    fun onMissLungeFinished(token: Long) {
+        if (_missLungeToken.value == token) {
+            _missLungeActorId.value = null
         }
     }
 
@@ -476,6 +513,9 @@ class CombatViewModel(
                     }
                 }
                 is CombatLogEntry.Damage -> {
+                    if (entry.amount == 0 && entry.element == "miss") {
+                        triggerMissLunge(entry.targetId)
+                    }
                     combatFxEvents.tryEmit(
                         CombatFxEvent.Impact(
                             sourceId = entry.sourceId,
@@ -731,6 +771,7 @@ class CombatViewModel(
         val guardTargets = guardableTargetsFor(action).filter { id ->
             snapshot.combatants[id]?.isAlive == true
         }
+        maybeTriggerAttackLunge(action)
         val guardMessage = guardTargets.takeIf { it.isNotEmpty() }?.let { guardPromptMessage(it, snapshot) }
         val guardSuccess = if (guardMessage != null) {
             awaitTimedWindow(

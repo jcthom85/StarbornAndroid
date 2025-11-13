@@ -39,7 +39,6 @@ data class ExplorationUiState(
     val narrationPrompt: NarrationPrompt? = null,
     val partyStatus: PartyStatusUi = PartyStatusUi(),
     val progressionSummary: ProgressionSummaryUi = ProgressionSummaryUi(),
-    val combatOutcome: CombatOutcomeUi? = null,
     val levelUpPrompt: LevelUpPrompt? = null,
     val cinematic: CinematicUiState? = null,
     val minimap: MinimapUiState? = null,
@@ -48,7 +47,8 @@ data class ExplorationUiState(
     val themeStyle: ThemeStyle? = null,
     val mineGeneratorOnline: Boolean = false,
     val darkCapableRooms: Set<String> = emptySet(),
-    val isMinimapLegendVisible: Boolean = false,
+    val canReturnToHub: Boolean = false,
+    val isMapLegendVisible: Boolean = false,
     val isQuestLogVisible: Boolean = false,
     val isFullMapVisible: Boolean = false,
     val shopGreeting: ShopGreetingUi? = null,
@@ -85,12 +85,6 @@ data class LevelUpPrompt(
     val unlockedSkills: List<SkillUnlockUi>,
     val portraitPath: String?,
     val statChanges: List<StatChangeUi>
-)
-
-data class CombatOutcomeUi(
-    val outcome: com.example.starborn.navigation.CombatResultPayload.Outcome,
-    val enemyIds: List<String>,
-    val message: String
 )
 
 data class QuestSummaryUi(
