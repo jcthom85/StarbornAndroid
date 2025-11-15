@@ -175,6 +175,16 @@ class GameSessionStore {
         }
     }
 
+    fun unlockArea(areaId: String) {
+        if (areaId.isBlank()) return
+        _state.update { it.copy(unlockedAreas = it.unlockedAreas + areaId) }
+    }
+
+    fun unlockExit(roomId: String?, direction: String?) {
+        val key = buildExitKey(roomId, direction) ?: return
+        _state.update { it.copy(unlockedExits = it.unlockedExits + key) }
+    }
+
     fun setTrackedQuest(questId: String?) {
         _state.update { it.copy(trackedQuestId = questId?.takeIf { id -> id.isNotBlank() }) }
     }
@@ -245,6 +255,73 @@ class GameSessionStore {
     fun setInventory(entries: Map<String, Int>) {
         val normalized = entries.filterValues { it > 0 }
         _state.update { it.copy(inventory = normalized) }
+    }
+
+    fun markEventCompleted(eventId: String) {
+        if (eventId.isBlank()) return
+        _state.update { it.copy(completedEvents = it.completedEvents + eventId) }
+    }
+
+    fun clearEventCompletion(eventId: String) {
+        if (eventId.isBlank()) return
+        _state.update { it.copy(completedEvents = it.completedEvents - eventId) }
+    }
+
+    fun setQuestStage(questId: String, stageId: String?) {
+        if (questId.isBlank()) return
+        _state.update { state ->
+            val updated = if (stageId.isNullOrBlank()) {
+                state.questStageById - questId
+            } else {
+                state.questStageById + (questId to stageId)
+            }
+            state.copy(questStageById = updated)
+        }
+    }
+
+    fun setQuestTasksCompleted(questId: String, taskIds: Set<String>) {
+        if (questId.isBlank()) return
+        val filtered = taskIds.filter { it.isNotBlank() }.toSet()
+        _state.update { state ->
+            val updated = if (filtered.isEmpty()) {
+                state.questTasksCompleted - questId
+            } else {
+                state.questTasksCompleted + (questId to filtered)
+            }
+            state.copy(questTasksCompleted = updated)
+        }
+    }
+
+    fun setQuestTaskCompleted(questId: String, taskId: String, completed: Boolean) {
+        if (questId.isBlank() || taskId.isBlank()) return
+        _state.update { state ->
+            val current = state.questTasksCompleted[questId].orEmpty().toMutableSet()
+            val changed = if (completed) current.add(taskId) else current.remove(taskId)
+            if (!changed) {
+                state
+            } else {
+                val updated = if (current.isEmpty()) {
+                    state.questTasksCompleted - questId
+                } else {
+                    state.questTasksCompleted + (questId to current.toSet())
+                }
+                state.copy(questTasksCompleted = updated)
+            }
+        }
+    }
+
+    fun clearQuestTasks(questId: String) {
+        if (questId.isBlank()) return
+        _state.update { it.copy(questTasksCompleted = it.questTasksCompleted - questId) }
+    }
+
+    fun resetQuestProgress() {
+        _state.update {
+            it.copy(
+                questStageById = emptyMap(),
+                questTasksCompleted = emptyMap()
+            )
+        }
     }
 
     fun markTutorialSeen(id: String) {
@@ -404,23 +481,33 @@ class GameSessionStore {
         return result
     }
 
-    fun changeResonance(delta: Int): Int {
-        var result = 0
-        _state.update {
-            val updated = (it.resonance + delta).coerceIn(it.resonanceMin, it.resonanceMax)
-            result = updated
-            it.copy(resonance = updated)
-        }
-        return result
+fun changeResonance(delta: Int): Int {
+    var result = 0
+    _state.update {
+        val updated = (it.resonance + delta).coerceIn(it.resonanceMin, it.resonanceMax)
+        result = updated
+        it.copy(resonance = updated)
+    }
+    return result
+}
+
+fun setResonance(value: Int): Int {
+    var result = 0
+    _state.update {
+        val clamped = value.coerceIn(it.resonanceMin, it.resonanceMax)
+        result = clamped
+        it.copy(resonance = clamped)
+    }
+    return result
+}
+
+    private fun buildExitKey(roomId: String?, direction: String?): String? {
+        val normalizedRoom = roomId?.takeIf { it.isNotBlank() }?.lowercase(Locale.getDefault()) ?: return null
+        val normalizedDirection = direction?.takeIf { it.isNotBlank() }?.lowercase(Locale.getDefault()) ?: return null
+        return "$normalizedRoom$EXIT_KEY_SEPARATOR$normalizedDirection"
     }
 
-    fun setResonance(value: Int): Int {
-        var result = 0
-        _state.update {
-            val clamped = value.coerceIn(it.resonanceMin, it.resonanceMax)
-            result = clamped
-            it.copy(resonance = clamped)
-        }
-        return result
+    companion object {
+        private const val EXIT_KEY_SEPARATOR = "::"
     }
 }

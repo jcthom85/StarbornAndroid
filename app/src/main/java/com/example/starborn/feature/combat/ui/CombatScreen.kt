@@ -93,6 +93,11 @@ import com.example.starborn.feature.combat.ui.animations.CombatSide
 import com.example.starborn.feature.combat.ui.animations.LungeAxis
 import com.example.starborn.feature.combat.ui.animations.Lungeable
 import com.example.starborn.feature.combat.viewmodel.TargetRequirement
+import com.example.starborn.domain.cinematic.CinematicPlaybackState
+import com.example.starborn.domain.cinematic.CinematicStepType
+import com.example.starborn.feature.exploration.ui.CinematicOverlay
+import com.example.starborn.feature.exploration.viewmodel.CinematicStepUi
+import com.example.starborn.feature.exploration.viewmodel.CinematicUiState
 import com.example.starborn.ui.dialogs.SkillsDialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.starborn.R
@@ -104,6 +109,7 @@ import com.example.starborn.ui.background.rememberRoomBackgroundPainter
 import com.example.starborn.ui.vfx.WeatherOverlay
 import com.example.starborn.ui.vfx.GlowProgressBar
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.util.UUID
 import kotlin.random.Random
@@ -149,6 +155,36 @@ private enum class TargetFilter {
     ANY
 }
 
+private fun CinematicPlaybackState.toUiState(): CinematicUiState {
+    val steps = scene.steps
+    if (steps.isEmpty()) {
+        return CinematicUiState(
+            sceneId = scene.id,
+            title = scene.title,
+            stepIndex = 0,
+            stepCount = 0,
+            step = CinematicStepUi(
+                type = CinematicStepType.NARRATION,
+                speaker = null,
+                text = ""
+            )
+        )
+    }
+    val safeIndex = stepIndex.coerceIn(0, steps.lastIndex)
+    val step = steps[safeIndex]
+    return CinematicUiState(
+        sceneId = scene.id,
+        title = scene.title,
+        stepIndex = safeIndex,
+        stepCount = steps.size,
+        step = CinematicStepUi(
+            type = step.type,
+            speaker = step.speaker,
+            text = step.text
+        )
+    )
+}
+
 private enum class VictoryDialogStage {
     SPOILS,
     LEVEL_UPS
@@ -192,7 +228,9 @@ fun CombatScreen(
     suppressFlashes: Boolean,
     suppressScreenshake: Boolean,
     highContrastMode: Boolean,
-    largeTouchTargets: Boolean
+    largeTouchTargets: Boolean,
+    cinematicState: StateFlow<CinematicPlaybackState?>? = null,
+    onAdvanceCinematic: (() -> Unit)? = null
 ) {
     val playerParty = viewModel.playerParty
     val enemies = viewModel.enemies
@@ -207,6 +245,9 @@ fun CombatScreen(
     val timedPromptState by viewModel.timedPrompt.collectAsStateWithLifecycle()
     val awaitingActionId by viewModel.awaitingAction.collectAsStateWithLifecycle()
     val combatMessage by viewModel.combatMessage.collectAsStateWithLifecycle()
+    val cinematicPlayback = cinematicState
+        ?.collectAsStateWithLifecycle(initialValue = null)
+        ?.value
     val damageFx = remember { mutableStateListOf<DamageFxUi>() }
     val healFx = remember { mutableStateListOf<HealFxUi>() }
     val statusFx = remember { mutableStateListOf<StatusFxUi>() }
@@ -711,6 +752,15 @@ fun CombatScreen(
                         onContinue = { advanceVictoryDialog() }
                     )
                 }
+            }
+            cinematicPlayback?.toUiState()?.let { overlayState ->
+                CinematicOverlay(
+                    state = overlayState,
+                    onAdvance = { onAdvanceCinematic?.invoke() },
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(24.dp)
+                )
             }
         }
         }

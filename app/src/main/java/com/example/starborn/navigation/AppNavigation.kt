@@ -80,10 +80,16 @@ fun NavigationHost(navController: NavHostController = rememberNavController()) {
             MainMenuScreen(
                 viewModel = mainMenuViewModel,
                 onStartGame = {
-                    navController.navigate(Hub.route)
+                    navController.navigate(Hub.route) {
+                        popUpTo(MainMenu.route) { inclusive = true }
+                    }
+                    navController.navigate(Exploration.route)
                 },
                 onSlotLoaded = {
-                    navController.navigate(Hub.route)
+                    navController.navigate(Hub.route) {
+                        popUpTo(MainMenu.route) { inclusive = true }
+                    }
+                    navController.navigate(Exploration.route)
                 }
             )
         }
@@ -172,6 +178,7 @@ fun NavigationHost(navController: NavHostController = rememberNavController()) {
             ExplorationScreen(
                 viewModel = explorationViewModel,
                 audioCuePlayer = services.audioCuePlayer,
+                uiEventBus = services.uiEventBus,
                 onEnemySelected = { enemyIds ->
                     if (enemyIds.isNotEmpty()) {
                         navController.navigate(Combat.create(enemyIds))
@@ -343,7 +350,9 @@ fun NavigationHost(navController: NavHostController = rememberNavController()) {
                     suppressFlashes = userSettings.disableFlashes,
                     suppressScreenshake = userSettings.disableScreenshake,
                     highContrastMode = userSettings.highContrastMode,
-                    largeTouchTargets = userSettings.largeTouchTargets
+                    largeTouchTargets = userSettings.largeTouchTargets,
+                    cinematicState = services.cinematicState,
+                    onAdvanceCinematic = services.cinematicCoordinator::advance
                 )
             }
         }

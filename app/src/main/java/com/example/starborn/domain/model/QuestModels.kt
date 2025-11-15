@@ -7,8 +7,8 @@ import com.squareup.moshi.JsonClass
 data class Quest(
     val id: String,
     val title: String,
-    val summary: String,
-    val description: String,
+    val summary: String = "",
+    val description: String = "",
     val flavor: String? = null,
     val giver: String? = null,
     @Json(name = "hub_id")
@@ -21,7 +21,7 @@ data class Quest(
 data class QuestStage(
     val id: String,
     val title: String,
-    val description: String,
+    val description: String = "",
     val tasks: List<QuestTask> = emptyList()
 )
 

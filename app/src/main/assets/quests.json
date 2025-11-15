@@ -82,7 +82,7 @@
     "title": "Talk to Jed",
     "summary": "Ollie needs you to check in with Jed before the mentor locks up for the night.",
     "description": "Ollie flagged you down on the Main Road and reminded you that Jed hates waiting. Hustle down to Jed's stall, let him know you're back from scavenging, and see what he needs.",
-    "flavor": "Jed's temper is shorter than the daylight on Rusthavenâ€”better not keep him stewing.",
+    "flavor": "Jed's temper is shorter than the daylight on Rusthaven\u00e2\u20ac\u201dbetter not keep him stewing.",
     "giver": "Ollie",
     "hub_id": "w1_hub1",
     "stages": [
@@ -199,5 +199,33 @@
         "amount": 300
       }
     ]
+  },
+  {
+    "id": "tutorial_smoke",
+    "title": "Tutorial Smoke Test",
+    "stages": [
+      {
+        "id": "stage_one",
+        "title": "Start",
+        "tasks": [
+          {
+            "id": "listen_jed",
+            "text": "Talk to Jed at the shop."
+          }
+        ]
+      },
+      {
+        "id": "stage_two",
+        "title": "Learn Movement",
+        "tasks": [
+          {
+            "id": "movement_hint",
+            "text": "Follow the movement tutorial.",
+            "tutorial_id": "movement"
+          }
+        ]
+      }
+    ],
+    "rewards": []
   }
 ]

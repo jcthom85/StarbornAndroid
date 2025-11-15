@@ -7,6 +7,7 @@ import com.example.starborn.core.DispatcherProvider
 import com.example.starborn.data.assets.WorldAssetDataSource
 import com.example.starborn.data.local.Theme
 import com.example.starborn.data.local.ThemeStyle
+import com.example.starborn.data.local.UserSettings
 import com.example.starborn.data.local.UserSettingsStore
 import com.example.starborn.data.repository.QuestRepository
 import com.example.starborn.data.repository.ShopRepository
@@ -16,12 +17,16 @@ import com.example.starborn.domain.audio.AudioCueType
 import com.example.starborn.domain.audio.AudioRouter
 import com.example.starborn.domain.audio.VoiceoverController
 import com.example.starborn.domain.cinematic.CinematicScene
+import com.example.starborn.domain.cinematic.CinematicCoordinator
+import com.example.starborn.domain.cinematic.CinematicPlaybackState
+import com.example.starborn.domain.cinematic.CinematicStepType
 import com.example.starborn.domain.combat.CombatFormulas
-import com.example.starborn.domain.cinematic.CinematicService
 import com.example.starborn.domain.crafting.CraftingOutcome
 import com.example.starborn.domain.crafting.CraftingService
 import com.example.starborn.domain.dialogue.DialogueService
+import com.example.starborn.domain.dialogue.DialogueTriggerParser
 import com.example.starborn.domain.dialogue.DialogueSession
+import com.example.starborn.domain.event.AudioLayerCommandSpec
 import com.example.starborn.domain.event.EventHooks
 import com.example.starborn.domain.event.EventManager
 import com.example.starborn.domain.event.EventPayload
@@ -62,6 +67,7 @@ import com.example.starborn.domain.session.GameSessionState
 import com.example.starborn.domain.session.GameSessionStore
 import com.example.starborn.domain.session.GameSaveRepository
 import com.example.starborn.domain.tutorial.TutorialEntry
+import com.example.starborn.domain.tutorial.TutorialRuntimeState
 import com.example.starborn.domain.tutorial.TutorialRuntimeManager
 import com.example.starborn.domain.theme.EnvironmentThemeManager
 import com.example.starborn.feature.fishing.viewmodel.FishingResultPayload
@@ -79,6 +85,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 private const val DEFAULT_PORTRAIT = "communicator_portrait"
 private const val MILESTONE_BAND_LIMIT = 3
@@ -92,6 +99,7 @@ private const val STELLARIUM_GENERATOR_OFF_EVENT = "evt_mine_power_off"
 private const val STELLARIUM_GENERATOR_ON_MESSAGE_FALLBACK = "The Stellarium generator roars to life."
 private const val STELLARIUM_GENERATOR_OFF_MESSAGE = "The Stellarium generator winds down into silence."
 private const val STELLARIUM_GENERATOR_OFF_ACCENT = 0xFFFF5252
+private const val EXIT_KEY_SEPARATOR = "::"
 
 private data class ShopDialogueSession(
     val shopId: String,
@@ -109,13 +117,62 @@ private data class ShopDialogueTopicState(
     val voiceCue: String?
 )
 
+private class SystemTutorialCoordinator(
+    private val tutorialManager: TutorialRuntimeManager
+) {
+    fun play(sceneId: String?, context: String?, onComplete: () -> Unit): Boolean {
+        val normalizedScene = sceneId?.takeIf { it.isNotBlank() }
+        if (normalizedScene != null) {
+            val scheduled = tutorialManager.playScript(
+                scriptId = normalizedScene,
+                allowDuplicates = false,
+                onComplete = onComplete
+            )
+            if (scheduled) return true
+        }
+        val message = buildMessage(normalizedScene, context)
+        val key = normalizedScene ?: buildKey(context)
+        tutorialManager.showOnce(
+            entry = TutorialEntry(
+                key = key,
+                context = context,
+                message = message,
+                metadata = mapOf("source" to "system")
+            ),
+            allowDuplicates = false,
+            onDismiss = onComplete
+        )
+        return true
+    }
+
+    private fun buildMessage(sceneId: String?, context: String?): String {
+        val formattedScene = sceneId?.let { formatSceneId(it) }
+        val parts = mutableListOf<String>()
+        parts += formattedScene?.let { "Tutorial: $it" } ?: "Tutorial"
+        context?.takeIf { it.isNotBlank() }?.let { parts += it }
+        return parts.filter { it.isNotBlank() }.joinToString("\n").ifBlank { "Tutorial available" }
+    }
+
+    private fun buildKey(context: String?): String {
+        return context?.takeIf { it.isNotBlank() }
+            ?.lowercase(Locale.getDefault())
+            ?.let { "system:$it" }
+            ?: "system_tutorial"
+    }
+
+    private fun formatSceneId(sceneId: String): String =
+        sceneId.replace('_', ' ').replaceFirstChar { char ->
+            if (char.isLowerCase()) char.titlecase(Locale.getDefault()) else char.toString()
+        }
+}
+
 class ExplorationViewModel(
     private val worldAssets: WorldAssetDataSource,
     private val sessionStore: GameSessionStore,
     private val dialogueService: DialogueService,
     private val inventoryService: InventoryService,
     private val craftingService: CraftingService,
-    private val cinematicService: CinematicService,
+    private val cinematicCoordinator: CinematicCoordinator,
     private val questRepository: QuestRepository,
     private val questRuntimeManager: QuestRuntimeManager,
     private val milestoneManager: MilestoneRuntimeManager,
@@ -133,7 +190,8 @@ class ExplorationViewModel(
     eventDefinitions: List<GameEvent>,
     bootstrapCinematics: List<String> = emptyList(),
     bootstrapActions: List<String> = emptyList(),
-    private val dispatchers: DispatcherProvider = DefaultDispatcherProvider
+    private val dispatchers: DispatcherProvider = DefaultDispatcherProvider,
+    private val dialogueTriggerBinder: (((String) -> Boolean)?) -> Unit = {}
 ) : ViewModel() {
 
     private val eventsById: Map<String, GameEvent> = eventDefinitions.associateBy { it.id }
@@ -147,18 +205,37 @@ class ExplorationViewModel(
     private var skillsById: Map<String, Skill> = emptyMap()
     private var skillTreesByCharacter: Map<String, SkillTreeDefinition> = emptyMap()
     private val stageTutorialKeys: MutableSet<String> = mutableSetOf()
+    private val inventoryAddListener: (String, Int) -> Unit = { itemId, _ ->
+        handleItemAcquired(itemId)
+    }
+    private val systemTutorialCoordinator = SystemTutorialCoordinator(tutorialManager)
 
     init {
         inventoryService.loadItems()
+        inventoryService.addOnItemAddedListener(inventoryAddListener)
+        dialogueTriggerBinder(::handleDialogueTrigger)
+        cinematicCoordinator.setCallbacks(
+            onSceneStart = { emitAudioCommands(audioRouter.duckForCinematic()) },
+            onSceneEnd = { emitAudioCommands(audioRouter.restoreAfterCinematic()) }
+        )
+        observeUserSettings()
     }
 
     private val eventManager = EventManager(
         events = eventDefinitions,
         sessionStore = sessionStore,
         eventHooks = EventHooks(
-            onPlayCinematic = { sceneId ->
-                startCinematic(sceneId)
-                emitEvent(ExplorationEvent.PlayCinematic(sceneId))
+            onPlayCinematic = { sceneId, onComplete ->
+                if (startSpecialCinematic(sceneId, onComplete)) {
+                    emitEvent(ExplorationEvent.PlayCinematic(sceneId))
+                } else {
+                    val started = startCinematic(sceneId, onComplete)
+                    if (started) {
+                        emitEvent(ExplorationEvent.PlayCinematic(sceneId))
+                    } else {
+                        onComplete()
+                    }
+                }
             },
             onMessage = { message ->
                 postStatus(message)
@@ -192,6 +269,18 @@ class ExplorationViewModel(
                 refreshCurrentRoomBlockedDirections()
                 emitEvent(ExplorationEvent.ItemGranted(name, quantity))
             },
+            onTakeItem = { itemId, quantity ->
+                val normalizedQuantity = quantity.coerceAtLeast(1)
+                if (!inventoryService.hasItem(itemId, normalizedQuantity)) {
+                    false
+                } else {
+                    val name = inventoryService.itemDisplayName(itemId)
+                    inventoryService.removeItem(itemId, normalizedQuantity)
+                    postStatus("Gave $normalizedQuantity x $name")
+                    refreshCurrentRoomBlockedDirections()
+                    true
+                }
+            },
             onGiveXp = { amount ->
                 postStatus("Gained $amount XP")
                 emitEvent(ExplorationEvent.XpGained(amount))
@@ -211,10 +300,13 @@ class ExplorationViewModel(
                 }
             },
             onQuestStarted = { questId ->
-                questId?.let { questRuntimeManager.resetQuest(it) }
+                questId?.let { questRuntimeManager.recordQuestStarted(it) }
             },
             onQuestCompleted = { questId ->
-                questId?.let { questRuntimeManager.markQuestCompleted(it) }
+                questId?.let {
+                    questRuntimeManager.markQuestCompleted(it)
+                    questRuntimeManager.recordQuestCompleted(it)
+                }
             },
             onQuestFailed = { questId, reason ->
                 questId?.let { questRuntimeManager.markQuestFailed(it, reason) }
@@ -223,37 +315,15 @@ class ExplorationViewModel(
                 roomId?.let { roomsById[it]?.let { room -> markDiscovered(room) } }
                 emitEvent(ExplorationEvent.BeginNode(roomId))
             },
-            onSystemTutorial = { sceneId, context ->
-                val message = buildString {
-                    append("Tutorial")
-                    sceneId?.takeIf { it.isNotBlank() }?.let {
-                        append(": ")
-                        append(
-                            it.replace('_', ' ').replaceFirstChar { c ->
-                                if (c.isLowerCase()) c.titlecase(Locale.getDefault()) else c.toString()
-                            }
-                        )
-                    }
-                    context?.takeIf { it.isNotBlank() }?.let {
-                        append("\n")
-                        append(it)
-                    }
-                }.ifBlank { "Tutorial available" }.trim()
-
-                val key = sceneId?.takeIf { it.isNotBlank() } ?: message
-                tutorialManager.showOnce(
-                    key = key,
-                    message = message,
-                    context = context,
-                    metadata = mapOf("source" to "system")
-                )
+            onSystemTutorial = { sceneId, context, done ->
+                val handled = systemTutorialCoordinator.play(sceneId, context) { done() }
                 emitEvent(ExplorationEvent.TutorialRequested(sceneId, context))
+                if (!handled) {
+                    done()
+                }
             },
             onMilestoneSet = { milestone ->
-                val message = formatMilestoneMessage(milestone)
-                milestoneManager.handleMilestone(milestone, message)
-                playUiCue("milestone_unlock")
-                announceMilestoneEvent(milestone, message)
+                milestoneManager.handleMilestone(milestone, null)
             },
             onNarration = { message, tapToDismiss ->
                 showNarration(message, tapToDismiss)
@@ -269,9 +339,49 @@ class ExplorationViewModel(
                 val message = note ?: "Something useful is now revealed."
                 postStatus(message)
                 emitEvent(ExplorationEvent.RoomSearchUnlocked(targetRoom, message))
-            }
+            },
+            onEventCompleted = { eventId ->
+                milestoneManager.onEventCompleted(eventId)
+            },
+            onPartyMemberJoined = { memberId ->
+                handlePartyMemberJoined(memberId)
+            },
+            onAudioLayerCommand = { handleAudioLayerCommand(it) }
         )
     )
+
+    private fun observeUserSettings() {
+        viewModelScope.launch(dispatchers.io) {
+            userSettingsStore.settings.collect { settings ->
+                withContext(dispatchers.main) {
+                    applyUserSettings(settings)
+                }
+            }
+        }
+    }
+
+    private fun applyUserSettings(settings: UserSettings) {
+        val newMusic = settings.musicVolume.coerceIn(0f, 1f)
+        val newSfx = settings.sfxVolume.coerceIn(0f, 1f)
+        val newVignette = settings.vignetteEnabled
+        val musicChanged = abs(newMusic - userMusicVolume) > 0.001f
+        val sfxChanged = abs(newSfx - userSfxVolume) > 0.001f
+        userMusicVolume = newMusic
+        userSfxVolume = newSfx
+        isVignetteEnabled = newVignette
+        _uiState.update { state ->
+            state.copy(
+                settings = state.settings.copy(
+                    musicVolume = userMusicVolume,
+                    sfxVolume = userSfxVolume,
+                    vignetteEnabled = isVignetteEnabled
+                )
+            )
+        }
+        if (musicChanged || sfxChanged) {
+            emitEvent(ExplorationEvent.AudioSettingsChanged(userMusicVolume, userSfxVolume))
+        }
+    }
 
     private var roomsById: Map<String, Room> = emptyMap()
     private var themeByRoomId: Map<String, Theme?> = emptyMap()
@@ -296,11 +406,8 @@ class ExplorationViewModel(
     private var pendingStateMessage: String? = null
     private var suppressNextStateMessage: Boolean = false
     private val levelUpQueue: ArrayDeque<LevelUpPrompt> = ArrayDeque()
-    private val cinematicQueue: ArrayDeque<CinematicScene> = ArrayDeque()
     private val bootstrapCinematicQueue: ArrayDeque<String> = ArrayDeque(bootstrapCinematics)
     private val bootstrapActionQueue: ArrayDeque<String> = ArrayDeque(bootstrapActions)
-    private var activeCinematic: CinematicScene? = null
-    private var cinematicStepIndex: Int = 0
     private val milestoneMessages: Map<String, String> = mapOf(
         "ms_kasey_projector_collected" to "Recovered Kasey's broken projector.",
         "ms_maddie_grinder_collected" to "Recovered Maddie's coffee grinder.",
@@ -313,14 +420,28 @@ class ExplorationViewModel(
     )
     private val acknowledgedMilestones: MutableSet<String> = mutableSetOf()
     private val unlockedDirections: MutableMap<String, MutableSet<String>> = mutableMapOf()
+    private val unlockedAreaIds: MutableSet<String> = mutableSetOf()
+    private val pendingUnlockedAreas: MutableSet<String> = mutableSetOf()
+    private val unlockedExitKeys: MutableSet<String> = mutableSetOf()
+    private val pendingUnlockedExitKeys: MutableSet<String> = mutableSetOf()
     private var activeDialogueSession: DialogueSession? = null
     private var darkCapableRoomIds: Set<String> = emptySet()
     private var entryRoomIds: Set<String> = emptySet()
+    private val darkRoomEntryDirection: MutableMap<String, String> = mutableMapOf()
+    private var fadeOverlayCommandId: Long = 0L
+    private val pendingFadeCallbacks: MutableMap<Long, () -> Unit> = mutableMapOf()
     private var userMusicVolume: Float = 1f
     private var userSfxVolume: Float = 1f
     private var isVignetteEnabled: Boolean = true
     private val eventAnnouncementQueue: ArrayDeque<EventAnnouncementUi> = ArrayDeque()
     private var nextEventAnnouncementId: Long = 0L
+
+    override fun onCleared() {
+        inventoryService.removeOnItemAddedListener(inventoryAddListener)
+        dialogueTriggerBinder(null)
+        cinematicCoordinator.setCallbacks()
+        super.onCleared()
+    }
 
     private fun emitEvent(event: ExplorationEvent) {
         viewModelScope.launch(dispatchers.main) {
@@ -331,6 +452,31 @@ class ExplorationViewModel(
     private fun emitAudioCommands(commands: List<AudioCommand>) {
         if (commands.isEmpty()) return
         emitEvent(ExplorationEvent.AudioCommands(commands))
+    }
+
+    private fun handleAudioLayerCommand(command: AudioLayerCommandSpec) {
+        val layerType = command.layer?.let(::parseAudioLayer) ?: return
+        val commands = audioRouter.commandsForLayerOverride(
+            layer = layerType,
+            cueId = command.cueId,
+            gain = command.gain,
+            fadeMs = command.fadeMs,
+            loop = command.loop,
+            stop = command.stop
+        )
+        emitAudioCommands(commands)
+    }
+
+    private fun parseAudioLayer(raw: String): AudioCueType? {
+        val normalized = raw.trim().lowercase(Locale.getDefault())
+        return when (normalized) {
+            "music", "music_primary", "primary", "music_pad", "pad" -> AudioCueType.MUSIC
+            "ambience", "ambient", "environment" -> AudioCueType.AMBIENT
+            "ui", "interface" -> AudioCueType.UI
+            "battle", "combat", "stinger" -> AudioCueType.BATTLE
+            "voice", "voiceover", "vo" -> AudioCueType.VOICE
+            else -> null
+        }
     }
 
     private fun playRoomAudio(hubId: String?, roomId: String?) {
@@ -520,53 +666,158 @@ class ExplorationViewModel(
         promoteNextLevelUp()
     }
 
-    private fun startCinematic(sceneId: String?) {
-        val scene = cinematicService.scene(sceneId)
-        if (scene == null || scene.steps.isEmpty()) {
-            if (!sceneId.isNullOrBlank()) {
-                postStatus("Cinematic $sceneId is not available yet.")
+    private fun startSpecialCinematic(
+        sceneId: String?,
+        onComplete: () -> Unit
+    ): Boolean {
+        if (sceneId.isNullOrBlank()) return false
+        return when (sceneId) {
+            "new_game_fade_in" -> {
+                triggerFadeOverlay(
+                    fromAlpha = 1f,
+                    toAlpha = 0f,
+                    durationMillis = 1800,
+                    onComplete = onComplete
+                )
+                true
             }
-            return
+            else -> false
         }
-        if (activeCinematic == null) {
-            activeCinematic = scene
-            cinematicStepIndex = 0
-            emitAudioCommands(audioRouter.duckForCinematic())
-            pushCinematicStep(scene, 0)
-        } else {
-            cinematicQueue.add(scene)
+    }
+
+    private fun startCinematic(
+        sceneId: String?,
+        completion: (() -> Unit)? = null
+    ): Boolean {
+        val onComplete = completion ?: {}
+        val started = cinematicCoordinator.play(sceneId) { onComplete() }
+        if (!started && !sceneId.isNullOrBlank()) {
+            postStatus("Cinematic $sceneId is not available yet.")
         }
+        return started
+    }
+
+    private fun triggerFadeOverlay(
+        fromAlpha: Float,
+        toAlpha: Float,
+        durationMillis: Int,
+        onComplete: () -> Unit
+    ) {
+        val commandId = ++fadeOverlayCommandId
+        pendingFadeCallbacks[commandId] = onComplete
+        _uiState.update {
+            it.copy(
+                fadeOverlay = FadeOverlayCommand(
+                    id = commandId,
+                    fromAlpha = fromAlpha,
+                    toAlpha = toAlpha,
+                    durationMillis = durationMillis
+                )
+            )
+        }
+    }
+
+    fun onFadeOverlayFinished(commandId: Long) {
+        pendingFadeCallbacks.remove(commandId)?.invoke()
+        _uiState.update { state ->
+            if (state.fadeOverlay?.id == commandId) state.copy(fadeOverlay = null) else state
+        }
+    }
+
+    private fun handlePartyMemberJoined(memberId: String) {
+        val normalized = memberId.lowercase(Locale.getDefault())
+        if (normalized == "ollie") {
+            removeNpcFromRoom(
+                roomId = "town_8",
+                npcId = "Ollie",
+                descriptionRemovals = listOf("Ollie waves to you.", "Ollie waves to you")
+            )
+        }
+        val displayName = charactersById[memberId]?.name
+            ?: memberId.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+        val message = "${displayName.ifBlank { "A new ally" }} joined the party!"
+        postStatus(message)
+        emitEvent(ExplorationEvent.ShowToast(id = "party:$normalized", message = message))
+        emitEvent(ExplorationEvent.ShowMessage(message))
+    }
+
+    private fun removeNpcFromRoom(roomId: String, npcId: String, descriptionRemovals: List<String> = emptyList()) {
+        val room = roomsById[roomId] ?: return
+        val filtered = room.npcs.filterNot { it.equals(npcId, ignoreCase = true) }
+        if (filtered.size == room.npcs.size) return
+        var updatedRoom = room.copy(npcs = filtered)
+        if (descriptionRemovals.isNotEmpty()) {
+            val updatedDescription = scrubDescription(updatedRoom.description, descriptionRemovals)
+            val updatedDarkDescription = scrubDescription(updatedRoom.descriptionDark, descriptionRemovals)
+            if (updatedDescription != null || updatedDarkDescription != null) {
+                updatedRoom = updatedRoom.copy(
+                    description = updatedDescription ?: updatedRoom.description,
+                    descriptionDark = updatedDarkDescription ?: updatedRoom.descriptionDark
+                )
+            }
+        }
+        roomsById = roomsById + (roomId to updatedRoom)
+        if (_uiState.value.currentRoom?.id == roomId) {
+            _uiState.update {
+                it.copy(
+                    currentRoom = updatedRoom,
+                    npcs = filtered
+                )
+            }
+        }
+    }
+
+    private fun scrubDescription(text: String?, tokens: List<String>): String? {
+        if (text.isNullOrBlank()) return null
+        val source = requireNotNull(text)
+        var updated = source
+        tokens.forEach { token ->
+            if (token.isNotBlank()) {
+                updated = updated.replace(token, " ")
+            }
+        }
+        val normalized = updated
+            .replace(Regex("\\s{2,}"), " ")
+            .replace(" ,", ",")
+            .replace(" .", ".")
+            .trim()
+        val original = source.trim()
+        return if (normalized.isEmpty() || normalized == original) null else normalized
     }
 
     fun advanceCinematic() {
-        val scene = activeCinematic
-        if (scene == null) {
-            if (cinematicQueue.isNotEmpty()) {
-                promoteNextCinematicScene()
-            }
-            return
-        }
-        val nextIndex = cinematicStepIndex + 1
-        if (nextIndex >= scene.steps.size) {
-            promoteNextCinematicScene()
-        } else {
-            cinematicStepIndex = nextIndex
-            pushCinematicStep(scene, nextIndex)
-        }
+        cinematicCoordinator.advance()
     }
 
-    private fun promoteNextCinematicScene() {
-        val nextScene = if (cinematicQueue.isEmpty()) null else cinematicQueue.removeFirst()
-        if (nextScene == null) {
-            activeCinematic = null
-            cinematicStepIndex = 0
-            _uiState.update { it.copy(cinematic = null) }
-            emitAudioCommands(audioRouter.restoreAfterCinematic())
-        } else {
-            activeCinematic = nextScene
-            cinematicStepIndex = 0
-            pushCinematicStep(nextScene, 0)
+    private fun CinematicPlaybackState.toUiState(): CinematicUiState {
+        val steps = scene.steps
+        if (steps.isEmpty()) {
+            return CinematicUiState(
+                sceneId = scene.id,
+                title = scene.title,
+                stepIndex = 0,
+                stepCount = 0,
+                step = CinematicStepUi(
+                    type = CinematicStepType.NARRATION,
+                    speaker = null,
+                    text = ""
+                )
+            )
         }
+        val safeIndex = stepIndex.coerceIn(0, steps.lastIndex)
+        val step = steps[safeIndex]
+        val stepUi = CinematicStepUi(
+            type = step.type,
+            speaker = step.speaker,
+            text = step.text
+        )
+        return CinematicUiState(
+            sceneId = scene.id,
+            title = scene.title,
+            stepIndex = safeIndex,
+            stepCount = steps.size,
+            step = stepUi
+        )
     }
 
     private fun processBootstrapQueues() {
@@ -578,26 +829,6 @@ class ExplorationViewModel(
             while (bootstrapActionQueue.isNotEmpty()) {
                 triggerPlayerAction(bootstrapActionQueue.removeFirst())
             }
-        }
-    }
-
-    private fun pushCinematicStep(scene: CinematicScene, index: Int) {
-        val step = scene.steps.getOrNull(index) ?: return
-        val stepUi = CinematicStepUi(
-            type = step.type,
-            speaker = step.speaker,
-            text = step.text
-        )
-        _uiState.update {
-            it.copy(
-                cinematic = CinematicUiState(
-                    sceneId = scene.id,
-                    title = scene.title,
-                    stepIndex = index,
-                    stepCount = scene.steps.size,
-                    step = stepUi
-                )
-            )
         }
     }
 
@@ -624,7 +855,10 @@ class ExplorationViewModel(
             val dx = pos.first - currentPos.first
             val dy = pos.second - currentPos.second
             if (abs(dx) > 1 || abs(dy) > 1) return@mapNotNull null
-            if (!visitedRooms.contains(room.id) && room.id != currentRoom.id) return@mapNotNull null
+            val isVisible = room.id == currentRoom.id ||
+                visitedRooms.contains(room.id) ||
+                discoveredRooms.contains(room.id)
+            if (!isVisible) return@mapNotNull null
             val connections = room.connections.mapNotNull { (direction, targetId) ->
                 targetId?.let { direction.lowercase(Locale.getDefault()) to it }
             }.toMap()
@@ -658,7 +892,8 @@ class ExplorationViewModel(
                 blockedDirections = blocked,
                 connections = connections,
                 pathHints = pathHints,
-                services = services
+                services = services,
+                isDark = isRoomDark(room)
             )
         }
         return MinimapUiState(cells = cells)
@@ -668,7 +903,10 @@ class ExplorationViewModel(
         val currentPos = roomPosition(currentRoom)
         val roomsInContext = roomsForMaps(currentRoom)
         val cells = roomsInContext.mapNotNull { room ->
-            if (!visitedRooms.contains(room.id) && room.id != currentRoom.id) return@mapNotNull null
+            val isVisible = room.id == currentRoom.id ||
+                visitedRooms.contains(room.id) ||
+                discoveredRooms.contains(room.id)
+            if (!isVisible) return@mapNotNull null
             val pos = roomPosition(room)
             val connections = room.connections.mapNotNull { (direction, targetId) ->
                 targetId?.let { direction.lowercase(Locale.getDefault()) to it }
@@ -695,7 +933,8 @@ class ExplorationViewModel(
                 hasEnemies = room.enemies.isNotEmpty(),
                 blockedDirections = blocked,
                 connections = connections,
-                services = services
+                services = services,
+                isDark = isRoomDark(room)
             )
         }
         return FullMapUiState(cells = cells)
@@ -718,6 +957,30 @@ class ExplorationViewModel(
 
     private fun environmentKey(env: String?): String =
         env?.takeIf { it.isNotBlank() }?.lowercase(Locale.getDefault()) ?: "__default"
+
+    private fun isRoomDark(room: Room): Boolean = isRoomDark(room.id, room)
+
+    private fun isRoomDark(roomId: String, fallback: Room? = roomsById[roomId]): Boolean {
+        val stateValues = roomStates[roomId]
+        val explicitLight = stateValues?.get("light_on")?.let { booleanValueOf(it) }
+        if (explicitLight == true) return false
+        if (explicitLight == false) return true
+        val explicitDark = stateValues?.get("dark")?.let { booleanValueOf(it) }
+        if (explicitDark != null) return explicitDark
+        val room = fallback ?: roomsById[roomId]
+        room ?: return false
+        val initialLight = room.state["light_on"]?.let { booleanValueOf(it) }
+        if (initialLight == true) return false
+        val initialDark = room.state["dark"]?.let { booleanValueOf(it) }
+        return initialDark ?: (room.dark == true)
+    }
+
+    private fun visibleConnections(room: Room): Map<String, String> {
+        if (!isRoomDark(room)) return room.connections
+        val allowed = darkRoomEntryDirection[room.id]?.lowercase(Locale.getDefault())
+        if (allowed.isNullOrBlank()) return emptyMap()
+        return room.connections.filterKeys { it.equals(allowed, ignoreCase = true) }
+    }
 
     private fun buildDialogueUi(line: DialogueLine?): DialogueUi? {
         if (line == null) return null
@@ -767,6 +1030,21 @@ class ExplorationViewModel(
         refreshCurrentRoomBlockedDirections()
     }
 
+    private fun handleItemAcquired(itemId: String) {
+        if (itemId.isBlank()) return
+        eventManager.handleTrigger(
+            type = "item_acquired",
+            payload = EventPayload.ItemAcquired(itemId)
+        )
+    }
+
+    private fun handleDialogueTrigger(trigger: String): Boolean {
+        val actions = DialogueTriggerParser.parse(trigger)
+        if (actions.isEmpty()) return false
+        eventManager.performActions(actions)
+        return true
+    }
+
     private fun triggerPlayerAction(actionId: String?, itemId: String? = null) {
         if (actionId.isNullOrBlank()) return
         eventManager.handleTrigger("player_action", EventPayload.Action(actionId, itemId))
@@ -799,6 +1077,8 @@ class ExplorationViewModel(
                     )
                 }
                 updateActionHints(_uiState.value.currentRoom)
+                updateUnlockedAreas(newState.unlockedAreas)
+                updateUnlockedExits(newState.unlockedExits)
             }
         }
 
@@ -906,6 +1186,18 @@ class ExplorationViewModel(
                 _uiState.update { it.copy(prompt = promptState.current) }
             }
         }
+
+        viewModelScope.launch(dispatchers.main) {
+            tutorialManager.runtimeState.collect { tutorialState ->
+                _uiState.update { it.copy(tutorialState = tutorialState) }
+            }
+        }
+
+        viewModelScope.launch(dispatchers.main) {
+            cinematicCoordinator.state.collect { playback ->
+                _uiState.update { it.copy(cinematic = playback?.toUiState()) }
+            }
+        }
     }
 
     init {
@@ -969,6 +1261,14 @@ class ExplorationViewModel(
             val preselectedWorldId = existingState.worldId
             val preselectedHubId = existingState.hubId
             val preselectedRoomId = existingState.roomId
+            unlockedAreaIds.clear()
+            unlockedAreaIds.addAll(existingState.unlockedAreas)
+            pendingUnlockedAreas.clear()
+            pendingUnlockedAreas.addAll(unlockedAreaIds)
+            unlockedExitKeys.clear()
+            unlockedExitKeys.addAll(existingState.unlockedExits)
+            pendingUnlockedExitKeys.clear()
+            pendingUnlockedExitKeys.addAll(unlockedExitKeys)
 
             val worlds = worldAssets.loadWorlds()
             val hubs = worldAssets.loadHubs()
@@ -1008,6 +1308,8 @@ class ExplorationViewModel(
             roomsByNodeId = nodes.associate { node ->
                 node.id to node.rooms.mapNotNull { roomId -> roomsById[roomId] }
             }
+            flushPendingUnlockedExits()
+            flushPendingUnlockedAreas()
             initializeRoomStates(rooms)
             sanitizeDarkStates()
             initializeUnlockedDirections(rooms)
@@ -1080,13 +1382,14 @@ class ExplorationViewModel(
                 levelingManager = levelingManager
             )
             val initialActions = parseActions(initialRoom)
+            val initialConnections = initialRoom?.let { visibleConnections(it) }.orEmpty()
             _uiState.update {
                 ExplorationUiState(
                     isLoading = false,
                     currentWorld = initialWorld,
                     currentHub = initialHub,
                     currentRoom = initialRoom,
-                    availableConnections = initialRoom?.connections.orEmpty(),
+                    availableConnections = initialConnections,
                     npcs = initialRoom?.npcs.orEmpty(),
                     actions = initialActions,
                     actionHints = buildActionHints(initialRoom, initialActions),
@@ -1112,7 +1415,13 @@ class ExplorationViewModel(
                     )
                 )
             }
-            initialRoom?.let { handleRoomEntryTutorials(it) }
+            initialRoom?.let { room ->
+                handleRoomEntryTutorials(room)
+                if (!isRoomDark(room)) {
+                    visitedRooms.add(room.id)
+                    markDiscovered(room)
+                }
+            }
             playRoomAudio(initialHub?.id, initialRoom?.id)
             updateMinimap(initialRoom)
             initialRoom?.let { eventManager.handleTrigger("enter_room", EventPayload.EnterRoom(it.id)) }
@@ -1122,6 +1431,15 @@ class ExplorationViewModel(
 
     fun travel(direction: String) {
         val currentRoom = _uiState.value.currentRoom ?: return
+        val normalizedDirection = direction.lowercase(Locale.getDefault())
+        if (isRoomDark(currentRoom)) {
+            val allowedDirection = darkRoomEntryDirection[currentRoom.id]?.lowercase(Locale.getDefault())
+            if (allowedDirection != null && allowedDirection != normalizedDirection) {
+                postStatus("It's too dark to feel your way in that direction.")
+                playUiCue("error")
+                return
+            }
+        }
         val evaluation = evaluateDirection(currentRoom, direction, DirectionEvaluationMode.ATTEMPT)
         if (evaluation.blocked) {
             val message = evaluation.message ?: "The path is blocked."
@@ -1134,13 +1452,21 @@ class ExplorationViewModel(
 
         val nextRoomId = getConnection(currentRoom, direction) ?: return
         val nextRoom = roomsById[nextRoomId] ?: return
+        val nextRoomIsDark = isRoomDark(nextRoom)
         val nextTheme = themeByRoomId[nextRoom.id]
         val nextThemeStyle = themeStyleByRoomId[nextRoom.id]
         environmentThemeManager.apply(nextRoom.env, nextRoom.weather)
 
         sessionStore.setRoom(nextRoom.id)
-        visitedRooms.add(nextRoom.id)
-        markDiscovered(nextRoom)
+        if (!nextRoomIsDark) {
+            visitedRooms.add(nextRoom.id)
+            markDiscovered(nextRoom)
+            darkRoomEntryDirection.remove(nextRoom.id)
+        } else {
+            val allowedExit = oppositeDirection(normalizedDirection) ?: normalizedDirection
+            darkRoomEntryDirection[nextRoom.id] = allowedExit.lowercase(Locale.getDefault())
+        }
+        darkRoomEntryDirection.remove(currentRoom.id)
         sessionStore.markTutorialCompleted("swipe_move")
         tutorialManager.cancel("swipe_hint")
 
@@ -1149,7 +1475,7 @@ class ExplorationViewModel(
         _uiState.update {
             it.copy(
                 currentRoom = nextRoom,
-                availableConnections = nextRoom.connections,
+                availableConnections = visibleConnections(nextRoom),
                 npcs = nextRoom.npcs,
                 actions = nextActions,
                 actionHints = buildActionHints(nextRoom, nextActions),
@@ -1668,6 +1994,14 @@ class ExplorationViewModel(
         playUiCue("menu_action")
     }
 
+    fun quickSave() {
+        viewModelScope.launch(dispatchers.io) {
+            val success = runCatching { saveRepository.quickSave() }.getOrElse { false }
+            val message = if (success) "Quicksave complete." else "Unable to quicksave."
+            postStatus(message)
+        }
+    }
+
     fun selectMenuTab(tab: MenuTab) {
         lastMenuTab = tab
         _uiState.update { it.copy(menuTab = tab) }
@@ -1681,6 +2015,9 @@ class ExplorationViewModel(
             state.copy(settings = state.settings.copy(musicVolume = clamped))
         }
         emitEvent(ExplorationEvent.AudioSettingsChanged(userMusicVolume, userSfxVolume))
+        viewModelScope.launch(dispatchers.io) {
+            userSettingsStore.setMusicVolume(clamped)
+        }
     }
 
     fun updateSfxVolume(volume: Float) {
@@ -1691,6 +2028,9 @@ class ExplorationViewModel(
             state.copy(settings = state.settings.copy(sfxVolume = clamped))
         }
         emitEvent(ExplorationEvent.AudioSettingsChanged(userMusicVolume, userSfxVolume))
+        viewModelScope.launch(dispatchers.io) {
+            userSettingsStore.setSfxVolume(clamped)
+        }
     }
 
     fun setVignetteEnabled(enabled: Boolean) {
@@ -1698,6 +2038,9 @@ class ExplorationViewModel(
         isVignetteEnabled = enabled
         _uiState.update { state ->
             state.copy(settings = state.settings.copy(vignetteEnabled = enabled))
+        }
+        viewModelScope.launch(dispatchers.io) {
+            userSettingsStore.setVignetteEnabled(enabled)
         }
     }
     fun engageEnemy(enemyId: String) {
@@ -1719,10 +2062,9 @@ class ExplorationViewModel(
         if (room.id.equals("town_9", ignoreCase = true)) {
             val lightOn = booleanValueOf(room.state["light_on"]) ?: false
             if (!tutorialManager.hasCompleted("light_switch_touch") && !lightOn) {
-                tutorialManager.showOnce(
+                tutorialManager.scheduleScript(
                     key = "light_switch_hint",
-                    message = "Tap the light switch to brighten the room.",
-                    context = room.title,
+                    scriptId = "scene_light_switch_hint",
                     delayMs = 14_000L
                 )
             }
@@ -1730,16 +2072,46 @@ class ExplorationViewModel(
     }
 
     private fun onRoomStateChanged(roomId: String, stateKey: String, value: Boolean) {
+        val currentRoom = _uiState.value.currentRoom
         if (roomId.equals("town_9", ignoreCase = true) && stateKey.equals("light_on", ignoreCase = true) && value) {
             sessionStore.markTutorialCompleted("light_switch_touch")
             tutorialManager.markCompleted("light_switch_touch")
             tutorialManager.cancel("light_switch_hint")
-            tutorialManager.showOnce(
-                key = "swipe_hint",
-                message = "Swipe across the screen to explore the house.",
-                context = "Movement",
-                delayMs = 3_000L
-            )
+            if (!tutorialManager.hasCompleted("swipe_move")) {
+                tutorialManager.scheduleScript(
+                    key = "swipe_hint",
+                    scriptId = "scene_swipe_movement",
+                    delayMs = 3_000L
+                )
+            }
+        }
+        if (currentRoom?.id.equals(roomId, ignoreCase = true)) {
+            val resolvedRoom = roomsById[roomId] ?: currentRoom ?: return
+            if (stateKey.equals("light_on", ignoreCase = true) && value) {
+                darkRoomEntryDirection.remove(roomId)
+                if (!visitedRooms.contains(roomId)) {
+                    visitedRooms.add(roomId)
+                    markDiscovered(resolvedRoom)
+                }
+            }
+            if (stateKey.equals("dark", ignoreCase = true)) {
+                if (!value) {
+                    darkRoomEntryDirection.remove(roomId)
+                    if (!visitedRooms.contains(roomId)) {
+                        visitedRooms.add(roomId)
+                        markDiscovered(resolvedRoom)
+                    }
+                } else {
+                    darkRoomEntryDirection.putIfAbsent(roomId, "")
+                }
+            }
+            updateMinimap(resolvedRoom)
+            _uiState.update { state ->
+                state.copy(
+                    availableConnections = visibleConnections(resolvedRoom),
+                    canReturnToHub = canReturnToHub(resolvedRoom)
+                )
+            }
         }
     }
 
@@ -1889,9 +2261,17 @@ class ExplorationViewModel(
         val roomId = roomIdOrNull ?: _uiState.value.currentRoom?.id ?: return null
         val changed = applyRoomStateValue(roomId, stateKeySafe, value)
         if (!changed) return value
+        var darkStateChanged = false
+        if (stateKeySafe.equals("light_on", ignoreCase = true)) {
+            val targetDark = !value
+            darkStateChanged = applyRoomStateValue(roomId, "dark", targetDark)
+        }
         reevaluateBlockedDirections(roomId, silent = true)
         if (notify) {
             onRoomStateChanged(roomId, stateKeySafe, value)
+            if (darkStateChanged) {
+                onRoomStateChanged(roomId, "dark", !value)
+            }
             emitStateStatusIfNeeded(stateKeySafe, value)
             updateActionHints(_uiState.value.currentRoom)
         }
@@ -1979,13 +2359,7 @@ class ExplorationViewModel(
         val roomId = roomIdOrNull ?: _uiState.value.currentRoom?.id ?: return null
         val states = roomStates.getOrPut(roomId) { mutableMapOf() }
         val newValue = !(states[stateKeySafe] ?: false)
-        states[stateKeySafe] = newValue
-        updateRoomModelState(roomId, stateKeySafe, newValue)
-        reevaluateBlockedDirections(roomId, silent = true)
-        onRoomStateChanged(roomId, stateKeySafe, newValue)
-        emitStateStatusIfNeeded(stateKeySafe, newValue)
-        updateActionHints(_uiState.value.currentRoom)
-        return newValue
+        return setRoomStateValue(roomId, stateKeySafe, newValue)
     }
 
     private fun updateRoomModelState(roomId: String, stateKey: String, value: Boolean) {
@@ -1996,14 +2370,19 @@ class ExplorationViewModel(
         roomsById = roomsById.toMutableMap().apply { put(roomId, updatedRoom) }
         if (_uiState.value.currentRoom?.id == roomId) {
             val snapshot = roomStates[roomId]?.toMap().orEmpty()
+            val updatedActions = parseActions(updatedRoom)
             _uiState.update {
                 it.copy(
                     currentRoom = updatedRoom,
                     roomState = snapshot,
+                    actions = updatedActions,
+                    actionHints = buildActionHints(updatedRoom, updatedActions),
+                    availableConnections = visibleConnections(updatedRoom),
                     blockedDirections = computeBlockedDirections(updatedRoom),
                     canReturnToHub = canReturnToHub(updatedRoom)
                 )
             }
+            updateMinimap(updatedRoom)
         }
     }
 
@@ -2046,14 +2425,100 @@ class ExplorationViewModel(
     }
 
     private fun markDiscovered(room: Room) {
-        if (discoveredRooms.add(room.id)) {
-            // newly discovered current room
-        }
-        room.connections.values.forEach { connectionId ->
-            if (!connectionId.isNullOrBlank()) {
-                discoveredRooms.add(connectionId)
+        if (isRoomDark(room)) return
+        val newlyAdded = discoveredRooms.add(room.id)
+        if (newlyAdded) {
+            room.connections.values.forEach { connectionId ->
+                if (!connectionId.isNullOrBlank()) {
+                    discoveredRooms.add(connectionId)
+                }
             }
         }
+    }
+
+    private fun updateUnlockedAreas(areas: Set<String>) {
+        val removed = unlockedAreaIds - areas
+        if (removed.isNotEmpty()) {
+            unlockedAreaIds.removeAll(removed)
+            pendingUnlockedAreas.removeAll(removed)
+        }
+        val newIds = areas - unlockedAreaIds
+        if (newIds.isNotEmpty()) {
+            unlockedAreaIds.addAll(newIds)
+            markUnlockedAreas(newIds)
+        }
+    }
+
+    private fun markUnlockedAreas(areaIds: Collection<String>) {
+        areaIds.forEach { areaId ->
+            val room = roomsById[areaId]
+            if (room != null) {
+                markDiscovered(room)
+                pendingUnlockedAreas.remove(areaId)
+            } else {
+                pendingUnlockedAreas.add(areaId)
+            }
+        }
+    }
+
+    private fun flushPendingUnlockedAreas() {
+        if (pendingUnlockedAreas.isEmpty()) return
+        val iterator = pendingUnlockedAreas.iterator()
+        while (iterator.hasNext()) {
+            val areaId = iterator.next()
+            val room = roomsById[areaId]
+            if (room != null) {
+                markDiscovered(room)
+                iterator.remove()
+            }
+        }
+    }
+
+    private fun updateUnlockedExits(exitKeys: Set<String>) {
+        val removed = unlockedExitKeys - exitKeys
+        if (removed.isNotEmpty()) {
+            unlockedExitKeys.removeAll(removed)
+            pendingUnlockedExitKeys.removeAll(removed)
+        }
+        val newKeys = exitKeys - unlockedExitKeys
+        if (newKeys.isEmpty()) return
+        val processedKeys = mutableSetOf<String>()
+        newKeys.forEach { key ->
+            val (roomId, direction) = parseExitKey(key) ?: return@forEach
+            val room = roomsById[roomId]
+            if (room == null) {
+                pendingUnlockedExitKeys.add(key)
+            } else {
+                val block = room.blockedDirections?.get(direction.lowercase(Locale.getDefault()))
+                unlockDirection(roomId, direction, block, silent = true)
+                processedKeys.add(key)
+            }
+        }
+        unlockedExitKeys.addAll(processedKeys)
+    }
+
+    private fun flushPendingUnlockedExits() {
+        if (pendingUnlockedExitKeys.isEmpty()) return
+        val iterator = pendingUnlockedExitKeys.iterator()
+        while (iterator.hasNext()) {
+            val key = iterator.next()
+            val (roomId, direction) = parseExitKey(key) ?: continue
+            val room = roomsById[roomId]
+            if (room != null) {
+                val block = room.blockedDirections?.get(direction.lowercase(Locale.getDefault()))
+                unlockDirection(roomId, direction, block, silent = true)
+                iterator.remove()
+                unlockedExitKeys.add(key)
+            }
+        }
+    }
+
+    private fun parseExitKey(key: String): Pair<String, String>? {
+        val parts = key.split(EXIT_KEY_SEPARATOR, limit = 2)
+        if (parts.size != 2) return null
+        val roomId = parts[0].takeIf { it.isNotBlank() } ?: return null
+        val direction = parts[1].takeIf { it.isNotBlank() } ?: return null
+        return roomId to direction
     }
 
     private fun registerPortrait(portraitPath: String?, vararg rawKeys: String?) {
@@ -2867,6 +3332,7 @@ sealed interface ExplorationEvent {
     data class EnterCombat(val enemyIds: List<String>) : ExplorationEvent
     data class PlayCinematic(val sceneId: String) : ExplorationEvent
     data class ShowMessage(val message: String) : ExplorationEvent
+    data class ShowToast(val id: String, val message: String) : ExplorationEvent
     data class RewardGranted(val reward: EventReward) : ExplorationEvent
     data class ItemGranted(val itemName: String, val quantity: Int) : ExplorationEvent
     data class XpGained(val amount: Int) : ExplorationEvent

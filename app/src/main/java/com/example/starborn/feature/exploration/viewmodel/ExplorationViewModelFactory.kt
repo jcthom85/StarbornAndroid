@@ -21,7 +21,7 @@ class ExplorationViewModelFactory(
                 dialogueService = services.dialogueService,
                 inventoryService = services.inventoryService,
                 craftingService = services.craftingService,
-                cinematicService = services.cinematicService,
+                cinematicCoordinator = services.cinematicCoordinator,
                 questRepository = services.questRepository,
                 questRuntimeManager = services.questRuntimeManager,
                 milestoneManager = services.milestoneManager,
@@ -38,7 +38,8 @@ class ExplorationViewModelFactory(
                 eventDefinitions = services.events,
                 userSettingsStore = services.userSettingsStore,
                 bootstrapCinematics = services.drainPendingCinematics(),
-                bootstrapActions = services.drainPendingPlayerActions()
+                bootstrapActions = services.drainPendingPlayerActions(),
+                dialogueTriggerBinder = services::setDialogueTriggerListener
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")

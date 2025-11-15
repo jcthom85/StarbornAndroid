@@ -11,6 +11,7 @@ class InventoryService(
     private val items: MutableMap<String, InventoryEntry> = mutableMapOf()
     private val _state = MutableStateFlow<List<InventoryEntry>>(emptyList())
     val state: StateFlow<List<InventoryEntry>> = _state.asStateFlow()
+    private val itemAddedListeners: MutableSet<(String, Int) -> Unit> = mutableSetOf()
 
     fun loadItems() {
         itemCatalog.load()
@@ -35,6 +36,9 @@ class InventoryService(
         val item = itemCatalog.findItem(idOrAlias) ?: return
         val entry = items.getOrPut(item.id) { InventoryEntry(item, 0) }
         entry.quantity += quantity
+        if (quantity > 0) {
+            notifyItemAdded(item.id, quantity)
+        }
         publish()
     }
 
@@ -89,6 +93,19 @@ class InventoryService(
 
     private fun publish() {
         _state.value = items.values.sortedBy { it.item.name }.toList()
+    }
+
+    fun addOnItemAddedListener(listener: (String, Int) -> Unit) {
+        itemAddedListeners.add(listener)
+    }
+
+    fun removeOnItemAddedListener(listener: (String, Int) -> Unit) {
+        itemAddedListeners.remove(listener)
+    }
+
+    private fun notifyItemAdded(itemId: String, quantity: Int) {
+        if (quantity <= 0) return
+        itemAddedListeners.toList().forEach { it(itemId, quantity) }
     }
 
     fun itemDisplayName(idOrAlias: String): String {

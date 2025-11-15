@@ -76,6 +76,18 @@ data class EventAction(
     @Json(name = "action")
     val action: String? = null,
     val context: String? = null,
+    @Json(name = "layer")
+    val audioLayer: String? = null,
+    @Json(name = "cue_id")
+    val audioCueId: String? = null,
+    @Json(name = "gain")
+    val audioGain: Float? = null,
+    @Json(name = "fade_ms")
+    val audioFadeMs: Long? = null,
+    @Json(name = "loop")
+    val audioLoop: Boolean? = null,
+    @Json(name = "stop")
+    val audioStop: Boolean? = null,
     @Json(name = "on_complete")
     val onComplete: List<EventAction>? = null,
     @Json(name = "items")
@@ -88,7 +100,21 @@ data class EventAction(
 
 data class EventCondition(
     val type: String,
-    val milestone: String? = null
+    val milestone: String? = null,
+    @Json(name = "quest_id")
+    val questId: String? = null,
+    @Json(name = "stage_id")
+    val stageId: String? = null,
+    @Json(name = "task_id")
+    val taskId: String? = null,
+    @Json(name = "item_id")
+    val itemId: String? = null,
+    val item: String? = null,
+    val quantity: Int? = null,
+    @Json(name = "event_id")
+    val eventId: String? = null,
+    @Json(name = "tutorial_id")
+    val tutorialId: String? = null
 )
 
 data class EventReward(

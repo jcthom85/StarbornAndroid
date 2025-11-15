@@ -7,7 +7,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.Animatable as CoreAnimatable
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -82,11 +82,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.geometry.RoundRect
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.ClipOp
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.DrawScope
@@ -139,8 +142,6 @@ import com.example.starborn.domain.model.TinkeringAction
 import com.example.starborn.domain.model.GenericAction
 import com.example.starborn.domain.model.actionKey
 import com.example.starborn.domain.model.serviceTag
-import com.example.starborn.domain.quest.QuestLogEntry
-import com.example.starborn.domain.quest.QuestLogEntryType
 import com.example.starborn.domain.tutorial.TutorialEntry
 import com.example.starborn.ui.background.rememberAssetPainter
 import com.example.starborn.ui.vfx.ThemeBandOverlay
@@ -191,6 +192,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.util.Locale
+import com.example.starborn.ui.events.UiEvent
+import com.example.starborn.ui.events.UiEventBus
+import com.example.starborn.ui.overlay.ProgressToastOverlay
+import com.example.starborn.ui.overlay.QuestBannerOverlay
+import com.example.starborn.ui.overlay.QuestDetailOverlay
+import com.example.starborn.ui.overlay.QuestSummaryOverlay
 import com.example.starborn.ui.theme.MinimapTextStyle
 import com.example.starborn.ui.theme.themeColor
 
@@ -201,6 +208,7 @@ import com.example.starborn.ui.theme.themeColor
 fun ExplorationScreen(
     viewModel: ExplorationViewModel,
     audioCuePlayer: AudioCuePlayer,
+    uiEventBus: UiEventBus,
     modifier: Modifier = Modifier,
     onEnemySelected: (List<String>) -> Unit = {},
     onOpenInventory: (InventoryLaunchOptions) -> Unit = {},
@@ -237,6 +245,12 @@ fun ExplorationScreen(
                 is ExplorationEvent.EnterCombat -> onEnemySelected(event.enemyIds)
                 is ExplorationEvent.PlayCinematic -> Unit
                 is ExplorationEvent.ShowMessage -> viewModel.showStatusMessage(event.message)
+                is ExplorationEvent.ShowToast -> uiEventBus.tryEmit(
+                    UiEvent.ShowToast(
+                        id = event.id,
+                        text = event.message
+                    )
+                )
                 is ExplorationEvent.RewardGranted -> viewModel.showStatusMessage(formatRewardMessage(event.reward))
                 is ExplorationEvent.ItemGranted -> viewModel.showStatusMessage("Received ${event.quantity} x ${event.itemName}")
                 is ExplorationEvent.XpGained -> viewModel.showStatusMessage("Gained ${event.amount} XP")
@@ -278,6 +292,18 @@ fun ExplorationScreen(
     var dragDelta by remember { mutableStateOf(Offset.Zero) }
 
     val backgroundPainter = rememberRoomBackgroundPainter(uiState.currentRoom?.backgroundImage)
+    val fadeCommand = uiState.fadeOverlay
+    val fadeOverlayAnim = remember { CoreAnimatable(0f) }
+
+    LaunchedEffect(fadeCommand?.id) {
+        val command = fadeCommand ?: return@LaunchedEffect
+        fadeOverlayAnim.snapTo(command.fromAlpha)
+        fadeOverlayAnim.animateTo(
+            targetValue = command.toAlpha,
+            animationSpec = tween(durationMillis = command.durationMillis)
+        )
+        viewModel.onFadeOverlayFinished(command.id)
+    }
 
     BackHandler {
         if (uiState.isMenuOverlayVisible) {
@@ -518,6 +544,7 @@ fun ExplorationScreen(
                 MinimapWidget(
                     minimap = uiState.minimap,
                     onLegend = { viewModel.openMapLegend() },
+                    obscured = isRoomDark,
                     modifier = Modifier
                         .requiredSize(minimapSize)
                         .constrainAs(minimapRef) {
@@ -676,6 +703,27 @@ fun ExplorationScreen(
             )
         }
 
+        val menuScrimColor = themeColor(activeTheme?.bg, Color.Black)
+        val menuScrimInteraction = remember { MutableInteractionSource() }
+        val scrimAlpha by animateFloatAsState(
+            targetValue = if (uiState.isMenuOverlayVisible) 0.75f else 0f,
+            animationSpec = tween(durationMillis = 220, easing = FastOutSlowInEasing),
+            label = "menuScrimAlpha"
+        )
+        if (scrimAlpha > 0.01f) {
+            Box(
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .fillMaxSize()
+                    .zIndex(0.5f)
+                    .background(menuScrimColor.copy(alpha = scrimAlpha))
+                    .clickable(
+                        enabled = uiState.isMenuOverlayVisible,
+                        indication = null,
+                        interactionSource = menuScrimInteraction
+                    ) { viewModel.closeMenuOverlay() }
+            )
+        }
         AnimatedVisibility(
             visible = uiState.isMenuOverlayVisible,
             enter = slideInVertically(initialOffsetY = { it }) + fadeIn(),
@@ -705,6 +753,7 @@ fun ExplorationScreen(
                 onMusicVolumeChange = { viewModel.updateMusicVolume(it) },
                 onSfxVolumeChange = { viewModel.updateSfxVolume(it) },
                 onToggleVignette = { viewModel.setVignetteEnabled(it) },
+                onQuickSave = { viewModel.quickSave() },
                 partyStatus = uiState.partyStatus,
                 onShowSkillTree = { memberId -> viewModel.openSkillTree(memberId) },
                 onShowDetails = { memberId -> viewModel.openPartyMemberDetails(memberId) },
@@ -713,10 +762,20 @@ fun ExplorationScreen(
                 minimap = uiState.minimap,
                 fullMap = uiState.fullMap,
                 theme = activeTheme,
+                isCurrentRoomDark = isRoomDark,
                 onMenuAction = { viewModel.onMenuActionInvoked() },
                 inventoryItems = uiState.inventoryPreview,
-                equippedItems = uiState.equippedItems,
-                modifier = Modifier.fillMaxSize()
+                equippedItems = uiState.equippedItems
+            )
+        }
+
+        if (fadeOverlayAnim.value > 0.01f) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = fadeOverlayAnim.value))
+                    .align(Alignment.Center)
+                    .zIndex(10f)
             )
         }
 
@@ -814,6 +873,36 @@ fun ExplorationScreen(
             )
         }
 
+        val questAccentColor = themeColor(activeTheme?.accent, Color(0xFF80E0FF))
+
+        QuestBannerOverlay(
+            uiEventBus = uiEventBus,
+            deferShowing = blockingOverlayActive,
+            accentColor = questAccentColor,
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .fillMaxWidth()
+        )
+
+        ProgressToastOverlay(
+            uiEventBus = uiEventBus,
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .padding(start = 16.dp, bottom = 32.dp)
+        )
+
+        QuestDetailOverlay(
+            uiEventBus = uiEventBus,
+            gradientColor = questAccentColor,
+            outlineColor = panelBorderColor
+        )
+
+        QuestSummaryOverlay(
+            uiEventBus = uiEventBus,
+            isSceneBlocking = blockingOverlayActive,
+            modifier = Modifier.align(Alignment.Center)
+        )
+
         CraftingFxOverlay(
             bursts = fxBursts,
             onExpired = { id -> fxBursts.removeAll { it.id == id } },
@@ -821,14 +910,13 @@ fun ExplorationScreen(
         )
     }
 }
-
 }
-
 @Composable
 private fun MinimapWidget(
     minimap: MinimapUiState?,
     onLegend: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    obscured: Boolean = false
 ) {
     val clrBackground = Color(0.05f, 0.1f, 0.15f, 0.85f)
     val clrBorder = Color(0.3f, 0.8f, 1.0f, 1.0f)
@@ -838,7 +926,7 @@ private fun MinimapWidget(
     val clrTileGlow = Color(0.9f, 1.0f, 1.0f, 1.0f)
     val clrPlayer = Color(1.0f, 0.9f, 0.3f, 1.0f)
 
-    val playerPulse = remember { Animatable(1f) }
+    val playerPulse = remember { CoreAnimatable(1f) }
     LaunchedEffect(Unit) {
         playerPulse.animateTo(
             targetValue = 0.1f,
@@ -853,7 +941,8 @@ private fun MinimapWidget(
         color = Color.Black.copy(alpha = 0.4f),
         shape = RoundedCornerShape(16.dp)
     ) {
-        Canvas(modifier = Modifier.fillMaxSize()) {
+        Box(modifier = Modifier.fillMaxSize()) {
+        Canvas(modifier = Modifier.matchParentSize()) {
             val w = size.width
             val h = size.height
             val base = minOf(w, h)
@@ -953,16 +1042,34 @@ private fun MinimapWidget(
                 cellsInViewport.forEach { cell ->
                     val px = cx + cell.offsetX * step
                     val py = cy - cell.offsetY * step
+                    val center = Offset(px, py)
 
                     val isCurrent = cell.isCurrent
-                    val pipColor = if (isCurrent) clrTileGlow else clrTile
+                    val baseColor = if (isCurrent) clrTileGlow else clrTile
+                    val pipColor = baseColor.copy(alpha = if (cell.isDark) baseColor.alpha * 0.6f else baseColor.alpha)
                     val pipSize = g * if (isCurrent) 0.9f else 0.6f
 
                     drawCircle(
                         color = pipColor,
                         radius = pipSize / 2,
-                        center = Offset(px, py)
+                        center = center
                     )
+
+                    if (cell.isDark) {
+                        val overlaySize = Size(pipSize * 1.05f, pipSize * 1.05f)
+                        val topLeft = Offset(
+                            x = center.x - overlaySize.width / 2f,
+                            y = center.y - overlaySize.height / 2f
+                        )
+                        drawDarkRoomOverlay(
+                            topLeft = topLeft,
+                            size = overlaySize,
+                            cornerRadius = CornerRadius(overlaySize.width * 0.35f, overlaySize.height * 0.35f),
+                            overlayColor = Color.Black.copy(alpha = 0.75f),
+                            hatchColor = Color.White.copy(alpha = 0.08f),
+                            hatchSpacing = overlaySize.width / 4f
+                        )
+                    }
                 }
             }
 
@@ -979,6 +1086,60 @@ private fun MinimapWidget(
             val lineWidth = 2.dp.toPx()
             drawLine(clrPlayer, Offset(cx - hairLength, cy), Offset(cx + hairLength, cy), strokeWidth = lineWidth)
             drawLine(clrPlayer, Offset(cx, cy - hairLength), Offset(cx, cy + hairLength), strokeWidth = lineWidth)
+        }
+        if (obscured) {
+            Canvas(
+                modifier = Modifier
+                    .matchParentSize()
+                    .zIndex(1f)
+            ) {
+                drawRect(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(
+                            Color(0f, 0f, 0f, 0.96f),
+                            Color(0.03f, 0.02f, 0.08f, 0.9f),
+                            Color(0f, 0f, 0f, 0.94f)
+                        )
+                    )
+                )
+                val hazeLayers = 4
+                val baseRadius = size.minDimension * 0.45f
+                repeat(hazeLayers) { layer ->
+                    val progress = layer / hazeLayers.toFloat().coerceAtLeast(0.001f)
+                    val radius = baseRadius * (1.1f - progress * 0.6f)
+                    val center = Offset(
+                        x = size.width * (0.35f + 0.3f * kotlin.math.sin(layer * 1.7f)),
+                        y = size.height * (0.4f + 0.25f * kotlin.math.cos(layer * 1.3f))
+                    )
+                    val sweepPath = Path().apply {
+                        addOval(
+                            Rect(
+                                left = center.x - radius,
+                                top = center.y - radius * 0.8f,
+                                right = center.x + radius,
+                                bottom = center.y + radius * 0.8f
+                            )
+                        )
+                    }
+                    drawPath(
+                        path = sweepPath,
+                        color = Color.White.copy(alpha = 0.02f + 0.03f * progress),
+                        style = Stroke(width = radius * 0.08f, cap = StrokeCap.Round)
+                    )
+                }
+                val hatchSpacing = size.minDimension / 9f
+                var offset = -size.height
+                while (offset < size.width + size.height) {
+                    drawLine(
+                        color = Color(0.07f, 0.05f, 0.12f, 0.35f),
+                        start = Offset(offset, 0f),
+                        end = Offset(offset + size.height * 1.4f, size.height),
+                        strokeWidth = 2f
+                    )
+                    offset += hatchSpacing
+                }
+            }
+        }
         }
     }
 }
@@ -1041,6 +1202,46 @@ private fun DrawScope.drawServiceGlyph(service: MinimapService, centerX: Float, 
     }
 }
 
+private fun DrawScope.drawDarkRoomOverlay(
+    topLeft: Offset,
+    size: Size,
+    cornerRadius: CornerRadius,
+    overlayColor: Color,
+    hatchColor: Color,
+    hatchSpacing: Float
+) {
+    if (size.width <= 0f || size.height <= 0f) return
+    val roundRect = RoundRect(
+        left = topLeft.x,
+        top = topLeft.y,
+        right = topLeft.x + size.width,
+        bottom = topLeft.y + size.height,
+        cornerRadius = cornerRadius
+    )
+    val shapePath = Path().apply { addRoundRect(roundRect) }
+    drawPath(shapePath, color = overlayColor)
+    val canvas = drawContext.canvas
+    canvas.save()
+    canvas.clipPath(shapePath, ClipOp.Intersect)
+    val strokeWidth = 1.dp.toPx().coerceAtLeast(0.5f)
+    val spacing = hatchSpacing.coerceAtLeast(strokeWidth * 3f)
+    var offset = -size.height
+    while (offset < size.width + size.height) {
+        val start = Offset(topLeft.x + offset, topLeft.y)
+        val end = Offset(start.x + size.height * 1.2f, topLeft.y + size.height * 1.2f)
+        drawLine(
+            color = hatchColor,
+            start = start,
+            end = end,
+            strokeWidth = strokeWidth
+        )
+        offset += spacing
+    }
+    canvas.restore()
+}
+
+
+
 @Composable
 private fun MenuOverlay(
     selectedTab: MenuTab,
@@ -1053,6 +1254,7 @@ private fun MenuOverlay(
     onMusicVolumeChange: (Float) -> Unit,
     onSfxVolumeChange: (Float) -> Unit,
     onToggleVignette: (Boolean) -> Unit,
+    onQuickSave: () -> Unit,
     partyStatus: PartyStatusUi,
     onShowSkillTree: (String) -> Unit,
     onShowDetails: (String) -> Unit,
@@ -1061,6 +1263,7 @@ private fun MenuOverlay(
     minimap: MinimapUiState?,
     fullMap: FullMapUiState?,
     theme: Theme?,
+    isCurrentRoomDark: Boolean,
     onMenuAction: () -> Unit,
     inventoryItems: List<InventoryPreviewItemUi>,
     equippedItems: Map<String, String>,
@@ -1069,27 +1272,12 @@ private fun MenuOverlay(
     val panelColor = themeColor(theme?.bg, MaterialTheme.colorScheme.surface).copy(alpha = 0.95f)
     val panelBorder = themeColor(theme?.border, Color.White.copy(alpha = 0.4f))
     val accentColor = themeColor(theme?.accent, MaterialTheme.colorScheme.primary)
-    val scrimColor = themeColor(theme?.bg, Color.Black).copy(alpha = 0.75f)
-    val scrimInteraction = remember { MutableInteractionSource() }
-
-    Box(
-        modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.BottomCenter
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(scrimColor)
-                .clickable(
-                    indication = null,
-                    interactionSource = scrimInteraction
-                ) { onClose() }
-        )
     val sheetScroll = rememberScrollState()
 
     Surface(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
+            .fillMaxHeight(0.9f)
             .widthIn(max = 860.dp)
             .padding(horizontal = 20.dp, vertical = 16.dp)
             .navigationBarsPadding(),
@@ -1097,13 +1285,13 @@ private fun MenuOverlay(
         color = panelColor,
         border = BorderStroke(1.dp, panelBorder.copy(alpha = 0.8f))
     ) {
-            Column(
-                modifier = Modifier
-                    .padding(20.dp)
-                    .fillMaxWidth()
-                    .verticalScroll(sheetScroll),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
+        Column(
+            modifier = Modifier
+                .padding(20.dp)
+                .fillMaxWidth()
+                .verticalScroll(sheetScroll),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -1136,6 +1324,7 @@ private fun MenuOverlay(
                     tab = selectedTab,
                     accentColor = accentColor,
                     borderColor = panelBorder,
+                    isCurrentRoomDark = isCurrentRoomDark,
                     statusMessage = statusMessage,
                     partyStatus = partyStatus,
                     trackedQuest = trackedQuest,
@@ -1149,12 +1338,12 @@ private fun MenuOverlay(
                     onMusicVolumeChange = onMusicVolumeChange,
                     onSfxVolumeChange = onSfxVolumeChange,
                     onToggleVignette = onToggleVignette,
+                    onQuickSave = onQuickSave,
                     onShowSkillTree = onShowSkillTree,
                     onShowDetails = onShowDetails,
                     inventoryItems = inventoryItems,
                     equippedItems = equippedItems
                 )
-            }
         }
     }
 }
@@ -1214,6 +1403,7 @@ private fun MenuTabContentArea(
     tab: MenuTab,
     accentColor: Color,
     borderColor: Color,
+    isCurrentRoomDark: Boolean,
     statusMessage: String?,
     partyStatus: PartyStatusUi,
     trackedQuest: QuestSummaryUi?,
@@ -1227,6 +1417,7 @@ private fun MenuTabContentArea(
     onMusicVolumeChange: (Float) -> Unit,
     onSfxVolumeChange: (Float) -> Unit,
     onToggleVignette: (Boolean) -> Unit,
+    onQuickSave: () -> Unit,
     onShowSkillTree: (String) -> Unit,
     onShowDetails: (String) -> Unit,
     inventoryItems: List<InventoryPreviewItemUi>,
@@ -1249,6 +1440,7 @@ private fun MenuTabContentArea(
             MenuTab.MAP -> MapTabContent(
                 minimap = minimap,
                 fullMap = fullMap,
+                isCurrentRoomDark = isCurrentRoomDark,
                 accentColor = accentColor,
                 borderColor = borderColor,
                 onMenuAction = onMenuAction,
@@ -1267,7 +1459,8 @@ private fun MenuTabContentArea(
                 borderColor = borderColor,
                 onMusicVolumeChange = onMusicVolumeChange,
                 onSfxVolumeChange = onSfxVolumeChange,
-                onToggleVignette = onToggleVignette
+                onToggleVignette = onToggleVignette,
+                onQuickSave = onQuickSave
             )
         }
     }
@@ -1514,6 +1707,7 @@ private fun JournalTabContent(
 private fun MapTabContent(
     minimap: MinimapUiState?,
     fullMap: FullMapUiState?,
+    isCurrentRoomDark: Boolean,
     accentColor: Color,
     borderColor: Color,
     onMenuAction: () -> Unit,
@@ -1527,6 +1721,7 @@ private fun MapTabContent(
         MapPreviewPanel(
             minimap = minimap,
             fullMap = fullMap,
+            isCurrentRoomDark = isCurrentRoomDark,
             accentColor = accentColor,
             onMenuAction = onMenuAction,
             onMapLegend = onOpenMapLegend
@@ -1563,7 +1758,8 @@ private fun SettingsTabContent(
     borderColor: Color,
     onMusicVolumeChange: (Float) -> Unit,
     onSfxVolumeChange: (Float) -> Unit,
-    onToggleVignette: (Boolean) -> Unit
+    onToggleVignette: (Boolean) -> Unit,
+    onQuickSave: () -> Unit
 ) {
     MenuSectionCard(
         title = "Audio & Display",
@@ -1574,7 +1770,8 @@ private fun SettingsTabContent(
             settings = settings,
             onMusicVolumeChange = onMusicVolumeChange,
             onSfxVolumeChange = onSfxVolumeChange,
-            onToggleVignette = onToggleVignette
+            onToggleVignette = onToggleVignette,
+            onQuickSave = onQuickSave
         )
     }
 }
@@ -2062,7 +2259,8 @@ private fun SettingsPanel(
     settings: SettingsUiState,
     onMusicVolumeChange: (Float) -> Unit,
     onSfxVolumeChange: (Float) -> Unit,
-    onToggleVignette: (Boolean) -> Unit
+    onToggleVignette: (Boolean) -> Unit,
+    onQuickSave: () -> Unit
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Column {
@@ -2107,6 +2305,17 @@ private fun SettingsPanel(
                 onCheckedChange = onToggleVignette
             )
         }
+        Button(
+            onClick = onQuickSave,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Quick Save")
+        }
+        Text(
+            text = "Quicksave writes your current progress immediately without leaving the game.",
+            color = Color.White.copy(alpha = 0.7f),
+            style = MaterialTheme.typography.bodySmall
+        )
     }
 }
 
@@ -2114,6 +2323,7 @@ private fun SettingsPanel(
 private fun MapPreviewPanel(
     minimap: MinimapUiState?,
     fullMap: FullMapUiState?,
+    isCurrentRoomDark: Boolean,
     accentColor: Color,
     onMenuAction: () -> Unit,
     onMapLegend: () -> Unit
@@ -2153,6 +2363,7 @@ private fun MapPreviewPanel(
                     MinimapWidget(
                         minimap = it,
                         onLegend = onMapLegend,
+                        obscured = isCurrentRoomDark,
                         modifier = Modifier.size(140.dp)
                     )
                 }
@@ -3040,26 +3251,36 @@ private fun FullMapCanvas(
             cells.forEach { cell ->
                 val posX = originX + (cell.gridX - displayMinX) * spacing
                 val posY = originY + (displayMaxY - cell.gridY) * spacing
-            val rectTopLeft = Offset(posX, posY)
-            val fillColor = when {
-                cell.isCurrent -> primaryColor
-                cell.visited -> visitedColor
-                cell.discovered -> discoveredColor
-                else -> emptyColor
+                val rectTopLeft = Offset(posX, posY)
+                val fillColor = when {
+                    cell.isCurrent -> primaryColor
+                    cell.visited -> visitedColor
+                    cell.discovered -> discoveredColor
+                    else -> emptyColor
+                }
+                drawRoundRect(
+                    color = fillColor,
+                    topLeft = rectTopLeft,
+                    size = Size(cellSizePx, cellSizePx),
+                    cornerRadius = CornerRadius(6f, 6f)
+                )
+                drawRoundRect(
+                    color = outlineColor,
+                    topLeft = rectTopLeft,
+                    size = Size(cellSizePx, cellSizePx),
+                    style = Stroke(width = 1f)
+                )
+                if (cell.isDark) {
+                    drawDarkRoomOverlay(
+                        topLeft = rectTopLeft,
+                        size = Size(cellSizePx, cellSizePx),
+                        cornerRadius = CornerRadius(6f, 6f),
+                        overlayColor = Color.Black.copy(alpha = 0.65f),
+                        hatchColor = Color.White.copy(alpha = 0.08f),
+                        hatchSpacing = cellSizePx / 3.5f
+                    )
+                }
             }
-            drawRoundRect(
-                color = fillColor,
-                topLeft = rectTopLeft,
-                size = Size(cellSizePx, cellSizePx),
-                cornerRadius = CornerRadius(6f, 6f)
-            )
-            drawRoundRect(
-                color = outlineColor,
-                topLeft = rectTopLeft,
-                size = Size(cellSizePx, cellSizePx),
-                style = Stroke(width = 1f)
-            )
-        }
 
             cells.forEach { cell ->
                 val startX = originX + (cell.gridX - displayMinX) * spacing + cellSizePx / 2f
@@ -4704,8 +4925,8 @@ private fun FxBurstView(
     burst: UiFxBurst,
     onExpired: (Long) -> Unit
 ) {
-    val radius = remember { Animatable(0f) }
-    val alpha = remember { Animatable(1f) }
+    val radius = remember { CoreAnimatable(0f) }
+    val alpha = remember { CoreAnimatable(1f) }
 
     LaunchedEffect(burst.id) {
         radius.animateTo(
@@ -4770,87 +4991,4 @@ private fun minimapServiceColor(service: MinimapService): Color = when (service)
     MinimapService.COOKING -> Color(0xFFFF8A65)
     MinimapService.FIRST_AID -> Color(0xFF66BB6A)
     MinimapService.TINKERING -> Color(0xFFBA68C8)
-}
-
-@Composable
-fun QuestUpdateBanner(
-    prompt: com.example.starborn.domain.quest.QuestLogEntry,
-    onDismiss: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val (headline, accent) = when (prompt.type) {
-        QuestLogEntryType.NEW_QUEST -> "New Quest" to Color(0xFF64B5F6)
-        QuestLogEntryType.QUEST_COMPLETED -> "Quest Complete" to Color(0xFFFFC857)
-        QuestLogEntryType.UPDATE -> "Quest Update" to Color(0xFFFFC857)
-    }
-    val titleText = prompt.questTitle?.takeIf { it.isNotBlank() } ?: prompt.message
-    val description = when (prompt.type) {
-        QuestLogEntryType.NEW_QUEST -> prompt.message.removePrefix("New Quest:").trim().ifEmpty { prompt.message }
-        QuestLogEntryType.QUEST_COMPLETED -> prompt.message.removePrefix("Quest Completed:").trim().ifEmpty { prompt.message }
-        else -> prompt.message
-    }
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(horizontal = 24.dp, vertical = 32.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Surface(
-            shape = RoundedCornerShape(28.dp),
-            shadowElevation = 18.dp,
-            color = Color(0xFF03070F).copy(alpha = 0.95f),
-            border = BorderStroke(1.dp, accent.copy(alpha = 0.6f))
-        ) {
-            Column(
-                modifier = Modifier
-                    .background(
-                        Brush.verticalGradient(
-                            listOf(accent.copy(alpha = 0.55f), Color.Transparent),
-                            startY = 0f,
-                            endY = 360f
-                        )
-                    )
-                    .padding(horizontal = 28.dp, vertical = 26.dp)
-                    .widthIn(min = 320.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                Text(
-                    text = headline,
-                    style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.SemiBold),
-                    color = Color.White,
-                    letterSpacing = 0.15.em
-                )
-                Text(
-                    text = titleText,
-                    style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.ExtraBold),
-                    color = Color.White,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Text(
-                    text = description,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = Color.White.copy(alpha = 0.9f),
-                    maxLines = 3,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Spacer(modifier = Modifier.height(6.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    Button(
-                        onClick = onDismiss,
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = accent,
-                            contentColor = Color.Black
-                        ),
-                        shape = RoundedCornerShape(999.dp)
-                    ) {
-                        Text("Continue", fontWeight = FontWeight.SemiBold)
-                    }
-                }
-            }
-        }
-    }
 }

@@ -1,3 +1,5 @@
+import org.gradle.api.tasks.testing.Test
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -90,5 +92,17 @@ protobuf {
                 }
             }
         }
+    }
+}
+
+afterEvaluate {
+    val testDebugUnitTest = tasks.named<Test>("testDebugUnitTest")
+    tasks.register<Test>("runAssetIntegrity") {
+        description = "Runs DataIntegrityTest to validate events, cinematics, and tutorial assets."
+        group = "verification"
+        testClassesDirs = testDebugUnitTest.get().testClassesDirs
+        classpath = testDebugUnitTest.get().classpath
+        include("**/DataIntegrityTest.class")
+        shouldRunAfter(testDebugUnitTest)
     }
 }

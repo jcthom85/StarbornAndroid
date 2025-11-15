@@ -73,6 +73,22 @@ class InventoryServiceTest {
         assertTrue(stats.contains("spd"))
         assertTrue(stats.contains("focus"))
     }
+
+    @Test
+    fun addItemNotifiesListeners() {
+        var notified = 0
+        val listener: (String, Int) -> Unit = { id, qty ->
+            if (id == "medkit_i" && qty == 2) {
+                notified++
+            }
+        }
+        inventoryService.addOnItemAddedListener(listener)
+
+        inventoryService.addItem("medkit_i", 2)
+
+        assertEquals(1, notified)
+        inventoryService.removeOnItemAddedListener(listener)
+    }
 }
 
 private class FakeItemCatalog(items: List<Item>) : ItemCatalog {

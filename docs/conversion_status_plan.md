@@ -1,45 +1,43 @@
 # Starborn Port – Status & Forward Plan (Session Hand-off)
 
-Context: Evaluation captured after wrapping Phase 2C (progression systems, cooking/first-aid polish, shop greetings, autosave tooling). This document compares the Android/Kotlin project against the original Python/Kivy game (`~/AndroidStudioProjects/Starborn/Starborn_Python`) and outlines the next execution plan.
+Context: Evaluation captured while spinning up **Phase 5 (Perf, QA, Packaging)** after shipping exploration overlays, narrative tooling, and instrumentation coverage. This document compares the Android/Kotlin project against the original Python/Kivy game (`~/AndroidStudioProjects/Starborn/Starborn_Python`) and outlines the refreshed execution plan.
 
 ---
 
 ## 1. Conversion Status Overview
 | Feature / System | Kotlin Status | Python Reference | Notes |
 |------------------|---------------|------------------|-------|
-| **Asset loading & repositories** | ✅ | `data/*.json`, `item_repository.py` | Moshi models cover rooms, items, events, characters; more schema verification needed. |
-| **Session management** | ✅ | `game_session.py`, `game.py` | `GameSessionStore` now persists via DataStore with autosave cadence, slot management, and legacy import hook. |
-| **Event engine** | ⚠️ Partial | `event_manager.py` | Core trigger dispatch present; milestone/quest hooks implemented, but cinematic queueing and scripted tutorials still need parity passes. |
-| **Dialogue** | ⚠️ Partial | `dialogue_manager.py` | Dialogue service parses JSON, portraits/VO surface in Compose, and shop greetings leverage choice tags; cinematic sequencing + portrait alignment remain. |
-| **Exploration loop** | ✅ Phase-2C slice | `game.py` (`ExplorationScreen`, `Bag`) | Room navigation, quest progression, loot drops, minimap service glyphs, crafting/shop routing, milestone/narration overlays in place. Outstanding polish: art-driven hotspots and direction ring flourish. |
-| **Inventory UI/logic** | ✅ First pass | `ui/bag_screen.py`, `game_objects.Bag` | List/detail/use flows working; equipment management and advanced sorting TBD. |
-| **Crafting services/UI** | ⚠️ Partial | `crafting_manager.py`, `ui/tinkering_screen.py` | Tinkering plus tuned cooking/first-aid timing bars (with FX/audio hooks) implemented; authored failure tutorials and fishing loop still pending. |
-| **Combat** | ✅ Phase-2A parity | `combat_manager.py`, `ui/combat_screen.py` | Multi-party support, reward pipeline, FX overlays, support cues, and defeat/retreat cinematics all implemented. |
-| **Quests/Milestones/Tutorials** | ⚠️ Partial | `quest_manager.py`, `tutorial_manager.py` | Quest metadata loaded, objectives tracked, milestone banners in place. Tutorial system still basic; quest journal detail view TBD. |
-| **Shops, radial menu, minigames** | ⚠️ Partial | `ui/shop_screen.py`, `ui/radial_menu.py`, etc. | Shop flow includes greetings, dialogue choices, VO, and FX routing; fishing minigame now mirrors timing loop but radial menu/vendor scripting still upcoming. |
-| **Audio/theme/shaders** | ⚠️ Partial | `sound_manager.py`, `theme_manager.py`, `vfx.py` | AudioRouter now applies catalogue-driven fades/looping; ambience/music layering in place, shader-driven theming still pending. |
-| **Persistence (Save/Load)** | ⚠️ Partial | `save_system.py` | Autosave cadence, slot timestamps, legacy quest/milestone migration implemented; cloud backup story outstanding. |
-| **Tooling/tests** | ⚠️ Minimal | Python tools, pytest scripts | Added persistence regression tests; still need combat/event integration coverage and CI wiring. |
+| **Asset loading & repositories** | ✅ | `data/*.json`, `item_repository.py` | Moshi models cover rooms, items, events, characters; integrity tests enforce cinematic/tutorial/exit references. |
+| **Session management** | ✅ | `game_session.py`, `game.py` | `GameSessionStore` persists via Proto DataStore, slots expose timestamps, and legacy JSON import keeps milestone/quest parity. |
+| **Event engine** | ⚠️ Partial | `event_manager.py` | Trigger dispatch, milestone hooks, quest/task propagation, and tutorial/cinematic callbacks are live; late-game encounter choreography + audio-layer verbs still pending. |
+| **Dialogue** | ⚠️ Partial | `dialogue_manager.py` | Dialogue service parses JSON, portraits/VO surface in Compose, and shop greetings leverage choice tags; cinematic sequencing + portrait alignment remain for end-game scenes. |
+| **Exploration loop** | ✅ Phase-4 polish | `game.py` (`ExplorationScreen`, `Bag`) | Room navigation, quest progression, loot drops, minimap/service glyphs, crafting/shop routing, skill tree overlays, vignette/weather FX, and milestone/narration overlays match Python beats. Remaining polish: art-authored hotspots + final accessibility sizing. |
+| **Inventory UI/logic** | ✅ | `ui/bag_screen.py`, `game_objects.Bag` | List/detail/use flows plus filters, contextual actions, and data-driven rewards are in place; future work is equipment comparison + contextual inspect surfaces. |
+| **Crafting services/UI** | ⚠️ Partial | `crafting_manager.py`, `ui/tinkering_screen.py` | Tinkering, cooking, first-aid, and fishing Compose screens mirror timing loops with FX/audio cues; authored failure tutorials + recipe storytelling still TODO. |
+| **Combat** | ✅ Phase-3 parity | `combat_manager.py`, `ui/combat_screen.py` | Multi-party support, reward pipeline, FX overlays, support cues, weather/theme overlays, and defeat/retreat cinematics implemented; final telegraph polish still upcoming. |
+| **Quests/Milestones/Tutorials** | ⚠️ Partial | `quest_manager.py`, `tutorial_manager.py` | Quest runtime state persists, milestone gallery + tutorial queue work, and instrumentation drives core loops; late-game tutorials, hub journal cards, and quest breadcrumbs outstanding. |
+| **Shops, radial menu, minigames** | ⚠️ Partial | `ui/shop_screen.py`, `ui/radial_menu.py`, etc. | Shop loop includes greetings, dialogue choices, VO, rotating stock, and FX routing; radial vendor scripting + equipment compare overlays still pending. |
+| **Audio/theme/shaders** | ⚠️ Partial | `sound_manager.py`, `theme_manager.py`, `vfx.py` | AudioRouter drives room/hub music, ambience, weather cues, and cinematic ducking with VO layering; audio-layer actions, runtime mixer sliders-to-router bridge, and shader fallback audits remain. |
+| **Persistence (Save/Load)** | ⚠️ Partial | `save_system.py` | Autosave cadence, quicksave button, backup rotation, manual save/load overlay, and legacy migration exist; cloud/export workflow remains to be designed. |
+| **Tooling/tests** | ⚠️ In progress | Python tools, pytest scripts | JVM + instrumentation suites run via CI (`lintDebug`, `testDebugUnitTest`, `connectedDebugAndroidTest`); need dedicated asset-only Gradle task + broader combat/event coverage. |
 
 ---
 
 ## 2. Key Deltas vs Python Implementation
-1. **Room actions & state mutations**  
-   - Direction ring and hotspot overlays are live, but event-driven room art, blocked-exit cinematics, and automatic encounter spawns still trail the Python flow. |
-2. **Inventory integration**  
-   - Loot cards and ground item pickup flows are working; shop greetings and vendor VO now live, but contextual prompts for hub services still trail Python. |
-3. **Combat pipeline**  
-   - Turn order, targeting, and rewards are ported; cinematic FX, ally support scripting, and defeat/retreat story beats remain. |
-4. **Quest Flow & Tutorials**  
-   - Python uses event hooks to start quests, pop tutorials, and manage cinematics. Kotlin stubs exist but require UI + logic to match original pacing. |
-5. **UI fidelity**  
-   - Exploration HUD mirrors core layout, but minimap, particle FX, and shader-based theming still need Android counterparts. |
-6. **Persistence & Progression**  
-   - Save slots, load on boot, and long-term progression (skills, XP curves) remain unimplemented. |
+1. **Author-driven encounters & hotspots**  
+   - Runtime unlocks, milestone overlays, and minimap breadcrumbs match Python, but the art-authored hotspot sprites/blocked-exit cinematics still lag for late hubs. |
+2. **Tutorial cadence**  
+   - Light-switch/swipe/equipment tutorials now schedule through `TutorialRuntimeManager`, yet late-game scripted tutorials aren’t imported and hub journal cards are absent. |
+3. **Audio mixing + shaders**  
+   - AGSL vignette/weather overlays and accessibility toggles landed, but AudioRouter still lacks layer-specific fades from events/dialogue and shader fallbacks need perf validation. |
+4. **Persistence & backups**  
+   - Slots/autosave/legacy import exist, but quicksave/backups/cloud sync aren’t spec’d. |
+5. **Tooling & perf**  
+   - CI runs lint/unit/instrumentation, though dedicated asset-only Gradle tasks + profiling captures (FrameTimeline, GPU, memory, audio) still need to be executed and logged. |
 
 ---
 
-> Phase 2C milestone shipped: progression overlays, tuned cooking/first-aid loops, shop greetings with dialogue choices, minimap service glyphs, and autosave metadata/timestamps are live. Focus now shifts to Phase 3 systems and overlays.
+> Current milestone: exploration loop, quest runtime, accessibility toggles, instrumentation smoke, and save-slot UX are live. Focus now shifts to **Phase 5** – profiling, QA automation, release packaging, and audio/persistence parity polish.
 
 ### Current Session Highlights
 - Exploration HUD now mirrors the Python layout: service tray, animated quick menu, quest journal overlay, and milestone timeline landed in Compose.
@@ -61,23 +59,26 @@ Context: Evaluation captured after wrapping Phase 2C (progression systems, coo
 - Combat log flavor text is back to single-line animated callouts timed with attack FX, and the inline action menu replaces the old bottom buttons when a player becomes ready.
 - Target selection relies on a glow/pulse overlay instead of brackets, ATB/HP bars only show blue/red pairs, and the resonance bar respects min/max from the session store.
 
-## 3. Immediate Next Steps (Phase 4 – Visual & Audio Fidelity)
-1. **Shader & VFX pass**
-   - Port vignette, weather layers, and combat FX using AGSL/RenderEffect so ambience matches the Python build.
-2. **UI theming & accessibility**
-   - Finalise theme bands, high-contrast mode, and touchscreen affordances for combat/exploration overlays.
-3. **Audio polish & mixing**
-   - Integrate voiceover routing, refine combat stingers/palette swaps, and surface haptics once VO stems arrive.
-
-Deliverable: Phase 4 milestone — visual identity lock-in, accessibility polish, and full audio mixing controls ready for content finalisation.
+## 3. Immediate Next Steps (Phase 5 – Perf, QA, Packaging)
+1. **Profiling campaign**
+   - Capture FrameTimeline, GPU counters, memory soak, and audio headroom on target hardware; log results in `docs/profiling_reports.md` and file follow-ups for shader/audio issues.
+2. **Asset validation tasking**
+   - Ship the `runAssetIntegrity` Gradle task, expand `DataIntegrityTest` coverage (quests/tasks/milestones), and wire the task into local/CI workflows per the perf playbook.
+3. **Persistence & backup polish**
+   - Design quicksave/backups (mirroring Python’s rotation + fingerprint throttling) and scope cloud/export needs; ensure docs + QA scripts reference the plan.
+4. **Audio mixing plan delivery**
+   - Implement `audio_layer` event actions, router fade helpers, and settings-store → router hooks so runtime sliders and cinematics share the same gain control.
+5. **Release automation**
+   - Document signing assets, add `bundleRelease` smoke to CI, and prep Play Console hand-off (track scripts, QA checklist, analytics toggles).
 
 ---
 
 ## 4. Near-Term Roadmap
 | Sprint Goal | Tasks | Dependencies |
 |-------------|-------|--------------|
-| **Phase 3 – Systems & overlays** *(complete)* | Complete: event parity, hub hotspots, minimap breadcrumbs, and runtime services shipped. | — |
-| **Phase 4 – Visual & audio fidelity** | - Compose shader/VFX pass (vignette, weather, damage numbers).<br>- Scene theming & accessibility polish.<br>- Voiceover mixing, runtime audio settings, haptics. | Dependent on stabilized visual style guide and audio stems. |
+| **Phase 3 – Systems & overlays** *(complete)* | Event parity, hub hotspots, minimap breadcrumbs, crafting/cooking/first-aid/fishing screens, AudioRouter MVP. | — |
+| **Phase 4 – Visual & audio fidelity** *(functionally complete)* | AGSL vignette/weather overlays, accessibility toggles, hub navigation polish, VO routing stubs. | Final polish feeds into Phase 5. |
+| **Phase 5 – Perf, QA, Packaging** *(in progress)* | - Capture perf traces + log findings.<br>- Ship `runAssetIntegrity`, broaden tests, and enforce CI gates.<br>- Implement quicksave/backups + release automation (signing, bundle builds, Play tracks). | Needs audio mixing plan + persistence polish to close. |
 
 ---
 

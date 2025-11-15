@@ -196,7 +196,11 @@ private fun SaveSlotCard(
                 .padding(horizontal = 12.dp, vertical = 10.dp),
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            val slotLabel = if (summary.isAutosave) "Autosave" else "Slot ${summary.slot}"
+            val slotLabel = when {
+                summary.isQuickSave -> "Quicksave"
+                summary.isAutosave -> "Autosave"
+                else -> "Slot ${summary.slot}"
+            }
             Text(
                 text = slotLabel,
                 color = Color.White,
@@ -235,7 +239,7 @@ private fun SaveSlotCard(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                if (!summary.isAutosave) {
+                if (!summary.isAutosave && !summary.isQuickSave) {
                     OutlinedButton(
                         onClick = { onSave(summary.slot) },
                         enabled = summary.isEmpty || !summary.isEmpty
@@ -243,17 +247,31 @@ private fun SaveSlotCard(
                         Text(if (summary.isEmpty) "Save" else "Overwrite")
                     }
                 }
+                if (summary.isQuickSave) {
+                    OutlinedButton(
+                        onClick = { onSave(summary.slot) }
+                    ) {
+                        Text(if (summary.isEmpty) "Quick Save" else "Overwrite Quicksave")
+                    }
+                }
                 OutlinedButton(
                     onClick = { onLoad(summary.slot) },
                     enabled = !summary.isEmpty
                 ) {
-                    Text(if (summary.isAutosave) "Load Autosave" else "Load")
+                    val loadLabel = when {
+                        summary.isAutosave -> "Load Autosave"
+                        summary.isQuickSave -> "Load Quicksave"
+                        else -> "Load"
+                    }
+                    Text(loadLabel)
                 }
-                OutlinedButton(
-                    onClick = { onDelete(summary.slot) },
-                    enabled = !summary.isEmpty && !summary.isAutosave
-                ) {
-                    Text("Delete")
+                if (!summary.isAutosave) {
+                    OutlinedButton(
+                        onClick = { onDelete(summary.slot) },
+                        enabled = !summary.isEmpty
+                    ) {
+                        Text(if (summary.isQuickSave) "Clear" else "Delete")
+                    }
                 }
             }
         }

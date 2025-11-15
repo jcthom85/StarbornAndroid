@@ -966,6 +966,18 @@
           {
             "type": "set_milestone",
             "milestone": "ms_ollie_met"
+          },
+          {
+            "type": "start_quest",
+            "quest_id": "talk_to_jed"
+          },
+          {
+            "type": "track_quest",
+            "quest_id": "talk_to_jed"
+          },
+          {
+            "type": "show_message",
+            "message": "Quest started: Talk to Jed"
           }
         ]
       }
@@ -1607,7 +1619,7 @@
           {
             "type": "system_tutorial",
             "scene_id": "fishing_basics",
-            "context": "Watch the timing bar and tap when the marker overlaps the highlighted zone."
+            "context": "Fishing"
           },
           {
             "type": "show_message",
@@ -1651,6 +1663,50 @@
             "message": "Easy does it\u2014try adjusting your timing."
           }
         ]
+      }
+    ]
+  },
+  {
+    "id": "evt_mine_generator_restore",
+    "description": "Restores power to the mine and unlocks the adjacent tunnels.",
+    "trigger": {
+      "type": "player_action",
+      "action": "mine_generator_restore"
+    },
+    "actions": [
+      {
+        "type": "set_milestone",
+        "milestone": "ms_mine_power_on"
+      },
+      {
+        "type": "show_message",
+        "message": "The generator hums back to life, unlocking the northern gate."
+      },
+      {
+        "type": "show_message",
+        "message": "Some vents open deeper in the mines."
+      },
+      {
+        "type": "play_cinematic",
+        "scene_id": "scene_mine_restore"
+      }
+    ]
+  },
+  {
+    "id": "evt_tutorial_smoke_trigger",
+    "trigger": {
+      "type": "player_action",
+      "action": "tutorial_smoke_stage"
+    },
+    "actions": [
+      {
+        "type": "start_quest",
+        "start_quest": "tutorial_smoke"
+      },
+      {
+        "type": "system_tutorial",
+        "scene_id": "movement",
+        "context": "Exploration"
       }
     ]
   }

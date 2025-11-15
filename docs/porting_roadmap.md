@@ -30,8 +30,15 @@
 - Voice/SFX mixing, crossfades, and runtime audio settings menu.
 
 ## Phase 5 – Persistence, QA, Packaging (Weeks 11-12+)
-- Save/Load parity with autosave slots, migration path from legacy JSON.
-- End-to-end UI tests, load testing for large JSON, performance profiling.
+- Save/Load parity with autosave slots, migration path from legacy JSON. Add regression tests (for example `GameSessionPersistenceTest`) covering tutorials/unlocked exits and run nightly.
+- Asset/data validation: JVM checks ensure every `play_cinematic` and `unlock_exit` reference has a matching asset before shipping.
+- Device instrumentation smoke tests: `app/src/androidTest/java/com/example/starborn/NarrativeSystemsInstrumentedTest.kt` drives the tutorial → milestone → cinematic loop off real JSON; extend coverage to dialogue-triggered rewards and combat transitions.
+- End-to-end UI tests, load testing for large JSON, and performance profiling (FrameTimeline, CPU/memory, audio underruns) captured in a standing checklist before beta.
+- Performance gameplan: capture FrameTimeline + GPU counters on Pixel 6/7, log heap usage after 30-minute exploration/combat soak, and validate audio mixer headroom (battle ducking, narration VO) using systrace captures.
+- Release readiness: document QA hand-off steps (instrumentation pass, JVM suite, lint), prep signing keystore + Play Console track scripts, and add `./gradlew bundleRelease` smoke invocation to CI once secrets are wired.
+- Profiling/release checklist: see `docs/phase5_perf_release_checklist.md` for step-by-step capture + automation requirements that must pass before beta.
+- CI: `.github/workflows/android-ci.yml` runs lint/unit tests and boots an API 33 emulator for `connectedDebugAndroidTest` so device smoke coverage gates every PR.
+- Release automation: document signing keys, wire `./gradlew bundleRelease`/`publishBundle` tasks, and capture QA gating in a Play Console handoff note.
 - Google Play signing setup, beta build generation, analytics/debug tooling.
 
 ## Backlog & Risks

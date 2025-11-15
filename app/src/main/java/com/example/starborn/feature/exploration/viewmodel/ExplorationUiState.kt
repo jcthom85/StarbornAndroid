@@ -9,6 +9,7 @@ import com.example.starborn.domain.model.World
 import com.example.starborn.domain.prompt.UIPrompt
 import com.example.starborn.domain.milestone.MilestoneEvent
 import com.example.starborn.domain.quest.QuestLogEntryType
+import com.example.starborn.domain.tutorial.TutorialRuntimeState
 
 data class ExplorationUiState(
     val isLoading: Boolean = true,
@@ -64,7 +65,16 @@ data class ExplorationUiState(
     val equippedItems: Map<String, String> = emptyMap(),
     val skillTreeOverlay: SkillTreeOverlayUi? = null,
     val partyMemberDetails: PartyMemberDetailsUi? = null,
-    val eventAnnouncement: EventAnnouncementUi? = null
+    val eventAnnouncement: EventAnnouncementUi? = null,
+    val fadeOverlay: FadeOverlayCommand? = null,
+    val tutorialState: TutorialRuntimeState = TutorialRuntimeState()
+)
+
+data class FadeOverlayCommand(
+    val id: Long,
+    val fromAlpha: Float,
+    val toAlpha: Float,
+    val durationMillis: Int
 )
 
 data class NarrationPrompt(
@@ -164,7 +174,8 @@ data class MinimapCellUi(
     val blockedDirections: Set<String>,
     val connections: Map<String, String>,
     val pathHints: Set<String> = emptySet(),
-    val services: Set<MinimapService> = emptySet()
+    val services: Set<MinimapService> = emptySet(),
+    val isDark: Boolean = false
 )
 
 enum class MinimapService {

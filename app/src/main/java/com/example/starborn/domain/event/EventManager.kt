@@ -18,20 +18,29 @@ class EventManager(
     fun handleTrigger(type: String, payload: EventPayload = EventPayload.Empty) {
         val candidates = eventsByTriggerType[type.lowercase()].orEmpty()
         val state = sessionStore.state.value
+        val completedEvents = state.completedEvents.toMutableSet()
         for (event in candidates) {
-            val completionKey = completionKeyFor(event.id)
-            if (!event.repeatable && completionKey in state.completedMilestones) {
+            val eventId = event.id
+            if (!event.repeatable && completedEvents.contains(eventId)) {
                 continue
             }
             if (!conditionsSatisfied(event.conditions, state)) continue
             if (!matchesTrigger(event.trigger, payload, state)) continue
             if (executeActions(event.actions, state)) {
-                // Mark completion for non-repeatable events
                 if (!event.repeatable) {
-                    sessionStore.setMilestone(completionKey)
+                    completedEvents.add(eventId)
+                    sessionStore.markEventCompleted(eventId)
+                }
+                if (eventId.isNotBlank()) {
+                    eventHooks.onEventCompleted(eventId)
                 }
             }
         }
+    }
+
+    fun performActions(actions: List<EventAction>) {
+        if (actions.isEmpty()) return
+        executeActions(actions, sessionStore.state.value)
     }
 
     private fun matchesTrigger(
@@ -67,7 +76,15 @@ class EventManager(
             "encounter_retreat" -> payload is EventPayload.EncounterOutcome &&
                 payload.outcome == EventPayload.EncounterOutcome.Outcome.RETREAT &&
                 (trigger.enemies.isNullOrEmpty() || payload.enemyIds.any { it in trigger.enemies })
-            "item_acquired" -> true // Inventory system pending
+            "item_acquired" -> {
+                val itemPayload = (payload as? EventPayload.ItemAcquired)?.itemId
+                val triggerItem = trigger.itemId ?: trigger.item
+                if (triggerItem.isNullOrBlank()) {
+                    itemPayload != null
+                } else {
+                    triggerItem.equals(itemPayload, ignoreCase = true)
+                }
+            }
             else -> true
         }
     }
@@ -155,9 +172,19 @@ class EventManager(
                 }
                 "play_cinematic", "trigger_cutscene" -> {
                     val sceneId = action.sceneId
-                    sceneId?.let { eventHooks.onPlayCinematic(it) }
-                    action.onComplete?.let { executeActions(it, state) }
-                    sceneId != null || action.onComplete != null
+                    if (sceneId.isNullOrBlank()) {
+                        action.onComplete?.let { executeActions(it, state) }
+                        action.onComplete != null
+                    } else {
+                        var callbackInvoked = false
+                        eventHooks.onPlayCinematic(sceneId) {
+                            if (!callbackInvoked) {
+                                callbackInvoked = true
+                                action.onComplete?.let { executeActions(it, state) }
+                            }
+                        }
+                        true
+                    }
                 }
                 "show_message" -> {
                     action.message?.let { eventHooks.onMessage(it) }
@@ -199,6 +226,15 @@ class EventManager(
                     }
                     true
                 }
+                "take_item" -> {
+                    val id = action.item ?: action.itemId
+                    if (id.isNullOrBlank()) {
+                        false
+                    } else {
+                        val qty = action.quantity ?: 1
+                        eventHooks.onTakeItem(id, qty.coerceAtLeast(1))
+                    }
+                }
                 "reveal_hidden_item", "spawn_item_on_ground" -> {
                     val itemId = action.itemId ?: action.item
                     if (!itemId.isNullOrBlank()) {
@@ -208,6 +244,19 @@ class EventManager(
                     } else {
                         false
                     }
+                }
+                "player_action" -> {
+                    action.action?.let { actionId ->
+                        handleTrigger("player_action", EventPayload.Action(actionId, action.itemId ?: action.item))
+                    }
+                    true
+                }
+                "add_party_member" -> {
+                    action.itemId?.let { memberId ->
+                        sessionStore.addPartyMember(memberId)
+                        eventHooks.onPartyMemberJoined(memberId)
+                    }
+                    true
                 }
                 "give_xp" -> {
                     action.xp?.let { eventHooks.onGiveXp(it) }
@@ -235,8 +284,25 @@ class EventManager(
                     true
                 }
                 "system_tutorial" -> {
-                    eventHooks.onSystemTutorial(action.sceneId, action.context)
-                    action.onComplete?.let { executeActions(it, state) }
+                    var callbackInvoked = false
+                    eventHooks.onSystemTutorial(action.sceneId, action.context) {
+                        if (!callbackInvoked) {
+                            callbackInvoked = true
+                            action.onComplete?.let { executeActions(it, state) }
+                        }
+                    }
+                    true
+                }
+                "audio_layer" -> {
+                    val command = AudioLayerCommandSpec(
+                        layer = action.audioLayer,
+                        cueId = action.audioCueId,
+                        gain = action.audioGain,
+                        fadeMs = action.audioFadeMs,
+                        loop = action.audioLoop,
+                        stop = action.audioStop == true
+                    )
+                    eventHooks.onAudioLayerCommand(command)
                     true
                 }
                 "unlock_room_search" -> {
@@ -257,12 +323,6 @@ class EventManager(
                         false
                     }
                 }
-                "player_action" -> {
-                    action.action?.let { actionId ->
-                        handleTrigger("player_action", EventPayload.Action(actionId, action.itemId ?: action.item))
-                    }
-                    true
-                }
                 else -> false
             } || executed
         }
@@ -276,17 +336,83 @@ class EventManager(
         if (conditions.isEmpty()) return true
         return conditions.all { condition ->
             when (condition.type.lowercase()) {
-                "milestone_not_set" -> {
-                    val milestone = condition.milestone
-                    milestone.isNullOrBlank() || milestone !in state.completedMilestones
+                "milestone_not_set" -> condition.milestone.isNullOrBlank() ||
+                    condition.milestone !in state.completedMilestones
+                "milestone_set" -> condition.milestone.isNullOrBlank() ||
+                    condition.milestone in state.completedMilestones
+                "quest_active" -> condition.questId?.let { state.activeQuests.contains(it) } ?: false
+                "quest_not_started" -> condition.questId?.let { questId ->
+                    questId !in state.activeQuests &&
+                        questId !in state.completedQuests &&
+                        questId !in state.failedQuests
+                } ?: false
+                "quest_completed" -> condition.questId?.let { state.completedQuests.contains(it) } ?: false
+                "quest_not_completed" -> condition.questId?.let { questId ->
+                    questId !in state.completedQuests
+                } ?: false
+                "quest_failed" -> condition.questId?.let { state.failedQuests.contains(it) } ?: false
+                "quest_stage" -> {
+                    val questId = condition.questId
+                    val stageId = condition.stageId
+                    if (questId.isNullOrBlank() || stageId.isNullOrBlank()) {
+                        false
+                    } else {
+                        state.questStageById[questId]?.equals(stageId, ignoreCase = true) == true
+                    }
                 }
-                "milestone_set" -> {
-                    val milestone = condition.milestone
-                    milestone.isNullOrBlank() || milestone in state.completedMilestones
+                "quest_stage_not" -> {
+                    val questId = condition.questId
+                    val stageId = condition.stageId
+                    if (questId.isNullOrBlank() || stageId.isNullOrBlank()) {
+                        true
+                    } else {
+                        state.questStageById[questId]?.equals(stageId, ignoreCase = true) != true
+                    }
                 }
+                "quest_task_done" -> {
+                    val questId = condition.questId
+                    val taskId = condition.taskId
+                    if (questId.isNullOrBlank() || taskId.isNullOrBlank()) {
+                        false
+                    } else {
+                        state.questTasksCompleted[questId]?.contains(taskId) == true
+                    }
+                }
+                "quest_task_not_done" -> {
+                    val questId = condition.questId
+                    val taskId = condition.taskId
+                    if (questId.isNullOrBlank() || taskId.isNullOrBlank()) {
+                        true
+                    } else {
+                        state.questTasksCompleted[questId]?.contains(taskId) != true
+                    }
+                }
+                "event_completed" -> condition.eventId?.let { state.completedEvents.contains(it) } ?: false
+                "event_not_completed" -> condition.eventId?.let { id ->
+                    id !in state.completedEvents
+                } ?: false
+                "tutorial_completed" -> condition.tutorialId?.let { id ->
+                    id in state.tutorialCompleted
+                } ?: false
+                "tutorial_not_completed" -> condition.tutorialId?.let { id ->
+                    id !in state.tutorialCompleted
+                } ?: false
+                "item" -> condition.hasInventory(state)
+                "item_not" -> !condition.hasInventory(state)
                 else -> true
             }
         }
+    }
+
+    private fun com.example.starborn.domain.model.EventCondition.hasInventory(
+        state: GameSessionState
+    ): Boolean {
+        val id = (itemId ?: item)?.takeUnless { it.isNullOrBlank() } ?: return false
+        val qty = (quantity ?: 1).coerceAtLeast(1)
+        val available = state.inventory.entries.any { (key, value) ->
+            key.equals(id, ignoreCase = true) && value >= qty
+        }
+        return available
     }
 
     private fun executeConditionalBranch(
@@ -320,7 +446,6 @@ class EventManager(
         val items = action.rewardItems ?: base.items
         return EventReward(xp = xp, credits = credits, ap = ap, items = items)
     }
-    private fun completionKeyFor(eventId: String): String = "evt_completed_$eventId"
 }
 
 sealed interface EventPayload {
@@ -330,6 +455,7 @@ sealed interface EventPayload {
     data class EnterRoom(val roomId: String) : EventPayload
     data class QuestStage(val questId: String) : EventPayload
     data class EnemyVictory(val enemyIds: List<String>) : EventPayload
+    data class ItemAcquired(val itemId: String) : EventPayload
     data class EncounterOutcome(
         val enemyIds: List<String>,
         val outcome: Outcome
@@ -342,14 +468,24 @@ sealed interface EventPayload {
     }
 }
 
+data class AudioLayerCommandSpec(
+    val layer: String?,
+    val cueId: String?,
+    val gain: Float?,
+    val fadeMs: Long?,
+    val loop: Boolean?,
+    val stop: Boolean = false
+)
+
 data class EventHooks(
-    val onPlayCinematic: (sceneId: String) -> Unit = {},
+    val onPlayCinematic: (sceneId: String, onComplete: () -> Unit) -> Unit = { _, done -> done() },
     val onMessage: (message: String) -> Unit = {},
     val onReward: (reward: EventReward) -> Unit = {},
     val onSetRoomState: (roomId: String?, stateKey: String, value: Boolean) -> Unit = { _, _, _ -> },
     val onToggleRoomState: (roomId: String?, stateKey: String) -> Unit = { _, _ -> },
     val onSpawnEncounter: (encounterId: String?, roomId: String?) -> Unit = { _, _ -> },
     val onGiveItem: (itemId: String, quantity: Int) -> Unit = { _, _ -> },
+    val onTakeItem: (itemId: String, quantity: Int) -> Boolean = { _, _ -> true },
     val onGiveXp: (amount: Int) -> Unit = {},
     val onAdvanceQuest: (questId: String?) -> Unit = {},
     val onQuestUpdated: () -> Unit = {},
@@ -360,8 +496,11 @@ data class EventHooks(
     val onQuestCompleted: (questId: String?) -> Unit = {},
     val onQuestFailed: (questId: String?, reason: String?) -> Unit = { _, _ -> },
     val onBeginNode: (roomId: String?) -> Unit = {},
-    val onSystemTutorial: (sceneId: String?, context: String?) -> Unit = { _, _ -> },
+    val onSystemTutorial: (sceneId: String?, context: String?, onComplete: () -> Unit) -> Unit = { _, _, done -> done() },
     val onNarration: (message: String, tapToDismiss: Boolean) -> Unit = { _, _ -> },
     val onSpawnGroundItem: (roomId: String?, itemId: String, quantity: Int) -> Unit = { _, _, _ -> },
-    val onUnlockRoomSearch: (roomId: String?, note: String?) -> Unit = { _, _ -> }
+    val onUnlockRoomSearch: (roomId: String?, note: String?) -> Unit = { _, _ -> },
+    val onEventCompleted: (eventId: String) -> Unit = {},
+    val onPartyMemberJoined: (memberId: String) -> Unit = {},
+    val onAudioLayerCommand: (AudioLayerCommandSpec) -> Unit = {}
 )
