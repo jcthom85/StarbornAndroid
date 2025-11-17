@@ -1,0 +1,121 @@
+{
+  "default": {
+    "vignette": {
+      "base_intensity": 0.18,
+      "dark_boost": 0.35,
+      "feather": 0.24,
+      "margin_dp": 24,
+      "color": [0.02, 0.03, 0.07, 1.0]
+    },
+    "bands": {
+      "base_alpha": 0.68,
+      "dark_boost": 0.4,
+      "highlight_alpha": 0.42,
+      "noise_alpha": 0.06,
+      "min_height_dp": 56,
+      "max_height_dp": 220
+    }
+  },
+  "forest": {
+    "vignette": {
+      "base_intensity": 0.12,
+      "dark_boost": 0.3,
+      "feather": 0.28,
+      "margin_dp": 16,
+      "color": [0.01, 0.05, 0.02, 1.0]
+    },
+    "bands": {
+      "base_alpha": 0.62,
+      "dark_boost": 0.32,
+      "highlight_alpha": 0.38,
+      "noise_alpha": 0.05,
+      "min_height_dp": 48,
+      "max_height_dp": 200
+    }
+  },
+  "market": {
+    "vignette": {
+      "base_intensity": 0.15,
+      "dark_boost": 0.3,
+      "feather": 0.26,
+      "margin_dp": 18,
+      "color": [0.06, 0.03, 0.01, 1.0]
+    },
+    "bands": {
+      "base_alpha": 0.7,
+      "dark_boost": 0.42,
+      "highlight_alpha": 0.5,
+      "noise_alpha": 0.07,
+      "min_height_dp": 64,
+      "max_height_dp": 230
+    }
+  },
+  "spaceship": {
+    "vignette": {
+      "base_intensity": 0.2,
+      "dark_boost": 0.38,
+      "feather": 0.22,
+      "margin_dp": 26,
+      "color": [0.03, 0.04, 0.08, 1.0]
+    },
+    "bands": {
+      "base_alpha": 0.74,
+      "dark_boost": 0.45,
+      "highlight_alpha": 0.48,
+      "noise_alpha": 0.04,
+      "min_height_dp": 60,
+      "max_height_dp": 240
+    }
+  },
+  "starborn": {
+    "vignette": {
+      "base_intensity": 0.22,
+      "dark_boost": 0.35,
+      "feather": 0.2,
+      "margin_dp": 24,
+      "color": [0.02, 0.02, 0.08, 1.0]
+    },
+    "bands": {
+      "base_alpha": 0.72,
+      "dark_boost": 0.4,
+      "highlight_alpha": 0.5,
+      "noise_alpha": 0.06,
+      "min_height_dp": 60,
+      "max_height_dp": 240
+    }
+  },
+  "Neon Galleria Nexus": {
+    "vignette": {
+      "base_intensity": 0.24,
+      "dark_boost": 0.35,
+      "feather": 0.18,
+      "margin_dp": 30,
+      "color": [0.03, 0.0, 0.08, 1.0]
+    },
+    "bands": {
+      "base_alpha": 0.78,
+      "dark_boost": 0.48,
+      "highlight_alpha": 0.55,
+      "noise_alpha": 0.05,
+      "min_height_dp": 72,
+      "max_height_dp": 260
+    }
+  },
+  "Retroport Neon Atrium": {
+    "vignette": {
+      "base_intensity": 0.21,
+      "dark_boost": 0.34,
+      "feather": 0.2,
+      "margin_dp": 26,
+      "color": [0.02, 0.03, 0.09, 1.0]
+    },
+    "bands": {
+      "base_alpha": 0.7,
+      "dark_boost": 0.4,
+      "highlight_alpha": 0.52,
+      "noise_alpha": 0.05,
+      "min_height_dp": 64,
+      "max_height_dp": 240
+    }
+  }
+}

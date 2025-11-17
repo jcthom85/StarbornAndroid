@@ -1,0 +1,251 @@
+{
+  "character": "nova",
+  "branches": {
+    "Thievery": [
+      {
+        "id": "nova_light_fingers",
+        "name": "Light Fingers",
+        "pos": [1, 0],
+        "cost_ap": 1,
+        "requires": [],
+        "effect": { "type": "buff", "buff_type": "steal_rate", "value": 5, "rp_cost": 10 }
+      },
+      {
+        "id": "nova_quiet_steps",
+        "name": "Quiet Steps",
+        "pos": [0, 0],
+        "cost_ap": 1,
+        "requires": [],
+        "effect": { "type": "buff", "buff_type": "speed", "value": 5, "rp_cost": 0 }
+      },
+      {
+        "id": "nova_keen_sight",
+        "name": "Keen Sight",
+        "pos": [2, 0],
+        "cost_ap": 1,
+        "requires": [],
+        "effect": { "type": "buff", "buff_type": "accuracy", "value": 5, "rp_cost": 0 }
+      },
+      {
+        "id": "nova_lockpicking",
+        "name": "Lockpicking",
+        "pos": [1, 1],
+        "cost_ap": 1,
+        "requires": ["nova_light_fingers"],
+        "effect": { "type": "utility", "subtype": "unlock", "rp_cost": 5 }
+      },
+      {
+        "id": "nova_distraction",
+        "name": "Distraction",
+        "pos": [0, 2],
+        "cost_ap": 2,
+        "requires": ["nova_lockpicking"],
+        "effect": { "type": "damage", "mult": 1.2, "rp_cost": 5 }
+      },
+      {
+        "id": "nova_backstab",
+        "name": "Back Stab",
+        "pos": [2, 2],
+        "cost_ap": 2,
+        "requires": ["nova_lockpicking"],
+        "effect": { "type": "damage", "mult": 1.5, "rp_cost": 8 }
+      },
+      {
+        "id": "nova_smoke_bomb",
+        "name": "Smoke Bomb",
+        "pos": [1, 3],
+        "cost_ap": 3,
+        "requires": ["nova_distraction", "nova_backstab"],
+        "effect": { "type": "buff", "buff_type": "evasion", "value": 10, "rp_cost": 8 }
+      },
+      {
+        "id": "nova_pickpocket_master",
+        "name": "Pickpocket Master",
+        "pos": [0, 4],
+        "cost_ap": 3,
+        "requires": ["nova_smoke_bomb"],
+        "effect": { "type": "buff", "buff_type": "steal_rate", "value": 15, "rp_cost": 12 }
+      },
+      {
+        "id": "nova_shadow_escape",
+        "name": "Shadow Escape",
+        "pos": [2, 4],
+        "cost_ap": 3,
+        "requires": ["nova_smoke_bomb"],
+        "effect": { "type": "utility", "subtype": "escape", "rp_cost": 10 }
+      },
+      {
+        "id": "nova_master_thief",
+        "name": "Master Thief",
+        "pos": [1, 5],
+        "cost_ap": 5,
+        "requires": ["nova_shadow_escape", "nova_pickpocket_master"],
+        "effect": { "type": "damage", "mult": 2.0, "rp_cost": 15 }
+      }
+    ],
+    "Darkness": [
+      {
+        "id": "nova_dark_sight",
+        "name": "Dark Sight",
+        "pos": [1, 0],
+        "cost_ap": 1,
+        "requires": [],
+        "effect": { "type": "buff", "buff_type": "accuracy", "value": 5, "rp_cost": 0 }
+      },
+      {
+        "id": "nova_night_cloak",
+        "name": "Night Cloak",
+        "pos": [0, 0],
+        "cost_ap": 1,
+        "requires": [],
+        "effect": { "type": "buff", "buff_type": "defense", "value": 5, "rp_cost": 0 }
+      },
+      {
+        "id": "nova_shadow_blade",
+        "name": "Shadow Blade",
+        "pos": [2, 0],
+        "cost_ap": 1,
+        "requires": [],
+        "effect": { "type": "damage", "mult": 1.3, "rp_cost": 1 }
+      },
+      {
+        "id": "nova_umbral_step",
+        "name": "Umbral Step",
+        "pos": [1, 1],
+        "cost_ap": 1,
+        "requires": ["nova_dark_sight"],
+        "effect": { "type": "utility", "subtype": "teleport", "rp_cost": 5 }
+      },
+      {
+        "id": "nova_fear_aura",
+        "name": "Fear Aura",
+        "pos": [0, 2],
+        "cost_ap": 2,
+        "requires": ["nova_umbral_step"],
+        "effect": { "type": "buff", "buff_type": "evasion", "value": 5, "rp_cost": 8 }
+      },
+      {
+        "id": "nova_soul_drain",
+        "name": "Soul Drain",
+        "pos": [2, 2],
+        "cost_ap": 2,
+        "requires": ["nova_umbral_step"],
+        "effect": { "type": "damage", "mult": 1.6, "rp_cost": 10 }
+      },
+      {
+        "id": "nova_dark_pact",
+        "name": "Dark Pact",
+        "pos": [1, 3],
+        "cost_ap": 3,
+        "requires": ["nova_fear_aura", "nova_soul_drain"],
+        "effect": { "type": "buff", "buff_type": "attack", "value": 5, "rp_cost": 10 }
+      },
+      {
+        "id": "nova_gloom_burst",
+        "name": "Gloom Burst",
+        "pos": [0, 4],
+        "cost_ap": 3,
+        "requires": ["nova_dark_pact"],
+        "effect": { "type": "damage", "mult": 1.8, "rp_cost": 12 }
+      },
+      {
+        "id": "nova_eclipse",
+        "name": "Eclipse",
+        "pos": [2, 4],
+        "cost_ap": 3,
+        "requires": ["nova_dark_pact"],
+        "effect": { "type": "utility", "subtype": "blind", "rp_cost": 12 }
+      },
+      {
+        "id": "nova_lord_of_shadows",
+        "name": "Lord of Shadows",
+        "pos": [1, 5],
+        "cost_ap": 5,
+        "requires": ["nova_gloom_burst", "nova_eclipse"],
+        "effect": { "type": "damage", "mult": 2.2, "rp_cost": 20 }
+      }
+    ],
+    "Tinkering": [
+      {
+        "id": "nova_jury_rig",
+        "name": "Jury Rig",
+        "pos": [1, 0],
+        "cost_ap": 1,
+        "requires": [],
+        "effect": { "type": "buff", "buff_type": "attack", "value": 3, "rp_cost": 0 }
+      },
+      {
+        "id": "nova_handy_tools",
+        "name": "Handy Tools",
+        "pos": [0, 0],
+        "cost_ap": 1,
+        "requires": [],
+        "effect": { "type": "utility", "subtype": "repair", "rp_cost": 0 }
+      },
+      {
+        "id": "nova_trap_setting",
+        "name": "Trap Setting",
+        "pos": [2, 0],
+        "cost_ap": 1,
+        "requires": [],
+        "effect": { "type": "damage", "mult": 1.2, "rp_cost": 4 }
+      },
+      {
+        "id": "nova_gear_upgrade",
+        "name": "Gear Upgrade",
+        "pos": [1, 1],
+        "cost_ap": 1,
+        "requires": ["nova_jury_rig"],
+        "effect": { "type": "buff", "buff_type": "defense", "value": 5, "rp_cost": 5 }
+      },
+      {
+        "id": "nova_hacking",
+        "name": "Hacking",
+        "pos": [0, 2],
+        "cost_ap": 2,
+        "requires": ["nova_gear_upgrade"],
+        "effect": { "type": "utility", "subtype": "hack", "rp_cost": 5 }
+      },
+      {
+        "id": "nova_remote_mine",
+        "name": "Remote Mine",
+        "pos": [2, 2],
+        "cost_ap": 2,
+        "requires": ["nova_gear_upgrade"],
+        "effect": { "type": "damage", "mult": 1.4, "rp_cost": 8 }
+      },
+      {
+        "id": "nova_turret_deploy",
+        "name": "Turret Deploy",
+        "pos": [1, 3],
+        "cost_ap": 3,
+        "requires": ["nova_hacking", "nova_remote_mine"],
+        "effect": { "type": "utility", "subtype": "turret", "rp_cost": 8 }
+      },
+      {
+        "id": "nova_overclock",
+        "name": "Overclock",
+        "pos": [0, 4],
+        "cost_ap": 3,
+        "requires": ["nova_turret_deploy"],
+        "effect": { "type": "buff", "buff_type": "speed", "value": 10, "rp_cost": 10 }
+      },
+      {
+        "id": "nova_drone_swarm",
+        "name": "Drone Swarm",
+        "pos": [2, 4],
+        "cost_ap": 3,
+        "requires": ["nova_turret_deploy"],
+        "effect": { "type": "damage", "mult": 1.7, "rp_cost": 12 }
+      },
+      {
+        "id": "nova_master_engineer",
+        "name": "Master Engineer",
+        "pos": [1, 5],
+        "cost_ap": 5,
+        "requires": ["nova_overclock", "nova_drone_swarm"],
+        "effect": { "type": "buff", "buff_type": "attack", "value": 15, "rp_cost": 15 }
+      }
+    ]
+  }
+}

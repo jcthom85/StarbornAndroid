@@ -1,0 +1,336 @@
+[
+  {
+    "id": "movement",
+    "steps": [
+      {
+        "message": "Swipe left or right across the screen to move between nearby rooms.",
+        "context": "Exploration"
+      },
+      {
+        "message": "Watch the minimap highlight to see which exits are open.",
+        "context": "Exploration",
+        "delay_ms": 2200
+      }
+    ]
+  },
+  {
+    "id": "npc_talk",
+    "steps": [
+      {
+        "message": "Tap a character's name to open their interaction menu.",
+        "context": "Exploration"
+      },
+      {
+        "message": "Choose Talk to hear what they have to say and advance the story.",
+        "context": "Exploration",
+        "delay_ms": 2000
+      }
+    ]
+  },
+  {
+    "id": "scene_tinkering_tutorial",
+    "steps": [
+      {
+        "message": "Jed will highlight the parts you need. Drag them into the slots when they flash yellow.",
+        "context": "Tinkering"
+      },
+      {
+        "message": "Watch the stability meter. Tap the reinforce button before it dips into the red zone.",
+        "context": "Tinkering",
+        "delay_ms": 2500
+      }
+    ]
+  },
+  {
+    "id": "cooking_failure",
+    "steps": [
+      {
+        "key": "cook_timing",
+        "message": "The pan scorched. Release while the cursor is inside the gold zone.",
+        "context": "Cooking"
+      },
+      {
+        "message": "Watch the bar settle before tapping again.",
+        "context": "Cooking",
+        "delay_ms": 2000
+      }
+    ]
+  },
+  {
+    "id": "first_aid_failure",
+    "steps": [
+      {
+        "key": "first_aid_timing",
+        "message": "That bandage slipped. Hold until the pulse enters the green window.",
+        "context": "First Aid"
+      }
+    ]
+  },
+  {
+    "id": "scene_light_switch_hint",
+    "steps": [
+      {
+        "key": "light_switch_touch",
+        "message": "It is still dark inside Nova's house. Tap the \"Light Switch\" hotspot to power the room lights.",
+        "context": "Nova's House"
+      },
+      {
+        "message": "Once the lights are on you'll see every hotspot and can continue exploring.",
+        "context": "Nova's House",
+        "delay_ms": 2200
+      }
+    ]
+  },
+  {
+    "id": "scene_swipe_movement",
+    "steps": [
+      {
+        "key": "swipe_move",
+        "message": "Swipe across the screen to travel between rooms.",
+        "context": "Movement Basics"
+      },
+      {
+        "message": "Use the glowing minimap indicators to confirm which exits are unlocked.",
+        "context": "Movement Basics",
+        "delay_ms": 2000
+      }
+    ]
+  },
+  {
+    "id": "fishing_failure",
+    "steps": [
+      {
+        "message": "The fish wriggled free. Reel when the indicator crosses the green band.",
+        "context": "Fishing"
+      }
+    ]
+  },
+  {
+    "id": "fishing_success",
+    "steps": [
+      {
+        "message": "Nice catch! Try for a perfect by landing in the gold band.",
+        "context": "Fishing"
+      }
+    ]
+  },
+  {
+    "id": "fishing_basics",
+    "steps": [
+      {
+        "message": "The marker glides automatically. Tap anywhere when it enters the green band to hook a fish.",
+        "context": "Fishing"
+      },
+      {
+        "message": "Release if the marker hits red to avoid snapping the line.",
+        "context": "Fishing",
+        "delay_ms": 2200
+      }
+    ]
+  },
+  {
+    "id": "scene_lights_out_intro",
+    "steps": [
+      {
+        "message": "That surge knocked out every light. Check the breaker panel near the door and figure out why it's still dark.",
+        "context": "Nova's House"
+      },
+      {
+        "message": "Ollie stashed a spare fuse in your storage trunk. Grab it before you try flipping the switch again.",
+        "context": "Nova's House",
+        "delay_ms": 2200
+      }
+    ]
+  },
+  {
+    "id": "scene_lights_out_breaker",
+    "steps": [
+      {
+        "message": "Tap the breaker panel to inspect it. Look for the scorched fuse slot highlighted in yellow.",
+        "context": "Nova's House"
+      }
+    ]
+  },
+  {
+    "id": "scene_lights_out_trunk",
+    "steps": [
+      {
+        "message": "Open your storage trunk beside the bed to dig out the backup fuse.",
+        "context": "Nova's House"
+      },
+      {
+        "message": "Items you recover show up in your bag - double-check the backup fuse is there before heading back to the breaker.",
+        "context": "Nova's House",
+        "delay_ms": 2000
+      }
+    ]
+  },
+  {
+    "id": "scene_lights_out_install",
+    "steps": [
+      {
+        "message": "With the spare fuse in hand, inspect the breaker and choose Install Fuse to seat it.",
+        "context": "Nova's House"
+      },
+      {
+        "message": "Once the breaker hums back to life, flip the light switch to finish the repair.",
+        "context": "Nova's House",
+        "delay_ms": 2200
+      }
+    ]
+  },
+  {
+    "id": "scene_scrap_run_tyson",
+    "steps": [
+      {
+        "message": "Tyson waves you over. Tap the \"Talk to Tyson\" prompt inside his stall to hear what he needs.",
+        "context": "Tyson's Provisions"
+      },
+      {
+        "message": "He'll explain where the ration crate is stashed once you check in.",
+        "context": "Tyson's Provisions",
+        "delay_ms": 2000
+      }
+    ]
+  },
+  {
+    "id": "scene_scrap_run_shop",
+    "steps": [
+      {
+        "message": "Grab the ration pack from the crate in the back room. It's marked with a glowing icon.",
+        "context": "Tyson's Provisions"
+      },
+      {
+        "message": "Anything you pick up automatically drops into your bag so you can deliver it without fiddling in menus.",
+        "context": "Tyson's Provisions",
+        "delay_ms": 2200
+      }
+    ]
+  },
+  {
+    "id": "scene_scrap_run_return",
+    "steps": [
+      {
+        "message": "Ollie is waiting near the plaza fountain. Tap his prompt to hand over the ration pack.",
+        "context": "Market Plaza"
+      },
+      {
+        "message": "He won't stop lecturing you about nutrition until he gets his snack, so get moving.",
+        "context": "Market Plaza",
+        "delay_ms": 2000
+      }
+    ]
+  },
+  {
+    "id": "scene_fixers_favor_jed",
+    "steps": [
+      {
+        "message": "Jed wants to review the busted gear. Talk to him inside Scrap & Salvage to get the rundown.",
+        "context": "Jed's Workshop"
+      },
+      {
+        "message": "He'll hand you parts and push you toward the bench once you're caught up.",
+        "context": "Jed's Workshop",
+        "delay_ms": 2000
+      }
+    ]
+  },
+  {
+    "id": "scene_fixers_favor_table",
+    "steps": [
+      {
+        "message": "Tap the Tinkering Table prompt to lay out the repairs when Jed calls you over.",
+        "context": "Tinkering"
+      },
+      {
+        "message": "Watch for highlighted sockets and follow Jed's cues before you start welding.",
+        "context": "Tinkering",
+        "delay_ms": 2000
+      }
+    ]
+  },
+  {
+    "id": "scene_fixers_favor_craft",
+    "steps": [
+      {
+        "message": "Slot the components Jed hands you, then press Craft to seal the first repair.",
+        "context": "Tinkering"
+      },
+      {
+        "message": "Keep an eye on the stability meter—reinforce if it dips into the red.",
+        "context": "Tinkering",
+        "delay_ms": 2200
+      }
+    ]
+  },
+  {
+    "id": "scene_fixers_favor_return",
+    "steps": [
+      {
+        "message": "Once the tutorial wraps, close the bench and talk to Jed to hand the repairs back.",
+        "context": "Jed's Workshop"
+      },
+      {
+        "message": "He'll debrief you and queue up the next deliveries.",
+        "context": "Jed's Workshop",
+        "delay_ms": 2000
+      }
+    ]
+  },
+  {
+    "id": "scene_ollie_recruitment",
+    "steps": [
+      {
+        "message": "Ollie is tagging along as your in-universe guide. When an ally joins, their portrait appears near your HUD.",
+        "context": "Nova's House"
+      },
+      {
+        "message": "Tap their portrait anytime to swap party members or hear their latest tip.",
+        "context": "Nova's House",
+        "delay_ms": 2200
+      }
+    ]
+  },
+  {
+    "id": "scene_market_locator",
+    "steps": [
+      {
+        "message": "Head south to the market strip. Look for Jed's scrap stall glowing in yellow on the minimap.",
+        "context": "Market Plaza"
+      },
+      {
+        "message": "Tap highlighted doorways to enter new stalls—Jed's is just east of the plaza.",
+        "context": "Market Plaza",
+        "delay_ms": 2200
+      }
+    ]
+  },
+  {
+    "id": "scene_market_journal",
+    "steps": [
+      {
+        "message": "Open your journal from the HUD to track active errands. The highlighted quest is pinned on your minimap.",
+        "context": "Market Plaza"
+      },
+      {
+        "message": "Use the journal tabs to review ally requests and hub summaries as they unlock.",
+        "context": "Market Plaza",
+        "delay_ms": 2000
+      }
+    ]
+  },
+  {
+    "id": "bag_basics",
+    "steps": [
+      {
+        "message": "Swipe up from the bottom tray or tap the backpack icon to open your bag at any time.",
+        "context": "Inventory"
+      },
+      {
+        "message": "Use the filters along the left edge to jump between gear, consumables, and key items. Long-press any entry for more details.",
+        "context": "Inventory",
+        "delay_ms": 2200
+      }
+    ]
+  }
+]

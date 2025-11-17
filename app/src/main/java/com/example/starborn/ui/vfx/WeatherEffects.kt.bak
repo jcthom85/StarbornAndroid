@@ -1,0 +1,114 @@
+package com.example.starborn.ui.vfx
+
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import kotlin.random.Random
+
+sealed interface WeatherEffect {
+    data class Dust(
+        val color: Color
+    ) : WeatherEffect
+
+    data class Rain(
+        val intensity: String,
+        val color: Color
+    ) : WeatherEffect
+
+    data class Storm(
+        val intensity: String,
+        val color: Color,
+        val lightningColor: Color
+    ) : WeatherEffect
+
+    data class Snow(
+        val intensity: String,
+        val color: Color
+    ) : WeatherEffect
+
+    data class CaveDrip(
+        val color: Color
+    ) : WeatherEffect
+
+    data class Starfall(
+        val color: Color
+    ) : WeatherEffect
+}
+
+data class ParticleConfig(
+    val count: Int,
+    val emitRate: Int,
+    val life: Pair<Float, Float>,
+    val size: Pair<Float, Float>,
+    val spawnArea: Rect,
+    val velocity: Pair<Float, Float>,
+    val angle: Pair<Float, Float>,
+    val gravity: Pair<Float, Float>,
+    val drag: Float,
+    val color: Color,
+    val ttl: Float,
+    val turbulence: List<Float>? = null,
+    val sway: List<Float>? = null,
+    val state: String? = null,
+    val hangTime: Float? = null,
+    val initialSize: Pair<Float, Float>? = null
+)
+
+data class Rect(
+    val x: Float,
+    val y: Float,
+    val width: Float,
+    val height: Float
+)
+
+data class Particle(
+    var position: Offset,
+    var velocity: Offset,
+    var size: Pair<Float, Float>,
+    var color: Color,
+    var life: Float,
+    val maxLife: Float,
+    var angle: Float,
+    var state: String? = null,
+    var hangTime: Float? = null,
+    val initialSize: Pair<Float, Float>? = null,
+    val turbulence: List<Float>? = null,
+    val sway: List<Float>? = null
+) {
+    companion object {
+        fun create(
+            config: ParticleConfig,
+            random: Random,
+            viewportWidth: Float,
+            viewportHeight: Float
+        ): Particle {
+            val x = random.nextFloat() * config.spawnArea.width + config.spawnArea.x
+            val y = random.nextFloat() * config.spawnArea.height + config.spawnArea.y
+
+            val angle = random.nextFloat() * (config.angle.second - config.angle.first) + config.angle.first
+            val angleRad = Math.toRadians(angle.toDouble()).toFloat()
+            val speed = random.nextFloat() * (config.velocity.second - config.velocity.first) + config.velocity.first
+
+            val vx = speed * kotlin.math.cos(angleRad)
+            val vy = speed * kotlin.math.sin(angleRad)
+
+            val width = random.nextFloat() * (config.size.second - config.size.first) + config.size.first
+            val height = random.nextFloat() * (config.size.second - config.size.first) + config.size.first
+            val particleLife = random.nextFloat() * (config.life.second - config.life.first) + config.life.first
+
+            return Particle(
+                position = Offset(x, y),
+                velocity = Offset(vx, vy),
+                size = width to height,
+                color = config.color,
+                life = particleLife,
+                maxLife = particleLife,
+                angle = angle,
+                state = config.state,
+                hangTime = config.hangTime,
+                initialSize = config.initialSize,
+                turbulence = config.turbulence,
+                sway = config.sway
+            )
+        }
+    }
+}

@@ -1,0 +1,20 @@
+{
+  "inventory": {
+    "brew": 5,
+    "kit": 3,
+    "medallion": 1,
+    "sword_1": 1,
+    "shield_1": 1
+  },
+  "equipment": {
+    "weapon": "sword_1",
+    "accessory": "medallion",
+    "offhand": "shield_1"
+  },
+  "credits": 4321,
+  "party": [
+    "nova",
+    "ollie",
+    "maddie"
+  ]
+}

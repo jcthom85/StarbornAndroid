@@ -1,0 +1,279 @@
+{
+  "mechanic_shop": {
+    "name": "Mechanic's Wares",
+    "portrait": "images/portraits/mechanic.png",
+    "greeting": "Mechanic: Hey there, Nova! I've got parts polished and ready to bolt on.",
+    "vo_cue": "shop_mechanic_greeting",
+    "pricing": {
+      "sell_markup": 1.2,
+      "buy_markdown": 0.35
+    },
+    "sells": {
+      "items": [
+        "Medkit",
+        "Grenade",
+        "Utility Vest"
+      ],
+      "rules": {
+        "types_in": [],
+        "subtypes_in": []
+      },
+      "gates": {
+        "Utility Vest": {
+          "milestones": [
+            "MET_MECHANIC"
+          ]
+        }
+      }
+    },
+        "buys": {
+            "accept_types": [
+                "consumable",
+                "weapon",
+                "armor",
+                "accessory",
+                "ingredient",
+                "component"
+            ],
+            "blacklist": []
+        },
+        "dialogue": {
+            "preface": [
+                {
+                    "speaker": "Mechanic",
+                    "text": "Hey there, Nova! I've been polishing parts since dawn.",
+                    "voice": "shop_mechanic_greeting"
+                },
+                {
+                    "speaker": "Mechanic",
+                    "text": "If you're hunting for mod cores, grab them before the scouts do."
+                }
+            ],
+            "smalltalk": [
+                {
+                    "id": "shop_mechanic_stock",
+                    "label": "Ask what's new",
+                    "voice": "shop_mechanic_smalltalk",
+                    "response": [
+                        {
+                            "speaker": "Mechanic",
+                            "text": "Scavvers dragged in a crate of micro-cores\u2014perfect for overclocking your drone.",
+                            "voice": "shop_mechanic_smalltalk"
+                        },
+                        {
+                            "speaker": "Mechanic",
+                            "text": "I've stashed the best ones under the counter. Ask if you want the premium batch."
+                        }
+                    ]
+                },
+                {
+                    "id": "shop_mechanic_gossip",
+                    "label": "Trade rumors",
+                    "response": [
+                        {
+                            "speaker": "Mechanic",
+                            "text": "Word is the mine tunnel reopened. If you're heading there, reinforce your boots."
+                        },
+                        {
+                            "speaker": "Mechanic",
+                            "text": "Last crew brought back slagged plating\u2014whatever's down there hits hard."
+                        }
+                    ]
+                }
+            ],
+            "trade_label": "Browse the mods",
+            "leave_label": "Back to the hub"
+        }
+    },
+  "weapon_shop": {
+    "name": "Blades & Blasters",
+    "portrait": "images/portraits/weaponsmith.png",
+    "greeting": "Weaponsmith: Looking to upgrade your bite? I've got fresh steel and plasma.",
+    "vo_cue": "shop_weapon_greeting",
+    "pricing": {
+      "sell_markup": 1.2,
+      "buy_markdown": 0.35
+    },
+    "sells": {
+      "items": [
+        "Laser Pistol",
+        "Pyro-Blade",
+        "Toxic Dagger",
+        "Grenade"
+      ],
+      "rules": {
+        "types_in": [],
+        "subtypes_in": []
+      },
+      "gates": {
+        "Pyro-Blade": {
+          "milestones": [
+            "REACHED_WORLD_2"
+          ]
+        },
+        "Toxic Dagger": {
+          "milestones": [
+            "REACHED_WORLD_2"
+          ]
+        }
+      }
+    },
+    "buys": {
+      "accept_types": [
+        "consumable",
+        "weapon",
+        "armor",
+        "accessory",
+        "ingredient",
+        "component"
+      ],
+      "blacklist": []
+    }
+  },
+  "armor_shop": {
+    "name": "The Aegis",
+    "portrait": "images/portraits/armorer.png",
+    "greeting": "Armorer: Step in and suit up—no frontier scrape should catch you unshielded.",
+    "vo_cue": "shop_armor_greeting",
+    "pricing": {
+      "sell_markup": 1.2,
+      "buy_markdown": 0.35
+    },
+    "sells": {
+      "items": [
+        "Utility Vest",
+        "Heat-Shield Vest",
+        "Cryo-Coat"
+      ],
+      "rules": {
+        "types_in": [],
+        "subtypes_in": []
+      },
+      "gates": {
+        "Heat-Shield Vest": {
+          "milestones": [
+            "REACHED_WORLD_3"
+          ]
+        },
+        "Cryo-Coat": {
+          "milestones": [
+            "REACHED_WORLD_3"
+          ]
+        }
+      }
+    },
+    "buys": {
+      "accept_types": [
+        "consumable",
+        "weapon",
+        "armor",
+        "accessory",
+        "ingredient",
+        "component"
+      ],
+      "blacklist": []
+    }
+  },
+  "accessory_shop": {
+    "name": "Trinkets & Tech",
+    "portrait": "images/portraits/jeweler.png",
+    "greeting": "Jeweler: I've curated only the finest gizmos and charms. Care for a peek?",
+    "vo_cue": "shop_accessory_greeting",
+    "pricing": {
+      "sell_markup": 1.2,
+      "buy_markdown": 0.35
+    },
+    "sells": {
+      "items": [
+        "Grounding Boots",
+        "Re-Breather Mask",
+        "Adrenaline Shot"
+      ],
+      "rules": {
+        "types_in": [],
+        "subtypes_in": []
+      },
+      "gates": {}
+    },
+    "buys": {
+      "accept_types": [
+        "consumable",
+        "weapon",
+        "armor",
+        "accessory",
+        "ingredient",
+        "component"
+      ],
+      "blacklist": []
+    }
+  },
+  "general_store": {
+    "name": "General Store",
+    "portrait": "images/portraits/shopkeep.png",
+    "greeting": "Shopkeep: Supplies, snacks, emergency fixes—if you need it, I stock it.",
+    "vo_cue": "shop_general_greeting",
+    "pricing": {
+      "sell_markup": 1.2,
+      "buy_markdown": 0.35
+    },
+    "sells": {
+      "items": [
+        "Medkit",
+        "Antidote",
+        "Power Cell",
+        "Smokescreen",
+        "Scrap Metal",
+        "Wiring Bundle"
+      ],
+      "rules": {
+        "types_in": [],
+        "subtypes_in": []
+      },
+      "gates": {}
+    },
+        "buys": {
+            "accept_types": [
+                "consumable",
+                "weapon",
+                "armor",
+                "accessory",
+                "ingredient",
+                "component"
+            ],
+            "blacklist": []
+        },
+        "dialogue": {
+            "preface": [
+                {
+                    "speaker": "Shopkeep",
+                    "text": "Supplies, snacks, emergency fixes\u2014if you need it, I stock it.",
+                    "voice": "shop_general_greeting"
+                }
+            ],
+            "smalltalk": [
+                {
+                    "id": "shop_general_weather",
+                    "label": "Ask about the weather",
+                    "response": [
+                        {
+                            "speaker": "Shopkeep",
+                            "text": "Fog rolled in from the marsh. Makes the signal lanterns look like ghosts."
+                        }
+                    ]
+                },
+                {
+                    "id": "shop_general_tip",
+                    "label": "Request a travel tip",
+                    "response": [
+                        {
+                            "speaker": "Shopkeep",
+                            "text": "If you see blue chalk on a doorframe, that's a scout mark\u2014follow it for safe rooms."
+                        }
+                    ]
+                }
+            ],
+            "trade_label": "Show me the goods",
+            "leave_label": "Maybe later"
+        }
+    }
+}

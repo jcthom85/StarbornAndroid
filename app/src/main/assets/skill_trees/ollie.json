@@ -1,0 +1,18 @@
+{
+    "character": "ollie",
+    "branches": {
+        "scrapper": [
+            {
+                "id": "slingshot",
+                "name": "Slingshot",
+                "pos": [
+                    0,
+                    0
+                ],
+                "cost_ap": 0,
+                "requires": [],
+                "effect": {}
+            }
+        ]
+    }
+}

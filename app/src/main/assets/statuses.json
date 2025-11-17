@@ -1,0 +1,87 @@
+[
+  {
+    "id": "bleed",
+    "default_duration": 3,
+    "tick": {
+      "mode": "damage",
+      "per_max_hp_divisor": 20,
+      "min": 2
+    },
+    "target": "enemy"
+  },
+  {
+    "id": "burn",
+    "default_duration": 3,
+    "tick": {
+      "mode": "damage",
+      "per_max_hp_divisor": 16,
+      "min": 1,
+      "element": "fire"
+    },
+    "target": "enemy"
+  },
+  {
+    "id": "freeze",
+    "default_duration": 2,
+    "skip_reason": "is frozen solid",
+    "target": "enemy"
+  },
+  {
+    "id": "guard",
+    "default_duration": 2,
+    "incoming_multiplier": 0.6,
+    "target": "ally"
+  },
+  {
+    "id": "poison",
+    "default_duration": 3,
+    "tick": {
+      "mode": "damage",
+      "per_max_hp_divisor": 10,
+      "min": 1,
+      "element": "poison"
+    },
+    "target": "enemy"
+  },
+  {
+    "id": "regen",
+    "default_duration": 3,
+    "tick": {
+      "mode": "heal",
+      "per_max_hp_divisor": 12,
+      "min": 1
+    },
+    "target": "ally"
+  },
+  {
+    "id": "shield",
+    "default_duration": 3,
+    "incoming_multiplier": 0.75,
+    "target": "ally"
+  },
+  {
+    "id": "shock",
+    "default_duration": 1,
+    "skip_reason": "is stunned by electric shock",
+    "target": "enemy"
+  },
+  {
+    "id": "sleep",
+    "default_duration": 2,
+    "skip_reason": "is fast asleep",
+    "incoming_multiplier": 1.25,
+    "target": "enemy"
+  },
+  {
+    "id": "stun",
+    "default_duration": 1,
+    "skip_reason": "is stunned",
+    "target": "enemy"
+  },
+  {
+    "id": "weak",
+    "default_duration": 2,
+    "outgoing_multiplier": 0.75,
+    "target": "enemy"
+  }
+]

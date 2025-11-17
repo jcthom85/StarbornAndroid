@@ -1,0 +1,43 @@
+{
+  "rods": [
+    {
+      "id": "basic_rod",
+      "name": "Basic Fishing Rod",
+      "description": "A simple rod for beginners.",
+      "power": 1.0
+    }
+  ],
+  "lures": [
+    {
+      "id": "basic_lure",
+      "name": "Basic Lure",
+      "description": "Attracts common fish.",
+      "rarity_bonus": 0.0
+    }
+  ],
+  "zones": [
+    {
+      "id": "default_fishing_zone",
+      "name": "Default Fishing Zone",
+      "minigame_rules": {
+        "speed": 1.0,
+        "success_window": 0.3,
+        "perfect_window": 0.1
+      },
+      "catches": [
+        {
+          "item_id": "common_fish",
+          "weight": 100,
+          "min_quantity": 1,
+          "max_quantity": 3
+        },
+        {
+          "item_id": "uncommon_fish",
+          "weight": 20,
+          "min_quantity": 1,
+          "max_quantity": 1
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,144 @@
+[
+  {
+    "id": "ms_talked_to_jed",
+    "name": "Jed's Briefing",
+    "description": "You listened to Jed outline the plan inside Nova's House.",
+    "toast": "Jed's briefing is complete."
+  },
+  {
+    "id": "ms_scrap_run_started",
+    "name": "Scrap Run Accepted",
+    "description": "Tyson asked you to run his ration errand.",
+    "toast": "Tyson needs that ration pack."
+  },
+  {
+    "id": "ms_scrap_run_talked_tyson",
+    "name": "Tyson Briefed You",
+    "description": "You talked to Tyson and heard about the ration crate.",
+    "toast": "Tyson told you where the rations are stashed."
+  },
+  {
+    "id": "ms_scrap_run_rations_collected",
+    "name": "Ration Pack Collected",
+    "description": "You grabbed the ration pack from Tyson's back room.",
+    "toast": "You pocket the ration pack."
+  },
+  {
+    "id": "ms_scrap_run_complete",
+    "name": "Scrap Run Complete",
+    "description": "You delivered the ration pack to Ollie.",
+    "toast": "Ollie devours the ration pack."
+  },
+  {
+    "id": "ms_fixers_favor_started",
+    "name": "Fixer's Favor Accepted",
+    "description": "Jed asked you to take over the repairs on his bench.",
+    "toast": "Jed wants you at the tinkering table."
+  },
+  {
+    "id": "ms_fixers_favor_talked_jed",
+    "name": "Jed Briefed You",
+    "description": "You talked with Jed about the pending repairs.",
+    "toast": "Jed hands you a basket of parts."
+  },
+  {
+    "id": "ms_fixers_favor_table_opened",
+    "name": "Bench Opened",
+    "description": "You opened the tinkering table to begin Jed's tutorial.",
+    "toast": "The bench is ready for repairs."
+  },
+  {
+    "id": "ms_fixers_favor_first_repair",
+    "name": "First Repair Complete",
+    "description": "You finished the first repair during Jed's tutorial.",
+    "toast": "Jed nods approvingly."
+  },
+  {
+    "id": "ms_fixers_favor_complete",
+    "name": "Fixer's Favor Complete",
+    "description": "You finished the tutorial and debriefed with Jed.",
+    "toast": "Jed trusts you with the bench now."
+  },
+  {
+    "id": "ms_lights_out_started",
+    "name": "Lights Out",
+    "description": "A blackout hit Nova's house and the breaker needs attention.",
+    "toast": "Find the breaker and restore power."
+  },
+  {
+    "id": "ms_lights_out_complete",
+    "name": "House Lights Restored",
+    "description": "Nova brought the lights back online and can leave the house.",
+    "toast": "Nova's house is lit once more."
+  },
+  {
+    "id": "ms_ellie_display_collected",
+    "name": "Recovered Ellie's Display",
+    "description": "You have the busted arcade display that Ellie asked for.",
+    "toast": "Recovered Ellie's arcade display.",
+    "trigger": {
+      "type": "event",
+      "event_id": "evt_item_display_pickup"
+    }
+  },
+  {
+    "id": "ms_maddie_grinder_collected",
+    "name": "Recovered Maddie's Grinder",
+    "description": "You salvaged Maddie's coffee grinder.",
+    "toast": "Recovered Maddie's coffee grinder.",
+    "trigger": {
+      "type": "event",
+      "event_id": "evt_item_grinder_pickup"
+    }
+  },
+  {
+    "id": "ms_kasey_projector_collected",
+    "name": "Recovered Kasey's Projector",
+    "description": "You found Kasey's projector lens.",
+    "toast": "Recovered Kasey's broken projector.",
+    "trigger": {
+      "type": "event",
+      "event_id": "evt_item_projector_pickup"
+    }
+  },
+  {
+    "id": "ms_repair_bundle_delivered",
+    "name": "Delivered Repair Bundle",
+    "description": "Jed received all three broken devices.",
+    "toast": "Jed received the bundle of broken devices."
+  },
+  {
+    "id": "ms_tinkering_prompt_active",
+    "name": "Tinkering Unlocked",
+    "description": "Jed opened the tinkering table and the tutorial is ready.",
+    "toast": "Jed unlocked tinkering. Head to the table to continue."
+  },
+  {
+    "id": "ms_tinkering_tutorial_done",
+    "name": "Tinkering Tutorial",
+    "description": "You completed Jed's tinkering tutorial.",
+    "toast": "Tinkering tutorial complete."
+  },
+  {
+    "id": "ms_ollie_met",
+    "name": "Met Ollie",
+    "description": "You bumped into Ollie on Main Road and heard his warning.",
+    "toast": "Met Ollie outside Nova's House.",
+    "trigger": {
+      "type": "event",
+      "event_id": "ollie_first_meeting"
+    }
+  },
+  {
+    "id": "ms_mine_power_on",
+    "name": "Restored Mine Power",
+    "description": "The Stellarium generator roared back to life.",
+    "toast": "The Stellarium generator roars to life.",
+    "effects": {
+      "unlock_exits": [
+        { "room_id": "mines_2", "direction": "north" },
+        { "room_id": "mines_3", "direction": "south" }
+      ]
+    }
+  }
+]

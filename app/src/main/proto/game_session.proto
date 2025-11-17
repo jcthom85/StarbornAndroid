@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+option java_package = "com.example.starborn.datastore";
+option java_multiple_files = true;
+
+message GameSessionProto {
+  string world_id = 1;
+  string hub_id = 2;
+  string room_id = 3;
+  string player_id = 4;
+  int32 player_level = 5;
+  int32 player_xp = 6;
+  int32 player_ap = 7;
+  int32 player_credits = 8;
+  map<string, int32> party_member_xp = 9;
+  map<string, int32> party_member_levels = 10;
+  repeated string active_quests = 11;
+  repeated string completed_quests = 12;
+  repeated string completed_milestones = 13;
+  repeated string learned_schematics = 14;
+  repeated string unlocked_skills = 15;
+  repeated string party_members = 16;
+  repeated InventoryEntryProto inventory = 17;
+  map<string, int32> party_member_hp = 18;
+  map<string, int32> party_member_rp = 19;
+  int64 last_saved_ms = 20;
+  repeated string tutorial_seen = 21;
+  repeated string tutorial_completed = 22;
+  repeated string tutorial_rooms_seen = 23;
+  string tracked_quest_id = 24;
+  repeated string failed_quests = 25;
+  repeated string milestone_history = 26;
+  map<string, string> equipped_items = 27;
+  int32 resonance = 28;
+  int32 resonance_min = 29;
+  int32 resonance_max = 30;
+  int32 resonance_start_base = 31;
+  map<string, string> quest_stage = 32;
+  map<string, QuestTaskListProto> quest_tasks = 33;
+  repeated string completed_events = 34;
+  repeated string unlocked_areas = 35;
+  repeated string unlocked_exits = 36;
+}
+
+message InventoryEntryProto {
+  string item_id = 1;
+  int32 quantity = 2;
+}
+
+message QuestTaskListProto {
+  repeated string completed_task_ids = 1;
+}

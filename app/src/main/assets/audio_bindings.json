@@ -1,0 +1,40 @@
+{
+  "music": {
+    "hub_1": "music_hub1",
+    "hub_2": "music_hub2",
+    "vfx_sandbox": "music_hub1"
+  },
+  "ambience": {
+    "1_1": "amb_vent",
+    "1_2": "amb_forest_birds",
+    "2_1": "amb_cave_drips",
+    "hub_1": "amb_vent+amb_forest_birds",
+    "hub_2": "amb_forest_birds+amb_cave_drips"
+  },
+  "weather": {
+    "dust": "amb_forest_birds",
+    "rain": "amb_cave_drips",
+    "cave_drip": "amb_cave_drips",
+    "industrial": "amb_vent"
+  },
+  "ui": {
+    "click": "ui_click",
+    "confirm": "ui_confirm",
+    "error": "ui_error",
+    "back": "ui_back",
+    "menu_open": "ui_confirm",
+    "menu_close": "ui_back",
+    "menu_action": "ui_click",
+    "shop_mechanic_greeting": "shop_mechanic_vo",
+    "shop_mechanic_smalltalk": "shop_mechanic_vo",
+    "shop_weapon_greeting": "shop_weapon_vo",
+    "shop_armor_greeting": "shop_armor_vo",
+    "shop_accessory_greeting": "shop_accessory_vo",
+    "shop_general_greeting": "shop_general_vo"
+  },
+  "battle": {
+    "start": "battle_start",
+    "victory": "victory_fanfare",
+    "defeat": "defeat_sting"
+  }
+}
