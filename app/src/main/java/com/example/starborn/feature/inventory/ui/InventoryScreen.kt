@@ -73,7 +73,7 @@ private const val CATEGORY_CRAFTING = "crafting"
 private const val CATEGORY_KEY_ITEMS = "key_items"
 private const val CATEGORY_OTHER = "other"
 
-enum class InventoryTab { ITEMS, EQUIPMENT }
+enum class InventoryTab { SUPPLIES, GEAR, KEY_ITEMS }
 
 data class InventoryLaunchOptions(
     val initialTab: InventoryTab? = null,
@@ -157,19 +157,28 @@ private fun InventoryScreen(
 ) {
     val normalizedFocusSlot = remember(focusSlot) { focusSlot?.lowercase(Locale.getDefault()) }
     val resolvedInitialTab = remember(initialTab, normalizedFocusSlot) {
-        initialTab ?: if (normalizedFocusSlot != null) InventoryTab.EQUIPMENT else InventoryTab.ITEMS
+        initialTab ?: if (normalizedFocusSlot != null) InventoryTab.GEAR else InventoryTab.SUPPLIES
     }
     var activeTab by remember(resolvedInitialTab) { mutableStateOf(resolvedInitialTab) }
-    var selectedCategory by remember(entries) { mutableStateOf(CATEGORY_ALL) }
-    val categories = remember(entries) {
-        val keys = entries.map { it.item.categoryKey() }.toSet()
+    val suppliesEntries = remember(entries) {
+        entries.filter {
+            when (it.item.categoryKey()) {
+                CATEGORY_EQUIPMENT, CATEGORY_KEY_ITEMS -> false
+                else -> true
+            }
+        }
+    }
+    val keyItemEntries = remember(entries) {
+        entries.filter { it.item.categoryKey() == CATEGORY_KEY_ITEMS }
+    }
+    var selectedCategory by remember(suppliesEntries) { mutableStateOf(CATEGORY_ALL) }
+    val categories = remember(suppliesEntries) {
+        val keys = suppliesEntries.map { it.item.categoryKey() }.toSet()
         buildList {
             add(CATEGORY_ALL)
             listOf(
                 CATEGORY_CONSUMABLES,
-                CATEGORY_EQUIPMENT,
                 CATEGORY_CRAFTING,
-                CATEGORY_KEY_ITEMS,
                 CATEGORY_OTHER
             ).forEach { key -> if (key in keys) add(key) }
         }
@@ -177,20 +186,31 @@ private fun InventoryScreen(
     if (selectedCategory !in categories) {
         selectedCategory = CATEGORY_ALL
     }
-    val filteredItems = remember(entries, selectedCategory) {
+    val filteredSupplies = remember(suppliesEntries, selectedCategory) {
         when (selectedCategory) {
-            CATEGORY_ALL -> entries
-            else -> entries.filter { it.item.categoryKey() == selectedCategory }
+            CATEGORY_ALL -> suppliesEntries
+            else -> suppliesEntries.filter { it.item.categoryKey() == selectedCategory }
         }
     }
-    var selectedEntry by remember { mutableStateOf(filteredItems.firstOrNull()) }
-    LaunchedEffect(filteredItems, activeTab) {
-        if (activeTab == InventoryTab.ITEMS) {
-            selectedEntry = when {
-                filteredItems.isEmpty() -> null
-                selectedEntry == null -> filteredItems.first()
-                filteredItems.none { it.item.id == selectedEntry?.item?.id } -> filteredItems.first()
-                else -> selectedEntry
+    var selectedSupplyEntry by remember { mutableStateOf(filteredSupplies.firstOrNull()) }
+    LaunchedEffect(filteredSupplies, activeTab) {
+        if (activeTab == InventoryTab.SUPPLIES) {
+            selectedSupplyEntry = when {
+                filteredSupplies.isEmpty() -> null
+                selectedSupplyEntry == null -> filteredSupplies.first()
+                filteredSupplies.none { it.item.id == selectedSupplyEntry?.item?.id } -> filteredSupplies.first()
+                else -> selectedSupplyEntry
+            }
+        }
+    }
+    var selectedKeyEntry by remember { mutableStateOf(keyItemEntries.firstOrNull()) }
+    LaunchedEffect(keyItemEntries, activeTab) {
+        if (activeTab == InventoryTab.KEY_ITEMS) {
+            selectedKeyEntry = when {
+                keyItemEntries.isEmpty() -> null
+                selectedKeyEntry == null -> keyItemEntries.first()
+                keyItemEntries.none { it.item.id == selectedKeyEntry?.item?.id } -> keyItemEntries.first()
+                else -> selectedKeyEntry
             }
         }
     }
@@ -225,7 +245,7 @@ private fun InventoryScreen(
         )
     }
     LaunchedEffect(selectedSlot, equippableEntries, activeTab, equippedItems) {
-        if (activeTab == InventoryTab.EQUIPMENT) {
+        if (activeTab == InventoryTab.GEAR) {
             val normalizedSlot = selectedSlot.lowercase(Locale.getDefault())
             val equippedId = equippedItems[normalizedSlot]
             selectedEquipEntry = equippableEntries.firstOrNull { it.item.id == equippedId }
@@ -300,13 +320,13 @@ private fun InventoryScreen(
                         largeTouchTargets = largeTouchTargets
                     )
                     when (activeTab) {
-                        InventoryTab.ITEMS -> ItemsTabContent(
+                        InventoryTab.SUPPLIES -> SuppliesTabContent(
                             categories = categories,
                             selectedCategory = selectedCategory,
                             onSelectCategory = { selectedCategory = it },
-                            items = filteredItems,
-                            selectedItem = selectedEntry,
-                            onSelectItem = { selectedEntry = it },
+                            items = filteredSupplies,
+                            selectedItem = selectedSupplyEntry,
+                            onSelectItem = { selectedSupplyEntry = it },
                             onUseItem = onUseItem,
                             accentColor = accentColor,
                             borderColor = borderColor,
@@ -314,7 +334,7 @@ private fun InventoryScreen(
                             highContrastMode = highContrastMode,
                             largeTouchTargets = largeTouchTargets
                         )
-                        InventoryTab.EQUIPMENT -> EquipmentTabContent(
+                        InventoryTab.GEAR -> EquipmentTabContent(
                             slots = slotOptions,
                             selectedSlot = selectedSlot,
                             onSelectSlot = { selectedSlot = it },
@@ -324,6 +344,16 @@ private fun InventoryScreen(
                             equippedItems = equippedItems,
                             equippedItemNames = equippedItemNames,
                             onEquipItem = onEquipItem,
+                            accentColor = accentColor,
+                            borderColor = borderColor,
+                            foregroundColor = foregroundColor,
+                            highContrastMode = highContrastMode,
+                            largeTouchTargets = largeTouchTargets
+                        )
+                        InventoryTab.KEY_ITEMS -> KeyItemsTabContent(
+                            items = keyItemEntries,
+                            selectedItem = selectedKeyEntry,
+                            onSelectItem = { selectedKeyEntry = it },
                             accentColor = accentColor,
                             borderColor = borderColor,
                             foregroundColor = foregroundColor,
@@ -473,18 +503,27 @@ private fun InventoryTabRow(
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         InventoryTabButton(
-            label = "Items",
-            selected = selectedTab == InventoryTab.ITEMS,
-            onClick = { onSelectTab(InventoryTab.ITEMS) },
+            label = "Supplies",
+            selected = selectedTab == InventoryTab.SUPPLIES,
+            onClick = { onSelectTab(InventoryTab.SUPPLIES) },
             accentColor = accentColor,
             borderColor = borderColor,
             largeTouchTargets = largeTouchTargets,
             modifier = Modifier.weight(1f)
         )
         InventoryTabButton(
-            label = "Equipment",
-            selected = selectedTab == InventoryTab.EQUIPMENT,
-            onClick = { onSelectTab(InventoryTab.EQUIPMENT) },
+            label = "Gear",
+            selected = selectedTab == InventoryTab.GEAR,
+            onClick = { onSelectTab(InventoryTab.GEAR) },
+            accentColor = accentColor,
+            borderColor = borderColor,
+            largeTouchTargets = largeTouchTargets,
+            modifier = Modifier.weight(1f)
+        )
+        InventoryTabButton(
+            label = "Key Items",
+            selected = selectedTab == InventoryTab.KEY_ITEMS,
+            onClick = { onSelectTab(InventoryTab.KEY_ITEMS) },
             accentColor = accentColor,
             borderColor = borderColor,
             largeTouchTargets = largeTouchTargets,
@@ -527,7 +566,7 @@ private fun InventoryTabButton(
 }
 
 @Composable
-private fun ItemsTabContent(
+private fun SuppliesTabContent(
     categories: List<String>,
     selectedCategory: String,
     onSelectCategory: (String) -> Unit,
@@ -580,6 +619,49 @@ private fun ItemsTabContent(
             primaryActionLabel = selectedItem?.let { "Use Item" },
             primaryActionEnabled = selectedItem?.item?.effect != null,
             onPrimaryAction = selectedItem?.let { entry -> { onUseItem(entry.item.id) } }
+        )
+    }
+}
+
+@Composable
+private fun KeyItemsTabContent(
+    items: List<InventoryEntry>,
+    selectedItem: InventoryEntry?,
+    onSelectItem: (InventoryEntry) -> Unit,
+    accentColor: Color,
+    borderColor: Color,
+    foregroundColor: Color,
+    highContrastMode: Boolean,
+    largeTouchTargets: Boolean
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 4.dp),
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        InventoryItemsColumn(
+            modifier = Modifier
+                .weight(0.6f)
+                .fillMaxHeight(),
+            items = items,
+            selectedItem = selectedItem,
+            onSelectItem = onSelectItem,
+            accentColor = accentColor,
+            borderColor = borderColor,
+            equippedItemId = null,
+            highContrastMode = highContrastMode,
+            largeTouchTargets = largeTouchTargets
+        )
+        InventoryDetailPanel(
+            modifier = Modifier
+                .weight(0.4f)
+                .fillMaxHeight(),
+            entry = selectedItem,
+            accentColor = accentColor,
+            borderColor = borderColor,
+            foregroundColor = foregroundColor,
+            largeTouchTargets = largeTouchTargets
         )
     }
 }

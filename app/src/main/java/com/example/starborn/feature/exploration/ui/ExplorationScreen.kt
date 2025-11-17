@@ -131,6 +131,7 @@ import com.example.starborn.R
 import com.example.starborn.domain.audio.AudioCuePlayer
 import com.example.starborn.domain.inventory.ItemUseResult
 import com.example.starborn.domain.milestone.MilestoneEvent
+import com.example.starborn.domain.model.ContainerAction
 import com.example.starborn.domain.model.CookingAction
 import com.example.starborn.domain.model.EventReward
 import com.example.starborn.domain.model.FirstAidAction
@@ -140,6 +141,7 @@ import com.example.starborn.domain.model.RoomAction
 import com.example.starborn.domain.model.ShopAction
 import com.example.starborn.domain.model.TinkeringAction
 import com.example.starborn.domain.model.GenericAction
+import com.example.starborn.domain.model.ToggleAction
 import com.example.starborn.domain.model.actionKey
 import com.example.starborn.domain.model.serviceTag
 import com.example.starborn.domain.tutorial.TutorialEntry
@@ -416,7 +418,7 @@ fun ExplorationScreen(
         } else {
             themeColor(activeTheme?.fg, Color.White.copy(alpha = 0.92f))
         }
-        val inlinePlan = remember(baseRoomDescription, uiState.actions, actionHints, currentRoom) {
+        val inlinePlanBase = remember(baseRoomDescription, uiState.actions, actionHints, currentRoom) {
             buildInlineActionPlan(
                 description = baseRoomDescription,
                 actions = uiState.actions,
@@ -424,11 +426,47 @@ fun ExplorationScreen(
                 room = currentRoom
             )
         }
-        val matchedNpcNames = inlinePlan?.segments
+        val matchedNpcNames = inlinePlanBase?.segments
             ?.mapNotNull { (it.target as? InlineActionTarget.Npc)?.name }
             ?.toSet()
             .orEmpty()
+        val matchedActionKeys = inlinePlanBase?.segments
+            ?.mapNotNull { (it.target as? InlineActionTarget.Room)?.action?.actionKey() }
+            ?.toSet()
+            .orEmpty()
         val fallbackNpcs = currentRoom?.npcs.orEmpty().filter { it.isNotBlank() && !matchedNpcNames.contains(it) }
+        val fallbackActions = remember(uiState.actions, matchedActionKeys) {
+            uiState.actions.filter { action ->
+                val key = action.actionKey()
+                action.name.isNotBlank() && !matchedActionKeys.contains(key)
+            }
+        }
+        val descriptionWithFallback = remember(baseRoomDescription, fallbackActions) {
+            if (fallbackActions.isEmpty()) {
+                baseRoomDescription
+            } else {
+                val base = baseRoomDescription.orEmpty().trimEnd()
+                buildString {
+                    if (base.isNotEmpty()) {
+                        append(base)
+                        append("\n\n")
+                    }
+                    fallbackActions.forEachIndexed { index, action ->
+                        if (index > 0) append('\n')
+                        append("• ")
+                        append(action.name.ifBlank { actionLabelFallback(action) })
+                    }
+                }
+            }
+        }
+        val inlinePlan = remember(descriptionWithFallback, uiState.actions, actionHints, currentRoom) {
+            buildInlineActionPlan(
+                description = descriptionWithFallback,
+                actions = uiState.actions,
+                hints = actionHints,
+                room = currentRoom
+            )
+        }
         val serviceQuickActions = remember(uiState.actions, uiState.actionHints, currentRoom?.id) {
             val unique = LinkedHashSet<String>()
             val items = mutableListOf<QuickMenuAction>()
@@ -590,7 +628,7 @@ fun ExplorationScreen(
 
             RoomDescriptionPanel(
                 currentRoom = currentRoom,
-                description = baseRoomDescription,
+                description = descriptionWithFallback,
                 plan = inlinePlan,
                 isDark = isRoomDark,
                 onAction = { action -> viewModel.onActionSelected(action) },
@@ -1453,7 +1491,7 @@ private fun MenuTabContentArea(
     }
 }
 
-private enum class InventoryCarouselPage { ITEMS, EQUIPMENT }
+private enum class InventoryCarouselPage { SUPPLIES, GEAR, KEY_ITEMS }
 
 @Composable
 private fun InventoryTabContent(
@@ -1463,7 +1501,11 @@ private fun InventoryTabContent(
     borderColor: Color,
     onOpenInventory: (InventoryLaunchOptions) -> Unit
 ) {
-    var page by rememberSaveable { mutableStateOf(InventoryCarouselPage.ITEMS) }
+    var page by rememberSaveable { mutableStateOf(InventoryCarouselPage.SUPPLIES) }
+    val supplies = remember(inventoryItems) {
+        inventoryItems.filterNot { it.isKeyItem() }
+    }
+    val keyItems = remember(inventoryItems) { inventoryItems.filter { it.isKeyItem() } }
     MenuSectionCard(
         title = "Inventory Overview",
         accentColor = accentColor,
@@ -1477,15 +1519,23 @@ private fun InventoryTabContent(
         )
         Spacer(modifier = Modifier.height(12.dp))
         when (page) {
-            InventoryCarouselPage.ITEMS -> InventoryItemsPreview(
-                items = inventoryItems,
-                borderColor = borderColor
+            InventoryCarouselPage.SUPPLIES -> InventoryItemsPreview(
+                items = supplies,
+                borderColor = borderColor,
+                emptyMessage = "No supplies collected yet. Explore rooms to gather materials.",
+                moreLabel = "more supplies"
             )
-            InventoryCarouselPage.EQUIPMENT -> InventoryEquipmentPreview(
+            InventoryCarouselPage.GEAR -> InventoryEquipmentPreview(
                 equippedItems = equippedItems,
                 borderColor = borderColor,
                 accentColor = accentColor,
                 onOpenInventory = onOpenInventory
+            )
+            InventoryCarouselPage.KEY_ITEMS -> InventoryItemsPreview(
+                items = keyItems,
+                borderColor = borderColor,
+                emptyMessage = "No key items collected yet.",
+                moreLabel = "more key items"
             )
         }
         Spacer(modifier = Modifier.height(4.dp))
@@ -1507,16 +1557,23 @@ private fun InventoryCarouselToggle(
         horizontalArrangement = Arrangement.spacedBy(6.dp)
     ) {
         InventoryCarouselButton(
-            label = "Items",
-            selected = current == InventoryCarouselPage.ITEMS,
-            onClick = { onSelect(InventoryCarouselPage.ITEMS) },
+            label = "Supplies",
+            selected = current == InventoryCarouselPage.SUPPLIES,
+            onClick = { onSelect(InventoryCarouselPage.SUPPLIES) },
             accentColor = accentColor,
             modifier = Modifier.weight(1f)
         )
         InventoryCarouselButton(
-            label = "Equipment",
-            selected = current == InventoryCarouselPage.EQUIPMENT,
-            onClick = { onSelect(InventoryCarouselPage.EQUIPMENT) },
+            label = "Gear",
+            selected = current == InventoryCarouselPage.GEAR,
+            onClick = { onSelect(InventoryCarouselPage.GEAR) },
+            accentColor = accentColor,
+            modifier = Modifier.weight(1f)
+        )
+        InventoryCarouselButton(
+            label = "Key Items",
+            selected = current == InventoryCarouselPage.KEY_ITEMS,
+            onClick = { onSelect(InventoryCarouselPage.KEY_ITEMS) },
             accentColor = accentColor,
             modifier = Modifier.weight(1f)
         )
@@ -1556,11 +1613,13 @@ private fun InventoryCarouselButton(
 @Composable
 private fun InventoryItemsPreview(
     items: List<InventoryPreviewItemUi>,
-    borderColor: Color
+    borderColor: Color,
+    emptyMessage: String,
+    moreLabel: String
 ) {
     if (items.isEmpty()) {
         Text(
-            text = "No items collected yet. Explore rooms to gather supplies.",
+            text = emptyMessage,
             style = MaterialTheme.typography.bodyMedium,
             color = Color.White.copy(alpha = 0.85f)
         )
@@ -1599,13 +1658,18 @@ private fun InventoryItemsPreview(
         }
         if (items.size > 6) {
             Text(
-                text = "+${items.size - 6} more items",
+                text = "+${items.size - 6} $moreLabel",
                 style = MaterialTheme.typography.labelSmall,
                 color = Color.White.copy(alpha = 0.7f),
                 modifier = Modifier.align(Alignment.End)
             )
         }
     }
+}
+
+private fun InventoryPreviewItemUi.isKeyItem(): Boolean {
+    val normalized = type.lowercase(Locale.getDefault())
+    return normalized == "key" || normalized == "key_item" || normalized == "quest"
 }
 
 @Composable
@@ -1622,7 +1686,7 @@ private fun InventoryEquipmentPreview(
     }
     if (slots.isEmpty()) {
         Text(
-            text = "No equipment assigned. Visit the equipment screen to gear up.",
+            text = "No gear assigned. Visit the gear screen to equip the squad.",
             style = MaterialTheme.typography.bodyMedium,
             color = Color.White.copy(alpha = 0.85f)
         )
@@ -1640,7 +1704,7 @@ private fun InventoryEquipmentPreview(
                     .clickable {
                         onOpenInventory(
                             InventoryLaunchOptions(
-                                initialTab = InventoryTab.EQUIPMENT,
+                                initialTab = InventoryTab.GEAR,
                                 focusSlot = normalized
                             )
                         )
@@ -3918,6 +3982,19 @@ private fun RoomDescriptionPanel(
             }
         }
     }
+}
+
+private fun actionLabelFallback(action: RoomAction): String = when (action) {
+    is ContainerAction -> "Search"
+    is ToggleAction -> "Toggle"
+    is TinkeringAction -> "Tinkering"
+    is CookingAction -> "Cooking"
+    is FirstAidAction -> "First Aid"
+    is ShopAction -> "Shop"
+    is GenericAction -> action.type.ifBlank { "Action" }.replaceFirstChar { ch ->
+        if (ch.isLowerCase()) ch.titlecase(Locale.getDefault()) else ch.toString()
+    }
+    else -> "Action"
 }
 
 @Composable

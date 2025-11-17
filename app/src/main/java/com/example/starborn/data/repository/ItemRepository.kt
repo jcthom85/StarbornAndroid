@@ -10,33 +10,58 @@ class ItemRepository(
 ) : ItemCatalog {
     private val itemsById: MutableMap<String, Item> = mutableMapOf()
     private val aliasMap: MutableMap<String, String> = mutableMapOf()
+    private val whitespaceRegex = Regex("\\s+")
+    private val punctuationRegex = Regex("[^a-z0-9_]")
 
     override fun load() {
         val items = dataSource.loadItems()
         itemsById.clear()
         aliasMap.clear()
-        val whitespaceRegex = Regex("\\s+")
         items.forEach { item ->
-            itemsById[item.id] = item
-            aliasMap[item.id.lowercase(Locale.getDefault())] = item.id
-            item.aliases.forEach { alias ->
-                aliasMap[alias.lowercase(Locale.getDefault())] = item.id
-            }
-            val name = item.name.trim()
-            if (name.isNotBlank()) {
-                val lower = name.lowercase(Locale.getDefault())
-                aliasMap[lower] = item.id
-                val underscored = lower.replace(whitespaceRegex, "_")
-                aliasMap[underscored] = item.id
-            }
+            val id = item.id.lowercase(Locale.getDefault())
+            itemsById[id] = item
+            registerAlias(item.id, item.id)
+            item.aliases.forEach { alias -> registerAlias(alias, item.id) }
+            registerAlias(item.name, item.id)
         }
     }
 
     fun allItems(): List<Item> = itemsById.values.toList()
 
     override fun findItem(idOrAlias: String): Item? {
-        val key = idOrAlias.lowercase()
-        val id = itemsById[key]?.id ?: aliasMap[key]
-        return id?.let { itemsById[it] }
+        val normalized = idOrAlias.trim().lowercase(Locale.getDefault())
+        if (normalized.isEmpty()) return null
+        val candidates = buildList {
+            add(normalized)
+            add(whitespaceRegex.replace(normalized, "_"))
+            add(normalized.replace('-', '_'))
+            add(punctuationRegex.replace(normalized, ""))
+            if (normalized.contains('_')) {
+                add(normalized.replace('_', ' '))
+            }
+        }.mapNotNull { key -> key.takeIf { it.isNotBlank() } }
+            .distinct()
+        candidates.forEach { key ->
+            itemsById[key]?.let { return it }
+            aliasMap[key]?.let { id -> itemsById[id]?.let { return it } }
+        }
+        return null
+    }
+
+    private fun registerAlias(raw: String?, itemId: String) {
+        if (raw.isNullOrBlank()) return
+        val lower = raw.trim().lowercase(Locale.getDefault())
+        if (lower.isEmpty()) return
+        val variants = listOf(
+            lower,
+            whitespaceRegex.replace(lower, "_"),
+            lower.replace('-', '_'),
+            punctuationRegex.replace(lower, "")
+        )
+        variants.forEach { variant ->
+            if (variant.isNotBlank()) {
+                aliasMap[variant] = itemId
+            }
+        }
     }
 }

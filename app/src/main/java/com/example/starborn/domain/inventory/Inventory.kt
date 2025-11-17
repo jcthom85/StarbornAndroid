@@ -4,6 +4,7 @@ import com.example.starborn.domain.model.Item
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import java.util.Locale
 
 class InventoryService(
     private val itemCatalog: ItemCatalog
@@ -20,20 +21,23 @@ class InventoryService(
 
     fun snapshot(): Map<String, Int> = items.mapValues { it.value.quantity }.filterValues { it > 0 }
 
+    private val placeholderItems: MutableMap<String, Item> = mutableMapOf()
+
     fun restore(entries: Map<String, Int>) {
         itemCatalog.load()
         items.clear()
         entries.forEach { (id, quantity) ->
             val normalizedQuantity = quantity.coerceAtLeast(0)
             if (normalizedQuantity <= 0) return@forEach
-            val item = itemCatalog.findItem(id) ?: return@forEach
-            items[id] = InventoryEntry(item = item, quantity = normalizedQuantity)
+            val item = resolveItem(id) ?: return@forEach
+            items[item.id] = InventoryEntry(item = item, quantity = normalizedQuantity)
         }
         publish()
     }
 
     fun addItem(idOrAlias: String, quantity: Int = 1) {
-        val item = itemCatalog.findItem(idOrAlias) ?: return
+        if (quantity == 0) return
+        val item = resolveItem(idOrAlias) ?: return
         val entry = items.getOrPut(item.id) { InventoryEntry(item, 0) }
         entry.quantity += quantity
         if (quantity > 0) {
@@ -43,12 +47,12 @@ class InventoryService(
     }
 
     fun removeItem(idOrAlias: String, quantity: Int = 1) {
-        val item = itemCatalog.findItem(idOrAlias) ?: return
+        val item = resolveItem(idOrAlias) ?: return
         removeItemById(item.id, quantity)
     }
 
     fun hasItem(idOrAlias: String, quantity: Int = 1): Boolean {
-        val item = itemCatalog.findItem(idOrAlias) ?: return false
+        val item = resolveItem(idOrAlias) ?: return false
         val entry = items[item.id] ?: return false
         return entry.quantity >= quantity
     }
@@ -60,7 +64,7 @@ class InventoryService(
     }
 
     fun useItem(idOrAlias: String): ItemUseResult? {
-        val item = itemCatalog.findItem(idOrAlias) ?: return null
+        val item = resolveItem(idOrAlias) ?: return null
         if (!hasItemDirect(item.id)) return null
         val effect = item.effect
         val result = when {
@@ -109,10 +113,10 @@ class InventoryService(
     }
 
     fun itemDisplayName(idOrAlias: String): String {
-        return itemCatalog.findItem(idOrAlias)?.name ?: idOrAlias
+        return resolveItem(idOrAlias)?.name ?: idOrAlias
     }
 
-    fun itemDetail(idOrAlias: String): Item? = itemCatalog.findItem(idOrAlias)
+    fun itemDetail(idOrAlias: String): Item? = resolveItem(idOrAlias)
 
     private fun hasItemDirect(itemId: String): Boolean =
         items[itemId]?.quantity?.let { it > 0 } ?: false
@@ -124,6 +128,44 @@ class InventoryService(
             items.remove(itemId)
         }
         publish()
+    }
+
+    private fun resolveItem(idOrAlias: String): Item? {
+        val trimmed = idOrAlias.trim()
+        if (trimmed.isEmpty()) return null
+        val catalogItem = itemCatalog.findItem(trimmed)
+        if (catalogItem != null) return catalogItem
+        val normalized = trimmed.lowercase(Locale.getDefault())
+        placeholderItems[normalized]?.let { return it }
+        val name = normalized.replace('_', ' ').replace('-', ' ')
+            .split(' ')
+            .filter { it.isNotBlank() }
+            .joinToString(" ") { part ->
+                part.replaceFirstChar { ch ->
+                    if (ch.isLowerCase()) ch.titlecase(Locale.getDefault()) else ch.toString()
+                }
+            }.ifBlank { trimmed }
+        val type = when {
+            normalized.contains("key") -> "key_item"
+            normalized.contains("quest") -> "quest"
+            normalized.contains("schematic") -> "schematic"
+            normalized.contains("recipe") -> "schematic"
+            normalized.contains("medkit") || normalized.contains("potion") -> "consumable"
+            normalized.contains("ingredient") || normalized.contains("pepper") ||
+                normalized.contains("fish") || normalized.contains("meat") ||
+                normalized.contains("lettuce") -> "ingredient"
+            normalized.contains("scrap") || normalized.contains("wiring") ||
+                normalized.contains("component") || normalized.contains("core") ||
+                normalized.contains("cell") -> "component"
+            else -> "misc"
+        }
+        val placeholder = Item(
+            id = normalized,
+            name = name,
+            type = type
+        )
+        placeholderItems[normalized] = placeholder
+        return placeholder
     }
 }
 

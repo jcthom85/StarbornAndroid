@@ -568,8 +568,11 @@ class ExplorationViewModel(
         if (result.rewardAp > 0) rewardParts += "${result.rewardAp} AP"
         if (result.rewardCredits > 0) rewardParts += "${result.rewardCredits} credits"
         result.rewardItems.forEach { (itemId, quantity) ->
+            val qty = quantity.coerceAtLeast(0)
+            if (qty <= 0) return@forEach
             val name = inventoryService.itemDisplayName(itemId)
-            rewardParts += "$quantity x $name"
+            rewardParts += "$qty x $name"
+            emitEvent(ExplorationEvent.ItemGranted(name, qty))
         }
         val outcomeMessage = if (rewardParts.isNotEmpty()) {
             "Victory reward: ${rewardParts.joinToString(", ")}"
@@ -1087,7 +1090,6 @@ class ExplorationViewModel(
             inventoryService.state.collect { entries ->
                 val preview = entries
                     .sortedBy { it.item.name.lowercase(Locale.getDefault()) }
-                    .take(8)
                     .map { entry ->
                         InventoryPreviewItemUi(
                             id = entry.item.id,
@@ -3041,6 +3043,17 @@ class ExplorationViewModel(
             }
         }
         postStatus(message)
+        if (grantedItems.isNotEmpty()) {
+            val title = action.popupTitle?.takeIf { it.isNotBlank() }
+                ?: action.name.ifBlank { "Supply Cache" }
+            val announcement = if (grantedItems.size == 1) {
+                "Recovered ${grantedItems.first()}."
+            } else {
+                val prefix = grantedItems.dropLast(1).joinToString(", ")
+                "Recovered $prefix and ${grantedItems.last()}."
+            }
+            enqueueEventAnnouncement(title, announcement)
+        }
 
         triggerPlayerAction(action.actionEvent?.takeIf { it.isNotBlank() })
         updateActionHints(_uiState.value.currentRoom)
