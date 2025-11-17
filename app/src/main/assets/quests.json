@@ -1,5 +1,135 @@
 [
   {
+    "id": "lights_out",
+    "title": "Lights Out",
+    "summary": "Nova wakes up in darkness after a storm surge fries the power in her house.",
+    "description": "Flip the lights back on so Nova can see what she's doing before heading outside.",
+    "flavor": "Ollie insists the fix is easy. The sparking panel says otherwise.",
+    "giver": "Ollie",
+    "hub_id": "w1_hub1",
+    "stages": [
+      {
+        "id": "restore_power",
+        "title": "Restore Power",
+        "description": "Bring the lights back with a single switch so Nova can leave the house.",
+        "tasks": [
+          {
+            "id": "flip_switch",
+            "text": "Flip the light switch to restore power.",
+            "done": false,
+            "tutorial_id": "scene_light_switch_hint"
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 20
+      }
+    ]
+  },
+  {
+    "id": "scrap_run",
+    "title": "Scrap Run",
+    "summary": "Tyson needs a ration pack run before he lets you leave the market empty-handed.",
+    "description": "Check on Tyson's stall, gather the ration pack he set aside, and deliver it to Ollie so he has some energy left for Jed's errands.",
+    "flavor": "Tyson swears the ration paste builds character. Ollie just calls it edible sludge.",
+    "giver": "Tyson",
+    "hub_id": "w1_hub1",
+    "stages": [
+      {
+        "id": "restock_tyson",
+        "title": "Resupply Tyson",
+        "description": "Tyson flagged you down to grab his rations and shuttle them over to Ollie.",
+        "tasks": [
+          {
+            "id": "talk_to_tyson",
+            "text": "Talk to Tyson inside the provisions stall.",
+            "done": false,
+            "tutorial_id": "scene_scrap_run_tyson"
+          },
+          {
+            "id": "collect_rations",
+            "text": "Collect the ration pack from the back room.",
+            "done": false,
+            "tutorial_id": "scene_scrap_run_shop"
+          },
+          {
+            "id": "return_to_ollie",
+            "text": "Bring the ration pack to Ollie in the plaza.",
+            "done": false,
+            "tutorial_id": "scene_scrap_run_return"
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 40
+      },
+      {
+        "type": "item",
+        "item_id": "ration_pack",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "fixers_favor",
+    "title": "Fixer's Favor",
+    "summary": "Jed tosses you the reins on his workbench so you can patch the town's busted gear.",
+    "description": "With the broken devices gathered, Jed wants you to learn the ropes on his tinkering table. Follow his instructions, finish the repairs, and report back so he can deliver them.",
+    "flavor": "Nothing impresses Jed like a clean repair job.",
+    "giver": "Jed",
+    "hub_id": "w1_hub1",
+    "stages": [
+      {
+        "id": "learn_tinkering",
+        "title": "Learn the Bench",
+        "description": "Shadow Jed through his tinkering tutorial and finish the repairs.",
+        "tasks": [
+          {
+            "id": "talk_to_jed_fixers",
+            "text": "Talk to Jed to review the repairs he needs.",
+            "done": false,
+            "tutorial_id": "scene_fixers_favor_jed"
+          },
+          {
+            "id": "open_tinkering_table",
+            "text": "Open the tinkering table when Jed tells you to.",
+            "done": false,
+            "tutorial_id": "scene_fixers_favor_table"
+          },
+          {
+            "id": "craft_first_repair",
+            "text": "Complete the first repair on Jed's bench.",
+            "done": false,
+            "tutorial_id": "scene_fixers_favor_craft"
+          },
+          {
+            "id": "return_repaired_items",
+            "text": "Debrief with Jed after the repairs.",
+            "done": false,
+            "tutorial_id": "scene_fixers_favor_return"
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 80
+      },
+      {
+        "type": "item",
+        "item_id": "scrap_metal",
+        "quantity": 5
+      }
+    ]
+  },
+  {
     "id": "gather_broken_gear",
     "title": "Gather the Broken Gear",
     "summary": "Jed needs three busted devices rounded up before he can start repairs.",
@@ -100,7 +230,8 @@
           {
             "id": "spot_jed_shop",
             "text": "Find Jed's Scrap & Salvage stall in the market strip.",
-            "done": false
+            "done": false,
+            "tutorial_id": "scene_market_locator"
           },
           {
             "id": "talk_to_jed_task",

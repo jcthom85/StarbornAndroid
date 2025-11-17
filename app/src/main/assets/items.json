@@ -317,6 +317,20 @@
     "value": 0
   },
   {
+    "id": "ration_pack",
+    "name": "Ration Pack",
+    "aliases": [
+      "rations",
+      "nova rations"
+    ],
+    "type": "consumable",
+    "description": "Compressed protein slabs, caffeine chews, and a flask of electrolyte soup. Restores 40 HP.",
+    "value": 35,
+    "effect": {
+      "restore_hp": 40
+    }
+  },
+  {
     "id": "energy_core",
     "name": "Energy Core",
     "aliases": [

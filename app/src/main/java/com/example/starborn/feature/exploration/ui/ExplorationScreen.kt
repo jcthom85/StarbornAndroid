@@ -424,19 +424,8 @@ fun ExplorationScreen(
                 room = currentRoom
             )
         }
-        val matchedActionKeys = inlinePlan?.segments
-            ?.mapNotNull { (it.target as? InlineActionTarget.Room)?.action?.actionKey() }
-            ?.toSet()
-            .orEmpty()
-        val fallbackActions = remember(uiState.actions, matchedActionKeys) {
-            uiState.actions.filterNot { matchedActionKeys.contains(it.actionKey()) }
-        }
         val matchedNpcNames = inlinePlan?.segments
             ?.mapNotNull { (it.target as? InlineActionTarget.Npc)?.name }
-            ?.toSet()
-            .orEmpty()
-        val matchedEnemyIds = inlinePlan?.segments
-            ?.mapNotNull { (it.target as? InlineActionTarget.Enemy)?.id }
             ?.toSet()
             .orEmpty()
         val fallbackNpcs = currentRoom?.npcs.orEmpty().filter { it.isNotBlank() && !matchedNpcNames.contains(it) }
@@ -609,9 +598,7 @@ fun ExplorationScreen(
                 onEnemyClick = { enemyId -> viewModel.engageEnemy(enemyId) },
                 borderColor = panelBorderColor,
                 backgroundColor = panelBackgroundColor,
-                fallbackActions = fallbackActions,
                 fallbackNpcs = fallbackNpcs,
-                actionHints = actionHints,
                 accentColor = actionAccentColor,
                 textColor = roomTextColor,
                 modifier = Modifier
@@ -3863,9 +3850,7 @@ private fun RoomDescriptionPanel(
     onEnemyClick: (String) -> Unit,
     borderColor: Color,
     backgroundColor: Color,
-    fallbackActions: List<RoomAction>,
     fallbackNpcs: List<String>,
-    actionHints: Map<String, ActionHintUi>,
     accentColor: Color,
     modifier: Modifier = Modifier
 ) {
@@ -3894,30 +3879,6 @@ private fun RoomDescriptionPanel(
                 accentColor = accentColor,
                 modifier = Modifier.fillMaxWidth()
             )
-            if (fallbackActions.isNotEmpty()) {
-                Text(
-                    text = "Interactions",
-                    color = Color.White.copy(alpha = 0.75f),
-                    style = MaterialTheme.typography.labelMedium
-                )
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .horizontalScroll(rememberScrollState()),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    fallbackActions.forEach { action ->
-                        val key = action.actionKey()
-                        val locked = actionHints[key]?.locked == true
-                        RoomActionChip(
-                            label = action.name.ifBlank { "Interact" },
-                            accentColor = accentColor,
-                            locked = locked,
-                            onClick = { onAction(action) }
-                        )
-                    }
-                }
-            }
             if (fallbackNpcs.isNotEmpty()) {
                 Text(
                     text = "People",

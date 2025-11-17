@@ -681,6 +681,11 @@
           {
             "type": "start_quest",
             "quest_id": "gather_broken_gear"
+          },
+          {
+            "type": "system_tutorial",
+            "scene_id": "scene_market_journal",
+            "context": "Market Plaza"
           }
         ]
       },
@@ -718,6 +723,18 @@
                     "milestone": "ms_tinkering_prompt_active"
                   },
                   {
+                    "type": "start_quest",
+                    "quest_id": "fixers_favor"
+                  },
+                  {
+                    "type": "track_quest",
+                    "quest_id": "fixers_favor"
+                  },
+                  {
+                    "type": "set_milestone",
+                    "milestone": "ms_fixers_favor_started"
+                  },
+                  {
                     "type": "give_item_to_player",
                     "item": "Scrap Metal",
                     "quantity": 20
@@ -735,6 +752,11 @@
                   {
                     "type": "play_cinematic",
                     "scene_id": "scene_jed_tinkering_prompt"
+                  },
+                  {
+                    "type": "system_tutorial",
+                    "scene_id": "scene_fixers_favor_jed",
+                    "context": "Jed's Workshop"
                   },
                   {
                     "type": "narrate",
@@ -834,6 +856,27 @@
               {
                 "type": "set_milestone",
                 "milestone": "ms_tinkering_tutorial_done"
+              },
+              {
+                "type": "if_quest_active",
+                "quest_id": "fixers_favor",
+                "do": [
+                  {
+                    "type": "if_milestone_not_set",
+                    "milestone": "ms_fixers_favor_first_repair",
+                    "do": [
+                      {
+                        "type": "set_quest_task_done",
+                        "quest_id": "fixers_favor",
+                        "task_id": "craft_first_repair"
+                      },
+                      {
+                        "type": "set_milestone",
+                        "milestone": "ms_fixers_favor_first_repair"
+                      }
+                    ]
+                  }
+                ]
               }
             ]
           }
@@ -856,6 +899,35 @@
           {
             "type": "play_cinematic",
             "scene_id": "scene_jed_tinkering_wrapup"
+          },
+          {
+            "type": "if_quest_active",
+            "quest_id": "fixers_favor",
+            "do": [
+              {
+                "type": "if_milestone_not_set",
+                "milestone": "ms_fixers_favor_complete",
+                "do": [
+                  {
+                    "type": "set_quest_task_done",
+                    "quest_id": "fixers_favor",
+                    "task_id": "return_repaired_items"
+                  },
+                  {
+                    "type": "complete_quest",
+                    "quest_id": "fixers_favor"
+                  },
+                  {
+                    "type": "set_milestone",
+                    "milestone": "ms_fixers_favor_complete"
+                  },
+                  {
+                    "type": "show_message",
+                    "message": "Jed claps you on the shoulder and promises to deliver the fixed gear."
+                  }
+                ]
+              }
+            ]
           }
         ]
       }
@@ -885,6 +957,27 @@
                   {
                     "type": "player_action",
                     "action": "tinkering_tutorial_finished"
+                  }
+                ]
+              },
+              {
+                "type": "if_quest_active",
+                "quest_id": "fixers_favor",
+                "do": [
+                  {
+                    "type": "if_milestone_not_set",
+                    "milestone": "ms_fixers_favor_table_opened",
+                    "do": [
+                      {
+                        "type": "set_quest_task_done",
+                        "quest_id": "fixers_favor",
+                        "task_id": "open_tinkering_table"
+                      },
+                      {
+                        "type": "set_milestone",
+                        "milestone": "ms_fixers_favor_table_opened"
+                      }
+                    ]
                   }
                 ]
               }
@@ -934,6 +1027,243 @@
     ]
   },
   {
+    "id": "evt_lights_out_intro",
+    "description": "Starts the Lights Out quest the first time Nova wakes up in her house.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "town_9"
+    },
+    "conditions": [
+      {
+        "type": "quest_not_started",
+        "quest_id": "lights_out"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_quest",
+        "quest_id": "lights_out"
+      },
+      {
+        "type": "track_quest",
+        "quest_id": "lights_out"
+      },
+      {
+        "type": "system_tutorial",
+        "scene_id": "scene_lights_out_intro",
+        "context": "Nova's House"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_lights_out_started"
+      },
+      {
+        "type": "show_message",
+        "message": "Quest started: Lights Out"
+      }
+    ]
+  },
+  {
+    "id": "evt_scrap_run_intro",
+    "description": "Tyson ropes Nova into a ration run once the blackout is resolved.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "market_plaza"
+    },
+    "conditions": [
+      {
+        "type": "milestone_set",
+        "milestone": "ms_lights_out_complete"
+      },
+      {
+        "type": "quest_not_started",
+        "quest_id": "scrap_run"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_quest",
+        "quest_id": "scrap_run"
+      },
+      {
+        "type": "track_quest",
+        "quest_id": "scrap_run"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_scrap_run_started"
+      },
+      {
+        "type": "system_tutorial",
+        "scene_id": "scene_scrap_run_tyson",
+        "context": "Tyson's Provisions"
+      },
+      {
+        "type": "show_message",
+        "message": "Quest started: Scrap Run"
+      }
+    ]
+  },
+  {
+    "id": "evt_scrap_run_talk_tyson",
+    "description": "Handles Tyson's briefing for the ration run.",
+    "trigger": {
+      "type": "player_action",
+      "action": "scrap_run_talk_tyson"
+    },
+    "actions": [
+      {
+        "type": "if_quest_active",
+        "quest_id": "scrap_run",
+        "do": [
+          {
+            "type": "if_milestone_not_set",
+            "milestone": "ms_scrap_run_talked_tyson",
+            "do": [
+              {
+                "type": "set_quest_task_done",
+                "quest_id": "scrap_run",
+                "task_id": "talk_to_tyson"
+              },
+              {
+                "type": "set_milestone",
+                "milestone": "ms_scrap_run_talked_tyson"
+              },
+              {
+                "type": "system_tutorial",
+                "scene_id": "scene_scrap_run_shop",
+                "context": "Tyson's Provisions"
+              },
+              {
+                "type": "show_message",
+                "message": "Tyson points you toward the ration crate."
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_scrap_run_collect_rations",
+    "description": "Marks the ration crate interaction.",
+    "trigger": {
+      "type": "player_action",
+      "action": "scrap_run_rations_taken"
+    },
+    "actions": [
+      {
+        "type": "if_quest_active",
+        "quest_id": "scrap_run",
+        "do": [
+          {
+            "type": "if_milestone_not_set",
+            "milestone": "ms_scrap_run_rations_collected",
+            "do": [
+              {
+                "type": "set_quest_task_done",
+                "quest_id": "scrap_run",
+                "task_id": "collect_rations"
+              },
+              {
+                "type": "set_milestone",
+                "milestone": "ms_scrap_run_rations_collected"
+              },
+              {
+                "type": "system_tutorial",
+                "scene_id": "scene_scrap_run_return",
+                "context": "Market Plaza"
+              },
+              {
+                "type": "show_message",
+                "message": "You collected the ration pack for Ollie."
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_scrap_run_return",
+    "description": "Completes the ration delivery.",
+    "trigger": {
+      "type": "player_action",
+      "action": "scrap_run_return_to_ollie"
+    },
+    "actions": [
+      {
+        "type": "if_quest_active",
+        "quest_id": "scrap_run",
+        "do": [
+          {
+            "type": "if_milestone_set",
+            "milestone": "ms_scrap_run_rations_collected",
+            "do": [
+              {
+                "type": "take_item",
+                "item_id": "ration_pack",
+                "quantity": 1
+              },
+              {
+                "type": "set_quest_task_done",
+                "quest_id": "scrap_run",
+                "task_id": "return_to_ollie"
+              },
+              {
+                "type": "complete_quest",
+                "quest_id": "scrap_run"
+              },
+              {
+                "type": "set_milestone",
+                "milestone": "ms_scrap_run_complete"
+              },
+              {
+                "type": "show_message",
+                "message": "Ollie tears into the ration pack and thanks you between bites."
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_fixers_favor_talk_jed",
+    "description": "Marks the talk-to-Jed step for Fixer's Favor.",
+    "trigger": {
+      "type": "talk_to",
+      "npc": "jed"
+    },
+    "actions": [
+      {
+        "type": "if_quest_active",
+        "quest_id": "fixers_favor",
+        "do": [
+          {
+            "type": "if_milestone_not_set",
+            "milestone": "ms_fixers_favor_talked_jed",
+            "do": [
+              {
+                "type": "set_quest_task_done",
+                "quest_id": "fixers_favor",
+                "task_id": "talk_to_jed_fixers"
+              },
+              {
+                "type": "set_milestone",
+                "milestone": "ms_fixers_favor_talked_jed"
+              },
+              {
+                "type": "show_message",
+                "message": "Jed tosses you tools and points toward the bench."
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": "nova_house_light_toggle",
     "description": "Toggle the lights in Nova's House.",
     "trigger": {
@@ -942,9 +1272,39 @@
     },
     "actions": [
       {
+        "type": "set_room_state",
         "room_id": "town_9",
         "state_key": "light_on",
-        "type": "toggle_room_state"
+        "value": true
+      },
+      {
+        "type": "set_room_state",
+        "room_id": "town_9",
+        "state_key": "power_restored",
+        "value": true
+      },
+      {
+        "type": "if_milestone_not_set",
+        "milestone": "ms_lights_out_complete",
+        "do": [
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "lights_out",
+            "task_id": "flip_switch"
+          },
+          {
+            "type": "complete_quest",
+            "quest_id": "lights_out"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_lights_out_complete"
+          },
+          {
+            "type": "show_message",
+            "message": "Power surges through the house as the lights flare to life."
+          }
+        ]
       }
     ],
     "repeatable": true,
@@ -976,6 +1336,11 @@
             "quest_id": "talk_to_jed"
           },
           {
+            "type": "system_tutorial",
+            "scene_id": "scene_ollie_recruitment",
+            "context": "Nova's House"
+          },
+          {
             "type": "show_message",
             "message": "Quest started: Talk to Jed"
           }
@@ -986,6 +1351,10 @@
       {
         "type": "milestone_not_set",
         "milestone": "ms_ollie_met"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_lights_out_complete"
       }
     ]
   },

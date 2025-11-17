@@ -100,6 +100,7 @@ private const val STELLARIUM_GENERATOR_ON_MESSAGE_FALLBACK = "The Stellarium gen
 private const val STELLARIUM_GENERATOR_OFF_MESSAGE = "The Stellarium generator winds down into silence."
 private const val STELLARIUM_GENERATOR_OFF_ACCENT = 0xFFFF5252
 private const val EXIT_KEY_SEPARATOR = "::"
+private const val BAG_TUTORIAL_ID = "bag_basics"
 
 private data class ShopDialogueSession(
     val shopId: String,
@@ -1251,6 +1252,17 @@ class ExplorationViewModel(
         return when (tutorialId.lowercase(Locale.getDefault())) {
             "movement" -> "Swipe in the highlighted direction to move between rooms."
             "npc_talk" -> "Tap a character's name and choose Talk to start a conversation."
+            "scene_light_switch_hint" -> "Turn on the light switch once power is restored to brighten Nova's House."
+            "scene_scrap_run_tyson" -> "Head into Tyson's stall and tap the Talk prompt to hear his request."
+            "scene_scrap_run_shop" -> "Loot the ration crate in Tyson's back room to collect his supplies."
+            "scene_scrap_run_return" -> "Find Ollie in the plaza and hand over the ration pack."
+            "scene_fixers_favor_jed" -> "Talk to Jed inside Scrap & Salvage so he can brief you on the repairs."
+            "scene_fixers_favor_table" -> "Tap the tinkering table when Jed calls you over to begin the tutorial."
+            "scene_fixers_favor_craft" -> "Follow Jed's prompts to slot parts and press Craft to seal the repair."
+            "scene_fixers_favor_return" -> "Close the bench and talk to Jed again to wrap up the repair session."
+            "scene_ollie_recruitment" -> "Tap ally portraits on the HUD to swap party members or hear their guidance."
+            "scene_market_locator" -> "Follow the glowing minimap marker to reach Jed's stall in the market."
+            "scene_market_journal" -> "Open your journal from the HUD to track errands and hub summaries."
             else -> null
         }
     }
@@ -1816,6 +1828,7 @@ class ExplorationViewModel(
             val tab = defaultTab ?: lastMenuTab
             lastMenuTab = tab
             _uiState.update { it.copy(isMenuOverlayVisible = true, menuTab = tab) }
+            maybeShowInventoryTutorial(tab)
         }
     }
 
@@ -2005,6 +2018,7 @@ class ExplorationViewModel(
     fun selectMenuTab(tab: MenuTab) {
         lastMenuTab = tab
         _uiState.update { it.copy(menuTab = tab) }
+        maybeShowInventoryTutorial(tab)
     }
 
     fun updateMusicVolume(volume: Float) {
@@ -2030,6 +2044,28 @@ class ExplorationViewModel(
         emitEvent(ExplorationEvent.AudioSettingsChanged(userMusicVolume, userSfxVolume))
         viewModelScope.launch(dispatchers.io) {
             userSettingsStore.setSfxVolume(clamped)
+        }
+    }
+
+    private fun maybeShowInventoryTutorial(tab: MenuTab) {
+        if (tab != MenuTab.INVENTORY) return
+        if (tutorialManager.hasCompleted(BAG_TUTORIAL_ID)) return
+        val scheduled = tutorialManager.playScript(
+            scriptId = BAG_TUTORIAL_ID,
+            allowDuplicates = false
+        ) {
+            tutorialManager.markCompleted(BAG_TUTORIAL_ID)
+        }
+        if (!scheduled) {
+            tutorialManager.showOnce(
+                entry = TutorialEntry(
+                    key = BAG_TUTORIAL_ID,
+                    context = "Inventory",
+                    message = "Swipe up from the tray or tap the backpack icon to open your bag.\nUse the filters to switch between gear, consumables, and key items."
+                ),
+                allowDuplicates = false,
+                onDismiss = { tutorialManager.markCompleted(BAG_TUTORIAL_ID) }
+            )
         }
     }
 
@@ -2953,19 +2989,7 @@ class ExplorationViewModel(
                         return ActionHintUi(locked = true, message = "Requires $label")
                     }
                 }
-                "if_milestone_not_set" -> {
-                    val milestone = action.milestone?.takeIf { it.isNotBlank() }
-                    if (milestone != null && milestone in completed) {
-                        return ActionHintUi(locked = true, message = "Already completed")
-                    }
-                }
-                "if_milestones_not_set" -> {
-                    val milestones = action.milestones.orEmpty()
-                    val alreadySet = milestones.filter { it in completed }
-                    if (alreadySet.isNotEmpty()) {
-                        return ActionHintUi(locked = true, message = "Already completed")
-                    }
-                }
+                "if_milestone_not_set", "if_milestones_not_set" -> Unit
             }
             findToggleHint(action.`do`)?.let { return it }
             findToggleHint(action.elseDo)?.let { return it }

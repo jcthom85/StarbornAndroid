@@ -296,8 +296,28 @@
     "items": [],
     "npcs": [],
     "enemies": [],
-    "actions": [],
-    "state": {}
+    "actions": [
+      {
+        "name": "Talk to Tyson",
+        "type": "generic",
+        "action_event": "scrap_run_talk_tyson",
+        "condition_unmet_message": "Tyson leans over the counter, waiting for you to respond."
+      },
+      {
+        "name": "Ration Crate",
+        "type": "container",
+        "state_key": "scrap_ration_crate_opened",
+        "items": [
+          "ration_pack"
+        ],
+        "action_event": "scrap_run_rations_taken",
+        "popup_title": "Ration Crate",
+        "already_open_message": "The ration crate is empty."
+      }
+    ],
+    "state": {
+      "scrap_ration_crate_opened": false
+    }
   },
   {
     "id": "market_2",
@@ -411,7 +431,14 @@
       0
     ],
     "state": {},
-    "actions": [],
+    "actions": [
+      {
+        "name": "Check in with Ollie",
+        "type": "generic",
+        "action_event": "scrap_run_return_to_ollie",
+        "condition_unmet_message": "Ollie waves a ration voucher toward you."
+      }
+    ],
     "connections": {
       "north": "market_1",
       "west": "market_3"
@@ -1208,16 +1235,30 @@
         "popup_title": "Light Switch",
         "label_on": "Turn on",
         "label_off": "Turn off",
-        "action_event": "toggle_nova_house_light"
+        "action_event_on": "toggle_nova_house_light"
       }
     ],
     "dark": true,
     "state": {
       "dark": true,
-      "light_on": false
+      "light_on": false,
+      "power_restored": false
     },
     "item_flavor": {},
-    "enemy_flavor": {}
+    "enemy_flavor": {},
+    "blocked_directions": {
+      "west": {
+        "type": "lock",
+        "requires": [
+          {
+            "room_id": "town_9",
+            "state_key": "power_restored",
+            "value": true
+          }
+        ],
+        "message_locked": "You should restore power before stumbling outside."
+      }
+    }
   },
   {
     "id": "town_clinic",
