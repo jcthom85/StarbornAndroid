@@ -39,6 +39,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.any
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -200,8 +201,114 @@ class CombatViewModelTest {
         assertTrue(second.isEmpty())
     }
 
+    @Test
+    fun lootDropsAreAddedToInventoryOnVictory() {
+        val player = Player(
+            id = "nova",
+            name = "Nova",
+            level = 1,
+            xp = 0,
+            hp = 120,
+            strength = 10,
+            vitality = 8,
+            agility = 6,
+            focus = 5,
+            luck = 4,
+            skills = listOf("nova_strike"),
+            miniIconPath = "images/portraits/nova.png"
+        )
+        val enemy = Enemy(
+            id = "scrap_bandit",
+            name = "Scrap Bandit",
+            tier = "normal",
+            hp = 90,
+            strength = 8,
+            vitality = 6,
+            agility = 5,
+            focus = 3,
+            luck = 2,
+            speed = 4,
+            element = "physical",
+            resistances = Resistances(),
+            abilities = emptyList(),
+            flavor = "A scavenger looking for trouble.",
+            xpReward = 40,
+            creditReward = 20,
+            drops = emptyList(),
+            description = "An opportunistic raider.",
+            portrait = "",
+            sprite = emptyList(),
+            attack = 12,
+            apReward = 1
+        )
+        val skill = Skill(
+            id = "nova_strike",
+            name = "Nova Strike",
+            character = player.id,
+            type = "attack",
+            basePower = 20,
+            cooldown = 0,
+            description = "A swift strike."
+        )
+
+        val worldAssets = mock<WorldAssetDataSource> {
+            on { loadCharacters() } doReturn listOf(player)
+            on { loadEnemies() } doReturn listOf(enemy)
+            on { loadSkills() } doReturn listOf(skill)
+        }
+
+        val expectedLoot = listOf(
+            com.example.starborn.domain.combat.LootDrop("item_a", 2),
+            com.example.starborn.domain.combat.LootDrop("item_b", 1)
+        )
+        val combatRewardWithLoot = CombatReward(
+            xp = 100,
+            ap = 10,
+            credits = 50,
+            drops = expectedLoot
+        )
+
+        val combatEngine = mock<CombatEngine>()
+        val inventoryService = mock<InventoryService>()
+        val gameSessionStore = GameSessionStore()
+
+        val themeRepository = mock<ThemeRepository> {
+            on { getTheme(any()) } doReturn null
+            on { getStyle(any()) } doReturn null
+        }
+        val environmentThemeManager = EnvironmentThemeManager(themeRepository)
+
+        val viewModel = CombatViewModel(
+            worldAssets = worldAssets,
+            combatEngine = combatEngine,
+            statusRegistry = StatusRegistry(),
+            sessionStore = gameSessionStore,
+            inventoryService = inventoryService,
+            levelingManager = LevelingManager(LevelingData(mapOf("1" to 0, "2" to 100))),
+            progressionData = ProgressionData(),
+            audioRouter = AudioRouter(AudioBindings()),
+            themeRepository = themeRepository,
+            environmentThemeManager = environmentThemeManager,
+            enemyIds = listOf(enemy.id)
+        )
+
+        // Use reflection to call the private applyVictoryRewards method
+        val method = CombatViewModel::class.java.getDeclaredMethod(
+            "applyVictoryRewards",
+            CombatReward::class.java
+        )
+        method.isAccessible = true
+        method.invoke(viewModel, combatRewardWithLoot)
+
+        // Verify that addItem was called for each loot drop
+        expectedLoot.forEach { drop ->
+            verify(inventoryService).addItem(drop.itemId, drop.quantity)
+        }
+    }
+
     private class FakeItemCatalog : ItemCatalog {
         override fun load() = Unit
         override fun findItem(idOrAlias: String): Item? = null
     }
 }
+

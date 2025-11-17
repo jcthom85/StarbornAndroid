@@ -32,6 +32,7 @@ import com.example.starborn.domain.event.EventManager
 import com.example.starborn.domain.event.EventPayload
 import com.example.starborn.domain.fishing.FishingService
 import com.example.starborn.domain.inventory.InventoryService
+import com.example.starborn.domain.inventory.normalizeLootItemId
 import com.example.starborn.domain.inventory.ItemUseResult
 import com.example.starborn.domain.leveling.LevelUpSummary
 import com.example.starborn.domain.leveling.LevelingManager
@@ -567,12 +568,19 @@ class ExplorationViewModel(
         if (result.rewardXp > 0) rewardParts += "${result.rewardXp} XP"
         if (result.rewardAp > 0) rewardParts += "${result.rewardAp} AP"
         if (result.rewardCredits > 0) rewardParts += "${result.rewardCredits} credits"
+        val grantedItems = mutableListOf<String>()
         result.rewardItems.forEach { (itemId, quantity) ->
             val qty = quantity.coerceAtLeast(0)
             if (qty <= 0) return@forEach
-            val name = inventoryService.itemDisplayName(itemId)
+            val canonicalId = normalizeLootItemId(itemId)
+            val name = inventoryService.itemDisplayName(canonicalId)
             rewardParts += "$qty x $name"
             emitEvent(ExplorationEvent.ItemGranted(name, qty))
+            inventoryService.addItem(canonicalId, qty)
+            grantedItems += "$qty x $name"
+        }
+        if (grantedItems.isNotEmpty()) {
+            sessionStore.setInventory(inventoryService.snapshot())
         }
         val outcomeMessage = if (rewardParts.isNotEmpty()) {
             "Victory reward: ${rewardParts.joinToString(", ")}"

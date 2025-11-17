@@ -428,11 +428,11 @@
     "credit_reward": 12,
     "drops": [
       {
-        "id": "scrap",
+        "id": "scrap_metal",
         "chance": 0.6
       },
       {
-        "id": "wiring",
+        "id": "wiring_bundle",
         "chance": 0.4
       }
     ]

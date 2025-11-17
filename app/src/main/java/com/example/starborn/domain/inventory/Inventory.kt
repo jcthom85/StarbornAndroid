@@ -188,3 +188,14 @@ interface ItemCatalog {
     fun load()
     fun findItem(idOrAlias: String): Item?
 }
+
+private val LOOT_ID_OVERRIDES = mapOf(
+    "scrap" to "scrap_metal",
+    "scrap metal" to "scrap_metal",
+    "wiring" to "wiring_bundle"
+)
+
+fun normalizeLootItemId(rawId: String): String {
+    val normalized = rawId.trim().lowercase(Locale.getDefault())
+    return LOOT_ID_OVERRIDES[normalized] ?: rawId
+}

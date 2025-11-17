@@ -26,6 +26,7 @@ import com.example.starborn.domain.combat.StatBlock
 import com.example.starborn.domain.combat.StatusRegistry
 import com.example.starborn.domain.inventory.InventoryEntry
 import com.example.starborn.domain.inventory.InventoryService
+import com.example.starborn.domain.inventory.normalizeLootItemId
 import com.example.starborn.domain.leveling.LevelUpSummary
 import com.example.starborn.domain.leveling.LevelingManager
 import com.example.starborn.domain.leveling.ProgressionData
@@ -937,11 +938,11 @@ class CombatViewModel(
         }
         if (reward.ap > 0) sessionStore.addAp(reward.ap)
         if (reward.credits > 0) sessionStore.addCredits(reward.credits)
+
         reward.drops.forEach { drop ->
-            if (drop.quantity > 0) {
-                inventoryService.addItem(drop.itemId, drop.quantity)
-            }
+            inventoryService.addItem(drop.itemId, drop.quantity)
         }
+
         return levelUps
     }
 
