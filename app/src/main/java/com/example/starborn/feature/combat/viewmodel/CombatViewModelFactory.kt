@@ -16,6 +16,7 @@ class CombatViewModelFactory(
                 statusRegistry = services.statusRegistry,
                 sessionStore = services.sessionStore,
                 inventoryService = services.inventoryService,
+                itemCatalog = services.itemRepository,
                 levelingManager = services.levelingManager,
                 progressionData = services.progressionData,
                 audioRouter = services.audioRouter,

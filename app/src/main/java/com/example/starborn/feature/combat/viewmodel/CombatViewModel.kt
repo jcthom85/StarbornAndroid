@@ -26,6 +26,7 @@ import com.example.starborn.domain.combat.StatBlock
 import com.example.starborn.domain.combat.StatusRegistry
 import com.example.starborn.domain.inventory.InventoryEntry
 import com.example.starborn.domain.inventory.InventoryService
+import com.example.starborn.domain.inventory.ItemCatalog
 import com.example.starborn.domain.inventory.normalizeLootItemId
 import com.example.starborn.domain.leveling.LevelUpSummary
 import com.example.starborn.domain.leveling.LevelingManager
@@ -40,6 +41,7 @@ import com.example.starborn.domain.model.SkillTreeNode
 import com.example.starborn.domain.model.StatusDefinition
 import com.example.starborn.domain.session.GameSessionStore
 import com.example.starborn.domain.theme.EnvironmentThemeManager
+import java.util.Locale
 import kotlin.math.max
 import kotlin.random.Random
 import kotlinx.coroutines.Job
@@ -63,6 +65,7 @@ class CombatViewModel(
     private val statusRegistry: StatusRegistry,
     private val sessionStore: GameSessionStore,
     private val inventoryService: InventoryService,
+    private val itemCatalog: ItemCatalog,
     private val levelingManager: LevelingManager,
     private val progressionData: ProgressionData,
     private val audioRouter: AudioRouter,
@@ -128,6 +131,7 @@ class CombatViewModel(
     private var atbJob: Job? = null
 
     init {
+        itemCatalog.load()
         val players = worldAssets.loadCharacters()
         val allEnemies = worldAssets.loadEnemies()
         val allSkills = worldAssets.loadSkills()
@@ -875,7 +879,8 @@ class CombatViewModel(
             creditsTotal += enemy.creditReward
             enemy.drops.forEach { drop ->
                 val qty = (drop.quantity ?: drop.qtyMax ?: drop.qtyMin ?: 1).coerceAtLeast(1)
-                dropAccumulator[drop.id] = dropAccumulator.getOrDefault(drop.id, 0) + qty
+                val canonicalId = canonicalLootId(drop.id)
+                dropAccumulator[canonicalId] = dropAccumulator.getOrDefault(canonicalId, 0) + qty
             }
         }
         val drops = dropAccumulator.entries.map { (id, qty) -> LootDrop(id, qty) }
@@ -885,6 +890,16 @@ class CombatViewModel(
             credits = creditsTotal,
             drops = drops
         )
+    }
+
+    private fun canonicalLootId(rawId: String): String {
+        if (rawId.isBlank()) return rawId
+        val normalized = normalizeLootItemId(rawId).trim()
+        if (normalized.isEmpty()) return rawId
+        val resolved = itemCatalog.findItem(normalized)
+        if (resolved != null) return resolved.id
+        val fallback = normalized.lowercase(Locale.getDefault())
+        return fallback.replace("\\s+".toRegex(), "_")
     }
 
     private fun applyVictoryRewards(reward: CombatReward): List<LevelUpSummary> {
@@ -941,6 +956,10 @@ class CombatViewModel(
 
         reward.drops.forEach { drop ->
             inventoryService.addItem(drop.itemId, drop.quantity)
+        }
+
+        if (reward.drops.isNotEmpty()) {
+            sessionStore.setInventory(inventoryService.snapshot())
         }
 
         return levelUps

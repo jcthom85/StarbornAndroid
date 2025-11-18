@@ -68,10 +68,15 @@
       "nova"
     ],
     "inventory": {
-      "Broken Coffee Grinder": 1,
-      "Broken Arcade Display": 1,
-      "Broken Projector": 1,
-      "Medkit I": 1
+      "broken_coffee_grinder": 1,
+      "broken_arcade_display": 1,
+      "broken_projector": 1,
+      "medkit_i": 1,
+      "scrap_metal": 8,
+      "wiring_bundle": 4,
+      "fiery_pepper": 3,
+      "beast_meat": 2,
+      "mine_keycard": 1
     },
     "credits": 500,
     "resonance": 0,

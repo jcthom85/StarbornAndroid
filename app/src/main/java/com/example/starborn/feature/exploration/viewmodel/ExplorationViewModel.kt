@@ -555,15 +555,6 @@ class ExplorationViewModel(
 
     fun onCombatVictory(result: CombatResultPayload) {
         val enemyIds = result.enemyIds
-        removeEnemiesFromCurrentRoom(enemyIds)
-        eventManager.handleTrigger(
-            type = "encounter_victory",
-            payload = EventPayload.EncounterOutcome(
-                enemyIds = enemyIds,
-                outcome = EventPayload.EncounterOutcome.Outcome.VICTORY
-            )
-        )
-        refreshCurrentRoomBlockedDirections()
         val rewardParts = mutableListOf<String>()
         if (result.rewardXp > 0) rewardParts += "${result.rewardXp} XP"
         if (result.rewardAp > 0) rewardParts += "${result.rewardAp} AP"
@@ -582,6 +573,15 @@ class ExplorationViewModel(
         if (grantedItems.isNotEmpty()) {
             sessionStore.setInventory(inventoryService.snapshot())
         }
+        removeEnemiesFromCurrentRoom(enemyIds)
+        eventManager.handleTrigger(
+            type = "encounter_victory",
+            payload = EventPayload.EncounterOutcome(
+                enemyIds = enemyIds,
+                outcome = EventPayload.EncounterOutcome.Outcome.VICTORY
+            )
+        )
+        refreshCurrentRoomBlockedDirections()
         val outcomeMessage = if (rewardParts.isNotEmpty()) {
             "Victory reward: ${rewardParts.joinToString(", ")}"
         } else {
@@ -2472,14 +2472,7 @@ class ExplorationViewModel(
 
     private fun markDiscovered(room: Room) {
         if (isRoomDark(room)) return
-        val newlyAdded = discoveredRooms.add(room.id)
-        if (newlyAdded) {
-            room.connections.values.forEach { connectionId ->
-                if (!connectionId.isNullOrBlank()) {
-                    discoveredRooms.add(connectionId)
-                }
-            }
-        }
+        discoveredRooms.add(room.id)
     }
 
     private fun updateUnlockedAreas(areas: Set<String>) {

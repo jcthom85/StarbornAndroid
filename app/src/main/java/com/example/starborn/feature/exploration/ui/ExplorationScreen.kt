@@ -4682,7 +4682,7 @@ private fun PromptBanner(
                 }
                 Column(
                     modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -4715,16 +4715,16 @@ private fun PromptBanner(
                         color = Color.White,
                         style = MaterialTheme.typography.bodyLarge
                     )
-                }
-                Button(
-                    onClick = onAction,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = accentColor,
-                        contentColor = Color.Black.copy(alpha = 0.85f)
-                    ),
-                    shape = RoundedCornerShape(18.dp)
-                ) {
-                    Text(actionLabel.uppercase(Locale.getDefault()))
+                    Button(
+                        onClick = onAction,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = accentColor,
+                            contentColor = Color.Black.copy(alpha = 0.85f)
+                        ),
+                        shape = RoundedCornerShape(18.dp)
+                    ) {
+                        Text(actionLabel.uppercase(Locale.getDefault()))
+                    }
                 }
             }
         }

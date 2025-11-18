@@ -37,6 +37,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import java.util.Locale
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
@@ -174,6 +175,7 @@ class CombatViewModelTest {
             statusRegistry = StatusRegistry(),
             sessionStore = GameSessionStore(),
             inventoryService = inventoryService,
+            itemCatalog = FakeItemCatalog(),
             levelingManager = LevelingManager(LevelingData(mapOf("1" to 0, "2" to 100))),
             progressionData = ProgressionData(),
             audioRouter = AudioRouter(AudioBindings()),
@@ -284,6 +286,7 @@ class CombatViewModelTest {
             statusRegistry = StatusRegistry(),
             sessionStore = gameSessionStore,
             inventoryService = inventoryService,
+            itemCatalog = FakeItemCatalog(),
             levelingManager = LevelingManager(LevelingData(mapOf("1" to 0, "2" to 100))),
             progressionData = ProgressionData(),
             audioRouter = AudioRouter(AudioBindings()),
@@ -306,9 +309,167 @@ class CombatViewModelTest {
         }
     }
 
+    @Test
+    fun victoryRewardCanonicalizesLootIds() {
+        val player = Player(
+            id = "nova",
+            name = "Nova",
+            level = 1,
+            xp = 0,
+            hp = 120,
+            strength = 10,
+            vitality = 8,
+            agility = 6,
+            focus = 5,
+            luck = 4,
+            skills = listOf("nova_strike"),
+            miniIconPath = "images/portraits/nova.png"
+        )
+        val enemy = Enemy(
+            id = "fume_bat",
+            name = "Fume Bat",
+            tier = "standard",
+            hp = 20,
+            strength = 4,
+            vitality = 2,
+            agility = 3,
+            focus = 1,
+            luck = 2,
+            speed = 5,
+            element = "fire",
+            resistances = Resistances(),
+            abilities = emptyList(),
+            flavor = "",
+            xpReward = 10,
+            creditReward = 5,
+            drops = listOf(
+                com.example.starborn.domain.model.Drop(
+                    id = "fiery pepper",
+                    chance = 1.0,
+                    quantity = 1
+                )
+            ),
+            description = "",
+            portrait = "",
+            sprite = emptyList(),
+            attack = 6,
+            apReward = 0
+        )
+        val skill = Skill(
+            id = "nova_strike",
+            name = "Nova Strike",
+            character = player.id,
+            type = "attack",
+            basePower = 20,
+            cooldown = 0,
+            description = "A swift strike."
+        )
+
+        val worldAssets = mock<WorldAssetDataSource> {
+            on { loadCharacters() } doReturn listOf(player)
+            on { loadEnemies() } doReturn listOf(enemy)
+            on { loadSkills() } doReturn listOf(skill)
+        }
+
+        val combatantPlayer = Combatant(
+            id = player.id,
+            name = player.name,
+            side = CombatSide.PLAYER,
+            stats = com.example.starborn.domain.combat.StatBlock(
+                maxHp = player.hp,
+                maxRp = player.hp,
+                strength = player.strength,
+                vitality = player.vitality,
+                agility = player.agility,
+                focus = player.focus,
+                luck = player.luck,
+                speed = player.agility
+            ),
+            skills = player.skills
+        )
+        val combatantEnemy = Combatant(
+            id = enemy.id,
+            name = enemy.name,
+            side = CombatSide.ENEMY,
+            stats = com.example.starborn.domain.combat.StatBlock(
+                maxHp = enemy.hp,
+                maxRp = enemy.vitality,
+                strength = enemy.strength,
+                vitality = enemy.vitality,
+                agility = enemy.agility,
+                focus = enemy.focus,
+                luck = enemy.luck,
+                speed = enemy.speed
+            ),
+            skills = enemy.abilities
+        )
+        val initialState = CombatState(
+            turnOrder = listOf(TurnSlot(combatantPlayer.id, 10)),
+            activeTurnIndex = 0,
+            combatants = mapOf(
+                combatantPlayer.id to CombatantState(
+                    combatantPlayer,
+                    combatantPlayer.stats.maxHp,
+                    combatantPlayer.stats.maxRp
+                ),
+                combatantEnemy.id to CombatantState(
+                    combatantEnemy,
+                    combatantEnemy.stats.maxHp,
+                    combatantEnemy.stats.maxRp
+                )
+            )
+        )
+
+        val combatEngine = mock<CombatEngine> {
+            on { beginEncounter(any()) } doReturn initialState
+        }
+        val inventoryService = InventoryService(SingleItemCatalog()).apply { loadItems() }
+        val themeRepository = mock<ThemeRepository> {
+            on { getTheme(any()) } doReturn null
+            on { getStyle(any()) } doReturn null
+        }
+        val environmentThemeManager = EnvironmentThemeManager(themeRepository)
+
+        val viewModel = CombatViewModel(
+            worldAssets = worldAssets,
+            combatEngine = combatEngine,
+            statusRegistry = StatusRegistry(),
+            sessionStore = GameSessionStore(),
+            inventoryService = inventoryService,
+            itemCatalog = SingleItemCatalog(),
+            levelingManager = LevelingManager(LevelingData(mapOf("1" to 0, "2" to 100))),
+            progressionData = ProgressionData(),
+            audioRouter = AudioRouter(AudioBindings()),
+            themeRepository = themeRepository,
+            environmentThemeManager = environmentThemeManager,
+            enemyIds = listOf(enemy.id)
+        )
+
+        val method = CombatViewModel::class.java.getDeclaredMethod("victoryReward")
+        method.isAccessible = true
+        val reward = method.invoke(viewModel) as CombatReward
+
+        assertTrue(reward.drops.any { it.itemId == "fiery_pepper" })
+    }
+
     private class FakeItemCatalog : ItemCatalog {
         override fun load() = Unit
         override fun findItem(idOrAlias: String): Item? = null
     }
-}
 
+    private class SingleItemCatalog : ItemCatalog {
+        override fun load() = Unit
+
+        override fun findItem(idOrAlias: String): Item? {
+            val key = idOrAlias.trim().lowercase(Locale.getDefault())
+            return when (key) {
+                "fiery_pepper", "fiery pepper" -> Item(
+                    id = "fiery_pepper",
+                    name = "Fiery Pepper",
+                    type = "ingredient"
+                )
+                else -> null
+            }
+        }
+    }
+}

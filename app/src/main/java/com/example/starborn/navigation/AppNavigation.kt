@@ -232,7 +232,8 @@ fun NavigationHost(navController: NavHostController = rememberNavController()) {
                 factory = InventoryViewModelFactory(
                     services.inventoryService,
                     services.craftingService,
-                    services.sessionStore
+                    services.sessionStore,
+                    services.worldDataSource.loadCharacters()
                 )
             )
             val tabArg = backStackEntry.arguments?.getString("tab")
