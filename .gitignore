@@ -1,5 +1,7 @@
 *.iml
+.git
 .gradle
+/app/build
 /local.properties
 /.idea/caches
 /.idea/libraries
@@ -14,5 +16,4 @@
 .cxx
 local.properties
 *.env
-Starborn_Python/build.log
-Starborn_Python/buildozer*.log
+/Starborn_Python

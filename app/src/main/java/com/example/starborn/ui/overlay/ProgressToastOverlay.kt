@@ -67,19 +67,6 @@ fun ProgressToastOverlay(
 
         uiEventBus.events.collect { event ->
             when (event) {
-                is UiEvent.ShowObjectiveToast -> {
-                    val key = "objective:${event.questId}:${event.objectiveId}"
-                    val label = event.text.ifBlank {
-                        buildString {
-                            val progress = event.progress
-                            val total = event.total
-                            if (progress != null && total != null) {
-                                append("$progress/$total")
-                            }
-                        }
-                    }
-                    enqueueToast(key, label, merge = true)
-                }
                 is UiEvent.ShowToast -> {
                     val key = "toast:${event.id}"
                     val label = event.text.ifBlank { event.id }

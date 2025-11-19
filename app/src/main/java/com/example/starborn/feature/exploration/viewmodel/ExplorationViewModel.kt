@@ -21,6 +21,9 @@ import com.example.starborn.domain.cinematic.CinematicCoordinator
 import com.example.starborn.domain.cinematic.CinematicPlaybackState
 import com.example.starborn.domain.cinematic.CinematicStepType
 import com.example.starborn.domain.combat.CombatFormulas
+import com.example.starborn.domain.combat.EncounterCoordinator
+import com.example.starborn.domain.combat.EncounterDescriptor
+import com.example.starborn.domain.combat.EncounterEnemyInstance
 import com.example.starborn.domain.crafting.CraftingOutcome
 import com.example.starborn.domain.crafting.CraftingService
 import com.example.starborn.domain.dialogue.DialogueService
@@ -32,8 +35,9 @@ import com.example.starborn.domain.event.EventManager
 import com.example.starborn.domain.event.EventPayload
 import com.example.starborn.domain.fishing.FishingService
 import com.example.starborn.domain.inventory.InventoryService
-import com.example.starborn.domain.inventory.normalizeLootItemId
+import com.example.starborn.domain.inventory.ItemUseController
 import com.example.starborn.domain.inventory.ItemUseResult
+import com.example.starborn.domain.inventory.normalizeLootItemId
 import com.example.starborn.domain.leveling.LevelUpSummary
 import com.example.starborn.domain.leveling.LevelingManager
 import com.example.starborn.domain.milestone.MilestoneEvent
@@ -47,9 +51,12 @@ import com.example.starborn.domain.model.EventReward
 import com.example.starborn.domain.model.FirstAidAction
 import com.example.starborn.domain.model.GameEvent
 import com.example.starborn.domain.model.GenericAction
+import com.example.starborn.domain.model.Quest
+import com.example.starborn.domain.model.QuestReward
 import com.example.starborn.domain.model.Player
 import com.example.starborn.domain.model.Requirement
 import com.example.starborn.domain.model.Room
+import com.example.starborn.domain.model.RoomEnemyInstance
 import com.example.starborn.domain.model.RoomAction
 import com.example.starborn.domain.model.ShopAction
 import com.example.starborn.domain.model.ShopDefinition
@@ -64,6 +71,7 @@ import com.example.starborn.domain.prompt.TutorialPrompt
 import com.example.starborn.domain.quest.QuestJournalEntry
 import com.example.starborn.domain.quest.QuestLogEntry
 import com.example.starborn.domain.quest.QuestRuntimeManager
+import com.example.starborn.domain.quest.QuestRuntimeState
 import com.example.starborn.domain.session.GameSessionState
 import com.example.starborn.domain.session.GameSessionStore
 import com.example.starborn.domain.session.GameSaveRepository
@@ -188,6 +196,7 @@ class ExplorationViewModel(
     private val promptManager: UIPromptManager,
     private val fishingService: FishingService,
     private val saveRepository: GameSaveRepository,
+    private val encounterCoordinator: EncounterCoordinator,
     private val userSettingsStore: UserSettingsStore,
     eventDefinitions: List<GameEvent>,
     bootstrapCinematics: List<String> = emptyList(),
@@ -206,6 +215,12 @@ class ExplorationViewModel(
     private var charactersById: Map<String, Player> = emptyMap()
     private var skillsById: Map<String, Skill> = emptyMap()
     private var skillTreesByCharacter: Map<String, SkillTreeDefinition> = emptyMap()
+    private val itemUseController = ItemUseController(
+        inventoryService = inventoryService,
+        craftingService = craftingService,
+        sessionStore = sessionStore,
+        charactersProvider = { charactersById }
+    )
     private val stageTutorialKeys: MutableSet<String> = mutableSetOf()
     private val inventoryAddListener: (String, Int) -> Unit = { itemId, _ ->
         handleItemAcquired(itemId)
@@ -532,19 +547,17 @@ class ExplorationViewModel(
 
     private fun removeEnemiesFromCurrentRoom(enemyIds: List<String>) {
         if (enemyIds.isEmpty()) return
-        val currentRoom = _uiState.value.currentRoom
-        if (currentRoom != null && currentRoom.enemies.isNotEmpty()) {
-            val remaining = currentRoom.enemies.filterNot { enemyIds.contains(it) }
-            if (remaining.size != currentRoom.enemies.size) {
-                val updatedRoom = currentRoom.copy(enemies = remaining)
-                roomsById = roomsById + (updatedRoom.id to updatedRoom)
-                _uiState.update {
-                    it.copy(
-                        currentRoom = updatedRoom,
-                        enemies = remaining,
-                        canReturnToHub = canReturnToHub(updatedRoom)
-                    )
-                }
+        val currentRoom = _uiState.value.currentRoom ?: return
+        if (roomEnemyParties(currentRoom).isEmpty()) return
+        val updatedRoom = removeDefeatedEnemies(currentRoom, enemyIds)
+        if (updatedRoom.enemies != currentRoom.enemies || updatedRoom.enemyParties != currentRoom.enemyParties) {
+            roomsById = roomsById + (updatedRoom.id to updatedRoom)
+            _uiState.update {
+                it.copy(
+                    currentRoom = updatedRoom,
+                    enemies = roomEnemyParties(updatedRoom).flatten(),
+                    canReturnToHub = canReturnToHub(updatedRoom)
+                )
             }
         }
     }
@@ -749,8 +762,11 @@ class ExplorationViewModel(
             ?: memberId.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
         val message = "${displayName.ifBlank { "A new ally" }} joined the party!"
         postStatus(message)
-        emitEvent(ExplorationEvent.ShowToast(id = "party:$normalized", message = message))
-        emitEvent(ExplorationEvent.ShowMessage(message))
+        enqueueEventAnnouncement(
+            title = displayName,
+            message = "Joined the party.",
+            accentColor = EVENT_ANNOUNCEMENT_ACCENT
+        )
     }
 
     private fun removeNpcFromRoom(roomId: String, npcId: String, descriptionRemovals: List<String> = emptyList()) {
@@ -900,7 +916,7 @@ class ExplorationViewModel(
                 visited = visitedRooms.contains(room.id),
                 discovered = discoveredRooms.contains(room.id),
                 isCurrent = room.id == currentRoom.id,
-                hasEnemies = room.enemies.isNotEmpty(),
+                hasEnemies = roomEnemyParties(room).isNotEmpty(),
                 blockedDirections = blocked,
                 connections = connections,
                 pathHints = pathHints,
@@ -942,7 +958,7 @@ class ExplorationViewModel(
                 visited = visitedRooms.contains(room.id),
                 discovered = discoveredRooms.contains(room.id),
                 isCurrent = room.id == currentRoom.id,
-                hasEnemies = room.enemies.isNotEmpty(),
+                hasEnemies = roomEnemyParties(room).isNotEmpty(),
                 blockedDirections = blocked,
                 connections = connections,
                 services = services,
@@ -1103,7 +1119,8 @@ class ExplorationViewModel(
                             id = entry.item.id,
                             name = entry.item.name,
                             quantity = entry.quantity,
-                            type = entry.item.type
+                            type = entry.item.type,
+                            effect = entry.item.effect
                         )
                     }
                 _uiState.update { it.copy(inventoryPreview = preview) }
@@ -1173,6 +1190,16 @@ class ExplorationViewModel(
                         questLogActive = questState.activeJournal.map { it.toUiSummary() },
                         questLogCompleted = questState.completedJournal.map { it.toUiSummary() }
                     )
+                    current.questDetail?.id?.let { openId ->
+                        val refreshed = buildQuestDetail(
+                            questId = openId,
+                            questState = questState,
+                            questRepository = questRepository,
+                            runtimeManager = questRuntimeManager,
+                            inventoryService = inventoryService
+                        )
+                        updated = updated.copy(questDetail = refreshed)
+                    }
                     updated
                 }
                 if (!firstEmission && (activeChanged || completedChanged)) {
@@ -1309,7 +1336,7 @@ class ExplorationViewModel(
                 } else {
                     room
                 }
-            }
+            }.map { normalizeRoomEnemies(it) }
             val players = worldAssets.loadCharacters()
             val skills = worldAssets.loadSkills()
             val skillTrees = worldAssets.loadSkillTrees()
@@ -1336,7 +1363,9 @@ class ExplorationViewModel(
             sanitizeDarkStates()
             initializeUnlockedDirections(rooms)
             initializeGroundItems(rooms)
-            val player = players.firstOrNull()
+            val sessionSnapshot = sessionStore.state.value
+            val player = sessionSnapshot.playerId?.let { id -> players.firstOrNull { it.id == id } }
+                ?: players.firstOrNull()
             val initialWorld =
                 preselectedWorldId?.let { id -> worlds.firstOrNull { it.id == id } }
                     ?: worlds.firstOrNull { it.id.equals("nova_prime", ignoreCase = true) }
@@ -1387,9 +1416,13 @@ class ExplorationViewModel(
             sessionStore.setHub(initialHub?.id)
             sessionStore.setRoom(initialRoom?.id)
             sessionStore.setPlayer(player?.id)
-            sessionStore.setPlayerLevel(player?.level ?: 1)
-            sessionStore.setPlayerXp(player?.xp ?: 0)
-            sessionStore.setPartyMembers(listOfNotNull(player?.id))
+            val resolvedPlayerLevel = sessionSnapshot.partyMemberLevels[player?.id] ?: player?.level ?: 1
+            val resolvedPlayerXp = sessionSnapshot.partyMemberXp[player?.id] ?: player?.xp ?: 0
+            sessionStore.setPlayerLevel(resolvedPlayerLevel)
+            sessionStore.setPlayerXp(resolvedPlayerXp)
+            val resolvedPartyMembers = sessionSnapshot.partyMembers.takeIf { it.isNotEmpty() }
+                ?: listOfNotNull(player?.id)
+            sessionStore.setPartyMembers(resolvedPartyMembers)
 
             val sessionState = sessionStore.state.value
             val partyStatus = buildPartyStatusUi(
@@ -1415,7 +1448,7 @@ class ExplorationViewModel(
                     npcs = initialRoom?.npcs.orEmpty(),
                     actions = initialActions,
                     actionHints = buildActionHints(initialRoom, initialActions),
-                    enemies = initialRoom?.enemies.orEmpty(),
+                    enemies = initialRoom?.let { roomEnemyParties(it).flatten() }.orEmpty(),
                     blockedDirections = computeBlockedDirections(initialRoom),
                     roomState = getRoomStateSnapshot(initialRoom?.id),
                     groundItems = getGroundItemsSnapshot(initialRoom?.id),
@@ -1501,7 +1534,7 @@ class ExplorationViewModel(
                 npcs = nextRoom.npcs,
                 actions = nextActions,
                 actionHints = buildActionHints(nextRoom, nextActions),
-                enemies = nextRoom.enemies,
+                enemies = roomEnemyParties(nextRoom).flatten(),
                 blockedDirections = computeBlockedDirections(nextRoom),
                 roomState = getRoomStateSnapshot(nextRoom.id),
                 groundItems = getGroundItemsSnapshot(nextRoom.id),
@@ -1815,6 +1848,44 @@ class ExplorationViewModel(
         }
     }
 
+    fun openQuestDetails(questId: String) {
+        viewModelScope.launch(dispatchers.main) {
+            val detail = buildQuestDetail(
+                questId = questId,
+                questState = questRuntimeManager.state.value,
+                questRepository = questRepository,
+                runtimeManager = questRuntimeManager,
+                inventoryService = inventoryService
+            )
+            if (detail != null) {
+                _uiState.update { it.copy(questDetail = detail) }
+            } else {
+                postStatus("Quest details unavailable.")
+            }
+        }
+    }
+
+    fun closeQuestDetails() {
+        viewModelScope.launch(dispatchers.main) {
+            _uiState.update { it.copy(questDetail = null) }
+        }
+    }
+
+    fun toggleQuestTracking(questId: String) {
+        viewModelScope.launch(dispatchers.main) {
+            val current = sessionStore.state.value.trackedQuestId
+            val next = if (current != null && current.equals(questId, ignoreCase = true)) {
+                null
+            } else questId
+            questRuntimeManager.trackQuest(next)
+            _uiState.update { state ->
+                val updatedDetail = state.questDetail?.takeIf { it.id.equals(questId, ignoreCase = true) }
+                    ?.copy(tracked = next != null)
+                state.copy(questDetail = updatedDetail ?: state.questDetail)
+            }
+        }
+    }
+
     fun openMilestoneGallery() {
         viewModelScope.launch(dispatchers.main) {
             playUiCue("click")
@@ -2090,15 +2161,51 @@ class ExplorationViewModel(
         }
     }
     fun engageEnemy(enemyId: String) {
-        val roomEnemies = _uiState.value.currentRoom?.enemies.orEmpty()
-        val ordered = buildList {
-            if (enemyId.isNotBlank()) add(enemyId)
-            roomEnemies.filter { it.isNotBlank() && it != enemyId }.forEach { add(it) }
-        }.mapNotNull { it.takeIf { id -> id.isNotBlank() } }
-        val encounterIds = ordered.ifEmpty { listOfNotNull(enemyId.takeIf { it.isNotBlank() }) }
-        if (encounterIds.isNotEmpty()) {
-            emitEvent(ExplorationEvent.EnterCombat(encounterIds.distinct()))
+        val room = _uiState.value.currentRoom
+        val parties = room?.let { roomEnemyParties(it) }.orEmpty()
+        val encounterIds = when {
+            parties.isEmpty() -> listOfNotNull(enemyId.takeIf { it.isNotBlank() })
+            enemyId.isBlank() -> parties.firstOrNull().orEmpty()
+            else -> parties.firstOrNull { party -> party.contains(enemyId) } ?: parties.firstOrNull().orEmpty()
         }
+        if (encounterIds.isNotEmpty()) {
+            room?.let { preparePendingEncounter(it, encounterIds) } ?: encounterCoordinator.clear()
+            emitEvent(ExplorationEvent.EnterCombat(encounterIds))
+        } else {
+            encounterCoordinator.clear()
+        }
+    }
+
+    private fun preparePendingEncounter(room: Room, encounterIds: List<String>) {
+        val descriptor = buildEncounterDescriptor(room, encounterIds)
+        encounterCoordinator.setPendingEncounter(descriptor)
+    }
+
+    private fun buildEncounterDescriptor(room: Room, encounterIds: List<String>): EncounterDescriptor {
+        val overridesByEnemy = room.enemyInstances.orEmpty().groupBy { it.enemyId }
+        if (overridesByEnemy.isEmpty()) {
+            return EncounterDescriptor(encounterIds.map { enemyId ->
+                EncounterEnemyInstance(enemyId = enemyId)
+            })
+        }
+        val usedOverrides = mutableSetOf<RoomEnemyInstance>()
+        val occurrenceCounters = mutableMapOf<String, Int>()
+        val slots = encounterIds.map { enemyId ->
+            val occurrence = (occurrenceCounters[enemyId] ?: 0) + 1
+            occurrenceCounters[enemyId] = occurrence
+            val candidates = overridesByEnemy[enemyId].orEmpty()
+            val match = candidates.firstOrNull { it.occurrence == occurrence && it !in usedOverrides }
+                ?: candidates.firstOrNull { it.occurrence == null && it !in usedOverrides }
+            if (match != null) {
+                usedOverrides += match
+            }
+            EncounterEnemyInstance(
+                enemyId = enemyId,
+                overrideDrops = match?.overrideDrops,
+                extraDrops = match?.extraDrops.orEmpty()
+            )
+        }
+        return EncounterDescriptor(slots)
     }
 
     private fun handleRoomEntryTutorials(room: Room) {
@@ -2161,40 +2268,22 @@ class ExplorationViewModel(
         }
     }
 
-    private fun currentEnemies(): List<String> = _uiState.value.currentRoom?.enemies.orEmpty()
+    private fun currentEnemies(): List<String> = _uiState.value.currentRoom?.let { roomEnemyParties(it).flatten() }.orEmpty()
 
     fun itemDisplayName(itemId: String): String = inventoryService.itemDisplayName(itemId)
 
-    fun useInventoryItem(itemId: String) {
-        val result = inventoryService.useItem(itemId)
-        if (result == null) {
-            postStatus("You don't have $itemId")
-            return
-        }
-        val message = when (result) {
-            is ItemUseResult.None -> "Used ${result.item.name}"
-            is ItemUseResult.Restore -> {
-                val parts = mutableListOf<String>()
-                if (result.hp > 0) parts.add("${result.hp} HP")
-                if (result.rp > 0) parts.add("${result.rp} RP")
-                if (parts.isEmpty()) "Used ${result.item.name}" else "Restored ${parts.joinToString(" and ")}"
-            }
-            is ItemUseResult.Damage -> "${result.item.name} deals ${result.amount} damage (not yet implemented)"
-            is ItemUseResult.Buff -> {
-                val buffs = result.buffs.joinToString { "${it.stat}+${it.value}" }
-                "Buffs applied: $buffs"
-            }
-            is ItemUseResult.LearnSchematic -> {
-                val learned = craftingService.learnSchematic(result.schematicId)
-                if (learned) {
-                    "Learned schematic ${result.schematicId}"
-                } else {
-                    "Already know schematic ${result.schematicId}"
+    fun useInventoryItem(itemId: String, targetId: String? = null) {
+        viewModelScope.launch(dispatchers.main) {
+            when (val outcome = itemUseController.useItem(itemId, targetId)) {
+                is ItemUseController.Result.Success -> {
+                    postStatus(outcome.message)
+                    emitEvent(ExplorationEvent.ItemUsed(outcome.result, outcome.message))
+                }
+                is ItemUseController.Result.Failure -> {
+                    postStatus(outcome.message)
                 }
             }
         }
-        postStatus(message)
-        emitEvent(ExplorationEvent.ItemUsed(result, message))
     }
 
     fun onTinkeringClosed() {
@@ -3191,10 +3280,10 @@ class ExplorationViewModel(
     }
 
     private fun hasBlockingEnemies(room: Room, direction: String): Boolean {
-        if (room.enemies.isNotEmpty()) return true
+        if (roomEnemyParties(room).isNotEmpty()) return true
         val destId = getConnection(room, direction) ?: return false
         val destRoom = roomsById[destId] ?: return false
-        return destRoom.enemies.isNotEmpty()
+        return roomEnemyParties(destRoom).isNotEmpty()
     }
 
     private fun getConnection(room: Room, direction: String): String? {
@@ -3332,6 +3421,122 @@ class ExplorationViewModel(
         }
     }
 
+}
+
+private fun buildQuestDetail(
+    questId: String,
+    questState: QuestRuntimeState,
+    questRepository: QuestRepository,
+    runtimeManager: QuestRuntimeManager,
+    inventoryService: InventoryService
+): QuestDetailUi? {
+    val quest = questRepository.questById(questId) ?: return null
+    val isCompleted = questState.completedQuestIds.contains(questId)
+    val stage = if (isCompleted) {
+        quest.stages.lastOrNull()
+    } else {
+        val stageId = questState.stageProgress[questId]
+        quest.stages.firstOrNull { it.id == stageId } ?: quest.stages.firstOrNull()
+    }
+    val completedTasks = runtimeManager.completedTaskIds(questId)
+    val objectives = stage?.tasks.orEmpty().map { task ->
+        val done = isCompleted || task.done || completedTasks.contains(task.id)
+        QuestObjectiveUi(
+            id = task.id,
+            text = task.text,
+            completed = done
+        )
+    }
+    val summary = quest.summary.takeIf { it.isNotBlank() } ?: quest.description.takeIf { it.isNotBlank() } ?: ""
+    val rewards = quest.rewards.map { formatQuestReward(it, inventoryService) }
+    val stageIndex = quest.stages.indexOf(stage).takeIf { it >= 0 } ?: 0
+    return QuestDetailUi(
+        id = quest.id,
+        title = quest.title,
+        summary = summary,
+        description = quest.description.takeIf { it.isNotBlank() },
+        stageTitle = stage?.title,
+        stageDescription = stage?.description,
+        objectives = objectives,
+        rewards = rewards,
+        stageIndex = stageIndex,
+        totalStages = quest.stages.size.coerceAtLeast(1),
+        tracked = questState.trackedQuestId?.equals(questId, ignoreCase = true) == true
+    )
+}
+
+private fun formatQuestReward(reward: QuestReward, inventoryService: InventoryService): String {
+    val amount = reward.amount ?: 0
+    return when (reward.type.lowercase(Locale.getDefault())) {
+        "xp" -> "+$amount XP"
+        "credit", "credits" -> "+$amount credits"
+        "item", "items" -> {
+            val name = reward.itemId?.let { inventoryService.itemDisplayName(it) } ?: "Item"
+            if (amount > 1) "${amount} x $name" else name
+        }
+        else -> reward.itemId?.takeIf { it.isNotBlank() } ?: reward.type
+    }
+}
+
+private fun sanitizeEnemyList(source: List<String>): List<String> =
+    source.map { it.trim() }.filter { it.isNotEmpty() }
+
+private fun sanitizeEnemyParties(raw: List<List<String>>?): List<List<String>>? {
+    if (raw.isNullOrEmpty()) return null
+    val sanitized = raw.map { sanitizeEnemyList(it) }.filter { it.isNotEmpty() }
+    return sanitized.takeIf { it.isNotEmpty() }
+}
+
+private fun normalizeRoomEnemies(room: Room): Room {
+    val parties = sanitizeEnemyParties(room.enemyParties)
+    val singles = sanitizeEnemyList(room.enemies)
+    return when {
+        parties != null -> room.copy(enemyParties = parties, enemies = parties.flatten())
+        singles != room.enemies -> room.copy(enemies = singles)
+        else -> room
+    }
+}
+
+private fun roomEnemyParties(room: Room): List<List<String>> {
+    val parties = sanitizeEnemyParties(room.enemyParties)
+    if (!parties.isNullOrEmpty()) return parties
+    val singles = sanitizeEnemyList(room.enemies)
+    return singles.map { listOf(it) }
+}
+
+private fun removeDefeatedEnemies(room: Room, defeatedIds: List<String>): Room {
+    val parties = roomEnemyParties(room)
+    val targetIndex = parties.indexOfFirst { partiesMatch(it, defeatedIds) }
+    val updatedParties = if (targetIndex >= 0) {
+        parties.toMutableList().apply { removeAt(targetIndex) }
+    } else {
+        parties.map { party ->
+            val remaining = party.toMutableList()
+            defeatedIds.forEach { id ->
+                val idx = remaining.indexOfFirst { candidate -> candidate == id }
+                if (idx >= 0) {
+                    remaining.removeAt(idx)
+                }
+            }
+            remaining
+        }.filter { it.isNotEmpty() }
+    }
+    val sanitized = sanitizeEnemyParties(updatedParties)
+    return if (room.enemyParties != null) {
+        room.copy(
+            enemyParties = sanitized,
+            enemies = sanitized?.flatten().orEmpty()
+        )
+    } else {
+        room.copy(enemies = sanitized?.flatten().orEmpty())
+    }
+}
+
+private fun partiesMatch(party: List<String>, defeatedIds: List<String>): Boolean {
+    if (party.size != defeatedIds.size) return false
+    val left = party.groupingBy { it }.eachCount()
+    val right = defeatedIds.groupingBy { it }.eachCount()
+    return left == right
 }
 
 private fun QuestJournalEntry.toUiSummary(): QuestSummaryUi = QuestSummaryUi(

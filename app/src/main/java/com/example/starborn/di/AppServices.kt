@@ -29,6 +29,7 @@ import com.example.starborn.domain.cinematic.CinematicCoordinator
 import com.example.starborn.domain.cinematic.CinematicPlaybackState
 import com.example.starborn.domain.cinematic.CinematicService
 import com.example.starborn.domain.combat.CombatEngine
+import com.example.starborn.domain.combat.EncounterCoordinator
 import com.example.starborn.domain.combat.StatusRegistry
 import com.example.starborn.domain.crafting.CraftingService
 import com.example.starborn.domain.dialogue.DialogueConditionEvaluator
@@ -105,6 +106,7 @@ class AppServices(context: Context) {
     val events: List<GameEvent> = eventDataSource.loadEvents()
     val statusRegistry = StatusRegistry(worldDataSource.loadStatuses())
     val combatEngine = CombatEngine(statusRegistry = statusRegistry)
+    val encounterCoordinator = EncounterCoordinator()
     val levelingManager = LevelingManager(worldDataSource.loadLevelingData() ?: LevelingData())
     val progressionData: ProgressionData = worldDataSource.loadProgressionData() ?: ProgressionData()
     val cinematicService = CinematicService(cinematicDataSource)
@@ -142,6 +144,11 @@ class AppServices(context: Context) {
     companion object {
         private const val AUTOSAVE_INTERVAL_MS = 90_000L
         private const val AUTOSAVE_SLOT = 0
+        private const val SAMPLE_SLOT_ID = 3
+        private val SAMPLE_PARTY = setOf("nova", "zeke", "orion", "gh0st")
+        private const val SAMPLE_WORLD_ID = "nova_prime"
+        private const val SAMPLE_HUB_ID = "mining_colony"
+        private const val SAMPLE_ROOM_ID = "market_2"
     }
 
     val promptManager = UIPromptManager()
@@ -213,13 +220,8 @@ class AppServices(context: Context) {
     }
 
     suspend fun loadSlot(slot: Int): Boolean {
-        var info = sessionPersistence.slotInfo(slot)
-        if (info == null || info.state.needsFallbackImport()) {
-            if (importLegacySlotFromAssets(slot)) {
-                info = sessionPersistence.slotInfo(slot)
-            }
-        }
-        val state = info?.state ?: return false
+        val info = resolveSlotInfo(slot) ?: return false
+        val state = info.state
         sessionStore.restore(state)
         inventoryService.restore(state.inventory)
         resetAutosaveThrottle()
@@ -232,13 +234,7 @@ class AppServices(context: Context) {
 
     suspend fun slotState(slot: Int): GameSessionState? = slotInfo(slot)?.state
 
-    suspend fun slotInfo(slot: Int): GameSessionSlotInfo? {
-        var info = sessionPersistence.slotInfo(slot)
-        if ((info == null || info.state.needsFallbackImport()) && importLegacySlotFromAssets(slot)) {
-            info = sessionPersistence.slotInfo(slot)
-        }
-        return info
-    }
+    suspend fun slotInfo(slot: Int): GameSessionSlotInfo? = resolveSlotInfo(slot)
 
     suspend fun loadAutosave(): Boolean {
         val info = sessionPersistence.autosaveInfo() ?: return false
@@ -303,11 +299,34 @@ class AppServices(context: Context) {
         }
     }
 
+    private suspend fun resolveSlotInfo(slot: Int): GameSessionSlotInfo? {
+        var info = sessionPersistence.slotInfo(slot)
+        if ((info == null || info.state.needsFallbackImport()) && importLegacySlotFromAssets(slot)) {
+            info = sessionPersistence.slotInfo(slot)
+        }
+        if (slot == SAMPLE_SLOT_ID && (info == null || !info.state.matchesSampleSeed())) {
+            if (importLegacySlotFromAssets(slot)) {
+                info = sessionPersistence.slotInfo(slot)
+            }
+        }
+        return info
+    }
+
     private fun GameSessionState.needsFallbackImport(): Boolean {
         val isPartyEmpty = playerId.isNullOrBlank() && partyMembers.isEmpty()
         val noProgress = worldId.isNullOrBlank() && hubId.isNullOrBlank() && roomId.isNullOrBlank()
         val noInventory = inventory.isEmpty() && playerCredits == 0
         return isPartyEmpty && noProgress && noInventory
+    }
+
+    private fun GameSessionState.matchesSampleSeed(): Boolean {
+        if (partyMembers.size != SAMPLE_PARTY.size) return false
+        if (!partyMembers.containsAll(SAMPLE_PARTY)) return false
+        if (!playerId.isNullOrBlank() && playerId !in SAMPLE_PARTY) return false
+        val worldMatches = worldId.isNullOrBlank() || worldId == SAMPLE_WORLD_ID
+        val hubMatches = hubId.isNullOrBlank() || hubId == SAMPLE_HUB_ID
+        val roomMatches = roomId.isNullOrBlank() || roomId == SAMPLE_ROOM_ID
+        return worldMatches && hubMatches && roomMatches
     }
 
     fun startNewGame() {

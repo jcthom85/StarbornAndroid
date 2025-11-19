@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -23,6 +25,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Close
@@ -50,6 +53,7 @@ fun QuestDetailOverlay(
     uiEventBus: UiEventBus,
     gradientColor: Color,
     outlineColor: Color,
+    onShowDetails: (String) -> Unit,
     autoDismissMillis: Long = 8000L
 ) {
     var current by remember { mutableStateOf<UiEvent.ShowQuestDetail?>(null) }
@@ -87,7 +91,8 @@ fun QuestDetailOverlay(
                     detail = detail,
                     gradientColor = gradientColor,
                     outlineColor = outlineColor,
-                    onDismiss = { visible = false }
+                    onDismiss = { visible = false },
+                    onShowDetails = onShowDetails
                 )
             }
         }
@@ -99,7 +104,8 @@ private fun QuestDetailCard(
     detail: UiEvent.ShowQuestDetail,
     gradientColor: Color,
     outlineColor: Color,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    onShowDetails: (String) -> Unit
 ) {
     val accent = gradientColor
     val icon = when (detail.type) {
@@ -170,11 +176,22 @@ private fun QuestDetailCard(
                     }
                 }
             }
-            Button(
-                onClick = onDismiss,
-                modifier = Modifier.align(Alignment.End)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
             ) {
-                Text("Continue")
+                TextButton(onClick = {
+                    onDismiss()
+                    onShowDetails(detail.questId)
+                }) {
+                    Text("Details")
+                }
+                Spacer(modifier = Modifier.width(8.dp))
+                Button(
+                    onClick = onDismiss
+                ) {
+                    Text("Continue")
+                }
             }
         }
     }

@@ -9,6 +9,7 @@ import com.example.starborn.ui.events.QuestBannerType
 import com.example.starborn.ui.events.QuestSummaryEntry
 import com.example.starborn.ui.events.UiEvent
 import com.example.starborn.ui.events.UiEventBus
+import com.example.starborn.ui.events.QuestObjectiveStatus
 import java.util.ArrayDeque
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -148,18 +149,6 @@ class QuestRuntimeManager(
                 val tasks = completedTasks.getOrPut(questId) { mutableSetOf() }
                 if (tasks.add(taskId)) {
                     val quest = questRepository.questById(questId)
-                    val taskTitle = quest?.stages
-                        ?.flatMap { it.tasks }
-                        ?.firstOrNull { it.id == taskId }
-                        ?.text
-                    val toastLabel = taskTitle?.takeIf { it.isNotBlank() } ?: "Objective updated"
-                    uiEventBus.tryEmit(
-                        UiEvent.ShowObjectiveToast(
-                            questId = questId,
-                            objectiveId = taskId,
-                            text = toastLabel
-                        )
-                    )
                     appendLog(
                         questId,
                         "Objective completed",
@@ -198,13 +187,13 @@ class QuestRuntimeManager(
                 appendLog(questId, message, stageProgress[questId])
                 emitStateLocked(sessionStore.state.value)
                 val title = questRepository.questById(questId)?.title?.takeIf { it.isNotBlank() } ?: questId
-                uiEventBus.tryEmit(
-                    UiEvent.ShowQuestBanner(
-                        type = QuestBannerType.FAILED,
-                        questId = questId,
-                        questTitle = title
-                    )
-                )
+        uiEventBus.tryEmit(
+            UiEvent.ShowQuestBanner(
+                type = QuestBannerType.FAILED,
+                questId = questId,
+                questTitle = title
+            )
+        )
                 uiEventBus.tryEmit(UiEvent.JournalBadgeDelta(+1))
             }
         }
@@ -221,24 +210,6 @@ class QuestRuntimeManager(
                 emitStateLocked(sessionStore.state.value)
             }
         }
-    }
-
-    fun postObjectiveProgress(
-        questId: String,
-        objectiveId: String,
-        label: String,
-        progress: Int? = null,
-        total: Int? = null
-    ) {
-        uiEventBus.tryEmit(
-            UiEvent.ShowObjectiveToast(
-                questId = questId,
-                objectiveId = objectiveId,
-                text = label,
-                progress = progress,
-                total = total
-            )
-        )
     }
 
     fun postSceneQuestSummary(entries: List<QuestSummaryEntry>) {
@@ -454,6 +425,7 @@ class QuestRuntimeManager(
             .filter { it.isNotBlank() }
         uiEventBus.tryEmit(
             UiEvent.ShowQuestDetail(
+                questId = quest.id,
                 type = type,
                 questTitle = quest.title,
                 summary = summary,
@@ -467,12 +439,27 @@ class QuestRuntimeManager(
         quest: Quest? = null
     ) {
         val data = quest ?: questRepository.questById(questId) ?: return
+        val objectives = questObjectivesForBanner(questId, data)
         uiEventBus.tryEmit(
             UiEvent.ShowQuestBanner(
                 type = QuestBannerType.PROGRESS,
                 questId = questId,
-                questTitle = data.title
+                questTitle = data.title,
+                objectives = objectives
             )
         )
+    }
+
+    private fun questObjectivesForBanner(questId: String, quest: Quest): List<QuestObjectiveStatus> {
+        val stageId = stageProgress[questId]
+        val stage = quest.stages.firstOrNull { it.id == stageId } ?: quest.stages.firstOrNull()
+        val completed = completedTasks[questId].orEmpty()
+        return stage?.tasks.orEmpty().map { task ->
+            QuestObjectiveStatus(
+                id = task.id,
+                text = task.text,
+                completed = task.done || completed.contains(task.id)
+            )
+        }
     }
 }

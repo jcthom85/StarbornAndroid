@@ -53,14 +53,18 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.Flag
 import androidx.compose.material.icons.outlined.School
 import androidx.compose.material.icons.rounded.AutoAwesome
+import androidx.compose.material.icons.outlined.RadioButtonUnchecked
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -146,6 +150,8 @@ import com.example.starborn.domain.model.actionKey
 import com.example.starborn.domain.model.serviceTag
 import com.example.starborn.domain.tutorial.TutorialEntry
 import com.example.starborn.ui.background.rememberAssetPainter
+import com.example.starborn.ui.components.ItemTargetSelectionDialog
+import com.example.starborn.ui.components.TargetSelectionOption
 import com.example.starborn.ui.vfx.ThemeBandOverlay
 import com.example.starborn.ui.vfx.VignetteOverlay
 import com.example.starborn.ui.vfx.WeatherOverlay
@@ -175,6 +181,8 @@ import com.example.starborn.feature.exploration.viewmodel.PartyStatusUi
 import com.example.starborn.feature.exploration.viewmodel.EventAnnouncementUi
 import com.example.starborn.feature.exploration.viewmodel.QuestLogEntryUi
 import com.example.starborn.feature.exploration.viewmodel.QuestSummaryUi
+import com.example.starborn.feature.exploration.viewmodel.QuestDetailUi
+import com.example.starborn.feature.exploration.viewmodel.QuestObjectiveUi
 import com.example.starborn.feature.exploration.viewmodel.ShopDialogueAction
 import com.example.starborn.feature.exploration.viewmodel.ShopDialogueChoiceUi
 import com.example.starborn.feature.exploration.viewmodel.ShopDialogueLineUi
@@ -223,6 +231,8 @@ fun ExplorationScreen(
     fxEvents: Flow<String>? = null
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle(initialValue = ExplorationUiState())
+    var pendingInventoryItem by remember { mutableStateOf<InventoryPreviewItemUi?>(null) }
+    var showInventoryTargetDialog by remember { mutableStateOf(false) }
     val fxBursts = remember { mutableStateListOf<UiFxBurst>() }
     val blockingOverlayActive =
         uiState.isMenuOverlayVisible ||
@@ -286,6 +296,29 @@ fun ExplorationScreen(
             stream.collect { fxId ->
                 val visual = fxVisualInfo(fxId)
                 fxBursts += UiFxBurst(System.nanoTime(), visual.label, visual.color)
+            }
+        }
+    }
+
+    LaunchedEffect(uiState.isMenuOverlayVisible) {
+        if (!uiState.isMenuOverlayVisible) {
+            pendingInventoryItem = null
+            showInventoryTargetDialog = false
+        }
+    }
+
+    val menuPartyMembers = uiState.partyStatus.members
+    val onUsePreviewItem: (InventoryPreviewItemUi) -> Unit = { item ->
+        val effect = item.effect
+        if (effect == null) {
+            viewModel.showStatusMessage("${item.name} can't be used right now.")
+        } else {
+            val targetMode = effect.target?.lowercase(Locale.getDefault()) ?: "any"
+            if (targetMode == "party" || menuPartyMembers.isEmpty()) {
+                viewModel.useInventoryItem(item.id, null)
+            } else {
+                pendingInventoryItem = item
+                showInventoryTargetDialog = true
             }
         }
     }
@@ -790,7 +823,38 @@ fun ExplorationScreen(
                 isCurrentRoomDark = isRoomDark,
                 onMenuAction = { viewModel.onMenuActionInvoked() },
                 inventoryItems = uiState.inventoryPreview,
-                equippedItems = uiState.equippedItems
+                equippedItems = uiState.equippedItems,
+                onUseInventoryItem = onUsePreviewItem,
+                onShowQuestDetails = { questId ->
+                    viewModel.openQuestDetails(questId)
+                }
+            )
+        }
+
+        if (showInventoryTargetDialog && pendingInventoryItem != null) {
+            val targetOptions = menuPartyMembers.map {
+                TargetSelectionOption(
+                    id = it.id,
+                    name = it.name,
+                    detail = it.hpLabel
+                )
+            }
+            ItemTargetSelectionDialog(
+                itemName = pendingInventoryItem!!.name,
+                targets = targetOptions,
+                onSelect = { targetId ->
+                    viewModel.useInventoryItem(pendingInventoryItem!!.id, targetId)
+                    pendingInventoryItem = null
+                    showInventoryTargetDialog = false
+                },
+                onDismiss = {
+                    pendingInventoryItem = null
+                    showInventoryTargetDialog = false
+                },
+                backgroundColor = themeColor(activeTheme?.bg, Color.Black).copy(alpha = 0.7f),
+                borderColor = themeColor(activeTheme?.border, Color.White.copy(alpha = 0.3f)),
+                textColor = themeColor(activeTheme?.fg, Color.White),
+                accentColor = themeColor(activeTheme?.accent, Color.White)
             )
         }
 
@@ -862,6 +926,9 @@ fun ExplorationScreen(
                 failedQuests = uiState.failedQuests,
                 questLog = uiState.questLogEntries,
                 onClose = { viewModel.closeQuestLog() },
+                onSelectQuest = { questId ->
+                    viewModel.openQuestDetails(questId)
+                },
                 modifier = Modifier.align(Alignment.Center)
             )
         }
@@ -919,14 +986,33 @@ fun ExplorationScreen(
         QuestDetailOverlay(
             uiEventBus = uiEventBus,
             gradientColor = questAccentColor,
-            outlineColor = panelBorderColor
+            outlineColor = panelBorderColor,
+            onShowDetails = { questId ->
+                viewModel.openQuestDetails(questId)
+            }
         )
 
         QuestSummaryOverlay(
             uiEventBus = uiEventBus,
             isSceneBlocking = blockingOverlayActive,
-            modifier = Modifier.align(Alignment.Center)
+            modifier = Modifier.align(Alignment.Center),
+            onShowDetails = { questId ->
+                viewModel.openQuestDetails(questId)
+            }
         )
+
+        uiState.questDetail?.let { detail ->
+            QuestDetailSheet(
+                detail = detail,
+                accentColor = questAccentColor,
+                onClose = { viewModel.closeQuestDetails() },
+                onToggleTrack = { questId -> viewModel.toggleQuestTracking(questId) },
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .padding(horizontal = 20.dp, vertical = 16.dp)
+                    .zIndex(2f)
+            )
+        }
 
         CraftingFxOverlay(
             bursts = fxBursts,
@@ -1180,6 +1266,178 @@ private fun serviceOffsets(count: Int, spacing: Float): List<Pair<Float, Float>>
     )
 }
 
+@Composable
+private fun QuestDetailSheet(
+    detail: QuestDetailUi,
+    accentColor: Color,
+    onClose: () -> Unit,
+    onToggleTrack: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val scrollState = rememberScrollState()
+    Surface(
+        modifier = modifier
+            .fillMaxWidth(0.92f)
+            .fillMaxHeight(0.85f),
+        shape = RoundedCornerShape(32.dp),
+        color = Color(0xF00A111E),
+        border = BorderStroke(1.dp, accentColor.copy(alpha = 0.5f))
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(24.dp)
+                .verticalScroll(scrollState),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column {
+                    Text(
+                        text = detail.title,
+                        style = MaterialTheme.typography.headlineSmall,
+                        color = Color.White
+                    )
+                    Text(
+                        text = "Stage ${detail.stageIndex + 1} of ${detail.totalStages}",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color.White.copy(alpha = 0.75f)
+                    )
+                }
+                IconButton(onClick = onClose) {
+                    Icon(
+                        imageVector = Icons.Filled.Close,
+                        contentDescription = "Close",
+                        tint = Color.White
+                    )
+                }
+            }
+            detail.summary.takeIf { it.isNotBlank() }?.let { summary ->
+                Text(
+                    text = summary,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.White.copy(alpha = 0.85f)
+                )
+            }
+            detail.description?.takeIf { it.isNotBlank() }?.let { description ->
+                Text(
+                    text = description,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color.White.copy(alpha = 0.75f)
+                )
+            }
+            detail.stageTitle?.let { stageTitle ->
+                Text(
+                    text = stageTitle,
+                    style = MaterialTheme.typography.titleMedium.copy(color = accentColor),
+                    color = accentColor
+                )
+            }
+            detail.stageDescription?.takeIf { it.isNotBlank() }?.let { stageDescription ->
+                Text(
+                    text = stageDescription,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.White.copy(alpha = 0.8f)
+                )
+            }
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(
+                    text = "Objectives",
+                    style = MaterialTheme.typography.titleSmall,
+                    color = Color.White
+                )
+                if (detail.objectives.isEmpty()) {
+                    Text(
+                        text = "No objectives listed.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color.White.copy(alpha = 0.6f)
+                    )
+                } else {
+                    detail.objectives.forEach { objective ->
+                        QuestObjectiveRow(objective = objective, accentColor = accentColor)
+                    }
+                }
+            }
+            if (detail.rewards.isNotEmpty()) {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(
+                        text = "Rewards",
+                        style = MaterialTheme.typography.titleSmall,
+                        color = Color.White
+                    )
+                    detail.rewards.forEach { reward ->
+                        Surface(
+                            color = Color.White.copy(alpha = 0.06f),
+                            shape = RoundedCornerShape(12.dp),
+                            border = BorderStroke(1.dp, accentColor.copy(alpha = 0.4f))
+                        ) {
+                            Text(
+                                text = reward,
+                                style = MaterialTheme.typography.bodySmall,
+                                color = Color.White,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 12.dp, vertical = 8.dp)
+                            )
+                        }
+                    }
+                }
+            }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                val trackLabel = if (detail.tracked) "Stop Tracking" else "Track Quest"
+                Button(
+                    onClick = { onToggleTrack(detail.id) },
+                    modifier = Modifier.weight(1f),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = if (detail.tracked) accentColor else Color.Transparent,
+                        contentColor = if (detail.tracked) Color(0xFF010308) else accentColor
+                    ),
+                    border = if (detail.tracked) null else BorderStroke(1.dp, accentColor.copy(alpha = 0.7f))
+                ) {
+                    Text(trackLabel)
+                }
+                OutlinedButton(
+                    onClick = onClose,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("Close")
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun QuestObjectiveRow(
+    objective: QuestObjectiveUi,
+    accentColor: Color
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        val icon = if (objective.completed) Icons.Filled.CheckCircle else Icons.Outlined.RadioButtonUnchecked
+        val tint = if (objective.completed) accentColor else Color.White.copy(alpha = 0.7f)
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            tint = tint
+        )
+        Text(
+            text = objective.text,
+            style = MaterialTheme.typography.bodyMedium,
+            color = Color.White
+        )
+    }
+}
+
 private fun DrawScope.drawServiceGlyph(service: MinimapService, centerX: Float, centerY: Float, size: Float) {
     val center = androidx.compose.ui.geometry.Offset(centerX, centerY)
     val color = minimapServiceColor(service)
@@ -1292,6 +1550,8 @@ private fun MenuOverlay(
     onMenuAction: () -> Unit,
     inventoryItems: List<InventoryPreviewItemUi>,
     equippedItems: Map<String, String>,
+    onUseInventoryItem: (InventoryPreviewItemUi) -> Unit,
+    onShowQuestDetails: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val panelColor = themeColor(theme?.bg, MaterialTheme.colorScheme.surface).copy(alpha = 0.95f)
@@ -1367,7 +1627,9 @@ private fun MenuOverlay(
                     onShowSkillTree = onShowSkillTree,
                     onShowDetails = onShowDetails,
                     inventoryItems = inventoryItems,
-                    equippedItems = equippedItems
+                    equippedItems = equippedItems,
+                    onUseInventoryItem = onUseInventoryItem,
+                    onShowQuestDetails = onShowQuestDetails
                 )
         }
     }
@@ -1446,7 +1708,9 @@ private fun MenuTabContentArea(
     onShowSkillTree: (String) -> Unit,
     onShowDetails: (String) -> Unit,
     inventoryItems: List<InventoryPreviewItemUi>,
-    equippedItems: Map<String, String>
+    equippedItems: Map<String, String>,
+    onUseInventoryItem: (InventoryPreviewItemUi) -> Unit,
+    onShowQuestDetails: (String) -> Unit
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         when (tab) {
@@ -1455,12 +1719,14 @@ private fun MenuTabContentArea(
                 equippedItems = equippedItems,
                 accentColor = accentColor,
                 borderColor = borderColor,
-                onOpenInventory = onOpenInventory
+                onOpenInventory = onOpenInventory,
+                onUseConsumable = onUseInventoryItem
             )
             MenuTab.JOURNAL -> JournalTabContent(
                 trackedQuest = trackedQuest,
                 accentColor = accentColor,
-                borderColor = borderColor
+                borderColor = borderColor,
+                onQuestSelected = onShowQuestDetails
             )
             MenuTab.MAP -> MapTabContent(
                 minimap = minimap,
@@ -1493,13 +1759,16 @@ private fun MenuTabContentArea(
 
 private enum class InventoryCarouselPage { SUPPLIES, GEAR, KEY_ITEMS }
 
+private enum class QuestJournalPage { ACTIVE, COMPLETED }
+
 @Composable
 private fun InventoryTabContent(
     inventoryItems: List<InventoryPreviewItemUi>,
     equippedItems: Map<String, String>,
     accentColor: Color,
     borderColor: Color,
-    onOpenInventory: (InventoryLaunchOptions) -> Unit
+    onOpenInventory: (InventoryLaunchOptions) -> Unit,
+    onUseConsumable: (InventoryPreviewItemUi) -> Unit
 ) {
     var page by rememberSaveable { mutableStateOf(InventoryCarouselPage.SUPPLIES) }
     val supplies = remember(inventoryItems) {
@@ -1523,7 +1792,8 @@ private fun InventoryTabContent(
                 items = supplies,
                 borderColor = borderColor,
                 emptyMessage = "No supplies collected yet. Explore rooms to gather materials.",
-                moreLabel = "more supplies"
+                moreLabel = "more supplies",
+                onItemClick = onUseConsumable
             )
             InventoryCarouselPage.GEAR -> InventoryEquipmentPreview(
                 equippedItems = equippedItems,
@@ -1535,7 +1805,7 @@ private fun InventoryTabContent(
                 items = keyItems,
                 borderColor = borderColor,
                 emptyMessage = "No key items collected yet.",
-                moreLabel = "more key items"
+                 moreLabel = "more key items"
             )
         }
         Spacer(modifier = Modifier.height(4.dp))
@@ -1615,7 +1885,8 @@ private fun InventoryItemsPreview(
     items: List<InventoryPreviewItemUi>,
     borderColor: Color,
     emptyMessage: String,
-    moreLabel: String
+    moreLabel: String,
+    onItemClick: ((InventoryPreviewItemUi) -> Unit)? = null
 ) {
     if (items.isEmpty()) {
         Text(
@@ -1627,10 +1898,15 @@ private fun InventoryItemsPreview(
     }
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         items.take(6).forEach { item ->
+            val isUsable = onItemClick != null && item.effect != null
+            val shape = RoundedCornerShape(18.dp)
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .border(BorderStroke(1.dp, borderColor.copy(alpha = 0.35f)), RoundedCornerShape(18.dp))
+                    .clip(shape)
+                    .background(if (isUsable) Color.White.copy(alpha = 0.05f) else Color.Transparent)
+                    .border(BorderStroke(1.dp, borderColor.copy(alpha = 0.35f)), shape)
+                    .clickable(enabled = isUsable) { onItemClick?.invoke(item) }
                     .padding(horizontal = 14.dp, vertical = 10.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -1646,7 +1922,7 @@ private fun InventoryItemsPreview(
                     Text(
                         text = item.type,
                         style = MaterialTheme.typography.bodySmall,
-                        color = Color.White.copy(alpha = 0.7f)
+                        color = Color.White.copy(alpha = if (isUsable) 0.7f else 0.5f)
                     )
                 }
                 Text(
@@ -1741,7 +2017,8 @@ private fun slotLabel(raw: String): String =
 private fun JournalTabContent(
     trackedQuest: QuestSummaryUi?,
     accentColor: Color,
-    borderColor: Color
+    borderColor: Color,
+    onQuestSelected: (String) -> Unit
 ) {
     MenuSectionCard(
         title = trackedQuest?.title ?: "Active Quest",
@@ -1749,7 +2026,8 @@ private fun JournalTabContent(
         borderColor = borderColor
     ) {
         QuestPreviewCard(
-            quest = trackedQuest
+            quest = trackedQuest,
+            onQuestSelected = { quest -> onQuestSelected(quest.id) }
         )
     }
 }
@@ -2272,7 +2550,8 @@ private fun QuickContextActions(
 
 @Composable
 private fun QuestPreviewCard(
-    quest: QuestSummaryUi?
+    quest: QuestSummaryUi?,
+    onQuestSelected: ((QuestSummaryUi) -> Unit)? = null
 ) {
     if (quest == null) {
         Text(
@@ -2282,7 +2561,16 @@ private fun QuestPreviewCard(
         )
         return
     }
-    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(6.dp),
+        modifier = if (onQuestSelected != null) {
+            Modifier
+                .clip(RoundedCornerShape(18.dp))
+                .background(Color.White.copy(alpha = 0.04f))
+                .clickable { onQuestSelected(quest) }
+                .padding(14.dp)
+        } else Modifier
+    ) {
         Text(
             text = quest.title,
             color = Color.White,
@@ -3622,6 +3910,7 @@ private fun QuestJournalOverlay(
     failedQuests: Set<String>,
     questLog: List<QuestLogEntryUi>,
     onClose: () -> Unit,
+    onSelectQuest: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val otherActive = remember(trackedQuest, activeQuests) {
@@ -3632,6 +3921,8 @@ private fun QuestJournalOverlay(
     }
 
     val totalCount = activeQuests.size + completedQuests.size + failedQuests.size
+
+    var page by rememberSaveable { mutableStateOf(QuestJournalPage.ACTIVE) }
 
     Surface(
         modifier = modifier
@@ -3672,82 +3963,137 @@ private fun QuestJournalOverlay(
                 )
             }
 
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(18.dp)
-    ) {
-                trackedQuest?.let { quest ->
-                    item {
-                        SectionCard(title = "Tracked Quest") {
-                            QuestSummaryDetails(quest, emphasize = true)
-                        }
-                    }
-                }
+            QuestJournalToggle(
+                current = page,
+                onSelect = { page = it },
+                accentColor = Color.White.copy(alpha = 0.9f),
+                borderColor = Color.White.copy(alpha = 0.3f)
+            )
 
-                if (recentLog.isNotEmpty()) {
-                    item {
-                        SectionCard(title = "Recent Updates") {
-                            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                                recentLog.forEach { entry ->
-                                    QuestLogEntryRow(entry)
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(18.dp)
+            ) {
+                when (page) {
+                    QuestJournalPage.ACTIVE -> {
+                        trackedQuest?.let { quest ->
+                            item {
+                                SectionCard(title = "Tracked Quest") {
+                                    QuestSummaryDetails(
+                                        quest = quest,
+                                        emphasize = true,
+                                        onClick = { onSelectQuest(quest.id) }
+                                    )
+                                }
+                            }
+                        } ?: item {
+                            SectionCard(title = "Tracked Quest") {
+                                Text(
+                                    text = "No quest tracked. Select one below.",
+                                    color = Color.White.copy(alpha = 0.75f),
+                                    style = MaterialTheme.typography.bodySmall
+                                )
+                            }
+                        }
+
+                        if (recentLog.isNotEmpty()) {
+                            item {
+                                SectionCard(title = "Recent Updates") {
+                                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                        recentLog.forEach { entry ->
+                                            QuestLogEntryRow(entry)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        if (otherActive.isNotEmpty()) {
+                            item {
+                                SectionCard(title = "Active Quests") {
+                                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                        otherActive.forEach { quest ->
+                                            QuestSummaryDetails(
+                                                quest = quest,
+                                                onClick = { onSelectQuest(quest.id) }
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            item {
+                                SectionCard(title = "Active Quests") {
+                                    Text(
+                                        text = "No active quests yet.",
+                                        color = Color.White.copy(alpha = 0.75f),
+                                        style = MaterialTheme.typography.bodySmall
+                                    )
                                 }
                             }
                         }
                     }
-                }
-
-                if (otherActive.isNotEmpty()) {
-                    item {
-                        SectionCard(title = "Active Quests") {
-                            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                                otherActive.forEach { quest ->
-                                    QuestSummaryDetails(quest)
+                    QuestJournalPage.COMPLETED -> {
+                        if (completedQuests.isNotEmpty()) {
+                            item {
+                                SectionCard(title = "Completed Quests") {
+                                    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                                        completedQuests.take(8).forEach { quest ->
+                                            Text(
+                                                text = "• ${quest.title}",
+                                                style = MaterialTheme.typography.bodySmall.copy(fontSize = 14.sp),
+                                                color = Color.White.copy(alpha = 0.85f),
+                                                modifier = Modifier
+                                                    .clip(RoundedCornerShape(8.dp))
+                                                    .clickable { onSelectQuest(quest.id) }
+                                                    .padding(horizontal = 4.dp, vertical = 2.dp)
+                                            )
+                                        }
+                                        if (completedQuests.size > 8) {
+                                            Text(
+                                                text = "+${completedQuests.size - 8} more",
+                                                style = MaterialTheme.typography.labelSmall.copy(fontSize = 12.sp),
+                                                color = Color.White.copy(alpha = 0.6f)
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            item {
+                                SectionCard(title = "Completed Quests") {
+                                    Text(
+                                        text = "You haven't finished any quests yet.",
+                                        color = Color.White.copy(alpha = 0.75f),
+                                        style = MaterialTheme.typography.bodySmall
+                                    )
                                 }
                             }
                         }
-                    }
-                }
 
-                if (completedQuests.isNotEmpty()) {
-                    item {
-                        SectionCard(title = "Completed Quests") {
-                            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                                completedQuests.take(8).forEach { quest ->
-                                    Text(
-                                        text = "• ${quest.title}",
-                                        style = MaterialTheme.typography.bodySmall.copy(fontSize = 14.sp),
-                                        color = Color.White.copy(alpha = 0.85f)
-                                    )
-                                }
-                                if (completedQuests.size > 8) {
-                                    Text(
-                                        text = "+${completedQuests.size - 8} more",
-                                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 12.sp),
-                                        color = Color.White.copy(alpha = 0.6f)
-                                    )
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if (failedQuests.isNotEmpty()) {
-                    item {
-                        SectionCard(title = "Failed Quests") {
-                            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                                failedQuests.take(8).forEach { questId ->
-                                    Text(
-                                        text = "• $questId",
-                                        style = MaterialTheme.typography.bodySmall.copy(fontSize = 14.sp),
-                                        color = MaterialTheme.colorScheme.error.copy(alpha = 0.85f)
-                                    )
-                                }
-                                if (failedQuests.size > 8) {
-                                    Text(
-                                        text = "+${failedQuests.size - 8} more",
-                                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 12.sp),
-                                        color = MaterialTheme.colorScheme.error.copy(alpha = 0.6f)
-                                    )
+                        if (failedQuests.isNotEmpty()) {
+                            item {
+                                SectionCard(title = "Failed Quests") {
+                                    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                                        failedQuests.take(8).forEach { questId ->
+                                            Text(
+                                                text = "• $questId",
+                                                style = MaterialTheme.typography.bodySmall.copy(fontSize = 14.sp),
+                                                color = MaterialTheme.colorScheme.error.copy(alpha = 0.85f),
+                                                modifier = Modifier
+                                                    .clip(RoundedCornerShape(8.dp))
+                                                    .clickable { onSelectQuest(questId) }
+                                                    .padding(horizontal = 4.dp, vertical = 2.dp)
+                                            )
+                                        }
+                                        if (failedQuests.size > 8) {
+                                            Text(
+                                                text = "+${failedQuests.size - 8} more",
+                                                style = MaterialTheme.typography.labelSmall.copy(fontSize = 12.sp),
+                                                color = MaterialTheme.colorScheme.error.copy(alpha = 0.6f)
+                                            )
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -3759,11 +4105,85 @@ private fun QuestJournalOverlay(
 }
 
 @Composable
+private fun QuestJournalToggle(
+    current: QuestJournalPage,
+    onSelect: (QuestJournalPage) -> Unit,
+    accentColor: Color,
+    borderColor: Color
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(BorderStroke(1.dp, borderColor), RoundedCornerShape(50.dp))
+            .padding(6.dp),
+        horizontalArrangement = Arrangement.spacedBy(6.dp)
+    ) {
+        JournalToggleButton(
+            label = "Active",
+            selected = current == QuestJournalPage.ACTIVE,
+            accentColor = accentColor,
+            onClick = { onSelect(QuestJournalPage.ACTIVE) },
+            modifier = Modifier.weight(1f)
+        )
+        JournalToggleButton(
+            label = "Completed",
+            selected = current == QuestJournalPage.COMPLETED,
+            accentColor = accentColor,
+            onClick = { onSelect(QuestJournalPage.COMPLETED) },
+            modifier = Modifier.weight(1f)
+        )
+    }
+}
+
+@Composable
+private fun JournalToggleButton(
+    label: String,
+    selected: Boolean,
+    accentColor: Color,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val background = if (selected) accentColor.copy(alpha = 0.2f) else Color.Transparent
+    Surface(
+        modifier = modifier
+            .clip(RoundedCornerShape(40.dp))
+            .clickable { onClick() },
+        color = background,
+        shape = RoundedCornerShape(40.dp)
+    ) {
+        Box(
+            modifier = Modifier.padding(vertical = 10.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.titleSmall,
+                color = if (selected) Color.White else Color.White.copy(alpha = 0.8f)
+            )
+        }
+    }
+}
+
+@Composable
 private fun QuestSummaryDetails(
     quest: QuestSummaryUi,
-    emphasize: Boolean = false
+    emphasize: Boolean = false,
+    onClick: (() -> Unit)? = null
 ) {
-    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+    val shape = RoundedCornerShape(18.dp)
+    val modifier = if (onClick != null) {
+        Modifier
+            .clip(shape)
+            .background(Color.White.copy(alpha = 0.05f))
+            .clickable { onClick() }
+            .padding(14.dp)
+    } else {
+        Modifier
+    }
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(6.dp)
+    ) {
         Text(
             text = quest.title,
             style = if (emphasize) MaterialTheme.typography.titleMedium else MaterialTheme.typography.bodyLarge,

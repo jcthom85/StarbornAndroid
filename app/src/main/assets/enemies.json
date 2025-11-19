@@ -222,12 +222,6 @@
       {
         "id": "beast meat",
         "chance": 0.4
-      },
-      {
-        "id": "mine_keycard",
-        "chance": 1.0,
-        "qty_min": 1,
-        "qty_max": 1
       }
     ]
   },

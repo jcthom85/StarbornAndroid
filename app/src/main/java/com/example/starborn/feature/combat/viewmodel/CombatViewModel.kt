@@ -17,6 +17,8 @@ import com.example.starborn.domain.combat.CombatReward
 import com.example.starborn.domain.combat.CombatSetup
 import com.example.starborn.domain.combat.CombatSide
 import com.example.starborn.domain.combat.CombatState
+import com.example.starborn.domain.combat.ElementalStackRules
+import com.example.starborn.domain.combat.EncounterCoordinator
 import com.example.starborn.domain.combat.Combatant
 import com.example.starborn.domain.combat.CombatantState
 import com.example.starborn.domain.combat.CombatLogEntry
@@ -39,6 +41,7 @@ import com.example.starborn.domain.model.Room
 import com.example.starborn.domain.model.Skill
 import com.example.starborn.domain.model.SkillTreeNode
 import com.example.starborn.domain.model.StatusDefinition
+import com.example.starborn.domain.model.Drop
 import com.example.starborn.domain.session.GameSessionStore
 import com.example.starborn.domain.theme.EnvironmentThemeManager
 import java.util.Locale
@@ -71,18 +74,21 @@ class CombatViewModel(
     private val audioRouter: AudioRouter,
     private val themeRepository: ThemeRepository,
     private val environmentThemeManager: EnvironmentThemeManager,
+    private val encounterCoordinator: EncounterCoordinator,
     enemyIds: List<String>
 ) : ViewModel() {
 
     val player: Player?
     val playerParty: List<Player>
     val enemies: List<Enemy>
+    private val encounterEnemySlots: List<EncounterEnemySlot>
 
     private val playerSkillsById: Map<String, List<Skill>>
     private val playerCombatants: List<Combatant>
     private val enemyCombatants: List<Combatant>
     private val playerIdList: List<String>
     private val enemyIdList: List<String>
+    private val encounterEnemyIdList: List<String>
     private val readyQueue = mutableListOf<String>()
     private val skillById: Map<String, Skill>
     private val skillNodesById: Map<String, SkillTreeNode>
@@ -113,7 +119,8 @@ class CombatViewModel(
     val state: StateFlow<CombatState?> = _state.asStateFlow()
     val combatState: CombatState? get() = _state.value
     private var enemyTurnJob: Job? = null
-    val encounterEnemyIds: List<String> get() = enemyIdList
+    val encounterEnemyIds: List<String> get() = encounterEnemyIdList
+    val enemyCombatantIds: List<String> get() = enemyIdList
     private val _selectedEnemies = MutableStateFlow<Set<String>>(emptySet())
     val selectedEnemies: StateFlow<Set<String>> = _selectedEnemies.asStateFlow()
     private val _lungeActorId = MutableStateFlow<String?>(null)
@@ -145,7 +152,23 @@ class CombatViewModel(
 
         playerParty = resolvedParty
         player = playerParty.firstOrNull()
-        enemies = enemyIds.mapNotNull { id -> allEnemies.find { it.id == id } }
+        val pendingEncounter = encounterCoordinator.consumePendingEncounter()
+        val pendingSlots = pendingEncounter?.enemies.orEmpty()
+        val slots = enemyIds
+            .mapIndexedNotNull { index, id ->
+                val canonicalId = id.takeIf { it.isNotBlank() } ?: return@mapIndexedNotNull null
+                val enemy = allEnemies.find { it.id == canonicalId } ?: return@mapIndexedNotNull null
+                val overrides = pendingSlots.getOrNull(index)?.takeIf { it.enemyId == canonicalId }
+                EncounterEnemySlot(
+                    canonicalId = canonicalId,
+                    enemy = enemy,
+                    overrideDrops = overrides?.overrideDrops,
+                    extraDrops = overrides?.extraDrops.orEmpty()
+                )
+            }
+        encounterEnemySlots = slots
+        enemies = slots.map { it.enemy }
+        encounterEnemyIdList = slots.map { it.canonicalId }
 
         val currentRoomId = sessionSnapshot.roomId
         val currentRoom: Room? = currentRoomId?.let { id -> rooms.firstOrNull { it.id == id } }
@@ -160,7 +183,17 @@ class CombatViewModel(
         }
 
         playerCombatants = playerParty.map { it.toCombatant() }
-        enemyCombatants = enemies.map { it.toCombatant() }
+        val duplicateCounts = encounterEnemyIdList.groupingBy { it }.eachCount()
+        val instanceCounters = mutableMapOf<String, Int>()
+        enemyCombatants = encounterEnemySlots.map { slot ->
+            val canonicalId = slot.canonicalId
+            val enemy = slot.enemy
+            val nextIndex = instanceCounters.getOrDefault(canonicalId, 0) + 1
+            instanceCounters[canonicalId] = nextIndex
+            val requireSuffix = (duplicateCounts[canonicalId] ?: 0) > 1
+            val instanceId = if (requireSuffix) "${canonicalId}#$nextIndex" else canonicalId
+            enemy.toCombatant(instanceId)
+        }
         playerIdList = playerCombatants.map { it.id }
         enemyIdList = enemyCombatants.map { it.id }
 
@@ -559,6 +592,8 @@ class CombatViewModel(
                     )
                     setCombatMessage(entry, updated)
                 }
+                is CombatLogEntry.ElementStack,
+                is CombatLogEntry.ElementBurst -> setCombatMessage(entry, updated)
                 is CombatLogEntry.Outcome -> {
                     val outcomeType = when (entry.result) {
                         is CombatOutcome.Victory -> CombatFxEvent.CombatOutcomeFx.OutcomeType.VICTORY
@@ -839,9 +874,9 @@ class CombatViewModel(
             skills = skills
         )
 
-    private fun Enemy.toCombatant(): Combatant =
+    private fun Enemy.toCombatant(combatantId: String = id): Combatant =
         Combatant(
-            id = id,
+            id = combatantId,
             name = name,
             side = CombatSide.ENEMY,
             stats = StatBlock(
@@ -873,14 +908,22 @@ class CombatViewModel(
         var apTotal = 0
         var creditsTotal = 0
         val dropAccumulator = mutableMapOf<String, Int>()
-        enemies.forEach { enemy ->
+        encounterEnemySlots.forEach { slot ->
+            val enemy = slot.enemy
             xpTotal += enemy.xpReward
             apTotal += enemy.apReward ?: 0
             creditsTotal += enemy.creditReward
-            enemy.drops.forEach { drop ->
-                val qty = (drop.quantity ?: drop.qtyMax ?: drop.qtyMin ?: 1).coerceAtLeast(1)
-                val canonicalId = canonicalLootId(drop.id)
-                dropAccumulator[canonicalId] = dropAccumulator.getOrDefault(canonicalId, 0) + qty
+            val baseDrops = slot.overrideDrops ?: enemy.drops
+            val dropsToProcess = if (slot.extraDrops.isEmpty()) baseDrops else baseDrops + slot.extraDrops
+            dropsToProcess.forEach { drop ->
+                val chance = drop.chance.coerceIn(0.0, 1.0)
+                if (chance <= 0.0) return@forEach
+                if (chance >= 1.0 || Random.nextDouble() <= chance) {
+                    val qty = rollDropQuantity(drop)
+                    if (qty <= 0) return@forEach
+                    val canonicalId = canonicalLootId(drop.id)
+                    dropAccumulator[canonicalId] = dropAccumulator.getOrDefault(canonicalId, 0) + qty
+                }
             }
         }
         val drops = dropAccumulator.entries.map { (id, qty) -> LootDrop(id, qty) }
@@ -900,6 +943,14 @@ class CombatViewModel(
         if (resolved != null) return resolved.id
         val fallback = normalized.lowercase(Locale.getDefault())
         return fallback.replace("\\s+".toRegex(), "_")
+    }
+
+    private fun rollDropQuantity(drop: Drop): Int {
+        drop.quantity?.let { return it.coerceAtLeast(1) }
+        val min = (drop.qtyMin ?: 1).coerceAtLeast(1)
+        val max = (drop.qtyMax ?: min).coerceAtLeast(min)
+        if (max <= min) return min
+        return Random.nextInt(min, max + 1)
     }
 
     private fun applyVictoryRewards(reward: CombatReward): List<LevelUpSummary> {
@@ -1011,6 +1062,13 @@ class CombatViewModel(
         }
         return unlocks
     }
+
+    private data class EncounterEnemySlot(
+        val canonicalId: String,
+        val enemy: Enemy,
+        val overrideDrops: List<Drop>? = null,
+        val extraDrops: List<Drop> = emptyList()
+    )
 
     private fun isSupportSkill(skill: Skill): Boolean {
         val tags = skill.combatTags.orEmpty()
@@ -1276,6 +1334,16 @@ private fun determineSkillTargeting(skill: Skill): SkillTargeting {
             is CombatLogEntry.StatusExpired -> {
                 val targetName = state.combatants[entry.targetId]?.combatant?.name ?: entry.targetId
                 "${entry.statusId.uppercase()} dissipates from $targetName"
+            }
+            is CombatLogEntry.ElementStack -> {
+                val targetName = state.combatants[entry.targetId]?.combatant?.name ?: entry.targetId
+                val display = entry.element.uppercase()
+                "$targetName builds $display energy (${entry.stacks}/${ElementalStackRules.STACK_THRESHOLD})"
+            }
+            is CombatLogEntry.ElementBurst -> {
+                val targetName = state.combatants[entry.targetId]?.combatant?.name ?: entry.targetId
+                val display = entry.element.uppercase()
+                "$display power erupts from $targetName!"
             }
             is CombatLogEntry.TurnSkipped -> {
                 val actorName = state.combatants[entry.actorId]?.combatant?.name ?: entry.actorId

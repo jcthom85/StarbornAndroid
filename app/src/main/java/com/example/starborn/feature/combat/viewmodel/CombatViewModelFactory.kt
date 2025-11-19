@@ -22,6 +22,7 @@ class CombatViewModelFactory(
                 audioRouter = services.audioRouter,
                 themeRepository = services.themeRepository,
                 environmentThemeManager = services.environmentThemeManager,
+                encounterCoordinator = services.encounterCoordinator,
                 enemyIds = enemyIds
             ) as T
         }

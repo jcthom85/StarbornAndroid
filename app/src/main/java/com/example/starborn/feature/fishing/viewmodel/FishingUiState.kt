@@ -1,5 +1,6 @@
 package com.example.starborn.feature.fishing.viewmodel
 
+import com.example.starborn.domain.fishing.FishBehaviorDefinition
 import com.example.starborn.domain.fishing.FishingLure
 import com.example.starborn.domain.fishing.FishingRod
 import com.example.starborn.domain.fishing.FishingResult
@@ -13,24 +14,35 @@ data class FishingUiState(
     val selectedLure: FishingLure? = null,
     val currentZone: FishingZone? = null,
     val fishingState: FishingState = FishingState.SETUP,
-    val minigame: FishingMinigameUi? = null,
+    val waitingState: FishingWaitingState? = null,
+    val hookState: FishingHookState? = null,
+    val reelState: FishingReelState? = null,
     val lastCatchResult: FishingResult? = null,
     val lastResult: MinigameResult? = null
 )
 
 enum class FishingState {
     SETUP,
-    MINIGAME,
+    WAITING,
+    HOOKSET,
+    REELING,
     RESULT
 }
 
-data class FishingMinigameUi(
+data class FishingWaitingState(
+    val elapsedMs: Long,
+    val targetMs: Long
+)
+
+data class FishingHookState(
+    val timeRemainingMs: Long,
+    val gyroAvailable: Boolean,
+    val fallbackVisible: Boolean
+)
+
+data class FishingReelState(
     val progress: Float,
-    val successStart: Float,
-    val successEnd: Float,
-    val perfectStart: Float,
-    val perfectEnd: Float,
-    val timeRemainingSeconds: Float,
-    val durationSeconds: Float,
-    val isRunning: Boolean
+    val tension: Float,
+    val fishName: String?,
+    val behavior: FishBehaviorDefinition?
 )

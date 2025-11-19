@@ -663,6 +663,12 @@
     "enemies": [
       "scraphopper"
     ],
+    "enemy_parties": [
+      [
+        "scraphopper",
+        "fume_bat"
+      ]
+    ],
     "actions": [],
     "state": {
       "dark": true,
@@ -724,10 +730,23 @@
     },
     "items": [],
     "npcs": [],
-    "enemies": [
-      "fume_bat"
-    ],
-    "actions": [],
+  "enemies": [
+    "fume_bat"
+  ],
+  "enemy_instances": [
+    {
+      "enemy_id": "fume_bat",
+      "extra_drops": [
+        {
+          "id": "mine_keycard",
+          "chance": 1.0,
+          "qty_min": 1,
+          "qty_max": 1
+        }
+      ]
+    }
+  ],
+  "actions": [],
     "state": {
       "dark": true,
       "light_on": false

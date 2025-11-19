@@ -65,19 +65,12 @@
   },
   "game_state": {
     "party": [
-      "nova"
+      "nova",
+      "zeke",
+      "orion",
+      "gh0st"
     ],
-    "inventory": {
-      "broken_coffee_grinder": 1,
-      "broken_arcade_display": 1,
-      "broken_projector": 1,
-      "medkit_i": 1,
-      "scrap_metal": 8,
-      "wiring_bundle": 4,
-      "fiery_pepper": 3,
-      "beast_meat": 2,
-      "mine_keycard": 1
-    },
+    "inventory": {},
     "credits": 500,
     "resonance": 0,
     "resonance_min": 0,
@@ -86,74 +79,26 @@
     "map": {
       "current_world_id": "nova_prime",
       "current_hub_id": "mining_colony",
-      "current_node_id": "mines",
-      "current_room_id": "mines_12",
+      "current_node_id": "market",
+      "current_room_id": "market_3",
       "room_positions": {
-        "living": [
+        "market_plaza": [
           0,
           0
         ],
-        "mines_1": [
-          0,
-          1
-        ],
-        "mines_3": [
-          0,
-          2
-        ],
-        "mines_4": [
-          0,
-          3
-        ],
-        "mines_6": [
-          1,
-          3
-        ],
-        "mines_2": [
-          1,
+        "market_3": [
+          -1,
           0
-        ],
-        "mines_5": [
-          -1,
-          3
-        ],
-        "mines_12": [
-          -1,
-          4
         ]
       },
       "discovered": [
         [
-          0,
-          1
-        ],
-        [
           -1,
-          4
-        ],
-        [
-          0,
           0
         ],
         [
           0,
-          3
-        ],
-        [
-          0,
-          2
-        ],
-        [
-          -1,
-          3
-        ],
-        [
-          1,
           0
-        ],
-        [
-          1,
-          3
         ]
       ],
       "node_maps": {
@@ -170,20 +115,12 @@
             "town_square": [
               -1,
               -1
-            ],
-            "town_1": [
-              0,
-              -1
-            ],
-            "town_4": [
-              -2,
-              -1
             ]
           },
           "discovered": [
             [
-              -2,
-              -1
+              -1,
+              0
             ],
             [
               -1,
@@ -192,14 +129,28 @@
             [
               0,
               0
+            ]
+          ]
+        },
+        "maintenance_tunnels": {
+          "room_positions": {
+            "maintenance_tunnels_1": [
+              0,
+              0
             ],
+            "maintenance_tunnels_2": [
+              1,
+              0
+            ]
+          },
+          "discovered": [
             [
-              -1,
+              1,
               0
             ],
             [
               0,
-              -1
+              0
             ]
           ]
         },
@@ -209,105 +160,19 @@
               0,
               0
             ],
-            "market_1": [
-              0,
-              1
-            ],
-            "market_4": [
-              1,
-              1
-            ],
-            "market_2": [
-              2,
-              1
+            "market_3": [
+              -1,
+              0
             ]
           },
           "discovered": [
             [
-              0,
-              1
-            ],
-            [
-              1,
-              1
-            ],
-            [
-              2,
-              1
-            ],
-            [
-              0,
-              0
-            ]
-          ]
-        },
-        "mines": {
-          "room_positions": {
-            "living": [
-              0,
-              0
-            ],
-            "mines_1": [
-              0,
-              1
-            ],
-            "mines_3": [
-              0,
-              2
-            ],
-            "mines_4": [
-              0,
-              3
-            ],
-            "mines_6": [
-              1,
-              3
-            ],
-            "mines_2": [
-              1,
-              0
-            ],
-            "mines_5": [
               -1,
-              3
-            ],
-            "mines_12": [
-              -1,
-              4
-            ]
-          },
-          "discovered": [
-            [
-              0,
-              1
-            ],
-            [
-              -1,
-              4
-            ],
-            [
-              0,
               0
             ],
             [
               0,
-              3
-            ],
-            [
-              0,
-              2
-            ],
-            [
-              -1,
-              3
-            ],
-            [
-              1,
               0
-            ],
-            [
-              1,
-              3
             ]
           ]
         }
@@ -315,259 +180,67 @@
     },
     "room_states": {
       "mines_1": {
-        "dark": false,
-        "light_on": true
+        "dark": true,
+        "light_on": false
       },
       "mines_10": {
-        "dark": false,
-        "light_on": true
+        "dark": true,
+        "light_on": false
       },
       "mines_11": {
-        "dark": false,
-        "light_on": true
+        "dark": true,
+        "light_on": false
       },
       "mines_12": {
-        "dark": false,
-        "light_on": true,
+        "dark": true,
+        "light_on": false,
         "breaker_on": false
       },
       "mines_2": {
-        "power_on": true
+        "power_on": false
       },
       "mines_3": {
-        "dark": false,
-        "light_on": true
+        "dark": true,
+        "light_on": false
       },
       "mines_4": {
-        "dark": false,
-        "light_on": true,
+        "dark": true,
+        "light_on": false,
         "breaker_on": false
       },
       "mines_5": {
-        "dark": false,
-        "light_on": true
+        "dark": true,
+        "light_on": false
       },
       "mines_6": {
-        "dark": false,
-        "light_on": true,
-        "cache_opened": true
+        "dark": true,
+        "light_on": false,
+        "cache_opened": false
       },
       "mines_7": {
-        "dark": false,
-        "light_on": true,
+        "dark": true,
+        "light_on": false,
         "breaker_alert_shown": false
       },
       "mines_8": {
-        "dark": false,
-        "light_on": true,
+        "dark": true,
+        "light_on": false,
         "breaker_on": false
       },
       "mines_9": {
-        "dark": false,
-        "light_on": true,
+        "dark": true,
+        "light_on": false,
         "breaker_on": false
       },
       "town_9": {
         "light_on": true,
+        "dark": false,
         "light_hint_done": true
       }
     },
     "quests": {
       "tracked": null,
-      "quests": [
-        {
-          "id": "W1-H1-MAIN-01",
-          "title": "Welcome to Rusthaven",
-          "summary": "Get your bearings in the colony and report to Jed.",
-          "description": "You’ve arrived in the Homestead Quarter. People are on edge. Find Jed, then gear up.",
-          "flavor": "Rusthaven smells like metal shavings and fried dough. Home, for now.",
-          "giver": "Jed",
-          "hub_id": "w1_hub1",
-          "node_id": "homestead_quarter",
-          "rewards": [
-            {
-              "type": "xp",
-              "amount": 50
-            },
-            {
-              "type": "item",
-              "id": "medkit_i",
-              "qty": 2
-            }
-          ],
-          "status": "active",
-          "stage_index": 0,
-          "stages": [
-            {
-              "id": "intro",
-              "title": "First Steps",
-              "description": "Learn the basics and check in with Jed.",
-              "tasks": [
-                {
-                  "id": "move",
-                  "text": "Learn movement & clickable text",
-                  "done": false,
-                  "tutorial_id": "movement"
-                },
-                {
-                  "id": "talk",
-                  "text": "Speak with Jed in Homestead",
-                  "done": false,
-                  "tutorial_id": "npc_talk"
-                },
-                {
-                  "id": "bag",
-                  "text": "Open your Bag and inspect an item",
-                  "done": false,
-                  "tutorial_id": "bag_basics"
-                }
-              ]
-            }
-          ],
-          "log": [
-            {
-              "t": 1760105739.966198,
-              "text": "Quest started."
-            }
-          ]
-        },
-        {
-          "id": "talk_to_jed",
-          "title": "Talk to Jed",
-          "summary": "Ollie needs you to check in with Jed before the mentor locks up for the night.",
-          "description": "Ollie flagged you down on the Main Road and reminded you that Jed hates waiting. Hustle down to Jed's stall, let him know you're back from scavenging, and see what he needs.",
-          "flavor": "Jed's temper is shorter than the daylight on Rusthaven—better not keep him stewing.",
-          "giver": "Ollie",
-          "hub_id": "w1_hub1",
-          "node_id": null,
-          "rewards": [
-            {
-              "type": "xp",
-              "amount": 25
-            }
-          ],
-          "status": "complete",
-          "stage_index": 0,
-          "stages": [
-            {
-              "id": "hustle_to_jed",
-              "title": "Hustle to Jed",
-              "description": "Get off the Main Road and into Jed's Scrap & Salvage before he shutters for shift change.",
-              "tasks": [
-                {
-                  "id": "navigate_main_road",
-                  "text": "Head south from the Main Road toward the Town Square.",
-                  "done": true,
-                  "tutorial_id": "movement"
-                },
-                {
-                  "id": "spot_jed_shop",
-                  "text": "Find Jed's Scrap & Salvage stall in the market strip.",
-                  "done": true,
-                  "tutorial_id": null
-                },
-                {
-                  "id": "talk_to_jed_task",
-                  "text": "Touch Jed's name and choose Talk to check in with him.",
-                  "done": true,
-                  "tutorial_id": "npc_talk"
-                }
-              ]
-            }
-          ],
-          "log": [
-            {
-              "t": 1760105750.942928,
-              "text": "Quest started."
-            },
-            {
-              "t": 1760105752.4469159,
-              "text": "Updated task: Head south from the Main Road toward the Town Square. → Done"
-            },
-            {
-              "t": 1760105757.9952462,
-              "text": "Updated task: Find Jed's Scrap & Salvage stall in the market strip. → Done"
-            },
-            {
-              "t": 1760105760.2544174,
-              "text": "Updated task: Touch Jed's name and choose Talk to check in with him. → Done"
-            },
-            {
-              "t": 1760105760.2544174,
-              "text": "Quest complete."
-            }
-          ]
-        },
-        {
-          "id": "gather_broken_gear",
-          "title": "Gather the Broken Gear",
-          "summary": "Jed needs three busted devices rounded up before he can start repairs.",
-          "description": "Track down the broken projector from Schoolteacher Kasey, Maddie's industrial coffee grinder, and Ellie's arcade display. Once you have all three, return to Jed so he can start patching them up.",
-          "flavor": "Half the town runs on Jed's tinkering—time to feed his backlog.",
-          "giver": "Jed",
-          "hub_id": "w1_hub1",
-          "node_id": null,
-          "rewards": [
-            {
-              "type": "xp",
-              "amount": 60
-            }
-          ],
-          "status": "active",
-          "stage_index": 0,
-          "stages": [
-            {
-              "id": "collect_repairs",
-              "title": "Round Up the Repairs",
-              "description": "Collect each broken device so Jed can get them back in working order.",
-              "tasks": [
-                {
-                  "id": "collect_projector",
-                  "text": "Collect Schoolteacher Kasey's broken projector.",
-                  "done": true,
-                  "tutorial_id": null
-                },
-                {
-                  "id": "collect_grinder",
-                  "text": "Collect Maddie's broken coffee grinder.",
-                  "done": true,
-                  "tutorial_id": null
-                },
-                {
-                  "id": "collect_display",
-                  "text": "Collect Ellie's broken arcade display.",
-                  "done": true,
-                  "tutorial_id": null
-                },
-                {
-                  "id": "report_to_jed",
-                  "text": "Talk to Jed once you have all three busted devices.",
-                  "done": false,
-                  "tutorial_id": null
-                }
-              ]
-            }
-          ],
-          "log": [
-            {
-              "t": 1760105760.2544174,
-              "text": "Quest started."
-            },
-            {
-              "t": 1760105763.9204087,
-              "text": "Updated task: Collect Maddie's broken coffee grinder. → Done"
-            },
-            {
-              "t": 1760105771.6722329,
-              "text": "Updated task: Collect Ellie's broken arcade display. → Done"
-            },
-            {
-              "t": 1760105779.0903063,
-              "text": "Updated task: Collect Schoolteacher Kasey's broken projector. → Done"
-            }
-          ]
-        }
-      ]
+      "quests": []
     },
     "routes": {
       "worlds": {
@@ -580,19 +253,12 @@
     },
     "learned_schematics": [],
     "fired_events": [
-      "evt_jed_assign_repair_quest",
-      "evt_collect_display_from_ellie",
-      "evt_collect_grinder_from_maddie",
-      "nova_house_light_toggle",
-      "evt_talk_to_jed_reach_square",
-      "evt_talk_to_jed_find_shop",
-      "enter_town_square_intro",
       "Intro Communicator",
-      "evt_mine_power_on",
-      "evt_collect_projector_from_kasey",
-      "evt_give_jed_quest",
-      "ollie_first_meeting",
-      "enter_market_plaza_intro"
+      "nova_house_light_toggle",
+      "enter_market_plaza_intro",
+      "evt_talk_to_jed_reach_square",
+      "enter_town_square_intro",
+      "ollie_first_meeting"
     ],
     "played_cutscenes": [
       "ollie_intro_scene",
@@ -601,11 +267,15 @@
   },
   "tutorials": {
     "seen": [
+      "light_switch_touch",
       "swipe_move"
     ],
     "completed": [
+      "light_switch_touch",
       "swipe_move"
     ],
-    "rooms_seen": []
+    "rooms_seen": [
+      "town_9"
+    ]
   }
 }

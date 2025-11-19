@@ -1,11 +1,18 @@
 package com.example.starborn.feature.combat.ui
 
 import android.os.SystemClock
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.EaseOutBack
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.VectorConverter
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -26,7 +33,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
@@ -40,6 +49,7 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -60,6 +70,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -67,8 +78,10 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
@@ -76,16 +89,35 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.EmojiEvents
+import androidx.compose.material.icons.filled.Flag
+import androidx.compose.material.icons.outlined.RadioButtonUnchecked
+import androidx.compose.material.icons.outlined.School
+import androidx.compose.material.icons.rounded.AutoAwesome
+import androidx.compose.material.icons.rounded.Bolt
+import androidx.compose.material.icons.rounded.Build
+import androidx.compose.material.icons.rounded.ExitToApp
+import androidx.compose.material.icons.rounded.Inventory2
+import androidx.compose.material.icons.rounded.Shield
+import androidx.compose.material.icons.rounded.Whatshot
 import com.example.starborn.domain.combat.CombatOutcome
 import com.example.starborn.domain.combat.CombatState
 import com.example.starborn.domain.combat.ActiveBuff
 import com.example.starborn.domain.combat.StatusEffect
+import com.example.starborn.domain.combat.ElementalStackRules
 import com.example.starborn.domain.leveling.LevelUpSummary
 import com.example.starborn.domain.model.Enemy
 import com.example.starborn.domain.model.Player
 import com.example.starborn.domain.model.Skill
+import com.example.starborn.data.local.Theme
 import com.example.starborn.feature.combat.viewmodel.CombatViewModel
 import com.example.starborn.feature.combat.viewmodel.CombatViewModel.TimedPromptState
 import com.example.starborn.feature.combat.viewmodel.CombatFxEvent
@@ -108,12 +140,15 @@ import com.example.starborn.ui.background.rememberAssetPainter
 import com.example.starborn.ui.background.rememberRoomBackgroundPainter
 import com.example.starborn.ui.vfx.WeatherOverlay
 import com.example.starborn.ui.vfx.GlowProgressBar
+import com.example.starborn.ui.theme.themeColor
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.util.Locale
 import java.util.UUID
 import kotlin.random.Random
 import kotlin.math.sin
+import kotlin.math.abs
 
 private const val STATUS_SOURCE_PREFIX = "status_"
 
@@ -234,6 +269,7 @@ fun CombatScreen(
 ) {
     val playerParty = viewModel.playerParty
     val enemies = viewModel.enemies
+    val enemyCombatantIds = viewModel.enemyCombatantIds
     val combatState by viewModel.state.collectAsState(initial = viewModel.combatState)
     val inventoryEntries by viewModel.inventory.collectAsStateWithLifecycle()
     val resonance by viewModel.resonance.collectAsStateWithLifecycle()
@@ -429,15 +465,20 @@ fun CombatScreen(
     }
 
     val state = combatState
-    val focusEnemy = selectedEnemyIds.firstOrNull()?.let { id ->
-        enemies.firstOrNull { it.id == id }
-    } ?: enemies.firstOrNull()
+    val enemyEntries = enemies.mapIndexed { index, enemy ->
+        enemy to enemyCombatantIds.getOrElse(index) { enemy.id }
+    }
+    val focusEnemyEntry = selectedEnemyIds.firstOrNull()?.let { id ->
+        enemyEntries.firstOrNull { it.second == id }
+    } ?: enemyEntries.firstOrNull()
+    val focusEnemy = focusEnemyEntry?.first
+    val focusEnemyCombatantId = focusEnemyEntry?.second
 
-    if (focusEnemy != null && state != null) {
+    if (focusEnemy != null && focusEnemyCombatantId != null && state != null) {
         val showSkillsDialog = remember { mutableStateOf(false) }
         val showItemsDialog = remember { mutableStateOf(false) }
         val activeCombatant = state.activeCombatant
-        val enemyState = state.combatants[focusEnemy.id]
+        val enemyState = state.combatants[focusEnemyCombatantId]
         val activeId = activeCombatant?.combatant?.id
         val combatLocked = pendingOutcome != null || timedPromptState != null || pendingVictoryPayload != null
         val menuActor = awaitingActionId?.let { id -> playerParty.firstOrNull { it.id == id } }
@@ -617,123 +658,130 @@ fun CombatScreen(
                     )
                 }
             val allowAllySelection = pendingTargetRequest?.accepts(TargetFilter.ALLY) == true
-            val actionMenuAvailable = menuActor != null &&
+            val enemyTargetPrompt = pendingTargetRequest?.accepts(TargetFilter.ENEMY) == true
+            val commandActor = menuActor
+            val commandPaletteVisible = commandActor != null &&
                 !combatLocked &&
                 !menuActorCannotAct &&
                 pendingTargetRequest == null
-            val actorForMenu = menuActor
-            val hasTargets = enemies.any { state.combatants[it.id]?.isAlive == true }
-            val actionMenuContent: (@Composable () -> Unit)? =
-                if (actionMenuAvailable && actorForMenu != null) {
-                    {
-                        ActionMenu(
-                            actor = actorForMenu,
-                            canAttack = hasTargets,
-                            hasSkills = menuActorSkills.isNotEmpty(),
-                            hasItems = inventoryEntries.isNotEmpty(),
-                            onAttack = {
-                                requestTarget(PendingTargetRequest.Attack)
-                            },
-                            onSkills = {
-                                showSkillsDialog.value = true
-                                pendingTargetRequest = null
-                                pendingInstruction = null
-                            },
-                            onItems = {
-                                showItemsDialog.value = true
-                                pendingTargetRequest = null
-                                pendingInstruction = null
-                            },
-                            onDefend = {
-                                pendingTargetRequest = null
-                                pendingInstruction = null
-                                viewModel.defend()
-                            },
-                            onRetreat = {
-                                pendingTargetRequest = null
-                                pendingInstruction = null
-                                viewModel.attemptRetreat()
-                            },
-                            highContrastMode = highContrastMode,
-                            largeTouchTargets = largeTouchTargets
-                        )
-                    }
-                } else null
+            val hasTargets = enemyCombatantIds.any { state.combatants[it]?.isAlive == true }
 
-            Column(
+            Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 16.dp, vertical = 24.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                    .padding(horizontal = 16.dp, vertical = 24.dp)
             ) {
                 Column(
                     modifier = Modifier
-                        .weight(1f, fill = true)
-                        .fillMaxWidth(),
-                    verticalArrangement = Arrangement.SpaceBetween
+                        .fillMaxSize(),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    EnemyRoster(
-                        enemies = enemies,
-                        combatState = state,
-                        activeId = activeId,
-                        selectedEnemyIds = selectedEnemyIds,
-                        damageFx = damageFx,
-                        healFx = healFx,
-                        statusFx = statusFx,
-                        knockoutFx = knockoutFx,
-                        onEnemyTap = { handleEnemyTap(it) },
-                        onEnemyLongPress = {
-                            if (pendingTargetRequest == null && !combatLocked) {
-                                viewModel.toggleEnemyTarget(it)
-                            }
-                        },
-                        atbMeters = atbMeters,
-                        lungeActorId = lungeActorId,
-                        lungeToken = lungeToken,
-                        missLungeActorId = missLungeActorId,
-                        missLungeToken = missLungeToken,
-                        onLungeFinished = viewModel::onLungeFinished,
-                        onMissLungeFinished = viewModel::onMissLungeFinished
-                    )
-                    CombatLogPanel(
-                        flavorLine = combatMessage,
-                        instruction = pendingInstruction,
-                        showCancel = pendingTargetRequest != null,
-                        onCancel = if (pendingTargetRequest != null) {
-                            { clearPendingRequest() }
-                        } else null,
-                        actionMenu = actionMenuContent
-                    )
-                    PartyRoster(
-                        party = playerParty,
-                        combatState = state,
-                        activeId = activeId,
-                        damageFx = damageFx,
-                        healFx = healFx,
-                        statusFx = statusFx,
-                        knockoutFx = knockoutFx,
-                        supportFx = supportFx,
-                        onMemberTap = if (allowAllySelection) { memberId ->
-                            handleAllyTap(memberId)
-                        } else null,
-                        victoryEmotes = victoryEmotes,
-                        atbMeters = atbMeters,
-                        lungeActorId = lungeActorId,
-                        lungeToken = lungeToken,
-                        missLungeActorId = missLungeActorId,
-                        missLungeToken = missLungeToken,
-                        onLungeFinished = viewModel::onLungeFinished,
-                        onMissLungeFinished = viewModel::onMissLungeFinished
-                    )
+                    Column(
+                        modifier = Modifier
+                            .weight(1f, fill = true)
+                            .fillMaxWidth(),
+                        verticalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        EnemyRoster(
+                            enemies = enemies,
+                            combatantIds = enemyCombatantIds,
+                            combatState = state,
+                            activeId = activeId,
+                            selectedEnemyIds = selectedEnemyIds,
+                            damageFx = damageFx,
+                            healFx = healFx,
+                            statusFx = statusFx,
+                            knockoutFx = knockoutFx,
+                            onEnemyTap = { handleEnemyTap(it) },
+                            onEnemyLongPress = {
+                                if (pendingTargetRequest == null && !combatLocked) {
+                                    viewModel.toggleEnemyTarget(it)
+                                }
+                            },
+                            atbMeters = atbMeters,
+                            lungeActorId = lungeActorId,
+                            lungeToken = lungeToken,
+                            missLungeActorId = missLungeActorId,
+                            missLungeToken = missLungeToken,
+                            onLungeFinished = viewModel::onLungeFinished,
+                            onMissLungeFinished = viewModel::onMissLungeFinished,
+                            showTargetPrompt = enemyTargetPrompt
+                        )
+                        CombatLogPanel(
+                            flavorLine = combatMessage,
+                            instruction = pendingInstruction,
+                            showCancel = pendingTargetRequest != null,
+                            instructionShownAbove = enemyTargetPrompt,
+                            onCancel = if (pendingTargetRequest != null) {
+                                { clearPendingRequest() }
+                            } else null
+                        )
+                        PartyRoster(
+                            party = playerParty,
+                            combatState = state,
+                            activeId = activeId,
+                            damageFx = damageFx,
+                            healFx = healFx,
+                            statusFx = statusFx,
+                            knockoutFx = knockoutFx,
+                            supportFx = supportFx,
+                            onMemberTap = if (allowAllySelection) { memberId ->
+                                handleAllyTap(memberId)
+                            } else null,
+                            victoryEmotes = victoryEmotes,
+                            atbMeters = atbMeters,
+                            lungeActorId = lungeActorId,
+                            lungeToken = lungeToken,
+                            missLungeActorId = missLungeActorId,
+                            missLungeToken = missLungeToken,
+                            onLungeFinished = viewModel::onLungeFinished,
+                            onMissLungeFinished = viewModel::onMissLungeFinished
+                        )
+                    }
+                    if (playerParty.isNotEmpty()) {
+                        ResonanceMeter(
+                            current = resonance,
+                            max = viewModel.resonanceMax,
+                            min = viewModel.resonanceMinBound,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
                 }
-                if (playerParty.isNotEmpty()) {
-                    ResonanceMeter(
-                        current = resonance,
-                        max = viewModel.resonanceMax,
-                        min = viewModel.resonanceMinBound,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
+
+                CommandPalette(
+                    visible = commandPaletteVisible,
+                    actor = commandActor,
+                    canAttack = hasTargets,
+                    hasSkills = menuActorSkills.isNotEmpty(),
+                    hasItems = inventoryEntries.isNotEmpty(),
+                    onAttack = { requestTarget(PendingTargetRequest.Attack) },
+                    onSkills = {
+                        showSkillsDialog.value = true
+                        pendingTargetRequest = null
+                        pendingInstruction = null
+                    },
+                    onItems = {
+                        showItemsDialog.value = true
+                        pendingTargetRequest = null
+                        pendingInstruction = null
+                    },
+                    onDefend = {
+                        pendingTargetRequest = null
+                        pendingInstruction = null
+                        viewModel.defend()
+                    },
+                    onRetreat = {
+                        pendingTargetRequest = null
+                        pendingInstruction = null
+                        viewModel.attemptRetreat()
+                    },
+                    highContrastMode = highContrastMode,
+                    largeTouchTargets = largeTouchTargets,
+                    theme = viewModel.theme,
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .navigationBarsPadding()
+                )
             }
             outcomeFx?.let { OutcomeOverlay(it, playerParty) }
             timedPromptState?.let { prompt ->
@@ -853,7 +901,7 @@ private fun PartyRoster(
                             verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             Box(
-                                modifier = Modifier.size(if (isActive) 96.dp else 92.dp),
+                                modifier = Modifier.size(if (isActive) 114.dp else 108.dp),
                                 contentAlignment = Alignment.Center
                             ) {
                                 if (isActive) {
@@ -871,7 +919,7 @@ private fun PartyRoster(
                                 }
                                 Box(
                                     modifier = Modifier
-                                        .size(88.dp)
+                                        .size(100.dp)
                                         .clip(CircleShape)
                                         .background(Color(0xFF1C1F24)),
                                     contentAlignment = Alignment.Center
@@ -928,6 +976,7 @@ private fun PartyRoster(
                                 statuses = memberState?.statusEffects.orEmpty(),
                                 buffs = memberState?.buffs.orEmpty()
                             )
+                            ElementStackRow(memberState?.elementStacks.orEmpty())
                         }
                         CombatFxOverlay(
                             damageFx = damageFx.filter { it.targetId == member.id },
@@ -951,6 +1000,7 @@ private fun PartyRoster(
 @Composable
 private fun EnemyRoster(
     enemies: List<Enemy>,
+    combatantIds: List<String>,
     combatState: CombatState,
     activeId: String?,
     selectedEnemyIds: Set<String>,
@@ -966,23 +1016,28 @@ private fun EnemyRoster(
     missLungeActorId: String?,
     missLungeToken: Long,
     onLungeFinished: (Long) -> Unit,
-    onMissLungeFinished: (Long) -> Unit
+    onMissLungeFinished: (Long) -> Unit,
+    showTargetPrompt: Boolean = false
 ) {
     if (enemies.isEmpty()) return
     val density = LocalDensity.current
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceEvenly,
-        verticalAlignment = Alignment.Bottom
+    val centerIndex = enemies.lastIndex / 2f
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(min = 240.dp),
+        contentAlignment = Alignment.BottomCenter
     ) {
-        enemies.forEach { enemy ->
-            val enemyState = combatState.combatants[enemy.id]
+        enemies.forEachIndexed { index, enemy ->
+            val combatantId = combatantIds.getOrElse(index) { enemy.id }
+            val enemyState = combatState.combatants[combatantId]
             val maxHp = enemyState?.combatant?.stats?.maxHp ?: enemy.hp.coerceAtLeast(1)
             val currentHp = enemyState?.hp ?: maxHp
-            val isActive = activeId == enemy.id
-            val isSelected = enemy.id in selectedEnemyIds
-            val flash = rememberDamageFlash(enemy.id, combatState.log)
-            val damageShake = rememberDamageShake(enemy.id, combatState.log)
+            val isActive = activeId == combatantId
+            val isSelected = combatantId in selectedEnemyIds
+            val isAlive = enemyState?.isAlive != false
+            val flash = rememberDamageFlash(combatantId, combatState.log)
+            val damageShake = rememberDamageShake(combatantId, combatState.log)
             val selectionGlow = remember { Animatable(0f) }
             LaunchedEffect(isSelected) {
                 if (isSelected) {
@@ -1000,105 +1055,141 @@ private fun EnemyRoster(
                 R.drawable.main_menu_background
             )
             val shape = RoundedCornerShape(28.dp)
-            val atbProgress = atbMeters[enemy.id] ?: 0f
-            val enemyLungeToken = if (enemy.id == lungeActorId) lungeToken else null
-            val enemyMissToken = if (enemy.id == missLungeActorId) missLungeToken else null
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier
-                    .graphicsLayer {
-                        translationX = damageShake * with(density) { 6.dp.toPx() }
-                    }
-                    .widthIn(min = 150.dp)
-                    .combinedClickable(
-                        onClick = { onEnemyTap(enemy.id) },
-                        onLongClick = { onEnemyLongPress(enemy.id) }
+            val atbProgress = atbMeters[combatantId] ?: 0f
+            val enemyLungeToken = if (combatantId == lungeActorId) lungeToken else null
+            val enemyMissToken = if (combatantId == missLungeActorId) missLungeToken else null
+            val horizontalOffset = ((index - centerIndex) * 90f).dp
+            val verticalOffset = (-abs(index - centerIndex) * 14f).dp
+            val cardModifier = Modifier
+                .align(Alignment.BottomCenter)
+                .offset {
+                    IntOffset(
+                        with(density) { horizontalOffset.roundToPx() },
+                        with(density) { verticalOffset.roundToPx() }
                     )
+                }
+                .graphicsLayer {
+                    translationX = damageShake * with(density) { 6.dp.toPx() }
+                }
+                .zIndex(
+                    when {
+                        isActive -> 3f
+                        isSelected -> 2.5f
+                        else -> index.toFloat()
+                    }
+                )
+                .widthIn(min = 160.dp)
+                .combinedClickable(
+                    onClick = { if (isAlive) onEnemyTap(combatantId) },
+                    onLongClick = { if (isAlive) onEnemyLongPress(combatantId) }
+                )
+
+            AnimatedVisibility(
+                visible = isAlive,
+                enter = fadeIn(animationSpec = tween(220)) +
+                    scaleIn(initialScale = 0.9f, animationSpec = tween(260)),
+                exit = fadeOut(animationSpec = tween(220)) +
+                    scaleOut(targetScale = 0.65f, animationSpec = tween(260)),
+                modifier = cardModifier,
+                label = "enemy_card_$combatantId"
             ) {
                 Column(
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    verticalArrangement = Arrangement.spacedBy(4.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    AtbBar(
-                        progress = atbProgress,
-                        modifier = Modifier.width(HUD_BAR_WIDTH),
-                        color = Color(0xFF2D9CFF)
-                    )
-                    StatBar(
-                        current = currentHp,
-                        max = maxHp,
-                        color = Color(0xFFFF5252),
-                        background = Color.Black.copy(alpha = 0.5f),
-                        height = 12.dp,
-                        modifier = Modifier.width(HUD_BAR_WIDTH)
-                    )
-                }
-                Box(
-                    modifier = Modifier
-                        .size(150.dp)
-                        .graphicsLayer {
-                            if (selectionGlow.value > 0f) {
-                                scaleX = 1f + selectionGlow.value * 0.08f
-                                scaleY = 1f + selectionGlow.value * 0.08f
-                            }
-                        }
-                ) {
-                    val selectionAlpha = if (isSelected) 0.18f + selectionGlow.value * 0.2f else if (isActive) 0.08f else 0f
-                    if (flash > 0f) {
-                        Box(
-                            modifier = Modifier
-                                .matchParentSize()
-                                .clip(shape)
-                                .background(Color.Black.copy(alpha = 0.18f * flash))
+                    Column(
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                        verticalArrangement = Arrangement.spacedBy(4.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        AtbBar(
+                            progress = atbProgress,
+                            modifier = Modifier.width(HUD_BAR_WIDTH * (2f / 3f)),
+                            color = Color(0xFF2D9CFF)
+                        )
+                        StatBar(
+                            current = currentHp,
+                            max = maxHp,
+                            color = Color(0xFFFF5252),
+                            background = Color.Black.copy(alpha = 0.5f),
+                            height = 9.dp,
+                            modifier = Modifier.width(HUD_BAR_WIDTH * (2f / 3f))
                         )
                     }
-                    Lungeable(
-                        side = CombatSide.ENEMY,
-                        triggerToken = enemyLungeToken,
-                        axis = LungeAxis.Y,
-                        directionSign = 1f,
+                    Box(
                         modifier = Modifier
-                            .align(Alignment.Center)
-                            .padding(bottom = 12.dp)
-                            .size(130.dp),
-                        onFinished = { enemyLungeToken?.let(onLungeFinished) }
+                            .size(190.dp)
+                            .graphicsLayer {
+                                if (selectionGlow.value > 0f) {
+                                    scaleX = 1f + selectionGlow.value * 0.08f
+                                    scaleY = 1f + selectionGlow.value * 0.08f
+                                }
+                            }
                     ) {
-                        Lungeable(
-                            side = CombatSide.ENEMY,
-                            triggerToken = enemyMissToken,
-                            axis = LungeAxis.X,
-                            directionSign = -1f,
-                            modifier = Modifier.matchParentSize(),
-                            onFinished = { enemyMissToken?.let(onMissLungeFinished) }
-                        ) {
-                            Image(
-                                painter = painter,
-                                contentDescription = enemy.name,
-                                contentScale = ContentScale.Fit,
-                                modifier = Modifier.matchParentSize()
+                        val selectionAlpha = if (isSelected) 0.18f + selectionGlow.value * 0.2f else if (isActive) 0.08f else 0f
+                        if (flash > 0f) {
+                            Box(
+                                modifier = Modifier
+                                    .matchParentSize()
+                                    .clip(shape)
+                                    .background(Color.Black.copy(alpha = 0.18f * flash))
                             )
                         }
+                        Lungeable(
+                            side = CombatSide.ENEMY,
+                            triggerToken = enemyLungeToken,
+                            axis = LungeAxis.Y,
+                            directionSign = 1f,
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                                .padding(bottom = 12.dp)
+                                .size(170.dp),
+                            onFinished = { enemyLungeToken?.let(onLungeFinished) }
+                        ) {
+                            Lungeable(
+                                side = CombatSide.ENEMY,
+                                triggerToken = enemyMissToken,
+                                axis = LungeAxis.X,
+                                directionSign = -1f,
+                                modifier = Modifier.matchParentSize(),
+                                onFinished = { enemyMissToken?.let(onMissLungeFinished) }
+                            ) {
+                                Image(
+                                    painter = painter,
+                                    contentDescription = enemy.name,
+                                    contentScale = ContentScale.Fit,
+                                    modifier = Modifier.matchParentSize()
+                                )
+                            }
+                        }
+                        CombatFxOverlay(
+                            damageFx = damageFx.filter { it.targetId == combatantId },
+                            healFx = healFx.filter { it.targetId == combatantId },
+                            statusFx = statusFx.filter { it.targetId == combatantId },
+                            showKnockout = knockoutFx.any { it.targetId == combatantId },
+                            shape = shape
+                        )
                     }
-                    CombatFxOverlay(
-                        damageFx = damageFx.filter { it.targetId == enemy.id },
-                        healFx = healFx.filter { it.targetId == enemy.id },
-                        statusFx = statusFx.filter { it.targetId == enemy.id },
-                        showKnockout = knockoutFx.any { it.targetId == enemy.id },
-                        shape = shape
+                    Text(
+                        text = enemy.name.uppercase(),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = Color.White
                     )
+                    StatusBadges(
+                        statuses = enemyState?.statusEffects.orEmpty(),
+                        buffs = enemyState?.buffs.orEmpty()
+                    )
+                    ElementStackRow(enemyState?.elementStacks.orEmpty())
                 }
-                Text(
-                    text = enemy.name.uppercase(),
-                    style = MaterialTheme.typography.labelMedium,
-                    color = Color.White
-                )
-                StatusBadges(
-                    statuses = enemyState?.statusEffects.orEmpty(),
-                    buffs = enemyState?.buffs.orEmpty()
-                )
             }
+        }
+        if (showTargetPrompt) {
+            TargetInstructionBadge(
+                text = "Choose Your Target",
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .padding(top = 4.dp)
+            )
         }
     }
 }
@@ -1180,6 +1271,71 @@ private fun StatusBadges(statuses: List<StatusEffect>, buffs: List<ActiveBuff>) 
             }
         }
     }
+}
+
+@Composable
+private fun ElementStackRow(elementStacks: Map<String, Int>) {
+    val entries = ElementalStackRules.displayOrder.mapNotNull { element ->
+        val count = elementStacks[element] ?: 0
+        if (count <= 0) null else element to count
+    }
+    if (entries.isEmpty()) return
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.padding(top = 2.dp)
+    ) {
+        entries.forEach { (element, count) ->
+            ElementStackBadge(element = element, stacks = count)
+        }
+    }
+}
+
+@Composable
+private fun ElementStackBadge(element: String, stacks: Int) {
+    val color = elementStackColor(element)
+    val label = element.take(1).uppercase(Locale.getDefault())
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(2.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .size(22.dp)
+                .clip(CircleShape)
+                .background(color.copy(alpha = 0.2f))
+                .border(BorderStroke(1.dp, color.copy(alpha = 0.7f)), CircleShape),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.labelSmall,
+                color = color,
+                maxLines = 1
+            )
+        }
+        Row(horizontalArrangement = Arrangement.spacedBy(3.dp)) {
+            val threshold = ElementalStackRules.STACK_THRESHOLD
+            repeat(threshold) { index ->
+                val filled = index < stacks.coerceAtMost(threshold)
+                Box(
+                    modifier = Modifier
+                        .size(6.dp)
+                        .clip(CircleShape)
+                        .background(if (filled) color else color.copy(alpha = 0.25f))
+                )
+            }
+        }
+    }
+}
+
+private fun elementStackColor(element: String): Color = when (element.lowercase(Locale.getDefault())) {
+    "fire" -> Color(0xFFFF7043)
+    "ice" -> Color(0xFF64B5F6)
+    "lightning" -> Color(0xFFFFEB3B)
+    "poison" -> Color(0xFF81C784)
+    "radiation" -> Color(0xFFFFB74D)
+    else -> Color(0xFFD1C4E9)
 }
 
 @Composable
@@ -1852,8 +2008,8 @@ private fun CombatLogPanel(
     flavorLine: String?,
     instruction: String?,
     showCancel: Boolean,
-    onCancel: (() -> Unit)?,
-    actionMenu: (@Composable () -> Unit)?
+    instructionShownAbove: Boolean = false,
+    onCancel: (() -> Unit)?
 ) {
     Column(
         modifier = Modifier
@@ -1862,11 +2018,12 @@ private fun CombatLogPanel(
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         AnimatedFlavorText(flavorLine)
-        instruction?.let {
-            Text(
-                text = it,
-                color = Color.White,
-                style = MaterialTheme.typography.bodyMedium
+        if (!instructionShownAbove && !instruction.isNullOrBlank()) {
+            TargetInstructionBadge(
+                text = instruction,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 12.dp)
             )
         }
         if (showCancel && onCancel != null) {
@@ -1874,16 +2031,35 @@ private fun CombatLogPanel(
                 Text(text = "Cancel target")
             }
         }
-        actionMenu?.let {
-            HorizontalDivider(color = Color.White.copy(alpha = 0.2f))
-            it()
-        }
     }
 }
 
 @Composable
-private fun ActionMenu(
-    actor: Player,
+private fun TargetInstructionBadge(text: String, modifier: Modifier = Modifier) {
+    val accent = MaterialTheme.colorScheme.secondary.copy(alpha = 0.75f)
+    Surface(
+        color = Color.White.copy(alpha = 0.04f),
+        border = BorderStroke(1.dp, accent),
+        shape = RoundedCornerShape(20.dp),
+        modifier = modifier
+    ) {
+        Text(
+            text = text.uppercase(Locale.getDefault()),
+            color = Color.White,
+            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Black),
+            textAlign = TextAlign.Center,
+            letterSpacing = 0.8.sp,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 8.dp)
+        )
+    }
+}
+
+@Composable
+private fun CommandPalette(
+    visible: Boolean,
+    actor: Player?,
     canAttack: Boolean,
     hasSkills: Boolean,
     hasItems: Boolean,
@@ -1893,74 +2069,189 @@ private fun ActionMenu(
     onDefend: () -> Unit,
     onRetreat: () -> Unit,
     highContrastMode: Boolean,
-    largeTouchTargets: Boolean
+    largeTouchTargets: Boolean,
+    theme: Theme?,
+    modifier: Modifier = Modifier
 ) {
-    Column(
-        modifier = Modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+    if (actor == null) return
+    AnimatedVisibility(
+        visible = visible,
+        enter = fadeIn() + slideInVertically(initialOffsetY = { full -> full }),
+        exit = fadeOut() + slideOutVertically(targetOffsetY = { full -> full / 2 })
     ) {
-        val minHeight = if (largeTouchTargets) 52.dp else 0.dp
-        Text(
-            text = "${actor.name} is ready.",
-            color = Color.White,
-            style = MaterialTheme.typography.bodyMedium
+        val portraitPainter = rememberAssetPainter(actor.miniIconPath, R.drawable.main_menu_background)
+        val paletteBase = themeColor(theme?.bg, Color(0xFF0F1118))
+        val paletteColor = paletteBase.copy(alpha = if (highContrastMode) 0.95f else 0.78f)
+        val borderColor = themeColor(theme?.border, Color.White.copy(alpha = if (highContrastMode) 0.65f else 0.5f))
+        val accentColor = themeColor(theme?.accent, Color(0xFFFF6A5F))
+        Box(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp, vertical = 8.dp)
+        ) {
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                color = paletteColor,
+                shape = RoundedCornerShape(32.dp),
+                shadowElevation = 12.dp,
+                tonalElevation = 6.dp,
+                border = BorderStroke(1.5.dp, borderColor)
+            ) {
+                Column(
+                    modifier = Modifier.padding(horizontal = 18.dp, vertical = 12.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(64.dp)
+                                .clip(RoundedCornerShape(18.dp))
+                                .background(Color(0xFF1C1F24)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Image(
+                                painter = portraitPainter,
+                                contentDescription = actor.name,
+                                modifier = Modifier
+                                    .matchParentSize()
+                                    .padding(6.dp),
+                                contentScale = ContentScale.Crop
+                            )
+                        }
+                        Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                            Text(
+                                text = actor.name,
+                                style = MaterialTheme.typography.titleMedium,
+                                color = Color.White
+                            )
+                            Text(
+                                text = if (visible) "Choose an action" else "Awaiting turn",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = Color.White.copy(alpha = 0.74f)
+                            )
+                        }
+                    }
+                    val commands = listOf(
+                        CommandEntry("Attack", Icons.Rounded.Whatshot, canAttack, onAttack),
+                        CommandEntry("Skills", Icons.Rounded.AutoAwesome, hasSkills, onSkills),
+                        CommandEntry("Items", Icons.Rounded.Inventory2, hasItems, onItems),
+                        CommandEntry("Defend", Icons.Rounded.Shield, true, onDefend),
+                        CommandEntry("Retreat", Icons.Rounded.ExitToApp, true, onRetreat)
+                    )
+                    val rows = commands.chunked(2)
+                    rows.forEach { chunk ->
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(10.dp)
+                        ) {
+                            chunk.forEach { entry ->
+                                CombatCommandButton(
+                                    label = entry.label,
+                                    icon = entry.icon,
+                                    enabled = entry.enabled,
+                                    onClick = entry.onClick,
+                                    largeTouchTargets = largeTouchTargets,
+                                    modifier = Modifier.weight(1f)
+                                )
+                            }
+                            if (chunk.size == 1) {
+                                Spacer(modifier = Modifier.weight(1f))
+                            }
+                        }
+                    }
+                }
+            }
+            CommandPaletteMarkers(
+                color = accentColor,
+                modifier = Modifier.matchParentSize()
+            )
+        }
+    }
+}
+
+private data class CommandEntry(
+    val label: String,
+    val icon: ImageVector,
+    val enabled: Boolean,
+    val onClick: () -> Unit
+)
+
+@Composable
+private fun CombatCommandButton(
+    label: String,
+    icon: ImageVector,
+    enabled: Boolean,
+    onClick: () -> Unit,
+    largeTouchTargets: Boolean,
+    modifier: Modifier = Modifier
+) {
+    val minHeight = if (largeTouchTargets) 70.dp else 56.dp
+    val interactionSource = remember { MutableInteractionSource() }
+    val background = if (enabled) Color(0xFF1E2534) else Color(0xFF1B1F29)
+    Surface(
+        shape = RoundedCornerShape(20.dp),
+        color = background,
+        tonalElevation = if (enabled) 4.dp else 0.dp,
+        modifier = modifier
+            .widthIn(min = 140.dp)
+            .heightIn(min = minHeight * 2 / 3)
+            .alpha(if (enabled) 1f else 0.45f)
+            .clickable(
+                enabled = enabled,
+                onClick = onClick,
+                interactionSource = interactionSource,
+                indication = null
+            )
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 12.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = label,
+                tint = Color.White
+            )
+            Text(
+                text = label,
+                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium),
+                color = Color.White
+            )
+        }
+    }
+}
+
+@Composable
+private fun CommandPaletteMarkers(color: Color, modifier: Modifier = Modifier) {
+    Canvas(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(horizontal = 42.dp, vertical = 8.dp)
+    ) {
+        val strokeWidth = 4.dp.toPx()
+        val markerLength = 38.dp.toPx()
+        val y = strokeWidth / 2f
+        val tint = color.copy(alpha = 0.9f)
+        drawLine(
+            color = tint,
+            start = Offset(0f, y),
+            end = Offset(markerLength, y),
+            strokeWidth = strokeWidth,
+            cap = StrokeCap.Round
         )
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Button(
-                onClick = onAttack,
-                enabled = canAttack,
-                modifier = Modifier
-                    .weight(1f)
-                    .heightIn(min = minHeight)
-            ) {
-                Text("Attack")
-            }
-            Button(
-                onClick = onSkills,
-                enabled = hasSkills,
-                modifier = Modifier
-                    .weight(1f)
-                    .heightIn(min = minHeight)
-            ) {
-                Text("Skills")
-            }
-            Button(
-                onClick = onItems,
-                enabled = hasItems,
-                modifier = Modifier
-                    .weight(1f)
-                    .heightIn(min = minHeight)
-            ) {
-                Text("Items")
-            }
-        }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Button(
-                onClick = onDefend,
-                modifier = Modifier
-                    .weight(1f)
-                    .heightIn(min = minHeight)
-            ) {
-                Text("Defend")
-            }
-            Button(
-                onClick = onRetreat,
-                modifier = Modifier
-                    .weight(1f)
-                    .heightIn(min = minHeight)
-            ) {
-                Text("Retreat")
-            }
-        }
-        if (highContrastMode) {
-            HorizontalDivider(color = Color.White.copy(alpha = 0.28f))
-        }
+        drawLine(
+            color = tint,
+            start = Offset(size.width - markerLength, y),
+            end = Offset(size.width, y),
+            strokeWidth = strokeWidth,
+            cap = StrokeCap.Round
+        )
     }
 }
 

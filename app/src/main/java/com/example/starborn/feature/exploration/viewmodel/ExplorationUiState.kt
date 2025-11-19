@@ -3,6 +3,7 @@ package com.example.starborn.feature.exploration.viewmodel
 import com.example.starborn.data.local.Theme
 import com.example.starborn.data.local.ThemeStyle
 import com.example.starborn.domain.model.Hub
+import com.example.starborn.domain.model.ItemEffect
 import com.example.starborn.domain.model.Room
 import com.example.starborn.domain.model.RoomAction
 import com.example.starborn.domain.model.World
@@ -35,6 +36,7 @@ data class ExplorationUiState(
     val questLogEntries: List<QuestLogEntryUi> = emptyList(),
     val questLogActive: List<QuestSummaryUi> = emptyList(),
     val questLogCompleted: List<QuestSummaryUi> = emptyList(),
+    val questDetail: QuestDetailUi? = null,
     val completedMilestones: Set<String> = emptySet(),
     val milestoneBands: List<MilestoneBandUi> = emptyList(),
     val narrationPrompt: NarrationPrompt? = null,
@@ -109,6 +111,26 @@ data class QuestSummaryUi(
     val totalStages: Int
 )
 
+data class QuestDetailUi(
+    val id: String,
+    val title: String,
+    val summary: String,
+    val description: String?,
+    val stageTitle: String?,
+    val stageDescription: String?,
+    val objectives: List<QuestObjectiveUi>,
+    val rewards: List<String>,
+    val stageIndex: Int,
+    val totalStages: Int,
+    val tracked: Boolean
+)
+
+data class QuestObjectiveUi(
+    val id: String,
+    val text: String,
+    val completed: Boolean
+)
+
 data class QuestLogEntryUi(
     val questId: String,
     val message: String,
@@ -130,7 +152,8 @@ data class InventoryPreviewItemUi(
     val id: String,
     val name: String,
     val quantity: Int,
-    val type: String
+    val type: String,
+    val effect: ItemEffect? = null
 )
 
 data class CinematicUiState(

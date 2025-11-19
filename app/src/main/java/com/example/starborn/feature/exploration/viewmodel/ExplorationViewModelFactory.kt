@@ -35,6 +35,7 @@ class ExplorationViewModelFactory(
                 promptManager = services.promptManager,
                 fishingService = services.fishingService,
                 saveRepository = saveRepository,
+                encounterCoordinator = services.encounterCoordinator,
                 eventDefinitions = services.events,
                 userSettingsStore = services.userSettingsStore,
                 bootstrapCinematics = services.drainPendingCinematics(),

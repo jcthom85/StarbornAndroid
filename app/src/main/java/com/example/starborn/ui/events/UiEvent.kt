@@ -4,15 +4,8 @@ sealed interface UiEvent {
     data class ShowQuestBanner(
         val type: QuestBannerType,
         val questId: String,
-        val questTitle: String
-    ) : UiEvent
-
-    data class ShowObjectiveToast(
-        val questId: String,
-        val objectiveId: String,
-        val text: String,
-        val progress: Int? = null,
-        val total: Int? = null
+        val questTitle: String,
+        val objectives: List<QuestObjectiveStatus> = emptyList()
     ) : UiEvent
 
     data class ShowToast(
@@ -29,6 +22,7 @@ sealed interface UiEvent {
     ) : UiEvent
 
     data class ShowQuestDetail(
+        val questId: String,
         val type: QuestBannerType,
         val questTitle: String,
         val summary: String,
@@ -39,9 +33,16 @@ sealed interface UiEvent {
 enum class QuestBannerType { NEW, COMPLETED, FAILED, PROGRESS }
 
 data class QuestSummaryEntry(
+    val questId: String,
     val type: SummaryType,
     val questTitle: String,
     val objectiveTitle: String? = null
 )
 
 enum class SummaryType { ACCEPTED, UPDATED, COMPLETED, FAILED }
+
+data class QuestObjectiveStatus(
+    val id: String,
+    val text: String,
+    val completed: Boolean
+)

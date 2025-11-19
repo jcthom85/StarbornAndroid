@@ -65,7 +65,8 @@ class CombatEngine(
         attackerId: String,
         targetId: String,
         amount: Int,
-        element: String?
+        element: String?,
+        applyElementStacks: Boolean = true
     ): CombatState {
         val targetState = state.combatants[targetId] ?: return state
         val clamped = if (amount < 0) 0 else amount
@@ -79,10 +80,22 @@ class CombatEngine(
             element = element,
             critical = false
         )
-        return state.copy(
+        val normalizedElement = ElementalStackRules.normalize(element)
+        var working = state.copy(
             combatants = state.combatants + (targetId to updated),
             log = state.log + damageEntry
         )
+        val shouldStack = applyElementStacks && clamped > 0 && ElementalStackRules.isStackable(normalizedElement)
+        return if (shouldStack && normalizedElement != null) {
+            applyElementStack(
+                state = working,
+                attackerId = attackerId,
+                targetId = targetId,
+                element = normalizedElement
+            )
+        } else {
+            working
+        }
     }
 
     fun applyHeal(
@@ -290,7 +303,8 @@ class CombatEngine(
                 attackerId = STATUS_SOURCE_PREFIX + status.id,
                 targetId = combatantId,
                 amount = amount,
-                element = tick.element
+                element = tick.element,
+                applyElementStacks = false
             )
             "heal" -> applyHeal(
                 state = state,
@@ -325,6 +339,139 @@ class CombatEngine(
         )
     }
 
+    private fun applyElementStack(
+        state: CombatState,
+        attackerId: String,
+        targetId: String,
+        element: String
+    ): CombatState {
+        val targetState = state.combatants[targetId] ?: return state
+        val currentStacks = targetState.elementStacks[element] ?: 0
+        val newStacks = (currentStacks + 1).coerceAtLeast(1)
+        val updated = targetState.copy(elementStacks = targetState.elementStacks + (element to newStacks))
+        var working = state.copy(
+            combatants = state.combatants + (targetId to updated)
+        )
+        working = working.copy(
+            log = working.log + CombatLogEntry.ElementStack(
+                turn = working.round,
+                targetId = targetId,
+                element = element,
+                stacks = newStacks
+            )
+        )
+        return if (newStacks >= ElementalStackRules.STACK_THRESHOLD) {
+            val burstApplied = triggerElementBurst(working, targetId, element)
+            clearElementStack(burstApplied, targetId, element)
+        } else {
+            working
+        }
+    }
+
+    private fun triggerElementBurst(state: CombatState, targetId: String, element: String): CombatState {
+        val targetState = state.combatants[targetId] ?: return state
+        var working = state.copy(
+            log = state.log + CombatLogEntry.ElementBurst(
+                turn = state.round,
+                targetId = targetId,
+                element = element
+            )
+        )
+        val maxHp = targetState.combatant.stats.maxHp.coerceAtLeast(1)
+        working = when (element) {
+            "fire" -> applyFireBurst(working, targetId, maxHp)
+            "ice" -> applyIceBurst(working, targetId)
+            "lightning" -> applyLightningBurst(working, targetId, maxHp)
+            "poison" -> applyPoisonBurst(working, targetId)
+            "radiation" -> applyRadiationBurst(working, targetId, maxHp)
+            else -> working
+        }
+        return working
+    }
+
+    private fun applyFireBurst(state: CombatState, originId: String, originMaxHp: Int): CombatState {
+        val origin = state.combatants[originId] ?: return state
+        val damage = burstDamage(originMaxHp, FIRE_BURST_DIVISOR)
+        val allies = state.combatants.values.filter {
+            it.combatant.side == origin.combatant.side && it.isAlive
+        }
+        var working = state
+        allies.forEach { ally ->
+            working = applyDamage(
+                state = working,
+                attackerId = originId,
+                targetId = ally.combatant.id,
+                amount = damage,
+                element = "fire",
+                applyElementStacks = false
+            )
+        }
+        return working
+    }
+
+    private fun applyIceBurst(state: CombatState, targetId: String): CombatState =
+        applyStatus(
+            state = state,
+            targetId = targetId,
+            statusId = "freeze",
+            duration = FREEZE_BURST_DURATION,
+            stacks = 1
+        )
+
+    private fun applyLightningBurst(state: CombatState, targetId: String, originMaxHp: Int): CombatState {
+        val damage = burstDamage(originMaxHp, LIGHTNING_BURST_DIVISOR)
+        var working = applyDamage(
+            state = state,
+            attackerId = targetId,
+            targetId = targetId,
+            amount = damage,
+            element = "lightning",
+            applyElementStacks = false
+        )
+        return applyStatus(
+            state = working,
+            targetId = targetId,
+            statusId = "shock",
+            duration = SHOCK_BURST_DURATION,
+            stacks = 1
+        )
+    }
+
+    private fun applyPoisonBurst(state: CombatState, targetId: String): CombatState =
+        applyStatus(
+            state = state,
+            targetId = targetId,
+            statusId = "poison",
+            duration = POISON_BURST_DURATION,
+            stacks = 2
+        )
+
+    private fun applyRadiationBurst(state: CombatState, originId: String, originMaxHp: Int): CombatState {
+        val damage = burstDamage(originMaxHp, RADIATION_BURST_DIVISOR)
+        val recipients = state.combatants.values.filter { it.combatant.id != originId && it.isAlive }
+        var working = state
+        recipients.forEach { recipient ->
+            working = applyDamage(
+                state = working,
+                attackerId = originId,
+                targetId = recipient.combatant.id,
+                amount = damage,
+                element = "radiation",
+                applyElementStacks = false
+            )
+        }
+        return working
+    }
+
+    private fun clearElementStack(state: CombatState, targetId: String, element: String): CombatState {
+        val targetState = state.combatants[targetId] ?: return state
+        if (!targetState.elementStacks.containsKey(element)) return state
+        val updated = targetState.copy(elementStacks = targetState.elementStacks - element)
+        return state.copy(combatants = state.combatants + (targetId to updated))
+    }
+
+    private fun burstDamage(maxHp: Int, divisor: Int): Int = max(1, maxHp / divisor)
+
     private fun resolveResistance(
         targetState: CombatantState,
         element: String?
@@ -349,6 +496,12 @@ class CombatEngine(
         private const val DEFAULT_BUFF_DURATION = 2
         private const val DEFAULT_STATUS_DURATION = 2
         private const val STATUS_SOURCE_PREFIX = "status_"
+        private const val FIRE_BURST_DIVISOR = 10
+        private const val LIGHTNING_BURST_DIVISOR = 10
+        private const val RADIATION_BURST_DIVISOR = 10
+        private const val FREEZE_BURST_DURATION = 2
+        private const val SHOCK_BURST_DURATION = 1
+        private const val POISON_BURST_DURATION = 4
     }
 }
 

@@ -24,7 +24,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -36,7 +35,6 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -64,6 +62,8 @@ import com.example.starborn.domain.model.ItemEffect
 import com.example.starborn.feature.inventory.InventoryViewModel
 import com.example.starborn.feature.inventory.PartyMemberStatus
 import com.example.starborn.ui.background.rememberRoomBackgroundPainter
+import com.example.starborn.ui.components.ItemTargetSelectionDialog
+import com.example.starborn.ui.components.TargetSelectionOption
 import com.example.starborn.ui.theme.themeColor
 import kotlinx.coroutines.flow.collectLatest
 import java.text.NumberFormat
@@ -328,6 +328,20 @@ private fun InventoryScreen(
                         borderColor = borderColor,
                         largeTouchTargets = largeTouchTargets
                     )
+
+                    val promptUse: (InventoryEntry) -> Unit = inner@{ entry ->
+                        val effect = entry.item.effect ?: return@inner
+                        val targetMode = effect.target?.lowercase(Locale.getDefault()) ?: "any"
+                        when {
+                            targetMode == "party" -> onUseItem(entry.item.id, null)
+                            partyMembers.isEmpty() -> onUseItem(entry.item.id, null)
+                            else -> {
+                                pendingTargetItem = entry
+                                showTargetDialog = true
+                            }
+                        }
+                    }
+
                     when (activeTab) {
                         InventoryTab.SUPPLIES -> SuppliesTabContent(
                             categories = categories,
@@ -335,17 +349,14 @@ private fun InventoryScreen(
                             onSelectCategory = { selectedCategory = it },
                             items = filteredSupplies,
                             selectedItem = selectedSupplyEntry,
-                            onSelectItem = { selectedSupplyEntry = it },
+                            onSelectItem = { entry ->
+                                selectedSupplyEntry = entry
+                                if (entry.item.effect != null) {
+                                    promptUse(entry)
+                                }
+                            },
                             onUseItem = { entry ->
-                                handleUseItem(
-                                    entry = entry,
-                                    partyMembers = partyMembers,
-                                    onUseItem = onUseItem,
-                                    onRequireTarget = {
-                                        pendingTargetItem = entry
-                                        showTargetDialog = true
-                                    }
-                                )
+                                promptUse(entry)
                             },
                             accentColor = accentColor,
                             borderColor = borderColor,
@@ -385,9 +396,16 @@ private fun InventoryScreen(
         }
     }
     if (showTargetDialog && pendingTargetItem != null) {
-        TargetSelectionDialog(
-            entry = pendingTargetItem!!,
-            partyMembers = partyMembers,
+        val targets = partyMembers.map {
+            TargetSelectionOption(
+                id = it.id,
+                name = it.name,
+                detail = "HP ${it.hp}/${it.maxHp}"
+            )
+        }
+        ItemTargetSelectionDialog(
+            itemName = pendingTargetItem!!.item.name,
+            targets = targets,
             onSelect = { targetId ->
                 onUseItem(pendingTargetItem!!.item.id, targetId)
                 pendingTargetItem = null
@@ -396,7 +414,11 @@ private fun InventoryScreen(
             onDismiss = {
                 pendingTargetItem = null
                 showTargetDialog = false
-            }
+            },
+            backgroundColor = panelColor.copy(alpha = 0.8f),
+            borderColor = borderColor,
+            textColor = foregroundColor,
+            accentColor = accentColor
         )
     }
 }
@@ -1159,70 +1181,6 @@ private fun InventoryDetailPanel(
             }
         }
     }
-}
-
-private fun handleUseItem(
-    entry: InventoryEntry,
-    partyMembers: List<PartyMemberStatus>,
-    onUseItem: (String, String?) -> Unit,
-    onRequireTarget: () -> Unit
-) {
-    val targetMode = entry.item.effect?.target?.lowercase(Locale.getDefault()) ?: "any"
-    when (targetMode) {
-        "party" -> onUseItem(entry.item.id, null)
-        else -> {
-            if (partyMembers.isEmpty()) {
-                onUseItem(entry.item.id, null)
-            } else {
-                onRequireTarget()
-            }
-        }
-    }
-}
-
-@Composable
-private fun TargetSelectionDialog(
-    entry: InventoryEntry,
-    partyMembers: List<PartyMemberStatus>,
-    onSelect: (String) -> Unit,
-    onDismiss: () -> Unit
-) {
-    if (partyMembers.isEmpty()) return
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        confirmButton = {},
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Cancel")
-            }
-        },
-        title = { Text("Use ${entry.item.name}") },
-        text = {
-            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                Text(text = "Choose a target:", style = MaterialTheme.typography.bodyMedium)
-                partyMembers.forEach { member ->
-                    Surface(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(14.dp))
-                            .clickable { onSelect(member.id) }
-                            .border(1.dp, Color.White.copy(alpha = 0.2f), RoundedCornerShape(14.dp))
-                            .padding(horizontal = 16.dp, vertical = 10.dp),
-                        color = Color.Black.copy(alpha = 0.4f)
-                    ) {
-                        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                            Text(member.name, color = Color.White, fontWeight = FontWeight.SemiBold)
-                            Text(
-                                text = "HP ${member.hp}/${member.maxHp}",
-                                color = Color.White.copy(alpha = 0.8f),
-                                style = MaterialTheme.typography.bodySmall
-                            )
-                        }
-                    }
-                }
-            }
-        }
-    )
 }
 
 @Composable

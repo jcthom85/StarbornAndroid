@@ -25,7 +25,8 @@ import kotlinx.coroutines.launch
 data class CookingUiState(
     val recipes: List<CookingRecipeUi> = emptyList(),
     val isLoading: Boolean = true,
-    val activeMinigame: TimingMinigameUi? = null
+    val activeMinigame: TimingMinigameUi? = null,
+    val workspace: CookingWorkspaceState = CookingWorkspaceState()
 )
 
 data class CookingRecipeUi(
@@ -43,6 +44,13 @@ data class IngredientUi(
     val label: String,
     val required: Int,
     val available: Int
+)
+
+data class CookingWorkspaceState(
+    val recipe: CookingRecipeUi? = null,
+    val ingredientSlots: List<IngredientUi> = emptyList(),
+    val canCook: Boolean = false,
+    val missingIngredients: List<String> = emptyList()
 )
 
 data class TimingMinigameUi(
@@ -78,6 +86,7 @@ class CookingViewModel(
     val feedback: SharedFlow<CraftingFeedback> = _feedback.asSharedFlow()
 
     private var minigameJob: Job? = null
+    private var workspaceRecipeId: String? = null
 
     init {
         loadRecipes()
@@ -144,6 +153,35 @@ class CookingViewModel(
         }
     }
 
+    fun selectWorkspaceRecipe(recipeId: String) {
+        if (craftingService.cookingRecipes.none { it.id == recipeId }) return
+        workspaceRecipeId = recipeId
+        _uiState.update { state ->
+            val map = state.recipes.associateBy { it.id }
+            state.copy(workspace = buildWorkspaceState(map))
+        }
+    }
+
+    fun clearWorkspace() {
+        workspaceRecipeId = null
+        _uiState.update { it.copy(workspace = CookingWorkspaceState()) }
+    }
+
+    fun cookWorkspaceRecipe() {
+        val workspaceRecipe = _uiState.value.workspace.recipe
+        if (workspaceRecipe == null) {
+            emitFeedback(CraftingFeedback(message = "Select a recipe before cooking."))
+            return
+        }
+        if (!workspaceRecipe.canCook) {
+            val missing = workspaceRecipe.missingIngredients.joinToString().takeIf { it.isNotBlank() }
+            val msg = missing?.let { "Missing: $it" } ?: "You need more ingredients."
+            emitFeedback(CraftingFeedback(message = msg))
+            return
+        }
+        startMinigame(workspaceRecipe.id)
+    }
+
     fun stopMinigame() {
         val minigame = _uiState.value.activeMinigame ?: return
         val recipe = craftingService.cookingRecipes.find { it.id == minigame.recipeId }
@@ -208,14 +246,25 @@ class CookingViewModel(
         if (recipes.isEmpty()) {
             _uiState.value = CookingUiState(isLoading = false, recipes = emptyList())
         } else {
-            _uiState.value = CookingUiState(isLoading = false, recipes = recipes.map { it.toUi() })
+            if (workspaceRecipeId == null) {
+                workspaceRecipeId = recipes.firstOrNull()?.id
+            }
+            val recipeUis = recipes.map { it.toUi() }
+            _uiState.value = CookingUiState(
+                isLoading = false,
+                recipes = recipeUis,
+                workspace = buildWorkspaceState(recipeUis.associateBy { it.id })
+            )
         }
     }
 
     private fun refreshRecipes() {
+        val recipeUis = craftingService.cookingRecipes.map { it.toUi() }
+        val map = recipeUis.associateBy { it.id }
         _uiState.update { state ->
             state.copy(
-                recipes = craftingService.cookingRecipes.map { it.toUi() }
+                recipes = recipeUis,
+                workspace = buildWorkspaceState(map)
             )
         }
     }
@@ -225,6 +274,22 @@ class CookingViewModel(
             inventoryService.state.collect {
                 refreshRecipes()
             }
+        }
+    }
+
+    private fun buildWorkspaceState(recipeMap: Map<String, CookingRecipeUi> = _uiState.value.recipes.associateBy { it.id }): CookingWorkspaceState {
+        val recipe = workspaceRecipeId?.let { id ->
+            recipeMap[id] ?: craftingService.cookingRecipes.find { it.id == id }?.toUi()
+        }
+        return if (recipe != null) {
+            CookingWorkspaceState(
+                recipe = recipe,
+                ingredientSlots = recipe.ingredients,
+                canCook = recipe.canCook,
+                missingIngredients = recipe.missingIngredients
+            )
+        } else {
+            CookingWorkspaceState()
         }
     }
 

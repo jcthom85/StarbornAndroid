@@ -12,6 +12,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -30,7 +31,8 @@ import kotlinx.coroutines.flow.collect
 fun QuestSummaryOverlay(
     uiEventBus: UiEventBus,
     isSceneBlocking: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onShowDetails: (String) -> Unit
 ) {
     var summary by remember { mutableStateOf<UiEvent.ShowQuestSummary?>(null) }
     var visible by remember { mutableStateOf(false) }
@@ -87,6 +89,15 @@ fun QuestSummaryOverlay(
                             text = line,
                             style = MaterialTheme.typography.bodyMedium
                         )
+                        TextButton(
+                            onClick = {
+                                visible = false
+                                onShowDetails(entry.questId)
+                                summary = null
+                            }
+                        ) {
+                            Text("Details")
+                        }
                     }
                     Button(
                         onClick = {

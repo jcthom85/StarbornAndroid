@@ -14,6 +14,8 @@ data class Room(
     val npcs: List<String>,
     val items: List<String>,
     val enemies: List<String>,
+    @Json(name = "enemy_parties")
+    val enemyParties: List<List<String>>? = null,
     val connections: Map<String, String>,
     val pos: List<Int>,
     val state: Map<String, Any>,
@@ -24,6 +26,8 @@ data class Room(
     val itemFlavor: Map<String, String>? = null,
     @Json(name = "enemy_flavor")
     val enemyFlavor: Map<String, String>? = null,
+    @Json(name = "enemy_instances")
+    val enemyInstances: List<RoomEnemyInstance>? = null,
     val dark: Boolean? = null,
     @Json(name = "description_dark")
     val descriptionDark: String? = null,
@@ -51,6 +55,16 @@ data class Requirement(
     @Json(name = "state_key")
     val stateKey: String,
     val value: Boolean
+)
+
+data class RoomEnemyInstance(
+    @Json(name = "enemy_id")
+    val enemyId: String,
+    val occurrence: Int? = null,
+    @Json(name = "override_drops")
+    val overrideDrops: List<Drop>? = null,
+    @Json(name = "extra_drops")
+    val extraDrops: List<Drop> = emptyList()
 )
 
 data class TitleOptions(

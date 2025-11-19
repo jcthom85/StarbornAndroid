@@ -254,7 +254,13 @@ fun NavigationHost(navController: NavHostController = rememberNavController()) {
             )
         }
         composable(Tinkering.route) {
-            val craftingViewModel: CraftingViewModel = viewModel(factory = CraftingViewModelFactory(services.craftingService))
+            val craftingViewModel: CraftingViewModel = viewModel(
+                factory = CraftingViewModelFactory(
+                    services.craftingService,
+                    services.inventoryService,
+                    services.sessionStore
+                )
+            )
             TinkeringRoute(
                 viewModel = craftingViewModel,
                 onBack = { navController.popBackStack() },
@@ -338,7 +344,6 @@ fun NavigationHost(navController: NavHostController = rememberNavController()) {
                 ?.let { Uri.decode(it) }
                 ?.split(',')
                 ?.mapNotNull { id -> id.takeIf { it.isNotBlank() } }
-                ?.distinct()
                 ?.ifEmpty { null }
             if (enemyIds != null) {
                 val combatViewModel: CombatViewModel = viewModel(
