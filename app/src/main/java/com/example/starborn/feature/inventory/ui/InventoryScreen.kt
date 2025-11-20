@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -358,6 +359,7 @@ private fun InventoryScreen(
                             onUseItem = { entry ->
                                 promptUse(entry)
                             },
+                            credits = credits,
                             accentColor = accentColor,
                             borderColor = borderColor,
                             foregroundColor = foregroundColor,
@@ -630,6 +632,7 @@ private fun SuppliesTabContent(
     selectedItem: InventoryEntry?,
     onSelectItem: (InventoryEntry) -> Unit,
     onUseItem: (InventoryEntry) -> Unit,
+    credits: Int,
     accentColor: Color,
     borderColor: Color,
     foregroundColor: Color,
@@ -646,6 +649,7 @@ private fun SuppliesTabContent(
             categories = categories,
             selectedCategory = selectedCategory,
             onSelectCategory = onSelectCategory,
+            credits = credits,
             accentColor = accentColor,
             borderColor = borderColor,
             largeTouchTargets = largeTouchTargets
@@ -799,10 +803,14 @@ private fun InventoryCategoryColumn(
     categories: List<String>,
     selectedCategory: String,
     onSelectCategory: (String) -> Unit,
+    credits: Int,
     accentColor: Color,
     borderColor: Color,
     largeTouchTargets: Boolean
 ) {
+    val formatter = remember { NumberFormat.getIntegerInstance(Locale.getDefault()) }
+    val creditsLabel = remember(credits) { formatter.format(credits.coerceAtLeast(0)) }
+
     Surface(
         modifier = Modifier
             .widthIn(min = 160.dp)
@@ -817,6 +825,19 @@ private fun InventoryCategoryColumn(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
+            SectionHeading(label = "Wallet", accentColor = accentColor)
+            WalletSummaryCard(
+                creditsLabel = creditsLabel,
+                accentColor = accentColor,
+                borderColor = borderColor
+            )
+            HorizontalDivider(color = borderColor.copy(alpha = 0.3f))
+            Text(
+                text = "Supplies",
+                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.SemiBold),
+                color = Color.White.copy(alpha = 0.7f),
+                modifier = Modifier.padding(horizontal = 4.dp)
+            )
             categories.forEach { key ->
                 val selected = key == selectedCategory
                 Surface(
@@ -843,6 +864,39 @@ private fun InventoryCategoryColumn(
                     }
                 }
             }
+            Spacer(modifier = Modifier.weight(1f))
+        }
+    }
+}
+
+@Composable
+private fun WalletSummaryCard(
+    creditsLabel: String,
+    accentColor: Color,
+    borderColor: Color
+) {
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        color = accentColor.copy(alpha = 0.14f),
+        border = BorderStroke(1.dp, borderColor.copy(alpha = 0.75f)),
+        shape = RoundedCornerShape(24.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 12.dp, vertical = 10.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            Text(
+                text = "WALLET",
+                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                color = accentColor.copy(alpha = 0.85f)
+            )
+            Text(
+                text = "$creditsLabel c",
+                style = MaterialTheme.typography.titleMedium,
+                color = Color.White
+            )
         }
     }
 }
@@ -932,6 +986,7 @@ private fun InventoryItemsColumn(
         border = BorderStroke(1.dp, borderColor.copy(alpha = 0.7f)),
         shape = RoundedCornerShape(28.dp)
     ) {
+        val listState = rememberLazyListState()
         if (items.isEmpty()) {
             Box(contentAlignment = Alignment.Center) {
                 Text(
@@ -944,6 +999,7 @@ private fun InventoryItemsColumn(
             }
         } else {
             LazyColumn(
+                state = listState,
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(6.dp),
                 contentPadding = PaddingValues(18.dp)

@@ -387,6 +387,7 @@ class ExplorationViewModelTest {
             on { getStyle(any()) } doReturn null
         }
         val environmentThemeManager = EnvironmentThemeManager(themeRepository)
+        val encounterCoordinator = com.example.starborn.domain.combat.EncounterCoordinator()
         val saveRepository = mock<GameSaveRepository>()
         val userSettingsFlow = MutableStateFlow(UserSettings())
         val userSettingsStore = mock<UserSettingsStore> {
@@ -419,6 +420,7 @@ class ExplorationViewModelTest {
             promptManager = promptManager,
             fishingService = fishingService,
             saveRepository = saveRepository,
+            encounterCoordinator = encounterCoordinator,
             userSettingsStore = userSettingsStore,
             eventDefinitions = emptyList(),
             dispatchers = dispatcherProvider

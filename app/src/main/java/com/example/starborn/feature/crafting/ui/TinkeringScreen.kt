@@ -10,13 +10,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
@@ -24,7 +25,6 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -33,10 +33,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+
+import com.example.starborn.R
 import com.example.starborn.domain.crafting.CraftingOutcome
 import com.example.starborn.feature.crafting.CraftingViewModel
 import com.example.starborn.feature.crafting.TinkeringBenchState
@@ -44,6 +50,8 @@ import com.example.starborn.feature.crafting.TinkeringFilter
 import com.example.starborn.feature.crafting.TinkeringRequirementStatus
 import com.example.starborn.feature.crafting.TinkeringRecipeUi
 import com.example.starborn.feature.crafting.TinkeringUiState
+import com.example.starborn.feature.common.ui.StationBackground
+import com.example.starborn.feature.common.ui.StationHeader
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -105,79 +113,91 @@ private fun TinkeringScreen(
     highContrastMode: Boolean,
     largeTouchTargets: Boolean
 ) {
-    val buttonMinHeight = if (largeTouchTargets) 52.dp else 0.dp
-    val containerColor = if (highContrastMode) Color(0xFF050B12) else MaterialTheme.colorScheme.background
-
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Tinkering Table") },
-                navigationIcon = {
-                    Button(
-                        onClick = onBack,
-                        modifier = Modifier.heightIn(min = buttonMinHeight)
-                    ) { Text("Back") }
-                }
-            )
-        },
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
-        containerColor = containerColor
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .padding(horizontal = 16.dp, vertical = 12.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            if (state.isLoading) {
-                Text("Loading schematics...", style = MaterialTheme.typography.bodyMedium)
-            } else {
-                TinkeringBenchCard(
-                    bench = state.bench,
-                    largeTouchTargets = largeTouchTargets,
-                    onCraft = onBenchCraft,
-                    onAutoFillBest = onAutoFillBest,
-                    onClear = onClearBench
+    StationBackground(
+        highContrastMode = highContrastMode,
+        backgroundRes = R.drawable.tinkeringtable_1,
+        vignetteRes = R.drawable.tinkering_vignette
+    ) {
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+            snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+            containerColor = Color.Transparent,
+            topBar = {
+                StationHeader(
+                    title = "Tinkering Table",
+                    iconRes = R.drawable.tinkering_icon,
+                    onBack = onBack,
+                    highContrastMode = highContrastMode,
+                    largeTouchTargets = largeTouchTargets
                 )
-                RecipeFilterRow(
-                    learnedCount = state.learnedRecipes.size,
-                    lockedCount = state.lockedRecipes.size,
-                    selected = state.filter,
-                    onFilterChange = onFilterChange
-                )
-                val recipes = remember(state) {
-                    when (state.filter) {
-                        TinkeringFilter.LEARNED -> state.learnedRecipes
-                        TinkeringFilter.ALL -> state.learnedRecipes + state.lockedRecipes
-                    }
-                }
-                if (recipes.isEmpty()) {
-                    Surface(
-                        tonalElevation = 2.dp,
-                        shape = MaterialTheme.shapes.medium,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(
-                            text = "You haven't learned any schematics yet.",
-                            style = MaterialTheme.typography.bodyLarge,
-                            modifier = Modifier.padding(20.dp)
-                        )
-                    }
+            }
+        ) { innerPadding ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                if (state.isLoading) {
+                    Text("Loading schematics...", style = MaterialTheme.typography.bodyMedium)
                 } else {
-                    LazyColumn(
-                        modifier = Modifier.fillMaxSize(),
-                        contentPadding = PaddingValues(bottom = 24.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        items(recipes, key = { it.id }) { recipe ->
-                            TinkeringRecipeCard(
-                                recipe = recipe,
-                                onAutoFill = onAutoFillRecipe,
-                                onCraft = onRecipeCraft,
-                                highContrastMode = highContrastMode,
-                                largeTouchTargets = largeTouchTargets
+                    val readyCount = remember(state.learnedRecipes) {
+                        state.learnedRecipes.count { it.canCraft }
+                    }
+                    TinkeringStatsRow(
+                        learned = state.learnedRecipes.size,
+                        craftable = readyCount,
+                        locked = state.lockedRecipes.size,
+                        highContrastMode = highContrastMode
+                    )
+                    TinkeringBenchCard(
+                        bench = state.bench,
+                        highContrastMode = highContrastMode,
+                        largeTouchTargets = largeTouchTargets,
+                        onCraft = onBenchCraft,
+                        onAutoFillBest = onAutoFillBest,
+                        onClear = onClearBench
+                    )
+                    RecipeFilterRow(
+                        learnedCount = state.learnedRecipes.size,
+                        lockedCount = state.lockedRecipes.size,
+                        selected = state.filter,
+                        onFilterChange = onFilterChange
+                    )
+                    val recipes = remember(state) {
+                        when (state.filter) {
+                            TinkeringFilter.LEARNED -> state.learnedRecipes
+                            TinkeringFilter.ALL -> state.learnedRecipes + state.lockedRecipes
+                        }
+                    }
+                    if (recipes.isEmpty()) {
+                        Surface(
+                            tonalElevation = 2.dp,
+                            shape = MaterialTheme.shapes.medium,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(
+                                text = "You haven't learned any schematics yet.",
+                                style = MaterialTheme.typography.bodyLarge,
+                                modifier = Modifier.padding(20.dp)
                             )
+                        }
+                    } else {
+                        LazyColumn(
+                            modifier = Modifier.fillMaxSize(),
+                            contentPadding = PaddingValues(bottom = 24.dp),
+                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            items(recipes, key = { it.id }) { recipe ->
+                                TinkeringRecipeCard(
+                                    recipe = recipe,
+                                    onAutoFill = onAutoFillRecipe,
+                                    onCraft = onRecipeCraft,
+                                    highContrastMode = highContrastMode,
+                                    largeTouchTargets = largeTouchTargets
+                                )
+                            }
                         }
                     }
                 }
@@ -196,58 +216,84 @@ private fun TinkeringRecipeCard(
 ) {
     val buttonHeight = if (largeTouchTargets) 52.dp else 0.dp
     ElevatedCard(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(18.dp)
     ) {
-        Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            val titleColor = if (highContrastMode) Color.White else MaterialTheme.colorScheme.onSurface
-            val bodyColor = if (highContrastMode) Color.White.copy(alpha = 0.8f) else MaterialTheme.colorScheme.onSurfaceVariant
-            Text(recipe.name, style = MaterialTheme.typography.titleMedium, color = titleColor)
-            recipe.description?.takeIf { it.isNotBlank() }?.let {
-                Text(it, style = MaterialTheme.typography.bodySmall, color = bodyColor)
-            }
-            Text(
-                text = "Base: ${recipe.base}",
-                style = MaterialTheme.typography.labelMedium,
-                color = bodyColor
-            )
-            if (recipe.components.isNotEmpty()) {
-                Text(
-                    text = "Components: ${recipe.components.joinToString()}",
-                    style = MaterialTheme.typography.labelMedium,
-                    color = bodyColor
-                )
-            }
-            val statusText = when {
-                !recipe.learned -> "Locked schematic"
-                recipe.canCraft -> "Ready to craft"
-                else -> "Missing components"
-            }
-            Text(
-                text = statusText,
-                style = MaterialTheme.typography.bodySmall,
-                color = when {
-                    !recipe.learned -> MaterialTheme.colorScheme.error
-                    recipe.canCraft -> MaterialTheme.colorScheme.tertiary
-                    else -> MaterialTheme.colorScheme.onSurfaceVariant
-                },
-                fontWeight = FontWeight.SemiBold
-            )
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                OutlinedButton(
-                    onClick = { onAutoFill(recipe.id) },
-                    modifier = Modifier.heightIn(min = buttonHeight)
+        Surface(
+            color = if (highContrastMode) Color(0xFF0E1623) else MaterialTheme.colorScheme.surface.copy(alpha = 0.9f)
+        ) {
+            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                val titleColor = if (highContrastMode) Color.White else MaterialTheme.colorScheme.onSurface
+                val bodyColor = if (highContrastMode) Color.White.copy(alpha = 0.82f) else MaterialTheme.colorScheme.onSurfaceVariant
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("Auto-Fill")
+                    Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                        Text(recipe.name, style = MaterialTheme.typography.titleMedium, color = titleColor)
+                        recipe.description?.takeIf { it.isNotBlank() }?.let {
+                            Text(it, style = MaterialTheme.typography.bodySmall, color = bodyColor)
+                        }
+                    }
+                    val statusText: String
+                    val statusColor: Color
+                    when {
+                        !recipe.learned -> {
+                            statusText = "Locked"
+                            statusColor = MaterialTheme.colorScheme.error
+                        }
+                        recipe.canCraft -> {
+                            statusText = "Ready"
+                            statusColor = MaterialTheme.colorScheme.tertiary
+                        }
+                        else -> {
+                            statusText = "Need parts"
+                            statusColor = MaterialTheme.colorScheme.primary
+                        }
+                    }
+                    StatusPill(text = statusText, color = statusColor, highContrastMode = highContrastMode)
                 }
-                Button(
-                    onClick = { onCraft(recipe.id) },
-                    enabled = recipe.learned && recipe.canCraft,
-                    modifier = Modifier.heightIn(min = buttonHeight)
+                Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    ItemPill(label = "Base", value = recipe.base, highContrastMode = highContrastMode)
+                    if (recipe.components.isNotEmpty()) {
+                        ItemPill(
+                            label = "Components",
+                            value = recipe.components.joinToString(),
+                            highContrastMode = highContrastMode
+                        )
+                    }
+                }
+                Surface(
+                    color = if (highContrastMode) Color(0xFF121A28) else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f),
+                    shape = RoundedCornerShape(14.dp),
+                    tonalElevation = if (highContrastMode) 0.dp else 1.dp,
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("Craft")
+                    Text(
+                        text = "Result: ${recipe.name} crafted at the bench.",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = if (highContrastMode) Color.White else MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(12.dp)
+                    )
+                }
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    OutlinedButton(
+                        onClick = { onAutoFill(recipe.id) },
+                        modifier = Modifier.heightIn(min = buttonHeight)
+                    ) {
+                        Text("Auto-Fill")
+                    }
+                    Button(
+                        onClick = { onCraft(recipe.id) },
+                        enabled = recipe.learned && recipe.canCraft,
+                        modifier = Modifier.heightIn(min = buttonHeight)
+                    ) {
+                        Text("Craft")
+                    }
                 }
             }
         }
@@ -257,6 +303,7 @@ private fun TinkeringRecipeCard(
 @Composable
 private fun TinkeringBenchCard(
     bench: TinkeringBenchState,
+    highContrastMode: Boolean,
     largeTouchTargets: Boolean,
     onCraft: () -> Unit,
     onAutoFillBest: () -> Unit,
@@ -264,33 +311,71 @@ private fun TinkeringBenchCard(
 ) {
     val buttonHeight = if (largeTouchTargets) 52.dp else 0.dp
     Surface(
-        tonalElevation = 3.dp,
-        shape = MaterialTheme.shapes.large,
-        modifier = Modifier.fillMaxWidth()
+        tonalElevation = 4.dp,
+        shape = RoundedCornerShape(20.dp),
+        modifier = Modifier.fillMaxWidth(),
+        color = if (highContrastMode) Color(0xFF0C131D) else MaterialTheme.colorScheme.surface.copy(alpha = 0.92f)
     ) {
         Column(
             modifier = Modifier.padding(20.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Text("Workbench", style = MaterialTheme.typography.titleMedium)
-            if (bench.activeRecipeId == null) {
-                Text(
-                    text = "Select a schematic to auto-fill the bench.",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            } else {
-                Text(
-                    text = bench.selectedBase?.let { "Base Item: $it" } ?: "Base Item not set",
-                    style = MaterialTheme.typography.bodyMedium
-                )
-                if (bench.selectedComponents.isNotEmpty()) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column {
+                    Text("Workbench", style = MaterialTheme.typography.titleMedium, color = if (highContrastMode) Color.White else MaterialTheme.colorScheme.onSurface)
                     Text(
-                        text = "Components: ${bench.selectedComponents.joinToString { it.ifBlank { "—" } }}",
-                        style = MaterialTheme.typography.bodyMedium
+                        text = "Lay out your base item and parts, then seal the mod.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = if (highContrastMode) Color.White.copy(alpha = 0.75f) else MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-                RequirementList(bench.requirements)
+                val statusText: String
+                val statusColor: Color
+                when {
+                    bench.activeRecipeId == null -> {
+                        statusText = "Idle"
+                        statusColor = MaterialTheme.colorScheme.secondary
+                    }
+                    bench.canCraftSelection -> {
+                        statusText = "Ready"
+                        statusColor = MaterialTheme.colorScheme.tertiary
+                    }
+                    else -> {
+                        statusText = "Missing"
+                        statusColor = MaterialTheme.colorScheme.error
+                    }
+                }
+                StatusPill(text = statusText, color = statusColor, highContrastMode = highContrastMode)
+            }
+            if (bench.activeRecipeId == null) {
+                Surface(
+                    tonalElevation = 0.dp,
+                    modifier = Modifier.fillMaxWidth(),
+                    color = if (highContrastMode) Color(0xFF111B27) else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                ) {
+                    Text(
+                        text = "Select a schematic from the list to auto-fill the bench.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = if (highContrastMode) Color.White else MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(14.dp)
+                    )
+                }
+            } else {
+                bench.selectedBase?.let {
+                    ItemPill(label = "Base", value = it, highContrastMode = highContrastMode)
+                }
+                if (bench.selectedComponents.isNotEmpty()) {
+                    ItemPill(
+                        label = "Components",
+                        value = bench.selectedComponents.joinToString { it.ifBlank { "—" } },
+                        highContrastMode = highContrastMode
+                    )
+                }
+                RequirementList(bench.requirements, highContrastMode)
             }
             Row(
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -322,7 +407,10 @@ private fun TinkeringBenchCard(
 }
 
 @Composable
-private fun RequirementList(requirements: List<TinkeringRequirementStatus>) {
+private fun RequirementList(
+    requirements: List<TinkeringRequirementStatus>,
+    highContrastMode: Boolean
+) {
     if (requirements.isEmpty()) return
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
         Text(
@@ -331,11 +419,35 @@ private fun RequirementList(requirements: List<TinkeringRequirementStatus>) {
         )
         requirements.forEach { req ->
             val meetsRequirement = req.available >= req.required
-            Text(
-                text = "${req.label}: ${req.available}/${req.required}",
-                color = if (meetsRequirement) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
-                style = MaterialTheme.typography.bodySmall
-            )
+            val ratio = (req.available.toFloat() / req.required.toFloat()).coerceIn(0f, 1f)
+            val track = if (highContrastMode) Color.White.copy(alpha = 0.15f) else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f)
+            val bar = if (meetsRequirement) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.error
+            Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = req.label,
+                        color = if (highContrastMode) Color.White else MaterialTheme.colorScheme.onSurface,
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                    Text(
+                        text = "${req.available}/${req.required}",
+                        color = if (meetsRequirement) bar else MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodySmall,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
+                LinearProgressIndicator(
+                    progress = ratio,
+                    trackColor = track,
+                    color = bar,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(6.dp)
+                )
+            }
         }
     }
 }
@@ -361,6 +473,91 @@ private fun RecipeFilterRow(
             onClick = { onFilterChange(TinkeringFilter.ALL) },
             label = { Text("All (${learnedCount + lockedCount})") }
         )
+    }
+}
+
+@Composable
+private fun TinkeringStatsRow(
+    learned: Int,
+    craftable: Int,
+    locked: Int,
+    highContrastMode: Boolean
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        StatPill(label = "Ready", value = craftable, color = MaterialTheme.colorScheme.tertiary, highContrastMode = highContrastMode, modifier = Modifier.weight(1f))
+        StatPill(label = "Learned", value = learned, color = MaterialTheme.colorScheme.primary, highContrastMode = highContrastMode, modifier = Modifier.weight(1f))
+        StatPill(label = "Locked", value = locked, color = MaterialTheme.colorScheme.error, highContrastMode = highContrastMode, modifier = Modifier.weight(1f))
+    }
+}
+
+@Composable
+private fun StatPill(
+    label: String,
+    value: Int,
+    color: Color,
+    highContrastMode: Boolean,
+    modifier: Modifier = Modifier
+) {
+    val surface = if (highContrastMode) Color(0xFF0F1722) else color.copy(alpha = 0.14f)
+    Surface(
+        modifier = modifier,
+        shape = RoundedCornerShape(16.dp),
+        tonalElevation = if (highContrastMode) 0.dp else 2.dp,
+        color = surface
+    ) {
+        Column(
+            modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            Text(
+                text = value.toString(),
+                style = MaterialTheme.typography.titleMedium,
+                color = if (highContrastMode) Color.White else color,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = label,
+                style = MaterialTheme.typography.labelMedium,
+                color = if (highContrastMode) Color.White.copy(alpha = 0.78f) else MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+    }
+}
+
+@Composable
+private fun StatusPill(text: String, color: Color, highContrastMode: Boolean) {
+    Surface(
+        color = if (highContrastMode) Color(0xFF111B28) else color.copy(alpha = 0.15f),
+        shape = RoundedCornerShape(12.dp),
+        tonalElevation = if (highContrastMode) 0.dp else 1.dp
+    ) {
+        Text(
+            text = text,
+            color = if (highContrastMode) Color.White else color,
+            modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+            style = MaterialTheme.typography.labelMedium,
+            fontWeight = FontWeight.Bold
+        )
+    }
+}
+
+@Composable
+private fun ItemPill(label: String, value: String, highContrastMode: Boolean) {
+    Surface(
+        color = if (highContrastMode) Color(0xFF101826) else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.65f),
+        shape = RoundedCornerShape(14.dp),
+        tonalElevation = if (highContrastMode) 0.dp else 1.dp
+    ) {
+        Column(
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(2.dp)
+        ) {
+            Text(label, style = MaterialTheme.typography.labelSmall, color = if (highContrastMode) Color.White.copy(alpha = 0.7f) else MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(value, style = MaterialTheme.typography.bodySmall, color = if (highContrastMode) Color.White else MaterialTheme.colorScheme.onSurface)
+        }
     }
 }
 

@@ -43,9 +43,11 @@ import org.junit.Before
 import org.junit.Test
 import java.util.Locale
 import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.any
+import org.mockito.kotlin.doAnswer
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
-import org.mockito.kotlin.any
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class CombatViewModelTest {
@@ -983,7 +985,7 @@ class CombatViewModelTest {
         var capturedSetup: CombatSetup? = null
         val combatEngine = mock<CombatEngine> {
             on { beginEncounter(any()) } doAnswer { invocation ->
-                val setup = invocation.getArgument<CombatSetup>(0)
+                val setup = invocation.arguments[0] as CombatSetup
                 capturedSetup = setup
                 val combatants = setup.allCombatants.associate { combatant ->
                     combatant.id to CombatantState(

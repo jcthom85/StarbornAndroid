@@ -1124,7 +1124,14 @@
     "items": [],
     "npcs": [],
     "enemies": [],
-    "actions": [],
+    "actions": [
+      {
+        "name": "Tinkering Bench",
+        "type": "tinkering",
+        "shop_id": "",
+        "condition_unmet_message": ""
+      }
+    ],
     "state": {}
   },
   {
@@ -1146,7 +1153,14 @@
       "Sam"
     ],
     "enemies": [],
-    "actions": [],
+    "actions": [
+      {
+        "name": "Cooking Station",
+        "type": "cooking",
+        "station_id": "homestead_kitchen",
+        "condition_unmet_message": ""
+      }
+    ],
     "state": {},
     "item_flavor": {},
     "enemy_flavor": {}
@@ -1219,7 +1233,14 @@
       "Ollie"
     ],
     "enemies": [],
-    "actions": [],
+    "actions": [
+      {
+        "name": "Fishing Spot",
+        "type": "fishing",
+        "zone_id": "town_8",
+        "condition_unmet_message": ""
+      }
+    ],
     "state": {},
     "item_flavor": {},
     "enemy_flavor": {}

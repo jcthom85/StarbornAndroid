@@ -111,6 +111,7 @@ fun MainMenuScreen(
                 },
                 onSave = { slot -> scope.launch { viewModel.saveSlot(slot) } },
                 onDelete = { slot -> scope.launch { viewModel.deleteSlot(slot) } },
+                onReloadFromAssets = { slot -> scope.launch { viewModel.reloadSlotFromAssets(slot) } },
                 onDismiss = { showLoadDialog = false }
             )
         }
@@ -123,6 +124,7 @@ private fun LoadGameDialog(
     onLoad: (Int) -> Unit,
     onSave: (Int) -> Unit,
     onDelete: (Int) -> Unit,
+    onReloadFromAssets: (Int) -> Unit,
     onDismiss: () -> Unit
 ) {
     Box(
@@ -160,7 +162,8 @@ private fun LoadGameDialog(
                             summary = summary,
                             onLoad = onLoad,
                             onSave = onSave,
-                            onDelete = onDelete
+                            onDelete = onDelete,
+                            onReloadFromAssets = onReloadFromAssets
                         )
                     }
                 }
@@ -183,7 +186,8 @@ private fun SaveSlotCard(
     summary: SaveSlotSummary,
     onLoad: (Int) -> Unit,
     onSave: (Int) -> Unit,
-    onDelete: (Int) -> Unit
+    onDelete: (Int) -> Unit,
+    onReloadFromAssets: (Int) -> Unit
 ) {
     Surface(
         tonalElevation = 2.dp,
@@ -271,6 +275,13 @@ private fun SaveSlotCard(
                         enabled = !summary.isEmpty
                     ) {
                         Text(if (summary.isQuickSave) "Clear" else "Delete")
+                    }
+                }
+                if (!summary.isAutosave && !summary.isQuickSave) {
+                    OutlinedButton(
+                        onClick = { onReloadFromAssets(summary.slot) }
+                    ) {
+                        Text("Reload Asset")
                     }
                 }
             }

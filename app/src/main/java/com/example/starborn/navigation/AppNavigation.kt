@@ -55,6 +55,7 @@ import com.example.starborn.feature.crafting.FirstAidViewModelFactory
 import com.example.starborn.feature.crafting.ui.CookingRoute
 import com.example.starborn.feature.crafting.ui.FirstAidRoute
 import com.example.starborn.feature.fishing.viewmodel.FishingResultPayload
+import com.example.starborn.feature.fishing.ui.FishingRoute
 import com.example.starborn.feature.fishing.viewmodel.FishingViewModel
 import com.example.starborn.feature.fishing.viewmodel.FishingViewModelFactory
 import com.example.starborn.feature.fishing.ui.FishingRoute

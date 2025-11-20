@@ -354,6 +354,78 @@
         "rarity": "common"
     },
     {
+        "id": "saltwater_fish",
+        "name": "Saltwater Fish",
+        "description": "A sturdy ocean catch prized by station chefs.",
+        "type": "ingredient",
+        "value": 10,
+        "buy_price": 20,
+        "rarity": "common"
+    },
+    {
+        "id": "forest_carp",
+        "name": "Forest Carp",
+        "description": "A rare carp from the arboreal cisterns around Nova Prime.",
+        "type": "ingredient",
+        "value": 12,
+        "buy_price": 24,
+        "rarity": "uncommon"
+    },
+    {
+        "id": "wooden_rod",
+        "name": "Wooden Rod",
+        "description": "A basic rod for practicing the new fishing techniques.",
+        "type": "component",
+        "value": 30,
+        "buy_price": 60,
+        "rarity": "common"
+    },
+    {
+        "id": "fiberglass_rod",
+        "name": "Fiberglass Rod",
+        "description": "A lightweight rod with improved stability and casting power.",
+        "type": "component",
+        "value": 45,
+        "buy_price": 90,
+        "rarity": "uncommon"
+    },
+    {
+        "id": "carbon_rod",
+        "name": "Carbon Rod",
+        "description": "Premium carbon fiber rod for veteran anglers.",
+        "type": "component",
+        "value": 65,
+        "buy_price": 130,
+        "rarity": "rare"
+    },
+    {
+        "id": "basic_lure",
+        "name": "Basic Lure",
+        "description": "Simple lure that keeps curious fish nearby.",
+        "type": "component",
+        "value": 12,
+        "buy_price": 24,
+        "rarity": "common"
+    },
+    {
+        "id": "shiny_lure",
+        "name": "Shiny Lure",
+        "description": "Reflective lure that increases uncommon bite rates.",
+        "type": "component",
+        "value": 20,
+        "buy_price": 40,
+        "rarity": "uncommon"
+    },
+    {
+        "id": "mystery_lure",
+        "name": "Mystery Lure",
+        "description": "Experimental lure rumored to attract exotic catches.",
+        "type": "component",
+        "value": 28,
+        "buy_price": 56,
+        "rarity": "rare"
+    },
+    {
         "id": "herb",
         "name": "Herb",
         "description": "A fragrant herb that brightens most dishes.",

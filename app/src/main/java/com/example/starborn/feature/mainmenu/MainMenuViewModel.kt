@@ -66,7 +66,9 @@ class MainMenuViewModel(
             QUICKSAVE_SLOT -> runCatching { services.loadQuickSave() }.getOrElse { false }
             else -> runCatching { services.loadSlot(slot) }.getOrElse { false }
         }
-        if (!success) {
+        if (success) {
+            services.syncInventoryFromSession()
+        } else {
             val message = when (slot) {
                 AUTOSAVE_SLOT -> "Unable to load autosave."
                 QUICKSAVE_SLOT -> "Unable to load quicksave."
@@ -123,6 +125,15 @@ class MainMenuViewModel(
                 }
                 emitMessage(message)
             }
+    }
+
+    suspend fun reloadSlotFromAssets(slot: Int) {
+        val success = runCatching { services.resetSlotFromAssets(slot) }.getOrElse { false }
+        emitMessage(
+            if (success) "Reloaded slot $slot from assets."
+            else "Unable to reload slot $slot."
+        )
+        refreshSlots()
     }
 
     private fun GameSessionSlotInfo?.toQuickSaveSummary(): SaveSlotSummary {

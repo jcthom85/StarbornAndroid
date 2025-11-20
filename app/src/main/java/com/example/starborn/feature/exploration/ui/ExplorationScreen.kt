@@ -1,6 +1,7 @@
 package com.example.starborn.feature.exploration.ui
 
 import android.graphics.BitmapFactory
+import androidx.annotation.DrawableRes
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -30,6 +31,7 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -45,6 +47,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -451,7 +454,7 @@ fun ExplorationScreen(
         } else {
             themeColor(activeTheme?.fg, Color.White.copy(alpha = 0.92f))
         }
-        val inlinePlanBase = remember(baseRoomDescription, uiState.actions, actionHints, currentRoom) {
+        val inlinePlan = remember(baseRoomDescription, uiState.actions, actionHints, currentRoom) {
             buildInlineActionPlan(
                 description = baseRoomDescription,
                 actions = uiState.actions,
@@ -459,47 +462,8 @@ fun ExplorationScreen(
                 room = currentRoom
             )
         }
-        val matchedNpcNames = inlinePlanBase?.segments
-            ?.mapNotNull { (it.target as? InlineActionTarget.Npc)?.name }
-            ?.toSet()
-            .orEmpty()
-        val matchedActionKeys = inlinePlanBase?.segments
-            ?.mapNotNull { (it.target as? InlineActionTarget.Room)?.action?.actionKey() }
-            ?.toSet()
-            .orEmpty()
-        val fallbackNpcs = currentRoom?.npcs.orEmpty().filter { it.isNotBlank() && !matchedNpcNames.contains(it) }
-        val fallbackActions = remember(uiState.actions, matchedActionKeys) {
-            uiState.actions.filter { action ->
-                val key = action.actionKey()
-                action.name.isNotBlank() && !matchedActionKeys.contains(key)
-            }
-        }
-        val descriptionWithFallback = remember(baseRoomDescription, fallbackActions) {
-            if (fallbackActions.isEmpty()) {
-                baseRoomDescription
-            } else {
-                val base = baseRoomDescription.orEmpty().trimEnd()
-                buildString {
-                    if (base.isNotEmpty()) {
-                        append(base)
-                        append("\n\n")
-                    }
-                    fallbackActions.forEachIndexed { index, action ->
-                        if (index > 0) append('\n')
-                        append("• ")
-                        append(action.name.ifBlank { actionLabelFallback(action) })
-                    }
-                }
-            }
-        }
-        val inlinePlan = remember(descriptionWithFallback, uiState.actions, actionHints, currentRoom) {
-            buildInlineActionPlan(
-                description = descriptionWithFallback,
-                actions = uiState.actions,
-                hints = actionHints,
-                room = currentRoom
-            )
-        }
+        val descriptionForPanel = baseRoomDescription
+        val fallbackNpcs = emptyList<String>()
         val serviceQuickActions = remember(uiState.actions, uiState.actionHints, currentRoom?.id) {
             val unique = LinkedHashSet<String>()
             val items = mutableListOf<QuickMenuAction>()
@@ -661,7 +625,7 @@ fun ExplorationScreen(
 
             RoomDescriptionPanel(
                 currentRoom = currentRoom,
-                description = descriptionWithFallback,
+                description = descriptionForPanel,
                 plan = inlinePlan,
                 isDark = isRoomDark,
                 onAction = { action -> viewModel.onActionSelected(action) },
@@ -696,9 +660,9 @@ fun ExplorationScreen(
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
                         .fillMaxWidth()
-                        .padding(start = 24.dp, end = 24.dp, bottom = 56.dp),
+                        .padding(start = 24.dp, end = 24.dp, bottom = 112.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(18.dp)
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     if (serviceQuickActions.isNotEmpty()) {
                         ServiceActionTray(
@@ -706,14 +670,17 @@ fun ExplorationScreen(
                             onAction = { viewModel.onActionSelected(it) },
                             backgroundColor = panelBackgroundColor.copy(alpha = if (isRoomDark) 0.65f else 0.8f),
                             accentColor = actionAccentColor,
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier
+                                .wrapContentWidth(Alignment.CenterHorizontally)
+                                .align(Alignment.CenterHorizontally)
                         )
                     }
                     if (uiState.canReturnToHub) {
                         ReturnHubButton(
-                            onClick = { viewModel.requestReturnToHub() }
-                            ,
-                            modifier = Modifier.offset(y = (-16).dp),
+                            onClick = { viewModel.requestReturnToHub() },
+                            modifier = Modifier
+                                .offset(y = (-8).dp)
+                                .padding(bottom = 4.dp),
                             size = 96.dp
                         )
                     }
@@ -822,6 +789,7 @@ fun ExplorationScreen(
                 theme = activeTheme,
                 isCurrentRoomDark = isRoomDark,
                 onMenuAction = { viewModel.onMenuActionInvoked() },
+                creditsLabel = uiState.progressionSummary.creditsLabel,
                 inventoryItems = uiState.inventoryPreview,
                 equippedItems = uiState.equippedItems,
                 onUseInventoryItem = onUsePreviewItem,
@@ -1548,6 +1516,7 @@ private fun MenuOverlay(
     theme: Theme?,
     isCurrentRoomDark: Boolean,
     onMenuAction: () -> Unit,
+    creditsLabel: String,
     inventoryItems: List<InventoryPreviewItemUi>,
     equippedItems: Map<String, String>,
     onUseInventoryItem: (InventoryPreviewItemUi) -> Unit,
@@ -1629,7 +1598,8 @@ private fun MenuOverlay(
                     inventoryItems = inventoryItems,
                     equippedItems = equippedItems,
                     onUseInventoryItem = onUseInventoryItem,
-                    onShowQuestDetails = onShowQuestDetails
+                    onShowQuestDetails = onShowQuestDetails,
+                    creditsLabel = creditsLabel
                 )
         }
     }
@@ -1710,7 +1680,8 @@ private fun MenuTabContentArea(
     inventoryItems: List<InventoryPreviewItemUi>,
     equippedItems: Map<String, String>,
     onUseInventoryItem: (InventoryPreviewItemUi) -> Unit,
-    onShowQuestDetails: (String) -> Unit
+    onShowQuestDetails: (String) -> Unit,
+    creditsLabel: String
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         when (tab) {
@@ -1720,7 +1691,8 @@ private fun MenuTabContentArea(
                 accentColor = accentColor,
                 borderColor = borderColor,
                 onOpenInventory = onOpenInventory,
-                onUseConsumable = onUseInventoryItem
+                onUseConsumable = onUseInventoryItem,
+                creditsLabel = creditsLabel
             )
             MenuTab.JOURNAL -> JournalTabContent(
                 trackedQuest = trackedQuest,
@@ -1768,7 +1740,8 @@ private fun InventoryTabContent(
     accentColor: Color,
     borderColor: Color,
     onOpenInventory: (InventoryLaunchOptions) -> Unit,
-    onUseConsumable: (InventoryPreviewItemUi) -> Unit
+    onUseConsumable: (InventoryPreviewItemUi) -> Unit,
+    creditsLabel: String
 ) {
     var page by rememberSaveable { mutableStateOf(InventoryCarouselPage.SUPPLIES) }
     val supplies = remember(inventoryItems) {
@@ -1792,7 +1765,6 @@ private fun InventoryTabContent(
                 items = supplies,
                 borderColor = borderColor,
                 emptyMessage = "No supplies collected yet. Explore rooms to gather materials.",
-                moreLabel = "more supplies",
                 onItemClick = onUseConsumable
             )
             InventoryCarouselPage.GEAR -> InventoryEquipmentPreview(
@@ -1804,11 +1776,16 @@ private fun InventoryTabContent(
             InventoryCarouselPage.KEY_ITEMS -> InventoryItemsPreview(
                 items = keyItems,
                 borderColor = borderColor,
-                emptyMessage = "No key items collected yet.",
-                 moreLabel = "more key items"
+                emptyMessage = "No key items collected yet."
             )
         }
-        Spacer(modifier = Modifier.height(4.dp))
+        Spacer(modifier = Modifier.height(8.dp))
+        WalletPill(
+            creditsLabel = creditsLabel,
+            accentColor = accentColor,
+            borderColor = borderColor,
+            modifier = Modifier.align(Alignment.End)
+        )
     }
 }
 
@@ -1885,7 +1862,6 @@ private fun InventoryItemsPreview(
     items: List<InventoryPreviewItemUi>,
     borderColor: Color,
     emptyMessage: String,
-    moreLabel: String,
     onItemClick: ((InventoryPreviewItemUi) -> Unit)? = null
 ) {
     if (items.isEmpty()) {
@@ -1896,10 +1872,17 @@ private fun InventoryItemsPreview(
         )
         return
     }
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        items.take(6).forEach { item ->
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(max = 360.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        contentPadding = PaddingValues(bottom = 6.dp)
+    ) {
+        items(items, key = { it.id }) { item ->
             val isUsable = onItemClick != null && item.effect != null
             val shape = RoundedCornerShape(18.dp)
+            val iconRes = remember(item.id + item.type) { previewItemIconRes(item.type) }
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -1911,19 +1894,31 @@ private fun InventoryItemsPreview(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Column(
-                    modifier = Modifier.weight(1f)
+                Row(
+                    modifier = Modifier.weight(1f),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    Text(
-                        text = item.name,
-                        style = MaterialTheme.typography.titleSmall,
-                        color = Color.White
+                    Image(
+                        painter = painterResource(iconRes),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(28.dp)
                     )
-                    Text(
-                        text = item.type,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = Color.White.copy(alpha = if (isUsable) 0.7f else 0.5f)
-                    )
+                    Column {
+                        Text(
+                            text = item.name,
+                            style = MaterialTheme.typography.titleSmall,
+                            color = Color.White,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                        Text(
+                            text = item.type,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = Color.White.copy(alpha = if (isUsable) 0.7f else 0.5f)
+                        )
+                    }
                 }
                 Text(
                     text = "x${item.quantity}",
@@ -1932,12 +1927,35 @@ private fun InventoryItemsPreview(
                 )
             }
         }
-        if (items.size > 6) {
+    }
+}
+
+@Composable
+private fun WalletPill(
+    creditsLabel: String,
+    accentColor: Color,
+    borderColor: Color,
+    modifier: Modifier = Modifier
+) {
+    val compactLabel = remember(creditsLabel) {
+        creditsLabel.replace(Regex("\\s*credits", RegexOption.IGNORE_CASE), " c").trim()
+    }
+    Surface(
+        modifier = modifier,
+        shape = RoundedCornerShape(14.dp),
+        color = Color.Black.copy(alpha = 0.15f),
+        border = BorderStroke(1.dp, borderColor.copy(alpha = 0.45f))
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(horizontal = 12.dp, vertical = 6.dp),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Text(
-                text = "+${items.size - 6} $moreLabel",
-                style = MaterialTheme.typography.labelSmall,
-                color = Color.White.copy(alpha = 0.7f),
-                modifier = Modifier.align(Alignment.End)
+                text = compactLabel,
+                style = MaterialTheme.typography.titleSmall,
+                color = accentColor.copy(alpha = 0.9f)
             )
         }
     }
@@ -2012,6 +2030,27 @@ private fun slotLabel(raw: String): String =
                 if (c.isLowerCase()) c.titlecase(Locale.getDefault()) else c.toString()
             }
         }
+
+@DrawableRes
+private fun previewItemIconRes(type: String?): Int {
+    val normalized = type?.lowercase(Locale.getDefault()) ?: return R.drawable.item_icon_generic
+    return when {
+        normalized.contains("food") -> R.drawable.item_icon_food
+        normalized in setOf("consumable", "medicine", "tonic", "drink") -> R.drawable.item_icon_consumable
+        normalized.contains("fish") -> R.drawable.item_icon_fish
+        normalized.contains("fishing") -> R.drawable.item_icon_fishing
+        normalized.contains("lure") -> R.drawable.item_icon_lure
+        normalized.contains("ingredient") ||
+            normalized.contains("material") -> R.drawable.item_icon_ingredient
+        normalized.contains("component") ||
+            normalized.contains("resource") ||
+            normalized.contains("part") -> R.drawable.item_icon_material
+        normalized.contains("armor") -> R.drawable.item_icon_armor
+        normalized.contains("accessory") -> R.drawable.item_icon_accessory
+        normalized.contains("weapon") || normalized.contains("gear") -> R.drawable.item_icon_sword
+        else -> R.drawable.item_icon_generic
+    }
+}
 
 @Composable
 private fun JournalTabContent(
@@ -3799,72 +3838,69 @@ private fun ServiceActionTray(
 ) {
     if (actions.isEmpty()) return
 
-    val trayShape = RoundedCornerShape(32.dp)
+    val trayShape = RoundedCornerShape(26.dp)
     Surface(
         modifier = modifier,
         color = Color.Transparent,
-        shape = trayShape,
-        shadowElevation = 12.dp
+        shadowElevation = 14.dp
     ) {
         Box(
             modifier = Modifier
                 .clip(trayShape)
                 .background(
-                    brush = Brush.linearGradient(
+                    Brush.verticalGradient(
                         listOf(
-                            backgroundColor.copy(alpha = 0.95f),
-                            backgroundColor.copy(alpha = 0.78f),
-                            backgroundColor.copy(alpha = 0.95f)
+                            backgroundColor.copy(alpha = 0.55f),
+                            backgroundColor.copy(alpha = 0.78f)
                         )
                     )
                 )
-                .border(1.1.dp, accentColor.copy(alpha = 0.35f), trayShape)
+                .border(1.2.dp, accentColor.copy(alpha = 0.45f), trayShape)
         ) {
             Row(
                 modifier = Modifier
-                    .padding(horizontal = 22.dp, vertical = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(18.dp),
+                    .padding(horizontal = 16.dp, vertical = 10.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 val chipShape = RoundedCornerShape(18.dp)
                 actions.forEach { action ->
                     Surface(
                         modifier = Modifier
-                            .widthIn(min = 76.dp)
-                            .clip(chipShape)
+                            .widthIn(min = 92.dp)
+                            .heightIn(min = 62.dp)
                             .clickable { onAction(action.roomAction) },
                         color = Color.Transparent,
                         shape = chipShape,
-                        shadowElevation = 0.dp,
-                        border = BorderStroke(1.dp, accentColor.copy(alpha = 0.4f))
+                        border = BorderStroke(1.1.dp, accentColor.copy(alpha = 0.6f))
                     ) {
                         Box(
                             modifier = Modifier
                                 .background(
-                                    brush = Brush.linearGradient(
+                                    brush = Brush.horizontalGradient(
                                         listOf(
-                                            accentColor.copy(alpha = 0.28f),
-                                            accentColor.copy(alpha = 0.6f)
+                                            accentColor.copy(alpha = 0.35f),
+                                            accentColor.copy(alpha = 0.7f)
                                         )
                                     )
                                 )
                         ) {
                             Column(
                                 modifier = Modifier
-                                    .padding(horizontal = 14.dp, vertical = 10.dp),
+                                    .padding(horizontal = 16.dp, vertical = 10.dp),
                                 horizontalAlignment = Alignment.CenterHorizontally,
                                 verticalArrangement = Arrangement.spacedBy(6.dp)
                             ) {
                                 Image(
                                     painter = painterResource(action.iconRes),
                                     contentDescription = action.label,
-                                    modifier = Modifier.size(32.dp),
-                                    colorFilter = ColorFilter.tint(accentColor.copy(alpha = 0.95f))
+                                    modifier = Modifier.size(48.dp),
+                                    colorFilter = ColorFilter.tint(accentColor.copy(alpha = 0.98f))
                                 )
                                 Text(
                                     text = action.label,
                                     style = MaterialTheme.typography.labelSmall.copy(
-                                        fontSize = 13.sp,
+                                        fontSize = 14.sp,
                                         fontWeight = FontWeight.SemiBold
                                     ),
                                     color = Color.White,

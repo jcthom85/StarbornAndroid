@@ -71,11 +71,30 @@
       "gh0st"
     ],
     "inventory": {
-      "Broken Coffee Grinder": 1,
-      "Broken Arcade Display": 1,
-      "Broken Projector": 1
+      "Broken Coffee Grinder": 90,
+      "Broken Arcade Display": 90,
+      "Broken Projector": 90,
+      "wooden_rod": 90,
+      "fiberglass_rod": 90,
+      "carbon_rod": 90,
+      "basic_lure": 90,
+      "shiny_lure": 90,
+      "mystery_lure": 90,
+      "Raw Fish": 90,
+      "Saltwater Fish": 90,
+      "Forest Carp": 90,
+      "Herb": 90,
+      "Noodles": 90,
+      "Fiery Pepper": 90,
+      "Beast Meat": 90,
+      "Scrap Metal": 90,
+      "Wiring Bundle": 90,
+      "Circuit Board": 90,
+      "Ballistic Weave": 90,
+      "Focusing Lens": 90,
+      "Cryo-Inductor": 90
     },
-    "credits": 500,
+    "credits": 12345,
     "resonance": 0,
     "resonance_min": 0,
     "resonance_start_base": 0,
@@ -83,42 +102,74 @@
     "map": {
       "current_world_id": "nova_prime",
       "current_hub_id": "mining_colony",
-      "current_node_id": "market",
-      "current_room_id": "market_2",
+      "current_node_id": "town",
+      "current_room_id": "town_8",
       "room_positions": {
-        "market_plaza": [
+        "town_9": [
           0,
           0
         ],
-        "market_1": [
+        "town_8": [
+          -1,
+          0
+        ],
+        "town_square": [
+          -1,
+          -1
+        ],
+        "town_1": [
+          0,
+          -1
+        ],
+        "town_4": [
+          -2,
+          -1
+        ],
+        "town_12": [
           0,
           1
         ],
-        "market_4": [
-          1,
-          1
-        ],
-        "market_2": [
+        "town_2": [
           2,
-          1
+          0
+        ],
+        "town_10": [
+          -1,
+          2
         ]
       },
       "discovered": [
         [
-          0,
-          1
+          -1,
+          -1
         ],
         [
-          1,
-          1
-        ],
-        [
-          2,
-          1
+          -2,
+          -1
         ],
         [
           0,
           0
+        ],
+        [
+          -1,
+          0
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          -1,
+          2
         ]
       ],
       "node_maps": {
@@ -143,6 +194,18 @@
             "town_4": [
               -2,
               -1
+            ],
+            "town_12": [
+              0,
+              1
+            ],
+            "town_2": [
+              2,
+              0
+            ],
+            "town_10": [
+              -1,
+              2
             ]
           },
           "discovered": [
@@ -165,6 +228,18 @@
             [
               0,
               -1
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              -1,
+              2
             ]
           ]
         },
@@ -420,6 +495,9 @@
       },
       "nodes": {}
     },
+    "completed_milestones": [
+      "ms_tinkering_tutorial_done"
+    ],
     "learned_schematics": [],
     "fired_events": [
       "evt_jed_assign_repair_quest",

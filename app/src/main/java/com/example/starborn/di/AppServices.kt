@@ -144,7 +144,7 @@ class AppServices(context: Context) {
     companion object {
         private const val AUTOSAVE_INTERVAL_MS = 90_000L
         private const val AUTOSAVE_SLOT = 0
-        private const val SAMPLE_SLOT_ID = 3
+        private const val SAMPLE_SLOT_ID = -1
         private val SAMPLE_PARTY = setOf("nova", "zeke", "orion", "gh0st")
         private const val SAMPLE_WORLD_ID = "nova_prime"
         private const val SAMPLE_HUB_ID = "mining_colony"
@@ -274,6 +274,10 @@ class AppServices(context: Context) {
         sessionPersistence.clearQuickSave()
     }
 
+    fun syncInventoryFromSession() {
+        inventoryService.restore(sessionStore.state.value.inventory)
+    }
+
     suspend fun importLegacySave(file: File): Boolean {
         val imported = sessionPersistence.importLegacySave(file, itemRepository) ?: return false
         sessionStore.restore(imported)
@@ -298,6 +302,9 @@ class AppServices(context: Context) {
             cacheFile.delete()
         }
     }
+
+    suspend fun resetSlotFromAssets(slot: Int): Boolean =
+        importLegacySlotFromAssets(slot)
 
     private suspend fun resolveSlotInfo(slot: Int): GameSessionSlotInfo? {
         var info = sessionPersistence.slotInfo(slot)

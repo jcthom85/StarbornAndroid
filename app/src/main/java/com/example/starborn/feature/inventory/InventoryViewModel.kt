@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -43,6 +44,19 @@ class InventoryViewModel(
         sessionStore = sessionStore,
         charactersProvider = { charactersById }
     )
+
+    init {
+        viewModelScope.launch {
+            sessionStore.state
+                .map { it.inventory }
+                .distinctUntilChanged()
+                .collect { inventory ->
+                    if (inventoryService.snapshot() != inventory) {
+                        inventoryService.restore(inventory)
+                    }
+                }
+        }
+    }
 
     val partyMembers: StateFlow<List<PartyMemberStatus>> = sessionStore.state
         .map { state ->

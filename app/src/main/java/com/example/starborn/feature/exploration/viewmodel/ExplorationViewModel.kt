@@ -226,6 +226,21 @@ class ExplorationViewModel(
         handleItemAcquired(itemId)
     }
     private val systemTutorialCoordinator = SystemTutorialCoordinator(tutorialManager)
+    private fun buildPreviewFromSnapshot(snapshot: Map<String, Int>): List<InventoryPreviewItemUi> {
+        return snapshot
+            .filterValues { it > 0 }
+            .map { (id, qty) ->
+                val item = inventoryService.itemDetail(id)
+                InventoryPreviewItemUi(
+                    id = item?.id ?: id,
+                    name = item?.name ?: inventoryService.itemDisplayName(id),
+                    quantity = qty,
+                    type = item?.type ?: "misc",
+                    effect = item?.effect
+                )
+            }
+            .sortedBy { it.name.lowercase(Locale.getDefault()) }
+    }
 
     init {
         inventoryService.loadItems()
@@ -299,6 +314,9 @@ class ExplorationViewModel(
                 }
             },
             onGiveXp = { amount ->
+                if (amount > 0) {
+                    sessionStore.addXp(amount)
+                }
                 postStatus("Gained $amount XP")
                 emitEvent(ExplorationEvent.XpGained(amount))
             },
@@ -1039,12 +1057,19 @@ class ExplorationViewModel(
 
     private fun handleReward(reward: EventReward) {
         val parts = mutableListOf<String>()
-        reward.xp?.takeIf { it > 0 }?.let {
-            parts.add("$it XP")
-            emitEvent(ExplorationEvent.XpGained(it))
+        reward.xp?.takeIf { it > 0 }?.let { amount ->
+            sessionStore.addXp(amount)
+            parts.add("$amount XP")
+            emitEvent(ExplorationEvent.XpGained(amount))
         }
-        reward.ap?.takeIf { it > 0 }?.let { parts.add("$it AP") }
-        reward.credits?.takeIf { it > 0 }?.let { parts.add("$it credits") }
+        reward.ap?.takeIf { it > 0 }?.let { amount ->
+            sessionStore.addAp(amount)
+            parts.add("$amount AP")
+        }
+        reward.credits?.takeIf { it > 0 }?.let { amount ->
+            sessionStore.addCredits(amount)
+            parts.add("$amount credits")
+        }
         reward.items.filter { it.itemId.isNotBlank() }.forEach { item ->
             val qty = item.quantity ?: 1
             inventoryService.addItem(item.itemId, qty)
@@ -1124,6 +1149,48 @@ class ExplorationViewModel(
                         )
                     }
                 _uiState.update { it.copy(inventoryPreview = preview) }
+            }
+        }
+
+        // Seed inventory preview immediately from any already-loaded inventory so the UI isn't empty on first open.
+        val initialEntries = inventoryService.state.value
+        if (initialEntries.isNotEmpty()) {
+            val initialPreview = initialEntries
+                .sortedBy { it.item.name.lowercase(Locale.getDefault()) }
+                .map { entry ->
+                    InventoryPreviewItemUi(
+                        id = entry.item.id,
+                        name = entry.item.name,
+                        quantity = entry.quantity,
+                        type = entry.item.type,
+                        effect = entry.item.effect
+                    )
+                }
+            _uiState.update { it.copy(inventoryPreview = initialPreview) }
+        } else if (sessionStore.state.value.inventory.isNotEmpty()) {
+            val snapshotPreview = buildPreviewFromSnapshot(sessionStore.state.value.inventory)
+            if (snapshotPreview.isNotEmpty()) {
+                _uiState.update { it.copy(inventoryPreview = snapshotPreview) }
+            }
+        }
+
+        viewModelScope.launch(dispatchers.main) {
+            // Ensure inventory is visible even when starting from a room without entering a hub first.
+            var restoredFromSession = false
+            sessionStore.state.collect { state ->
+                if (!restoredFromSession && inventoryService.snapshot().isEmpty() && state.inventory.isNotEmpty()) {
+                    inventoryService.restore(state.inventory)
+                    restoredFromSession = true
+                    val snapshotPreview = buildPreviewFromSnapshot(state.inventory)
+                    if (snapshotPreview.isNotEmpty()) {
+                        _uiState.update { it.copy(inventoryPreview = snapshotPreview) }
+                    }
+                } else if (_uiState.value.inventoryPreview.isEmpty() && state.inventory.isNotEmpty()) {
+                    val snapshotPreview = buildPreviewFromSnapshot(state.inventory)
+                    if (snapshotPreview.isNotEmpty()) {
+                        _uiState.update { it.copy(inventoryPreview = snapshotPreview) }
+                    }
+                }
             }
         }
 
@@ -2220,6 +2287,8 @@ class ExplorationViewModel(
                     scriptId = "scene_light_switch_hint",
                     delayMs = 14_000L
                 )
+            } else if (lightOn) {
+                tutorialManager.cancel("light_switch_hint")
             }
         }
     }
@@ -2702,11 +2771,15 @@ class ExplorationViewModel(
         shopId: String?,
         lockedMessage: String?
     ) {
-        if (!isTinkeringUnlocked()) {
+        val unlocked = isTinkeringUnlocked()
+        if (!unlocked && shopId != null) {
             val message = lockedMessage?.takeIf { it.isNotBlank() }
                 ?: "The tinkering table isn't ready yet."
             postStatus(message)
             return
+        }
+        if (!unlocked && shopId == null) {
+            sessionStore.setMilestone("ms_tinkering_tutorial_done")
         }
         val display = label.ifBlank { "Tinkering Table" }
         postStatus("Opening $display")
