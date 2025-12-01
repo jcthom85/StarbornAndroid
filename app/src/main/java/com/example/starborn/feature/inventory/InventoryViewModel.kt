@@ -92,6 +92,7 @@ class InventoryViewModel(
                 is ItemUseController.Result.Success -> _messages.emit(outcome.message)
                 is ItemUseController.Result.Failure -> _messages.emit(outcome.message)
             }
+            sessionStore.setInventory(inventoryService.snapshot())
         }
     }
 

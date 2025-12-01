@@ -58,8 +58,13 @@ class InventoryService(
     }
 
     fun consumeItems(requirements: Map<String, Int>): Boolean {
-        if (!requirements.all { hasItem(it.key, it.value) }) return false
-        requirements.forEach { (id, qty) -> removeItem(id, qty) }
+        val resolved = mutableListOf<Pair<String, Int>>()
+        for ((req, qty) in requirements) {
+            val entry = findEntry(req) ?: return false
+            if (entry.second.quantity < qty) return false
+            resolved.add(entry.first to qty)
+        }
+        resolved.forEach { (id, qty) -> removeItemById(id, qty) }
         return true
     }
 
@@ -167,6 +172,24 @@ class InventoryService(
         placeholderItems[normalized] = placeholder
         return placeholder
     }
+
+    private fun findEntry(idOrName: String): Pair<String, InventoryEntry>? {
+        val needle = idOrName.trim()
+        if (needle.isEmpty()) return null
+        val normalizedNeedle = normalizeToken(needle)
+        return items.entries.firstOrNull { entry ->
+            val item = entry.value.item
+            item.id.equals(needle, ignoreCase = true) ||
+                item.name.equals(needle, ignoreCase = true) ||
+                item.aliases.any { it.equals(needle, ignoreCase = true) } ||
+                normalizeToken(item.id) == normalizedNeedle ||
+                normalizeToken(item.name) == normalizedNeedle ||
+                item.aliases.any { normalizeToken(it) == normalizedNeedle }
+        }?.let { it.key to it.value }
+    }
+
+    private fun normalizeToken(raw: String): String =
+        raw.trim().lowercase(Locale.getDefault()).replace("[^a-z0-9]+".toRegex(), "")
 }
 
 data class InventoryEntry(

@@ -86,6 +86,7 @@ data class InventoryLaunchOptions(
 )
 
 private fun Item.categoryKey(): String {
+    categoryOverride?.let { return it.lowercase(Locale.getDefault()) }
     val normalized = type.lowercase(Locale.getDefault())
     return when (normalized) {
         "consumable", "medicine", "food", "drink", "tonic" -> CATEGORY_CONSUMABLES

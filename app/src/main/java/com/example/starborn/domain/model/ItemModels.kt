@@ -9,6 +9,8 @@ data class Item(
     val name: String,
     val aliases: List<String> = emptyList(),
     val type: String,
+    @Json(name = "category_override")
+    val categoryOverride: String? = null,
     val value: Int = 0,
     @Json(name = "buy_price")
     val buyPrice: Int? = null,

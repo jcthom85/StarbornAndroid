@@ -280,6 +280,7 @@
         "name": "Repaired Projector",
         "description": "The school's repaired projector. Good as new.",
         "type": "misc",
+        "category_override": "supplies",
         "value": 0,
         "buy_price": 0,
         "unsellable": true,

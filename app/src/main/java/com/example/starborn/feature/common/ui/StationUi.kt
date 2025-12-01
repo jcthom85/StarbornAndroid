@@ -57,11 +57,6 @@ fun StationBackground(
                     alpha = 0.2f
                 )
             }
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color(0x4402060B))
-            )
         }
         Box(
             modifier = Modifier
@@ -106,11 +101,6 @@ fun StationHeader(
                     text = title,
                     style = MaterialTheme.typography.headlineSmall,
                     color = titleColor
-                )
-                Text(
-                    text = "Starborn Systems Interface",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = subtitleColor
                 )
             }
         }

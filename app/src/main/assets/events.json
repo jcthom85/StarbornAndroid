@@ -1351,10 +1351,6 @@
       {
         "type": "milestone_not_set",
         "milestone": "ms_ollie_met"
-      },
-      {
-        "type": "milestone_set",
-        "milestone": "ms_lights_out_complete"
       }
     ]
   },
