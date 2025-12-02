@@ -600,7 +600,9 @@ class CombatViewModel(
                 }
                 is CombatLogEntry.Damage -> {
                     if (entry.amount == 0 && entry.element == "miss") {
-                        if (entry.targetId !in suppressMissLungeTargets) {
+                        val targetIsPlayer = entry.targetId in playerIdList
+                        if (!targetIsPlayer && entry.targetId !in suppressMissLungeTargets) {
+                            // Only trigger the miss lunge for non-player targets; players dodging should stay put.
                             triggerMissLunge(entry.targetId)
                         }
                     }

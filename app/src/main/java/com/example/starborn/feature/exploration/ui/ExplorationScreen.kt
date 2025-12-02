@@ -161,6 +161,7 @@ import com.example.starborn.domain.model.serviceTag
 import com.example.starborn.domain.tutorial.TutorialEntry
 import com.example.starborn.ui.background.rememberAssetPainter
 import com.example.starborn.ui.components.ItemTargetSelectionDialog
+import com.example.starborn.ui.components.SaveLoadDialog
 import com.example.starborn.ui.components.TargetSelectionOption
 import com.example.starborn.ui.vfx.ThemeBandOverlay
 import com.example.starborn.ui.vfx.VignetteOverlay
@@ -2292,8 +2293,9 @@ private fun InventoryEquipmentPreview(
         inventoryItems.associate { it.id.lowercase(Locale.getDefault()) to it.name }
     }
     val slots = remember(equippedItems) {
+        val filtered = equippedItems.filterKeys { !it.contains(":") }
         val defaults = listOf("weapon", "armor", "accessory", "snack")
-        (defaults + equippedItems.keys.map { it.lowercase(Locale.getDefault()) })
+        (defaults + filtered.keys.map { it.lowercase(Locale.getDefault()) })
             .distinct()
     }
     if (slots.isEmpty()) {
@@ -5777,162 +5779,6 @@ fun CinematicOverlay(
     }
 }
 
-@Composable
-private fun SaveLoadDialog(
-    mode: String,
-    slots: List<SaveSlotSummary>,
-    onSave: (Int) -> Unit,
-    onLoad: (Int) -> Unit,
-    onRefresh: () -> Unit,
-    onDismiss: () -> Unit,
-    accentColor: Color,
-    panelColor: Color,
-    borderColor: Color,
-    textColor: Color
-) {
-    val isSave = mode == "save"
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Black.copy(alpha = 0.65f))
-            .zIndex(40f),
-        contentAlignment = Alignment.Center
-    ) {
-        Surface(
-            modifier = Modifier
-                .padding(24.dp)
-                .fillMaxWidth(0.92f)
-                .fillMaxHeight(0.82f),
-            color = panelColor,
-            shape = RoundedCornerShape(24.dp),
-            border = BorderStroke(1.dp, borderColor)
-        ) {
-            Column(
-                modifier = Modifier
-                    .padding(20.dp)
-                    .fillMaxSize(),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = if (isSave) "Select Slot to Save" else "Select Slot to Load",
-                        color = accentColor,
-                        style = MaterialTheme.typography.titleLarge
-                    )
-                    TextButton(onClick = onRefresh) {
-                        Text("Refresh", color = accentColor)
-                    }
-                }
-                LazyColumn(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    items(slots) { summary ->
-                        SaveSlotRow(
-                            summary = summary,
-                            isSave = isSave,
-                            onSave = onSave,
-                            onLoad = onLoad,
-                            accent = accentColor,
-                            textColor = textColor,
-                            borderColor = borderColor
-                        )
-                    }
-                }
-                HorizontalDivider(color = Color.White.copy(alpha = 0.2f))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    TextButton(onClick = onDismiss) { Text("Close") }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun SaveSlotRow(
-    summary: SaveSlotSummary,
-    isSave: Boolean,
-    onSave: (Int) -> Unit,
-    onLoad: (Int) -> Unit,
-    accent: Color,
-    textColor: Color,
-    borderColor: Color
-) {
-    Surface(
-        tonalElevation = 6.dp,
-        color = Color(0xFF121A24),
-        shape = RoundedCornerShape(18.dp),
-        border = BorderStroke(1.dp, borderColor),
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 14.dp, vertical = 12.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            val slotLabel = when {
-                summary.isQuickSave -> "Quicksave"
-                summary.isAutosave -> "Autosave"
-                else -> "Slot ${summary.slot}"
-            }
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(text = slotLabel, color = accent, style = MaterialTheme.typography.titleSmall)
-                if (summary.state != null && !summary.isEmpty) {
-                    Text(
-                        text = summary.state.playerLevel.let { "Lv ${it}" },
-                        color = textColor.copy(alpha = 0.75f),
-                        style = MaterialTheme.typography.labelMedium
-                    )
-                }
-            }
-            Text(text = summary.title, color = textColor, maxLines = 1)
-            Text(
-                text = summary.subtitle,
-                color = textColor.copy(alpha = 0.7f),
-                style = MaterialTheme.typography.bodySmall,
-                maxLines = 1
-            )
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                if (isSave && !summary.isAutosave) {
-                    Button(onClick = { onSave(summary.slot) }) {
-                        Text(if (summary.isEmpty) "Save" else "Overwrite")
-                    }
-                }
-                if (!isSave) {
-                    Button(
-                        onClick = { onLoad(summary.slot) },
-                        enabled = !summary.isEmpty
-                    ) {
-                        Text(
-                            when {
-                                summary.isAutosave -> "Load Autosave"
-                                summary.isQuickSave -> "Load Quicksave"
-                                else -> "Load"
-                            }
-                        )
-                    }
-                }
-            }
-        }
-    }
-}
 
 @Composable
 fun ShopGreetingOverlay(

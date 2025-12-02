@@ -211,14 +211,35 @@ class GameSessionStore {
         _state.update { it.copy(learnedSchematics = it.learnedSchematics - schematicId) }
     }
 
-    fun setEquippedItem(slotId: String, itemId: String?) {
+    fun setEquippedItem(slotId: String, itemId: String?, characterId: String? = null) {
         if (slotId.isBlank()) return
-        val normalizedSlot = slotId.lowercase(Locale.getDefault())
+        val normalizedSlot = slotId.trim().lowercase(Locale.getDefault())
+        val ownerId = characterId?.trim()?.lowercase(Locale.getDefault())
         _state.update { state ->
-            val updated = if (itemId.isNullOrBlank()) {
-                state.equippedItems - normalizedSlot
+            val updated = state.equippedItems.toMutableMap()
+
+            if (itemId != null) {
+                // Ensure uniqueness: if another slot (or character) is holding this item, clear it.
+                val duplicateKeys = updated.filterValues { it.equals(itemId, ignoreCase = true) }
+                    .keys
+                    .filterNot { key ->
+                        ownerId != null && key.startsWith("$ownerId:", ignoreCase = true) &&
+                            key.substringAfter(':', "") == normalizedSlot
+                    }
+                duplicateKeys.forEach { updated.remove(it) }
+            }
+
+            if (ownerId != null) {
+                val scopedKey = "$ownerId:$normalizedSlot"
+                if (itemId.isNullOrBlank()) updated.remove(scopedKey) else updated[scopedKey] = itemId
+
+                // Mirror the active player's equipment into the legacy flat map for compatibility.
+                val isPlayer = state.playerId?.equals(ownerId, ignoreCase = true) == true
+                if (isPlayer) {
+                    if (itemId.isNullOrBlank()) updated.remove(normalizedSlot) else updated[normalizedSlot] = itemId
+                }
             } else {
-                state.equippedItems + (normalizedSlot to itemId)
+                if (itemId.isNullOrBlank()) updated.remove(normalizedSlot) else updated[normalizedSlot] = itemId
             }
             state.copy(equippedItems = updated)
         }

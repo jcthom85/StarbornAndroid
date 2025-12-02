@@ -28,6 +28,7 @@ import com.example.starborn.domain.audio.VoiceoverController
 import com.example.starborn.domain.cinematic.CinematicCoordinator
 import com.example.starborn.domain.cinematic.CinematicPlaybackState
 import com.example.starborn.domain.cinematic.CinematicService
+import android.util.Log
 import com.example.starborn.domain.combat.CombatEngine
 import com.example.starborn.domain.combat.EncounterCoordinator
 import com.example.starborn.domain.combat.StatusRegistry
@@ -336,43 +337,49 @@ class AppServices(context: Context) {
         return worldMatches && hubMatches && roomMatches
     }
 
-    fun startNewGame() {
-        bootstrapCinematics.clear()
-        bootstrapPlayerActions.clear()
-        promptManager.dismissCurrent()
-        tutorialManager.cancelAllScheduled()
-        milestoneManager.clearHistory()
+    fun startNewGame(): Boolean {
+        return runCatching {
+            bootstrapCinematics.clear()
+            bootstrapPlayerActions.clear()
+            promptManager.dismissCurrent()
+            tutorialManager.cancelAllScheduled()
+            milestoneManager.clearHistory()
 
-        val defaultPlayer = runCatching { worldDataSource.loadCharacters().firstOrNull() }.getOrNull()
-        val playerId = defaultPlayer?.id
-        val baseLevel = defaultPlayer?.level ?: 1
-        val baseXp = defaultPlayer?.xp ?: 0
-        val startingRoomId = "town_9"
-        val seedState = GameSessionState(
-            worldId = "nova_prime",
-            hubId = "mining_colony",
-            roomId = startingRoomId,
-            playerId = playerId,
-            playerLevel = baseLevel,
-            playerXp = baseXp,
-            partyMembers = playerId?.let { listOf(it) } ?: emptyList(),
-            partyMemberLevels = playerId?.let { mapOf(it to baseLevel) } ?: emptyMap(),
-            partyMemberXp = playerId?.let { mapOf(it to baseXp) } ?: emptyMap()
-        )
-        sessionStore.restore(seedState)
-        sessionStore.resetTutorialProgress()
-        sessionStore.resetQuestProgress()
-        inventoryService.restore(emptyMap())
-        questRuntimeManager.resetAll()
-        resetAutosaveThrottle()
+            val defaultPlayer = runCatching { worldDataSource.loadCharacters().firstOrNull() }.getOrNull()
+            val playerId = defaultPlayer?.id
+            val baseLevel = defaultPlayer?.level ?: 1
+            val baseXp = defaultPlayer?.xp ?: 0
+            val startingRoomId = "town_9"
+            val seedState = GameSessionState(
+                worldId = "nova_prime",
+                hubId = "mining_colony",
+                roomId = startingRoomId,
+                playerId = playerId,
+                playerLevel = baseLevel,
+                playerXp = baseXp,
+                partyMembers = playerId?.let { listOf(it) } ?: emptyList(),
+                partyMemberLevels = playerId?.let { mapOf(it to baseLevel) } ?: emptyMap(),
+                partyMemberXp = playerId?.let { mapOf(it to baseXp) } ?: emptyMap()
+            )
+            sessionStore.restore(seedState)
+            sessionStore.resetTutorialProgress()
+            sessionStore.resetQuestProgress()
+            inventoryService.restore(emptyMap())
+            questRuntimeManager.resetAll()
+            resetAutosaveThrottle()
 
-        val introSceneId = when {
-            cinematicService.scene("intro_prologue") != null -> "intro_prologue"
-            cinematicService.scene("new_game_intro") != null -> "new_game_intro"
-            else -> null
+            val introSceneId = when {
+                cinematicService.scene("intro_prologue") != null -> "intro_prologue"
+                cinematicService.scene("new_game_intro") != null -> "new_game_intro"
+                else -> null
+            }
+            introSceneId?.let { bootstrapCinematics.add(it) }
+            bootstrapPlayerActions.add("new_game_spawn_player_and_fade")
+            true
+        }.getOrElse { err ->
+            Log.e("AppServices", "Failed to start new game", err)
+            false
         }
-        introSceneId?.let { bootstrapCinematics.add(it) }
-        bootstrapPlayerActions.add("new_game_spawn_player_and_fade")
     }
 
     fun drainPendingCinematics(): List<String> =

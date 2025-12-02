@@ -1,273 +1,273 @@
 [
-  {
-    "id": "dlg_bran_intro",
-    "speaker": "Innkeeper Bran",
-    "text": "Beds are clean, tea is questionable. You staying?",
-    "next": "dlg_bran_intro_2"
-  },
-  {
-    "id": "dlg_bran_intro_2",
-    "speaker": "Player",
-    "text": "Just passing through.",
-    "next": "dlg_bran_intro_3"
-  },
-  {
-    "id": "dlg_bran_intro_3",
-    "speaker": "Innkeeper Bran",
-    "text": "Then pass through warm. Wind bites at night."
-  },
-  {
-    "id": "dlg_iva_intro",
-    "speaker": "Caretaker Iva",
-    "text": "Mind the chalk lines—they’re a fierce tournament.",
-    "next": "dlg_iva_intro_2"
-  },
-  {
-    "id": "dlg_iva_intro_2",
-    "speaker": "Player",
-    "text": "What’s the prize?",
-    "next": "dlg_iva_intro_3"
-  },
-  {
-    "id": "dlg_iva_intro_3",
-    "speaker": "Caretaker Iva",
-    "text": "Bragging. Best currency in the yard."
-  },
-  {
-    "id": "dlg_juno_intro",
-    "speaker": "Juno",
-    "text": "Courier on a deadline—talk fast or walk with me.",
-    "next": "dlg_juno_intro_2"
-  },
-  {
-    "id": "dlg_juno_intro_2",
-    "speaker": "Player",
-    "text": "Any news?",
-    "next": "dlg_juno_intro_3"
-  },
-  {
-    "id": "dlg_juno_intro_3",
-    "speaker": "Juno",
-    "text": "Packages go missing near the docks. Someone’s skimming. Keep your eyes open."
-  },
-  {
-    "id": "dlg_leto_intro",
-    "speaker": "Sergeant Leto",
-    "text": "Papers, please. Ha—kidding. We’re short on papers today.",
-    "next": "dlg_leto_intro_2"
-  },
-  {
-    "id": "dlg_leto_intro_2",
-    "speaker": "Player",
-    "text": "Anything we should avoid?",
-    "next": "dlg_leto_intro_3"
-  },
-  {
-    "id": "dlg_leto_intro_3",
-    "speaker": "Sergeant Leto",
-    "text": "Back alley after midnight. Unless you like buying trouble twice."
-  },
-  {
-    "id": "dlg_pasha_intro",
-    "speaker": "Pasha",
-    "text": "Step right up—today's lots are honest and only mildly cursed!",
-    "next": "dlg_pasha_intro_2"
-  },
-  {
-    "id": "dlg_pasha_intro_2",
-    "speaker": "Player",
-    "text": "We're just looking.",
-    "next": "dlg_pasha_intro_3"
-  },
-  {
-    "id": "dlg_pasha_intro_3",
-    "speaker": "Pasha",
-    "text": "Looking is free. Advice, too: bids rise when the drones clock off—late evenings are fierce."
-  },
-  {
-    "id": "dlg_rana_intro",
-    "speaker": "Rana",
-    "text": "Watch your step. Half these pallets wobble worse than a drunk loader.",
-    "next": "dlg_rana_intro_2"
-  },
-  {
-    "id": "dlg_rana_intro_2",
-    "speaker": "Player",
-    "text": "Busy day?",
-    "next": "dlg_rana_intro_3"
-  },
-  {
-    "id": "dlg_rana_intro_3",
-    "speaker": "Rana",
-    "text": "Always. If a crate's tagged in blue, it’s bound for the mine. Don’t touch blue."
-  },
-  {
-    "id": "dlg_sedge_intro",
-    "speaker": "Sedge",
-    "text": "You look like someone who can mind a secret.",
-    "next": "dlg_sedge_intro_2"
-  },
-  {
-    "id": "dlg_sedge_intro_2",
-    "speaker": "Player",
-    "text": "Depends on the secret.",
-    "next": "dlg_sedge_intro_3"
-  },
-  {
-    "id": "dlg_sedge_intro_3",
-    "speaker": "Sedge",
-    "text": "Then it depends on the price. Come back when you’ve got something to trade."
-  },
-  {
-    "id": "dlg_sera_intro",
-    "speaker": "Doctor Sera",
-    "text": "If you’re bleeding, sit. If you’re not, don’t start.",
-    "next": "dlg_sera_intro_2"
-  },
-  {
-    "id": "dlg_sera_intro_2",
-    "speaker": "Player",
-    "text": "We’re fine.",
-    "next": "dlg_sera_intro_3"
-  },
-  {
-    "id": "dlg_sera_intro_3",
-    "speaker": "Doctor Sera",
-    "text": "Good. I’m running low on synth-gel and patience in equal measure."
-  },
-  {
-    "id": "dlg_sima_intro",
-    "speaker": "Sima",
-    "text": "Noodles hot, pepper hotter. Want steam or fire?",
-    "next": "dlg_sima_intro_2"
-  },
-  {
-    "id": "dlg_sima_intro_2",
-    "speaker": "Player",
-    "text": "Surprise me.",
-    "next": "dlg_sima_intro_3"
-  },
-  {
-    "id": "dlg_sima_intro_3",
-    "speaker": "Sima",
-    "text": "Bold. I like bold. Here—don’t breathe in too deep."
-  },
-  {
-    "id": "dlg_tallo_intro",
-    "speaker": "Tallo",
-    "text": "New faces? Welcome. Roof leaks, hearts don’t.",
-    "next": "dlg_tallo_intro_2"
-  },
-  {
-    "id": "dlg_tallo_intro_2",
-    "speaker": "Player",
-    "text": "Nice place.",
-    "next": "dlg_tallo_intro_3"
-  },
-  {
-    "id": "dlg_tallo_intro_3",
-    "speaker": "Tallo",
-    "text": "It’s home. The trick is to keep it ours."
-  },
-  {
-    "id": "ellie_default_talk",
-    "speaker": "Ellie",
-    "text": "(Placeholder) Ellie's dialogue here."
-  },
-  {
-    "id": "jed_default_talk",
-    "speaker": "Jed",
-    "text": "(Placeholder) Jed's dialogue here."
-  },
-  {
-    "id": "jed_tinkering_complete",
-    "speaker": "Jed",
-    "text": "Nice work. That's all of 'em. Now, get this gear back to their owners. They've been pestering me for days."
-  },
-  {
-    "id": "jed_signal_instructions",
-    "speaker": "Jed",
-    "text": "Track that pulse to its source. If the mine lit up, something down there is chewing through power.",
-    "condition": "quest:stellarium_mine_investigation,milestone_not_set:ms_energy_core_claimed"
-  },
-  {
-    "id": "jed_signal_core_ready",
-    "speaker": "Jed",
-    "text": "Smell that ozone? That's the core spool. Hand it over before it cooks through your belt.",
-    "condition": "milestone:ms_energy_core_claimed,milestone_not_set:ms_energy_core_returned"
-  },
-  {
-    "id": "jed_signal_complete",
-    "speaker": "Jed",
-    "text": "Stellarium core is cooling on my workbench thanks to you. We'll make good use of it.",
-    "condition": "milestone:ms_energy_core_returned"
-  },
-  {
-    "id": "jed_energy_core_turnin_1",
-    "speaker": "Jed",
-    "text": "You made it back in one piece. That surge settle down once you pulled the core?"
-  },
-  {
-    "id": "nova_energy_core_turnin_1",
-    "speaker": "Nova",
-    "text": "Burrower was feeding on it. Nest is quiet now, but whoever rigged the chamber knew what they were doing."
-  },
-  {
-    "id": "jed_energy_core_turnin_2",
-    "speaker": "Jed",
-    "text": "Then we learn what they wanted. I'll crack the housing and see how far the resonance goes. Nice work bringing it home."
-  },
-  {
-    "id": "maddie_return_grinder",
-    "speaker": "Maddie",
-    "text": "You fixed it! Oh, thank you! Take these credits - may your next cup be on me."
-  },
-  {
-    "id": "ellie_return_display",
-    "speaker": "Ellie",
-    "text": "The arcade's alive again! Here, a little something for keeping the lights bright."
-  },
-  {
-    "id": "kasey_return_projector",
-    "speaker": "Schoolteacher Kasey",
-    "text": "Wonderful! The kids will be back under the stars tonight. Please, take this for your trouble."
-  },
-  {
-    "id": "jed_return_wrapup",
-    "speaker": "Jed",
-    "text": "Town runs smoother thanks to you. Keep pace like that and we'll stay ahead of the scrappers."
-  },
-  {
-    "id": "kasey_default_talk",
-    "speaker": "Schoolteacher Kasey",
-    "text": "(Placeholder) Kasey's dialogue here."
-  },
-  {
-    "id": "maddie_default_talk",
-    "speaker": "Maddie",
-    "text": "(Placeholder) Maddie's dialogue here."
-  },
-  {
-    "id": "ollie_intro_1",
-    "speaker": "Ollie",
-    "text": "Nova! There you are! C'mon, we're going to be late meeting Jed.",
-    "trigger": "start_quest:talk_to_jed,set_milestone:ms_talk_to_jed_quest_started",
-    "next": "ollie_join_party"
-  },
-  {
-    "id": "ollie_join_party",
-    "speaker": "Ollie",
-    "text": "Actually, I should probably come with you. Jed can be... a lot to handle.",
-    "trigger": "recruit:ollie"
-  },
-  {
-    "id": "ollie_intro_tutorial",
-    "speaker": "Ollie",
-    "text": "Quick, just tap my name on your HUD to bring up your options and talk to me."
-  },
-  {
-    "id": "ollie_quest_prompt",
-    "speaker": "Ollie",
-    "text": "See? Easy. Jed's waiting for us at the town square. You should go talk to him, I'll catch up!"
-  }
+    {
+        "id": "dlg_bran_intro",
+        "speaker": "Innkeeper Bran",
+        "text": "Beds are clean, tea is questionable. You staying?",
+        "next": "dlg_bran_intro_2"
+    },
+    {
+        "id": "dlg_bran_intro_2",
+        "speaker": "Player",
+        "text": "Just passing through.",
+        "next": "dlg_bran_intro_3"
+    },
+    {
+        "id": "dlg_bran_intro_3",
+        "speaker": "Innkeeper Bran",
+        "text": "Then pass through warm. Wind bites at night."
+    },
+    {
+        "id": "dlg_iva_intro",
+        "speaker": "Caretaker Iva",
+        "text": "Mind the chalk lines—they’re a fierce tournament.",
+        "next": "dlg_iva_intro_2"
+    },
+    {
+        "id": "dlg_iva_intro_2",
+        "speaker": "Player",
+        "text": "What’s the prize?",
+        "next": "dlg_iva_intro_3"
+    },
+    {
+        "id": "dlg_iva_intro_3",
+        "speaker": "Caretaker Iva",
+        "text": "Bragging. Best currency in the yard."
+    },
+    {
+        "id": "dlg_juno_intro",
+        "speaker": "Juno",
+        "text": "Courier on a deadline—talk fast or walk with me.",
+        "next": "dlg_juno_intro_2"
+    },
+    {
+        "id": "dlg_juno_intro_2",
+        "speaker": "Player",
+        "text": "Any news?",
+        "next": "dlg_juno_intro_3"
+    },
+    {
+        "id": "dlg_juno_intro_3",
+        "speaker": "Juno",
+        "text": "Packages go missing near the docks. Someone’s skimming. Keep your eyes open."
+    },
+    {
+        "id": "dlg_leto_intro",
+        "speaker": "Sergeant Leto",
+        "text": "Papers, please. Ha—kidding. We’re short on papers today.",
+        "next": "dlg_leto_intro_2"
+    },
+    {
+        "id": "dlg_leto_intro_2",
+        "speaker": "Player",
+        "text": "Anything we should avoid?",
+        "next": "dlg_leto_intro_3"
+    },
+    {
+        "id": "dlg_leto_intro_3",
+        "speaker": "Sergeant Leto",
+        "text": "Back alley after midnight. Unless you like buying trouble twice."
+    },
+    {
+        "id": "dlg_pasha_intro",
+        "speaker": "Pasha",
+        "text": "Step right up—today's lots are honest and only mildly cursed!",
+        "next": "dlg_pasha_intro_2"
+    },
+    {
+        "id": "dlg_pasha_intro_2",
+        "speaker": "Player",
+        "text": "We're just looking.",
+        "next": "dlg_pasha_intro_3"
+    },
+    {
+        "id": "dlg_pasha_intro_3",
+        "speaker": "Pasha",
+        "text": "Looking is free. Advice, too: bids rise when the drones clock off—late evenings are fierce."
+    },
+    {
+        "id": "dlg_rana_intro",
+        "speaker": "Rana",
+        "text": "Watch your step. Half these pallets wobble worse than a drunk loader.",
+        "next": "dlg_rana_intro_2"
+    },
+    {
+        "id": "dlg_rana_intro_2",
+        "speaker": "Player",
+        "text": "Busy day?",
+        "next": "dlg_rana_intro_3"
+    },
+    {
+        "id": "dlg_rana_intro_3",
+        "speaker": "Rana",
+        "text": "Always. If a crate's tagged in blue, it’s bound for the mine. Don’t touch blue."
+    },
+    {
+        "id": "dlg_sedge_intro",
+        "speaker": "Sedge",
+        "text": "You look like someone who can mind a secret.",
+        "next": "dlg_sedge_intro_2"
+    },
+    {
+        "id": "dlg_sedge_intro_2",
+        "speaker": "Player",
+        "text": "Depends on the secret.",
+        "next": "dlg_sedge_intro_3"
+    },
+    {
+        "id": "dlg_sedge_intro_3",
+        "speaker": "Sedge",
+        "text": "Then it depends on the price. Come back when you’ve got something to trade."
+    },
+    {
+        "id": "dlg_sera_intro",
+        "speaker": "Doctor Sera",
+        "text": "If you’re bleeding, sit. If you’re not, don’t start.",
+        "next": "dlg_sera_intro_2"
+    },
+    {
+        "id": "dlg_sera_intro_2",
+        "speaker": "Player",
+        "text": "We’re fine.",
+        "next": "dlg_sera_intro_3"
+    },
+    {
+        "id": "dlg_sera_intro_3",
+        "speaker": "Doctor Sera",
+        "text": "Good. I’m running low on synth-gel and patience in equal measure."
+    },
+    {
+        "id": "dlg_sima_intro",
+        "speaker": "Sima",
+        "text": "Noodles hot, pepper hotter. Want steam or fire?",
+        "next": "dlg_sima_intro_2"
+    },
+    {
+        "id": "dlg_sima_intro_2",
+        "speaker": "Player",
+        "text": "Surprise me.",
+        "next": "dlg_sima_intro_3"
+    },
+    {
+        "id": "dlg_sima_intro_3",
+        "speaker": "Sima",
+        "text": "Bold. I like bold. Here—don’t breathe in too deep."
+    },
+    {
+        "id": "dlg_tallo_intro",
+        "speaker": "Tallo",
+        "text": "New faces? Welcome. Roof leaks, hearts don’t.",
+        "next": "dlg_tallo_intro_2"
+    },
+    {
+        "id": "dlg_tallo_intro_2",
+        "speaker": "Player",
+        "text": "Nice place.",
+        "next": "dlg_tallo_intro_3"
+    },
+    {
+        "id": "dlg_tallo_intro_3",
+        "speaker": "Tallo",
+        "text": "It’s home. The trick is to keep it ours."
+    },
+    {
+        "id": "ellie_default_talk",
+        "speaker": "Ellie",
+        "text": "(Placeholder) Ellie's dialogue here."
+    },
+    {
+        "id": "ellie_return_display",
+        "speaker": "Ellie",
+        "text": "The arcade's alive again! Here, a little something for keeping the lights bright."
+    },
+    {
+        "id": "jed_default_talk",
+        "speaker": "Jed",
+        "text": "(Placeholder) Jed's dialogue here."
+    },
+    {
+        "id": "jed_energy_core_turnin_1",
+        "speaker": "Jed",
+        "text": "You made it back in one piece. That surge settle down once you pulled the core?"
+    },
+    {
+        "id": "jed_energy_core_turnin_2",
+        "speaker": "Jed",
+        "text": "Then we learn what they wanted. I'll crack the housing and see how far the resonance goes. Nice work bringing it home."
+    },
+    {
+        "id": "jed_return_wrapup",
+        "speaker": "Jed",
+        "text": "Town runs smoother thanks to you. Keep pace like that and we'll stay ahead of the scrappers."
+    },
+    {
+        "id": "jed_signal_complete",
+        "speaker": "Jed",
+        "text": "Stellarium core is cooling on my workbench thanks to you. We'll make good use of it.",
+        "condition": "milestone:ms_energy_core_returned"
+    },
+    {
+        "id": "jed_signal_core_ready",
+        "speaker": "Jed",
+        "text": "Smell that ozone? That's the core spool. Hand it over before it cooks through your belt.",
+        "condition": "milestone:ms_energy_core_claimed,milestone_not_set:ms_energy_core_returned"
+    },
+    {
+        "id": "jed_signal_instructions",
+        "speaker": "Jed",
+        "text": "Track that pulse to its source. If the mine lit up, something down there is chewing through power.",
+        "condition": "quest:stellarium_mine_investigation,milestone_not_set:ms_energy_core_claimed"
+    },
+    {
+        "id": "jed_tinkering_complete",
+        "speaker": "Jed",
+        "text": "Nice work. That's all of 'em. Now, get this gear back to their owners. They've been pestering me for days."
+    },
+    {
+        "id": "kasey_default_talk",
+        "speaker": "Schoolteacher Kasey",
+        "text": "(Placeholder) Kasey's dialogue here."
+    },
+    {
+        "id": "kasey_return_projector",
+        "speaker": "Schoolteacher Kasey",
+        "text": "Wonderful! The kids will be back under the stars tonight. Please, take this for your trouble."
+    },
+    {
+        "id": "maddie_default_talk",
+        "speaker": "Maddie",
+        "text": "(Placeholder) Maddie's dialogue here."
+    },
+    {
+        "id": "maddie_return_grinder",
+        "speaker": "Maddie",
+        "text": "You fixed it! Oh, thank you! Take these credits - may your next cup be on me."
+    },
+    {
+        "id": "nova_energy_core_turnin_1",
+        "speaker": "Nova",
+        "text": "Burrower was feeding on it. Nest is quiet now, but whoever rigged the chamber knew what they were doing."
+    },
+    {
+        "id": "ollie_intro_1",
+        "speaker": "Ollie",
+        "text": "Nova! There you are! C'mon, we're going to be late meeting Jed.",
+        "trigger": "start_quest:talk_to_jed,set_milestone:ms_talk_to_jed_quest_started",
+        "next": "ollie_join_party"
+    },
+    {
+        "id": "ollie_intro_tutorial",
+        "speaker": "Ollie",
+        "text": "Quick, just tap my name on your HUD to bring up your options and talk to me."
+    },
+    {
+        "id": "ollie_join_party",
+        "speaker": "Ollie",
+        "text": "Actually, I should probably come with you. Jed can be... a lot to handle.",
+        "trigger": "recruit:ollie"
+    },
+    {
+        "id": "ollie_quest_prompt",
+        "speaker": "Ollie",
+        "text": "See? Easy. Jed's waiting for us at the town square. You should go talk to him, I'll catch up!"
+    }
 ]

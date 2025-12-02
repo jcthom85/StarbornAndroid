@@ -19,6 +19,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -59,6 +62,7 @@ import com.example.starborn.R
 import com.example.starborn.data.local.Theme
 import com.example.starborn.domain.inventory.InventoryEntry
 import com.example.starborn.domain.model.Item
+import com.example.starborn.domain.model.Equipment
 import com.example.starborn.domain.model.ItemEffect
 import com.example.starborn.feature.inventory.InventoryViewModel
 import com.example.starborn.feature.inventory.PartyMemberStatus
@@ -70,6 +74,7 @@ import kotlinx.coroutines.flow.collectLatest
 import java.text.NumberFormat
 import java.util.Locale
 import androidx.compose.material3.ExperimentalMaterial3Api
+import kotlin.math.roundToInt
 
 private const val CATEGORY_ALL = "all"
 private const val CATEGORY_CONSUMABLES = "consumables"
@@ -126,6 +131,10 @@ fun InventoryRoute(
     val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
+        viewModel.syncFromSession()
+    }
+
+    LaunchedEffect(Unit) {
         viewModel.messages.collectLatest { message ->
             snackbarHostState.showSnackbar(message)
         }
@@ -138,6 +147,7 @@ fun InventoryRoute(
         snackbarHostState = snackbarHostState,
         onUseItem = viewModel::useItem,
         onEquipItem = viewModel::equipItem,
+        onRefreshInventory = viewModel::syncFromSession,
         onBack = onBack,
         highContrastMode = highContrastMode,
         largeTouchTargets = largeTouchTargets,
@@ -156,7 +166,8 @@ private fun InventoryScreen(
     partyMembers: List<PartyMemberStatus>,
     snackbarHostState: SnackbarHostState,
     onUseItem: (String, String?) -> Unit,
-    onEquipItem: (String, String?) -> Unit,
+    onEquipItem: (String, String?, String) -> Unit,
+    onRefreshInventory: () -> Unit,
     onBack: () -> Unit,
     highContrastMode: Boolean,
     largeTouchTargets: Boolean,
@@ -182,6 +193,13 @@ private fun InventoryScreen(
         entries.filter { it.item.categoryKey() == CATEGORY_KEY_ITEMS }
     }
     var selectedCategory by remember(suppliesEntries) { mutableStateOf(CATEGORY_ALL) }
+    var selectedCharacterId by remember(partyMembers) { mutableStateOf(partyMembers.firstOrNull()?.id) }
+    LaunchedEffect(partyMembers) {
+        val ids = partyMembers.map { it.id }
+        if (selectedCharacterId !in ids) {
+            selectedCharacterId = ids.firstOrNull()
+        }
+    }
     val categories = remember(suppliesEntries) {
         val keys = suppliesEntries.map { it.item.categoryKey() }.toSet()
         buildList {
@@ -229,13 +247,16 @@ private fun InventoryScreen(
 
     val entryById = remember(entries) { entries.associateBy { it.item.id } }
     val equippableEntries = remember(entries) { entries.filter { it.item.equipment != null } }
+    val characterEquippedItems = remember(equippedItems, selectedCharacterId) {
+        equippedForCharacter(equippedItems, selectedCharacterId)
+    }
     val baseSlots = remember(equippableEntries) {
         equippableEntries
             .mapNotNull { it.item.equipment?.slot?.lowercase(Locale.getDefault()) }
             .distinct()
     }
-    val slotOptions = remember(baseSlots, equippedItems, normalizedFocusSlot) {
-        (baseSlots + equippedItems.keys.map { it.lowercase(Locale.getDefault()) } + listOfNotNull(normalizedFocusSlot))
+    val slotOptions = remember(baseSlots, characterEquippedItems, normalizedFocusSlot) {
+        (baseSlots + characterEquippedItems.keys.map { it.lowercase(Locale.getDefault()) } + listOfNotNull(normalizedFocusSlot))
             .distinct()
             .ifEmpty { listOf("weapon", "armor", "accessory", "snack") }
     }
@@ -246,8 +267,13 @@ private fun InventoryScreen(
                 ?: "weapon"
         )
     }
-    val equippedItemNames = remember(equippedItems, entryById) {
-        equippedItems.mapValues { (_, itemId) ->
+    LaunchedEffect(selectedCharacterId, slotOptions) {
+        if (selectedSlot !in slotOptions && slotOptions.isNotEmpty()) {
+            selectedSlot = slotOptions.first()
+        }
+    }
+    val equippedItemNames = remember(characterEquippedItems, entryById) {
+        characterEquippedItems.mapValues { (_, itemId) ->
             entryById[itemId]?.item?.name ?: itemId
                 .takeIf { it.isNotBlank() }
                 ?.split('_', ' ')
@@ -264,10 +290,10 @@ private fun InventoryScreen(
             equippableEntries.firstOrNull { it.item.equipment?.slot.equals(selectedSlot, ignoreCase = true) }
         )
     }
-    LaunchedEffect(selectedSlot, equippableEntries, activeTab, equippedItems) {
+    LaunchedEffect(selectedSlot, equippableEntries, activeTab, characterEquippedItems) {
         if (activeTab == InventoryTab.GEAR) {
             val normalizedSlot = selectedSlot.lowercase(Locale.getDefault())
-            val equippedId = equippedItems[normalizedSlot]
+            val equippedId = characterEquippedItems[normalizedSlot]
             selectedEquipEntry = equippableEntries.firstOrNull { it.item.id == equippedId }
                 ?: equippableEntries.firstOrNull {
                     it.item.equipment?.slot.equals(selectedSlot, ignoreCase = true)
@@ -340,68 +366,85 @@ private fun InventoryScreen(
                         largeTouchTargets = largeTouchTargets
                     )
 
-                    val promptUse: (InventoryEntry) -> Unit = inner@{ entry ->
-                        val effect = entry.item.effect ?: return@inner
-                        val targetMode = effect.target?.lowercase(Locale.getDefault()) ?: "any"
-                        when {
-                            targetMode == "party" -> onUseItem(entry.item.id, null)
-                            partyMembers.isEmpty() -> onUseItem(entry.item.id, null)
-                            else -> {
-                                pendingTargetItem = entry
-                                showTargetDialog = true
-                            }
-                        }
-                    }
-
-                    when (activeTab) {
-                        InventoryTab.SUPPLIES -> SuppliesTabContent(
-                            categories = categories,
-                            selectedCategory = selectedCategory,
-                            onSelectCategory = { selectedCategory = it },
-                            items = filteredSupplies,
-                            selectedItem = selectedSupplyEntry,
-                            onSelectItem = { entry ->
-                                selectedSupplyEntry = entry
-                                if (entry.item.effect != null) {
-                                    promptUse(entry)
-                                }
-                            },
-                            onUseItem = { entry ->
-                                promptUse(entry)
-                            },
-                            credits = credits,
+                    if (entries.isEmpty()) {
+                        InventoryEmptyState(
                             accentColor = accentColor,
                             borderColor = borderColor,
                             foregroundColor = foregroundColor,
-                            highContrastMode = highContrastMode,
+                            onRefreshInventory = onRefreshInventory,
                             largeTouchTargets = largeTouchTargets
                         )
+                    } else {
+                        val promptUse: (InventoryEntry) -> Unit = inner@{ entry ->
+                            val effect = entry.item.effect ?: return@inner
+                            val targetMode = effect.target?.lowercase(Locale.getDefault()) ?: "any"
+                            when {
+                                targetMode == "party" -> onUseItem(entry.item.id, null)
+                                partyMembers.isEmpty() -> onUseItem(entry.item.id, null)
+                                else -> {
+                                    pendingTargetItem = entry
+                                    showTargetDialog = true
+                                }
+                            }
+                        }
+
+                        when (activeTab) {
+                            InventoryTab.SUPPLIES -> SuppliesTabContent(
+                                categories = categories,
+                                selectedCategory = selectedCategory,
+                                onSelectCategory = { selectedCategory = it },
+                                items = filteredSupplies,
+                                selectedItem = selectedSupplyEntry,
+                                onSelectItem = { entry ->
+                                    selectedSupplyEntry = entry
+                                    if (entry.item.effect != null) {
+                                        promptUse(entry)
+                                    }
+                                },
+                                onUseItem = { entry ->
+                                    promptUse(entry)
+                                },
+                                credits = credits,
+                                accentColor = accentColor,
+                                borderColor = borderColor,
+                                foregroundColor = foregroundColor,
+                                highContrastMode = highContrastMode,
+                                largeTouchTargets = largeTouchTargets
+                        )
                         InventoryTab.GEAR -> EquipmentTabContent(
+                            partyMembers = partyMembers,
+                            selectedCharacterId = selectedCharacterId,
+                            onSelectCharacter = { selectedCharacterId = it },
                             slots = slotOptions,
                             selectedSlot = selectedSlot,
                             onSelectSlot = { selectedSlot = it },
                             equippableEntries = equippableEntries,
                             selectedEntry = selectedEquipEntry,
                             onSelectEntry = { selectedEquipEntry = it },
-                            equippedItems = equippedItems,
+                            equippedItems = characterEquippedItems,
                             equippedItemNames = equippedItemNames,
-                            onEquipItem = onEquipItem,
+                            onEquipItem = { slot, itemId ->
+                                selectedCharacterId?.let { charId ->
+                                    onEquipItem(slot, itemId, charId)
+                                }
+                            },
                             accentColor = accentColor,
                             borderColor = borderColor,
                             foregroundColor = foregroundColor,
                             highContrastMode = highContrastMode,
                             largeTouchTargets = largeTouchTargets
-                        )
-                        InventoryTab.KEY_ITEMS -> KeyItemsTabContent(
-                            items = keyItemEntries,
-                            selectedItem = selectedKeyEntry,
-                            onSelectItem = { selectedKeyEntry = it },
-                            accentColor = accentColor,
-                            borderColor = borderColor,
-                            foregroundColor = foregroundColor,
-                            highContrastMode = highContrastMode,
-                            largeTouchTargets = largeTouchTargets
-                        )
+                            )
+                            InventoryTab.KEY_ITEMS -> KeyItemsTabContent(
+                                items = keyItemEntries,
+                                selectedItem = selectedKeyEntry,
+                                onSelectItem = { selectedKeyEntry = it },
+                                accentColor = accentColor,
+                                borderColor = borderColor,
+                                foregroundColor = foregroundColor,
+                                highContrastMode = highContrastMode,
+                                largeTouchTargets = largeTouchTargets
+                            )
+                        }
                     }
                 }
             }
@@ -634,6 +677,58 @@ private fun InventoryTabButton(
 }
 
 @Composable
+private fun InventoryEmptyState(
+    accentColor: Color,
+    borderColor: Color,
+    foregroundColor: Color,
+    onRefreshInventory: () -> Unit,
+    largeTouchTargets: Boolean
+) {
+    Surface(
+        modifier = Modifier
+            .fillMaxSize(),
+        color = Color.Black.copy(alpha = 0.35f),
+        border = BorderStroke(1.dp, borderColor.copy(alpha = 0.8f)),
+        shape = RoundedCornerShape(24.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(24.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "Inventory not loaded",
+                style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
+                color = foregroundColor
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "Sync from your save to see gear and supplies.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = foregroundColor.copy(alpha = 0.75f),
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(horizontal = 12.dp)
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+            val minHeight = if (largeTouchTargets) 56.dp else 48.dp
+            Button(
+                onClick = onRefreshInventory,
+                modifier = Modifier
+                    .heightIn(min = minHeight),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = accentColor,
+                    contentColor = Color(0xFF010308)
+                )
+            ) {
+                Text("Reload Inventory")
+            }
+        }
+    }
+}
+
+@Composable
 private fun SuppliesTabContent(
     categories: List<String>,
     selectedCategory: String,
@@ -738,6 +833,9 @@ private fun KeyItemsTabContent(
 
 @Composable
 private fun EquipmentTabContent(
+    partyMembers: List<PartyMemberStatus>,
+    selectedCharacterId: String?,
+    onSelectCharacter: (String) -> Unit,
     slots: List<String>,
     selectedSlot: String,
     onSelectSlot: (String) -> Unit,
@@ -753,58 +851,116 @@ private fun EquipmentTabContent(
     highContrastMode: Boolean,
     largeTouchTargets: Boolean
 ) {
-    Row(
+    val normalizedSlot = selectedSlot.lowercase(Locale.getDefault())
+    val equippedItemId = equippedItems[normalizedSlot]
+    val equippedEntry = equippableEntries.firstOrNull { it.item.id == equippedItemId }
+    val slotEntries = equippableEntries.filter {
+        it.item.equipment?.slot.equals(selectedSlot, ignoreCase = true)
+    }
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(top = 4.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        SlotColumn(
-            slots = slots,
-            selectedSlot = selectedSlot,
-            onSelectSlot = onSelectSlot,
-            equippedItemNames = equippedItemNames,
-            accentColor = accentColor,
-            borderColor = borderColor,
-            largeTouchTargets = largeTouchTargets
-        )
-        val normalizedSlot = selectedSlot.lowercase(Locale.getDefault())
-        val equippedItemId = equippedItems[normalizedSlot]
-        val slotEntries = equippableEntries.filter {
-            it.item.equipment?.slot.equals(selectedSlot, ignoreCase = true)
+        if (partyMembers.isNotEmpty()) {
+            PartyPickerRow(
+                members = partyMembers,
+                selectedId = selectedCharacterId,
+                onSelect = onSelectCharacter,
+                accentColor = accentColor,
+                borderColor = borderColor,
+                largeTouchTargets = largeTouchTargets
+            )
         }
-        InventoryItemsColumn(
-            modifier = Modifier
-                .weight(0.5f)
-                .fillMaxHeight(),
-            items = slotEntries,
-            selectedItem = selectedEntry,
-            onSelectItem = onSelectEntry,
-            accentColor = accentColor,
-            borderColor = borderColor,
-            equippedItemId = equippedItemId,
-            highContrastMode = highContrastMode,
-            largeTouchTargets = largeTouchTargets
-        )
-        InventoryDetailPanel(
-            modifier = Modifier
-                .weight(0.4f)
-                .fillMaxHeight(),
-            entry = selectedEntry,
-            accentColor = accentColor,
-            borderColor = borderColor,
-            foregroundColor = foregroundColor,
-            largeTouchTargets = largeTouchTargets,
-            equippedItemName = equippedItemNames[normalizedSlot],
-            primaryActionLabel = selectedEntry?.let { "Equip to ${selectedSlot.uppercase(Locale.getDefault())}" },
-            primaryActionEnabled = selectedEntry != null && selectedEntry.item.id != equippedItemId,
-            onPrimaryAction = selectedEntry?.let { entry ->
-                { onEquipItem(normalizedSlot, entry.item.id) }
-            },
-            secondaryActionLabel = equippedItemId?.let { "Unequip" },
-            secondaryActionEnabled = equippedItemId != null,
-            onSecondaryAction = equippedItemId?.let { { onEquipItem(normalizedSlot, null) } }
-        )
+        Row(
+            modifier = Modifier.fillMaxSize(),
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            LoadoutColumn(
+                modifier = Modifier
+                    .weight(0.4f)
+                    .fillMaxHeight(),
+                slots = slots,
+                selectedSlot = selectedSlot,
+                onSelectSlot = onSelectSlot,
+                equippedItemNames = equippedItemNames,
+                accentColor = accentColor,
+                borderColor = borderColor,
+                largeTouchTargets = largeTouchTargets
+            )
+            Column(
+                modifier = Modifier
+                    .weight(0.6f)
+                    .fillMaxHeight(),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                InventoryItemsColumn(
+                    modifier = Modifier.weight(1f),
+                    items = slotEntries,
+                    selectedItem = selectedEntry,
+                    onSelectItem = onSelectEntry,
+                    accentColor = accentColor,
+                    borderColor = borderColor,
+                    equippedItemId = equippedItemId,
+                    highContrastMode = highContrastMode,
+                    largeTouchTargets = largeTouchTargets,
+                    statSummary = { entry -> primaryStatSummary(entry.item) }
+                )
+                ComparisonPanel(
+                    slotLabel = selectedSlot,
+                    selectedEntry = selectedEntry,
+                    equippedEntry = equippedEntry,
+                    equippedItemName = equippedItemNames[normalizedSlot],
+                    accentColor = accentColor,
+                    borderColor = borderColor,
+                    foregroundColor = foregroundColor,
+                    largeTouchTargets = largeTouchTargets,
+                    onEquip = selectedEntry?.let { entry ->
+                        if (entry.item.id != equippedItemId) {
+                            { onEquipItem(normalizedSlot, entry.item.id) }
+                        } else null
+                    },
+                    onUnequip = equippedItemId?.let { { onEquipItem(normalizedSlot, null) } }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun PartyPickerRow(
+    members: List<PartyMemberStatus>,
+    selectedId: String?,
+    onSelect: (String) -> Unit,
+    accentColor: Color,
+    borderColor: Color,
+    largeTouchTargets: Boolean
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .horizontalScroll(rememberScrollState()),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        members.forEach { member ->
+            val selected = member.id == selectedId
+            Surface(
+                onClick = { onSelect(member.id) },
+                shape = RoundedCornerShape(18.dp),
+                border = BorderStroke(1.dp, if (selected) accentColor else borderColor.copy(alpha = 0.6f)),
+                color = if (selected) accentColor.copy(alpha = 0.18f) else Color.Transparent,
+                modifier = Modifier
+                    .heightIn(min = if (largeTouchTargets) 44.dp else 36.dp)
+            ) {
+                Text(
+                    text = member.name,
+                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
+                    color = Color.White,
+                    style = MaterialTheme.typography.labelLarge
+                )
+            }
+        }
     }
 }
 
@@ -912,7 +1068,8 @@ private fun WalletSummaryCard(
 }
 
 @Composable
-private fun SlotColumn(
+private fun LoadoutColumn(
+    modifier: Modifier,
     slots: List<String>,
     selectedSlot: String,
     onSelectSlot: (String) -> Unit,
@@ -922,56 +1079,124 @@ private fun SlotColumn(
     largeTouchTargets: Boolean
 ) {
     Surface(
-        modifier = Modifier
-            .widthIn(min = 160.dp)
-            .fillMaxHeight(),
+        modifier = modifier,
         color = Color.Black.copy(alpha = 0.25f),
         border = BorderStroke(1.dp, borderColor.copy(alpha = 0.6f)),
         shape = RoundedCornerShape(28.dp)
     ) {
+        val scrollState = rememberScrollState()
         Column(
             modifier = Modifier
                 .fillMaxHeight()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+                .padding(16.dp)
         ) {
-            slots.forEach { slot ->
-                val selected = slot.equals(selectedSlot, ignoreCase = true)
-                val equippedLabel = equippedItemNames[slot.lowercase(Locale.getDefault())]
-                Surface(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .heightIn(min = if (largeTouchTargets) 52.dp else 44.dp)
-                        .clip(RoundedCornerShape(24.dp))
-                        .clickable { onSelectSlot(slot) },
-                    color = if (selected) accentColor.copy(alpha = 0.8f) else Color.Transparent,
-                    border = BorderStroke(
-                        1.dp,
-                        if (selected) accentColor else borderColor.copy(alpha = 0.6f)
+            SectionHeading(label = "Loadout Overview", accentColor = accentColor)
+            Text(
+                text = "Tap a slot to focus matching gear.",
+                style = MaterialTheme.typography.bodySmall,
+                color = Color.White.copy(alpha = 0.7f),
+                modifier = Modifier
+                    .padding(start = 4.dp, top = 2.dp, bottom = 8.dp)
+            )
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(scrollState),
+                verticalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                slots.forEach { slot ->
+                    val normalized = slot.lowercase(Locale.getDefault())
+                    val equippedLabel = equippedItemNames[normalized]
+                    LoadoutCard(
+                        slotName = slot,
+                        equippedItemName = equippedLabel,
+                        selected = slot.equals(selectedSlot, ignoreCase = true),
+                        accentColor = accentColor,
+                        borderColor = borderColor,
+                        onClick = { onSelectSlot(slot) },
+                        largeTouchTargets = largeTouchTargets
                     )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun LoadoutCard(
+    slotName: String,
+    equippedItemName: String?,
+    selected: Boolean,
+    accentColor: Color,
+    borderColor: Color,
+    onClick: () -> Unit,
+    largeTouchTargets: Boolean
+) {
+    val background = if (selected) accentColor.copy(alpha = 0.18f) else Color.Transparent
+    val border = if (selected) accentColor else borderColor.copy(alpha = 0.6f)
+    val slotLabel = slotName.uppercase(Locale.getDefault())
+    val equippedLabel = equippedItemName?.takeIf { it.isNotBlank() } ?: "Empty"
+    val equippedColor = if (equippedItemName.isNullOrBlank()) {
+        Color.White.copy(alpha = 0.5f)
+    } else {
+        Color.White
+    }
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(min = if (largeTouchTargets) 76.dp else 64.dp)
+            .clip(RoundedCornerShape(22.dp))
+            .clickable { onClick() },
+        color = background,
+        border = BorderStroke(width = if (selected) 1.5.dp else 1.dp, color = border)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 14.dp, vertical = 10.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Surface(
+                modifier = Modifier
+                    .widthIn(min = 46.dp)
+                    .heightIn(min = 46.dp),
+                color = accentColor.copy(alpha = 0.12f),
+                shape = RoundedCornerShape(14.dp)
+            ) {
+                Box(contentAlignment = Alignment.Center) {
+                    Text(
+                        text = slotLabel.take(3),
+                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                        color = accentColor
+                    )
+                }
+            }
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = slotLabel,
+                    style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.SemiBold),
+                    color = Color.White
+                )
+                Text(
+                    text = equippedLabel,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = equippedColor,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+            if (selected) {
+                Surface(
+                    color = accentColor.copy(alpha = 0.2f),
+                    shape = RoundedCornerShape(8.dp)
                 ) {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text(
-                                text = slot.uppercase(Locale.getDefault()),
-                                style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.SemiBold),
-                                color = if (selected) Color(0xFF020409) else Color.White.copy(alpha = 0.85f)
-                            )
-                            equippedLabel?.takeIf { it.isNotBlank() }?.let { label ->
-                                Spacer(modifier = Modifier.height(4.dp))
-                                Text(
-                                    text = label,
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = if (selected) Color(0xFF010308) else Color.White.copy(alpha = 0.65f),
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
-                                )
-                            }
-                        }
-                    }
+                    Text(
+                        text = "ACTIVE",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = accentColor,
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                    )
                 }
             }
         }
@@ -988,7 +1213,8 @@ private fun InventoryItemsColumn(
     borderColor: Color,
     equippedItemId: String?,
     highContrastMode: Boolean,
-    largeTouchTargets: Boolean
+    largeTouchTargets: Boolean,
+    statSummary: (InventoryEntry) -> String? = { null }
 ) {
     Surface(
         modifier = modifier,
@@ -1021,7 +1247,8 @@ private fun InventoryItemsColumn(
                         isEquipped = equippedItemId?.equals(entry.item.id, ignoreCase = true) == true,
                         accentColor = accentColor,
                         onClick = { onSelectItem(entry) },
-                        largeTouchTargets = largeTouchTargets
+                        largeTouchTargets = largeTouchTargets,
+                        statSummary = statSummary(entry)
                     )
                 }
             }
@@ -1036,7 +1263,8 @@ private fun InventoryItemRow(
     isEquipped: Boolean,
     accentColor: Color,
     onClick: () -> Unit,
-    largeTouchTargets: Boolean
+    largeTouchTargets: Boolean,
+    statSummary: String? = null
 ) {
     val background = if (selected) accentColor.copy(alpha = 0.18f) else Color.Transparent
     val borderColor = if (selected) accentColor else Color.White.copy(alpha = 0.25f)
@@ -1097,6 +1325,14 @@ private fun InventoryItemRow(
                 }
             }
             Column(horizontalAlignment = Alignment.End) {
+                statSummary?.let { summary ->
+                    Text(
+                        text = summary,
+                        style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
+                        color = accentColor
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                }
                 Text(
                     text = "x${entry.quantity}",
                     style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
@@ -1110,6 +1346,211 @@ private fun InventoryItemRow(
                     )
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun ComparisonPanel(
+    slotLabel: String,
+    selectedEntry: InventoryEntry?,
+    equippedEntry: InventoryEntry?,
+    equippedItemName: String?,
+    accentColor: Color,
+    borderColor: Color,
+    foregroundColor: Color,
+    largeTouchTargets: Boolean,
+    onEquip: (() -> Unit)?,
+    onUnequip: (() -> Unit)?
+) {
+    val equippedName = equippedEntry?.item?.name ?: equippedItemName
+    val selectedName = selectedEntry?.item?.name
+    val comparisonRows = remember(selectedEntry, equippedEntry) {
+        buildComparisonRows(equippedEntry?.item, selectedEntry?.item)
+    }
+    val buttonMinHeight = if (largeTouchTargets) 56.dp else 48.dp
+
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        color = Color.Black.copy(alpha = 0.35f),
+        border = BorderStroke(1.dp, borderColor.copy(alpha = 0.8f)),
+        shape = RoundedCornerShape(24.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            SectionHeading(label = "Item Picker & Comparison", accentColor = accentColor)
+            Text(
+                text = slotLabel.uppercase(Locale.getDefault()),
+                style = MaterialTheme.typography.labelMedium,
+                color = foregroundColor.copy(alpha = 0.85f)
+            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                ComparisonPill(
+                    title = "Equipped",
+                    value = equippedName ?: "Empty",
+                    borderColor = borderColor,
+                    accentColor = accentColor,
+                    highlight = false,
+                    valueColor = foregroundColor,
+                    modifier = Modifier.weight(1f)
+                )
+                ComparisonPill(
+                    title = "Selected",
+                    value = selectedName ?: "Choose an item",
+                    borderColor = borderColor,
+                    accentColor = accentColor,
+                    highlight = selectedEntry != null,
+                    valueColor = foregroundColor,
+                    modifier = Modifier.weight(1f)
+                )
+            }
+            selectedEntry?.item?.description?.takeIf { it.isNotBlank() }?.let { description ->
+                Text(
+                    text = description,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = foregroundColor.copy(alpha = 0.8f)
+                )
+            }
+            HorizontalDivider(color = borderColor.copy(alpha = 0.35f))
+            if (selectedEntry == null) {
+                Text(
+                    text = "Select an item on the right to compare with your current loadout.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = foregroundColor.copy(alpha = 0.75f)
+                )
+            } else if (comparisonRows.isEmpty()) {
+                Text(
+                    text = "No comparable stats for this item type.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = foregroundColor.copy(alpha = 0.75f)
+                )
+            } else {
+                comparisonRows.forEach { row ->
+                    ComparisonStatRow(row = row, accentColor = accentColor, textColor = foregroundColor)
+                }
+            }
+            HorizontalDivider(color = borderColor.copy(alpha = 0.35f))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                Button(
+                    onClick = { onEquip?.invoke() },
+                    enabled = onEquip != null,
+                    modifier = Modifier
+                        .weight(1f)
+                        .heightIn(min = buttonMinHeight),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = accentColor,
+                        contentColor = Color(0xFF010308),
+                        disabledContainerColor = Color.White.copy(alpha = 0.1f),
+                        disabledContentColor = Color.White.copy(alpha = 0.4f)
+                    )
+                ) {
+                    Text(text = "Equip to ${slotLabel.uppercase(Locale.getDefault())}")
+                }
+                if (onUnequip != null) {
+                    OutlinedButton(
+                        onClick = onUnequip,
+                        modifier = Modifier
+                            .weight(0.6f)
+                            .heightIn(min = buttonMinHeight)
+                    ) {
+                        Text("Unequip")
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ComparisonPill(
+    title: String,
+    value: String,
+    borderColor: Color,
+    accentColor: Color,
+    highlight: Boolean,
+    valueColor: Color,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        modifier = modifier,
+        color = if (highlight) accentColor.copy(alpha = 0.12f) else Color.Transparent,
+        border = BorderStroke(1.dp, if (highlight) accentColor else borderColor.copy(alpha = 0.7f)),
+        shape = RoundedCornerShape(14.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp),
+            verticalArrangement = Arrangement.spacedBy(2.dp)
+        ) {
+            Text(
+                text = title.uppercase(Locale.getDefault()),
+                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                color = accentColor
+            )
+            Text(
+                text = value,
+                style = MaterialTheme.typography.bodyMedium,
+                color = valueColor,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+    }
+}
+
+@Composable
+private fun ComparisonStatRow(
+    row: StatComparisonRow,
+    accentColor: Color,
+    textColor: Color
+) {
+    val deltaColor = when {
+        row.delta == null || row.delta == 0 -> textColor.copy(alpha = 0.7f)
+        row.delta > 0 -> accentColor
+        else -> Color(0xFFFF6B6B)
+    }
+    val deltaLabel = row.delta?.takeIf { it != 0 }?.let { formatSigned(it) } ?: "—"
+
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = row.label,
+            style = MaterialTheme.typography.bodyMedium,
+            color = textColor.copy(alpha = 0.85f),
+            modifier = Modifier.weight(1f)
+        )
+        Text(
+            text = row.equippedValue ?: "—",
+            style = MaterialTheme.typography.bodyMedium,
+            color = textColor.copy(alpha = 0.8f),
+            textAlign = TextAlign.End,
+            modifier = Modifier.weight(0.9f)
+        )
+        Column(
+            modifier = Modifier.weight(1f),
+            horizontalAlignment = Alignment.End
+        ) {
+            Text(
+                text = row.selectedValue ?: "—",
+                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
+                color = textColor
+            )
+            Text(
+                text = deltaLabel,
+                style = MaterialTheme.typography.labelSmall,
+                color = deltaColor
+            )
         }
     }
 }
@@ -1249,6 +1690,93 @@ private fun InventoryDetailPanel(
     }
 }
 
+private data class StatComparisonRow(
+    val label: String,
+    val equippedValue: String?,
+    val selectedValue: String?,
+    val delta: Int?
+)
+
+private data class StatValue(
+    val display: String,
+    val numeric: Int?
+)
+
+private fun buildComparisonRows(
+    equippedItem: Item?,
+    selectedItem: Item?
+): List<StatComparisonRow> {
+    val equippedStats = equipmentStats(equippedItem?.equipment)
+    val selectedStats = equipmentStats(selectedItem?.equipment)
+    if (equippedStats.isEmpty() && selectedStats.isEmpty()) return emptyList()
+
+    val labels = linkedSetOf<String>()
+    labels.addAll(listOf("Damage", "Defense", "HP Bonus", "Weapon Type"))
+    labels.addAll(selectedStats.keys)
+    labels.addAll(equippedStats.keys)
+
+    return labels.mapNotNull { label ->
+        val equipped = equippedStats[label]
+        val candidate = selectedStats[label]
+        if (equipped == null && candidate == null) return@mapNotNull null
+        val delta = when {
+            candidate?.numeric != null || equipped?.numeric != null ->
+                (candidate?.numeric ?: 0) - (equipped?.numeric ?: 0)
+            else -> null
+        }
+        StatComparisonRow(
+            label = label,
+            equippedValue = equipped?.display,
+            selectedValue = candidate?.display,
+            delta = delta
+        )
+    }
+}
+
+private fun equipmentStats(equipment: Equipment?): Map<String, StatValue> {
+    if (equipment == null) return emptyMap()
+    val stats = mutableListOf<Pair<String, StatValue>>()
+    formatDamageLabel(equipment)?.let { damage ->
+        stats += "Damage" to StatValue(damage, averageDamageValue(equipment))
+    }
+    equipment.defense?.let { stats += "Defense" to StatValue(it.toString(), it) }
+    equipment.hpBonus?.let { stats += "HP Bonus" to StatValue("+$it", it) }
+    equipment.weaponType?.let { stats += "Weapon Type" to StatValue(it, null) }
+    equipment.statMods?.forEach { (stat, value) ->
+        val label = stat.uppercase(Locale.getDefault())
+        stats += label to StatValue(formatSigned(value), value)
+    }
+    return stats.toMap()
+}
+
+private fun formatDamageLabel(equipment: Equipment): String? {
+    val damageMin = equipment.damageMin
+    val damageMax = equipment.damageMax
+    return when {
+        damageMin == null && damageMax == null -> null
+        damageMin != null && damageMax != null && damageMin != damageMax -> "${damageMin}–${damageMax}"
+        damageMin != null -> damageMin.toString()
+        else -> damageMax.toString()
+    }
+}
+
+private fun averageDamageValue(equipment: Equipment): Int? {
+    val values = listOfNotNull(equipment.damageMin, equipment.damageMax)
+    if (values.isEmpty()) return null
+    return values.average().roundToInt()
+}
+
+private fun primaryStatSummary(item: Item): String? {
+    val equipment = item.equipment ?: return null
+    formatDamageLabel(equipment)?.let { return "DMG $it" }
+    equipment.defense?.let { return "DEF ${it}" }
+    equipment.hpBonus?.let { return "HP ${formatSigned(it)}" }
+    equipment.statMods?.entries?.firstOrNull()?.let { (stat, value) ->
+        return "${stat.uppercase(Locale.getDefault())} ${formatSigned(value)}"
+    }
+    return null
+}
+
 @Composable
 private fun SectionHeading(
     label: String,
@@ -1337,3 +1865,19 @@ private fun itemIconRes(item: Item?): Int {
 
 private fun formatSigned(value: Int): String =
     if (value >= 0) "+$value" else value.toString()
+
+private fun equippedForCharacter(
+    equippedItems: Map<String, String>,
+    characterId: String?
+): Map<String, String> {
+    val normalizedId = characterId?.lowercase(Locale.getDefault())
+    val scoped = equippedItems.mapNotNull { (key, value) ->
+        val owner = key.substringBefore(':', missingDelimiterValue = "")
+        val slot = key.substringAfter(':', missingDelimiterValue = "")
+        if (owner.isNotBlank() && slot.isNotBlank() && normalizedId != null && owner.equals(normalizedId, ignoreCase = true)) {
+            slot to value
+        } else null
+    }.toMap()
+    if (scoped.isNotEmpty()) return scoped
+    return equippedItems.filterKeys { !it.contains(':') }
+}

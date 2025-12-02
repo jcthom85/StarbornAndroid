@@ -739,10 +739,7 @@ fun CombatScreen(
                             atbMeters = atbMeters,
                             lungeActorId = lungeActorId,
                             lungeToken = lungeToken,
-                            missLungeActorId = missLungeActorId,
-                            missLungeToken = missLungeToken,
-                            onLungeFinished = viewModel::onLungeFinished,
-                            onMissLungeFinished = viewModel::onMissLungeFinished
+                            onLungeFinished = viewModel::onLungeFinished
                         )
                     }
                     if (playerParty.isNotEmpty()) {
@@ -851,10 +848,7 @@ private fun PartyRoster(
     atbMeters: Map<String, Float> = emptyMap(),
     lungeActorId: String?,
     lungeToken: Long,
-    missLungeActorId: String?,
-    missLungeToken: Long,
-    onLungeFinished: (Long) -> Unit,
-    onMissLungeFinished: (Long) -> Unit
+    onLungeFinished: (Long) -> Unit
 ) {
     if (party.isEmpty()) return
     val rows = party.chunked(2)
@@ -897,7 +891,6 @@ private fun PartyRoster(
                         baseModifier
                     }
                     val damageShake = rememberDamageShake(member.id, combatState.log)
-                    val memberMissToken = if (member.id == missLungeActorId) missLungeToken else null
                     Box(
                         modifier = interactiveModifier
                             .graphicsLayer {
@@ -943,26 +936,17 @@ private fun PartyRoster(
                                     Lungeable(
                                         side = CombatSide.PLAYER,
                                         triggerToken = memberLungeToken,
-                                        axis = LungeAxis.Y,
-                                        directionSign = 1f,
+                                        axis = LungeAxis.X,
+                                        directionSign = -1f,
                                         modifier = Modifier.matchParentSize(),
                                         onFinished = { memberLungeToken?.let(onLungeFinished) }
                                     ) {
-                                        Lungeable(
-                                            side = CombatSide.PLAYER,
-                                            triggerToken = memberMissToken,
-                                            axis = LungeAxis.X,
-                                            directionSign = -1f,
+                                        Image(
+                                            painter = portraitPainter,
+                                            contentDescription = member.name,
                                             modifier = Modifier.matchParentSize(),
-                                            onFinished = { memberMissToken?.let(onMissLungeFinished) }
-                                        ) {
-                                            Image(
-                                                painter = portraitPainter,
-                                                contentDescription = member.name,
-                                                modifier = Modifier.matchParentSize(),
-                                                contentScale = ContentScale.Crop
-                                            )
-                                        }
+                                            contentScale = ContentScale.Crop
+                                        )
                                     }
                                 }
                             }

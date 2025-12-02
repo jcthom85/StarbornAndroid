@@ -102,17 +102,26 @@ class InventoryViewModel(
         }
     }
 
-    fun equipItem(slotId: String, itemId: String?) {
+    fun syncFromSession() {
+        val sessionInventory = sessionStore.state.value.inventory
+        if (sessionInventory.isNotEmpty()) {
+            inventoryService.restore(sessionInventory)
+        } else {
+            sessionStore.setInventory(inventoryService.snapshot())
+        }
+    }
+
+    fun equipItem(slotId: String, itemId: String?, characterId: String? = null) {
         val normalizedSlot = slotId.trim().lowercase(Locale.getDefault())
         if (normalizedSlot.isBlank()) return
         if (itemId.isNullOrBlank()) {
-            sessionStore.setEquippedItem(normalizedSlot, null)
+            sessionStore.setEquippedItem(normalizedSlot, null, characterId)
             return
         }
         val entry = entries.value.firstOrNull { it.item.id == itemId } ?: return
         val equipment = entry.item.equipment ?: return
         if (!equipment.slot.equals(normalizedSlot, ignoreCase = true)) return
-        sessionStore.setEquippedItem(normalizedSlot, entry.item.id)
+        sessionStore.setEquippedItem(normalizedSlot, entry.item.id, characterId)
     }
 }
 

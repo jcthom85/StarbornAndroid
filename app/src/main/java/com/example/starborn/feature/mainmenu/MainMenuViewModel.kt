@@ -79,8 +79,16 @@ class MainMenuViewModel(
         return success
     }
 
-    fun startNewGame() {
-        services.startNewGame()
+    fun startNewGame(onComplete: (() -> Unit)? = null) {
+        viewModelScope.launch {
+            val success = services.startNewGame()
+            if (success) {
+                services.syncInventoryFromSession()
+                onComplete?.invoke()
+            } else {
+                emitMessage("Failed to start new game. Check assets and logs.")
+            }
+        }
     }
 
     suspend fun saveSlot(slot: Int) {

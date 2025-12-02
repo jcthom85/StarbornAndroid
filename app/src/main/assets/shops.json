@@ -26,65 +26,65 @@
         }
       }
     },
-        "buys": {
-            "accept_types": [
-                "consumable",
-                "weapon",
-                "armor",
-                "accessory",
-                "ingredient",
-                "component"
-            ],
-            "blacklist": []
-        },
-        "dialogue": {
-            "preface": [
-                {
-                    "speaker": "Mechanic",
-                    "text": "Hey there, Nova! I've been polishing parts since dawn.",
-                    "voice": "shop_mechanic_greeting"
-                },
-                {
-                    "speaker": "Mechanic",
-                    "text": "If you're hunting for mod cores, grab them before the scouts do."
-                }
-            ],
-            "smalltalk": [
-                {
-                    "id": "shop_mechanic_stock",
-                    "label": "Ask what's new",
-                    "voice": "shop_mechanic_smalltalk",
-                    "response": [
-                        {
-                            "speaker": "Mechanic",
-                            "text": "Scavvers dragged in a crate of micro-cores\u2014perfect for overclocking your drone.",
-                            "voice": "shop_mechanic_smalltalk"
-                        },
-                        {
-                            "speaker": "Mechanic",
-                            "text": "I've stashed the best ones under the counter. Ask if you want the premium batch."
-                        }
-                    ]
-                },
-                {
-                    "id": "shop_mechanic_gossip",
-                    "label": "Trade rumors",
-                    "response": [
-                        {
-                            "speaker": "Mechanic",
-                            "text": "Word is the mine tunnel reopened. If you're heading there, reinforce your boots."
-                        },
-                        {
-                            "speaker": "Mechanic",
-                            "text": "Last crew brought back slagged plating\u2014whatever's down there hits hard."
-                        }
-                    ]
-                }
-            ],
-            "trade_label": "Browse the mods",
-            "leave_label": "Back to the hub"
-        }
+    "buys": {
+      "accept_types": [
+        "consumable",
+        "weapon",
+        "armor",
+        "accessory",
+        "ingredient",
+        "component"
+      ],
+      "blacklist": []
     },
+    "dialogue": {
+      "preface": [
+        {
+          "speaker": "Mechanic",
+          "text": "Hey there, Nova! I've been polishing parts since dawn.",
+          "voice": "shop_mechanic_greeting"
+        },
+        {
+          "speaker": "Mechanic",
+          "text": "If you're hunting for mod cores, grab them before the scouts do."
+        }
+      ],
+      "smalltalk": [
+        {
+          "id": "shop_mechanic_stock",
+          "label": "Ask what's new",
+          "voice": "shop_mechanic_smalltalk",
+          "response": [
+            {
+              "speaker": "Mechanic",
+              "text": "Scavvers dragged in a crate of micro-cores—perfect for overclocking your drone.",
+              "voice": "shop_mechanic_smalltalk"
+            },
+            {
+              "speaker": "Mechanic",
+              "text": "I've stashed the best ones under the counter. Ask if you want the premium batch."
+            }
+          ]
+        },
+        {
+          "id": "shop_mechanic_gossip",
+          "label": "Trade rumors",
+          "response": [
+            {
+              "speaker": "Mechanic",
+              "text": "Word is the mine tunnel reopened. If you're heading there, reinforce your boots."
+            },
+            {
+              "speaker": "Mechanic",
+              "text": "Last crew brought back slagged plating—whatever's down there hits hard."
+            }
+          ]
+        }
+      ],
+      "trade_label": "Browse the mods",
+      "leave_label": "Back to the hub"
+    }
+  },
   "weapon_shop": {
     "name": "Blades & Blasters",
     "portrait": "images/portraits/weaponsmith.png",
@@ -177,8 +177,6 @@
   "accessory_shop": {
     "name": "Trinkets & Tech",
     "portrait": "images/portraits/jeweler.png",
-    "greeting": "Jeweler: I've curated only the finest gizmos and charms. Care for a peek?",
-    "vo_cue": "shop_accessory_greeting",
     "pricing": {
       "sell_markup": 1.2,
       "buy_markdown": 0.35
@@ -231,49 +229,49 @@
       },
       "gates": {}
     },
-        "buys": {
-            "accept_types": [
-                "consumable",
-                "weapon",
-                "armor",
-                "accessory",
-                "ingredient",
-                "component"
-            ],
-            "blacklist": []
-        },
-        "dialogue": {
-            "preface": [
-                {
-                    "speaker": "Shopkeep",
-                    "text": "Supplies, snacks, emergency fixes\u2014if you need it, I stock it.",
-                    "voice": "shop_general_greeting"
-                }
-            ],
-            "smalltalk": [
-                {
-                    "id": "shop_general_weather",
-                    "label": "Ask about the weather",
-                    "response": [
-                        {
-                            "speaker": "Shopkeep",
-                            "text": "Fog rolled in from the marsh. Makes the signal lanterns look like ghosts."
-                        }
-                    ]
-                },
-                {
-                    "id": "shop_general_tip",
-                    "label": "Request a travel tip",
-                    "response": [
-                        {
-                            "speaker": "Shopkeep",
-                            "text": "If you see blue chalk on a doorframe, that's a scout mark\u2014follow it for safe rooms."
-                        }
-                    ]
-                }
-            ],
-            "trade_label": "Show me the goods",
-            "leave_label": "Maybe later"
+    "buys": {
+      "accept_types": [
+        "consumable",
+        "weapon",
+        "armor",
+        "accessory",
+        "ingredient",
+        "component"
+      ],
+      "blacklist": []
+    },
+    "dialogue": {
+      "preface": [
+        {
+          "speaker": "Shopkeep",
+          "text": "Supplies, snacks, emergency fixes—if you need it, I stock it.",
+          "voice": "shop_general_greeting"
         }
+      ],
+      "smalltalk": [
+        {
+          "id": "shop_general_weather",
+          "label": "Ask about the weather",
+          "response": [
+            {
+              "speaker": "Shopkeep",
+              "text": "Fog rolled in from the marsh. Makes the signal lanterns look like ghosts."
+            }
+          ]
+        },
+        {
+          "id": "shop_general_tip",
+          "label": "Request a travel tip",
+          "response": [
+            {
+              "speaker": "Shopkeep",
+              "text": "If you see blue chalk on a doorframe, that's a scout mark—follow it for safe rooms."
+            }
+          ]
+        }
+      ],
+      "trade_label": "Show me the goods",
+      "leave_label": "Maybe later"
     }
+  }
 }

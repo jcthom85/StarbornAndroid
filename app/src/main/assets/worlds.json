@@ -1,14 +1,14 @@
 [
-    {
-        "id": "debug_sandbox",
-        "title": "Debug Sandbox",
-        "description": "A controlled testbed for cutscenes, VFX, and UI flows.",
-        "default_theme": "starborn"
-    },
-    {
-        "id": "nova_prime",
-        "title": "Nova's Homeworld",
-        "description": "A remote mining colony on a barren moon, and Nova's hardscrabble home.",
-        "default_theme": "spaceship"
-    }
+  {
+    "id": "debug_sandbox",
+    "title": "",
+    "description": "",
+    "default_theme": ""
+  },
+  {
+    "id": "nova_prime",
+    "title": "Nova\u0027s Homeworld",
+    "description": "A remote mining colony on a barren moon, and Nova\u0027s hardscrabble home.",
+    "default_theme": "spaceship"
+  }
 ]

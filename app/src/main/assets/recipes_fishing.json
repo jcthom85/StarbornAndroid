@@ -4,43 +4,134 @@
     "description": "Expanded fishing system with rod/lure selection, skill challenge, and outcomes"
   },
   "rods": [
-    { "id": "wooden_rod", "name": "Wooden Rod", "fishing_power": 1, "stability": 0.8 },
-    { "id": "fiberglass_rod", "name": "Fiberglass Rod", "fishing_power": 2, "stability": 1.0 },
-    { "id": "carbon_rod", "name": "Carbon Rod", "fishing_power": 3, "stability": 1.2 }
+    {
+      "id": "wooden_rod",
+      "name": "Wooden Rod",
+      "fishing_power": 1,
+      "stability": 0.8
+    },
+    {
+      "id": "fiberglass_rod",
+      "name": "Fiberglass Rod",
+      "fishing_power": 2,
+      "stability": 1.0
+    },
+    {
+      "id": "carbon_rod",
+      "name": "Carbon Rod",
+      "fishing_power": 3,
+      "stability": 1.2
+    }
   ],
   "lures": [
-    { "id": "basic_lure", "name": "Basic Lure", "rarity_bonus": 0, "attracts": ["raw_fish", "forest_carp"], "zone_bonus": { "forest": 0 } },
-    { "id": "shiny_lure", "name": "Shiny Lure", "rarity_bonus": 5, "attracts": ["forest_carp", "saltwater_fish"], "zone_bonus": { "coastal": 4 } },
-    { "id": "mystery_lure", "name": "Mystery Lure", "rarity_bonus": 10, "attracts": ["glowing_minnow", "star_squid"], "zone_bonus": { "coastal": 6 } }
+    {
+      "id": "basic_lure",
+      "name": "Basic Lure",
+      "rarity_bonus": 0,
+      "attracts": [
+        "raw_fish",
+        "forest_carp"
+      ],
+      "zone_bonus": {
+        "forest": 0
+      }
+    },
+    {
+      "id": "shiny_lure",
+      "name": "Shiny Lure",
+      "rarity_bonus": 5,
+      "attracts": [
+        "forest_carp",
+        "saltwater_fish"
+      ],
+      "zone_bonus": {
+        "coastal": 4
+      }
+    },
+    {
+      "id": "mystery_lure",
+      "name": "Mystery Lure",
+      "rarity_bonus": 10,
+      "attracts": [
+        "glowing_minnow",
+        "star_squid"
+      ],
+      "zone_bonus": {
+        "coastal": 6
+      }
+    }
   ],
   "fish_behaviors": {
-    "gentle_wobble": { "pattern": "sine", "base_pull": 0.35, "burst_pull": 0.0, "stamina": 10 },
-    "steady_pull": { "pattern": "linear", "base_pull": 0.55, "burst_pull": 0.15, "stamina": 14 },
-    "erratic_burst": { "pattern": "burst", "base_pull": 0.7, "burst_pull": 1.0, "stamina": 20 }
+    "gentle_wobble": {
+      "pattern": "sine",
+      "base_pull": 0.35,
+      "burst_pull": 0.0,
+      "stamina": 10
+    },
+    "steady_pull": {
+      "pattern": "linear",
+      "base_pull": 0.55,
+      "burst_pull": 0.15,
+      "stamina": 14
+    },
+    "erratic_burst": {
+      "pattern": "burst",
+      "base_pull": 0.7,
+      "burst_pull": 1.0,
+      "stamina": 20
+    }
   },
   "zones": {
     "forest": [
-      { "item": "Raw Fish", "weight": 50, "rarity": "common", "behavior_id": "gentle_wobble" },
-      { "item": "Forest Carp", "weight": 20, "rarity": "uncommon", "behavior_id": "steady_pull" },
-      { "item": "Old Boot", "weight": 10, "rarity": "junk", "behavior_id": "gentle_wobble" },
-      { "item": "Glowing Minnow", "weight": 5, "rarity": "rare", "behavior_id": "erratic_burst" }
+      {
+        "item": "Raw Fish",
+        "weight": 50,
+        "rarity": "common",
+        "behavior_id": "gentle_wobble"
+      },
+      {
+        "item": "Forest Carp",
+        "weight": 20,
+        "rarity": "uncommon",
+        "behavior_id": "steady_pull"
+      },
+      {
+        "item": "Old Boot",
+        "weight": 10,
+        "rarity": "junk",
+        "behavior_id": "gentle_wobble"
+      },
+      {
+        "item": "Glowing Minnow",
+        "weight": 5,
+        "rarity": "rare",
+        "behavior_id": "erratic_burst"
+      }
     ],
-    "coastal": [
-      { "item": "Raw Fish", "weight": 40, "rarity": "common", "behavior_id": "gentle_wobble" },
-      { "item": "Saltwater Fish", "weight": 30, "rarity": "common", "behavior_id": "steady_pull" },
-      { "item": "Message in a Bottle", "weight": 5, "rarity": "rare", "behavior_id": "steady_pull" },
-      { "item": "Old Boot", "weight": 15, "rarity": "junk", "behavior_id": "gentle_wobble" },
-      { "item": "Star Squid", "weight": 3, "rarity": "epic", "behavior_id": "erratic_burst" }
-    ]
+    "coastal": []
   },
   "minigame_rules": {
-    "easy":   { "target_size": 0.4,  "bar_speed": 1.2 },
-    "medium": { "target_size": 0.25, "bar_speed": 1.8 },
-    "hard":   { "target_size": 0.15, "bar_speed": 2.4 }
+    "easy": {
+      "target_size": 0.4,
+      "bar_speed": 1.2
+    },
+    "medium": {
+      "target_size": 0.25,
+      "bar_speed": 1.8
+    },
+    "hard": {
+      "target_size": 0.15,
+      "bar_speed": 2.4
+    }
   },
   "victory_screen": {
     "show_on_success": true,
     "show_on_failure": false,
-    "contents": ["item_name", "rarity", "quantity", "flavor_text"]
+    "contents": [
+      "item_name",
+      "rarity",
+      "quantity",
+      "flavor_text"
+    ]
   }
 }
