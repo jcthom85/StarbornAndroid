@@ -92,7 +92,22 @@
       "Circuit Board": 90,
       "Ballistic Weave": 90,
       "Focusing Lens": 90,
-      "Cryo-Inductor": 90
+      "Cryo-Inductor": 90,
+      "basic_blaster": 2,
+      "basic_slingshot": 2,
+      "basic_jacket": 2,
+      "basic_vest": 2,
+      "digital_watch": 2,
+      "gadget_belt": 2,
+      "starbar_crunch": 4,
+      "mineral_trail_mix": 4,
+      "comet_gummies": 3
+    },
+    "equipment": {
+      "weapon": "basic_blaster",
+      "armor": "basic_vest",
+      "accessory": "gadget_belt",
+      "snack": "comet_gummies"
     },
     "credits": 12345,
     "resonance": 0,

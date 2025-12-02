@@ -70,7 +70,23 @@
       "orion",
       "gh0st"
     ],
-    "inventory": {},
+    "inventory": {
+      "basic_blaster": 1,
+      "basic_slingshot": 1,
+      "basic_jacket": 1,
+      "basic_vest": 1,
+      "digital_watch": 1,
+      "gadget_belt": 1,
+      "starbar_crunch": 2,
+      "mineral_trail_mix": 2,
+      "comet_gummies": 1
+    },
+    "equipment": {
+      "weapon": "basic_blaster",
+      "armor": "basic_vest",
+      "accessory": "gadget_belt",
+      "snack": "starbar_crunch"
+    },
     "credits": 500,
     "resonance": 0,
     "resonance_min": 0,

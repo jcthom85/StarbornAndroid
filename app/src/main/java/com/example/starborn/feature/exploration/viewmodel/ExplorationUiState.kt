@@ -23,6 +23,7 @@ data class ExplorationUiState(
     val actionHints: Map<String, ActionHintUi> = emptyMap(),
     val enemies: List<String> = emptyList(),
     val blockedDirections: Set<String> = emptySet(),
+    val directionIndicators: Map<String, DirectionIndicatorUi> = emptyMap(),
     val roomState: Map<String, Boolean> = emptyMap(),
     val groundItems: Map<String, Int> = emptyMap(),
     val activeDialogue: DialogueUi? = null,
@@ -167,7 +168,8 @@ data class CinematicUiState(
 data class CinematicStepUi(
     val type: com.example.starborn.domain.cinematic.CinematicStepType,
     val speaker: String?,
-    val text: String
+    val text: String,
+    val portrait: String? = null
 )
 
 data class DialogueUi(
@@ -219,6 +221,17 @@ data class BlockedPrompt(
     val sceneId: String? = null,
     val requiresItemLabel: String? = null
 )
+
+data class DirectionIndicatorUi(
+    val direction: String,
+    val status: DirectionIndicatorStatus
+)
+
+enum class DirectionIndicatorStatus {
+    UNEXPLORED,
+    LOCKED,
+    ENEMY
+}
 
 data class ActionHintUi(
     val locked: Boolean,

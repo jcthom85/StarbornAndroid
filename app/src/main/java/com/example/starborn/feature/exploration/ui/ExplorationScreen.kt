@@ -10,7 +10,11 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.core.Animatable as CoreAnimatable
 import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
@@ -83,6 +87,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -123,6 +128,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextIndent
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.util.lerp
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -135,6 +141,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.example.starborn.R
+import com.example.starborn.domain.model.DialogueLine
 import com.example.starborn.domain.audio.AudioCuePlayer
 import com.example.starborn.domain.inventory.ItemUseResult
 import com.example.starborn.domain.milestone.MilestoneEvent
@@ -163,6 +170,8 @@ import com.example.starborn.feature.exploration.viewmodel.BlockedPrompt
 import com.example.starborn.feature.exploration.viewmodel.CinematicUiState
 import com.example.starborn.feature.exploration.viewmodel.DialogueChoiceUi
 import com.example.starborn.feature.exploration.viewmodel.DialogueUi
+import com.example.starborn.feature.exploration.viewmodel.DirectionIndicatorStatus
+import com.example.starborn.feature.exploration.viewmodel.DirectionIndicatorUi
 import com.example.starborn.feature.exploration.viewmodel.ExplorationEvent
 import com.example.starborn.feature.exploration.viewmodel.ExplorationUiState
 import com.example.starborn.feature.exploration.viewmodel.ExplorationViewModel
@@ -195,6 +204,7 @@ import com.example.starborn.feature.exploration.viewmodel.SettingsUiState
 import com.example.starborn.feature.exploration.viewmodel.SkillTreeBranchUi
 import com.example.starborn.feature.exploration.viewmodel.SkillTreeNodeUi
 import com.example.starborn.feature.exploration.viewmodel.SkillTreeOverlayUi
+import com.example.starborn.feature.mainmenu.SaveSlotSummary
 import android.text.format.DateUtils
 import java.util.LinkedHashSet
 import kotlin.math.abs
@@ -213,6 +223,7 @@ import com.example.starborn.ui.overlay.QuestDetailOverlay
 import com.example.starborn.ui.overlay.QuestSummaryOverlay
 import com.example.starborn.ui.theme.MinimapTextStyle
 import com.example.starborn.ui.theme.themeColor
+import kotlin.math.min
 
 
 
@@ -237,6 +248,9 @@ fun ExplorationScreen(
     var pendingInventoryItem by remember { mutableStateOf<InventoryPreviewItemUi?>(null) }
     var showInventoryTargetDialog by remember { mutableStateOf(false) }
     val fxBursts = remember { mutableStateListOf<UiFxBurst>() }
+    var saveLoadMode by remember { mutableStateOf<String?>(null) } // "save" or "load"
+    var slotSummaries by remember { mutableStateOf<List<SaveSlotSummary>>(emptyList()) }
+    val coroutineScope = rememberCoroutineScope()
     val blockingOverlayActive =
         uiState.isMenuOverlayVisible ||
             uiState.togglePrompt != null ||
@@ -566,8 +580,11 @@ fun ExplorationScreen(
             ) {
                 val (titleTextRef, underlineRef, minimapRef) = createRefs()
                 MinimapWidget(
-                    minimap = uiState.minimap,
-                    onLegend = { viewModel.openMapLegend() },
+                minimap = uiState.minimap,
+                    onLegend = {
+                        viewModel.selectMenuTab(MenuTab.MAP)
+                        viewModel.openMenuOverlay(MenuTab.MAP)
+                    },
                     obscured = isRoomDark,
                     modifier = Modifier
                         .requiredSize(minimapSize)
@@ -774,11 +791,26 @@ fun ExplorationScreen(
                 onOpenMapLegend = {
                     viewModel.openMapLegend()
                 },
+                onOpenFullMap = {
+                    viewModel.openFullMapOverlay()
+                },
                 settings = uiState.settings,
                 onMusicVolumeChange = { viewModel.updateMusicVolume(it) },
                 onSfxVolumeChange = { viewModel.updateSfxVolume(it) },
                 onToggleVignette = { viewModel.setVignetteEnabled(it) },
                 onQuickSave = { viewModel.quickSave() },
+                onSaveGame = {
+                    coroutineScope.launch {
+                        slotSummaries = viewModel.fetchSaveSlots()
+                        saveLoadMode = "save"
+                    }
+                },
+                onLoadGame = {
+                    coroutineScope.launch {
+                        slotSummaries = viewModel.fetchSaveSlots()
+                        saveLoadMode = "load"
+                    }
+                },
                 partyStatus = uiState.partyStatus,
                 onShowSkillTree = { memberId -> viewModel.openSkillTree(memberId) },
                 onShowDetails = { memberId -> viewModel.openPartyMemberDetails(memberId) },
@@ -823,6 +855,35 @@ fun ExplorationScreen(
                 borderColor = themeColor(activeTheme?.border, Color.White.copy(alpha = 0.3f)),
                 textColor = themeColor(activeTheme?.fg, Color.White),
                 accentColor = themeColor(activeTheme?.accent, Color.White)
+            )
+        }
+        if (saveLoadMode != null) {
+            SaveLoadDialog(
+                mode = saveLoadMode!!,
+                slots = slotSummaries,
+                onSave = { slot ->
+                    coroutineScope.launch {
+                        viewModel.saveGame(slot)
+                        slotSummaries = viewModel.fetchSaveSlots()
+                        saveLoadMode = null
+                    }
+                },
+                onLoad = { slot ->
+                    coroutineScope.launch {
+                        viewModel.loadGame(slot)
+                        saveLoadMode = null
+                    }
+                },
+                onRefresh = {
+                    coroutineScope.launch {
+                        slotSummaries = viewModel.fetchSaveSlots()
+                    }
+                },
+                onDismiss = { saveLoadMode = null },
+                accentColor = themeColor(activeTheme?.accent, Color(0xFF7BE4FF)),
+                panelColor = themeColor(activeTheme?.bg, Color(0xFF0B111A)).copy(alpha = 0.96f),
+                borderColor = themeColor(activeTheme?.border, Color.White.copy(alpha = 0.16f)),
+                textColor = themeColor(activeTheme?.fg, Color.White)
             )
         }
 
@@ -914,6 +975,11 @@ fun ExplorationScreen(
                 modifier = Modifier
                     .align(Alignment.Center)
                     .fillMaxSize()
+                    .zIndex(50f),
+                accentColor = themeColor(activeTheme?.accent, Color(0xFF7BE4FF)),
+                panelColor = themeColor(activeTheme?.bg, Color(0xFF050A12)).copy(alpha = 0.94f),
+                borderColor = themeColor(activeTheme?.border, Color.White.copy(alpha = 0.25f)),
+                textColor = themeColor(activeTheme?.fg, Color.White)
             )
         }
 
@@ -987,6 +1053,14 @@ fun ExplorationScreen(
             onExpired = { id -> fxBursts.removeAll { it.id == id } },
             modifier = Modifier.fillMaxSize()
         )
+
+        DirectionIndicatorsOverlay(
+            indicators = uiState.directionIndicators,
+            modifier = Modifier
+                .align(Alignment.Center)
+                .fillMaxSize()
+                .padding(12.dp)
+        )
     }
 }
 }
@@ -1021,7 +1095,7 @@ private fun MinimapWidget(
         shape = RoundedCornerShape(16.dp)
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
-        Canvas(modifier = Modifier.matchParentSize()) {
+        Canvas(modifier = Modifier.fillMaxSize()) {
             val w = size.width
             val h = size.height
             val base = minOf(w, h)
@@ -1169,7 +1243,7 @@ private fun MinimapWidget(
         if (obscured) {
             Canvas(
                 modifier = Modifier
-                    .matchParentSize()
+                    .fillMaxSize()
                     .zIndex(1f)
             ) {
                 drawRect(
@@ -1220,6 +1294,233 @@ private fun MinimapWidget(
             }
         }
         }
+    }
+}
+
+@Composable
+private fun DirectionIndicatorsOverlay(
+    indicators: Map<String, DirectionIndicatorUi>,
+    modifier: Modifier = Modifier
+) {
+    if (indicators.isEmpty()) return
+    Box(modifier = modifier) {
+        indicators.values.forEach { indicator ->
+            val direction = indicator.direction.lowercase(Locale.getDefault())
+            val (alignment, padding) = when (direction) {
+                "north" -> Alignment.TopCenter to PaddingValues(top = 4.dp)
+                "south" -> Alignment.BottomCenter to PaddingValues(bottom = 4.dp)
+                "east" -> Alignment.CenterEnd to PaddingValues(end = 4.dp)
+                "west" -> Alignment.CenterStart to PaddingValues(start = 4.dp)
+                else -> Alignment.Center to PaddingValues(0.dp)
+            }
+            val loop = rememberInfiniteTransition(label = "dirPulse-$direction")
+            val pulse by loop.animateFloat(
+                initialValue = 0f,
+                targetValue = 1f,
+                animationSpec = infiniteRepeatable(
+                    animation = tween(
+                        durationMillis = if (indicator.status == DirectionIndicatorStatus.ENEMY) 900 else 1200,
+                        easing = FastOutSlowInEasing
+                    ),
+                    repeatMode = RepeatMode.Reverse
+                ),
+                label = "pulse-$direction"
+            )
+            val baseAlphaRange = if (indicator.status == DirectionIndicatorStatus.ENEMY) 0.55f..0.98f else 0.65f..0.95f
+            val alpha = lerp(baseAlphaRange.start, baseAlphaRange.endInclusive, pulse)
+            val scale = 1f + 0.08f * pulse
+            Box(
+                modifier = Modifier
+                    .align(alignment)
+                    .padding(padding)
+                    .graphicsLayer {
+                        this.scaleX = scale
+                        this.scaleY = scale
+                        this.alpha = alpha
+                    }
+            ) {
+                DirectionIndicatorIcon(
+                    status = indicator.status,
+                    direction = direction
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun DirectionIndicatorIcon(
+    status: DirectionIndicatorStatus,
+    direction: String
+) {
+    val baseSize = 36.dp
+    val color = when (status) {
+        DirectionIndicatorStatus.UNEXPLORED -> Color(0.56f, 0.78f, 1.0f)
+        DirectionIndicatorStatus.LOCKED -> Color(0.70f, 0.72f, 0.80f)
+        DirectionIndicatorStatus.ENEMY -> Color(1.0f, 0.32f, 0.32f)
+    }
+    when (status) {
+        DirectionIndicatorStatus.UNEXPLORED -> DirectionArrowIndicator(direction, baseSize, color)
+        DirectionIndicatorStatus.LOCKED -> DirectionLockIndicator(direction, baseSize, color)
+        DirectionIndicatorStatus.ENEMY -> DirectionEnemyIndicator(direction, baseSize, color)
+    }
+}
+
+@Composable
+private fun DirectionArrowIndicator(direction: String, size: Dp, color: Color) {
+    val rotation = when (direction.lowercase(Locale.getDefault())) {
+        "east" -> 90f
+        "south" -> 180f
+        "west" -> 270f
+        else -> 0f
+    }
+    Canvas(
+        modifier = Modifier
+            .size(size)
+            .graphicsLayer { rotationZ = rotation }
+    ) {
+        val w = size.toPx()
+        val inset = w * 0.28f
+        val tipY = inset
+        val baseY = w - inset
+        val midX = w / 2f
+        val wing = w * 0.26f
+        val path = Path().apply {
+            moveTo(midX, tipY)
+            lineTo(midX + wing, baseY)
+            lineTo(midX, baseY - wing * 0.8f)
+            lineTo(midX - wing, baseY)
+            close()
+        }
+        // Glow
+        drawCircle(color = color.copy(alpha = 0.25f), radius = w * 0.55f, center = Offset(midX, midX))
+        drawCircle(color = color.copy(alpha = 0.35f), radius = w * 0.42f, center = Offset(midX, midX))
+        drawPath(path, color = color)
+        drawPath(path, color = Color.White.copy(alpha = 0.4f), style = Stroke(width = w * 0.05f))
+    }
+}
+
+@Composable
+private fun DirectionLockIndicator(direction: String, size: Dp, color: Color) {
+    val rotation = when (direction.lowercase(Locale.getDefault())) {
+        "east" -> 90f
+        "south" -> 180f
+        "west" -> 270f
+        else -> 0f
+    }
+    Canvas(
+        modifier = Modifier
+            .size(size)
+            .graphicsLayer { rotationZ = rotation }
+    ) {
+        val w = size.toPx()
+        val bodyWidth = w * 0.62f
+        val bodyHeight = w * 0.44f
+        val bodyTop = w * 0.48f
+        val bodyLeft = (w - bodyWidth) / 2f
+        val corner = CornerRadius(w * 0.12f, w * 0.12f)
+
+        // Glow
+        drawCircle(color = color.copy(alpha = 0.2f), radius = w * 0.52f, center = Offset(w / 2f, w / 2f))
+        drawCircle(color = color.copy(alpha = 0.3f), radius = w * 0.38f, center = Offset(w / 2f, w / 2f))
+
+        // Body
+        drawRoundRect(
+            color = color,
+            topLeft = Offset(bodyLeft, bodyTop),
+            size = Size(bodyWidth, bodyHeight),
+            cornerRadius = corner
+        )
+        drawRoundRect(
+            color = Color.White.copy(alpha = 0.35f),
+            topLeft = Offset(bodyLeft, bodyTop),
+            size = Size(bodyWidth, bodyHeight),
+            cornerRadius = corner,
+            style = Stroke(width = w * 0.05f)
+        )
+
+        // Shackle
+        val shackleThickness = w * 0.12f
+        val shackleWidth = w * 0.6f
+        val shackleHeight = w * 0.46f
+        val shackleLeft = (w - shackleWidth) / 2f
+        val shackleTop = w * 0.06f
+        drawArc(
+            color = color,
+            startAngle = 200f,
+            sweepAngle = 140f,
+            useCenter = false,
+            topLeft = Offset(shackleLeft, shackleTop),
+            size = Size(shackleWidth, shackleHeight),
+            style = Stroke(width = shackleThickness, cap = StrokeCap.Round)
+        )
+
+        // Keyhole
+        val keyholeRadius = w * 0.075f
+        val keyholeCenter = Offset(w / 2f, bodyTop + bodyHeight * 0.32f)
+        drawCircle(
+            color = Color.Black.copy(alpha = 0.7f),
+            radius = keyholeRadius,
+            center = keyholeCenter
+        )
+        drawRoundRect(
+            color = Color.Black.copy(alpha = 0.7f),
+            topLeft = Offset(keyholeCenter.x - keyholeRadius * 0.45f, keyholeCenter.y - keyholeRadius * 0.05f),
+            size = Size(keyholeRadius * 0.9f, keyholeRadius * 1.6f),
+            cornerRadius = CornerRadius(keyholeRadius * 0.4f, keyholeRadius * 0.4f)
+        )
+    }
+}
+
+@Composable
+private fun DirectionEnemyIndicator(direction: String, size: Dp, color: Color) {
+    val rotation = when (direction.lowercase(Locale.getDefault())) {
+        "east" -> 90f
+        "south" -> 180f
+        "west" -> 270f
+        else -> 0f
+    }
+    Canvas(
+        modifier = Modifier
+            .size(size)
+            .graphicsLayer { rotationZ = rotation }
+    ) {
+        val w = size.toPx()
+        val center = Offset(w / 2f, w / 2f)
+        val radius = w * 0.36f
+        val diamond = Path().apply {
+            moveTo(center.x, center.y - radius)
+            lineTo(center.x + radius, center.y)
+            lineTo(center.x, center.y + radius)
+            lineTo(center.x - radius, center.y)
+            close()
+        }
+
+        // Glow halo
+        drawCircle(color = color.copy(alpha = 0.22f), radius = w * 0.55f, center = center)
+        drawCircle(color = color.copy(alpha = 0.32f), radius = w * 0.42f, center = center)
+
+        // Core diamond
+        drawPath(diamond, color = color.copy(alpha = 0.92f))
+        drawPath(diamond, color = Color.White.copy(alpha = 0.4f), style = Stroke(width = w * 0.05f))
+
+        // Inner bevel
+        drawPath(diamond, color = Color.White.copy(alpha = 0.08f), style = Stroke(width = w * 0.14f))
+
+        // Exclamation mark
+        val barHeight = radius * 0.95f
+        val barWidth = w * 0.09f
+        drawRoundRect(
+            color = Color.White,
+            topLeft = Offset(center.x - barWidth / 2f, center.y - barHeight * 0.55f),
+            size = Size(barWidth, barHeight * 0.7f),
+            cornerRadius = CornerRadius(barWidth / 2f, barWidth / 2f)
+        )
+        drawCircle(
+            color = Color.White,
+            radius = barWidth * 0.65f,
+            center = Offset(center.x, center.y + barHeight * 0.35f)
+        )
     }
 }
 private fun serviceOffsets(count: Int, spacing: Float): List<Pair<Float, Float>> = when (count) {
@@ -1501,11 +1802,14 @@ private fun MenuOverlay(
     onOpenInventory: (InventoryLaunchOptions) -> Unit,
     onOpenJournal: () -> Unit,
     onOpenMapLegend: () -> Unit,
+    onOpenFullMap: () -> Unit,
     settings: SettingsUiState,
     onMusicVolumeChange: (Float) -> Unit,
     onSfxVolumeChange: (Float) -> Unit,
     onToggleVignette: (Boolean) -> Unit,
     onQuickSave: () -> Unit,
+    onSaveGame: () -> Unit,
+    onLoadGame: () -> Unit,
     partyStatus: PartyStatusUi,
     onShowSkillTree: (String) -> Unit,
     onShowDetails: (String) -> Unit,
@@ -1589,10 +1893,13 @@ private fun MenuOverlay(
                     onOpenInventory = onOpenInventory,
                     onOpenJournal = onOpenJournal,
                     onOpenMapLegend = onOpenMapLegend,
+                    onOpenFullMap = onOpenFullMap,
                     onMusicVolumeChange = onMusicVolumeChange,
                     onSfxVolumeChange = onSfxVolumeChange,
                     onToggleVignette = onToggleVignette,
                     onQuickSave = onQuickSave,
+                    onSaveGame = onSaveGame,
+                    onLoadGame = onLoadGame,
                     onShowSkillTree = onShowSkillTree,
                     onShowDetails = onShowDetails,
                     inventoryItems = inventoryItems,
@@ -1671,10 +1978,13 @@ private fun MenuTabContentArea(
     onOpenInventory: (InventoryLaunchOptions) -> Unit,
     onOpenJournal: () -> Unit,
     onOpenMapLegend: () -> Unit,
+    onOpenFullMap: () -> Unit,
     onMusicVolumeChange: (Float) -> Unit,
     onSfxVolumeChange: (Float) -> Unit,
     onToggleVignette: (Boolean) -> Unit,
     onQuickSave: () -> Unit,
+    onSaveGame: () -> Unit,
+    onLoadGame: () -> Unit,
     onShowSkillTree: (String) -> Unit,
     onShowDetails: (String) -> Unit,
     inventoryItems: List<InventoryPreviewItemUi>,
@@ -1707,7 +2017,8 @@ private fun MenuTabContentArea(
                 accentColor = accentColor,
                 borderColor = borderColor,
                 onMenuAction = onMenuAction,
-                onOpenMapLegend = onOpenMapLegend
+                onOpenMapLegend = onOpenMapLegend,
+                onOpenFullMap = onOpenFullMap
             )
             MenuTab.STATS -> StatsTabContent(
                 partyStatus = partyStatus,
@@ -1723,7 +2034,9 @@ private fun MenuTabContentArea(
                 onMusicVolumeChange = onMusicVolumeChange,
                 onSfxVolumeChange = onSfxVolumeChange,
                 onToggleVignette = onToggleVignette,
-                onQuickSave = onQuickSave
+                onQuickSave = onQuickSave,
+                onSaveGame = onSaveGame,
+                onLoadGame = onLoadGame
             )
         }
     }
@@ -1768,6 +2081,7 @@ private fun InventoryTabContent(
                 onItemClick = onUseConsumable
             )
             InventoryCarouselPage.GEAR -> InventoryEquipmentPreview(
+                inventoryItems = inventoryItems,
                 equippedItems = equippedItems,
                 borderColor = borderColor,
                 accentColor = accentColor,
@@ -1968,13 +2282,17 @@ private fun InventoryPreviewItemUi.isKeyItem(): Boolean {
 
 @Composable
 private fun InventoryEquipmentPreview(
+    inventoryItems: List<InventoryPreviewItemUi>,
     equippedItems: Map<String, String>,
     borderColor: Color,
     accentColor: Color,
     onOpenInventory: (InventoryLaunchOptions) -> Unit
 ) {
+    val itemNames = remember(inventoryItems) {
+        inventoryItems.associate { it.id.lowercase(Locale.getDefault()) to it.name }
+    }
     val slots = remember(equippedItems) {
-        val defaults = listOf("weapon", "armor", "accessory")
+        val defaults = listOf("weapon", "armor", "accessory", "snack")
         (defaults + equippedItems.keys.map { it.lowercase(Locale.getDefault()) })
             .distinct()
     }
@@ -1989,7 +2307,8 @@ private fun InventoryEquipmentPreview(
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         slots.forEach { slot ->
             val normalized = slot.lowercase(Locale.getDefault())
-            val equippedName = equippedItems[normalized] ?: "Unequipped"
+            val equippedId = equippedItems[normalized].orEmpty()
+            val equippedName = itemNames[equippedId.lowercase(Locale.getDefault())] ?: equippedId.ifBlank { "Unequipped" }
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -2035,7 +2354,7 @@ private fun slotLabel(raw: String): String =
 private fun previewItemIconRes(type: String?): Int {
     val normalized = type?.lowercase(Locale.getDefault()) ?: return R.drawable.item_icon_generic
     return when {
-        normalized.contains("food") -> R.drawable.item_icon_food
+        normalized.contains("food") || normalized == "snack" -> R.drawable.item_icon_food
         normalized in setOf("consumable", "medicine", "tonic", "drink") -> R.drawable.item_icon_consumable
         normalized.contains("fish") -> R.drawable.item_icon_fish
         normalized.contains("fishing") -> R.drawable.item_icon_fishing
@@ -2079,7 +2398,8 @@ private fun MapTabContent(
     accentColor: Color,
     borderColor: Color,
     onMenuAction: () -> Unit,
-    onOpenMapLegend: () -> Unit
+    onOpenMapLegend: () -> Unit,
+    onOpenFullMap: () -> Unit
 ) {
     MenuSectionCard(
         title = "Navigation",
@@ -2092,7 +2412,8 @@ private fun MapTabContent(
             isCurrentRoomDark = isCurrentRoomDark,
             accentColor = accentColor,
             onMenuAction = onMenuAction,
-            onMapLegend = onOpenMapLegend
+            onMapLegend = onOpenMapLegend,
+            onOpenFullMap = onOpenFullMap
         )
     }
 }
@@ -2127,7 +2448,9 @@ private fun SettingsTabContent(
     onMusicVolumeChange: (Float) -> Unit,
     onSfxVolumeChange: (Float) -> Unit,
     onToggleVignette: (Boolean) -> Unit,
-    onQuickSave: () -> Unit
+    onQuickSave: () -> Unit,
+    onSaveGame: () -> Unit,
+    onLoadGame: () -> Unit
 ) {
     MenuSectionCard(
         title = "Audio & Display",
@@ -2139,7 +2462,9 @@ private fun SettingsTabContent(
             onMusicVolumeChange = onMusicVolumeChange,
             onSfxVolumeChange = onSfxVolumeChange,
             onToggleVignette = onToggleVignette,
-            onQuickSave = onQuickSave
+            onQuickSave = onQuickSave,
+            onSaveGame = onSaveGame,
+            onLoadGame = onLoadGame
         )
     }
 }
@@ -2638,7 +2963,9 @@ private fun SettingsPanel(
     onMusicVolumeChange: (Float) -> Unit,
     onSfxVolumeChange: (Float) -> Unit,
     onToggleVignette: (Boolean) -> Unit,
-    onQuickSave: () -> Unit
+    onQuickSave: () -> Unit,
+    onSaveGame: () -> Unit,
+    onLoadGame: () -> Unit
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Column {
@@ -2684,6 +3011,18 @@ private fun SettingsPanel(
             )
         }
         Button(
+            onClick = onSaveGame,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Save")
+        }
+        Button(
+            onClick = onLoadGame,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Load")
+        }
+        Button(
             onClick = onQuickSave,
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -2704,7 +3043,8 @@ private fun MapPreviewPanel(
     isCurrentRoomDark: Boolean,
     accentColor: Color,
     onMenuAction: () -> Unit,
-    onMapLegend: () -> Unit
+    onMapLegend: () -> Unit,
+    onOpenFullMap: () -> Unit
 ) {
     val fullMapAvailable = fullMap?.cells?.isNotEmpty() == true
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -2740,7 +3080,10 @@ private fun MapPreviewPanel(
                 ) {
                     MinimapWidget(
                         minimap = it,
-                        onLegend = onMapLegend,
+                        onLegend = {
+                            onMenuAction()
+                            onOpenFullMap()
+                        },
                         obscured = isCurrentRoomDark,
                         modifier = Modifier.size(140.dp)
                     )
@@ -3337,14 +3680,19 @@ private fun FullMapOverlay(
 @Composable
 private fun MapLegendOverlay(
     onClose: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    accentColor: Color,
+    panelColor: Color,
+    borderColor: Color,
+    textColor: Color
 ) {
-    val colors = MaterialTheme.colorScheme
-    val visitedColor = colors.onSurface.copy(alpha = 0.6f)
-    val discoveredColor = colors.onSurface.copy(alpha = 0.25f)
-    val unexploredColor = colors.onSurface.copy(alpha = 0.08f)
-    val connectionColor = colors.outline.copy(alpha = 0.45f)
-    val playerIndicatorColor = Color(1f, 0.92f, 0.3f, 1f)
+    val visitedColor = textColor.copy(alpha = 0.7f)
+    val discoveredColor = textColor.copy(alpha = 0.4f)
+    val unexploredColor = textColor.copy(alpha = 0.16f)
+    val connectionColor = textColor.copy(alpha = 0.5f)
+    val playerIndicatorColor = Color(1f, 0.92f, 0.35f, 1f)
+    val darkOverlayColor = Color.Black.copy(alpha = 0.72f)
+    val darkHatchColor = Color.White.copy(alpha = 0.08f)
 
     Box(
         modifier = modifier
@@ -3354,68 +3702,127 @@ private fun MapLegendOverlay(
     ) {
         Surface(
             modifier = Modifier
-                .widthIn(max = 560.dp)
+                .widthIn(max = 640.dp)
                 .wrapContentHeight(),
             shape = RoundedCornerShape(24.dp),
-            color = Color(0xFF030712).copy(alpha = 0.95f),
-            border = BorderStroke(1.dp, Color.White.copy(alpha = 0.2f)),
-            tonalElevation = 6.dp
+            color = panelColor,
+            border = BorderStroke(1.dp, borderColor),
+            tonalElevation = 10.dp
         ) {
             Column(
                 modifier = Modifier
-                    .padding(24.dp)
+                    .padding(horizontal = 24.dp, vertical = 20.dp)
                     .fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(14.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Text(
                     text = "Map Legend",
                     style = MaterialTheme.typography.headlineSmall,
-                    color = Color.White
+                    color = accentColor
                 )
-                LegendColorRow(
-                    label = "Current room",
-                    description = "Primary tint marks the node you stand in.",
-                    swatchColor = colors.primary
+                Text(
+                    text = "Symbols for the map and minimap.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = textColor.copy(alpha = 0.78f)
                 )
-                LegendColorRow(
-                    label = "Visited room",
-                    description = "Previously explored rooms.",
-                    swatchColor = visitedColor
-                )
-                LegendColorRow(
-                    label = "Discovered room",
-                    description = "Revealed but not yet entered rooms.",
-                    swatchColor = discoveredColor
-                )
-                LegendColorRow(
-                    label = "Undiscovered slot",
-                    description = "Cells that will appear once new paths are unlocked.",
-                    swatchColor = unexploredColor
-                )
-                LegendLineRow(
-                    label = "Connections",
-                    description = "Link lines show exactly which rooms are adjacent.",
-                    lineColor = connectionColor
-                )
-                LegendPlayerRow(
-                    label = "Player marker",
+
+                LegendEntry(
+                    title = "Current room",
+                    description = "You are here.",
+                    textColor = textColor
+                ) {
+                    LegendCell(
+                        fillColor = accentColor,
+                        borderColor = borderColor
+                    )
+                }
+
+                LegendEntry(
+                    title = "Visited room",
+                    description = "Rooms you've already explored.",
+                    textColor = textColor
+                ) {
+                    LegendCell(
+                        fillColor = visitedColor,
+                        borderColor = borderColor
+                    )
+                }
+
+                LegendEntry(
+                    title = "Discovered room",
+                    description = "Revealed but not yet entered.",
+                    textColor = textColor
+                ) {
+                    LegendCell(
+                        fillColor = discoveredColor,
+                        borderColor = borderColor
+                    )
+                }
+
+                LegendEntry(
+                    title = "Undiscovered slot",
+                    description = "Future cells that appear when paths open.",
+                    textColor = textColor
+                ) {
+                    LegendCell(
+                        fillColor = unexploredColor,
+                        borderColor = borderColor.copy(alpha = 0.4f)
+                    )
+                }
+
+                LegendEntry(
+                    title = "Dark room",
+                    description = "Unlit areas are hatched until you light them.",
+                    textColor = textColor
+                ) {
+                    LegendCell(
+                        fillColor = visitedColor,
+                        borderColor = borderColor,
+                        overlayColor = darkOverlayColor,
+                        hatchColor = darkHatchColor
+                    )
+                }
+
+                LegendEntry(
+                    title = "Connections",
+                    description = "Lines show adjacency between rooms.",
+                    textColor = textColor
+                ) {
+                    LegendConnectionsGraphic(
+                        lineColor = connectionColor,
+                        nodeColor = textColor
+                    )
+                }
+
+                LegendEntry(
+                    title = "Player marker",
                     description = "The glowing dot on the minimap is you.",
-                    highlightColor = playerIndicatorColor
-                )
-                LegendGridRow(
-                    label = "Minimap grid",
-                    description = "The 3×3 grid visualizes nearby rooms and current tile.",
-                    gridColor = colors.surfaceVariant.copy(alpha = 0.35f),
-                    dotColor = colors.primary
-                )
-                Spacer(modifier = Modifier.height(8.dp))
+                    textColor = textColor
+                ) {
+                    LegendPlayerMarker(
+                        color = playerIndicatorColor
+                    )
+                }
+
+                LegendEntry(
+                    title = "Minimap grid",
+                    description = "3×3 grid around you with a highlighted center tile.",
+                    textColor = textColor
+                ) {
+                    LegendMiniGrid(
+                        gridColor = textColor.copy(alpha = 0.35f),
+                        dotColor = accentColor
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(6.dp))
                 Button(
                     onClick = onClose,
                     modifier = Modifier.align(Alignment.End),
                     shape = RoundedCornerShape(999.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4DD0E1))
+                    colors = ButtonDefaults.buttonColors(containerColor = accentColor)
                 ) {
-                    Text("Close")
+                    Text("Close", color = textColor)
                 }
             }
         }
@@ -3423,161 +3830,145 @@ private fun MapLegendOverlay(
 }
 
 @Composable
-private fun LegendColorRow(label: String, description: String, swatchColor: Color) {
+private fun LegendEntry(
+    title: String,
+    description: String,
+    textColor: Color,
+    leading: @Composable () -> Unit
+) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
+        horizontalArrangement = Arrangement.spacedBy(14.dp)
     ) {
         Box(
             modifier = Modifier
-                .size(32.dp)
-                .background(color = swatchColor, shape = RoundedCornerShape(8.dp))
-                .border(1.dp, Color.White.copy(alpha = 0.2f), RoundedCornerShape(8.dp))
+                .size(48.dp)
+                .clip(RoundedCornerShape(12.dp))
+        ) {
+            leading()
+        }
+        Column {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.bodyMedium,
+                color = textColor,
+                fontWeight = FontWeight.SemiBold
+            )
+            Text(
+                text = description,
+                style = MaterialTheme.typography.bodySmall,
+                color = textColor.copy(alpha = 0.74f)
+            )
+        }
+    }
+}
+
+@Composable
+private fun LegendCell(
+    fillColor: Color,
+    borderColor: Color,
+    overlayColor: Color? = null,
+    hatchColor: Color? = null
+) {
+    Canvas(modifier = Modifier.fillMaxSize()) {
+        val corner = CornerRadius(10.dp.toPx(), 10.dp.toPx())
+        drawRoundRect(
+            color = fillColor,
+            cornerRadius = corner
         )
-        Column {
-            Text(
-                text = label,
-                style = MaterialTheme.typography.bodyMedium,
-                color = Color.White,
-                fontWeight = FontWeight.SemiBold
-            )
-            Text(
-                text = description,
-                style = MaterialTheme.typography.bodySmall,
-                color = Color.White.copy(alpha = 0.75f)
+        drawRoundRect(
+            color = borderColor,
+            cornerRadius = corner,
+            style = Stroke(width = 1.dp.toPx())
+        )
+        if (overlayColor != null && hatchColor != null) {
+            drawDarkRoomOverlay(
+                topLeft = Offset.Zero,
+                size = size,
+                cornerRadius = corner,
+                overlayColor = overlayColor,
+                hatchColor = hatchColor,
+                hatchSpacing = size.width / 3f
             )
         }
     }
 }
 
 @Composable
-private fun LegendLineRow(label: String, description: String, lineColor: Color) {
-    Row(
+private fun LegendConnectionsGraphic(lineColor: Color, nodeColor: Color) {
+    Canvas(
         modifier = Modifier
-            .fillMaxWidth()
-            .height(IntrinsicSize.Min),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
+            .fillMaxSize()
+            .padding(8.dp)
     ) {
-        Canvas(
-            modifier = Modifier
-                .width(64.dp)
-                .height(28.dp)
-        ) {
-            val y = size.height / 2f
+        val y = size.height / 2f
+        val startX = 6.dp.toPx()
+        val endX = size.width - 6.dp.toPx()
+        drawLine(
+            color = lineColor,
+            start = Offset(startX, y),
+            end = Offset(endX, y),
+            strokeWidth = 4.dp.toPx(),
+            cap = StrokeCap.Round
+        )
+        drawCircle(color = nodeColor, radius = 3.dp.toPx(), center = Offset(startX, y))
+        drawCircle(color = nodeColor, radius = 3.dp.toPx(), center = Offset(endX, y))
+    }
+}
+
+@Composable
+private fun LegendPlayerMarker(color: Color) {
+    Canvas(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(6.dp)
+    ) {
+        val center = Offset(size.width / 2, size.height / 2)
+        drawCircle(color = color.copy(alpha = 0.3f), radius = size.minDimension / 2.8f, center = center)
+        drawCircle(color = color, radius = size.minDimension / 5f, center = center)
+    }
+}
+
+@Composable
+private fun LegendMiniGrid(gridColor: Color, dotColor: Color) {
+    Canvas(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(4.dp)
+    ) {
+        val rows = 3
+        val cols = 3
+        val spacingX = size.width / cols
+        val spacingY = size.height / rows
+        for (i in 0..cols) {
+            val x = i * spacingX
             drawLine(
-                color = lineColor,
-                start = Offset(8f, y),
-                end = Offset(size.width - 8f, y),
-                strokeWidth = 4f,
-                cap = StrokeCap.Round
-            )
-            drawCircle(color = Color.White, radius = 3.dp.toPx(), center = Offset(8f, y))
-            drawCircle(color = Color.White, radius = 3.dp.toPx(), center = Offset(size.width - 8f, y))
-        }
-        Column {
-            Text(
-                text = label,
-                style = MaterialTheme.typography.bodyMedium,
-                color = Color.White,
-                fontWeight = FontWeight.SemiBold
-            )
-            Text(
-                text = description,
-                style = MaterialTheme.typography.bodySmall,
-                color = Color.White.copy(alpha = 0.75f)
+                color = gridColor,
+                start = Offset(x, 0f),
+                end = Offset(x, size.height),
+                strokeWidth = 1.dp.toPx()
             )
         }
-    }
-}
-
-@Composable
-private fun LegendPlayerRow(label: String, description: String, highlightColor: Color) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        Canvas(modifier = Modifier.size(36.dp)) {
-            val center = Offset(size.width / 2, size.height / 2)
-            drawCircle(color = highlightColor.copy(alpha = 0.3f), radius = 12f)
-            drawCircle(color = highlightColor, radius = 6f, center = center)
-        }
-        Column {
-            Text(
-                text = label,
-                style = MaterialTheme.typography.bodyMedium,
-                color = Color.White,
-                fontWeight = FontWeight.SemiBold
-            )
-            Text(
-                text = description,
-                style = MaterialTheme.typography.bodySmall,
-                color = Color.White.copy(alpha = 0.75f)
+        for (j in 0..rows) {
+            val y = j * spacingY
+            drawLine(
+                color = gridColor,
+                start = Offset(0f, y),
+                end = Offset(size.width, y),
+                strokeWidth = 1.dp.toPx()
             )
         }
-    }
-}
-
-@Composable
-private fun LegendGridRow(label: String, description: String, gridColor: Color, dotColor: Color) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        Canvas(
-            modifier = Modifier
-                .width(72.dp)
-                .height(48.dp)
-        ) {
-            val rows = 3
-            val cols = 3
-            val spacingX = size.width / cols
-            val spacingY = size.height / rows
-            for (i in 0..cols) {
-                val x = i * spacingX
-                drawLine(
-                    color = gridColor,
-                    start = Offset(x, 0f),
-                    end = Offset(x, size.height),
-                    strokeWidth = 1.dp.toPx()
+        for (row in 0 until rows) {
+            for (col in 0 until cols) {
+                val px = col * spacingX + spacingX / 2f
+                val py = row * spacingY + spacingY / 2f
+                drawCircle(
+                    color = if (row == 1 && col == 1) dotColor else gridColor.copy(alpha = 0.8f),
+                    radius = if (row == 1 && col == 1) 3.5.dp.toPx() else 2.2.dp.toPx(),
+                    center = Offset(px, py)
                 )
             }
-            for (j in 0..rows) {
-                val y = j * spacingY
-                drawLine(
-                    color = gridColor,
-                    start = Offset(0f, y),
-                    end = Offset(size.width, y),
-                    strokeWidth = 1.dp.toPx()
-                )
-            }
-            for (row in 0 until rows) {
-                for (col in 0 until cols) {
-                    val px = col * spacingX + spacingX / 2f
-                    val py = row * spacingY + spacingY / 2f
-                    drawCircle(
-                        color = dotColor.copy(alpha = if (row == 1 && col == 1) 1f else 0.65f),
-                        radius = 2.5.dp.toPx(),
-                        center = Offset(px, py)
-                    )
-                }
-            }
-        }
-        Column {
-            Text(
-                text = label,
-                style = MaterialTheme.typography.bodyMedium,
-                color = Color.White,
-                fontWeight = FontWeight.SemiBold
-            )
-            Text(
-                text = description,
-                style = MaterialTheme.typography.bodySmall,
-                color = Color.White.copy(alpha = 0.75f)
-            )
         }
     }
 }
@@ -5312,6 +5703,30 @@ fun CinematicOverlay(
     onAdvance: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val speaker = state.step.speaker?.takeIf { it.isNotBlank() }
+    if (speaker != null) {
+        val dialogueLine = DialogueLine(
+            id = "${state.sceneId}_${state.stepIndex}",
+            speaker = speaker,
+            text = state.step.text,
+            portrait = state.step.portrait,
+            voiceCue = null
+        )
+        val dialogueUi = DialogueUi(
+            line = dialogueLine,
+            portrait = state.step.portrait,
+            voiceCue = null
+        )
+        DialogueOverlay(
+            dialogue = dialogueUi,
+            choices = emptyList(),
+            onAdvance = onAdvance,
+            onChoice = { onAdvance() },
+            onPlayVoice = {},
+            modifier = modifier
+        )
+        return
+    }
     Surface(
         modifier = modifier
             .fillMaxWidth(0.94f)
@@ -5356,6 +5771,163 @@ fun CinematicOverlay(
                 )
                 Button(onClick = onAdvance) {
                     Text(if (state.stepIndex + 1 >= state.stepCount) "Continue" else "Next")
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun SaveLoadDialog(
+    mode: String,
+    slots: List<SaveSlotSummary>,
+    onSave: (Int) -> Unit,
+    onLoad: (Int) -> Unit,
+    onRefresh: () -> Unit,
+    onDismiss: () -> Unit,
+    accentColor: Color,
+    panelColor: Color,
+    borderColor: Color,
+    textColor: Color
+) {
+    val isSave = mode == "save"
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black.copy(alpha = 0.65f))
+            .zIndex(40f),
+        contentAlignment = Alignment.Center
+    ) {
+        Surface(
+            modifier = Modifier
+                .padding(24.dp)
+                .fillMaxWidth(0.92f)
+                .fillMaxHeight(0.82f),
+            color = panelColor,
+            shape = RoundedCornerShape(24.dp),
+            border = BorderStroke(1.dp, borderColor)
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(20.dp)
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = if (isSave) "Select Slot to Save" else "Select Slot to Load",
+                        color = accentColor,
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                    TextButton(onClick = onRefresh) {
+                        Text("Refresh", color = accentColor)
+                    }
+                }
+                LazyColumn(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    items(slots) { summary ->
+                        SaveSlotRow(
+                            summary = summary,
+                            isSave = isSave,
+                            onSave = onSave,
+                            onLoad = onLoad,
+                            accent = accentColor,
+                            textColor = textColor,
+                            borderColor = borderColor
+                        )
+                    }
+                }
+                HorizontalDivider(color = Color.White.copy(alpha = 0.2f))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    TextButton(onClick = onDismiss) { Text("Close") }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun SaveSlotRow(
+    summary: SaveSlotSummary,
+    isSave: Boolean,
+    onSave: (Int) -> Unit,
+    onLoad: (Int) -> Unit,
+    accent: Color,
+    textColor: Color,
+    borderColor: Color
+) {
+    Surface(
+        tonalElevation = 6.dp,
+        color = Color(0xFF121A24),
+        shape = RoundedCornerShape(18.dp),
+        border = BorderStroke(1.dp, borderColor),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 14.dp, vertical = 12.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            val slotLabel = when {
+                summary.isQuickSave -> "Quicksave"
+                summary.isAutosave -> "Autosave"
+                else -> "Slot ${summary.slot}"
+            }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(text = slotLabel, color = accent, style = MaterialTheme.typography.titleSmall)
+                if (summary.state != null && !summary.isEmpty) {
+                    Text(
+                        text = summary.state.playerLevel.let { "Lv ${it}" },
+                        color = textColor.copy(alpha = 0.75f),
+                        style = MaterialTheme.typography.labelMedium
+                    )
+                }
+            }
+            Text(text = summary.title, color = textColor, maxLines = 1)
+            Text(
+                text = summary.subtitle,
+                color = textColor.copy(alpha = 0.7f),
+                style = MaterialTheme.typography.bodySmall,
+                maxLines = 1
+            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                if (isSave && !summary.isAutosave) {
+                    Button(onClick = { onSave(summary.slot) }) {
+                        Text(if (summary.isEmpty) "Save" else "Overwrite")
+                    }
+                }
+                if (!isSave) {
+                    Button(
+                        onClick = { onLoad(summary.slot) },
+                        enabled = !summary.isEmpty
+                    ) {
+                        Text(
+                            when {
+                                summary.isAutosave -> "Load Autosave"
+                                summary.isQuickSave -> "Load Quicksave"
+                                else -> "Load"
+                            }
+                        )
+                    }
                 }
             }
         }

@@ -75,12 +75,17 @@ import com.example.starborn.domain.quest.QuestRuntimeState
 import com.example.starborn.domain.session.GameSessionState
 import com.example.starborn.domain.session.GameSessionStore
 import com.example.starborn.domain.session.GameSaveRepository
+import com.example.starborn.domain.session.GameSessionSlotInfo
 import com.example.starborn.domain.tutorial.TutorialEntry
 import com.example.starborn.domain.tutorial.TutorialRuntimeState
 import com.example.starborn.domain.tutorial.TutorialRuntimeManager
 import com.example.starborn.domain.theme.EnvironmentThemeManager
 import com.example.starborn.feature.fishing.viewmodel.FishingResultPayload
 import com.example.starborn.navigation.CombatResultPayload
+import com.example.starborn.feature.mainmenu.SaveSlotSummary
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.util.Locale
 import kotlin.collections.ArrayDeque
 import kotlin.math.abs
@@ -574,6 +579,8 @@ class ExplorationViewModel(
                 it.copy(
                     currentRoom = updatedRoom,
                     enemies = roomEnemyParties(updatedRoom).flatten(),
+                    blockedDirections = computeBlockedDirections(updatedRoom),
+                    directionIndicators = buildDirectionIndicators(updatedRoom),
                     canReturnToHub = canReturnToHub(updatedRoom)
                 )
             }
@@ -846,7 +853,8 @@ class ExplorationViewModel(
                 step = CinematicStepUi(
                     type = CinematicStepType.NARRATION,
                     speaker = null,
-                    text = ""
+                    text = "",
+                    portrait = null
                 )
             )
         }
@@ -855,7 +863,8 @@ class ExplorationViewModel(
         val stepUi = CinematicStepUi(
             type = step.type,
             speaker = step.speaker,
-            text = step.text
+            text = step.text,
+            portrait = step.speaker?.let { resolvePortraitKey(it) }
         )
         return CinematicUiState(
             sceneId = scene.id,
@@ -1026,6 +1035,86 @@ class ExplorationViewModel(
         val allowed = darkRoomEntryDirection[room.id]?.lowercase(Locale.getDefault())
         if (allowed.isNullOrBlank()) return emptyMap()
         return room.connections.filterKeys { it.equals(allowed, ignoreCase = true) }
+    }
+
+    private fun unexploredAdjacentDirections(room: Room?): Set<String> {
+        if (room == null) return emptySet()
+        return room.connections.mapNotNull { (direction, targetId) ->
+            val normalized = direction.lowercase(Locale.getDefault())
+            val destination = targetId?.takeIf { it.isNotBlank() } ?: return@mapNotNull null
+            if (visitedRooms.contains(destination) || discoveredRooms.contains(destination)) return@mapNotNull null
+            normalized
+        }.toSet()
+    }
+
+    private fun buildDirectionIndicators(room: Room?): Map<String, DirectionIndicatorUi> {
+        if (room == null) return emptyMap()
+        val indicators = mutableMapOf<String, DirectionIndicatorUi>()
+        room.connections.keys.forEach { direction ->
+            val status = resolveBlockedIndicatorStatus(room, direction)
+            val key = direction.lowercase(Locale.getDefault())
+            if (status != null) {
+                indicators[key] = DirectionIndicatorUi(direction = key, status = status)
+            }
+        }
+        unexploredAdjacentDirections(room).forEach { direction ->
+            if (!indicators.containsKey(direction)) {
+                indicators[direction] = DirectionIndicatorUi(
+                    direction = direction,
+                    status = DirectionIndicatorStatus.UNEXPLORED
+                )
+            }
+        }
+        return indicators
+    }
+
+    private fun resolveBlockedIndicatorStatus(room: Room, direction: String): DirectionIndicatorStatus? {
+        val normalized = direction.lowercase(Locale.getDefault())
+        val currentBlock = room.blockedDirections?.get(normalized)
+        if (currentBlock != null && isBlockActive(room, normalized, currentBlock)) {
+            return currentBlock.toIndicatorStatus()
+        }
+
+        val destId = getConnection(room, normalized)
+        val opposite = oppositeDirection(normalized)
+        if (destId != null && opposite != null) {
+            val destRoom = roomsById[destId]
+            val destBlock = destRoom?.blockedDirections?.get(opposite)
+            if (destRoom != null && destBlock != null && isBlockActive(destRoom, opposite, destBlock)) {
+                return destBlock.toIndicatorStatus()
+            }
+        }
+        return null
+    }
+
+    private fun BlockedDirection.toIndicatorStatus(): DirectionIndicatorStatus? =
+        when (type.lowercase(Locale.getDefault())) {
+            "enemy" -> DirectionIndicatorStatus.ENEMY
+            "lock" -> DirectionIndicatorStatus.LOCKED
+            else -> null
+        }
+
+    private fun isBlockActive(room: Room, direction: String, block: BlockedDirection): Boolean {
+        val normalized = direction.lowercase(Locale.getDefault())
+        if (isDirectionUnlocked(room.id, normalized)) return false
+        return when (block.type.lowercase(Locale.getDefault())) {
+            "enemy" -> hasBlockingEnemies(room, normalized)
+            "lock" -> {
+                if (!requirementsMet(block.requires)) return true
+                val keyId = block.keyId?.takeIf { it.isNotBlank() }
+                keyId != null && !inventoryService.hasItem(keyId)
+            }
+
+            else -> true
+        }
+    }
+
+    private fun refreshDirectionIndicatorsForCurrentRoom() {
+        val room = _uiState.value.currentRoom ?: return
+        val indicators = buildDirectionIndicators(room)
+        _uiState.update { state ->
+            if (state.directionIndicators == indicators) state else state.copy(directionIndicators = indicators)
+        }
     }
 
     private fun buildDialogueUi(line: DialogueLine?): DialogueUi? {
@@ -1517,6 +1606,7 @@ class ExplorationViewModel(
                     actionHints = buildActionHints(initialRoom, initialActions),
                     enemies = initialRoom?.let { roomEnemyParties(it).flatten() }.orEmpty(),
                     blockedDirections = computeBlockedDirections(initialRoom),
+                    directionIndicators = buildDirectionIndicators(initialRoom),
                     roomState = getRoomStateSnapshot(initialRoom?.id),
                     groundItems = getGroundItemsSnapshot(initialRoom?.id),
                     activeDialogue = null,
@@ -1603,6 +1693,7 @@ class ExplorationViewModel(
                 actionHints = buildActionHints(nextRoom, nextActions),
                 enemies = roomEnemyParties(nextRoom).flatten(),
                 blockedDirections = computeBlockedDirections(nextRoom),
+                directionIndicators = buildDirectionIndicators(nextRoom),
                 roomState = getRoomStateSnapshot(nextRoom.id),
                 groundItems = getGroundItemsSnapshot(nextRoom.id),
                 activeDialogue = null,
@@ -2163,6 +2254,90 @@ class ExplorationViewModel(
         }
     }
 
+    fun saveGame(slot: Int = 1) {
+        viewModelScope.launch(dispatchers.io) {
+            val success = when (slot) {
+                GameSaveRepository.QUICKSAVE_SLOT -> runCatching { saveRepository.quickSave() }.isSuccess
+                else -> runCatching { saveRepository.save(slot) }.isSuccess
+            }
+            val label = if (slot == GameSaveRepository.QUICKSAVE_SLOT) "quicksave" else "slot $slot"
+            val message = if (success) "Saved to $label." else "Save failed."
+            postStatus(message)
+        }
+    }
+
+    fun loadGame(slot: Int = 1) {
+        viewModelScope.launch(dispatchers.io) {
+            val success = when (slot) {
+                GameSaveRepository.QUICKSAVE_SLOT -> runCatching { saveRepository.loadQuickSave() }.getOrElse { false }
+                else -> runCatching { saveRepository.load(slot) }.getOrElse { false }
+            }
+            val label = if (slot == GameSaveRepository.QUICKSAVE_SLOT) "quicksave" else "slot $slot"
+            val message = if (success) "Loaded $label." else "Load failed."
+            postStatus(message)
+        }
+    }
+
+    suspend fun fetchSaveSlots(): List<SaveSlotSummary> = withContext(dispatchers.io) {
+        val quick = runCatching { saveRepository.quickSaveInfo() }.getOrNull()
+        val slots = runCatching { saveRepository.slotInfos() }.getOrElse { emptyList() }
+        buildList {
+            add(quick.toSummary(GameSaveRepository.QUICKSAVE_SLOT, isQuick = true))
+            slots.forEach { (slot, info) ->
+                add(info.toSummary(slot, isQuick = false))
+            }
+        }
+    }
+
+    private fun GameSessionSlotInfo?.toSummary(slot: Int, isQuick: Boolean): SaveSlotSummary {
+        val state = this?.state
+        val savedAt = this?.savedAtMillis
+        if (state == null || state.isEmptySlot()) {
+            return SaveSlotSummary(
+                slot = slot,
+                state = null,
+                title = if (isQuick) "Quicksave" else "Empty Slot",
+                subtitle = if (isQuick) "No quicksave data" else "No data",
+                isEmpty = true,
+                isQuickSave = isQuick,
+                isAutosave = false,
+                savedAtMillis = null
+            )
+        }
+        val location = buildList {
+            state.roomId?.let { rid ->
+                roomsById[rid]?.title?.takeIf { it.isNotBlank() }?.let { add(it) } ?: add(rid)
+            }
+            state.hubId?.let { add(it) }
+        }.takeIf { it.isNotEmpty() }?.joinToString(" · ") ?: if (isQuick) "Quicksave" else "Unknown Location"
+        val summary = "Level ${state.playerLevel} · ${state.playerCredits} credits"
+        val savedLabel = savedAt?.let {
+            runCatching {
+                Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("MMM d • HH:mm"))
+            }.getOrNull()
+        }
+        val subtitle = listOfNotNull(summary, savedLabel).joinToString(" • ")
+        return SaveSlotSummary(
+            slot = slot,
+            state = state,
+            title = location,
+            subtitle = subtitle,
+            isEmpty = false,
+            isQuickSave = isQuick,
+            isAutosave = false,
+            savedAtMillis = savedAt
+        )
+    }
+
+    private fun GameSessionState.isEmptySlot(): Boolean {
+        return roomId.isNullOrBlank() &&
+            hubId.isNullOrBlank() &&
+            activeQuests.isEmpty() &&
+            inventory.isEmpty() &&
+            completedQuests.isEmpty() &&
+            completedMilestones.isEmpty()
+    }
+
     fun selectMenuTab(tab: MenuTab) {
         lastMenuTab = tab
         _uiState.update { it.copy(menuTab = tab) }
@@ -2331,6 +2506,8 @@ class ExplorationViewModel(
             _uiState.update { state ->
                 state.copy(
                     availableConnections = visibleConnections(resolvedRoom),
+                    blockedDirections = computeBlockedDirections(resolvedRoom),
+                    directionIndicators = buildDirectionIndicators(resolvedRoom),
                     canReturnToHub = canReturnToHub(resolvedRoom)
                 )
             }
@@ -2583,6 +2760,7 @@ class ExplorationViewModel(
                     actionHints = buildActionHints(updatedRoom, updatedActions),
                     availableConnections = visibleConnections(updatedRoom),
                     blockedDirections = computeBlockedDirections(updatedRoom),
+                    directionIndicators = buildDirectionIndicators(updatedRoom),
                     canReturnToHub = canReturnToHub(updatedRoom)
                 )
             }
@@ -2643,6 +2821,9 @@ class ExplorationViewModel(
         if (newIds.isNotEmpty()) {
             unlockedAreaIds.addAll(newIds)
             markUnlockedAreas(newIds)
+        }
+        if (newIds.isNotEmpty() || removed.isNotEmpty()) {
+            refreshDirectionIndicatorsForCurrentRoom()
         }
     }
 
@@ -3225,7 +3406,8 @@ class ExplorationViewModel(
     private fun refreshCurrentRoomBlockedDirections() {
         val room = _uiState.value.currentRoom ?: return
         val blocked = computeBlockedDirections(room)
-        _uiState.update { it.copy(blockedDirections = blocked) }
+        val indicators = buildDirectionIndicators(room)
+        _uiState.update { it.copy(blockedDirections = blocked, directionIndicators = indicators) }
     }
 
     private fun computeBlockedDirections(room: Room?): Set<String> {
@@ -3260,11 +3442,13 @@ class ExplorationViewModel(
         if (_uiState.value.currentRoom?.id == roomId) {
             val currentRoom = roomsById[roomId]
             val blocked = computeBlockedDirections(currentRoom)
+            val indicators = buildDirectionIndicators(currentRoom)
             _uiState.update {
                 val resolvedRoom = currentRoom ?: it.currentRoom
                 it.copy(
                     currentRoom = resolvedRoom,
                     blockedDirections = blocked,
+                    directionIndicators = indicators,
                     roomState = getRoomStateSnapshot(roomId),
                     canReturnToHub = canReturnToHub(resolvedRoom)
                 )
@@ -3416,11 +3600,13 @@ class ExplorationViewModel(
         if (_uiState.value.currentRoom?.id == roomId) {
             val updatedRoom = roomsById[roomId]
             val blocked = computeBlockedDirections(updatedRoom)
+            val indicators = buildDirectionIndicators(updatedRoom)
             _uiState.update {
                 val resolvedRoom = updatedRoom ?: it.currentRoom
                 it.copy(
                     currentRoom = resolvedRoom,
                     blockedDirections = blocked,
+                    directionIndicators = indicators,
                     canReturnToHub = canReturnToHub(resolvedRoom)
                 )
             }

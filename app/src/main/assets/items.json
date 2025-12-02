@@ -195,6 +195,50 @@
         }
     },
     {
+        "id": "starbar_crunch",
+        "name": "Starbar Crunch",
+        "description": "Sugary compressed carbs that keep you jittery through long runs.",
+        "type": "snack",
+        "value": 120,
+        "buy_price": 240,
+        "rarity": "uncommon",
+        "equipment": {
+            "slot": "snack",
+            "stat_mods": {
+                "spd": 6
+            }
+        }
+    },
+    {
+        "id": "mineral_trail_mix",
+        "name": "Mineral Trail Mix",
+        "description": "Protein nibs dusted with electrolytes mined from the Stellarium tunnels.",
+        "type": "snack",
+        "value": 140,
+        "buy_price": 260,
+        "rarity": "uncommon",
+        "equipment": {
+            "slot": "snack",
+            "hp_bonus": 120
+        }
+    },
+    {
+        "id": "comet_gummies",
+        "name": "Comet Gummies",
+        "description": "Sour gummies shaped like tiny comets that sharpen your focus.",
+        "type": "snack",
+        "value": 180,
+        "buy_price": 320,
+        "rarity": "rare",
+        "equipment": {
+            "slot": "snack",
+            "stat_mods": {
+                "foc": 4,
+                "luck": 2
+            }
+        }
+    },
+    {
         "id": "keystone",
         "name": "Keystone",
         "description": "The Keystone emits a low hum.",

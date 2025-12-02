@@ -112,6 +112,19 @@ class CombatViewModel(
     val timedPrompt: StateFlow<TimedPromptState?> = _timedPrompt.asStateFlow()
     private val _awaitingAction = MutableStateFlow<String?>(null)
     val awaitingAction: StateFlow<String?> = _awaitingAction.asStateFlow()
+    private fun setAwaitingAction(actorId: String?) {
+        val previous = _awaitingAction.value
+        if (previous == actorId) return
+        _awaitingAction.value = actorId
+        if (actorId != null) {
+            atbMenuPaused = true
+        } else {
+            atbMenuPaused = false
+            if (!isAtbPaused()) {
+                tryProcessEnemyTurns()
+            }
+        }
+    }
     private val _combatMessage = MutableStateFlow<String?>(null)
     val combatMessage: StateFlow<String?> = _combatMessage.asStateFlow()
 
@@ -136,6 +149,22 @@ class CombatViewModel(
     private val _atbMeters = MutableStateFlow<Map<String, Float>>(emptyMap())
     val atbMeters: StateFlow<Map<String, Float>> = _atbMeters.asStateFlow()
     private var atbJob: Job? = null
+    private var atbMenuPaused: Boolean = false
+    private var atbAnimationPauses: Int = 0
+    private var suppressMissLungeTargets: Set<String> = emptySet()
+
+    private fun isAtbPaused(): Boolean = atbMenuPaused || atbAnimationPauses > 0
+
+    private fun pauseAtbForAnimation() {
+        atbAnimationPauses += 1
+    }
+
+    private fun resumeAtbForAnimation() {
+        atbAnimationPauses = (atbAnimationPauses - 1).coerceAtLeast(0)
+        if (!isAtbPaused()) {
+            tryProcessEnemyTurns()
+        }
+    }
 
     init {
         itemCatalog.load()
@@ -286,12 +315,13 @@ class CombatViewModel(
     }
 
     private fun maybeTriggerAttackLunge(action: CombatAction) {
-        if (action is CombatAction.BasicAttack) {
+        if (action is CombatAction.BasicAttack && action.actorId in playerIdList) {
             triggerAttackLunge(action.actorId)
         }
     }
 
     private fun triggerMissLunge(targetId: String) {
+        pauseAtbForAnimation()
         _missLungeToken.value = _missLungeToken.value + 1
         _missLungeActorId.value = targetId
     }
@@ -317,6 +347,7 @@ class CombatViewModel(
     }
 
     private fun triggerAttackLunge(actorId: String) {
+        pauseAtbForAnimation()
         _lungeToken.value = _lungeToken.value + 1
         _lungeActorId.value = actorId
     }
@@ -324,12 +355,14 @@ class CombatViewModel(
     fun onLungeFinished(token: Long) {
         if (_lungeToken.value == token) {
             _lungeActorId.value = null
+            resumeAtbForAnimation()
         }
     }
 
     fun onMissLungeFinished(token: Long) {
         if (_missLungeToken.value == token) {
             _missLungeActorId.value = null
+            resumeAtbForAnimation()
         }
     }
 
@@ -406,6 +439,21 @@ class CombatViewModel(
         if (state.combatants[enemyId]?.isAlive != true) return
         playUiCue("click")
         setSelection(setOf(enemyId))
+    }
+
+    fun selectReadyPlayer(actorId: String) {
+        val state = _state.value ?: return
+        if (actorId !in playerIdList) return
+        if (!readyQueue.contains(actorId)) return
+        val actorState = state.combatants[actorId] ?: return
+        if (!actorState.isAlive) return
+        val index = readyQueue.indexOf(actorId)
+        if (index > 0) {
+            readyQueue.removeAt(index)
+            readyQueue.add(0, actorId)
+            updateActiveActorFromQueue(state)
+        }
+        setAwaitingAction(actorId)
     }
 
     fun toggleEnemyTarget(enemyId: String) {
@@ -552,7 +600,9 @@ class CombatViewModel(
                 }
                 is CombatLogEntry.Damage -> {
                     if (entry.amount == 0 && entry.element == "miss") {
-                        triggerMissLunge(entry.targetId)
+                        if (entry.targetId !in suppressMissLungeTargets) {
+                            triggerMissLunge(entry.targetId)
+                        }
                     }
                     combatFxEvents.tryEmit(
                         CombatFxEvent.Impact(
@@ -616,7 +666,7 @@ class CombatViewModel(
                         enemyTurnJob?.cancel()
                         enemyTurnJob = null
                         cancelTimedPrompt()
-                        _awaitingAction.value = null
+                        setAwaitingAction(null)
                     }
                 }
                 is CombatLogEntry.StatusExpired,
@@ -655,6 +705,7 @@ class CombatViewModel(
     private fun advanceAtb(deltaSeconds: Float) {
         val currentState = _state.value ?: return
         if (currentState.outcome != null) return
+        if (isAtbPaused()) return
         val meters = _atbMeters.value.toMutableMap()
         currentState.turnOrder.forEach { slot ->
             val id = slot.combatantId
@@ -676,7 +727,6 @@ class CombatViewModel(
             if (next >= 0.999f) {
                 readyQueue.add(id)
                 meters[id] = 1f
-                markAwaitingActionCandidate(id)
                 updateActiveActorFromQueue()
             }
         }
@@ -690,30 +740,9 @@ class CombatViewModel(
         }
     }
 
-    private fun markAwaitingActionCandidate(actorId: String) {
-        if (_awaitingAction.value != null) return
-        if (actorId in playerIdList && readyQueue.firstOrNull() == actorId) {
-            val alive = _state.value?.combatants?.get(actorId)?.isAlive != false
-            if (alive) {
-                _awaitingAction.value = actorId
-            }
-        }
-    }
-
     private fun clearAwaitingAction(actorId: String) {
         if (_awaitingAction.value == actorId) {
-            _awaitingAction.value = null
-            assignNextAwaitingAction()
-        }
-    }
-
-    private fun assignNextAwaitingAction() {
-        if (_awaitingAction.value != null) return
-        val next = readyQueue.firstOrNull()
-        if (next != null && next in playerIdList) {
-            if (_state.value?.combatants?.get(next)?.isAlive == true) {
-                _awaitingAction.value = next
-            }
+            setAwaitingAction(null)
         }
     }
 
@@ -736,15 +765,10 @@ class CombatViewModel(
         if (index >= 0) {
             readyQueue.removeAt(index)
             if (actorId in playerIdList && _awaitingAction.value == actorId) {
-                _awaitingAction.value = null
-                if (!updateActive) {
-                    assignNextAwaitingAction()
-                }
+                setAwaitingAction(null)
             }
             if (updateActive && index == 0) {
                 updateActiveActorFromQueue()
-            } else if (!updateActive && _awaitingAction.value == null) {
-                assignNextAwaitingAction()
             }
         }
     }
@@ -769,7 +793,7 @@ class CombatViewModel(
                 iterator.remove()
                 resetAtbMeter(id)
                 if (_awaitingAction.value == id) {
-                    _awaitingAction.value = null
+                    setAwaitingAction(null)
                 }
                 removed = true
             }
@@ -779,10 +803,9 @@ class CombatViewModel(
             enemyTurnJob?.cancel()
             enemyTurnJob = null
             cancelTimedPrompt()
-            _awaitingAction.value = null
+            setAwaitingAction(null)
         } else if (removed) {
             updateActiveActorFromQueue(state)
-            assignNextAwaitingAction()
         }
     }
 
@@ -798,61 +821,69 @@ class CombatViewModel(
     }
 
     private suspend fun executeEnemyTurn(enemyId: String) {
-        val snapshot = _state.value
-        val enemyStateSnapshot = snapshot?.combatants?.get(enemyId)
-        if (snapshot == null || enemyStateSnapshot == null || !enemyStateSnapshot.isAlive) {
-            removeFromReadyQueue(enemyId)
-            updateActiveActorFromQueue()
-            enemyTurnJob = null
-            tryProcessEnemyTurns()
-            return
-        }
-        val action = selectEnemyAction(snapshot, enemyStateSnapshot)
-        val guardTargets = guardableTargetsFor(action).filter { id ->
-            snapshot.combatants[id]?.isAlive == true
-        }
-        maybeTriggerAttackLunge(action)
-        val guardMessage = guardTargets.takeIf { it.isNotEmpty() }?.let { guardPromptMessage(it, snapshot) }
-        val guardSuccess = if (guardMessage != null) {
-            awaitTimedWindow(
-                type = TimedWindowType.Defense(guardTargets),
-                message = guardMessage,
-                durationMs = TIMED_GUARD_WINDOW_MS
-            )
-        } else {
-            false
-        }
+        pauseAtbForAnimation()
+        try {
+            val snapshot = _state.value
+            val enemyStateSnapshot = snapshot?.combatants?.get(enemyId)
+            if (snapshot == null || enemyStateSnapshot == null || !enemyStateSnapshot.isAlive) {
+                removeFromReadyQueue(enemyId)
+                updateActiveActorFromQueue()
+                enemyTurnJob = null
+                tryProcessEnemyTurns()
+                return
+            }
+            val action = selectEnemyAction(snapshot, enemyStateSnapshot)
+            val guardTargets = guardableTargetsFor(action).filter { id ->
+                snapshot.combatants[id]?.isAlive == true
+            }
+            maybeTriggerAttackLunge(action)
+            val guardMessage = guardTargets.takeIf { it.isNotEmpty() }?.let { guardPromptMessage(it, snapshot) }
+            val guardSuccess = if (guardMessage != null) {
+                awaitTimedWindow(
+                    type = TimedWindowType.Defense(guardTargets),
+                    message = guardMessage,
+                    durationMs = TIMED_GUARD_WINDOW_MS
+                )
+            } else {
+                false
+            }
 
-        var acted = false
-        updateState { current ->
-            val enemyState = current.combatants[enemyId] ?: return@updateState current
-            if (!enemyState.isAlive) return@updateState current
-            tickEnemyCooldowns()
-            var working = current
-            if (guardSuccess) {
-                guardTargets.forEach { targetId ->
-                    if (current.combatants[targetId]?.isAlive == true) {
-                        working = combatEngine.applyBuffs(
-                            working,
-                            targetId,
-                            listOf(BuffEffect(stat = "defense", value = TIMED_GUARD_DEF_BONUS, duration = 1))
-                        )
+            var acted = false
+            val suppressedMissTargets = if (guardSuccess) guardTargets.toSet() else emptySet()
+            suppressMissLungeTargets = suppressedMissTargets
+            updateState { current ->
+                val enemyState = current.combatants[enemyId] ?: return@updateState current
+                if (!enemyState.isAlive) return@updateState current
+                tickEnemyCooldowns()
+                var working = current
+                if (guardSuccess) {
+                    guardTargets.forEach { targetId ->
+                        if (current.combatants[targetId]?.isAlive == true) {
+                            working = combatEngine.applyBuffs(
+                                working,
+                                targetId,
+                                listOf(BuffEffect(stat = "defense", value = TIMED_GUARD_DEF_BONUS, duration = 1))
+                            )
+                        }
                     }
                 }
+                val resolved = actionProcessor.execute(working, action, ::victoryReward)
+                registerEnemyActionCooldown(action)
+                acted = true
+                resolved.applyOutcomeResults(current)
             }
-            val resolved = actionProcessor.execute(working, action, ::victoryReward)
-            registerEnemyActionCooldown(action)
-            acted = true
-            resolved.applyOutcomeResults(current)
+            if (acted) {
+                concludeActorTurn(enemyId)
+            } else {
+                removeFromReadyQueue(enemyId)
+                updateActiveActorFromQueue()
+            }
+            suppressMissLungeTargets = emptySet()
+            enemyTurnJob = null
+            tryProcessEnemyTurns()
+        } finally {
+            resumeAtbForAnimation()
         }
-        if (acted) {
-            concludeActorTurn(enemyId)
-        } else {
-            removeFromReadyQueue(enemyId)
-            updateActiveActorFromQueue()
-        }
-        enemyTurnJob = null
-        tryProcessEnemyTurns()
     }
 
     private fun Player.toCombatant(): Combatant =

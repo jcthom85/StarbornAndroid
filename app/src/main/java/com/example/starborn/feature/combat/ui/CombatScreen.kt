@@ -215,7 +215,8 @@ private fun CinematicPlaybackState.toUiState(): CinematicUiState {
         step = CinematicStepUi(
             type = step.type,
             speaker = step.speaker,
-            text = step.text
+            text = step.text,
+            portrait = null
         )
     )
 }
@@ -465,11 +466,11 @@ fun CombatScreen(
     }
 
     val state = combatState
-    val enemyEntries = enemies.mapIndexed { index, enemy ->
-        enemy to enemyCombatantIds.getOrElse(index) { enemy.id }
-    }
-    val focusEnemyEntry = selectedEnemyIds.firstOrNull()?.let { id ->
-        enemyEntries.firstOrNull { it.second == id }
+        val enemyEntries = enemies.mapIndexed { index, enemy ->
+            enemy to enemyCombatantIds.getOrElse(index) { enemy.id }
+        }
+        val focusEnemyEntry = selectedEnemyIds.firstOrNull()?.let { id ->
+            enemyEntries.firstOrNull { it.second == id }
     } ?: enemyEntries.firstOrNull()
     val focusEnemy = focusEnemyEntry?.first
     val focusEnemyCombatantId = focusEnemyEntry?.second
@@ -487,6 +488,8 @@ fun CombatScreen(
             val id = effect.id.lowercase()
             id == "shock" || id == "freeze" || id == "stun"
         }
+        val allowAllySelection = pendingTargetRequest?.accepts(TargetFilter.ALLY) == true
+        val enemyTargetPrompt = pendingTargetRequest?.accepts(TargetFilter.ENEMY) == true
         if (combatLocked || menuActor == null) {
             showSkillsDialog.value = false
             showItemsDialog.value = false
@@ -542,6 +545,13 @@ fun CombatScreen(
                 executePendingAction(pending, targetId)
             } else {
                 pendingInstruction = pending.instruction
+            }
+        }
+
+        fun handlePartyMemberTap(targetId: String) {
+            when {
+                allowAllySelection -> handleAllyTap(targetId)
+                pendingTargetRequest == null && !combatLocked -> viewModel.selectReadyPlayer(targetId)
             }
         }
 
@@ -657,8 +667,6 @@ fun CombatScreen(
                             .background(Color.Black.copy(alpha = 0.18f))
                     )
                 }
-            val allowAllySelection = pendingTargetRequest?.accepts(TargetFilter.ALLY) == true
-            val enemyTargetPrompt = pendingTargetRequest?.accepts(TargetFilter.ENEMY) == true
             val commandActor = menuActor
             val commandPaletteVisible = commandActor != null &&
                 !combatLocked &&
@@ -725,9 +733,8 @@ fun CombatScreen(
                             statusFx = statusFx,
                             knockoutFx = knockoutFx,
                             supportFx = supportFx,
-                            onMemberTap = if (allowAllySelection) { memberId ->
-                                handleAllyTap(memberId)
-                            } else null,
+                            onMemberTap = { handlePartyMemberTap(it) },
+                            allowNonReadySelection = allowAllySelection,
                             victoryEmotes = victoryEmotes,
                             atbMeters = atbMeters,
                             lungeActorId = lungeActorId,
@@ -839,6 +846,7 @@ private fun PartyRoster(
     knockoutFx: List<KnockoutFxUi>,
     supportFx: List<SupportFxUi>,
     onMemberTap: ((String) -> Unit)? = null,
+    allowNonReadySelection: Boolean = false,
     victoryEmotes: Boolean = false,
     atbMeters: Map<String, Float> = emptyMap(),
     lungeActorId: String?,
@@ -879,9 +887,11 @@ private fun PartyRoster(
                     }
                     val portraitPainter = rememberAssetPainter(portraitPath, R.drawable.main_menu_background)
                     val atbProgress = atbMeters[member.id] ?: 0f
+                    val readyToAct = atbProgress >= 0.999f
 
                     val baseModifier = Modifier.widthIn(min = 150.dp)
-                    val interactiveModifier = if (onMemberTap != null && isAlive) {
+                    val canTap = onMemberTap != null && isAlive && (readyToAct || allowNonReadySelection)
+                    val interactiveModifier = if (canTap) {
                         baseModifier.clickable { onMemberTap(member.id) }
                     } else {
                         baseModifier
@@ -904,6 +914,12 @@ private fun PartyRoster(
                                 modifier = Modifier.size(if (isActive) 114.dp else 108.dp),
                                 contentAlignment = Alignment.Center
                             ) {
+                                if (readyToAct) {
+                                    ReadyAura(
+                                        color = Color(0xFF4EE7FF),
+                                        modifier = Modifier.matchParentSize()
+                                    )
+                                }
                                 if (isActive) {
                                     Box(
                                         modifier = Modifier
@@ -1058,7 +1074,7 @@ private fun EnemyRoster(
             val atbProgress = atbMeters[combatantId] ?: 0f
             val enemyLungeToken = if (combatantId == lungeActorId) lungeToken else null
             val enemyMissToken = if (combatantId == missLungeActorId) missLungeToken else null
-            val horizontalOffset = ((index - centerIndex) * 90f).dp
+            val horizontalOffset = ((index - centerIndex) * 160f).dp
             val verticalOffset = (-abs(index - centerIndex) * 14f).dp
             val cardModifier = Modifier
                 .align(Alignment.BottomCenter)
@@ -2340,14 +2356,43 @@ private fun AnimatedFlavorText(line: String?) {
 }
 
 @Composable
+private fun ReadyAura(
+    color: Color,
+    modifier: Modifier = Modifier
+) {
+    val transition = rememberInfiniteTransition(label = "ready_aura_transition")
+    val pulse by transition.animateFloat(
+        initialValue = 0.94f,
+        targetValue = 1.08f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 900, easing = EaseOutBack),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "ready_aura_pulse"
+    )
+    Box(
+        modifier = modifier
+            .graphicsLayer {
+                scaleX = pulse
+                scaleY = pulse
+                alpha = 0.42f + (pulse - 0.94f) * 1.4f
+            }
+            .clip(CircleShape)
+            .background(color.copy(alpha = 0.2f))
+            .border(BorderStroke(2.dp, color.copy(alpha = 0.65f)), CircleShape)
+    )
+}
+
+@Composable
 private fun AtbBar(
     progress: Float,
     modifier: Modifier = Modifier,
     color: Color = Color(0xFF2D9CFF)
 ) {
     val clamped = progress.coerceIn(0f, 1f)
-    val tipTransition = rememberInfiniteTransition(label = "atb_tip_transition")
-    val tipGlow by tipTransition.animateFloat(
+    val ready = clamped >= 0.999f
+    val barTransition = rememberInfiniteTransition(label = "atb_bar_transition")
+    val tipGlow by barTransition.animateFloat(
         initialValue = 0.35f,
         targetValue = 1f,
         animationSpec = infiniteRepeatable(
@@ -2356,11 +2401,59 @@ private fun AtbBar(
         ),
         label = "atb_tip_glow"
     )
+    val readyPulse by barTransition.animateFloat(
+        initialValue = 0.6f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 1000, easing = EaseOutBack),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "atb_ready_pulse"
+    )
+    val readyFlash = remember { Animatable(0f) }
+    LaunchedEffect(ready) {
+        if (ready) {
+            readyFlash.snapTo(1f)
+            readyFlash.animateTo(0f, tween(durationMillis = 360))
+        } else {
+            readyFlash.snapTo(0f)
+        }
+    }
     Box(
         modifier = modifier
             .height(8.dp)
             .clip(RoundedCornerShape(999.dp))
     ) {
+        if (ready) {
+            Canvas(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .graphicsLayer {
+                        alpha = 0.55f + 0.35f * readyPulse
+                        scaleX = 1f + 0.04f * readyPulse
+                        scaleY = 1f + 0.04f * readyPulse
+                    }
+            ) {
+                val corner = CornerRadius(size.height, size.height)
+                drawRoundRect(
+                    brush = Brush.horizontalGradient(
+                        colors = listOf(
+                            color.copy(alpha = 0.05f),
+                            color.copy(alpha = 0.45f + 0.25f * readyPulse),
+                            color.copy(alpha = 0.05f)
+                        )
+                    ),
+                    size = size,
+                    cornerRadius = corner
+                )
+                drawRoundRect(
+                    color = Color.White.copy(alpha = 0.18f + 0.12f * readyPulse),
+                    size = size,
+                    cornerRadius = corner,
+                    style = Stroke(width = size.height * 0.2f)
+                )
+            }
+        }
         GlowProgressBar(
             progress = clamped,
             modifier = Modifier
@@ -2383,6 +2476,15 @@ private fun AtbBar(
                     color = color.copy(alpha = 0.25f + 0.45f * tipGlow),
                     radius = size.height * 0.75f,
                     center = Offset(tipX, size.height / 2f)
+                )
+            }
+        }
+        if (readyFlash.value > 0f) {
+            Canvas(modifier = Modifier.fillMaxSize()) {
+                drawRoundRect(
+                    color = Color.White.copy(alpha = 0.4f * readyFlash.value),
+                    size = size,
+                    cornerRadius = CornerRadius(size.height, size.height)
                 )
             }
         }

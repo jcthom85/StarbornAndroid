@@ -87,10 +87,11 @@ data class InventoryLaunchOptions(
 
 private fun Item.categoryKey(): String {
     categoryOverride?.let { return it.lowercase(Locale.getDefault()) }
+    if (equipment != null) return CATEGORY_EQUIPMENT
     val normalized = type.lowercase(Locale.getDefault())
     return when (normalized) {
         "consumable", "medicine", "food", "drink", "tonic" -> CATEGORY_CONSUMABLES
-        "weapon", "armor", "shield", "accessory", "gear" -> CATEGORY_EQUIPMENT
+        "weapon", "armor", "shield", "accessory", "gear", "snack" -> CATEGORY_EQUIPMENT
         "material", "ingredient", "component", "resource" -> CATEGORY_CRAFTING
         "key", "key_item", "quest" -> CATEGORY_KEY_ITEMS
         else -> CATEGORY_OTHER
@@ -236,7 +237,7 @@ private fun InventoryScreen(
     val slotOptions = remember(baseSlots, equippedItems, normalizedFocusSlot) {
         (baseSlots + equippedItems.keys.map { it.lowercase(Locale.getDefault()) } + listOfNotNull(normalizedFocusSlot))
             .distinct()
-            .ifEmpty { listOf("weapon", "armor", "accessory") }
+            .ifEmpty { listOf("weapon", "armor", "accessory", "snack") }
     }
     var selectedSlot by remember(slotOptions, normalizedFocusSlot) {
         mutableStateOf(
@@ -248,6 +249,14 @@ private fun InventoryScreen(
     val equippedItemNames = remember(equippedItems, entryById) {
         equippedItems.mapValues { (_, itemId) ->
             entryById[itemId]?.item?.name ?: itemId
+                .takeIf { it.isNotBlank() }
+                ?.split('_', ' ')
+                ?.filter { it.isNotBlank() }
+                ?.joinToString(" ") { part ->
+                    part.replaceFirstChar { c ->
+                        if (c.isLowerCase()) c.titlecase(Locale.getDefault()) else c.toString()
+                    }
+                }.orEmpty()
         }
     }
     var selectedEquipEntry by remember(selectedSlot, equippableEntries) {
@@ -1308,9 +1317,10 @@ private fun itemIconRes(item: Item?): Int {
             R.drawable.item_icon_fishing
         normalizedType.contains("lure") ->
             R.drawable.item_icon_lure
-        normalizedType in setOf("weapon", "armor", "accessory", "gear") || item.equipment != null -> {
+        normalizedType in setOf("weapon", "armor", "accessory", "gear", "snack") || item.equipment != null -> {
             val slot = item.equipment?.slot?.lowercase(Locale.getDefault())
             when {
+                slot == "snack" -> R.drawable.item_icon_food
                 slot == "armor" && name.contains("glove") -> R.drawable.item_icon_gloves
                 slot == "armor" && name.contains("pendant") -> R.drawable.item_icon_pendant
                 slot == "armor" -> R.drawable.item_icon_armor

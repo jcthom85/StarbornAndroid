@@ -46,6 +46,12 @@ class InventoryViewModel(
     )
 
     init {
+        // Prime inventory from the current session immediately so the Gear tab
+        // has data on first render before the flow collector runs.
+        val initialInventory = sessionStore.state.value.inventory
+        if (inventoryService.snapshot() != initialInventory) {
+            inventoryService.restore(initialInventory)
+        }
         viewModelScope.launch {
             sessionStore.state
                 .map { it.inventory }

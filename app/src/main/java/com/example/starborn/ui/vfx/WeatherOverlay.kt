@@ -165,9 +165,9 @@ fun SnowEffect(
             repeat(64) { add(0f) }
         }
     }
-    val maxColumnHeight = 0.22f
+    val maxColumnHeight = 0.16f
     val density = LocalDensity.current
-    val snowCapPx = with(density) { 64.dp.toPx() }
+    val snowCapPx = with(density) { 72.dp.toPx() }
 
     LaunchedEffect(intensity) {
         while (true) {
@@ -176,7 +176,8 @@ fun SnowEffect(
             particles.addAll(newParticles)
 
             for (i in accumulationColumns.indices) {
-                val decayed = (accumulationColumns[i] - 0.00002f).coerceAtLeast(0f)
+                val baseMelt = 0.00008f + accumulationColumns[i] * 0.00025f
+                val decayed = (accumulationColumns[i] - baseMelt).coerceAtLeast(0f)
                 if (decayed != accumulationColumns[i]) {
                     accumulationColumns[i] = decayed
                 }
@@ -184,19 +185,36 @@ fun SnowEffect(
 
             val numToEmit = when (intensity) {
                 "low" -> 1
-                "medium" -> 2
-                "high" -> 4
+                "medium" -> 1
+                "high" -> 2
                 else -> 0
             }
 
             for (i in 0 until numToEmit) {
                 val x = random.nextFloat()
                 val y = -0.1f
-                val size = (random.nextFloat() * 0.01f + 0.005f) to (random.nextFloat() * 0.01f + 0.005f)
-                val velocity = Offset(random.nextFloat() * 0.005f - 0.0025f, random.nextFloat() * 0.005f + 0.0025f)
-                val life = random.nextFloat() * 4f + 2f
-                val turbulence = listOf(random.nextFloat() * 0.02f - 0.01f, random.nextFloat() * 0.02f - 0.01f)
-                particles.add(Particle(Offset(x, y), velocity, size, color, life, life, turbulence = turbulence))
+                val flakeRadius = random.nextFloat() * 0.0065f + 0.0035f
+                val size = flakeRadius to flakeRadius
+                val velocity = Offset(
+                    random.nextFloat() * 0.0012f - 0.0006f,
+                    random.nextFloat() * 0.0016f + 0.001f
+                )
+                val life = random.nextFloat() * 4f + 5f
+                val turbulence = listOf(
+                    random.nextFloat() * 0.0008f - 0.0004f,
+                    random.nextFloat() * 0.0006f - 0.0003f
+                )
+                particles.add(
+                    Particle(
+                        Offset(x, y),
+                        velocity,
+                        size,
+                        color.copy(alpha = 0.75f),
+                        life,
+                        life,
+                        turbulence = turbulence
+                    )
+                )
             }
 
             val particlesToRemove = mutableListOf<Particle>()
@@ -208,7 +226,7 @@ fun SnowEffect(
 
                 if (p.position.y >= 1f) {
                     val columnIndex = ((p.position.x.coerceIn(0f, 0.999f)) * accumulationColumns.size).toInt()
-                    val deposit = (p.size.first + p.size.second) * 0.3f
+                    val deposit = (p.size.first + p.size.second) * 0.2f
                     val updated = (accumulationColumns[columnIndex] + deposit).coerceAtMost(maxColumnHeight)
                     accumulationColumns[columnIndex] = updated
                     particlesToRemove.add(p)
@@ -231,11 +249,13 @@ fun SnowEffect(
         }
 
         if (accumulationColumns.any { it > 0f }) {
-            val limitNormalized = (snowCapPx / size.height).coerceIn(0f, maxColumnHeight)
+            val limitNormalized = minOf(maxColumnHeight, (snowCapPx / size.height).coerceAtLeast(0f))
             val smoothed = accumulationColumns.mapIndexed { index, value ->
                 val left = accumulationColumns.getOrNull(index - 1) ?: value
                 val right = accumulationColumns.getOrNull(index + 1) ?: value
-                (left + value + right) / 3f
+                val base = (left + value + right) / 3f
+                val wobble = kotlin.math.sin(index * 0.4f) * 0.004f
+                (base + wobble).coerceAtLeast(0f)
             }
             val path = Path().apply {
                 moveTo(0f, size.height)
@@ -271,9 +291,9 @@ fun DustEffect(
 
     LaunchedEffect(Unit) {
         while (true) {
-            if (particles.size < 42) {
-                val deficit = 42 - particles.size
-                repeat(deficit.coerceAtMost(6)) {
+            if (particles.size < 24) {
+                val deficit = 24 - particles.size
+                repeat(deficit.coerceAtMost(3)) {
                     particles.add(spawnDustParticle(random, color))
                 }
             }
@@ -292,14 +312,14 @@ fun DustEffect(
                     val amplitude = it.getOrNull(0) ?: 0f
                     val frequency = it.getOrNull(1) ?: 0f
                     val phase = it.getOrNull(2) ?: 0f
-                    (amplitude * 0.5f) * cos(elapsed * frequency * 0.5f + phase)
+                    (amplitude * 0.35f) * cos(elapsed * frequency * 0.28f + phase)
                 } ?: 0f
                 p.position = Offset(
                     p.position.x + p.velocity.x + crosswind,
                     p.position.y + p.velocity.y + verticalDrift
                 )
                 p.life -= 0.016f
-                if (p.life > 0f && p.position.x in -0.2f..1.2f && p.position.y in -0.2f..1.2f) {
+                if (p.life > 0f && p.position.x in -0.25f..1.25f && p.position.y in -0.25f..1.25f) {
                     survivors += p
                 }
             }
@@ -316,7 +336,7 @@ fun DustEffect(
             val widthPx = p.size.first * size.width
             val heightPx = (p.size.second * size.height).coerceAtLeast(widthPx * 0.35f)
             drawRoundRect(
-                color = p.color.copy(alpha = alpha * 0.9f),
+                color = p.color.copy(alpha = alpha * 0.85f),
                 topLeft = Offset(center.x - widthPx / 2f, center.y - heightPx / 2f),
                 size = Size(widthPx, heightPx),
                 cornerRadius = CornerRadius(heightPx, heightPx)
@@ -337,15 +357,15 @@ fun StormEffect(
 
     Box(modifier = modifier.fillMaxSize()) {
         RainEffect(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.matchParentSize(),
             intensity = intensity,
             color = color,
-            drift = 0.04f
+            drift = 0f
         )
         if (lightningEnabled) {
             Box(
                 modifier = Modifier
-                    .fillMaxSize()
+                    .matchParentSize()
                     .background(lightningColor.copy(alpha = lightningAlpha.value))
             )
         }
@@ -568,20 +588,20 @@ private fun spawnDustParticle(random: Random, color: Color): Particle {
     val fromLeft = random.nextBoolean()
     val startX = if (fromLeft) -0.12f else 1.12f
     val startY = random.nextFloat()
-    val speed = random.nextFloat() * 0.0045f + 0.0025f
+    val speed = random.nextFloat() * 0.0011f + 0.0004f
     val vx = if (fromLeft) speed else -speed
-    val vy = (random.nextFloat() - 0.5f) * 0.0012f
-    val width = random.nextFloat() * 0.02f + 0.01f
-    val height = width * (random.nextFloat() * 0.4f + 0.25f)
-    val life = random.nextFloat() * 2.8f + 2.4f
-    val amplitude = random.nextFloat() * 0.012f + 0.004f
-    val frequency = random.nextFloat() * 0.9f + 0.3f
+    val vy = (random.nextFloat() - 0.5f) * 0.0004f
+    val width = random.nextFloat() * 0.02f + 0.008f
+    val height = width * (random.nextFloat() * 0.2f + 0.15f)
+    val life = random.nextFloat() * 5.5f + 7.5f
+    val amplitude = random.nextFloat() * 0.004f + 0.002f
+    val frequency = random.nextFloat() * 0.22f + 0.08f
     val phase = random.nextFloat() * (2f * PI).toFloat()
     return Particle(
         position = Offset(startX, startY),
         velocity = Offset(vx, vy),
         size = width to height,
-        color = color.copy(alpha = random.nextFloat() * 0.2f + 0.15f),
+        color = color.copy(alpha = random.nextFloat() * 0.08f + 0.06f),
         life = life,
         maxLife = life,
         turbulence = listOf(amplitude, frequency, phase)
