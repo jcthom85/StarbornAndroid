@@ -71,6 +71,14 @@ class QuestRuntimeManager(
     private val uiEventBus: UiEventBus
 ) {
 
+    private companion object {
+        // Flip to true to restore quest banner notifications.
+        private const val SHOW_QUEST_BANNERS = false
+        // Keep progress banners visible so players see objectives completing.
+        private const val SHOW_PROGRESS_BANNERS = true
+        private const val MAX_LOG_ENTRIES = 20
+    }
+
     private val mutex = Mutex()
     private val stageProgress: MutableMap<String, String> = mutableMapOf()
     private val completedTasks: MutableMap<String, MutableSet<String>> = mutableMapOf()
@@ -86,29 +94,50 @@ class QuestRuntimeManager(
                 val seededStages = mutableListOf<Pair<String, String>>()
                 mutex.withLock {
                     val trackedIds = session.activeQuests + session.completedQuests
-                    stageProgress.clear()
-                    stageProgress.putAll(session.questStageById)
+                    // Remove data for quests that are no longer tracked.
                     stageProgress.keys.retainAll(trackedIds)
-                    completedTasks.clear()
+                    completedTasks.keys.retainAll(trackedIds)
+
+                    // Merge persisted stage/task data from the session.
+                    session.questStageById.forEach { (questId, stageId) ->
+                        if (trackedIds.contains(questId)) {
+                            stageProgress[questId] = stageId
+                        }
+                    }
                     session.questTasksCompleted.forEach { (questId, tasks) ->
                         if (trackedIds.contains(questId)) {
                             completedTasks[questId] = tasks.toMutableSet()
                         }
                     }
-                    completedTasks.keys.retainAll(trackedIds)
-                    session.activeQuests.forEach { questId ->
+
+                    // Ensure quest progression reflects completed tasks and stages.
+                    val newlyCompleted = mutableListOf<String>()
+                    trackedIds.forEach { questId ->
+                        if (!session.completedQuests.contains(questId)) {
+                            val quest = questRepository.questById(questId)
+                            maybeProgressQuestLocked(
+                                questId = questId,
+                                quest = quest,
+                                completedTasks = completedTasks[questId].orEmpty(),
+                                newlyCompleted = newlyCompleted
+                            )
+                        }
+                    }
+
+                    // Seed defaults for any active/completed quest missing stage info.
+                    trackedIds.forEach { questId ->
                         if (!stageProgress.containsKey(questId)) {
                             val seeded = ensureStageDefault(questId, persist = false)
                             if (seeded != null) seededStages += questId to seeded
                         }
                     }
-                    session.completedQuests.forEach { questId ->
-                        if (!stageProgress.containsKey(questId)) {
-                            val seeded = ensureStageDefault(questId, persist = false)
-                            if (seeded != null) seededStages += questId to seeded
-                        }
-                    }
+
                     emitStateLocked(session)
+                    // Notify outside the lock after emitStateLocked
+                    val listeners = questCompletionListeners.toList()
+                    newlyCompleted.forEach { completedId ->
+                        listeners.forEach { it(completedId) }
+                    }
                 }
                 seededStages.forEach { (questId, stageId) ->
                     sessionStore.setQuestStage(questId, stageId)
@@ -145,7 +174,9 @@ class QuestRuntimeManager(
 
     fun markTaskComplete(questId: String, taskId: String) {
         scope.launch {
+            val newlyCompleted = mutableListOf<String>()
             mutex.withLock {
+                if (sessionStore.state.value.completedQuests.contains(questId)) return@withLock
                 val tasks = completedTasks.getOrPut(questId) { mutableSetOf() }
                 if (tasks.add(taskId)) {
                     val quest = questRepository.questById(questId)
@@ -155,10 +186,12 @@ class QuestRuntimeManager(
                         stageId = stageProgress[questId]
                     )
                     sessionStore.setQuestTaskCompleted(questId, taskId, completed = true)
+                    maybeProgressQuestLocked(questId, quest, tasks, newlyCompleted)
                     emitStateLocked(sessionStore.state.value)
                     emitQuestProgressBanner(questId, quest)
                 }
             }
+            newlyCompleted.forEach { notifyQuestCompleted(it) }
         }
     }
 
@@ -187,13 +220,15 @@ class QuestRuntimeManager(
                 appendLog(questId, message, stageProgress[questId])
                 emitStateLocked(sessionStore.state.value)
                 val title = questRepository.questById(questId)?.title?.takeIf { it.isNotBlank() } ?: questId
-        uiEventBus.tryEmit(
-            UiEvent.ShowQuestBanner(
-                type = QuestBannerType.FAILED,
-                questId = questId,
-                questTitle = title
-            )
-        )
+                if (SHOW_QUEST_BANNERS) {
+                    uiEventBus.tryEmit(
+                        UiEvent.ShowQuestBanner(
+                            type = QuestBannerType.FAILED,
+                            questId = questId,
+                            questTitle = title
+                        )
+                    )
+                }
                 uiEventBus.tryEmit(UiEvent.JournalBadgeDelta(+1))
             }
         }
@@ -235,14 +270,16 @@ class QuestRuntimeManager(
                     questTitle = title
                 )
                 emitStateLocked(sessionStore.state.value)
-                val bannerTitle = title ?: questId
-                uiEventBus.tryEmit(
-                    UiEvent.ShowQuestBanner(
-                        type = QuestBannerType.NEW,
-                        questId = questId,
-                        questTitle = bannerTitle
+                if (SHOW_QUEST_BANNERS) {
+                    val bannerTitle = title ?: questId
+                    uiEventBus.tryEmit(
+                        UiEvent.ShowQuestBanner(
+                            type = QuestBannerType.NEW,
+                            questId = questId,
+                            questTitle = bannerTitle
+                        )
                     )
-                )
+                }
                 uiEventBus.tryEmit(UiEvent.JournalBadgeDelta(+1))
                 quest?.let {
                     val stage = resolveStage(it, completed = false)
@@ -260,13 +297,15 @@ class QuestRuntimeManager(
                 emitStateLocked(sessionStore.state.value)
                 val quest = questRepository.questById(questId)
                 val title = quest?.title?.takeIf { it.isNotBlank() } ?: questId
-                uiEventBus.tryEmit(
-                    UiEvent.ShowQuestBanner(
-                        type = QuestBannerType.COMPLETED,
-                        questId = questId,
-                        questTitle = title
+                if (SHOW_QUEST_BANNERS) {
+                    uiEventBus.tryEmit(
+                        UiEvent.ShowQuestBanner(
+                            type = QuestBannerType.COMPLETED,
+                            questId = questId,
+                            questTitle = title
+                        )
                     )
-                )
+                }
                 uiEventBus.tryEmit(UiEvent.JournalBadgeDelta(+1))
                 quest?.let {
                     val stage = it.stages.lastOrNull()
@@ -408,8 +447,89 @@ class QuestRuntimeManager(
         )
     }
 
-    companion object {
-        private const val MAX_LOG_ENTRIES = 20
+    private fun maybeMarkQuestComplete(
+        questId: String,
+        quest: Quest?,
+        completedTasks: Set<String>
+    ) = maybeProgressQuestLocked(questId, quest, completedTasks)
+
+    private fun maybeProgressQuestLocked(
+        questId: String,
+        quest: Quest?,
+        completedTasks: Set<String>,
+        newlyCompleted: MutableList<String> = mutableListOf()
+    ) {
+        val session = sessionStore.state.value
+        if (session.completedQuests.contains(questId)) return
+        val data = quest ?: questRepository.questById(questId) ?: return
+        val stages = data.stages
+        if (stages.isEmpty()) return
+
+        var currentStageId = stageProgress[questId] ?: stages.first().id
+        var currentIndex = stages.indexOfFirst { it.id == currentStageId }.let { idx ->
+            if (idx >= 0) idx else 0
+        }
+        var progressed = false
+        while (true) {
+            val stage = stages.getOrNull(currentIndex) ?: break
+            val allDone = stage.tasks.all { task -> task.done || completedTasks.contains(task.id) }
+            val isLast = currentIndex == stages.lastIndex
+            if (!allDone) break
+
+            if (isLast) {
+                completeQuestLocked(questId, data, completedTasks, newlyCompleted)
+                return
+            }
+
+            val nextStage = stages[currentIndex + 1]
+            stageProgress[questId] = nextStage.id
+            sessionStore.setQuestStage(questId, nextStage.id)
+            logStageChange(questId, nextStage.id)
+            currentStageId = nextStage.id
+            currentIndex += 1
+            progressed = true
+        }
+
+        if (progressed) {
+            val tasks = this.completedTasks.getOrPut(questId) { mutableSetOf() }
+            tasks.addAll(completedTasks)
+        }
+    }
+
+    private fun completeQuestLocked(
+        questId: String,
+        quest: Quest,
+        completedTasks: Set<String>,
+        newlyCompleted: MutableList<String>
+    ) {
+        if (sessionStore.state.value.completedQuests.contains(questId)) return
+        sessionStore.completeQuest(questId)
+        val finalStage = quest.stages.lastOrNull()
+        finalStage?.let { stageProgress[questId] = it.id }
+        finalStage?.let { stage ->
+            this.completedTasks.getOrPut(questId) { mutableSetOf() }.apply {
+                addAll(completedTasks)
+                stage.tasks.forEach { add(it.id) }
+                sessionStore.setQuestTasksCompleted(questId, this.toSet())
+            }
+            sessionStore.setQuestStage(questId, stage.id)
+        }
+        appendQuestCompletedLog(questId)
+        emitStateLocked(sessionStore.state.value)
+        val title = quest.title.takeIf { it.isNotBlank() } ?: questId
+        if (SHOW_QUEST_BANNERS) {
+            uiEventBus.tryEmit(
+                UiEvent.ShowQuestBanner(
+                    type = QuestBannerType.COMPLETED,
+                    questId = questId,
+                    questTitle = title
+                )
+            )
+        }
+        uiEventBus.tryEmit(UiEvent.JournalBadgeDelta(+1))
+        val stage = quest.stages.lastOrNull()
+        emitQuestDetail(QuestBannerType.COMPLETED, quest, stage)
+        newlyCompleted.add(questId)
     }
 
     private fun emitQuestDetail(
@@ -438,6 +558,7 @@ class QuestRuntimeManager(
         questId: String,
         quest: Quest? = null
     ) {
+        if (!SHOW_PROGRESS_BANNERS) return
         val data = quest ?: questRepository.questById(questId) ?: return
         val objectives = questObjectivesForBanner(questId, data)
         uiEventBus.tryEmit(

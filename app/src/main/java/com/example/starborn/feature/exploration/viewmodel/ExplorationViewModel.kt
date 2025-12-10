@@ -1,5 +1,6 @@
 package com.example.starborn.feature.exploration.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.starborn.core.DefaultDispatcherProvider
@@ -34,6 +35,7 @@ import com.example.starborn.domain.event.EventHooks
 import com.example.starborn.domain.event.EventManager
 import com.example.starborn.domain.event.EventPayload
 import com.example.starborn.domain.fishing.FishingService
+import com.example.starborn.domain.inventory.GearRules
 import com.example.starborn.domain.inventory.InventoryService
 import com.example.starborn.domain.inventory.ItemUseController
 import com.example.starborn.domain.inventory.ItemUseResult
@@ -54,6 +56,7 @@ import com.example.starborn.domain.model.GenericAction
 import com.example.starborn.domain.model.Quest
 import com.example.starborn.domain.model.QuestReward
 import com.example.starborn.domain.model.Player
+import com.example.starborn.domain.model.Equipment
 import com.example.starborn.domain.model.Requirement
 import com.example.starborn.domain.model.Room
 import com.example.starborn.domain.model.RoomEnemyInstance
@@ -102,6 +105,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 private const val DEFAULT_PORTRAIT = "communicator_portrait"
+private const val LOG_TAG = "ExplorationVM"
 private const val MILESTONE_BAND_LIMIT = 3
 private const val FULL_MAP_COLUMNS = 16
 private const val FULL_MAP_ROWS = 8
@@ -133,9 +137,14 @@ private data class ShopDialogueTopicState(
 )
 
 private class SystemTutorialCoordinator(
-    private val tutorialManager: TutorialRuntimeManager
+    private val tutorialManager: TutorialRuntimeManager,
+    private val tutorialsEnabled: () -> Boolean = { true }
 ) {
     fun play(sceneId: String?, context: String?, onComplete: () -> Unit): Boolean {
+        if (!tutorialsEnabled()) {
+            onComplete()
+            return false
+        }
         val normalizedScene = sceneId?.takeIf { it.isNotBlank() }
         if (normalizedScene != null) {
             val scheduled = tutorialManager.playScript(
@@ -220,6 +229,7 @@ class ExplorationViewModel(
     private var charactersById: Map<String, Player> = emptyMap()
     private var skillsById: Map<String, Skill> = emptyMap()
     private var skillTreesByCharacter: Map<String, SkillTreeDefinition> = emptyMap()
+    private var tutorialsEnabled: Boolean = true
     private val itemUseController = ItemUseController(
         inventoryService = inventoryService,
         craftingService = craftingService,
@@ -230,7 +240,10 @@ class ExplorationViewModel(
     private val inventoryAddListener: (String, Int) -> Unit = { itemId, _ ->
         handleItemAcquired(itemId)
     }
-    private val systemTutorialCoordinator = SystemTutorialCoordinator(tutorialManager)
+    private val systemTutorialCoordinator = SystemTutorialCoordinator(
+        tutorialManager,
+        tutorialsEnabled = { tutorialsEnabled }
+    )
     private fun buildPreviewFromSnapshot(snapshot: Map<String, Int>): List<InventoryPreviewItemUi> {
         return snapshot
             .filterValues { it > 0 }
@@ -241,7 +254,8 @@ class ExplorationViewModel(
                     name = item?.name ?: inventoryService.itemDisplayName(id),
                     quantity = qty,
                     type = item?.type ?: "misc",
-                    effect = item?.effect
+                    effect = item?.effect,
+                    equipment = item?.equipment
                 )
             }
             .sortedBy { it.name.lowercase(Locale.getDefault()) }
@@ -263,16 +277,34 @@ class ExplorationViewModel(
         sessionStore = sessionStore,
         eventHooks = EventHooks(
             onPlayCinematic = { sceneId, onComplete ->
-                if (startSpecialCinematic(sceneId, onComplete)) {
-                    emitEvent(ExplorationEvent.PlayCinematic(sceneId))
-                } else {
-                    val started = startCinematic(sceneId, onComplete)
+                val normalizedScene = sceneId?.trim().orEmpty()
+
+                // Special-case the Ollie intro: mark the meeting milestone but
+                // don't auto-start the Jed quest until the player actually talks to Ollie.
+                if (normalizedScene.equals("ollie_intro_scene", ignoreCase = true)) {
+                    val markMet: () -> Unit = { sessionStore.setMilestone("ms_ollie_met") }
+                    val started = startSpecialCinematic(sceneId, markMet) ||
+                        startCinematic(sceneId, markMet)
                     if (started) {
                         emitEvent(ExplorationEvent.PlayCinematic(sceneId))
                     } else {
-                        onComplete()
+                        markMet()
                     }
+                    return@EventHooks
                 }
+
+                // Fallback for gather_broken_gear handoff scenes if cinematics are missing.
+                val handledFallback = applyFallbackCinematic(normalizedScene)
+                if (startSpecialCinematic(sceneId, onComplete)) {
+                    emitEvent(ExplorationEvent.PlayCinematic(sceneId))
+                    return@EventHooks
+                }
+                val started = startCinematic(sceneId, onComplete)
+                if (started) {
+                    emitEvent(ExplorationEvent.PlayCinematic(sceneId))
+                } else if (handledFallback) {
+                    onComplete()
+                } else onComplete()
             },
             onMessage = { message ->
                 postStatus(message)
@@ -301,6 +333,7 @@ class ExplorationViewModel(
             },
             onGiveItem = { itemId, quantity ->
                 inventoryService.addItem(itemId, quantity)
+                sessionStore.setInventory(inventoryService.snapshot())
                 val name = inventoryService.itemDisplayName(itemId)
                 postStatus("Received $quantity x $name")
                 refreshCurrentRoomBlockedDirections()
@@ -404,17 +437,20 @@ class ExplorationViewModel(
         val newMusic = settings.musicVolume.coerceIn(0f, 1f)
         val newSfx = settings.sfxVolume.coerceIn(0f, 1f)
         val newVignette = settings.vignetteEnabled
+        val newTutorialsEnabled = settings.tutorialsEnabled
         val musicChanged = abs(newMusic - userMusicVolume) > 0.001f
         val sfxChanged = abs(newSfx - userSfxVolume) > 0.001f
         userMusicVolume = newMusic
         userSfxVolume = newSfx
         isVignetteEnabled = newVignette
+        tutorialsEnabled = newTutorialsEnabled
         _uiState.update { state ->
             state.copy(
                 settings = state.settings.copy(
                     musicVolume = userMusicVolume,
                     sfxVolume = userSfxVolume,
-                    vignetteEnabled = isVignetteEnabled
+                    vignetteEnabled = isVignetteEnabled,
+                    tutorialsEnabled = tutorialsEnabled
                 )
             )
         }
@@ -516,6 +552,49 @@ class ExplorationViewModel(
             "battle", "combat", "stinger" -> AudioCueType.BATTLE
             "voice", "voiceover", "vo" -> AudioCueType.VOICE
             else -> null
+        }
+    }
+
+    private fun applyFallbackCinematic(sceneId: String): Boolean {
+        Log.d(LOG_TAG, "Fallback cinematic requested: $sceneId")
+        fun grantBrokenGear(
+            itemId: String,
+            displayName: String,
+            milestoneId: String,
+            taskId: String
+        ): Boolean {
+            Log.d(LOG_TAG, "Grant broken gear: item=$itemId milestone=$milestoneId task=$taskId")
+            val alreadyHasItem = inventoryService.hasItem(itemId, 1)
+            if (!alreadyHasItem) {
+                inventoryService.addItem(itemId, 1)
+                postStatus("Received $displayName")
+            }
+            sessionStore.setInventory(inventoryService.snapshot())
+            sessionStore.setMilestone(milestoneId)
+            milestoneManager.handleMilestone(milestoneId)
+            questRuntimeManager.markTaskComplete("gather_broken_gear", taskId)
+            return true
+        }
+        return when (sceneId.lowercase(Locale.getDefault())) {
+            "scene_collect_projector" -> grantBrokenGear(
+                itemId = "broken_projector",
+                displayName = "Broken Projector",
+                milestoneId = "ms_kasey_projector_collected",
+                taskId = "collect_projector"
+            )
+            "scene_collect_grinder" -> grantBrokenGear(
+                itemId = "broken_coffee_grinder",
+                displayName = "Broken Coffee Grinder",
+                milestoneId = "ms_maddie_grinder_collected",
+                taskId = "collect_grinder"
+            )
+            "scene_collect_display" -> grantBrokenGear(
+                itemId = "broken_arcade_display",
+                displayName = "Broken Arcade Display",
+                milestoneId = "ms_ellie_display_collected",
+                taskId = "collect_display"
+            )
+            else -> false
         }
     }
 
@@ -1234,7 +1313,8 @@ class ExplorationViewModel(
                             name = entry.item.name,
                             quantity = entry.quantity,
                             type = entry.item.type,
-                            effect = entry.item.effect
+                            effect = entry.item.effect,
+                            equipment = entry.item.equipment
                         )
                     }
                 _uiState.update { it.copy(inventoryPreview = preview) }
@@ -1244,17 +1324,18 @@ class ExplorationViewModel(
         // Seed inventory preview immediately from any already-loaded inventory so the UI isn't empty on first open.
         val initialEntries = inventoryService.state.value
         if (initialEntries.isNotEmpty()) {
-            val initialPreview = initialEntries
-                .sortedBy { it.item.name.lowercase(Locale.getDefault()) }
-                .map { entry ->
-                    InventoryPreviewItemUi(
-                        id = entry.item.id,
-                        name = entry.item.name,
-                        quantity = entry.quantity,
-                        type = entry.item.type,
-                        effect = entry.item.effect
-                    )
-                }
+                val initialPreview = initialEntries
+                    .sortedBy { it.item.name.lowercase(Locale.getDefault()) }
+                    .map { entry ->
+                        InventoryPreviewItemUi(
+                            id = entry.item.id,
+                            name = entry.item.name,
+                            quantity = entry.quantity,
+                            type = entry.item.type,
+                            effect = entry.item.effect,
+                            equipment = entry.item.equipment
+                        )
+                    }
             _uiState.update { it.copy(inventoryPreview = initialPreview) }
         } else if (sessionStore.state.value.inventory.isNotEmpty()) {
             val snapshotPreview = buildPreviewFromSnapshot(sessionStore.state.value.inventory)
@@ -1399,6 +1480,7 @@ class ExplorationViewModel(
     }
 
     private fun scheduleQuestStageTutorials(questId: String, stageId: String) {
+        if (!tutorialsEnabled) return
         val quest = questRepository.questById(questId) ?: return
         val stage = quest.stages.firstOrNull { it.id.equals(stageId, ignoreCase = true) } ?: return
         stage.tasks.forEach { task ->
@@ -1623,7 +1705,8 @@ class ExplorationViewModel(
                     settings = SettingsUiState(
                         musicVolume = userMusicVolume,
                         sfxVolume = userSfxVolume,
-                        vignetteEnabled = isVignetteEnabled
+                        vignetteEnabled = isVignetteEnabled,
+                        tutorialsEnabled = tutorialsEnabled
                     )
                 )
             }
@@ -1713,6 +1796,8 @@ class ExplorationViewModel(
     }
 
     fun onNpcInteraction(npcName: String) {
+        Log.d(LOG_TAG, "NPC interaction: $npcName (quest=${sessionStore.state.value.activeQuests.joinToString()})")
+        maybeGrantBrokenGearPickup(npcName, source = "pre-dialogue-tap")
         val session = dialogueService.startDialogue(npcName)
         activeDialogueSession = session
         playUiCue("click")
@@ -1729,6 +1814,68 @@ class ExplorationViewModel(
         session?.current()?.voiceCue?.let { playVoiceCue(it) }
         eventManager.handleTrigger("talk_to", EventPayload.TalkTo(npcName))
         eventManager.handleTrigger("npc_interaction", EventPayload.TalkTo(npcName))
+        maybeGrantBrokenGearPickup(npcName, source = "post-events")
+        ensureBrokenGearQuestItems()
+    }
+
+    private fun maybeGrantBrokenGearPickup(npcName: String, source: String) {
+        val normalized = npcName.trim().lowercase(Locale.getDefault())
+        val state = sessionStore.state.value
+        val questActive = state.activeQuests.contains("gather_broken_gear")
+
+        fun grant(itemId: String, milestoneId: String, taskId: String, label: String) {
+            Log.d(LOG_TAG, "Granting broken gear item for $label ($itemId), milestone=$milestoneId, task=$taskId via $source")
+            val hadItem = inventoryService.hasItem(itemId, 1)
+            if (!hadItem) {
+                inventoryService.addItem(itemId, 1)
+                postStatus("Received $label")
+            } else {
+                Log.d(LOG_TAG, "Already had $itemId; ensuring quest state updated.")
+            }
+            sessionStore.setInventory(inventoryService.snapshot())
+            sessionStore.setMilestone(milestoneId)
+            milestoneManager.handleMilestone(milestoneId)
+            questRuntimeManager.markTaskComplete("gather_broken_gear", taskId)
+        }
+
+        val isEllie = normalized.contains("ellie")
+        val isMaddie = normalized.contains("maddie")
+        val isKasey = normalized.contains("kasey") || normalized.contains("schoolteacher")
+        when {
+            isEllie && (questActive || !inventoryService.hasItem("broken_arcade_display", 1)) ->
+                grant("broken_arcade_display", "ms_ellie_display_collected", "collect_display", "Broken Arcade Display")
+            isMaddie && (questActive || !inventoryService.hasItem("broken_coffee_grinder", 1)) ->
+                grant("broken_coffee_grinder", "ms_maddie_grinder_collected", "collect_grinder", "Broken Coffee Grinder")
+            isKasey && (questActive || !inventoryService.hasItem("broken_projector", 1)) ->
+                grant("broken_projector", "ms_kasey_projector_collected", "collect_projector", "Broken Projector")
+            else -> Log.d(LOG_TAG, "No matching NPC grant for $npcName (normalized=$normalized)")
+        }
+    }
+
+    private fun ensureBrokenGearQuestItems() {
+        val state = sessionStore.state.value
+        if (!state.activeQuests.contains("gather_broken_gear") &&
+            !state.completedMilestones.any {
+                it.equals("ms_ellie_display_collected", true) ||
+                    it.equals("ms_maddie_grinder_collected", true) ||
+                    it.equals("ms_kasey_projector_collected", true)
+            }
+        ) return
+
+        fun ensureItem(itemId: String, milestoneId: String, displayName: String) {
+            val hasMilestone = state.completedMilestones.any { it.equals(milestoneId, true) }
+            val hasItem = inventoryService.hasItem(itemId, 1)
+            if ((hasMilestone || state.activeQuests.contains("gather_broken_gear")) && !hasItem) {
+                Log.d(LOG_TAG, "Reconciling missing quest item: $itemId (milestone=$milestoneId)")
+                inventoryService.addItem(itemId, 1)
+                sessionStore.setInventory(inventoryService.snapshot())
+                postStatus("DEBUG: Restored $displayName")
+            }
+        }
+
+        ensureItem("broken_arcade_display", "ms_ellie_display_collected", "Broken Arcade Display")
+        ensureItem("broken_coffee_grinder", "ms_maddie_grinder_collected", "Broken Coffee Grinder")
+        ensureItem("broken_projector", "ms_kasey_projector_collected", "Broken Projector")
     }
 
     fun advanceDialogue() {
@@ -1954,10 +2101,12 @@ class ExplorationViewModel(
         }
         emitAudioCommands(audioRouter.restoreLayer(AudioCueType.MUSIC))
         emitAudioCommands(audioRouter.restoreLayer(AudioCueType.AMBIENT))
-        if (result.success) {
-            tutorialManager.playScript("fishing_success")
-        } else {
-            tutorialManager.playScript("fishing_failure")
+        if (tutorialsEnabled) {
+            if (result.success) {
+                tutorialManager.playScript("fishing_success")
+            } else {
+                tutorialManager.playScript("fishing_failure")
+            }
         }
     }
 
@@ -2278,6 +2427,22 @@ class ExplorationViewModel(
         }
     }
 
+    fun deleteGame(slot: Int) {
+        viewModelScope.launch(dispatchers.io) {
+            val result = when (slot) {
+                GameSaveRepository.QUICKSAVE_SLOT -> runCatching { saveRepository.clearQuickSave() }.isSuccess
+                GameSaveRepository.AUTOSAVE_SLOT -> runCatching { saveRepository.clearAutosave() }.isSuccess
+                else -> runCatching { saveRepository.clear(slot) }.isSuccess
+            }
+            val label = when (slot) {
+                GameSaveRepository.QUICKSAVE_SLOT -> "quicksave"
+                GameSaveRepository.AUTOSAVE_SLOT -> "autosave"
+                else -> "slot $slot"
+            }
+            postStatus(if (result) "Cleared $label." else "Unable to clear $label.")
+        }
+    }
+
     suspend fun fetchSaveSlots(): List<SaveSlotSummary> = withContext(dispatchers.io) {
         val quick = runCatching { saveRepository.quickSaveInfo() }.getOrNull()
         val slots = runCatching { saveRepository.slotInfos() }.getOrElse { emptyList() }
@@ -2370,7 +2535,22 @@ class ExplorationViewModel(
         }
     }
 
+    fun updateTutorialsEnabled(enabled: Boolean) {
+        if (tutorialsEnabled == enabled) return
+        tutorialsEnabled = enabled
+        _uiState.update { state ->
+            state.copy(settings = state.settings.copy(tutorialsEnabled = enabled))
+        }
+        if (!enabled) {
+            tutorialManager.cancelAllScheduled()
+        }
+        viewModelScope.launch(dispatchers.io) {
+            userSettingsStore.setTutorialsEnabled(enabled)
+        }
+    }
+
     private fun maybeShowInventoryTutorial(tab: MenuTab) {
+        if (!tutorialsEnabled) return
         if (tab != MenuTab.INVENTORY) return
         if (tutorialManager.hasCompleted(BAG_TUTORIAL_ID)) return
         val scheduled = tutorialManager.playScript(
@@ -2451,6 +2631,7 @@ class ExplorationViewModel(
     }
 
     private fun handleRoomEntryTutorials(room: Room) {
+        if (!tutorialsEnabled) return
         tutorialManager.cancel("light_switch_hint")
         tutorialManager.cancel("swipe_hint")
         tutorialManager.markRoomVisited(room.id)
@@ -2474,7 +2655,7 @@ class ExplorationViewModel(
             sessionStore.markTutorialCompleted("light_switch_touch")
             tutorialManager.markCompleted("light_switch_touch")
             tutorialManager.cancel("light_switch_hint")
-            if (!tutorialManager.hasCompleted("swipe_move")) {
+            if (tutorialsEnabled && !tutorialManager.hasCompleted("swipe_move")) {
                 tutorialManager.scheduleScript(
                     key = "swipe_hint",
                     scriptId = "scene_swipe_movement",
@@ -2530,6 +2711,30 @@ class ExplorationViewModel(
                 }
             }
         }
+    }
+
+    fun equipInventoryItem(slotId: String, itemId: String?, characterId: String? = null) {
+        val normalizedSlot = slotId.trim().lowercase(Locale.getDefault())
+        if (normalizedSlot.isBlank() || normalizedSlot !in GearRules.equipSlots) return
+        if (itemId.isNullOrBlank()) {
+            sessionStore.setEquippedItem(normalizedSlot, null, characterId)
+            return
+        }
+        val entry = inventoryService.state.value.firstOrNull { it.item.id.equals(itemId, ignoreCase = true) } ?: return
+        val normalizedType = entry.item.type.trim().lowercase(Locale.getDefault())
+        val equipment = entry.item.equipment ?: run {
+            val slotFromType = when {
+                GearRules.equipSlots.contains(normalizedType) -> normalizedType
+                GearRules.isWeaponType(normalizedType) -> "weapon"
+                else -> null
+            } ?: return
+            Equipment(
+                slot = slotFromType,
+                weaponType = normalizedType.takeIf { GearRules.isWeaponType(it) }
+            )
+        }
+        if (!GearRules.matchesSlot(equipment, normalizedSlot, characterId, entry.item.type)) return
+        sessionStore.setEquippedItem(normalizedSlot, entry.item.id, characterId)
     }
 
     fun onTinkeringClosed() {

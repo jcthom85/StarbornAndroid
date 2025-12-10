@@ -1,34 +1,45 @@
 package com.example.starborn.feature.crafting.ui
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
-import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -41,12 +52,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.starborn.R
+import com.example.starborn.data.local.Theme
 import com.example.starborn.domain.crafting.CraftingOutcome
+import com.example.starborn.domain.prompt.UIPromptManager
+import com.example.starborn.feature.common.ui.StationBackground
+import com.example.starborn.feature.common.ui.StationHeader
 import com.example.starborn.feature.crafting.CraftingViewModel
 import com.example.starborn.feature.crafting.TinkeringBenchState
 import com.example.starborn.feature.crafting.TinkeringFilter
@@ -55,8 +76,9 @@ import com.example.starborn.feature.crafting.TinkeringPreview
 import com.example.starborn.feature.crafting.TinkeringRequirementStatus
 import com.example.starborn.feature.crafting.TinkeringRecipeUi
 import com.example.starborn.feature.crafting.TinkeringUiState
-import com.example.starborn.feature.common.ui.StationBackground
-import com.example.starborn.feature.common.ui.StationHeader
+import com.example.starborn.feature.exploration.viewmodel.EventAnnouncementUi
+import com.example.starborn.feature.exploration.ui.UIPromptOverlay
+import com.example.starborn.ui.theme.themeColor
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -67,15 +89,27 @@ fun TinkeringRoute(
     onBack: () -> Unit,
     onCrafted: (CraftingOutcome.Success) -> Unit,
     onClosed: () -> Unit,
+    promptManager: UIPromptManager,
     highContrastMode: Boolean,
-    largeTouchTargets: Boolean
+    largeTouchTargets: Boolean,
+    theme: Theme? = null
 ){
     val uiState by viewModel.uiState.collectAsState()
     val snackbarHost = remember { SnackbarHostState() }
+    val promptState by promptManager.state.collectAsState()
+    var announcement by remember { mutableStateOf<EventAnnouncementUi?>(null) }
+    val accentColor = themeColor(theme?.accent, Color(0xFFF5B437))
 
     LaunchedEffect(Unit) {
         launch {
-            viewModel.messages.collectLatest { message -> snackbarHost.showSnackbar(message) }
+            viewModel.messages.collectLatest { message ->
+                announcement = EventAnnouncementUi(
+                    id = System.currentTimeMillis(),
+                    title = "Tinkering",
+                    message = message,
+                    accentColor = accentColor.toArgb().toLong()
+                )
+            }
         }
         launch {
             viewModel.craftResults.collectLatest { onCrafted(it) }
@@ -86,22 +120,41 @@ fun TinkeringRoute(
         onDispose { onClosed() }
     }
 
-    TinkeringScreen(
-        state = uiState,
-        snackbarHostState = snackbarHost,
-        onRecipeCraft = viewModel::craft,
-        onBenchCraft = viewModel::craftFromBench,
-        onAutoFillRecipe = viewModel::autoFill,
-        onAutoFillBest = viewModel::autoFillBest,
-        onClearBench = viewModel::clearBench,
-        onSelectMain = viewModel::selectMain,
-        onSelectComponent = viewModel::selectComponent,
-        onScrap = viewModel::scrap,
-        onFilterChange = viewModel::setFilter,
-        onBack = onBack,
-        highContrastMode = highContrastMode,
-        largeTouchTargets = largeTouchTargets
-    )
+    Box(modifier = Modifier.fillMaxSize()) {
+        TinkeringScreen(
+            state = uiState,
+            snackbarHostState = snackbarHost,
+            onRecipeCraft = viewModel::craft,
+            onBenchCraft = viewModel::craftFromBench,
+            onAutoFillRecipe = viewModel::autoFill,
+            onClearBench = viewModel::clearBench,
+            onSelectMain = viewModel::selectMain,
+            onSelectComponent = viewModel::selectComponent,
+            onScrap = viewModel::scrap,
+            onFilterChange = viewModel::setFilter,
+            onBack = onBack,
+            highContrastMode = highContrastMode,
+            largeTouchTargets = largeTouchTargets,
+            theme = theme,
+            modifier = Modifier.fillMaxSize()
+        )
+
+        UIPromptOverlay(
+            prompt = promptState.current,
+            onDismiss = { promptManager.dismissCurrent() },
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 12.dp)
+        )
+        announcement?.let { current ->
+            CraftAnnouncementOverlay(
+                announcement = current,
+                theme = theme,
+                onDismiss = { announcement = null },
+                modifier = Modifier.fillMaxSize()
+            )
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -112,7 +165,6 @@ private fun TinkeringScreen(
     onRecipeCraft: (String) -> Unit,
     onBenchCraft: () -> Unit,
     onAutoFillRecipe: (String) -> Unit,
-    onAutoFillBest: () -> Unit,
     onClearBench: () -> Unit,
     onSelectMain: (String?) -> Unit,
     onSelectComponent: (Int, String?) -> Unit,
@@ -120,8 +172,30 @@ private fun TinkeringScreen(
     onFilterChange: (TinkeringFilter) -> Unit,
     onBack: () -> Unit,
     highContrastMode: Boolean,
-    largeTouchTargets: Boolean
+    largeTouchTargets: Boolean,
+    theme: Theme?,
+    modifier: Modifier = Modifier
 ){
+    val colorScheme = MaterialTheme.colorScheme
+    val colors = remember(theme, highContrastMode, colorScheme) {
+        val accent = if (highContrastMode) colorScheme.primary else themeColor(theme?.accent, Color(0xFFF5B437))
+        val base = if (highContrastMode) Color(0xFF0E1623) else themeColor(theme?.bg, Color(0xFF0C131D))
+        val panel = base.copy(alpha = if (highContrastMode) 0.96f else 0.9f)
+        val slot = if (highContrastMode) Color(0xFF0F1A27) else base.copy(alpha = 0.75f)
+        val border = if (highContrastMode) Color.White.copy(alpha = 0.35f) else themeColor(theme?.border, Color.White.copy(alpha = 0.28f))
+        val text = if (highContrastMode) Color.White else themeColor(theme?.fg, colorScheme.onSurface)
+        val muted = if (highContrastMode) Color.White.copy(alpha = 0.78f) else text.copy(alpha = 0.78f)
+        val card = if (highContrastMode) Color(0xFF121A28) else base.copy(alpha = 0.82f)
+        TinkeringColors(
+            accent = accent,
+            panel = panel,
+            slot = slot,
+            border = border,
+            textPrimary = text,
+            textSecondary = muted,
+            card = card
+        )
+    }
     var pickerTarget by remember { mutableStateOf<PickerTarget?>(null) }
     var scrapSelection by remember { mutableStateOf<String?>(null) }
     var selectedSection by remember { mutableStateOf(TinkeringSection.Tinker) }
@@ -133,12 +207,12 @@ private fun TinkeringScreen(
         vignetteRes = R.drawable.tinkering_vignette
     ) {
         Scaffold(
-            modifier = Modifier.fillMaxSize(),
+            modifier = modifier.fillMaxSize(),
             snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
             containerColor = Color.Transparent,
             topBar = {
                 StationHeader(
-                    title = "Tinkering Table",
+                    title = "Let's Tinker!",
                     iconRes = R.drawable.tinkering_icon,
                     onBack = onBack,
                     highContrastMode = highContrastMode,
@@ -155,7 +229,8 @@ private fun TinkeringScreen(
             ) {
                 SectionTabs(
                     selected = selectedSection,
-                    onSelect = { selectedSection = it }
+                    onSelect = { selectedSection = it },
+                    colors = colors
                 )
                 if (state.scrapChoices.isNotEmpty() && scrapSelection == null) {
                     scrapSelection = state.scrapChoices.firstOrNull()?.id
@@ -169,10 +244,10 @@ private fun TinkeringScreen(
                     when (selectedSection) {
                         TinkeringSection.Tinker -> TinkerSection(
                             state = state,
+                            colors = colors,
                             highContrastMode = highContrastMode,
                             largeTouchTargets = largeTouchTargets,
                             onBenchCraft = onBenchCraft,
-                            onAutoFillBest = onAutoFillBest,
                             onClearBench = onClearBench,
                             onSelectMain = { pickerTarget = PickerTarget.Main },
                             onSelectComponent1 = { pickerTarget = PickerTarget.Component1 },
@@ -187,6 +262,7 @@ private fun TinkeringScreen(
                             onAutoFillRecipe = onAutoFillRecipe,
                             onCraft = onRecipeCraft,
                             onFilterChange = onFilterChange,
+                            colors = colors,
                             highContrastMode = highContrastMode,
                             largeTouchTargets = largeTouchTargets
                         )
@@ -195,6 +271,7 @@ private fun TinkeringScreen(
                             selectedId = scrapSelection,
                             onSelect = { scrapSelection = it },
                             onScrap = onScrap,
+                            colors = colors,
                             highContrastMode = highContrastMode,
                             largeTouchTargets = largeTouchTargets
                         )
@@ -237,22 +314,41 @@ private fun TinkeringScreen(
 @Composable
 private fun SectionTabs(
     selected: TinkeringSection,
-    onSelect: (TinkeringSection) -> Unit
+    onSelect: (TinkeringSection) -> Unit,
+    colors: TinkeringColors
 ) {
     val tabs = listOf(
         TinkeringSection.Tinker to "Tinker",
         TinkeringSection.Schematics to "Schematics",
         TinkeringSection.Scrap to "Scrap"
     )
-    TabRow(selectedTabIndex = tabs.indexOfFirst { it.first == selected }.coerceAtLeast(0)) {
+    Row(modifier = Modifier.fillMaxWidth()) {
         tabs.forEach { (section, label) ->
-            Tab(
-                selected = selected == section,
-                onClick = { onSelect(section) },
-                text = { Text(label) },
-                selectedContentColor = MaterialTheme.colorScheme.primary,
-                unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+            val active = selected == section
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .clickable { onSelect(section) }
+                    .padding(vertical = 10.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Text(
+                    label,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = if (active) colors.accent else colors.textSecondary,
+                    fontWeight = if (active) FontWeight.SemiBold else FontWeight.Medium
+                )
+                Box(
+                    modifier = Modifier
+                        .width(54.dp)
+                        .height(3.dp)
+                        .clip(RoundedCornerShape(999.dp))
+                        .background(
+                            if (active) colors.accent else colors.border.copy(alpha = 0.4f)
+                        )
+                )
+            }
         }
     }
 }
@@ -260,10 +356,10 @@ private fun SectionTabs(
 @Composable
 private fun TinkerSection(
     state: TinkeringUiState,
+    colors: TinkeringColors,
     highContrastMode: Boolean,
     largeTouchTargets: Boolean,
     onBenchCraft: () -> Unit,
-    onAutoFillBest: () -> Unit,
     onClearBench: () -> Unit,
     onSelectMain: () -> Unit,
     onSelectComponent1: () -> Unit,
@@ -277,17 +373,18 @@ private fun TinkerSection(
     ) {
         TinkeringBenchCard(
             bench = state.bench,
+            colors = colors,
             highContrastMode = highContrastMode,
             largeTouchTargets = largeTouchTargets,
             onSelectMain = onSelectMain,
             onSelectComponent1 = onSelectComponent1,
             onSelectComponent2 = onSelectComponent2,
             onCraft = onBenchCraft,
-            onAutoFillBest = onAutoFillBest,
             onClear = onClearBench
         )
         PreviewCard(
             preview = state.bench.preview,
+            colors = colors,
             highContrastMode = highContrastMode
         )
     }
@@ -301,6 +398,7 @@ private fun SchematicsSection(
     onAutoFillRecipe: (String) -> Unit,
     onCraft: (String) -> Unit,
     onFilterChange: (TinkeringFilter) -> Unit,
+    colors: TinkeringColors,
     highContrastMode: Boolean,
     largeTouchTargets: Boolean
 ) {
@@ -324,11 +422,14 @@ private fun SchematicsSection(
             Surface(
                 tonalElevation = 2.dp,
                 shape = MaterialTheme.shapes.medium,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                color = colors.card,
+                border = BorderStroke(1.dp, colors.border.copy(alpha = 0.35f))
             ) {
                 Text(
                     text = "You haven't learned any schematics yet.",
                     style = MaterialTheme.typography.bodyLarge,
+                    color = colors.textPrimary,
                     modifier = Modifier.padding(20.dp)
                 )
             }
@@ -361,6 +462,7 @@ private fun SchematicsSection(
         }
         PreviewCard(
             preview = selectedPreview,
+            colors = colors,
             highContrastMode = highContrastMode,
             emptyMessage = "Tap a schematic to see its result."
         )
@@ -373,6 +475,7 @@ private fun ScrapSection(
     selectedId: String?,
     onSelect: (String?) -> Unit,
     onScrap: (String) -> Unit,
+    colors: TinkeringColors,
     highContrastMode: Boolean,
     largeTouchTargets: Boolean
 ) {
@@ -406,6 +509,7 @@ private fun ScrapSection(
         ScrapPreviewCard(
             itemName = selectedId,
             recipe = recipe,
+            colors = colors,
             highContrastMode = highContrastMode
         )
     }
@@ -415,6 +519,7 @@ private fun ScrapSection(
 private fun ScrapPreviewCard(
     itemName: String?,
     recipe: TinkeringRecipeUi?,
+    colors: TinkeringColors,
     highContrastMode: Boolean
 ) {
     Surface(
@@ -423,29 +528,30 @@ private fun ScrapPreviewCard(
             .heightIn(min = 140.dp),
         tonalElevation = 2.dp,
         shape = RoundedCornerShape(14.dp),
-        color = if (highContrastMode) Color(0xFF0D1620) else MaterialTheme.colorScheme.surface.copy(alpha = 0.92f)
+        color = colors.card,
+        border = BorderStroke(1.dp, colors.border.copy(alpha = 0.35f))
     ) {
         Column(
             modifier = Modifier.padding(12.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Text("Scrap Preview", style = MaterialTheme.typography.titleSmall, color = if (highContrastMode) Color.White else MaterialTheme.colorScheme.onSurface)
+            Text("Scrap Preview", style = MaterialTheme.typography.titleSmall, color = colors.textPrimary)
             when {
                 itemName.isNullOrBlank() -> Text(
                     text = "Choose a crafted item to see what you'll reclaim.",
                     style = MaterialTheme.typography.bodySmall,
-                    color = if (highContrastMode) Color.White.copy(alpha = 0.75f) else MaterialTheme.colorScheme.onSurfaceVariant
+                    color = colors.textSecondary
                 )
                 recipe == null -> Text(
                     text = "No breakdown data found for $itemName.",
                     style = MaterialTheme.typography.bodySmall,
-                    color = if (highContrastMode) Color.White.copy(alpha = 0.75f) else MaterialTheme.colorScheme.onSurfaceVariant
+                    color = colors.textSecondary
                 )
                 else -> {
                     Text(
                         text = "Scrapping $itemName yields:",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = if (highContrastMode) Color.White else MaterialTheme.colorScheme.onSurface
+                        color = colors.textPrimary
                     )
                     ItemPill(label = "Base", value = recipe.base, highContrastMode = highContrastMode)
                     if (recipe.components.isNotEmpty()) {
@@ -578,6 +684,7 @@ private fun TinkeringRecipeCard(
 @Composable
 private fun PreviewCard(
     preview: TinkeringPreview?,
+    colors: TinkeringColors,
     highContrastMode: Boolean,
     emptyMessage: String = "Add items to see what this combo produces."
 ) {
@@ -587,28 +694,29 @@ private fun PreviewCard(
             .heightIn(min = 140.dp),
         tonalElevation = 2.dp,
         shape = RoundedCornerShape(14.dp),
-        color = if (highContrastMode) Color(0xFF0D1620) else MaterialTheme.colorScheme.surface.copy(alpha = 0.92f)
+        color = colors.card,
+        border = BorderStroke(1.dp, colors.border.copy(alpha = 0.35f))
     ) {
         Column(
             modifier = Modifier.padding(12.dp),
             verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
-            Text("Preview", style = MaterialTheme.typography.titleSmall, color = if (highContrastMode) Color.White else MaterialTheme.colorScheme.onSurface)
+            Text("Preview", style = MaterialTheme.typography.titleSmall, color = colors.textPrimary)
             if (preview == null) {
                 Text(
                     text = emptyMessage,
                     style = MaterialTheme.typography.bodySmall,
-                    color = if (highContrastMode) Color.White.copy(alpha = 0.7f) else MaterialTheme.colorScheme.onSurfaceVariant
+                    color = colors.textSecondary
                 )
             } else {
-                Text(preview.name, style = MaterialTheme.typography.titleMedium, color = if (highContrastMode) Color.White else MaterialTheme.colorScheme.onSurface)
+                Text(preview.name, style = MaterialTheme.typography.titleMedium, color = colors.textPrimary)
                 preview.description?.takeIf { it.isNotBlank() }?.let {
-                    Text(it, style = MaterialTheme.typography.bodySmall, color = if (highContrastMode) Color.White.copy(alpha = 0.8f) else MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(it, style = MaterialTheme.typography.bodySmall, color = colors.textSecondary)
                 }
                 Text(
                     text = "Result: ${preview.resultId}",
                     style = MaterialTheme.typography.labelMedium,
-                    color = if (highContrastMode) Color.White.copy(alpha = 0.85f) else MaterialTheme.colorScheme.onSurfaceVariant
+                    color = colors.textSecondary
                 )
                 val statusText = if (preview.learned) "Known schematic" else "Discovery"
                 StatusPill(text = statusText, color = if (preview.learned) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary, highContrastMode = highContrastMode)
@@ -620,13 +728,13 @@ private fun PreviewCard(
 @Composable
 private fun TinkeringBenchCard(
     bench: TinkeringBenchState,
+    colors: TinkeringColors,
     highContrastMode: Boolean,
     largeTouchTargets: Boolean,
     onSelectMain: () -> Unit,
     onSelectComponent1: () -> Unit,
     onSelectComponent2: () -> Unit,
     onCraft: () -> Unit,
-    onAutoFillBest: () -> Unit,
     onClear: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -635,112 +743,87 @@ private fun TinkeringBenchCard(
         tonalElevation = 4.dp,
         shape = RoundedCornerShape(20.dp),
         modifier = modifier.fillMaxWidth(),
-        color = if (highContrastMode) Color(0xFF0C131D) else MaterialTheme.colorScheme.surface.copy(alpha = 0.92f)
+        color = colors.panel,
+        border = BorderStroke(1.dp, colors.border.copy(alpha = 0.55f))
     ) {
-        Row(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(end = 4.dp),
-                verticalArrangement = Arrangement.spacedBy(10.dp)
+            Text(
+                text = "Combine a main item with up to two components to modify or enhance gear.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = colors.textSecondary
+            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column {
-                        Text("Workbench", style = MaterialTheme.typography.titleMedium, color = if (highContrastMode) Color.White else MaterialTheme.colorScheme.onSurface)
-                        Text(
-                            text = "Slot a main item and up to two components. Craft from schematics or discovery.",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = if (highContrastMode) Color.White.copy(alpha = 0.75f) else MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                    val statusText: String
-                    val statusColor: Color
-                    when {
-                        bench.activeRecipeId == null -> {
-                            statusText = "Idle"
-                            statusColor = MaterialTheme.colorScheme.secondary
-                        }
-                        bench.canCraftSelection -> {
-                            statusText = "Ready"
-                            statusColor = MaterialTheme.colorScheme.tertiary
-                        }
-                        else -> {
-                            statusText = "Missing"
-                            statusColor = MaterialTheme.colorScheme.error
-                        }
-                    }
-                    StatusPill(text = statusText, color = statusColor, highContrastMode = highContrastMode)
-                }
-                SelectionRow(
-                    label = "Main Item",
-                    value = bench.mainItemName ?: "Choose an item",
-                    detail = bench.mainItemName?.let { "Selected" } ?: "Tap to choose",
-                    highContrastMode = highContrastMode,
+                SlotTile(
+                    title = bench.mainItemName ?: "Select Main Item",
+                    subtitle = bench.mainItemName?.let { "Tap to change" } ?: "Tap to choose",
+                    icon = if (bench.mainItemName != null) Icons.Filled.Close else Icons.Filled.Add,
+                    optional = false,
+                    colors = colors,
                     onClick = onSelectMain
                 )
-                SelectionRow(
-                    label = "Component 1",
-                    value = bench.componentNames.getOrNull(0)?.takeIf { it.isNotBlank() } ?: "Optional",
-                    detail = bench.componentNames.getOrNull(0)?.takeIf { it.isNotBlank() }?.let { "Selected" } ?: "Tap to choose",
-                    highContrastMode = highContrastMode,
+                SlotTile(
+                    title = bench.componentNames.getOrNull(0)?.takeIf { it.isNotBlank() } ?: "Add Component",
+                    subtitle = bench.componentNames.getOrNull(0)?.takeIf { it.isNotBlank() }?.let { "Tap to change" } ?: "Optional",
+                    icon = if (bench.componentNames.getOrNull(0)?.isNotBlank() == true) Icons.Filled.Close else Icons.Filled.Add,
+                    optional = true,
+                    colors = colors,
                     onClick = onSelectComponent1
                 )
-                SelectionRow(
-                    label = "Component 2",
-                    value = bench.componentNames.getOrNull(1)?.takeIf { it.isNotBlank() } ?: "Optional",
-                    detail = bench.componentNames.getOrNull(1)?.takeIf { it.isNotBlank() }?.let { "Selected" } ?: "Tap to choose",
-                    highContrastMode = highContrastMode,
+                SlotTile(
+                    title = bench.componentNames.getOrNull(1)?.takeIf { it.isNotBlank() } ?: "Add Component",
+                    subtitle = bench.componentNames.getOrNull(1)?.takeIf { it.isNotBlank() }?.let { "Tap to change" } ?: "Optional",
+                    icon = if (bench.componentNames.getOrNull(1)?.isNotBlank() == true) Icons.Filled.Close else Icons.Filled.Add,
+                    optional = true,
+                    colors = colors,
                     onClick = onSelectComponent2
                 )
-                if (bench.requirements.isNotEmpty()) {
-                    RequirementList(bench.requirements, highContrastMode)
-                } else {
-                    Text(
-                        text = "Pick a combination or auto-fill with a learned schematic.",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = if (highContrastMode) Color.White.copy(alpha = 0.75f) else MaterialTheme.colorScheme.onSurfaceVariant
+            }
+            if (bench.requirements.isNotEmpty()) {
+                RequirementSummary(
+                    requirements = bench.requirements,
+                    colors = colors
+                )
+            }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                OutlinedButton(
+                    onClick = onClear,
+                    modifier = Modifier
+                        .weight(1f)
+                        .heightIn(min = buttonHeight)
+                        .defaultMinSize(minWidth = 136.dp),
+                    border = BorderStroke(1.dp, colors.border.copy(alpha = 0.8f)),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        contentColor = colors.textPrimary
                     )
+                ) {
+                    Text("Clear", fontWeight = FontWeight.SemiBold, color = colors.textPrimary)
                 }
-                Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        OutlinedButton(
-                            onClick = onAutoFillBest,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .heightIn(min = buttonHeight)
-                                .defaultMinSize(minWidth = 136.dp)
-                        ) {
-                            Text("Auto-Fill Best")
-                        }
-                        OutlinedButton(
-                            onClick = onClear,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .heightIn(min = buttonHeight)
-                                .defaultMinSize(minWidth = 136.dp)
-                        ) {
-                            Text("Clear")
-                        }
-                    }
-                    Button(
-                        onClick = onCraft,
-                        enabled = bench.canCraftSelection,
-                        modifier = Modifier
-                            .weight(1f)
-                            .heightIn(min = buttonHeight)
-                            .defaultMinSize(minWidth = 136.dp)
-                    ) {
-                        Text("Craft Selection")
-                    }
+                Button(
+                    onClick = onCraft,
+                    enabled = bench.canCraftSelection,
+                    modifier = Modifier
+                        .weight(1f)
+                        .heightIn(min = buttonHeight)
+                        .defaultMinSize(minWidth = 136.dp),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = colors.accent,
+                        contentColor = Color.Black
+                    )
+                ) {
+                    Text("Craft", fontWeight = FontWeight.Bold)
                 }
             }
         }
@@ -748,45 +831,89 @@ private fun TinkeringBenchCard(
 }
 
 @Composable
-private fun RequirementList(
+private fun RowScope.SlotTile(
+    title: String,
+    subtitle: String,
+    icon: ImageVector,
+    optional: Boolean,
+    colors: TinkeringColors,
+    onClick: () -> Unit
+) {
+    Surface(
+        modifier = Modifier
+            .weight(1f)
+            .heightIn(min = 120.dp)
+            .clickable { onClick() },
+        shape = RoundedCornerShape(16.dp),
+        color = colors.slot,
+        border = BorderStroke(1.dp, colors.border.copy(alpha = 0.6f))
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 12.dp, vertical = 14.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(44.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(colors.border.copy(alpha = 0.2f)),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    tint = colors.textPrimary
+                )
+            }
+            Text(
+                title,
+                style = MaterialTheme.typography.bodyLarge,
+                color = colors.textPrimary,
+                fontWeight = FontWeight.SemiBold,
+                textAlign = TextAlign.Center
+            )
+            Text(
+                if (optional && subtitle.isBlank()) "Optional" else subtitle,
+                style = MaterialTheme.typography.bodySmall,
+                color = colors.textSecondary,
+                textAlign = TextAlign.Center
+            )
+        }
+    }
+}
+
+@Composable
+private fun RequirementSummary(
     requirements: List<TinkeringRequirementStatus>,
-    highContrastMode: Boolean
+    colors: TinkeringColors
 ) {
     if (requirements.isEmpty()) return
-    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
         Text(
             text = "Requirements",
-            style = MaterialTheme.typography.labelLarge
+            style = MaterialTheme.typography.labelSmall,
+            color = colors.textSecondary
         )
         requirements.forEach { req ->
             val meetsRequirement = req.available >= req.required
-            val ratio = (req.available.toFloat() / req.required.toFloat()).coerceIn(0f, 1f)
-            val track = if (highContrastMode) Color.White.copy(alpha = 0.15f) else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f)
-            val bar = if (meetsRequirement) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.error
-            Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = req.label,
-                        color = if (highContrastMode) Color.White else MaterialTheme.colorScheme.onSurface,
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                    Text(
-                        text = "${req.available}/${req.required}",
-                        color = if (meetsRequirement) bar else MaterialTheme.colorScheme.error,
-                        style = MaterialTheme.typography.bodySmall,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                }
-                LinearProgressIndicator(
-                    progress = ratio,
-                    trackColor = track,
-                    color = bar,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .heightIn(min = 6.dp)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = req.label,
+                    color = colors.textPrimary,
+                    style = MaterialTheme.typography.bodySmall
+                )
+                Text(
+                    text = "${req.available}/${req.required}",
+                    color = if (meetsRequirement) colors.accent else MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodySmall,
+                    fontWeight = FontWeight.SemiBold
                 )
             }
         }
@@ -961,6 +1088,83 @@ private fun ItemPickerDialog(
 }
 
 @Composable
+private fun CraftAnnouncementOverlay(
+    announcement: EventAnnouncementUi,
+    theme: Theme?,
+    onDismiss: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val eventAccent = Color(announcement.accentColor)
+    val accentColor = themeColor(theme?.accent, eventAccent)
+    val outlineColor = themeColor(theme?.border, accentColor.copy(alpha = 0.8f))
+    val backgroundColor = themeColor(theme?.bg, Color(0xFF040914)).copy(alpha = 0.95f)
+    val hasTitle = !announcement.title.isNullOrBlank()
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .background(Color.Black.copy(alpha = 0.6f))
+            .padding(horizontal = 24.dp, vertical = 32.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .widthIn(max = 540.dp),
+            shape = RoundedCornerShape(28.dp),
+            border = BorderStroke(1.dp, outlineColor),
+            color = backgroundColor,
+            tonalElevation = 12.dp
+        ) {
+            Column(
+                modifier = Modifier
+                    .background(
+                        Brush.verticalGradient(
+                            listOf(
+                                accentColor.copy(alpha = 0.18f),
+                                Color.Transparent
+                            )
+                        )
+                    )
+                    .padding(horizontal = 32.dp, vertical = 28.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                if (hasTitle) {
+                    Text(
+                        text = announcement.title!!,
+                        style = MaterialTheme.typography.headlineSmall.copy(
+                            shadow = Shadow(
+                                color = accentColor.copy(alpha = 0.65f),
+                                blurRadius = 18f
+                            )
+                        ),
+                        color = accentColor,
+                        textAlign = TextAlign.Center
+                    )
+                    HorizontalDivider(color = accentColor.copy(alpha = 0.4f))
+                }
+                Text(
+                    text = announcement.message,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = Color.White,
+                    textAlign = TextAlign.Center
+                )
+                Button(
+                    onClick = onDismiss,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = accentColor.copy(alpha = 0.4f),
+                        contentColor = Color.White
+                    ),
+                    shape = RoundedCornerShape(999.dp)
+                ) {
+                    Text("Continue")
+                }
+            }
+        }
+    }
+}
+
+@Composable
 private fun SelectionRow(
     label: String,
     value: String,
@@ -989,6 +1193,16 @@ private fun SelectionRow(
 
 private enum class PickerTarget { Main, Component1, Component2 }
 private enum class TinkeringSection { Tinker, Schematics, Scrap }
+
+private data class TinkeringColors(
+    val accent: Color,
+    val panel: Color,
+    val slot: Color,
+    val border: Color,
+    val textPrimary: Color,
+    val textSecondary: Color,
+    val card: Color
+)
 
 @Preview
 @Composable
@@ -1052,7 +1266,6 @@ fun TinkeringScreenPreview() {
         onRecipeCraft = {},
         onBenchCraft = {},
         onAutoFillRecipe = {},
-        onAutoFillBest = {},
         onClearBench = {},
         onSelectMain = {},
         onSelectComponent = { _, _ -> },
@@ -1060,6 +1273,7 @@ fun TinkeringScreenPreview() {
         onFilterChange = {},
         onBack = {},
         highContrastMode = false,
-        largeTouchTargets = false
+        largeTouchTargets = false,
+        theme = null
     )
 }

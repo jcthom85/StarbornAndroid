@@ -324,6 +324,13 @@ fun GameSessionPersistence.importLegacySave(file: File, itemCatalog: ItemCatalog
     }
     val characters = root.optJSONObject("characters") ?: JSONObject()
 
+    fun resolveItemId(rawId: String): String {
+        val normalizedKey = rawId.trim()
+        return itemCatalog.findItem(normalizedKey)?.id
+            ?: itemCatalog.findItem(normalizedKey.lowercase(Locale.getDefault()))?.id
+            ?: normalizedKey
+    }
+
     val partyMembers = mutableListOf<String>()
     val partyArray = gameState.optJSONArray("party")
     if (partyArray != null) {
@@ -339,21 +346,36 @@ fun GameSessionPersistence.importLegacySave(file: File, itemCatalog: ItemCatalog
     inventoryJson?.keys()?.forEachRemaining { key ->
         val quantity = inventoryJson.optInt(key, 0)
         if (quantity > 0) {
-            val item = itemCatalog.findItem(key) ?: itemCatalog.findItem(key.lowercase())
-            if (item != null) {
-                inventory[item.id] = quantity
-            }
+            val itemId = resolveItemId(key)
+            val existing = inventory[itemId] ?: 0
+            inventory[itemId] = existing + quantity
         }
     }
 
     val partyLevels = mutableMapOf<String, Int>()
     val partyXp = mutableMapOf<String, Int>()
     val partyHp = mutableMapOf<String, Int>()
+    val baseEquipment = mutableMapOf<String, String>()
+    val scopedEquipment = mutableMapOf<String, String>()
     characters.keys().forEachRemaining { id ->
         val entry = characters.optJSONObject(id) ?: return@forEachRemaining
         partyLevels[id] = entry.optInt("level", 1)
         partyXp[id] = entry.optInt("xp", 0)
         partyHp[id] = entry.optInt("hp", 0)
+        val equipment = entry.optJSONObject("equipment")
+        equipment?.keys()?.forEachRemaining { slot ->
+            val rawItemId = equipment.optString(slot)?.trim()
+            val itemId = rawItemId?.takeIf { it.isNotBlank() }?.let { resolveItemId(it) } ?: return@forEachRemaining
+            val normalizedSlot = slot.lowercase(Locale.getDefault())
+            val scopedKey = "${id.lowercase(Locale.getDefault())}:$normalizedSlot"
+            scopedEquipment[scopedKey] = itemId
+            if (!inventory.containsKey(itemId)) {
+                inventory[itemId] = 1
+            }
+            if (playerId != null && playerId.equals(id, ignoreCase = true)) {
+                baseEquipment.putIfAbsent(normalizedSlot, itemId)
+            }
+        }
     }
 
     val activeQuests = mutableSetOf<String>()
@@ -410,21 +432,37 @@ fun GameSessionPersistence.importLegacySave(file: File, itemCatalog: ItemCatalog
     val roomId = mapState?.optString("current_room_id")?.takeIf { it.isNotBlank() }
 
     val credits = gameState.optInt("credits", 0)
-    val equipmentJson = gameState.optJSONObject("equipment")
-    val equippedItems = mutableMapOf<String, String>()
-    equipmentJson?.keys()?.forEachRemaining { slot ->
-        val itemId = equipmentJson.optString(slot)
-        if (!itemId.isNullOrBlank()) {
-            equippedItems[slot.lowercase(Locale.getDefault())] = itemId
-        }
-    }
-
     val playerLevel = playerId?.let { partyLevels[it] } ?: partyLevels.values.firstOrNull() ?: 1
     val playerXp = playerId?.let { partyXp[it] } ?: partyXp.values.firstOrNull() ?: 0
     val resonance = gameState.optInt("resonance", 0)
     val resonanceMin = gameState.optInt("resonance_min", 0)
     val resonanceMax = gameState.optInt("resonance_max", 100)
     val resonanceStartBase = gameState.optInt("resonance_start_base", 0)
+
+    val equipmentJson = gameState.optJSONObject("equipment")
+    equipmentJson?.keys()?.forEachRemaining { slot ->
+        val itemId = equipmentJson.optString(slot)?.trim()
+        if (!itemId.isNullOrBlank()) {
+            val resolvedId = resolveItemId(itemId)
+            val normalizedSlot = slot.lowercase(Locale.getDefault())
+            baseEquipment.putIfAbsent(normalizedSlot, resolvedId)
+            if (!inventory.containsKey(resolvedId)) {
+                inventory[resolvedId] = 1
+            }
+        }
+    }
+
+    if (baseEquipment.isNotEmpty() && partyMembers.isNotEmpty()) {
+        partyMembers.mapNotNull { it.takeIf { id -> id.isNotBlank() } }
+            .forEach { memberId ->
+                val normalizedId = memberId.lowercase(Locale.getDefault())
+                baseEquipment.forEach { (slot, itemId) ->
+                    val scopedKey = "$normalizedId:$slot"
+                    scopedEquipment.putIfAbsent(scopedKey, itemId)
+                }
+            }
+    }
+    val equippedItems = (baseEquipment + scopedEquipment).toMutableMap()
 
     return GameSessionState(
         worldId = worldId,
@@ -456,23 +494,34 @@ fun GameSessionPersistence.importLegacySave(file: File, itemCatalog: ItemCatalog
 }
 
 private fun importSimpleSave(root: JSONObject, itemCatalog: ItemCatalog): GameSessionState {
+    fun resolveItemId(rawId: String): String {
+        val normalizedKey = rawId.trim()
+        return itemCatalog.findItem(normalizedKey)?.id
+            ?: itemCatalog.findItem(normalizedKey.lowercase(Locale.getDefault()))?.id
+            ?: normalizedKey
+    }
+
     val inventoryJson = root.optJSONObject("inventory")
     val inventory = mutableMapOf<String, Int>()
     inventoryJson?.keys()?.forEachRemaining { key ->
         val quantity = inventoryJson.optInt(key, 0)
         if (quantity > 0) {
-            val item = itemCatalog.findItem(key) ?: itemCatalog.findItem(key.lowercase(Locale.getDefault()))
-            if (item != null) {
-                inventory[item.id] = quantity
-            }
+            val itemId = resolveItemId(key)
+            val existing = inventory[itemId] ?: 0
+            inventory[itemId] = existing + quantity
         }
     }
     val equipmentJson = root.optJSONObject("equipment")
-    val equipped = mutableMapOf<String, String>()
+    val baseEquipment = mutableMapOf<String, String>()
     equipmentJson?.keys()?.forEachRemaining { slot ->
-        val id = equipmentJson.optString(slot)
+        val id = equipmentJson.optString(slot)?.trim()
         if (!id.isNullOrBlank()) {
-            equipped[slot.lowercase(Locale.getDefault())] = id
+            val normalizedSlot = slot.lowercase(Locale.getDefault())
+            val resolvedId = resolveItemId(id)
+            baseEquipment[normalizedSlot] = resolvedId
+            if (!inventory.containsKey(resolvedId)) {
+                inventory[resolvedId] = 1
+            }
         }
     }
     val partyMembers = mutableListOf<String>()
@@ -483,6 +532,17 @@ private fun importSimpleSave(root: JSONObject, itemCatalog: ItemCatalog): GameSe
             if (id.isNotBlank()) partyMembers += id
         }
     }
+    val scopedEquipment = mutableMapOf<String, String>()
+    if (baseEquipment.isNotEmpty() && partyMembers.isNotEmpty()) {
+        partyMembers.mapNotNull { it.takeIf { id -> id.isNotBlank() } }
+            .forEach { memberId ->
+                val normalizedId = memberId.lowercase(Locale.getDefault())
+                baseEquipment.forEach { (slot, itemId) ->
+                    scopedEquipment["$normalizedId:$slot"] = itemId
+                }
+            }
+    }
+    val equipped = (baseEquipment + scopedEquipment).toMutableMap()
     val playerId = partyMembers.firstOrNull()
     return GameSessionState(
         playerId = playerId,

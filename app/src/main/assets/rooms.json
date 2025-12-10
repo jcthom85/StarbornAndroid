@@ -180,7 +180,7 @@
     "enemy_flavor": {}
   },
   {
-    "id": "maintenance_tunnels_1",
+  "id": "maintenance_tunnels_1",
     "title": "Service Access",
     "title_options": {
       "underline_adjust": 30
@@ -195,9 +195,9 @@
     "connections": {
       "east": "maintenance_tunnels_2"
     },
-    "items": [],
-    "npcs": [],
-    "enemies": [],
+  "items": [],
+  "npcs": [],
+  "enemies": [],
     "actions": [],
     "blocked_directions": {
       "north": {
@@ -219,7 +219,7 @@
     "state": {}
   },
   {
-    "id": "maintenance_tunnels_2",
+  "id": "maintenance_tunnels_2",
     "title": "Elevator Bay",
     "env": "market",
     "background_image": "images/rooms/world_1/elevator_bay_1.png",
@@ -231,14 +231,14 @@
     "connections": {
       "west": "maintenance_tunnels_1"
     },
-    "items": [],
-    "npcs": [],
-    "enemies": [],
+  "items": [],
+  "npcs": [],
+  "enemies": [],
     "actions": [],
     "state": {}
   },
   {
-    "id": "maintenance_tunnels_3",
+  "id": "maintenance_tunnels_3",
     "title": "Lower Landing",
     "env": "maintenance_tunnels",
     "background_image": "images/rooms/world_1/lower_landing_1.png",
@@ -247,9 +247,9 @@
       2,
       0
     ],
-    "items": [],
-    "npcs": [],
-    "enemies": [],
+  "items": [],
+  "npcs": [],
+  "enemies": [],
     "actions": [],
     "state": {},
     "connections": {
@@ -257,7 +257,7 @@
     }
   },
   {
-    "id": "maintenance_tunnels_4",
+  "id": "maintenance_tunnels_4",
     "title": "Outpost Gate",
     "env": "maintenance_tunnels",
     "background_image": "images/rooms/world_1/outpost_gate_1.png",
@@ -269,14 +269,14 @@
     "connections": {
       "west": "maintenance_tunnels_3"
     },
-    "items": [],
-    "npcs": [],
-    "enemies": [],
+  "items": [],
+  "npcs": [],
+  "enemies": [],
     "actions": [],
     "state": {}
   },
   {
-    "id": "market_1",
+  "id": "market_1",
     "title": "Tyson's Provisions",
     "title_options": {
       "underline_adjust": 40
@@ -472,7 +472,8 @@
       "light_on": false
     },
     "item_flavor": {},
-    "enemy_flavor": {},
+  "enemy_flavor": {
+  },
     "dark": true,
     "description_dark": "It's too dark to see anything. I need to find a way to get the lights on."
   },
@@ -592,8 +593,9 @@
       "dark": true,
       "light_on": false
     },
-    "item_flavor": {},
-    "enemy_flavor": {},
+  "item_flavor": {},
+  "enemy_flavor": {
+  },
     "dark": true,
     "description_dark": "It's too dark to see anything. I need to find a way to get the lights on.",
     "blocked_directions": {
@@ -663,12 +665,6 @@
     "enemies": [
       "scraphopper"
     ],
-    "enemy_parties": [
-      [
-        "scraphopper",
-        "fume_bat"
-      ]
-    ],
     "actions": [],
     "state": {
       "dark": true,
@@ -678,6 +674,22 @@
     "enemy_flavor": {
       "scraphopper": "A scraphopper eyes you from the corner of the room."
     },
+    "enemy_instances": [
+      {
+        "enemy_id": "scraphopper",
+        "override_drops": [
+          { "id": "basic_blaster", "chance": 1.0, "qty_min": 1, "qty_max": 1 },
+          { "id": "basic_slingshot", "chance": 1.0, "qty_min": 1, "qty_max": 1 },
+          { "id": "basic_vest", "chance": 1.0, "qty_min": 1, "qty_max": 1 },
+          { "id": "basic_jacket", "chance": 1.0, "qty_min": 1, "qty_max": 1 },
+          { "id": "digital_watch", "chance": 1.0, "qty_min": 1, "qty_max": 1 },
+          { "id": "gadget_belt", "chance": 1.0, "qty_min": 1, "qty_max": 1 },
+          { "id": "starbar_crunch", "chance": 1.0, "qty_min": 1, "qty_max": 2 },
+          { "id": "mineral_trail_mix", "chance": 1.0, "qty_min": 1, "qty_max": 2 },
+          { "id": "comet_gummies", "chance": 1.0, "qty_min": 1, "qty_max": 2 }
+        ]
+      }
+    ],
     "dark": true,
     "description_dark": "It's too dark to see anything. I need to find a way to get the lights on."
   },

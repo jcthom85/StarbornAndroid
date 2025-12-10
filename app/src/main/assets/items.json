@@ -11,7 +11,7 @@
         "rarity": "common",
         "equipment": {
             "slot": "weapon",
-            "weapon_type": "pistol",
+            "weapon_type": "gun",
             "damage_min": 600,
             "damage_max": 1200
         }
@@ -42,7 +42,7 @@
         "rarity": "common",
         "equipment": {
             "slot": "weapon",
-            "weapon_type": "pistol",
+            "weapon_type": "gun",
             "damage_min": 5,
             "damage_max": 7
         }
@@ -154,7 +154,7 @@
         "aliases": [
             "watch"
         ],
-        "type": "armor",
+        "type": "accessory",
         "value": 50,
         "buy_price": 100,
         "rarity": "common",
@@ -185,7 +185,7 @@
         "aliases": [
             "belt"
         ],
-        "type": "armor",
+        "type": "accessory",
         "value": 50,
         "buy_price": 100,
         "rarity": "common",
@@ -708,5 +708,101 @@
         "value": 4,
         "buy_price": 8,
         "rarity": "common"
+    },
+    {
+        "id": "holo_charm",
+        "name": "Holo Charm",
+        "description": "A flickering charm that projects soothing light patterns.",
+        "type": "accessory",
+        "value": 180,
+        "buy_price": 360,
+        "rarity": "uncommon",
+        "equipment": {
+            "slot": "accessory",
+            "stat_mods": {
+                "luck": 3
+            }
+        }
+    },
+    {
+        "id": "kinetic_bracelet",
+        "name": "Kinetic Bracelet",
+        "description": "Bracelet that channels surplus motion into reactive armor.",
+        "type": "accessory",
+        "value": 220,
+        "buy_price": 420,
+        "rarity": "rare",
+        "equipment": {
+            "slot": "accessory",
+            "defense": 6,
+            "stat_mods": {
+                "spd": 2
+            }
+        }
+    },
+    {
+        "id": "basic_glove",
+        "name": "Basic Glove",
+        "description": "Standard issue combat glove.",
+        "type": "weapon",
+        "value": 100,
+        "buy_price": 200,
+        "rarity": "common",
+        "equipment": {
+            "slot": "weapon",
+            "weapon_type": "glove",
+            "damage_min": 15,
+            "damage_max": 25
+        }
+    },
+    {
+        "id": "basic_jewel",
+        "name": "Focus Jewel",
+        "description": "A gemstone that channels bio-energy.",
+        "type": "weapon",
+        "value": 150,
+        "buy_price": 300,
+        "rarity": "common",
+        "equipment": {
+            "slot": "weapon",
+            "weapon_type": "jewel",
+            "damage_min": 20,
+            "damage_max": 30,
+            "stat_mods": {
+                "rp": 10
+            }
+        }
+    },
+    {
+        "id": "basic_sword",
+        "name": "Training Sword",
+        "description": "A dull blade for practice.",
+        "type": "weapon",
+        "value": 120,
+        "buy_price": 240,
+        "rarity": "common",
+        "equipment": {
+            "slot": "weapon",
+            "weapon_type": "sword",
+            "damage_min": 25,
+            "damage_max": 35
+        }
+    },
+    {
+        "id": "protein_bar",
+        "name": "Protein Bar",
+        "description": "Dense nutrition block.",
+        "type": "snack",
+        "value": 10,
+        "buy_price": 20,
+        "rarity": "common",
+        "equipment": {
+            "slot": "snack",
+            "hp_bonus": 5
+        },
+        "effect": {
+             "restore_hp": 20,
+             "target": "self"
+        }
     }
 ]

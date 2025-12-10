@@ -9,7 +9,8 @@
       "equipment": {
         "weapon": null,
         "armor": null,
-        "accessory": null
+        "accessory": null,
+        "snack": null
       }
     },
     "zeke": {
@@ -21,7 +22,8 @@
       "equipment": {
         "weapon": null,
         "armor": null,
-        "accessory": null
+        "accessory": null,
+        "snack": null
       }
     },
     "orion": {
@@ -33,7 +35,8 @@
       "equipment": {
         "weapon": null,
         "armor": null,
-        "accessory": null
+        "accessory": null,
+        "snack": null
       }
     },
     "gh0st": {
@@ -45,7 +48,8 @@
       "equipment": {
         "weapon": null,
         "armor": null,
-        "accessory": null
+        "accessory": null,
+        "snack": null
       }
     },
     "ollie": {
@@ -59,7 +63,8 @@
       "equipment": {
         "weapon": null,
         "armor": null,
-        "accessory": null
+        "accessory": null,
+        "snack": null
       }
     }
   },
@@ -71,22 +76,29 @@
       "gh0st"
     ],
     "inventory": {
-      "basic_blaster": 1,
-      "basic_slingshot": 1,
-      "basic_jacket": 1,
-      "basic_vest": 1,
-      "digital_watch": 1,
-      "gadget_belt": 1,
-      "starbar_crunch": 2,
-      "mineral_trail_mix": 2,
-      "comet_gummies": 1
+      "basic_blaster": 2,
+      "basic_slingshot": 2,
+      "photon_saber": 1,
+      "scatter_rifle": 1,
+      "basic_jacket": 2,
+      "basic_vest": 2,
+      "kinetic_plates": 1,
+      "shock_gloves": 1,
+      "digital_watch": 2,
+      "gadget_belt": 2,
+      "holo_pendant": 1,
+      "tech_medal": 1,
+      "starbar_crunch": 4,
+      "mineral_trail_mix": 4,
+      "comet_gummies": 4,
+      "broken_projector": 1,
+      "circuit_board": 1,
+      "basic_glove": 1,
+      "basic_jewel": 1,
+      "basic_sword": 1,
+      "protein_bar": 1
     },
-    "equipment": {
-      "weapon": "basic_blaster",
-      "armor": "basic_vest",
-      "accessory": "gadget_belt",
-      "snack": "starbar_crunch"
-    },
+    "equipment": {},
     "credits": 500,
     "resonance": 0,
     "resonance_min": 0,

@@ -3,6 +3,7 @@ package com.example.starborn.feature.exploration.viewmodel
 import com.example.starborn.data.local.Theme
 import com.example.starborn.data.local.ThemeStyle
 import com.example.starborn.domain.model.Hub
+import com.example.starborn.domain.model.Equipment
 import com.example.starborn.domain.model.ItemEffect
 import com.example.starborn.domain.model.Room
 import com.example.starborn.domain.model.RoomAction
@@ -154,7 +155,8 @@ data class InventoryPreviewItemUi(
     val name: String,
     val quantity: Int,
     val type: String,
-    val effect: ItemEffect? = null
+    val effect: ItemEffect? = null,
+    val equipment: Equipment? = null
 )
 
 data class CinematicUiState(
@@ -255,7 +257,8 @@ data class TogglePromptUi(
 data class SettingsUiState(
     val musicVolume: Float = 1f,
     val sfxVolume: Float = 1f,
-    val vignetteEnabled: Boolean = true
+    val vignetteEnabled: Boolean = true,
+    val tutorialsEnabled: Boolean = true
 )
 
 data class PartyStatusUi(

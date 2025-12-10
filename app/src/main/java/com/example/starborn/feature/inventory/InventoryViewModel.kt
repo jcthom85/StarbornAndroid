@@ -8,6 +8,8 @@ import com.example.starborn.domain.combat.CombatFormulas
 import com.example.starborn.domain.inventory.InventoryEntry
 import com.example.starborn.domain.inventory.InventoryService
 import com.example.starborn.domain.inventory.ItemUseController
+import com.example.starborn.domain.inventory.GearRules
+import com.example.starborn.domain.model.Equipment
 import com.example.starborn.domain.model.Player
 import com.example.starborn.domain.session.GameSessionStore
 import java.util.Locale
@@ -79,7 +81,8 @@ class InventoryViewModel(
                     hp = currentHp,
                     maxHp = maxOf(baseMaxHp, currentHp),
                     rp = currentRp,
-                    maxRp = maxOf(baseMaxRp, currentRp)
+                    maxRp = maxOf(baseMaxRp, currentRp),
+                    portraitPath = character?.miniIconPath
                 )
             }
         }
@@ -113,14 +116,25 @@ class InventoryViewModel(
 
     fun equipItem(slotId: String, itemId: String?, characterId: String? = null) {
         val normalizedSlot = slotId.trim().lowercase(Locale.getDefault())
-        if (normalizedSlot.isBlank()) return
+        if (normalizedSlot.isBlank() || normalizedSlot !in GearRules.equipSlots) return
         if (itemId.isNullOrBlank()) {
             sessionStore.setEquippedItem(normalizedSlot, null, characterId)
             return
         }
         val entry = entries.value.firstOrNull { it.item.id == itemId } ?: return
-        val equipment = entry.item.equipment ?: return
-        if (!equipment.slot.equals(normalizedSlot, ignoreCase = true)) return
+        val normalizedType = entry.item.type.trim().lowercase(Locale.getDefault())
+        val equipment = entry.item.equipment ?: run {
+            val slotFromType = when {
+                GearRules.equipSlots.contains(normalizedType) -> normalizedType
+                GearRules.isWeaponType(normalizedType) -> "weapon"
+                else -> null
+            } ?: return
+            Equipment(
+                slot = slotFromType,
+                weaponType = normalizedType.takeIf { GearRules.isWeaponType(it) }
+            )
+        }
+        if (!GearRules.matchesSlot(equipment, normalizedSlot, characterId, entry.item.type)) return
         sessionStore.setEquippedItem(normalizedSlot, entry.item.id, characterId)
     }
 }
@@ -145,5 +159,6 @@ data class PartyMemberStatus(
     val hp: Int,
     val maxHp: Int,
     val rp: Int,
-    val maxRp: Int
+    val maxRp: Int,
+    val portraitPath: String?
 )

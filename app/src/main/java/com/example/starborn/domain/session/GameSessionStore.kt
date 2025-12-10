@@ -12,8 +12,9 @@ class GameSessionStore {
     val state: StateFlow<GameSessionState> = _state.asStateFlow()
 
     fun restore(state: GameSessionState) {
-        if (_state.value == state) return
-        _state.value = state
+        val normalized = normalizeEquipment(state)
+        if (_state.value == normalized) return
+        _state.value = normalized
     }
 
     fun setWorld(worldId: String?) {
@@ -218,28 +219,27 @@ class GameSessionStore {
         _state.update { state ->
             val updated = state.equippedItems.toMutableMap()
 
-            if (itemId != null) {
+            val normalizedItem = itemId?.trim()
+            if (!normalizedItem.isNullOrBlank()) {
                 // Ensure uniqueness: if another slot (or character) is holding this item, clear it.
-                val duplicateKeys = updated.filterValues { it.equals(itemId, ignoreCase = true) }
+                val targetKey = ownerId?.let { "$it:$normalizedSlot" } ?: normalizedSlot
+                val duplicateKeys = updated.filterValues { it.equals(normalizedItem, ignoreCase = true) }
                     .keys
-                    .filterNot { key ->
-                        ownerId != null && key.startsWith("$ownerId:", ignoreCase = true) &&
-                            key.substringAfter(':', "") == normalizedSlot
-                    }
+                    .filterNot { key -> key.equals(targetKey, ignoreCase = true) }
                 duplicateKeys.forEach { updated.remove(it) }
             }
 
             if (ownerId != null) {
                 val scopedKey = "$ownerId:$normalizedSlot"
-                if (itemId.isNullOrBlank()) updated.remove(scopedKey) else updated[scopedKey] = itemId
-
-                // Mirror the active player's equipment into the legacy flat map for compatibility.
-                val isPlayer = state.playerId?.equals(ownerId, ignoreCase = true) == true
-                if (isPlayer) {
-                    if (itemId.isNullOrBlank()) updated.remove(normalizedSlot) else updated[normalizedSlot] = itemId
+                // Clear any lingering party-wide entry for this slot.
+                updated.remove(normalizedSlot)
+                if (normalizedItem.isNullOrBlank()) {
+                    updated.remove(scopedKey)
+                } else {
+                    updated[scopedKey] = normalizedItem
                 }
             } else {
-                if (itemId.isNullOrBlank()) updated.remove(normalizedSlot) else updated[normalizedSlot] = itemId
+                if (normalizedItem.isNullOrBlank()) updated.remove(normalizedSlot) else updated[normalizedSlot] = normalizedItem
             }
             state.copy(equippedItems = updated)
         }
@@ -263,12 +263,14 @@ class GameSessionStore {
             }
             val filteredHp = state.partyMemberHp.filterKeys { it in distinct }
             val filteredRp = state.partyMemberRp.filterKeys { it in distinct }
-            state.copy(
+            normalizeEquipment(
+                state.copy(
                 partyMembers = distinct,
                 partyMemberXp = seededXp,
                 partyMemberLevels = seededLevels,
                 partyMemberHp = filteredHp,
                 partyMemberRp = filteredRp
+            )
             )
         }
     }
@@ -521,6 +523,48 @@ fun setResonance(value: Int): Int {
     }
     return result
 }
+
+    private fun normalizeEquipment(state: GameSessionState): GameSessionState {
+        val normalized = normalizeScopedEquipment(state)
+        return if (normalized == state.equippedItems) state else state.copy(equippedItems = normalized)
+    }
+
+    private fun normalizeScopedEquipment(state: GameSessionState): Map<String, String> {
+        val scoped = mutableMapOf<String, String>()
+        val base = mutableMapOf<String, String>()
+
+        state.equippedItems.forEach { (rawKey, rawValue) ->
+            val value = rawValue.trim()
+            val key = rawKey.trim()
+            if (key.isBlank() || value.isBlank()) return@forEach
+            if (key.contains(':')) {
+                val owner = key.substringBefore(':').lowercase(Locale.getDefault())
+                val slot = key.substringAfter(':').lowercase(Locale.getDefault())
+                if (owner.isNotBlank() && slot.isNotBlank()) {
+                    scoped["$owner:$slot"] = value
+                }
+            } else {
+                base[key.lowercase(Locale.getDefault())] = value
+            }
+        }
+
+        if (base.isEmpty()) {
+            return scoped
+        }
+
+        val targets = state.partyMembers.ifEmpty { listOfNotNull(state.playerId) }
+            .mapNotNull { it?.trim()?.lowercase(Locale.getDefault()) }
+        if (targets.isEmpty() && scoped.isEmpty()) {
+            return base
+        }
+        targets.forEach { id ->
+            base.forEach { (slot, itemId) ->
+                val scopedKey = "$id:$slot"
+                scoped.putIfAbsent(scopedKey, itemId)
+            }
+        }
+        return scoped
+    }
 
     private fun buildExitKey(roomId: String?, direction: String?): String? {
         val normalizedRoom = roomId?.takeIf { it.isNotBlank() }?.lowercase(Locale.getDefault()) ?: return null

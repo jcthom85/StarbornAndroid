@@ -29,7 +29,7 @@ class CraftingService(
                 add(normalizeToken(entry.item.id))
                 add(normalizeToken(entry.item.name))
                 entry.item.aliases.forEach { add(normalizeToken(it)) }
-            }
+            }.distinct()
             tokens.forEach { key ->
                 inventoryCounts[key] = inventoryCounts.getOrDefault(key, 0) + entry.quantity
             }
@@ -97,9 +97,11 @@ class CraftingService(
             requirements[component] = requirements.getOrDefault(component, 0) + 1
         }
         if (!inventoryService.consumeItems(requirements)) return CraftingOutcome.Failure("Unable to consume components")
-        addCraftedItem(recipe)
-        recipe.successMessage?.let { return CraftingOutcome.Success(recipe.result, it) }
-        return CraftingOutcome.Success(recipe.result, "Crafted ${recipe.name}")
+        val addedId = addCraftedItem(recipe)
+        // Keep session inventory in sync for downstream screens (inventory, save).
+        sessionStore.setInventory(inventoryService.snapshot())
+        recipe.successMessage?.let { return CraftingOutcome.Success(addedId, it) }
+        return CraftingOutcome.Success(addedId, "Crafted ${recipe.name}")
     }
 
     private fun matchingCount(needle: String): Int {
@@ -114,19 +116,29 @@ class CraftingService(
         }
     }
 
-    private fun addCraftedItem(recipe: TinkeringRecipe) {
-        // Try the canonical result id, catch catalog mismatch by trying by name/id/alias.
-        val candidates = listOf(recipe.result, recipe.name, recipe.id)
-        candidates.forEach { candidate ->
-            val before = matchingCount(candidate)
-            inventoryService.addItem(candidate, 1)
-            val after = matchingCount(candidate)
-            if (after > before) return
+    private fun addCraftedItem(recipe: TinkeringRecipe): String {
+        val candidates = listOf(recipe.result, recipe.id, recipe.name)
+            .mapNotNull { it.trim().ifBlank { null } }
+
+        val resolvedId = candidates
+            .asSequence()
+            .mapNotNull { candidate ->
+                inventoryService.catalogItem(candidate)?.id
+                    ?: inventoryService.catalogItem(candidate.replace("\\s+".toRegex(), "_"))?.id
+                    ?: inventoryService.catalogItem(normalizeToken(candidate))?.id
+            }
+            .firstOrNull()
+            ?: inventoryService.itemDetail(candidates.first())?.id
+            ?: normalizeToken(recipe.result.ifBlank { recipe.id.ifBlank { recipe.name } })
+
+        val beforeQty = inventoryService.snapshot()[resolvedId] ?: 0
+        inventoryService.addItem(resolvedId, 1)
+        val afterQty = inventoryService.snapshot()[resolvedId] ?: 0
+        if (afterQty <= beforeQty) {
+            // Guarantee the crafted item is present even if the first add failed to change quantity.
+            inventoryService.addItem(resolvedId, 1)
         }
-        // If still nothing, force-add by result string.
-        inventoryService.addItem(recipe.result, 1)
-        // Sync session snapshot in case downstream relies on session inventory (menu preview).
-        sessionStore.setInventory(inventoryService.snapshot())
+        return inventoryService.itemDetail(resolvedId)?.id ?: resolvedId
     }
 
     fun craftFirstAid(recipeId: String, outcome: MinigameResult = MinigameResult.SUCCESS): CraftingOutcome {

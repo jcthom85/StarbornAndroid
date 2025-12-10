@@ -18,10 +18,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -44,6 +43,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -57,20 +57,25 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.starborn.R
 import com.example.starborn.data.local.Theme
+import com.example.starborn.domain.inventory.GearRules
 import com.example.starborn.domain.inventory.InventoryEntry
 import com.example.starborn.domain.model.Item
 import com.example.starborn.domain.model.Equipment
 import com.example.starborn.domain.model.ItemEffect
 import com.example.starborn.feature.inventory.InventoryViewModel
 import com.example.starborn.feature.inventory.PartyMemberStatus
+import com.example.starborn.ui.background.rememberAssetPainter
 import com.example.starborn.ui.background.rememberRoomBackgroundPainter
 import com.example.starborn.ui.components.ItemTargetSelectionDialog
 import com.example.starborn.ui.components.TargetSelectionOption
 import com.example.starborn.ui.theme.themeColor
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import java.text.NumberFormat
 import java.util.Locale
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -82,22 +87,30 @@ private const val CATEGORY_EQUIPMENT = "equipment"
 private const val CATEGORY_CRAFTING = "crafting"
 private const val CATEGORY_KEY_ITEMS = "key_items"
 private const val CATEGORY_OTHER = "other"
+private val EQUIP_SLOTS = GearRules.equipSlots
 
 enum class InventoryTab { SUPPLIES, GEAR, KEY_ITEMS }
 
 data class InventoryLaunchOptions(
     val initialTab: InventoryTab? = null,
-    val focusSlot: String? = null
+    val focusSlot: String? = null,
+    val initialCharacterId: String? = null
 )
 
 private fun Item.categoryKey(): String {
     categoryOverride?.let { return it.lowercase(Locale.getDefault()) }
     if (equipment != null) return CATEGORY_EQUIPMENT
     val normalized = type.lowercase(Locale.getDefault())
+    if (GearRules.isWeaponType(normalized)) return CATEGORY_EQUIPMENT
+    val idLower = id.lowercase(Locale.getDefault())
+    val nameLower = name.lowercase(Locale.getDefault())
+    val looksBrokenComponent = idLower.startsWith("broken_") || nameLower.contains("broken ")
     return when (normalized) {
         "consumable", "medicine", "food", "drink", "tonic" -> CATEGORY_CONSUMABLES
         "weapon", "armor", "shield", "accessory", "gear", "snack" -> CATEGORY_EQUIPMENT
         "material", "ingredient", "component", "resource" -> CATEGORY_CRAFTING
+        // Treat broken quest components as crafting parts so they appear under Supplies -> Crafting.
+        "misc" -> if (looksBrokenComponent) CATEGORY_CRAFTING else CATEGORY_OTHER
         "key", "key_item", "quest" -> CATEGORY_KEY_ITEMS
         else -> CATEGORY_OTHER
     }
@@ -123,7 +136,8 @@ fun InventoryRoute(
     theme: Theme? = null,
     credits: Int,
     initialTab: InventoryTab? = null,
-    focusSlot: String? = null
+    focusSlot: String? = null,
+    initialCharacterId: String? = null
 ) {
     val entries by viewModel.entries.collectAsStateWithLifecycle()
     val equippedItems by viewModel.equippedItems.collectAsStateWithLifecycle()
@@ -154,7 +168,8 @@ fun InventoryRoute(
         theme = theme,
         credits = credits,
         initialTab = initialTab,
-        focusSlot = focusSlot
+        focusSlot = focusSlot,
+        initialCharacterId = initialCharacterId
     )
 }
 
@@ -166,7 +181,7 @@ private fun InventoryScreen(
     partyMembers: List<PartyMemberStatus>,
     snackbarHostState: SnackbarHostState,
     onUseItem: (String, String?) -> Unit,
-    onEquipItem: (String, String?, String) -> Unit,
+    onEquipItem: (String, String?, String?) -> Unit,
     onRefreshInventory: () -> Unit,
     onBack: () -> Unit,
     highContrastMode: Boolean,
@@ -174,13 +189,16 @@ private fun InventoryScreen(
     theme: Theme?,
     credits: Int,
     initialTab: InventoryTab?,
-    focusSlot: String?
+    focusSlot: String?,
+    initialCharacterId: String?
 ) {
     val normalizedFocusSlot = remember(focusSlot) { focusSlot?.lowercase(Locale.getDefault()) }
+    val normalizedInitialCharacterId = remember(initialCharacterId) { initialCharacterId?.lowercase(Locale.getDefault()) }
     val resolvedInitialTab = remember(initialTab, normalizedFocusSlot) {
         initialTab ?: if (normalizedFocusSlot != null) InventoryTab.GEAR else InventoryTab.SUPPLIES
     }
     var activeTab by remember(resolvedInitialTab) { mutableStateOf(resolvedInitialTab) }
+    val scope = rememberCoroutineScope()
     val suppliesEntries = remember(entries) {
         entries.filter {
             when (it.item.categoryKey()) {
@@ -193,7 +211,13 @@ private fun InventoryScreen(
         entries.filter { it.item.categoryKey() == CATEGORY_KEY_ITEMS }
     }
     var selectedCategory by remember(suppliesEntries) { mutableStateOf(CATEGORY_ALL) }
-    var selectedCharacterId by remember(partyMembers) { mutableStateOf(partyMembers.firstOrNull()?.id) }
+    var selectedCharacterId by remember(partyMembers, normalizedInitialCharacterId) {
+        mutableStateOf(
+            partyMembers.firstOrNull { member ->
+                normalizedInitialCharacterId != null && member.id.equals(normalizedInitialCharacterId, ignoreCase = true)
+            }?.id ?: partyMembers.firstOrNull()?.id
+        )
+    }
     LaunchedEffect(partyMembers) {
         val ids = partyMembers.map { it.id }
         if (selectedCharacterId !in ids) {
@@ -246,20 +270,57 @@ private fun InventoryScreen(
     }
 
     val entryById = remember(entries) { entries.associateBy { it.item.id } }
-    val equippableEntries = remember(entries) { entries.filter { it.item.equipment != null } }
+    val itemNameForId = remember(entryById) {
+        { id: String? ->
+            entryById[id]?.item?.name ?: id?.humanizeId()
+        }
+    }
+    val inventoryEquippableEntries = remember(entries) {
+        entries.mapNotNull { entry ->
+            val item = entry.item
+            val normalizedType = item.type.lowercase(Locale.getDefault())
+            val slotCandidate = item.equipment?.slot?.lowercase(Locale.getDefault()) ?: when {
+                EQUIP_SLOTS.contains(normalizedType) -> normalizedType
+                GearRules.isWeaponType(normalizedType) -> "weapon"
+                else -> null
+            }
+            if (slotCandidate == null) return@mapNotNull null
+            if (item.equipment != null) return@mapNotNull entry
+            val weaponType = normalizedType.takeIf { GearRules.isWeaponType(it) }
+            entry.copy(item = item.copy(equipment = Equipment(slot = slotCandidate, weaponType = weaponType)))
+        }
+    }
     val characterEquippedItems = remember(equippedItems, selectedCharacterId) {
         equippedForCharacter(equippedItems, selectedCharacterId)
     }
-    val baseSlots = remember(equippableEntries) {
-        equippableEntries
-            .mapNotNull { it.item.equipment?.slot?.lowercase(Locale.getDefault()) }
-            .distinct()
+    val fallbackEquippedEntries = remember(inventoryEquippableEntries, characterEquippedItems, selectedCharacterId) {
+        val existingIds = inventoryEquippableEntries.map { it.item.id }.toSet()
+        characterEquippedItems.mapNotNull { (slotId, itemId) ->
+            if (itemId.isNullOrBlank() || existingIds.contains(itemId)) return@mapNotNull null
+            val normalizedSlot = slotId.lowercase(Locale.getDefault())
+            val readableName = itemId.split('_', ' ')
+                .filter { it.isNotBlank() }
+                .joinToString(" ") { part ->
+                    part.replaceFirstChar { c -> if (c.isLowerCase()) c.titlecase(Locale.getDefault()) else c.toString() }
+                }.ifBlank { itemId }
+            InventoryEntry(
+                item = Item(
+                    id = itemId,
+                    name = readableName,
+                    type = "equipment",
+                    equipment = Equipment(
+                        slot = normalizedSlot,
+                        weaponType = if (normalizedSlot == "weapon") GearRules.allowedWeaponTypeFor(selectedCharacterId) else null
+                    )
+                ),
+                quantity = 1
+            )
+        }
     }
-    val slotOptions = remember(baseSlots, characterEquippedItems, normalizedFocusSlot) {
-        (baseSlots + characterEquippedItems.keys.map { it.lowercase(Locale.getDefault()) } + listOfNotNull(normalizedFocusSlot))
-            .distinct()
-            .ifEmpty { listOf("weapon", "armor", "accessory", "snack") }
+    val equippableEntries = remember(inventoryEquippableEntries, fallbackEquippedEntries) {
+        (inventoryEquippableEntries + fallbackEquippedEntries).distinctBy { it.item.id }
     }
+    val slotOptions = remember { EQUIP_SLOTS }
     var selectedSlot by remember(slotOptions, normalizedFocusSlot) {
         mutableStateOf(
             normalizedFocusSlot?.takeIf { slotOptions.contains(it) }
@@ -288,16 +349,22 @@ private fun InventoryScreen(
     var selectedEquipEntry by remember(selectedSlot, equippableEntries) {
         mutableStateOf(
             equippableEntries.firstOrNull { it.item.equipment?.slot.equals(selectedSlot, ignoreCase = true) }
+                ?: equippableEntries.firstOrNull()
         )
     }
-    LaunchedEffect(selectedSlot, equippableEntries, activeTab, characterEquippedItems) {
+    LaunchedEffect(selectedSlot, selectedCharacterId, equippableEntries, activeTab, characterEquippedItems) {
         if (activeTab == InventoryTab.GEAR) {
             val normalizedSlot = selectedSlot.lowercase(Locale.getDefault())
             val equippedId = characterEquippedItems[normalizedSlot]
-            selectedEquipEntry = equippableEntries.firstOrNull { it.item.id == equippedId }
-                ?: equippableEntries.firstOrNull {
-                    it.item.equipment?.slot.equals(selectedSlot, ignoreCase = true)
-                }
+            val filteredOptions = filterGearOptions(
+                entries = equippableEntries,
+                slotId = selectedSlot,
+                characterId = selectedCharacterId
+            )
+            selectedEquipEntry = filteredOptions.firstOrNull { it.item.id == equippedId }
+                ?: filteredOptions.firstOrNull()
+                ?: equippableEntries.firstOrNull { it.item.equipment?.slot.equals(selectedSlot, ignoreCase = true) }
+                ?: equippableEntries.firstOrNull()
         }
     }
 
@@ -411,29 +478,6 @@ private fun InventoryScreen(
                                 highContrastMode = highContrastMode,
                                 largeTouchTargets = largeTouchTargets
                         )
-                        InventoryTab.GEAR -> EquipmentTabContent(
-                            partyMembers = partyMembers,
-                            selectedCharacterId = selectedCharacterId,
-                            onSelectCharacter = { selectedCharacterId = it },
-                            slots = slotOptions,
-                            selectedSlot = selectedSlot,
-                            onSelectSlot = { selectedSlot = it },
-                            equippableEntries = equippableEntries,
-                            selectedEntry = selectedEquipEntry,
-                            onSelectEntry = { selectedEquipEntry = it },
-                            equippedItems = characterEquippedItems,
-                            equippedItemNames = equippedItemNames,
-                            onEquipItem = { slot, itemId ->
-                                selectedCharacterId?.let { charId ->
-                                    onEquipItem(slot, itemId, charId)
-                                }
-                            },
-                            accentColor = accentColor,
-                            borderColor = borderColor,
-                            foregroundColor = foregroundColor,
-                            highContrastMode = highContrastMode,
-                            largeTouchTargets = largeTouchTargets
-                            )
                             InventoryTab.KEY_ITEMS -> KeyItemsTabContent(
                                 items = keyItemEntries,
                                 selectedItem = selectedKeyEntry,
@@ -444,6 +488,49 @@ private fun InventoryScreen(
                                 highContrastMode = highContrastMode,
                                 largeTouchTargets = largeTouchTargets
                             )
+                            InventoryTab.GEAR -> {
+                                val normalizedSlot = selectedSlot.lowercase(Locale.getDefault())
+                                val equippedId = characterEquippedItems[normalizedSlot]
+                                val equippedEntry = equippableEntries.firstOrNull { it.item.id == equippedId }
+                                val gearOptions = remember(equippableEntries, selectedSlot, selectedCharacterId) {
+                                    filterGearOptions(
+                                        entries = equippableEntries,
+                                        slotId = selectedSlot,
+                                        characterId = selectedCharacterId
+                                    )
+                                }
+                                GearTabContent(
+                                    partyMembers = partyMembers,
+                                    selectedCharacterId = selectedCharacterId,
+                                    slots = slotOptions,
+                                    selectedSlot = selectedSlot,
+                                    equippedItems = equippedItems,
+                                    availableItems = gearOptions,
+                                    selectedEntry = selectedEquipEntry,
+                                    equippedEntry = equippedEntry,
+                                    equippedItemName = equippedItemNames[normalizedSlot],
+                                    accentColor = accentColor,
+                                    borderColor = borderColor,
+                                    foregroundColor = foregroundColor,
+                                    highContrastMode = highContrastMode,
+                                    largeTouchTargets = largeTouchTargets,
+                                    itemNameForId = itemNameForId,
+                                    onSelectCharacter = { id ->
+                                        selectedCharacterId = id
+                                    },
+                                    onSelectSlot = { slot ->
+                                        val normalized = slot.lowercase(Locale.getDefault())
+                                        selectedSlot = normalized
+                                    },
+                                    onSelectEntry = { entry -> selectedEquipEntry = entry },
+                                    onEquip = if (selectedCharacterId != null) {
+                                        { selectedCharacterId?.let { onEquipItem(selectedSlot, selectedEquipEntry?.item?.id, it) } }
+                                    } else null,
+                                    onUnequip = if (selectedCharacterId != null) {
+                                        { onEquipItem(selectedSlot, null, selectedCharacterId!!) }
+                                    } else null
+                                )
+                            }
                         }
                     }
                 }
@@ -832,134 +919,266 @@ private fun KeyItemsTabContent(
 }
 
 @Composable
-private fun EquipmentTabContent(
+private fun GearTabContent(
     partyMembers: List<PartyMemberStatus>,
     selectedCharacterId: String?,
-    onSelectCharacter: (String) -> Unit,
     slots: List<String>,
     selectedSlot: String,
-    onSelectSlot: (String) -> Unit,
-    equippableEntries: List<InventoryEntry>,
-    selectedEntry: InventoryEntry?,
-    onSelectEntry: (InventoryEntry) -> Unit,
     equippedItems: Map<String, String>,
-    equippedItemNames: Map<String, String>,
-    onEquipItem: (String, String?) -> Unit,
+    availableItems: List<InventoryEntry>,
+    selectedEntry: InventoryEntry?,
+    equippedEntry: InventoryEntry?,
+    equippedItemName: String?,
     accentColor: Color,
     borderColor: Color,
     foregroundColor: Color,
     highContrastMode: Boolean,
-    largeTouchTargets: Boolean
+    largeTouchTargets: Boolean,
+    itemNameForId: (String?) -> String?,
+    onSelectCharacter: (String) -> Unit,
+    onSelectSlot: (String) -> Unit,
+    onSelectEntry: (InventoryEntry) -> Unit,
+    onEquip: (() -> Unit)?,
+    onUnequip: (() -> Unit)?
 ) {
-    val normalizedSlot = selectedSlot.lowercase(Locale.getDefault())
-    val equippedItemId = equippedItems[normalizedSlot]
-    val equippedEntry = equippableEntries.firstOrNull { it.item.id == equippedItemId }
-    val slotEntries = equippableEntries.filter {
-        it.item.equipment?.slot.equals(selectedSlot, ignoreCase = true)
-    }
-    Column(
+    Row(
         modifier = Modifier
             .fillMaxSize()
             .padding(top = 4.dp),
-        verticalArrangement = Arrangement.spacedBy(10.dp)
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        if (partyMembers.isNotEmpty()) {
-            PartyPickerRow(
-                members = partyMembers,
-                selectedId = selectedCharacterId,
-                onSelect = onSelectCharacter,
-                accentColor = accentColor,
-                borderColor = borderColor,
-                largeTouchTargets = largeTouchTargets
-            )
-        }
-        Row(
-            modifier = Modifier.fillMaxSize(),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            LoadoutColumn(
+        PartyMemberSidebar(
+            modifier = Modifier
+                .weight(0.3f)
+                .fillMaxHeight(),
+            partyMembers = partyMembers,
+            selectedCharacterId = selectedCharacterId,
+            onSelectCharacter = onSelectCharacter,
+            accentColor = accentColor,
+            borderColor = borderColor
+        )
+        GearWorkshop(
+            modifier = Modifier
+                .weight(0.7f)
+                .fillMaxHeight(),
+            slots = slots,
+            selectedSlot = selectedSlot,
+            onSelectSlot = onSelectSlot,
+            equippedItemName = equippedItemName,
+            availableItems = availableItems,
+            selectedEntry = selectedEntry,
+            equippedEntry = equippedEntry,
+            onSelectEntry = onSelectEntry,
+            onEquip = onEquip,
+            onUnequip = onUnequip,
+            accentColor = accentColor,
+            borderColor = borderColor,
+            foregroundColor = foregroundColor,
+            highContrastMode = highContrastMode,
+            largeTouchTargets = largeTouchTargets
+        )
+    }
+}
+
+@Composable
+private fun PartyMemberSidebar(
+    modifier: Modifier,
+    partyMembers: List<PartyMemberStatus>,
+    selectedCharacterId: String?,
+    onSelectCharacter: (String) -> Unit,
+    accentColor: Color,
+    borderColor: Color
+) {
+    Surface(
+        modifier = modifier,
+        color = Color.Black.copy(alpha = 0.25f),
+        border = BorderStroke(1.dp, borderColor.copy(alpha = 0.6f)),
+        shape = RoundedCornerShape(28.dp)
+    ) {
+        if (partyMembers.isEmpty()) {
+             Box(contentAlignment = Alignment.Center) {
+                 Text("No Party", color = Color.White.copy(alpha = 0.5f), style = MaterialTheme.typography.labelSmall)
+             }
+        } else {
+            LazyColumn(
                 modifier = Modifier
-                    .weight(0.4f)
-                    .fillMaxHeight(),
-                slots = slots,
-                selectedSlot = selectedSlot,
-                onSelectSlot = onSelectSlot,
-                equippedItemNames = equippedItemNames,
-                accentColor = accentColor,
-                borderColor = borderColor,
-                largeTouchTargets = largeTouchTargets
-            )
-            Column(
-                modifier = Modifier
-                    .weight(0.6f)
-                    .fillMaxHeight(),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                    .fillMaxSize()
+                    .padding(12.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                InventoryItemsColumn(
-                    modifier = Modifier.weight(1f),
-                    items = slotEntries,
-                    selectedItem = selectedEntry,
-                    onSelectItem = onSelectEntry,
-                    accentColor = accentColor,
-                    borderColor = borderColor,
-                    equippedItemId = equippedItemId,
-                    highContrastMode = highContrastMode,
-                    largeTouchTargets = largeTouchTargets,
-                    statSummary = { entry -> primaryStatSummary(entry.item) }
-                )
-                ComparisonPanel(
-                    slotLabel = selectedSlot,
-                    selectedEntry = selectedEntry,
-                    equippedEntry = equippedEntry,
-                    equippedItemName = equippedItemNames[normalizedSlot],
-                    accentColor = accentColor,
-                    borderColor = borderColor,
-                    foregroundColor = foregroundColor,
-                    largeTouchTargets = largeTouchTargets,
-                    onEquip = selectedEntry?.let { entry ->
-                        if (entry.item.id != equippedItemId) {
-                            { onEquipItem(normalizedSlot, entry.item.id) }
-                        } else null
-                    },
-                    onUnequip = equippedItemId?.let { { onEquipItem(normalizedSlot, null) } }
-                )
+                items(partyMembers, key = { it.id }) { member ->
+                    PartyMemberItem(
+                        member = member,
+                        isSelected = member.id == selectedCharacterId,
+                        onClick = { onSelectCharacter(member.id) },
+                        accentColor = accentColor
+                    )
+                }
             }
         }
     }
 }
 
 @Composable
-private fun PartyPickerRow(
-    members: List<PartyMemberStatus>,
-    selectedId: String?,
-    onSelect: (String) -> Unit,
+private fun PartyMemberItem(
+    member: PartyMemberStatus,
+    isSelected: Boolean,
+    onClick: () -> Unit,
+    accentColor: Color
+) {
+    val background = if (isSelected) accentColor.copy(alpha = 0.2f) else Color.Transparent
+    val border = if (isSelected) accentColor else Color.Transparent
+    val portraitPainter = rememberAssetPainter(member.portraitPath, R.drawable.main_menu_background)
+
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(64.dp)
+            .clip(RoundedCornerShape(16.dp))
+            .clickable { onClick() },
+        color = background,
+        border = BorderStroke(1.dp, border)
+    ) {
+        Row(
+            modifier = Modifier.padding(8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Image(
+                painter = portraitPainter,
+                contentDescription = null,
+                modifier = Modifier
+                    .size(48.dp)
+                    .clip(RoundedCornerShape(12.dp)),
+                contentScale = ContentScale.Crop
+            )
+            Text(
+                text = member.name,
+                style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                color = Color.White,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+    }
+}
+
+@Composable
+private fun GearWorkshop(
+    modifier: Modifier,
+    slots: List<String>,
+    selectedSlot: String,
+    onSelectSlot: (String) -> Unit,
+    equippedItemName: String?,
+    availableItems: List<InventoryEntry>,
+    selectedEntry: InventoryEntry?,
+    equippedEntry: InventoryEntry?,
+    onSelectEntry: (InventoryEntry) -> Unit,
+    onEquip: (() -> Unit)?,
+    onUnequip: (() -> Unit)?,
+    accentColor: Color,
+    borderColor: Color,
+    foregroundColor: Color,
+    highContrastMode: Boolean,
+    largeTouchTargets: Boolean
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        SlotTabRow(
+            slots = slots,
+            selectedSlot = selectedSlot,
+            onSelectSlot = onSelectSlot,
+            accentColor = accentColor,
+            borderColor = borderColor,
+            largeTouchTargets = largeTouchTargets
+        )
+        
+        ComparisonPanel(
+            slotLabel = slotDisplayName(selectedSlot),
+            selectedEntry = selectedEntry,
+            equippedEntry = equippedEntry,
+            equippedItemName = equippedItemName,
+            accentColor = accentColor,
+            borderColor = borderColor,
+            foregroundColor = foregroundColor,
+            largeTouchTargets = largeTouchTargets,
+            onEquip = onEquip,
+            onUnequip = onUnequip
+        )
+        
+        InventoryItemsColumn(
+            modifier = Modifier.weight(1f),
+            items = availableItems,
+            selectedItem = selectedEntry,
+            onSelectItem = onSelectEntry,
+            accentColor = accentColor,
+            borderColor = borderColor,
+            equippedItemId = equippedEntry?.item?.id,
+            highContrastMode = highContrastMode,
+            largeTouchTargets = largeTouchTargets,
+            statSummary = { entry -> primaryStatSummary(entry.item) }
+        )
+    }
+}
+
+@Composable
+private fun SlotTabRow(
+    slots: List<String>,
+    selectedSlot: String,
+    onSelectSlot: (String) -> Unit,
     accentColor: Color,
     borderColor: Color,
     largeTouchTargets: Boolean
 ) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .horizontalScroll(rememberScrollState()),
+        modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        members.forEach { member ->
-            val selected = member.id == selectedId
-            Surface(
-                onClick = { onSelect(member.id) },
-                shape = RoundedCornerShape(18.dp),
-                border = BorderStroke(1.dp, if (selected) accentColor else borderColor.copy(alpha = 0.6f)),
-                color = if (selected) accentColor.copy(alpha = 0.18f) else Color.Transparent,
-                modifier = Modifier
-                    .heightIn(min = if (largeTouchTargets) 44.dp else 36.dp)
-            ) {
-                Text(
-                    text = member.name,
-                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
-                    color = Color.White,
-                    style = MaterialTheme.typography.labelLarge
-                )
-            }
+        slots.forEach { slot ->
+            SlotTab(
+                slot = slot,
+                isSelected = slot.equals(selectedSlot, ignoreCase = true),
+                onClick = { onSelectSlot(slot) },
+                accentColor = accentColor,
+                borderColor = borderColor,
+                largeTouchTargets = largeTouchTargets,
+                modifier = Modifier.weight(1f)
+            )
+        }
+    }
+}
+
+@Composable
+private fun SlotTab(
+    slot: String,
+    isSelected: Boolean,
+    onClick: () -> Unit,
+    accentColor: Color,
+    borderColor: Color,
+    largeTouchTargets: Boolean,
+    modifier: Modifier
+) {
+    val background = if (isSelected) accentColor.copy(alpha = 0.2f) else Color.Black.copy(alpha = 0.25f)
+    val border = if (isSelected) accentColor else borderColor.copy(alpha = 0.5f)
+    
+    Surface(
+        modifier = modifier
+            .height(if (largeTouchTargets) 56.dp else 48.dp)
+            .clip(RoundedCornerShape(12.dp))
+            .clickable { onClick() },
+        color = background,
+        border = BorderStroke(1.dp, border)
+    ) {
+        Box(contentAlignment = Alignment.Center) {
+             Text(
+                text = slot.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() },
+                style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                color = if (isSelected) Color.White else Color.White.copy(alpha = 0.7f),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
         }
     }
 }
@@ -1063,142 +1282,6 @@ private fun WalletSummaryCard(
                 style = MaterialTheme.typography.titleMedium,
                 color = Color.White
             )
-        }
-    }
-}
-
-@Composable
-private fun LoadoutColumn(
-    modifier: Modifier,
-    slots: List<String>,
-    selectedSlot: String,
-    onSelectSlot: (String) -> Unit,
-    equippedItemNames: Map<String, String>,
-    accentColor: Color,
-    borderColor: Color,
-    largeTouchTargets: Boolean
-) {
-    Surface(
-        modifier = modifier,
-        color = Color.Black.copy(alpha = 0.25f),
-        border = BorderStroke(1.dp, borderColor.copy(alpha = 0.6f)),
-        shape = RoundedCornerShape(28.dp)
-    ) {
-        val scrollState = rememberScrollState()
-        Column(
-            modifier = Modifier
-                .fillMaxHeight()
-                .padding(16.dp)
-        ) {
-            SectionHeading(label = "Loadout Overview", accentColor = accentColor)
-            Text(
-                text = "Tap a slot to focus matching gear.",
-                style = MaterialTheme.typography.bodySmall,
-                color = Color.White.copy(alpha = 0.7f),
-                modifier = Modifier
-                    .padding(start = 4.dp, top = 2.dp, bottom = 8.dp)
-            )
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .verticalScroll(scrollState),
-                verticalArrangement = Arrangement.spacedBy(10.dp)
-            ) {
-                slots.forEach { slot ->
-                    val normalized = slot.lowercase(Locale.getDefault())
-                    val equippedLabel = equippedItemNames[normalized]
-                    LoadoutCard(
-                        slotName = slot,
-                        equippedItemName = equippedLabel,
-                        selected = slot.equals(selectedSlot, ignoreCase = true),
-                        accentColor = accentColor,
-                        borderColor = borderColor,
-                        onClick = { onSelectSlot(slot) },
-                        largeTouchTargets = largeTouchTargets
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun LoadoutCard(
-    slotName: String,
-    equippedItemName: String?,
-    selected: Boolean,
-    accentColor: Color,
-    borderColor: Color,
-    onClick: () -> Unit,
-    largeTouchTargets: Boolean
-) {
-    val background = if (selected) accentColor.copy(alpha = 0.18f) else Color.Transparent
-    val border = if (selected) accentColor else borderColor.copy(alpha = 0.6f)
-    val slotLabel = slotName.uppercase(Locale.getDefault())
-    val equippedLabel = equippedItemName?.takeIf { it.isNotBlank() } ?: "Empty"
-    val equippedColor = if (equippedItemName.isNullOrBlank()) {
-        Color.White.copy(alpha = 0.5f)
-    } else {
-        Color.White
-    }
-    Surface(
-        modifier = Modifier
-            .fillMaxWidth()
-            .heightIn(min = if (largeTouchTargets) 76.dp else 64.dp)
-            .clip(RoundedCornerShape(22.dp))
-            .clickable { onClick() },
-        color = background,
-        border = BorderStroke(width = if (selected) 1.5.dp else 1.dp, color = border)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 14.dp, vertical = 10.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            Surface(
-                modifier = Modifier
-                    .widthIn(min = 46.dp)
-                    .heightIn(min = 46.dp),
-                color = accentColor.copy(alpha = 0.12f),
-                shape = RoundedCornerShape(14.dp)
-            ) {
-                Box(contentAlignment = Alignment.Center) {
-                    Text(
-                        text = slotLabel.take(3),
-                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                        color = accentColor
-                    )
-                }
-            }
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = slotLabel,
-                    style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.SemiBold),
-                    color = Color.White
-                )
-                Text(
-                    text = equippedLabel,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = equippedColor,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
-            if (selected) {
-                Surface(
-                    color = accentColor.copy(alpha = 0.2f),
-                    shape = RoundedCornerShape(8.dp)
-                ) {
-                    Text(
-                        text = "ACTIVE",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = accentColor,
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-                    )
-                }
-            }
         }
     }
 }
@@ -1845,8 +1928,11 @@ private fun itemIconRes(item: Item?): Int {
             R.drawable.item_icon_fishing
         normalizedType.contains("lure") ->
             R.drawable.item_icon_lure
-        normalizedType in setOf("weapon", "armor", "accessory", "gear", "snack") || item.equipment != null -> {
+        normalizedType in setOf("weapon", "armor", "accessory", "gear", "snack") ||
+            GearRules.isWeaponType(normalizedType) || item.equipment != null -> {
             val slot = item.equipment?.slot?.lowercase(Locale.getDefault())
+                ?: normalizedType.takeIf { EQUIP_SLOTS.contains(it) }
+                ?: if (GearRules.isWeaponType(normalizedType)) "weapon" else null
             when {
                 slot == "snack" -> R.drawable.item_icon_food
                 slot == "armor" && name.contains("glove") -> R.drawable.item_icon_gloves
@@ -1866,6 +1952,22 @@ private fun itemIconRes(item: Item?): Int {
 private fun formatSigned(value: Int): String =
     if (value >= 0) "+$value" else value.toString()
 
+private fun filterGearOptions(
+    entries: List<InventoryEntry>,
+    slotId: String?,
+    characterId: String?
+): List<InventoryEntry> {
+    val normalizedSlot = slotId?.trim()?.lowercase(Locale.getDefault()) ?: return emptyList()
+    return entries.filter { entry ->
+        GearRules.matchesSlot(
+            equipment = entry.item.equipment,
+            slotId = normalizedSlot,
+            characterId = characterId,
+            itemTypeHint = entry.item.type
+        )
+    }
+}
+
 private fun equippedForCharacter(
     equippedItems: Map<String, String>,
     characterId: String?
@@ -1878,6 +1980,24 @@ private fun equippedForCharacter(
             slot to value
         } else null
     }.toMap()
-    if (scoped.isNotEmpty()) return scoped
-    return equippedItems.filterKeys { !it.contains(':') }
+    return scoped
 }
+
+private fun slotDisplayName(raw: String): String =
+    raw.split('_', ' ')
+        .filter { it.isNotBlank() }
+        .joinToString(" ") { part ->
+            part.replaceFirstChar { char ->
+                if (char.isLowerCase()) char.titlecase(Locale.getDefault()) else char.toString()
+            }
+        }
+        .ifBlank { raw }
+
+private fun String.humanizeId(): String =
+    split('_', ' ')
+        .filter { it.isNotBlank() }
+        .joinToString(" ") { part ->
+            part.replaceFirstChar { char ->
+                if (char.isLowerCase()) char.titlecase(Locale.getDefault()) else char.toString()
+            }
+        }

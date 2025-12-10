@@ -172,7 +172,7 @@
     {
         "id": "ellie_default_talk",
         "speaker": "Ellie",
-        "text": "(Placeholder) Ellie's dialogue here."
+        "text": "Ellie (default): Just swapping out panels here—what's up?"
     },
     {
         "id": "ellie_return_display",
@@ -182,7 +182,28 @@
     {
         "id": "jed_default_talk",
         "speaker": "Jed",
-        "text": "(Placeholder) Jed's dialogue here."
+        "text": "Jed (default): Grab a seat if you're sticking around."
+    },
+    {
+        "id": "jed_talk_intro_1",
+        "speaker": "Jed",
+        "text": "Ollie said you'd stop by. Got a list as long as my arm, but we'll start simple.",
+        "condition": "quest_active:talk_to_jed",
+        "next": "jed_talk_intro_2"
+    },
+    {
+        "id": "jed_talk_intro_2",
+        "speaker": "Jed",
+        "text": "Three busted gadgets scattered around town. Bring them to me, we'll get you on the bench after.",
+        "condition": "quest_active:talk_to_jed",
+        "next": "jed_talk_intro_complete"
+    },
+    {
+        "id": "jed_talk_intro_complete",
+        "speaker": "Jed",
+        "text": "I'll mark the details in your journal. Go round them up, then we tinker.",
+        "condition": "quest_active:talk_to_jed",
+        "trigger": "set_quest_task_done:talk_to_jed:talk_to_jed_task,complete_quest:talk_to_jed,start_quest:gather_broken_gear,track_quest:gather_broken_gear,set_milestone:ms_talked_to_jed,system_tutorial:scene_market_journal|Market Plaza"
     },
     {
         "id": "jed_energy_core_turnin_1",
@@ -235,7 +256,7 @@
     {
         "id": "maddie_default_talk",
         "speaker": "Maddie",
-        "text": "(Placeholder) Maddie's dialogue here."
+        "text": "Maddie (default): Beans are roasting—did you need something?"
     },
     {
         "id": "maddie_return_grinder",

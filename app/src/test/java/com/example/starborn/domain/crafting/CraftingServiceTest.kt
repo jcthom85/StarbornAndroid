@@ -162,6 +162,49 @@ class CraftingServiceTest {
         assertEquals("Medkit+", outcome.itemId)
         assertTrue(inventory.hasItem("Medkit+"))
     }
+
+    @Test
+    fun craftTinkeringAddsResultAndConsumesParts() {
+        val catalog = TestItemCatalog(
+            listOf(
+                item(id = "broken_projector", name = "Broken Projector", type = "misc"),
+                item(id = "circuit_board", name = "Circuit Board", type = "component"),
+                item(
+                    id = "repaired_projector",
+                    name = "Repaired Projector",
+                    type = "misc",
+                    categoryOverride = "supplies"
+                )
+            )
+        )
+        val inventory = InventoryService(catalog).apply {
+            loadItems()
+            addItem("Broken Projector", 1)
+            addItem("Circuit Board", 1)
+        }
+        val recipes = TestRecipeSource(
+            tinkering = listOf(
+                TinkeringRecipe(
+                    id = "repaired_projector",
+                    name = "Repaired Projector",
+                    description = null,
+                    base = "Broken Projector",
+                    components = listOf("Circuit Board"),
+                    result = "Repaired Projector",
+                    successMessage = "Fixed it."
+                )
+            )
+        )
+        val service = CraftingService(recipes, inventory, GameSessionStore())
+
+        val outcome = service.craftTinkering("repaired_projector")
+
+        assertTrue(outcome is CraftingOutcome.Success)
+        assertEquals("repaired_projector", outcome.itemId)
+        assertTrue(inventory.hasItem("repaired_projector"))
+        assertFalse(inventory.hasItem("Broken Projector"))
+        assertFalse(inventory.hasItem("Circuit Board"))
+    }
 }
 
 private class EmptyItemCatalog : ItemCatalog {
@@ -205,10 +248,16 @@ private class TestRecipeSource(
     override fun loadFirstAidRecipes(): List<FirstAidRecipe> = firstAid
 }
 
-private fun item(id: String, name: String): Item = Item(
+private fun item(
+    id: String,
+    name: String,
+    type: String = "ingredient",
+    categoryOverride: String? = null
+): Item = Item(
     id = id,
     name = name,
     aliases = listOf(name),
-    type = "ingredient",
+    type = type,
+    categoryOverride = categoryOverride,
     value = 10
 )

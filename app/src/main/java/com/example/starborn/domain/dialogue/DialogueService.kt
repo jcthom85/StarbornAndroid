@@ -15,7 +15,9 @@ class DialogueService(
 
     fun startDialogue(speaker: String): DialogueSession? {
         val entries = dialogueBySpeaker[speaker.lowercase(Locale.getDefault())] ?: return null
-        val start = entries.firstOrNull { conditionEvaluator.isConditionMet(it.condition) } ?: return null
+        val (conditioned, unconditioned) = entries.partition { !it.condition.isNullOrBlank() }
+        val ordered = conditioned + unconditioned
+        val start = ordered.firstOrNull { conditionEvaluator.isConditionMet(it.condition) } ?: return null
         return DialogueSession(dialogueById, start, conditionEvaluator, triggerHandler)
     }
 }

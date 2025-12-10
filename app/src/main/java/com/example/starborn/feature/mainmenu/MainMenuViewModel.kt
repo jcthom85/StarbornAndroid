@@ -3,6 +3,7 @@ package com.example.starborn.feature.mainmenu
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.starborn.di.AppServices
+import com.example.starborn.data.local.Theme
 import com.example.starborn.domain.session.GameSessionSlotInfo
 import com.example.starborn.domain.session.GameSessionState
 import com.example.starborn.domain.session.GameSaveRepository.Companion.AUTOSAVE_SLOT
@@ -39,6 +40,9 @@ class MainMenuViewModel(
 
     private val _messages = MutableSharedFlow<String>(extraBufferCapacity = 4)
     val messages: SharedFlow<String> = _messages.asSharedFlow()
+
+    val mainMenuTheme: Theme? = services.themeRepository.getTheme(MAIN_MENU_THEME_ID)
+        ?: services.themeRepository.getTheme(DEFAULT_THEME_ID)
 
     init {
         refreshSlots()
@@ -87,6 +91,18 @@ class MainMenuViewModel(
                 onComplete?.invoke()
             } else {
                 emitMessage("Failed to start new game. Check assets and logs.")
+            }
+        }
+    }
+
+    fun startNewGameWithFullInventory(onComplete: (() -> Unit)? = null) {
+        viewModelScope.launch {
+            val success = services.startNewGame(debugFullInventory = true)
+            if (success) {
+                services.syncInventoryFromSession()
+                onComplete?.invoke()
+            } else {
+                emitMessage("Failed to start debug new game.")
             }
         }
     }
@@ -275,5 +291,7 @@ class MainMenuViewModel(
 
     companion object {
         private const val MAX_SLOTS = 3
+        private const val MAIN_MENU_THEME_ID = "starborn"
+        private const val DEFAULT_THEME_ID = "default"
     }
 }

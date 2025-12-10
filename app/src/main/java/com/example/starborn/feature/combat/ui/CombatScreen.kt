@@ -862,7 +862,7 @@ private fun PartyRoster(
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly,
-                verticalAlignment = Alignment.Bottom
+                verticalAlignment = Alignment.Top
             ) {
                 rowMembers.forEach { member ->
                     val memberState = combatState.combatants[member.id]

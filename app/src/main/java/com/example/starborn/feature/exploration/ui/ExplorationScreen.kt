@@ -143,6 +143,7 @@ import androidx.constraintlayout.compose.Dimension
 import com.example.starborn.R
 import com.example.starborn.domain.model.DialogueLine
 import com.example.starborn.domain.audio.AudioCuePlayer
+import com.example.starborn.domain.inventory.GearRules
 import com.example.starborn.domain.inventory.ItemUseResult
 import com.example.starborn.domain.milestone.MilestoneEvent
 import com.example.starborn.domain.model.ContainerAction
@@ -156,6 +157,7 @@ import com.example.starborn.domain.model.ShopAction
 import com.example.starborn.domain.model.TinkeringAction
 import com.example.starborn.domain.model.GenericAction
 import com.example.starborn.domain.model.ToggleAction
+import com.example.starborn.domain.model.Equipment
 import com.example.starborn.domain.model.actionKey
 import com.example.starborn.domain.model.serviceTag
 import com.example.starborn.domain.tutorial.TutorialEntry
@@ -798,6 +800,7 @@ fun ExplorationScreen(
                 settings = uiState.settings,
                 onMusicVolumeChange = { viewModel.updateMusicVolume(it) },
                 onSfxVolumeChange = { viewModel.updateSfxVolume(it) },
+                onToggleTutorials = { viewModel.updateTutorialsEnabled(it) },
                 onToggleVignette = { viewModel.setVignetteEnabled(it) },
                 onQuickSave = { viewModel.quickSave() },
                 onSaveGame = {
@@ -817,6 +820,8 @@ fun ExplorationScreen(
                 onShowDetails = { memberId -> viewModel.openPartyMemberDetails(memberId) },
                 statusMessage = uiState.statusMessage,
                 trackedQuest = trackedQuest,
+                activeQuests = uiState.questLogActive,
+                completedQuests = uiState.questLogCompleted,
                 minimap = uiState.minimap,
                 fullMap = uiState.fullMap,
                 theme = activeTheme,
@@ -825,6 +830,9 @@ fun ExplorationScreen(
                 creditsLabel = uiState.progressionSummary.creditsLabel,
                 inventoryItems = uiState.inventoryPreview,
                 equippedItems = uiState.equippedItems,
+                onEquipItem = { slot, itemId, characterId ->
+                    viewModel.equipInventoryItem(slot, itemId, characterId)
+                },
                 onUseInventoryItem = onUsePreviewItem,
                 onShowQuestDetails = { questId ->
                     viewModel.openQuestDetails(questId)
@@ -873,6 +881,12 @@ fun ExplorationScreen(
                     coroutineScope.launch {
                         viewModel.loadGame(slot)
                         saveLoadMode = null
+                    }
+                },
+                onDelete = { slot ->
+                    coroutineScope.launch {
+                        viewModel.deleteGame(slot)
+                        slotSummaries = viewModel.fetchSaveSlots()
                     }
                 },
                 onRefresh = {
@@ -1807,6 +1821,7 @@ private fun MenuOverlay(
     settings: SettingsUiState,
     onMusicVolumeChange: (Float) -> Unit,
     onSfxVolumeChange: (Float) -> Unit,
+    onToggleTutorials: (Boolean) -> Unit,
     onToggleVignette: (Boolean) -> Unit,
     onQuickSave: () -> Unit,
     onSaveGame: () -> Unit,
@@ -1816,6 +1831,8 @@ private fun MenuOverlay(
     onShowDetails: (String) -> Unit,
     statusMessage: String?,
     trackedQuest: QuestSummaryUi?,
+    activeQuests: List<QuestSummaryUi>,
+    completedQuests: List<QuestSummaryUi>,
     minimap: MinimapUiState?,
     fullMap: FullMapUiState?,
     theme: Theme?,
@@ -1824,6 +1841,7 @@ private fun MenuOverlay(
     creditsLabel: String,
     inventoryItems: List<InventoryPreviewItemUi>,
     equippedItems: Map<String, String>,
+    onEquipItem: (String, String?, String) -> Unit,
     onUseInventoryItem: (InventoryPreviewItemUi) -> Unit,
     onShowQuestDetails: (String) -> Unit,
     modifier: Modifier = Modifier
@@ -1887,6 +1905,8 @@ private fun MenuOverlay(
                     statusMessage = statusMessage,
                     partyStatus = partyStatus,
                     trackedQuest = trackedQuest,
+                    activeQuests = activeQuests,
+                    completedQuests = completedQuests,
                     minimap = minimap,
                     fullMap = fullMap,
                     settings = settings,
@@ -1897,6 +1917,7 @@ private fun MenuOverlay(
                     onOpenFullMap = onOpenFullMap,
                     onMusicVolumeChange = onMusicVolumeChange,
                     onSfxVolumeChange = onSfxVolumeChange,
+                    onToggleTutorials = onToggleTutorials,
                     onToggleVignette = onToggleVignette,
                     onQuickSave = onQuickSave,
                     onSaveGame = onSaveGame,
@@ -1905,6 +1926,7 @@ private fun MenuOverlay(
                     onShowDetails = onShowDetails,
                     inventoryItems = inventoryItems,
                     equippedItems = equippedItems,
+                    onEquipItem = onEquipItem,
                     onUseInventoryItem = onUseInventoryItem,
                     onShowQuestDetails = onShowQuestDetails,
                     creditsLabel = creditsLabel
@@ -1972,6 +1994,8 @@ private fun MenuTabContentArea(
     statusMessage: String?,
     partyStatus: PartyStatusUi,
     trackedQuest: QuestSummaryUi?,
+    activeQuests: List<QuestSummaryUi>,
+    completedQuests: List<QuestSummaryUi>,
     minimap: MinimapUiState?,
     fullMap: FullMapUiState?,
     settings: SettingsUiState,
@@ -1982,6 +2006,7 @@ private fun MenuTabContentArea(
     onOpenFullMap: () -> Unit,
     onMusicVolumeChange: (Float) -> Unit,
     onSfxVolumeChange: (Float) -> Unit,
+    onToggleTutorials: (Boolean) -> Unit,
     onToggleVignette: (Boolean) -> Unit,
     onQuickSave: () -> Unit,
     onSaveGame: () -> Unit,
@@ -1990,6 +2015,7 @@ private fun MenuTabContentArea(
     onShowDetails: (String) -> Unit,
     inventoryItems: List<InventoryPreviewItemUi>,
     equippedItems: Map<String, String>,
+    onEquipItem: (String, String?, String) -> Unit,
     onUseInventoryItem: (InventoryPreviewItemUi) -> Unit,
     onShowQuestDetails: (String) -> Unit,
     creditsLabel: String
@@ -1999,14 +2025,17 @@ private fun MenuTabContentArea(
             MenuTab.INVENTORY -> InventoryTabContent(
                 inventoryItems = inventoryItems,
                 equippedItems = equippedItems,
+                partyMembers = partyStatus.members,
                 accentColor = accentColor,
                 borderColor = borderColor,
-                onOpenInventory = onOpenInventory,
+                onEquipItem = onEquipItem,
                 onUseConsumable = onUseInventoryItem,
                 creditsLabel = creditsLabel
             )
             MenuTab.JOURNAL -> JournalTabContent(
                 trackedQuest = trackedQuest,
+                activeQuests = activeQuests,
+                completedQuests = completedQuests,
                 accentColor = accentColor,
                 borderColor = borderColor,
                 onQuestSelected = onShowQuestDetails
@@ -2034,6 +2063,7 @@ private fun MenuTabContentArea(
                 borderColor = borderColor,
                 onMusicVolumeChange = onMusicVolumeChange,
                 onSfxVolumeChange = onSfxVolumeChange,
+                onToggleTutorials = onToggleTutorials,
                 onToggleVignette = onToggleVignette,
                 onQuickSave = onQuickSave,
                 onSaveGame = onSaveGame,
@@ -2051,9 +2081,10 @@ private enum class QuestJournalPage { ACTIVE, COMPLETED }
 private fun InventoryTabContent(
     inventoryItems: List<InventoryPreviewItemUi>,
     equippedItems: Map<String, String>,
+    partyMembers: List<PartyMemberStatusUi>,
     accentColor: Color,
     borderColor: Color,
-    onOpenInventory: (InventoryLaunchOptions) -> Unit,
+    onEquipItem: (String, String?, String) -> Unit,
     onUseConsumable: (InventoryPreviewItemUi) -> Unit,
     creditsLabel: String
 ) {
@@ -2084,9 +2115,10 @@ private fun InventoryTabContent(
             InventoryCarouselPage.GEAR -> InventoryEquipmentPreview(
                 inventoryItems = inventoryItems,
                 equippedItems = equippedItems,
+                partyMembers = partyMembers,
                 borderColor = borderColor,
                 accentColor = accentColor,
-                onOpenInventory = onOpenInventory
+                onEquipItem = onEquipItem
             )
             InventoryCarouselPage.KEY_ITEMS -> InventoryItemsPreview(
                 items = keyItems,
@@ -2285,61 +2317,113 @@ private fun InventoryPreviewItemUi.isKeyItem(): Boolean {
 private fun InventoryEquipmentPreview(
     inventoryItems: List<InventoryPreviewItemUi>,
     equippedItems: Map<String, String>,
+    partyMembers: List<PartyMemberStatusUi>,
     borderColor: Color,
     accentColor: Color,
-    onOpenInventory: (InventoryLaunchOptions) -> Unit
+    onEquipItem: (String, String?, String) -> Unit
 ) {
+    var gearPicker by remember { mutableStateOf<Pair<String, String>?>(null) }
     val itemNames = remember(inventoryItems) {
         inventoryItems.associate { it.id.lowercase(Locale.getDefault()) to it.name }
     }
-    val slots = remember(equippedItems) {
-        val filtered = equippedItems.filterKeys { !it.contains(":") }
-        val defaults = listOf("weapon", "armor", "accessory", "snack")
-        (defaults + filtered.keys.map { it.lowercase(Locale.getDefault()) })
-            .distinct()
-    }
-    if (slots.isEmpty()) {
+    val slots = remember { listOf("weapon", "armor", "accessory", "snack") }
+    if (partyMembers.isEmpty()) {
         Text(
-            text = "No gear assigned. Visit the gear screen to equip the squad.",
+            text = "No party members yet.",
             style = MaterialTheme.typography.bodyMedium,
             color = Color.White.copy(alpha = 0.85f)
         )
         return
     }
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        slots.forEach { slot ->
-            val normalized = slot.lowercase(Locale.getDefault())
-            val equippedId = equippedItems[normalized].orEmpty()
-            val equippedName = itemNames[equippedId.lowercase(Locale.getDefault())] ?: equippedId.ifBlank { "Unequipped" }
-            Row(
+        partyMembers.forEach { member ->
+            val portraitPainter = rememberAssetPainter(member.portraitPath, R.drawable.main_menu_background)
+            Column(
+                verticalArrangement = Arrangement.spacedBy(6.dp),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .border(BorderStroke(1.dp, borderColor.copy(alpha = 0.35f)), RoundedCornerShape(18.dp))
-                    .clip(RoundedCornerShape(18.dp))
-                    .clickable {
-                        onOpenInventory(
-                            InventoryLaunchOptions(
-                                initialTab = InventoryTab.GEAR,
-                                focusSlot = normalized
-                            )
+                    .border(BorderStroke(1.dp, borderColor.copy(alpha = 0.4f)), RoundedCornerShape(18.dp))
+                    .padding(12.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    Image(
+                        painter = portraitPainter,
+                        contentDescription = "${member.name} portrait",
+                        modifier = Modifier
+                            .size(56.dp)
+                            .clip(RoundedCornerShape(14.dp))
+                            .border(1.dp, borderColor.copy(alpha = 0.6f), RoundedCornerShape(14.dp)),
+                        contentScale = ContentScale.Crop
+                    )
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = member.name,
+                            style = MaterialTheme.typography.titleMedium,
+                            color = Color.White
                         )
                     }
-                    .padding(horizontal = 14.dp, vertical = 10.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = slotLabel(slot),
-                    style = MaterialTheme.typography.titleSmall,
-                    color = Color.White
-                )
-                Text(
-                    text = equippedName,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = if (equippedItems[normalized].isNullOrBlank()) accentColor.copy(alpha = 0.7f) else Color.White
-                )
+                }
+                slots.forEach { slot ->
+                    val normalized = slot.lowercase(Locale.getDefault())
+                    val scopedKey = "${member.id.lowercase(Locale.getDefault())}:$normalized"
+                    val equippedId = equippedItems[scopedKey].orEmpty()
+                    val equippedName = itemNames[equippedId.lowercase(Locale.getDefault())] ?: equippedId.ifBlank { "Unequipped" }
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(12.dp))
+                            .clickable { gearPicker = member.id to normalized }
+                            .padding(horizontal = 10.dp, vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = slotLabel(slot),
+                            style = MaterialTheme.typography.labelLarge,
+                            color = accentColor
+                        )
+                        Text(
+                            text = equippedName,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = if (equippedId.isBlank()) accentColor.copy(alpha = 0.7f) else Color.White
+                        )
+                    }
+                }
             }
         }
+    }
+
+    val picker = gearPicker
+    if (picker != null) {
+        val (characterId, slotId) = picker
+        val normalizedSlot = slotId.lowercase(Locale.getDefault())
+        val options = remember(inventoryItems, picker) {
+            filterGearOptionsForPreview(inventoryItems, normalizedSlot, characterId)
+        }
+        val characterName = partyMembers.firstOrNull { it.id == characterId }?.name ?: characterId
+        val equippedKey = "${characterId.lowercase(Locale.getDefault())}:$normalizedSlot"
+        val equippedId = equippedItems[equippedKey].orEmpty()
+        GearSelectionDialog(
+            characterName = characterName,
+            slotLabel = slotLabel(slotId),
+            options = options,
+            equippedId = equippedId,
+            accentColor = accentColor,
+            borderColor = borderColor,
+            onSelect = { selection ->
+                onEquipItem(normalizedSlot, selection, characterId)
+                gearPicker = null
+            },
+            onUnequip = {
+                onEquipItem(normalizedSlot, null, characterId)
+                gearPicker = null
+            },
+            onDismiss = { gearPicker = null }
+        )
     }
 }
 
@@ -2351,6 +2435,175 @@ private fun slotLabel(raw: String): String =
                 if (c.isLowerCase()) c.titlecase(Locale.getDefault()) else c.toString()
             }
         }
+
+private fun filterGearOptionsForPreview(
+    items: List<InventoryPreviewItemUi>,
+    slotId: String,
+    characterId: String
+): List<InventoryPreviewItemUi> {
+    val normalizedSlot = slotId.trim().lowercase(Locale.getDefault())
+    return items.mapNotNull { item ->
+        val equipment = item.equipment ?: synthesizePreviewEquipment(item) ?: return@mapNotNull null
+        if (GearRules.matchesSlot(equipment, normalizedSlot, characterId, item.type)) item else null
+    }.sortedBy { it.name.lowercase(Locale.getDefault()) }
+}
+
+private fun synthesizePreviewEquipment(item: InventoryPreviewItemUi): Equipment? {
+    val normalizedType = item.type.trim().lowercase(Locale.getDefault())
+    val slot = when {
+        GearRules.equipSlots.contains(normalizedType) -> normalizedType
+        GearRules.isWeaponType(normalizedType) -> "weapon"
+        else -> null
+    } ?: return null
+    val weaponType = normalizedType.takeIf { GearRules.isWeaponType(it) }
+    return Equipment(slot = slot, weaponType = weaponType)
+}
+
+@Composable
+private fun GearSelectionDialog(
+    characterName: String,
+    slotLabel: String,
+    options: List<InventoryPreviewItemUi>,
+    equippedId: String?,
+    accentColor: Color,
+    borderColor: Color,
+    onSelect: (String?) -> Unit,
+    onUnequip: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    val equippedNormalized = remember(equippedId) { equippedId?.lowercase(Locale.getDefault()).orEmpty() }
+    Dialog(
+        onDismissRequest = onDismiss,
+        properties = DialogProperties(usePlatformDefaultWidth = false)
+    ) {
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            color = Color(0xFF0A0F18),
+            border = BorderStroke(1.dp, borderColor.copy(alpha = 0.7f)),
+            shape = RoundedCornerShape(20.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = "$characterName - $slotLabel",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = Color.White,
+                        modifier = Modifier.weight(1f)
+                    )
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = "Close",
+                        tint = Color.White.copy(alpha = 0.6f),
+                        modifier = Modifier
+                            .size(24.dp)
+                            .clickable { onDismiss() }
+                    )
+                }
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    OutlinedButton(
+                        onClick = { onUnequip() },
+                        border = BorderStroke(1.dp, accentColor.copy(alpha = 0.8f)),
+                        colors = ButtonDefaults.outlinedButtonColors(contentColor = accentColor)
+                    ) {
+                        Text("Unequip")
+                    }
+                }
+
+                if (options.isEmpty()) {
+                    Text(
+                        text = "No $slotLabel available.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.White.copy(alpha = 0.8f)
+                    )
+                } else {
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .heightIn(max = 480.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        items(options, key = { it.id }) { option ->
+                            val normalizedId = option.id.lowercase(Locale.getDefault())
+                            val isEquipped = normalizedId == equippedNormalized
+                            val shape = RoundedCornerShape(14.dp)
+                            val iconRes = remember(option.id + option.type) { previewItemIconRes(option.type) }
+                            Surface(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clip(shape)
+                                    .clickable { onSelect(option.id) },
+                                color = if (isEquipped) accentColor.copy(alpha = 0.15f) else Color.White.copy(alpha = 0.03f),
+                                border = BorderStroke(
+                                    1.dp,
+                                    if (isEquipped) accentColor else borderColor.copy(alpha = 0.5f)
+                                )
+                            ) {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 12.dp, vertical = 10.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                                ) {
+                                    Image(
+                                        painter = painterResource(iconRes),
+                                        contentDescription = null,
+                                        modifier = Modifier.size(32.dp)
+                                    )
+                                    Column(modifier = Modifier.weight(1f)) {
+                                        Text(
+                                            text = option.name,
+                                            style = MaterialTheme.typography.titleSmall,
+                                            color = Color.White
+                                        )
+                                        Text(
+                                            text = option.type,
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = Color.White.copy(alpha = 0.7f)
+                                        )
+                                    }
+                                    Text(
+                                        text = "x${option.quantity}",
+                                        style = MaterialTheme.typography.labelMedium,
+                                        color = Color.White.copy(alpha = 0.7f)
+                                    )
+                                    if (isEquipped) {
+                                        Surface(
+                                            color = accentColor.copy(alpha = 0.2f),
+                                            shape = RoundedCornerShape(6.dp)
+                                        ) {
+                                            Text(
+                                                text = "EQUIPPED",
+                                                style = MaterialTheme.typography.labelSmall,
+                                                color = accentColor,
+                                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 
 @DrawableRes
 private fun previewItemIconRes(type: String?): Int {
@@ -2376,19 +2629,130 @@ private fun previewItemIconRes(type: String?): Int {
 @Composable
 private fun JournalTabContent(
     trackedQuest: QuestSummaryUi?,
+    activeQuests: List<QuestSummaryUi>,
+    completedQuests: List<QuestSummaryUi>,
     accentColor: Color,
     borderColor: Color,
     onQuestSelected: (String) -> Unit
 ) {
+    var page by rememberSaveable { mutableStateOf(QuestJournalPage.ACTIVE) }
+
     MenuSectionCard(
-        title = trackedQuest?.title ?: "Active Quest",
+        title = "Quest Journal",
         accentColor = accentColor,
         borderColor = borderColor
     ) {
-        QuestPreviewCard(
-            quest = trackedQuest,
-            onQuestSelected = { quest -> onQuestSelected(quest.id) }
+        QuestJournalToggle(
+            current = page,
+            onSelect = { page = it },
+            accentColor = accentColor,
+            borderColor = borderColor
         )
+        Spacer(modifier = Modifier.height(12.dp))
+        when (page) {
+            QuestJournalPage.ACTIVE -> {
+                val items = buildList {
+                    trackedQuest?.let { add(it) }
+                    addAll(activeQuests.filter { it.id != trackedQuest?.id })
+                }
+                QuestListPanel(
+                    quests = items,
+                    emptyMessage = "No active quests yet.",
+                    accentColor = accentColor,
+                    borderColor = borderColor,
+                    onQuestSelected = onQuestSelected
+                )
+            }
+            QuestJournalPage.COMPLETED -> {
+                QuestListPanel(
+                    quests = completedQuests,
+                    emptyMessage = "No completed quests yet.",
+                    accentColor = accentColor,
+                    borderColor = borderColor,
+                    onQuestSelected = onQuestSelected
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun QuestListPanel(
+    quests: List<QuestSummaryUi>,
+    emptyMessage: String,
+    accentColor: Color,
+    borderColor: Color,
+    onQuestSelected: (String) -> Unit
+) {
+    if (quests.isEmpty()) {
+        Text(
+            text = emptyMessage,
+            color = Color.White.copy(alpha = 0.75f),
+            style = MaterialTheme.typography.bodyMedium
+        )
+        return
+    }
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(max = 360.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        items(quests, key = { it.id }) { quest ->
+            val shape = RoundedCornerShape(16.dp)
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(shape)
+                    .clickable { onQuestSelected(quest.id) },
+                color = Color.White.copy(alpha = 0.04f),
+                border = BorderStroke(1.dp, borderColor.copy(alpha = 0.4f)),
+                shape = shape
+            ) {
+                Column(
+                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Text(
+                        text = quest.title,
+                        style = MaterialTheme.typography.titleSmall,
+                        color = Color.White
+                    )
+                    quest.stageTitle?.takeIf { it.isNotBlank() }?.let { stage ->
+                        Text(
+                            text = stage,
+                            style = MaterialTheme.typography.labelMedium,
+                            color = accentColor.copy(alpha = 0.85f)
+                        )
+                    }
+                    val objectives = quest.objectives.take(2)
+                    if (objectives.isNotEmpty()) {
+                        objectives.forEach { obj ->
+                            Text(
+                                text = "• $obj",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = Color.White.copy(alpha = 0.78f)
+                            )
+                        }
+                    } else {
+                        quest.summary.takeIf { it.isNotBlank() }?.let { summary ->
+                            Text(
+                                text = summary,
+                                style = MaterialTheme.typography.bodySmall,
+                                color = Color.White.copy(alpha = 0.78f)
+                            )
+                        }
+                    }
+                    if (quest.completed) {
+                        Text(
+                            text = "Completed",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = accentColor.copy(alpha = 0.9f)
+                        )
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -2449,6 +2813,7 @@ private fun SettingsTabContent(
     borderColor: Color,
     onMusicVolumeChange: (Float) -> Unit,
     onSfxVolumeChange: (Float) -> Unit,
+    onToggleTutorials: (Boolean) -> Unit,
     onToggleVignette: (Boolean) -> Unit,
     onQuickSave: () -> Unit,
     onSaveGame: () -> Unit,
@@ -2463,6 +2828,7 @@ private fun SettingsTabContent(
             settings = settings,
             onMusicVolumeChange = onMusicVolumeChange,
             onSfxVolumeChange = onSfxVolumeChange,
+            onToggleTutorials = onToggleTutorials,
             onToggleVignette = onToggleVignette,
             onQuickSave = onQuickSave,
             onSaveGame = onSaveGame,
@@ -2532,6 +2898,7 @@ private fun PartyStatusPanel(
 }
 
 @Composable
+@Suppress("UNUSED_PARAMETER")
 private fun PartyMemberCard(
     member: PartyMemberStatusUi,
     accentColor: Color,
@@ -2547,80 +2914,68 @@ private fun PartyMemberCard(
             .fillMaxWidth()
             .clip(RoundedCornerShape(20.dp))
             .border(1.dp, accentColor.copy(alpha = 0.45f), RoundedCornerShape(20.dp))
-            .background(Color.Black.copy(alpha = 0.25f))
-            .padding(horizontal = 16.dp, vertical = 16.dp),
+            .background(
+                Brush.verticalGradient(
+                    colors = listOf(
+                        accentColor.copy(alpha = 0.12f),
+                        Color.Black.copy(alpha = 0.22f)
+                    )
+                )
+            )
+            .padding(horizontal = 16.dp, vertical = 14.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            verticalAlignment = Alignment.Bottom
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
                 painter = portraitPainter,
                 contentDescription = member.name,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .size(120.dp)
-                    .clip(RoundedCornerShape(20.dp))
-                    .border(1.dp, accentColor.copy(alpha = 0.6f), RoundedCornerShape(20.dp))
+                    .size(72.dp)
+                    .clip(RoundedCornerShape(18.dp))
+                    .border(1.dp, accentColor.copy(alpha = 0.6f), RoundedCornerShape(18.dp))
             )
             Column(
                 modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = member.name,
-                        color = Color.White,
-                        style = MaterialTheme.typography.titleSmall,
-                        modifier = Modifier.weight(1f, fill = false)
-                    )
-                    Text(
-                        text = "Lv ${member.level}",
-                        color = Color.White.copy(alpha = 0.85f),
-                        style = MaterialTheme.typography.labelMedium
-                    )
-                }
-                Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    ThemedMenuButton(
-                        label = "Details",
-                        accentColor = accentColor,
-                        modifier = Modifier.fillMaxWidth(),
-                        onClick = { onShowDetails(member.id) }
-                    )
-                    ThemedMenuButton(
-                        label = "Skill Tree",
-                        accentColor = accentColor,
-                        modifier = Modifier.fillMaxWidth(),
-                        onClick = { onShowSkillTree(member.id) }
-                    )
-                }
+                Text(
+                    text = member.name,
+                    color = Color.White,
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Text(
+                    text = "Lv ${member.level}",
+                    color = Color.White.copy(alpha = 0.85f),
+                    style = MaterialTheme.typography.labelMedium
+                )
             }
-        }
-        // existing overlay blocks remain below for now
-        member.hpProgress?.let { progress ->
-            MiniStatBar(
-                label = member.hpLabel ?: "HP",
-                progress = progress,
-                accentColor = Color(0xFFFF5252)
+            ThemedMenuButton(
+                label = "Details",
+                accentColor = accentColor,
+                modifier = Modifier
+                    .widthIn(min = 96.dp, max = 120.dp)
+                    .heightIn(min = 40.dp),
+                onClick = { onShowDetails(member.id) }
             )
         }
-        MiniStatBar(
-            label = "XP",
-            progress = member.xpProgress,
-            accentColor = Color(0xFF7C4DFF)
-        )
-        member.xpLabel.takeIf { !it.isNullOrBlank() }?.let { xpText ->
-            Text(
-                text = xpText,
-                color = Color.White.copy(alpha = 0.8f),
-                style = MaterialTheme.typography.labelSmall
-            )
+
+        val bars = buildList {
+            member.hpProgress?.let { add(Triple(member.hpLabel ?: "HP", it, Color(0xFFFF5252))) }
+            add(Triple("XP", member.xpProgress, Color(0xFF7C4DFF)))
+        }
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            bars.forEach { (label, progress, color) ->
+                MiniStatBar(
+                    label = label,
+                    progress = progress,
+                    accentColor = color
+                )
+            }
         }
     }
 }
@@ -2629,7 +2984,8 @@ private fun PartyMemberCard(
 private fun MiniStatBar(
     label: String,
     progress: Float,
-    accentColor: Color
+    accentColor: Color,
+    modifier: Modifier = Modifier
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
         Text(
@@ -2639,7 +2995,7 @@ private fun MiniStatBar(
         )
         LinearProgressIndicator(
             progress = progress.coerceIn(0f, 1f),
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .height(6.dp)
                 .clip(RoundedCornerShape(4.dp)),
@@ -2964,6 +3320,7 @@ private fun SettingsPanel(
     settings: SettingsUiState,
     onMusicVolumeChange: (Float) -> Unit,
     onSfxVolumeChange: (Float) -> Unit,
+    onToggleTutorials: (Boolean) -> Unit,
     onToggleVignette: (Boolean) -> Unit,
     onQuickSave: () -> Unit,
     onSaveGame: () -> Unit,
@@ -3010,6 +3367,24 @@ private fun SettingsPanel(
             Switch(
                 checked = settings.vignetteEnabled,
                 onCheckedChange = onToggleVignette
+            )
+        }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column {
+                Text("Tutorials", color = Color.White, style = MaterialTheme.typography.bodyMedium)
+                Text(
+                    text = if (settings.tutorialsEnabled) "Shown" else "Hidden",
+                    color = Color.White.copy(alpha = 0.7f),
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+            Switch(
+                checked = settings.tutorialsEnabled,
+                onCheckedChange = onToggleTutorials
             )
         }
         Button(

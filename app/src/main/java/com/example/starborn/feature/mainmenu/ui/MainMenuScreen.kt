@@ -1,18 +1,13 @@
 package com.example.starborn.feature.mainmenu.ui
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -34,6 +29,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.starborn.R
 import com.example.starborn.feature.mainmenu.MainMenuViewModel
 import com.example.starborn.ui.components.SaveLoadDialog
+import com.example.starborn.ui.theme.themeColor
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -47,6 +43,19 @@ fun MainMenuScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val slots by viewModel.slots.collectAsStateWithLifecycle()
     val scope = rememberCoroutineScope()
+    val menuTheme = remember { viewModel.mainMenuTheme }
+    val accentColor = remember(menuTheme) {
+        themeColor(menuTheme?.accent, Color(0xFF7BE4FF))
+    }
+    val panelColor = remember(menuTheme) {
+        themeColor(menuTheme?.bg, Color(0xFF0B111A)).copy(alpha = 0.96f)
+    }
+    val borderColor = remember(menuTheme) {
+        themeColor(menuTheme?.border, Color.White.copy(alpha = 0.16f))
+    }
+    val textColor = remember(menuTheme) {
+        themeColor(menuTheme?.fg, Color.White)
+    }
 
     LaunchedEffect(Unit) {
         viewModel.messages.collectLatest { snackbarHostState.showSnackbar(it) }
@@ -80,6 +89,16 @@ fun MainMenuScreen(
                     }
                 }
             ) { Text("New Game") }
+            Spacer(modifier = Modifier.padding(6.dp))
+            OutlinedButton(
+                onClick = {
+                    viewModel.startNewGameWithFullInventory {
+                        onStartGame()
+                    }
+                }
+            ) {
+                Text("Debug: New Game (Full Inventory)")
+            }
             Spacer(modifier = Modifier.padding(8.dp))
             OutlinedButton(onClick = { saveLoadMode = "load" }) {
                 Text("Load Game")
@@ -113,12 +132,17 @@ fun MainMenuScreen(
                         }
                     }
                 },
+                onDelete = { slot ->
+                    scope.launch {
+                        viewModel.deleteSlot(slot)
+                    }
+                },
                 onRefresh = { viewModel.refreshSlots() },
                 onDismiss = { saveLoadMode = null },
-                accentColor = Color(0xFFFFB347),
-                panelColor = Color(0xFF1C2A33).copy(alpha = 0.95f),
-                borderColor = Color.White.copy(alpha = 0.12f),
-                textColor = Color.White
+                accentColor = accentColor,
+                panelColor = panelColor,
+                borderColor = borderColor,
+                textColor = textColor
             )
         }
     }

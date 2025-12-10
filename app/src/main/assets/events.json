@@ -10,6 +10,50 @@
     "actions": [
       {
         "type": "if_quest_active",
+        "quest_id": "talk_to_jed",
+        "do": [
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "talk_to_jed",
+            "task_id": "talk_to_jed_task"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_talked_to_jed"
+          },
+          {
+            "type": "complete_quest",
+            "quest_id": "talk_to_jed"
+          }
+        ]
+      },
+      {
+        "type": "if_quest_not_started",
+        "quest_id": "gather_broken_gear",
+        "do": [
+          {
+            "type": "if_milestone_set",
+            "milestone": "ms_talked_to_jed",
+            "do": [
+              {
+                "type": "start_quest",
+                "quest_id": "gather_broken_gear"
+              },
+              {
+                "type": "track_quest",
+                "quest_id": "gather_broken_gear"
+              },
+              {
+                "type": "system_tutorial",
+                "scene_id": "scene_market_journal",
+                "context": "Market Plaza"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "if_quest_active",
         "quest_id": "gather_broken_gear",
         "do": [
           {
@@ -49,26 +93,34 @@
       "type": "talk_to",
       "npc": "ellie"
     },
-    "repeatable": true,
-    "actions": [
-      {
-        "type": "if_quest_active",
-        "quest_id": "gather_broken_gear",
-        "do": [
-          {
-            "type": "if_milestone_not_set",
-            "milestone": "ms_ellie_display_collected",
-            "do": [
-              {
-                "type": "play_cinematic",
-                "scene_id": "scene_collect_display"
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
+  "repeatable": true,
+  "actions": [
+    {
+      "type": "if_quest_active",
+      "quest_id": "gather_broken_gear",
+      "do": [
+        {
+          "type": "play_cinematic",
+          "scene_id": "scene_collect_display"
+        },
+        {
+          "type": "give_item_to_player",
+          "item_id": "broken_arcade_display",
+          "quantity": 1
+        },
+        {
+          "type": "set_milestone",
+          "milestone": "ms_ellie_display_collected"
+        },
+        {
+          "type": "set_quest_task_done",
+          "quest_id": "gather_broken_gear",
+          "task_id": "collect_display"
+        }
+      ]
+    }
+  ]
+},
   {
     "id": "evt_collect_grinder_from_maddie",
     "description": "Collect Maddie's busted coffee grinder.",
@@ -76,26 +128,34 @@
       "type": "talk_to",
       "npc": "maddie"
     },
-    "repeatable": true,
-    "actions": [
-      {
-        "type": "if_quest_active",
-        "quest_id": "gather_broken_gear",
-        "do": [
-          {
-            "type": "if_milestone_not_set",
-            "milestone": "ms_maddie_grinder_collected",
-            "do": [
-              {
-                "type": "play_cinematic",
-                "scene_id": "scene_collect_grinder"
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
+  "repeatable": true,
+  "actions": [
+    {
+      "type": "if_quest_active",
+      "quest_id": "gather_broken_gear",
+      "do": [
+        {
+          "type": "play_cinematic",
+          "scene_id": "scene_collect_grinder"
+        },
+        {
+          "type": "give_item_to_player",
+          "item_id": "broken_coffee_grinder",
+          "quantity": 1
+        },
+        {
+          "type": "set_milestone",
+          "milestone": "ms_maddie_grinder_collected"
+        },
+        {
+          "type": "set_quest_task_done",
+          "quest_id": "gather_broken_gear",
+          "task_id": "collect_grinder"
+        }
+      ]
+    }
+  ]
+},
   {
     "id": "evt_collect_projector_from_kasey",
     "description": "Collect Schoolteacher Kasey's busted projector.",
@@ -103,26 +163,34 @@
       "type": "talk_to",
       "npc": "schoolteacher kasey"
     },
-    "repeatable": true,
-    "actions": [
-      {
-        "type": "if_quest_active",
-        "quest_id": "gather_broken_gear",
-        "do": [
-          {
-            "type": "if_milestone_not_set",
-            "milestone": "ms_kasey_projector_collected",
-            "do": [
-              {
-                "type": "play_cinematic",
-                "scene_id": "scene_collect_projector"
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
+  "repeatable": true,
+  "actions": [
+    {
+      "type": "if_quest_active",
+      "quest_id": "gather_broken_gear",
+      "do": [
+        {
+          "type": "play_cinematic",
+          "scene_id": "scene_collect_projector"
+        },
+        {
+          "type": "give_item_to_player",
+          "item_id": "broken_projector",
+          "quantity": 1
+        },
+        {
+          "type": "set_milestone",
+          "milestone": "ms_kasey_projector_collected"
+        },
+        {
+          "type": "set_quest_task_done",
+          "quest_id": "gather_broken_gear",
+          "task_id": "collect_projector"
+        }
+      ]
+    }
+  ]
+},
   {
     "id": "evt_return_display_to_ellie",
     "description": "Return the repaired display to Ellie.",
@@ -668,6 +736,16 @@
           {
             "type": "set_quest_task_done",
             "quest_id": "talk_to_jed",
+            "task_id": "navigate_main_road"
+          },
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "talk_to_jed",
+            "task_id": "spot_jed_shop"
+          },
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "talk_to_jed",
             "task_id": "talk_to_jed_task"
           },
           {
@@ -679,13 +757,23 @@
             "quest_id": "talk_to_jed"
           },
           {
-            "type": "start_quest",
-            "quest_id": "gather_broken_gear"
-          },
-          {
-            "type": "system_tutorial",
-            "scene_id": "scene_market_journal",
-            "context": "Market Plaza"
+            "type": "if_quest_not_started",
+            "quest_id": "gather_broken_gear",
+            "do": [
+              {
+                "type": "start_quest",
+                "quest_id": "gather_broken_gear"
+              },
+              {
+                "type": "track_quest",
+                "quest_id": "gather_broken_gear"
+              },
+              {
+                "type": "system_tutorial",
+                "scene_id": "scene_market_journal",
+                "context": "Market Plaza"
+              }
+            ]
           }
         ]
       },

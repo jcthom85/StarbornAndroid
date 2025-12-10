@@ -16,6 +16,7 @@ data class UserSettings(
     val sfxVolume: Float = 1f,
     val voiceVolume: Float = 1f,
     val vignetteEnabled: Boolean = true,
+    val tutorialsEnabled: Boolean = true,
     val disableScreenshake: Boolean = false,
     val disableFlashes: Boolean = false,
     val disableHaptics: Boolean = false,
@@ -33,6 +34,7 @@ class UserSettingsStore(context: Context) {
             sfxVolume = prefs[SFX_VOLUME] ?: 1f,
             voiceVolume = prefs[VOICE_VOLUME] ?: 1f,
             vignetteEnabled = prefs[VIGNETTE_ENABLED] ?: true,
+            tutorialsEnabled = prefs[TUTORIALS_ENABLED] ?: true,
             disableScreenshake = prefs[DISABLE_SCREENSHAKE] ?: false,
             disableFlashes = prefs[DISABLE_FLASHES] ?: false,
             disableHaptics = prefs[DISABLE_HAPTICS] ?: false,
@@ -56,6 +58,10 @@ class UserSettingsStore(context: Context) {
 
     suspend fun setVignetteEnabled(enabled: Boolean) {
         dataStore.edit { it[VIGNETTE_ENABLED] = enabled }
+    }
+
+    suspend fun setTutorialsEnabled(enabled: Boolean) {
+        dataStore.edit { it[TUTORIALS_ENABLED] = enabled }
     }
 
     suspend fun setScreenshakeDisabled(disabled: Boolean) {
@@ -86,6 +92,7 @@ class UserSettingsStore(context: Context) {
         private val MUSIC_VOLUME: Preferences.Key<Float> = floatPreferencesKey("music_volume")
         private val SFX_VOLUME: Preferences.Key<Float> = floatPreferencesKey("sfx_volume")
         private val VIGNETTE_ENABLED: Preferences.Key<Boolean> = booleanPreferencesKey("vignette_enabled")
+        private val TUTORIALS_ENABLED: Preferences.Key<Boolean> = booleanPreferencesKey("tutorials_enabled")
         private val DISABLE_SCREENSHAKE: Preferences.Key<Boolean> = booleanPreferencesKey("disable_screenshake")
         private val DISABLE_FLASHES: Preferences.Key<Boolean> = booleanPreferencesKey("disable_flashes")
         private val DISABLE_HAPTICS: Preferences.Key<Boolean> = booleanPreferencesKey("disable_haptics")

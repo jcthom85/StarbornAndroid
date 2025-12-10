@@ -1,5 +1,6 @@
 package com.example.starborn.domain.inventory
 
+import com.example.starborn.domain.model.Equipment
 import com.example.starborn.domain.model.Item
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -123,6 +124,12 @@ class InventoryService(
 
     fun itemDetail(idOrAlias: String): Item? = resolveItem(idOrAlias)
 
+    /**
+     * Returns a catalog-backed item for the provided id/alias, or null if not found.
+     * Unlike itemDetail, this will not synthesize placeholders.
+     */
+    fun catalogItem(idOrAlias: String): Item? = itemCatalog.findItem(idOrAlias)
+
     private fun hasItemDirect(itemId: String): Boolean =
         items[itemId]?.quantity?.let { it > 0 } ?: false
 
@@ -138,7 +145,13 @@ class InventoryService(
     private fun resolveItem(idOrAlias: String): Item? {
         val trimmed = idOrAlias.trim()
         if (trimmed.isEmpty()) return null
-        val catalogItem = itemCatalog.findItem(trimmed)
+        val catalogItem = itemCatalog.findItem(trimmed)?.let { item ->
+            val looksBroken = item.id.startsWith("broken_", ignoreCase = true) ||
+                item.name.startsWith("Broken ", ignoreCase = true)
+            if (looksBroken && item.categoryOverride == null && item.type.equals("misc", true)) {
+                item.copy(categoryOverride = "crafting")
+            } else item
+        }
         if (catalogItem != null) return catalogItem
         val normalized = trimmed.lowercase(Locale.getDefault())
         placeholderItems[normalized]?.let { return it }
@@ -150,7 +163,9 @@ class InventoryService(
                     if (ch.isLowerCase()) ch.titlecase(Locale.getDefault()) else ch.toString()
                 }
             }.ifBlank { trimmed }
+        val inferredSlot = inferEquipmentSlot(normalized)
         val type = when {
+            inferredSlot != null -> inferredSlot
             normalized.contains("key") -> "key_item"
             normalized.contains("quest") -> "quest"
             normalized.contains("schematic") -> "schematic"
@@ -167,7 +182,8 @@ class InventoryService(
         val placeholder = Item(
             id = normalized,
             name = name,
-            type = type
+            type = type,
+            equipment = inferredSlot?.let { Equipment(slot = it) }
         )
         placeholderItems[normalized] = placeholder
         return placeholder
@@ -186,6 +202,32 @@ class InventoryService(
                 normalizeToken(item.name) == normalizedNeedle ||
                 item.aliases.any { normalizeToken(it) == normalizedNeedle }
         }?.let { it.key to it.value }
+    }
+
+    private fun inferEquipmentSlot(normalized: String): String? {
+        val hasWeaponKeywords = listOf(
+            "weapon", "sword", "blade", "blaster", "gun", "rifle", "pistol", "slingshot", "bow", "staff"
+        ).any { normalized.contains(it) }
+        if (hasWeaponKeywords) return "weapon"
+
+        if (normalized.contains("shield") || normalized.contains("offhand")) {
+            return "offhand"
+        }
+
+        val hasArmorKeywords = listOf(
+            "armor", "armour", "vest", "jacket", "coat", "jumpsuit", "plates", "plating"
+        ).any { normalized.contains(it) }
+        if (hasArmorKeywords) return "armor"
+
+        val hasAccessoryKeywords = listOf(
+            "medal", "medallion", "amulet", "ring", "belt", "trinket", "charm", "watch", "bracelet"
+        ).any { normalized.contains(it) }
+        if (hasAccessoryKeywords) return "accessory"
+
+        val hasSnackKeywords = listOf(
+            "snack", "bar", "mix", "gummies", "cookie", "ration", "brew"
+        ).any { normalized.contains(it) }
+        return if (hasSnackKeywords) "snack" else null
     }
 
     private fun normalizeToken(raw: String): String =

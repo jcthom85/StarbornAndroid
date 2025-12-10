@@ -1,11 +1,11 @@
 package com.example.starborn.navigation
 
+import android.net.Uri
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import android.net.Uri
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -63,6 +63,7 @@ import com.example.starborn.feature.hub.ui.HubScreen
 import com.example.starborn.feature.hub.viewmodel.HubViewModel
 import com.example.starborn.feature.hub.viewmodel.HubViewModelFactory
 import com.example.starborn.data.local.UserSettings
+import com.example.starborn.ui.events.UiEvent
 import java.util.Locale
 
 @Composable
@@ -188,9 +189,11 @@ fun NavigationHost(navController: NavHostController = rememberNavController()) {
                 onOpenInventory = { options ->
                     val tabParam = options.initialTab?.name?.lowercase(Locale.getDefault())
                     val slotParam = options.focusSlot?.lowercase(Locale.getDefault())
+                    val characterParam = options.initialCharacterId?.lowercase(Locale.getDefault())
                     val queryParts = buildList {
                         tabParam?.let { add("tab=${Uri.encode(it)}") }
                         slotParam?.let { add("slot=${Uri.encode(it)}") }
+                        characterParam?.let { add("character=${Uri.encode(it)}") }
                     }
                     val destination = if (queryParts.isEmpty()) {
                         Inventory.route
@@ -215,7 +218,7 @@ fun NavigationHost(navController: NavHostController = rememberNavController()) {
             )
         }
         composable(
-            route = "${Inventory.route}?tab={tab}&slot={slot}",
+            route = "${Inventory.route}?tab={tab}&slot={slot}&character={character}",
             arguments = listOf(
                 navArgument("tab") {
                     type = NavType.StringType
@@ -223,6 +226,11 @@ fun NavigationHost(navController: NavHostController = rememberNavController()) {
                     defaultValue = null
                 },
                 navArgument("slot") {
+                    type = NavType.StringType
+                    nullable = true
+                    defaultValue = null
+                },
+                navArgument("character") {
                     type = NavType.StringType
                     nullable = true
                     defaultValue = null
@@ -239,10 +247,12 @@ fun NavigationHost(navController: NavHostController = rememberNavController()) {
             )
             val tabArg = backStackEntry.arguments?.getString("tab")
             val slotArg = backStackEntry.arguments?.getString("slot")
+            val characterArg = backStackEntry.arguments?.getString("character")
             val initialTab = tabArg?.let { arg ->
                 InventoryTab.values().firstOrNull { it.name.equals(arg, ignoreCase = true) }
             }
             val initialSlot = slotArg?.takeIf { it.isNotBlank() }?.lowercase(Locale.getDefault())
+            val initialCharacter = characterArg?.takeIf { it.isNotBlank() }
             InventoryRoute(
                 viewModel = inventoryViewModel,
                 onBack = { navController.popBackStack() },
@@ -251,7 +261,8 @@ fun NavigationHost(navController: NavHostController = rememberNavController()) {
                 theme = environmentThemeState.theme,
                 credits = sessionState.playerCredits,
                 initialTab = initialTab,
-                focusSlot = initialSlot
+                focusSlot = initialSlot,
+                initialCharacterId = initialCharacter
             )
         }
         composable(Tinkering.route) {
@@ -275,8 +286,10 @@ fun NavigationHost(navController: NavHostController = rememberNavController()) {
                         ?.savedStateHandle
                         ?.set("tinkering_closed", true)
                 },
+                promptManager = services.promptManager,
                 highContrastMode = userSettings.highContrastMode,
-                largeTouchTargets = userSettings.largeTouchTargets
+                largeTouchTargets = userSettings.largeTouchTargets,
+                theme = environmentThemeState.theme
             )
         }
         composable(Cooking.route) {

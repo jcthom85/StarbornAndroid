@@ -30,6 +30,14 @@ class GameSaveRepository(private val services: AppServices) {
         services.clearQuickSave()
     }
 
+    suspend fun clearAutosave() {
+        services.clearAutosave()
+    }
+
+    suspend fun clear(slot: Int) {
+        services.clearSlot(slot)
+    }
+
     companion object {
         const val QUICKSAVE_SLOT = -1
         const val AUTOSAVE_SLOT = 0

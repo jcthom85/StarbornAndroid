@@ -132,7 +132,8 @@ class EventManager(
                     true
                 }
                 "start_quest" -> {
-                    val updated = action.startQuest?.let {
+                    val questId = action.startQuest ?: action.questId
+                    val updated = questId?.let {
                         sessionStore.startQuest(it)
                         eventHooks.onQuestStarted(it)
                         true
@@ -141,12 +142,13 @@ class EventManager(
                     updated
                 }
                 "complete_quest" -> {
-                    val updated = action.completeQuest?.let {
+                    val questId = action.completeQuest ?: action.questId
+                    val updated = questId?.let {
                         sessionStore.completeQuest(it)
                         eventHooks.onQuestCompleted(it)
+                        eventHooks.onQuestUpdated()
                         true
                     } ?: false
-                    if (updated) eventHooks.onQuestUpdated()
                     updated
                 }
                 "fail_quest" -> {
@@ -211,16 +213,21 @@ class EventManager(
                     true
                 }
                 "give_item", "give_item_to_player" -> {
+                    if ((action.item != null || action.itemId != null) && (action.quantity ?: 1) <= 0) {
+                        println("DEBUG: give_item requested with non-positive quantity for ${action.item ?: action.itemId}")
+                    }
                     when {
                         action.item != null || action.itemId != null -> {
                             val id = action.item ?: action.itemId
                             if (id != null) {
                                 val qty = action.quantity ?: 1
+                                println("DEBUG: give_item action id=$id qty=$qty")
                                 eventHooks.onGiveItem(id, qty)
                             }
                         }
                         else -> action.rewardItems.orEmpty().forEach { rewardItem ->
                             val qty = rewardItem.quantity ?: 1
+                            println("DEBUG: give_item rewardItems id=${rewardItem.itemId} qty=$qty")
                             eventHooks.onGiveItem(rewardItem.itemId, qty)
                         }
                     }

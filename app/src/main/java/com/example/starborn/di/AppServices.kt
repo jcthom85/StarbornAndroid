@@ -337,7 +337,7 @@ class AppServices(context: Context) {
         return worldMatches && hubMatches && roomMatches
     }
 
-    fun startNewGame(): Boolean {
+    fun startNewGame(debugFullInventory: Boolean = false): Boolean {
         return runCatching {
             bootstrapCinematics.clear()
             bootstrapPlayerActions.clear()
@@ -346,10 +346,11 @@ class AppServices(context: Context) {
             milestoneManager.clearHistory()
 
             val defaultPlayer = runCatching { worldDataSource.loadCharacters().firstOrNull() }.getOrNull()
-            val playerId = defaultPlayer?.id
+            val playerId = defaultPlayer?.id ?: SAMPLE_PARTY.firstOrNull()
             val baseLevel = defaultPlayer?.level ?: 1
             val baseXp = defaultPlayer?.xp ?: 0
             val startingRoomId = "town_9"
+            val party = if (debugFullInventory) SAMPLE_PARTY.toList() else playerId?.let { listOf(it) } ?: emptyList()
             val seedState = GameSessionState(
                 worldId = "nova_prime",
                 hubId = "mining_colony",
@@ -357,14 +358,21 @@ class AppServices(context: Context) {
                 playerId = playerId,
                 playerLevel = baseLevel,
                 playerXp = baseXp,
-                partyMembers = playerId?.let { listOf(it) } ?: emptyList(),
-                partyMemberLevels = playerId?.let { mapOf(it to baseLevel) } ?: emptyMap(),
-                partyMemberXp = playerId?.let { mapOf(it to baseXp) } ?: emptyMap()
+                partyMembers = party,
+                partyMemberLevels = party.associateWith { baseLevel },
+                partyMemberXp = party.associateWith { baseXp }
             )
             sessionStore.restore(seedState)
             sessionStore.resetTutorialProgress()
             sessionStore.resetQuestProgress()
-            inventoryService.restore(emptyMap())
+            if (debugFullInventory) {
+                val fullInventory = buildFullInventory()
+                inventoryService.restore(fullInventory)
+                sessionStore.setInventory(fullInventory)
+                sessionStore.addCredits(50_000)
+            } else {
+                inventoryService.restore(emptyMap())
+            }
             questRuntimeManager.resetAll()
             resetAutosaveThrottle()
 
@@ -417,6 +425,21 @@ class AppServices(context: Context) {
     private fun resetAutosaveThrottle() {
         lastAutosaveFingerprint = null
         lastAutosaveTimestamp = 0L
+    }
+
+    private fun buildFullInventory(): Map<String, Int> {
+        itemRepository.load()
+        val items = itemRepository.allItems()
+        if (items.isEmpty()) return emptyMap()
+        val maxStack = 9
+        return items.associate { item ->
+            val qty = when {
+                (item.equipment != null) -> 4
+                item.type.equals("key_item", true) -> 1
+                else -> maxStack
+            }
+            item.id to qty
+        }
     }
 }
 
