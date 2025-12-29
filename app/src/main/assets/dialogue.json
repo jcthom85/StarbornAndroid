@@ -213,7 +213,7 @@
     {
         "id": "jed_energy_core_turnin_2",
         "speaker": "Jed",
-        "text": "Then we learn what they wanted. I'll crack the housing and see how far the resonance goes. Nice work bringing it home."
+        "text": "Then we learn what they wanted. I'll crack the housing and see how far the signal goes. Nice work bringing it home."
     },
     {
         "id": "jed_return_wrapup",
@@ -272,23 +272,33 @@
         "id": "ollie_intro_1",
         "speaker": "Ollie",
         "text": "Nova! There you are! C'mon, we're going to be late meeting Jed.",
-        "trigger": "start_quest:talk_to_jed,set_milestone:ms_talk_to_jed_quest_started",
-        "next": "ollie_join_party"
+        "condition": "milestone_not_set:ms_ollie_met",
+        "next": "ollie_intro_tutorial"
     },
     {
         "id": "ollie_intro_tutorial",
         "speaker": "Ollie",
-        "text": "Quick, just tap my name on your HUD to bring up your options and talk to me."
+        "text": "Quick, tap my name on your HUD to bring up your options and talk to me.",
+        "condition": "milestone_not_set:ms_ollie_met",
+        "trigger": "start_quest:talk_to_jed,track_quest:talk_to_jed,set_milestone:ms_ollie_met,set_milestone:ms_talk_to_jed_quest_started,system_tutorial:scene_ollie_recruitment|Main Road"
+    },
+    {
+        "id": "ollie_quest_prompt",
+        "speaker": "Ollie",
+        "text": "See? Easy. Jed's waiting for us at the town square. You should go talk to him, I'll catch up!",
+        "condition": "milestone:ms_ollie_met,milestone_not_set:ms_ollie_recruited",
+        "next": "ollie_join_party"
     },
     {
         "id": "ollie_join_party",
         "speaker": "Ollie",
         "text": "Actually, I should probably come with you. Jed can be... a lot to handle.",
-        "trigger": "recruit:ollie"
+        "condition": "milestone:ms_ollie_met,milestone_not_set:ms_ollie_recruited",
+        "trigger": "recruit:ollie,set_milestone:ms_ollie_recruited"
     },
     {
-        "id": "ollie_quest_prompt",
-        "speaker": "Ollie",
-        "text": "See? Easy. Jed's waiting for us at the town square. You should go talk to him, I'll catch up!"
+        "id": "tyson_default_talk",
+        "speaker": "Tyson",
+        "text": "Tyson: Stock's thin but the shelves are honest. Need provisions or just passing through?"
     }
 ]

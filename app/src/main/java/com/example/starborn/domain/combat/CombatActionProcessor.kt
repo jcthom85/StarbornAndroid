@@ -2,6 +2,7 @@ package com.example.starborn.domain.combat
 
 import com.example.starborn.domain.inventory.ItemUseResult
 import com.example.starborn.domain.model.BuffEffect
+import com.example.starborn.domain.model.Item
 import com.example.starborn.domain.model.Skill
 import kotlin.math.roundToInt
 import java.util.LinkedHashMap
@@ -12,7 +13,8 @@ class CombatActionProcessor(
     private val engine: CombatEngine,
     private val statusRegistry: StatusRegistry,
     private val skillLookup: (String) -> Skill?,
-    private val consumeItem: ((String) -> ItemUseResult?)? = null
+    private val consumeItem: ((String) -> ItemUseResult?)? = null,
+    private val itemLookup: ((String) -> Item?)? = null
 ) {
 
     fun execute(
@@ -35,25 +37,34 @@ class CombatActionProcessor(
             return if (withOutcome.outcome != null) withOutcome else engine.advance(withOutcome)
         }
         val queued = engine.queueAction(state, action)
+        val sanitized = if (action is CombatAction.BasicAttack) queued else queued.clearWeaponCharge(action.actorId)
         return when (action) {
             is CombatAction.BasicAttack -> finalizeAction(
-                processBasicAttack(queued, action),
+                processBasicAttack(sanitized, action),
+                rewardProvider
+            )
+            is CombatAction.SupportAbility -> finalizeAction(
+                processSupportAbility(sanitized, action),
                 rewardProvider
             )
             is CombatAction.SkillUse -> finalizeAction(
-                processSkillUse(queued, action),
+                processSkillUse(sanitized, action),
                 rewardProvider
             )
             is CombatAction.ItemUse -> finalizeAction(
-                processItemUse(queued, action),
+                processItemUse(sanitized, action),
+                rewardProvider
+            )
+            is CombatAction.SnackUse -> finalizeAction(
+                processSnackUse(sanitized, action),
                 rewardProvider
             )
             is CombatAction.Defend -> finalizeAction(
-                processDefend(queued, action),
+                processDefend(sanitized, action),
                 rewardProvider
             )
             is CombatAction.Flee -> finalizeAction(
-                processFlee(queued),
+                processFlee(sanitized),
                 rewardProvider,
                 advance = false
             )
@@ -65,10 +76,155 @@ class CombatActionProcessor(
         action: CombatAction.BasicAttack
     ): CombatState {
         val attacker = state.combatants[action.actorId] ?: return state
-        val target = state.combatants[action.targetId] ?: return state
-        val hit = rollPhysicalHit(attacker, target)
+        val weapon = attacker.combatant.weapon
+        return when (val attack = weapon?.attack) {
+            null -> processBasicAttackUnarmed(state, action, attacker)
+            is WeaponAttack.SingleTarget -> {
+                state.clearWeaponCharge(action.actorId).applyWeaponAttack(
+                    attackerId = action.actorId,
+                    preferredTargetId = action.targetId,
+                    multiplier = attack.powerMultiplier,
+                    element = attack.element ?: PHYSICAL_ELEMENT
+                )
+            }
+            is WeaponAttack.AllEnemies -> {
+                state.clearWeaponCharge(action.actorId).applyWeaponAttackAllEnemies(
+                    attackerId = action.actorId,
+                    multiplier = attack.powerMultiplier,
+                    element = attack.element ?: PHYSICAL_ELEMENT
+                )
+            }
+            is WeaponAttack.ChargedSplash -> {
+                val resolvedWeapon = weapon ?: return processBasicAttackUnarmed(state, action, attacker)
+                processChargedSplashAttack(
+                    state = state,
+                    action = action,
+                    weapon = resolvedWeapon,
+                    attack = attack
+                )
+            }
+        }
+    }
+
+    private fun processSupportAbility(
+        state: CombatState,
+        action: CombatAction.SupportAbility
+    ): CombatState {
+        val actor = state.combatants[action.actorId] ?: return state
+        val actorKey = action.actorId.substringBefore('#').trim().lowercase()
+        return when (actorKey) {
+            "nova" -> {
+                val targetId = resolveValidEnemyTarget(
+                    state = state,
+                    attacker = actor,
+                    preferredTargetId = action.targetId,
+                    allowFallback = true
+                ) ?: return state
+                var working = state
+                working = engine.applyBuffs(
+                    state = working,
+                    targetId = targetId,
+                    buffs = listOf(
+                        BuffEffect(stat = "accuracy", value = NOVA_CHEAP_SHOT_ACCURACY_PENALTY, duration = SUPPORT_TURN_DURATION)
+                    ),
+                    sourceId = action.actorId
+                )
+                working = engine.applyBuffs(
+                    state = working,
+                    targetId = action.actorId,
+                    buffs = listOf(
+                        BuffEffect(stat = "evasion", value = NOVA_CHEAP_SHOT_EVASION_BONUS, duration = SUPPORT_TURN_DURATION)
+                    ),
+                    sourceId = action.actorId
+                )
+                working
+            }
+            "zeke" -> {
+                val targetId = resolveValidAllyTarget(
+                    state = state,
+                    attacker = actor,
+                    preferredTargetId = action.targetId,
+                    allowFallback = true
+                ) ?: return state
+                engine.applyBuffs(
+                    state = state,
+                    targetId = targetId,
+                    buffs = listOf(
+                        BuffEffect(stat = "defense", value = ZEKE_SYNERGY_BARRIER, duration = SUPPORT_TURN_DURATION)
+                    ),
+                    sourceId = action.actorId
+                )
+            }
+            "orion" -> {
+                val targetId = resolveValidAllyTarget(
+                    state = state,
+                    attacker = actor,
+                    preferredTargetId = action.targetId,
+                    allowFallback = true
+                ) ?: return state
+                val target = state.combatants[targetId] ?: return state
+                val maxHp = target.combatant.stats.maxHp.coerceAtLeast(1)
+                val heal = (maxHp * ORION_STASIS_HEAL_PERCENT).roundToInt().coerceAtLeast(1)
+                var working = engine.applyHeal(
+                    state = state,
+                    sourceId = action.actorId,
+                    targetId = targetId,
+                    amount = heal
+                )
+                working = engine.applyBuffs(
+                    state = working,
+                    targetId = targetId,
+                    buffs = listOf(
+                        BuffEffect(stat = "defense", value = ORION_WARD_BARRIER, duration = SUPPORT_TURN_DURATION)
+                    ),
+                    sourceId = action.actorId
+                )
+                working
+            }
+            "gh0st" -> {
+                val targetId = resolveValidEnemyTarget(
+                    state = state,
+                    attacker = actor,
+                    preferredTargetId = action.targetId,
+                    allowFallback = true
+                ) ?: return state
+                var working = state
+                working = applyTargetLock(
+                    state = working,
+                    targetId = targetId,
+                    duration = GHOST_TARGET_LOCK_DURATION,
+                    stacks = GHOST_TARGET_LOCK_HITS
+                )
+                working = engine.applyBuffs(
+                    state = working,
+                    targetId = action.actorId,
+                    buffs = listOf(
+                        BuffEffect(stat = "defense", value = GHOST_TARGET_LOCK_DR_BONUS, duration = SUPPORT_TURN_DURATION)
+                    ),
+                    sourceId = action.actorId
+                )
+                working
+            }
+            else -> processDefend(state, CombatAction.Defend(action.actorId))
+        }
+    }
+
+    private fun processBasicAttackUnarmed(
+        state: CombatState,
+        action: CombatAction.BasicAttack,
+        attacker: CombatantState
+    ): CombatState {
+        val targetId = resolveValidEnemyTarget(
+            state = state,
+            attacker = attacker,
+            preferredTargetId = action.targetId,
+            allowFallback = true
+        ) ?: return state
+        val target = state.combatants[targetId] ?: return state
+        val critBonus = targetLockCritBonus(target)
+        val hit = rollPhysicalHit(attacker, target, critBonus = critBonus)
         if (hit is HitRoll.Miss) {
-            return state.logMiss(action.actorId, action.targetId)
+            return state.logMiss(action.actorId, targetId)
         }
         val outgoing = adjustOutgoingDamage(attacker, hit.damage)
         val rawDamage = engine.calculateDamage(attacker, target, outgoing, PHYSICAL_ELEMENT)
@@ -76,14 +232,318 @@ class CombatActionProcessor(
             (rawDamage * CombatFormulas.CRIT_DAMAGE_MULT).roundToInt().coerceAtLeast(1)
         } else rawDamage
         val finalDamage = adjustIncomingDamage(target, critAdjusted)
-        return if (finalDamage <= 0) state.logMiss(action.actorId, action.targetId)
-        else engine.applyDamage(
+        val appliedDamage = finalDamage.coerceAtLeast(0)
+        return engine.applyDamage(
             state = state,
             attackerId = action.actorId,
-            targetId = action.targetId,
-            amount = finalDamage,
-            element = PHYSICAL_ELEMENT
+            targetId = targetId,
+            amount = appliedDamage,
+            element = PHYSICAL_ELEMENT,
+            critical = hit.critical
+        ).consumeTargetLockIfPresent(targetId)
+    }
+
+    private fun processChargedSplashAttack(
+        state: CombatState,
+        action: CombatAction.BasicAttack,
+        weapon: CombatWeapon,
+        attack: WeaponAttack.ChargedSplash
+    ): CombatState {
+        val attacker = state.combatants[action.actorId] ?: return state
+        val chargeTurns = attack.chargeTurns.coerceAtLeast(0)
+        val existingCharge = attacker.weaponCharge
+        val sameWeaponCharging = existingCharge?.weaponItemId == weapon.itemId
+        if (!sameWeaponCharging) {
+            if (chargeTurns <= 0) {
+                return state.clearWeaponCharge(action.actorId).applyChargedSplashDamage(
+                    attackerId = action.actorId,
+                    preferredTargetId = action.targetId,
+                    attack = attack
+                )
+            }
+            val updatedAttacker = attacker.copy(
+                weaponCharge = WeaponChargeState(
+                    weaponItemId = weapon.itemId,
+                    remainingTurns = chargeTurns
+                )
+            )
+            return state.copy(
+                combatants = state.combatants + (action.actorId to updatedAttacker),
+                log = state.log + CombatLogEntry.TurnSkipped(
+                    turn = state.round,
+                    actorId = action.actorId,
+                    reason = "is charging ${weapon.name}"
+                )
+            )
+        }
+
+        val remaining = (existingCharge?.remainingTurns ?: 0) - 1
+        return if (remaining > 0) {
+            val updatedAttacker = attacker.copy(
+                weaponCharge = existingCharge!!.copy(remainingTurns = remaining)
+            )
+            state.copy(
+                combatants = state.combatants + (action.actorId to updatedAttacker),
+                log = state.log + CombatLogEntry.TurnSkipped(
+                    turn = state.round,
+                    actorId = action.actorId,
+                    reason = "continues charging ${weapon.name}"
+                )
+            )
+        } else {
+            state.clearWeaponCharge(action.actorId).applyChargedSplashDamage(
+                attackerId = action.actorId,
+                preferredTargetId = action.targetId,
+                attack = attack
+            )
+        }
+    }
+
+    private fun CombatState.applyChargedSplashDamage(
+        attackerId: String,
+        preferredTargetId: String,
+        attack: WeaponAttack.ChargedSplash
+    ): CombatState {
+        val attacker = combatants[attackerId] ?: return this
+        val targetId = resolveValidEnemyTarget(
+            state = this,
+            attacker = attacker,
+            preferredTargetId = preferredTargetId,
+            allowFallback = true
+        ) ?: return this
+        val element = attack.element ?: PHYSICAL_ELEMENT
+        val primaryMultiplier = attack.powerMultiplier
+        val splashMultiplier = attack.splashMultiplier
+
+        var working = applyWeaponAttack(
+            attackerId = attackerId,
+            preferredTargetId = targetId,
+            multiplier = primaryMultiplier,
+            element = element,
+            forceHit = true,
+            allowCrit = false
         )
+
+        if (splashMultiplier <= 0.0) return working
+        val refreshedAttacker = working.combatants[attackerId] ?: return working
+        val splashTargets = opposingLivingTargets(working, refreshedAttacker).filterNot { it == targetId }
+        if (splashTargets.isEmpty()) return working
+        val combinedMultiplier = primaryMultiplier * splashMultiplier
+        splashTargets.forEach { otherId ->
+            working = working.applyWeaponAttack(
+                attackerId = attackerId,
+                preferredTargetId = otherId,
+                multiplier = combinedMultiplier,
+                element = element,
+                forceHit = true,
+                allowCrit = false,
+                fallbackToOtherTarget = false
+            )
+        }
+        return working
+    }
+
+    private fun CombatState.applyWeaponAttackAllEnemies(
+        attackerId: String,
+        multiplier: Double,
+        element: String
+    ): CombatState {
+        val attacker = combatants[attackerId] ?: return this
+        val targets = opposingLivingTargets(this, attacker)
+        if (targets.isEmpty()) return this
+        var working = this
+        targets.forEach { targetId ->
+            working = working.applyWeaponAttack(
+                attackerId = attackerId,
+                preferredTargetId = targetId,
+                multiplier = multiplier,
+                element = element,
+                fallbackToOtherTarget = false
+            )
+        }
+        return working
+    }
+
+    private fun CombatState.applyWeaponAttack(
+        attackerId: String,
+        preferredTargetId: String,
+        multiplier: Double,
+        element: String,
+        forceHit: Boolean = false,
+        allowCrit: Boolean = true,
+        fallbackToOtherTarget: Boolean = true
+    ): CombatState {
+        val attacker = combatants[attackerId] ?: return this
+        val targetId = resolveValidEnemyTarget(
+            state = this,
+            attacker = attacker,
+            preferredTargetId = preferredTargetId,
+            allowFallback = fallbackToOtherTarget
+        ) ?: return this
+        val target = combatants[targetId] ?: return this
+        if (!attacker.isAlive || !target.isAlive) return this
+
+        val shouldApplyTargetLock = target.hasStatus(TARGET_LOCK_STATUS_ID)
+        val critBonus = if (shouldApplyTargetLock) GHOST_TARGET_LOCK_CRIT_BONUS else 0.0
+        val hit = if (forceHit) {
+            HitRoll.Hit(
+                damage = basePhysicalDamage(attacker, target),
+                critical = false
+            )
+        } else {
+            rollPhysicalHit(attacker, target, critBonus = critBonus)
+        }
+        if (hit is HitRoll.Miss) return logMiss(attackerId, targetId)
+
+        val scaledDamage = scaleDamage(hit.damage, multiplier)
+        val outgoing = adjustOutgoingDamage(attacker, scaledDamage)
+        val rawDamage = engine.calculateDamage(attacker, target, outgoing, element)
+        val critAdjusted = if (allowCrit && hit.critical) {
+            (rawDamage * CombatFormulas.CRIT_DAMAGE_MULT).roundToInt().coerceAtLeast(1)
+        } else rawDamage
+        val finalDamage = adjustIncomingDamage(target, critAdjusted)
+        val appliedDamage = finalDamage.coerceAtLeast(0)
+        val damaged = engine.applyDamage(
+            state = this,
+            attackerId = attackerId,
+            targetId = targetId,
+            amount = appliedDamage,
+            element = element,
+            critical = allowCrit && hit.critical
+        )
+        val statusId = attacker.combatant.weapon?.statusOnHit
+            ?.trim()
+            ?.lowercase()
+        val statusChance = attacker.combatant.weapon?.statusChance ?: 0.0
+        val withStatus = if (!statusId.isNullOrBlank() && Random.nextDouble(0.0, 100.0) <= statusChance) {
+            engine.applyStatus(
+                state = damaged,
+                targetId = targetId,
+                statusId = statusId,
+                duration = 0,
+                sourceId = attackerId
+            )
+        } else {
+            damaged
+        }
+        return if (shouldApplyTargetLock) withStatus.consumeTargetLockIfPresent(targetId) else withStatus
+    }
+
+    private fun CombatState.clearWeaponCharge(actorId: String): CombatState {
+        val actor = combatants[actorId] ?: return this
+        if (actor.weaponCharge == null) return this
+        return copy(
+            combatants = combatants + (actorId to actor.copy(weaponCharge = null))
+        )
+    }
+
+    private fun opposingLivingTargets(
+        state: CombatState,
+        attacker: CombatantState
+    ): List<String> {
+        val opposingSide = opposingSide(attacker.combatant.side)
+        return state.turnOrder.asSequence()
+            .map { it.combatantId }
+            .mapNotNull(state.combatants::get)
+            .filter { it.combatant.side == opposingSide && it.isAlive }
+            .map { it.combatant.id }
+            .toList()
+    }
+
+    private fun resolveValidEnemyTarget(
+        state: CombatState,
+        attacker: CombatantState,
+        preferredTargetId: String,
+        allowFallback: Boolean
+    ): String? {
+        val preferred = state.combatants[preferredTargetId]
+        if (preferred?.isAlive == true && preferred.combatant.side == opposingSide(attacker.combatant.side)) {
+            return preferredTargetId
+        }
+        return if (allowFallback) opposingLivingTargets(state, attacker).firstOrNull() else null
+    }
+
+    private fun resolveValidAllyTarget(
+        state: CombatState,
+        attacker: CombatantState,
+        preferredTargetId: String,
+        allowFallback: Boolean
+    ): String? {
+        val preferred = state.combatants[preferredTargetId]
+        if (preferred?.isAlive == true && preferred.combatant.side == attacker.combatant.side) {
+            return preferredTargetId
+        }
+        if (!allowFallback) return null
+        if (attacker.isAlive) return attacker.combatant.id
+        return state.turnOrder.asSequence()
+            .map { it.combatantId }
+            .mapNotNull(state.combatants::get)
+            .filter { it.combatant.side == attacker.combatant.side && it.isAlive }
+            .map { it.combatant.id }
+            .firstOrNull()
+    }
+
+    private fun targetLockCritBonus(target: CombatantState): Double =
+        if (target.hasStatus(TARGET_LOCK_STATUS_ID)) GHOST_TARGET_LOCK_CRIT_BONUS else 0.0
+
+    private fun CombatantState.hasStatus(statusId: String): Boolean =
+        statusEffects.any { it.id.equals(statusId, ignoreCase = true) && it.stacks > 0 }
+
+    private fun CombatState.consumeTargetLockIfPresent(targetId: String): CombatState {
+        val target = combatants[targetId] ?: return this
+        val statuses = target.statusEffects.toMutableList()
+        val index = statuses.indexOfFirst { it.id.equals(TARGET_LOCK_STATUS_ID, ignoreCase = true) }
+        if (index < 0) return this
+        val existing = statuses[index]
+        val remainingStacks = (existing.stacks - 1).coerceAtLeast(0)
+        if (remainingStacks <= 0) {
+            statuses.removeAt(index)
+        } else {
+            statuses[index] = existing.copy(stacks = remainingStacks)
+        }
+        return copy(
+            combatants = combatants + (targetId to target.copy(statusEffects = statuses))
+        )
+    }
+
+    private fun applyTargetLock(
+        state: CombatState,
+        targetId: String,
+        duration: Int,
+        stacks: Int
+    ): CombatState {
+        val target = state.combatants[targetId] ?: return state
+        val resolvedDuration = duration.coerceAtLeast(1)
+        val resolvedStacks = stacks.coerceAtLeast(1)
+        val updatedStatuses = target.statusEffects.toMutableList()
+        val index = updatedStatuses.indexOfFirst { it.id.equals(TARGET_LOCK_STATUS_ID, ignoreCase = true) }
+        val newStatus = StatusEffect(
+            id = TARGET_LOCK_STATUS_ID,
+            remainingTurns = resolvedDuration,
+            stacks = resolvedStacks
+        )
+        if (index >= 0) {
+            updatedStatuses[index] = newStatus
+        } else {
+            updatedStatuses.add(newStatus)
+        }
+        val updatedState = state.copy(
+            combatants = state.combatants + (targetId to target.copy(statusEffects = updatedStatuses))
+        )
+        val logEntry = CombatLogEntry.StatusApplied(
+            turn = state.round,
+            targetId = targetId,
+            statusId = TARGET_LOCK_STATUS_ID,
+            stacks = resolvedStacks
+        )
+        return updatedState.copy(log = updatedState.log + logEntry)
+    }
+
+    private fun scaleDamage(baseDamage: Int, multiplier: Double): Int {
+        if (baseDamage <= 0) return 0
+        val clamped = multiplier.coerceAtLeast(0.0)
+        if (clamped == 0.0) return 0
+        return (baseDamage * clamped).roundToInt().coerceAtLeast(1)
     }
 
     private fun processSkillUse(
@@ -103,7 +563,7 @@ class CombatActionProcessor(
             val explicitTargets = action.targetIds
             val mode = when {
                 skill == null -> SkillMode.Damage(attackerState.effectiveStat("strength").coerceAtLeast(1), PHYSICAL_ELEMENT)
-                isHealSkill(skill) -> SkillMode.Heal(skill.basePower.coerceAtLeast(1))
+                isHealSkill(skill) -> SkillMode.Heal(resolveSkillHeal(attackerState, skill))
                 else -> SkillMode.Damage(
                     baseDamage = resolveSkillDamage(attackerState, skill),
                     element = element ?: PHYSICAL_ELEMENT
@@ -164,6 +624,96 @@ class CombatActionProcessor(
             is ItemUseResult.Damage -> applyItemDamage(state, action, itemResult)
             is ItemUseResult.Buff -> applyItemBuff(state, action, itemResult)
             is ItemUseResult.LearnSchematic -> state // handled outside combat
+        }
+    }
+
+    private fun processSnackUse(
+        state: CombatState,
+        action: CombatAction.SnackUse
+    ): CombatState {
+        val actor = state.combatants[action.actorId] ?: return state
+        val item = itemLookup?.invoke(action.snackItemId) ?: return state
+        val effect = item.effect ?: return state
+        val hasDamage = (effect.damage ?: 0) > 0
+        val hasRestore = (effect.restoreHp ?: 0) > 0
+        val hasBuff = effect.singleBuff != null || !effect.buffs.isNullOrEmpty()
+
+        val declaredTarget = effect.target?.trim()?.lowercase()
+        val resolvedTargetId = when (declaredTarget) {
+            "self" -> action.actorId
+            "enemy" -> resolveValidEnemyTarget(
+                state = state,
+                attacker = actor,
+                preferredTargetId = action.targetId.orEmpty(),
+                allowFallback = true
+            )
+            "ally" -> resolveValidAllyTarget(
+                state = state,
+                attacker = actor,
+                preferredTargetId = action.targetId ?: action.actorId,
+                allowFallback = true
+            )
+            "any" -> {
+                val preferred = action.targetId
+                    ?.takeIf { it.isNotBlank() }
+                    ?.let { candidate ->
+                        state.combatants[candidate]?.takeIf { it.isAlive }?.combatant?.id
+                    }
+                preferred
+                    ?: resolveValidEnemyTarget(
+                        state = state,
+                        attacker = actor,
+                        preferredTargetId = action.targetId.orEmpty(),
+                        allowFallback = true
+                    )
+                    ?: resolveValidAllyTarget(
+                        state = state,
+                        attacker = actor,
+                        preferredTargetId = action.targetId ?: action.actorId,
+                        allowFallback = true
+                    )
+            }
+            else -> when {
+                hasDamage -> resolveValidEnemyTarget(
+                    state = state,
+                    attacker = actor,
+                    preferredTargetId = action.targetId.orEmpty(),
+                    allowFallback = true
+                )
+                hasRestore || hasBuff -> action.actorId
+                else -> action.actorId
+            }
+        }
+
+        val proxy = CombatAction.ItemUse(
+            actorId = action.actorId,
+            itemId = item.id,
+            targetId = resolvedTargetId
+        )
+        val result = when {
+            hasRestore -> ItemUseResult.Restore(
+                item = item,
+                hp = effect.restoreHp ?: 0
+            )
+            hasDamage -> ItemUseResult.Damage(
+                item = item,
+                amount = effect.damage ?: 0
+            )
+            hasBuff -> {
+                val buffs = buildList {
+                    effect.singleBuff?.let { add(it) }
+                    effect.buffs?.let { addAll(it) }
+                }
+                ItemUseResult.Buff(item = item, buffs = buffs)
+            }
+            else -> ItemUseResult.None(item)
+        }
+        return when (result) {
+            is ItemUseResult.None -> state
+            is ItemUseResult.Restore -> applyItemRestore(state, proxy, result)
+            is ItemUseResult.Damage -> applyItemDamage(state, proxy, result)
+            is ItemUseResult.Buff -> applyItemBuff(state, proxy, result)
+            is ItemUseResult.LearnSchematic -> state
         }
     }
 
@@ -283,13 +833,6 @@ class CombatActionProcessor(
                     amount = result.hp
                 )
             }
-            if (result.rp > 0) {
-                working = engine.restoreResource(
-                    state = working,
-                    targetId = targetId,
-                    amount = result.rp
-                )
-            }
         }
         return working
     }
@@ -378,7 +921,8 @@ class CombatActionProcessor(
 
     private fun rollPhysicalHit(
         attacker: CombatantState,
-        target: CombatantState
+        target: CombatantState,
+        critBonus: Double = 0.0
     ): HitRoll {
         val hitChance = (attacker.accuracyRating() - target.evasionRating())
             .coerceIn(MIN_HIT_CHANCE, MAX_HIT_CHANCE)
@@ -386,7 +930,8 @@ class CombatActionProcessor(
         if (roll > hitChance) return HitRoll.Miss
         val baseDamage = basePhysicalDamage(attacker, target)
         val critRoll = Random.nextDouble(0.0, 100.0)
-        val critical = critRoll <= attacker.critChance()
+        val critChance = (attacker.critChance() + critBonus).coerceIn(0.0, 100.0)
+        val critical = critRoll <= critChance
         return HitRoll.Hit(baseDamage, critical)
     }
 
@@ -397,22 +942,37 @@ class CombatActionProcessor(
         val attack = CombatFormulas.attackPower(attacker.effectiveStat("strength"))
         val defense = CombatFormulas.defensePower(target.effectiveStat("vitality"))
         val variance = Random.nextInt(PHYSICAL_VARIANCE_MIN, PHYSICAL_VARIANCE_MAX + 1)
-        return (attack + variance - defense).coerceAtLeast(1)
+        val weaponDamage = rollWeaponDamage(attacker)
+        return (attack + weaponDamage + variance - defense).coerceAtLeast(1)
+    }
+
+    private fun rollWeaponDamage(attacker: CombatantState): Int {
+        val weapon = attacker.combatant.weapon ?: return 0
+        val min = weapon.minDamage.coerceAtLeast(0)
+        val max = weapon.maxDamage.coerceAtLeast(min)
+        if (max <= 0) return 0
+        return Random.nextInt(min, max + 1)
     }
 
     private fun CombatantState.accuracyRating(): Double {
         val buffs = totalBuffValue("accuracy")
-        return (CombatFormulas.accuracy(combatant.stats.focus) + buffs).coerceIn(0.0, 100.0)
+        val base = CombatFormulas.accuracy(effectiveStat("focus"))
+        return (base + combatant.stats.accuracyBonus + buffs).coerceIn(0.0, 100.0)
     }
 
     private fun CombatantState.evasionRating(): Double {
         val buffs = totalBuffValue("evasion")
-        return (CombatFormulas.evasion(combatant.stats.agility) + buffs).coerceIn(0.0, 99.5)
+        val base = CombatFormulas.evasion(effectiveStat("agility"))
+        return (base + combatant.stats.evasionBonus + buffs).coerceIn(0.0, 99.5)
     }
 
     private fun CombatantState.critChance(): Double {
         val buffs = totalBuffValue("crit_rate")
-        return (CombatFormulas.critChance(combatant.stats.focus) + buffs).coerceIn(0.0, 100.0)
+        val base = CombatFormulas.critChance(
+            focus = effectiveStat("focus"),
+            luck = effectiveStat("luck")
+        )
+        return (base + combatant.stats.critBonus + buffs).coerceIn(0.0, 100.0)
     }
 
     private fun opposingSide(side: CombatSide): CombatSide =
@@ -448,14 +1008,23 @@ class CombatActionProcessor(
     ): Int {
         val base = when (skill.scaling?.lowercase()) {
             "atk", "attack", "str", "strength" -> attacker.effectiveStat("strength")
-            "agi", "agility", "speed" -> attacker.effectiveStat("agility")
+            "agi", "agility" -> attacker.effectiveStat("agility")
+            "speed", "spd" -> attacker.effectiveStat("speed")
             "focus", "psi", "int" -> attacker.effectiveStat("focus")
             "vit", "vitality", "def" -> attacker.effectiveStat("vitality")
             "luck", "lck" -> attacker.effectiveStat("luck")
             else -> attacker.effectiveStat("strength")
         }
         val multiplier = skill.basePower.coerceAtLeast(0) / 100.0
-        return (base * multiplier).roundToInt().coerceAtLeast(if (skill.basePower > 0) 1 else 0)
+        val potency = CombatFormulas.skillPotencyMultiplier(attacker.effectiveStat("focus"))
+        return (base * multiplier * potency).roundToInt().coerceAtLeast(if (skill.basePower > 0) 1 else 0)
+    }
+
+    private fun resolveSkillHeal(attacker: CombatantState, skill: Skill): Int {
+        val base = skill.basePower.coerceAtLeast(0)
+        if (base <= 0) return 0
+        val potency = CombatFormulas.skillPotencyMultiplier(attacker.effectiveStat("focus"))
+        return (base * potency).roundToInt().coerceAtLeast(1)
     }
 
     private fun statusesForSkill(
@@ -551,7 +1120,7 @@ class CombatActionProcessor(
     private fun adjustIncomingDamage(target: CombatantState, rawDamage: Int): Int {
         if (rawDamage <= 0) return 0
         var result = rawDamage.toDouble()
-        var flatReduction = target.totalBuffValue("defense")
+        var flatReduction = target.combatant.stats.flatDamageReduction + target.totalBuffValue("flat_defense")
         target.statusEffects.forEach { status ->
             statusRegistry.definition(status.id)?.let { definition ->
                 definition.incomingMultiplier?.let { result *= it }
@@ -576,8 +1145,6 @@ class CombatActionProcessor(
             "focus" -> combatant.stats.focus
             "luck" -> combatant.stats.luck
             "speed" -> combatant.stats.speed
-            "defense" -> combatant.stats.vitality
-            "evasion" -> combatant.stats.agility
             else -> 0
         }
         val bonus = totalBuffValue(canonical)
@@ -654,6 +1221,17 @@ class CombatActionProcessor(
         private const val DEFEND_BONUS = 20
         private const val DEFEND_DURATION = 2
         private const val DEFEND_STATUS_ID = "defend"
+        private const val SUPPORT_TURN_DURATION = 2
+        private const val NOVA_CHEAP_SHOT_ACCURACY_PENALTY = -12
+        private const val NOVA_CHEAP_SHOT_EVASION_BONUS = 5
+        private const val ZEKE_SYNERGY_BARRIER = 6
+        private const val ORION_WARD_BARRIER = 5
+        private const val ORION_STASIS_HEAL_PERCENT = 0.08
+        private const val TARGET_LOCK_STATUS_ID = "target_lock"
+        private const val GHOST_TARGET_LOCK_HITS = 2
+        private const val GHOST_TARGET_LOCK_DURATION = 4
+        private const val GHOST_TARGET_LOCK_CRIT_BONUS = 25.0
+        private const val GHOST_TARGET_LOCK_DR_BONUS = 4
         private const val DEFAULT_STATUS_DURATION = 2
         private const val MIN_HIT_CHANCE = 5.0
         private const val MAX_HIT_CHANCE = 99.0
@@ -674,12 +1252,15 @@ class CombatActionProcessor(
 
         private val STAT_ALIASES: Map<String, Set<String>> = mapOf(
             "strength" to setOf("str", "atk", "attack"),
-            "vitality" to setOf("vit", "def", "defense"),
+            "vitality" to setOf("vit"),
             "agility" to setOf("agi"),
-            "focus" to setOf("fcs", "int"),
+            "focus" to setOf("fcs", "foc", "int", "psi"),
             "luck" to setOf("lck"),
             "speed" to setOf("spd"),
-            "evasion" to setOf("eva")
+            "accuracy" to setOf("acc"),
+            "evasion" to setOf("eva"),
+            "crit_rate" to setOf("crit", "crit_chance"),
+            "flat_defense" to setOf("def", "defense", "armor", "damage_reduction", "dr")
         )
     }
 }

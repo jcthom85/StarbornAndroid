@@ -39,5 +39,6 @@ data class QuestReward(
     val type: String,
     val amount: Int? = null,
     @Json(name = "item_id")
-    val itemId: String? = null
+    val itemId: String? = null,
+    val quantity: Int? = null
 )

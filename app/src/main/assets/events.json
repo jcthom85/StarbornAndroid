@@ -10,50 +10,6 @@
     "actions": [
       {
         "type": "if_quest_active",
-        "quest_id": "talk_to_jed",
-        "do": [
-          {
-            "type": "set_quest_task_done",
-            "quest_id": "talk_to_jed",
-            "task_id": "talk_to_jed_task"
-          },
-          {
-            "type": "set_milestone",
-            "milestone": "ms_talked_to_jed"
-          },
-          {
-            "type": "complete_quest",
-            "quest_id": "talk_to_jed"
-          }
-        ]
-      },
-      {
-        "type": "if_quest_not_started",
-        "quest_id": "gather_broken_gear",
-        "do": [
-          {
-            "type": "if_milestone_set",
-            "milestone": "ms_talked_to_jed",
-            "do": [
-              {
-                "type": "start_quest",
-                "quest_id": "gather_broken_gear"
-              },
-              {
-                "type": "track_quest",
-                "quest_id": "gather_broken_gear"
-              },
-              {
-                "type": "system_tutorial",
-                "scene_id": "scene_market_journal",
-                "context": "Market Plaza"
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "type": "if_quest_active",
         "quest_id": "gather_broken_gear",
         "do": [
           {
@@ -75,6 +31,18 @@
                       {
                         "type": "play_cinematic",
                         "scene_id": "scene_complete_gather_broken_gear"
+                      },
+                      {
+                        "type": "complete_quest",
+                        "quest_id": "gather_broken_gear"
+                      },
+                      {
+                        "type": "set_milestone",
+                        "milestone": "ms_return_items_complete"
+                      },
+                      {
+                        "type": "show_message",
+                        "message": "Quest complete: Gather the Broken Gear"
                       }
                     ]
                   }
@@ -90,32 +58,40 @@
     "id": "evt_collect_display_from_ellie",
     "description": "Collect Ellie's arcade display.",
     "trigger": {
-      "type": "talk_to",
+      "type": "dialogue_closed",
       "npc": "ellie"
     },
-  "repeatable": true,
+  "repeatable": false,
   "actions": [
     {
       "type": "if_quest_active",
       "quest_id": "gather_broken_gear",
       "do": [
         {
-          "type": "play_cinematic",
-          "scene_id": "scene_collect_display"
-        },
-        {
-          "type": "give_item_to_player",
-          "item_id": "broken_arcade_display",
-          "quantity": 1
-        },
-        {
-          "type": "set_milestone",
-          "milestone": "ms_ellie_display_collected"
-        },
-        {
-          "type": "set_quest_task_done",
-          "quest_id": "gather_broken_gear",
-          "task_id": "collect_display"
+          "type": "if_milestone_not_set",
+          "milestone": "ms_repair_bundle_delivered",
+          "do": [
+            {
+              "type": "if_milestone_not_set",
+              "milestone": "ms_ellie_display_collected",
+              "do": [
+                {
+                  "type": "give_item_to_player",
+                  "item_id": "broken_arcade_display",
+                  "quantity": 1
+                },
+                {
+                  "type": "set_milestone",
+                  "milestone": "ms_ellie_display_collected"
+                },
+                {
+                  "type": "set_quest_task_done",
+                  "quest_id": "gather_broken_gear",
+                  "task_id": "collect_display"
+                }
+              ]
+            }
+          ]
         }
       ]
     }
@@ -125,32 +101,40 @@
     "id": "evt_collect_grinder_from_maddie",
     "description": "Collect Maddie's busted coffee grinder.",
     "trigger": {
-      "type": "talk_to",
+      "type": "dialogue_closed",
       "npc": "maddie"
     },
-  "repeatable": true,
+  "repeatable": false,
   "actions": [
     {
       "type": "if_quest_active",
       "quest_id": "gather_broken_gear",
       "do": [
         {
-          "type": "play_cinematic",
-          "scene_id": "scene_collect_grinder"
-        },
-        {
-          "type": "give_item_to_player",
-          "item_id": "broken_coffee_grinder",
-          "quantity": 1
-        },
-        {
-          "type": "set_milestone",
-          "milestone": "ms_maddie_grinder_collected"
-        },
-        {
-          "type": "set_quest_task_done",
-          "quest_id": "gather_broken_gear",
-          "task_id": "collect_grinder"
+          "type": "if_milestone_not_set",
+          "milestone": "ms_repair_bundle_delivered",
+          "do": [
+            {
+              "type": "if_milestone_not_set",
+              "milestone": "ms_maddie_grinder_collected",
+              "do": [
+                {
+                  "type": "give_item_to_player",
+                  "item_id": "broken_coffee_grinder",
+                  "quantity": 1
+                },
+                {
+                  "type": "set_milestone",
+                  "milestone": "ms_maddie_grinder_collected"
+                },
+                {
+                  "type": "set_quest_task_done",
+                  "quest_id": "gather_broken_gear",
+                  "task_id": "collect_grinder"
+                }
+              ]
+            }
+          ]
         }
       ]
     }
@@ -160,32 +144,40 @@
     "id": "evt_collect_projector_from_kasey",
     "description": "Collect Schoolteacher Kasey's busted projector.",
     "trigger": {
-      "type": "talk_to",
+      "type": "dialogue_closed",
       "npc": "schoolteacher kasey"
     },
-  "repeatable": true,
+  "repeatable": false,
   "actions": [
     {
       "type": "if_quest_active",
       "quest_id": "gather_broken_gear",
       "do": [
         {
-          "type": "play_cinematic",
-          "scene_id": "scene_collect_projector"
-        },
-        {
-          "type": "give_item_to_player",
-          "item_id": "broken_projector",
-          "quantity": 1
-        },
-        {
-          "type": "set_milestone",
-          "milestone": "ms_kasey_projector_collected"
-        },
-        {
-          "type": "set_quest_task_done",
-          "quest_id": "gather_broken_gear",
-          "task_id": "collect_projector"
+          "type": "if_milestone_not_set",
+          "milestone": "ms_repair_bundle_delivered",
+          "do": [
+            {
+              "type": "if_milestone_not_set",
+              "milestone": "ms_kasey_projector_collected",
+              "do": [
+                {
+                  "type": "give_item_to_player",
+                  "item_id": "broken_projector",
+                  "quantity": 1
+                },
+                {
+                  "type": "set_milestone",
+                  "milestone": "ms_kasey_projector_collected"
+                },
+                {
+                  "type": "set_quest_task_done",
+                  "quest_id": "gather_broken_gear",
+                  "task_id": "collect_projector"
+                }
+              ]
+            }
+          ]
         }
       ]
     }
@@ -201,25 +193,66 @@
     "repeatable": true,
     "actions": [
       {
-        "type": "if_quest_active",
-        "quest_id": "gather_broken_gear",
-        "do": [
-          {
-            "type": "if_milestone_set",
-            "milestone": "ms_return_items_stage_active",
-            "do": [
-              {
-                "type": "if_milestone_not_set",
-                "milestone": "ms_display_returned",
-                "do": [
-                  {
-                    "type": "play_cinematic",
-                    "scene_id": "scene_return_display"
-                  }
-                ]
-              }
-            ]
-          }
+      "type": "if_quest_active",
+      "quest_id": "gather_broken_gear",
+      "do": [
+        {
+          "type": "if_milestone_set",
+          "milestone": "ms_return_items_stage_active",
+          "do": [
+            {
+              "type": "if_milestone_not_set",
+              "milestone": "ms_display_returned",
+              "do": [
+                {
+                  "type": "play_cinematic",
+                  "scene_id": "scene_return_display"
+                },
+                {
+                  "type": "set_milestone",
+                  "milestone": "ms_display_returned"
+                },
+                {
+                  "type": "set_quest_task_done",
+                  "quest_id": "gather_broken_gear",
+                  "task_id": "return_display"
+                },
+                {
+                  "type": "if_milestone_not_set",
+                  "milestone": "ms_return_items_complete",
+                  "do": [
+                    {
+                      "type": "if_milestones_set",
+                      "milestones": [
+                        "ms_display_returned",
+                        "ms_grinder_returned",
+                        "ms_projector_returned"
+                      ],
+                      "do": [
+                        {
+                          "type": "play_cinematic",
+                          "scene_id": "scene_complete_gather_broken_gear"
+                        },
+                        {
+                          "type": "complete_quest",
+                          "quest_id": "gather_broken_gear"
+                        },
+                        {
+                          "type": "set_milestone",
+                          "milestone": "ms_return_items_complete"
+                        },
+                        {
+                          "type": "show_message",
+                          "message": "Quest complete: Gather the Broken Gear"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
         ]
       }
     ]
@@ -234,25 +267,66 @@
     "repeatable": true,
     "actions": [
       {
-        "type": "if_quest_active",
-        "quest_id": "gather_broken_gear",
-        "do": [
-          {
-            "type": "if_milestone_set",
-            "milestone": "ms_return_items_stage_active",
-            "do": [
-              {
-                "type": "if_milestone_not_set",
-                "milestone": "ms_grinder_returned",
-                "do": [
-                  {
-                    "type": "play_cinematic",
-                    "scene_id": "scene_return_grinder"
-                  }
-                ]
-              }
-            ]
-          }
+      "type": "if_quest_active",
+      "quest_id": "gather_broken_gear",
+      "do": [
+        {
+          "type": "if_milestone_set",
+          "milestone": "ms_return_items_stage_active",
+          "do": [
+            {
+              "type": "if_milestone_not_set",
+              "milestone": "ms_grinder_returned",
+              "do": [
+                {
+                  "type": "play_cinematic",
+                  "scene_id": "scene_return_grinder"
+                },
+                {
+                  "type": "set_milestone",
+                  "milestone": "ms_grinder_returned"
+                },
+                {
+                  "type": "set_quest_task_done",
+                  "quest_id": "gather_broken_gear",
+                  "task_id": "return_grinder"
+                },
+                {
+                  "type": "if_milestone_not_set",
+                  "milestone": "ms_return_items_complete",
+                  "do": [
+                    {
+                      "type": "if_milestones_set",
+                      "milestones": [
+                        "ms_display_returned",
+                        "ms_grinder_returned",
+                        "ms_projector_returned"
+                      ],
+                      "do": [
+                        {
+                          "type": "play_cinematic",
+                          "scene_id": "scene_complete_gather_broken_gear"
+                        },
+                        {
+                          "type": "complete_quest",
+                          "quest_id": "gather_broken_gear"
+                        },
+                        {
+                          "type": "set_milestone",
+                          "milestone": "ms_return_items_complete"
+                        },
+                        {
+                          "type": "show_message",
+                          "message": "Quest complete: Gather the Broken Gear"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
         ]
       }
     ]
@@ -267,25 +341,66 @@
     "repeatable": true,
     "actions": [
       {
-        "type": "if_quest_active",
-        "quest_id": "gather_broken_gear",
-        "do": [
-          {
-            "type": "if_milestone_set",
-            "milestone": "ms_return_items_stage_active",
-            "do": [
-              {
-                "type": "if_milestone_not_set",
-                "milestone": "ms_projector_returned",
-                "do": [
-                  {
-                    "type": "play_cinematic",
-                    "scene_id": "scene_return_projector"
-                  }
-                ]
-              }
-            ]
-          }
+      "type": "if_quest_active",
+      "quest_id": "gather_broken_gear",
+      "do": [
+        {
+          "type": "if_milestone_set",
+          "milestone": "ms_return_items_stage_active",
+          "do": [
+            {
+              "type": "if_milestone_not_set",
+              "milestone": "ms_projector_returned",
+              "do": [
+                {
+                  "type": "play_cinematic",
+                  "scene_id": "scene_return_projector"
+                },
+                {
+                  "type": "set_milestone",
+                  "milestone": "ms_projector_returned"
+                },
+                {
+                  "type": "set_quest_task_done",
+                  "quest_id": "gather_broken_gear",
+                  "task_id": "return_projector"
+                },
+                {
+                  "type": "if_milestone_not_set",
+                  "milestone": "ms_return_items_complete",
+                  "do": [
+                    {
+                      "type": "if_milestones_set",
+                      "milestones": [
+                        "ms_display_returned",
+                        "ms_grinder_returned",
+                        "ms_projector_returned"
+                      ],
+                      "do": [
+                        {
+                          "type": "play_cinematic",
+                          "scene_id": "scene_complete_gather_broken_gear"
+                        },
+                        {
+                          "type": "complete_quest",
+                          "quest_id": "gather_broken_gear"
+                        },
+                        {
+                          "type": "set_milestone",
+                          "milestone": "ms_return_items_complete"
+                        },
+                        {
+                          "type": "show_message",
+                          "message": "Quest complete: Gather the Broken Gear"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
         ]
       }
     ]
@@ -625,102 +740,6 @@
     ]
   },
   {
-    "id": "evt_item_display_pickup",
-    "description": "Handles arcade display pickups that happen outside the conversation.",
-    "trigger": {
-      "type": "item_acquired",
-      "item": "broken_arcade_display"
-    },
-    "repeatable": true,
-    "actions": [
-      {
-        "type": "if_quest_active",
-        "quest_id": "gather_broken_gear",
-        "do": [
-          {
-            "type": "if_milestone_not_set",
-            "milestone": "ms_ellie_display_collected",
-            "do": [
-              {
-                "type": "set_milestone",
-                "milestone": "ms_ellie_display_collected"
-              },
-              {
-                "type": "set_quest_task_done",
-                "quest_id": "gather_broken_gear",
-                "task_id": "collect_display"
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": "evt_item_grinder_pickup",
-    "description": "Handles grinder pickups that happen outside the conversation.",
-    "trigger": {
-      "type": "item_acquired",
-      "item": "broken_coffee_grinder"
-    },
-    "repeatable": true,
-    "actions": [
-      {
-        "type": "if_quest_active",
-        "quest_id": "gather_broken_gear",
-        "do": [
-          {
-            "type": "if_milestone_not_set",
-            "milestone": "ms_maddie_grinder_collected",
-            "do": [
-              {
-                "type": "set_milestone",
-                "milestone": "ms_maddie_grinder_collected"
-              },
-              {
-                "type": "set_quest_task_done",
-                "quest_id": "gather_broken_gear",
-                "task_id": "collect_grinder"
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": "evt_item_projector_pickup",
-    "description": "Handles projector pickups that happen outside the conversation.",
-    "trigger": {
-      "type": "item_acquired",
-      "item": "broken_projector"
-    },
-    "repeatable": true,
-    "actions": [
-      {
-        "type": "if_quest_active",
-        "quest_id": "gather_broken_gear",
-        "do": [
-          {
-            "type": "if_milestone_not_set",
-            "milestone": "ms_kasey_projector_collected",
-            "do": [
-              {
-                "type": "set_milestone",
-                "milestone": "ms_kasey_projector_collected"
-              },
-              {
-                "type": "set_quest_task_done",
-                "quest_id": "gather_broken_gear",
-                "task_id": "collect_projector"
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
     "id": "evt_jed_assign_repair_quest",
     "description": "Jed wraps the intro quest and hands over the repair errand.",
     "trigger": {
@@ -778,6 +797,31 @@
         ]
       },
       {
+        "type": "if_quest_not_started",
+        "quest_id": "gather_broken_gear",
+        "do": [
+          {
+            "type": "if_milestone_set",
+            "milestone": "ms_talked_to_jed",
+            "do": [
+              {
+                "type": "start_quest",
+                "quest_id": "gather_broken_gear"
+              },
+              {
+                "type": "track_quest",
+                "quest_id": "gather_broken_gear"
+              },
+              {
+                "type": "system_tutorial",
+                "scene_id": "scene_market_journal",
+                "context": "Market Plaza"
+              }
+            ]
+          }
+        ]
+      },
+      {
         "type": "if_quest_active",
         "quest_id": "gather_broken_gear",
         "do": [
@@ -800,7 +844,8 @@
                   },
                   {
                     "type": "advance_quest_stage",
-                    "quest_id": "gather_broken_gear"
+                    "quest_id": "gather_broken_gear",
+                    "to_stage_id": "repair_batch"
                   },
                   {
                     "type": "set_milestone",
@@ -824,17 +869,17 @@
                   },
                   {
                     "type": "give_item_to_player",
-                    "item": "Scrap Metal",
+                    "item_id": "scrap_metal",
                     "quantity": 20
                   },
                   {
                     "type": "give_item_to_player",
-                    "item": "Nano Filament",
+                    "item_id": "nano_filament",
                     "quantity": 20
                   },
                   {
                     "type": "give_item_to_player",
-                    "item": "Circuit Board",
+                    "item_id": "circuit_board",
                     "quantity": 20
                   },
                   {
@@ -1016,6 +1061,30 @@
                 ]
               }
             ]
+          },
+          {
+            "type": "if_quest_active",
+            "quest_id": "gather_broken_gear",
+            "do": [
+              {
+                "type": "set_quest_task_done",
+                "quest_id": "gather_broken_gear",
+                "task_id": "report_to_jed_after_repairs"
+              },
+              {
+                "type": "advance_quest_stage",
+                "quest_id": "gather_broken_gear",
+                "to_stage_id": "return_items"
+              },
+              {
+                "type": "set_milestone",
+                "milestone": "ms_return_items_stage_active"
+              },
+              {
+                "type": "show_message",
+                "message": "The repaired gear is ready to return to its owners."
+              }
+            ]
           }
         ]
       }
@@ -1180,11 +1249,6 @@
       {
         "type": "set_milestone",
         "milestone": "ms_scrap_run_started"
-      },
-      {
-        "type": "system_tutorial",
-        "scene_id": "scene_scrap_run_tyson",
-        "context": "Tyson's Provisions"
       },
       {
         "type": "show_message",
@@ -1406,6 +1470,7 @@
       "type": "enter_room",
       "room": "town_8"
     },
+    "repeatable": true,
     "actions": [
       {
         "type": "play_cinematic",
@@ -1426,7 +1491,7 @@
           {
             "type": "system_tutorial",
             "scene_id": "scene_ollie_recruitment",
-            "context": "Nova's House"
+            "context": "Main Road"
           },
           {
             "type": "show_message",

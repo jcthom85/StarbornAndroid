@@ -57,7 +57,6 @@ class InventoryServiceTest {
         assertNotNull(result)
         val restore = result as Restore
         assertEquals(50, restore.hp)
-        assertEquals(0, restore.rp)
     }
 
     @Test
@@ -123,7 +122,7 @@ private fun medkitItem() = Item(
     id = "medkit_i",
     name = "Medkit I",
     type = "consumable",
-    effect = ItemEffect(restoreHp = 50, restoreRp = 0)
+    effect = ItemEffect(restoreHp = 50)
 )
 
 private fun latteItem() = Item(

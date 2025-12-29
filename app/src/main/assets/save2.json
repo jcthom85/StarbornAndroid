@@ -100,10 +100,6 @@
     },
     "equipment": {},
     "credits": 500,
-    "resonance": 0,
-    "resonance_min": 0,
-    "resonance_start_base": 0,
-    "resonance_max": 100,
     "map": {
       "current_world_id": "nova_prime",
       "current_hub_id": "mining_colony",

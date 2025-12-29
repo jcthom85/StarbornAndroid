@@ -1,36 +1,28 @@
 {
   "level_up_skills": {
     "nova": {
-      "3": "nova_backstab",
+      "3": "nova_arc_tether",
       "6": "nova_smoke_bomb",
-      "9": "nova_shadow_blade",
-      "12": "nova_remote_mine",
-      "15": "nova_eclipse",
-      "18": "nova_drone_swarm"
+      "9": "nova_plasma_burst",
+      "12": "nova_rend_round"
     },
     "zeke": {
-      "3": "zeke_motivational_speech",
-      "6": "zeke_benefits_plan",
-      "9": "zeke_resource_allocation",
-      "12": "zeke_quality_assurance",
-      "15": "zeke_production_boost",
-      "18": "zeke_executive_order"
+      "3": "zeke_shatter_blow",
+      "6": "zeke_bulwark_stance",
+      "9": "zeke_overload_fists",
+      "12": "zeke_quake_slam"
     },
     "orion": {
-      "3": "orion_shield_protocol",
+      "3": "orion_prism_lance",
       "6": "orion_nano_repair",
-      "9": "orion_revive",
-      "12": "orion_energy_shield",
-      "15": "orion_mass_repair",
-      "18": "orion_singularity_bomb"
+      "9": "orion_disruption_pulse",
+      "12": "orion_stasis_field"
     },
     "gh0st": {
       "3": "gh0st_headshot",
-      "6": "gh0st_emp_grenade",
-      "9": "gh0st_penetrating_shot",
-      "12": "gh0st_system_shock",
-      "15": "gh0st_crippling_shot",
-      "18": "gh0st_meltdown"
+      "6": "gh0st_venom_edge",
+      "9": "gh0st_system_crash",
+      "12": "gh0st_shadow_flurry"
     }
   }
 }

@@ -32,8 +32,28 @@ data class Enemy(
     val apReward: Int? = null,
     val behavior: String? = null,
     @Json(name = "alert_delay")
-    val alertDelay: Int? = null
+    val alertDelay: Int? = null,
+    val composite: CompositePart? = null
 ) : Entity(id, name, description)
+
+@JsonClass(generateAdapter = true)
+data class CompositePart(
+    val group: String,
+    val role: String? = null,
+    @Json(name = "group_offset_x")
+    val groupOffsetX: Float = 0f,
+    @Json(name = "group_offset_y")
+    val groupOffsetY: Float = 0f,
+    @Json(name = "offset_x")
+    val offsetX: Float = 0f,
+    @Json(name = "offset_y")
+    val offsetY: Float = 0f,
+    @Json(name = "width_scale")
+    val widthScale: Float = 1f,
+    @Json(name = "height_scale")
+    val heightScale: Float = 1f,
+    val z: Float = 0f
+)
 
 @JsonClass(generateAdapter = true)
 data class Resistances(

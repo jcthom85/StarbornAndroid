@@ -3,7 +3,12 @@ package com.example.starborn
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.starborn.navigation.NavigationHost
 import com.example.starborn.ui.theme.StarbornTheme
@@ -14,7 +19,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             StarbornTheme {
-                NavigationHost()
+                Box(modifier = Modifier.fillMaxSize().background(Color.Black)) {
+                    NavigationHost()
+                }
             }
         }
     }
@@ -24,6 +31,8 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun DefaultPreview() {
     StarbornTheme {
-        NavigationHost()
+        Box(modifier = Modifier.fillMaxSize().background(Color.Black)) {
+            NavigationHost()
+        }
     }
 }

@@ -6,7 +6,9 @@ sealed interface CombatFxEvent {
         val targetId: String,
         val amount: Int,
         val element: String? = null,
-        val critical: Boolean = false
+        val critical: Boolean = false,
+        val showAttackFx: Boolean = false,
+        val targetDefeated: Boolean = false
     ) : CombatFxEvent
 
     data class Heal(

@@ -16,7 +16,6 @@ data class GameSessionState(
     val partyMemberXp: Map<String, Int> = emptyMap(),
     val partyMemberLevels: Map<String, Int> = emptyMap(),
     val partyMemberHp: Map<String, Int> = emptyMap(),
-    val partyMemberRp: Map<String, Int> = emptyMap(),
     val trackedQuestId: String? = null,
     val activeQuests: Set<String> = emptySet(),
     val completedQuests: Set<String> = emptySet(),
@@ -25,21 +24,21 @@ data class GameSessionState(
     val milestoneHistory: List<String> = emptyList(),
     val learnedSchematics: Set<String> = emptySet(),
     val unlockedSkills: Set<String> = emptySet(),
+    val unlockedWeapons: Set<String> = emptySet(),
+    val unlockedArmors: Set<String> = emptySet(),
     val unlockedAreas: Set<String> = emptySet(),
     val unlockedExits: Set<String> = emptySet(),
     val partyMembers: List<String> = emptyList(),
     val inventory: Map<String, Int> = emptyMap(),
     val equippedItems: Map<String, String> = emptyMap(),
+    val equippedWeapons: Map<String, String> = emptyMap(),
+    val equippedArmors: Map<String, String> = emptyMap(),
     val tutorialSeen: Set<String> = emptySet(),
     val tutorialCompleted: Set<String> = emptySet(),
     val tutorialRoomsSeen: Set<String> = emptySet(),
     val questStageById: Map<String, String> = emptyMap(),
     val questTasksCompleted: Map<String, Set<String>> = emptyMap(),
-    val completedEvents: Set<String> = emptySet(),
-    val resonance: Int = 0,
-    val resonanceMin: Int = 0,
-    val resonanceMax: Int = 100,
-    val resonanceStartBase: Int = 0
+    val completedEvents: Set<String> = emptySet()
 )
 
 fun GameSessionState.fingerprint(): String {
@@ -68,6 +67,26 @@ fun GameSessionState.fingerprint(): String {
     }
     inventory.entries.sortedBy { it.key.lowercase(normalizedLocale) }.forEach { (itemId, qty) ->
         builder.append("INV:").append(itemId.lowercase(normalizedLocale)).append('=').append(qty).append('|')
+    }
+    unlockedWeapons.map { it.lowercase(normalizedLocale) }.sorted().forEach {
+        builder.append("WPN:").append(it).append('|')
+    }
+    equippedWeapons.entries.sortedBy { it.key.lowercase(normalizedLocale) }.forEach { (ownerId, weaponId) ->
+        builder.append("WPN_EQ:")
+            .append(ownerId.lowercase(normalizedLocale))
+            .append('=')
+            .append(weaponId.lowercase(normalizedLocale))
+            .append('|')
+    }
+    unlockedArmors.map { it.lowercase(normalizedLocale) }.sorted().forEach {
+        builder.append("ARM:").append(it).append('|')
+    }
+    equippedArmors.entries.sortedBy { it.key.lowercase(normalizedLocale) }.forEach { (ownerId, armorId) ->
+        builder.append("ARM_EQ:")
+            .append(ownerId.lowercase(normalizedLocale))
+            .append('=')
+            .append(armorId.lowercase(normalizedLocale))
+            .append('|')
     }
     unlockedAreas.map { it.lowercase(normalizedLocale) }.sorted().forEach {
         builder.append("AREA:").append(it).append('|')

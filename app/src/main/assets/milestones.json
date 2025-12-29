@@ -108,6 +108,36 @@
     "toast": "Jed received the bundle of broken devices."
   },
   {
+    "id": "ms_return_items_stage_active",
+    "name": "Repairs Finished",
+    "description": "Jed finished the repairs and sent you to return the gear.",
+    "toast": "Return the fixed gear to their owners."
+  },
+  {
+    "id": "ms_display_returned",
+    "name": "Returned Ellie's Display",
+    "description": "You brought the repaired arcade display back to Ellie.",
+    "toast": "Delivered Ellie's repaired display."
+  },
+  {
+    "id": "ms_grinder_returned",
+    "name": "Returned Maddie's Grinder",
+    "description": "You returned the repaired coffee grinder to Maddie.",
+    "toast": "Delivered Maddie's repaired grinder."
+  },
+  {
+    "id": "ms_projector_returned",
+    "name": "Returned Kasey's Projector",
+    "description": "You returned the repaired projector to Schoolteacher Kasey.",
+    "toast": "Delivered Kasey's repaired projector."
+  },
+  {
+    "id": "ms_return_items_complete",
+    "name": "Delivered Repaired Gear",
+    "description": "All three repaired items are back where they belong.",
+    "toast": "Repaired gear returned across town."
+  },
+  {
     "id": "ms_tinkering_prompt_active",
     "name": "Tinkering Unlocked",
     "description": "Jed opened the tinkering table and the tutorial is ready.",
@@ -128,6 +158,12 @@
       "type": "event",
       "event_id": "ollie_first_meeting"
     }
+  },
+  {
+    "id": "ms_ollie_recruited",
+    "name": "Ollie Joined",
+    "description": "Ollie agreed to tag along after you checked in with him on the Main Road.",
+    "toast": "Ollie joined your party."
   },
   {
     "id": "ms_mine_power_on",

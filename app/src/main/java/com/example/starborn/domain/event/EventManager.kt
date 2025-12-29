@@ -51,6 +51,8 @@ class EventManager(
         return when (trigger.type.lowercase()) {
             "talk_to" -> payload is EventPayload.TalkTo && payload.npc.equals(trigger.npc, true)
             "npc_interaction" -> payload is EventPayload.TalkTo && payload.npc.equals(trigger.npc, true)
+            "dialogue_closed", "dialogue_dismissed" ->
+                payload is EventPayload.TalkTo && payload.npc.equals(trigger.npc, true)
             "enter_room" -> {
                 val roomId = (payload as? EventPayload.EnterRoom)?.roomId ?: state.roomId
                 val triggerRoom = trigger.roomId ?: trigger.room
@@ -93,7 +95,35 @@ class EventManager(
         var executed = false
         for (action in actions) {
             executed = when (action.type.lowercase()) {
-                "if_quest_active" -> executeConditionalBranch(action.questId in state.activeQuests, action, state)
+                "if_quest_active" -> executeConditionalBranch(
+                    action.questId?.let { it in state.activeQuests } ?: false,
+                    action,
+                    state
+                )
+                "if_quest_not_started" -> executeConditionalBranch(
+                    action.questId?.let { questId ->
+                        questId !in state.activeQuests &&
+                            questId !in state.completedQuests &&
+                            questId !in state.failedQuests
+                    } ?: false,
+                    action,
+                    state
+                )
+                "if_quest_completed" -> executeConditionalBranch(
+                    action.questId?.let { it in state.completedQuests } ?: false,
+                    action,
+                    state
+                )
+                "if_quest_not_completed" -> executeConditionalBranch(
+                    action.questId?.let { it !in state.completedQuests } ?: false,
+                    action,
+                    state
+                )
+                "if_quest_failed" -> executeConditionalBranch(
+                    action.questId?.let { it in state.failedQuests } ?: false,
+                    action,
+                    state
+                )
                 "if_milestone_set" -> executeConditionalBranch(
                     action.milestone != null && action.milestone in state.completedMilestones,
                     action,

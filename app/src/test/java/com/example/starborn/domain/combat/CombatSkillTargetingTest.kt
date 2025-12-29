@@ -28,7 +28,6 @@ class CombatSkillTargetingTest {
         side = CombatSide.PLAYER,
         stats = StatBlock(
             maxHp = 100,
-            maxRp = 10,
             strength = 18,
             vitality = 12,
             agility = 8,
@@ -44,7 +43,6 @@ class CombatSkillTargetingTest {
         side = CombatSide.ENEMY,
         stats = StatBlock(
             maxHp = 80,
-            maxRp = 5,
             strength = 10,
             vitality = 8,
             agility = 6,

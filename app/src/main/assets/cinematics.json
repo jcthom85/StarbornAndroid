@@ -1,1 +1,472 @@
-[]
+[
+  {
+    "id": "scene_encounter_defeat_tip",
+    "title": "Tactical Review",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "The squad retreats to regroup after the defeat."
+      },
+      {
+        "type": "narration",
+        "text": "Patch up, recharge shields, and consider buffing allies before re-engaging. Status items and defensive skills can swing the next encounter."
+      }
+    ]
+  },
+  {
+    "id": "scene_encounter_retreat_tip",
+    "title": "Regroup Successful",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "You slipped away before things turned critical."
+      },
+      {
+        "type": "narration",
+        "text": "Use the breathing room to craft support items, adjust party loadouts, or scout an alternate route."
+      }
+    ]
+  },
+  {
+    "id": "scene_blocked_lock",
+    "title": "Access Denied",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "A security lock halts your progress."
+      },
+      {
+        "type": "narration",
+        "text": "Check your objectives or inventory\u2014certain rooms need power restored or a keycard before they open."
+      }
+    ]
+  },
+  {
+    "id": "scene_blocked_enemy",
+    "title": "Hostile Presence",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Sensors flag movement beyond the doorway."
+      },
+      {
+        "type": "narration",
+        "text": "Clear nearby threats or prepare a pre-emptive strike\u2014some exits stay sealed until the ambush is dealt with."
+      }
+    ]
+  },
+  {
+    "id": "ollie_intro_scene",
+    "title": "Main Road Encounter",
+    "steps": [
+      {
+        "type": "dialogue",
+        "speaker": "Ollie",
+        "text": "Nova! There you are! We're late to meet Jed."
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Ollie",
+        "text": "Touch my name on your HUD, choose Talk, and let's catch up to him before he locks up."
+      }
+    ]
+  },
+  {
+    "id": "scene_fishing_basics",
+    "title": "Fishing Basics",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Tap Cast to launch the line and start the timing meter."
+      },
+      {
+        "type": "narration",
+        "text": "Watch the cursor sweep across the bar\u2014tap when it overlaps the highlighted zone to reel in a catch."
+      },
+      {
+        "type": "narration",
+        "text": "Stronger rods widen rare catch chances, while lures boost the odds of uncommon finds."
+      }
+    ]
+  },
+  {
+    "id": "scene_mine_restore",
+    "title": "Power Restored",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "The generator hums to life, flooding the tunnels with light."
+      },
+      {
+        "type": "narration",
+        "text": "Somewhere deeper within the mine, heavy locks release."
+      }
+    ]
+  },
+  {
+    "id": "scene_collect_display",
+    "title": "Collector",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Ellie carefully packs the shattered display into a crate for repair."
+      }
+    ]
+  },
+  {
+    "id": "scene_collect_grinder",
+    "title": "Collector",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Maddie hands over the grinder, hopeful you can repair it."
+      }
+    ]
+  },
+  {
+    "id": "scene_collect_projector",
+    "title": "Collector",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Kasey reluctantly passes you the cracked projector lens."
+      }
+    ]
+  },
+  {
+    "id": "scene_complete_gather_broken_gear",
+    "title": "Mission Complete",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Jed celebrates as all three relics return to the workshop."
+      }
+    ]
+  },
+  {
+    "id": "camera_gallery_demo",
+    "title": "Camera Gallery Demo",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Placeholder cinematic '$scene_id'."
+      }
+    ]
+  },
+  {
+    "id": "camera_test",
+    "title": "Camera Test",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Placeholder cinematic '$scene_id'."
+      }
+    ]
+  },
+  {
+    "id": "caption_cycle",
+    "title": "Caption Cycle",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Placeholder cinematic '$scene_id'."
+      }
+    ]
+  },
+  {
+    "id": "caption_demo",
+    "title": "Caption Demo",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Placeholder cinematic '$scene_id'."
+      }
+    ]
+  },
+  {
+    "id": "cinematic_text_demo",
+    "title": "Cinematic Text Demo",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Placeholder cinematic '$scene_id'."
+      }
+    ]
+  },
+  {
+    "id": "color_filter_demo",
+    "title": "Color Filter Demo",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Placeholder cinematic '$scene_id'."
+      }
+    ]
+  },
+  {
+    "id": "fade_demo",
+    "title": "Fade Demo",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Placeholder cinematic '$scene_id'."
+      }
+    ]
+  },
+  {
+    "id": "flash_demo",
+    "title": "Flash Demo",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Placeholder cinematic '$scene_id'."
+      }
+    ]
+  },
+  {
+    "id": "flashback_demo",
+    "title": "Flashback Demo",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Placeholder cinematic '$scene_id'."
+      }
+    ]
+  },
+  {
+    "id": "letterbox_demo",
+    "title": "Letterbox Demo",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Placeholder cinematic '$scene_id'."
+      }
+    ]
+  },
+  {
+    "id": "market_plaza_intro",
+    "title": "Market Plaza Intro",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Placeholder cinematic '$scene_id'."
+      }
+    ]
+  },
+  {
+    "id": "master_showcase",
+    "title": "Master Showcase",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Placeholder cinematic '$scene_id'."
+      }
+    ]
+  },
+  {
+    "id": "narration_demo",
+    "title": "Narration Demo",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Placeholder cinematic '$scene_id'."
+      }
+    ]
+  },
+  {
+    "id": "new_game_fade_in",
+    "title": "New Game Fade In",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Placeholder cinematic '$scene_id'."
+      }
+    ]
+  },
+  {
+    "id": "pan_only_demo",
+    "title": "Pan Only Demo",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Placeholder cinematic '$scene_id'."
+      }
+    ]
+  },
+  {
+    "id": "particles_demo",
+    "title": "Particles Demo",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Placeholder cinematic '$scene_id'."
+      }
+    ]
+  },
+  {
+    "id": "ring_demo",
+    "title": "Ring Demo",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Placeholder cinematic '$scene_id'."
+      }
+    ]
+  },
+  {
+    "id": "scene_jed_tinkering_prompt",
+    "title": "Scene Jed Tinkering Prompt",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Placeholder cinematic '$scene_id'."
+      }
+    ]
+  },
+  {
+    "id": "scene_jed_tinkering_wrapup",
+    "title": "Scene Jed Tinkering Wrapup",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Placeholder cinematic '$scene_id'."
+      }
+    ]
+  },
+  {
+    "id": "scene_return_display",
+    "title": "Scene Return Display",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Placeholder cinematic '$scene_id'."
+      }
+    ]
+  },
+  {
+    "id": "scene_return_grinder",
+    "title": "Scene Return Grinder",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Placeholder cinematic '$scene_id'."
+      }
+    ]
+  },
+  {
+    "id": "scene_return_projector",
+    "title": "Scene Return Projector",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Placeholder cinematic '$scene_id'."
+      }
+    ]
+  },
+  {
+    "id": "shake_demo",
+    "title": "Shake Demo",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Placeholder cinematic '$scene_id'."
+      }
+    ]
+  },
+  {
+    "id": "speed_lines_demo",
+    "title": "Speed Lines Demo",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Placeholder cinematic '$scene_id'."
+      }
+    ]
+  },
+  {
+    "id": "tilt_demo",
+    "title": "Tilt Demo",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Placeholder cinematic '$scene_id'."
+      }
+    ]
+  },
+  {
+    "id": "town_square_intro",
+    "title": "Town Square Intro",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Placeholder cinematic '$scene_id'."
+      }
+    ]
+  },
+  {
+    "id": "vfx_stage_demo",
+    "title": "Vfx Stage Demo",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Placeholder cinematic '$scene_id'."
+      }
+    ]
+  },
+  {
+    "id": "vignette_demo",
+    "title": "Vignette Demo",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Placeholder cinematic '$scene_id'."
+      }
+    ]
+  },
+  {
+    "id": "wipe_demo",
+    "title": "Wipe Demo",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Placeholder cinematic '$scene_id'."
+      }
+    ]
+  },
+  {
+    "id": "zoom_only_demo",
+    "title": "Zoom Only Demo",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Placeholder cinematic '$scene_id'."
+      }
+    ]
+  },
+  {
+    "id": "zoom_pan_demo",
+    "title": "Zoom Pan Demo",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Placeholder cinematic '$scene_id'."
+      }
+    ]
+  },
+  {
+    "id": "ollie_intro_scene",
+    "title": "Main Road Encounter",
+    "steps": [
+      {
+        "type": "dialogue",
+        "speaker": "Ollie",
+        "text": "Nova! There you are! We're late to meet Jed."
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Ollie",
+        "text": "Touch my name on your HUD, choose Talk, and let's catch up to him before he locks up."
+      }
+    ]
+  }
+]

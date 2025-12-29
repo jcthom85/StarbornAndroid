@@ -8,7 +8,7 @@
         "pos": [1, 0],
         "cost_ap": 1,
         "requires": [],
-        "effect": { "type": "buff", "buff_type": "morale", "value": 5, "rp_cost": 0 }
+        "effect": { "type": "buff", "buff_type": "morale", "value": 5 }
       },
       {
         "id": "zeke_training_session",
@@ -16,7 +16,7 @@
         "pos": [0, 0],
         "cost_ap": 1,
         "requires": [],
-        "effect": { "type": "buff", "buff_type": "attack", "value": 5, "rp_cost": 0 }
+        "effect": { "type": "buff", "buff_type": "attack", "value": 5 }
       },
       {
         "id": "zeke_motivational_speech",
@@ -24,7 +24,7 @@
         "pos": [2, 0],
         "cost_ap": 1,
         "requires": [],
-        "effect": { "type": "buff", "buff_type": "speed", "value": 5, "rp_cost": 0 }
+        "effect": { "type": "buff", "buff_type": "speed", "value": 5 }
       },
       {
         "id": "zeke_conflict_resolution",
@@ -32,7 +32,7 @@
         "pos": [1, 1],
         "cost_ap": 1,
         "requires": ["zeke_team_meeting"],
-        "effect": { "type": "utility", "subtype": "peace", "rp_cost": 5 }
+        "effect": { "type": "utility", "subtype": "peace" }
       },
       {
         "id": "zeke_benefits_plan",
@@ -40,7 +40,7 @@
         "pos": [0, 2],
         "cost_ap": 2,
         "requires": ["zeke_conflict_resolution"],
-        "effect": { "type": "buff", "buff_type": "defense", "value": 5, "rp_cost": 5 }
+        "effect": { "type": "buff", "buff_type": "defense", "value": 5 }
       },
       {
         "id": "zeke_retention_bonus",
@@ -48,7 +48,7 @@
         "pos": [2, 2],
         "cost_ap": 2,
         "requires": ["zeke_conflict_resolution"],
-        "effect": { "type": "buff", "buff_type": "attack", "value": 5, "rp_cost": 8 }
+        "effect": { "type": "buff", "buff_type": "attack", "value": 5 }
       },
       {
         "id": "zeke_talent_acquisition",
@@ -56,7 +56,7 @@
         "pos": [1, 3],
         "cost_ap": 3,
         "requires": ["zeke_benefits_plan", "zeke_retention_bonus"],
-        "effect": { "type": "utility", "subtype": "recruit", "rp_cost": 8 }
+        "effect": { "type": "utility", "subtype": "recruit" }
       },
       {
         "id": "zeke_employee_survey",
@@ -64,7 +64,7 @@
         "pos": [0, 4],
         "cost_ap": 3,
         "requires": ["zeke_talent_acquisition"],
-        "effect": { "type": "buff", "buff_type": "morale", "value": 10, "rp_cost": 12 }
+        "effect": { "type": "buff", "buff_type": "morale", "value": 10 }
       },
       {
         "id": "zeke_professional_development",
@@ -72,7 +72,7 @@
         "pos": [2, 4],
         "cost_ap": 3,
         "requires": ["zeke_talent_acquisition"],
-        "effect": { "type": "buff", "buff_type": "speed", "value": 10, "rp_cost": 10 }
+        "effect": { "type": "buff", "buff_type": "speed", "value": 10 }
       },
       {
         "id": "zeke_chief_people_officer",
@@ -80,7 +80,7 @@
         "pos": [1, 5],
         "cost_ap": 5,
         "requires": ["zeke_professional_development", "zeke_employee_survey"],
-        "effect": { "type": "buff", "buff_type": "attack", "value": 15, "rp_cost": 15 }
+        "effect": { "type": "buff", "buff_type": "attack", "value": 15 }
       }
     ],
     "Administration": [
@@ -90,7 +90,7 @@
             "pos": [1,0],
             "cost_ap": 1,
             "requires": [],
-            "effect": { "type": "utility", "subtype": "organize", "rp_cost": 0 }
+            "effect": { "type": "utility", "subtype": "organize" }
         },
         {
             "id": "zeke_budgeting",
@@ -98,7 +98,7 @@
             "pos": [0,0],
             "cost_ap": 1,
             "requires": [],
-            "effect": { "type": "buff", "buff_type": "defense", "value": 5, "rp_cost": 0 }
+            "effect": { "type": "buff", "buff_type": "defense", "value": 5 }
         },
         {
             "id": "zeke_paperwork_mastery",
@@ -106,7 +106,7 @@
             "pos": [2,0],
             "cost_ap": 1,
             "requires": [],
-            "effect": { "type": "buff", "buff_type": "accuracy", "value": 5, "rp_cost": 0 }
+            "effect": { "type": "buff", "buff_type": "accuracy", "value": 5 }
         },
         {
             "id": "zeke_resource_allocation",
@@ -114,7 +114,7 @@
             "pos": [1,1],
             "cost_ap": 1,
             "requires": ["zeke_filing_system"],
-            "effect": { "type": "utility", "subtype": "allocate", "rp_cost": 5 }
+            "effect": { "type": "utility", "subtype": "allocate" }
         },
         {
             "id": "zeke_policy_manual",
@@ -122,7 +122,7 @@
             "pos": [0,2],
             "cost_ap": 2,
             "requires": ["zeke_resource_allocation"],
-            "effect": { "type": "buff", "buff_type": "defense", "value": 5, "rp_cost": 5 }
+            "effect": { "type": "buff", "buff_type": "defense", "value": 5 }
         },
         {
             "id": "zeke_audit",
@@ -130,7 +130,7 @@
             "pos": [2,2],
             "cost_ap": 2,
             "requires": ["zeke_resource_allocation"],
-            "effect": { "type": "utility", "subtype": "investigate", "rp_cost": 8 }
+            "effect": { "type": "utility", "subtype": "investigate" }
         },
         {
             "id": "zeke_compliance_check",
@@ -138,7 +138,7 @@
             "pos": [1,3],
             "cost_ap": 3,
             "requires": ["zeke_policy_manual", "zeke_audit"],
-            "effect": { "type": "buff", "buff_type": "attack", "value": 5, "rp_cost": 8 }
+            "effect": { "type": "buff", "buff_type": "attack", "value": 5 }
         },
         {
             "id": "zeke_office_renovation",
@@ -146,7 +146,7 @@
             "pos": [0,4],
             "cost_ap": 3,
             "requires": ["zeke_compliance_check"],
-            "effect": { "type": "heal", "value": 10, "rp_cost": 12 }
+            "effect": { "type": "heal", "value": 10 }
         },
         {
             "id": "zeke_process_optimization",
@@ -154,7 +154,7 @@
             "pos": [2,4],
             "cost_ap": 3,
             "requires": ["zeke_compliance_check"],
-            "effect": { "type": "buff", "buff_type": "speed", "value": 10, "rp_cost": 12 }
+            "effect": { "type": "buff", "buff_type": "speed", "value": 10 }
         },
         {
             "id": "zeke_executive_order",
@@ -162,7 +162,7 @@
             "pos": [1,5],
             "cost_ap": 5,
             "requires": ["zeke_process_optimization", "zeke_office_renovation"],
-            "effect": { "type": "buff", "buff_type": "attack", "value": 20, "rp_cost": 15 }
+            "effect": { "type": "buff", "buff_type": "attack", "value": 20 }
         }
     ],
     "Operations": [
@@ -172,7 +172,7 @@
             "pos": [1,0],
             "cost_ap": 1,
             "requires": [],
-            "effect": { "type": "buff", "buff_type": "speed", "value": 5, "rp_cost": 0 }
+            "effect": { "type": "buff", "buff_type": "speed", "value": 5 }
         },
         {
             "id": "zeke_workflow_charts",
@@ -180,7 +180,7 @@
             "pos": [0,0],
             "cost_ap": 1,
             "requires": [],
-            "effect": { "type": "utility", "subtype": "plan", "rp_cost": 0 }
+            "effect": { "type": "utility", "subtype": "plan" }
         },
         {
             "id": "zeke_standard_procedure",
@@ -188,7 +188,7 @@
             "pos": [2,0],
             "cost_ap": 1,
             "requires": [],
-            "effect": { "type": "buff", "buff_type": "defense", "value": 5, "rp_cost": 0 }
+            "effect": { "type": "buff", "buff_type": "defense", "value": 5 }
         },
         {
             "id": "zeke_supply_chain",
@@ -196,7 +196,7 @@
             "pos": [1,1],
             "cost_ap": 1,
             "requires": ["zeke_load_balancing"],
-            "effect": { "type": "utility", "subtype": "supply", "rp_cost": 5 }
+            "effect": { "type": "utility", "subtype": "supply" }
         },
         {
             "id": "zeke_quality_assurance",
@@ -204,7 +204,7 @@
             "pos": [0,2],
             "cost_ap": 2,
             "requires": ["zeke_supply_chain"],
-            "effect": { "type": "buff", "buff_type": "attack", "value": 5, "rp_cost": 5 }
+            "effect": { "type": "buff", "buff_type": "attack", "value": 5 }
         },
         {
             "id": "zeke_logistics",
@@ -212,7 +212,7 @@
             "pos": [2,2],
             "cost_ap": 2,
             "requires": ["zeke_supply_chain"],
-            "effect": { "type": "utility", "subtype": "move", "rp_cost": 8 }
+            "effect": { "type": "utility", "subtype": "move" }
         },
         {
             "id": "zeke_risk_management",
@@ -220,7 +220,7 @@
             "pos": [1,3],
             "cost_ap": 3,
             "requires": ["zeke_quality_assurance", "zeke_logistics"],
-            "effect": { "type": "buff", "buff_type": "defense", "value": 10, "rp_cost": 8 }
+            "effect": { "type": "buff", "buff_type": "defense", "value": 10 }
         },
         {
             "id": "zeke_production_boost",
@@ -228,7 +228,7 @@
             "pos": [0,4],
             "cost_ap": 3,
             "requires": ["zeke_risk_management"],
-            "effect": { "type": "buff", "buff_type": "attack", "value": 10, "rp_cost": 12 }
+            "effect": { "type": "buff", "buff_type": "attack", "value": 10 }
         },
         {
             "id": "zeke_emergency_protocol",
@@ -236,7 +236,7 @@
             "pos": [2,4],
             "cost_ap": 3,
             "requires": ["zeke_risk_management"],
-            "effect": { "type": "utility", "subtype": "panic", "rp_cost": 12 }
+            "effect": { "type": "utility", "subtype": "panic" }
         },
         {
             "id": "zeke_operations_overlord",
@@ -244,7 +244,7 @@
             "pos": [1,5],
             "cost_ap": 5,
             "requires": ["zeke_production_boost", "zeke_emergency_protocol"],
-            "effect": { "type": "buff", "buff_type": "attack", "value": 20, "rp_cost": 15 }
+            "effect": { "type": "buff", "buff_type": "attack", "value": 20 }
         }
     ]
   }

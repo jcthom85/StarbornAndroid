@@ -22,7 +22,6 @@ message GameSessionProto {
   repeated string party_members = 16;
   repeated InventoryEntryProto inventory = 17;
   map<string, int32> party_member_hp = 18;
-  map<string, int32> party_member_rp = 19;
   int64 last_saved_ms = 20;
   repeated string tutorial_seen = 21;
   repeated string tutorial_completed = 22;
@@ -31,15 +30,20 @@ message GameSessionProto {
   repeated string failed_quests = 25;
   repeated string milestone_history = 26;
   map<string, string> equipped_items = 27;
-  int32 resonance = 28;
-  int32 resonance_min = 29;
-  int32 resonance_max = 30;
-  int32 resonance_start_base = 31;
   map<string, string> quest_stage = 32;
   map<string, QuestTaskListProto> quest_tasks = 33;
   repeated string completed_events = 34;
   repeated string unlocked_areas = 35;
   repeated string unlocked_exits = 36;
+  repeated string unlocked_weapons = 37;
+  map<string, string> equipped_weapons = 38;
+  repeated string unlocked_armors = 39;
+  map<string, string> equipped_armors = 40;
+
+  reserved 19;
+  reserved 28, 29, 30, 31;
+  reserved "party_member_rp";
+  reserved "resonance", "resonance_min", "resonance_max", "resonance_start_base";
 }
 
 message InventoryEntryProto {

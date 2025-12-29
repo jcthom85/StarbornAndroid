@@ -273,5 +273,61 @@
       "trade_label": "Show me the goods",
       "leave_label": "Maybe later"
     }
+  },
+  "tysons_provisions": {
+    "name": "Tyson's Provisions",
+    "greeting": "Tyson: If you're paying, I'm selling. If you're not, keep your hands where I can see 'em.",
+    "pricing": {
+      "sell_markup": 1.2,
+      "buy_markdown": 0.35
+    },
+    "sells": {
+      "items": [
+        "ration_pack",
+        "black_coffee",
+        "medkit_i",
+        "battery_pack",
+        "scrap_metal",
+        "wiring_bundle"
+      ],
+      "rules": {
+        "types_in": [],
+        "subtypes_in": []
+      },
+      "gates": {}
+    },
+    "buys": {
+      "accept_types": [
+        "consumable",
+        "weapon",
+        "armor",
+        "accessory",
+        "ingredient",
+        "component"
+      ],
+      "blacklist": []
+    },
+    "dialogue": {
+      "preface": [
+        {
+          "speaker": "Tyson",
+          "text": "If the mine's calling you, take a medkit. That's not a suggestion."
+        }
+      ],
+      "smalltalk": [
+        {
+          "id": "shop_tyson_rumor",
+          "label": "Ask what's been moving",
+          "response": [
+            {
+              "speaker": "Tyson",
+              "text": "Ration shipments are light. Someone upstream is skimming or something's eating the supply lines."
+            }
+          ]
+        }
+      ],
+      "trade_label": "Browse provisions",
+      "leave_label": "Back"
+    }
   }
 }

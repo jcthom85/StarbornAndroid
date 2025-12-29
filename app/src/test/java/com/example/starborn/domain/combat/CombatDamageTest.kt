@@ -14,7 +14,6 @@ class CombatDamageTest {
         side = CombatSide.PLAYER,
         stats = StatBlock(
             maxHp = 100,
-            maxRp = 10,
             strength = 20,
             vitality = 10,
             agility = 10,
@@ -28,7 +27,7 @@ class CombatDamageTest {
         id = "enemy_neutral",
         name = "Neutral",
         side = CombatSide.ENEMY,
-        stats = StatBlock(70, 5, 8, 6, 6, 6, 4, 8),
+        stats = StatBlock(70, 8, 6, 6, 6, 4, 8),
         resistances = ResistanceProfile(physical = 0)
     )
 
@@ -36,7 +35,7 @@ class CombatDamageTest {
         id = "enemy_resistant",
         name = "Resistant",
         side = CombatSide.ENEMY,
-        stats = StatBlock(70, 5, 8, 6, 6, 6, 4, 8),
+        stats = StatBlock(70, 8, 6, 6, 6, 4, 8),
         resistances = ResistanceProfile(physical = 50, fire = 25)
     )
 
@@ -44,7 +43,7 @@ class CombatDamageTest {
         id = "enemy_vulnerable",
         name = "Vulnerable",
         side = CombatSide.ENEMY,
-        stats = StatBlock(70, 5, 8, 6, 6, 6, 4, 8),
+        stats = StatBlock(70, 8, 6, 6, 6, 4, 8),
         resistances = ResistanceProfile(physical = -20, fire = -50)
     )
 

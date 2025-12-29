@@ -9,7 +9,8 @@ data class Combatant(
     val stats: StatBlock,
     val resistances: ResistanceProfile = ResistanceProfile(),
     val skills: List<String> = emptyList(),
-    val initiativeModifier: Int = 0
+    val initiativeModifier: Int = 0,
+    val weapon: CombatWeapon? = null
 )
 
 enum class CombatSide {
@@ -20,13 +21,16 @@ enum class CombatSide {
 
 data class StatBlock(
     val maxHp: Int,
-    val maxRp: Int,
     val strength: Int,
     val vitality: Int,
     val agility: Int,
     val focus: Int,
     val luck: Int,
-    val speed: Int
+    val speed: Int,
+    val accuracyBonus: Double = 0.0,
+    val evasionBonus: Double = 0.0,
+    val critBonus: Double = 0.0,
+    val flatDamageReduction: Int = 0
 )
 
 data class ResistanceProfile(
@@ -43,10 +47,10 @@ data class ResistanceProfile(
 data class CombatantState(
     val combatant: Combatant,
     val hp: Int,
-    val rp: Int,
     val buffs: List<ActiveBuff> = emptyList(),
     val statusEffects: List<StatusEffect> = emptyList(),
-    val elementStacks: Map<String, Int> = emptyMap()
+    val elementStacks: Map<String, Int> = emptyMap(),
+    val weaponCharge: WeaponChargeState? = null
 ) {
     val isAlive: Boolean get() = hp > 0
 }
@@ -105,6 +109,11 @@ sealed interface CombatAction {
         val targetId: String
     ) : CombatAction
 
+    data class SupportAbility(
+        override val actorId: String,
+        val targetId: String
+    ) : CombatAction
+
     data class SkillUse(
         override val actorId: String,
         val skillId: String,
@@ -114,6 +123,12 @@ sealed interface CombatAction {
     data class ItemUse(
         override val actorId: String,
         val itemId: String,
+        val targetId: String? = null
+    ) : CombatAction
+
+    data class SnackUse(
+        override val actorId: String,
+        val snackItemId: String,
         val targetId: String? = null
     ) : CombatAction
 

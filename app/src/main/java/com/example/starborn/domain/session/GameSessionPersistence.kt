@@ -8,6 +8,7 @@ import androidx.datastore.dataStoreFile
 import com.example.starborn.datastore.GameSessionProto
 import com.example.starborn.datastore.InventoryEntryProto
 import com.example.starborn.datastore.QuestTaskListProto
+import com.example.starborn.domain.inventory.GearRules
 import com.example.starborn.domain.inventory.ItemCatalog
 import java.io.File
 import java.util.Locale
@@ -221,7 +222,6 @@ private fun GameSessionProto.toState(): GameSessionState = GameSessionState(
     partyMemberXp = partyMemberXpMap,
     partyMemberLevels = partyMemberLevelsMap,
     partyMemberHp = partyMemberHpMap,
-    partyMemberRp = partyMemberRpMap,
     trackedQuestId = trackedQuestId.orEmpty().ifBlank { null },
     activeQuests = activeQuestsList.toSet(),
     completedQuests = completedQuestsList.toSet(),
@@ -230,9 +230,13 @@ private fun GameSessionProto.toState(): GameSessionState = GameSessionState(
     milestoneHistory = milestoneHistoryList,
     learnedSchematics = learnedSchematicsList.toSet(),
     unlockedSkills = unlockedSkillsList.toSet(),
+    unlockedWeapons = unlockedWeaponsList.toSet(),
+    unlockedArmors = unlockedArmorsList.toSet(),
     partyMembers = partyMembersList,
     inventory = inventoryList.associate { entry -> entry.itemId to entry.quantity },
     equippedItems = equippedItemsMap,
+    equippedWeapons = equippedWeaponsMap,
+    equippedArmors = equippedArmorsMap,
     tutorialSeen = tutorialSeenList.toSet(),
     tutorialCompleted = tutorialCompletedList.toSet(),
     tutorialRoomsSeen = tutorialRoomsSeenList.toSet(),
@@ -242,11 +246,7 @@ private fun GameSessionProto.toState(): GameSessionState = GameSessionState(
     },
     completedEvents = completedEventsList.toSet(),
     unlockedAreas = unlockedAreasList.toSet(),
-    unlockedExits = unlockedExitsList.toSet(),
-    resonance = resonance,
-    resonanceMin = resonanceMin,
-    resonanceMax = resonanceMax.takeIf { it > 0 } ?: 100,
-    resonanceStartBase = resonanceStartBase
+    unlockedExits = unlockedExitsList.toSet()
 )
 
 private fun GameSessionState.toProto(savedAt: Long = System.currentTimeMillis()): GameSessionProto = GameSessionProto.newBuilder().apply {
@@ -261,7 +261,6 @@ private fun GameSessionState.toProto(savedAt: Long = System.currentTimeMillis())
     putAllPartyMemberXp(this@toProto.partyMemberXp)
     putAllPartyMemberLevels(this@toProto.partyMemberLevels)
     putAllPartyMemberHp(this@toProto.partyMemberHp)
-    putAllPartyMemberRp(this@toProto.partyMemberRp)
     trackedQuestId = this@toProto.trackedQuestId.orEmpty()
     addAllActiveQuests(this@toProto.activeQuests)
     addAllCompletedQuests(this@toProto.completedQuests)
@@ -272,6 +271,8 @@ private fun GameSessionState.toProto(savedAt: Long = System.currentTimeMillis())
     addAllMilestoneHistory(this@toProto.milestoneHistory)
     addAllLearnedSchematics(this@toProto.learnedSchematics)
     addAllUnlockedSkills(this@toProto.unlockedSkills)
+    addAllUnlockedWeapons(this@toProto.unlockedWeapons)
+    addAllUnlockedArmors(this@toProto.unlockedArmors)
     addAllPartyMembers(this@toProto.partyMembers)
     clearInventory()
     this@toProto.inventory.forEach { (itemId, quantity) ->
@@ -283,6 +284,8 @@ private fun GameSessionState.toProto(savedAt: Long = System.currentTimeMillis())
         )
     }
     putAllEquippedItems(this@toProto.equippedItems)
+    putAllEquippedWeapons(this@toProto.equippedWeapons)
+    putAllEquippedArmors(this@toProto.equippedArmors)
     clearTutorialSeen()
     addAllTutorialSeen(this@toProto.tutorialSeen)
     clearTutorialCompleted()
@@ -308,10 +311,6 @@ private fun GameSessionState.toProto(savedAt: Long = System.currentTimeMillis())
             )
         }
     }
-    resonance = this@toProto.resonance
-    resonanceMin = this@toProto.resonanceMin
-    resonanceMax = this@toProto.resonanceMax
-    resonanceStartBase = this@toProto.resonanceStartBase
     lastSavedMs = savedAt
 }.build()
 
@@ -331,6 +330,21 @@ fun GameSessionPersistence.importLegacySave(file: File, itemCatalog: ItemCatalog
             ?: normalizedKey
     }
 
+    fun isWeaponItem(itemId: String): Boolean {
+        val item = itemCatalog.findItem(itemId) ?: return false
+        val normalizedType = item.type.trim().lowercase(Locale.getDefault())
+        return normalizedType == "weapon" ||
+            GearRules.isWeaponType(normalizedType) ||
+            item.equipment?.slot?.equals("weapon", ignoreCase = true) == true
+    }
+
+    fun weaponOwnerFor(itemId: String): String? {
+        val item = itemCatalog.findItem(itemId) ?: return null
+        val weaponType = item.equipment?.weaponType?.trim()?.lowercase(Locale.getDefault())
+        val fallbackType = item.type.trim().lowercase(Locale.getDefault())
+        return GearRules.characterForWeaponType(weaponType ?: fallbackType)
+    }
+
     val partyMembers = mutableListOf<String>()
     val partyArray = gameState.optJSONArray("party")
     if (partyArray != null) {
@@ -343,12 +357,18 @@ fun GameSessionPersistence.importLegacySave(file: File, itemCatalog: ItemCatalog
 
     val inventoryJson = gameState.optJSONObject("inventory")
     val inventory = mutableMapOf<String, Int>()
+    val unlockedWeapons = mutableSetOf<String>()
+    val equippedWeapons = mutableMapOf<String, String>()
     inventoryJson?.keys()?.forEachRemaining { key ->
         val quantity = inventoryJson.optInt(key, 0)
         if (quantity > 0) {
             val itemId = resolveItemId(key)
-            val existing = inventory[itemId] ?: 0
-            inventory[itemId] = existing + quantity
+            if (isWeaponItem(itemId)) {
+                unlockedWeapons += itemId
+            } else {
+                val existing = inventory[itemId] ?: 0
+                inventory[itemId] = existing + quantity
+            }
         }
     }
 
@@ -357,6 +377,13 @@ fun GameSessionPersistence.importLegacySave(file: File, itemCatalog: ItemCatalog
     val partyHp = mutableMapOf<String, Int>()
     val baseEquipment = mutableMapOf<String, String>()
     val scopedEquipment = mutableMapOf<String, String>()
+    fun registerWeaponEquip(characterId: String?, weaponId: String) {
+        unlockedWeapons += weaponId
+        val ownerId = characterId?.trim()?.lowercase(Locale.getDefault()) ?: return
+        if (!equippedWeapons.containsKey(ownerId)) {
+            equippedWeapons[ownerId] = weaponId
+        }
+    }
     characters.keys().forEachRemaining { id ->
         val entry = characters.optJSONObject(id) ?: return@forEachRemaining
         partyLevels[id] = entry.optInt("level", 1)
@@ -367,13 +394,18 @@ fun GameSessionPersistence.importLegacySave(file: File, itemCatalog: ItemCatalog
             val rawItemId = equipment.optString(slot)?.trim()
             val itemId = rawItemId?.takeIf { it.isNotBlank() }?.let { resolveItemId(it) } ?: return@forEachRemaining
             val normalizedSlot = slot.lowercase(Locale.getDefault())
-            val scopedKey = "${id.lowercase(Locale.getDefault())}:$normalizedSlot"
-            scopedEquipment[scopedKey] = itemId
-            if (!inventory.containsKey(itemId)) {
-                inventory[itemId] = 1
-            }
-            if (playerId != null && playerId.equals(id, ignoreCase = true)) {
-                baseEquipment.putIfAbsent(normalizedSlot, itemId)
+            if (normalizedSlot == "weapon" || isWeaponItem(itemId)) {
+                val ownerId = weaponOwnerFor(itemId) ?: id
+                registerWeaponEquip(ownerId, itemId)
+            } else {
+                val scopedKey = "${id.lowercase(Locale.getDefault())}:$normalizedSlot"
+                scopedEquipment[scopedKey] = itemId
+                if (!inventory.containsKey(itemId)) {
+                    inventory[itemId] = 1
+                }
+                if (playerId != null && playerId.equals(id, ignoreCase = true)) {
+                    baseEquipment.putIfAbsent(normalizedSlot, itemId)
+                }
             }
         }
     }
@@ -434,10 +466,6 @@ fun GameSessionPersistence.importLegacySave(file: File, itemCatalog: ItemCatalog
     val credits = gameState.optInt("credits", 0)
     val playerLevel = playerId?.let { partyLevels[it] } ?: partyLevels.values.firstOrNull() ?: 1
     val playerXp = playerId?.let { partyXp[it] } ?: partyXp.values.firstOrNull() ?: 0
-    val resonance = gameState.optInt("resonance", 0)
-    val resonanceMin = gameState.optInt("resonance_min", 0)
-    val resonanceMax = gameState.optInt("resonance_max", 100)
-    val resonanceStartBase = gameState.optInt("resonance_start_base", 0)
 
     val equipmentJson = gameState.optJSONObject("equipment")
     equipmentJson?.keys()?.forEachRemaining { slot ->
@@ -445,9 +473,14 @@ fun GameSessionPersistence.importLegacySave(file: File, itemCatalog: ItemCatalog
         if (!itemId.isNullOrBlank()) {
             val resolvedId = resolveItemId(itemId)
             val normalizedSlot = slot.lowercase(Locale.getDefault())
-            baseEquipment.putIfAbsent(normalizedSlot, resolvedId)
-            if (!inventory.containsKey(resolvedId)) {
-                inventory[resolvedId] = 1
+            if (normalizedSlot == "weapon" || isWeaponItem(resolvedId)) {
+                val ownerId = weaponOwnerFor(resolvedId) ?: playerId
+                registerWeaponEquip(ownerId, resolvedId)
+            } else {
+                baseEquipment.putIfAbsent(normalizedSlot, resolvedId)
+                if (!inventory.containsKey(resolvedId)) {
+                    inventory[resolvedId] = 1
+                }
             }
         }
     }
@@ -476,20 +509,17 @@ fun GameSessionPersistence.importLegacySave(file: File, itemCatalog: ItemCatalog
         partyMemberLevels = partyLevels,
         partyMemberXp = partyXp,
         partyMemberHp = partyHp,
-        partyMemberRp = emptyMap(),
         inventory = inventory.filterValues { it > 0 },
         equippedItems = equippedItems,
+        unlockedWeapons = unlockedWeapons,
+        equippedWeapons = equippedWeapons,
         trackedQuestId = trackedQuestId,
         activeQuests = activeQuests,
         completedQuests = completedQuests,
         failedQuests = failedQuests,
         completedMilestones = completedMilestones,
         milestoneHistory = completedMilestones.toList(),
-        learnedSchematics = learnedSchematics,
-        resonance = resonance,
-        resonanceMin = resonanceMin,
-        resonanceMax = resonanceMax,
-        resonanceStartBase = resonanceStartBase
+        learnedSchematics = learnedSchematics
     )
 }
 
@@ -501,26 +531,59 @@ private fun importSimpleSave(root: JSONObject, itemCatalog: ItemCatalog): GameSe
             ?: normalizedKey
     }
 
+    fun isWeaponItem(itemId: String): Boolean {
+        val item = itemCatalog.findItem(itemId) ?: return false
+        val normalizedType = item.type.trim().lowercase(Locale.getDefault())
+        return normalizedType == "weapon" ||
+            GearRules.isWeaponType(normalizedType) ||
+            item.equipment?.slot?.equals("weapon", ignoreCase = true) == true
+    }
+
+    fun weaponOwnerFor(itemId: String): String? {
+        val item = itemCatalog.findItem(itemId) ?: return null
+        val weaponType = item.equipment?.weaponType?.trim()?.lowercase(Locale.getDefault())
+        val fallbackType = item.type.trim().lowercase(Locale.getDefault())
+        return GearRules.characterForWeaponType(weaponType ?: fallbackType)
+    }
+
     val inventoryJson = root.optJSONObject("inventory")
     val inventory = mutableMapOf<String, Int>()
+    val unlockedWeapons = mutableSetOf<String>()
+    val equippedWeapons = mutableMapOf<String, String>()
     inventoryJson?.keys()?.forEachRemaining { key ->
         val quantity = inventoryJson.optInt(key, 0)
         if (quantity > 0) {
             val itemId = resolveItemId(key)
-            val existing = inventory[itemId] ?: 0
-            inventory[itemId] = existing + quantity
+            if (isWeaponItem(itemId)) {
+                unlockedWeapons += itemId
+            } else {
+                val existing = inventory[itemId] ?: 0
+                inventory[itemId] = existing + quantity
+            }
         }
     }
     val equipmentJson = root.optJSONObject("equipment")
     val baseEquipment = mutableMapOf<String, String>()
+    fun registerWeaponEquip(characterId: String?, weaponId: String) {
+        unlockedWeapons += weaponId
+        val ownerId = characterId?.trim()?.lowercase(Locale.getDefault()) ?: return
+        if (!equippedWeapons.containsKey(ownerId)) {
+            equippedWeapons[ownerId] = weaponId
+        }
+    }
     equipmentJson?.keys()?.forEachRemaining { slot ->
         val id = equipmentJson.optString(slot)?.trim()
         if (!id.isNullOrBlank()) {
             val normalizedSlot = slot.lowercase(Locale.getDefault())
             val resolvedId = resolveItemId(id)
-            baseEquipment[normalizedSlot] = resolvedId
-            if (!inventory.containsKey(resolvedId)) {
-                inventory[resolvedId] = 1
+            if (normalizedSlot == "weapon" || isWeaponItem(resolvedId)) {
+                val ownerId = weaponOwnerFor(resolvedId)
+                registerWeaponEquip(ownerId, resolvedId)
+            } else {
+                baseEquipment[normalizedSlot] = resolvedId
+                if (!inventory.containsKey(resolvedId)) {
+                    inventory[resolvedId] = 1
+                }
             }
         }
     }
@@ -550,6 +613,8 @@ private fun importSimpleSave(root: JSONObject, itemCatalog: ItemCatalog): GameSe
         playerCredits = root.optInt("credits", 0),
         inventory = inventory,
         equippedItems = equipped,
+        unlockedWeapons = unlockedWeapons,
+        equippedWeapons = equippedWeapons,
         playerLevel = 1,
         playerXp = 0
     )

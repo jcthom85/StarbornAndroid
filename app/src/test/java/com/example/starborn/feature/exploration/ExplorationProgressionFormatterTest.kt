@@ -46,8 +46,7 @@ class ExplorationProgressionFormatterTest {
             partyMembers = listOf("nova"),
             partyMemberLevels = mapOf("nova" to 2),
             partyMemberXp = mapOf("nova" to 150),
-            partyMemberHp = mapOf("nova" to 72),
-            partyMemberRp = mapOf("nova" to 18)
+            partyMemberHp = mapOf("nova" to 72)
         )
         val status = buildPartyStatusUi(
             sessionState = session,
@@ -57,11 +56,10 @@ class ExplorationProgressionFormatterTest {
         )
         assertEquals(1, status.members.size)
         assertEquals("72 / 120 HP", status.members.first().hpLabel)
-        assertEquals("18 / 30 Focus", status.members.first().rpLabel)
     }
 
     @Test
-    fun progressionSummaryIncludesHpAndRpLabels() {
+    fun progressionSummaryIncludesHpLabel() {
         val session = GameSessionState(
             playerId = "nova",
             playerLevel = 2,
@@ -70,7 +68,6 @@ class ExplorationProgressionFormatterTest {
             partyMemberLevels = mapOf("nova" to 2),
             partyMemberXp = mapOf("nova" to 120),
             partyMemberHp = mapOf("nova" to 80),
-            partyMemberRp = mapOf("nova" to 20),
             playerAp = 4,
             playerCredits = 250
         )
@@ -81,6 +78,5 @@ class ExplorationProgressionFormatterTest {
         )
         assertNotNull(summary.hpLabel)
         assertEquals("80 / 120 HP", summary.hpLabel)
-        assertEquals("20 / 30 Focus", summary.rpLabel)
     }
 }

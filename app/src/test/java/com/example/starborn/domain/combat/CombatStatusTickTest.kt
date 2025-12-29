@@ -28,7 +28,6 @@ class CombatStatusTickTest {
         side = CombatSide.PLAYER,
         stats = StatBlock(
             maxHp = 100,
-            maxRp = 10,
             strength = 20,
             vitality = 10,
             agility = 8,
@@ -44,7 +43,6 @@ class CombatStatusTickTest {
         side = CombatSide.ENEMY,
         stats = StatBlock(
             maxHp = 80,
-            maxRp = 5,
             strength = 12,
             vitality = 8,
             agility = 6,

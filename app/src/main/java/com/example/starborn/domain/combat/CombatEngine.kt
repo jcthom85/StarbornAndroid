@@ -14,8 +14,7 @@ class CombatEngine(
         val combatants = setup.allCombatants.associate { combatant ->
             combatant.id to CombatantState(
                 combatant = combatant,
-                hp = combatant.stats.maxHp,
-                rp = combatant.stats.maxRp
+                hp = combatant.stats.maxHp
             )
         }
         return CombatState(
@@ -66,7 +65,8 @@ class CombatEngine(
         targetId: String,
         amount: Int,
         element: String?,
-        applyElementStacks: Boolean = true
+        applyElementStacks: Boolean = true,
+        critical: Boolean = false
     ): CombatState {
         val targetState = state.combatants[targetId] ?: return state
         val clamped = if (amount < 0) 0 else amount
@@ -78,7 +78,7 @@ class CombatEngine(
             targetId = targetId,
             amount = clamped,
             element = element,
-            critical = false
+            critical = critical
         )
         val normalizedElement = ElementalStackRules.normalize(element)
         var working = state.copy(
@@ -120,22 +120,6 @@ class CombatEngine(
         return state.copy(
             combatants = state.combatants + (targetId to updated),
             log = state.log + logEntry
-        )
-    }
-
-    fun restoreResource(
-        state: CombatState,
-        targetId: String,
-        amount: Int
-    ): CombatState {
-        if (amount <= 0) return state
-        val targetState = state.combatants[targetId] ?: return state
-        val maxRp = targetState.combatant.stats.maxRp
-        val newRp = (targetState.rp + amount).coerceAtMost(maxRp)
-        if (newRp == targetState.rp) return state
-        val updated = targetState.copy(rp = newRp)
-        return state.copy(
-            combatants = state.combatants + (targetId to updated)
         )
     }
 
@@ -488,8 +472,19 @@ class CombatEngine(
             "void" -> profile.void
             else -> profile.physical
         } ?: 0
-        val general = CombatFormulas.generalResistance(targetState.combatant.stats.focus)
+        val general = CombatFormulas.generalResistance(effectiveFocus(targetState))
         return (base + general).toDouble()
+    }
+
+    private fun effectiveFocus(targetState: CombatantState): Int {
+        if (targetState.buffs.isEmpty()) return targetState.combatant.stats.focus
+        val bonus = targetState.buffs.sumOf { buff ->
+            when (buff.effect.stat.lowercase()) {
+                "focus", "foc", "fcs", "int", "psi" -> buff.effect.value
+                else -> 0
+            }
+        }
+        return (targetState.combatant.stats.focus + bonus).coerceAtLeast(0)
     }
 
     companion object {

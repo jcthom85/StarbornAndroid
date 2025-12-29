@@ -294,7 +294,9 @@
       "east": "market_4"
     },
     "items": [],
-    "npcs": [],
+    "npcs": [
+      "Tyson"
+    ],
     "enemies": [],
     "actions": [
       {
@@ -302,6 +304,12 @@
         "type": "generic",
         "action_event": "scrap_run_talk_tyson",
         "condition_unmet_message": "Tyson leans over the counter, waiting for you to respond."
+      },
+      {
+        "name": "Shop",
+        "type": "shop",
+        "shop_id": "tysons_provisions",
+        "condition_unmet_message": "Tyson wipes down the counter. \"Come back later.\""
       },
       {
         "name": "Ration Crate",
@@ -479,11 +487,11 @@
   },
   {
     "id": "mines_10",
-    "title": "Burrower's Nest",
+    "title": "Driller's Den",
     "env": "mine",
     "weather": "cave_drip",
     "background_image": "images/rooms/world_1/burrowers_nest_1.png",
-    "description": "An oval chamber braced by warped timbers and fresh claw-gouges.",
+    "description": "A reinforced chamber shudders with each grinding pulse of the Driller's core.",
     "pos": [
       -1,
       6
@@ -495,7 +503,20 @@
     "items": [],
     "npcs": [],
     "enemies": [
-      "burrower"
+      "driller_core",
+      "driller_drill_arm",
+      "driller_cutter_arm",
+      "driller_fire_arm",
+      "driller_grabber_arm"
+    ],
+    "enemy_parties": [
+      [
+        "driller_core",
+        "driller_drill_arm",
+        "driller_cutter_arm",
+        "driller_fire_arm",
+        "driller_grabber_arm"
+      ]
     ],
     "actions": [],
     "state": {
@@ -504,14 +525,18 @@
     },
     "item_flavor": {},
     "enemy_flavor": {
-      "burrower": "A massive Burrower heaves from a central bore, armored hide rasping stone."
+      "driller_core": "The Driller's core grinds against the rock, arms swiveling for the strike.",
+      "driller_drill_arm": "A drill arm spins up with a shrill whine.",
+      "driller_cutter_arm": "The cutter arm charges a neon-green edge.",
+      "driller_fire_arm": "A fire arm vents heat into the dripping air.",
+      "driller_grabber_arm": "A grabber arm flexes, ready to clamp down."
     },
     "dark": true,
     "description_dark": "It's too dark to see anything. I need to find a way to get the lights on.",
     "blocked_directions": {
       "north": {
         "type": "enemy",
-        "enemy_id": "burrower"
+        "enemy_id": "driller_core"
       },
       "south": {
         "type": "lock",
@@ -553,7 +578,7 @@
     "blocked_directions": {
       "south": {
         "type": "enemy",
-        "enemy_id": "burrower"
+        "enemy_id": "driller_core"
       }
     },
     "state": {
@@ -561,7 +586,7 @@
       "light_on": false
     },
     "item_flavor": {
-      "Energy Core": "The glowing core hums with contained power."
+      "energy_core": "A stabilized energy core rests in a cradle of alloy teeth, humming like a held breath."
     },
     "enemy_flavor": {},
     "dark": true,
@@ -587,7 +612,9 @@
     },
     "items": [],
     "npcs": [],
-    "enemies": [],
+    "enemies": [
+      "burrower"
+    ],
     "actions": [],
     "state": {
       "dark": true,
@@ -595,6 +622,7 @@
     },
   "item_flavor": {},
   "enemy_flavor": {
+    "burrower": "A massive Burrower prowls the vestibule, scraping sparks from the stone."
   },
     "dark": true,
     "description_dark": "It's too dark to see anything. I need to find a way to get the lights on.",
@@ -623,7 +651,9 @@
     },
     "items": [],
     "npcs": [],
-    "enemies": [],
+    "enemies": [
+      "burrower"
+    ],
     "actions": [
       {
         "type": "toggle",
@@ -663,7 +693,16 @@
     "items": [],
     "npcs": [],
     "enemies": [
+      "fume_bat",
+      "fume_bat",
       "scraphopper"
+    ],
+    "enemy_parties": [
+      [
+        "fume_bat",
+        "fume_bat",
+        "scraphopper"
+      ]
     ],
     "actions": [],
     "state": {
@@ -672,24 +711,9 @@
     },
     "item_flavor": {},
     "enemy_flavor": {
-      "scraphopper": "A scraphopper eyes you from the corner of the room."
+      "fume_bat": "Fume bats drift through the runoff, claws scraping stone.",
+      "scraphopper": "A scraphopper rattles in the shadows, jump servos whining."
     },
-    "enemy_instances": [
-      {
-        "enemy_id": "scraphopper",
-        "override_drops": [
-          { "id": "basic_blaster", "chance": 1.0, "qty_min": 1, "qty_max": 1 },
-          { "id": "basic_slingshot", "chance": 1.0, "qty_min": 1, "qty_max": 1 },
-          { "id": "basic_vest", "chance": 1.0, "qty_min": 1, "qty_max": 1 },
-          { "id": "basic_jacket", "chance": 1.0, "qty_min": 1, "qty_max": 1 },
-          { "id": "digital_watch", "chance": 1.0, "qty_min": 1, "qty_max": 1 },
-          { "id": "gadget_belt", "chance": 1.0, "qty_min": 1, "qty_max": 1 },
-          { "id": "starbar_crunch", "chance": 1.0, "qty_min": 1, "qty_max": 2 },
-          { "id": "mineral_trail_mix", "chance": 1.0, "qty_min": 1, "qty_max": 2 },
-          { "id": "comet_gummies", "chance": 1.0, "qty_min": 1, "qty_max": 2 }
-        ]
-      }
-    ],
     "dark": true,
     "description_dark": "It's too dark to see anything. I need to find a way to get the lights on."
   },
@@ -898,7 +922,9 @@
       "breaker_on": false
     },
     "item_flavor": {},
-    "enemy_flavor": {},
+    "enemy_flavor": {
+      "burrower": "A burrower has wedged itself into the niche, guarding the breaker."
+    },
     "dark": true,
     "description_dark": "It's too dark to see anything. I need to find a way to get the lights on."
   },
@@ -1165,14 +1191,7 @@
       "Sam"
     ],
     "enemies": [],
-    "actions": [
-      {
-        "name": "Cooking Station",
-        "type": "cooking",
-        "station_id": "homestead_kitchen",
-        "condition_unmet_message": ""
-      }
-    ],
+    "actions": [],
     "state": {},
     "item_flavor": {},
     "enemy_flavor": {}
@@ -1245,14 +1264,7 @@
       "Ollie"
     ],
     "enemies": [],
-    "actions": [
-      {
-        "name": "Fishing Spot",
-        "type": "fishing",
-        "zone_id": "town_8",
-        "condition_unmet_message": ""
-      }
-    ],
+    "actions": [],
     "state": {},
     "item_flavor": {},
     "enemy_flavor": {}

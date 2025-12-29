@@ -12,7 +12,7 @@ class GameSessionStore {
     val state: StateFlow<GameSessionState> = _state.asStateFlow()
 
     fun restore(state: GameSessionState) {
-        val normalized = normalizeEquipment(state)
+        val normalized = normalizeArmors(normalizeWeapons(normalizeEquipment(state)))
         if (_state.value == normalized) return
         _state.value = normalized
     }
@@ -215,6 +215,7 @@ class GameSessionStore {
     fun setEquippedItem(slotId: String, itemId: String?, characterId: String? = null) {
         if (slotId.isBlank()) return
         val normalizedSlot = slotId.trim().lowercase(Locale.getDefault())
+        if (normalizedSlot == "weapon" || normalizedSlot == "armor") return
         val ownerId = characterId?.trim()?.lowercase(Locale.getDefault())
         _state.update { state ->
             val updated = state.equippedItems.toMutableMap()
@@ -250,6 +251,56 @@ class GameSessionStore {
         _state.update { it.copy(unlockedSkills = it.unlockedSkills + skillId) }
     }
 
+    fun unlockWeapon(weaponId: String) {
+        if (weaponId.isBlank()) return
+        _state.update { it.copy(unlockedWeapons = it.unlockedWeapons + weaponId) }
+    }
+
+    fun unlockArmor(armorId: String) {
+        if (armorId.isBlank()) return
+        _state.update { it.copy(unlockedArmors = it.unlockedArmors + armorId) }
+    }
+
+    fun setEquippedWeapon(characterId: String, weaponId: String?) {
+        if (characterId.isBlank()) return
+        val normalizedId = characterId.trim().lowercase(Locale.getDefault())
+        _state.update { state ->
+            val updated = state.equippedWeapons.toMutableMap()
+            val unlocked = state.unlockedWeapons.toMutableSet()
+            val normalizedWeapon = weaponId?.trim()
+            if (normalizedWeapon.isNullOrBlank()) {
+                updated.remove(normalizedId)
+            } else {
+                updated[normalizedId] = normalizedWeapon
+                unlocked.add(normalizedWeapon)
+            }
+            state.copy(
+                equippedWeapons = updated,
+                unlockedWeapons = unlocked
+            )
+        }
+    }
+
+    fun setEquippedArmor(characterId: String, armorId: String?) {
+        if (characterId.isBlank()) return
+        val normalizedId = characterId.trim().lowercase(Locale.getDefault())
+        _state.update { state ->
+            val updated = state.equippedArmors.toMutableMap()
+            val unlocked = state.unlockedArmors.toMutableSet()
+            val normalizedArmor = armorId?.trim()
+            if (normalizedArmor.isNullOrBlank()) {
+                updated.remove(normalizedId)
+            } else {
+                updated[normalizedId] = normalizedArmor
+                unlocked.add(normalizedArmor)
+            }
+            state.copy(
+                equippedArmors = updated,
+                unlockedArmors = unlocked
+            )
+        }
+    }
+
     fun setPartyMembers(ids: List<String>) {
         _state.update { state ->
             val distinct = ids.distinct()
@@ -262,15 +313,17 @@ class GameSessionStore {
                 if (acc.containsKey(id)) acc else acc + (id to state.playerLevel)
             }
             val filteredHp = state.partyMemberHp.filterKeys { it in distinct }
-            val filteredRp = state.partyMemberRp.filterKeys { it in distinct }
-            normalizeEquipment(
-                state.copy(
-                partyMembers = distinct,
-                partyMemberXp = seededXp,
-                partyMemberLevels = seededLevels,
-                partyMemberHp = filteredHp,
-                partyMemberRp = filteredRp
-            )
+            normalizeArmors(
+                normalizeWeapons(
+                    normalizeEquipment(
+                        state.copy(
+                            partyMembers = distinct,
+                            partyMemberXp = seededXp,
+                            partyMemberLevels = seededLevels,
+                            partyMemberHp = filteredHp
+                        )
+                    )
+                )
             )
         }
     }
@@ -383,14 +436,11 @@ class GameSessionStore {
             val updatedMembers = (state.partyMembers + id).distinct()
             val updatedXp = state.partyMemberXp + (id to state.partyMemberXp.getOrElse(id) { state.playerXp })
             val updatedLevels = state.partyMemberLevels + (id to state.partyMemberLevels.getOrElse(id) { state.playerLevel })
-            val updatedHp = state.partyMemberHp
-            val updatedRp = state.partyMemberRp
             state.copy(
                 partyMembers = updatedMembers,
                 partyMemberXp = updatedXp,
                 partyMemberLevels = updatedLevels,
-                partyMemberHp = updatedHp,
-                partyMemberRp = updatedRp
+                partyMemberHp = state.partyMemberHp
             )
         }
     }
@@ -402,8 +452,7 @@ class GameSessionStore {
                 partyMembers = state.partyMembers.filterNot { member -> member == id },
                 partyMemberXp = state.partyMemberXp - id,
                 partyMemberLevels = state.partyMemberLevels - id,
-                partyMemberHp = state.partyMemberHp - id,
-                partyMemberRp = state.partyMemberRp - id
+                partyMemberHp = state.partyMemberHp - id
             )
         }
     }
@@ -455,78 +504,56 @@ class GameSessionStore {
         }
     }
 
-    fun setPartyMemberRp(id: String, rp: Int) {
-        if (id.isBlank()) return
-        _state.update { state ->
-            val clamped = rp.coerceAtLeast(0)
-            val updated = state.partyMemberRp + (id to clamped)
-            state.copy(partyMemberRp = updated)
-        }
-    }
-
-    fun updatePartyVitals(snapshot: Map<String, Pair<Int, Int>>) {
+    fun updatePartyVitals(snapshot: Map<String, Int>) {
         if (snapshot.isEmpty()) return
         _state.update { state ->
             var hpMap = state.partyMemberHp
-            var rpMap = state.partyMemberRp
-            snapshot.forEach { (id, vitals) ->
-                hpMap = hpMap + (id to vitals.first.coerceAtLeast(0))
-                rpMap = rpMap + (id to vitals.second.coerceAtLeast(0))
+            snapshot.forEach { (id, hp) ->
+                hpMap = hpMap + (id to hp.coerceAtLeast(0))
             }
-            state.copy(
-                partyMemberHp = hpMap,
-                partyMemberRp = rpMap
-            )
+            state.copy(partyMemberHp = hpMap)
         }
     }
-
-    fun setResonanceBounds(min: Int, max: Int, startBase: Int = _state.value.resonanceStartBase) {
-        val clampedMin = min.coerceAtLeast(0)
-        val clampedMax = max.coerceAtLeast(clampedMin)
-        val clampedStart = startBase.coerceIn(clampedMin, clampedMax)
-        _state.update {
-            it.copy(
-                resonanceMin = clampedMin,
-                resonanceMax = clampedMax,
-                resonanceStartBase = clampedStart,
-                resonance = it.resonance.coerceIn(clampedMin, clampedMax)
-            )
-        }
-    }
-
-    fun resetResonanceToStart(): Int {
-        var result = 0
-        _state.update {
-            val start = it.resonanceStartBase.coerceIn(it.resonanceMin, it.resonanceMax)
-            result = start
-            it.copy(resonance = start)
-        }
-        return result
-    }
-
-fun changeResonance(delta: Int): Int {
-    var result = 0
-    _state.update {
-        val updated = (it.resonance + delta).coerceIn(it.resonanceMin, it.resonanceMax)
-        result = updated
-        it.copy(resonance = updated)
-    }
-    return result
-}
-
-fun setResonance(value: Int): Int {
-    var result = 0
-    _state.update {
-        val clamped = value.coerceIn(it.resonanceMin, it.resonanceMax)
-        result = clamped
-        it.copy(resonance = clamped)
-    }
-    return result
-}
 
     private fun normalizeEquipment(state: GameSessionState): GameSessionState {
         val normalized = normalizeScopedEquipment(state)
         return if (normalized == state.equippedItems) state else state.copy(equippedItems = normalized)
+    }
+
+    private fun normalizeWeapons(state: GameSessionState): GameSessionState {
+        val normalized = buildMap {
+            state.equippedWeapons.forEach { (rawKey, rawValue) ->
+                val characterId = rawKey.trim().lowercase(Locale.getDefault())
+                val weaponId = rawValue.trim()
+                if (characterId.isBlank() || weaponId.isBlank()) return@forEach
+                put(characterId, weaponId)
+            }
+        }
+        val unlocked = state.unlockedWeapons.toMutableSet()
+        normalized.values.forEach { unlocked.add(it) }
+        val updated = state.copy(
+            equippedWeapons = normalized,
+            unlockedWeapons = unlocked
+        )
+        return if (updated == state) state else updated
+    }
+
+    private fun normalizeArmors(state: GameSessionState): GameSessionState {
+        val normalized = buildMap {
+            state.equippedArmors.forEach { (rawKey, rawValue) ->
+                val characterId = rawKey.trim().lowercase(Locale.getDefault())
+                val armorId = rawValue.trim()
+                if (characterId.isBlank() || armorId.isBlank()) return@forEach
+                put(characterId, armorId)
+            }
+        }
+        val unlocked = state.unlockedArmors.toMutableSet()
+        normalized.values.forEach { unlocked.add(it) }
+        val updated = state.copy(
+            equippedArmors = normalized,
+            unlockedArmors = unlocked
+        )
+        return if (updated == state) state else updated
     }
 
     private fun normalizeScopedEquipment(state: GameSessionState): Map<String, String> {
@@ -540,11 +567,14 @@ fun setResonance(value: Int): Int {
             if (key.contains(':')) {
                 val owner = key.substringBefore(':').lowercase(Locale.getDefault())
                 val slot = key.substringAfter(':').lowercase(Locale.getDefault())
+                if (slot == "weapon" || slot == "armor") return@forEach
                 if (owner.isNotBlank() && slot.isNotBlank()) {
                     scoped["$owner:$slot"] = value
                 }
             } else {
-                base[key.lowercase(Locale.getDefault())] = value
+                val slot = key.lowercase(Locale.getDefault())
+                if (slot == "weapon" || slot == "armor") return@forEach
+                base[slot] = value
             }
         }
 

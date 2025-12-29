@@ -95,13 +95,13 @@ class InventoryViewModelTest {
         id = "medkit_i",
         name = "Medkit I",
         type = "consumable",
-        effect = ItemEffect(target = "any", restoreHp = 50, restoreRp = 0)
+        effect = ItemEffect(target = "any", restoreHp = 50)
     )
 
     private fun samplerItem() = Item(
         id = "ellies_signature_sampler",
         name = "Sampler",
         type = "consumable",
-        effect = ItemEffect(target = "party", restoreHp = 9999, restoreRp = 0)
+        effect = ItemEffect(target = "party", restoreHp = 9999)
     )
 }

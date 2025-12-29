@@ -30,10 +30,27 @@ data class Equipment(
     val damageMin: Int? = null,
     @Json(name = "damage_max")
     val damageMax: Int? = null,
+    @Json(name = "attack_style")
+    val attackStyle: String? = null,
+    @Json(name = "attack_power_mult")
+    val attackPowerMultiplier: Double? = null,
+    @Json(name = "attack_charge_turns")
+    val attackChargeTurns: Int? = null,
+    @Json(name = "attack_splash_mult")
+    val attackSplashMultiplier: Double? = null,
+    @Json(name = "attack_element")
+    val attackElement: String? = null,
+    @Json(name = "status_on_hit")
+    val statusOnHit: String? = null,
+    @Json(name = "status_chance")
+    val statusChance: Double? = null,
     @Json(name = "defense")
     val defense: Int? = null,
     @Json(name = "hp_bonus")
     val hpBonus: Int? = null,
+    val accuracy: Double? = null,
+    @Json(name = "crit_rate")
+    val critRate: Double? = null,
     @Json(name = "stat_mods")
     val statMods: Map<String, Int>? = null
 )
@@ -48,8 +65,6 @@ data class ItemEffect(
     val target: String? = null,
     @Json(name = "restore_hp")
     val restoreHp: Int? = null,
-    @Json(name = "restore_rp")
-    val restoreRp: Int? = null,
     val damage: Int? = null,
     @Json(name = "learn_schematic")
     val learnSchematic: String? = null,

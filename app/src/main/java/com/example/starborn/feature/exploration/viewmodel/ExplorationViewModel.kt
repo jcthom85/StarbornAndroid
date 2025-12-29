@@ -53,10 +53,12 @@ import com.example.starborn.domain.model.EventReward
 import com.example.starborn.domain.model.FirstAidAction
 import com.example.starborn.domain.model.GameEvent
 import com.example.starborn.domain.model.GenericAction
+import com.example.starborn.domain.model.Item
 import com.example.starborn.domain.model.Quest
 import com.example.starborn.domain.model.QuestReward
 import com.example.starborn.domain.model.Player
 import com.example.starborn.domain.model.Equipment
+import com.example.starborn.domain.model.Enemy
 import com.example.starborn.domain.model.Requirement
 import com.example.starborn.domain.model.Room
 import com.example.starborn.domain.model.RoomEnemyInstance
@@ -117,6 +119,13 @@ private const val STELLARIUM_GENERATOR_OFF_EVENT = "evt_mine_power_off"
 private const val STELLARIUM_GENERATOR_ON_MESSAGE_FALLBACK = "The Stellarium generator roars to life."
 private const val STELLARIUM_GENERATOR_OFF_MESSAGE = "The Stellarium generator winds down into silence."
 private const val STELLARIUM_GENERATOR_OFF_ACCENT = 0xFFFF5252
+private const val STELLARIUM_BREAKER_W_ROOM_ID = "mines_8"
+private const val STELLARIUM_BREAKER_E_ROOM_ID = "mines_9"
+private const val STELLARIUM_SWITCHBACK_HUB_ROOM_ID = "mines_7"
+private const val STELLARIUM_BREAKER_STATE_KEY = "breaker_on"
+private const val STELLARIUM_BREAKER_ALERT_STATE_KEY = "breaker_alert_shown"
+private const val STELLARIUM_BREAKER_FIRST_MESSAGE = "Power hums toward the hub."
+private const val STELLARIUM_BREAKER_SECOND_MESSAGE = "You hear something loud in the next room."
 private const val EXIT_KEY_SEPARATOR = "::"
 private const val BAG_TUTORIAL_ID = "bag_basics"
 
@@ -220,7 +229,10 @@ class ExplorationViewModel(
 ) : ViewModel() {
 
     private val eventsById: Map<String, GameEvent> = eventDefinitions.associateBy { it.id }
-    private val _uiState = MutableStateFlow(ExplorationUiState())
+    private val startWithBlackScreen: Boolean = bootstrapActions.any {
+        it.equals("new_game_spawn_player_and_fade", ignoreCase = true)
+    }
+    private val _uiState = MutableStateFlow(ExplorationUiState(forceBlackScreen = startWithBlackScreen))
     val uiState: StateFlow<ExplorationUiState> = _uiState.asStateFlow()
 
     private val _events = MutableSharedFlow<ExplorationEvent>()
@@ -228,6 +240,8 @@ class ExplorationViewModel(
 
     private var charactersById: Map<String, Player> = emptyMap()
     private var skillsById: Map<String, Skill> = emptyMap()
+    private var enemyById: Map<String, Enemy> = emptyMap()
+    private var enemyTierById: Map<String, String> = emptyMap()
     private var skillTreesByCharacter: Map<String, SkillTreeDefinition> = emptyMap()
     private var tutorialsEnabled: Boolean = true
     private val itemUseController = ItemUseController(
@@ -282,29 +296,47 @@ class ExplorationViewModel(
                 // Special-case the Ollie intro: mark the meeting milestone but
                 // don't auto-start the Jed quest until the player actually talks to Ollie.
                 if (normalizedScene.equals("ollie_intro_scene", ignoreCase = true)) {
-                    val markMet: () -> Unit = { sessionStore.setMilestone("ms_ollie_met") }
-                    val started = startSpecialCinematic(sceneId, markMet) ||
-                        startCinematic(sceneId, markMet)
+                    val complete: () -> Unit = {
+                        onComplete()
+                    }
+                    val started = startSpecialCinematic(sceneId, complete) ||
+                        startCinematic(sceneId, complete)
                     if (started) {
                         emitEvent(ExplorationEvent.PlayCinematic(sceneId))
                     } else {
-                        markMet()
+                        val dialogueStarted = startImmediateDialogue("Ollie")
+                        complete()
+                        if (!dialogueStarted) {
+                            postStatus("Ollie tries to get your attention, but something feels off.")
+                        }
+                    }
+                    return@EventHooks
+                }
+
+                if (startSpecialCinematic(sceneId, onComplete)) {
+                    if (!normalizedScene.equals("new_game_fade_in", ignoreCase = true)) {
+                        emitEvent(ExplorationEvent.PlayCinematic(sceneId))
+                    }
+                    return@EventHooks
+                }
+                val started = cinematicCoordinator.play(sceneId) { onComplete() }
+                if (started) {
+                    if (!normalizedScene.equals("new_game_fade_in", ignoreCase = true)) {
+                        emitEvent(ExplorationEvent.PlayCinematic(sceneId))
                     }
                     return@EventHooks
                 }
 
                 // Fallback for gather_broken_gear handoff scenes if cinematics are missing.
-                val handledFallback = applyFallbackCinematic(normalizedScene)
-                if (startSpecialCinematic(sceneId, onComplete)) {
-                    emitEvent(ExplorationEvent.PlayCinematic(sceneId))
+                if (applyFallbackCinematic(normalizedScene)) {
+                    onComplete()
                     return@EventHooks
                 }
-                val started = startCinematic(sceneId, onComplete)
-                if (started) {
-                    emitEvent(ExplorationEvent.PlayCinematic(sceneId))
-                } else if (handledFallback) {
-                    onComplete()
-                } else onComplete()
+
+                if (!sceneId.isNullOrBlank()) {
+                    postStatus("Cinematic $sceneId is not available yet.")
+                }
+                onComplete()
             },
             onMessage = { message ->
                 postStatus(message)
@@ -332,6 +364,17 @@ class ExplorationViewModel(
                 emitEvent(ExplorationEvent.SpawnEncounter(encounterId, roomId))
             },
             onGiveItem = { itemId, quantity ->
+                oneTimeGiftMilestoneByItemId[itemId]?.let { milestone ->
+                    val alreadyGifted = sessionStore.state.value.completedMilestones.contains(milestone)
+                    val alreadyHas = inventoryService.hasItem(itemId, 1)
+                    if (alreadyGifted || alreadyHas) {
+                        Log.d(
+                            LOG_TAG,
+                            "Skipping duplicate one-time gift item: $itemId (milestone=$milestone gifted=$alreadyGifted has=$alreadyHas)"
+                        )
+                        return@EventHooks
+                    }
+                }
                 inventoryService.addItem(itemId, quantity)
                 sessionStore.setInventory(inventoryService.snapshot())
                 val name = inventoryService.itemDisplayName(itemId)
@@ -396,7 +439,20 @@ class ExplorationViewModel(
                 }
             },
             onMilestoneSet = { milestone ->
+                if (milestone.equals("ms_lights_out_complete", ignoreCase = true)) {
+                    finishInitialFade(reason = "lights_out_complete")
+                }
                 milestoneManager.handleMilestone(milestone, null)
+
+                itemPopupByMilestone[milestone]?.let { spec ->
+                    val itemName = inventoryService.itemDisplayName(spec.itemId)
+                    val message = if (spec.quantity == 1) {
+                        "Recovered $itemName."
+                    } else {
+                        "Recovered ${spec.quantity} x $itemName."
+                    }
+                    enqueueEventAnnouncement(spec.title, message)
+                }
             },
             onNarration = { message, tapToDismiss ->
                 showNarration(message, tapToDismiss)
@@ -494,6 +550,33 @@ class ExplorationViewModel(
         "ms_mine_power_on" to "The Stellarium generator roars to life.",
         "ms_breaker_alert_shown" to "You hear machinery unlocking nearby."
     )
+
+    private data class ItemPopupSpec(
+        val title: String,
+        val itemId: String,
+        val quantity: Int = 1
+    )
+
+    private val itemPopupByMilestone: Map<String, ItemPopupSpec> = mapOf(
+        "ms_ellie_display_collected" to ItemPopupSpec(
+            title = "Ellie",
+            itemId = "broken_arcade_display"
+        ),
+        "ms_maddie_grinder_collected" to ItemPopupSpec(
+            title = "Maddie",
+            itemId = "broken_coffee_grinder"
+        ),
+        "ms_kasey_projector_collected" to ItemPopupSpec(
+            title = "Schoolteacher Kasey",
+            itemId = "broken_projector"
+        )
+    )
+
+    private val oneTimeGiftMilestoneByItemId: Map<String, String> = mapOf(
+        "broken_arcade_display" to "ms_ellie_display_collected",
+        "broken_coffee_grinder" to "ms_maddie_grinder_collected",
+        "broken_projector" to "ms_kasey_projector_collected"
+    )
     private val acknowledgedMilestones: MutableSet<String> = mutableSetOf()
     private val unlockedDirections: MutableMap<String, MutableSet<String>> = mutableMapOf()
     private val unlockedAreaIds: MutableSet<String> = mutableSetOf()
@@ -501,10 +584,12 @@ class ExplorationViewModel(
     private val unlockedExitKeys: MutableSet<String> = mutableSetOf()
     private val pendingUnlockedExitKeys: MutableSet<String> = mutableSetOf()
     private var activeDialogueSession: DialogueSession? = null
+    private var activeDialogueNpcName: String? = null
     private var darkCapableRoomIds: Set<String> = emptySet()
     private var entryRoomIds: Set<String> = emptySet()
     private val darkRoomEntryDirection: MutableMap<String, String> = mutableMapOf()
     private var fadeOverlayCommandId: Long = 0L
+    private var initialFadePrimed: Boolean = startWithBlackScreen
     private val pendingFadeCallbacks: MutableMap<Long, () -> Unit> = mutableMapOf()
     private var userMusicVolume: Float = 1f
     private var userSfxVolume: Float = 1f
@@ -557,43 +642,19 @@ class ExplorationViewModel(
 
     private fun applyFallbackCinematic(sceneId: String): Boolean {
         Log.d(LOG_TAG, "Fallback cinematic requested: $sceneId")
-        fun grantBrokenGear(
-            itemId: String,
-            displayName: String,
-            milestoneId: String,
-            taskId: String
-        ): Boolean {
-            Log.d(LOG_TAG, "Grant broken gear: item=$itemId milestone=$milestoneId task=$taskId")
-            val alreadyHasItem = inventoryService.hasItem(itemId, 1)
-            if (!alreadyHasItem) {
-                inventoryService.addItem(itemId, 1)
-                postStatus("Received $displayName")
-            }
-            sessionStore.setInventory(inventoryService.snapshot())
-            sessionStore.setMilestone(milestoneId)
-            milestoneManager.handleMilestone(milestoneId)
-            questRuntimeManager.markTaskComplete("gather_broken_gear", taskId)
-            return true
-        }
         return when (sceneId.lowercase(Locale.getDefault())) {
-            "scene_collect_projector" -> grantBrokenGear(
-                itemId = "broken_projector",
-                displayName = "Broken Projector",
-                milestoneId = "ms_kasey_projector_collected",
-                taskId = "collect_projector"
-            )
-            "scene_collect_grinder" -> grantBrokenGear(
-                itemId = "broken_coffee_grinder",
-                displayName = "Broken Coffee Grinder",
-                milestoneId = "ms_maddie_grinder_collected",
-                taskId = "collect_grinder"
-            )
-            "scene_collect_display" -> grantBrokenGear(
-                itemId = "broken_arcade_display",
-                displayName = "Broken Arcade Display",
-                milestoneId = "ms_ellie_display_collected",
-                taskId = "collect_display"
-            )
+            "scene_collect_projector" -> {
+                showNarration("Kasey reluctantly passes you the cracked projector lens.", tapToDismiss = true)
+                true
+            }
+            "scene_collect_grinder" -> {
+                showNarration("Maddie hands over the grinder, hopeful you can repair it.", tapToDismiss = true)
+                true
+            }
+            "scene_collect_display" -> {
+                showNarration("Ellie carefully packs the shattered display into a crate for repair.", tapToDismiss = true)
+                true
+            }
             else -> false
         }
     }
@@ -658,6 +719,8 @@ class ExplorationViewModel(
                 it.copy(
                     currentRoom = updatedRoom,
                     enemies = roomEnemyParties(updatedRoom).flatten(),
+                    enemyTiers = buildEnemyTierMap(updatedRoom),
+                    enemyIcons = buildEnemyIconMap(updatedRoom),
                     blockedDirections = computeBlockedDirections(updatedRoom),
                     directionIndicators = buildDirectionIndicators(updatedRoom),
                     canReturnToHub = canReturnToHub(updatedRoom)
@@ -690,7 +753,6 @@ class ExplorationViewModel(
         if (grantedItems.isNotEmpty()) {
             sessionStore.setInventory(inventoryService.snapshot())
         }
-        removeEnemiesFromCurrentRoom(enemyIds)
         eventManager.handleTrigger(
             type = "encounter_victory",
             payload = EventPayload.EncounterOutcome(
@@ -705,7 +767,6 @@ class ExplorationViewModel(
             "Encounter cleared."
         }
         postStatus(outcomeMessage)
-        enqueueLevelUps(result.levelUps)
         emitEvent(
             ExplorationEvent.CombatOutcome(
                 outcome = CombatResultPayload.Outcome.VICTORY,
@@ -802,10 +863,12 @@ class ExplorationViewModel(
         if (sceneId.isNullOrBlank()) return false
         return when (sceneId) {
             "new_game_fade_in" -> {
+                _uiState.update { it.copy(forceBlackScreen = true) }
+                initialFadePrimed = true
                 triggerFadeOverlay(
                     fromAlpha = 1f,
                     toAlpha = 0f,
-                    durationMillis = 1800,
+                    durationMillis = 18000,
                     onComplete = onComplete
                 )
                 true
@@ -848,8 +911,27 @@ class ExplorationViewModel(
 
     fun onFadeOverlayFinished(commandId: Long) {
         pendingFadeCallbacks.remove(commandId)?.invoke()
+        var consumedInitialFade = false
         _uiState.update { state ->
-            if (state.fadeOverlay?.id == commandId) state.copy(fadeOverlay = null) else state
+            val isInitialFade = initialFadePrimed && state.fadeOverlay?.id == commandId
+            if (isInitialFade) consumedInitialFade = true
+            val cleared = if (state.fadeOverlay?.id == commandId) state.copy(fadeOverlay = null) else state
+            if (isInitialFade) cleared.copy(forceBlackScreen = false) else cleared
+        }
+        if (consumedInitialFade) {
+            initialFadePrimed = false
+        }
+    }
+
+    private fun finishInitialFade(reason: String? = null) {
+        val currentId = _uiState.value.fadeOverlay?.id
+        if (currentId != null) {
+            onFadeOverlayFinished(currentId)
+            return
+        }
+        if (initialFadePrimed || _uiState.value.forceBlackScreen) {
+            initialFadePrimed = false
+            _uiState.update { it.copy(forceBlackScreen = false, fadeOverlay = null) }
         }
     }
 
@@ -1268,6 +1350,10 @@ class ExplorationViewModel(
 
     private fun triggerPlayerAction(actionId: String?, itemId: String? = null) {
         if (actionId.isNullOrBlank()) return
+        if (actionId.equals("new_game_spawn_player_and_fade", ignoreCase = true)) {
+            initialFadePrimed = true
+            _uiState.update { it.copy(forceBlackScreen = true) }
+        }
         eventManager.handleTrigger("player_action", EventPayload.Action(actionId, itemId))
     }
 
@@ -1294,6 +1380,10 @@ class ExplorationViewModel(
                         partyStatus = partyStatus,
                         progressionSummary = progressionSummary,
                         equippedItems = newState.equippedItems,
+                        unlockedWeapons = newState.unlockedWeapons,
+                        equippedWeapons = newState.equippedWeapons,
+                        unlockedArmors = newState.unlockedArmors,
+                        equippedArmors = newState.equippedArmors,
                         skillTreeOverlay = overlay
                     )
                 }
@@ -1579,10 +1669,13 @@ class ExplorationViewModel(
             val skills = worldAssets.loadSkills()
             val skillTrees = worldAssets.loadSkillTrees()
             val npcs = worldAssets.loadNpcs()
+            val enemies = worldAssets.loadEnemies()
 
             charactersById = players.associateBy { it.id }
             skillsById = skills.associateBy { it.id }
             skillTreesByCharacter = skillTrees.associateBy { it.character }
+            enemyById = enemies.associateBy { it.id }
+            enemyTierById = enemyById.mapValues { it.value.tier }
 
             roomsById = rooms.associateBy { it.id }
             themeByRoomId = rooms.associate { it.id to themeRepository.getTheme(it.env) }
@@ -1687,6 +1780,8 @@ class ExplorationViewModel(
                     actions = initialActions,
                     actionHints = buildActionHints(initialRoom, initialActions),
                     enemies = initialRoom?.let { roomEnemyParties(it).flatten() }.orEmpty(),
+                    enemyTiers = buildEnemyTierMap(initialRoom),
+                    enemyIcons = buildEnemyIconMap(initialRoom),
                     blockedDirections = computeBlockedDirections(initialRoom),
                     directionIndicators = buildDirectionIndicators(initialRoom),
                     roomState = getRoomStateSnapshot(initialRoom?.id),
@@ -1707,7 +1802,14 @@ class ExplorationViewModel(
                         sfxVolume = userSfxVolume,
                         vignetteEnabled = isVignetteEnabled,
                         tutorialsEnabled = tutorialsEnabled
-                    )
+                    ),
+                    inventoryPreview = buildPreviewFromSnapshot(sessionState.inventory),
+                    equippedItems = sessionState.equippedItems,
+                    unlockedWeapons = sessionState.unlockedWeapons,
+                    equippedWeapons = sessionState.equippedWeapons,
+                    unlockedArmors = sessionState.unlockedArmors,
+                    equippedArmors = sessionState.equippedArmors,
+                    forceBlackScreen = startWithBlackScreen
                 )
             }
             initialRoom?.let { room ->
@@ -1775,6 +1877,8 @@ class ExplorationViewModel(
                 actions = nextActions,
                 actionHints = buildActionHints(nextRoom, nextActions),
                 enemies = roomEnemyParties(nextRoom).flatten(),
+                enemyTiers = buildEnemyTierMap(nextRoom),
+                enemyIcons = buildEnemyIconMap(nextRoom),
                 blockedDirections = computeBlockedDirections(nextRoom),
                 directionIndicators = buildDirectionIndicators(nextRoom),
                 roomState = getRoomStateSnapshot(nextRoom.id),
@@ -1795,11 +1899,29 @@ class ExplorationViewModel(
         eventManager.handleTrigger("enter_room", EventPayload.EnterRoom(nextRoom.id))
     }
 
+    private fun startImmediateDialogue(npcName: String): Boolean {
+        val session = dialogueService.startDialogue(npcName) ?: return false
+        activeDialogueSession = session
+        activeDialogueNpcName = npcName
+        lastDialogueVoiceCue = null
+        _uiState.update {
+            it.copy(
+                activeDialogue = buildDialogueUi(session.current()),
+                dialogueChoices = session.choices().map { option ->
+                    DialogueChoiceUi(option.id, option.text)
+                },
+                statusMessage = null
+            )
+        }
+        session.current()?.voiceCue?.let { playVoiceCue(it) }
+        return true
+    }
+
     fun onNpcInteraction(npcName: String) {
         Log.d(LOG_TAG, "NPC interaction: $npcName (quest=${sessionStore.state.value.activeQuests.joinToString()})")
-        maybeGrantBrokenGearPickup(npcName, source = "pre-dialogue-tap")
         val session = dialogueService.startDialogue(npcName)
         activeDialogueSession = session
+        activeDialogueNpcName = npcName
         playUiCue("click")
         lastDialogueVoiceCue = null
         _uiState.update {
@@ -1814,68 +1936,9 @@ class ExplorationViewModel(
         session?.current()?.voiceCue?.let { playVoiceCue(it) }
         eventManager.handleTrigger("talk_to", EventPayload.TalkTo(npcName))
         eventManager.handleTrigger("npc_interaction", EventPayload.TalkTo(npcName))
-        maybeGrantBrokenGearPickup(npcName, source = "post-events")
-        ensureBrokenGearQuestItems()
-    }
-
-    private fun maybeGrantBrokenGearPickup(npcName: String, source: String) {
-        val normalized = npcName.trim().lowercase(Locale.getDefault())
-        val state = sessionStore.state.value
-        val questActive = state.activeQuests.contains("gather_broken_gear")
-
-        fun grant(itemId: String, milestoneId: String, taskId: String, label: String) {
-            Log.d(LOG_TAG, "Granting broken gear item for $label ($itemId), milestone=$milestoneId, task=$taskId via $source")
-            val hadItem = inventoryService.hasItem(itemId, 1)
-            if (!hadItem) {
-                inventoryService.addItem(itemId, 1)
-                postStatus("Received $label")
-            } else {
-                Log.d(LOG_TAG, "Already had $itemId; ensuring quest state updated.")
-            }
-            sessionStore.setInventory(inventoryService.snapshot())
-            sessionStore.setMilestone(milestoneId)
-            milestoneManager.handleMilestone(milestoneId)
-            questRuntimeManager.markTaskComplete("gather_broken_gear", taskId)
+        if (session == null) {
+            eventManager.handleTrigger("dialogue_closed", EventPayload.TalkTo(npcName))
         }
-
-        val isEllie = normalized.contains("ellie")
-        val isMaddie = normalized.contains("maddie")
-        val isKasey = normalized.contains("kasey") || normalized.contains("schoolteacher")
-        when {
-            isEllie && (questActive || !inventoryService.hasItem("broken_arcade_display", 1)) ->
-                grant("broken_arcade_display", "ms_ellie_display_collected", "collect_display", "Broken Arcade Display")
-            isMaddie && (questActive || !inventoryService.hasItem("broken_coffee_grinder", 1)) ->
-                grant("broken_coffee_grinder", "ms_maddie_grinder_collected", "collect_grinder", "Broken Coffee Grinder")
-            isKasey && (questActive || !inventoryService.hasItem("broken_projector", 1)) ->
-                grant("broken_projector", "ms_kasey_projector_collected", "collect_projector", "Broken Projector")
-            else -> Log.d(LOG_TAG, "No matching NPC grant for $npcName (normalized=$normalized)")
-        }
-    }
-
-    private fun ensureBrokenGearQuestItems() {
-        val state = sessionStore.state.value
-        if (!state.activeQuests.contains("gather_broken_gear") &&
-            !state.completedMilestones.any {
-                it.equals("ms_ellie_display_collected", true) ||
-                    it.equals("ms_maddie_grinder_collected", true) ||
-                    it.equals("ms_kasey_projector_collected", true)
-            }
-        ) return
-
-        fun ensureItem(itemId: String, milestoneId: String, displayName: String) {
-            val hasMilestone = state.completedMilestones.any { it.equals(milestoneId, true) }
-            val hasItem = inventoryService.hasItem(itemId, 1)
-            if ((hasMilestone || state.activeQuests.contains("gather_broken_gear")) && !hasItem) {
-                Log.d(LOG_TAG, "Reconciling missing quest item: $itemId (milestone=$milestoneId)")
-                inventoryService.addItem(itemId, 1)
-                sessionStore.setInventory(inventoryService.snapshot())
-                postStatus("DEBUG: Restored $displayName")
-            }
-        }
-
-        ensureItem("broken_arcade_display", "ms_ellie_display_collected", "Broken Arcade Display")
-        ensureItem("broken_coffee_grinder", "ms_maddie_grinder_collected", "Broken Coffee Grinder")
-        ensureItem("broken_projector", "ms_kasey_projector_collected", "Broken Projector")
     }
 
     fun advanceDialogue() {
@@ -1883,9 +1946,14 @@ class ExplorationViewModel(
         if (session.choices().isNotEmpty()) return
         val nextLine = session.advance()
         if (nextLine == null) {
+            val npcName = activeDialogueNpcName
             activeDialogueSession = null
+            activeDialogueNpcName = null
             _uiState.update { it.copy(activeDialogue = null, dialogueChoices = emptyList()) }
             lastDialogueVoiceCue = null
+            if (!npcName.isNullOrBlank()) {
+                eventManager.handleTrigger("dialogue_closed", EventPayload.TalkTo(npcName))
+            }
         } else {
             _uiState.update {
                 it.copy(
@@ -1904,9 +1972,14 @@ class ExplorationViewModel(
         playUiCue("confirm")
         val nextLine = session.choose(optionId)
         if (nextLine == null) {
+            val npcName = activeDialogueNpcName
             activeDialogueSession = null
+            activeDialogueNpcName = null
             _uiState.update { it.copy(activeDialogue = null, dialogueChoices = emptyList()) }
             lastDialogueVoiceCue = null
+            if (!npcName.isNullOrBlank()) {
+                eventManager.handleTrigger("dialogue_closed", EventPayload.TalkTo(npcName))
+            }
         } else {
             _uiState.update {
                 it.copy(
@@ -2286,10 +2359,6 @@ class ExplorationViewModel(
             val maxHp = character.hp.coerceAtLeast(0)
             val currentHp = (sessionState.partyMemberHp[character.id] ?: maxHp).coerceAtLeast(0)
             val hpLabel = if (maxHp > 0) "$currentHp / $maxHp HP" else null
-            val maxFocus = character.focus.coerceAtLeast(0)
-            val currentFocus = (sessionState.partyMemberRp[character.id] ?: maxFocus).coerceAtLeast(0)
-            val focusLabel = if (maxFocus > 0) "$currentFocus / $maxFocus Focus" else null
-
             val primaryStats = listOf(
                 CharacterStatValueUi("Strength", character.strength.toString()),
                 CharacterStatValueUi("Vitality", character.vitality.toString()),
@@ -2314,7 +2383,11 @@ class ExplorationViewModel(
                 ),
                 CharacterStatValueUi(
                     "Crit Rate",
-                    String.format(Locale.getDefault(), "%.1f%%", CombatFormulas.critChance(character.focus))
+                    String.format(
+                        Locale.getDefault(),
+                        "%.1f%%",
+                        CombatFormulas.critChance(character.focus, character.luck)
+                    )
                 ),
                 CharacterStatValueUi(
                     "Resistance",
@@ -2336,7 +2409,6 @@ class ExplorationViewModel(
                         level = level,
                         xpLabel = xpLabel,
                         hpLabel = hpLabel,
-                        focusLabel = focusLabel,
                         portraitPath = character.miniIconPath,
                         primaryStats = primaryStats,
                         combatStats = combatStats,
@@ -2585,10 +2657,15 @@ class ExplorationViewModel(
     fun engageEnemy(enemyId: String) {
         val room = _uiState.value.currentRoom
         val parties = room?.let { roomEnemyParties(it) }.orEmpty()
+        val normalizedEnemyId = enemyId.trim()
         val encounterIds = when {
             parties.isEmpty() -> listOfNotNull(enemyId.takeIf { it.isNotBlank() })
-            enemyId.isBlank() -> parties.firstOrNull().orEmpty()
-            else -> parties.firstOrNull { party -> party.contains(enemyId) } ?: parties.firstOrNull().orEmpty()
+            normalizedEnemyId.isBlank() -> parties.firstOrNull().orEmpty()
+            else -> parties.firstOrNull { party ->
+                party.firstOrNull()?.equals(normalizedEnemyId, ignoreCase = true) == true
+            } ?: parties.firstOrNull { party ->
+                party.any { member -> member.equals(normalizedEnemyId, ignoreCase = true) }
+            } ?: parties.firstOrNull().orEmpty()
         }
         if (encounterIds.isNotEmpty()) {
             room?.let { preparePendingEncounter(it, encounterIds) } ?: encounterCoordinator.clear()
@@ -2693,11 +2770,116 @@ class ExplorationViewModel(
                 )
             }
         }
+        maybeAnnounceStellariumBreakers(roomId, stateKey, value)
+    }
+
+    private fun maybeAnnounceStellariumBreakers(roomId: String, stateKey: String, value: Boolean) {
+        if (!stateKey.equals(STELLARIUM_BREAKER_STATE_KEY, ignoreCase = true) || !value) return
+        val isWest = roomId.equals(STELLARIUM_BREAKER_W_ROOM_ID, ignoreCase = true)
+        val isEast = roomId.equals(STELLARIUM_BREAKER_E_ROOM_ID, ignoreCase = true)
+        if (!isWest && !isEast) return
+
+        val otherRoomId = if (isWest) STELLARIUM_BREAKER_E_ROOM_ID else STELLARIUM_BREAKER_W_ROOM_ID
+        val otherOn = roomStateValue(otherRoomId, STELLARIUM_BREAKER_STATE_KEY) == true
+        val title = "Breaker Lever"
+
+        if (otherOn) {
+            val alreadyShown = roomStateValue(STELLARIUM_SWITCHBACK_HUB_ROOM_ID, STELLARIUM_BREAKER_ALERT_STATE_KEY) == true
+            if (alreadyShown) return
+            setRoomStateValue(
+                roomIdOrNull = STELLARIUM_SWITCHBACK_HUB_ROOM_ID,
+                stateKey = STELLARIUM_BREAKER_ALERT_STATE_KEY,
+                value = true,
+                notify = false
+            )
+            enqueueEventAnnouncement(title, STELLARIUM_BREAKER_SECOND_MESSAGE)
+        } else {
+            enqueueEventAnnouncement(title, STELLARIUM_BREAKER_FIRST_MESSAGE)
+        }
+    }
+
+    private fun roomStateValue(roomId: String, stateKey: String): Boolean? {
+        val local = roomStates[roomId]?.get(stateKey)
+        if (local != null) return local
+        val room = roomsById[roomId] ?: return null
+        return booleanValueOf(room.state[stateKey])
     }
 
     private fun currentEnemies(): List<String> = _uiState.value.currentRoom?.let { roomEnemyParties(it).flatten() }.orEmpty()
 
+    private fun enemySpritePath(enemy: Enemy): String {
+        return enemy.sprite.firstOrNull()?.takeIf { it.isNotBlank() }
+            ?: enemy.portrait?.takeIf { it.isNotBlank() }
+            ?: "images/enemies/${enemy.id}_combat.png"
+    }
+
+    private fun buildEnemyTierMap(room: Room?): Map<String, String> {
+        if (room == null) return emptyMap()
+        return roomEnemyParties(room)
+            .flatten()
+            .distinct()
+            .associateWith { enemyId -> enemyTierById[enemyId] ?: "common" }
+    }
+
+    private fun buildEnemyIconMap(room: Room?): Map<String, EnemyIconUi> {
+        if (room == null) return emptyMap()
+        val parties = roomEnemyParties(room)
+        if (parties.isEmpty()) return emptyMap()
+        val result = mutableMapOf<String, EnemyIconUi>()
+        parties.forEach { party ->
+            val partyIds = party.mapNotNull { id -> id.trim().takeIf { trimmed -> trimmed.isNotBlank() } }
+            val leaderId = partyIds.firstOrNull().orEmpty()
+            if (leaderId.isBlank()) return@forEach
+            val leaderEnemy = enemyById[leaderId]
+            val leaderSprite = leaderEnemy?.let { enemySpritePath(it) }
+                ?: "images/enemies/${leaderId}_combat.png"
+            val partyEnemies = partyIds.mapNotNull { enemyById[it] }
+            val compositeGroup = partyEnemies.mapNotNull { enemy ->
+                enemy.composite?.group?.takeIf { it.isNotBlank() }
+            }.distinct()
+            if (partyEnemies.size == partyIds.size && compositeGroup.size == 1) {
+                val group = compositeGroup.first()
+                val groupSource = partyEnemies.firstOrNull { enemy ->
+                    enemy.composite?.role?.equals("core", ignoreCase = true) == true
+                } ?: partyEnemies.firstOrNull { enemy ->
+                    enemy.composite?.group == group
+                }
+                val groupOffsetX = groupSource?.composite?.groupOffsetX ?: 0f
+                val groupOffsetY = groupSource?.composite?.groupOffsetY ?: 0f
+                val parts = partyEnemies.mapNotNull { enemy ->
+                    val composite = enemy.composite ?: return@mapNotNull null
+                    if (composite.group != group) return@mapNotNull null
+                    EnemyCompositePartUi(
+                        spritePath = enemySpritePath(enemy),
+                        offsetX = composite.offsetX,
+                        offsetY = composite.offsetY,
+                        widthScale = composite.widthScale,
+                        heightScale = composite.heightScale,
+                        z = composite.z
+                    )
+                }
+                if (parts.size == partyEnemies.size && parts.isNotEmpty()) {
+                    result[leaderId] = EnemyIconUi(
+                        spritePath = leaderSprite,
+                        composite = EnemyCompositeIconUi(
+                            groupOffsetX = groupOffsetX,
+                            groupOffsetY = groupOffsetY,
+                            parts = parts.sortedBy { it.z }
+                        )
+                    )
+                    return@forEach
+                }
+            }
+            result[leaderId] = EnemyIconUi(spritePath = leaderSprite)
+        }
+        return result
+    }
+
     fun itemDisplayName(itemId: String): String = inventoryService.itemDisplayName(itemId)
+
+    fun weaponItem(itemId: String): Item? = inventoryService.itemDetail(itemId)
+
+    fun armorItem(itemId: String): Item? = inventoryService.itemDetail(itemId)
 
     fun useInventoryItem(itemId: String, targetId: String? = null) {
         viewModelScope.launch(dispatchers.main) {
@@ -2716,6 +2898,12 @@ class ExplorationViewModel(
     fun equipInventoryItem(slotId: String, itemId: String?, characterId: String? = null) {
         val normalizedSlot = slotId.trim().lowercase(Locale.getDefault())
         if (normalizedSlot.isBlank() || normalizedSlot !in GearRules.equipSlots) return
+        if (normalizedSlot == "armor") {
+            if (characterId != null) {
+                equipArmor(characterId, itemId)
+            }
+            return
+        }
         if (itemId.isNullOrBlank()) {
             sessionStore.setEquippedItem(normalizedSlot, null, characterId)
             return
@@ -2735,6 +2923,71 @@ class ExplorationViewModel(
         }
         if (!GearRules.matchesSlot(equipment, normalizedSlot, characterId, entry.item.type)) return
         sessionStore.setEquippedItem(normalizedSlot, entry.item.id, characterId)
+    }
+
+    fun equipInventoryMod(slotId: String, itemId: String?, characterId: String? = null) {
+        val normalizedSlot = slotId.trim().lowercase(Locale.getDefault())
+        if (normalizedSlot.isBlank()) return
+        if (itemId.isNullOrBlank()) {
+            sessionStore.setEquippedItem(normalizedSlot, null, characterId)
+            return
+        }
+        val entry = inventoryService.state.value.firstOrNull { it.item.id.equals(itemId, ignoreCase = true) } ?: return
+        val normalizedType = entry.item.type.trim().lowercase(Locale.getDefault())
+        val isMod = normalizedType == "mod" || entry.item.equipment?.slot?.equals("mod", true) == true
+        if (!isMod) return
+        sessionStore.setEquippedItem(normalizedSlot, entry.item.id, characterId)
+    }
+
+    fun equipWeapon(characterId: String, weaponId: String?) {
+        val normalizedCharacter = characterId.trim().lowercase(Locale.getDefault())
+        if (normalizedCharacter.isBlank()) return
+        if (weaponId.isNullOrBlank()) {
+            sessionStore.setEquippedWeapon(normalizedCharacter, null)
+            return
+        }
+        val unlocked = sessionStore.state.value.unlockedWeapons
+        val resolvedWeaponId = unlocked.firstOrNull { it.equals(weaponId, ignoreCase = true) } ?: return
+        val item = inventoryService.itemDetail(resolvedWeaponId) ?: return
+        if (!isWeaponForCharacter(item, normalizedCharacter)) return
+        sessionStore.setEquippedWeapon(normalizedCharacter, resolvedWeaponId)
+    }
+
+    fun equipArmor(characterId: String, armorId: String?) {
+        val normalizedCharacter = characterId.trim().lowercase(Locale.getDefault())
+        if (normalizedCharacter.isBlank()) return
+        if (armorId.isNullOrBlank()) {
+            sessionStore.setEquippedArmor(normalizedCharacter, null)
+            return
+        }
+        val unlocked = sessionStore.state.value.unlockedArmors
+        val resolvedArmorId = unlocked.firstOrNull { it.equals(armorId, ignoreCase = true) } ?: return
+        val item = inventoryService.itemDetail(resolvedArmorId) ?: return
+        if (!isArmorItem(item)) return
+        if (!isArmorForCharacter(item, normalizedCharacter)) return
+        sessionStore.setEquippedArmor(normalizedCharacter, resolvedArmorId)
+    }
+
+    private fun isWeaponForCharacter(item: Item, characterId: String): Boolean {
+        val expectedType = GearRules.allowedWeaponTypeFor(characterId) ?: return true
+        val weaponType = item.equipment?.weaponType
+            ?.trim()
+            ?.lowercase(Locale.getDefault())
+            ?: item.type.trim().lowercase(Locale.getDefault())
+        return weaponType == expectedType
+    }
+
+    private fun isArmorItem(item: Item): Boolean {
+        val normalizedType = item.type.trim().lowercase(Locale.getDefault())
+        return normalizedType == "armor" ||
+            item.equipment?.slot?.equals("armor", ignoreCase = true) == true
+    }
+
+    private fun isArmorForCharacter(item: Item, characterId: String): Boolean {
+        val expectedType = GearRules.allowedArmorTypeFor(characterId) ?: return true
+        val armorType = item.type.trim().lowercase(Locale.getDefault())
+        if (!GearRules.isArmorType(armorType)) return false
+        return armorType == expectedType
     }
 
     fun onTinkeringClosed() {
@@ -3195,13 +3448,7 @@ class ExplorationViewModel(
         }
         action.actionEvent?.takeIf { it.isNotBlank() }?.let { triggerPlayerAction(it) }
         val displayName = shop.name.ifBlank { "Shop" }
-        val greeting = shop.greeting?.takeIf { it.isNotBlank() }
-        if (greeting != null) {
-            postStatus("Chatting with $displayName")
-            showShopGreeting(shop, greeting)
-        } else {
-            openShop(shop, displayName)
-        }
+        openShop(shop, displayName)
     }
 
     fun enterPendingShop() {

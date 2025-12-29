@@ -8,6 +8,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -48,6 +49,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
@@ -97,6 +99,16 @@ data class InventoryLaunchOptions(
     val initialCharacterId: String? = null
 )
 
+private data class WeaponOption(
+    val id: String,
+    val item: Item
+)
+
+private data class ArmorOption(
+    val id: String,
+    val item: Item
+)
+
 private fun Item.categoryKey(): String {
     categoryOverride?.let { return it.lowercase(Locale.getDefault()) }
     if (equipment != null) return CATEGORY_EQUIPMENT
@@ -141,6 +153,10 @@ fun InventoryRoute(
 ) {
     val entries by viewModel.entries.collectAsStateWithLifecycle()
     val equippedItems by viewModel.equippedItems.collectAsStateWithLifecycle()
+    val unlockedWeapons by viewModel.unlockedWeapons.collectAsStateWithLifecycle()
+    val equippedWeapons by viewModel.equippedWeapons.collectAsStateWithLifecycle()
+    val unlockedArmors by viewModel.unlockedArmors.collectAsStateWithLifecycle()
+    val equippedArmors by viewModel.equippedArmors.collectAsStateWithLifecycle()
     val partyMembers by viewModel.partyMembers.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -157,10 +173,19 @@ fun InventoryRoute(
     InventoryScreen(
         entries = entries,
         equippedItems = equippedItems,
+        unlockedWeapons = unlockedWeapons,
+        equippedWeapons = equippedWeapons,
+        unlockedArmors = unlockedArmors,
+        equippedArmors = equippedArmors,
         partyMembers = partyMembers,
         snackbarHostState = snackbarHostState,
         onUseItem = viewModel::useItem,
         onEquipItem = viewModel::equipItem,
+        onEquipMod = viewModel::equipMod,
+        resolveWeaponItem = viewModel::weaponItem,
+        onEquipWeapon = viewModel::equipWeapon,
+        resolveArmorItem = viewModel::armorItem,
+        onEquipArmor = viewModel::equipArmor,
         onRefreshInventory = viewModel::syncFromSession,
         onBack = onBack,
         highContrastMode = highContrastMode,
@@ -178,10 +203,19 @@ fun InventoryRoute(
 private fun InventoryScreen(
     entries: List<InventoryEntry>,
     equippedItems: Map<String, String>,
+    unlockedWeapons: Set<String>,
+    equippedWeapons: Map<String, String>,
+    unlockedArmors: Set<String>,
+    equippedArmors: Map<String, String>,
     partyMembers: List<PartyMemberStatus>,
     snackbarHostState: SnackbarHostState,
     onUseItem: (String, String?) -> Unit,
     onEquipItem: (String, String?, String?) -> Unit,
+    onEquipMod: (String, String?, String?) -> Unit,
+    resolveWeaponItem: (String) -> Item?,
+    onEquipWeapon: (String, String?) -> Unit,
+    resolveArmorItem: (String) -> Item?,
+    onEquipArmor: (String, String?) -> Unit,
     onRefreshInventory: () -> Unit,
     onBack: () -> Unit,
     highContrastMode: Boolean,
@@ -247,6 +281,12 @@ private fun InventoryScreen(
     var selectedSupplyEntry by remember { mutableStateOf(filteredSupplies.firstOrNull()) }
     var pendingTargetItem by remember { mutableStateOf<InventoryEntry?>(null) }
     var showTargetDialog by remember { mutableStateOf(false) }
+    var pendingModSlot by remember { mutableStateOf<String?>(null) }
+    var showModDialog by remember { mutableStateOf(false) }
+    var showWeaponDialog by remember { mutableStateOf(false) }
+    var showArmorDialog by remember { mutableStateOf(false) }
+    var selectedWeaponOptionId by remember { mutableStateOf<String?>(null) }
+    var selectedArmorOptionId by remember { mutableStateOf<String?>(null) }
     LaunchedEffect(filteredSupplies, activeTab) {
         if (activeTab == InventoryTab.SUPPLIES) {
             selectedSupplyEntry = when {
@@ -270,10 +310,8 @@ private fun InventoryScreen(
     }
 
     val entryById = remember(entries) { entries.associateBy { it.item.id } }
-    val itemNameForId = remember(entryById) {
-        { id: String? ->
-            entryById[id]?.item?.name ?: id?.humanizeId()
-        }
+    val modEntries = remember(entries) {
+        entries.filter { entry -> isModItem(entry.item) }
     }
     val inventoryEquippableEntries = remember(entries) {
         entries.mapNotNull { entry ->
@@ -293,11 +331,60 @@ private fun InventoryScreen(
     val characterEquippedItems = remember(equippedItems, selectedCharacterId) {
         equippedForCharacter(equippedItems, selectedCharacterId)
     }
+    val equippedWeaponId = remember(equippedWeapons, selectedCharacterId) {
+        selectedCharacterId?.let { id ->
+            equippedWeapons[id.lowercase(Locale.getDefault())]
+        }
+    }
+    val equippedWeaponItem = remember(equippedWeaponId) { equippedWeaponId?.let(resolveWeaponItem) }
+    val equippedWeaponName = remember(equippedWeaponItem, equippedWeaponId) {
+        when {
+            equippedWeaponItem != null -> equippedWeaponItem.name
+            !equippedWeaponId.isNullOrBlank() -> equippedWeaponId.humanizeId()
+            else -> "No weapon equipped"
+        }
+    }
+    val weaponOptionIds = remember(unlockedWeapons, equippedWeaponId) {
+        if (equippedWeaponId.isNullOrBlank()) unlockedWeapons
+        else unlockedWeapons + equippedWeaponId
+    }
+    val weaponOptions = remember(weaponOptionIds, selectedCharacterId, resolveWeaponItem) {
+        buildWeaponOptions(
+            unlockedWeapons = weaponOptionIds,
+            characterId = selectedCharacterId,
+            resolveWeaponItem = resolveWeaponItem
+        )
+    }
+    val equippedArmorId = remember(equippedArmors, selectedCharacterId) {
+        selectedCharacterId?.let { id ->
+            equippedArmors[id.lowercase(Locale.getDefault())]
+        }
+    }
+    val equippedArmorItem = remember(equippedArmorId) { equippedArmorId?.let(resolveArmorItem) }
+    val equippedArmorName = remember(equippedArmorItem, equippedArmorId) {
+        when {
+            equippedArmorItem != null -> equippedArmorItem.name
+            !equippedArmorId.isNullOrBlank() -> equippedArmorId.humanizeId()
+            else -> "No armor equipped"
+        }
+    }
+    val armorOptionIds = remember(unlockedArmors, equippedArmorId) {
+        if (equippedArmorId.isNullOrBlank()) unlockedArmors
+        else unlockedArmors + equippedArmorId
+    }
+    val armorOptions = remember(armorOptionIds, selectedCharacterId, resolveArmorItem) {
+        buildArmorOptions(
+            unlockedArmors = armorOptionIds,
+            characterId = selectedCharacterId,
+            resolveArmorItem = resolveArmorItem
+        )
+    }
     val fallbackEquippedEntries = remember(inventoryEquippableEntries, characterEquippedItems, selectedCharacterId) {
         val existingIds = inventoryEquippableEntries.map { it.item.id }.toSet()
         characterEquippedItems.mapNotNull { (slotId, itemId) ->
             if (itemId.isNullOrBlank() || existingIds.contains(itemId)) return@mapNotNull null
             val normalizedSlot = slotId.lowercase(Locale.getDefault())
+            if (!EQUIP_SLOTS.contains(normalizedSlot)) return@mapNotNull null
             val readableName = itemId.split('_', ' ')
                 .filter { it.isNotBlank() }
                 .joinToString(" ") { part ->
@@ -320,7 +407,7 @@ private fun InventoryScreen(
     val equippableEntries = remember(inventoryEquippableEntries, fallbackEquippedEntries) {
         (inventoryEquippableEntries + fallbackEquippedEntries).distinctBy { it.item.id }
     }
-    val slotOptions = remember { EQUIP_SLOTS }
+    val slotOptions = remember { (EQUIP_SLOTS + "weapon").distinct() }
     var selectedSlot by remember(slotOptions, normalizedFocusSlot) {
         mutableStateOf(
             normalizedFocusSlot?.takeIf { slotOptions.contains(it) }
@@ -346,6 +433,26 @@ private fun InventoryScreen(
                 }.orEmpty()
         }
     }
+    val equippedItemNamesWithWeapon = remember(equippedItemNames, equippedWeaponName, equippedArmorName) {
+        var updated = equippedItemNames
+        if (!equippedWeaponName.isNullOrBlank()) {
+            updated = updated + ("weapon" to equippedWeaponName)
+        }
+        if (!equippedArmorName.isNullOrBlank()) {
+            updated = updated + ("armor" to equippedArmorName)
+        }
+        updated
+    }
+    val loadoutEquippedItems = remember(characterEquippedItems, equippedWeaponId, equippedArmorId) {
+        var updated = characterEquippedItems
+        if (!equippedWeaponId.isNullOrBlank()) {
+            updated = updated + ("weapon" to equippedWeaponId)
+        }
+        if (!equippedArmorId.isNullOrBlank()) {
+            updated = updated + ("armor" to equippedArmorId)
+        }
+        updated
+    }
     var selectedEquipEntry by remember(selectedSlot, equippableEntries) {
         mutableStateOf(
             equippableEntries.firstOrNull { it.item.equipment?.slot.equals(selectedSlot, ignoreCase = true) }
@@ -355,6 +462,10 @@ private fun InventoryScreen(
     LaunchedEffect(selectedSlot, selectedCharacterId, equippableEntries, activeTab, characterEquippedItems) {
         if (activeTab == InventoryTab.GEAR) {
             val normalizedSlot = selectedSlot.lowercase(Locale.getDefault())
+            if (normalizedSlot == "weapon" || normalizedSlot == "armor") {
+                selectedEquipEntry = null
+                return@LaunchedEffect
+            }
             val equippedId = characterEquippedItems[normalizedSlot]
             val filteredOptions = filterGearOptions(
                 entries = equippableEntries,
@@ -365,6 +476,28 @@ private fun InventoryScreen(
                 ?: filteredOptions.firstOrNull()
                 ?: equippableEntries.firstOrNull { it.item.equipment?.slot.equals(selectedSlot, ignoreCase = true) }
                 ?: equippableEntries.firstOrNull()
+        }
+    }
+    LaunchedEffect(showWeaponDialog, weaponOptions, equippedWeaponId) {
+        if (showWeaponDialog) {
+            val initialSelection = weaponOptions.firstOrNull { option ->
+                option.id.equals(equippedWeaponId, ignoreCase = true)
+            } ?: weaponOptions.firstOrNull()
+            selectedWeaponOptionId = initialSelection?.id
+        }
+    }
+    LaunchedEffect(showArmorDialog, armorOptions, equippedArmorId) {
+        if (showArmorDialog) {
+            val initialSelection = armorOptions.firstOrNull { option ->
+                option.id.equals(equippedArmorId, ignoreCase = true)
+            } ?: armorOptions.firstOrNull()
+            selectedArmorOptionId = initialSelection?.id
+        }
+    }
+    LaunchedEffect(selectedCharacterId) {
+        if (selectedCharacterId == null) {
+            showWeaponDialog = false
+            showArmorDialog = false
         }
     }
 
@@ -490,46 +623,120 @@ private fun InventoryScreen(
                             )
                             InventoryTab.GEAR -> {
                                 val normalizedSlot = selectedSlot.lowercase(Locale.getDefault())
-                                val equippedId = characterEquippedItems[normalizedSlot]
-                                val equippedEntry = equippableEntries.firstOrNull { it.item.id == equippedId }
-                                val gearOptions = remember(equippableEntries, selectedSlot, selectedCharacterId) {
-                                    filterGearOptions(
-                                        entries = equippableEntries,
-                                        slotId = selectedSlot,
-                                        characterId = selectedCharacterId
+                                if (normalizedSlot == "weapon") {
+                                    WeaponGearTabContent(
+                                        partyMembers = partyMembers,
+                                        selectedCharacterId = selectedCharacterId,
+                                        slots = slotOptions,
+                                        selectedSlot = selectedSlot,
+                                        equippedItems = loadoutEquippedItems,
+                                        equippedItemNames = equippedItemNamesWithWeapon,
+                                        equippedWeaponItem = equippedWeaponItem,
+                                        equippedWeaponName = equippedWeaponName,
+                                        equippedWeaponSummary = equippedWeaponItem?.let { weaponSummaryLine(it) },
+                                        hasUnlockedWeapons = weaponOptions.isNotEmpty() && selectedCharacterId != null,
+                                        accentColor = accentColor,
+                                        borderColor = borderColor,
+                                        foregroundColor = foregroundColor,
+                                        largeTouchTargets = largeTouchTargets,
+                                        onSelectCharacter = { id -> selectedCharacterId = id },
+                                        onSelectSlot = { slot ->
+                                            val normalized = slot.lowercase(Locale.getDefault())
+                                            selectedSlot = normalized
+                                        },
+                                        onSelectModSlot = { slot ->
+                                            if (selectedCharacterId != null) {
+                                                pendingModSlot = slot
+                                                showModDialog = true
+                                            }
+                                        },
+                                        onOpenWeaponPicker = {
+                                            if (selectedCharacterId != null) {
+                                                showWeaponDialog = true
+                                            }
+                                        }
+                                    )
+                                } else if (normalizedSlot == "armor") {
+                                    ArmorGearTabContent(
+                                        partyMembers = partyMembers,
+                                        selectedCharacterId = selectedCharacterId,
+                                        slots = slotOptions,
+                                        selectedSlot = selectedSlot,
+                                        equippedItems = loadoutEquippedItems,
+                                        equippedItemNames = equippedItemNamesWithWeapon,
+                                        equippedArmorItem = equippedArmorItem,
+                                        equippedArmorName = equippedArmorName,
+                                        equippedArmorSummary = equippedArmorItem?.let { armorSummaryLine(it) },
+                                        hasUnlockedArmors = armorOptions.isNotEmpty() && selectedCharacterId != null,
+                                        accentColor = accentColor,
+                                        borderColor = borderColor,
+                                        foregroundColor = foregroundColor,
+                                        largeTouchTargets = largeTouchTargets,
+                                        onSelectCharacter = { id -> selectedCharacterId = id },
+                                        onSelectSlot = { slot ->
+                                            val normalized = slot.lowercase(Locale.getDefault())
+                                            selectedSlot = normalized
+                                        },
+                                        onSelectModSlot = { slot ->
+                                            if (selectedCharacterId != null) {
+                                                pendingModSlot = slot
+                                                showModDialog = true
+                                            }
+                                        },
+                                        onOpenArmorPicker = {
+                                            if (selectedCharacterId != null) {
+                                                showArmorDialog = true
+                                            }
+                                        }
+                                    )
+                                } else {
+                                    val equippedId = characterEquippedItems[normalizedSlot]
+                                    val equippedEntry = equippableEntries.firstOrNull { it.item.id == equippedId }
+                                    val gearOptions = remember(equippableEntries, selectedSlot, selectedCharacterId) {
+                                        filterGearOptions(
+                                            entries = equippableEntries,
+                                            slotId = selectedSlot,
+                                            characterId = selectedCharacterId
+                                        )
+                                    }
+                                    GearTabContent(
+                                        partyMembers = partyMembers,
+                                        selectedCharacterId = selectedCharacterId,
+                                        slots = slotOptions,
+                                        selectedSlot = selectedSlot,
+                                        equippedItems = loadoutEquippedItems,
+                                        availableItems = gearOptions,
+                                        selectedEntry = selectedEquipEntry,
+                                        equippedEntry = equippedEntry,
+                                        equippedItemName = equippedItemNamesWithWeapon[normalizedSlot],
+                                        equippedItemNames = equippedItemNamesWithWeapon,
+                                        accentColor = accentColor,
+                                        borderColor = borderColor,
+                                        foregroundColor = foregroundColor,
+                                        highContrastMode = highContrastMode,
+                                        largeTouchTargets = largeTouchTargets,
+                                        onSelectCharacter = { id ->
+                                            selectedCharacterId = id
+                                        },
+                                        onSelectSlot = { slot ->
+                                            val normalized = slot.lowercase(Locale.getDefault())
+                                            selectedSlot = normalized
+                                        },
+                                        onSelectEntry = { entry -> selectedEquipEntry = entry },
+                                        onEquip = if (selectedCharacterId != null) {
+                                            { selectedCharacterId?.let { onEquipItem(selectedSlot, selectedEquipEntry?.item?.id, it) } }
+                                        } else null,
+                                        onUnequip = if (selectedCharacterId != null) {
+                                            { onEquipItem(selectedSlot, null, selectedCharacterId!!) }
+                                        } else null,
+                                        onSelectModSlot = { slot ->
+                                            if (selectedCharacterId != null) {
+                                                pendingModSlot = slot
+                                                showModDialog = true
+                                            }
+                                        }
                                     )
                                 }
-                                GearTabContent(
-                                    partyMembers = partyMembers,
-                                    selectedCharacterId = selectedCharacterId,
-                                    slots = slotOptions,
-                                    selectedSlot = selectedSlot,
-                                    equippedItems = equippedItems,
-                                    availableItems = gearOptions,
-                                    selectedEntry = selectedEquipEntry,
-                                    equippedEntry = equippedEntry,
-                                    equippedItemName = equippedItemNames[normalizedSlot],
-                                    accentColor = accentColor,
-                                    borderColor = borderColor,
-                                    foregroundColor = foregroundColor,
-                                    highContrastMode = highContrastMode,
-                                    largeTouchTargets = largeTouchTargets,
-                                    itemNameForId = itemNameForId,
-                                    onSelectCharacter = { id ->
-                                        selectedCharacterId = id
-                                    },
-                                    onSelectSlot = { slot ->
-                                        val normalized = slot.lowercase(Locale.getDefault())
-                                        selectedSlot = normalized
-                                    },
-                                    onSelectEntry = { entry -> selectedEquipEntry = entry },
-                                    onEquip = if (selectedCharacterId != null) {
-                                        { selectedCharacterId?.let { onEquipItem(selectedSlot, selectedEquipEntry?.item?.id, it) } }
-                                    } else null,
-                                    onUnequip = if (selectedCharacterId != null) {
-                                        { onEquipItem(selectedSlot, null, selectedCharacterId!!) }
-                                    } else null
-                                )
                             }
                         }
                     }
@@ -561,6 +768,73 @@ private fun InventoryScreen(
             borderColor = borderColor,
             textColor = foregroundColor,
             accentColor = accentColor
+        )
+    }
+    if (showModDialog && pendingModSlot != null && selectedCharacterId != null) {
+        val slotLabel = slotDisplayName(pendingModSlot!!)
+        val currentModId = characterEquippedItems[pendingModSlot!!]
+        ModPickerDialog(
+            slotLabel = slotLabel,
+            mods = modEntries,
+            selectedModId = currentModId,
+            onSelect = { entry ->
+                onEquipMod(pendingModSlot!!, entry.item.id, selectedCharacterId)
+                pendingModSlot = null
+                showModDialog = false
+            },
+            onRemove = {
+                onEquipMod(pendingModSlot!!, null, selectedCharacterId)
+                pendingModSlot = null
+                showModDialog = false
+            },
+            onDismiss = {
+                pendingModSlot = null
+                showModDialog = false
+            },
+            accentColor = accentColor,
+            borderColor = borderColor,
+            foregroundColor = foregroundColor,
+            largeTouchTargets = largeTouchTargets
+        )
+    }
+    val weaponDialogCharacterId = selectedCharacterId
+    if (showWeaponDialog && weaponDialogCharacterId != null) {
+        val characterName = partyMembers.firstOrNull { it.id == weaponDialogCharacterId }?.name
+            ?: weaponDialogCharacterId.humanizeId()
+        WeaponPickerDialog(
+            characterName = characterName,
+            weapons = weaponOptions,
+            equippedWeaponId = equippedWeaponId,
+            selectedWeaponId = selectedWeaponOptionId,
+            onSelectWeapon = { selectedWeaponOptionId = it },
+            onEquipWeapon = { weaponId ->
+                onEquipWeapon(weaponDialogCharacterId, weaponId)
+            },
+            onDismiss = { showWeaponDialog = false },
+            accentColor = accentColor,
+            borderColor = borderColor,
+            foregroundColor = foregroundColor,
+            largeTouchTargets = largeTouchTargets
+        )
+    }
+    val armorDialogCharacterId = selectedCharacterId
+    if (showArmorDialog && armorDialogCharacterId != null) {
+        val characterName = partyMembers.firstOrNull { it.id == armorDialogCharacterId }?.name
+            ?: armorDialogCharacterId.humanizeId()
+        ArmorPickerDialog(
+            characterName = characterName,
+            armors = armorOptions,
+            equippedArmorId = equippedArmorId,
+            selectedArmorId = selectedArmorOptionId,
+            onSelectArmor = { selectedArmorOptionId = it },
+            onEquipArmor = { armorId ->
+                onEquipArmor(armorDialogCharacterId, armorId)
+            },
+            onDismiss = { showArmorDialog = false },
+            accentColor = accentColor,
+            borderColor = borderColor,
+            foregroundColor = foregroundColor,
+            largeTouchTargets = largeTouchTargets
         )
     }
 }
@@ -929,17 +1203,18 @@ private fun GearTabContent(
     selectedEntry: InventoryEntry?,
     equippedEntry: InventoryEntry?,
     equippedItemName: String?,
+    equippedItemNames: Map<String, String?>,
     accentColor: Color,
     borderColor: Color,
     foregroundColor: Color,
     highContrastMode: Boolean,
     largeTouchTargets: Boolean,
-    itemNameForId: (String?) -> String?,
     onSelectCharacter: (String) -> Unit,
     onSelectSlot: (String) -> Unit,
     onSelectEntry: (InventoryEntry) -> Unit,
     onEquip: (() -> Unit)?,
-    onUnequip: (() -> Unit)?
+    onUnequip: (() -> Unit)?,
+    onSelectModSlot: (String) -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -965,18 +1240,353 @@ private fun GearTabContent(
             selectedSlot = selectedSlot,
             onSelectSlot = onSelectSlot,
             equippedItemName = equippedItemName,
+            equippedItemNames = equippedItemNames,
+            equippedItems = equippedItems,
             availableItems = availableItems,
             selectedEntry = selectedEntry,
             equippedEntry = equippedEntry,
             onSelectEntry = onSelectEntry,
             onEquip = onEquip,
             onUnequip = onUnequip,
+            onSelectModSlot = onSelectModSlot,
             accentColor = accentColor,
             borderColor = borderColor,
             foregroundColor = foregroundColor,
             highContrastMode = highContrastMode,
             largeTouchTargets = largeTouchTargets
         )
+    }
+}
+
+@Composable
+private fun WeaponGearTabContent(
+    partyMembers: List<PartyMemberStatus>,
+    selectedCharacterId: String?,
+    slots: List<String>,
+    selectedSlot: String,
+    equippedItems: Map<String, String>,
+    equippedItemNames: Map<String, String?>,
+    equippedWeaponItem: Item?,
+    equippedWeaponName: String?,
+    equippedWeaponSummary: String?,
+    hasUnlockedWeapons: Boolean,
+    accentColor: Color,
+    borderColor: Color,
+    foregroundColor: Color,
+    largeTouchTargets: Boolean,
+    onSelectCharacter: (String) -> Unit,
+    onSelectSlot: (String) -> Unit,
+    onSelectModSlot: (String) -> Unit,
+    onOpenWeaponPicker: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 4.dp),
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        PartyMemberSidebar(
+            modifier = Modifier
+                .weight(0.3f)
+                .fillMaxHeight(),
+            partyMembers = partyMembers,
+            selectedCharacterId = selectedCharacterId,
+            onSelectCharacter = onSelectCharacter,
+            accentColor = accentColor,
+            borderColor = borderColor
+        )
+        Column(
+            modifier = Modifier
+                .weight(0.7f)
+                .fillMaxHeight(),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            GearLoadoutGrid(
+                slots = slots,
+                selectedSlot = selectedSlot,
+                equippedItemNames = equippedItemNames,
+                equippedItems = equippedItems,
+                onSelectSlot = onSelectSlot,
+                onSelectModSlot = onSelectModSlot,
+                accentColor = accentColor,
+                borderColor = borderColor,
+                foregroundColor = foregroundColor,
+                largeTouchTargets = largeTouchTargets
+            )
+            WeaponSlotPanel(
+                equippedWeaponItem = equippedWeaponItem,
+                equippedWeaponName = equippedWeaponName,
+                equippedWeaponSummary = equippedWeaponSummary,
+                hasUnlockedWeapons = hasUnlockedWeapons,
+                onOpenWeaponPicker = onOpenWeaponPicker,
+                accentColor = accentColor,
+                borderColor = borderColor,
+                foregroundColor = foregroundColor,
+                largeTouchTargets = largeTouchTargets
+            )
+        }
+    }
+}
+
+@Composable
+private fun ArmorGearTabContent(
+    partyMembers: List<PartyMemberStatus>,
+    selectedCharacterId: String?,
+    slots: List<String>,
+    selectedSlot: String,
+    equippedItems: Map<String, String>,
+    equippedItemNames: Map<String, String?>,
+    equippedArmorItem: Item?,
+    equippedArmorName: String?,
+    equippedArmorSummary: String?,
+    hasUnlockedArmors: Boolean,
+    accentColor: Color,
+    borderColor: Color,
+    foregroundColor: Color,
+    largeTouchTargets: Boolean,
+    onSelectCharacter: (String) -> Unit,
+    onSelectSlot: (String) -> Unit,
+    onSelectModSlot: (String) -> Unit,
+    onOpenArmorPicker: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 4.dp),
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        PartyMemberSidebar(
+            modifier = Modifier
+                .weight(0.3f)
+                .fillMaxHeight(),
+            partyMembers = partyMembers,
+            selectedCharacterId = selectedCharacterId,
+            onSelectCharacter = onSelectCharacter,
+            accentColor = accentColor,
+            borderColor = borderColor
+        )
+        Column(
+            modifier = Modifier
+                .weight(0.7f)
+                .fillMaxHeight(),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            GearLoadoutGrid(
+                slots = slots,
+                selectedSlot = selectedSlot,
+                equippedItemNames = equippedItemNames,
+                equippedItems = equippedItems,
+                onSelectSlot = onSelectSlot,
+                onSelectModSlot = onSelectModSlot,
+                accentColor = accentColor,
+                borderColor = borderColor,
+                foregroundColor = foregroundColor,
+                largeTouchTargets = largeTouchTargets
+            )
+            ArmorSlotPanel(
+                equippedArmorItem = equippedArmorItem,
+                equippedArmorName = equippedArmorName,
+                equippedArmorSummary = equippedArmorSummary,
+                hasUnlockedArmors = hasUnlockedArmors,
+                onOpenArmorPicker = onOpenArmorPicker,
+                accentColor = accentColor,
+                borderColor = borderColor,
+                foregroundColor = foregroundColor,
+                largeTouchTargets = largeTouchTargets
+            )
+        }
+    }
+}
+
+@Composable
+private fun WeaponSlotPanel(
+    equippedWeaponItem: Item?,
+    equippedWeaponName: String?,
+    equippedWeaponSummary: String?,
+    hasUnlockedWeapons: Boolean,
+    onOpenWeaponPicker: () -> Unit,
+    accentColor: Color,
+    borderColor: Color,
+    foregroundColor: Color,
+    largeTouchTargets: Boolean
+) {
+    val weaponLabel = equippedWeaponName?.takeIf { it.isNotBlank() } ?: "No weapon equipped"
+    val description = equippedWeaponItem?.description?.takeIf { it.isNotBlank() }
+        ?: if (equippedWeaponItem == null) "No weapon equipped yet." else "No description available."
+    val iconRes = remember(equippedWeaponItem?.id) {
+        equippedWeaponItem?.let { itemIconRes(it) } ?: slotIconRes("weapon")
+    }
+    val buttonHeight = if (largeTouchTargets) 56.dp else 48.dp
+
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        color = Color.Black.copy(alpha = 0.35f),
+        border = BorderStroke(1.dp, borderColor.copy(alpha = 0.8f)),
+        shape = RoundedCornerShape(24.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            SectionHeading(label = "Weapon Loadout", accentColor = accentColor)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(14.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Image(
+                    painter = painterResource(iconRes),
+                    contentDescription = null,
+                    modifier = Modifier.size(if (largeTouchTargets) 88.dp else 76.dp)
+                )
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = weaponLabel,
+                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
+                        color = foregroundColor
+                    )
+                    Text(
+                        text = description,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = foregroundColor.copy(alpha = 0.75f),
+                        maxLines = 3,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    equippedWeaponSummary?.let { summary ->
+                        Text(
+                            text = summary,
+                            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
+                            color = accentColor
+                        )
+                    }
+                }
+            }
+            if (!hasUnlockedWeapons) {
+                Text(
+                    text = "No weapons unlocked yet.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = foregroundColor.copy(alpha = 0.7f)
+                )
+            }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                Button(
+                    onClick = onOpenWeaponPicker,
+                    enabled = hasUnlockedWeapons,
+                    modifier = Modifier
+                        .weight(1f)
+                        .heightIn(min = buttonHeight),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = accentColor.copy(alpha = 0.18f),
+                        contentColor = accentColor,
+                        disabledContainerColor = Color.White.copy(alpha = 0.08f),
+                        disabledContentColor = Color.White.copy(alpha = 0.4f)
+                    )
+                ) {
+                    Text("Choose Weapon")
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ArmorSlotPanel(
+    equippedArmorItem: Item?,
+    equippedArmorName: String?,
+    equippedArmorSummary: String?,
+    hasUnlockedArmors: Boolean,
+    onOpenArmorPicker: () -> Unit,
+    accentColor: Color,
+    borderColor: Color,
+    foregroundColor: Color,
+    largeTouchTargets: Boolean
+) {
+    val armorLabel = equippedArmorName?.takeIf { it.isNotBlank() } ?: "No armor equipped"
+    val description = equippedArmorItem?.description?.takeIf { it.isNotBlank() }
+        ?: if (equippedArmorItem == null) "No armor equipped yet." else "No description available."
+    val iconRes = remember(equippedArmorItem?.id) {
+        equippedArmorItem?.let { itemIconRes(it) } ?: slotIconRes("armor")
+    }
+    val buttonHeight = if (largeTouchTargets) 56.dp else 48.dp
+
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        color = Color.Black.copy(alpha = 0.35f),
+        border = BorderStroke(1.dp, borderColor.copy(alpha = 0.8f)),
+        shape = RoundedCornerShape(24.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            SectionHeading(label = "Armor Loadout", accentColor = accentColor)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(14.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Image(
+                    painter = painterResource(iconRes),
+                    contentDescription = null,
+                    modifier = Modifier.size(if (largeTouchTargets) 88.dp else 76.dp)
+                )
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = armorLabel,
+                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
+                        color = foregroundColor
+                    )
+                    Text(
+                        text = description,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = foregroundColor.copy(alpha = 0.75f),
+                        maxLines = 3,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    equippedArmorSummary?.let { summary ->
+                        Text(
+                            text = summary,
+                            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
+                            color = accentColor
+                        )
+                    }
+                }
+            }
+            if (!hasUnlockedArmors) {
+                Text(
+                    text = "No armor unlocked yet.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = foregroundColor.copy(alpha = 0.7f)
+                )
+            }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                Button(
+                    onClick = onOpenArmorPicker,
+                    enabled = hasUnlockedArmors,
+                    modifier = Modifier
+                        .weight(1f)
+                        .heightIn(min = buttonHeight),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = accentColor.copy(alpha = 0.18f),
+                        contentColor = accentColor,
+                        disabledContainerColor = Color.White.copy(alpha = 0.08f),
+                        disabledContentColor = Color.White.copy(alpha = 0.4f)
+                    )
+                ) {
+                    Text("Choose Armor")
+                }
+            }
+        }
     }
 }
 
@@ -1070,12 +1680,15 @@ private fun GearWorkshop(
     selectedSlot: String,
     onSelectSlot: (String) -> Unit,
     equippedItemName: String?,
+    equippedItemNames: Map<String, String?>,
+    equippedItems: Map<String, String>,
     availableItems: List<InventoryEntry>,
     selectedEntry: InventoryEntry?,
     equippedEntry: InventoryEntry?,
     onSelectEntry: (InventoryEntry) -> Unit,
     onEquip: (() -> Unit)?,
     onUnequip: (() -> Unit)?,
+    onSelectModSlot: (String) -> Unit,
     accentColor: Color,
     borderColor: Color,
     foregroundColor: Color,
@@ -1086,15 +1699,19 @@ private fun GearWorkshop(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        SlotTabRow(
+        GearLoadoutGrid(
             slots = slots,
             selectedSlot = selectedSlot,
+            equippedItemNames = equippedItemNames,
+            equippedItems = equippedItems,
             onSelectSlot = onSelectSlot,
+            onSelectModSlot = onSelectModSlot,
             accentColor = accentColor,
             borderColor = borderColor,
+            foregroundColor = foregroundColor,
             largeTouchTargets = largeTouchTargets
         )
-        
+
         ComparisonPanel(
             slotLabel = slotDisplayName(selectedSlot),
             selectedEntry = selectedEntry,
@@ -1107,7 +1724,7 @@ private fun GearWorkshop(
             onEquip = onEquip,
             onUnequip = onUnequip
         )
-        
+
         InventoryItemsColumn(
             modifier = Modifier.weight(1f),
             items = availableItems,
@@ -1124,61 +1741,1076 @@ private fun GearWorkshop(
 }
 
 @Composable
-private fun SlotTabRow(
+private fun GearLoadoutGrid(
     slots: List<String>,
     selectedSlot: String,
+    equippedItemNames: Map<String, String?>,
+    equippedItems: Map<String, String>,
     onSelectSlot: (String) -> Unit,
+    onSelectModSlot: (String) -> Unit,
     accentColor: Color,
     borderColor: Color,
+    foregroundColor: Color,
     largeTouchTargets: Boolean
 ) {
-    Row(
+    val preferredOrder = listOf("weapon", "armor", "accessory", "snack")
+    val orderedSlots = remember(slots) {
+        val normalized = slots.map { it.lowercase(Locale.getDefault()) }
+        val ordered = preferredOrder.filter { normalized.contains(it) }
+        ordered + normalized.filterNot { preferredOrder.contains(it) }
+    }
+    Column(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        slots.forEach { slot ->
-            SlotTab(
+        orderedSlots.forEach { slot ->
+            LoadoutSlotCard(
                 slot = slot,
                 isSelected = slot.equals(selectedSlot, ignoreCase = true),
+                equippedItemName = equippedItemNames[slot],
+                equippedItems = equippedItems,
+                equippedItemNames = equippedItemNames,
                 onClick = { onSelectSlot(slot) },
+                onSelectModSlot = onSelectModSlot,
                 accentColor = accentColor,
                 borderColor = borderColor,
+                foregroundColor = foregroundColor,
                 largeTouchTargets = largeTouchTargets,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.fillMaxWidth()
             )
         }
     }
 }
 
 @Composable
-private fun SlotTab(
+private fun LoadoutSlotCard(
     slot: String,
     isSelected: Boolean,
+    equippedItemName: String?,
+    equippedItems: Map<String, String>,
+    equippedItemNames: Map<String, String?>,
     onClick: () -> Unit,
+    onSelectModSlot: (String) -> Unit,
     accentColor: Color,
     borderColor: Color,
+    foregroundColor: Color,
     largeTouchTargets: Boolean,
     modifier: Modifier
 ) {
-    val background = if (isSelected) accentColor.copy(alpha = 0.2f) else Color.Black.copy(alpha = 0.25f)
+    val background = if (isSelected) accentColor.copy(alpha = 0.18f) else Color.Black.copy(alpha = 0.28f)
     val border = if (isSelected) accentColor else borderColor.copy(alpha = 0.5f)
-    
+    val slotLabel = slotDisplayName(slot)
+    val name = equippedItemName?.takeIf { it.isNotBlank() } ?: "Empty"
+    val cardHeight = if (largeTouchTargets) 104.dp else 96.dp
+    val normalizedSlot = slot.lowercase(Locale.getDefault())
+    val supportsMods = normalizedSlot == "weapon" || normalizedSlot == "armor"
+    val modSlots = if (normalizedSlot == "weapon") {
+        listOf("weapon_mod1", "weapon_mod2")
+    } else if (normalizedSlot == "armor") {
+        listOf("armor_mod1", "armor_mod2")
+    } else {
+        emptyList()
+    }
+    val baseEquippedId = equippedItems[normalizedSlot]
+    val modsLocked = supportsMods && baseEquippedId.isNullOrBlank()
+
     Surface(
         modifier = modifier
-            .height(if (largeTouchTargets) 56.dp else 48.dp)
-            .clip(RoundedCornerShape(12.dp))
+            .heightIn(min = cardHeight)
+            .clip(RoundedCornerShape(20.dp))
             .clickable { onClick() },
         color = background,
         border = BorderStroke(1.dp, border)
     ) {
-        Box(contentAlignment = Alignment.Center) {
-             Text(
-                text = slot.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() },
-                style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
-                color = if (isSelected) Color.White else Color.White.copy(alpha = 0.7f),
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 14.dp, vertical = 12.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Image(
+                    painter = painterResource(slotIconRes(slot)),
+                    contentDescription = null,
+                    modifier = Modifier.size(36.dp)
+                )
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = slotLabel,
+                        style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.SemiBold),
+                        color = foregroundColor
+                    )
+                    Text(
+                        text = name,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = foregroundColor.copy(alpha = if (equippedItemName.isNullOrBlank()) 0.6f else 0.9f),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+                if (isSelected) {
+                    Surface(
+                        color = accentColor.copy(alpha = 0.2f),
+                        shape = RoundedCornerShape(10.dp)
+                    ) {
+                        Text(
+                            text = "ACTIVE",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = accentColor,
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                        )
+                    }
+                }
+            }
+            if (supportsMods) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .alpha(if (modsLocked) 0.6f else 1f),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "Mods",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = foregroundColor.copy(alpha = 0.7f)
+                    )
+                    modSlots.forEach { modSlot ->
+                        val modName = equippedItemNames[modSlot]?.takeIf { it.isNotBlank() } ?: "Empty"
+                        ModSlotChip(
+                            label = if (modSlot.endsWith("1")) "M1" else "M2",
+                            name = modName,
+                            enabled = !modsLocked,
+                            accentColor = accentColor,
+                            borderColor = borderColor,
+                            foregroundColor = foregroundColor,
+                            onClick = { onSelectModSlot(modSlot) }
+                        )
+                    }
+                }
+                if (modsLocked) {
+                    Text(
+                        text = "Equip ${slotLabel.lowercase(Locale.getDefault())} to unlock mods.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = foregroundColor.copy(alpha = 0.6f)
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ModSlotChip(
+    label: String,
+    name: String,
+    enabled: Boolean,
+    accentColor: Color,
+    borderColor: Color,
+    foregroundColor: Color,
+    onClick: () -> Unit
+) {
+    Surface(
+        modifier = Modifier
+            .heightIn(min = 34.dp)
+            .clip(RoundedCornerShape(12.dp))
+            .let { base -> if (enabled) base.clickable { onClick() } else base },
+        color = Color.Black.copy(alpha = 0.22f),
+        border = BorderStroke(1.dp, borderColor.copy(alpha = 0.5f))
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Surface(
+                color = accentColor.copy(alpha = 0.2f),
+                shape = RoundedCornerShape(6.dp)
+            ) {
+                Text(
+                    text = label,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = accentColor,
+                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                )
+            }
+            Text(
+                text = name,
+                style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.SemiBold),
+                color = foregroundColor,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
+        }
+    }
+}
+
+@Composable
+private fun ModSlotsPanel(
+    baseSlot: String,
+    baseEquippedId: String?,
+    equippedItemNames: Map<String, String?>,
+    onSelectModSlot: (String) -> Unit,
+    accentColor: Color,
+    borderColor: Color,
+    foregroundColor: Color,
+    largeTouchTargets: Boolean
+) {
+    val normalizedBase = baseSlot.lowercase(Locale.getDefault())
+    val modSlots = if (normalizedBase == "weapon") {
+        listOf("weapon_mod1", "weapon_mod2")
+    } else {
+        listOf("armor_mod1", "armor_mod2")
+    }
+    val isLocked = baseEquippedId.isNullOrBlank()
+    val panelAlpha = if (isLocked) 0.5f else 1f
+
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        color = Color.Black.copy(alpha = 0.3f),
+        border = BorderStroke(1.dp, borderColor.copy(alpha = 0.7f)),
+        shape = RoundedCornerShape(22.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(14.dp)
+                .alpha(panelAlpha),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            SectionHeading(label = "Mods", accentColor = accentColor)
+            if (isLocked) {
+                Text(
+                    text = "Equip a ${slotDisplayName(baseSlot).lowercase(Locale.getDefault())} to install mods.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = foregroundColor.copy(alpha = 0.7f)
+                )
+            }
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                modSlots.forEach { slot ->
+                    val modName = equippedItemNames[slot]?.takeIf { it.isNotBlank() } ?: "Empty Slot"
+                    Surface(
+                        modifier = Modifier
+                            .weight(1f)
+                            .heightIn(min = if (largeTouchTargets) 68.dp else 60.dp)
+                            .clip(RoundedCornerShape(16.dp))
+                            .let { base ->
+                                if (!isLocked) base.clickable { onSelectModSlot(slot) } else base
+                            },
+                        color = Color.Black.copy(alpha = 0.25f),
+                        border = BorderStroke(1.dp, borderColor.copy(alpha = 0.5f))
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(horizontal = 12.dp, vertical = 10.dp),
+                            verticalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                text = slotDisplayName(slot).replace("Weapon ", "").replace("Armor ", ""),
+                                style = MaterialTheme.typography.labelSmall,
+                                color = foregroundColor.copy(alpha = 0.7f)
+                            )
+                            Text(
+                                text = modName,
+                                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
+                                color = foregroundColor,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ModPickerDialog(
+    slotLabel: String,
+    mods: List<InventoryEntry>,
+    selectedModId: String?,
+    onSelect: (InventoryEntry) -> Unit,
+    onRemove: () -> Unit,
+    onDismiss: () -> Unit,
+    accentColor: Color,
+    borderColor: Color,
+    foregroundColor: Color,
+    largeTouchTargets: Boolean
+) {
+    val selectedName = mods.firstOrNull { it.item.id == selectedModId }?.item?.name
+        ?: selectedModId?.humanizeId()
+    Dialog(
+        onDismissRequest = onDismiss,
+        properties = DialogProperties(usePlatformDefaultWidth = false)
+    ) {
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth(0.92f)
+                .heightIn(max = 560.dp),
+            color = Color(0xFF0B0F16),
+            border = BorderStroke(1.dp, borderColor.copy(alpha = 0.8f)),
+            shape = RoundedCornerShape(26.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(18.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column {
+                        Text(
+                            text = "Select Mod",
+                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                            color = foregroundColor
+                        )
+                        Text(
+                            text = slotLabel.uppercase(Locale.getDefault()),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = foregroundColor.copy(alpha = 0.6f)
+                        )
+                    }
+                    OutlinedButton(onClick = onDismiss) {
+                        Text("Close")
+                    }
+                }
+                Text(
+                    text = "Current: ${selectedName ?: "None"}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = foregroundColor.copy(alpha = 0.8f)
+                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    Button(
+                        onClick = onRemove,
+                        enabled = !selectedModId.isNullOrBlank(),
+                        modifier = Modifier
+                            .weight(1f)
+                            .heightIn(min = if (largeTouchTargets) 52.dp else 44.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = accentColor.copy(alpha = 0.18f),
+                            contentColor = accentColor,
+                            disabledContainerColor = Color.White.copy(alpha = 0.08f),
+                            disabledContentColor = Color.White.copy(alpha = 0.4f)
+                        )
+                    ) {
+                        Text("Remove Mod")
+                    }
+                    OutlinedButton(
+                        onClick = onDismiss,
+                        modifier = Modifier
+                            .weight(0.8f)
+                            .heightIn(min = if (largeTouchTargets) 52.dp else 44.dp)
+                    ) {
+                        Text("Cancel")
+                    }
+                }
+                if (mods.isEmpty()) {
+                    Text(
+                        text = "No mods in inventory yet.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = foregroundColor.copy(alpha = 0.7f)
+                    )
+                } else {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        items(mods, key = { it.item.id }) { entry ->
+                            InventoryItemRow(
+                                entry = entry,
+                                selected = entry.item.id == selectedModId,
+                                isEquipped = entry.item.id == selectedModId,
+                                accentColor = accentColor,
+                                onClick = { onSelect(entry) },
+                                largeTouchTargets = largeTouchTargets,
+                                statSummary = primaryStatSummary(entry.item)
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun WeaponPickerDialog(
+    characterName: String,
+    weapons: List<WeaponOption>,
+    equippedWeaponId: String?,
+    selectedWeaponId: String?,
+    onSelectWeapon: (String) -> Unit,
+    onEquipWeapon: (String) -> Unit,
+    onDismiss: () -> Unit,
+    accentColor: Color,
+    borderColor: Color,
+    foregroundColor: Color,
+    largeTouchTargets: Boolean
+) {
+    Dialog(
+        onDismissRequest = onDismiss,
+        properties = DialogProperties(usePlatformDefaultWidth = false)
+    ) {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = Color(0xFF050B12)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(20.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column {
+                        Text(
+                            text = "Weapon Loadout",
+                            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                            color = foregroundColor
+                        )
+                        Text(
+                            text = characterName.uppercase(Locale.getDefault()),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = foregroundColor.copy(alpha = 0.6f)
+                        )
+                    }
+                    OutlinedButton(onClick = onDismiss) {
+                        Text("Close")
+                    }
+                }
+                if (weapons.isEmpty()) {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "No weapons unlocked yet.",
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = foregroundColor.copy(alpha = 0.7f),
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                } else {
+                    val selectedOption = weapons.firstOrNull { it.id.equals(selectedWeaponId, ignoreCase = true) }
+                        ?: weapons.firstOrNull()
+                    BoxWithConstraints(
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        val isWide = maxWidth > 720.dp
+                        if (isWide) {
+                            Row(
+                                modifier = Modifier.fillMaxSize(),
+                                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                            ) {
+                                WeaponOptionsColumn(
+                                    modifier = Modifier
+                                        .weight(0.45f)
+                                        .fillMaxHeight(),
+                                    weapons = weapons,
+                                    selectedWeaponId = selectedOption?.id,
+                                    equippedWeaponId = equippedWeaponId,
+                                    onSelectWeapon = onSelectWeapon,
+                                    accentColor = accentColor,
+                                    borderColor = borderColor,
+                                    foregroundColor = foregroundColor,
+                                    largeTouchTargets = largeTouchTargets
+                                )
+                                WeaponDetailPanel(
+                                    modifier = Modifier
+                                        .weight(0.55f)
+                                        .fillMaxHeight(),
+                                    option = selectedOption,
+                                    equippedWeaponId = equippedWeaponId,
+                                    onEquipWeapon = onEquipWeapon,
+                                    accentColor = accentColor,
+                                    borderColor = borderColor,
+                                    foregroundColor = foregroundColor,
+                                    largeTouchTargets = largeTouchTargets
+                                )
+                            }
+                        } else {
+                            Column(
+                                modifier = Modifier.fillMaxSize(),
+                                verticalArrangement = Arrangement.spacedBy(16.dp)
+                            ) {
+                                WeaponDetailPanel(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    option = selectedOption,
+                                    equippedWeaponId = equippedWeaponId,
+                                    onEquipWeapon = onEquipWeapon,
+                                    accentColor = accentColor,
+                                    borderColor = borderColor,
+                                    foregroundColor = foregroundColor,
+                                    largeTouchTargets = largeTouchTargets
+                                )
+                                WeaponOptionsColumn(
+                                    modifier = Modifier.weight(1f),
+                                    weapons = weapons,
+                                    selectedWeaponId = selectedOption?.id,
+                                    equippedWeaponId = equippedWeaponId,
+                                    onSelectWeapon = onSelectWeapon,
+                                    accentColor = accentColor,
+                                    borderColor = borderColor,
+                                    foregroundColor = foregroundColor,
+                                    largeTouchTargets = largeTouchTargets
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ArmorPickerDialog(
+    characterName: String,
+    armors: List<ArmorOption>,
+    equippedArmorId: String?,
+    selectedArmorId: String?,
+    onSelectArmor: (String) -> Unit,
+    onEquipArmor: (String) -> Unit,
+    onDismiss: () -> Unit,
+    accentColor: Color,
+    borderColor: Color,
+    foregroundColor: Color,
+    largeTouchTargets: Boolean
+) {
+    Dialog(
+        onDismissRequest = onDismiss,
+        properties = DialogProperties(usePlatformDefaultWidth = false)
+    ) {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = Color(0xFF050B12)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(20.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column {
+                        Text(
+                            text = "Armor Loadout",
+                            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                            color = foregroundColor
+                        )
+                        Text(
+                            text = characterName.uppercase(Locale.getDefault()),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = foregroundColor.copy(alpha = 0.6f)
+                        )
+                    }
+                    OutlinedButton(onClick = onDismiss) {
+                        Text("Close")
+                    }
+                }
+                if (armors.isEmpty()) {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "No armor unlocked yet.",
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = foregroundColor.copy(alpha = 0.7f),
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                } else {
+                    val selectedOption = armors.firstOrNull { it.id.equals(selectedArmorId, ignoreCase = true) }
+                        ?: armors.firstOrNull()
+                    BoxWithConstraints(
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        val isWide = maxWidth > 720.dp
+                        if (isWide) {
+                            Row(
+                                modifier = Modifier.fillMaxSize(),
+                                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                            ) {
+                                ArmorOptionsColumn(
+                                    modifier = Modifier
+                                        .weight(0.45f)
+                                        .fillMaxHeight(),
+                                    armors = armors,
+                                    selectedArmorId = selectedOption?.id,
+                                    equippedArmorId = equippedArmorId,
+                                    onSelectArmor = onSelectArmor,
+                                    accentColor = accentColor,
+                                    borderColor = borderColor,
+                                    foregroundColor = foregroundColor,
+                                    largeTouchTargets = largeTouchTargets
+                                )
+                                ArmorDetailPanel(
+                                    modifier = Modifier
+                                        .weight(0.55f)
+                                        .fillMaxHeight(),
+                                    option = selectedOption,
+                                    equippedArmorId = equippedArmorId,
+                                    onEquipArmor = onEquipArmor,
+                                    accentColor = accentColor,
+                                    borderColor = borderColor,
+                                    foregroundColor = foregroundColor,
+                                    largeTouchTargets = largeTouchTargets
+                                )
+                            }
+                        } else {
+                            Column(
+                                modifier = Modifier.fillMaxSize(),
+                                verticalArrangement = Arrangement.spacedBy(16.dp)
+                            ) {
+                                ArmorDetailPanel(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    option = selectedOption,
+                                    equippedArmorId = equippedArmorId,
+                                    onEquipArmor = onEquipArmor,
+                                    accentColor = accentColor,
+                                    borderColor = borderColor,
+                                    foregroundColor = foregroundColor,
+                                    largeTouchTargets = largeTouchTargets
+                                )
+                                ArmorOptionsColumn(
+                                    modifier = Modifier.weight(1f),
+                                    armors = armors,
+                                    selectedArmorId = selectedOption?.id,
+                                    equippedArmorId = equippedArmorId,
+                                    onSelectArmor = onSelectArmor,
+                                    accentColor = accentColor,
+                                    borderColor = borderColor,
+                                    foregroundColor = foregroundColor,
+                                    largeTouchTargets = largeTouchTargets
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun WeaponOptionsColumn(
+    modifier: Modifier,
+    weapons: List<WeaponOption>,
+    selectedWeaponId: String?,
+    equippedWeaponId: String?,
+    onSelectWeapon: (String) -> Unit,
+    accentColor: Color,
+    borderColor: Color,
+    foregroundColor: Color,
+    largeTouchTargets: Boolean
+) {
+    Surface(
+        modifier = modifier.fillMaxHeight(),
+        color = Color.Black.copy(alpha = 0.25f),
+        border = BorderStroke(1.dp, borderColor.copy(alpha = 0.6f)),
+        shape = RoundedCornerShape(22.dp)
+    ) {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            contentPadding = PaddingValues(16.dp)
+        ) {
+            items(weapons, key = { it.id }) { option ->
+                WeaponOptionRow(
+                    option = option,
+                    selected = option.id.equals(selectedWeaponId, ignoreCase = true),
+                    isEquipped = option.id.equals(equippedWeaponId, ignoreCase = true),
+                    accentColor = accentColor,
+                    borderColor = borderColor,
+                    foregroundColor = foregroundColor,
+                    largeTouchTargets = largeTouchTargets,
+                    onClick = { onSelectWeapon(option.id) }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun ArmorOptionsColumn(
+    modifier: Modifier,
+    armors: List<ArmorOption>,
+    selectedArmorId: String?,
+    equippedArmorId: String?,
+    onSelectArmor: (String) -> Unit,
+    accentColor: Color,
+    borderColor: Color,
+    foregroundColor: Color,
+    largeTouchTargets: Boolean
+) {
+    Surface(
+        modifier = modifier.fillMaxHeight(),
+        color = Color.Black.copy(alpha = 0.25f),
+        border = BorderStroke(1.dp, borderColor.copy(alpha = 0.6f)),
+        shape = RoundedCornerShape(22.dp)
+    ) {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            contentPadding = PaddingValues(16.dp)
+        ) {
+            items(armors, key = { it.id }) { option ->
+                ArmorOptionRow(
+                    option = option,
+                    selected = option.id.equals(selectedArmorId, ignoreCase = true),
+                    isEquipped = option.id.equals(equippedArmorId, ignoreCase = true),
+                    accentColor = accentColor,
+                    borderColor = borderColor,
+                    foregroundColor = foregroundColor,
+                    largeTouchTargets = largeTouchTargets,
+                    onClick = { onSelectArmor(option.id) }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun WeaponOptionRow(
+    option: WeaponOption,
+    selected: Boolean,
+    isEquipped: Boolean,
+    accentColor: Color,
+    borderColor: Color,
+    foregroundColor: Color,
+    largeTouchTargets: Boolean,
+    onClick: () -> Unit
+) {
+    val background = if (selected) accentColor.copy(alpha = 0.18f) else Color.Transparent
+    val outline = if (selected) accentColor else borderColor.copy(alpha = 0.6f)
+    val summary = weaponSummaryLine(option.item)
+    val iconRes = remember(option.id) { itemIconRes(option.item) }
+
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(min = if (largeTouchTargets) 80.dp else 68.dp)
+            .clip(RoundedCornerShape(18.dp))
+            .clickable { onClick() },
+        color = background,
+        border = BorderStroke(1.dp, outline)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 12.dp, vertical = 10.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Image(
+                painter = painterResource(iconRes),
+                contentDescription = null,
+                modifier = Modifier.size(48.dp)
+            )
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = option.item.name,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = foregroundColor,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                summary?.let {
+                    Text(
+                        text = it,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = foregroundColor.copy(alpha = 0.7f),
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+            }
+            if (isEquipped) {
+                Surface(
+                    color = accentColor.copy(alpha = 0.18f),
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Text(
+                        text = "EQUIPPED",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = accentColor,
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ArmorOptionRow(
+    option: ArmorOption,
+    selected: Boolean,
+    isEquipped: Boolean,
+    accentColor: Color,
+    borderColor: Color,
+    foregroundColor: Color,
+    largeTouchTargets: Boolean,
+    onClick: () -> Unit
+) {
+    val background = if (selected) accentColor.copy(alpha = 0.18f) else Color.Transparent
+    val outline = if (selected) accentColor else borderColor.copy(alpha = 0.6f)
+    val summary = armorSummaryLine(option.item)
+    val iconRes = remember(option.id) { itemIconRes(option.item) }
+
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(min = if (largeTouchTargets) 80.dp else 68.dp)
+            .clip(RoundedCornerShape(18.dp))
+            .clickable { onClick() },
+        color = background,
+        border = BorderStroke(1.dp, outline)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 12.dp, vertical = 10.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Image(
+                painter = painterResource(iconRes),
+                contentDescription = null,
+                modifier = Modifier.size(48.dp)
+            )
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = option.item.name,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = foregroundColor,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                summary?.let {
+                    Text(
+                        text = it,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = foregroundColor.copy(alpha = 0.7f),
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+            }
+            if (isEquipped) {
+                Surface(
+                    color = accentColor.copy(alpha = 0.18f),
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Text(
+                        text = "EQUIPPED",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = accentColor,
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun WeaponDetailPanel(
+    modifier: Modifier,
+    option: WeaponOption?,
+    equippedWeaponId: String?,
+    onEquipWeapon: (String) -> Unit,
+    accentColor: Color,
+    borderColor: Color,
+    foregroundColor: Color,
+    largeTouchTargets: Boolean
+) {
+    val weapon = option?.item
+    val isEquipped = option?.id?.equals(equippedWeaponId, ignoreCase = true) == true
+    val detailRows = weapon?.let { weaponDetailRows(it) }.orEmpty()
+    val buttonHeight = if (largeTouchTargets) 56.dp else 48.dp
+    val iconRes = remember(option?.id) {
+        weapon?.let { itemIconRes(it) } ?: slotIconRes("weapon")
+    }
+
+    Surface(
+        modifier = modifier,
+        color = Color.Black.copy(alpha = 0.28f),
+        border = BorderStroke(1.dp, borderColor.copy(alpha = 0.7f)),
+        shape = RoundedCornerShape(22.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            SectionHeading(label = "Weapon Details", accentColor = accentColor)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(14.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Image(
+                    painter = painterResource(iconRes),
+                    contentDescription = null,
+                    modifier = Modifier.size(if (largeTouchTargets) 96.dp else 84.dp)
+                )
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = weapon?.name ?: "Select a weapon",
+                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
+                        color = foregroundColor
+                    )
+                    Text(
+                        text = weapon?.description?.takeIf { it.isNotBlank() } ?: "Choose a weapon to see details.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = foregroundColor.copy(alpha = 0.75f),
+                        maxLines = 3,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+            }
+            if (detailRows.isNotEmpty()) {
+                Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                    detailRows.forEach { (label, value) ->
+                        StatRow(label, value, accentColor)
+                    }
+                }
+            }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                Button(
+                    onClick = { option?.let { onEquipWeapon(it.id) } },
+                    enabled = option != null && !isEquipped,
+                    modifier = Modifier
+                        .weight(1f)
+                        .heightIn(min = buttonHeight),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = accentColor.copy(alpha = 0.18f),
+                        contentColor = accentColor,
+                        disabledContainerColor = Color.White.copy(alpha = 0.08f),
+                        disabledContentColor = Color.White.copy(alpha = 0.4f)
+                    )
+                ) {
+                    Text(if (isEquipped) "Equipped" else "Equip Weapon")
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ArmorDetailPanel(
+    modifier: Modifier,
+    option: ArmorOption?,
+    equippedArmorId: String?,
+    onEquipArmor: (String) -> Unit,
+    accentColor: Color,
+    borderColor: Color,
+    foregroundColor: Color,
+    largeTouchTargets: Boolean
+) {
+    val armor = option?.item
+    val isEquipped = option?.id?.equals(equippedArmorId, ignoreCase = true) == true
+    val detailRows = armor?.let { armorDetailRows(it) }.orEmpty()
+    val buttonHeight = if (largeTouchTargets) 56.dp else 48.dp
+    val iconRes = remember(option?.id) {
+        armor?.let { itemIconRes(it) } ?: slotIconRes("armor")
+    }
+
+    Surface(
+        modifier = modifier,
+        color = Color.Black.copy(alpha = 0.28f),
+        border = BorderStroke(1.dp, borderColor.copy(alpha = 0.7f)),
+        shape = RoundedCornerShape(22.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            SectionHeading(label = "Armor Details", accentColor = accentColor)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(14.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Image(
+                    painter = painterResource(iconRes),
+                    contentDescription = null,
+                    modifier = Modifier.size(if (largeTouchTargets) 96.dp else 84.dp)
+                )
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = armor?.name ?: "Select armor",
+                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
+                        color = foregroundColor
+                    )
+                    Text(
+                        text = armor?.description?.takeIf { it.isNotBlank() } ?: "Choose armor to see details.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = foregroundColor.copy(alpha = 0.75f),
+                        maxLines = 3,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+            }
+            if (detailRows.isNotEmpty()) {
+                Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                    detailRows.forEach { (label, value) ->
+                        StatRow(label, value, accentColor)
+                    }
+                }
+            }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                Button(
+                    onClick = { option?.let { onEquipArmor(it.id) } },
+                    enabled = option != null && !isEquipped,
+                    modifier = Modifier
+                        .weight(1f)
+                        .heightIn(min = buttonHeight),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = accentColor.copy(alpha = 0.18f),
+                        contentColor = accentColor,
+                        disabledContainerColor = Color.White.copy(alpha = 0.08f),
+                        disabledContentColor = Color.White.copy(alpha = 0.4f)
+                    )
+                ) {
+                    Text(if (isEquipped) "Equipped" else "Equip Armor")
+                }
+            }
         }
     }
 }
@@ -1715,20 +3347,22 @@ private fun InventoryDetailPanel(
                     equipment.weaponType?.let { StatRow("Weapon Type", it, accentColor) }
                     val damageMin = equipment.damageMin
                     val damageMax = equipment.damageMax
-                    if (damageMin != null || damageMax != null) {
-                        val label = when {
-                            damageMin != null && damageMax != null && damageMin != damageMax ->
-                                "${damageMin}–${damageMax}"
-                            damageMin != null -> damageMin.toString()
-                            else -> damageMax.toString()
-                        }
-                        StatRow("Damage", label, accentColor)
+                if (damageMin != null || damageMax != null) {
+                    val label = when {
+                        damageMin != null && damageMax != null && damageMin != damageMax ->
+                            "${damageMin}–${damageMax}"
+                        damageMin != null -> damageMin.toString()
+                        else -> damageMax.toString()
                     }
-                    equipment.defense?.let { StatRow("Defense", it.toString(), accentColor) }
-                    equipment.hpBonus?.let { StatRow("HP Bonus", "+$it", accentColor) }
-                    equipment.statMods?.forEach { (stat, value) ->
-                        StatRow(stat.uppercase(Locale.getDefault()), formatSigned(value), accentColor)
-                    }
+                    StatRow("Damage", label, accentColor)
+                }
+                equipment.defense?.let { StatRow("Defense", it.toString(), accentColor) }
+                equipment.hpBonus?.let { StatRow("HP Bonus", "+$it", accentColor) }
+                equipment.accuracy?.let { StatRow("Accuracy", formatSignedDecimal(it), accentColor) }
+                equipment.critRate?.let { StatRow("Crit Rate", formatSignedDecimal(it), accentColor) }
+                equipment.statMods?.forEach { (stat, value) ->
+                    StatRow(stat.uppercase(Locale.getDefault()), formatSigned(value), accentColor)
+                }
                 }
 
                 entry.item.effect?.let { effect ->
@@ -1794,7 +3428,7 @@ private fun buildComparisonRows(
     if (equippedStats.isEmpty() && selectedStats.isEmpty()) return emptyList()
 
     val labels = linkedSetOf<String>()
-    labels.addAll(listOf("Damage", "Defense", "HP Bonus", "Weapon Type"))
+    labels.addAll(listOf("Damage", "Defense", "HP Bonus", "Accuracy", "Crit Rate", "Weapon Type"))
     labels.addAll(selectedStats.keys)
     labels.addAll(equippedStats.keys)
 
@@ -1824,6 +3458,8 @@ private fun equipmentStats(equipment: Equipment?): Map<String, StatValue> {
     }
     equipment.defense?.let { stats += "Defense" to StatValue(it.toString(), it) }
     equipment.hpBonus?.let { stats += "HP Bonus" to StatValue("+$it", it) }
+    equipment.accuracy?.let { stats += "Accuracy" to StatValue(formatSignedDecimal(it), it.roundToInt()) }
+    equipment.critRate?.let { stats += "Crit Rate" to StatValue(formatSignedDecimal(it), it.roundToInt()) }
     equipment.weaponType?.let { stats += "Weapon Type" to StatValue(it, null) }
     equipment.statMods?.forEach { (stat, value) ->
         val label = stat.uppercase(Locale.getDefault())
@@ -1854,6 +3490,8 @@ private fun primaryStatSummary(item: Item): String? {
     formatDamageLabel(equipment)?.let { return "DMG $it" }
     equipment.defense?.let { return "DEF ${it}" }
     equipment.hpBonus?.let { return "HP ${formatSigned(it)}" }
+    equipment.accuracy?.let { return "ACC ${formatSignedDecimal(it)}" }
+    equipment.critRate?.let { return "CRIT ${formatSignedDecimal(it)}" }
     equipment.statMods?.entries?.firstOrNull()?.let { (stat, value) ->
         return "${stat.uppercase(Locale.getDefault())} ${formatSigned(value)}"
     }
@@ -1899,7 +3537,6 @@ private fun StatRow(
 @Composable
 private fun EffectRows(effect: ItemEffect, accentColor: Color) {
     effect.restoreHp?.takeIf { it > 0 }?.let { StatRow("Restore HP", "+$it", accentColor) }
-    effect.restoreRp?.takeIf { it > 0 }?.let { StatRow("Restore RP", "+$it", accentColor) }
     effect.damage?.takeIf { it > 0 }?.let { StatRow("Damage", "$it", accentColor) }
     effect.learnSchematic?.let { StatRow("Schematic", it, accentColor) }
     effect.singleBuff?.let { buff ->
@@ -1916,6 +3553,8 @@ private fun itemIconRes(item: Item?): Int {
     val normalizedType = item.type.lowercase(Locale.getDefault())
     val name = item.name.lowercase(Locale.getDefault())
     return when {
+        normalizedType == "mod" || item.equipment?.slot?.equals("mod", true) == true ->
+            R.drawable.item_icon_material
         normalizedType.contains("food") || listOf("stew", "salad", "ramen", "cake").any { name.contains(it) } ->
             R.drawable.item_icon_food
         normalizedType in setOf("consumable", "medicine", "tonic", "drink") ->
@@ -1952,6 +3591,47 @@ private fun itemIconRes(item: Item?): Int {
 private fun formatSigned(value: Int): String =
     if (value >= 0) "+$value" else value.toString()
 
+private fun formatSignedDecimal(value: Double): String {
+    val formatted = if (value % 1.0 == 0.0) {
+        value.toInt().toString()
+    } else {
+        String.format(Locale.getDefault(), "%.1f", value)
+    }
+    return if (value >= 0) "+$formatted" else formatted
+}
+
+private fun formatMultiplier(value: Double): String {
+    val formatted = if (value % 1.0 == 0.0) {
+        value.toInt().toString()
+    } else {
+        String.format(Locale.getDefault(), "%.2f", value)
+            .trimEnd('0')
+            .trimEnd('.')
+    }
+    return "x$formatted"
+}
+
+private fun formatPercent(value: Double): String {
+    val percent = if (value <= 1.0) value * 100.0 else value
+    val rounded = percent.roundToInt()
+    return "$rounded%"
+}
+
+private fun slotIconRes(slot: String): Int {
+    return when (slot.lowercase(Locale.getDefault())) {
+        "weapon" -> R.drawable.item_icon_sword
+        "armor" -> R.drawable.item_icon_armor
+        "accessory" -> R.drawable.item_icon_accessory
+        "snack" -> R.drawable.item_icon_food
+        else -> R.drawable.item_icon_generic
+    }
+}
+
+private fun isModItem(item: Item): Boolean {
+    val normalizedType = item.type.lowercase(Locale.getDefault())
+    return normalizedType == "mod" || item.equipment?.slot?.equals("mod", true) == true
+}
+
 private fun filterGearOptions(
     entries: List<InventoryEntry>,
     slotId: String?,
@@ -1966,6 +3646,112 @@ private fun filterGearOptions(
             itemTypeHint = entry.item.type
         )
     }
+}
+
+private fun buildWeaponOptions(
+    unlockedWeapons: Set<String>,
+    characterId: String?,
+    resolveWeaponItem: (String) -> Item?
+): List<WeaponOption> {
+    val expectedType = GearRules.allowedWeaponTypeFor(characterId)
+    val options = unlockedWeapons.mapNotNull { rawId ->
+        val item = resolveWeaponItem(rawId) ?: return@mapNotNull null
+        val weaponType = weaponTypeFor(item)
+        if (expectedType != null && weaponType != null && weaponType != expectedType) return@mapNotNull null
+        if (expectedType != null && weaponType == null && item.equipment?.slot?.equals("weapon", true) != true) {
+            return@mapNotNull null
+        }
+        WeaponOption(id = item.id, item = item)
+    }
+    return options
+        .distinctBy { it.id }
+        .sortedBy { it.item.name.lowercase(Locale.getDefault()) }
+}
+
+private fun buildArmorOptions(
+    unlockedArmors: Set<String>,
+    characterId: String?,
+    resolveArmorItem: (String) -> Item?
+): List<ArmorOption> {
+    val expectedType = GearRules.allowedArmorTypeFor(characterId)
+    val options = unlockedArmors.mapNotNull { rawId ->
+        val item = resolveArmorItem(rawId) ?: return@mapNotNull null
+        if (!item.isArmorItem()) return@mapNotNull null
+        val armorType = item.type.trim().lowercase(Locale.getDefault())
+        if (expectedType != null) {
+            if (!GearRules.isArmorType(armorType)) return@mapNotNull null
+            if (armorType != expectedType) return@mapNotNull null
+        }
+        ArmorOption(id = item.id, item = item)
+    }
+    return options
+        .distinctBy { it.id }
+        .sortedBy { it.item.name.lowercase(Locale.getDefault()) }
+}
+
+private fun weaponTypeFor(item: Item): String? {
+    val weaponType = item.equipment?.weaponType?.trim()?.lowercase(Locale.getDefault())
+    if (!weaponType.isNullOrBlank()) return weaponType
+    val normalizedType = item.type.trim().lowercase(Locale.getDefault())
+    return normalizedType.takeIf { GearRules.isWeaponType(it) }
+}
+
+private fun Item.isArmorItem(): Boolean {
+    val normalizedType = type.trim().lowercase(Locale.getDefault())
+    return normalizedType == "armor" || equipment?.slot?.equals("armor", ignoreCase = true) == true
+}
+
+private fun weaponSummaryLine(item: Item): String? {
+    val equipment = item.equipment ?: return null
+    val parts = mutableListOf<String>()
+    formatDamageLabel(equipment)?.let { parts += "DMG $it" }
+    equipment.attackStyle?.let { parts += slotDisplayName(it) }
+    equipment.attackElement?.let { parts += slotDisplayName(it) }
+    return parts.joinToString(" | ").takeIf { it.isNotBlank() }
+}
+
+private fun armorSummaryLine(item: Item): String? {
+    val equipment = item.equipment ?: return null
+    val parts = mutableListOf<String>()
+    equipment.defense?.let { parts += "DEF ${formatSigned(it)}" }
+    equipment.hpBonus?.let { parts += "HP ${formatSigned(it)}" }
+    equipment.accuracy?.let { parts += "ACC ${formatSignedDecimal(it)}" }
+    equipment.critRate?.let { parts += "CRIT ${formatSignedDecimal(it)}" }
+    return parts.joinToString(" | ").takeIf { it.isNotBlank() }
+}
+
+private fun weaponDetailRows(item: Item): List<Pair<String, String>> {
+    val equipment = item.equipment ?: return emptyList()
+    val rows = mutableListOf<Pair<String, String>>()
+    formatDamageLabel(equipment)?.let { rows += "Damage" to it }
+    equipment.attackStyle?.let { rows += "Style" to slotDisplayName(it) }
+    equipment.attackPowerMultiplier?.let { rows += "Power" to formatMultiplier(it) }
+    equipment.attackChargeTurns?.let { turns ->
+        rows += "Charge" to "$turns turn${if (turns == 1) "" else "s"}"
+    }
+    equipment.attackSplashMultiplier?.let { rows += "Splash" to formatPercent(it) }
+    equipment.attackElement?.let { rows += "Element" to slotDisplayName(it) }
+    equipment.statusOnHit?.let { status ->
+        val chanceLabel = equipment.statusChance?.let { formatPercent(it) }
+        val label = chanceLabel?.let { "${slotDisplayName(status)} ($it)" } ?: slotDisplayName(status)
+        rows += "Status" to label
+    }
+    equipment.accuracy?.let { rows += "Accuracy" to formatSignedDecimal(it) }
+    equipment.critRate?.let { rows += "Crit Rate" to formatSignedDecimal(it) }
+    return rows
+}
+
+private fun armorDetailRows(item: Item): List<Pair<String, String>> {
+    val equipment = item.equipment ?: return emptyList()
+    val rows = mutableListOf<Pair<String, String>>()
+    equipment.defense?.let { rows += "Defense" to formatSigned(it) }
+    equipment.hpBonus?.let { rows += "HP Bonus" to formatSigned(it) }
+    equipment.accuracy?.let { rows += "Accuracy" to formatSignedDecimal(it) }
+    equipment.critRate?.let { rows += "Crit Rate" to formatSignedDecimal(it) }
+    equipment.statMods?.forEach { (stat, value) ->
+        rows += slotDisplayName(stat) to formatSigned(value)
+    }
+    return rows
 }
 
 private fun equippedForCharacter(

@@ -25,21 +25,21 @@ class CombatElementStackTest {
         id = "player",
         name = "Player",
         side = CombatSide.PLAYER,
-        stats = StatBlock(120, 20, 18, 12, 10, 10, 5, 12)
+        stats = StatBlock(120, 18, 12, 10, 10, 5, 12)
     )
 
     private val enemyAlpha = Combatant(
         id = "enemy_a",
         name = "Alpha",
         side = CombatSide.ENEMY,
-        stats = StatBlock(90, 10, 12, 10, 10, 8, 6, 8)
+        stats = StatBlock(90, 12, 10, 10, 8, 6, 8)
     )
 
     private val enemyBeta = Combatant(
         id = "enemy_b",
         name = "Beta",
         side = CombatSide.ENEMY,
-        stats = StatBlock(75, 8, 10, 10, 8, 8, 5, 7)
+        stats = StatBlock(75, 10, 10, 8, 8, 5, 7)
     )
 
     @Test

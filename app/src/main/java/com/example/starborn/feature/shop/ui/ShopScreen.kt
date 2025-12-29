@@ -1,6 +1,10 @@
 package com.example.starborn.feature.shop.ui
 
 import android.content.Context
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,17 +16,18 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilterChip
-import androidx.compose.material3.FilterChipDefaults
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -32,8 +37,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -50,12 +53,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.starborn.R
+import com.example.starborn.feature.common.ui.StationBackground
+import com.example.starborn.feature.common.ui.StationHeader
 import com.example.starborn.feature.shop.SellItemUi
 import com.example.starborn.feature.shop.ShopItemUi
 import com.example.starborn.feature.shop.ShopTab
 import com.example.starborn.feature.shop.ShopUiState
 import com.example.starborn.domain.audio.VoiceoverController
-import com.example.starborn.feature.shop.ShopDialogueTopicUi
 import com.example.starborn.feature.shop.ShopDialogueLineUi
 import com.example.starborn.feature.shop.ShopViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -82,12 +87,44 @@ fun ShopRoute(
         onBuy = viewModel::buyItem,
         onSell = viewModel::sellItem,
         onTabSelected = viewModel::switchTab,
-        onSmalltalk = viewModel::playSmalltalk,
         onBack = onBack,
         highContrastMode = highContrastMode,
         largeTouchTargets = largeTouchTargets,
         voiceoverController = voiceoverController
     )
+}
+
+private data class ShopColors(
+    val accent: Color,
+    val panel: Color,
+    val panelAlt: Color,
+    val border: Color,
+    val textPrimary: Color,
+    val textSecondary: Color,
+    val divider: Color,
+    val danger: Color
+)
+
+@Composable
+private fun rememberShopColors(highContrastMode: Boolean): ShopColors {
+    val scheme = MaterialTheme.colorScheme
+    return remember(highContrastMode, scheme) {
+        val accent = if (highContrastMode) scheme.primary else Color(0xFF7BE4FF)
+        val base = if (highContrastMode) Color(0xFF0A1018) else Color(0xFF050A12)
+        val panel = base.copy(alpha = if (highContrastMode) 0.96f else 0.88f)
+        val panelAlt = if (highContrastMode) Color(0xFF0E1623) else base.copy(alpha = 0.78f)
+        val border = if (highContrastMode) Color.White.copy(alpha = 0.28f) else Color.White.copy(alpha = 0.18f)
+        ShopColors(
+            accent = accent,
+            panel = panel,
+            panelAlt = panelAlt,
+            border = border,
+            textPrimary = Color.White,
+            textSecondary = Color.White.copy(alpha = 0.78f),
+            divider = Color.White.copy(alpha = 0.10f),
+            danger = if (highContrastMode) Color(0xFFFF6B6B) else scheme.error
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -98,13 +135,13 @@ private fun ShopScreen(
     onBuy: (String, Int) -> Unit,
     onSell: (String, Int) -> Unit,
     onTabSelected: (ShopTab) -> Unit,
-    onSmalltalk: (String) -> Unit,
     onBack: () -> Unit,
     highContrastMode: Boolean,
     largeTouchTargets: Boolean,
     voiceoverController: VoiceoverController
 ) {
     val context = LocalContext.current
+    val colors = rememberShopColors(highContrastMode)
     var lastVoiceLineId by remember { mutableStateOf<String?>(null) }
     LaunchedEffect(state.conversationLog) {
         val voiceEntry = state.conversationLog.lastOrNull { !it.voiceCue.isNullOrBlank() }
@@ -125,128 +162,110 @@ private fun ShopScreen(
     var pendingPurchase by remember { mutableStateOf<ShopItemUi?>(null) }
     var pendingSale by remember { mutableStateOf<SellItemUi?>(null) }
 
-    val backgroundColor = if (highContrastMode) Color(0xFF03090F) else MaterialTheme.colorScheme.background
-    val dividerColor = if (highContrastMode) Color.White.copy(alpha = 0.35f) else MaterialTheme.colorScheme.outlineVariant
-    val buttonMinHeight = if (largeTouchTargets) 52.dp else 0.dp
-
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(state.shopName.ifBlank { "Shop" }) },
-                navigationIcon = {
-                    Button(
-                        onClick = onBack,
-                        modifier = Modifier.heightIn(min = buttonMinHeight)
-                    ) {
-                        Text("Back")
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = if (highContrastMode) Color(0xFF0B1119) else MaterialTheme.colorScheme.surface
+    StationBackground(
+        highContrastMode = highContrastMode,
+        backgroundRes = R.drawable.market_1,
+        vignetteRes = R.drawable.shop_vignette
+    ) {
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+            snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+            containerColor = Color.Transparent,
+            topBar = {
+                StationHeader(
+                    title = state.shopName.ifBlank { "Shop" },
+                    iconRes = R.drawable.shop_icon,
+                    onBack = onBack,
+                    highContrastMode = highContrastMode,
+                    largeTouchTargets = largeTouchTargets,
+                    actionLabel = "Leave"
                 )
-            )
-        },
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
-        containerColor = backgroundColor
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .padding(horizontal = 16.dp, vertical = 12.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                portraitRes?.let { resId ->
-                    androidx.compose.foundation.Image(
-                        painter = painterResource(id = resId),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(72.dp)
-                            .clip(MaterialTheme.shapes.medium),
-                        contentScale = ContentScale.Crop
-                    )
-                }
-                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                    Text(
-                        text = state.shopName,
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                    Text(
-                        text = "Credits: ${state.credits}",
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
             }
+        ) { innerPadding ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding),
+                verticalArrangement = Arrangement.spacedBy(14.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    ShopTabSelector(
+                        activeTab = state.activeTab,
+                        onTabSelected = onTabSelected,
+                        modifier = Modifier.weight(1f),
+                        colors = colors,
+                        largeTouchTargets = largeTouchTargets
+                    )
+                    CreditsPill(credits = state.credits, colors = colors)
+                }
 
-            HorizontalDivider(color = dividerColor)
-
-            ShopDialoguePanel(
-                topics = state.smalltalkTopics,
-                log = state.conversationLog,
-                onSmalltalk = onSmalltalk,
-                highContrastMode = highContrastMode,
-                largeTouchTargets = largeTouchTargets,
-                dividerColor = dividerColor
-            )
-
-            ShopTabSelector(
-                activeTab = state.activeTab,
-                onTabSelected = onTabSelected,
-                modifier = Modifier.fillMaxWidth(),
-                highContrastMode = highContrastMode,
-                largeTouchTargets = largeTouchTargets
-            )
-
-            Box(modifier = Modifier.fillMaxSize()) {
-                when {
-                    state.unavailableMessage != null -> {
-                        ShopEmptyState(message = state.unavailableMessage, highContrastMode = highContrastMode)
-                    }
-                    state.activeTab == ShopTab.BUY && state.itemsForSale.isEmpty() -> {
-                        ShopEmptyState(message = "Nothing for sale right now.", highContrastMode = highContrastMode)
-                    }
-                    state.activeTab == ShopTab.SELL && state.sellInventory.isEmpty() -> {
-                        ShopEmptyState(message = "You have nothing to sell.", highContrastMode = highContrastMode)
-                    }
-                    state.activeTab == ShopTab.BUY -> {
-                        LazyColumn(
-                            modifier = Modifier.fillMaxSize(),
-                            verticalArrangement = Arrangement.spacedBy(12.dp),
-                            contentPadding = PaddingValues(bottom = 24.dp)
-                        ) {
-                            items(state.itemsForSale, key = { it.id }) { item ->
-                                ShopItemCard(
-                                    item = item,
-                                    onRequestQuantity = { pendingPurchase = it },
-                                    highContrastMode = highContrastMode,
-                                    largeTouchTargets = largeTouchTargets
-                                )
+                Surface(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
+                    color = colors.panel,
+                    shape = RoundedCornerShape(22.dp),
+                    border = BorderStroke(1.dp, colors.border)
+                ) {
+                    Box(modifier = Modifier.fillMaxSize().padding(14.dp)) {
+                        when {
+                            state.unavailableMessage != null -> {
+                                ShopEmptyState(message = state.unavailableMessage, colors = colors)
                             }
-                        }
-                    }
-                    else -> {
-                        LazyColumn(
-                            modifier = Modifier.fillMaxSize(),
-                            verticalArrangement = Arrangement.spacedBy(12.dp),
-                            contentPadding = PaddingValues(bottom = 24.dp)
-                        ) {
-                            items(state.sellInventory, key = { it.id }) { item ->
-                                SellItemCard(
-                                    item = item,
-                                    onRequestQuantity = { pendingSale = it },
-                                    highContrastMode = highContrastMode,
-                                    largeTouchTargets = largeTouchTargets
-                                )
+                            state.activeTab == ShopTab.BUY && state.itemsForSale.isEmpty() -> {
+                                ShopEmptyState(message = "Nothing for sale right now.", colors = colors)
+                            }
+                            state.activeTab == ShopTab.SELL && state.sellInventory.isEmpty() -> {
+                                ShopEmptyState(message = "You have nothing to sell.", colors = colors)
+                            }
+                            state.activeTab == ShopTab.BUY -> {
+                                LazyColumn(
+                                    modifier = Modifier.fillMaxSize(),
+                                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                                    contentPadding = PaddingValues(bottom = 24.dp)
+                                ) {
+                                    items(state.itemsForSale, key = { it.id }) { item ->
+                                        ShopItemCard(
+                                            item = item,
+                                            onRequestQuantity = { pendingPurchase = it },
+                                            colors = colors,
+                                            largeTouchTargets = largeTouchTargets
+                                        )
+                                    }
+                                }
+                            }
+                            else -> {
+                                LazyColumn(
+                                    modifier = Modifier.fillMaxSize(),
+                                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                                    contentPadding = PaddingValues(bottom = 24.dp)
+                                ) {
+                                    items(state.sellInventory, key = { it.id }) { item ->
+                                        SellItemCard(
+                                            item = item,
+                                            onRequestQuantity = { pendingSale = it },
+                                            colors = colors,
+                                            largeTouchTargets = largeTouchTargets
+                                        )
+                                    }
+                                }
                             }
                         }
                     }
                 }
+
+                ShopDialogueBar(
+                    lines = state.conversationLog,
+                    shopName = state.shopName,
+                    portraitRes = portraitRes,
+                    colors = colors,
+                    largeTouchTargets = largeTouchTargets,
+                    modifier = Modifier.fillMaxWidth()
+                )
             }
         }
     }
@@ -285,71 +304,106 @@ private fun ShopScreen(
 private fun ShopItemCard(
     item: ShopItemUi,
     onRequestQuantity: (ShopItemUi) -> Unit,
-    highContrastMode: Boolean,
+    colors: ShopColors,
     largeTouchTargets: Boolean,
     modifier: Modifier = Modifier
 ) {
+    val canBuy = item.canAfford && !item.locked && item.maxQuantity > 0
     Surface(
         modifier = modifier.fillMaxWidth(),
-        tonalElevation = 2.dp,
-        color = if (highContrastMode) Color(0xFF0F1319) else MaterialTheme.colorScheme.surface
+        color = colors.panelAlt,
+        shape = RoundedCornerShape(18.dp),
+        border = BorderStroke(1.dp, colors.border)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 12.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+                .padding(horizontal = 16.dp, vertical = 14.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+                verticalAlignment = Alignment.Top,
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 Column(
                     modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                    verticalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
                     Text(
                         text = item.name,
-                        style = MaterialTheme.typography.titleSmall,
+                        style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold,
-                        color = if (highContrastMode) Color.White else MaterialTheme.colorScheme.onSurface
+                        color = colors.textPrimary,
+                        modifier = Modifier.weight(1f, fill = false)
                     )
-                    val description = item.description
-                    if (!description.isNullOrBlank()) {
+                        if (item.rotating) {
+                            Surface(
+                                color = colors.accent.copy(alpha = 0.22f),
+                                shape = RoundedCornerShape(999.dp),
+                                border = BorderStroke(1.dp, colors.accent.copy(alpha = 0.45f))
+                            ) {
+                                Text(
+                                    text = "Fresh",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = colors.accent,
+                                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
+                                )
+                            }
+                        }
+                    }
+                    item.description?.takeIf { it.isNotBlank() }?.let { description ->
                         Text(
                             text = description,
                             style = MaterialTheme.typography.bodySmall,
-                            color = if (highContrastMode) Color.White.copy(alpha = 0.75f) else MaterialTheme.colorScheme.onSurfaceVariant
+                            color = colors.textSecondary
                         )
                     }
                 }
-                Text(
-                    text = "${item.price} cr",
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = if (highContrastMode) Color.White else MaterialTheme.colorScheme.onSurface
-                )
+                Surface(
+                    color = Color.Black.copy(alpha = 0.35f),
+                    shape = RoundedCornerShape(14.dp),
+                    border = BorderStroke(1.dp, colors.border)
+                ) {
+                    Text(
+                        text = "${item.price} c",
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = colors.textPrimary,
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp)
+                    )
+                }
             }
-            if (item.locked) {
-                Text(
+
+            when {
+                item.locked -> Text(
                     text = item.lockedMessage ?: "Currently unavailable",
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.error
+                    color = colors.danger
                 )
-            } else {
-                Text(
+                item.maxQuantity <= 0 -> Text(
+                    text = "Not enough credits.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = colors.textSecondary
+                )
+                else -> Text(
                     text = "Max affordable: ${item.maxQuantity.coerceAtLeast(0)}",
                     style = MaterialTheme.typography.bodySmall,
-                    color = if (highContrastMode) Color.White.copy(alpha = 0.8f) else Color.White.copy(alpha = 0.8f)
+                    color = colors.textSecondary
                 )
             }
             Button(
                 onClick = { onRequestQuantity(item) },
-                enabled = item.canAfford && !item.locked && item.maxQuantity > 0,
-                modifier = Modifier.heightIn(min = if (largeTouchTargets) 52.dp else 0.dp)
+                enabled = canBuy,
+                modifier = Modifier
+                    .heightIn(min = if (largeTouchTargets) 52.dp else 0.dp)
+                    .widthIn(min = 140.dp)
             ) {
-                Text(text = "Buy")
+                Text(text = if (canBuy) "Buy" else "Unavailable")
             }
         }
     }
@@ -359,133 +413,80 @@ private fun ShopItemCard(
 private fun SellItemCard(
     item: SellItemUi,
     onRequestQuantity: (SellItemUi) -> Unit,
-    highContrastMode: Boolean,
+    colors: ShopColors,
     largeTouchTargets: Boolean,
     modifier: Modifier = Modifier
 ) {
     Surface(
         modifier = modifier.fillMaxWidth(),
-        tonalElevation = 2.dp,
-        color = if (highContrastMode) Color(0xFF0F1319) else MaterialTheme.colorScheme.surface
+        color = colors.panelAlt,
+        shape = RoundedCornerShape(18.dp),
+        border = BorderStroke(1.dp, colors.border)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 12.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+                .padding(horizontal = 16.dp, vertical = 14.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+                verticalAlignment = Alignment.Top,
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 Column(
                     modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                    verticalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                     Text(
                         text = item.name,
-                        style = MaterialTheme.typography.titleSmall,
+                        style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold,
-                        color = if (highContrastMode) Color.White else MaterialTheme.colorScheme.onSurface
+                        color = colors.textPrimary
                     )
                     item.description?.takeIf { it.isNotBlank() }?.let { desc ->
                         Text(
                             text = desc,
                             style = MaterialTheme.typography.bodySmall,
-                            color = if (highContrastMode) Color.White.copy(alpha = 0.75f) else MaterialTheme.colorScheme.onSurfaceVariant
+                            color = colors.textSecondary
                         )
                     }
                 }
-                Text(
-                    text = "${item.price} cr",
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = if (highContrastMode) Color.White else MaterialTheme.colorScheme.onSurface
-                )
+                Surface(
+                    color = Color.Black.copy(alpha = 0.35f),
+                    shape = RoundedCornerShape(14.dp),
+                    border = BorderStroke(1.dp, colors.border)
+                ) {
+                    Text(
+                        text = "${item.price} c",
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = colors.textPrimary,
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp)
+                    )
+                }
             }
             Text(
-                text = "In stock: ${item.quantity}",
+                text = "In pack: ${item.quantity}",
                 style = MaterialTheme.typography.bodySmall,
-                color = if (highContrastMode) Color.White.copy(alpha = 0.8f) else Color.White.copy(alpha = 0.8f)
+                color = colors.textSecondary
             )
             val reason = item.reason
             if (!item.canSell && reason != null) {
                 Text(
                     text = reason,
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.error
+                    color = colors.danger
                 )
             }
             Button(
                 onClick = { onRequestQuantity(item) },
                 enabled = item.canSell && item.quantity > 0,
-                modifier = Modifier.heightIn(min = if (largeTouchTargets) 52.dp else 0.dp)
+                modifier = Modifier
+                    .heightIn(min = if (largeTouchTargets) 52.dp else 0.dp)
+                    .widthIn(min = 140.dp)
             ) {
                 Text("Sell")
-            }
-        }
-    }
-}
-
-@Composable
-private fun ShopDialoguePanel(
-    topics: List<ShopDialogueTopicUi>,
-    log: List<ShopDialogueLineUi>,
-    onSmalltalk: (String) -> Unit,
-    highContrastMode: Boolean,
-    largeTouchTargets: Boolean,
-    dividerColor: Color
-) {
-    Surface(
-        modifier = Modifier
-            .fillMaxWidth(),
-        tonalElevation = 2.dp,
-        color = if (highContrastMode) Color(0xFF111722) else MaterialTheme.colorScheme.surfaceVariant
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            Text(
-                text = "Smalltalk",
-                style = MaterialTheme.typography.titleSmall,
-                color = if (highContrastMode) Color.White else MaterialTheme.colorScheme.onSurface
-            )
-            if (topics.isEmpty()) {
-                Text(
-                    text = "Nothing to chat about right now.",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = if (highContrastMode) Color.White.copy(alpha = 0.65f) else MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            } else {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    topics.forEach { topic ->
-                        Button(
-                            onClick = { onSmalltalk(topic.id) },
-                            modifier = Modifier.heightIn(min = if (largeTouchTargets) 52.dp else 0.dp)
-                        ) {
-                            Text(topic.label)
-                        }
-                    }
-                }
-            }
-            HorizontalDivider(color = dividerColor)
-            Column(
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                log.asReversed().take(4).forEach { line ->
-                    Text(
-                        text = line.text,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = if (highContrastMode) Color.White else MaterialTheme.colorScheme.onSurface
-                    )
-                }
             }
         }
     }
@@ -496,42 +497,144 @@ private fun ShopTabSelector(
     activeTab: ShopTab,
     onTabSelected: (ShopTab) -> Unit,
     modifier: Modifier = Modifier,
-    highContrastMode: Boolean,
+    colors: ShopColors,
     largeTouchTargets: Boolean
 ) {
-    Row(
+    val tabHeight = if (largeTouchTargets) 54.dp else 44.dp
+    Row(modifier = modifier) {
+        listOf(ShopTab.BUY to "Buy", ShopTab.SELL to "Sell").forEach { (tab, label) ->
+            val active = activeTab == tab
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .heightIn(min = tabHeight)
+                    .clip(RoundedCornerShape(14.dp))
+                    .clickable { onTabSelected(tab) }
+                    .padding(vertical = 10.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Text(
+                    text = label,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = if (active) colors.accent else colors.textSecondary,
+                    fontWeight = if (active) FontWeight.SemiBold else FontWeight.Medium
+                )
+                Box(
+                    modifier = Modifier
+                        .width(54.dp)
+                        .height(3.dp)
+                        .clip(RoundedCornerShape(999.dp))
+                        .background(if (active) colors.accent else colors.border.copy(alpha = 0.4f))
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun CreditsPill(
+    credits: Int,
+    colors: ShopColors,
+    modifier: Modifier = Modifier
+) {
+    Surface(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
-        verticalAlignment = Alignment.CenterVertically
+        color = Color.Black.copy(alpha = 0.35f),
+        shape = RoundedCornerShape(999.dp),
+        border = BorderStroke(1.dp, colors.border)
     ) {
-        FilterChip(
-            selected = activeTab == ShopTab.BUY,
-            onClick = { onTabSelected(ShopTab.BUY) },
-            label = { Text("Buy") },
-            colors = FilterChipDefaults.filterChipColors(),
-            modifier = Modifier.heightIn(min = if (largeTouchTargets) 40.dp else 0.dp)
+        Text(
+            text = "$credits c",
+            style = MaterialTheme.typography.labelLarge,
+            color = colors.textPrimary,
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp)
         )
-        FilterChip(
-            selected = activeTab == ShopTab.SELL,
-            onClick = { onTabSelected(ShopTab.SELL) },
-            label = { Text("Sell") },
-            colors = FilterChipDefaults.filterChipColors(),
-            modifier = Modifier.heightIn(min = if (largeTouchTargets) 40.dp else 0.dp)
-        )
+    }
+}
+
+@Composable
+private fun ShopDialogueBar(
+    lines: List<ShopDialogueLineUi>,
+    shopName: String,
+    portraitRes: Int?,
+    colors: ShopColors,
+    largeTouchTargets: Boolean,
+    modifier: Modifier = Modifier
+) {
+    val line = lines.lastOrNull() ?: return
+    val padding = if (largeTouchTargets) 18.dp else 14.dp
+    val speaker = line.speaker?.takeIf { it.isNotBlank() } ?: shopName.ifBlank { "Shopkeeper" }
+    Surface(
+        modifier = modifier,
+        color = Color.Black.copy(alpha = 0.82f),
+        contentColor = Color.White,
+        shadowElevation = 12.dp,
+        tonalElevation = 6.dp,
+        shape = RoundedCornerShape(28.dp),
+        border = BorderStroke(1.dp, colors.border)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(padding),
+            verticalArrangement = Arrangement.spacedBy(14.dp)
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (portraitRes != null) {
+                    Image(
+                        painter = painterResource(id = portraitRes),
+                        contentDescription = speaker,
+                        modifier = Modifier
+                            .size(72.dp)
+                            .clip(CircleShape),
+                        contentScale = ContentScale.Crop
+                    )
+                } else {
+                    Surface(
+                        modifier = Modifier
+                            .size(64.dp)
+                            .clip(CircleShape),
+                        color = Color.White.copy(alpha = 0.1f)
+                    ) {
+                        Box(contentAlignment = Alignment.Center) {
+                            val initial = speaker.firstOrNull()?.uppercaseChar()?.toString() ?: "?"
+                            Text(
+                                text = initial,
+                                style = MaterialTheme.typography.titleLarge,
+                                color = Color.White
+                            )
+                        }
+                    }
+                }
+                Text(
+                    text = speaker,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = Color.White
+                )
+            }
+            Text(
+                text = line.text,
+                style = MaterialTheme.typography.bodyLarge,
+                color = Color.White.copy(alpha = 0.92f)
+            )
+        }
     }
 }
 
 @Composable
 private fun ShopEmptyState(
     message: String,
-    highContrastMode: Boolean
+    colors: ShopColors
 ) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 32.dp),
-        color = if (highContrastMode) Color(0xFF131313) else MaterialTheme.colorScheme.surfaceVariant,
-        tonalElevation = 2.dp
+        color = Color.Transparent
     ) {
         Column(
             modifier = Modifier
@@ -542,7 +645,7 @@ private fun ShopEmptyState(
             Text(
                 text = message,
                 style = MaterialTheme.typography.bodyMedium,
-                color = if (highContrastMode) Color.White else MaterialTheme.colorScheme.onSurface
+                color = colors.textSecondary
             )
         }
     }

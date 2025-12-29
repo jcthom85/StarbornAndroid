@@ -17,7 +17,9 @@ object CombatFormulas {
     const val EVA_PER_AGI = 0.15
     const val ACC_PER_FOCUS = 0.20
     const val CRIT_PER_FOCUS = 0.15
+    const val CRIT_PER_LUCK = 0.10
     const val RES_PER_FOCUS = 0.10
+    const val SKILL_FOCUS_MULT = 0.01
 
     const val CRIT_DAMAGE_MULT = 2.0
 
@@ -33,7 +35,10 @@ object CombatFormulas {
 
     fun evasion(agility: Int): Double = BASE_EVASION + agility * EVA_PER_AGI
 
-    fun critChance(focus: Int): Double = BASE_CRIT + focus * CRIT_PER_FOCUS
+    fun critChance(focus: Int, luck: Int = 0): Double =
+        BASE_CRIT + focus * CRIT_PER_FOCUS + luck * CRIT_PER_LUCK
 
     fun generalResistance(focus: Int): Int = max(0, (focus * RES_PER_FOCUS).toInt())
+
+    fun skillPotencyMultiplier(focus: Int): Double = 1.0 + focus * SKILL_FOCUS_MULT
 }

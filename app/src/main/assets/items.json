@@ -1,35 +1,562 @@
 [
     {
-        "id": "basic_blaster",
-        "name": "Basic Blaster",
+        "id": "nova_laser_blaster",
+        "name": "Laser Blaster",
+        "description": "A crisp beam emitter built for precision takedowns.",
         "aliases": [
-            "blaster"
+            "laser blaster"
         ],
         "type": "weapon",
-        "value": 100,
-        "buy_price": 200,
-        "rarity": "common",
+        "value": 180,
+        "buy_price": 360,
+        "rarity": "uncommon",
         "equipment": {
             "slot": "weapon",
             "weapon_type": "gun",
-            "damage_min": 600,
-            "damage_max": 1200
+            "damage_min": 7,
+            "damage_max": 10,
+            "attack_style": "single",
+            "attack_power_mult": 1.0
+        }
+    },
+    {
+        "id": "nova_plasma_shotgun",
+        "name": "Plasma Shotgun",
+        "description": "A wide plasma burst that clips every foe in front of you.",
+        "aliases": [
+            "plasma shotgun"
+        ],
+        "type": "weapon",
+        "value": 260,
+        "buy_price": 520,
+        "rarity": "rare",
+        "equipment": {
+            "slot": "weapon",
+            "weapon_type": "gun",
+            "damage_min": 5,
+            "damage_max": 8,
+            "attack_style": "spread",
+            "attack_power_mult": 0.7
+        }
+    },
+    {
+        "id": "nova_rocket_launcher",
+        "name": "Rocket Launcher",
+        "description": "Heavy ordnance that takes time to line up, then detonates across the battlefield.",
+        "aliases": [
+            "rocket launcher"
+        ],
+        "type": "weapon",
+        "value": 350,
+        "buy_price": 700,
+        "rarity": "epic",
+        "equipment": {
+            "slot": "weapon",
+            "weapon_type": "gun",
+            "damage_min": 9,
+            "damage_max": 14,
+            "attack_style": "rocket",
+            "attack_charge_turns": 1,
+            "attack_power_mult": 1.6,
+            "attack_splash_mult": 0.5
+        }
+    },
+    {
+        "id": "zeke_shock_fists",
+        "name": "Shock Fists",
+        "description": "Gauntlets that crackle with a focused lightning jab.",
+        "aliases": [
+            "shock fists"
+        ],
+        "type": "weapon",
+        "value": 190,
+        "buy_price": 380,
+        "rarity": "uncommon",
+        "equipment": {
+            "slot": "weapon",
+            "weapon_type": "glove",
+            "damage_min": 7,
+            "damage_max": 11,
+            "attack_style": "single",
+            "attack_power_mult": 1.1,
+            "attack_element": "lightning",
+            "accuracy": 4
+        }
+    },
+    {
+        "id": "zeke_quake_knuckles",
+        "name": "Quake Knuckles",
+        "description": "A heavy sweep that rattles the whole line.",
+        "aliases": [
+            "quake knuckles"
+        ],
+        "type": "weapon",
+        "value": 250,
+        "buy_price": 500,
+        "rarity": "rare",
+        "equipment": {
+            "slot": "weapon",
+            "weapon_type": "glove",
+            "damage_min": 5,
+            "damage_max": 8,
+            "attack_style": "all",
+            "attack_power_mult": 0.7
+        }
+    },
+    {
+        "id": "zeke_maul_gauntlet",
+        "name": "Maul Gauntlet",
+        "description": "A charged impact that detonates into a shockwave.",
+        "aliases": [
+            "maul gauntlet"
+        ],
+        "type": "weapon",
+        "value": 360,
+        "buy_price": 720,
+        "rarity": "epic",
+        "equipment": {
+            "slot": "weapon",
+            "weapon_type": "glove",
+            "damage_min": 9,
+            "damage_max": 14,
+            "attack_style": "charged_splash",
+            "attack_charge_turns": 1,
+            "attack_power_mult": 1.5,
+            "attack_splash_mult": 0.5
+        }
+    },
+    {
+        "id": "orion_prism_focus",
+        "name": "Prism Focus",
+        "description": "A refined jewel that sharpens a psychic beam.",
+        "aliases": [
+            "prism focus"
+        ],
+        "type": "weapon",
+        "value": 180,
+        "buy_price": 360,
+        "rarity": "uncommon",
+        "equipment": {
+            "slot": "weapon",
+            "weapon_type": "jewel",
+            "damage_min": 6,
+            "damage_max": 10,
+            "attack_style": "single",
+            "attack_power_mult": 1.0,
+            "attack_element": "psychic",
+            "accuracy": 5
+        }
+    },
+    {
+        "id": "orion_halo_array",
+        "name": "Halo Array",
+        "description": "Diffuse light that grazes every target at once.",
+        "aliases": [
+            "halo array"
+        ],
+        "type": "weapon",
+        "value": 245,
+        "buy_price": 490,
+        "rarity": "rare",
+        "equipment": {
+            "slot": "weapon",
+            "weapon_type": "jewel",
+            "damage_min": 4,
+            "damage_max": 7,
+            "attack_style": "all",
+            "attack_power_mult": 0.65,
+            "attack_element": "psychic"
+        }
+    },
+    {
+        "id": "orion_stasis_core",
+        "name": "Stasis Core",
+        "description": "Builds a charge before snapping targets in a psychic burst.",
+        "aliases": [
+            "stasis core"
+        ],
+        "type": "weapon",
+        "value": 355,
+        "buy_price": 710,
+        "rarity": "epic",
+        "equipment": {
+            "slot": "weapon",
+            "weapon_type": "jewel",
+            "damage_min": 8,
+            "damage_max": 12,
+            "attack_style": "charged_splash",
+            "attack_charge_turns": 1,
+            "attack_power_mult": 1.4,
+            "attack_splash_mult": 0.5,
+            "attack_element": "psychic",
+            "stat_mods": {
+                "foc": 3
+            }
+        }
+    },
+    {
+        "id": "gh0st_whisperblade",
+        "name": "Whisperblade",
+        "description": "A razor-thin edge built for silent takedowns.",
+        "aliases": [
+            "whisperblade"
+        ],
+        "type": "weapon",
+        "value": 200,
+        "buy_price": 400,
+        "rarity": "uncommon",
+        "equipment": {
+            "slot": "weapon",
+            "weapon_type": "sword",
+            "damage_min": 7,
+            "damage_max": 11,
+            "attack_style": "single",
+            "attack_power_mult": 1.15,
+            "crit_rate": 6.0
+        }
+    },
+    {
+        "id": "gh0st_splitter_edge",
+        "name": "Splitter Edge",
+        "description": "A sweeping blade that tags every foe in range.",
+        "aliases": [
+            "splitter edge"
+        ],
+        "type": "weapon",
+        "value": 255,
+        "buy_price": 510,
+        "rarity": "rare",
+        "equipment": {
+            "slot": "weapon",
+            "weapon_type": "sword",
+            "damage_min": 5,
+            "damage_max": 9,
+            "attack_style": "all_enemies",
+            "attack_power_mult": 0.75
+        }
+    },
+    {
+        "id": "gh0st_void_fang",
+        "name": "Void Fang",
+        "description": "A charged lunge that erupts into a void surge.",
+        "aliases": [
+            "void fang"
+        ],
+        "type": "weapon",
+        "value": 365,
+        "buy_price": 730,
+        "rarity": "epic",
+        "equipment": {
+            "slot": "weapon",
+            "weapon_type": "sword",
+            "damage_min": 9,
+            "damage_max": 14,
+            "attack_style": "charged_splash",
+            "attack_charge_turns": 1,
+            "attack_power_mult": 1.6,
+            "attack_splash_mult": 0.5,
+            "attack_element": "void"
+        }
+    },
+    {
+        "id": "zeke_bulwark_plate",
+        "name": "Bulwark Plate",
+        "description": "Reinforced plating built to soak the hardest hits.",
+        "aliases": [
+            "bulwark plate"
+        ],
+        "type": "armor_zeke",
+        "value": 220,
+        "buy_price": 440,
+        "rarity": "rare",
+        "equipment": {
+            "slot": "armor",
+            "defense": 12,
+            "hp_bonus": 80
+        }
+    },
+    {
+        "id": "zeke_surge_harness",
+        "name": "Surge Harness",
+        "description": "Shock-dampened straps that keep a bruiser light on his feet.",
+        "aliases": [
+            "surge harness"
+        ],
+        "type": "armor_zeke",
+        "value": 180,
+        "buy_price": 360,
+        "rarity": "uncommon",
+        "equipment": {
+            "slot": "armor",
+            "defense": 4,
+            "stat_mods": {
+                "spd": 4,
+                "evasion": 6
+            }
+        }
+    },
+    {
+        "id": "zeke_brawler_rig",
+        "name": "Brawler Rig",
+        "description": "Weighted buckles that turn every swing into a statement.",
+        "aliases": [
+            "brawler rig"
+        ],
+        "type": "armor_zeke",
+        "value": 260,
+        "buy_price": 520,
+        "rarity": "rare",
+        "equipment": {
+            "slot": "armor",
+            "defense": 6,
+            "stat_mods": {
+                "str": 6,
+                "crit_rate": 4
+            }
+        }
+    },
+    {
+        "id": "orion_ward_coat",
+        "name": "Ward Coat",
+        "description": "Layered fibers that steady the line and protect allies.",
+        "aliases": [
+            "ward coat"
+        ],
+        "type": "armor_orion",
+        "value": 210,
+        "buy_price": 420,
+        "rarity": "rare",
+        "equipment": {
+            "slot": "armor",
+            "defense": 10,
+            "hp_bonus": 60,
+            "stat_mods": {
+                "foc": 2
+            }
+        }
+    },
+    {
+        "id": "orion_channeler_mantle",
+        "name": "Channeler Mantle",
+        "description": "A calm weave that sharpens focus under pressure.",
+        "aliases": [
+            "channeler mantle"
+        ],
+        "type": "armor_orion",
+        "value": 190,
+        "buy_price": 380,
+        "rarity": "uncommon",
+        "equipment": {
+            "slot": "armor",
+            "defense": 4,
+            "stat_mods": {
+                "foc": 5,
+                "accuracy": 6
+            }
+        }
+    },
+    {
+        "id": "orion_driftweave_cloak",
+        "name": "Driftweave Cloak",
+        "description": "A weightless cloak for constant repositioning.",
+        "aliases": [
+            "driftweave cloak"
+        ],
+        "type": "armor_orion",
+        "value": 200,
+        "buy_price": 400,
+        "rarity": "uncommon",
+        "equipment": {
+            "slot": "armor",
+            "defense": 3,
+            "stat_mods": {
+                "spd": 4,
+                "evasion": 6
+            }
+        }
+    },
+    {
+        "id": "gh0st_nullguard_coat",
+        "name": "Nullguard Coat",
+        "description": "A dense coat that buys time when the ambush turns.",
+        "aliases": [
+            "nullguard coat"
+        ],
+        "type": "armor_gh0st",
+        "value": 230,
+        "buy_price": 460,
+        "rarity": "rare",
+        "equipment": {
+            "slot": "armor",
+            "defense": 9,
+            "hp_bonus": 50
+        }
+    },
+    {
+        "id": "gh0st_phaseweave_jacket",
+        "name": "Phaseweave Jacket",
+        "description": "Flickering panels that help you slip between strikes.",
+        "aliases": [
+            "phaseweave jacket"
+        ],
+        "type": "armor_gh0st",
+        "value": 190,
+        "buy_price": 380,
+        "rarity": "uncommon",
+        "equipment": {
+            "slot": "armor",
+            "defense": 3,
+            "stat_mods": {
+                "spd": 4,
+                "evasion": 8
+            }
+        }
+    },
+    {
+        "id": "gh0st_killer_harness",
+        "name": "Killer Harness",
+        "description": "Lean rigging tuned for ruthless, accurate cuts.",
+        "aliases": [
+            "killer harness"
+        ],
+        "type": "armor_gh0st",
+        "value": 270,
+        "buy_price": 540,
+        "rarity": "rare",
+        "equipment": {
+            "slot": "armor",
+            "defense": 5,
+            "stat_mods": {
+                "str": 5,
+                "crit_rate": 6,
+                "accuracy": 4
+            }
         }
     },
     {
         "id": "basic_jacket",
-        "name": "Basic Jacket",
-        "description": "An everyday jacket.",
+        "name": "Scraprunner Jacket",
+        "description": "A patched jacket that keeps Ollie fast and focused.",
         "aliases": [
+            "scraprunner jacket",
             "jacket"
         ],
-        "type": "armor",
-        "value": 50,
-        "buy_price": 100,
+        "type": "armor_ollie",
+        "value": 120,
+        "buy_price": 240,
         "rarity": "common",
         "equipment": {
             "slot": "armor",
-            "defense": 5
+            "defense": 4,
+            "accuracy": 4,
+            "stat_mods": {
+                "lck": 3,
+                "spd": 2
+            }
+        }
+    },
+    {
+        "id": "nova_helioguard_plate",
+        "name": "Helioguard Plate",
+        "description": "Sunburst plating that steadies Nova through recoil.",
+        "aliases": [
+            "helioguard plate"
+        ],
+        "type": "armor_nova",
+        "value": 240,
+        "buy_price": 480,
+        "rarity": "rare",
+        "equipment": {
+            "slot": "armor",
+            "defense": 11,
+            "hp_bonus": 60,
+            "stat_mods": {
+                "foc": 3
+            }
+        }
+    },
+    {
+        "id": "nova_flux_liner",
+        "name": "Flux Liner",
+        "description": "Lightweight layers that keep Nova dancing between volleys.",
+        "aliases": [
+            "flux liner"
+        ],
+        "type": "armor_nova",
+        "value": 180,
+        "buy_price": 360,
+        "rarity": "uncommon",
+        "equipment": {
+            "slot": "armor",
+            "defense": 3,
+            "stat_mods": {
+                "spd": 5,
+                "evasion": 4,
+                "accuracy": 4
+            }
+        }
+    },
+    {
+        "id": "nova_starline_jacket",
+        "name": "Starline Jacket",
+        "description": "Luminous threading keeps Nova steady while charging the next shot.",
+        "aliases": [
+            "starline jacket"
+        ],
+        "type": "armor_nova",
+        "value": 200,
+        "buy_price": 400,
+        "rarity": "rare",
+        "equipment": {
+            "slot": "armor",
+            "defense": 7,
+            "accuracy": 5,
+            "crit_rate": 3,
+            "stat_mods": {
+                "foc": 2
+            }
+        }
+    },
+    {
+        "id": "basic_vest",
+        "name": "Trailblazer Vest",
+        "description": "A rugged vest tuned for Ollie's scrappy scouting.",
+        "aliases": [
+            "trailblazer vest",
+            "vest"
+        ],
+        "type": "armor_ollie",
+        "value": 120,
+        "buy_price": 240,
+        "rarity": "common",
+        "equipment": {
+            "slot": "armor",
+            "defense": 7,
+            "stat_mods": {
+                "agi": 3,
+                "evasion": 4
+            }
+        }
+    },
+    {
+        "id": "ollie_canopy_mantle",
+        "name": "Canopy Mantle",
+        "description": "Leaf-styled layers that hide Ollie in the treeline.",
+        "aliases": [
+            "canopy mantle"
+        ],
+        "type": "armor_ollie",
+        "value": 220,
+        "buy_price": 440,
+        "rarity": "rare",
+        "equipment": {
+            "slot": "armor",
+            "defense": 9,
+            "hp_bonus": 50,
+            "stat_mods": {
+                "lck": 4,
+                "evasion": 3
+            }
         }
     },
     {
@@ -42,24 +569,9 @@
         "rarity": "common",
         "equipment": {
             "slot": "weapon",
-            "weapon_type": "gun",
+            "weapon_type": "slingshot",
             "damage_min": 5,
             "damage_max": 7
-        }
-    },
-    {
-        "id": "basic_vest",
-        "name": "Basic Vest",
-        "aliases": [
-            "vest"
-        ],
-        "type": "armor",
-        "value": 75,
-        "buy_price": 150,
-        "rarity": "common",
-        "equipment": {
-            "slot": "armor",
-            "defense": 8
         }
     },
     {
@@ -85,7 +597,6 @@
         "effect": {
             "target": "any",
             "restore_hp": 0,
-            "restore_rp": 0,
             "damage": 0,
             "buff_stat": {
                 "stat": "spd",
@@ -174,7 +685,6 @@
         "effect": {
             "target": "party",
             "restore_hp": 9999,
-            "restore_rp": 0,
             "damage": 0
         }
     },
@@ -207,6 +717,10 @@
             "stat_mods": {
                 "spd": 6
             }
+        },
+        "effect": {
+            "buff_stat": { "stat": "evasion", "value": 10, "duration": 2 },
+            "target": "self"
         }
     },
     {
@@ -220,6 +734,10 @@
         "equipment": {
             "slot": "snack",
             "hp_bonus": 120
+        },
+        "effect": {
+            "buff_stat": { "stat": "defense", "value": 6, "duration": 2 },
+            "target": "self"
         }
     },
     {
@@ -236,6 +754,240 @@
                 "foc": 4,
                 "luck": 2
             }
+        },
+        "effect": {
+            "buffs": [
+                { "stat": "accuracy", "value": 8, "duration": 2 },
+                { "stat": "crit_rate", "value": 10, "duration": 2 }
+            ],
+            "target": "self"
+        }
+    },
+    {
+        "id": "stellar_scone",
+        "name": "Stellar Scone",
+        "description": "A crumbly pastry you can split with a friend when things get rough.",
+        "type": "snack",
+        "value": 220,
+        "buy_price": 420,
+        "rarity": "rare",
+        "equipment": {
+            "slot": "snack",
+            "hp_bonus": 60
+        },
+        "effect": {
+            "restore_hp": 35,
+            "target": "ally"
+        }
+    },
+    {
+        "id": "void_jerky",
+        "name": "Void Jerky",
+        "description": "Salt-smoked protein that leaves your hands numb and your hits heavier.",
+        "type": "snack",
+        "value": 200,
+        "buy_price": 380,
+        "rarity": "rare",
+        "equipment": {
+            "slot": "snack",
+            "stat_mods": {
+                "str": 2
+            }
+        },
+        "effect": {
+            "buff_stat": { "stat": "strength", "value": 8, "duration": 2 },
+            "target": "self"
+        }
+    },
+    {
+        "id": "ion_poppers",
+        "name": "Ion Poppers",
+        "description": "Fizzy beads that steady your aim for a few heartbeats.",
+        "type": "snack",
+        "value": 190,
+        "buy_price": 360,
+        "rarity": "uncommon",
+        "equipment": {
+            "slot": "snack",
+            "stat_mods": {
+                "luck": 2
+            }
+        },
+        "effect": {
+            "buff_stat": { "stat": "accuracy", "value": 12, "duration": 2 },
+            "target": "self"
+        }
+    },
+    {
+        "id": "sunder_seeds",
+        "name": "Sunder Seeds",
+        "description": "Bitter seeds you spit like shrapnel, leaving armor loose at the seams.",
+        "type": "snack",
+        "value": 210,
+        "buy_price": 400,
+        "rarity": "uncommon",
+        "equipment": {
+            "slot": "snack",
+            "stat_mods": {
+                "vit": 1
+            }
+        },
+        "effect": {
+            "buff_stat": { "stat": "defense", "value": -6, "duration": 2 },
+            "target": "enemy"
+        }
+    },
+    {
+        "id": "pulse_citrus",
+        "name": "Pulse Citrus",
+        "description": "Tart wedges that kick your heartbeat into a sprint.",
+        "type": "snack",
+        "value": 150,
+        "buy_price": 300,
+        "rarity": "uncommon",
+        "equipment": {
+            "slot": "snack",
+            "stat_mods": {
+                "spd": 3
+            }
+        },
+        "effect": {
+            "buff_stat": { "stat": "speed", "value": 8, "duration": 2 },
+            "target": "self"
+        }
+    },
+    {
+        "id": "iron_biscuit",
+        "name": "Iron Biscuit",
+        "description": "Dense, salty bread that settles the nerves before impact.",
+        "type": "snack",
+        "value": 160,
+        "buy_price": 320,
+        "rarity": "uncommon",
+        "equipment": {
+            "slot": "snack",
+            "hp_bonus": 80
+        },
+        "effect": {
+            "buff_stat": { "stat": "defense", "value": 8, "duration": 2 },
+            "target": "self"
+        }
+    },
+    {
+        "id": "mindfruit_slice",
+        "name": "Mindfruit Slice",
+        "description": "Cool, bright fruit that sharpens decisions on the spot.",
+        "type": "snack",
+        "value": 190,
+        "buy_price": 380,
+        "rarity": "rare",
+        "equipment": {
+            "slot": "snack",
+            "stat_mods": {
+                "foc": 3
+            }
+        },
+        "effect": {
+            "buffs": [
+                { "stat": "accuracy", "value": 8, "duration": 2 },
+                { "stat": "crit_rate", "value": 6, "duration": 2 }
+            ],
+            "target": "self"
+        }
+    },
+    {
+        "id": "rattle_pepper",
+        "name": "Rattle Pepper",
+        "description": "A hot snap that drives punches deeper.",
+        "type": "snack",
+        "value": 170,
+        "buy_price": 340,
+        "rarity": "uncommon",
+        "equipment": {
+            "slot": "snack",
+            "stat_mods": {
+                "str": 2
+            }
+        },
+        "effect": {
+            "buff_stat": { "stat": "strength", "value": 8, "duration": 2 },
+            "target": "self"
+        }
+    },
+    {
+        "id": "slipstream_mochi",
+        "name": "Slipstream Mochi",
+        "description": "Chewy bites that keep your steps a half-beat ahead.",
+        "type": "snack",
+        "value": 180,
+        "buy_price": 360,
+        "rarity": "rare",
+        "equipment": {
+            "slot": "snack",
+            "stat_mods": {
+                "evasion": 6
+            }
+        },
+        "effect": {
+            "buff_stat": { "stat": "evasion", "value": 12, "duration": 2 },
+            "target": "self"
+        }
+    },
+    {
+        "id": "shadow_kelp",
+        "name": "Shadow Kelp",
+        "description": "Inky strips that dull an opponent's aim.",
+        "type": "snack",
+        "value": 175,
+        "buy_price": 350,
+        "rarity": "uncommon",
+        "equipment": {
+            "slot": "snack",
+            "stat_mods": {
+                "luck": 2
+            }
+        },
+        "effect": {
+            "buff_stat": { "stat": "accuracy", "value": -10, "duration": 2 },
+            "target": "enemy"
+        }
+    },
+    {
+        "id": "ember_broth",
+        "name": "Ember Broth",
+        "description": "A warm sip that steadies breathing and mends small wounds.",
+        "type": "snack",
+        "value": 165,
+        "buy_price": 330,
+        "rarity": "uncommon",
+        "equipment": {
+            "slot": "snack",
+            "stat_mods": {
+                "vit": 2
+            }
+        },
+        "effect": {
+            "restore_hp": 45,
+            "target": "ally"
+        }
+    },
+    {
+        "id": "void_crisp",
+        "name": "Void Crisp",
+        "description": "A dark crunch that primes ruthless strikes.",
+        "type": "snack",
+        "value": 200,
+        "buy_price": 400,
+        "rarity": "rare",
+        "equipment": {
+            "slot": "snack",
+            "stat_mods": {
+                "crit_rate": 3
+            }
+        },
+        "effect": {
+            "buff_stat": { "stat": "crit_rate", "value": 12, "duration": 2 },
+            "target": "self"
         }
     },
     {
@@ -258,7 +1010,6 @@
         "effect": {
             "target": "any",
             "restore_hp": 0,
-            "restore_rp": 0,
             "damage": 0,
             "buffs": [
                 {
@@ -286,7 +1037,6 @@
         "buy_price": 50,
         "effect": {
             "restore_hp": 50,
-            "restore_rp": 0,
             "damage": 0
         }
     },
@@ -516,7 +1266,6 @@
         "rarity": "uncommon",
         "effect": {
             "restore_hp": 120,
-            "restore_rp": 0,
             "damage": 0
         }
     },
@@ -529,8 +1278,7 @@
         "buy_price": 110,
         "rarity": "uncommon",
         "effect": {
-            "restore_hp": 80,
-            "restore_rp": 20,
+            "restore_hp": 100,
             "damage": 0
         }
     },
@@ -687,8 +1435,7 @@
         "buy_price": 130,
         "rarity": "rare",
         "effect": {
-            "restore_hp": 120,
-            "restore_rp": 30
+            "restore_hp": 150
         }
     },
     {
@@ -741,51 +1488,129 @@
         }
     },
     {
-        "id": "basic_glove",
-        "name": "Basic Glove",
-        "description": "Standard issue combat glove.",
-        "type": "weapon",
-        "value": 100,
-        "buy_price": 200,
-        "rarity": "common",
+        "id": "precision_sight",
+        "name": "Precision Sight",
+        "description": "A slim optic that rewards clean shots.",
+        "type": "accessory",
+        "value": 140,
+        "buy_price": 280,
+        "rarity": "uncommon",
         "equipment": {
-            "slot": "weapon",
-            "weapon_type": "glove",
-            "damage_min": 15,
-            "damage_max": 25
+            "slot": "accessory",
+            "accuracy": 8,
+            "crit_rate": 4.0
         }
     },
     {
-        "id": "basic_jewel",
-        "name": "Focus Jewel",
-        "description": "A gemstone that channels bio-energy.",
-        "type": "weapon",
-        "value": 150,
-        "buy_price": 300,
-        "rarity": "common",
+        "id": "stability_gyro",
+        "name": "Stability Gyro",
+        "description": "A spinning core that keeps balance under fire.",
+        "type": "accessory",
+        "value": 160,
+        "buy_price": 320,
+        "rarity": "uncommon",
         "equipment": {
-            "slot": "weapon",
-            "weapon_type": "jewel",
-            "damage_min": 20,
-            "damage_max": 30,
+            "slot": "accessory",
+            "defense": 4,
             "stat_mods": {
-                "rp": 10
+                "spd": 3
             }
         }
     },
     {
-        "id": "basic_sword",
-        "name": "Training Sword",
-        "description": "A dull blade for practice.",
-        "type": "weapon",
-        "value": 120,
-        "buy_price": 240,
-        "rarity": "common",
+        "id": "vital_signet",
+        "name": "Vital Signet",
+        "description": "An etched ring that reinforces the wearer's pulse.",
+        "type": "accessory",
+        "value": 220,
+        "buy_price": 440,
+        "rarity": "rare",
         "equipment": {
-            "slot": "weapon",
-            "weapon_type": "sword",
-            "damage_min": 25,
-            "damage_max": 35
+            "slot": "accessory",
+            "hp_bonus": 120,
+            "stat_mods": {
+                "vit": 2
+            }
+        }
+    },
+    {
+        "id": "focus_conduit",
+        "name": "Focus Conduit",
+        "description": "A crystal conduit that steadies focus and intent.",
+        "type": "accessory",
+        "value": 210,
+        "buy_price": 420,
+        "rarity": "rare",
+        "equipment": {
+            "slot": "accessory",
+            "accuracy": 4,
+            "stat_mods": {
+                "foc": 4
+            }
+        }
+    },
+    {
+        "id": "shadow_coil",
+        "name": "Shadow Coil",
+        "description": "A coiled tether that helps you slip out of sightlines.",
+        "type": "accessory",
+        "value": 200,
+        "buy_price": 400,
+        "rarity": "rare",
+        "equipment": {
+            "slot": "accessory",
+            "stat_mods": {
+                "evasion": 8,
+                "spd": 2
+            }
+        }
+    },
+    {
+        "id": "brutal_charm",
+        "name": "Brutal Charm",
+        "description": "A weighted charm tuned for brutal follow-through.",
+        "type": "accessory",
+        "value": 230,
+        "buy_price": 460,
+        "rarity": "rare",
+        "equipment": {
+            "slot": "accessory",
+            "crit_rate": 5.0,
+            "stat_mods": {
+                "str": 4
+            }
+        }
+    },
+    {
+        "id": "lucky_talisman",
+        "name": "Lucky Talisman",
+        "description": "A chipped charm that tilts odds in your favor.",
+        "type": "accessory",
+        "value": 170,
+        "buy_price": 340,
+        "rarity": "uncommon",
+        "equipment": {
+            "slot": "accessory",
+            "accuracy": 2,
+            "stat_mods": {
+                "luck": 4
+            }
+        }
+    },
+    {
+        "id": "reactive_plating",
+        "name": "Reactive Plating",
+        "description": "Microplates that harden just before impact.",
+        "type": "accessory",
+        "value": 240,
+        "buy_price": 480,
+        "rarity": "rare",
+        "equipment": {
+            "slot": "accessory",
+            "defense": 7,
+            "stat_mods": {
+                "evasion": 4
+            }
         }
     },
     {
@@ -803,6 +1628,241 @@
         "effect": {
              "restore_hp": 20,
              "target": "self"
+        }
+    },
+    {
+        "id": "precision_core",
+        "name": "Precision Core",
+        "description": "Micro-stabilizers tuned for pinpoint strikes.",
+        "type": "mod",
+        "value": 240,
+        "buy_price": 480,
+        "rarity": "rare",
+        "equipment": {
+            "slot": "mod",
+            "stat_mods": {
+                "accuracy": 6,
+                "crit_rate": 4
+            },
+            "attack_element": "psychic"
+        }
+    },
+    {
+        "id": "stability_gyro_mod",
+        "name": "Stability Gyro Mod",
+        "description": "Gyroscopic ring that anchors stance under recoil.",
+        "type": "mod",
+        "value": 200,
+        "buy_price": 400,
+        "rarity": "uncommon",
+        "equipment": {
+            "slot": "mod",
+            "stat_mods": {
+                "defense": 4,
+                "speed": 2
+            }
+        }
+    },
+    {
+        "id": "impact_node",
+        "name": "Impact Node",
+        "description": "Power cell that boosts impact force on contact.",
+        "type": "mod",
+        "value": 220,
+        "buy_price": 440,
+        "rarity": "uncommon",
+        "equipment": {
+            "slot": "mod",
+            "stat_mods": {
+                "strength": 4,
+                "crit_rate": 2
+            },
+            "status_on_hit": "bleed",
+            "status_chance": 22
+        }
+    },
+    {
+        "id": "bulwark_layer",
+        "name": "Bulwark Layer",
+        "description": "Dense weave that absorbs the first hit.",
+        "type": "mod",
+        "value": 260,
+        "buy_price": 520,
+        "rarity": "rare",
+        "equipment": {
+            "slot": "mod",
+            "stat_mods": {
+                "defense": 6,
+                "vitality": 3
+            }
+        }
+    },
+    {
+        "id": "focus_matrix",
+        "name": "Focus Matrix",
+        "description": "Neural grid that sharpens skill execution.",
+        "type": "mod",
+        "value": 240,
+        "buy_price": 480,
+        "rarity": "rare",
+        "equipment": {
+            "slot": "mod",
+            "stat_mods": {
+                "focus": 4,
+                "accuracy": 3
+            },
+            "attack_element": "radiation"
+        }
+    },
+    {
+        "id": "velocity_spool",
+        "name": "Velocity Spool",
+        "description": "Kinetic ribbon that keeps you moving.",
+        "type": "mod",
+        "value": 210,
+        "buy_price": 420,
+        "rarity": "uncommon",
+        "equipment": {
+            "slot": "mod",
+            "stat_mods": {
+                "speed": 4,
+                "evasion": 4
+            }
+        }
+    },
+    {
+        "id": "razor_capacitor",
+        "name": "Razor Capacitor",
+        "description": "Overclocked capacitor that sharpens cutting arcs.",
+        "type": "mod",
+        "value": 260,
+        "buy_price": 520,
+        "rarity": "rare",
+        "equipment": {
+            "slot": "mod",
+            "stat_mods": {
+                "strength": 5,
+                "crit_rate": 3
+            },
+            "status_on_hit": "bleed",
+            "status_chance": 30
+        }
+    },
+    {
+        "id": "coil_synchronizer",
+        "name": "Coil Synchronizer",
+        "description": "Synchronizes firing coils for steadier aim.",
+        "type": "mod",
+        "value": 220,
+        "buy_price": 440,
+        "rarity": "uncommon",
+        "equipment": {
+            "slot": "mod",
+            "stat_mods": {
+                "accuracy": 5,
+                "focus": 2
+            },
+            "attack_element": "lightning"
+        }
+    },
+    {
+        "id": "recoil_dampener",
+        "name": "Recoil Dampener",
+        "description": "Mag-brace that tames kick and keeps shots true.",
+        "type": "mod",
+        "value": 210,
+        "buy_price": 420,
+        "rarity": "uncommon",
+        "equipment": {
+            "slot": "mod",
+            "stat_mods": {
+                "accuracy": 4,
+                "speed": 3
+            },
+            "status_on_hit": "shock",
+            "status_chance": 18
+        }
+    },
+    {
+        "id": "execution_servo",
+        "name": "Execution Servo",
+        "description": "Servo assist for finishing strikes.",
+        "type": "mod",
+        "value": 230,
+        "buy_price": 460,
+        "rarity": "uncommon",
+        "equipment": {
+            "slot": "mod",
+            "stat_mods": {
+                "strength": 4,
+                "speed": 4
+            },
+            "status_on_hit": "weak",
+            "status_chance": 16
+        }
+    },
+    {
+        "id": "ablative_mesh",
+        "name": "Ablative Mesh",
+        "description": "Layered mesh that absorbs burst damage.",
+        "type": "mod",
+        "value": 250,
+        "buy_price": 500,
+        "rarity": "rare",
+        "equipment": {
+            "slot": "mod",
+            "stat_mods": {
+                "defense": 5,
+                "vitality": 3
+            }
+        }
+    },
+    {
+        "id": "shock_lattice",
+        "name": "Shock Lattice",
+        "description": "Insulated lattice that disperses energy surges.",
+        "type": "mod",
+        "value": 230,
+        "buy_price": 460,
+        "rarity": "uncommon",
+        "equipment": {
+            "slot": "mod",
+            "stat_mods": {
+                "defense": 4,
+                "evasion": 4
+            }
+        }
+    },
+    {
+        "id": "adaptive_padding",
+        "name": "Adaptive Padding",
+        "description": "Reactive padding that reinforces weak points.",
+        "type": "mod",
+        "value": 220,
+        "buy_price": 440,
+        "rarity": "uncommon",
+        "equipment": {
+            "slot": "mod",
+            "stat_mods": {
+                "vitality": 5,
+                "agility": 2
+            }
+        }
+    },
+    {
+        "id": "warding_matrix",
+        "name": "Warding Matrix",
+        "description": "Dampening nodes that blunt incoming strikes.",
+        "type": "mod",
+        "value": 240,
+        "buy_price": 480,
+        "rarity": "rare",
+        "equipment": {
+            "slot": "mod",
+            "stat_mods": {
+                "defense": 3,
+                "luck": 3
+            }
         }
     }
 ]

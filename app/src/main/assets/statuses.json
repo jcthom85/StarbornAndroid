@@ -33,6 +33,12 @@
     "target": "ally"
   },
   {
+    "id": "braced",
+    "default_duration": 2,
+    "flat_defense_bonus": 5,
+    "target": "ally"
+  },
+  {
     "id": "poison",
     "default_duration": 3,
     "tick": {

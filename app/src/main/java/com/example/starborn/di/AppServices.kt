@@ -42,6 +42,8 @@ import com.example.starborn.domain.event.EventManager
 import com.example.starborn.domain.event.EventPayload
 import com.example.starborn.domain.model.GameEvent
 import com.example.starborn.domain.model.MilestoneEffects
+import com.example.starborn.domain.model.Player
+import com.example.starborn.domain.model.Item
 import com.example.starborn.domain.session.GameSessionPersistence
 import com.example.starborn.domain.session.GameSessionSlotInfo
 import com.example.starborn.domain.session.GameSessionState
@@ -49,6 +51,7 @@ import com.example.starborn.domain.session.GameSessionStore
 import com.example.starborn.domain.session.fingerprint
 import com.example.starborn.domain.session.importLegacySave
 import com.example.starborn.domain.inventory.InventoryService
+import com.example.starborn.domain.inventory.GearRules
 import com.example.starborn.domain.leveling.LevelingData
 import com.example.starborn.domain.leveling.ProgressionData
 import com.example.starborn.domain.leveling.LevelingManager
@@ -68,12 +71,14 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import java.util.ArrayDeque
 import java.util.Locale
 import java.io.File
+import kotlin.random.Random
 
 class AppServices(context: Context) {
     private val appContext = context.applicationContext
@@ -152,6 +157,14 @@ class AppServices(context: Context) {
         private const val SAMPLE_ROOM_ID = "market_2"
     }
 
+    private val defaultArmorsByCharacter = mapOf(
+        "nova" to "nova_flux_liner",
+        "zeke" to "zeke_surge_harness",
+        "orion" to "orion_channeler_mantle",
+        "gh0st" to "gh0st_phaseweave_jacket",
+        "ollie" to "basic_vest"
+    )
+
     val promptManager = UIPromptManager()
     val dialogueService: DialogueService = DialogueService(
         dialogueDataSource.loadDialogue(),
@@ -176,13 +189,24 @@ class AppServices(context: Context) {
     val tutorialManager = TutorialRuntimeManager(sessionStore, promptManager, tutorialScripts, runtimeScope)
 
     init {
+        inventoryService.addOnItemAddedListener { itemId, quantity ->
+            if (quantity > 0) {
+                handleWeaponUnlockFromItem(itemId, quantity)
+                handleArmorUnlockFromItem(itemId, quantity)
+            }
+        }
         questRuntimeManager.addQuestCompletionListener { questId ->
             milestoneManager.onQuestCompleted(questId)
         }
         persistenceScope.launch {
-            sessionPersistence.sessionFlow.collect { stored ->
+            // Only hydrate from persisted session once on startup.
+            // If the user starts a new game before the initial read completes, don't overwrite it.
+            val stored = sessionPersistence.sessionFlow.first()
+            if (sessionStore.state.value.needsFallbackImport()) {
                 sessionStore.restore(stored)
                 inventoryService.restore(stored.inventory)
+                migrateLegacyWeapons(stored)
+                migrateLegacyArmors(stored)
             }
         }
         persistenceScope.launch {
@@ -216,6 +240,320 @@ class AppServices(context: Context) {
         }
     }
 
+    private fun handleWeaponUnlockFromItem(itemId: String, quantity: Int) {
+        if (quantity <= 0) return
+        val item = itemRepository.findItem(itemId) ?: return
+        if (!item.isWeaponItem()) return
+        val weaponId = item.id
+        sessionStore.unlockWeapon(weaponId)
+        val ownerId = weaponOwnerFor(item)
+        if (!ownerId.isNullOrBlank()) {
+            val normalizedOwner = ownerId.lowercase(Locale.getDefault())
+            val equipped = sessionStore.state.value.equippedWeapons[normalizedOwner]
+            if (equipped.isNullOrBlank()) {
+                sessionStore.setEquippedWeapon(ownerId, weaponId)
+            }
+        }
+        inventoryService.removeItem(weaponId, quantity)
+    }
+
+    private fun handleArmorUnlockFromItem(itemId: String, quantity: Int) {
+        if (quantity <= 0) return
+        val item = itemRepository.findItem(itemId) ?: return
+        if (!item.isArmorItem()) return
+        sessionStore.unlockArmor(item.id)
+        inventoryService.removeItem(item.id, quantity)
+    }
+
+    private fun migrateLegacyWeapons(state: GameSessionState) {
+        val weaponIds = mutableSetOf<String>()
+        val legacyEquipped = mutableMapOf<String, String>()
+
+        state.inventory.keys.forEach { rawId ->
+            canonicalWeaponId(rawId)?.let { weaponIds += it }
+        }
+
+        state.equippedItems.forEach { (key, value) ->
+            val slot = if (key.contains(':')) key.substringAfter(':') else key
+            if (!slot.equals("weapon", ignoreCase = true)) return@forEach
+            val weaponId = canonicalWeaponId(value) ?: return@forEach
+            weaponIds += weaponId
+            val ownerId = if (key.contains(':')) key.substringBefore(':') else weaponOwnerFor(weaponId)
+            if (!ownerId.isNullOrBlank()) {
+                legacyEquipped[ownerId.lowercase(Locale.getDefault())] = weaponId
+            }
+        }
+
+        state.equippedWeapons.forEach { (ownerId, weaponId) ->
+            canonicalWeaponId(weaponId)?.let { weaponIds += it }
+            if (ownerId.isNotBlank() && weaponId.isNotBlank()) {
+                legacyEquipped.putIfAbsent(ownerId.lowercase(Locale.getDefault()), weaponId)
+            }
+        }
+
+        weaponIds.forEach { sessionStore.unlockWeapon(it) }
+        legacyEquipped.forEach { (ownerId, weaponId) ->
+            val equipped = sessionStore.state.value.equippedWeapons[ownerId]
+            if (equipped.isNullOrBlank()) {
+                sessionStore.setEquippedWeapon(ownerId, weaponId)
+            }
+        }
+
+        val inventorySnapshot = inventoryService.snapshot()
+        inventorySnapshot.forEach { (id, qty) ->
+            if (isWeaponItemId(id)) {
+                inventoryService.removeItem(id, qty)
+            }
+        }
+    }
+
+    private fun migrateLegacyArmors(state: GameSessionState) {
+        val armorIds = mutableSetOf<String>()
+        val legacyEquipped = mutableMapOf<String, String>()
+
+        state.inventory.keys.forEach { rawId ->
+            canonicalArmorId(rawId)?.let { armorIds += it }
+        }
+
+        state.equippedItems.forEach { (key, value) ->
+            val slot = if (key.contains(':')) key.substringAfter(':') else key
+            if (!slot.equals("armor", ignoreCase = true)) return@forEach
+            val armorId = canonicalArmorId(value) ?: return@forEach
+            armorIds += armorId
+            val ownerId = if (key.contains(':')) key.substringBefore(':') else null
+            if (!ownerId.isNullOrBlank()) {
+                legacyEquipped[ownerId.lowercase(Locale.getDefault())] = armorId
+            }
+        }
+
+        state.equippedArmors.forEach { (ownerId, armorId) ->
+            canonicalArmorId(armorId)?.let { armorIds += it }
+            if (ownerId.isNotBlank() && armorId.isNotBlank()) {
+                legacyEquipped.putIfAbsent(ownerId.lowercase(Locale.getDefault()), armorId)
+            }
+        }
+
+        armorIds.forEach { sessionStore.unlockArmor(it) }
+        legacyEquipped.forEach { (ownerId, armorId) ->
+            val equipped = sessionStore.state.value.equippedArmors[ownerId]
+            if (equipped.isNullOrBlank()) {
+                sessionStore.setEquippedArmor(ownerId, armorId)
+            }
+        }
+
+        val inventorySnapshot = inventoryService.snapshot()
+        inventorySnapshot.forEach { (id, qty) ->
+            if (isArmorItemId(id)) {
+                inventoryService.removeItem(id, qty)
+            }
+        }
+    }
+
+    private fun seedDefaultWeaponsForCharacters(characterIds: List<String>) {
+        if (characterIds.isEmpty()) return
+        itemRepository.load()
+        val weaponItems = itemRepository.allItems().filter { it.isWeaponItem() }
+        if (weaponItems.isEmpty()) return
+        val rng = Random(System.currentTimeMillis())
+        characterIds
+            .map { it.trim().lowercase(Locale.getDefault()) }
+            .filter { it.isNotBlank() }
+            .distinct()
+            .forEach { normalizedId ->
+                val equipped = sessionStore.state.value.equippedWeapons[normalizedId]
+                if (!equipped.isNullOrBlank()) {
+                    sessionStore.unlockWeapon(equipped)
+                    return@forEach
+                }
+                val chosen = pickRandomWeaponForCharacter(normalizedId, weaponItems, rng) ?: return@forEach
+                sessionStore.setEquippedWeapon(normalizedId, chosen.id)
+            }
+    }
+
+    private fun seedDefaultArmorsForCharacters(characterIds: List<String>) {
+        if (characterIds.isEmpty()) return
+        itemRepository.load()
+        val armorItems = itemRepository.allItems().filter { it.isArmorItem() }
+        if (armorItems.isEmpty()) return
+        val rng = Random(System.currentTimeMillis())
+        characterIds
+            .map { it.trim().lowercase(Locale.getDefault()) }
+            .filter { it.isNotBlank() }
+            .distinct()
+            .forEach { normalizedId ->
+                val equipped = sessionStore.state.value.equippedArmors[normalizedId]
+                if (!equipped.isNullOrBlank()) {
+                    sessionStore.unlockArmor(equipped)
+                    return@forEach
+                }
+                val chosen = pickDefaultArmorForCharacter(normalizedId, armorItems, rng) ?: return@forEach
+                sessionStore.setEquippedArmor(normalizedId, chosen.id)
+            }
+    }
+
+    private fun unlockAllWeapons() {
+        itemRepository.load()
+        itemRepository.allItems()
+            .filter { it.isWeaponItem() }
+            .forEach { sessionStore.unlockWeapon(it.id) }
+    }
+
+    private fun unlockAllArmors() {
+        itemRepository.load()
+        itemRepository.allItems()
+            .filter { it.isArmorItem() }
+            .forEach { sessionStore.unlockArmor(it.id) }
+    }
+
+    private fun buildStartingWeaponState(
+        characterIds: List<String>,
+        unlockAll: Boolean
+    ): Pair<Set<String>, Map<String, String>> {
+        itemRepository.load()
+        val unlocked = mutableSetOf<String>()
+        val equipped = mutableMapOf<String, String>()
+        val weaponItems = itemRepository.allItems().filter { it.isWeaponItem() }
+
+        if (unlockAll) {
+            weaponItems.forEach { unlocked += it.id }
+        }
+
+        val rng = Random(System.currentTimeMillis())
+        characterIds
+            .map { it.trim().lowercase(Locale.getDefault()) }
+            .filter { it.isNotBlank() }
+            .distinct()
+            .forEach { normalizedId ->
+                val chosen = pickRandomWeaponForCharacter(normalizedId, weaponItems, rng) ?: return@forEach
+                unlocked += chosen.id
+                equipped.putIfAbsent(normalizedId, chosen.id)
+            }
+
+        return unlocked to equipped
+    }
+
+    private fun buildStartingArmorState(
+        characterIds: List<String>,
+        unlockAll: Boolean
+    ): Pair<Set<String>, Map<String, String>> {
+        itemRepository.load()
+        val unlocked = mutableSetOf<String>()
+        val equipped = mutableMapOf<String, String>()
+        val armorItems = itemRepository.allItems().filter { it.isArmorItem() }
+
+        if (unlockAll) {
+            armorItems.forEach { unlocked += it.id }
+        }
+
+        if (armorItems.isEmpty()) return unlocked to equipped
+        val rng = Random(System.currentTimeMillis())
+        characterIds
+            .map { it.trim().lowercase(Locale.getDefault()) }
+            .filter { it.isNotBlank() }
+            .distinct()
+            .forEach { normalizedId ->
+                val chosen = pickDefaultArmorForCharacter(normalizedId, armorItems, rng) ?: return@forEach
+                unlocked += chosen.id
+                equipped.putIfAbsent(normalizedId, chosen.id)
+            }
+
+        return unlocked to equipped
+    }
+
+    private fun canonicalWeaponId(rawId: String): String? =
+        itemRepository.findItem(rawId)?.takeIf { it.isWeaponItem() }?.id
+
+    private fun isWeaponItemId(rawId: String): Boolean =
+        itemRepository.findItem(rawId)?.let { it.isWeaponItem() } == true
+
+    private fun canonicalArmorId(rawId: String): String? =
+        itemRepository.findItem(rawId)?.takeIf { it.isArmorItem() }?.id
+
+    private fun isArmorItemId(rawId: String): Boolean =
+        itemRepository.findItem(rawId)?.let { it.isArmorItem() } == true
+
+    private fun weaponOwnerFor(item: Item): String? {
+        val weaponType = item.equipment?.weaponType?.trim()?.lowercase(Locale.getDefault())
+        val fallbackType = item.type.trim().lowercase(Locale.getDefault())
+        return GearRules.characterForWeaponType(weaponType ?: fallbackType)
+    }
+
+    private fun weaponOwnerFor(itemId: String): String? =
+        itemRepository.findItem(itemId)?.let { weaponOwnerFor(it) }
+
+    private fun weaponTypeFor(item: Item): String? {
+        val equipmentType = item.equipment?.weaponType?.trim()?.lowercase(Locale.getDefault())
+        if (!equipmentType.isNullOrBlank()) return equipmentType
+        val normalizedType = item.type.trim().lowercase(Locale.getDefault())
+        return normalizedType.takeIf { GearRules.isWeaponType(it) }
+    }
+
+    private fun armorTypeFor(item: Item): String? {
+        val normalizedType = item.type.trim().lowercase(Locale.getDefault())
+        return normalizedType.takeIf { GearRules.isArmorType(it) }
+    }
+
+    private fun pickRandomWeaponForCharacter(
+        characterId: String,
+        weapons: List<Item>,
+        rng: Random
+    ): Item? {
+        if (weapons.isEmpty()) return null
+        val expectedType = GearRules.allowedWeaponTypeFor(characterId)
+        val matches = if (expectedType == null) weapons else weapons.filter {
+            weaponTypeFor(it) == expectedType
+        }
+        val pool = if (matches.isNotEmpty()) matches else weapons
+        return pool[rng.nextInt(pool.size)]
+    }
+
+    private fun pickRandomArmorForCharacter(
+        characterId: String,
+        armors: List<Item>,
+        rng: Random
+    ): Item? {
+        if (armors.isEmpty()) return null
+        val expectedType = GearRules.allowedArmorTypeFor(characterId)
+        val matches = if (expectedType == null) armors else armors.filter {
+            armorTypeFor(it) == expectedType
+        }
+        val pool = if (matches.isNotEmpty()) matches else armors
+        return pool[rng.nextInt(pool.size)]
+    }
+
+    private fun pickDefaultArmorForCharacter(
+        characterId: String,
+        armors: List<Item>,
+        rng: Random
+    ): Item? {
+        val normalizedId = characterId.trim().lowercase(Locale.getDefault())
+        val expectedType = GearRules.allowedArmorTypeFor(normalizedId)
+        val preferredId = defaultArmorsByCharacter[normalizedId]
+        val preferred = preferredId?.let { id ->
+            armors.firstOrNull { it.id.equals(id, ignoreCase = true) }
+        }
+        if (preferred != null) {
+            val preferredType = armorTypeFor(preferred)
+            if (expectedType == null || preferredType == expectedType) {
+                return preferred
+            }
+        }
+        return pickRandomArmorForCharacter(normalizedId, armors, rng)
+    }
+
+    private fun Item.isWeaponItem(): Boolean {
+        val normalizedType = type.trim().lowercase(Locale.getDefault())
+        return normalizedType == "weapon" ||
+            GearRules.isWeaponType(normalizedType) ||
+            equipment?.slot?.equals("weapon", ignoreCase = true) == true
+    }
+
+    private fun Item.isArmorItem(): Boolean {
+        val normalizedType = type.trim().lowercase(Locale.getDefault())
+        return normalizedType == "armor" ||
+            equipment?.slot?.equals("armor", ignoreCase = true) == true
+    }
+
     suspend fun saveSlot(slot: Int) {
         sessionPersistence.writeSlot(slot, sessionStore.state.value)
     }
@@ -225,6 +563,8 @@ class AppServices(context: Context) {
         val state = info.state
         sessionStore.restore(state)
         inventoryService.restore(state.inventory)
+        migrateLegacyWeapons(state)
+        migrateLegacyArmors(state)
         resetAutosaveThrottle()
         return true
     }
@@ -242,6 +582,8 @@ class AppServices(context: Context) {
         val state = info.state
         sessionStore.restore(state)
         inventoryService.restore(state.inventory)
+        migrateLegacyWeapons(state)
+        migrateLegacyArmors(state)
         recordAutosaveState(state)
         return true
     }
@@ -265,6 +607,8 @@ class AppServices(context: Context) {
         val state = info.state
         sessionStore.restore(state)
         inventoryService.restore(state.inventory)
+        migrateLegacyWeapons(state)
+        migrateLegacyArmors(state)
         recordAutosaveState(state)
         return true
     }
@@ -283,6 +627,8 @@ class AppServices(context: Context) {
         val imported = sessionPersistence.importLegacySave(file, itemRepository) ?: return false
         sessionStore.restore(imported)
         inventoryService.restore(imported.inventory)
+        migrateLegacyWeapons(imported)
+        migrateLegacyArmors(imported)
         return true
     }
 
@@ -345,12 +691,23 @@ class AppServices(context: Context) {
             tutorialManager.cancelAllScheduled()
             milestoneManager.clearHistory()
 
-            val defaultPlayer = runCatching { worldDataSource.loadCharacters().firstOrNull() }.getOrNull()
+            val players = runCatching { worldDataSource.loadCharacters() }.getOrNull().orEmpty()
+            val defaultPlayer = players.firstOrNull()
             val playerId = defaultPlayer?.id ?: SAMPLE_PARTY.firstOrNull()
             val baseLevel = defaultPlayer?.level ?: 1
             val baseXp = defaultPlayer?.xp ?: 0
             val startingRoomId = "town_9"
             val party = if (debugFullInventory) SAMPLE_PARTY.toList() else playerId?.let { listOf(it) } ?: emptyList()
+            val rosterIds = players.map { it.id.trim() }.filter { it.isNotBlank() }.distinct()
+            val weaponSeedIds = if (rosterIds.isNotEmpty()) rosterIds else party
+            val (startingUnlockedWeapons, startingEquippedWeapons) = buildStartingWeaponState(
+                characterIds = weaponSeedIds,
+                unlockAll = debugFullInventory
+            )
+            val (startingUnlockedArmors, startingEquippedArmors) = buildStartingArmorState(
+                characterIds = weaponSeedIds,
+                unlockAll = debugFullInventory
+            )
             val seedState = GameSessionState(
                 worldId = "nova_prime",
                 hubId = "mining_colony",
@@ -358,9 +715,13 @@ class AppServices(context: Context) {
                 playerId = playerId,
                 playerLevel = baseLevel,
                 playerXp = baseXp,
+                unlockedWeapons = startingUnlockedWeapons,
+                unlockedArmors = startingUnlockedArmors,
                 partyMembers = party,
                 partyMemberLevels = party.associateWith { baseLevel },
-                partyMemberXp = party.associateWith { baseXp }
+                partyMemberXp = party.associateWith { baseXp },
+                equippedWeapons = startingEquippedWeapons,
+                equippedArmors = startingEquippedArmors
             )
             sessionStore.restore(seedState)
             sessionStore.resetTutorialProgress()
@@ -369,9 +730,19 @@ class AppServices(context: Context) {
                 val fullInventory = buildFullInventory()
                 inventoryService.restore(fullInventory)
                 sessionStore.setInventory(fullInventory)
+                migrateLegacyWeapons(sessionStore.state.value)
+                migrateLegacyArmors(sessionStore.state.value)
+                unlockAllWeapons()
+                unlockAllArmors()
+                seedDefaultWeaponsForCharacters(weaponSeedIds)
+                seedDefaultArmorsForCharacters(weaponSeedIds)
                 sessionStore.addCredits(50_000)
+                unlockAllSkillsForParty(party)
             } else {
                 inventoryService.restore(emptyMap())
+                seedDefaultWeaponsForCharacters(weaponSeedIds)
+                seedDefaultArmorsForCharacters(weaponSeedIds)
+                unlockStartingSkillsForParty(party, players, baseLevel)
             }
             questRuntimeManager.resetAll()
             resetAutosaveThrottle()
@@ -432,14 +803,83 @@ class AppServices(context: Context) {
         val items = itemRepository.allItems()
         if (items.isEmpty()) return emptyMap()
         val maxStack = 9
-        return items.associate { item ->
+        val inventory = items.associate { item ->
             val qty = when {
                 (item.equipment != null) -> 4
                 item.type.equals("key_item", true) -> 1
                 else -> maxStack
             }
             item.id to qty
+        }.toMutableMap()
+
+        listOf(
+            "nova_laser_blaster",
+            "nova_plasma_shotgun",
+            "nova_rocket_launcher",
+            "zeke_shock_fists",
+            "zeke_quake_knuckles",
+            "zeke_maul_gauntlet",
+            "orion_prism_focus",
+            "orion_halo_array",
+            "orion_stasis_core",
+            "gh0st_whisperblade",
+            "gh0st_splitter_edge",
+            "gh0st_void_fang",
+            "zeke_bulwark_plate",
+            "zeke_surge_harness",
+            "zeke_brawler_rig",
+            "orion_ward_coat",
+            "orion_channeler_mantle",
+            "orion_driftweave_cloak",
+            "gh0st_nullguard_coat",
+            "gh0st_phaseweave_jacket",
+            "gh0st_killer_harness",
+            "precision_sight",
+            "stability_gyro",
+            "vital_signet",
+            "focus_conduit",
+            "shadow_coil",
+            "brutal_charm",
+            "lucky_talisman",
+            "reactive_plating",
+            "pulse_citrus",
+            "iron_biscuit",
+            "mindfruit_slice",
+            "rattle_pepper",
+            "slipstream_mochi",
+            "shadow_kelp",
+            "ember_broth",
+            "void_crisp"
+        ).forEach { id -> inventory.putIfAbsent(id, 1) }
+
+        return inventory
+    }
+
+    private fun unlockStartingSkillsForParty(
+        party: List<String>,
+        players: List<Player>,
+        baseLevel: Int
+    ) {
+        if (party.isEmpty()) return
+        val byId = players.associateBy { it.id }
+        party.forEach { memberId ->
+            byId[memberId]?.skills.orEmpty().forEach { skillId ->
+                sessionStore.unlockSkill(skillId)
+            }
+            progressionData.levelUpSkills[memberId].orEmpty().forEach { (level, skillId) ->
+                val resolvedLevel = level.toIntOrNull() ?: return@forEach
+                if (resolvedLevel <= baseLevel) {
+                    sessionStore.unlockSkill(skillId)
+                }
+            }
         }
+    }
+
+    private fun unlockAllSkillsForParty(party: List<String>) {
+        if (party.isEmpty()) return
+        val skills = runCatching { worldDataSource.loadSkills() }.getOrNull().orEmpty()
+        skills.filter { skill -> party.contains(skill.character) }
+            .forEach { skill -> sessionStore.unlockSkill(skill.id) }
     }
 }
 

@@ -23,6 +23,8 @@ data class ExplorationUiState(
     val actions: List<RoomAction> = emptyList(),
     val actionHints: Map<String, ActionHintUi> = emptyMap(),
     val enemies: List<String> = emptyList(),
+    val enemyTiers: Map<String, String> = emptyMap(),
+    val enemyIcons: Map<String, EnemyIconUi> = emptyMap(),
     val blockedDirections: Set<String> = emptySet(),
     val directionIndicators: Map<String, DirectionIndicatorUi> = emptyMap(),
     val roomState: Map<String, Boolean> = emptyMap(),
@@ -67,11 +69,36 @@ data class ExplorationUiState(
     val settings: SettingsUiState = SettingsUiState(),
     val inventoryPreview: List<InventoryPreviewItemUi> = emptyList(),
     val equippedItems: Map<String, String> = emptyMap(),
+    val unlockedWeapons: Set<String> = emptySet(),
+    val equippedWeapons: Map<String, String> = emptyMap(),
+    val unlockedArmors: Set<String> = emptySet(),
+    val equippedArmors: Map<String, String> = emptyMap(),
     val skillTreeOverlay: SkillTreeOverlayUi? = null,
     val partyMemberDetails: PartyMemberDetailsUi? = null,
     val eventAnnouncement: EventAnnouncementUi? = null,
+    val forceBlackScreen: Boolean = false,
     val fadeOverlay: FadeOverlayCommand? = null,
     val tutorialState: TutorialRuntimeState = TutorialRuntimeState()
+)
+
+data class EnemyIconUi(
+    val spritePath: String,
+    val composite: EnemyCompositeIconUi? = null
+)
+
+data class EnemyCompositeIconUi(
+    val groupOffsetX: Float,
+    val groupOffsetY: Float,
+    val parts: List<EnemyCompositePartUi>
+)
+
+data class EnemyCompositePartUi(
+    val spritePath: String,
+    val offsetX: Float,
+    val offsetY: Float,
+    val widthScale: Float,
+    val heightScale: Float,
+    val z: Float
 )
 
 data class FadeOverlayCommand(
@@ -272,9 +299,7 @@ data class PartyMemberStatusUi(
     val xpProgress: Float,
     val xpLabel: String,
     val hpLabel: String?,
-    val rpLabel: String?,
     val hpProgress: Float? = null,
-    val rpProgress: Float? = null,
     val portraitPath: String?,
     val unlockedSkills: List<String>
 )
@@ -285,7 +310,6 @@ data class PartyMemberDetailsUi(
     val level: Int,
     val xpLabel: String,
     val hpLabel: String?,
-    val focusLabel: String?,
     val portraitPath: String?,
     val primaryStats: List<CharacterStatValueUi>,
     val combatStats: List<CharacterStatValueUi>,
@@ -304,8 +328,7 @@ data class ProgressionSummaryUi(
     val xpToNextLabel: String? = null,
     val actionPointLabel: String = "0 AP",
     val creditsLabel: String = "0 credits",
-    val hpLabel: String? = null,
-    val rpLabel: String? = null
+    val hpLabel: String? = null
 )
 
 data class SkillUnlockUi(

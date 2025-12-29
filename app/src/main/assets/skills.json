@@ -222,6 +222,87 @@
     ]
   },
   {
+    "id": "driller_core_repair",
+    "name": "Core Repair",
+    "character": "driller_core",
+    "type": "heal",
+    "description": "Reroutes power to seal damaged plating.",
+    "combat_tags": [
+      "heal",
+      "support"
+    ],
+    "base_power": 120,
+    "scaling": "focus",
+    "cooldown": 3,
+    "status_applications": []
+  },
+  {
+    "id": "driller_drill_bore",
+    "name": "Seismic Bore",
+    "character": "driller_drill_arm",
+    "type": "enemy",
+    "description": "A lightning-charged drill strike.",
+    "combat_tags": [
+      "lightning",
+      "shock"
+    ],
+    "base_power": 170,
+    "scaling": "atk",
+    "cooldown": 3,
+    "status_applications": [
+      "shock"
+    ]
+  },
+  {
+    "id": "driller_cutter_spill",
+    "name": "Caustic Cutter",
+    "character": "driller_cutter_arm",
+    "type": "enemy",
+    "description": "Cuts with a corrosive spray.",
+    "combat_tags": [
+      "poison"
+    ],
+    "base_power": 160,
+    "scaling": "atk",
+    "cooldown": 3,
+    "status_applications": [
+      "poison"
+    ]
+  },
+  {
+    "id": "driller_fire_burst",
+    "name": "Incinerator Burst",
+    "character": "driller_fire_arm",
+    "type": "enemy",
+    "description": "Blasts a cone of flame.",
+    "combat_tags": [
+      "fire",
+      "burn"
+    ],
+    "base_power": 170,
+    "scaling": "atk",
+    "cooldown": 3,
+    "status_applications": [
+      "burn"
+    ]
+  },
+  {
+    "id": "driller_grabber_crush",
+    "name": "Clamp Crush",
+    "character": "driller_grabber_arm",
+    "type": "enemy",
+    "description": "Crushes the target with a stunning clamp.",
+    "combat_tags": [
+      "stun"
+    ],
+    "base_power": 155,
+    "scaling": "atk",
+    "cooldown": 3,
+    "status_applications": [
+      "stun"
+    ]
+  },
+  {
     "id": "lightning_weakpoint",
     "name": "Lightning Weakpoint",
     "character": "enemy",
@@ -512,6 +593,229 @@
     "cooldown": 3,
     "status_applications": [
       "shield"
+    ]
+  },
+  {
+    "id": "nova_arc_tether",
+    "name": "Arc Tether",
+    "character": "nova",
+    "type": "active",
+    "description": "Tethers a target with arcing current, dealing lightning damage and shocking them.",
+    "combat_tags": [
+      "lightning"
+    ],
+    "base_power": 120,
+    "scaling": "agility",
+    "cooldown": 2,
+    "status_applications": [
+      "shock"
+    ]
+  },
+  {
+    "id": "nova_plasma_burst",
+    "name": "Plasma Burst",
+    "character": "nova",
+    "type": "active",
+    "description": "Detonates a plasma burst across the enemy line, igniting targets.",
+    "combat_tags": [
+      "fire",
+      "aoe"
+    ],
+    "base_power": 90,
+    "scaling": "agility",
+    "cooldown": 3,
+    "status_applications": [
+      "burn"
+    ]
+  },
+  {
+    "id": "nova_rend_round",
+    "name": "Rend Round",
+    "character": "nova",
+    "type": "active",
+    "description": "A precision round that slices armor, causing bleed.",
+    "combat_tags": [
+      "dmg"
+    ],
+    "base_power": 140,
+    "scaling": "agility",
+    "cooldown": 2,
+    "status_applications": [
+      "bleed"
+    ]
+  },
+  {
+    "id": "zeke_shatter_blow",
+    "name": "Shatter Blow",
+    "character": "zeke",
+    "type": "active",
+    "description": "A crushing strike that weakens the target.",
+    "combat_tags": [
+      "dmg"
+    ],
+    "base_power": 150,
+    "scaling": "strength",
+    "cooldown": 2,
+    "status_applications": [
+      "weak"
+    ]
+  },
+  {
+    "id": "zeke_bulwark_stance",
+    "name": "Bulwark Stance",
+    "character": "zeke",
+    "type": "active",
+    "description": "Braces for impact, reducing incoming damage.",
+    "combat_tags": [
+      "support"
+    ],
+    "base_power": 0,
+    "scaling": "strength",
+    "cooldown": 3,
+    "status_applications": [
+      "guard",
+      "braced"
+    ]
+  },
+  {
+    "id": "zeke_overload_fists",
+    "name": "Overload Fists",
+    "character": "zeke",
+    "type": "active",
+    "description": "Surges with electricity to shock the target.",
+    "combat_tags": [
+      "lightning"
+    ],
+    "base_power": 120,
+    "scaling": "strength",
+    "cooldown": 2,
+    "status_applications": [
+      "shock"
+    ]
+  },
+  {
+    "id": "zeke_quake_slam",
+    "name": "Quake Slam",
+    "character": "zeke",
+    "type": "active",
+    "description": "Smashes the ground, damaging all foes.",
+    "combat_tags": [
+      "aoe"
+    ],
+    "base_power": 100,
+    "scaling": "strength",
+    "cooldown": 3,
+    "status_applications": []
+  },
+  {
+    "id": "orion_prism_lance",
+    "name": "Prism Lance",
+    "character": "orion",
+    "type": "active",
+    "description": "Fires a focused lance of radiant energy.",
+    "combat_tags": [
+      "radiation"
+    ],
+    "base_power": 120,
+    "scaling": "focus",
+    "cooldown": 2,
+    "status_applications": []
+  },
+  {
+    "id": "orion_nano_repair",
+    "name": "Nano Repair",
+    "character": "orion",
+    "type": "active",
+    "description": "Nanites stabilize the body, restoring health over time.",
+    "combat_tags": [
+      "support"
+    ],
+    "base_power": 0,
+    "scaling": "focus",
+    "cooldown": 3,
+    "status_applications": [
+      "regen"
+    ]
+  },
+  {
+    "id": "orion_disruption_pulse",
+    "name": "Disruption Pulse",
+    "character": "orion",
+    "type": "active",
+    "description": "A disruptive wave that weakens every enemy.",
+    "combat_tags": [
+      "aoe"
+    ],
+    "base_power": 0,
+    "scaling": "focus",
+    "cooldown": 3,
+    "status_applications": [
+      "weak"
+    ]
+  },
+  {
+    "id": "orion_stasis_field",
+    "name": "Stasis Field",
+    "character": "orion",
+    "type": "active",
+    "description": "Freezes the battlefield in a burst of cold energy.",
+    "combat_tags": [
+      "ice",
+      "aoe"
+    ],
+    "base_power": 80,
+    "scaling": "focus",
+    "cooldown": 4,
+    "status_applications": [
+      "freeze"
+    ]
+  },
+  {
+    "id": "gh0st_venom_edge",
+    "name": "Venom Edge",
+    "character": "gh0st",
+    "type": "active",
+    "description": "A poisoned cut that seeps into the wound.",
+    "combat_tags": [
+      "poison"
+    ],
+    "base_power": 110,
+    "scaling": "agility",
+    "cooldown": 2,
+    "status_applications": [
+      "poison"
+    ]
+  },
+  {
+    "id": "gh0st_system_crash",
+    "name": "System Crash",
+    "character": "gh0st",
+    "type": "active",
+    "description": "A void surge that stuns the target.",
+    "combat_tags": [
+      "void"
+    ],
+    "base_power": 100,
+    "scaling": "agility",
+    "cooldown": 3,
+    "status_applications": [
+      "stun"
+    ]
+  },
+  {
+    "id": "gh0st_shadow_flurry",
+    "name": "Shadow Flurry",
+    "character": "gh0st",
+    "type": "active",
+    "description": "A rapid strike that hits every enemy.",
+    "combat_tags": [
+      "aoe"
+    ],
+    "base_power": 90,
+    "scaling": "agility",
+    "cooldown": 3,
+    "status_applications": [
+      "bleed"
     ]
   }
 ]

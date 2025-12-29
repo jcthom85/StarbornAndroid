@@ -83,7 +83,10 @@ class MainMenuViewModel(
         return success
     }
 
-    fun startNewGame(onComplete: (() -> Unit)? = null) {
+    fun startNewGame(
+        onComplete: (() -> Unit)? = null,
+        onFailure: (() -> Unit)? = null
+    ) {
         viewModelScope.launch {
             val success = services.startNewGame()
             if (success) {
@@ -91,11 +94,15 @@ class MainMenuViewModel(
                 onComplete?.invoke()
             } else {
                 emitMessage("Failed to start new game. Check assets and logs.")
+                onFailure?.invoke()
             }
         }
     }
 
-    fun startNewGameWithFullInventory(onComplete: (() -> Unit)? = null) {
+    fun startNewGameWithFullInventory(
+        onComplete: (() -> Unit)? = null,
+        onFailure: (() -> Unit)? = null
+    ) {
         viewModelScope.launch {
             val success = services.startNewGame(debugFullInventory = true)
             if (success) {
@@ -103,6 +110,7 @@ class MainMenuViewModel(
                 onComplete?.invoke()
             } else {
                 emitMessage("Failed to start debug new game.")
+                onFailure?.invoke()
             }
         }
     }

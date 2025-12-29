@@ -28,8 +28,6 @@ data class SkillNodeEffect(
     @Json(name = "buff_type")
     val buffType: String? = null,
     val subtype: String? = null,
-    @Json(name = "rp_cost")
-    val rpCost: Int? = null,
     val element: String? = null,
     val target: String? = null
 )

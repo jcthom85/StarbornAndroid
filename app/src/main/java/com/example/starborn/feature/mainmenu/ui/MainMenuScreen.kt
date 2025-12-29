@@ -1,6 +1,10 @@
 package com.example.starborn.feature.mainmenu.ui
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,8 +34,11 @@ import com.example.starborn.R
 import com.example.starborn.feature.mainmenu.MainMenuViewModel
 import com.example.starborn.ui.components.SaveLoadDialog
 import com.example.starborn.ui.theme.themeColor
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+
+private enum class StartMode { NORMAL, DEBUG }
 
 @Composable
 fun MainMenuScreen(
@@ -39,6 +46,7 @@ fun MainMenuScreen(
     onStartGame: () -> Unit,
     onSlotLoaded: () -> Unit
 ) {
+    var pendingStartMode by remember { mutableStateOf<StartMode?>(null) }
     var saveLoadMode by remember { mutableStateOf<String?>(null) }
     val snackbarHostState = remember { SnackbarHostState() }
     val slots by viewModel.slots.collectAsStateWithLifecycle()
@@ -56,6 +64,7 @@ fun MainMenuScreen(
     val textColor = remember(menuTheme) {
         themeColor(menuTheme?.fg, Color.White)
     }
+    val fadeOutAlpha = remember { Animatable(0f) }
 
     LaunchedEffect(Unit) {
         viewModel.messages.collectLatest { snackbarHostState.showSnackbar(it) }
@@ -64,6 +73,41 @@ fun MainMenuScreen(
     LaunchedEffect(saveLoadMode) {
         if (saveLoadMode != null) {
             viewModel.refreshSlots()
+        }
+    }
+
+    LaunchedEffect(pendingStartMode) {
+        if (pendingStartMode == null) {
+            fadeOutAlpha.animateTo(
+                targetValue = 0f,
+                animationSpec = tween(durationMillis = 260, easing = FastOutSlowInEasing)
+            )
+            return@LaunchedEffect
+        }
+        fadeOutAlpha.stop()
+        fadeOutAlpha.snapTo(0f)
+        // Smooth fade out before heavy work begins.
+        fadeOutAlpha.animateTo(
+            targetValue = 1f,
+            animationSpec = tween(durationMillis = 560, easing = FastOutSlowInEasing)
+        )
+        // Give the frame a beat to present the black overlay before loading.
+        delay(120)
+        val onFailure: () -> Unit = { pendingStartMode = null }
+        when (pendingStartMode) {
+            StartMode.NORMAL -> {
+                viewModel.startNewGame(
+                    onComplete = { onStartGame() },
+                    onFailure = onFailure
+                )
+            }
+            StartMode.DEBUG -> {
+                viewModel.startNewGameWithFullInventory(
+                    onComplete = { onStartGame() },
+                    onFailure = onFailure
+                )
+            }
+            null -> Unit
         }
     }
 
@@ -84,23 +128,24 @@ fun MainMenuScreen(
         ) {
             Button(
                 onClick = {
-                    viewModel.startNewGame {
-                        onStartGame()
-                    }
-                }
+                    pendingStartMode = StartMode.NORMAL
+                },
+                enabled = pendingStartMode == null
             ) { Text("New Game") }
             Spacer(modifier = Modifier.padding(6.dp))
             OutlinedButton(
                 onClick = {
-                    viewModel.startNewGameWithFullInventory {
-                        onStartGame()
-                    }
-                }
+                    pendingStartMode = StartMode.DEBUG
+                },
+                enabled = pendingStartMode == null
             ) {
                 Text("Debug: New Game (Full Inventory)")
             }
             Spacer(modifier = Modifier.padding(8.dp))
-            OutlinedButton(onClick = { saveLoadMode = "load" }) {
+            OutlinedButton(
+                onClick = { saveLoadMode = "load" },
+                enabled = pendingStartMode == null
+            ) {
                 Text("Load Game")
             }
         }
@@ -143,6 +188,14 @@ fun MainMenuScreen(
                 panelColor = panelColor,
                 borderColor = borderColor,
                 textColor = textColor
+            )
+        }
+
+        if (fadeOutAlpha.value > 0.01f) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = fadeOutAlpha.value))
             )
         }
     }

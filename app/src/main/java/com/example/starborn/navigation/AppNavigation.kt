@@ -82,16 +82,16 @@ fun NavigationHost(navController: NavHostController = rememberNavController()) {
             MainMenuScreen(
                 viewModel = mainMenuViewModel,
                 onStartGame = {
-                    navController.navigate(Hub.route) {
+                    navController.navigate(Exploration.route) {
                         popUpTo(MainMenu.route) { inclusive = true }
+                        launchSingleTop = true
                     }
-                    navController.navigate(Exploration.route)
                 },
                 onSlotLoaded = {
-                    navController.navigate(Hub.route) {
+                    navController.navigate(Exploration.route) {
                         popUpTo(MainMenu.route) { inclusive = true }
+                        launchSingleTop = true
                     }
-                    navController.navigate(Exploration.route)
                 }
             )
         }
@@ -213,7 +213,12 @@ fun NavigationHost(navController: NavHostController = rememberNavController()) {
                 onOpenShop = { shopId ->
                     navController.navigate(Shop.create(shopId))
                 },
-                onReturnToHub = { navController.popBackStack() },
+                onReturnToHub = {
+                    navController.navigate(Hub.route) {
+                        popUpTo(Exploration.route) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                },
                 fxEvents = services.uiFxBus.fxEvents
             )
         }

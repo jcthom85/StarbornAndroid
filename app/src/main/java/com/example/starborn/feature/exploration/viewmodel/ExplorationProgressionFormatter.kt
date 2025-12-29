@@ -56,10 +56,6 @@ internal fun buildPartyStatusUi(
         val currentHp = (sessionState.partyMemberHp[id] ?: maxHp).coerceAtLeast(0)
         val hpLabel = if (maxHp > 0) "$currentHp / $maxHp HP" else null
         val hpProgress = if (maxHp > 0) currentHp.toFloat() / maxHp else null
-        val maxFocus = character.focus.coerceAtLeast(0)
-        val currentRp = (sessionState.partyMemberRp[id] ?: maxFocus).coerceAtLeast(0)
-        val rpLabel = if (maxFocus > 0) "$currentRp / $maxFocus Focus" else null
-        val rpProgress = if (maxFocus > 0) currentRp.toFloat() / maxFocus else null
         val unlockedSkills = sessionState.unlockedSkills
             .mapNotNull { skillId -> skillsById[skillId]?.takeIf { it.character == character.id }?.name }
             .sorted()
@@ -70,9 +66,7 @@ internal fun buildPartyStatusUi(
             xpProgress = progress,
             xpLabel = xpLabel,
             hpLabel = hpLabel,
-            rpLabel = rpLabel,
             hpProgress = hpProgress,
-            rpProgress = rpProgress,
             portraitPath = character.miniIconPath,
             unlockedSkills = unlockedSkills
         )
@@ -113,9 +107,6 @@ internal fun buildProgressionSummaryUi(
     val maxHp = character?.hp?.takeIf { it > 0 } ?: sessionState.partyMemberHp[primaryId] ?: 0
     val currentHp = sessionState.partyMemberHp[primaryId] ?: maxHp
     val hpLabel = if (maxHp > 0) "$currentHp / $maxHp HP" else null
-    val maxFocus = character?.focus?.takeIf { it > 0 } ?: sessionState.partyMemberRp[primaryId] ?: 0
-    val currentRp = sessionState.partyMemberRp[primaryId] ?: maxFocus
-    val rpLabel = if (maxFocus > 0) "$currentRp / $maxFocus Focus" else null
     return ProgressionSummaryUi(
         playerLevel = level,
         xpLabel = "$xp XP",
@@ -123,8 +114,7 @@ internal fun buildProgressionSummaryUi(
         xpToNextLabel = xpToNextLabel,
         actionPointLabel = "${sessionState.playerAp} AP",
         creditsLabel = "${sessionState.playerCredits} credits",
-        hpLabel = hpLabel,
-        rpLabel = rpLabel
+        hpLabel = hpLabel
     )
 }
 
@@ -233,8 +223,7 @@ private fun formatSkillNodeDescription(effect: SkillNodeEffect?): String? {
         }
         else -> null
     }
-    val rpCost = effect.rpCost?.takeIf { it > 0 }?.let { "RP Cost: $it." }
-    return listOfNotNull(description, rpCost).joinToString(" ").ifBlank { null }
+    return description?.ifBlank { null }
 }
 
 private fun String.humanizeId(): String =

@@ -54,7 +54,6 @@ class ItemUseController(
                 applyRestoration(resolvedTargets, result, characters)
                 val parts = mutableListOf<String>()
                 if (result.hp > 0) parts += "${result.hp} HP"
-                if (result.rp > 0) parts += "${result.rp} RP"
                 val label = formatTargetLabel(resolvedTargets, characters)
                 if (parts.isEmpty()) "Used ${result.item.name}."
                 else "Restored ${parts.joinToString(" and ")} to $label"
@@ -89,14 +88,6 @@ class ItemUseController(
                     val current = state.partyMemberHp[targetId] ?: maxHp
                     val updated = (current + result.hp).coerceAtMost(maxHp)
                     sessionStore.setPartyMemberHp(targetId, updated)
-                }
-            }
-            if (result.rp > 0) {
-                val maxRp = maxHpFor(targetId, characters)
-                if (maxRp != null) {
-                    val current = state.partyMemberRp[targetId] ?: maxRp
-                    val updated = (current + result.rp).coerceAtMost(maxRp)
-                    sessionStore.setPartyMemberRp(targetId, updated)
                 }
             }
         }

@@ -42,7 +42,6 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import java.util.Locale
-import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.doReturn
@@ -126,7 +125,6 @@ class CombatViewModelTest {
             side = CombatSide.PLAYER,
             stats = com.example.starborn.domain.combat.StatBlock(
                 maxHp = player.hp,
-                maxRp = player.hp,
                 strength = player.strength,
                 vitality = player.vitality,
                 agility = player.agility,
@@ -142,7 +140,6 @@ class CombatViewModelTest {
             side = CombatSide.ENEMY,
             stats = com.example.starborn.domain.combat.StatBlock(
                 maxHp = enemy.hp,
-                maxRp = enemy.vitality,
                 strength = enemy.strength,
                 vitality = enemy.vitality,
                 agility = enemy.agility,
@@ -157,8 +154,8 @@ class CombatViewModelTest {
             turnOrder = listOf(TurnSlot(combatantPlayer.id, 10)),
             activeTurnIndex = 0,
             combatants = mapOf(
-                combatantPlayer.id to CombatantState(combatantPlayer, combatantPlayer.stats.maxHp, combatantPlayer.stats.maxRp),
-                combatantEnemy.id to CombatantState(combatantEnemy, combatantEnemy.stats.maxHp, combatantEnemy.stats.maxRp)
+                combatantPlayer.id to CombatantState(combatantPlayer, combatantPlayer.stats.maxHp),
+                combatantEnemy.id to CombatantState(combatantEnemy, combatantEnemy.stats.maxHp)
             ),
             outcome = CombatOutcome.Victory(CombatReward())
         )
@@ -385,7 +382,6 @@ class CombatViewModelTest {
             side = CombatSide.PLAYER,
             stats = com.example.starborn.domain.combat.StatBlock(
                 maxHp = player.hp,
-                maxRp = player.hp,
                 strength = player.strength,
                 vitality = player.vitality,
                 agility = player.agility,
@@ -401,7 +397,6 @@ class CombatViewModelTest {
             side = CombatSide.ENEMY,
             stats = com.example.starborn.domain.combat.StatBlock(
                 maxHp = enemy.hp,
-                maxRp = enemy.vitality,
                 strength = enemy.strength,
                 vitality = enemy.vitality,
                 agility = enemy.agility,
@@ -417,13 +412,11 @@ class CombatViewModelTest {
             combatants = mapOf(
                 combatantPlayer.id to CombatantState(
                     combatantPlayer,
-                    combatantPlayer.stats.maxHp,
-                    combatantPlayer.stats.maxRp
+                    combatantPlayer.stats.maxHp
                 ),
                 combatantEnemy.id to CombatantState(
                     combatantEnemy,
-                    combatantEnemy.stats.maxHp,
-                    combatantEnemy.stats.maxRp
+                    combatantEnemy.stats.maxHp
                 )
             )
         )
@@ -529,7 +522,6 @@ class CombatViewModelTest {
             side = CombatSide.PLAYER,
             stats = com.example.starborn.domain.combat.StatBlock(
                 maxHp = player.hp,
-                maxRp = player.hp,
                 strength = player.strength,
                 vitality = player.vitality,
                 agility = player.agility,
@@ -545,7 +537,6 @@ class CombatViewModelTest {
             side = CombatSide.ENEMY,
             stats = com.example.starborn.domain.combat.StatBlock(
                 maxHp = enemy.hp,
-                maxRp = enemy.vitality,
                 strength = enemy.strength,
                 vitality = enemy.vitality,
                 agility = enemy.agility,
@@ -561,13 +552,11 @@ class CombatViewModelTest {
             combatants = mapOf(
                 combatantPlayer.id to CombatantState(
                     combatantPlayer,
-                    combatantPlayer.stats.maxHp,
-                    combatantPlayer.stats.maxRp
+                    combatantPlayer.stats.maxHp
                 ),
                 combatantEnemy.id to CombatantState(
                     combatantEnemy,
-                    combatantEnemy.stats.maxHp,
-                    combatantEnemy.stats.maxRp
+                    combatantEnemy.stats.maxHp
                 )
             )
         )
@@ -667,7 +656,6 @@ class CombatViewModelTest {
             side = CombatSide.PLAYER,
             stats = com.example.starborn.domain.combat.StatBlock(
                 maxHp = player.hp,
-                maxRp = player.hp,
                 strength = player.strength,
                 vitality = player.vitality,
                 agility = player.agility,
@@ -683,7 +671,6 @@ class CombatViewModelTest {
             side = CombatSide.ENEMY,
             stats = com.example.starborn.domain.combat.StatBlock(
                 maxHp = enemy.hp,
-                maxRp = enemy.vitality,
                 strength = enemy.strength,
                 vitality = enemy.vitality,
                 agility = enemy.agility,
@@ -699,13 +686,11 @@ class CombatViewModelTest {
             combatants = mapOf(
                 combatantPlayer.id to CombatantState(
                     combatantPlayer,
-                    combatantPlayer.stats.maxHp,
-                    combatantPlayer.stats.maxRp
+                    combatantPlayer.stats.maxHp
                 ),
                 combatantEnemy.id to CombatantState(
                     combatantEnemy,
-                    combatantEnemy.stats.maxHp,
-                    combatantEnemy.stats.maxRp
+                    combatantEnemy.stats.maxHp
                 )
             )
         )
@@ -829,7 +814,6 @@ class CombatViewModelTest {
             side = CombatSide.PLAYER,
             stats = com.example.starborn.domain.combat.StatBlock(
                 maxHp = player.hp,
-                maxRp = player.hp,
                 strength = player.strength,
                 vitality = player.vitality,
                 agility = player.agility,
@@ -845,7 +829,6 @@ class CombatViewModelTest {
             side = CombatSide.ENEMY,
             stats = com.example.starborn.domain.combat.StatBlock(
                 maxHp = enemy.hp,
-                maxRp = enemy.vitality,
                 strength = enemy.strength,
                 vitality = enemy.vitality,
                 agility = enemy.agility,
@@ -861,13 +844,11 @@ class CombatViewModelTest {
             combatants = mapOf(
                 combatantPlayer.id to CombatantState(
                     combatantPlayer,
-                    combatantPlayer.stats.maxHp,
-                    combatantPlayer.stats.maxRp
+                    combatantPlayer.stats.maxHp
                 ),
                 combatantEnemy.id to CombatantState(
                     combatantEnemy,
-                    combatantEnemy.stats.maxHp,
-                    combatantEnemy.stats.maxRp
+                    combatantEnemy.stats.maxHp
                 )
             )
         )
@@ -990,8 +971,7 @@ class CombatViewModelTest {
                 val combatants = setup.allCombatants.associate { combatant ->
                     combatant.id to CombatantState(
                         combatant = combatant,
-                        hp = combatant.stats.maxHp,
-                        rp = combatant.stats.maxRp
+                        hp = combatant.stats.maxHp
                     )
                 }
                 CombatState(
