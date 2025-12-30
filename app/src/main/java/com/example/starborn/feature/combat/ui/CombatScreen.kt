@@ -1465,21 +1465,18 @@ private fun EnemyRoster(
                                                 scaleY = spriteScale
                                             }
                                     ) {
-                                        Lungeable(
-                                            side = CombatSide.ENEMY,
-                                            triggerToken = enemyLungeToken,
-                                            axis = LungeAxis.X,
-                                            directionSign = -1f,
-                                            modifier = Modifier.matchParentSize(),
-                                            onFinished = { enemyLungeToken?.let(onLungeFinished) }
-                                        ) {
-                                            Image(
-                                                painter = painter,
-                                                contentDescription = enemy.name,
-                                                contentScale = ContentScale.Fit,
-                                                modifier = Modifier.matchParentSize()
-                                            )
+                                        LaunchedEffect(enemyLungeToken) {
+                                            if (enemyLungeToken != null) {
+                                                delay(250)
+                                                onLungeFinished(enemyLungeToken)
+                                            }
                                         }
+                                        Image(
+                                            painter = painter,
+                                            contentDescription = enemy.name,
+                                            contentScale = ContentScale.Fit,
+                                            modifier = Modifier.matchParentSize()
+                                        )
                                     }
                                     CombatFxOverlay(
                                         damageFx = damageFx.filter { it.targetId == combatantId },
@@ -1727,21 +1724,18 @@ private fun CompositeEnemyRoster(
                                         .background(Color.Black.copy(alpha = 0.18f * flash))
                                 )
                             }
-                            Lungeable(
-                                side = CombatSide.ENEMY,
-                                triggerToken = enemyLungeToken,
-                                axis = LungeAxis.X,
-                                directionSign = -1f,
-                                modifier = Modifier.matchParentSize(),
-                                onFinished = { enemyLungeToken?.let(onLungeFinished) }
-                            ) {
-                                Image(
-                                    painter = painter,
-                                    contentDescription = enemy.name,
-                                    contentScale = ContentScale.Fit,
-                                    modifier = Modifier.matchParentSize()
-                                )
+                            LaunchedEffect(enemyLungeToken) {
+                                if (enemyLungeToken != null) {
+                                    delay(250)
+                                    onLungeFinished(enemyLungeToken)
+                                }
                             }
+                            Image(
+                                painter = painter,
+                                contentDescription = enemy.name,
+                                contentScale = ContentScale.Fit,
+                                modifier = Modifier.matchParentSize()
+                            )
                             CombatFxOverlay(
                                 damageFx = damageFx.filter { it.targetId == combatantId },
                                 attackFx = attackFx.filter { it.targetId == combatantId },
