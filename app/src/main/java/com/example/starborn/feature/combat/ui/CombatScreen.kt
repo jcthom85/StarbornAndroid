@@ -1473,21 +1473,12 @@ private fun EnemyRoster(
                                             modifier = Modifier.matchParentSize(),
                                             onFinished = { enemyLungeToken?.let(onLungeFinished) }
                                         ) {
-                                            Lungeable(
-                                                side = CombatSide.ENEMY,
-                                                triggerToken = enemyMissToken,
-                                                axis = LungeAxis.X,
-                                                directionSign = -1f,
-                                                modifier = Modifier.matchParentSize(),
-                                                onFinished = { enemyMissToken?.let(onMissLungeFinished) }
-                                            ) {
-                                                Image(
-                                                    painter = painter,
-                                                    contentDescription = enemy.name,
-                                                    contentScale = ContentScale.Fit,
-                                                    modifier = Modifier.matchParentSize()
-                                                )
-                                            }
+                                            Image(
+                                                painter = painter,
+                                                contentDescription = enemy.name,
+                                                contentScale = ContentScale.Fit,
+                                                modifier = Modifier.matchParentSize()
+                                            )
                                         }
                                     }
                                     CombatFxOverlay(
@@ -1744,21 +1735,12 @@ private fun CompositeEnemyRoster(
                                 modifier = Modifier.matchParentSize(),
                                 onFinished = { enemyLungeToken?.let(onLungeFinished) }
                             ) {
-                                Lungeable(
-                                    side = CombatSide.ENEMY,
-                                    triggerToken = enemyMissToken,
-                                    axis = LungeAxis.X,
-                                    directionSign = -1f,
-                                    modifier = Modifier.matchParentSize(),
-                                    onFinished = { enemyMissToken?.let(onMissLungeFinished) }
-                                ) {
-                                    Image(
-                                        painter = painter,
-                                        contentDescription = enemy.name,
-                                        contentScale = ContentScale.Fit,
-                                        modifier = Modifier.matchParentSize()
-                                    )
-                                }
+                                Image(
+                                    painter = painter,
+                                    contentDescription = enemy.name,
+                                    contentScale = ContentScale.Fit,
+                                    modifier = Modifier.matchParentSize()
+                                )
                             }
                             CombatFxOverlay(
                                 damageFx = damageFx.filter { it.targetId == combatantId },
