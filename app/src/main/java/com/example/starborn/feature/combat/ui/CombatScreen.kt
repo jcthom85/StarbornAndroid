@@ -1455,11 +1455,7 @@ private fun EnemyRoster(
                                                 .background(Color.Black.copy(alpha = 0.18f * flash))
                                         )
                                     }
-                                    Lungeable(
-                                        side = CombatSide.ENEMY,
-                                        triggerToken = enemyLungeToken,
-                                        axis = LungeAxis.X,
-                                        directionSign = -1f,
+                                    Box(
                                         modifier = Modifier
                                             .align(Alignment.Center)
                                             .padding(bottom = innerPadding)
@@ -1467,23 +1463,31 @@ private fun EnemyRoster(
                                             .graphicsLayer {
                                                 scaleX = spriteScale
                                                 scaleY = spriteScale
-                                            },
-                                        onFinished = { enemyLungeToken?.let(onLungeFinished) }
+                                            }
                                     ) {
                                         Lungeable(
                                             side = CombatSide.ENEMY,
-                                            triggerToken = enemyMissToken,
+                                            triggerToken = enemyLungeToken,
                                             axis = LungeAxis.X,
                                             directionSign = -1f,
                                             modifier = Modifier.matchParentSize(),
-                                            onFinished = { enemyMissToken?.let(onMissLungeFinished) }
+                                            onFinished = { enemyLungeToken?.let(onLungeFinished) }
                                         ) {
-                                            Image(
-                                                painter = painter,
-                                                contentDescription = enemy.name,
-                                                contentScale = ContentScale.Fit,
-                                                modifier = Modifier.matchParentSize()
-                                            )
+                                            Lungeable(
+                                                side = CombatSide.ENEMY,
+                                                triggerToken = enemyMissToken,
+                                                axis = LungeAxis.X,
+                                                directionSign = -1f,
+                                                modifier = Modifier.matchParentSize(),
+                                                onFinished = { enemyMissToken?.let(onMissLungeFinished) }
+                                            ) {
+                                                Image(
+                                                    painter = painter,
+                                                    contentDescription = enemy.name,
+                                                    contentScale = ContentScale.Fit,
+                                                    modifier = Modifier.matchParentSize()
+                                                )
+                                            }
                                         }
                                     }
                                     CombatFxOverlay(
