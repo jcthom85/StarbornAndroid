@@ -1455,8 +1455,11 @@ private fun EnemyRoster(
                                                 .background(Color.Black.copy(alpha = 0.18f * flash))
                                         )
                                     }
-                                    AttackPulse(
+                                    Lungeable(
+                                        side = CombatSide.ENEMY,
                                         triggerToken = enemyLungeToken,
+                                        axis = LungeAxis.X,
+                                        directionSign = -1f,
                                         modifier = Modifier
                                             .align(Alignment.Center)
                                             .padding(bottom = innerPadding)
@@ -1729,8 +1732,11 @@ private fun CompositeEnemyRoster(
                                         .background(Color.Black.copy(alpha = 0.18f * flash))
                                 )
                             }
-                            AttackPulse(
+                            Lungeable(
+                                side = CombatSide.ENEMY,
                                 triggerToken = enemyLungeToken,
+                                axis = LungeAxis.X,
+                                directionSign = -1f,
                                 modifier = Modifier.matchParentSize(),
                                 onFinished = { enemyLungeToken?.let(onLungeFinished) }
                             ) {
@@ -2167,39 +2173,7 @@ private fun InventoryEntry.targetFilter(): TargetFilter? {
     }
 }
 
-@Composable
-private fun AttackPulse(
-    triggerToken: Any?,
-    modifier: Modifier = Modifier,
-    scaleAmount: Float = 0.05f,
-    durationMillis: Int = 120,
-    onFinished: (() -> Unit)? = null,
-    content: @Composable () -> Unit
-) {
-    val scale = remember { Animatable(1f) }
-    LaunchedEffect(triggerToken) {
-        if (triggerToken != null) {
-            scale.snapTo(1f)
-            scale.animateTo(
-                targetValue = 1f + scaleAmount,
-                animationSpec = tween(durationMillis = durationMillis, easing = FastOutSlowInEasing)
-            )
-            scale.animateTo(
-                targetValue = 1f,
-                animationSpec = tween(durationMillis = durationMillis, easing = FastOutSlowInEasing)
-            )
-            onFinished?.invoke()
-        }
-    }
-    Box(
-        modifier = modifier.graphicsLayer {
-            scaleX = scale.value
-            scaleY = scale.value
-        }
-    ) {
-        content()
-    }
-}
+
 
 @Composable
 private fun CombatFxOverlay(
