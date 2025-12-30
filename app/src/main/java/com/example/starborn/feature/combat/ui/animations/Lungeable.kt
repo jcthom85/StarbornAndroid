@@ -38,7 +38,7 @@ fun Lungeable(
     val density = LocalDensity.current
     val base = if (side == CombatSide.PLAYER) -1f else +1f
     val signedDirection = base * directionSign
-    val resolvedDistance = if (side == CombatSide.PLAYER && axis == LungeAxis.Y) 0.dp else distance
+    val resolvedDistance = distance
 
     LaunchedEffect(triggerToken) {
         if (triggerToken != null) {

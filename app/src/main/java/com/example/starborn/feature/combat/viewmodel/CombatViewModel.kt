@@ -66,6 +66,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
 import java.util.UUID
 
+enum class AttackLungeStyle {
+    HIT,
+    MISS
+}
+
 class CombatViewModel(
     worldAssets: WorldAssetDataSource,
     private val combatEngine: CombatEngine,
@@ -143,6 +148,8 @@ class CombatViewModel(
     val lungeActorId: StateFlow<String?> = _lungeActorId.asStateFlow()
     private val _lungeToken = MutableStateFlow(0L)
     val lungeToken: StateFlow<Long> = _lungeToken.asStateFlow()
+    private val _lungeStyle = MutableStateFlow(AttackLungeStyle.HIT)
+    val lungeStyle: StateFlow<AttackLungeStyle> = _lungeStyle.asStateFlow()
     private val _missLungeActorId = MutableStateFlow<String?>(null)
     val missLungeActorId: StateFlow<String?> = _missLungeActorId.asStateFlow()
     private val _missLungeToken = MutableStateFlow(0L)
@@ -368,9 +375,12 @@ class CombatViewModel(
         }
     }
 
-    private fun maybeTriggerAttackLunge(action: CombatAction) {
+    private fun maybeTriggerAttackLunge(
+        action: CombatAction,
+        style: AttackLungeStyle = AttackLungeStyle.HIT
+    ) {
         if (action is CombatAction.BasicAttack) {
-            triggerAttackLunge(action.actorId)
+            triggerAttackLunge(action.actorId, style)
         }
     }
 
@@ -382,16 +392,25 @@ class CombatViewModel(
 
     private fun executePlayerAttack(attackerId: String, targetId: String) {
         var executed = false
+        var attackMissed = false
         val action = CombatAction.BasicAttack(attackerId, targetId)
-        maybeTriggerAttackLunge(action)
         updateState { current ->
             val attackerState = current.combatants[attackerId] ?: return@updateState current
             val targetState = current.combatants[targetId] ?: return@updateState current
+            val previousLogSize = current.log.size
             val resolved = actionProcessor.execute(current, action, ::victoryReward)
+            val newEntries = resolved.log.drop(previousLogSize)
+            val damageEntries = newEntries
+                .filterIsInstance<CombatLogEntry.Damage>()
+                .filter { it.sourceId == attackerId }
+            attackMissed = damageEntries.isNotEmpty() &&
+                damageEntries.all { it.amount == 0 && it.element == "miss" }
             executed = true
             resolved.applyOutcomeResults(current)
         }
         if (executed) {
+            val style = if (attackMissed) AttackLungeStyle.MISS else AttackLungeStyle.HIT
+            triggerAttackLunge(attackerId, style)
             clearAwaitingAction(attackerId)
             concludeActorTurn(attackerId)
         } else {
@@ -400,8 +419,12 @@ class CombatViewModel(
         }
     }
 
-    private fun triggerAttackLunge(actorId: String) {
+    private fun triggerAttackLunge(
+        actorId: String,
+        style: AttackLungeStyle = AttackLungeStyle.HIT
+    ) {
         pauseAtbForAnimation()
+        _lungeStyle.value = style
         _lungeToken.value = _lungeToken.value + 1
         _lungeActorId.value = actorId
     }

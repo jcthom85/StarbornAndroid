@@ -110,7 +110,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
@@ -140,6 +139,7 @@ import com.example.starborn.domain.model.Enemy
 import com.example.starborn.domain.model.Player
 import com.example.starborn.domain.model.Skill
 import com.example.starborn.data.local.Theme
+import com.example.starborn.feature.combat.viewmodel.AttackLungeStyle
 import com.example.starborn.feature.combat.viewmodel.CombatViewModel
 import com.example.starborn.feature.combat.viewmodel.CombatViewModel.TimedPromptState
 import com.example.starborn.feature.combat.viewmodel.CombatFxEvent
@@ -348,6 +348,7 @@ fun CombatScreen(
     val atbMeters by viewModel.atbMeters.collectAsStateWithLifecycle()
     val lungeActorId by viewModel.lungeActorId.collectAsStateWithLifecycle(null)
     val lungeToken by viewModel.lungeToken.collectAsStateWithLifecycle(0L)
+    val lungeStyle by viewModel.lungeStyle.collectAsStateWithLifecycle(AttackLungeStyle.HIT)
     val missLungeActorId by viewModel.missLungeActorId.collectAsStateWithLifecycle(null)
     val missLungeToken by viewModel.missLungeToken.collectAsStateWithLifecycle(0L)
     val timedPromptState by viewModel.timedPrompt.collectAsStateWithLifecycle()
@@ -376,7 +377,8 @@ fun CombatScreen(
     val playerIdSet = remember(playerParty) {
         playerParty.map { it.id.lowercase(Locale.getDefault()) }.toSet()
     }
-    val activeId = combatState?.activeCombatant?.combatant?.id
+    val turnActorId = combatState?.activeCombatant?.combatant?.id
+    val activeId = awaitingActionId
 
     val outcome = combatState?.outcome
     if (outcome != null && pendingOutcome == null) {
@@ -384,7 +386,7 @@ fun CombatScreen(
     }
 
     val currentCombatState by rememberUpdatedState(combatState)
-    val currentActiveId by rememberUpdatedState(activeId)
+    val currentTurnActorId by rememberUpdatedState(turnActorId)
     LaunchedEffect(Unit) {
         viewModel.fxEvents.collect { event ->
             when (event) {
@@ -405,7 +407,7 @@ fun CombatScreen(
                         val resolvedStyle = resolveAttackStyle(
                             sourceId = event.sourceId,
                             combatState = currentCombatState,
-                            activeId = currentActiveId,
+                            activeId = currentTurnActorId,
                             playerIdSet = playerIdSet
                         )
                         val style = resolvedStyle
@@ -440,19 +442,19 @@ fun CombatScreen(
                         }
                     }
                     val normalizedSource = normalizeAttackSourceId(event.sourceId)
-                    val allowShake = normalizedSource in playerIdSet
+                    val allowShake = normalizedSource in playerIdSet && event.critical
                     if (!suppressScreenshake && allowShake) {
                         launch {
-                            val amplitude = with(density) { if (event.critical) 16.dp.toPx() else 10.dp.toPx() }
+                            val amplitude = with(density) { 12.dp.toPx() }
                             val offset = Offset(
                                 x = if (Random.nextBoolean()) amplitude else -amplitude,
-                                y = if (Random.nextBoolean()) amplitude * 0.6f else -amplitude * 0.6f
+                                y = if (Random.nextBoolean()) amplitude * 0.5f else -amplitude * 0.5f
                             )
                             shakeOffset.stop()
                             shakeOffset.snapTo(offset)
                             shakeOffset.animateTo(
                                 targetValue = Offset.Zero,
-                                animationSpec = tween(durationMillis = 180)
+                                animationSpec = tween(durationMillis = 140)
                             )
                         }
                     }
@@ -836,16 +838,17 @@ fun CombatScreen(
             val commandCurrentHp = commandActorState?.hp ?: commandMaxHp
             val partyDockHeightPx = remember(playerParty.size) { mutableStateOf(0) }
             val partyDockHeight = with(density) { partyDockHeightPx.value.toDp() }
+            val contentPadding = PaddingValues(horizontal = 16.dp, vertical = 24.dp)
 
-            Box(
+            BoxWithConstraints(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 16.dp, vertical = 24.dp)
+                    .padding(contentPadding)
             ) {
-                Column(
+                Box(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(bottom = partyDockHeight + 8.dp)
+                        .fillMaxWidth()
+                        .align(Alignment.TopCenter)
                 ) {
                     EnemyRoster(
                         enemies = enemies,
@@ -875,7 +878,13 @@ fun CombatScreen(
                         onMissLungeFinished = viewModel::onMissLungeFinished,
                         showTargetPrompt = enemyTargetPrompt
                     )
-                    Spacer(modifier = Modifier.weight(1f))
+                }
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = partyDockHeight + 8.dp)
+                ) {
                     CombatLogPanel(
                         flavorLine = combatMessage,
                         instruction = pendingInstruction,
@@ -886,6 +895,12 @@ fun CombatScreen(
                         } else null
                     )
                 }
+            }
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(contentPadding)
+            ) {
                 PartyRoster(
                     party = playerParty,
                     combatState = state,
@@ -902,6 +917,7 @@ fun CombatScreen(
                     atbMeters = atbMeters,
                     lungeActorId = lungeActorId,
                     lungeToken = lungeToken,
+                    lungeStyle = lungeStyle,
                     onLungeFinished = viewModel::onLungeFinished,
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
@@ -913,103 +929,103 @@ fun CombatScreen(
                             }
                         }
                 )
-
-                CommandPalette(
-                    visible = commandPaletteVisible,
-                    actor = commandActor,
-                    currentHp = commandCurrentHp,
-                    maxHp = commandMaxHp,
-                    canAttack = hasTargets,
-                    hasSkills = menuActorSkills.isNotEmpty(),
-                    hasItems = inventoryEntries.isNotEmpty(),
-                    onAttack = { requestTarget(PendingTargetRequest.Attack) },
-                    onSkills = {
-                        showSkillsDialog.value = true
-                        pendingTargetRequest = null
-                        pendingInstruction = null
-                    },
-                    onItems = {
-                        showItemsDialog.value = true
-                        pendingTargetRequest = null
-                        pendingInstruction = null
-                    },
-                    snackLabel = snackLabel,
-                    canSnack = canSnack,
-                    onSnack = {
-                        when (snackRequirement) {
-                            TargetRequirement.ENEMY -> requestTarget(
-                                PendingTargetRequest.SnackRequest(
-                                    snackName = snackBaseLabel,
-                                    filter = TargetFilter.ENEMY,
-                                    instruction = "Choose an enemy for $snackBaseLabel"
-                                )
-                            )
-                            TargetRequirement.ALLY -> requestTarget(
-                                PendingTargetRequest.SnackRequest(
-                                    snackName = snackBaseLabel,
-                                    filter = TargetFilter.ALLY,
-                                    instruction = "Choose an ally for $snackBaseLabel"
-                                )
-                            )
-                            TargetRequirement.ANY -> requestTarget(
-                                PendingTargetRequest.SnackRequest(
-                                    snackName = snackBaseLabel,
-                                    filter = TargetFilter.ANY,
-                                    instruction = "Choose a target for $snackBaseLabel"
-                                )
-                            )
-                            TargetRequirement.NONE -> {
-                                pendingTargetRequest = null
-                                pendingInstruction = null
-                                viewModel.useSnack()
-                            }
-                        }
-                    },
-                    supportLabel = supportLabel,
-                    canSupport = canSupport,
-                    onSupport = {
-                        when (supportRequirement) {
-                            TargetRequirement.ENEMY -> requestTarget(
-                                PendingTargetRequest.SupportRequest(
-                                    abilityName = supportLabel,
-                                    filter = TargetFilter.ENEMY,
-                                    instruction = "Choose an enemy for $supportLabel"
-                                )
-                            )
-                            TargetRequirement.ALLY -> requestTarget(
-                                PendingTargetRequest.SupportRequest(
-                                    abilityName = supportLabel,
-                                    filter = TargetFilter.ALLY,
-                                    instruction = "Choose an ally for $supportLabel"
-                                )
-                            )
-                            TargetRequirement.ANY -> requestTarget(
-                                PendingTargetRequest.SupportRequest(
-                                    abilityName = supportLabel,
-                                    filter = TargetFilter.ANY,
-                                    instruction = "Choose a target for $supportLabel"
-                                )
-                            )
-                            TargetRequirement.NONE -> {
-                                pendingTargetRequest = null
-                                pendingInstruction = null
-                                viewModel.useSupportAbility()
-                            }
-                        }
-                    },
-                    onRetreat = {
-                        pendingTargetRequest = null
-                        pendingInstruction = null
-                        viewModel.attemptRetreat()
-                    },
-                    highContrastMode = highContrastMode,
-                    largeTouchTargets = largeTouchTargets,
-                    theme = viewModel.theme,
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .navigationBarsPadding()
-                )
             }
+
+            CommandPalette(
+                visible = commandPaletteVisible,
+                actor = commandActor,
+                currentHp = commandCurrentHp,
+                maxHp = commandMaxHp,
+                canAttack = hasTargets,
+                hasSkills = menuActorSkills.isNotEmpty(),
+                hasItems = inventoryEntries.isNotEmpty(),
+                onAttack = { requestTarget(PendingTargetRequest.Attack) },
+                onSkills = {
+                    showSkillsDialog.value = true
+                    pendingTargetRequest = null
+                    pendingInstruction = null
+                },
+                onItems = {
+                    showItemsDialog.value = true
+                    pendingTargetRequest = null
+                    pendingInstruction = null
+                },
+                snackLabel = snackLabel,
+                canSnack = canSnack,
+                onSnack = {
+                    when (snackRequirement) {
+                        TargetRequirement.ENEMY -> requestTarget(
+                            PendingTargetRequest.SnackRequest(
+                                snackName = snackBaseLabel,
+                                filter = TargetFilter.ENEMY,
+                                instruction = "Choose an enemy for $snackBaseLabel"
+                            )
+                        )
+                        TargetRequirement.ALLY -> requestTarget(
+                            PendingTargetRequest.SnackRequest(
+                                snackName = snackBaseLabel,
+                                filter = TargetFilter.ALLY,
+                                instruction = "Choose an ally for $snackBaseLabel"
+                            )
+                        )
+                        TargetRequirement.ANY -> requestTarget(
+                            PendingTargetRequest.SnackRequest(
+                                snackName = snackBaseLabel,
+                                filter = TargetFilter.ANY,
+                                instruction = "Choose a target for $snackBaseLabel"
+                            )
+                        )
+                        TargetRequirement.NONE -> {
+                            pendingTargetRequest = null
+                            pendingInstruction = null
+                            viewModel.useSnack()
+                        }
+                    }
+                },
+                supportLabel = supportLabel,
+                canSupport = canSupport,
+                onSupport = {
+                    when (supportRequirement) {
+                        TargetRequirement.ENEMY -> requestTarget(
+                            PendingTargetRequest.SupportRequest(
+                                abilityName = supportLabel,
+                                filter = TargetFilter.ENEMY,
+                                instruction = "Choose an enemy for $supportLabel"
+                            )
+                        )
+                        TargetRequirement.ALLY -> requestTarget(
+                            PendingTargetRequest.SupportRequest(
+                                abilityName = supportLabel,
+                                filter = TargetFilter.ALLY,
+                                instruction = "Choose an ally for $supportLabel"
+                            )
+                        )
+                        TargetRequirement.ANY -> requestTarget(
+                            PendingTargetRequest.SupportRequest(
+                                abilityName = supportLabel,
+                                filter = TargetFilter.ANY,
+                                instruction = "Choose a target for $supportLabel"
+                            )
+                        )
+                        TargetRequirement.NONE -> {
+                            pendingTargetRequest = null
+                            pendingInstruction = null
+                            viewModel.useSupportAbility()
+                        }
+                    }
+                },
+                onRetreat = {
+                    pendingTargetRequest = null
+                    pendingInstruction = null
+                    viewModel.attemptRetreat()
+                },
+                highContrastMode = highContrastMode,
+                largeTouchTargets = largeTouchTargets,
+                theme = viewModel.theme,
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .navigationBarsPadding()
+            )
             outcomeFx?.let { OutcomeOverlay(it, playerParty) }
             timedPromptState?.let { prompt ->
                 TimedPromptOverlay(
@@ -1077,6 +1093,7 @@ private fun PartyRoster(
     atbMeters: Map<String, Float> = emptyMap(),
     lungeActorId: String?,
     lungeToken: Long,
+    lungeStyle: AttackLungeStyle,
     onLungeFinished: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -1104,8 +1121,10 @@ private fun PartyRoster(
                             val cardShape = RoundedCornerShape(22.dp)
                             val isAlive = memberState?.isAlive != false
                             val memberLungeToken = if (member.id == lungeActorId) lungeToken else null
+                            val isMissLunge = memberLungeToken != null && lungeStyle == AttackLungeStyle.MISS
                             val portraitPath = when {
                                 !isAlive -> "images/characters/emotes/${member.id}_down.png"
+                                isMissLunge -> "images/characters/emotes/${member.id}_confident.png"
                                 memberLungeToken != null -> "images/characters/emotes/${member.id}_angry.png"
                                 victoryEmotes -> "images/characters/emotes/${member.id}_cool.png"
                                 else -> member.miniIconPath
@@ -1123,6 +1142,12 @@ private fun PartyRoster(
                                 baseModifier
                             }
                             val damageFlash = rememberDamageFlash(member.id, combatState.log)
+                            val hitPulse = rememberHitPulse(member.id, combatState.log)
+                            val hitRecoilY = rememberHitRecoil(
+                                targetId = member.id,
+                                log = combatState.log,
+                                directionSign = 1f
+                            )
                             val suppressLunge = damageFlash > 0f
                             Box(
                                 modifier = interactiveModifier.padding(horizontal = 4.dp)
@@ -1159,16 +1184,24 @@ private fun PartyRoster(
                                             modifier = Modifier
                                                 .size(100.dp)
                                                 .clip(CircleShape)
-                                                .background(Color(0xFF1C1F24)),
+                                                .background(Color(0xFF1C1F24))
+                                                .graphicsLayer {
+                                                    val pulse = 1f + 0.06f * hitPulse
+                                                    scaleX = pulse
+                                                    scaleY = pulse
+                                                    translationY = hitRecoilY
+                                                },
                                             contentAlignment = Alignment.Center
                                         ) {
                                             val lungeDistance = if (suppressLunge) 0.dp else 24.dp
+                                            val lungeAxis = if (isMissLunge) LungeAxis.X else LungeAxis.Y
+                                            val lungeDirectionSign = if (isMissLunge) -1f else 1f
                                             Lungeable(
                                                 side = CombatSide.PLAYER,
                                                 triggerToken = memberLungeToken,
                                                 distance = lungeDistance,
-                                                axis = LungeAxis.X,
-                                                directionSign = -1f,
+                                                axis = lungeAxis,
+                                                directionSign = lungeDirectionSign,
                                                 modifier = Modifier.matchParentSize(),
                                                 onFinished = { memberLungeToken?.let(onLungeFinished) }
                                             ) {
@@ -1237,7 +1270,8 @@ private fun PartyRoster(
                                     statusFx = statusFx.filter { it.targetId == member.id },
                                     showKnockout = knockoutFx.any { it.targetId == member.id },
                                     shape = cardShape,
-                                    supportFx = supportHighlights
+                                    supportFx = supportHighlights,
+                                    modifier = Modifier.matchParentSize()
                                 )
                             }
                         }
@@ -1369,6 +1403,12 @@ private fun EnemyRoster(
                         val isElite = isEliteTier(enemy.tier)
                         val isBoss = isBossTier(enemy.tier)
                         val flash = rememberDamageFlash(combatantId, combatState.log)
+                        val hitPulse = rememberHitPulse(combatantId, combatState.log)
+                        val hitRecoilY = rememberHitRecoil(
+                            targetId = combatantId,
+                            log = combatState.log,
+                            directionSign = -1f
+                        )
                         val damageShake = rememberDamageShake(combatantId, combatState.log)
                         val selectionGlow = remember { Animatable(0f) }
                         LaunchedEffect(isSelected) {
@@ -1441,10 +1481,11 @@ private fun EnemyRoster(
                                     modifier = Modifier
                                         .size(cardSize)
                                         .graphicsLayer {
-                                            if (selectionGlow.value > 0f) {
-                                                scaleX = 1f + selectionGlow.value * 0.08f
-                                                scaleY = 1f + selectionGlow.value * 0.08f
-                                            }
+                                            val glowScale = 1f + selectionGlow.value * 0.08f
+                                            val hitScale = 1f + 0.04f * hitPulse
+                                            val combined = glowScale * hitScale
+                                            scaleX = combined
+                                            scaleY = combined
                                         }
                                 ) {
                                     if (flash > 0f) {
@@ -1463,20 +1504,35 @@ private fun EnemyRoster(
                                             .graphicsLayer {
                                                 scaleX = spriteScale
                                                 scaleY = spriteScale
+                                                translationY = hitRecoilY
                                             }
                                     ) {
-                                        LaunchedEffect(enemyLungeToken) {
-                                            if (enemyLungeToken != null) {
-                                                delay(250)
-                                                onLungeFinished(enemyLungeToken)
+                                        Lungeable(
+                                            side = CombatSide.ENEMY,
+                                            triggerToken = enemyMissToken,
+                                            distance = 18.dp,
+                                            axis = LungeAxis.X,
+                                            directionSign = 1f,
+                                            modifier = Modifier.matchParentSize(),
+                                            onFinished = { enemyMissToken?.let(onMissLungeFinished) }
+                                        ) {
+                                            Lungeable(
+                                                side = CombatSide.ENEMY,
+                                                triggerToken = enemyLungeToken,
+                                                distance = 24.dp,
+                                                axis = LungeAxis.Y,
+                                                directionSign = 1f,
+                                                modifier = Modifier.matchParentSize(),
+                                                onFinished = { enemyLungeToken?.let(onLungeFinished) }
+                                            ) {
+                                                Image(
+                                                    painter = painter,
+                                                    contentDescription = enemy.name,
+                                                    contentScale = ContentScale.Fit,
+                                                    modifier = Modifier.matchParentSize()
+                                                )
                                             }
                                         }
-                                        Image(
-                                            painter = painter,
-                                            contentDescription = enemy.name,
-                                            contentScale = ContentScale.Fit,
-                                            modifier = Modifier.matchParentSize()
-                                        )
                                     }
                                     CombatFxOverlay(
                                         damageFx = damageFx.filter { it.targetId == combatantId },
@@ -1484,7 +1540,8 @@ private fun EnemyRoster(
                                         healFx = healFx.filter { it.targetId == combatantId },
                                         statusFx = statusFx.filter { it.targetId == combatantId },
                                         showKnockout = knockoutFx.any { it.targetId == combatantId },
-                                        shape = shape
+                                        shape = shape,
+                                        modifier = Modifier.matchParentSize()
                                     )
                                 }
                                 StatusBadges(
@@ -1655,6 +1712,12 @@ private fun CompositeEnemyRoster(
                     val isAlive = enemyState?.isAlive != false
                     val isVisible = isAlive || delayedDeathTargets.containsKey(combatantId)
                     val flash = rememberDamageFlash(combatantId, combatState.log)
+                    val hitPulse = rememberHitPulse(combatantId, combatState.log)
+                    val hitRecoilY = rememberHitRecoil(
+                        targetId = combatantId,
+                        log = combatState.log,
+                        directionSign = -1f
+                    )
                     val damageShake = rememberDamageShake(combatantId, combatState.log)
                     val selectionGlow = remember { Animatable(0f) }
                     LaunchedEffect(isSelected) {
@@ -1710,10 +1773,12 @@ private fun CompositeEnemyRoster(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .graphicsLayer {
-                                    if (selectionGlow.value > 0f) {
-                                        scaleX = 1f + selectionGlow.value * 0.08f
-                                        scaleY = 1f + selectionGlow.value * 0.08f
-                                    }
+                                    val glowScale = 1f + selectionGlow.value * 0.08f
+                                    val hitScale = 1f + 0.04f * hitPulse
+                                    val combined = glowScale * hitScale
+                                    scaleX = combined
+                                    scaleY = combined
+                                    translationY = hitRecoilY
                                 }
                         ) {
                             if (flash > 0f) {
@@ -1724,25 +1789,40 @@ private fun CompositeEnemyRoster(
                                         .background(Color.Black.copy(alpha = 0.18f * flash))
                                 )
                             }
-                            LaunchedEffect(enemyLungeToken) {
-                                if (enemyLungeToken != null) {
-                                    delay(250)
-                                    onLungeFinished(enemyLungeToken)
+                            Lungeable(
+                                side = CombatSide.ENEMY,
+                                triggerToken = enemyMissToken,
+                                distance = 18.dp,
+                                axis = LungeAxis.X,
+                                directionSign = 1f,
+                                modifier = Modifier.matchParentSize(),
+                                onFinished = { enemyMissToken?.let(onMissLungeFinished) }
+                            ) {
+                                Lungeable(
+                                    side = CombatSide.ENEMY,
+                                    triggerToken = enemyLungeToken,
+                                    distance = 24.dp,
+                                    axis = LungeAxis.Y,
+                                    directionSign = 1f,
+                                    modifier = Modifier.matchParentSize(),
+                                    onFinished = { enemyLungeToken?.let(onLungeFinished) }
+                                ) {
+                                    Image(
+                                        painter = painter,
+                                        contentDescription = enemy.name,
+                                        contentScale = ContentScale.Fit,
+                                        modifier = Modifier.matchParentSize()
+                                    )
                                 }
                             }
-                            Image(
-                                painter = painter,
-                                contentDescription = enemy.name,
-                                contentScale = ContentScale.Fit,
-                                modifier = Modifier.matchParentSize()
-                            )
                             CombatFxOverlay(
                                 damageFx = damageFx.filter { it.targetId == combatantId },
                                 attackFx = attackFx.filter { it.targetId == combatantId },
                                 healFx = healFx.filter { it.targetId == combatantId },
                                 statusFx = statusFx.filter { it.targetId == combatantId },
                                 showKnockout = knockoutFx.any { it.targetId == combatantId },
-                                shape = shape
+                                shape = shape,
+                                modifier = Modifier.matchParentSize()
                             )
                         }
                     }
@@ -1935,7 +2015,9 @@ private fun rememberDamageFlash(
     log: List<com.example.starborn.domain.combat.CombatLogEntry>
 ): Float {
     val lastDamage = log.lastOrNull { entry ->
-        entry is com.example.starborn.domain.combat.CombatLogEntry.Damage && entry.targetId == targetId
+        entry is com.example.starborn.domain.combat.CombatLogEntry.Damage &&
+            entry.targetId == targetId &&
+            !(entry.amount == 0 && entry.element == "miss")
     }
     val anim = remember { Animatable(0f) }
     LaunchedEffect(lastDamage) {
@@ -1953,7 +2035,9 @@ private fun rememberDamageShake(
     log: List<com.example.starborn.domain.combat.CombatLogEntry>
 ): Float {
     val damageIndex = log.indexOfLast {
-        it is com.example.starborn.domain.combat.CombatLogEntry.Damage && it.targetId == targetId
+        it is com.example.starborn.domain.combat.CombatLogEntry.Damage &&
+            it.targetId == targetId &&
+            !(it.amount == 0 && it.element == "miss")
     }
     val lastIndex = remember { mutableStateOf(-1) }
     val anim = remember { Animatable(0f) }
@@ -1967,6 +2051,71 @@ private fun rememberDamageShake(
         }
     }
     return anim.value * direction.value
+}
+
+@Composable
+private fun rememberHitRecoil(
+    targetId: String,
+    log: List<com.example.starborn.domain.combat.CombatLogEntry>,
+    directionSign: Float
+): Float {
+    val lastHit = log.lastOrNull { entry ->
+        entry is com.example.starborn.domain.combat.CombatLogEntry.Damage &&
+            entry.targetId == targetId &&
+            !(entry.amount == 0 && entry.element == "miss")
+    } as? com.example.starborn.domain.combat.CombatLogEntry.Damage
+    val hitIndex = log.indexOfLast { entry ->
+        entry is com.example.starborn.domain.combat.CombatLogEntry.Damage &&
+            entry.targetId == targetId &&
+            !(entry.amount == 0 && entry.element == "miss")
+    }
+    val lastIndex = remember { mutableStateOf(-1) }
+    val anim = remember { Animatable(0f) }
+    val density = LocalDensity.current
+    val critical = lastHit?.critical == true
+    val distance = if (critical) 12.dp else 8.dp
+    val holdMs = if (critical) 90L else 60L
+    LaunchedEffect(hitIndex) {
+        if (hitIndex >= 0 && hitIndex > lastIndex.value) {
+            lastIndex.value = hitIndex
+            anim.snapTo(1f)
+            delay(holdMs)
+            anim.animateTo(0f, animationSpec = tween(durationMillis = 180, easing = FastOutSlowInEasing))
+        }
+    }
+    val distancePx = with(density) { distance.toPx() }
+    return anim.value * distancePx * directionSign
+}
+
+@Composable
+private fun rememberHitPulse(
+    targetId: String,
+    log: List<com.example.starborn.domain.combat.CombatLogEntry>
+): Float {
+    val lastHit = log.lastOrNull { entry ->
+        entry is com.example.starborn.domain.combat.CombatLogEntry.Damage &&
+            entry.targetId == targetId &&
+            !(entry.amount == 0 && entry.element == "miss")
+    } as? com.example.starborn.domain.combat.CombatLogEntry.Damage
+    val hitIndex = log.indexOfLast { entry ->
+        entry is com.example.starborn.domain.combat.CombatLogEntry.Damage &&
+            entry.targetId == targetId &&
+            !(entry.amount == 0 && entry.element == "miss")
+    }
+    val lastIndex = remember { mutableStateOf(-1) }
+    val anim = remember { Animatable(0f) }
+    val critical = lastHit?.critical == true
+    val holdMs = if (critical) 90L else 60L
+    val returnMs = if (critical) 240 else 200
+    LaunchedEffect(hitIndex) {
+        if (hitIndex >= 0 && hitIndex > lastIndex.value) {
+            lastIndex.value = hitIndex
+            anim.snapTo(1f)
+            delay(holdMs)
+            anim.animateTo(0f, animationSpec = tween(durationMillis = returnMs, easing = FastOutSlowInEasing))
+        }
+    }
+    return anim.value
 }
 
 @Composable
@@ -2163,12 +2312,12 @@ private fun CombatFxOverlay(
     statusFx: List<StatusFxUi>,
     showKnockout: Boolean,
     shape: Shape,
-    supportFx: List<SupportFxUi> = emptyList()
+    supportFx: List<SupportFxUi> = emptyList(),
+    modifier: Modifier = Modifier.fillMaxSize()
 ) {
     if (damageFx.isEmpty() && attackFx.isEmpty() && healFx.isEmpty() && statusFx.isEmpty() && !showKnockout && supportFx.isEmpty()) return
     Box(
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = modifier
             .clip(shape)
             .zIndex(1f)
     ) {
@@ -2199,6 +2348,14 @@ private fun CombatFxOverlay(
                 style = MaterialTheme.typography.headlineSmall,
                 color = Color.White,
                 modifier = Modifier.align(Alignment.Center)
+            )
+        }
+        damageFx.filter { fx ->
+            fx.amount > 0 && fx.element != "miss"
+        }.forEach { fx ->
+            ImpactBurst(
+                fx = fx,
+                modifier = Modifier.matchParentSize()
             )
         }
         damageFx.forEach { fx ->
@@ -2797,6 +2954,61 @@ private fun AttackHitFx(
                     drawCircle(brush = mist, radius = sizeMin * 0.4f, center = center)
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun ImpactBurst(
+    fx: DamageFxUi,
+    modifier: Modifier = Modifier
+) {
+    val anim = remember { Animatable(0f) }
+    LaunchedEffect(fx.id) {
+        anim.snapTo(0f)
+        anim.animateTo(
+            targetValue = 1f,
+            animationSpec = tween(
+                durationMillis = if (fx.critical) 280 else 220,
+                easing = FastOutSlowInEasing
+            )
+        )
+    }
+    val t = anim.value
+    val alpha = (1f - t).coerceIn(0f, 1f)
+    val ringScale = if (fx.critical) 1.15f else 1f
+    val (topColor, _) = damageNumberColors(fx.element, fx.critical, isHealing = false)
+    Canvas(modifier = modifier.graphicsLayer { this.alpha = alpha }) {
+        val minSize = size.minDimension
+        if (minSize <= 0f) return@Canvas
+        val center = Offset(size.width / 2f, size.height / 2f)
+        val baseRadius = minSize * 0.16f
+        val radius = baseRadius * (1f + 0.55f * t) * ringScale
+        val stroke = (minSize * 0.02f).coerceAtLeast(2f)
+        drawCircle(
+            color = topColor.copy(alpha = 0.75f * alpha),
+            radius = radius,
+            center = center,
+            style = Stroke(width = stroke)
+        )
+        val shardLength = minSize * 0.08f * ringScale
+        val shardStroke = stroke * 0.6f
+        val angleOffset = t * 0.9f
+        repeat(4) { index ->
+            val angle = angleOffset + index * (PI.toFloat() / 2f)
+            val dir = Offset(
+                cos(angle.toDouble()).toFloat(),
+                sin(angle.toDouble()).toFloat()
+            )
+            val start = center + dir * radius * 0.55f
+            val end = center + dir * (radius * 0.55f + shardLength)
+            drawLine(
+                color = topColor.copy(alpha = 0.55f * alpha),
+                start = start,
+                end = end,
+                strokeWidth = shardStroke,
+                cap = StrokeCap.Round
+            )
         }
     }
 }
