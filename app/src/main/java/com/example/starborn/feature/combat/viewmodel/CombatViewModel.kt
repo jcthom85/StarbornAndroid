@@ -225,7 +225,7 @@ class CombatViewModel(
             players.find { it.id == id }
         }).ifEmpty { players.take(1) }
 
-        playerParty = resolvedParty
+        playerParty = resolvedParty.toList()
         player = playerParty.firstOrNull()
         playerDefaultSkillIds = playerParty.associate { member -> member.id to member.skills.toSet() }
         val pendingEncounter = encounterCoordinator.consumePendingEncounter()
@@ -369,7 +369,7 @@ class CombatViewModel(
     }
 
     private fun maybeTriggerAttackLunge(action: CombatAction) {
-        if (action is CombatAction.BasicAttack && action.actorId in playerIdList) {
+        if (action is CombatAction.BasicAttack) {
             triggerAttackLunge(action.actorId)
         }
     }
@@ -1112,41 +1112,15 @@ class CombatViewModel(
                 return
             }
             val action = selectEnemyAction(snapshot, enemyStateSnapshot)
-            val guardTargets = guardableTargetsFor(action).filter { id ->
-                snapshot.combatants[id]?.isAlive == true
-            }
             maybeTriggerAttackLunge(action)
-            val guardMessage = guardTargets.takeIf { it.isNotEmpty() }?.let { guardPromptMessage(it, snapshot) }
-            val guardSuccess = if (guardMessage != null) {
-                awaitTimedWindow(
-                    type = TimedWindowType.Defense(guardTargets),
-                    message = guardMessage,
-                    durationMs = TIMED_GUARD_WINDOW_MS
-                )
-            } else {
-                false
-            }
-
+            // Guard minigame disabled: enemy attacks always resolve immediately.
+            suppressMissLungeTargets = emptySet()
             var acted = false
-            val suppressedMissTargets = if (guardSuccess) guardTargets.toSet() else emptySet()
-            suppressMissLungeTargets = suppressedMissTargets
             updateState { current ->
                 val enemyState = current.combatants[enemyId] ?: return@updateState current
                 if (!enemyState.isAlive) return@updateState current
                 tickEnemyCooldowns()
-                var working = current
-                if (guardSuccess) {
-                    guardTargets.forEach { targetId ->
-                        if (current.combatants[targetId]?.isAlive == true) {
-                            working = combatEngine.applyBuffs(
-                                working,
-                                targetId,
-                                listOf(BuffEffect(stat = "defense", value = TIMED_GUARD_DEF_BONUS, duration = 1))
-                            )
-                        }
-                    }
-                }
-                val resolved = actionProcessor.execute(working, action, ::victoryReward)
+                val resolved = actionProcessor.execute(current, action, ::victoryReward)
                 registerEnemyActionCooldown(action)
                 acted = true
                 resolved.applyOutcomeResults(current)

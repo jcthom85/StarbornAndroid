@@ -65,6 +65,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -339,7 +340,7 @@ fun CombatScreen(
     BackHandler(enabled = true) {
         // Block system back/edge-swipe from leaving combat.
     }
-    val playerParty = viewModel.playerParty
+    val playerParty = remember(viewModel) { viewModel.playerParty.toList() }
     val enemies = viewModel.enemies
     val enemyCombatantIds = viewModel.enemyCombatantIds
     val combatState by viewModel.state.collectAsState(initial = viewModel.combatState)
@@ -852,6 +853,7 @@ fun CombatScreen(
                         combatState = state,
                         activeId = activeId,
                         selectedEnemyIds = selectedEnemyIds,
+                        labelBorderColor = themeColor(viewModel.theme?.accent, Color(0xFF2D9CFF)),
                         damageFx = damageFx,
                         attackFx = attackHitFx,
                         healFx = healFx,
@@ -906,7 +908,7 @@ fun CombatScreen(
                         .padding(bottom = 4.dp)
                         .onGloballyPositioned { coords ->
                             val height = coords.size.height
-                            if (height > 0 && partyDockHeightPx.value == 0) {
+                            if (height > 0 && partyDockHeightPx.value != height) {
                                 partyDockHeightPx.value = height
                             }
                         }
@@ -1079,150 +1081,170 @@ private fun PartyRoster(
     modifier: Modifier = Modifier
 ) {
     if (party.isEmpty()) return
-    val rows = party.chunked(2)
+    val rows = remember(party) { party.chunked(2) }
     Column(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         rows.forEach { rowMembers ->
+            key(rowMembers.joinToString(separator = "|") { member -> member.id }) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.Top
             ) {
-                rowMembers.forEach { member ->
-                    val memberState = combatState.combatants[member.id]
-                    val maxHp = memberState?.combatant?.stats?.maxHp ?: member.hp.coerceAtLeast(1)
-                    val currentHp = memberState?.hp ?: maxHp
-                    val isActive = member.id == activeId
-                    val supportHighlights = supportFx.filter { member.id in it.targetIds }
-                    val cardShape = RoundedCornerShape(22.dp)
-                    val isAlive = memberState?.isAlive != false
-                    val memberLungeToken = if (member.id == lungeActorId) lungeToken else null
-                    val portraitPath = when {
-                        !isAlive -> "images/characters/emotes/${member.id}_down.png"
-                        memberLungeToken != null -> "images/characters/emotes/${member.id}_angry.png"
-                        victoryEmotes -> "images/characters/emotes/${member.id}_cool.png"
-                        else -> member.miniIconPath
-                    }
-                    val portraitPainter = rememberAssetPainter(portraitPath, R.drawable.main_menu_background)
-                    val atbProgress = atbMeters[member.id] ?: 0f
-                    val readyToAct = atbProgress >= 0.999f
+                    rowMembers.forEach { member ->
+                        key(member.id) {
+                            val memberState = combatState.combatants[member.id]
+                            val maxHp = memberState?.combatant?.stats?.maxHp ?: member.hp.coerceAtLeast(1)
+                            val currentHp = memberState?.hp ?: maxHp
+                            val isActive = member.id == activeId
+                            val supportHighlights = supportFx.filter { member.id in it.targetIds }
+                            val cardShape = RoundedCornerShape(22.dp)
+                            val isAlive = memberState?.isAlive != false
+                            val memberLungeToken = if (member.id == lungeActorId) lungeToken else null
+                            val portraitPath = when {
+                                !isAlive -> "images/characters/emotes/${member.id}_down.png"
+                                memberLungeToken != null -> "images/characters/emotes/${member.id}_angry.png"
+                                victoryEmotes -> "images/characters/emotes/${member.id}_cool.png"
+                                else -> member.miniIconPath
+                            }
+                            val portraitPainter = rememberAssetPainter(portraitPath, R.drawable.main_menu_background)
+                            val portraitFrameSize = 114.dp
+                            val atbProgress = atbMeters[member.id] ?: 0f
+                            val readyToAct = atbProgress >= 0.999f
 
-                    val baseModifier = Modifier.widthIn(min = 150.dp)
-                    val canTap = onMemberTap != null && isAlive && (readyToAct || allowNonReadySelection)
-                    val interactiveModifier = if (canTap) {
-                        baseModifier.clickable { onMemberTap(member.id) }
-                    } else {
-                        baseModifier
-                    }
-                    val damageFlash = rememberDamageFlash(member.id, combatState.log)
-                    val suppressLunge = damageFlash > 0f
-                    Box(
-                        modifier = interactiveModifier.padding(horizontal = 4.dp)
-                    ) {
-                        Column(
-                            modifier = Modifier.padding(horizontal = 14.dp, vertical = 12.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
+                            val baseModifier = Modifier.widthIn(min = 150.dp)
+                            val canTap = onMemberTap != null && isAlive && (readyToAct || allowNonReadySelection)
+                            val interactiveModifier = if (canTap) {
+                                baseModifier.clickable { onMemberTap(member.id) }
+                            } else {
+                                baseModifier
+                            }
+                            val damageFlash = rememberDamageFlash(member.id, combatState.log)
+                            val suppressLunge = damageFlash > 0f
                             Box(
-                                modifier = Modifier.size(if (isActive) 114.dp else 108.dp),
-                                contentAlignment = Alignment.Center
+                                modifier = interactiveModifier.padding(horizontal = 4.dp)
                             ) {
-                                if (readyToAct) {
-                                    ReadyAura(
-                                        color = Color(0xFF4EE7FF),
-                                        modifier = Modifier.matchParentSize()
+                                Column(
+                                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 12.dp),
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                    Box(
+                                        modifier = Modifier.size(portraitFrameSize),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        if (readyToAct) {
+                                            ReadyAura(
+                                                color = Color(0xFF4EE7FF),
+                                                modifier = Modifier.matchParentSize()
+                                            )
+                                        }
+                                        if (isActive) {
+                                            Box(
+                                                modifier = Modifier
+                                                    .matchParentSize()
+                                                    .clip(CircleShape)
+                                                    .background(Color.White.copy(alpha = 0.12f))
+                                                    .border(
+                                                        width = 2.dp,
+                                                        color = Color.White.copy(alpha = 0.55f),
+                                                        shape = CircleShape
+                                                    )
+                                            )
+                                        }
+                                        Box(
+                                            modifier = Modifier
+                                                .size(100.dp)
+                                                .clip(CircleShape)
+                                                .background(Color(0xFF1C1F24)),
+                                            contentAlignment = Alignment.Center
+                                        ) {
+                                            val lungeDistance = if (suppressLunge) 0.dp else 24.dp
+                                            Lungeable(
+                                                side = CombatSide.PLAYER,
+                                                triggerToken = memberLungeToken,
+                                                distance = lungeDistance,
+                                                axis = LungeAxis.X,
+                                                directionSign = -1f,
+                                                modifier = Modifier.matchParentSize(),
+                                                onFinished = { memberLungeToken?.let(onLungeFinished) }
+                                            ) {
+                                                Image(
+                                                    painter = portraitPainter,
+                                                    contentDescription = member.name,
+                                                    modifier = Modifier.matchParentSize(),
+                                                    contentScale = ContentScale.Crop
+                                                )
+                                            }
+                                            if (damageFlash > 0f) {
+                                                Box(
+                                                    modifier = Modifier
+                                                        .matchParentSize()
+                                                        .clip(CircleShape)
+                                                        .background(Color.Black.copy(alpha = 0.18f * damageFlash))
+                                                )
+                                            }
+                                        }
+                                    }
+                                    Text(
+                                        text = titleCaseName(member.name),
+                                        style = MaterialTheme.typography.labelSmall.copy(
+                                            fontFamily = CombatNameFont,
+                                            fontWeight = FontWeight.Medium
+                                        ),
+                                        color = Color.White
+                                    )
+                                    AtbBar(
+                                        progress = atbProgress,
+                                        modifier = Modifier.width(HUD_BAR_WIDTH)
+                                    )
+                                    StatBar(
+                                        current = currentHp,
+                                        max = maxHp,
+                                        color = Color(0xFFFF5252),
+                                        background = Color.Black.copy(alpha = 0.5f),
+                                        height = 12.dp,
+                                        modifier = Modifier.width(HUD_BAR_WIDTH)
                                     )
                                 }
-                                if (isActive) {
+                                val statuses = memberState?.statusEffects.orEmpty()
+                                val buffs = memberState?.buffs.orEmpty()
+                                val elementStacks = memberState?.elementStacks.orEmpty()
+                                if (statuses.isNotEmpty() || buffs.isNotEmpty() || elementStacks.values.any { it > 0 }) {
                                     Box(
                                         modifier = Modifier
                                             .matchParentSize()
-                                            .clip(CircleShape)
-                                            .background(Color.White.copy(alpha = 0.12f))
-                                            .border(
-                                                width = 2.dp,
-                                                color = Color.White.copy(alpha = 0.55f),
-                                                shape = CircleShape
-                                            )
-                                    )
-                                }
-                                Box(
-                                    modifier = Modifier
-                                        .size(100.dp)
-                                        .clip(CircleShape)
-                                        .background(Color(0xFF1C1F24)),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    val lungeDistance = if (suppressLunge) 0.dp else 24.dp
-                                    Lungeable(
-                                        side = CombatSide.PLAYER,
-                                        triggerToken = memberLungeToken,
-                                        distance = lungeDistance,
-                                        axis = LungeAxis.X,
-                                        directionSign = -1f,
-                                        modifier = Modifier.matchParentSize(),
-                                        onFinished = { memberLungeToken?.let(onLungeFinished) }
+                                            .zIndex(0.5f),
+                                        contentAlignment = Alignment.TopCenter
                                     ) {
-                                        Image(
-                                            painter = portraitPainter,
-                                            contentDescription = member.name,
-                                            modifier = Modifier.matchParentSize(),
-                                            contentScale = ContentScale.Crop
-                                        )
-                                    }
-                                    if (damageFlash > 0f) {
-                                        Box(
-                                            modifier = Modifier
-                                                .matchParentSize()
-                                                .clip(CircleShape)
-                                                .background(Color.Black.copy(alpha = 0.18f * damageFlash))
-                                        )
+                                        Column(
+                                            horizontalAlignment = Alignment.CenterHorizontally,
+                                            verticalArrangement = Arrangement.spacedBy(4.dp),
+                                            modifier = Modifier.padding(top = 6.dp)
+                                        ) {
+                                            StatusBadges(statuses = statuses, buffs = buffs)
+                                            ElementStackRow(elementStacks)
+                                        }
                                     }
                                 }
+                                CombatFxOverlay(
+                                    damageFx = damageFx.filter { it.targetId == member.id },
+                                    attackFx = attackFx.filter { it.targetId == member.id },
+                                    healFx = healFx.filter { it.targetId == member.id },
+                                    statusFx = statusFx.filter { it.targetId == member.id },
+                                    showKnockout = knockoutFx.any { it.targetId == member.id },
+                                    shape = cardShape,
+                                    supportFx = supportHighlights
+                                )
                             }
-                            Text(
-                                text = titleCaseName(member.name),
-                                style = MaterialTheme.typography.labelSmall.copy(
-                                    fontFamily = CombatNameFont,
-                                    fontWeight = FontWeight.Medium
-                                ),
-                                color = Color.White
-                            )
-                            AtbBar(
-                                progress = atbProgress,
-                                modifier = Modifier.width(HUD_BAR_WIDTH)
-                            )
-                            StatBar(
-                                current = currentHp,
-                                max = maxHp,
-                                color = Color(0xFFFF5252),
-                                background = Color.Black.copy(alpha = 0.5f),
-                                height = 12.dp,
-                                modifier = Modifier.width(HUD_BAR_WIDTH)
-                            )
-                            StatusBadges(
-                                statuses = memberState?.statusEffects.orEmpty(),
-                                buffs = memberState?.buffs.orEmpty()
-                            )
-                            ElementStackRow(memberState?.elementStacks.orEmpty())
                         }
-                        CombatFxOverlay(
-                            damageFx = damageFx.filter { it.targetId == member.id },
-                            attackFx = attackFx.filter { it.targetId == member.id },
-                            healFx = healFx.filter { it.targetId == member.id },
-                            statusFx = statusFx.filter { it.targetId == member.id },
-                            showKnockout = knockoutFx.any { it.targetId == member.id },
-                            shape = cardShape,
-                            supportFx = supportHighlights
-                        )
                     }
-                }
-                if (rowMembers.size == 1 && party.size > 1) {
-                    Spacer(modifier = Modifier.width(150.dp))
+                    if (rowMembers.size == 1 && party.size > 1) {
+                        Spacer(modifier = Modifier.width(150.dp))
+                    }
                 }
             }
         }
@@ -1237,6 +1259,7 @@ private fun EnemyRoster(
     combatState: CombatState,
     activeId: String?,
     selectedEnemyIds: Set<String>,
+    labelBorderColor: Color,
     damageFx: List<DamageFxUi>,
     attackFx: List<AttackHitFxUi>,
     healFx: List<HealFxUi>,
@@ -1265,6 +1288,7 @@ private fun EnemyRoster(
             combatState = combatState,
             activeId = activeId,
             selectedEnemyIds = selectedEnemyIds,
+            labelBorderColor = labelBorderColor,
             damageFx = damageFx,
             attackFx = attackFx,
             healFx = healFx,
@@ -1410,6 +1434,7 @@ private fun EnemyRoster(
                                     isAlive = isAlive,
                                     isActive = isActive,
                                     isSelected = isSelected,
+                                    accentColor = labelBorderColor,
                                     barWidth = barWidth
                                 )
                                 Box(
@@ -1430,11 +1455,8 @@ private fun EnemyRoster(
                                                 .background(Color.Black.copy(alpha = 0.18f * flash))
                                         )
                                     }
-                                    Lungeable(
-                                        side = CombatSide.ENEMY,
+                                    AttackPulse(
                                         triggerToken = enemyLungeToken,
-                                        axis = LungeAxis.Y,
-                                        directionSign = 1f,
                                         modifier = Modifier
                                             .align(Alignment.Center)
                                             .padding(bottom = innerPadding)
@@ -1502,6 +1524,7 @@ private fun CompositeEnemyRoster(
     combatState: CombatState,
     activeId: String?,
     selectedEnemyIds: Set<String>,
+    labelBorderColor: Color,
     damageFx: List<DamageFxUi>,
     attackFx: List<AttackHitFxUi>,
     healFx: List<HealFxUi>,
@@ -1617,6 +1640,7 @@ private fun CompositeEnemyRoster(
                             activeId = activeId,
                             selectedEnemyIds = selectedEnemyIds,
                             atbMeters = atbMeters,
+                            labelBorderColor = labelBorderColor,
                             onEnemyTap = onEnemyTap,
                             onEnemyLongPress = onEnemyLongPress
                         )
@@ -1705,11 +1729,8 @@ private fun CompositeEnemyRoster(
                                         .background(Color.Black.copy(alpha = 0.18f * flash))
                                 )
                             }
-                            Lungeable(
-                                side = CombatSide.ENEMY,
+                            AttackPulse(
                                 triggerToken = enemyLungeToken,
-                                axis = LungeAxis.Y,
-                                directionSign = 1f,
                                 modifier = Modifier.matchParentSize(),
                                 onFinished = { enemyLungeToken?.let(onLungeFinished) }
                             ) {
@@ -1766,6 +1787,7 @@ private fun CompositeEnemyRoster(
                                 activeId = activeId,
                                 selectedEnemyIds = selectedEnemyIds,
                                 atbMeters = atbMeters,
+                                labelBorderColor = labelBorderColor,
                                 onEnemyTap = onEnemyTap,
                                 onEnemyLongPress = onEnemyLongPress
                             )
@@ -1794,6 +1816,7 @@ private fun CompositePartStatus(
     activeId: String?,
     selectedEnemyIds: Set<String>,
     atbMeters: Map<String, Float>,
+    labelBorderColor: Color,
     onEnemyTap: (String) -> Unit,
     onEnemyLongPress: (String) -> Unit
 ) {
@@ -1813,6 +1836,7 @@ private fun CompositePartStatus(
         isAlive = isAlive,
         isActive = isActive,
         isSelected = isSelected,
+        accentColor = labelBorderColor,
         barWidth = 90.dp,
         onClick = { if (isAlive) onEnemyTap(combatantId) },
         onLongClick = { if (isAlive) onEnemyLongPress(combatantId) }
@@ -1829,15 +1853,17 @@ private fun EnemyStatusLabel(
     isAlive: Boolean,
     isActive: Boolean,
     isSelected: Boolean,
+    accentColor: Color,
     barWidth: Dp,
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
     onLongClick: (() -> Unit)? = null
 ) {
+    val baseAccent = accentColor.copy(alpha = 1f)
     val borderColor = when {
-        isActive -> Color(0xFF2D9CFF)
-        isSelected -> Color(0xFF2D9CFF).copy(alpha = 0.7f)
-        else -> Color.White.copy(alpha = 0.18f)
+        isActive -> baseAccent
+        isSelected -> baseAccent.copy(alpha = 0.7f)
+        else -> baseAccent.copy(alpha = 0.4f)
     }
     val interactionModifier = if (onClick != null || onLongClick != null) {
         modifier.combinedClickable(
@@ -2138,6 +2164,40 @@ private fun InventoryEntry.targetFilter(): TargetFilter? {
         effect.restoreHp?.let { it > 0 } == true -> TargetFilter.ALLY
         effect.singleBuff != null || !effect.buffs.isNullOrEmpty() -> TargetFilter.ALLY
         else -> null
+    }
+}
+
+@Composable
+private fun AttackPulse(
+    triggerToken: Any?,
+    modifier: Modifier = Modifier,
+    scaleAmount: Float = 0.05f,
+    durationMillis: Int = 120,
+    onFinished: (() -> Unit)? = null,
+    content: @Composable () -> Unit
+) {
+    val scale = remember { Animatable(1f) }
+    LaunchedEffect(triggerToken) {
+        if (triggerToken != null) {
+            scale.snapTo(1f)
+            scale.animateTo(
+                targetValue = 1f + scaleAmount,
+                animationSpec = tween(durationMillis = durationMillis, easing = FastOutSlowInEasing)
+            )
+            scale.animateTo(
+                targetValue = 1f,
+                animationSpec = tween(durationMillis = durationMillis, easing = FastOutSlowInEasing)
+            )
+            onFinished?.invoke()
+        }
+    }
+    Box(
+        modifier = modifier.graphicsLayer {
+            scaleX = scale.value
+            scaleY = scale.value
+        }
+    ) {
+        content()
     }
 }
 
