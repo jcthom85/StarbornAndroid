@@ -67,7 +67,10 @@ import com.example.starborn.ui.events.UiEvent
 import java.util.Locale
 
 @Composable
-fun NavigationHost(navController: NavHostController = rememberNavController()) {
+fun NavigationHost(
+    navController: NavHostController = rememberNavController(),
+    showCombatActionText: Boolean = false
+) {
     val context = LocalContext.current
     val services = remember { AppServices(context) }
     val userSettings by services.userSettingsStore.settings.collectAsState(initial = UserSettings())
@@ -376,6 +379,7 @@ fun NavigationHost(navController: NavHostController = rememberNavController()) {
                     suppressScreenshake = userSettings.disableScreenshake,
                     highContrastMode = userSettings.highContrastMode,
                     largeTouchTargets = userSettings.largeTouchTargets,
+                    showCombatActionText = showCombatActionText,
                     cinematicState = services.cinematicState,
                     onAdvanceCinematic = services.cinematicCoordinator::advance
                 )

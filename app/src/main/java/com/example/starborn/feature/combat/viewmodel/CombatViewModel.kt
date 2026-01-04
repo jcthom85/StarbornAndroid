@@ -831,6 +831,7 @@ class CombatViewModel(
         if (updated.log.size <= previousSize) return
         val newEntries = updated.log.drop(previousSize)
         var currentAction: CombatAction? = null
+        val pendingBursts = mutableListOf<BurstMarker>()
         newEntries.forEach { entry ->
             when (entry) {
                 is CombatLogEntry.ActionQueued -> {
@@ -855,20 +856,8 @@ class CombatViewModel(
                     val showAttackFx = shouldShowAttackFx(entry, currentAction, updated)
                     val targetState = updated.combatants[entry.targetId]
                     val targetDefeated = targetState?.isAlive == false
-                    combatFxEvents.tryEmit(
-                        CombatFxEvent.Impact(
-                            sourceId = entry.sourceId,
-                            targetId = entry.targetId,
-                            amount = entry.amount,
-                            element = entry.element,
-                            critical = entry.critical,
-                            showAttackFx = showAttackFx,
-                            targetDefeated = targetDefeated
-                        )
-                    )
-                    if (targetDefeated) {
-                        combatFxEvents.tryEmit(CombatFxEvent.Knockout(entry.targetId))
-                    }
+                    val burstDelayMs = burstDelayFor(entry, pendingBursts)
+                    emitImpact(entry, showAttackFx, targetDefeated, burstDelayMs)
                     setCombatMessage(entry, updated)
                 }
                 is CombatLogEntry.Heal -> {
@@ -882,17 +871,27 @@ class CombatViewModel(
                     setCombatMessage(entry, updated)
                 }
                 is CombatLogEntry.StatusApplied -> {
-                    combatFxEvents.tryEmit(
-                        CombatFxEvent.StatusApplied(
-                            targetId = entry.targetId,
-                            statusId = entry.statusId,
-                            stacks = entry.stacks
-                        )
-                    )
+                    val burstDelayMs = burstStatusDelayFor(entry, pendingBursts)
+                    emitStatusApplied(entry, burstDelayMs)
                     setCombatMessage(entry, updated)
                 }
-                is CombatLogEntry.ElementStack,
-                is CombatLogEntry.ElementBurst -> setCombatMessage(entry, updated)
+                is CombatLogEntry.ElementStack -> setCombatMessage(entry, updated)
+                is CombatLogEntry.ElementBurst -> {
+                    val normalized = ElementalStackRules.normalize(entry.element)
+                        ?: entry.element.lowercase(Locale.getDefault())
+                    pendingBursts += BurstMarker(
+                        targetId = entry.targetId.lowercase(Locale.getDefault()),
+                        element = normalized
+                    )
+                    combatFxEvents.tryEmit(
+                        CombatFxEvent.Burst(
+                            targetId = entry.targetId,
+                            element = normalized
+                        )
+                    )
+                    playBurstCue(normalized)
+                    setCombatMessage(entry, updated)
+                }
                 is CombatLogEntry.Outcome -> {
                     val outcomeType = when (entry.result) {
                         is CombatOutcome.Victory -> CombatFxEvent.CombatOutcomeFx.OutcomeType.VICTORY
@@ -937,6 +936,103 @@ class CombatViewModel(
         val targetSide = state.combatants[entry.targetId]?.combatant?.side
         val isAttackerFriendly = attackerSide == CombatSide.PLAYER || attackerSide == CombatSide.ALLY
         return isAttackerFriendly && targetSide == CombatSide.ENEMY
+    }
+
+    private fun emitImpact(
+        entry: CombatLogEntry.Damage,
+        showAttackFx: Boolean,
+        targetDefeated: Boolean,
+        delayMs: Long
+    ) {
+        if (delayMs <= 0L) {
+            combatFxEvents.tryEmit(
+                CombatFxEvent.Impact(
+                    sourceId = entry.sourceId,
+                    targetId = entry.targetId,
+                    amount = entry.amount,
+                    element = entry.element,
+                    critical = entry.critical,
+                    showAttackFx = showAttackFx,
+                    targetDefeated = targetDefeated
+                )
+            )
+            if (targetDefeated) {
+                combatFxEvents.tryEmit(CombatFxEvent.Knockout(entry.targetId))
+            }
+            return
+        }
+        viewModelScope.launch {
+            delay(delayMs)
+            combatFxEvents.tryEmit(
+                CombatFxEvent.Impact(
+                    sourceId = entry.sourceId,
+                    targetId = entry.targetId,
+                    amount = entry.amount,
+                    element = entry.element,
+                    critical = entry.critical,
+                    showAttackFx = showAttackFx,
+                    targetDefeated = targetDefeated
+                )
+            )
+            if (targetDefeated) {
+                combatFxEvents.tryEmit(CombatFxEvent.Knockout(entry.targetId))
+            }
+        }
+    }
+
+    private fun emitStatusApplied(entry: CombatLogEntry.StatusApplied, delayMs: Long) {
+        if (delayMs <= 0L) {
+            combatFxEvents.tryEmit(
+                CombatFxEvent.StatusApplied(
+                    targetId = entry.targetId,
+                    statusId = entry.statusId,
+                    stacks = entry.stacks
+                )
+            )
+            return
+        }
+        viewModelScope.launch {
+            delay(delayMs)
+            combatFxEvents.tryEmit(
+                CombatFxEvent.StatusApplied(
+                    targetId = entry.targetId,
+                    statusId = entry.statusId,
+                    stacks = entry.stacks
+                )
+            )
+        }
+    }
+
+    private fun burstDelayFor(
+        entry: CombatLogEntry.Damage,
+        pendingBursts: List<BurstMarker>
+    ): Long {
+        val element = entry.element?.trim()?.lowercase(Locale.getDefault()) ?: return 0L
+        if (element == "miss") return 0L
+        val sourceId = entry.sourceId.lowercase(Locale.getDefault())
+        val matches = pendingBursts.any { marker ->
+            marker.element == element && marker.targetId == sourceId
+        }
+        return if (matches) BURST_FX_DELAY_MS else 0L
+    }
+
+    private fun burstStatusDelayFor(
+        entry: CombatLogEntry.StatusApplied,
+        pendingBursts: List<BurstMarker>
+    ): Long {
+        val targetId = entry.targetId.lowercase(Locale.getDefault())
+        val statusId = entry.statusId.trim().lowercase(Locale.getDefault())
+        val matches = pendingBursts.any { marker ->
+            marker.targetId == targetId && burstStatusIdFor(marker.element) == statusId
+        }
+        return if (matches) BURST_FX_DELAY_MS else 0L
+    }
+
+    private fun burstStatusIdFor(element: String): String? = when (element) {
+        "ice" -> "freeze"
+        "lightning" -> "shock"
+        "poison" -> "poison"
+        else -> null
     }
 
     private fun initializeAtbMeters() {
@@ -1848,10 +1944,28 @@ private fun determineSkillTargeting(skill: Skill): SkillTargeting {
         emitAudio(audioRouter.commandsForBattle(key))
     }
 
+    private fun playBurstCue(element: String) {
+        if (element.isBlank()) return
+        val key = when (element.lowercase(Locale.getDefault())) {
+            "fire" -> "burst_fire"
+            "ice" -> "burst_ice"
+            "lightning" -> "burst_lightning"
+            "poison" -> "burst_poison"
+            "radiation" -> "burst_radiation"
+            else -> "burst"
+        }
+        playBattleCue(key)
+    }
+
     private fun emitAudio(commands: List<AudioCommand>) {
         if (commands.isEmpty()) return
         combatFxEvents.tryEmit(CombatFxEvent.Audio(commands))
     }
+
+    private data class BurstMarker(
+        val targetId: String,
+        val element: String
+    )
 
     private enum class SkillTargeting {
         SELF,
@@ -1940,6 +2054,7 @@ private fun determineSkillTargeting(skill: Skill): SkillTargeting {
         private const val STATUS_SOURCE_PREFIX = "status_"
         private const val ATB_SPEED_SCALE = 90f
         private const val ATTACK_ANIMATION_PAUSE_MS = 500L
+        private const val BURST_FX_DELAY_MS = 320L
         private const val TIMED_GUARD_WINDOW_MS = 700L
         private const val TIMED_GUARD_DEF_BONUS = 10
         private const val ZEKE_SUPPORT_ATB_BONUS = 0.25f

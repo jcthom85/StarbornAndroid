@@ -13,14 +13,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.starborn.navigation.NavigationHost
 import com.example.starborn.ui.theme.StarbornTheme
 
+private const val EXTRA_DEBUG_COMBAT_ACTION_TEXT = "debug_combat_action_text"
+
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val showCombatActionText = intent?.getBooleanExtra(EXTRA_DEBUG_COMBAT_ACTION_TEXT, false) == true
         setContent {
             StarbornTheme {
                 Box(modifier = Modifier.fillMaxSize().background(Color.Black)) {
-                    NavigationHost()
+                    NavigationHost(showCombatActionText = showCombatActionText)
                 }
             }
         }

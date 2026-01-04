@@ -756,7 +756,7 @@ fun ExplorationScreen(
                 onPlayVoice = { viewModel.onDialogueVoiceRequested(it) },
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .padding(16.dp)
+                    .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 24.dp)
             )
         }
 

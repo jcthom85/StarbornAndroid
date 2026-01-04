@@ -23,6 +23,11 @@ sealed interface CombatFxEvent {
         val stacks: Int
     ) : CombatFxEvent
 
+    data class Burst(
+        val targetId: String,
+        val element: String
+    ) : CombatFxEvent
+
     data class Knockout(
         val targetId: String
     ) : CombatFxEvent

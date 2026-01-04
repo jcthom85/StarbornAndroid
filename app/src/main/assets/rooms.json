@@ -7,7 +7,7 @@
     "description": "Zooms, pans, and tilts on display.",
     "npcs": [],
     "items": [],
-    "enemies": [],
+    "enemies":[],
     "connections": {
       "east": "tilt_suite",
       "south": "zoom_lounge"
@@ -1263,7 +1263,9 @@
     "npcs": [
       "Ollie"
     ],
-    "enemies": [],
+    "enemies": [
+      "scraphopper"
+    ],
     "actions": [],
     "state": {},
     "item_flavor": {},

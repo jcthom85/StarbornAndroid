@@ -2,6 +2,8 @@
 .git
 .gradle
 .gradle-home/
+/.gradle-user-home/
+/.gradle_home/
 /app/build
 /local.properties
 /.idea/caches

@@ -178,6 +178,7 @@ import kotlin.math.min
 
 private const val STATUS_SOURCE_PREFIX = "status_"
 private const val ATTACK_FX_DURATION_MS = 500L
+private const val BURST_FX_DURATION_MS = 600L
 private val CombatNameFont = FontFamily(
     Font(R.font.orbitron_medium, weight = FontWeight.Medium)
 )
@@ -220,6 +221,25 @@ private data class AttackHitFxUi(
     val targetId: String,
     val style: AttackFxStyle,
     val critical: Boolean
+)
+
+private data class BurstFxUi(
+    val id: String,
+    val targetId: String,
+    val element: String
+)
+
+private data class BurstShardSpec(
+    val angle: Float,
+    val length: Float,
+    val width: Float
+)
+
+private data class BurstBubbleSpec(
+    val x: Float,
+    val radius: Float,
+    val delay: Float,
+    val drift: Float
 )
 
 private data class CompositeEnemyEntry(
@@ -334,6 +354,7 @@ fun CombatScreen(
     suppressScreenshake: Boolean,
     highContrastMode: Boolean,
     largeTouchTargets: Boolean,
+    showCombatActionText: Boolean,
     cinematicState: StateFlow<CinematicPlaybackState?>? = null,
     onAdvanceCinematic: (() -> Unit)? = null
 ) {
@@ -363,6 +384,7 @@ fun CombatScreen(
     val knockoutFx = remember { mutableStateListOf<KnockoutFxUi>() }
     val supportFx = remember { mutableStateListOf<SupportFxUi>() }
     val attackHitFx = remember { mutableStateListOf<AttackHitFxUi>() }
+    val burstFx = remember { mutableStateListOf<BurstFxUi>() }
     val delayedDeathTargets = remember { mutableStateMapOf<String, Long>() }
     var lastPlayerActionStyle by remember { mutableStateOf<AttackFxStyle?>(null) }
     var outcomeFx by remember { mutableStateOf<CombatFxEvent.CombatOutcomeFx.OutcomeType?>(null) }
@@ -374,6 +396,9 @@ fun CombatScreen(
     var pendingInstruction by remember { mutableStateOf<String?>(null) }
     val density = LocalDensity.current
     val shakeOffset = remember { Animatable(Offset.Zero, Offset.VectorConverter) }
+    val burstFlashAlpha = remember { Animatable(0f) }
+    var burstFlashColor by remember { mutableStateOf(Color.White) }
+    var burstFlashStrength by remember { mutableStateOf(0f) }
     val playerIdSet = remember(playerParty) {
         playerParty.map { it.id.lowercase(Locale.getDefault()) }.toSet()
     }
@@ -489,6 +514,46 @@ fun CombatScreen(
                     launch {
                         delay(880)
                         statusFx.remove(fx)
+                    }
+                }
+                is CombatFxEvent.Burst -> {
+                    val fx = BurstFxUi(
+                        id = UUID.randomUUID().toString(),
+                        targetId = event.targetId,
+                        element = event.element
+                    )
+                    burstFx += fx
+                    launch {
+                        delay(BURST_FX_DURATION_MS)
+                        burstFx.remove(fx)
+                    }
+                    if (!suppressScreenshake) {
+                        launch {
+                            val amplitude = with(density) { 18.dp.toPx() }
+                            val offset = Offset(
+                                x = if (Random.nextBoolean()) amplitude else -amplitude,
+                                y = if (Random.nextBoolean()) amplitude * 0.6f else -amplitude * 0.6f
+                            )
+                            shakeOffset.stop()
+                            shakeOffset.snapTo(offset)
+                            shakeOffset.animateTo(
+                                targetValue = Offset.Zero,
+                                animationSpec = tween(durationMillis = 180)
+                            )
+                        }
+                    }
+                    if (!suppressFlashes) {
+                        val (flashColor, flashStrength) = burstFlashStyleFor(event.element)
+                        if (flashStrength > 0f) {
+                            burstFlashColor = flashColor
+                            burstFlashStrength = flashStrength
+                            launch {
+                                burstFlashAlpha.stop()
+                                burstFlashAlpha.snapTo(0f)
+                                burstFlashAlpha.animateTo(1f, tween(durationMillis = 90))
+                                burstFlashAlpha.animateTo(0f, tween(durationMillis = 220))
+                            }
+                        }
                     }
                 }
                 is CombatFxEvent.Knockout -> {
@@ -861,6 +926,7 @@ fun CombatScreen(
                         attackFx = attackHitFx,
                         healFx = healFx,
                         statusFx = statusFx,
+                        burstFx = burstFx,
                         knockoutFx = knockoutFx,
                         delayedDeathTargets = delayedDeathTargets,
                         onEnemyTap = { handleEnemyTap(it) },
@@ -886,7 +952,7 @@ fun CombatScreen(
                         .padding(bottom = partyDockHeight + 8.dp)
                 ) {
                     CombatLogPanel(
-                        flavorLine = combatMessage,
+                        flavorLine = if (showCombatActionText) combatMessage else null,
                         instruction = pendingInstruction,
                         showCancel = pendingTargetRequest != null,
                         instructionShownAbove = enemyTargetPrompt,
@@ -909,6 +975,7 @@ fun CombatScreen(
                     attackFx = attackHitFx,
                     healFx = healFx,
                     statusFx = statusFx,
+                    burstFx = burstFx,
                     knockoutFx = knockoutFx,
                     supportFx = supportFx,
                     onMemberTap = { handlePartyMemberTap(it) },
@@ -1059,6 +1126,18 @@ fun CombatScreen(
                         .padding(24.dp)
                 )
             }
+            if (burstFlashAlpha.value > 0f && burstFlashStrength > 0f) {
+                Box(
+                    modifier = Modifier
+                        .matchParentSize()
+                        .background(
+                            burstFlashColor.copy(
+                                alpha = burstFlashStrength * burstFlashAlpha.value
+                            )
+                        )
+                        .zIndex(50f)
+                )
+            }
         }
     } else {
         Box(
@@ -1085,6 +1164,7 @@ private fun PartyRoster(
     attackFx: List<AttackHitFxUi>,
     healFx: List<HealFxUi>,
     statusFx: List<StatusFxUi>,
+    burstFx: List<BurstFxUi>,
     knockoutFx: List<KnockoutFxUi>,
     supportFx: List<SupportFxUi>,
     onMemberTap: ((String) -> Unit)? = null,
@@ -1268,6 +1348,7 @@ private fun PartyRoster(
                                     attackFx = attackFx.filter { it.targetId == member.id },
                                     healFx = healFx.filter { it.targetId == member.id },
                                     statusFx = statusFx.filter { it.targetId == member.id },
+                                    burstFx = burstFx.filter { it.targetId == member.id },
                                     showKnockout = knockoutFx.any { it.targetId == member.id },
                                     shape = cardShape,
                                     supportFx = supportHighlights,
@@ -1298,6 +1379,7 @@ private fun EnemyRoster(
     attackFx: List<AttackHitFxUi>,
     healFx: List<HealFxUi>,
     statusFx: List<StatusFxUi>,
+    burstFx: List<BurstFxUi>,
     knockoutFx: List<KnockoutFxUi>,
     delayedDeathTargets: Map<String, Long>,
     onEnemyTap: (String) -> Unit,
@@ -1327,6 +1409,7 @@ private fun EnemyRoster(
             attackFx = attackFx,
             healFx = healFx,
             statusFx = statusFx,
+            burstFx = burstFx,
             knockoutFx = knockoutFx,
             delayedDeathTargets = delayedDeathTargets,
             onEnemyTap = onEnemyTap,
@@ -1429,10 +1512,11 @@ private fun EnemyRoster(
                         val shape = RoundedCornerShape(28.dp)
                         val atbProgress = atbMeters[combatantId] ?: 0f
                         val spriteScale = when {
-                            isElite -> 1.4f
+                            isElite -> 1.6f
                             isBoss -> 1f
-                            else -> 1.1f
+                            else -> 1.4f
                         }
+                        val labelSpacer = if (isElite) 8.dp else 4.dp
                         val enemyLungeToken = if (combatantId == lungeActorId) lungeToken else null
                         val enemyMissToken = if (combatantId == missLungeActorId) missLungeToken else null
                         val cardModifier = Modifier
@@ -1477,6 +1561,7 @@ private fun EnemyRoster(
                                     accentColor = labelBorderColor,
                                     barWidth = barWidth
                                 )
+                                Spacer(modifier = Modifier.height(labelSpacer))
                                 Box(
                                     modifier = Modifier
                                         .size(cardSize)
@@ -1507,6 +1592,9 @@ private fun EnemyRoster(
                                                 translationY = hitRecoilY
                                             }
                                     ) {
+                                        EnemyShadow(
+                                            modifier = Modifier.matchParentSize()
+                                        )
                                         Lungeable(
                                             side = CombatSide.ENEMY,
                                             triggerToken = enemyMissToken,
@@ -1539,6 +1627,7 @@ private fun EnemyRoster(
                                         attackFx = attackFx.filter { it.targetId == combatantId },
                                         healFx = healFx.filter { it.targetId == combatantId },
                                         statusFx = statusFx.filter { it.targetId == combatantId },
+                                        burstFx = burstFx.filter { it.targetId == combatantId },
                                         showKnockout = knockoutFx.any { it.targetId == combatantId },
                                         shape = shape,
                                         modifier = Modifier.matchParentSize()
@@ -1581,6 +1670,7 @@ private fun CompositeEnemyRoster(
     attackFx: List<AttackHitFxUi>,
     healFx: List<HealFxUi>,
     statusFx: List<StatusFxUi>,
+    burstFx: List<BurstFxUi>,
     knockoutFx: List<KnockoutFxUi>,
     delayedDeathTargets: Map<String, Long>,
     onEnemyTap: (String) -> Unit,
@@ -1781,6 +1871,13 @@ private fun CompositeEnemyRoster(
                                     translationY = hitRecoilY
                                 }
                         ) {
+                            if (entry.layout.role?.equals("core", ignoreCase = true) != false) {
+                                EnemyShadow(
+                                    modifier = Modifier.matchParentSize(),
+                                    widthFraction = 0.7f,
+                                    heightFraction = 0.2f
+                                )
+                            }
                             if (flash > 0f) {
                                 Box(
                                     modifier = Modifier
@@ -1820,6 +1917,7 @@ private fun CompositeEnemyRoster(
                                 attackFx = attackFx.filter { it.targetId == combatantId },
                                 healFx = healFx.filter { it.targetId == combatantId },
                                 statusFx = statusFx.filter { it.targetId == combatantId },
+                                burstFx = burstFx.filter { it.targetId == combatantId },
                                 showKnockout = knockoutFx.any { it.targetId == combatantId },
                                 shape = shape,
                                 modifier = Modifier.matchParentSize()
@@ -2215,6 +2313,35 @@ private fun ElementStackBadge(element: String, stacks: Int) {
     }
 }
 
+@Composable
+private fun EnemyShadow(
+    modifier: Modifier = Modifier,
+    widthFraction: Float = 0.62f,
+    heightFraction: Float = 0.18f,
+    liftFraction: Float = 0.06f,
+    alpha: Float = 0.35f
+) {
+    Canvas(modifier = modifier) {
+        if (size.minDimension <= 0f) return@Canvas
+        val shadowWidth = size.width * widthFraction
+        val shadowHeight = size.height * heightFraction
+        val topLeft = Offset(
+            (size.width - shadowWidth) / 2f,
+            size.height - shadowHeight - size.height * liftFraction
+        )
+        drawOval(
+            color = Color.Black.copy(alpha = alpha * 0.45f),
+            topLeft = topLeft,
+            size = Size(shadowWidth, shadowHeight)
+        )
+        drawOval(
+            color = Color.Black.copy(alpha = alpha),
+            topLeft = topLeft + Offset(shadowWidth * 0.1f, shadowHeight * 0.12f),
+            size = Size(shadowWidth * 0.8f, shadowHeight * 0.7f)
+        )
+    }
+}
+
 private fun elementStackColor(element: String): Color = when (element.lowercase(Locale.getDefault())) {
     "fire" -> Color(0xFFFF7043)
     "ice" -> Color(0xFF90CAF9)
@@ -2222,6 +2349,14 @@ private fun elementStackColor(element: String): Color = when (element.lowercase(
     "poison" -> Color(0xFF81C784)
     "radiation" -> Color(0xFFFFD54F)
     else -> Color(0xFFD1C4E9)
+}
+
+private fun burstFlashStyleFor(element: String): Pair<Color, Float> {
+    return when (element.trim().lowercase(Locale.getDefault())) {
+        "fire", "lightning" -> Color.White to 0.3f
+        "radiation" -> Color(0xFFDDE77A) to 0.28f
+        else -> Color.Transparent to 0f
+    }
 }
 
 @Composable
@@ -2310,12 +2445,22 @@ private fun CombatFxOverlay(
     attackFx: List<AttackHitFxUi>,
     healFx: List<HealFxUi>,
     statusFx: List<StatusFxUi>,
+    burstFx: List<BurstFxUi>,
     showKnockout: Boolean,
     shape: Shape,
     supportFx: List<SupportFxUi> = emptyList(),
     modifier: Modifier = Modifier.fillMaxSize()
 ) {
-    if (damageFx.isEmpty() && attackFx.isEmpty() && healFx.isEmpty() && statusFx.isEmpty() && !showKnockout && supportFx.isEmpty()) return
+    if (damageFx.isEmpty() &&
+        attackFx.isEmpty() &&
+        healFx.isEmpty() &&
+        statusFx.isEmpty() &&
+        burstFx.isEmpty() &&
+        !showKnockout &&
+        supportFx.isEmpty()
+    ) {
+        return
+    }
     Box(
         modifier = modifier
             .clip(shape)
@@ -2350,30 +2495,16 @@ private fun CombatFxOverlay(
                 modifier = Modifier.align(Alignment.Center)
             )
         }
-        damageFx.filter { fx ->
-            fx.amount > 0 && fx.element != "miss"
-        }.forEach { fx ->
-            ImpactBurst(
+        burstFx.forEach { fx ->
+            BurstFx(
                 fx = fx,
-                modifier = Modifier.matchParentSize()
-            )
-        }
-        damageFx.forEach { fx ->
-            DamageNumberBubble(
-                fx = fx,
-                modifier = Modifier.align(Alignment.Center)
+                modifier = Modifier.fillMaxSize().zIndex(5f)
             )
         }
         attackFx.forEach { fx ->
             AttackHitFx(
                 fx = fx,
-                modifier = Modifier.fillMaxSize()
-            )
-        }
-        healFx.forEach { fx ->
-            HealNumberBubble(
-                fx = fx,
-                modifier = Modifier.align(Alignment.Center)
+                modifier = Modifier.fillMaxSize().zIndex(10f)
             )
         }
         statusFx.forEach { fx ->
@@ -2382,6 +2513,19 @@ private fun CombatFxOverlay(
                 modifier = Modifier
                     .align(Alignment.TopCenter)
                     .padding(top = 6.dp)
+                    .zIndex(15f)
+            )
+        }
+        damageFx.forEach { fx ->
+            DamageNumberBubble(
+                fx = fx,
+                modifier = Modifier.align(Alignment.Center).zIndex(100f)
+            )
+        }
+        healFx.forEach { fx ->
+            HealNumberBubble(
+                fx = fx,
+                modifier = Modifier.align(Alignment.Center).zIndex(100f)
             )
         }
     }
@@ -2959,6 +3103,249 @@ private fun AttackHitFx(
 }
 
 @Composable
+private fun BurstFx(
+    fx: BurstFxUi,
+    modifier: Modifier = Modifier
+) {
+    val progress = remember { Animatable(0f) }
+    val seed = remember(fx.id) { abs(fx.id.hashCode()) }
+    val emberSpecs = remember(fx.id) {
+        val rng = Random(seed + 11)
+        List(12) {
+            BurstShardSpec(
+                angle = rng.nextFloat() * (2f * PI.toFloat()),
+                length = 0.6f + rng.nextFloat() * 0.7f,
+                width = 0.008f + rng.nextFloat() * 0.014f
+            )
+        }
+    }
+    val iceShards = remember(fx.id) {
+        val rng = Random(seed + 31)
+        List(7) {
+            BurstShardSpec(
+                angle = rng.nextFloat() * (2f * PI.toFloat()),
+                length = 0.08f + rng.nextFloat() * 0.12f,
+                width = 0.018f + rng.nextFloat() * 0.03f
+            )
+        }
+    }
+    val poisonBubbles = remember(fx.id) {
+        val rng = Random(seed + 57)
+        List(12) {
+            BurstBubbleSpec(
+                x = rng.nextFloat() * 2f - 1f,
+                radius = 0.012f + rng.nextFloat() * 0.018f,
+                delay = rng.nextFloat() * 0.35f,
+                drift = (rng.nextFloat() - 0.5f) * 0.12f
+            )
+        }
+    }
+    val boltOffsets = remember(fx.id) {
+        val rng = Random(seed + 79)
+        List(6) { (rng.nextFloat() * 2f - 1f) }
+    }
+    val normalized = remember(fx.element) { fx.element.trim().lowercase(Locale.getDefault()) }
+    LaunchedEffect(fx.id) {
+        progress.snapTo(0f)
+        progress.animateTo(
+            targetValue = 1f,
+            animationSpec = tween(durationMillis = BURST_FX_DURATION_MS.toInt(), easing = LinearEasing)
+        )
+    }
+    val t = progress.value
+    Canvas(modifier = modifier) {
+        val sizeMin = size.minDimension
+        if (sizeMin <= 0f) return@Canvas
+        val center = Offset(size.width / 2f, size.height / 2f)
+        when (normalized) {
+            "fire" -> {
+                val fade = (1f - t).coerceIn(0f, 1f)
+                val radius = sizeMin * (0.18f + 0.58f * t)
+                val ringWidth = sizeMin * (0.05f - 0.02f * t)
+                drawCircle(
+                    color = Color(0xFFFFF3C2).copy(alpha = 0.85f * fade),
+                    radius = radius,
+                    center = center
+                )
+                drawCircle(
+                    color = Color(0xFFFFA726).copy(alpha = 0.75f * fade),
+                    radius = radius * 0.76f,
+                    center = center
+                )
+                drawCircle(
+                    color = Color(0xFFE64A19).copy(alpha = 0.65f * fade),
+                    radius = radius * 0.5f,
+                    center = center
+                )
+                drawCircle(
+                    color = Color(0xFFFFF3C2).copy(alpha = 0.35f * fade),
+                    radius = radius * 1.08f,
+                    center = center,
+                    style = Stroke(width = ringWidth)
+                )
+                val emberAlpha = 0.7f * fade
+                emberSpecs.forEach { spec ->
+                    val dir = Offset(cos(spec.angle), sin(spec.angle))
+                    val distance = sizeMin * (0.1f + 0.45f * t) * spec.length
+                    val emberRadius = sizeMin * spec.width
+                    drawCircle(
+                        color = Color(0xFFFFCC80).copy(alpha = emberAlpha),
+                        radius = emberRadius,
+                        center = center + dir * distance
+                    )
+                }
+            }
+            "ice" -> {
+                val hold = 0.18f
+                val shatter = ((t - hold) / (1f - hold)).coerceIn(0f, 1f)
+                val scale = 0.92f + 0.5f * shatter
+                val alpha = if (t < hold) 1f else (1f - shatter)
+                val baseRadius = sizeMin * 0.22f
+                val innerRadius = baseRadius * 0.45f
+                val pointCount = 8
+                val rotation = (seed % 360) * (PI.toFloat() / 180f)
+                val crystalPath = Path().apply {
+                    repeat(pointCount) { index ->
+                        val angle = rotation + index * (2f * PI.toFloat() / pointCount)
+                        val radius = if (index % 2 == 0) baseRadius else innerRadius
+                        val point = center + Offset(cos(angle), sin(angle)) * radius
+                        if (index == 0) moveTo(point.x, point.y) else lineTo(point.x, point.y)
+                    }
+                    close()
+                }
+                withTransform({
+                    scale(scale, scale, center)
+                }) {
+                    drawPath(
+                        path = crystalPath,
+                        color = Color(0xFFB3E5FC).copy(alpha = 0.7f * alpha)
+                    )
+                    drawPath(
+                        path = crystalPath,
+                        color = Color.White.copy(alpha = 0.45f * alpha),
+                        style = Stroke(width = sizeMin * 0.02f)
+                    )
+                }
+                if (shatter > 0f) {
+                    val shardAlpha = (1f - shatter) * 0.75f
+                    iceShards.forEach { spec ->
+                        val dir = Offset(cos(spec.angle), sin(spec.angle))
+                        val base = center + dir * sizeMin * (0.08f + 0.22f * shatter)
+                        val ortho = Offset(-dir.y, dir.x)
+                        val length = sizeMin * spec.length * (0.6f + shatter)
+                        val width = sizeMin * spec.width
+                        val tip = base + dir * length
+                        val left = base + ortho * width
+                        val right = base - ortho * width
+                        val shardPath = Path().apply {
+                            moveTo(tip.x, tip.y)
+                            lineTo(left.x, left.y)
+                            lineTo(right.x, right.y)
+                            close()
+                        }
+                        drawPath(
+                            path = shardPath,
+                            color = Color(0xFFB3E5FC).copy(alpha = shardAlpha)
+                        )
+                    }
+                }
+            }
+            "lightning" -> {
+                val boltLife = if (t < 0.35f) 1f else (1f - (t - 0.35f) / 0.65f).coerceIn(0f, 1f)
+                val boltAlpha = boltLife
+                val boltHeight = size.height * 0.8f
+                val top = center.y - boltHeight / 2f
+                val step = boltHeight / (boltOffsets.size + 1)
+                val boltPath = Path().apply {
+                    moveTo(center.x, top)
+                    boltOffsets.forEachIndexed { index, offset ->
+                        lineTo(center.x + offset * sizeMin * 0.28f, top + step * (index + 1))
+                    }
+                    lineTo(center.x, top + boltHeight)
+                }
+                drawPath(
+                    path = boltPath,
+                    color = Color(0xFF64B5F6).copy(alpha = 0.35f * boltAlpha),
+                    style = Stroke(width = sizeMin * 0.06f, cap = StrokeCap.Round)
+                )
+                drawPath(
+                    path = boltPath,
+                    color = Color.White.copy(alpha = 0.9f * boltAlpha),
+                    style = Stroke(width = sizeMin * 0.018f, cap = StrokeCap.Round)
+                )
+                val flicker = 0.5f + 0.5f * sin((t * 9f) + seed.toFloat())
+                val auraAlpha = (1f - t) * 0.35f * flicker
+                val auraRadius = sizeMin * (0.2f + 0.06f * flicker)
+                drawCircle(
+                    color = Color(0xFF81D4FA).copy(alpha = auraAlpha),
+                    radius = auraRadius,
+                    center = center
+                )
+            }
+            "poison" -> {
+                val fade = (1f - t).coerceIn(0f, 1f)
+                val haze = Brush.radialGradient(
+                    colors = listOf(
+                        Color(0xFF81C784).copy(alpha = 0.35f * fade),
+                        Color(0xFFBA68C8).copy(alpha = 0.2f * fade),
+                        Color.Transparent
+                    ),
+                    center = center + Offset(0f, sizeMin * 0.08f),
+                    radius = sizeMin * 0.45f
+                )
+                drawCircle(brush = haze, radius = sizeMin * 0.45f, center = center + Offset(0f, sizeMin * 0.08f))
+                poisonBubbles.forEachIndexed { index, spec ->
+                    val rise = ((t - spec.delay) / (1f - spec.delay)).coerceIn(0f, 1f)
+                    if (rise <= 0f) return@forEachIndexed
+                    val x = center.x + spec.x * sizeMin * 0.35f + spec.drift * sizeMin * rise
+                    val y = center.y + sizeMin * 0.28f - rise * sizeMin * 0.55f
+                    val radius = sizeMin * spec.radius * (1f - 0.2f * rise)
+                    val color = if (index % 2 == 0) Color(0xFF81C784) else Color(0xFFBA68C8)
+                    val alpha = (1f - rise) * 0.65f
+                    drawCircle(
+                        color = color.copy(alpha = alpha),
+                        radius = radius,
+                        center = Offset(x, y)
+                    )
+                }
+            }
+            "radiation" -> {
+                val fade = (1f - t).coerceIn(0f, 1f)
+                val ringOne = sizeMin * (0.16f + 0.54f * t)
+                val ringTwo = sizeMin * (0.26f + 0.62f * t)
+                val stroke = sizeMin * (0.04f - 0.016f * t)
+                drawCircle(
+                    color = Color(0xFFB2FF59).copy(alpha = 0.55f * fade),
+                    radius = ringOne,
+                    center = center,
+                    style = Stroke(width = stroke)
+                )
+                drawCircle(
+                    color = Color(0xFFCCFF90).copy(alpha = 0.35f * fade),
+                    radius = ringTwo,
+                    center = center,
+                    style = Stroke(width = stroke * 0.7f)
+                )
+                drawCircle(
+                    color = Color(0xFFB2FF59).copy(alpha = 0.25f * fade),
+                    radius = sizeMin * 0.12f,
+                    center = center
+                )
+            }
+            else -> {
+                val fade = (1f - t).coerceIn(0f, 1f)
+                drawCircle(
+                    color = Color.White.copy(alpha = 0.2f * fade),
+                    radius = sizeMin * (0.2f + 0.4f * t),
+                    center = center,
+                    style = Stroke(width = sizeMin * 0.03f)
+                )
+            }
+        }
+    }
+}
+
+@Composable
 private fun ImpactBurst(
     fx: DamageFxUi,
     modifier: Modifier = Modifier
@@ -3047,7 +3434,8 @@ private fun DamageNumberBubble(
             )
         }
         launch {
-            alphaAnim.animateTo(0f, tween(durationMillis = 680, easing = LinearEasing))
+            delay(350)
+            alphaAnim.animateTo(0f, tween(durationMillis = 400, easing = LinearEasing))
         }
         launch {
             scaleAnim.animateTo(1f, tween(durationMillis = 420, easing = EaseOutBack))
@@ -3063,13 +3451,13 @@ private fun DamageNumberBubble(
         text = headline,
         style = MaterialTheme.typography.titleLarge.copy(
             shadow = Shadow(
-                color = bottomColor.copy(alpha = 0.75f),
-                offset = Offset(0f, 6f),
-                blurRadius = 18f
+                color = bottomColor.copy(alpha = 0.9f),
+                offset = Offset(0f, 4f),
+                blurRadius = 12f
             ),
             fontStyle = if (isHealing) FontStyle.Italic else FontStyle.Normal
         ),
-        fontWeight = if (!isHealing && fx.critical) FontWeight.Black else FontWeight.SemiBold,
+        fontWeight = FontWeight.Black,
         color = topColor,
         modifier = modifier.graphicsLayer {
             translationY = verticalOffset.value
@@ -3130,8 +3518,13 @@ private fun HealNumberBubble(
     LaunchedEffect(fx.id) {
         verticalOffset.snapTo(0f)
         alphaAnim.snapTo(1f)
-        verticalOffset.animateTo(-52f, tween(durationMillis = 560, easing = LinearEasing))
-        alphaAnim.animateTo(0f, tween(durationMillis = 560, easing = LinearEasing))
+        launch {
+            verticalOffset.animateTo(-52f, tween(durationMillis = 560, easing = LinearEasing))
+        }
+        launch {
+            delay(350)
+            alphaAnim.animateTo(0f, tween(durationMillis = 400, easing = LinearEasing))
+        }
     }
     Text(
         text = "+${fx.amount}",
