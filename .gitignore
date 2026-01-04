@@ -20,3 +20,6 @@
 local.properties
 *.env
 /Starborn_Python
+
+# Heap dumps
+*.hprof
