@@ -1248,7 +1248,6 @@
     "title": "Main Road",
     "env": "town",
     "background_image": "images/rooms/world_1/main_road_1.png",
-    "weather": "rain",
     "description": "The main thoroughfare of the Homestead Quarter. The road is unpaved, and the buildings on either side are a mix of prefabricated habitats and structures built from salvaged ship parts. Ollie waves to you.",
     "pos": [
       0,
