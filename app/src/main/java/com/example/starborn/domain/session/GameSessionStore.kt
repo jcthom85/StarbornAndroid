@@ -333,6 +333,21 @@ class GameSessionStore {
         _state.update { it.copy(inventory = normalized) }
     }
 
+    fun setRoomState(roomId: String, stateKey: String, value: Boolean) {
+        val normalizedRoomId = roomId.trim()
+        val normalizedKey = stateKey.trim()
+        if (normalizedRoomId.isBlank() || normalizedKey.isBlank()) return
+        _state.update { state ->
+            val existing = state.roomStates[normalizedRoomId].orEmpty()
+            if (existing[normalizedKey] == value) {
+                state
+            } else {
+                val updatedRoom = existing + (normalizedKey to value)
+                state.copy(roomStates = state.roomStates + (normalizedRoomId to updatedRoom))
+            }
+        }
+    }
+
     fun markEventCompleted(eventId: String) {
         if (eventId.isBlank()) return
         _state.update { it.copy(completedEvents = it.completedEvents + eventId) }

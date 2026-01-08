@@ -8,6 +8,7 @@ import androidx.datastore.dataStoreFile
 import com.example.starborn.datastore.GameSessionProto
 import com.example.starborn.datastore.InventoryEntryProto
 import com.example.starborn.datastore.QuestTaskListProto
+import com.example.starborn.datastore.RoomStateProto
 import com.example.starborn.domain.inventory.GearRules
 import com.example.starborn.domain.inventory.ItemCatalog
 import java.io.File
@@ -246,7 +247,12 @@ private fun GameSessionProto.toState(): GameSessionState = GameSessionState(
     },
     completedEvents = completedEventsList.toSet(),
     unlockedAreas = unlockedAreasList.toSet(),
-    unlockedExits = unlockedExitsList.toSet()
+    unlockedExits = unlockedExitsList.toSet(),
+    roomStates = roomStatesMap
+        .filterKeys { it.isNotBlank() }
+        .mapValues { (_, stateProto) ->
+            stateProto.statesMap.filterKeys { it.isNotBlank() }
+        }
 )
 
 private fun GameSessionState.toProto(savedAt: Long = System.currentTimeMillis()): GameSessionProto = GameSessionProto.newBuilder().apply {
@@ -298,6 +304,20 @@ private fun GameSessionState.toProto(savedAt: Long = System.currentTimeMillis())
     addAllUnlockedAreas(this@toProto.unlockedAreas)
     clearUnlockedExits()
     addAllUnlockedExits(this@toProto.unlockedExits)
+    clearRoomStates()
+    this@toProto.roomStates.forEach { (roomId, states) ->
+        val normalizedRoom = roomId.trim()
+        if (normalizedRoom.isBlank()) return@forEach
+        val filteredStates = states.filterKeys { it.isNotBlank() }
+        if (filteredStates.isNotEmpty()) {
+            putRoomStates(
+                normalizedRoom,
+                RoomStateProto.newBuilder()
+                    .putAllStates(filteredStates)
+                    .build()
+            )
+        }
+    }
     putAllQuestStage(this@toProto.questStageById)
     // Quest tasks use a map so we only persist non-empty sets.
     clearQuestTasks()

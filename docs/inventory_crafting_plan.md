@@ -9,6 +9,8 @@
 1. **Data Models**
    - `Item`, `Equipment`, `RewardItem`, `Recipe` (tinkering), `ShopInventory` with Moshi adapters.
    - Map Python structures to Kotlin data classes; normalize categories (weapon, armor, consumable, key item, crafting material).
+   - **EquipSlot Enum:** WEAPON, ARMOR, ACCESSORY, SNACK.
+   - **Equipment Model:** Include `sockets: List<ModItem>` (Max 2) to support modding.
 
 2. **Repositories & Services**
    - `ItemRepository`: loads `items.json` into memory, supports lookup by id/aliases.
@@ -17,11 +19,14 @@
 
 3. **Compose UI Strategy**
    - Rebuild `BagScreen` as `feature.inventory.ui.InventoryScreen` with filters/tabs (All, Weapons, Consumables, Key Items).
-   - `ShopScreen`, `TinkeringScreen` as separate feature packages; reuse shared composables for item cards, tooltips, restricted actions.
+   - `ShopScreen` as separate feature packages.
+   - **Tinkering Screen:** Implemented as a **Main Menu** screen (accessible anywhere).
+   - **Equipment Detail:** Visuals must show Mod Sockets as **Locked / Open / Filled**, driven by Story Flags.
 
 4. **Integration Points**
    - Tie into `ExplorationViewModel` events: `give_item`, `grant_reward`, `spawn_item_on_ground`, `unlock_room_search` update inventory or world state.
    - Dialogue/event triggers can open inventory or crafting screens via new navigation routes.
+   - **Combat UI:** Replace standard "Item" menu with a single "Snack" button. This button instantly activates the equipped item in the `SNACK_SLOT` (Self-Target only), triggering a cooldown.
    - Combat consumes inventory items (heals, buffs) via shared service and event bus.
 
 5. **Upcoming Tasks**

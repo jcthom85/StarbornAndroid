@@ -936,6 +936,19 @@ class ExplorationViewModel(
     }
 
     private fun handlePartyMemberJoined(memberId: String) {
+        applyPartyMemberRoomOverrides(memberId)
+        val displayName = charactersById[memberId]?.name
+            ?: memberId.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+        val message = "${displayName.ifBlank { "New party member" }} joined the party."
+        postStatus(message)
+        enqueueEventAnnouncement(
+            title = null,
+            message = message,
+            accentColor = EVENT_ANNOUNCEMENT_ACCENT
+        )
+    }
+
+    private fun applyPartyMemberRoomOverrides(memberId: String) {
         val normalized = memberId.lowercase(Locale.getDefault())
         if (normalized == "ollie") {
             removeNpcFromRoom(
@@ -944,15 +957,6 @@ class ExplorationViewModel(
                 descriptionRemovals = listOf("Ollie waves to you.", "Ollie waves to you")
             )
         }
-        val displayName = charactersById[memberId]?.name
-            ?: memberId.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
-        val message = "${displayName.ifBlank { "A new ally" }} joined the party!"
-        postStatus(message)
-        enqueueEventAnnouncement(
-            title = displayName,
-            message = "Joined the party.",
-            accentColor = EVENT_ANNOUNCEMENT_ACCENT
-        )
     }
 
     private fun removeNpcFromRoom(roomId: String, npcId: String, descriptionRemovals: List<String> = emptyList()) {
@@ -1683,15 +1687,18 @@ class ExplorationViewModel(
             darkCapableRoomIds = rooms.filter { room ->
                 room.dark == true || booleanValueOf(room.state["dark"]) == true
             }.map { it.id }.toSet()
-            roomsByEnvironment = rooms.groupBy { environmentKey(it.env) }
             nodeIdByRoomId = nodes.flatMap { node -> node.rooms.map { it to node.id } }.toMap()
-            roomsByNodeId = nodes.associate { node ->
-                node.id to node.rooms.mapNotNull { roomId -> roomsById[roomId] }
-            }
+            restoreRoomStates(existingState.roomStates)
             flushPendingUnlockedExits()
             flushPendingUnlockedAreas()
             initializeRoomStates(rooms)
             sanitizeDarkStates()
+            applyRoomStatesToRooms()
+            existingState.partyMembers.forEach { applyPartyMemberRoomOverrides(it) }
+            roomsByEnvironment = roomsById.values.groupBy { environmentKey(it.env) }
+            roomsByNodeId = nodes.associate { node ->
+                node.id to node.rooms.mapNotNull { roomId -> roomsById[roomId] }
+            }
             initializeUnlockedDirections(rooms)
             initializeGroundItems(rooms)
             val sessionSnapshot = sessionStore.state.value
@@ -3053,6 +3060,20 @@ class ExplorationViewModel(
         }
     }
 
+    private fun restoreRoomStates(savedStates: Map<String, Map<String, Boolean>>) {
+        roomStates.clear()
+        if (savedStates.isEmpty()) return
+        savedStates.forEach { (roomId, states) ->
+            val normalizedRoomId = roomId.trim()
+            if (normalizedRoomId.isBlank() || states.isEmpty()) return@forEach
+            if (!roomsById.containsKey(normalizedRoomId)) return@forEach
+            val filteredStates = states.filterKeys { it.isNotBlank() }
+            if (filteredStates.isNotEmpty()) {
+                roomStates[normalizedRoomId] = filteredStates.toMutableMap()
+            }
+        }
+    }
+
     private fun initializeRoomStates(rooms: List<Room>) {
         rooms.forEach { room ->
             val stateSnapshot = roomStates.getOrPut(room.id) { mutableMapOf() }
@@ -3063,6 +3084,25 @@ class ExplorationViewModel(
             }
             room.dark?.let { stateSnapshot.putIfAbsent("dark", it) }
         }
+    }
+
+    private fun applyRoomStatesToRooms() {
+        if (roomStates.isEmpty()) return
+        val updated = roomsById.toMutableMap()
+        roomStates.forEach { (roomId, states) ->
+            val room = updated[roomId] ?: return@forEach
+            if (states.isEmpty()) return@forEach
+            val mergedState = room.state.toMutableMap()
+            states.forEach { (key, value) ->
+                if (key.isNotBlank()) {
+                    mergedState[key] = value
+                }
+            }
+            if (mergedState != room.state) {
+                updated[roomId] = room.copy(state = mergedState)
+            }
+        }
+        roomsById = updated
     }
 
     private fun initializeGroundItems(rooms: List<Room>) {
@@ -3138,6 +3178,7 @@ class ExplorationViewModel(
         if (states[stateKey] == value) return false
         states[stateKey] = value
         updateRoomModelState(roomId, stateKey, value)
+        sessionStore.setRoomState(roomId, stateKey, value)
         return true
     }
 

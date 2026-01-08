@@ -606,7 +606,7 @@ fun ExplorationScreen(
                         }
                 )
                 val titleColor = themeColor(activeTheme?.accent, Color(0xFFBEE9FF))
-                val underlinePainter = painterResource(id = R.drawable.room_title_underline)
+                val underlinePainter = painterResource(id = R.drawable.underline_4)
                 Text(
                     text = uiState.currentRoom?.title ?: "Unknown area",
                     style = MaterialTheme.typography.headlineLarge.copy(
@@ -1316,31 +1316,6 @@ private fun MinimapWidget(
                         )
                     )
                 )
-                val hazeLayers = 4
-                val baseRadius = size.minDimension * 0.45f
-                repeat(hazeLayers) { layer ->
-                    val progress = layer / hazeLayers.toFloat().coerceAtLeast(0.001f)
-                    val radius = baseRadius * (1.1f - progress * 0.6f)
-                    val center = Offset(
-                        x = size.width * (0.35f + 0.3f * kotlin.math.sin(layer * 1.7f)),
-                        y = size.height * (0.4f + 0.25f * kotlin.math.cos(layer * 1.3f))
-                    )
-                    val sweepPath = Path().apply {
-                        addOval(
-                            Rect(
-                                left = center.x - radius,
-                                top = center.y - radius * 0.8f,
-                                right = center.x + radius,
-                                bottom = center.y + radius * 0.8f
-                            )
-                        )
-                    }
-                    drawPath(
-                        path = sweepPath,
-                        color = Color.White.copy(alpha = 0.02f + 0.03f * progress),
-                        style = Stroke(width = radius * 0.08f, cap = StrokeCap.Round)
-                    )
-                }
                 val hatchSpacing = size.minDimension / 9f
                 var offset = -size.height
                 while (offset < size.width + size.height) {
@@ -4033,7 +4008,8 @@ private fun EventAnnouncementOverlay(
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
-                .widthIn(max = 540.dp),
+                .widthIn(max = 540.dp)
+                .clickable(onClick = onDismiss),
             shape = RoundedCornerShape(28.dp),
             border = BorderStroke(1.dp, outlineColor),
             color = backgroundColor,
@@ -4049,7 +4025,7 @@ private fun EventAnnouncementOverlay(
                             )
                         )
                     )
-                    .padding(horizontal = 32.dp, vertical = 28.dp),
+                    .padding(start = 32.dp, top = 28.dp, end = 32.dp, bottom = 36.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
@@ -4071,19 +4047,9 @@ private fun EventAnnouncementOverlay(
                     text = announcement.message,
                     style = MaterialTheme.typography.bodyLarge,
                     color = Color.White,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(top = if (hasTitle) 8.dp else 8.dp)
                 )
-                Spacer(modifier = Modifier.height(4.dp))
-                Button(
-                    onClick = onDismiss,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = accentColor.copy(alpha = 0.4f),
-                        contentColor = Color.White
-                    ),
-                    shape = RoundedCornerShape(999.dp)
-                ) {
-                    Text("Continue")
-                }
             }
         }
     }

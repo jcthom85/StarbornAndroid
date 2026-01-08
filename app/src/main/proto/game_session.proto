@@ -39,11 +39,16 @@ message GameSessionProto {
   map<string, string> equipped_weapons = 38;
   repeated string unlocked_armors = 39;
   map<string, string> equipped_armors = 40;
+  map<string, RoomStateProto> room_states = 41;
 
   reserved 19;
   reserved 28, 29, 30, 31;
   reserved "party_member_rp";
   reserved "resonance", "resonance_min", "resonance_max", "resonance_start_base";
+}
+
+message RoomStateProto {
+  map<string, bool> states = 1;
 }
 
 message InventoryEntryProto {

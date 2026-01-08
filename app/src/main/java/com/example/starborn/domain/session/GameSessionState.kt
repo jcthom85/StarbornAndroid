@@ -38,7 +38,8 @@ data class GameSessionState(
     val tutorialRoomsSeen: Set<String> = emptySet(),
     val questStageById: Map<String, String> = emptyMap(),
     val questTasksCompleted: Map<String, Set<String>> = emptyMap(),
-    val completedEvents: Set<String> = emptySet()
+    val completedEvents: Set<String> = emptySet(),
+    val roomStates: Map<String, Map<String, Boolean>> = emptyMap()
 )
 
 fun GameSessionState.fingerprint(): String {
@@ -96,6 +97,21 @@ fun GameSessionState.fingerprint(): String {
     }
     completedEvents.map { it.lowercase(normalizedLocale) }.sorted().forEach {
         builder.append("EVT:").append(it).append('|')
+    }
+    roomStates.entries.sortedBy { it.key.lowercase(normalizedLocale) }.forEach { (roomId, states) ->
+        if (roomId.isBlank() || states.isEmpty()) return@forEach
+        builder.append("ROOM:")
+            .append(roomId.lowercase(normalizedLocale))
+            .append('=')
+        states.entries.sortedBy { it.key.lowercase(normalizedLocale) }.forEach { (key, value) ->
+            if (key.isNotBlank()) {
+                builder.append(key.lowercase(normalizedLocale))
+                    .append(':')
+                    .append(if (value) '1' else '0')
+                    .append(',')
+            }
+        }
+        builder.append('|')
     }
     val digest = MessageDigest.getInstance("SHA-1")
     val hash = digest.digest(builder.toString().toByteArray(Charsets.UTF_8))

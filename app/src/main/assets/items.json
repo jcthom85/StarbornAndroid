@@ -1614,19 +1614,15 @@
         }
     },
     {
-        "id": "protein_bar",
-        "name": "Protein Bar",
-        "description": "Dense nutrition block.",
-        "type": "snack",
-        "value": 10,
-        "buy_price": 20,
+        "id": "painkillers",
+        "name": "Neural Stabilizer",
+        "description": "Medical-grade stabilizer. Reduces neural noise and restores focus.",
+        "type": "medicine",
+        "value": 15,
+        "buy_price": 35,
         "rarity": "common",
-        "equipment": {
-            "slot": "snack",
-            "hp_bonus": 5
-        },
         "effect": {
-             "restore_hp": 20,
+             "restore_hp": 25,
              "target": "self"
         }
     },

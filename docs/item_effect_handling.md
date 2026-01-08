@@ -9,6 +9,7 @@
 1. **Effect Application**
    - Hook restorative and buff results into combat/player stats once those systems are ported.
    - Apply damage effects and targeted usage when enemy/player contexts exist.
+   - **Snack Slot Logic:** In-combat consumables ("Snacks") trigger a Cooldown Timer on the slot (default 5 turns) preventing re-use until cleared. Charges reset on Rest.
 2. **Crafting Progress**
    - Persist learned schematics and expose availability filtering in crafting UI.
 3. **UI Enhancements**
