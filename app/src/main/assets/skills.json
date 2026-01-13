@@ -817,5 +817,169 @@
     "status_applications": [
       "bleed"
     ]
+  },
+  {
+    "id": "nova_blast_wave",
+    "name": "Blast Wave",
+    "character": "nova",
+    "type": "source_art",
+    "description": "Unleashes a wave of force that shatters shields and pushes enemies back.",
+    "combat_tags": [
+      "force",
+      "aoe",
+      "guard_break"
+    ],
+    "base_power": 160,
+    "scaling": "agility",
+    "cooldown": 4,
+    "status_applications": [
+      "stun"
+    ]
+  },
+  {
+    "id": "zeke_signal_jammer",
+    "name": "Signal Jammer",
+    "character": "zeke",
+    "type": "source_art",
+    "description": "Floods the area with noise, silencing tech and confusing organics.",
+    "combat_tags": [
+      "tech",
+      "aoe"
+    ],
+    "base_power": 80,
+    "scaling": "focus",
+    "cooldown": 5,
+    "status_applications": [
+      "silence",
+      "confuse"
+    ]
+  },
+  {
+    "id": "nova_hydraulic_kick",
+    "name": "Hydraulic Kick",
+    "character": "nova",
+    "type": "active",
+    "description": "A powered kick designed to break guards and dent armor.",
+    "combat_tags": [
+      "dmg",
+      "guard_break"
+    ],
+    "base_power": 110,
+    "scaling": "agility",
+    "cooldown": 2,
+    "status_applications": [
+      "weak"
+    ]
+  },
+  {
+    "id": "nova_pulse_grenade",
+    "name": "Pulse Grenade",
+    "character": "nova",
+    "type": "active",
+    "description": "Throws a mining explosive that deals area damage.",
+    "combat_tags": [
+      "aoe",
+      "physical"
+    ],
+    "base_power": 100,
+    "scaling": "agility",
+    "cooldown": 3,
+    "status_applications": []
+  },
+  {
+    "id": "warden_riot_shield",
+    "name": "Riot Shield",
+    "character": "the_warden",
+    "type": "enemy",
+    "description": "Raises a heavy shield, becoming immune to frontal attacks.",
+    "combat_tags": [
+      "support"
+    ],
+    "base_power": 0,
+    "scaling": "defense",
+    "cooldown": 3,
+    "status_applications": [
+      "guard",
+      "invulnerable"
+    ]
+  },
+  {
+    "id": "warden_drone_summon",
+    "name": "Summon Drone",
+    "character": "the_warden",
+    "type": "enemy",
+    "description": "Calls for backup.",
+    "combat_tags": [
+      "summon"
+    ],
+    "base_power": 0,
+    "scaling": "tech",
+    "cooldown": 4,
+    "status_applications": []
+  },
+  {
+    "id": "warden_gas_grenade",
+    "name": "Gas Grenade",
+    "character": "the_warden",
+    "type": "enemy",
+    "description": "Fills the area with choking gas.",
+    "combat_tags": [
+      "aoe",
+      "poison"
+    ],
+    "base_power": 80,
+    "scaling": "tech",
+    "cooldown": 3,
+    "status_applications": [
+      "poison"
+    ]
+  },
+  {
+    "id": "flashbang",
+    "name": "Flashbang",
+    "character": "dominion_guard",
+    "type": "enemy",
+    "description": "A blinding flash that lowers accuracy.",
+    "combat_tags": [
+      "aoe",
+      "debuff"
+    ],
+    "base_power": 20,
+    "scaling": "tech",
+    "cooldown": 3,
+    "status_applications": [
+      "blind"
+    ]
+  },
+  {
+    "id": "scrap_shot",
+    "name": "Scrap Shot",
+    "character": "nova",
+    "type": "active",
+    "description": "Fires a quick, dirty shot. Reliable but low damage.",
+    "combat_tags": [
+      "dmg"
+    ],
+    "base_power": 100,
+    "scaling": "agility",
+    "cooldown": 0,
+    "status_applications": []
+  },
+  {
+    "id": "slide_kick",
+    "name": "Slide Kick",
+    "character": "nova",
+    "type": "active",
+    "description": "A low slide that trips the enemy, causing stagger.",
+    "combat_tags": [
+      "dmg",
+      "stagger"
+    ],
+    "base_power": 80,
+    "scaling": "agility",
+    "cooldown": 2,
+    "status_applications": [
+      "stagger"
+    ]
   }
 ]

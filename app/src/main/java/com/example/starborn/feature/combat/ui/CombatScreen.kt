@@ -182,6 +182,7 @@ private const val BURST_FX_DURATION_MS = 600L
 private val CombatNameFont = FontFamily(
     Font(R.font.orbitron_medium, weight = FontWeight.Medium)
 )
+private val TargetRippleColor = Color(0xFF3FE4FF)
 
 private data class DamageFxUi(
     val id: String,
@@ -1516,9 +1517,12 @@ private fun EnemyRoster(
                             isBoss -> 1f
                             else -> 1.4f
                         }
+                        val rippleScale = 1f + (spriteScale - 1f) * 0.5f
+                        val rippleSize = portraitSize * rippleScale
                         val labelSpacer = if (isElite) 8.dp else 4.dp
                         val enemyLungeToken = if (combatantId == lungeActorId) lungeToken else null
                         val enemyMissToken = if (combatantId == missLungeActorId) missLungeToken else null
+                        val enemyInteractionSource = remember(combatantId) { MutableInteractionSource() }
                         val cardModifier = Modifier
                             .width(cardSize)
                             .graphicsLayer {
@@ -1533,6 +1537,8 @@ private fun EnemyRoster(
                                 }
                             )
                             .combinedClickable(
+                                interactionSource = enemyInteractionSource,
+                                indication = null,
                                 onClick = { if (isAlive) onEnemyTap(combatantId) },
                                 onLongClick = { if (isAlive) onEnemyLongPress(combatantId) }
                             )
@@ -1581,6 +1587,13 @@ private fun EnemyRoster(
                                                 .background(Color.Black.copy(alpha = 0.18f * flash))
                                         )
                                     }
+                                    SelectionRipple(
+                                        isSelected = isSelected,
+                                        modifier = Modifier
+                                            .align(Alignment.Center)
+                                            .padding(bottom = innerPadding)
+                                            .size(rippleSize)
+                                    )
                                     Box(
                                         modifier = Modifier
                                             .align(Alignment.Center)
@@ -1832,6 +1845,7 @@ private fun CompositeEnemyRoster(
                     val partHeight = baseSize * entry.layout.heightScale
                     val partOffsetX = baseSize * entry.layout.offsetX
                     val partOffsetY = baseSize * entry.layout.offsetY + groupOffsetYDp
+                    val enemyInteractionSource = remember(combatantId) { MutableInteractionSource() }
                     val partModifier = Modifier
                         .align(Alignment.Center)
                         .offset(x = partOffsetX + groupOffsetXDp, y = partOffsetY)
@@ -1847,6 +1861,8 @@ private fun CompositeEnemyRoster(
                             }
                         )
                         .combinedClickable(
+                            interactionSource = enemyInteractionSource,
+                            indication = null,
                             onClick = { if (isAlive) onEnemyTap(combatantId) },
                             onLongClick = { if (isAlive) onEnemyLongPress(combatantId) }
                         )
@@ -1886,6 +1902,10 @@ private fun CompositeEnemyRoster(
                                         .background(Color.Black.copy(alpha = 0.18f * flash))
                                 )
                             }
+                            SelectionRipple(
+                                isSelected = isSelected,
+                                modifier = Modifier.matchParentSize()
+                            )
                             Lungeable(
                                 side = CombatSide.ENEMY,
                                 triggerToken = enemyMissToken,
@@ -2338,6 +2358,49 @@ private fun EnemyShadow(
             color = Color.Black.copy(alpha = alpha),
             topLeft = topLeft + Offset(shadowWidth * 0.1f, shadowHeight * 0.12f),
             size = Size(shadowWidth * 0.8f, shadowHeight * 0.7f)
+        )
+    }
+}
+
+@Composable
+private fun SelectionRipple(
+    isSelected: Boolean,
+    modifier: Modifier = Modifier,
+    color: Color = TargetRippleColor
+) {
+    val rippleAnim = remember { Animatable(0f) }
+    LaunchedEffect(isSelected) {
+        if (isSelected) {
+            rippleAnim.snapTo(0f)
+            rippleAnim.animateTo(
+                1f,
+                animationSpec = tween(durationMillis = 520, easing = FastOutSlowInEasing)
+            )
+        } else {
+            rippleAnim.snapTo(0f)
+        }
+    }
+    val progress = rippleAnim.value
+    if (progress <= 0f) return
+    Canvas(modifier = modifier) {
+        val minDimension = size.minDimension
+        if (minDimension <= 0f) return@Canvas
+        val t = progress.coerceIn(0f, 1f)
+        val center = Offset(size.width / 2f, size.height * 0.82f)
+        val radius = minDimension * (0.16f + 0.34f * t)
+        val stroke = minDimension * (0.024f - 0.012f * t)
+        val alpha = (1f - t).coerceIn(0f, 1f)
+        drawCircle(
+            color = color.copy(alpha = 0.65f * alpha),
+            radius = radius,
+            center = center,
+            style = Stroke(width = stroke)
+        )
+        drawCircle(
+            color = color.copy(alpha = 0.35f * alpha),
+            radius = radius * 0.65f,
+            center = center,
+            style = Stroke(width = stroke * 0.6f)
         )
     }
 }

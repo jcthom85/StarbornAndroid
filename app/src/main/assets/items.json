@@ -1026,11 +1026,29 @@
         }
     },
     {
-        "id": "medkit_i",
-        "name": "Medkit I",
-        "description": "A basic medkit.",
+        "id": "mining_pistol",
+        "name": "Mining Pistol",
+        "description": "Standard issue energy cutter modified for personal defense.",
+        "type": "weapon",
+        "value": 45,
+        "buy_price": 90,
+        "rarity": "common",
+        "equipment": {
+            "slot": "weapon",
+            "weapon_type": "gun",
+            "damage_min": 4,
+            "damage_max": 7,
+            "attack_style": "single",
+            "attack_power_mult": 1.0
+        }
+    },
+    {
+        "id": "medkit",
+        "name": "Medkit",
+        "description": "A basic first aid kit with bio-sealant and painkillers.",
         "aliases": [
-            "medkit"
+            "medkit",
+            "first aid"
         ],
         "type": "consumable",
         "value": 25,
@@ -1104,15 +1122,76 @@
         }
     },
     {
-        "id": "mine_keycard",
-        "name": "Mining Keycard",
+        "id": "mine_access_badge",
+        "name": "Mine Access Badge",
         "aliases": [
-            "keycard",
+            "badge",
+            "access badge",
             "mining keycard"
         ],
         "type": "quest",
         "description": "A magnetic pass that unlocks sealed sections of the Stellarium mines.",
         "value": 0
+    },
+    {
+        "id": "tuning_fork",
+        "name": "The Tuning Fork",
+        "aliases": [
+            "fork",
+            "tuning fork",
+            "relic"
+        ],
+        "type": "key_item",
+        "description": "An ancient Echo Relic. It hums with a frequency that makes your teeth ache.",
+        "value": 0,
+        "rarity": "mythic"
+    },
+    {
+        "id": "ghost_signal_cell",
+        "name": "Ghost Signal Cell",
+        "aliases": [
+            "chime",
+            "cell",
+            "signal cell"
+        ],
+        "type": "key_item",
+        "description": "A resonant battery from the Old World. Dominion calls it a Ghost Signal Cell. Jed called it a Chime.",
+        "value": 0,
+        "rarity": "mythic"
+    },
+    {
+        "id": "mod_corrosive_rounds",
+        "name": "Corrosive Rounds",
+        "description": "Ammo modification that drips with molecular acid.",
+        "type": "mod",
+        "value": 250,
+        "buy_price": 500,
+        "rarity": "rare",
+        "equipment": {
+            "slot": "mod",
+            "stat_mods": {
+                "strength": 3
+            },
+            "status_on_hit": "poison",
+            "status_chance": 25
+        }
+    },
+    {
+        "id": "pulse_grenade",
+        "name": "Pulse Grenade",
+        "aliases": [
+            "pulse grenade"
+        ],
+        "description": "Standard issue mining explosive. Designed to crack rocks; equally effective on ribs.",
+        "type": "consumable",
+        "value": 60,
+        "buy_price": 120,
+        "rarity": "uncommon",
+        "effect": {
+            "damage": 120,
+            "damage_type": "physical",
+            "target": "enemy_group"
+        }
     },
     {
         "id": "ration_pack",

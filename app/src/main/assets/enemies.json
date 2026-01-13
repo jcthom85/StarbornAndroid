@@ -751,5 +751,101 @@
             "height_scale": 0.45,
             "z": 0.9
         }
+    },
+    {
+        "id": "the_warden",
+        "name": "The Warden",
+        "tier": "boss",
+        "hp": 600,
+        "strength": 14,
+        "vitality": 15,
+        "agility": 4,
+        "focus": 8,
+        "luck": 5,
+        "speed": 12,
+        "element": "physical",
+        "resistances": {
+            "physical": 30,
+            "fire": 10,
+            "poison": 50
+        },
+        "abilities": [
+            "warden_riot_shield",
+            "warden_drone_summon",
+            "warden_gas_grenade"
+        ],
+        "flavor": "Head of Colony Security. Massive power-armor suit. Face obscured by a glowing visor.",
+        "xp_reward": 500,
+        "credit_reward": 400,
+        "drops": [
+             {
+                "id": "mine_access_badge",
+                "chance": 1.0,
+                "qty_min": 1,
+                "qty_max": 1
+            }
+        ],
+        "description": "The Wall Nova must break.",
+        "sprite": [],
+        "attack": 12
+    },
+    {
+        "id": "dominion_guard",
+        "name": "Dominion Guard",
+        "tier": "standard",
+        "hp": 45,
+        "strength": 5,
+        "vitality": 4,
+        "agility": 3,
+        "focus": 3,
+        "luck": 2,
+        "speed": 10,
+        "element": "physical",
+        "resistances": {
+            "physical": 10
+        },
+        "abilities": [
+            "suppressive_fire",
+            "flashbang"
+        ],
+        "flavor": "A corporate enforcer. Just doing his job, which includes shooting you.",
+        "xp_reward": 35,
+        "credit_reward": 25,
+        "drops": [
+            {
+                "id": "ration_pack",
+                "chance": 0.3
+            }
+        ]
+    },
+    {
+        "id": "rock_borer",
+        "name": "Rock-Borer",
+        "tier": "standard",
+        "hp": 55,
+        "strength": 6,
+        "vitality": 5,
+        "agility": 2,
+        "focus": 1,
+        "luck": 1,
+        "speed": 8,
+        "element": "physical",
+        "resistances": {
+            "physical": 20,
+            "fire": -20
+        },
+        "abilities": [
+            "burrow",
+            "gnaw"
+        ],
+        "flavor": "Wildlife. Burrows underground and pops up to bite.",
+        "xp_reward": 40,
+        "credit_reward": 10,
+        "drops": [
+            {
+                "id": "beast_meat",
+                "chance": 0.5
+            }
+        ]
     }
 ]
