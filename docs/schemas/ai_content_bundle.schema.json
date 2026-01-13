@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://starborn.local/schemas/ai_content_bundle.schema.json",
+  "title": "Starborn AI Content Bundle",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["quests", "events", "dialogue"],
+  "properties": {
+    "quests": { "$ref": "quests.schema.json" },
+    "events": { "$ref": "events.schema.json" },
+    "dialogue": { "$ref": "dialogue.schema.json" }
+  }
+}

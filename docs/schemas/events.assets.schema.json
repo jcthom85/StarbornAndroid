@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://starborn.local/schemas/events.assets.schema.json",
+  "title": "Starborn Events (assets-compatible, permissive)",
+  "description": "Permissive schema for validating the current events.json file; use events.schema.json for strict AI output contracts.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["id", "trigger", "actions"],
+    "properties": {
+      "id": { "type": "string", "minLength": 1 },
+      "description": { "type": ["string", "null"] },
+      "repeatable": { "type": "boolean" },
+      "trigger": {
+        "type": "object",
+        "required": ["type"],
+        "properties": {
+          "type": { "type": "string", "minLength": 1 }
+        },
+        "additionalProperties": true
+      },
+      "conditions": {
+        "type": "array",
+        "items": { "type": "object", "required": ["type"], "additionalProperties": true }
+      },
+      "actions": {
+        "type": "array",
+        "items": { "type": "object", "required": ["type"], "additionalProperties": true }
+      }
+    },
+    "additionalProperties": true
+  }
+}

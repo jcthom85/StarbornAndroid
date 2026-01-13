@@ -1,0 +1,160 @@
+[
+  {
+    "id": "w1_mq01",
+    "title": "Wake Up Call",
+    "description": "Report to Jed at the Workshop.",
+    "trigger": "game_start",
+    "steps": [
+      {
+        "id": "step_1",
+        "description": "Wake up.",
+        "target_node": "pit",
+        "action": "interact_bunk"
+      },
+      {
+        "id": "step_2",
+        "description": "Go to the Workshop.",
+        "target_node": "workshop",
+        "action": "talk_jed"
+      }
+    ],
+    "rewards": [
+      {
+        "type": "item",
+        "id": "mining_pistol"
+      },
+      {
+        "type": "xp",
+        "value": 50
+      }
+    ]
+  },
+  {
+    "id": "w1_mq02",
+    "title": "Paperwork",
+    "description": "Get clearance to enter the mines.",
+    "trigger": "complete_w1_mq01",
+    "steps": [
+      {
+        "id": "step_1",
+        "description": "Try the Admin Gate.",
+        "target_node": "admin_gate",
+        "action": "interact_gate"
+      },
+      {
+        "id": "step_2",
+        "description": "Talk to Zeke.",
+        "target_node": "admin_gate",
+        "action": "talk_zeke"
+      }
+    ],
+    "rewards": [
+      {
+        "type": "item",
+        "id": "mine_access_badge"
+      },
+      {
+        "type": "unlock",
+        "target": "hub_2_logistics"
+      }
+    ]
+  },
+  {
+    "id": "w1_mq03",
+    "title": "The Echo",
+    "description": "Find the source of the interference in Sector 4.",
+    "trigger": "enter_hub_2",
+    "steps": [
+      {
+        "id": "step_1",
+        "description": "Talk to Foreman Bogs.",
+        "target_node": "logistics_concourse",
+        "action": "talk_bogs"
+      },
+      {
+        "id": "step_2",
+        "description": "Descend to Deep Mine.",
+        "target_node": "deep_mine_elevator",
+        "action": "use_elevator"
+      },
+      {
+        "id": "step_3",
+        "description": "Clear the tunnels.",
+        "target_node": "deep_mine",
+        "action": "clear_enemies"
+      },
+      {
+        "id": "step_4",
+        "description": "Find the signal.",
+        "target_node": "ancient_chamber",
+        "action": "touch_relic"
+      }
+    ],
+    "rewards": [
+      {
+        "type": "item",
+        "id": "tuning_fork"
+      },
+      {
+        "type": "skill",
+        "id": "nova_blast_wave"
+      }
+    ]
+  },
+  {
+    "id": "w1_mq04",
+    "title": "Red Alert",
+    "description": "Escape the lockdown.",
+    "trigger": "complete_w1_mq03",
+    "steps": [
+      {
+        "id": "step_1",
+        "description": "Escape the Deep Mine.",
+        "target_node": "logistics_concourse",
+        "action": "reach_node"
+      },
+      {
+        "id": "step_2",
+        "description": "Get to the Cargo Lift.",
+        "target_node": "launch_bay",
+        "action": "reach_node"
+      }
+    ],
+    "rewards": [
+      {
+        "type": "item",
+        "id": "ghost_signal_cell"
+      }
+    ]
+  },
+  {
+    "id": "w1_mq05",
+    "title": "The Launch",
+    "description": "Hijack the pod and escape.",
+    "trigger": "complete_w1_mq04",
+    "steps": [
+      {
+        "id": "step_1",
+        "description": "Defeat The Warden.",
+        "target_node": "launch_bay",
+        "action": "kill_boss_warden"
+      },
+      {
+        "id": "step_2",
+        "description": "Launch the pod.",
+        "target_node": "launch_bay",
+        "action": "interact_pod"
+      }
+    ],
+    "rewards": [
+      {
+        "type": "party_member",
+        "id": "zeke"
+      },
+      {
+        "type": "transition",
+        "target": "world_2"
+      }
+    ]
+  }
+]

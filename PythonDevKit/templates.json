@@ -1,0 +1,16 @@
+{
+  "templates": [
+    {
+      "id": "tpl_shop_basic",
+      "title": "Shop (Basic)",
+      "defaults": {
+        "env": "shop",
+        "background_image": "bg/shop.png",
+        "description": "A cozy shop with wooden shelves.",
+        "title": "Shop"
+      },
+      "sockets": ["north","south","east","west"], 
+      "tags": ["indoor","shop"]
+    }
+  ]
+}

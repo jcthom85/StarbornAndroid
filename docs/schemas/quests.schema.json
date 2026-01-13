@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://starborn.local/schemas/quests.schema.json",
+  "title": "Starborn QuestSpec (quests.json)",
+  "type": "array",
+  "items": { "$ref": "#/$defs/QuestSpec" },
+  "$defs": {
+    "NonEmptyString": { "type": "string", "minLength": 1 },
+    "QuestSpec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "stages", "rewards"],
+      "properties": {
+        "id": { "$ref": "#/$defs/NonEmptyString" },
+        "title": { "$ref": "#/$defs/NonEmptyString" },
+        "summary": { "type": "string" },
+        "description": { "type": "string" },
+        "flavor": { "type": ["string", "null"] },
+        "giver": { "type": ["string", "null"] },
+        "hub_id": { "type": ["string", "null"] },
+        "stages": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/QuestStage" }
+        },
+        "rewards": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/QuestReward" }
+        }
+      }
+    },
+    "QuestStage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "tasks"],
+      "properties": {
+        "id": { "$ref": "#/$defs/NonEmptyString" },
+        "title": { "$ref": "#/$defs/NonEmptyString" },
+        "description": { "type": "string" },
+        "tasks": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/QuestTask" }
+        }
+      }
+    },
+    "QuestTask": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "text"],
+      "properties": {
+        "id": { "$ref": "#/$defs/NonEmptyString" },
+        "text": { "$ref": "#/$defs/NonEmptyString" },
+        "done": { "type": "boolean" },
+        "tutorial_id": { "type": ["string", "null"] }
+      }
+    },
+    "QuestReward": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["xp", "item"]
+        },
+        "amount": { "type": "integer", "minimum": 0 },
+        "item_id": { "type": ["string", "null"] },
+        "quantity": { "type": ["integer", "null"], "minimum": 1 }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "type": { "const": "xp" } } },
+          "then": { "required": ["amount"] }
+        },
+        {
+          "if": { "properties": { "type": { "const": "item" } } },
+          "then": { "required": ["item_id"] }
+        }
+      ]
+    }
+  }
+}

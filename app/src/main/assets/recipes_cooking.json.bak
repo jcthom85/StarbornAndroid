@@ -1,0 +1,23 @@
+[
+    {
+        "name": "Fish Stew",
+        "result": "Fish Stew",
+        "ingredients": {
+            "Raw Fish": 2,
+            "Herb": 1
+        },
+        "id": "fish_stew",
+        "description": "A simple and hearty fish stew."
+    },
+    {
+        "id": "spicy_ramen",
+        "name": "Spicy Ramen",
+        "description": "A hot and spicy noodle dish that invigorates the senses.",
+        "ingredients": {
+            "Noodles": 1,
+            "Fiery Pepper": 1,
+            "Beast Meat": 1
+        },
+        "result": "Spicy Ramen"
+    }
+]

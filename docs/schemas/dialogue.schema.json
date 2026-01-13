@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://starborn.local/schemas/dialogue.schema.json",
+  "title": "Starborn DialogueSpec (dialogue.json)",
+  "type": "array",
+  "items": { "$ref": "#/$defs/DialogueLine" },
+  "$defs": {
+    "NonEmptyString": { "type": "string", "minLength": 1 },
+    "DialogueLine": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "speaker", "text"],
+      "properties": {
+        "id": { "$ref": "#/$defs/NonEmptyString" },
+        "speaker": { "$ref": "#/$defs/NonEmptyString" },
+        "text": { "$ref": "#/$defs/NonEmptyString" },
+        "next": { "type": ["string", "null"] },
+        "condition": { "type": ["string", "null"] },
+        "trigger": { "type": ["string", "null"] },
+        "options": {
+          "type": ["array", "null"],
+          "items": { "$ref": "#/$defs/DialogueOption" }
+        },
+        "portrait": { "type": ["string", "null"] },
+        "voice": { "type": ["string", "null"] }
+      }
+    },
+    "DialogueOption": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "text"],
+      "properties": {
+        "id": { "$ref": "#/$defs/NonEmptyString" },
+        "text": { "$ref": "#/$defs/NonEmptyString" },
+        "next": { "type": ["string", "null"] },
+        "trigger": { "type": ["string", "null"] },
+        "condition": { "type": ["string", "null"] }
+      }
+    }
+  }
+}

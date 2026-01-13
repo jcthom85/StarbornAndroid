@@ -1,0 +1,163 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://starborn.local/schemas/events.schema.json",
+  "title": "Starborn EventSpec (events.json)",
+  "type": "array",
+  "items": { "$ref": "#/$defs/EventSpec" },
+  "$defs": {
+    "NonEmptyString": { "type": "string", "minLength": 1 },
+    "EventSpec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "trigger", "actions"],
+      "properties": {
+        "id": { "$ref": "#/$defs/NonEmptyString" },
+        "description": { "type": ["string", "null"] },
+        "repeatable": { "type": "boolean" },
+        "trigger": { "$ref": "#/$defs/EventTrigger" },
+        "conditions": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/EventCondition" }
+        },
+        "actions": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/EventAction" }
+        },
+        "on_message": { "type": ["string", "null"] },
+        "off_message": { "type": ["string", "null"] },
+        "message": { "type": ["string", "null"] }
+      }
+    },
+    "EventTrigger": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "talk_to",
+            "npc_interaction",
+            "dialogue_closed",
+            "dialogue_dismissed",
+            "enter_room",
+            "player_action",
+            "quest_stage_complete",
+            "encounter_victory",
+            "encounter_defeat",
+            "encounter_retreat",
+            "item_acquired"
+          ]
+        },
+        "npc": { "type": ["string", "null"] },
+        "room": { "type": ["string", "null"] },
+        "room_id": { "type": ["string", "null"] },
+        "quest_id": { "type": ["string", "null"] },
+        "action": { "type": ["string", "null"] },
+        "item": { "type": ["string", "null"] },
+        "item_id": { "type": ["string", "null"] },
+        "enemies": {
+          "type": ["array", "null"],
+          "items": { "$ref": "#/$defs/NonEmptyString" }
+        }
+      }
+    },
+    "EventCondition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "milestone",
+            "milestone_not_set",
+            "quest_active",
+            "quest_not_started",
+            "quest_completed",
+            "quest_failed",
+            "event_completed",
+            "event_not_completed",
+            "tutorial_completed",
+            "tutorial_not_completed",
+            "item",
+            "item_not"
+          ]
+        },
+        "milestone": { "type": ["string", "null"] },
+        "quest_id": { "type": ["string", "null"] },
+        "stage_id": { "type": ["string", "null"] },
+        "task_id": { "type": ["string", "null"] },
+        "item_id": { "type": ["string", "null"] },
+        "item": { "type": ["string", "null"] },
+        "quantity": { "type": ["integer", "null"], "minimum": 1 },
+        "event_id": { "type": ["string", "null"] },
+        "tutorial_id": { "type": ["string", "null"] }
+      }
+    },
+    "RewardItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["item_id"],
+      "properties": {
+        "item_id": { "$ref": "#/$defs/NonEmptyString" },
+        "quantity": { "type": ["integer", "null"], "minimum": 1 }
+      }
+    },
+    "EventAction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type"],
+      "properties": {
+        "type": { "$ref": "#/$defs/NonEmptyString" },
+        "quest_id": { "type": ["string", "null"] },
+        "task_id": { "type": ["string", "null"] },
+        "milestone": { "type": ["string", "null"] },
+        "milestones": { "type": ["array", "null"], "items": { "$ref": "#/$defs/NonEmptyString" } },
+        "scene_id": { "type": ["string", "null"] },
+        "message": { "type": ["string", "null"] },
+        "note": { "type": ["string", "null"] },
+        "start_quest": { "type": ["string", "null"] },
+        "complete_quest": { "type": ["string", "null"] },
+        "item": { "type": ["string", "null"] },
+        "item_id": { "type": ["string", "null"] },
+        "quantity": { "type": ["integer", "null"], "minimum": 1 },
+        "xp": { "type": ["integer", "null"], "minimum": 0 },
+        "credits": { "type": ["integer", "null"], "minimum": 0 },
+        "ap": { "type": ["integer", "null"], "minimum": 0 },
+        "text": { "type": ["string", "null"] },
+        "tap_to_dismiss": { "type": ["boolean", "null"] },
+        "room_id": { "type": ["string", "null"] },
+        "state_key": { "type": ["string", "null"] },
+        "value": { "type": ["boolean", "null"] },
+        "encounter_id": { "type": ["string", "null"] },
+        "tutorial_id": { "type": ["string", "null"] },
+        "action": { "type": ["string", "null"] },
+        "context": { "type": ["string", "null"] },
+        "layer": { "type": ["string", "null"] },
+        "cue_id": { "type": ["string", "null"] },
+        "gain": { "type": ["number", "null"] },
+        "fade_ms": { "type": ["integer", "null"], "minimum": 0 },
+        "loop": { "type": ["boolean", "null"] },
+        "stop": { "type": ["boolean", "null"] },
+        "on_complete": {
+          "type": ["array", "null"],
+          "items": { "$ref": "#/$defs/EventAction" }
+        },
+        "items": {
+          "type": ["array", "null"],
+          "items": { "$ref": "#/$defs/RewardItem" }
+        },
+        "do": {
+          "type": ["array", "null"],
+          "items": { "$ref": "#/$defs/EventAction" }
+        },
+        "else": {
+          "type": ["array", "null"],
+          "items": { "$ref": "#/$defs/EventAction" }
+        },
+        "to_stage_id": { "type": ["string", "null"] }
+      }
+    }
+  }
+}

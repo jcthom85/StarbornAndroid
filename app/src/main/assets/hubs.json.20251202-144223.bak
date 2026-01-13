@@ -1,0 +1,18 @@
+[
+  {
+    "id": "mining_colony",
+    "world_id": "",
+    "title": "",
+    "description": "",
+    "background_image": "",
+    "discovered": false
+  },
+  {
+    "id": "vfx_sandbox",
+    "world_id": "debug_sandbox",
+    "title": "VFX Sandbox",
+    "description": "A compact hub with specialized test nodes for cutscenes and VFX.",
+    "background_image": "images/hubs/mining_colony.png",
+    "discovered": true
+  }
+]

@@ -1,0 +1,151 @@
+{
+  "id": "world_1",
+  "name": "The Mines",
+  "hubs": [
+    {
+      "id": "hub_1_homestead",
+      "name": "Homestead Quarter",
+      "nodes": [
+        {
+          "id": "pit",
+          "name": "The Pit",
+          "description": "The air smells of ozone and unwashed bodies. Sleeping pods are stacked like coffins three high. Your bunk is a dent in the wall.",
+          "interactions": [
+            {
+              "id": "bunk",
+              "type": "examine",
+              "text": "Your bunk. The mattress is thin, but it's yours.",
+              "action": "rest_tutorial"
+            }
+          ],
+          "exits": ["workshop"]
+        },
+        {
+          "id": "workshop",
+          "name": "Jed's Workshop",
+          "description": "Cluttered, warm, and loud. A workbench sits in the center, covered in scavenged droid parts.",
+          "interactions": [
+            {
+              "id": "workbench",
+              "type": "examine",
+              "text": "Jed's pride and joy. He can fix anything with a hammer and bad language.",
+              "action": "open_tinkering"
+            }
+          ],
+          "npcs": ["jed"],
+          "exits": ["pit", "trade_row", "med_bay", "admin_gate"]
+        },
+        {
+          "id": "trade_row",
+          "name": "Trade Row",
+          "description": "A neon-lit scar in the rock. Miners barter company scrip for contraband and recyc-whiskey.",
+          "interactions": [],
+          "npcs": ["scrapper"],
+          "exits": ["workshop"]
+        },
+        {
+          "id": "med_bay",
+          "name": "Med-Bay",
+          "description": "Sterile white tiles stained with grime. The hum of bio-scanners covers the sound of coughing miners.",
+          "interactions": [],
+          "npcs": ["doc"],
+          "exits": ["workshop"]
+        },
+        {
+          "id": "admin_gate",
+          "name": "Admin Gate",
+          "description": "Massive blast doors block the way to the Logistics Sector. A checkpoint booth sits behind reinforced glass.",
+          "interactions": [
+            {
+              "id": "gate_console",
+              "type": "examine",
+              "text": "Standard Dominion bio-lock. It needs a badge or a breach.",
+              "action": "check_gate"
+            }
+          ],
+          "npcs": ["gate_guard", "zeke"],
+          "exits": ["workshop"]
+        }
+      ]
+    },
+    {
+      "id": "hub_2_logistics",
+      "name": "Logistics Sector",
+      "nodes": [
+        {
+          "id": "transit_checkpoint",
+          "name": "Transit Checkpoint",
+          "description": "The threshold between the living quarters and the work zones. The air here is filtered and cold.",
+          "interactions": [],
+          "exits": ["logistics_concourse"]
+        },
+        {
+          "id": "logistics_concourse",
+          "name": "Logistics Concourse",
+          "description": "A massive open atrium where ore crates are routed. The ceiling is lost in shadow.",
+          "interactions": [],
+          "npcs": ["foreman_bogs"],
+          "exits": ["transit_checkpoint", "server_room", "deep_mine_elevator"]
+        },
+        {
+          "id": "server_room",
+          "name": "Server Room",
+          "description": "Rows of blinking server racks kept at sub-zero temperatures. It hums with the colony's data.",
+          "interactions": [
+             {
+              "id": "terminal",
+              "type": "hack",
+              "text": "A maintenance terminal left unlocked.",
+              "action": "start_hack_sq04"
+             }
+          ],
+          "exits": ["logistics_concourse"]
+        },
+        {
+          "id": "deep_mine_elevator",
+          "name": "Deep Mine Elevator",
+          "description": "A heavy industrial lift that descends into the dark.",
+          "interactions": [
+            {
+                "id": "lift_button",
+                "type": "use",
+                "text": "Controls for the descent.",
+                "action": "descend_to_mine"
+            }
+          ],
+          "exits": ["logistics_concourse"]
+        },
+        {
+          "id": "deep_mine",
+          "name": "Deep Mine Sector 4",
+          "description": "Old tunnels, unsupported and dripping. The sensors glitch out here.",
+          "combat_zone": true,
+          "enemy_pool": ["rock_borer"],
+          "exits": ["ancient_chamber"]
+        },
+        {
+          "id": "ancient_chamber",
+          "name": "Ancient Chamber",
+          "description": "The rock gives way to smooth, impossible geometry. A low hum vibrates in your teeth.",
+          "interactions": [
+            {
+                "id": "relic",
+                "type": "examine",
+                "text": "The Tuning Fork. It sings to you.",
+                "action": "touch_relic"
+            }
+          ],
+          "exits": ["deep_mine"]
+        },
+        {
+            "id": "launch_bay",
+            "name": "Cargo Launch Bay",
+            "description": "Cargo rails stretch up toward the shield. A single pod sits on the pad.",
+            "boss_arena": true,
+            "boss_id": "the_warden",
+            "exits": []
+        }
+      ]
+    }
+  ]
+}
