@@ -1453,6 +1453,14 @@
             "milestone": "ms_lights_out_complete"
           },
           {
+            "type": "start_quest",
+            "quest_id": "checking_the_fuse"
+          },
+          {
+            "type": "track_quest",
+            "quest_id": "checking_the_fuse"
+          },
+          {
             "type": "show_message",
             "message": "Power surges through the house as the lights flare to life."
           }
