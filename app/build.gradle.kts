@@ -95,17 +95,6 @@ protobuf {
     }
 }
 
-tasks.register<Exec>("buildGameData") {
-    description = "Aggregates JSON data from docs/story into app/src/main/assets"
-    group = "starborn"
-    workingDir = rootProject.projectDir
-    commandLine("python", "tools/build_game_data.py")
-}
-
-tasks.named("preBuild") {
-    dependsOn("buildGameData")
-}
-
 afterEvaluate {
     val testDebugUnitTest = tasks.named<Test>("testDebugUnitTest")
     tasks.register<Test>("runAssetIntegrity") {

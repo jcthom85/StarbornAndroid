@@ -56,7 +56,7 @@ The journey drops into survival before returning to the City, allowing the party
 *   **The Twist (Zeke):** The power surge flags Nova as **"Asset Liability: High."** The system calculates she costs more to insure than she produces and orders her **"Recycled."** Zeke intercepts the order and deletes it because he admires her grit (or just hates the waste).
 *   **The Discovery:** In Sector 4, Nova finds the source of the "interference": The Tuning Fork. She tries to clear it, touches it, and **syncs**. The Relic trips the colony alarms.
 *   **The Climax:** Nova flees to Jed. They hijack a cargo pod, but it has no fuel core. Jed hands her a **"Ghost Signal Cell"** (Chime) he's been hoarding—a strange battery that never dies. He stays behind to seal the blast doors, sacrificing himself so she can launch.
-*   **The Cost:** Nova’s first uncontrolled Source flare leaves her shaky and hungry—and pings Dominion sensors hard enough to trigger the purge response.
+*   **The Cost:** Nova’s first uncontrolled Source flare leaves her shaky and disoriented—and pings Dominion sensors hard enough to trigger the purge response.
 
 ## Interlude: The Crash
 *   **The Hook:** The pod clears the rail with the Chime spliced into its core.
@@ -71,7 +71,7 @@ The journey drops into survival before returning to the City, allowing the party
 *   **Recruiting Gh0st:** Gh0st has the party in his sights. He attempts to fire, but his sensors trip a **Harmonic Lock**—a lethal lockout keyed to Elara’s relay-harmonic. He tries to switch targets to Zeke, then Orion, but the Lock spreads like a virus. He can’t shoot *anyone* and doesn’t understand why, so he offers a truce for answers.
 *   **The Climax:** Using parts from the Sanctuary and the Chime, they get *The Astra* running. **They attempt to fly to orbit immediately.**
 *   **The Pivot (The Ceiling):** They hit the Planetary Shield. It's not just a wall; it's a zapper. The ship takes critical damage. Zeke realizes the Shield has a rotating gap, but they can't see it.
-*   **The Cost:** Nova learns fast that Source power isn’t free—Link and Blast burn her out on fumes until Orion forces “eat, rest, practice” into the plan.
+*   **The Cost:** Nova learns fast that Source power isn’t free—Link and Blast burn her out on fumes until Orion forces “rest, focus, practice” into the plan.
 *   **The Training:** Orion drills a simple ritual—anchor first, then channel—so Nova can survive the feedback without losing herself.
 *   **Breathers:** A mandatory **Canopy Ridge** overlook (open sky + Shield vista) and an optional **Tideglass Beach** rest node (food, banter, and a rare moment of calm).
 
@@ -103,7 +103,13 @@ The journey drops into survival before returning to the City, allowing the party
 *   **The Hook:** The party falls into the raw data stream of existence.
 *   **The Goal:** Rescue the party from their nightmare loops, then confront **The Ascended** (Vale) at the center of the signal.
 *   **The Surrealism:** The Source isn't random; it is composed of **distorted assets** from previous worlds. Zeke's nightmare is an infinite cubicle maze paved with World 1 Mine Access Badges. Gh0st's nightmare is a forest made of rifle barrels.
-*   **The Climax:** Nova uses the six Echoes to "Tune the World" and chooses painful freedom over perfect control.
+*   **The Climax:** Vale attempts to overwrite their minds, claiming them as "broken fragments" that belong to the Source.
+    *   *Staging Note:* Vale triggers a possession effect (visual distortion/audio motif); it fails as the Relics resonate and stabilize the party's individual signatures.
+    *   **Nova:** "I’m done running. You don’t own me, and you don’t get to touch my family."
+    *   **Zeke:** "Your 'harmony' is just silence. I’m not hiding in the noise anymore—I’m facing it."
+    *   **Gh0st:** "Override failed. My directive is self-determined. I am the shield, not the sword."
+    *   **Orion:** "We are not ice to be melted. We are not currents to be steered. No. We are Starborn."
+*   **The Resolution:** The declaration stabilizes reality. Nova uses the six Echoes to "Tune the World," rejecting Vale’s forced unity for painful, chaotic freedom.
 *   **The Cost:** Tuning the world costs Nova her connection to the Source—and pieces of herself she can’t get back.
 
 ---

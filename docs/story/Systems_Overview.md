@@ -29,54 +29,77 @@ Known tooling direction: a growing suite of editors and an AI assistant panel to
 
 - Screen is portrait. Main text window occupies ~75% of the top portion with the room title above it (stylized pixel font).
 - Room description includes highlighted/interactive words (bold/glow).
-- Tapping a highlighted word opens an action menu (e.g., examine, use, talk, take, toggle).
-- Actions can change the room description (stateful text) and can reveal new exits.
-- Exits appear in the bottom-right area of the UI; discovered exits persist for navigation clarity.
+- Tapping a highlighted word opens an action menu (e.g., examine, use, talk, take, toggle), or triggers the action directly if only one logical option exists (accompanied by a narrative popup).
+- Actions can change the room description (stateful text).
+- Discovered exits persist for navigation clarity.
 - No typing: all movement and actions are UI-driven.
 ## 3.2 World/Hub/Node Structure
 
 The overworld structure is hierarchical: World → Hub → Node → Room. Generally each world will have two hubs. In World 1 there are currently two hubs: the Mining Colony (Hub 1) and the Corporate Outpost (Hub 2). Hub 1 currently has four main nodes: Homestead Quarter, Trade Row, Stellarium Mine, and Maintenance Tunnels (unlocks late and leads onward).
 
-# 4) Combat System
+# 4) Combat & Skill System (Cooldown-Driven)
 
-## 4.1 Core Combat Flow
+Starborn uses a cooldown-based skill system instead of traditional resource pools (MP, mana, stamina, etc.). All skills are available based on cooldown state and tactical conditions, not consumable points.
 
-- ATB-based combat inspired by classic JRPGs with modernized UX.
-- Party grows from 1 up to 4 characters over time.
-- Players select actions for characters in any order (strategic planning emphasis).
-- Most encounters are player-initiated; ambushes where enemies go first are less common and may be story-related.
+**Core Principles:**
+*   **Baseline Equality:** Every encounter starts with the same mechanical baseline.
+*   **Tactical Gating:** Power is gated by player decisions, not attrition.
+*   **Sequencing over Stats:** Strategy and sequencing matter more than luck or stat abuse.
+*   **Earned Power:** Strong actions must be earned within the fight (setup/conditions), not front-loaded.
 
-## 4.2 Combat UI Transition (Canonical)
+## 4.1 Skill Categories (The "12 Skill" Limit)
 
-When combat begins, exploration UI elements (journal/inventory/directional controls) collapse and fade, while a settings gear icon remains consistent. Character sprites fan out from the bottom-left into a cross-like formation for easy selection (mobile-first). Sprites idle with a breathing animation until set; once a character’s action is selected, they shift into a ready stance and freeze to show they are locked in.
+Each character has **12 total skills**, split into two distinct categories:
 
-## 4.3 The Shared Burden (Distributed Relics)
+### A. Core Skills (6 per character)
+Core skills define a character’s identity and combat role.
+*   **Availability:** Always available once learned (governed by cooldowns).
+*   **Function:** Form the backbone of moment-to-moment combat.
+*   **Design:** Designed to interact with enemy states, positioning, turn order, or ally actions.
+*   **No Nukes:** Core skills are intentionally not raw "nukes." Strong effects require setup (e.g., target debuffed, ally acted earlier, defensive stance held). This prevents "open with the best move" syndrome.
 
-### Narrative Mechanic
-- **Concept:** Relics are too volatile for one person. Physical contact with a Relic triggers a **Team-Wide Unlock**, granting a unique ability to every party member present.
-- **The Loop:** Every crew member gains a new power instantly upon touching the Relic (or later via the ship's Array).
-- **The Result:** The party shares the burden. Specific Relics unlock "Source Arts" (Ultimates) for specific characters, reinforcing their combat roles (see `Characters.md`). The Relic refracts through the user—e.g., The Tuning Fork (Force) gives Nova a Blast (External push), but gives Gh0st a Stomp (Internal weight).
+### B. Source Arts (6 per character)
+Source Arts are **Relic-granted abilities**, acquired when the party discovers and interacts with a world Relic.
+*   **Acquisition:** One Relic per world = One new Source Art per character per world.
+*   **Total:** 6 Source Arts per character across the full game.
+*   **Philosophy (No "Ultimates"):**
+    *   They are **Tactical Tools**, not damage spikes.
+    *   Situationally powerful, not universally optimal.
+    *   Designed to change *how* combat is approached, not end it.
+    *   *Example:* A Source Art might reset cooldowns, force enemy turns to skip, or swap positions—powerful, but requires timing.
 
-### The Cooldown System (Tempo)
-Instead of a shared resource pool (MP/SP), combat is governed by **Cooldowns (CD)** measured in turns. This shifts the focus from hoarding resources to managing tempo and rotation.
-- **Standard Skills:** 0-2 Turn CD. Available frequently for core rotations.
-- **Source Arts (Ultimates):** 3-5 Turn CD. High-impact abilities that must be timed for maximum effect.
+## 4.2 Cooldown & Condition Model
 
-### Elemental & Type Logic
-- **Damage Types:** Physical (Kinetic, Thermal) vs. Source (Phase, Void).
-- **Stacking:** Dealing Source damage builds "Instability" on enemies. At 3 stacks, the next physical hit triggers a **Disruption Break** (massive damage + status effect based on the element).
+All skills use cooldowns, but cooldown alone is not the primary limiter. Skills often require **Conditions** to be effective:
+*   **Enemy State:** Target must be debuffed, charging, or exposed.
+*   **Player State:** User guarded last turn, or repositioned.
+*   **Rhythm:** Skill is stronger if used second in a chain.
 
-## 4.4 The Snack Slot (Combat Consumables)
+**The Rule:** Cooldowns define *when* a skill can be used again. Conditions define *whether* it should be used at all.
 
-Combat consumables are managed via a dedicated **Snack Slot** to streamline UI and prevent item spam.
-- **Preparation:** Players equip one "Snack" (Consumable) to a dedicated slot per character.
-- **Usage:** Snacks behave like Skills. They have a default **5-Turn Cooldown** to prevent reliance on healing spam.
-- **Targeting:** Snacks are **Self-Only** (or AoE centered on self). Characters consume their own snack; they cannot feed others. This removes the need for a target selection menu, making usage instant.
-- **Restocking:** Charges are refilled upon returning to the ship or resting at a safe zone.
+## 4.3 Encounter Balance
 
-## 4.5 Sprite Standards (Canonical)
+*   **Standard Enemies:** Allow aggressive openings. Core skills feel responsive. Source Arts provide efficiency.
+*   **Elites:** Punish sloppy sequencing. Require setup before big actions. Source Arts solve specific mechanical problems.
+*   **Bosses:**
+    *   Designed with telegraphed actions and phases.
+    *   Punish premature skill use.
+    *   **Tactical Flow:** Opening with the strongest skill is often suboptimal. Players must prepare the moment. Source Arts are clutch interventions (e.g., interrupting a wipe mechanic).
 
-Combat character sprites are defined in data as ASCII block grids: characters use a 5-row x 7-column grid; enemies use a 7-row x 11-column grid. These are stored in each character/enemy JSON file using filled block characters.
+## 4.4 Sprite Standards
+
+Combat character sprites are defined in data (JSON) and rendered using pixel-art assets (PNG).
+*   **Player Characters:** 64x64 or similar standard size.
+*   **Enemies:** Varying sizes based on tier (Standard, Elite, Boss).
+*   **Animations:** Idle (Breathing), Ready (Targeted), Attack, Hit, Death.
+
+## 4.5 The Snack Slot (Combat Consumables)
+(Retained from previous design)
+*   **Structure:** Dedicated equipment slot for one consumable type.
+*   **Mechanic:** Functions as a **Skill with a Cooldown** (e.g., 5 turns).
+*   **Targeting:** Self-only. Prevents item spam and reliance on potion hoarding.
+
+---
 
 # 5) Inventory, Equipment, and Shops
 
@@ -98,25 +121,12 @@ Tinkering is a core crafting system accessible via the **Main Menu** (anytime/Ca
 - **Puzzle Solving:** Combining Key Items (e.g., "Broken Key" + "Glue").
 - **Field Survival:** Crafting basic supplies.
 
-# 7) Progression and Skills
+# 7) Progression & Scope (Summary)
 
-## 7.1 Open Skill Access System
-Characters gradually unlock a suite of ~11 skills throughout the game. Unlike a loadout system, **all unlocked active skills are available in combat**.
-*   **Combat Menu:** The "Skills" command opens a scrolling list (or categorized view) of all available abilities.
-*   **Source Arts:** These are special high-impact skills listed prominently in the menu, governed by **long Cooldowns**.
-
-## 7.2 The "10+ Skill" Progression Formula
-The game targets a flexible kit size where each character builds a unique arsenal of ~10 permanent skills plus equipment bonuses.
-1.  **Starting Kit (2 Skills):** Characters join with just two core abilities (e.g., a Basic Attack and a signature Class Skill).
-2.  **Relic Skills (5 Skills):** The 5 Combat Relics grant **one unique skill to every party member**.
-    *   **Thematic Adaptation:** The skill reflects how that character's archetype interprets the Relic's nature.
-        *   *Example:* **The Tuning Fork** (Force/Disruption) grants Nova *Blast Wave* (AoE push), but grants Gh0st *Concussive Round* (Single-target stun).
-    *   **Catch-Up:** If a character joins the party after a Relic has been acquired, they gain the skill by physically interacting with the Relic stored on the ship (Sync).
-3.  **Quest Rewards (~3 Skills):** Additional specialized skills are awarded via Main Quests, Side Quests, or Character Arc milestones.
-4.  **Equipment Skills (Temporary):** Certain high-tier Weapons, Armor, or Mods can grant an active skill while equipped, allowing players to "rent" powers for specific strategies.
-
-## 7.3 Passive Traits
-Passives are "always on" once unlocked and represent permanent character growth (e.g., stat boosts, resistances). These are typically rewards for leveling up or specific achievements.
+*   **Core Skills (6):** Establish consistency and mastery. Learned via leveling/quests.
+*   **Source Arts (6):** Reflect narrative progression and world discovery (Relics).
+*   **Total Complexity:** 12 Active Skills = Readable for mobile, expressive without bloat.
+*   **Pacing:** Because Source Arts arrive gradually (one per world), players learn naturally without overload.
 
 # 8) Tutorials and Pacing (World 1, Hub 1 Plan)
 
@@ -124,7 +134,7 @@ World 1, Hub 1 tutorials should be delivered via a limited number of quests (not
 
 # 9) Cinematics and Accessibility
 
-Text-based cinematics are planned using animated 2D text and subtle visual effects (flickering lights, fades). Accessibility settings should exist for these sequences (e.g., reduce motion, reduce flicker, speed controls).
+Text-based cinematicare planned using animated 2D text and subtle visual effects (flickering lights, fades). Accessibility settings should exist for these sequences (e.g., reduce motion, reduce flicker, speed controls).
 
 # 10) Visual Framing Rule (Backgrounds)
 

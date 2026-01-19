@@ -10,7 +10,8 @@ data class Npc(
     val role: String? = null,
     val description: String? = null,
     val id: String? = null,
-    val portrait: String? = null
+    val portrait: String? = null,
+    val emotes: Map<String, String> = emptyMap()
 )
 
 data class Interaction(

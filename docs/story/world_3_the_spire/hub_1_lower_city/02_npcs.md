@@ -21,15 +21,8 @@
 *   **State of Mind:** **Haunted.** This was his home, and now he's a ghost here. He sees his old life erased.
 *   **Bark:** "They reformatted my drive... I mean, my apartment. They threw out my plants."
 
-## Hostiles
+## Hostiles (Lower City Subset)
 
-### Riot Guard (Mob)
-*   **Role:** Enforcer.
-*   **Appearance:** Faceless helmet, stun-baton, heavy riot shield.
-*   **Behavior:** Blocks paths. Demands ID.
-*   **Bark:** "Citizen, halt. Scan in progress."
-
-### Sentinel Mk. I (Mini-Boss)
-*   **Role:** Automated Defense.
-*   **Appearance:** Tripod combat droid with a rotating Gatling arm.
-*   **Mechanic:** Stationary turret mode vs. Mobile chase mode.
+*   **Riot Guard:** Enforces curfew.
+*   **Sentinel Mk. I:** Guards checkpoints.
+*(See Hub 2 NPCs for full Bestiary details)*

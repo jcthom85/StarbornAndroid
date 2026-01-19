@@ -12,13 +12,13 @@
         "speed": 6,
         "element": "none",
         "resistances": {
-            "fire": -20,
-            "ice": 30,
-            "lightning": 0,
-            "poison": 0,
-            "radiation": 0,
-            "psychic": 0,
-            "void": 0
+            "burn": -20,
+            "freeze": 30,
+            "shock": 0,
+            "corrosion": 0,
+            "corrosion": 0,
+            "harmonic": 0,
+            "harmonic": 0
         },
         "abilities": [],
         "flavor": "The colony's colossal autonomous driller, berserk after the blast.",
@@ -61,10 +61,10 @@
         "focus": 6,
         "luck": 3,
         "speed": 10,
-        "element": "radiation",
+        "element": "corrosion",
         "resistances": {
-            "radiation": 30,
-            "ice": -30
+            "corrosion": 30,
+            "freeze": -30
         },
         "abilities": [
             "burrow",
@@ -99,13 +99,13 @@
         "speed": 6,
         "element": "none",
         "resistances": {
-            "fire": -20,
-            "ice": 30,
-            "lightning": 0,
-            "poison": 0,
-            "radiation": 0,
-            "psychic": 0,
-            "void": 0
+            "burn": -20,
+            "freeze": 30,
+            "shock": 0,
+            "corrosion": 0,
+            "corrosion": 0,
+            "harmonic": 0,
+            "harmonic": 0
         },
         "abilities": [
             "drill_lunge",
@@ -173,10 +173,10 @@
         "focus": 1,
         "luck": 1,
         "speed": 22,
-        "element": "lightning",
+        "element": "shock",
         "resistances": {
-            "lightning": 20,
-            "ice": -30
+            "shock": 20,
+            "freeze": -30
         },
         "abilities": [
             "static_burst",
@@ -203,9 +203,9 @@
         "focus": 0,
         "luck": 2,
         "speed": 17,
-        "element": "fire",
+        "element": "burn",
         "resistances": {
-            "fire": -20
+            "burn": -20
         },
         "abilities": [
             "sonic_shriek",
@@ -238,7 +238,7 @@
         "speed": 16,
         "element": "none",
         "resistances": {
-            "ice": -20
+            "freeze": -20
         },
         "abilities": [
             "undermine",
@@ -271,7 +271,7 @@
         "speed": 12,
         "element": "none",
         "resistances": {
-            "lightning": 20
+            "shock": 20
         },
         "abilities": [
             "suppressive_fire",
@@ -338,7 +338,7 @@
         "speed": 10,
         "element": "none",
         "resistances": {
-            "lightning": 20
+            "shock": 20
         },
         "abilities": [
             "triple_burst",
@@ -376,7 +376,7 @@
         "speed": 14,
         "element": "none",
         "resistances": {
-            "poison": 50
+            "corrosion": 50
         },
         "abilities": [
             "alpha_howl",
@@ -408,10 +408,10 @@
         "focus": 1,
         "luck": 2,
         "speed": 14,
-        "element": "lightning",
+        "element": "shock",
         "resistances": {
-            "lightning": 20,
-            "ice": -20
+            "shock": 20,
+            "freeze": -20
         },
         "abilities": [
             "arc_spark",
@@ -469,10 +469,10 @@
         "focus": 2,
         "luck": 3,
         "speed": 18,
-        "element": "poison",
+        "element": "corrosion",
         "resistances": {
-            "poison": 10,
-            "fire": -10
+            "corrosion": 10,
+            "burn": -10
         },
         "abilities": [
             "gnaw",
@@ -499,9 +499,9 @@
         "focus": 2,
         "luck": 1,
         "speed": 9,
-        "element": "poison",
+        "element": "corrosion",
         "resistances": {
-            "fire": 10
+            "burn": 10
         },
         "abilities": [
             "acid_splash",
@@ -532,10 +532,10 @@
         "focus": 3,
         "luck": 0,
         "speed": 8,
-        "element": "fire",
+        "element": "burn",
         "resistances": {
-            "fire": 30,
-            "ice": -30
+            "burn": 30,
+            "freeze": -30
         },
         "abilities": [
             "slag_nova",
@@ -569,9 +569,9 @@
         "speed": 8,
         "element": "none",
         "resistances": {
-            "fire": -10,
-            "ice": 10,
-            "lightning": 10,
+            "burn": -10,
+            "freeze": 10,
+            "shock": 10,
             "physical": 15
         },
         "abilities": [
@@ -618,7 +618,7 @@
         "element": "physical",
         "resistances": {
             "physical": 10,
-            "lightning": -10
+            "shock": -10
         },
         "abilities": [
             "driller_drill_bore"
@@ -652,10 +652,10 @@
         "focus": 3,
         "luck": 1,
         "speed": 9,
-        "element": "poison",
+        "element": "corrosion",
         "resistances": {
-            "poison": 20,
-            "ice": -10
+            "corrosion": 20,
+            "freeze": -10
         },
         "abilities": [
             "driller_cutter_spill"
@@ -689,10 +689,10 @@
         "focus": 2,
         "luck": 1,
         "speed": 8,
-        "element": "fire",
+        "element": "burn",
         "resistances": {
-            "fire": 30,
-            "ice": -20
+            "burn": 30,
+            "freeze": -20
         },
         "abilities": [
             "driller_fire_burst"
@@ -729,7 +729,7 @@
         "element": "physical",
         "resistances": {
             "physical": 10,
-            "fire": -10
+            "burn": -10
         },
         "abilities": [
             "driller_grabber_crush"
@@ -766,8 +766,8 @@
         "element": "physical",
         "resistances": {
             "physical": 30,
-            "fire": 10,
-            "poison": 50
+            "burn": 10,
+            "corrosion": 50
         },
         "abilities": [
             "warden_riot_shield",
@@ -832,7 +832,7 @@
         "element": "physical",
         "resistances": {
             "physical": 20,
-            "fire": -20
+            "burn": -20
         },
         "abilities": [
             "burrow",

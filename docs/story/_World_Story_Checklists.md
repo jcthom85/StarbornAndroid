@@ -36,7 +36,7 @@ x# Starborn — World Story Checklists
 *   **Relic / Key Item Use:** The **Tuning Fork** grants **Blast**; the **Chime** becomes the practical escape tool and the future beacon that will pull them toward Orion.
 *   **Failure/Cost Beat (Nova):** Her first uncontrolled Source flare pings Dominion sensors (lockdown) and leaves her physically burned out—shaking and bleeding, proving the power isn't free.
 *   **Payoff (Emotional):** Grief + adrenaline: the safety net is cut and the story becomes irreversible.
-*   **Payoff (Mechanical):** First Source ability (**Blast**), first party member (**Zeke**), and “the world is hostile now” pacing shift.
+*   **Payoff (Mechanical):** First Source Art (**Blast**), first party member (**Zeke**), and “the world is hostile now” pacing shift.
 *   **Exit Logic / Hook:** They get out… but the pod nav hard-locks onto an unknown signal and the Shield hits them.
 
 ### Interlude — The Crash (Transition)
@@ -64,9 +64,9 @@ x# Starborn — World Story Checklists
 *   **Character Turn:** Orion stops hiding (joins the fight); Gh0st breaks mission certainty (chooses truce/protection); Nova shifts from “reacting” to leading.
 *   **Found-Family Beat:** The crew saves one another *when it’s inconvenient*—then gets to breathe like a family at **Canopy Ridge** (mandatory) and **Tideglass Beach** (optional).
 *   **Relic / Key Item Use:** The **Chime** provides limited, local harmonic power to the Sanctuary—enough to release Orion from stasis, bring up minimal lighting and interfaces, and reinitialize *The Astra*’s **Bridge Relic**, but not sustain the Sanctuary long-term.
-*   **Failure/Cost Beat (Nova):** She tries to Link while unshielded and nearly blacks out; Orion forces the lesson: power is practice + fuel, not willpower.
+*   **Failure/Cost Beat (Nova):** She tries to Link while unshielded and nearly blacks out; Orion forces the lesson: power is practice + focus, not willpower.
 *   **Payoff (Emotional):** Hope: the universe is bigger than Dominion, and the crew isn’t alone anymore.
-*   **Payoff (Mechanical):** Party expands (Orion, Gh0st); first support-style Source ability (**Link**).
+*   **Payoff (Mechanical):** Party expands (Orion, Gh0st); first support-style Source Art (**Link**).
 *   **Exit Logic / Hook:** They escape the Wilds… but the Shield still cages the planet. To leave, they’ll need a way to *see* its gap.
 
 ### World 3 — The Spire (Heist)

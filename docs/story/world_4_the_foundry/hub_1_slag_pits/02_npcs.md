@@ -22,14 +22,8 @@
 *   **Function:** Stinger Reveal.
 *   **Key Line:** "Director Thorne's metrics are... inefficient. We are initiating a reboot. Goodbye, Commander."
 
-## Hostiles
+## Hostiles (Slag Pits Subset)
 
-### Magma Drone
-*   **Role:** Aerial Harasser.
-*   **Appearance:** Drone coated in heat-shielding ceramics.
-*   **Attack:** Napalm spray.
-
-### Slag Golem
-*   **Role:** Heavy Tank.
-*   **Appearance:** A semi-sentient blob of molten rock held together by a magnetic core.
-*   **Weakness:** **Ice/Water** (Cooling Springs water?) or **Blast Wave** (Shatter).
+*   **Magma Drone:** Aerial harasser.
+*   **Slag Golem:** Heavy tank.
+*(See Hub 2 NPCs for full Bestiary details)*

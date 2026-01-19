@@ -89,9 +89,13 @@ To the wider universe, "Relics" are rumors or folklore. Only the Dominion's top-
 Nova is **not** a prophesied hero. She's unlucky, stubborn, and just compatible enough to survive.
 *   **The Echo Line:** Nova carries a faint Aethel imprint in her signal (distant ancestry). It doesn't make her powerful. It just means the Echo doesn't instantly reject her.
 *   **The Incident:** When she found the Tuning Fork in World 1, it should have disintegrated her (returned her data to the signal).
-*   **The Adaptation:** Instead, her biology adapted. She became a living receiver for the Source.
-*   **The Work:** Control isn't genetic. Orion can teach her to tune the signal, but she still has to earn it—discipline, practice, and a body that isn't starving.
-*   **The Cost:** The human mind isn't built to hold the Source. It’s like trying to pour an ocean into a cup. Overuse causes erosion—synapses fire too hot, and memories simply burn away like film exposed to too much light. Dominion calls the aftereffect "Noise." Orion calls it "feedback."
+*   **The Circuit:** A human mind cannot hold the Source alone; it burns out the nerves ("Noise"). To survive, the party forms a living circuit to share the load.
+    *   **The Spark (Nova):** Opens the channel and invites the energy in.
+    *   **The Ground (Zeke):** Dumps the excess static/heat so the Spark doesn't fry.
+    *   **The Shield (Gh0st):** Physically contains the radiation field.
+    *   **The Tuner (Orion):** Modulates the frequency so it's music, not chaos.
+*   **The Work:** Control isn't genetic. Orion can teach her to tune the signal, but she still has to earn it—discipline, practice, and trust in her team.
+*   **The Cost:** The cost is shared. If the circuit breaks, everyone burns.
 *   **The Hidden Layer:** Echo marks don’t just let Nova reach *into* the Source—they let the Source reach *back*. Most of the time it’s just pressure, dreams, and imprint-flashes… but it’s also how Orion’s people can touch the physical world at all.
 
 ---
@@ -109,7 +113,7 @@ Thorne isn’t trying to “save” people. She’s trying to **corner a market*
 *   **Why she’s not cartoon evil:** She doesn’t enjoy cruelty. She enjoys *winning*. If the numbers go up and the sector stays quiet, she sleeps fine.
 
 **Lieutenant Arden Vale is a radical idealist.**
-Vale doesn’t want profit—he wants *purity*. He genuinely believes individuality is cruelty and that suffering is a structural flaw in consciousness. Where Thorne wants a managed “choir” she can sell and steer, Vale wants the only stable end-state he can imagine: **one voice**. In Vale’s mind, becoming the Soloist isn’t conquest; it’s responsibility taken to a monstrous extreme.
+Vale doesn’t want profit—he wants *purity*. He genuinely believes individuality is cruelty and that suffering is a structural flaw in consciousness. But his solution isn't just silence—it's **total ownership**. He seeks to claim the Chorus, forcing every consciousness in the Source into a single, directed will: his own. In Vale’s mind, becoming the Soloist isn’t conquest; it’s responsibility taken to a monstrous extreme.
 
 ### Dominion Planetary Shield (Phase Curtain)
 Dominion’s Planetary Shield is not a “bubble.” It’s a **phase curtain** anchored and managed from the Orbital Ring.
@@ -148,7 +152,7 @@ Machines can generate huge standing fields, but they’re clumsy at *improvisati
 #### Harmonic Foci (Elara-Era Prototypes)
 Dominion built “foci” that are inert in normal hands and catastrophic in a conduit’s.
 *   **Prism-Saber (Melee):** A hilt that projects a blade of hardened phase-noise—destabilizes bonds instead of cutting by edge.
-*   **Caster Gauntlets (Ranged):** Amplify bioelectric signal into shaped Source discharge (concussive / heat / EMP variants).
+*   **Caster Gauntlets (Ranged):** Amplify harmonic signal into shaped Source discharge (concussive / heat / EMP variants).
 *   **Vector Harness (Utility):** An inertial rig that locks position for short bursts—wall-walk, micro-blinks, and recoil-cancel tricks.
 
 These prototypes can become late-game “legendary gear,” but **not as destiny locks**: Echo-marked users can ignite them, Orion can stabilize them, Zeke can calibrate them, and Gh0st can operate dampened modes.
@@ -172,5 +176,21 @@ Thorne thinks Harmony is controllable because it’s *her* product. Vale thinks 
 *   **Limitations:** The Chorus can’t simply walk into the Skin. Dominion damping, phase curtains, and the nature of Veyra make direct manifestation unstable. They can only **nudge** through anchored interfaces: Chimes, Echo Relics, and Echo-marked nervous systems.
 *   **How they help (without destiny):** They don’t “choose” heroes. They answer what’s *loud enough to hear*—a reactivated Chime, a Relic handshake, a person risking themselves for someone else. Their influence is wind-on-water: direction, not control.
 *   **Orion:** He is one of the last “Physical Aethel.” After stasis, he thinks the music went silent and that his people left him. Near the end, he learns the truth: they aren't dead. They're just underwater. They’ve been screaming his name for 20 years, but he was too "solid" to hear it.
+
+---
+
+# VI. Glossary & Terminology
+
+### Starborn
+Derogatory slang used by the Dominion for things that "fell from the sky" (Aliens/Unauthorized breaches).
+*   **Usage:** A slur for Orion or anything Aethel-related.
+*   **Reclamation:** To the party, it is reclaimed to mean a "Constellation" (a stable group of stars). They are not one hero; they are a system.
+
+### Aethel Ascension
+The process by which an Aethel consciousness sheds its physical form ("melting the ice") and returns to the Source ("the Ocean") as a coherent, self-sustaining pattern. Unlike death, where the pattern dissolves, Ascension allows the individual to join the Chorus while retaining their essence.
+
+### Relics as Anchors
+Relics are not merely tools for manipulating reality; they act as heavy "sinkers" or anchors that bridge the gap between the Source (Ocean) and the Physical World (Skin). Without an anchor, Source energy dissipates or burns uncontrollably in the physical realm. The Relics stabilize the flow, allowing specific aspects of reality to be tuned safely.
+
 
 ---

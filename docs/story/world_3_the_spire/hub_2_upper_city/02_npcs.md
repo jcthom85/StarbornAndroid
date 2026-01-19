@@ -15,6 +15,43 @@
 *   **Behavior:** If they see you, they don't attack; they scream "Security!" (Alert Level +1).
 *   **Bark:** "Ugh, a worker? Up here? Someone call maintenance."
 
+## Bestiary (World 3)
+
+### Riot Guard (Human - Common)
+*   **Type:** Humanoid / Tank.
+*   **Location:** Lower City / Upper City (Alert).
+*   **Behavior:** Blocks paths. Uses Riot Shield (Must be staggered).
+*   **Weakness:** Impact / Force.
+
+### Sentinel Mk. I (Machine - Common)
+*   **Type:** Tech / Ranged.
+*   **Location:** Lower City (Checkpoints).
+*   **Behavior:** Stationary turret mode. Fires suppression bursts.
+*   **Weakness:** Lightning / Hacking.
+
+### Aero-Drone (Machine - Common)
+*   **Type:** Tech / Flying.
+*   **Location:** Upper City (Patrol).
+*   **Behavior:** Fast, low HP. Fires "Stun Darts" (paralyze).
+*   **Weakness:** Ranged / AoE.
+
+### Corporate Assassin (Human - Elite)
+*   **Type:** Humanoid / Stealth.
+*   **Location:** Upper City (Penthouse).
+*   **Behavior:** Uses "Cloak" (High Evasion). Strikes with high critical damage.
+*   **Weakness:** Source Art: True Sight (Scan).
+
+### Heavy Mech (Machine - Elite)
+*   **Type:** Tech / Tank.
+*   **Location:** Upper City (Alert).
+*   **Behavior:** Massive HP. Uses "Flamethrower" (AoE Fire).
+*   **Weakness:** Freeze / Source.
+
+### The Administrator (Boss)
+*   **Type:** Humanoid / Tech.
+*   **Phase 1:** Uses "Bureaucracy" (Summons Drones).
+*   **Phase 2:** Equips Exoskeleton. "Liquidation Mode" (High Dmg Lasers).
+
 ## Party Members (Heist Roles)
 
 ### Nova (The Face/Wildcard)

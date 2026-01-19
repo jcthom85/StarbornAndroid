@@ -14,9 +14,10 @@ Studio integration:
 """
 
 import os, sys, json
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Set, Tuple
 
 from devkit_paths import resolve_paths
+from scope_utils import ScopeIndex, scope_prefix, scoped_id
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (
@@ -416,6 +417,10 @@ class EventEditor(QWidget):
         self.setWindowTitle("Starborn Event Editor")
         self.resize(1200, 760)
 
+        self.scope_index = ScopeIndex.from_assets(self.root)
+        self.world_ids = self.scope_index.world_ids
+        self.hubs_by_world = self.scope_index.hubs_by_world
+
         # Resources for combos
         self.resources: Dict[str, List[str]] = {
             "rooms": [], "items": [], "enemies": [], "quests": [], "npcs": [], "cinematics": []
@@ -505,12 +510,110 @@ class EventEditor(QWidget):
         except Exception as e:
             QMessageBox.critical(self, "Save Error", f"Failed to save events.json:\n{e}")
 
+    def _current_scope_filter(self) -> Tuple[str, str]:
+        world_id = ""
+        hub_id = ""
+        if hasattr(self, "scope_world"):
+            world_id = self.scope_world.currentText()
+            if world_id == "All":
+                world_id = ""
+        if hasattr(self, "scope_hub"):
+            hub_id = self.scope_hub.currentText()
+            if hub_id == "All":
+                hub_id = ""
+        if hub_id and not world_id:
+            world_id = self.scope_index.hub_to_world.get(hub_id, "")
+        return world_id, hub_id
+
+    def _scope_prefix(self) -> str:
+        world_id, hub_id = self._current_scope_filter()
+        return scope_prefix(world_id or None, hub_id or None)
+
+    def _refresh_hub_filter(self):
+        if not hasattr(self, "scope_hub"):
+            return
+        world_id = self.scope_world.currentText() if hasattr(self, "scope_world") else ""
+        if world_id == "All":
+            world_id = ""
+        hubs = ["All"]
+        if world_id and self.hubs_by_world:
+            hubs += self.hubs_by_world.get(world_id, [])
+        else:
+            hubs += self.scope_index.hub_ids
+        prev = self.scope_hub.currentText() if self.scope_hub.count() else "All"
+        self.scope_hub.blockSignals(True)
+        self.scope_hub.clear()
+        self.scope_hub.addItems(hubs)
+        if prev in hubs:
+            self.scope_hub.setCurrentText(prev)
+        self.scope_hub.blockSignals(False)
+
+    def _on_scope_filter_changed(self):
+        self._refresh_hub_filter()
+        self._refresh_list()
+
+    def _collect_event_rooms(self, payload: Any) -> Set[str]:
+        rooms: Set[str] = set()
+
+        def _scan(obj: Any):
+            if isinstance(obj, dict):
+                for key, val in obj.items():
+                    if key in ("room", "room_id", "target_room", "entry_room"):
+                        if isinstance(val, str) and val:
+                            rooms.add(val)
+                    elif isinstance(val, (dict, list)):
+                        _scan(val)
+            elif isinstance(obj, list):
+                for entry in obj:
+                    _scan(entry)
+
+        _scan(payload)
+        return rooms
+
+    def _event_hubs(self, event: Dict[str, Any]) -> Set[str]:
+        rooms = set()
+        rooms.update(self._collect_event_rooms(event.get("trigger", {})))
+        rooms.update(self._collect_event_rooms(event.get("actions", [])))
+        hubs = {self.scope_index.room_to_hub.get(r) for r in rooms}
+        return {h for h in hubs if h}
+
+    def _event_matches_scope(self, event_id: str, event: Dict[str, Any]) -> bool:
+        world_id, hub_id = self._current_scope_filter()
+        if not world_id and not hub_id:
+            return True
+        hubs = self._event_hubs(event)
+        if hub_id:
+            if hub_id in hubs:
+                return True
+            prefix = self._scope_prefix()
+            return bool(prefix and event_id.startswith(prefix))
+        if world_id:
+            for hid in hubs:
+                if self.scope_index.hub_to_world.get(hid) == world_id:
+                    return True
+            prefix = self._scope_prefix()
+            return bool(prefix and event_id.startswith(prefix))
+        return True
+
     # ---------- UI ----------
     def _build_ui(self):
         root = QHBoxLayout(self)
 
         # Left list
         left = QVBoxLayout()
+        filter_row = QHBoxLayout()
+        self.scope_world = QComboBox()
+        self.scope_world.addItems(["All"] + self.world_ids)
+        self.scope_hub = QComboBox()
+        self.scope_world.currentTextChanged.connect(self._on_scope_filter_changed)
+        self.scope_hub.currentTextChanged.connect(self._refresh_list)
+        filter_row.addWidget(QLabel("World"))
+        filter_row.addWidget(self.scope_world, 1)
+        filter_row.addWidget(QLabel("Hub"))
+        filter_row.addWidget(self.scope_hub, 1)
+        left.addLayout(filter_row)
+        self._refresh_hub_filter()
+
         self.search = QLineEdit(); self.search.setPlaceholderText("Search events (id/desc)")
         self.search.textChanged.connect(self._refresh_list)
         left.addWidget(self.search)
@@ -595,6 +698,8 @@ class EventEditor(QWidget):
         ft = (self.search.text() or "").lower().strip()
         for eid in sorted(self.events.keys()):
             e = self.events[eid]
+            if not self._event_matches_scope(eid, e):
+                continue
             line = eid
             if e.get("description"):
                 line += f" — {e['description']}"
@@ -608,12 +713,8 @@ class EventEditor(QWidget):
         self._load_into_form(eid)
 
     def _on_add(self):
-        base = "new_event"
-        n = 1
-        eid = base
-        while eid in self.events:
-            n += 1
-            eid = f"{base}_{n}"
+        prefix = self._scope_prefix()
+        eid = scoped_id(prefix, "evt", "new", self.events.keys())
         self.events[eid] = {
             "id": eid,
             "description": "",
@@ -692,6 +793,14 @@ class EventEditor(QWidget):
             return
 
         eid_new = self.id_edit.text().strip()
+        prefix = self._scope_prefix()
+        if prefix and not eid_new.startswith(prefix):
+            QMessageBox.warning(
+                self,
+                "Validation",
+                f"Event ID must start with '{prefix}' for the current scope.",
+            )
+            return
         if self.current_id and eid_new != self.current_id and eid_new in self.events:
             QMessageBox.warning(self, "Validation", f"Event id '{eid_new}' already exists.")
             return

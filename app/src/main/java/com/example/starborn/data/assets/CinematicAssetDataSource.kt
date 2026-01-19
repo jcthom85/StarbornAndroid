@@ -36,7 +36,8 @@ class CinematicAssetDataSource(
             type = type,
             speaker = step.speaker,
             text = text,
-            durationSeconds = step.durationSeconds
+            durationSeconds = step.durationSeconds,
+            emote = step.emote
         )
     }
 }
@@ -52,5 +53,6 @@ data class CinematicStepAsset(
     val speaker: String? = null,
     val text: String? = null,
     val line: String? = null,
-    val durationSeconds: Double? = null
+    val durationSeconds: Double? = null,
+    val emote: String? = null
 )

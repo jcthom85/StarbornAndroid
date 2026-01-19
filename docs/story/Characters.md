@@ -2,35 +2,36 @@
 
 ## Nova
 
-**Role:** Protagonist / The Catalyst (Accelerates Team Tempo - Cooldown Reduction)
+**Role:** Protagonist / The Spark (Accelerates Team Tempo - Cooldown Reduction)
 **Archetype:** Striker (High-Speed Ranged)
 **Weapon:** Dual Laser Guns
 **Key Relics:** **The Tuning Fork** (Mines) & **The Anchor** (Void)
 
-Nova is a scrappy colony kid with a rogue vibe—steals, hacks, survives. She’s funny, sharp, reckless in a controlled way, and refuses to let Dominion define her life. Story-wise, she’s the "small person vs huge system" lens. When she becomes **imprinted** by the Source, she acts as the **Living Router**—absorbing raw energy and channeling it to her crew because the pressure is too high for one person.
+Nova is a scrappy colony kid with a rogue vibe—steals, hacks, survives. She’s funny, sharp, reckless in a controlled way, and refuses to let Dominion define her life. Story-wise, she’s the "small person vs huge system" lens. When she becomes **imprinted** by the Source, she acts as the **Spark**—the one who opens the door to the energy, trusting her team to keep her from burning out.
 
 **Narrative Arc:**
 - World 1: Survives first contact (Tuning Fork), loses Jed, chooses freedom.
 - World 2: Learns she is a conduit, not a god. "Anchor first."
 - World 3: Leads the Lens heist.
-- World 6: Rejects "perfect control" (The Anchor) and wins by letting go.
+- World 6: Rejects "perfect control" (The Anchor) and learns to **close the circuit**, sharing the load to save the world without losing herself.
 
 **Combat Kit (The Spark)**
 **Note: Skills are governed by Cooldowns.**
 Nova focuses on high-speed ranged attacks and mobility. She accelerates team tempo by reducing ally cooldowns.
-*   **Starting Skills:**
+*   **Core Skills (6 Total):**
     *   *Scrap Shot:* Basic laser fire. High speed.
     *   *Slide Kick:* Low damage, high stagger, breaks guard.
-*   **Unlockable Quest Skills (Examples):**
     *   *Overclock:* Self-buff (Speed up, Defense down).
     *   *Pulse Grenade:* AoE kinetic damage.
     *   *Chain Lightning:* Multi-target energy damage.
-*   **Source Arts (5 Relic Skills):**
+    *   *Hydraulic Kick:* Heavy melee strike. High guard break and stagger.
+*   **Source Arts (6 Relic Skills):**
     *   *Blast Wave (Tuning Fork - Force):* A massive directional push. Shatters armor.
     *   *Phase Dash (The Bridge - Connection):* Instantly teleports to strike an enemy (ignoring cover).
     *   *Laser Focus (The Lens - Vision):* Next attack ignores 100% of enemy Armor/Guard.
     *   *Shard Storm (The Anvil - Creation):* Constructs 3 floating hard-light daggers that fire when she attacks.
     *   *Stasis Bolt (The Anchor - Stability):* Completely freezes one target in time for 1 turn.
+    *   *Harmonic Burst (The Source - Resonance):* Clears all cooldowns for the entire party.
 
 ## Zeke
 
@@ -48,19 +49,20 @@ Zeke talks like corporate HR software—buzzwords, relentless optimism—because
 
 **Combat Kit (The Analyst)**
 Zeke fights up close, using data to exploit weak points and destabilize enemies.
-*   **Starting Skills:**
+*   **Core Skills (6 Total):**
     *   *Target Lock:* Marks an enemy (lowers evasion).
     *   *Adrenaline Surge:* Self target Haste/Attack buff.
-*   **Unlockable Quest Skills (Examples):**
     *   *Flashbang:* AoE blind/stun.
     *   *Corrosive Strike:* Melee damage over time (Acid).
     *   *Data Siphon:* Steals enemy buffs on hit.
-*   **Source Arts (5 Relic Skills):**
+    *   *Logic Bomb:* Detonates "Target Lock" marks for massive damage.
+*   **Source Arts (6 Relic Skills):**
     *   *Signal Jammer (Tuning Fork - Force):* AoE Silence. Prevents enemies from using Tech/Arts.
     *   *Network Patch (The Bridge - Connection):* Spreads a single ally's buffs to the entire party.
     *   *True Sight (The Lens - Vision):* Reveals all weaknesses + Party deals Guaranteed Crits for 1 turn.
     *   *Auto-Turret (The Anvil - Creation):* Constructs a drone that deals passive damage every turn.
     *   *Lag Spike (The Anchor - Stability):* Massively reduces Speed/Turn Order for all enemies.
+    *   *System Reboot (The Source - Resonance):* Revives a fallen ally with full HP and no cooldown penalty.
 
 ## Orion
 
@@ -78,19 +80,20 @@ Orion is the last physical Aethel. He is introspective, earnest, and haunted by 
 
 **Combat Kit (The Guide)**
 Orion channels the Source through his Jewel to damage enemies and heal the team.
-*   **Starting Skills:**
+*   **Core Skills (6 Total):**
     *   *Mend:* Single target heal.
     *   *Aftertone Pulse:* Light AoE damage + self-heal.
-*   **Unlockable Quest Skills (Examples):**
     *   *Purge:* Removes debuffs.
     *   *Barrier Field:* Reduces incoming damage for one ally.
     *   *Chorus Echo:* Heals repeat for 2 turns.
-*   **Source Arts (5 Relic Skills):**
+    *   *Silence Field:* Zone that dampens enemy Source attacks.
+*   **Source Arts (6 Relic Skills):**
     *   *Shock Pulse (Tuning Fork - Force):* Knocks enemies away from low-HP allies (Disengage).
     *   *Soul Link (The Bridge - Connection):* Links party HP. Damage is split evenly; Healing is shared.
     *   *Triage Scan (The Lens - Vision):* Cleanses all Debuffs from party + Heals based on debuffs removed.
     *   *Sanctuary (The Anvil - Creation):* Constructs a zone on the floor; allies inside regenerate HP.
     *   *Undo (The Anchor - Stability):* Reverses all damage taken by one ally in the last turn.
+    *   *Symphony (The Source - Resonance):* Applies "Invulnerable" to the whole party for 1 turn.
 
 ## Gh0st
 
@@ -108,16 +111,17 @@ Gh0st is a defected corporate assassin (Phantom-class). He is cool, efficient, a
 
 **Combat Kit (The Wall)**
 Gh0st holds the line with his blade and shields, forcing enemies to focus on him.
-*   **Starting Skills:**
+*   **Core Skills (6 Total):**
     *   *Taunt:* Forces enemies to attack Gh0st.
     *   *Suppression Strike:* Low damage, lowers enemy attack.
-*   **Unlockable Quest Skills (Examples):**
     *   *Harden:* Drastically increases defense for 1 turn.
     *   *Shock Blade:* Melee range stun/damage.
     *   *Intercept:* Takes damage meant for another ally.
-*   **Source Arts (5 Relic Skills):**
+    *   *Vengeance:* Deals damage based on missing HP.
+*   **Source Arts (6 Relic Skills):**
     *   *Seismic Stomp (Tuning Fork - Force):* AoE Stun centred on self. Punishes swarming.
     *   *Tether (The Bridge - Connection):* Leashes an enemy to Gh0st. They cannot target others or move away.
     *   *Threat Assessment (The Lens - Vision):* Enters a stance that Auto-Counters the next physical hit with massive damage.
     *   *Barricade (The Anvil - Creation):* Constructs physical cover (Wall) with its own HP bar.
     *   *Gravity Well (The Anchor - Stability):* Pulls all enemies to one point and Roots them.
+    *   *Iron Curtain (The Source - Resonance):* Prevents all allies from falling below 1 HP for 1 turn.

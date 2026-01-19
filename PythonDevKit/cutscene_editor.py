@@ -40,6 +40,7 @@ STEP_SPECS: Dict[str, List[FieldSpec]] = { # label, kind, json_key (optional), e
     "dialogue": [
         FieldSpec(label="Actor", kind="str",  json_key="actor", default=""),
         FieldSpec(label="Line",  kind="text", json_key="line",  default=""),
+        FieldSpec(label="Emote (opt)", kind="opt_str", json_key="emote"),
         FieldSpec(label="Hint Placement", kind="enum_opt", json_key="placement", enum=("top","middle","bottom")),
         FieldSpec(label="Hint Width (0..1)", kind="opt_float", json_key="width_ratio", default=None),
         FieldSpec(label="Hint Margin (px)", kind="opt_float", json_key="vertical_margin", default=None),
@@ -212,7 +213,9 @@ STEP_SPECS: Dict[str, List[FieldSpec]] = { # label, kind, json_key (optional), e
 def summarize_step(step: Dict[str, Any]) -> str:
     t = step.get("type","?")
     if t == "dialogue":
-        return f'{step.get("actor","?")}: {step.get("line","")[:60]}'
+        emote = step.get("emote")
+        emote_suffix = f" ({emote})" if emote else ""
+        return f'{step.get("actor","?")}{emote_suffix}: {step.get("line","")[:60]}'
     if t == "wait":
         return f'{step.get("duration", 0)}s'
     if t == "wait_for_player_action":

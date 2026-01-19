@@ -21,6 +21,7 @@
           "type": ["array", "null"],
           "items": { "$ref": "#/$defs/DialogueOption" }
         },
+        "emote": { "type": ["string", "null"] },
         "portrait": { "type": ["string", "null"] },
         "voice": { "type": ["string", "null"] }
       }

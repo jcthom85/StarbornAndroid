@@ -13,7 +13,7 @@
 *   **External Conflict:** **Nova vs. The System.** The Warden, the guards, the locked doors.
 *   **Internal Conflict:** **Comfort vs. Freedom.** Nova is safe here (she has a bed, a job, Jed), but she feels trapped.
 *   **Interpersonal Conflict:** **Nova vs. Jed.** Jed wants to protect her (stay); Nova wants to fly (go).
-*   **Cost Beat:** Nova’s first Source flare is uncontrolled—she feels the feedback (hunger/memory-skip) and Dominion sensors light up.
+*   **Cost Beat:** Nova’s first Source flare is uncontrolled—she feels the feedback (erosion/memory-skip) and Dominion sensors light up.
 *   **Emotional Climax:** **Grief.** Jed sacrifices himself. The safety net is cut. Nova is truly alone for the first time.
 *   **The Drive:** **Survival.** She *cannot* go back.
 
@@ -33,11 +33,11 @@
 *   **Emotional Tone:** **Wonder & Terror.** The beauty of the bioluminescence vs. the lethality of the beasts.
 *   **Breather Beat:** **Canopy Ridge** (mandatory) gives open-sky relief and a view of the Spire/Shield; **Tideglass Beach** (optional) lets the crew eat, joke, and feel human.
 *   **Flashback Beat:** When the Chime provides a burst of harmonic thrust, Nova catches a harmonic imprint—Orion launching it during the lab breach twenty years ago.
-*   **External Conflict:** **Man vs. Nature.** The Source Beast, the poison, the hunger.
+*   **External Conflict:** **Man vs. Nature.** The Source Beast, the poison, the erosion.
 *   **Interpersonal Conflict:** **Trust.**
     *   **Zeke vs. Nova:** Zeke blames her for the crash.
     *   **Gh0st vs. The Party:** He is literally hunting them.
-*   **Cost Beat:** Nova tries to use power like a shortcut and nearly collapses—Orion forces the “fuel + practice” rule.
+*   **Cost Beat:** Nova tries to use power like a shortcut and nearly collapses—Orion forces the “focus + practice” rule.
 *   **Emotional Climax:** **Empathy.** Gh0st is physically locked out of attacking by Elara's Song. He chooses to trust the anomaly rather than fight the lock. The enemy becomes a protector.
 *   **The Drive:** **Hope.** They found a ship (*The Astra*). They have a way out.
 

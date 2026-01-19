@@ -48,6 +48,6 @@ With **6-8 new enemies** per world, the player has to learn a specific "combat l
     *   **MQ:** 3 (The Echo, Red Alert, The Launch)
     *   **SQ:** 2 (Protocol Override, The Lost Shift)
 *   **Total:** 5 MQ, 5 SQ.
-*   **Bestiary:** ~9 Unique Entries (Guards, Drones, Rock-Borers, Fume Bats, etc.) + 1 Boss.
+*   **Bestiary (Enemies):** 7 Unique Entries (4 Common, 2 Elite, 1 Boss).
 
 This template should be replicated for Worlds 2–6.

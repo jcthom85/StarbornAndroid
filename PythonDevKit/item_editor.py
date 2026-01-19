@@ -57,7 +57,7 @@ CONSUMABLE_TARGETS = ["self", "ally", "party", "enemy", "all_enemies", "any"]
 STATUS_EFFECTS = ["burn", "freeze", "shock", "poison", "radiation", "psychic", "void", "weak", "regen", "shield"]
 CURE_STATUS_CHOICES = ["", "all"] + STATUS_EFFECTS + ["custom…"]
 
-STAT_CHOICES = ["", "hp", "max_hp", "rp", "max_rp", "atk", "def", "spd", "strength", "vitality", "agility", "focus", "luck", "accuracy", "evasion", "crit_rate"]
+STAT_CHOICES = ["", "hp", "max_hp", "atk", "def", "spd", "strength", "vitality", "agility", "focus", "luck", "accuracy", "evasion", "crit_rate"]
 
 EQUIP_SLOTS  = ["weapon", "armor", "accessory"]
 WEAPON_TYPES = ["blade", "pistol", "rifle", "launcher", "staff", "unarmed", "rod", "other"]
@@ -250,10 +250,8 @@ class ConsumableEditor(QWidget):
         form.addRow("effect.target", self.target)
 
         self.restore_hp = QSpinBox(); self.restore_hp.setRange(0, 99999)
-        self.restore_rp = QSpinBox(); self.restore_rp.setRange(0, 99999)
         self.damage     = QSpinBox(); self.damage.setRange(0, 99999)
         form.addRow("effect.restore_hp", self.restore_hp)
-        form.addRow("effect.restore_rp", self.restore_rp)
 
         form.addRow("effect.damage",     self.damage)
 
@@ -326,8 +324,6 @@ class ConsumableEditor(QWidget):
         self.target.setEditText(e.get("target", ""))
         try: self.restore_hp.setValue(abs(int(e.get("restore_hp", e.get("restore", 0)))))
         except Exception: self.restore_hp.setValue(0)
-        try: self.restore_rp.setValue(abs(int(e.get("restore_rp", 0))))
-        except Exception: self.restore_rp.setValue(0)
         try: self.damage.setValue(abs(int(e.get("damage", 0))))
         except Exception: self.damage.setValue(0)
         self.cure_status.setEditText(e.get("cure_status",""))
@@ -351,7 +347,6 @@ class ConsumableEditor(QWidget):
         out = {
             "target": self.target.currentText().strip(),
             "restore_hp": int(self.restore_hp.value()),
-            "restore_rp": int(self.restore_rp.value()),
             "damage": int(self.damage.value()),
         }
         cur = (self.cure_status.currentText() or "").strip()
@@ -840,7 +835,7 @@ class ItemEditor(QWidget):
                     # normalize legacy 'restore' and ensure non-negative ints
                     if "restore" in eff and "restore_hp" not in eff:
                         eff["restore_hp"] = eff.pop("restore")
-                    for key in ("restore_hp", "restore_rp", "damage"):
+                    for key in ("restore_hp", "damage"):
                         try:
                             eff[key] = abs(int(eff.get(key, 0) or 0))
                         except Exception:
@@ -935,9 +930,8 @@ class ItemEditor(QWidget):
                     # after sanitize these are non-negative; keep a guard anyway
                     try:
                         rhp = int(eff.get("restore_hp", 0) or 0)
-                        rrp = int(eff.get("restore_rp", 0) or 0)
                         dmg = int(eff.get("damage", 0) or 0)
-                        if rhp < 0 or rrp < 0 or dmg < 0:
+                        if rhp < 0 or dmg < 0:
                             issues.append(f"{name}: effect restore/damage cannot be negative")
                     except Exception:
                         issues.append(f"{name}: effect values must be integers")

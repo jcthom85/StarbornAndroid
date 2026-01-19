@@ -79,6 +79,7 @@ class SkillsTab(QWidget):
         self.f_cooldown = QSpinBox(); self.f_cooldown.setRange(0, 99)
         self.f_max_rank = QSpinBox(); self.f_max_rank.setRange(0, 99)
         self.f_scaling = QLineEdit()
+        self.f_conditions = QLineEdit()    # execution conditions
         self.f_tags = QLineEdit()          # generic tags
         self.f_cbtags = QLineEdit()        # combat_tags
         self.f_desc = QTextEdit()
@@ -91,6 +92,7 @@ class SkillsTab(QWidget):
         form.addRow("Cooldown", self.f_cooldown)
         form.addRow("Max Rank", self.f_max_rank)
         form.addRow("Scaling", self.f_scaling)
+        form.addRow("Conditions", self.f_conditions)
         form.addRow("Tags (comma)", self.f_tags)
         form.addRow("Combat Tags (comma)", self.f_cbtags)
         form.addRow(QLabel("Description"))
@@ -142,6 +144,7 @@ class SkillsTab(QWidget):
             "cooldown": int(self.f_cooldown.value()),
             "max_rank": int(self.f_max_rank.value()) if self.f_max_rank.value() else base.get("max_rank", 0),
             "scaling": self.f_scaling.text().strip() or base.get("scaling",""),
+            "conditions": self.f_conditions.text().strip(),
             "tags": [t.strip() for t in self.f_tags.text().split(",") if t.strip()],
             "combat_tags": [t.strip() for t in self.f_cbtags.text().split(",") if t.strip()],
             "description": self.f_desc.toPlainText().strip(),
@@ -151,6 +154,7 @@ class SkillsTab(QWidget):
         if not base.get("combat_tags"): base.pop("combat_tags", None)
         if not base.get("scaling"): base.pop("scaling", None)
         if not base.get("max_rank"): base.pop("max_rank", None)
+        if not base.get("conditions"): base.pop("conditions", None)
         return base
 
     def _load(self, s: Dict[str, Any]):
@@ -162,6 +166,7 @@ class SkillsTab(QWidget):
         self.f_cooldown.setValue(int(s.get("cooldown",0)))
         self.f_max_rank.setValue(int(s.get("max_rank",0)))
         self.f_scaling.setText(str(s.get("scaling","")))
+        self.f_conditions.setText(str(s.get("conditions", "")))
         self.f_tags.setText(", ".join(s.get("tags",[])))
         self.f_cbtags.setText(", ".join(s.get("combat_tags",[])))
         self.f_desc.setPlainText(s.get("description",""))
@@ -836,7 +841,7 @@ class TreesTab(QWidget):
             "id": nid, "name": "New Node",
             "pos": [1, 0], "cost_ap": 1,
             "requires": [],
-            "effect": {"type": "buff", "buff_type": "attack", "value": 1, "rp_cost": 0}
+            "effect": {"type": "buff", "buff_type": "attack", "value": 1}
         }
         nodes.append(n); self._set_branch_nodes(nodes)
         self._populate_nodes_table()

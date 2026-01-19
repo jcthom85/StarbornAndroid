@@ -26,6 +26,18 @@ Inside each Hub folder, details are broken down by category:
 - **`03_locations.md`**: Detailed descriptions of specific rooms, nodes, or points of interest.
 - **`04_events.md`**: Cutscenes and scripted events.
 
+### 4. Scoped IDs (Recommended)
+To keep large JSON files readable without splitting them, use a consistent scope prefix:
+- **Hub-scoped:** `<world_id>__<hub_id>__<type>_<slug>`
+- **World-scoped:** `<world_id>__<type>_<slug>`
+- **Global:** No scope prefix
+
+Examples:
+- `nova_prime__mining_colony__evt_market_intro`
+- `nova_prime__dlg_orion_wake`
+
+Devkit filters use these prefixes (plus `hub_id` and room references) to group content.
+
 ## Workflow
 1.  **Design Phase:** Write the broad strokes in `Starborn_Master_Story.md`.
 2.  **World Breakout:** Create a new folder for the world.

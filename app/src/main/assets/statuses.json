@@ -1,56 +1,108 @@
 [
   {
     "id": "bleed",
+    "name": "Bleeding",
     "default_duration": 3,
     "tick": {
       "mode": "damage",
       "per_max_hp_divisor": 20,
-      "min": 2
+      "min": 2,
+      "element": "physical"
     },
     "target": "enemy"
   },
   {
-    "id": "burn",
+    "id": "meltdown",
+    "name": "Meltdown",
     "default_duration": 3,
     "tick": {
       "mode": "damage",
       "per_max_hp_divisor": 16,
       "min": 1,
-      "element": "fire"
+      "element": "burn"
     },
     "target": "enemy"
   },
   {
-    "id": "freeze",
-    "default_duration": 2,
-    "skip_reason": "is frozen solid",
-    "target": "enemy"
-  },
-  {
-    "id": "guard",
-    "default_duration": 2,
-    "incoming_multiplier": 0.6,
-    "target": "ally"
-  },
-  {
-    "id": "braced",
-    "default_duration": 2,
-    "flat_defense_bonus": 5,
-    "target": "ally"
-  },
-  {
-    "id": "poison",
+    "id": "erosion",
+    "name": "Erosion",
     "default_duration": 3,
     "tick": {
       "mode": "damage",
       "per_max_hp_divisor": 10,
       "min": 1,
-      "element": "poison"
+      "element": "corrosion",
+      "ramp_up": true
     },
     "target": "enemy"
   },
   {
+    "id": "brittle",
+    "name": "Brittle",
+    "default_duration": 2,
+    "incoming_multiplier_kinetic": 1.5,
+    "target": "enemy"
+  },
+  {
+    "id": "short",
+    "name": "Short",
+    "default_duration": 1,
+    "skip_reason": "is shorting out",
+    "target": "enemy"
+  },
+  {
+    "id": "stun",
+    "name": "Stunned",
+    "default_duration": 1,
+    "skip_reason": "is stunned",
+    "target": "enemy"
+  },
+  {
+    "id": "jammed",
+    "name": "Jammed",
+    "default_duration": 2,
+    "block_skills": true,
+    "target": "enemy"
+  },
+  {
+    "id": "exposed",
+    "name": "Exposed",
+    "default_duration": 1,
+    "defense_multiplier": 0.0,
+    "target": "enemy"
+  },
+  {
+    "id": "guard",
+    "name": "Guarding",
+    "default_duration": 1,
+    "incoming_multiplier": 0.5,
+    "prevent_stagger": true,
+    "target": "ally"
+  },
+  {
+    "id": "charged",
+    "name": "Charged",
+    "default_duration": 1,
+    "telegraph": true,
+    "target": "enemy"
+  },
+  {
+    "id": "weak",
+    "name": "Discord",
+    "default_duration": 2,
+    "outgoing_multiplier": 0.75,
+    "target": "enemy"
+  },
+  {
+    "id": "blind",
+    "name": "Obscured",
+    "default_duration": 2,
+    "accuracy_multiplier": 0.5,
+    "target": "enemy"
+  },
+  {
     "id": "regen",
+    "name": "Regen",
     "default_duration": 3,
     "tick": {
       "mode": "heal",
@@ -61,33 +113,9 @@
   },
   {
     "id": "shield",
+    "name": "Shielded",
     "default_duration": 3,
     "incoming_multiplier": 0.75,
     "target": "ally"
-  },
-  {
-    "id": "shock",
-    "default_duration": 1,
-    "skip_reason": "is stunned by electric shock",
-    "target": "enemy"
-  },
-  {
-    "id": "sleep",
-    "default_duration": 2,
-    "skip_reason": "is fast asleep",
-    "incoming_multiplier": 1.25,
-    "target": "enemy"
-  },
-  {
-    "id": "stun",
-    "default_duration": 1,
-    "skip_reason": "is stunned",
-    "target": "enemy"
-  },
-  {
-    "id": "weak",
-    "default_duration": 2,
-    "outgoing_multiplier": 0.75,
-    "target": "enemy"
   }
 ]

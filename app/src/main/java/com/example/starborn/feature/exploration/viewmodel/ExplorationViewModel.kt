@@ -527,6 +527,7 @@ class ExplorationViewModel(
     private var roomsByNodeId: Map<String, List<Room>> = emptyMap()
     private var nodeIdByRoomId: Map<String, String> = emptyMap()
     private val portraitBySpeaker: MutableMap<String, String> = mutableMapOf()
+    private val emotesBySpeaker: MutableMap<String, Map<String, String>> = mutableMapOf()
     private val portraitOverrides: Map<String, String> = mapOf(
         "pasha" to DEFAULT_PORTRAIT,
         "jed" to DEFAULT_PORTRAIT,
@@ -1025,11 +1026,14 @@ class ExplorationViewModel(
         }
         val safeIndex = stepIndex.coerceIn(0, steps.lastIndex)
         val step = steps[safeIndex]
+        val portrait = step.speaker?.let { speaker ->
+            resolveEmotePortrait(speaker, step.emote) ?: resolvePortraitKey(speaker)
+        }
         val stepUi = CinematicStepUi(
             type = step.type,
             speaker = step.speaker,
             text = step.text,
-            portrait = step.speaker?.let { resolvePortraitKey(it) }
+            portrait = portrait
         )
         return CinematicUiState(
             sceneId = scene.id,
@@ -1284,8 +1288,9 @@ class ExplorationViewModel(
 
     private fun buildDialogueUi(line: DialogueLine?): DialogueUi? {
         if (line == null) return null
-        val portrait = resolvePortraitKey(line.speaker)
+        val portrait = resolveEmotePortrait(line.speaker, line.emote)
             ?: line.portrait?.takeIf { it.isNotBlank() }?.let { sanitizePortraitName(it) }
+            ?: resolvePortraitKey(line.speaker)
         return DialogueUi(
             line = line,
             portrait = portrait,
@@ -1722,6 +1727,7 @@ class ExplorationViewModel(
             environmentThemeManager.apply(initialThemeId, initialRoom?.weather)
 
             portraitBySpeaker.clear()
+            emotesBySpeaker.clear()
             players.forEach { character ->
                 registerPortrait(character.miniIconPath, character.name, character.id)
             }
@@ -1734,6 +1740,7 @@ class ExplorationViewModel(
                 keys += npc.name.substringAfterLast(' ', missingDelimiterValue = npc.name)
                 keys += npc.name.substringBefore(' ', missingDelimiterValue = npc.name)
                 registerPortrait(npc.portrait, *keys.toTypedArray())
+                registerEmotes(npc.emotes, *keys.toTypedArray())
             }
 
             visitedRooms.clear()
@@ -3412,11 +3419,41 @@ class ExplorationViewModel(
             }
     }
 
+    private fun registerEmotes(emotes: Map<String, String>?, vararg rawKeys: String?) {
+        if (emotes.isNullOrEmpty()) return
+        val normalizedEmotes = emotes.mapNotNull { (key, value) ->
+            val normalizedKey = key.trim().lowercase(Locale.getDefault())
+            val sanitized = sanitizePortraitName(value)
+            if (normalizedKey.isNotEmpty() && sanitized != null) {
+                normalizedKey to sanitized
+            } else {
+                null
+            }
+        }.toMap()
+        if (normalizedEmotes.isEmpty()) return
+        rawKeys.filterNotNull()
+            .map { it.normalizedKey() }
+            .filter { it.isNotEmpty() }
+            .forEach { key ->
+                emotesBySpeaker[key] = normalizedEmotes
+            }
+    }
+
     private fun resolvePortraitKey(speaker: String): String? {
         val normalized = speaker.normalizedKey()
         portraitBySpeaker[normalized]?.let { return it }
         val lastSegment = normalized.substringAfterLast(' ', normalized)
         portraitBySpeaker[lastSegment]?.let { return it }
+        return null
+    }
+
+    private fun resolveEmotePortrait(speaker: String, emote: String?): String? {
+        val normalizedEmote = emote?.trim()?.lowercase(Locale.getDefault()) ?: return null
+        if (normalizedEmote.isBlank()) return null
+        val normalized = speaker.normalizedKey()
+        emotesBySpeaker[normalized]?.get(normalizedEmote)?.let { return it }
+        val lastSegment = normalized.substringAfterLast(' ', normalized)
+        emotesBySpeaker[lastSegment]?.get(normalizedEmote)?.let { return it }
         return null
     }
 

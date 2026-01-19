@@ -220,6 +220,14 @@ class NPCEditor(QWidget):
         self.aliases_edit.setPlaceholderText("Comma-separated")
         form.addRow("Aliases:", self.aliases_edit)
 
+        self.portrait_edit = QLineEdit()
+        self.portrait_edit.setPlaceholderText("e.g., images/npcs/ollie.png or ollie_portrait")
+        form.addRow("Portrait:", self.portrait_edit)
+
+        self.emotes_blob = QTextEdit()
+        self.emotes_blob.setPlaceholderText('{"angry": "ollie_emote_angry", "sad": "ollie_emote_sad"}')
+        form.addRow("Emotes (JSON map):", self.emotes_blob)
+
         self.dialogue_blob = QTextEdit()
         self.dialogue_blob.setPlaceholderText("NPC-local Dialogue (legacy; not used by engine).")
         form.addRow("NPC-local Dialogue (legacy; not used by engine):", self.dialogue_blob)
@@ -318,9 +326,9 @@ class NPCEditor(QWidget):
         self.dlg_filter.textChanged.connect(self._refresh_dialogue_list)
         top.addWidget(self.dlg_filter)
 
-        self.lbl_current_speaker = QLabel("Speaker: --  (showing only)")
-        self.lbl_current_speaker.setStyleSheet("color: #777;")
-        top.addWidget(self.lbl_current_speaker)
+        self.lbl_current_speaker = QLabel("-")
+        # self.lbl_current_speaker.setStyleSheet("color: #777;")
+        top_bar.addWidget(self.lbl_current_speaker)
 
         b_reload = QPushButton("Reload dialogue.json"); b_reload.clicked.connect(self._on_reload_dialogue_clicked)
         top.addWidget(b_reload)
@@ -349,6 +357,7 @@ class NPCEditor(QWidget):
         self.dlg_id_edit = QLineEdit(); form.addRow("ID:", self.dlg_id_edit)
         self.dlg_speaker = QLineEdit(); form.addRow("Speaker:", self.dlg_speaker)
         self.dlg_text = QTextEdit(); form.addRow("Text:", self.dlg_text)
+        self.dlg_emote = QLineEdit(); self.dlg_emote.setPlaceholderText("e.g., angry, sad"); form.addRow("Emote:", self.dlg_emote)
         self.dlg_condition = QLineEdit(); form.addRow("Condition (e.g., quest:id, milestone:id, item:Name):", self.dlg_condition)
         self.dlg_trigger = QLineEdit(); form.addRow("Trigger (e.g., give_item:id, start_quest:id):", self.dlg_trigger)
         self.dlg_next = QComboBox(); self.dlg_next.setEditable(True); form.addRow("Next ID:", self.dlg_next)
@@ -404,6 +413,8 @@ class NPCEditor(QWidget):
     def _clear_forms(self):
         self.name_edit.setText("")
         self.aliases_edit.setText("")
+        self.portrait_edit.setText("")
+        self.emotes_blob.setPlainText("")
         self.dialogue_blob.setPlainText("")
         self._load_interactions([])
         self._refresh_room_checks()
@@ -412,6 +423,8 @@ class NPCEditor(QWidget):
         npc = self.npcs.get(self.current_key, {})
         self.name_edit.setText(npc.get("name", ""))
         self.aliases_edit.setText(", ".join(npc.get("aliases", [])))
+        self.portrait_edit.setText(npc.get("portrait", "") or "")
+        self.emotes_blob.setPlainText(json.dumps(npc.get("emotes", {}), indent=4))
         self.dialogue_blob.setPlainText(json.dumps(npc.get("dialogue", {}), indent=4))
         self._load_interactions(npc.get("interactions", []))
         self._refresh_room_checks()
@@ -452,6 +465,18 @@ class NPCEditor(QWidget):
         aliases = sorted({a for a in aliases if a.lower() != new_key})
         npc["aliases"] = aliases
 
+        npc["portrait"] = self.portrait_edit.text().strip()
+
+        try:
+            txt = self.emotes_blob.toPlainText().strip() or "{}"
+            obj = json.loads(txt)
+            if not isinstance(obj, dict):
+                raise ValueError("Must be a JSON object")
+            npc["emotes"] = obj
+        except Exception as e:
+            QMessageBox.warning(self, "Invalid JSON", f"Emotes JSON invalid:\n{e}")
+            return
+
         # Legacy per-NPC dialogue JSON (kept)
         try:
             txt = self.dialogue_blob.toPlainText().strip() or "{}"
@@ -486,7 +511,14 @@ class NPCEditor(QWidget):
         if key in self.npcs:
             QMessageBox.warning(self, "Exists", f"NPC '{text}' already exists.")
             return
-        self.npcs[key] = {"name": text.strip(), "aliases": [], "dialogue": {}, "interactions": []}
+        self.npcs[key] = {
+            "name": text.strip(),
+            "aliases": [],
+            "portrait": "",
+            "emotes": {},
+            "dialogue": {},
+            "interactions": []
+        }
         self._save_npcs()
         self._refresh_npc_list()
         self._select_by_key(key)
@@ -818,6 +850,7 @@ class NPCEditor(QWidget):
             return
         entry["speaker"] = self.dlg_speaker.text().strip()
         entry["text"] = self.dlg_text.toPlainText()
+        entry["emote"] = self.dlg_emote.text().strip()
         entry["condition"] = self.dlg_condition.text().strip()
         entry["trigger"] = self.dlg_trigger.text().strip()
         entry["next"] = self.dlg_next.currentText().strip()
@@ -832,6 +865,7 @@ class NPCEditor(QWidget):
             "id": new_id,
             "speaker": base,
             "text": "",
+            "emote": "",
             "condition": "",
             "trigger": "",
             "next": ""
@@ -870,12 +904,14 @@ class NPCEditor(QWidget):
                 return
             speaker = entry.get("speaker", "")
             text_body = entry.get("text", "")
+            emote = entry.get("emote", "")
             cond = entry.get("condition", "")
             trig = entry.get("trigger", "")
             nxt = entry.get("next", "")
             lines = [
                 f"id: {value}",
                 f"speaker: {speaker}",
+                f"emote: {emote}",
                 f"condition: {cond}",
                 f"trigger: {trig}",
                 f"next: {nxt}",
@@ -1100,6 +1136,7 @@ class NPCEditor(QWidget):
         self.dlg_id_edit.setText("")
         self.dlg_speaker.setText("")
         self.dlg_text.setPlainText("")
+        self.dlg_emote.setText("")
         self.dlg_condition.setText("")
         self.dlg_trigger.setText("")
         self.dlg_next.setEditText("")
@@ -1109,6 +1146,7 @@ class NPCEditor(QWidget):
         self.dlg_id_edit.setText(d.get("id", did))
         self.dlg_speaker.setText(d.get("speaker", ""))
         self.dlg_text.setPlainText(d.get("text", ""))
+        self.dlg_emote.setText(d.get("emote", ""))
         self.dlg_condition.setText(d.get("condition", ""))
         self.dlg_trigger.setText(d.get("trigger", ""))
         self.dlg_next.setEditText(d.get("next", ""))
@@ -1135,6 +1173,7 @@ class NPCEditor(QWidget):
             "id": new_id,
             "speaker": npc_name,  # <-- prefill to current NPC
             "text": "",
+            "emote": "",
             "condition": "",
             "trigger": "",
             "next": ""
@@ -1198,6 +1237,7 @@ class NPCEditor(QWidget):
         d = self.dialogue_index[self.current_dlg_id]
         d["speaker"]   = self.dlg_speaker.text().strip()
         d["text"]      = self.dlg_text.toPlainText()
+        d["emote"]     = self.dlg_emote.text().strip()
         d["condition"] = self.dlg_condition.text().strip()
         d["trigger"]   = self.dlg_trigger.text().strip()
         d["next"]      = self.dlg_next.currentText().strip()

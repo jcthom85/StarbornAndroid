@@ -104,17 +104,23 @@
     *   Night in the ruins. Bioluminescent spores drift like slow snow.
     *   Zeke is bandaging a cut. Nova reaches for Link again—trying to help—and the connection shrieks. Her vision fuzzes with static.
     *   Orion catches her wrist. Gentle, firm.
-    *   **Orion:** "Anchor."
+    *   **Orion:** "Stop. You are burning the wire."
     *   Nova blinks, breathing hard.
-    *   **Orion:** "Dominion calls the aftereffect Noise. It's feedback. Your body is a receiver that overheats."
-    *   **Nova:** "So what, I just... don't use it?"
-    *   **Orion:** "You use it like you use a blade. With training. With fuel. With restraint."
-    *   Orion sets a pebble in her palm. "Name three things you can feel."
-    *   **Nova:** "Cold. Weight. My heartbeat."
-    *   **Orion:** "Good. Now a single note. No heroics."
-    *   Nova focuses. A faint shimmer runs through the pebble—then stops. She sways, but stays standing.
-    *   Zeke offers her a canteen without a word. Gh0st silently stands between her and the dark, creating a perimeter.
-    *   **Orion:** "Again tomorrow. Anchor first. Every time."
+    *   **Nova:** "I can handle it. I just need to focus."
+    *   **Orion:** "Focus isn't the problem. Physics is. No single wire can hold a thunderstorm."
+    *   He gestures to the others.
+    *   **Orion:** "You are the Spark. You open the door. But if you try to hold the energy alone, you will melt."
+    *   He points to Zeke. "He is the Ground. When the static gets too high, you push it to him. He dissipates it."
+    *   He points to Gh0st. "He is the Shield. He contains the heat so it doesn't leak."
+    *   **Nova:** "And you?"
+    *   **Orion:** "I am the Tuner. I make sure the noise becomes music."
+    *   Orion sets a pebble in her palm.
+    *   **Orion:** "Don't lift this alone. Build the circuit. Trust them to carry the weight."
+    *   Nova closes her eyes. She doesn't just push; she *connects*.
+    *   Zeke shakes his hand like he touched a live wire. "Whoa. Tingly."
+    *   Gh0st’s vents hiss softly. "Thermal spike absorbed."
+    *   The pebble glows—steady, bright, and cool.
+    *   **Orion:** "Better. Again tomorrow."
 
 ## EVT_W2_04A: Tideglass Beach (Optional Breather)
 *   **Trigger:** Visiting Tideglass Beach (SQ_12, optional).

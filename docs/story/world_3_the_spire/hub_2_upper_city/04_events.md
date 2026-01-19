@@ -10,13 +10,17 @@
     *   **Zeke (low):** "Act like you belong. Like… aggressively belong."
     *   Orion tilts his face toward the fake sun. "They built a sky."
     *   **Nova:** "Yeah. And they still found a way to put it on a schedule."
-    *   A pair of rich kids pass, laughing too loudly. One glances at Nova’s faint Echo marks and wrinkles their nose.
-    *   **Rich Kid (hushed):** "Starborn."
-    *   **Nova (smiling, sweet):** "Bless you."
-    *   Zeke slips into customer-service perfection and talks their way past a hostess drone while Nova “accidentally” bumps a wristband reader off a champagne cart.
-    *   **System Ping:** **GUEST ACCESS: ACQUIRED.**
-    *   For a few seconds, the crew stands under the fake sun like they’re normal.
-    *   Then a security drone turns its head and the moment snaps back into a mission.
+    *   A man in velvet robes—a **Museum Curator**—stops in front of Orion. He isn't looking at Orion's face; he's looking at the way light bends around his skin.
+    *   **Curator:** "Fascinating refraction. Sector 9 lineage?"
+    *   He reaches out to touch Orion’s arm like he’s inspecting a vase. Orion flinches.
+    *   The Curator sneers, wiping his hand.
+    *   **Curator:** "Ugh. A Starborn stray. Who let this thing off the leash?"
+    *   He turns to Nova. "Control your pet, or I'll call animal control. The city is for citizens, not falling debris."
+    *   **Zeke (stepping in, terrifyingly polite):** "Sir, this is a commemorative statue. Very lifelike. Move along."
+    *   Zeke hustles them away before Gh0st can remove the Curator's head.
+    *   **Nova:** "Starborn?"
+    *   **Orion:** "A Dominion word. It means 'trash from the sky'."
+    *   For a few seconds, the crew stands under the fake sun, reminded they don't belong.
 
 ## EVT_W3_03: The Lens
 *   **Trigger:** Solving the Light Puzzle in the Archive.

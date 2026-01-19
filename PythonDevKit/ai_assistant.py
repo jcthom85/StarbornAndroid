@@ -405,10 +405,9 @@ class RoomClusterPage(_BuildPageBase):
                 pass
 
         # help text
-        help_lb = QLabel("Patterns: Linear / Branching / Loop / Wheel (hub+ring) / Maze.\n"
-                         "Rooms write to rooms.json and are appended to the node in hub_nodes.json. IDs auto-increment as <node>_<N>.")
-        help_lb.setStyleSheet("color:#888;")
-        v.addWidget(help_lb)
+                help_lb = QLabel("Select an agent to see capabilities.")
+                # help_lb.setStyleSheet("color:#888;")
+                layout.addWidget(help_lb)
 
     def get_proposals(self) -> Dict[str, Any]:
         nid = self.node_pick.currentData() or ""
@@ -808,10 +807,9 @@ class ItemsPage(_BuildPageBase):
         form = QFormLayout(ai_box)
         self.ai_count = QSpinBox(); self.ai_count.setRange(1, 100); self.ai_count.setValue(5)
         form.addRow("Count:", self.ai_count)
-        self.ai_hint = QLabel("If you don't add manual rows, Preview will try to generate items.\n"
-                              "If 'Use OpenAI' is OFF, it uses an offline generator with your Theme.")
-        self.ai_hint.setStyleSheet("color:#888;")
-        form.addRow(self.ai_hint)
+                self.ai_hint = QLabel("If you don't add manual rows, Preview will try to generate items.\n"          "If 'Use OpenAI' is OFF, it uses an offline generator with your Theme.")
+                # self.ai_hint.setStyleSheet("color:#888;")
+                form.addRow(self.ai_hint)
         v.addWidget(ai_box)
 
         # wire buttons
@@ -1019,7 +1017,7 @@ class _SimpleListPage(_BuildPageBase):
         form.addRow(self.ai_count_label, self.ai_count)
         self.hint = QLabel("If no manual rows are provided, Preview will generate using AI if enabled, "
                            "otherwise an offline placeholder.")
-        self.hint.setStyleSheet("color:#888;")
+        # self.hint.setStyleSheet("color:#888;")
         form.addRow(self.hint)
         v.addWidget(ai_box)
 
@@ -1171,10 +1169,9 @@ class _JsonWholeFilePage(_BuildPageBase):
         top.addWidget(self.theme, 1)
         v.addLayout(top)
 
-        self.note = QLabel("This generator produces the entire file. "
-                           "Use Preview to see a full diff before applying.")
-        self.note.setStyleSheet("color:#888;")
-        v.addWidget(self.note)
+        self.note = QLabel("Generates a pixel-art style icon (256x256).")
+        # self.note.setStyleSheet("color:#888;")
+        layout.addWidget(self.note)
 
     def get_proposals(self) -> Dict[str, Any]:
         # If AI is disabled, just return the current file (no-op) so the diff shows current.
@@ -1613,7 +1610,7 @@ class QuestPackPage(_BuildPageBase):
 
         help_lb = QLabel("Generates a cohesive set of assets and wires cross-references (ids). "
                          "Preview shows all proposed JSON updates across files before applying.")
-        help_lb.setStyleSheet("color:#888;")
+        # help_lb.setStyleSheet("color:#888;")
         v.addWidget(help_lb)
 
     # -------- helpers --------
@@ -2158,7 +2155,7 @@ class AIAssistant(QWidget):
 
         # Status + ping
         self.ai_status = QLabel()
-        self.ai_status.setStyleSheet("color:#888")
+        # self.ai_status.setStyleSheet("color:#888")
         bar.addWidget(self.ai_status)
 
         self.ping_btn = QPushButton("Ping")

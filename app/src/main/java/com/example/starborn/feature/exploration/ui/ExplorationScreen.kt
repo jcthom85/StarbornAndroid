@@ -48,6 +48,7 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
@@ -130,6 +131,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextIndent
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.util.lerp
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
@@ -795,8 +797,7 @@ fun ExplorationScreen(
             enter = slideInVertically(initialOffsetY = { it }) + fadeIn(),
             exit = slideOutVertically(targetOffsetY = { it }) + fadeOut(),
             modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth()
+                .fillMaxSize()
                 .zIndex(1f)
         ) {
             val trackedQuest = uiState.questLogActive.firstOrNull { it.id == uiState.trackedQuestId }
@@ -1880,96 +1881,186 @@ private fun MenuOverlay(
     val panelBorder = themeColor(theme?.border, Color.White.copy(alpha = 0.4f))
     val accentColor = themeColor(theme?.accent, MaterialTheme.colorScheme.primary)
     val sheetScroll = rememberScrollState()
+    val cornerRadius = 28.dp
+    val borderWidth = 2.dp
+    val borderColor = panelBorder.copy(alpha = 0.8f)
+    val contentMaxWidth = 860.dp
 
     Surface(
         modifier = modifier
-            .fillMaxWidth()
-            .fillMaxHeight(0.9f)
-            .widthIn(max = 860.dp)
-            .padding(horizontal = 20.dp, vertical = 16.dp)
-            .navigationBarsPadding(),
-        shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
-        color = panelColor,
-        border = BorderStroke(1.dp, panelBorder.copy(alpha = 0.8f))
-    ) {
-        Column(
-            modifier = Modifier
-                .padding(20.dp)
-                .fillMaxWidth()
-                .verticalScroll(sheetScroll),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "Menu",
-                        style = MaterialTheme.typography.titleLarge,
-                        color = accentColor
-                    )
-                    Text(
-                        text = "Close",
-                        style = MaterialTheme.typography.labelLarge,
-                        color = accentColor,
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(12.dp))
-                            .clickable { onClose() }
-                            .padding(horizontal = 8.dp, vertical = 4.dp)
+            .fillMaxSize()
+            .drawWithContent {
+                drawContent()
+                val strokeWidth = borderWidth.toPx()
+                val halfStroke = strokeWidth / 2f
+                val left = halfStroke
+                val top = halfStroke
+                val right = size.width - halfStroke
+                val bottom = size.height - halfStroke
+                if (right > left && bottom > top) {
+                    val radiusMax = min(right - left, bottom - top) / 2f
+                    val radius = min(cornerRadius.toPx(), radiusMax).coerceAtLeast(0f)
+                    val path = Path().apply {
+                        moveTo(left, bottom)
+                        lineTo(left, top + radius)
+                        if (radius > 0f) {
+                            arcTo(
+                                rect = Rect(left, top, left + 2 * radius, top + 2 * radius),
+                                startAngleDegrees = 180f,
+                                sweepAngleDegrees = 90f,
+                                forceMoveTo = false
+                            )
+                            lineTo(right - radius, top)
+                            arcTo(
+                                rect = Rect(right - 2 * radius, top, right, top + 2 * radius),
+                                startAngleDegrees = 270f,
+                                sweepAngleDegrees = 90f,
+                                forceMoveTo = false
+                            )
+                        } else {
+                            lineTo(left, top)
+                            lineTo(right, top)
+                        }
+                        lineTo(right, bottom)
+                    }
+                    drawPath(
+                        path = path,
+                        color = borderColor,
+                        style = Stroke(width = strokeWidth)
                     )
                 }
+            },
+        shape = RoundedCornerShape(topStart = cornerRadius, topEnd = cornerRadius),
+        color = panelColor,
+        border = null
+    ) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .statusBarsPadding()
+                    .navigationBarsPadding()
+                    .padding(horizontal = 20.dp, vertical = 16.dp),
+                contentAlignment = Alignment.TopCenter
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .widthIn(max = contentMaxWidth)
+                        .verticalScroll(sheetScroll),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Menu",
+                            style = MaterialTheme.typography.titleLarge,
+                            color = accentColor
+                        )
+                        Text(
+                            text = "Close",
+                            style = MaterialTheme.typography.labelLarge,
+                            color = accentColor,
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(12.dp))
+                                .clickable { onClose() }
+                                .padding(horizontal = 8.dp, vertical = 4.dp)
+                        )
+                    }
 
-                MenuTabRow(
-                    selectedTab = selectedTab,
-                    onSelectTab = onSelectTab,
-                    accentColor = accentColor,
-                    borderColor = panelBorder
-                )
+                    MenuTabRow(
+                        selectedTab = selectedTab,
+                        onSelectTab = onSelectTab,
+                        accentColor = accentColor,
+                        borderColor = panelBorder
+                    )
 
-                MenuTabContentArea(
-                    tab = selectedTab,
-                    accentColor = accentColor,
-                    borderColor = panelBorder,
-                    isCurrentRoomDark = isCurrentRoomDark,
-                    statusMessage = statusMessage,
-                    partyStatus = partyStatus,
-                    trackedQuest = trackedQuest,
-                    activeQuests = activeQuests,
-                    completedQuests = completedQuests,
-                    minimap = minimap,
-                    fullMap = fullMap,
-                    settings = settings,
-                    onMenuAction = onMenuAction,
-                    onOpenInventory = onOpenInventory,
-                    onOpenJournal = onOpenJournal,
-                    onOpenMapLegend = onOpenMapLegend,
-                    onOpenFullMap = onOpenFullMap,
-                    onMusicVolumeChange = onMusicVolumeChange,
-                    onSfxVolumeChange = onSfxVolumeChange,
-                    onToggleTutorials = onToggleTutorials,
-                    onToggleVignette = onToggleVignette,
-                    onQuickSave = onQuickSave,
-                    onSaveGame = onSaveGame,
-                    onLoadGame = onLoadGame,
-                    onShowSkillTree = onShowSkillTree,
-                    onShowDetails = onShowDetails,
-                    inventoryItems = inventoryItems,
-                    equippedItems = equippedItems,
-                    unlockedWeapons = unlockedWeapons,
-                    equippedWeapons = equippedWeapons,
-                    unlockedArmors = unlockedArmors,
-                    equippedArmors = equippedArmors,
-                    onEquipItem = onEquipItem,
-                    onEquipMod = onEquipMod,
-                    onEquipWeapon = onEquipWeapon,
-                    resolveWeaponItem = resolveWeaponItem,
-                    onEquipArmor = onEquipArmor,
-                    resolveArmorItem = resolveArmorItem,
-                    onUseInventoryItem = onUseInventoryItem,
-                    onShowQuestDetails = onShowQuestDetails,
-                    creditsLabel = creditsLabel
+                    MenuTabContentArea(
+                        tab = selectedTab,
+                        accentColor = accentColor,
+                        borderColor = panelBorder,
+                        isCurrentRoomDark = isCurrentRoomDark,
+                        statusMessage = statusMessage,
+                        partyStatus = partyStatus,
+                        trackedQuest = trackedQuest,
+                        activeQuests = activeQuests,
+                        completedQuests = completedQuests,
+                        minimap = minimap,
+                        fullMap = fullMap,
+                        settings = settings,
+                        onMenuAction = onMenuAction,
+                        onOpenInventory = onOpenInventory,
+                        onOpenJournal = onOpenJournal,
+                        onOpenMapLegend = onOpenMapLegend,
+                        onOpenFullMap = onOpenFullMap,
+                        onMusicVolumeChange = onMusicVolumeChange,
+                        onSfxVolumeChange = onSfxVolumeChange,
+                        onToggleTutorials = onToggleTutorials,
+                        onToggleVignette = onToggleVignette,
+                        onQuickSave = onQuickSave,
+                        onSaveGame = onSaveGame,
+                        onLoadGame = onLoadGame,
+                        onShowSkillTree = onShowSkillTree,
+                        onShowDetails = onShowDetails,
+                        inventoryItems = inventoryItems,
+                        equippedItems = equippedItems,
+                        unlockedWeapons = unlockedWeapons,
+                        equippedWeapons = equippedWeapons,
+                        unlockedArmors = unlockedArmors,
+                        equippedArmors = equippedArmors,
+                        onEquipItem = onEquipItem,
+                        onEquipMod = onEquipMod,
+                        onEquipWeapon = onEquipWeapon,
+                        resolveWeaponItem = resolveWeaponItem,
+                        onEquipArmor = onEquipArmor,
+                        resolveArmorItem = resolveArmorItem,
+                        onUseInventoryItem = onUseInventoryItem,
+                        onShowQuestDetails = onShowQuestDetails,
+                        creditsLabel = creditsLabel
+                    )
+                }
+            }
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth()
+                    .widthIn(max = contentMaxWidth)
+                    .navigationBarsPadding()
+                    .padding(start = 24.dp, end = 24.dp, bottom = 12.dp)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(24.dp)
+                        .background(
+                            Brush.verticalGradient(
+                                colors = listOf(
+                                    Color.Transparent,
+                                    accentColor.copy(alpha = 0.05f),
+                                    accentColor.copy(alpha = 0.12f)
+                                )
+                            )
+                        )
                 )
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .fillMaxWidth()
+                        .height(2.dp)
+                        .background(
+                            Brush.horizontalGradient(
+                                colors = listOf(
+                                    Color.Transparent,
+                                    accentColor.copy(alpha = 0.4f),
+                                    Color.Transparent
+                                )
+                            )
+                        )
+                )
+            }
         }
     }
 }

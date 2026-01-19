@@ -377,6 +377,7 @@ class DialogueQuickEdit(QDialog):
 
         self.id_edit = QLineEdit(_ensure_str(self._data.get("id")))
         self.speaker_edit = QLineEdit(_ensure_str(self._data.get("speaker")))
+        self.emote_edit = QLineEdit(_ensure_str(self._data.get("emote")))
         self.text_edit = QPlainTextEdit(_ensure_str(self._data.get("text")))
         self.next_edit = QLineEdit(_ensure_str(self._data.get("next")))
         self.condition_edit = QLineEdit(_ensure_str(self._data.get("condition")))
@@ -390,6 +391,7 @@ class DialogueQuickEdit(QDialog):
 
         form.addRow("ID:", self.id_edit)
         form.addRow("Speaker:", self.speaker_edit)
+        form.addRow("Emote (optional):", self.emote_edit)
         form.addRow("Text:", self.text_edit)
         form.addRow("Next (optional):", self.next_edit)
         form.addRow("Condition (optional):", self.condition_edit)
@@ -541,6 +543,12 @@ class DialogueQuickEdit(QDialog):
         base["id"] = did
         base["speaker"] = speaker
         base["text"] = text
+
+        emote = self.emote_edit.text().strip()
+        if emote:
+            base["emote"] = emote
+        else:
+            base.pop("emote", None)
 
         nxt = self.next_edit.text().strip()
         if nxt:
@@ -694,7 +702,7 @@ class EventQuickEdit(QDialog):
         self.on_msg_edit = QLineEdit()
         self.off_msg_edit = QLineEdit()
         self.summary_label = QLabel("")
-        self.summary_label.setStyleSheet("color: #6f6f6f;")
+        # self.summary_label.setStyleSheet("color: #6f6f6f;")
 
         form.addRow("ID:", self.id_edit)
         form.addRow("Description:", self.desc_edit)
@@ -3305,8 +3313,8 @@ class CinematicQuickEdit(QDialog):
         layout.addLayout(form)
 
         self.steps_table = QTableWidget()
-        self.steps_table.setColumnCount(4)
-        self.steps_table.setHorizontalHeaderLabels(["type", "speaker", "text", "durationSeconds"])
+        self.steps_table.setColumnCount(5)
+        self.steps_table.setHorizontalHeaderLabels(["type", "speaker", "emote", "text", "durationSeconds"])
         self.steps_table.horizontalHeader().setStretchLastSection(True)
         self.steps_table.setSelectionBehavior(QAbstractItemView.SelectRows)
         self.steps_table.setSelectionMode(QAbstractItemView.SingleSelection)
@@ -3356,8 +3364,9 @@ class CinematicQuickEdit(QDialog):
         self.steps_table.insertRow(r)
         self.steps_table.setItem(r, 0, QTableWidgetItem(_ensure_str(step.get("type", "narration"))))
         self.steps_table.setItem(r, 1, QTableWidgetItem(_ensure_str(step.get("speaker", ""))))
-        self.steps_table.setItem(r, 2, QTableWidgetItem(_ensure_str(step.get("text", step.get("line", "")))))
-        self.steps_table.setItem(r, 3, QTableWidgetItem(_ensure_str(step.get("durationSeconds", ""))))
+        self.steps_table.setItem(r, 2, QTableWidgetItem(_ensure_str(step.get("emote", ""))))
+        self.steps_table.setItem(r, 3, QTableWidgetItem(_ensure_str(step.get("text", step.get("line", "")))))
+        self.steps_table.setItem(r, 4, QTableWidgetItem(_ensure_str(step.get("durationSeconds", ""))))
         self.steps_table.setCurrentCell(r, 0)
 
     def _add_step(self):
@@ -3370,8 +3379,9 @@ class CinematicQuickEdit(QDialog):
         step = {
             "type": self.steps_table.item(row, 0).text() if self.steps_table.item(row, 0) else "narration",
             "speaker": self.steps_table.item(row, 1).text() if self.steps_table.item(row, 1) else "",
-            "text": self.steps_table.item(row, 2).text() if self.steps_table.item(row, 2) else "",
-            "durationSeconds": self.steps_table.item(row, 3).text() if self.steps_table.item(row, 3) else "",
+            "emote": self.steps_table.item(row, 2).text() if self.steps_table.item(row, 2) else "",
+            "text": self.steps_table.item(row, 3).text() if self.steps_table.item(row, 3) else "",
+            "durationSeconds": self.steps_table.item(row, 4).text() if self.steps_table.item(row, 4) else "",
         }
         self._append_step_row(step)
 
@@ -3391,7 +3401,7 @@ class CinematicQuickEdit(QDialog):
         def _row_values(r: int) -> List[str]:
             return [
                 self.steps_table.item(r, c).text() if self.steps_table.item(r, c) else ""
-                for c in range(4)
+                for c in range(self.steps_table.columnCount())
             ]
         a = _row_values(row)
         b = _row_values(new_row)
@@ -3418,8 +3428,9 @@ class CinematicQuickEdit(QDialog):
         for r in range(self.steps_table.rowCount()):
             t = self.steps_table.item(r, 0).text().strip() if self.steps_table.item(r, 0) else ""
             sp = self.steps_table.item(r, 1).text().strip() if self.steps_table.item(r, 1) else ""
-            tx = self.steps_table.item(r, 2).text().strip() if self.steps_table.item(r, 2) else ""
-            dur_raw = self.steps_table.item(r, 3).text().strip() if self.steps_table.item(r, 3) else ""
+            emote = self.steps_table.item(r, 2).text().strip() if self.steps_table.item(r, 2) else ""
+            tx = self.steps_table.item(r, 3).text().strip() if self.steps_table.item(r, 3) else ""
+            dur_raw = self.steps_table.item(r, 4).text().strip() if self.steps_table.item(r, 4) else ""
             if not t:
                 t = "narration"
             if not tx:
@@ -3427,6 +3438,8 @@ class CinematicQuickEdit(QDialog):
             step: Dict[str, Any] = {"type": t, "text": tx}
             if sp:
                 step["speaker"] = sp
+            if emote:
+                step["emote"] = emote
             if dur_raw:
                 try:
                     step["durationSeconds"] = float(dur_raw)
@@ -3992,16 +4005,16 @@ class NarrativeStudio(QWidget):
         header = QHBoxLayout()
         title = QLabel("Narrative Studio")
         title.setStyleSheet("font-size: 20px; font-weight: 650;")
-        sub = QLabel("Build stage moments as beats; link dialogue/events/cutscenes/milestones; validate + export.")
-        sub.setStyleSheet("color: #6f6f6f;")
-        sub.setWordWrap(True)
+        sub = QLabel("Manage quests, dialogue, cutscenes, and events in one place.")
+        # sub.setStyleSheet("color: #6f6f6f;")
+        layout.addWidget(title)
         header_left = QVBoxLayout()
         header_left.addWidget(title)
         header_left.addWidget(sub)
         header.addLayout(header_left, 1)
 
         self.focus_label = QLabel("Focus: (select a quest stage)")
-        self.focus_label.setStyleSheet("color: #6f6f6f;")
+        # self.focus_label.setStyleSheet("color: #6f6f6f;")
         header.addWidget(self.focus_label)
 
         b_save = QPushButton("Save")

@@ -23,10 +23,8 @@
 *   **Appearance:** Unnaturally calm. He doesn't blink.
 *   **Dialogue:** "Director. You are clutter. Please delete yourself."
 
-## Hostiles
+## Hostiles (Orbital Ring Subset)
 
-### HK-Droid (Hunter-Killer)
-*   **Role:** Unstoppable Pursuer.
-*   **Appearance:** Skeletal chrome frame. Red optic sensor.
-*   **Mechanic:** Cannot be killed. **Stasis** (Anchor Relic) freezes them for 3 turns.
-*   **Bark:** *Silence.* (They do not speak).
+*   **Compliance Officer:** Basic security.
+*   **Null-G Drone:** Maintenance hazard.
+*(See Hub 2 NPCs for full Bestiary details)*

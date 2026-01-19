@@ -7,7 +7,7 @@ This document outlines the emotional journeys and structural development of the 
 ## 1. Nova — The Catalyst
 
 *   **The Lie:** "I’m just a rat in the walls. If I keep my head down and survive, that’s enough."
-*   **The Truth:** "I am part of something bigger. Power isn't about surviving; it's about choosing who you save."
+*   **The Truth:** "I am part of something bigger. Power isn't about surviving; it's about choosing who you save. I reject ownership."
 
 | World | State of Mind | Key Beat / Action |
 | :--- | :--- | :--- |
@@ -16,14 +16,14 @@ This document outlines the emotional journeys and structural development of the 
 | **3: The Spire** | Competent. Starts to enjoy the power. Feels like a "cool" rebel. | **The Test:** Leads the heist. Confidence borders on arrogance. She thinks she can outsmart the Administrator effortlessly. |
 | **4: The Foundry** | Responsibility. Realizes her power has consequences for others. | **The Pivot:** She uses her power to support Gh0st’s revenge, putting his needs above the mission. A leader’s choice. |
 | **5: The Void** | Failure. Tries to fix everything alone with "Stasis." Arrogant. | **Low Point:** Vale defeats her easily because she tries to control him. She realizes brute force (even Source power) can’t fix a broken soul. |
-| **6: The Source** | Acceptance. Rejects "Perfect Control." | **Climax:** She gives up the god-like power to save her friends. She wins by letting go, proving she is no longer the scared rat. |
+| **6: The Source** | Acceptance. Rejects "Perfect Control." | **Climax:** She rejects Vale's claim on her soul ("You don't own me") and chooses to save her found family over becoming a god. |
 
 ---
 
 ## 2. Zeke — The Insider
 
 *   **The Lie:** "I’m a coward. I can only fix things from the inside by following the rules."
-*   **The Truth:** "I am brave. Rules are just code, and I can rewrite them to protect my friends."
+*   **The Truth:** "I am brave. Rules are just code, and I can rewrite them. I refuse to be silenced."
 
 | World | State of Mind | Key Beat / Action |
 | :--- | :--- | :--- |
@@ -32,14 +32,14 @@ This document outlines the emotional journeys and structural development of the 
 | **3: The Spire** | Haunted. Back in civilization, he’s terrified of being recognized. | **The Confrontation:** Has to bluff a Dominion guard using his old "HR voice." He realizes he can use his past as a weapon, not just a shame. |
 | **4: The Foundry** | Angry. Sees how the sausage is made (Gh0st’s creation). | **The Bond:** He connects with Gh0st—the "software guy" understanding the "hardware guy." He hacks the assembly line to save Gh0st. |
 | **5: The Void** | Regret. Sees the full scale of what he helped build. | **Low Point:** He is locked out of the system by Vale. His "Insider" status means nothing. He feels he has nothing left to offer. |
-| **6: The Source** | Resolved. He stops looking for a system to join. | **Climax:** He doesn't hack a computer; he "hacks" the group dynamic, keeping them together when reality breaks. He is the glue. |
+| **6: The Source** | Resolved. He stops looking for a system to join. | **Climax:** He rejects Vale's "Harmony" as noise ("I'm not hiding anymore") and acts as the grounding wire that keeps the team connected. |
 
 ---
 
 ## 3. Gh0st — The Weapon
 
 *   **The Lie:** "I am a thing. I have no name, only a function. I follow orders."
-*   **The Truth:** "I am a person. I choose who I protect."
+*   **The Truth:** "I am a person. I choose who I protect. I cannot be owned."
 
 | World | State of Mind | Key Beat / Action |
 | :--- | :--- | :--- |
@@ -48,14 +48,14 @@ This document outlines the emotional journeys and structural development of the 
 | **3: The Spire** | The Watchdog. Protective of Nova, but claims it's "mission critical." | **The Crack:** He takes a hit meant for Nova without calculating it first. Logic says "dodge," body says "protect." |
 | **4: The Foundry** | The Reckoning. Confronts his production line. | **The Choice:** Meets his maker (Rylos). Rylos tries to use the command codes. Gh0st overrides them—not with code, but with will. |
 | **5: The Void** | The Brother. Desperate to find Elara. | **Low Point:** Finds Elara, but she is lost/gone. The "rescue" fails. He has to grieve the sister he never really knew. |
-| **6: The Source** | The Shield. No more orders. | **Climax:** He stands between the Ascended and Nova. Not because of programming, but because he loves this family. |
+| **6: The Source** | The Shield. No more orders. | **Climax:** He calmly rejects Vale's user authority ("You are not my user") and stands as the lethal, free protector of his family. |
 
 ---
 
 ## 4. Orion — The Ancient
 
 *   **The Lie:** "My time is over. The silence of my people is my punishment. I should just fade away."
-*   **The Truth:** "Life is for the living. I can honor the dead by teaching the new generation."
+*   **The Truth:** "Life is for the living. We are Starborn."
 
 | World | State of Mind | Key Beat / Action |
 | :--- | :--- | :--- |
@@ -64,7 +64,7 @@ This document outlines the emotional journeys and structural development of the 
 | **3: The Spire** | Judgment. Looks at the Dominion city with disgust. | **The Perspective:** He sees "Aethel tech" bastardized by humans. He has to get over his superiority complex to help them use the tech for good. |
 | **4: The Foundry** | Connection. Bonding with the "Artificial" (Gh0st). | **The Wisdom:** He teaches Gh0st that having a "designed purpose" doesn't mean you lack a soul. |
 | **5: The Void** | Horror. Recognizes the "Great Silence" protocol. | **Low Point:** Realizes his people weren't just "quiet," they were silenced. The Chorus calls him to join them in death. |
-| **6: The Source** | Life. Rejects the Chorus. | **Climax:** He hears his old people calling him home, but he looks at Nova/Zeke/Gh0st and chooses this messy, loud, imperfect family. |
+| **6: The Source** | Life. Rejects the Chorus. | **Climax:** He rejects the past and the Chorus. He chooses the human word for their bond, declaring "No. We are Starborn." |
 
 ---
 

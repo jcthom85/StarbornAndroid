@@ -11,22 +11,11 @@
     2.  **The Chorus:** Summons shadow copies of the party.
     3.  **The Silence:** Mass AoE wipe mechanic.
 
-## The Nightmares (Personal Demons)
+## Hostiles (Event Horizon Subset)
 
-### The Manager (Zeke's Fear)
-*   **Appearance:** A towering figure made of staplers, monitors, and ties. It has no face.
-*   **Attacks:** "Performance Review" (Debuff), "Downsize" (High Dmg).
-*   **Defeat:** Zeke must laugh at it.
-
-### The War (Gh0st's Fear)
-*   **Appearance:** A shadowy reflection of Gh0st, but covered in blood and obeying orders perfectly.
-*   **Attacks:** Sniper Shot, CQC.
-*   **Defeat:** Gh0st must refuse to fight.
-
-### The Void (Orion's Fear)
-*   **Appearance:** An emptiness in the shape of an Aethel. It absorbs light.
-*   **Attacks:** "Silence" (Mutes casting).
-*   **Defeat:** Orion must connect (Heal).
+*   **Source Shadow:** Basic distorted enemy.
+*   **The Nightmares:** Zeke, Gh0st, and Orion's personal demons.
+*(See Hub 2 NPCs for full Bestiary details)*
 
 ## Party (Epilogue Forms)
 

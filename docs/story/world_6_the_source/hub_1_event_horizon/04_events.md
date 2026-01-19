@@ -137,17 +137,22 @@
     *   **Orion:** "We cannot amplify it further without the Array."
     *   **Nova:** "Yes we can. I'm the receiver."
     *   She reaches for the safety latches on the Relics.
-    *   **Orion:** "Nova, no. If you uncouple the buffer, you become the circuit. The current will burn through you. You will lose yourself."
-    *   **Nova:** (Looking at the photo in her pocket). "I know. It’s asking for space."
-    *   **Gh0st:** "Negative. Find another way."
-    *   **Nova:** "There is no other way. He's rewriting reality. I'm just editing myself."
-    *   She turns to Zeke.
-    *   **Nova:** "Zeke?"
-    *   **Zeke:** "Yeah?" (Voice cracking).
-    *   **Nova:** "Take good notes. I’m gonna need you to tell me how we won."
-    *   **Action:** Nova uncouples the buffer. She opens her arms and invites the raw Source in.
-    *   **Visual:** It isn't digital static—it is blinding white heat. We see her silhouette tense in silent agony. We see flashes of her memories (The Mines, Jed, The Crash) literally burning up on screen—turning to ash and blowing away.
-    *   **Result:** She fires the Tuned Note. The Tear closes. Nova collapses, her eyes open but empty of recognition.
+    *   **Orion:** "Nova, no. You cannot hold the ocean in a cup. It will break you."
+    *   **Nova:** "I’m not a cup. I’m a wire."
+    *   She looks at them. "And I'm not alone."
+    *   **Zeke:** "We doing this? Like the drill?"
+    *   **Nova:** "Like the drill. Form the circuit."
+    *   **Action:** Nova uncouples the buffer.
+    *   Orion grabs her left shoulder. Zeke grabs her right hand. Gh0st steps behind her, bracing her back with his armored frame.
+    *   **Nova:** "Open!"
+    *   **Visual:** The Source hits them like a freight train of white light.
+    *   **The Circuit:**
+        *   **Nova (Spark):** Her eyes go solid white. She screams as the energy pours through her.
+        *   **Zeke (Ground):** His hands shake violently. Arcs of blue static shoot off his boots, grounding into the platform. "Too hot! It's too hot!"
+        *   **Gh0st (Shield):** His armor vents scream, blasting white-hot steam. "THERMAL CRITICAL. HOLDING."
+        *   **Orion (Tuner):** He hums a counter-frequency—a deep, resonant chord that forces the chaotic light into a beam.
+    *   **Orion:** "No. We are Starborn."
+    *   **Result:** They fire the Tuned Note together. The Tear closes. The feedback blast knocks them all unconscious, but the circuit holds. They fall together.
 
 ## EVT_W6_10: Epilogue
 *   **Visual:**

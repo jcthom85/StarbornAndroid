@@ -23,10 +23,6 @@
 *   **State of Mind:** **Useless.** He is an indoor creature. The jungle terrifies him.
 *   **Dialogue:** Complaining to mask fear.
 *   **Key Line:** "I can hack a bank mainframe in twelve seconds. I cannot, however, hack a mosquito. We are going to die here."
+    *   **Zeke vs. Nova:** Zeke blames her for the crash.
+    *   **Gh0st vs. The Party:** He is literally hunting them.
 
-## Hostiles
-
-### The Beast (Boss)
-*   **Role:** Apex Predator / Source Beast.
-*   **Appearance:** A silverback gorilla mutated by raw Source leakage. Glowing purple veins, bark-like armor.
-*   **Behavior:** Territorially aggressive. It wants the Chime.

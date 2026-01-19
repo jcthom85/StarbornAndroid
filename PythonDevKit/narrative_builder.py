@@ -59,8 +59,9 @@ from PyQt5.QtWidgets import (
 )
 from jinja2 import Environment, FileSystemLoader
 
-from data_core import json_load, json_save, unique_id
+from data_core import detect_project_root, json_load, json_save, unique_id
 from devkit_paths import resolve_paths
+from scope_utils import ScopeIndex, scope_prefix, ensure_prefix, infer_prefix
 from ai_narrative import NarrativeContext, NarrativeGenerationError, StageDraft, generate_stage
 from editor_bus import goto as studio_goto
 
@@ -136,6 +137,7 @@ class DialogueDialog(QDialog):
 
         self.id_edit = QLineEdit(self._data.get("id", ""))
         self.speaker_edit = QLineEdit(self._data.get("speaker", ""))
+        self.emote_edit = QLineEdit(self._data.get("emote", ""))
         self.text_edit = QTextEdit()
         self.text_edit.setPlainText(self._data.get("text", ""))
         self.condition_edit = QLineEdit(self._data.get("condition", ""))
@@ -144,6 +146,7 @@ class DialogueDialog(QDialog):
 
         form.addRow("ID:", self.id_edit)
         form.addRow("Speaker:", self.speaker_edit)
+        form.addRow("Emote (optional):", self.emote_edit)
         form.addRow(QLabel("Text:"))
         form.addRow(self.text_edit)
         form.addRow("Condition:", self.condition_edit)
@@ -174,6 +177,9 @@ class DialogueDialog(QDialog):
             "speaker": self.speaker_edit.text().strip(),
             "text": text,
         }
+        emote = self.emote_edit.text().strip()
+        if emote:
+            self._data["emote"] = emote
         if self.condition_edit.text().strip():
             self._data["condition"] = self.condition_edit.text().strip()
         if self.trigger_edit.text().strip():
@@ -241,7 +247,7 @@ class CutsceneDialog(QDialog):
         self.resize(580, 500)
         self._existing = set(existing_ids)
         self._scene_id = scene_id or ""
-        self._steps = steps or [{"type": "dialogue", "actor": "", "line": ""}]
+        self._steps = steps or [{"type": "dialogue", "actor": "", "line": "", "emote": None}]
 
         layout = QVBoxLayout(self)
         form = QFormLayout()
@@ -623,9 +629,12 @@ class NarrativeBuilder(QWidget):
         self.cinematics: Dict[str, List[dict]] = {}
         self.flows: Dict[str, Dict[str, List[dict]]] = {}
         self.npc_ids: List[str] = []
+        self.world_ids: List[str] = []
         self.hub_ids: List[str] = []
+        self.hubs_by_world: Dict[str, List[str]] = {}
         self.node_ids: List[str] = []
         self.room_ids: List[str] = []
+        self.scope_index: Optional[ScopeIndex] = None
 
         self.current_quest_id: Optional[str] = None
         self.current_stage_index: Optional[int] = None
@@ -656,6 +665,10 @@ class NarrativeBuilder(QWidget):
         rooms = _read_json_dict(self.rooms_path)
         self.room_ids = sorted(rooms.keys())
 
+        self.scope_index = ScopeIndex.from_assets(self.assets_root)
+        self.world_ids = self.scope_index.world_ids
+        self.hubs_by_world = self.scope_index.hubs_by_world
+
         if self.creative_prompts_path.exists():
             self.creative_prompts = json_load(self.creative_prompts_path, default=[])
         else:
@@ -685,6 +698,68 @@ class NarrativeBuilder(QWidget):
         self._dirty = dirty
         self._update_window_title()
 
+    def _current_scope_filter(self) -> Tuple[str, str]:
+        world_id = ""
+        hub_id = ""
+        if hasattr(self, "quest_world_filter"):
+            world_id = self.quest_world_filter.currentText()
+            if world_id == "All":
+                world_id = ""
+        if hasattr(self, "quest_hub_filter"):
+            hub_id = self.quest_hub_filter.currentText()
+            if hub_id == "All":
+                hub_id = ""
+        if hub_id and not world_id and self.scope_index:
+            world_id = self.scope_index.hub_to_world.get(hub_id, "")
+        return world_id, hub_id
+
+    def _scope_prefix(self) -> str:
+        world_id, hub_id = self._current_scope_filter()
+        return scope_prefix(world_id or None, hub_id or None)
+
+    def _strip_known_prefix(self, value: str) -> str:
+        if not self.scope_index or not value:
+            return value
+        prefix = infer_prefix(value, self.scope_index)
+        if prefix and value.startswith(prefix):
+            return value[len(prefix):]
+        return value
+
+    def _apply_scope_prefix_to_values(self, values: Dict[str, str], keys: List[str]) -> Dict[str, str]:
+        prefix = self._scope_prefix()
+        if not prefix:
+            return values
+        for key in keys:
+            val = values.get(key)
+            if isinstance(val, str) and val:
+                values[key] = ensure_prefix(val, prefix)
+        return values
+
+    def _refresh_hub_filter(self):
+        if not hasattr(self, "quest_hub_filter"):
+            return
+        world_id = ""
+        if hasattr(self, "quest_world_filter"):
+            world_id = self.quest_world_filter.currentText()
+            if world_id == "All":
+                world_id = ""
+        hubs = ["All"]
+        if world_id and self.hubs_by_world:
+            hubs += self.hubs_by_world.get(world_id, [])
+        else:
+            hubs += self.hub_ids
+        prev = self.quest_hub_filter.currentText() if self.quest_hub_filter.count() else "All"
+        self.quest_hub_filter.blockSignals(True)
+        self.quest_hub_filter.clear()
+        self.quest_hub_filter.addItems(hubs)
+        if prev in hubs:
+            self.quest_hub_filter.setCurrentText(prev)
+        self.quest_hub_filter.blockSignals(False)
+
+    def _on_scope_filter_changed(self):
+        self._refresh_hub_filter()
+        self._refresh_quest_list()
+
     def _save_all(self):
         try:
             json_save(self.quest_path, self.quests, sort_obj=True, indent=2)
@@ -710,7 +785,7 @@ class NarrativeBuilder(QWidget):
         title.setStyleSheet("font-size: 22px; font-weight: 600;")
         subtitle = QLabel("Sketch quests, stage emotional beats, and stitch dialogue without leaving the flow.")
         subtitle.setWordWrap(True)
-        subtitle.setStyleSheet("color: #6f6f6f;")
+        # subtitle.setStyleSheet("color: #6f6f6f;")
         header_text.addWidget(title)
         header_text.addWidget(subtitle)
         header_row.addLayout(header_text)
@@ -729,7 +804,7 @@ class NarrativeBuilder(QWidget):
         focus_row.addWidget(focus_label)
         focus_row.addWidget(self.header_label, 1)
         self.status_hint_label = QLabel("Tip: double-click a beat to open its micro editor.")
-        self.status_hint_label.setStyleSheet("color: #7a7a7a;")
+        # self.status_hint_label.setStyleSheet("color: #7a7a7a;")
         focus_row.addWidget(self.status_hint_label)
         layout.addLayout(focus_row)
 
@@ -779,8 +854,21 @@ class NarrativeBuilder(QWidget):
 
         caption = QLabel("Browse arcs, filter for vibes, and dive into a quest with a single click.")
         caption.setWordWrap(True)
-        caption.setStyleSheet("color: #7a7a7a;")
+        # caption.setStyleSheet("color: #7a7a7a;")
         layout.addWidget(caption)
+
+        filter_row = QHBoxLayout()
+        self.quest_world_filter = QComboBox()
+        self.quest_world_filter.addItems(["All"] + self.world_ids)
+        self.quest_hub_filter = QComboBox()
+        self.quest_world_filter.currentTextChanged.connect(self._on_scope_filter_changed)
+        self.quest_hub_filter.currentTextChanged.connect(self._refresh_quest_list)
+        filter_row.addWidget(QLabel("World"))
+        filter_row.addWidget(self.quest_world_filter, 1)
+        filter_row.addWidget(QLabel("Hub"))
+        filter_row.addWidget(self.quest_hub_filter, 1)
+        layout.addLayout(filter_row)
+        self._refresh_hub_filter()
 
         self.quest_search = QLineEdit()
         self.quest_search.setPlaceholderText("Search by title, ID, or mood…")
@@ -848,7 +936,7 @@ class NarrativeBuilder(QWidget):
 
         info = QLabel("Capture the quest identity up top so every beat stays anchored in intent.")
         info.setWordWrap(True)
-        info.setStyleSheet("color: #7a7a7a;")
+        # info.setStyleSheet("color: #7a7a7a;")
         quest_layout.addWidget(info)
 
         quest_form = QFormLayout()
@@ -870,7 +958,7 @@ class NarrativeBuilder(QWidget):
             return container
 
         self.quest_id_label = QPushButton("-")
-        self.quest_id_label.setStyleSheet("text-align: left; border: none; color: blue; text-decoration: underline;")
+        self.quest_id_label.setStyleSheet("text-align: left; border: none; color: #4da6ff; text-decoration: underline;")
         self.quest_id_label.clicked.connect(self._open_quest_in_editor)
         self.quest_title_edit = QLineEdit()
         self.quest_title_edit.setPlaceholderText("Quest title or emotional hook…")
@@ -942,7 +1030,7 @@ class NarrativeBuilder(QWidget):
 
         stage_info = QLabel("Lay out the flow. Think in beats: setup, twist, payoff, aftermath.")
         stage_info.setWordWrap(True)
-        stage_info.setStyleSheet("color: #7a7a7a;")
+        # stage_info.setStyleSheet("color: #7a7a7a;")
         stage_layout.addWidget(stage_info)
 
         search_row = QHBoxLayout()
@@ -990,7 +1078,7 @@ class NarrativeBuilder(QWidget):
         outline_layout.setSpacing(6)
         outline_hint = QLabel("Live document of every stage, task, and beat — perfect for reviews or export.")
         outline_hint.setWordWrap(True)
-        outline_hint.setStyleSheet("color: #7a7a7a;")
+        # outline_hint.setStyleSheet("color: #7a7a7a;")
         outline_layout.addWidget(outline_hint)
         self.quest_outline_edit = QPlainTextEdit()
         self.quest_outline_edit.setReadOnly(True)
@@ -1041,7 +1129,7 @@ class NarrativeBuilder(QWidget):
 
         self.stage_header_label = QLabel("Pick a stage to begin sculpting its beats.")
         self.stage_header_label.setWordWrap(True)
-        self.stage_header_label.setStyleSheet("color: #7a7a7a;")
+        # self.stage_header_label.setStyleSheet("color: #7a7a7a;")
         layout.addWidget(self.stage_header_label)
 
         idea_box = QGroupBox("Idea Spark")
@@ -1049,7 +1137,7 @@ class NarrativeBuilder(QWidget):
         idea_layout.setSpacing(6)
         idea_intro = QLabel("Use the prompt to riff before you lock the beats. Shuffle whenever inspiration fades.")
         idea_intro.setWordWrap(True)
-        idea_intro.setStyleSheet("color: #7a7a7a;")
+        # idea_intro.setStyleSheet("color: #7a7a7a;")
         idea_layout.addWidget(idea_intro)
         self.prompt_box = QPlainTextEdit()
         self.prompt_box.setReadOnly(True)
@@ -1078,7 +1166,7 @@ class NarrativeBuilder(QWidget):
         )
         workflow_blurb.setWordWrap(True)
         workflow_blurb.setTextFormat(Qt.RichText)
-        workflow_blurb.setStyleSheet("color: #6a6a6a;")
+        # workflow_blurb.setStyleSheet("color: #6a6a6a;")
         workflow_layout.addWidget(workflow_blurb)
         layout.addWidget(workflow_box)
 
@@ -1087,7 +1175,7 @@ class NarrativeBuilder(QWidget):
         outline_layout.setSpacing(6)
         outline_hint = QLabel("Auto-builds a scenario string from notes, tasks, and beats.")
         outline_hint.setWordWrap(True)
-        outline_hint.setStyleSheet("color: #7a7a7a;")
+        # outline_hint.setStyleSheet("color: #7a7a7a;")
         outline_layout.addWidget(outline_hint)
         self.stage_outline_edit = QPlainTextEdit()
         self.stage_outline_edit.setReadOnly(True)
@@ -1145,7 +1233,7 @@ class NarrativeBuilder(QWidget):
 
         info = QLabel("Name the beat, describe the fantasy, and capture raw notes for future you.")
         info.setWordWrap(True)
-        info.setStyleSheet("color: #7a7a7a;")
+        # info.setStyleSheet("color: #7a7a7a;")
         layout.addWidget(info)
 
         form = QFormLayout()
@@ -1154,7 +1242,7 @@ class NarrativeBuilder(QWidget):
         form.setContentsMargins(0, 0, 0, 0)
 
         self.stage_id_label = QPushButton("-")
-        self.stage_id_label.setStyleSheet("text-align: left; border: none; color: blue; text-decoration: underline;")
+        self.stage_id_label.setStyleSheet("text-align: left; border: none; color: #4da6ff; text-decoration: underline;")
         self.stage_id_label.clicked.connect(self._on_stage_id_clicked)
         self.stage_title_edit = QLineEdit()
         self.stage_title_edit.setPlaceholderText("Stage name or vibe (e.g., \"Sneak into the Observatory\")")
@@ -1185,7 +1273,7 @@ class NarrativeBuilder(QWidget):
 
         info = QLabel("Draft the player-facing tasks. Keep them clear, motivational, and flavorful.")
         info.setWordWrap(True)
-        info.setStyleSheet("color: #7a7a7a;")
+        # info.setStyleSheet("color: #7a7a7a;")
         layout.addWidget(info)
 
         self.task_table = QTableWidget(0, 4)
@@ -1222,7 +1310,7 @@ class NarrativeBuilder(QWidget):
 
         info = QLabel("Assemble dialogue, events, cutscenes, and notes. Reorder beats to tune pacing.")
         info.setWordWrap(True)
-        info.setStyleSheet("color: #7a7a7a;")
+        # info.setStyleSheet("color: #7a7a7a;")
         layout.addWidget(info)
 
         self.flow_list = QListWidget()
@@ -1548,8 +1636,24 @@ class NarrativeBuilder(QWidget):
             return
         self._updating_ui = True
         search = (self.quest_search.text() or "").strip().lower()
+        world_filter, hub_filter = self._current_scope_filter()
+        prefix = self._scope_prefix()
         self.quest_list.clear()
         for quest in self.quests:
+            quest_id = quest.get("id", "")
+            hub_id = (quest.get("hub_id") or "").strip()
+            if hub_filter:
+                if hub_id:
+                    if hub_id != hub_filter:
+                        continue
+                elif prefix and not quest_id.startswith(prefix):
+                    continue
+            elif world_filter:
+                if hub_id and self.scope_index:
+                    if self.scope_index.hub_to_world.get(hub_id) != world_filter:
+                        continue
+                elif prefix and not quest_id.startswith(prefix):
+                    continue
             title = quest.get("title", quest.get("id", ""))
             if search and search not in (title or "").lower() and search not in quest.get("id", "").lower():
                 continue
@@ -1683,21 +1787,27 @@ class NarrativeBuilder(QWidget):
 
     # ------------- quest CRUD --------------
     def _add_quest(self):
-        new_id, ok = QInputDialog.getText(self, "New Quest", "Quest ID:", text="quest_new")
+        prefix = self._scope_prefix()
+        default_id = ensure_prefix("quest_new", prefix) if prefix else "quest_new"
+        new_id, ok = QInputDialog.getText(self, "New Quest", "Quest ID:", text=default_id)
         if not ok or not new_id.strip():
             return
         new_id = new_id.strip()
+        if prefix:
+            new_id = ensure_prefix(new_id, prefix)
         if any(q.get("id") == new_id for q in self.quests):
             QMessageBox.warning(self, "Duplicate", f"Quest '{new_id}' already exists.")
             return
+        _, hub_filter = self._current_scope_filter()
+        title_seed = self._strip_known_prefix(new_id)
         quest = {
             "id": new_id,
-            "title": new_id.replace("_", " ").title(),
+            "title": title_seed.replace("_", " ").title(),
             "summary": "",
             "description": "",
             "flavor": "",
             "giver": "",
-            "hub_id": "",
+            "hub_id": hub_filter or "",
             "node_id": "",
             "mood": "",
             "rewards": [],
@@ -1750,17 +1860,25 @@ class NarrativeBuilder(QWidget):
             return
 
         # Get a unique ID for the new quest
+        prefix = self._scope_prefix()
         new_id_suggestion = new_quest.get("id", "new_quest")
+        if prefix:
+            new_id_suggestion = ensure_prefix(new_id_suggestion, prefix)
         new_id, ok = QInputDialog.getText(self, "New Quest ID", "Enter new quest ID:", text=new_id_suggestion)
         if not ok or not new_id.strip():
             return
         new_id = new_id.strip()
+        if prefix:
+            new_id = ensure_prefix(new_id, prefix)
 
         if any(q.get("id") == new_id for q in self.quests):
             QMessageBox.warning(self, "ID Error", "Quest ID already exists.")
             return
 
         new_quest["id"] = new_id
+        _, hub_filter = self._current_scope_filter()
+        if hub_filter and not new_quest.get("hub_id"):
+            new_quest["hub_id"] = hub_filter
 
         self.quests.append(new_quest)
         self.current_quest_id = new_id
@@ -1806,6 +1924,14 @@ class NarrativeBuilder(QWidget):
             return
 
         values = wizard.get_values()
+        self._apply_scope_prefix_to_values(values, [
+            "event_id",
+            "cinematic_id",
+            "quest_dialogue_id",
+            "post_quest_dialogue_id",
+            "met_milestone",
+            "quest_started_milestone",
+        ])
         template_path = self.project_root / "templates" / "pattern_conditional_quest.json.j2"
 
         try:
@@ -1850,6 +1976,13 @@ class NarrativeBuilder(QWidget):
             return
 
         values = wizard.get_values()
+        self._apply_scope_prefix_to_values(values, [
+            "quest_id",
+            "start_dialogue_id",
+            "complete_dialogue_id",
+            "milestone_item_obtained",
+            "milestone_quest_started",
+        ])
         template_path = self.project_root / "templates" / "pattern_fetch_quest.json.j2"
 
         try:
@@ -1875,6 +2008,9 @@ class NarrativeBuilder(QWidget):
         quest_payload = data["quest"]
         quest_id = quest_payload.get("id")
         if quest_id:
+            _, hub_filter = self._current_scope_filter()
+            if hub_filter and not quest_payload.get("hub_id"):
+                quest_payload["hub_id"] = hub_filter
             self.quests.append(quest_payload)
         for dialogue_entry in data["dialogues"]:
             dlg_id = dialogue_entry.get("id")
@@ -1895,6 +2031,13 @@ class NarrativeBuilder(QWidget):
             return
 
         values = wizard.get_values()
+        self._apply_scope_prefix_to_values(values, [
+            "quest_id",
+            "start_dialogue_id",
+            "complete_dialogue_id",
+            "milestone_enemies_killed",
+            "milestone_quest_started",
+        ])
         template_path = self.project_root / "templates" / "pattern_kill_quest.json.j2"
 
         try:
@@ -1920,6 +2063,9 @@ class NarrativeBuilder(QWidget):
         quest_payload = data["quest"]
         quest_id = quest_payload.get("id")
         if quest_id:
+            _, hub_filter = self._current_scope_filter()
+            if hub_filter and not quest_payload.get("hub_id"):
+                quest_payload["hub_id"] = hub_filter
             self.quests.append(quest_payload)
         for dialogue_entry in data["dialogues"]:
             dlg_id = dialogue_entry.get("id")
@@ -1945,8 +2091,18 @@ class NarrativeBuilder(QWidget):
         values = wizard.get_values()
         quest_id = values["quest_id"]
 
+        prefix = ""
+        if self.scope_index:
+            prefix = infer_prefix(quest_id, self.scope_index)
+        if not prefix:
+            prefix = self._scope_prefix()
+        quest_id_clean = quest_id
+        if prefix and quest_id.startswith(prefix):
+            quest_id_clean = quest_id[len(prefix):]
+        event_id = ensure_prefix(f"evt_complete_{quest_id_clean}", prefix)
+
         new_event = {
-            "id": f"evt_complete_{quest_id}",
+            "id": event_id,
             "description": f"Event to complete the quest '{quest_id}'.",
             "trigger": {
                 "type": values["trigger_type"],

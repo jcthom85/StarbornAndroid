@@ -34,6 +34,21 @@
 *   **Behavior:** Uses cover. Throws flashbangs.
 *   **Weakness:** Melee Rush.
 
+### Fume Bat (Wildlife)
+*   **Type:** Beast / Swarm.
+*   **Behavior:** Fast, erratic movement. Attacks in groups. Applies "Distracted" debuff (lowers accuracy).
+*   **Weakness:** AoE (Pulse Grenade).
+
+### Heavy Automaton (Machine)
+*   **Type:** Elite / Tank.
+*   **Behavior:** Slow but high HP and Armor. Uses a massive hydraulic claw for heavy melee damage.
+*   **Weakness:** Stagger / Guard Break (Slide Kick / Hydraulic Kick).
+
+### Overseer Drone (Machine)
+*   **Type:** Elite / Support.
+*   **Behavior:** hovers at the back. Buffs other machines with "Overclock" and heals them.
+*   **Weakness:** Source Damage / Hacking.
+
 ## Quest Givers (Interactive Objects)
 
 ### Hacked Terminal (SQ_04)

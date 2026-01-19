@@ -1,17 +1,16 @@
-# Quests — World 4: The Foundry
+# Quests — World 4: The Foundry (Hub 1: Slag Pits)
 
-## Main Questline (The Upgrade)
+## Main Questline (The Infiltration)
 
 | ID | Title | Objective | Key Steps | Rewards | Notes |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **MQ_17** | **Into the Fire** | Infiltrate the Factory. | 1. Land on the Obsidian Shelf.<br>2. Navigate the "Slag Rivers" (Hazard tutorial).<br>3. Hack the cooling vents to enter. | Fire Resistance Gear | Environmental hazards. |
-| **MQ_18** | **Ghost in the Machine** | Find Gh0st's blueprint data. | 1. Gh0st accesses the terminal.<br>2. Discover "Project Phantom" logs.<br>3. Realize Elara was the prototype.<br>4. Regroup at the **Cooling Springs**. | **Gh0st Upgrade** | Narrative heavy + mandatory breather before the Anvil climb. |
-| **MQ_19** | **The Anvil** | Steal the Relic. | 1. Reach the Core Chamber.<br>2. Solve the "Conveyor Belt" puzzle.<br>3. **Acquire: The Anvil Relic.** | **Source Ability: Construct** | Puzzle/Platforming. First Construct misfire (Nova cost beat). |
-| **MQ_20** | **Meltdown** | Defeat Rylos and escape. | 1. **Commander Rylos** activates the "Titan Walker".<br>2. Boss Fight on a sinking platform.<br>3. Steal the "Deep Core Engine" AND "Phase-Cutter Arrays" (Ship Weapons).<br>4. Escape before the volcano erupts.<br>5. **Cinematic: Compliance Coup (Stinger).** | **World 5 Access** | Gh0st gets the emotional climax; Vale’s takeover hits as fallout. Ship is now combat-ready. |
+| **MQ_16** | **Into the Fire** | Infiltrate the Factory. | 1. Land on the Obsidian Shelf.<br>2. Navigate the "Slag Rivers" (Hazard tutorial).<br>3. Hack the cooling vents to enter. | Fire Resistance Gear | Environmental hazards. |
+| **MQ_17** | **Ghost in the Machine** | Find Gh0st's blueprint data. | 1. Gh0st accesses the terminal.<br>2. Discover "Project Phantom" logs.<br>3. Realize Gh0st is Elara's replacement backup.<br>4. Regroup at the **Cooling Springs**. | **Gh0st Upgrade** | Narrative heavy + mandatory breather before the Assembly climb. |
 
 ## Side Quests
 
-| ID | Title | Quest Giver | Objective | Rewards | Notes |
+| ID | Title | Hub | Quest Giver | Objective | Reward | Notes |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **SQ_07** | **Sabotage** | Resistance Contact | Destroy 3 Ammo Crates. | Explosive Ammo | Combat. |
-| **SQ_08** | **Lost Worker** | Worker Tablet | Find a missing engineer in the lava tubes. | "Coolant Mod" | Exploration. |
+| **SQ_16** | **Sabotage** | Hub 1 | Resistance Contact | Destroy 3 Ammo Crates. | **Weapon Mod: Explosive Tip** | Replaces generic "Explosive Ammo". |
+| **SQ_17** | **Lost Worker** | Hub 1 | Worker Tablet | Find a missing engineer in the lava tubes. | **Armor Mod: Coolant System** | Increases Fire Res. Exploration focused. |
+| **SQ_18** | **The Scrap Heap** | Hub 1 | Scrapper Drone | Salvage parts from 3 destroyed mechs in the lava flow. | **Passive: Scavenger** | Increases loot drops from machines. |

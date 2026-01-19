@@ -10,6 +10,7 @@ data class DialogueLine(
     val condition: String? = null,
     val trigger: String? = null,
     val options: List<DialogueOption>? = null,
+    val emote: String? = null,
     val portrait: String? = null,
     @Json(name = "voice")
     val voiceCue: String? = null

@@ -10,7 +10,7 @@ Starborn — Dialogue Editor (v3.2)
 from __future__ import annotations
 import os, sys, json, shutil
 from pathlib import Path
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Any, Optional, Tuple
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (
@@ -26,12 +26,17 @@ from starborn_data import (
     collect_npc_names, collect_item_names, collect_quest_ids, collect_milestone_ids,
     validate_dialogue, collect_dialogue_ids
 )
+from scope_utils import ScopeIndex, scope_prefix, scoped_id
 
 class DialogueEditor(QWidget):
     def __init__(self, project_root: Optional[str] = None):
         super().__init__()
         self.setWindowTitle("Starborn — Dialogue")
         self.root = find_project_root(Path(project_root) if project_root else Path(__file__).parent)
+
+        self.scope_index = ScopeIndex.from_assets(self.root)
+        self.world_ids = self.scope_index.world_ids
+        self.hubs_by_world = self.scope_index.hubs_by_world
 
         self.dialogue: Dict[str, dict] = {}
         self.current_id: Optional[str] = None
@@ -79,6 +84,48 @@ class DialogueEditor(QWidget):
         all_ids = list(self.dialogue.keys())
         return validate_dialogue(list(self.dialogue.values()), self.npc_names, all_ids)
 
+    def _current_scope_filter(self) -> Tuple[str, str]:
+        world_id = ""
+        hub_id = ""
+        if hasattr(self, "scope_world"):
+            world_id = self.scope_world.currentText()
+            if world_id == "All":
+                world_id = ""
+        if hasattr(self, "scope_hub"):
+            hub_id = self.scope_hub.currentText()
+            if hub_id == "All":
+                hub_id = ""
+        if hub_id and not world_id:
+            world_id = self.scope_index.hub_to_world.get(hub_id, "")
+        return world_id, hub_id
+
+    def _scope_prefix(self) -> str:
+        world_id, hub_id = self._current_scope_filter()
+        return scope_prefix(world_id or None, hub_id or None)
+
+    def _refresh_hub_filter(self):
+        if not hasattr(self, "scope_hub"):
+            return
+        world_id = self.scope_world.currentText() if hasattr(self, "scope_world") else ""
+        if world_id == "All":
+            world_id = ""
+        hubs = ["All"]
+        if world_id and self.hubs_by_world:
+            hubs += self.hubs_by_world.get(world_id, [])
+        else:
+            hubs += self.scope_index.hub_ids
+        prev = self.scope_hub.currentText() if self.scope_hub.count() else "All"
+        self.scope_hub.blockSignals(True)
+        self.scope_hub.clear()
+        self.scope_hub.addItems(hubs)
+        if prev in hubs:
+            self.scope_hub.setCurrentText(prev)
+        self.scope_hub.blockSignals(False)
+
+    def _on_scope_filter_changed(self):
+        self._refresh_hub_filter()
+        self._reload_list()
+
     # -------- UI --------
     def _build_ui(self):
         split = QSplitter(Qt.Horizontal, self)
@@ -87,6 +134,19 @@ class DialogueEditor(QWidget):
 
         # LEFT: search + list + row of buttons
         left = QWidget(); l = QVBoxLayout(left)
+
+        filter_row = QHBoxLayout()
+        self.scope_world = QComboBox()
+        self.scope_world.addItems(["All"] + self.world_ids)
+        self.scope_hub = QComboBox()
+        self.scope_world.currentTextChanged.connect(self._on_scope_filter_changed)
+        self.scope_hub.currentTextChanged.connect(self._reload_list)
+        filter_row.addWidget(QLabel("World"))
+        filter_row.addWidget(self.scope_world, 1)
+        filter_row.addWidget(QLabel("Hub"))
+        filter_row.addWidget(self.scope_hub, 1)
+        l.addLayout(filter_row)
+        self._refresh_hub_filter()
 
         self.search_box = QLineEdit(); self.search_box.setPlaceholderText("Search by id / speaker / text…")
         self.search_box.textChanged.connect(self._reload_list)
@@ -121,6 +181,7 @@ class DialogueEditor(QWidget):
         self.f_id_label = QLabel("-")
         self.f_speaker = QComboBox(); self.f_speaker.setEditable(True); self.f_speaker.addItems(self.npc_names)
         self.f_text = QTextEdit(); self.f_text.setPlaceholderText("Dialogue text…")
+        self.f_emote = QLineEdit(); self.f_emote.setPlaceholderText("e.g., angry, sad")
         self.f_condition = QLineEdit(); self.f_condition.setPlaceholderText("quest:repair_generator | milestone:locker_open | item:Medkit")
         self.f_trigger   = QLineEdit(); self.f_trigger.setPlaceholderText("start_quest:id | give_item:Name | set_milestone:id")
         self.f_next = QComboBox(); self.f_next.setEditable(True)
@@ -128,6 +189,7 @@ class DialogueEditor(QWidget):
         form.addRow(QLabel("<b>ID</b>:"), self.f_id_label)
         form.addRow("Speaker:", self.f_speaker)
         form.addRow(QLabel("Text:")); form.addRow(self.f_text)
+        form.addRow("Emote:", self.f_emote)
         form.addRow("Condition:", self.f_condition)
         form.addRow("Trigger:",   self.f_trigger)
         form.addRow("Next ID:",   self.f_next)
@@ -160,10 +222,13 @@ class DialogueEditor(QWidget):
     def _reload_list(self):
         self.list.clear()
         ft = (self.search_box.text() or "").lower().strip()
+        prefix = self._scope_prefix()
         next_ids = collect_dialogue_ids(self.root)
         self.f_next.clear(); self.f_next.addItems(next_ids)
 
         for did in sorted(self.dialogue.keys(), key=str.lower):
+            if prefix and not did.startswith(prefix):
+                continue
             d = self.dialogue[did]
             speaker = (d.get("speaker") or "")
             text = (d.get("text") or "")
@@ -198,6 +263,7 @@ class DialogueEditor(QWidget):
         self.f_id_label.setText(did)
         self.f_speaker.setEditText(d.get("speaker",""))
         self.f_text.setPlainText(d.get("text",""))
+        self.f_emote.setText(d.get("emote",""))
         self.f_condition.setText(d.get("condition",""))
         self.f_trigger.setText(d.get("trigger",""))
         self.f_next.setEditText(d.get("next",""))
@@ -209,6 +275,7 @@ class DialogueEditor(QWidget):
         d["id"] = self.current_id
         d["speaker"] = self.f_speaker.currentText().strip()
         d["text"] = self.f_text.toPlainText()
+        d["emote"] = self.f_emote.text().strip()
         d["condition"] = self.f_condition.text().strip()
         d["trigger"] = self.f_trigger.text().strip()
         d["next"] = self.f_next.currentText().strip()
@@ -217,11 +284,8 @@ class DialogueEditor(QWidget):
 
     # -------- Buttons --------
     def _on_new(self):
-        base = "line"
-        i = 1
-        while f"{base}_{i}" in self.dialogue:
-            i += 1
-        did = f"{base}_{i}"
+        prefix = self._scope_prefix()
+        did = scoped_id(prefix, "dlg", "line", self.dialogue.keys())
         self.dialogue[did] = {"id": did, "speaker": "", "text": "", "condition": "", "trigger":"", "next":""}
         self._reload_list()
         self._select_id(did)
@@ -255,6 +319,10 @@ class DialogueEditor(QWidget):
         new, ok = QInputDialog.getText(self, "Rename ID", "New id:", text=old)
         new = (new or "").strip()
         if not ok or not new or new == old: return
+        prefix = self._scope_prefix()
+        if prefix and not new.startswith(prefix):
+            QMessageBox.warning(self, "Scope", f"Dialogue ID must start with '{prefix}' for the current scope.")
+            return
         if new in self.dialogue:
             QMessageBox.warning(self, "Exists", f"'{new}' already exists.")
             return

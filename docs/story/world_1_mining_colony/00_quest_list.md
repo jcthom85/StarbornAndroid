@@ -8,7 +8,7 @@ Canonical key item name: Mine Access Badge (UI can label it "Mining Pass" if nee
 | ID | Title | Primary Objective | Key Beats (canonical) | Rewards / Unlocks |
 | :--- | :--- | :--- | :--- | :--- |
 | **W1_MQ01** | **Wake Up Call** | Report to Jed | Wake -> Workshop tutorial -> basic hub onboarding | Opens Hub 1 exploration |
-| **W1_MQ02** | **Paperwork** | Get mine clearance | Gate Guard / bureaucracy -> meet/notice Zeke -> clearance granted | Mine Access Badge; unlocks Transit Checkpoint / Mine access |
+| **W1_MQ02** | **Paperwork** | Get mine clearance | Gate Guard / bureaucracy -> meet/notice Zeke (If met in EVT_W1_00: 'Oh, it's the volunteer again.') -> clearance granted | Mine Access Badge; unlocks Transit Checkpoint / Mine access |
 | **W1_MQ03** | **The Echo** | Find the Source signal | Travel to Logistics -> Deep Elevator -> Sector 4 -> Ancient Chamber -> Sync with Relic | Relic acquired: The Tuning Fork (Echo Relic); Nova gains Source Art: Blast Wave |
 | **W1_MQ04** | **Red Alert** | Escape the lockdown | Lockdown triggers -> chase/gauntlet through tunnels -> Zeke guides via comms -> Cargo Lift | Jed's sacrifice + Chime handoff (Ghost Signal Cell); opens Launch Bay path |
 | **W1_MQ05** | **The Launch** | Hijack a pod and get off-world | Fight through Logistics -> Pod Bay -> Boss: The Warden -> launch sequence -> shield/nav lock -> crash | Zeke joins party; Zeke syncs -> Source Art: Signal Jammer; transition to World 2 (crash interlude) |

@@ -10,7 +10,8 @@ data class CinematicStep(
     val type: CinematicStepType,
     val speaker: String? = null,
     val text: String,
-    val durationSeconds: Double? = null
+    val durationSeconds: Double? = null,
+    val emote: String? = null
 )
 
 enum class CinematicStepType {
