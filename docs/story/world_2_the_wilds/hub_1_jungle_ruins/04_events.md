@@ -22,7 +22,7 @@
     *   **Orion:** "That Chime... I jettisoned it. Twenty years ago."
     *   He takes it, slots it into the pod, and the lights stabilize.
     *   The moment the Chime clicks into place, Nova’s Echo marks flare—then the ruins drop out from under her.
-    *   **Flashback (Harmonic Imprint):**
+    *   **Flashback (Source Imprint):**
         *   Clean lab lighting. Fresh steel bolted onto ancient stone. Dominion warning stripes over Architect geometry.
         *   Red strobes. A siren that sounds like it’s chewing through the air.
         *   A younger Orion slams a canister into a launch tube—hands shaking, eyes wild.

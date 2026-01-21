@@ -6,7 +6,7 @@
 *   **Role:** MacGuffin / Tragic Figure.
 *   **Location:** The Anchor Chamber.
 *   **State:** Unconscious, wired into the machine. She is processing the Source data for the entire station.
-*   **Lore Note:** Project **Virtuoso**—a tuned human conduit + relay augmentation. Her unique relay-harmonic (chordprint) became both an encryption key and a weapon blueprint. Dominion used it as a key in Phantom units (the **Harmonic Lock** failsafe).
+*   **Lore Note:** Project **Virtuoso**—a tuned human conduit + relay augmentation. Her unique relay-Source chordprint became both an encryption key and a weapon blueprint. Dominion used it as a key in Phantom units (the **Source Lock** failsafe).
 *   **Fate:** Pulled into the Tear.
 
 ### Director Mara Thorne (The Deposed)

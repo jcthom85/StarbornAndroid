@@ -32,7 +32,7 @@
 *   **The Beat:** Surviving the jungle, finding Orion, recruiting Gh0st.
 *   **Emotional Tone:** **Wonder & Terror.** The beauty of the bioluminescence vs. the lethality of the beasts.
 *   **Breather Beat:** **Canopy Ridge** (mandatory) gives open-sky relief and a view of the Spire/Shield; **Tideglass Beach** (optional) lets the crew eat, joke, and feel human.
-*   **Flashback Beat:** When the Chime provides a burst of harmonic thrust, Nova catches a harmonic imprint—Orion launching it during the lab breach twenty years ago.
+*   **Flashback Beat:** When the Chime provides a burst of Source thrust, Nova catches a Source imprint—Orion launching it during the lab breach twenty years ago.
 *   **External Conflict:** **Man vs. Nature.** The Source Beast, the poison, the erosion.
 *   **Interpersonal Conflict:** **Trust.**
     *   **Zeke vs. Nova:** Zeke blames her for the crash.

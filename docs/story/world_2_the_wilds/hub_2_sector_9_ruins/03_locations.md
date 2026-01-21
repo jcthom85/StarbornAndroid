@@ -21,10 +21,10 @@ The ancient Aethel facility buried beneath the jungle. Clean geometry, shifting 
 *   **Description:** A circular room dominated by a single, humming pod. Dust undisturbed for years.
 *   **Internal Content:** Pod Room.
 *   **Purpose:** Recruit Orion.
-*   **Unlocks:** Stage 3 (Harmonic Gate).
+*   **Unlocks:** Stage 3 (Source Gate).
 
 ## Stage 3
-### Node 3: Harmonic Gate
+### Node 3: Source Gate
 *   **Icon:** 🎼
 *   **Type:** Puzzle
 *   **Description:** A resonator lock that requires specific frequencies to open.

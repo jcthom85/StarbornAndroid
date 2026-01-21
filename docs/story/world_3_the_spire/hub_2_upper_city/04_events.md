@@ -33,7 +33,7 @@
     *   **Zeke:** "Resignation accepted."
     *   Nova steps up to the Lens. It hums, reacting to her presence before she even touches it.
     *   **Zeke (Checking readings):** "Wait. The energy density is spiking. It's reading you as... incompatible. If you touch that, the feedback loop will light us up like a flare."
-    *   **Orion:** "He is right. The harmonic is too loud. We need to dampen it first."
+    *   **Orion:** "He is right. The Source is too loud. We need to dampen it first."
     *   **Nova:** "We don't have time for a safe mode. I can tune it out. I'm strong enough."
     *   **Orion:** "Nova, don't—"
     *   She ignores them and grabs the Lens.
@@ -43,10 +43,10 @@
     *   **Overlay:** **PHASE CURTAIN // CORRIDOR ROTATION**  
     *   **Undercurrent (faint):** **SYNC: ESTABLISHED**
     *   She sees the Administrator's "Shadow" — a dark tether leading into the Source.
-    *   For a moment, she sees her own signature: a messy human waveform... and a thin, old harmonic thread running through it.
+    *   For a moment, she sees her own signature: a messy human waveform... and a thin, old Source thread running through it.
     *   The Lens flares hot. The Archive security system tags her in clean, clinical text: **ANOMALY DETECTED.**
     *   Nova recoils as feedback rips behind her eyes. Orion catches her wrist. "I told you. The Source isn't a toy."
-    *   Orion clocks her reaction. "That harmonic—" He stops as alarms begin to rise. "Later."
+    *   Orion clocks her reaction. "That Source—" He stops as alarms begin to rise. "Later."
 *   **Effect:** Unlocks "Scan" (See invisible objects/weaknesses).
 
 ## EVT_W3_04: Compliance Override

@@ -13,4 +13,4 @@
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **SQ_06** | **Botanist** | Zeke | Scan 5 unique plants. | **Passive: Ecological Insight** | Lore: Zeke tries to make sense of nature by cataloging it. Reward increases critical chance against beasts. |
 | **SQ_07** | **Lost Patrol** | Dead Soldier | Find the logs of a lost Dominion squad. | Heavy Laser Mod | Atmosphere: Shows that even Dominion tech fails here. |
-| **SQ_08** | **Tideglass Day** | Orion | Visit Tideglass Beach and scavenge food for the crew. | **Weapon Mod: Harmonic Resin** | **Breather:** A moment of calm. Orion teaches Nova that the Source isn't just a weapon; it's life. Resin adds Source damage to physical attacks. |
+| **SQ_08** | **Tideglass Day** | Orion | Visit Tideglass Beach and scavenge food for the crew. | **Weapon Mod: Source Resin** | **Breather:** A moment of calm. Orion teaches Nova that the Source isn't just a weapon; it's life. Resin adds Source damage to physical attacks. |

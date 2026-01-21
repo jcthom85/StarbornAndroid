@@ -27,7 +27,7 @@
 *   **Type:** Tech / Ranged.
 *   **Location:** Lower City (Checkpoints).
 *   **Behavior:** Stationary turret mode. Fires suppression bursts.
-*   **Weakness:** Lightning / Hacking.
+*   **Weakness:** Shock / Hacking.
 
 ### Aero-Drone (Machine - Common)
 *   **Type:** Tech / Flying.
@@ -44,7 +44,7 @@
 ### Heavy Mech (Machine - Elite)
 *   **Type:** Tech / Tank.
 *   **Location:** Upper City (Alert).
-*   **Behavior:** Massive HP. Uses "Flamethrower" (AoE Fire).
+*   **Behavior:** Massive HP. Uses "Flamethrower" (AoE Burn).
 *   **Weakness:** Freeze / Source.
 
 ### The Administrator (Boss)

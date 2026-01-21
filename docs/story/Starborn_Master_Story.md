@@ -24,7 +24,7 @@ The journey drops into survival before returning to the City, allowing the party
 | Sequence | Chapter | Biome/Theme | Key Character | Major Plot Beat | Villain |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **1** | **The Mines** | Industrial / Underground | **Nova & Zeke** | **Origins.** Nova finds the Relic. Jed hands her a **Chime** (Ghost Signal Cell). Zeke defects and helps her escape in a stolen **Ore Pod**. | **The Warden** |
-| **Interlude** | **The Crash** | The Skies | **Party** | **The Pull.** Zeke splices the Chime into the pod for a burst of harmonic thrust. The nav locks to Orion's signal, the Shield hits them, and they crash in Sector 9. | N/A |
+| **Interlude** | **The Crash** | The Skies | **Party** | **The Pull.** Zeke splices the Chime into the pod for a burst of Source thrust. The nav locks to Orion's signal, the Shield hits them, and they crash in Sector 9. | N/A |
 | **2** | **The Wilds** | Jungle / Ancient Ruins | **Orion & Gh0st** | **Survival.** The Chime unlocks Orion's Sanctuary. The party discovers a derelict survey ship, **The Astra**. They repair it just enough to fly atmospherically to World 3 ("Limping"). | **Source Beast** |
 | **3** | **The Spire** | Neon City / Corporate | **Full Party** | **The Return.** The party steals the **Lens Relic**. The Astra is fully repaired and upgraded here, unlocking the full Hub. Ocean's Eleven style heist. | **The Administrator** |
 | **4** | **The Foundry** | Magma / Heavy Industry | **Gh0st** | **Vengeance.** Infiltrating the factory where Gh0st was made. Confronting his creator. Upgrading the *Astra* with a Deep Core Engine… then a **compliance coup stinger** shows Vale has relieved Mara Thorne. | **Rylos → Vale** |
@@ -42,7 +42,7 @@ The journey drops into survival before returning to the City, allowing the party
 *   Red strobes. A siren that sounds like it’s chewing through the air.
 *   **Lab PA:** "SOURCE BEAST CONTAINMENT BREACH."
 *   The far doors bow inward like something is leaning on them from the other side—geometry warping, too big for the room.
-*   Orion rips a **Chime** (Ghost Signal Cell) from its cradle: a harmonic resonator keyed to his signature.
+*   Orion rips a **Chime** (Ghost Signal Cell) from its cradle: a Source resonator keyed to his signature.
 *   Orion’s voice is a hiss meant for machines and prayers. "Get the signal out. If Veyra can hear me, it can find me."
 *   He slams the Chime into the launch tube and hits the release. It rockets away into darkness.
 *   For a single impossible beat, the Chorus answers—not a voice, but a soft chord like many notes agreeing to carry it.
@@ -66,9 +66,9 @@ The journey drops into survival before returning to the City, allowing the party
 
 ## World 2: The Wilds (Sector 9)
 *   **The Hook:** Nova and Zeke crash. They are lost.
-*   **Recruiting Orion:** The Chime provides limited, local harmonic power to the Sanctuary—enough to release Orion from stasis. He recognizes it as the beacon he launched **twenty years ago**.
+*   **Recruiting Orion:** The Chime provides limited, local Source power to the Sanctuary—enough to release Orion from stasis. He recognizes it as the beacon he launched **twenty years ago**.
 *   **Finding The Astra:** The party discovers a crashed Dominion survey ship (The Astra) nearby. It is a wreck, but salvageable.
-*   **Recruiting Gh0st:** Gh0st has the party in his sights. He attempts to fire, but his sensors trip a **Harmonic Lock**—a lethal lockout keyed to Elara’s relay-harmonic. He tries to switch targets to Zeke, then Orion, but the Lock spreads like a virus. He can’t shoot *anyone* and doesn’t understand why, so he offers a truce for answers.
+*   **Recruiting Gh0st:** Gh0st has the party in his sights. He attempts to fire, but his sensors trip a **Source Lock**—a lethal lockout keyed to Elara’s relay-Source signature. He tries to switch targets to Zeke, then Orion, but the Lock spreads like a virus. He can’t shoot *anyone* and doesn’t understand why, so he offers a truce for answers.
 *   **The Climax:** Using parts from the Sanctuary and the Chime, they get *The Astra* running. **They attempt to fly to orbit immediately.**
 *   **The Pivot (The Ceiling):** They hit the Planetary Shield. It's not just a wall; it's a zapper. The ship takes critical damage. Zeke realizes the Shield has a rotating gap, but they can't see it.
 *   **The Cost:** Nova learns fast that Source power isn’t free—Link and Blast burn her out on fumes until Orion forces “rest, focus, practice” into the plan.

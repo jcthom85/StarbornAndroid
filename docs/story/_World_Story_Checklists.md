@@ -45,10 +45,10 @@ x# Starborn — World Story Checklists
 
 *   **Goal (External):** Clear the rail and reach open sky.
 *   **Antagonist Pressure:** The Planetary Shield and the pod’s locked nav override human control.
-*   **Key Reveal:** The Chime isn’t a power cell—it’s a harmonic-resonator beacon, and something out there is answering.
+*   **Key Reveal:** The Chime isn’t a power cell—it’s a Source resonator beacon, and something out there is answering.
 *   **Character Turn:** Zeke realizes he can’t “hack” everything; Nova’s trust in him is tested when he can’t stop the lock.
 *   **Found-Family Beat:** In the chaos, they keep each other alive anyway—no more pretending this is a solo problem.
-*   **Relic / Key Item Use:** Zeke splices the **Chime** for a burst of harmonic thrust; the same splice hard-locks the nav to Orion’s signal.
+*   **Relic / Key Item Use:** Zeke splices the **Chime** for a burst of Source thrust; the same splice hard-locks the nav to Orion’s signal.
 *   **Failure/Cost Beat (Nova):** She can’t “hero” the crash—gravity wins, and their first victory is simply surviving together.
 *   **Payoff (Emotional):** Panic → dread → determination.
 *   **Payoff (Mechanical):** Transitions the party into the World 2 survival/tutorial framing.
@@ -60,10 +60,10 @@ x# Starborn — World Story Checklists
 
 *   **Goal (External):** Get out of the Wilds by following the signal and finding a way to leave the surface alive.
 *   **Antagonist Pressure:** The Source Beast, environmental hazards, the noise, and Gh0st hunting them under Dominion programming.
-*   **Key Reveal:** The Chime is Orion’s jettisoned beacon from a lab breach twenty years ago; the ruins hint at Architect and Aethel history; Nova’s **Echo-marked** state includes a faint harmonic trace (compatibility, not destiny).
+*   **Key Reveal:** The Chime is Orion’s jettisoned beacon from a lab breach twenty years ago; the ruins hint at Architect and Aethel history; Nova’s **Echo-marked** state includes a faint Source trace (compatibility, not destiny).
 *   **Character Turn:** Orion stops hiding (joins the fight); Gh0st breaks mission certainty (chooses truce/protection); Nova shifts from “reacting” to leading.
 *   **Found-Family Beat:** The crew saves one another *when it’s inconvenient*—then gets to breathe like a family at **Canopy Ridge** (mandatory) and **Tideglass Beach** (optional).
-*   **Relic / Key Item Use:** The **Chime** provides limited, local harmonic power to the Sanctuary—enough to release Orion from stasis, bring up minimal lighting and interfaces, and reinitialize *The Astra*’s **Bridge Relic**, but not sustain the Sanctuary long-term.
+*   **Relic / Key Item Use:** The **Chime** provides limited, local Source power to the Sanctuary—enough to release Orion from stasis, bring up minimal lighting and interfaces, and reinitialize *The Astra*’s **Bridge Relic**, but not sustain the Sanctuary long-term.
 *   **Failure/Cost Beat (Nova):** She tries to Link while unshielded and nearly blacks out; Orion forces the lesson: power is practice + focus, not willpower.
 *   **Payoff (Emotional):** Hope: the universe is bigger than Dominion, and the crew isn’t alone anymore.
 *   **Payoff (Mechanical):** Party expands (Orion, Gh0st); first support-style Source Art (**Link**).

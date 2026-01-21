@@ -22,7 +22,7 @@ Beneath the physical layer flows **the Source**. It is a psionic current of pure
 ### Dominion Engineering Model: Hardened vs. Tunable Reality
 Dominion doesn’t treat the Source like mysticism. They treat it like **acoustics**.
 *   **Solid-State (Normal Physics):** Steel is steel. Bullets stop in armor. Walls are walls.
-*   **Phase-State (Dominion term):** With the right **harmonic alignment**, matter becomes *tunable*—fields can harden air into barriers, “curtains” can become solid, and specialized impacts can shear through shields that would otherwise be impenetrable.
+*   **Phase-State (Dominion term):** With the right **Source alignment**, matter becomes *tunable*—fields can harden air into barriers, “curtains” can become solid, and specialized impacts can shear through shields that would otherwise be impenetrable.
 
 This is the foundation of Dominion Source-tech: force reality into a controlled phase-state, then profit from the control.
 
@@ -60,23 +60,23 @@ The Architects were not gods. They were engineers who tried to solve suffering w
 *   The relic suite survived as scattered Echoes. Dominion is rebuilding the same ladder with a different logo.
 
 ### Chimes (Non-Echo Artifacts)
-Chimes are portable harmonic resonators keyed to a specific psionic signature.
+Chimes are portable Source resonators keyed to a specific psionic signature.
 *   **Dominion designation:** Ghost Signal Cell.
 *   **Aethel term:** Chime.
 
 They can "handshake" with Source-era locks and dormant systems, but they do not generate sustained power or grant reality-editing on their own.
 *   **Orion's Chime:** Twenty years ago, when a Source Beast surfaced in Orion’s lab (Dominion classification), he **jettisoned** a Chime through a launch tube—then put himself into stasis to mute his signal and avoid its search.
 *   **How it reaches Nova:** Dominion later recovered it as salvage and it eventually filtered down to the Mining Colony as scrap, where Jed found it.
-*   **Function in the story:** It pulls Nova and Zeke's escape pod toward Sector 9 and provides limited harmonic power to reinitialize the Sanctuary—releasing Orion from stasis and rebooting *The Astra*'s Bridge Relic.
+*   **Function in the story:** It pulls Nova and Zeke's escape pod toward Sector 9 and provides limited Source power to reinitialize the Sanctuary—releasing Orion from stasis and rebooting *The Astra*'s Bridge Relic.
 *   **Chorus Response:** When a Chime reactivates, it’s audible inside Veyra. Orion’s people can’t steer ships, but they can **nudge the current**—strengthening the pull toward the Sanctuary once Orion’s signal returns.
 
 ### Signalprints (Dominion: Spectral ID)
-Direct contact with the Source (especially via Relics) leaves a measurable harmonic fingerprint in the way a person "rings" when they act, panic, fight, or channel power.
+Direct contact with the Source (especially via Relics) leaves a measurable Source fingerprint in the way a person "rings" when they act, panic, fight, or channel power.
 *   **Dominion term:** Spectral ID / Spectral Profile.
 *   **Orion's term:** Chordprint.
 *   **How it shows up in tech:** Locks, sensors, and weapons can key off the chordprint instead of DNA.
-*   **Project Phantom failsafe:** Gh0st-class units carry a **Harmonic Lock** keyed to Elara’s relay-chordprint. If a target matches above threshold, lethal force is locked and a retrieval/protection routine engages.
-*   **Why Nova can trip it:** Nova’s output includes a faint Aethel harmonic thread; Elara’s relay augmentation imprinted a similar harmonic. When Nova channels the Source, she can ping a partial match. It’s not blood—it’s frequency.
+*   **Project Phantom failsafe:** Gh0st-class units carry a **Source Lock** keyed to Elara’s relay-chordprint. If a target matches above threshold, lethal force is locked and a retrieval/protection routine engages.
+*   **Why Nova can trip it:** Nova’s output includes a faint Aethel Source thread; Elara’s relay augmentation imprinted a similar Source signature. When Nova channels the Source, she can ping a partial match. It’s not blood—it’s frequency.
 
 ---
 
@@ -135,13 +135,13 @@ Dominion already builds technology that harnesses the Source in many ways—impe
 This is their “magitek” ladder: infrastructure → industry → personal weapons.
 
 #### Pillar 1: Logistics (Relay Network)
-*   **What it is:** Orbital relays and harmonic repeaters that keep Dominion commerce and compliance connected.
+*   **What it is:** Orbital relays and Source repeaters that keep Dominion commerce and compliance connected.
 *   **What it does:** Turns distance into a managed variable—shipping windows, communications priority, and “accidental” shortages that can be blamed on weather.
 *   **Story function:** Dominion doesn’t just own labor. It owns the **frequency** that food, medicine, and evacuation rides on.
 
 #### Pillar 2: Defense & Industry (Phase-Tech)
 *   **Phase Curtains:** Planetary and facility-scale barriers with timed corridors (the Shield as logistics + prison).
-*   **Harmonic Barriers:** Corridor shutters, kill-walls, and containment fields keyed to **chordprints** (Spectral ID).
+*   **Source Barriers:** Corridor shutters, kill-walls, and containment fields keyed to **chordprints** (Spectral ID).
 *   **Phase Tools:** “Drills” and cutters that hum rock into dust instead of spinning—fast, quiet, and brutal.
 
 #### Pillar 3: Warfare (Virtuoso Program)
@@ -149,10 +149,10 @@ Machines can generate huge standing fields, but they’re clumsy at *improvisati
 *   **The solution:** A living brain as the processor: a human conduit synced with relay augmentation.
 *   **Project Virtuoso (Elara):** Proof that a tuned human + a focus can do what Dominion hardware alone cannot.
 
-#### Harmonic Foci (Elara-Era Prototypes)
+#### Source Foci (Elara-Era Prototypes)
 Dominion built “foci” that are inert in normal hands and catastrophic in a conduit’s.
 *   **Prism-Saber (Melee):** A hilt that projects a blade of hardened phase-noise—destabilizes bonds instead of cutting by edge.
-*   **Caster Gauntlets (Ranged):** Amplify harmonic signal into shaped Source discharge (concussive / heat / EMP variants).
+*   **Caster Gauntlets (Ranged):** Amplify Source signal into shaped Source discharge (concussive / heat / EMP variants).
 *   **Vector Harness (Utility):** An inertial rig that locks position for short bursts—wall-walk, micro-blinks, and recoil-cancel tricks.
 
 These prototypes can become late-game “legendary gear,” but **not as destiny locks**: Echo-marked users can ignite them, Orion can stabilize them, Zeke can calibrate them, and Gh0st can operate dampened modes.

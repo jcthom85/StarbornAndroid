@@ -31,7 +31,7 @@ Nova focuses on high-speed ranged attacks and mobility. She accelerates team tem
     *   *Laser Focus (The Lens - Vision):* Next attack ignores 100% of enemy Armor/Guard.
     *   *Shard Storm (The Anvil - Creation):* Constructs 3 floating hard-light daggers that fire when she attacks.
     *   *Stasis Bolt (The Anchor - Stability):* Completely freezes one target in time for 1 turn.
-    *   *Harmonic Burst (The Source - Resonance):* Clears all cooldowns for the entire party.
+    *   *Source Burst (The Source):* Clears all cooldowns for the entire party.
 
 ## Zeke
 
@@ -62,7 +62,7 @@ Zeke fights up close, using data to exploit weak points and destabilize enemies.
     *   *True Sight (The Lens - Vision):* Reveals all weaknesses + Party deals Guaranteed Crits for 1 turn.
     *   *Auto-Turret (The Anvil - Creation):* Constructs a drone that deals passive damage every turn.
     *   *Lag Spike (The Anchor - Stability):* Massively reduces Speed/Turn Order for all enemies.
-    *   *System Reboot (The Source - Resonance):* Revives a fallen ally with full HP and no cooldown penalty.
+    *   *System Reboot (The Source):* Revives a fallen ally with full HP and no cooldown penalty.
 
 ## Orion
 
@@ -93,7 +93,7 @@ Orion channels the Source through his Jewel to damage enemies and heal the team.
     *   *Triage Scan (The Lens - Vision):* Cleanses all Debuffs from party + Heals based on debuffs removed.
     *   *Sanctuary (The Anvil - Creation):* Constructs a zone on the floor; allies inside regenerate HP.
     *   *Undo (The Anchor - Stability):* Reverses all damage taken by one ally in the last turn.
-    *   *Symphony (The Source - Resonance):* Applies "Invulnerable" to the whole party for 1 turn.
+    *   *Symphony (The Source):* Applies "Invulnerable" to the whole party for 1 turn.
 
 ## Gh0st
 
@@ -124,4 +124,4 @@ Gh0st holds the line with his blade and shields, forcing enemies to focus on him
     *   *Threat Assessment (The Lens - Vision):* Enters a stance that Auto-Counters the next physical hit with massive damage.
     *   *Barricade (The Anvil - Creation):* Constructs physical cover (Wall) with its own HP bar.
     *   *Gravity Well (The Anchor - Stability):* Pulls all enemies to one point and Roots them.
-    *   *Iron Curtain (The Source - Resonance):* Prevents all allies from falling below 1 HP for 1 turn.
+    *   *Iron Curtain (The Source):* Prevents all allies from falling below 1 HP for 1 turn.
