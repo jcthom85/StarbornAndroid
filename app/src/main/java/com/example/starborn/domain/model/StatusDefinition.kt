@@ -6,6 +6,7 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class StatusDefinition(
     val id: String,
+    val name: String? = null,
     @Json(name = "display_name")
     val displayName: String? = null,
     @Json(name = "default_duration")

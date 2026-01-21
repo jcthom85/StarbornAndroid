@@ -105,6 +105,8 @@ class CombatViewModel(
     private val skillNodesById: Map<String, SkillTreeNode>
     private val actionProcessor: CombatActionProcessor
     private val enemyCooldowns: MutableMap<String, Int> = mutableMapOf()
+    private val playerCooldowns: MutableMap<String, Int> = mutableMapOf()
+    private val skillUsageCounts: MutableMap<String, Int> = mutableMapOf()
     private val snackCooldowns: MutableMap<String, Int> = mutableMapOf()
     private val combatFxEvents = MutableSharedFlow<CombatFxEvent>(extraBufferCapacity = 16)
     private var lastEnemyTargetId: String? = null
@@ -126,6 +128,11 @@ class CombatViewModel(
         _awaitingAction.value = actorId
         if (actorId != null) {
             atbMenuPaused = true
+            if (actorId in playerIdList) {
+                tickPlayerCooldowns(actorId)
+                tickSnackCooldown(actorId)
+                playUiCue("turn_start")
+            }
         } else {
             atbMenuPaused = false
             if (!isAtbPaused()) {
@@ -133,8 +140,21 @@ class CombatViewModel(
             }
         }
     }
-    private val _combatMessage = MutableStateFlow<String?>(null)
-    val combatMessage: StateFlow<String?> = _combatMessage.asStateFlow()
+
+    private fun tickPlayerCooldowns(actorId: String) {
+        val prefix = "$actorId:"
+        val keysToUpdate = playerCooldowns.keys.filter { it.startsWith(prefix) }
+        keysToUpdate.forEach { key ->
+            val current = playerCooldowns[key] ?: return@forEach
+            if (current > 0) {
+                playerCooldowns[key] = current - 1
+            }
+        }
+    }
+    private val combatTextVerbosity = CombatTextVerbosity.STANDARD
+    private var bannerSession: BannerSession? = null
+    private val _combatBanner = MutableStateFlow<CombatBannerMessage?>(null)
+    val combatBanner: StateFlow<CombatBannerMessage?> = _combatBanner.asStateFlow()
 
     private val _state = MutableStateFlow<CombatState?>(null)
     val state: StateFlow<CombatState?> = _state.asStateFlow()
@@ -370,6 +390,13 @@ class CombatViewModel(
             withRewards
         }
         if (executed) {
+            val key = "$attackerId:${skill.id}"
+            if (skill.cooldown > 0) {
+                playerCooldowns[key] = skill.cooldown + 1 // +1 because tick happens at start of turn
+            }
+            if (skill.usesPerBattle != null) {
+                skillUsageCounts[key] = skillUsageCounts.getOrDefault(key, 0) + 1
+            }
             clearAwaitingAction(attackerId)
             concludeActorTurn(attackerId)
         }
@@ -558,7 +585,8 @@ class CombatViewModel(
             resolved.applyOutcomeResults(current)
         }
         if (executed) {
-            snackCooldowns[attackerId] = SNACK_COOLDOWN_TURNS + 1
+            val cooldown = snack.effect?.cooldown?.takeIf { it > 0 } ?: 5
+            snackCooldowns[attackerId] = cooldown + 1
             clearAwaitingAction(attackerId)
             concludeActorTurn(attackerId)
         }
@@ -722,6 +750,37 @@ class CombatViewModel(
             resolveActivePlayerId(current)?.let { skillsForPlayer(it) }
         }.orEmpty()
 
+    fun canUseSkill(actorId: String, skill: Skill): Boolean {
+        val state = _state.value ?: return false
+        val key = "$actorId:${skill.id}"
+        
+        // 1. Check Cooldown
+        if (playerCooldowns.getOrDefault(key, 0) > 0) return false
+        
+        // 2. Check Usage Limits
+        if (skill.usesPerBattle != null) {
+            val used = skillUsageCounts.getOrDefault(key, 0)
+            if (used >= skill.usesPerBattle) return false
+        }
+        
+        // 3. Check Conditions (Weapon Requirements, HP thresholds, etc.)
+        if (!checkSkillConditions(actorId, skill, state)) return false
+        
+        return true
+    }
+
+    fun skillCooldownRemaining(actorId: String, skillId: String): Int =
+        playerCooldowns.getOrDefault("$actorId:$skillId", 0)
+
+    private fun checkSkillConditions(actorId: String, skill: Skill, state: CombatState): Boolean {
+        if (skill.conditions.isNullOrEmpty()) return true
+        
+        val actorState = state.combatants[actorId] ?: return false
+        // TODO: Expand this with actual condition parsing logic
+        // Examples: "hp_below_50", "sword_equipped", "target_stunned"
+        return true 
+    }
+
     fun consumeLevelUpSummaries(): List<LevelUpSummary> {
         if (pendingLevelUps.isEmpty()) return emptyList()
         val copy = pendingLevelUps.toList()
@@ -841,9 +900,7 @@ class CombatViewModel(
                     if (shouldPauseForAttackAnimation(entry.action)) {
                         pauseForAttackAnimation()
                     }
-                    if (entry.actorId in playerIdList) {
-                        _combatMessage.value = null
-                    }
+                    setCombatBanner(entry, updated)
                 }
                 is CombatLogEntry.Damage -> {
                     if (entry.amount == 0 && entry.element == "miss") {
@@ -858,7 +915,7 @@ class CombatViewModel(
                     val targetDefeated = targetState?.isAlive == false
                     val burstDelayMs = burstDelayFor(entry, pendingBursts)
                     emitImpact(entry, showAttackFx, targetDefeated, burstDelayMs)
-                    setCombatMessage(entry, updated)
+                    setCombatBanner(entry, updated)
                 }
                 is CombatLogEntry.Heal -> {
                     combatFxEvents.tryEmit(
@@ -868,14 +925,14 @@ class CombatViewModel(
                             amount = entry.amount
                         )
                     )
-                    setCombatMessage(entry, updated)
+                    setCombatBanner(entry, updated)
                 }
                 is CombatLogEntry.StatusApplied -> {
                     val burstDelayMs = burstStatusDelayFor(entry, pendingBursts)
                     emitStatusApplied(entry, burstDelayMs)
-                    setCombatMessage(entry, updated)
+                    setCombatBanner(entry, updated)
                 }
-                is CombatLogEntry.ElementStack -> setCombatMessage(entry, updated)
+                is CombatLogEntry.ElementStack -> setCombatBanner(entry, updated)
                 is CombatLogEntry.ElementBurst -> {
                     val normalized = ElementalStackRules.normalize(entry.element)
                         ?: entry.element.lowercase(Locale.getDefault())
@@ -890,7 +947,7 @@ class CombatViewModel(
                         )
                     )
                     playBurstCue(normalized)
-                    setCombatMessage(entry, updated)
+                    setCombatBanner(entry, updated)
                 }
                 is CombatLogEntry.Outcome -> {
                     val outcomeType = when (entry.result) {
@@ -908,7 +965,7 @@ class CombatViewModel(
                             outcome = outcomeType
                         )
                     )
-                    setCombatMessage(entry, updated)
+                    setCombatBanner(entry, updated)
                     if (updated.outcome != null) {
                         readyQueue.clear()
                         enemyTurnJob?.cancel()
@@ -918,7 +975,7 @@ class CombatViewModel(
                     }
                 }
                 is CombatLogEntry.StatusExpired,
-                is CombatLogEntry.TurnSkipped -> setCombatMessage(entry, updated)
+                is CombatLogEntry.TurnSkipped -> setCombatBanner(entry, updated)
                 else -> Unit
             }
         }
@@ -1135,11 +1192,336 @@ class CombatViewModel(
         }
     }
 
-    private fun setCombatMessage(entry: CombatLogEntry, state: CombatState) {
-        val message = describeEntry(entry, state)
-        if (!message.isNullOrBlank()) {
-            _combatMessage.value = message
+    private data class BannerSession(
+        val id: String,
+        val actorId: String,
+        val primary: String,
+        val accent: CombatBannerAccent,
+        val icon: CombatBannerIcon?
+    )
+
+    private fun setCombatBanner(
+        entry: CombatLogEntry,
+        state: CombatState,
+        currentAction: CombatAction? = null
+    ) {
+        when (combatTextVerbosity) {
+            CombatTextVerbosity.VERBOSE -> {
+                val message = describeEntry(entry, state).orEmpty().trim()
+                if (message.isNotBlank()) {
+                    bannerSession = null
+                    _combatBanner.value = CombatBannerMessage(
+                        id = UUID.randomUUID().toString(),
+                        primary = message,
+                        accent = CombatBannerAccent.DEFAULT,
+                        icon = null
+                    )
+                }
+                return
+            }
+            else -> Unit
         }
+
+        val update = when (entry) {
+            is CombatLogEntry.ActionQueued -> bannerForActionQueued(entry, state)
+            is CombatLogEntry.Damage -> bannerForDamage(entry, state)
+            is CombatLogEntry.Heal -> bannerForHeal(entry, state, currentAction)
+            is CombatLogEntry.StatusApplied -> bannerForStatusApplied(entry, state)
+            is CombatLogEntry.StatusExpired -> bannerForStatusExpired(entry, state)
+            is CombatLogEntry.ElementBurst -> bannerForElementBurst(entry, state)
+            is CombatLogEntry.TurnSkipped -> bannerForTurnSkipped(entry, state)
+            is CombatLogEntry.Outcome -> bannerForOutcome(entry)
+            is CombatLogEntry.ElementStack -> bannerForElementStack(entry, state)
+        }
+        if (update != null) {
+            _combatBanner.value = update
+        }
+    }
+
+    private fun bannerForActionQueued(
+        entry: CombatLogEntry.ActionQueued,
+        state: CombatState
+    ): CombatBannerMessage? {
+        if (entry.action is CombatAction.BasicAttack) {
+            bannerSession = null
+            return null
+        }
+        val actorId = entry.actorId
+        val actionDescriptor = actionDescriptor(entry.action)
+        val primary = actionDescriptor.label
+        val session = BannerSession(
+            id = UUID.randomUUID().toString(),
+            actorId = actorId,
+            primary = primary,
+            accent = actionDescriptor.accent ?: accentForActor(actorId, state),
+            icon = actionDescriptor.icon
+        )
+        bannerSession = session
+        if (!shouldShowActionBanner(actorId = actorId, action = entry.action, state = state)) {
+            return null
+        }
+        return CombatBannerMessage(
+            id = session.id,
+            primary = session.primary,
+            accent = session.accent,
+            icon = session.icon
+        )
+    }
+
+    private fun bannerForDamage(
+        entry: CombatLogEntry.Damage,
+        state: CombatState
+    ): CombatBannerMessage? {
+        val isStatusTick = entry.sourceId.startsWith(STATUS_SOURCE_PREFIX)
+        val isMiss = entry.element?.equals("miss", ignoreCase = true) == true
+        if (isMiss) return null
+        if (!isStatusTick) return null
+        val targetIsPlayer = entry.targetId in playerIdList
+        if (combatTextVerbosity != CombatTextVerbosity.VERBOSE && !targetIsPlayer) return null
+        val statusId = entry.sourceId.removePrefix(STATUS_SOURCE_PREFIX)
+        val statusName = statusDisplayName(statusId)
+        val secondary = entry.amount.takeIf { it > 0 }?.let { "-$it" }
+        return CombatBannerMessage(
+            id = UUID.randomUUID().toString(),
+            primary = statusName,
+            secondary = secondary,
+            accent = accentForElement(entry.element),
+            icon = CombatBannerIcon.STATUS,
+            importance = CombatBannerImportance.NORMAL
+        )
+    }
+
+    private fun bannerForHeal(
+        entry: CombatLogEntry.Heal,
+        state: CombatState,
+        currentAction: CombatAction?
+    ): CombatBannerMessage? {
+        if (combatTextVerbosity == CombatTextVerbosity.MINIMAL) return null
+        val isStatusTick = entry.sourceId.startsWith(STATUS_SOURCE_PREFIX)
+        if (isStatusTick) {
+            val statusId = entry.sourceId.removePrefix(STATUS_SOURCE_PREFIX)
+            val statusName = statusDisplayName(statusId)
+            return CombatBannerMessage(
+                id = UUID.randomUUID().toString(),
+                primary = statusName,
+                secondary = "+${entry.amount} HP",
+                accent = CombatBannerAccent.HEAL,
+                icon = CombatBannerIcon.HEAL,
+                importance = CombatBannerImportance.NORMAL
+            )
+        }
+
+        val session = bannerSession?.takeIf { it.actorId == entry.sourceId }
+        val actionFallback = currentAction?.takeIf { it.actorId == entry.sourceId }
+        val primary = session?.primary ?: run {
+            actionFallback?.let { actionDescriptor(it).label } ?: "Heal"
+        }
+        val messageId = session?.id ?: UUID.randomUUID().toString()
+        val icon = session?.icon ?: actionFallback?.let { actionDescriptor(it).icon } ?: CombatBannerIcon.HEAL
+        return CombatBannerMessage(
+            id = messageId,
+            primary = primary,
+            secondary = "+${entry.amount} HP",
+            accent = CombatBannerAccent.HEAL,
+            icon = icon,
+            importance = CombatBannerImportance.IMPORTANT
+        )
+    }
+
+    private fun bannerForStatusApplied(
+        entry: CombatLogEntry.StatusApplied,
+        state: CombatState
+    ): CombatBannerMessage? {
+        val targetIsPlayer = entry.targetId in playerIdList
+        if (combatTextVerbosity != CombatTextVerbosity.VERBOSE && !targetIsPlayer) return null
+
+        val statusName = statusDisplayName(entry.statusId)
+        val stacksSuffix = if (entry.stacks > 1) " x${entry.stacks}" else ""
+        val importance = if (targetIsPlayer) CombatBannerImportance.IMPORTANT else CombatBannerImportance.NORMAL
+        val session = bannerSession
+        val primary = session?.primary ?: "$statusName$stacksSuffix"
+        val secondary = if (session != null) "$statusName$stacksSuffix" else null
+        return CombatBannerMessage(
+            id = session?.id ?: UUID.randomUUID().toString(),
+            primary = primary,
+            secondary = secondary,
+            accent = accentForStatus(entry.statusId),
+            icon = CombatBannerIcon.STATUS,
+            importance = importance
+        )
+    }
+
+    private fun bannerForStatusExpired(
+        entry: CombatLogEntry.StatusExpired,
+        state: CombatState
+    ): CombatBannerMessage? {
+        val targetIsPlayer = entry.targetId in playerIdList
+        if (!targetIsPlayer) return null
+        if (combatTextVerbosity == CombatTextVerbosity.MINIMAL) return null
+        val statusName = statusDisplayName(entry.statusId)
+        return CombatBannerMessage(
+            id = UUID.randomUUID().toString(),
+            primary = "$statusName ended",
+            accent = CombatBannerAccent.DEFAULT,
+            icon = CombatBannerIcon.STATUS,
+            importance = CombatBannerImportance.NORMAL
+        )
+    }
+
+    private fun bannerForElementStack(
+        entry: CombatLogEntry.ElementStack,
+        state: CombatState
+    ): CombatBannerMessage? {
+        if (combatTextVerbosity != CombatTextVerbosity.VERBOSE) return null
+        val display = entry.element.uppercase(Locale.getDefault())
+        return CombatBannerMessage(
+            id = UUID.randomUUID().toString(),
+            primary = display,
+            secondary = "$display ${entry.stacks}/${ElementalStackRules.STACK_THRESHOLD}",
+            accent = accentForElement(entry.element),
+            icon = CombatBannerIcon.BURST,
+            importance = CombatBannerImportance.NORMAL
+        )
+    }
+
+    private fun bannerForElementBurst(
+        entry: CombatLogEntry.ElementBurst,
+        state: CombatState
+    ): CombatBannerMessage? {
+        val display = entry.element.uppercase(Locale.getDefault())
+        bannerSession = null
+        return CombatBannerMessage(
+            id = UUID.randomUUID().toString(),
+            primary = "$display BURST",
+            secondary = "$display energy erupts",
+            accent = accentForElement(entry.element),
+            icon = CombatBannerIcon.BURST,
+            importance = CombatBannerImportance.IMPORTANT
+        )
+    }
+
+        private fun bannerForTurnSkipped(
+            entry: CombatLogEntry.TurnSkipped,
+            state: CombatState
+        ): CombatBannerMessage? {
+            val chargingWeapon = chargingWeaponName(entry.reason)
+            if (chargingWeapon == null && combatTextVerbosity != CombatTextVerbosity.VERBOSE && entry.actorId !in playerIdList) {
+                return null
+            }
+            val reason = chargingWeapon?.let { "$it..." } ?: skipReasonLabel(entry.reason)
+            bannerSession = null
+            return CombatBannerMessage(
+                id = UUID.randomUUID().toString(),
+                primary = reason,
+                accent = CombatBannerAccent.DEFAULT,            icon = if (chargingWeapon != null) CombatBannerIcon.ATTACK else CombatBannerIcon.STATUS,
+            importance = if (chargingWeapon != null) CombatBannerImportance.IMPORTANT else CombatBannerImportance.IMPORTANT
+        )
+    }
+
+    private fun bannerForOutcome(entry: CombatLogEntry.Outcome): CombatBannerMessage? {
+        bannerSession = null
+        return null
+    }
+
+    private data class ActionDescriptor(
+        val label: String,
+        val icon: CombatBannerIcon,
+        val accent: CombatBannerAccent? = null
+    )
+
+    private fun actionDescriptor(action: CombatAction): ActionDescriptor =
+        when (action) {
+            is CombatAction.BasicAttack -> ActionDescriptor(label = "Strike", icon = CombatBannerIcon.ATTACK)
+            is CombatAction.SkillUse -> ActionDescriptor(
+                label = skillById[action.skillId]?.name ?: "Skill",
+                icon = CombatBannerIcon.SKILL
+            )
+            is CombatAction.ItemUse -> ActionDescriptor(
+                label = itemDisplayName(action.itemId),
+                icon = CombatBannerIcon.ITEM
+            )
+            is CombatAction.SnackUse -> ActionDescriptor(
+                label = itemDisplayName(action.snackItemId),
+                icon = CombatBannerIcon.SNACK
+            )
+            is CombatAction.SupportAbility -> ActionDescriptor(label = "Support", icon = CombatBannerIcon.SKILL)
+            is CombatAction.Defend -> ActionDescriptor(label = "Guard", icon = CombatBannerIcon.GUARD)
+            is CombatAction.Flee -> ActionDescriptor(label = "Retreat", icon = CombatBannerIcon.RETREAT)
+        }
+
+    private fun shouldShowActionBanner(
+        actorId: String,
+        action: CombatAction,
+        state: CombatState
+    ): Boolean {
+        val side = state.combatants[actorId]?.combatant?.side
+        val isEnemy = side == CombatSide.ENEMY
+        return when (combatTextVerbosity) {
+            CombatTextVerbosity.MINIMAL -> !isEnemy
+            CombatTextVerbosity.STANDARD -> !isEnemy || action !is CombatAction.BasicAttack
+            CombatTextVerbosity.VERBOSE -> true
+        }
+    }
+
+    private fun combatantName(state: CombatState, combatantId: String): String =
+        state.combatants[combatantId]?.combatant?.name ?: combatantId
+
+    private fun accentForActor(actorId: String, state: CombatState): CombatBannerAccent {
+        val normalized = actorId.lowercase(Locale.getDefault()).removePrefix("player_")
+        return when {
+            normalized.contains("nova") -> CombatBannerAccent.NOVA
+            normalized.contains("zeke") -> CombatBannerAccent.ZEKE
+            normalized.contains("orion") -> CombatBannerAccent.ORION
+            normalized.contains("gh0st") || normalized.contains("ghost") -> CombatBannerAccent.GHOST
+            state.combatants[actorId]?.combatant?.side == CombatSide.ENEMY -> CombatBannerAccent.ENEMY
+            else -> CombatBannerAccent.DEFAULT
+        }
+    }
+
+    private fun statusDisplayName(statusId: String): String =
+        statusRegistry.definition(statusId)?.displayName?.takeIf { it.isNotBlank() }
+            ?: statusRegistry.definition(statusId)?.name?.takeIf { it.isNotBlank() }
+            ?: statusId.replace('_', ' ').trim().replaceFirstChar { ch ->
+                if (ch.isLowerCase()) ch.titlecase(Locale.getDefault()) else ch.toString()
+            }
+
+    private fun accentForStatus(statusId: String): CombatBannerAccent {
+        val element = statusRegistry.definition(statusId)?.tick?.element
+        return accentForElement(element)
+    }
+
+    private fun accentForElement(element: String?): CombatBannerAccent {
+        val normalized = element?.trim()?.lowercase(Locale.getDefault())
+        return when (normalized) {
+            "fire" -> CombatBannerAccent.FIRE
+            "burn" -> CombatBannerAccent.FIRE
+            "ice" -> CombatBannerAccent.ICE
+            "lightning", "shock" -> CombatBannerAccent.SHOCK
+            "poison" -> CombatBannerAccent.POISON
+            "corrosion" -> CombatBannerAccent.POISON
+            "radiation" -> CombatBannerAccent.RADIATION
+            "psychic", "psionic" -> CombatBannerAccent.PSYCHIC
+            "void" -> CombatBannerAccent.VOID
+            "physical" -> CombatBannerAccent.PHYSICAL
+            "miss" -> CombatBannerAccent.MISS
+            else -> CombatBannerAccent.DEFAULT
+        }
+    }
+
+    private fun skipReasonLabel(reason: String): String {
+        val cleaned = reason.trim()
+        val lowered = cleaned.lowercase(Locale.getDefault())
+        val withoutIs = if (lowered.startsWith("is ")) cleaned.drop(3) else cleaned
+        return withoutIs.replace('_', ' ').trim().replaceFirstChar { ch ->
+            if (ch.isLowerCase()) ch.titlecase(Locale.getDefault()) else ch.toString()
+        }
+    }
+
+    private fun chargingWeaponName(reason: String): String? {
+        val match = Regex("""\bcharging\s+(.+)$""", RegexOption.IGNORE_CASE)
+            .find(reason.trim())
+        val weapon = match?.groupValues?.getOrNull(1)?.trim().orEmpty()
+        return weapon.takeIf { it.isNotBlank() }
     }
 
     private fun concludeActorTurn(actorId: String) {

@@ -64,7 +64,7 @@
     {
         "id": "zeke_shock_fists",
         "name": "Shock Fists",
-        "description": "Gauntlets that crackle with a focused "shock" jab.",
+        "description": "Gauntlets that crackle with a focused \"shock\" jab.",
         "aliases": [
             "shock fists"
         ],
@@ -79,7 +79,7 @@
             "damage_max": 11,
             "attack_style": "single",
             "attack_power_mult": 1.1,
-            "attack_element": ""shock"",
+            "attack_element": "shock",
             "accuracy": 4
         }
     },
@@ -1897,7 +1897,7 @@
                 "accuracy": 5,
                 "focus": 2
             },
-            "attack_element": ""shock""
+            "attack_element": "shock"
         }
     },
     {

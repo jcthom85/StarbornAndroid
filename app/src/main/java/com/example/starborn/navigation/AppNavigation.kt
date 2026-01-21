@@ -1,11 +1,16 @@
 package com.example.starborn.navigation
 
 import android.net.Uri
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -21,6 +26,7 @@ import com.example.starborn.feature.mainmenu.ui.MainMenuScreen
 import com.example.starborn.feature.mainmenu.MainMenuViewModel
 import com.example.starborn.feature.mainmenu.MainMenuViewModelFactory
 import com.example.starborn.feature.exploration.ui.ExplorationScreen
+import com.example.starborn.feature.exploration.ui.CombatTransitionOverlay
 import com.example.starborn.feature.inventory.InventoryViewModel
 import com.example.starborn.feature.inventory.InventoryViewModelFactory
 import com.example.starborn.feature.inventory.ui.InventoryRoute
@@ -58,18 +64,20 @@ import com.example.starborn.feature.fishing.viewmodel.FishingResultPayload
 import com.example.starborn.feature.fishing.ui.FishingRoute
 import com.example.starborn.feature.fishing.viewmodel.FishingViewModel
 import com.example.starborn.feature.fishing.viewmodel.FishingViewModelFactory
-import com.example.starborn.feature.fishing.ui.FishingRoute
 import com.example.starborn.feature.hub.ui.HubScreen
 import com.example.starborn.feature.hub.viewmodel.HubViewModel
 import com.example.starborn.feature.hub.viewmodel.HubViewModelFactory
 import com.example.starborn.data.local.UserSettings
 import com.example.starborn.ui.events.UiEvent
 import java.util.Locale
+import androidx.compose.runtime.DisposableEffect
+import com.example.starborn.feature.exploration.ui.TransitionMode
+import androidx.compose.ui.draw.scale
 
 @Composable
 fun NavigationHost(
     navController: NavHostController = rememberNavController(),
-    showCombatActionText: Boolean = false
+    showCombatActionText: Boolean = true
 ) {
     val context = LocalContext.current
     val services = remember { AppServices(context) }
@@ -116,6 +124,31 @@ fun NavigationHost(
         }
         composable(Exploration.route) { backStackEntry ->
             val explorationViewModel: ExplorationViewModel = viewModel(factory = ExplorationViewModelFactory(services))
+            var combatTransitionVisible by remember { mutableStateOf(false) }
+            var pendingCombatEnemyIds by remember { mutableStateOf<List<String>?>(null) }
+            val pulseScale = remember { androidx.compose.animation.core.Animatable(1f) }
+
+            DisposableEffect(Unit) {
+                onDispose {
+                    combatTransitionVisible = false
+                }
+            }
+
+            LaunchedEffect(combatTransitionVisible) {
+                if (combatTransitionVisible) {
+                    pulseScale.animateTo(
+                        targetValue = 1.05f,
+                        animationSpec = androidx.compose.animation.core.tween(100)
+                    )
+                    pulseScale.animateTo(
+                        targetValue = 1f,
+                        animationSpec = androidx.compose.animation.core.tween(100)
+                    )
+                } else {
+                    pulseScale.snapTo(1f)
+                }
+            }
+
             LaunchedEffect(backStackEntry) {
                 val victoryFlow = backStackEntry.savedStateHandle
                     .getStateFlow("combat_victory", emptyList<String>())
@@ -180,50 +213,70 @@ fun NavigationHost(
                     }
                 }
             }
-            ExplorationScreen(
-                viewModel = explorationViewModel,
-                audioCuePlayer = services.audioCuePlayer,
-                uiEventBus = services.uiEventBus,
-                onEnemySelected = { enemyIds ->
-                    if (enemyIds.isNotEmpty()) {
-                        navController.navigate(Combat.create(enemyIds))
+            Box(modifier = Modifier.fillMaxSize()) {
+                ExplorationScreen(
+                    viewModel = explorationViewModel,
+                    audioCuePlayer = services.audioCuePlayer,
+                    uiEventBus = services.uiEventBus,
+                    modifier = Modifier.scale(pulseScale.value),
+                    onEnemySelected = { enemyIds ->
+                        if (enemyIds.isEmpty() || combatTransitionVisible) return@ExplorationScreen
+                        pendingCombatEnemyIds = enemyIds
+                        combatTransitionVisible = true
+                    },
+                    onOpenInventory = { options ->
+                        val tabParam = options.initialTab?.name?.lowercase(Locale.getDefault())
+                        val slotParam = options.focusSlot?.lowercase(Locale.getDefault())
+                        val characterParam = options.initialCharacterId?.lowercase(Locale.getDefault())
+                        val queryParts = buildList {
+                            tabParam?.let { add("tab=${Uri.encode(it)}") }
+                            slotParam?.let { add("slot=${Uri.encode(it)}") }
+                            characterParam?.let { add("character=${Uri.encode(it)}") }
+                        }
+                        val destination = if (queryParts.isEmpty()) {
+                            Inventory.route
+                        } else {
+                            "${Inventory.route}?${queryParts.joinToString("&")}"
+                        }
+                        navController.navigate(destination)
+                    },
+                    onOpenTinkering = {
+                        backStackEntry.savedStateHandle["tinkering_closed"] = false
+                        backStackEntry.savedStateHandle["tinkering_craft"] = ""
+                        navController.navigate(Tinkering.route)
+                    },
+                    onOpenCooking = { navController.navigate(Cooking.route) },
+                    onOpenFirstAid = { navController.navigate(FirstAid.route) },
+                    onOpenFishing = { zoneId -> navController.navigate(Fishing.create(zoneId)) },
+                    onOpenShop = { shopId ->
+                        navController.navigate(Shop.create(shopId))
+                    },
+                    onReturnToHub = {
+                        navController.navigate(Hub.route) {
+                            popUpTo(Exploration.route) { inclusive = true }
+                            launchSingleTop = true
+                        }
+                    },
+                    fxEvents = services.uiFxBus.fxEvents
+                )
+
+                CombatTransitionOverlay(
+                    visible = combatTransitionVisible,
+                    theme = environmentThemeState.theme,
+                    suppressFlashes = userSettings.disableFlashes,
+                    highContrastMode = userSettings.highContrastMode,
+                    mode = TransitionMode.ENTER,
+                    onFinished = {
+                        val enemyIds = pendingCombatEnemyIds
+                        pendingCombatEnemyIds = null
+                        if (!enemyIds.isNullOrEmpty()) {
+                            navController.navigate(Combat.create(enemyIds))
+                        } else {
+                            combatTransitionVisible = false
+                        }
                     }
-                },
-                onOpenInventory = { options ->
-                    val tabParam = options.initialTab?.name?.lowercase(Locale.getDefault())
-                    val slotParam = options.focusSlot?.lowercase(Locale.getDefault())
-                    val characterParam = options.initialCharacterId?.lowercase(Locale.getDefault())
-                    val queryParts = buildList {
-                        tabParam?.let { add("tab=${Uri.encode(it)}") }
-                        slotParam?.let { add("slot=${Uri.encode(it)}") }
-                        characterParam?.let { add("character=${Uri.encode(it)}") }
-                    }
-                    val destination = if (queryParts.isEmpty()) {
-                        Inventory.route
-                    } else {
-                        "${Inventory.route}?${queryParts.joinToString("&")}"
-                    }
-                    navController.navigate(destination)
-                },
-                onOpenTinkering = {
-                    backStackEntry.savedStateHandle["tinkering_closed"] = false
-                    backStackEntry.savedStateHandle["tinkering_craft"] = ""
-                    navController.navigate(Tinkering.route)
-                },
-                onOpenCooking = { navController.navigate(Cooking.route) },
-                onOpenFirstAid = { navController.navigate(FirstAid.route) },
-                onOpenFishing = { zoneId -> navController.navigate(Fishing.create(zoneId)) },
-                onOpenShop = { shopId ->
-                    navController.navigate(Shop.create(shopId))
-                },
-                onReturnToHub = {
-                    navController.navigate(Hub.route) {
-                        popUpTo(Exploration.route) { inclusive = true }
-                        launchSingleTop = true
-                    }
-                },
-                fxEvents = services.uiFxBus.fxEvents
-            )
+                )
+            }
         }
         composable(
             route = "${Inventory.route}?tab={tab}&slot={slot}&character={character}",

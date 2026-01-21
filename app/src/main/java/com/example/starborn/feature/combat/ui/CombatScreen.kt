@@ -107,8 +107,11 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -140,6 +143,10 @@ import com.example.starborn.domain.model.Player
 import com.example.starborn.domain.model.Skill
 import com.example.starborn.data.local.Theme
 import com.example.starborn.feature.combat.viewmodel.AttackLungeStyle
+import com.example.starborn.feature.combat.viewmodel.CombatBannerAccent
+import com.example.starborn.feature.combat.viewmodel.CombatBannerImportance
+import com.example.starborn.feature.combat.viewmodel.CombatBannerIcon
+import com.example.starborn.feature.combat.viewmodel.CombatBannerMessage
 import com.example.starborn.feature.combat.viewmodel.CombatViewModel
 import com.example.starborn.feature.combat.viewmodel.CombatViewModel.TimedPromptState
 import com.example.starborn.feature.combat.viewmodel.CombatFxEvent
@@ -150,6 +157,8 @@ import com.example.starborn.feature.combat.viewmodel.TargetRequirement
 import com.example.starborn.domain.cinematic.CinematicPlaybackState
 import com.example.starborn.domain.cinematic.CinematicStepType
 import com.example.starborn.feature.exploration.ui.CinematicOverlay
+import com.example.starborn.feature.exploration.ui.CombatTransitionOverlay
+import com.example.starborn.feature.exploration.ui.TransitionMode
 import com.example.starborn.feature.exploration.viewmodel.CinematicStepUi
 import com.example.starborn.feature.exploration.viewmodel.CinematicUiState
 import com.example.starborn.ui.dialogs.SkillsDialog
@@ -375,10 +384,14 @@ fun CombatScreen(
     val missLungeToken by viewModel.missLungeToken.collectAsStateWithLifecycle(0L)
     val timedPromptState by viewModel.timedPrompt.collectAsStateWithLifecycle()
     val awaitingActionId by viewModel.awaitingAction.collectAsStateWithLifecycle()
-    val combatMessage by viewModel.combatMessage.collectAsStateWithLifecycle()
-    val cinematicPlayback = cinematicState
+    val combatBanner by viewModel.combatBanner.collectAsStateWithLifecycle()
+        val cinematicPlayback = cinematicState
         ?.collectAsStateWithLifecycle(initialValue = null)
         ?.value
+    
+    // Transition State
+    var exitTransitionVisible by remember { mutableStateOf(true) }
+
     val damageFx = remember { mutableStateListOf<DamageFxUi>() }
     val healFx = remember { mutableStateListOf<HealFxUi>() }
     val statusFx = remember { mutableStateListOf<StatusFxUi>() }
@@ -814,6 +827,7 @@ fun CombatScreen(
             SkillsDialog(
                 player = menuActor,
                 skills = menuActorSkills,
+                viewModel = viewModel,
                 onDismiss = { showSkillsDialog.value = false },
                 onSkillSelected = { skill ->
                     showSkillsDialog.value = false
@@ -953,10 +967,12 @@ fun CombatScreen(
                         .padding(bottom = partyDockHeight + 8.dp)
                 ) {
                     CombatLogPanel(
-                        flavorLine = if (showCombatActionText) combatMessage else null,
+                        bannerMessage = if (showCombatActionText) combatBanner else null,
                         instruction = pendingInstruction,
                         showCancel = pendingTargetRequest != null,
                         instructionShownAbove = enemyTargetPrompt,
+                        highContrastMode = highContrastMode,
+                        theme = viewModel.theme,
                         onCancel = if (pendingTargetRequest != null) {
                             { clearPendingRequest() }
                         } else null
@@ -1127,6 +1143,17 @@ fun CombatScreen(
                         .padding(24.dp)
                 )
             }
+            
+            CombatTransitionOverlay(
+                visible = exitTransitionVisible,
+                theme = viewModel.theme,
+                suppressFlashes = suppressFlashes,
+                highContrastMode = highContrastMode,
+                mode = TransitionMode.EXIT,
+                onFinished = { exitTransitionVisible = false },
+                modifier = Modifier.zIndex(100f)
+            )
+
             if (burstFlashAlpha.value > 0f && burstFlashStrength > 0f) {
                 Box(
                     modifier = Modifier
@@ -3468,19 +3495,26 @@ private fun DamageNumberBubble(
     fx: DamageFxUi,
     modifier: Modifier = Modifier
 ) {
+    val normalizedElement = fx.element?.trim()?.lowercase(Locale.getDefault())
+    val isMiss = normalizedElement == "miss" && fx.amount == 0
     val isHealing = fx.amount < 0
     val displayAmount = abs(fx.amount)
     val verticalOffset = remember { Animatable(0f) }
     val alphaAnim = remember { Animatable(1f) }
     val scaleAnim = remember { Animatable(1f) }
-    val driftX = remember(fx.id) { (Random.nextFloat() - 0.5f) * 48f }
-    val tilt = remember(fx.id, isHealing) {
-        if (isHealing) 0f else (Random.nextFloat() - 0.5f) * if (fx.critical) 18f else 10f
+    val driftX = remember(fx.id, isMiss) { (Random.nextFloat() - 0.5f) * if (isMiss) 24f else 48f }
+    val tilt = remember(fx.id, isHealing, isMiss) {
+        when {
+            isHealing -> 0f
+            isMiss -> 0f
+            else -> (Random.nextFloat() - 0.5f) * if (fx.critical) 18f else 10f
+        }
     }
     LaunchedEffect(fx.id) {
         verticalOffset.snapTo(0f)
         alphaAnim.snapTo(1f)
         val initialScale = when {
+            isMiss -> 1.12f
             isHealing -> 1.05f
             fx.critical -> 1.25f
             else -> 1.1f
@@ -3489,6 +3523,7 @@ private fun DamageNumberBubble(
         launch {
             verticalOffset.animateTo(
                 targetValue = when {
+                    isMiss -> -64f
                     isHealing -> -60f
                     fx.critical -> -96f
                     else -> -72f
@@ -3505,22 +3540,25 @@ private fun DamageNumberBubble(
         }
     }
     val headline = when {
+        isMiss -> "MISS!"
         isHealing -> "+$displayAmount"
-        fx.critical -> "!$displayAmount"
+        fx.critical -> "$displayAmount"
         else -> "$displayAmount"
     }
     val (topColor, bottomColor) = damageNumberColors(fx.element, fx.critical, isHealing)
     Text(
         text = headline,
         style = MaterialTheme.typography.titleLarge.copy(
+            fontFamily = if (isMiss) CombatNameFont else null,
             shadow = Shadow(
                 color = bottomColor.copy(alpha = 0.9f),
                 offset = Offset(0f, 4f),
                 blurRadius = 12f
             ),
+            letterSpacing = if (isMiss) 1.0.sp else 0.sp,
             fontStyle = if (isHealing) FontStyle.Italic else FontStyle.Normal
         ),
-        fontWeight = FontWeight.Black,
+        fontWeight = if (isMiss) FontWeight.SemiBold else FontWeight.Black,
         color = topColor,
         modifier = modifier.graphicsLayer {
             translationY = verticalOffset.value
@@ -4091,50 +4129,71 @@ private fun LevelUpCard(
 
 @Composable
 private fun CombatLogPanel(
-    flavorLine: String?,
+    bannerMessage: CombatBannerMessage?,
     instruction: String?,
     showCancel: Boolean,
     instructionShownAbove: Boolean = false,
+    highContrastMode: Boolean,
+    theme: Theme?,
     onCancel: (() -> Unit)?
 ) {
     val instructionSlotHeight = 30.dp
     val cancelSlotHeight = 28.dp
-    Column(
+    val baseSpacing = 6.dp
+    val baseHeight = instructionSlotHeight + cancelSlotHeight + baseSpacing
+    val hasInstruction = instructionShownAbove || !instruction.isNullOrBlank()
+    Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 4.dp),
-        verticalArrangement = Arrangement.spacedBy(6.dp)
+            .padding(horizontal = 4.dp)
+            .height(baseHeight)
     ) {
-        AnimatedFlavorText(flavorLine)
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(instructionSlotHeight)
+                .align(Alignment.BottomCenter),
+            verticalArrangement = Arrangement.spacedBy(baseSpacing)
         ) {
-            if (!instructionShownAbove && !instruction.isNullOrBlank()) {
-                TargetInstructionBadge(
-                    text = instruction,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.Center)
-                        .padding(horizontal = 12.dp)
-                )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(instructionSlotHeight)
+            ) {
+                if (!instructionShownAbove && !instruction.isNullOrBlank()) {
+                    TargetInstructionBadge(
+                        text = instruction,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .align(Alignment.Center)
+                            .padding(horizontal = 12.dp)
+                    )
+                }
             }
-        }
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(cancelSlotHeight)
-        ) {
-            if (showCancel && onCancel != null) {
-                TextButton(
-                    onClick = onCancel,
-                    modifier = Modifier.align(Alignment.CenterEnd)
-                ) {
-                    Text(text = "Cancel target")
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(cancelSlotHeight)
+            ) {
+                if (showCancel && onCancel != null) {
+                    TextButton(
+                        onClick = onCancel,
+                        modifier = Modifier.align(Alignment.CenterEnd)
+                    ) {
+                        Text(text = "Cancel target")
+                    }
                 }
             }
         }
+        CombatImpactBanner(
+            message = bannerMessage,
+            hasInstruction = hasInstruction,
+            highContrastMode = highContrastMode,
+            theme = theme,
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .offset(y = (-56).dp)
+                .padding(horizontal = 8.dp)
+        )
     }
 }
 
@@ -4418,41 +4477,228 @@ private fun CombatItemsDialog(
 }
 
 @Composable
-private fun AnimatedFlavorText(line: String?) {
-    if (line.isNullOrBlank()) return
-    val offsetY = remember { Animatable(-40f) }
+private fun CombatImpactBanner(
+    message: CombatBannerMessage?,
+    hasInstruction: Boolean,
+    highContrastMode: Boolean,
+    theme: Theme?,
+    modifier: Modifier = Modifier
+) {
+    if (message == null || message.primary.isBlank()) return
     val alpha = remember { Animatable(0f) }
-    val rotation = remember(line) { (Random.nextInt(-10, 11)).toFloat() }
-    LaunchedEffect(line) {
-        offsetY.snapTo(-40f)
-        alpha.snapTo(0f)
-        offsetY.animateTo(
-            targetValue = 0f,
-            animationSpec = tween(durationMillis = 420, easing = EaseOutBack)
-        )
-        alpha.animateTo(
-            targetValue = 1f,
-            animationSpec = tween(durationMillis = 180)
-        )
-        alpha.animateTo(
-            targetValue = 0f,
-            animationSpec = tween(durationMillis = 300, delayMillis = 1600)
-        )
+    val offsetY = remember { Animatable(14f) }
+    val scale = remember { Animatable(0.98f) }
+    val glow = remember { Animatable(0f) }
+    val lastId = remember { mutableStateOf<String?>(null) }
+    val tagKey = remember(message.tags) { message.tags.joinToString("|") }
+
+    LaunchedEffect(message.id, message.primary, message.secondary, tagKey) {
+        val isNew = message.id != lastId.value
+        if (isNew) {
+            lastId.value = message.id
+            alpha.snapTo(0f)
+            offsetY.snapTo(14f)
+            scale.snapTo(0.98f)
+            glow.snapTo(0f)
+            launch {
+                offsetY.animateTo(0f, tween(durationMillis = 220, easing = FastOutSlowInEasing))
+            }
+            launch {
+                scale.animateTo(1f, tween(durationMillis = 240, easing = FastOutSlowInEasing))
+            }
+            alpha.animateTo(1f, tween(durationMillis = 140, easing = LinearEasing))
+        } else {
+            if (alpha.value < 1f) {
+                alpha.animateTo(1f, tween(durationMillis = 80, easing = LinearEasing))
+            }
+            glow.snapTo(1f)
+            glow.animateTo(0f, tween(durationMillis = 320, easing = FastOutSlowInEasing))
+        }
+        val baseHoldMs = if (message.importance == CombatBannerImportance.IMPORTANT) 1700L else 1400L
+        val holdMs = when {
+            message.icon == CombatBannerIcon.OUTCOME -> 2200L
+            message.icon == CombatBannerIcon.BURST -> 2000L
+            message.tags.any { it.equals("KO", ignoreCase = true) } -> 2000L
+            else -> baseHoldMs
+        }
+        delay(holdMs)
+        alpha.animateTo(0f, tween(durationMillis = 200, easing = LinearEasing))
     }
-    Text(
-        text = line,
-        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-        color = Color.White,
-        modifier = Modifier
-            .fillMaxWidth()
-            .graphicsLayer {
-                translationY = offsetY.value
-                this.rotationZ = rotation
-                this.alpha = alpha.value
-            },
-        textAlign = TextAlign.Center
+
+    if (alpha.value <= 0.001f) return
+    val accent = bannerAccentColor(message.accent, theme)
+    val borderAlpha = if (highContrastMode) 0.72f else 0.55f
+    val borderColor = accent.copy(alpha = (borderAlpha + 0.25f * glow.value).coerceIn(0f, 1f))
+    val backgroundBase = themeColor(theme?.bg, Color(0xFF0F1118))
+    val backgroundAlpha = if (highContrastMode) 0.92f else 0.74f
+    val backgroundColor = backgroundBase.copy(alpha = backgroundAlpha)
+
+    val tightMode = hasInstruction
+    val bigEvent = message.icon == CombatBannerIcon.OUTCOME ||
+        message.icon == CombatBannerIcon.BURST ||
+        message.tags.any { it.equals("KO", ignoreCase = true) }
+    val showTwoLines = !tightMode && bigEvent && !message.secondary.isNullOrBlank()
+
+    val icon = if (tightMode) null else bannerIcon(message.icon)
+    val displayTags = if (tightMode) emptyList() else message.tags.take(2)
+    val primaryStyle = MaterialTheme.typography.labelLarge.copy(
+        fontFamily = CombatNameFont,
+        fontWeight = FontWeight.Medium,
+        letterSpacing = 0.25.sp
     )
+    val secondaryStyle = MaterialTheme.typography.labelMedium.copy(
+        fontWeight = FontWeight.Medium,
+        color = Color.White.copy(alpha = 0.82f)
+    )
+    Surface(
+        color = backgroundColor,
+        shape = RoundedCornerShape(16.dp),
+        shadowElevation = 10.dp,
+        border = BorderStroke(1.dp, borderColor),
+        modifier = modifier
+            .graphicsLayer {
+                this.alpha = alpha.value
+                translationY = offsetY.value
+                scaleX = scale.value
+                scaleY = scale.value
+            }
+    ) {
+        Box(
+            modifier = Modifier.background(
+                Brush.horizontalGradient(
+                    listOf(accent.copy(alpha = 0.18f), Color.Transparent)
+                )
+            )
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 12.dp, vertical = 10.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                if (icon != null) {
+                    Surface(
+                        color = accent.copy(alpha = 0.16f),
+                        border = BorderStroke(1.dp, accent.copy(alpha = 0.55f)),
+                        shape = CircleShape
+                    ) {
+                        Icon(
+                            imageVector = icon,
+                            contentDescription = null,
+                            tint = accent,
+                            modifier = Modifier.padding(7.dp).size(18.dp)
+                        )
+                    }
+                }
+                Column(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(2.dp)
+                ) {
+                    if (tightMode || message.secondary.isNullOrBlank() || showTwoLines) {
+                        Text(
+                            text = message.primary,
+                            style = primaryStyle,
+                            color = Color.White,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    } else {
+                        val secondary = message.secondary.trim()
+                        Text(
+                            text = buildAnnotatedString {
+                                withStyle(SpanStyle(color = Color.White, fontWeight = FontWeight.SemiBold)) {
+                                    append(message.primary)
+                                }
+                                if (secondary.isNotBlank()) {
+                                    append("  •  ")
+                                    withStyle(
+                                        SpanStyle(
+                                            color = Color.White.copy(alpha = 0.82f),
+                                            fontWeight = FontWeight.Medium
+                                        )
+                                    ) {
+                                        append(secondary)
+                                    }
+                                }
+                            },
+                            style = primaryStyle,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+                    if (showTwoLines) {
+                        Text(
+                            text = message.secondary.orEmpty(),
+                            style = secondaryStyle,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+                }
+                if (displayTags.isNotEmpty()) {
+                    Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                        displayTags.forEach { tag ->
+                            Surface(
+                                color = accent.copy(alpha = 0.12f),
+                                border = BorderStroke(1.dp, accent.copy(alpha = 0.5f)),
+                                shape = RoundedCornerShape(999.dp)
+                            ) {
+                                Text(
+                                    text = tag.uppercase(Locale.getDefault()),
+                                    style = MaterialTheme.typography.labelSmall.copy(
+                                        fontFamily = CombatNameFont,
+                                        fontWeight = FontWeight.Medium,
+                                        letterSpacing = 0.6.sp
+                                    ),
+                                    color = Color.White,
+                                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+                                    maxLines = 1
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
+
+private fun bannerIcon(icon: CombatBannerIcon?): ImageVector? =
+    when (icon) {
+        null -> null
+        CombatBannerIcon.ATTACK -> Icons.Rounded.Bolt
+        CombatBannerIcon.SKILL -> Icons.Rounded.AutoAwesome
+        CombatBannerIcon.ITEM -> Icons.Rounded.Inventory2
+        CombatBannerIcon.SNACK -> Icons.Rounded.Restaurant
+        CombatBannerIcon.GUARD -> Icons.Rounded.Shield
+        CombatBannerIcon.RETREAT -> Icons.Rounded.ExitToApp
+        CombatBannerIcon.HEAL -> Icons.Filled.CheckCircle
+        CombatBannerIcon.STATUS -> Icons.Filled.Flag
+        CombatBannerIcon.BURST -> Icons.Rounded.Whatshot
+        CombatBannerIcon.OUTCOME -> Icons.Filled.EmojiEvents
+        CombatBannerIcon.MISS -> Icons.Outlined.RadioButtonUnchecked
+    }
+
+private fun bannerAccentColor(accent: CombatBannerAccent, theme: Theme?): Color =
+    when (accent) {
+        CombatBannerAccent.DEFAULT -> themeColor(theme?.accent, Color(0xFF2D9CFF))
+        CombatBannerAccent.MISS -> Color(0xFFB0BEC5)
+        CombatBannerAccent.HEAL -> Color(0xFF81C784)
+        CombatBannerAccent.FIRE -> Color(0xFFFF7043)
+        CombatBannerAccent.ICE -> Color(0xFF90CAF9)
+        CombatBannerAccent.SHOCK -> Color(0xFF42A5F5)
+        CombatBannerAccent.POISON -> Color(0xFF81C784)
+        CombatBannerAccent.RADIATION -> Color(0xFFFFD54F)
+        CombatBannerAccent.PSYCHIC -> Color(0xFFBA68C8)
+        CombatBannerAccent.VOID -> Color(0xFF7E57C2)
+        CombatBannerAccent.PHYSICAL -> Color(0xFFFFB74D)
+        CombatBannerAccent.NOVA -> Color(0xFF7BE4FF)
+        CombatBannerAccent.ZEKE -> Color(0xFFFFB74D)
+        CombatBannerAccent.ORION -> Color(0xFFB388FF)
+        CombatBannerAccent.GHOST -> Color(0xFF80D8FF)
+        CombatBannerAccent.ENEMY -> themeColor(theme?.accent, Color(0xFFFF6A5F))
+    }
 
 @Composable
 private fun ReadyAura(

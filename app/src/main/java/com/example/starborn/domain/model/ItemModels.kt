@@ -70,7 +70,8 @@ data class ItemEffect(
     val learnSchematic: String? = null,
     @Json(name = "buff_stat")
     val singleBuff: BuffEffect? = null,
-    val buffs: List<BuffEffect>? = null
+    val buffs: List<BuffEffect>? = null,
+    val cooldown: Int? = null
 )
 
 @JsonClass(generateAdapter = true)

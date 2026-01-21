@@ -7,11 +7,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import com.example.starborn.domain.model.Player
 import com.example.starborn.domain.model.Skill
+import com.example.starborn.feature.combat.viewmodel.CombatViewModel
 
 @Composable
 fun SkillsDialog(
     player: Player,
     skills: List<Skill>,
+    viewModel: CombatViewModel,
     onDismiss: () -> Unit,
     onSkillSelected: (Skill) -> Unit
 ) {
@@ -21,8 +23,14 @@ fun SkillsDialog(
         text = {
             Column {
                 for (skill in skills) {
-                    Button(onClick = { onSkillSelected(skill) }) {
-                        Text(text = skill.name)
+                    val canUse = viewModel.canUseSkill(player.id, skill)
+                    val cooldown = viewModel.skillCooldownRemaining(player.id, skill.id)
+                    val label = if (cooldown > 0) "${skill.name} ($cooldown)" else skill.name
+                    Button(
+                        onClick = { if (canUse) onSkillSelected(skill) },
+                        enabled = canUse
+                    ) {
+                        Text(text = label)
                     }
                 }
             }
