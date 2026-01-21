@@ -10,7 +10,7 @@
 ### Spore-Spitter (Wildlife)
 *   **Type:** Beast / Ranged.
 *   **Behavior:** Stationary but fires toxic spores that apply "Poison" (DoT).
-*   **Weakness:** Burn / Kinetic.
+*   **Weakness:** Burn / Physical.
 
 ### Ruin-Guardian (Machine)
 *   **Type:** Tech / Melee.

@@ -7,7 +7,7 @@ Starborn uses a 6-element system. These are not just "colors" of damage but repr
 
 ---
 
-## 1. Kinetic (Physical)
+## 1. Physical
 **"The Skin against the Skin."**
 *   **Source:** Solid matter collisions. Bullets, mining drills, falling rocks, melee impacts, shrapnel.
 *   **Lore:** The most common force in the Dominion. It is brute force physics—Newton’s laws applied with violent intent.
@@ -43,7 +43,7 @@ Starborn uses a 6-element system. These are not just "colors" of damage but repr
 *   **Lore:** The halting of vibration. Freeze doesn't just chill; it makes matter rigid and fragile, compromising structural integrity.
 *   **Gameplay Role:**
     *   **Utility/Control:** Often lower raw damage but high utility.
-    *   **Setup:** Used to make enemies "Brittle" (weakening armor for Kinetic follow-ups).
+    *   **Setup:** Used to make enemies "Brittle" (weakening armor for Physical follow-ups).
     *   **Weaknesses:** Ineffective against enemies with high internal heat generation.
     *   **Tempo Trigger:** Weakness hits on Overheated/Fragile targets reduce active Cooldowns by 1 Turn.
 

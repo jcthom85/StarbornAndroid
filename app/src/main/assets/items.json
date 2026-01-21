@@ -143,7 +143,7 @@
             "damage_max": 10,
             "attack_style": "single",
             "attack_power_mult": 1.0,
-            "attack_element": "harmonic",
+            "attack_element": "source",
             "accuracy": 5
         }
     },
@@ -165,7 +165,7 @@
             "damage_max": 7,
             "attack_style": "all",
             "attack_power_mult": 0.65,
-            "attack_element": "harmonic"
+            "attack_element": "source"
         }
     },
     {
@@ -188,7 +188,7 @@
             "attack_charge_turns": 1,
             "attack_power_mult": 1.4,
             "attack_splash_mult": 0.5,
-            "attack_element": "harmonic",
+            "attack_element": "source",
             "stat_mods": {
                 "foc": 3
             }
@@ -255,7 +255,7 @@
             "attack_charge_turns": 1,
             "attack_power_mult": 1.6,
             "attack_splash_mult": 0.5,
-            "attack_element": "harmonic"
+            "attack_element": "source"
         }
     },
     {
@@ -1232,7 +1232,7 @@
             "stat_mods": {
                 "strength": 3
             },
-            "status_on_hit": "poison",
+            "status_on_hit": "erosion",
             "status_chance": 25
         }
     },
@@ -1779,7 +1779,7 @@
                 "accuracy": 6,
                 "crit_rate": 4
             },
-            "attack_element": "harmonic"
+            "attack_element": "source"
         }
     },
     {
@@ -1846,7 +1846,7 @@
                 "focus": 4,
                 "accuracy": 3
             },
-            "attack_element": "corrosion"
+            "attack_element": "acid"
         }
     },
     {

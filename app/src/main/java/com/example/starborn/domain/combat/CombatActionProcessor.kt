@@ -231,7 +231,7 @@ class CombatActionProcessor(
         val critAdjusted = if (hit.critical) {
             (rawDamage * CombatFormulas.CRIT_DAMAGE_MULT).roundToInt().coerceAtLeast(1)
         } else rawDamage
-        val finalDamage = adjustIncomingDamage(target, critAdjusted)
+        val finalDamage = adjustIncomingDamage(target, critAdjusted, PHYSICAL_ELEMENT)
         val appliedDamage = finalDamage.coerceAtLeast(0)
         return engine.applyDamage(
             state = state,
@@ -401,7 +401,7 @@ class CombatActionProcessor(
         val critAdjusted = if (allowCrit && hit.critical) {
             (rawDamage * CombatFormulas.CRIT_DAMAGE_MULT).roundToInt().coerceAtLeast(1)
         } else rawDamage
-        val finalDamage = adjustIncomingDamage(target, critAdjusted)
+        val finalDamage = adjustIncomingDamage(target, critAdjusted, element)
         val appliedDamage = finalDamage.coerceAtLeast(0)
         val damaged = engine.applyDamage(
             state = this,
@@ -782,7 +782,7 @@ class CombatActionProcessor(
                 baseDamage = outgoing,
                 element = damageMode.element
             )
-            val damage = adjustIncomingDamage(targetState, rawDamage)
+            val damage = adjustIncomingDamage(targetState, rawDamage, damageMode.element)
             if (damage > 0) {
                 working = engine.applyDamage(
                     state = working,
@@ -1117,13 +1117,16 @@ class CombatActionProcessor(
         return if (baseDamage <= 0) adjusted.coerceAtLeast(0) else adjusted.coerceAtLeast(1)
     }
 
-    private fun adjustIncomingDamage(target: CombatantState, rawDamage: Int): Int {
+    private fun adjustIncomingDamage(target: CombatantState, rawDamage: Int, element: String? = null): Int {
         if (rawDamage <= 0) return 0
         var result = rawDamage.toDouble()
         var flatReduction = target.combatant.stats.flatDamageReduction + target.totalBuffValue("flat_defense")
         target.statusEffects.forEach { status ->
             statusRegistry.definition(status.id)?.let { definition ->
                 definition.incomingMultiplier?.let { result *= it }
+                if (element == PHYSICAL_ELEMENT) {
+                    definition.incomingMultiplierPhysical?.let { result *= it }
+                }
                 definition.flatDefenseBonus?.let { flatReduction += it }
             }
         }
@@ -1239,14 +1242,11 @@ class CombatActionProcessor(
         private const val PHYSICAL_VARIANCE_MAX = 2
 
         private val ELEMENT_TAGS = setOf(
-            "fire",
-            "ice",
-            "lightning",
-            "poison",
-            "radiation",
-            "psychic",
-            "psionic",
-            "void",
+            "burn",
+            "freeze",
+            "shock",
+            "acid",
+            "source",
             "physical"
         )
 

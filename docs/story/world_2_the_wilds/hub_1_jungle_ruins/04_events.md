@@ -76,10 +76,10 @@
     *   **Cinematic Battle Sequence:**
         *   Gh0st raises his rifle at Nova. **HUD POV:** "TARGET ACQUIRED."
         *   He pulls the trigger. *Click.* Nothing happens.
-        *   **HUD POV:** "ERROR. HARMONIC LOCK DETECTED."
+        *   **HUD POV:** "ERROR. SOURCE LOCK DETECTED."
         *   Gh0st growls and snaps his aim to Zeke.
         *   He pulls the trigger. *Click.*
-        *   **HUD POV:** "ERROR. PROXIMITY OVERRIDE. HARMONIC LOCK EXTENDED."
+        *   **HUD POV:** "ERROR. PROXIMITY OVERRIDE. SOURCE LOCK EXTENDED."
         *   Gh0st, frustrated, spins and aims at Orion.
         *   He pulls the trigger. *Click.*
         *   **Gh0st:** "Weapon system failure? Impossible."

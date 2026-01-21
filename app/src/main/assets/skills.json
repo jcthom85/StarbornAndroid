@@ -4,9 +4,9 @@
     "name": "Acid Splash",
     "character": "enemy",
     "type": "enemy",
-    "description": "Corrosive splash that applies poison.",
+    "description": "Corrosive splash that applies acid.",
     "combat_tags": [
-      "corrosion"
+      "acid"
     ],
     "base_power": 70,
     "scaling": "focus",
@@ -119,7 +119,7 @@
     "type": "enemy",
     "description": "Acidic spray that weakens armor.",
     "combat_tags": [
-      "corrosion",
+      "acid",
       "weak"
     ],
     "base_power": 75,
@@ -260,7 +260,7 @@
     "type": "enemy",
     "description": "Cuts with a corrosive spray.",
     "combat_tags": [
-      "corrosion"
+      "acid"
     ],
     "base_power": 160,
     "scaling": "atk",
@@ -354,9 +354,9 @@
     "name": "Radiant Spike",
     "character": "collapse_wyrm",
     "type": "enemy",
-    "description": "Radiation-charged spike that weakens foes.",
+    "description": "Source-charged spike that weakens foes.",
     "combat_tags": [
-      "corrosion",
+      "acid",
       "weak"
     ],
     "base_power": 120,
@@ -417,9 +417,9 @@
     "name": "Acid Spit",
     "character": "slag_rat",
     "type": "enemy",
-    "description": "Hurls corrosive bile that poisons the target.",
+    "description": "Hurls corrosive bile that covers the target in acid.",
     "combat_tags": [
-      "corrosion"
+      "acid"
     ],
     "base_power": 80,
     "scaling": "atk",
@@ -525,7 +525,7 @@
     "type": "enemy",
     "description": "Envenoms the target with toxic saliva.",
     "combat_tags": [
-      "corrosion"
+      "acid"
     ],
     "base_power": 70,
     "scaling": "atk",
@@ -572,7 +572,7 @@
     "description": "Shakes the cavern with collapsing pillars.",
     "combat_tags": [
       "dmg",
-      "corrosion"
+      "acid"
     ],
     "base_power": 110,
     "scaling": "atk",
@@ -714,7 +714,7 @@
     "type": "active",
     "description": "Fires a focused lance of radiant energy.",
     "combat_tags": [
-      "corrosion"
+      "acid"
     ],
     "base_power": 120,
     "scaling": "focus",
@@ -775,9 +775,9 @@
     "name": "Venom Edge",
     "character": "gh0st",
     "type": "active",
-    "description": "A poisoned cut that seeps into the wound.",
+    "description": "A septic cut that seeps into the wound.",
     "combat_tags": [
-      "corrosion"
+      "acid"
     ],
     "base_power": 110,
     "scaling": "agility",
@@ -793,7 +793,7 @@
     "type": "active",
     "description": "A void surge that stuns the target.",
     "combat_tags": [
-      "harmonic"
+      "source"
     ],
     "base_power": 100,
     "scaling": "agility",

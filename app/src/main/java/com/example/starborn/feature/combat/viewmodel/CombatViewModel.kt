@@ -903,6 +903,9 @@ class CombatViewModel(
                     setCombatBanner(entry, updated)
                 }
                 is CombatLogEntry.Damage -> {
+                    if (entry.isWeakness && entry.sourceId in playerIdList) {
+                        tickPlayerCooldowns(entry.sourceId)
+                    }
                     if (entry.amount == 0 && entry.element == "miss") {
                         val targetIsPlayer = entry.targetId in playerIdList
                         if (!targetIsPlayer && entry.targetId !in suppressMissLungeTargets) {
@@ -1493,17 +1496,14 @@ class CombatViewModel(
     private fun accentForElement(element: String?): CombatBannerAccent {
         val normalized = element?.trim()?.lowercase(Locale.getDefault())
         return when (normalized) {
-            "fire" -> CombatBannerAccent.FIRE
-            "burn" -> CombatBannerAccent.FIRE
-            "ice" -> CombatBannerAccent.ICE
-            "lightning", "shock" -> CombatBannerAccent.SHOCK
-            "poison" -> CombatBannerAccent.POISON
-            "corrosion" -> CombatBannerAccent.POISON
-            "radiation" -> CombatBannerAccent.RADIATION
-            "psychic", "psionic" -> CombatBannerAccent.PSYCHIC
-            "void" -> CombatBannerAccent.VOID
-            "physical" -> CombatBannerAccent.PHYSICAL
             "miss" -> CombatBannerAccent.MISS
+            "heal" -> CombatBannerAccent.HEAL
+            "fire", "burn" -> CombatBannerAccent.BURN
+            "ice", "freeze" -> CombatBannerAccent.FREEZE
+            "lightning", "shock" -> CombatBannerAccent.SHOCK
+            "poison", "acid", "corrosion" -> CombatBannerAccent.ACID
+            "source", "harmonic", "psychic", "psionic", "void" -> CombatBannerAccent.SOURCE
+            "physical" -> CombatBannerAccent.PHYSICAL
             else -> CombatBannerAccent.DEFAULT
         }
     }
@@ -1767,6 +1767,7 @@ class CombatViewModel(
                 focus = adjustedFocus,
                 luck = adjustedLuck,
                 speed = adjustedSpeed,
+                stability = 100,
                 accuracyBonus = bonuses.accuracyBonus,
                 evasionBonus = bonuses.evasionBonus,
                 critBonus = bonuses.critBonus,
@@ -1790,16 +1791,15 @@ class CombatViewModel(
                 agility = agility,
                 focus = focus,
                 luck = luck,
-                speed = CombatFormulas.speed(speed, agility).roundToInt()
+                speed = CombatFormulas.speed(speed, agility).roundToInt(),
+                stability = stability
             ),
             resistances = ResistanceProfile(
-                fire = resistances.fire ?: 0,
-                ice = resistances.ice ?: 0,
-                lightning = resistances.lightning ?: 0,
-                poison = resistances.poison ?: 0,
-                radiation = resistances.radiation ?: 0,
-                psychic = resistances.psychic ?: 0,
-                void = resistances.void ?: 0,
+                burn = resistances.burn ?: 0,
+                freeze = resistances.freeze ?: 0,
+                shock = resistances.shock ?: 0,
+                acid = resistances.acid ?: 0,
+                source = resistances.source ?: 0,
                 physical = resistances.physical ?: 0
             ),
             skills = abilities
@@ -2329,11 +2329,10 @@ private fun determineSkillTargeting(skill: Skill): SkillTargeting {
     private fun playBurstCue(element: String) {
         if (element.isBlank()) return
         val key = when (element.lowercase(Locale.getDefault())) {
-            "fire" -> "burst_fire"
-            "ice" -> "burst_ice"
-            "lightning" -> "burst_lightning"
-            "poison" -> "burst_poison"
-            "radiation" -> "burst_radiation"
+            "burn", "fire" -> "burst_fire"
+            "freeze", "ice" -> "burst_ice"
+            "shock", "lightning" -> "burst_lightning"
+            "acid", "poison" -> "burst_poison"
             else -> "burst"
         }
         playBattleCue(key)

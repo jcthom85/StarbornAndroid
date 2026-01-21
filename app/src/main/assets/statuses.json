@@ -31,7 +31,7 @@
       "mode": "damage",
       "per_max_hp_divisor": 10,
       "min": 1,
-      "element": "corrosion",
+      "element": "acid",
       "ramp_up": true
     },
     "target": "enemy"
@@ -40,7 +40,7 @@
     "id": "brittle",
     "name": "Brittle",
     "default_duration": 2,
-    "incoming_multiplier_kinetic": 1.5,
+    "incoming_multiplier_physical": 1.5,
     "target": "enemy"
   },
   {
@@ -117,5 +117,12 @@
     "default_duration": 3,
     "incoming_multiplier": 0.75,
     "target": "ally"
+  },
+  {
+    "id": "stagger",
+    "name": "Staggered",
+    "default_duration": 1,
+    "skip_reason": "is staggered",
+    "target": "enemy"
   }
 ]

@@ -18,6 +18,8 @@ data class StatusDefinition(
     val outgoingMultiplier: Double? = null,
     @Json(name = "incoming_multiplier")
     val incomingMultiplier: Double? = null,
+    @Json(name = "incoming_multiplier_physical")
+    val incomingMultiplierPhysical: Double? = null,
     @Json(name = "flat_defense_bonus")
     val flatDefenseBonus: Int? = null,
     val target: String? = null,

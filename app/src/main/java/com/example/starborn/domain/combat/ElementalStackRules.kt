@@ -5,11 +5,10 @@ package com.example.starborn.domain.combat
  */
 object ElementalStackRules {
     private val stackableElements = linkedSetOf(
-        "fire",
-        "ice",
-        "lightning",
-        "poison",
-        "radiation"
+        "burn",
+        "freeze",
+        "shock",
+        "acid"
     )
 
     const val STACK_THRESHOLD = 3

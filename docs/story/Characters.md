@@ -22,7 +22,7 @@ Nova focuses on high-speed ranged attacks and mobility. She accelerates team tem
     *   *Scrap Shot:* Basic laser fire. High speed.
     *   *Slide Kick:* Low damage, high stagger, breaks guard.
     *   *Overclock:* Self-buff (Speed up, Defense down).
-    *   *Pulse Grenade:* AoE kinetic damage.
+    *   *Pulse Grenade:* AoE physical damage.
     *   *Chain Lightning:* Multi-target energy damage.
     *   *Hydraulic Kick:* Heavy melee strike. High guard break and stagger.
 *   **Source Arts (6 Relic Skills):**

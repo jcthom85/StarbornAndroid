@@ -27,6 +27,7 @@ data class StatBlock(
     val focus: Int,
     val luck: Int,
     val speed: Int,
+    val stability: Int = 100,
     val accuracyBonus: Double = 0.0,
     val evasionBonus: Double = 0.0,
     val critBonus: Double = 0.0,
@@ -34,19 +35,18 @@ data class StatBlock(
 )
 
 data class ResistanceProfile(
-    val fire: Int = 0,
-    val ice: Int = 0,
-    val lightning: Int = 0,
-    val poison: Int = 0,
-    val radiation: Int = 0,
-    val psychic: Int = 0,
-    val void: Int = 0,
+    val burn: Int = 0,
+    val freeze: Int = 0,
+    val shock: Int = 0,
+    val acid: Int = 0,
+    val source: Int = 0,
     val physical: Int = 0
 )
 
 data class CombatantState(
     val combatant: Combatant,
     val hp: Int,
+    val stability: Int,
     val buffs: List<ActiveBuff> = emptyList(),
     val statusEffects: List<StatusEffect> = emptyList(),
     val elementStacks: Map<String, Int> = emptyMap(),
@@ -145,7 +145,8 @@ sealed interface CombatLogEntry {
         val targetId: String,
         val amount: Int,
         val element: String? = null,
-        val critical: Boolean = false
+        val critical: Boolean = false,
+        val isWeakness: Boolean = false
     ) : CombatLogEntry
 
     data class Heal(

@@ -15,6 +15,7 @@ data class Enemy(
     val focus: Int,
     val luck: Int,
     val speed: Int,
+    val stability: Int = 100,
     val element: String = "none",
     val resistances: Resistances = Resistances(),
     val abilities: List<String> = emptyList(),
@@ -57,13 +58,12 @@ data class CompositePart(
 
 @JsonClass(generateAdapter = true)
 data class Resistances(
-    val fire: Int? = null,
-    val ice: Int? = null,
-    val lightning: Int? = null,
-    val poison: Int? = null,
+    val burn: Int? = null,
+    val freeze: Int? = null,
+    val shock: Int? = null,
+    val acid: Int? = null,
     val radiation: Int? = null,
-    val psychic: Int? = null,
-    val void: Int? = null,
+    val source: Int? = null,
     val physical: Int? = null
 )
 

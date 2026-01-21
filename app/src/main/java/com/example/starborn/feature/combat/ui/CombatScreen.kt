@@ -2432,22 +2432,25 @@ private fun SelectionRipple(
     }
 }
 
-private fun elementStackColor(element: String): Color = when (element.lowercase(Locale.getDefault())) {
-    "fire" -> Color(0xFFFF7043)
-    "ice" -> Color(0xFF90CAF9)
-    "lightning" -> Color(0xFF42A5F5)
-    "poison" -> Color(0xFF81C784)
-    "radiation" -> Color(0xFFFFD54F)
-    else -> Color(0xFFD1C4E9)
-}
-
-private fun burstFlashStyleFor(element: String): Pair<Color, Float> {
-    return when (element.trim().lowercase(Locale.getDefault())) {
-        "fire", "lightning" -> Color.White to 0.3f
-        "radiation" -> Color(0xFFDDE77A) to 0.28f
-        else -> Color.Transparent to 0f
+    private fun elementStackColor(element: String): Color = when (element.lowercase(Locale.getDefault())) {
+        "burn", "fire" -> Color(0xFFFF5252)
+        "freeze", "ice" -> Color(0xFF40C4FF)
+        "shock", "lightning" -> Color(0xFFFFEB3B)
+        "acid", "poison" -> Color(0xFF81C784)
+        "source" -> Color(0xFFD68EFF)
+        else -> Color.White
     }
-}
+
+    private fun burstFlashStyleFor(element: String): Pair<Color, Float> {
+        return when (element.trim().lowercase(Locale.getDefault())) {
+            "burn", "fire" -> Color(0xFFFF5252) to 0.12f
+            "freeze", "ice" -> Color(0xFF40C4FF) to 0.12f
+            "shock", "lightning" -> Color(0xFFFFEB3B) to 0.35f
+            "acid", "poison" -> Color(0xFF81C784) to 0.12f
+            "source" -> Color(0xFFD68EFF) to 0.25f
+            else -> Color.White to 0f
+        }
+    }
 
 @Composable
 private fun StatBar(
@@ -3248,7 +3251,7 @@ private fun BurstFx(
         if (sizeMin <= 0f) return@Canvas
         val center = Offset(size.width / 2f, size.height / 2f)
         when (normalized) {
-            "fire" -> {
+            "burn", "fire" -> {
                 val fade = (1f - t).coerceIn(0f, 1f)
                 val radius = sizeMin * (0.18f + 0.58f * t)
                 val ringWidth = sizeMin * (0.05f - 0.02f * t)
@@ -3285,7 +3288,7 @@ private fun BurstFx(
                     )
                 }
             }
-            "ice" -> {
+            "freeze", "ice" -> {
                 val hold = 0.18f
                 val shatter = ((t - hold) / (1f - hold)).coerceIn(0f, 1f)
                 val scale = 0.92f + 0.5f * shatter
@@ -3340,7 +3343,7 @@ private fun BurstFx(
                     }
                 }
             }
-            "lightning" -> {
+            "shock", "lightning" -> {
                 val boltLife = if (t < 0.35f) 1f else (1f - (t - 0.35f) / 0.65f).coerceIn(0f, 1f)
                 val boltAlpha = boltLife
                 val boltHeight = size.height * 0.8f
@@ -3372,7 +3375,7 @@ private fun BurstFx(
                     center = center
                 )
             }
-            "poison" -> {
+            "acid", "poison" -> {
                 val fade = (1f - t).coerceIn(0f, 1f)
                 val haze = Brush.radialGradient(
                     colors = listOf(
@@ -3399,29 +3402,7 @@ private fun BurstFx(
                     )
                 }
             }
-            "radiation" -> {
-                val fade = (1f - t).coerceIn(0f, 1f)
-                val ringOne = sizeMin * (0.16f + 0.54f * t)
-                val ringTwo = sizeMin * (0.26f + 0.62f * t)
-                val stroke = sizeMin * (0.04f - 0.016f * t)
-                drawCircle(
-                    color = Color(0xFFB2FF59).copy(alpha = 0.55f * fade),
-                    radius = ringOne,
-                    center = center,
-                    style = Stroke(width = stroke)
-                )
-                drawCircle(
-                    color = Color(0xFFCCFF90).copy(alpha = 0.35f * fade),
-                    radius = ringTwo,
-                    center = center,
-                    style = Stroke(width = stroke * 0.7f)
-                )
-                drawCircle(
-                    color = Color(0xFFB2FF59).copy(alpha = 0.25f * fade),
-                    radius = sizeMin * 0.12f,
-                    center = center
-                )
-            }
+
             else -> {
                 val fade = (1f - t).coerceIn(0f, 1f)
                 drawCircle(
@@ -3586,13 +3567,11 @@ private fun damageNumberColors(
     }
     val normalized = element?.trim()?.lowercase(Locale.getDefault())
     val base = when (normalized) {
-        "fire" -> Color(0xFFFF7043)
-        "ice" -> Color(0xFF90CAF9)
-        "lightning", "shock" -> Color(0xFF42A5F5)
-        "poison" -> Color(0xFF81C784)
-        "radiation" -> Color(0xFFFFD54F)
-        "psychic", "psionic" -> Color(0xFFBA68C8)
-        "void" -> Color(0xFF7E57C2)
+        "burn", "fire" -> Color(0xFFFF7043)
+        "freeze", "ice" -> Color(0xFF90CAF9)
+        "shock", "lightning" -> Color(0xFF42A5F5)
+        "acid", "poison" -> Color(0xFF81C784)
+        "source", "harmonic", "psychic", "psionic", "void" -> Color(0xFFBA68C8)
         "physical" -> null
         "miss" -> Color(0xFFB0BEC5)
         else -> null
@@ -4685,13 +4664,11 @@ private fun bannerAccentColor(accent: CombatBannerAccent, theme: Theme?): Color 
         CombatBannerAccent.DEFAULT -> themeColor(theme?.accent, Color(0xFF2D9CFF))
         CombatBannerAccent.MISS -> Color(0xFFB0BEC5)
         CombatBannerAccent.HEAL -> Color(0xFF81C784)
-        CombatBannerAccent.FIRE -> Color(0xFFFF7043)
-        CombatBannerAccent.ICE -> Color(0xFF90CAF9)
+        CombatBannerAccent.BURN -> Color(0xFFFF7043)
+        CombatBannerAccent.FREEZE -> Color(0xFF90CAF9)
         CombatBannerAccent.SHOCK -> Color(0xFF42A5F5)
-        CombatBannerAccent.POISON -> Color(0xFF81C784)
-        CombatBannerAccent.RADIATION -> Color(0xFFFFD54F)
-        CombatBannerAccent.PSYCHIC -> Color(0xFFBA68C8)
-        CombatBannerAccent.VOID -> Color(0xFF7E57C2)
+        CombatBannerAccent.ACID -> Color(0xFF81C784)
+        CombatBannerAccent.SOURCE -> Color(0xFFBA68C8)
         CombatBannerAccent.PHYSICAL -> Color(0xFFFFB74D)
         CombatBannerAccent.NOVA -> Color(0xFF7BE4FF)
         CombatBannerAccent.ZEKE -> Color(0xFFFFB74D)

@@ -15,10 +15,8 @@
             "burn": -20,
             "freeze": 30,
             "shock": 0,
-            "corrosion": 0,
-            "corrosion": 0,
-            "harmonic": 0,
-            "harmonic": 0
+            "acid": 0,
+            "source": 0
         },
         "abilities": [],
         "flavor": "The colony's colossal autonomous driller, berserk after the blast.",
@@ -61,9 +59,9 @@
         "focus": 6,
         "luck": 3,
         "speed": 10,
-        "element": "corrosion",
+        "element": "acid",
         "resistances": {
-            "corrosion": 30,
+            "acid": 30,
             "freeze": -30
         },
         "abilities": [
@@ -102,10 +100,8 @@
             "burn": -20,
             "freeze": 30,
             "shock": 0,
-            "corrosion": 0,
-            "corrosion": 0,
-            "harmonic": 0,
-            "harmonic": 0
+            "acid": 0,
+            "source": 0
         },
         "abilities": [
             "drill_lunge",
@@ -376,7 +372,7 @@
         "speed": 14,
         "element": "none",
         "resistances": {
-            "corrosion": 50
+            "acid": 50
         },
         "abilities": [
             "alpha_howl",
@@ -469,9 +465,9 @@
         "focus": 2,
         "luck": 3,
         "speed": 18,
-        "element": "corrosion",
+        "element": "acid",
         "resistances": {
-            "corrosion": 10,
+            "acid": 10,
             "burn": -10
         },
         "abilities": [
@@ -499,7 +495,7 @@
         "focus": 2,
         "luck": 1,
         "speed": 9,
-        "element": "corrosion",
+        "element": "acid",
         "resistances": {
             "burn": 10
         },
@@ -652,9 +648,9 @@
         "focus": 3,
         "luck": 1,
         "speed": 9,
-        "element": "corrosion",
+        "element": "acid",
         "resistances": {
-            "corrosion": 20,
+            "acid": 20,
             "freeze": -10
         },
         "abilities": [
@@ -767,7 +763,7 @@
         "resistances": {
             "physical": 30,
             "burn": 10,
-            "corrosion": 50
+            "acid": 50
         },
         "abilities": [
             "warden_riot_shield",
@@ -849,3 +845,4 @@
         ]
     }
 ]
+

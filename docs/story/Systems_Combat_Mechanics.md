@@ -21,14 +21,14 @@ In the style of classic JRPGs, Elements primarily function as **Damage Multiplie
 ### **Elemental Roles (World 1 Focus)**
 | Element | Primary Weakness Target | Logic / Lore |
 | :--- | :--- | :--- |
-| **Kinetic** | Soft/Unarmored Targets | Brute force physics. |
+| **Physical** | Soft/Unarmored Targets | Brute force physics. |
 | **Shock** | Robotic / Electronic | Overloads circuits and internal sensors. |
 | **Burn** | Biological / Freeze Environments | Rapidly destroys organic tissue. |
 | **Freeze** | Overheated / Fragile Material | Halts movement; makes armor brittle. |
 | **Acid** | Heavily Plated / Industrial | Breaks down molecular bonds and rusts metal. |
 | **Source** | Hardened Tech / Source Beasts | Bypasses standard armor via frequency. |
 
-### **The Reward: Harmonic Instability**
+### **The Reward: Source Instability**
 Weakness isn’t just a multiplier. It’s you landing the right hit in the right place and knocking the target out of tune.
 
 *   **Tempo (Cooldown Momentum):** Landing a **Weakness (++)** hit instantly reduces the attacker’s active Cooldowns by **1 Turn** (to a minimum of 0). You tuned the target and stole a step.
@@ -48,7 +48,7 @@ Status effects are **not** automatically applied by every elemental hit. Instead
 
 ## B. Strategic Debuffs (Setup for big hits)
 *   **Exposed**: Reduces Defense to 0 for the next hit.
-*   **Brittle**: Increases incoming **Kinetic** damage by +50%.
+*   **Brittle**: Increases incoming **Physical** damage by +50%.
 *   **Obscured**: Reduces Target Accuracy by 50% (Blind).
 *   **Marked**: All incoming hits against this target are Critical.
 
