@@ -1,0 +1,59 @@
+[
+    {
+        "id": "checking_the_fuse",
+        "title": "Checking the Fuse",
+        "summary": "The lights are back on, but the wiring is still humming ominously.",
+        "description": "That surge didn't just trip a breaker; it fried something deeper in the wall. Ollie wants you to check the sub-panel outside before the whole block goes dark again.",
+        "flavor": "It smells like ozone and bad decisions.",
+        "giver": "Ollie",
+        "hub_id": "w1_hub1",
+        "prereq_quest_id": "lights_out",
+        "stages": [
+            {
+                "id": "inspect_subpanel",
+                "title": "Inspect the Sub-Panel",
+                "description": "Head outside and check the sub-panel on the exterior wall.",
+                "tasks": [
+                    {
+                        "id": "go_outside",
+                        "text": "Exit the house.",
+                        "done": false
+                    },
+                    {
+                        "id": "check_panel",
+                        "text": "Inspect the sparking sub-panel.",
+                        "done": false
+                    }
+                ]
+            },
+            {
+                "id": "replace_fuse",
+                "title": "Replace the Fuse",
+                "description": "Swap out the blown fuse with a spare from the toolbox.",
+                "tasks": [
+                    {
+                        "id": "find_fuse",
+                        "text": "Find a spare fuse in the garage toolbox.",
+                        "done": false
+                    },
+                    {
+                        "id": "install_fuse",
+                        "text": "Install the new fuse in the sub-panel.",
+                        "done": false
+                    }
+                ]
+            }
+        ],
+        "rewards": [
+            {
+                "type": "xp",
+                "amount": 50
+            },
+            {
+                "type": "item",
+                "item_id": "scrap_metal",
+                "quantity": 2
+            }
+        ]
+    }
+]
