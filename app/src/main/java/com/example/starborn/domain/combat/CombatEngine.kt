@@ -66,7 +66,6 @@ class CombatEngine(
         targetId: String,
         amount: Int,
         element: String?,
-        applyElementStacks: Boolean = true,
         critical: Boolean = false
     ): CombatState {
         val targetState = state.combatants[targetId] ?: return state
@@ -95,7 +94,6 @@ class CombatEngine(
             critical = critical,
             isWeakness = isWeakness
         )
-        val normalizedElement = ElementalStackRules.normalize(element)
         var working = state.copy(
             combatants = state.combatants + (targetId to updated),
             log = state.log + damageEntry
@@ -105,17 +103,7 @@ class CombatEngine(
             working = applyStatus(working, targetId, "stagger", duration = 1, stacks = 1)
         }
 
-        val shouldStack = applyElementStacks && clamped > 0 && ElementalStackRules.isStackable(normalizedElement)
-        return if (shouldStack && normalizedElement != null) {
-            applyElementStack(
-                state = working,
-                attackerId = attackerId,
-                targetId = targetId,
-                element = normalizedElement
-            )
-        } else {
-            working
-        }
+        return working
     }
 
     fun applyHeal(
@@ -307,8 +295,7 @@ class CombatEngine(
                 attackerId = STATUS_SOURCE_PREFIX + status.id,
                 targetId = combatantId,
                 amount = amount,
-                element = tick.element,
-                applyElementStacks = false
+                element = tick.element
             )
             "heal" -> applyHeal(
                 state = state,
@@ -343,122 +330,7 @@ class CombatEngine(
         )
     }
 
-    private fun applyElementStack(
-        state: CombatState,
-        attackerId: String,
-        targetId: String,
-        element: String
-    ): CombatState {
-        val targetState = state.combatants[targetId] ?: return state
-        val currentStacks = targetState.elementStacks[element] ?: 0
-        val newStacks = (currentStacks + 1).coerceAtLeast(1)
-        val updated = targetState.copy(elementStacks = targetState.elementStacks + (element to newStacks))
-        var working = state.copy(
-            combatants = state.combatants + (targetId to updated)
-        )
-        working = working.copy(
-            log = working.log + CombatLogEntry.ElementStack(
-                turn = working.round,
-                targetId = targetId,
-                element = element,
-                stacks = newStacks
-            )
-        )
-        return if (newStacks >= ElementalStackRules.STACK_THRESHOLD) {
-            val burstApplied = triggerElementBurst(working, targetId, element)
-            clearElementStack(burstApplied, targetId, element)
-        } else {
-            working
-        }
-    }
 
-    private fun triggerElementBurst(state: CombatState, targetId: String, element: String): CombatState {
-        val targetState = state.combatants[targetId] ?: return state
-        var working = state.copy(
-            log = state.log + CombatLogEntry.ElementBurst(
-                turn = state.round,
-                targetId = targetId,
-                element = element
-            )
-        )
-        val maxHp = targetState.combatant.stats.maxHp.coerceAtLeast(1)
-        working = when (element) {
-            "burn" -> applyBurnBurst(working, targetId, maxHp)
-            "freeze" -> applyFreezeBurst(working, targetId)
-            "shock" -> applyShockBurst(working, targetId, maxHp)
-            "acid" -> applyAcidBurst(working, targetId)
-            else -> working
-        }
-        return working
-    }
-
-    private fun applyBurnBurst(state: CombatState, originId: String, originMaxHp: Int): CombatState {
-        val origin = state.combatants[originId] ?: return state
-        val damage = burstDamage(originMaxHp, BURN_BURST_DIVISOR)
-        val allies = state.combatants.values.filter {
-            it.combatant.side == origin.combatant.side && it.isAlive
-        }
-        var working = state
-        allies.forEach { ally ->
-            working = applyDamage(
-                state = working,
-                attackerId = originId,
-                targetId = ally.combatant.id,
-                amount = damage,
-                element = "burn",
-                applyElementStacks = false
-            )
-        }
-        return working
-    }
-
-    private fun applyFreezeBurst(state: CombatState, targetId: String): CombatState =
-        applyStatus(
-            state = state,
-            targetId = targetId,
-            statusId = "brittle",
-            duration = FREEZE_BURST_DURATION,
-            stacks = 1
-        )
-
-    private fun applyShockBurst(state: CombatState, targetId: String, originMaxHp: Int): CombatState {
-        val damage = burstDamage(originMaxHp, SHOCK_BURST_DIVISOR)
-        var working = applyDamage(
-            state = state,
-            attackerId = targetId,
-            targetId = targetId,
-            amount = damage,
-            element = "shock",
-            applyElementStacks = false
-        )
-        return applyStatus(
-            state = working,
-            targetId = targetId,
-            statusId = "short",
-            duration = SHOCK_BURST_DURATION,
-            stacks = 1
-        )
-    }
-
-    private fun applyAcidBurst(state: CombatState, targetId: String): CombatState =
-        applyStatus(
-            state = state,
-            targetId = targetId,
-            statusId = "erosion",
-            duration = ACID_BURST_DURATION,
-            stacks = 2
-        )
-
-
-
-    private fun clearElementStack(state: CombatState, targetId: String, element: String): CombatState {
-        val targetState = state.combatants[targetId] ?: return state
-        if (!targetState.elementStacks.containsKey(element)) return state
-        val updated = targetState.copy(elementStacks = targetState.elementStacks - element)
-        return state.copy(combatants = state.combatants + (targetId to updated))
-    }
-
-    private fun burstDamage(maxHp: Int, divisor: Int): Int = max(1, maxHp / divisor)
 
     private fun resolveResistance(
         targetState: CombatantState,

@@ -49,7 +49,6 @@ data class CombatantState(
     val stability: Int,
     val buffs: List<ActiveBuff> = emptyList(),
     val statusEffects: List<StatusEffect> = emptyList(),
-    val elementStacks: Map<String, Int> = emptyMap(),
     val weaponCharge: WeaponChargeState? = null
 ) {
     val isAlive: Boolean get() = hp > 0
@@ -161,19 +160,6 @@ sealed interface CombatLogEntry {
         val targetId: String,
         val statusId: String,
         val stacks: Int
-    ) : CombatLogEntry
-
-    data class ElementStack(
-        override val turn: Int,
-        val targetId: String,
-        val element: String,
-        val stacks: Int
-    ) : CombatLogEntry
-
-    data class ElementBurst(
-        override val turn: Int,
-        val targetId: String,
-        val element: String
     ) : CombatLogEntry
 
     data class StatusExpired(
