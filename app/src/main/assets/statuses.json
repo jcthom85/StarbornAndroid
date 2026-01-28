@@ -95,7 +95,7 @@
   },
   {
     "id": "blind",
-    "name": "Obscured",
+    "name": "Blind",
     "default_duration": 2,
     "accuracy_multiplier": 0.5,
     "target": "enemy"

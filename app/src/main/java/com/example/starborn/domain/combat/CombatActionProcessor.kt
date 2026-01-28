@@ -36,9 +36,10 @@ class CombatActionProcessor(
             val withOutcome = engine.resolveOutcome(afterTick, rewardProvider)
             return if (withOutcome.outcome != null) withOutcome else engine.advance(withOutcome)
         }
+        val beforeLogSize = state.log.size
         val queued = engine.queueAction(state, action)
         val sanitized = if (action is CombatAction.BasicAttack) queued else queued.clearWeaponCharge(action.actorId)
-        return when (action) {
+        val resolved = when (action) {
             is CombatAction.BasicAttack -> finalizeAction(
                 processBasicAttack(sanitized, action),
                 rewardProvider
@@ -69,6 +70,7 @@ class CombatActionProcessor(
                 advance = false
             )
         }
+        return appendWeaknessRewardIfNeeded(state, action, resolved, beforeLogSize)
     }
 
     private fun processBasicAttack(
@@ -1097,7 +1099,30 @@ class CombatActionProcessor(
         return engine.advance(withOutcome)
     }
 
+    private fun appendWeaknessRewardIfNeeded(
+        previous: CombatState,
+        action: CombatAction,
+        resolved: CombatState,
+        beforeLogSize: Int
+    ): CombatState {
+        val actor = previous.combatants[action.actorId] ?: return resolved
+        if (actor.combatant.side != CombatSide.PLAYER) return resolved
+        val newEntries = resolved.log.drop(beforeLogSize)
+        val triggered = newEntries.filterIsInstance<CombatLogEntry.Damage>()
+            .any { it.sourceId == action.actorId && it.isWeakness }
+        if (!triggered) return resolved
+        return resolved.copy(
+            log = resolved.log + CombatLogEntry.WeaknessReward(
+                turn = previous.round,
+                actorId = action.actorId
+            )
+        )
+    }
+
     private fun skipReason(combatant: CombatantState): SkipInfo? {
+        if (combatant.breakTurns > 0) {
+            return SkipInfo("is broken")
+        }
         combatant.statusEffects.forEach { status ->
             val definition = statusRegistry.definition(status.id)
             if (!definition?.skipReason.isNullOrBlank()) {

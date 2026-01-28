@@ -51,9 +51,8 @@ class CombatEngine(
         element: String?
     ): Int {
         if (baseDamage <= 0) return 0
-        val resistance = resolveResistance(targetState, element)
-        val modifier = 1.0 - (resistance / 100.0)
-        val scaled = baseDamage * modifier
+        val tier = resolveAffinityTier(targetState, element)
+        val scaled = baseDamage * tier.multiplier
         return when {
             scaled <= 0.0 -> 0
             else -> scaled.roundToInt().coerceAtLeast(1)
@@ -69,22 +68,26 @@ class CombatEngine(
         critical: Boolean = false
     ): CombatState {
         val targetState = state.combatants[targetId] ?: return state
-        val resistance = resolveResistance(targetState, element)
-        val isWeakness = resistance < 0
+        val tier = resolveAffinityTier(targetState, element)
+        val isWeakness = tier == AffinityTier.WEAKNESS
 
         val clamped = if (amount < 0) 0 else amount
         val newHp = (targetState.hp - clamped).coerceAtLeast(0)
 
         val stabilityDamage = if (isWeakness) clamped * 2 else clamped
         var newStability = targetState.stability - stabilityDamage
-        var staggerApplied = false
+        var breakTurns = targetState.breakTurns
 
         if (newStability <= 0) {
             newStability = targetState.combatant.stats.stability
-            staggerApplied = true
+            breakTurns = max(breakTurns, BREAK_DURATION_TURNS)
         }
 
-        val updated = targetState.copy(hp = newHp, stability = newStability)
+        val updated = targetState.copy(
+            hp = newHp,
+            stability = newStability,
+            breakTurns = breakTurns
+        )
         val damageEntry = CombatLogEntry.Damage(
             turn = state.round,
             sourceId = attackerId,
@@ -98,10 +101,6 @@ class CombatEngine(
             combatants = state.combatants + (targetId to updated),
             log = state.log + damageEntry
         )
-
-        if (staggerApplied) {
-            working = applyStatus(working, targetId, "stagger", duration = 1, stacks = 1)
-        }
 
         return working
     }
@@ -261,9 +260,12 @@ class CombatEngine(
                 }
             }
 
+            val updatedBreakTurns = (current.breakTurns - 1).coerceAtLeast(0)
+
             val replacement = current.copy(
                 statusEffects = updatedStatuses,
-                buffs = updatedBuffs
+                buffs = updatedBuffs,
+                breakTurns = updatedBreakTurns
             )
             working = working.copy(
                 combatants = working.combatants + (combatantId to replacement)
@@ -332,10 +334,10 @@ class CombatEngine(
 
 
 
-    private fun resolveResistance(
+    private fun resolveAffinityTier(
         targetState: CombatantState,
         element: String?
-    ): Double {
+    ): AffinityTier {
         val profile = targetState.combatant.resistances
         val key = element?.lowercase()
         val base = when (key) {
@@ -345,20 +347,8 @@ class CombatEngine(
             "acid", "poison", "corrosion" -> profile.acid
             "source", "harmonic", "psychic", "psionic" -> profile.source
             else -> profile.physical
-        } ?: 0
-        val general = CombatFormulas.generalResistance(effectiveFocus(targetState))
-        return (base + general).toDouble()
-    }
-
-    private fun effectiveFocus(targetState: CombatantState): Int {
-        if (targetState.buffs.isEmpty()) return targetState.combatant.stats.focus
-        val bonus = targetState.buffs.sumOf { buff ->
-            when (buff.effect.stat.lowercase()) {
-                "focus", "foc", "fcs", "int", "psi" -> buff.effect.value
-                else -> 0
-            }
-        }
-        return (targetState.combatant.stats.focus + bonus).coerceAtLeast(0)
+        } ?: AffinityTier.NEUTRAL.code
+        return ElementalAffinityRules.tierForValue(base)
     }
 
     companion object {
@@ -370,6 +360,7 @@ class CombatEngine(
         private const val FREEZE_BURST_DURATION = 2
         private const val SHOCK_BURST_DURATION = 1
         private const val ACID_BURST_DURATION = 4
+        private const val BREAK_DURATION_TURNS = 2
     }
 }
 

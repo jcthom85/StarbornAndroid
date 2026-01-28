@@ -47,6 +47,7 @@ data class CombatantState(
     val combatant: Combatant,
     val hp: Int,
     val stability: Int,
+    val breakTurns: Int = 0,
     val buffs: List<ActiveBuff> = emptyList(),
     val statusEffects: List<StatusEffect> = emptyList(),
     val weaponCharge: WeaponChargeState? = null
@@ -183,5 +184,10 @@ sealed interface CombatLogEntry {
         override val turn: Int,
         val actorId: String,
         val reason: String
+    ) : CombatLogEntry
+
+    data class WeaknessReward(
+        override val turn: Int,
+        val actorId: String
     ) : CombatLogEntry
 }

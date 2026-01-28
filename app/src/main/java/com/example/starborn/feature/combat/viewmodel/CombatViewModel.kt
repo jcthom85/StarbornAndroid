@@ -17,6 +17,7 @@ import com.example.starborn.domain.combat.CombatReward
 import com.example.starborn.domain.combat.CombatSetup
 import com.example.starborn.domain.combat.CombatSide
 import com.example.starborn.domain.combat.CombatState
+import com.example.starborn.domain.combat.ElementalAffinityRules
 import com.example.starborn.domain.combat.ElementalStackRules
 import com.example.starborn.domain.combat.EncounterCoordinator
 import com.example.starborn.domain.combat.Combatant
@@ -902,9 +903,6 @@ class CombatViewModel(
                     setCombatBanner(entry, updated)
                 }
                 is CombatLogEntry.Damage -> {
-                    if (entry.isWeakness && entry.sourceId in playerIdList) {
-                        tickPlayerCooldowns(entry.sourceId)
-                    }
                     if (entry.amount == 0 && entry.element == "miss") {
                         val targetIsPlayer = entry.targetId in playerIdList
                         if (!targetIsPlayer && entry.targetId !in suppressMissLungeTargets) {
@@ -917,6 +915,11 @@ class CombatViewModel(
                     val targetDefeated = targetState?.isAlive == false
                     emitImpact(entry, showAttackFx, targetDefeated, 0L)
                     setCombatBanner(entry, updated)
+                }
+                is CombatLogEntry.WeaknessReward -> {
+                    if (entry.actorId in playerIdList) {
+                        tickPlayerCooldowns(entry.actorId)
+                    }
                 }
                 is CombatLogEntry.Heal -> {
                     combatFxEvents.tryEmit(
@@ -1183,6 +1186,7 @@ class CombatViewModel(
             is CombatLogEntry.StatusExpired -> bannerForStatusExpired(entry, state)
             is CombatLogEntry.TurnSkipped -> bannerForTurnSkipped(entry, state)
             is CombatLogEntry.Outcome -> bannerForOutcome(entry)
+            is CombatLogEntry.WeaknessReward -> null
 
         }
         if (update != null) {
@@ -1699,30 +1703,27 @@ class CombatViewModel(
         }
 
     private fun Enemy.toCombatant(combatantId: String = id): Combatant =
-        Combatant(
-            id = combatantId,
-            name = name,
-            side = CombatSide.ENEMY,
-            stats = StatBlock(
-                maxHp = CombatFormulas.maxHp(hp, vitality),
-                strength = strength,
-                vitality = vitality,
-                agility = agility,
-                focus = focus,
-                luck = luck,
-                speed = CombatFormulas.speed(speed, agility).roundToInt(),
-                stability = stability
-            ),
-            resistances = ResistanceProfile(
-                burn = resistances.burn ?: 0,
-                freeze = resistances.freeze ?: 0,
-                shock = resistances.shock ?: 0,
-                acid = resistances.acid ?: 0,
-                source = resistances.source ?: 0,
-                physical = resistances.physical ?: 0
-            ),
-            skills = abilities
-        )
+        run {
+            val baseProfile = ElementalAffinityRules.fromTags(tags)
+            val resolvedProfile = ElementalAffinityRules.applyOverrides(baseProfile, resistances)
+            Combatant(
+                id = combatantId,
+                name = name,
+                side = CombatSide.ENEMY,
+                stats = StatBlock(
+                    maxHp = CombatFormulas.maxHp(hp, vitality),
+                    strength = strength,
+                    vitality = vitality,
+                    agility = agility,
+                    focus = focus,
+                    luck = luck,
+                    speed = CombatFormulas.speed(speed, agility).roundToInt(),
+                    stability = stability
+                ),
+                resistances = resolvedProfile,
+                skills = abilities
+            )
+        }
 
     private fun resolveCombatWeapon(
         characterId: String,
@@ -2301,6 +2302,7 @@ private fun determineSkillTargeting(skill: Skill): SkillTargeting {
                 val actorName = state.combatants[entry.actorId]?.combatant?.name ?: entry.actorId
                 "$actorName lines up an action"
             }
+            is CombatLogEntry.WeaknessReward -> null
             is CombatLogEntry.Outcome -> when (entry.result) {
                 is CombatOutcome.Victory -> "All foes defeated!"
                 is CombatOutcome.Defeat -> "Party overwhelmed..."

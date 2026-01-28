@@ -28,12 +28,12 @@ In the style of classic JRPGs, Elements primarily function as **Damage Multiplie
 | **Acid** | Heavily Plated / Industrial | Breaks down molecular bonds and rusts metal. |
 | **Source** | Hardened Tech / Source Beasts | Bypasses standard armor via frequency. |
 
-### **The Reward: Source Instability**
-Weakness isn’t just a multiplier. It’s you landing the right hit in the right place and knocking the target out of tune.
+### **The Reward: Harmonic Instability**
+Weakness isn’t just a multiplier. It’s you landing the right hit in the right place, tuning the target, and gaining momentum.
 
-*   **Tempo (Cooldown Momentum):** Landing a **Weakness (++)** hit instantly reduces the attacker’s active Cooldowns by **1 Turn** (to a minimum of 0). You tuned the target and stole a step.
+*   **Tempo (Cooldown Momentum):** Landing a **Weakness (++)** hit (**200% Damage**) instantly reduces the attacker’s active Cooldowns by **1 Turn** (to a minimum of 0). You tuned the target and stole a step.
 *   **Stagger (Stability Damage):** Weakness hits deal **2x** damage to the enemy’s hidden **Stability** meter, making them Break/Stagger faster.
-*   **No Free Status:** Weakness hits do **not** automatically apply Status Effects. If you want **Stun**, **Bleed**, **Brittle**, etc., they must come from a specific Skill, Snack, or Weapon Mod.
+*   **No Free Status:** Weakness hits do **not** automatically apply Status Effects. Those payloads must come from specific Skills.
 
 ---
 
@@ -49,7 +49,7 @@ Status effects are **not** automatically applied by every elemental hit. Instead
 ## B. Strategic Debuffs (Setup for big hits)
 *   **Exposed**: Reduces Defense to 0 for the next hit.
 *   **Brittle**: Increases incoming **Physical** damage by +50%.
-*   **Obscured**: Reduces Target Accuracy by 50% (Blind).
+*   **Blind**: Reduces Target Accuracy by 50%.
 *   **Marked**: All incoming hits against this target are Critical.
 
 ## C. Damage Over Time (Attrition)

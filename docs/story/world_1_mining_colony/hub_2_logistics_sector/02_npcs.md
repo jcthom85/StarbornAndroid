@@ -15,7 +15,7 @@
 *   **Mechanics:**
     *   *Riot Shield:* Immune to frontal attacks. (Must be broken by **Blast Wave** or **Slide Kick**).
     *   *Summon Drone:* Calls 2 Scout Drones every 3 turns.
-    *   *Gas Grenade:* AoE DoT zone.
+    *   *Gas Grenade:* AoE **Burn** DoT zone.
 
 ## Enemies (The Mines)
 
@@ -36,7 +36,7 @@
 
 ### Fume Bat (Wildlife)
 *   **Type:** Beast / Swarm.
-*   **Behavior:** Fast, erratic movement. Attacks in groups. Applies "Distracted" debuff (lowers accuracy).
+*   **Behavior:** Fast, erratic movement. Attacks in groups. Applies **Blind** (lowers accuracy).
 *   **Weakness:** AoE (Pulse Grenade).
 
 ### Heavy Automaton (Machine)

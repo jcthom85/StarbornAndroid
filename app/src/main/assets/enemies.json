@@ -11,13 +11,13 @@
         "luck": 0,
         "speed": 6,
         "element": "none",
-        "resistances": {
-            "burn": -20,
-            "freeze": 30,
-            "shock": 0,
-            "acid": 0,
-            "source": 0
-        },
+        "tags": [
+            "robotic",
+            "industrial",
+            "plated",
+            "hardened_tech",
+            "high_internal_heat"
+        ],
         "abilities": [],
         "flavor": "The colony's colossal autonomous driller, berserk after the blast.",
         "xp_reward": 300,
@@ -60,10 +60,10 @@
         "luck": 3,
         "speed": 10,
         "element": "acid",
-        "resistances": {
-            "acid": 30,
-            "freeze": -30
-        },
+        "tags": [
+            "fragile",
+            "corrosion_resistant"
+        ],
         "abilities": [
             "burrow",
             "unstable_pillars",
@@ -96,13 +96,13 @@
         "luck": 0,
         "speed": 6,
         "element": "none",
-        "resistances": {
-            "burn": -20,
-            "freeze": 30,
-            "shock": 0,
-            "acid": 0,
-            "source": 0
-        },
+        "tags": [
+            "robotic",
+            "industrial",
+            "plated",
+            "hardened_tech",
+            "high_internal_heat"
+        ],
         "abilities": [
             "drill_lunge",
             "hydraulic_overheat",
@@ -147,6 +147,11 @@
         "focus": 1,
         "luck": 0,
         "speed": 3,
+        "tags": [
+            "robotic",
+            "electronic",
+            "plated"
+        ],
         "flavor": "An ancient drone covered in rust and moss, putters through the area.",
         "behavior": "passive",
         "xp_reward": 20,
@@ -170,10 +175,11 @@
         "luck": 1,
         "speed": 22,
         "element": "shock",
-        "resistances": {
-            "shock": 20,
-            "freeze": -30
-        },
+        "tags": [
+            "biological",
+            "fragile",
+            "insulated"
+        ],
         "abilities": [
             "static_burst",
             "dim_glow"
@@ -200,9 +206,9 @@
         "luck": 2,
         "speed": 17,
         "element": "burn",
-        "resistances": {
-            "burn": -20
-        },
+        "tags": [
+            "biological"
+        ],
         "abilities": [
             "sonic_shriek",
             "volatile_swell"
@@ -233,9 +239,9 @@
         "luck": 4,
         "speed": 16,
         "element": "none",
-        "resistances": {
-            "freeze": -20
-        },
+        "tags": [
+            "fragile"
+        ],
         "abilities": [
             "undermine",
             "glimmer_dust"
@@ -266,9 +272,12 @@
         "luck": 2,
         "speed": 12,
         "element": "none",
-        "resistances": {
-            "shock": 20
-        },
+        "tags": [
+            "robotic",
+            "electronic",
+            "plated",
+            "insulated"
+        ],
         "abilities": [
             "suppressive_fire",
             "barrier_field"
@@ -304,9 +313,10 @@
         "luck": 0,
         "speed": 8,
         "element": "none",
-        "resistances": {
-            "physical": 50
-        },
+        "tags": [
+            "industrial",
+            "plated"
+        ],
         "abilities": [
             "slide_slam",
             "split"
@@ -333,9 +343,12 @@
         "luck": 1,
         "speed": 10,
         "element": "none",
-        "resistances": {
-            "shock": 20
-        },
+        "tags": [
+            "robotic",
+            "electronic",
+            "plated",
+            "insulated"
+        ],
         "abilities": [
             "triple_burst",
             "overheat"
@@ -371,9 +384,10 @@
         "luck": 5,
         "speed": 14,
         "element": "none",
-        "resistances": {
-            "acid": 50
-        },
+        "tags": [
+            "biological",
+            "corrosion_resistant"
+        ],
         "abilities": [
             "alpha_howl",
             "lightning_weakpoint"
@@ -405,10 +419,12 @@
         "luck": 2,
         "speed": 14,
         "element": "shock",
-        "resistances": {
-            "shock": 20,
-            "freeze": -20
-        },
+        "tags": [
+            "robotic",
+            "electronic",
+            "fragile",
+            "insulated"
+        ],
         "abilities": [
             "arc_spark",
             "self_repair"
@@ -438,6 +454,11 @@
         "focus": 2,
         "luck": 0,
         "speed": 4,
+        "tags": [
+            "robotic",
+            "electronic",
+            "plated"
+        ],
         "flavor": "A Security Drone hovers near the ceiling, red optic scanning the room.",
         "behavior": "alertable",
         "alert_delay": 3,
@@ -466,9 +487,12 @@
         "luck": 3,
         "speed": 18,
         "element": "acid",
+        "tags": [
+            "biological",
+            "corrosion_resistant"
+        ],
         "resistances": {
-            "acid": 10,
-            "burn": -10
+            "burn": -50
         },
         "abilities": [
             "gnaw",
@@ -496,8 +520,11 @@
         "luck": 1,
         "speed": 9,
         "element": "acid",
+        "tags": [
+            "corrosion_resistant"
+        ],
         "resistances": {
-            "burn": 10
+            "burn": 50
         },
         "abilities": [
             "acid_splash",
@@ -529,10 +556,12 @@
         "luck": 0,
         "speed": 8,
         "element": "burn",
-        "resistances": {
-            "burn": 30,
-            "freeze": -30
-        },
+        "tags": [
+            "overheated",
+            "industrial",
+            "plated",
+            "heat_shielded"
+        ],
         "abilities": [
             "slag_nova",
             "ember_stride"
@@ -564,11 +593,16 @@
         "luck": 2,
         "speed": 8,
         "element": "none",
+        "tags": [
+            "robotic",
+            "industrial",
+            "plated",
+            "hardened_tech",
+            "insulated",
+            "high_internal_heat"
+        ],
         "resistances": {
-            "burn": -10,
-            "freeze": 10,
-            "shock": 10,
-            "physical": 15
+            "burn": -50
         },
         "abilities": [
             "driller_core_repair"
@@ -612,9 +646,14 @@
         "luck": 1,
         "speed": 10,
         "element": "physical",
+        "tags": [
+            "robotic",
+            "industrial",
+            "plated",
+            "insulated"
+        ],
         "resistances": {
-            "physical": 10,
-            "shock": -10
+            "shock": -50
         },
         "abilities": [
             "driller_drill_bore"
@@ -649,9 +688,15 @@
         "luck": 1,
         "speed": 9,
         "element": "acid",
+        "tags": [
+            "robotic",
+            "industrial",
+            "plated",
+            "insulated"
+        ],
         "resistances": {
-            "acid": 20,
-            "freeze": -10
+            "acid": 50,
+            "freeze": -50
         },
         "abilities": [
             "driller_cutter_spill"
@@ -686,10 +731,13 @@
         "luck": 1,
         "speed": 8,
         "element": "burn",
-        "resistances": {
-            "burn": 30,
-            "freeze": -20
-        },
+        "tags": [
+            "robotic",
+            "industrial",
+            "plated",
+            "overheated",
+            "heat_shielded"
+        ],
         "abilities": [
             "driller_fire_burst"
         ],
@@ -723,9 +771,14 @@
         "luck": 1,
         "speed": 11,
         "element": "physical",
+        "tags": [
+            "robotic",
+            "industrial",
+            "plated",
+            "insulated"
+        ],
         "resistances": {
-            "physical": 10,
-            "burn": -10
+            "burn": -50
         },
         "abilities": [
             "driller_grabber_crush"
@@ -760,9 +813,14 @@
         "luck": 5,
         "speed": 12,
         "element": "physical",
+        "tags": [
+            "armored",
+            "plated",
+            "industrial",
+            "insulated",
+            "heat_shielded"
+        ],
         "resistances": {
-            "physical": 30,
-            "burn": 10,
             "acid": 50
         },
         "abilities": [
@@ -797,9 +855,10 @@
         "luck": 2,
         "speed": 10,
         "element": "physical",
-        "resistances": {
-            "physical": 10
-        },
+        "tags": [
+            "biological",
+            "armored"
+        ],
         "abilities": [
             "suppressive_fire",
             "flashbang"
@@ -826,10 +885,10 @@
         "luck": 1,
         "speed": 8,
         "element": "physical",
-        "resistances": {
-            "physical": 20,
-            "burn": -20
-        },
+        "tags": [
+            "biological",
+            "armored"
+        ],
         "abilities": [
             "burrow",
             "gnaw"

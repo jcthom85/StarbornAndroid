@@ -18,6 +18,7 @@ data class Enemy(
     val stability: Int = 100,
     val element: String = "none",
     val resistances: Resistances = Resistances(),
+    val tags: List<String> = emptyList(),
     val abilities: List<String> = emptyList(),
     val flavor: String = "",
     @Json(name = "xp_reward")
