@@ -45,6 +45,8 @@ fun CombatTransitionOverlay(
     suppressFlashes: Boolean,
     highContrastMode: Boolean,
     mode: TransitionMode = TransitionMode.FULL,
+    mainText: String = "HOSTILES",
+    subText: String = "INCOMING!",
     onFinished: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -242,72 +244,76 @@ fun CombatTransitionOverlay(
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    // Line 1: HOSTILES
-                    Box {
-                        Text(
-                            text = "HOSTILES",
-                            style = MaterialTheme.typography.displayMedium.copy(
-                                color = accentColor,
-                                fontWeight = FontWeight.Black,
-                                fontStyle = FontStyle.Italic,
-                                letterSpacing = 4.sp,
-                                shadow = Shadow(
-                                    color = borderColor,
-                                    offset = Offset(4f, 4f),
-                                    blurRadius = 0f
-                                )
-                            ),
-                            textAlign = TextAlign.Center
-                        )
-                        // Ghost Text
-                        Text(
-                            text = "HOSTILES",
-                            style = MaterialTheme.typography.displayMedium.copy(
-                                color = Color.White.copy(alpha = 0.5f),
-                                fontWeight = FontWeight.Black,
-                                fontStyle = FontStyle.Italic,
-                                letterSpacing = 4.sp
-                            ),
-                            modifier = Modifier.graphicsLayer {
-                                translationX = 6f
-                                translationY = -3f
-                            },
-                            textAlign = TextAlign.Center
-                        )
+                    // Line 1: Main Text
+                    if (mainText.isNotBlank()) {
+                        Box {
+                            Text(
+                                text = mainText,
+                                style = MaterialTheme.typography.displayMedium.copy(
+                                    color = accentColor,
+                                    fontWeight = FontWeight.Black,
+                                    fontStyle = FontStyle.Italic,
+                                    letterSpacing = 4.sp,
+                                    shadow = Shadow(
+                                        color = borderColor,
+                                        offset = Offset(4f, 4f),
+                                        blurRadius = 0f
+                                    )
+                                ),
+                                textAlign = TextAlign.Center
+                            )
+                            // Ghost Text
+                            Text(
+                                text = mainText,
+                                style = MaterialTheme.typography.displayMedium.copy(
+                                    color = Color.White.copy(alpha = 0.5f),
+                                    fontWeight = FontWeight.Black,
+                                    fontStyle = FontStyle.Italic,
+                                    letterSpacing = 4.sp
+                                ),
+                                modifier = Modifier.graphicsLayer {
+                                    translationX = 6f
+                                    translationY = -3f
+                                },
+                                textAlign = TextAlign.Center
+                            )
+                        }
                     }
                     
-                    // Line 2: INCOMING!
-                    Box(modifier = Modifier.graphicsLayer { translationY = -10f }) { 
-                        Text(
-                            text = "INCOMING!",
-                            style = MaterialTheme.typography.displayMedium.copy(
-                                color = accentColor,
-                                fontWeight = FontWeight.Black,
-                                fontStyle = FontStyle.Italic,
-                                letterSpacing = 4.sp,
-                                shadow = Shadow(
-                                    color = borderColor,
-                                    offset = Offset(4f, 4f),
-                                    blurRadius = 0f
-                                )
-                            ),
-                            textAlign = TextAlign.Center
-                        )
-                        // Ghost Text
-                        Text(
-                            text = "INCOMING!",
-                            style = MaterialTheme.typography.displayMedium.copy(
-                                color = Color.White.copy(alpha = 0.5f),
-                                fontWeight = FontWeight.Black,
-                                fontStyle = FontStyle.Italic,
-                                letterSpacing = 4.sp
-                            ),
-                            modifier = Modifier.graphicsLayer {
-                                translationX = -6f
-                                translationY = -3f
-                            },
-                            textAlign = TextAlign.Center
-                        )
+                    // Line 2: Sub Text
+                    if (subText.isNotBlank()) {
+                        Box(modifier = Modifier.graphicsLayer { translationY = -10f }) { 
+                            Text(
+                                text = subText,
+                                style = MaterialTheme.typography.displayMedium.copy(
+                                    color = accentColor,
+                                    fontWeight = FontWeight.Black,
+                                    fontStyle = FontStyle.Italic,
+                                    letterSpacing = 4.sp,
+                                    shadow = Shadow(
+                                        color = borderColor,
+                                        offset = Offset(4f, 4f),
+                                        blurRadius = 0f
+                                    )
+                                ),
+                                textAlign = TextAlign.Center
+                            )
+                            // Ghost Text
+                            Text(
+                                text = subText,
+                                style = MaterialTheme.typography.displayMedium.copy(
+                                    color = Color.White.copy(alpha = 0.5f),
+                                    fontWeight = FontWeight.Black,
+                                    fontStyle = FontStyle.Italic,
+                                    letterSpacing = 4.sp
+                                ),
+                                modifier = Modifier.graphicsLayer {
+                                    translationX = -6f
+                                    translationY = -3f
+                                },
+                                textAlign = TextAlign.Center
+                            )
+                        }
                     }
                 }
             }

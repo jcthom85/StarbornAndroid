@@ -2098,34 +2098,6 @@
     ]
   },
   {
-    "id": "event_tutorial_encounter_retreat",
-    "description": "Provide guidance after the player retreats from combat.",
-    "trigger": {
-      "type": "encounter_retreat"
-    },
-    "repeatable": false,
-    "actions": [
-      {
-        "type": "if_milestone_not_set",
-        "milestone": "ms_tutorial_encounter_retreat",
-        "do": [
-          {
-            "type": "show_message",
-            "message": "Retreat successful. Restock or craft items before re-engaging."
-          },
-          {
-            "type": "play_cinematic",
-            "scene_id": "scene_encounter_retreat_tip"
-          },
-          {
-            "type": "set_milestone",
-            "milestone": "ms_tutorial_encounter_retreat"
-          }
-        ]
-      }
-    ]
-  },
-  {
     "id": "evt_player_fishing_success",
     "description": "Handles the first successful catch and introduces fishing tutorials.",
     "trigger": {

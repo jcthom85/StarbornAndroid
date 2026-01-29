@@ -119,10 +119,34 @@
     "target": "ally"
   },
   {
+    "id": "invulnerable",
+    "name": "Invulnerable",
+    "default_duration": 2,
+    "incoming_multiplier": 0.0,
+    "target": "enemy",
+    "aliases": [
+      "riot_shield"
+    ]
+  },
+  {
     "id": "stagger",
     "name": "Staggered",
     "default_duration": 1,
     "skip_reason": "is staggered",
+    "target": "enemy"
+  },
+  {
+    "id": "overdrive",
+    "name": "Overdrive",
+    "default_duration": 2,
+    "outgoing_multiplier": 1.5,
+    "target": "ally"
+  },
+  {
+    "id": "marked",
+    "name": "Marked",
+    "default_duration": 2,
+    "force_crit": true,
     "target": "enemy"
   }
 ]

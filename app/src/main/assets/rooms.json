@@ -1332,7 +1332,7 @@
     "background_image": "images/rooms/916test.png",
     "description": "A clean, well-lit clinic with a single medical bed and a cabinet full of supplies. The air smells of antiseptic and a faint, floral scent.",
     "npcs": [],
-    "items": [],
+    "items": [ ],
     "enemies": [],
     "connections": {
       "north": "town_square"

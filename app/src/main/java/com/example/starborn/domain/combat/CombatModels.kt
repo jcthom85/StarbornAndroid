@@ -10,7 +10,8 @@ data class Combatant(
     val resistances: ResistanceProfile = ResistanceProfile(),
     val skills: List<String> = emptyList(),
     val initiativeModifier: Int = 0,
-    val weapon: CombatWeapon? = null
+    val weapon: CombatWeapon? = null,
+    val brokenTurns: Int = 1
 )
 
 enum class CombatSide {

@@ -14,20 +14,6 @@
     ]
   },
   {
-    "id": "scene_encounter_retreat_tip",
-    "title": "Regroup Successful",
-    "steps": [
-      {
-        "type": "narration",
-        "text": "You slipped away before things turned critical."
-      },
-      {
-        "type": "narration",
-        "text": "Use the breathing room to craft support items, adjust party loadouts, or scout an alternate route."
-      }
-    ]
-  },
-  {
     "id": "scene_blocked_lock",
     "title": "Access Denied",
     "steps": [

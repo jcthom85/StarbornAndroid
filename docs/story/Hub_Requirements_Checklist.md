@@ -17,6 +17,7 @@ This document tracks the **Entry State** (prerequisites) and **Exit State** (del
     *   **Tutorials:** Movement, Investigation (Tap words), Inventory (Equip Pistol).
     *   **Key Location:** Nova’s Bunk (Save Point tutorial).
     *   **Key NPC:** Jed (Father figure, gives first real quest).
+    *   **Combat Literacy (Soft-Mandatory):** Guard Break/Stagger training via **W1_SQ03 "Heavy Lifting"** (Hydraulic Kick) should be mandatory or heavily signposted before Hub 1.2.
 *   **Exit State:**
     *   **Party:** Nova (Solo).
     *   **Items:** Mining Access Pass (Key Item).
@@ -32,7 +33,7 @@ This document tracks the **Entry State** (prerequisites) and **Exit State** (del
     *   **Key NPC:** Zeke (introduced via screens/voice first, then in person).
     *   **Key Location:** The Deep Elevator (Point of No Return).
     *   **Event:** The Relic Chamber (Nova finds **Tuning Fork**).
-    *   **Combat:** First real fight (Drones). **Tuning Fork** grants **Blast** (Source Art).
+    *   **Combat:** First real fights (Drones). Add an early shielded enemy (Riot Shield) that is immune until Staggered/Guard Broken to teach "damage isn't everything" before the Warden. **Tuning Fork** grants **Blast** (Source Art).
 *   **Exit State:**
     *   **Party:** Nova + Zeke (Defector).
 *   **Items:** Tuning Fork (Relic 1), Chime (Key Item/Resonator).

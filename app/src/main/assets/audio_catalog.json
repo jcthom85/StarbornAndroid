@@ -88,6 +88,22 @@
       "fade_out_ms": 400
     },
     {
+      "id": "shield_block",
+      "category": "battle",
+      "priority": 3,
+      "gain": 0.95,
+      "fade_in_ms": 0,
+      "fade_out_ms": 140
+    },
+    {
+      "id": "shield_break",
+      "category": "battle",
+      "priority": 4,
+      "gain": 1.0,
+      "fade_in_ms": 0,
+      "fade_out_ms": 220
+    },
+    {
       "id": "victory_fanfare",
       "category": "battle",
       "priority": 5,

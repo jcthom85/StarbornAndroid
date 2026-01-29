@@ -15,7 +15,13 @@ data class Enemy(
     val focus: Int,
     val luck: Int,
     val speed: Int,
-    val stability: Int = 100,
+    val stability: Int? = null,
+    @Json(name = "broken_turns")
+    val brokenTurns: Int? = null,
+    @Json(name = "combat_behavior")
+    val combatBehavior: String? = null,
+    @Json(name = "combat_role")
+    val combatRole: String? = null,
     val element: String = "none",
     val resistances: Resistances = Resistances(),
     val tags: List<String> = emptyList(),

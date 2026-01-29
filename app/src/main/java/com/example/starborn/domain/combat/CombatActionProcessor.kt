@@ -428,7 +428,10 @@ class CombatActionProcessor(
         } else {
             damaged
         }
-        return if (shouldApplyTargetLock) withStatus.consumeTargetLockIfPresent(targetId) else withStatus
+        
+        val withConsumedCrit = withStatus.consumeForceCritIfPresent(targetId)
+        
+        return if (shouldApplyTargetLock) withConsumedCrit.consumeTargetLockIfPresent(targetId) else withConsumedCrit
     }
 
     private fun CombatState.clearWeaponCharge(actorId: String): CombatState {
@@ -491,10 +494,34 @@ class CombatActionProcessor(
     private fun CombatantState.hasStatus(statusId: String): Boolean =
         statusEffects.any { it.id.equals(statusId, ignoreCase = true) && it.stacks > 0 }
 
+    private fun CombatantState.hasBlockingStatus(): Boolean =
+        statusEffects.any { effect ->
+            effect.stacks > 0 && BLOCKING_STATUS_IDS.any { it.equals(effect.id, ignoreCase = true) }
+        }
+
     private fun CombatState.consumeTargetLockIfPresent(targetId: String): CombatState {
         val target = combatants[targetId] ?: return this
         val statuses = target.statusEffects.toMutableList()
         val index = statuses.indexOfFirst { it.id.equals(TARGET_LOCK_STATUS_ID, ignoreCase = true) }
+        if (index < 0) return this
+        val existing = statuses[index]
+        val remainingStacks = (existing.stacks - 1).coerceAtLeast(0)
+        if (remainingStacks <= 0) {
+            statuses.removeAt(index)
+        } else {
+            statuses[index] = existing.copy(stacks = remainingStacks)
+        }
+        return copy(
+            combatants = combatants + (targetId to target.copy(statusEffects = statuses))
+        )
+    }
+
+    private fun CombatState.consumeForceCritIfPresent(targetId: String): CombatState {
+        val target = combatants[targetId] ?: return this
+        val statuses = target.statusEffects.toMutableList()
+        val index = statuses.indexOfFirst { status ->
+            statusRegistry.definition(status.id)?.forceCrit == true
+        }
         if (index < 0) return this
         val existing = statuses[index]
         val remainingStacks = (existing.stacks - 1).coerceAtLeast(0)
@@ -554,6 +581,20 @@ class CombatActionProcessor(
     ): CombatState {
         val attackerId = action.actorId
         val attackerState = state.combatants[attackerId] ?: return state
+        
+        val isJammed = attackerState.statusEffects.any { status ->
+            statusRegistry.definition(status.id)?.blockSkills == true
+        }
+        if (isJammed) {
+            return state.copy(
+                log = state.log + CombatLogEntry.TurnSkipped(
+                    turn = state.round,
+                    actorId = attackerId,
+                    reason = "is jammed"
+                )
+            )
+        }
+
         val skill = skillLookup(action.skillId)
 
         var working = state
@@ -583,10 +624,24 @@ class CombatActionProcessor(
                     if (mode.baseDamage <= 0) {
                         working
                     } else {
+                        val resolvedTargets = actionTargets(
+                            state = working,
+                            attacker = attackerState,
+                            explicitTargets = explicitTargets,
+                            targeting = Targeting.ENEMY
+                        )
+                        val guardBreak = skill?.combatTags.orEmpty().any { tag ->
+                            tag.equals("guard_break", ignoreCase = true)
+                        }
+                        val prepared = if (guardBreak) {
+                            applyGuardBreak(working, resolvedTargets)
+                        } else {
+                            working
+                        }
                         applyDamage(
-                            working,
+                            prepared,
                             attackerId,
-                            explicitTargets,
+                            resolvedTargets,
                             mode
                         )
                     }
@@ -613,6 +668,37 @@ class CombatActionProcessor(
         }
 
         return working
+    }
+
+    private fun applyGuardBreak(
+        state: CombatState,
+        targetIds: List<String>
+    ): CombatState {
+        if (targetIds.isEmpty()) return state
+        var working = state
+        targetIds.forEach { targetId ->
+            val target = working.combatants[targetId] ?: return@forEach
+            if (!target.isAlive) return@forEach
+            if (!target.hasBlockingStatus()) return@forEach
+            working = working.removeStatus(targetId, "invulnerable")
+            working = working.removeStatus(targetId, "guard")
+            working = working.removeStatus(targetId, "shield")
+        }
+        return working
+    }
+
+    private fun CombatState.removeStatus(
+        targetId: String,
+        statusId: String
+    ): CombatState {
+        val target = combatants[targetId] ?: return this
+        val statuses = target.statusEffects.toMutableList()
+        val index = statuses.indexOfFirst { it.id.equals(statusId, ignoreCase = true) }
+        if (index < 0) return this
+        statuses.removeAt(index)
+        return copy(
+            combatants = combatants + (targetId to target.copy(statusEffects = statuses))
+        )
     }
 
     private fun processItemUse(
@@ -793,6 +879,15 @@ class CombatActionProcessor(
                     amount = damage,
                     element = damageMode.element
                 )
+                working = working.consumeForceCritIfPresent(targetId)
+            } else if (outgoing > 0 && targetState.hasBlockingStatus()) {
+                working = engine.applyDamage(
+                    state = working,
+                    attackerId = attackerId,
+                    targetId = targetId,
+                    amount = 0,
+                    element = damageMode.element
+                )
             }
         }
         return working
@@ -933,7 +1028,12 @@ class CombatActionProcessor(
         val baseDamage = basePhysicalDamage(attacker, target)
         val critRoll = Random.nextDouble(0.0, 100.0)
         val critChance = (attacker.critChance() + critBonus).coerceIn(0.0, 100.0)
-        val critical = critRoll <= critChance
+        
+        val forceCrit = target.statusEffects.any { status ->
+            statusRegistry.definition(status.id)?.forceCrit == true
+        }
+        val critical = forceCrit || (critRoll <= critChance)
+        
         return HitRoll.Hit(baseDamage, critical)
     }
 
@@ -959,7 +1059,15 @@ class CombatActionProcessor(
     private fun CombatantState.accuracyRating(): Double {
         val buffs = totalBuffValue("accuracy")
         val base = CombatFormulas.accuracy(effectiveStat("focus"))
-        return (base + combatant.stats.accuracyBonus + buffs).coerceIn(0.0, 100.0)
+        var rating = base + combatant.stats.accuracyBonus + buffs
+        if (statusEffects.isNotEmpty()) {
+            var multiplier = 1.0
+            statusEffects.forEach { status ->
+                statusRegistry.definition(status.id)?.accuracyMultiplier?.let { multiplier *= it }
+            }
+            rating *= multiplier
+        }
+        return rating.coerceIn(0.0, 100.0)
     }
 
     private fun CombatantState.evasionRating(): Double {
@@ -1120,9 +1228,6 @@ class CombatActionProcessor(
     }
 
     private fun skipReason(combatant: CombatantState): SkipInfo? {
-        if (combatant.breakTurns > 0) {
-            return SkipInfo("is broken")
-        }
         combatant.statusEffects.forEach { status ->
             val definition = statusRegistry.definition(status.id)
             if (!definition?.skipReason.isNullOrBlank()) {
@@ -1265,6 +1370,7 @@ class CombatActionProcessor(
         private const val MAX_HIT_CHANCE = 99.0
         private const val PHYSICAL_VARIANCE_MIN = -2
         private const val PHYSICAL_VARIANCE_MAX = 2
+        private val BLOCKING_STATUS_IDS = setOf("invulnerable", "shield", "guard")
 
         private val ELEMENT_TAGS = setOf(
             "burn",

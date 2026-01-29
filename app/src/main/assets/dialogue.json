@@ -272,6 +272,7 @@
         "id": "ollie_intro_1",
         "speaker": "Ollie",
         "text": "Nova! There you are! C'mon, we're going to be late meeting Jed.",
+        "emote": "surprised",
         "condition": "milestone_not_set:ms_ollie_met",
         "next": "ollie_intro_tutorial"
     },

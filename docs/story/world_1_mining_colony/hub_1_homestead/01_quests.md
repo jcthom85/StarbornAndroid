@@ -19,5 +19,5 @@ These quests reward combat tools and skills, encouraging players to explore befo
 | ID | Title | Quest Giver | Objective | Rewards | Notes |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **W1_SQ01** | **The Scavenger's Stash** | Scrapper (Fence) | Track down a hidden cache of old mining explosives. | **Nova Skill: Pulse Grenade** | Teaches usage of consumables/AoE. |
-| **W1_SQ02** | **System Flush** | Doc (Medic) | Clear contaminated vents / chemical hazard. | **Weapon Mod: Corrosive Rounds** (Acid DoT for Nova's guns) | Explains Damage-over-Time (Acid) mechanics. |
-| **W1_SQ03** | **Heavy Lifting** | Foreman Bogs | Use a loader/mech to move cargo / clear path. | **Nova Skill: Hydraulic Kick** | Teaches Guard Breaking / Stagger. |
+| **W1_SQ02** | **System Flush** | Doc (Medic) | Clear contaminated vents / chemical hazard. | **Weapon Mod: Corrosive Rounds** (Applies Corrosion / Acid DoT for Nova's guns) | Explains Corrosion (anti-armor) mechanics. |
+| **W1_SQ03** | **Heavy Lifting** | Foreman Bogs | Use a loader/mech to move cargo / clear path. | **Nova Skill: Hydraulic Kick** | Make this mandatory or heavily signposted: it teaches Guard Break/Stagger (needed for shielded enemies leading into the Warden). |

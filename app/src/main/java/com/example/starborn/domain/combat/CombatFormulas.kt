@@ -2,6 +2,7 @@ package com.example.starborn.domain.combat
 
 import kotlin.math.floor
 import kotlin.math.max
+import kotlin.math.roundToInt
 
 object CombatFormulas {
 
@@ -41,4 +42,14 @@ object CombatFormulas {
     fun generalResistance(focus: Int): Int = max(0, (focus * RES_PER_FOCUS).toInt())
 
     fun skillPotencyMultiplier(focus: Int): Double = 1.0 + focus * SKILL_FOCUS_MULT
+
+    fun stabilityForTier(maxHp: Int, tier: String?): Int {
+        val multiplier = when (tier?.trim()?.lowercase()) {
+            "boss" -> 0.95
+            "elite" -> 0.85
+            "mini" -> 0.75
+            else -> 0.6
+        }
+        return (maxHp * multiplier).roundToInt().coerceAtLeast(1)
+    }
 }

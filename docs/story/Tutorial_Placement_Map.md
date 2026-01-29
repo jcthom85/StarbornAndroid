@@ -79,6 +79,7 @@ If it is something the player must understand to play well, it goes here.
 | Shop: buy/sell + currency framing | Prompt + Practice | Node 3B: Trade Row -> first time entering a shop stall | Optional | Must have fallback prompt later on a mandatory shop interaction (World 1 Hub 1.2 or World 2). |
 | Healing outside combat (med items / first aid station) | Practice + Feedback | Node 3A: Med-Bay -> treat a minor injury | Optional | If First Aid minigame exists, teach it here as a low-stakes version. Fallback is World 2 crash. |
 | Mods exist (and may be locked by milestones) | Implicit UI + Prompt | When player receives first weapon mod reward (W1_SQ02 Corrosive Rounds) | Optional | Show mod sockets UI in equipment detail. If sockets locked, label: "Unlocks after Main Story milestone." |
+| Guard Break / Stagger as the primary "puzzle key" | Practice + Feedback | W1_SQ03 "Heavy Lifting" -> reward beat: acquire Hydraulic Kick, then use it once on a shielded target (training dummy or scripted spar) | Yes (soft gate) | Strongly signpost as required training before Logistics. Teach: some enemies take **0 damage** until Guard Broken/Staggered. |
 | Point-of-no-return warning language | Prompt | Node 4: Admin Gate -> first time approaching the Gate | Yes | "Crossing the checkpoint may lock out unfinished errands." Keep it honest and specific. |
 
 ### Hub 1.2 - Logistics Sector (First Dungeon + Escape)
@@ -88,13 +89,14 @@ If it is something the player must understand to play well, it goes here.
 | Hacking interaction (no typing, puzzle UI) | Script + Gated Step | W1_MQ02 "Paperwork" -> Admin Gate/Window: clearance denial -> hack | Yes | This is the first "minigame" style tutorial. Keep failure cheap, give clear feedback. |
 | Combat entry (encounter start/readiness) | Prompt | W1_MQ03 "The Echo" -> Node 2B: Deep Mine -> first fight trigger | Yes | One prompt only: how to pick an action + end turn (or equivalent). |
 | Targeting (single target vs multi target) | Practice + Feedback | W1_MQ03 -> first fight: 2 enemies | Yes | Teach switching targets and reading target info. |
+| Shielded enemies (damage isn't everything) | Practice + Feedback | W1_MQ03 -> first fight includes a Riot Shield enemy that is immune until Staggered/Guard Broken | Yes | Tooltip-on-first-0-damage: "Guard Up. Break it with Slide Kick / Hydraulic Kick / Blast Wave." This is the pre-boss teach for The Warden's shield. |
 | Cooldowns as primary resource (no MP) | Prompt + Practice | W1_MQ03 -> first time player taps a skill on cooldown | Yes | Make the UI do the teaching (cooldown badge), prompt only on first confusion. |
 | Elemental weakness (+ tempo/stagger payoff) | Practice + Feedback | W1_MQ03 -> first enemy with clear weakness (e.g., Drone weak to Shock) | Yes | First weakness hit triggers a small "Weakness! Cooldowns -1" style toast. |
-| Status effects (DoT, stun, jam) basics | Practice + Feedback | W1_SQ02 (if completed) OR W1_MQ03 second combat | Yes (fallback) | If optional quests are skipped, ensure at least one mandatory fight applies a simple status with a tooltip-on-first-application. |
+| Status effects (DoT, stun, blind) basics | Practice + Feedback | W1_SQ02 (if completed) OR W1_MQ03 second combat | Yes (fallback) | Keep World 1 reactive/brute-force only. Do not tutorial **Jammed** or **Marked** until World 2 (Zeke joins too late). |
 | Source Art acquisition (Relic sync unlocks a new ability) | Cinematic + Prompt | W1_MQ03 -> Node 3: Echo Chamber -> Ancient Chamber -> sync with Tuning Fork | Yes | Immediately show the new skill in combat UI with a "Source Art" label. |
 | Chase/gauntlet pacing (fast movement, limited detours) | Dialogue + Prompt | W1_MQ04 "Red Alert" -> Maintenance Tunnels | Yes | Use Zeke comms as the "tutorial voice" here: minimal UI prompts. |
 | Boss telegraphs (read intent, don't auto-attack) | Practice + Feedback | W1_MQ05 "The Launch" -> Boss: The Warden | Yes | The first boss should explicitly telegraph at least one move; tooltip-on-first-telegraph. |
-| Party member joins (Zeke) + party UI basics | Script + Practice | W1_MQ05 end: Zeke joins party (post-boss / escape) | Yes | Script: (new) `party_basics` - portraits, swapping, role hint. If party swapping is not a feature, teach "multiple turns/ally skills" instead. |
+| Party member joins (Zeke) + party UI basics | Script + Practice | W1_MQ05 end: Zeke joins party (post-boss / escape) | Yes | Script: (new) `party_basics` - portraits, swapping, role hint. Avoid teaching Zeke's advanced status layer (Jam/Mark) here; first teach in World 2. |
 | Synergy skills / combo conditions | Practice + Feedback | First post-recruit fight with Nova+Zeke | Yes | Teach one "obvious" synergy with a highlighted button when conditions are met. |
 | Snack slot in combat (reusable cooldown tool, not item spam) | Prompt + Practice | First combat after player equips a snack OR first time snack button is available | Yes | Use a single line: "Snacks recharge; cooldown limits use." Reinforce by showing cooldown after use. |
 
@@ -127,6 +129,8 @@ If it is something the player must understand to play well, it goes here.
 | Puzzle interaction language (alignment, rotate, tune) | Practice + Feedback | MQ_08 "Sleeping Giant" -> Stasis Chamber alignment puzzle | Yes | Keep vocabulary consistent with later relic puzzles. |
 | New party member role (Orion = healer/utility) | Dialogue + Practice | MQ_08 end: Orion joins -> next combat | Yes | First combat after recruit should *require* at least one heal/buff (soft gate via enemy damage). |
 | Tank/protector framing (Gh0st = protection) | Dialogue + Practice | MQ_09 "The Hunter" -> Gh0st joins during boss | Yes | Teach "Protect/Intercept" by showing damage redirection once, with one tooltip. |
+| Jammed (Silence) basics (deny enemy skills) | Practice + Feedback | Hub 2.2 -> first enemy that charges an obvious special attack | Yes | First teach for Zeke's Signal Jammer. Teach: Jam stops Skills/Arts, not basic attacks. |
+| Marked / Target Lock (setup → payoff) | Practice + Feedback | Hub 2.2 -> first fight designed around "Target Lock" then a payoff skill | Yes | Teach the tactical layer here (not World 1). Keep it to one simple combo highlight; no multi-step puzzle fights yet. |
 | The Astra unlock (mobile hub access) | Prompt | MQ_10 "Liftoff" -> Hangar Bay -> interact with The Astra | Yes | Teach: "Tap the ship to enter your hub." Reinforce by making ship image available from future hub screens. |
 
 ---

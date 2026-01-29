@@ -33,6 +33,12 @@ With **6-8 new enemies** per world, the player has to learn a specific "combat l
 *   **> 8:** Combat becomes random; player can't build a strategy.
 *   **The Mix:** 6-8 allows for different *combinations* of enemy groups (e.g., 2 Guards + 1 Drone vs. 3 Rock-Borers) to create freshness without needing new assets.
 
+#### World 1 Addendum: Tutorial Cognitive Load (Keep It Lean)
+World 1 is the tutorial biome, so its "combat language" must be readable at a glance.
+*   **Teach fewer status effects:** Prioritize reactive/brute-force statuses (Stun/Blind/Corrosion) and delay tactical layers (**Jammed**, **Marked**) until World 2 (Zeke joins too late in W1 to build lessons around them).
+*   **Make Guard Break/Stagger the star:** World 1 introduces shielded/armored enemies early; players need a clear "this is the key" mechanic before the Warden.
+*   **Elements are fine—don’t teach all of them at once:** World 1 can focus on Physical/Shock/Burn (+ Acid via an optional mod) and save deeper element interactions for later worlds.
+
 ### C. Main Quest Pacing
 *   **Hub 1** is designed to be "Social/Exploration" heavy. Talk to NPCs, get access, learn the culture.
 *   **Hub 2** is designed to be "Combat/Dungeon" heavy. Gauntlets, puzzles, boss fights.
@@ -49,5 +55,7 @@ With **6-8 new enemies** per world, the player has to learn a specific "combat l
     *   **SQ:** 2 (Protocol Override, The Lost Shift)
 *   **Total:** 5 MQ, 5 SQ.
 *   **Bestiary (Enemies):** 7 Unique Entries (4 Common, 2 Elite, 1 Boss).
+
+**World 1 pacing note:** Treat **W1_SQ03 "Heavy Lifting"** as mandatory or strongly signposted, since it teaches **Guard Break/Stagger** and rewards **Hydraulic Kick** (a core tool for shielded enemies leading into the Warden).
 
 This template should be replicated for Worlds 2–6.

@@ -49,8 +49,9 @@ Zeke talks like corporate HR software—buzzwords, relentless optimism—because
 
 **Combat Kit (The Analyst)**
 Zeke fights up close, using data to exploit weak points and destabilize enemies.
+*   **World 1 onboarding note:** Zeke joins at the very end of World 1, so his tactical "deny/setup" layer (Silence/Jam + Mark setup/payoff) should be tutorialized in World 2, not World 1.
 *   **Core Skills (6 Total):**
-    *   *Target Lock:* Marks an enemy (lowers evasion).
+    *   *Target Lock:* Marks an enemy (crit setup / lowers evasion).
     *   *Adrenaline Surge:* Self target Haste/Attack buff.
     *   *Flashbang:* AoE blind/stun.
     *   *Corrosive Strike:* Melee damage over time (Acid).

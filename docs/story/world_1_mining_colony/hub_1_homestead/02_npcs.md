@@ -51,4 +51,5 @@
 *   **Location:** The Loading Dock.
 *   **Function:** Giver of **SQ_03** (Reward: Hydraulic Kick).
 *   **Vibe:** Loud, bureaucratic bully.
+*   **Design Note:** Treat **SQ_03** as mandatory/signposted training: it teaches **Guard Break/Stagger** before the Logistics/Warden run.
 *   **Quote:** "You want credits? Move that debris. Company time ain't charity."

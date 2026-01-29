@@ -85,7 +85,9 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.Shadow
@@ -99,6 +101,8 @@ import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.lerp
+import kotlin.math.roundToInt
+import kotlin.math.sin
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.ContentScale
@@ -125,12 +129,19 @@ import androidx.compose.material.icons.filled.Flag
 import androidx.compose.material.icons.outlined.RadioButtonUnchecked
 import androidx.compose.material.icons.outlined.School
 import androidx.compose.material.icons.rounded.AutoAwesome
+import androidx.compose.material.icons.rounded.AcUnit
 import androidx.compose.material.icons.rounded.Bolt
+import androidx.compose.material.icons.rounded.BrokenImage
 import androidx.compose.material.icons.rounded.Build
 import androidx.compose.material.icons.rounded.ExitToApp
 import androidx.compose.material.icons.rounded.Inventory2
 import androidx.compose.material.icons.rounded.Restaurant
 import androidx.compose.material.icons.rounded.Shield
+import androidx.compose.material.icons.rounded.Star
+import androidx.compose.material.icons.rounded.Timer
+import androidx.compose.material.icons.rounded.VisibilityOff
+import androidx.compose.material.icons.rounded.Warning
+import androidx.compose.material.icons.rounded.WaterDrop
 import androidx.compose.material.icons.rounded.Whatshot
 import com.example.starborn.domain.combat.CombatOutcome
 import com.example.starborn.domain.combat.CombatState
@@ -226,11 +237,23 @@ private data class SupportFxUi(
     val targetIds: List<String>
 )
 
+private data class TelegraphFxUi(
+    val id: String,
+    val actorId: String,
+    val skillName: String,
+    val targetIds: List<String>
+)
+
 private data class AttackHitFxUi(
     val id: String,
     val targetId: String,
     val style: AttackFxStyle,
     val critical: Boolean
+)
+
+private data class ShieldBreakFxUi(
+    val id: String,
+    val targetId: String
 )
 
 
@@ -362,7 +385,7 @@ fun CombatScreen(
     val atbMeters by viewModel.atbMeters.collectAsStateWithLifecycle()
     val lungeActorId by viewModel.lungeActorId.collectAsStateWithLifecycle(null)
     val lungeToken by viewModel.lungeToken.collectAsStateWithLifecycle(0L)
-    val lungeStyle by viewModel.lungeStyle.collectAsStateWithLifecycle(AttackLungeStyle.HIT)
+    val lungeStyle by viewModel.lungeStyle.collectAsStateWithLifecycle(AttackLungeStyle.MELEE)
     val missLungeActorId by viewModel.missLungeActorId.collectAsStateWithLifecycle(null)
     val missLungeToken by viewModel.missLungeToken.collectAsStateWithLifecycle(0L)
     val timedPromptState by viewModel.timedPrompt.collectAsStateWithLifecycle()
@@ -374,13 +397,17 @@ fun CombatScreen(
     
     // Transition State
     var exitTransitionVisible by remember { mutableStateOf(true) }
+    var isExiting by remember { mutableStateOf(false) }
+    var exitMainText by remember { mutableStateOf("") }
 
     val damageFx = remember { mutableStateListOf<DamageFxUi>() }
     val healFx = remember { mutableStateListOf<HealFxUi>() }
     val statusFx = remember { mutableStateListOf<StatusFxUi>() }
     val knockoutFx = remember { mutableStateListOf<KnockoutFxUi>() }
     val supportFx = remember { mutableStateListOf<SupportFxUi>() }
+    val telegraphFx = remember { mutableStateListOf<TelegraphFxUi>() }
     val attackHitFx = remember { mutableStateListOf<AttackHitFxUi>() }
+    val shieldBreakFx = remember { mutableStateListOf<ShieldBreakFxUi>() }
 
     val delayedDeathTargets = remember { mutableStateMapOf<String, Long>() }
     var lastPlayerActionStyle by remember { mutableStateOf<AttackFxStyle?>(null) }
@@ -537,6 +564,30 @@ fun CombatScreen(
                         supportFx.remove(fx)
                     }
                 }
+                is CombatFxEvent.Telegraph -> {
+                    val fx = TelegraphFxUi(
+                        id = UUID.randomUUID().toString(),
+                        actorId = event.actorId,
+                        skillName = event.skillName,
+                        targetIds = event.targetIds
+                    )
+                    telegraphFx += fx
+                    launch {
+                        delay(800)
+                        telegraphFx.remove(fx)
+                    }
+                }
+                is CombatFxEvent.ShieldBreak -> {
+                    val fx = ShieldBreakFxUi(
+                        id = UUID.randomUUID().toString(),
+                        targetId = event.targetId
+                    )
+                    shieldBreakFx += fx
+                    launch {
+                        delay(520)
+                        shieldBreakFx.remove(fx)
+                    }
+                }
                 is CombatFxEvent.Audio -> audioCuePlayer.execute(event.commands)
             }
         }
@@ -575,7 +626,8 @@ fun CombatScreen(
                 )
                 handle?.set("combat_result", payload)
                 pendingOutcome = null
-                navController.popBackStack()
+                exitMainText = "The party collapses in defeat..."
+                isExiting = true
             }
             CombatOutcome.Retreat -> {
                 val payload = CombatResultPayload(
@@ -584,7 +636,8 @@ fun CombatScreen(
                 )
                 handle?.set("combat_result", payload)
                 pendingOutcome = null
-                navController.popBackStack()
+                exitMainText = ""
+                isExiting = true
             }
         }
     }
@@ -603,7 +656,8 @@ fun CombatScreen(
         pendingVictoryPayload = null
         victoryDialogStage = null
         pendingOutcome = null
-        navController.popBackStack()
+        exitMainText = ""
+        isExiting = true
     }
 
     fun advanceVictoryDialog() {
@@ -883,8 +937,10 @@ fun CombatScreen(
                         attackFx = attackHitFx,
                         healFx = healFx,
                         statusFx = statusFx,
+                        shieldBreakFx = shieldBreakFx,
 
                         knockoutFx = knockoutFx,
+                        telegraphFx = telegraphFx,
                         delayedDeathTargets = delayedDeathTargets,
                         onEnemyTap = { handleEnemyTap(it) },
                         onEnemyLongPress = {
@@ -899,7 +955,8 @@ fun CombatScreen(
                         missLungeToken = missLungeToken,
                         onLungeFinished = viewModel::onLungeFinished,
                         onMissLungeFinished = viewModel::onMissLungeFinished,
-                        showTargetPrompt = enemyTargetPrompt
+                        showTargetPrompt = enemyTargetPrompt,
+                        lungeStyle = lungeStyle
                     )
                 }
                 Box(
@@ -934,9 +991,11 @@ fun CombatScreen(
                     attackFx = attackHitFx,
                     healFx = healFx,
                     statusFx = statusFx,
+                    shieldBreakFx = shieldBreakFx,
 
                     knockoutFx = knockoutFx,
                     supportFx = supportFx,
+                    telegraphFx = telegraphFx,
                     onMemberTap = { handlePartyMemberTap(it) },
                     allowNonReadySelection = allowAllySelection,
                     victoryEmotes = victoryEmotes,
@@ -1096,6 +1155,20 @@ fun CombatScreen(
                 modifier = Modifier.zIndex(100f)
             )
 
+            if (isExiting) {
+                CombatTransitionOverlay(
+                    visible = true,
+                    theme = viewModel.theme,
+                    suppressFlashes = suppressFlashes,
+                    highContrastMode = highContrastMode,
+                    mode = TransitionMode.ENTER,
+                    mainText = exitMainText,
+                    subText = "",
+                    onFinished = { navController.popBackStack() },
+                    modifier = Modifier.zIndex(100f)
+                )
+            }
+
 
         }
     } else {
@@ -1123,8 +1196,10 @@ private fun PartyRoster(
     attackFx: List<AttackHitFxUi>,
     healFx: List<HealFxUi>,
     statusFx: List<StatusFxUi>,
+    shieldBreakFx: List<ShieldBreakFxUi>,
     knockoutFx: List<KnockoutFxUi>,
     supportFx: List<SupportFxUi>,
+    telegraphFx: List<TelegraphFxUi>,
     onMemberTap: ((String) -> Unit)? = null,
     allowNonReadySelection: Boolean = false,
     victoryEmotes: Boolean = false,
@@ -1156,6 +1231,7 @@ private fun PartyRoster(
                             val currentHp = memberState?.hp ?: maxHp
                             val isActive = member.id == activeId
                             val supportHighlights = supportFx.filter { member.id in it.targetIds }
+                            val telegraphHighlights = telegraphFx.filter { member.id in it.targetIds }
                             val cardShape = RoundedCornerShape(22.dp)
                             val isAlive = memberState?.isAlive != false
                             val memberLungeToken = if (member.id == lungeActorId) lungeToken else null
@@ -1224,6 +1300,7 @@ private fun PartyRoster(
                                                 .clip(CircleShape)
                                                 .background(Color(0xFF1C1F24))
                                                 .graphicsLayer {
+                                                    compositingStrategy = CompositingStrategy.Offscreen
                                                     val pulse = 1f + 0.06f * hitPulse
                                                     scaleX = pulse
                                                     scaleY = pulse
@@ -1231,9 +1308,22 @@ private fun PartyRoster(
                                                 },
                                             contentAlignment = Alignment.Center
                                         ) {
-                                            val lungeDistance = if (suppressLunge) 0.dp else 24.dp
-                                            val lungeAxis = if (isMissLunge) LungeAxis.X else LungeAxis.Y
-                                            val lungeDirectionSign = if (isMissLunge) -1f else 1f
+                                            val lungeDistance = when {
+                                                suppressLunge -> 0.dp
+                                                isMissLunge -> 18.dp
+                                                lungeStyle == AttackLungeStyle.RANGED -> 12.dp
+                                                lungeStyle == AttackLungeStyle.BUFF -> 16.dp
+                                                lungeStyle == AttackLungeStyle.CAST -> 8.dp
+                                                lungeStyle == AttackLungeStyle.ITEM -> 6.dp
+                                                lungeStyle == AttackLungeStyle.SNACK -> 8.dp
+                                                else -> 24.dp
+                                            }
+                                            val lungeAxis = if (isMissLunge || lungeStyle == AttackLungeStyle.ITEM) LungeAxis.X else LungeAxis.Y
+                                            val lungeDirectionSign = when {
+                                                isMissLunge -> -1f
+                                                lungeStyle == AttackLungeStyle.RANGED -> -1f
+                                                else -> 1f
+                                            }
                                             Lungeable(
                                                 side = CombatSide.PLAYER,
                                                 triggerToken = memberLungeToken,
@@ -1248,6 +1338,16 @@ private fun PartyRoster(
                                                     contentDescription = member.name,
                                                     modifier = Modifier.matchParentSize(),
                                                     contentScale = ContentScale.Crop
+                                                )
+                                            }
+                                            val shielded = memberState?.statusEffects.orEmpty().any { status ->
+                                                isShieldVisualStatus(status.id)
+                                            }
+                                            if (shielded && isAlive) {
+                                                ShieldFieldOverlay(
+                                                    modifier = Modifier
+                                                        .matchParentSize()
+                                                        .clip(CircleShape)
                                                 )
                                             }
                                             if (damageFlash > 0f) {
@@ -1300,17 +1400,19 @@ private fun PartyRoster(
                                         }
                                     }
                                 }
-                                CombatFxOverlay(
-                                    damageFx = damageFx.filter { it.targetId == member.id },
-                                    attackFx = attackFx.filter { it.targetId == member.id },
-                                    healFx = healFx.filter { it.targetId == member.id },
-                                    statusFx = statusFx.filter { it.targetId == member.id },
+                                    CombatFxOverlay(
+                                        damageFx = damageFx.filter { it.targetId == member.id },
+                                        attackFx = attackFx.filter { it.targetId == member.id },
+                                        healFx = healFx.filter { it.targetId == member.id },
+                                        statusFx = statusFx.filter { it.targetId == member.id },
+                                        shieldBreakFx = shieldBreakFx.filter { it.targetId == member.id },
 
-                                    showKnockout = knockoutFx.any { it.targetId == member.id },
-                                    shape = cardShape,
-                                    supportFx = supportHighlights,
-                                    modifier = Modifier.matchParentSize()
-                                )
+                                        showKnockout = knockoutFx.any { it.targetId == member.id },
+                                        shape = cardShape,
+                                        supportFx = supportHighlights,
+                                        telegraphFx = telegraphHighlights,
+                                        modifier = Modifier.matchParentSize()
+                                    )
                             }
                         }
                     }
@@ -1336,8 +1438,10 @@ private fun EnemyRoster(
     attackFx: List<AttackHitFxUi>,
     healFx: List<HealFxUi>,
     statusFx: List<StatusFxUi>,
+    shieldBreakFx: List<ShieldBreakFxUi>,
 
     knockoutFx: List<KnockoutFxUi>,
+    telegraphFx: List<TelegraphFxUi>,
     delayedDeathTargets: Map<String, Long>,
     onEnemyTap: (String) -> Unit,
     onEnemyLongPress: (String) -> Unit,
@@ -1348,7 +1452,8 @@ private fun EnemyRoster(
     missLungeToken: Long,
     onLungeFinished: (Long) -> Unit,
     onMissLungeFinished: (Long) -> Unit,
-    showTargetPrompt: Boolean = false
+    showTargetPrompt: Boolean = false,
+    lungeStyle: AttackLungeStyle = AttackLungeStyle.MELEE
 ) {
     if (enemies.isEmpty()) return
     val compositeGroup = enemies.firstOrNull()?.composite?.group
@@ -1366,8 +1471,10 @@ private fun EnemyRoster(
             attackFx = attackFx,
             healFx = healFx,
             statusFx = statusFx,
+            shieldBreakFx = shieldBreakFx,
 
             knockoutFx = knockoutFx,
+            telegraphFx = telegraphFx,
             delayedDeathTargets = delayedDeathTargets,
             onEnemyTap = onEnemyTap,
             onEnemyLongPress = onEnemyLongPress,
@@ -1378,7 +1485,8 @@ private fun EnemyRoster(
             missLungeToken = missLungeToken,
             onLungeFinished = onLungeFinished,
             onMissLungeFinished = onMissLungeFinished,
-            showTargetPrompt = showTargetPrompt
+            showTargetPrompt = showTargetPrompt,
+            lungeStyle = lungeStyle
         )
         return
     }
@@ -1436,9 +1544,12 @@ private fun EnemyRoster(
                         val enemyState = combatState.combatants[combatantId]
                         val maxHp = enemyState?.combatant?.stats?.maxHp ?: enemy.hp.coerceAtLeast(1)
                         val currentHp = enemyState?.hp ?: maxHp
+                        val maxStability = enemyState?.combatant?.stats?.stability ?: 100
+                        val currentStability = enemyState?.stability ?: maxStability
                         val isActive = activeId == combatantId
                         val isSelected = combatantId in selectedEnemyIds
                         val isAlive = enemyState?.isAlive != false
+                        val telegraphHighlights = telegraphFx.filter { combatantId in it.targetIds }
                         val isVisible = isAlive || delayedDeathTargets.containsKey(combatantId)
                         val isElite = isEliteTier(enemy.tier)
                         val isBoss = isBossTier(enemy.tier)
@@ -1516,6 +1627,9 @@ private fun EnemyRoster(
                                     name = enemy.name,
                                     currentHp = currentHp,
                                     maxHp = maxHp,
+                                    currentStability = currentStability,
+                                    maxStability = maxStability,
+                                    breakTurns = enemyState?.breakTurns ?: 0,
                                     atbProgress = atbProgress,
                                     isAlive = isAlive,
                                     isActive = isActive,
@@ -1550,15 +1664,37 @@ private fun EnemyRoster(
                                             .padding(bottom = innerPadding)
                                             .size(rippleSize)
                                     )
+                                    val idleTransition = rememberInfiniteTransition(label = "enemy_idle_$combatantId")
+                                    val idlePhase = remember(combatantId) { Random.nextFloat() * (2f * Math.PI).toFloat() }
+                                    val idleWave by idleTransition.animateFloat(
+                                        initialValue = 0f,
+                                        targetValue = (2f * Math.PI).toFloat(),
+                                        animationSpec = infiniteRepeatable(
+                                            animation = tween(durationMillis = 2600, easing = LinearEasing),
+                                            repeatMode = RepeatMode.Restart
+                                        ),
+                                        label = "enemy_idle_wave"
+                                    )
+                                    val enemyBroken = (enemyState?.breakTurns ?: 0) > 0
                                     Box(
                                         modifier = Modifier
                                             .align(Alignment.Center)
                                             .padding(bottom = innerPadding)
                                             .size(portraitSize)
                                             .graphicsLayer {
-                                                scaleX = spriteScale
-                                                scaleY = spriteScale
-                                                translationY = hitRecoilY
+                                                compositingStrategy = CompositingStrategy.Offscreen
+                                                if (enemyBroken) {
+                                                    scaleX = spriteScale
+                                                    scaleY = spriteScale
+                                                    translationY = hitRecoilY
+                                                } else {
+                                                    val idleBreath = sin(idleWave + idlePhase)
+                                                    val idleBob = idleBreath * 2.2f
+                                                    val idlePuff = 1f + 0.012f * idleBreath
+                                                    scaleX = spriteScale * (1f + 0.006f * idleBreath)
+                                                    scaleY = spriteScale * idlePuff
+                                                    translationY = hitRecoilY + idleBob
+                                                }
                                             }
                                     ) {
                                         EnemyShadow(
@@ -1573,12 +1709,24 @@ private fun EnemyRoster(
                                             modifier = Modifier.matchParentSize(),
                                             onFinished = { enemyMissToken?.let(onMissLungeFinished) }
                                         ) {
+                                            val dist = when (lungeStyle) {
+                                                AttackLungeStyle.RANGED -> 12.dp
+                                                AttackLungeStyle.BUFF -> 16.dp
+                                                AttackLungeStyle.CAST -> 8.dp
+                                                AttackLungeStyle.ITEM -> 6.dp
+                                                AttackLungeStyle.SNACK -> 8.dp
+                                                else -> 24.dp
+                                            }
+                                            val sign = when {
+                                                lungeStyle == AttackLungeStyle.RANGED || lungeStyle == AttackLungeStyle.BUFF || lungeStyle == AttackLungeStyle.SNACK -> -1f
+                                                else -> 1f
+                                            }
                                             Lungeable(
                                                 side = CombatSide.ENEMY,
                                                 triggerToken = enemyLungeToken,
-                                                distance = 24.dp,
-                                                axis = LungeAxis.Y,
-                                                directionSign = 1f,
+                                                distance = dist,
+                                                axis = if (lungeStyle == AttackLungeStyle.ITEM) LungeAxis.X else LungeAxis.Y,
+                                                directionSign = sign,
                                                 modifier = Modifier.matchParentSize(),
                                                 onFinished = { enemyLungeToken?.let(onLungeFinished) }
                                             ) {
@@ -1590,15 +1738,27 @@ private fun EnemyRoster(
                                                 )
                                             }
                                         }
+                                        val enemyShielded = enemyState?.statusEffects.orEmpty().any { status ->
+                                            isShieldVisualStatus(status.id)
+                                        }
+                                        val enemyBroken = (enemyState?.breakTurns ?: 0) > 0
+                                        if (enemyShielded && isAlive) {
+                                            ShieldFieldOverlay(modifier = Modifier.matchParentSize())
+                                        }
+                                        if (enemyBroken && isAlive) {
+                                            BrokenFieldOverlay(modifier = Modifier.matchParentSize())
+                                        }
                                     }
                                     CombatFxOverlay(
                                         damageFx = damageFx.filter { it.targetId == combatantId },
                                         attackFx = attackFx.filter { it.targetId == combatantId },
                                         healFx = healFx.filter { it.targetId == combatantId },
                                         statusFx = statusFx.filter { it.targetId == combatantId },
+                                        shieldBreakFx = shieldBreakFx.filter { it.targetId == combatantId },
 
                                         showKnockout = knockoutFx.any { it.targetId == combatantId },
                                         shape = shape,
+                                        telegraphFx = telegraphHighlights,
                                         modifier = Modifier.matchParentSize()
                                     )
                                 }
@@ -1639,8 +1799,10 @@ private fun CompositeEnemyRoster(
     attackFx: List<AttackHitFxUi>,
     healFx: List<HealFxUi>,
     statusFx: List<StatusFxUi>,
+    shieldBreakFx: List<ShieldBreakFxUi>,
 
     knockoutFx: List<KnockoutFxUi>,
+    telegraphFx: List<TelegraphFxUi>,
     delayedDeathTargets: Map<String, Long>,
     onEnemyTap: (String) -> Unit,
     onEnemyLongPress: (String) -> Unit,
@@ -1651,7 +1813,8 @@ private fun CompositeEnemyRoster(
     missLungeToken: Long,
     onLungeFinished: (Long) -> Unit,
     onMissLungeFinished: (Long) -> Unit,
-    showTargetPrompt: Boolean = false
+    showTargetPrompt: Boolean = false,
+    lungeStyle: AttackLungeStyle = AttackLungeStyle.MELEE
 ) {
     if (enemies.isEmpty()) return
     val entries = enemies.mapIndexedNotNull { index, enemy ->
@@ -1768,6 +1931,7 @@ private fun CompositeEnemyRoster(
                     val enemyState = combatState.combatants[combatantId]
                     val isActive = activeId == combatantId
                     val isSelected = combatantId in selectedEnemyIds
+                    val telegraphHighlights = telegraphFx.filter { combatantId in it.targetIds }
                     val isAlive = enemyState?.isAlive != false
                     val isVisible = isAlive || delayedDeathTargets.containsKey(combatantId)
                     val flash = rememberDamageFlash(combatantId, combatState.log)
@@ -1831,16 +1995,38 @@ private fun CompositeEnemyRoster(
                         modifier = partModifier,
                         label = "enemy_part_$combatantId"
                     ) {
+                        val idleTransition = rememberInfiniteTransition(label = "enemy_idle_part_$combatantId")
+                        val idlePhase = remember(combatantId) { Random.nextFloat() * (2f * Math.PI).toFloat() }
+                        val idleWave by idleTransition.animateFloat(
+                            initialValue = 0f,
+                            targetValue = (2f * Math.PI).toFloat(),
+                            animationSpec = infiniteRepeatable(
+                                animation = tween(durationMillis = 2600, easing = LinearEasing),
+                                repeatMode = RepeatMode.Restart
+                            ),
+                            label = "enemy_idle_wave"
+                        )
                         Box(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .graphicsLayer {
+                                    compositingStrategy = CompositingStrategy.Offscreen
                                     val glowScale = 1f + selectionGlow.value * 0.08f
                                     val hitScale = 1f + 0.04f * hitPulse
                                     val combined = glowScale * hitScale
-                                    scaleX = combined
-                                    scaleY = combined
-                                    translationY = hitRecoilY
+                                    val isBroken = (enemyState?.breakTurns ?: 0) > 0
+                                    if (isBroken) {
+                                        scaleX = combined
+                                        scaleY = combined
+                                        translationY = hitRecoilY
+                                    } else {
+                                        val idleBreath = sin(idleWave + idlePhase)
+                                        val idleBob = idleBreath * 2.0f
+                                        val idlePuff = 1f + 0.01f * idleBreath
+                                        scaleX = combined * (1f + 0.006f * idleBreath)
+                                        scaleY = combined * idlePuff
+                                        translationY = hitRecoilY + idleBob
+                                    }
                                 }
                         ) {
                             if (entry.layout.role?.equals("core", ignoreCase = true) != false) {
@@ -1871,12 +2057,24 @@ private fun CompositeEnemyRoster(
                                 modifier = Modifier.matchParentSize(),
                                 onFinished = { enemyMissToken?.let(onMissLungeFinished) }
                             ) {
+                                val dist = when (lungeStyle) {
+                                    AttackLungeStyle.RANGED -> 12.dp
+                                    AttackLungeStyle.BUFF -> 16.dp
+                                    AttackLungeStyle.CAST -> 8.dp
+                                    AttackLungeStyle.ITEM -> 6.dp
+                                    AttackLungeStyle.SNACK -> 8.dp
+                                    else -> 24.dp
+                                }
+                                val sign = when {
+                                    lungeStyle == AttackLungeStyle.RANGED || lungeStyle == AttackLungeStyle.BUFF || lungeStyle == AttackLungeStyle.SNACK -> -1f
+                                    else -> 1f
+                                }
                                 Lungeable(
                                     side = CombatSide.ENEMY,
                                     triggerToken = enemyLungeToken,
-                                    distance = 24.dp,
-                                    axis = LungeAxis.Y,
-                                    directionSign = 1f,
+                                    distance = dist,
+                                    axis = if (lungeStyle == AttackLungeStyle.ITEM) LungeAxis.X else LungeAxis.Y,
+                                    directionSign = sign,
                                     modifier = Modifier.matchParentSize(),
                                     onFinished = { enemyLungeToken?.let(onLungeFinished) }
                                 ) {
@@ -1888,14 +2086,26 @@ private fun CompositeEnemyRoster(
                                     )
                                 }
                             }
+                            val enemyShielded = enemyState?.statusEffects.orEmpty().any { status ->
+                                isShieldVisualStatus(status.id)
+                            }
+                            val enemyBroken = (enemyState?.breakTurns ?: 0) > 0
+                            if (enemyShielded && isAlive) {
+                                ShieldFieldOverlay(modifier = Modifier.matchParentSize())
+                            }
+                            if (enemyBroken && isAlive) {
+                                BrokenFieldOverlay(modifier = Modifier.matchParentSize())
+                            }
                             CombatFxOverlay(
                                 damageFx = damageFx.filter { it.targetId == combatantId },
                                 attackFx = attackFx.filter { it.targetId == combatantId },
                                 healFx = healFx.filter { it.targetId == combatantId },
                                 statusFx = statusFx.filter { it.targetId == combatantId },
+                                shieldBreakFx = shieldBreakFx.filter { it.targetId == combatantId },
 
                                 showKnockout = knockoutFx.any { it.targetId == combatantId },
                                 shape = shape,
+                                telegraphFx = telegraphHighlights,
                                 modifier = Modifier.matchParentSize()
                             )
                         }
@@ -1964,6 +2174,8 @@ private fun CompositePartStatus(
     val enemyState = combatState.combatants[combatantId]
     val maxHp = enemyState?.combatant?.stats?.maxHp ?: entry.enemy.hp.coerceAtLeast(1)
     val currentHp = enemyState?.hp ?: maxHp
+    val maxStability = enemyState?.combatant?.stats?.stability ?: 100
+    val currentStability = enemyState?.stability ?: maxStability
     val isAlive = enemyState?.isAlive != false
     val isActive = combatantId == activeId
     val isSelected = combatantId in selectedEnemyIds
@@ -1972,6 +2184,9 @@ private fun CompositePartStatus(
         name = entry.enemy.name,
         currentHp = currentHp,
         maxHp = maxHp,
+        currentStability = currentStability,
+        maxStability = maxStability,
+        breakTurns = enemyState?.breakTurns ?: 0,
         atbProgress = atbProgress,
         isAlive = isAlive,
         isActive = isActive,
@@ -1989,6 +2204,9 @@ private fun EnemyStatusLabel(
     name: String,
     currentHp: Int,
     maxHp: Int,
+    currentStability: Int,
+    maxStability: Int,
+    breakTurns: Int,
     atbProgress: Float,
     isAlive: Boolean,
     isActive: Boolean,
@@ -2004,6 +2222,23 @@ private fun EnemyStatusLabel(
         isActive -> baseAccent
         isSelected -> baseAccent.copy(alpha = 0.7f)
         else -> baseAccent.copy(alpha = 0.4f)
+    }
+    val isBroken = breakTurns > 0
+    val displayedStability = remember { Animatable(currentStability.toFloat()) }
+    LaunchedEffect(currentStability, maxStability, breakTurns) {
+        val target = if (isBroken) 0f else currentStability.toFloat()
+        if (isBroken) {
+            displayedStability.snapTo(0f)
+        } else {
+            val start = displayedStability.value
+            val clampedTarget = target.coerceIn(0f, maxStability.toFloat())
+            if (start != clampedTarget) {
+                displayedStability.animateTo(
+                    clampedTarget,
+                    animationSpec = tween(durationMillis = 420, easing = FastOutSlowInEasing)
+                )
+            }
+        }
     }
     val interactionModifier = if (onClick != null || onLongClick != null) {
         modifier.combinedClickable(
@@ -2048,6 +2283,26 @@ private fun EnemyStatusLabel(
                 height = 6.dp,
                 modifier = Modifier.width(barWidth)
             )
+            Row(
+                modifier = Modifier.width(barWidth),
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Rounded.Shield,
+                    contentDescription = null,
+                    tint = if (isBroken) Color(0xFFFF8A80) else Color(0xFFB39DDB).copy(alpha = 0.9f),
+                    modifier = Modifier.size(12.dp)
+                )
+                StatBar(
+                    current = displayedStability.value.roundToInt(),
+                    max = maxStability,
+                    color = if (isBroken) Color(0xFFE57373) else Color(0xFF7E57C2),
+                    background = Color.Black.copy(alpha = 0.45f),
+                    height = 5.dp,
+                    modifier = Modifier.weight(1f)
+                )
+            }
         }
     }
 }
@@ -2199,38 +2454,286 @@ private fun StatusBadges(statuses: List<StatusEffect>, buffs: List<ActiveBuff>) 
         statuses.forEach { statusEffect ->
             add(
                 StatusChip(
-                    label = statusEffect.id.uppercase(),
-                    tint = MaterialTheme.colorScheme.error.copy(alpha = 0.75f),
+                    icon = iconForStatus(statusEffect.id),
+                    tint = colorForStatus(statusEffect.id),
                     turns = statusEffect.remainingTurns
                 )
             )
         }
         buffs.forEach { buff ->
-            val sign = if (buff.effect.value >= 0) "+" else ""
+            val isPositive = buff.effect.value >= 0
+            val stat = buff.effect.stat.lowercase(Locale.getDefault())
             add(
                 StatusChip(
-                    label = "${sign}${buff.effect.value} ${buff.effect.stat}",
-                    tint = MaterialTheme.colorScheme.secondary.copy(alpha = 0.75f),
-                    turns = buff.remainingTurns
+                    icon = iconForStat(stat),
+                    tint = if (isPositive) Color(0xFF4CAF50) else Color(0xFFFF5252),
+                    turns = buff.remainingTurns,
+                    value = buff.effect.value
                 )
             )
         }
     }
-    LazyRow(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+    LazyRow(
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        contentPadding = PaddingValues(horizontal = 2.dp)
+    ) {
         items(entries) { chip ->
             Surface(
-                color = chip.tint,
-                contentColor = MaterialTheme.colorScheme.onSurface,
-                shape = MaterialTheme.shapes.small
+                color = chip.tint.copy(alpha = 0.85f),
+                contentColor = Color.White,
+                shape = CircleShape,
+                modifier = Modifier.height(20.dp)
             ) {
-                Text(
-                    text = "${chip.label} (${chip.turns})",
-                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                    style = MaterialTheme.typography.labelSmall
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                ) {
+                    Icon(
+                        imageVector = chip.icon,
+                        contentDescription = null,
+                        modifier = Modifier.size(12.dp)
+                    )
+                    Spacer(modifier = Modifier.width(3.dp))
+                    val text = if (chip.value != null) {
+                        "${if (chip.value > 0) "+" else ""}${chip.value}"
+                    } else {
+                        "${chip.turns}"
+                    }
+                    Text(
+                        text = text,
+                        style = MaterialTheme.typography.labelSmall.copy(
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    )
+                }
             }
         }
     }
+}
+
+private fun iconForStatus(statusId: String): ImageVector {
+    return when (statusId.lowercase(Locale.getDefault())) {
+        "burn", "meltdown" -> Icons.Rounded.Whatshot
+        "shock", "static" -> Icons.Rounded.Bolt
+        "freeze", "frozen" -> Icons.Rounded.AcUnit
+        "wet", "water" -> Icons.Rounded.WaterDrop
+        "acid", "poison", "erosion", "bleed" -> Icons.Rounded.WaterDrop // Reusing WaterDrop as generic liquid/blood
+        "stun", "stagger" -> Icons.Rounded.Star
+        "blind" -> Icons.Rounded.VisibilityOff
+        "shield", "guard", "invulnerable" -> Icons.Rounded.Shield
+        "weak", "brittle", "exposed", "discord" -> Icons.Rounded.BrokenImage
+        "regen", "heal" -> Icons.Rounded.AutoAwesome
+        "jammed", "silence" -> Icons.Rounded.micsOff() // Need to check if MicOff exists or use generic
+        "overdrive", "charged" -> Icons.Rounded.Bolt
+        else -> Icons.Rounded.Warning
+    }
+}
+
+private fun Icons.Rounded.micsOff(): ImageVector = Icons.Rounded.VisibilityOff // Fallback
+
+private fun iconForStat(stat: String): ImageVector {
+    return when (stat) {
+        "strength", "str", "atk" -> Icons.Rounded.Restaurant // Sword icon missing, using generic
+        "vitality", "vit", "def" -> Icons.Rounded.Shield
+        "agility", "agi", "spd", "speed" -> Icons.Rounded.AutoAwesome // Wing icon missing
+        "focus", "int", "psi" -> Icons.Rounded.Bolt
+        else -> Icons.Rounded.AutoAwesome
+    }
+}
+
+private fun colorForStatus(statusId: String): Color {
+    return when (statusId.lowercase(Locale.getDefault())) {
+        "burn", "meltdown" -> Color(0xFFFF5722)
+        "shock", "static", "overdrive" -> Color(0xFFFFC107)
+        "freeze", "frozen" -> Color(0xFF03A9F4)
+        "acid", "poison", "erosion" -> Color(0xFF8BC34A)
+        "bleed" -> Color(0xFFE91E63)
+        "stun", "stagger" -> Color(0xFF9C27B0)
+        "blind" -> Color(0xFF607D8B)
+        "shield", "guard", "invulnerable", "regen" -> Color(0xFF4CAF50)
+        "weak", "brittle", "exposed" -> Color(0xFF795548)
+        else -> Color(0xFF9E9E9E)
+    }
+}
+
+@Composable
+private fun ShieldFieldOverlay(
+    modifier: Modifier = Modifier,
+    color: Color = Color(0xFF42A5F5)
+) {
+    val transition = rememberInfiniteTransition(label = "shield_field")
+    val pulse by transition.animateFloat(
+        initialValue = 0f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 1150, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "shield_pulse"
+    )
+    val sweep by transition.animateFloat(
+        initialValue = 0f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 1900, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart
+        ),
+        label = "shield_sweep"
+    )
+    Canvas(modifier = modifier) {
+        if (size.minDimension <= 0f) return@Canvas
+
+        // Mask this overlay to whatever has already been drawn beneath it (enemy sprite/portrait),
+        // so it reads as a "field over the target" instead of a new HUD bar.
+        val maskBlend = BlendMode.SrcAtop
+
+        val intensity = 0.65f + 0.35f * pulse
+        val center = Offset(size.width * 0.5f, size.height * 0.35f)
+        val radius = size.maxDimension * 0.9f
+        val base = Brush.radialGradient(
+            colors = listOf(
+                color.copy(alpha = 0.20f * intensity),
+                color.copy(alpha = 0.10f * intensity),
+                Color.Transparent
+            ),
+            center = center,
+            radius = radius
+        )
+        drawRect(brush = base, blendMode = maskBlend)
+
+        val bandWidth = size.minDimension * 0.55f
+        val x = (size.width + bandWidth) * sweep - bandWidth
+        val shimmer = Brush.linearGradient(
+            colors = listOf(
+                Color.Transparent,
+                Color.White.copy(alpha = 0.08f + 0.10f * pulse),
+                Color.Transparent
+            ),
+            start = Offset(x - bandWidth, 0f),
+            end = Offset(x + bandWidth, size.height)
+        )
+        drawRect(brush = shimmer, blendMode = maskBlend)
+    }
+}
+
+@Composable
+private fun BrokenFieldOverlay(
+    modifier: Modifier = Modifier,
+    color: Color = Color(0xFFB388FF)
+) {
+    val transition = rememberInfiniteTransition(label = "broken_field")
+    val pulse by transition.animateFloat(
+        initialValue = 0.15f,
+        targetValue = 0.65f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 900, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "broken_pulse"
+    )
+    val sweep by transition.animateFloat(
+        initialValue = 0f,
+        targetValue = (Math.PI * 2).toFloat(),
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 1300, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart
+        ),
+        label = "broken_sweep"
+    )
+    Canvas(modifier = modifier) {
+        if (size.minDimension <= 0f) return@Canvas
+        val maskBlend = BlendMode.SrcAtop
+        val intensity = 0.6f + 0.4f * pulse
+        val center = Offset(size.width * 0.5f, size.height * 0.6f)
+        val radius = size.maxDimension * 0.95f
+        val base = Brush.radialGradient(
+            colors = listOf(
+                color.copy(alpha = 0.16f * intensity),
+                color.copy(alpha = 0.08f * intensity),
+                Color.Transparent
+            ),
+            center = center,
+            radius = radius
+        )
+        drawRect(brush = base, blendMode = maskBlend)
+
+        val bandWidth = size.minDimension * 0.45f
+        val looped = (kotlin.math.sin(sweep) + 1f) * 0.5f
+        val x = (size.width + bandWidth) * looped - bandWidth
+        val fissure = Brush.linearGradient(
+            colors = listOf(
+                Color.Transparent,
+                color.copy(alpha = 0.22f + 0.18f * pulse),
+                Color.Transparent
+            ),
+            start = Offset(x - bandWidth, 0f),
+            end = Offset(x + bandWidth, size.height)
+        )
+        drawRect(brush = fissure, blendMode = maskBlend)
+
+        val crackStroke = size.minDimension * 0.024f
+        val crackColor = Color(0xFFF3E5F5).copy(alpha = 0.48f + 0.28f * pulse)
+        val crackHighlight = Color.White.copy(alpha = 0.28f + 0.2f * pulse)
+
+        val shardCenter = Offset(size.width * 0.46f, size.height * 0.44f)
+        val mainStart = Offset(size.width * 0.12f, size.height * 0.08f)
+        val mainEnd = Offset(size.width * 0.9f, size.height * 0.86f)
+        drawLine(color = crackColor, start = mainStart, end = shardCenter, strokeWidth = crackStroke, blendMode = maskBlend)
+        drawLine(color = crackColor, start = shardCenter, end = mainEnd, strokeWidth = crackStroke, blendMode = maskBlend)
+        drawLine(color = crackHighlight, start = mainStart, end = shardCenter, strokeWidth = crackStroke * 0.55f, blendMode = maskBlend)
+        drawLine(color = crackHighlight, start = shardCenter, end = mainEnd, strokeWidth = crackStroke * 0.55f, blendMode = maskBlend)
+
+        val branchStroke = crackStroke * 0.7f
+        val branches = listOf(
+            shardCenter to shardCenter + Offset(size.width * 0.26f, size.height * -0.14f),
+            shardCenter to shardCenter + Offset(size.width * -0.18f, size.height * 0.26f),
+            shardCenter to shardCenter + Offset(size.width * 0.12f, size.height * 0.3f)
+        )
+        branches.forEach { (start, end) ->
+            drawLine(color = crackColor, start = start, end = end, strokeWidth = branchStroke, blendMode = maskBlend)
+            drawLine(color = crackHighlight, start = start, end = end, strokeWidth = branchStroke * 0.55f, blendMode = maskBlend)
+        }
+
+        val burstRadius = size.minDimension * 0.08f
+        val burstCount = 7
+        repeat(burstCount) { idx ->
+            val angle = (idx / burstCount.toFloat()) * 360f + 12f
+            val length = burstRadius * (0.7f + 0.5f * (idx % 2))
+            val rad = Math.toRadians(angle.toDouble())
+            val end = Offset(
+                shardCenter.x + (kotlin.math.cos(rad) * length).toFloat(),
+                shardCenter.y + (kotlin.math.sin(rad) * length).toFloat()
+            )
+            drawLine(color = crackHighlight, start = shardCenter, end = end, strokeWidth = crackStroke * 0.45f, blendMode = maskBlend)
+        }
+
+        val glintRadius = size.minDimension * 0.18f
+        val glintBrush = Brush.radialGradient(
+            colors = listOf(
+                Color.Transparent,
+                Color.White.copy(alpha = 0.12f + 0.08f * pulse),
+                Color.Transparent,
+                Color.Transparent
+            ),
+            center = shardCenter + Offset(glintRadius * 0.2f, -glintRadius * 0.2f),
+            radius = glintRadius
+        )
+        drawCircle(
+            brush = glintBrush,
+            radius = glintRadius,
+            center = shardCenter + Offset(glintRadius * 0.2f, -glintRadius * 0.2f),
+            blendMode = maskBlend
+        )
+    }
+}
+
+private fun isShieldVisualStatus(statusId: String): Boolean {
+    val normalized = statusId.trim().lowercase(Locale.getDefault())
+    return normalized == "invulnerable" ||
+        normalized == "shield" ||
+        normalized == "guard" ||
+        normalized == "defend"
 }
 
 
@@ -2370,9 +2873,10 @@ private fun StatBar(
 }
 
 private data class StatusChip(
-    val label: String,
+    val icon: ImageVector,
     val tint: Color,
-    val turns: Int
+    val turns: Int,
+    val value: Int? = null
 )
 
 private fun InventoryEntry.targetFilter(): TargetFilter? {
@@ -2397,18 +2901,22 @@ private fun CombatFxOverlay(
     attackFx: List<AttackHitFxUi>,
     healFx: List<HealFxUi>,
     statusFx: List<StatusFxUi>,
+    shieldBreakFx: List<ShieldBreakFxUi> = emptyList(),
 
     showKnockout: Boolean,
     shape: Shape,
     supportFx: List<SupportFxUi> = emptyList(),
+    telegraphFx: List<TelegraphFxUi> = emptyList(),
     modifier: Modifier = Modifier.fillMaxSize()
 ) {
     if (damageFx.isEmpty() &&
         attackFx.isEmpty() &&
         healFx.isEmpty() &&
         statusFx.isEmpty() &&
+        shieldBreakFx.isEmpty() &&
         !showKnockout &&
-        supportFx.isEmpty()
+        supportFx.isEmpty() &&
+        telegraphFx.isEmpty()
     ) {
         return
     }
@@ -2417,21 +2925,38 @@ private fun CombatFxOverlay(
             .clip(shape)
             .zIndex(1f)
     ) {
-        val supportHighlight = supportFx.firstOrNull()
-        if (supportHighlight != null) {
+        val telegraphHighlight = telegraphFx.firstOrNull()
+        if (telegraphHighlight != null) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color(0xFF00ACC1).copy(alpha = 0.22f))
+                    .background(Color(0xFF8E24AA).copy(alpha = 0.24f))
             )
             Text(
-                text = "Support: ${supportHighlight.skillName}",
+                text = "Incoming: ${telegraphHighlight.skillName}",
                 style = MaterialTheme.typography.labelMedium,
                 color = Color.White,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .padding(bottom = 8.dp)
             )
+        } else {
+            val supportHighlight = supportFx.firstOrNull()
+            if (supportHighlight != null) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color(0xFF00ACC1).copy(alpha = 0.22f))
+                )
+                Text(
+                    text = "Support: ${supportHighlight.skillName}",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = Color.White,
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 8.dp)
+                )
+            }
         }
         if (showKnockout) {
             Box(
@@ -2444,6 +2969,13 @@ private fun CombatFxOverlay(
                 style = MaterialTheme.typography.headlineSmall,
                 color = Color.White,
                 modifier = Modifier.align(Alignment.Center)
+            )
+        }
+
+        shieldBreakFx.forEach { fx ->
+            ShieldBreakBurst(
+                fx = fx,
+                modifier = Modifier.fillMaxSize().zIndex(9f)
             )
         }
 
@@ -3104,22 +3636,83 @@ private fun ImpactBurst(
 }
 
 @Composable
+private fun ShieldBreakBurst(
+    fx: ShieldBreakFxUi,
+    modifier: Modifier = Modifier
+) {
+    val anim = remember { Animatable(0f) }
+    LaunchedEffect(fx.id) {
+        anim.snapTo(0f)
+        anim.animateTo(
+            targetValue = 1f,
+            animationSpec = tween(durationMillis = 380, easing = FastOutSlowInEasing)
+        )
+    }
+    val t = anim.value.coerceIn(0f, 1f)
+    val alpha = (1f - t).coerceIn(0f, 1f)
+    val shieldColor = Color(0xFF42A5F5)
+    Canvas(modifier = modifier.graphicsLayer { this.alpha = alpha }) {
+        val minSize = size.minDimension
+        if (minSize <= 0f) return@Canvas
+        val center = Offset(size.width / 2f, size.height / 2f)
+        val radius = minSize * (0.18f + 0.42f * t)
+        val stroke = (minSize * 0.018f).coerceAtLeast(2f)
+
+        drawCircle(
+            color = shieldColor.copy(alpha = 0.65f * alpha),
+            radius = radius,
+            center = center,
+            style = Stroke(width = stroke)
+        )
+
+        val arcSize = Size(radius * 2f, radius * 2f)
+        val arcTopLeft = Offset(center.x - radius, center.y - radius)
+        drawArc(
+            color = Color.White.copy(alpha = 0.35f * alpha),
+            startAngle = 360f * t,
+            sweepAngle = 80f,
+            useCenter = false,
+            topLeft = arcTopLeft,
+            size = arcSize,
+            style = Stroke(width = stroke * 0.75f, cap = StrokeCap.Round)
+        )
+
+        val shardCount = 7
+        repeat(shardCount) { index ->
+            val angle = (index / shardCount.toFloat()) * (PI.toFloat() * 2f) + t * 1.1f
+            val dir = Offset(cos(angle.toDouble()).toFloat(), sin(angle.toDouble()).toFloat())
+            val start = center + dir * radius * 0.62f
+            val end = center + dir * radius * (0.92f + 0.18f * t)
+            drawLine(
+                color = shieldColor.copy(alpha = 0.55f * alpha),
+                start = start,
+                end = end,
+                strokeWidth = stroke * 0.7f,
+                cap = StrokeCap.Round
+            )
+        }
+    }
+}
+
+@Composable
 private fun DamageNumberBubble(
     fx: DamageFxUi,
     modifier: Modifier = Modifier
 ) {
     val normalizedElement = fx.element?.trim()?.lowercase(Locale.getDefault())
     val isMiss = normalizedElement == "miss" && fx.amount == 0
+    val isBlocked = normalizedElement == "blocked" && fx.amount == 0
     val isHealing = fx.amount < 0
     val displayAmount = abs(fx.amount)
     val verticalOffset = remember { Animatable(0f) }
     val alphaAnim = remember { Animatable(1f) }
     val scaleAnim = remember { Animatable(1f) }
-    val driftX = remember(fx.id, isMiss) { (Random.nextFloat() - 0.5f) * if (isMiss) 24f else 48f }
-    val tilt = remember(fx.id, isHealing, isMiss) {
+    val driftX = remember(fx.id, isMiss, isBlocked) { (Random.nextFloat() - 0.5f) * if (isMiss || isBlocked) 22f else 48f }
+    val tilt = remember(fx.id, isHealing, isMiss, isBlocked) {
         when {
             isHealing -> 0f
             isMiss -> 0f
+            isBlocked -> 0f
             else -> (Random.nextFloat() - 0.5f) * if (fx.critical) 18f else 10f
         }
     }
@@ -3128,6 +3721,7 @@ private fun DamageNumberBubble(
         alphaAnim.snapTo(1f)
         val initialScale = when {
             isMiss -> 1.12f
+            isBlocked -> 1.12f
             isHealing -> 1.05f
             fx.critical -> 1.25f
             else -> 1.1f
@@ -3137,6 +3731,7 @@ private fun DamageNumberBubble(
             verticalOffset.animateTo(
                 targetValue = when {
                     isMiss -> -64f
+                    isBlocked -> -64f
                     isHealing -> -60f
                     fx.critical -> -96f
                     else -> -72f
@@ -3154,26 +3749,13 @@ private fun DamageNumberBubble(
     }
     val headline = when {
         isMiss -> "MISS!"
+        isBlocked -> "BLOCKED"
         isHealing -> "+$displayAmount"
         fx.critical -> "$displayAmount"
         else -> "$displayAmount"
     }
     val (topColor, bottomColor) = damageNumberColors(fx.element, fx.critical, isHealing)
-    Text(
-        text = headline,
-        style = MaterialTheme.typography.titleLarge.copy(
-            fontFamily = if (isMiss) CombatNameFont else null,
-            shadow = Shadow(
-                color = bottomColor.copy(alpha = 0.9f),
-                offset = Offset(0f, 4f),
-                blurRadius = 12f
-            ),
-            letterSpacing = if (isMiss) 1.0.sp else 0.sp,
-            fontStyle = if (isHealing) FontStyle.Italic else FontStyle.Normal
-        ),
-        fontWeight = if (isMiss) FontWeight.SemiBold else FontWeight.Black,
-        color = topColor,
-        modifier = modifier.graphicsLayer {
+    val bubbleModifier = modifier.graphicsLayer {
             translationY = verticalOffset.value
             translationX = driftX
             alpha = alphaAnim.value
@@ -3181,7 +3763,58 @@ private fun DamageNumberBubble(
             scaleY = scaleAnim.value
             rotationZ = tilt
         }
-    )
+    Box(
+        modifier = bubbleModifier,
+        contentAlignment = Alignment.Center
+    ) {
+        if (isBlocked) {
+            Icon(
+                imageVector = Icons.Rounded.Shield,
+                contentDescription = null,
+                tint = bottomColor.copy(alpha = 0.55f),
+                modifier = Modifier.size(46.dp)
+            )
+            Canvas(modifier = Modifier.size(46.dp)) {
+                val w = size.width
+                val h = size.height
+                val crackColor = Color.White.copy(alpha = 0.62f)
+                val stroke = (size.minDimension * 0.06f).coerceAtLeast(2f)
+                drawLine(
+                    color = crackColor,
+                    start = Offset(w * 0.58f, h * 0.22f),
+                    end = Offset(w * 0.46f, h * 0.52f),
+                    strokeWidth = stroke,
+                    cap = StrokeCap.Round
+                )
+                drawLine(
+                    color = crackColor,
+                    start = Offset(w * 0.46f, h * 0.52f),
+                    end = Offset(w * 0.62f, h * 0.78f),
+                    strokeWidth = stroke * 0.8f,
+                    cap = StrokeCap.Round
+                )
+            }
+        }
+        Text(
+            text = headline,
+            style = MaterialTheme.typography.titleLarge.copy(
+                fontFamily = if (isMiss || isBlocked) CombatNameFont else null,
+                shadow = Shadow(
+                    color = bottomColor.copy(alpha = 0.9f),
+                    offset = Offset(0f, 4f),
+                    blurRadius = 12f
+                ),
+                letterSpacing = if (isMiss || isBlocked) 0.85.sp else 0.sp,
+                fontStyle = if (isHealing) FontStyle.Italic else FontStyle.Normal
+            ),
+            fontWeight = when {
+                isMiss || isBlocked -> FontWeight.SemiBold
+                else -> FontWeight.Black
+            },
+            color = topColor,
+            modifier = if (isBlocked) Modifier.padding(horizontal = 8.dp) else Modifier
+        )
+    }
 }
 
 private fun damageNumberColors(
@@ -3206,6 +3839,7 @@ private fun damageNumberColors(
         "source", "harmonic", "psychic", "psionic", "void" -> Color(0xFFBA68C8)
         "physical" -> null
         "miss" -> Color(0xFFB0BEC5)
+        "blocked" -> Color(0xFF90A4AE)
         else -> null
     }
     if (base == null) {
@@ -4138,34 +4772,21 @@ private fun CombatImpactBanner(
 
     if (alpha.value <= 0.001f) return
     val accent = bannerAccentColor(message.accent, theme)
-    val borderAlpha = if (highContrastMode) 0.72f else 0.55f
-    val borderColor = accent.copy(alpha = (borderAlpha + 0.25f * glow.value).coerceIn(0f, 1f))
-    val backgroundBase = themeColor(theme?.bg, Color(0xFF0F1118))
-    val backgroundAlpha = if (highContrastMode) 0.92f else 0.74f
-    val backgroundColor = backgroundBase.copy(alpha = backgroundAlpha)
-
     val tightMode = hasInstruction
-    val bigEvent = message.icon == CombatBannerIcon.OUTCOME ||
-        message.icon == CombatBannerIcon.BURST ||
-        message.tags.any { it.equals("KO", ignoreCase = true) }
-    val showTwoLines = !tightMode && bigEvent && !message.secondary.isNullOrBlank()
-
     val icon = if (tightMode) null else bannerIcon(message.icon)
-    val displayTags = if (tightMode) emptyList() else message.tags.take(2)
-    val primaryStyle = MaterialTheme.typography.labelLarge.copy(
+    val primaryStyle = MaterialTheme.typography.titleMedium.copy(
         fontFamily = CombatNameFont,
-        fontWeight = FontWeight.Medium,
-        letterSpacing = 0.25.sp
+        fontWeight = FontWeight.Bold,
+        letterSpacing = 0.5.sp,
+        shadow = Shadow(color = Color.Black, offset = Offset(2f, 2f), blurRadius = 2f)
     )
-    val secondaryStyle = MaterialTheme.typography.labelMedium.copy(
+    val secondaryStyle = MaterialTheme.typography.bodyMedium.copy(
+        color = Color.White.copy(alpha = 0.85f),
         fontWeight = FontWeight.Medium,
-        color = Color.White.copy(alpha = 0.82f)
+        shadow = Shadow(color = Color.Black, offset = Offset(1f, 1f), blurRadius = 1f)
     )
-    Surface(
-        color = backgroundColor,
-        shape = RoundedCornerShape(16.dp),
-        shadowElevation = 10.dp,
-        border = BorderStroke(1.dp, borderColor),
+
+    Box(
         modifier = modifier
             .graphicsLayer {
                 this.alpha = alpha.value
@@ -4173,102 +4794,74 @@ private fun CombatImpactBanner(
                 scaleX = scale.value
                 scaleY = scale.value
             }
-    ) {
-        Box(
-            modifier = Modifier.background(
-                Brush.horizontalGradient(
-                    listOf(accent.copy(alpha = 0.18f), Color.Transparent)
-                )
+            .fillMaxWidth()
+            .background(
+                color = Color(0xFF0A0C10).copy(alpha = 0.85f), // Solid dark backing for legibility
+                shape = RoundedCornerShape(8.dp)
             )
+            .padding(vertical = 4.dp)
+    ) {
+        // Subtle Gradient Highlight
+        Box(
+            modifier = Modifier
+                .matchParentSize()
+                .background(
+                    brush = Brush.horizontalGradient(
+                        colors = listOf(
+                            accent.copy(alpha = 0.35f),
+                            accent.copy(alpha = 0.05f),
+                            Color.Transparent
+                        ),
+                        startX = 0f,
+                        endX = 300f
+                    ),
+                    shape = RoundedCornerShape(8.dp)
+                )
+        )
+
+        Row(
+            modifier = Modifier
+                .padding(start = 12.dp, end = 16.dp, top = 6.dp, bottom = 6.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Row(
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 12.dp, vertical = 10.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    .width(4.dp)
+                    .height(32.dp)
+                    .clip(RoundedCornerShape(2.dp))
+                    .background(accent)
+            )
+
+            if (icon != null) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    tint = Color.White,
+                    modifier = Modifier
+                        .size(24.dp)
+                        .shadow(elevation = 4.dp, shape = CircleShape)
+                )
+            }
+
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.Center
             ) {
-                if (icon != null) {
-                    Surface(
-                        color = accent.copy(alpha = 0.16f),
-                        border = BorderStroke(1.dp, accent.copy(alpha = 0.55f)),
-                        shape = CircleShape
-                    ) {
-                        Icon(
-                            imageVector = icon,
-                            contentDescription = null,
-                            tint = accent,
-                            modifier = Modifier.padding(7.dp).size(18.dp)
-                        )
-                    }
-                }
-                Column(
-                    modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(2.dp)
-                ) {
-                    if (tightMode || message.secondary.isNullOrBlank() || showTwoLines) {
-                        Text(
-                            text = message.primary,
-                            style = primaryStyle,
-                            color = Color.White,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    } else {
-                        val secondary = message.secondary.trim()
-                        Text(
-                            text = buildAnnotatedString {
-                                withStyle(SpanStyle(color = Color.White, fontWeight = FontWeight.SemiBold)) {
-                                    append(message.primary)
-                                }
-                                if (secondary.isNotBlank()) {
-                                    append("  •  ")
-                                    withStyle(
-                                        SpanStyle(
-                                            color = Color.White.copy(alpha = 0.82f),
-                                            fontWeight = FontWeight.Medium
-                                        )
-                                    ) {
-                                        append(secondary)
-                                    }
-                                }
-                            },
-                            style = primaryStyle,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    }
-                    if (showTwoLines) {
-                        Text(
-                            text = message.secondary.orEmpty(),
-                            style = secondaryStyle,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    }
-                }
-                if (displayTags.isNotEmpty()) {
-                    Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                        displayTags.forEach { tag ->
-                            Surface(
-                                color = accent.copy(alpha = 0.12f),
-                                border = BorderStroke(1.dp, accent.copy(alpha = 0.5f)),
-                                shape = RoundedCornerShape(999.dp)
-                            ) {
-                                Text(
-                                    text = tag.uppercase(Locale.getDefault()),
-                                    style = MaterialTheme.typography.labelSmall.copy(
-                                        fontFamily = CombatNameFont,
-                                        fontWeight = FontWeight.Medium,
-                                        letterSpacing = 0.6.sp
-                                    ),
-                                    color = Color.White,
-                                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
-                                    maxLines = 1
-                                )
-                            }
-                        }
-                    }
+                Text(
+                    text = message.primary,
+                    style = primaryStyle,
+                    color = Color.White,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                if (!message.secondary.isNullOrBlank()) {
+                    Text(
+                        text = message.secondary ?: "",
+                        style = secondaryStyle,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
                 }
             }
         }

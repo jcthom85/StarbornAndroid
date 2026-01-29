@@ -34,6 +34,8 @@
   },
   "battle": {
     "start": "battle_start",
+    "shield_block": "shield_block",
+    "shield_break": "shield_break",
     "victory": "victory_fanfare",
     "defeat": "defeat_sting"
   }

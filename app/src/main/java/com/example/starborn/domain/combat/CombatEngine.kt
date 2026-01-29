@@ -69,9 +69,8 @@ class CombatEngine(
     ): CombatState {
         val targetState = state.combatants[targetId] ?: return state
         val tier = resolveAffinityTier(targetState, element)
-        val isWeakness = tier == AffinityTier.WEAKNESS
-
         val clamped = if (amount < 0) 0 else amount
+        val isWeakness = clamped > 0 && tier == AffinityTier.WEAKNESS
         val newHp = (targetState.hp - clamped).coerceAtLeast(0)
 
         val stabilityDamage = if (isWeakness) clamped * 2 else clamped
@@ -80,7 +79,7 @@ class CombatEngine(
 
         if (newStability <= 0) {
             newStability = targetState.combatant.stats.stability
-            breakTurns = max(breakTurns, BREAK_DURATION_TURNS)
+            breakTurns = max(breakTurns, targetState.combatant.brokenTurns.coerceAtLeast(1))
         }
 
         val updated = targetState.copy(
@@ -260,12 +259,10 @@ class CombatEngine(
                 }
             }
 
-            val updatedBreakTurns = (current.breakTurns - 1).coerceAtLeast(0)
-
             val replacement = current.copy(
                 statusEffects = updatedStatuses,
                 buffs = updatedBuffs,
-                breakTurns = updatedBreakTurns
+                breakTurns = current.breakTurns
             )
             working = working.copy(
                 combatants = working.combatants + (combatantId to replacement)
@@ -360,7 +357,6 @@ class CombatEngine(
         private const val FREEZE_BURST_DURATION = 2
         private const val SHOCK_BURST_DURATION = 1
         private const val ACID_BURST_DURATION = 4
-        private const val BREAK_DURATION_TURNS = 2
     }
 }
 

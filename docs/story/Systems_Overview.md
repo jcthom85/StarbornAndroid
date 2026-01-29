@@ -130,7 +130,9 @@ Tinkering is a core crafting system accessible via the **Main Menu** (anytime/Ca
 
 # 8) Tutorials and Pacing (World 1, Hub 1 Plan)
 
-World 1, Hub 1 tutorials should be delivered via a limited number of quests (not excessive). Covered topics include: movement, tapping highlighted words, NPC interaction, item usage, equipping gear, consumables vs equipment, combat consumables, shops/commerce, quest tracking, basic combat, group combat, Synergy skills, and tinkering. Deeper systems are pushed to Hub 2 or later.
+World 1, Hub 1 tutorials should be delivered via a limited number of quests (not excessive). Covered topics include: movement, tapping highlighted words, NPC interaction, item usage, equipping gear, consumables vs equipment, combat consumables, shops/commerce, quest tracking, basic combat, group combat, Synergy skills, and tinkering.
+
+Combat onboarding should stay lean: prioritize Physical/Shock/Burn (+ optional Acid/Corrosion), make Guard Break/Stagger the clear "puzzle key" before the Warden, and delay tactical statuses like Jammed/Marked until World 2 (Zeke joins too late in World 1 to build lessons around them).
 
 # 9) Cinematics and Accessibility
 

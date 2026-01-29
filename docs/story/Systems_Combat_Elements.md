@@ -7,6 +7,15 @@ Starborn uses a 6-element system. These are not just "colors" of damage but repr
 
 ---
 
+## World 1 Teaching Focus (Onboarding)
+World 1 is a tutorial world, so we should not ask the player to internalize all six elements immediately.
+*   **Primary (World 1):** Physical / Shock / Burn (establishes Bio vs. Machine logic fast).
+*   **Secondary (World 1):** Acid (introduced via an optional mod / anti-armor lesson).
+*   **Late (World 1):** Source (arrives as a Relic/Source Art—framed as rare/ultimate, not a full "matchup chart" the player must memorize yet).
+*   **Hold for later:** Freeze exists in the system, but should not be required or tutorialized in World 1.
+
+---
+
 ## 1. Physical
 **"The Skin against the Skin."**
 *   **Source:** Solid matter collisions. Bullets, mining drills, falling rocks, melee impacts, shrapnel.

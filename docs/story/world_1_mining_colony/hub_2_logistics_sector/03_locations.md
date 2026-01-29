@@ -28,7 +28,7 @@ The operational heart of the colony. Clean lines, cold lights, and the hum of ma
 *   **Type:** Choice B / Combat
 *   **Description:** The raw, unrefined tunnels beneath the facility. Dark and dangerous.
 *   **Internal Content:** Tunnels.
-*   **Purpose:** Combat challenge / Side Quest SQ_05.
+*   **Purpose:** Combat challenge / first shielded enemy teach (Riot Shield → Guard Break/Stagger) / Side Quest SQ_05.
 *   **Unlocks:** Stage 3 (Echo Chamber).
 
 ## Stage 3

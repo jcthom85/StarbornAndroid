@@ -18,7 +18,7 @@ In the style of classic JRPGs, Elements primarily function as **Damage Multiplie
 *   **Resistant (-)**: 50% Damage.
 *   **Immune (X)**: 0 Damage.
 
-### **Elemental Roles (World 1 Focus)**
+### **Elemental Roles (World 1 Teaching Focus)**
 | Element | Primary Weakness Target | Logic / Lore |
 | :--- | :--- | :--- |
 | **Physical** | Soft/Unarmored Targets | Brute force physics. |
@@ -27,6 +27,8 @@ In the style of classic JRPGs, Elements primarily function as **Damage Multiplie
 | **Freeze** | Overheated / Fragile Material | Halts movement; makes armor brittle. |
 | **Acid** | Heavily Plated / Industrial | Breaks down molecular bonds and rusts metal. |
 | **Source** | Hardened Tech / Source Beasts | Bypasses standard armor via frequency. |
+
+**World 1 onboarding note:** Do not tutorialize every element at once. World 1 primarily teaches **Physical/Shock/Burn**, introduces **Acid** via an optional anti-armor lesson, and frames **Source** as a late/rare Relic tool. **Freeze** is held for later worlds.
 
 ### **The Reward: Harmonic Instability**
 Weakness isn’t just a multiplier. It’s you landing the right hit in the right place, tuning the target, and gaining momentum.
@@ -41,26 +43,32 @@ Weakness isn’t just a multiplier. It’s you landing the right hit in the righ
 
 Status effects are **not** automatically applied by every elemental hit. Instead, they are **Tactical Payloads** attached to specific **Skills**, **Snacks**, or **Weapon Mods**. This prevents "status spam" and makes Skill usage a calculated decision.
 
+## World 1 Teaching Scope (Keep It Lean)
+World 1 is a tutorial world. It should focus on reactive/brute-force payloads and one clear "puzzle key" mechanic.
+*   **Teach in World 1:** Stun (Short/Concussed), Blind, Corrosion (Acid DoT), and Guard Break/Stagger.
+*   **Delay to World 2+:** **Jammed** (Silence/caster denial) and **Marked** (setup → payoff / crit setup).
+
 ## A. Control & Denial (Applied by high-CD Skills)
-*   **Stunned** (General) / **Short** (Robotic): Target skips their next turn.
-*   **Staggered**: Target is pushed to the bottom of the current turn order.
-*   **Jammed**: Target is "Silenced"—cannot use Skills or special attacks.
+*   **Stunned** (Organic, also called **Concussed**) / **Short** (Machine): Target skips their next turn. **UI:** In World 1, group these under a single **Stunned** icon to reduce visual clutter.
+*   **Staggered (Guard Break):** Target is Guard Broken (shields/guard drop) and pushed to the bottom of the current turn order. This is a primary World 1 mechanic.
+*   **Jammed (Silence):** Target cannot use Skills or special attacks. Basic attacks only.
 
 ## B. Strategic Debuffs (Setup for big hits)
 *   **Exposed**: Reduces Defense to 0 for the next hit.
 *   **Brittle**: Increases incoming **Physical** damage by +50%.
 *   **Blind**: Reduces Target Accuracy by 50%.
-*   **Marked**: All incoming hits against this target are Critical.
+*   **Marked:** The next incoming hit against this target is a guaranteed **Critical Hit**.
 
 ## C. Damage Over Time (Attrition)
 *   **Bleeding**: Physical damage per turn (Organic only).
 *   **Meltdown**: Burn damage per turn.
-*   **Erosion**: Acid damage that increases every turn.
+*   **Corrosion**: Acid damage that increases every turn.
 
 ## D. Player States (Buffs & Stances)
 *   **Guarding**: -50% Damage taken. Prevents Stagger/Stun.
 *   **Charged**: A telegraph state. The unit is winding up a powerful move.
 *   **Regen**: Heals a percentage of Max HP every turn.
+*   **Overdrive**: Increases Outgoing Damage by +50%. Used by mechs/constructs.
 
 ---
 

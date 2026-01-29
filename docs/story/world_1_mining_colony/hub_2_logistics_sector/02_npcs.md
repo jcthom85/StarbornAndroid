@@ -13,7 +13,7 @@
 *   **Location:** Launch Bay.
 *   **Archetype:** Heavy Tank / Summoner.
 *   **Mechanics:**
-    *   *Riot Shield:* Immune to frontal attacks. (Must be broken by **Blast Wave** or **Slide Kick**).
+    *   *Riot Shield:* Immune while guarding. Must be Staggered/Guard Broken (via **Slide Kick**, **Hydraulic Kick**, or **Blast Wave**) before the party can meaningfully damage him.
     *   *Summon Drone:* Calls 2 Scout Drones every 3 turns.
     *   *Gas Grenade:* AoE **Burn** DoT zone.
 
@@ -33,6 +33,12 @@
 *   **Type:** Humanoid / Ranged.
 *   **Behavior:** Uses cover. Throws flashbangs.
 *   **Weakness:** Melee Rush.
+
+### Riot Guard (Human - Shield)
+*   **Type:** Humanoid / Shield.
+*   **Behavior:** Advances with a riot shield up. Blocks most incoming damage while guarding.
+*   **Mechanics:** Takes **0 damage** while the shield is up (or is heavily mitigated, if full immunity is too punishing). Must be Staggered/Guard Broken to open a damage window.
+*   **Weakness:** Guard Break / Stagger (Slide Kick / Hydraulic Kick).
 
 ### Fume Bat (Wildlife)
 *   **Type:** Beast / Swarm.

@@ -346,15 +346,15 @@
     "scaling": "atk",
     "cooldown": 3,
     "status_applications": [
-      "guard"
+      "overdrive"
     ]
   },
   {
-    "id": "radiant_spike",
-    "name": "Radiant Spike",
+    "id": "crystalline_spike",
+    "name": "Crystalline Spike",
     "character": "collapse_wyrm",
     "type": "enemy",
-    "description": "Source-charged spike that weakens foes.",
+    "description": "Razor-sharp crystal spike that weakens foes.",
     "combat_tags": [
       "acid",
       "weak"
@@ -463,13 +463,13 @@
     "type": "enemy",
     "description": "Shrill cry that disorients foes.",
     "combat_tags": [
-      "shock"
+      "debuff"
     ],
     "base_power": 80,
     "scaling": "focus",
     "cooldown": 2,
     "status_applications": [
-      "shock"
+      "weak"
     ]
   },
   {
@@ -973,7 +973,8 @@
     "description": "A low slide that trips the enemy, causing stagger.",
     "combat_tags": [
       "dmg",
-      "stagger"
+      "stagger",
+      "guard_break"
     ],
     "base_power": 80,
     "scaling": "agility",

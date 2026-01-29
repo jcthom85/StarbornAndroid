@@ -62,15 +62,31 @@ fun DialogueOverlay(
 ) {
     val line = dialogue.line
     val context = LocalContext.current
-    val portraitRes = remember(dialogue.portrait) {
+    val portraitRes = remember(dialogue.portrait, line.emote, line.speaker) {
         val candidates = mutableListOf<String>()
+        
+        // 1. Explicit Portrait Override
         dialogue.portrait?.takeIf { it.isNotBlank() }?.let { provided ->
             candidates += provided
             if (provided.contains('/')) {
                 candidates += provided.substringAfterLast('/').substringBeforeLast('.')
             }
         }
+
+        // 2. Smart Emote Resolution (portrait_{speaker}_{emote})
+        val speakerKey = line.speaker.lowercase(Locale.getDefault()).replace(' ', '_').replace(Regex("[^a-z0-9_]"), "")
+        if (speakerKey.isNotBlank()) {
+            line.emote?.takeIf { it.isNotBlank() }?.let { emote ->
+                val emoteKey = emote.lowercase(Locale.getDefault())
+                candidates += "portrait_${speakerKey}_${emoteKey}"
+            }
+            // 3. Fallback to Base Speaker Portrait
+            candidates += "portrait_${speakerKey}"
+        }
+
+        // 4. Final Fallback
         candidates += "communicator_portrait"
+        
         candidates.firstNotNullOfOrNull { candidate ->
             val trimmed = candidate.trim()
             if (trimmed.isEmpty()) {

@@ -49,7 +49,17 @@ sealed interface CombatFxEvent {
         val targetIds: List<String>
     ) : CombatFxEvent
 
+    data class Telegraph(
+        val actorId: String,
+        val skillName: String,
+        val targetIds: List<String>
+    ) : CombatFxEvent
+
     data class Audio(
         val commands: List<com.example.starborn.domain.audio.AudioCommand>
+    ) : CombatFxEvent
+
+    data class ShieldBreak(
+        val targetId: String
     ) : CombatFxEvent
 }

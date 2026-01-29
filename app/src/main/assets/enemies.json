@@ -3,49 +3,38 @@
         "id": "burrower",
         "name": "Burrower",
         "tier": "elite",
-        "hp": 500,
-        "strength": 11,
-        "vitality": 10,
-        "agility": 0,
-        "focus": 4,
-        "luck": 0,
-        "speed": 6,
+        "hp": 320,
+        "strength": 9,
+        "vitality": 8,
+        "agility": 3,
+        "focus": 2,
+        "luck": 3,
+        "speed": 11,
         "element": "none",
         "tags": [
-            "robotic",
-            "industrial",
-            "plated",
-            "hardened_tech",
-            "high_internal_heat"
+            "biological",
+            "armored"
         ],
-        "abilities": [],
-        "flavor": "The colony's colossal autonomous driller, berserk after the blast.",
-        "xp_reward": 300,
-        "credit_reward": 250,
+        "abilities": [
+            "burrow",
+            "gnaw",
+            "slide_slam"
+        ],
+        "flavor": "A hulking, blind beast with stone-crushing claws. It feeds on minerals and unlucky miners.",
+        "xp_reward": 180,
+        "credit_reward": 50,
         "drops": [
             {
-                "id": "scrap",
+                "id": "beast meat",
                 "chance": 1.0,
-                "qty_min": 1,
-                "qty_max": 1
-            },
-            {
-                "id": "lens",
-                "chance": 0.5,
-                "qty_min": 1,
-                "qty_max": 1
-            },
-            {
-                "id": "medkit+",
-                "chance": 0.4,
-                "qty_min": 1,
-                "qty_max": 1
+                "qty_min": 2,
+                "qty_max": 4
             }
         ],
-        "description": "Guardian of the energy core.",
+        "description": "A massive subterranean predator.",
         "portrait": "images/enemies/burrower_combat.png",
         "sprite": [],
-        "attack": 10,
+        "attack": 8,
         "ap_reward": 0
     },
     {
@@ -67,7 +56,7 @@
         "abilities": [
             "burrow",
             "unstable_pillars",
-            "radiant_spike"
+            "crystalline_spike"
         ],
         "flavor": "A crystalline silicon worm awakened by seismic charges, hungering for ore veins.",
         "xp_reward": 320,
