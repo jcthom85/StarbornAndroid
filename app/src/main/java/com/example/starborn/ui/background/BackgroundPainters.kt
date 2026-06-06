@@ -4,6 +4,8 @@ import android.graphics.BitmapFactory
 import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.asImageBitmap
@@ -15,10 +17,9 @@ import java.util.Locale
 @Composable
 fun rememberAssetPainter(
     imagePath: String?,
-    @DrawableRes fallbackRes: Int = R.drawable.main_menu_background
+    fallback: Painter = painterResource(R.drawable.main_menu_background)
 ): Painter {
     val context = LocalContext.current
-    val fallback = painterResource(fallbackRes)
     if (imagePath.isNullOrBlank()) return fallback
 
     val (resolvedId, assetPainter) = remember(imagePath) {
@@ -45,4 +46,4 @@ fun rememberAssetPainter(
 
 @Composable
 fun rememberRoomBackgroundPainter(imagePath: String?): Painter =
-    rememberAssetPainter(imagePath, fallbackRes = R.drawable.main_menu_background)
+    rememberAssetPainter(imagePath, fallback = ColorPainter(Color.Black))

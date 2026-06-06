@@ -19,3 +19,6 @@ def goto(target_type: str, ident: str):
 
 def refresh_references():
     EditorBus.publish("refresh_refs")
+
+def rename_entity(entity_type: str, old_id: str, new_id: str):
+    EditorBus.publish("rename", entity_type, old_id, new_id)

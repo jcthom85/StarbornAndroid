@@ -1,27 +1,12 @@
 [
     {
-        "name": "Pasha",
-        "aliases": [
-            "pasha",
-            "auctioneer"
-        ],
-        "dialogue": {},
-        "interactions": [
-            {
-                "label": "Talk",
-                "type": "talk",
-                "dialogue_id": "dlg_pasha_intro"
-            }
-        ]
-    },
-    {
-        "name": "Jed",
-        "role": "Mentor",
-        "description": "A tall, gruff man with a low voice. He is a tinkerer and helps run/oversee the mining town Rusthaven",
         "id": "jed",
+        "name": "Jed",
         "aliases": [],
+        "role": "Mentor",
+        "description": "A tall, gruff man with a low voice. He is a tinkerer and Nova's surrogate father.",
+        "portrait": "images/npcs/jed.png",
         "dialogue": {},
-        "portrait": "images/npcs/pasha.png",
         "interactions": [
             {
                 "label": "Talk",
@@ -31,22 +16,114 @@
         ]
     },
     {
-        "name": "Maddie",
+        "id": "zeke",
+        "name": "Zeke",
         "aliases": [],
+        "role": "Administrator",
+        "description": "A nervous Dominion clerk who chooses truth over safety.",
+        "portrait": "images/npcs/zeke.png",
         "dialogue": {},
-        "portrait": "images/npcs/jed.png",
         "interactions": [
             {
                 "label": "Talk",
                 "type": "talk",
-                "dialogue_id": "maddie_default_talk"
+                "dialogue_id": "zeke_default_talk"
             }
         ]
     },
     {
-        "name": "Ollie",
-        "id": "ollie",
+        "id": "scrapper",
+        "name": "Scrapper",
         "aliases": [],
+        "role": "Fence",
+        "description": "A paranoid black-market vendor who deals in illegal tech.",
+        "portrait": "images/npcs/scrapper.png",
+        "dialogue": {},
+        "interactions": [
+            {
+                "label": "Shop",
+                "type": "shop",
+                "shop_id": "scrappers_contraband",
+                "dialogue_id": "scrapper_shop_intro"
+            },
+            {
+                "label": "Talk",
+                "type": "talk",
+                "dialogue_id": "scrapper_default_talk"
+            }
+        ]
+    },
+    {
+        "id": "doc",
+        "name": "Doc",
+        "aliases": [],
+        "role": "Medic",
+        "description": "The colony's cynical and overworked medical officer.",
+        "portrait": "images/npcs/doc.png",
+        "dialogue": {},
+        "interactions": [
+            {
+                "label": "Talk",
+                "type": "talk",
+                "dialogue_id": "doc_default_talk"
+            }
+        ]
+    },
+    {
+        "id": "foreman_bogs",
+        "name": "Foreman Bogs",
+        "aliases": [],
+        "role": "Supervisor",
+        "description": "A loud, bureaucratic bully who prioritizes quotas over lives.",
+        "portrait": "images/npcs/bogs.png",
+        "dialogue": {},
+        "interactions": [
+            {
+                "label": "Talk",
+                "type": "talk",
+                "dialogue_id": "bogs_default_talk"
+            }
+        ]
+    },
+    {
+        "id": "guard_hank",
+        "name": "Guard Hank",
+        "aliases": [],
+        "role": "Security",
+        "description": "A bored Dominion guard who's seen it all.",
+        "portrait": "images/npcs/guard_hank.png",
+        "dialogue": {},
+        "interactions": [
+            {
+                "label": "Talk",
+                "type": "talk",
+                "dialogue_id": "hank_default_talk"
+            }
+        ]
+    },
+    {
+        "id": "miner_bill",
+        "name": "Miner Bill",
+        "aliases": [],
+        "role": "Worker",
+        "description": "A weary miner who spends his meager scrip at the bar.",
+        "portrait": "images/npcs/miner_bill.png",
+        "dialogue": {},
+        "interactions": [
+            {
+                "label": "Talk",
+                "type": "talk",
+                "dialogue_id": "bill_default_talk"
+            }
+        ]
+    },
+    {
+        "id": "ollie",
+        "name": "Ollie",
+        "aliases": [],
+        "role": "Guide",
+        "description": "A scrappy kid who knows every shortcut in the colony.",
+        "portrait": "images/characters/ollie_portrait.png",
         "dialogue": {},
         "interactions": [
             {
@@ -55,67 +132,5 @@
                 "dialogue_id": "ollie_quest_prompt"
             }
         ]
-    },
-    {
-        "name": "Sam",
-        "aliases": [],
-        "dialogue": {},
-        "interactions": []
-    },
-    {
-        "name": "Ellie",
-        "aliases": [],
-        "dialogue": {},
-        "portrait": "images/npcs/maddie.png",
-        "interactions": [
-            {
-                "label": "Talk",
-                "type": "talk",
-                "dialogue_id": "ellie_default_talk"
-            }
-        ]
-    },
-    {
-        "name": "man",
-        "aliases": [],
-        "dialogue": {},
-        "interactions": []
-    },
-    {
-        "name": "woman",
-        "aliases": [],
-        "dialogue": {},
-        "interactions": []
-    },
-    {
-        "name": "Nurse Megan",
-        "aliases": [],
-        "dialogue": {},
-        "interactions": []
-    },
-    {
-        "name": "Schoolteacher Kasey",
-        "aliases": [],
-        "dialogue": {},
-        "portrait": "images/npcs/ollie.png",
-        "interactions": [
-            {
-                "label": "Talk",
-                "type": "talk",
-                "dialogue_id": "kasey_default_talk"
-            }
-        ]
-    },
-    {
-        "name": "Cameron",
-        "aliases": [],
-        "dialogue": {},
-        "interactions": []
-    },
-    {
-        "name": "Tyson",
-        "aliases": [],
-        "dialogue": {},
-        "interactions": []
     }
 ]

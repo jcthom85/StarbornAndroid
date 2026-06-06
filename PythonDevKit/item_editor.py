@@ -25,7 +25,7 @@ Usage:
 from __future__ import annotations
 import os, sys, json, shutil, re
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union, Callable
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (
@@ -38,6 +38,7 @@ from PyQt5.QtWidgets import (
 from theme_kit import ThemeManager         # optional if you want per-editor theme flips
 from data_core import json_load, json_save, unique_id
 from devkit_paths import resolve_paths
+from starborn_data import collect_icons, collect_sfx_ids, collect_item_names
 from editor_undo import UndoManager
 from ui_common import attach_status_bar, flash_status, attach_hotkeys, attach_list_context_menu, mark_invalid, clear_invalid
 from editor_bus import goto as studio_goto, refresh_references as studio_refresh
@@ -46,21 +47,33 @@ from editor_bus import goto as studio_goto, refresh_references as studio_refresh
 # Config / enums
 # -----------------------------
 ITEM_TYPES = [
-    "consumable", "equippable",
-    "weapon", "armor", "fishing_rod", "tool",
-    "ingredient", "component", "key_item",
+    "consumable", "medicine", "snack",
+    "equippable", "weapon", "armor", "accessory", "mod",
+    "armor_zeke", "armor_orion", "armor_gh0st", "armor_ollie", "armor_nova",
+    "tool",
+    "ingredient", "component", "key_item", "schematic",
     "junk", "summon", "misc"
 ]
-EQUIP_LIKE_TYPES = {"equippable", "weapon", "armor", "fishing_rod", "tool"}
+EQUIP_LIKE_TYPES = {
+    "equippable", "weapon", "armor", "accessory", "mod", "snack",
+    "armor_zeke", "armor_orion", "armor_gh0st", "armor_ollie", "armor_nova",
+    "tool"
+}
 
-CONSUMABLE_TARGETS = ["self", "ally", "party", "enemy", "all_enemies", "any"]
-STATUS_EFFECTS = ["burn", "freeze", "shock", "poison", "radiation", "psychic", "void", "weak", "regen", "shield"]
+CONSUMABLE_TARGETS = ["self", "ally", "party", "enemy", "all_enemies", "enemy_group", "any"]
+STATUS_EFFECTS = [
+    "burn", "freeze", "shock", "acid", "poison", "radiation", "psychic", "void", 
+    "weak", "regen", "shield", "bleed", "erosion", "blind", "stun", "jammed", 
+    "exposed", "brittle", "marked", "guarded"
+]
 CURE_STATUS_CHOICES = ["", "all"] + STATUS_EFFECTS + ["custom…"]
 
 STAT_CHOICES = ["", "hp", "max_hp", "atk", "def", "spd", "strength", "vitality", "agility", "focus", "luck", "accuracy", "evasion", "crit_rate"]
 
-EQUIP_SLOTS  = ["weapon", "armor", "accessory"]
-WEAPON_TYPES = ["blade", "pistol", "rifle", "launcher", "staff", "unarmed", "rod", "other"]
+EQUIP_SLOTS  = ["weapon", "armor", "accessory", "mod", "snack"]
+WEAPON_TYPES = ["blade", "pistol", "rifle", "launcher", "staff", "unarmed", "rod", "glove", "jewel", "gun", "sword", "slingshot", "other"]
+ATTACK_STYLES = ["single", "spread", "rocket", "all", "all_enemies", "charged_splash"]
+ATTACK_ELEMENTS = ["", "physical", "energy", "burn", "freeze", "shock", "acid", "void", "radiation", "psychic", "source"]
 RARITY_LEVELS = ["", "common", "uncommon", "rare", "epic", "legendary", "mythic"]
 
 def _sanitize_id(s: str) -> str:
@@ -113,8 +126,8 @@ def _clean_empty(x: Any) -> Any:
 # Small widgets
 # -----------------------------
 class DictEditor(QWidget):
-    """Two-column key/value editor. Supports dropdown for keys."""
-    def __init__(self, title: str, value_is_int: bool = False, key_choices: Optional[List[str]] = None):
+    """Two-column key/value editor. Supports dropdown for keys (list or callable)."""
+    def __init__(self, title: str, value_is_int: bool = False, key_choices: Union[List[str], Callable[[], List[str]], None] = None):
         super().__init__()
         self.value_is_int = value_is_int
         self.key_choices = key_choices
@@ -135,13 +148,19 @@ class DictEditor(QWidget):
         self.add_btn.clicked.connect(self._add)
         self.del_btn.clicked.connect(self._del)
 
+    def _get_choices(self) -> List[str]:
+        if callable(self.key_choices):
+            return self.key_choices()
+        return self.key_choices or []
 
     def _add(self):
         r = self.table.rowCount()
         self.table.insertRow(r)
-        if self.key_choices:
+        choices = self._get_choices()
+        if choices:
             combo = QComboBox()
-            combo.addItems(self.key_choices)
+            combo.setEditable(True)
+            combo.addItems(choices)
             self.table.setCellWidget(r, 0, combo)
         else:
             self.table.setItem(r, 0, QTableWidgetItem(""))
@@ -153,12 +172,14 @@ class DictEditor(QWidget):
 
     def set_dict(self, data: dict | None):
         self.table.setRowCount(0)
+        choices = self._get_choices()
         for k, val in (data or {}).items():
             r = self.table.rowCount()
             self.table.insertRow(r)
-            if self.key_choices:
+            if choices:
                 combo = QComboBox()
-                combo.addItems(self.key_choices)
+                combo.setEditable(True)
+                combo.addItems(choices)
                 combo.setCurrentText(str(k))
                 self.table.setCellWidget(r, 0, combo)
             else:
@@ -181,9 +202,10 @@ class DictEditor(QWidget):
         return out
 
 class ListEditor(QWidget):
-    """List[str] with add/remove/up/down controls."""
+    """List[str] with add/remove/up/down controls. Supports choices (list or callable)."""
     def __init__(self, title: str = "", placeholder: str = "value"):
         super().__init__()
+        self.choices: Union[List[str], Callable[[], List[str]], None] = None
         v = QVBoxLayout(self)
         if title: v.addWidget(QLabel(title))
         self.list = QListWidget()
@@ -205,7 +227,23 @@ class ListEditor(QWidget):
         self.up_btn.clicked.connect(self._up)
         self.down_btn.clicked.connect(self._down)
 
+    def set_choices(self, choices: Union[List[str], Callable[[], List[str]]]):
+        self.choices = choices
+
+    def _get_choices(self) -> List[str]:
+        if callable(self.choices):
+            return self.choices()
+        return self.choices or []
+
     def _add(self):
+        choices = self._get_choices()
+        if choices:
+            val, ok = QInputDialog.getItem(self, "Add Item", "Select item:", choices, 0, True)
+            if ok and val:
+                item = QListWidgetItem(val, self.list)
+                item.setFlags(item.flags() | Qt.ItemIsEditable)
+            return
+
         item = QListWidgetItem(self.placeholder, self.list)
         item.setFlags(item.flags() | Qt.ItemIsEditable)
         self.list.editItem(item) # Immediately start editing the new item
@@ -285,6 +323,12 @@ class ConsumableEditor(QWidget):
         # --- END NEW ---
 
         from PyQt5.QtWidgets import QLineEdit
+        self.damage_type = QComboBox(); self.damage_type.addItems(ATTACK_ELEMENTS)
+        form.addRow("effect.damage_type", self.damage_type)
+
+        self.learn_schematic = QLineEdit()
+        form.addRow("effect.learn_schematic", self.learn_schematic)
+
         self.utility = QLineEdit()
         form.addRow("effect.utility", self.utility)
 
@@ -326,7 +370,9 @@ class ConsumableEditor(QWidget):
         except Exception: self.restore_hp.setValue(0)
         try: self.damage.setValue(abs(int(e.get("damage", 0))))
         except Exception: self.damage.setValue(0)
+        self.damage_type.setCurrentText(e.get("damage_type", ""))
         self.cure_status.setEditText(e.get("cure_status",""))
+        self.learn_schematic.setText(e.get("learn_schematic", ""))
 
         # Load buffs into the table
         self.buffs_table.setRowCount(0)
@@ -349,6 +395,11 @@ class ConsumableEditor(QWidget):
             "restore_hp": int(self.restore_hp.value()),
             "damage": int(self.damage.value()),
         }
+        if self.damage_type.currentText():
+            out["damage_type"] = self.damage_type.currentText()
+        if self.learn_schematic.text().strip():
+            out["learn_schematic"] = self.learn_schematic.text().strip()
+
         cur = (self.cure_status.currentText() or "").strip()
         if cur == "custom…":
             pass
@@ -392,20 +443,35 @@ class EquippableEditor(QWidget):
         eq_box = QGroupBox("Equipment"); eq_form = QFormLayout(eq_box)
         self.slot = QComboBox(); self.slot.setEditable(True); self.slot.addItems(EQUIP_SLOTS)
         self.weapon_type = QComboBox(); self.weapon_type.setEditable(True); self.weapon_type.addItems(WEAPON_TYPES)
+        self.hp_bonus = QSpinBox(); self.hp_bonus.setRange(0, 9999)
         eq_form.addRow("equipment.slot", self.slot)
         eq_form.addRow("equipment.weapon_type", self.weapon_type)
+        eq_form.addRow("hp_bonus", self.hp_bonus)
         main_layout.addWidget(eq_box)
 
         # --- Weapon/Armor Stats ---
         stats_box = QGroupBox("Combat Stats"); stats_form = QFormLayout(stats_box)
         self.dmg_min = QSpinBox(); self.dmg_min.setRange(0, 9999)
         self.dmg_max = QSpinBox(); self.dmg_max.setRange(0, 9999)
+        self.attack_style = QComboBox(); self.attack_style.addItems([""] + ATTACK_STYLES)
+        self.attack_element = QComboBox(); self.attack_element.addItems(ATTACK_ELEMENTS)
+        self.attack_power_mult = QDoubleSpinBox(); self.attack_power_mult.setRange(0, 10); self.attack_power_mult.setSingleStep(0.1)
+        self.attack_splash_mult = QDoubleSpinBox(); self.attack_splash_mult.setRange(0, 10); self.attack_splash_mult.setSingleStep(0.1)
+        self.attack_charge_turns = QSpinBox(); self.attack_charge_turns.setRange(0, 5)
+
         self.speed = QSpinBox(); self.speed.setRange(-100, 100)
         self.crit_rate = QDoubleSpinBox(); self.crit_rate.setRange(0, 100); self.crit_rate.setSuffix("%")
         self.accuracy = QSpinBox(); self.accuracy.setRange(0, 200)
         self.defense = QSpinBox(); self.defense.setRange(0, 999)
         self.block = QDoubleSpinBox(); self.block.setRange(0, 100); self.block.setSuffix("%")
+        
         stats_form.addRow("Damage (Min/Max)", self._hbox(self.dmg_min, self.dmg_max))
+        stats_form.addRow("Attack Style", self.attack_style)
+        stats_form.addRow("Attack Element", self.attack_element)
+        stats_form.addRow("Power Mult", self.attack_power_mult)
+        stats_form.addRow("Splash Mult", self.attack_splash_mult)
+        stats_form.addRow("Charge Turns", self.attack_charge_turns)
+        
         stats_form.addRow("Speed Bonus", self.speed)
         stats_form.addRow("Crit Rate Bonus", self.crit_rate)
         stats_form.addRow("Accuracy Bonus", self.accuracy)
@@ -413,21 +479,20 @@ class EquippableEditor(QWidget):
         stats_form.addRow("Block Chance", self.block)
         main_layout.addWidget(stats_box)
 
-        # --- Stat Bonuses & Requirements ---
+        # --- Stat Mods (was stats) & Requirements ---
         row = QHBoxLayout()
-        self.stats = DictEditor("equipment.stats (key->int)", value_is_int=True, key_choices=STAT_CHOICES)
+        self.stat_mods = DictEditor("stat_mods (key->int)", value_is_int=True, key_choices=STAT_CHOICES)
         self.reqs = DictEditor("requirements (stat->value)", value_is_int=True, key_choices=STAT_CHOICES)
-        row.addWidget(self.stats); row.addWidget(self.reqs)
+        row.addWidget(self.stat_mods); row.addWidget(self.reqs)
         main_layout.addLayout(row)
 
-        # --- On-Hit Effects ---
+        # --- On-Hit Effects (Flattened) ---
         on_hit_box = QGroupBox("On-Hit Effect"); on_hit_form = QFormLayout(on_hit_box)
-        self.on_hit_chance = QDoubleSpinBox(); self.on_hit_chance.setRange(0, 1); self.on_hit_chance.setSingleStep(0.05)
-        self.on_hit_status = QComboBox(); self.on_hit_status.setEditable(True); self.on_hit_status.addItems([""] + STATUS_EFFECTS)
-        self.on_hit_duration = QSpinBox(); self.on_hit_duration.setRange(0, 99)
-        on_hit_form.addRow("Chance (0-1)", self.on_hit_chance)
-        on_hit_form.addRow("Inflict Status", self.on_hit_status)
-        on_hit_form.addRow("Duration (turns)", self.on_hit_duration)
+        self.status_chance = QDoubleSpinBox(); self.status_chance.setRange(0, 100); self.status_chance.setSuffix("%")
+        self.status_on_hit = QComboBox(); self.status_on_hit.setEditable(True); self.status_on_hit.addItems([""] + STATUS_EFFECTS)
+        on_hit_form.addRow("Status on Hit", self.status_on_hit)
+        on_hit_form.addRow("Chance (%)", self.status_chance)
+        # Note: 'duration' seems absent in flat structure or handled elsewhere? Keeping logic simple for now.
         main_layout.addWidget(on_hit_box)
 
         # --- Resistances Tab ---
@@ -437,7 +502,13 @@ class EquippableEditor(QWidget):
         self.resist_labels: Dict[str, QLabel] = {}
         
         grid = QGridLayout()
-        all_resists = ["fire", "ice", "lightning", "poison", "radiation", "psychic", "void"] + STATUS_EFFECTS
+        # Cleaned up resistance list (avoiding duplicates from STATUS_EFFECTS)
+        # We start with basic elements + common statuses that make sense as resistances
+        _basic_res = ["physical", "energy", "burn", "freeze", "shock", "acid", "void", "radiation", "psychic"]
+        # Add any statuses that aren't already in basic_res
+        _extra_res = [s for s in STATUS_EFFECTS if s not in _basic_res]
+        all_resists = sorted(list(set(_basic_res + _extra_res)))
+        
         for i, res_name in enumerate(all_resists):
             row, col = i % ((len(all_resists) + 1) // 2), i // ((len(all_resists) + 1) // 2)
             
@@ -457,8 +528,14 @@ class EquippableEditor(QWidget):
         # --- Mod Slots & Scrap ---
         mod_scrap_tab = QWidget(); ms_layout = QHBoxLayout(mod_scrap_tab)
         tabs.addTab(mod_scrap_tab, "Mods & Scrap")
+        
+        # Use lambda to fetch current items on-demand
+        item_fetcher = lambda: sorted([x.get("name","") for x in self.parent_editor.items])
+        
         self.mod_slots = ListEditor("mod_slots", "slot_id")
-        self.scrap     = DictEditor("scrap_yield (component->qty)", value_is_int=True)
+        self.mod_slots.set_choices(item_fetcher)
+        
+        self.scrap     = DictEditor("scrap_yield (component->qty)", value_is_int=True, key_choices=item_fetcher)
         ms_layout.addWidget(self.mod_slots, 1)
         ms_layout.addWidget(self.scrap, 1)
 
@@ -472,11 +549,20 @@ class EquippableEditor(QWidget):
         eq = equipment or {}
         self.slot.setEditText(eq.get("slot",""))
         self.weapon_type.setEditText(eq.get("weapon_type",""))
-        self.stats.set_dict(eq.get("stats", {}))
+        self.hp_bonus.setValue(int(eq.get("hp_bonus", 0)))
+        
+        # Stat mods (was stats)
+        self.stat_mods.set_dict(eq.get("stat_mods", eq.get("stats", {})))
 
         # Weapon/Armor stats
         self.dmg_min.setValue(int(eq.get("damage_min", 0)))
         self.dmg_max.setValue(int(eq.get("damage_max", 0)))
+        self.attack_style.setCurrentText(str(eq.get("attack_style", "")))
+        self.attack_element.setCurrentText(str(eq.get("attack_element", "")))
+        self.attack_power_mult.setValue(float(eq.get("attack_power_mult", 0.0)))
+        self.attack_splash_mult.setValue(float(eq.get("attack_splash_mult", 0.0)))
+        self.attack_charge_turns.setValue(int(eq.get("attack_charge_turns", 0)))
+
         self.speed.setValue(int(eq.get("speed", 0)))
         self.crit_rate.setValue(float(eq.get("crit_rate", 0.0)))
         self.accuracy.setValue(int(eq.get("accuracy", 0)))
@@ -486,11 +572,10 @@ class EquippableEditor(QWidget):
         # Requirements
         self.reqs.set_dict(eq.get("requirements", {}))
 
-        # On-hit
-        on_hit = eq.get("on_hit", {})
-        self.on_hit_chance.setValue(float(on_hit.get("chance", 0.0)))
-        self.on_hit_status.setEditText(on_hit.get("status", ""))
-        self.on_hit_duration.setValue(int(on_hit.get("duration", 0)))
+        # On-hit (flattened in JSON now)
+        self.status_on_hit.setEditText(str(eq.get("status_on_hit", "")))
+        # Chance might be 0-100 or 0-1. JSON shows 25, 30 etc. Assume 0-100.
+        self.status_chance.setValue(float(eq.get("status_chance", 0.0)))
 
         # Resistances
         resists = eq.get("resistances", {})
@@ -507,21 +592,27 @@ class EquippableEditor(QWidget):
             "slot": self.slot.currentText().strip(),
             "weapon_type": self.weapon_type.currentText().strip()
         }
+        if self.hp_bonus.value() > 0:
+            equipment["hp_bonus"] = self.hp_bonus.value()
+
         # Combat stats
         for w, k in [(self.dmg_min, "damage_min"), (self.dmg_max, "damage_max"), (self.speed, "speed"),
                      (self.crit_rate, "crit_rate"), (self.accuracy, "accuracy"), (self.defense, "defense"),
-                     (self.block, "block_chance")]:
+                     (self.block, "block_chance"), (self.attack_power_mult, "attack_power_mult"),
+                     (self.attack_splash_mult, "attack_splash_mult"), (self.attack_charge_turns, "attack_charge_turns")]:
             if w.value() != 0: equipment[k] = w.value()
 
-        equipment["stats"] = self.stats.get_dict()
+        if self.attack_style.currentText(): equipment["attack_style"] = self.attack_style.currentText()
+        if self.attack_element.currentText(): equipment["attack_element"] = self.attack_element.currentText()
+
+        equipment["stat_mods"] = self.stat_mods.get_dict()
         equipment["requirements"] = self.reqs.get_dict()
 
-        if self.on_hit_chance.value() > 0 and self.on_hit_status.currentText():
-            equipment["on_hit"] = {
-                "chance": self.on_hit_chance.value(),
-                "status": self.on_hit_status.currentText(),
-                "duration": self.on_hit_duration.value()
-            }
+        if self.status_on_hit.currentText():
+            equipment["status_on_hit"] = self.status_on_hit.currentText()
+            if self.status_chance.value() > 0:
+                equipment["status_chance"] = self.status_chance.value()
+
         equipment["resistances"] = {k: s.value() for k, s in self.resist_sliders.items() if s.value() != 0}
         return (_clean_empty(equipment), self.mod_slots.get_list(), self.scrap.get_dict())
 
@@ -537,17 +628,35 @@ class ItemEditor(QWidget):
         self.current: Optional[Dict[str, Any]] = None
         self._loading = False
         self._last_filter = ""
+        self.undo_manager = UndoManager()
 
         # sanitize once on load (non-destructive; only adjusts negatives/legacy restore)
         self._sanitize_all()
 
         self._build_ui()
+        self._wire_undo()
         self._refresh_type_filter()
         self._reload_list()
 
     # ---------- Paths ----------
     @property
     def items_path(self) -> Path: return self.root / "items.json"
+
+    # ---------- Undo ----------
+    def _wire_undo(self):
+        um = self.undo_manager
+        um.watch_line_edit(self.name_edit)
+        um.watch_combo(self.icon)
+        um.watch_combo(self.swing_sfx)
+        um.watch_combo(self.hit_sfx)
+        um.watch_line_edit(self.tags)
+        um.watch_line_edit(self.category_override)
+        um.watch_plain_text(self.desc_edit)
+        um.watch_spin(self.value_spin)
+        um.watch_spin(self.buy_spin)
+        um.watch_checkbox(self.unsellable)
+        um.watch_combo(self.type_combo)
+        um.watch_combo(self.rarity)
 
     # ---------- UI ----------
     def _build_ui(self):
@@ -624,24 +733,45 @@ class ItemEditor(QWidget):
         self.unsellable = QCheckBox("Cannot be sold")
         # --- NEW: Add the missing widgets from the feature request ---
         self.rarity = QComboBox(); self.rarity.addItems(RARITY_LEVELS)
-        self.icon = QLineEdit()
-        self.swing_sfx = QLineEdit()
-        self.hit_sfx = QLineEdit()
+        self.category_override = QLineEdit(); self.category_override.setPlaceholderText("e.g. supplies")
+        
+        # Icon / SFX as ComboBoxes
+        self.icon = QComboBox(); self.icon.setEditable(True)
+        self.icon.addItems([""] + collect_icons(self.root))
+        
+        self.swing_sfx = QComboBox(); self.swing_sfx.setEditable(True)
+        sfx_ids = [""] + collect_sfx_ids(self.root)
+        self.swing_sfx.addItems(sfx_ids)
+        
+        self.hit_sfx = QComboBox(); self.hit_sfx.setEditable(True)
+        self.hit_sfx.addItems(sfx_ids)
+
+        # Tags with helper
         self.tags = QLineEdit(); self.tags.setPlaceholderText("e.g. two_handed, unique")
+        self.tag_adder = QComboBox()
+        self.tag_adder.addItems(["Add tag...", "two_handed", "one_handed", "unique", "quest", "sellable", "craftable", "fragile", "heavy", "light"])
+        self.tag_adder.currentIndexChanged.connect(self._on_add_tag)
+
         # -------------------------------------------------------------
 
         form.addRow(QLabel("<b>name</b>:"), self.name_edit)
         form.addRow("type:", self.type_combo)
+        form.addRow("category_override:", self.category_override)
         form.addRow("value (sell):", self.value_spin)
         form.addRow("buy_price:", self.buy_spin)
         form.addRow("", self.unsellable)
         fp.addWidget(g)
         form.addRow("rarity:", self.rarity)
         self.type_combo.currentTextChanged.connect(self._on_type_changed)
+        
         form.addRow("Icon:", self.icon)
         form.addRow("swing_sfx:", self.swing_sfx)
         form.addRow("hit_sfx:", self.hit_sfx)
-        form.addRow("tags:", self.tags)
+        
+        tag_row = QHBoxLayout()
+        tag_row.addWidget(self.tags)
+        tag_row.addWidget(self.tag_adder)
+        form.addRow("tags:", tag_row)
 
         fp.addWidget(self.desc_edit, 1)
 
@@ -690,6 +820,16 @@ class ItemEditor(QWidget):
         vu.addWidget(self.used_list, 1)
         self.tabs.addTab(self.tab_used, "Where Used")
 
+    def _on_add_tag(self, idx):
+        if idx <= 0: return
+        tag = self.tag_adder.currentText()
+        curr = self.tags.text().strip()
+        parts = [p.strip() for p in curr.split(",") if p.strip()]
+        if tag not in parts:
+            parts.append(tag)
+            self.tags.setText(", ".join(parts))
+        self.tag_adder.setCurrentIndex(0)
+
     # ---------- List & selection ----------
     def _refresh_type_filter(self):
         self.type_filter.blockSignals(True)
@@ -736,6 +876,7 @@ class ItemEditor(QWidget):
     # ---------- Load/collect ----------
     def _load_current(self):
         self._loading = True
+        self.undo_manager.stack.clear()
         try:
             it = self.current
             if not it:
@@ -761,24 +902,37 @@ class ItemEditor(QWidget):
 
             self.desc_edit.setPlainText(it.get("description",""))
             self.type_combo.setEditText(it.get("type",""))
+            self.category_override.setText(it.get("category_override", ""))
             self.value_spin.setValue(int(it.get("value", 0)))
             self.buy_spin.setValue(int(it.get("buy_price", 0)))
             self.rarity.setCurrentText(it.get("rarity", ""))
-            self.icon.setText(it.get("icon", ""))
-            self.swing_sfx.setText(it.get("swing_sfx", ""))
-            self.hit_sfx.setText(it.get("hit_sfx", ""))
+            self.icon.setEditText(it.get("icon", ""))
+            self.swing_sfx.setEditText(it.get("swing_sfx", ""))
+            self.hit_sfx.setEditText(it.get("hit_sfx", ""))
             tags = it.get("tags", [])
             self.tags.setText(", ".join(tags) if isinstance(tags, list) else "")
 
             # type-specific fields
             t = item_type
-            if t == "consumable":
-                self.type_tabs.setCurrentWidget(self.page_consumable)
-            elif t in EQUIP_LIKE_TYPES:
-                self.type_tabs.setCurrentWidget(self.page_equippable)
-            # load (both set so swapping types doesn't drop data)
-            self.page_consumable.set_value(it.get("effect"))
-            self.page_equippable.set_value(it.get("equipment"), it.get("mod_slots"), it.get("scrap_yield"))
+            if t == "snack":
+                # Snacks use BOTH tabs
+                self.type_tabs.setTabEnabled(0, True)
+                self.type_tabs.setTabEnabled(1, True)
+                self.page_consumable.set_value(it.get("effect"))
+                self.page_equippable.set_value(it.get("equipment"), it.get("mod_slots"), it.get("scrap_yield"))
+            else:
+                is_consumable = t in ["consumable", "medicine"]
+                is_equip = t in EQUIP_LIKE_TYPES
+                
+                self.type_tabs.setTabEnabled(0, is_consumable)
+                self.type_tabs.setTabEnabled(1, is_equip)
+                
+                if is_consumable:
+                    self.type_tabs.setCurrentWidget(self.page_consumable)
+                    self.page_consumable.set_value(it.get("effect"))
+                elif is_equip:
+                    self.type_tabs.setCurrentWidget(self.page_equippable)
+                    self.page_equippable.set_value(it.get("equipment"), it.get("mod_slots"), it.get("scrap_yield"))
 
             # Raw tab
             self.raw.setPlainText(json.dumps(it, ensure_ascii=False, indent=4))
@@ -794,6 +948,18 @@ class ItemEditor(QWidget):
         is_key_item = (new_type == "key_item")
         self.unsellable.setChecked(is_key_item or self.unsellable.isChecked())
         self.unsellable.setEnabled(not is_key_item)
+        
+        # Live update tabs
+        if new_type == "snack":
+            self.type_tabs.setTabEnabled(0, True)
+            self.type_tabs.setTabEnabled(1, True)
+        else:
+            is_consumable = new_type in ["consumable", "medicine"]
+            is_equip = new_type in EQUIP_LIKE_TYPES
+            self.type_tabs.setTabEnabled(0, is_consumable)
+            self.type_tabs.setTabEnabled(1, is_equip)
+            if is_consumable: self.type_tabs.setCurrentWidget(self.page_consumable)
+            elif is_equip: self.type_tabs.setCurrentWidget(self.page_equippable)
 
     def _collect(self) -> dict:
         name = (self.name_edit.text() or "").strip()
@@ -806,14 +972,25 @@ class ItemEditor(QWidget):
             "buy_price": int(self.buy_spin.value()),
             "unsellable": self.unsellable.isChecked(),
             "rarity": self.rarity.currentText(),
-            "icon": self.icon.text().strip(),
-            "swing_sfx": self.swing_sfx.text().strip(),
-            "hit_sfx": self.hit_sfx.text().strip(),
+            "icon": self.icon.currentText().strip(),
+            "swing_sfx": self.swing_sfx.currentText().strip(),
+            "hit_sfx": self.hit_sfx.currentText().strip(),
             "tags": [t.strip() for t in self.tags.text().split(",") if t.strip()],
         }
+        if self.category_override.text().strip():
+            it["category_override"] = self.category_override.text().strip()
+
         # Type specifics
         t = it["type"]
-        if t == "consumable":
+        
+        if t == "snack":
+            # Collect BOTH
+            it["effect"] = self.page_consumable.get_value()
+            eq, mod_slots, scrap = self.page_equippable.get_value()
+            it["equipment"] = eq
+            if mod_slots: it["mod_slots"] = mod_slots
+            if scrap: it["scrap_yield"] = scrap
+        elif t in ["consumable", "medicine"]:
             it["effect"] = self.page_consumable.get_value()
         elif t in EQUIP_LIKE_TYPES:
             eq, mod_slots, scrap = self.page_equippable.get_value()
@@ -1034,7 +1211,9 @@ class ItemEditor(QWidget):
         it = self.current or self._get_selected()
         if not it: return
         from PyQt5.QtWidgets import QInputDialog
-        new_name, ok = QInputDialog.getText(self, "Rename item", "New name:", text=it.get("name",""))
+        old_name = it.get("name", "")
+        old_id = it.get("id", "")
+        new_name, ok = QInputDialog.getText(self, "Rename item", "New name:", text=old_name)
         if not ok: return
         nn = (new_name or "").strip()
         if not nn:
@@ -1043,7 +1222,26 @@ class ItemEditor(QWidget):
         if any(x for x in self.items if (x is not it and (x.get("name") or "").strip().lower() == nn.lower())):
             QMessageBox.warning(self, "Rename", f"An item named '{nn}' already exists.")
             return
-        it["name"] = nn; it["id"] = _sanitize_id(nn)
+        new_id = _sanitize_id(nn)
+        # Propagate rename across other files
+        from rename_propagator import preview_rename, apply_rename
+        changes = preview_rename("item", old_id, new_id, self.root)
+        if not changes:
+            changes = preview_rename("item", old_name, nn, self.root)
+        if changes:
+            msg = "This rename will also update:\n"
+            for c in changes:
+                msg += f"  - {c['file']}: {c['count']} reference(s)\n"
+            reply = QMessageBox.question(self, "Propagate Rename?", msg,
+                                         QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel)
+            if reply == QMessageBox.Cancel:
+                return
+            if reply == QMessageBox.Yes:
+                apply_rename("item", old_id, new_id, self.root)
+                apply_rename("item", old_name, nn, self.root)
+                from editor_bus import refresh_references
+                refresh_references()
+        it["name"] = nn; it["id"] = new_id
         self._reload_list()
         self._reselect(nn)
         self._load_current()

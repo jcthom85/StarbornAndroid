@@ -17,7 +17,7 @@ from PyQt5.QtWidgets import (
     QApplication, QWidget, QHBoxLayout, QVBoxLayout, QSplitter,
     QListWidget, QListWidgetItem, QLineEdit, QPushButton, QLabel,
     QFormLayout, QTextEdit, QMessageBox, QComboBox, QTabWidget,
-    QInputDialog, QGroupBox, QGridLayout
+    QInputDialog, QGroupBox, QGridLayout, QDoubleSpinBox
 )
 
 # Local helpers (no "file_manager.py" used)
@@ -27,6 +27,7 @@ from starborn_data import (
     validate_dialogue, collect_dialogue_ids
 )
 from scope_utils import ScopeIndex, scope_prefix, scoped_id
+from editor_undo import UndoManager
 
 class DialogueEditor(QWidget):
     def __init__(self, project_root: Optional[str] = None):
@@ -46,9 +47,27 @@ class DialogueEditor(QWidget):
         self.milestone_ids: List[str] = []
         self.item_names: List[str] = []
 
+        self.undo_manager = UndoManager()
         self._load_all()
         self._build_ui()
+        self._wire_undo()
         self._reload_list()
+
+    # -------- Undo --------
+    def _wire_undo(self):
+        um = self.undo_manager
+        um.watch_combo(self.f_speaker)
+        um.watch_plain_text(self.f_text)
+        um.watch_line_edit(self.f_emote)
+        um.watch_line_edit(self.f_portrait)
+        um.watch_line_edit(self.f_vo_cue)
+        um.watch_spin(self.f_pitch)
+        um.watch_spin(self.f_resonance)
+        um.watch_line_edit(self.f_chord)
+        um.watch_line_edit(self.f_condition)
+        um.watch_line_edit(self.f_trigger)
+        um.watch_combo(self.f_next)
+        um.watch_plain_text(self.f_options)
 
     # -------- I/O --------
     @property
@@ -182,17 +201,35 @@ class DialogueEditor(QWidget):
         self.f_speaker = QComboBox(); self.f_speaker.setEditable(True); self.f_speaker.addItems(self.npc_names)
         self.f_text = QTextEdit(); self.f_text.setPlaceholderText("Dialogue text…")
         self.f_emote = QLineEdit(); self.f_emote.setPlaceholderText("e.g., angry, sad")
+        self.f_portrait = QLineEdit(); self.f_portrait.setPlaceholderText("portrait id or asset key")
+        
+        # Cosmic Resonance Fields
+        cosmic_grp = QGroupBox("Cosmic Resonance / Audio")
+        cg = QFormLayout(cosmic_grp)
+        self.f_vo_cue = QLineEdit(); self.f_vo_cue.setPlaceholderText("voice id or asset key")
+        self.f_pitch = QDoubleSpinBox(); self.f_pitch.setRange(0.1, 5.0); self.f_pitch.setValue(1.0); self.f_pitch.setSingleStep(0.1)
+        self.f_resonance = QDoubleSpinBox(); self.f_resonance.setRange(0.0, 1.0); self.f_resonance.setValue(0.0); self.f_resonance.setSingleStep(0.05)
+        self.f_chord = QLineEdit(); self.f_chord.setPlaceholderText("e.g. C#m7, ocean_swell")
+        cg.addRow("VO Cue:", self.f_vo_cue)
+        cg.addRow("Pitch:", self.f_pitch)
+        cg.addRow("Resonance:", self.f_resonance)
+        cg.addRow("Chord / Aura:", self.f_chord)
+
         self.f_condition = QLineEdit(); self.f_condition.setPlaceholderText("quest:repair_generator | milestone:locker_open | item:Medkit")
         self.f_trigger   = QLineEdit(); self.f_trigger.setPlaceholderText("start_quest:id | give_item:Name | set_milestone:id")
         self.f_next = QComboBox(); self.f_next.setEditable(True)
+        self.f_options = QTextEdit(); self.f_options.setPlaceholderText("JSON array of options…")
 
         form.addRow(QLabel("<b>ID</b>:"), self.f_id_label)
         form.addRow("Speaker:", self.f_speaker)
         form.addRow(QLabel("Text:")); form.addRow(self.f_text)
         form.addRow("Emote:", self.f_emote)
+        form.addRow("Portrait:", self.f_portrait)
+        form.addRow(cosmic_grp)
         form.addRow("Condition:", self.f_condition)
         form.addRow("Trigger:",   self.f_trigger)
         form.addRow("Next ID:",   self.f_next)
+        form.addRow("Options:", self.f_options)
 
         # helpers for condition/trigger composition
         helper = QGroupBox("Helpers"); g = QGridLayout(helper)
@@ -255,6 +292,7 @@ class DialogueEditor(QWidget):
         if not self.list.selectedItems(): return
         # before switching, push form → current record
         self._save_current_form_to_memory()
+        self.undo_manager.stack.clear()
 
         did = self.list.selectedItems()[0].text()
         self.current_id = did
@@ -264,9 +302,21 @@ class DialogueEditor(QWidget):
         self.f_speaker.setEditText(d.get("speaker",""))
         self.f_text.setPlainText(d.get("text",""))
         self.f_emote.setText(d.get("emote",""))
+        self.f_portrait.setText(d.get("portrait",""))
+        
+        # Cosmic fields population (map legacy 'voice' to vo_cue)
+        self.f_vo_cue.setText(d.get("vo_cue", d.get("voice", "")))
+        self.f_pitch.setValue(float(d.get("pitch", 1.0)))
+        self.f_resonance.setValue(float(d.get("resonance", 0.0)))
+        self.f_chord.setText(d.get("chord", ""))
+
         self.f_condition.setText(d.get("condition",""))
         self.f_trigger.setText(d.get("trigger",""))
         self.f_next.setEditText(d.get("next",""))
+        try:
+            self.f_options.setPlainText(json.dumps(d.get("options") or [], ensure_ascii=False, indent=2))
+        except Exception:
+            self.f_options.setPlainText("[]")
         self.raw_edit.setPlainText(json.dumps(d, ensure_ascii=False, indent=4))
 
     def _save_current_form_to_memory(self):
@@ -276,9 +326,43 @@ class DialogueEditor(QWidget):
         d["speaker"] = self.f_speaker.currentText().strip()
         d["text"] = self.f_text.toPlainText()
         d["emote"] = self.f_emote.text().strip()
+        
+        if self.f_portrait.text().strip():
+            d["portrait"] = self.f_portrait.text().strip()
+        else:
+            d.pop("portrait", None)
+
+        # Cosmic fields saving
+        if self.f_vo_cue.text().strip():
+            d["vo_cue"] = self.f_vo_cue.text().strip()
+            d.pop("voice", None) # Clean up legacy
+        else:
+            d.pop("vo_cue", None)
+            d.pop("voice", None)
+            
+        d["pitch"] = round(self.f_pitch.value(), 2)
+        d["resonance"] = round(self.f_resonance.value(), 2)
+        
+        if self.f_chord.text().strip():
+            d["chord"] = self.f_chord.text().strip()
+        else:
+            d.pop("chord", None)
+
         d["condition"] = self.f_condition.text().strip()
         d["trigger"] = self.f_trigger.text().strip()
         d["next"] = self.f_next.currentText().strip()
+        # options JSON
+        opt_text = self.f_options.toPlainText().strip()
+        if opt_text:
+            try:
+                parsed = json.loads(opt_text)
+                if not isinstance(parsed, list):
+                    raise ValueError("Options must be a JSON array.")
+                d["options"] = parsed
+            except Exception as exc:
+                QMessageBox.warning(self, "Options JSON", f"Could not parse options:\n{exc}")
+        else:
+            d.pop("options", None)
         # keep raw tab in sync
         self.raw_edit.setPlainText(json.dumps(d, ensure_ascii=False, indent=4))
 
@@ -333,6 +417,11 @@ class DialogueEditor(QWidget):
         for d in self.dialogue.values():
             if (d.get("next") or "") == old:
                 d["next"] = new
+            opts = d.get("options") or []
+            if isinstance(opts, list):
+                for opt in opts:
+                    if isinstance(opt, dict) and (opt.get("next") or "") == old:
+                        opt["next"] = new
         self.current_id = new
         self._reload_list()
         self._select_id(new)

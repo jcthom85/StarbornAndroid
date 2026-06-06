@@ -20,6 +20,16 @@
 local.properties
 *.env
 /Starborn_Python
+/openai_api_key.txt
+/node_modules/
+/.npm-cache/
+/.appium/
+/.kotlin/errors/
+/PythonDevKit/__pycache__/
+/tmp/
+/reports/
+/appium-starborn*.log
+/app/src/main/res/drawable - Copy/
 
 # Heap dumps
 *.hprof

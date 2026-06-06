@@ -165,6 +165,20 @@ class AppServices(context: Context) {
         "ollie" to "basic_vest"
     )
 
+    private val defaultWeaponsByCharacter = mapOf(
+        "nova" to "nova_laser_blaster",
+        "zeke" to "zeke_shock_fists",
+        "orion" to "orion_prism_focus",
+        "gh0st" to "gh0st_whisperblade"
+    )
+
+    private val defaultSnacksByCharacter = mapOf(
+        "nova" to "starbar_crunch",
+        "zeke" to "mineral_trail_mix",
+        "orion" to "comet_gummies",
+        "gh0st" to "void_jerky"
+    )
+
     val promptManager = UIPromptManager()
     val dialogueService: DialogueService = DialogueService(
         dialogueDataSource.loadDialogue(),
@@ -365,7 +379,7 @@ class AppServices(context: Context) {
                     sessionStore.unlockWeapon(equipped)
                     return@forEach
                 }
-                val chosen = pickRandomWeaponForCharacter(normalizedId, weaponItems, rng) ?: return@forEach
+                val chosen = pickDefaultWeaponForCharacter(normalizedId, weaponItems, rng) ?: return@forEach
                 sessionStore.setEquippedWeapon(normalizedId, chosen.id)
             }
     }
@@ -424,7 +438,7 @@ class AppServices(context: Context) {
             .filter { it.isNotBlank() }
             .distinct()
             .forEach { normalizedId ->
-                val chosen = pickRandomWeaponForCharacter(normalizedId, weaponItems, rng) ?: return@forEach
+                val chosen = pickDefaultWeaponForCharacter(normalizedId, weaponItems, rng) ?: return@forEach
                 unlocked += chosen.id
                 equipped.putIfAbsent(normalizedId, chosen.id)
             }
@@ -491,6 +505,43 @@ class AppServices(context: Context) {
     private fun armorTypeFor(item: Item): String? {
         val normalizedType = item.type.trim().lowercase(Locale.getDefault())
         return normalizedType.takeIf { GearRules.isArmorType(it) }
+    }
+
+    private fun pickDefaultWeaponForCharacter(
+        characterId: String,
+        weapons: List<Item>,
+        rng: Random
+    ): Item? {
+        val normalizedId = characterId.trim().lowercase(Locale.getDefault())
+        val expectedType = GearRules.allowedWeaponTypeFor(normalizedId)
+        val preferredId = defaultWeaponsByCharacter[normalizedId]
+        val preferred = preferredId?.let { id ->
+            weapons.firstOrNull { it.id.equals(id, ignoreCase = true) }
+        }
+        if (preferred != null) {
+            val preferredType = weaponTypeFor(preferred)
+            if (expectedType == null || preferredType == expectedType) {
+                return preferred
+            }
+        }
+        return pickRandomWeaponForCharacter(normalizedId, weapons, rng)
+    }
+
+    private fun buildStartingSnackState(
+        characterIds: List<String>
+    ): Map<String, String> {
+        val equipped = mutableMapOf<String, String>()
+        characterIds
+            .map { it.trim().lowercase(Locale.getDefault()) }
+            .filter { it.isNotBlank() }
+            .distinct()
+            .forEach { normalizedId ->
+                val snackId = defaultSnacksByCharacter[normalizedId]
+                if (snackId != null) {
+                    equipped["$normalizedId:snack"] = snackId
+                }
+            }
+        return equipped
     }
 
     private fun pickRandomWeaponForCharacter(
@@ -696,7 +747,7 @@ class AppServices(context: Context) {
             val playerId = defaultPlayer?.id ?: SAMPLE_PARTY.firstOrNull()
             val baseLevel = defaultPlayer?.level ?: 1
             val baseXp = defaultPlayer?.xp ?: 0
-            val startingRoomId = "town_9"
+            val startingRoomId = "pit_nova_bunk"
             val party = if (debugFullInventory) SAMPLE_PARTY.toList() else playerId?.let { listOf(it) } ?: emptyList()
             val rosterIds = players.map { it.id.trim() }.filter { it.isNotBlank() }.distinct()
             val weaponSeedIds = if (rosterIds.isNotEmpty()) rosterIds else party
@@ -708,9 +759,10 @@ class AppServices(context: Context) {
                 characterIds = weaponSeedIds,
                 unlockAll = debugFullInventory
             )
+            val startingEquippedItems = if (debugFullInventory) buildStartingSnackState(weaponSeedIds) else emptyMap()
             val seedState = GameSessionState(
-                worldId = "nova_prime",
-                hubId = "mining_colony",
+                worldId = "world_1",
+                hubId = "hub_1_homestead",
                 roomId = startingRoomId,
                 playerId = playerId,
                 playerLevel = baseLevel,
@@ -721,7 +773,8 @@ class AppServices(context: Context) {
                 partyMemberLevels = party.associateWith { baseLevel },
                 partyMemberXp = party.associateWith { baseXp },
                 equippedWeapons = startingEquippedWeapons,
-                equippedArmors = startingEquippedArmors
+                equippedArmors = startingEquippedArmors,
+                equippedItems = startingEquippedItems
             )
             sessionStore.restore(seedState)
             sessionStore.resetTutorialProgress()

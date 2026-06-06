@@ -213,8 +213,21 @@ class NPCEditor(QWidget):
         self.tab_basics = QWidget()
         form = QFormLayout(self.tab_basics)
 
+        self.id_edit = QLineEdit()
+        self.id_edit.setPlaceholderText("(Optional) unique ID")
+        form.addRow("ID:", self.id_edit)
+
         self.name_edit = QLineEdit()
         form.addRow("Name:", self.name_edit)
+
+        self.role_edit = QLineEdit()
+        self.role_edit.setPlaceholderText("e.g. Shopkeeper, Quest Giver")
+        form.addRow("Role:", self.role_edit)
+
+        self.desc_edit = QTextEdit()
+        self.desc_edit.setPlaceholderText("Flavor text or description...")
+        self.desc_edit.setMaximumHeight(80)
+        form.addRow("Description:", self.desc_edit)
 
         self.aliases_edit = QLineEdit()
         self.aliases_edit.setPlaceholderText("Comma-separated")
@@ -328,7 +341,7 @@ class NPCEditor(QWidget):
 
         self.lbl_current_speaker = QLabel("-")
         # self.lbl_current_speaker.setStyleSheet("color: #777;")
-        top_bar.addWidget(self.lbl_current_speaker)
+        top.addWidget(self.lbl_current_speaker)
 
         b_reload = QPushButton("Reload dialogue.json"); b_reload.clicked.connect(self._on_reload_dialogue_clicked)
         top.addWidget(b_reload)
@@ -411,7 +424,10 @@ class NPCEditor(QWidget):
         self._refresh_dialogue_list()
 
     def _clear_forms(self):
+        self.id_edit.setText("")
         self.name_edit.setText("")
+        self.role_edit.setText("")
+        self.desc_edit.setPlainText("")
         self.aliases_edit.setText("")
         self.portrait_edit.setText("")
         self.emotes_blob.setPlainText("")
@@ -421,7 +437,10 @@ class NPCEditor(QWidget):
 
     def _load_npc_into_forms(self):
         npc = self.npcs.get(self.current_key, {})
+        self.id_edit.setText(npc.get("id", ""))
         self.name_edit.setText(npc.get("name", ""))
+        self.role_edit.setText(npc.get("role", ""))
+        self.desc_edit.setPlainText(npc.get("description", ""))
         self.aliases_edit.setText(", ".join(npc.get("aliases", [])))
         self.portrait_edit.setText(npc.get("portrait", "") or "")
         self.emotes_blob.setPlainText(json.dumps(npc.get("emotes", {}), indent=4))
@@ -460,6 +479,19 @@ class NPCEditor(QWidget):
             self.npcs[new_key] = old
             self.current_key = new_key
             npc = old
+
+        # Save new fields
+        nid = self.id_edit.text().strip()
+        if nid: npc["id"] = nid
+        else: npc.pop("id", None)
+
+        role = self.role_edit.text().strip()
+        if role: npc["role"] = role
+        else: npc.pop("role", None)
+
+        desc = self.desc_edit.toPlainText().strip()
+        if desc: npc["description"] = desc
+        else: npc.pop("description", None)
 
         aliases = [a.strip() for a in self.aliases_edit.text().split(",") if a.strip()]
         aliases = sorted({a for a in aliases if a.lower() != new_key})

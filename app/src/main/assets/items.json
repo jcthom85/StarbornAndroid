@@ -1279,87 +1279,6 @@
         "value": 0
     },
     {
-        "id": "raw_fish",
-        "name": "Raw Fish",
-        "description": "Freshly caught fish used in hearty cooking recipes.",
-        "type": "ingredient",
-        "value": 8,
-        "buy_price": 16,
-        "rarity": "common"
-    },
-    {
-        "id": "saltwater_fish",
-        "name": "Saltwater Fish",
-        "description": "A sturdy ocean catch prized by station chefs.",
-        "type": "ingredient",
-        "value": 10,
-        "buy_price": 20,
-        "rarity": "common"
-    },
-    {
-        "id": "forest_carp",
-        "name": "Forest Carp",
-        "description": "A rare carp from the arboreal cisterns around Nova Prime.",
-        "type": "ingredient",
-        "value": 12,
-        "buy_price": 24,
-        "rarity": "uncommon"
-    },
-    {
-        "id": "wooden_rod",
-        "name": "Wooden Rod",
-        "description": "A basic rod for practicing the new fishing techniques.",
-        "type": "component",
-        "value": 30,
-        "buy_price": 60,
-        "rarity": "common"
-    },
-    {
-        "id": "fiberglass_rod",
-        "name": "Fiberglass Rod",
-        "description": "A lightweight rod with improved stability and casting power.",
-        "type": "component",
-        "value": 45,
-        "buy_price": 90,
-        "rarity": "uncommon"
-    },
-    {
-        "id": "carbon_rod",
-        "name": "Carbon Rod",
-        "description": "Premium carbon fiber rod for veteran anglers.",
-        "type": "component",
-        "value": 65,
-        "buy_price": 130,
-        "rarity": "rare"
-    },
-    {
-        "id": "basic_lure",
-        "name": "Basic Lure",
-        "description": "Simple lure that keeps curious fish nearby.",
-        "type": "component",
-        "value": 12,
-        "buy_price": 24,
-        "rarity": "common"
-    },
-    {
-        "id": "shiny_lure",
-        "name": "Shiny Lure",
-        "description": "Reflective lure that increases uncommon bite rates.",
-        "type": "component",
-        "value": 20,
-        "buy_price": 40,
-        "rarity": "uncommon"
-    },
-    {
-        "id": "mystery_lure",
-        "name": "Mystery Lure",
-        "description": "Experimental lure rumored to attract exotic catches.",
-        "type": "component",
-        "value": 28,
-        "buy_price": 56,
-        "rarity": "rare"
-    },
-    {
         "id": "herb",
         "name": "Herb",
         "description": "A fragrant herb that brightens most dishes.",
@@ -1394,19 +1313,6 @@
         "value": 14,
         "buy_price": 28,
         "rarity": "common"
-    },
-    {
-        "id": "fish_stew",
-        "name": "Fish Stew",
-        "description": "A simple stew that warms the crew after a long patrol.",
-        "type": "consumable",
-        "value": 45,
-        "buy_price": 90,
-        "rarity": "uncommon",
-        "effect": {
-            "restore_hp": 120,
-            "damage": 0
-        }
     },
     {
         "id": "spicy_ramen",
@@ -1999,5 +1905,50 @@
                 "luck": 3
             }
         }
+    },
+    {
+        "id": "armor_plate",
+        "name": "Armor Plate",
+        "description": "A thick sheet of composite armor plating.",
+        "type": "component",
+        "value": 50,
+        "buy_price": 100,
+        "rarity": "common"
+    },
+    {
+        "id": "battery",
+        "name": "Battery",
+        "description": "A standard energy cell for powering small electronics.",
+        "type": "component",
+        "value": 30,
+        "buy_price": 60,
+        "rarity": "common"
+    },
+    {
+        "id": "hydraulic_fluid",
+        "name": "Hydraulic Fluid",
+        "description": "Pressurized fluid salvaged from heavy machinery.",
+        "type": "component",
+        "value": 40,
+        "buy_price": 80,
+        "rarity": "common"
+    },
+    {
+        "id": "heavy_gear",
+        "name": "Heavy Gear",
+        "description": "An industrial-grade gear used in mining vehicles.",
+        "type": "component",
+        "value": 60,
+        "buy_price": 120,
+        "rarity": "common"
+    },
+    {
+        "id": "warden_keycard",
+        "name": "Warden Keycard",
+        "description": "A high-security keycard found on the Dominion Warden.",
+        "type": "key_item",
+        "value": 0,
+        "buy_price": 0,
+        "rarity": "rare"
     }
 ]

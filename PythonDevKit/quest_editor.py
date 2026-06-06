@@ -27,8 +27,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (
     QApplication, QWidget, QSplitter, QListWidget, QListWidgetItem, QLineEdit, QTextEdit,
     QVBoxLayout, QHBoxLayout, QFormLayout, QLabel, QPushButton, QMessageBox, QComboBox,
-    QSpinBox, QInputDialog, QListWidget as QtListWidget, QListWidgetItem as QtListItem,
-    QFileDialog
+    QInputDialog, QFileDialog
 )
 from theme_kit import ThemeManager         # optional if you want per-editor theme flips
 from data_core import json_load, json_save, unique_id
@@ -86,21 +85,15 @@ def _collect_npc_ids(root_dir: Path) -> List[str]:
 def _collect_quest_ids(quests_by_id: Dict[str, dict]) -> List[str]:
     return sorted(quests_by_id.keys(), key=str.lower)
 
-def _collect_dialogue_ids(root_dir: Path) -> List[str]:
-    # Optional: load from dialogue.json if present; free-type otherwise
-    dlg_path = root_dir / "dialogue.json"
-    if not dlg_path.exists():
-        return []
-    data = _load_json_list(dlg_path)
+def _collect_hub_ids(root_dir: Path) -> List[str]:
+    hubs_path = root_dir / "hubs.json"
+    hubs = _load_json_list(hubs_path)
     seen = set()
-    for d in data:
-        did = (d.get("id") or "").strip()
-        if did:
-            seen.add(did)
+    for h in hubs:
+        hid = (h.get("id") or "").strip()
+        if hid:
+            seen.add(hid)
     return sorted(seen, key=str.lower)
-
-ALLOWED_TYPES  = ["main", "side", "character", "fetch", "explore", "talk", "defeat", "craft", "interact"]
-ALLOWED_STATUS = ["inactive", "active", "complete"]
 
 # -----------------------------
 #  Editor widget
@@ -128,7 +121,7 @@ class QuestEditor(QWidget):
         # Lookups
         self.item_ids: List[str] = []
         self.npc_ids: List[str] = []
-        self.dialogue_ids: List[str] = []
+        self.hub_ids: List[str] = []
 
         # UI refs
         self.search_box: QLineEdit = None  # type: ignore
@@ -137,18 +130,14 @@ class QuestEditor(QWidget):
         # Form widgets
         self.id_label: QLabel = None  # type: ignore
         self.title_edit: QLineEdit = None  # type: ignore
+        self.summary_edit: QTextEdit = None  # type: ignore
         self.desc_edit: QTextEdit = None  # type: ignore
-        self.type_combo: QComboBox = None  # type: ignore
-        self.status_combo: QComboBox = None  # type: ignore
+        self.flavor_edit: QTextEdit = None  # type: ignore
         self.giver_combo: QComboBox = None  # type: ignore
-        self.receiver_combo: QComboBox = None  # type: ignore
-        self.req_item_combo: QComboBox = None  # type: ignore
-        self.reward_item_combo: QComboBox = None  # type: ignore
-        self.auto_item_combo: QComboBox = None  # type: ignore
-        self.xp_spin: QSpinBox = None  # type: ignore
-        self.requires_list: QtListWidget = None  # type: ignore
-        self.start_dialogue_combo: QComboBox = None  # type: ignore
-        self.completion_dialogue_combo: QComboBox = None  # type: ignore
+        self.hub_combo: QComboBox = None  # type: ignore
+        self.prereq_combo: QComboBox = None  # type: ignore
+        self.rewards_edit: QTextEdit = None  # type: ignore
+        self.stages_edit: QTextEdit = None  # type: ignore
 
         # Load & build UI
         self.reload_lookups()
@@ -162,7 +151,7 @@ class QuestEditor(QWidget):
     def reload_lookups(self):
         self.item_ids = _collect_item_ids(self.root)
         self.npc_ids = _collect_npc_ids(self.root)
-        self.dialogue_ids = _collect_dialogue_ids(self.root)
+        self.hub_ids = _collect_hub_ids(self.root)
 
     def loadQuests(self):
         path = self.root / "quests.json"
@@ -262,54 +251,36 @@ class QuestEditor(QWidget):
         self.title_edit = QLineEdit()
         form.addRow("Title:", self.title_edit)
 
+        self.summary_edit = QTextEdit()
+        self.summary_edit.setPlaceholderText("Quest summary…")
+        form.addRow("Summary:", self.summary_edit)
+
         self.desc_edit = QTextEdit()
         self.desc_edit.setPlaceholderText("Quest description…")
         form.addRow("Description:", self.desc_edit)
 
-        self.type_combo = QComboBox(); self.type_combo.addItems(ALLOWED_TYPES)
-        form.addRow("Type:", self.type_combo)
+        self.flavor_edit = QTextEdit()
+        self.flavor_edit.setPlaceholderText("Flavor / VO direction / lore…")
+        form.addRow("Flavor:", self.flavor_edit)
 
-        self.status_combo = QComboBox(); self.status_combo.addItems(ALLOWED_STATUS)
-        form.addRow("Status:", self.status_combo)
-
-        # Giver / Receiver (NPC pickers; editable)
+        # Giver / Hub / Prereq
         self.giver_combo = QComboBox(); self.giver_combo.setEditable(True)
         self.giver_combo.addItems([""] + self.npc_ids)
-        self.receiver_combo = QComboBox(); self.receiver_combo.setEditable(True)
-        self.receiver_combo.addItems([""] + self.npc_ids)
+        self.hub_combo = QComboBox(); self.hub_combo.setEditable(True)
+        self.hub_combo.addItems([""] + self.hub_ids)
+        self.prereq_combo = QComboBox(); self.prereq_combo.setEditable(True)
+        self.prereq_combo.addItems([""] + _collect_quest_ids(self.quests))
         form.addRow("Giver NPC:", self.giver_combo)
-        form.addRow("Receiver NPC:", self.receiver_combo)
+        form.addRow("Hub ID:", self.hub_combo)
+        form.addRow("Prereq Quest:", self.prereq_combo)
 
-        # Items
-        self.req_item_combo = QComboBox(); self.req_item_combo.setEditable(True)
-        self.req_item_combo.addItems([""] + self.item_ids)
-        self.reward_item_combo = QComboBox(); self.reward_item_combo.setEditable(True)
-        self.reward_item_combo.addItems([""] + self.item_ids)
-        form.addRow("Required Item:", self.req_item_combo)
-        form.addRow("Reward Item:", self.reward_item_combo)
-
-        # Auto-complete if player already has <item>
-        self.auto_item_combo = QComboBox(); self.auto_item_combo.setEditable(True)
-        self.auto_item_combo.addItems([""] + self.item_ids)
-        form.addRow("Auto-Complete If Has:", self.auto_item_combo)
-
-        # Requires (multi-select quests)
-        self.requires_list = QtListWidget()
-        self.requires_list.setSelectionMode(QtListWidget.MultiSelection)
-        form.addRow("Requires Quests:", self.requires_list)
-
-        # XP
-        self.xp_spin = QSpinBox(); self.xp_spin.setRange(0, 999999); self.xp_spin.setSingleStep(10)
-        form.addRow("XP Reward:", self.xp_spin)
-
-        # Dialogue links (optional)
-        self.start_dialogue_combo = QComboBox(); self.start_dialogue_combo.setEditable(True)
-        self.start_dialogue_combo.addItems([""] + self.dialogue_ids)
-        form.addRow("Start Dialogue:", self.start_dialogue_combo)
-
-        self.completion_dialogue_combo = QComboBox(); self.completion_dialogue_combo.setEditable(True)
-        self.completion_dialogue_combo.addItems([""] + self.dialogue_ids)
-        form.addRow("Completion Dialogue:", self.completion_dialogue_combo)
+        # Rewards / Stages (raw JSON)
+        self.rewards_edit = QTextEdit()
+        self.rewards_edit.setPlaceholderText("JSON array of rewards…")
+        form.addRow("Rewards (JSON):", self.rewards_edit)
+        self.stages_edit = QTextEdit()
+        self.stages_edit.setPlaceholderText("JSON array of stages…")
+        form.addRow("Stages (JSON):", self.stages_edit)
 
         right_layout.addLayout(form)
 
@@ -334,18 +305,14 @@ class QuestEditor(QWidget):
 
         # Mark form dirty on edits
         self.title_edit.textChanged.connect(self._mark_form_dirty)
+        self.summary_edit.textChanged.connect(self._mark_form_dirty)
         self.desc_edit.textChanged.connect(self._mark_form_dirty)
-        self.type_combo.currentTextChanged.connect(self._mark_form_dirty)
-        self.status_combo.currentTextChanged.connect(self._mark_form_dirty)
+        self.flavor_edit.textChanged.connect(self._mark_form_dirty)
         self.giver_combo.currentTextChanged.connect(self._mark_form_dirty)
-        self.receiver_combo.currentTextChanged.connect(self._mark_form_dirty)
-        self.req_item_combo.currentTextChanged.connect(self._mark_form_dirty)
-        self.reward_item_combo.currentTextChanged.connect(self._mark_form_dirty)
-        self.auto_item_combo.currentTextChanged.connect(self._mark_form_dirty)
-        self.xp_spin.valueChanged.connect(self._mark_form_dirty)
-        self.requires_list.itemSelectionChanged.connect(self._mark_form_dirty)
-        self.start_dialogue_combo.currentTextChanged.connect(self._mark_form_dirty)
-        self.completion_dialogue_combo.currentTextChanged.connect(self._mark_form_dirty)
+        self.hub_combo.currentTextChanged.connect(self._mark_form_dirty)
+        self.prereq_combo.currentTextChanged.connect(self._mark_form_dirty)
+        self.rewards_edit.textChanged.connect(self._mark_form_dirty)
+        self.stages_edit.textChanged.connect(self._mark_form_dirty)
 
     # -------------------------
     #  Dirty helpers
@@ -370,6 +337,16 @@ class QuestEditor(QWidget):
         sel = self.current_id
         self.list_widget.clear()
 
+        # Update prereq dropdown with current quest ids
+        if self.prereq_combo is not None:
+            prev = self.prereq_combo.currentText()
+            self.prereq_combo.blockSignals(True)
+            self.prereq_combo.clear()
+            self.prereq_combo.addItems([""] + _collect_quest_ids(self.quests))
+            if prev:
+                self.prereq_combo.setCurrentText(prev)
+            self.prereq_combo.blockSignals(False)
+
         q = (self.search_box.text() or "").strip().lower()
         for qid in _collect_quest_ids(self.quests):
             qobj = self.quests[qid]
@@ -389,29 +366,47 @@ class QuestEditor(QWidget):
         else:
             self._clear_form()
 
+    def _select_id(self, qid: str):
+        for i in range(self.list_widget.count()):
+            if self.list_widget.item(i).text() == qid:
+                self.list_widget.blockSignals(True)
+                self.list_widget.setCurrentRow(i)
+                self.list_widget.blockSignals(False)
+                return
+
     def _on_list_selection_changed(self):
         items = self.list_widget.selectedItems()
         if not items:
             # Apply pending edits to model for the old selection before clearing
-            self._maybe_apply_current_form_to_model()
+            if not self._maybe_apply_current_form_to_model():
+                # keep selection on current item if JSON invalid
+                if self.current_id:
+                    self._select_id(self.current_id)
+                return
             self.current_id = None
             self._clear_form()
             return
 
         # Before switching, apply edits from the previous quest into the model (memory only)
-        self._maybe_apply_current_form_to_model()
+        if not self._maybe_apply_current_form_to_model():
+            if self.current_id:
+                self._select_id(self.current_id)
+            return
 
         qid = items[0].text()
         self.current_id = qid
         self._load_into_form(qid)
 
     # Apply current form edits to the in-memory model (does NOT write file)
-    def _maybe_apply_current_form_to_model(self):
+    def _maybe_apply_current_form_to_model(self) -> bool:
         if not self.current_id or not self._form_dirty:
-            return
-        self._apply_form_to_model(self.current_id)
+            return True
+        ok = self._apply_form_to_model(self.current_id)
+        if not ok:
+            return False
         self._form_dirty = False
         self._mark_model_dirty()
+        return True
 
     # -------------------------
     #  Form helpers
@@ -419,22 +414,14 @@ class QuestEditor(QWidget):
     def _clear_form(self):
         self.id_label.setText("-")
         self.title_edit.setText("")
+        self.summary_edit.setPlainText("")
         self.desc_edit.setPlainText("")
-        self.type_combo.setCurrentText("side")
-        self.status_combo.setCurrentText("inactive")
+        self.flavor_edit.setPlainText("")
         self.giver_combo.setCurrentText("")
-        self.receiver_combo.setCurrentText("")
-        self.req_item_combo.setCurrentText("")
-        self.reward_item_combo.setCurrentText("")
-        self.auto_item_combo.setCurrentText("")
-        self.xp_spin.setValue(0)
-        self.requires_list.clear()
-        # repopulate all quest IDs (no selection)
-        all_ids = _collect_quest_ids(self.quests)
-        for qx in all_ids:
-            self.requires_list.addItem(QtListItem(qx))
-        self.start_dialogue_combo.setCurrentText("")
-        self.completion_dialogue_combo.setCurrentText("")
+        self.hub_combo.setCurrentText("")
+        self.prereq_combo.setCurrentText("")
+        self.rewards_edit.setPlainText("[]")
+        self.stages_edit.setPlainText("[]")
         # Clearing the form isn't a data change
         self._form_dirty = False
         self._update_title_dirty()
@@ -443,94 +430,76 @@ class QuestEditor(QWidget):
         q = self.quests.get(qid, {})
         self.id_label.setText(qid)
         self.title_edit.setText(q.get("title", ""))
+        self.summary_edit.setPlainText(q.get("summary", ""))
         self.desc_edit.setPlainText(q.get("description", ""))
-
-        self.type_combo.setCurrentText(q.get("type", "side") or "side")
-        self.status_combo.setCurrentText(q.get("status", "inactive") or "inactive")
+        self.flavor_edit.setPlainText(q.get("flavor", ""))
 
         self.giver_combo.setCurrentText(q.get("giver", "") or "")
-        self.receiver_combo.setCurrentText(q.get("receiver", "") or "")
+        self.hub_combo.setCurrentText(q.get("hub_id", "") or "")
+        self.prereq_combo.setCurrentText(q.get("prereq_quest_id", "") or "")
 
-        self.req_item_combo.setCurrentText(q.get("required_item", "") or "")
-        self.reward_item_combo.setCurrentText(q.get("reward_item", "") or "")
-        self.auto_item_combo.setCurrentText(q.get("auto_complete_if_has", "") or "")
-
-        self.xp_spin.setValue(int(q.get("xp_reward", 0) or 0))
-
-        # Requires: accept string or list
-        requires = q.get("requires", [])
-        if isinstance(requires, str):
-            requires = [requires] if requires else []
-
-        # Populate requires list with all quest IDs and select current ones
-        self.requires_list.clear()
-        all_ids = _collect_quest_ids(self.quests)
-        for qx in all_ids:
-            it = QtListItem(qx)
-            it.setSelected(qx in requires)
-            self.requires_list.addItem(it)
-
-        # Dialogues (optional)
-        self.start_dialogue_combo.setCurrentText(q.get("start_dialogue", "") or "")
-        self.completion_dialogue_combo.setCurrentText(q.get("completion_dialogue", "") or "")
+        try:
+            self.rewards_edit.setPlainText(json.dumps(q.get("rewards", []) or [], ensure_ascii=False, indent=2))
+        except Exception:
+            self.rewards_edit.setPlainText("[]")
+        try:
+            self.stages_edit.setPlainText(json.dumps(q.get("stages", []) or [], ensure_ascii=False, indent=2))
+        except Exception:
+            self.stages_edit.setPlainText("[]")
 
         # Loaded form matches model → not dirty yet
         self._form_dirty = False
         self._update_title_dirty()
 
-    def _apply_form_to_model(self, qid: str):
+    def _apply_form_to_model(self, qid: str) -> bool:
         """Apply current form widgets into self.quests[qid]. Does NOT save to disk."""
         if qid not in self.quests:
-            return
+            return False
         q = self.quests[qid]
+
+        # Parse JSON fields
+        try:
+            rewards_text = self.rewards_edit.toPlainText().strip()
+            rewards = json.loads(rewards_text) if rewards_text else []
+            if rewards is None:
+                rewards = []
+            if not isinstance(rewards, list):
+                raise ValueError("Rewards must be a JSON array.")
+        except Exception as exc:
+            QMessageBox.warning(self, "Invalid Rewards JSON", f"{exc}")
+            return False
+
+        try:
+            stages_text = self.stages_edit.toPlainText().strip()
+            stages = json.loads(stages_text) if stages_text else []
+            if stages is None:
+                stages = []
+            if not isinstance(stages, list):
+                raise ValueError("Stages must be a JSON array.")
+        except Exception as exc:
+            QMessageBox.warning(self, "Invalid Stages JSON", f"{exc}")
+            return False
 
         # Basic fields
         q["id"] = qid
         q["title"] = self.title_edit.text().strip()
+        q["summary"] = self.summary_edit.toPlainText()
         q["description"] = self.desc_edit.toPlainText()
-        q["type"] = self.type_combo.currentText()
-        q["status"] = self.status_combo.currentText()
+        q["flavor"] = self.flavor_edit.toPlainText()
 
-        # NPCs
+        # NPCs / Hub / Prereq
         q["giver"] = self.giver_combo.currentText().strip()
-        q["receiver"] = self.receiver_combo.currentText().strip()
-
-        # Items
-        q["required_item"] = self.req_item_combo.currentText().strip()
-        q["reward_item"] = self.reward_item_combo.currentText().strip()
-        auto_has = self.auto_item_combo.currentText().strip()
-        if auto_has:
-            q["auto_complete_if_has"] = auto_has
+        q["hub_id"] = self.hub_combo.currentText().strip()
+        prereq = self.prereq_combo.currentText().strip()
+        if prereq:
+            q["prereq_quest_id"] = prereq
         else:
-            q.pop("auto_complete_if_has", None)
+            q.pop("prereq_quest_id", None)
 
-        # XP
-        q["xp_reward"] = int(self.xp_spin.value())
-
-        # Requires
-        selected = [
-            self.requires_list.item(i).text()
-            for i in range(self.requires_list.count())
-            if self.requires_list.item(i).isSelected()
-        ]
-        if len(selected) == 0:
-            q.pop("requires", None)
-        elif len(selected) == 1:
-            q["requires"] = selected[0]
-        else:
-            q["requires"] = selected
-
-        # Dialogues (optional)
-        sd = self.start_dialogue_combo.currentText().strip()
-        cd = self.completion_dialogue_combo.currentText().strip()
-        if sd:
-            q["start_dialogue"] = sd
-        else:
-            q.pop("start_dialogue", None)
-        if cd:
-            q["completion_dialogue"] = cd
-        else:
-            q.pop("completion_dialogue", None)
+        # Structured lists
+        q["rewards"] = rewards
+        q["stages"] = stages
+        return True
 
     # -------------------------
     #  Actions
@@ -546,19 +515,19 @@ class QuestEditor(QWidget):
             QMessageBox.warning(self, "Add Quest", "Quest ID already exists.")
             return
         # Apply pending edits from current form before switching
-        self._maybe_apply_current_form_to_model()
+        if not self._maybe_apply_current_form_to_model():
+            return
 
         self.quests[new_id] = {
             "id": new_id,
             "title": "",
-            "status": "inactive",
-            "type": "side",
+            "summary": "",
             "giver": "",
-            "receiver": "",
             "description": "",
-            "xp_reward": 0,
-            "required_item": "",
-            "reward_item": ""
+            "flavor": "",
+            "hub_id": "",
+            "stages": [],
+            "rewards": []
         }
         self.current_id = new_id
         self.refreshList()
@@ -588,7 +557,8 @@ class QuestEditor(QWidget):
             QMessageBox.warning(self, "ID Error", "Quest ID already exists.")
             return
 
-        self._maybe_apply_current_form_to_model()
+        if not self._maybe_apply_current_form_to_model():
+            return
 
         new_quest = json.loads(json.dumps(template_data))  # Deep copy
         new_quest["id"] = new_id
@@ -613,7 +583,8 @@ class QuestEditor(QWidget):
             return
 
         # Apply pending edits from current form to the source quest first
-        self._maybe_apply_current_form_to_model()
+        if not self._maybe_apply_current_form_to_model():
+            return
 
         dup = json.loads(json.dumps(src))  # deep copy
         dup["id"] = new_id
@@ -631,7 +602,8 @@ class QuestEditor(QWidget):
             return
 
         # Apply any pending edits to the model before removing (keeps consistency)
-        self._maybe_apply_current_form_to_model()
+        if not self._maybe_apply_current_form_to_model():
+            return
 
         self.quests.pop(qid, None)
         self.current_id = None
@@ -640,7 +612,8 @@ class QuestEditor(QWidget):
 
     def onSave(self):
         # Before writing, apply any pending edits from the current form to the model
-        self._maybe_apply_current_form_to_model()
+        if not self._maybe_apply_current_form_to_model():
+            return
         self.saveQuests()
 
     def onReload(self):
@@ -685,51 +658,65 @@ class QuestEditor(QWidget):
             if not (q.get("title") or "").strip():
                 issues.append(f"{qid}: empty title")
 
-            # Type/Status validity
-            t = q.get("type", "side")
-            if t not in ALLOWED_TYPES:
-                issues.append(f"{qid}: unknown type '{t}' (allowed: {', '.join(ALLOWED_TYPES)})")
-            s = q.get("status", "inactive")
-            if s not in ALLOWED_STATUS:
-                issues.append(f"{qid}: unknown status '{s}' (allowed: {', '.join(ALLOWED_STATUS)})")
-
             # NPC refs (allow free-typed if npcs.json is missing; warn if list exists and not found)
             g = (q.get("giver") or "").strip()
-            r = (q.get("receiver") or "").strip()
             if self.npc_ids:
                 if g and g not in npcs:
                     issues.append(f"{qid}: unknown giver NPC '{g}'")
-                if r and r not in npcs:
-                    issues.append(f"{qid}: unknown receiver NPC '{r}'")
+            # Hub / prereq refs
+            hub_id = (q.get("hub_id") or "").strip()
+            if hub_id and self.hub_ids and hub_id not in self.hub_ids:
+                issues.append(f"{qid}: unknown hub_id '{hub_id}'")
+            prereq = (q.get("prereq_quest_id") or "").strip()
+            if prereq and prereq not in qids:
+                issues.append(f"{qid}: unknown prereq_quest_id '{prereq}'")
 
-            # Item refs
-            req_it = (q.get("required_item") or "").strip()
-            rew_it = (q.get("reward_item") or "").strip()
-            auto   = (q.get("auto_complete_if_has") or "").strip()
-            if req_it and items and req_it not in items:
-                issues.append(f"{qid}: unknown required_item '{req_it}'")
-            if rew_it and items and rew_it not in items:
-                issues.append(f"{qid}: unknown reward_item '{rew_it}'")
-            if auto and items and auto not in items:
-                issues.append(f"{qid}: unknown auto_complete_if_has '{auto}'")
+            # Rewards list
+            rewards = q.get("rewards")
+            if not isinstance(rewards, list):
+                issues.append(f"{qid}: rewards must be a list")
+            else:
+                for ridx, r in enumerate(rewards):
+                    if not isinstance(r, dict):
+                        issues.append(f"{qid}: reward[{ridx}] must be an object")
+                        continue
+                    rtype = r.get("type")
+                    if rtype == "item":
+                        iid = r.get("item_id")
+                        if iid and items and iid not in items:
+                            issues.append(f"{qid}: reward[{ridx}] unknown item '{iid}'")
+                    elif rtype == "xp":
+                        if r.get("amount") is None:
+                            issues.append(f"{qid}: reward[{ridx}] missing amount")
+                    elif rtype:
+                        issues.append(f"{qid}: reward[{ridx}] unknown type '{rtype}'")
 
-            # Requires quest id(s)
-            req = q.get("requires")
-            if isinstance(req, str):
-                if req and req not in qids:
-                    issues.append(f"{qid}: requires unknown quest '{req}'")
-            elif isinstance(req, list):
-                for rqq in req:
-                    if rqq not in qids:
-                        issues.append(f"{qid}: requires unknown quest '{rqq}'")
-            elif req is not None:
-                issues.append(f"{qid}: 'requires' must be string, list, or absent")
-
-            # xp_reward numeric
-            try:
-                int(q.get("xp_reward", 0))
-            except Exception:
-                issues.append(f"{qid}: xp_reward must be an integer")
+            # Stages/tasks
+            stages = q.get("stages")
+            if not isinstance(stages, list):
+                issues.append(f"{qid}: stages must be a list")
+            else:
+                for sidx, st in enumerate(stages):
+                    if not isinstance(st, dict):
+                        issues.append(f"{qid}: stage[{sidx}] must be an object")
+                        continue
+                    sid = (st.get("id") or "").strip()
+                    if not sid:
+                        issues.append(f"{qid}: stage[{sidx}] missing id")
+                    tasks = st.get("tasks") or []
+                    if not isinstance(tasks, list):
+                        issues.append(f"{qid}: stage[{sidx}] tasks must be a list")
+                        continue
+                    for tidx, task in enumerate(tasks):
+                        if not isinstance(task, dict):
+                            issues.append(f"{qid}: stage[{sidx}] task[{tidx}] must be an object")
+                            continue
+                        tid = (task.get("id") or "").strip()
+                        if not tid:
+                            issues.append(f"{qid}: stage[{sidx}] task[{tidx}] missing id")
+                        ttxt = (task.get("text") or "").strip()
+                        if not ttxt:
+                            issues.append(f"{qid}: stage[{sidx}] task[{tidx}] missing text")
 
         return issues
 

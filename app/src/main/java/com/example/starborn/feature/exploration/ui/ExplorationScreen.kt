@@ -224,6 +224,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import com.example.starborn.ui.background.rememberRoomBackgroundPainter
 import java.util.Locale
 import com.example.starborn.ui.events.UiEvent
 import com.example.starborn.ui.events.UiEventBus
@@ -278,7 +279,8 @@ fun ExplorationScreen(
             uiState.levelUpPrompt != null ||
             uiState.isQuestLogVisible ||
             uiState.isFullMapVisible ||
-            uiState.isMapLegendVisible
+            uiState.isMapLegendVisible ||
+            uiState.tutorialState.current != null
 
     LaunchedEffect(Unit) {
         viewModel.events.collect { event ->
@@ -567,14 +569,10 @@ fun ExplorationScreen(
         BoxWithConstraints(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 24.dp, vertical = 24.dp)
+                .statusBarsPadding()
+            .padding(horizontal = 24.dp, vertical = 24.dp)
         ) {
             val descriptionTopPadding = remember(maxHeight) { maxHeight * 0.2f }
-            var titleMaxLineWidthPx by remember(currentRoom?.title) { mutableStateOf(0f) }
-            val density = LocalDensity.current
-            val underlineWidth = remember(titleMaxLineWidthPx, density) {
-                if (titleMaxLineWidthPx > 0f) with(density) { titleMaxLineWidthPx.toDp() } else 0.dp
-            }
             val actionAccentColor = themeColor(activeTheme?.accent, Color(0xFF80E0FF))
             ThemeBandOverlay(
                 theme = activeTheme,
@@ -585,89 +583,66 @@ fun ExplorationScreen(
                     .fillMaxWidth()
                     .height(96.dp)
             )
-            val minimapSize = 88.dp
-            val headerMaxWidth = (maxWidth - minimapSize - 16.dp).coerceAtLeast(0.dp)
-            ConstraintLayout(
+            val minimapSize = 78.dp
+            val titleColor = themeColor(activeTheme?.accent, Color(0xFFBEE9FF))
+            val warmTitleColor = Color(0xFFFF9F2E)
+            Surface(
                 modifier = Modifier
                     .align(Alignment.TopCenter)
-                    .fillMaxWidth()
+                    .fillMaxWidth(0.9f),
+                shape = RoundedCornerShape(14.dp),
+                color = Color(0xFF061018).copy(alpha = if (isRoomDark) 0.72f else 0.46f),
+                border = BorderStroke(1.dp, titleColor.copy(alpha = if (isRoomDark) 0.50f else 0.38f))
             ) {
-                val (titleTextRef, underlineRef, minimapRef) = createRefs()
-                MinimapWidget(
-                minimap = uiState.minimap,
-                    onLegend = {
-                        viewModel.selectMenuTab(MenuTab.MAP)
-                        viewModel.openMenuOverlay(MenuTab.MAP)
-                    },
-                    obscured = isRoomDark,
+                Row(
                     modifier = Modifier
-                        .requiredSize(minimapSize)
-                        .constrainAs(minimapRef) {
-                            top.linkTo(parent.top)
-                            end.linkTo(parent.end)
-                        }
-                )
-                val titleColor = themeColor(activeTheme?.accent, Color(0xFFBEE9FF))
-                val underlinePainter = painterResource(id = R.drawable.underline_4)
-                Text(
-                    text = uiState.currentRoom?.title ?: "Unknown area",
-                    style = MaterialTheme.typography.headlineLarge.copy(
-                        fontSize = 32.sp,
-                        lineHeight = 38.sp,
-                        textIndent = TextIndent(restLine = 14.sp),
-                        shadow = Shadow(
-                            color = Color.Black.copy(alpha = 0.85f),
-                            offset = Offset(0f, 1.25f),
-                            blurRadius = 1.5f
-                        )
-                    ),
-                    color = titleColor,
-                    onTextLayout = { result: TextLayoutResult ->
-                        var widest = 0f
-                        for (i in 0 until result.lineCount) {
-                            val width = result.getLineRight(i) - result.getLineLeft(i)
-                            if (width > widest) widest = width
-                        }
-                        titleMaxLineWidthPx = widest
-                    },
-                    modifier = Modifier
-                        .widthIn(max = headerMaxWidth.coerceAtMost(360.dp))
-                        .padding(end = 16.dp)
-                        .constrainAs(titleTextRef) {
-                            start.linkTo(parent.start)
-                            end.linkTo(minimapRef.start)
-                            width = Dimension.preferredWrapContent
-                            centerVerticallyTo(minimapRef)
-                        }
-                )
-                val resolvedUnderlineWidth = underlineWidth.takeIf { it > 0.dp } ?: 140.dp
-                val painterSize = underlinePainter.intrinsicSize
-                val underlineHeight = 32.dp
-                Box(
-                    modifier = Modifier
-                        .padding(top = 0.dp, end = 16.dp)
-                        .width(resolvedUnderlineWidth)
-                        .height(underlineHeight)
-                        .constrainAs(underlineRef) {
-                            start.linkTo(titleTextRef.start)
-                            top.linkTo(titleTextRef.bottom)
-                        }
+                        .fillMaxWidth()
+                        .padding(start = 16.dp, top = 10.dp, end = 10.dp, bottom = 10.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Image(
-                        painter = underlinePainter,
-                        contentDescription = null,
-                        contentScale = ContentScale.FillBounds,
-                        colorFilter = ColorFilter.tint(Color.Black.copy(alpha = 0.85f)),
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .offset(y = 1.dp)
-                    )
-                    Image(
-                        painter = underlinePainter,
-                        contentDescription = null,
-                        contentScale = ContentScale.FillBounds,
-                        colorFilter = ColorFilter.tint(titleColor.copy(alpha = 0.85f)),
-                        modifier = Modifier.fillMaxSize()
+                    Column(
+                        modifier = Modifier.weight(1f),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Text(
+                            text = uiState.currentRoom?.title ?: "Unknown area",
+                            style = MaterialTheme.typography.headlineSmall.copy(
+                                fontSize = 26.sp,
+                                lineHeight = 30.sp,
+                                shadow = Shadow(
+                                    color = Color.Black.copy(alpha = 0.62f),
+                                    offset = Offset(0f, 1.25f),
+                                    blurRadius = 1.5f
+                                )
+                            ),
+                            color = warmTitleColor,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(2.dp)
+                                .background(
+                                    Brush.horizontalGradient(
+                                        colors = listOf(
+                                            warmTitleColor.copy(alpha = 0.76f),
+                                            titleColor.copy(alpha = 0.34f),
+                                            Color.Transparent
+                                        )
+                                    )
+                                )
+                        )
+                    }
+                    MinimapWidget(
+                        minimap = uiState.minimap,
+                        onLegend = {
+                            viewModel.selectMenuTab(MenuTab.MAP)
+                            viewModel.openMenuOverlay(MenuTab.MAP)
+                        },
+                        obscured = isRoomDark,
+                        modifier = Modifier.requiredSize(minimapSize)
                     )
                 }
             }
@@ -694,11 +669,11 @@ fun ExplorationScreen(
                 modifier = Modifier
                     .align(Alignment.TopCenter)
                     .padding(top = descriptionTopPadding)
-                    .fillMaxWidth(0.8f)
+                    .fillMaxWidth(0.9f)
                     .heightIn(min = 240.dp, max = 480.dp)
             )
 
-            if (serviceQuickActions.isNotEmpty() || uiState.canReturnToHub) {
+            if (serviceQuickActions.isNotEmpty()) {
                 Column(
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
@@ -707,38 +682,26 @@ fun ExplorationScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    if (serviceQuickActions.isNotEmpty()) {
-                        ServiceActionTray(
-                            actions = serviceQuickActions,
-                            onAction = { viewModel.onActionSelected(it) },
-                            backgroundColor = panelBackgroundColor.copy(alpha = if (isRoomDark) 0.65f else 0.8f),
-                            accentColor = actionAccentColor,
-                            modifier = Modifier
-                                .wrapContentWidth(Alignment.CenterHorizontally)
-                                .align(Alignment.CenterHorizontally)
-                        )
-                    }
-                    if (uiState.canReturnToHub) {
-                        ReturnHubButton(
-                            onClick = { viewModel.requestReturnToHub() },
-                            modifier = Modifier
-                                .offset(y = (-8).dp)
-                                .padding(bottom = 4.dp),
-                            size = 96.dp
-                        )
-                    }
+                    ServiceActionTray(
+                        actions = serviceQuickActions,
+                        onAction = { viewModel.onActionSelected(it) },
+                        backgroundColor = panelBackgroundColor.copy(alpha = if (isRoomDark) 0.65f else 0.8f),
+                        accentColor = actionAccentColor,
+                        modifier = Modifier
+                            .wrapContentWidth(Alignment.CenterHorizontally)
+                            .align(Alignment.CenterHorizontally)
+                    )
                 }
             }
         }
         uiState.narrationPrompt?.let { narration ->
-            NarrationCard(
+            InspectionOverlay(
                 prompt = narration,
                 theme = activeTheme,
                 onDismiss = { viewModel.dismissNarration() },
                 modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .padding(top = 140.dp)
-                    .zIndex(2f)
+                    .fillMaxSize()
+                    .zIndex(40f)
             )
         }
         uiState.togglePrompt?.let { prompt ->
@@ -758,6 +721,7 @@ fun ExplorationScreen(
                 onPlayVoice = { viewModel.onDialogueVoiceRequested(it) },
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
+                    .navigationBarsPadding()
                     .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 24.dp)
             )
         }
@@ -873,7 +837,8 @@ fun ExplorationScreen(
                 onUseInventoryItem = onUsePreviewItem,
                 onShowQuestDetails = { questId ->
                     viewModel.openQuestDetails(questId)
-                }
+                },
+                modifier = Modifier.statusBarsPadding()
             )
         }
 
@@ -949,20 +914,36 @@ fun ExplorationScreen(
             )
         }
 
-        MenuToggleButton(
-            isOpen = uiState.isMenuOverlayVisible,
-            onToggle = {
-                if (uiState.isMenuOverlayVisible) {
-                    viewModel.closeMenuOverlay()
+        if (uiState.prompt == null && !blockingOverlayActive && !uiState.isMenuOverlayVisible) {
+            Row(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .navigationBarsPadding()
+                    .fillMaxWidth()
+                    .padding(start = 20.dp, end = 20.dp, bottom = 26.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (uiState.canReturnToHub) {
+                    ReturnHubButton(
+                        onClick = { viewModel.requestReturnToHub() }
+                    )
                 } else {
-                    viewModel.openMenuOverlay()
+                    Spacer(modifier = Modifier.width(116.dp))
                 }
-            },
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 32.dp),
-            enabled = !blockingOverlayActive
-        )
+                MenuToggleButton(
+                    isOpen = uiState.isMenuOverlayVisible,
+                    onToggle = {
+                        if (uiState.isMenuOverlayVisible) {
+                            viewModel.closeMenuOverlay()
+                        } else {
+                            viewModel.openMenuOverlay()
+                        }
+                    },
+                    enabled = !blockingOverlayActive
+                )
+            }
+        }
 
         uiState.cinematic?.let { cinematic ->
             CinematicOverlay(
@@ -1053,7 +1034,7 @@ fun ExplorationScreen(
             )
         }
 
-        if (uiState.eventAnnouncement == null) {
+        if (uiState.eventAnnouncement == null && !uiState.isMenuOverlayVisible) {
             UIPromptOverlay(
                 prompt = uiState.prompt,
                 onDismiss = { viewModel.dismissPrompt() },
@@ -1083,6 +1064,7 @@ fun ExplorationScreen(
             uiEventBus = uiEventBus,
             gradientColor = questAccentColor,
             outlineColor = panelBorderColor,
+            deferShowing = blockingOverlayActive,
             onShowDetails = { questId ->
                 viewModel.openQuestDetails(questId)
             }
@@ -1133,13 +1115,12 @@ private fun MinimapWidget(
     modifier: Modifier = Modifier,
     obscured: Boolean = false
 ) {
-    val clrBackground = Color(0.05f, 0.1f, 0.15f, 0.85f)
-    val clrBorder = Color(0.3f, 0.8f, 1.0f, 1.0f)
-    val clrBorderAccent = Color(0.6f, 0.9f, 1.0f, 0.8f)
-    val clrGrid = Color(0.3f, 0.8f, 1.0f, 0.15f)
-    val clrTile = Color(0.6f, 0.85f, 1.0f, 0.7f)
-    val clrTileGlow = Color(0.9f, 1.0f, 1.0f, 1.0f)
-    val clrPlayer = Color(1.0f, 0.9f, 0.3f, 1.0f)
+    val clrBackground = Color(0xFF061018).copy(alpha = 0.88f)
+    val clrBorder = Color(0xFF7FE6FF).copy(alpha = 0.92f)
+    val clrGrid = Color(0xFF7FE6FF).copy(alpha = 0.16f)
+    val clrTile = Color(0xFF8FD9FF).copy(alpha = 0.72f)
+    val clrTileGlow = Color(0xFFE8FCFF)
+    val clrPlayer = Color(0xFFFFC857)
 
     val playerPulse = remember { CoreAnimatable(1f) }
     LaunchedEffect(Unit) {
@@ -1151,10 +1132,10 @@ private fun MinimapWidget(
 
     Surface(
         modifier = modifier
-            .clip(RoundedCornerShape(16.dp))
+            .clip(RoundedCornerShape(12.dp))
             .clickable(onClick = onLegend),
-        color = Color.Black.copy(alpha = 0.4f),
-        shape = RoundedCornerShape(16.dp)
+        color = Color.Transparent,
+        shape = RoundedCornerShape(12.dp)
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
         Canvas(modifier = Modifier.fillMaxSize()) {
@@ -1167,17 +1148,23 @@ private fun MinimapWidget(
             val g = base / 7
             val pad = g / 2.7f
             val step = g + pad
-            val radius = base * 0.15f
-            val padding = base * 0.1f
+            val radius = base * 0.12f
 
-            // Base Panel
             drawRoundRect(
                 color = clrBackground,
                 size = size,
                 cornerRadius = CornerRadius(radius, radius)
             )
+            drawRect(
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        Color.White.copy(alpha = 0.05f),
+                        Color.Transparent,
+                        Color.Black.copy(alpha = 0.16f)
+                    )
+                )
+            )
 
-            // 3x3 Grid
             val gridStartX = cx - 1.5f * step
             val gridStartY = cy - 1.5f * step
             for (i in 0..3) {
@@ -1195,7 +1182,6 @@ private fun MinimapWidget(
                 )
             }
 
-            // Stylized Border
             drawRoundRect(
                 color = clrBorder,
                 size = Size(w - 2, h - 2),
@@ -1204,31 +1190,13 @@ private fun MinimapWidget(
                 style = Stroke(width = 1.dp.toPx())
             )
 
-            // Corner accent details
-            val cornerSize = padding * 1.5f
-            val accentStrokeWidth = 1.5f.dp.toPx()
-            // Top-left
-            drawLine(clrBorderAccent, Offset(padding, h - cornerSize), Offset(padding, h - padding), strokeWidth = accentStrokeWidth)
-            drawLine(clrBorderAccent, Offset(padding, h - padding), Offset(cornerSize, h - padding), strokeWidth = accentStrokeWidth)
-            // Top-right
-            drawLine(clrBorderAccent, Offset(w - cornerSize, h - padding), Offset(w - padding, h - padding), strokeWidth = accentStrokeWidth)
-            drawLine(clrBorderAccent, Offset(w - padding, h - padding), Offset(w - padding, h - cornerSize), strokeWidth = accentStrokeWidth)
-            // Bottom-left
-            drawLine(clrBorderAccent, Offset(padding, cornerSize), Offset(padding, padding), strokeWidth = accentStrokeWidth)
-            drawLine(clrBorderAccent, Offset(padding, padding), Offset(cornerSize, padding), strokeWidth = accentStrokeWidth)
-            // Bottom-right
-            drawLine(clrBorderAccent, Offset(w - padding, cornerSize), Offset(w - padding, padding), strokeWidth = accentStrokeWidth)
-            drawLine(clrBorderAccent, Offset(w - padding, padding), Offset(w - cornerSize, padding), strokeWidth = accentStrokeWidth)
-
             minimap?.let { state ->
                 val cellsInViewport = state.cells.filter {
                     abs(it.offsetX) <= 1 && abs(it.offsetY) <= 1 && (it.discovered || it.isCurrent)
                 }
                 val idToCell = state.cells.associateBy { it.roomId }
 
-                // --- Connection lines (only where rooms are truly connected) ---
                 cellsInViewport.forEach { cell ->
-                    // Only draw connections to east and north to avoid duplicates and redundant checks
                     for (direction in setOf("east", "north")) {
                         val connectedRoomId = cell.connections[direction]
                         if (connectedRoomId != null) {
@@ -1243,17 +1211,17 @@ private fun MinimapWidget(
                                 val x2 = cx + neighbor.offsetX * step
                                 val y2 = cy - neighbor.offsetY * step
                                 drawLine(
-                                    color = clrGrid.copy(alpha = 0.6f),
+                                    color = clrBorder.copy(alpha = 0.42f),
                                     start = Offset(x1, y1),
                                     end = Offset(x2, y2),
-                                    strokeWidth = 1.dp.toPx()
+                                    strokeWidth = 1.5f.dp.toPx(),
+                                    cap = StrokeCap.Round
                                 )
                             }
                         }
                     }
                 }
 
-                // Rooms
                 cellsInViewport.forEach { cell ->
                     val px = cx + cell.offsetX * step
                     val py = cy - cell.offsetY * step
@@ -1262,7 +1230,7 @@ private fun MinimapWidget(
                     val isCurrent = cell.isCurrent
                     val baseColor = if (isCurrent) clrTileGlow else clrTile
                     val pipColor = baseColor.copy(alpha = if (cell.isDark) baseColor.alpha * 0.6f else baseColor.alpha)
-                    val pipSize = g * if (isCurrent) 0.9f else 0.6f
+                    val pipSize = g * if (isCurrent) 0.95f else 0.58f
 
                     drawCircle(
                         color = pipColor,
@@ -1288,7 +1256,6 @@ private fun MinimapWidget(
                 }
             }
 
-            // Player Indicator
             val playerSize = g * 0.6f
             val glowSize = playerSize * (1 + playerPulse.value * 0.5f)
             drawCircle(
@@ -1877,13 +1844,20 @@ private fun MenuOverlay(
     onShowQuestDetails: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val panelColor = themeColor(theme?.bg, MaterialTheme.colorScheme.surface).copy(alpha = 0.95f)
-    val panelBorder = themeColor(theme?.border, Color.White.copy(alpha = 0.4f))
-    val accentColor = themeColor(theme?.accent, MaterialTheme.colorScheme.primary)
+    val themeBase = themeColor(theme?.bg, Color(0xFF071018))
+    val panelColor = Color(
+        red = themeBase.red * 0.45f,
+        green = themeBase.green * 0.45f,
+        blue = themeBase.blue * 0.45f,
+        alpha = 0.97f
+    )
+    val panelBorder = Color(0xFF7FE6FF)
+    val accentColor = Color(0xFF7FE6FF)
+    val warmAccent = Color(0xFFFFC857)
     val sheetScroll = rememberScrollState()
-    val cornerRadius = 28.dp
-    val borderWidth = 2.dp
-    val borderColor = panelBorder.copy(alpha = 0.8f)
+    val cornerRadius = 14.dp
+    val borderWidth = 1.dp
+    val borderColor = panelBorder.copy(alpha = 0.62f)
     val contentMaxWidth = 860.dp
 
     Surface(
@@ -1937,6 +1911,22 @@ private fun MenuOverlay(
         Box(modifier = Modifier.fillMaxSize()) {
             Box(
                 modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .fillMaxWidth()
+                    .height(5.dp)
+                    .background(
+                        Brush.horizontalGradient(
+                            colors = listOf(
+                                Color.Transparent,
+                                accentColor.copy(alpha = 0.72f),
+                                warmAccent.copy(alpha = 0.34f),
+                                Color.Transparent
+                            )
+                        )
+                    )
+            )
+            Box(
+                modifier = Modifier
                     .fillMaxSize()
                     .statusBarsPadding()
                     .navigationBarsPadding()
@@ -1955,20 +1945,42 @@ private fun MenuOverlay(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(
-                            text = "Menu",
-                            style = MaterialTheme.typography.titleLarge,
-                            color = accentColor
-                        )
-                        Text(
-                            text = "Close",
-                            style = MaterialTheme.typography.labelLarge,
-                            color = accentColor,
-                            modifier = Modifier
-                                .clip(RoundedCornerShape(12.dp))
-                                .clickable { onClose() }
-                                .padding(horizontal = 8.dp, vertical = 4.dp)
-                        )
+                        Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                            Text(
+                                text = "FIELD MENU",
+                                style = MaterialTheme.typography.labelMedium,
+                                color = warmAccent.copy(alpha = 0.74f)
+                            )
+                            Text(
+                                text = selectedTab.label(),
+                                style = MaterialTheme.typography.titleLarge.copy(fontSize = 30.sp, lineHeight = 34.sp),
+                                color = warmAccent
+                            )
+                        }
+                        Surface(
+                            onClick = onClose,
+                            shape = RoundedCornerShape(10.dp),
+                            color = Color(0xFF061018).copy(alpha = 0.42f),
+                            border = BorderStroke(1.dp, accentColor.copy(alpha = 0.45f))
+                        ) {
+                            Row(
+                                modifier = Modifier.padding(horizontal = 10.dp, vertical = 7.dp),
+                                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.Close,
+                                    contentDescription = null,
+                                    tint = accentColor,
+                                    modifier = Modifier.size(16.dp)
+                                )
+                                Text(
+                                    text = "Close",
+                                    style = MaterialTheme.typography.labelLarge,
+                                    color = accentColor
+                                )
+                            }
+                        }
                     }
 
                     MenuTabRow(
@@ -2034,13 +2046,13 @@ private fun MenuOverlay(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(24.dp)
+                    .height(24.dp)
                         .background(
                             Brush.verticalGradient(
                                 colors = listOf(
                                     Color.Transparent,
-                                    accentColor.copy(alpha = 0.05f),
-                                    accentColor.copy(alpha = 0.12f)
+                                    accentColor.copy(alpha = 0.09f),
+                                    warmAccent.copy(alpha = 0.04f)
                                 )
                             )
                         )
@@ -2075,8 +2087,12 @@ private fun MenuTabRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .clip(RoundedCornerShape(12.dp))
+            .background(Color(0xFF061018).copy(alpha = 0.38f))
+            .border(1.dp, accentColor.copy(alpha = 0.28f), RoundedCornerShape(12.dp))
+            .padding(3.dp)
             .horizontalScroll(rememberScrollState()),
-        horizontalArrangement = Arrangement.spacedBy(10.dp)
+        horizontalArrangement = Arrangement.spacedBy(3.dp)
     ) {
         MenuTab.values().forEach { tab ->
             MenuTabChip(
@@ -2098,20 +2114,40 @@ private fun MenuTabChip(
     borderColor: Color,
     onSelect: () -> Unit
 ) {
-    val background = if (isSelected) accentColor.copy(alpha = 0.28f) else Color.Transparent
-    val contentColor = if (isSelected) Color.White else accentColor.copy(alpha = 0.9f)
+    val background = if (isSelected) {
+        Brush.horizontalGradient(
+            colors = listOf(
+                accentColor.copy(alpha = 0.28f),
+                Color(0xFFFFC857).copy(alpha = 0.12f)
+            )
+        )
+    } else {
+        Brush.horizontalGradient(
+            colors = listOf(Color.Transparent, Color.Transparent)
+        )
+    }
+    val contentColor = if (isSelected) Color.White else accentColor.copy(alpha = 0.78f)
     Surface(
         onClick = onSelect,
-        shape = RoundedCornerShape(20.dp),
-        border = BorderStroke(1.dp, borderColor.copy(alpha = if (isSelected) 0.9f else 0.4f)),
-        color = background
+        shape = RoundedCornerShape(9.dp),
+        border = BorderStroke(1.dp, borderColor.copy(alpha = if (isSelected) 0.72f else 0.0f)),
+        color = Color.Transparent
     ) {
-        Text(
-            text = tab.label(),
-            color = contentColor,
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
-            style = MaterialTheme.typography.labelLarge
-        )
+        Box(
+            modifier = Modifier
+                .background(background)
+                .widthIn(min = 92.dp)
+                .padding(horizontal = 10.dp, vertical = 8.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = tab.label(),
+                color = contentColor,
+                style = MaterialTheme.typography.labelLarge.copy(fontSize = 18.sp, lineHeight = 22.sp),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
     }
 }
 
@@ -2567,7 +2603,7 @@ private fun InventoryEquipmentPreview(
     }
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         partyMembers.forEach { member ->
-            val portraitPainter = rememberAssetPainter(member.portraitPath, R.drawable.main_menu_background)
+            val portraitPainter = rememberAssetPainter(member.portraitPath, painterResource(R.drawable.main_menu_background))
             Column(
                 verticalArrangement = Arrangement.spacedBy(6.dp),
                 modifier = Modifier
@@ -3836,26 +3872,48 @@ private fun MenuSectionCard(
     content: @Composable ColumnScope.() -> Unit
 ) {
     Column(modifier = modifier) {
-        Text(
-            text = title,
-            color = accentColor,
-            style = MaterialTheme.typography.titleMedium
-        )
         Surface(
-            shape = RoundedCornerShape(18.dp),
-            color = Color.Black.copy(alpha = 0.3f),
-            border = BorderStroke(1.dp, borderColor.copy(alpha = 0.6f)),
+            shape = RoundedCornerShape(12.dp),
+            color = Color(0xFF071018).copy(alpha = 0.48f),
+            border = BorderStroke(1.dp, borderColor.copy(alpha = 0.42f)),
             modifier = Modifier
-                .padding(top = 8.dp)
                 .fillMaxWidth()
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .background(
+                        Brush.verticalGradient(
+                            colors = listOf(
+                                accentColor.copy(alpha = 0.08f),
+                                Color.Transparent
+                            )
+                        )
+                    )
                     .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                content = content
-            )
+                verticalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                Text(
+                    text = title.uppercase(Locale.getDefault()),
+                    color = accentColor.copy(alpha = 0.92f),
+                    style = MaterialTheme.typography.labelLarge
+                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(1.dp)
+                        .background(
+                            Brush.horizontalGradient(
+                                colors = listOf(
+                                    accentColor.copy(alpha = 0.5f),
+                                    Color(0xFFFFC857).copy(alpha = 0.25f),
+                                    Color.Transparent
+                                )
+                            )
+                        )
+                )
+                content()
+            }
         }
     }
 }
@@ -3897,7 +3955,7 @@ private fun PartyMemberCard(
 ) {
     val portraitPainter = rememberAssetPainter(
         imagePath = member.portraitPath,
-        fallbackRes = R.drawable.inventory_icon
+        fallback = painterResource(R.drawable.inventory_icon)
     )
     Column(
         modifier = Modifier
@@ -4030,7 +4088,7 @@ private fun PartyMemberDetailsDialog(
                     val portraitPath = details.portraitPath
                     if (!portraitPath.isNullOrBlank()) {
                         Image(
-                            painter = rememberAssetPainter(portraitPath, R.drawable.inventory_icon),
+                            painter = rememberAssetPainter(portraitPath, painterResource(R.drawable.inventory_icon)),
                             contentDescription = details.name,
                             contentScale = ContentScale.Crop,
                             modifier = Modifier
@@ -4087,12 +4145,12 @@ private fun EventAnnouncementOverlay(
     val eventAccent = Color(announcement.accentColor)
     val accentColor = themeColor(theme?.accent, eventAccent)
     val outlineColor = themeColor(theme?.border, eventAccent.copy(alpha = 0.8f))
-    val backgroundColor = themeColor(theme?.bg, Color(0xFF040914)).copy(alpha = 0.95f)
+    val backgroundColor = themeColor(theme?.bg, Color(0xFF040914)).copy(alpha = 0.98f)
     val hasTitle = !announcement.title.isNullOrBlank()
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(Color.Black.copy(alpha = 0.6f))
+            .background(Color.Black.copy(alpha = 0.38f))
             .padding(horizontal = 24.dp, vertical = 32.dp),
         contentAlignment = Alignment.Center
     ) {
@@ -4487,7 +4545,7 @@ private fun SkillTreeOverlay(
     val scrollState = rememberScrollState()
     val portraitPainter = rememberAssetPainter(
         imagePath = overlay.portraitPath,
-        fallbackRes = R.drawable.inventory_icon
+        fallback = painterResource(R.drawable.inventory_icon)
     )
     var selectedBranchIndex by rememberSaveable(overlay.characterId) { mutableStateOf(0) }
     if (overlay.branches.isNotEmpty()) {
@@ -4859,9 +4917,9 @@ private fun ThemedMenuButton(
     Surface(
         onClick = onClick,
         enabled = enabled,
-        shape = RoundedCornerShape(16.dp),
-        border = BorderStroke(1.dp, accentColor.copy(alpha = 0.6f)),
-        color = if (enabled) accentColor.copy(alpha = 0.2f) else Color.Gray.copy(alpha = 0.2f),
+        shape = RoundedCornerShape(10.dp),
+        border = BorderStroke(1.dp, accentColor.copy(alpha = if (enabled) 0.52f else 0.22f)),
+        color = if (enabled) Color(0xFF061018).copy(alpha = 0.45f) else Color.Gray.copy(alpha = 0.16f),
         modifier = modifier
     ) {
         Box(
@@ -4870,6 +4928,7 @@ private fun ThemedMenuButton(
                     Brush.horizontalGradient(
                         listOf(
                             accentColor.copy(alpha = if (enabled) 0.35f else 0.15f),
+                            Color(0xFFFFC857).copy(alpha = if (enabled) 0.10f else 0f),
                             Color.Transparent
                         )
                     )
@@ -5532,36 +5591,134 @@ private fun MenuToggleButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true
 ) {
-    val painter = rememberAssetPainter("images/ui/menu_button.png")
     val description = if (isOpen) "Close menu" else "Open menu"
     val baseAlpha = if (isOpen) 0.75f else 1f
     val alpha = if (enabled) baseAlpha else baseAlpha * 0.35f
-    Image(
-        painter = painter,
-        contentDescription = description,
+    val accentColor = Color(0xFF7FE6FF)
+    val warmColor = Color(0xFFFFC857)
+    Surface(
         modifier = modifier
-            .size(112.dp)
-            .clip(RoundedCornerShape(12.dp))
+            .height(54.dp)
+            .widthIn(min = 106.dp)
             .graphicsLayer { this.alpha = alpha }
-            .clickable(enabled = enabled, onClick = onToggle)
-    )
+            .clickable(enabled = enabled, onClick = onToggle),
+        shape = RoundedCornerShape(14.dp),
+        color = Color(0xFF061018).copy(alpha = 0.58f),
+        border = BorderStroke(1.dp, accentColor.copy(alpha = if (isOpen) 0.86f else 0.48f))
+    ) {
+        Row(
+            modifier = Modifier
+                .height(54.dp)
+                .background(
+                    Brush.horizontalGradient(
+                        colors = listOf(
+                            accentColor.copy(alpha = if (isOpen) 0.18f else 0.10f),
+                            warmColor.copy(alpha = if (isOpen) 0.08f else 0.04f),
+                            Color.Transparent
+                        )
+                    )
+                )
+                .padding(horizontal = 14.dp),
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Canvas(
+                modifier = Modifier
+                    .size(22.dp)
+                    .alpha(if (enabled) 1f else 0.55f)
+            ) {
+                val strokeWidth = 2.4.dp.toPx()
+                val startX = size.width * 0.12f
+                val endX = size.width * 0.88f
+                listOf(0.28f, 0.50f, 0.72f).forEach { yFactor ->
+                    drawLine(
+                        color = accentColor,
+                        start = Offset(startX, size.height * yFactor),
+                        end = Offset(endX, size.height * yFactor),
+                        strokeWidth = strokeWidth,
+                        cap = StrokeCap.Round
+                    )
+                }
+            }
+            Text(
+                text = "MENU",
+                color = Color.White.copy(alpha = if (enabled) 0.94f else 0.55f),
+                style = MaterialTheme.typography.labelLarge,
+                fontWeight = FontWeight.Black,
+                letterSpacing = 0.sp
+            )
+        }
+    }
 }
 
 @Composable
 private fun ReturnHubButton(
     onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    size: Dp = 96.dp
+    modifier: Modifier = Modifier
 ) {
-    val painter = rememberAssetPainter("images/ui/return_hub_icon.png")
-    Image(
-        painter = painter,
-        contentDescription = "Return to hub",
+    val accentColor = Color(0xFFFFC857)
+    val dangerColor = Color(0xFFFF5D4F)
+    Surface(
         modifier = modifier
-            .size(size)
-            .clip(RoundedCornerShape(12.dp))
-            .clickable(onClick = onClick)
-    )
+            .height(54.dp)
+            .widthIn(min = 116.dp)
+            .clickable(onClick = onClick),
+        shape = RoundedCornerShape(14.dp),
+        color = Color(0xFF061018).copy(alpha = 0.58f),
+        border = BorderStroke(1.dp, accentColor.copy(alpha = 0.52f))
+    ) {
+        Row(
+            modifier = Modifier
+                .height(54.dp)
+                .background(
+                    Brush.horizontalGradient(
+                        colors = listOf(
+                            dangerColor.copy(alpha = 0.16f),
+                            accentColor.copy(alpha = 0.08f),
+                            Color.Transparent
+                        )
+                    )
+                )
+                .padding(horizontal = 13.dp),
+            horizontalArrangement = Arrangement.spacedBy(9.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Canvas(
+                modifier = Modifier.size(22.dp)
+            ) {
+                val strokeWidth = 2.8.dp.toPx()
+                val centerY = size.height * 0.5f
+                drawLine(
+                    color = accentColor,
+                    start = Offset(size.width * 0.18f, centerY),
+                    end = Offset(size.width * 0.84f, centerY),
+                    strokeWidth = strokeWidth,
+                    cap = StrokeCap.Round
+                )
+                drawLine(
+                    color = accentColor,
+                    start = Offset(size.width * 0.18f, centerY),
+                    end = Offset(size.width * 0.46f, size.height * 0.24f),
+                    strokeWidth = strokeWidth,
+                    cap = StrokeCap.Round
+                )
+                drawLine(
+                    color = accentColor,
+                    start = Offset(size.width * 0.18f, centerY),
+                    end = Offset(size.width * 0.46f, size.height * 0.76f),
+                    strokeWidth = strokeWidth,
+                    cap = StrokeCap.Round
+                )
+            }
+            Text(
+                text = "HUB",
+                color = Color.White.copy(alpha = 0.94f),
+                style = MaterialTheme.typography.labelLarge,
+                fontWeight = FontWeight.Black,
+                letterSpacing = 0.sp
+            )
+        }
+    }
 }
 
 private data class QuickMenuAction(
@@ -6141,17 +6298,40 @@ private fun RoomDescriptionPanel(
     }
     Surface(
         modifier = modifier,
-        color = if (isDark) Color.Black.copy(alpha = 0.74f) else backgroundColor,
-        shape = RoundedCornerShape(18.dp),
-        border = BorderStroke(1.4.dp, borderColor.copy(alpha = 0.9f))
+        color = Color(0xFF061018).copy(alpha = if (isDark) 0.76f else 0.50f),
+        shape = RoundedCornerShape(12.dp),
+        border = BorderStroke(1.dp, borderColor.copy(alpha = if (isDark) 0.72f else 0.42f))
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(
+                            accentColor.copy(alpha = if (isDark) 0.05f else 0.07f),
+                            Color.Transparent,
+                            Color.Black.copy(alpha = if (isDark) 0.10f else 0.04f)
+                        )
+                    )
+                )
                 .verticalScroll(scrollState)
-                .padding(horizontal = 24.dp, vertical = 18.dp),
+                .padding(horizontal = 20.dp, vertical = 16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(1.dp)
+                    .background(
+                        Brush.horizontalGradient(
+                            colors = listOf(
+                                Color(0xFFFF9F2E).copy(alpha = 0.50f),
+                                accentColor.copy(alpha = 0.26f),
+                                Color.Transparent
+                            )
+                        )
+                    )
+            )
             RoomDescription(
                 plan = plan,
                 description = description,
@@ -6606,7 +6786,7 @@ private fun EnemyPartyLeaderIcon(
     icon: EnemyIconUi?
 ) {
     val iconPath = icon?.spritePath ?: remember(enemyId) { "images/enemies/${enemyId}_combat.png" }
-    val painter = rememberAssetPainter(iconPath, R.drawable.inventory_icon)
+    val painter = rememberAssetPainter(iconPath, painterResource(R.drawable.inventory_icon))
     val iconTint = accentColor.copy(alpha = if (isDark) 0.72f else 0.92f)
     val tierAccent = when (tier) {
         EnemyTier.BOSS -> Color(0xFFFFD54F)
@@ -6828,7 +7008,7 @@ private fun CompositeEnemyIcon(
             val offsetX = baseSize * (part.offsetX + groupOffsetX - centerX)
             val offsetY = baseSize * (part.offsetY + groupOffsetY - centerY)
             Image(
-                painter = rememberAssetPainter(part.spritePath, R.drawable.inventory_icon),
+                painter = rememberAssetPainter(part.spritePath, painterResource(R.drawable.inventory_icon)),
                 contentDescription = null,
                 contentScale = ContentScale.Fit,
                 colorFilter = ColorFilter.tint(tint),
@@ -6971,35 +7151,6 @@ private fun buildInlineActionPlan(
 
 private fun rangesOverlap(a: IntRange, b: IntRange): Boolean =
     a.first < b.last && b.first < a.last
-
-@Composable
-private fun rememberRoomBackgroundPainter(imagePath: String?): Painter {
-    val context = LocalContext.current
-    val defaultPainter = painterResource(R.drawable.main_menu_background)
-    if (imagePath.isNullOrBlank()) return defaultPainter
-
-    val (resId, assetPainter) = remember(imagePath) {
-        val resourceName = imagePath
-            .substringAfterLast('/')
-            .substringBeforeLast('.')
-            .lowercase(Locale.getDefault())
-        val resolvedId = context.resources.getIdentifier(resourceName, "drawable", context.packageName)
-        runCatching {
-            context.assets.open(imagePath).use { stream ->
-                BitmapFactory.decodeStream(stream)?.let { bitmap ->
-                    BitmapPainter(bitmap.asImageBitmap())
-                }
-            }
-        }.getOrNull().let { resolvedPainter ->
-            resolvedId to resolvedPainter
-        }
-    }
-    return when {
-        resId != 0 -> painterResource(resId)
-        assetPainter != null -> assetPainter
-        else -> defaultPainter
-    }
-}
 
 @Composable
 private fun QuestSummaryCard(
@@ -7282,7 +7433,7 @@ private fun PromptBanner(
     title: String,
     message: String,
     accentColor: Color,
-    backgroundColor: Color = Color(0xFF060B13).copy(alpha = 0.96f),
+    backgroundColor: Color = Color(0xFF060B13).copy(alpha = 0.92f),
     actionLabel: String,
     onAction: () -> Unit,
     modifier: Modifier = Modifier
@@ -7306,7 +7457,7 @@ private fun PromptBanner(
             .widthIn(min = 320.dp, max = 860.dp),
         color = Color.Transparent,
         shape = shape,
-        shadowElevation = 18.dp
+        shadowElevation = 10.dp
     ) {
         Box(
             modifier = Modifier
@@ -7314,13 +7465,13 @@ private fun PromptBanner(
                 .background(
                     brush = Brush.linearGradient(
                         listOf(
-                            backgroundColor.copy(alpha = 0.98f),
                             backgroundColor.copy(alpha = 0.94f),
-                            backgroundColor.copy(alpha = 0.98f)
+                            backgroundColor.copy(alpha = 0.90f),
+                            backgroundColor.copy(alpha = 0.94f)
                         )
                     )
                 )
-                .border(1.4.dp, accentColor.copy(alpha = 0.45f), shape)
+                .border(1.2.dp, accentColor.copy(alpha = 0.50f), shape)
         ) {
             Row(
                 modifier = Modifier
@@ -7403,6 +7554,40 @@ private fun PromptBanner(
 }
 
 @Composable
+fun InspectionOverlay(
+    prompt: NarrationPrompt,
+    theme: Theme?,
+    onDismiss: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier
+            .background(Color.Black.copy(alpha = 0.56f))
+            .clickable(
+                indication = null,
+                interactionSource = remember { MutableInteractionSource() },
+                onClick = {
+                    if (prompt.tapToDismiss) onDismiss()
+                }
+            ),
+        contentAlignment = Alignment.Center
+    ) {
+        NarrationCard(
+            prompt = prompt,
+            theme = theme,
+            modifier = Modifier
+                .padding(horizontal = 20.dp, vertical = 32.dp)
+                .clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() },
+                    onClick = {}
+                ),
+            onDismiss = onDismiss
+        )
+    }
+}
+
+@Composable
 fun NarrationCard(
     prompt: NarrationPrompt,
     theme: Theme?,
@@ -7410,56 +7595,45 @@ fun NarrationCard(
     modifier: Modifier = Modifier
 ) {
     val accentColor = themeColor(theme?.accent, Color(0xFF8DE2FF))
-    val borderColor = themeColor(theme?.border, Color.White.copy(alpha = 0.7f))
-    val backgroundColor = Color(0xFF030910).copy(alpha = 0.95f)
-    val shape = RoundedCornerShape(28.dp)
-    val baseModifier = Modifier
-        .fillMaxWidth(0.92f)
-        .widthIn(min = 360.dp, max = 720.dp)
-        .let { mod ->
-            if (prompt.tapToDismiss) {
-                mod.clickable(onClick = onDismiss)
-            } else {
-                mod
-            }
-        }
+    val borderColor = themeColor(theme?.border, Color.White.copy(alpha = 0.72f))
+    val backgroundColor = Color(0xFF050B12).copy(alpha = 0.97f)
+    val shape = RoundedCornerShape(18.dp)
 
     Surface(
-        modifier = baseModifier.then(modifier),
+        modifier = modifier
+            .fillMaxWidth(0.9f)
+            .widthIn(max = 620.dp),
         color = backgroundColor,
         shape = shape,
-        border = BorderStroke(1.5.dp, borderColor.copy(alpha = 0.9f))
+        border = BorderStroke(1.dp, borderColor.copy(alpha = 0.82f)),
+        shadowElevation = 18.dp
     ) {
-        Row(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(
-                    Brush.horizontalGradient(
-                        listOf(accentColor.copy(alpha = 0.18f), Color.Transparent)
+                    Brush.verticalGradient(
+                        listOf(accentColor.copy(alpha = 0.12f), Color.Transparent)
                     )
                 )
-                .padding(horizontal = 24.dp, vertical = 18.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
+                .padding(horizontal = 22.dp, vertical = 20.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Box(
-                modifier = Modifier
-                    .width(5.dp)
-                    .height(48.dp)
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(accentColor.copy(alpha = 0.85f))
-            )
-            Column(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(6.dp)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.Top,
+                horizontalArrangement = Arrangement.spacedBy(14.dp)
             ) {
-                Text(
-                    text = "Narration",
-                    color = accentColor,
-                    style = MaterialTheme.typography.labelMedium
+                Box(
+                    modifier = Modifier
+                        .width(4.dp)
+                        .height(52.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(accentColor.copy(alpha = 0.85f))
                 )
                 Text(
                     text = prompt.message,
+                    modifier = Modifier.weight(1f),
                     color = Color.White,
                     textAlign = TextAlign.Start,
                     style = MaterialTheme.typography.bodyLarge
@@ -7467,9 +7641,15 @@ fun NarrationCard(
             }
             TextButton(
                 onClick = onDismiss,
+                modifier = Modifier
+                    .align(Alignment.End)
+                    .defaultMinSize(minWidth = 92.dp),
                 colors = ButtonDefaults.textButtonColors(contentColor = accentColor)
             ) {
-                Text(if (prompt.tapToDismiss) "Got it" else "Dismiss")
+                Text(
+                    text = if (prompt.tapToDismiss) "Got it" else "Dismiss",
+                    style = MaterialTheme.typography.labelLarge
+                )
             }
         }
     }

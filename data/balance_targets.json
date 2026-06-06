@@ -39,8 +39,8 @@
     "enemies": "enemies.json",
     "skills": "skills.json",
     "skill_trees_dir": "skill_trees",
-    "leveling": "data/leveling_data.json",
-    "progression": "data/progression.json",
+    "leveling": "leveling_data.json",
+    "progression": "progression.json",
     "reports_dir": "reports"
   }
 }

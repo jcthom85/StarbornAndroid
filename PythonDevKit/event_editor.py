@@ -63,7 +63,10 @@ TRIGGER_TYPES: Dict[str, Dict[str, Any]] = {
     # type: { label: str, fields: [(key, widget_kind, choices_key_or_None, tip)] }
     "player_action": {
         "label": "Player Action",
-        "fields": [("action", "text", None, "Action name, e.g. unlock_locker")]
+        "fields": [
+            ("action", "text", None, "Action name, e.g. unlock_locker"),
+            ("item_id", "combo_or_text", "items", "Optional item id")
+        ]
     },
     "talk_to": {
         "label": "Talk To",
@@ -71,11 +74,11 @@ TRIGGER_TYPES: Dict[str, Dict[str, Any]] = {
     },
     "item_acquired": {
         "label": "Item Acquired",
-        "fields": [("item", "combo_or_text", "items", "Item name (case-insensitive match in engine)")]
+        "fields": [("item_id", "combo_or_text", "items", "Item id")]
     },
     "item_given": {
         "label": "Item Given To NPC",
-        "fields": [("item", "combo_or_text", "items", "Item name"),
+        "fields": [("item_id", "combo_or_text", "items", "Item id"),
                    ("npc", "combo_or_text", "npcs", "NPC id or name")]
     },
     "enemy_defeated": {
@@ -94,10 +97,18 @@ TRIGGER_TYPES: Dict[str, Dict[str, Any]] = {
         "label": "Event Completed",
         "fields": [("event_id", "combo_or_text", "events", "ID of the event that just completed")]
     },
+    "dialogue_closed": {
+        "label": "Dialogue Closed",
+        "fields": [("npc", "combo_or_text", "npcs", "NPC id or name")]
+    },
     # Extra trigger kinds present in events.json (fallback as text fields)
     "encounter_victory": {
         "label": "Encounter Victory",
-        "fields": [("encounter_id", "text", None, "Encounter id")]
+        "fields": [("encounter_id", "combo_or_text", "encounters", "Encounter id")]
+    },
+    "encounter_defeat": {
+        "label": "Encounter Defeat",
+        "fields": [("encounter_id", "combo_or_text", "encounters", "Encounter id")]
     },
     "quest_stage_complete": {
         "label": "Quest Stage Complete",
@@ -113,6 +124,22 @@ TRIGGER_TYPES: Dict[str, Dict[str, Any]] = {
 
 # Actions supported by event_manager.py and your events.json today
 ACTION_DEFS: Dict[str, Dict[str, Any]] = {
+    "advance_quest": {
+        "label": "Advance Quest",
+        "fields": [("quest_id", "combo_or_text", "quests", "Quest id"),
+                   ("to_stage_id", "text", None, "Stage id")]
+    },
+    "advance_quest_if_active": {
+        "label": "Advance Quest If Active",
+        "fields": [("quest_id", "combo_or_text", "quests", "Quest id"),
+                   ("to_stage_id", "text", None, "Stage id"),
+                   ("condition", "text", None, "Optional condition expression")]
+    },
+    "advance_quest_stage": {
+        "label": "Advance Quest Stage",
+        "fields": [("quest_id", "combo_or_text", "quests", "Quest id"),
+                   ("to_stage_id", "text", None, "Stage id")]
+    },
     "toggle_room_state": {
         "label": "Toggle Room State",
         "fields": [("room_id", "combo_or_text", "rooms", "Room id"),
@@ -125,19 +152,45 @@ ACTION_DEFS: Dict[str, Dict[str, Any]] = {
     },
     "give_item_to_player": {
         "label": "Give Item To Player",
-        "fields": [("item", "combo_or_text", "items", "Item name")]
+        "fields": [("item_id", "combo_or_text", "items", "Item id"),
+                   ("quantity", "text", None, "Quantity")]
+    },
+    "give_item": {
+        "label": "Give Item",
+        "fields": [("item_id", "combo_or_text", "items", "Item id"),
+                   ("quantity", "text", None, "Quantity"),
+                   ("to_player", "checkbox", None, "Give directly to player"),
+                   ("note", "text", None, "Optional note")]
+    },
+    "give_xp": {
+        "label": "Give XP",
+        "fields": [("xp", "text", None, "XP amount")]
+    },
+    "grant_reward": {
+        "label": "Grant Reward Bundle",
+        "fields": [("quest_id", "combo_or_text", "quests", "Quest id (optional)"),
+                   ("xp", "text", None, "XP amount"),
+                   ("credits", "text", None, "Credits amount"),
+                   ("ap", "text", None, "AP amount"),
+                   ("items", "text", None, "Items JSON array")]
     },
     "start_quest": {
         "label": "Start Quest",
-        "fields": [("quest_id", "combo_or_text", "quests", "Quest id")]
+        "fields": [("quest_id", "combo_or_text", "quests", "Quest id"),
+                   ("start_quest", "combo_or_text", "quests", "Legacy start_quest id")]
     },
     "complete_quest": {
         "label": "Complete Quest",
         "fields": [("quest_id", "combo_or_text", "quests", "Quest id")]
     },
-    "advance_quest_stage": {
-        "label": "Advance Quest Stage",
+    "track_quest": {
+        "label": "Track Quest",
         "fields": [("quest_id", "combo_or_text", "quests", "Quest id")]
+    },
+    "set_quest_task_done": {
+        "label": "Set Quest Task Done",
+        "fields": [("quest_id", "combo_or_text", "quests", "Quest id"),
+                   ("task_id", "text", None, "Task id")]
     },
     "update_npc_dialogue": {
         "label": "Update NPC Dialogue",
@@ -152,11 +205,60 @@ ACTION_DEFS: Dict[str, Dict[str, Any]] = {
         "label": "Play Cinematic",
         "fields": [("scene_id", "combo_or_text", "cinematics", "Cinematic scene id")]
     },
+    "trigger_cutscene": {
+        "label": "Trigger Cutscene",
+        "fields": [("cutscene_id", "combo_or_text", "cinematics", "Cutscene id")]
+    },
     "set_room_state": {
         "label": "Set Room State",
         "fields": [("room_id", "combo_or_text", "rooms", "Room id"),
                    ("state_key", "text", None, "Room state key (e.g., dark)"),
                    ("value", "text", None, "true/false or on/off")]
+    },
+    "set_milestone": {
+        "label": "Set Milestone",
+        "fields": [("milestone", "combo_or_text", "milestones", "Milestone id")]
+    },
+    "show_message": {
+        "label": "Show Message",
+        "fields": [("message", "text", None, "Message")]
+    },
+    "narrate": {
+        "label": "Narrate (Overlay Text)",
+        "fields": [("text", "text", None, "Narration text"),
+                   ("tap_to_dismiss", "checkbox", None, "Tap to dismiss")]
+    },
+    "system_tutorial": {
+        "label": "System Tutorial",
+        "fields": [("scene_id", "combo_or_text", "cinematics", "Tutorial scene id"),
+                   ("context", "text", None, "Context / label")]
+    },
+    "player_action": {
+        "label": "Player Action",
+        "fields": [("action", "text", None, "Action id")]
+    },
+    "spawn_encounter": {
+        "label": "Spawn Encounter",
+        "fields": [("encounter_id", "combo_or_text", "encounters", "Encounter id"),
+                   ("room_id", "combo_or_text", "rooms", "Room id"),
+                   ("condition", "text", None, "Optional condition expression")]
+    },
+    "unlock_room_search": {
+        "label": "Unlock Room Search",
+        "fields": [("room_id", "combo_or_text", "rooms", "Room id"),
+                   ("note", "text", None, "Optional note")]
+    },
+    "reveal_hidden_item": {
+        "label": "Reveal Hidden Item",
+        "fields": [("room_id", "combo_or_text", "rooms", "Room id"),
+                   ("item_id", "combo_or_text", "items", "Item id"),
+                   ("quantity", "text", None, "Quantity"),
+                   ("note", "text", None, "Optional note")]
+    },
+    "take_item": {
+        "label": "Take Item",
+        "fields": [("item_id", "combo_or_text", "items", "Item id"),
+                   ("quantity", "text", None, "Quantity")]
     },
     "set_global_dark": {
         "label": "Set Global Dark (Fade)",
@@ -168,6 +270,26 @@ ACTION_DEFS: Dict[str, Dict[str, Any]] = {
     "if_quest_active": {
         "label": "IF Quest Active",
         "fields": [("quest_id", "combo_or_text", "quests", "Quest id")],
+        "is_conditional": True
+    },
+    "if_quest_not_started": {
+        "label": "IF Quest Not Started",
+        "fields": [("quest_id", "combo_or_text", "quests", "Quest id")],
+        "is_conditional": True
+    },
+    "if_milestone_set": {
+        "label": "IF Milestone Set",
+        "fields": [("milestone", "combo_or_text", "milestones", "Milestone id")],
+        "is_conditional": True
+    },
+    "if_milestone_not_set": {
+        "label": "IF Milestone Not Set",
+        "fields": [("milestone", "combo_or_text", "milestones", "Milestone id")],
+        "is_conditional": True
+    },
+    "if_milestones_set": {
+        "label": "IF Milestones Set",
+        "fields": [("milestones", "multi_combo_text", "milestones", "Milestone ids (comma-separated)")],
         "is_conditional": True
     },
     "if_quest_status_is": {
@@ -269,7 +391,15 @@ class TriggerForm(QWidget):
         for key, kind, rsrc_key, tip in fields:
             if kind == "text":
                 w = QLineEdit()
-                if preset: w.setText(str(preset.get(key, "")))
+                if preset:
+                    val = preset.get(key, "")
+                    if key == "items" and isinstance(val, list):
+                        try:
+                            w.setText(json.dumps(val, ensure_ascii=False))
+                        except Exception:
+                            w.setText(str(val))
+                    else:
+                        w.setText(str(val))
             elif kind == "combo_or_text":
                 options = self.resources.get(rsrc_key, [])
                 w = combo_or_text(options)
@@ -284,7 +414,10 @@ class TriggerForm(QWidget):
         tkey = self.type_cb.currentData()
         out = {"type": tkey}
         meta = TRIGGER_TYPES.get(tkey, {})
-        for key, kind, _rsrc_key, _tip in meta.get("fields", []):
+        fields = list(meta.get("fields", []))
+        if not fields and tkey in self._extra_type_fields:
+            fields = self._extra_type_fields[tkey]
+        for key, kind, _rsrc_key, _tip in fields:
             w = self.field_widgets[key]
             out[key] = w.currentText() if isinstance(w, QComboBox) else w.text()
             if isinstance(out[key], str):
@@ -384,7 +517,10 @@ class ActionDialog(QDialog):
         akey = self.type_cb.currentData()
         out = {"type": akey}
         meta = ACTION_DEFS.get(akey, {})
-        for key, kind, _rsrc_key, _tip in meta.get("fields", []):
+        fields = list(meta.get("fields", []))
+        if not fields and akey in self._extra_type_fields:
+            fields = self._extra_type_fields[akey]
+        for key, kind, _rsrc_key, _tip in fields:
             w = self.field_widgets[key]
             if isinstance(w, QComboBox):
                 val = w.currentText()
@@ -400,6 +536,16 @@ class ActionDialog(QDialog):
                     out[key] = parts
                 else:
                     out[key] = val
+            elif key == "items" and isinstance(val, str):
+                # allow JSON array for reward items
+                if not val:
+                    out[key] = []
+                else:
+                    try:
+                        parsed = json.loads(val)
+                        out[key] = parsed if isinstance(parsed, list) else val
+                    except Exception:
+                        out[key] = val
             else:
                 out[key] = val
         return out
@@ -423,7 +569,8 @@ class EventEditor(QWidget):
 
         # Resources for combos
         self.resources: Dict[str, List[str]] = {
-            "rooms": [], "items": [], "enemies": [], "quests": [], "npcs": [], "cinematics": []
+            "rooms": [], "items": [], "enemies": [], "quests": [], "npcs": [],
+            "cinematics": [], "milestones": [], "encounters": []
         }
         self._load_resources()
 
@@ -434,8 +581,20 @@ class EventEditor(QWidget):
         # Make event IDs available for the trigger dropdown
         self.resources["events"] = sorted(self.events.keys())
 
+        self.undo_manager = UndoManager()
         self._build_ui()
+        self._wire_undo()
         self._refresh_list()
+
+    # ---------- Undo ----------
+    def _wire_undo(self):
+        um = self.undo_manager
+        um.watch_line_edit(self.id_edit)
+        um.watch_line_edit(self.desc_edit)
+        um.watch_checkbox(self.repeat_chk)
+        um.watch_line_edit(self.on_msg)
+        um.watch_line_edit(self.off_msg)
+        um.watch_plain_text(self.conditions_edit)
 
     # ---------- IO ----------
     def _load_resources(self):
@@ -453,11 +612,12 @@ class EventEditor(QWidget):
 
         items = load_json_safe(os.path.join(self.root, "items.json"), [])
         if isinstance(items, list):
-            names = []
+            ids = []
             for it in items:
-                name = it.get("name") or it.get("id")
-                if name: names.append(name)
-            self.resources["items"] = names
+                ident = it.get("id") or it.get("name")
+                if ident:
+                    ids.append(ident)
+            self.resources["items"] = ids
 
         enemies = load_json_safe(os.path.join(self.root, "enemies.json"), [])
         enemy_ids: List[str] = []
@@ -477,12 +637,30 @@ class EventEditor(QWidget):
         cinematics = load_json_safe(os.path.join(self.root, "cinematics.json"), {})
         if isinstance(cinematics, dict):
             self.resources["cinematics"] = list(cinematics.keys())
+        elif isinstance(cinematics, list):
+            self.resources["cinematics"] = [c.get("id") for c in cinematics if isinstance(c, dict) and c.get("id")]
 
-        # NPC list is not centralized yet; try to infer from rooms.json where possible
-        # fall back to free text
+        milestones = load_json_safe(os.path.join(self.root, "milestones.json"), [])
+        if isinstance(milestones, list):
+            self.resources["milestones"] = [m.get("id") for m in milestones if isinstance(m, dict) and m.get("id")]
+
+        encounters = load_json_safe(os.path.join(self.root, "encounters.json"), [])
+        if isinstance(encounters, list):
+            self.resources["encounters"] = [e.get("id") for e in encounters if isinstance(e, dict) and e.get("id")]
+        elif isinstance(encounters, dict):
+            self.resources["encounters"] = list(encounters.keys())
+
+        # NPC list: prefer npcs.json, fall back to rooms.json inference
         npcs = set()
-        if isinstance(rooms, dict):
-            for rid, r in rooms.items():
+        npcs_data = load_json_safe(os.path.join(self.root, "npcs.json"), [])
+        if isinstance(npcs_data, list):
+            for n in npcs_data:
+                if isinstance(n, dict):
+                    ident = n.get("id") or n.get("name")
+                    if ident:
+                        npcs.add(ident)
+        if not npcs and isinstance(rooms, dict):
+            for _rid, r in rooms.items():
                 for k in ("npcs", "NPCs", "characters"):
                     if isinstance(r.get(k), list):
                         for n in r[k]:
@@ -639,13 +817,9 @@ class EventEditor(QWidget):
         self.id_edit = QLineEdit(); self.id_edit.setPlaceholderText("unique_event_id")
         self.desc_edit = QLineEdit()
         self.repeat_chk = QCheckBox("Repeatable")
-        self.xp_spin = QSpinBox(); self.xp_spin.setRange(0, 999999)
-        self.notes_edit = QTextEdit()
         basic_l.addRow("ID:", self.id_edit)
         basic_l.addRow("Description:", self.desc_edit)
         basic_l.addRow("Repeatable:", self.repeat_chk)
-        basic_l.addRow("XP Reward:", self.xp_spin)
-        basic_l.addRow("Notes:", self.notes_edit)
         self.tabs.addTab(basic, "Basics")
 
         # Trigger
@@ -653,6 +827,13 @@ class EventEditor(QWidget):
         self.trigger_form = TriggerForm(self.resources)
         trig_l.addWidget(self.trigger_form)
         self.tabs.addTab(trig, "Trigger")
+
+        # Conditions
+        cond = QWidget(); cond_l = QVBoxLayout(cond)
+        self.conditions_edit = QTextEdit()
+        self.conditions_edit.setPlaceholderText("JSON array of condition objects…")
+        cond_l.addWidget(self.conditions_edit, 1)
+        self.tabs.addTab(cond, "Conditions")
 
         # Actions tab
         act = QWidget(); act_l = QVBoxLayout(act)
@@ -706,8 +887,20 @@ class EventEditor(QWidget):
             if not ft or ft in line.lower():
                 self.event_list.addItem(QListWidgetItem(line))
 
+    def select_id(self, ident: str):
+        """Select an event by ID. Called by Studio Pro goto."""
+        ident = (ident or "").strip()
+        if not ident or ident not in self.events:
+            return
+        for i in range(self.event_list.count()):
+            item = self.event_list.item(i)
+            if item and item.text().split(" — ")[0] == ident:
+                self.event_list.setCurrentItem(item)
+                break
+
     def _on_select(self, item: QListWidgetItem):
         # extract id (before " — ")
+        self.undo_manager.stack.clear()
         text = item.text()
         eid = text.split(" — ")[0]
         self._load_into_form(eid)
@@ -758,8 +951,7 @@ class EventEditor(QWidget):
         self.id_edit.setText(eid or "")
         self.desc_edit.setText("")
         self.repeat_chk.setChecked(False)
-        self.xp_spin.setValue(0)
-        self.notes_edit.setPlainText("")
+        self.conditions_edit.setPlainText("[]")
         self.on_msg.setText("")
         self.off_msg.setText("")
         # trigger
@@ -774,8 +966,10 @@ class EventEditor(QWidget):
         self.id_edit.setText(e.get("id",""))
         self.desc_edit.setText(e.get("description",""))
         self.repeat_chk.setChecked(bool(e.get("repeatable", False)))
-        self.xp_spin.setValue(int(e.get("xp_reward", 0) or 0))
-        self.notes_edit.setPlainText(e.get("notes",""))
+        try:
+            self.conditions_edit.setPlainText(json.dumps(e.get("conditions", []) or [], ensure_ascii=False, indent=2))
+        except Exception:
+            self.conditions_edit.setPlainText("[]")
         self.on_msg.setText(e.get("on_message","") or "")
         self.off_msg.setText(e.get("off_message","") or "")
 
@@ -805,18 +999,28 @@ class EventEditor(QWidget):
             QMessageBox.warning(self, "Validation", f"Event id '{eid_new}' already exists.")
             return
 
+        # Parse conditions JSON
+        try:
+            cond_text = self.conditions_edit.toPlainText().strip()
+            conditions = json.loads(cond_text) if cond_text else []
+            if conditions is None:
+                conditions = []
+            if not isinstance(conditions, list):
+                raise ValueError("Conditions must be a JSON array.")
+        except Exception as exc:
+            QMessageBox.warning(self, "Validation", f"Invalid conditions JSON:\n{exc}")
+            return
+
         out = {
             "id": eid_new,
             "description": self.desc_edit.text().strip(),
             "trigger": self.trigger_form.value(),
+            "conditions": conditions,
             "actions": self._serialize_actions_tree(),
         }
         if self.repeat_chk.isChecked(): out["repeatable"] = True
-        xp = int(self.xp_spin.value())
-        if xp > 0: out["xp_reward"] = xp
         if self.on_msg.text().strip(): out["on_message"] = self.on_msg.text().strip()
         if self.off_msg.text().strip(): out["off_message"] = self.off_msg.text().strip()
-        if self.notes_edit.toPlainText().strip(): out["notes"] = self.notes_edit.toPlainText().strip()
 
         # Update dict key on rename
         if self.current_id and eid_new != self.current_id:
@@ -828,19 +1032,21 @@ class EventEditor(QWidget):
 
     # ---------- Actions tree helpers ----------
     def _summarize_action(self, act: Dict[str, Any]) -> str:
-        t = act.get("type","")
-        if t in ("if_quest_active","if_quest_status_is"):
-            return ", ".join([f"{k}={v}" for k,v in act.items() if k not in ("type","do")])
-        else:
-            keys = [k for k in act.keys() if k != "type"]
-            parts = []
-            for k in keys:
-                v = act[k]
-                if isinstance(v, list):
-                    parts.append(f"{k}=[{', '.join(map(str,v))}]")
-                else:
-                    parts.append(f"{k}={v}")
-            return ", ".join(parts)
+        keys = [k for k in act.keys() if k not in ("type", "do", "else", "on_complete")]
+        parts = []
+        for k in keys:
+            v = act[k]
+            if isinstance(v, list):
+                parts.append(f"{k}=[{', '.join(map(str,v))}]")
+            else:
+                parts.append(f"{k}={v}")
+        return ", ".join(parts)
+
+    def _is_conditional_action(self, act: Dict[str, Any]) -> bool:
+        t = act.get("type")
+        if ACTION_DEFS.get(t, {}).get("is_conditional"):
+            return True
+        return isinstance(act.get("do"), list)
 
     def _add_action_item(self, parent_item: Optional[QTreeWidgetItem], act: Dict[str, Any]):
         label = act.get("type","")
@@ -852,7 +1058,7 @@ class EventEditor(QWidget):
             self.actions_tree.addTopLevelItem(item)
 
         # If conditional, add children from "do"
-        if act.get("type") in ("if_quest_active","if_quest_status_is") and isinstance(act.get("do"), list):
+        if self._is_conditional_action(act) and isinstance(act.get("do"), list):
             for child in act["do"]:
                 self._add_action_item(item, child)
             item.setExpanded(True)
@@ -860,15 +1066,14 @@ class EventEditor(QWidget):
     def _collect_action_from_item(self, item: QTreeWidgetItem) -> Dict[str, Any]:
         act = item.data(0, Qt.UserRole)
         t = act.get("type")
-        if t in ("if_quest_active","if_quest_status_is"):
+        if self._is_conditional_action(act):
             do_list = []
             for i in range(item.childCount()):
                 do_list.append(self._collect_action_from_item(item.child(i)))
             out = dict(act)
             out["do"] = do_list
             return out
-        else:
-            return dict(act)
+        return dict(act)
 
     def _serialize_actions_tree(self) -> List[Dict[str, Any]]:
         out = []
@@ -892,7 +1097,7 @@ class EventEditor(QWidget):
             QMessageBox.information(self, "Info", "Select a conditional action first.")
             return
         act = sel.data(0, Qt.UserRole) or {}
-        if act.get("type") not in ("if_quest_active","if_quest_status_is"):
+        if not self._is_conditional_action(act):
             QMessageBox.information(self, "Info", "Selected action is not conditional.")
             return
         dlg = ActionDialog(self.resources, parent=self)
@@ -909,6 +1114,10 @@ class EventEditor(QWidget):
         dlg = ActionDialog(self.resources, existing=act, parent=self)
         if dlg.exec_() == QDialog.Accepted:
             new_act = dlg.value()
+            # Preserve nested branches and reward item arrays when not edited
+            for k in ("do", "else", "on_complete", "items"):
+                if k in act and k not in new_act:
+                    new_act[k] = act[k]
             if ACTION_DEFS.get(new_act["type"],{}).get("is_conditional"):
                 new_act.setdefault("do", [])
             sel.setData(0, Qt.UserRole, new_act)

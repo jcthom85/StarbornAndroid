@@ -12,7 +12,7 @@ from PyQt5.QtWidgets import (
     QSplitter, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton,
     QFormLayout, QFileDialog, QMessageBox, QGroupBox, QComboBox,
     QTableWidget, QTableWidgetItem, QHeaderView, QTabWidget, QDialog,
-    QDialogButtonBox, QDoubleSpinBox
+    QDialogButtonBox, QDoubleSpinBox, QTextEdit
 )
 from PyQt5.QtCore import Qt
 
@@ -235,6 +235,22 @@ class ShopEditor(QMainWindow):
         form.addRow("Buy Markdown", self.inp_buy_markdown)
         self.tabs.addTab(basics, "Basics")
 
+        # Dialogue (Narrative)
+        dialogue = QWidget()
+        dform = QFormLayout(dialogue)
+        self.inp_greeting = QLineEdit()
+        self.inp_vo_cue = QLineEdit()
+        self.inp_trade_label = QLineEdit(); self.inp_trade_label.setPlaceholderText("e.g. Browse Wares")
+        self.inp_leave_label = QLineEdit(); self.inp_leave_label.setPlaceholderText("e.g. Leave")
+        self.inp_smalltalk = QTextEdit(); self.inp_smalltalk.setPlaceholderText("JSON list of smalltalk objects...")
+        
+        dform.addRow("Greeting (Text)", self.inp_greeting)
+        dform.addRow("VO Cue ID", self.inp_vo_cue)
+        dform.addRow("Trade Button Label", self.inp_trade_label)
+        dform.addRow("Leave Button Label", self.inp_leave_label)
+        dform.addRow("Smalltalk (JSON)", self.inp_smalltalk)
+        self.tabs.addTab(dialogue, "Dialogue")
+
         # Sells
         sells = QWidget()
         s_v = QVBoxLayout(sells)
@@ -374,6 +390,11 @@ class ShopEditor(QMainWindow):
         self.inp_accept_types.setText("")
         self.inp_blacklist.setText("")
         self.tbl_preview.setRowCount(0)
+        self.inp_greeting.setText("")
+        self.inp_vo_cue.setText("")
+        self.inp_trade_label.setText("")
+        self.inp_leave_label.setText("")
+        self.inp_smalltalk.setPlainText("")
 
     def _load_form(self, sid: str):
         self._clear_form()
@@ -384,6 +405,15 @@ class ShopEditor(QMainWindow):
         pricing = data.get("pricing", {})
         self.inp_sell_markup.setValue(float(pricing.get("sell_markup", 1.20)))
         self.inp_buy_markdown.setValue(float(pricing.get("buy_markdown", 0.35)))
+        
+        # Narrative fields
+        self.inp_greeting.setText(data.get("greeting", ""))
+        self.inp_vo_cue.setText(data.get("vo_cue", ""))
+        dlg = data.get("dialogue", {})
+        self.inp_trade_label.setText(dlg.get("trade_label", ""))
+        self.inp_leave_label.setText(dlg.get("leave_label", ""))
+        if "smalltalk" in dlg:
+            self.inp_smalltalk.setPlainText(json.dumps(dlg["smalltalk"], indent=2))
 
         sells = data.get("sells", {})
         items = sells.get("items", [])
@@ -431,6 +461,29 @@ class ShopEditor(QMainWindow):
             "sells": {"items": items, "rules": {"types_in": types_in, "subtypes_in": subtypes_in}, "gates": gates},
             "buys": {"accept_types": accept_types, "blacklist": blacklist}
         }
+        
+        # Narrative
+        greeting = self.inp_greeting.text().strip()
+        if greeting: payload["greeting"] = greeting
+        
+        vo = self.inp_vo_cue.text().strip()
+        if vo: payload["vo_cue"] = vo
+        
+        dialogue = {}
+        if self.inp_trade_label.text().strip(): dialogue["trade_label"] = self.inp_trade_label.text().strip()
+        if self.inp_leave_label.text().strip(): dialogue["leave_label"] = self.inp_leave_label.text().strip()
+        
+        sm_txt = self.inp_smalltalk.toPlainText().strip()
+        if sm_txt:
+            try:
+                sm = json.loads(sm_txt)
+                if isinstance(sm, list):
+                    dialogue["smalltalk"] = sm
+            except: pass
+            
+        if dialogue:
+            payload["dialogue"] = dialogue
+            
         return sid, payload
 
     # ---------- Items table helpers ----------

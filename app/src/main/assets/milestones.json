@@ -169,12 +169,6 @@
     "id": "ms_mine_power_on",
     "name": "Restored Mine Power",
     "description": "The Stellarium generator roared back to life.",
-    "toast": "The Stellarium generator roars to life.",
-    "effects": {
-      "unlock_exits": [
-        { "room_id": "mines_2", "direction": "north" },
-        { "room_id": "mines_3", "direction": "south" }
-      ]
-    }
+    "toast": "The Stellarium generator roars to life."
   }
 ]

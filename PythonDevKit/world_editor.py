@@ -41,11 +41,12 @@ from PyQt5.QtWidgets import (
     QFormLayout, QPlainTextEdit, QScrollArea, QSpinBox, QComboBox,
     QInputDialog, QMessageBox, QDialog, QMenu, QAction, QFileDialog, QFrame, QCheckBox,
     QMainWindow, QSplitter, QStackedWidget, QDialogButtonBox, QTextBrowser, QTabWidget,
-    QDoubleSpinBox, QToolTip, QTreeWidgetItemIterator, QCompleter, QShortcut
+    QDoubleSpinBox, QToolTip, QTreeWidgetItemIterator, QCompleter, QShortcut, QSlider
 )
 
 from context_index import ContextIndex
 from ai_layout import generate_node_layout, LayoutOptions
+from editor_undo import UndoManager
 
 # ---------- Visual tuning ----------
 ROOM_SIZE = 56
@@ -253,11 +254,10 @@ class EditActionDialog(JsonEditorDialog):
         self.setWindowTitle("Edit Action")
         self.add_field("name", "Name (in text):", QLineEdit())
         type_combo = QComboBox()
-        type_combo.addItems(["", "tinkering", "cooking", "fishing", "toggle", "shop", "player_action", "container"])
+        type_combo.addItems(["", "tinkering", "cooking", "toggle", "shop", "player_action", "container"])
         self.add_field("type", "Type:", type_combo)
         self.add_field("state_key", "State Key (toggle/container):", QLineEdit())
         self.add_field("items", "Items (container, comma-separated):", QLineEdit())
-        self.add_field("zone_id", "Zone ID (fishing):", QLineEdit())
         self.add_field("shop_id", "Shop ID (shop):", QLineEdit())
         self.add_field("action_event", "Event Name (toggle):", QLineEdit())
         self.add_field("condition_unmet_message", "Locked Message:", QLineEdit())
@@ -601,6 +601,7 @@ class VisualCanvas(QWidget):
     connection_requested = pyqtSignal(str, str)
     snapshot_requested = pyqtSignal(set)
     room_dropped_on = pyqtSignal(str, str)  # room_id, dropped_item_id
+    zoom_changed = pyqtSignal(float)
 
     MODE_HUB = 0
     MODE_NODE = 1
@@ -641,6 +642,10 @@ class VisualCanvas(QWidget):
 
         # Interaction
         self._panning = False; self._drag_start = QPointF(0, 0)
+        self._space_panning = False
+        self._rmb_panning = False
+        self._has_panned = False
+
         # -- Hub Mode --
         self._dragging_node = False; self._resizing_node = False
         self._resize_handle: Optional[str] = None
@@ -887,16 +892,17 @@ class VisualCanvas(QWidget):
             minx, maxx = min(xs), max(xs); miny, maxy = min(ys), max(ys)
             w_world = max(1.0, (maxx - minx) + 2.5); h_world = max(1.0, (maxy - miny) + 2.5)
             view_w = max(1, self.width()); view_h = max(1, self.height())
-            z_x = (view_w * 0.8) / (w_world * 100.0); z_y = (view_h * 0.8) / (h_world * 100.0)
+            z_x = (view_w * 0.8) / (w_world * float(GRID_STEP)); z_y = (view_h * 0.8) / (h_world * float(GRID_STEP))
             self.zoom = max(0.1, min(5.0, min(z_x, z_y)))
             cx = (minx + maxx) * 0.5; cy = (miny + maxy) * 0.5
-            sx = cx * 100.0 * self.zoom
-            sy = -cy * 100.0 * self.zoom
+            sx = cx * float(GRID_STEP) * self.zoom
+            sy = -cy * float(GRID_STEP) * self.zoom
             # Center the average of the visible rooms at the view center.
-            # IMPORTANT: do NOT add width/height halves here â€” _get_room_center_view()
+            # IMPORTANT: do NOT add width/height halves here â€" _get_room_center_view()
             # already adds them when converting world->view coordinates.
             self.offset = QPointF(-sx, -sy)
 
+        self.zoom_changed.emit(self.zoom)
         self.update()
 
     # Hit testing / geometry
@@ -958,8 +964,8 @@ class VisualCanvas(QWidget):
         r = self.rooms_by_id.get(room_id)
         if not r: return None
         pos = r.get("pos", [0, 0])
-        cx = (pos[0] * 100) * self.zoom + self.offset.x() + self.width() * 0.5
-        cy = (-pos[1] * 100) * self.zoom + self.offset.y() + self.height() * 0.5
+        cx = (pos[0] * GRID_STEP) * self.zoom + self.offset.x() + self.width() * 0.5
+        cy = (-pos[1] * GRID_STEP) * self.zoom + self.offset.y() + self.height() * 0.5
         return QPointF(cx, cy)
 
     # Painting
@@ -1104,6 +1110,12 @@ class VisualCanvas(QWidget):
             p.drawRect(r)
 
     def keyPressEvent(self, ev):
+        if ev.key() == Qt.Key_Space and not ev.isAutoRepeat() and not self._panning:
+            self._space_panning = True
+            self.setCursor(Qt.OpenHandCursor)
+            ev.accept()
+            return
+
         if self.mode != self.MODE_NODE:
             return super().keyPressEvent(ev)
 
@@ -1131,12 +1143,44 @@ class VisualCanvas(QWidget):
 
         super().keyPressEvent(ev)
 
+    def keyReleaseEvent(self, ev):
+        if ev.key() == Qt.Key_Space and not ev.isAutoRepeat():
+            self._space_panning = False
+            if not self._panning:
+                self.setCursor(Qt.ArrowCursor)
+            ev.accept()
+            return
+        super().keyReleaseEvent(ev)
+
     # Mouse & wheel
     def mousePressEvent(self, ev):
         self.hover_card.hide()
+        
+        # Space+LMB Pan
+        if ev.button() == Qt.LeftButton and self._space_panning:
+            self._panning = True
+            self._drag_start = ev.pos()
+            self.setCursor(Qt.ClosedHandCursor)
+            return
+
         # Middle-mouse or Alt+LMB = Pan
         if ev.button() == Qt.MiddleButton or (ev.button() == Qt.LeftButton and (QApplication.keyboardModifiers() & Qt.AltModifier)):
             self._panning = True; self._drag_start = ev.pos(); self.setCursor(Qt.ClosedHandCursor); return
+
+        # RMB Pan (prepare) - only if not hitting an interactable object
+        if ev.button() == Qt.RightButton:
+            hit = False
+            if self.mode == self.MODE_HUB:
+                hit = bool(self._hit_test_node(self.view_to_scene(ev.pos())))
+            elif self.mode == self.MODE_NODE:
+                hit = bool(self._hit_test_room(ev.pos()))
+            
+            if not hit:
+                self._rmb_panning = True
+                self._drag_start = ev.pos()
+                self._has_panned = False
+                # We do NOT return here; we let fall-through happen so standard right-click logic (like context menu prep) can still occur if we don't move.
+
         if self.mode == self.MODE_HUB: self._mousePressHub(ev)
         elif self.mode == self.MODE_NODE: self._mousePressNode(ev)
 
@@ -1291,6 +1335,16 @@ class VisualCanvas(QWidget):
             delta = ev.pos() - self._drag_start
             self.offset += delta; self._drag_start = ev.pos(); self.update(); return
 
+        if self._rmb_panning:
+            delta = ev.pos() - self._drag_start
+            if self._has_panned or delta.manhattanLength() > 5:
+                self._has_panned = True
+                self.offset += delta
+                self._drag_start = ev.pos()
+                self.setCursor(Qt.ClosedHandCursor)
+                self.update()
+            return
+
         if self.mode == self.MODE_HUB: self._mouseMoveHub(ev)
         elif self.mode == self.MODE_NODE: self._mouseMoveNode(ev)
 
@@ -1415,7 +1469,13 @@ class VisualCanvas(QWidget):
     def mouseReleaseEvent(self, ev):
         if self._panning:
             self._panning = False
+            self.setCursor(Qt.OpenHandCursor if self._space_panning else Qt.ArrowCursor)
+
+        if self._rmb_panning and ev.button() == Qt.RightButton:
+            self._rmb_panning = False
             self.setCursor(Qt.ArrowCursor)
+            if self._has_panned:
+                return
 
         if self.mode == self.MODE_HUB:
             self._dragging_node = False
@@ -1529,6 +1589,7 @@ class VisualCanvas(QWidget):
                 mouse.y() - (self.height() * 0.5) + (wy * GRID_STEP * self.zoom)
             )
 
+        self.zoom_changed.emit(self.zoom)
         self.update()
 
     # Drag & drop
@@ -1550,6 +1611,11 @@ class VisualCanvas(QWidget):
 
     # Context menu
     def contextMenuEvent(self, event):
+        # Prevent menu if we just panned with RMB
+        if self._has_panned:
+            self._has_panned = False
+            return
+
         # Never show a context menu in Node mode while Quick Create is enabled.
         # RMB is reserved for "create here" / right-drag in quick mode.
         if self.mode == self.MODE_NODE and getattr(self, "quick_mode", False):
@@ -1760,6 +1826,8 @@ class WorldBuilder(QMainWindow):
         left_layout.addWidget(self.tree, 1)
         # Tree Buttons
         tree_btn_layout = QHBoxLayout()
+        tree_btn_layout.setSpacing(4)
+        tree_btn_layout.setContentsMargins(0, 2, 0, 2)
         add_world_btn = QPushButton("ï¼‹ World"); add_world_btn.clicked.connect(self._add_world)
         add_hub_btn = QPushButton("ï¼‹ Hub"); add_hub_btn.clicked.connect(self._add_hub)
         add_node_btn = QPushButton("ï¼‹ Node"); add_node_btn.clicked.connect(lambda: self._add_node())
@@ -1775,9 +1843,8 @@ class WorldBuilder(QMainWindow):
             center_panel.setMinimumWidth(220)
         except Exception:
             pass
-        # Top Controls
-        top_ctrl_layout = QHBoxLayout()
-        self.canvas_mode_label = QLabel("Mode: Hub"); top_ctrl_layout.addWidget(self.canvas_mode_label)
+        # Top Controls — two-row layout
+        self.canvas_mode_label = QLabel("Mode: Hub")
         self.connect_btn = QPushButton("🔗 Connect Rooms"); self.connect_btn.setCheckable(True); self.connect_btn.toggled.connect(self._toggle_connect_mode)
         self.add_room_btn = QPushButton("➕ Add Room Mode"); self.add_room_btn.setCheckable(True); self.add_room_btn.toggled.connect(self._toggle_add_mode)
         self.quick_btn = QPushButton("⚡ Quick Create"); self.quick_btn.setCheckable(True); self.quick_btn.toggled.connect(self._toggle_quick_mode)
@@ -1785,13 +1852,49 @@ class WorldBuilder(QMainWindow):
         self.fit_btn = QPushButton("⤢ Fit to View"); self.fit_btn.clicked.connect(lambda: self.canvas.fit_to_view())
         self.repair_btn = QPushButton("🛠 Repair Links…"); self.repair_btn.clicked.connect(self._repair_links_dialog)
         self.orphans_btn = QPushButton("🧩 Orphan Rooms…"); self.orphans_btn.clicked.connect(self._show_orphans_for_current_node)
-        self.templates_btn = QPushButton("📦 Templates…"); self.templates_btn.clicked.connect(self._open_templates_dialog); top_ctrl_layout.addWidget(self.templates_btn)
-        self.procgen_btn = QPushButton("✨ Procedural Gen…"); self.procgen_btn.clicked.connect(self._open_procgen_dialog); top_ctrl_layout.addWidget(self.procgen_btn)
+        self.templates_btn = QPushButton("📦 Templates…"); self.templates_btn.clicked.connect(self._open_templates_dialog)
+        self.procgen_btn = QPushButton("✨ Procedural Gen…"); self.procgen_btn.clicked.connect(self._open_procgen_dialog)
         self.validate_btn = QPushButton("✓ Validate"); self.validate_btn.clicked.connect(self._validate_all)
-        top_ctrl_layout.addStretch()
-        top_ctrl_layout.addWidget(self.connect_btn); top_ctrl_layout.addWidget(self.add_room_btn); top_ctrl_layout.addWidget(self.quick_btn); top_ctrl_layout.addWidget(self.snap_box)
-        top_ctrl_layout.addWidget(self.repair_btn); top_ctrl_layout.addWidget(self.orphans_btn); top_ctrl_layout.addWidget(self.validate_btn); top_ctrl_layout.addWidget(self.fit_btn)
-        center_layout.addLayout(top_ctrl_layout)
+
+        top_ctrl_wrapper = QVBoxLayout()
+        top_ctrl_wrapper.setSpacing(2)
+        top_ctrl_wrapper.setContentsMargins(0, 0, 0, 0)
+
+        # Row 1: Mode info + data tools
+        top_row1 = QHBoxLayout()
+        top_row1.setSpacing(6)
+        top_row1.setContentsMargins(4, 2, 4, 2)
+        top_row1.addWidget(self.canvas_mode_label)
+        top_row1.addWidget(self.templates_btn)
+        top_row1.addWidget(self.procgen_btn)
+        top_row1.addStretch()
+        top_row1.addWidget(self.repair_btn)
+        top_row1.addWidget(self.orphans_btn)
+        top_row1.addWidget(self.validate_btn)
+
+        # Row 2: Canvas interaction tools
+        top_row2 = QHBoxLayout()
+        top_row2.setSpacing(6)
+        top_row2.setContentsMargins(4, 2, 4, 2)
+        top_row2.addWidget(self.connect_btn)
+        top_row2.addWidget(self.add_room_btn)
+        top_row2.addWidget(self.quick_btn)
+        top_row2.addWidget(self.snap_box)
+        top_row2.addStretch()
+        top_row2.addWidget(self.fit_btn)
+
+        top_ctrl_wrapper.addLayout(top_row1)
+        top_ctrl_wrapper.addLayout(top_row2)
+        center_layout.addLayout(top_ctrl_wrapper)
+
+        # Breadcrumb
+        self.breadcrumb_label = QLabel("")
+        self.breadcrumb_label.setTextFormat(Qt.RichText)
+        self.breadcrumb_label.setTextInteractionFlags(Qt.TextBrowserInteraction)
+        self.breadcrumb_label.linkActivated.connect(self._on_breadcrumb_clicked)
+        self.breadcrumb_label.setStyleSheet("color: #8e9297; font-size: 11px; padding: 2px 4px;")
+        center_layout.addWidget(self.breadcrumb_label)
+
         # Canvas
         self.canvas = VisualCanvas(self, self)
         self.canvas.set_data(self.hubs_by_id, self.nodes_by_id, self.rooms_by_id)
@@ -1806,12 +1909,35 @@ class WorldBuilder(QMainWindow):
         self.canvas.connection_requested.connect(self._create_connection_dialog)
         self.canvas.snapshot_requested.connect(self.export_snapshot)
         self.canvas.room_dropped_on.connect(self._on_item_dropped_on_room)
-        center_layout.addWidget(self.canvas)
+        self.canvas.zoom_changed.connect(self._on_zoom_changed)
+        center_layout.addWidget(self.canvas, 1)
         # Bottom Controls
         bottom_ctrl_layout = QHBoxLayout()
+        bottom_ctrl_layout.setContentsMargins(4, 2, 4, 2)
+        bottom_ctrl_layout.setSpacing(8)
         self.play_btn = QPushButton("▶ Play from Here"); self.play_btn.clicked.connect(self._play_from_here)
         save_all_btn = QPushButton("💾 Save All"); save_all_btn.clicked.connect(self._save_all_data)
-        bottom_ctrl_layout.addWidget(self.play_btn); bottom_ctrl_layout.addStretch(); bottom_ctrl_layout.addWidget(save_all_btn)
+        bottom_ctrl_layout.addWidget(self.play_btn)
+        bottom_ctrl_layout.addStretch()
+        # Zoom controls
+        zoom_minus = QPushButton("\u2212"); zoom_minus.setFixedWidth(24)
+        zoom_minus.clicked.connect(lambda: self._set_canvas_zoom(self.canvas.zoom / 1.25))
+        self.zoom_slider = QSlider(Qt.Horizontal)
+        self.zoom_slider.setRange(10, 800)
+        self.zoom_slider.setValue(100)
+        self.zoom_slider.setFixedWidth(120)
+        self.zoom_slider.valueChanged.connect(lambda v: self._set_canvas_zoom(v / 100.0))
+        zoom_plus = QPushButton("+"); zoom_plus.setFixedWidth(24)
+        zoom_plus.clicked.connect(lambda: self._set_canvas_zoom(self.canvas.zoom * 1.25))
+        self.zoom_label = QLabel("100%")
+        self.zoom_label.setFixedWidth(45)
+        self.zoom_label.setAlignment(Qt.AlignCenter)
+        bottom_ctrl_layout.addWidget(zoom_minus)
+        bottom_ctrl_layout.addWidget(self.zoom_slider)
+        bottom_ctrl_layout.addWidget(zoom_plus)
+        bottom_ctrl_layout.addWidget(self.zoom_label)
+        bottom_ctrl_layout.addSpacing(8)
+        bottom_ctrl_layout.addWidget(save_all_btn)
         center_layout.addLayout(bottom_ctrl_layout)
         splitter.addWidget(center_panel)
 
@@ -1829,6 +1955,8 @@ class WorldBuilder(QMainWindow):
         # Inspector
         self.inspector_stack = QStackedWidget()
         self._init_inspectors()  # move this line up
+        self.undo_manager = UndoManager()
+        self._wire_undo()
         self.inspector_scroll = QScrollArea()
         self.inspector_scroll.setWidgetResizable(True)
         self.inspector_scroll.setFrameShape(QFrame.NoFrame)
@@ -1871,7 +1999,81 @@ class WorldBuilder(QMainWindow):
         QShortcut(QKeySequence("Alt+]"), self, activated=lambda: self._nudge_inspector(+80))
         QShortcut(QKeySequence("Alt+["), self, activated=lambda: self._nudge_inspector(-80))
         QShortcut(QKeySequence("Alt+P"), self, activated=self._toggle_palettes)
+        QShortcut(QKeySequence("F"), self, activated=lambda: self._shortcut_safe(self.canvas.fit_to_view))
+        QShortcut(QKeySequence("G"), self, activated=lambda: self._shortcut_safe(self._toggle_snap_grid))
+        QShortcut(QKeySequence("Ctrl+Z"), self, activated=self.undo_manager.stack.undo)
+        QShortcut(QKeySequence("Ctrl+Y"), self, activated=self.undo_manager.stack.redo)
+        QShortcut(QKeySequence("Ctrl+Shift+Z"), self, activated=self.undo_manager.stack.redo)
         self._update_title()
+
+    def _shortcut_safe(self, callback):
+        """Only fire shortcut if focus is NOT in a text-entry widget."""
+        w = QApplication.focusWidget()
+        if isinstance(w, (QLineEdit, QPlainTextEdit, QSpinBox, QDoubleSpinBox, QComboBox)):
+            return
+        callback()
+
+    def _toggle_snap_grid(self):
+        self.snap_to_grid = not self.snap_to_grid
+        self.snap_box.setChecked(self.snap_to_grid)
+
+    def _wire_undo(self):
+        um = self.undo_manager
+        # Room inspector
+        for le in (self.r_title, self.r_env, self.r_bg, self.r_conn_n, self.r_conn_s, self.r_conn_e, self.r_conn_w, self.r_items, self.r_npcs):
+            um.watch_line_edit(le)
+        for sp in (self.r_pos_x, self.r_pos_y, self.r_underline_adjust):
+            um.watch_spin(sp)
+        for cb in (self.r_dark, self.r_is_entry):
+            um.watch_checkbox(cb)
+        um.watch_combo(self.r_weather)
+        for te in (self.r_dark_desc, self.r_enemy_parties, self.r_enemy_instances):
+            um.watch_plain_text(te)
+        um.watch_plain_text(self.desc_edit)
+        # World inspector
+        um.watch_line_edit(self.w_id)
+        um.watch_line_edit(self.w_title)
+        um.watch_line_edit(self.w_desc)
+        um.watch_line_edit(self.w_theme)
+        # Hub inspector
+        um.watch_line_edit(self.h_id)
+        um.watch_line_edit(self.h_title)
+        um.watch_line_edit(self.h_bg)
+        um.watch_combo(self.h_world)
+        um.watch_checkbox(self.h_discovered)
+        # Node inspector
+        um.watch_line_edit(self.n_id)
+        um.watch_line_edit(self.n_title)
+        um.watch_line_edit(self.n_icon)
+        um.watch_checkbox(self.n_discovered)
+        for sp in (self.n_w, self.n_h, self.n_title_gap):
+            um.watch_spin(sp)
+        for sp in (self.n_cx, self.n_cy):
+            um.watch_spin(sp)
+
+    def _set_canvas_zoom(self, new_zoom: float):
+        new_zoom = max(0.1, min(8.0, new_zoom))
+        cx, cy = self.canvas.width() / 2, self.canvas.height() / 2
+        if self.canvas.mode == self.canvas.MODE_HUB:
+            scene_before = self.canvas.view_to_scene(QPointF(cx, cy))
+            self.canvas.zoom = new_zoom
+            self.canvas.offset = QPointF(
+                cx - scene_before.x() * new_zoom,
+                cy - scene_before.y() * new_zoom)
+        else:
+            wx, wy = self.canvas.screen_to_world_node(cx, cy)
+            self.canvas.zoom = new_zoom
+            self.canvas.offset = QPointF(
+                cx - (self.canvas.width() * 0.5) - (wx * GRID_STEP * new_zoom),
+                cy - (self.canvas.height() * 0.5) + (wy * GRID_STEP * new_zoom))
+        self.canvas.zoom_changed.emit(new_zoom)
+        self.canvas.update()
+
+    def _on_zoom_changed(self, zoom: float):
+        self.zoom_slider.blockSignals(True)
+        self.zoom_slider.setValue(int(zoom * 100))
+        self.zoom_slider.blockSignals(False)
+        self.zoom_label.setText(f"{int(zoom * 100)}%")
 
     def _open_procgen_dialog(self):
         from PyQt5.QtWidgets import QMessageBox
@@ -1934,7 +2136,8 @@ class WorldBuilder(QMainWindow):
 
         # Index 1: World
         self.w_id = QLineEdit(); self.w_title = QLineEdit(); self.w_desc = QLineEdit()
-        self.inspector_stack.addWidget(self._create_inspector_panel("World", {"ID": self.w_id, "Title": self.w_title, "Description": self.w_desc}))
+        self.w_theme = QLineEdit(); self.w_theme.setPlaceholderText("e.g. spaceship")
+        self.inspector_stack.addWidget(self._create_inspector_panel("World", {"ID": self.w_id, "Title": self.w_title, "Description": self.w_desc, "Default Theme": self.w_theme}))
 
         # Index 2: Hub
         self.h_id = QLineEdit(); self.h_title = QLineEdit(); self.h_world = QComboBox(); self.h_bg = QLineEdit()
@@ -1961,10 +2164,22 @@ class WorldBuilder(QMainWindow):
         self.r_id = QLabel(); self.r_title = QLineEdit(); self.r_env = QLineEdit(); self.r_bg = QLineEdit()
         self.r_bg_browse = QPushButton("..."); self.r_bg_browse.clicked.connect(lambda: self._browse_for_image(self.r_bg))
         self.r_bg.installEventFilter(self); self.bg_preview = ImageHoverPreview(self)
-        # --- NEW: Weather dropdown for rooms ---
+        
         self.r_weather = QComboBox()
         self.r_weather.addItems(["", "none", "cave_drip", "dust", "rain", "snow", "starfall", "storm"])
-        # --- END NEW ---
+        
+        # New Room Fields
+        self.r_dark = QCheckBox("Dark (requires light source)")
+        self.r_dark_desc = QPlainTextEdit(); self.r_dark_desc.setPlaceholderText("Description when dark...")
+        self.r_dark_desc.setMaximumHeight(60)
+        self.r_underline_adjust = QSpinBox(); self.r_underline_adjust.setRange(-500, 500)
+        
+        # New Enemy Editors (Raw JSON for now)
+        self.r_enemy_parties = QPlainTextEdit(); self.r_enemy_parties.setPlaceholderText('[["enemy1", "enemy2"], ...]')
+        self.r_enemy_parties.setMaximumHeight(60)
+        self.r_enemy_instances = QPlainTextEdit(); self.r_enemy_instances.setPlaceholderText('[{"enemy_id": "...", "extra_drops": [...]}]')
+        self.r_enemy_instances.setMaximumHeight(80)
+
         r_bg_layout = QHBoxLayout(); r_bg_layout.addWidget(self.r_bg); r_bg_layout.addWidget(self.r_bg_browse)
 
         self.r_pos_x = QSpinBox(); self.r_pos_x.setRange(-2000, 2000)
@@ -2008,28 +2223,57 @@ class WorldBuilder(QMainWindow):
         self.r_conn_s_btn.clicked.connect(lambda: self._pick_connection(self.r_conn_s))
         self.r_conn_e_btn.clicked.connect(lambda: self._pick_connection(self.r_conn_e))
         self.r_conn_w_btn.clicked.connect(lambda: self._pick_connection(self.r_conn_w))
-        conn_layout = QFormLayout()
         rowN = QHBoxLayout(); rowN.addWidget(self.r_conn_n, 1); rowN.addWidget(self.r_conn_n_btn, 0)
         rowS = QHBoxLayout(); rowS.addWidget(self.r_conn_s, 1); rowS.addWidget(self.r_conn_s_btn, 0)
         rowE = QHBoxLayout(); rowE.addWidget(self.r_conn_e, 1); rowE.addWidget(self.r_conn_e_btn, 0)
         rowW = QHBoxLayout(); rowW.addWidget(self.r_conn_w, 1); rowW.addWidget(self.r_conn_w_btn, 0)
-        conn_layout.addRow("North", rowN); conn_layout.addRow("South", rowS); conn_layout.addRow("East", rowE); conn_layout.addRow("West", rowW)
-        conn_box = QGroupBox("Connections"); conn_box.setLayout(conn_layout)
 
         self.r_is_entry = QCheckBox("Make this the node start")
 
-        # Final Room Inspector Assembly
-        room_inspector_widgets = {
-            "ID": self.r_id, "Title": self.r_title, "Environment": self.r_env,
-            "Weather": self.r_weather, "Background": r_bg_layout, "Position": r_pos_layout, "Description": self.desc_tabs,
-            "Items": items_row, "NPCs": npcs_row,
-            "Connections": conn_box, "Starting Room": self.r_is_entry,
-            "Enemies": self.r_enemies_editor, "Actions": self.r_actions_editor, "State": self.r_state_editor,
-            "Blocked Directions": self.r_blocked_editor,
-            "Item Flavor": self.r_item_flavor_editor,
-            "Enemy Flavor": self.r_enemy_flavor_editor
+        # Room references (events/quests that target this room)
+        self.r_refs_list = QListWidget()
+        self.r_refs_list.setMaximumHeight(120)
+        self.r_refs_list.itemActivated.connect(self._on_room_ref_clicked)
+        self._cached_events = None
+
+        # Final Room Inspector Assembly (collapsible sections)
+        room_groups = {
+            "Identity": {
+                "ID": self.r_id, "Title": self.r_title, "Environment": self.r_env,
+                "Weather": self.r_weather, "Background": r_bg_layout,
+            },
+            "Room State": {
+                "Dark": self.r_dark, "Dark Desc": self.r_dark_desc,
+                "Title Underline Adjust": self.r_underline_adjust,
+            },
+            "Layout": {
+                "Position": r_pos_layout, "Description": self.desc_tabs,
+            },
+            "Content": {
+                "Items": items_row, "NPCs": npcs_row,
+                "Starting Room": self.r_is_entry,
+            },
+            "Connections": {
+                "North": rowN, "South": rowS, "East": rowE, "West": rowW,
+            },
+            "Combat": {
+                "Enemies": self.r_enemies_editor,
+                "Enemy Parties (JSON)": self.r_enemy_parties,
+                "Enemy Instances (JSON)": self.r_enemy_instances,
+                "Actions": self.r_actions_editor,
+            },
+            "Advanced": {
+                "State": self.r_state_editor,
+                "Blocked Directions": self.r_blocked_editor,
+                "Item Flavor": self.r_item_flavor_editor,
+                "Enemy Flavor": self.r_enemy_flavor_editor,
+                "References": self.r_refs_list,
+            },
         }
-        self.inspector_stack.addWidget(self._create_inspector_panel("Room", room_inspector_widgets, has_apply=False))
+        self.inspector_stack.addWidget(self._create_grouped_inspector_panel(
+            room_groups, has_apply=False,
+            default_open={"Identity", "Layout", "Content", "Connections"}
+        ))
 
     def _create_inspector_panel(self, title: str, widgets: Dict, has_apply=True) -> QWidget:
         panel = QWidget(); layout = QVBoxLayout(panel)
@@ -2047,6 +2291,24 @@ class WorldBuilder(QMainWindow):
         layout.addWidget(box)
         if has_apply:
             apply_btn = QPushButton("Apply Changes"); apply_btn.clicked.connect(self._apply_inspector_changes)
+            layout.addWidget(apply_btn)
+        layout.addStretch()
+        return panel
+
+    def _create_grouped_inspector_panel(self, groups, has_apply=False, default_open=None):
+        from ui_common import CollapsibleSection
+        panel = QWidget()
+        layout = QVBoxLayout(panel)
+        layout.setContentsMargins(2, 2, 2, 2)
+        for section_title, widgets in groups.items():
+            is_open = (default_open is None) or (section_title in default_open)
+            section = CollapsibleSection(section_title, initially_open=is_open)
+            for label, widget in widgets.items():
+                section.add_row(label, widget)
+            layout.addWidget(section)
+        if has_apply:
+            apply_btn = QPushButton("Apply Changes")
+            apply_btn.clicked.connect(self._apply_inspector_changes)
             layout.addWidget(apply_btn)
         layout.addStretch()
         return panel
@@ -2318,12 +2580,14 @@ class WorldBuilder(QMainWindow):
 
     # --- Selection handling ---
     def _on_tree_selection_changed(self):
+        self.undo_manager.stack.clear()
         items = self.tree.selectedItems()
         if not items:
             self.current_selection = (None, None)
             self._pending_node_mode = False
             self.inspector_stack.setCurrentIndex(0)
             self.canvas.set_mode(self.canvas.MODE_HUB)
+            self.breadcrumb_label.setText("")
             return
 
         typ, _id = items[0].data(0, Qt.UserRole)
@@ -2365,6 +2629,75 @@ class WorldBuilder(QMainWindow):
             self._sync_room_inspector()
             # Center on the selected room
             self.canvas.center_on_room(_id)
+
+        self._update_breadcrumb()
+
+    def _update_breadcrumb(self):
+        typ, _id = self.current_selection
+        if not _id:
+            self.breadcrumb_label.setText("")
+            return
+        link_style = "color:#8e9297; text-decoration:none;"
+        sep = ' <span style="color:#4f545c"> &gt; </span> '
+        parts = []
+
+        if typ == "room":
+            node_id = None
+            for nid, n in self.nodes_by_id.items():
+                if _id in n.get(_node_room_key(n), []):
+                    node_id = nid; break
+            if node_id:
+                node = self.nodes_by_id[node_id]
+                hub_id = node.get("hub_id")
+                if hub_id:
+                    hub = self.hubs_by_id.get(hub_id, {})
+                    world_id = hub.get("world_id")
+                    if world_id:
+                        w = self.worlds_by_id.get(world_id, {})
+                        parts.append(f'<a href="world:{world_id}" style="{link_style}">{w.get("title", world_id)}</a>')
+                    parts.append(f'<a href="hub:{hub_id}" style="{link_style}">{hub.get("title", hub_id)}</a>')
+                parts.append(f'<a href="node:{node_id}" style="{link_style}">{node.get("title", node_id)}</a>')
+            parts.append(f'<b style="color:#dcddde">{self.rooms_by_id.get(_id, {}).get("title", _id)}</b>')
+        elif typ == "node":
+            node = self.nodes_by_id.get(_id, {})
+            hub_id = node.get("hub_id")
+            if hub_id:
+                hub = self.hubs_by_id.get(hub_id, {})
+                world_id = hub.get("world_id")
+                if world_id:
+                    w = self.worlds_by_id.get(world_id, {})
+                    parts.append(f'<a href="world:{world_id}" style="{link_style}">{w.get("title", world_id)}</a>')
+                parts.append(f'<a href="hub:{hub_id}" style="{link_style}">{hub.get("title", hub_id)}</a>')
+            parts.append(f'<b style="color:#dcddde">{node.get("title", _id)}</b>')
+        elif typ == "hub":
+            hub = self.hubs_by_id.get(_id, {})
+            world_id = hub.get("world_id")
+            if world_id:
+                w = self.worlds_by_id.get(world_id, {})
+                parts.append(f'<a href="world:{world_id}" style="{link_style}">{w.get("title", world_id)}</a>')
+            parts.append(f'<b style="color:#dcddde">{hub.get("title", _id)}</b>')
+        elif typ == "world":
+            w = self.worlds_by_id.get(_id, {})
+            parts.append(f'<b style="color:#dcddde">{w.get("title", _id)}</b>')
+
+        self.breadcrumb_label.setText(sep.join(parts))
+
+    def _on_breadcrumb_clicked(self, link: str):
+        if ":" not in link:
+            return
+        kind, entity_id = link.split(":", 1)
+        self._select_in_tree(kind, entity_id)
+
+    def select_id(self, ident: str):
+        """Select a world/hub/node/room by ID. Called by Studio Pro goto."""
+        ident = (ident or "").strip()
+        if not ident:
+            return
+        for kind, lookup in [("room", self.rooms_by_id), ("node", self.nodes_by_id),
+                             ("hub", self.hubs_by_id), ("world", self.worlds_by_id)]:
+            if ident in lookup:
+                self._select_in_tree(kind, ident)
+                return
 
     def _select_in_tree(self, kind: str, _id: str, force_emit: bool = False):
         if not _id: return
@@ -2443,6 +2776,7 @@ class WorldBuilder(QMainWindow):
         self.w_id.setText(w.get("id", ""))
         self.w_title.setText(w.get("title", ""))
         self.w_desc.setText(w.get("description", ""))
+        self.w_theme.setText(w.get("default_theme", ""))
 
     def _sync_hub_inspector(self):
         _id = self.current_selection[1]
@@ -2524,6 +2858,17 @@ class WorldBuilder(QMainWindow):
         self.r_env.setText(r.get("env", ""))
         self.r_weather.setCurrentText(r.get("weather", ""))
         self.r_bg.setText(r.get("background_image", ""))
+        self.r_dark.setChecked(bool(r.get("dark", False)))
+        self.r_dark_desc.setPlainText(r.get("description_dark", ""))
+        try:
+            ua = r.get("title_options", {}).get("underline_adjust", 0)
+            self.r_underline_adjust.setValue(int(ua))
+        except:
+            self.r_underline_adjust.setValue(0)
+            
+        self.r_enemy_parties.setPlainText(json.dumps(r.get("enemy_parties", []), indent=2))
+        self.r_enemy_instances.setPlainText(json.dumps(r.get("enemy_instances", []), indent=2))
+
         pos = r.get("pos", [0,0]); self.r_pos_x.setValue(int(pos[0])); self.r_pos_y.setValue(int(pos[1]))
         self.desc_edit.setPlainText(r.get("description", "")); self._update_kivy_preview()
         conns = r.get("connections", {})
@@ -2596,12 +2941,75 @@ class WorldBuilder(QMainWindow):
         except Exception:
             pass
 
+        # Populate event references for this room
+        self._load_room_references(_id)
+
     def _clear_room_inspector(self, current_id=None):
         self.r_id.setText(current_id or "—"); self.r_title.clear(); self.r_env.clear(); self.r_bg.clear(); self.r_weather.setCurrentText("")
+        self.r_dark.setChecked(False); self.r_dark_desc.clear(); self.r_underline_adjust.setValue(0)
+        self.r_enemy_parties.clear(); self.r_enemy_instances.clear()
         self.r_pos_x.setValue(0); self.r_pos_y.setValue(0); self.desc_edit.clear(); self.desc_preview.clear()
         self.r_conn_n.clear(); self.r_conn_s.clear(); self.r_conn_e.clear(); self.r_conn_w.clear()
         self.r_items.clear(); self.r_npcs.clear(); self.r_enemies_editor.set_data([]); self.r_actions_editor.set_data([]); self.r_state_editor.set_data({}); self.r_blocked_editor.set_data({})
         self.r_item_flavor_edit.clear(); self.r_enemy_flavor_edit.clear()
+        self.r_refs_list.clear()
+
+    def _load_room_references(self, room_id: str):
+        """Populate the References list with events that target this room."""
+        self.r_refs_list.clear()
+        if not room_id:
+            return
+        # Lazy-load and cache events.json
+        if self._cached_events is None:
+            events_path = Path(self.root) / "events.json"
+            if events_path.exists():
+                try:
+                    self._cached_events = json.loads(events_path.read_text(encoding="utf-8"))
+                except Exception:
+                    self._cached_events = []
+            else:
+                self._cached_events = []
+        # Scan events for references to this room
+        for evt in self._cached_events:
+            eid = evt.get("id", "")
+            matched = False
+            # Check trigger
+            trigger = evt.get("trigger", {})
+            if trigger.get("room") == room_id or trigger.get("room_id") == room_id:
+                matched = True
+            # Check actions (and nested do/else blocks)
+            if not matched:
+                matched = self._actions_reference_room(evt.get("actions", []), room_id)
+            if matched:
+                desc = evt.get("description", "")[:60]
+                label = f"{eid}"
+                if desc:
+                    label += f" — {desc}"
+                item = QListWidgetItem(label)
+                item.setData(Qt.UserRole, eid)
+                self.r_refs_list.addItem(item)
+
+    def _actions_reference_room(self, actions: list, room_id: str) -> bool:
+        """Recursively check if any action references the given room_id."""
+        for act in actions:
+            if not isinstance(act, dict):
+                continue
+            if act.get("room") == room_id or act.get("room_id") == room_id or act.get("target_room") == room_id:
+                return True
+            # Check nested do/else blocks
+            for sub_key in ("do", "else", "actions"):
+                sub = act.get(sub_key)
+                if isinstance(sub, list) and self._actions_reference_room(sub, room_id):
+                    return True
+        return False
+
+    def _on_room_ref_clicked(self, item):
+        """Navigate to the clicked event via EditorBus."""
+        eid = item.data(Qt.UserRole)
+        if eid:
+            from editor_bus import goto
+            goto("event", eid)
+
     def _on_toggle_starting_room(self, checked: bool):
         rid = self.current_selection[1]
         nid = self._find_parent_node_id_for_room(rid)
@@ -2628,6 +3036,7 @@ class WorldBuilder(QMainWindow):
             w = self.worlds_by_id[_id]; new_id = _sanitize_id(self.w_id.text())
             if new_id and new_id != _id: self._remap_id("world", _id, new_id); _id = new_id
             w = self.worlds_by_id[_id]; w["title"] = self.w_title.text(); w["description"] = self.w_desc.text()
+            w["default_theme"] = self.w_theme.text().strip()
         elif typ == "hub":
             h = self.hubs_by_id[_id]; new_id = _sanitize_id(self.h_id.text())
             if new_id and new_id != _id: self._remap_id("hub", _id, new_id); _id = new_id
@@ -2668,7 +3077,31 @@ class WorldBuilder(QMainWindow):
         # --- NEW: Handle weather property ---
         if weather and weather != "none": r["weather"] = weather
         else: r.pop("weather", None) # Clean up if set to none/empty
-        # --- END NEW ---
+        
+        # New properties
+        if self.r_dark.isChecked(): r["dark"] = True
+        else: r.pop("dark", None)
+        
+        dd = self.r_dark_desc.toPlainText().strip()
+        if dd: r["description_dark"] = dd
+        else: r.pop("description_dark", None)
+        
+        ua = self.r_underline_adjust.value()
+        if ua != 0: r["title_options"] = {"underline_adjust": ua}
+        else: r.pop("title_options", None)
+        
+        try:
+            ep = json.loads(self.r_enemy_parties.toPlainText() or "[]")
+            if ep: r["enemy_parties"] = ep
+            else: r.pop("enemy_parties", None)
+        except Exception: pass
+        
+        try:
+            ei = json.loads(self.r_enemy_instances.toPlainText() or "[]")
+            if ei: r["enemy_instances"] = ei
+            else: r.pop("enemy_instances", None)
+        except Exception: pass
+
         r["background_image"] = self.r_bg.text()
         r["pos"] = [self.r_pos_x.value(), self.r_pos_y.value()]
         r["description"] = self.desc_edit.toPlainText(); self._update_kivy_preview()

@@ -66,10 +66,14 @@ STYLE_GUIDE_CORE = (
     # 3.0 Environments
     "Environments: clean, semi-realistic aesthetic; layered backgrounds with optional parallax (fog, pipes, drifting dust/sparks, flickering neon). "
     "Maintain established world moods (e.g., Gritty Mining Colony, Bustling Outerworld Hub, Eerie Relay Lab).\n"
-    # 4.0 Combat assets spec
+    # 4.0 Cosmic Resonance
+    "Cosmic Resonance / Acoustic Theme: visual representations of sound and pressure. "
+    "Resonance is shown as thin, glowing spectral lines, circular 'cymatic' patterns on surfaces, or rippling heat-haze 'standing waves' in the air. "
+    "Aura colors represent different chords (e.g., deep indigo for C#m7, warm gold for G Major).\n"
+    # 5.0 Combat assets spec
     "Combat sprites: static chibi sprites with code-driven motion (slide/idle/shake/hit-flash). "
     "Portraits: realistically proportioned anime busts for dialogue; richer detail and emotion than chibi sprites.\n"
-    # 5.0 UI
+    # 6.0 UI
     "UI: portrait-mode mobile first; clean, thematic; room title in large pixel font; description in semi-transparent panel; "
     "interactive keywords light blue (#8ec9ff); minimal square icons; simple mini-map (ASCII/pixel grid)."
 )
@@ -92,6 +96,12 @@ STYLE_MODE_HINTS: Dict[str, str] = {
         "Not semi-realistic: surfaces simplified but atmospheric; clear depth with parallax-friendly layers. "
         "Use world mood cues (gritty mining colony, eerie lab, neon hub, etc.). "
         "Reserve negative space for UI overlays. No characters; no text."
+    ),
+    "Resonance Aura / Effect": (
+        "OUTPUT: stylized visual representation of a cosmic resonance aura. "
+        "Cymatic patterns, glowing spectral lines, or standing waves. "
+        "Transparent background; vibrant glowing colors (e.g., neon purple, cyan, or gold). "
+        "Abstract and atmospheric; no solid objects."
     ),
     "UI Element (Icon/Panel)": (
         "OUTPUT: crisp, minimal UI asset for portrait-mode game; geometric iconography; "
@@ -179,7 +189,7 @@ class AIArtTool(QWidget):
         target_row = QHBoxLayout()
         self.kind = QComboBox(); self.kind.addItems([
             "Room Background", "Hub Background", "Node Icon",
-            "NPC Portrait", "Enemy Art", "Item Icon"
+            "NPC Portrait", "Enemy Art", "Item Icon", "Resonance Aura"
         ])
         self.ident = QComboBox(); self._reload_ident_choices()
         self.kind.currentIndexChanged.connect(self._reload_ident_choices)
@@ -197,7 +207,8 @@ class AIArtTool(QWidget):
         self.mode.addItems([
             "Chibi Combat Sprite",
             "Dialogue Portrait (Bust)",
-            "Environment Background (Semi-Realistic)",
+            "Environment Background (Stylized Anime)",
+            "Resonance Aura / Effect",
             "UI Element (Icon/Panel)",
         ])
 

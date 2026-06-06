@@ -44,10 +44,6 @@ class CombatActionProcessor(
                 processBasicAttack(sanitized, action),
                 rewardProvider
             )
-            is CombatAction.SupportAbility -> finalizeAction(
-                processSupportAbility(sanitized, action),
-                rewardProvider
-            )
             is CombatAction.SkillUse -> finalizeAction(
                 processSkillUse(sanitized, action),
                 rewardProvider
@@ -105,109 +101,6 @@ class CombatActionProcessor(
                     attack = attack
                 )
             }
-        }
-    }
-
-    private fun processSupportAbility(
-        state: CombatState,
-        action: CombatAction.SupportAbility
-    ): CombatState {
-        val actor = state.combatants[action.actorId] ?: return state
-        val actorKey = action.actorId.substringBefore('#').trim().lowercase()
-        return when (actorKey) {
-            "nova" -> {
-                val targetId = resolveValidEnemyTarget(
-                    state = state,
-                    attacker = actor,
-                    preferredTargetId = action.targetId,
-                    allowFallback = true
-                ) ?: return state
-                var working = state
-                working = engine.applyBuffs(
-                    state = working,
-                    targetId = targetId,
-                    buffs = listOf(
-                        BuffEffect(stat = "accuracy", value = NOVA_CHEAP_SHOT_ACCURACY_PENALTY, duration = SUPPORT_TURN_DURATION)
-                    ),
-                    sourceId = action.actorId
-                )
-                working = engine.applyBuffs(
-                    state = working,
-                    targetId = action.actorId,
-                    buffs = listOf(
-                        BuffEffect(stat = "evasion", value = NOVA_CHEAP_SHOT_EVASION_BONUS, duration = SUPPORT_TURN_DURATION)
-                    ),
-                    sourceId = action.actorId
-                )
-                working
-            }
-            "zeke" -> {
-                val targetId = resolveValidAllyTarget(
-                    state = state,
-                    attacker = actor,
-                    preferredTargetId = action.targetId,
-                    allowFallback = true
-                ) ?: return state
-                engine.applyBuffs(
-                    state = state,
-                    targetId = targetId,
-                    buffs = listOf(
-                        BuffEffect(stat = "defense", value = ZEKE_SYNERGY_BARRIER, duration = SUPPORT_TURN_DURATION)
-                    ),
-                    sourceId = action.actorId
-                )
-            }
-            "orion" -> {
-                val targetId = resolveValidAllyTarget(
-                    state = state,
-                    attacker = actor,
-                    preferredTargetId = action.targetId,
-                    allowFallback = true
-                ) ?: return state
-                val target = state.combatants[targetId] ?: return state
-                val maxHp = target.combatant.stats.maxHp.coerceAtLeast(1)
-                val heal = (maxHp * ORION_STASIS_HEAL_PERCENT).roundToInt().coerceAtLeast(1)
-                var working = engine.applyHeal(
-                    state = state,
-                    sourceId = action.actorId,
-                    targetId = targetId,
-                    amount = heal
-                )
-                working = engine.applyBuffs(
-                    state = working,
-                    targetId = targetId,
-                    buffs = listOf(
-                        BuffEffect(stat = "defense", value = ORION_WARD_BARRIER, duration = SUPPORT_TURN_DURATION)
-                    ),
-                    sourceId = action.actorId
-                )
-                working
-            }
-            "gh0st" -> {
-                val targetId = resolveValidEnemyTarget(
-                    state = state,
-                    attacker = actor,
-                    preferredTargetId = action.targetId,
-                    allowFallback = true
-                ) ?: return state
-                var working = state
-                working = applyTargetLock(
-                    state = working,
-                    targetId = targetId,
-                    duration = GHOST_TARGET_LOCK_DURATION,
-                    stacks = GHOST_TARGET_LOCK_HITS
-                )
-                working = engine.applyBuffs(
-                    state = working,
-                    targetId = action.actorId,
-                    buffs = listOf(
-                        BuffEffect(stat = "defense", value = GHOST_TARGET_LOCK_DR_BONUS, duration = SUPPORT_TURN_DURATION)
-                    ),
-                    sourceId = action.actorId
-                )
-                working
-            }
-            else -> processDefend(state, CombatAction.Defend(action.actorId))
         }
     }
 
@@ -597,7 +490,18 @@ class CombatActionProcessor(
 
         val skill = skillLookup(action.skillId)
 
-        var working = state
+        val stateWithCooldown = if (skill != null && skill.cooldown > 0) {
+            val updatedAttacker = attackerState.copy(
+                activeCooldowns = attackerState.activeCooldowns + (skill.id to skill.cooldown + 1)
+            )
+            state.copy(combatants = state.combatants + (attackerId to updatedAttacker))
+        } else {
+            state
+        }
+
+        val freshAttackerState = stateWithCooldown.combatants[attackerId] ?: attackerState
+
+        var working = stateWithCooldown
         val special = applySkillSpecialCases(working, skill, attackerId)
         working = special.state
 
@@ -605,10 +509,10 @@ class CombatActionProcessor(
             val element = resolveElement(skill)
             val explicitTargets = action.targetIds
             val mode = when {
-                skill == null -> SkillMode.Damage(attackerState.effectiveStat("strength").coerceAtLeast(1), PHYSICAL_ELEMENT)
-                isHealSkill(skill) -> SkillMode.Heal(resolveSkillHeal(attackerState, skill))
+                skill == null -> SkillMode.Damage(freshAttackerState.effectiveStat("strength").coerceAtLeast(1), PHYSICAL_ELEMENT)
+                isHealSkill(skill) -> SkillMode.Heal(resolveSkillHeal(freshAttackerState, skill))
                 else -> SkillMode.Damage(
-                    baseDamage = resolveSkillDamage(attackerState, skill),
+                    baseDamage = resolveSkillDamage(freshAttackerState, skill),
                     element = element ?: PHYSICAL_ELEMENT
                 )
             }
@@ -626,7 +530,7 @@ class CombatActionProcessor(
                     } else {
                         val resolvedTargets = actionTargets(
                             state = working,
-                            attacker = attackerState,
+                            attacker = freshAttackerState,
                             explicitTargets = explicitTargets,
                             targeting = Targeting.ENEMY
                         )
@@ -653,7 +557,7 @@ class CombatActionProcessor(
                     skill = skill,
                     attackerId = attackerId,
                     state = working,
-                    attackerState = attackerState,
+                    attackerState = freshAttackerState,
                     explicitTargets = explicitTargets
                 )
                 statusDescriptors.forEach { descriptor ->
@@ -726,18 +630,23 @@ class CombatActionProcessor(
         val hasRestore = (effect.restoreHp ?: 0) > 0
         val hasBuff = effect.singleBuff != null || !effect.buffs.isNullOrEmpty()
 
+        // Set snackCooldown + 1 because tickEndOfTurn will immediately decrement it by 1 at the end of the turn.
+        val baseCooldown = effect.cooldown?.takeIf { it > 0 } ?: 5
+        val updatedActor = actor.copy(snackCooldown = baseCooldown + 1)
+        val stateWithCooldown = state.copy(combatants = state.combatants + (action.actorId to updatedActor))
+
         val declaredTarget = effect.target?.trim()?.lowercase()
         val resolvedTargetId = when (declaredTarget) {
             "self" -> action.actorId
             "enemy" -> resolveValidEnemyTarget(
-                state = state,
-                attacker = actor,
+                state = stateWithCooldown,
+                attacker = updatedActor,
                 preferredTargetId = action.targetId.orEmpty(),
                 allowFallback = true
             )
             "ally" -> resolveValidAllyTarget(
-                state = state,
-                attacker = actor,
+                state = stateWithCooldown,
+                attacker = updatedActor,
                 preferredTargetId = action.targetId ?: action.actorId,
                 allowFallback = true
             )
@@ -745,26 +654,26 @@ class CombatActionProcessor(
                 val preferred = action.targetId
                     ?.takeIf { it.isNotBlank() }
                     ?.let { candidate ->
-                        state.combatants[candidate]?.takeIf { it.isAlive }?.combatant?.id
+                        stateWithCooldown.combatants[candidate]?.takeIf { it.isAlive }?.combatant?.id
                     }
                 preferred
                     ?: resolveValidEnemyTarget(
-                        state = state,
-                        attacker = actor,
+                        state = stateWithCooldown,
+                        attacker = updatedActor,
                         preferredTargetId = action.targetId.orEmpty(),
                         allowFallback = true
                     )
                     ?: resolveValidAllyTarget(
-                        state = state,
-                        attacker = actor,
+                        state = stateWithCooldown,
+                        attacker = updatedActor,
                         preferredTargetId = action.targetId ?: action.actorId,
                         allowFallback = true
                     )
             }
             else -> when {
                 hasDamage -> resolveValidEnemyTarget(
-                    state = state,
-                    attacker = actor,
+                    state = stateWithCooldown,
+                    attacker = updatedActor,
                     preferredTargetId = action.targetId.orEmpty(),
                     allowFallback = true
                 )
@@ -797,11 +706,11 @@ class CombatActionProcessor(
             else -> ItemUseResult.None(item)
         }
         return when (result) {
-            is ItemUseResult.None -> state
-            is ItemUseResult.Restore -> applyItemRestore(state, proxy, result)
-            is ItemUseResult.Damage -> applyItemDamage(state, proxy, result)
-            is ItemUseResult.Buff -> applyItemBuff(state, proxy, result)
-            is ItemUseResult.LearnSchematic -> state
+            is ItemUseResult.None -> stateWithCooldown
+            is ItemUseResult.Restore -> applyItemRestore(stateWithCooldown, proxy, result)
+            is ItemUseResult.Damage -> applyItemDamage(stateWithCooldown, proxy, result)
+            is ItemUseResult.Buff -> applyItemBuff(stateWithCooldown, proxy, result)
+            is ItemUseResult.LearnSchematic -> stateWithCooldown
         }
     }
 
@@ -1219,7 +1128,19 @@ class CombatActionProcessor(
         val triggered = newEntries.filterIsInstance<CombatLogEntry.Damage>()
             .any { it.sourceId == action.actorId && it.isWeakness }
         if (!triggered) return resolved
+
+        val actorInResolved = resolved.combatants[action.actorId] ?: return resolved
+        val updatedCooldowns = actorInResolved.activeCooldowns.mapValues { (_, value) ->
+            (value - 1).coerceAtLeast(0)
+        }.filterValues { it > 0 }
+        val updatedSnackCooldown = (actorInResolved.snackCooldown - 1).coerceAtLeast(0)
+        val updatedActor = actorInResolved.copy(
+            activeCooldowns = updatedCooldowns,
+            snackCooldown = updatedSnackCooldown
+        )
+
         return resolved.copy(
+            combatants = resolved.combatants + (action.actorId to updatedActor),
             log = resolved.log + CombatLogEntry.WeaknessReward(
                 turn = previous.round,
                 actorId = action.actorId

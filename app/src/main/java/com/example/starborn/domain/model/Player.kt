@@ -15,5 +15,7 @@ data class Player(
     val luck: Int,
     val skills: List<String>,
     @Json(name = "mini_icon_path")
-    val miniIconPath: String
+    val miniIconPath: String,
+    @Json(name = "combat_icon_path")
+    val combatIconPath: String = ""
 ) : Entity(id, name, "")

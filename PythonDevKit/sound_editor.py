@@ -36,7 +36,7 @@ from PyQt5.QtWidgets import (
     QPushButton, QLabel, QFormLayout, QTableWidget,
     QTableWidgetItem, QHeaderView, QAbstractItemView,
     QFileDialog, QMessageBox, QGroupBox, QSlider, QCheckBox, QSpinBox,
-    QInputDialog
+    QInputDialog, QColorDialog, QDoubleSpinBox
 )
 
 import pygame
@@ -61,6 +61,10 @@ DEFAULT_META = {
     "fade_out_ms": 0,       # currently preview-only info (use later in runtime)
     "vol_jitter": 0.0,      # 0..0.5 (0..50%) recommended
     "pan": 0.0,             # -1..1 (left..right)
+    "pitch": 1.0,           # default playback pitch
+    "resonance": 0.0,       # atmospheric resonance intensity
+    "aura_color": "",       # visual representation
+    "fundamental_freq": 0,  # fundamental frequency in Hz
 }
 
 
@@ -116,6 +120,9 @@ class SoundEditor(QWidget):
             merged["volume"] = max(0.0, min(1.0, float(merged["volume"])))
             merged["pan"] = max(-1.0, min(1.0, float(merged["pan"])))
             merged["vol_jitter"] = max(0.0, min(0.9, float(merged["vol_jitter"])))
+            merged["pitch"] = max(0.1, min(5.0, float(merged.get("pitch", 1.0))))
+            merged["resonance"] = max(0.0, min(1.0, float(merged.get("resonance", 0.0))))
+            
             if merged.get("bus") not in BUS_NAMES:
                 merged["bus"] = DEFAULT_BUS
             merged["category"] = str(merged.get("category", DEFAULT_CATEGORY))
@@ -158,6 +165,10 @@ class SoundEditor(QWidget):
                 "fade_out_ms": int(m.get("fade_out_ms", 0)),
                 "vol_jitter": max(0.0, min(0.9, float(m.get("vol_jitter", 0.0)))),
                 "pan": max(-1.0, min(1.0, float(m.get("pan", 0.0)))),
+                "pitch": max(0.1, min(5.0, float(m.get("pitch", 1.0)))),
+                "resonance": max(0.0, min(1.0, float(m.get("resonance", 0.0)))),
+                "aura_color": str(m.get("aura_color", "")),
+                "fundamental_freq": int(m.get("fundamental_freq", 0)),
             }
         try:
             json_save(self.meta_path, out, sort_obj=True, indent=2)
@@ -300,15 +311,39 @@ class SoundEditor(QWidget):
         self.pan_slider = QSlider(Qt.Horizontal); self.pan_slider.setRange(-100, 100); self.pan_slider.setValue(0)
         self.pan_slider.valueChanged.connect(self._on_meta_changed)
 
+        self.pitch_slider = QSlider(Qt.Horizontal); self.pitch_slider.setRange(10, 500); self.pitch_slider.setValue(100)
+        self.pitch_slider.valueChanged.connect(self._on_meta_changed)
+
+        self.res_slider = QSlider(Qt.Horizontal); self.res_slider.setRange(0, 100); self.res_slider.setValue(0)
+        self.res_slider.valueChanged.connect(self._on_meta_changed)
+
         pb_l.addRow("Volume:", self.vol_slider)
+        pb_l.addRow("Pitch:", self.pitch_slider)
+        pb_l.addRow("Resonance:", self.res_slider)
         pb_l.addRow("", self.loop_chk)
         pb_l.addRow("Fade in (ms):", self.fadein_spin)
         pb_l.addRow("Fade out (ms):", self.fadeout_spin)
         pb_l.addRow("Vol jitter (%):", self.jitter_slider)
         pb_l.addRow("Pan (L/R):", self.pan_slider)
 
+        # Cosmic Resonance / Acoustic Metadata
+        cosmic_group = QGroupBox("Cosmic Resonance / Acoustic (Metadata)")
+        cosmic_l = QFormLayout(cosmic_group)
+        
+        self.aura_color_edit = QLineEdit()
+        self.aura_color_btn = QPushButton("Pick Color")
+        self.aura_color_btn.clicked.connect(self._pick_aura_color)
+        ac_row = QHBoxLayout(); ac_row.addWidget(self.aura_color_edit); ac_row.addWidget(self.aura_color_btn)
+        
+        self.freq_spin = QSpinBox(); self.freq_spin.setRange(0, 5000); self.freq_spin.setSuffix(" Hz")
+        self.freq_spin.valueChanged.connect(self._on_meta_changed)
+        
+        cosmic_l.addRow("Aura Color:", ac_row)
+        cosmic_l.addRow("Fundamental Freq:", self.freq_spin)
+
         detail_v.addLayout(form)
         detail_v.addWidget(meta_group)
+        detail_v.addWidget(cosmic_group)
         detail_v.addWidget(pb_group)
 
         # Files table
@@ -438,6 +473,10 @@ class SoundEditor(QWidget):
         self.fadeout_spin.setValue(int(m.get("fade_out_ms", 0)))
         self.jitter_slider.setValue(int(round(float(m.get("vol_jitter", 0.0)) * 100)))
         self.pan_slider.setValue(int(round(float(m.get("pan", 0.0)) * 100)))
+        self.pitch_slider.setValue(int(round(float(m.get("pitch", 1.0)) * 100)))
+        self.res_slider.setValue(int(round(float(m.get("resonance", 0.0)) * 100)))
+        self.aura_color_edit.setText(str(m.get("aura_color", "")))
+        self.freq_spin.setValue(int(m.get("fundamental_freq", 0)))
 
     def _append_file_row(self, filename: str):
         row = self.table.rowCount()
@@ -447,6 +486,12 @@ class SoundEditor(QWidget):
         if not exists:
             item.setForeground(QBrush(QColor("red")))
         self.table.setItem(row, 0, item)
+
+    def _pick_aura_color(self):
+        c = QColorDialog.getColor(QColor(self.aura_color_edit.text() or "#FFFFFF"), self, "Pick Aura Color")
+        if c.isValid():
+            self.aura_color_edit.setText(c.name().upper())
+            self._on_meta_changed()
 
     # ---------------------------
     # Tag ops
@@ -660,6 +705,10 @@ class SoundEditor(QWidget):
         m["fade_out_ms"] = int(self.fadeout_spin.value())
         m["vol_jitter"] = self.jitter_slider.value() / 100.0
         m["pan"] = self.pan_slider.value() / 100.0
+        m["pitch"] = self.pitch_slider.value() / 100.0
+        m["resonance"] = self.res_slider.value() / 100.0
+        m["aura_color"] = self.aura_color_edit.text().strip()
+        m["fundamental_freq"] = int(self.freq_spin.value())
 
         # Update filters’ source of truth when categories change
         self._refresh_category_filter()

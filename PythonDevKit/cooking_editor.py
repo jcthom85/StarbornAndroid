@@ -400,6 +400,18 @@ class CookingEditor(QWidget):
         btn_res_new.clicked.connect(_create_res)
         right.addRow("Result", res_row)
 
+        self.success_edit = QLineEdit()
+        self.success_edit.editingFinished.connect(self._on_field_changed)
+        right.addRow("Success Msg", self.success_edit)
+
+        # Cosmic / Audio
+        cosmic_grp = QGroupBox("Cosmic Resonance / Audio")
+        cg = QFormLayout(cosmic_grp)
+        self.vo_cue_edit = QLineEdit()
+        self.vo_cue_edit.editingFinished.connect(self._on_field_changed)
+        cg.addRow("VO Cue", self.vo_cue_edit)
+        right.addRow(cosmic_grp)
+
         # Ingredients table
         self.ing_editor = DictEditor("Ingredients")
         right.addRow(self.ing_editor)
@@ -488,6 +500,8 @@ class CookingEditor(QWidget):
     def _clear_form(self) -> None:
         self.name_edit.setText("")
         self.result_edit.setText("")
+        self.success_edit.setText("")
+        self.vo_cue_edit.setText("")
         self.ing_editor.set_dict({})
         self.extras.set_data({})
 
@@ -496,9 +510,12 @@ class CookingEditor(QWidget):
             self._clear_form(); return
         self.name_edit.setText(self.current.get("name", ""))
         self.result_edit.setText(self.current.get("result", ""))
+        self.success_edit.setText(self.current.get("success_message", ""))
+        self.vo_cue_edit.setText(self.current.get("vo_cue", ""))
         self.ing_editor.set_dict(self.current.get("ingredients", {}))
         # extras = all non-core keys preserved
-        extra = {k: v for k, v in self.current.items() if k not in CORE_KEYS}
+        core_plus = CORE_KEYS | {"success_message", "vo_cue"}
+        extra = {k: v for k, v in self.current.items() if k not in core_plus}
         self.extras.set_data(extra)
 
     def _gather_form(self) -> Optional[Dict[str, Any]]:
@@ -518,24 +535,18 @@ class CookingEditor(QWidget):
         if not ingredients:
             QMessageBox.warning(self, "Validation", "At least one ingredient is required.")
             return None
-        # warn—not block—on unknown references
-        unk = []
-        if result and not _item_exists(self.root, result):
-            unk.append(f"result '{result}'")
-        for ing in ingredients.keys():
-            if not _item_exists(self.root, ing):
-                unk.append(f"ingredient '{ing}'")
-        if unk:
-            QMessageBox.information(
-                self, "Heads up",
-                "Unknown item references detected: " + ", ".join(unk) +
-                "\nYou can still save, or use Open/Quick Create to resolve them."
-            )
-
-        payload = {"name": name, "result": result, "ingredients": ingredients}
+        
+        payload = {
+            "name": name, 
+            "result": result, 
+            "ingredients": ingredients,
+            "success_message": self.success_edit.text().strip(),
+            "vo_cue": self.vo_cue_edit.text().strip()
+        }
         # merge extras (avoid shadowing core keys)
+        core_plus = CORE_KEYS | {"success_message", "vo_cue"}
         for k, v in extras.items():
-            if k in CORE_KEYS: continue
+            if k in core_plus: continue
             payload[k] = v
         return payload
 

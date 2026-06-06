@@ -41,6 +41,9 @@ STEP_SPECS: Dict[str, List[FieldSpec]] = { # label, kind, json_key (optional), e
         FieldSpec(label="Actor", kind="str",  json_key="actor", default=""),
         FieldSpec(label="Line",  kind="text", json_key="line",  default=""),
         FieldSpec(label="Emote (opt)", kind="opt_str", json_key="emote"),
+        FieldSpec(label="VO Cue (opt)", kind="opt_str", json_key="vo_cue"),
+        FieldSpec(label="Pitch (opt)", kind="opt_float", json_key="pitch"),
+        FieldSpec(label="Resonance (opt)", kind="opt_float", json_key="resonance"),
         FieldSpec(label="Hint Placement", kind="enum_opt", json_key="placement", enum=("top","middle","bottom")),
         FieldSpec(label="Hint Width (0..1)", kind="opt_float", json_key="width_ratio", default=None),
         FieldSpec(label="Hint Margin (px)", kind="opt_float", json_key="vertical_margin", default=None),
@@ -107,6 +110,9 @@ STEP_SPECS: Dict[str, List[FieldSpec]] = { # label, kind, json_key (optional), e
     "narration": [
         FieldSpec(label="Text (markup)", kind="text",  json_key="text", default="[i]Narration panel.[/i]"),
         FieldSpec(label="Duration (s)", kind="float", json_key="duration", default=2.0),
+        FieldSpec(label="VO Cue (opt)", kind="opt_str", json_key="vo_cue"),
+        FieldSpec(label="Pitch (opt)", kind="opt_float", json_key="pitch"),
+        FieldSpec(label="Resonance (opt)", kind="opt_float", json_key="resonance"),
         FieldSpec(label="Position", kind="enum",  json_key="position", enum=("top","center","bottom"), default="bottom"),
         FieldSpec(label="Width (0..1)", kind="float", json_key="width", default=0.82),
         FieldSpec(label="Fade In (s)", kind="float", json_key="fade_in", default=0.18),
@@ -115,9 +121,18 @@ STEP_SPECS: Dict[str, List[FieldSpec]] = { # label, kind, json_key (optional), e
     "cinematic_text": [
         FieldSpec(label="Text (markup)", kind="text",  json_key="text", default="[i]Cinematic text.[/i]"),
         FieldSpec(label="Duration (s)", kind="float", json_key="duration", default=2.2),
+        FieldSpec(label="VO Cue (opt)", kind="opt_str", json_key="vo_cue"),
+        FieldSpec(label="Pitch (opt)", kind="opt_float", json_key="pitch"),
+        FieldSpec(label="Resonance (opt)", kind="opt_float", json_key="resonance"),
         FieldSpec(label="Position", kind="enum",  json_key="position", enum=("top","center","bottom"), default="center"),
         FieldSpec(label="Width (0..1)", kind="float", json_key="width", default=0.9),
         FieldSpec(label="Dim Alpha", kind="float", json_key="dim_alpha", default=0.28),
+    ],
+    "resonance_aura": [
+        FieldSpec(label="Chord", kind="str", json_key="chord", default="C#m7"),
+        FieldSpec(label="Resonance", kind="float", json_key="resonance", default=0.5),
+        FieldSpec(label="Duration (s)", kind="float", json_key="duration", default=2.0),
+        FieldSpec(label="Fade In (s)", kind="float", json_key="fade_in", default=1.0),
     ],
     "wait_for_player_action": [
         FieldSpec(label="Action", kind="str", json_key="action", default=""),
@@ -213,9 +228,13 @@ STEP_SPECS: Dict[str, List[FieldSpec]] = { # label, kind, json_key (optional), e
 def summarize_step(step: Dict[str, Any]) -> str:
     t = step.get("type","?")
     if t == "dialogue":
+        actor = step.get("actor", step.get("speaker", "?"))
         emote = step.get("emote")
-        emote_suffix = f" ({emote})" if emote else ""
-        return f'{step.get("actor","?")}{emote_suffix}: {step.get("line","")[:60]}'
+        vo = step.get("vo_cue")
+        suffix = ""
+        if emote: suffix += f" ({emote})"
+        if vo: suffix += f" [VO]"
+        return f'{actor}{suffix}: {step.get("line", step.get("text", ""))[:60]}'
     if t == "wait":
         return f'{step.get("duration", 0)}s'
     if t == "wait_for_player_action":
@@ -244,9 +263,13 @@ def summarize_step(step: Dict[str, Any]) -> str:
     if t == "caption":
         return f'"{step.get("text","")[:32]}" {step.get("duration",1.5)}s'
     if t == "narration":
-        return f'"{step.get("text","")[:32]}" {step.get("duration",2.0)}s @ {step.get("position","bottom")}'
+        vo = " [VO]" if step.get("vo_cue") else ""
+        return f'"{step.get("text","")[:32]}"{vo} {step.get("duration",2.0)}s @ {step.get("position","bottom")}'
     if t == "cinematic_text":
-        return f'"{step.get("text","")[:32]}" {step.get("duration",2.2)}s dim={step.get("dim_alpha",0.28)}'
+        vo = " [VO]" if step.get("vo_cue") else ""
+        return f'"{step.get("text","")[:32]}"{vo} {step.get("duration",2.2)}s dim={step.get("dim_alpha",0.28)}'
+    if t == "resonance_aura":
+        return f'aura:{step.get("chord","?")} res={step.get("resonance",0.5)} {step.get("duration",2.0)}s'
     if t == "speed_lines":
         return f'count={step.get("count",36)} {step.get("duration",0.5)}s'
     if t == "ring":
@@ -297,6 +320,7 @@ class CutsceneEditor(QWidget):
         self._dirty = False
 
         self._scenes: Dict[str, List[Dict[str, Any]]] = {}
+        self._scene_titles: Dict[str, str] = {}
         self._scene_order: List[str] = []  # maintain stable order in UI
         self._current_id: Optional[str] = None
         self._current_step_index: int = -1
@@ -365,6 +389,14 @@ class CutsceneEditor(QWidget):
 
         # Steps table
         steps_box = QWidget(); sb = QVBoxLayout(steps_box)
+        title_row = QHBoxLayout()
+        self.title_edit = QLineEdit()
+        self.title_edit.setPlaceholderText("Scene title…")
+        self.title_edit.textChanged.connect(self._on_title_changed)
+        title_row.addWidget(QLabel("Title:"))
+        title_row.addWidget(self.title_edit, 1)
+        sb.addLayout(title_row)
+
         row1 = QHBoxLayout()
         self.add_type_combo = QComboBox()
         for t in sorted(STEP_SPECS.keys()):
@@ -434,10 +466,47 @@ class CutsceneEditor(QWidget):
 
     # ---------------------- Loading / Saving ----------------------
     def _load(self):
-        data = json_load(self.path, default={}) # type: ignore
-        if not isinstance(data, dict):
-            data = {}
-        self._scenes = {k: (v if isinstance(v, list) else []) for k, v in data.items()}
+        data = json_load(self.path, default=[]) # type: ignore
+        self._scenes = {}
+        self._scene_titles = {}
+        if isinstance(data, dict):
+            # legacy dict format: {scene_id: [steps]} or {scene_id: {steps/title}}
+            for sid, payload in data.items():
+                if isinstance(payload, dict):
+                    steps = payload.get("steps", [])
+                    title = payload.get("title", "")
+                    step_list = steps if isinstance(steps, list) else []
+                    if (payload.get("repeatable") is not None) or (payload.get("notes") is not None):
+                        meta_step = {
+                            "type": "scene_meta",
+                            "repeatable": bool(payload.get("repeatable", False)),
+                            "notes": payload.get("notes", "") or "",
+                        }
+                        step_list = [meta_step] + step_list
+                else:
+                    step_list = payload if isinstance(payload, list) else []
+                    title = ""
+                self._scenes[sid] = step_list
+                self._scene_titles[sid] = str(title or "")
+        elif isinstance(data, list):
+            for row in data:
+                if not isinstance(row, dict):
+                    continue
+                sid = row.get("id")
+                if not sid:
+                    continue
+                steps = row.get("steps", [])
+                title = row.get("title", "")
+                step_list = steps if isinstance(steps, list) else []
+                if (row.get("repeatable") is not None) or (row.get("notes") is not None):
+                    meta_step = {
+                        "type": "scene_meta",
+                        "repeatable": bool(row.get("repeatable", False)),
+                        "notes": row.get("notes", "") or "",
+                    }
+                    step_list = [meta_step] + step_list
+                self._scenes[sid] = step_list
+                self._scene_titles[sid] = str(title or "")
         self._scene_order = sorted(self._scenes.keys(), key=str.lower)
         self._refresh_scene_list()
         self._set_dirty(False)
@@ -466,7 +535,27 @@ class CutsceneEditor(QWidget):
                                 cfg[k] = s.pop(k)
                         s["config"] = cfg
 
-        ok = json_save(self.path, self._scenes, sort_obj=True, indent=2)
+        # Write list-based format: [{id,title,steps}]
+        out_rows: List[Dict[str, Any]] = []
+        for sid in self._scene_order:
+            steps = self._scenes.get(sid, [])
+            # strip internal metadata steps
+            meta_step = None
+            if steps and isinstance(steps[0], dict) and steps[0].get("type") == "scene_meta":
+                meta_step = steps[0]
+            clean_steps = [s for s in steps if not (isinstance(s, dict) and s.get("type") == "scene_meta")]
+            row = {
+                "id": sid,
+                "title": self._scene_titles.get(sid, ""),
+                "steps": clean_steps,
+            }
+            if meta_step:
+                if meta_step.get("repeatable") is not None:
+                    row["repeatable"] = bool(meta_step.get("repeatable", False))
+                if meta_step.get("notes"):
+                    row["notes"] = meta_step.get("notes")
+            out_rows.append(row)
+        ok = json_save(self.path, out_rows, sort_obj=True, indent=2)
         if ok is None:  # json_save returns None on success in our helper
             ok = True
         if ok:
@@ -538,6 +627,9 @@ class CutsceneEditor(QWidget):
         self._flush_current_editor_into_scene()
         self._current_id = it.text()
         self.undo_stack.clear()
+        self.title_edit.blockSignals(True)
+        self.title_edit.setText(self._scene_titles.get(self._current_id, ""))
+        self.title_edit.blockSignals(False)
         self._populate_steps_table()
 
         # Load scene metadata
@@ -559,6 +651,7 @@ class CutsceneEditor(QWidget):
         self._scene_order.append(sid)
         # Add a default metadata step to new scenes
         self._scenes[sid] = [{"type": "scene_meta", "repeatable": False, "notes": ""}]
+        self._scene_titles[sid] = sid.replace("_", " ").title()
         self._refresh_scene_list()
         self._select_scene(sid)
         self._set_dirty(True)
@@ -570,6 +663,7 @@ class CutsceneEditor(QWidget):
         new_id = unique_id(orig, self._scene_order)
         self._scene_order.append(new_id)
         self._scenes[new_id] = json.loads(json.dumps(self._scenes.get(orig, [])))
+        self._scene_titles[new_id] = self._scene_titles.get(orig, "")
         self._refresh_scene_list()
         self._select_scene(new_id)
         self._set_dirty(True)
@@ -585,6 +679,7 @@ class CutsceneEditor(QWidget):
             QMessageBox.warning(self, "Exists", f"A scene named '{new}' already exists.")
             return
         self._scenes[new] = self._scenes.pop(old)
+        self._scene_titles[new] = self._scene_titles.pop(old, self.title_edit.text().strip())
         self._scene_order = [new if x == old else x for x in self._scene_order]
         self._refresh_scene_list()
         self._select_scene(new)
@@ -597,6 +692,7 @@ class CutsceneEditor(QWidget):
         if QMessageBox.question(self, "Delete Scene", f"Delete scene '{sid}'?", QMessageBox.Yes|QMessageBox.No) != QMessageBox.Yes:
             return
         self._scenes.pop(sid, None)
+        self._scene_titles.pop(sid, None)
         self._scene_order = [x for x in self._scene_order if x != sid]
         self._refresh_scene_list()
         self._set_dirty(True)
@@ -610,6 +706,7 @@ class CutsceneEditor(QWidget):
     # ---------------------- Steps table ops ----------------------
     def _clear_steps(self):
         self.steps.setRowCount(0)
+        self.title_edit.setText("")
         self.scene_notes.setPlainText("")
         self.repeatable_chk.setChecked(False)
         self._build_step_form(None)
@@ -727,6 +824,12 @@ class CutsceneEditor(QWidget):
             meta_step = scene[0]
         meta_step["repeatable"] = self.repeatable_chk.isChecked()
         meta_step["notes"] = self.scene_notes.toPlainText()
+        self._set_dirty(True)
+
+    def _on_title_changed(self, text: str):
+        if not self._current_id:
+            return
+        self._scene_titles[self._current_id] = text.strip()
         self._set_dirty(True)
 
     # ---------------------- Step form ----------------------

@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -42,6 +43,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
+import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.graphics.graphicsLayer
@@ -101,7 +103,9 @@ private fun HubScreenContent(
         Column(
             modifier = Modifier
                 .align(Alignment.TopCenter)
-                .padding(horizontal = 24.dp, vertical = 32.dp)
+                .statusBarsPadding()
+                .padding(horizontal = 24.dp)
+                .padding(top = 48.dp, bottom = 32.dp)
                 .widthIn(max = 420.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -312,7 +316,7 @@ private fun lerpColor(start: Color, end: Color, t: Float): Color {
 @Composable
 private fun rememberHubBackgroundPainter(imagePath: String?): Painter {
     val context = LocalContext.current
-    val default = painterResource(R.drawable.main_menu_background)
+    val fallback = ColorPainter(Color.Black)
     val painter = remember(imagePath) {
         if (imagePath.isNullOrBlank()) {
             null
@@ -324,5 +328,5 @@ private fun rememberHubBackgroundPainter(imagePath: String?): Painter {
             }.getOrNull()
         }
     }
-    return painter ?: default
+    return painter ?: fallback
 }

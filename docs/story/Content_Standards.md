@@ -45,7 +45,33 @@ World 1 is the tutorial biome, so its "combat language" must be readable at a gl
 
 ---
 
-## 3. World 1 Template (Applied)
+## 4. Node Room Density Standard
+
+To ensure locations feel like lived-in environments rather than single-purpose sets, every node must meet a minimum "Room Count" standard. This prevents nodes from feeling like "menu selections" and encourages exploration.
+
+| Node Type | Room Count (W1) | Distribution |
+| :--- | :--- | :--- |
+| **Minor / Social** | **6–8** | 1 Entry, 1 Main, 2-3 Flavor/Lore, 2 Transition. |
+| **Major / Home** | **8–12** | 1 Entry, 2-3 Main (Shops/Home), 4-5 Flavor/Loot, 2-3 Transition. |
+| **Dungeon / Combat** | **10–15** | 1 Entry, 3-4 Combat Arenas, 1-2 Puzzle/Gating, 4-5 Lore/Loot, 1 Boss/Relic. |
+
+**Progression Note:** This is the baseline for World 1. Later worlds (W3+) should increase these counts by ~50% (e.g., 15–20 rooms for a dungeon) as complexity and player traversal capabilities grow.
+
+---
+
+## 5. Actionable Word Standards
+
+To support the "no typing" interaction model, room descriptions use a system of "Actionable Words" that are highlighted and tappable in the UI.
+
+*   **Keyword Density:** Every room description must contain **2–4 actionable keywords**.
+*   **Implementation:** Keywords are defined in the room's `actions` array. The `name` field of the action must match the exact string (including casing) used in the description.
+*   **Casing Rule:** Use normal sentence casing. Keywords should not be artificially capitalized unless they start a sentence or are proper nouns.
+*   **Interaction Requirement:** Every keyword found in a description **must** have a corresponding entry in the `actions` array.
+*   **Feedback Loop:** If a keyword is purely for investigation (lore/flavor), use a `GenericAction` with a `condition_unmet_message` to provide the "Examine" text.
+
+---
+
+## 6. World 1 Template (Applied)
 
 *   **Hub 1 (Homestead):**
     *   **MQ:** 2 (Wake Up Call, Paperwork)

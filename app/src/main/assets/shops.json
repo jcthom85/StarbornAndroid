@@ -274,6 +274,62 @@
       "leave_label": "Maybe later"
     }
   },
+  "scrappers_contraband": {
+    "name": "Scrapper's Contraband",
+    "portrait": "images/portraits/scrapper.png",
+    "greeting": "Scrapper: Keep your voice down. Good salvage costs extra when it has a story.",
+    "pricing": {
+      "sell_markup": 1.25,
+      "buy_markdown": 0.4
+    },
+    "sells": {
+      "items": [
+        "pulse_grenade",
+        "battery_pack",
+        "scrap_metal",
+        "wiring_bundle"
+      ],
+      "rules": {
+        "types_in": [],
+        "subtypes_in": []
+      },
+      "gates": {}
+    },
+    "buys": {
+      "accept_types": [
+        "consumable",
+        "weapon",
+        "armor",
+        "accessory",
+        "ingredient",
+        "component",
+        "mod"
+      ],
+      "blacklist": []
+    },
+    "dialogue": {
+      "preface": [
+        {
+          "speaker": "Scrapper",
+          "text": "No labels, no receipts, no refunds. That's how you know it's good."
+        }
+      ],
+      "smalltalk": [
+        {
+          "id": "shop_scrapper_cache",
+          "label": "Ask about stashes",
+          "response": [
+            {
+              "speaker": "Scrapper",
+              "text": "If a corner looks too boring to search, that's usually where somebody smart hid something."
+            }
+          ]
+        }
+      ],
+      "trade_label": "Browse contraband",
+      "leave_label": "Back"
+    }
+  },
   "tysons_provisions": {
     "name": "Tyson's Provisions",
     "greeting": "Tyson: If you're paying, I'm selling. If you're not, keep your hands where I can see 'em.",

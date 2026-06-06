@@ -1,896 +1,302 @@
 [
-    {
-        "id": "burrower",
-        "name": "Burrower",
-        "tier": "elite",
-        "hp": 320,
-        "strength": 9,
-        "vitality": 8,
-        "agility": 3,
-        "focus": 2,
-        "luck": 3,
-        "speed": 11,
-        "element": "none",
-        "tags": [
-            "biological",
-            "armored"
-        ],
-        "abilities": [
-            "burrow",
-            "gnaw",
-            "slide_slam"
-        ],
-        "flavor": "A hulking, blind beast with stone-crushing claws. It feeds on minerals and unlucky miners.",
-        "xp_reward": 180,
-        "credit_reward": 50,
-        "drops": [
-            {
-                "id": "beast meat",
-                "chance": 1.0,
-                "qty_min": 2,
-                "qty_max": 4
-            }
-        ],
-        "description": "A massive subterranean predator.",
-        "portrait": "images/enemies/burrower_combat.png",
-        "sprite": [],
-        "attack": 8,
-        "ap_reward": 0
+  {
+    "id": "rock_borer",
+    "name": "Rock-Borer",
+    "tier": "standard",
+    "combat_behavior": "aggressive",
+    "combat_role": "striker",
+    "hp": 55,
+    "strength": 6,
+    "vitality": 5,
+    "agility": 2,
+    "focus": 1,
+    "luck": 1,
+    "speed": 8,
+    "element": "physical",
+    "weaknesses": {
+      "burn": 200,
+      "shock": 50
     },
-    {
-        "id": "collapse_wyrm",
-        "name": "Collapse Wyrm",
-        "tier": "boss",
-        "hp": 520,
-        "strength": 12,
-        "vitality": 13,
-        "agility": 2,
-        "focus": 6,
-        "luck": 3,
-        "speed": 10,
-        "element": "acid",
-        "tags": [
-            "fragile",
-            "corrosion_resistant"
-        ],
-        "abilities": [
-            "burrow",
-            "unstable_pillars",
-            "crystalline_spike"
-        ],
-        "flavor": "A crystalline silicon worm awakened by seismic charges, hungering for ore veins.",
-        "xp_reward": 320,
-        "credit_reward": 270,
-        "drops": [
-            {
-                "id": "beast meat",
-                "chance": 0.7,
-                "quantity": 3
-            },
-            {
-                "id": "vial of venom",
-                "chance": 0.5
-            }
-        ]
+    "tags": [
+      "biological",
+      "beast"
+    ],
+    "abilities": [
+      "gnaw",
+      "burrow"
+    ],
+    "flavor": "A chitinous badger with metal-infused claws. Churns through rock and bone with equal ease.",
+    "xp_reward": 40,
+    "credit_reward": 10,
+    "drops": [
+      {
+        "id": "beast_meat",
+        "chance": 0.5
+      }
+    ],
+    "description": "Territorial mining wildlife. Dangerous in packs.",
+    "portrait": "images/enemies/rock_borer_combat.png"
+  },
+  {
+    "id": "fume_bat",
+    "name": "Fume Bat",
+    "tier": "standard",
+    "combat_behavior": "trickster",
+    "combat_role": "controller",
+    "hp": 35,
+    "strength": 4,
+    "vitality": 2,
+    "agility": 6,
+    "focus": 3,
+    "luck": 4,
+    "speed": 14,
+    "element": "acid",
+    "weaknesses": {
+      "shock": 200,
+      "physical": 50
     },
-    {
-        "id": "core_drill_behemoth",
-        "name": "Core-Drill Behemoth",
-        "tier": "elite",
-        "hp": 500,
-        "strength": 11,
-        "vitality": 10,
-        "agility": 0,
-        "focus": 4,
-        "luck": 0,
-        "speed": 6,
-        "element": "none",
-        "tags": [
-            "robotic",
-            "industrial",
-            "plated",
-            "hardened_tech",
-            "high_internal_heat"
-        ],
-        "abilities": [
-            "drill_lunge",
-            "hydraulic_overheat",
-            "arm_detach"
-        ],
-        "flavor": "The colony's colossal autonomous driller, berserk after the blast.",
-        "xp_reward": 300,
-        "credit_reward": 250,
-        "drops": [
-            {
-                "id": "scrap",
-                "chance": 1.0,
-                "qty_min": 1,
-                "qty_max": 1
-            },
-            {
-                "id": "lens",
-                "chance": 0.5,
-                "qty_min": 1,
-                "qty_max": 1
-            },
-            {
-                "id": "medkit+",
-                "chance": 0.4,
-                "qty_min": 1,
-                "qty_max": 1
-            }
-        ],
-        "description": "The colony's colossal autonomous driller, berserk after the blast.",
-        "portrait": "images/enemies/core_drill_behemoth_combat.png",
-        "sprite": [],
-        "attack": 10,
-        "ap_reward": 0
+    "tags": [
+      "biological",
+      "flying"
+    ],
+    "abilities": [
+      "smog_spit",
+      "screech"
+    ],
+    "flavor": "Hangs from ventilation pipes, feeding on toxic runoff. Their screech can scramble a sensor array.",
+    "xp_reward": 45,
+    "credit_reward": 12,
+    "drops": [
+      {
+        "id": "vial_of_venom",
+        "chance": 0.3
+      }
+    ],
+    "description": "Evasive aerial pest. Applies Blind.",
+    "portrait": "images/enemies/fume_bat_combat.png"
+  },
+  {
+    "id": "dominion_enforcer",
+    "name": "Dominion Enforcer",
+    "tier": "standard",
+    "combat_behavior": "balanced",
+    "combat_role": "striker",
+    "hp": 80,
+    "strength": 5,
+    "vitality": 4,
+    "agility": 3,
+    "focus": 4,
+    "luck": 2,
+    "speed": 10,
+    "element": "physical",
+    "weaknesses": {
+      "acid": 200,
+      "burn": 200
     },
-    {
-        "id": "drone_ancient",
-        "name": "Ancient Drone",
-        "hp": 30,
-        "strength": 3,
-        "vitality": 2,
-        "agility": 0,
-        "focus": 1,
-        "luck": 0,
-        "speed": 3,
-        "tags": [
-            "robotic",
-            "electronic",
-            "plated"
-        ],
-        "flavor": "An ancient drone covered in rust and moss, putters through the area.",
-        "behavior": "passive",
-        "xp_reward": 20,
-        "credit_reward": 15,
-        "drops": [
-            {
-                "id": "cryo-inductor",
-                "chance": 0.5
-            }
-        ]
+    "tags": [
+      "human",
+      "dominion"
+    ],
+    "abilities": [
+      "suppressing_fire",
+      "flashbang"
+    ],
+    "flavor": "Corporate security. Their armor is cleaner than yours, but their souls are just as tired.",
+    "xp_reward": 60,
+    "credit_reward": 25,
+    "drops": [
+      {
+        "id": "ration_pack",
+        "chance": 0.25
+      },
+      {
+        "id": "scrap",
+        "chance": 0.5
+      }
+    ],
+    "description": "Tactical corporate infantry. Uses cover.",
+    "portrait": "images/enemies/dominion_enforcer_combat.png"
+  },
+  {
+    "id": "riot_guard",
+    "name": "Riot Guard",
+    "tier": "elite",
+    "combat_behavior": "defensive",
+    "combat_role": "tank",
+    "hp": 120,
+    "strength": 7,
+    "vitality": 8,
+    "agility": 1,
+    "focus": 5,
+    "luck": 1,
+    "speed": 7,
+    "element": "physical",
+    "weaknesses": {
+      "shock": 200
     },
-    {
-        "id": "flicker_mite",
-        "name": "Flicker-Mite",
-        "tier": "standard",
-        "hp": 10,
-        "strength": 2,
-        "vitality": 1,
-        "agility": 4,
-        "focus": 1,
-        "luck": 1,
-        "speed": 22,
-        "element": "shock",
-        "tags": [
-            "biological",
-            "fragile",
-            "insulated"
-        ],
-        "abilities": [
-            "static_burst",
-            "dim_glow"
-        ],
-        "flavor": "A cave firefly that overloads capacitors with its rapid flicker.",
-        "xp_reward": 14,
-        "credit_reward": 10,
-        "drops": [
-            {
-                "id": "power cell",
-                "chance": 0.25
-            }
-        ]
+    "resistances": {
+      "physical": 0
     },
-    {
-        "id": "fume_bat",
-        "name": "Fume Bat",
-        "tier": "standard",
-        "hp": 16,
-        "strength": 3,
-        "vitality": 1,
-        "agility": 2,
-        "focus": 0,
-        "luck": 2,
-        "speed": 17,
-        "element": "burn",
-        "tags": [
-            "biological"
-        ],
-        "abilities": [
-            "sonic_shriek",
-            "volatile_swell"
-        ],
-        "flavor": "Gas-filled bat that ignites when startled – handle with care.",
-        "xp_reward": 16,
-        "credit_reward": 12,
-        "drops": [
-            {
-                "id": "fiery pepper",
-                "chance": 0.3
-            },
-            {
-                "id": "beast meat",
-                "chance": 0.4
-            }
-        ]
+    "tags": [
+      "human",
+      "dominion",
+      "armored",
+      "shielded"
+    ],
+    "abilities": [
+      "riot_stance",
+      "shield_bash"
+    ],
+    "flavor": "Equipped with a kinetic-absorption shield. Designed to suppress 'unproductive behavior'.",
+    "xp_reward": 100,
+    "credit_reward": 40,
+    "drops": [
+      {
+        "id": "armor_plate",
+        "chance": 0.4
+      }
+    ],
+    "description": "Heavily armored. Immune until Staggered.",
+    "portrait": "images/enemies/riot_guard_combat.png"
+  },
+  {
+    "id": "security_drone",
+    "name": "Security Drone",
+    "tier": "standard",
+    "combat_behavior": "avoidant",
+    "combat_role": "support",
+    "hp": 40,
+    "strength": 2,
+    "vitality": 2,
+    "agility": 5,
+    "focus": 6,
+    "luck": 0,
+    "speed": 12,
+    "element": "shock",
+    "weaknesses": {
+      "shock": 200,
+      "physical": 200,
+      "acid": 50
     },
-    {
-        "id": "glimmer_worm",
-        "name": "Glimmer Worm",
-        "tier": "standard",
-        "hp": 12,
-        "strength": 3,
-        "vitality": 1,
-        "agility": 2,
-        "focus": 1,
-        "luck": 4,
-        "speed": 16,
-        "element": "none",
-        "tags": [
-            "fragile"
-        ],
-        "abilities": [
-            "undermine",
-            "glimmer_dust"
-        ],
-        "flavor": "A silicon worm that tunnels underfoot, scattering blinding dust.",
-        "xp_reward": 15,
-        "credit_reward": 10,
-        "drops": [
-            {
-                "id": "herb",
-                "chance": 0.5
-            },
-            {
-                "id": "lettuce",
-                "chance": 0.5
-            }
-        ]
+    "tags": [
+      "robotic",
+      "flying"
+    ],
+    "abilities": [
+      "taser_dart",
+      "radio_uplink"
+    ],
+    "flavor": "The 'eye' of the Warden. Every frame it records is evidence against you.",
+    "xp_reward": 50,
+    "credit_reward": 15,
+    "drops": [
+      {
+        "id": "wiring",
+        "chance": 0.6
+      },
+      {
+        "id": "battery",
+        "chance": 0.4
+      }
+    ],
+    "description": "Flying surveyor. Alerts reinforcements.",
+    "portrait": "images/enemies/security_drone_combat.png"
+  },
+  {
+    "id": "heavy_loader",
+    "name": "Heavy Loader",
+    "tier": "elite",
+    "combat_behavior": "smart",
+    "combat_role": "striker",
+    "hp": 200,
+    "strength": 12,
+    "vitality": 10,
+    "agility": 0,
+    "focus": 4,
+    "luck": 0,
+    "speed": 5,
+    "element": "physical",
+    "weaknesses": {
+      "acid": 200,
+      "shock": 150,
+      "physical": 50,
+      "burn": 50
     },
-    {
-        "id": "overseer_drone_mk2",
-        "name": "Overseer Drone MK-II",
-        "tier": "mini",
-        "hp": 140,
-        "strength": 7,
-        "vitality": 6,
-        "agility": 2,
-        "focus": 5,
-        "luck": 2,
-        "speed": 12,
-        "element": "none",
-        "tags": [
-            "robotic",
-            "electronic",
-            "plated",
-            "insulated"
-        ],
-        "abilities": [
-            "suppressive_fire",
-            "barrier_field"
-        ],
-        "flavor": "An upgraded corporate riot drone deployed far too late to save anything.",
-        "xp_reward": 130,
-        "credit_reward": 110,
-        "drops": [
-            {
-                "id": "scrap",
-                "chance": 0.7,
-                "quantity": 2
-            },
-            {
-                "id": "wiring",
-                "chance": 0.5
-            },
-            {
-                "id": "power cell",
-                "chance": 0.5
-            }
-        ]
+    "tags": [
+      "robotic",
+      "industrial",
+      "massive"
+    ],
+    "abilities": [
+      "hydraulic_slam",
+      "vent_coolant",
+      "harden"
+    ],
+    "anticipation_logic": {
+      "trigger": "player_status_charged",
+      "response": "harden",
+      "priority_boost": 50
     },
-    {
-        "id": "rockling",
-        "name": "Rockling Ooze",
-        "tier": "standard",
-        "hp": 23,
-        "strength": 2,
-        "vitality": 2,
-        "agility": 1,
-        "focus": 0,
-        "luck": 0,
-        "speed": 8,
-        "element": "none",
-        "tags": [
-            "industrial",
-            "plated"
-        ],
-        "abilities": [
-            "slide_slam",
-            "split"
-        ],
-        "flavor": "Semi-liquid ore sludge animated by psionic residue.",
-        "xp_reward": 18,
-        "credit_reward": 14,
-        "drops": [
-            {
-                "id": "scrap",
-                "chance": 0.5
-            }
-        ]
+    "flavor": "Massive hydraulic limbs built for cargo but perfect for crushing bones.",
+    "xp_reward": 250,
+    "credit_reward": 100,
+    "drops": [
+      {
+        "id": "hydraulic_fluid",
+        "chance": 0.5
+      },
+      {
+        "id": "heavy_gear",
+        "chance": 0.3
+      }
+    ],
+    "description": "Industrial mech. Massive physical damage.",
+    "portrait": "images/enemies/heavy_loader_combat.png"
+  },
+  {
+    "id": "the_warden",
+    "name": "The Warden",
+    "tier": "boss",
+    "combat_behavior": "oppressive",
+    "combat_role": "tank_summoner",
+    "hp": 800,
+    "strength": 15,
+    "vitality": 15,
+    "agility": 3,
+    "focus": 10,
+    "luck": 5,
+    "speed": 9,
+    "element": "physical",
+    "weaknesses": {
+      "shock": 150,
+      "acid": 100
     },
-    {
-        "id": "rusted_sentry",
-        "name": "Rusted Sentry",
-        "tier": "standard",
-        "hp": 25,
-        "strength": 4,
-        "vitality": 2,
-        "agility": 1,
-        "focus": 3,
-        "luck": 1,
-        "speed": 10,
-        "element": "none",
-        "tags": [
-            "robotic",
-            "electronic",
-            "plated",
-            "insulated"
-        ],
-        "abilities": [
-            "triple_burst",
-            "overheat"
-        ],
-        "flavor": "A half-buried turret crawling on piston legs, desperate for coolant.",
-        "xp_reward": 20,
-        "credit_reward": 18,
-        "drops": [
-            {
-                "id": "scrap",
-                "chance": 0.6,
-                "quantity": 2
-            },
-            {
-                "id": "wiring",
-                "chance": 0.5
-            },
-            {
-                "id": "lens",
-                "chance": 0.2
-            }
-        ]
+    "resistances": {
+      "physical": 0
     },
-    {
-        "id": "scav_biter_alpha",
-        "name": "\"Scav-Biter\" Alpha",
-        "tier": "mini",
-        "hp": 130,
-        "strength": 9,
-        "vitality": 5,
-        "agility": 3,
-        "focus": 2,
-        "luck": 5,
-        "speed": 14,
-        "element": "none",
-        "tags": [
-            "biological",
-            "corrosion_resistant"
-        ],
-        "abilities": [
-            "alpha_howl",
-            "lightning_weakpoint"
-        ],
-        "flavor": "The sofa-sized mutant rat that leads its brood with toxic fangs.",
-        "xp_reward": 110,
-        "credit_reward": 90,
-        "drops": [
-            {
-                "id": "beast meat",
-                "chance": 0.8,
-                "quantity": 2
-            },
-            {
-                "id": "adrenaline",
-                "chance": 0.25
-            }
-        ]
-    },
-    {
-        "id": "scraphopper",
-        "name": "Scrap-hopper",
-        "tier": "standard",
-        "hp": 20,
-        "strength": 3,
-        "vitality": 1,
-        "agility": 2,
-        "focus": 1,
-        "luck": 2,
-        "speed": 14,
-        "element": "shock",
-        "tags": [
-            "robotic",
-            "electronic",
-            "fragile",
-            "insulated"
-        ],
-        "abilities": [
-            "arc_spark",
-            "self_repair"
-        ],
-        "flavor": "A twitchy Scrap-hopper forever looking for fresh wiring to chew.",
-        "xp_reward": 15,
-        "credit_reward": 12,
-        "drops": [
-            { "id": "basic_blaster", "chance": 0.8, "qty_min": 1, "qty_max": 1 },
-            { "id": "basic_slingshot", "chance": 0.8, "qty_min": 1, "qty_max": 1 },
-            { "id": "basic_vest", "chance": 0.85, "qty_min": 1, "qty_max": 1 },
-            { "id": "basic_jacket", "chance": 0.85, "qty_min": 1, "qty_max": 1 },
-            { "id": "digital_watch", "chance": 0.9, "qty_min": 1, "qty_max": 1 },
-            { "id": "gadget_belt", "chance": 0.9, "qty_min": 1, "qty_max": 1 },
-            { "id": "starbar_crunch", "chance": 1.0, "qty_min": 1, "qty_max": 2 },
-            { "id": "mineral_trail_mix", "chance": 1.0, "qty_min": 1, "qty_max": 2 },
-            { "id": "comet_gummies", "chance": 1.0, "qty_min": 1, "qty_max": 2 }
-        ]
-    },
-    {
-        "id": "security_drone",
-        "name": "Security Drone",
-        "hp": 20,
-        "strength": 2,
-        "vitality": 1,
-        "agility": 1,
-        "focus": 2,
-        "luck": 0,
-        "speed": 4,
-        "tags": [
-            "robotic",
-            "electronic",
-            "plated"
-        ],
-        "flavor": "A Security Drone hovers near the ceiling, red optic scanning the room.",
-        "behavior": "alertable",
-        "alert_delay": 3,
-        "xp_reward": 12,
-        "credit_reward": 8,
-        "drops": [
-            {
-                "id": "scrap",
-                "chance": 0.6
-            },
-            {
-                "id": "wiring",
-                "chance": 0.4
-            }
-        ]
-    },
-    {
-        "id": "slag_rat",
-        "name": "Slag Rat",
-        "tier": "standard",
-        "hp": 14,
-        "strength": 3,
-        "vitality": 1,
-        "agility": 3,
-        "focus": 2,
-        "luck": 3,
-        "speed": 18,
-        "element": "acid",
-        "tags": [
-            "biological",
-            "corrosion_resistant"
-        ],
-        "resistances": {
-            "burn": -50
-        },
-        "abilities": [
-            "gnaw",
-            "toxic_bite"
-        ],
-        "flavor": "A Slag Rat is here, gnawing on molten ore.",
-        "xp_reward": 14,
-        "credit_reward": 10,
-        "drops": [
-            {
-                "id": "beast meat",
-                "chance": 0.5
-            }
-        ]
-    },
-    {
-        "id": "slag_slime",
-        "name": "Caustic Slag-Slime",
-        "tier": "standard",
-        "hp": 18,
-        "strength": 3,
-        "vitality": 1,
-        "agility": 1,
-        "focus": 2,
-        "luck": 1,
-        "speed": 9,
-        "element": "acid",
-        "tags": [
-            "corrosion_resistant"
-        ],
-        "resistances": {
-            "burn": 50
-        },
-        "abilities": [
-            "acid_splash",
-            "dissolve_armor"
-        ],
-        "flavor": "A corrosive puddle formed around the cracked reactor core.",
-        "xp_reward": 18,
-        "credit_reward": 15,
-        "drops": [
-            {
-                "id": "scrap",
-                "chance": 0.6
-            },
-            {
-                "id": "catalyst",
-                "chance": 0.3
-            }
-        ]
-    },
-    {
-        "id": "smelter_golem",
-        "name": "Smelter Golem",
-        "tier": "mini",
-        "hp": 160,
-        "strength": 7,
-        "vitality": 6,
-        "agility": 1,
-        "focus": 3,
-        "luck": 0,
-        "speed": 8,
-        "element": "burn",
-        "tags": [
-            "overheated",
-            "industrial",
-            "plated",
-            "heat_shielded"
-        ],
-        "abilities": [
-            "slag_nova",
-            "ember_stride"
-        ],
-        "flavor": "A lumbering mass of molten slag animated by mag-fields.",
-        "xp_reward": 120,
-        "credit_reward": 100,
-        "drops": [
-            {
-                "id": "scrap",
-                "chance": 1.0,
-                "quantity": 3
-            },
-            {
-                "id": "fire grenade",
-                "chance": 0.3
-            }
-        ]
-    },
-    {
-        "id": "driller_core",
-        "name": "Driller Core",
-        "tier": "boss",
-        "hp": 220,
-        "strength": 8,
-        "vitality": 6,
-        "agility": 1,
-        "focus": 4,
-        "luck": 2,
-        "speed": 8,
-        "element": "none",
-        "tags": [
-            "robotic",
-            "industrial",
-            "plated",
-            "hardened_tech",
-            "insulated",
-            "high_internal_heat"
-        ],
-        "resistances": {
-            "burn": -50
-        },
-        "abilities": [
-            "driller_core_repair"
-        ],
-        "flavor": "The armored heart of the Driller, routing power to its limbs.",
-        "xp_reward": 200,
-        "credit_reward": 150,
-        "drops": [
-            {
-                "id": "scrap",
-                "chance": 1.0,
-                "qty_min": 2,
-                "qty_max": 4
-            }
-        ],
-        "description": "The command core of the Driller.",
-        "sprite": [
-            "images/enemies/bosses/driller_core.png"
-        ],
-        "composite": {
-            "group": "driller",
-            "role": "core",
-            "group_offset_x": 0.0,
-            "group_offset_y": -0.28,
-            "offset_x": 0.0,
-            "offset_y": 0.0,
-            "width_scale": 1.0,
-            "height_scale": 0.75,
-            "z": 1.0
-        }
-    },
-    {
-        "id": "driller_drill_arm",
-        "name": "Drill Arm",
-        "tier": "elite",
-        "hp": 80,
-        "strength": 6,
-        "vitality": 3,
-        "agility": 2,
-        "focus": 2,
-        "luck": 1,
-        "speed": 10,
-        "element": "physical",
-        "tags": [
-            "robotic",
-            "industrial",
-            "plated",
-            "insulated"
-        ],
-        "resistances": {
-            "shock": -50
-        },
-        "abilities": [
-            "driller_drill_bore"
-        ],
-        "flavor": "A spinning drill arm hunts for a clean strike.",
-        "xp_reward": 0,
-        "credit_reward": 0,
-        "drops": [],
-        "description": "Independent drill arm.",
-        "sprite": [
-            "images/enemies/bosses/driller_drill_arm.png"
-        ],
-        "composite": {
-            "group": "driller",
-            "role": "arm",
-            "offset_x": -0.55,
-            "offset_y": 0.22,
-            "width_scale": 0.95,
-            "height_scale": 0.4,
-            "z": 0.8
-        }
-    },
-    {
-        "id": "driller_cutter_arm",
-        "name": "Cutter Arm",
-        "tier": "elite",
-        "hp": 75,
-        "strength": 5,
-        "vitality": 2,
-        "agility": 2,
-        "focus": 3,
-        "luck": 1,
-        "speed": 9,
-        "element": "acid",
-        "tags": [
-            "robotic",
-            "industrial",
-            "plated",
-            "insulated"
-        ],
-        "resistances": {
-            "acid": 50,
-            "freeze": -50
-        },
-        "abilities": [
-            "driller_cutter_spill"
-        ],
-        "flavor": "A cutter arm spits corrosive spray.",
-        "xp_reward": 0,
-        "credit_reward": 0,
-        "drops": [],
-        "description": "Independent cutter arm.",
-        "sprite": [
-            "images/enemies/bosses/driller_cutter_arm.png"
-        ],
-        "composite": {
-            "group": "driller",
-            "role": "arm",
-            "offset_x": 0.5,
-            "offset_y": -0.22,
-            "width_scale": 0.95,
-            "height_scale": 0.42,
-            "z": 0.85
-        }
-    },
-    {
-        "id": "driller_fire_arm",
-        "name": "Fire Arm",
-        "tier": "elite",
-        "hp": 85,
-        "strength": 6,
-        "vitality": 3,
-        "agility": 1,
-        "focus": 2,
-        "luck": 1,
-        "speed": 8,
-        "element": "burn",
-        "tags": [
-            "robotic",
-            "industrial",
-            "plated",
-            "overheated",
-            "heat_shielded"
-        ],
-        "abilities": [
-            "driller_fire_burst"
-        ],
-        "flavor": "A blast nozzle arm ignites the tunnel air.",
-        "xp_reward": 0,
-        "credit_reward": 0,
-        "drops": [],
-        "description": "Independent fire arm.",
-        "sprite": [
-            "images/enemies/bosses/driller_fire_arm.png"
-        ],
-        "composite": {
-            "group": "driller",
-            "role": "arm",
-            "offset_x": 0.55,
-            "offset_y": 0.25,
-            "width_scale": 1.0,
-            "height_scale": 0.45,
-            "z": 0.9
-        }
-    },
-    {
-        "id": "driller_grabber_arm",
-        "name": "Grabber Arm",
-        "tier": "elite",
-        "hp": 70,
-        "strength": 5,
-        "vitality": 2,
-        "agility": 3,
-        "focus": 2,
-        "luck": 1,
-        "speed": 11,
-        "element": "physical",
-        "tags": [
-            "robotic",
-            "industrial",
-            "plated",
-            "insulated"
-        ],
-        "resistances": {
-            "burn": -50
-        },
-        "abilities": [
-            "driller_grabber_crush"
-        ],
-        "flavor": "A clawed grabber arm seeks a grapple.",
-        "xp_reward": 0,
-        "credit_reward": 0,
-        "drops": [],
-        "description": "Independent grabber arm.",
-        "sprite": [
-            "images/enemies/bosses/driller_grabber_arm.png"
-        ],
-        "composite": {
-            "group": "driller",
-            "role": "arm",
-            "offset_x": -0.5,
-            "offset_y": -0.24,
-            "width_scale": 0.85,
-            "height_scale": 0.45,
-            "z": 0.9
-        }
-    },
-    {
-        "id": "the_warden",
-        "name": "The Warden",
-        "tier": "boss",
-        "hp": 600,
-        "strength": 14,
-        "vitality": 15,
-        "agility": 4,
-        "focus": 8,
-        "luck": 5,
-        "speed": 12,
-        "element": "physical",
-        "tags": [
-            "armored",
-            "plated",
-            "industrial",
-            "insulated",
-            "heat_shielded"
-        ],
-        "resistances": {
-            "acid": 50
-        },
-        "abilities": [
-            "warden_riot_shield",
-            "warden_drone_summon",
-            "warden_gas_grenade"
-        ],
-        "flavor": "Head of Colony Security. Massive power-armor suit. Face obscured by a glowing visor.",
-        "xp_reward": 500,
-        "credit_reward": 400,
-        "drops": [
-             {
-                "id": "mine_access_badge",
-                "chance": 1.0,
-                "qty_min": 1,
-                "qty_max": 1
-            }
-        ],
-        "description": "The Wall Nova must break.",
-        "sprite": [],
-        "attack": 12
-    },
-    {
-        "id": "dominion_guard",
-        "name": "Dominion Guard",
-        "tier": "standard",
-        "hp": 45,
-        "strength": 5,
-        "vitality": 4,
-        "agility": 3,
-        "focus": 3,
-        "luck": 2,
-        "speed": 10,
-        "element": "physical",
-        "tags": [
-            "biological",
-            "armored"
-        ],
-        "abilities": [
-            "suppressive_fire",
-            "flashbang"
-        ],
-        "flavor": "A corporate enforcer. Just doing his job, which includes shooting you.",
-        "xp_reward": 35,
-        "credit_reward": 25,
-        "drops": [
-            {
-                "id": "ration_pack",
-                "chance": 0.3
-            }
-        ]
-    },
-    {
-        "id": "rock_borer",
-        "name": "Rock-Borer",
-        "tier": "standard",
-        "hp": 55,
-        "strength": 6,
-        "vitality": 5,
-        "agility": 2,
-        "focus": 1,
-        "luck": 1,
-        "speed": 8,
-        "element": "physical",
-        "tags": [
-            "biological",
-            "armored"
-        ],
-        "abilities": [
-            "burrow",
-            "gnaw"
-        ],
-        "flavor": "Wildlife. Burrows underground and pops up to bite.",
-        "xp_reward": 40,
-        "credit_reward": 10,
-        "drops": [
-            {
-                "id": "beast_meat",
-                "chance": 0.5
-            }
-        ]
-    }
+    "tags": [
+      "human",
+      "boss",
+      "power_armor"
+    ],
+    "abilities": [
+      "warden_riot_shield",
+      "kinetic_barrage",
+      "warden_summon_drones",
+      "gas_grenade"
+    ],
+    "flavor": "A careerist in high-grade power armor. He doesn't enjoy the work, but he enjoys the authority.",
+    "xp_reward": 1000,
+    "credit_reward": 800,
+    "drops": [
+      {
+        "id": "warden_keycard",
+        "chance": 1.0,
+        "qty_min": 1,
+        "qty_max": 1
+      }
+    ],
+    "description": "Sector Authority. Immune until Guard Broken.",
+    "portrait": "images/enemies/the_warden_combat.png"
+  }
 ]
-

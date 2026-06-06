@@ -1,14 +1,8 @@
 [
   {
-    "id": "debug_sandbox",
-    "title": "",
-    "description": "",
-    "default_theme": ""
-  },
-  {
-    "id": "nova_prime",
-    "title": "Nova\u0027s Homeworld",
-    "description": "A remote mining colony on a barren moon, and Nova\u0027s hardscrabble home.",
-    "default_theme": "spaceship"
+    "id": "world_1",
+    "title": "The Mines",
+    "description": "A Dominion-owned mining operation built into canyon walls.",
+    "default_theme": "mine"
   }
 ]

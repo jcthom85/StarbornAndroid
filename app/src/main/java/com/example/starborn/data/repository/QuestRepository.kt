@@ -11,10 +11,13 @@ class QuestRepository(
     fun load() {
         val quests = dataSource.loadQuests()
         questsById.clear()
-        quests.forEach { quest -> questsById[quest.id] = quest }
+        quests.forEach { quest ->
+            questsById[quest.id] = quest
+            questsById[quest.id.lowercase(java.util.Locale.US)] = quest
+        }
     }
 
-    fun questById(id: String): Quest? = questsById[id]
+    fun questById(id: String): Quest? = questsById[id] ?: questsById[id.lowercase(java.util.Locale.US)]
 
     fun allQuests(): Collection<Quest> = questsById.values
 }

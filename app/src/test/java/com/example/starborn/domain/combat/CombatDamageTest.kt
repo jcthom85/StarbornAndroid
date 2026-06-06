@@ -36,7 +36,7 @@ class CombatDamageTest {
         name = "Resistant",
         side = CombatSide.ENEMY,
         stats = StatBlock(70, 8, 6, 6, 6, 4, 8),
-        resistances = ResistanceProfile(physical = 50, fire = 25)
+        resistances = ResistanceProfile(physical = 50, burn = 50)
     )
 
     private val enemyVulnerable = Combatant(
@@ -44,7 +44,7 @@ class CombatDamageTest {
         name = "Vulnerable",
         side = CombatSide.ENEMY,
         stats = StatBlock(70, 8, 6, 6, 6, 4, 8),
-        resistances = ResistanceProfile(physical = -20, fire = -50)
+        resistances = ResistanceProfile(physical = -50, burn = -50)
     )
 
     private fun scenario(engine: CombatEngine, defender: Combatant): CombatState {
@@ -80,7 +80,7 @@ class CombatDamageTest {
 
         assertEquals(20, neutralDamage)
         assertEquals(10, resistantDamage)
-        assertEquals(24, weakDamage)
+        assertEquals(30, weakDamage)
     }
 
     @Test
@@ -101,7 +101,7 @@ class CombatDamageTest {
         val resistant = resistState.calculateDamage("player", "enemy_resistant", baseDamage, element = "fire")
         val vulnerable = weakState.calculateDamage("player", "enemy_vulnerable", baseDamage, element = "fire")
 
-        assertEquals(15, resistant)
+        assertEquals(10, resistant)
         assertEquals(30, vulnerable)
     }
 

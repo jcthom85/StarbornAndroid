@@ -14,7 +14,7 @@ from PyQt5.QtWidgets import (
     QLabel, QLineEdit, QComboBox, QSpinBox, QTextEdit, QPushButton, QFormLayout,
     QMessageBox, QGroupBox, QTableWidget, QTableWidgetItem, QAbstractItemView,
     QInputDialog, QSplitter, QDialog, QDialogButtonBox, QCheckBox, QHeaderView,
-    QListView
+    QListView, QDoubleSpinBox
 )
 
 # ------------------------------------------------------------
@@ -74,7 +74,7 @@ class SkillsTab(QWidget):
         self.f_id = QLineEdit()
         self.f_name = QLineEdit()
         self.f_char = QLineEdit()
-        self.f_type = QComboBox(); self.f_type.addItems(["active", "passive"])
+        self.f_type = QComboBox(); self.f_type.addItems(["active", "passive", "source_art", "enemy"])
         self.f_power = QSpinBox(); self.f_power.setRange(0, 99999)
         self.f_cooldown = QSpinBox(); self.f_cooldown.setRange(0, 99)
         self.f_max_rank = QSpinBox(); self.f_max_rank.setRange(0, 99)
@@ -82,6 +82,12 @@ class SkillsTab(QWidget):
         self.f_conditions = QLineEdit()    # execution conditions
         self.f_tags = QLineEdit()          # generic tags
         self.f_cbtags = QLineEdit()        # combat_tags
+        
+        # Resonance / Audio
+        self.f_vo_cue = QLineEdit()
+        self.f_pitch = QDoubleSpinBox(); self.f_pitch.setRange(0.1, 5.0); self.f_pitch.setValue(1.0)
+        self.f_resonance = QDoubleSpinBox(); self.f_resonance.setRange(0.0, 1.0); self.f_resonance.setValue(0.0)
+        
         self.f_desc = QTextEdit()
 
         form.addRow("ID", self.f_id)
@@ -95,6 +101,14 @@ class SkillsTab(QWidget):
         form.addRow("Conditions", self.f_conditions)
         form.addRow("Tags (comma)", self.f_tags)
         form.addRow("Combat Tags (comma)", self.f_cbtags)
+        
+        cosmic_grp = QGroupBox("Cosmic Resonance / Audio")
+        cg = QFormLayout(cosmic_grp)
+        cg.addRow("VO Cue", self.f_vo_cue)
+        cg.addRow("Pitch", self.f_pitch)
+        cg.addRow("Resonance", self.f_resonance)
+        form.addRow(cosmic_grp)
+        
         form.addRow(QLabel("Description"))
         form.addRow(self.f_desc)
 
@@ -148,6 +162,9 @@ class SkillsTab(QWidget):
             "tags": [t.strip() for t in self.f_tags.text().split(",") if t.strip()],
             "combat_tags": [t.strip() for t in self.f_cbtags.text().split(",") if t.strip()],
             "description": self.f_desc.toPlainText().strip(),
+            "vo_cue": self.f_vo_cue.text().strip(),
+            "pitch": round(self.f_pitch.value(), 2),
+            "resonance": round(self.f_resonance.value(), 2),
         })
         # Drop empty arrays for cleanliness
         if not base.get("tags"): base.pop("tags", None)
@@ -155,6 +172,7 @@ class SkillsTab(QWidget):
         if not base.get("scaling"): base.pop("scaling", None)
         if not base.get("max_rank"): base.pop("max_rank", None)
         if not base.get("conditions"): base.pop("conditions", None)
+        if not base.get("vo_cue"): base.pop("vo_cue", None)
         return base
 
     def _load(self, s: Dict[str, Any]):
@@ -170,6 +188,9 @@ class SkillsTab(QWidget):
         self.f_tags.setText(", ".join(s.get("tags",[])))
         self.f_cbtags.setText(", ".join(s.get("combat_tags",[])))
         self.f_desc.setPlainText(s.get("description",""))
+        self.f_vo_cue.setText(s.get("vo_cue", ""))
+        self.f_pitch.setValue(float(s.get("pitch", 1.0)))
+        self.f_resonance.setValue(float(s.get("resonance", 0.0)))
 
     # ---------- actions ----------
     def _on_select(self, row: int):

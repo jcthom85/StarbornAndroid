@@ -32,7 +32,7 @@ from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
 
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QKeySequence
+from PyQt5.QtGui import QKeySequence, QIntValidator
 from PyQt5.QtWidgets import (
     QApplication,
     QAbstractItemView,
@@ -64,12 +64,18 @@ from PyQt5.QtWidgets import (
     QVBoxLayout,
     QWidget,
     QShortcut,
+    QStackedWidget,
+    QSizePolicy,
+    QStyle
 )
+from jinja2 import Environment, FileSystemLoader
 
 from data_core import json_load, json_save, unique_id
 from devkit_paths import resolve_paths
 from editor_bus import EditorBus, goto as studio_goto
 from ui_common import attach_hotkeys, flash_status
+from scope_utils import ScopeIndex, scope_prefix, ensure_prefix, infer_prefix
+from theme_kit import ThemeManager
 
 
 BEAT_TYPES: Tuple[str, ...] = ("dialogue", "event", "cutscene", "tutorial", "milestone", "note")
@@ -3735,6 +3741,315 @@ class TaskQuickEdit(QDialog):
         return dict(self._data)
 
 
+class TemplateVariablesDialog(QDialog):
+    def __init__(self, parent: QWidget, variables: List[str]):
+        super().__init__(parent)
+        self.setWindowTitle("Template Variables")
+        self.setMinimumWidth(400)
+        self.variables = variables
+        self.edits = {}
+
+        layout = QVBoxLayout(self)
+        form = QFormLayout()
+
+        for var in self.variables:
+            edit = QLineEdit()
+            self.edits[var] = edit
+            form.addRow(f"{{{{ {var} }}}}:", edit)
+
+        layout.addLayout(form)
+
+        self.button_box = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        self.button_box.accepted.connect(self.accept)
+        self.button_box.rejected.connect(self.reject)
+        layout.addWidget(self.button_box)
+
+    def get_values(self) -> Dict[str, str]:
+        return {var: edit.text() for var, edit in self.edits.items()}
+
+
+class StageNotesDialog(QDialog):
+    def __init__(self, parent: QWidget, text: str, flavor: str):
+        super().__init__(parent)
+        self.setWindowTitle("Stage Notes")
+        self.resize(480, 480)
+        layout = QVBoxLayout(self)
+        self.edit = QPlainTextEdit() # Changed to QPlainTextEdit to match Studio style
+        self.edit.setPlainText(text)
+        layout.addWidget(self.edit)
+
+        self.flavor_edit = QPlainTextEdit() # Changed to QPlainTextEdit
+        self.flavor_edit.setPlaceholderText("Flavor text / VO direction / lore tidbits…")
+        self.flavor_edit.setPlainText(flavor)
+        layout.addWidget(self.flavor_edit)
+
+        buttons = QDialogButtonBox(QDialogButtonBox.Save | QDialogButtonBox.Cancel)
+        buttons.accepted.connect(self.accept)
+        buttons.rejected.connect(self.reject)
+        layout.addWidget(buttons)
+
+    def value(self) -> Tuple[str, str]:
+        return self.edit.toPlainText(), self.flavor_edit.toPlainText()
+
+
+class ConditionalQuestWizard(QDialog):
+    def __init__(self, parent: QWidget, room_ids: List[str]):
+        super().__init__(parent)
+        self.setWindowTitle("Create Conditional Quest")
+        self.setMinimumWidth(600)
+
+        self.edits = {}
+        layout = QVBoxLayout(self)
+        form = QFormLayout()
+
+        self.edits["npc_name"] = QLineEdit()
+        self.edits["npc_name"].setPlaceholderText("e.g., Ollie")
+        form.addRow("NPC Name", self.edits["npc_name"])
+
+        self.edits["room_id"] = QComboBox()
+        self.edits["room_id"].addItems([""] + room_ids)
+        form.addRow("Room ID for Lure:", self.edits["room_id"])
+
+        self.edits["quest_id"] = QLineEdit()
+        self.edits["quest_id"].setPlaceholderText("e.g., talk_to_jed")
+        form.addRow("Quest ID to Start", self.edits["quest_id"])
+
+        self.edits["lure_dialogue"] = QLineEdit()
+        self.edits["lure_dialogue"].setPlaceholderText("e.g., Nova! Go talk to Jed.")
+        form.addRow("Lure Cinematic Dialogue", self.edits["lure_dialogue"])
+
+        self.edits["quest_dialogue_text"] = QLineEdit()
+        self.edits["quest_dialogue_text"].setPlaceholderText("e.g., Thanks for talking to me. Please go see Jed.")
+        form.addRow("Quest-Giving Dialogue", self.edits["quest_dialogue_text"])
+
+        self.edits["post_quest_dialogue_text"] = QLineEdit()
+        self.edits["post_quest_dialogue_text"].setPlaceholderText("e.g., You should get going, Jed's waiting!")
+        form.addRow("Post-Quest Dialogue", self.edits["post_quest_dialogue_text"])
+
+        layout.addLayout(form)
+
+        self.button_box = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        self.button_box.accepted.connect(self.accept)
+        self.button_box.rejected.connect(self.reject)
+        layout.addWidget(self.button_box)
+
+    def get_values(self) -> Dict[str, str]:
+        values = {}
+        for key, widget in self.edits.items():
+            if isinstance(widget, QLineEdit):
+                values[key] = widget.text().strip()
+            elif isinstance(widget, QComboBox):
+                values[key] = widget.currentText()
+        npc_id_safe = values["npc_name"].lower().replace(" ", "_")
+        quest_id_safe = values["quest_id"].lower()
+
+        values["npc_id"] = npc_id_safe
+        values["event_id"] = f"evt_meet_{npc_id_safe}_for_{quest_id_safe}"
+        values["cinematic_id"] = f"cin_{npc_id_safe}_{quest_id_safe}_lure"
+        values["met_milestone"] = f"ms_met_{npc_id_safe}"
+        values["quest_started_milestone"] = f"ms_{quest_id_safe}_started"
+        values["quest_dialogue_id"] = f"dlg_{npc_id_safe}_{quest_id_safe}_prompt"
+        values["post_quest_dialogue_id"] = f"dlg_{npc_id_safe}_{quest_id_safe}_post"
+
+        return values
+
+
+class FetchQuestWizard(QDialog):
+    def __init__(self, parent: QWidget, item_ids: List[str], npc_ids: List[str]):
+        super().__init__(parent)
+        self.setWindowTitle("Create Fetch Quest")
+        self.setMinimumWidth(600)
+
+        self.edits = {}
+        layout = QVBoxLayout(self)
+        form = QFormLayout()
+
+        self.edits["quest_name"] = QLineEdit()
+        self.edits["quest_name"].setPlaceholderText("e.g., The Missing Relic")
+        form.addRow("Quest Name", self.edits["quest_name"])
+
+        self.edits["item_id"] = QComboBox()
+        self.edits["item_id"].addItems([""] + item_ids)
+        form.addRow("Item to Fetch", self.edits["item_id"])
+
+        self.edits["quantity"] = QLineEdit("1")
+        self.edits["quantity"].setValidator(QIntValidator())
+        form.addRow("Quantity", self.edits["quantity"])
+
+        self.edits["giver_npc_id"] = QComboBox()
+        self.edits["giver_npc_id"].addItems([""] + npc_ids)
+        form.addRow("Quest Giver NPC", self.edits["giver_npc_id"])
+
+        self.edits["delivery_npc_id"] = QComboBox()
+        self.edits["delivery_npc_id"].addItems([""] + npc_ids)
+        form.addRow("Delivery NPC (Optional)", self.edits["delivery_npc_id"])
+
+        layout.addLayout(form)
+
+        self.button_box = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        self.button_box.accepted.connect(self.accept)
+        self.button_box.rejected.connect(self.reject)
+        layout.addWidget(self.button_box)
+
+    def get_values(self) -> Dict[str, str]:
+        values = {}
+        for key, widget in self.edits.items():
+            if isinstance(widget, QLineEdit):
+                values[key] = widget.text().strip()
+            elif isinstance(widget, QComboBox):
+                values[key] = widget.currentText()
+
+        quest_name_safe = values["quest_name"].lower().replace(" ", "_")
+        item_id_safe = values["item_id"].lower()
+
+        values["quest_id"] = f"quest_fetch_{quest_name_safe}"
+        values["start_dialogue_id"] = f"dlg_fetch_{item_id_safe}_start"
+        values["complete_dialogue_id"] = f"dlg_fetch_{item_id_safe}_complete"
+        values["milestone_item_obtained"] = f"ms_fetch_{item_id_safe}_obtained"
+        values["milestone_quest_started"] = f"ms_fetch_{item_id_safe}_started"
+
+        return values
+
+
+class KillQuestWizard(QDialog):
+    def __init__(self, parent: QWidget, npc_ids: List[str], room_ids: List[str]):
+        super().__init__(parent)
+        self.setWindowTitle("Create Kill Quest")
+        self.setMinimumWidth(600)
+
+        self.edits = {}
+        layout = QVBoxLayout(self)
+        form = QFormLayout()
+
+        self.edits["quest_name"] = QLineEdit()
+        self.edits["quest_name"].setPlaceholderText("e.g., The Goblin Menace")
+        form.addRow("Quest Name", self.edits["quest_name"])
+
+        self.edits["target_enemy_id"] = QComboBox()
+        self.edits["target_enemy_id"].addItems([""] + npc_ids)
+        form.addRow("Target Enemy", self.edits["target_enemy_id"])
+
+        self.edits["quantity"] = QLineEdit("1")
+        self.edits["quantity"].setValidator(QIntValidator())
+        form.addRow("Quantity", self.edits["quantity"])
+
+        self.edits["location_room_id"] = QComboBox()
+        self.edits["location_room_id"].addItems([""] + room_ids)
+        form.addRow("Location (Room ID)", self.edits["location_room_id"])
+
+        self.edits["giver_npc_id"] = QComboBox()
+        self.edits["giver_npc_id"].addItems([""] + npc_ids)
+        form.addRow("Quest Giver NPC", self.edits["giver_npc_id"])
+
+        layout.addLayout(form)
+
+        self.button_box = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        self.button_box.accepted.connect(self.accept)
+        self.button_box.rejected.connect(self.reject)
+        layout.addWidget(self.button_box)
+
+    def get_values(self) -> Dict[str, str]:
+        values = {}
+        for key, widget in self.edits.items():
+            if isinstance(widget, QLineEdit):
+                values[key] = widget.text().strip()
+            elif isinstance(widget, QComboBox):
+                values[key] = widget.currentText()
+
+        quest_name_safe = values["quest_name"].lower().replace(" ", "_")
+        target_enemy_id_safe = values["target_enemy_id"].lower()
+
+        values["quest_id"] = f"quest_kill_{quest_name_safe}"
+        values["start_dialogue_id"] = f"dlg_kill_{target_enemy_id_safe}_start"
+        values["complete_dialogue_id"] = f"dlg_kill_{target_enemy_id_safe}_complete"
+        values["milestone_enemies_killed"] = f"ms_kill_{target_enemy_id_safe}_count"
+        values["milestone_quest_started"] = f"ms_kill_{target_enemy_id_safe}_started"
+
+        return values
+
+
+class QuestCompletionWizard(QDialog):
+    def __init__(self, parent: QWidget, quests: List[str], npc_ids: List[str], room_ids: List[str], item_ids: List[str]):
+        super().__init__(parent)
+        self.setWindowTitle("Create Quest Completion Event")
+        self.setMinimumWidth(500)
+
+        layout = QVBoxLayout(self)
+        form = QFormLayout()
+
+        self.quest_combo = QComboBox()
+        self.quest_combo.addItems(quests)
+        form.addRow("Quest to Complete:", self.quest_combo)
+
+        self.trigger_combo = QComboBox()
+        self.trigger_combo.addItems(["Talk to NPC", "Enter Room", "Player Action"])
+        form.addRow("Trigger Type:", self.trigger_combo)
+
+        self.trigger_stack = QStackedWidget()
+        self.npc_combo = QComboBox()
+        self.npc_combo.addItems([""] + npc_ids)
+        self.room_combo = QComboBox()
+        self.room_combo.addItems([""] + room_ids)
+        self.action_edit = QLineEdit()
+        self.action_edit.setPlaceholderText("e.g., boss_defeated")
+        self.trigger_stack.addWidget(self.npc_combo)
+        self.trigger_stack.addWidget(self.room_combo)
+        self.trigger_stack.addWidget(self.action_edit)
+        form.addRow("Trigger Value:", self.trigger_stack)
+
+        self.trigger_combo.currentIndexChanged.connect(self.trigger_stack.setCurrentIndex)
+
+        self.dialogue_edit = QLineEdit()
+        self.dialogue_edit.setPlaceholderText("(Optional)")
+        form.addRow("Completion Dialogue ID:", self.dialogue_edit)
+
+        self.item_reward_combo = QComboBox()
+        self.item_reward_combo.addItems([""] + item_ids)
+        form.addRow("Item Reward:", self.item_reward_combo)
+
+        layout.addLayout(form)
+
+        self.button_box = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        self.button_box.accepted.connect(self.accept)
+        self.button_box.rejected.connect(self.reject)
+        layout.addWidget(self.button_box)
+
+    def get_values(self) -> Dict[str, str]:
+        quest_id = self.quest_combo.currentText()
+        trigger_type_text = self.trigger_combo.currentText()
+        dialogue_id = self.dialogue_edit.text().strip()
+
+        trigger_value = ""
+        current_widget = self.trigger_stack.currentWidget()
+        if isinstance(current_widget, QComboBox):
+            trigger_value = current_widget.currentText()
+        elif isinstance(current_widget, QLineEdit):
+            trigger_value = current_widget.text().strip()
+
+        trigger_type_map = {
+            "Talk to NPC": "talk_to",
+            "Enter Room": "enter_room",
+            "Player Action": "player_action"
+        }
+        trigger_key_map = {
+            "talk_to": "npc",
+            "enter_room": "room",
+            "player_action": "action"
+        }
+
+        trigger_type = trigger_type_map[trigger_type_text]
+        trigger_key = trigger_key_map[trigger_type]
+
+        return {
+            "quest_id": quest_id,
+            "trigger_type": trigger_type,
+            "trigger_key": trigger_key,
+            "trigger_value": trigger_value,
+            "dialogue_id": dialogue_id,
+            "item_reward": self.item_reward_combo.currentText()
+        }
+
+
 @dataclass(frozen=True)
 class RefJump:
     kind: str  # dialogue/event/cutscene/tutorial/milestone/quest
@@ -3895,6 +4210,24 @@ class NarrativeStudio(QWidget):
 
     # -------------------- Data loading/saving --------------------
 
+    def _current_scope_filter(self) -> Tuple[str, str]:
+        # Placeholder for future scope filtering UI
+        return "", ""
+
+    def _scope_prefix(self) -> str:
+        world_id, hub_id = self._current_scope_filter()
+        return scope_prefix(world_id or None, hub_id or None)
+
+    def _apply_scope_prefix_to_values(self, values: Dict[str, str], keys: List[str]) -> Dict[str, str]:
+        prefix = self._scope_prefix()
+        if not prefix:
+            return values
+        for key in keys:
+            val = values.get(key)
+            if isinstance(val, str) and val:
+                values[key] = ensure_prefix(val, prefix)
+        return values
+
     def _load_all(self):
         self._load_indices_only()
         try:
@@ -3958,6 +4291,12 @@ class NarrativeStudio(QWidget):
                         player_actions.add(v.strip())
         self.player_action_ids = sorted(player_actions, key=str.lower)
 
+        # Scope helper
+        try:
+            self.scope_index = ScopeIndex.from_assets(self.assets_root)
+        except Exception:
+            self.scope_index = None
+
     def _save_dirty(self) -> bool:
         if not self._dirty_any:
             flash_status(self, "Nothing to save.", 1200)
@@ -3998,117 +4337,175 @@ class NarrativeStudio(QWidget):
 
     def _build_ui(self):
         root = QVBoxLayout(self)
-        root.setContentsMargins(10, 10, 10, 10)
-        root.setSpacing(8)
+        root.setContentsMargins(8, 8, 8, 8)
+        root.setSpacing(6)
 
-        # Header
-        header = QHBoxLayout()
-        title = QLabel("Narrative Studio")
-        title.setStyleSheet("font-size: 20px; font-weight: 650;")
-        sub = QLabel("Manage quests, dialogue, cutscenes, and events in one place.")
-        # sub.setStyleSheet("color: #6f6f6f;")
-        layout.addWidget(title)
-        header_left = QVBoxLayout()
-        header_left.addWidget(title)
-        header_left.addWidget(sub)
-        header.addLayout(header_left, 1)
+        # Main Splitter: Library | Workbench | Inspector
+        self.main_splitter = QSplitter(Qt.Horizontal)
+        root.addWidget(self.main_splitter)
 
-        self.focus_label = QLabel("Focus: (select a quest stage)")
-        # self.focus_label.setStyleSheet("color: #6f6f6f;")
-        header.addWidget(self.focus_label)
-
-        b_save = QPushButton("Save")
-        b_save.setShortcut("Ctrl+S")
-        b_save.clicked.connect(self.save)
-        header.addWidget(b_save)
-
-        root.addLayout(header)
-
-        splitter = QSplitter(Qt.Horizontal)
-        root.addWidget(splitter, 1)
-
-        # Left: navigator
-        nav = QWidget()
-        nav.setMinimumWidth(330)
-        nav_l = QVBoxLayout(nav)
-        nav_l.setContentsMargins(0, 0, 0, 0)
+        # --- Pane 1: Library (Left) ---
+        library_panel = QWidget()
+        lib_l = QVBoxLayout(library_panel)
+        lib_l.setContentsMargins(0, 0, 0, 0)
+        
+        # New Quest / Wizards Menu
+        b_create = QPushButton("New…")
+        create_menu = QMenu(b_create)
+        create_menu.addAction("Empty Quest", self._add_quest)
+        create_menu.addAction("From Template…", self._add_quest_from_template)
+        create_menu.addSeparator()
+        create_menu.addAction("Wizard: Fetch Quest", self._create_fetch_quest)
+        create_menu.addAction("Wizard: Kill Quest", self._create_kill_quest)
+        create_menu.addAction("Wizard: Conditional Quest", self._create_conditional_quest)
+        create_menu.addAction("Wizard: Completion Event", self._create_quest_completion_event)
+        b_create.setMenu(create_menu)
+        lib_l.addWidget(b_create)
 
         self.quest_search = QLineEdit()
-        self.quest_search.setPlaceholderText("Search quests (id/title/summary)…")
+        self.quest_search.setPlaceholderText("Search quests…")
         self.quest_search.textChanged.connect(self._refresh_quest_list)
-        nav_l.addWidget(self.quest_search)
+        lib_l.addWidget(self.quest_search)
 
         self.quest_list = QListWidget()
+        self.quest_list.setAlternatingRowColors(True)
         self.quest_list.itemSelectionChanged.connect(self._on_select_quest)
-        nav_l.addWidget(self.quest_list, 1)
+        lib_l.addWidget(self.quest_list, 1)
+        
+        self.main_splitter.addWidget(library_panel)
 
-        nav_l.addWidget(QLabel("Stages:"))
+        # --- Pane 2: Workbench (Center) ---
+        workbench_panel = QWidget()
+        wb_l = QVBoxLayout(workbench_panel)
+        wb_l.setContentsMargins(0, 0, 0, 0)
+
+        # Header / Focus
+        self.focus_header = QLabel("No Quest Selected")
+        self.focus_header.setStyleSheet("font-size: 16px; font-weight: bold; color: #5865F2;")
+        wb_l.addWidget(self.focus_header)
+
+        # Stack: Quest Overview vs Stage Script
+        self.wb_stack = QStackedWidget()
+        
+        # View 1: Quest Overview
+        self.page_quest = QWidget()
+        pq_l = QVBoxLayout(self.page_quest)
+        pq_l.setContentsMargins(0, 0, 0, 0)
+        
+        # Quest Metadata Form
+        q_meta_box = QGroupBox("Quest Metadata")
+        q_meta_form = QFormLayout(q_meta_box)
+        self.quest_id_edit = QLineEdit()
+        self.quest_title_edit = QLineEdit()
+        self.quest_summary_edit = QPlainTextEdit(); self.quest_summary_edit.setMaximumHeight(60)
+        self.quest_desc_edit = QPlainTextEdit(); self.quest_desc_edit.setMaximumHeight(80)
+        self.quest_flavor_edit = QPlainTextEdit(); self.quest_flavor_edit.setMaximumHeight(60)
+        
+        # Connect signals for quest form
+        self.quest_title_edit.textChanged.connect(self._apply_quest_form)
+        self.quest_summary_edit.textChanged.connect(self._apply_quest_form)
+        self.quest_desc_edit.textChanged.connect(self._apply_quest_form)
+        self.quest_flavor_edit.textChanged.connect(self._apply_quest_form)
+
+        q_meta_form.addRow("ID:", self.quest_id_edit)
+        q_meta_form.addRow("Title:", self.quest_title_edit)
+        q_meta_form.addRow("Summary:", self.quest_summary_edit)
+        q_meta_form.addRow("Description:", self.quest_desc_edit)
+        q_meta_form.addRow("Flavor:", self.quest_flavor_edit)
+        pq_l.addWidget(q_meta_box)
+
+        # Stage List
+        stage_group = QGroupBox("Stages")
+        sg_l = QVBoxLayout(stage_group)
         self.stage_list = QListWidget()
+        self.stage_list.setAlternatingRowColors(True)
         self.stage_list.itemSelectionChanged.connect(self._on_select_stage)
-        nav_l.addWidget(self.stage_list, 1)
+        self.stage_list.itemDoubleClicked.connect(lambda _: self.wb_stack.setCurrentIndex(1))
+        
+        stg_btns = QHBoxLayout()
+        style = self.style()
+        b_add_stage = QPushButton(); b_add_stage.setIcon(style.standardIcon(QStyle.SP_FileDialogNewFolder)); b_add_stage.setToolTip("Add Stage")
+        b_add_stage.clicked.connect(self._add_stage)
+        
+        b_edit_script = QPushButton("Edit Script"); b_edit_script.setIcon(style.standardIcon(QStyle.SP_FileIcon)); b_edit_script.setToolTip("Open Beat Script")
+        b_edit_script.clicked.connect(self._open_stage_script)
+        
+        b_dup_stage = QPushButton(); b_dup_stage.setIcon(style.standardIcon(QStyle.SP_FileDialogDetailedView)); b_dup_stage.setToolTip("Duplicate")
+        b_dup_stage.clicked.connect(self._duplicate_stage)
+        b_del_stage = QPushButton(); b_del_stage.setIcon(style.standardIcon(QStyle.SP_TrashIcon)); b_del_stage.setToolTip("Delete")
+        b_del_stage.clicked.connect(self._delete_stage)
+        stg_btns.addWidget(b_add_stage); stg_btns.addWidget(b_edit_script); stg_btns.addWidget(b_dup_stage); stg_btns.addWidget(b_del_stage); stg_btns.addStretch()
+        
+        sg_l.addWidget(self.stage_list)
+        sg_l.addLayout(stg_btns)
+        pq_l.addWidget(stage_group, 1)
+        
+        self.wb_stack.addWidget(self.page_quest)
 
-        nav_btns = QHBoxLayout()
-        b_open_quest = QPushButton("Open Quest Editor")
-        b_open_quest.clicked.connect(self._goto_current_quest)
-        nav_btns.addWidget(b_open_quest)
-        nav_l.addLayout(nav_btns)
+        # View 2: Stage Script (Beat Flow)
+        self.page_script = QWidget()
+        ps_l = QVBoxLayout(self.page_script)
+        ps_l.setContentsMargins(0, 0, 0, 0)
+        
+        # Back Button
+        b_back = QPushButton("← Back to Quest Overview")
+        b_back.setIcon(style.standardIcon(QStyle.SP_FileDialogBack))
+        b_back.clicked.connect(lambda: self.wb_stack.setCurrentIndex(0))
+        ps_l.addWidget(b_back)
 
-        splitter.addWidget(nav)
-
-        # Middle: flow list
-        flow_panel = QWidget()
-        flow_l = QVBoxLayout(flow_panel)
-        flow_l.setContentsMargins(0, 0, 0, 0)
-
-        flow_hdr = QHBoxLayout()
-        flow_hdr.addWidget(QLabel("Beat Flow"))
-        flow_hdr.addStretch(1)
-
-        b_add = QToolButton()
-        b_add.setText("Add…")
-        add_menu = QMenu(b_add)
-        for t in BEAT_TYPES:
-            add_menu.addAction(t.title(), lambda tt=t: self._add_beat(tt))
-        b_add.setMenu(add_menu)
-        b_add.setPopupMode(QToolButton.InstantPopup)
-        flow_hdr.addWidget(b_add)
-
-        b_dup = QPushButton("Duplicate")
-        b_dup.clicked.connect(self._duplicate_selected_beat)
-        flow_hdr.addWidget(b_dup)
-
-        b_del = QPushButton("Delete")
-        b_del.clicked.connect(self._delete_selected_beat)
-        flow_hdr.addWidget(b_del)
-
-        b_up = QPushButton("▲")
-        b_dn = QPushButton("▼")
-        b_up.clicked.connect(lambda: self._move_selected_beat(-1))
-        b_dn.clicked.connect(lambda: self._move_selected_beat(+1))
-        flow_hdr.addWidget(b_up)
-        flow_hdr.addWidget(b_dn)
-
-        flow_l.addLayout(flow_hdr)
-
+        # Beat Flow List (The Script)
         self.flow_list = FlowListWidget()
+        self.flow_list.setAlternatingRowColors(True)
         self.flow_list.itemSelectionChanged.connect(self._on_select_beat)
         self.flow_list.itemDoubleClicked.connect(self._open_selected_reference)
         self.flow_list.on_reordered = self._on_flow_reordered
-        flow_l.addWidget(self.flow_list, 1)
+        ps_l.addWidget(self.flow_list, 1)
 
-        splitter.addWidget(flow_panel)
+        # Flow Controls
+        flow_ctrl = QHBoxLayout()
+        b_add_beat = QToolButton(); b_add_beat.setIcon(style.standardIcon(QStyle.SP_FileDialogContentsView)); b_add_beat.setToolTip("Add Beat…")
+        add_menu = QMenu(b_add_beat)
+        for t in BEAT_TYPES:
+            add_menu.addAction(t.title(), lambda tt=t: self._add_beat(tt))
+        b_add_beat.setMenu(add_menu); b_add_beat.setPopupMode(QToolButton.InstantPopup)
+        
+        b_dup_beat = QPushButton(); b_dup_beat.setIcon(style.standardIcon(QStyle.SP_FileDialogDetailedView)); b_dup_beat.setToolTip("Dup")
+        b_dup_beat.clicked.connect(self._duplicate_selected_beat)
+        b_del_beat = QPushButton(); b_del_beat.setIcon(style.standardIcon(QStyle.SP_TrashIcon)); b_del_beat.setToolTip("Del")
+        b_del_beat.clicked.connect(self._delete_selected_beat)
+        b_ai_draft = QPushButton(); b_ai_draft.setIcon(style.standardIcon(QStyle.SP_CommandLink)); b_ai_draft.setToolTip("AI Draft")
+        b_ai_draft.clicked.connect(self._ai_generate_stage_beats)
+        
+        flow_ctrl.addWidget(b_add_beat); flow_ctrl.addWidget(b_dup_beat); flow_ctrl.addWidget(b_del_beat)
+        flow_ctrl.addWidget(b_ai_draft); flow_ctrl.addStretch()
+        ps_l.addLayout(flow_ctrl)
 
-        # Right: tabs (Beat / Context / Tools)
-        right = QTabWidget()
-        splitter.addWidget(right)
-        splitter.setStretchFactor(1, 1)
-        splitter.setStretchFactor(2, 1)
+        self.wb_stack.addWidget(self.page_script)
+        wb_l.addWidget(self.wb_stack)
+        
+        self.main_splitter.addWidget(workbench_panel)
 
-        right.addTab(self._build_tab_beat(), "Beat")
-        right.addTab(self._build_tab_context(), "Context")
-        right.addTab(self._build_tab_tools(), "Tools")
+        # --- Pane 3: Inspector (Right) ---
+        self.inspector_tabs = QTabWidget()
+        
+        self.inspector_tabs.addTab(self._build_tab_beat(), "Properties")
+        self.inspector_tabs.addTab(self._build_tab_context(), "Context")
+        
+        # Outline Tab (New!)
+        self.quest_outline_edit = QPlainTextEdit()
+        self.quest_outline_edit.setReadOnly(True)
+        self.inspector_tabs.addTab(self.quest_outline_edit, "Outline")
+        
+        self.inspector_tabs.addTab(self._build_tab_tools(), "Tools")
+        
+        self.main_splitter.addWidget(self.inspector_tabs)
 
-        # Status bar (visible even though we're a QWidget tab in Studio Pro)
+        # Layout Weights (20% | 50% | 30%)
+        self.main_splitter.setStretchFactor(0, 2)
+        self.main_splitter.setStretchFactor(1, 5)
+        self.main_splitter.setStretchFactor(2, 3)
+
+        # Status Bar
         self._status_bar = QStatusBar()
         root.addWidget(self._status_bar)
 
@@ -4147,9 +4544,14 @@ class NarrativeStudio(QWidget):
         self.beat_open_btn.clicked.connect(self._open_selected_reference)
         self.beat_create_btn = QPushButton("Create/Quick Edit…")
         self.beat_create_btn.clicked.connect(self._create_or_edit_reference)
+        self.beat_view_room_btn = QPushButton("View Room")
+        self.beat_view_room_btn.setToolTip("Jump to the room referenced by this event")
+        self.beat_view_room_btn.clicked.connect(self._view_beat_room)
+        self.beat_view_room_btn.setVisible(False)
         btns.addWidget(self.beat_apply_btn)
         btns.addWidget(self.beat_open_btn)
         btns.addWidget(self.beat_create_btn)
+        btns.addWidget(self.beat_view_room_btn)
         btns.addStretch(1)
         l.addWidget(box)
         l.addLayout(btns)
@@ -5037,23 +5439,457 @@ class NarrativeStudio(QWidget):
         sid = item.data(Qt.UserRole) if item else None
         self.current_stage_id = str(sid) if sid else None
 
-        self._set_focus_label()
+        # Update Inspector context but DO NOT switch to script view yet
         self._refresh_flow_list()
+        self._update_focus_header()
         self._refresh_context()
+        self._refresh_stage_outline()
+
+    def _open_stage_script(self):
+        """Explicitly switch to the script view."""
+        if self.current_stage_id:
+            self.wb_stack.setCurrentIndex(1)
+            self._refresh_flow_list()
+            self._update_focus_header()
+        else:
+            QMessageBox.information(self, "Select Stage", "Please select a stage first.")
+
+    def _update_focus_header(self):
+        q = self.quests_by_id.get(self.current_quest_id, {})
+        q_title = q.get("title", self.current_quest_id or "No Quest")
+        
+        if self.current_stage_id:
+            stages = q.get("stages", [])
+            s_title = self.current_stage_id
+            for s in stages:
+                if s.get("id") == self.current_stage_id:
+                    s_title = s.get("title", self.current_stage_id)
+                    break
+            self.focus_header.setText(f"{q_title} > {s_title}")
+        else:
+            self.focus_header.setText(q_title)
 
     def _set_focus_label(self):
-        quest = self._current_quest()
-        stage = self._current_stage()
-        if not quest or not stage:
-            self.focus_label.setText("Focus: (select a quest stage)")
-            return
-        qtitle = quest.get("title") or quest.get("id") or ""
-        stitle = stage.get("title") or stage.get("id") or ""
-        self.focus_label.setText(f"Focus: {qtitle} → {stitle}")
+        # Deprecated by _update_focus_header but kept for safety if called elsewhere
+        self._update_focus_header()
 
     def _goto_current_quest(self):
         if self.current_quest_id:
             self._goto_or_open_editor("quest", self.current_quest_id)
+
+    def _add_quest(self):
+        prefix = self._scope_prefix()
+        default_id = ensure_prefix("quest_new", prefix) if prefix else "quest_new"
+        new_id, ok = QInputDialog.getText(self, "New Quest", "Quest ID:", text=default_id)
+        if not ok or not new_id.strip():
+            return
+        new_id = new_id.strip()
+        if prefix:
+            new_id = ensure_prefix(new_id, prefix)
+        if new_id in self.quests_by_id:
+            QMessageBox.warning(self, "Duplicate", f"Quest '{new_id}' already exists.")
+            return
+        
+        quest = {
+            "id": new_id,
+            "title": new_id.replace("_", " ").title(),
+            "summary": "",
+            "description": "",
+            "flavor": "",
+            "giver": "",
+            "hub_id": "",
+            "stages": [],
+            "rewards": [],
+        }
+        self.quests.append(quest)
+        self.quests_by_id[new_id] = quest
+        self.flows.setdefault(new_id, {})
+        self._mark_dirty("quests")
+        self._refresh_quest_list()
+        self._select_quest_by_id(new_id)
+
+    def _add_quest_from_template(self):
+        template_path, _ = QFileDialog.getOpenFileName(
+            self, "Select Quest Template", str(self.project_root / "templates"), "Jinja2 Templates (*.json.j2 *.json)"
+        )
+        if not template_path:
+            return
+
+        try:
+            with open(template_path, "r", encoding="utf-8") as f:
+                template_content = f.read()
+        except Exception as e:
+            QMessageBox.critical(self, "Template Error", f"Failed to load template:\n{e}")
+            return
+
+        # Find all variables in the template
+        variables = sorted(list(set(re.findall(r"\{\{\s*(\w+)\s*\}\}", template_content))))
+
+        template_values = {}
+        if variables:
+            var_dialog = TemplateVariablesDialog(self, variables)
+            if var_dialog.exec_() == QDialog.Accepted:
+                template_values = var_dialog.get_values()
+            else:
+                return # User cancelled
+
+        # Render the template
+        try:
+            jinja_env = Environment(loader=FileSystemLoader(os.path.dirname(template_path)))
+            template = jinja_env.from_string(template_content)
+            rendered_json = template.render(template_values)
+            new_quest = json.loads(rendered_json)
+        except Exception as e:
+            QMessageBox.critical(self, "Template Error", f"Failed to render template or parse JSON:\n{e}")
+            return
+
+        # Get a unique ID for the new quest
+        prefix = self._scope_prefix()
+        new_id_suggestion = new_quest.get("id", "new_quest")
+        if prefix:
+            new_id_suggestion = ensure_prefix(new_id_suggestion, prefix)
+        new_id, ok = QInputDialog.getText(self, "New Quest ID", "Enter new quest ID:", text=new_id_suggestion)
+        if not ok or not new_id.strip():
+            return
+        new_id = new_id.strip()
+        if prefix:
+            new_id = ensure_prefix(new_id, prefix)
+
+        if new_id in self.quests_by_id:
+            QMessageBox.warning(self, "ID Error", "Quest ID already exists.")
+            return
+
+        new_quest["id"] = new_id
+        _, hub_filter = self._current_scope_filter()
+        if hub_filter and not new_quest.get("hub_id"):
+            new_quest["hub_id"] = hub_filter
+
+        self.quests.append(new_quest)
+        self.quests_by_id[new_id] = new_quest
+        self._mark_dirty("quests")
+        self._refresh_quest_list()
+        self._select_quest_by_id(new_id)
+
+    def _create_conditional_quest(self):
+        wizard = ConditionalQuestWizard(self, list(self.rooms_by_id.keys()))
+        if wizard.exec_() != QDialog.Accepted:
+            return
+
+        values = wizard.get_values()
+        self._apply_scope_prefix_to_values(values, [
+            "event_id",
+            "cinematic_id",
+            "quest_dialogue_id",
+            "post_quest_dialogue_id",
+            "met_milestone",
+            "quest_started_milestone",
+        ])
+        template_path = self.project_root / "templates" / "pattern_conditional_quest.json.j2"
+
+        try:
+            with open(template_path, "r", encoding="utf-8") as f:
+                template_content = f.read()
+        except FileNotFoundError:
+            QMessageBox.critical(self, "Template Error", f"Pattern template not found at {template_path}")
+            return
+        except Exception as e:
+            QMessageBox.critical(self, "Template Error", f"Failed to load pattern template:\n{e}")
+            return
+
+        try:
+            jinja_env = Environment()
+            template = jinja_env.from_string(template_content)
+            rendered_json = template.render(values)
+            data = json.loads(rendered_json)
+        except Exception as e:
+            QMessageBox.critical(self, "Template Error", f"Failed to render pattern or parse JSON:\n{e}")
+            return
+
+        # Append the new data to the in-memory stores
+        event_payload = data["event"]
+        event_id = event_payload.get("id")
+        if event_id:
+            self.events_by_id[event_id] = event_payload
+            self._mark_dirty("events")
+        cinematic_payload = data["cinematic"]
+        if isinstance(cinematic_payload, dict):
+            cid = cinematic_payload.get("id")
+            if cid:
+                scene = dict(cinematic_payload)
+                scene.setdefault("steps", [])
+                scene.setdefault("title", scene.get("title", "") or "")
+                self.cinematics_by_id[cid] = scene
+                self._mark_dirty("cinematics")
+        for dialogue_entry in data["dialogues"]:
+            dlg_id = dialogue_entry.get("id")
+            if dlg_id:
+                self.dialogues_by_id[dlg_id] = dialogue_entry
+                self._mark_dirty("dialogue")
+
+        QMessageBox.information(self, "Success", f"Successfully created conditional quest logic for {values['npc_name']}.")
+
+    def _create_fetch_quest(self):
+        items = self.items_by_id
+        item_ids = sorted(items.keys())
+        wizard = FetchQuestWizard(self, item_ids, self.npc_ids)
+        if wizard.exec_() != QDialog.Accepted:
+            return
+
+        values = wizard.get_values()
+        self._apply_scope_prefix_to_values(values, [
+            "quest_id",
+            "start_dialogue_id",
+            "complete_dialogue_id",
+            "milestone_item_obtained",
+            "milestone_quest_started",
+        ])
+        template_path = self.project_root / "templates" / "pattern_fetch_quest.json.j2"
+
+        try:
+            with open(template_path, "r", encoding="utf-8") as f:
+                template_content = f.read()
+        except FileNotFoundError:
+            QMessageBox.critical(self, "Template Error", f"Pattern template not found at {template_path}")
+            return
+        except Exception as e:
+            QMessageBox.critical(self, "Template Error", f"Failed to load pattern template:\n{e}")
+            return
+
+        try:
+            jinja_env = Environment()
+            template = jinja_env.from_string(template_content)
+            rendered_json = template.render(values)
+            data = json.loads(rendered_json)
+        except Exception as e:
+            QMessageBox.critical(self, "Template Error", f"Failed to render pattern or parse JSON:\n{e}")
+            return
+
+        # Append the new data to the in-memory stores
+        quest_payload = data["quest"]
+        quest_id = quest_payload.get("id")
+        if quest_id:
+            _, hub_filter = self._current_scope_filter()
+            if hub_filter and not quest_payload.get("hub_id"):
+                quest_payload["hub_id"] = hub_filter
+            self.quests.append(quest_payload)
+            self.quests_by_id[quest_id] = quest_payload
+            self._mark_dirty("quests")
+        for dialogue_entry in data["dialogues"]:
+            dlg_id = dialogue_entry.get("id")
+            if dlg_id:
+                self.dialogues_by_id[dlg_id] = dialogue_entry
+                self._mark_dirty("dialogue")
+        for event_entry in data["events"]:
+            evt_id = event_entry.get("id")
+            if evt_id:
+                self.events_by_id[evt_id] = event_entry
+                self._mark_dirty("events")
+
+        self._refresh_quest_list()
+        QMessageBox.information(self, "Success", f"Successfully created fetch quest '{quest_id}'.")
+
+    def _create_kill_quest(self):
+        wizard = KillQuestWizard(self, self.npc_ids, sorted(self.rooms_by_id.keys()))
+        if wizard.exec_() != QDialog.Accepted:
+            return
+
+        values = wizard.get_values()
+        self._apply_scope_prefix_to_values(values, [
+            "quest_id",
+            "start_dialogue_id",
+            "complete_dialogue_id",
+            "milestone_enemies_killed",
+            "milestone_quest_started",
+        ])
+        template_path = self.project_root / "templates" / "pattern_kill_quest.json.j2"
+
+        try:
+            with open(template_path, "r", encoding="utf-8") as f:
+                template_content = f.read()
+        except FileNotFoundError:
+            QMessageBox.critical(self, "Template Error", f"Pattern template not found at {template_path}")
+            return
+        except Exception as e:
+            QMessageBox.critical(self, "Template Error", f"Failed to load pattern template:\n{e}")
+            return
+
+        try:
+            jinja_env = Environment()
+            template = jinja_env.from_string(template_content)
+            rendered_json = template.render(values)
+            data = json.loads(rendered_json)
+        except Exception as e:
+            QMessageBox.critical(self, "Template Error", f"Failed to render pattern or parse JSON:\n{e}")
+            return
+
+        # Append the new data to the in-memory stores
+        quest_payload = data["quest"]
+        quest_id = quest_payload.get("id")
+        if quest_id:
+            _, hub_filter = self._current_scope_filter()
+            if hub_filter and not quest_payload.get("hub_id"):
+                quest_payload["hub_id"] = hub_filter
+            self.quests.append(quest_payload)
+            self.quests_by_id[quest_id] = quest_payload
+            self._mark_dirty("quests")
+        for dialogue_entry in data["dialogues"]:
+            dlg_id = dialogue_entry.get("id")
+            if dlg_id:
+                self.dialogues_by_id[dlg_id] = dialogue_entry
+                self._mark_dirty("dialogue")
+        for event_entry in data["events"]:
+            evt_id = event_entry.get("id")
+            if evt_id:
+                self.events_by_id[evt_id] = event_entry
+                self._mark_dirty("events")
+
+        self._refresh_quest_list()
+        QMessageBox.information(self, "Success", f"Successfully created kill quest '{quest_id}'.")
+
+    def _create_quest_completion_event(self):
+        quest_ids = sorted(self.quests_by_id.keys())
+        item_ids = sorted(self.items_by_id.keys())
+        wizard = QuestCompletionWizard(self, quest_ids, self.npc_ids, sorted(self.rooms_by_id.keys()), item_ids)
+        if wizard.exec_() != QDialog.Accepted:
+            return
+
+        values = wizard.get_values()
+        quest_id = values["quest_id"]
+
+        prefix = ""
+        if self.scope_index:
+            prefix = infer_prefix(quest_id, self.scope_index)
+        if not prefix:
+            prefix = self._scope_prefix()
+        quest_id_clean = quest_id
+        if prefix and quest_id.startswith(prefix):
+            quest_id_clean = quest_id[len(prefix):]
+        event_id = ensure_prefix(f"evt_complete_{quest_id_clean}", prefix)
+
+        new_event = {
+            "id": event_id,
+            "description": f"Event to complete the quest '{quest_id}'.",
+            "trigger": {
+                "type": values["trigger_type"],
+                values["trigger_key"]: values["trigger_value"]
+            },
+            "actions": [
+                {
+                    "type": "complete_quest",
+                    "quest_id": quest_id
+                }
+            ],
+            "conditions": [
+                {
+                    "type": "quest_active",
+                    "quest_id": quest_id
+                }
+            ]
+        }
+
+        if values["dialogue_id"]:
+            new_event["actions"].insert(0, {
+                "type": "play_dialogue",
+                "dialogue_id": values["dialogue_id"]
+            })
+
+        if values["item_reward"]:
+            new_event["actions"].append({
+                "type": "add_item",
+                "item_id": values["item_reward"],
+                "quantity": 1
+            })
+
+        self.events_by_id[new_event["id"]] = new_event
+        self._mark_dirty("events")
+        QMessageBox.information(self, "Success", f"Successfully created completion event for quest '{quest_id}'.")
+
+    def _duplicate_quest(self):
+        quest = self._current_quest()
+        if not quest:
+            return
+        clone = json.loads(json.dumps(quest))
+        clone_id = unique_id(f"{quest['id']}_copy", list(self.quests_by_id.keys()))
+        clone["id"] = clone_id
+        clone["title"] = f"{quest.get('title', quest['id'])} (Copy)"
+        self.quests.append(clone)
+        self.quests_by_id[clone_id] = clone
+        # copy flow too
+        if quest["id"] in self.flows:
+            self.flows[clone_id] = json.loads(json.dumps(self.flows[quest["id"]]))
+            self._mark_dirty("flows")
+        
+        self._mark_dirty("quests")
+        self._refresh_quest_list()
+        self._select_quest_by_id(clone_id)
+
+    def _delete_quest(self):
+        quest = self._current_quest()
+        if not quest:
+            return
+        if QMessageBox.question(self, "Delete quest", f"Delete quest '{quest.get('title', quest.get('id'))}'?") != QMessageBox.Yes:
+            return
+        qid = quest["id"]
+        self.quests = [q for q in self.quests if q.get("id") != qid]
+        self.quests_by_id.pop(qid, None)
+        self.flows.pop(qid, None)
+        self._mark_dirty("quests")
+        self._mark_dirty("flows")
+        self.current_quest_id = None
+        self.current_stage_id = None
+        self._refresh_quest_list()
+        self._refresh_stage_list()
+        self._populate_quest_form(None)
+
+    def _select_quest_by_id(self, quest_id: str):
+        # find in list
+        for i in range(self.quest_list.count()):
+            it = self.quest_list.item(i)
+            if it.data(Qt.UserRole) == quest_id:
+                self.quest_list.setCurrentRow(i)
+                break
+
+    def _select_stage_by_id(self, stage_id: str):
+        # find in list
+        for i in range(self.stage_list.count()):
+            it = self.stage_list.item(i)
+            if it.data(Qt.UserRole) == stage_id:
+                self.stage_list.setCurrentRow(i)
+                break
+
+    def _add_stage(self):
+        quest = self.quests_by_id.get(self.current_quest_id)
+        if not quest:
+            return
+        stages = quest.setdefault("stages", [])
+        new_id = unique_id("stage", [s.get("id", "") for s in stages])
+        stages.append({"id": new_id, "title": f"Stage {len(stages)+1}"})
+        self._mark_dirty("quests")
+        self._refresh_quest_list()
+        self._select_stage_by_id(new_id)
+
+    def _duplicate_stage(self):
+        quest = self.quests_by_id.get(self.current_quest_id)
+        if not quest or not self.current_stage_id:
+            return
+        QMessageBox.information(self, "Duplicate", "Stage duplication not fully implemented in this view yet.")
+
+    def _delete_stage(self):
+        quest = self.quests_by_id.get(self.current_quest_id)
+        if not quest or not self.current_stage_id:
+            return
+        if QMessageBox.question(self, "Delete", f"Delete stage '{self.current_stage_id}'?") != QMessageBox.Yes:
+            return
+        quest["stages"] = [s for s in quest.get("stages", []) if s.get("id") != self.current_stage_id]
+        if self.current_quest_id in self.flows:
+            self.flows[self.current_quest_id].pop(self.current_stage_id, None)
+        self._mark_dirty("quests")
+        self._mark_dirty("flows")
+        self.current_stage_id = None
+        self._refresh_quest_list()
+
+    def _ai_generate_stage_beats(self):
+        QMessageBox.information(self, "AI Draft", "AI features are coming soon!")
 
     # -------------------- Flow helpers --------------------
 
@@ -5095,6 +5931,84 @@ class NarrativeStudio(QWidget):
             stages[self.current_stage_id] = beats
         return beats
 
+    def _refresh_stage_outline(self):
+        # We don't have a dedicated stage outline widget in this view yet, 
+        # but we can refresh the quest outline if it's visible.
+        self._refresh_quest_outline()
+
+    def _refresh_quest_outline(self):
+        if not hasattr(self, "quest_outline_edit"):
+            return
+        quest = self.quests_by_id.get(self.current_quest_id)
+        if not quest:
+            self.quest_outline_edit.setPlainText("Select a quest to see its outline.")
+            return
+
+        title = quest.get("title", quest.get("id", "Quest"))
+        lines: List[str] = [f"Quest: {title} ({quest.get('id', '').strip()})"]
+        if quest.get("summary"):
+            lines.append("")
+            lines.append("Summary:")
+            lines.append(f"  {quest['summary'].strip()}")
+        if quest.get("description"):
+            lines.append("")
+            lines.append("Description:")
+            lines.append(f"  {quest['description'].strip()}")
+        if quest.get("flavor"):
+            lines.append("")
+            lines.append("Flavor:")
+            for flavor_line in quest["flavor"].splitlines():
+                lines.append(f"  - {flavor_line}")
+
+        stages = quest.get("stages", [])
+        if stages:
+            lines.append("")
+            lines.append("Stages:")
+            flow_map = self.flows.get(quest.get("id", ""), {})
+            for idx, stage in enumerate(stages, start=1):
+                stage_title = stage.get("title", stage.get("id", f"Stage {idx}"))
+                stage_id = stage.get("id", "")
+                stage_line = f"  {idx}. {stage_title}"
+                if stage_id:
+                    stage_line += f" ({stage_id})"
+                lines.append(stage_line)
+                if stage.get("description"):
+                    lines.append(f"     - Synopsis: {stage['description'].strip()}")
+                if stage.get("notes"):
+                    note_preview = stage["notes"].strip().splitlines()[0]
+                    lines.append(f"     - Notes: {note_preview}")
+                tasks = stage.get("tasks", [])
+                if tasks:
+                    lines.append("     - Tasks:")
+                    for task in tasks:
+                        task_text = (task.get("text") or "").strip()
+                        lines.append(f"         • {task.get('id', '')}: {task_text}")
+                beats = flow_map.get(stage_id, [])
+                if beats:
+                    lines.append("     - Beats:")
+                    for b_idx, beat in enumerate(beats, start=1):
+                        label = beat.get("label") or beat.get("id") or ""
+                        if beat.get("type") == "note":
+                            label = (beat.get("text") or label or "").strip()
+                        lines.append(f"         • {b_idx}. [{beat.get('type', '').title()}] {label}")
+        else:
+            lines.append("")
+            lines.append("Stages:")
+            lines.append("  (No stages yet — add one to begin the journey.)")
+
+        self.quest_outline_edit.setPlainText("\n".join(lines))
+
+    def _copy_stage_outline(self):
+        pass # Placeholder
+
+    def _copy_quest_outline(self):
+        if not hasattr(self, "quest_outline_edit"):
+            return
+        text = (self.quest_outline_edit.toPlainText() or "").strip()
+        if not text:
+            return
+        QApplication.clipboard().setText(text)
+
     def _refresh_flow_list(self):
         selected = self._selected_beat_obj()
         self.flow_list.blockSignals(True)
@@ -5110,6 +6024,15 @@ class NarrativeStudio(QWidget):
             self.flow_list.blockSignals(False)
         self._refresh_refs_list()
         self._load_beat_into_form(self._selected_beat_obj())
+
+    BEAT_COLORS = {
+        "dialogue": "#2d5a88",  # Deep Blue
+        "event": "#8c5a1b",     # Bronze/Orange
+        "cutscene": "#5e3c99",  # Purple
+        "tutorial": "#018571",  # Teal
+        "milestone": "#ca0020", # Red
+        "note": "#444444"       # Dark Grey
+    }
 
     def _render_flow_item(self, beat: dict) -> QListWidgetItem:
         t = str((beat or {}).get("type") or "note").strip() or "note"
@@ -5170,6 +6093,13 @@ class NarrativeStudio(QWidget):
 
         item = QListWidgetItem(text)
         item.setData(Qt.UserRole, beat)
+        
+        # --- NEW: Visual Polish ---
+        from PyQt5.QtGui import QColor, QBrush
+        color_hex = self.BEAT_COLORS.get(t, "#333333")
+        item.setBackground(QBrush(QColor(color_hex)))
+        # --------------------------
+
         if missing:
             item.setForeground(Qt.red)
             item.setToolTip("Missing reference: create or fix the referenced ID.")
@@ -5377,6 +6307,43 @@ class NarrativeStudio(QWidget):
         self._select_beat_obj(beat)
         self._refresh_context()
 
+    def _populate_quest_form(self, quest: Optional[dict]):
+        self._updating_ui = True
+        try:
+            if not quest:
+                self.quest_id_edit.setText("")
+                self.quest_title_edit.setText("")
+                self.quest_summary_edit.setPlainText("")
+                self.quest_desc_edit.setPlainText("")
+                self.quest_flavor_edit.setPlainText("")
+                self.quest_outline_edit.setPlainText("")
+                return
+
+            self.quest_id_edit.setText(_ensure_str(quest.get("id")))
+            self.quest_title_edit.setText(_ensure_str(quest.get("title")))
+            self.quest_summary_edit.setPlainText(_ensure_str(quest.get("summary")))
+            self.quest_desc_edit.setPlainText(_ensure_str(quest.get("description")))
+            self.quest_flavor_edit.setPlainText(_ensure_str(quest.get("flavor")))
+            self._refresh_quest_outline()
+        finally:
+            self._updating_ui = False
+
+    def _apply_quest_form(self):
+        if self._updating_ui or not self.current_quest_id:
+            return
+        quest = self.quests_by_id.get(self.current_quest_id)
+        if not quest:
+            return
+        
+        quest["title"] = self.quest_title_edit.text().strip()
+        quest["summary"] = self.quest_summary_edit.toPlainText().strip()
+        quest["description"] = self.quest_desc_edit.toPlainText().strip()
+        quest["flavor"] = self.quest_flavor_edit.toPlainText().strip()
+        
+        self._mark_dirty("quests")
+        self._refresh_quest_list()
+        self._refresh_quest_outline()
+
     def _refresh_ref_combo_for_type(self, beat_type: str):
         beat_type = beat_type.strip()
         values: List[str] = [""]
@@ -5409,6 +6376,7 @@ class NarrativeStudio(QWidget):
         if not beat:
             self.beat_open_btn.setEnabled(False)
             self.beat_create_btn.setEnabled(False)
+            self.beat_view_room_btn.setVisible(False)
             return
         t = self.beat_type_combo.currentText().strip() or "note"
         ref = self.ref_combo.currentText().strip()
@@ -5427,6 +6395,39 @@ class NarrativeStudio(QWidget):
             can_open = bool(ref)
         self.beat_open_btn.setEnabled(can_open)
         self.beat_create_btn.setEnabled(can_create)
+
+        # Show "View Room" button when event references a room
+        room_id = self._get_beat_event_room(t, ref)
+        self.beat_view_room_btn.setVisible(bool(room_id))
+        if room_id:
+            self.beat_view_room_btn.setToolTip(f"Jump to room: {room_id}")
+
+    def _get_beat_event_room(self, beat_type: str, ref_id: str) -> str:
+        """Return the room_id referenced by the event, or empty string."""
+        if beat_type != "event" or not ref_id:
+            return ""
+        ev = self.events_by_id.get(ref_id)
+        if not ev:
+            return ""
+        trigger = ev.get("trigger", {})
+        room = trigger.get("room") or trigger.get("room_id") or ""
+        if room:
+            return room
+        # Check actions for room references
+        for act in ev.get("actions", []):
+            if isinstance(act, dict):
+                r = act.get("room") or act.get("room_id") or act.get("target_room") or ""
+                if r:
+                    return r
+        return ""
+
+    def _view_beat_room(self):
+        """Navigate to the room referenced by the current event beat."""
+        t = self.beat_type_combo.currentText().strip()
+        ref = self.ref_combo.currentText().strip()
+        room_id = self._get_beat_event_room(t, ref)
+        if room_id:
+            studio_goto("world", room_id)
 
     def _open_selected_reference(self):
         beat = self._last_selected_beat
@@ -7309,6 +8310,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     args = parser.parse_args(argv)
 
     app = QApplication([])
+    ThemeManager.apply(app, "dark") # Apply professional dark theme
     w = NarrativeStudio(Path(args.root) if args.root else None)
     w.show()
     return int(app.exec_())

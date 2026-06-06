@@ -19,7 +19,6 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import java.io.File
 import com.example.starborn.domain.model.TinkeringRecipe
-import com.example.starborn.domain.model.CookingRecipe
 import com.example.starborn.domain.model.FirstAidRecipe
 
 @RunWith(RobolectricTestRunner::class)
@@ -69,10 +68,8 @@ class DialogEventsLoadingTest {
     @Test
     fun craftingRecipesLoad() {
         val tinkering = readList("src/main/assets/recipes_tinkering.json", TinkeringRecipe::class.java)
-        val cooking = readList("src/main/assets/recipes_cooking.json", CookingRecipe::class.java)
         val firstAid = readList("src/main/assets/recipes_firstaid.json", FirstAidRecipe::class.java)
         assertTrue(tinkering.isNotEmpty())
-        assertTrue(cooking.isNotEmpty())
         assertTrue(firstAid.isNotEmpty())
     }
 }

@@ -85,12 +85,14 @@ class BalanceLabPanel(QWidget):
         self.btn_analyze = QPushButton("Analyze")
         self.btn_tune = QPushButton("Tune")
         self.btn_apply = QPushButton("Tune & Apply")
+        self.btn_simulate = QPushButton("Simulate")
+        self.btn_simulate.setToolTip("Run turn-by-turn combat simulations (100 runs per matchup)")
         self.btn_open_summary = QPushButton("Open SUMMARY.md")
         self.btn_open_folder = QPushButton("Open Reports Folder")
         self.btn_refresh = QPushButton("Refresh View")
 
         top = QHBoxLayout()
-        for b in (self.btn_analyze, self.btn_tune, self.btn_apply, self.btn_open_summary, self.btn_open_folder, self.btn_refresh):
+        for b in (self.btn_analyze, self.btn_tune, self.btn_apply, self.btn_simulate, self.btn_open_summary, self.btn_open_folder, self.btn_refresh):
             top.addWidget(b)
         top.addStretch(1)
 
@@ -102,18 +104,32 @@ class BalanceLabPanel(QWidget):
         self.table.setModel(self.model)
         self.table.horizontalHeader().setStretchLastSection(True)
 
+        self.sim_table = QTableView()
+        self.sim_model = QStandardItemModel(self)
+        self.sim_table.setModel(self.sim_model)
+        self.sim_table.horizontalHeader().setStretchLastSection(True)
+
+        self.sim_log = QTextEdit()
+        self.sim_log.setReadOnly(True)
+        self.sim_log.setPlaceholderText("Run Simulate to see a sample combat log…")
+
         root = QVBoxLayout(self)
         root.addWidget(self.lbl)
         root.addLayout(top)
         root.addWidget(QLabel("SUMMARY.md"))
         root.addWidget(self.summary, 2)
         root.addWidget(QLabel("pairwise.csv"))
-        root.addWidget(self.table, 3)
+        root.addWidget(self.table, 2)
+        root.addWidget(QLabel("Simulation Results (sim_summary.csv)"))
+        root.addWidget(self.sim_table, 2)
+        root.addWidget(QLabel("Sample Combat Log"))
+        root.addWidget(self.sim_log, 1)
         self.setLayout(root)
 
         self.btn_analyze.clicked.connect(lambda: self._run("analyze"))
         self.btn_tune.clicked.connect(lambda: self._run("tune"))
         self.btn_apply.clicked.connect(lambda: self._run("tune", apply=True))
+        self.btn_simulate.clicked.connect(lambda: self._run("simulate"))
         self.btn_open_summary.clicked.connect(self._open_summary)
         self.btn_open_folder.clicked.connect(self._open_reports_folder)
         self.btn_refresh.clicked.connect(self._load_outputs)
@@ -202,3 +218,34 @@ class BalanceLabPanel(QWidget):
         else:
             self.model.clear()
             self.model.setHorizontalHeaderLabels([])
+
+        # Simulation results
+        sim_csv = self.reports_dir / "sim_summary.csv"
+        if sim_csv.exists():
+            sim_rows: List[List[str]] = []
+            with open(sim_csv, "r", encoding="utf-8") as f:
+                r = csv.reader(f)
+                for i, row in enumerate(r):
+                    if i == 0:
+                        sim_headers = row
+                        self.sim_model.setColumnCount(len(sim_headers))
+                        self.sim_model.setHorizontalHeaderLabels(sim_headers)
+                        continue
+                    sim_rows.append(row)
+            self.sim_model.setRowCount(len(sim_rows))
+            for ri, row in enumerate(sim_rows):
+                for ci, val in enumerate(row):
+                    self.sim_model.setItem(ri, ci, QStandardItem(str(val)))
+            self.sim_table.resizeColumnsToContents()
+        else:
+            self.sim_model.clear()
+            self.sim_model.setHorizontalHeaderLabels([])
+
+        sim_log_path = self.reports_dir / "sim_sample_log.txt"
+        if sim_log_path.exists():
+            try:
+                self.sim_log.setPlainText(sim_log_path.read_text(encoding="utf-8"))
+            except Exception:
+                self.sim_log.setPlainText("(Could not read sim_sample_log.txt)")
+        else:
+            self.sim_log.setPlainText("(No simulation log yet)")

@@ -93,8 +93,13 @@ def collect_enemy_ids(root: Path) -> List[str]:
     return sorted(out, key=str.lower)
 
 def collect_cinematic_ids(root: Path) -> List[str]:
-    data = _load_json_dict(root / "cinematics.json")
-    return sorted(data.keys(), key=str.lower)
+    data = _load_json(root / "cinematics.json")
+    if isinstance(data, dict):
+        return sorted(data.keys(), key=str.lower)
+    if isinstance(data, list):
+        ids = [row.get("id") for row in data if isinstance(row, dict) and row.get("id")]
+        return sorted(ids, key=str.lower)
+    return []
 
 # -----------------------------
 #  Conditions parse/format

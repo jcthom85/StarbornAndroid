@@ -238,6 +238,8 @@ class SaveEditor(QMainWindow):
         self.xp  = QSpinBox(); self.xp.setRange(0, 10_000_000)
         self.hp  = QSpinBox(); self.hp.setRange(0, 999_999)
         self.ap  = QSpinBox(); self.ap.setRange(0, 999)
+        self.erosion = QSpinBox(); self.erosion.setRange(0, 1000)
+        self.erosion_max = QSpinBox(); self.erosion_max.setRange(0, 1000)
 
         self.weapon = QComboBox(); self.weapon.setEditable(True); self.weapon.addItem(""); self.weapon.addItems(self.equippables)
         self.armor  = QComboBox(); self.armor.setEditable(True); self.armor.addItem(""); self.armor.addItems(self.equippables)
@@ -248,6 +250,8 @@ class SaveEditor(QMainWindow):
         form.addRow("XP:", self.xp)
         form.addRow("HP:", self.hp)
         form.addRow("Ability Points:", self.ap)
+        form.addRow("Erosion:", self.erosion)
+        form.addRow("Erosion Max:", self.erosion_max)
         form.addRow("Weapon:", self.weapon)
         form.addRow("Armor:", self.armor)
         form.addRow("Accessory:", self.access)
@@ -503,6 +507,8 @@ class SaveEditor(QMainWindow):
         self.xp.setValue(int(c.get("xp", 0)))
         self.hp.setValue(int(c.get("hp", 0)))
         self.ap.setValue(int(c.get("ability_points", 0)))
+        self.erosion.setValue(int(c.get("erosion", 0)))
+        self.erosion_max.setValue(int(c.get("erosion_max", 100)))
         eq = c.get("equipment", {}) or {}
         self.weapon.setCurrentText(eq.get("weapon") or "")
         self.armor.setCurrentText(eq.get("armor") or "")
@@ -518,6 +524,8 @@ class SaveEditor(QMainWindow):
         c["xp"] = int(self.xp.value())
         c["hp"] = int(self.hp.value())
         c["ability_points"] = int(self.ap.value())
+        c["erosion"] = int(self.erosion.value())
+        c["erosion_max"] = int(self.erosion_max.value())
         c["unlocked_abilities"] = self.unlocked.get_list()
         c["equipment"] = {
             "weapon": self.weapon.currentText() or None,

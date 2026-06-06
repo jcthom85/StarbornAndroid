@@ -53,6 +53,7 @@ fun QuestDetailOverlay(
     uiEventBus: UiEventBus,
     gradientColor: Color,
     outlineColor: Color,
+    deferShowing: Boolean = false,
     onShowDetails: (String) -> Unit,
     autoDismissMillis: Long = 8000L
 ) {
@@ -76,7 +77,7 @@ fun QuestDetailOverlay(
     }
 
     AnimatedVisibility(
-        visible = visible && current != null,
+        visible = visible && !deferShowing && current != null,
         enter = slideInVertically(initialOffsetY = { it }) + fadeIn(),
         exit = slideOutVertically(targetOffsetY = { it }) + fadeOut()
     ) {

@@ -1638,7 +1638,7 @@ private fun PartyMemberItem(
 ) {
     val background = if (isSelected) accentColor.copy(alpha = 0.2f) else Color.Transparent
     val border = if (isSelected) accentColor else Color.Transparent
-    val portraitPainter = rememberAssetPainter(member.portraitPath, R.drawable.main_menu_background)
+    val portraitPainter = rememberAssetPainter(member.portraitPath, painterResource(R.drawable.main_menu_background))
 
     Surface(
         modifier = Modifier

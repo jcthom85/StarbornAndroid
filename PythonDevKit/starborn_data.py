@@ -88,6 +88,34 @@ def collect_milestone_ids(root: Path) -> List[str]:
         if mid: ids.append(mid)
     return sorted(set(ids), key=str.lower)
 
+def collect_icons(root: Path) -> List[str]:
+    """Scans android res/drawable for likely icons."""
+    # Assuming standard android structure relative to assets
+    # root is assets_dir -> ../res/drawable
+    res_dir = root.parent / "res"
+    drawable_dir = res_dir / "drawable"
+    
+    icons = set()
+    if drawable_dir.exists():
+        for f in drawable_dir.iterdir():
+            if f.suffix.lower() in (".png", ".jpg", ".xml", ".webp"):
+                icons.add(f.stem)
+    return sorted(list(icons))
+
+def collect_sfx_ids(root: Path) -> List[str]:
+    """Scans audio_catalog.json for cue IDs."""
+    ids = set()
+    cat = read_dict_json(root / "audio_catalog.json")
+    for cue in cat.get("cues", []):
+        cid = cue.get("id")
+        if cid: ids.add(cid)
+    # Also check legacy sfx.json if it exists
+    legacy = read_dict_json(root / "sfx.json")
+    for k in legacy.keys():
+        ids.add(k)
+        
+    return sorted(list(ids))
+
 # ---------- Validation bits ----------
 ELEMENTS = ["none","fire","ice","lightning","poison","radiation","psychic","void"]
 TIERS    = ["minion","standard","elite","boss"]
@@ -112,6 +140,22 @@ def validate_dialogue(dialogue: List[dict], npc_names: List[str], all_ids: List[
         nxt = (d.get("next") or "").strip()
         if nxt and nxt not in all_ids:
             issues.append(f"{did}: next references unknown id '{nxt}'")
+        # options (if present)
+        opts = d.get("options") or []
+        if isinstance(opts, list):
+            for idx, opt in enumerate(opts):
+                if not isinstance(opt, dict):
+                    issues.append(f"{did}: option[{idx}] is not an object")
+                    continue
+                oid = (opt.get("id") or "").strip()
+                if not oid:
+                    issues.append(f"{did}: option[{idx}] missing id")
+                otext = (opt.get("text") or "").strip()
+                if not otext:
+                    issues.append(f"{did}: option[{idx}] missing text")
+                onext = (opt.get("next") or "").strip()
+                if onext and onext not in all_ids:
+                    issues.append(f"{did}: option[{idx}] next references unknown id '{onext}'")
     # basic cycle/unreachable scan (optional light heuristic)
     # build edges
     edges = {d.get("id"): (d.get("next") or "").strip() for d in dialogue if d.get("id")}

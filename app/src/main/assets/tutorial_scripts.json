@@ -97,38 +97,6 @@
     ]
   },
   {
-    "id": "fishing_failure",
-    "steps": [
-      {
-        "message": "The fish wriggled free. Reel when the indicator crosses the green band.",
-        "context": "Fishing"
-      }
-    ]
-  },
-  {
-    "id": "fishing_success",
-    "steps": [
-      {
-        "message": "Nice catch! Try for a perfect by landing in the gold band.",
-        "context": "Fishing"
-      }
-    ]
-  },
-  {
-    "id": "fishing_basics",
-    "steps": [
-      {
-        "message": "The marker glides automatically. Tap anywhere when it enters the green band to hook a fish.",
-        "context": "Fishing"
-      },
-      {
-        "message": "Release if the marker hits red to avoid snapping the line.",
-        "context": "Fishing",
-        "delay_ms": 2200
-      }
-    ]
-  },
-  {
     "id": "scene_lights_out_intro",
     "steps": [
       {

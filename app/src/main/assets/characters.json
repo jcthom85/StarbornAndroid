@@ -5,7 +5,8 @@
         "level": 1, "xp": 0, "hp": 500,
         "strength": 8, "vitality": 6, "agility": 9, "focus": 6, "luck": 7,
         "skills": ["nova_arc_tether"],
-        "mini_icon_path": "images/characters/nova_portrait.png"
+        "mini_icon_path": "images/characters/nova_portrait.png",
+        "combat_icon_path": "images/characters/nova_combat.png"
     },
     {
         "id": "zeke",
@@ -13,7 +14,8 @@
         "level": 1, "xp": 0, "hp": 500,
         "strength": 4, "vitality": 7, "agility": 5, "focus": 3, "luck": 5,
         "skills": ["zeke_shatter_blow"],
-        "mini_icon_path": "images/characters/zeke_portrait.png"
+        "mini_icon_path": "images/characters/zeke_portrait.png",
+        "combat_icon_path": "images/characters/zeke_combat.png"
     },
     {
         "id": "orion",
@@ -21,7 +23,8 @@
         "level": 1, "xp": 0, "hp": 500,
         "strength": 4, "vitality": 4, "agility": 8, "focus": 8, "luck": 5,
         "skills": ["orion_prism_lance"],
-        "mini_icon_path": "images/characters/orion_portrait.png"
+        "mini_icon_path": "images/characters/orion_portrait.png",
+        "combat_icon_path": "images/characters/orion_combat.png"
     },
     {
         "id": "gh0st",
@@ -29,7 +32,8 @@
         "level": 1, "xp": 0, "hp": 500,
         "strength": 5, "vitality": 5, "agility": 10, "focus": 7, "luck": 5,
         "skills": ["gh0st_headshot"],
-        "mini_icon_path": "images/characters/gh0st_portrait.png"
+        "mini_icon_path": "images/characters/gh0st_portrait.png",
+        "combat_icon_path": "images/characters/gh0st_combat.png"
     },
     {
         "id": "ollie",
@@ -37,6 +41,7 @@
         "level": 1, "xp": 0, "hp": 450,
         "strength": 4, "vitality": 5, "agility": 8, "focus": 6, "luck": 8,
         "skills": ["slingshot"],
-        "mini_icon_path": "images/characters/ollie_portrait.png"
+        "mini_icon_path": "images/characters/ollie_portrait.png",
+        "combat_icon_path": "images/characters/ollie_combat.png"
     }
 ]

@@ -376,6 +376,101 @@ class Patcher:
         with open(ep, "w", encoding="utf-8") as f: json.dump(enemies, f, indent=2)
         return [f"Applied enemy_hp_scale ×{scale} to {len(enemies)} enemies.", f"Backup written: {bak}"]
 
+def _snapshot_to_combat_unit(snap: UnitSnapshot, cfg: BalanceConfig, skills: list = None):
+    """Convert a UnitSnapshot into a combat_sim.CombatUnit."""
+    from combat_sim import CombatUnit
+    return CombatUnit(
+        name=snap.name,
+        kind=snap.kind,
+        max_hp=int(snap.hp),
+        atk=snap.atk,
+        spd=snap.spd,
+        defense=snap.defense,
+        crit_chance=float(cfg.defaults.get("crit_chance", 0.05)),
+        crit_mult=float(cfg.defaults.get("crit_mult", 1.5)),
+        dodge_chance=float(cfg.defaults.get("dodge_chance", 0.03)),
+        skills=skills or [],
+        rp_regen=int(cfg.defaults.get("rp_regen_per_turn", 6)),
+    )
+
+
+def _run_simulate(cfg: BalanceConfig, data: GameData, runs: int, seed: int | None):
+    from combat_sim import CombatSimulator
+    analyzer = BalanceAnalyzer(cfg, data)
+    sim = CombatSimulator(cfg.formulas, cfg.defaults)
+
+    chars = [analyzer.snapshot_character(c) for c in data.characters]
+    enemies = [analyzer.snapshot_enemy(e) for e in data.enemies]
+
+    # Build skill lists for characters from skill trees
+    char_skill_defs: Dict[str, list] = {}
+    for c in data.characters:
+        cid = c.get("id", c.get("name", "").lower())
+        tree = data.skill_trees.get(cid, {})
+        nodes = []
+        if tree and "branches" in tree:
+            for branch in tree["branches"].values():
+                for node in branch:
+                    eff = node.get("effect")
+                    if eff and eff.get("type") == "damage":
+                        nodes.append(node)
+        char_skill_defs[cid] = nodes
+
+    results = []
+    for cs in chars:
+        cid = next((c.get("id", c.get("name","").lower()) for c in data.characters if c.get("name") == cs.name), cs.name.lower())
+        cu = _snapshot_to_combat_unit(cs, cfg, char_skill_defs.get(cid, []))
+        for es in enemies:
+            eu = _snapshot_to_combat_unit(es, cfg)
+            summary = sim.simulate(cu, eu, runs=runs, seed=seed)
+            results.append(summary)
+
+    # Write results
+    out_dir = os.path.join(PROJECT_ROOT, cfg.paths.get("reports_dir") or "reports")
+    _ensure_dir(out_dir)
+
+    # JSON
+    json_rows = []
+    for r in results:
+        json_rows.append({
+            "character": r.char_name, "enemy": r.enemy_name,
+            "runs": r.runs, "wins": r.wins, "losses": r.losses,
+            "win_rate": r.win_rate, "avg_turns": r.avg_turns,
+            "avg_char_hp_remaining": r.avg_char_hp_remaining,
+            "avg_enemy_hp_remaining": r.avg_enemy_hp_remaining,
+        })
+    jpath = os.path.join(out_dir, "sim_results.json")
+    with open(jpath, "w", encoding="utf-8") as f:
+        json.dump(json_rows, f, indent=2)
+
+    # CSV
+    cpath = os.path.join(out_dir, "sim_summary.csv")
+    cols = ["character", "enemy", "runs", "wins", "losses", "win_rate", "avg_turns",
+            "avg_char_hp_remaining", "avg_enemy_hp_remaining"]
+    with open(cpath, "w", newline="", encoding="utf-8") as f:
+        w = csv.DictWriter(f, fieldnames=cols)
+        w.writeheader()
+        for row in json_rows:
+            w.writerow(row)
+
+    # Sample log from first matchup
+    if results and results[0].sample_log:
+        log_path = os.path.join(out_dir, "sim_sample_log.txt")
+        with open(log_path, "w", encoding="utf-8") as f:
+            f.write(f"Sample combat: {results[0].char_name} vs {results[0].enemy_name}\n")
+            f.write("=" * 60 + "\n")
+            for entry in results[0].sample_log:
+                if entry.miss:
+                    f.write(f"  Turn {entry.turn}: {entry.actor} uses {entry.action} — MISS\n")
+                else:
+                    crit_tag = " (CRIT!)" if entry.crit else ""
+                    f.write(f"  Turn {entry.turn}: {entry.actor} uses {entry.action} — {entry.damage} dmg{crit_tag} (target HP: {entry.hp_remaining})\n")
+
+    print(f"[BalanceLab] Simulation ({runs} runs) complete.")
+    print(f"  {jpath}")
+    print(f"  {cpath}")
+
+
 def main():
     ap = argparse.ArgumentParser(description="Starborn Balance Lab")
     ap.add_argument("--config", default=DEF_CFG, help="Path to data/balance_targets.json")
@@ -383,15 +478,21 @@ def main():
     sub.add_parser("analyze", help="Analyze and write reports")
     sp = sub.add_parser("tune", help="Analyze and propose global tuning")
     sp.add_argument("--apply", action="store_true", help="Apply safe changes (v0: enemy_hp_scale)")
+    sp_sim = sub.add_parser("simulate", help="Run turn-by-turn combat simulations")
+    sp_sim.add_argument("--runs", type=int, default=100, help="Number of simulation runs per matchup")
+    sp_sim.add_argument("--seed", type=int, default=None, help="Random seed for reproducibility")
     args = ap.parse_args()
     cfg = BalanceConfig.from_file(args.config)
     data = DataLoader(cfg).load()
-    analyzer = BalanceAnalyzer(cfg, data)
-    report = analyzer.analyze()
-    Reporter(cfg).write_all(report)
-    if args.cmd == "tune" and args.apply:
-        msgs = Patcher(cfg).apply(report)
-        print("\n".join(msgs))
+    if args.cmd == "simulate":
+        _run_simulate(cfg, data, args.runs, args.seed)
+    else:
+        analyzer = BalanceAnalyzer(cfg, data)
+        report = analyzer.analyze()
+        Reporter(cfg).write_all(report)
+        if args.cmd == "tune" and args.apply:
+            msgs = Patcher(cfg).apply(report)
+            print("\n".join(msgs))
 
 if __name__ == "__main__":
     main()

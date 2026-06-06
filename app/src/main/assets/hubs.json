@@ -1,18 +1,18 @@
 [
   {
-    "id": "mining_colony",
-    "world_id": "nova_prime",
-    "title": "Rusthaven",
-    "description": "A rugged and industrious mining colony.",
-    "background_image": "images/hubs/rusthaven_1.png",
+    "id": "hub_1_homestead",
+    "world_id": "world_1",
+    "title": "Homestead Quarter",
+    "description": "A dense cluster of sleeping pods and industrial workshops.",
+    "background_image": "images/hubs/homestead_v4.png",
     "discovered": true
   },
   {
-    "id": "vfx_sandbox",
-    "world_id": "debug_sandbox",
-    "title": "VFX Sandbox",
-    "description": "A compact hub with specialized test nodes for cutscenes and VFX.",
-    "background_image": "images/hubs/mining_colony.png",
+    "id": "hub_2_logistics",
+    "world_id": "world_1",
+    "title": "Logistics Sector",
+    "description": "The operational heart of the colony, leading to the deep mines.",
+    "background_image": "images/hubs/logistics.png",
     "discovered": true
   }
 ]

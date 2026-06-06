@@ -169,11 +169,6 @@ class _SimpleContextIndex:
         # Crafting
         self._recipes_cooking   = _read_any("data/recipes_cooking.json", {})
         self._recipes_tinkering = _read_any("data/recipes_tinkering.json", {})
-        self._recipes_fishing   = _read_any("data/recipes_fishing.json", {
-            "meta": {}, "rods": [], "lures": [], "zones": [],
-            "minigame_rules": {}, "victory_screen": {}
-        })
-        self._fishing_zones = self._recipes_fishing.get("zones", [])
 
         # Characters / trees
         self._characters = _read_any("characters.json", [])
@@ -212,7 +207,6 @@ class _SimpleContextIndex:
 
             "shops": self._shops, "events": self._events, "cinematics": self._cinematics,
             "recipes_cooking": self._recipes_cooking, "recipes_tinkering": self._recipes_tinkering,
-            "recipes_fishing": self._recipes_fishing, "fishing_zones": self._fishing_zones,
 
             "themes": self._themes, "sfx": self._sfx, "balance_targets": self._balance_targets,
             "components": self._components,
@@ -807,9 +801,12 @@ class ItemsPage(_BuildPageBase):
         form = QFormLayout(ai_box)
         self.ai_count = QSpinBox(); self.ai_count.setRange(1, 100); self.ai_count.setValue(5)
         form.addRow("Count:", self.ai_count)
-                self.ai_hint = QLabel("If you don't add manual rows, Preview will try to generate items.\n"          "If 'Use OpenAI' is OFF, it uses an offline generator with your Theme.")
-                # self.ai_hint.setStyleSheet("color:#888;")
-                form.addRow(self.ai_hint)
+        self.ai_hint = QLabel(
+            "If you don't add manual rows, Preview will try to generate items.\n"
+            "If 'Use OpenAI' is OFF, it uses an offline generator with your Theme."
+        )
+        # self.ai_hint.setStyleSheet("color:#888;")
+        form.addRow(self.ai_hint)
         v.addWidget(ai_box)
 
         # wire buttons
@@ -916,9 +913,12 @@ class ItemsPage(_BuildPageBase):
             "items": [{
                 "id": "string",
                 "name": "string",
-                "type": "consumable|equippable|material|key",
+                "type": "consumable|equippable|material|key|snack|mod",
                 "rarity": "string",
-                "description": "string"
+                "description": "string",
+                "hp_bonus": 0,
+                "attack_style": "string",
+                "stat_mods": {"strength":0, "agility":0, "focus":0}
             }]
         }
 
@@ -1171,7 +1171,7 @@ class _JsonWholeFilePage(_BuildPageBase):
 
         self.note = QLabel("Generates a pixel-art style icon (256x256).")
         # self.note.setStyleSheet("color:#888;")
-        layout.addWidget(self.note)
+        v.addWidget(self.note)
 
     def get_proposals(self) -> Dict[str, Any]:
         # If AI is disabled, just return the current file (no-op) so the diff shows current.
@@ -1203,16 +1203,29 @@ class _JsonWholeFilePage(_BuildPageBase):
     
 class QuestsPage(_SimpleListPage):
     file_name = "quests.json"
-    cols = ["title", "giver", "receiver", "objective"]
+    cols = ["title", "giver", "hub_id", "summary"]
     ai_tag = "quests_generate"
-    ai_schema = {"quests":[{"id":"string","title":"string","giver":"string","receiver":"string","stages":[{"id":"string","text":"string"}],"rewards":["string"]}]}
+    ai_schema = {"quests":[
+        {"id":"string","title":"string","summary":"string","description":"string","flavor":"string",
+         "giver":"string","hub_id":"string","prereq_quest_id":"string",
+         "stages":[{"id":"string","title":"string","description":"string",
+                    "tasks":[{"id":"string","text":"string","done":False,"tutorial_id":"string"}]}],
+         "rewards":[{"type":"xp","amount":0},{"type":"item","item_id":"string","quantity":1}]
+        }
+    ]}
     ai_prompt_label = "Theme:"
 
 class DialoguePage(_SimpleListPage):
     file_name = "dialogue.json"
     cols = ["speaker", "text", "next"]
     ai_tag = "dialogue_generate"
-    ai_schema = {"dialogue":[{"id":"string","speaker":"string","text":"string","next":"string"}]}
+    ai_schema = {"dialogue":[
+        {"id":"string","speaker":"string","text":"string","next":"string",
+         "condition":"string","trigger":"string","emote":"string","portrait":"string","vo_cue":"string",
+         "pitch":1.0, "resonance":0.0, "chord":"string",
+         "options":[{"id":"string","text":"string","next":"string","trigger":"string","condition":"string"}]
+        }
+    ]}
     ai_prompt_label = "Theme:"
 
 class NPCsPage(_SimpleListPage):
@@ -1235,10 +1248,11 @@ class SkillsPage(_SimpleListPage):
     cols = ["id", "name", "type", "target", "cost", "power", "element", "description"]
     ai_tag = "skills_generate"
     ai_schema = {"skills":[
-        {"id":"string","name":"string","type":"active|passive","target":"self|ally|enemy|all",
+        {"id":"string","name":"string","type":"active|passive|source_art|enemy","target":"self|ally|enemy|all",
          "resource":"stamina|energy|mana","cost":0,"power":0,
          "element":"neutral|fire|ice|shock|poison|radiation|psychic|void",
-         "status":"","description":"string"}
+         "status":"","description":"string",
+         "vo_cue":"string", "pitch":1.0, "resonance":0.0, "vulnerability_shift":"string"}
     ]}
     ai_prompt_label = "Theme:"
 
@@ -1250,6 +1264,7 @@ class EnemiesPage(_SimpleListPage):
     ai_schema = {"enemies":[
         {"id":"string","name":"string","level":1,"hp":20,"atk":5,"def":5,"speed":5,
          "element":"neutral|fire|ice|shock|poison|radiation|psychic|void",
+         "resonance_frequency":0, "aura_color":"string", "vo_cue":"string",
          "resistances":{"fire":0,"ice":0,"shock":0,"poison":0,"radiation":0,"psychic":0,"void":0},
          "drops":[{"id":"string","chance":0.2}],"notes":"string"}
     ]}
@@ -1272,8 +1287,16 @@ class EventsPage(_SimpleListPage):
     cols = ["id", "trigger", "conditions", "actions"]
     ai_tag = "events_generate"
     ai_schema = {"events":[
-        {"id":"string","trigger":"on_enter|on_interact|on_battle_end|on_flag",
-         "conditions":["string"], "actions":["string"], "notes":"string"}
+        {"id":"string","description":"string","repeatable":False,
+         "trigger":{"type":"string","npc":"string","npc_id":"string","room":"string","quest_id":"string",
+                    "stage_id":"string","action":"string","item_id":"string","encounter_id":"string","interaction_type":"string"},
+         "conditions":[{"type":"string","milestone":"string","quest_id":"string","stage_id":"string","task_id":"string","item_id":"string","quantity":1}],
+         "actions":[{"type":"string","quest_id":"string","item_id":"string","quantity":1,"room_id":"string",
+                     "milestone":"string","milestones":["string"],"scene_id":"string","cutscene_id":"string",
+                     "text":"string","message":"string","xp":0,"credits":0,"ap":0,
+                     "do":[{"type":"string"}],"else":[{"type":"string"}],"on_complete":[{"type":"string"}]
+                    }]
+        }
     ]}
     ai_prompt_label = "Theme:"
 
@@ -1285,9 +1308,9 @@ class CutscenesPage(_SimpleListPage):
     ai_schema = {"cinematics":[
         {"id":"string","title":"string",
          "steps":[
-            {"type":"text","speaker":"string","text":"string"},
-            {"type":"move","actor":"string","to":"room_id"},
-            {"type":"effect","name":"string","params":{"strength":1.0}}
+            {"type":"narration","text":"string","vo_cue":"string","pitch":1.0,"resonance":0.0},
+            {"type":"dialogue","speaker":"string","text":"string","vo_cue":"string","pitch":1.0,"resonance":0.0},
+            {"type":"resonance_aura","chord":"string","resonance":0.5,"duration":2.0}
          ]}
     ]}
     ai_prompt_label = "Theme:"
@@ -1316,23 +1339,6 @@ class TinkeringPage(_SimpleListPage):
          "output":{"id":"string","qty":1},
          "time":5,"notes":"string"}
     ]}
-    ai_prompt_label = "Theme:"
-
-# ----- Fishing (whole-file dict) ----- 
-class FishingPage(_JsonWholeFilePage):
-    file_name = "data/recipes_fishing.json"
-    ai_tag = "recipes_fishing_generate"
-    ai_schema = {
-        "meta": {"version": 1, "author": "assistant"},
-        "rods": [{"id":"string","name":"string","power":1,"stability":1,"notes":"string"}],
-        "lures": [{"id":"string","name":"string","type":"spinner|bait|plug","rarity":"common|rare|epic","notes":"string"}],
-        "zones": [{
-            "id":"string","name":"string","biome":"river|lake|ocean|sewer|void",
-            "loot_table":[{"id":"item_id_or_fish","weight":1}]
-        }],
-        "minigame_rules": {"base_speed": 1.0, "tension_decay": 0.05, "crit_window": 0.1},
-        "victory_screen": {"music":"fanfare_catch","show_spoils": True}
-    }
     ai_prompt_label = "Theme:"
 
 # ----- Themes Page ----- 
@@ -2235,7 +2241,6 @@ class AIAssistant(QWidget):
             "Cutscene(s)",
             "Cooking Recipes",
             "Tinkering Recipes",
-            "Fishing System",
             "Themes"
         ]
         for k in kinds:
@@ -2260,14 +2265,13 @@ class AIAssistant(QWidget):
         self.page_cutscenes = CutscenesPage(self.root, self.cx, self._current_model, self._use_ai)
         self.page_cooking = CookingPage(self.root, self.cx, self._current_model, self._use_ai)
         self.page_tinkering = TinkeringPage(self.root, self.cx, self._current_model, self._use_ai)
-        self.page_fishing = FishingPage(self.root, self.cx, self._current_model, self._use_ai)
         self.page_questpack = QuestPackPage(self.root, self.cx, self._current_model, self._use_ai)
         self.page_themes = ThemesPage(self.root, self.cx, self._current_model, self._use_ai)
 
         for p in [
             self.page_rooms, self.page_questpack, self.page_items, self.page_quests, self.page_dialogue, self.page_npcs, self.page_encounters,
             self.page_skills, self.page_enemies, self.page_shops, self.page_events, self.page_cutscenes,
-            self.page_cooking, self.page_tinkering, self.page_fishing, self.page_themes
+            self.page_cooking, self.page_tinkering, self.page_themes
         ]:
             self.stack.addWidget(p)
 

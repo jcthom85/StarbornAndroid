@@ -23,7 +23,11 @@
         },
         "emote": { "type": ["string", "null"] },
         "portrait": { "type": ["string", "null"] },
-        "voice": { "type": ["string", "null"] }
+        "voice": { "type": ["string", "null"] },
+        "vo_cue": { "type": ["string", "null"] },
+        "pitch": { "type": ["number", "null"] },
+        "resonance": { "type": ["number", "null"] },
+        "chord": { "type": ["string", "null"] }
       }
     },
     "DialogueOption": {

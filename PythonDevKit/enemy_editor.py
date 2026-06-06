@@ -14,11 +14,12 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QColor
 from PyQt5.QtWidgets import (
     QApplication, QWidget, QTabWidget, QHBoxLayout, QVBoxLayout, QSplitter,
     QListWidget, QListWidgetItem, QLabel, QLineEdit, QComboBox, QSpinBox, QFileDialog, QCompleter,
     QPushButton, QFormLayout, QGroupBox, QTableWidget, QTableWidgetItem,
-    QAbstractItemView, QMessageBox, QDoubleSpinBox, QTextEdit
+    QAbstractItemView, QMessageBox, QDoubleSpinBox, QTextEdit, QColorDialog
 )
 
 # Local helpers
@@ -143,19 +144,16 @@ class EnemyEditor(QWidget):
         self.f_tier = QComboBox(); self.f_tier.addItems(TIERS)
         self.f_elem = QComboBox(); self.f_elem.addItems(ELEMENTS)
 
-        # --- NEW: Portrait field with file browser ---
         portrait_layout = QHBoxLayout()
         self.f_portrait = QLineEdit(); self.f_portrait.setPlaceholderText("e.g. images/portraits/enemies/drone.png")
         portrait_browse_btn = QPushButton("…")
-        portrait_browse_btn.setToolTip("Browse for portrait image")
-        portrait_browse_btn.setFixedWidth(30)
         portrait_browse_btn.clicked.connect(self._browse_for_portrait)
         portrait_layout.addWidget(self.f_portrait); portrait_layout.addWidget(portrait_browse_btn)
-        # --- END NEW ---
         
         self.f_description = QTextEdit(); self.f_description.setPlaceholderText("Flavor text for the enemy...")
         self.f_sprite_editor = ListEditor("Sprite Paths", "images/enemies/new.png")
-        self.f_abilities = QLineEdit(); self.f_abilities.setPlaceholderText("ability_id, another_ability_id …")
+        self.f_abilities_editor = ListEditor("Abilities (Skills)", "ability_id")
+        
         fb.addRow("ID", self.f_id)
         fb.addRow("Name", self.f_name)
         fb.addRow("Description", self.f_description)
@@ -163,8 +161,44 @@ class EnemyEditor(QWidget):
         fb.addRow("Element", self.f_elem)
         fb.addRow("Portrait (path)", portrait_layout)
         fb.addRow(self.f_sprite_editor)
-        fb.addRow("Abilities (comma)", self.f_abilities)
+        fb.addRow(self.f_abilities_editor)
         self.tabs.addTab(self.tab_basic, "Basics")
+
+        # --- Tab: Resonance
+        self.tab_resonance = QWidget(); fr = QFormLayout(self.tab_resonance)
+        self.f_res_freq = QSpinBox(); self.f_res_freq.setRange(0, 5000); self.f_res_freq.setSuffix(" Hz")
+        
+        self.f_aura_color = QLineEdit(); self.f_aura_color.setPlaceholderText("e.g. #FF0000")
+        aura_btn = QPushButton("Pick Color")
+        aura_btn.clicked.connect(self._pick_aura_color)
+        aura_layout = QHBoxLayout(); aura_layout.addWidget(self.f_aura_color); aura_layout.addWidget(aura_btn)
+        
+        self.f_vo_cue = QLineEdit(); self.f_vo_cue.setPlaceholderText("e.g. sfx_enemy_shout")
+        
+        fr.addRow("Resonance Frequency", self.f_res_freq)
+        fr.addRow("Aura Color", aura_layout)
+        fr.addRow("VO Cue", self.f_vo_cue)
+        self.tabs.addTab(self.tab_resonance, "Resonance")
+
+        # --- Tab: Composite (Boss Parts)
+        self.tab_composite = QWidget(); vc = QVBoxLayout(self.tab_composite)
+        comp_grp = QGroupBox("Composite Boss Settings")
+        cfg = QFormLayout(comp_grp)
+        self.f_comp_group = QLineEdit(); self.f_comp_role = QLineEdit()
+        self.f_comp_gx = QDoubleSpinBox(); self.f_comp_gx.setRange(-2, 2); self.f_comp_gy = QDoubleSpinBox(); self.f_comp_gy.setRange(-2, 2)
+        self.f_comp_ox = QDoubleSpinBox(); self.f_comp_ox.setRange(-2, 2); self.f_comp_oy = QDoubleSpinBox(); self.f_comp_oy.setRange(-2, 2)
+        self.f_comp_ws = QDoubleSpinBox(); self.f_comp_ws.setRange(0.1, 5); self.f_comp_ws.setValue(1.0)
+        self.f_comp_hs = QDoubleSpinBox(); self.f_comp_hs.setRange(0.1, 5); self.f_comp_hs.setValue(1.0)
+        self.f_comp_z = QDoubleSpinBox(); self.f_comp_z.setRange(0, 10); self.f_comp_z.setValue(1.0)
+        
+        cfg.addRow("Group ID", self.f_comp_group)
+        cfg.addRow("Role", self.f_comp_role)
+        cfg.addRow("Group Offset X", self.f_comp_gx); cfg.addRow("Group Offset Y", self.f_comp_gy)
+        cfg.addRow("Part Offset X", self.f_comp_ox); cfg.addRow("Part Offset Y", self.f_comp_oy)
+        cfg.addRow("Width Scale", self.f_comp_ws); cfg.addRow("Height Scale", self.f_comp_hs)
+        cfg.addRow("Z Order", self.f_comp_z)
+        vc.addWidget(comp_grp); vc.addStretch()
+        self.tabs.addTab(self.tab_composite, "Composite")
 
         # --- Tab: Stats
         self.tab_stats = QWidget(); fs = QFormLayout(self.tab_stats)
@@ -237,6 +271,11 @@ class EnemyEditor(QWidget):
                 self.f_portrait.setText(rel_path)
             except ValueError:
                 self.f_portrait.setText(path) # Fallback to absolute path if on a different drive
+    def _pick_aura_color(self):
+        c = QColorDialog.getColor(QColor(self.f_aura_color.text() or "#FFFFFF"), self, "Pick Aura Color")
+        if c.isValid():
+            self.f_aura_color.setText(c.name().upper())
+
     # ---------------- Data ↔ UI ----------------
     def _reload_list(self):
         self.list.clear()
@@ -268,7 +307,25 @@ class EnemyEditor(QWidget):
         self.f_elem.setCurrentText(e.get("element","none"))
         self.f_portrait.setText(e.get("portrait",""))
         self.f_sprite_editor.set_list(_as_list(e.get("sprite", [])))
-        self.f_abilities.setText(", ".join(_as_list(e.get("abilities", []))))
+        self.f_abilities_editor.set_list(_as_list(e.get("abilities", [])))
+        
+        # Resonance
+        self.f_res_freq.setValue(int(e.get("resonance_frequency", 0)))
+        self.f_aura_color.setText(e.get("aura_color", ""))
+        self.f_vo_cue.setText(e.get("vo_cue", ""))
+        
+        # Composite
+        comp = e.get("composite", {})
+        self.f_comp_group.setText(comp.get("group", ""))
+        self.f_comp_role.setText(comp.get("role", ""))
+        self.f_comp_gx.setValue(float(comp.get("group_offset_x", 0.0)))
+        self.f_comp_gy.setValue(float(comp.get("group_offset_y", 0.0)))
+        self.f_comp_ox.setValue(float(comp.get("offset_x", 0.0)))
+        self.f_comp_oy.setValue(float(comp.get("offset_y", 0.0)))
+        self.f_comp_ws.setValue(float(comp.get("width_scale", 1.0)))
+        self.f_comp_hs.setValue(float(comp.get("height_scale", 1.0)))
+        self.f_comp_z.setValue(float(comp.get("z", 1.0)))
+
         # Stats
         self.f_hp.setValue(int(e.get("hp", 30)))
         self.f_speed.setValue(int(e.get("speed", 20)))
@@ -300,7 +357,34 @@ class EnemyEditor(QWidget):
         e["element"] = self.f_elem.currentText()
         e["portrait"] = self.f_portrait.text().strip()
         e["sprite"] = self.f_sprite_editor.get_list()
-        e["abilities"] = [a.strip() for a in self.f_abilities.text().split(",") if a.strip()]
+        e["abilities"] = self.f_abilities_editor.get_list()
+        
+        # Resonance
+        if self.f_res_freq.value() > 0: e["resonance_frequency"] = self.f_res_freq.value()
+        else: e.pop("resonance_frequency", None)
+        
+        if self.f_aura_color.text().strip(): e["aura_color"] = self.f_aura_color.text().strip()
+        else: e.pop("aura_color", None)
+        
+        if self.f_vo_cue.text().strip(): e["vo_cue"] = self.f_vo_cue.text().strip()
+        else: e.pop("vo_cue", None)
+        
+        # Composite
+        if self.f_comp_group.text().strip():
+            comp = e.get("composite", {})
+            comp["group"] = self.f_comp_group.text().strip()
+            comp["role"] = self.f_comp_role.text().strip()
+            comp["group_offset_x"] = round(self.f_comp_gx.value(), 3)
+            comp["group_offset_y"] = round(self.f_comp_gy.value(), 3)
+            comp["offset_x"] = round(self.f_comp_ox.value(), 3)
+            comp["offset_y"] = round(self.f_comp_oy.value(), 3)
+            comp["width_scale"] = round(self.f_comp_ws.value(), 3)
+            comp["height_scale"] = round(self.f_comp_hs.value(), 3)
+            comp["z"] = round(self.f_comp_z.value(), 3)
+            e["composite"] = comp
+        else:
+            e.pop("composite", None)
+
         e["hp"] = self.f_hp.value()
         e["speed"] = self.f_speed.value()
         e["attack"] = self.f_attack.value()

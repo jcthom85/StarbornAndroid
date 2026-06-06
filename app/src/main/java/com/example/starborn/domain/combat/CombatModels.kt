@@ -51,7 +51,9 @@ data class CombatantState(
     val breakTurns: Int = 0,
     val buffs: List<ActiveBuff> = emptyList(),
     val statusEffects: List<StatusEffect> = emptyList(),
-    val weaponCharge: WeaponChargeState? = null
+    val weaponCharge: WeaponChargeState? = null,
+    val activeCooldowns: Map<String, Int> = emptyMap(),
+    val snackCooldown: Int = 0
 ) {
     val isAlive: Boolean get() = hp > 0
 }
@@ -106,11 +108,6 @@ sealed interface CombatAction {
     val actorId: String
 
     data class BasicAttack(
-        override val actorId: String,
-        val targetId: String
-    ) : CombatAction
-
-    data class SupportAbility(
         override val actorId: String,
         val targetId: String
     ) : CombatAction

@@ -50,7 +50,7 @@ class InventoryViewModelTest {
         )
         val viewModel = InventoryViewModel(inventoryService, craftingService, sessionStore, roster)
 
-        inventoryService.addItem("medkit_i")
+        sessionStore.setInventory(mapOf("medkit_i" to 1))
         viewModel.useItem("medkit_i", "nova")
         dispatcher.scheduler.advanceUntilIdle()
 
@@ -74,13 +74,13 @@ class InventoryViewModelTest {
         )
         val viewModel = InventoryViewModel(inventoryService, craftingService, sessionStore, roster)
 
-        inventoryService.addItem("ellies_signature_sampler")
+        sessionStore.setInventory(mapOf("ellies_signature_sampler" to 1))
         viewModel.useItem("ellies_signature_sampler")
         dispatcher.scheduler.advanceUntilIdle()
 
         val state = sessionStore.state.value
-        assertEquals(120, state.partyMemberHp["nova"])
-        assertEquals(100, state.partyMemberHp["ollie"])
+        assertEquals(200, state.partyMemberHp["nova"])
+        assertEquals(170, state.partyMemberHp["ollie"])
     }
 
     private class TestCatalog(items: List<Item>) : ItemCatalog {

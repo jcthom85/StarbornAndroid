@@ -141,25 +141,12 @@ class CombatViewModel(
         if (actorId != null) {
             atbMenuPaused = true
             if (actorId in playerIdList) {
-                tickPlayerCooldowns(actorId)
-                tickSnackCooldown(actorId)
                 playUiCue("turn_start")
             }
         } else {
             atbMenuPaused = false
             if (!isAtbPaused()) {
                 tryProcessEnemyTurns()
-            }
-        }
-    }
-
-    private fun tickPlayerCooldowns(actorId: String) {
-        val prefix = "$actorId:"
-        val keysToUpdate = playerCooldowns.keys.filter { it.startsWith(prefix) }
-        keysToUpdate.forEach { key ->
-            val current = playerCooldowns[key] ?: return@forEach
-            if (current > 0) {
-                playerCooldowns[key] = current - 1
             }
         }
     }
@@ -227,7 +214,6 @@ class CombatViewModel(
             }
             is CombatAction.ItemUse -> isDamageItem(action.itemId)
             is CombatAction.SnackUse -> isDamageItem(action.snackItemId)
-            is CombatAction.SupportAbility,
             is CombatAction.Defend,
             is CombatAction.Flee -> false
         }
@@ -373,6 +359,10 @@ class CombatViewModel(
 
     fun useSkill(skill: Skill, explicitTargets: List<String>? = null) {
         val attackerId = _awaitingAction.value ?: return
+        if (!canUseSkill(attackerId, skill)) {
+            playUiCue("error")
+            return
+        }
         var executed = false
         updateState { current ->
             val attackerState = current.combatants[attackerId] ?: return@updateState current
@@ -407,9 +397,6 @@ class CombatViewModel(
         }
         if (executed) {
             val key = "$attackerId:${skill.id}"
-            if (skill.cooldown > 0) {
-                playerCooldowns[key] = skill.cooldown + 1 // +1 because tick happens at start of turn
-            }
             if (skill.usesPerBattle != null) {
                 skillUsageCounts[key] = skillUsageCounts.getOrDefault(key, 0) + 1
             }
@@ -547,8 +534,11 @@ class CombatViewModel(
         }
     }
 
-    fun snackCooldownRemaining(actorId: String): Int =
-        snackCooldowns[actorId]?.coerceAtLeast(0) ?: 0
+    fun snackCooldownRemaining(actorId: String): Int {
+        val state = _state.value ?: return 0
+        val actorState = state.combatants[actorId] ?: return 0
+        return actorState.snackCooldown.coerceAtLeast(0)
+    }
 
     fun canUseSnack(actorId: String): Boolean {
         if (snackCooldownRemaining(actorId) > 0) return false
@@ -615,85 +605,7 @@ class CombatViewModel(
             resolved.applyOutcomeResults(current)
         }
         if (executed) {
-            val cooldown = snack.effect?.cooldown?.takeIf { it > 0 } ?: 5
-            snackCooldowns[attackerId] = cooldown + 1
             triggerAttackLunge(attackerId, AttackLungeStyle.SNACK)
-            clearAwaitingAction(attackerId)
-            concludeActorTurn(attackerId)
-        }
-    }
-
-    fun supportAbilityLabel(actorId: String): String {
-        val key = actorId.substringBefore('#').trim().lowercase(Locale.getDefault())
-        return when (key) {
-            "nova" -> "Cheap Shot"
-            "zeke" -> "Synergy Pitch"
-            "orion" -> "Stasis Stitch"
-            "gh0st" -> "Target Lock"
-            else -> "Support"
-        }
-    }
-
-    fun supportTargetRequirement(actorId: String): TargetRequirement {
-        val key = actorId.substringBefore('#').trim().lowercase(Locale.getDefault())
-        return when (key) {
-            "nova", "gh0st" -> TargetRequirement.ENEMY
-            "zeke", "orion" -> TargetRequirement.ALLY
-            else -> TargetRequirement.NONE
-        }
-    }
-
-    fun useSupportAbility(targetIdOverride: String? = null) {
-        val attackerId = _awaitingAction.value ?: return
-        val supportName = supportAbilityLabel(attackerId)
-        val requirement = supportTargetRequirement(attackerId)
-        var executed = false
-        var resolvedTargetId: String? = null
-        updateState { current ->
-            val attackerState = current.combatants[attackerId] ?: return@updateState current
-            if (!attackerState.isAlive) {
-                clearAwaitingAction(attackerId)
-                return@updateState current
-            }
-            val validOverride = targetIdOverride?.takeIf { candidate ->
-                val snapshot = current.combatants[candidate] ?: return@takeIf false
-                val isEnemy = snapshot.combatant.side == CombatSide.ENEMY
-                val isAlly = snapshot.combatant.side == CombatSide.PLAYER || snapshot.combatant.side == CombatSide.ALLY
-                snapshot.isAlive && when (requirement) {
-                    TargetRequirement.ENEMY -> isEnemy
-                    TargetRequirement.ALLY -> isAlly
-                    TargetRequirement.ANY -> isEnemy || isAlly
-                    TargetRequirement.NONE -> false
-                }
-            }
-            val targetId = when (requirement) {
-                TargetRequirement.ENEMY -> validOverride ?: resolveEnemyTargets(current).firstOrNull()
-                TargetRequirement.ALLY -> validOverride ?: attackerId
-                TargetRequirement.ANY -> validOverride ?: resolveEnemyTargets(current).firstOrNull() ?: attackerId
-                TargetRequirement.NONE -> attackerId
-            } ?: return@updateState current
-
-            resolvedTargetId = targetId
-            playUiCue("confirm")
-            val action = CombatAction.SupportAbility(attackerId, targetId)
-            val resolved = actionProcessor.execute(current, action, ::victoryReward)
-            executed = true
-            resolved.applyOutcomeResults(current)
-        }
-        val resolvedTarget = resolvedTargetId
-        if (executed) {
-            if (!resolvedTarget.isNullOrBlank()) {
-                combatFxEvents.tryEmit(
-                    CombatFxEvent.SupportCue(
-                        actorId = attackerId,
-                        skillName = supportName,
-                        targetIds = listOf(resolvedTarget)
-                    )
-                )
-                if (attackerId.substringBefore('#').equals("zeke", ignoreCase = true)) {
-                    boostAtb(resolvedTarget, ZEKE_SUPPORT_ATB_BONUS)
-                }
-            }
             clearAwaitingAction(attackerId)
             concludeActorTurn(attackerId)
         }
@@ -791,10 +703,10 @@ class CombatViewModel(
         }
         if (isJammed) return false
 
-        val key = "$actorId:${skill.id}"
-        
         // 1. Check Cooldown
-        if (playerCooldowns.getOrDefault(key, 0) > 0) return false
+        if (actorState.activeCooldowns.getOrDefault(skill.id, 0) > 0) return false
+        
+        val key = "$actorId:${skill.id}"
         
         // 2. Check Usage Limits
         if (skill.usesPerBattle != null) {
@@ -808,8 +720,11 @@ class CombatViewModel(
         return true
     }
 
-    fun skillCooldownRemaining(actorId: String, skillId: String): Int =
-        playerCooldowns.getOrDefault("$actorId:$skillId", 0)
+    fun skillCooldownRemaining(actorId: String, skillId: String): Int {
+        val state = _state.value ?: return 0
+        val actorState = state.combatants[actorId] ?: return 0
+        return actorState.activeCooldowns.getOrDefault(skillId, 0)
+    }
 
     private fun checkSkillConditions(actorId: String, skill: Skill, state: CombatState): Boolean {
         if (skill.conditions.isNullOrEmpty()) return true
@@ -939,22 +854,6 @@ class CombatViewModel(
         }
     }
 
-    private fun tickEnemyCooldowns() {
-        if (enemyCooldowns.isEmpty()) return
-        enemyCooldowns.keys.toList().forEach { key ->
-            val updated = (enemyCooldowns[key] ?: 0) - 1
-            enemyCooldowns[key] = updated.coerceAtLeast(0)
-        }
-    }
-
-    private fun registerEnemyActionCooldown(action: CombatAction) {
-        if (action !is CombatAction.SkillUse) return
-        val skill = skillById[action.skillId] ?: return
-        val cooldown = skill.cooldown.coerceAtLeast(0)
-        if (cooldown > 0) {
-            enemyCooldowns[action.skillId] = cooldown
-        }
-    }
     private fun recordEnemySkillUse(action: CombatAction) {
         if (action !is CombatAction.SkillUse) return
         val key = "${action.actorId}:${action.skillId}"
@@ -967,7 +866,9 @@ class CombatViewModel(
     }
 
     private fun canEnemyUseSkill(enemyId: String, skill: Skill): Boolean {
-        if (enemyCooldowns.getOrDefault(skill.id, 0) > 0) return false
+        val state = _state.value ?: return false
+        val enemyState = state.combatants[enemyId] ?: return false
+        if (enemyState.activeCooldowns.getOrDefault(skill.id, 0) > 0) return false
         val uses = skill.usesPerBattle ?: return true
         val used = enemySkillUsageCounts.getOrDefault("$enemyId:${skill.id}", 0)
         return used < uses
@@ -1406,9 +1307,7 @@ class CombatViewModel(
                     setCombatBanner(entry, updated)
                 }
                 is CombatLogEntry.WeaknessReward -> {
-                    if (entry.actorId in playerIdList) {
-                        tickPlayerCooldowns(entry.actorId)
-                    }
+                    // Handled reactively in CombatActionProcessor/CombatState
                 }
                 is CombatLogEntry.Heal -> {
                     combatFxEvents.tryEmit(
@@ -1752,7 +1651,6 @@ class CombatViewModel(
             is CombatLogEntry.TurnSkipped -> bannerForTurnSkipped(entry, state)
             is CombatLogEntry.Outcome -> bannerForOutcome(entry)
             is CombatLogEntry.WeaknessReward -> null
-
         }
         if (update != null) {
             _combatBanner.value = update
@@ -1793,23 +1691,7 @@ class CombatViewModel(
         entry: CombatLogEntry.Damage,
         state: CombatState
     ): CombatBannerMessage? {
-        val isStatusTick = entry.sourceId.startsWith(STATUS_SOURCE_PREFIX)
-        val isMiss = entry.element?.equals("miss", ignoreCase = true) == true
-        if (isMiss) return null
-        if (!isStatusTick) return null
-        val targetIsPlayer = entry.targetId in playerIdList
-        if (combatTextVerbosity != CombatTextVerbosity.VERBOSE && !targetIsPlayer) return null
-        val statusId = entry.sourceId.removePrefix(STATUS_SOURCE_PREFIX)
-        val statusName = statusDisplayName(statusId)
-        val secondary = entry.amount.takeIf { it > 0 }?.let { "-$it" }
-        return CombatBannerMessage(
-            id = UUID.randomUUID().toString(),
-            primary = statusName,
-            secondary = secondary,
-            accent = accentForElement(entry.element),
-            icon = CombatBannerIcon.STATUS,
-            importance = CombatBannerImportance.NORMAL
-        )
+        return null // Suppress all damage banners including DOT as requested
     }
 
     private fun bannerForHeal(
@@ -1819,18 +1701,7 @@ class CombatViewModel(
     ): CombatBannerMessage? {
         if (combatTextVerbosity == CombatTextVerbosity.MINIMAL) return null
         val isStatusTick = entry.sourceId.startsWith(STATUS_SOURCE_PREFIX)
-        if (isStatusTick) {
-            val statusId = entry.sourceId.removePrefix(STATUS_SOURCE_PREFIX)
-            val statusName = statusDisplayName(statusId)
-            return CombatBannerMessage(
-                id = UUID.randomUUID().toString(),
-                primary = statusName,
-                secondary = "+${entry.amount} HP",
-                accent = CombatBannerAccent.HEAL,
-                icon = CombatBannerIcon.HEAL,
-                importance = CombatBannerImportance.NORMAL
-            )
-        }
+        if (isStatusTick) return null
 
         val session = bannerSession?.takeIf { it.actorId == entry.sourceId }
         val actionFallback = currentAction?.takeIf { it.actorId == entry.sourceId }
@@ -1842,7 +1713,7 @@ class CombatViewModel(
         return CombatBannerMessage(
             id = messageId,
             primary = primary,
-            secondary = "+${entry.amount} HP",
+            secondary = null,
             accent = CombatBannerAccent.HEAL,
             icon = icon,
             importance = CombatBannerImportance.IMPORTANT
@@ -1861,11 +1732,10 @@ class CombatViewModel(
         val importance = if (targetIsPlayer) CombatBannerImportance.IMPORTANT else CombatBannerImportance.NORMAL
         val session = bannerSession
         val primary = session?.primary ?: "$statusName$stacksSuffix"
-        val secondary = if (session != null) "$statusName$stacksSuffix" else null
         return CombatBannerMessage(
             id = session?.id ?: UUID.randomUUID().toString(),
             primary = primary,
-            secondary = secondary,
+            secondary = null,
             accent = accentForStatus(entry.statusId),
             icon = CombatBannerIcon.STATUS,
             importance = importance
@@ -1876,26 +1746,24 @@ class CombatViewModel(
         entry: CombatLogEntry.StatusExpired,
         state: CombatState
     ): CombatBannerMessage? {
-        // We no longer show text for expired statuses; the icon simply disappears from the UI.
         return null
     }
 
-
-
-        private fun bannerForTurnSkipped(
-            entry: CombatLogEntry.TurnSkipped,
-            state: CombatState
-        ): CombatBannerMessage? {
-            val chargingWeapon = chargingWeaponName(entry.reason)
-            if (chargingWeapon == null && combatTextVerbosity != CombatTextVerbosity.VERBOSE && entry.actorId !in playerIdList) {
-                return null
-            }
-            val reason = chargingWeapon?.let { "$it..." } ?: skipReasonLabel(entry.reason)
-            bannerSession = null
-            return CombatBannerMessage(
-                id = UUID.randomUUID().toString(),
-                primary = reason,
-                accent = CombatBannerAccent.DEFAULT,            icon = if (chargingWeapon != null) CombatBannerIcon.ATTACK else CombatBannerIcon.STATUS,
+    private fun bannerForTurnSkipped(
+        entry: CombatLogEntry.TurnSkipped,
+        state: CombatState
+    ): CombatBannerMessage? {
+        val chargingWeapon = chargingWeaponName(entry.reason)
+        if (chargingWeapon == null && combatTextVerbosity != CombatTextVerbosity.VERBOSE && entry.actorId !in playerIdList) {
+            return null
+        }
+        val reason = chargingWeapon?.let { "$it..." } ?: skipReasonLabel(entry.reason)
+        bannerSession = null
+        return CombatBannerMessage(
+            id = UUID.randomUUID().toString(),
+            primary = reason,
+            accent = CombatBannerAccent.DEFAULT,
+            icon = if (chargingWeapon != null) CombatBannerIcon.ATTACK else CombatBannerIcon.STATUS,
             importance = if (chargingWeapon != null) CombatBannerImportance.IMPORTANT else CombatBannerImportance.IMPORTANT
         )
     }
@@ -1926,7 +1794,6 @@ class CombatViewModel(
                 label = itemDisplayName(action.snackItemId),
                 icon = CombatBannerIcon.SNACK
             )
-            is CombatAction.SupportAbility -> ActionDescriptor(label = "Support", icon = CombatBannerIcon.SKILL)
             is CombatAction.Defend -> ActionDescriptor(label = "Guard", icon = CombatBannerIcon.GUARD)
             is CombatAction.Flee -> ActionDescriptor(label = "Retreat", icon = CombatBannerIcon.RETREAT)
         }
@@ -2004,18 +1871,10 @@ class CombatViewModel(
     }
 
     private fun concludeActorTurn(actorId: String) {
-        tickSnackCooldown(actorId)
         removeFromReadyQueue(actorId, updateActive = false)
         resetAtbMeter(actorId)
         updateActiveActorFromQueue()
         tryProcessEnemyTurns()
-    }
-
-    private fun tickSnackCooldown(actorId: String) {
-        val current = snackCooldowns[actorId] ?: return
-        if (current <= 0) return
-        val updated = (current - 1).coerceAtLeast(0)
-        if (updated <= 0) snackCooldowns.remove(actorId) else snackCooldowns[actorId] = updated
     }
 
     private fun removeFromReadyQueue(actorId: String, updateActive: Boolean = true) {
@@ -2111,9 +1970,7 @@ class CombatViewModel(
             updateState { current ->
                 val enemyState = current.combatants[enemyId] ?: return@updateState current
                 if (!enemyState.isAlive) return@updateState current
-                tickEnemyCooldowns()
                 val resolved = actionProcessor.execute(current, action, ::victoryReward)
-                registerEnemyActionCooldown(action)
                 acted = true
                 resolved.applyOutcomeResults(current)
             }

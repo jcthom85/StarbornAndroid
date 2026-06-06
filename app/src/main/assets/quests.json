@@ -1,419 +1,583 @@
 [
-    {
-        "id": "fixers_favor",
-        "title": "Fixer's Favor",
-        "summary": "Jed tosses you the reins on his workbench so you can patch the town's busted gear.",
-        "description": "With the broken devices gathered, Jed wants you to learn the ropes on his tinkering table. Follow his instructions, finish the repairs, and report back so he can deliver them.",
-        "flavor": "Nothing impresses Jed like a clean repair job.",
-        "giver": "Jed",
-        "hub_id": "w1_hub1",
-        "stages": [
-            {
-                "id": "learn_tinkering",
-                "title": "Learn the Bench",
-                "description": "Shadow Jed through his tinkering tutorial and finish the repairs.",
-                "tasks": [
-                    {
-                        "id": "talk_to_jed_fixers",
-                        "text": "Talk to Jed to review the repairs he needs.",
-                        "done": false,
-                        "tutorial_id": "scene_fixers_favor_jed"
-                    },
-                    {
-                        "id": "open_tinkering_table",
-                        "text": "Open the tinkering table when Jed tells you to.",
-                        "done": false,
-                        "tutorial_id": "scene_fixers_favor_table"
-                    },
-                    {
-                        "id": "craft_first_repair",
-                        "text": "Complete the first repair on Jed's bench.",
-                        "done": false,
-                        "tutorial_id": "scene_fixers_favor_craft"
-                    },
-                    {
-                        "id": "return_repaired_items",
-                        "text": "Debrief with Jed after the repairs.",
-                        "done": false,
-                        "tutorial_id": "scene_fixers_favor_return"
-                    }
-                ]
-            }
-        ],
-        "rewards": [
-            {
-                "type": "xp",
-                "amount": 80
-            },
-            {
-                "type": "item",
-                "item_id": "scrap_metal",
-                "quantity": 5
-            }
+  {
+    "id": "w1_mq01",
+    "title": "Wake Up Call",
+    "summary": "Nova wakes for another shift in the Pit and reports to Jed before the colony day starts.",
+    "description": "Learn the basics of moving through the Homestead, check your bunk, report to Jed's Workshop, and get your gear ready for another quota run.",
+    "flavor": "For Nova, survival starts before breakfast.",
+    "giver": "Jed",
+    "hub_id": "hub_1_homestead",
+    "stages": [
+      {
+        "id": "wake_in_the_pit",
+        "title": "Wake in the Pit",
+        "description": "Get your bearings in Nova's bunk and leave the sleeping level.",
+        "tasks": [
+          {
+            "id": "check_bunk",
+            "text": "Check Nova's bunk before heading out."
+          },
+          {
+            "id": "leave_sleeping_level",
+            "text": "Find your way out of the Pit sleeping level."
+          }
         ]
-    },
-    {
-        "id": "gather_broken_gear",
-        "title": "Gather the Broken Gear",
-        "summary": "Jed needs three busted devices rounded up before he can start repairs.",
-        "description": "Track down the broken projector from Schoolteacher Kasey, Maddie's industrial coffee grinder, and Ellie's arcade display. Once you have all three, return to Jed so he can start patching them up.",
-        "flavor": "Half the town runs on Jed's tinkering - time to feed his backlog.",
-        "giver": "Jed",
-        "hub_id": "w1_hub1",
-        "stages": [
-            {
-                "id": "collect_repairs",
-                "title": "Round Up the Repairs",
-                "description": "Collect each broken device so Jed can get them back in working order.",
-                "tasks": [
-                    {
-                        "id": "collect_projector",
-                        "text": "Collect Schoolteacher Kasey's broken projector.",
-                        "done": false
-                    },
-                    {
-                        "id": "collect_grinder",
-                        "text": "Collect Maddie's broken coffee grinder.",
-                        "done": false
-                    },
-                    {
-                        "id": "collect_display",
-                        "text": "Collect Ellie's broken arcade display.",
-                        "done": false
-                    },
-                    {
-                        "id": "report_to_jed",
-                        "text": "Talk to Jed once you have all three busted devices.",
-                        "done": false
-                    }
-                ]
-            },
-            {
-                "id": "repair_batch",
-                "title": "Patch the Gear",
-                "description": "Work with Jed to get the broken gear back in shape.",
-                "tasks": [
-                    {
-                        "id": "report_to_jed_after_repairs",
-                        "text": "Check in with Jed after the repairs tutorial.",
-                        "done": false
-                    }
-                ]
-            },
-            {
-                "id": "return_items",
-                "title": "Return the Repaired Items",
-                "description": "Return the repaired items to their respective owners.",
-                "tasks": [
-                    {
-                        "id": "return_projector",
-                        "text": "Return the repaired projector to Schoolteacher Kasey.",
-                        "done": false
-                    },
-                    {
-                        "id": "return_grinder",
-                        "text": "Return the repaired coffee grinder to Maddie.",
-                        "done": false
-                    },
-                    {
-                        "id": "return_display",
-                        "text": "Return the repaired arcade display to Ellie.",
-                        "done": false
-                    }
-                ]
-            }
-        ],
-        "rewards": [
-            {
-                "type": "xp",
-                "amount": 160
-            }
+      },
+      {
+        "id": "report_to_jed",
+        "title": "Report to Jed",
+        "description": "Jed is waiting in the Workshop with another warning and another repair job.",
+        "tasks": [
+          {
+            "id": "reach_workshop",
+            "text": "Reach Jed's Workshop."
+          },
+          {
+            "id": "talk_to_jed",
+            "text": "Talk to Jed about the shift."
+          },
+          {
+            "id": "equip_starter_gear",
+            "text": "Equip your starter gear before leaving."
+          },
+          {
+            "id": "use_tinkering_table",
+            "text": "Use Jed's tinkering table once."
+          }
         ]
-    },
-    {
-        "id": "lights_out",
-        "title": "Lights Out",
-        "summary": "Nova wakes up in darkness after a storm surge fries the power in her house.",
-        "description": "Flip the lights back on so Nova can see what she's doing before heading outside.",
-        "flavor": "Ollie insists the fix is easy. The sparking panel says otherwise.",
-        "giver": "Ollie",
-        "hub_id": "w1_hub1",
-        "stages": [
-            {
-                "id": "restore_power",
-                "title": "Restore Power",
-                "description": "Bring the lights back with a single switch so Nova can leave the house.",
-                "tasks": [
-                    {
-                        "id": "flip_switch",
-                        "text": "Flip the light switch to restore power.",
-                        "done": false,
-                        "tutorial_id": "scene_light_switch_hint"
-                    }
-                ]
-            }
-        ],
-        "rewards": [
-            {
-                "type": "xp",
-                "amount": 20
-            }
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 50
+      },
+      {
+        "type": "item",
+        "item_id": "mining_pistol",
+        "quantity": 1
+      },
+      {
+        "type": "item",
+        "item_id": "ration_pack",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "w1_mq02",
+    "title": "Paperwork",
+    "summary": "Nova needs clearance for the mine, but the checkpoint finds something worse than a missing form.",
+    "description": "Get through the Transit Checkpoint, meet Zeke at the Admin window, and survive the Dominion math that marked Nova for recycling.",
+    "flavor": "The system does not hate you. It calculated you.",
+    "giver": "Zeke",
+    "hub_id": "hub_1_homestead",
+    "stages": [
+      {
+        "id": "reach_checkpoint",
+        "title": "Reach the Checkpoint",
+        "description": "The mine route runs through a guarded Dominion checkpoint.",
+        "tasks": [
+          {
+            "id": "approach_admin_gate",
+            "text": "Approach the Transit Checkpoint."
+          },
+          {
+            "id": "request_clearance",
+            "text": "Request mine clearance at the booth."
+          }
         ]
-    },
-    {
-        "id": "scrap_run",
-        "title": "Scrap Run",
-        "summary": "Tyson needs a ration pack run before he lets you leave the market empty-handed.",
-        "description": "Check on Tyson's stall, gather the ration pack he set aside, and deliver it to Ollie so he has some energy left for Jed's errands.",
-        "flavor": "Tyson swears the ration paste builds character. Ollie just calls it edible sludge.",
-        "giver": "Tyson",
-        "hub_id": "w1_hub1",
-        "stages": [
-            {
-                "id": "restock_tyson",
-                "title": "Resupply Tyson",
-                "description": "Tyson flagged you down to grab his rations and shuttle them over to Ollie.",
-                "tasks": [
-                    {
-                        "id": "talk_to_tyson",
-                        "text": "Talk to Tyson inside the provisions stall.",
-                        "done": false,
-                        "tutorial_id": "scene_scrap_run_tyson"
-                    },
-                    {
-                        "id": "collect_rations",
-                        "text": "Collect the ration pack from the back room.",
-                        "done": false,
-                        "tutorial_id": "scene_scrap_run_shop"
-                    },
-                    {
-                        "id": "return_to_ollie",
-                        "text": "Bring the ration pack to Ollie in the plaza.",
-                        "done": false,
-                        "tutorial_id": "scene_scrap_run_return"
-                    }
-                ]
-            }
-        ],
-        "rewards": [
-            {
-                "type": "xp",
-                "amount": 40
-            },
-            {
-                "type": "item",
-                "item_id": "ration_pack",
-                "quantity": 1
-            }
+      },
+      {
+        "id": "override_retirement",
+        "title": "Override the Flag",
+        "description": "Zeke finds Nova's mandatory retirement order and tries to bury it in the paperwork.",
+        "tasks": [
+          {
+            "id": "meet_zeke",
+            "text": "Talk to Zeke at the Admin window."
+          },
+          {
+            "id": "spoof_liability_form",
+            "text": "Spoof the liability form to blame the surge on grid instability."
+          },
+          {
+            "id": "receive_mine_access_badge",
+            "text": "Take the Mine Access Badge from Zeke."
+          }
         ]
-    },
-    {
-        "id": "stellarium_mine_investigation",
-        "title": "The Stellarium Signal",
-        "summary": "Jed has detected an energy surge pulsing from the Stellarium Mine.",
-        "description": "Jed's jury-rigged scanners picked up an anomalous signal deep in the Stellarium Mine. He needs you to track it down and bring back whatever is broadcasting it.",
-        "flavor": "Mines like that never stay quiet once the dark starts humming.",
-        "giver": "Jed",
-        "hub_id": "w1_hub1",
-        "stages": [
-            {
-                "id": "investigate_mine",
-                "title": "Investigate the Mine",
-                "description": "Follow Jed's lead into the Stellarium Mine.",
-                "tasks": [
-                    {
-                        "id": "travel_to_mine",
-                        "text": "Travel to the Stellarium Mine.",
-                        "done": false
-                    }
-                ]
-            },
-            {
-                "id": "into_the_dark",
-                "title": "Into the Dark",
-                "description": "Bring the mine's systems back online.",
-                "tasks": [
-                    {
-                        "id": "light_up_mine",
-                        "text": "Find a way to light up the mine.",
-                        "done": false
-                    }
-                ]
-            },
-            {
-                "id": "delving_deeper",
-                "title": "Delving Deeper",
-                "description": "Track the resonant signal deeper underground.",
-                "tasks": [
-                    {
-                        "id": "locate_signal_source",
-                        "text": "Find the source of the energy signal.",
-                        "done": false
-                    }
-                ]
-            },
-            {
-                "id": "burrower_lair",
-                "title": "Heart of the Nest",
-                "description": "Break through whatever is roosting around the signal source.",
-                "tasks": [
-                    {
-                        "id": "defeat_burrower",
-                        "text": "Break through the nest's guardian.",
-                        "done": false
-                    }
-                ]
-            },
-            {
-                "id": "the_prize",
-                "title": "The Prize",
-                "description": "Secure the power source and report back.",
-                "tasks": [
-                    {
-                        "id": "retrieve_energy_cell",
-                        "text": "Retrieve the energy core.",
-                        "done": false
-                    },
-                    {
-                        "id": "return_to_jed_energy_cell",
-                        "text": "Return to Jed with the energy core.",
-                        "done": false
-                    }
-                ]
-            }
-        ],
-        "rewards": [
-            {
-                "type": "xp",
-                "amount": 300
-            }
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 75
+      },
+      {
+        "type": "item",
+        "item_id": "mine_access_badge",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "w1_mq03",
+    "title": "The Echo",
+    "summary": "Bogs sends Nova to Sector 4 to clear interference, but the signal is older than Dominion.",
+    "description": "Enter the Logistics Sector, descend into the Deep Mine, fight through Sector 4, and find the source of the impossible hum.",
+    "flavor": "The mine was never quiet. Nova just had not heard what was underneath.",
+    "giver": "Foreman Bogs",
+    "hub_id": "hub_2_logistics",
+    "stages": [
+      {
+        "id": "sector_four_assignment",
+        "title": "Sector 4 Assignment",
+        "description": "Bogs turns Nova's breaker surge into punishment duty.",
+        "tasks": [
+          {
+            "id": "enter_logistics_sector",
+            "text": "Enter the Logistics Sector."
+          },
+          {
+            "id": "talk_to_bogs",
+            "text": "Get the Sector 4 assignment from Foreman Bogs."
+          },
+          {
+            "id": "use_deep_elevator",
+            "text": "Use the Mine Access Badge at the Deep Elevator."
+          }
         ]
-    },
-    {
-        "id": "talk_to_jed",
-        "title": "Talk to Jed",
-        "summary": "Ollie needs you to check in with Jed before the mentor locks up for the night.",
-        "description": "Ollie flagged you down on the Main Road and reminded you that Jed hates waiting. Hustle down to Jed's stall, let him know you're back from scavenging, and see what he needs.",
-        "flavor": "Jed's temper is shorter than the daylight on Rusthaven\u00e2\u20ac\u201dbetter not keep him stewing.",
-        "giver": "Ollie",
-        "hub_id": "w1_hub1",
-        "stages": [
-            {
-                "id": "hustle_to_jed",
-                "title": "Hustle to Jed",
-                "description": "Get off the Main Road and into Jed's Scrap & Salvage before he shutters for shift change.",
-                "tasks": [
-                    {
-                        "id": "navigate_main_road",
-                        "text": "Head south from the Main Road toward the Town Square.",
-                        "done": false,
-                        "tutorial_id": "movement"
-                    },
-                    {
-                        "id": "spot_jed_shop",
-                        "text": "Find Jed's Scrap & Salvage stall in the market strip.",
-                        "done": false,
-                        "tutorial_id": "scene_market_locator"
-                    },
-                    {
-                        "id": "talk_to_jed_task",
-                        "text": "Touch Jed's name and choose Talk to check in with him.",
-                        "done": false,
-                        "tutorial_id": "npc_talk"
-                    }
-                ]
-            }
-        ],
-        "rewards": [
-            {
-                "type": "xp",
-                "amount": 25
-            }
+      },
+      {
+        "id": "deep_mine_descent",
+        "title": "Deep Mine Descent",
+        "description": "Push through the old tunnels and learn how to break shielded enemies.",
+        "tasks": [
+          {
+            "id": "clear_first_mine_encounter",
+            "text": "Clear the first Deep Mine encounter."
+          },
+          {
+            "id": "break_riot_guard",
+            "text": "Defeat a shielded Riot Guard by using Guard Break or Stagger."
+          },
+          {
+            "id": "reach_architect_threshold",
+            "text": "Reach the Architect threshold below Sector 4."
+          }
         ]
-    },
-    {
-        "id": "tutorial_smoke",
-        "title": "Tutorial Smoke Test",
-        "stages": [
-            {
-                "id": "stage_one",
-                "title": "Start",
-                "tasks": [
-                    {
-                        "id": "listen_jed",
-                        "text": "Talk to Jed at the shop."
-                    }
-                ]
-            },
-            {
-                "id": "stage_two",
-                "title": "Learn Movement",
-                "tasks": [
-                    {
-                        "id": "movement_hint",
-                        "text": "Follow the movement tutorial.",
-                        "tutorial_id": "movement"
-                    }
-                ]
-            }
-        ],
-        "rewards": []
-    },
-    {
-        "id": "checking_the_fuse",
-        "title": "Checking the Fuse",
-        "summary": "The lights are back on, but the wiring is still humming ominously.",
-        "description": "That surge didn't just trip a breaker; it fried something deeper in the wall. Ollie wants you to check the sub-panel outside before the whole block goes dark again.",
-        "flavor": "It smells like ozone and bad decisions.",
-        "giver": "Ollie",
-        "hub_id": "w1_hub1",
-        "prereq_quest_id": "lights_out",
-        "stages": [
-            {
-                "id": "inspect_subpanel",
-                "title": "Inspect the Sub-Panel",
-                "description": "Head outside and check the sub-panel on the exterior wall.",
-                "tasks": [
-                    {
-                        "id": "go_outside",
-                        "text": "Exit the house.",
-                        "done": false
-                    },
-                    {
-                        "id": "check_panel",
-                        "text": "Inspect the sparking sub-panel.",
-                        "done": false
-                    }
-                ]
-            },
-            {
-                "id": "replace_fuse",
-                "title": "Replace the Fuse",
-                "description": "Swap out the blown fuse with a spare from the toolbox.",
-                "tasks": [
-                    {
-                        "id": "find_fuse",
-                        "text": "Find a spare fuse in the garage toolbox.",
-                        "done": false
-                    },
-                    {
-                        "id": "install_fuse",
-                        "text": "Install the new fuse in the sub-panel.",
-                        "done": false
-                    }
-                ]
-            }
-        ],
-        "rewards": [
-            {
-                "type": "xp",
-                "amount": 50
-            },
-            {
-                "type": "item",
-                "item_id": "scrap_metal",
-                "quantity": 2
-            }
+      },
+      {
+        "id": "relic_sync",
+        "title": "The Tuning Fork",
+        "description": "The interference is a relic signal, and touching it changes Nova.",
+        "tasks": [
+          {
+            "id": "reach_echo_chamber",
+            "text": "Reach the Echo Chamber."
+          },
+          {
+            "id": "touch_tuning_fork",
+            "text": "Touch the Tuning Fork."
+          },
+          {
+            "id": "survive_source_sync",
+            "text": "Survive the Source sync and recover the relic."
+          }
         ]
-    }
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 150
+      },
+      {
+        "type": "item",
+        "item_id": "tuning_fork",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "w1_mq04",
+    "title": "Red Alert",
+    "summary": "The relic trips the lockdown and the colony Nova knew turns hostile.",
+    "description": "Escape the Deep Mine under lockdown, follow Zeke's comm guidance, and reach the Cargo Lift before the Warden's security teams close in.",
+    "flavor": "The system stopped ignoring Nova. That was worse.",
+    "giver": "Zeke",
+    "hub_id": "hub_2_logistics",
+    "stages": [
+      {
+        "id": "lockdown_escape",
+        "title": "Escape the Lockdown",
+        "description": "The Warden seals the sector after Nova syncs with the relic.",
+        "tasks": [
+          {
+            "id": "survive_lockdown_broadcast",
+            "text": "Survive the lockdown broadcast."
+          },
+          {
+            "id": "follow_zeke_comms",
+            "text": "Follow Zeke's comm instructions through the escape route."
+          },
+          {
+            "id": "clear_escape_gauntlet",
+            "text": "Fight through the lockdown gauntlet."
+          }
+        ]
+      },
+      {
+        "id": "cargo_lift_sacrifice",
+        "title": "Cargo Lift",
+        "description": "Jed catches up at the lift with one last piece of impossible scrap.",
+        "tasks": [
+          {
+            "id": "reach_cargo_lift",
+            "text": "Reach the Cargo Lift."
+          },
+          {
+            "id": "receive_chime",
+            "text": "Receive the Chime from Jed."
+          },
+          {
+            "id": "escape_to_launch_bay",
+            "text": "Escape toward the Launch Bay."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 150
+      },
+      {
+        "type": "item",
+        "item_id": "ghost_signal_cell",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "w1_mq05",
+    "title": "The Launch",
+    "summary": "Nova and Zeke hijack a cargo pod, but the sky is another wall.",
+    "description": "Fight to the Pod Bay, defeat the Warden, splice the Chime into the pod core, and launch into the crash that ends Nova's old life.",
+    "flavor": "Escaping the colony is not the same thing as escaping the planet.",
+    "giver": "Zeke",
+    "hub_id": "hub_2_logistics",
+    "stages": [
+      {
+        "id": "reach_pod_bay",
+        "title": "Reach the Pod Bay",
+        "description": "Security is collapsing toward the launch rail.",
+        "tasks": [
+          {
+            "id": "fight_through_launch_access",
+            "text": "Fight through Launch Bay access."
+          },
+          {
+            "id": "reach_pod_bay",
+            "text": "Reach the Pod Bay."
+          }
+        ]
+      },
+      {
+        "id": "defeat_warden",
+        "title": "Defeat the Warden",
+        "description": "The Warden blocks the pod and forces Nova to prove what she learned in the mines.",
+        "tasks": [
+          {
+            "id": "survive_warden_intro",
+            "text": "Survive the Warden's arrival."
+          },
+          {
+            "id": "break_warden_guard",
+            "text": "Break the Warden's guard."
+          },
+          {
+            "id": "defeat_the_warden",
+            "text": "Defeat the Warden."
+          }
+        ]
+      },
+      {
+        "id": "launch_pod",
+        "title": "Launch",
+        "description": "The Chime wakes the pod core, but the auto-nav locks onto an unknown signal.",
+        "tasks": [
+          {
+            "id": "splice_chime",
+            "text": "Splice the Chime into the pod core."
+          },
+          {
+            "id": "launch_from_colony",
+            "text": "Launch from the colony."
+          },
+          {
+            "id": "hit_planetary_shield",
+            "text": "Hit the Planetary Shield and crash toward Sector 9."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 250
+      }
+    ]
+  },
+  {
+    "id": "w1_sq01",
+    "title": "The Scavenger's Stash",
+    "summary": "Scrapper knows where a failed rebel cache is hidden, but paranoia keeps him from fetching it.",
+    "description": "Follow Scrapper's lead through Trade Row, find the old cache, and recover the explosives the last resistance cell never got to use.",
+    "flavor": "The people who hid the stash are gone. Their warning still has teeth.",
+    "giver": "Scrapper",
+    "hub_id": "hub_1_homestead",
+    "stages": [
+      {
+        "id": "follow_scrapper_tip",
+        "title": "Follow Scrapper's Tip",
+        "description": "Scrapper has a lead on a hidden cache from a failed rebel operation.",
+        "tasks": [
+          {
+            "id": "talk_to_scrapper",
+            "text": "Talk to Scrapper in Trade Row."
+          },
+          {
+            "id": "find_hidden_stash",
+            "text": "Find the hidden stash."
+          },
+          {
+            "id": "open_rebel_cache",
+            "text": "Open the old rebel cache."
+          }
+        ]
+      },
+      {
+        "id": "return_to_scrapper",
+        "title": "Return to Scrapper",
+        "description": "Bring the cache proof back before Scrapper loses his nerve.",
+        "tasks": [
+          {
+            "id": "return_cache_proof",
+            "text": "Return to Scrapper."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 80
+      },
+      {
+        "type": "item",
+        "item_id": "pulse_grenade",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "w1_sq02",
+    "title": "System Flush",
+    "summary": "Doc's med-bay vents are backing up with toxic fumes because Dominion keeps denying repairs.",
+    "description": "Clear the contaminated ventilation route, stop the fumes from poisoning the med-bay, and collect Doc's corrosive round mod.",
+    "flavor": "Dominion does not fix what it can replace.",
+    "giver": "Doc",
+    "hub_id": "hub_1_homestead",
+    "stages": [
+      {
+        "id": "clear_medbay_vents",
+        "title": "Clear the Vents",
+        "description": "Doc needs the med-bay vents cleared before more patients start coughing blood.",
+        "tasks": [
+          {
+            "id": "talk_to_doc",
+            "text": "Talk to Doc in the Med-Bay."
+          },
+          {
+            "id": "enter_ventilation_hub",
+            "text": "Enter the ventilation hub."
+          },
+          {
+            "id": "clear_toxic_blockage",
+            "text": "Clear the toxic blockage."
+          }
+        ]
+      },
+      {
+        "id": "doc_turn_in",
+        "title": "Report to Doc",
+        "description": "Doc can finally breathe long enough to pay you.",
+        "tasks": [
+          {
+            "id": "return_to_doc",
+            "text": "Return to Doc."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 90
+      },
+      {
+        "type": "item",
+        "item_id": "mod_corrosive_rounds",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "w1_sq03",
+    "title": "Heavy Lifting",
+    "summary": "Bogs needs cargo moved and cares more about the shipment clock than the workers trapped behind it.",
+    "description": "Use a loader to clear the collapsed cargo route, save the trapped workers, and learn why shielded enemies need to be broken before they can be hurt.",
+    "flavor": "Bogs calls it labor efficiency. Nova calls it not letting people die under a crate.",
+    "giver": "Foreman Bogs",
+    "hub_id": "hub_1_homestead",
+    "stages": [
+      {
+        "id": "clear_cargo_collapse",
+        "title": "Clear the Cargo Collapse",
+        "description": "A cargo collapse is blocking the loading route, and Bogs wants it fixed now.",
+        "tasks": [
+          {
+            "id": "talk_to_bogs",
+            "text": "Talk to Foreman Bogs about the blocked route."
+          },
+          {
+            "id": "start_loader",
+            "text": "Start the loader."
+          },
+          {
+            "id": "move_cargo",
+            "text": "Move the collapsed cargo."
+          }
+        ]
+      },
+      {
+        "id": "guard_break_training",
+        "title": "Break the Guard",
+        "description": "The loader route becomes a controlled lesson in breaking a shield before attacking.",
+        "tasks": [
+          {
+            "id": "learn_hydraulic_kick",
+            "text": "Learn Hydraulic Kick."
+          },
+          {
+            "id": "break_training_shield",
+            "text": "Use Guard Break or Stagger against a shielded target."
+          },
+          {
+            "id": "rescue_trapped_workers",
+            "text": "Clear the final debris and free the trapped workers."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 100
+      },
+      {
+        "type": "item",
+        "item_id": "hydraulic_fluid",
+        "quantity": 1
+      },
+      {
+        "type": "item",
+        "item_id": "heavy_gear",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "w1_sq04",
+    "title": "Protocol Override",
+    "summary": "A hacked terminal in the Server Room still carries code from a resistance cell that failed.",
+    "description": "Find the old rebel terminal, restore its protocol spoof, and leave with admin access that can shave time off future security work.",
+    "flavor": "If you are reading this, we failed. But the code still works.",
+    "giver": "Hacked Terminal",
+    "hub_id": "hub_2_logistics",
+    "stages": [
+      {
+        "id": "find_rebel_terminal",
+        "title": "Find the Terminal",
+        "description": "The Server Room hides old code Dominion never fully scrubbed.",
+        "tasks": [
+          {
+            "id": "enter_server_room",
+            "text": "Enter the Server Room."
+          },
+          {
+            "id": "locate_hacked_terminal",
+            "text": "Locate the hacked terminal."
+          },
+          {
+            "id": "restore_protocol_spoof",
+            "text": "Restore the protocol spoof."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 110
+      },
+      {
+        "type": "item",
+        "item_id": "circuit_board",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "w1_sq05",
+    "title": "The Lost Shift",
+    "summary": "A dead miner's datapad proves the colony stopped being employment long before Nova noticed.",
+    "description": "Track the missing shift through the Deep Mine, recover the datapad, and learn what Dominion does when workers stop producing.",
+    "flavor": "They were not paying us anymore. They were just keeping us.",
+    "giver": "Dead Miner's Datapad",
+    "hub_id": "hub_2_logistics",
+    "stages": [
+      {
+        "id": "trace_missing_shift",
+        "title": "Trace the Missing Shift",
+        "description": "A collapsed side route holds the last record of a crew nobody rescued.",
+        "tasks": [
+          {
+            "id": "find_collapsed_tunnel",
+            "text": "Find the collapsed tunnel in the Deep Mine."
+          },
+          {
+            "id": "recover_datapad",
+            "text": "Recover the dead miner's datapad."
+          },
+          {
+            "id": "read_final_letter",
+            "text": "Read the miner's final letter."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 120
+      },
+      {
+        "type": "item",
+        "item_id": "recoil_dampener",
+        "quantity": 1
+      }
+    ]
+  }
 ]

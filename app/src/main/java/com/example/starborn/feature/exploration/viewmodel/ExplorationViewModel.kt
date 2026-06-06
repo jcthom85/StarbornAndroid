@@ -532,7 +532,7 @@ class ExplorationViewModel(
         "pasha" to DEFAULT_PORTRAIT,
         "jed" to DEFAULT_PORTRAIT,
         "maddie" to DEFAULT_PORTRAIT,
-        "ollie" to "ollie_portrait"
+        "ollie" to "images/characters/ollie_portrait.png"
     )
     private var activeShopDialogue: ShopDialogueSession? = null
     private var lastDialogueVoiceCue: String? = null
@@ -1719,7 +1719,7 @@ class ExplorationViewModel(
                     ?: hubs.firstOrNull()
             val initialRoom =
                 preselectedRoomId?.let { id -> roomsById[id] }
-                    ?: rooms.firstOrNull { it.id.equals("town_9", ignoreCase = true) }
+                    ?: rooms.firstOrNull { it.id.equals("pit_nova_bunk", ignoreCase = true) }
                     ?: rooms.firstOrNull()
             val initialThemeId = initialRoom?.env
             val initialTheme = initialRoom?.let { themeByRoomId[it.id] }
@@ -2726,34 +2726,19 @@ class ExplorationViewModel(
         tutorialManager.cancel("light_switch_hint")
         tutorialManager.cancel("swipe_hint")
         tutorialManager.markRoomVisited(room.id)
-        if (room.id.equals("town_9", ignoreCase = true)) {
-            val lightOn = booleanValueOf(room.state["light_on"]) ?: false
-            if (!tutorialManager.hasCompleted("light_switch_touch") && !lightOn) {
+        if (room.id.equals("pit_nova_bunk", ignoreCase = true)) {
+            if (!tutorialManager.hasCompleted("swipe_move")) {
                 tutorialManager.scheduleScript(
-                    key = "light_switch_hint",
-                    scriptId = "scene_light_switch_hint",
-                    delayMs = 14_000L
+                    key = "swipe_hint",
+                    scriptId = "scene_swipe_movement",
+                    delayMs = 4000L
                 )
-            } else if (lightOn) {
-                tutorialManager.cancel("light_switch_hint")
             }
         }
     }
 
     private fun onRoomStateChanged(roomId: String, stateKey: String, value: Boolean) {
         val currentRoom = _uiState.value.currentRoom
-        if (roomId.equals("town_9", ignoreCase = true) && stateKey.equals("light_on", ignoreCase = true) && value) {
-            sessionStore.markTutorialCompleted("light_switch_touch")
-            tutorialManager.markCompleted("light_switch_touch")
-            tutorialManager.cancel("light_switch_hint")
-            if (tutorialsEnabled && !tutorialManager.hasCompleted("swipe_move")) {
-                tutorialManager.scheduleScript(
-                    key = "swipe_hint",
-                    scriptId = "scene_swipe_movement",
-                    delayMs = 3_000L
-                )
-            }
-        }
         if (currentRoom?.id.equals(roomId, ignoreCase = true)) {
             val resolvedRoom = roomsById[roomId] ?: currentRoom ?: return
             if (stateKey.equals("light_on", ignoreCase = true) && value) {

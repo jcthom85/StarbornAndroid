@@ -20,7 +20,7 @@ This document tracks the **Entry State** (prerequisites) and **Exit State** (del
     *   **Combat Literacy (Soft-Mandatory):** Guard Break/Stagger training via **W1_SQ03 "Heavy Lifting"** (Hydraulic Kick) should be mandatory or heavily signposted before Hub 1.2.
 *   **Exit State:**
     *   **Party:** Nova (Solo).
-    *   **Items:** Mining Access Pass (Key Item).
+    *   **Items:** Mine Access Badge (Key Item).
     *   **Story Beat:** Nova heads to the mines for a "special job" from Jed.
     *   **Next:** Transit Checkpoint → Hub 1.2.
 

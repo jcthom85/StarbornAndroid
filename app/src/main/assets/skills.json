@@ -966,6 +966,72 @@
     "status_applications": []
   },
   {
+    "id": "nova_cheap_shot",
+    "name": "Cheap Shot",
+    "character": "nova",
+    "type": "active",
+    "description": "A dirty strike that lowers target accuracy and increases your evasion.",
+    "combat_tags": [
+      "debuff"
+    ],
+    "base_power": 0,
+    "scaling": "agility",
+    "cooldown": 0,
+    "status_applications": [
+      "weak"
+    ]
+  },
+  {
+    "id": "zeke_synergy_pitch",
+    "name": "Synergy Pitch",
+    "character": "zeke",
+    "type": "active",
+    "description": "Projects a kinetic barrier to protect an ally.",
+    "combat_tags": [
+      "support"
+    ],
+    "base_power": 0,
+    "scaling": "strength",
+    "cooldown": 0,
+    "status_applications": [
+      "shield"
+    ]
+  },
+  {
+    "id": "orion_stasis_stitch",
+    "name": "Stasis Stitch",
+    "character": "orion",
+    "type": "active",
+    "description": "Uses nanites to heal an ally and grant a minor barrier.",
+    "combat_tags": [
+      "heal",
+      "support"
+    ],
+    "base_power": 40,
+    "scaling": "focus",
+    "cooldown": 0,
+    "status_applications": [
+      "shield"
+    ]
+  },
+  {
+    "id": "gh0st_target_lock",
+    "name": "Target Lock",
+    "character": "gh0st",
+    "type": "active",
+    "description": "Tags an enemy for increased critical hits while shielding yourself.",
+    "combat_tags": [
+      "debuff",
+      "support"
+    ],
+    "base_power": 0,
+    "scaling": "agility",
+    "cooldown": 0,
+    "status_applications": [
+      "target_lock"
+    ]
+  },
+  {
     "id": "slide_kick",
     "name": "Slide Kick",
     "character": "nova",

@@ -58,24 +58,6 @@
     ]
   },
   {
-    "id": "scene_fishing_basics",
-    "title": "Fishing Basics",
-    "steps": [
-      {
-        "type": "narration",
-        "text": "Tap Cast to launch the line and start the timing meter."
-      },
-      {
-        "type": "narration",
-        "text": "Watch the cursor sweep across the bar\u2014tap when it overlaps the highlighted zone to reel in a catch."
-      },
-      {
-        "type": "narration",
-        "text": "Stronger rods widen rare catch chances, while lures boost the odds of uncommon finds."
-      }
-    ]
-  },
-  {
     "id": "scene_mine_restore",
     "title": "Power Restored",
     "steps": [

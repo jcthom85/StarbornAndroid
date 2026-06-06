@@ -154,8 +154,8 @@ class CombatViewModelTest {
             turnOrder = listOf(TurnSlot(combatantPlayer.id, 10)),
             activeTurnIndex = 0,
             combatants = mapOf(
-                combatantPlayer.id to CombatantState(combatantPlayer, combatantPlayer.stats.maxHp),
-                combatantEnemy.id to CombatantState(combatantEnemy, combatantEnemy.stats.maxHp)
+                combatantPlayer.id to CombatantState(combatantPlayer, combatantPlayer.stats.maxHp, combatantPlayer.stats.stability),
+                combatantEnemy.id to CombatantState(combatantEnemy, combatantEnemy.stats.maxHp, combatantEnemy.stats.stability)
             ),
             outcome = CombatOutcome.Victory(CombatReward())
         )
@@ -412,11 +412,13 @@ class CombatViewModelTest {
             combatants = mapOf(
                 combatantPlayer.id to CombatantState(
                     combatantPlayer,
-                    combatantPlayer.stats.maxHp
+                    combatantPlayer.stats.maxHp,
+                    combatantPlayer.stats.stability
                 ),
                 combatantEnemy.id to CombatantState(
                     combatantEnemy,
-                    combatantEnemy.stats.maxHp
+                    combatantEnemy.stats.maxHp,
+                    combatantEnemy.stats.stability
                 )
             )
         )
@@ -552,11 +554,13 @@ class CombatViewModelTest {
             combatants = mapOf(
                 combatantPlayer.id to CombatantState(
                     combatantPlayer,
-                    combatantPlayer.stats.maxHp
+                    combatantPlayer.stats.maxHp,
+                    combatantPlayer.stats.stability
                 ),
                 combatantEnemy.id to CombatantState(
                     combatantEnemy,
-                    combatantEnemy.stats.maxHp
+                    combatantEnemy.stats.maxHp,
+                    combatantEnemy.stats.stability
                 )
             )
         )
@@ -686,11 +690,13 @@ class CombatViewModelTest {
             combatants = mapOf(
                 combatantPlayer.id to CombatantState(
                     combatantPlayer,
-                    combatantPlayer.stats.maxHp
+                    combatantPlayer.stats.maxHp,
+                    combatantPlayer.stats.stability
                 ),
                 combatantEnemy.id to CombatantState(
                     combatantEnemy,
-                    combatantEnemy.stats.maxHp
+                    combatantEnemy.stats.maxHp,
+                    combatantEnemy.stats.stability
                 )
             )
         )
@@ -844,11 +850,13 @@ class CombatViewModelTest {
             combatants = mapOf(
                 combatantPlayer.id to CombatantState(
                     combatantPlayer,
-                    combatantPlayer.stats.maxHp
+                    combatantPlayer.stats.maxHp,
+                    combatantPlayer.stats.stability
                 ),
                 combatantEnemy.id to CombatantState(
                     combatantEnemy,
-                    combatantEnemy.stats.maxHp
+                    combatantEnemy.stats.maxHp,
+                    combatantEnemy.stats.stability
                 )
             )
         )
@@ -971,7 +979,8 @@ class CombatViewModelTest {
                 val combatants = setup.allCombatants.associate { combatant ->
                     combatant.id to CombatantState(
                         combatant = combatant,
-                        hp = combatant.stats.maxHp
+                        hp = combatant.stats.maxHp,
+                        stability = combatant.stats.stability
                     )
                 }
                 CombatState(

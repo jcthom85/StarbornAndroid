@@ -21,10 +21,19 @@ class OllieIntroFlowTest {
     @Test
     fun ollieIntroHappensInTwoPhases() {
         val sessionStore = GameSessionStore()
+        var pendingCinematicComplete: (() -> Unit)? = null
         val eventManager = EventManager(
             events = loadEvents(),
             sessionStore = sessionStore,
-            eventHooks = EventHooks()
+            eventHooks = EventHooks(
+                onPlayCinematic = { sceneId, onComplete ->
+                    if (sceneId == "ollie_intro_scene") {
+                        pendingCinematicComplete = onComplete
+                    } else {
+                        onComplete()
+                    }
+                }
+            )
         )
         val dialogueService = DialogueService(
             loadDialogue(),
@@ -45,6 +54,9 @@ class OllieIntroFlowTest {
 
         introSession?.advance() // move to second line
         introSession?.advance() // fire triggers on second line
+
+        // Complete the cinematic now that dialogue has finished
+        pendingCinematicComplete?.invoke()
 
         val afterIntro = sessionStore.state.value
         assertTrue(afterIntro.completedMilestones.contains("ms_ollie_met"))

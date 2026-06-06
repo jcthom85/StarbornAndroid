@@ -18,6 +18,8 @@
     *   **Zeke:** "I'm not doing it. I'm not signing a death warrant for a spreadsheet."
     *   He types a furious command. The red text vanishes.
     *   **Zeke:** "I just flagged the surge as 'Grid Instability'. Not your fault. Temporary override."
+    *   **The Cost:** As the badge prints, a camera on the wall swivels to focus directly on Zeke. A silent "LOGGED" notification flashes on his console.
+    *   **Zeke:** "I... just made a Level 4 breach. I'm a loose end now."
     *   He slides the chit under the glass, his hand shaking violently.
     *   **Nova:** "Why?"
     *   **Zeke:** "Because they're trying to kill you. And I won't help them."

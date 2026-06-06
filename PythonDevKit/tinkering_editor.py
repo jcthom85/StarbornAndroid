@@ -167,6 +167,13 @@ class TinkeringEditor(QWidget):
         text_form.addRow("Success Message", self.inp_success)
         rv.addWidget(text_box)
 
+        # Cosmic / Audio
+        cosmic_grp = QGroupBox("Cosmic Resonance / Audio")
+        cg = QFormLayout(cosmic_grp)
+        self.inp_vo_cue = QLineEdit()
+        cg.addRow("VO Cue", self.inp_vo_cue)
+        rv.addWidget(cosmic_grp)
+
         rv.addStretch(1)
         # bottom bar
         bar = QHBoxLayout()
@@ -229,7 +236,7 @@ class TinkeringEditor(QWidget):
             QMessageBox.information(self, "Reverted", "Recipes reloaded from file.")
 
     def _new(self):
-        payload = {"id":"", "name":"New Tinker", "base":"", "components":[], "result":"", "description":"", "success_message":""}
+        payload = {"id":"", "name":"New Tinker", "base":"", "components":[], "result":"", "description":"", "success_message":"", "vo_cue":""}
         self.recipes.append(payload)
         self._reload_list()
         self._select_text("New Tinker")
@@ -270,6 +277,7 @@ class TinkeringEditor(QWidget):
         self.inp_id.setText(""); self.inp_name.setText("")
         self.inp_base.setCurrentText(""); self.inp_comp1.setCurrentText(""); self.inp_comp2.setCurrentText("")
         self.inp_result.setCurrentText(""); self.inp_desc.setPlainText(""); self.inp_success.setText("")
+        self.inp_vo_cue.setText("")
 
     def _load_form(self, row: int):
         item = self.list.item(row)
@@ -288,6 +296,7 @@ class TinkeringEditor(QWidget):
         self.inp_result.setCurrentText(r.get("result",""))
         self.inp_desc.setPlainText(r.get("description",""))
         self.inp_success.setText(r.get("success_message",""))
+        self.inp_vo_cue.setText(r.get("vo_cue",""))
         self.current_idx = idx
 
     def _apply_form_to_memory(self):
@@ -306,6 +315,7 @@ class TinkeringEditor(QWidget):
         res = (self.inp_result.currentText() or "").strip()
         desc = self.inp_desc.toPlainText().strip()
         succ = (self.inp_success.text() or "").strip()
+        vo = (self.inp_vo_cue.text() or "").strip()
 
         if not nm: QMessageBox.warning(self, "Validation", "Name is required."); return None
         if not base: QMessageBox.warning(self, "Validation", "Base item is required."); return None
@@ -322,7 +332,7 @@ class TinkeringEditor(QWidget):
         comps: List[str] = [x for x in [c1, c2] if x]
         return {
             "id": rid, "name": nm, "base": base, "components": comps,
-            "result": res, "description": desc, "success_message": succ
+            "result": res, "description": desc, "success_message": succ, "vo_cue": vo
         }
 
     # ---- item helpers ----

@@ -13,7 +13,7 @@ from pathlib import Path
 from PyQt5.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QHBoxLayout, QListWidget,
     QLineEdit, QPushButton, QLabel, QFormLayout, QTextEdit,
-    QMessageBox, QListWidgetItem, QInputDialog
+    QMessageBox, QListWidgetItem, QInputDialog, QGroupBox
 )
 from PyQt5.QtCore import Qt
 from theme_kit import ThemeManager         # optional if you want per-editor theme flips
@@ -89,10 +89,20 @@ class MilestoneEditor(QWidget):
         form = QFormLayout()
         self.name_edit = QLineEdit()
         self.desc_edit = QTextEdit()
+        self.toast_edit = QLineEdit()
+        self.vo_cue_edit = QLineEdit()
         self.trigger_edit = QTextEdit()
         self.effects_edit = QTextEdit()
+        
         form.addRow("Name:", self.name_edit)
         form.addRow("Description:", self.desc_edit)
+        form.addRow("Toast Text:", self.toast_edit)
+        
+        cosmic_grp = QGroupBox("Cosmic Resonance / Audio")
+        cg = QFormLayout(cosmic_grp)
+        cg.addRow("Toast VO Cue:", self.vo_cue_edit)
+        form.addRow(cosmic_grp)
+        
         form.addRow("Trigger (JSON Object):", self.trigger_edit)
         form.addRow("Effects (JSON Object):", self.effects_edit)
         right.addLayout(form)
@@ -167,6 +177,8 @@ class MilestoneEditor(QWidget):
             "id": new_id,
             "name": new_id,
             "description": "",
+            "toast": "",
+            "vo_cue": "",
             "trigger": {},
             "effects": {}
         }
@@ -204,12 +216,16 @@ class MilestoneEditor(QWidget):
     def _populate_form(self, m: dict):
         self.name_edit.setText(str(m.get("name", "")))
         self.desc_edit.setPlainText(str(m.get("description", "")))
+        self.toast_edit.setText(str(m.get("toast", "")))
+        self.vo_cue_edit.setText(str(m.get("vo_cue", "")))
         self.trigger_edit.setPlainText(json.dumps(m.get("trigger", {}), indent=2))
         self.effects_edit.setPlainText(json.dumps(m.get("effects", {}), indent=2))
 
     def _clear_form(self):
         self.name_edit.clear()
         self.desc_edit.clear()
+        self.toast_edit.clear()
+        self.vo_cue_edit.clear()
         self.trigger_edit.clear()
         self.effects_edit.clear()
 
@@ -224,6 +240,8 @@ class MilestoneEditor(QWidget):
         m = self.milestones[self.current_id]
         m["name"] = self.name_edit.text()
         m["description"] = self.desc_edit.toPlainText()
+        m["toast"] = self.toast_edit.text()
+        m["vo_cue"] = self.vo_cue_edit.text()
         try:
             trig_txt = self.trigger_edit.toPlainText().strip()
             eff_txt = self.effects_edit.toPlainText().strip()

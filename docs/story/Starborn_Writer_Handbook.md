@@ -11,7 +11,11 @@
 1.  **The "Grunt" Test:** If a tired shift-worker wouldn't think it, don't write it. (Exception: Orion/Source).
 2.  **Texture over Philosophy:** Don't describe the "concept" of poverty; describe the taste of recycled air.
 3.  **No Lore Dumps:** History belongs in datapads. Room text belongs to the now.
-4.  **The Highlight Rule:** Every Room Description must contain 2-4 highlightable nouns (Interactables). Write the sentence around the object you want the player to touch.
+4.  **The Actionable Word System:** Every Room Description must contain 2-4 tappable nouns (Interactables). 
+    *   **Implementation:** These words are NO LONGER bolded with `**` in the JSON. Instead, they are defined in the room's `actions` array.
+    *   **Matching:** The `name` field of the action must match the exact word (including casing) used in the `description` string.
+    *   **Standard Casing:** Use normal sentence casing for these words. If a word is not at the start of a sentence or a proper noun, it should be lowercase.
+    *   **Feedback:** If the action has no specific function (like a quest trigger), use `condition_unmet_message` to provide "examine" flavor text.
 
 ---
 
@@ -117,10 +121,19 @@ Use this table when describing Starborn magic (The Source/Relics).
 
 The game UI is a Dominion interface. It treats the player as an employee, not a hero.
 
+This is primarily a **text and framing rule**, not a command to make the UI visually severe. Starborn's actual visual language is chibi/anime sci-fi with bold outlines, saturated accents, expressive icons, and readable comic-game panels. The Dominion layer should add paperwork flavor, status labels, and dry compliance language on top of that playful foundation.
+
 *   **Quest Accepted:** "Assignment Logged."
 *   **Quest Complete:** "Ticket Closed. Performance Rating: Adequate."
 *   **Level Up:** "Asset Value Increased."
 *   **Game Over:** "Asset Liability Exceeded. Recycling..."
+
+### UI Visual Tone
+
+*   **Good:** Colorful icon tabs, chunky outlined controls, bright cyan/orange/yellow accents, compact status strips, and clear game-first hierarchy.
+*   **Good:** A quest panel that says "Assignment Logged" while still looking like a bold anime adventure interface.
+*   **Bad:** Grey-on-grey corporate minimalism that looks like a real enterprise dashboard.
+*   **Bad:** Oppressive terminal styling so heavy that it clashes with Nova's chibi portraits and the sticker-like enemy art.
 
 ---
 

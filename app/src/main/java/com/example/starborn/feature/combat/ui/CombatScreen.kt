@@ -42,6 +42,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.requiredSize
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
@@ -106,6 +108,7 @@ import kotlin.math.sin
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -318,17 +321,8 @@ private sealed interface PendingTargetRequest {
     fun accepts(target: TargetFilter): Boolean
 
     data object Attack : PendingTargetRequest {
-        override val instruction: String = "Choose an enemy to attack"
+        override val instruction: String = "Choose a target"
         override fun accepts(target: TargetFilter): Boolean = target == TargetFilter.ENEMY
-    }
-
-    data class SupportRequest(
-        val abilityName: String,
-        val filter: TargetFilter,
-        override val instruction: String
-    ) : PendingTargetRequest {
-        override fun accepts(target: TargetFilter): Boolean =
-            filter == TargetFilter.ANY || filter == target
     }
 
     data class SnackRequest(
@@ -720,9 +714,6 @@ fun CombatScreen(
                     viewModel.focusEnemyTarget(targetId)
                     viewModel.playerAttack(targetId)
                 }
-                is PendingTargetRequest.SupportRequest -> {
-                    viewModel.useSupportAbility(targetId)
-                }
                 is PendingTargetRequest.SnackRequest -> {
                     viewModel.useSnack(targetId)
                 }
@@ -785,7 +776,7 @@ fun CombatScreen(
                     PendingTargetRequest.SkillRequest(
                         skill = skill,
                         filter = TargetFilter.ANY,
-                        instruction = "Choose a target for ${skill.name}"
+                        instruction = "Choose a target"
                     )
                 )
                 TargetRequirement.NONE -> viewModel.useSkill(skill)
@@ -812,7 +803,7 @@ fun CombatScreen(
                     PendingTargetRequest.ItemRequest(
                         entry = entry,
                         filter = TargetFilter.ANY,
-                        instruction = "Choose a target for ${entry.item.name}"
+                        instruction = "Choose a target"
                     )
                 )
                 null -> viewModel.useItem(entry)
@@ -893,15 +884,7 @@ fun CombatScreen(
             }
             val snackRequirement = commandActor?.let { actor -> viewModel.snackTargetRequirement(actor.id) } ?: TargetRequirement.NONE
             val snackUsable = commandActor?.let { actor -> viewModel.canUseSnack(actor.id) } == true
-            val supportLabel = commandActor?.let { actor -> viewModel.supportAbilityLabel(actor.id) } ?: "Support"
-            val supportRequirement = commandActor?.let { actor -> viewModel.supportTargetRequirement(actor.id) } ?: TargetRequirement.NONE
             val canSnack = snackUsable && when (snackRequirement) {
-                TargetRequirement.ENEMY -> hasTargets
-                TargetRequirement.ALLY -> playerParty.any { member -> state.combatants[member.id]?.isAlive == true }
-                TargetRequirement.ANY -> hasTargets || playerParty.any { member -> state.combatants[member.id]?.isAlive == true }
-                TargetRequirement.NONE -> true
-            }
-            val canSupport = when (supportRequirement) {
                 TargetRequirement.ENEMY -> hasTargets
                 TargetRequirement.ALLY -> playerParty.any { member -> state.combatants[member.id]?.isAlive == true }
                 TargetRequirement.ANY -> hasTargets || playerParty.any { member -> state.combatants[member.id]?.isAlive == true }
@@ -925,6 +908,7 @@ fun CombatScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .align(Alignment.TopCenter)
+                        .statusBarsPadding()
                 ) {
                     EnemyRoster(
                         enemies = enemies,
@@ -955,7 +939,7 @@ fun CombatScreen(
                         missLungeToken = missLungeToken,
                         onLungeFinished = viewModel::onLungeFinished,
                         onMissLungeFinished = viewModel::onMissLungeFinished,
-                        showTargetPrompt = enemyTargetPrompt,
+                        showTargetPrompt = false,
                         lungeStyle = lungeStyle
                     )
                 }
@@ -963,13 +947,18 @@ fun CombatScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .align(Alignment.BottomCenter)
+                        .navigationBarsPadding()
                         .padding(bottom = partyDockHeight + 8.dp)
                 ) {
                     CombatLogPanel(
                         bannerMessage = if (showCombatActionText) combatBanner else null,
-                        instruction = pendingInstruction,
+                        instruction = when {
+                            !pendingInstruction.isNullOrBlank() -> pendingInstruction
+                            pendingTargetRequest != null || enemyTargetPrompt -> "Choose Your Target"
+                            else -> null
+                        },
                         showCancel = pendingTargetRequest != null,
-                        instructionShownAbove = enemyTargetPrompt,
+                        instructionShownAbove = false,
                         highContrastMode = highContrastMode,
                         theme = viewModel.theme,
                         onCancel = if (pendingTargetRequest != null) {
@@ -1006,6 +995,7 @@ fun CombatScreen(
                     onLungeFinished = viewModel::onLungeFinished,
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
+                        .navigationBarsPadding()
                         .padding(bottom = 4.dp)
                         .onGloballyPositioned { coords ->
                             val height = coords.size.height
@@ -1037,6 +1027,7 @@ fun CombatScreen(
                 },
                 snackLabel = snackLabel,
                 canSnack = canSnack,
+                snackCooldown = snackCooldown,
                 onSnack = {
                     when (snackRequirement) {
                         TargetRequirement.ENEMY -> requestTarget(
@@ -1057,45 +1048,13 @@ fun CombatScreen(
                             PendingTargetRequest.SnackRequest(
                                 snackName = snackBaseLabel,
                                 filter = TargetFilter.ANY,
-                                instruction = "Choose a target for $snackBaseLabel"
+                                instruction = "Choose a target"
                             )
                         )
                         TargetRequirement.NONE -> {
                             pendingTargetRequest = null
                             pendingInstruction = null
                             viewModel.useSnack()
-                        }
-                    }
-                },
-                supportLabel = supportLabel,
-                canSupport = canSupport,
-                onSupport = {
-                    when (supportRequirement) {
-                        TargetRequirement.ENEMY -> requestTarget(
-                            PendingTargetRequest.SupportRequest(
-                                abilityName = supportLabel,
-                                filter = TargetFilter.ENEMY,
-                                instruction = "Choose an enemy for $supportLabel"
-                            )
-                        )
-                        TargetRequirement.ALLY -> requestTarget(
-                            PendingTargetRequest.SupportRequest(
-                                abilityName = supportLabel,
-                                filter = TargetFilter.ALLY,
-                                instruction = "Choose an ally for $supportLabel"
-                            )
-                        )
-                        TargetRequirement.ANY -> requestTarget(
-                            PendingTargetRequest.SupportRequest(
-                                abilityName = supportLabel,
-                                filter = TargetFilter.ANY,
-                                instruction = "Choose a target for $supportLabel"
-                            )
-                        )
-                        TargetRequirement.NONE -> {
-                            pendingTargetRequest = null
-                            pendingInstruction = null
-                            viewModel.useSupportAbility()
                         }
                     }
                 },
@@ -1110,6 +1069,7 @@ fun CombatScreen(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .navigationBarsPadding()
+                    .offset(y = 32.dp)
             )
             outcomeFx?.let { OutcomeOverlay(it, playerParty) }
             timedPromptState?.let { prompt ->
@@ -1241,9 +1201,9 @@ private fun PartyRoster(
                                 isMissLunge -> "images/characters/emotes/${member.id}_confident.png"
                                 memberLungeToken != null -> "images/characters/emotes/${member.id}_angry.png"
                                 victoryEmotes -> "images/characters/emotes/${member.id}_cool.png"
-                                else -> member.miniIconPath
+                                else -> member.combatIconPath.takeIf { it.isNotBlank() } ?: member.miniIconPath
                             }
-                            val portraitPainter = rememberAssetPainter(portraitPath, R.drawable.main_menu_background)
+                            val portraitPainter = rememberAssetPainter(portraitPath, painterResource(R.drawable.main_menu_background))
                             val portraitFrameSize = 114.dp
                             val atbProgress = atbMeters[member.id] ?: 0f
                             val readyToAct = atbProgress >= 0.999f
@@ -1575,7 +1535,7 @@ private fun EnemyRoster(
                             ?: "images/enemies/${enemy.id}_combat.png"
                         val painter = rememberAssetPainter(
                             spritePath,
-                            R.drawable.main_menu_background
+                            painterResource(R.drawable.main_menu_background)
                         )
                         val shape = RoundedCornerShape(28.dp)
                         val atbProgress = atbMeters[combatantId] ?: 0f
@@ -1755,7 +1715,6 @@ private fun EnemyRoster(
                                         healFx = healFx.filter { it.targetId == combatantId },
                                         statusFx = statusFx.filter { it.targetId == combatantId },
                                         shieldBreakFx = shieldBreakFx.filter { it.targetId == combatantId },
-
                                         showKnockout = knockoutFx.any { it.targetId == combatantId },
                                         shape = shape,
                                         telegraphFx = telegraphHighlights,
@@ -1766,21 +1725,10 @@ private fun EnemyRoster(
                                     statuses = enemyState?.statusEffects.orEmpty(),
                                     buffs = enemyState?.buffs.orEmpty()
                                 )
-
                             }
                         }
                     }
                 }
-            }
-        }
-        if (showTargetPrompt) {
-            Box(modifier = Modifier.matchParentSize()) {
-                TargetInstructionBadge(
-                    text = "Choose Your Target",
-                    modifier = Modifier
-                        .align(Alignment.TopCenter)
-                        .padding(top = 4.dp)
-                )
             }
         }
     }
@@ -1956,7 +1904,7 @@ private fun CompositeEnemyRoster(
                         ?: "images/enemies/${enemy.id}_combat.png"
                     val painter = rememberAssetPainter(
                         spritePath,
-                        R.drawable.main_menu_background
+                        painterResource(R.drawable.main_menu_background)
                     )
                     val shape = RoundedCornerShape(24.dp)
                     val enemyLungeToken = if (combatantId == lungeActorId) lungeToken else null
@@ -2143,16 +2091,6 @@ private fun CompositeEnemyRoster(
                             )
                         }
                     }
-            }
-        }
-        if (showTargetPrompt) {
-            Box(modifier = Modifier.matchParentSize()) {
-                TargetInstructionBadge(
-                    text = "Choose Your Target",
-                    modifier = Modifier
-                        .align(Alignment.TopCenter)
-                        .padding(top = 4.dp)
-                )
             }
         }
     }
@@ -3795,25 +3733,51 @@ private fun DamageNumberBubble(
                 )
             }
         }
-        Text(
-            text = headline,
-            style = MaterialTheme.typography.titleLarge.copy(
-                fontFamily = if (isMiss || isBlocked) CombatNameFont else null,
-                shadow = Shadow(
-                    color = bottomColor.copy(alpha = 0.9f),
-                    offset = Offset(0f, 4f),
-                    blurRadius = 12f
-                ),
+        Box(
+            contentAlignment = Alignment.Center
+        ) {
+            val outlineColor = Color.Black.copy(alpha = 0.8f)
+            val outlineOffset = 1.5.dp
+            val textStyle = MaterialTheme.typography.titleLarge.copy(
+                fontSize = if (fx.critical) 28.sp else 24.sp,
+                fontFamily = CombatNameFont,
                 letterSpacing = if (isMiss || isBlocked) 0.85.sp else 0.sp,
-                fontStyle = if (isHealing) FontStyle.Italic else FontStyle.Normal
-            ),
-            fontWeight = when {
-                isMiss || isBlocked -> FontWeight.SemiBold
-                else -> FontWeight.Black
-            },
-            color = topColor,
-            modifier = if (isBlocked) Modifier.padding(horizontal = 8.dp) else Modifier
-        )
+                fontStyle = if (isHealing) FontStyle.Italic else FontStyle.Normal,
+                fontWeight = FontWeight.Black
+            )
+
+            // Outline layers
+            listOf(
+                Offset(-1f, -1f), Offset(1f, -1f),
+                Offset(-1f, 1f), Offset(1f, 1f),
+                Offset(0f, -1.2f), Offset(0f, 1.2f),
+                Offset(-1.2f, 0f), Offset(1.2f, 0f)
+            ).forEach { offset ->
+                Text(
+                    text = headline,
+                    style = textStyle,
+                    color = outlineColor,
+                    modifier = Modifier.offset(
+                        x = (offset.x * outlineOffset.value).dp,
+                        y = (offset.y * outlineOffset.value).dp
+                    )
+                )
+            }
+
+            // Main Text
+            Text(
+                text = headline,
+                style = textStyle.copy(
+                    shadow = Shadow(
+                        color = bottomColor.copy(alpha = 0.9f),
+                        offset = Offset(0f, 4f),
+                        blurRadius = 12f
+                    )
+                ),
+                color = topColor,
+                modifier = if (isBlocked) Modifier.padding(horizontal = 8.dp) else Modifier
+            )
+        }
     }
 }
 
@@ -3872,16 +3836,44 @@ private fun HealNumberBubble(
             alphaAnim.animateTo(0f, tween(durationMillis = 400, easing = LinearEasing))
         }
     }
-    Text(
-        text = "+${fx.amount}",
-        style = MaterialTheme.typography.titleMedium,
-        fontWeight = FontWeight.SemiBold,
-        color = Color(0xFF81C784),
+    Box(
         modifier = modifier.graphicsLayer {
             translationY = verticalOffset.value
             alpha = alphaAnim.value
+        },
+        contentAlignment = Alignment.Center
+    ) {
+        val text = "+${fx.amount}"
+        val textStyle = MaterialTheme.typography.titleLarge.copy(
+            fontSize = 22.sp,
+            fontFamily = CombatNameFont,
+            fontWeight = FontWeight.Black
+        )
+        val outlineColor = Color.Black.copy(alpha = 0.75f)
+        val outlineOffset = 1.2.dp
+
+        // Outline
+        listOf(
+            Offset(-1f, -1f), Offset(1f, -1f),
+            Offset(-1f, 1f), Offset(1f, 1f)
+        ).forEach { offset ->
+            Text(
+                text = text,
+                style = textStyle,
+                color = outlineColor,
+                modifier = Modifier.offset(
+                    x = (offset.x * outlineOffset.value).dp,
+                    y = (offset.y * outlineOffset.value).dp
+                )
+            )
         }
-    )
+
+        Text(
+            text = text,
+            style = textStyle,
+            color = Color(0xFF81C784)
+        )
+    }
 }
 
 @Composable
@@ -3954,7 +3946,7 @@ private fun OutcomeOverlay(
                             }
                             if (emotePath != null) {
                                 Image(
-                                    painter = rememberAssetPainter(emotePath, R.drawable.main_menu_background),
+                                    painter = rememberAssetPainter(emotePath, painterResource(R.drawable.main_menu_background)),
                                     contentDescription = player.name,
                                     modifier = Modifier.size(72.dp),
                                     contentScale = ContentScale.Crop
@@ -4249,7 +4241,7 @@ private fun LevelUpCard(
     borderColor: Color,
     highContrastMode: Boolean
 ) {
-    val portraitPainter = rememberAssetPainter(portraitPath, R.drawable.main_menu_background)
+    val portraitPainter = rememberAssetPainter(portraitPath, painterResource(R.drawable.main_menu_background))
     val cardColor = Color(0xFF151C2A).copy(alpha = if (highContrastMode) 0.96f else 0.9f)
     Surface(
         color = cardColor,
@@ -4387,6 +4379,14 @@ private fun CombatLogPanel(
     val baseSpacing = 6.dp
     val baseHeight = instructionSlotHeight + cancelSlotHeight + baseSpacing
     val hasInstruction = instructionShownAbove || !instruction.isNullOrBlank()
+    val displayMessage = bannerMessage ?: if (!instructionShownAbove && !instruction.isNullOrBlank()) {
+        CombatBannerMessage(
+            id = "instruction",
+            primary = instruction,
+            accent = CombatBannerAccent.DEFAULT
+        )
+    } else null
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -4403,17 +4403,7 @@ private fun CombatLogPanel(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(instructionSlotHeight)
-            ) {
-                if (!instructionShownAbove && !instruction.isNullOrBlank()) {
-                    TargetInstructionBadge(
-                        text = instruction,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .align(Alignment.Center)
-                            .padding(horizontal = 12.dp)
-                    )
-                }
-            }
+            )
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -4430,8 +4420,9 @@ private fun CombatLogPanel(
             }
         }
         CombatImpactBanner(
-            message = bannerMessage,
+            message = displayMessage,
             hasInstruction = hasInstruction,
+            persistent = displayMessage?.id == "instruction",
             highContrastMode = highContrastMode,
             theme = theme,
             modifier = Modifier
@@ -4445,22 +4436,43 @@ private fun CombatLogPanel(
 @Composable
 private fun TargetInstructionBadge(text: String, modifier: Modifier = Modifier) {
     val accent = MaterialTheme.colorScheme.secondary.copy(alpha = 0.75f)
-    Surface(
-        color = Color.White.copy(alpha = 0.04f),
-        border = BorderStroke(1.dp, accent),
-        shape = RoundedCornerShape(20.dp),
+    Box(
         modifier = modifier
+            .fillMaxWidth()
+            .background(
+                color = Color(0xFF0A0C10).copy(alpha = 0.85f),
+                shape = RoundedCornerShape(8.dp)
+            )
+            .padding(vertical = 4.dp)
     ) {
-        Text(
-            text = text.uppercase(Locale.getDefault()),
-            color = Color.White,
-            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Black),
-            textAlign = TextAlign.Center,
-            letterSpacing = 0.8.sp,
+        Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp)
-        )
+                .padding(start = 12.dp, end = 16.dp, top = 6.dp, bottom = 6.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .width(4.dp)
+                    .height(32.dp)
+                    .clip(RoundedCornerShape(2.dp))
+                    .background(accent)
+            )
+
+            Text(
+                text = text.uppercase(Locale.getDefault()),
+                color = Color.White,
+                style = MaterialTheme.typography.titleMedium.copy(
+                    fontSize = 14.sp,
+                    fontFamily = CombatNameFont,
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = 0.5.sp,
+                    shadow = Shadow(color = Color.Black, offset = Offset(2f, 2f), blurRadius = 2f)
+                ),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
     }
 }
 
@@ -4478,10 +4490,8 @@ private fun CommandPalette(
     onItems: () -> Unit,
     snackLabel: String,
     canSnack: Boolean,
+    snackCooldown: Int,
     onSnack: () -> Unit,
-    supportLabel: String,
-    canSupport: Boolean,
-    onSupport: () -> Unit,
     onRetreat: () -> Unit,
     highContrastMode: Boolean,
     largeTouchTargets: Boolean,
@@ -4494,7 +4504,7 @@ private fun CommandPalette(
         enter = fadeIn() + slideInVertically(initialOffsetY = { full -> full }),
         exit = fadeOut() + slideOutVertically(targetOffsetY = { full -> full / 2 })
     ) {
-        val portraitPainter = rememberAssetPainter(actor.miniIconPath, R.drawable.main_menu_background)
+        val portraitPainter = rememberAssetPainter(actor.miniIconPath, painterResource(R.drawable.main_menu_background))
         val paletteBase = themeColor(theme?.bg, Color(0xFF0F1118))
         val paletteColor = paletteBase.copy(alpha = if (highContrastMode) 0.95f else 0.78f)
         val borderColor = themeColor(theme?.border, Color.White.copy(alpha = if (highContrastMode) 0.65f else 0.5f))
@@ -4556,8 +4566,7 @@ private fun CommandPalette(
                         CommandEntry("Attack", Icons.Rounded.Whatshot, canAttack, onAttack),
                         CommandEntry("Skills", Icons.Rounded.AutoAwesome, hasSkills, onSkills),
                         CommandEntry("Items", Icons.Rounded.Inventory2, hasItems, onItems),
-                        CommandEntry(snackLabel, Icons.Rounded.Restaurant, canSnack, onSnack),
-                        CommandEntry(supportLabel, Icons.Rounded.Shield, canSupport, onSupport),
+                        CommandEntry(snackLabel, Icons.Rounded.Restaurant, canSnack, onSnack, cooldown = snackCooldown),
                         CommandEntry("Retreat", Icons.Rounded.ExitToApp, true, onRetreat)
                     )
                     val rows = commands.chunked(2)
@@ -4573,6 +4582,7 @@ private fun CommandPalette(
                                     enabled = entry.enabled,
                                     onClick = entry.onClick,
                                     largeTouchTargets = largeTouchTargets,
+                                    cooldownRemaining = entry.cooldown,
                                     modifier = Modifier.weight(1f)
                                 )
                             }
@@ -4595,7 +4605,8 @@ private data class CommandEntry(
     val label: String,
     val icon: ImageVector,
     val enabled: Boolean,
-    val onClick: () -> Unit
+    val onClick: () -> Unit,
+    val cooldown: Int = 0
 )
 
 @Composable
@@ -4605,43 +4616,66 @@ private fun CombatCommandButton(
     enabled: Boolean,
     onClick: () -> Unit,
     largeTouchTargets: Boolean,
+    cooldownRemaining: Int = 0,
     modifier: Modifier = Modifier
 ) {
     val minHeight = if (largeTouchTargets) 70.dp else 56.dp
     val interactionSource = remember { MutableInteractionSource() }
     val background = if (enabled) Color(0xFF1E2534) else Color(0xFF1B1F29)
-    Surface(
-        shape = RoundedCornerShape(20.dp),
-        color = background,
-        tonalElevation = if (enabled) 4.dp else 0.dp,
+    Box(
         modifier = modifier
             .widthIn(min = 140.dp)
             .heightIn(min = minHeight * 2 / 3)
-            .alpha(if (enabled) 1f else 0.45f)
-            .clickable(
-                enabled = enabled,
-                onClick = onClick,
-                interactionSource = interactionSource,
-                indication = null
-            )
     ) {
-        Row(
+        Surface(
+            shape = RoundedCornerShape(20.dp),
+            color = background,
+            tonalElevation = if (enabled) 4.dp else 0.dp,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 12.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalAlignment = Alignment.CenterVertically
+                .alpha(if (enabled) 1f else 0.45f)
+                .clickable(
+                    enabled = enabled,
+                    onClick = onClick,
+                    interactionSource = interactionSource,
+                    indication = null
+                )
         ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = label,
-                tint = Color.White
-            )
-            Text(
-                text = label,
-                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium),
-                color = Color.White
-            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = label,
+                    tint = Color.White
+                )
+                Text(
+                    text = label,
+                    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium),
+                    color = Color.White
+                )
+            }
+        }
+        if (cooldownRemaining > 0) {
+            Box(
+                modifier = Modifier
+                    .matchParentSize()
+                    .clip(RoundedCornerShape(20.dp))
+                    .background(Color.Black.copy(alpha = 0.6f)),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = cooldownRemaining.toString(),
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFFFFD700)
+                    )
+                )
+            }
         }
     }
 }
@@ -4725,6 +4759,7 @@ private fun CombatItemsDialog(
 private fun CombatImpactBanner(
     message: CombatBannerMessage?,
     hasInstruction: Boolean,
+    persistent: Boolean = false,
     highContrastMode: Boolean,
     theme: Theme?,
     modifier: Modifier = Modifier
@@ -4737,7 +4772,7 @@ private fun CombatImpactBanner(
     val lastId = remember { mutableStateOf<String?>(null) }
     val tagKey = remember(message.tags) { message.tags.joinToString("|") }
 
-    LaunchedEffect(message.id, message.primary, message.secondary, tagKey) {
+    LaunchedEffect(message.id, message.primary, message.secondary, tagKey, persistent) {
         val isNew = message.id != lastId.value
         if (isNew) {
             lastId.value = message.id
@@ -4759,15 +4794,18 @@ private fun CombatImpactBanner(
             glow.snapTo(1f)
             glow.animateTo(0f, tween(durationMillis = 320, easing = FastOutSlowInEasing))
         }
-        val baseHoldMs = if (message.importance == CombatBannerImportance.IMPORTANT) 1700L else 1400L
-        val holdMs = when {
-            message.icon == CombatBannerIcon.OUTCOME -> 2200L
-            message.icon == CombatBannerIcon.BURST -> 2000L
-            message.tags.any { it.equals("KO", ignoreCase = true) } -> 2000L
-            else -> baseHoldMs
+        
+        if (!persistent) {
+            val baseHoldMs = if (message.importance == CombatBannerImportance.IMPORTANT) 1700L else 1400L
+            val holdMs = when {
+                message.icon == CombatBannerIcon.OUTCOME -> 2200L
+                message.icon == CombatBannerIcon.BURST -> 2000L
+                message.tags.any { it.equals("KO", ignoreCase = true) } -> 2000L
+                else -> baseHoldMs
+            }
+            delay(holdMs)
+            alpha.animateTo(0f, tween(durationMillis = 200, easing = LinearEasing))
         }
-        delay(holdMs)
-        alpha.animateTo(0f, tween(durationMillis = 200, easing = LinearEasing))
     }
 
     if (alpha.value <= 0.001f) return
@@ -4775,6 +4813,7 @@ private fun CombatImpactBanner(
     val tightMode = hasInstruction
     val icon = if (tightMode) null else bannerIcon(message.icon)
     val primaryStyle = MaterialTheme.typography.titleMedium.copy(
+        fontSize = 16.sp,
         fontFamily = CombatNameFont,
         fontWeight = FontWeight.Bold,
         letterSpacing = 0.5.sp,
@@ -4855,14 +4894,6 @@ private fun CombatImpactBanner(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
-                if (!message.secondary.isNullOrBlank()) {
-                    Text(
-                        text = message.secondary ?: "",
-                        style = secondaryStyle,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
             }
         }
     }

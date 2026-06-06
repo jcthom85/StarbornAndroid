@@ -18,6 +18,7 @@
         "flavor": { "type": ["string", "null"] },
         "giver": { "type": ["string", "null"] },
         "hub_id": { "type": ["string", "null"] },
+        "prereq_quest_id": { "type": ["string", "null"] },
         "stages": {
           "type": "array",
           "items": { "$ref": "#/$defs/QuestStage" }

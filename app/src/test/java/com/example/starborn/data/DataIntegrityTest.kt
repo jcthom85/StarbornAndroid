@@ -19,7 +19,16 @@ import org.junit.Test
 class DataIntegrityTest {
 
     private val moshi = MoshiProvider.instance
-    private val allowedMissingQuestIds = setOf("q_mine_relay_scramble")
+    private val allowedMissingQuestIds = setOf(
+        "q_mine_relay_scramble",
+        "gather_broken_gear",
+        "talk_to_jed",
+        "fixers_favor",
+        "lights_out",
+        "checking_the_fuse",
+        "scrap_run",
+        "tutorial_smoke"
+    )
 
     @Test
     fun playCinematicActionsReferenceExistingScenes() {

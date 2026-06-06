@@ -1155,21 +1155,28 @@
   },
   {
     "id": "new_game_spawn_player_and_fade",
-    "description": "After the intro, this spawns the player in Nova's house (while the screen is black) and begins the long fade-in.",
+    "description": "After the intro, this spawns the player in Nova's bunk and begins the fade-in.",
     "trigger": {
       "type": "player_action",
       "action": "new_game_spawn_player_and_fade"
     },
     "actions": [
       {
-        "type": "set_room_state",
-        "room_id": "town_9",
-        "state_key": "light_on",
-        "value": false
+        "type": "start_quest",
+        "quest_id": "w1_mq01"
+      },
+      {
+        "type": "track_quest",
+        "quest_id": "w1_mq01"
+      },
+      {
+        "type": "advance_quest_stage",
+        "quest_id": "w1_mq01",
+        "to_stage_id": "wake_in_the_pit"
       },
       {
         "type": "begin_node",
-        "room_id": "town_9"
+        "room_id": "pit_nova_bunk"
       },
       {
         "type": "rebuild_ui"
@@ -1180,6 +1187,501 @@
       {
         "type": "play_cinematic",
         "scene_id": "new_game_fade_in"
+      }
+    ]
+  },
+  {
+    "id": "w1_mq01_start_on_bunk_entry",
+    "description": "Starts Wake Up Call if the player enters Nova's bunk without active quest state.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "pit_nova_bunk"
+    },
+    "conditions": [
+      {
+        "type": "quest_not_started",
+        "quest_id": "w1_mq01"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_quest",
+        "quest_id": "w1_mq01"
+      },
+      {
+        "type": "track_quest",
+        "quest_id": "w1_mq01"
+      },
+      {
+        "type": "advance_quest_stage",
+        "quest_id": "w1_mq01",
+        "to_stage_id": "wake_in_the_pit"
+      }
+    ]
+  },
+  {
+    "id": "w1_mq01_check_bunk",
+    "description": "Marks Nova's bunk check for Wake Up Call.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w1_mq01_check_bunk"
+    },
+    "repeatable": true,
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w1_mq01"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_mq01",
+        "task_id": "check_bunk"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w1_mq01_checked_bunk"
+      },
+      {
+        "type": "narrate",
+        "message": "The bunk is hard, narrow, and still warm from the few hours of sleep you stole from the shift clock. It is not much, but it is yours.",
+        "tap_to_dismiss": true
+      }
+    ]
+  },
+  {
+    "id": "w1_mq01_check_netting",
+    "description": "Marks Nova's possessions check for Wake Up Call.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w1_mq01_check_netting"
+    },
+    "repeatable": true,
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w1_mq01"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_mq01",
+        "task_id": "check_bunk"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w1_mq01_checked_bunk"
+      },
+      {
+        "type": "narrate",
+        "message": "The cargo netting holds a few tools, a spare ration, and the small metal carving Jed made for you when you were younger.",
+        "tap_to_dismiss": true
+      }
+    ]
+  },
+  {
+    "id": "w1_mq01_leave_sleeping_level",
+    "description": "Marks the first route out of the Pit sleeping level.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "pit_shaft"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w1_mq01"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w1_mq01",
+        "task_id": "leave_sleeping_level"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_mq01",
+        "task_id": "leave_sleeping_level"
+      },
+      {
+        "type": "advance_quest_stage",
+        "quest_id": "w1_mq01",
+        "to_stage_id": "report_to_jed"
+      }
+    ]
+  },
+  {
+    "id": "w1_mq01_reach_workshop",
+    "description": "Marks arrival at Jed's Workshop.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "workshop_floor"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w1_mq01"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w1_mq01",
+        "task_id": "reach_workshop"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_mq01",
+        "task_id": "reach_workshop"
+      }
+    ]
+  },
+  {
+    "id": "w1_mq01_tinkering_entered",
+    "description": "Completes Wake Up Call when Nova opens Jed's workbench after talking to him.",
+    "trigger": {
+      "type": "player_action",
+      "action": "tinkering_screen_entered"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w1_mq01"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w1_mq01",
+        "task_id": "talk_to_jed"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_mq01",
+        "task_id": "use_tinkering_table"
+      },
+      {
+        "type": "give_item",
+        "item_id": "ration_pack",
+        "quantity": 1
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w1_mq01"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w1_mq01_complete"
+      },
+      {
+        "type": "show_message",
+        "message": "Quest complete: Wake Up Call"
+      }
+    ]
+  },
+  {
+    "id": "w1_mq02_start_at_checkpoint",
+    "description": "Starts Paperwork when Nova reaches the Transit Checkpoint after Wake Up Call.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "checkpoint_queue"
+    },
+    "conditions": [
+      {
+        "type": "quest_completed",
+        "quest_id": "w1_mq01"
+      },
+      {
+        "type": "quest_not_started",
+        "quest_id": "w1_mq02"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_quest",
+        "quest_id": "w1_mq02"
+      },
+      {
+        "type": "track_quest",
+        "quest_id": "w1_mq02"
+      },
+      {
+        "type": "advance_quest_stage",
+        "quest_id": "w1_mq02",
+        "to_stage_id": "reach_checkpoint"
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_mq02",
+        "task_id": "approach_admin_gate"
+      }
+    ]
+  },
+  {
+    "id": "w1_mq02_reach_booth",
+    "description": "Marks the booth objective once Nova reaches Zeke's window.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "checkpoint_booth"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w1_mq02"
+      }
+    ],
+    "actions": [
+      {
+        "type": "advance_quest_stage",
+        "quest_id": "w1_mq02",
+        "to_stage_id": "override_retirement"
+      }
+    ]
+  },
+  {
+    "id": "w1_sq01_find_stash",
+    "description": "Marks discovery of Scrapper's hidden rebel cache.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "trade_stash"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w1_sq01"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w1_sq01",
+        "task_id": "find_hidden_stash"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_sq01",
+        "task_id": "find_hidden_stash"
+      }
+    ]
+  },
+  {
+    "id": "w1_sq01_open_rebel_cache",
+    "description": "Marks the rebel cache opening and sends Nova back to Scrapper.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w1_sq01_open_rebel_cache"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w1_sq01"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w1_sq01",
+        "task_id": "open_rebel_cache"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_sq01",
+        "task_id": "open_rebel_cache"
+      },
+      {
+        "type": "advance_quest_stage",
+        "quest_id": "w1_sq01",
+        "to_stage_id": "return_to_scrapper"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w1_sq01_cache_opened"
+      },
+      {
+        "type": "show_message",
+        "message": "The cache holds old resistance grenades and names scratched into the lid."
+      }
+    ]
+  },
+  {
+    "id": "w1_sq02_enter_vents",
+    "description": "Marks entry into the med-bay ventilation route.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "medbay_vents"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w1_sq02"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w1_sq02",
+        "task_id": "enter_ventilation_hub"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_sq02",
+        "task_id": "enter_ventilation_hub"
+      }
+    ]
+  },
+  {
+    "id": "w1_sq02_patch_vent",
+    "description": "Marks the toxic vent patch and sends Nova back to Doc.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w1_sq02_patch_vent"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w1_sq02"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w1_sq02",
+        "task_id": "clear_toxic_blockage"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_sq02",
+        "task_id": "clear_toxic_blockage"
+      },
+      {
+        "type": "advance_quest_stage",
+        "quest_id": "w1_sq02",
+        "to_stage_id": "doc_turn_in"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w1_sq02_vent_patched"
+      },
+      {
+        "type": "show_message",
+        "message": "The vent coughs, then clears. The med-bay can breathe again."
+      }
+    ]
+  },
+  {
+    "id": "w1_sq03_start_loader",
+    "description": "Marks the loader startup step in Heavy Lifting.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w1_sq03_start_loader"
+    },
+    "repeatable": true,
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w1_sq03"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_sq03",
+        "task_id": "start_loader"
+      },
+      {
+        "type": "advance_quest_stage",
+        "quest_id": "w1_sq03",
+        "to_stage_id": "guard_break_training"
+      }
+    ]
+  },
+  {
+    "id": "w1_sq03_move_cargo",
+    "description": "Marks the cargo movement setup step in Heavy Lifting.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w1_sq03_move_cargo"
+    },
+    "repeatable": true,
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w1_sq03"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_sq03",
+        "task_id": "move_cargo"
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_sq03",
+        "task_id": "learn_hydraulic_kick"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w1_sq03_hydraulic_kick_ready"
+      },
+      {
+        "type": "show_message",
+        "message": "Hydraulic Kick training unlocked."
+      }
+    ]
+  },
+  {
+    "id": "w1_sq03_training_victory",
+    "description": "Completes Heavy Lifting when Nova defeats the shielded training guard.",
+    "trigger": {
+      "type": "encounter_victory",
+      "enemies": ["riot_guard"]
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w1_sq03"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w1_sq03",
+        "task_id": "break_training_shield"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_sq03",
+        "task_id": "break_training_shield"
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_sq03",
+        "task_id": "rescue_trapped_workers"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w1_guardbreak_trained"
+      },
+      {
+        "type": "give_item",
+        "item_id": "hydraulic_fluid",
+        "quantity": 1
+      },
+      {
+        "type": "give_item",
+        "item_id": "heavy_gear",
+        "quantity": 1
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w1_sq03"
+      },
+      {
+        "type": "show_message",
+        "message": "Quest complete: Heavy Lifting."
       }
     ]
   },
@@ -2092,73 +2594,6 @@
           {
             "type": "set_milestone",
             "milestone": "ms_tutorial_encounter_defeat"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": "evt_player_fishing_success",
-    "description": "Handles the first successful catch and introduces fishing tutorials.",
-    "trigger": {
-      "type": "player_action",
-      "action": "fishing_success"
-    },
-    "repeatable": true,
-    "actions": [
-      {
-        "type": "if_milestone_not_set",
-        "milestone": "ms_fishing_first_catch",
-        "do": [
-          {
-            "type": "set_milestone",
-            "milestone": "ms_fishing_first_catch"
-          },
-          {
-            "type": "system_tutorial",
-            "scene_id": "fishing_basics",
-            "context": "Fishing"
-          },
-          {
-            "type": "show_message",
-            "message": "That catch will make a fine meal."
-          }
-        ],
-        "else": [
-          {
-            "type": "show_message",
-            "message": "You\u2019re getting the hang of the timing."
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": "evt_player_fishing_failed",
-    "description": "Offers gentle encouragement after a missed catch.",
-    "trigger": {
-      "type": "player_action",
-      "action": "fishing_failed"
-    },
-    "repeatable": true,
-    "actions": [
-      {
-        "type": "if_milestone_not_set",
-        "milestone": "ms_fishing_encouragement_shown",
-        "do": [
-          {
-            "type": "set_milestone",
-            "milestone": "ms_fishing_encouragement_shown"
-          },
-          {
-            "type": "show_message",
-            "message": "Patience. Cast again when you\u2019re ready."
-          }
-        ],
-        "else": [
-          {
-            "type": "show_message",
-            "message": "Easy does it\u2014try adjusting your timing."
           }
         ]
       }

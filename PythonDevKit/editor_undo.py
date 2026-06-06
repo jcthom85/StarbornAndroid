@@ -13,7 +13,9 @@ class _SetValueCmd(QUndoCommand):
         self._apply(self.new)
     def _apply(self, v):
         # Supports common widget APIs
-        if hasattr(self.w, "setText"): self.w.setText(str(v))
+        if hasattr(self.w, "setCurrentText") and hasattr(self.w, "currentText"):
+            self.w.setCurrentText(str(v))
+        elif hasattr(self.w, "setText"): self.w.setText(str(v))
         elif hasattr(self.w, "setPlainText"): self.w.setPlainText(str(v))
         elif hasattr(self.w, "setValue"): self.w.setValue(v)
         elif hasattr(self.w, "setChecked"): self.w.setChecked(bool(v))
@@ -40,6 +42,9 @@ class UndoManager:
 
     def watch_checkbox(self, cb):
         cb.toggled.connect(lambda _: self._record_if_changed(cb, lambda: cb.isChecked()))
+
+    def watch_combo(self, cb):
+        cb.currentTextChanged.connect(lambda _: self._record_if_changed(cb, lambda: cb.currentText()))
 
     def _record_if_changed(self, w, getter):
         new = getter()

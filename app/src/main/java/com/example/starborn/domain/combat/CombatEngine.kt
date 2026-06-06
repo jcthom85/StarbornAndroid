@@ -259,10 +259,25 @@ class CombatEngine(
                 }
             }
 
+            val isActorTurnEnd = combatantId == state.activeCombatant?.combatant?.id
+            val updatedActiveCooldowns = if (isActorTurnEnd) {
+                current.activeCooldowns.mapValues { (_, value) -> (value - 1).coerceAtLeast(0) }
+                    .filterValues { it > 0 }
+            } else {
+                current.activeCooldowns
+            }
+            val updatedSnackCooldown = if (isActorTurnEnd) {
+                (current.snackCooldown - 1).coerceAtLeast(0)
+            } else {
+                current.snackCooldown
+            }
+
             val replacement = current.copy(
                 statusEffects = updatedStatuses,
                 buffs = updatedBuffs,
-                breakTurns = current.breakTurns
+                breakTurns = current.breakTurns,
+                activeCooldowns = updatedActiveCooldowns,
+                snackCooldown = updatedSnackCooldown
             )
             working = working.copy(
                 combatants = working.combatants + (combatantId to replacement)
