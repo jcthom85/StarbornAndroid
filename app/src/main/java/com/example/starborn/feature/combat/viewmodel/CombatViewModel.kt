@@ -119,6 +119,7 @@ class CombatViewModel(
     private val enemySkillUsageCounts: MutableMap<String, Int> = mutableMapOf()
     private val playerCooldowns: MutableMap<String, Int> = mutableMapOf()
     private val skillUsageCounts: MutableMap<String, Int> = mutableMapOf()
+    private val snackUsageCounts: MutableMap<String, Int> = mutableMapOf()
     private val snackCooldowns: MutableMap<String, Int> = mutableMapOf()
     private val combatFxEvents = MutableSharedFlow<CombatFxEvent>(extraBufferCapacity = 16)
     private var lastEnemyTargetId: String? = null
@@ -519,19 +520,7 @@ class CombatViewModel(
     }
 
     fun snackTargetRequirement(actorId: String): TargetRequirement {
-        val equippedItems = sessionStore.state.value.equippedItems
-        val snackId = equippedItemId(actorId, "snack", equippedItems) ?: return TargetRequirement.NONE
-        val effect = itemCatalog.findItem(snackId)?.effect ?: return TargetRequirement.NONE
-        return when (effect.target?.trim()?.lowercase(Locale.getDefault())) {
-            "enemy" -> TargetRequirement.ENEMY
-            "ally" -> TargetRequirement.ALLY
-            "any" -> TargetRequirement.ANY
-            "self" -> TargetRequirement.NONE
-            else -> when {
-                effect.damage?.let { it > 0 } == true -> TargetRequirement.ENEMY
-                else -> TargetRequirement.NONE
-            }
-        }
+        return TargetRequirement.NONE
     }
 
     fun snackCooldownRemaining(actorId: String): Int {
@@ -545,15 +534,18 @@ class CombatViewModel(
         val equippedItems = sessionStore.state.value.equippedItems
         val snackId = equippedItemId(actorId, "snack", equippedItems) ?: return false
         val item = itemCatalog.findItem(snackId) ?: return false
-        return item.effect != null
+        val effect = item.effect ?: return false
+        
+        effect.usesPerBattle?.let { limit ->
+            val key = "$actorId:$snackId"
+            val used = snackUsageCounts.getOrDefault(key, 0)
+            if (used >= limit) return false
+        }
+        return true
     }
 
     fun useSnack(targetIdOverride: String? = null) {
         val attackerId = _awaitingAction.value ?: return
-        if (snackCooldownRemaining(attackerId) > 0) {
-            playUiCue("error")
-            return
-        }
         val equippedItems = sessionStore.state.value.equippedItems
         val snackId = equippedItemId(attackerId, "snack", equippedItems) ?: run {
             playUiCue("error")
@@ -563,7 +555,7 @@ class CombatViewModel(
             playUiCue("error")
             return
         }
-        if (snack.effect == null) {
+        if (!canUseSnack(attackerId)) {
             playUiCue("error")
             return
         }
@@ -605,6 +597,10 @@ class CombatViewModel(
             resolved.applyOutcomeResults(current)
         }
         if (executed) {
+            val key = "$attackerId:$snackId"
+            snack.effect?.usesPerBattle?.let {
+                snackUsageCounts[key] = snackUsageCounts.getOrDefault(key, 0) + 1
+            }
             triggerAttackLunge(attackerId, AttackLungeStyle.SNACK)
             clearAwaitingAction(attackerId)
             concludeActorTurn(attackerId)
@@ -727,12 +723,52 @@ class CombatViewModel(
     }
 
     private fun checkSkillConditions(actorId: String, skill: Skill, state: CombatState): Boolean {
-        if (skill.conditions.isNullOrEmpty()) return true
+        val conditions = skill.conditions
+        if (conditions.isNullOrEmpty()) return true
         
         val actorState = state.combatants[actorId] ?: return false
-        // TODO: Expand this with actual condition parsing logic
-        // Examples: "hp_below_50", "sword_equipped", "target_stunned"
-        return true 
+        
+        return conditions.all { cond ->
+            val trimmed = cond.trim().lowercase()
+            when {
+                trimmed.startsWith("hp_below_") -> {
+                    val pct = trimmed.removePrefix("hp_below_").toIntOrNull() ?: 0
+                    val maxHp = actorState.combatant.stats.maxHp
+                    actorState.hp.toDouble() / maxHp * 100.0 < pct
+                }
+                trimmed.startsWith("hp_above_") -> {
+                    val pct = trimmed.removePrefix("hp_above_").toIntOrNull() ?: 0
+                    val maxHp = actorState.combatant.stats.maxHp
+                    actorState.hp.toDouble() / maxHp * 100.0 > pct
+                }
+                trimmed.endsWith("_equipped") -> {
+                    val weaponType = trimmed.removeSuffix("_equipped")
+                    val equippedType = actorState.combatant.weapon?.weaponType?.lowercase()
+                    equippedType == weaponType
+                }
+                trimmed == "target_stunned" -> {
+                    val actorSide = actorState.combatant.side
+                    val targets = state.combatants.values.filter { it.isAlive && 
+                        if (isSupportSkill(skill)) it.combatant.side == actorSide
+                        else it.combatant.side != actorSide
+                    }
+                    targets.any { target ->
+                        target.statusEffects.any { it.id.equals("stun", true) || it.id.equals("stagger", true) }
+                    }
+                }
+                trimmed == "target_staggered" -> {
+                    val actorSide = actorState.combatant.side
+                    val targets = state.combatants.values.filter { it.isAlive && 
+                        if (isSupportSkill(skill)) it.combatant.side == actorSide
+                        else it.combatant.side != actorSide
+                    }
+                    targets.any { target ->
+                        target.statusEffects.any { it.id.equals("stagger", true) }
+                    }
+                }
+                else -> true
+            }
+        }
     }
 
     fun consumeLevelUpSummaries(): List<LevelUpSummary> {

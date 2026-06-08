@@ -59,6 +59,8 @@ import com.example.starborn.domain.model.QuestReward
 import com.example.starborn.domain.model.Player
 import com.example.starborn.domain.model.Equipment
 import com.example.starborn.domain.model.Enemy
+import com.example.starborn.domain.model.Hub
+import com.example.starborn.domain.model.World
 import com.example.starborn.domain.model.Requirement
 import com.example.starborn.domain.model.Room
 import com.example.starborn.domain.model.RoomEnemyInstance
@@ -1078,7 +1080,7 @@ class ExplorationViewModel(
             val pos = roomPosition(room)
             val dx = pos.first - currentPos.first
             val dy = pos.second - currentPos.second
-            if (abs(dx) > 1 || abs(dy) > 1) return@mapNotNull null
+            if (abs(dx) > 2 || abs(dy) > 2) return@mapNotNull null
             val isVisible = room.id == currentRoom.id ||
                 visitedRooms.contains(room.id) ||
                 discoveredRooms.contains(room.id)
@@ -1396,9 +1398,19 @@ class ExplorationViewModel(
                         skillTreeOverlay = overlay
                     )
                 }
+                if (newState.activeQuests.contains("w1_mq01") && newState.equippedWeapons["nova"] != null) {
+                    val completed = questRuntimeManager.state.value.completedTasks["w1_mq01"] ?: emptySet()
+                    if (!completed.contains("equip_starter_gear")) {
+                        questRuntimeManager.markTaskComplete("w1_mq01", "equip_starter_gear")
+                    }
+                }
                 updateActionHints(_uiState.value.currentRoom)
                 updateUnlockedAreas(newState.unlockedAreas)
                 updateUnlockedExits(newState.unlockedExits)
+                val currentRoomId = _uiState.value.currentRoom?.id
+                if (!_uiState.value.isLoading && newState.roomId != null && newState.roomId != currentRoomId) {
+                    warpToRoom(newState.roomId)
+                }
             }
         }
 
@@ -1543,7 +1555,11 @@ class ExplorationViewModel(
                     postStatus("Quest log updated")
                     updateActionHints(_uiState.value.currentRoom)
                 }
-                if (!firstEmission) {
+                if (firstEmission) {
+                    questState.stageProgress.forEach { (questId, stageId) ->
+                        scheduleQuestStageTutorials(questId, stageId)
+                    }
+                } else {
                     stageChanges.forEach { (questId, stageId) ->
                         scheduleQuestStageTutorials(questId, stageId)
                     }
@@ -1868,6 +1884,14 @@ class ExplorationViewModel(
         val nextThemeStyle = themeStyleByRoomId[nextRoom.id]
         environmentThemeManager.apply(nextRoom.env, nextRoom.weather)
 
+        val (nextHub, nextWorld) = getHubAndWorldForRoom(nextRoom)
+        if (nextHub != null && nextHub.id != sessionStore.state.value.hubId) {
+            sessionStore.setHub(nextHub.id)
+        }
+        if (nextWorld != null && nextWorld.id != sessionStore.state.value.worldId) {
+            sessionStore.setWorld(nextWorld.id)
+        }
+
         sessionStore.setRoom(nextRoom.id)
         if (!nextRoomIsDark) {
             visitedRooms.add(nextRoom.id)
@@ -1886,6 +1910,8 @@ class ExplorationViewModel(
         _uiState.update {
             it.copy(
                 currentRoom = nextRoom,
+                currentHub = nextHub ?: it.currentHub,
+                currentWorld = nextWorld ?: it.currentWorld,
                 availableConnections = visibleConnections(nextRoom),
                 npcs = nextRoom.npcs,
                 actions = nextActions,
@@ -1908,7 +1934,74 @@ class ExplorationViewModel(
         }
         activeDialogueSession = null
         updateMinimap(nextRoom)
-        playRoomAudio(sessionState.hubId, nextRoom.id)
+        playRoomAudio(nextHub?.id ?: sessionState.hubId, nextRoom.id)
+        handleRoomEntryTutorials(nextRoom)
+        eventManager.handleTrigger("enter_room", EventPayload.EnterRoom(nextRoom.id))
+    }
+
+    private fun getHubAndWorldForRoom(room: Room): Pair<Hub?, World?> {
+        val nextNodeId = nodeIdByRoomId[room.id]
+        val nodes = worldAssets.loadHubNodes()
+        val nextNode = nodes.firstOrNull { it.id == nextNodeId }
+        val hubs = worldAssets.loadHubs()
+        val worlds = worldAssets.loadWorlds()
+        val nextHub = nextNode?.let { node -> hubs.firstOrNull { it.id == node.hubId } }
+        val nextWorld = nextHub?.let { hub -> worlds.firstOrNull { it.id == hub.worldId } }
+        return Pair(nextHub, nextWorld)
+    }
+
+    private fun warpToRoom(roomId: String) {
+        val nextRoom = roomsById[roomId] ?: return
+        val nextRoomIsDark = isRoomDark(nextRoom)
+        val nextTheme = themeByRoomId[nextRoom.id]
+        val nextThemeStyle = themeStyleByRoomId[nextRoom.id]
+        environmentThemeManager.apply(nextRoom.env, nextRoom.weather)
+
+        val (nextHub, nextWorld) = getHubAndWorldForRoom(nextRoom)
+
+        if (nextHub != null && nextHub.id != sessionStore.state.value.hubId) {
+            sessionStore.setHub(nextHub.id)
+        }
+        if (nextWorld != null && nextWorld.id != sessionStore.state.value.worldId) {
+            sessionStore.setWorld(nextWorld.id)
+        }
+
+        if (!nextRoomIsDark) {
+            visitedRooms.add(nextRoom.id)
+            markDiscovered(nextRoom)
+            darkRoomEntryDirection.remove(nextRoom.id)
+        }
+
+        val nextActions = parseActions(nextRoom)
+        val sessionState = sessionStore.state.value
+        _uiState.update { current ->
+            current.copy(
+                currentRoom = nextRoom,
+                currentHub = nextHub ?: current.currentHub,
+                currentWorld = nextWorld ?: current.currentWorld,
+                availableConnections = visibleConnections(nextRoom),
+                npcs = nextRoom.npcs,
+                actions = nextActions,
+                actionHints = buildActionHints(nextRoom, nextActions),
+                enemies = roomEnemyParties(nextRoom).flatten(),
+                enemyTiers = buildEnemyTierMap(nextRoom),
+                enemyIcons = buildEnemyIconMap(nextRoom),
+                blockedDirections = computeBlockedDirections(nextRoom),
+                directionIndicators = buildDirectionIndicators(nextRoom),
+                roomState = getRoomStateSnapshot(nextRoom.id),
+                groundItems = getGroundItemsSnapshot(nextRoom.id),
+                activeDialogue = null,
+                activeQuests = sessionState.activeQuests,
+                completedQuests = sessionState.completedQuests,
+                theme = nextTheme,
+                themeStyle = nextThemeStyle,
+                statusMessage = null,
+                canReturnToHub = canReturnToHub(nextRoom)
+            )
+        }
+        activeDialogueSession = null
+        updateMinimap(nextRoom)
+        playRoomAudio(nextHub?.id ?: sessionStore.state.value.hubId, nextRoom.id)
         handleRoomEntryTutorials(nextRoom)
         eventManager.handleTrigger("enter_room", EventPayload.EnterRoom(nextRoom.id))
     }
@@ -2730,7 +2823,7 @@ class ExplorationViewModel(
             if (!tutorialManager.hasCompleted("swipe_move")) {
                 tutorialManager.scheduleScript(
                     key = "swipe_hint",
-                    scriptId = "scene_swipe_movement",
+                    scriptId = "movement",
                     delayMs = 4000L
                 )
             }

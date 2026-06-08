@@ -82,6 +82,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
@@ -89,6 +90,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.Shape
@@ -184,6 +186,7 @@ import com.example.starborn.navigation.CombatResultPayload
 import com.example.starborn.ui.background.rememberAssetPainter
 import com.example.starborn.ui.background.rememberRoomBackgroundPainter
 import com.example.starborn.ui.vfx.WeatherOverlay
+import com.example.starborn.ui.vfx.VignetteOverlay
 import com.example.starborn.ui.vfx.GlowProgressBar
 import com.example.starborn.ui.theme.themeColor
 import kotlinx.coroutines.delay
@@ -852,8 +855,11 @@ fun CombatScreen(
                 Image(
                     painter = backgroundPainter,
                     contentDescription = null,
-                    modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Crop
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .blur(8.dp),
+                    contentScale = ContentScale.Crop,
+                    colorFilter = ColorFilter.tint(Color(0xFF070B14).copy(alpha = 0.55f), BlendMode.Darken)
                 )
                 WeatherOverlay(
                     weatherId = viewModel.weatherId,
@@ -870,6 +876,12 @@ fun CombatScreen(
                     )
                 }
             }
+            VignetteOverlay(
+                visible = true,
+                modifier = Modifier.fillMaxSize(),
+                intensity = 0.75f,
+                color = Color(0xFF030508)
+            )
             val commandActor = menuActor
             val commandPaletteVisible = commandActor != null &&
                 !combatLocked &&

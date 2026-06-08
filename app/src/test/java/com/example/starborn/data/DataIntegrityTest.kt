@@ -8,11 +8,13 @@ import com.example.starborn.domain.cinematic.CinematicStep
 import com.example.starborn.domain.cinematic.CinematicStepType
 import com.example.starborn.domain.model.EventAction
 import com.example.starborn.domain.model.GameEvent
+import com.example.starborn.domain.model.HubNode
 import com.example.starborn.domain.model.MilestoneDefinition
 import com.example.starborn.domain.model.MilestoneExitUnlock
 import com.example.starborn.domain.model.Quest
 import com.squareup.moshi.Types
 import java.io.File
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -203,6 +205,32 @@ class DataIntegrityTest {
             "Quest tutorial_id + system_tutorial scene_id entries must reference tutorial_scripts (missing: $missing)",
             missing.isEmpty()
         )
+    }
+
+    @Test
+    fun hubOneNodesUsePublicThresholdRoomsAsEntries() {
+        val expectedEntries = mapOf(
+            "pit" to "pit_L1_landing",
+            "workshop" to "workshop_yard",
+            "med_bay" to "medbay_hall",
+            "trade_row" to "trade_entrance",
+            "admin_gate" to "checkpoint_queue"
+        )
+        val nodes = readList("src/main/assets/hub_nodes.json", HubNode::class.java)
+            .filter { it.hubId == "hub_1_homestead" }
+            .associateBy { it.id }
+        val roomIds = readList("src/main/assets/rooms.json", RoomSummary::class.java)
+            .map { it.id }
+            .toSet()
+
+        assertEquals(expectedEntries.keys, nodes.keys)
+        expectedEntries.forEach { (nodeId, entryRoomId) ->
+            val node = requireNotNull(nodes[nodeId]) { "Missing Hub 1 node $nodeId" }
+            assertEquals("$nodeId should enter through its public threshold", entryRoomId, node.entryRoom)
+            assertTrue("$nodeId entry room must belong to the node", entryRoomId in node.rooms)
+            assertTrue("$nodeId entry room must exist", entryRoomId in roomIds)
+            assertEquals("$nodeId should list its entry room first", entryRoomId, node.rooms.firstOrNull())
+        }
     }
 
     private fun isUnlockValid(unlock: MilestoneExitUnlock, rooms: Map<String, RoomSummary>): Boolean {

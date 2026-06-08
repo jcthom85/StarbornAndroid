@@ -177,7 +177,39 @@
     {
         "id": "ellie_return_display",
         "speaker": "Ellie",
-        "text": "The arcade's alive again! Here, a little something for keeping the lights bright."
+        "text": "The arcade's alive again! Here, a little something for keeping the lights bright.",
+        "condition": "quest_active:gather_broken_gear"
+    },
+    {
+        "id": "jed_w1_mq04_sacrifice_1",
+        "speaker": "Jed",
+        "text": "Nova! Thank the currents. I heard the alarm broadcast. The Warden's security is descending, sealing everything.",
+        "condition": "quest_active:w1_mq04,quest_stage:w1_mq04:cargo_lift_sacrifice",
+        "next": "jed_w1_mq04_sacrifice_2"
+    },
+    {
+        "id": "jed_w1_mq04_sacrifice_2",
+        "speaker": "Nova",
+        "text": "Jed, they're calling me a contaminant. Zeke's overriding the gates, but we have to move now. Come on!",
+        "next": "jed_w1_mq04_sacrifice_3"
+    },
+    {
+        "id": "jed_w1_mq04_sacrifice_3",
+        "speaker": "Jed",
+        "text": "I can't, girl. The manual override panel for this lift is failing. If I let go of this handle, the lift locks down, and they pin you in this shaft.",
+        "next": "jed_w1_mq04_sacrifice_4"
+    },
+    {
+        "id": "jed_w1_mq04_sacrifice_4",
+        "speaker": "Nova",
+        "text": "No! We can jam the gears! I'm not leaving you behind!",
+        "next": "jed_w1_mq04_sacrifice_5"
+    },
+    {
+        "id": "jed_w1_mq04_sacrifice_5",
+        "speaker": "Jed",
+        "text": "This isn't a quota run, Nova. You have to launch. Here—take this Chime. It was in the generator core housing. It's the only thing that will bypass the launch bay locks. Now run, and don't look back.",
+        "trigger": "set_quest_task_done:w1_mq04:receive_chime,player_action:jed_sacrifice"
     },
     {
         "id": "jed_w1_mq01_intro_1",
@@ -208,7 +240,7 @@
         "id": "jed_w1_mq01_intro_5",
         "speaker": "Jed",
         "text": "I know the math. I hate the math. Check your gear, then use the bench. And take the ration bar before you pretend you aren't hungry.",
-        "trigger": "set_quest_task_done:w1_mq01:talk_to_jed,set_quest_task_done:w1_mq01:equip_starter_gear,set_milestone:ms_w1_mq01_jed_talked,give_item:ration_pack"
+        "trigger": "set_quest_task_done:w1_mq01:talk_to_jed,give_item:mining_pistol,give_item:cryo_inductor,give_item:scrap_metal:2,set_milestone:ms_w1_mq01_jed_talked,give_item:ration_pack,system_tutorial:bag_basics|Jed's Workshop"
     },
     {
         "id": "jed_default_talk",
@@ -216,30 +248,11 @@
         "text": "Jed (default): Grab a seat if you're sticking around."
     },
     {
-        "id": "jed_talk_intro_1",
-        "speaker": "Jed",
-        "text": "Ollie said you'd stop by. Got a list as long as my arm, but we'll start simple.",
-        "condition": "quest_active:talk_to_jed",
-        "next": "jed_talk_intro_2"
-    },
-    {
-        "id": "jed_talk_intro_2",
-        "speaker": "Jed",
-        "text": "Three busted gadgets scattered around town. Bring them to me, we'll get you on the bench after.",
-        "condition": "quest_active:talk_to_jed",
-        "next": "jed_talk_intro_complete"
-    },
-    {
-        "id": "jed_talk_intro_complete",
-        "speaker": "Jed",
-        "text": "I'll mark the details in your journal. Go round them up, then we tinker.",
-        "condition": "quest_active:talk_to_jed",
-        "trigger": "set_quest_task_done:talk_to_jed:talk_to_jed_task,complete_quest:talk_to_jed,start_quest:gather_broken_gear,track_quest:gather_broken_gear,set_milestone:ms_talked_to_jed,system_tutorial:scene_market_journal|Market Plaza"
-    },
-    {
         "id": "jed_energy_core_turnin_1",
         "speaker": "Jed",
-        "text": "You made it back in one piece. That surge settle down once you pulled the core?"
+        "text": "You made it back in one piece. That surge settle down once you pulled the core?",
+        "next": "nova_energy_core_turnin_1",
+        "condition": "quest_active:stellarium_mine_investigation"
     },
     {
         "id": "jed_energy_core_turnin_2",
@@ -249,7 +262,8 @@
     {
         "id": "jed_return_wrapup",
         "speaker": "Jed",
-        "text": "Town runs smoother thanks to you. Keep pace like that and we'll stay ahead of the scrappers."
+        "text": "Town runs smoother thanks to you. Keep pace like that and we'll stay ahead of the scrappers.",
+        "condition": "quest_completed:stellarium_mine_investigation"
     },
     {
         "id": "jed_signal_complete",
@@ -267,12 +281,13 @@
         "id": "jed_signal_instructions",
         "speaker": "Jed",
         "text": "Track that pulse to its source. If the mine lit up, something down there is chewing through power.",
-        "condition": "quest:stellarium_mine_investigation,milestone_not_set:ms_energy_core_claimed"
+        "condition": "quest:w1_mq03,milestone_not_set:ms_energy_core_claimed"
     },
     {
         "id": "jed_tinkering_complete",
         "speaker": "Jed",
-        "text": "Nice work. That's all of 'em. Now, get this gear back to their owners. They've been pestering me for days."
+        "text": "Nice work. That's all of 'em. Now, get this gear back to their owners. They've been pestering me for days.",
+        "condition": "quest_active:gather_broken_gear"
     },
     {
         "id": "kasey_default_talk",
@@ -282,7 +297,8 @@
     {
         "id": "kasey_return_projector",
         "speaker": "Schoolteacher Kasey",
-        "text": "Wonderful! The kids will be back under the stars tonight. Please, take this for your trouble."
+        "text": "Wonderful! The kids will be back under the stars tonight. Please, take this for your trouble.",
+        "condition": "quest_active:gather_broken_gear"
     },
     {
         "id": "maddie_default_talk",
@@ -292,41 +308,14 @@
     {
         "id": "maddie_return_grinder",
         "speaker": "Maddie",
-        "text": "You fixed it! Oh, thank you! Take these credits - may your next cup be on me."
+        "text": "You fixed it! Oh, thank you! Take these credits - may your next cup be on me.",
+        "condition": "quest_active:gather_broken_gear"
     },
     {
         "id": "nova_energy_core_turnin_1",
         "speaker": "Nova",
-        "text": "Burrower was feeding on it. Nest is quiet now, but whoever rigged the chamber knew what they were doing."
-    },
-    {
-        "id": "ollie_intro_1",
-        "speaker": "Ollie",
-        "text": "Nova! There you are! C'mon, we're going to be late meeting Jed.",
-        "emote": "surprised",
-        "condition": "milestone_not_set:ms_ollie_met",
-        "next": "ollie_intro_tutorial"
-    },
-    {
-        "id": "ollie_intro_tutorial",
-        "speaker": "Ollie",
-        "text": "Quick, tap my name on your HUD to bring up your options and talk to me.",
-        "condition": "milestone_not_set:ms_ollie_met",
-        "trigger": "start_quest:talk_to_jed,track_quest:talk_to_jed,set_milestone:ms_ollie_met,set_milestone:ms_talk_to_jed_quest_started,system_tutorial:scene_ollie_recruitment|Main Road"
-    },
-    {
-        "id": "ollie_quest_prompt",
-        "speaker": "Ollie",
-        "text": "See? Easy. Jed's waiting for us at the town square. You should go talk to him, I'll catch up!",
-        "condition": "milestone:ms_ollie_met,milestone_not_set:ms_ollie_recruited",
-        "next": "ollie_join_party"
-    },
-    {
-        "id": "ollie_join_party",
-        "speaker": "Ollie",
-        "text": "Actually, I should probably come with you. Jed can be... a lot to handle.",
-        "condition": "milestone:ms_ollie_met,milestone_not_set:ms_ollie_recruited",
-        "trigger": "recruit:ollie,set_milestone:ms_ollie_recruited"
+        "text": "Burrower was feeding on it. Nest is quiet now, but whoever rigged the chamber knew what they were doing.",
+        "next": "jed_energy_core_turnin_2"
     },
     {
         "id": "hank_w1_mq02_denial_1",
@@ -499,6 +488,37 @@
         "text": "If you're bleeding, sit. If you're not, don't start."
     },
     {
+        "id": "bogs_w1_mq03_intro_1",
+        "speaker": "Foreman Bogs",
+        "text": "You. Cutter girl. Zeke said you're the one who caused that surge in the Pit.",
+        "condition": "quest_active:w1_mq03,milestone_not_set:ms_w1_mq03_bogs_talked",
+        "next": "bogs_w1_mq03_intro_2"
+    },
+    {
+        "id": "bogs_w1_mq03_intro_2",
+        "speaker": "Nova",
+        "text": "It was grid instability, Bogs. I just work the cutters.",
+        "next": "bogs_w1_mq03_intro_3"
+    },
+    {
+        "id": "bogs_w1_mq03_intro_3",
+        "speaker": "Foreman Bogs",
+        "text": "Sure it was. Anyway, the interference is overloading the relays in Sector 4. I'm putting you on punishment duty. Descend and clear it.",
+        "next": "bogs_w1_mq03_intro_4"
+    },
+    {
+        "id": "bogs_w1_mq03_intro_4",
+        "speaker": "Nova",
+        "text": "Sector 4? That's deep mine. The lift is locked.",
+        "next": "bogs_w1_mq03_intro_5"
+    },
+    {
+        "id": "bogs_w1_mq03_intro_5",
+        "speaker": "Foreman Bogs",
+        "text": "You've got that Mine Access Badge Zeke signed off on. My scanner's updated. Use the elevator to go down, and don't come back until the relays stop humming.",
+        "trigger": "set_quest_task_done:w1_mq03:talk_to_bogs,player_action:bogs_talked,set_milestone:ms_w1_mq03_bogs_talked"
+    },
+    {
         "id": "bogs_w1_sq03_intro_1",
         "speaker": "Foreman Bogs",
         "text": "You. Cutter girl. Loader's sitting idle and cargo's blocking my schedule.",
@@ -529,8 +549,96 @@
         "text": "Company time ain't charity. Move."
     },
     {
-        "id": "tyson_default_talk",
-        "speaker": "Tyson",
-        "text": "Tyson: Stock's thin but the shelves are honest. Need provisions or just passing through?"
+        "id": "warden_boss_intro_1",
+        "speaker": "The Warden",
+        "text": "Nova. Asset 942-D. Retinal scan flagged for recycling, grid interference logs, and now unauthorized transit.",
+        "condition": "quest_active:w1_mq05,quest_stage:w1_mq05:reach_pod_bay",
+        "next": "warden_boss_intro_2"
+    },
+    {
+        "id": "warden_boss_intro_2",
+        "speaker": "Player",
+        "text": "We're leaving, Warden. Out of our way.",
+        "next": "warden_boss_intro_3"
+    },
+    {
+        "id": "warden_boss_intro_3",
+        "speaker": "The Warden",
+        "text": "Leave? There is nowhere to go. The dome isn't just physical. It's a lock. And I hold the frequency. You are a standing wave that has lost its pitch. I will quiet you myself.",
+        "trigger": "set_quest_task_done:w1_mq05:fight_through_launch_access,set_quest_task_done:w1_mq05:reach_pod_bay,advance_quest_stage:w1_mq05:defeat_warden,set_quest_task_done:w1_mq05:survive_warden_intro"
+    },
+    {
+        "id": "zeke_w1_mq05_defeat_warden_1",
+        "speaker": "Zeke",
+        "text": "Nova! You actually did it. The Warden's down. The way to the pod is clear, but security is going to reboot the grid any second.",
+        "condition": "quest_active:w1_mq05,quest_stage:w1_mq05:launch_pod,quest_task_not_done:w1_mq05:splice_chime",
+        "next": "zeke_w1_mq05_defeat_warden_2"
+    },
+    {
+        "id": "zeke_w1_mq05_defeat_warden_2",
+        "speaker": "Player",
+        "text": "Let's move. Jed said the Chime is the key.",
+        "next": "zeke_w1_mq05_defeat_warden_3"
+    },
+    {
+        "id": "zeke_w1_mq05_defeat_warden_3",
+        "speaker": "Zeke",
+        "text": "Get inside the pod! I'll secure the hatch. We need to splice that Chime into the console inside."
+    },
+    {
+        "id": "zeke_w1_mq05_pod_core_1",
+        "speaker": "Zeke",
+        "text": "Nova! Connect the Chime to that port on the console. If Jed's math is right, it should establish a resonance that overrides the colony's lock on the pod launchers.",
+        "condition": "quest_active:w1_mq05,quest_stage:w1_mq05:launch_pod,quest_task_not_done:w1_mq05:splice_chime",
+        "next": "zeke_w1_mq05_pod_core_2"
+    },
+    {
+        "id": "zeke_w1_mq05_pod_core_2",
+        "speaker": "Player",
+        "text": "I'm inserting it now. Let's hope the frequency matches.",
+        "next": "zeke_w1_mq05_pod_core_3"
+    },
+    {
+        "id": "zeke_w1_mq05_pod_core_3",
+        "speaker": "Zeke",
+        "text": "Yes! The core is spooling up. The console's active! We're green for launch. Nova, initiate the sequence on the navigation console!",
+        "trigger": "set_quest_task_done:w1_mq05:splice_chime,take_item:ghost_signal_cell,set_milestone:ms_w1_chime_spliced"
+    },
+    {
+        "id": "zeke_w2_crash_1",
+        "speaker": "Zeke",
+        "text": "Nova... *cough*... My head feels like a reactor breach. Are you intact?",
+        "condition": "quest_active:w2_mq01,quest_task_not_done:w2_mq01:check_on_zeke",
+        "next": "zeke_w2_crash_2"
+    },
+    {
+        "id": "zeke_w2_crash_2",
+        "speaker": "Nova",
+        "text": "I'm fine, Zeke. The pod took the brunt of the impact. How are you holding up?",
+        "next": "zeke_w2_crash_3"
+    },
+    {
+        "id": "zeke_w2_crash_3",
+        "speaker": "Zeke",
+        "text": "Everything is bruised, but my suit's recycler is still pumping. We're on the surface, Nova. We actually crossed the barrier... but the pod's core is completely fried.",
+        "next": "zeke_w2_crash_4"
+    },
+    {
+        "id": "zeke_w2_crash_4",
+        "speaker": "Zeke",
+        "text": "Check the core housing in the wreckage. If the Chime is still intact, we need to recover it before this swamp water short-circuits it completely.",
+        "trigger": "set_quest_task_done:w2_mq01:check_on_zeke"
+    },
+    {
+        "id": "zeke_w2_crash_repeat_1",
+        "speaker": "Zeke",
+        "text": "Check the wreckage of the pod core. We can't leave the Chime behind.",
+        "condition": "quest_active:w2_mq01,quest_task_done:w2_mq01:check_on_zeke,quest_task_not_done:w2_mq01:examine_pod"
+    },
+    {
+        "id": "zeke_w2_crash_repeat_2",
+        "speaker": "Zeke",
+        "text": "The stream of glow-water seems to flow deeper into the concrete structures. Follow it, Nova. I'll catch my breath and catch up.",
+        "condition": "quest_active:w2_mq01,quest_task_done:w2_mq01:check_on_zeke,quest_task_done:w2_mq01:examine_pod"
     }
 ]

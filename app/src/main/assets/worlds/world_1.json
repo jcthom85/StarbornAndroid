@@ -120,7 +120,7 @@
           "name": "Deep Mine Sector 4",
           "description": "Old tunnels, unsupported and dripping. The sensors glitch out here.",
           "combat_zone": true,
-          "enemy_pool": ["rock_borer"],
+          "enemy_pool": ["echo_borer"],
           "exits": ["ancient_chamber"]
         },
         {
@@ -142,7 +142,7 @@
             "name": "Cargo Launch Bay",
             "description": "Cargo rails stretch up toward the shield. A single pod sits on the pad.",
             "boss_arena": true,
-            "boss_id": "the_warden",
+            "boss_id": "the_iron_warden",
             "exits": []
         }
       ]

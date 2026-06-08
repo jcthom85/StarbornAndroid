@@ -1,0 +1,27 @@
+{
+  "id": "world_2",
+  "name": "Sector 9",
+  "hubs": [
+    {
+      "id": "hub_3_sector9",
+      "name": "Sector 9 Ruins",
+      "nodes": [
+        {
+          "id": "sector9_landing",
+          "name": "Crash Site",
+          "description": "An overgrown courtyard surrounded by high concrete walls. Water drips from hanging moss.",
+          "interactions": [
+            {
+              "id": "zeke_pod",
+              "type": "examine",
+              "text": "The escape pod wreckage. Zeke is sitting on a metal crate nearby.",
+              "action": "examine_wreckage"
+            }
+          ],
+          "npcs": ["zeke"],
+          "exits": []
+        }
+      ]
+    }
+  ]
+}

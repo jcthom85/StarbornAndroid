@@ -15,7 +15,8 @@
         "tasks": [
           {
             "id": "check_bunk",
-            "text": "Check Nova's bunk before heading out."
+            "text": "Check Nova's bunk before heading out.",
+            "tutorial_id": "movement"
           },
           {
             "id": "leave_sleeping_level",
@@ -30,7 +31,8 @@
         "tasks": [
           {
             "id": "reach_workshop",
-            "text": "Reach Jed's Workshop."
+            "text": "Reach Jed's Workshop.",
+            "tutorial_id": "scene_market_locator"
           },
           {
             "id": "talk_to_jed",
@@ -42,7 +44,8 @@
           },
           {
             "id": "use_tinkering_table",
-            "text": "Use Jed's tinkering table once."
+            "text": "Use Jed's tinkering table once.",
+            "tutorial_id": "scene_tinkering_tutorial"
           }
         ]
       }
@@ -51,16 +54,6 @@
       {
         "type": "xp",
         "amount": 50
-      },
-      {
-        "type": "item",
-        "item_id": "mining_pistol",
-        "quantity": 1
-      },
-      {
-        "type": "item",
-        "item_id": "ration_pack",
-        "quantity": 1
       }
     ]
   },
@@ -159,7 +152,7 @@
           },
           {
             "id": "break_riot_guard",
-            "text": "Defeat a shielded Riot Guard by using Guard Break or Stagger."
+            "text": "Defeat a shielded Acoustic Bulwark by using Guard Break or Stagger."
           },
           {
             "id": "reach_architect_threshold",
@@ -577,6 +570,42 @@
         "type": "item",
         "item_id": "recoil_dampener",
         "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "w2_mq01",
+    "title": "A Strange Coast",
+    "summary": "The pod crashed in the overgrown ruins of Sector 9. Establish a foothold and find a way forward.",
+    "description": "Examine the wreckage, check on Zeke, and explore the surrounding overgrown area of Sector 9.",
+    "flavor": "The air smells of ozone and crushed green ferns. The metal hull is cold.",
+    "giver": "Zeke",
+    "hub_id": "hub_3_sector9",
+    "stages": [
+      {
+        "id": "assess_crash_site",
+        "title": "Assess the Crash",
+        "description": "Find your bearings after the crash in Sector 9.",
+        "tasks": [
+          {
+            "id": "check_on_zeke",
+            "text": "Talk to Zeke at the pod wreckage."
+          },
+          {
+            "id": "examine_pod",
+            "text": "Examine the sub-critical pod core."
+          },
+          {
+            "id": "follow_stream",
+            "text": "Follow the glow-water stream into the ruins."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 150
       }
     ]
   }

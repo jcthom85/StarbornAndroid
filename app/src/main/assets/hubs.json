@@ -14,5 +14,13 @@
     "description": "The operational heart of the colony, leading to the deep mines.",
     "background_image": "images/hubs/logistics.png",
     "discovered": true
+  },
+  {
+    "id": "hub_3_sector9",
+    "world_id": "world_2",
+    "title": "Sector 9 Ruins",
+    "description": "A flooded, overgrown zone once used for logistics, now swallowed by Aethel resonance.",
+    "background_image": "images/hubs/sector9.png",
+    "discovered": true
   }
 ]

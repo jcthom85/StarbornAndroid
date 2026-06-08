@@ -14,7 +14,7 @@ class SnackUseTest {
     private val engine = CombatEngine(statusRegistry = statusRegistry)
 
     @Test
-    fun `snack restore heals the chosen ally`() {
+    fun `snack restore heals the user`() {
         val snacks = mapOf(
             "heal_snack" to Item(
                 id = "heal_snack",
@@ -22,7 +22,7 @@ class SnackUseTest {
                 type = "snack",
                 effect = ItemEffect(
                     restoreHp = 20,
-                    target = "ally"
+                    target = "self"
                 )
             )
         )
@@ -33,15 +33,14 @@ class SnackUseTest {
             itemLookup = { id -> snacks[id] }
         )
 
-        val orion = player("orion")
         val nova = player("nova")
         val enemy = enemy("enemy")
-        val base = engine.beginEncounter(CombatSetup(playerParty = listOf(orion, nova), enemyParty = listOf(enemy)))
+        val base = engine.beginEncounter(CombatSetup(playerParty = listOf(nova), enemyParty = listOf(enemy)))
         val wounded = base.copy(combatants = base.combatants + (nova.id to base.combatants.getValue(nova.id).copy(hp = 50)))
 
         val result = processor.execute(
             state = wounded,
-            action = CombatAction.SnackUse(actorId = orion.id, snackItemId = "heal_snack", targetId = nova.id)
+            action = CombatAction.SnackUse(actorId = nova.id, snackItemId = "heal_snack")
         ) { CombatReward() }
 
         assertEquals(70, result.combatants.getValue(nova.id).hp)
@@ -82,15 +81,15 @@ class SnackUseTest {
     }
 
     @Test
-    fun `snack debuff applies a negative buff to an enemy`() {
+    fun `snack is applied to self even if action target is specified elsewhere`() {
         val snacks = mapOf(
             "debuff_snack" to Item(
                 id = "debuff_snack",
                 name = "Debuff Snack",
                 type = "snack",
                 effect = ItemEffect(
-                    singleBuff = BuffEffect(stat = "defense", value = -6, duration = 2),
-                    target = "enemy"
+                    singleBuff = BuffEffect(stat = "defense", value = 6, duration = 2),
+                    target = "self"
                 )
             )
         )
@@ -110,13 +109,17 @@ class SnackUseTest {
             action = CombatAction.SnackUse(actorId = nova.id, snackItemId = "debuff_snack", targetId = enemy.id)
         ) { CombatReward() }
 
-        val debuff = result.combatants.getValue(enemy.id).buffs.firstOrNull { it.effect.stat == "defense" }
-        assertNotNull(debuff)
-        assertEquals(-6, debuff!!.effect.value)
+        // Nova (self) should have the buff, not the enemy
+        val buffOnSelf = result.combatants.getValue(nova.id).buffs.firstOrNull { it.effect.stat == "defense" }
+        assertNotNull(buffOnSelf)
+        assertEquals(6, buffOnSelf!!.effect.value)
+
+        val buffOnEnemy = result.combatants.getValue(enemy.id).buffs.firstOrNull { it.effect.stat == "defense" }
+        assertTrue(buffOnEnemy == null)
     }
 
     @Test
-    fun `snack damage reduces enemy hp`() {
+    fun `snack damage reduces user hp`() {
         val snacks = mapOf(
             "damage_snack" to Item(
                 id = "damage_snack",
@@ -124,7 +127,7 @@ class SnackUseTest {
                 type = "snack",
                 effect = ItemEffect(
                     damage = 15,
-                    target = "enemy"
+                    target = "self"
                 )
             )
         )
@@ -144,13 +147,12 @@ class SnackUseTest {
             action = CombatAction.SnackUse(actorId = nova.id, snackItemId = "damage_snack", targetId = enemy.id)
         ) { CombatReward() }
 
-        val updatedHp = result.combatants.getValue(enemy.id).hp
+        // Nova (self) should take the damage, not the enemy
+        val updatedHp = result.combatants.getValue(nova.id).hp
         assertEquals(85, updatedHp)
 
-        val damageEntry = result.log.filterIsInstance<CombatLogEntry.Damage>()
-            .firstOrNull { it.sourceId == nova.id && it.targetId == enemy.id && it.amount > 0 }
-        assertNotNull(damageEntry)
-        assertTrue(damageEntry!!.amount > 0)
+        val enemyHp = result.combatants.getValue(enemy.id).hp
+        assertEquals(100, enemyHp)
     }
 
     private fun player(id: String): Combatant {

@@ -29,6 +29,7 @@ class Hub1CriticalFlowTest {
         assertEquals("jed_w1_mq01_intro_1", jed?.current()?.id)
         jed?.advanceUntilFinished()
 
+        harness.store.setQuestTaskCompleted("w1_mq01", "equip_starter_gear", true)
         harness.events.handleTrigger("player_action", EventPayload.Action("tinkering_screen_entered"))
 
         val state = harness.store.state.value
@@ -52,7 +53,7 @@ class Hub1CriticalFlowTest {
         harness.events.handleTrigger(
             "encounter_victory",
             EventPayload.EncounterOutcome(
-                enemyIds = listOf("riot_guard"),
+                enemyIds = listOf("acoustic_bulwark"),
                 outcome = EventPayload.EncounterOutcome.Outcome.VICTORY
             )
         )
@@ -148,6 +149,35 @@ class Hub1CriticalFlowTest {
         assertTrue(completedTasks.contains("spoof_liability_form"))
         assertTrue(completedTasks.contains("receive_mine_access_badge"))
         assertTrue(state.inventory["mine_access_badge"].orZero() >= 1)
+    }
+
+    @Test
+    fun sector9CrashSiteAndStrangeCoastQuestFlow() {
+        val harness = Hub1Harness()
+        harness.store.startQuest("w2_mq01")
+
+        // 1. Talk to Zeke at the crash site
+        val zeke = harness.dialogue.startDialogue("Zeke")
+        assertEquals("zeke_w2_crash_1", zeke?.current()?.id)
+        zeke?.advanceUntilFinished()
+
+        val stateAfterZeke = harness.store.state.value
+        assertTrue(stateAfterZeke.questTasksCompleted["w2_mq01"].orEmpty().contains("check_on_zeke"))
+
+        // 2. Examine the pod core
+        harness.events.handleTrigger("player_action", EventPayload.Action("w2_mq01_examine_pod"))
+
+        val stateAfterPod = harness.store.state.value
+        assertTrue(stateAfterPod.questTasksCompleted["w2_mq01"].orEmpty().contains("examine_pod"))
+        assertTrue(stateAfterPod.inventory["ghost_signal_cell"].orZero() >= 1)
+        assertTrue(stateAfterPod.inventory["medkit"].orZero() >= 1)
+
+        // 3. Move to the stream
+        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("sector9_stream"))
+
+        val finalState = harness.store.state.value
+        assertTrue(finalState.completedQuests.contains("w2_mq01"))
+        assertTrue(finalState.completedMilestones.contains("ms_w2_mq01_complete"))
     }
 
     private class Hub1Harness {

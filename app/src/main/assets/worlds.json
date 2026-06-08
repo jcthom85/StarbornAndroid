@@ -4,5 +4,11 @@
     "title": "The Mines",
     "description": "A Dominion-owned mining operation built into canyon walls.",
     "default_theme": "mine"
+  },
+  {
+    "id": "world_2",
+    "title": "Sector 9",
+    "description": "Overgrown ruins of an abandoned Dominion shipping sector, reclaimed by swamp and resonance.",
+    "default_theme": "swamp"
   }
 ]

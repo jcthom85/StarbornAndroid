@@ -138,7 +138,7 @@ class TutorialRuntimeManagerTest {
         advanceUntilIdle()
 
         prompt = promptManager.state.value.current as? TutorialPrompt
-        assertEquals("bag_basics", prompt?.entry?.key)
+        assertEquals("bag_basics_step_1", prompt?.entry?.key)
 
         promptManager.dismissCurrent()
         advanceUntilIdle()

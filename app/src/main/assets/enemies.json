@@ -1,7 +1,7 @@
 [
   {
-    "id": "rock_borer",
-    "name": "Rock-Borer",
+    "id": "echo_borer",
+    "name": "Echo-Borer",
     "tier": "standard",
     "combat_behavior": "aggressive",
     "combat_role": "striker",
@@ -25,7 +25,7 @@
       "gnaw",
       "burrow"
     ],
-    "flavor": "A chitinous badger with metal-infused claws. Churns through rock and bone with equal ease.",
+    "flavor": "A subterranean skitterer that strikes its crystalline claws against the rock to emit focal soundwaves. It is highly sensitive to the neural rhythm of intruders, reacting with frenzied aggression to any disruption in the ambient hum.",
     "xp_reward": 40,
     "credit_reward": 10,
     "drops": [
@@ -34,12 +34,12 @@
         "chance": 0.5
       }
     ],
-    "description": "Territorial mining wildlife. Dangerous in packs.",
-    "portrait": "images/enemies/rock_borer_combat.png"
+    "description": "Resonant cave dweller. Attracted to neural frequencies.",
+    "portrait": "images/enemies/echo_borer_combat.png"
   },
   {
-    "id": "fume_bat",
-    "name": "Fume Bat",
+    "id": "siren_skimmer",
+    "name": "Siren Skimmer",
     "tier": "standard",
     "combat_behavior": "trickster",
     "combat_role": "controller",
@@ -60,10 +60,10 @@
       "flying"
     ],
     "abilities": [
-      "smog_spit",
-      "screech"
+      "sonic_shriek",
+      "volatile_swell"
     ],
-    "flavor": "Hangs from ventilation pipes, feeding on toxic runoff. Their screech can scramble a sensor array.",
+    "flavor": "Hovering cave pests nesting near geothermal vents. They feed on the vibrations of pressurized steam and emit disorienting high-frequency standing waves that blur neural focus.",
     "xp_reward": 45,
     "credit_reward": 12,
     "drops": [
@@ -72,12 +72,12 @@
         "chance": 0.3
       }
     ],
-    "description": "Evasive aerial pest. Applies Blind.",
-    "portrait": "images/enemies/fume_bat_combat.png"
+    "description": "Evasive aerial pest. Disrupts neural waves, causing Blind.",
+    "portrait": "images/enemies/siren_skimmer_combat.png"
   },
   {
-    "id": "dominion_enforcer",
-    "name": "Dominion Enforcer",
+    "id": "dominion_dampener",
+    "name": "Dominion Dampener",
     "tier": "standard",
     "combat_behavior": "balanced",
     "combat_role": "striker",
@@ -98,10 +98,10 @@
       "dominion"
     ],
     "abilities": [
-      "suppressing_fire",
+      "suppressive_fire",
       "flashbang"
     ],
-    "flavor": "Corporate security. Their armor is cleaner than yours, but their souls are just as tired.",
+    "flavor": "Corporate security troopers enclosed in pressurized helmets designed to filter out the deafening roar of the deep drills. They use kinetic standing-wave launchers to pacify workers by dampening their neural resonance.",
     "xp_reward": 60,
     "credit_reward": 25,
     "drops": [
@@ -114,12 +114,12 @@
         "chance": 0.5
       }
     ],
-    "description": "Tactical corporate infantry. Uses cover.",
-    "portrait": "images/enemies/dominion_enforcer_combat.png"
+    "description": "Pressurized corporate infantry. Emits kinetic waves.",
+    "portrait": "images/enemies/dominion_dampener_combat.png"
   },
   {
-    "id": "riot_guard",
-    "name": "Riot Guard",
+    "id": "acoustic_bulwark",
+    "name": "Acoustic Bulwark",
     "tier": "elite",
     "combat_behavior": "defensive",
     "combat_role": "tank",
@@ -144,10 +144,10 @@
       "shielded"
     ],
     "abilities": [
-      "riot_stance",
-      "shield_bash"
+      "barrier_field",
+      "slide_slam"
     ],
-    "flavor": "Equipped with a kinetic-absorption shield. Designed to suppress 'unproductive behavior'.",
+    "flavor": "Heavy bulwarks equipped with acoustic-absorption shields. They absorb kinetic impacts and release them as concussive pressure shocks, using the mine's natural echo chamber to break resistance.",
     "xp_reward": 100,
     "credit_reward": 40,
     "drops": [
@@ -156,12 +156,12 @@
         "chance": 0.4
       }
     ],
-    "description": "Heavily armored. Immune until Staggered.",
-    "portrait": "images/enemies/riot_guard_combat.png"
+    "description": "Harmonic-shield tank. Shielded until Staggered.",
+    "portrait": "images/enemies/acoustic_bulwark_combat.png"
   },
   {
-    "id": "security_drone",
-    "name": "Security Drone",
+    "id": "resonance_buoy",
+    "name": "Resonance Buoy",
     "tier": "standard",
     "combat_behavior": "avoidant",
     "combat_role": "support",
@@ -183,10 +183,10 @@
       "flying"
     ],
     "abilities": [
-      "taser_dart",
-      "radio_uplink"
+      "resonance_buoy_emp_burst",
+      "static_burst"
     ],
-    "flavor": "The 'eye' of the Warden. Every frame it records is evidence against you.",
+    "flavor": "A floating acoustic surveyor that tracks sonic ripples and maps local pressure density. Its constant pinging acts as a beacon, summoning Dominion reinforcements to restore order.",
     "xp_reward": 50,
     "credit_reward": 15,
     "drops": [
@@ -199,12 +199,12 @@
         "chance": 0.4
       }
     ],
-    "description": "Flying surveyor. Alerts reinforcements.",
-    "portrait": "images/enemies/security_drone_combat.png"
+    "description": "Acoustic surveyor drone. Beacon for backup dispatch.",
+    "portrait": "images/enemies/resonance_buoy_combat.png"
   },
   {
-    "id": "heavy_loader",
-    "name": "Heavy Loader",
+    "id": "pressure_hauler",
+    "name": "Pressure Hauler",
     "tier": "elite",
     "combat_behavior": "smart",
     "combat_role": "striker",
@@ -228,16 +228,10 @@
       "massive"
     ],
     "abilities": [
-      "hydraulic_slam",
-      "vent_coolant",
-      "harden"
+      "hydraulic_overheat",
+      "slide_slam"
     ],
-    "anticipation_logic": {
-      "trigger": "player_status_charged",
-      "response": "harden",
-      "priority_boost": 50
-    },
-    "flavor": "Massive hydraulic limbs built for cargo but perfect for crushing bones.",
+    "flavor": "A massive mining mech built to withstand high-pressure depths. It hums with heavy subsonic hydraulic pressure; each mechanical step sends ripples through the floor that shake down loose rock.",
     "xp_reward": 250,
     "credit_reward": 100,
     "drops": [
@@ -250,12 +244,12 @@
         "chance": 0.3
       }
     ],
-    "description": "Industrial mech. Massive physical damage.",
-    "portrait": "images/enemies/heavy_loader_combat.png"
+    "description": "Industrial pressure loader. Emits subsonic shockwaves.",
+    "portrait": "images/enemies/pressure_hauler_combat.png"
   },
   {
-    "id": "the_warden",
-    "name": "The Warden",
+    "id": "the_iron_warden",
+    "name": "The Iron Warden",
     "tier": "boss",
     "combat_behavior": "oppressive",
     "combat_role": "tank_summoner",
@@ -280,12 +274,12 @@
       "power_armor"
     ],
     "abilities": [
-      "warden_riot_shield",
-      "kinetic_barrage",
-      "warden_summon_drones",
-      "gas_grenade"
+      "iron_warden_riot_shield",
+      "triple_burst",
+      "iron_warden_drone_summon",
+      "iron_warden_gas_grenade"
     ],
-    "flavor": "A careerist in high-grade power armor. He doesn't enjoy the work, but he enjoys the authority.",
+    "flavor": "The Sector Commander, encased in pressurized atmospheric power armor to withstand the deep relic's current. He asserts absolute control by generating acoustic white-noise static that completely erodes neural coherence.",
     "xp_reward": 1000,
     "credit_reward": 800,
     "drops": [
@@ -296,7 +290,7 @@
         "qty_max": 1
       }
     ],
-    "description": "Sector Authority. Immune until Guard Broken.",
-    "portrait": "images/enemies/the_warden_combat.png"
+    "description": "Sector commander in pressurized dive-armor. Suppresses neural waves.",
+    "portrait": "images/enemies/the_iron_warden_combat.png"
   }
 ]

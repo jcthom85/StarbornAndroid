@@ -1145,7 +1145,7 @@ private fun MinimapWidget(
             val cx = w / 2
             val cy = h / 2
 
-            val g = base / 7
+            val g = base / 11.5f
             val pad = g / 2.7f
             val step = g + pad
             val radius = base * 0.12f
@@ -1165,19 +1165,19 @@ private fun MinimapWidget(
                 )
             )
 
-            val gridStartX = cx - 1.5f * step
-            val gridStartY = cy - 1.5f * step
-            for (i in 0..3) {
+            val gridStartX = cx - 2.5f * step
+            val gridStartY = cy - 2.5f * step
+            for (i in 0..5) {
                 drawLine(
                     color = clrGrid,
                     start = Offset(gridStartX + i * step, gridStartY),
-                    end = Offset(gridStartX + i * step, gridStartY + 3 * step),
+                    end = Offset(gridStartX + i * step, gridStartY + 5 * step),
                     strokeWidth = 1.dp.toPx()
                 )
                 drawLine(
                     color = clrGrid,
                     start = Offset(gridStartX, gridStartY + i * step),
-                    end = Offset(gridStartX + 3 * step, gridStartY + i * step),
+                    end = Offset(gridStartX + 5 * step, gridStartY + i * step),
                     strokeWidth = 1.dp.toPx()
                 )
             }
@@ -1192,7 +1192,7 @@ private fun MinimapWidget(
 
             minimap?.let { state ->
                 val cellsInViewport = state.cells.filter {
-                    abs(it.offsetX) <= 1 && abs(it.offsetY) <= 1 && (it.discovered || it.isCurrent)
+                    abs(it.offsetX) <= 2 && abs(it.offsetY) <= 2 && (it.discovered || it.isCurrent)
                 }
                 val idToCell = state.cells.associateBy { it.roomId }
 
@@ -1202,8 +1202,8 @@ private fun MinimapWidget(
                         if (connectedRoomId != null) {
                             val neighbor = idToCell[connectedRoomId]
                             if (neighbor != null &&
-                                abs(neighbor.offsetX) <= 1 &&
-                                abs(neighbor.offsetY) <= 1 &&
+                                abs(neighbor.offsetX) <= 2 &&
+                                abs(neighbor.offsetY) <= 2 &&
                                 (neighbor.discovered || neighbor.isCurrent)
                             ) {
                                 val x1 = cx + cell.offsetX * step
@@ -5216,7 +5216,7 @@ private fun MapLegendOverlay(
 
                 LegendEntry(
                     title = "Minimap grid",
-                    description = "3×3 grid around you with a highlighted center tile.",
+                    description = "5×5 grid around you with a highlighted center tile.",
                     textColor = textColor
                 ) {
                     LegendMiniGrid(

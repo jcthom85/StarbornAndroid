@@ -55,6 +55,8 @@ class TutorialRuntimeManager(
         onDismiss: (() -> Unit)? = null
     ) {
         if (entry.key != null && hasCompleted(entry.key)) return
+        val parentScriptId = entry.metadata["script_id"]
+        if (parentScriptId != null && hasCompleted(parentScriptId)) return
         val normalizedKey = entry.key?.normalized()
         if (!allowDuplicates && normalizedKey != null) {
             if (completedTutorials.value.any { it.normalized() == normalizedKey }) {
@@ -106,6 +108,8 @@ class TutorialRuntimeManager(
     ) {
         val key = entry.key
         if (key != null && hasCompleted(key)) return
+        val parentScriptId = entry.metadata["script_id"]
+        if (parentScriptId != null && hasCompleted(parentScriptId)) return
         if (delayMs > 0) {
             schedule(
                 entry.key ?: entry.hashCode().toString(),
@@ -124,13 +128,14 @@ class TutorialRuntimeManager(
         onComplete: (() -> Unit)? = null
     ): Boolean {
         val script = scripts?.script(scriptId) ?: return false
+        sessionStore.markTutorialSeen(scriptId)
         var scheduled = false
         script.steps.forEachIndexed { index, step ->
             val entry = TutorialEntry(
-                key = step.key ?: scriptId,
+                key = step.key ?: "${scriptId}_step_$index",
                 context = step.context,
                 message = step.message,
-                metadata = step.metadata
+                metadata = step.metadata + mapOf("script_id" to scriptId)
             )
             val delayMs = step.delayMs ?: 0L
             val isLast = index == script.steps.lastIndex

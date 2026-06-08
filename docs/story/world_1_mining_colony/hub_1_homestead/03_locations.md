@@ -12,12 +12,12 @@ Nodes unlock in Stages. Nodes in the same Stage are available simultaneously.
 *   **Type:** Start / Tutorial
 *   **Description:** A dense cluster of sleeping pods and communal mess halls. The air smells of recycled ozone and unwashed bodies.
 *   **Rooms (10):**
-    1.  **Pit Landing (pit_L1_landing):** Entry point from the rest of the hub.
+    1.  **Pit Landing (pit_L1_landing):** Entry/exit point used by the Hub 1 map.
     2.  **Mess Hall (pit_mess):** Large social space; community flavor and possible Zeke volunteer beat.
     3.  **Ration Sink (pit_kitchen):** Small flavor room off the mess hall.
     4.  **Lift Shaft (pit_shaft):** A vertical room connecting L1 and L2.
     5.  **Pod Row (pit_L2_corridor):** Hallway lined with pods.
-    6.  **Nova's Bunk (pit_nova_bunk):** The specific start point (Player's pod).
+    6.  **Nova's Bunk (pit_nova_bunk):** The new-game story start (Player's pod), not a hub-map entry point.
     7.  **Jed's Bunk (pit_jed_bunk):** Jed's personal pod (Lore/Flavor).
     8.  **Shared Showers (pit_showers):** Grimy, industrial; hide a small loot item here.
     9.  **Supply Closet (pit_storage):** Small room for tools/flavor.

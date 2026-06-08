@@ -331,8 +331,8 @@ class CombatViewModelTest {
             miniIconPath = "images/portraits/nova.png"
         )
         val enemy = Enemy(
-            id = "fume_bat",
-            name = "Fume Bat",
+            id = "siren_skimmer",
+            name = "Siren Skimmer",
             tier = "standard",
             hp = 20,
             strength = 4,
@@ -473,8 +473,8 @@ class CombatViewModelTest {
             miniIconPath = "images/portraits/nova.png"
         )
         val enemy = Enemy(
-            id = "fume_bat",
-            name = "Fume Bat",
+            id = "siren_skimmer",
+            name = "Siren Skimmer",
             tier = "standard",
             hp = 20,
             strength = 4,
@@ -615,8 +615,8 @@ class CombatViewModelTest {
             miniIconPath = "images/portraits/nova.png"
         )
         val enemy = Enemy(
-            id = "fume_bat",
-            name = "Fume Bat",
+            id = "siren_skimmer",
+            name = "Siren Skimmer",
             tier = "standard",
             hp = 20,
             strength = 4,
@@ -769,8 +769,8 @@ class CombatViewModelTest {
             miniIconPath = "images/portraits/nova.png"
         )
         val enemy = Enemy(
-            id = "fume_bat",
-            name = "Fume Bat",
+            id = "siren_skimmer",
+            name = "Siren Skimmer",
             tier = "standard",
             hp = 20,
             strength = 4,

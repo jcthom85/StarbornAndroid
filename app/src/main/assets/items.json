@@ -793,7 +793,7 @@
         },
         "effect": {
             "restore_hp": 35,
-            "target": "ally"
+            "target": "self"
         }
     },
     {
@@ -845,7 +845,7 @@
     {
         "id": "sunder_seeds",
         "name": "Sunder Seeds",
-        "description": "Hard, bitter pits. You spit them at armor joints to grind gears. Dirty fighting at its finest.",
+        "description": "Hard, bitter pits. Chewing them steels your resolve.",
         "type": "snack",
         "value": 210,
         "buy_price": 400,
@@ -859,10 +859,10 @@
         "effect": {
             "buff_stat": {
                 "stat": "defense",
-                "value": -6,
+                "value": 6,
                 "duration": 2
             },
-            "target": "enemy"
+            "target": "self"
         }
     },
     {
@@ -988,7 +988,7 @@
     {
         "id": "shadow_kelp",
         "name": "Shadow Kelp",
-        "description": "Slimy strips from the deep tanks. Throwing it clouds sensors and ruins appetites.",
+        "description": "Slimy strips from the deep tanks. Consuming them tunes your senses, sharpening accuracy.",
         "type": "snack",
         "value": 175,
         "buy_price": 350,
@@ -1002,10 +1002,10 @@
         "effect": {
             "buff_stat": {
                 "stat": "accuracy",
-                "value": -10,
+                "value": 10,
                 "duration": 2
             },
-            "target": "enemy"
+            "target": "self"
         }
     },
     {
@@ -1024,7 +1024,7 @@
         },
         "effect": {
             "restore_hp": 45,
-            "target": "ally"
+            "target": "self"
         }
     },
     {

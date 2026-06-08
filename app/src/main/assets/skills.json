@@ -367,9 +367,9 @@
     ]
   },
   {
-    "id": "security_drone_emp_burst",
+    "id": "resonance_buoy_emp_burst",
     "name": "EMP Burst",
-    "character": "security_drone",
+    "character": "resonance_buoy",
     "type": "enemy",
     "description": "Discharges an electric shock that can stun attackers.",
     "combat_tags": [
@@ -459,7 +459,7 @@
   {
     "id": "sonic_shriek",
     "name": "Sonic Shriek",
-    "character": "fume_bat",
+    "character": "siren_skimmer",
     "type": "enemy",
     "description": "Shrill cry that disorients foes.",
     "combat_tags": [
@@ -582,7 +582,7 @@
   {
     "id": "volatile_swell",
     "name": "Volatile Swell",
-    "character": "fume_bat",
+    "character": "siren_skimmer",
     "type": "enemy",
     "description": "Charges up volatile gases to empower attacks.",
     "combat_tags": [
@@ -887,9 +887,9 @@
     "status_applications": []
   },
   {
-    "id": "warden_riot_shield",
+    "id": "iron_warden_riot_shield",
     "name": "Riot Shield",
-    "character": "the_warden",
+    "character": "the_iron_warden",
     "type": "enemy",
     "description": "Raises a heavy shield, becoming immune to frontal attacks.",
     "combat_tags": [
@@ -904,9 +904,9 @@
     ]
   },
   {
-    "id": "warden_drone_summon",
+    "id": "iron_warden_drone_summon",
     "name": "Summon Drone",
-    "character": "the_warden",
+    "character": "the_iron_warden",
     "type": "enemy",
     "description": "Calls for backup.",
     "combat_tags": [
@@ -918,9 +918,9 @@
     "status_applications": []
   },
   {
-    "id": "warden_gas_grenade",
+    "id": "iron_warden_gas_grenade",
     "name": "Gas Grenade",
-    "character": "the_warden",
+    "character": "the_iron_warden",
     "type": "enemy",
     "description": "Fills the area with choking gas.",
     "combat_tags": [

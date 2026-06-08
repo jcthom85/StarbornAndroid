@@ -12,7 +12,10 @@
       "north": "pit_shaft",
       "east": "pit_mess"
     },
-    "pos": [0, 0],
+    "pos": [
+      0,
+      0
+    ],
     "state": {},
     "actions": [
       {
@@ -36,7 +39,10 @@
       "east": "pit_kitchen",
       "south": "pit_vents"
     },
-    "pos": [1, 0],
+    "pos": [
+      1,
+      0
+    ],
     "state": {},
     "actions": [
       {
@@ -63,7 +69,10 @@
     "connections": {
       "west": "pit_mess"
     },
-    "pos": [2, 0],
+    "pos": [
+      2,
+      0
+    ],
     "state": {},
     "actions": [
       {
@@ -92,7 +101,10 @@
       "north": "pit_L2_corridor",
       "west": "pit_jed_bunk"
     },
-    "pos": [0, 1],
+    "pos": [
+      0,
+      1
+    ],
     "state": {},
     "actions": [
       {
@@ -113,13 +125,18 @@
     "title": "Jed's Bunk",
     "background_image": "images/rooms/world_1/pit_jed_bunk_v5.png",
     "description": "Jed's pod is bigger than yours only because he filled every spare inch with parts. Manuals, sensors, and half-built fixes crowd the bunk, all smelling like machine oil and stubbornness.",
-    "npcs": ["jed"],
+    "npcs": [
+      "jed"
+    ],
     "items": [],
     "enemies": [],
     "connections": {
       "east": "pit_shaft"
     },
-    "pos": [-1, 1],
+    "pos": [
+      -1,
+      1
+    ],
     "state": {},
     "actions": [
       {
@@ -148,7 +165,10 @@
       "east": "pit_nova_bunk",
       "west": "pit_storage"
     },
-    "pos": [0, 2],
+    "pos": [
+      0,
+      2
+    ],
     "state": {},
     "actions": [
       {
@@ -175,7 +195,10 @@
     "connections": {
       "west": "pit_L2_corridor"
     },
-    "pos": [1, 2],
+    "pos": [
+      1,
+      2
+    ],
     "state": {},
     "actions": [
       {
@@ -204,7 +227,10 @@
     "connections": {
       "east": "pit_L2_corridor"
     },
-    "pos": [-1, 2],
+    "pos": [
+      -1,
+      2
+    ],
     "state": {},
     "actions": [
       {
@@ -237,7 +263,10 @@
       "north": "pit_mess",
       "east": "pit_showers"
     },
-    "pos": [1, -1],
+    "pos": [
+      1,
+      -1
+    ],
     "state": {},
     "actions": [
       {
@@ -264,7 +293,10 @@
     "connections": {
       "west": "pit_vents"
     },
-    "pos": [2, -1],
+    "pos": [
+      2,
+      -1
+    ],
     "state": {},
     "actions": [
       {
@@ -291,7 +323,10 @@
     "connections": {
       "north": "workshop_floor"
     },
-    "pos": [0, 0],
+    "pos": [
+      0,
+      0
+    ],
     "state": {},
     "actions": [
       {
@@ -312,7 +347,9 @@
     "title": "Main Bench",
     "background_image": "images/rooms/world_1/workshop_floor_v3.png",
     "description": "Warm work lights spill across Jed's main bench, catching on solder smoke and bright little tool handles. Your illegal cutter parts sit in the middle of it all, dangerous, necessary, and almost ready.",
-    "npcs": ["jed"],
+    "npcs": [
+      "jed"
+    ],
     "items": [],
     "enemies": [],
     "connections": {
@@ -321,7 +358,10 @@
       "east": "workshop_shed",
       "west": "workshop_loft"
     },
-    "pos": [0, 1],
+    "pos": [
+      0,
+      1
+    ],
     "state": {},
     "actions": [
       {
@@ -343,13 +383,18 @@
     "title": "Jed's Office",
     "background_image": "images/rooms/world_1/workshop_office_v3.png",
     "description": "Ancient screens, hand-drawn schematics, and locked parts bins crowd Jed's windowless office. His worn chair still holds the shape of someone who keeps choosing one more repair over sleep.",
-    "npcs": ["jed"],
+    "npcs": [
+      "jed"
+    ],
     "items": [],
     "enemies": [],
     "connections": {
       "south": "workshop_floor"
     },
-    "pos": [0, 2],
+    "pos": [
+      0,
+      2
+    ],
     "state": {},
     "actions": [
       {
@@ -381,7 +426,10 @@
     "connections": {
       "east": "workshop_floor"
     },
-    "pos": [-1, 1],
+    "pos": [
+      -1,
+      1
+    ],
     "state": {},
     "actions": [
       {
@@ -410,7 +458,10 @@
       "south": "workshop_basement",
       "east": "workshop_dock"
     },
-    "pos": [1, 1],
+    "pos": [
+      1,
+      1
+    ],
     "state": {},
     "actions": [
       {
@@ -437,13 +488,18 @@
     "connections": {
       "north": "workshop_shed"
     },
-    "pos": [1, 0],
+    "pos": [
+      1,
+      0
+    ],
     "state": {},
     "actions": [
       {
         "name": "scrap pile",
         "type": "container",
-        "items": ["scrap_metal_i"],
+        "items": [
+          "scrap_metal_i"
+        ],
         "condition_unmet_message": "You dig through the pile and find a useful piece of alloy."
       },
       {
@@ -459,14 +515,21 @@
     "title": "Loading Dock",
     "background_image": "images/rooms/world_1/workshop_dock_v3.png",
     "description": "A cargo rail vanishes into the dark beyond the shutter. A battered loader waits beside a fresh scrap pile, while a scarred riot shield trainer makes the whole dock feel like a lesson waiting to happen.",
-    "npcs": ["foreman_bogs"],
+    "npcs": [
+      "foreman_bogs"
+    ],
     "items": [],
-    "enemies": ["riot_guard"],
+    "enemies": [
+      "acoustic_bulwark"
+    ],
     "connections": {
       "west": "workshop_shed",
       "east": "workshop_back"
     },
-    "pos": [2, 1],
+    "pos": [
+      2,
+      1
+    ],
     "state": {},
     "actions": [
       {
@@ -500,7 +563,10 @@
     "connections": {
       "west": "workshop_dock"
     },
-    "pos": [3, 1],
+    "pos": [
+      3,
+      1
+    ],
     "state": {},
     "actions": [
       {
@@ -524,7 +590,10 @@
       "west": "medbay_decon",
       "east": "medbay_vents"
     },
-    "pos": [0, 0],
+    "pos": [
+      0,
+      0
+    ],
     "state": {},
     "actions": [
       {
@@ -545,14 +614,19 @@
     "title": "Doc's Exam Room",
     "background_image": "images/rooms/world_1/medbay_exam1_v3.png",
     "description": "Doc's exam room tries hard to look clean and loses by inches. Stained tiles, taped scanner leads, and overused med trays turn every injury into paperwork with a pulse. The med station is patched together, but it still works.",
-    "npcs": ["doc"],
+    "npcs": [
+      "doc"
+    ],
     "items": [],
     "enemies": [],
     "connections": {
       "south": "medbay_hall",
       "east": "medbay_storage"
     },
-    "pos": [0, 1],
+    "pos": [
+      0,
+      1
+    ],
     "state": {},
     "actions": [
       {
@@ -574,12 +648,17 @@
     "background_image": "images/rooms/world_1/medbay_storage_v3.png",
     "description": "Empty shelves, expired packets, and carefully rationed bandages make the closet feel picked over before the emergency even starts. One locked cold cabinet still hums like it is guarding treasure.",
     "npcs": [],
-    "items": ["medkit_i"],
+    "items": [
+      "medkit_i"
+    ],
     "enemies": [],
     "connections": {
       "west": "medbay_exam1"
     },
-    "pos": [1, 1],
+    "pos": [
+      1,
+      1
+    ],
     "state": {},
     "actions": [
       {
@@ -602,12 +681,17 @@
     "description": "Rusted fans and patched pipes keep the med-bay breathing by sheer habit. A cracked vent hisses chemical haze into the room, tinting the air a sickly green where your lights cut through it.",
     "npcs": [],
     "items": [],
-    "enemies": ["rock_borer"],
+    "enemies": [
+      "echo_borer"
+    ],
     "connections": {
       "west": "medbay_hall",
       "east": "medbay_exhaust"
     },
-    "pos": [1, 0],
+    "pos": [
+      1,
+      0
+    ],
     "state": {},
     "actions": [
       {
@@ -640,7 +724,10 @@
     "connections": {
       "west": "medbay_vents"
     },
-    "pos": [2, 0],
+    "pos": [
+      2,
+      0
+    ],
     "state": {},
     "actions": [
       {
@@ -668,7 +755,10 @@
       "east": "medbay_hall",
       "north": "medbay_morgue"
     },
-    "pos": [-1, 0],
+    "pos": [
+      -1,
+      0
+    ],
     "state": {},
     "actions": [
       {
@@ -695,7 +785,10 @@
     "connections": {
       "south": "medbay_decon"
     },
-    "pos": [-1, 1],
+    "pos": [
+      -1,
+      1
+    ],
     "state": {},
     "actions": [
       {
@@ -718,7 +811,10 @@
       "north": "trade_strip",
       "east": "trade_bar"
     },
-    "pos": [0, 0],
+    "pos": [
+      0,
+      0
+    ],
     "state": {},
     "actions": [
       {
@@ -748,7 +844,10 @@
       "east": "trade_stash",
       "west": "trade_gantry"
     },
-    "pos": [0, 1],
+    "pos": [
+      0,
+      1
+    ],
     "state": {},
     "actions": [
       {
@@ -769,14 +868,19 @@
     "title": "Scrapper's Stall",
     "background_image": "images/rooms/world_1/trade_scrapper_v3.png",
     "description": "Illegal tech, salvaged weapons, and mystery parts spill from Scrapper's reinforced stall in tidy little disasters. He prices everything like a favor, watches every shadow, and keeps the contraband worth buying under the counter.",
-    "npcs": ["scrapper"],
+    "npcs": [
+      "scrapper"
+    ],
     "items": [],
     "enemies": [],
     "connections": {
       "south": "trade_strip",
       "east": "trade_locker"
     },
-    "pos": [0, 2],
+    "pos": [
+      0,
+      2
+    ],
     "state": {},
     "actions": [
       {
@@ -814,14 +918,19 @@
     "connections": {
       "west": "trade_strip"
     },
-    "pos": [1, 1],
+    "pos": [
+      1,
+      1
+    ],
     "state": {},
     "actions": [
       {
         "name": "rebel cache",
         "type": "container",
         "state_key": "rebel_cache_opened",
-        "items": ["pulse_grenade"],
+        "items": [
+          "pulse_grenade"
+        ],
         "action_event": "w1_sq01_open_rebel_cache",
         "already_open_message": "The rebel cache is empty except for old names scratched into the lid.",
         "popup_title": "Rebel Cache"
@@ -839,7 +948,9 @@
     "title": "Recyc Bar",
     "background_image": "images/rooms/world_1/trade_bar_v3.png",
     "description": "Dented glasses, sticky counters, and recyc-whiskey give the bar its proud chemical bite. A broken jukebox fights the ventilation with a synth-country tune nobody admits they like.",
-    "npcs": ["miner_bill"],
+    "npcs": [
+      "miner_bill"
+    ],
     "items": [],
     "enemies": [],
     "connections": {
@@ -847,7 +958,10 @@
       "east": "trade_den",
       "south": "trade_maint"
     },
-    "pos": [1, 0],
+    "pos": [
+      1,
+      0
+    ],
     "state": {},
     "actions": [
       {
@@ -874,7 +988,10 @@
     "connections": {
       "west": "trade_bar"
     },
-    "pos": [2, 0],
+    "pos": [
+      2,
+      0
+    ],
     "state": {},
     "actions": [
       {
@@ -901,7 +1018,10 @@
     "connections": {
       "west": "trade_scrapper"
     },
-    "pos": [1, 2],
+    "pos": [
+      1,
+      2
+    ],
     "state": {},
     "actions": [
       {
@@ -928,7 +1048,10 @@
     "connections": {
       "east": "trade_strip"
     },
-    "pos": [-1, 1],
+    "pos": [
+      -1,
+      1
+    ],
     "state": {},
     "actions": [
       {
@@ -950,7 +1073,10 @@
     "connections": {
       "north": "trade_bar"
     },
-    "pos": [1, -1],
+    "pos": [
+      1,
+      -1
+    ],
     "state": {},
     "actions": [
       {
@@ -977,7 +1103,10 @@
     "connections": {
       "north": "checkpoint_bay"
     },
-    "pos": [0, 0],
+    "pos": [
+      0,
+      0
+    ],
     "state": {},
     "actions": [
       {
@@ -998,7 +1127,9 @@
     "title": "Search Bay",
     "background_image": "images/rooms/world_1/checkpoint_bay_v3.png",
     "description": "Scanning arches hum at a pitch that makes your teeth itch. The reinforced counter is polished clean, but the shock-baton marks on the floor tell the older story.",
-    "npcs": ["guard_hank"],
+    "npcs": [
+      "guard_hank"
+    ],
     "items": [],
     "enemies": [],
     "connections": {
@@ -1006,7 +1137,10 @@
       "north": "checkpoint_door",
       "east": "checkpoint_booth"
     },
-    "pos": [0, 1],
+    "pos": [
+      0,
+      1
+    ],
     "state": {},
     "actions": [
       {
@@ -1027,14 +1161,19 @@
     "title": "Zeke's Booth",
     "background_image": "images/rooms/world_1/checkpoint_booth_v3.png",
     "description": "Zeke's window sits behind reinforced glass, half buried in badge readers and liability screens. The speaker crackles before he says anything, like even the booth is nervous.",
-    "npcs": ["zeke"],
+    "npcs": [
+      "zeke"
+    ],
     "items": [],
     "enemies": [],
     "connections": {
       "west": "checkpoint_bay",
       "north": "checkpoint_cell"
     },
-    "pos": [1, 1],
+    "pos": [
+      1,
+      1
+    ],
     "state": {},
     "actions": [
       {
@@ -1061,7 +1200,10 @@
     "connections": {
       "south": "checkpoint_booth"
     },
-    "pos": [1, 2],
+    "pos": [
+      1,
+      2
+    ],
     "state": {},
     "actions": [
       {
@@ -1089,7 +1231,10 @@
       "south": "checkpoint_bay",
       "north": "checkpoint_tunnel"
     },
-    "pos": [0, 2],
+    "pos": [
+      0,
+      2
+    ],
     "state": {},
     "blocked_directions": {
       "north": {
@@ -1126,7 +1271,10 @@
       "south": "checkpoint_door",
       "north": "admin_lobby"
     },
-    "pos": [0, 3],
+    "pos": [
+      0,
+      3
+    ],
     "state": {},
     "actions": [
       {
@@ -1142,7 +1290,9 @@
     "title": "Concourse Lobby",
     "background_image": "images/rooms/world_1/admin_lobby.png",
     "description": "The grand entrance is a massive, open space with floor-to-ceiling windows overlooking the mining pit. The air is filtered and perfectly chilled, a stark contrast to the grit of the Homestead.",
-    "npcs": ["foreman_bogs"],
+    "npcs": [
+      "foreman_bogs"
+    ],
     "items": [],
     "enemies": [],
     "connections": {
@@ -1151,7 +1301,10 @@
       "east": "admin_window",
       "west": "admin_elevator"
     },
-    "pos": [0, 0],
+    "pos": [
+      0,
+      0
+    ],
     "state": {},
     "actions": [
       {
@@ -1175,7 +1328,10 @@
       "north": "admin_office",
       "east": "admin_kiosk"
     },
-    "pos": [0, 1],
+    "pos": [
+      0,
+      1
+    ],
     "state": {},
     "actions": [
       {
@@ -1196,7 +1352,9 @@
     "title": "Customer Service",
     "background_image": "images/rooms/world_1/admin_window.png",
     "description": "A row of identical glass booths where the colony's bureaucracy processes the living and the dead. The silence is broken only by the soft chime of verified badges.",
-    "npcs": ["zeke"],
+    "npcs": [
+      "zeke"
+    ],
     "items": [],
     "enemies": [],
     "connections": {
@@ -1204,7 +1362,10 @@
       "north": "admin_kiosk",
       "east": "admin_security"
     },
-    "pos": [1, 0],
+    "pos": [
+      1,
+      0
+    ],
     "state": {},
     "actions": [
       {
@@ -1226,12 +1387,17 @@
     "background_image": "images/rooms/world_1/admin_office.png",
     "description": "Bogs' local HQ is filled with humming server racks and stacks of physical shipment logs. A large map of the colony is projected onto the wall, glowing with Dominion blue.",
     "npcs": [],
-    "items": ["shipment_log"],
+    "items": [
+      "shipment_log"
+    ],
     "enemies": [],
     "connections": {
       "south": "admin_deck"
     },
-    "pos": [0, 2],
+    "pos": [
+      0,
+      2
+    ],
     "state": {},
     "actions": [
       {
@@ -1260,7 +1426,10 @@
       "south": "admin_window",
       "north": "admin_lounge"
     },
-    "pos": [1, 1],
+    "pos": [
+      1,
+      1
+    ],
     "state": {},
     "actions": [
       {
@@ -1287,7 +1456,10 @@
     "connections": {
       "south": "admin_kiosk"
     },
-    "pos": [1, 2],
+    "pos": [
+      1,
+      2
+    ],
     "state": {},
     "actions": [
       {
@@ -1320,7 +1492,10 @@
       "east": "admin_lobby",
       "north": "mine_landing"
     },
-    "pos": [-1, 0],
+    "pos": [
+      -1,
+      0
+    ],
     "state": {},
     "actions": [
       {
@@ -1348,11 +1523,16 @@
     "description": "A room full of flickering monitors and weapon racks that smell of gun oil. A deactivated security drone hangs from a charging dock, its lens tracking your movement.",
     "npcs": [],
     "items": [],
-    "enemies": ["security_drone"],
+    "enemies": [
+      "resonance_buoy"
+    ],
     "connections": {
       "west": "admin_window"
     },
-    "pos": [2, 0],
+    "pos": [
+      2,
+      0
+    ],
     "state": {},
     "actions": [
       {
@@ -1380,7 +1560,10 @@
       "north": "server_aisle1",
       "east": "server_crawl"
     },
-    "pos": [0, 0],
+    "pos": [
+      0,
+      0
+    ],
     "state": {},
     "actions": [
       {
@@ -1398,13 +1581,18 @@
     "description": "Miles of blue server racks hang in the void, humming with the data of the colony's every transaction. The floor is a metal grate that reveals a bottomless pit of cabling below.",
     "npcs": [],
     "items": [],
-    "enemies": ["security_drone"],
+    "enemies": [
+      "resonance_buoy"
+    ],
     "connections": {
       "south": "server_airlock",
       "east": "server_cooling",
       "north": "server_hub"
     },
-    "pos": [0, 1],
+    "pos": [
+      0,
+      1
+    ],
     "state": {},
     "actions": [
       {
@@ -1431,7 +1619,10 @@
     "connections": {
       "west": "server_aisle1"
     },
-    "pos": [1, 1],
+    "pos": [
+      1,
+      1
+    ],
     "state": {},
     "actions": [
       {
@@ -1460,7 +1651,10 @@
       "west": "server_backup",
       "east": "server_office"
     },
-    "pos": [0, 2],
+    "pos": [
+      0,
+      2
+    ],
     "state": {},
     "actions": [
       {
@@ -1483,12 +1677,17 @@
     "background_image": "images/rooms/world_1/server_backup.png",
     "description": "Redundant data drives are stored in heavy, insulated cases that look like small safes. A portable heater in the corner has been kicked over, its coils long since cold.",
     "npcs": [],
-    "items": ["data_logs"],
+    "items": [
+      "data_logs"
+    ],
     "enemies": [],
     "connections": {
       "east": "server_hub"
     },
-    "pos": [-1, 2],
+    "pos": [
+      -1,
+      2
+    ],
     "state": {},
     "actions": [
       {
@@ -1510,12 +1709,17 @@
     "background_image": "images/rooms/world_1/server_office.png",
     "description": "A small, windowless room where the air is slightly warmer. A forgotten datapad lies on a desk next to a cup of coffee that has frozen solid into a brown puck.",
     "npcs": [],
-    "items": ["admin_badge"],
+    "items": [
+      "admin_badge"
+    ],
     "enemies": [],
     "connections": {
       "west": "server_hub"
     },
-    "pos": [1, 2],
+    "pos": [
+      1,
+      2
+    ],
     "state": {},
     "actions": [
       {
@@ -1537,7 +1741,10 @@
     "connections": {
       "west": "server_airlock"
     },
-    "pos": [1, 0],
+    "pos": [
+      1,
+      0
+    ],
     "state": {},
     "actions": [
       {
@@ -1565,7 +1772,10 @@
       "south": "admin_elevator",
       "north": "mine_alpha"
     },
-    "pos": [0, 0],
+    "pos": [
+      0,
+      0
+    ],
     "state": {},
     "actions": [
       {
@@ -1593,13 +1803,18 @@
     "description": "The start of the deep excavation tunnels where the walls are scarred by giant drills. A rusted ore cart sits abandoned on its tracks, its wheels welded to the rail by rust.",
     "npcs": [],
     "items": [],
-    "enemies": ["rock_borer"],
+    "enemies": [
+      "echo_borer"
+    ],
     "connections": {
       "south": "mine_landing",
       "north": "mine_junction",
       "east": "mine_shunt"
     },
-    "pos": [0, 1],
+    "pos": [
+      0,
+      1
+    ],
     "state": {},
     "actions": [
       {
@@ -1621,12 +1836,17 @@
     "background_image": "images/rooms/world_1/mine_shunt.png",
     "description": "A dead-end tunnel used for storage, filled with empty crates and broken support beams. A discarded datapad lies in the dust, its screen cracked but still flickering with a final message.",
     "npcs": [],
-    "items": ["crew_datapad"],
+    "items": [
+      "crew_datapad"
+    ],
     "enemies": [],
     "connections": {
       "west": "mine_alpha"
     },
-    "pos": [1, 1],
+    "pos": [
+      1,
+      1
+    ],
     "state": {},
     "actions": [
       {
@@ -1642,7 +1862,8 @@
       {
         "name": "datapad",
         "type": "generic",
-        "condition_unmet_message": "The log of a miner who didn't make it out. 'The noise... it's coming from the walls.'"
+        "condition_unmet_message": "The log of a miner who didn't make it out. 'The noise... it's coming from the walls.'",
+        "action_event": "read_datapad_sq05"
       }
     ]
   },
@@ -1660,7 +1881,10 @@
       "north": "mine_checkpoint",
       "east": "mine_conveyor"
     },
-    "pos": [0, 2],
+    "pos": [
+      0,
+      2
+    ],
     "state": {},
     "actions": [
       {
@@ -1683,7 +1907,10 @@
       "west": "mine_junction",
       "north": "mine_sifter"
     },
-    "pos": [1, 2],
+    "pos": [
+      1,
+      2
+    ],
     "state": {},
     "actions": [
       {
@@ -1706,12 +1933,17 @@
     "description": "A fortified sentry post with reinforced walls and a row of high-intensity floodlights. A riot shield is propped against the desk, its surface scarred by many impacts.",
     "npcs": [],
     "items": [],
-    "enemies": ["riot_guard"],
+    "enemies": [
+      "acoustic_bulwark"
+    ],
     "connections": {
       "south": "mine_junction",
       "west": "mine_gas"
     },
-    "pos": [0, 3],
+    "pos": [
+      0,
+      3
+    ],
     "state": {},
     "actions": [
       {
@@ -1744,7 +1976,10 @@
       "south": "mine_conveyor",
       "north": "mine_shoring"
     },
-    "pos": [1, 3],
+    "pos": [
+      1,
+      3
+    ],
     "state": {},
     "actions": [
       {
@@ -1776,7 +2011,10 @@
     "connections": {
       "east": "mine_checkpoint"
     },
-    "pos": [-1, 3],
+    "pos": [
+      -1,
+      3
+    ],
     "state": {},
     "actions": [
       {
@@ -1799,7 +2037,10 @@
       "south": "mine_sifter",
       "north": "mine_threshold"
     },
-    "pos": [1, 4],
+    "pos": [
+      1,
+      4
+    ],
     "state": {},
     "actions": [
       {
@@ -1827,7 +2068,10 @@
       "south": "mine_shoring",
       "west": "mine_slope"
     },
-    "pos": [1, 5],
+    "pos": [
+      1,
+      5
+    ],
     "state": {},
     "actions": [
       {
@@ -1855,7 +2099,10 @@
       "east": "mine_threshold",
       "north": "mine_antechamber"
     },
-    "pos": [0, 5],
+    "pos": [
+      0,
+      5
+    ],
     "state": {},
     "actions": [
       {
@@ -1878,7 +2125,10 @@
       "south": "mine_slope",
       "north": "echo_gap"
     },
-    "pos": [0, 6],
+    "pos": [
+      0,
+      6
+    ],
     "state": {},
     "actions": [
       {
@@ -1906,7 +2156,10 @@
       "south": "mine_antechamber",
       "north": "echo_walkway"
     },
-    "pos": [0, 0],
+    "pos": [
+      0,
+      0
+    ],
     "state": {},
     "actions": [
       {
@@ -1934,7 +2187,10 @@
       "south": "echo_gap",
       "north": "echo_heart"
     },
-    "pos": [0, 1],
+    "pos": [
+      0,
+      1
+    ],
     "state": {},
     "actions": [
       {
@@ -1956,7 +2212,9 @@
     "background_image": "images/rooms/world_1/echo_heart.png",
     "description": "The tuning fork hums in the center of the room, held in a cradle of white geometry. The air here vibrates with a pressure that feels like a physical weight against your chest.",
     "npcs": [],
-    "items": ["tuning_fork"],
+    "items": [
+      "tuning_fork"
+    ],
     "enemies": [],
     "connections": {
       "south": "echo_walkway",
@@ -1964,7 +2222,10 @@
       "west": "echo_memory",
       "north": "echo_exit"
     },
-    "pos": [0, 2],
+    "pos": [
+      0,
+      2
+    ],
     "state": {},
     "actions": [
       {
@@ -1992,7 +2253,10 @@
     "connections": {
       "west": "echo_heart"
     },
-    "pos": [1, 2],
+    "pos": [
+      1,
+      2
+    ],
     "state": {},
     "actions": [
       {
@@ -2014,7 +2278,10 @@
     "connections": {
       "east": "echo_heart"
     },
-    "pos": [-1, 2],
+    "pos": [
+      -1,
+      2
+    ],
     "state": {},
     "actions": [
       {
@@ -2042,7 +2309,10 @@
       "south": "echo_heart",
       "north": "launch_access"
     },
-    "pos": [0, 3],
+    "pos": [
+      0,
+      3
+    ],
     "state": {},
     "actions": [
       {
@@ -2060,13 +2330,18 @@
     "description": "A final, narrow crawl through the colony's gut, filled with humming conduits and hot pipes. The sound of sirens is muffled here, replaced by the rhythmic thumping of the cargo lift.",
     "npcs": [],
     "items": [],
-    "enemies": ["security_drone"],
+    "enemies": [
+      "resonance_buoy"
+    ],
     "connections": {
       "south": "echo_exit",
       "north": "launch_lift",
       "east": "launch_gantry"
     },
-    "pos": [0, 0],
+    "pos": [
+      0,
+      0
+    ],
     "state": {},
     "actions": [
       {
@@ -2098,7 +2373,10 @@
     "connections": {
       "west": "launch_access"
     },
-    "pos": [1, 0],
+    "pos": [
+      1,
+      0
+    ],
     "state": {},
     "actions": [
       {
@@ -2125,7 +2403,10 @@
     "connections": {
       "north": "launch_access"
     },
-    "pos": [0, -1],
+    "pos": [
+      0,
+      -1
+    ],
     "state": {},
     "actions": [
       {
@@ -2146,14 +2427,21 @@
     "title": "Cargo Lift",
     "background_image": "images/rooms/world_1/launch_lift.png",
     "description": "A heavy industrial platform where Jed stands by the manual override panel. The hydraulics scream as the lift begins its ascent, carrying you away from the only home you've ever known.",
-    "npcs": ["jed"],
+    "npcs": [
+      "jed"
+    ],
     "items": [],
-    "enemies": ["riot_guard"],
+    "enemies": [
+      "acoustic_bulwark"
+    ],
     "connections": {
       "south": "launch_access",
       "north": "launch_checkpoint"
     },
-    "pos": [0, 1],
+    "pos": [
+      0,
+      1
+    ],
     "state": {},
     "actions": [
       {
@@ -2166,7 +2454,13 @@
         "type": "generic",
         "condition_unmet_message": "They're failing under the strain of the lockdown."
       }
-    ]
+    ],
+    "blocked_directions": {
+      "north": {
+        "type": "enemy",
+        "message_locked": "A hostile Acoustic Bulwark blocks access to the security checkpoint."
+      }
+    }
   },
   {
     "id": "launch_checkpoint",
@@ -2176,12 +2470,17 @@
     "description": "A fortified checkpoint where the air smells of ozone and static. Harsh white floodlights sweep the room, searching for any asset attempting to reach the pods.",
     "npcs": [],
     "items": [],
-    "enemies": ["security_drone"],
+    "enemies": [
+      "resonance_buoy"
+    ],
     "connections": {
       "south": "launch_lift",
       "north": "launch_bay"
     },
-    "pos": [0, 2],
+    "pos": [
+      0,
+      2
+    ],
     "state": {},
     "actions": [
       {
@@ -2194,22 +2493,36 @@
         "type": "generic",
         "condition_unmet_message": "Searching for any movement. You'll need to be fast."
       }
-    ]
+    ],
+    "blocked_directions": {
+      "north": {
+        "type": "enemy",
+        "message_locked": "A security drone scans the gateway, blocking the route to the pods."
+      }
+    }
   },
   {
     "id": "launch_bay",
     "env": "logistics",
     "title": "Pod Bay",
     "background_image": "images/rooms/world_1/launch_bay.png",
-    "description": "The massive cargo rails stretch up toward the planetary shield, glowing with an emergency red. A single escape pod sits on the pad, its engines humming with a low, expectant vibration.",
-    "npcs": ["the_warden", "zeke"],
+    "description": "The massive cargo rails stretch up toward the planetary shield, glowing with an emergency red. A single escape pod sits on the pad, its engines humming. [npc:The Warden] blocks the way, while [npc:Zeke] frantically attempts to hack the hatch controls.",
+    "npcs": [
+      "the_warden",
+      "zeke"
+    ],
     "items": [],
-    "enemies": ["the_warden"],
+    "enemies": [
+      "the_iron_warden"
+    ],
     "connections": {
       "south": "launch_checkpoint",
       "north": "launch_pod"
     },
-    "pos": [0, 3],
+    "pos": [
+      0,
+      3
+    ],
     "state": {},
     "actions": [
       {
@@ -2222,7 +2535,22 @@
         "type": "generic",
         "condition_unmet_message": "A 'Life-Saver' class pod. It doesn't look very sturdy."
       }
-    ]
+    ],
+    "blocked_directions": {
+      "north": {
+        "type": "lock",
+        "consume": false,
+        "message_locked": "The Warden stands in front of the escape pod, blocking the access hatch.",
+        "message_unlock": "The Warden is defeated. Zeke has opened the pod hatch.",
+        "requires": [
+          {
+            "room_id": "launch_bay",
+            "state_key": "warden_defeated",
+            "value": true
+          }
+        ]
+      }
+    }
   },
   {
     "id": "launch_pod",
@@ -2230,14 +2558,19 @@
     "title": "The Pod Core",
     "background_image": "images/rooms/world_1/launch_pod.png",
     "description": "Inside the cramped pod, the air is thick with the scent of recycled oxygen and panic. Zeke hammers at the navigation console, his hands shaking as the countdown blares from the overhead speaker.",
-    "npcs": ["zeke"],
+    "npcs": [
+      "zeke"
+    ],
     "items": [],
     "enemies": [],
     "connections": {
       "south": "launch_bay",
       "north": "launch_rail"
     },
-    "pos": [0, 4],
+    "pos": [
+      0,
+      4
+    ],
     "state": {},
     "actions": [
       {
@@ -2248,7 +2581,8 @@
       {
         "name": "navigation console",
         "type": "generic",
-        "condition_unmet_message": "Flashing with unknown signal alerts. Zeke is struggling to lock in a heading."
+        "condition_unmet_message": "The console is locked. It needs a physical Chime bypass to override the Dominion shield frequency.",
+        "action_event": "use_nav_console"
       },
       {
         "name": "speaker",
@@ -2269,7 +2603,10 @@
     "connections": {
       "south": "launch_pod"
     },
-    "pos": [0, 5],
+    "pos": [
+      0,
+      5
+    ],
     "state": {},
     "actions": [
       {
@@ -2286,6 +2623,97 @@
         "name": "planetary shield",
         "type": "generic",
         "condition_unmet_message": "A cage made of light. It's solid enough to shred any ship without the right frequency."
+      }
+    ]
+  },
+  {
+    "id": "sector9_crash_site",
+    "env": "swamp",
+    "title": "Crash Site",
+    "background_image": "images/rooms/world_2/crash_site.png",
+    "description": "The escape pod is half-submerged in warm, glowing water. Thick vines hang from concrete struts, and a low, resonant hum like waves on a distant shore fills the air. Zeke sits coughing on the hull.",
+    "npcs": [
+      "zeke"
+    ],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "north": "sector9_canopy"
+    },
+    "pos": [
+      0,
+      0
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "wreckage",
+        "type": "generic",
+        "condition_unmet_message": "The pod's thrusters are completely fused. It won't fly again."
+      },
+      {
+        "name": "pod core",
+        "type": "generic",
+        "action_event": "w2_mq01_examine_pod",
+        "condition_unmet_message": "Examining the pod's sub-critical core..."
+      },
+      {
+        "name": "glow-water",
+        "type": "generic",
+        "condition_unmet_message": "The water is warm and vibrates with a gentle frequency. It feels soothing to touch."
+      }
+    ]
+  },
+  {
+    "id": "sector9_canopy",
+    "env": "swamp",
+    "title": "Resonant Canopy",
+    "background_image": "images/rooms/world_2/resonant_canopy.png",
+    "description": "The canopy of the ruins is covered in giant, crystalline ferns that catch the dim light and buzz with low-frequency standing waves.",
+    "npcs": [],
+    "items": [],
+    "enemies": [
+      "echo_borer"
+    ],
+    "connections": {
+      "south": "sector9_crash_site",
+      "east": "sector9_stream"
+    },
+    "pos": [
+      0,
+      1
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "ferns",
+        "type": "generic",
+        "condition_unmet_message": "Their leaves vibrate like harp strings when touched, ringing out a quiet chord."
+      }
+    ]
+  },
+  {
+    "id": "sector9_stream",
+    "env": "swamp",
+    "title": "Glow-Water Stream",
+    "background_image": "images/rooms/world_2/glow_stream.png",
+    "description": "A gentle stream of mineral-rich water flows through the concrete ruins. The water vibrates, creating visible patterns of standing waves on the surface.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "sector9_canopy"
+    },
+    "pos": [
+      1,
+      1
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "stream",
+        "type": "generic",
+        "condition_unmet_message": "The water hums with a deep subsonic tone, washing away local static."
       }
     ]
   }

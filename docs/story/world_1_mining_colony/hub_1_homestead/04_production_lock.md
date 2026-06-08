@@ -43,14 +43,14 @@ Hub 1 is structurally ready to design in detail.
 
 | Room | Purpose | Quest/Beat | Status | Art Direction |
 | --- | --- | --- | --- | --- |
-| `pit_nova_bunk` | Start room; establishes Nova's poverty and personal stakes. | `w1_mq01` wake/interact. | Art Ready | Small pod, netting, patched gear, oppressive PA glow. |
+| `pit_nova_bunk` | New-game start room only; establishes Nova's poverty and personal stakes. It is not the node's hub entry/exit. | `w1_mq01` wake/interact. | Art Ready | Small pod, netting, patched gear, oppressive PA glow. |
 | `pit_L2_corridor` | First navigation hallway; shows stacked sleeping pods. | `w1_mq01` route. | Art Ready | Claustrophobic vertical worker housing. |
 | `pit_storage` | Optional small loot/flavor room. | Flavor. | Flavor Later | Tool closet, stolen odds and ends. |
 | `pit_shaft` | Vertical connector between home levels. | `w1_mq01` route. | Art Ready | Industrial lift shaft, unsafe catwalks. |
 | `pit_jed_bunk` | Jed personal lore and foreshadowing. | Flavor/Jed. | Flavor Later | Sparse bunk, repair notes, hidden warmth. |
 | `pit_vents` | Secret crawlspace and possible future SQ02 link. | Exploration flavor. | Design First | Low vent tunnel, dripping condensation. |
 | `pit_showers` | Poverty/body horror texture; optional loot. | Flavor. | Flavor Later | Communal industrial wash stalls. |
-| `pit_L1_landing` | Main Pit entry/exit point. | `w1_mq01` route. | Art Ready | Worker traffic node, hazard signage. |
+| `pit_L1_landing` | Main Pit entry/exit point and the room used when entering The Pit from the Hub 1 map. | `w1_mq01` route. | Art Ready | Worker traffic node, hazard signage. |
 | `pit_mess` | Social space; shows community under pressure. | Flavor and possible Zeke volunteer location. | Design First | Communal tables, ration line, memorial wall nearby. |
 | `pit_kitchen` | Small slop/ration flavor room. | Flavor. | Flavor Later | Steam, stained vats, ration packs. |
 

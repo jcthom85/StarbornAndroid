@@ -13,9 +13,19 @@ class DialogueService(
     private val dialogueBySpeaker: Map<String, List<DialogueLine>> =
         dialogueLines.groupBy { it.speaker.lowercase(Locale.getDefault()) }
 
+    private val referencedNextIds: Set<String> = buildSet {
+        for (line in dialogueLines) {
+            line.next?.let { add(it) }
+            line.options?.forEach { option ->
+                option.next?.let { add(it) }
+            }
+        }
+    }
+
     fun startDialogue(speaker: String): DialogueSession? {
         val entries = dialogueBySpeaker[speaker.lowercase(Locale.getDefault())] ?: return null
-        val (conditioned, unconditioned) = entries.partition { !it.condition.isNullOrBlank() }
+        val candidates = entries.filter { it.id !in referencedNextIds }
+        val (conditioned, unconditioned) = candidates.partition { !it.condition.isNullOrBlank() }
         val ordered = conditioned + unconditioned
         val start = ordered.firstOrNull { conditionEvaluator.isConditionMet(it.condition) } ?: return null
         return DialogueSession(dialogueById, start, conditionEvaluator, triggerHandler)

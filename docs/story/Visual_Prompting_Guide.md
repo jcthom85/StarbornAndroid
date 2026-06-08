@@ -3,6 +3,10 @@
 **Status:** Canon  
 **Purpose:** To define the exact format and content standards for generating room background descriptions for the image generator.
 
+All image-generation workflows are indexed in
+`docs/story/Starborn_Art_Production_Guide.md`. Enemy combat sprites also have
+the specialized `docs/story/Enemy_Sprite_Generation_Guide.md`.
+
 ---
 
 ## 0. Starborn Visual North Star

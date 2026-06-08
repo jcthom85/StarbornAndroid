@@ -31,6 +31,18 @@ The universe is not digital or simulated—it is **acoustic**. Reality is a "Son
 - **UI:** Minimalist, mobile-first.
 - **Acoustic Cues:** "Aura Colors" represent different chords/frequencies (e.g., C#m7 = Indigo, G Major = Gold).
 
+### Art Production
+- Master instructions: `docs/story/Starborn_Art_Production_Guide.md`.
+- Read the master guide before generating room backgrounds, hub maps, node icons, title art, character sprites, portraits, or enemy sprites.
+- Canonical default: `gpt-image-2`, `quality=low`; use the asset-specific dimensions and transparency workflow in the guide.
+- Do not wire generated art into game data unless the user explicitly requests wiring.
+
+### Enemy Sprite Production
+- Canonical instructions: `docs/story/Enemy_Sprite_Generation_Guide.md`.
+- Required baseline: `gpt-image-2`, `quality=low`, `1024x1024`, flat `#00ff00` chroma-key source, then local soft-matte/despill removal to transparent RGBA PNG.
+- Match the approved World 1 reference set listed in that guide.
+- Do not wire generated sprites into game data unless the user explicitly requests it.
+
 ## Characters
 - **Nova:** Rogue/Scavenger. Spiky black hair, purple eyes. The "Tuner".
 - **Zeke:** Support/Tank. Blond, blue jacket. The "Anchor".

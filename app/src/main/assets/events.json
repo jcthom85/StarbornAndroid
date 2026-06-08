@@ -1,411 +1,5 @@
 [
   {
-    "id": "evt_return_items_wrapup",
-    "description": "Jed thanks the player once all repaired gear is delivered.",
-    "trigger": {
-      "type": "talk_to",
-      "npc": "jed"
-    },
-    "repeatable": true,
-    "actions": [
-      {
-        "type": "if_quest_active",
-        "quest_id": "gather_broken_gear",
-        "do": [
-          {
-            "type": "if_milestone_set",
-            "milestone": "ms_return_items_stage_active",
-            "do": [
-              {
-                "type": "if_milestones_set",
-                "milestones": [
-                  "ms_display_returned",
-                  "ms_grinder_returned",
-                  "ms_projector_returned"
-                ],
-                "do": [
-                  {
-                    "type": "if_milestone_not_set",
-                    "milestone": "ms_return_items_complete",
-                    "do": [
-                      {
-                        "type": "play_cinematic",
-                        "scene_id": "scene_complete_gather_broken_gear"
-                      },
-                      {
-                        "type": "complete_quest",
-                        "quest_id": "gather_broken_gear"
-                      },
-                      {
-                        "type": "set_milestone",
-                        "milestone": "ms_return_items_complete"
-                      },
-                      {
-                        "type": "show_message",
-                        "message": "Quest complete: Gather the Broken Gear"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": "evt_collect_display_from_ellie",
-    "description": "Collect Ellie's arcade display.",
-    "trigger": {
-      "type": "dialogue_closed",
-      "npc": "ellie"
-    },
-  "repeatable": false,
-  "actions": [
-    {
-      "type": "if_quest_active",
-      "quest_id": "gather_broken_gear",
-      "do": [
-        {
-          "type": "if_milestone_not_set",
-          "milestone": "ms_repair_bundle_delivered",
-          "do": [
-            {
-              "type": "if_milestone_not_set",
-              "milestone": "ms_ellie_display_collected",
-              "do": [
-                {
-                  "type": "give_item_to_player",
-                  "item_id": "broken_arcade_display",
-                  "quantity": 1
-                },
-                {
-                  "type": "set_milestone",
-                  "milestone": "ms_ellie_display_collected"
-                },
-                {
-                  "type": "set_quest_task_done",
-                  "quest_id": "gather_broken_gear",
-                  "task_id": "collect_display"
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
-},
-  {
-    "id": "evt_collect_grinder_from_maddie",
-    "description": "Collect Maddie's busted coffee grinder.",
-    "trigger": {
-      "type": "dialogue_closed",
-      "npc": "maddie"
-    },
-  "repeatable": false,
-  "actions": [
-    {
-      "type": "if_quest_active",
-      "quest_id": "gather_broken_gear",
-      "do": [
-        {
-          "type": "if_milestone_not_set",
-          "milestone": "ms_repair_bundle_delivered",
-          "do": [
-            {
-              "type": "if_milestone_not_set",
-              "milestone": "ms_maddie_grinder_collected",
-              "do": [
-                {
-                  "type": "give_item_to_player",
-                  "item_id": "broken_coffee_grinder",
-                  "quantity": 1
-                },
-                {
-                  "type": "set_milestone",
-                  "milestone": "ms_maddie_grinder_collected"
-                },
-                {
-                  "type": "set_quest_task_done",
-                  "quest_id": "gather_broken_gear",
-                  "task_id": "collect_grinder"
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
-},
-  {
-    "id": "evt_collect_projector_from_kasey",
-    "description": "Collect Schoolteacher Kasey's busted projector.",
-    "trigger": {
-      "type": "dialogue_closed",
-      "npc": "schoolteacher kasey"
-    },
-  "repeatable": false,
-  "actions": [
-    {
-      "type": "if_quest_active",
-      "quest_id": "gather_broken_gear",
-      "do": [
-        {
-          "type": "if_milestone_not_set",
-          "milestone": "ms_repair_bundle_delivered",
-          "do": [
-            {
-              "type": "if_milestone_not_set",
-              "milestone": "ms_kasey_projector_collected",
-              "do": [
-                {
-                  "type": "give_item_to_player",
-                  "item_id": "broken_projector",
-                  "quantity": 1
-                },
-                {
-                  "type": "set_milestone",
-                  "milestone": "ms_kasey_projector_collected"
-                },
-                {
-                  "type": "set_quest_task_done",
-                  "quest_id": "gather_broken_gear",
-                  "task_id": "collect_projector"
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
-},
-  {
-    "id": "evt_return_display_to_ellie",
-    "description": "Return the repaired display to Ellie.",
-    "trigger": {
-      "type": "talk_to",
-      "npc": "ellie"
-    },
-    "repeatable": true,
-    "actions": [
-      {
-      "type": "if_quest_active",
-      "quest_id": "gather_broken_gear",
-      "do": [
-        {
-          "type": "if_milestone_set",
-          "milestone": "ms_return_items_stage_active",
-          "do": [
-            {
-              "type": "if_milestone_not_set",
-              "milestone": "ms_display_returned",
-              "do": [
-                {
-                  "type": "play_cinematic",
-                  "scene_id": "scene_return_display"
-                },
-                {
-                  "type": "set_milestone",
-                  "milestone": "ms_display_returned"
-                },
-                {
-                  "type": "set_quest_task_done",
-                  "quest_id": "gather_broken_gear",
-                  "task_id": "return_display"
-                },
-                {
-                  "type": "if_milestone_not_set",
-                  "milestone": "ms_return_items_complete",
-                  "do": [
-                    {
-                      "type": "if_milestones_set",
-                      "milestones": [
-                        "ms_display_returned",
-                        "ms_grinder_returned",
-                        "ms_projector_returned"
-                      ],
-                      "do": [
-                        {
-                          "type": "play_cinematic",
-                          "scene_id": "scene_complete_gather_broken_gear"
-                        },
-                        {
-                          "type": "complete_quest",
-                          "quest_id": "gather_broken_gear"
-                        },
-                        {
-                          "type": "set_milestone",
-                          "milestone": "ms_return_items_complete"
-                        },
-                        {
-                          "type": "show_message",
-                          "message": "Quest complete: Gather the Broken Gear"
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-        ]
-      }
-    ]
-  },
-  {
-    "id": "evt_return_grinder_to_maddie",
-    "description": "Return the repaired coffee grinder to Maddie.",
-    "trigger": {
-      "type": "talk_to",
-      "npc": "maddie"
-    },
-    "repeatable": true,
-    "actions": [
-      {
-      "type": "if_quest_active",
-      "quest_id": "gather_broken_gear",
-      "do": [
-        {
-          "type": "if_milestone_set",
-          "milestone": "ms_return_items_stage_active",
-          "do": [
-            {
-              "type": "if_milestone_not_set",
-              "milestone": "ms_grinder_returned",
-              "do": [
-                {
-                  "type": "play_cinematic",
-                  "scene_id": "scene_return_grinder"
-                },
-                {
-                  "type": "set_milestone",
-                  "milestone": "ms_grinder_returned"
-                },
-                {
-                  "type": "set_quest_task_done",
-                  "quest_id": "gather_broken_gear",
-                  "task_id": "return_grinder"
-                },
-                {
-                  "type": "if_milestone_not_set",
-                  "milestone": "ms_return_items_complete",
-                  "do": [
-                    {
-                      "type": "if_milestones_set",
-                      "milestones": [
-                        "ms_display_returned",
-                        "ms_grinder_returned",
-                        "ms_projector_returned"
-                      ],
-                      "do": [
-                        {
-                          "type": "play_cinematic",
-                          "scene_id": "scene_complete_gather_broken_gear"
-                        },
-                        {
-                          "type": "complete_quest",
-                          "quest_id": "gather_broken_gear"
-                        },
-                        {
-                          "type": "set_milestone",
-                          "milestone": "ms_return_items_complete"
-                        },
-                        {
-                          "type": "show_message",
-                          "message": "Quest complete: Gather the Broken Gear"
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-        ]
-      }
-    ]
-  },
-  {
-    "id": "evt_return_projector_to_kasey",
-    "description": "Return the repaired projector to Schoolteacher Kasey.",
-    "trigger": {
-      "type": "talk_to",
-      "npc": "schoolteacher kasey"
-    },
-    "repeatable": true,
-    "actions": [
-      {
-      "type": "if_quest_active",
-      "quest_id": "gather_broken_gear",
-      "do": [
-        {
-          "type": "if_milestone_set",
-          "milestone": "ms_return_items_stage_active",
-          "do": [
-            {
-              "type": "if_milestone_not_set",
-              "milestone": "ms_projector_returned",
-              "do": [
-                {
-                  "type": "play_cinematic",
-                  "scene_id": "scene_return_projector"
-                },
-                {
-                  "type": "set_milestone",
-                  "milestone": "ms_projector_returned"
-                },
-                {
-                  "type": "set_quest_task_done",
-                  "quest_id": "gather_broken_gear",
-                  "task_id": "return_projector"
-                },
-                {
-                  "type": "if_milestone_not_set",
-                  "milestone": "ms_return_items_complete",
-                  "do": [
-                    {
-                      "type": "if_milestones_set",
-                      "milestones": [
-                        "ms_display_returned",
-                        "ms_grinder_returned",
-                        "ms_projector_returned"
-                      ],
-                      "do": [
-                        {
-                          "type": "play_cinematic",
-                          "scene_id": "scene_complete_gather_broken_gear"
-                        },
-                        {
-                          "type": "complete_quest",
-                          "quest_id": "gather_broken_gear"
-                        },
-                        {
-                          "type": "set_milestone",
-                          "milestone": "ms_return_items_complete"
-                        },
-                        {
-                          "type": "show_message",
-                          "message": "Quest complete: Gather the Broken Gear"
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-        ]
-      }
-    ]
-  },
-  {
     "id": "enter_camera_gallery",
     "description": "Camera moves demo.",
     "trigger": {
@@ -740,411 +334,6 @@
     ]
   },
   {
-    "id": "evt_jed_assign_repair_quest",
-    "description": "Jed wraps the intro quest and hands over the repair errand.",
-    "trigger": {
-      "type": "talk_to",
-      "npc": "jed"
-    },
-    "repeatable": true,
-    "actions": [
-      {
-        "type": "if_quest_active",
-        "quest_id": "talk_to_jed",
-        "do": [
-          {
-            "type": "set_quest_task_done",
-            "quest_id": "talk_to_jed",
-            "task_id": "navigate_main_road"
-          },
-          {
-            "type": "set_quest_task_done",
-            "quest_id": "talk_to_jed",
-            "task_id": "spot_jed_shop"
-          },
-          {
-            "type": "set_quest_task_done",
-            "quest_id": "talk_to_jed",
-            "task_id": "talk_to_jed_task"
-          },
-          {
-            "type": "set_milestone",
-            "milestone": "ms_talked_to_jed"
-          },
-          {
-            "type": "complete_quest",
-            "quest_id": "talk_to_jed"
-          },
-          {
-            "type": "if_quest_not_started",
-            "quest_id": "gather_broken_gear",
-            "do": [
-              {
-                "type": "start_quest",
-                "quest_id": "gather_broken_gear"
-              },
-              {
-                "type": "track_quest",
-                "quest_id": "gather_broken_gear"
-              },
-              {
-                "type": "system_tutorial",
-                "scene_id": "scene_market_journal",
-                "context": "Market Plaza"
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "type": "if_quest_not_started",
-        "quest_id": "gather_broken_gear",
-        "do": [
-          {
-            "type": "if_milestone_set",
-            "milestone": "ms_talked_to_jed",
-            "do": [
-              {
-                "type": "start_quest",
-                "quest_id": "gather_broken_gear"
-              },
-              {
-                "type": "track_quest",
-                "quest_id": "gather_broken_gear"
-              },
-              {
-                "type": "system_tutorial",
-                "scene_id": "scene_market_journal",
-                "context": "Market Plaza"
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "type": "if_quest_active",
-        "quest_id": "gather_broken_gear",
-        "do": [
-          {
-            "type": "if_milestones_set",
-            "milestones": [
-              "ms_kasey_projector_collected",
-              "ms_maddie_grinder_collected",
-              "ms_ellie_display_collected"
-            ],
-            "do": [
-              {
-                "type": "if_milestone_not_set",
-                "milestone": "ms_repair_bundle_delivered",
-                "do": [
-                  {
-                    "type": "set_quest_task_done",
-                    "quest_id": "gather_broken_gear",
-                    "task_id": "report_to_jed"
-                  },
-                  {
-                    "type": "advance_quest_stage",
-                    "quest_id": "gather_broken_gear",
-                    "to_stage_id": "repair_batch"
-                  },
-                  {
-                    "type": "set_milestone",
-                    "milestone": "ms_repair_bundle_delivered"
-                  },
-                  {
-                    "type": "set_milestone",
-                    "milestone": "ms_tinkering_prompt_active"
-                  },
-                  {
-                    "type": "start_quest",
-                    "quest_id": "fixers_favor"
-                  },
-                  {
-                    "type": "track_quest",
-                    "quest_id": "fixers_favor"
-                  },
-                  {
-                    "type": "set_milestone",
-                    "milestone": "ms_fixers_favor_started"
-                  },
-                  {
-                    "type": "give_item_to_player",
-                    "item_id": "scrap_metal",
-                    "quantity": 20
-                  },
-                  {
-                    "type": "give_item_to_player",
-                    "item_id": "nano_filament",
-                    "quantity": 20
-                  },
-                  {
-                    "type": "give_item_to_player",
-                    "item_id": "circuit_board",
-                    "quantity": 20
-                  },
-                  {
-                    "type": "play_cinematic",
-                    "scene_id": "scene_jed_tinkering_prompt"
-                  },
-                  {
-                    "type": "system_tutorial",
-                    "scene_id": "scene_fixers_favor_jed",
-                    "context": "Jed's Workshop"
-                  },
-                  {
-                    "type": "narrate",
-                    "text": "Tap the Tinkering Table to lay out the broken parts so Jed can walk you through the fix.",
-                    "tap_to_dismiss": true
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": "evt_talk_to_jed_find_shop",
-    "description": "Marks the objective when Nova reaches Jed's Scrap & Salvage.",
-    "trigger": {
-      "type": "enter_room",
-      "room": "market_2"
-    },
-    "actions": [
-      {
-        "type": "if_quest_active",
-        "quest_id": "talk_to_jed",
-        "do": [
-          {
-            "type": "if_milestone_not_set",
-            "milestone": "ms_talk_to_jed_found_shop",
-            "do": [
-              {
-                "type": "set_quest_task_done",
-                "quest_id": "talk_to_jed",
-                "task_id": "spot_jed_shop"
-              },
-              {
-                "type": "set_milestone",
-                "milestone": "ms_talk_to_jed_found_shop"
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": "evt_talk_to_jed_reach_square",
-    "description": "Marks the Town Square objective once the player leaves the Main Road.",
-    "trigger": {
-      "type": "enter_room",
-      "room": "town_square"
-    },
-    "actions": [
-      {
-        "type": "wait_for_draw"
-      },
-      {
-        "type": "if_quest_active",
-        "quest_id": "talk_to_jed",
-        "do": [
-          {
-            "type": "if_milestone_not_set",
-            "milestone": "ms_talk_to_jed_reached_square",
-            "do": [
-              {
-                "type": "set_quest_task_done",
-                "quest_id": "talk_to_jed",
-                "task_id": "navigate_main_road"
-              },
-              {
-                "type": "set_milestone",
-                "milestone": "ms_talk_to_jed_reached_square"
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": "evt_tinkering_tutorial_complete",
-    "description": "Wraps the tutorial once the arcade display is repaired.",
-    "trigger": {
-      "type": "player_action",
-      "action": "tinkering_craft",
-      "item_id": "broken_arcade_display"
-    },
-    "actions": [
-      {
-        "type": "if_milestone_set",
-        "milestone": "ms_tinkering_prompt_active",
-        "do": [
-          {
-            "type": "if_milestone_not_set",
-            "milestone": "ms_tinkering_tutorial_done",
-            "do": [
-              {
-                "type": "set_milestone",
-                "milestone": "ms_tinkering_tutorial_done"
-              },
-              {
-                "type": "if_quest_active",
-                "quest_id": "fixers_favor",
-                "do": [
-                  {
-                    "type": "if_milestone_not_set",
-                    "milestone": "ms_fixers_favor_first_repair",
-                    "do": [
-                      {
-                        "type": "set_quest_task_done",
-                        "quest_id": "fixers_favor",
-                        "task_id": "craft_first_repair"
-                      },
-                      {
-                        "type": "set_milestone",
-                        "milestone": "ms_fixers_favor_first_repair"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": "evt_tinkering_tutorial_wrapup",
-    "description": "Plays Jed's final dialogue after the tinkering tutorial is complete and the screen has closed.",
-    "trigger": {
-      "type": "player_action",
-      "action": "tinkering_screen_closed"
-    },
-    "actions": [
-      {
-        "type": "if_milestone_not_set",
-        "milestone": "ms_return_items_stage_active",
-        "do": [
-          {
-            "type": "play_cinematic",
-            "scene_id": "scene_jed_tinkering_wrapup"
-          },
-          {
-            "type": "if_quest_active",
-            "quest_id": "fixers_favor",
-            "do": [
-              {
-                "type": "if_milestone_not_set",
-                "milestone": "ms_fixers_favor_complete",
-                "do": [
-                  {
-                    "type": "set_quest_task_done",
-                    "quest_id": "fixers_favor",
-                    "task_id": "return_repaired_items"
-                  },
-                  {
-                    "type": "complete_quest",
-                    "quest_id": "fixers_favor"
-                  },
-                  {
-                    "type": "set_milestone",
-                    "milestone": "ms_fixers_favor_complete"
-                  },
-                  {
-                    "type": "show_message",
-                    "message": "Jed claps you on the shoulder and promises to deliver the fixed gear."
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "type": "if_quest_active",
-            "quest_id": "gather_broken_gear",
-            "do": [
-              {
-                "type": "set_quest_task_done",
-                "quest_id": "gather_broken_gear",
-                "task_id": "report_to_jed_after_repairs"
-              },
-              {
-                "type": "advance_quest_stage",
-                "quest_id": "gather_broken_gear",
-                "to_stage_id": "return_items"
-              },
-              {
-                "type": "set_milestone",
-                "milestone": "ms_return_items_stage_active"
-              },
-              {
-                "type": "show_message",
-                "message": "The repaired gear is ready to return to its owners."
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": "evt_tinkering_tutorial_on_enter",
-    "description": "Runs Jed's tinkering tutorial once the bench is opened after his prompt.",
-    "trigger": {
-      "type": "player_action",
-      "action": "tinkering_screen_entered"
-    },
-    "actions": [
-      {
-        "type": "if_milestone_set",
-        "milestone": "ms_tinkering_prompt_active",
-        "do": [
-          {
-            "type": "if_milestone_not_set",
-            "milestone": "ms_tinkering_tutorial_done",
-            "do": [
-              {
-                "type": "system_tutorial",
-                "scene_id": "scene_tinkering_tutorial",
-                "context": "tinkering",
-                "on_complete": [
-                  {
-                    "type": "player_action",
-                    "action": "tinkering_tutorial_finished"
-                  }
-                ]
-              },
-              {
-                "type": "if_quest_active",
-                "quest_id": "fixers_favor",
-                "do": [
-                  {
-                    "type": "if_milestone_not_set",
-                    "milestone": "ms_fixers_favor_table_opened",
-                    "do": [
-                      {
-                        "type": "set_quest_task_done",
-                        "quest_id": "fixers_favor",
-                        "task_id": "open_tinkering_table"
-                      },
-                      {
-                        "type": "set_milestone",
-                        "milestone": "ms_fixers_favor_table_opened"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
     "id": "Intro Communicator",
     "description": "",
     "trigger": {
@@ -1335,6 +524,11 @@
         "type": "set_quest_task_done",
         "quest_id": "w1_mq01",
         "task_id": "reach_workshop"
+      },
+      {
+        "type": "system_tutorial",
+        "scene_id": "npc_talk",
+        "context": "Jed's Workshop"
       }
     ]
   },
@@ -1354,6 +548,11 @@
         "type": "quest_task_done",
         "quest_id": "w1_mq01",
         "task_id": "talk_to_jed"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w1_mq01",
+        "task_id": "equip_starter_gear"
       }
     ],
     "actions": [
@@ -1637,7 +836,9 @@
     "description": "Completes Heavy Lifting when Nova defeats the shielded training guard.",
     "trigger": {
       "type": "encounter_victory",
-      "enemies": ["riot_guard"]
+      "enemies": [
+        "acoustic_bulwark"
+      ]
     },
     "conditions": [
       {
@@ -1682,338 +883,6 @@
       {
         "type": "show_message",
         "message": "Quest complete: Heavy Lifting."
-      }
-    ]
-  },
-  {
-    "id": "evt_lights_out_intro",
-    "description": "Starts the Lights Out quest the first time Nova wakes up in her house.",
-    "trigger": {
-      "type": "enter_room",
-      "room": "town_9"
-    },
-    "conditions": [
-      {
-        "type": "quest_not_started",
-        "quest_id": "lights_out"
-      }
-    ],
-    "actions": [
-      {
-        "type": "start_quest",
-        "quest_id": "lights_out"
-      },
-      {
-        "type": "track_quest",
-        "quest_id": "lights_out"
-      },
-      {
-        "type": "system_tutorial",
-        "scene_id": "scene_lights_out_intro",
-        "context": "Nova's House"
-      },
-      {
-        "type": "set_milestone",
-        "milestone": "ms_lights_out_started"
-      },
-      {
-        "type": "show_message",
-        "message": "Quest started: Lights Out"
-      }
-    ]
-  },
-  {
-    "id": "evt_scrap_run_intro",
-    "description": "Tyson ropes Nova into a ration run once the blackout is resolved.",
-    "trigger": {
-      "type": "enter_room",
-      "room": "market_plaza"
-    },
-    "conditions": [
-      {
-        "type": "milestone_set",
-        "milestone": "ms_lights_out_complete"
-      },
-      {
-        "type": "quest_not_started",
-        "quest_id": "scrap_run"
-      }
-    ],
-    "actions": [
-      {
-        "type": "start_quest",
-        "quest_id": "scrap_run"
-      },
-      {
-        "type": "track_quest",
-        "quest_id": "scrap_run"
-      },
-      {
-        "type": "set_milestone",
-        "milestone": "ms_scrap_run_started"
-      },
-      {
-        "type": "show_message",
-        "message": "Quest started: Scrap Run"
-      }
-    ]
-  },
-  {
-    "id": "evt_scrap_run_talk_tyson",
-    "description": "Handles Tyson's briefing for the ration run.",
-    "trigger": {
-      "type": "player_action",
-      "action": "scrap_run_talk_tyson"
-    },
-    "actions": [
-      {
-        "type": "if_quest_active",
-        "quest_id": "scrap_run",
-        "do": [
-          {
-            "type": "if_milestone_not_set",
-            "milestone": "ms_scrap_run_talked_tyson",
-            "do": [
-              {
-                "type": "set_quest_task_done",
-                "quest_id": "scrap_run",
-                "task_id": "talk_to_tyson"
-              },
-              {
-                "type": "set_milestone",
-                "milestone": "ms_scrap_run_talked_tyson"
-              },
-              {
-                "type": "system_tutorial",
-                "scene_id": "scene_scrap_run_shop",
-                "context": "Tyson's Provisions"
-              },
-              {
-                "type": "show_message",
-                "message": "Tyson points you toward the ration crate."
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": "evt_scrap_run_collect_rations",
-    "description": "Marks the ration crate interaction.",
-    "trigger": {
-      "type": "player_action",
-      "action": "scrap_run_rations_taken"
-    },
-    "actions": [
-      {
-        "type": "if_quest_active",
-        "quest_id": "scrap_run",
-        "do": [
-          {
-            "type": "if_milestone_not_set",
-            "milestone": "ms_scrap_run_rations_collected",
-            "do": [
-              {
-                "type": "set_quest_task_done",
-                "quest_id": "scrap_run",
-                "task_id": "collect_rations"
-              },
-              {
-                "type": "set_milestone",
-                "milestone": "ms_scrap_run_rations_collected"
-              },
-              {
-                "type": "system_tutorial",
-                "scene_id": "scene_scrap_run_return",
-                "context": "Market Plaza"
-              },
-              {
-                "type": "show_message",
-                "message": "You collected the ration pack for Ollie."
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": "evt_scrap_run_return",
-    "description": "Completes the ration delivery.",
-    "trigger": {
-      "type": "player_action",
-      "action": "scrap_run_return_to_ollie"
-    },
-    "actions": [
-      {
-        "type": "if_quest_active",
-        "quest_id": "scrap_run",
-        "do": [
-          {
-            "type": "if_milestone_set",
-            "milestone": "ms_scrap_run_rations_collected",
-            "do": [
-              {
-                "type": "take_item",
-                "item_id": "ration_pack",
-                "quantity": 1
-              },
-              {
-                "type": "set_quest_task_done",
-                "quest_id": "scrap_run",
-                "task_id": "return_to_ollie"
-              },
-              {
-                "type": "complete_quest",
-                "quest_id": "scrap_run"
-              },
-              {
-                "type": "set_milestone",
-                "milestone": "ms_scrap_run_complete"
-              },
-              {
-                "type": "show_message",
-                "message": "Ollie tears into the ration pack and thanks you between bites."
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": "evt_fixers_favor_talk_jed",
-    "description": "Marks the talk-to-Jed step for Fixer's Favor.",
-    "trigger": {
-      "type": "talk_to",
-      "npc": "jed"
-    },
-    "actions": [
-      {
-        "type": "if_quest_active",
-        "quest_id": "fixers_favor",
-        "do": [
-          {
-            "type": "if_milestone_not_set",
-            "milestone": "ms_fixers_favor_talked_jed",
-            "do": [
-              {
-                "type": "set_quest_task_done",
-                "quest_id": "fixers_favor",
-                "task_id": "talk_to_jed_fixers"
-              },
-              {
-                "type": "set_milestone",
-                "milestone": "ms_fixers_favor_talked_jed"
-              },
-              {
-                "type": "show_message",
-                "message": "Jed tosses you tools and points toward the bench."
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": "nova_house_light_toggle",
-    "description": "Toggle the lights in Nova's House.",
-    "trigger": {
-      "type": "player_action",
-      "action": "toggle_nova_house_light"
-    },
-    "actions": [
-      {
-        "type": "set_room_state",
-        "room_id": "town_9",
-        "state_key": "light_on",
-        "value": true
-      },
-      {
-        "type": "set_room_state",
-        "room_id": "town_9",
-        "state_key": "power_restored",
-        "value": true
-      },
-      {
-        "type": "if_milestone_not_set",
-        "milestone": "ms_lights_out_complete",
-        "do": [
-          {
-            "type": "set_quest_task_done",
-            "quest_id": "lights_out",
-            "task_id": "flip_switch"
-          },
-          {
-            "type": "complete_quest",
-            "quest_id": "lights_out"
-          },
-          {
-            "type": "set_milestone",
-            "milestone": "ms_lights_out_complete"
-          },
-          {
-            "type": "start_quest",
-            "quest_id": "checking_the_fuse"
-          },
-          {
-            "type": "track_quest",
-            "quest_id": "checking_the_fuse"
-          },
-          {
-            "type": "show_message",
-            "message": "Power surges through the house as the lights flare to life."
-          }
-        ]
-      }
-    ],
-    "repeatable": true,
-    "on_message": "You flip the switch. The lights come on.",
-    "off_message": "You flip the switch. The room goes dark."
-  },
-  {
-    "id": "ollie_first_meeting",
-    "description": "Ollie intercepts the player on the Main Road to start the first quest.",
-    "trigger": {
-      "type": "enter_room",
-      "room": "town_8"
-    },
-    "repeatable": true,
-    "actions": [
-      {
-        "type": "play_cinematic",
-        "scene_id": "ollie_intro_scene",
-        "on_complete": [
-          {
-            "type": "set_milestone",
-            "milestone": "ms_ollie_met"
-          },
-          {
-            "type": "start_quest",
-            "quest_id": "talk_to_jed"
-          },
-          {
-            "type": "track_quest",
-            "quest_id": "talk_to_jed"
-          },
-          {
-            "type": "system_tutorial",
-            "scene_id": "scene_ollie_recruitment",
-            "context": "Main Road"
-          },
-          {
-            "type": "show_message",
-            "message": "Quest started: Talk to Jed"
-          }
-        ]
-      }
-    ],
-    "conditions": [
-      {
-        "type": "milestone_not_set",
-        "milestone": "ms_ollie_met"
       }
     ]
   },
@@ -2626,20 +1495,857 @@
     ]
   },
   {
-    "id": "evt_tutorial_smoke_trigger",
+    "id": "w1_mq03_start_at_lobby",
+    "description": "Starts Main Quest 3 when Nova reaches the Admin Concourse Lobby.",
     "trigger": {
-      "type": "player_action",
-      "action": "tutorial_smoke_stage"
+      "type": "enter_room",
+      "room": "admin_lobby"
     },
+    "conditions": [
+      {
+        "type": "quest_completed",
+        "quest_id": "w1_mq02"
+      },
+      {
+        "type": "quest_not_started",
+        "quest_id": "w1_mq03"
+      }
+    ],
     "actions": [
       {
         "type": "start_quest",
-        "start_quest": "tutorial_smoke"
+        "quest_id": "w1_mq03"
       },
       {
-        "type": "system_tutorial",
-        "scene_id": "movement",
-        "context": "Exploration"
+        "type": "track_quest",
+        "quest_id": "w1_mq03"
+      },
+      {
+        "type": "advance_quest_stage",
+        "quest_id": "w1_mq03",
+        "to_stage_id": "sector_four_assignment"
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_mq03",
+        "task_id": "enter_logistics_sector"
+      }
+    ]
+  },
+  {
+    "id": "w1_mq03_bogs_dialogue_complete",
+    "description": "Sets the room state for admin_lobby when the player finishes talking to Bogs.",
+    "trigger": {
+      "type": "player_action",
+      "action": "bogs_talked"
+    },
+    "actions": [
+      {
+        "type": "set_room_state",
+        "room_id": "admin_lobby",
+        "state_key": "bogs_talked",
+        "value": true
+      }
+    ]
+  },
+  {
+    "id": "w1_mq03_enter_deep_mine",
+    "description": "Marks the elevator task complete when entering the deep mine landing.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "mine_landing"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w1_mq03"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w1_mq03",
+        "task_id": "use_deep_elevator"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_mq03",
+        "task_id": "use_deep_elevator"
+      },
+      {
+        "type": "advance_quest_stage",
+        "quest_id": "w1_mq03",
+        "to_stage_id": "deep_mine_descent"
+      }
+    ]
+  },
+  {
+    "id": "w1_mq03_clear_rock_borer",
+    "description": "Marks the first deep mine encounter complete when Nova defeats the rock borer.",
+    "trigger": {
+      "type": "encounter_victory",
+      "enemies": [
+        "echo_borer"
+      ]
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w1_mq03"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w1_mq03",
+        "task_id": "clear_first_mine_encounter"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_mq03",
+        "task_id": "clear_first_mine_encounter"
+      }
+    ]
+  },
+  {
+    "id": "w1_mq03_clear_riot_guard",
+    "description": "Marks the Acoustic Bulwark task complete when Nova defeats the Acoustic Bulwark.",
+    "trigger": {
+      "type": "encounter_victory",
+      "enemies": [
+        "acoustic_bulwark"
+      ]
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w1_mq03"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w1_mq03",
+        "task_id": "break_riot_guard"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_mq03",
+        "task_id": "break_riot_guard"
+      }
+    ]
+  },
+  {
+    "id": "w1_mq03_reach_threshold",
+    "description": "Marks the threshold task complete when entering the ancient threshold room.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "mine_threshold"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w1_mq03"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w1_mq03",
+        "task_id": "reach_architect_threshold"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_mq03",
+        "task_id": "reach_architect_threshold"
+      },
+      {
+        "type": "advance_quest_stage",
+        "quest_id": "w1_mq03",
+        "to_stage_id": "relic_sync"
+      }
+    ]
+  },
+  {
+    "id": "w1_mq03_reach_echo_chamber",
+    "description": "Marks the reach echo chamber task complete when entering the echo gap.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "echo_gap"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w1_mq03"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w1_mq03",
+        "task_id": "reach_echo_chamber"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_mq03",
+        "task_id": "reach_echo_chamber"
+      }
+    ]
+  },
+  {
+    "id": "w1_mq03_touch_relic",
+    "description": "Completes the relic touch and sync sequence when Nova interacts with the Tuning Fork.",
+    "trigger": {
+      "type": "player_action",
+      "action": "touch_relic"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w1_mq03"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w1_mq03",
+        "task_id": "touch_tuning_fork"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_mq03",
+        "task_id": "touch_tuning_fork"
+      },
+      {
+        "type": "play_cinematic",
+        "scene_id": "scene_relic_sync",
+        "on_complete": [
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w1_mq03",
+            "task_id": "survive_source_sync"
+          },
+          {
+            "type": "set_room_state",
+            "room_id": "echo_heart",
+            "state_key": "relic_synced",
+            "value": true
+          },
+          {
+            "type": "give_item",
+            "item_id": "tuning_fork",
+            "quantity": 1
+          },
+          {
+            "type": "complete_quest",
+            "quest_id": "w1_mq03"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w1_mq03_complete"
+          },
+          {
+            "type": "show_message",
+            "message": "Main Quest complete: The Echo."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "w1_mq04_start_lockdown",
+    "description": "Starts Main Quest 4 (Red Alert) when Main Quest 3 completes.",
+    "trigger": {
+      "type": "quest_stage_complete",
+      "quest_id": "w1_mq03"
+    },
+    "conditions": [
+      {
+        "type": "quest_completed",
+        "quest_id": "w1_mq03"
+      },
+      {
+        "type": "quest_not_started",
+        "quest_id": "w1_mq04"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_quest",
+        "quest_id": "w1_mq04"
+      },
+      {
+        "type": "track_quest",
+        "quest_id": "w1_mq04"
+      },
+      {
+        "type": "advance_quest_stage",
+        "quest_id": "w1_mq04",
+        "to_stage_id": "lockdown_escape"
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_mq04",
+        "task_id": "survive_lockdown_broadcast"
+      },
+      {
+        "type": "show_message",
+        "message": "WARNING: Biological contamination detected. Sector lockdown active."
+      }
+    ]
+  },
+  {
+    "id": "w1_mq04_enter_exit_tunnel",
+    "description": "Triggers Zeke's comms instruction when Nova enters the emergency exit tunnel.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "echo_exit"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w1_mq04"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w1_mq04",
+        "task_id": "follow_zeke_comms"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_mq04",
+        "task_id": "follow_zeke_comms"
+      },
+      {
+        "type": "narrate",
+        "message": "Zeke: 'Nova! Do you hear me? The Warden sealed the core, but I've bypassed the emergency exit. Get to the cargo lift! I'll try to hold the security gates from here!'",
+        "tap_to_dismiss": true
+      }
+    ]
+  },
+  {
+    "id": "w1_mq04_gauntlet_victory",
+    "description": "Marks the escape gauntlet task done when Nova defeats a security drone or enforcer.",
+    "trigger": {
+      "type": "encounter_victory"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w1_mq04"
+      },
+      {
+        "type": "quest_stage",
+        "quest_id": "w1_mq04",
+        "stage_id": "lockdown_escape"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w1_mq04",
+        "task_id": "clear_escape_gauntlet"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_mq04",
+        "task_id": "clear_escape_gauntlet"
+      },
+      {
+        "type": "advance_quest_stage",
+        "quest_id": "w1_mq04",
+        "to_stage_id": "cargo_lift_sacrifice"
+      }
+    ]
+  },
+  {
+    "id": "w1_mq04_reach_lift",
+    "description": "Marks the reach cargo lift task done when Nova enters the Cargo Lift room.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "launch_lift"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w1_mq04"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w1_mq04",
+        "task_id": "reach_cargo_lift"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_mq04",
+        "task_id": "reach_cargo_lift"
+      }
+    ]
+  },
+  {
+    "id": "w1_mq04_complete",
+    "description": "Completes Main Quest 4 (Red Alert) when Nova talks to Jed and receives the Chime.",
+    "trigger": {
+      "type": "player_action",
+      "action": "jed_sacrifice"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w1_mq04"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_mq04",
+        "task_id": "receive_chime"
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_mq04",
+        "task_id": "escape_to_launch_bay"
+      },
+      {
+        "type": "give_item",
+        "item_id": "ghost_signal_cell",
+        "quantity": 1
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w1_mq04"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w1_mq04_complete"
+      },
+      {
+        "type": "show_message",
+        "message": "Main Quest complete: Red Alert."
+      },
+      {
+        "type": "start_quest",
+        "quest_id": "w1_mq05"
+      },
+      {
+        "type": "track_quest",
+        "quest_id": "w1_mq05"
+      },
+      {
+        "type": "advance_quest_stage",
+        "quest_id": "w1_mq05",
+        "to_stage_id": "reach_pod_bay"
+      }
+    ]
+  },
+  {
+    "id": "w1_mq05_checkpoint_victory",
+    "description": "Marks launch access gauntlet task done when security drone is defeated.",
+    "trigger": {
+      "type": "encounter_victory",
+      "enemies": [
+        "resonance_buoy"
+      ]
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w1_mq05"
+      },
+      {
+        "type": "quest_stage",
+        "quest_id": "w1_mq05",
+        "stage_id": "reach_pod_bay"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_mq05",
+        "task_id": "fight_through_launch_access"
+      }
+    ]
+  },
+  {
+    "id": "w1_mq05_enter_launch_bay",
+    "description": "Advances quest to defeat_warden stage upon entering the Pod Bay.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "launch_bay"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w1_mq05"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_mq05",
+        "task_id": "fight_through_launch_access"
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_mq05",
+        "task_id": "reach_pod_bay"
+      },
+      {
+        "type": "advance_quest_stage",
+        "quest_id": "w1_mq05",
+        "to_stage_id": "defeat_warden"
+      }
+    ]
+  },
+  {
+    "id": "w1_mq05_warden_victory",
+    "description": "Sets warden_defeated room state and advances quest to launch stage when Warden is defeated.",
+    "trigger": {
+      "type": "encounter_victory",
+      "enemies": [
+        "the_iron_warden"
+      ]
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w1_mq05"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_room_state",
+        "room_id": "launch_bay",
+        "state_key": "warden_defeated"
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_mq05",
+        "task_id": "survive_warden_intro"
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_mq05",
+        "task_id": "break_warden_guard"
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_mq05",
+        "task_id": "defeat_the_warden"
+      },
+      {
+        "type": "advance_quest_stage",
+        "quest_id": "w1_mq05",
+        "to_stage_id": "launch_pod"
+      }
+    ]
+  },
+  {
+    "id": "w1_mq05_use_nav_console",
+    "description": "Handles the navigation console interaction inside the pod core.",
+    "trigger": {
+      "type": "player_action",
+      "action": "use_nav_console"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w1_mq05"
+      },
+      {
+        "type": "quest_stage",
+        "quest_id": "w1_mq05",
+        "stage_id": "launch_pod"
+      }
+    ],
+    "actions": [
+      {
+        "type": "if_milestone_not_set",
+        "milestone": "ms_w1_chime_spliced",
+        "do": [
+          {
+            "type": "show_message",
+            "message": "The console is locked. It needs a physical Chime bypass to override the Dominion shield frequency."
+          }
+        ]
+      },
+      {
+        "type": "if_milestone_set",
+        "milestone": "ms_w1_chime_spliced",
+        "do": [
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w1_mq05",
+            "task_id": "launch_from_colony"
+          },
+          {
+            "type": "play_cinematic",
+            "scene_id": "scene_launch_crash",
+            "on_complete": [
+              {
+                "type": "set_quest_task_done",
+                "quest_id": "w1_mq05",
+                "task_id": "hit_planetary_shield"
+              },
+              {
+                "type": "complete_quest",
+                "quest_id": "w1_mq05"
+              },
+              {
+                "type": "set_milestone",
+                "milestone": "ms_w1_mq05_complete"
+              },
+              {
+                "type": "warp",
+                "room_id": "sector9_crash_site"
+              },
+              {
+                "type": "start_quest",
+                "quest_id": "w2_mq01"
+              },
+              {
+                "type": "track_quest",
+                "quest_id": "w2_mq01"
+              },
+              {
+                "type": "show_message",
+                "message": "Main Quest complete: The Launch."
+              },
+              {
+                "type": "show_message",
+                "message": "A new chapter begins."
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "w1_sq04_start_and_complete",
+    "description": "Triggered when player interacts with the hacked terminal in server hub. Starts and completes SQ04.",
+    "trigger": {
+      "type": "player_action",
+      "action": "start_hack_sq04"
+    },
+    "conditions": [
+      {
+        "type": "quest_not_started",
+        "quest_id": "w1_sq04"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_quest",
+        "quest_id": "w1_sq04"
+      },
+      {
+        "type": "track_quest",
+        "quest_id": "w1_sq04"
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_sq04",
+        "task_id": "enter_server_room"
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_sq04",
+        "task_id": "locate_hacked_terminal"
+      },
+      {
+        "type": "play_cinematic",
+        "scene_id": "scene_sq04_hack"
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_sq04",
+        "task_id": "restore_protocol_spoof"
+      },
+      {
+        "type": "give_item",
+        "item_id": "circuit_board",
+        "quantity": 1
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w1_sq04"
+      },
+      {
+        "type": "show_message",
+        "message": "Quest complete: Protocol Override."
+      }
+    ]
+  },
+  {
+    "id": "w1_sq05_start_shunt",
+    "description": "Triggered when entering mine_shunt. Starts SQ05.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "mine_shunt"
+    },
+    "conditions": [
+      {
+        "type": "quest_not_started",
+        "quest_id": "w1_sq05"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_quest",
+        "quest_id": "w1_sq05"
+      },
+      {
+        "type": "track_quest",
+        "quest_id": "w1_sq05"
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_sq05",
+        "task_id": "find_collapsed_tunnel"
+      },
+      {
+        "type": "show_message",
+        "message": "Quest started: The Lost Shift."
+      }
+    ]
+  },
+  {
+    "id": "w1_sq05_read_datapad",
+    "description": "Triggered when player interacts with the datapad in side shunt 4. Completes SQ05.",
+    "trigger": {
+      "type": "player_action",
+      "action": "read_datapad_sq05"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w1_sq05"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_sq05",
+        "task_id": "recover_datapad"
+      },
+      {
+        "type": "play_cinematic",
+        "scene_id": "scene_sq05_datapad"
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_sq05",
+        "task_id": "read_final_letter"
+      },
+      {
+        "type": "give_item",
+        "item_id": "recoil_dampener",
+        "quantity": 1
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w1_sq05"
+      },
+      {
+        "type": "show_message",
+        "message": "Quest complete: The Lost Shift."
+      }
+    ]
+  },
+  {
+    "id": "w2_mq01_examine_pod",
+    "description": "Examine the sub-critical pod core and recover the Chime.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_mq01_examine_pod"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_mq01"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w2_mq01",
+        "task_id": "check_on_zeke"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w2_mq01",
+        "task_id": "examine_pod"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w2_mq01",
+        "task_id": "examine_pod"
+      },
+      {
+        "type": "give_item",
+        "item_id": "ghost_signal_cell",
+        "quantity": 1
+      },
+      {
+        "type": "give_item",
+        "item_id": "medkit",
+        "quantity": 1
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_chime_recovered"
+      },
+      {
+        "type": "show_message",
+        "message": "You open the steaming access panel of the pod core. Inside, the Chime is intact, humming in a quiet, stable resonance. You recover it along with an emergency medkit from the crash reserves."
+      }
+    ]
+  },
+  {
+    "id": "w2_mq01_explore_stream",
+    "description": "Completes A Strange Coast when entering the glow-water stream.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "sector9_stream"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_mq01"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w2_mq01",
+        "task_id": "check_on_zeke"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w2_mq01",
+        "task_id": "examine_pod"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w2_mq01",
+        "task_id": "follow_stream"
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w2_mq01"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_mq01_complete"
+      },
+      {
+        "type": "show_message",
+        "message": "Quest Complete: A Strange Coast\n\nYou trace the glowing water to a wider path leading deeper into the ancient ruins. The resonance of the planet surface hums in your Echo marks."
       }
     ]
   }

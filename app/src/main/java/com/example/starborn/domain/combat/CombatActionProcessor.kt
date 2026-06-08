@@ -22,8 +22,21 @@ class CombatActionProcessor(
         action: CombatAction,
         rewardProvider: () -> CombatReward
     ): CombatState {
-        val actorState = state.combatants[action.actorId]
-        val skipInfo = actorState?.let { skipReason(it) }
+        val actorState = state.combatants[action.actorId] ?: return state
+        
+        when (action) {
+            is CombatAction.SkillUse -> {
+                val skill = skillLookup(action.skillId) ?: return state
+                if (actorState.activeCooldowns.getOrDefault(skill.id, 0) > 0) return state
+                if (!checkSkillConditions(action.actorId, skill, state, action.targetIds)) return state
+            }
+            is CombatAction.SnackUse -> {
+                if (actorState.snackCooldown > 0) return state
+            }
+            else -> {}
+        }
+
+        val skipInfo = skipReason(actorState)
         if (skipInfo != null) {
             val skipped = state.copy(
                 log = state.log + CombatLogEntry.TurnSkipped(
@@ -490,6 +503,14 @@ class CombatActionProcessor(
 
         val skill = skillLookup(action.skillId)
 
+        if (skill != null && attackerState.activeCooldowns.getOrDefault(skill.id, 0) > 0) {
+            return state
+        }
+
+        if (skill != null && !checkSkillConditions(attackerId, skill, state, action.targetIds)) {
+            return state
+        }
+
         val stateWithCooldown = if (skill != null && skill.cooldown > 0) {
             val updatedAttacker = attackerState.copy(
                 activeCooldowns = attackerState.activeCooldowns + (skill.id to skill.cooldown + 1)
@@ -624,6 +645,8 @@ class CombatActionProcessor(
         action: CombatAction.SnackUse
     ): CombatState {
         val actor = state.combatants[action.actorId] ?: return state
+        if (actor.snackCooldown > 0) return state
+
         val item = itemLookup?.invoke(action.snackItemId) ?: return state
         val effect = item.effect ?: return state
         val hasDamage = (effect.damage ?: 0) > 0
@@ -635,52 +658,7 @@ class CombatActionProcessor(
         val updatedActor = actor.copy(snackCooldown = baseCooldown + 1)
         val stateWithCooldown = state.copy(combatants = state.combatants + (action.actorId to updatedActor))
 
-        val declaredTarget = effect.target?.trim()?.lowercase()
-        val resolvedTargetId = when (declaredTarget) {
-            "self" -> action.actorId
-            "enemy" -> resolveValidEnemyTarget(
-                state = stateWithCooldown,
-                attacker = updatedActor,
-                preferredTargetId = action.targetId.orEmpty(),
-                allowFallback = true
-            )
-            "ally" -> resolveValidAllyTarget(
-                state = stateWithCooldown,
-                attacker = updatedActor,
-                preferredTargetId = action.targetId ?: action.actorId,
-                allowFallback = true
-            )
-            "any" -> {
-                val preferred = action.targetId
-                    ?.takeIf { it.isNotBlank() }
-                    ?.let { candidate ->
-                        stateWithCooldown.combatants[candidate]?.takeIf { it.isAlive }?.combatant?.id
-                    }
-                preferred
-                    ?: resolveValidEnemyTarget(
-                        state = stateWithCooldown,
-                        attacker = updatedActor,
-                        preferredTargetId = action.targetId.orEmpty(),
-                        allowFallback = true
-                    )
-                    ?: resolveValidAllyTarget(
-                        state = stateWithCooldown,
-                        attacker = updatedActor,
-                        preferredTargetId = action.targetId ?: action.actorId,
-                        allowFallback = true
-                    )
-            }
-            else -> when {
-                hasDamage -> resolveValidEnemyTarget(
-                    state = stateWithCooldown,
-                    attacker = updatedActor,
-                    preferredTargetId = action.targetId.orEmpty(),
-                    allowFallback = true
-                )
-                hasRestore || hasBuff -> action.actorId
-                else -> action.actorId
-            }
-        }
+        val resolvedTargetId = action.actorId
 
         val proxy = CombatAction.ItemUse(
             actorId = action.actorId,
@@ -1267,6 +1245,76 @@ class CombatActionProcessor(
         data object Miss : HitRoll {
             override val damage: Int = 0
             override val critical: Boolean = false
+        }
+    }
+
+    private fun isSupportSkill(skill: Skill): Boolean {
+        val tags = skill.combatTags.orEmpty()
+        if (skill.type.equals("support", true) || skill.type.equals("heal", true)) return true
+        if (tags.any { it.equals("support", true) || it.equals("heal", true) || it.equals("buff", true) }) return true
+        if (skill.basePower <= 0 && skill.statusApplications.orEmpty().isNotEmpty()) return true
+        return false
+    }
+
+    private fun checkSkillConditions(
+        actorId: String,
+        skill: Skill,
+        state: CombatState,
+        targetIds: List<String>? = null
+    ): Boolean {
+        val conditions = skill.conditions
+        if (conditions.isNullOrEmpty()) return true
+
+        val actorState = state.combatants[actorId] ?: return false
+
+        return conditions.all { cond ->
+            val trimmed = cond.trim().lowercase()
+            when {
+                trimmed.startsWith("hp_below_") -> {
+                    val pct = trimmed.removePrefix("hp_below_").toIntOrNull() ?: 0
+                    val maxHp = actorState.combatant.stats.maxHp
+                    actorState.hp.toDouble() / maxHp * 100.0 < pct
+                }
+                trimmed.startsWith("hp_above_") -> {
+                    val pct = trimmed.removePrefix("hp_above_").toIntOrNull() ?: 0
+                    val maxHp = actorState.combatant.stats.maxHp
+                    actorState.hp.toDouble() / maxHp * 100.0 > pct
+                }
+                trimmed.endsWith("_equipped") -> {
+                    val weaponType = trimmed.removeSuffix("_equipped")
+                    val equippedType = actorState.combatant.weapon?.weaponType?.lowercase()
+                    equippedType == weaponType
+                }
+                trimmed == "target_stunned" -> {
+                    val targets = if (targetIds != null && targetIds.isNotEmpty()) {
+                        targetIds.mapNotNull { state.combatants[it] }
+                    } else {
+                        val actorSide = actorState.combatant.side
+                        state.combatants.values.filter { it.isAlive &&
+                            if (isSupportSkill(skill)) it.combatant.side == actorSide
+                            else it.combatant.side != actorSide
+                        }
+                    }
+                    targets.any { target ->
+                        target.statusEffects.any { it.id.equals("stun", true) || it.id.equals("stagger", true) }
+                    }
+                }
+                trimmed == "target_staggered" -> {
+                    val targets = if (targetIds != null && targetIds.isNotEmpty()) {
+                        targetIds.mapNotNull { state.combatants[it] }
+                    } else {
+                        val actorSide = actorState.combatant.side
+                        state.combatants.values.filter { it.isAlive &&
+                            if (isSupportSkill(skill)) it.combatant.side == actorSide
+                            else it.combatant.side != actorSide
+                        }
+                    }
+                    targets.any { target ->
+                        target.statusEffects.any { it.id.equals("stagger", true) }
+                    }
+                }
+                else -> true
+            }
         }
     }
 

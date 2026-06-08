@@ -347,6 +347,12 @@ class EventManager(
                     true
                 }
                 "rebuild_ui", "wait_for_draw" -> true
+                "set_room", "warp" -> {
+                    action.roomId?.let {
+                        sessionStore.setRoom(it)
+                    }
+                    true
+                }
                 "narrate" -> {
                     val text = action.message ?: action.text
                     if (!text.isNullOrBlank()) {
