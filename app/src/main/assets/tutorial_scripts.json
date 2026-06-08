@@ -3,13 +3,8 @@
         "id": "movement",
         "steps": [
             {
-                "message": "Swipe left or right across the screen to move between nearby rooms.",
+                "message": "Swipe toward any open exit to move. The minimap pips and connecting lines show nearby routes.",
                 "context": "Exploration"
-            },
-            {
-                "message": "Watch the minimap highlight to see which exits are open.",
-                "context": "Exploration",
-                "delay_ms": 2200
             }
         ]
     },
@@ -17,11 +12,11 @@
         "id": "npc_talk",
         "steps": [
             {
-                "message": "Tap a character's name to open their interaction menu.",
+                "message": "Tap a highlighted character name to start a conversation.",
                 "context": "Exploration"
             },
             {
-                "message": "Choose Talk to hear what they have to say and advance the story.",
+                "message": "Tap the dialogue card to continue the conversation and advance the story.",
                 "context": "Exploration",
                 "delay_ms": 2000
             }
@@ -31,28 +26,13 @@
         "id": "scene_tinkering_tutorial",
         "steps": [
             {
-                "message": "Jed will highlight the parts you need. Drag them into the slots when they flash yellow.",
+                "message": "At Jed's bench, choose a recipe or tap a slot to pick the item you want to work on.",
                 "context": "Tinkering"
             },
             {
-                "message": "Watch the stability meter. Tap the reinforce button before it dips into the red zone.",
+                "message": "Check the requirements, add any missing parts, then press Craft when the bench is ready.",
                 "context": "Tinkering",
                 "delay_ms": 2500
-            }
-        ]
-    },
-    {
-        "id": "cooking_failure",
-        "steps": [
-            {
-                "key": "cook_timing",
-                "message": "The pan scorched. Release while the cursor is inside the gold zone.",
-                "context": "Cooking"
-            },
-            {
-                "message": "Watch the bar settle before tapping again.",
-                "context": "Cooking",
-                "delay_ms": 2000
             }
         ]
     },
@@ -70,13 +50,8 @@
         "id": "scene_market_locator",
         "steps": [
             {
-                "message": "Head south to the market strip. Look for Jed's scrap stall glowing in yellow on the minimap.",
-                "context": "Market Plaza"
-            },
-            {
-                "message": "Tap highlighted doorways to enter new stalls—Jed's is just east of the plaza.",
-                "context": "Market Plaza",
-                "delay_ms": 2200
+                "message": "Head out of the Pit toward Jed's Workshop. Tap highlighted exits or swipe toward open connections to keep moving.",
+                "context": "Homestead"
             }
         ]
     },
@@ -84,7 +59,7 @@
         "id": "scene_market_journal",
         "steps": [
             {
-                "message": "Open your journal from the HUD to track active errands. The highlighted quest is pinned on your minimap.",
+                "message": "Open your journal from the menu to track active errands and choose which quest to follow.",
                 "context": "Market Plaza"
             },
             {
@@ -98,11 +73,11 @@
         "id": "bag_basics",
         "steps": [
             {
-                "message": "Swipe up from the bottom tray or tap the backpack icon to open your bag at any time.",
+                "message": "Use the bottom menu button, then choose Inventory to review supplies, gear, and key items.",
                 "context": "Inventory"
             },
             {
-                "message": "Use the filters along the left edge to jump between gear, consumables, and key items. Long-press any entry for more details.",
+                "message": "Use the Supplies, Gear, and Key Items tabs across the top. Tap an entry to inspect or use it.",
                 "context": "Inventory",
                 "delay_ms": 2200
             }

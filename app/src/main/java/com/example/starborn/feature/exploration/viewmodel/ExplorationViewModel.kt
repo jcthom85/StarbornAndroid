@@ -46,7 +46,6 @@ import com.example.starborn.domain.milestone.MilestoneEvent
 import com.example.starborn.domain.milestone.MilestoneRuntimeManager
 import com.example.starborn.domain.model.BlockedDirection
 import com.example.starborn.domain.model.ContainerAction
-import com.example.starborn.domain.model.CookingAction
 import com.example.starborn.domain.model.DialogueLine
 import com.example.starborn.domain.model.EventAction
 import com.example.starborn.domain.model.EventReward
@@ -1099,7 +1098,6 @@ class ExplorationViewModel(
             val services = parseActions(room).mapNotNull { action ->
                 when (action) {
                     is ShopAction -> MinimapService.SHOP
-                    is CookingAction -> MinimapService.COOKING
                     is FirstAidAction -> MinimapService.FIRST_AID
                     is TinkeringAction -> MinimapService.TINKERING
                     else -> null
@@ -1141,7 +1139,6 @@ class ExplorationViewModel(
             val services = parseActions(room).mapNotNull { action ->
                 when (action) {
                     is ShopAction -> MinimapService.SHOP
-                    is CookingAction -> MinimapService.COOKING
                     is FirstAidAction -> MinimapService.FIRST_AID
                     is TinkeringAction -> MinimapService.TINKERING
                     else -> null
@@ -1398,12 +1395,6 @@ class ExplorationViewModel(
                         skillTreeOverlay = overlay
                     )
                 }
-                if (newState.activeQuests.contains("w1_mq01") && newState.equippedWeapons["nova"] != null) {
-                    val completed = questRuntimeManager.state.value.completedTasks["w1_mq01"] ?: emptySet()
-                    if (!completed.contains("equip_starter_gear")) {
-                        questRuntimeManager.markTaskComplete("w1_mq01", "equip_starter_gear")
-                    }
-                }
                 updateActionHints(_uiState.value.currentRoom)
                 updateUnlockedAreas(newState.unlockedAreas)
                 updateUnlockedExits(newState.unlockedExits)
@@ -1651,7 +1642,7 @@ class ExplorationViewModel(
             "scene_fixers_favor_craft" -> "Follow Jed's prompts to slot parts and press Craft to seal the repair."
             "scene_fixers_favor_return" -> "Close the bench and talk to Jed again to wrap up the repair session."
             "scene_ollie_recruitment" -> "Tap ally portraits on the HUD to swap party members or hear their guidance."
-            "scene_market_locator" -> "Follow the glowing minimap marker to reach Jed's stall in the market."
+            "scene_market_locator" -> "Use the minimap to follow open connections through the Scrap Yard to reach Jed's Workshop."
             "scene_market_journal" -> "Open your journal from the HUD to track errands and hub summaries."
             else -> null
         }
@@ -2117,7 +2108,6 @@ class ExplorationViewModel(
                 lockedMessage = action.conditionUnmetMessage
             )
             is ShopAction -> handleShopAction(action)
-            is CookingAction -> handleCookingAction(action)
             is FirstAidAction -> handleFirstAidAction(action)
             is GenericAction -> handleGenericAction(action)
             else -> Unit
@@ -2731,6 +2721,11 @@ class ExplorationViewModel(
     private fun maybeShowInventoryTutorial(tab: MenuTab) {
         if (!tutorialsEnabled) return
         if (tab != MenuTab.INVENTORY) return
+        val session = sessionStore.state.value
+        val receivedStarterSupplies =
+            "ms_w1_mq01_jed_talked" in session.completedMilestones ||
+                "w1_mq01" in session.completedQuests
+        if (!receivedStarterSupplies) return
         if (tutorialManager.hasCompleted(BAG_TUTORIAL_ID)) return
         val scheduled = tutorialManager.playScript(
             scriptId = BAG_TUTORIAL_ID,
@@ -2743,7 +2738,7 @@ class ExplorationViewModel(
                 entry = TutorialEntry(
                     key = BAG_TUTORIAL_ID,
                     context = "Inventory",
-                    message = "Swipe up from the tray or tap the backpack icon to open your bag.\nUse the filters to switch between gear, consumables, and key items."
+                    message = "Use the bottom menu button, then choose Inventory.\nUse the Supplies, Gear, and Key Items tabs across the top."
                 ),
                 allowDuplicates = false,
                 onDismiss = { tutorialManager.markCompleted(BAG_TUTORIAL_ID) }
@@ -3020,6 +3015,8 @@ class ExplorationViewModel(
     fun equipInventoryMod(slotId: String, itemId: String?, characterId: String? = null) {
         val normalizedSlot = slotId.trim().lowercase(Locale.getDefault())
         if (normalizedSlot.isBlank()) return
+        val completed = sessionStore.state.value.completedMilestones
+        if (!GearRules.isModSlotUnlocked(normalizedSlot, completed)) return
         if (itemId.isNullOrBlank()) {
             sessionStore.setEquippedItem(normalizedSlot, null, characterId)
             return
@@ -3648,21 +3645,6 @@ class ExplorationViewModel(
         _uiState.update { it.copy(shopGreeting = null, pendingShopId = null) }
     }
 
-    private fun handleCookingAction(action: CookingAction) {
-        val required = collectRequiredMilestones(action.requiresMilestone, action.requiresMilestones)
-        val completed = sessionStore.state.value.completedMilestones
-        val locked = required.any { it !in completed }
-        if (locked) {
-            val message = action.conditionUnmetMessage?.takeIf { it.isNotBlank() }
-                ?: "The kitchen isn't ready yet."
-            postStatus(message)
-            return
-        }
-        action.actionEvent?.takeIf { it.isNotBlank() }?.let { triggerPlayerAction(it) }
-        postStatus("Opening ${action.name.ifBlank { "Kitchen" }}")
-        emitEvent(ExplorationEvent.OpenCooking(action.stationId))
-    }
-
     private fun handleFirstAidAction(action: FirstAidAction) {
         val required = collectRequiredMilestones(action.requiresMilestone, action.requiresMilestones)
         val completed = sessionStore.state.value.completedMilestones
@@ -4253,14 +4235,6 @@ class ExplorationViewModel(
                     shopId = action["shop_id"].asStringOrNull()?.takeIf { it.isNotBlank() },
                     conditionUnmetMessage = action["condition_unmet_message"].asStringOrNull()
                 )
-                "cooking" -> CookingAction(
-                    name = name,
-                    stationId = action["station_id"].asStringOrNull()?.takeIf { it.isNotBlank() },
-                    requiresMilestones = action["requires_milestones"].asListOrNull(),
-                    requiresMilestone = action["requires_milestone"].asStringOrNull(),
-                    conditionUnmetMessage = action["condition_unmet_message"].asStringOrNull(),
-                    actionEvent = action["action_event"].asStringOrNull()
-                )
                 "first_aid", "firstaid" -> FirstAidAction(
                     name = name,
                     stationId = action["station_id"].asStringOrNull()?.takeIf { it.isNotBlank() },
@@ -4456,7 +4430,6 @@ sealed interface ExplorationEvent {
     data class RoomSearchUnlocked(val roomId: String?, val note: String?) : ExplorationEvent
     data class ItemUsed(val result: ItemUseResult, val message: String? = null) : ExplorationEvent
     data class OpenTinkering(val shopId: String?) : ExplorationEvent
-    data class OpenCooking(val stationId: String?) : ExplorationEvent
     data class OpenFirstAid(val stationId: String?) : ExplorationEvent
     data class OpenFishing(val zoneId: String?) : ExplorationEvent
     data class OpenShop(val shopId: String) : ExplorationEvent

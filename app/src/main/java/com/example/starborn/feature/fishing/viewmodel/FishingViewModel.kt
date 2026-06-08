@@ -44,6 +44,8 @@ class FishingViewModel(
     private var reelJob: Job? = null
     private var currentEncounter: FishingEncounter? = null
     private var reelProgress: Float = 0f
+    private var reelTension: Float = 0f
+    private var isReeling: Boolean = false
     private var highestProgress: Float = 0f
 
     init {
@@ -131,15 +133,16 @@ class FishingViewModel(
         attemptHook()
     }
 
-    fun onReelTap() {
+    fun onReelPressed() {
         if (_uiState.value.fishingState != FishingState.REELING) return
-        val rod = _uiState.value.selectedRod ?: return
-        reelProgress = (reelProgress + (0.08f + rod.fishingPower.toFloat() * 0.02f)).coerceAtMost(1.1f)
-        highestProgress = max(highestProgress, reelProgress)
-        updateReelState(rod)
-        if (reelProgress >= 1f) {
-            finishReeling(success = true)
-        }
+        isReeling = true
+        updateReelState()
+    }
+
+    fun onReelReleased() {
+        if (_uiState.value.fishingState != FishingState.REELING) return
+        isReeling = false
+        updateReelState()
     }
 
     fun cancelWaiting() {
@@ -233,6 +236,8 @@ class FishingViewModel(
             return
         }
         reelProgress = 0.35f
+        reelTension = 0.18f
+        isReeling = false
         highestProgress = reelProgress
         val fishName = encounter.catch.itemId
         _uiState.update {
@@ -242,7 +247,8 @@ class FishingViewModel(
                 waitingState = null,
                 reelState = FishingReelState(
                     progress = reelProgress,
-                    tension = 0f,
+                    tension = reelTension,
+                    isReeling = isReeling,
                     fishName = fishName,
                     behavior = encounter.behavior
                 )
@@ -251,12 +257,12 @@ class FishingViewModel(
         reelJob = viewModelScope.launch {
             while (isActive) {
                 delay(REEL_TICK_MS)
-                applyFishPull(encounter, rod)
+                applyReelTick(encounter, rod)
             }
         }
     }
 
-    private fun applyFishPull(encounter: FishingEncounter, rod: FishingRod) {
+    private fun applyReelTick(encounter: FishingEncounter, rod: FishingRod) {
         val behavior = encounter.behavior
         val basePull = ((behavior?.basePull ?: 0.4) / rod.stability).toFloat()
         val burstPull = when (behavior?.pattern) {
@@ -266,31 +272,49 @@ class FishingViewModel(
             com.example.starborn.domain.fishing.FishPattern.BURST -> if (random.nextFloat() < 0.25f) (behavior.burstPull / rod.stability).toFloat() else 0f
         }
         val totalPull = (basePull + burstPull).coerceAtLeast(0.02f) * PULL_SCALE
-        reelProgress = (reelProgress - totalPull).coerceAtLeast(0f)
+        if (isReeling) {
+            val reelGain = (REEL_GAIN_BASE + rod.fishingPower.toFloat() * REEL_POWER_SCALE) * (1f - reelTension * 0.35f)
+            reelProgress = (reelProgress + reelGain - totalPull * 0.35f).coerceIn(0f, 1.1f)
+            reelTension = (reelTension + TENSION_GAIN / rod.stability.toFloat() + totalPull * 0.45f).coerceAtMost(1.2f)
+        } else {
+            reelProgress = (reelProgress - totalPull).coerceAtLeast(0f)
+            reelTension = (reelTension - TENSION_RECOVERY / rod.stability.toFloat() + totalPull * 0.12f).coerceIn(0f, 1.2f)
+        }
+        highestProgress = max(highestProgress, reelProgress)
+        if (reelTension >= 1f) {
+            finishReeling(success = false, message = "The line snapped under too much tension.")
+            return
+        }
         if (reelProgress <= 0f) {
             finishReeling(success = false)
             return
         }
-        updateReelState(rod, totalPull)
+        if (reelProgress >= 1f) {
+            finishReeling(success = true)
+            return
+        }
+        updateReelState()
     }
 
-    private fun updateReelState(rod: FishingRod, tension: Float = 0f) {
+    private fun updateReelState() {
         _uiState.update {
             it.copy(
                 reelState = it.reelState?.copy(
                     progress = reelProgress,
-                    tension = tension
+                    tension = reelTension,
+                    isReeling = isReeling
                 )
             )
         }
     }
 
-    private fun finishReeling(success: Boolean) {
+    private fun finishReeling(success: Boolean, message: String = "The line went slack.") {
         reelJob?.cancel()
+        isReeling = false
         val encounter = currentEncounter
         if (!success || encounter == null) {
             emitResult(
-                FishingResult(itemId = "", quantity = 0, message = "The line went slack."),
+                FishingResult(itemId = "", quantity = 0, message = message),
                 MinigameResult.FAIL
             )
             currentEncounter = null
@@ -341,8 +365,12 @@ class FishingViewModel(
         private const val NIBBLE_INTERVAL_MS = 600L
         private const val HOOK_WINDOW_MS = 1_500L
         private const val HOOK_TICK_MS = 100L
-        private const val REEL_TICK_MS = 200L
+        private const val REEL_TICK_MS = 120L
         private const val PULL_SCALE = 0.05f
+        private const val REEL_GAIN_BASE = 0.025f
+        private const val REEL_POWER_SCALE = 0.015f
+        private const val TENSION_GAIN = 0.055f
+        private const val TENSION_RECOVERY = 0.065f
         private const val PERFECT_THRESHOLD = 0.85f
     }
 }

@@ -3,7 +3,6 @@ package com.example.starborn.domain.crafting
 import com.example.starborn.data.assets.CraftingRecipeSource
 import com.example.starborn.domain.inventory.InventoryService
 import com.example.starborn.domain.session.GameSessionStore
-import com.example.starborn.domain.model.CookingRecipe
 import com.example.starborn.domain.model.FirstAidRecipe
 import com.example.starborn.domain.model.TinkeringRecipe
 
@@ -13,16 +12,12 @@ class CraftingService(
     private val sessionStore: GameSessionStore
 ) {
     val tinkeringRecipes: List<TinkeringRecipe> by lazy { craftingDataSource.loadTinkeringRecipes() }
-    val cookingRecipes: List<CookingRecipe> by lazy { craftingDataSource.loadCookingRecipes() }
     val firstAidRecipes: List<FirstAidRecipe> by lazy { craftingDataSource.loadFirstAidRecipes() }
 
-    fun canCraft(recipe: CookingRecipe): Boolean = recipe.ingredients.all { (itemId, qty) ->
-        inventoryService.hasItem(itemId, qty)
-    }
-
     fun canCraft(recipe: TinkeringRecipe): Boolean {
-        val normalizedBase = normalizeToken(recipe.base)
-        val componentCounts = recipe.components.groupingBy { normalizeToken(it) }.eachCount()
+        val requirements = ingredientsFor(recipe)
+        if (requirements.isEmpty()) return false
+        val requirementCounts = requirements.mapKeys { (item, _) -> normalizeToken(item) }
         val inventoryCounts = mutableMapOf<String, Int>()
         inventoryService.state.value.forEach { entry ->
             val tokens = buildList {
@@ -34,9 +29,7 @@ class CraftingService(
                 inventoryCounts[key] = inventoryCounts.getOrDefault(key, 0) + entry.quantity
             }
         }
-        val baseOk = (inventoryCounts[normalizedBase] ?: 0) >= 1
-        val componentsOk = componentCounts.all { (id, needed) -> (inventoryCounts[id] ?: 0) >= needed }
-        return baseOk && componentsOk
+        return requirementCounts.all { (id, needed) -> (inventoryCounts[id] ?: 0) >= needed }
     }
 
     private fun normalizeToken(raw: String): String =
@@ -56,46 +49,10 @@ class CraftingService(
     fun isSchematicLearned(schematicId: String): Boolean =
         schematicId.isNotBlank() && schematicId in sessionStore.state.value.learnedSchematics
 
-    fun craftCooking(recipeId: String, outcome: MinigameResult = MinigameResult.SUCCESS): CraftingOutcome {
-        val recipe = cookingRecipes.find { it.id == recipeId } ?: return CraftingOutcome.Failure("Unknown recipe")
-        if (!canCraft(recipe)) return CraftingOutcome.Failure("Missing ingredients")
-        if (!inventoryService.consumeItems(recipe.ingredients)) return CraftingOutcome.Failure("Unable to consume ingredients")
-        val minigame = recipe.minigame
-        return when (outcome) {
-            MinigameResult.FAILURE -> CraftingOutcome.Failure(
-                message = "The recipe went wrong. Try again.",
-                audioCue = minigame?.failureCue,
-                fxId = minigame?.failureFx
-            )
-            MinigameResult.SUCCESS -> {
-                inventoryService.addItem(recipe.result, 1)
-                CraftingOutcome.Success(
-                    itemId = recipe.result,
-                    message = "Cooked ${recipe.name}",
-                    audioCue = minigame?.successCue,
-                    fxId = minigame?.successFx
-                )
-            }
-            MinigameResult.PERFECT -> {
-                inventoryService.addItem(recipe.result, 1)
-                CraftingOutcome.Success(
-                    itemId = recipe.result,
-                    message = "Perfectly cooked ${recipe.name}!",
-                    audioCue = minigame?.perfectCue ?: minigame?.successCue,
-                    fxId = minigame?.successFx
-                )
-            }
-        }
-    }
-
     fun craftTinkering(recipeId: String): CraftingOutcome {
         val recipe = tinkeringRecipes.find { it.id == recipeId } ?: return CraftingOutcome.Failure("Unknown recipe")
         if (!canCraft(recipe)) return CraftingOutcome.Failure("Missing components")
-        val requirements = mutableMapOf<String, Int>()
-        requirements[recipe.base] = requirements.getOrDefault(recipe.base, 0) + 1
-        recipe.components.forEach { component ->
-            requirements[component] = requirements.getOrDefault(component, 0) + 1
-        }
+        val requirements = ingredientsFor(recipe)
         if (!inventoryService.consumeItems(requirements)) return CraftingOutcome.Failure("Unable to consume components")
         val addedId = addCraftedItem(recipe)
         // Keep session inventory in sync for downstream screens (inventory, save).
@@ -104,16 +61,22 @@ class CraftingService(
         return CraftingOutcome.Success(addedId, "Crafted ${recipe.name}")
     }
 
-    private fun matchingCount(needle: String): Int {
-        val token = normalizeToken(needle)
-        return inventoryService.state.value.sumOf { entry ->
-            val tokens = buildList {
-                add(normalizeToken(entry.item.id))
-                add(normalizeToken(entry.item.name))
-                entry.item.aliases.forEach { add(normalizeToken(it)) }
-            }
-            if (tokens.any { it == token }) entry.quantity else 0
+    fun ingredientsFor(recipe: TinkeringRecipe): Map<String, Int> {
+        if (recipe.ingredients.isNotEmpty()) {
+            return recipe.ingredients
+                .filterKeys { it.isNotBlank() }
+                .mapValues { (_, qty) -> qty.coerceAtLeast(1) }
         }
+        val requirements = mutableMapOf<String, Int>()
+        recipe.base?.takeIf { it.isNotBlank() }?.let { base ->
+            requirements[base] = requirements.getOrDefault(base, 0) + 1
+        }
+        recipe.components.forEach { component ->
+            if (component.isNotBlank()) {
+                requirements[component] = requirements.getOrDefault(component, 0) + 1
+            }
+        }
+        return requirements
     }
 
     private fun addCraftedItem(recipe: TinkeringRecipe): String {
@@ -132,11 +95,11 @@ class CraftingService(
             ?: normalizeToken(recipe.result.ifBlank { recipe.id.ifBlank { recipe.name } })
 
         val beforeQty = inventoryService.snapshot()[resolvedId] ?: 0
-        inventoryService.addItem(resolvedId, 1)
+        inventoryService.addItem(resolvedId, recipe.resultQuantity.coerceAtLeast(1))
         val afterQty = inventoryService.snapshot()[resolvedId] ?: 0
         if (afterQty <= beforeQty) {
             // Guarantee the crafted item is present even if the first add failed to change quantity.
-            inventoryService.addItem(resolvedId, 1)
+            inventoryService.addItem(resolvedId, recipe.resultQuantity.coerceAtLeast(1))
         }
         return inventoryService.itemDetail(resolvedId)?.id ?: resolvedId
     }

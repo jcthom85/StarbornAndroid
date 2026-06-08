@@ -1,6 +1,7 @@
 package com.example.starborn.feature.inventory
 
 import com.example.starborn.domain.crafting.CraftingService
+import com.example.starborn.domain.inventory.GearRules
 import com.example.starborn.domain.inventory.InventoryService
 import com.example.starborn.domain.inventory.ItemCatalog
 import com.example.starborn.domain.model.Item
@@ -83,6 +84,40 @@ class InventoryViewModelTest {
         assertEquals(170, state.partyMemberHp["ollie"])
     }
 
+    @Test
+    fun modSlotMilestoneLockingEnforced() {
+        val catalog = TestCatalog(listOf(modItem()))
+        val inventoryService = InventoryService(catalog).apply { loadItems() }
+        val craftingService = mock<CraftingService>()
+        val sessionStore = GameSessionStore().apply {
+            setEquippedItem("weapon", "some_weapon", "nova")
+            setInventory(mapOf("basic_mod" to 1))
+        }
+        val roster = listOf(
+            Player("nova", "Nova", 1, 0, 120, 10, 8, 6, 5, 4, emptyList(), "")
+        )
+        val viewModel = InventoryViewModel(inventoryService, craftingService, sessionStore, roster)
+
+        // Try to equip mod to weapon_mod1 when ms_w1_mq01_complete is not completed
+        viewModel.equipMod("weapon_mod1", "basic_mod", "nova")
+        dispatcher.scheduler.advanceUntilIdle()
+
+        // Verify it was NOT equipped
+        val equippedMap = sessionStore.state.value.equippedItems
+        assertEquals(null, equippedMap["nova:weapon_mod1"])
+
+        // Complete the milestone
+        sessionStore.setMilestone("ms_w1_mq01_complete")
+
+        // Try equipping again
+        viewModel.equipMod("weapon_mod1", "basic_mod", "nova")
+        dispatcher.scheduler.advanceUntilIdle()
+
+        // Verify it IS equipped now
+        val equippedMapAfter = sessionStore.state.value.equippedItems
+        assertEquals("basic_mod", equippedMapAfter["nova:weapon_mod1"])
+    }
+
     private class TestCatalog(items: List<Item>) : ItemCatalog {
         private val itemsById = items.associateBy { it.id }
 
@@ -103,5 +138,11 @@ class InventoryViewModelTest {
         name = "Sampler",
         type = "consumable",
         effect = ItemEffect(target = "party", restoreHp = 9999)
+    )
+
+    private fun modItem() = Item(
+        id = "basic_mod",
+        name = "Basic Mod",
+        type = "mod"
     )
 }

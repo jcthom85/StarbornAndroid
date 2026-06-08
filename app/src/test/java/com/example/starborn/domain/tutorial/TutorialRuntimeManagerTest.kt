@@ -146,5 +146,12 @@ class TutorialRuntimeManagerTest {
         assertTrue("Completion callback should run after final step", completed)
         val state = sessionStore.state.value
         assertTrue(state.tutorialSeen.contains("bag_basics"))
+        assertTrue(state.tutorialCompleted.contains("bag_basics_intro"))
+        assertTrue(state.tutorialCompleted.contains("bag_basics_step_1"))
+        assertTrue(state.tutorialCompleted.contains("bag_basics"))
+
+        assertTrue(manager.playScript("bag_basics"))
+        advanceUntilIdle()
+        assertNull(promptManager.state.value.current)
     }
 }

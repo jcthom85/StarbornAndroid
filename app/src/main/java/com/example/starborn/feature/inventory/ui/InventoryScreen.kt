@@ -153,6 +153,7 @@ fun InventoryRoute(
 ) {
     val entries by viewModel.entries.collectAsStateWithLifecycle()
     val equippedItems by viewModel.equippedItems.collectAsStateWithLifecycle()
+    val completedMilestones by viewModel.completedMilestones.collectAsStateWithLifecycle()
     val unlockedWeapons by viewModel.unlockedWeapons.collectAsStateWithLifecycle()
     val equippedWeapons by viewModel.equippedWeapons.collectAsStateWithLifecycle()
     val unlockedArmors by viewModel.unlockedArmors.collectAsStateWithLifecycle()
@@ -173,6 +174,7 @@ fun InventoryRoute(
     InventoryScreen(
         entries = entries,
         equippedItems = equippedItems,
+        completedMilestones = completedMilestones,
         unlockedWeapons = unlockedWeapons,
         equippedWeapons = equippedWeapons,
         unlockedArmors = unlockedArmors,
@@ -203,6 +205,7 @@ fun InventoryRoute(
 private fun InventoryScreen(
     entries: List<InventoryEntry>,
     equippedItems: Map<String, String>,
+    completedMilestones: Set<String>,
     unlockedWeapons: Set<String>,
     equippedWeapons: Map<String, String>,
     unlockedArmors: Set<String>,
@@ -630,6 +633,7 @@ private fun InventoryScreen(
                                         slots = slotOptions,
                                         selectedSlot = selectedSlot,
                                         equippedItems = loadoutEquippedItems,
+                                        completedMilestones = completedMilestones,
                                         equippedItemNames = equippedItemNamesWithWeapon,
                                         equippedWeaponItem = equippedWeaponItem,
                                         equippedWeaponName = equippedWeaponName,
@@ -663,6 +667,7 @@ private fun InventoryScreen(
                                         slots = slotOptions,
                                         selectedSlot = selectedSlot,
                                         equippedItems = loadoutEquippedItems,
+                                        completedMilestones = completedMilestones,
                                         equippedItemNames = equippedItemNamesWithWeapon,
                                         equippedArmorItem = equippedArmorItem,
                                         equippedArmorName = equippedArmorName,
@@ -705,6 +710,7 @@ private fun InventoryScreen(
                                         slots = slotOptions,
                                         selectedSlot = selectedSlot,
                                         equippedItems = loadoutEquippedItems,
+                                        completedMilestones = completedMilestones,
                                         availableItems = gearOptions,
                                         selectedEntry = selectedEquipEntry,
                                         equippedEntry = equippedEntry,
@@ -1199,6 +1205,7 @@ private fun GearTabContent(
     slots: List<String>,
     selectedSlot: String,
     equippedItems: Map<String, String>,
+    completedMilestones: Set<String>,
     availableItems: List<InventoryEntry>,
     selectedEntry: InventoryEntry?,
     equippedEntry: InventoryEntry?,
@@ -1242,6 +1249,7 @@ private fun GearTabContent(
             equippedItemName = equippedItemName,
             equippedItemNames = equippedItemNames,
             equippedItems = equippedItems,
+            completedMilestones = completedMilestones,
             availableItems = availableItems,
             selectedEntry = selectedEntry,
             equippedEntry = equippedEntry,
@@ -1265,6 +1273,7 @@ private fun WeaponGearTabContent(
     slots: List<String>,
     selectedSlot: String,
     equippedItems: Map<String, String>,
+    completedMilestones: Set<String>,
     equippedItemNames: Map<String, String?>,
     equippedWeaponItem: Item?,
     equippedWeaponName: String?,
@@ -1306,6 +1315,7 @@ private fun WeaponGearTabContent(
                 selectedSlot = selectedSlot,
                 equippedItemNames = equippedItemNames,
                 equippedItems = equippedItems,
+                completedMilestones = completedMilestones,
                 onSelectSlot = onSelectSlot,
                 onSelectModSlot = onSelectModSlot,
                 accentColor = accentColor,
@@ -1335,6 +1345,7 @@ private fun ArmorGearTabContent(
     slots: List<String>,
     selectedSlot: String,
     equippedItems: Map<String, String>,
+    completedMilestones: Set<String>,
     equippedItemNames: Map<String, String?>,
     equippedArmorItem: Item?,
     equippedArmorName: String?,
@@ -1376,6 +1387,7 @@ private fun ArmorGearTabContent(
                 selectedSlot = selectedSlot,
                 equippedItemNames = equippedItemNames,
                 equippedItems = equippedItems,
+                completedMilestones = completedMilestones,
                 onSelectSlot = onSelectSlot,
                 onSelectModSlot = onSelectModSlot,
                 accentColor = accentColor,
@@ -1682,6 +1694,7 @@ private fun GearWorkshop(
     equippedItemName: String?,
     equippedItemNames: Map<String, String?>,
     equippedItems: Map<String, String>,
+    completedMilestones: Set<String>,
     availableItems: List<InventoryEntry>,
     selectedEntry: InventoryEntry?,
     equippedEntry: InventoryEntry?,
@@ -1704,6 +1717,7 @@ private fun GearWorkshop(
             selectedSlot = selectedSlot,
             equippedItemNames = equippedItemNames,
             equippedItems = equippedItems,
+            completedMilestones = completedMilestones,
             onSelectSlot = onSelectSlot,
             onSelectModSlot = onSelectModSlot,
             accentColor = accentColor,
@@ -1746,6 +1760,7 @@ private fun GearLoadoutGrid(
     selectedSlot: String,
     equippedItemNames: Map<String, String?>,
     equippedItems: Map<String, String>,
+    completedMilestones: Set<String>,
     onSelectSlot: (String) -> Unit,
     onSelectModSlot: (String) -> Unit,
     accentColor: Color,
@@ -1770,6 +1785,7 @@ private fun GearLoadoutGrid(
                 equippedItemName = equippedItemNames[slot],
                 equippedItems = equippedItems,
                 equippedItemNames = equippedItemNames,
+                completedMilestones = completedMilestones,
                 onClick = { onSelectSlot(slot) },
                 onSelectModSlot = onSelectModSlot,
                 accentColor = accentColor,
@@ -1789,6 +1805,7 @@ private fun LoadoutSlotCard(
     equippedItemName: String?,
     equippedItems: Map<String, String>,
     equippedItemNames: Map<String, String?>,
+    completedMilestones: Set<String>,
     onClick: () -> Unit,
     onSelectModSlot: (String) -> Unit,
     accentColor: Color,
@@ -1880,11 +1897,17 @@ private fun LoadoutSlotCard(
                         color = foregroundColor.copy(alpha = 0.7f)
                     )
                     modSlots.forEach { modSlot ->
-                        val modName = equippedItemNames[modSlot]?.takeIf { it.isNotBlank() } ?: "Empty"
+                        val isUnlocked = GearRules.isModSlotUnlocked(modSlot, completedMilestones)
+                        val modName = if (isUnlocked) {
+                            equippedItemNames[modSlot]?.takeIf { it.isNotBlank() } ?: "Empty"
+                        } else {
+                            "Locked"
+                        }
+                        val chipEnabled = !modsLocked && isUnlocked
                         ModSlotChip(
                             label = if (modSlot.endsWith("1")) "M1" else "M2",
                             name = modName,
-                            enabled = !modsLocked,
+                            enabled = chipEnabled,
                             accentColor = accentColor,
                             borderColor = borderColor,
                             foregroundColor = foregroundColor,
@@ -1898,6 +1921,15 @@ private fun LoadoutSlotCard(
                         style = MaterialTheme.typography.bodySmall,
                         color = foregroundColor.copy(alpha = 0.6f)
                     )
+                } else {
+                    val anyLockedByStory = modSlots.any { !GearRules.isModSlotUnlocked(it, completedMilestones) }
+                    if (anyLockedByStory) {
+                        Text(
+                            text = "Unlocks after Main Story milestone.",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = foregroundColor.copy(alpha = 0.6f)
+                        )
+                    }
                 }
             }
         }

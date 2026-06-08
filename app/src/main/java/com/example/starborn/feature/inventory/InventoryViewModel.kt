@@ -45,6 +45,13 @@ class InventoryViewModel(
             started = SharingStarted.Eagerly,
             initialValue = sessionStore.state.value.equippedItems
         )
+    val completedMilestones: StateFlow<Set<String>> = sessionStore.state
+        .map { it.completedMilestones }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            initialValue = sessionStore.state.value.completedMilestones
+        )
     val unlockedWeapons: StateFlow<Set<String>> = sessionStore.state
         .map { it.unlockedWeapons }
         .stateIn(
@@ -179,6 +186,8 @@ class InventoryViewModel(
     fun equipMod(slotId: String, itemId: String?, characterId: String? = null) {
         val normalizedSlot = slotId.trim().lowercase(Locale.getDefault())
         if (normalizedSlot.isBlank()) return
+        val completed = sessionStore.state.value.completedMilestones
+        if (!GearRules.isModSlotUnlocked(normalizedSlot, completed)) return
         if (itemId.isNullOrBlank()) {
             sessionStore.setEquippedItem(normalizedSlot, null, characterId)
             return

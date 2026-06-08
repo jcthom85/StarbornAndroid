@@ -38,7 +38,6 @@ import com.example.starborn.navigation.NavigationDestination.MainMenu
 import com.example.starborn.navigation.NavigationDestination.Hub
 import com.example.starborn.navigation.NavigationDestination.Inventory
 import com.example.starborn.navigation.NavigationDestination.Tinkering
-import com.example.starborn.navigation.NavigationDestination.Cooking
 import com.example.starborn.navigation.NavigationDestination.FirstAid
 import com.example.starborn.navigation.NavigationDestination.Shop
 import com.example.starborn.navigation.NavigationDestination.Fishing
@@ -54,11 +53,8 @@ import com.example.starborn.navigation.CombatResultPayload
 import com.example.starborn.feature.shop.ShopViewModel
 import com.example.starborn.feature.shop.ShopViewModelFactory
 import com.example.starborn.feature.shop.ui.ShopRoute
-import com.example.starborn.feature.crafting.CookingViewModel
-import com.example.starborn.feature.crafting.CookingViewModelFactory
 import com.example.starborn.feature.crafting.FirstAidViewModel
 import com.example.starborn.feature.crafting.FirstAidViewModelFactory
-import com.example.starborn.feature.crafting.ui.CookingRoute
 import com.example.starborn.feature.crafting.ui.FirstAidRoute
 import com.example.starborn.feature.fishing.viewmodel.FishingResultPayload
 import com.example.starborn.feature.fishing.ui.FishingRoute
@@ -245,7 +241,6 @@ fun NavigationHost(
                         backStackEntry.savedStateHandle["tinkering_craft"] = ""
                         navController.navigate(Tinkering.route)
                     },
-                    onOpenCooking = { navController.navigate(Cooking.route) },
                     onOpenFirstAid = { navController.navigate(FirstAid.route) },
                     onOpenFishing = { zoneId -> navController.navigate(Fishing.create(zoneId)) },
                     onOpenShop = { shopId ->
@@ -351,19 +346,6 @@ fun NavigationHost(
                 highContrastMode = userSettings.highContrastMode,
                 largeTouchTargets = userSettings.largeTouchTargets,
                 theme = environmentThemeState.theme
-            )
-        }
-        composable(Cooking.route) {
-            val cookingViewModel: CookingViewModel = viewModel(factory = CookingViewModelFactory(services))
-            CookingRoute(
-                viewModel = cookingViewModel,
-                onBack = { navController.popBackStack() },
-                onPlayAudio = { cue ->
-                    services.audioCuePlayer.execute(services.audioRouter.commandsForUi(cue))
-                },
-                onTriggerFx = services.uiFxBus::trigger,
-                highContrastMode = userSettings.highContrastMode,
-                largeTouchTargets = userSettings.largeTouchTargets
             )
         }
         composable(FirstAid.route) {

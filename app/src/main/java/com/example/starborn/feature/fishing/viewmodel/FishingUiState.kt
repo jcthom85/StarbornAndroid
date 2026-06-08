@@ -43,6 +43,7 @@ data class FishingHookState(
 data class FishingReelState(
     val progress: Float,
     val tension: Float,
+    val isReeling: Boolean,
     val fishName: String?,
     val behavior: FishBehaviorDefinition?
 )

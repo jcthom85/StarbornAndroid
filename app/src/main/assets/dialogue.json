@@ -240,7 +240,7 @@
         "id": "jed_w1_mq01_intro_5",
         "speaker": "Jed",
         "text": "I know the math. I hate the math. Check your gear, then use the bench. And take the ration bar before you pretend you aren't hungry.",
-        "trigger": "set_quest_task_done:w1_mq01:talk_to_jed,give_item:mining_pistol,give_item:cryo_inductor,give_item:scrap_metal:2,set_milestone:ms_w1_mq01_jed_talked,give_item:ration_pack,system_tutorial:bag_basics|Jed's Workshop"
+        "trigger": "set_quest_task_done:w1_mq01:talk_to_jed,give_item:mining_pistol,give_item:cryo_inductor,give_item:scrap_metal:2,set_quest_task_done:w1_mq01:equip_starter_gear,set_milestone:ms_w1_mq01_jed_talked,give_item:ration_pack,system_tutorial:bag_basics|Jed's Workshop"
     },
     {
         "id": "jed_default_talk",

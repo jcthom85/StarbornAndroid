@@ -2714,6 +2714,12 @@
         "name": "stream",
         "type": "generic",
         "condition_unmet_message": "The water hums with a deep subsonic tone, washing away local static."
+      },
+      {
+        "name": "Fish the glow-water",
+        "type": "fishing",
+        "zone_id": "sector9_stream",
+        "condition_unmet_message": "The stream is calm enough for fishing."
       }
     ]
   }

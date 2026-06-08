@@ -2,88 +2,174 @@
   {
     "id": "mod_power_lens_1",
     "name": "Power Lens Mk. I",
-    "base": "Focusing Lens",
+    "category": "gear",
+    "method": "mod",
+    "base": "focusing_lens",
     "components": [
-      "Wiring Bundle"
+      "wiring_bundle"
     ],
-    "result": "Power Lens Mk. I",
-    "description": "Replaces a standard lens to boost energy output.",
+    "ingredients": {
+      "focusing_lens": 1,
+      "wiring_bundle": 1
+    },
+    "result": "power_lens_mk_i",
+    "description": "Tune a focusing lens with insulated wiring to boost energy output.",
     "success_message": "You assemble a crisp new Power Lens Mk. I."
   },
   {
     "id": "mod_ergonomic_grip_1",
     "name": "Ergonomic Grip",
-    "base": "Ballistic Weave",
+    "category": "gear",
+    "method": "mod",
+    "base": "ballistic_weave",
     "components": [
-      "Scrap Metal",
-      "Scrap Metal"
+      "scrap_metal",
+      "scrap_metal"
     ],
-    "result": "Ergonomic Grip",
-    "description": "A custom-molded grip that improves weapon stability under pressure.",
+    "ingredients": {
+      "ballistic_weave": 1,
+      "scrap_metal": 2
+    },
+    "result": "ergonomic_grip",
+    "description": "Mold reinforced weave and scrap into a steadier weapon grip.",
     "success_message": "You mold an Ergonomic Grip that feels perfect in the hand."
   },
   {
     "id": "mod_armor_plating_1",
     "name": "Armor Plating Mk. I",
-    "base": "Scrap Metal",
-    "components": [],
-    "result": "Armor Plating Mk. I",
-    "description": "Bolts an extra layer of ablative armor onto a vest.",
+    "category": "gear",
+    "method": "mod",
+    "base": "scrap_metal",
+    "ingredients": {
+      "scrap_metal": 1
+    },
+    "result": "armor_plating_mk_i",
+    "description": "Press scrap into a simple ablative armor plate.",
     "success_message": "You bolt together Armor Plating Mk. I."
   },
   {
     "id": "mod_insulated_lining_1",
     "name": "Insulated Lining",
-    "base": "Ballistic Weave",
+    "category": "gear",
+    "method": "mod",
+    "base": "ballistic_weave",
     "components": [
-      "Wiring Bundle"
+      "wiring_bundle"
     ],
-    "result": "Insulated Lining",
-    "description": "Adds a layer of insulated fabric to protect against energy discharge.",
+    "ingredients": {
+      "ballistic_weave": 1,
+      "wiring_bundle": 1
+    },
+    "result": "insulated_lining",
+    "description": "Stitch insulated wiring through weave to soften energy discharge.",
     "success_message": "You stitch an Insulated Lining that hums with safety."
   },
   {
     "id": "repair_cryo_inductor",
     "name": "Functional Cryo-Inductor",
-    "base": "Cryo-Inductor",
+    "category": "repair",
+    "method": "repair",
+    "base": "cryo_inductor",
     "components": [
-      "Scrap Metal"
+      "scrap_metal"
     ],
-    "result": "Functional Cryo-Inductor",
-    "description": "Repair the damaged Cryo-Inductor using scrap metal.",
-    "success_message": "The Cryo-Inductor whirs back to life!"
+    "ingredients": {
+      "cryo_inductor": 1,
+      "scrap_metal": 1
+    },
+    "result": "functional_cryo_inductor",
+    "description": "Repair the damaged Cryo-Inductor so Jed can bring the cold loop online.",
+    "success_message": "The Cryo-Inductor whirs back to life."
   },
   {
     "id": "repaired_projector",
     "name": "Repaired Projector",
-    "base": "Broken Projector",
+    "category": "repair",
+    "method": "repair",
+    "base": "broken_projector",
     "components": [
-      "Circuit Board"
+      "circuit_board"
     ],
-    "result": "Repaired Projector",
-    "description": "[DEBUG] Not sure where this text goes in the game.",
-    "success_message": "You repaired Schoolteacher Kasey's projector!"
+    "ingredients": {
+      "broken_projector": 1,
+      "circuit_board": 1
+    },
+    "result": "repaired_projector",
+    "description": "Replace the cracked controller board and restore the school's projector.",
+    "success_message": "You repaired Schoolteacher Kasey's projector."
   },
   {
     "id": "repaired_arcade_display",
     "name": "Repaired Arcade Display",
-    "base": "Broken Arcade Display",
+    "category": "repair",
+    "method": "repair",
+    "base": "broken_arcade_display",
     "components": [
-      "Nano Filament"
+      "nano_filament"
     ],
-    "result": "Repaired Arcade Display",
-    "description": "[DEBUG] Not sure where this text goes in the game.",
-    "success_message": "You repaired Sam & Ellie's Arcade Display!"
+    "ingredients": {
+      "broken_arcade_display": 1,
+      "nano_filament": 1
+    },
+    "result": "repaired_arcade_display",
+    "description": "Thread nano-filament through the dead pixel lattice.",
+    "success_message": "You repaired Sam and Ellie's arcade display."
   },
   {
     "id": "repaired_coffee_grinder",
     "name": "Repaired Coffee Grinder",
-    "base": "Broken Coffee Grinder",
+    "category": "repair",
+    "method": "repair",
+    "base": "broken_coffee_grinder",
     "components": [
-      "Scrap Metal"
+      "scrap_metal"
     ],
-    "result": "Repaired Coffee Grinder",
-    "description": "[DEBUG] Not sure where this text goes in the game.",
-    "success_message": "You repaired Maddie's Coffee Grinder!"
+    "ingredients": {
+      "broken_coffee_grinder": 1,
+      "scrap_metal": 1
+    },
+    "result": "repaired_coffee_grinder",
+    "description": "Re-seat the grinder teeth and patch the cracked drive housing.",
+    "success_message": "You repaired Maddie's coffee grinder."
+  },
+  {
+    "id": "provision_spicy_ramen",
+    "name": "Spicy Ramen",
+    "category": "provision",
+    "method": "field_cook",
+    "ingredients": {
+      "noodles": 1,
+      "fiery_pepper": 1,
+      "beast_meat": 1
+    },
+    "result": "spicy_ramen",
+    "description": "Use the bench heater and pressure cup to turn field supplies into a sharp combat meal.",
+    "success_message": "You seal a steaming bowl of Spicy Ramen."
+  },
+  {
+    "id": "provision_ration_soup",
+    "name": "Ration Soup",
+    "category": "provision",
+    "method": "field_cook",
+    "ingredients": {
+      "ration_pack": 1,
+      "herb": 1
+    },
+    "result": "ration_soup",
+    "description": "Stretch a ration pack into a warmer, cleaner recovery meal.",
+    "success_message": "You turn the ration pack into a restorative soup."
+  },
+  {
+    "id": "provision_glowfish_broth",
+    "name": "Glowfish Broth",
+    "category": "provision",
+    "method": "field_cook",
+    "ingredients": {
+      "raw_glowfish": 2,
+      "herb": 1
+    },
+    "result": "glowfish_broth",
+    "description": "Stabilize glow-water fish into a mineral broth that steadies the hands.",
+    "success_message": "You brew a bowl of Glowfish Broth."
   }
 ]

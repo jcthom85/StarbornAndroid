@@ -18,6 +18,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import java.io.File
+import com.example.starborn.domain.fishing.FishingData
 import com.example.starborn.domain.model.TinkeringRecipe
 import com.example.starborn.domain.model.FirstAidRecipe
 
@@ -69,8 +70,12 @@ class DialogEventsLoadingTest {
     fun craftingRecipesLoad() {
         val tinkering = readList("src/main/assets/recipes_tinkering.json", TinkeringRecipe::class.java)
         val firstAid = readList("src/main/assets/recipes_firstaid.json", FirstAidRecipe::class.java)
+        val fishing = readObject("src/main/assets/recipes_fishing.json", FishingData::class.java)
         assertTrue(tinkering.isNotEmpty())
         assertTrue(firstAid.isNotEmpty())
+        assertTrue(fishing.zones.containsKey("sector9_stream"))
+        assertTrue(fishing.rods.isNotEmpty())
+        assertTrue(fishing.lures.isNotEmpty())
     }
 }
 
@@ -95,5 +100,13 @@ private fun <T> readList(path: String, clazz: Class<T>): List<T> {
     require(file.exists()) { "$path not found" }
     val moshi = MoshiProvider.instance
     val adapter = moshi.adapter<List<T>>(Types.newParameterizedType(List::class.java, clazz))
+    return requireNotNull(adapter.fromJson(file.readText()))
+}
+
+private fun <T> readObject(path: String, clazz: Class<T>): T {
+    val file = File(path)
+    require(file.exists()) { "$path not found" }
+    val moshi = MoshiProvider.instance
+    val adapter = moshi.adapter(clazz)
     return requireNotNull(adapter.fromJson(file.readText()))
 }

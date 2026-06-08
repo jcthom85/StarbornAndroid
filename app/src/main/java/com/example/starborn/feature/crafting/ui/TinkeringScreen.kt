@@ -318,9 +318,9 @@ private fun SectionTabs(
     colors: TinkeringColors
 ) {
     val tabs = listOf(
-        TinkeringSection.Tinker to "Tinker",
+        TinkeringSection.Tinker to "Workbench",
         TinkeringSection.Schematics to "Schematics",
-        TinkeringSection.Scrap to "Scrap"
+        TinkeringSection.Scrap to "Reclaim"
     )
     Row(modifier = Modifier.fillMaxWidth()) {
         tabs.forEach { (section, label) ->
@@ -403,9 +403,12 @@ private fun SchematicsSection(
     largeTouchTargets: Boolean
 ) {
     val recipes = remember(state.filter, state.learnedRecipes, state.lockedRecipes) {
+        val all = state.learnedRecipes + state.lockedRecipes
         when (state.filter) {
-            TinkeringFilter.LEARNED -> state.learnedRecipes
-            TinkeringFilter.ALL -> state.learnedRecipes + state.lockedRecipes
+            TinkeringFilter.ALL -> all
+            TinkeringFilter.REPAIR -> all.filter { it.category.equals("repair", ignoreCase = true) }
+            TinkeringFilter.GEAR -> all.filter { it.category.equals("gear", ignoreCase = true) }
+            TinkeringFilter.PROVISION -> all.filter { it.category.equals("provision", ignoreCase = true) }
         }
     }
     Column(
@@ -413,8 +416,7 @@ private fun SchematicsSection(
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         RecipeFilterRow(
-            learnedCount = state.learnedRecipes.size,
-            lockedCount = state.lockedRecipes.size,
+            recipes = state.learnedRecipes + state.lockedRecipes,
             selected = state.filter,
             onFilterChange = onFilterChange
         )
@@ -449,6 +451,8 @@ private fun SchematicsSection(
                                 recipeId = it.id,
                                 name = it.name,
                                 description = it.description,
+                                category = it.category,
+                                method = it.method,
                                 resultId = it.resultId,
                                 learned = it.learned
                             )
@@ -490,7 +494,7 @@ private fun ScrapSection(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = "No crafted items to scrap right now.",
+                    text = "No crafted items to reclaim right now.",
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.padding(20.dp)
                 )
@@ -535,10 +539,10 @@ private fun ScrapPreviewCard(
             modifier = Modifier.padding(12.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Text("Scrap Preview", style = MaterialTheme.typography.titleSmall, color = colors.textPrimary)
+            Text("Reclaim Preview", style = MaterialTheme.typography.titleSmall, color = colors.textPrimary)
             when {
                 itemName.isNullOrBlank() -> Text(
-                    text = "Choose a crafted item to see what you'll reclaim.",
+                    text = "Choose a crafted item to see what you will reclaim.",
                     style = MaterialTheme.typography.bodySmall,
                     color = colors.textSecondary
                 )
@@ -549,15 +553,14 @@ private fun ScrapPreviewCard(
                 )
                 else -> {
                     Text(
-                        text = "Scrapping $itemName yields:",
+                        text = "Reclaiming $itemName yields:",
                         style = MaterialTheme.typography.bodyMedium,
                         color = colors.textPrimary
                     )
-                    ItemPill(label = "Base", value = recipe.base, highContrastMode = highContrastMode)
-                    if (recipe.components.isNotEmpty()) {
+                    if (recipe.ingredients.isNotEmpty()) {
                         ItemPill(
-                            label = "Components",
-                            value = recipe.components.joinToString(),
+                            label = "Returned supplies",
+                            value = recipe.ingredients.joinToString { "${it.label} x${it.required}" },
                             highContrastMode = highContrastMode
                         )
                     }
@@ -611,11 +614,15 @@ private fun TinkeringRecipeCard(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                    Column(
+                        modifier = Modifier.weight(1f),
+                        verticalArrangement = Arrangement.spacedBy(2.dp)
+                    ) {
                         Text(recipe.name, style = MaterialTheme.typography.titleMedium, color = titleColor)
                         recipe.description?.takeIf { it.isNotBlank() }?.let {
                             Text(it, style = MaterialTheme.typography.bodySmall, color = bodyColor)
                         }
+                        Text(recipe.categoryLabel(), style = MaterialTheme.typography.labelSmall, color = bodyColor)
                     }
                     val statusText: String
                     val statusColor: Color
@@ -636,14 +643,11 @@ private fun TinkeringRecipeCard(
                     StatusPill(text = statusText, color = statusColor, highContrastMode = highContrastMode)
                 }
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                    ItemPill(label = "Base", value = recipe.base, highContrastMode = highContrastMode)
-                    if (recipe.components.isNotEmpty()) {
-                        ItemPill(
-                            label = "Components",
-                            value = recipe.components.joinToString(),
-                            highContrastMode = highContrastMode
-                        )
-                    }
+                    ItemPill(
+                        label = "Supplies",
+                        value = recipe.ingredients.joinToString { "${it.label} x${it.required}" },
+                        highContrastMode = highContrastMode
+                    )
                 }
                 Surface(
                     color = if (highContrastMode) Color(0xFF121A28) else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f),
@@ -710,6 +714,11 @@ private fun PreviewCard(
                 )
             } else {
                 Text(preview.name, style = MaterialTheme.typography.titleMedium, color = colors.textPrimary)
+                Text(
+                    text = preview.categoryLabel(),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = colors.textSecondary
+                )
                 preview.description?.takeIf { it.isNotBlank() }?.let {
                     Text(it, style = MaterialTheme.typography.bodySmall, color = colors.textSecondary)
                 }
@@ -753,7 +762,7 @@ private fun TinkeringBenchCard(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Text(
-                text = "Combine a main item with up to two components to modify or enhance gear.",
+                text = "Pick a schematic or combine supplies to repair gear, tune equipment, or prepare provisions.",
                 style = MaterialTheme.typography.bodyMedium,
                 color = colors.textSecondary
             )
@@ -922,8 +931,7 @@ private fun RequirementSummary(
 
 @Composable
 private fun RecipeFilterRow(
-    learnedCount: Int,
-    lockedCount: Int,
+    recipes: List<TinkeringRecipeUi>,
     selected: TinkeringFilter,
     onFilterChange: (TinkeringFilter) -> Unit
 ) {
@@ -932,17 +940,43 @@ private fun RecipeFilterRow(
         modifier = Modifier.fillMaxWidth()
     ) {
         FilterChip(
-            selected = selected == TinkeringFilter.LEARNED,
-            onClick = { onFilterChange(TinkeringFilter.LEARNED) },
-            label = { Text("Learned ($learnedCount)") }
-        )
-        FilterChip(
             selected = selected == TinkeringFilter.ALL,
             onClick = { onFilterChange(TinkeringFilter.ALL) },
-            label = { Text("All (${learnedCount + lockedCount})") }
+            label = { Text("All (${recipes.size})") }
+        )
+        FilterChip(
+            selected = selected == TinkeringFilter.REPAIR,
+            onClick = { onFilterChange(TinkeringFilter.REPAIR) },
+            label = { Text("Repairs (${recipes.countCategory("repair")})") }
+        )
+        FilterChip(
+            selected = selected == TinkeringFilter.GEAR,
+            onClick = { onFilterChange(TinkeringFilter.GEAR) },
+            label = { Text("Gear (${recipes.countCategory("gear")})") }
+        )
+        FilterChip(
+            selected = selected == TinkeringFilter.PROVISION,
+            onClick = { onFilterChange(TinkeringFilter.PROVISION) },
+            label = { Text("Provisions (${recipes.countCategory("provision")})") }
         )
     }
 }
+
+private fun List<TinkeringRecipeUi>.countCategory(category: String): Int =
+    count { it.category.equals(category, ignoreCase = true) }
+
+private fun TinkeringRecipeUi.categoryLabel(): String =
+    listOfNotNull(category.displayLabel(), method.displayLabel()).filter { it.isNotBlank() }.joinToString(" - ")
+
+private fun TinkeringPreview.categoryLabel(): String =
+    listOfNotNull(category.displayLabel(), method.displayLabel()).filter { it.isNotBlank() }.joinToString(" - ")
+
+private fun String?.displayLabel(): String =
+    this.orEmpty()
+        .replace('_', ' ')
+        .split(' ')
+        .filter { it.isNotBlank() }
+        .joinToString(" ") { word -> word.replaceFirstChar { it.uppercase() } }
 
 @Composable
 private fun StatusPill(text: String, color: Color, highContrastMode: Boolean) {
@@ -1214,8 +1248,14 @@ fun TinkeringScreenPreview() {
                 id = "mod_power_lens_1",
                 name = "Power Lens Mk. I",
                 description = "Replaces a standard lens to boost energy output.",
+                category = "gear",
+                method = "mod",
                 base = "Focusing Lens",
                 components = listOf("Wiring Bundle"),
+                ingredients = listOf(
+                    TinkeringRequirementStatus("Focusing Lens", 1, 1),
+                    TinkeringRequirementStatus("Wiring Bundle", 1, 2)
+                ),
                 resultId = "Power Lens Mk. I",
                 canCraft = true,
                 learned = true
@@ -1226,8 +1266,14 @@ fun TinkeringScreenPreview() {
                 id = "mod_ergonomic_grip_1",
                 name = "Ergonomic Grip",
                 description = "Improves stability.",
+                category = "gear",
+                method = "mod",
                 base = "Ballistic Weave",
                 components = listOf("Scrap Metal", "Scrap Metal"),
+                ingredients = listOf(
+                    TinkeringRequirementStatus("Ballistic Weave", 1, 0),
+                    TinkeringRequirementStatus("Scrap Metal", 2, 1)
+                ),
                 resultId = "Ergonomic Grip",
                 canCraft = false,
                 learned = false
@@ -1243,6 +1289,8 @@ fun TinkeringScreenPreview() {
                 recipeId = "mod_power_lens_1",
                 name = "Power Lens Mk. I",
                 description = "Replaces a standard lens to boost energy output.",
+                category = "gear",
+                method = "mod",
                 resultId = "Power Lens Mk. I",
                 learned = true
             ),

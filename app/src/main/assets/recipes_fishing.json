@@ -1,0 +1,141 @@
+{
+  "meta": {
+    "version": "2",
+    "description": "Sector 9 fishing data for glow-water stream catches."
+  },
+  "rods": [
+    {
+      "id": "wooden_rod",
+      "name": "Field Rod",
+      "description": "A collapsible starter rod. It works, but flexes under heavy resonance.",
+      "fishing_power": 1.0,
+      "stability": 1.0
+    },
+    {
+      "id": "fiberglass_rod",
+      "name": "Resin Rod",
+      "description": "A lighter resin rod with steadier pull control.",
+      "fishing_power": 1.25,
+      "stability": 1.25
+    },
+    {
+      "id": "carbon_rod",
+      "name": "Carbon Thread Rod",
+      "description": "A tuned carbon rod that handles sudden glow-water surges.",
+      "fishing_power": 1.55,
+      "stability": 1.55
+    }
+  ],
+  "lures": [
+    {
+      "id": "basic_lure",
+      "name": "Plain Chime Lure",
+      "description": "A simple lure that clicks faintly in moving water.",
+      "rarity_bonus": 0.0,
+      "attracts": [
+        "raw_glowfish",
+        "old_boot"
+      ],
+      "zone_bonus": {
+        "sector9_stream": 1
+      }
+    },
+    {
+      "id": "shiny_lure",
+      "name": "Glimmer Lure",
+      "description": "A reflective lure that flashes through mineral-rich water.",
+      "rarity_bonus": 0.2,
+      "attracts": [
+        "resonance_carp",
+        "chime_minnow"
+      ],
+      "zone_bonus": {
+        "sector9_stream": 2
+      }
+    },
+    {
+      "id": "mystery_lure",
+      "name": "Ghost-Signal Lure",
+      "description": "A lure with an unstable signal bead. Fish notice it. So does everything else.",
+      "rarity_bonus": 0.35,
+      "attracts": [
+        "chime_minnow",
+        "resonance_carp"
+      ],
+      "zone_bonus": {
+        "sector9_stream": 3
+      }
+    }
+  ],
+  "zones": {
+    "sector9_stream": [
+      {
+        "item": "raw_glowfish",
+        "weight": 55,
+        "rarity": "common",
+        "behavior_id": "gentle_wobble"
+      },
+      {
+        "item": "resonance_carp",
+        "weight": 28,
+        "rarity": "uncommon",
+        "behavior_id": "steady_pull"
+      },
+      {
+        "item": "old_boot",
+        "weight": 12,
+        "rarity": "junk",
+        "behavior_id": "gentle_wobble"
+      },
+      {
+        "item": "chime_minnow",
+        "weight": 5,
+        "rarity": "rare",
+        "behavior_id": "erratic_burst"
+      }
+    ]
+  },
+  "fish_behaviors": {
+    "gentle_wobble": {
+      "pattern": "sine",
+      "base_pull": 0.28,
+      "burst_pull": 0.08,
+      "stamina": 10.0
+    },
+    "steady_pull": {
+      "pattern": "linear",
+      "base_pull": 0.42,
+      "burst_pull": 0.12,
+      "stamina": 12.0
+    },
+    "erratic_burst": {
+      "pattern": "burst",
+      "base_pull": 0.36,
+      "burst_pull": 0.34,
+      "stamina": 15.0
+    }
+  },
+  "minigame_rules": {
+    "easy": {
+      "target_size": 0.38,
+      "bar_speed": 0.85
+    },
+    "medium": {
+      "target_size": 0.3,
+      "bar_speed": 1.0
+    },
+    "hard": {
+      "target_size": 0.24,
+      "bar_speed": 1.2
+    }
+  },
+  "victory_screen": {
+    "show_on_success": true,
+    "show_on_failure": false,
+    "contents": [
+      "catch_name",
+      "rarity",
+      "zone"
+    ]
+  }
+}

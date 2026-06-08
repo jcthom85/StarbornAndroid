@@ -40,12 +40,11 @@
           },
           {
             "id": "equip_starter_gear",
-            "text": "Equip your starter gear before leaving."
+            "text": "Receive your starter gear from Jed."
           },
           {
             "id": "use_tinkering_table",
-            "text": "Use Jed's tinkering table once.",
-            "tutorial_id": "scene_tinkering_tutorial"
+            "text": "Use Jed's tinkering table once."
           }
         ]
       }

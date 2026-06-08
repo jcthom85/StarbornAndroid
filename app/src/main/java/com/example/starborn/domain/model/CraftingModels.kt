@@ -8,21 +8,16 @@ data class TinkeringRecipe(
     val id: String,
     val name: String,
     val description: String? = null,
-    val base: String,
-    val components: List<String>,
+    val category: String = "gear",
+    val method: String? = null,
+    val base: String? = null,
+    val components: List<String> = emptyList(),
+    val ingredients: Map<String, Int> = emptyMap(),
     val result: String,
+    @Json(name = "result_quantity")
+    val resultQuantity: Int = 1,
     @Json(name = "success_message")
     val successMessage: String? = null
-)
-
-@JsonClass(generateAdapter = true)
-data class CookingRecipe(
-    val id: String,
-    val name: String,
-    val description: String? = null,
-    val result: String,
-    val ingredients: Map<String, Int>,
-    val minigame: MinigameDefinition? = null
 )
 
 @JsonClass(generateAdapter = true)

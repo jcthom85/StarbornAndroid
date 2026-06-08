@@ -146,10 +146,22 @@ class ExplorationViewModelTest {
     }
 
     @Test
-    fun openingInventoryTabQueuesBagTutorial() {
+    fun openingInventoryTabBeforeJedDoesNotQueueBagTutorial() {
+        val viewModel = createViewModel()
+        val promptManager = getPrivateField<UIPromptManager>(viewModel, "promptManager")
+
+        viewModel.openMenuOverlay(MenuTab.INVENTORY)
+        dispatcher.scheduler.advanceUntilIdle()
+
+        assertNull(promptManager.state.value.current)
+    }
+
+    @Test
+    fun openingInventoryTabAfterJedQueuesBagTutorial() {
         val viewModel = createViewModel()
         val promptManager = getPrivateField<UIPromptManager>(viewModel, "promptManager")
         val sessionStore = getPrivateField<GameSessionStore>(viewModel, "sessionStore")
+        sessionStore.setMilestone("ms_w1_mq01_jed_talked")
 
         viewModel.openMenuOverlay(MenuTab.INVENTORY)
         dispatcher.scheduler.advanceUntilIdle()
@@ -361,7 +373,6 @@ class ExplorationViewModelTest {
         doAnswer { }.whenever(inventoryService).addOnItemAddedListener(any())
         doAnswer { }.whenever(inventoryService).removeOnItemAddedListener(any())
         val craftingService = mock<CraftingService> {
-            on { cookingRecipes } doReturn emptyList()
             on { firstAidRecipes } doReturn emptyList()
             on { tinkeringRecipes } doReturn emptyList()
         }

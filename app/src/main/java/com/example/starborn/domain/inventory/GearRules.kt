@@ -95,4 +95,16 @@ object GearRules {
         val typeToCheck = itemWeaponType ?: normalizedType
         return typeToCheck == expectedWeaponType
     }
+
+    fun isModSlotUnlocked(slotId: String, completedMilestones: Set<String>): Boolean {
+        val normalized = slotId.trim().lowercase(Locale.getDefault())
+        return when (normalized) {
+            "weapon_mod1" -> completedMilestones.contains("ms_w1_mq01_complete")
+            "weapon_mod2" -> completedMilestones.contains("ms_w1_mq03_complete")
+            "armor_mod1" -> completedMilestones.contains("ms_w1_mq02_complete")
+            "armor_mod2" -> completedMilestones.contains("ms_w1_mq05_complete")
+            else -> true
+        }
+    }
 }
+

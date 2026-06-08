@@ -1324,7 +1324,13 @@
         "rarity": "uncommon",
         "effect": {
             "restore_hp": 100,
-            "damage": 0
+            "buffs": [
+                {
+                    "stat": "speed",
+                    "value": 5,
+                    "duration": 2
+                }
+            ]
         }
     },
     {
@@ -1413,6 +1419,127 @@
         "value": 34,
         "buy_price": 68,
         "rarity": "uncommon"
+    },
+    {
+        "id": "wooden_rod",
+        "name": "Field Rod",
+        "description": "A collapsible starter rod for quiet water and small catches.",
+        "type": "fishing_rod",
+        "value": 25,
+        "buy_price": 50,
+        "rarity": "common"
+    },
+    {
+        "id": "fiberglass_rod",
+        "name": "Resin Rod",
+        "description": "A lighter rod with steadier pull control.",
+        "type": "fishing_rod",
+        "value": 80,
+        "buy_price": 160,
+        "rarity": "uncommon"
+    },
+    {
+        "id": "carbon_rod",
+        "name": "Carbon Thread Rod",
+        "description": "A tuned rod that handles sudden glow-water surges.",
+        "type": "fishing_rod",
+        "value": 150,
+        "buy_price": 300,
+        "rarity": "rare"
+    },
+    {
+        "id": "basic_lure",
+        "name": "Plain Chime Lure",
+        "description": "A simple lure that clicks faintly in moving water.",
+        "type": "fishing_lure",
+        "value": 8,
+        "buy_price": 16,
+        "rarity": "common"
+    },
+    {
+        "id": "shiny_lure",
+        "name": "Glimmer Lure",
+        "description": "A reflective lure that flashes through mineral-rich water.",
+        "type": "fishing_lure",
+        "value": 20,
+        "buy_price": 40,
+        "rarity": "uncommon"
+    },
+    {
+        "id": "mystery_lure",
+        "name": "Ghost-Signal Lure",
+        "description": "A lure with an unstable signal bead.",
+        "type": "fishing_lure",
+        "value": 45,
+        "buy_price": 90,
+        "rarity": "rare"
+    },
+    {
+        "id": "raw_glowfish",
+        "name": "Raw Glowfish",
+        "description": "A small fish with mineral light under its skin. Useful for provisions.",
+        "type": "ingredient",
+        "value": 10,
+        "buy_price": 20,
+        "rarity": "common"
+    },
+    {
+        "id": "resonance_carp",
+        "name": "Resonance Carp",
+        "description": "A broad glow-water carp that hums when handled.",
+        "type": "ingredient",
+        "value": 28,
+        "buy_price": 56,
+        "rarity": "uncommon"
+    },
+    {
+        "id": "chime_minnow",
+        "name": "Chime Minnow",
+        "description": "A rare tiny fish whose bones ring like glass.",
+        "type": "ingredient",
+        "value": 65,
+        "buy_price": 130,
+        "rarity": "rare"
+    },
+    {
+        "id": "old_boot",
+        "name": "Old Boot",
+        "description": "Waterlogged, sturdy, and probably not edible.",
+        "type": "junk",
+        "value": 1,
+        "buy_price": 2,
+        "rarity": "junk"
+    },
+    {
+        "id": "ration_soup",
+        "name": "Ration Soup",
+        "description": "A warmed ration broth with enough herbs to taste alive. Restores 60 HP.",
+        "type": "consumable",
+        "value": 45,
+        "buy_price": 90,
+        "rarity": "common",
+        "effect": {
+            "restore_hp": 60
+        }
+    },
+    {
+        "id": "glowfish_broth",
+        "name": "Glowfish Broth",
+        "description": "Mineral-rich fish broth that steadies the hands. Restores 80 HP and improves accuracy briefly.",
+        "type": "consumable",
+        "value": 75,
+        "buy_price": 150,
+        "rarity": "uncommon",
+        "effect": {
+            "restore_hp": 80,
+            "buffs": [
+                {
+                    "stat": "accuracy",
+                    "value": 5,
+                    "duration": 2
+                }
+            ]
+        }
     },
     {
         "id": "adrenaline",

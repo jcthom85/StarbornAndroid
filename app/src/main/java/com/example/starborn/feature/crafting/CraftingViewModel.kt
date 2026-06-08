@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 
 data class TinkeringUiState(
     val isLoading: Boolean = true,
-    val filter: TinkeringFilter = TinkeringFilter.LEARNED,
+    val filter: TinkeringFilter = TinkeringFilter.ALL,
     val learnedRecipes: List<TinkeringRecipeUi> = emptyList(),
     val lockedRecipes: List<TinkeringRecipeUi> = emptyList(),
     val bench: TinkeringBenchState = TinkeringBenchState(),
@@ -32,8 +32,11 @@ data class TinkeringRecipeUi(
     val id: String,
     val name: String,
     val description: String?,
-    val base: String,
+    val category: String,
+    val method: String?,
+    val base: String?,
     val components: List<String>,
+    val ingredients: List<TinkeringRequirementStatus>,
     val resultId: String,
     val canCraft: Boolean,
     val learned: Boolean
@@ -67,11 +70,13 @@ data class TinkeringPreview(
     val recipeId: String,
     val name: String,
     val description: String?,
+    val category: String,
+    val method: String?,
     val resultId: String,
     val learned: Boolean
 )
 
-enum class TinkeringFilter { LEARNED, ALL }
+enum class TinkeringFilter { ALL, REPAIR, GEAR, PROVISION }
 
 class CraftingViewModel(
     private val craftingService: CraftingService,
@@ -198,7 +203,7 @@ class CraftingViewModel(
         val craftable = learnedRecipes.filter { craftingService.canCraft(it) }
         val preferredBase = _uiState.value.bench.mainItemId
         val match = if (preferredBase != null) {
-            craftable.firstOrNull { it.base.equals(preferredBase, ignoreCase = true) } ?: craftable.firstOrNull()
+            craftable.firstOrNull { it.base?.equals(preferredBase, ignoreCase = true) == true } ?: craftable.firstOrNull()
         } else {
             craftable.firstOrNull()
         }
@@ -264,8 +269,9 @@ class CraftingViewModel(
             viewModelScope.launch { _messages.emit("Unable to scrap right now.") }
             return
         }
-        inventoryService.addItem(recipe.base, 1)
-        recipe.components.forEach { inventoryService.addItem(it, 1) }
+        craftingService.ingredientsFor(recipe).forEach { (item, qty) ->
+            inventoryService.addItem(item, qty)
+        }
         sessionStore.setInventory(inventoryService.snapshot())
         viewModelScope.launch {
             _messages.emit("Scrapped $itemId into parts.")
@@ -275,16 +281,23 @@ class CraftingViewModel(
 
     private fun benchFromRecipe(recipe: TinkeringRecipe): TinkeringBenchState {
         val requirements = requirementStatuses(recipe)
+        val componentIds = craftingService.ingredientsFor(recipe)
+            .keys
+            .filterNot { ingredient -> recipe.base?.equals(ingredient, ignoreCase = true) == true }
+            .take(2)
+            .toList()
         return TinkeringBenchState(
             mainItemId = recipe.base,
-            mainItemName = inventoryService.itemDetail(recipe.base)?.name ?: recipe.base,
-            componentIds = recipe.components,
-            componentNames = recipe.components.map { id -> inventoryService.itemDetail(id)?.name ?: id },
+            mainItemName = recipe.base?.let { inventoryService.itemDetail(it)?.name ?: it },
+            componentIds = componentIds,
+            componentNames = componentIds.map { id -> inventoryService.itemDetail(id)?.name ?: id },
             activeRecipeId = recipe.id,
             preview = TinkeringPreview(
                 recipeId = recipe.id,
                 name = recipe.name,
                 description = recipe.description,
+                category = recipe.category,
+                method = recipe.method,
                 resultId = recipe.result,
                 learned = craftingService.isSchematicLearned(recipe.id)
             ),
@@ -304,6 +317,8 @@ class CraftingViewModel(
                 recipeId = it.id,
                 name = it.name,
                 description = it.description,
+                category = it.category,
+                method = it.method,
                 resultId = it.result,
                 learned = craftingService.isSchematicLearned(it.id)
             )
@@ -326,8 +341,10 @@ class CraftingViewModel(
         val mainKey = normalizeToken(mainId)
         val componentCounts = components.filter { it.isNotBlank() }.groupingBy { normalizeToken(it) }.eachCount()
         return craftingService.tinkeringRecipes.firstOrNull { recipe ->
-            val recipeMain = normalizeToken(recipe.base)
-            val recipeComponents = recipe.components.groupingBy { normalizeToken(it) }.eachCount()
+            val recipeMain = recipe.base?.let { normalizeToken(it) }
+            val recipeComponents = craftingService.ingredientsFor(recipe)
+                .filterKeys { ingredient -> recipe.base?.equals(ingredient, ignoreCase = true) != true }
+                .mapKeys { (ingredient, _) -> normalizeToken(ingredient) }
             recipeMain == mainKey && countsEqual(componentCounts, recipeComponents)
         }
     }
@@ -342,15 +359,10 @@ class CraftingViewModel(
 
 
     private fun requirementStatuses(recipe: TinkeringRecipe): List<TinkeringRequirementStatus> {
-        val counts = mutableMapOf<String, Int>()
-        counts[recipe.base] = counts.getOrDefault(recipe.base, 0) + 1
-        recipe.components.forEach { component ->
-            counts[component] = counts.getOrDefault(component, 0) + 1
-        }
-        return counts.map { (item, needed) ->
+        return craftingService.ingredientsFor(recipe).map { (item, needed) ->
             val available = inventoryQuantity(item)
             TinkeringRequirementStatus(
-                label = item,
+                label = inventoryService.itemDetail(item)?.name ?: item,
                 required = needed,
                 available = available
             )
@@ -372,8 +384,11 @@ class CraftingViewModel(
             id = id,
             name = name,
             description = description,
+            category = category,
+            method = method,
             base = base,
             components = components,
+            ingredients = requirementStatuses(this),
             resultId = result,
             canCraft = craftingService.canCraft(this),
             learned = learned

@@ -14,7 +14,6 @@ sealed class NavigationDestination(val route: String) {
     }
     data object Inventory : NavigationDestination("inventory")
     data object Tinkering : NavigationDestination("tinkering")
-    data object Cooking : NavigationDestination("cooking")
     data object FirstAid : NavigationDestination("first_aid")
     data object Fishing : NavigationDestination("fishing?zoneId={zoneId}") {
         fun create(zoneId: String?): String =

@@ -72,10 +72,10 @@ class TutorialRuntimeManager(
     }
 
     fun hasCompleted(key: String): Boolean =
-        completedTutorials.value.any { it.equals(key, ignoreCase = true) }
+        sessionStore.state.value.tutorialCompleted.any { it.equals(key, ignoreCase = true) }
 
     fun hasSeen(key: String): Boolean =
-        seenTutorials.value.any { it.equals(key, ignoreCase = true) }
+        sessionStore.state.value.tutorialSeen.any { it.equals(key, ignoreCase = true) }
 
     fun markCompleted(key: String) {
         if (key.isBlank()) return
@@ -128,25 +128,39 @@ class TutorialRuntimeManager(
         onComplete: (() -> Unit)? = null
     ): Boolean {
         val script = scripts?.script(scriptId) ?: return false
+        if (hasCompleted(scriptId)) {
+            onComplete?.invoke()
+            return true
+        }
         sessionStore.markTutorialSeen(scriptId)
-        var scheduled = false
-        script.steps.forEachIndexed { index, step ->
+        val pendingSteps = script.steps.mapIndexedNotNull { index, step ->
+            val key = step.key ?: "${scriptId}_step_$index"
+            if (hasCompleted(key)) null else Triple(index, key, step)
+        }
+        if (pendingSteps.isEmpty()) {
+            markCompleted(scriptId)
+            onComplete?.invoke()
+            return true
+        }
+        pendingSteps.forEachIndexed { pendingIndex, (index, key, step) ->
             val entry = TutorialEntry(
-                key = step.key ?: "${scriptId}_step_$index",
+                key = key,
                 context = step.context,
                 message = step.message,
                 metadata = step.metadata + mapOf("script_id" to scriptId)
             )
             val delayMs = step.delayMs ?: 0L
-            val isLast = index == script.steps.lastIndex
-            val completionCallback = if (isLast) onComplete else null
+            val isLast = pendingIndex == pendingSteps.lastIndex
+            val completionCallback = {
+                markCompleted(key)
+                if (isLast) {
+                    markCompleted(scriptId)
+                    onComplete?.invoke()
+                }
+            }
             showOnce(entry, allowDuplicates, delayMs, completionCallback)
-            scheduled = true
         }
-        if (!scheduled) {
-            onComplete?.invoke()
-        }
-        return scheduled
+        return true
     }
 
     fun scheduleScript(

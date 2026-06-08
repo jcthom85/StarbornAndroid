@@ -3,7 +3,6 @@ package com.example.starborn.domain.crafting
 import com.example.starborn.data.assets.CraftingRecipeSource
 import com.example.starborn.domain.inventory.InventoryService
 import com.example.starborn.domain.inventory.ItemCatalog
-import com.example.starborn.domain.model.CookingRecipe
 import com.example.starborn.domain.model.FirstAidRecipe
 import com.example.starborn.domain.model.Item
 import com.example.starborn.domain.model.TinkeringRecipe
@@ -55,72 +54,75 @@ class CraftingServiceTest {
     }
 
     @Test
-    fun craftCookingSuccessConsumesIngredientsAndAddsResult() {
+    fun craftProvisionConsumesIngredientsAndAddsResult() {
         val catalog = TestItemCatalog(
             listOf(
-                item(id = "raw_fish", name = "Raw Fish"),
+                item(id = "raw_glowfish", name = "Raw Glowfish"),
                 item(id = "herb", name = "Herb"),
-                item(id = "fish_stew", name = "Fish Stew")
+                item(id = "glowfish_broth", name = "Glowfish Broth")
             )
         )
         val inventory = InventoryService(catalog).apply {
             loadItems()
-            addItem("Raw Fish", 2)
+            addItem("Raw Glowfish", 2)
             addItem("Herb", 1)
         }
         val recipes = TestRecipeSource(
-            cooking = listOf(
-                CookingRecipe(
-                    id = "fish_stew",
-                    name = "Fish Stew",
+            tinkering = listOf(
+                TinkeringRecipe(
+                    id = "provision_glowfish_broth",
+                    name = "Glowfish Broth",
                     description = null,
-                    ingredients = mapOf("Raw Fish" to 2, "Herb" to 1),
-                    result = "Fish Stew"
+                    category = "provision",
+                    method = "field_cook",
+                    ingredients = mapOf("Raw Glowfish" to 2, "Herb" to 1),
+                    result = "Glowfish Broth"
                 )
             )
         )
         val service = CraftingService(recipes, inventory, GameSessionStore())
 
-        val outcome = service.craftCooking("fish_stew", MinigameResult.SUCCESS)
+        val outcome = service.craftTinkering("provision_glowfish_broth")
 
         assertTrue(outcome is CraftingOutcome.Success)
-        assertEquals("Fish Stew", outcome.itemId)
-        assertTrue(inventory.hasItem("Fish Stew"))
-        assertFalse(inventory.hasItem("Raw Fish"))
+        assertEquals("glowfish_broth", outcome.itemId)
+        assertTrue(inventory.hasItem("Glowfish Broth"))
+        assertFalse(inventory.hasItem("Raw Glowfish"))
     }
 
     @Test
-    fun craftCookingFailureConsumesIngredientsWithoutReward() {
+    fun craftProvisionFailsWithoutConsumingWhenMissingIngredients() {
         val catalog = TestItemCatalog(
             listOf(
-                item(id = "raw_fish", name = "Raw Fish"),
+                item(id = "raw_glowfish", name = "Raw Glowfish"),
                 item(id = "herb", name = "Herb"),
-                item(id = "fish_stew", name = "Fish Stew")
+                item(id = "glowfish_broth", name = "Glowfish Broth")
             )
         )
         val inventory = InventoryService(catalog).apply {
             loadItems()
-            addItem("Raw Fish", 2)
             addItem("Herb", 1)
         }
         val recipes = TestRecipeSource(
-            cooking = listOf(
-                CookingRecipe(
-                    id = "fish_stew",
-                    name = "Fish Stew",
+            tinkering = listOf(
+                TinkeringRecipe(
+                    id = "provision_glowfish_broth",
+                    name = "Glowfish Broth",
                     description = null,
-                    ingredients = mapOf("Raw Fish" to 2, "Herb" to 1),
-                    result = "Fish Stew"
+                    category = "provision",
+                    method = "field_cook",
+                    ingredients = mapOf("Raw Glowfish" to 2, "Herb" to 1),
+                    result = "Glowfish Broth"
                 )
             )
         )
         val service = CraftingService(recipes, inventory, GameSessionStore())
 
-        val outcome = service.craftCooking("fish_stew", MinigameResult.FAILURE)
+        val outcome = service.craftTinkering("provision_glowfish_broth")
 
         assertTrue(outcome is CraftingOutcome.Failure)
-        assertFalse(inventory.hasItem("Fish Stew"))
-        assertFalse(inventory.hasItem("Raw Fish"))
+        assertFalse(inventory.hasItem("Glowfish Broth"))
+        assertTrue(inventory.hasItem("Herb"))
     }
 
     @Test
@@ -217,7 +219,6 @@ private class EmptyItemCatalog : ItemCatalog {
 
 private class EmptyRecipeSource : CraftingRecipeSource {
     override fun loadTinkeringRecipes(): List<TinkeringRecipe> = emptyList()
-    override fun loadCookingRecipes(): List<CookingRecipe> = emptyList()
     override fun loadFirstAidRecipes(): List<FirstAidRecipe> = emptyList()
 }
 
@@ -240,11 +241,9 @@ private class TestItemCatalog(private val items: List<Item>) : ItemCatalog {
 
 private class TestRecipeSource(
     private val tinkering: List<TinkeringRecipe> = emptyList(),
-    private val cooking: List<CookingRecipe> = emptyList(),
     private val firstAid: List<FirstAidRecipe> = emptyList()
 ) : CraftingRecipeSource {
     override fun loadTinkeringRecipes(): List<TinkeringRecipe> = tinkering
-    override fun loadCookingRecipes(): List<CookingRecipe> = cooking
     override fun loadFirstAidRecipes(): List<FirstAidRecipe> = firstAid
 }
 

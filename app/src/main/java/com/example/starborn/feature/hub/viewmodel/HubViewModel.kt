@@ -121,7 +121,6 @@ class HubViewModel(
             when ((action["type"] as? String)?.lowercase(Locale.getDefault())) {
                 "shop" -> (action["name"] as? String)?.ifBlank { null } ?: "Shop"
                 "tinkering" -> (action["name"] as? String)?.ifBlank { null } ?: "Tinkering"
-                "cooking" -> (action["name"] as? String)?.ifBlank { null } ?: "Cooking"
                 "first_aid", "firstaid" -> (action["name"] as? String)?.ifBlank { null } ?: "First Aid"
                 else -> null
             }

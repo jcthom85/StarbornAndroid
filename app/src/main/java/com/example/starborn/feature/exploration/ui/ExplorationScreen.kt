@@ -120,6 +120,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLayoutResult
@@ -151,7 +153,6 @@ import com.example.starborn.domain.inventory.GearRules
 import com.example.starborn.domain.inventory.ItemUseResult
 import com.example.starborn.domain.milestone.MilestoneEvent
 import com.example.starborn.domain.model.ContainerAction
-import com.example.starborn.domain.model.CookingAction
 import com.example.starborn.domain.model.EventReward
 import com.example.starborn.domain.model.FirstAidAction
 import com.example.starborn.data.local.Theme
@@ -248,7 +249,6 @@ fun ExplorationScreen(
     onEnemySelected: (List<String>) -> Unit = {},
     onOpenInventory: (InventoryLaunchOptions) -> Unit = {},
     onOpenTinkering: (String?) -> Unit = {},
-    onOpenCooking: (String?) -> Unit = {},
     onOpenFirstAid: (String?) -> Unit = {},
     onOpenFishing: (String?) -> Unit = {},
     onOpenShop: (String) -> Unit = {},
@@ -307,7 +307,6 @@ fun ExplorationScreen(
                 is ExplorationEvent.RoomSearchUnlocked -> viewModel.showStatusMessage(event.note ?: "A hidden stash is now accessible")
                 is ExplorationEvent.ItemUsed -> viewModel.showStatusMessage(event.message ?: formatItemUseResult(event.result))
                 is ExplorationEvent.OpenTinkering -> onOpenTinkering(event.shopId)
-                is ExplorationEvent.OpenCooking -> onOpenCooking(event.stationId)
                 is ExplorationEvent.OpenFirstAid -> onOpenFirstAid(event.stationId)
                 is ExplorationEvent.OpenFishing -> onOpenFishing(event.zoneId)
                 is ExplorationEvent.OpenShop -> onOpenShop(event.shopId)
@@ -518,17 +517,6 @@ fun ExplorationScreen(
                             val label = action.name.takeIf { it.isNotBlank() } ?: "Tinkering"
                             items += QuickMenuAction(
                                 iconRes = R.drawable.tinkering_icon,
-                                label = label,
-                                roomAction = action
-                            )
-                        }
-                    }
-                    is CookingAction -> {
-                        val key = "cooking:${action.stationId.orEmpty()}"
-                        if (unique.add(key)) {
-                            val label = action.name.takeIf { it.isNotBlank() } ?: "Cooking"
-                            items += QuickMenuAction(
-                                iconRes = R.drawable.cooking_icon,
                                 label = label,
                                 roomAction = action
                             )
@@ -816,6 +804,7 @@ fun ExplorationScreen(
                 creditsLabel = uiState.progressionSummary.creditsLabel,
                 inventoryItems = uiState.inventoryPreview,
                 equippedItems = uiState.equippedItems,
+                completedMilestones = uiState.completedMilestones,
                 unlockedWeapons = uiState.unlockedWeapons,
                 equippedWeapons = uiState.equippedWeapons,
                 unlockedArmors = uiState.unlockedArmors,
@@ -1100,6 +1089,7 @@ fun ExplorationScreen(
 
         DirectionIndicatorsOverlay(
             indicators = uiState.directionIndicators,
+            onTravel = viewModel::travel,
             modifier = Modifier
                 .align(Alignment.Center)
                 .fillMaxSize()
@@ -1304,6 +1294,7 @@ private fun MinimapWidget(
 @Composable
 private fun DirectionIndicatorsOverlay(
     indicators: Map<String, DirectionIndicatorUi>,
+    onTravel: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     if (indicators.isEmpty()) return
@@ -1342,6 +1333,17 @@ private fun DirectionIndicatorsOverlay(
                         this.scaleY = scale
                         this.alpha = alpha
                     }
+                    .semantics {
+                        contentDescription = when (indicator.status) {
+                            DirectionIndicatorStatus.UNEXPLORED -> "Travel $direction"
+                            DirectionIndicatorStatus.LOCKED -> "$direction exit locked"
+                            DirectionIndicatorStatus.ENEMY -> "$direction exit blocked by enemy"
+                        }
+                    }
+                    .clickable(
+                        enabled = indicator.status == DirectionIndicatorStatus.UNEXPLORED,
+                        onClick = { onTravel(indicator.direction) }
+                    )
             ) {
                 DirectionIndicatorIcon(
                     status = indicator.status,
@@ -1830,6 +1832,7 @@ private fun MenuOverlay(
     creditsLabel: String,
     inventoryItems: List<InventoryPreviewItemUi>,
     equippedItems: Map<String, String>,
+    completedMilestones: Set<String>,
     unlockedWeapons: Set<String>,
     equippedWeapons: Map<String, String>,
     unlockedArmors: Set<String>,
@@ -2019,6 +2022,7 @@ private fun MenuOverlay(
                         onShowDetails = onShowDetails,
                         inventoryItems = inventoryItems,
                         equippedItems = equippedItems,
+                        completedMilestones = completedMilestones,
                         unlockedWeapons = unlockedWeapons,
                         equippedWeapons = equippedWeapons,
                         unlockedArmors = unlockedArmors,
@@ -2181,6 +2185,7 @@ private fun MenuTabContentArea(
     onShowDetails: (String) -> Unit,
     inventoryItems: List<InventoryPreviewItemUi>,
     equippedItems: Map<String, String>,
+    completedMilestones: Set<String>,
     unlockedWeapons: Set<String>,
     equippedWeapons: Map<String, String>,
     unlockedArmors: Set<String>,
@@ -2200,6 +2205,7 @@ private fun MenuTabContentArea(
             MenuTab.INVENTORY -> InventoryTabContent(
                 inventoryItems = inventoryItems,
                 equippedItems = equippedItems,
+                completedMilestones = completedMilestones,
                 unlockedWeapons = unlockedWeapons,
                 equippedWeapons = equippedWeapons,
                 unlockedArmors = unlockedArmors,
@@ -2265,6 +2271,7 @@ private enum class QuestJournalPage { ACTIVE, COMPLETED }
 private fun InventoryTabContent(
     inventoryItems: List<InventoryPreviewItemUi>,
     equippedItems: Map<String, String>,
+    completedMilestones: Set<String>,
     unlockedWeapons: Set<String>,
     equippedWeapons: Map<String, String>,
     unlockedArmors: Set<String>,
@@ -2308,6 +2315,7 @@ private fun InventoryTabContent(
             InventoryCarouselPage.GEAR -> InventoryEquipmentPreview(
                 inventoryItems = inventoryItems,
                 equippedItems = equippedItems,
+                completedMilestones = completedMilestones,
                 unlockedWeapons = unlockedWeapons,
                 equippedWeapons = equippedWeapons,
                 unlockedArmors = unlockedArmors,
@@ -2519,6 +2527,7 @@ private fun InventoryPreviewItemUi.isKeyItem(): Boolean {
 private fun InventoryEquipmentPreview(
     inventoryItems: List<InventoryPreviewItemUi>,
     equippedItems: Map<String, String>,
+    completedMilestones: Set<String>,
     unlockedWeapons: Set<String>,
     equippedWeapons: Map<String, String>,
     unlockedArmors: Set<String>,
@@ -2667,13 +2676,19 @@ private fun InventoryEquipmentPreview(
                         val modNames = modSlots.associateWith { modSlot ->
                             val modKey = "$normalizedMemberId:$modSlot"
                             val modId = equippedItems[modKey].orEmpty()
-                            itemNames[modId.lowercase(Locale.getDefault())] ?: modId.ifBlank { "Empty" }
+                            val isUnlocked = GearRules.isModSlotUnlocked(modSlot, completedMilestones)
+                            if (isUnlocked) {
+                                itemNames[modId.lowercase(Locale.getDefault())] ?: modId.ifBlank { "Empty" }
+                            } else {
+                                "Locked"
+                            }
                         }
                         GearSlotTile(
                             slot = normalized,
                             equippedName = equippedName,
                             modsLocked = modSlots.isNotEmpty() && equippedId.isBlank(),
                             modNames = modNames,
+                            completedMilestones = completedMilestones,
                             iconRes = iconRes,
                             accentColor = accentColor,
                             borderColor = borderColor,
@@ -2804,6 +2819,7 @@ private fun GearSlotTile(
     equippedName: String,
     modsLocked: Boolean,
     modNames: Map<String, String>,
+    completedMilestones: Set<String>,
     @DrawableRes iconRes: Int,
     accentColor: Color,
     borderColor: Color,
@@ -2860,25 +2876,38 @@ private fun GearSlotTile(
                 }
             }
             if (modNames.isNotEmpty()) {
+                val modSlots = modSlotsForBaseSlot(slot)
                 Column(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .alpha(if (modsLocked) 0.6f else 1f),
+                        .fillMaxWidth(),
                     verticalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
-                    modNames.entries.forEach { (slotId, name) ->
+                    modSlots.forEach { modSlot ->
+                        val isUnlocked = GearRules.isModSlotUnlocked(modSlot, completedMilestones)
+                        val name = modNames[modSlot].orEmpty()
+                        val chipEnabled = !modsLocked && isUnlocked
                         ModChip(
-                            label = if (slotId.endsWith("1")) "M1" else "M2",
+                            label = if (modSlot.endsWith("1")) "M1" else "M2",
                             name = name,
-                            enabled = !modsLocked,
+                            enabled = chipEnabled,
                             accentColor = accentColor,
                             borderColor = borderColor,
-                            onClick = { onSelectMod(slotId) }
+                            onClick = { onSelectMod(modSlot) }
                         )
                     }
                 }
                 if (modsLocked) {
                     Spacer(modifier = Modifier.height(0.dp))
+                } else {
+                    val anyLockedByStory = modSlots.any { !GearRules.isModSlotUnlocked(it, completedMilestones) }
+                    if (anyLockedByStory) {
+                        Text(
+                            text = "Unlocks after Main Story milestone.",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = accentColor.copy(alpha = 0.7f),
+                            modifier = Modifier.padding(top = 2.dp)
+                        )
+                    }
                 }
             }
         }
@@ -6446,7 +6475,6 @@ private fun actionLabelFallback(action: RoomAction): String = when (action) {
     is ContainerAction -> "Search"
     is ToggleAction -> "Toggle"
     is TinkeringAction -> "Tinkering"
-    is CookingAction -> "Cooking"
     is FirstAidAction -> "First Aid"
     is ShopAction -> "Shop"
     is GenericAction -> action.type.ifBlank { "Action" }.replaceFirstChar { ch ->
@@ -7890,9 +7918,6 @@ private fun fxVisualInfo(fxId: String): FxVisualInfo {
         "craft_first_aid_success" -> FxVisualInfo("Med kit assembled", Color(0xFF66BB6A))
         "craft_first_aid_perfect" -> FxVisualInfo("Perfect med kit!", Color(0xFF81C784))
         "craft_first_aid_failure" -> FxVisualInfo("First aid failed", Color(0xFFE53935))
-        "craft_cooking_success" -> FxVisualInfo("Dish complete", Color(0xFFFFB74D))
-        "craft_cooking_perfect" -> FxVisualInfo("Perfect dish!", Color(0xFFFFE082))
-        "craft_cooking_failure" -> FxVisualInfo("Cooking failed", Color(0xFFEF5350))
         else -> FxVisualInfo(
             label = normalized.replace('_', ' ').replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() },
             color = Color(0xFF90CAF9)

@@ -7,6 +7,9 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -163,7 +167,8 @@ fun FishingScreen(
 
                         FishingState.REELING -> FishingReelSection(
                             reelState = uiState.reelState,
-                            onReelTap = viewModel::onReelTap,
+                            onReelPressed = viewModel::onReelPressed,
+                            onReelReleased = viewModel::onReelReleased,
                             onCancel = viewModel::cancelFishing,
                             highContrastMode = highContrastMode,
                             largeTouchTargets = largeTouchTargets,
@@ -477,7 +482,8 @@ private fun FishingHookSection(
 @Composable
 private fun FishingReelSection(
     reelState: FishingReelState?,
-    onReelTap: () -> Unit,
+    onReelPressed: () -> Unit,
+    onReelReleased: () -> Unit,
     onCancel: () -> Unit,
     highContrastMode: Boolean,
     largeTouchTargets: Boolean,
@@ -521,13 +527,44 @@ private fun FishingReelSection(
             }
         }
         Text(
-            text = "Keep tension balanced—rapid taps when the bar dips.",
+            text = "Hold to reel. Release to let the line cool before tension snaps it.",
             style = MaterialTheme.typography.bodySmall,
             color = if (highContrastMode) Color.White.copy(alpha = 0.8f) else MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center
         )
-        Button(onClick = onReelTap, modifier = Modifier.heightIn(min = buttonHeight)) {
-            Text("Tap to Reel")
+        LinearProgressIndicator(
+            progress = { (reelState?.tension ?: 0f).coerceIn(0f, 1f) },
+            modifier = Modifier.fillMaxWidth(),
+            color = if ((reelState?.tension ?: 0f) > 0.75f) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.tertiary
+        )
+        Text(
+            text = "Tension ${(reelState?.tension ?: 0f).coerceIn(0f, 1f).times(100).toInt()}%",
+            style = MaterialTheme.typography.labelMedium,
+            color = if (highContrastMode) Color.White.copy(alpha = 0.8f) else MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(min = if (largeTouchTargets) 76.dp else 60.dp)
+                .pointerInput(Unit) {
+                    awaitEachGesture {
+                        awaitFirstDown()
+                        onReelPressed()
+                        waitForUpOrCancellation()
+                        onReelReleased()
+                    }
+                },
+            shape = RoundedCornerShape(18.dp),
+            color = if (reelState?.isReeling == true) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primaryContainer,
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
+        ) {
+            Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxWidth()) {
+                Text(
+                    if (reelState?.isReeling == true) "Reeling..." else "Hold to Reel",
+                    fontWeight = FontWeight.Bold,
+                    color = if (reelState?.isReeling == true) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onPrimaryContainer
+                )
+            }
         }
         OutlinedButton(onClick = onCancel, modifier = Modifier.heightIn(min = buttonHeight)) {
             Text("Give Up")

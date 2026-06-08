@@ -17,7 +17,7 @@ import org.junit.Test
 class Hub1CriticalFlowTest {
 
     @Test
-    fun wakeUpCallCompletesFromBunkToJedToTinkering() {
+    fun wakeUpCallCompletesFromBunkToJedToCryoInductorRepair() {
         val harness = Hub1Harness()
 
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("pit_nova_bunk"))
@@ -31,6 +31,13 @@ class Hub1CriticalFlowTest {
 
         harness.store.setQuestTaskCompleted("w1_mq01", "equip_starter_gear", true)
         harness.events.handleTrigger("player_action", EventPayload.Action("tinkering_screen_entered"))
+
+        val afterBenchEntry = harness.store.state.value
+        assertTrue(afterBenchEntry.activeQuests.contains("w1_mq01"))
+        assertTrue(!afterBenchEntry.completedQuests.contains("w1_mq01"))
+        assertTrue(!afterBenchEntry.questTasksCompleted["w1_mq01"].orEmpty().contains("use_tinkering_table"))
+
+        harness.events.handleTrigger("player_action", EventPayload.Action("tinkering_craft", "functional_cryo_inductor"))
 
         val state = harness.store.state.value
         assertTrue(state.completedQuests.contains("w1_mq01"))
@@ -171,6 +178,8 @@ class Hub1CriticalFlowTest {
         assertTrue(stateAfterPod.questTasksCompleted["w2_mq01"].orEmpty().contains("examine_pod"))
         assertTrue(stateAfterPod.inventory["ghost_signal_cell"].orZero() >= 1)
         assertTrue(stateAfterPod.inventory["medkit"].orZero() >= 1)
+        assertTrue(stateAfterPod.inventory["wooden_rod"].orZero() >= 1)
+        assertTrue(stateAfterPod.inventory["basic_lure"].orZero() >= 1)
 
         // 3. Move to the stream
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("sector9_stream"))
