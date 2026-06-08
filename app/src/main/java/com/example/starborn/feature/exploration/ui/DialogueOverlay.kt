@@ -112,13 +112,17 @@ fun DialogueOverlay(
             base
         }
     }
+    val hasVoice = !dialogue.voiceCue.isNullOrBlank()
+    val showPortrait = portraitRes != null
+    val topPadding = if (showPortrait) 56.dp else 0.dp
+
     Box(
         modifier = modifier
             .fillMaxWidth()
             .padding(16.dp)
     ) {
         Surface(
-            modifier = containerModifier,
+            modifier = containerModifier.padding(top = topPadding),
             color = surfaceColor,
             contentColor = MaterialTheme.colorScheme.onSurface,
             shadowElevation = 6.dp,
@@ -132,14 +136,45 @@ fun DialogueOverlay(
                     .padding(start = 18.dp, top = 16.dp, end = 20.dp, bottom = 20.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                DialogueMessageCard(
-                    text = line.text,
-                    speaker = line.speaker,
-                    portraitRes = portraitRes,
-                    accentColor = accentColor,
-                    voiceCue = dialogue.voiceCue,
-                    onPlayVoice = onPlayVoice
-                )
+                if (!showPortrait) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        SpeakerName(
+                            name = line.speaker,
+                            accentColor = accentColor
+                        )
+                        Spacer(modifier = Modifier.weight(1f))
+                        if (hasVoice) {
+                            VoicePulseChip(
+                                onClick = { onPlayVoice(dialogue.voiceCue.orEmpty()) },
+                                accentColor = accentColor
+                            )
+                        }
+                    }
+                }
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(IntrinsicSize.Min),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .width(2.dp)
+                            .fillMaxHeight()
+                            .clip(RoundedCornerShape(999.dp))
+                            .background(accentColor.copy(alpha = 0.7f))
+                    )
+                    Text(
+                        text = line.text,
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        textAlign = TextAlign.Left
+                    )
+                }
 
                 if (choices.isNotEmpty()) {
                     Text(
@@ -162,81 +197,14 @@ fun DialogueOverlay(
                 }
             }
         }
-    }
-}
 
-@Composable
-private fun DialogueMessageCard(
-    text: String,
-    speaker: String,
-    portraitRes: Int?,
-    accentColor: Color,
-    voiceCue: String?,
-    onPlayVoice: (String) -> Unit
-) {
-    val hasVoice = !voiceCue.isNullOrBlank()
-    val messageTopPadding = if (portraitRes != null) PortraitSize - PortraitLift - PortraitOverlap else 0.dp
-    Box(modifier = Modifier.fillMaxWidth()) {
-        Surface(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = messageTopPadding),
-            color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.45f),
-            border = BorderStroke(1.dp, accentColor.copy(alpha = 0.16f)),
-            shape = RoundedCornerShape(14.dp)
-        ) {
-            Column(
-                modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = 12.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                if (portraitRes == null) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        SpeakerName(
-                            name = speaker,
-                            accentColor = accentColor
-                        )
-                        Spacer(modifier = Modifier.weight(1f))
-                        if (hasVoice) {
-                            VoicePulseChip(
-                                onClick = { onPlayVoice(voiceCue.orEmpty()) },
-                                accentColor = accentColor
-                            )
-                        }
-                    }
-                }
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(IntrinsicSize.Min),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .width(2.dp)
-                            .fillMaxHeight()
-                            .clip(RoundedCornerShape(999.dp))
-                            .background(accentColor.copy(alpha = 0.7f))
-                    )
-                    Text(
-                        text = text,
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        textAlign = TextAlign.Left
-                    )
-                }
-            }
-        }
         if (portraitRes != null) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .align(Alignment.TopStart)
-                    .offset(x = PortraitInset, y = -PortraitLift),
-                verticalAlignment = Alignment.Bottom
+                    .offset(x = 16.dp, y = 4.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -244,19 +212,20 @@ private fun DialogueMessageCard(
                 ) {
                     PortraitCard(
                         portraitRes = portraitRes,
-                        speaker = speaker,
+                        speaker = line.speaker,
                         accentColor = accentColor
                     )
                     SpeakerName(
-                        name = speaker,
+                        name = line.speaker,
                         accentColor = accentColor
                     )
                 }
                 Spacer(modifier = Modifier.weight(1f))
                 if (hasVoice) {
                     VoicePulseChip(
-                        onClick = { onPlayVoice(voiceCue.orEmpty()) },
-                        accentColor = accentColor
+                        onClick = { onPlayVoice(dialogue.voiceCue.orEmpty()) },
+                        accentColor = accentColor,
+                        modifier = Modifier.padding(end = 16.dp)
                     )
                 }
             }
@@ -284,7 +253,8 @@ private fun SpeakerName(
 @Composable
 private fun VoicePulseChip(
     onClick: () -> Unit,
-    accentColor: Color
+    accentColor: Color,
+    modifier: Modifier = Modifier
 ) {
     val transition = rememberInfiniteTransition(label = "voicePulse")
     val pulse by transition.animateFloat(
@@ -300,7 +270,8 @@ private fun VoicePulseChip(
         onClick = onClick,
         shape = RoundedCornerShape(999.dp),
         color = accentColor.copy(alpha = 0.06f),
-        border = BorderStroke(1.dp, accentColor.copy(alpha = 0.35f))
+        border = BorderStroke(1.dp, accentColor.copy(alpha = 0.35f)),
+        modifier = modifier
     ) {
         Row(
             modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
@@ -331,6 +302,7 @@ private fun VoicePulseChip(
         }
     }
 }
+
 
 @Composable
 private fun PortraitCard(
