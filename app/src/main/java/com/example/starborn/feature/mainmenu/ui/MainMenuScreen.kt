@@ -51,6 +51,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.starborn.R
+import com.example.starborn.domain.audio.AudioCuePlayer
+import com.example.starborn.domain.audio.AudioCueType
+import com.example.starborn.domain.audio.AudioRouter
 import com.example.starborn.feature.mainmenu.MainMenuViewModel
 import com.example.starborn.ui.components.SaveLoadDialog
 import com.example.starborn.ui.theme.themeColor
@@ -70,6 +73,8 @@ private val TitleMutedText = Color(0xFFD7EAF4)
 @Composable
 fun MainMenuScreen(
     viewModel: MainMenuViewModel,
+    audioCuePlayer: AudioCuePlayer,
+    audioRouter: AudioRouter,
     onStartGame: () -> Unit,
     onSlotLoaded: () -> Unit
 ) {
@@ -91,7 +96,26 @@ fun MainMenuScreen(
     val textColor = remember(menuTheme) {
         themeColor(menuTheme?.fg, Color.White)
     }
+    val fadeInAlpha = remember { Animatable(1f) }
     val fadeOutAlpha = remember { Animatable(0f) }
+
+    LaunchedEffect(Unit) {
+        fadeInAlpha.animateTo(
+            targetValue = 0f,
+            animationSpec = tween(durationMillis = 1000, easing = FastOutSlowInEasing)
+        )
+    }
+
+    LaunchedEffect(audioCuePlayer, audioRouter) {
+        audioCuePlayer.execute(
+            audioRouter.commandsForLayerOverride(
+                layer = AudioCueType.MUSIC,
+                cueId = "music_title_theme",
+                fadeMs = 900L,
+                loop = true
+            )
+        )
+    }
 
     LaunchedEffect(Unit) {
         viewModel.messages.collectLatest { snackbarHostState.showSnackbar(it) }
@@ -250,6 +274,14 @@ fun MainMenuScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Color.Black.copy(alpha = fadeOutAlpha.value))
+            )
+        }
+
+        if (fadeInAlpha.value > 0.01f) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = fadeInAlpha.value))
             )
         }
     }

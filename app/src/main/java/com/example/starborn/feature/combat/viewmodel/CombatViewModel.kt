@@ -7,6 +7,7 @@ import com.example.starborn.data.assets.WorldAssetDataSource
 import com.example.starborn.data.local.Theme
 import com.example.starborn.data.repository.ThemeRepository
 import com.example.starborn.domain.audio.AudioCommand
+import com.example.starborn.domain.audio.AudioCueType
 import com.example.starborn.domain.audio.AudioRouter
 import com.example.starborn.domain.combat.CombatAction
 import com.example.starborn.domain.combat.CombatActionProcessor
@@ -129,6 +130,8 @@ class CombatViewModel(
     val weatherId: String?
     val theme: Theme?
     val roomBackground: String?
+    val locationTitle: String?
+    val encounterTitle: String
     private val timedPromptLock = Any()
     private var timedPromptDeferred: CompletableDeferred<Boolean>? = null
     private val _timedPrompt = MutableStateFlow<TimedPromptState?>(null)
@@ -280,6 +283,7 @@ class CombatViewModel(
         weatherId = currentRoom?.weather
         theme = environmentId?.let { themeRepository.getTheme(it) }
         roomBackground = currentRoom?.backgroundImage
+        locationTitle = currentRoom?.title
         environmentThemeManager.apply(environmentId, weatherId)
 
         playerSkillsById = playerParty.associate { member ->
@@ -306,6 +310,7 @@ class CombatViewModel(
             enemyDefinitions[instanceId] = enemy
             enemy.toCombatant(instanceId)
         }
+        encounterTitle = buildEncounterTitle(encounterEnemySlots.map { it.enemy })
         playerIdList = playerCombatants.map { it.id }
         enemyIdList = enemyCombatants.map { it.id }
         bossCoreCombatantIds = encounterEnemySlots.mapIndexedNotNull { index, slot ->
@@ -339,7 +344,6 @@ class CombatViewModel(
                 )
             )
             _state.value = seeded
-            playBattleCue("start")
             startAtbTicker()
         }
         refreshSelection(_state.value)
@@ -1321,6 +1325,7 @@ class CombatViewModel(
                     setCombatBanner(entry, updated)
                 }
                 is CombatLogEntry.Damage -> {
+                    playCharacterAttackSound(entry.sourceId)
                     if (entry.amount == 0 && entry.element == "miss") {
                         val targetIsPlayer = entry.targetId in playerIdList
                         if (!targetIsPlayer && entry.targetId !in suppressMissLungeTargets) {
@@ -1366,7 +1371,10 @@ class CombatViewModel(
                         CombatOutcome.Retreat -> CombatFxEvent.CombatOutcomeFx.OutcomeType.RETREAT
                     }
                     when (outcomeType) {
-                        CombatFxEvent.CombatOutcomeFx.OutcomeType.VICTORY -> playBattleCue("victory")
+                        CombatFxEvent.CombatOutcomeFx.OutcomeType.VICTORY -> {
+                            playBattleCue("victory")
+                            playVictoryMusic()
+                        }
                         CombatFxEvent.CombatOutcomeFx.OutcomeType.DEFEAT -> playBattleCue("defeat")
                         CombatFxEvent.CombatOutcomeFx.OutcomeType.RETREAT -> playBattleCue("retreat")
                     }
@@ -2516,6 +2524,20 @@ class CombatViewModel(
             .ifBlank { skillId }
     }
 
+    private fun buildEncounterTitle(enemies: List<Enemy>): String {
+        if (enemies.isEmpty()) return "Combat"
+        val grouped = enemies.groupingBy { it.name.ifBlank { it.id } }.eachCount()
+        if (grouped.size == 1) {
+            val (name, count) = grouped.entries.first()
+            return if (count > 1) "$name x$count" else name
+        }
+        val boss = enemies.firstOrNull { it.tier.equals("boss", ignoreCase = true) }
+        if (boss != null) return "${boss.name} and escort"
+        val elite = enemies.firstOrNull { it.tier.equals("elite", ignoreCase = true) }
+        if (elite != null) return "${elite.name} and allies"
+        return "${enemies.size} hostiles"
+    }
+
     private data class EncounterEnemySlot(
         val canonicalId: String,
         val enemy: Enemy,
@@ -2723,6 +2745,61 @@ private fun determineSkillTargeting(skill: Skill): SkillTargeting {
 
     private fun playBattleCue(key: String) {
         emitAudio(audioRouter.commandsForBattle(key))
+    }
+
+    private var audioStarted = false
+
+    fun onScreenReady() {
+        if (!audioStarted) {
+            audioStarted = true
+            playBattleCue("start")
+            playCombatMusic()
+        }
+    }
+
+    private fun playCombatMusic() {
+        val worldId = sessionStore.state.value.worldId ?: "world_1"
+        val trackId = when (worldId) {
+            "world_2" -> "music_w2_combat"
+            "world_3" -> "music_w3_combat"
+            "world_4" -> "music_w4_combat"
+            "world_5" -> "music_w5_combat"
+            "world_6" -> "music_w6_combat"
+            else -> "music_w1_combat"
+        }
+        val commands = audioRouter.commandsForLayerOverride(
+            layer = AudioCueType.MUSIC,
+            cueId = trackId,
+            fadeMs = 400L,
+            loop = true
+        )
+        emitAudio(commands)
+    }
+
+    private fun playVictoryMusic() {
+        val commands = audioRouter.commandsForLayerOverride(
+            layer = AudioCueType.MUSIC,
+            cueId = "music_victory_theme",
+            fadeMs = 250L,
+            loop = true
+        )
+        emitAudio(commands)
+    }
+
+    private fun playCharacterAttackSound(sourceId: String) {
+        val base = sourceId.substringBefore('#')
+        val segment = base.substringAfterLast(':').substringAfterLast('/')
+        val normalized = segment.lowercase(Locale.getDefault()).removePrefix("player_")
+        val cue = when {
+            normalized.startsWith("nova") -> "wpn_nova_laser"
+            normalized.startsWith("zeke") -> "wpn_zeke_punch"
+            normalized.startsWith("orion") -> "wpn_orion_resonance"
+            normalized.startsWith("gh0st") || normalized.startsWith("ghost") -> "wpn_gh0st_slash"
+            else -> null
+        }
+        if (cue != null) {
+            playBattleCue(cue)
+        }
     }
 
 

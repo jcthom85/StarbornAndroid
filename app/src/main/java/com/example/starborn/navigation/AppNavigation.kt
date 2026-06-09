@@ -88,6 +88,8 @@ fun NavigationHost(
             val mainMenuViewModel: MainMenuViewModel = viewModel(factory = MainMenuViewModelFactory(services))
             MainMenuScreen(
                 viewModel = mainMenuViewModel,
+                audioCuePlayer = services.audioCuePlayer,
+                audioRouter = services.audioRouter,
                 onStartGame = {
                     navController.navigate(Exploration.route) {
                         popUpTo(MainMenu.route) { inclusive = true }

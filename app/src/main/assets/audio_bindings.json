@@ -1,15 +1,33 @@
 {
   "music": {
-    "hub_1": "music_hub1",
-    "hub_2": "music_hub2",
-    "vfx_sandbox": "music_hub1"
+    "hub_1_homestead": "music_w1_homestead_explore",
+    "hub_2_logistics": "music_w1_logistics_explore",
+    "hub_3_sector9": "music_w2_sector9_explore",
+    "hub_1": "music_w1_homestead_explore",
+    "hub_2": "music_w1_logistics_explore",
+    "vfx_sandbox": "music_w1_homestead_explore"
   },
   "ambience": {
-    "1_1": "amb_vent",
-    "1_2": "amb_forest_birds",
-    "2_1": "amb_cave_drips",
+    "hub_1_homestead": "amb_vent+amb_forest_birds",
+    "hub_2_logistics": "amb_forest_birds+amb_cave_drips",
+    "hub_3_sector9": "amb_forest_birds+amb_cave_drips",
     "hub_1": "amb_vent+amb_forest_birds",
-    "hub_2": "amb_forest_birds+amb_cave_drips"
+    "hub_2": "amb_forest_birds+amb_cave_drips",
+    "pit_vents": "amb_vent",
+    "medbay_vents": "amb_vent",
+    "pit_shaft": "amb_cave_drips",
+    "mine_landing": "amb_cave_drips",
+    "mine_alpha": "amb_cave_drips",
+    "mine_shunt": "amb_cave_drips",
+    "mine_junction": "amb_cave_drips",
+    "mine_conveyor": "amb_cave_drips+amb_vent",
+    "mine_checkpoint": "amb_cave_drips",
+    "mine_sifter": "amb_cave_drips+amb_vent",
+    "mine_gas": "amb_cave_drips",
+    "mine_shoring": "amb_cave_drips",
+    "mine_threshold": "amb_cave_drips",
+    "mine_slope": "amb_cave_drips",
+    "mine_antechamber": "amb_cave_drips"
   },
   "weather": {
     "dust": "amb_forest_birds",
@@ -24,19 +42,17 @@
     "back": "ui_back",
     "menu_open": "ui_confirm",
     "menu_close": "ui_back",
-    "menu_action": "ui_click",
-    "shop_mechanic_greeting": "shop_mechanic_vo",
-    "shop_mechanic_smalltalk": "shop_mechanic_vo",
-    "shop_weapon_greeting": "shop_weapon_vo",
-    "shop_armor_greeting": "shop_armor_vo",
-    "shop_accessory_greeting": "shop_accessory_vo",
-    "shop_general_greeting": "shop_general_vo"
+    "menu_action": "ui_click"
   },
   "battle": {
     "start": "battle_start",
     "shield_block": "shield_block",
     "shield_break": "shield_break",
     "victory": "victory_fanfare",
-    "defeat": "defeat_sting"
+    "defeat": "defeat_sting",
+    "wpn_nova_laser": "wpn_nova_laser",
+    "wpn_zeke_punch": "wpn_zeke_punch",
+    "wpn_orion_resonance": "wpn_orion_resonance",
+    "wpn_gh0st_slash": "wpn_gh0st_slash"
   }
 }
