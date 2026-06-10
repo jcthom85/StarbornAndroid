@@ -107,7 +107,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-private const val DEFAULT_PORTRAIT = "communicator_portrait"
+private const val DEFAULT_PORTRAIT = "images/characters/communicator_portrait.png"
 private const val LOG_TAG = "ExplorationVM"
 private const val MILESTONE_BAND_LIMIT = 3
 private const val FULL_MAP_COLUMNS = 16
@@ -531,9 +531,23 @@ class ExplorationViewModel(
     private val emotesBySpeaker: MutableMap<String, Map<String, String>> = mutableMapOf()
     private val portraitOverrides: Map<String, String> = mapOf(
         "pasha" to DEFAULT_PORTRAIT,
-        "jed" to DEFAULT_PORTRAIT,
         "maddie" to DEFAULT_PORTRAIT,
         "ollie" to "images/characters/ollie_portrait.png"
+    )
+    private val standardCharacterEmotes = listOf(
+        "angry",
+        "confident",
+        "cool",
+        "crying",
+        "gasping",
+        "happy",
+        "idle",
+        "laughing",
+        "puzzled",
+        "sad",
+        "scared",
+        "surprised",
+        "worried"
     )
     private var activeShopDialogue: ShopDialogueSession? = null
     private var lastDialogueVoiceCue: String? = null
@@ -1287,8 +1301,8 @@ class ExplorationViewModel(
 
     private fun buildDialogueUi(line: DialogueLine?): DialogueUi? {
         if (line == null) return null
-        val portrait = resolveEmotePortrait(line.speaker, line.emote)
-            ?: line.portrait?.takeIf { it.isNotBlank() }?.let { sanitizePortraitName(it) }
+        val portrait = line.portrait?.takeIf { it.isNotBlank() }?.let { sanitizePortraitPath(it) }
+            ?: resolveEmotePortrait(line.speaker, line.emote)
             ?: resolvePortraitKey(line.speaker)
         return DialogueUi(
             line = line,
@@ -1737,6 +1751,7 @@ class ExplorationViewModel(
             emotesBySpeaker.clear()
             players.forEach { character ->
                 registerPortrait(character.miniIconPath, character.name, character.id)
+                registerCharacterEmotes(character.id, character.name)
             }
             players.firstOrNull()?.let { registerPortrait(it.miniIconPath, "player") }
             npcs.forEach { npc ->
@@ -1797,7 +1812,7 @@ class ExplorationViewModel(
                     currentHub = initialHub,
                     currentRoom = initialRoom,
                     availableConnections = initialConnections,
-                    npcs = initialRoom?.npcs.orEmpty(),
+                    npcs = visibleNpcsForRoom(initialRoom, sessionState.completedMilestones),
                     actions = initialActions,
                     actionHints = buildActionHints(initialRoom, initialActions),
                     enemies = initialRoom?.let { roomEnemyParties(it).flatten() }.orEmpty(),
@@ -1904,7 +1919,7 @@ class ExplorationViewModel(
                 currentHub = nextHub ?: it.currentHub,
                 currentWorld = nextWorld ?: it.currentWorld,
                 availableConnections = visibleConnections(nextRoom),
-                npcs = nextRoom.npcs,
+                npcs = visibleNpcsForRoom(nextRoom, sessionState.completedMilestones),
                 actions = nextActions,
                 actionHints = buildActionHints(nextRoom, nextActions),
                 enemies = roomEnemyParties(nextRoom).flatten(),
@@ -1928,6 +1943,20 @@ class ExplorationViewModel(
         playRoomAudio(nextHub?.id ?: sessionState.hubId, nextRoom.id)
         handleRoomEntryTutorials(nextRoom)
         eventManager.handleTrigger("enter_room", EventPayload.EnterRoom(nextRoom.id))
+    }
+
+    private fun visibleNpcsForRoom(room: Room?, completedMilestones: Set<String> = sessionStore.state.value.completedMilestones): List<String> {
+        if (room == null) return emptyList()
+        val npcs = room.npcs.toMutableList()
+        room.npcPresence.forEach { rule ->
+            val npcId = rule.npc.trim().takeIf { it.isNotEmpty() } ?: return@forEach
+            val hasRequirements = rule.requiresMilestones.all { it in completedMilestones }
+            val blocked = rule.forbiddenMilestones.any { it in completedMilestones }
+            if (hasRequirements && !blocked) {
+                npcs += npcId
+            }
+        }
+        return npcs.distinctBy { it.lowercase(Locale.getDefault()) }
     }
 
     private fun getHubAndWorldForRoom(room: Room): Pair<Hub?, World?> {
@@ -1971,7 +2000,7 @@ class ExplorationViewModel(
                 currentHub = nextHub ?: current.currentHub,
                 currentWorld = nextWorld ?: current.currentWorld,
                 availableConnections = visibleConnections(nextRoom),
-                npcs = nextRoom.npcs,
+                npcs = visibleNpcsForRoom(nextRoom, sessionState.completedMilestones),
                 actions = nextActions,
                 actionHints = buildActionHints(nextRoom, nextActions),
                 enemies = roomEnemyParties(nextRoom).flatten(),
@@ -2964,6 +2993,38 @@ class ExplorationViewModel(
 
     fun itemDisplayName(itemId: String): String = inventoryService.itemDisplayName(itemId)
 
+    fun roomItemDetailLabel(itemId: String): String? {
+        val item = inventoryService.catalogItem(itemId) ?: inventoryService.itemDetail(itemId) ?: return null
+        val equipment = item.equipment
+        if (equipment != null) {
+            val slot = equipment.slot.replaceFirstChar { ch ->
+                if (ch.isLowerCase()) ch.titlecase(Locale.getDefault()) else ch.toString()
+            }
+            val stat = when {
+                equipment.damageMin != null && equipment.damageMax != null -> "DMG ${equipment.damageMin}-${equipment.damageMax}"
+                equipment.defense != null -> "DEF ${equipment.defense}"
+                equipment.hpBonus != null -> "HP +${equipment.hpBonus}"
+                equipment.accuracy != null -> "ACC +${formatCompactNumber(equipment.accuracy)}"
+                equipment.critRate != null -> "CRIT +${formatCompactNumber(equipment.critRate)}"
+                else -> null
+            }
+            return listOfNotNull(slot, stat).joinToString(" | ")
+        }
+        return item.type
+            .takeIf { it.isNotBlank() }
+            ?.replace('_', ' ')
+            ?.replaceFirstChar { ch -> if (ch.isLowerCase()) ch.titlecase(Locale.getDefault()) else ch.toString() }
+    }
+
+    private fun formatCompactNumber(value: Double): String {
+        val rounded = value.toInt()
+        return if (value == rounded.toDouble()) rounded.toString() else String.format(Locale.getDefault(), "%.1f", value)
+    }
+    fun roomItemIsEquipment(itemId: String): Boolean {
+        val item = inventoryService.catalogItem(itemId) ?: inventoryService.itemDetail(itemId) ?: return false
+        return item.equipment != null
+    }
+
     fun weaponItem(itemId: String): Item? = inventoryService.itemDetail(itemId)
 
     fun armorItem(itemId: String): Item? = inventoryService.itemDetail(itemId)
@@ -3481,7 +3542,7 @@ class ExplorationViewModel(
     }
 
     private fun registerPortrait(portraitPath: String?, vararg rawKeys: String?) {
-        val sanitized = sanitizePortraitName(portraitPath)
+        val sanitized = sanitizePortraitPath(portraitPath)
         val resolved = sanitized ?: DEFAULT_PORTRAIT
         rawKeys.filterNotNull()
             .map { it.normalizedKey() }
@@ -3494,11 +3555,19 @@ class ExplorationViewModel(
             }
     }
 
+    private fun registerCharacterEmotes(characterId: String?, characterName: String?) {
+        val normalizedId = characterId?.normalizedAssetKey()?.takeIf { it.isNotEmpty() } ?: return
+        val emotes = standardCharacterEmotes.associateWith { emote ->
+            "images/characters/emotes/${normalizedId}_${emote}.png"
+        }
+        registerEmotes(emotes, characterId, characterName)
+    }
+
     private fun registerEmotes(emotes: Map<String, String>?, vararg rawKeys: String?) {
         if (emotes.isNullOrEmpty()) return
         val normalizedEmotes = emotes.mapNotNull { (key, value) ->
             val normalizedKey = key.trim().lowercase(Locale.getDefault())
-            val sanitized = sanitizePortraitName(value)
+            val sanitized = sanitizePortraitPath(value)
             if (normalizedKey.isNotEmpty() && sanitized != null) {
                 normalizedKey to sanitized
             } else {
@@ -3519,7 +3588,7 @@ class ExplorationViewModel(
         portraitBySpeaker[normalized]?.let { return it }
         val lastSegment = normalized.substringAfterLast(' ', normalized)
         portraitBySpeaker[lastSegment]?.let { return it }
-        return null
+        return DEFAULT_PORTRAIT
     }
 
     private fun resolveEmotePortrait(speaker: String, emote: String?): String? {
@@ -3532,15 +3601,20 @@ class ExplorationViewModel(
         return null
     }
 
-    private fun sanitizePortraitName(path: String?): String? {
-        if (path.isNullOrBlank()) return null
-        val base = path.substringAfterLast('/').substringBeforeLast('.')
+    private fun sanitizePortraitPath(path: String?): String? {
+        val trimmed = path?.trim()?.replace('\\', '/')?.takeIf { it.isNotEmpty() } ?: return null
+        if (trimmed.contains('/')) return trimmed
+        val base = trimmed.substringAfterLast('/').substringBeforeLast('.')
         val normalized = base.replace('-', '_').lowercase(Locale.getDefault())
-        val remapped = portraitOverrides[normalized] ?: normalized
-        return remapped.takeIf { it.isNotBlank() }
+        portraitOverrides[normalized]?.let { return it }
+        val fileName = if (trimmed.endsWith(".png", ignoreCase = true)) trimmed else "$normalized.png"
+        return "images/characters/$fileName"
     }
 
     private fun String.normalizedKey(): String = trim().lowercase(Locale.getDefault())
+
+    private fun String.normalizedAssetKey(): String =
+        trim().lowercase(Locale.getDefault()).replace('-', '_').replace(Regex("[^a-z0-9_]"), "")
 
     private fun playVoiceCue(cueId: String?, force: Boolean = false) {
         val normalized = cueId?.trim()?.takeIf { it.isNotEmpty() } ?: return

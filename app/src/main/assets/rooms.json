@@ -347,8 +347,14 @@
     "title": "Main Bench",
     "background_image": "images/rooms/world_1/workshop_floor_v3.png",
     "description": "Warm work lights spill across Jed's main bench, catching on solder smoke and bright little tool handles. Your illegal cutter parts sit in the middle of it all, dangerous, necessary, and almost ready.",
-    "npcs": [
-      "jed"
+    "npcs": [],
+    "npc_presence": [
+      {
+        "npc": "jed",
+        "requires_milestones": [
+          "ms_w1_mq01_jed_talked"
+        ]
+      }
     ],
     "items": [],
     "enemies": [],
@@ -383,9 +389,7 @@
     "title": "Jed's Office",
     "background_image": "images/rooms/world_1/workshop_office_v3.png",
     "description": "Ancient screens, hand-drawn schematics, and locked parts bins crowd Jed's windowless office. His worn chair still holds the shape of someone who keeps choosing one more repair over sleep.",
-    "npcs": [
-      "jed"
-    ],
+    "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {

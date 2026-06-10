@@ -28,11 +28,22 @@ data class Room(
     val enemyFlavor: Map<String, String>? = null,
     @Json(name = "enemy_instances")
     val enemyInstances: List<RoomEnemyInstance>? = null,
+    @Json(name = "npc_presence")
+    val npcPresence: List<NpcPresenceRule> = emptyList(),
     val dark: Boolean? = null,
     @Json(name = "description_dark")
     val descriptionDark: String? = null,
     @Json(name = "title_options")
     val titleOptions: TitleOptions? = null
+)
+
+
+data class NpcPresenceRule(
+    val npc: String,
+    @Json(name = "requires_milestones")
+    val requiresMilestones: List<String> = emptyList(),
+    @Json(name = "forbidden_milestones")
+    val forbiddenMilestones: List<String> = emptyList()
 )
 
 data class BlockedDirection(

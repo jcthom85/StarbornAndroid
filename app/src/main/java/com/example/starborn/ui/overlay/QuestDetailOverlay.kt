@@ -1,4 +1,4 @@
-package com.example.starborn.ui.overlay
+﻿package com.example.starborn.ui.overlay
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -41,11 +41,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.example.starborn.ui.events.QuestBannerType
 import com.example.starborn.ui.events.UiEvent
 import com.example.starborn.ui.events.UiEventBus
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
@@ -54,8 +55,7 @@ fun QuestDetailOverlay(
     gradientColor: Color,
     outlineColor: Color,
     deferShowing: Boolean = false,
-    onShowDetails: (String) -> Unit,
-    autoDismissMillis: Long = 8000L
+    onShowDetails: (String) -> Unit
 ) {
     var current by remember { mutableStateOf<UiEvent.ShowQuestDetail?>(null) }
     var visible by remember { mutableStateOf(false) }
@@ -68,15 +68,7 @@ fun QuestDetailOverlay(
             }
         }
     }
-
-    LaunchedEffect(current, visible) {
-        if (visible && current != null) {
-            delay(autoDismissMillis)
-            visible = false
-        }
-    }
-
-    AnimatedVisibility(
+AnimatedVisibility(
         visible = visible && !deferShowing && current != null,
         enter = slideInVertically(initialOffsetY = { it }) + fadeIn(),
         exit = slideOutVertically(targetOffsetY = { it }) + fadeOut()
@@ -117,6 +109,7 @@ private fun QuestDetailCard(
     }
 
     Card(
+        modifier = Modifier.semantics { contentDescription = "Quest Detail Popup" },
         shape = RoundedCornerShape(28.dp),
         elevation = CardDefaults.cardElevation(18.dp),
         border = BorderStroke(1.5.dp, outlineColor),
@@ -170,7 +163,7 @@ private fun QuestDetailCard(
                 Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                     detail.objectives.forEach { line ->
                         Text(
-                            text = "• $line",
+                            text = "- $line",
                             style = MaterialTheme.typography.bodySmall,
                             color = Color.White.copy(alpha = 0.85f)
                         )
@@ -197,3 +190,5 @@ private fun QuestDetailCard(
         }
     }
 }
+
+

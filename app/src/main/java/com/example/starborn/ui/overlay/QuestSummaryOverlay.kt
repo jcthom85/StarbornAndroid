@@ -1,4 +1,4 @@
-package com.example.starborn.ui.overlay
+﻿package com.example.starborn.ui.overlay
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -21,6 +21,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.example.starborn.ui.events.SummaryType
 import com.example.starborn.ui.events.UiEvent
@@ -55,7 +57,8 @@ fun QuestSummaryOverlay(
             Card(
                 modifier = modifier
                     .fillMaxWidth()
-                    .padding(16.dp),
+                    .padding(16.dp)
+                    .semantics { contentDescription = "Quest Summary Popup" },
                 colors = CardDefaults.cardColors(
                     containerColor = MaterialTheme.colorScheme.surface
                 ),
@@ -81,7 +84,7 @@ fun QuestSummaryOverlay(
                             append(' ')
                             append(entry.questTitle)
                             entry.objectiveTitle?.takeIf { it.isNotBlank() }?.let {
-                                append(" — ")
+                                append(" - ")
                                 append(it)
                             }
                         }
@@ -113,3 +116,7 @@ fun QuestSummaryOverlay(
         }
     }
 }
+
+
+
+

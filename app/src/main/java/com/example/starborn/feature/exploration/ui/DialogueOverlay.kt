@@ -40,12 +40,14 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.shape.RoundedCornerShape
 import com.example.starborn.R
 import com.example.starborn.ui.background.rememberAssetPainter
@@ -64,45 +66,8 @@ fun DialogueOverlay(
     modifier: Modifier = Modifier
 ) {
     val line = dialogue.line
-    val context = LocalContext.current
-    val portraitPath = remember(dialogue.portrait, line.emote, line.speaker) {
-        val speakerKey = line.speaker.lowercase(Locale.getDefault()).replace(' ', '_').replace(Regex("[^a-z0-9_]"), "")
-        if (speakerKey.isBlank() && dialogue.portrait.isNullOrBlank()) {
-            null
-        } else {
-            val candidates = mutableListOf<String>()
-
-            // 1. Explicit Portrait Override
-            dialogue.portrait?.takeIf { it.isNotBlank() }?.let { provided ->
-                if (provided.contains('/') || provided.endsWith(".png")) {
-                    candidates += provided
-                } else {
-                    candidates += "images/characters/$provided.png"
-                    candidates += "images/npcs/$provided.png"
-                    if (provided.endsWith("_portrait")) {
-                        val base = provided.removeSuffix("_portrait")
-                        candidates += "images/characters/$base.png"
-                        candidates += "images/npcs/$base.png"
-                    }
-                }
-            }
-
-            // 2. Resolve speaker & emote
-            if (speakerKey.isNotBlank()) {
-                line.emote?.takeIf { it.isNotBlank() }?.let { emote ->
-                    val emoteKey = emote.lowercase(Locale.getDefault())
-                    candidates += "images/characters/emotes/${speakerKey}_${emoteKey}.png"
-                    candidates += "images/characters/emotes/${speakerKey}_${emote}.png"
-                }
-                candidates += "images/characters/${speakerKey}_portrait.png"
-                candidates += "images/npcs/${speakerKey}.png"
-            }
-
-            // 3. Fallback
-            candidates += "images/characters/communicator_portrait.png"
-
-            candidates.firstOrNull { assetExists(context, it) }
-        }
+    val portraitPath = remember(dialogue.portrait) {
+        dialogue.portrait?.takeIf { it.isNotBlank() }
     }
     val portraitPainter = rememberAssetPainter(portraitPath, painterResource(R.drawable.main_menu_background))
 
@@ -111,19 +76,23 @@ fun DialogueOverlay(
     val surfaceColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.98f)
     val canDismissByTap = choices.isEmpty()
     val tapInteraction = remember { MutableInteractionSource() }
-    val containerModifier = Modifier.fillMaxWidth().let { base ->
-        if (canDismissByTap) {
-            base.clickable(
-                interactionSource = tapInteraction,
-                indication = null
-            ) { onAdvance() }
-        } else {
-            base
+    val containerModifier = Modifier
+        .fillMaxWidth()
+        .semantics { contentDescription = if (canDismissByTap) "Dialogue Popup. Tap to continue" else "Dialogue Popup" }
+        .let { base ->
+            if (canDismissByTap) {
+                base.clickable(
+                    interactionSource = tapInteraction,
+                    indication = null
+                ) { onAdvance() }
+            } else {
+                base
+            }
         }
-    }
     val hasVoice = !dialogue.voiceCue.isNullOrBlank()
     val showPortrait = portraitPath != null
-    val topPadding = if (showPortrait) 56.dp else 0.dp
+    val topPadding = if (showPortrait) (PortraitSize * 0.62f) else 0.dp
+    val contentTopPadding = if (showPortrait) 42.dp else 16.dp
 
     Box(
         modifier = modifier
@@ -142,7 +111,7 @@ fun DialogueOverlay(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 18.dp, top = 16.dp, end = 20.dp, bottom = 20.dp),
+                    .padding(start = 18.dp, top = contentTopPadding, end = 20.dp, bottom = 20.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 if (!showPortrait) {
@@ -212,7 +181,7 @@ fun DialogueOverlay(
                 modifier = Modifier
                     .fillMaxWidth()
                     .align(Alignment.TopStart)
-                    .offset(x = 16.dp, y = 4.dp),
+                    .offset(x = 16.dp, y = (-8).dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Row(
@@ -251,8 +220,8 @@ private fun SpeakerName(
     Text(
         text = name,
         modifier = modifier,
-        style = MaterialTheme.typography.labelLarge,
-        fontWeight = FontWeight.SemiBold,
+        style = MaterialTheme.typography.titleMedium.copy(fontSize = 22.sp),
+        fontWeight = FontWeight.Bold,
         color = accentColor.copy(alpha = 0.9f),
         maxLines = 1,
         overflow = TextOverflow.Ellipsis
@@ -335,14 +304,6 @@ private fun PortraitCard(
     }
 }
 
-private fun assetExists(context: android.content.Context, path: String): Boolean {
-    return try {
-        context.assets.open(path).use { }
-        true
-    } catch (e: Exception) {
-        false
-    }
-}
 
 @Composable
 private fun DialogueChoiceButton(
@@ -433,7 +394,4 @@ private fun String.toChoiceTag(): ChoiceTag? = when (this.lowercase(Locale.getDe
     else -> null
 }
 
-private val PortraitSize = 64.dp
-private val PortraitLift = 8.dp
-private val PortraitOverlap = 10.dp
-private val PortraitInset = 6.dp
+private val PortraitSize = 80.dp

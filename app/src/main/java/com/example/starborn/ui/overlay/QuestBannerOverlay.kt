@@ -1,4 +1,4 @@
-package com.example.starborn.ui.overlay
+﻿package com.example.starborn.ui.overlay
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -19,7 +19,6 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material.icons.outlined.RadioButtonUnchecked
-import androidx.compose.material.icons.outlined.RadioButtonUnchecked
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -38,6 +37,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
@@ -63,7 +64,6 @@ fun QuestBannerOverlay(
     uiEventBus: UiEventBus,
     deferShowing: Boolean,
     accentColor: Color,
-    autoHideMillis: Long = 2500,
     modifier: Modifier = Modifier
 ) {
     val queue = remember { mutableStateListOf<Banner>() }
@@ -113,15 +113,7 @@ fun QuestBannerOverlay(
             Haptics.pulse(context, type)
         }
     }
-
-    LaunchedEffect(current, isShowing) {
-        if (current != null && isShowing) {
-            delay(autoHideMillis)
-            isShowing = false
-        }
-    }
-
-    LaunchedEffect(isShowing) {
+LaunchedEffect(isShowing) {
         if (!isShowing && current != null) {
             delay(180)
             current = null
@@ -178,6 +170,7 @@ private fun QuestBannerCard(
     }
 
     Card(
+        modifier = Modifier.semantics { contentDescription = "Quest Banner" },
         shape = RoundedCornerShape(18.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 12.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.98f))
@@ -221,7 +214,7 @@ private fun QuestBannerCard(
             IconButton(onClick = onDismiss) {
                 Icon(
                     imageVector = Icons.Filled.Close,
-                    contentDescription = "Dismiss",
+                    contentDescription = "Dismiss Quest Banner",
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
@@ -255,3 +248,5 @@ private fun BannerObjectiveRow(
         )
     }
 }
+
+

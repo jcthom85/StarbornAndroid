@@ -492,7 +492,7 @@ fun ExplorationScreen(
             )
         }
         val descriptionForPanel = baseRoomDescription
-        val fallbackNpcs = emptyList<String>()
+        val fallbackNpcs = uiState.npcs
         val serviceQuickActions = remember(uiState.actions, uiState.actionHints, currentRoom?.id) {
             val unique = LinkedHashSet<String>()
             val items = mutableListOf<QuickMenuAction>()
@@ -645,6 +645,8 @@ fun ExplorationScreen(
                 onEnemyClick = { enemyId -> viewModel.engageEnemy(enemyId) },
                 groundItems = uiState.groundItems,
                 itemDisplayName = { itemId -> viewModel.itemDisplayName(itemId) },
+                itemDetailLabel = { itemId -> viewModel.roomItemDetailLabel(itemId) },
+                itemIsEquipment = { itemId -> viewModel.roomItemIsEquipment(itemId) },
                 onCollectItem = { itemId -> viewModel.collectGroundItem(itemId) },
                 onCollectAll = { viewModel.collectAllGroundItems() },
                 enemyTiers = uiState.enemyTiers,
@@ -6310,6 +6312,8 @@ private fun RoomDescriptionPanel(
     onEnemyClick: (String) -> Unit,
     groundItems: Map<String, Int>,
     itemDisplayName: (String) -> String,
+    itemDetailLabel: (String) -> String?,
+    itemIsEquipment: (String) -> Boolean,
     onCollectItem: (String) -> Unit,
     onCollectAll: () -> Unit,
     enemyTiers: Map<String, String>,
@@ -6389,88 +6393,350 @@ private fun RoomDescriptionPanel(
             }.orEmpty()
             val itemFlavor = currentRoom?.itemFlavor.orEmpty()
             val hasFinds = groundItems.isNotEmpty()
-            val hasAnySections = fallbackNpcs.isNotEmpty() || enemyParties.isNotEmpty() || hasFinds
-            if (hasAnySections) {
+            val hasAnyEntities = fallbackNpcs.isNotEmpty() || enemyParties.isNotEmpty() || hasFinds
+            if (hasAnyEntities) {
                 HorizontalDivider(color = borderColor.copy(alpha = if (isDark) 0.28f else 0.18f))
-            }
-            if (fallbackNpcs.isNotEmpty()) {
-                Text(
-                    text = "People",
-                    color = Color.White.copy(alpha = 0.75f),
-                    style = MaterialTheme.typography.labelMedium
-                )
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .horizontalScroll(rememberScrollState()),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    fallbackNpcs.forEach { npc ->
-                        RoomActionChip(
-                            label = npc,
-                            accentColor = accentColor,
-                            onClick = { onNpcClick(npc) }
-                        )
-                    }
-                }
-                if (enemyParties.isNotEmpty() || hasFinds) {
-                    HorizontalDivider(color = borderColor.copy(alpha = if (isDark) 0.28f else 0.18f))
-                }
-            }
-            val showEnemyFlavorText = false
-            if (showEnemyFlavorText) {
-                val enemyFlavor = currentRoom?.enemyFlavor.orEmpty()
-                val partyLeaders = when {
-                    currentRoom?.enemyParties.isNullOrEmpty() ->
-                        currentRoom?.enemies.orEmpty()
-                            .mapNotNull { enemyId -> enemyId.trim().takeIf { it.isNotBlank() } }
-                    else ->
-                        currentRoom?.enemyParties.orEmpty()
-                            .mapNotNull { party -> party.firstOrNull()?.trim()?.takeIf { it.isNotBlank() } }
-                }
-                val enemyLines = partyLeaders.mapNotNull { enemyId ->
-                    enemyFlavor[enemyId]?.let { enemyId to it }
-                }
-                if (!isDark && enemyLines.isNotEmpty()) {
-                    EnemyFlavorBlock(
-                        entries = enemyLines,
-                        accentColor = accentColor,
-                        onEnemyClick = onEnemyClick
-                    )
-                }
-            }
-            if (enemyParties.isNotEmpty()) {
-                EnemyPartyStrip(
-                    parties = enemyParties,
+                RoomEntitySection(
+                    npcs = fallbackNpcs,
+                    enemyParties = enemyParties,
+                    groundItems = groundItems,
+                    itemFlavor = itemFlavor,
+                    itemDisplayName = itemDisplayName,
+                    itemDetailLabel = itemDetailLabel,
+                    itemIsEquipment = itemIsEquipment,
                     enemyTiers = enemyTiers,
                     enemyIcons = enemyIcons,
                     accentColor = accentColor,
                     borderColor = borderColor,
                     isDark = isDark,
-                    onPartyClick = { leaderId ->
-                        if (leaderId.isNotBlank()) onEnemyClick(leaderId)
-                    }
-                )
-                if (hasFinds) {
-                    HorizontalDivider(color = borderColor.copy(alpha = if (isDark) 0.28f else 0.18f))
-                }
-            }
-            if (hasFinds) {
-                RoomFindsBlock(
-                    items = groundItems,
-                    itemFlavor = itemFlavor,
-                    itemDisplayName = itemDisplayName,
+                    onNpcClick = onNpcClick,
+                    onEnemyClick = onEnemyClick,
                     onCollectItem = onCollectItem,
-                    onCollectAll = onCollectAll,
-                    accentColor = accentColor,
-                    borderColor = borderColor,
-                    isDark = isDark
+                    onCollectAll = onCollectAll
                 )
             }
         }
     }
 }
 
+
+@Composable
+private fun RoomEntitySection(
+    npcs: List<String>,
+    enemyParties: List<List<String>>,
+    groundItems: Map<String, Int>,
+    itemFlavor: Map<String, String>,
+    itemDisplayName: (String) -> String,
+    itemDetailLabel: (String) -> String?,
+    itemIsEquipment: (String) -> Boolean,
+    enemyTiers: Map<String, String>,
+    enemyIcons: Map<String, EnemyIconUi>,
+    accentColor: Color,
+    borderColor: Color,
+    isDark: Boolean,
+    onNpcClick: (String) -> Unit,
+    onEnemyClick: (String) -> Unit,
+    onCollectItem: (String) -> Unit,
+    onCollectAll: () -> Unit
+) {
+    val totalItems = groundItems.values.sum()
+    val partyCount = enemyParties.size
+    val hasGear = groundItems.keys.any(itemIsEquipment)
+    Surface(
+        shape = RoundedCornerShape(14.dp),
+        color = Color.Black.copy(alpha = if (isDark) 0.22f else 0.13f),
+        border = BorderStroke(1.dp, borderColor.copy(alpha = if (isDark) 0.30f else 0.18f))
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 12.dp, vertical = 10.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "In this room",
+                    color = Color.White.copy(alpha = 0.82f),
+                    style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold)
+                )
+                Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                    if (npcs.isNotEmpty()) EntityCountPill("${npcs.size} people", accentColor)
+                    if (totalItems > 0) EntityCountPill(if (hasGear) "$totalItems finds + gear" else "$totalItems finds", accentColor)
+                    if (partyCount > 0) EntityCountPill("$partyCount hostile", accentColor)
+                }
+            }
+            if (npcs.isNotEmpty()) {
+                CompactEntityRow(label = "People") {
+                    npcs.forEach { npc ->
+                        RoomActionChip(
+                            label = npcDisplayLabel(npc),
+                            accentColor = accentColor,
+                            onClick = { onNpcClick(npc) }
+                        )
+                    }
+                }
+            }
+            if (groundItems.isNotEmpty()) {
+                CompactFindsRow(
+                    items = groundItems,
+                    itemFlavor = itemFlavor,
+                    itemDisplayName = itemDisplayName,
+                    itemDetailLabel = itemDetailLabel,
+                    itemIsEquipment = itemIsEquipment,
+                    accentColor = accentColor,
+                    borderColor = borderColor,
+                    isDark = isDark,
+                    onCollectItem = onCollectItem,
+                    onCollectAll = onCollectAll
+                )
+            }
+            if (enemyParties.isNotEmpty()) {
+                CompactHostilesRow(
+                    enemyParties = enemyParties,
+                    enemyTiers = enemyTiers,
+                    enemyIcons = enemyIcons,
+                    accentColor = accentColor,
+                    borderColor = borderColor,
+                    isDark = isDark,
+                    onEnemyClick = onEnemyClick
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun CompactEntityRow(
+    label: String,
+    content: @Composable () -> Unit
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = label,
+            color = Color.White.copy(alpha = 0.64f),
+            style = MaterialTheme.typography.labelMedium,
+            modifier = Modifier.width(58.dp)
+        )
+        Row(
+            modifier = Modifier
+                .weight(1f)
+                .horizontalScroll(rememberScrollState()),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            content()
+        }
+    }
+}
+
+@Composable
+private fun CompactHostilesRow(
+    enemyParties: List<List<String>>,
+    enemyTiers: Map<String, String>,
+    enemyIcons: Map<String, EnemyIconUi>,
+    accentColor: Color,
+    borderColor: Color,
+    isDark: Boolean,
+    onEnemyClick: (String) -> Unit
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = "Hostiles",
+            color = Color.White.copy(alpha = 0.64f),
+            style = MaterialTheme.typography.labelMedium,
+            modifier = Modifier.width(58.dp)
+        )
+        Box(modifier = Modifier.weight(1f)) {
+            EnemyPartyStrip(
+                parties = enemyParties,
+                enemyTiers = enemyTiers,
+                enemyIcons = enemyIcons,
+                accentColor = accentColor,
+                borderColor = borderColor,
+                isDark = isDark,
+                onPartyClick = { leaderId ->
+                    if (leaderId.isNotBlank()) onEnemyClick(leaderId)
+                }
+            )
+        }
+    }
+}
+@Composable
+private fun CompactFindsRow(
+    items: Map<String, Int>,
+    itemFlavor: Map<String, String>,
+    itemDisplayName: (String) -> String,
+    itemDetailLabel: (String) -> String?,
+    itemIsEquipment: (String) -> Boolean,
+    accentColor: Color,
+    borderColor: Color,
+    isDark: Boolean,
+    onCollectItem: (String) -> Unit,
+    onCollectAll: () -> Unit
+) {
+    val entries = items.entries.sortedWith(
+        compareByDescending<Map.Entry<String, Int>> { itemIsEquipment(it.key) }
+            .thenBy { itemDisplayName(it.key).lowercase(Locale.getDefault()) }
+    )
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
+        verticalAlignment = Alignment.Top
+    ) {
+        Text(
+            text = if (entries.any { itemIsEquipment(it.key) }) "Finds" else "Items",
+            color = Color.White.copy(alpha = 0.64f),
+            style = MaterialTheme.typography.labelMedium,
+            modifier = Modifier
+                .width(58.dp)
+                .padding(top = 8.dp)
+        )
+        Row(
+            modifier = Modifier
+                .weight(1f)
+                .horizontalScroll(rememberScrollState()),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.Top
+        ) {
+            entries.forEach { (itemId, quantity) ->
+                CompactFindCard(
+                    itemId = itemId,
+                    quantity = quantity,
+                    name = itemDisplayName(itemId),
+                    detail = itemDetailLabel(itemId),
+                    flavor = itemFlavor[itemId].orEmpty(),
+                    isEquipment = itemIsEquipment(itemId),
+                    accentColor = accentColor,
+                    borderColor = borderColor,
+                    isDark = isDark,
+                    onCollectItem = onCollectItem
+                )
+            }
+            if (entries.size > 1) {
+                Surface(
+                    onClick = onCollectAll,
+                    shape = RoundedCornerShape(12.dp),
+                    color = accentColor.copy(alpha = 0.12f),
+                    border = BorderStroke(1.dp, accentColor.copy(alpha = 0.58f)),
+                    modifier = Modifier
+                        .width(96.dp)
+                        .height(82.dp)
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        Text(
+                            text = "Pick Up\nAll",
+                            color = Color.White,
+                            textAlign = TextAlign.Center,
+                            style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold)
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun CompactFindCard(
+    itemId: String,
+    quantity: Int,
+    name: String,
+    detail: String?,
+    flavor: String,
+    isEquipment: Boolean,
+    accentColor: Color,
+    borderColor: Color,
+    isDark: Boolean,
+    onCollectItem: (String) -> Unit
+) {
+    Surface(
+        onClick = { onCollectItem(itemId) },
+        shape = RoundedCornerShape(12.dp),
+        color = Color.White.copy(alpha = if (isDark) 0.07f else 0.05f),
+        border = BorderStroke(1.dp, if (isEquipment) accentColor.copy(alpha = 0.58f) else borderColor.copy(alpha = 0.28f)),
+        modifier = Modifier
+            .width(174.dp)
+            .height(82.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = name,
+                    color = Color.White,
+                    style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f)
+                )
+                if (quantity > 1) EntityCountPill("x$quantity", accentColor)
+            }
+            val secondary = detail?.takeIf { it.isNotBlank() }
+                ?: flavor.takeIf { it.isNotBlank() }
+                ?: if (isEquipment) "Gear" else "Pick up"
+            Text(
+                text = secondary,
+                color = Color.White.copy(alpha = 0.68f),
+                style = MaterialTheme.typography.bodySmall,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            Text(
+                text = "Tap to collect",
+                color = accentColor.copy(alpha = 0.9f),
+                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                maxLines = 1
+            )
+        }
+    }
+}
+
+@Composable
+private fun EntityCountPill(label: String, accentColor: Color) {
+    Surface(
+        shape = RoundedCornerShape(999.dp),
+        color = accentColor.copy(alpha = 0.16f),
+        border = BorderStroke(1.dp, accentColor.copy(alpha = 0.42f))
+    ) {
+        Text(
+            text = label,
+            color = accentColor.copy(alpha = 0.92f),
+            style = MaterialTheme.typography.labelSmall,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.padding(horizontal = 7.dp, vertical = 2.dp)
+        )
+    }
+}
+
+private fun npcDisplayLabel(npc: String): String = npc
+    .replace('_', ' ')
+    .split(' ')
+    .filter { it.isNotBlank() }
+    .joinToString(" ") { part ->
+        part.replaceFirstChar { ch ->
+            if (ch.isLowerCase()) ch.titlecase(Locale.getDefault()) else ch.toString()
+        }
+    }
+    .ifBlank { npc }
 private fun actionLabelFallback(action: RoomAction): String = when (action) {
     is ContainerAction -> "Search"
     is ToggleAction -> "Toggle"
