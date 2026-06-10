@@ -21,6 +21,7 @@ local.properties
 *.env
 /Starborn_Python
 /openai_api_key.txt
+/elevenlabs_api_key.txt
 /node_modules/
 /.npm-cache/
 /.appium/
@@ -33,3 +34,10 @@ local.properties
 
 # Heap dumps
 *.hprof
+# Local mobile automation tooling/state
+/tools/maestro/
+/.maestro-home/
+/.gradle-codex/
+/early-*.png
+/start-new-game.png
+/tmp_starborn_launch*.png

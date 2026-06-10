@@ -83,9 +83,10 @@ Constraints: Environment only. No people, characters, animals, creatures, readab
 Avoid: photorealism, muddy darkness, excessive clutter, generic empty sci-fi corridors, tiny unreadable details, text, and visual elements that imply unrequested interactions.
 ```
 
-## 5. Character Art
+## 5. Character and NPC Portrait Art
 
 Character combat sprites and portraits are separate asset roles even if some current files share artwork.
+NPC portraits and emotes use the same visual language as character portraits and emotes. Do not create a separate gritty, painterly, semi-realistic, or lower-detail NPC style.
 
 ### Shared Rules
 
@@ -94,6 +95,7 @@ Character combat sprites and portraits are separate asset roles even if some cur
 - Inspect the existing character assets before prompting.
 - Use thick outlines, bright cel shading, expressive anime features, and chibi proportions.
 - Keep all hair, weapons, limbs, and effects inside the canvas.
+- Judge portraits at dialogue-box size, not only at full resolution.
 
 ### Combat Sprite
 
@@ -107,6 +109,30 @@ Character combat sprites and portraits are separate asset roles even if some cur
 - Expression must be readable at small dialogue size.
 - Keep the face unobstructed.
 - Emote variants must preserve identity, clothing, crop, lighting, and rendering style; change only the requested expression or pose detail.
+
+### NPC Portraits
+
+- Generate NPC base portraits as `1024x1024` transparent RGBA PNGs under `app/src/main/assets/images/npcs/`.
+- NPCs must match the approved party portrait/emote style, especially the clean readability of Zeke, Nova, Orion, and Gh0st.
+- NPC portraits should have bold dark outlines, bright cel shading, large readable facial features, simple confident shapes, and a clear mobile-scale silhouette.
+- NPC role details are allowed, but keep them graphic and sparse: one or two readable props or costume cues, not dense concept-art clutter.
+- Avoid muted painterly rendering, gritty realism, tiny costume details, low-contrast muddy palettes, complex props, environmental lighting, and semi-realistic anatomy.
+- For NPCs who also exist as party/character art, reuse the approved character portrait unless a separate NPC identity is intentionally requested.
+- Archive replaced NPC portraits before installing new ones, for example under `app/src/main/assets/images/npcs/_archive/<reason_or_date>/`.
+
+### NPC Emotes
+
+- NPCs can use emotes in dialogue, but they do not need the full party emote set by default.
+- Generate only NPC emotes that are actually referenced by dialogue, cinematics, shops, or other content.
+- NPC emotes must preserve the NPC base portrait's identity, crop, clothing, lighting, outline weight, and rendering style; only the expression or small pose detail should change.
+- Dialogue must fall back gracefully when an NPC emote is not available: use the NPC base portrait first, then the global communicator/default portrait only if the speaker has no usable portrait.
+- Before shipping dialogue changes that use emotes, run:
+
+```powershell
+python scripts\validate_dialogue_emotes.py
+```
+
+The validator reports referenced NPC emotes that have not been generated yet.
 
 ### Prompt Template
 
@@ -123,6 +149,34 @@ Avoid: identity drift, realistic anatomy, costume redesign, excessive detail, cr
 ```
 
 For identity-sensitive work, use the current character image as a reference or edit target. Do not regenerate a known character from text alone when a reference is available.
+
+### NPC Portrait Prompt Template
+
+```text
+Use case: stylized-concept
+Asset type: Starborn NPC portrait for dialogue boxes, menus, and combat UI; transparent PNG after chroma-key removal, 1024x1024.
+Primary request: Create <NPC NAME>, <SHORT ROLE AND PERSONALITY>.
+Character: <AGE/BUILD/EXPRESSION/COSTUME/ONE OR TWO ROLE CUES>. Keep the design readable and uncluttered at dialogue portrait size.
+Style/medium: Match the approved Starborn character portrait/emote style: bright expressive 2D cel-shaded game portrait, bold dark outlines, simple confident shapes, large readable facial features, clean anime-influenced indie RPG proportions, high-saturation accents, smooth flat color blocks, crisp silhouette, minimal painterly texture.
+Composition/framing: Centered upper-body bust, head large in frame, shoulders visible, generous padding, no crop through hair/head, simple pose, readable expression.
+Color palette: Use clear, saturated character colors with restrained cyan resonance accents only where appropriate.
+Constraints: Flat solid #00ff00 chroma-key background, no shadow, no floor plane, no reflection, no text, no logo, no watermark, no extra characters. Do not use #00ff00 in the subject.
+Avoid: separate NPC concept-art style, gritty realism, semi-realistic painterly rendering, muted muddy colors, tiny costume clutter, complex props, environmental lighting, cropped head, and generic anime substitution.
+```
+
+### NPC Emote Prompt Template
+
+```text
+Use case: stylized-concept
+Asset type: Starborn NPC dialogue emote portrait; transparent PNG after chroma-key removal, 1024x1024.
+Primary request: Create the <EMOTE NAME> emote for <NPC NAME>.
+Identity: Preserve the approved <NPC NAME> base portrait exactly: face, hair, skin tone, outfit, palette, outline weight, crop, lighting, and rendering style.
+Expression change: <SPECIFIC EXPRESSION OR SMALL POSE DETAIL>.
+Style/medium: Same Starborn portrait/emote style as the approved party emotes: bright expressive 2D cel shading, bold dark outlines, simple mobile-readable shapes, large readable expression.
+Composition/framing: Match the base portrait crop and scale. Centered upper-body bust with generous padding.
+Constraints: Flat solid #00ff00 chroma-key background, no shadow, no floor plane, no reflection, no text, no logo, no watermark, no extra characters. Do not use #00ff00 in the subject.
+Avoid: identity drift, costume redesign, different crop, different lighting, different line weight, painterly NPC style, and excessive prop detail.
+```
 
 ## 6. Enemy Combat Sprites
 
@@ -241,4 +295,3 @@ Use this at the start of a new art-production chat:
 ```text
 I am working on Starborn at C:\Users\jctho\StudioProjects\StarbornAndroid. Before generating or editing any visual assets, read docs/story/Starborn_Art_Production_Guide.md, docs/story/Visual_Prompting_Guide.md, docs/story/Enemy_Sprite_Generation_Guide.md, and data/assistant_briefing.md. Treat them as canonical. Inspect the current JSON data and at least two approved assets of the same type before writing prompts. Follow the documented gpt-image-2 quality-low pipelines, dimensions, transparency workflow, visual style, content exclusions, naming, validation, and destination folders. Use OPENAI_API_KEY from the environment and never expose it. Do not alter unrelated files or wire generated assets into game data unless I explicitly request wiring.
 ```
-

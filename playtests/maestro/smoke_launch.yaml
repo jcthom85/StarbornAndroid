@@ -1,0 +1,10 @@
+appId: com.example.starborn
+---
+- launchApp:
+    clearState: false
+- extendedWaitUntil:
+    visible: "Starborn"
+    timeout: 60000
+- assertVisible: "New Game"
+- assertVisible: "Debug: Full Inventory"
+- assertVisible: "Load Game"

@@ -1,0 +1,57 @@
+appId: com.example.starborn
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "New Game"
+    timeout: 60000
+- tapOn: "New Game"
+- extendedWaitUntil:
+    visible: "GOT IT"
+    timeout: 20000
+- tapOn: "GOT IT"
+- extendedWaitUntil:
+    visible: "Nova's Bunk"
+    timeout: 10000
+- swipe:
+    direction: LEFT
+    duration: 450
+- extendedWaitUntil:
+    visible: "Pod Row"
+    timeout: 60000
+- extendedWaitUntil:
+    visible: "Wake Up Call"
+    timeout: 10000
+- tapOn: "Continue"
+- extendedWaitUntil:
+    notVisible: "Wake Up Call"
+    timeout: 10000
+- swipe:
+    direction: DOWN
+    duration: 450
+- extendedWaitUntil:
+    visible: "Lift Shaft"
+    timeout: 15000
+- extendedWaitUntil:
+    visible: "GOT IT"
+    timeout: 10000
+- tapOn: "GOT IT"
+- swipe:
+    direction: LEFT
+    duration: 450
+- extendedWaitUntil:
+    visible: "Jed's Bunk"
+    timeout: 15000
+- extendedWaitUntil:
+    visible: "QUEST UPDATED"
+    timeout: 10000
+- tapOn: "Dismiss Quest Banner"
+- extendedWaitUntil:
+    notVisible: "QUEST UPDATED"
+    timeout: 10000
+- tapOn: "Jed"
+- extendedWaitUntil:
+    visible: ".*pressure leak.*"
+    timeout: 10000
+- assertVisible: "Jed"
+- takeScreenshot: early-jed-dialogue

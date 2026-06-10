@@ -11,6 +11,8 @@ These files contain the canon "Bible" for the game.
 - **`Character_Arcs.md`**: The "Lie vs. Truth" progression for each main character.
 - **`Hub_Requirements_Checklist.md`**: Entry/Exit state tracking for every Hub.
 - **`Systems_Overview.md`**: How story intersects with gameplay mechanics.
+- **`Audio_Design_Guide.md`**: The master audio blueprint, music catalog, and ElevenLabs API voice/SFX parameters.
+- **`Music_Production_Process.md`**: The JRPG musical architecture, leitmotif specifications, and production workflows.
 - **`_World_Story_Checklists.md`**: A planning template to keep each World’s goal/reveal/turn/relic/payoff consistent.
 
 ### 2. World Directories (`docs/story/world_X_name/`)

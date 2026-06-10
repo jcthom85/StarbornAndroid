@@ -1,0 +1,12 @@
+appId: com.example.starborn
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "New Game"
+    timeout: 60000
+- tapOn: "New Game"
+- extendedWaitUntil:
+    notVisible: "New Game"
+    timeout: 20000
+- takeScreenshot: start-new-game

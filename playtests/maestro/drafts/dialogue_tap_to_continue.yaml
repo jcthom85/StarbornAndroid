@@ -1,0 +1,16 @@
+﻿appId: com.example.starborn
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "New Game"
+    timeout: 15000
+- tapOn: "New Game"
+- extendedWaitUntil:
+    visible: "Dialogue Popup. Tap to continue"
+    timeout: 20000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    notVisible: "Dialogue Popup. Tap to continue"
+    timeout: 20000
+- takeScreenshot: dialogue-advanced

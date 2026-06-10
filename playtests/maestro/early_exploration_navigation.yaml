@@ -1,0 +1,37 @@
+appId: com.example.starborn
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "New Game"
+    timeout: 60000
+- tapOn: "New Game"
+- extendedWaitUntil:
+    visible: "GOT IT"
+    timeout: 20000
+- tapOn: "GOT IT"
+- extendedWaitUntil:
+    visible: "Nova's Bunk"
+    timeout: 10000
+- swipe:
+    direction: LEFT
+    duration: 450
+- extendedWaitUntil:
+    visible: "Pod Row"
+    timeout: 60000
+- extendedWaitUntil:
+    visible: "Wake Up Call"
+    timeout: 10000
+- tapOn: "Continue"
+- extendedWaitUntil:
+    notVisible: "Wake Up Call"
+    timeout: 10000
+- tapOn: "MENU"
+- extendedWaitUntil:
+    visible: "FIELD MENU"
+    timeout: 10000
+- tapOn: "Close"
+- extendedWaitUntil:
+    notVisible: "FIELD MENU"
+    timeout: 10000
+- takeScreenshot: early-exploration-navigation

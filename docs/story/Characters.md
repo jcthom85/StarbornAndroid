@@ -13,7 +13,7 @@ Nova is a scrappy colony kid with a rogue vibe—steals, hacks, survives. She’
 - World 1: Survives first contact (Tuning Fork), loses Jed, chooses freedom.
 - World 2: Learns she is a conduit, not a god. "Anchor first."
 - World 3: Leads the Lens heist.
-- World 6: Rejects "perfect control" (The Anchor) and learns to **close the circuit**, sharing the load to save the world without losing herself.
+- World 6: Rejects "perfect contro" (The Anchor) and learns to **close the circuit**, sharing the load to save the world without losing herself.
 
 **Combat Kit (The Spark)**
 **Note: Skills are governed by Cooldowns.**

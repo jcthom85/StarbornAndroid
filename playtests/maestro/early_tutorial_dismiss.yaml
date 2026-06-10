@@ -1,0 +1,18 @@
+appId: com.example.starborn
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "New Game"
+    timeout: 60000
+- tapOn: "New Game"
+- extendedWaitUntil:
+    visible: "TUTORIAL"
+    timeout: 20000
+- assertVisible: "GOT IT"
+- tapOn: "GOT IT"
+- extendedWaitUntil:
+    notVisible: "GOT IT"
+    timeout: 10000
+- assertVisible: "Nova's Bunk"
+- takeScreenshot: early-tutorial-dismissed
