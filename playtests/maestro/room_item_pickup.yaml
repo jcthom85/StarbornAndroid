@@ -1,0 +1,21 @@
+appId: com.example.starborn
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "Debug: Room Items"
+    timeout: 60000
+- tapOn: "Debug: Room Items"
+- extendedWaitUntil:
+    visible: "Med Supply Closet"
+    timeout: 15000
+- extendedWaitUntil:
+    visible: "Pick up Medkit I"
+    timeout: 10000
+- assertVisible: "Medkit I"
+- takeScreenshot: room-item-chip
+- tapOn: "Pick up Medkit I"
+- extendedWaitUntil:
+    notVisible: "Pick up Medkit I"
+    timeout: 10000
+- takeScreenshot: room-item-pickup

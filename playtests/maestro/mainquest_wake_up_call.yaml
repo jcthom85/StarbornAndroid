@@ -1,0 +1,180 @@
+appId: com.example.starborn
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "New Game"
+    timeout: 60000
+- tapOn: "New Game"
+- extendedWaitUntil:
+    visible: "GOT IT"
+    timeout: 20000
+- tapOn: "GOT IT"
+- extendedWaitUntil:
+    visible: "Wake Up Call"
+    timeout: 10000
+- tapOn: "Continue"
+- extendedWaitUntil:
+    notVisible: "Wake Up Call"
+    timeout: 10000
+- extendedWaitUntil:
+    visible: "Nova's Bunk"
+    timeout: 10000
+- tapOn: "Inspect Bunk"
+- extendedWaitUntil:
+    visible: ".*bunk is hard.*"
+    timeout: 10000
+- tapOn: "Got it"
+- extendedWaitUntil:
+    visible: "Quest Updated"
+    timeout: 10000
+- assertVisible: "Check Nova's bunk before heading out."
+- tapOn: "Dismiss Quest Banner"
+- extendedWaitUntil:
+    notVisible: "Quest Updated"
+    timeout: 10000
+- swipe:
+    direction: LEFT
+    duration: 450
+- extendedWaitUntil:
+    visible: "Pod Row"
+    timeout: 15000
+- swipe:
+    direction: DOWN
+    duration: 450
+- extendedWaitUntil:
+    visible: "Lift Shaft"
+    timeout: 15000
+- extendedWaitUntil:
+    visible: "Head out of the Pit toward Jed's Workshop.*"
+    timeout: 10000
+- tapOn: "GOT IT"
+- swipe:
+    direction: LEFT
+    duration: 450
+- extendedWaitUntil:
+    visible: "Jed's Bunk"
+    timeout: 15000
+- extendedWaitUntil:
+    visible: "Quest Updated"
+    timeout: 10000
+- assertVisible: "Reach Jed's Workshop."
+- assertVisible: "Talk to Jed about the shift."
+- tapOn: "Dismiss Quest Banner"
+- tapOn:
+    point: "86%,18%"
+- extendedWaitUntil:
+    notVisible: "Quest Updated"
+    timeout: 10000
+- tapOn: "Talk to Jed"
+- extendedWaitUntil:
+    visible: ".*pressure leak.*"
+    timeout: 10000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: ".*slept enough.*"
+    timeout: 10000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: ".*cutter pops.*"
+    timeout: 10000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: ".*If I don't push it.*"
+    timeout: 10000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: ".*I know the math.*"
+    timeout: 10000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    notVisible: "Dialogue Popup"
+    timeout: 10000
+- extendedWaitUntil:
+    visible: "Use the bottom menu button.*"
+    timeout: 10000
+- tapOn: "GOT IT"
+- extendedWaitUntil:
+    visible: "Use the Supplies, Gear, and Key Items tabs.*"
+    timeout: 15000
+- tapOn: "GOT IT"
+- extendedWaitUntil:
+    visible: "Quest Updated"
+    timeout: 10000
+- assertVisible: "Talk to Jed about the shift."
+- tapOn: "Dismiss Quest Banner"
+- extendedWaitUntil:
+    notVisible: "Quest Updated"
+    timeout: 10000
+- swipe:
+    direction: RIGHT
+    duration: 450
+- extendedWaitUntil:
+    visible: "Lift Shaft"
+    timeout: 15000
+- swipe:
+    direction: DOWN
+    duration: 450
+- extendedWaitUntil:
+    visible: "Pit Landing"
+    timeout: 15000
+- tapOn: "Return to Hub"
+- extendedWaitUntil:
+    visible: "Homestead Quarter"
+    timeout: 15000
+- tapOn: "Enter Jed's Workshop"
+- extendedWaitUntil:
+    visible: "Scrap Yard"
+    timeout: 15000
+- tapOn: "Travel north"
+- extendedWaitUntil:
+    visible: "Main Bench"
+    timeout: 15000
+- extendedWaitUntil:
+    visible: "Tap a highlighted character name.*"
+    timeout: 10000
+- tapOn: "GOT IT"
+- extendedWaitUntil:
+    visible: "Tap the dialogue card.*"
+    timeout: 15000
+- tapOn: "GOT IT"
+- extendedWaitUntil:
+    visible: "Quest Updated"
+    timeout: 10000
+- assertVisible: "Reach Jed's Workshop."
+- tapOn: "Dismiss Quest Banner"
+- extendedWaitUntil:
+    notVisible: "Quest Updated"
+    timeout: 10000
+- tapOn: "Open Workbench"
+- extendedWaitUntil:
+    visible: "Jed's Bench"
+    timeout: 15000
+- extendedWaitUntil:
+    visible: "At Jed's bench.*"
+    timeout: 10000
+- tapOn: "GOT IT"
+- extendedWaitUntil:
+    visible: "Check the requirements.*"
+    timeout: 15000
+- tapOn: "GOT IT"
+- tapOn: "Schematics"
+- tapOn: "Repair 4"
+- extendedWaitUntil:
+    visible: "Functional Cryo-Inductor"
+    timeout: 10000
+- tapOn: "Craft Functional Cryo-Inductor"
+- extendedWaitUntil:
+    visible: "The Cryo-Inductor whirs back to life."
+    timeout: 10000
+- tapOn: "Continue"
+- pressKey: BACK
+- extendedWaitUntil:
+    visible: "Quest Completed"
+    timeout: 15000
+- assertVisible: "Wake Up Call"
+- tapOn: "Continue"
+- extendedWaitUntil:
+    notVisible: "Quest Completed"
+    timeout: 10000
+- takeScreenshot: mainquest-wake-up-call

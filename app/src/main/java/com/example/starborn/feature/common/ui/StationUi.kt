@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -23,6 +24,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.starborn.R
@@ -61,6 +64,7 @@ fun StationBackground(
         Box(
             modifier = Modifier
                 .fillMaxSize()
+                .statusBarsPadding()
                 .padding(horizontal = 20.dp, vertical = 16.dp)
         ) {
             content()
@@ -76,7 +80,8 @@ fun StationHeader(
     highContrastMode: Boolean,
     largeTouchTargets: Boolean,
     modifier: Modifier = Modifier,
-    actionLabel: String = "Back"
+    actionLabel: String = "Back",
+    actionContentDescription: String = actionLabel
 ) {
     val titleColor = if (highContrastMode) Color.White else MaterialTheme.colorScheme.onSurface
     val subtitleColor = if (highContrastMode) Color.White.copy(alpha = 0.75f) else MaterialTheme.colorScheme.onSurfaceVariant
@@ -106,7 +111,9 @@ fun StationHeader(
         }
         OutlinedButton(
             onClick = onBack,
-            modifier = Modifier.heightIn(min = if (largeTouchTargets) 52.dp else Dp.Unspecified),
+            modifier = Modifier
+                .heightIn(min = if (largeTouchTargets) 52.dp else Dp.Unspecified)
+                .semantics { contentDescription = actionContentDescription },
             shape = RoundedCornerShape(12.dp),
             colors = ButtonDefaults.outlinedButtonColors(
                 contentColor = titleColor

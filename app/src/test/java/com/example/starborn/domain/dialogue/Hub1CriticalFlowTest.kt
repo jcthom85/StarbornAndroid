@@ -6,13 +6,16 @@ import com.example.starborn.domain.event.EventManager
 import com.example.starborn.domain.event.EventPayload
 import com.example.starborn.domain.model.DialogueLine
 import com.example.starborn.domain.model.GameEvent
+import com.example.starborn.domain.session.GameSessionPersistence
 import com.example.starborn.domain.session.GameSessionState
 import com.example.starborn.domain.session.GameSessionStore
 import com.squareup.moshi.Types
 import java.io.File
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import kotlinx.coroutines.runBlocking
 
 class Hub1CriticalFlowTest {
 
@@ -78,6 +81,28 @@ class Hub1CriticalFlowTest {
     }
 
     @Test
+    fun bogsRedirectsToHeavyLiftingBeforeDeepMineIfGuardBreakIsUntrained() {
+        val harness = Hub1Harness()
+        harness.store.completeQuest("w1_mq01")
+        harness.store.completeQuest("w1_mq02")
+        harness.store.setInventory(mapOf("mine_access_badge" to 1))
+
+        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("admin_lobby"))
+
+        val bogs = harness.dialogue.startDialogue("Foreman Bogs")
+        assertEquals("bogs_w1_mq03_guardbreak_gate_1", bogs?.current()?.id)
+        bogs?.advanceUntilFinished()
+
+        val state = harness.store.state.value
+        assertTrue(state.activeQuests.contains("w1_mq03"))
+        assertTrue(state.activeQuests.contains("w1_sq03"))
+        assertEquals("w1_sq03", state.trackedQuestId)
+        assertTrue(state.completedMilestones.contains("ms_w1_sq03_started"))
+        assertTrue(state.questTasksCompleted["w1_sq03"].orEmpty().contains("talk_to_bogs"))
+        assertTrue(!state.completedMilestones.contains("ms_w1_mq03_bogs_talked"))
+    }
+
+    @Test
     fun scavengersStashMakesTradeRowPlayable() {
         val harness = Hub1Harness()
         harness.store.completeQuest("w1_mq01")
@@ -132,6 +157,54 @@ class Hub1CriticalFlowTest {
     }
 
     @Test
+    fun protocolOverrideTerminalCompletesServerRoomSideQuest() {
+        val harness = Hub1Harness()
+        harness.store.completeQuest("w1_mq01")
+        harness.store.completeQuest("w1_mq02")
+        harness.store.completeQuest("w1_mq03")
+        harness.store.setInventory(mapOf("mine_access_badge" to 1))
+
+        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("server_hub"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("start_hack_sq04"))
+
+        val state = harness.store.state.value
+        val completedTasks = state.questTasksCompleted["w1_sq04"].orEmpty()
+        assertTrue(state.completedQuests.contains("w1_sq04"))
+        assertTrue(!state.activeQuests.contains("w1_sq04"))
+        assertTrue(completedTasks.contains("enter_server_room"))
+        assertTrue(completedTasks.contains("locate_hacked_terminal"))
+        assertTrue(completedTasks.contains("restore_protocol_spoof"))
+        assertTrue(state.inventory["circuit_board"].orZero() >= 1)
+    }
+
+    @Test
+    fun lostShiftStartsAtMineShuntAndCompletesFromDatapad() {
+        val harness = Hub1Harness()
+        harness.store.completeQuest("w1_mq01")
+        harness.store.completeQuest("w1_mq02")
+        harness.store.startQuest("w1_mq03")
+        harness.store.setInventory(mapOf("mine_access_badge" to 1))
+
+        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("mine_shunt"))
+
+        var state = harness.store.state.value
+        assertTrue(state.activeQuests.contains("w1_sq05"))
+        assertEquals("w1_sq05", state.trackedQuestId)
+        assertTrue(state.questTasksCompleted["w1_sq05"].orEmpty().contains("find_collapsed_tunnel"))
+
+        harness.events.handleTrigger("player_action", EventPayload.Action("read_datapad_sq05"))
+
+        state = harness.store.state.value
+        val completedTasks = state.questTasksCompleted["w1_sq05"].orEmpty()
+        assertTrue(state.completedQuests.contains("w1_sq05"))
+        assertTrue(!state.activeQuests.contains("w1_sq05"))
+        assertTrue(completedTasks.contains("find_collapsed_tunnel"))
+        assertTrue(completedTasks.contains("recover_datapad"))
+        assertTrue(completedTasks.contains("read_final_letter"))
+        assertTrue(state.inventory["recoil_dampener"].orZero() >= 1)
+    }
+
+    @Test
     fun paperworkDenialZekeOverrideAndBadgeGateProgress() {
         val harness = Hub1Harness()
         harness.store.completeQuest("w1_mq01")
@@ -156,6 +229,216 @@ class Hub1CriticalFlowTest {
         assertTrue(completedTasks.contains("spoof_liability_form"))
         assertTrue(completedTasks.contains("receive_mine_access_badge"))
         assertTrue(state.inventory["mine_access_badge"].orZero() >= 1)
+    }
+
+    @Test
+    fun world1CriticalPathReachesCrashSiteAfterLaunch() {
+        val harness = Hub1Harness()
+        harness.store.completeQuest("w1_mq01")
+        harness.store.completeQuest("w1_mq02")
+        harness.store.completeQuest("w1_sq03")
+        harness.store.setMilestone("ms_w1_guardbreak_trained")
+        harness.store.setInventory(mapOf("mine_access_badge" to 1))
+
+        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("admin_lobby"))
+        var state = harness.store.state.value
+        assertTrue(state.activeQuests.contains("w1_mq03"))
+        assertTrue(state.questTasksCompleted["w1_mq03"].orEmpty().contains("enter_logistics_sector"))
+
+        val bogs = harness.dialogue.startDialogue("Foreman Bogs")
+        assertEquals("bogs_w1_mq03_intro_1", bogs?.current()?.id)
+        bogs?.advanceUntilFinished()
+
+        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("mine_landing"))
+        harness.events.handleTrigger(
+            "encounter_victory",
+            EventPayload.EncounterOutcome(
+                enemyIds = listOf("echo_borer"),
+                outcome = EventPayload.EncounterOutcome.Outcome.VICTORY
+            )
+        )
+        harness.events.handleTrigger(
+            "encounter_victory",
+            EventPayload.EncounterOutcome(
+                enemyIds = listOf("acoustic_bulwark"),
+                outcome = EventPayload.EncounterOutcome.Outcome.VICTORY
+            )
+        )
+        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("mine_threshold"))
+        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("echo_gap"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("touch_relic"))
+
+        state = harness.store.state.value
+        assertTrue(state.completedQuests.contains("w1_mq03"))
+        assertTrue(state.completedMilestones.contains("ms_w1_mq03_complete"))
+        assertTrue(state.activeQuests.contains("w1_mq04"))
+        assertTrue(state.questTasksCompleted["w1_mq04"].orEmpty().contains("survive_lockdown_broadcast"))
+        assertTrue(state.inventory["tuning_fork"].orZero() >= 1)
+
+        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("echo_exit"))
+        harness.events.handleTrigger(
+            "encounter_victory",
+            EventPayload.EncounterOutcome(
+                enemyIds = listOf("acoustic_bulwark"),
+                outcome = EventPayload.EncounterOutcome.Outcome.VICTORY
+            )
+        )
+        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("launch_lift"))
+
+        val jed = harness.dialogue.startDialogue("Jed")
+        assertEquals("jed_w1_mq04_sacrifice_1", jed?.current()?.id)
+        jed?.advanceUntilFinished()
+
+        state = harness.store.state.value
+        assertTrue(state.completedQuests.contains("w1_mq04"))
+        assertTrue(state.completedMilestones.contains("ms_w1_mq04_complete"))
+        assertTrue(state.activeQuests.contains("w1_mq05"))
+        assertTrue(state.inventory["ghost_signal_cell"].orZero() >= 1)
+
+        harness.events.handleTrigger(
+            "encounter_victory",
+            EventPayload.EncounterOutcome(
+                enemyIds = listOf("resonance_buoy"),
+                outcome = EventPayload.EncounterOutcome.Outcome.VICTORY
+            )
+        )
+        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("launch_bay"))
+
+        val warden = harness.dialogue.startDialogue("The Warden")
+        assertEquals("warden_boss_intro_1", warden?.current()?.id)
+        warden?.advanceUntilFinished()
+        harness.events.handleTrigger(
+            "encounter_victory",
+            EventPayload.EncounterOutcome(
+                enemyIds = listOf("the_iron_warden"),
+                outcome = EventPayload.EncounterOutcome.Outcome.VICTORY
+            )
+        )
+
+        val zekeAtBay = harness.dialogue.startDialogue("Zeke")
+        assertEquals("zeke_w1_mq05_defeat_warden_1", zekeAtBay?.current()?.id)
+        zekeAtBay?.advanceUntilFinished()
+        assertTrue(harness.store.state.value.completedMilestones.contains("ms_w1_zeke_directed_to_pod"))
+
+        val zekeAtPod = harness.dialogue.startDialogue("Zeke")
+        assertEquals("zeke_w1_mq05_pod_core_1", zekeAtPod?.current()?.id)
+        zekeAtPod?.advanceUntilFinished()
+
+        state = harness.store.state.value
+        assertTrue(state.completedMilestones.contains("ms_w1_chime_spliced"))
+        assertTrue(state.questTasksCompleted["w1_mq05"].orEmpty().contains("splice_chime"))
+        assertTrue(state.inventory["ghost_signal_cell"].orZero() == 0)
+
+        harness.events.handleTrigger("player_action", EventPayload.Action("use_nav_console"))
+
+        state = harness.store.state.value
+        assertTrue(state.completedQuests.contains("w1_mq05"))
+        assertTrue(state.completedMilestones.contains("ms_w1_mq05_complete"))
+        assertEquals("sector9_crash_site", state.roomId)
+        assertTrue(state.activeQuests.contains("w2_mq01"))
+    }
+
+    @Test
+    fun world1CriticalPathResumesAfterSaveAtLaunchLockdown() = runBlocking {
+        var harness = Hub1Harness()
+        harness.store.completeQuest("w1_mq01")
+        harness.store.completeQuest("w1_mq02")
+        harness.store.completeQuest("w1_sq03")
+        harness.store.setMilestone("ms_w1_guardbreak_trained")
+        harness.store.setInventory(mapOf("mine_access_badge" to 1))
+
+        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("admin_lobby"))
+        val bogs = harness.dialogue.startDialogue("Foreman Bogs")
+        assertEquals("bogs_w1_mq03_intro_1", bogs?.current()?.id)
+        bogs?.advanceUntilFinished()
+
+        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("mine_landing"))
+        harness.events.handleTrigger(
+            "encounter_victory",
+            EventPayload.EncounterOutcome(
+                enemyIds = listOf("echo_borer"),
+                outcome = EventPayload.EncounterOutcome.Outcome.VICTORY
+            )
+        )
+        harness.events.handleTrigger(
+            "encounter_victory",
+            EventPayload.EncounterOutcome(
+                enemyIds = listOf("acoustic_bulwark"),
+                outcome = EventPayload.EncounterOutcome.Outcome.VICTORY
+            )
+        )
+        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("mine_threshold"))
+        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("echo_gap"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("touch_relic"))
+
+        val savedState = harness.store.state.value.copy(
+            worldId = "world_1",
+            hubId = "hub_2_logistics",
+            roomId = "echo_heart"
+        )
+        assertTrue(savedState.completedQuests.contains("w1_mq03"))
+        assertTrue(savedState.activeQuests.contains("w1_mq04"))
+        assertTrue(savedState.completedMilestones.contains("ms_w1_mq03_complete"))
+
+        val restoredState = roundTripCriticalPathState(savedState)
+        harness = Hub1Harness(restoredState)
+        assertTrue(harness.store.state.value.completedQuests.contains("w1_mq03"))
+        assertTrue(harness.store.state.value.activeQuests.contains("w1_mq04"))
+
+        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("echo_exit"))
+        harness.events.handleTrigger(
+            "encounter_victory",
+            EventPayload.EncounterOutcome(
+                enemyIds = listOf("acoustic_bulwark"),
+                outcome = EventPayload.EncounterOutcome.Outcome.VICTORY
+            )
+        )
+        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("launch_lift"))
+
+        val jed = harness.dialogue.startDialogue("Jed")
+        assertEquals("jed_w1_mq04_sacrifice_1", jed?.current()?.id)
+        jed?.advanceUntilFinished()
+
+        var state = harness.store.state.value
+        assertTrue(state.completedQuests.contains("w1_mq04"))
+        assertTrue(state.completedMilestones.contains("ms_w1_mq04_complete"))
+        assertTrue(state.activeQuests.contains("w1_mq05"))
+
+        harness.events.handleTrigger(
+            "encounter_victory",
+            EventPayload.EncounterOutcome(
+                enemyIds = listOf("resonance_buoy"),
+                outcome = EventPayload.EncounterOutcome.Outcome.VICTORY
+            )
+        )
+        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("launch_bay"))
+
+        val warden = harness.dialogue.startDialogue("The Warden")
+        assertEquals("warden_boss_intro_1", warden?.current()?.id)
+        warden?.advanceUntilFinished()
+        harness.events.handleTrigger(
+            "encounter_victory",
+            EventPayload.EncounterOutcome(
+                enemyIds = listOf("the_iron_warden"),
+                outcome = EventPayload.EncounterOutcome.Outcome.VICTORY
+            )
+        )
+
+        val zekeAtBay = harness.dialogue.startDialogue("Zeke")
+        assertEquals("zeke_w1_mq05_defeat_warden_1", zekeAtBay?.current()?.id)
+        zekeAtBay?.advanceUntilFinished()
+
+        val zekeAtPod = harness.dialogue.startDialogue("Zeke")
+        assertEquals("zeke_w1_mq05_pod_core_1", zekeAtPod?.current()?.id)
+        zekeAtPod?.advanceUntilFinished()
+
+        harness.events.handleTrigger("player_action", EventPayload.Action("use_nav_console"))
+
+        state = harness.store.state.value
+        assertTrue(state.completedQuests.contains("w1_mq05"))
+        assertTrue(state.completedMilestones.contains("ms_w1_mq05_complete"))
+        assertEquals("sector9_crash_site", state.roomId)
+        assertTrue(state.activeQuests.contains("w2_mq01"))
     }
 
     @Test
@@ -189,42 +472,88 @@ class Hub1CriticalFlowTest {
         assertTrue(finalState.completedMilestones.contains("ms_w2_mq01_complete"))
     }
 
-    private class Hub1Harness {
+    private class Hub1Harness(initialState: GameSessionState? = null) {
         val store = GameSessionStore()
-        val events = EventManager(
-            events = loadEvents(),
-            sessionStore = store,
-            eventHooks = EventHooks(
-                onQuestTaskUpdated = { questId, taskId ->
-                    if (!questId.isNullOrBlank() && !taskId.isNullOrBlank()) {
-                        store.setQuestTaskCompleted(questId, taskId, true)
-                    }
-                },
-                onQuestStageAdvanced = { questId, stageId ->
-                    if (!questId.isNullOrBlank() && !stageId.isNullOrBlank()) {
-                        store.setQuestStage(questId, stageId)
-                    }
-                },
-                onGiveItem = { itemId, quantity ->
-                    val current = store.state.value.inventory
-                    val next = current + (itemId to (current[itemId].orZero() + quantity.coerceAtLeast(1)))
-                    store.setInventory(next)
-                },
-                onGiveXp = { amount ->
-                    store.addXp(amount)
-                }
+        val events: EventManager
+        val dialogue: DialogueService
+
+        init {
+            initialState?.let(store::restore)
+            events = EventManager(
+                events = loadEvents(),
+                sessionStore = store,
+                eventHooks = EventHooks(
+                    onQuestTaskUpdated = { questId, taskId ->
+                        if (!questId.isNullOrBlank() && !taskId.isNullOrBlank()) {
+                            store.setQuestTaskCompleted(questId, taskId, true)
+                        }
+                    },
+                    onQuestStageAdvanced = { questId, stageId ->
+                        if (!questId.isNullOrBlank() && !stageId.isNullOrBlank()) {
+                            store.setQuestStage(questId, stageId)
+                        }
+                    },
+                    onGiveItem = { itemId, quantity ->
+                        val current = store.state.value.inventory
+                        val next = current + (itemId to (current[itemId].orZero() + quantity.coerceAtLeast(1)))
+                        store.setInventory(next)
+                    },
+                    onTakeItem = { itemId, quantity ->
+                        val current = store.state.value.inventory
+                        val available = current[itemId].orZero()
+                        val requested = quantity.coerceAtLeast(1)
+                        if (available < requested) {
+                            false
+                        } else {
+                            val remaining = available - requested
+                            val next = if (remaining > 0) {
+                                current + (itemId to remaining)
+                            } else {
+                                current - itemId
+                            }
+                            store.setInventory(next)
+                            true
+                        }
+                    },
+                    onGiveXp = { amount ->
+                        store.addXp(amount)
+                    },
+                    onQuestCompleted = ::handleQuestCompleted
+                )
             )
-        )
-        val dialogue = DialogueService(
-            loadDialogue(),
-            DialogueConditionEvaluator { condition -> conditionMet(condition, store.state.value) },
-            DialogueTriggerHandler { trigger -> events.performActions(DialogueTriggerParser.parse(trigger)) }
-        )
+            dialogue = DialogueService(
+                loadDialogue(),
+                DialogueConditionEvaluator { condition -> conditionMet(condition, store.state.value) },
+                DialogueTriggerHandler { trigger -> events.performActions(DialogueTriggerParser.parse(trigger)) }
+            )
+        }
+
+        private fun handleQuestCompleted(questId: String?) {
+            if (!questId.isNullOrBlank()) {
+                events.handleTrigger("quest_stage_complete", EventPayload.QuestStage(questId))
+            }
+        }
     }
 
     private fun DialogueSession.advanceUntilFinished() {
         while (!isFinished()) {
             advance()
+        }
+    }
+
+    private suspend fun roundTripCriticalPathState(state: GameSessionState): GameSessionState {
+        val baseDir = File(
+            System.getProperty("java.io.tmpdir"),
+            "starborn-critical-flow-${System.nanoTime()}"
+        ).apply { mkdirs() }
+        return try {
+            val persistence = GameSessionPersistence(baseDir)
+            persistence.writeSlot(1, state)
+            val restored = persistence.readSlot(1)
+            assertNotNull("Expected World 1 checkpoint save to restore", restored)
+            restored!!
+        } finally {
+            baseDir.deleteRecursively()
         }
     }
 
@@ -250,9 +579,38 @@ class Hub1CriticalFlowTest {
                             value !in state.failedQuests
                         "quest_completed" -> value in state.completedQuests
                         "quest_not_completed" -> value !in state.completedQuests
+                        "quest_stage" -> {
+                            val (questId, stageId) = parseQuestPair(value)
+                            questId != null && stageId != null &&
+                                state.questStageById[questId]?.equals(stageId, ignoreCase = true) == true
+                        }
+                        "quest_stage_not" -> {
+                            val (questId, stageId) = parseQuestPair(value)
+                            questId == null || stageId == null ||
+                                state.questStageById[questId]?.equals(stageId, ignoreCase = true) != true
+                        }
+                        "quest_task_done" -> {
+                            val (questId, taskId) = parseQuestPair(value)
+                            questId != null && taskId != null &&
+                                state.questTasksCompleted[questId].orEmpty().contains(taskId)
+                        }
+                        "quest_task_not_done" -> {
+                            val (questId, taskId) = parseQuestPair(value)
+                            questId == null || taskId == null ||
+                                !state.questTasksCompleted[questId].orEmpty().contains(taskId)
+                        }
+                        "item" -> value in state.inventory && state.inventory[value].orZero() > 0
+                        "item_not" -> value !in state.inventory || state.inventory[value].orZero() <= 0
                         else -> true
                     }
                 }
+        }
+
+        private fun parseQuestPair(raw: String): Pair<String?, String?> {
+            val parts = raw.split(':', limit = 2)
+            val questId = parts.getOrNull(0)?.trim().takeUnless { it.isNullOrEmpty() }
+            val value = parts.getOrNull(1)?.trim().takeUnless { it.isNullOrEmpty() }
+            return questId to value
         }
 
         private fun Int?.orZero(): Int = this ?: 0

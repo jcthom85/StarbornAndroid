@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
@@ -329,14 +330,14 @@ class QuestRuntimeManager(
     }
 
     fun resetAll() {
-        scope.launch {
+        runBlocking {
             mutex.withLock {
                 stageProgress.clear()
                 completedTasks.clear()
                 recentLog.clear()
+                sessionStore.resetQuestProgress()
                 emitStateLocked(sessionStore.state.value)
             }
-            sessionStore.resetQuestProgress()
         }
     }
 

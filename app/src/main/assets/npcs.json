@@ -133,4 +133,23 @@
             }
         ]
     }
-]
+,
+    {
+        "id": "the_warden",
+        "name": "The Warden",
+        "aliases": [
+            "warden",
+            "iron warden"
+        ],
+        "role": "Dominion Commander",
+        "description": "The armored Sector Commander who enforces Dominion asset policy with ritual calm.",
+        "portrait": "images/characters/communicator_portrait.png",
+        "dialogue": {},
+        "interactions": [
+            {
+                "label": "Confront",
+                "type": "talk",
+                "dialogue_id": "warden_boss_intro_1"
+            }
+        ]
+    }]

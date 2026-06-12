@@ -25,6 +25,9 @@ data class EncounterDescriptor(
 
 data class EncounterEnemyInstance(
     val enemyId: String,
+    val hp: Int? = null,
+    val vitality: Int? = null,
+    val stability: Int? = null,
     val overrideDrops: List<Drop>? = null,
     val extraDrops: List<Drop> = emptyList()
 )

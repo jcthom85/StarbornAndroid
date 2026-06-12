@@ -1,0 +1,106 @@
+appId: com.example.starborn
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "Debug: Scavenger"
+    timeout: 60000
+- tapOn: "Debug: Scavenger"
+- extendedWaitUntil:
+    visible: "Scrapper's Stall"
+    timeout: 15000
+- tapOn: "Talk to Scrapper"
+- extendedWaitUntil:
+    visible: ".*Old resistance stock.*"
+    timeout: 10000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: "Why not grab it yourself?"
+    timeout: 10000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: ".*Find the crate.*"
+    timeout: 10000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    notVisible: "Dialogue Popup"
+    timeout: 10000
+- extendedWaitUntil:
+    visible: "New Quest"
+    timeout: 10000
+- assertVisible: "The Scavenger's Stash"
+- tapOn: "Dismiss"
+- extendedWaitUntil:
+    notVisible: "New Quest"
+    timeout: 10000
+- extendedWaitUntil:
+    visible: "Quest Updated"
+    timeout: 10000
+- assertVisible: "Talk to Scrapper in Trade Row."
+- tapOn: "Dismiss Quest Banner"
+- extendedWaitUntil:
+    notVisible: "Quest Updated"
+    timeout: 10000
+- tapOn: "Travel south"
+- extendedWaitUntil:
+    visible: "Market Strip"
+    timeout: 15000
+- tapOn: "Travel east"
+- extendedWaitUntil:
+    visible: "The Hidden Stash"
+    timeout: 15000
+- extendedWaitUntil:
+    visible: "Quest Updated"
+    timeout: 10000
+- assertVisible: "Find the hidden stash."
+- tapOn: "Dismiss Quest Banner"
+- extendedWaitUntil:
+    notVisible: "Quest Updated"
+    timeout: 10000
+- tapOn: "Inspect Rebel cache"
+- extendedWaitUntil:
+    visible: "Rebel Cache"
+    timeout: 10000
+- assertVisible: "Pulse Grenade"
+- tapOn: "Dismiss Event Announcement"
+- extendedWaitUntil:
+    notVisible: "Rebel Cache"
+    timeout: 10000
+- extendedWaitUntil:
+    visible: "Quest Updated"
+    timeout: 10000
+- assertVisible: "Return to Scrapper."
+- tapOn: "Dismiss Quest Banner"
+- extendedWaitUntil:
+    notVisible: "Quest Updated"
+    timeout: 10000
+- tapOn: "Travel west"
+- extendedWaitUntil:
+    visible: "Market Strip"
+    timeout: 15000
+- tapOn: "Travel north"
+- extendedWaitUntil:
+    visible: "Scrapper's Stall"
+    timeout: 15000
+- tapOn: "Talk to Scrapper"
+- extendedWaitUntil:
+    visible: ".*You opened it.*"
+    timeout: 10000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: "They scratched names into the lid."
+    timeout: 10000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: ".*Take the grenades.*"
+    timeout: 10000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: "Quest Completed"
+    timeout: 10000
+- assertVisible: "The Scavenger's Stash"
+- tapOn: "Dismiss"
+- extendedWaitUntil:
+    notVisible: "Quest Completed"
+    timeout: 10000
+- takeScreenshot: sidequest-scavenger-stash

@@ -9,9 +9,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
@@ -40,6 +43,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.example.starborn.ui.events.QuestBannerType
@@ -113,7 +117,7 @@ fun QuestBannerOverlay(
             Haptics.pulse(context, type)
         }
     }
-LaunchedEffect(isShowing) {
+    LaunchedEffect(isShowing) {
         if (!isShowing && current != null) {
             delay(180)
             current = null
@@ -125,7 +129,7 @@ LaunchedEffect(isShowing) {
     Box(
         modifier = modifier
             .statusBarsPadding()
-            .padding(top = 120.dp, start = 16.dp, end = 16.dp),
+            .padding(top = 56.dp, start = 16.dp, end = 16.dp),
         contentAlignment = Alignment.TopCenter
     ) {
         AnimatedVisibility(
@@ -170,9 +174,12 @@ private fun QuestBannerCard(
     }
 
     Card(
-        modifier = Modifier.semantics { contentDescription = "Quest Banner" },
-        shape = RoundedCornerShape(18.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 12.dp),
+        modifier = Modifier
+            .fillMaxWidth(0.92f)
+            .widthIn(max = 520.dp)
+            .semantics { contentDescription = "Quest Banner" },
+        shape = RoundedCornerShape(14.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.98f))
     ) {
         Row(
@@ -185,28 +192,33 @@ private fun QuestBannerCard(
                         )
                     )
                 )
-                .padding(horizontal = 16.dp, vertical = 14.dp),
+                .padding(horizontal = 12.dp, vertical = 10.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                tint = accent
+                tint = accent,
+                modifier = Modifier.size(20.dp)
             )
-            Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+            Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
                 Text(
                     text = heading.uppercase(),
-                    style = MaterialTheme.typography.labelLarge,
-                    color = accent
+                    style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                    color = accent,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
                 Text(
                     text = banner.title,
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onSurface
+                    style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
+                    color = MaterialTheme.colorScheme.onSurface,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
                 if (banner.type == QuestBannerType.PROGRESS && banner.objectives.isNotEmpty()) {
-                    banner.objectives.take(4).forEach { objective ->
+                    banner.objectives.take(2).forEach { objective ->
                         BannerObjectiveRow(objective = objective, accentColor = accent)
                     }
                 }
@@ -215,7 +227,8 @@ private fun QuestBannerCard(
                 Icon(
                     imageVector = Icons.Filled.Close,
                     contentDescription = "Dismiss Quest Banner",
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.size(20.dp)
                 )
             }
         }
@@ -236,7 +249,8 @@ private fun BannerObjectiveRow(
         Icon(
             imageVector = icon,
             contentDescription = null,
-            tint = tint
+            tint = tint,
+            modifier = Modifier.size(16.dp)
         )
         Text(
             text = objective.text,
@@ -244,7 +258,9 @@ private fun BannerObjectiveRow(
                 color = Color.White.copy(alpha = if (objective.completed) 0.8f else 1f),
                 fontWeight = if (objective.completed) FontWeight.Medium else FontWeight.SemiBold,
                 textDecoration = if (objective.completed) TextDecoration.LineThrough else TextDecoration.None
-            )
+            ),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
         )
     }
 }

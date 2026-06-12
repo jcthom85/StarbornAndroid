@@ -1,0 +1,50 @@
+appId: com.example.starborn
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "New Game"
+    timeout: 60000
+- swipe:
+    direction: UP
+- swipe:
+    direction: UP
+- extendedWaitUntil:
+    visible: "Debug: Enemy Party"
+    timeout: 10000
+- tapOn: "Debug: Enemy Party"
+- extendedWaitUntil:
+    visible: "Security Checkpoint B"
+    timeout: 15000
+- extendedWaitUntil:
+    visible: "Engage Dominion Dampener + Resonance Buoy party"
+    timeout: 10000
+- tapOn: "Engage Dominion Dampener + Resonance Buoy party"
+- extendedWaitUntil:
+    visible: "HOSTILE CONTACT"
+    timeout: 60000
+- tapOn: "Zeke"
+- extendedWaitUntil:
+    visible: "Skills"
+    timeout: 15000
+- tapOn: "Skills"
+- extendedWaitUntil:
+    visible: "Shatter Blow"
+    timeout: 15000
+- tapOn: "Shatter Blow"
+- extendedWaitUntil:
+    visible: "CHOOSE AN ENEM.*"
+    timeout: 5000
+- tapOn: "Dominion Dampener"
+- extendedWaitUntil:
+    visible: "HOSTILE CONTACT"
+    timeout: 15000
+- assertVisible: "Dominion Dampener"
+- assertVisible: "Resonance Buoy"
+- extendedWaitUntil:
+    notVisible: "ATB"
+    timeout: 1000
+- extendedWaitUntil:
+    notVisible: "R1 READY 4"
+    timeout: 1000
+- takeScreenshot: combat-enemy-status-rail

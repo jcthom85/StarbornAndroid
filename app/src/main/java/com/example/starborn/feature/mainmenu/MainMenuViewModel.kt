@@ -115,6 +115,166 @@ class MainMenuViewModel(
         }
     }
 
+    fun startNewGameAtFirstCombat(
+        onComplete: (() -> Unit)? = null,
+        onFailure: (() -> Unit)? = null
+    ) {
+        viewModelScope.launch {
+            val success = services.startNewGameAtFirstCombat()
+            if (success) {
+                services.syncInventoryFromSession()
+                onComplete?.invoke()
+            } else {
+                emitMessage("Failed to start debug first combat.")
+                onFailure?.invoke()
+            }
+        }
+    }
+
+    fun startNewGameAtEnemyPartyCombat(
+        onComplete: (() -> Unit)? = null,
+        onFailure: (() -> Unit)? = null
+    ) {
+        viewModelScope.launch {
+            val success = services.startNewGameAtEnemyPartyCombat()
+            if (success) {
+                services.syncInventoryFromSession()
+                onComplete?.invoke()
+            } else {
+                emitMessage("Failed to start debug enemy-party combat.")
+                onFailure?.invoke()
+            }
+        }
+    }
+
+    fun startNewGameAtPresenceStress(
+        onComplete: (() -> Unit)? = null,
+        onFailure: (() -> Unit)? = null
+    ) {
+        viewModelScope.launch {
+            val success = services.startNewGameAtPresenceStress()
+            if (success) {
+                services.syncInventoryFromSession()
+                onComplete?.invoke()
+            } else {
+                emitMessage("Failed to start debug presence-stress game.")
+                onFailure?.invoke()
+            }
+        }
+    }
+
+    fun startNewGameAtRoomItems(
+        onComplete: (() -> Unit)? = null,
+        onFailure: (() -> Unit)? = null
+    ) {
+        viewModelScope.launch {
+            val success = services.startNewGameAtRoomItems()
+            if (success) {
+                services.syncInventoryFromSession()
+                onComplete?.invoke()
+            } else {
+                emitMessage("Failed to start debug room-items game.")
+                onFailure?.invoke()
+            }
+        }
+    }
+
+    fun startNewGameAtScavengerStash(
+        onComplete: (() -> Unit)? = null,
+        onFailure: (() -> Unit)? = null
+    ) {
+        viewModelScope.launch {
+            val success = services.startNewGameAtScavengerStash()
+            if (success) {
+                services.syncInventoryFromSession()
+                onComplete?.invoke()
+            } else {
+                emitMessage("Failed to start debug Scavenger's Stash game.")
+                onFailure?.invoke()
+            }
+        }
+    }
+
+    fun startNewGameAtHeavyLifting(
+        onComplete: (() -> Unit)? = null,
+        onFailure: (() -> Unit)? = null
+    ) {
+        viewModelScope.launch {
+            val success = services.startNewGameAtHeavyLifting()
+            if (success) {
+                services.syncInventoryFromSession()
+                onComplete?.invoke()
+            } else {
+                emitMessage("Failed to start debug Heavy Lifting game.")
+                onFailure?.invoke()
+            }
+        }
+    }
+
+    fun startNewGameAtCheckpoint(
+        onComplete: (() -> Unit)? = null,
+        onFailure: (() -> Unit)? = null
+    ) {
+        viewModelScope.launch {
+            val success = services.startNewGameAtCheckpoint()
+            if (success) {
+                services.syncInventoryFromSession()
+                onComplete?.invoke()
+            } else {
+                emitMessage("Failed to start debug checkpoint game.")
+                onFailure?.invoke()
+            }
+        }
+    }
+
+    fun startNewGameAtDeepMine(
+        onComplete: (() -> Unit)? = null,
+        onFailure: (() -> Unit)? = null
+    ) {
+        viewModelScope.launch {
+            val success = services.startNewGameAtDeepMine()
+            if (success) {
+                services.syncInventoryFromSession()
+                onComplete?.invoke()
+            } else {
+                emitMessage("Failed to start debug Deep Mine game.")
+                onFailure?.invoke()
+            }
+        }
+    }
+
+    fun startNewGameAtRedAlert(
+        onComplete: (() -> Unit)? = null,
+        onFailure: (() -> Unit)? = null
+    ) {
+        viewModelScope.launch {
+            val success = services.startNewGameAtRedAlert()
+            if (success) {
+                services.syncInventoryFromSession()
+                onComplete?.invoke()
+            } else {
+                emitMessage("Failed to start debug Red Alert game.")
+                onFailure?.invoke()
+            }
+        }
+    }
+
+    fun startNewGameAtLaunch(
+        onComplete: (() -> Unit)? = null,
+        onFailure: (() -> Unit)? = null
+    ) {
+        viewModelScope.launch {
+            val success = services.startNewGameAtLaunch()
+            if (success) {
+                services.syncInventoryFromSession()
+                onComplete?.invoke()
+            } else {
+                emitMessage("Failed to start debug Launch game.")
+                onFailure?.invoke()
+            }
+        }
+    }
+
     suspend fun saveSlot(slot: Int) {
         when (slot) {
             AUTOSAVE_SLOT -> emitMessage("Autosave is managed automatically.")

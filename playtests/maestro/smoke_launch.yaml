@@ -7,4 +7,6 @@ appId: com.example.starborn
     timeout: 60000
 - assertVisible: "New Game"
 - assertVisible: "Debug: Full Inventory"
+- swipe:
+    direction: UP
 - assertVisible: "Load Game"

@@ -172,16 +172,46 @@
         "toast": "The Stellarium generator roars to life."
     },
     {
+        "id": "ms_w1_mq01_jed_talked",
+        "name": "Jed Checked In",
+        "description": "You reached Jed after waking up and heard the pressure behind his latest repair job.",
+        "toast": "Jed is waiting at the main bench."
+    },
+    {
+        "id": "ms_w1_mq01_checked_bunk",
+        "name": "Bunk Checked",
+        "description": "Nova checked the bunk and gathered herself before leaving the Pit.",
+        "toast": "Bunk checked."
+    },
+    {
         "id": "ms_w1_mq01_complete",
         "name": "Homestead Operations",
         "description": "You completed Nova's onboarding and tinkering training with Jed.",
         "toast": "Homestead operations briefing completed."
     },
     {
+        "id": "ms_w1_mq02_hank_denied",
+        "name": "Checkpoint Denial",
+        "description": "Guard Hank blocked Nova at the Transit Checkpoint and sent her to the Admin window.",
+        "toast": "Checkpoint clearance denied."
+    },
+    {
+        "id": "ms_w1_mq02_zeke_override",
+        "name": "Zeke's Override",
+        "description": "Zeke buried Nova's retirement flag and issued the mine access badge.",
+        "toast": "Zeke falsified the override."
+    },
+    {
         "id": "ms_w1_mq02_complete",
         "name": "Admin Gate Breach",
         "description": "You spoofed the liability form and bypassed Hank to unlock the Admin Gate.",
         "toast": "Admin Gate breached. Logistics accessible."
+    },
+    {
+        "id": "ms_w1_mq03_bogs_talked",
+        "name": "Sector 4 Assignment",
+        "description": "Foreman Bogs sent Nova into Sector 4 to clear the interference.",
+        "toast": "Sector 4 assignment received."
     },
     {
         "id": "ms_w1_mq03_complete",
@@ -196,9 +226,80 @@
         "toast": "Jed stays behind. You hold the Chime."
     },
     {
+        "id": "ms_w1_chime_spliced",
+        "name": "Chime Spliced",
+        "description": "You connected Jed's Chime to the launch pod core and forced the colony systems to accept the escape route.",
+        "toast": "The Chime locks into the pod core."
+    },
+    {
+        "id": "ms_w1_zeke_directed_to_pod",
+        "name": "Pod Path Clear",
+        "description": "Zeke opened the pod hatch after Nova defeated the Warden and moved to secure the launch core.",
+        "toast": "Zeke opens the pod hatch."
+    },
+    {
         "id": "ms_w1_mq05_complete",
         "name": "The Crash",
         "description": "You launched the cargo pod and crashed into Sector 9 after colliding with the planetary resonance shield.",
         "toast": "The sky was a wall. You crashed."
+    },
+    {
+        "id": "ms_w1_sq01_started",
+        "name": "Scavenger Tip",
+        "description": "Scrapper told Nova about an old rebel cache hidden near Trade Row.",
+        "toast": "Scrapper marked a hidden cache."
+    },
+    {
+        "id": "ms_w1_sq01_cache_opened",
+        "name": "Cache Opened",
+        "description": "Nova opened the old rebel cache and found proof for Scrapper.",
+        "toast": "The rebel cache is open."
+    },
+    {
+        "id": "ms_w1_sq01_complete",
+        "name": "Stash Settled",
+        "description": "Nova returned the cache proof to Scrapper and collected the grenades.",
+        "toast": "The Scavenger's Stash is complete."
+    },
+    {
+        "id": "ms_w1_sq02_started",
+        "name": "Vent Trouble",
+        "description": "Doc asked Nova to clear the contaminated med-bay vents.",
+        "toast": "Doc needs the vents cleared."
+    },
+    {
+        "id": "ms_w1_sq02_vent_patched",
+        "name": "Vent Patched",
+        "description": "Nova patched the toxic vent blockage feeding fumes into the med-bay.",
+        "toast": "The med-bay vents clear."
+    },
+    {
+        "id": "ms_w1_sq02_complete",
+        "name": "System Flush Complete",
+        "description": "Nova reported the vent repair to Doc and received the corrosive round mod.",
+        "toast": "System Flush is complete."
+    },
+    {
+        "id": "ms_w1_sq03_started",
+        "name": "Cargo Collapse",
+        "description": "Foreman Bogs assigned Nova to clear the blocked cargo route.",
+        "toast": "Heavy Lifting started."
+    },
+    {
+        "id": "ms_w1_sq03_hydraulic_kick_ready",
+        "name": "Hydraulic Kick Ready",
+        "description": "Nova brought the loader online and unlocked the guard-break training moment.",
+        "toast": "Hydraulic Kick training is ready.",
+        "effects": {
+            "unlock_abilities": [
+                "nova_hydraulic_kick"
+            ]
+        }
+    },
+    {
+        "id": "ms_w1_guardbreak_trained",
+        "name": "Guard Break Trained",
+        "description": "Nova learned how to break shielded enemies before committing damage.",
+        "toast": "Guard Break training complete."
     }
 ]

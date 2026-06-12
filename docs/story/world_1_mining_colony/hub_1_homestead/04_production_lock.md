@@ -8,7 +8,10 @@ Hub 1 is structurally ready to design in detail.
 
 - Live data has 5 Hub 1 nodes and 40 Hub 1 rooms.
 - The story spine is now clear: wake in the Pit, report to Jed, open the colony, complete optional Trade Row and Med-Bay loops, learn Guard Break through Heavy Lifting, get denied at the checkpoint, then get Zeke's badge override.
-- `w1_sq01` and `w1_sq02` have playable first-pass data. They still need an in-app feel pass, but they are no longer content-design blockers.
+- `w1_mq01` has passing in-app Maestro coverage from new game through Jed's Workshop tinkering completion and the `Wake Up Call` quest-complete popup.
+- `w1_sq01` and `w1_sq02` have playable first-pass data and passing in-app Maestro coverage. They are no longer content-design blockers.
+- `w1_sq03` has passing in-app Maestro coverage through Bogs' intro, loader/cargo quest updates, Hydraulic Kick unlock, Acoustic Bulwark training victory, spoils, level-up, quest completion, and return to the room.
+- If the player reaches `The Echo` without Guard Break training, Bogs now redirects them into `Heavy Lifting` before the Deep Mine route.
 - Final artwork should begin only for rooms marked `Art Ready`.
 - Rooms marked `Design First` need their gameplay action, quest step, or blocker clarified before final art.
 - Rooms marked `Flavor Later` can use placeholder art until the first playable Hub 1 pass feels good.
@@ -17,25 +20,25 @@ Hub 1 is structurally ready to design in detail.
 
 | Order | Node | Room Count | Main Job | Required Before Hub 2? | Art Timing |
 | --- | --- | ---: | --- | --- | --- |
-| 1 | The Pit | 10 | Home, poverty, movement, interaction tutorial. | Yes | Start after `w1_mq01` route is playtested. |
+| 1 | The Pit | 10 | Home, poverty, movement, interaction tutorial. | Yes | Route playtested; start now for core rooms. |
 | 2 | Jed's Workshop | 8 | Jed relationship, tinkering, home base, Heavy Lifting setup. | Yes | Start now for core rooms. |
-| 3 | Med-Bay | 7 | Optional side quest, Dominion neglect, corrosion/status teaching. | No | Eligible after in-app `w1_sq02` feel pass. |
-| 4 | Trade Row | 9 | Shop, Scrapper, old resistance stash, optional economy loop. | No | Eligible after in-app `w1_sq01` feel pass. |
+| 3 | Med-Bay | 7 | Optional side quest, Dominion neglect, corrosion/status teaching. | No | Eligible for art pass; `sidequest_system_flush.yaml` passes with banner/backtracking polish applied. |
+| 4 | Trade Row | 9 | Shop, Scrapper, old resistance stash, optional economy loop. | No | Eligible for art pass; `sidequest_scavenger_stash.yaml` passes. |
 | 5 | Transit Checkpoint | 6 | Paperwork gate, Zeke save, Hub 2 transition. | Yes | Start after `w1_mq02` flow is playtested. |
 
 ## Required Hub 1 Beats
 
 | Beat | Required Rooms | Current Data State | Build Status |
 | --- | --- | --- | --- |
-| Wake in Nova's bunk | `pit_nova_bunk`, `pit_L2_corridor` | Quest starts on new game; bunk/netting actions exist. | Playtest next. |
-| Move through home | `pit_shaft`, `pit_L1_landing`, `pit_mess` | Rooms exist with flavor actions. | Needs route feel pass. |
-| Meet Jed | `workshop_floor` | Dialogue and task triggers exist. | Playtest next. |
-| Tinkering tutorial | `workshop_floor` | Tinkering entry completes `w1_mq01` after Jed talk. | Needs UI/playtest verification. |
-| Scavenger's Stash | `trade_scrapper`, `trade_stash` | Scrapper starts `w1_sq01`; stash room/action advances quest; Scrapper turn-in completes it. | Automated flow test passes; needs in-app feel pass. |
-| System Flush | `medbay_exam1`, `medbay_vents` | Doc starts `w1_sq02`; vent room/action advances quest; Doc turn-in completes it. | Automated flow test passes; needs in-app feel pass. |
-| Heavy Lifting | `workshop_dock` | Bogs starts `w1_sq03`; loader/cargo actions exist; `riot_guard` victory completes quest. | Playtest next. |
-| Checkpoint denial | `checkpoint_queue`, `checkpoint_bay`, `checkpoint_booth` | Enter/action events and Hank/Zeke dialogue exist. | Playtest next. |
-| Badge gate | `checkpoint_door`, `checkpoint_tunnel` | Door requires `mine_access_badge`. | Playtest next. |
+| Wake in Nova's bunk | `pit_nova_bunk`, `pit_L2_corridor` | Quest starts on new game; bunk/netting actions exist. | In-app Maestro flow passes through bunk inspection and quest update. |
+| Move through home | `pit_shaft`, `pit_L1_landing`, `pit_mess` | Rooms exist with flavor actions. | Critical route passes; compact description/presence dock polish applied. |
+| Meet Jed | `workshop_floor` | Dialogue and task triggers exist. | In-app Maestro flow passes through Jed intro dialogue. |
+| Tinkering tutorial | `workshop_floor` | Tinkering entry completes `w1_mq01` after Jed talk. | In-app Maestro flow passes through Functional Cryo-Inductor crafting and quest completion. |
+| Scavenger's Stash | `trade_scrapper`, `trade_stash` | Scrapper starts `w1_sq01`; stash room/action advances quest; Scrapper turn-in completes it. | In-app Maestro flow passes through stash discovery, rebel-cache pickup, return dialogue, and completion. |
+| System Flush | `medbay_exam1`, `medbay_vents` | Doc starts `w1_sq02`; vent room/action advances quest; Doc turn-in completes it. | In-app Maestro flow passes; banner/backtracking polish applied. |
+| Heavy Lifting | `workshop_dock` | Bogs starts `w1_sq03`; loader/cargo actions exist; Acoustic Bulwark training victory completes quest. | In-app Maestro flow passes through Hydraulic Kick unlock, Acoustic Bulwark victory, spoils, level-up, quest completion, and return to exploration. |
+| Checkpoint denial | `checkpoint_queue`, `checkpoint_bay`, `checkpoint_booth` | Enter/action events and Hank/Zeke dialogue exist. | In-app Maestro flow passes through Hank denial, Zeke override, and Paperwork completion. |
+| Badge gate | `checkpoint_door`, `checkpoint_tunnel` | Door requires `mine_access_badge`; Concourse entry starts `The Echo`; Bogs redirects untrained Nova into Heavy Lifting before Deep Mine pressure. | In-app Maestro flow passes through badge gate, Concourse handoff, MQ03 start, and Bogs' Guard Break training signpost. |
 
 ## Room Purpose Lock
 
@@ -166,9 +169,7 @@ Second art batch after feel pass:
 
 ## Immediate Build Checklist
 
-1. Playtest `w1_mq01` from new game through tinkering completion.
-2. Playtest `w1_sq03` from Bogs dialogue through `riot_guard` victory.
-3. Playtest `w1_mq02` from checkpoint denial through Zeke badge grant and `checkpoint_door` unlock.
-4. Playtest `w1_sq01` from Scrapper intro through stash opening and turn-in.
-5. Playtest `w1_sq02` from Doc intro through vent patch and turn-in.
-6. Start first art batch once the critical-path feel pass is acceptable.
+1. Keep `w1_sq03` in the regression set if later combat tuning touches tutorial HP, skill damage, spoils, level-up, or quest-completion timing.
+2. Extend or refine `w1_sq01` and `w1_sq02` coverage only if later pacing/content changes touch those routes.
+3. Keep the checkpoint/Bogs redirect flow in the regression set if later pacing changes touch the checkpoint, Concourse, Deep Mine, or Guard Break onboarding route.
+4. Start first art batch once the critical-path feel pass is acceptable.

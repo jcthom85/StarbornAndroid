@@ -35,6 +35,11 @@ class MilestoneRuntimeManager(
 
     fun messageFor(id: String): String = buildMessage(id)
 
+    fun applyEffectsFor(milestoneId: String) {
+        if (milestoneId.isBlank()) return
+        repository.milestoneById(milestoneId)?.effects?.let(applyEffects)
+    }
+
     fun showMilestone(milestoneId: String, message: String) {
         handleMilestone(milestoneId, message, triggerPrompt = false)
     }

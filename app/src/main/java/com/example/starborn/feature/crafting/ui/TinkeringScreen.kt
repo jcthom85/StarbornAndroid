@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,9 +30,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -58,8 +57,11 @@ import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.starborn.R
@@ -203,8 +205,7 @@ private fun TinkeringScreen(
 
     StationBackground(
         highContrastMode = highContrastMode,
-        backgroundRes = R.drawable.tinkeringtable_1,
-        vignetteRes = R.drawable.tinkering_vignette
+        backgroundRes = R.drawable.tinkeringtable_1
     ) {
         Scaffold(
             modifier = modifier.fillMaxSize(),
@@ -212,11 +213,12 @@ private fun TinkeringScreen(
             containerColor = Color.Transparent,
             topBar = {
                 StationHeader(
-                    title = "Let's Tinker!",
+                    title = "Jed's Bench",
                     iconRes = R.drawable.tinkering_icon,
                     onBack = onBack,
                     highContrastMode = highContrastMode,
-                    largeTouchTargets = largeTouchTargets
+                    largeTouchTargets = largeTouchTargets,
+                    actionContentDescription = "Close Tinkering"
                 )
             }
         ) { innerPadding ->
@@ -224,8 +226,8 @@ private fun TinkeringScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding)
-                    .padding(horizontal = 16.dp, vertical = 12.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                    .padding(horizontal = 12.dp, vertical = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 SectionTabs(
                     selected = selectedSection,
@@ -322,32 +324,42 @@ private fun SectionTabs(
         TinkeringSection.Schematics to "Schematics",
         TinkeringSection.Scrap to "Reclaim"
     )
-    Row(modifier = Modifier.fillMaxWidth()) {
-        tabs.forEach { (section, label) ->
-            val active = selected == section
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .clickable { onSelect(section) }
-                    .padding(vertical = 10.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Text(
-                    label,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = if (active) colors.accent else colors.textSecondary,
-                    fontWeight = if (active) FontWeight.SemiBold else FontWeight.Medium
-                )
-                Box(
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        color = colors.panel.copy(alpha = 0.72f),
+        border = BorderStroke(1.dp, colors.border.copy(alpha = 0.35f))
+    ) {
+        Row(
+            modifier = Modifier.padding(4.dp),
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            tabs.forEach { (section, label) ->
+                val active = selected == section
+                Surface(
                     modifier = Modifier
-                        .width(54.dp)
-                        .height(3.dp)
-                        .clip(RoundedCornerShape(999.dp))
-                        .background(
-                            if (active) colors.accent else colors.border.copy(alpha = 0.4f)
+                        .weight(1f)
+                        .height(42.dp)
+                        .clickable { onSelect(section) },
+                    shape = RoundedCornerShape(12.dp),
+                    color = if (active) colors.accent.copy(alpha = 0.18f) else Color.Transparent,
+                    border = if (active) {
+                        BorderStroke(1.dp, colors.accent.copy(alpha = 0.55f))
+                    } else {
+                        BorderStroke(1.dp, Color.Transparent)
+                    }
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        Text(
+                            label,
+                            style = MaterialTheme.typography.labelLarge,
+                            color = if (active) colors.accent else colors.textSecondary,
+                            fontWeight = if (active) FontWeight.Bold else FontWeight.SemiBold,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
                         )
-                )
+                    }
+                }
             }
         }
     }
@@ -369,7 +381,7 @@ private fun TinkerSection(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         TinkeringBenchCard(
             bench = state.bench,
@@ -381,11 +393,6 @@ private fun TinkerSection(
             onSelectComponent2 = onSelectComponent2,
             onCraft = onBenchCraft,
             onClear = onClearBench
-        )
-        PreviewCard(
-            preview = state.bench.preview,
-            colors = colors,
-            highContrastMode = highContrastMode
         )
     }
 }
@@ -529,11 +536,11 @@ private fun ScrapPreviewCard(
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .heightIn(min = 140.dp),
+            .heightIn(min = 104.dp),
         tonalElevation = 2.dp,
         shape = RoundedCornerShape(14.dp),
-        color = colors.card,
-        border = BorderStroke(1.dp, colors.border.copy(alpha = 0.35f))
+        color = colors.card.copy(alpha = 0.78f),
+        border = BorderStroke(1.dp, colors.border.copy(alpha = 0.28f))
     ) {
         Column(
             modifier = Modifier.padding(12.dp),
@@ -596,89 +603,121 @@ private fun TinkeringRecipeCard(
     highContrastMode: Boolean,
     largeTouchTargets: Boolean
 ) {
-    val buttonHeight = if (largeTouchTargets) 52.dp else 0.dp
-    ElevatedCard(
+    val buttonHeight = if (largeTouchTargets) 52.dp else 42.dp
+    val titleColor = if (highContrastMode) Color.White else MaterialTheme.colorScheme.onSurface
+    val bodyColor = if (highContrastMode) Color.White.copy(alpha = 0.78f) else MaterialTheme.colorScheme.onSurfaceVariant
+    val statusText: String
+    val statusColor: Color
+    when {
+        recipe.canCraft -> {
+            statusText = "Ready"
+            statusColor = MaterialTheme.colorScheme.tertiary
+        }
+        !recipe.learned -> {
+            statusText = "Locked"
+            statusColor = MaterialTheme.colorScheme.error
+        }
+        else -> {
+            statusText = "Need parts"
+            statusColor = MaterialTheme.colorScheme.primary
+        }
+    }
+    Surface(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onPreview(recipe) },
-        shape = RoundedCornerShape(18.dp)
+        shape = RoundedCornerShape(14.dp),
+        color = if (highContrastMode) Color(0xFF0E1623) else MaterialTheme.colorScheme.surface.copy(alpha = 0.82f),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = if (highContrastMode) 0.42f else 0.24f))
     ) {
-        Surface(
-            color = if (highContrastMode) Color(0xFF0E1623) else MaterialTheme.colorScheme.surface.copy(alpha = 0.9f)
+        Column(
+            modifier = Modifier.padding(12.dp),
+            verticalArrangement = Arrangement.spacedBy(9.dp)
         ) {
-            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                val titleColor = if (highContrastMode) Color.White else MaterialTheme.colorScheme.onSurface
-                val bodyColor = if (highContrastMode) Color.White.copy(alpha = 0.82f) else MaterialTheme.colorScheme.onSurfaceVariant
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column(
-                        modifier = Modifier.weight(1f),
-                        verticalArrangement = Arrangement.spacedBy(2.dp)
-                    ) {
-                        Text(recipe.name, style = MaterialTheme.typography.titleMedium, color = titleColor)
-                        recipe.description?.takeIf { it.isNotBlank() }?.let {
-                            Text(it, style = MaterialTheme.typography.bodySmall, color = bodyColor)
-                        }
-                        Text(recipe.categoryLabel(), style = MaterialTheme.typography.labelSmall, color = bodyColor)
-                    }
-                    val statusText: String
-                    val statusColor: Color
-                    when {
-                        !recipe.learned -> {
-                            statusText = "Locked"
-                            statusColor = MaterialTheme.colorScheme.error
-                        }
-                        recipe.canCraft -> {
-                            statusText = "Ready"
-                            statusColor = MaterialTheme.colorScheme.tertiary
-                        }
-                        else -> {
-                            statusText = "Need parts"
-                            statusColor = MaterialTheme.colorScheme.primary
-                        }
-                    }
-                    StatusPill(text = statusText, color = statusColor, highContrastMode = highContrastMode)
-                }
-                Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                    ItemPill(
-                        label = "Supplies",
-                        value = recipe.ingredients.joinToString { "${it.label} x${it.required}" },
-                        highContrastMode = highContrastMode
-                    )
-                }
-                Surface(
-                    color = if (highContrastMode) Color(0xFF121A28) else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f),
-                    shape = RoundedCornerShape(14.dp),
-                    tonalElevation = if (highContrastMode) 0.dp else 1.dp,
-                    modifier = Modifier.fillMaxWidth()
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                verticalAlignment = Alignment.Top
+            ) {
+                Column(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(3.dp)
                 ) {
                     Text(
-                        text = "Result: ${recipe.resultId} crafted at the bench.",
+                        recipe.name,
+                        style = MaterialTheme.typography.titleMedium,
+                        color = titleColor,
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Text(
+                        recipe.categoryLabel(),
                         style = MaterialTheme.typography.labelMedium,
-                        color = if (highContrastMode) Color.White else MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(12.dp)
+                        color = bodyColor,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
                 }
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                StatusPill(text = statusText, color = statusColor, highContrastMode = highContrastMode)
+            }
+            recipe.description?.takeIf { it.isNotBlank() }?.let {
+                Text(
+                    it,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = bodyColor,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+            Surface(
+                color = if (highContrastMode) Color(0xFF121A28) else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.48f),
+                shape = RoundedCornerShape(12.dp),
+                tonalElevation = if (highContrastMode) 0.dp else 1.dp,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(
+                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp),
+                    verticalArrangement = Arrangement.spacedBy(3.dp)
                 ) {
-                    OutlinedButton(
-                        onClick = { onAutoFill(recipe.id) },
-                        modifier = Modifier.heightIn(min = buttonHeight).defaultMinSize(minWidth = 120.dp)
-                    ) {
-                        Text("Auto-Fill")
-                    }
-                    Button(
-                        onClick = { onCraft(recipe.id) },
-                        enabled = recipe.canCraft,
-                        modifier = Modifier.heightIn(min = buttonHeight).defaultMinSize(minWidth = 120.dp)
-                    ) {
-                        Text("Craft")
-                    }
+                    Text(
+                        text = "Builds ${recipe.resultDisplayName()}",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = if (highContrastMode) Color.White else MaterialTheme.colorScheme.onSurface
+                    )
+                    Text(
+                        text = recipe.ingredients.joinToString { "${it.label} ${it.available}/${it.required}" },
+                        style = MaterialTheme.typography.labelSmall,
+                        color = bodyColor,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+            }
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                OutlinedButton(
+                    onClick = { onAutoFill(recipe.id) },
+                    modifier = Modifier
+                        .weight(1f)
+                        .heightIn(min = buttonHeight)
+                        .semantics { contentDescription = "Auto-Fill ${recipe.name}" },
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Text("Load")
+                }
+                Button(
+                    onClick = { onCraft(recipe.id) },
+                    enabled = recipe.canCraft,
+                    modifier = Modifier
+                        .weight(1f)
+                        .heightIn(min = buttonHeight)
+                        .semantics { contentDescription = "Craft ${recipe.name}" },
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Text("Craft")
                 }
             }
         }
@@ -723,7 +762,7 @@ private fun PreviewCard(
                     Text(it, style = MaterialTheme.typography.bodySmall, color = colors.textSecondary)
                 }
                 Text(
-                    text = "Result: ${preview.resultId}",
+                    text = "Result: ${preview.resultDisplayName()}",
                     style = MaterialTheme.typography.labelMedium,
                     color = colors.textSecondary
                 )
@@ -747,54 +786,93 @@ private fun TinkeringBenchCard(
     onClear: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val buttonHeight = if (largeTouchTargets) 52.dp else 0.dp
+    val buttonHeight = if (largeTouchTargets) 52.dp else 44.dp
+    val preview = bench.preview
+    val hasSelection = bench.mainItemName != null || bench.componentNames.any { it.isNotBlank() }
+    val benchStatus = when {
+        bench.canCraftSelection -> "Ready"
+        preview != null -> "Need parts"
+        hasSelection -> "No match"
+        else -> "Empty"
+    }
+    val statusColor = when (benchStatus) {
+        "Ready" -> colors.accent
+        "Need parts" -> MaterialTheme.colorScheme.primary
+        "No match" -> MaterialTheme.colorScheme.error
+        else -> colors.textSecondary
+    }
     Surface(
-        tonalElevation = 4.dp,
-        shape = RoundedCornerShape(20.dp),
+        tonalElevation = 2.dp,
+        shape = RoundedCornerShape(18.dp),
         modifier = modifier.fillMaxWidth(),
-        color = colors.panel,
-        border = BorderStroke(1.dp, colors.border.copy(alpha = 0.55f))
+        color = colors.panel.copy(alpha = 0.82f),
+        border = BorderStroke(1.dp, colors.border.copy(alpha = 0.42f))
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+                .padding(12.dp),
+            verticalArrangement = Arrangement.spacedBy(11.dp)
         ) {
-            Text(
-                text = "Pick a schematic or combine supplies to repair gear, tune equipment, or prepare provisions.",
-                style = MaterialTheme.typography.bodyMedium,
-                color = colors.textSecondary
-            )
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(2.dp)
+                ) {
+                    Text(
+                        text = "Assembly",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = colors.textPrimary,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = preview?.name ?: "Load a schematic or choose parts manually.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = colors.textSecondary,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+                StatusPill(text = benchStatus, color = statusColor, highContrastMode = highContrastMode)
+            }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 SlotTile(
-                    title = bench.mainItemName ?: "Select Main Item",
-                    subtitle = bench.mainItemName?.let { "Tap to change" } ?: "Tap to choose",
+                    label = "Base",
+                    value = bench.mainItemName ?: "Choose item",
+                    selected = bench.mainItemName != null,
                     icon = if (bench.mainItemName != null) Icons.Filled.Close else Icons.Filled.Add,
-                    optional = false,
                     colors = colors,
                     onClick = onSelectMain
                 )
                 SlotTile(
-                    title = bench.componentNames.getOrNull(0)?.takeIf { it.isNotBlank() } ?: "Add Component",
-                    subtitle = bench.componentNames.getOrNull(0)?.takeIf { it.isNotBlank() }?.let { "Tap to change" } ?: "Optional",
+                    label = "Part A",
+                    value = bench.componentNames.getOrNull(0)?.takeIf { it.isNotBlank() } ?: "Optional",
+                    selected = bench.componentNames.getOrNull(0)?.isNotBlank() == true,
                     icon = if (bench.componentNames.getOrNull(0)?.isNotBlank() == true) Icons.Filled.Close else Icons.Filled.Add,
-                    optional = true,
                     colors = colors,
                     onClick = onSelectComponent1
                 )
                 SlotTile(
-                    title = bench.componentNames.getOrNull(1)?.takeIf { it.isNotBlank() } ?: "Add Component",
-                    subtitle = bench.componentNames.getOrNull(1)?.takeIf { it.isNotBlank() }?.let { "Tap to change" } ?: "Optional",
+                    label = "Part B",
+                    value = bench.componentNames.getOrNull(1)?.takeIf { it.isNotBlank() } ?: "Optional",
+                    selected = bench.componentNames.getOrNull(1)?.isNotBlank() == true,
                     icon = if (bench.componentNames.getOrNull(1)?.isNotBlank() == true) Icons.Filled.Close else Icons.Filled.Add,
-                    optional = true,
                     colors = colors,
                     onClick = onSelectComponent2
                 )
             }
+            WorkbenchResultStrip(
+                preview = preview,
+                colors = colors,
+                highContrastMode = highContrastMode
+            )
             if (bench.requirements.isNotEmpty()) {
                 RequirementSummary(
                     requirements = bench.requirements,
@@ -810,9 +888,9 @@ private fun TinkeringBenchCard(
                     modifier = Modifier
                         .weight(1f)
                         .heightIn(min = buttonHeight)
-                        .defaultMinSize(minWidth = 136.dp),
+                        .defaultMinSize(minWidth = 120.dp),
                     border = BorderStroke(1.dp, colors.border.copy(alpha = 0.8f)),
-                    shape = RoundedCornerShape(16.dp),
+                    shape = RoundedCornerShape(12.dp),
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = colors.textPrimary
                     )
@@ -825,8 +903,8 @@ private fun TinkeringBenchCard(
                     modifier = Modifier
                         .weight(1f)
                         .heightIn(min = buttonHeight)
-                        .defaultMinSize(minWidth = 136.dp),
-                    shape = RoundedCornerShape(16.dp),
+                        .defaultMinSize(minWidth = 120.dp),
+                    shape = RoundedCornerShape(12.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = colors.accent,
                         contentColor = Color.Black
@@ -841,55 +919,113 @@ private fun TinkeringBenchCard(
 
 @Composable
 private fun RowScope.SlotTile(
-    title: String,
-    subtitle: String,
+    label: String,
+    value: String,
+    selected: Boolean,
     icon: ImageVector,
-    optional: Boolean,
     colors: TinkeringColors,
     onClick: () -> Unit
 ) {
     Surface(
         modifier = Modifier
             .weight(1f)
-            .heightIn(min = 120.dp)
+            .heightIn(min = 84.dp)
             .clickable { onClick() },
-        shape = RoundedCornerShape(16.dp),
-        color = colors.slot,
-        border = BorderStroke(1.dp, colors.border.copy(alpha = 0.6f))
+        shape = RoundedCornerShape(14.dp),
+        color = if (selected) colors.accent.copy(alpha = 0.12f) else colors.slot.copy(alpha = 0.72f),
+        border = BorderStroke(1.dp, if (selected) colors.accent.copy(alpha = 0.48f) else colors.border.copy(alpha = 0.38f))
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 12.dp, vertical = 14.dp),
+                .padding(horizontal = 7.dp, vertical = 8.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(10.dp)
+            verticalArrangement = Arrangement.Center
         ) {
             Box(
                 modifier = Modifier
-                    .size(44.dp)
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(colors.border.copy(alpha = 0.2f)),
+                    .size(30.dp)
+                    .clip(RoundedCornerShape(9.dp))
+                    .background(if (selected) colors.accent.copy(alpha = 0.18f) else colors.border.copy(alpha = 0.16f)),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     imageVector = icon,
                     contentDescription = null,
-                    tint = colors.textPrimary
+                    tint = if (selected) colors.accent else colors.textPrimary,
+                    modifier = Modifier.size(18.dp)
                 )
             }
+            Spacer(modifier = Modifier.height(6.dp))
             Text(
-                title,
-                style = MaterialTheme.typography.bodyLarge,
-                color = colors.textPrimary,
-                fontWeight = FontWeight.SemiBold,
-                textAlign = TextAlign.Center
-            )
-            Text(
-                if (optional && subtitle.isBlank()) "Optional" else subtitle,
-                style = MaterialTheme.typography.bodySmall,
+                label,
+                style = MaterialTheme.typography.labelMedium,
                 color = colors.textSecondary,
-                textAlign = TextAlign.Center
+                fontWeight = FontWeight.SemiBold,
+                textAlign = TextAlign.Center,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
+            Text(
+                value,
+                style = MaterialTheme.typography.bodySmall,
+                color = colors.textPrimary,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+    }
+}
+
+@Composable
+private fun WorkbenchResultStrip(
+    preview: TinkeringPreview?,
+    colors: TinkeringColors,
+    highContrastMode: Boolean
+) {
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(13.dp),
+        color = if (highContrastMode) Color(0xFF0D1722) else colors.slot.copy(alpha = 0.62f),
+        border = BorderStroke(1.dp, colors.border.copy(alpha = 0.28f))
+    ) {
+        Column(
+            modifier = Modifier.padding(horizontal = 11.dp, vertical = 9.dp),
+            verticalArrangement = Arrangement.spacedBy(3.dp)
+        ) {
+            Text(
+                text = "Output",
+                style = MaterialTheme.typography.labelSmall,
+                color = colors.textSecondary,
+                fontWeight = FontWeight.SemiBold
+            )
+            if (preview == null) {
+                Text(
+                    text = "No schematic loaded.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = colors.textPrimary
+                )
+            } else {
+                Text(
+                    text = preview.name,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = colors.textPrimary,
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                preview.description?.takeIf { it.isNotBlank() }?.let {
+                    Text(
+                        text = it,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = colors.textSecondary,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+            }
         }
     }
 }
@@ -900,30 +1036,44 @@ private fun RequirementSummary(
     colors: TinkeringColors
 ) {
     if (requirements.isEmpty()) return
-    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-        Text(
-            text = "Requirements",
-            style = MaterialTheme.typography.labelSmall,
-            color = colors.textSecondary
-        )
-        requirements.forEach { req ->
-            val meetsRequirement = req.available >= req.required
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = req.label,
-                    color = colors.textPrimary,
-                    style = MaterialTheme.typography.bodySmall
-                )
-                Text(
-                    text = "${req.available}/${req.required}",
-                    color = if (meetsRequirement) colors.accent else MaterialTheme.colorScheme.error,
-                    style = MaterialTheme.typography.bodySmall,
-                    fontWeight = FontWeight.SemiBold
-                )
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(13.dp),
+        color = colors.slot.copy(alpha = 0.48f),
+        border = BorderStroke(1.dp, colors.border.copy(alpha = 0.24f))
+    ) {
+        Column(
+            modifier = Modifier.padding(horizontal = 11.dp, vertical = 9.dp),
+            verticalArrangement = Arrangement.spacedBy(5.dp)
+        ) {
+            Text(
+                text = "Required parts",
+                style = MaterialTheme.typography.labelSmall,
+                color = colors.textSecondary,
+                fontWeight = FontWeight.SemiBold
+            )
+            requirements.forEach { req ->
+                val meetsRequirement = req.available >= req.required
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = req.label,
+                        color = colors.textPrimary,
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier.weight(1f),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Text(
+                        text = "${req.available}/${req.required}",
+                        color = if (meetsRequirement) colors.accent else MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodySmall,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             }
         }
     }
@@ -935,30 +1085,51 @@ private fun RecipeFilterRow(
     selected: TinkeringFilter,
     onFilterChange: (TinkeringFilter) -> Unit
 ) {
+    val filters = listOf(
+        TinkeringFilter.ALL to "All ${recipes.size}",
+        TinkeringFilter.REPAIR to "Repair ${recipes.countCategory("repair")}",
+        TinkeringFilter.GEAR to "Gear ${recipes.countCategory("gear")}",
+        TinkeringFilter.PROVISION to "Food ${recipes.countCategory("provision")}"
+    )
     Row(
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        horizontalArrangement = Arrangement.spacedBy(6.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
-        FilterChip(
-            selected = selected == TinkeringFilter.ALL,
-            onClick = { onFilterChange(TinkeringFilter.ALL) },
-            label = { Text("All (${recipes.size})") }
-        )
-        FilterChip(
-            selected = selected == TinkeringFilter.REPAIR,
-            onClick = { onFilterChange(TinkeringFilter.REPAIR) },
-            label = { Text("Repairs (${recipes.countCategory("repair")})") }
-        )
-        FilterChip(
-            selected = selected == TinkeringFilter.GEAR,
-            onClick = { onFilterChange(TinkeringFilter.GEAR) },
-            label = { Text("Gear (${recipes.countCategory("gear")})") }
-        )
-        FilterChip(
-            selected = selected == TinkeringFilter.PROVISION,
-            onClick = { onFilterChange(TinkeringFilter.PROVISION) },
-            label = { Text("Provisions (${recipes.countCategory("provision")})") }
-        )
+        filters.forEach { (filter, label) ->
+            val active = selected == filter
+            Surface(
+                modifier = Modifier
+                    .weight(1f)
+                    .height(38.dp)
+                    .clickable { onFilterChange(filter) },
+                shape = RoundedCornerShape(11.dp),
+                color = if (active) {
+                    MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
+                } else {
+                    MaterialTheme.colorScheme.surface.copy(alpha = 0.18f)
+                },
+                border = BorderStroke(
+                    1.dp,
+                    if (active) {
+                        MaterialTheme.colorScheme.primary.copy(alpha = 0.62f)
+                    } else {
+                        MaterialTheme.colorScheme.outline.copy(alpha = 0.36f)
+                    }
+                )
+            ) {
+                Box(contentAlignment = Alignment.Center) {
+                    Text(
+                        text = label,
+                        style = MaterialTheme.typography.labelMedium,
+                        color = if (active) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontWeight = FontWeight.SemiBold,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+        }
     }
 }
 
@@ -971,9 +1142,16 @@ private fun TinkeringRecipeUi.categoryLabel(): String =
 private fun TinkeringPreview.categoryLabel(): String =
     listOfNotNull(category.displayLabel(), method.displayLabel()).filter { it.isNotBlank() }.joinToString(" - ")
 
+private fun TinkeringRecipeUi.resultDisplayName(): String =
+    resultId.displayLabel().ifBlank { name }
+
+private fun TinkeringPreview.resultDisplayName(): String =
+    resultId.displayLabel().ifBlank { name }
+
 private fun String?.displayLabel(): String =
     this.orEmpty()
         .replace('_', ' ')
+        .replace('-', ' ')
         .split(' ')
         .filter { it.isNotBlank() }
         .joinToString(" ") { word -> word.replaceFirstChar { it.uppercase() } }
@@ -1194,33 +1372,6 @@ private fun CraftAnnouncementOverlay(
                     Text("Continue")
                 }
             }
-        }
-    }
-}
-
-@Composable
-private fun SelectionRow(
-    label: String,
-    value: String,
-    detail: String,
-    highContrastMode: Boolean,
-    onClick: () -> Unit
-) {
-    Surface(
-        tonalElevation = 1.dp,
-        shape = RoundedCornerShape(12.dp),
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onClick() },
-        color = if (highContrastMode) Color(0xFF0E1623) else MaterialTheme.colorScheme.surface.copy(alpha = 0.9f)
-    ) {
-        Column(
-            modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp),
-            verticalArrangement = Arrangement.spacedBy(2.dp)
-        ) {
-            Text(label, style = MaterialTheme.typography.labelSmall, color = if (highContrastMode) Color.White.copy(alpha = 0.75f) else MaterialTheme.colorScheme.onSurfaceVariant)
-            Text(value, style = MaterialTheme.typography.bodyMedium, color = if (highContrastMode) Color.White else MaterialTheme.colorScheme.onSurface)
-            Text(detail, style = MaterialTheme.typography.bodySmall, color = if (highContrastMode) Color.White.copy(alpha = 0.7f) else MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }
 }

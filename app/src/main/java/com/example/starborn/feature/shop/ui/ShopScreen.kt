@@ -52,6 +52,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.starborn.R
 import com.example.starborn.feature.common.ui.StationBackground
@@ -309,49 +310,56 @@ private fun ShopItemCard(
     modifier: Modifier = Modifier
 ) {
     val canBuy = item.canAfford && !item.locked && item.maxQuantity > 0
+    val availabilityText = when {
+        item.locked -> item.lockedMessage ?: "Currently unavailable"
+        item.maxQuantity <= 0 -> "Not enough credits"
+        else -> "Up to ${item.maxQuantity.coerceAtLeast(0)}"
+    }
     Surface(
         modifier = modifier.fillMaxWidth(),
         color = colors.panelAlt,
-        shape = RoundedCornerShape(18.dp),
+        shape = RoundedCornerShape(8.dp),
         border = BorderStroke(1.dp, colors.border)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 14.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
+                .padding(horizontal = 14.dp, vertical = 12.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.Top,
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 Column(
                     modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(6.dp)
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                    Text(
-                        text = item.name,
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold,
-                        color = colors.textPrimary,
-                        modifier = Modifier.weight(1f, fill = false)
-                    )
+                        Text(
+                            text = item.name,
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.SemiBold,
+                            color = colors.textPrimary,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.weight(1f, fill = false)
+                        )
                         if (item.rotating) {
                             Surface(
                                 color = colors.accent.copy(alpha = 0.22f),
-                                shape = RoundedCornerShape(999.dp),
+                                shape = RoundedCornerShape(8.dp),
                                 border = BorderStroke(1.dp, colors.accent.copy(alpha = 0.45f))
                             ) {
                                 Text(
                                     text = "Fresh",
                                     style = MaterialTheme.typography.labelSmall,
                                     color = colors.accent,
-                                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
+                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
                                 )
                             }
                         }
@@ -360,50 +368,49 @@ private fun ShopItemCard(
                         Text(
                             text = description,
                             style = MaterialTheme.typography.bodySmall,
-                            color = colors.textSecondary
+                            color = colors.textSecondary,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis
                         )
                     }
                 }
                 Surface(
                     color = Color.Black.copy(alpha = 0.35f),
-                    shape = RoundedCornerShape(14.dp),
+                    shape = RoundedCornerShape(8.dp),
                     border = BorderStroke(1.dp, colors.border)
                 ) {
                     Text(
                         text = "${item.price} c",
-                        style = MaterialTheme.typography.bodyMedium,
+                        style = MaterialTheme.typography.labelLarge,
                         fontWeight = FontWeight.Bold,
                         color = colors.textPrimary,
-                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp)
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 7.dp)
                     )
                 }
             }
 
-            when {
-                item.locked -> Text(
-                    text = item.lockedMessage ?: "Currently unavailable",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = colors.danger
-                )
-                item.maxQuantity <= 0 -> Text(
-                    text = "Not enough credits.",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = colors.textSecondary
-                )
-                else -> Text(
-                    text = "Max affordable: ${item.maxQuantity.coerceAtLeast(0)}",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = colors.textSecondary
-                )
-            }
-            Button(
-                onClick = { onRequestQuantity(item) },
-                enabled = canBuy,
-                modifier = Modifier
-                    .heightIn(min = if (largeTouchTargets) 52.dp else 0.dp)
-                    .widthIn(min = 140.dp)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                Text(text = if (canBuy) "Buy" else "Unavailable")
+                Text(
+                    text = availabilityText,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = if (item.locked) colors.danger else colors.textSecondary,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f)
+                )
+                Button(
+                    onClick = { onRequestQuantity(item) },
+                    enabled = canBuy,
+                    modifier = Modifier
+                        .heightIn(min = if (largeTouchTargets) 52.dp else 44.dp)
+                        .widthIn(min = 104.dp)
+                ) {
+                    Text(text = "Buy")
+                }
             }
         }
     }
@@ -563,64 +570,70 @@ private fun ShopDialogueBar(
     modifier: Modifier = Modifier
 ) {
     val line = lines.lastOrNull() ?: return
-    val padding = if (largeTouchTargets) 18.dp else 14.dp
+    val padding = if (largeTouchTargets) 14.dp else 12.dp
     val speaker = line.speaker?.takeIf { it.isNotBlank() } ?: shopName.ifBlank { "Shopkeeper" }
     Surface(
         modifier = modifier,
         color = Color.Black.copy(alpha = 0.82f),
         contentColor = Color.White,
-        shadowElevation = 12.dp,
-        tonalElevation = 6.dp,
-        shape = RoundedCornerShape(28.dp),
+        shadowElevation = 6.dp,
+        tonalElevation = 3.dp,
+        shape = RoundedCornerShape(8.dp),
         border = BorderStroke(1.dp, colors.border)
     ) {
-        Column(
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(padding),
-            verticalArrangement = Arrangement.spacedBy(14.dp)
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                if (portraitRes != null) {
-                    Image(
-                        painter = painterResource(id = portraitRes),
-                        contentDescription = speaker,
-                        modifier = Modifier
-                            .size(72.dp)
-                            .clip(CircleShape),
-                        contentScale = ContentScale.Crop
-                    )
-                } else {
-                    Surface(
-                        modifier = Modifier
-                            .size(64.dp)
-                            .clip(CircleShape),
-                        color = Color.White.copy(alpha = 0.1f)
-                    ) {
-                        Box(contentAlignment = Alignment.Center) {
-                            val initial = speaker.firstOrNull()?.uppercaseChar()?.toString() ?: "?"
-                            Text(
-                                text = initial,
-                                style = MaterialTheme.typography.titleLarge,
-                                color = Color.White
-                            )
-                        }
+            if (portraitRes != null) {
+                Image(
+                    painter = painterResource(id = portraitRes),
+                    contentDescription = speaker,
+                    modifier = Modifier
+                        .size(if (largeTouchTargets) 56.dp else 48.dp)
+                        .clip(CircleShape),
+                    contentScale = ContentScale.Crop
+                )
+            } else {
+                Surface(
+                    modifier = Modifier
+                        .size(if (largeTouchTargets) 52.dp else 46.dp)
+                        .clip(CircleShape),
+                    color = Color.White.copy(alpha = 0.1f)
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        val initial = speaker.firstOrNull()?.uppercaseChar()?.toString() ?: "?"
+                        Text(
+                            text = initial,
+                            style = MaterialTheme.typography.titleMedium,
+                            color = Color.White
+                        )
                     }
                 }
+            }
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(2.dp)
+            ) {
                 Text(
                     text = speaker,
-                    style = MaterialTheme.typography.titleMedium,
-                    color = Color.White
+                    style = MaterialTheme.typography.labelLarge,
+                    fontWeight = FontWeight.SemiBold,
+                    color = colors.accent,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Text(
+                    text = line.text,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color.White.copy(alpha = 0.92f),
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
-            Text(
-                text = line.text,
-                style = MaterialTheme.typography.bodyLarge,
-                color = Color.White.copy(alpha = 0.92f)
-            )
         }
     }
 }

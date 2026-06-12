@@ -1,0 +1,29 @@
+appId: com.example.starborn
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "New Game"
+    timeout: 60000
+- swipe:
+    direction: UP
+- swipe:
+    direction: UP
+- extendedWaitUntil:
+    visible: "Debug: Presence Stress"
+    timeout: 10000
+- tapOn: "Debug: Presence Stress"
+- extendedWaitUntil:
+    visible: "Presence Stress Test"
+    timeout: 15000
+- assertVisible: "Talk to Zeke"
+- assertVisible: "Talk to Scrapper"
+- assertVisible: "Talk to Guard Hank"
+- assertVisible: "Pick up Medkit I"
+- assertVisible: "Pick up Ration Pack"
+- assertVisible: "Pick up Scrap Metal"
+- assertVisible: "Pick up Battery"
+- assertVisible: "Engage Dominion Dampener + Resonance Buoy party"
+- assertVisible: "Engage Acoustic Bulwark"
+- assertVisible: "Engage Echo Borer + Siren Skimmer party"
+- takeScreenshot: presence-stress

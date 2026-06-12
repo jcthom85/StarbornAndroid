@@ -1,0 +1,115 @@
+appId: com.example.starborn
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "Debug: Red Alert"
+    timeout: 60000
+- swipe:
+    direction: UP
+- extendedWaitUntil:
+    visible: "Debug: The Launch"
+    timeout: 10000
+- tapOn: "Debug: The Launch"
+- extendedWaitUntil:
+    visible: "Pod Bay"
+    timeout: 15000
+- extendedWaitUntil:
+    notVisible: "Engage The Iron Warden"
+    timeout: 1000
+- assertVisible: "Talk to Zeke"
+- tapOn: "Talk to Zeke"
+- extendedWaitUntil:
+    visible: ".*Warden's down.*"
+    timeout: 10000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: ".*Chime is the key.*"
+    timeout: 10000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: ".*Get inside the pod.*"
+    timeout: 10000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    notVisible: "Dialogue Popup"
+    timeout: 10000
+- tapOn: "Travel north"
+- extendedWaitUntil:
+    visible: "The Pod Core"
+    timeout: 15000
+- assertVisible: "Talk to Zeke"
+- tapOn: "Talk to Zeke"
+- extendedWaitUntil:
+    visible: ".*Connect the Chime.*"
+    timeout: 10000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: ".*inserting it now.*"
+    timeout: 10000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: ".*console's active.*"
+    timeout: 10000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    notVisible: "Dialogue Popup"
+    timeout: 10000
+- extendedWaitUntil:
+    visible: "Quest Updated"
+    timeout: 10000
+- tapOn: "Dismiss Quest Banner"
+- extendedWaitUntil:
+    notVisible: "Quest Updated"
+    timeout: 10000
+- tapOn: "Inspect navigation console"
+- extendedWaitUntil:
+    visible: ".*pod clears the magnetic launch rail.*"
+    timeout: 15000
+- takeScreenshot: planetary-impact-cinematic
+- tapOn: "Cinematic Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: ".*view out the viewport fractures.*"
+    timeout: 10000
+- tapOn: "Cinematic Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: ".*hull begins to shriek.*"
+    timeout: 10000
+- tapOn: "Cinematic Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: ".*frequency bypass isn't holding.*"
+    timeout: 10000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: ".*Alarms scream.*"
+    timeout: 10000
+- tapOn: "Cinematic Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: ".*shield rejects the pod.*"
+    timeout: 10000
+- tapOn: "Cinematic Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: ".*Everything goes white.*"
+    timeout: 10000
+- tapOn: "Cinematic Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: "Crash Site"
+    timeout: 20000
+- extendedWaitUntil:
+    visible: "New Quest"
+    timeout: 10000
+- assertVisible: "A Strange Coast"
+- tapOn: "Continue"
+- extendedWaitUntil:
+    notVisible: "New Quest"
+    timeout: 10000
+- extendedWaitUntil:
+    visible: "Quest Updated"
+    timeout: 10000
+- tapOn: "Dismiss Quest Banner"
+- extendedWaitUntil:
+    notVisible: "Quest Updated"
+    timeout: 10000
+- assertVisible: "Crash Site"
+- assertVisible: "Talk to Zeke"
+- takeScreenshot: mainquest-the-launch

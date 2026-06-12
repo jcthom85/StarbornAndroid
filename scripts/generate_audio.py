@@ -150,6 +150,26 @@ SFX_CATALOG = {
         "text": "Hollow stone cavern echo, slow cold water droplets dripping onto wet stones, deep dark subterranean room acoustics, loopable background",
         "duration": 30.0,
     },
+    "amb_colony_vent_crowd": {
+        "text": "Loopable working-class sci-fi colony ambience, low ventilation rumble, distant muffled miners talking, soft metal creaks, dry dusty air, no melody",
+        "duration": 30.0,
+    },
+    "amb_logistics_machinery": {
+        "text": "Loopable industrial logistics ambience, heavy conveyor motors, distant cargo lifts, dry metal clanks, low electrical hum, corporate mine machinery, no melody",
+        "duration": 30.0,
+    },
+    "amb_server_cold": {
+        "text": "Loopable cold server room ambience, dense computer fan wash, frosty air vents, subtle electrical ticks, sterile sci-fi data center hum, no melody",
+        "duration": 30.0,
+    },
+    "amb_launch_alarm": {
+        "text": "Loopable emergency launch bay ambience, distant warning sirens, cargo rail power hum, hydraulic lift strain, metal vibration, urgent sci-fi industrial atmosphere, no melody",
+        "duration": 30.0,
+    },
+    "amb_dust_storm": {
+        "text": "Loopable Stellarium mine dust storm ambience, low rushing wind through hollow pipes, dry sandy grit scratching metal walls, distant industrial hum, no melody",
+        "duration": 30.0,
+    },
     "wpn_nova_laser": {
         "text": "A sharp sci-fi laser gun blast, high-tech energy projectile discharge, crisp futuristic weapon sound effect, short decay",
         "duration": 0.8,
@@ -170,6 +190,26 @@ SFX_CATALOG = {
 
 # Voiceover scripts mapping
 VOICE_CATALOG = {
+    "shop_mechanic_greeting": {
+        "character": "zeke",
+        "text": "Hey there, Nova! I've got parts polished and ready to bolt on.",
+    },
+    "shop_mechanic_smalltalk": {
+        "character": "zeke",
+        "text": "Scavvers dragged in a crate of micro-cores, perfect for overclocking your drone.",
+    },
+    "shop_weapon_greeting": {
+        "character": "gh0st",
+        "text": "Looking to upgrade your bite? I've got fresh steel and plasma.",
+    },
+    "shop_armor_greeting": {
+        "character": "zeke",
+        "text": "Step in and suit up. No frontier scrape should catch you unshielded.",
+    },
+    "shop_general_greeting": {
+        "character": "nova",
+        "text": "Supplies, snacks, emergency fixes. If you need it, I stock it.",
+    },
     "shop_mechanic_vo": {
         "character": "zeke",
         "text": "Need something calibrated? Don't break it before we start, please.",

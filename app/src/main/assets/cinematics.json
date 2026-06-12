@@ -113,21 +113,21 @@
     },
     {
         "id": "camera_gallery_demo",
-        "title": "Camera Gallery Demo",
+        "title": "Camera Gallery",
         "steps": [
             {
                 "type": "narration",
-                "text": "Placeholder cinematic '$scene_id'."
+                "text": "Colony camera feeds cycle through wide, close, and tracking angles for visual calibration."
             }
         ]
     },
     {
         "id": "camera_test",
-        "title": "Camera Test",
+        "title": "Camera Calibration",
         "steps": [
             {
                 "type": "narration",
-                "text": "Placeholder cinematic '$scene_id'."
+                "text": "The view locks, drifts, then settles as the scene framing comes online."
             }
         ]
     },
@@ -137,77 +137,77 @@
         "steps": [
             {
                 "type": "narration",
-                "text": "Placeholder cinematic '$scene_id'."
+                "text": "Status captions pulse across the feed, translating colony alarms into something readable."
             }
         ]
     },
     {
         "id": "caption_demo",
-        "title": "Caption Demo",
+        "title": "Caption Timing",
         "steps": [
             {
                 "type": "narration",
-                "text": "Placeholder cinematic '$scene_id'."
+                "text": "The caption layer holds long enough to read before the next warning takes its place."
             }
         ]
     },
     {
         "id": "cinematic_text_demo",
-        "title": "Cinematic Text Demo",
+        "title": "Cinematic Text",
         "steps": [
             {
                 "type": "narration",
-                "text": "Placeholder cinematic '$scene_id'."
+                "text": "Narration settles over the scene like a system log with a pulse."
             }
         ]
     },
     {
         "id": "color_filter_demo",
-        "title": "Color Filter Demo",
+        "title": "Color Filter Pass",
         "steps": [
             {
                 "type": "narration",
-                "text": "Placeholder cinematic '$scene_id'."
+                "text": "Emergency color grading washes the image in warning reds and cold industrial blues."
             }
         ]
     },
     {
         "id": "fade_demo",
-        "title": "Fade Demo",
+        "title": "Fade Sequence",
         "steps": [
             {
                 "type": "narration",
-                "text": "Placeholder cinematic '$scene_id'."
+                "text": "The scene fades down until only the colony hum remains."
             }
         ]
     },
     {
         "id": "flash_demo",
-        "title": "Flash Demo",
+        "title": "Impact Flash",
         "steps": [
             {
                 "type": "narration",
-                "text": "Placeholder cinematic '$scene_id'."
+                "text": "A white impact flare swallows the frame, then snaps back to the room."
             }
         ]
     },
     {
         "id": "flashback_demo",
-        "title": "Flashback Demo",
+        "title": "Memory Flashback",
         "steps": [
             {
                 "type": "narration",
-                "text": "Placeholder cinematic '$scene_id'."
+                "text": "A fractured memory cuts through the present, bright at the edges and gone too fast."
             }
         ]
     },
     {
         "id": "letterbox_demo",
-        "title": "Letterbox Demo",
+        "title": "Letterbox Frame",
         "steps": [
             {
                 "type": "narration",
-                "text": "Placeholder cinematic '$scene_id'."
+                "text": "The frame narrows, focusing attention on the single choice left in front of Nova."
             }
         ]
     },
@@ -217,7 +217,7 @@
         "steps": [
             {
                 "type": "narration",
-                "text": "Placeholder cinematic '$scene_id'."
+                "text": "Trade Row opens into noise, heat, and a dozen quiet deals pretending to be legal."
             }
         ]
     },
@@ -227,17 +227,17 @@
         "steps": [
             {
                 "type": "narration",
-                "text": "Placeholder cinematic '$scene_id'."
+                "text": "Every visual layer stacks together: motion, captions, filters, and the pressure of the moment."
             }
         ]
     },
     {
         "id": "narration_demo",
-        "title": "Narration Demo",
+        "title": "Narration Pass",
         "steps": [
             {
                 "type": "narration",
-                "text": "Placeholder cinematic '$scene_id'."
+                "text": "The narrator catches the quiet detail the alarms are too loud to notice."
             }
         ]
     },
@@ -247,117 +247,117 @@
         "steps": [
             {
                 "type": "narration",
-                "text": "Placeholder cinematic '$scene_id'."
+                "text": "The bunk wall hums awake around you. Somewhere below, the colony drills begin their morning rhythm."
             }
         ]
     },
     {
         "id": "pan_only_demo",
-        "title": "Pan Only Demo",
+        "title": "Slow Pan",
         "steps": [
             {
                 "type": "narration",
-                "text": "Placeholder cinematic '$scene_id'."
+                "text": "The camera glides across the room, letting the damage tell the story first."
             }
         ]
     },
     {
         "id": "particles_demo",
-        "title": "Particles Demo",
+        "title": "Particle Field",
         "steps": [
             {
                 "type": "narration",
-                "text": "Placeholder cinematic '$scene_id'."
+                "text": "Dust, sparks, and tiny motes of resonance drift through the light."
             }
         ]
     },
     {
         "id": "ring_demo",
-        "title": "Ring Demo",
+        "title": "Resonance Ring",
         "steps": [
             {
                 "type": "narration",
-                "text": "Placeholder cinematic '$scene_id'."
+                "text": "A ring of pressure ripples outward, bending the air into visible sound."
             }
         ]
     },
     {
         "id": "scene_jed_tinkering_prompt",
-        "title": "Scene Jed Tinkering Prompt",
+        "title": "Tinkering Bench",
         "steps": [
             {
                 "type": "narration",
-                "text": "Placeholder cinematic '$scene_id'."
+                "text": "Jed taps the bench twice, already watching to see whether Nova remembers the first rule: power off before hands in."
             }
         ]
     },
     {
         "id": "scene_jed_tinkering_wrapup",
-        "title": "Scene Jed Tinkering Wrapup",
+        "title": "Repair Complete",
         "steps": [
             {
                 "type": "narration",
-                "text": "Placeholder cinematic '$scene_id'."
+                "text": "The cutter settles into a steady hum. Jed tries not to look proud and fails by half an inch."
             }
         ]
     },
     {
         "id": "scene_return_display",
-        "title": "Scene Return Display",
+        "title": "Display Returned",
         "steps": [
             {
                 "type": "narration",
-                "text": "Placeholder cinematic '$scene_id'."
+                "text": "The shattered display slides onto Jed's bench, another broken thing waiting for stubborn hands."
             }
         ]
     },
     {
         "id": "scene_return_grinder",
-        "title": "Scene Return Grinder",
+        "title": "Grinder Returned",
         "steps": [
             {
                 "type": "narration",
-                "text": "Placeholder cinematic '$scene_id'."
+                "text": "The grinder lands with a heavy clunk, smelling of dust, old grease, and useful trouble."
             }
         ]
     },
     {
         "id": "scene_return_projector",
-        "title": "Scene Return Projector",
+        "title": "Projector Returned",
         "steps": [
             {
                 "type": "narration",
-                "text": "Placeholder cinematic '$scene_id'."
+                "text": "The cracked projector lens catches the work light, splitting it into tired little rainbows."
             }
         ]
     },
     {
         "id": "shake_demo",
-        "title": "Shake Demo",
+        "title": "Camera Shake",
         "steps": [
             {
                 "type": "narration",
-                "text": "Placeholder cinematic '$scene_id'."
+                "text": "The frame jolts as something heavy hits nearby."
             }
         ]
     },
     {
         "id": "speed_lines_demo",
-        "title": "Speed Lines Demo",
+        "title": "Launch Speed Lines",
         "steps": [
             {
                 "type": "narration",
-                "text": "Placeholder cinematic '$scene_id'."
+                "text": "Motion streaks tear past the viewport as the launch rail takes hold."
             }
         ]
     },
     {
         "id": "tilt_demo",
-        "title": "Tilt Demo",
+        "title": "Dutch Tilt",
         "steps": [
             {
                 "type": "narration",
-                "text": "Placeholder cinematic '$scene_id'."
+                "text": "The horizon tips sideways, making the corridor feel even less trustworthy."
             }
         ]
     },
@@ -367,57 +367,57 @@
         "steps": [
             {
                 "type": "narration",
-                "text": "Placeholder cinematic '$scene_id'."
+                "text": "The open square catches every sound at once: boots, vendors, distant machinery, and the low electric buzz of surveillance."
             }
         ]
     },
     {
         "id": "vfx_stage_demo",
-        "title": "Vfx Stage Demo",
+        "title": "Visual Effects Stage",
         "steps": [
             {
                 "type": "narration",
-                "text": "Placeholder cinematic '$scene_id'."
+                "text": "The visual effects layer blooms across the frame, then folds back into the scene."
             }
         ]
     },
     {
         "id": "vignette_demo",
-        "title": "Vignette Demo",
+        "title": "Vignette Focus",
         "steps": [
             {
                 "type": "narration",
-                "text": "Placeholder cinematic '$scene_id'."
+                "text": "The edges darken, pulling the eye toward the one detail that matters."
             }
         ]
     },
     {
         "id": "wipe_demo",
-        "title": "Wipe Demo",
+        "title": "Wipe Transition",
         "steps": [
             {
                 "type": "narration",
-                "text": "Placeholder cinematic '$scene_id'."
+                "text": "A hard transition sweeps the old room away and leaves the next danger waiting."
             }
         ]
     },
     {
         "id": "zoom_only_demo",
-        "title": "Zoom Only Demo",
+        "title": "Slow Zoom",
         "steps": [
             {
                 "type": "narration",
-                "text": "Placeholder cinematic '$scene_id'."
+                "text": "The view tightens slowly, closing the distance before anyone moves."
             }
         ]
     },
     {
         "id": "zoom_pan_demo",
-        "title": "Zoom Pan Demo",
+        "title": "Zoom Pan",
         "steps": [
             {
                 "type": "narration",
-                "text": "Placeholder cinematic '$scene_id'."
+                "text": "The camera pushes forward and tracks sideways, following the line of trouble through the room."
             }
         ]
     },
@@ -482,6 +482,7 @@
             {
                 "type": "dialogue",
                 "speaker": "Zeke",
+                "emote": "scared",
                 "text": "Nova! Hold on! The navigation console is burning out—the frequency bypass isn't holding!"
             },
             {

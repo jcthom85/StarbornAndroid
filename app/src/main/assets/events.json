@@ -2013,6 +2013,11 @@
       {
         "type": "quest_active",
         "quest_id": "w1_mq05"
+      },
+      {
+        "type": "quest_stage",
+        "quest_id": "w1_mq05",
+        "stage_id": "reach_pod_bay"
       }
     ],
     "actions": [

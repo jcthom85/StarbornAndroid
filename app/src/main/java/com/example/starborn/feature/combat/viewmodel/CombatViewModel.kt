@@ -116,7 +116,7 @@ class CombatViewModel(
     private val enemyCooldowns: MutableMap<String, Int> = mutableMapOf()
     private val enemyBrains: MutableMap<String, EnemyBrain> = mutableMapOf()
     private val enemyDefinitions: MutableMap<String, Enemy> = mutableMapOf()
-    private val enemySkillHistory: MutableMap<String, ArrayDeque<String>> = mutableMapOf()
+    private val enemyActionHistory: MutableMap<String, ArrayDeque<String>> = mutableMapOf()
     private val enemySkillUsageCounts: MutableMap<String, Int> = mutableMapOf()
     private val playerCooldowns: MutableMap<String, Int> = mutableMapOf()
     private val skillUsageCounts: MutableMap<String, Int> = mutableMapOf()
@@ -163,6 +163,8 @@ class CombatViewModel(
     val state: StateFlow<CombatState?> = _state.asStateFlow()
     val combatState: CombatState? get() = _state.value
     private var enemyTurnJob: Job? = null
+    private var enemyTurnResumeJob: Job? = null
+    private var enemyTurnsBlockedUntilMs: Long = 0L
     val encounterEnemyIds: List<String> get() = encounterEnemyIdList
     val enemyCombatantIds: List<String> get() = enemyIdList
     private val _selectedEnemies = MutableStateFlow<Set<String>>(emptySet())
@@ -197,6 +199,28 @@ class CombatViewModel(
     private fun resumeAtbForAnimation() {
         atbAnimationPauses = (atbAnimationPauses - 1).coerceAtLeast(0)
         if (!isAtbPaused()) {
+            tryProcessEnemyTurns()
+        }
+    }
+
+    private fun deferEnemyTurns(durationMs: Long) {
+        if (durationMs <= 0L) return
+        val resumeAtMs = currentTimeMs() + durationMs
+        enemyTurnsBlockedUntilMs = maxOf(enemyTurnsBlockedUntilMs, resumeAtMs)
+        scheduleEnemyTurnResume()
+    }
+
+    private fun scheduleEnemyTurnResume() {
+        val remainingMs = enemyTurnsBlockedUntilMs - currentTimeMs()
+        if (remainingMs <= 0L) {
+            enemyTurnsBlockedUntilMs = 0L
+            return
+        }
+        if (enemyTurnResumeJob?.isActive == true) return
+        enemyTurnResumeJob = viewModelScope.launch {
+            delay(remainingMs)
+            enemyTurnResumeJob = null
+            enemyTurnsBlockedUntilMs = 0L
             tryProcessEnemyTurns()
         }
     }
@@ -269,6 +293,9 @@ class CombatViewModel(
                 EncounterEnemySlot(
                     canonicalId = canonicalId,
                     enemy = enemy,
+                    hp = overrides?.hp,
+                    vitality = overrides?.vitality,
+                    stability = overrides?.stability,
                     overrideDrops = overrides?.overrideDrops,
                     extraDrops = overrides?.extraDrops.orEmpty()
                 )
@@ -308,7 +335,12 @@ class CombatViewModel(
             val requireSuffix = (duplicateCounts[canonicalId] ?: 0) > 1
             val instanceId = if (requireSuffix) "${canonicalId}#$nextIndex" else canonicalId
             enemyDefinitions[instanceId] = enemy
-            enemy.toCombatant(instanceId)
+            enemy.toCombatant(
+                combatantId = instanceId,
+                hpOverride = slot.hp,
+                vitalityOverride = slot.vitality,
+                stabilityOverride = slot.stability
+            )
         }
         encounterTitle = buildEncounterTitle(encounterEnemySlots.map { it.enemy })
         playerIdList = playerCombatants.map { it.id }
@@ -656,6 +688,7 @@ class CombatViewModel(
     }
 
     fun dismissActionMenu(actorId: String) {
+        deferEnemyTurns(MENU_DISMISS_ENEMY_GRACE_MS)
         clearAwaitingAction(actorId)
     }
 
@@ -726,7 +759,12 @@ class CombatViewModel(
         return actorState.activeCooldowns.getOrDefault(skillId, 0)
     }
 
-    private fun checkSkillConditions(actorId: String, skill: Skill, state: CombatState): Boolean {
+    private fun checkSkillConditions(
+        actorId: String,
+        skill: Skill,
+        state: CombatState,
+        targetIds: List<String>? = null
+    ): Boolean {
         val conditions = skill.conditions
         if (conditions.isNullOrEmpty()) return true
         
@@ -751,27 +789,36 @@ class CombatViewModel(
                     equippedType == weaponType
                 }
                 trimmed == "target_stunned" -> {
-                    val actorSide = actorState.combatant.side
-                    val targets = state.combatants.values.filter { it.isAlive && 
-                        if (isSupportSkill(skill)) it.combatant.side == actorSide
-                        else it.combatant.side != actorSide
-                    }
+                    val targets = conditionTargets(actorState, skill, state, targetIds)
                     targets.any { target ->
                         target.statusEffects.any { it.id.equals("stun", true) || it.id.equals("stagger", true) }
                     }
                 }
                 trimmed == "target_staggered" -> {
-                    val actorSide = actorState.combatant.side
-                    val targets = state.combatants.values.filter { it.isAlive && 
-                        if (isSupportSkill(skill)) it.combatant.side == actorSide
-                        else it.combatant.side != actorSide
-                    }
+                    val targets = conditionTargets(actorState, skill, state, targetIds)
                     targets.any { target ->
                         target.statusEffects.any { it.id.equals("stagger", true) }
                     }
                 }
                 else -> true
             }
+        }
+    }
+
+    private fun conditionTargets(
+        actorState: CombatantState,
+        skill: Skill,
+        state: CombatState,
+        targetIds: List<String>?
+    ): List<CombatantState> {
+        if (!targetIds.isNullOrEmpty()) {
+            return targetIds.mapNotNull { state.combatants[it] }
+        }
+        val actorSide = actorState.combatant.side
+        return state.combatants.values.filter { target ->
+            target.isAlive &&
+                if (isSupportSkill(skill)) target.combatant.side == actorSide
+                else target.combatant.side != actorSide
         }
     }
 
@@ -794,7 +841,7 @@ class CombatViewModel(
 
     private fun initializeEnemyBrains() {
         enemyBrains.clear()
-        enemySkillHistory.clear()
+        enemyActionHistory.clear()
         enemySkillUsageCounts.clear()
         enemyCooldowns.clear()
         encounterEnemySlots.forEachIndexed { index, slot ->
@@ -805,7 +852,7 @@ class CombatViewModel(
                 ?: inferBehavior(skills)
             val role = parseRole(slot.enemy.combatRole) ?: inferRole(skills)
             enemyBrains[combatant.id] = EnemyBrain(behavior = behavior, role = role)
-            enemySkillHistory[combatant.id] = ArrayDeque()
+            enemyActionHistory[combatant.id] = ArrayDeque()
         }
     }
 
@@ -818,6 +865,7 @@ class CombatViewModel(
             val skill = skillById[skillId] ?: return@forEach
             if (!canEnemyUseSkill(enemyId, skill)) return@forEach
             val targetSets = resolveTargetSetsForAi(skill, state, enemyId)
+                .filter { targets -> checkSkillConditions(enemyId, skill, state, targets) }
             if (targetSets.isEmpty()) return@forEach
             targetSets.forEach { targets ->
                 val score = scoreSkill(skill, enemyState, targets, state, brain)
@@ -894,13 +942,23 @@ class CombatViewModel(
         }
     }
 
-    private fun recordEnemySkillUse(action: CombatAction) {
-        if (action !is CombatAction.SkillUse) return
-        val key = "${action.actorId}:${action.skillId}"
-        enemySkillUsageCounts[key] = enemySkillUsageCounts.getOrDefault(key, 0) + 1
-        val history = enemySkillHistory.getOrPut(action.actorId) { ArrayDeque() }
-        history.addLast(action.skillId)
-        while (history.size > ENEMY_SKILL_MEMORY) {
+    private fun recordEnemyActionUse(action: CombatAction) {
+        when (action) {
+            is CombatAction.SkillUse -> {
+                val key = "${action.actorId}:${action.skillId}"
+                enemySkillUsageCounts[key] = enemySkillUsageCounts.getOrDefault(key, 0) + 1
+                recordEnemyAction(action.actorId, action.skillId)
+            }
+            is CombatAction.BasicAttack -> recordEnemyAction(action.actorId, ENEMY_BASIC_ACTION_MARKER)
+            is CombatAction.Defend -> recordEnemyAction(action.actorId, ENEMY_DEFEND_ACTION_MARKER)
+            else -> Unit
+        }
+    }
+
+    private fun recordEnemyAction(enemyId: String, actionId: String) {
+        val history = enemyActionHistory.getOrPut(enemyId) { ArrayDeque() }
+        history.addLast(actionId)
+        while (history.size > ENEMY_ACTION_MEMORY) {
             history.removeFirst()
         }
     }
@@ -908,10 +966,16 @@ class CombatViewModel(
     private fun canEnemyUseSkill(enemyId: String, skill: Skill): Boolean {
         val state = _state.value ?: return false
         val enemyState = state.combatants[enemyId] ?: return false
+        val isJammed = enemyState.statusEffects.any { status ->
+            statusRegistry.definition(status.id)?.blockSkills == true
+        }
+        if (isJammed) return false
         if (enemyState.activeCooldowns.getOrDefault(skill.id, 0) > 0) return false
-        val uses = skill.usesPerBattle ?: return true
-        val used = enemySkillUsageCounts.getOrDefault("$enemyId:${skill.id}", 0)
-        return used < uses
+        skill.usesPerBattle?.let { uses ->
+            val used = enemySkillUsageCounts.getOrDefault("$enemyId:${skill.id}", 0)
+            if (used >= uses) return false
+        }
+        return checkSkillConditions(enemyId, skill, state)
     }
 
     private fun resolveTargetSetsForAi(
@@ -1157,7 +1221,7 @@ class CombatViewModel(
     }
 
     private fun diversityPenalty(enemyId: String, skillId: String): Double {
-        val history = enemySkillHistory[enemyId] ?: return 0.0
+        val history = enemyActionHistory[enemyId] ?: return 0.0
         if (history.isEmpty()) return 0.0
         val repeatCount = history.count { it == skillId }
         val lastRepeat = if (history.lastOrNull() == skillId) 1 else 0
@@ -1973,6 +2037,11 @@ class CombatViewModel(
     private fun tryProcessEnemyTurns() {
         val state = _state.value ?: return
         if (state.outcome != null) return
+        if (isAtbPaused()) return
+        if (enemyTurnsBlockedUntilMs > currentTimeMs()) {
+            scheduleEnemyTurnResume()
+            return
+        }
         if (enemyTurnJob?.isActive == true) return
         val readyEnemy = readyQueue.firstOrNull { id ->
             id in enemyIdList && state.combatants[id]?.isAlive == true
@@ -2019,7 +2088,7 @@ class CombatViewModel(
                 resolved.applyOutcomeResults(current)
             }
             if (acted) {
-                recordEnemySkillUse(action)
+                recordEnemyActionUse(action)
                 concludeActorTurn(enemyId)
             } else {
                 removeFromReadyQueue(enemyId)
@@ -2173,12 +2242,21 @@ class CombatViewModel(
         )
         }
 
-    private fun Enemy.toCombatant(combatantId: String = id): Combatant =
+    private fun Enemy.toCombatant(
+        combatantId: String = id,
+        hpOverride: Int? = null,
+        vitalityOverride: Int? = null,
+        stabilityOverride: Int? = null
+    ): Combatant =
         run {
             val baseProfile = ElementalAffinityRules.fromTags(tags)
             val resolvedProfile = ElementalAffinityRules.applyOverrides(baseProfile, resistances)
-            val maxHp = CombatFormulas.maxHp(hp, vitality)
-            val resolvedStability = stability ?: CombatFormulas.stabilityForTier(maxHp, tier)
+            val resolvedBaseHp = hpOverride?.coerceAtLeast(1) ?: hp
+            val resolvedVitality = vitalityOverride?.coerceAtLeast(0) ?: vitality
+            val maxHp = CombatFormulas.maxHp(resolvedBaseHp, resolvedVitality)
+            val resolvedStability = stabilityOverride?.coerceAtLeast(1)
+                ?: stability
+                ?: CombatFormulas.stabilityForTier(maxHp, tier)
             Combatant(
                 id = combatantId,
                 name = name,
@@ -2186,7 +2264,7 @@ class CombatViewModel(
                 stats = StatBlock(
                     maxHp = maxHp,
                     strength = strength,
-                    vitality = vitality,
+                    vitality = resolvedVitality,
                     agility = agility,
                     focus = focus,
                     luck = luck,
@@ -2531,16 +2609,22 @@ class CombatViewModel(
             val (name, count) = grouped.entries.first()
             return if (count > 1) "$name x$count" else name
         }
+        if (enemies.size <= 2) {
+            return enemies.joinToString(" + ") { enemy -> enemy.name.ifBlank { enemy.id } }
+        }
         val boss = enemies.firstOrNull { it.tier.equals("boss", ignoreCase = true) }
-        if (boss != null) return "${boss.name} and escort"
+        if (boss != null) return "${boss.name} + ${enemies.size - 1} more"
         val elite = enemies.firstOrNull { it.tier.equals("elite", ignoreCase = true) }
-        if (elite != null) return "${elite.name} and allies"
+        if (elite != null) return "${elite.name} + ${enemies.size - 1} more"
         return "${enemies.size} hostiles"
     }
 
     private data class EncounterEnemySlot(
         val canonicalId: String,
         val enemy: Enemy,
+        val hp: Int? = null,
+        val vitality: Int? = null,
+        val stability: Int? = null,
         val overrideDrops: List<Drop>? = null,
         val extraDrops: List<Drop> = emptyList()
     )
@@ -2938,7 +3022,10 @@ private fun determineSkillTargeting(skill: Skill): SkillTargeting {
         private const val STATUS_SOURCE_PREFIX = "status_"
         private const val ATB_SPEED_SCALE = 90f
         private const val ATTACK_ANIMATION_PAUSE_MS = 500L
-        private const val ENEMY_SKILL_MEMORY = 3
+        private const val MENU_DISMISS_ENEMY_GRACE_MS = 260L
+        private const val ENEMY_ACTION_MEMORY = 3
+        private const val ENEMY_BASIC_ACTION_MARKER = "__basic_attack__"
+        private const val ENEMY_DEFEND_ACTION_MARKER = "__defend__"
 
         private const val TIMED_GUARD_WINDOW_MS = 700L
         private const val TIMED_GUARD_DEF_BONUS = 10
@@ -2959,6 +3046,7 @@ private fun determineSkillTargeting(skill: Skill): SkillTargeting {
     }
 }
 
+private fun currentTimeMs(): Long = System.currentTimeMillis()
 
 enum class TargetRequirement {
     NONE,

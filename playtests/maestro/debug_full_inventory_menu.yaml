@@ -1,0 +1,33 @@
+appId: com.example.starborn
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "Debug: Full Inventory"
+    timeout: 60000
+- tapOn: "Debug: Full Inventory"
+- extendedWaitUntil:
+    visible: "GOT IT"
+    timeout: 30000
+- tapOn: "GOT IT"
+- extendedWaitUntil:
+    visible: "Nova's Bunk"
+    timeout: 15000
+- tapOn: "MENU"
+- extendedWaitUntil:
+    visible: "FIELD MENU"
+    timeout: 10000
+- assertVisible: "Inventory Overview"
+- assertVisible: "Supplies"
+- assertVisible: "Gear"
+- assertVisible: "Key Items"
+- tapOn: "Stats"
+- extendedWaitUntil:
+    visible: "Party Status"
+    timeout: 10000
+- assertVisible: "Nova"
+- swipe:
+    direction: UP
+    duration: 350
+- assertVisible: "Zeke"
+- takeScreenshot: debug-full-inventory-menu

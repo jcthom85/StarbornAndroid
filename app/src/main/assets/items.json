@@ -2070,6 +2070,74 @@
         "rarity": "common"
     },
     {
+        "id": "medkit_i",
+        "name": "Medkit I",
+        "aliases": [
+            "medkit i",
+            "basic medkit"
+        ],
+        "description": "A compact Dominion first-aid pack stocked for minor burns, cuts, and pressure bruises.",
+        "type": "consumable",
+        "value": 25,
+        "buy_price": 50,
+        "rarity": "common",
+        "effect": {
+            "restore_hp": 45
+        }
+    },
+    {
+        "id": "shipment_log",
+        "name": "Shipment Log",
+        "aliases": [
+            "shipping log",
+            "shipment manifest"
+        ],
+        "description": "A stamped logistics slate showing rerouted cutter parts and sealed cargo transfers.",
+        "type": "quest",
+        "value": 0,
+        "rarity": "common",
+        "unsellable": true
+    },
+    {
+        "id": "data_logs",
+        "name": "Data Logs",
+        "aliases": [
+            "server logs",
+            "backup logs"
+        ],
+        "description": "Encrypted server exports documenting colony liability flags and deleted security orders.",
+        "type": "quest",
+        "value": 0,
+        "rarity": "uncommon",
+        "unsellable": true
+    },
+    {
+        "id": "admin_badge",
+        "name": "Admin Badge",
+        "aliases": [
+            "administrator badge",
+            "admin pass"
+        ],
+        "description": "A clipped-on Dominion credential with enough authority to open a few wrong doors.",
+        "type": "quest",
+        "value": 0,
+        "rarity": "uncommon",
+        "unsellable": true
+    },
+    {
+        "id": "crew_datapad",
+        "name": "Crew Datapad",
+        "aliases": [
+            "lost datapad",
+            "miner datapad"
+        ],
+        "description": "A cracked shift pad full of final check-ins from a crew that never made it back to the lifts.",
+        "type": "quest",
+        "value": 0,
+        "rarity": "uncommon",
+        "unsellable": true
+    },
+    {
         "id": "warden_keycard",
         "name": "Warden Keycard",
         "description": "A high-security keycard found on the Dominion Warden.",

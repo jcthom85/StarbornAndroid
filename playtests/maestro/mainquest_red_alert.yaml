@@ -1,0 +1,77 @@
+appId: com.example.starborn
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "Debug: Red Alert"
+    timeout: 60000
+- tapOn: "Debug: Red Alert"
+- extendedWaitUntil:
+    visible: "Zeke:.*bypassed the emergency exit.*"
+    timeout: 15000
+- tapOn: "Got it"
+- extendedWaitUntil:
+    visible: "Emergency Exit"
+    timeout: 15000
+- extendedWaitUntil:
+    visible: "Quest Updated"
+    timeout: 10000
+- tapOn: "Dismiss Quest Banner"
+- extendedWaitUntil:
+    notVisible: "Quest Updated"
+    timeout: 10000
+- tapOn: "Travel north"
+- extendedWaitUntil:
+    visible: "Maintenance Access"
+    timeout: 15000
+- extendedWaitUntil:
+    notVisible: "Engage Resonance Buoy"
+    timeout: 1000
+- tapOn: "Travel north"
+- extendedWaitUntil:
+    visible: "Cargo Lift"
+    timeout: 15000
+- extendedWaitUntil:
+    visible: "Quest Updated"
+    timeout: 10000
+- tapOn: "Dismiss Quest Banner"
+- extendedWaitUntil:
+    notVisible: "Quest Updated"
+    timeout: 10000
+- extendedWaitUntil:
+    notVisible: "Engage Acoustic Bulwark"
+    timeout: 1000
+- tapOn: "Talk to Jed"
+- extendedWaitUntil:
+    visible: ".*alarm broadcast.*"
+    timeout: 10000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: ".*calling me a contaminant.*"
+    timeout: 10000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: ".*manual override panel.*"
+    timeout: 10000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: ".*not leaving you behind.*"
+    timeout: 10000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: ".*take this Chime.*"
+    timeout: 10000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    notVisible: "Dialogue Popup"
+    timeout: 10000
+- extendedWaitUntil:
+    visible: "New Quest"
+    timeout: 15000
+- assertVisible: "The Launch"
+- tapOn: "Continue"
+- extendedWaitUntil:
+    notVisible: "New Quest"
+    timeout: 10000
+- assertVisible: "Cargo Lift"
+- takeScreenshot: mainquest-red-alert

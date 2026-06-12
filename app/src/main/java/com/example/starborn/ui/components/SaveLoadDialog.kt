@@ -23,6 +23,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.example.starborn.feature.mainmenu.SaveSlotSummary
 import java.util.Locale
@@ -165,14 +167,20 @@ private fun SaveSlotRow(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 if (isSave && !summary.isAutosave) {
-                    Button(onClick = { onSave(summary.slot) }) {
+                    Button(
+                        onClick = { onSave(summary.slot) },
+                        modifier = Modifier.semantics {
+                            contentDescription = "Save $slotLabel"
+                        }
+                    ) {
                         Text(if (summary.isEmpty) "Save" else "Overwrite")
                     }
                 }
                 if (!isSave) {
                     Button(
                         onClick = { onLoad(summary.slot) },
-                        enabled = !summary.isEmpty
+                        enabled = !summary.isEmpty,
+                        modifier = Modifier.semantics { contentDescription = "Load $slotLabel" }
                     ) {
                         Text(
                             when {

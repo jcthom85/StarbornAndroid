@@ -30,8 +30,44 @@ $warnings = New-Object System.Collections.Generic.List[string]
 $phaseMap = [ordered]@{
     "baseline" = @()
 }
+$storyMilestoneOrder = @(
+    "ms_w1_mq01_jed_talked",
+    "ms_w1_mq01_complete",
+    "ms_w1_mq02_complete",
+    "ms_w1_mq03_complete",
+    "ms_w1_mq04_complete",
+    "ms_w1_zeke_directed_to_pod",
+    "ms_w1_chime_spliced",
+    "ms_w1_mq05_complete"
+)
+
+function Test-DebugRoom($room) {
+    if ($null -eq $room -or [string]::IsNullOrWhiteSpace($room.id)) { return $false }
+    $roomId = [string]$room.id
+    return $roomId.StartsWith("debug_", [System.StringComparison]::OrdinalIgnoreCase) -or
+        $roomId.StartsWith("test_", [System.StringComparison]::OrdinalIgnoreCase)
+}
+
+function Expand-CompletedMilestones($requirements) {
+    $completed = @()
+    foreach ($milestone in @($requirements) | Where-Object { $_ }) {
+        $index = [Array]::IndexOf($storyMilestoneOrder, [string]$milestone)
+        if ($index -ge 0) {
+            for ($i = 0; $i -le $index; $i++) {
+                if ($completed -notcontains $storyMilestoneOrder[$i]) {
+                    $completed += $storyMilestoneOrder[$i]
+                }
+            }
+        } elseif ($completed -notcontains $milestone) {
+            $completed += $milestone
+        }
+    }
+    return $completed
+}
 
 foreach ($room in $rooms) {
+    $includeInStoryPresenceRules = -not (Test-DebugRoom $room)
+
     foreach ($npcId in @($room.npcs)) {
         if (-not $npcIds.ContainsKey($npcId)) {
             $warnings.Add("Room '$($room.id)' references uncataloged static actor '$npcId'.")
@@ -57,11 +93,13 @@ foreach ($room in $rooms) {
             }
         }
 
-        $requirements = @($rule.requires_milestones) | Where-Object { $_ } | Sort-Object -Unique
-        if ($requirements.Count -gt 0) {
-            $key = "after:" + ($requirements -join "+")
-            if (-not $phaseMap.Contains($key)) {
-                $phaseMap[$key] = $requirements
+        if ($includeInStoryPresenceRules) {
+            $requirements = @($rule.requires_milestones) | Where-Object { $_ } | Sort-Object -Unique
+            if ($requirements.Count -gt 0) {
+                $key = "after:" + ($requirements -join "+")
+                if (-not $phaseMap.Contains($key)) {
+                    $phaseMap[$key] = Expand-CompletedMilestones $requirements
+                }
             }
         }
     }
@@ -69,19 +107,22 @@ foreach ($room in $rooms) {
 
 $allRequired = @(
     foreach ($room in $rooms) {
+        if (Test-DebugRoom $room) { continue }
         foreach ($rule in @($room.npc_presence | Where-Object { $_ })) {
             foreach ($milestone in @($rule.requires_milestones) | Where-Object { $_ }) { $milestone }
         }
     }
 ) | Sort-Object -Unique
 if ($allRequired.Count -gt 0) {
-    $phaseMap["all_presence_requirements"] = $allRequired
+    $phaseMap["all_presence_requirements"] = Expand-CompletedMilestones $allRequired
 }
 
 foreach ($phaseName in $phaseMap.Keys) {
     $completed = @($phaseMap[$phaseName])
     $byNpc = @{}
     foreach ($room in $rooms) {
+        if (Test-DebugRoom $room) { continue }
+
         $visible = New-Object System.Collections.Generic.List[string]
         foreach ($npcId in @($room.npcs)) {
             if ($npcId) { $visible.Add($npcId) }

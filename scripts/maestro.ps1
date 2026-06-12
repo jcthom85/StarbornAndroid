@@ -21,10 +21,13 @@ if (-not (Test-Path $adbPath)) {
 $maestroHome = Join-Path $repoRoot ".maestro-home"
 $maestroLocalAppData = Join-Path $maestroHome "AppData\Local"
 $maestroRoaming = Join-Path $maestroHome "AppData\Roaming"
+$maestroTmpRoot = Join-Path $maestroHome "tmp"
+$runTemp = Join-Path $maestroTmpRoot ([System.Guid]::NewGuid().ToString("N"))
 New-Item -ItemType Directory -Force -Path `
     (Join-Path $maestroHome ".maestro"), `
     (Join-Path $maestroLocalAppData "mobile_dev\maestro\Logs"), `
-    $maestroRoaming | Out-Null
+    $maestroRoaming, `
+    $runTemp | Out-Null
 
 $env:MAESTRO_CLI_NO_ANALYTICS = "true"
 $env:MAESTRO_CLI_ANALYSIS_NOTIFICATION_DISABLED = "true"
@@ -34,8 +37,54 @@ $env:USERPROFILE = $maestroHome
 $env:HOME = $maestroHome
 $env:LOCALAPPDATA = $maestroLocalAppData
 $env:APPDATA = $maestroRoaming
+$env:TEMP = $runTemp
+$env:TMP = $runTemp
 $env:JAVA_OPTS = (($env:JAVA_OPTS, "-Duser.home=$maestroHome") | Where-Object { $_ } | Select-Object -Unique) -join " "
 $env:PATH = "$androidHome\platform-tools;" + (Split-Path -Parent $maestroCli) + ";$env:PATH"
 
-& $maestroCli @MaestroArgs
-exit $LASTEXITCODE
+$tempBase = Join-Path $runTemp "maestro"
+$stdoutPath = "$tempBase.out"
+$stderrPath = "$tempBase.err"
+
+try {
+    $process = Start-Process `
+        -FilePath $maestroCli `
+        -ArgumentList $MaestroArgs `
+        -WorkingDirectory $repoRoot `
+        -NoNewWindow `
+        -PassThru `
+        -RedirectStandardOutput $stdoutPath `
+        -RedirectStandardError $stderrPath
+
+    $process.WaitForExit()
+
+    $stdout = if (Test-Path $stdoutPath) { @(Get-Content -Path $stdoutPath) } else { @() }
+    $stderr = if (Test-Path $stderrPath) { @(Get-Content -Path $stderrPath) } else { @() }
+    $stdout
+    $stderr
+
+    $combinedOutput = ($stdout + $stderr) -join "`n"
+    $fatalOutputPatterns = @(
+        "There is not enough space on the disk",
+        "Exception in thread `"main`"",
+        "java.lang.UnsatisfiedLinkError",
+        "... FAILED",
+        "[Failed]",
+        "Flow failed",
+        "Element not found",
+        "Failed to find",
+        "Assertion is false",
+        "No device found",
+        "is not connected"
+    )
+    $hasFatalOutput = $fatalOutputPatterns | Where-Object { $combinedOutput.Contains($_) }
+    $hasCompletedCommand = $combinedOutput.Contains("... COMPLETED")
+    $hasPassedSuite = $combinedOutput -match "\d+/\d+ Flows Passed"
+
+    if ($hasFatalOutput -or (-not $hasCompletedCommand -and -not $hasPassedSuite)) {
+        exit 1
+    }
+    exit 0
+} finally {
+    Remove-Item -LiteralPath $runTemp -Recurse -Force -ErrorAction SilentlyContinue
+}

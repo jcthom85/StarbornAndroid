@@ -3,7 +3,6 @@
     "name": "Mechanic's Wares",
     "portrait": "images/portraits/mechanic.png",
     "greeting": "Mechanic: Hey there, Nova! I've got parts polished and ready to bolt on.",
-    "vo_cue": "shop_mechanic_greeting",
     "pricing": {
       "sell_markup": 1.2,
       "buy_markdown": 0.35
@@ -41,8 +40,7 @@
       "preface": [
         {
           "speaker": "Mechanic",
-          "text": "Hey there, Nova! I've been polishing parts since dawn.",
-          "voice": "shop_mechanic_greeting"
+          "text": "Hey there, Nova! I've been polishing parts since dawn."
         },
         {
           "speaker": "Mechanic",
@@ -53,12 +51,10 @@
         {
           "id": "shop_mechanic_stock",
           "label": "Ask what's new",
-          "voice": "shop_mechanic_smalltalk",
           "response": [
             {
               "speaker": "Mechanic",
-              "text": "Scavvers dragged in a crate of micro-cores—perfect for overclocking your drone.",
-              "voice": "shop_mechanic_smalltalk"
+              "text": "Scavvers dragged in a crate of micro-cores—perfect for overclocking your drone."
             },
             {
               "speaker": "Mechanic",
@@ -89,7 +85,6 @@
     "name": "Blades & Blasters",
     "portrait": "images/portraits/weaponsmith.png",
     "greeting": "Weaponsmith: Looking to upgrade your bite? I've got fresh steel and plasma.",
-    "vo_cue": "shop_weapon_greeting",
     "pricing": {
       "sell_markup": 1.2,
       "buy_markdown": 0.35
@@ -134,7 +129,6 @@
     "name": "The Aegis",
     "portrait": "images/portraits/armorer.png",
     "greeting": "Armorer: Step in and suit up—no frontier scrape should catch you unshielded.",
-    "vo_cue": "shop_armor_greeting",
     "pricing": {
       "sell_markup": 1.2,
       "buy_markdown": 0.35
@@ -209,7 +203,6 @@
     "name": "General Store",
     "portrait": "images/portraits/shopkeep.png",
     "greeting": "Shopkeep: Supplies, snacks, emergency fixes—if you need it, I stock it.",
-    "vo_cue": "shop_general_greeting",
     "pricing": {
       "sell_markup": 1.2,
       "buy_markdown": 0.35
@@ -244,8 +237,7 @@
       "preface": [
         {
           "speaker": "Shopkeep",
-          "text": "Supplies, snacks, emergency fixes—if you need it, I stock it.",
-          "voice": "shop_general_greeting"
+          "text": "Supplies, snacks, emergency fixes—if you need it, I stock it."
         }
       ],
       "smalltalk": [

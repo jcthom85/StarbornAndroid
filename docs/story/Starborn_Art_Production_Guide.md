@@ -129,10 +129,10 @@ NPC portraits and emotes use the same visual language as character portraits and
 - Before shipping dialogue changes that use emotes, run:
 
 ```powershell
-python scripts\validate_dialogue_emotes.py
+python scripts\validate_dialogue_emotes.py --fail-on-missing --min-uses 12
 ```
 
-The validator reports referenced NPC emotes that have not been generated yet.
+The validator reports referenced NPC emotes that have not been generated yet and catches regressions where dialogue stops using the generated emote set.
 
 ### Prompt Template
 

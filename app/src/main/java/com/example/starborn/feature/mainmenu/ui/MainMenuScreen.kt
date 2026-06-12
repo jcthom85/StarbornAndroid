@@ -10,6 +10,8 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -61,7 +63,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-private enum class StartMode { NORMAL, DEBUG }
+private enum class StartMode { NORMAL, DEBUG, ROOM_ITEMS, SCAVENGER, HEAVY_LIFTING, CHECKPOINT, DEEP_MINE, RED_ALERT, LAUNCH, FIRST_COMBAT, ENEMY_PARTY, PRESENCE_STRESS }
 
 private val TitleGold = Color(0xFFFFC857)
 private val TitleAmber = Color(0xFFFF9F2E)
@@ -158,6 +160,66 @@ fun MainMenuScreen(
                     onFailure = onFailure
                 )
             }
+            StartMode.ROOM_ITEMS -> {
+                viewModel.startNewGameAtRoomItems(
+                    onComplete = { onStartGame() },
+                    onFailure = onFailure
+                )
+            }
+            StartMode.SCAVENGER -> {
+                viewModel.startNewGameAtScavengerStash(
+                    onComplete = { onStartGame() },
+                    onFailure = onFailure
+                )
+            }
+            StartMode.HEAVY_LIFTING -> {
+                viewModel.startNewGameAtHeavyLifting(
+                    onComplete = { onStartGame() },
+                    onFailure = onFailure
+                )
+            }
+            StartMode.CHECKPOINT -> {
+                viewModel.startNewGameAtCheckpoint(
+                    onComplete = { onStartGame() },
+                    onFailure = onFailure
+                )
+            }
+            StartMode.DEEP_MINE -> {
+                viewModel.startNewGameAtDeepMine(
+                    onComplete = { onStartGame() },
+                    onFailure = onFailure
+                )
+            }
+            StartMode.RED_ALERT -> {
+                viewModel.startNewGameAtRedAlert(
+                    onComplete = { onStartGame() },
+                    onFailure = onFailure
+                )
+            }
+            StartMode.LAUNCH -> {
+                viewModel.startNewGameAtLaunch(
+                    onComplete = { onStartGame() },
+                    onFailure = onFailure
+                )
+            }
+            StartMode.FIRST_COMBAT -> {
+                viewModel.startNewGameAtFirstCombat(
+                    onComplete = { onStartGame() },
+                    onFailure = onFailure
+                )
+            }
+            StartMode.ENEMY_PARTY -> {
+                viewModel.startNewGameAtEnemyPartyCombat(
+                    onComplete = { onStartGame() },
+                    onFailure = onFailure
+                )
+            }
+            StartMode.PRESENCE_STRESS -> {
+                viewModel.startNewGameAtPresenceStress(
+                    onComplete = { onStartGame() },
+                    onFailure = onFailure
+                )
+            }
             null -> Unit
         }
     }
@@ -206,6 +268,8 @@ fun MainMenuScreen(
                 .systemBarsPadding()
                 .widthIn(max = 460.dp)
                 .fillMaxWidth()
+                .heightIn(max = if (compactHeight) 430.dp else 560.dp)
+                .verticalScroll(rememberScrollState())
                 .padding(horizontal = 30.dp, vertical = if (compactHeight) 22.dp else 34.dp),
             verticalArrangement = Arrangement.spacedBy(13.dp),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -219,6 +283,56 @@ fun MainMenuScreen(
             StarbornTitleButton(
                 text = "Debug: Full Inventory",
                 onClick = { pendingStartMode = StartMode.DEBUG },
+                enabled = pendingStartMode == null
+            )
+            StarbornTitleButton(
+                text = "Debug: Room Items",
+                onClick = { pendingStartMode = StartMode.ROOM_ITEMS },
+                enabled = pendingStartMode == null
+            )
+            StarbornTitleButton(
+                text = "Debug: Scavenger",
+                onClick = { pendingStartMode = StartMode.SCAVENGER },
+                enabled = pendingStartMode == null
+            )
+            StarbornTitleButton(
+                text = "Debug: Heavy Lifting",
+                onClick = { pendingStartMode = StartMode.HEAVY_LIFTING },
+                enabled = pendingStartMode == null
+            )
+            StarbornTitleButton(
+                text = "Debug: Checkpoint",
+                onClick = { pendingStartMode = StartMode.CHECKPOINT },
+                enabled = pendingStartMode == null
+            )
+            StarbornTitleButton(
+                text = "Debug: Deep Mine",
+                onClick = { pendingStartMode = StartMode.DEEP_MINE },
+                enabled = pendingStartMode == null
+            )
+            StarbornTitleButton(
+                text = "Debug: Red Alert",
+                onClick = { pendingStartMode = StartMode.RED_ALERT },
+                enabled = pendingStartMode == null
+            )
+            StarbornTitleButton(
+                text = "Debug: The Launch",
+                onClick = { pendingStartMode = StartMode.LAUNCH },
+                enabled = pendingStartMode == null
+            )
+            StarbornTitleButton(
+                text = "Debug: First Combat",
+                onClick = { pendingStartMode = StartMode.FIRST_COMBAT },
+                enabled = pendingStartMode == null
+            )
+            StarbornTitleButton(
+                text = "Debug: Enemy Party",
+                onClick = { pendingStartMode = StartMode.ENEMY_PARTY },
+                enabled = pendingStartMode == null
+            )
+            StarbornTitleButton(
+                text = "Debug: Presence Stress",
+                onClick = { pendingStartMode = StartMode.PRESENCE_STRESS },
                 enabled = pendingStartMode == null
             )
             StarbornTitleButton(

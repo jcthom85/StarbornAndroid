@@ -15,14 +15,11 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
 import java.io.File
 import com.example.starborn.domain.fishing.FishingData
 import com.example.starborn.domain.model.TinkeringRecipe
 import com.example.starborn.domain.model.FirstAidRecipe
 
-@RunWith(RobolectricTestRunner::class)
 class DialogEventsLoadingTest {
 
     @Test

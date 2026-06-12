@@ -4,6 +4,7 @@ import com.example.starborn.data.assets.WorldAssetDataSource
 import com.example.starborn.data.repository.ThemeRepository
 import com.example.starborn.domain.audio.AudioBindings
 import com.example.starborn.domain.audio.AudioRouter
+import com.example.starborn.domain.combat.CombatAction
 import com.example.starborn.domain.combat.CombatEngine
 import com.example.starborn.domain.combat.CombatOutcome
 import com.example.starborn.domain.combat.CombatReward
@@ -38,6 +39,8 @@ import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -1021,6 +1024,217 @@ class CombatViewModelTest {
 
         val setupIds = capturedSetup?.enemyParty?.map { it.id }
         assertEquals(listOf("${enemy.id}#1", "${enemy.id}#2"), setupIds)
+    }
+
+    @Test
+    fun enemyBasicActionClearsConsecutiveSkillPenalty() {
+        val viewModel = createMinimalCombatViewModel(enemySkillId = "flashbang")
+
+        val recordAction = CombatViewModel::class.java.getDeclaredMethod(
+            "recordEnemyActionUse",
+            CombatAction::class.java
+        )
+        recordAction.isAccessible = true
+        val diversityPenalty = CombatViewModel::class.java.getDeclaredMethod(
+            "diversityPenalty",
+            String::class.java,
+            String::class.java
+        )
+        diversityPenalty.isAccessible = true
+
+        recordAction.invoke(
+            viewModel,
+            CombatAction.SkillUse("scrap_bandit", "flashbang", listOf("nova"))
+        )
+        val penaltyAfterSkill = diversityPenalty.invoke(
+            viewModel,
+            "scrap_bandit",
+            "flashbang"
+        ) as Double
+
+        recordAction.invoke(
+            viewModel,
+            CombatAction.BasicAttack("scrap_bandit", "nova")
+        )
+        val penaltyAfterBasic = diversityPenalty.invoke(
+            viewModel,
+            "scrap_bandit",
+            "flashbang"
+        ) as Double
+
+        assertEquals(17.0, penaltyAfterSkill, 0.001)
+        assertEquals(7.0, penaltyAfterBasic, 0.001)
+    }
+
+    @Test
+    fun readyEnemyCanActBehindReadyPlayerWhenMenuIsNotOpen() {
+        val viewModel = createMinimalCombatViewModel(enemySkillId = "suppressive_fire")
+        val readyQueueField = CombatViewModel::class.java.getDeclaredField("readyQueue")
+        readyQueueField.isAccessible = true
+        @Suppress("UNCHECKED_CAST")
+        val readyQueue = readyQueueField.get(viewModel) as MutableList<String>
+        readyQueue.clear()
+        readyQueue.add("nova")
+        readyQueue.add("scrap_bandit")
+
+        val tryProcessEnemyTurns = CombatViewModel::class.java.getDeclaredMethod("tryProcessEnemyTurns")
+        tryProcessEnemyTurns.isAccessible = true
+        tryProcessEnemyTurns.invoke(viewModel)
+
+        val enemyTurnJobField = CombatViewModel::class.java.getDeclaredField("enemyTurnJob")
+        enemyTurnJobField.isAccessible = true
+        assertNotNull(enemyTurnJobField.get(viewModel))
+    }
+
+    @Test
+    fun readyEnemyCannotActWhilePlayerCommandMenuIsOpen() {
+        val viewModel = createMinimalCombatViewModel(enemySkillId = "suppressive_fire")
+        val readyQueueField = CombatViewModel::class.java.getDeclaredField("readyQueue")
+        readyQueueField.isAccessible = true
+        @Suppress("UNCHECKED_CAST")
+        val readyQueue = readyQueueField.get(viewModel) as MutableList<String>
+        readyQueue.clear()
+        readyQueue.add("nova")
+        readyQueue.add("scrap_bandit")
+
+        viewModel.selectReadyPlayer("nova")
+
+        val tryProcessEnemyTurns = CombatViewModel::class.java.getDeclaredMethod("tryProcessEnemyTurns")
+        tryProcessEnemyTurns.isAccessible = true
+        tryProcessEnemyTurns.invoke(viewModel)
+
+        val enemyTurnJobField = CombatViewModel::class.java.getDeclaredField("enemyTurnJob")
+        enemyTurnJobField.isAccessible = true
+        assertNull(enemyTurnJobField.get(viewModel))
+    }
+
+    @Test
+    fun dismissingPlayerCommandMenuDefersReadyEnemyAction() {
+        val viewModel = createMinimalCombatViewModel(enemySkillId = "suppressive_fire")
+        val readyQueueField = CombatViewModel::class.java.getDeclaredField("readyQueue")
+        readyQueueField.isAccessible = true
+        @Suppress("UNCHECKED_CAST")
+        val readyQueue = readyQueueField.get(viewModel) as MutableList<String>
+        readyQueue.clear()
+        readyQueue.add("nova")
+        readyQueue.add("scrap_bandit")
+
+        viewModel.selectReadyPlayer("nova")
+        viewModel.dismissActionMenu("nova")
+
+        val tryProcessEnemyTurns = CombatViewModel::class.java.getDeclaredMethod("tryProcessEnemyTurns")
+        tryProcessEnemyTurns.isAccessible = true
+        tryProcessEnemyTurns.invoke(viewModel)
+
+        val enemyTurnJobField = CombatViewModel::class.java.getDeclaredField("enemyTurnJob")
+        enemyTurnJobField.isAccessible = true
+        assertNull(enemyTurnJobField.get(viewModel))
+    }
+
+    private fun createMinimalCombatViewModel(enemySkillId: String): CombatViewModel {
+        val player = Player(
+            id = "nova",
+            name = "Nova",
+            level = 1,
+            xp = 0,
+            hp = 120,
+            strength = 10,
+            vitality = 8,
+            agility = 6,
+            focus = 5,
+            luck = 4,
+            skills = listOf("nova_strike"),
+            miniIconPath = "images/portraits/nova.png"
+        )
+        val enemy = Enemy(
+            id = "scrap_bandit",
+            name = "Scrap Bandit",
+            tier = "normal",
+            hp = 90,
+            strength = 8,
+            vitality = 6,
+            agility = 5,
+            focus = 3,
+            luck = 2,
+            speed = 4,
+            element = "physical",
+            resistances = Resistances(),
+            abilities = listOf(enemySkillId),
+            flavor = "A scavenger looking for trouble.",
+            xpReward = 40,
+            creditReward = 20,
+            drops = emptyList(),
+            description = "An opportunistic raider.",
+            portrait = "",
+            sprite = emptyList(),
+            attack = 12,
+            apReward = 1
+        )
+        val playerSkill = Skill(
+            id = "nova_strike",
+            name = "Nova Strike",
+            character = player.id,
+            type = "attack",
+            basePower = 20,
+            cooldown = 0,
+            description = "A swift strike."
+        )
+        val enemySkill = Skill(
+            id = enemySkillId,
+            name = "Flashbang",
+            character = "enemy",
+            type = "enemy",
+            basePower = 25,
+            cooldown = 2,
+            description = "Disorienting burst."
+        )
+        val worldAssets = mock<WorldAssetDataSource> {
+            on { loadCharacters() } doReturn listOf(player)
+            on { loadEnemies() } doReturn listOf(enemy)
+            on { loadSkills() } doReturn listOf(playerSkill, enemySkill)
+            on { loadRooms() } doReturn emptyList()
+            on { loadSkillNodes() } doReturn emptyMap()
+        }
+        val combatEngine = mock<CombatEngine> {
+            on { beginEncounter(any()) } doAnswer { invocation ->
+                val setup = invocation.arguments[0] as CombatSetup
+                val combatants = setup.allCombatants.associate { combatant ->
+                    combatant.id to CombatantState(
+                        combatant = combatant,
+                        hp = combatant.stats.maxHp,
+                        stability = combatant.stats.stability
+                    )
+                }
+                CombatState(
+                    turnOrder = setup.allCombatants.mapIndexed { index, combatant ->
+                        TurnSlot(combatant.id, setup.allCombatants.size - index)
+                    },
+                    activeTurnIndex = 0,
+                    combatants = combatants
+                )
+            }
+        }
+        val inventoryService = InventoryService(FakeItemCatalog()).apply { loadItems() }
+        val themeRepository = mock<ThemeRepository> {
+            on { getTheme(any()) } doReturn null
+            on { getStyle(any()) } doReturn null
+        }
+
+        return CombatViewModel(
+            worldAssets = worldAssets,
+            combatEngine = combatEngine,
+            statusRegistry = StatusRegistry(),
+            sessionStore = GameSessionStore(),
+            inventoryService = inventoryService,
+            itemCatalog = FakeItemCatalog(),
+            levelingManager = LevelingManager(LevelingData(mapOf("1" to 0, "2" to 100))),
+            progressionData = ProgressionData(),
+            audioRouter = AudioRouter(AudioBindings()),
+            themeRepository = themeRepository,
+            environmentThemeManager = EnvironmentThemeManager(themeRepository),
+            encounterCoordinator = EncounterCoordinator(),
+            enemyIds = listOf(enemy.id)
+        )
     }
 
     private class FakeItemCatalog : ItemCatalog {

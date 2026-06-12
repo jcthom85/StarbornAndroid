@@ -10,24 +10,6 @@
       "tags": ["title", "explore", "acoustic", "orchestral"]
     },
     {
-      "id": "music_hub1",
-      "type": "music",
-      "loop": true,
-      "fade_in_ms": 1200,
-      "fade_out_ms": 1000,
-      "gain": 1.0,
-      "tags": ["hub", "calm"]
-    },
-    {
-      "id": "music_hub2",
-      "type": "music",
-      "loop": true,
-      "fade_in_ms": 1400,
-      "fade_out_ms": 1100,
-      "gain": 1.0,
-      "tags": ["hub", "mellow"]
-    },
-    {
       "id": "music_w1_homestead_explore",
       "type": "music",
       "loop": true,
@@ -179,6 +161,51 @@
       "fade_out_ms": 850,
       "gain": 0.82,
       "tags": ["cave", "moist"]
+    },
+    {
+      "id": "amb_colony_vent_crowd",
+      "type": "ambient",
+      "loop": true,
+      "fade_in_ms": 900,
+      "fade_out_ms": 900,
+      "gain": 0.72,
+      "tags": ["world_1", "homestead", "industrial", "crowd"]
+    },
+    {
+      "id": "amb_logistics_machinery",
+      "type": "ambient",
+      "loop": true,
+      "fade_in_ms": 900,
+      "fade_out_ms": 900,
+      "gain": 0.78,
+      "tags": ["world_1", "logistics", "industrial", "machinery"]
+    },
+    {
+      "id": "amb_server_cold",
+      "type": "ambient",
+      "loop": true,
+      "fade_in_ms": 900,
+      "fade_out_ms": 900,
+      "gain": 0.76,
+      "tags": ["world_1", "server", "cold", "electronics"]
+    },
+    {
+      "id": "amb_launch_alarm",
+      "type": "ambient",
+      "loop": true,
+      "fade_in_ms": 700,
+      "fade_out_ms": 900,
+      "gain": 0.80,
+      "tags": ["world_1", "launch", "alarm", "industrial"]
+    },
+    {
+      "id": "amb_dust_storm",
+      "type": "ambient",
+      "loop": true,
+      "fade_in_ms": 900,
+      "fade_out_ms": 900,
+      "gain": 0.78,
+      "tags": ["world_1", "dust", "wind", "industrial"]
     },
     {
       "id": "music_victory_theme",

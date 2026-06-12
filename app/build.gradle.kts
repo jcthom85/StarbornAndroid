@@ -1,3 +1,4 @@
+import org.gradle.api.tasks.Exec
 import org.gradle.api.tasks.testing.Test
 
 plugins {
@@ -68,6 +69,7 @@ dependencies {
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1")
     testImplementation("org.mockito:mockito-inline:5.2.0")
     testImplementation("org.mockito.kotlin:mockito-kotlin:5.2.1")
+    testImplementation("org.json:json:20240303")
     implementation("androidx.compose.material:material-icons-extended")
     implementation("com.squareup.moshi:moshi:1.15.1")
     implementation("com.squareup.moshi:moshi-kotlin:1.15.1")
@@ -78,6 +80,109 @@ dependencies {
     implementation(libs.androidx.media3.exoplayer)
     implementation(libs.androidx.media3.datasource)
     implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
+}
+
+tasks.withType<Test>().configureEach {
+    val isolatedHome = layout.buildDirectory.dir("test-home")
+    val isolatedTmp = layout.buildDirectory.dir("test-tmp")
+    systemProperty("user.home", isolatedHome.get().asFile.absolutePath)
+    systemProperty("java.io.tmpdir", isolatedTmp.get().asFile.absolutePath)
+    jvmArgs("-Djava.io.tmpdir=${isolatedTmp.get().asFile.absolutePath}")
+    environment("TMP", isolatedTmp.get().asFile.absolutePath)
+    environment("TEMP", isolatedTmp.get().asFile.absolutePath)
+    doFirst {
+        isolatedHome.get().asFile.mkdirs()
+        isolatedTmp.get().asFile.mkdirs()
+    }
+}
+
+val isWindowsHost = System.getProperty("os.name").lowercase().contains("windows")
+val powerShellExecutable = if (isWindowsHost) "powershell" else "pwsh"
+val powerShellBaseArgs = if (isWindowsHost) {
+    listOf("-NoProfile", "-ExecutionPolicy", "Bypass", "-File")
+} else {
+    listOf("-NoProfile", "-File")
+}
+val pythonExecutable = if (isWindowsHost) "python" else "python3"
+
+fun registerPowerShellValidationTask(
+    name: String,
+    descriptionText: String,
+    scriptPath: String,
+    vararg scriptArgs: String
+) = tasks.register<Exec>(name) {
+    description = descriptionText
+    group = "verification"
+    workingDir = rootProject.projectDir
+    commandLine(
+        listOf(powerShellExecutable) +
+            powerShellBaseArgs +
+            listOf(scriptPath) +
+            scriptArgs.toList()
+    )
+}
+
+val validateWorld1Content = registerPowerShellValidationTask(
+    "validateWorld1Content",
+    "Validates World 1 rooms, references, art, and audio coverage.",
+    "scripts/validate_world1_content.ps1",
+    "-StrictArt",
+    "-StrictAudio",
+    "-StrictInlineActions"
+)
+
+val validateRoomPresence = registerPowerShellValidationTask(
+    "validateRoomPresence",
+    "Validates room NPC presence rules and duplicate availability.",
+    "scripts/validate_room_presence.ps1",
+    "-StrictDuplicates"
+)
+
+val validateAudioReferences = registerPowerShellValidationTask(
+    "validateAudioReferences",
+    "Validates referenced audio cues against the audio catalog.",
+    "scripts/validate_audio_references.ps1",
+    "-StrictCatalog"
+)
+
+val validateProgressionReferences = registerPowerShellValidationTask(
+    "validateProgressionReferences",
+    "Validates World 1 progression, milestone, and dialogue references.",
+    "scripts/validate_progression_references.ps1",
+    "-StrictMilestones"
+)
+
+val validateWorld1Balance = registerPowerShellValidationTask(
+    "validateWorld1Balance",
+    "Validates World 1 encounter/reward balance guardrails.",
+    "scripts/validate_world1_balance.ps1",
+    "-Strict"
+)
+
+val validateDialogueEmotes = tasks.register<Exec>("validateDialogueEmotes") {
+    description = "Validates used dialogue/cinematic/shop emote references and minimum emote coverage."
+    group = "verification"
+    workingDir = rootProject.projectDir
+    commandLine(
+        pythonExecutable,
+        "scripts/validate_dialogue_emotes.py",
+        "--fail-on-missing",
+        "--min-uses",
+        "12"
+    )
+}
+
+val validateWorld1Assets = tasks.register("validateWorld1Assets") {
+    description = "Runs all World 1 content, audio, progression, balance, and dialogue emote validators."
+    group = "verification"
+    dependsOn(
+        validateWorld1Content,
+        validateRoomPresence,
+        validateAudioReferences,
+        validateProgressionReferences,
+        validateWorld1Balance,
+        validateDialogueEmotes
+    )
 }
 
 protobuf {
@@ -100,6 +205,7 @@ afterEvaluate {
     tasks.register<Test>("runAssetIntegrity") {
         description = "Runs DataIntegrityTest to validate events, cinematics, and tutorial assets."
         group = "verification"
+        dependsOn(validateWorld1Assets)
         testClassesDirs = testDebugUnitTest.get().testClassesDirs
         classpath = testDebugUnitTest.get().classpath
         include("**/DataIntegrityTest.class")

@@ -13,8 +13,8 @@
     "luck": 1,
     "speed": 8,
     "element": "physical",
-    "weaknesses": {
-      "burn": 200,
+    "resistances": {
+      "burn": -100,
       "shock": 50
     },
     "tags": [
@@ -51,8 +51,8 @@
     "luck": 4,
     "speed": 14,
     "element": "acid",
-    "weaknesses": {
-      "shock": 200,
+    "resistances": {
+      "shock": -100,
       "physical": 50
     },
     "tags": [
@@ -89,9 +89,9 @@
     "luck": 2,
     "speed": 10,
     "element": "physical",
-    "weaknesses": {
-      "acid": 200,
-      "burn": 200
+    "resistances": {
+      "acid": -100,
+      "burn": -100
     },
     "tags": [
       "human",
@@ -110,7 +110,7 @@
         "chance": 0.25
       },
       {
-        "id": "scrap",
+        "id": "scrap_metal",
         "chance": 0.5
       }
     ],
@@ -131,10 +131,8 @@
     "luck": 1,
     "speed": 7,
     "element": "physical",
-    "weaknesses": {
-      "shock": 200
-    },
     "resistances": {
+      "shock": -100,
       "physical": 0
     },
     "tags": [
@@ -173,9 +171,9 @@
     "luck": 0,
     "speed": 12,
     "element": "shock",
-    "weaknesses": {
-      "shock": 200,
-      "physical": 200,
+    "resistances": {
+      "shock": -100,
+      "physical": -100,
       "acid": 50
     },
     "tags": [
@@ -191,7 +189,7 @@
     "credit_reward": 15,
     "drops": [
       {
-        "id": "wiring",
+        "id": "wiring_bundle",
         "chance": 0.6
       },
       {
@@ -216,9 +214,9 @@
     "luck": 0,
     "speed": 5,
     "element": "physical",
-    "weaknesses": {
-      "acid": 200,
-      "shock": 150,
+    "resistances": {
+      "acid": -100,
+      "shock": -50,
       "physical": 50,
       "burn": 50
     },
@@ -261,11 +259,9 @@
     "luck": 5,
     "speed": 9,
     "element": "physical",
-    "weaknesses": {
-      "shock": 150,
-      "acid": 100
-    },
     "resistances": {
+      "shock": -50,
+      "acid": 0,
       "physical": 0
     },
     "tags": [
@@ -280,8 +276,8 @@
       "iron_warden_gas_grenade"
     ],
     "flavor": "The Sector Commander, encased in pressurized atmospheric power armor to withstand the deep relic's current. He asserts absolute control by generating acoustic white-noise static that completely erodes neural coherence.",
-    "xp_reward": 1000,
-    "credit_reward": 800,
+    "xp_reward": 350,
+    "credit_reward": 225,
     "drops": [
       {
         "id": "warden_keycard",

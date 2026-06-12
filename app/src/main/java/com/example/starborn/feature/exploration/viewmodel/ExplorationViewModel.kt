@@ -128,6 +128,7 @@ private const val STELLARIUM_BREAKER_ALERT_STATE_KEY = "breaker_alert_shown"
 private const val STELLARIUM_BREAKER_FIRST_MESSAGE = "Power hums toward the hub."
 private const val STELLARIUM_BREAKER_SECOND_MESSAGE = "You hear something loud in the next room."
 private const val EXIT_KEY_SEPARATOR = "::"
+private const val ENCOUNTER_CLEARED_STATE_PREFIX = "encounter_cleared:"
 private const val BAG_TUTORIAL_ID = "bag_basics"
 
 private data class ShopDialogueSession(
@@ -243,6 +244,7 @@ class ExplorationViewModel(
     private var skillsById: Map<String, Skill> = emptyMap()
     private var enemyById: Map<String, Enemy> = emptyMap()
     private var enemyTierById: Map<String, String> = emptyMap()
+    private var npcDialogueNameByKey: Map<String, String> = emptyMap()
     private var skillTreesByCharacter: Map<String, SkillTreeDefinition> = emptyMap()
     private var tutorialsEnabled: Boolean = true
     private val itemUseController = ItemUseController(
@@ -420,10 +422,7 @@ class ExplorationViewModel(
                 questId?.let { questRuntimeManager.recordQuestStarted(it) }
             },
             onQuestCompleted = { questId ->
-                questId?.let {
-                    questRuntimeManager.markQuestCompleted(it)
-                    questRuntimeManager.recordQuestCompleted(it)
-                }
+                handleEventQuestCompleted(questId)
             },
             onQuestFailed = { questId, reason ->
                 questId?.let { questRuntimeManager.markQuestFailed(it, reason) }
@@ -444,15 +443,22 @@ class ExplorationViewModel(
                     finishInitialFade(reason = "lights_out_complete")
                 }
                 milestoneManager.handleMilestone(milestone, null)
+                milestoneManager.applyEffectsFor(milestone)
 
                 itemPopupByMilestone[milestone]?.let { spec ->
                     val itemName = inventoryService.itemDisplayName(spec.itemId)
+                    val itemLabel = if (spec.quantity == 1) itemName else "${spec.quantity} x $itemName"
                     val message = if (spec.quantity == 1) {
                         "Recovered $itemName."
                     } else {
                         "Recovered ${spec.quantity} x $itemName."
                     }
-                    enqueueEventAnnouncement(spec.title, message)
+                    enqueueEventAnnouncement(
+                        title = spec.title,
+                        message = message,
+                        eyebrow = "Recovered",
+                        items = listOf(itemLabel)
+                    )
                 }
             },
             onNarration = { message, tapToDismiss ->
@@ -479,6 +485,14 @@ class ExplorationViewModel(
             onAudioLayerCommand = { handleAudioLayerCommand(it) }
         )
     )
+
+    private fun handleEventQuestCompleted(questId: String?) {
+        questId?.let {
+            questRuntimeManager.markQuestCompleted(it)
+            questRuntimeManager.recordQuestCompleted(it)
+            eventManager.handleTrigger("quest_stage_complete", EventPayload.QuestStage(it))
+        }
+    }
 
     private fun observeUserSettings() {
         viewModelScope.launch(dispatchers.io) {
@@ -695,14 +709,18 @@ class ExplorationViewModel(
     private fun enqueueEventAnnouncement(
         title: String?,
         message: String,
-        accentColor: Long = EVENT_ANNOUNCEMENT_ACCENT
+        accentColor: Long = EVENT_ANNOUNCEMENT_ACCENT,
+        eyebrow: String? = null,
+        items: List<String> = emptyList()
     ) {
         viewModelScope.launch(dispatchers.main) {
             val announcement = EventAnnouncementUi(
                 id = ++nextEventAnnouncementId,
                 title = title?.takeIf { it.isNotBlank() },
                 message = message,
-                accentColor = accentColor
+                accentColor = accentColor,
+                eyebrow = eyebrow?.takeIf { it.isNotBlank() },
+                items = items.filter { it.isNotBlank() }
             )
             if (_uiState.value.eventAnnouncement == null) {
                 _uiState.update { it.copy(eventAnnouncement = announcement) }
@@ -728,6 +746,12 @@ class ExplorationViewModel(
         if (enemyIds.isEmpty()) return
         val currentRoom = _uiState.value.currentRoom ?: return
         if (roomEnemyParties(currentRoom).isEmpty()) return
+        setRoomStateValue(
+            roomIdOrNull = currentRoom.id,
+            stateKey = encounterClearedStateKey(enemyIds),
+            value = true,
+            notify = false
+        )
         val updatedRoom = removeDefeatedEnemies(currentRoom, enemyIds)
         if (updatedRoom.enemies != currentRoom.enemies || updatedRoom.enemyParties != currentRoom.enemyParties) {
             roomsById = roomsById + (updatedRoom.id to updatedRoom)
@@ -1219,27 +1243,20 @@ class ExplorationViewModel(
         return room.connections.filterKeys { it.equals(allowed, ignoreCase = true) }
     }
 
-    private fun unexploredAdjacentDirections(room: Room?): Set<String> {
-        if (room == null) return emptySet()
-        return room.connections.mapNotNull { (direction, targetId) ->
-            val normalized = direction.lowercase(Locale.getDefault())
-            val destination = targetId?.takeIf { it.isNotBlank() } ?: return@mapNotNull null
-            if (visitedRooms.contains(destination) || discoveredRooms.contains(destination)) return@mapNotNull null
-            normalized
-        }.toSet()
-    }
-
     private fun buildDirectionIndicators(room: Room?): Map<String, DirectionIndicatorUi> {
         if (room == null) return emptyMap()
         val indicators = mutableMapOf<String, DirectionIndicatorUi>()
+        val visibleDirections = visibleConnections(room).keys
+            .map { it.lowercase(Locale.getDefault()) }
+            .toSet()
         room.connections.keys.forEach { direction ->
             val status = resolveBlockedIndicatorStatus(room, direction)
             val key = direction.lowercase(Locale.getDefault())
-            if (status != null) {
+            if (status != null && (!isRoomDark(room) || visibleDirections.contains(key))) {
                 indicators[key] = DirectionIndicatorUi(direction = key, status = status)
             }
         }
-        unexploredAdjacentDirections(room).forEach { direction ->
+        visibleDirections.forEach { direction ->
             if (!indicators.containsKey(direction)) {
                 indicators[direction] = DirectionIndicatorUi(
                     direction = direction,
@@ -1272,7 +1289,7 @@ class ExplorationViewModel(
     private fun BlockedDirection.toIndicatorStatus(): DirectionIndicatorStatus? =
         when (type.lowercase(Locale.getDefault())) {
             "enemy" -> DirectionIndicatorStatus.ENEMY
-            "lock" -> DirectionIndicatorStatus.LOCKED
+            "lock", "key" -> DirectionIndicatorStatus.LOCKED
             else -> null
         }
 
@@ -1281,7 +1298,7 @@ class ExplorationViewModel(
         if (isDirectionUnlocked(room.id, normalized)) return false
         return when (block.type.lowercase(Locale.getDefault())) {
             "enemy" -> hasBlockingEnemies(room, normalized)
-            "lock" -> {
+            "lock", "key" -> {
                 if (!requirementsMet(block.requires)) return true
                 val keyId = block.keyId?.takeIf { it.isNotBlank() }
                 keyId != null && !inventoryService.hasItem(keyId)
@@ -1397,8 +1414,12 @@ class ExplorationViewModel(
                     val overlay = current.skillTreeOverlay?.characterId?.let { characterId ->
                         buildSkillTreeOverlay(characterId, newState)
                     }
+                    val visibleNpcs = current.currentRoom?.let { room ->
+                        visibleNpcsForRoom(room, newState.completedMilestones)
+                    } ?: current.npcs
                     current.copy(
                         completedMilestones = newState.completedMilestones,
+                        npcs = visibleNpcs,
                         partyStatus = partyStatus,
                         progressionSummary = progressionSummary,
                         equippedItems = newState.equippedItems,
@@ -1706,6 +1727,21 @@ class ExplorationViewModel(
             skillTreesByCharacter = skillTrees.associateBy { it.character }
             enemyById = enemies.associateBy { it.id }
             enemyTierById = enemyById.mapValues { it.value.tier }
+            npcDialogueNameByKey = buildMap {
+                npcs.forEach { npc ->
+                    val dialogueName = npc.name.trim().ifBlank { npc.id.orEmpty().trim() }
+                    if (dialogueName.isBlank()) return@forEach
+                    val keys = buildList<String?> {
+                        add(npc.name)
+                        add(npc.id)
+                        addAll(npc.aliases)
+                        add(npc.name.substringAfterLast(' ', missingDelimiterValue = npc.name))
+                        add(npc.name.substringBefore(' ', missingDelimiterValue = npc.name))
+                    }
+                    keys.mapNotNull { key -> key?.trim()?.takeIf { it.isNotBlank() } }
+                        .forEach { key -> put(key.lowercase(Locale.getDefault()), dialogueName) }
+                }
+            }
 
             roomsById = rooms.associateBy { it.id }
             themeByRoomId = rooms.associate { it.id to themeRepository.getTheme(it.env) }
@@ -1753,7 +1789,10 @@ class ExplorationViewModel(
                 registerPortrait(character.miniIconPath, character.name, character.id)
                 registerCharacterEmotes(character.id, character.name)
             }
-            players.firstOrNull()?.let { registerPortrait(it.miniIconPath, "player") }
+            players.firstOrNull()?.let {
+                registerPortrait(it.miniIconPath, "player")
+                registerCharacterEmotes(it.id, "player")
+            }
             npcs.forEach { npc ->
                 val keys = mutableListOf<String?>()
                 keys += npc.name
@@ -2027,7 +2066,8 @@ class ExplorationViewModel(
     }
 
     private fun startImmediateDialogue(npcName: String): Boolean {
-        val session = dialogueService.startDialogue(npcName) ?: return false
+        val dialogueName = resolveNpcDialogueName(npcName)
+        val session = dialogueService.startDialogue(dialogueName) ?: return false
         activeDialogueSession = session
         activeDialogueNpcName = npcName
         lastDialogueVoiceCue = null
@@ -2046,7 +2086,8 @@ class ExplorationViewModel(
 
     fun onNpcInteraction(npcName: String) {
         Log.d(LOG_TAG, "NPC interaction: $npcName (quest=${sessionStore.state.value.activeQuests.joinToString()})")
-        val session = dialogueService.startDialogue(npcName)
+        val dialogueName = resolveNpcDialogueName(npcName)
+        val session = dialogueService.startDialogue(dialogueName)
         activeDialogueSession = session
         activeDialogueNpcName = npcName
         playUiCue("click")
@@ -2057,14 +2098,14 @@ class ExplorationViewModel(
                 dialogueChoices = session?.choices()?.map { option ->
                     DialogueChoiceUi(option.id, option.text)
                 } ?: emptyList(),
-                statusMessage = session?.let { null } ?: "No dialogue available for $npcName yet."
+                statusMessage = session?.let { null } ?: "No dialogue available for $dialogueName yet."
             )
         }
         session?.current()?.voiceCue?.let { playVoiceCue(it) }
-        eventManager.handleTrigger("talk_to", EventPayload.TalkTo(npcName))
-        eventManager.handleTrigger("npc_interaction", EventPayload.TalkTo(npcName))
+        handleNpcTrigger("talk_to", npcName, dialogueName)
+        handleNpcTrigger("npc_interaction", npcName, dialogueName)
         if (session == null) {
-            eventManager.handleTrigger("dialogue_closed", EventPayload.TalkTo(npcName))
+            handleNpcTrigger("dialogue_closed", npcName, dialogueName)
         }
     }
 
@@ -2079,7 +2120,7 @@ class ExplorationViewModel(
             _uiState.update { it.copy(activeDialogue = null, dialogueChoices = emptyList()) }
             lastDialogueVoiceCue = null
             if (!npcName.isNullOrBlank()) {
-                eventManager.handleTrigger("dialogue_closed", EventPayload.TalkTo(npcName))
+                handleNpcTrigger("dialogue_closed", npcName, resolveNpcDialogueName(npcName))
             }
         } else {
             _uiState.update {
@@ -2105,7 +2146,7 @@ class ExplorationViewModel(
             _uiState.update { it.copy(activeDialogue = null, dialogueChoices = emptyList()) }
             lastDialogueVoiceCue = null
             if (!npcName.isNullOrBlank()) {
-                eventManager.handleTrigger("dialogue_closed", EventPayload.TalkTo(npcName))
+                handleNpcTrigger("dialogue_closed", npcName, resolveNpcDialogueName(npcName))
             }
         } else {
             _uiState.update {
@@ -2125,9 +2166,29 @@ class ExplorationViewModel(
         playVoiceCue(cueId, force = true)
     }
 
+    private fun resolveNpcDialogueName(npcName: String): String {
+        val key = npcName.trim().lowercase(Locale.getDefault())
+        return npcDialogueNameByKey[key] ?: npcName
+    }
+
+    private fun handleNpcTrigger(triggerType: String, rawNpcName: String, dialogueName: String) {
+        eventManager.handleTrigger(triggerType, EventPayload.TalkTo(rawNpcName))
+        if (!rawNpcName.equals(dialogueName, ignoreCase = true)) {
+            eventManager.handleTrigger(triggerType, EventPayload.TalkTo(dialogueName))
+        }
+    }
+
     fun onActionSelected(action: RoomAction) {
         playUiCue("click")
         dismissBlockedPrompt()
+        val actionHint = _uiState.value.actionHints[action.actionKey()]
+        if (actionHint?.locked == true) {
+            val message = actionHint.message?.takeIf { it.isNotBlank() }
+                ?: "That isn't available yet."
+            showInspection(message)
+            updateActionHints(_uiState.value.currentRoom)
+            return
+        }
         when (action) {
             is ToggleAction -> handleToggleAction(action)
             is ContainerAction -> handleContainerAction(action)
@@ -2652,6 +2713,13 @@ class ExplorationViewModel(
         }
     }
 
+    fun placeholderSaveSlots(): List<SaveSlotSummary> = buildList {
+        add(null.toSummary(GameSaveRepository.QUICKSAVE_SLOT, isQuick = true))
+        (1..3).forEach { slot ->
+            add(null.toSummary(slot, isQuick = false))
+        }
+    }
+
     private fun GameSessionSlotInfo?.toSummary(slot: Int, isQuick: Boolean): SaveSlotSummary {
         val state = this?.state
         val savedAt = this?.savedAtMillis
@@ -2831,6 +2899,9 @@ class ExplorationViewModel(
             }
             EncounterEnemyInstance(
                 enemyId = enemyId,
+                hp = match?.hp,
+                vitality = match?.vitality,
+                stability = match?.stability,
                 overrideDrops = match?.overrideDrops,
                 extraDrops = match?.extraDrops.orEmpty()
             )
@@ -3241,8 +3312,14 @@ class ExplorationViewModel(
                     mergedState[key] = value
                 }
             }
-            if (mergedState != room.state) {
-                updated[roomId] = room.copy(state = mergedState)
+            val stateMergedRoom = if (mergedState != room.state) {
+                room.copy(state = mergedState)
+            } else {
+                room
+            }
+            val encounterFilteredRoom = applyEncounterClearedStates(stateMergedRoom, states)
+            if (encounterFilteredRoom != room) {
+                updated[roomId] = encounterFilteredRoom
             }
         }
         roomsById = updated
@@ -3389,7 +3466,12 @@ class ExplorationViewModel(
         val room = roomsById[roomId] ?: return
         val updatedState = room.state.toMutableMap()
         updatedState[stateKey] = value
-        val updatedRoom = room.copy(state = updatedState)
+        var updatedRoom = room.copy(state = updatedState)
+        if (isEncounterClearedStateKey(stateKey) && value) {
+            defeatedEnemyIdsFromStateKey(stateKey)?.let { enemyIds ->
+                updatedRoom = removeDefeatedEnemies(updatedRoom, enemyIds)
+            }
+        }
         roomsById = roomsById.toMutableMap().apply { put(roomId, updatedRoom) }
         if (_uiState.value.currentRoom?.id == roomId) {
             val snapshot = roomStates[roomId]?.toMap().orEmpty()
@@ -3479,6 +3561,37 @@ class ExplorationViewModel(
                 pendingUnlockedAreas.add(areaId)
             }
         }
+    }
+
+    private fun encounterClearedStateKey(enemyIds: List<String>): String {
+        val canonicalIds = enemyIds
+            .map { it.trim() }
+            .filter { it.isNotBlank() }
+            .sorted()
+        return ENCOUNTER_CLEARED_STATE_PREFIX + canonicalIds.joinToString("|")
+    }
+
+    private fun isEncounterClearedStateKey(key: String): Boolean =
+        key.startsWith(ENCOUNTER_CLEARED_STATE_PREFIX)
+
+    private fun defeatedEnemyIdsFromStateKey(key: String): List<String>? {
+        if (!isEncounterClearedStateKey(key)) return null
+        val ids = key
+            .removePrefix(ENCOUNTER_CLEARED_STATE_PREFIX)
+            .split('|')
+            .map { it.trim() }
+            .filter { it.isNotBlank() }
+        return ids.takeIf { it.isNotEmpty() }
+    }
+
+    private fun applyEncounterClearedStates(room: Room, states: Map<String, Boolean>): Room {
+        var updated = room
+        states.forEach { (key, value) ->
+            if (!value) return@forEach
+            val enemyIds = defeatedEnemyIdsFromStateKey(key) ?: return@forEach
+            updated = removeDefeatedEnemies(updated, enemyIds)
+        }
+        return updated
     }
 
     private fun flushPendingUnlockedAreas() {
@@ -3886,8 +3999,13 @@ class ExplorationViewModel(
             else -> {
                 val status = action.conditionUnmetMessage?.takeIf { it.isNotBlank() }
                     ?: "Triggered ${action.name}"
-                postStatus(status)
-                triggerPlayerAction(action.actionEvent?.takeIf { it.isNotBlank() })
+                val eventId = action.actionEvent?.takeIf { it.isNotBlank() }
+                if (eventId == null) {
+                    showInspection(status)
+                } else {
+                    postStatus(status)
+                    triggerPlayerAction(eventId)
+                }
             }
         }
     }
@@ -3931,6 +4049,11 @@ class ExplorationViewModel(
                 it.copy(narrationPrompt = NarrationPrompt(message, tapToDismiss))
             }
         }
+    }
+
+    private fun showInspection(message: String) {
+        postStatus(message)
+        showNarration(message, tapToDismiss = true)
     }
 
     private fun showBlockedDirectionPrompt(direction: String, message: String, block: BlockedDirection?) {
@@ -4060,7 +4183,12 @@ class ExplorationViewModel(
                 val prefix = grantedItems.dropLast(1).joinToString(", ")
                 "Recovered $prefix and ${grantedItems.last()}."
             }
-            enqueueEventAnnouncement(title, announcement)
+            enqueueEventAnnouncement(
+                title = title,
+                message = announcement,
+                eyebrow = "Recovered",
+                items = grantedItems
+            )
         }
 
         triggerPlayerAction(action.actionEvent?.takeIf { it.isNotBlank() })
@@ -4089,7 +4217,7 @@ class ExplorationViewModel(
             val normalized = direction.lowercase(Locale.getDefault())
             if (isDirectionUnlocked(roomId, normalized)) return@forEach
             when (block.type.lowercase(Locale.getDefault())) {
-                "lock" -> {
+                "lock", "key" -> {
                     val requirementsMet = requirementsMet(block.requires)
                     val needsKey = !block.keyId.isNullOrBlank()
                     if (requirementsMet && !needsKey) {
@@ -4157,7 +4285,7 @@ class ExplorationViewModel(
                     DirectionEvaluation(blocked = false)
                 }
             }
-            "lock" -> {
+            "lock", "key" -> {
                 if (!requirementsMet(block.requires)) {
                     if (mode == DirectionEvaluationMode.ATTEMPT) {
                         handleBlockedDirectionCinematic(room.id, normalized, block)

@@ -36,6 +36,17 @@ class DialogueTriggerParserTest {
     }
 
     @Test
+    fun parsesCreditsAsRewardAction() {
+        val actions = DialogueTriggerParser.parse("give_credits:75,give_xp:40")
+
+        assertEquals(2, actions.size)
+        assertEquals("give_reward", actions[0].type)
+        assertEquals(75, actions[0].credits)
+        assertEquals("give_xp", actions[1].type)
+        assertEquals(40, actions[1].xp)
+    }
+
+    @Test
     fun ignoresEmptyValues() {
         val actions = DialogueTriggerParser.parse("start_quest:,give_item:")
         assertTrue(actions.isEmpty())

@@ -1,0 +1,28 @@
+appId: com.example.starborn
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "Debug: Scavenger"
+    timeout: 60000
+- tapOn: "Debug: Scavenger"
+- extendedWaitUntil:
+    visible: "Scrapper's Stall"
+    timeout: 15000
+- tapOn: "Open Contraband"
+- extendedWaitUntil:
+    visible: "Scrapper's Contraband"
+    timeout: 10000
+- assertVisible: "Pulse Grenade"
+- assertVisible: "Battery Pack"
+- assertVisible: "Scrap Metal"
+- assertVisible: "Buy"
+- assertVisible: "Sell"
+- tapOn: "Sell"
+- extendedWaitUntil:
+    visible: "You have nothing to sell."
+    timeout: 10000
+- tapOn: "Leave"
+- extendedWaitUntil:
+    visible: "Scrapper's Stall"
+    timeout: 10000

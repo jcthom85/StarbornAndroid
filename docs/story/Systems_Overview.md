@@ -33,6 +33,13 @@ Known tooling direction: a growing suite of editors and an AI assistant panel to
 - Actions can change the room description (stateful text).
 - Discovered exits persist for navigation clarity.
 - No typing: all movement and actions are UI-driven.
+
+## 3.1A Deferred: Dynamic Enemy Movement
+
+Dynamic enemy movement is documented as a future exploration system in `docs/story/Systems_Dynamic_Enemy_Movement.md`. It would add bounded enemy patrol/wander/hunter behavior, aggression levels, and UI/audio signaling for enemies entering or leaving rooms.
+
+This is intentionally out of scope for the current World 1 vertical slice. World 1 encounter placement should remain deterministic while the playable slice is finished and stabilized.
+
 ## 3.2 World/Hub/Node Structure
 
 The overworld structure is hierarchical: World → Hub → Node → Room. Generally each world will have two hubs. In World 1 there are currently two hubs: the Mining Colony (Hub 1) and the Corporate Outpost (Hub 2). Hub 1 currently has four main nodes: Homestead Quarter, Trade Row, Stellarium Mine, and Maintenance Tunnels (unlocks late and leads onward).

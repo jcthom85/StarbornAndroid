@@ -174,7 +174,9 @@ data class EventAnnouncementUi(
     val id: Long,
     val title: String?,
     val message: String,
-    val accentColor: Long
+    val accentColor: Long,
+    val eyebrow: String? = null,
+    val items: List<String> = emptyList()
 )
 
 data class InventoryPreviewItemUi(

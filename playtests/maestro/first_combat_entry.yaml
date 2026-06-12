@@ -1,0 +1,35 @@
+appId: com.example.starborn
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "New Game"
+    timeout: 60000
+- swipe:
+    direction: UP
+- swipe:
+    direction: UP
+- extendedWaitUntil:
+    visible: "Debug: First Combat"
+    timeout: 10000
+- tapOn: "Debug: First Combat"
+- extendedWaitUntil:
+    visible: "Elevator Landing"
+    timeout: 15000
+- tapOn: "Travel north"
+- extendedWaitUntil:
+    visible: "Main Tunnel Alpha"
+    timeout: 15000
+- extendedWaitUntil:
+    visible: "Engage Echo Borer"
+    timeout: 10000
+- tapOn: "Engage Echo Borer"
+- extendedWaitUntil:
+    visible: "Echo-Borer"
+    timeout: 60000
+- extendedWaitUntil:
+    visible: "Nova"
+    timeout: 30000
+- assertVisible: "Zeke"
+- assertVisible: "Gnaw"
+- takeScreenshot: first-combat-entry

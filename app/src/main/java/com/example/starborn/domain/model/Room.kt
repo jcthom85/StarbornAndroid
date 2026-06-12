@@ -72,6 +72,9 @@ data class RoomEnemyInstance(
     @Json(name = "enemy_id")
     val enemyId: String,
     val occurrence: Int? = null,
+    val hp: Int? = null,
+    val vitality: Int? = null,
+    val stability: Int? = null,
     @Json(name = "override_drops")
     val overrideDrops: List<Drop>? = null,
     @Json(name = "extra_drops")

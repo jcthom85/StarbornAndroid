@@ -8,11 +8,11 @@
     "vfx_sandbox": "music_w1_homestead_explore"
   },
   "ambience": {
-    "hub_1_homestead": "amb_vent+amb_forest_birds",
-    "hub_2_logistics": "amb_forest_birds+amb_cave_drips",
+    "hub_1_homestead": "amb_colony_vent_crowd",
+    "hub_2_logistics": "amb_logistics_machinery",
     "hub_3_sector9": "amb_forest_birds+amb_cave_drips",
-    "hub_1": "amb_vent+amb_forest_birds",
-    "hub_2": "amb_forest_birds+amb_cave_drips",
+    "hub_1": "amb_colony_vent_crowd",
+    "hub_2": "amb_logistics_machinery",
     "pit_vents": "amb_vent",
     "medbay_vents": "amb_vent",
     "pit_shaft": "amb_cave_drips",
@@ -27,10 +27,25 @@
     "mine_shoring": "amb_cave_drips",
     "mine_threshold": "amb_cave_drips",
     "mine_slope": "amb_cave_drips",
-    "mine_antechamber": "amb_cave_drips"
+    "mine_antechamber": "amb_cave_drips",
+    "server_airlock": "amb_server_cold",
+    "server_aisle1": "amb_server_cold",
+    "server_cooling": "amb_server_cold+amb_vent",
+    "server_hub": "amb_server_cold",
+    "server_backup": "amb_server_cold",
+    "server_office": "amb_server_cold",
+    "server_crawl": "amb_server_cold+amb_vent",
+    "launch_access": "amb_launch_alarm",
+    "launch_gantry": "amb_launch_alarm",
+    "launch_fuel": "amb_launch_alarm",
+    "launch_lift": "amb_launch_alarm",
+    "launch_checkpoint": "amb_launch_alarm",
+    "launch_bay": "amb_launch_alarm",
+    "launch_pod": "amb_launch_alarm",
+    "launch_rail": "amb_launch_alarm"
   },
   "weather": {
-    "dust": "amb_forest_birds",
+    "dust": "amb_dust_storm",
     "rain": "amb_cave_drips",
     "cave_drip": "amb_cave_drips",
     "industrial": "amb_vent"

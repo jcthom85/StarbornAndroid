@@ -59,4 +59,38 @@ class MilestoneRuntimeManagerTest {
         assertTrue(sessionStore.state.value.unlockedExits.contains("room_a::north"))
         scope.cancel()
     }
+
+    @Test
+    fun applyEffectsForDirectMilestoneUnlocksAbility() = runTest {
+        val dispatcher = StandardTestDispatcher(testScheduler)
+        val scope = TestScope(dispatcher)
+        val sessionStore = GameSessionStore()
+        val promptManager = UIPromptManager()
+        val definition = MilestoneDefinition(
+            id = "ms_w1_sq03_hydraulic_kick_ready",
+            effects = MilestoneEffects(
+                unlockAbilities = listOf("nova_hydraulic_kick")
+            )
+        )
+        val repository = mock<MilestoneRepository> {
+            on { milestoneById("ms_w1_sq03_hydraulic_kick_ready") } doReturn definition
+        }
+
+        val manager = MilestoneRuntimeManager(
+            repository = repository,
+            sessionStore = sessionStore,
+            promptManager = promptManager,
+            scope = scope,
+            applyEffects = { effects ->
+                effects.unlockAbilities.orEmpty().forEach { sessionStore.unlockSkill(it) }
+            }
+        )
+
+        sessionStore.setMilestone("ms_w1_sq03_hydraulic_kick_ready")
+        manager.applyEffectsFor("ms_w1_sq03_hydraulic_kick_ready")
+        dispatcher.scheduler.advanceUntilIdle()
+
+        assertTrue(sessionStore.state.value.unlockedSkills.contains("nova_hydraulic_kick"))
+        scope.cancel()
+    }
 }

@@ -1,6 +1,7 @@
 package com.example.starborn.domain.event
 
 import com.example.starborn.domain.model.EventAction
+import com.example.starborn.domain.model.EventReward
 import com.example.starborn.domain.model.EventTrigger
 import com.example.starborn.domain.model.GameEvent
 import com.example.starborn.domain.session.GameSessionStore
@@ -148,6 +149,37 @@ class EventManagerTest {
 
         assertEquals("quest_item", removedItemId)
         assertEquals(2, removedQuantity)
+    }
+
+    @Test
+    fun giveRewardDelegatesCreditsAndXpToHook() {
+        val sessionStore = GameSessionStore()
+        var receivedReward: EventReward? = null
+        val event = GameEvent(
+            id = "evt_reward",
+            trigger = EventTrigger(type = "custom"),
+            repeatable = true,
+            actions = listOf(
+                EventAction(
+                    type = "give_reward",
+                    xp = 40,
+                    credits = 75
+                )
+            )
+        )
+        val manager = EventManager(
+            events = listOf(event),
+            sessionStore = sessionStore,
+            eventHooks = EventHooks(
+                onReward = { reward -> receivedReward = reward }
+            )
+        )
+
+        manager.handleTrigger("custom")
+
+        val reward = receivedReward ?: error("Expected reward hook to receive payload")
+        assertEquals(40, reward.xp)
+        assertEquals(75, reward.credits)
     }
 
     @Test

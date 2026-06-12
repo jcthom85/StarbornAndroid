@@ -26,16 +26,21 @@ import org.json.JSONObject
 
 private const val MAX_BACKUPS = 3
 
-class GameSessionPersistence(context: Context) {
+class GameSessionPersistence private constructor(
+    private val fileForName: (String) -> File
+) {
 
-    private val appContext = context.applicationContext
-    private val dataStoreFile = appContext.dataStoreFile(DATASTORE_FILE)
-    private val autosaveFile = appContext.dataStoreFile(AUTOSAVE_FILE)
-    private val quickSaveFile = appContext.dataStoreFile(QUICKSAVE_FILE)
+    constructor(context: Context) : this({ name -> context.applicationContext.dataStoreFile(name) })
 
-    private val dataStore: DataStore<GameSessionProto> = dataStoreFor(appContext, dataStoreFile)
-    private val autosaveStore: DataStore<GameSessionProto> = dataStoreFor(appContext, autosaveFile)
-    private val quickSaveStore: DataStore<GameSessionProto> = dataStoreFor(appContext, quickSaveFile)
+    internal constructor(baseDir: File) : this({ name -> File(baseDir, name) })
+
+    private val dataStoreFile = fileForName(DATASTORE_FILE)
+    private val autosaveFile = fileForName(AUTOSAVE_FILE)
+    private val quickSaveFile = fileForName(QUICKSAVE_FILE)
+
+    private val dataStore: DataStore<GameSessionProto> = dataStoreFor(dataStoreFile)
+    private val autosaveStore: DataStore<GameSessionProto> = dataStoreFor(autosaveFile)
+    private val quickSaveStore: DataStore<GameSessionProto> = dataStoreFor(quickSaveFile)
 
     val sessionFlow: Flow<GameSessionState> = dataStore.data.map { proto -> proto.toState() }
 
@@ -87,7 +92,7 @@ class GameSessionPersistence(context: Context) {
         quickSaveStore.updateData { GameSessionProto.getDefaultInstance() }
     }
 
-    private fun slotStore(slot: Int): SlotStore = slotStoreFor(appContext, slot)
+    private fun slotStore(slot: Int): SlotStore = slotStoreFor(fileForName("game_session_slot$slot.pb"))
 
     companion object {
         private const val DATASTORE_FILE = "game_session.pb"
@@ -98,7 +103,7 @@ class GameSessionPersistence(context: Context) {
         private val sharedStores = java.util.concurrent.ConcurrentHashMap<String, DataStore<GameSessionProto>>()
         private val sharedSlotStores = java.util.concurrent.ConcurrentHashMap<String, SlotStore>()
 
-        private fun dataStoreFor(context: Context, file: File): DataStore<GameSessionProto> {
+        private fun dataStoreFor(file: File): DataStore<GameSessionProto> {
             val key = file.absolutePath
             return sharedStores.getOrPut(key) {
                 DataStoreFactory.create(
@@ -110,9 +115,7 @@ class GameSessionPersistence(context: Context) {
             }
         }
 
-        private fun slotStoreFor(context: Context, slot: Int): SlotStore {
-            val fileName = "game_session_slot$slot.pb"
-            val file = context.dataStoreFile(fileName)
+        private fun slotStoreFor(file: File): SlotStore {
             val key = file.absolutePath
             return sharedSlotStores.getOrPut(key) {
                 SlotStore(file)

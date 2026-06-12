@@ -172,7 +172,7 @@ import com.example.starborn.feature.combat.ui.animations.Lungeable
 import com.example.starborn.feature.combat.viewmodel.TargetRequirement
 import com.example.starborn.domain.cinematic.CinematicPlaybackState
 import com.example.starborn.domain.cinematic.CinematicStepType
-import com.example.starborn.feature.exploration.ui.CinematicOverlay
+import com.example.starborn.feature.exploration.ui.CinematicOverlayHost
 import com.example.starborn.feature.exploration.ui.CombatTransitionOverlay
 import com.example.starborn.feature.exploration.ui.TransitionMode
 import com.example.starborn.feature.exploration.viewmodel.CinematicStepUi
@@ -452,7 +452,6 @@ fun CombatScreen(
                         val resolvedStyle = resolveAttackStyle(
                             sourceId = event.sourceId,
                             combatState = currentCombatState,
-                            activeId = currentTurnActorId,
                             playerIdSet = playerIdSet
                         )
                         val style = resolvedStyle
@@ -892,9 +891,16 @@ fun CombatScreen(
             val borderColor = themeColor(viewModel.theme?.border, Color(0xFF5CCBE8))
             val panelColor = themeColor(viewModel.theme?.bg, Color(0xFF061018))
             val commandActor = menuActor
+            val targetPromptText = when {
+                !pendingInstruction.isNullOrBlank() -> pendingInstruction.orEmpty()
+                pendingTargetRequest != null || enemyTargetPrompt -> "Choose a target"
+                else -> null
+            }
+            val targetMode = !targetPromptText.isNullOrBlank()
             val commandPaletteVisible = commandActor != null &&
                 !combatLocked &&
-                !menuActorCannotAct
+                !menuActorCannotAct &&
+                !targetMode
             val hasTargets = enemyCombatantIds.any { state.combatants[it]?.isAlive == true }
             val snackBaseLabel = commandActor?.let { actor -> viewModel.snackLabel(actor.id) } ?: "Snack"
             val snackCooldown = commandActor?.let { actor -> viewModel.snackCooldownRemaining(actor.id) } ?: 0
@@ -918,7 +924,6 @@ fun CombatScreen(
             val partyDockHeightPx = remember(playerParty.size) { mutableStateOf(0) }
             val partyDockHeight = with(density) { partyDockHeightPx.value.toDp() }
             val contentPadding = PaddingValues(horizontal = 16.dp, vertical = 24.dp)
-            val deckLift = if (commandPaletteVisible) 228.dp else 0.dp
 
             BoxWithConstraints(
                 modifier = Modifier
@@ -932,7 +937,7 @@ fun CombatScreen(
                     highContrastMode = highContrastMode,
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(top = 92.dp, bottom = partyDockHeight + deckLift + 76.dp)
+                        .padding(top = 92.dp, bottom = partyDockHeight + 76.dp)
                 )
                 Box(
                     modifier = Modifier
@@ -946,9 +951,11 @@ fun CombatScreen(
                     ) {
                         CombatEncounterHeader(
                             locationTitle = viewModel.locationTitle,
-                            encounterTitle = viewModel.encounterTitle,
-                            round = state.round,
-                            readyCount = atbMeters.count { (_, value) -> value >= 0.999f },
+                            statusText = targetPromptText ?: "Hostile Contact",
+                            targetMode = targetMode,
+                            onCancelTarget = if (pendingTargetRequest != null) {
+                                { clearPendingRequest() }
+                            } else null,
                             theme = viewModel.theme,
                             highContrastMode = highContrastMode,
                             modifier = Modifier.fillMaxWidth()
@@ -992,23 +999,19 @@ fun CombatScreen(
                         .fillMaxWidth()
                         .align(Alignment.BottomCenter)
                         .navigationBarsPadding()
-                        .padding(bottom = partyDockHeight + deckLift + 8.dp)
+                        .padding(bottom = partyDockHeight + 8.dp)
                 ) {
-                    CombatLogPanel(
-                        bannerMessage = if (showCombatActionText) combatBanner else null,
-                        instruction = when {
-                            !pendingInstruction.isNullOrBlank() -> pendingInstruction
-                            pendingTargetRequest != null || enemyTargetPrompt -> "Choose Your Target"
-                            else -> null
-                        },
-                        showCancel = pendingTargetRequest != null,
-                        instructionShownAbove = false,
-                        highContrastMode = highContrastMode,
-                        theme = viewModel.theme,
-                        onCancel = if (pendingTargetRequest != null) {
-                            { clearPendingRequest() }
-                        } else null
-                    )
+                    if (!commandPaletteVisible && !targetMode) {
+                        CombatLogPanel(
+                            bannerMessage = if (showCombatActionText) combatBanner else null,
+                            instruction = null,
+                            showCancel = false,
+                            instructionShownAbove = false,
+                            highContrastMode = highContrastMode,
+                            theme = viewModel.theme,
+                            onCancel = null
+                        )
+                    }
                 }
             }
             Box(
@@ -1040,7 +1043,7 @@ fun CombatScreen(
                         modifier = Modifier
                             .align(Alignment.BottomCenter)
                             .navigationBarsPadding()
-                            .padding(bottom = deckLift + 4.dp)
+                            .padding(bottom = 4.dp)
                         .onGloballyPositioned { coords ->
                             val height = coords.size.height
                             if (height > 0 && partyDockHeightPx.value != height) {
@@ -1111,18 +1114,14 @@ fun CombatScreen(
                 highContrastMode = highContrastMode,
                 largeTouchTargets = largeTouchTargets,
                 theme = viewModel.theme,
-                targetInstruction = when {
-                    !pendingInstruction.isNullOrBlank() -> pendingInstruction
-                    pendingTargetRequest != null || enemyTargetPrompt -> "Choose Your Target"
-                    else -> null
-                },
-                onCancelTarget = if (pendingTargetRequest != null) {
-                    { clearPendingRequest() }
-                } else null,
+                targetInstruction = null,
+                onCancelTarget = null,
                 modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .navigationBarsPadding()
-                    .padding(bottom = 8.dp)
+                    .align(Alignment.TopCenter)
+                    .statusBarsPadding()
+                    .padding(contentPadding)
+                    .padding(top = 138.dp)
+                    .zIndex(6f)
             )
             outcomeFx?.let { OutcomeOverlay(it, playerParty) }
             timedPromptState?.let { prompt ->
@@ -1148,15 +1147,13 @@ fun CombatScreen(
                     )
                 }
             }
-            cinematicPlayback?.toUiState()?.let { overlayState ->
-                CinematicOverlay(
-                    state = overlayState,
-                    onAdvance = { onAdvanceCinematic?.invoke() },
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(24.dp)
-                )
-            }
+            CinematicOverlayHost(
+                state = cinematicPlayback?.toUiState(),
+                onAdvance = { onAdvanceCinematic?.invoke() },
+                modifier = Modifier
+                    .fillMaxSize()
+                    .zIndex(80f)
+            )
             
             CombatTransitionOverlay(
                 visible = exitTransitionVisible,
@@ -1203,9 +1200,9 @@ fun CombatScreen(
 @Composable
 private fun CombatEncounterHeader(
     locationTitle: String?,
-    encounterTitle: String,
-    round: Int,
-    readyCount: Int,
+    statusText: String,
+    targetMode: Boolean,
+    onCancelTarget: (() -> Unit)?,
     theme: Theme?,
     highContrastMode: Boolean,
     modifier: Modifier = Modifier
@@ -1227,7 +1224,7 @@ private fun CombatEncounterHeader(
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column(
@@ -1246,25 +1243,32 @@ private fun CombatEncounterHeader(
                         overflow = TextOverflow.Ellipsis
                     )
                     Text(
-                        text = encounterTitle,
+                        text = statusText.uppercase(Locale.getDefault()),
                         style = MaterialTheme.typography.titleMedium.copy(
                             fontFamily = CombatNameFont,
                             fontWeight = FontWeight.Bold
                         ),
-                        color = Color.White,
+                        color = if (targetMode) Color(0xFFFFC8B8) else Color.White,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
                 }
-                Text(
-                    text = "R${round.coerceAtLeast(1)}  READY $readyCount",
-                    style = MaterialTheme.typography.labelMedium.copy(
-                        fontFamily = CombatNameFont,
-                        fontWeight = FontWeight.Bold
-                    ),
-                    color = Color.White.copy(alpha = 0.78f),
-                    textAlign = TextAlign.End
-                )
+                if (targetMode && onCancelTarget != null) {
+                    TextButton(onClick = onCancelTarget) {
+                        Icon(
+                            imageVector = Icons.Filled.Close,
+                            contentDescription = null,
+                            tint = Color(0xFFFF7E78),
+                            modifier = Modifier.size(18.dp)
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(
+                            text = "Cancel",
+                            color = Color.White,
+                            style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold)
+                        )
+                    }
+                }
             }
             Box(
                 modifier = Modifier
@@ -1568,19 +1572,31 @@ private fun PartyRoster(
                                         }
                                     }
                                 }
-                                    CombatFxOverlay(
-                                        damageFx = damageFx.filter { it.targetId == member.id },
-                                        attackFx = attackFx.filter { it.targetId == member.id },
-                                        healFx = healFx.filter { it.targetId == member.id },
-                                        statusFx = statusFx.filter { it.targetId == member.id },
-                                        shieldBreakFx = shieldBreakFx.filter { it.targetId == member.id },
-
-                                        showKnockout = knockoutFx.any { it.targetId == member.id },
-                                        shape = cardShape,
-                                        supportFx = supportHighlights,
-                                        telegraphFx = telegraphHighlights,
-                                        modifier = Modifier.matchParentSize()
-                                    )
+                                CombatFxOverlay(
+                                    damageFx = damageFx.filter { it.targetId == member.id },
+                                    attackFx = attackFx.filter { it.targetId == member.id },
+                                    healFx = healFx.filter { it.targetId == member.id },
+                                    statusFx = statusFx.filter { it.targetId == member.id },
+                                    shieldBreakFx = shieldBreakFx.filter { it.targetId == member.id },
+                                    showKnockout = knockoutFx.any { it.targetId == member.id },
+                                    shape = CircleShape,
+                                    modifier = Modifier
+                                        .align(Alignment.TopCenter)
+                                        .padding(top = 12.dp)
+                                        .size(portraitFrameSize)
+                                )
+                                CombatFxOverlay(
+                                    damageFx = emptyList(),
+                                    attackFx = emptyList(),
+                                    healFx = emptyList(),
+                                    statusFx = emptyList(),
+                                    shieldBreakFx = emptyList(),
+                                    showKnockout = false,
+                                    shape = cardShape,
+                                    supportFx = supportHighlights,
+                                    telegraphFx = telegraphHighlights,
+                                    modifier = Modifier.matchParentSize()
+                                )
                             }
                         }
                     }
@@ -1928,11 +1944,15 @@ private fun EnemyRoster(
                                         telegraphFx = telegraphHighlights,
                                         modifier = Modifier.matchParentSize()
                                     )
+                                    EnemyStatusRail(
+                                        statuses = enemyState?.statusEffects.orEmpty(),
+                                        buffs = enemyState?.buffs.orEmpty(),
+                                        modifier = Modifier
+                                            .align(Alignment.TopCenter)
+                                            .padding(top = 4.dp)
+                                            .zIndex(6f)
+                                    )
                                 }
-                                StatusBadges(
-                                    statuses = enemyState?.statusEffects.orEmpty(),
-                                    buffs = enemyState?.buffs.orEmpty()
-                                )
                             }
                         }
                     }
@@ -2326,22 +2346,32 @@ private fun CompositePartStatus(
     val isActive = combatantId == activeId
     val isSelected = combatantId in selectedEnemyIds
     val atbProgress = atbMeters[combatantId] ?: 0f
-    EnemyStatusLabel(
-        name = entry.enemy.name,
-        currentHp = currentHp,
-        maxHp = maxHp,
-        currentStability = currentStability,
-        maxStability = maxStability,
-        breakTurns = enemyState?.breakTurns ?: 0,
-        atbProgress = atbProgress,
-        isAlive = isAlive,
-        isActive = isActive,
-        isSelected = isSelected,
-        accentColor = labelBorderColor,
-        barWidth = 90.dp,
-        onClick = { if (isAlive) onEnemyTap(combatantId) },
-        onLongClick = { if (isAlive) onEnemyLongPress(combatantId) }
-    )
+    Box(contentAlignment = Alignment.Center) {
+        EnemyStatusLabel(
+            name = entry.enemy.name,
+            currentHp = currentHp,
+            maxHp = maxHp,
+            currentStability = currentStability,
+            maxStability = maxStability,
+            breakTurns = enemyState?.breakTurns ?: 0,
+            atbProgress = atbProgress,
+            isAlive = isAlive,
+            isActive = isActive,
+            isSelected = isSelected,
+            accentColor = labelBorderColor,
+            barWidth = 90.dp,
+            onClick = { if (isAlive) onEnemyTap(combatantId) },
+            onLongClick = { if (isAlive) onEnemyLongPress(combatantId) }
+        )
+        EnemyStatusRail(
+            statuses = enemyState?.statusEffects.orEmpty(),
+            buffs = enemyState?.buffs.orEmpty(),
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .offset(y = 18.dp)
+                .zIndex(2f)
+        )
+    }
 }
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -2399,11 +2429,13 @@ private fun EnemyStatusLabel(
         contentColor = Color.White,
         shape = RoundedCornerShape(14.dp),
         border = BorderStroke(1.dp, borderColor),
-        modifier = interactionModifier.alpha(if (isAlive) 1f else 0.45f)
+        modifier = interactionModifier
+            .height(66.dp)
+            .alpha(if (isAlive) 1f else 0.45f)
     ) {
         Column(
-            modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp),
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 5.dp),
+            verticalArrangement = Arrangement.spacedBy(3.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
@@ -2419,7 +2451,8 @@ private fun EnemyStatusLabel(
             )
             AtbBar(
                 progress = atbProgress,
-                modifier = Modifier.width(barWidth)
+                modifier = Modifier.width(barWidth),
+                color = if (isActive) Color(0xFFFFD36E) else Color(0xFFFF9F43)
             )
             StatBar(
                 current = currentHp,
@@ -2594,9 +2627,144 @@ private fun rememberHitPulse(
 }
 
 @Composable
+private fun EnemyStatusRail(
+    statuses: List<StatusEffect>,
+    buffs: List<ActiveBuff>,
+    modifier: Modifier = Modifier,
+    maxVisible: Int = 3
+) {
+    val entries = statusChipsFor(statuses, buffs)
+    if (entries.isEmpty()) return
+    val visible = entries.take(maxVisible.coerceAtLeast(1))
+    val overflow = entries.size - visible.size
+    Surface(
+        color = Color(0xFF070A10).copy(alpha = 0.74f),
+        contentColor = Color.White,
+        shape = RoundedCornerShape(999.dp),
+        border = BorderStroke(1.dp, Color.White.copy(alpha = 0.22f)),
+        modifier = modifier
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 4.dp, vertical = 3.dp),
+            horizontalArrangement = Arrangement.spacedBy(3.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            visible.forEach { chip ->
+                EnemyStatusPip(chip)
+            }
+            if (overflow > 0) {
+                Surface(
+                    color = Color.White.copy(alpha = 0.14f),
+                    contentColor = Color.White,
+                    shape = RoundedCornerShape(999.dp),
+                    border = BorderStroke(1.dp, Color.White.copy(alpha = 0.20f)),
+                    modifier = Modifier.height(22.dp)
+                ) {
+                    Box(
+                        modifier = Modifier.padding(horizontal = 7.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "+$overflow",
+                            style = MaterialTheme.typography.labelSmall.copy(
+                                fontSize = 9.sp,
+                                lineHeight = 10.sp,
+                                fontWeight = FontWeight.Bold
+                            ),
+                            maxLines = 1
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun EnemyStatusPip(chip: StatusChip) {
+    Box(modifier = Modifier.size(24.dp)) {
+        Surface(
+            color = chip.tint.copy(alpha = 0.88f),
+            contentColor = Color.White,
+            shape = CircleShape,
+            border = BorderStroke(1.dp, Color.White.copy(alpha = 0.28f)),
+            modifier = Modifier.matchParentSize()
+        ) {
+            Box(contentAlignment = Alignment.Center) {
+                Icon(
+                    imageVector = chip.icon,
+                    contentDescription = null,
+                    modifier = Modifier.size(13.dp)
+                )
+            }
+        }
+        Surface(
+            color = Color(0xFF05070B).copy(alpha = 0.96f),
+            contentColor = Color.White,
+            shape = RoundedCornerShape(999.dp),
+            border = BorderStroke(0.5.dp, Color.White.copy(alpha = 0.28f)),
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .offset(x = 3.dp, y = 2.dp)
+                .height(12.dp)
+                .widthIn(min = 12.dp)
+        ) {
+            Text(
+                text = statusChipLabel(chip),
+                style = MaterialTheme.typography.labelSmall.copy(
+                    fontSize = 7.sp,
+                    lineHeight = 8.sp,
+                    fontWeight = FontWeight.Bold
+                ),
+                color = Color.White,
+                maxLines = 1,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(horizontal = 2.dp)
+            )
+        }
+    }
+}
+
+@Composable
 private fun StatusBadges(statuses: List<StatusEffect>, buffs: List<ActiveBuff>) {
-    if (statuses.isEmpty() && buffs.isEmpty()) return
-    val entries = buildList {
+    val entries = statusChipsFor(statuses, buffs)
+    if (entries.isEmpty()) return
+    LazyRow(
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        contentPadding = PaddingValues(horizontal = 2.dp)
+    ) {
+        items(entries) { chip ->
+            Surface(
+                color = chip.tint.copy(alpha = 0.85f),
+                contentColor = Color.White,
+                shape = CircleShape,
+                modifier = Modifier.height(20.dp)
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                ) {
+                    Icon(
+                        imageVector = chip.icon,
+                        contentDescription = null,
+                        modifier = Modifier.size(12.dp)
+                    )
+                    Spacer(modifier = Modifier.width(3.dp))
+                    Text(
+                        text = statusChipLabel(chip),
+                        style = MaterialTheme.typography.labelSmall.copy(
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    )
+                }
+            }
+        }
+    }
+}
+
+private fun statusChipsFor(statuses: List<StatusEffect>, buffs: List<ActiveBuff>): List<StatusChip> =
+    buildList {
         statuses.forEach { statusEffect ->
             add(
                 StatusChip(
@@ -2619,42 +2787,20 @@ private fun StatusBadges(statuses: List<StatusEffect>, buffs: List<ActiveBuff>) 
             )
         }
     }
-    LazyRow(
-        horizontalArrangement = Arrangement.spacedBy(4.dp),
-        contentPadding = PaddingValues(horizontal = 2.dp)
-    ) {
-        items(entries) { chip ->
-            Surface(
-                color = chip.tint.copy(alpha = 0.85f),
-                contentColor = Color.White,
-                shape = CircleShape,
-                modifier = Modifier.height(20.dp)
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
-                ) {
-                    Icon(
-                        imageVector = chip.icon,
-                        contentDescription = null,
-                        modifier = Modifier.size(12.dp)
-                    )
-                    Spacer(modifier = Modifier.width(3.dp))
-                    val text = if (chip.value != null) {
-                        "${if (chip.value > 0) "+" else ""}${chip.value}"
-                    } else {
-                        "${chip.turns}"
-                    }
-                    Text(
-                        text = text,
-                        style = MaterialTheme.typography.labelSmall.copy(
-                            fontSize = 10.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                    )
-                }
-            }
+
+private fun statusChipLabel(chip: StatusChip): String {
+    val value = chip.value
+    return if (value != null) {
+        val magnitude = abs(value)
+        val sign = when {
+            value > 0 -> "+"
+            value < 0 -> "-"
+            else -> ""
         }
+        if (magnitude > 9) "${sign}9+" else "$sign$magnitude"
+    } else {
+        val turns = chip.turns.coerceAtLeast(0)
+        if (turns > 9) "9+" else turns.toString()
     }
 }
 
@@ -3132,6 +3278,12 @@ private fun CombatFxOverlay(
             )
         }
         statusFx.forEach { fx ->
+            StatusImpactFlash(
+                fx = fx,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .zIndex(14f)
+            )
             StatusPulse(
                 fx = fx,
                 modifier = Modifier
@@ -3166,7 +3318,6 @@ private fun attackFxStyleFor(sourceId: String): AttackFxStyle? = when (sourceId)
 private fun resolveAttackStyle(
     sourceId: String,
     combatState: CombatState?,
-    activeId: String?,
     playerIdSet: Set<String>
 ): AttackFxStyle? {
     val normalized = normalizeAttackSourceId(sourceId)
@@ -3182,10 +3333,6 @@ private fun resolveAttackStyle(
     val fromCombatant = combatantMatch?.combatant?.name?.let { attackFxStyleForName(it) }
         ?: combatantMatch?.combatant?.id?.lowercase(Locale.getDefault())?.let { attackFxStyleFor(it) }
     if (fromCombatant != null) return fromCombatant
-    val activeStyle = activeId
-        ?.lowercase(Locale.getDefault())
-        ?.let { attackFxStyleFor(it) ?: attackFxStyleForName(it) }
-    if (activeStyle != null) return activeStyle
     val matchedPlayer = playerIdSet.firstOrNull { playerId ->
         normalized.startsWith(playerId) || normalized.contains(playerId)
     }
@@ -4109,6 +4256,57 @@ private fun StatusPulse(
 }
 
 @Composable
+private fun StatusImpactFlash(
+    fx: StatusFxUi,
+    modifier: Modifier = Modifier
+) {
+    val progress = remember { Animatable(0f) }
+    LaunchedEffect(fx.id) {
+        progress.snapTo(0f)
+        progress.animateTo(1f, tween(durationMillis = 760, easing = FastOutSlowInEasing))
+    }
+    val normalized = fx.statusId.lowercase(Locale.getDefault())
+    val isBlind = normalized == "blind"
+    val statusColor = if (isBlind) Color(0xFFE9F5FF) else colorForStatus(fx.statusId)
+    Canvas(modifier = modifier) {
+        if (size.minDimension <= 0f) return@Canvas
+        val t = progress.value.coerceIn(0f, 1f)
+        val fade = 1f - t
+        val center = Offset(size.width * 0.5f, size.height * 0.48f)
+        val radius = size.minDimension * (0.18f + 0.72f * t)
+        drawCircle(
+            brush = Brush.radialGradient(
+                colors = listOf(
+                    Color.White.copy(alpha = if (isBlind) 0.62f * fade else 0.28f * fade),
+                    statusColor.copy(alpha = if (isBlind) 0.34f * fade else 0.26f * fade),
+                    Color.Transparent
+                ),
+                center = center,
+                radius = radius.coerceAtLeast(1f)
+            ),
+            radius = radius,
+            center = center
+        )
+        drawCircle(
+            color = statusColor.copy(alpha = 0.44f * fade),
+            radius = size.minDimension * (0.28f + 0.44f * t),
+            center = center,
+            style = Stroke(width = size.minDimension * 0.035f)
+        )
+        if (isBlind) {
+            val sweepY = size.height * (0.28f + 0.32f * t)
+            drawLine(
+                color = Color.White.copy(alpha = 0.62f * fade),
+                start = Offset(size.width * 0.12f, sweepY),
+                end = Offset(size.width * 0.88f, sweepY),
+                strokeWidth = size.minDimension * 0.035f,
+                cap = StrokeCap.Round
+            )
+        }
+    }
+}
+
+@Composable
 private fun OutcomeOverlay(
     outcomeType: CombatFxEvent.CombatOutcomeFx.OutcomeType,
     party: List<Player>
@@ -4717,35 +4915,35 @@ private fun CommandPalette(
     ) {
         val portraitPainter = rememberAssetPainter(actor.miniIconPath, painterResource(R.drawable.main_menu_background))
         val paletteBase = themeColor(theme?.bg, Color(0xFF0F1118))
-        val paletteColor = paletteBase.copy(alpha = if (highContrastMode) 0.96f else 0.86f)
+        val paletteColor = paletteBase.copy(alpha = if (highContrastMode) 0.96f else 0.90f)
         val borderColor = themeColor(theme?.border, Color.White.copy(alpha = if (highContrastMode) 0.65f else 0.5f))
         val accentColor = themeColor(theme?.accent, Color(0xFFFF6A5F))
         val isTargetMode = !targetInstruction.isNullOrBlank()
         Box(
             modifier = modifier
                 .fillMaxWidth()
-                .padding(horizontal = 18.dp, vertical = 8.dp)
+                .padding(horizontal = 14.dp, vertical = 4.dp)
         ) {
             Surface(
                 modifier = Modifier.fillMaxWidth(),
                 color = paletteColor,
-                shape = RoundedCornerShape(18.dp),
-                shadowElevation = 12.dp,
+                shape = RoundedCornerShape(16.dp),
+                shadowElevation = 10.dp,
                 tonalElevation = 6.dp,
-                border = BorderStroke(1.5.dp, borderColor)
+                border = BorderStroke(1.25.dp, borderColor)
             ) {
                 Column(
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
-                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
                         Box(
                             modifier = Modifier
-                                .size(58.dp)
-                                .clip(RoundedCornerShape(14.dp))
+                                .size(42.dp)
+                                .clip(RoundedCornerShape(11.dp))
                                 .background(Color(0xFF1C1F24)),
                             contentAlignment = Alignment.Center
                         ) {
@@ -4754,17 +4952,17 @@ private fun CommandPalette(
                                 contentDescription = actor.name,
                                 modifier = Modifier
                                     .matchParentSize()
-                                    .padding(6.dp),
+                                    .padding(4.dp),
                                 contentScale = ContentScale.Crop
                             )
                         }
                         Column(
                             modifier = Modifier.weight(1f),
-                            verticalArrangement = Arrangement.spacedBy(2.dp)
+                            verticalArrangement = Arrangement.spacedBy(1.dp)
                         ) {
                             Text(
                                 text = titleCaseName(actor.name),
-                                style = MaterialTheme.typography.titleMedium.copy(
+                                style = MaterialTheme.typography.titleSmall.copy(
                                     fontFamily = CombatNameFont,
                                     fontWeight = FontWeight.Medium
                                 ),
@@ -4772,14 +4970,14 @@ private fun CommandPalette(
                             )
                             Text(
                                 text = "${currentHp.coerceAtLeast(0)}/${maxHp.coerceAtLeast(1)}",
-                                style = MaterialTheme.typography.bodySmall,
+                                style = MaterialTheme.typography.labelSmall,
                                 color = Color.White.copy(alpha = 0.74f)
                             )
                             AtbBar(
                                 progress = atbProgress,
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(top = 4.dp)
+                                    .padding(top = 2.dp)
                             )
                         }
                         if (isTargetMode && onCancelTarget != null) {
@@ -4807,27 +5005,26 @@ private fun CommandPalette(
                             CommandEntry(snackLabel, Icons.Rounded.Restaurant, canSnack, onSnack, cooldown = snackCooldown),
                             CommandEntry("Retreat", Icons.Rounded.ExitToApp, true, onRetreat)
                         )
-                        val rows = commands.chunked(2)
+                        val rows = listOf(commands.take(3), commands.drop(3))
                         rows.forEach { chunk ->
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(10.dp)
-                        ) {
-                            chunk.forEach { entry ->
-                                CombatCommandButton(
-                                    label = entry.label,
-                                    icon = entry.icon,
-                                    enabled = entry.enabled,
-                                    onClick = entry.onClick,
-                                    largeTouchTargets = largeTouchTargets,
-                                    cooldownRemaining = entry.cooldown,
-                                    modifier = Modifier.weight(1f)
-                                )
+                            if (chunk.isNotEmpty()) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                    chunk.forEach { entry ->
+                                        CombatCommandButton(
+                                            label = entry.label,
+                                            icon = entry.icon,
+                                            enabled = entry.enabled,
+                                            onClick = entry.onClick,
+                                            largeTouchTargets = largeTouchTargets,
+                                            cooldownRemaining = entry.cooldown,
+                                            modifier = Modifier.weight(1f)
+                                        )
+                                    }
+                                }
                             }
-                            if (chunk.size == 1) {
-                                Spacer(modifier = Modifier.weight(1f))
-                            }
-                        }
                         }
                     }
                 }
@@ -4858,16 +5055,16 @@ private fun CombatCommandButton(
     cooldownRemaining: Int = 0,
     modifier: Modifier = Modifier
 ) {
-    val minHeight = if (largeTouchTargets) 70.dp else 56.dp
+    val minHeight = if (largeTouchTargets) 58.dp else 48.dp
     val interactionSource = remember { MutableInteractionSource() }
     val background = if (enabled) Color(0xFF1E2534) else Color(0xFF1B1F29)
     Box(
         modifier = modifier
-            .widthIn(min = 140.dp)
-            .heightIn(min = minHeight * 2 / 3)
+            .widthIn(min = 88.dp)
+            .heightIn(min = minHeight)
     ) {
         Surface(
-            shape = RoundedCornerShape(20.dp),
+            shape = RoundedCornerShape(16.dp),
             color = background,
             tonalElevation = if (enabled) 4.dp else 0.dp,
             modifier = Modifier
@@ -4883,19 +5080,23 @@ private fun CombatCommandButton(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 12.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    .heightIn(min = minHeight)
+                    .padding(horizontal = 10.dp, vertical = 8.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
                     imageVector = icon,
                     contentDescription = label,
-                    tint = Color.White
+                    tint = Color.White,
+                    modifier = Modifier.size(22.dp)
                 )
                 Text(
                     text = label,
-                    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium),
-                    color = Color.White
+                    style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Medium),
+                    color = Color.White,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
         }

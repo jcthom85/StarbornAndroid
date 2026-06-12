@@ -1,0 +1,23 @@
+appId: com.example.starborn
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "New Game"
+    timeout: 60000
+- swipe:
+    direction: UP
+- swipe:
+    direction: UP
+- extendedWaitUntil:
+    visible: "Debug: Enemy Party"
+    timeout: 10000
+- tapOn: "Debug: Enemy Party"
+- extendedWaitUntil:
+    visible: "Security Checkpoint B"
+    timeout: 15000
+- extendedWaitUntil:
+    visible: "Engage Dominion Dampener + Resonance Buoy party"
+    timeout: 10000
+- assertVisible: "Engage Dominion Dampener + Resonance Buoy party"
+- takeScreenshot: room-entities-tray

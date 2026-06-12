@@ -172,7 +172,7 @@
     {
         "id": "ellie_default_talk",
         "speaker": "Ellie",
-        "text": "Ellie (default): Just swapping out panels here—what's up?"
+        "text": "Just swapping out panels before the sparks get ambitious. What do you need?"
     },
     {
         "id": "ellie_return_display",
@@ -190,6 +190,7 @@
     {
         "id": "jed_w1_mq04_sacrifice_2",
         "speaker": "Nova",
+        "emote": "scared",
         "text": "Jed, they're calling me a contaminant. Zeke's overriding the gates, but we have to move now. Come on!",
         "next": "jed_w1_mq04_sacrifice_3"
     },
@@ -202,6 +203,7 @@
     {
         "id": "jed_w1_mq04_sacrifice_4",
         "speaker": "Nova",
+        "emote": "crying",
         "text": "No! We can jam the gears! I'm not leaving you behind!",
         "next": "jed_w1_mq04_sacrifice_5"
     },
@@ -221,6 +223,7 @@
     {
         "id": "jed_w1_mq01_intro_2",
         "speaker": "Nova",
+        "emote": "puzzled",
         "text": "I slept enough. Quota doesn't care how rested I am.",
         "next": "jed_w1_mq01_intro_3"
     },
@@ -233,6 +236,7 @@
     {
         "id": "jed_w1_mq01_intro_4",
         "speaker": "Nova",
+        "emote": "worried",
         "text": "If I don't push it, I miss count. If I miss count, I lose scrip. If I lose scrip...",
         "next": "jed_w1_mq01_intro_5"
     },
@@ -240,12 +244,12 @@
         "id": "jed_w1_mq01_intro_5",
         "speaker": "Jed",
         "text": "I know the math. I hate the math. Check your gear, then use the bench. And take the ration bar before you pretend you aren't hungry.",
-        "trigger": "set_quest_task_done:w1_mq01:talk_to_jed,give_item:mining_pistol,give_item:cryo_inductor,give_item:scrap_metal:2,set_quest_task_done:w1_mq01:equip_starter_gear,set_milestone:ms_w1_mq01_jed_talked,give_item:ration_pack,system_tutorial:bag_basics|Jed's Workshop"
+        "trigger": "set_quest_task_done:w1_mq01:talk_to_jed,give_item:mining_pistol,give_item:cryo_inductor,give_item:scrap_metal*2,set_quest_task_done:w1_mq01:equip_starter_gear,set_milestone:ms_w1_mq01_jed_talked,give_item:ration_pack,system_tutorial:bag_basics|Jed's Workshop"
     },
     {
         "id": "jed_default_talk",
         "speaker": "Jed",
-        "text": "Jed (default): Grab a seat if you're sticking around."
+        "text": "Grab a seat if you're sticking around. If something starts smoking, hand me the wrench first."
     },
     {
         "id": "jed_energy_core_turnin_1",
@@ -280,8 +284,8 @@
     {
         "id": "jed_signal_instructions",
         "speaker": "Jed",
-        "text": "Track that pulse to its source. If the mine lit up, something down there is chewing through power.",
-        "condition": "quest:w1_mq03,milestone_not_set:ms_energy_core_claimed"
+        "text": "Track that pulse to its source. If the deep mine lit up, something below Sector 4 is chewing through power.",
+        "condition": "quest_active:w1_mq03,milestone_not_set:ms_w1_mq03_complete"
     },
     {
         "id": "jed_tinkering_complete",
@@ -292,7 +296,7 @@
     {
         "id": "kasey_default_talk",
         "speaker": "Schoolteacher Kasey",
-        "text": "(Placeholder) Kasey's dialogue here."
+        "text": "Quiet feet, please. The little ones are mapping constellations they have never been allowed to see."
     },
     {
         "id": "kasey_return_projector",
@@ -303,7 +307,7 @@
     {
         "id": "maddie_default_talk",
         "speaker": "Maddie",
-        "text": "Maddie (default): Beans are roasting—did you need something?"
+        "text": "Beans are roasting, and for once the grinder is not threatening to explode. Did you need something?"
     },
     {
         "id": "maddie_return_grinder",
@@ -327,6 +331,7 @@
     {
         "id": "hank_w1_mq02_denial_2",
         "speaker": "Nova",
+        "emote": "confident",
         "text": "Morning to you too.",
         "next": "hank_w1_mq02_denial_3"
     },
@@ -344,6 +349,7 @@
     {
         "id": "zeke_w1_mq02_override_1",
         "speaker": "Zeke",
+        "emote": "surprised",
         "text": "Name? ID? Clearance sco--oh. It's you. The volunteer.",
         "condition": "quest_active:w1_mq02,milestone_not_set:ms_w1_mq02_zeke_override",
         "next": "zeke_w1_mq02_override_2"
@@ -351,36 +357,42 @@
     {
         "id": "zeke_w1_mq02_override_2",
         "speaker": "Nova",
+        "emote": "cool",
         "text": "I need a mining pass, suit. Shift starts in ten.",
         "next": "zeke_w1_mq02_override_3"
     },
     {
         "id": "zeke_w1_mq02_override_3",
         "speaker": "Zeke",
+        "emote": "worried",
         "text": "Right. Eligibility check. Completely routine. Very normal.",
         "next": "zeke_w1_mq02_override_4"
     },
     {
         "id": "zeke_w1_mq02_override_4",
         "speaker": "Zeke",
+        "emote": "scared",
         "text": "...Mandatory Retirement. Asset Liability exceeds projected value. Recycle.",
         "next": "zeke_w1_mq02_override_5"
     },
     {
         "id": "zeke_w1_mq02_override_5",
         "speaker": "Nova",
+        "emote": "surprised",
         "text": "Recycle means fired, right?",
         "next": "zeke_w1_mq02_override_6"
     },
     {
         "id": "zeke_w1_mq02_override_6",
         "speaker": "Zeke",
+        "emote": "sad",
         "text": "It means bio-reclamation. Death. For a breaker surge.",
         "next": "zeke_w1_mq02_override_7"
     },
     {
         "id": "zeke_w1_mq02_override_7",
         "speaker": "Zeke",
+        "emote": "confident",
         "text": "I'm flagging it as grid instability. Temporary override. Take the badge before I remember how rules work.",
         "trigger": "set_quest_task_done:w1_mq02:meet_zeke,set_quest_task_done:w1_mq02:spoof_liability_form,set_quest_task_done:w1_mq02:receive_mine_access_badge,give_item:mine_access_badge,complete_quest:w1_mq02,set_milestone:ms_w1_mq02_zeke_override,set_milestone:ms_w1_mq02_complete"
     },
@@ -439,6 +451,11 @@
         "text": "Keep your voice down. Dominion buys echoes cheaper than scrap."
     },
     {
+        "id": "scrapper_shop_intro",
+        "speaker": "Scrapper",
+        "text": "Buying, selling, or just looking guilty? Keep it quick either way."
+    },
+    {
         "id": "doc_w1_sq02_turnin_1",
         "speaker": "Doc",
         "text": "The coughing stopped. Either you fixed the vents or everyone finally died.",
@@ -486,6 +503,25 @@
         "id": "doc_default_talk",
         "speaker": "Doc",
         "text": "If you're bleeding, sit. If you're not, don't start."
+    },
+    {
+        "id": "bogs_w1_mq03_guardbreak_gate_1",
+        "speaker": "Foreman Bogs",
+        "text": "You heading down without shield training? That's how assets become floor paste.",
+        "condition": "quest_active:w1_mq03,milestone_not_set:ms_w1_guardbreak_trained",
+        "next": "bogs_w1_mq03_guardbreak_gate_2"
+    },
+    {
+        "id": "bogs_w1_mq03_guardbreak_gate_2",
+        "speaker": "Nova",
+        "text": "Shield training?",
+        "next": "bogs_w1_mq03_guardbreak_gate_3"
+    },
+    {
+        "id": "bogs_w1_mq03_guardbreak_gate_3",
+        "speaker": "Foreman Bogs",
+        "text": "Loading Dock. Riot shield trainer. Bring the loader online, move my cargo, learn Hydraulic Kick, then go play hero in Sector 4.",
+        "trigger": "start_quest:w1_sq03,track_quest:w1_sq03,set_quest_task_done:w1_sq03:talk_to_bogs,set_milestone:ms_w1_sq03_started"
     },
     {
         "id": "bogs_w1_mq03_intro_1",
@@ -549,15 +585,21 @@
         "text": "Company time ain't charity. Move."
     },
     {
+        "id": "bill_default_talk",
+        "speaker": "Miner Bill",
+        "text": "Bar's quiet if you ignore the vents. I recommend ignoring the vents."
+    },
+    {
         "id": "warden_boss_intro_1",
         "speaker": "The Warden",
         "text": "Nova. Asset 942-D. Retinal scan flagged for recycling, grid interference logs, and now unauthorized transit.",
-        "condition": "quest_active:w1_mq05,quest_stage:w1_mq05:reach_pod_bay",
+        "condition": "quest_active:w1_mq05,quest_stage:w1_mq05:defeat_warden,quest_task_not_done:w1_mq05:survive_warden_intro",
         "next": "warden_boss_intro_2"
     },
     {
         "id": "warden_boss_intro_2",
         "speaker": "Player",
+        "emote": "angry",
         "text": "We're leaving, Warden. Out of our way.",
         "next": "warden_boss_intro_3"
     },
@@ -570,37 +612,44 @@
     {
         "id": "zeke_w1_mq05_defeat_warden_1",
         "speaker": "Zeke",
+        "emote": "surprised",
         "text": "Nova! You actually did it. The Warden's down. The way to the pod is clear, but security is going to reboot the grid any second.",
-        "condition": "quest_active:w1_mq05,quest_stage:w1_mq05:launch_pod,quest_task_not_done:w1_mq05:splice_chime",
+        "condition": "quest_active:w1_mq05,quest_stage:w1_mq05:launch_pod,quest_task_not_done:w1_mq05:splice_chime,milestone_not_set:ms_w1_zeke_directed_to_pod",
         "next": "zeke_w1_mq05_defeat_warden_2"
     },
     {
         "id": "zeke_w1_mq05_defeat_warden_2",
         "speaker": "Player",
+        "emote": "worried",
         "text": "Let's move. Jed said the Chime is the key.",
         "next": "zeke_w1_mq05_defeat_warden_3"
     },
     {
         "id": "zeke_w1_mq05_defeat_warden_3",
         "speaker": "Zeke",
-        "text": "Get inside the pod! I'll secure the hatch. We need to splice that Chime into the console inside."
+        "emote": "worried",
+        "text": "Get inside the pod! I'll secure the hatch. We need to splice that Chime into the console inside.",
+        "trigger": "set_milestone:ms_w1_zeke_directed_to_pod"
     },
     {
         "id": "zeke_w1_mq05_pod_core_1",
         "speaker": "Zeke",
+        "emote": "worried",
         "text": "Nova! Connect the Chime to that port on the console. If Jed's math is right, it should establish a resonance that overrides the colony's lock on the pod launchers.",
-        "condition": "quest_active:w1_mq05,quest_stage:w1_mq05:launch_pod,quest_task_not_done:w1_mq05:splice_chime",
+        "condition": "quest_active:w1_mq05,quest_stage:w1_mq05:launch_pod,quest_task_not_done:w1_mq05:splice_chime,milestone:ms_w1_zeke_directed_to_pod",
         "next": "zeke_w1_mq05_pod_core_2"
     },
     {
         "id": "zeke_w1_mq05_pod_core_2",
         "speaker": "Player",
+        "emote": "worried",
         "text": "I'm inserting it now. Let's hope the frequency matches.",
         "next": "zeke_w1_mq05_pod_core_3"
     },
     {
         "id": "zeke_w1_mq05_pod_core_3",
         "speaker": "Zeke",
+        "emote": "happy",
         "text": "Yes! The core is spooling up. The console's active! We're green for launch. Nova, initiate the sequence on the navigation console!",
         "trigger": "set_quest_task_done:w1_mq05:splice_chime,take_item:ghost_signal_cell,set_milestone:ms_w1_chime_spliced"
     },

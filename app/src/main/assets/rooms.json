@@ -62,7 +62,7 @@
     "env": "mine",
     "title": "Ration Sink",
     "background_image": "images/rooms/world_1/pit_kitchen_v5.png",
-    "description": "A greasy alcove coughs up daily rations from a dispenser patched with tape and hope. Something gray bubbles on the warmer, smelling almost like beef if you stand far enough away.",
+    "description": "A greasy alcove coughs up daily rations from a dispenser patched with tape and hope. A dented pot bubbles on the warmer, smelling almost like beef if you stand far enough away.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -92,7 +92,7 @@
     "env": "mine",
     "title": "Lift Shaft",
     "background_image": "images/rooms/world_1/pit_shaft_v5.png",
-    "description": "A rusted ladder and narrow lift cage climb through the Pit's stacked levels. Steam curls around the rails, turning the hazard stripes glossy and slick.",
+    "description": "A rusted ladder and narrow lift cage climb through the Pit's stacked levels. A sweating pipe vents steam around the rails, turning the hazard stripes glossy and slick.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -124,10 +124,8 @@
     "env": "mine",
     "title": "Jed's Bunk",
     "background_image": "images/rooms/world_1/pit_jed_bunk_v5.png",
-    "description": "Jed's pod is bigger than yours only because he filled every spare inch with parts. Manuals, sensors, and half-built fixes crowd the bunk, all smelling like machine oil and stubbornness.",
-    "npcs": [
-      "jed"
-    ],
+    "description": "Jed's pod is bigger than yours only because he filled every spare inch with parts. Manuals, gadgets, and half-built fixes crowd the bunk, all smelling like machine oil and stubbornness.",
+    "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
@@ -149,6 +147,15 @@
         "type": "generic",
         "condition_unmet_message": "Small sensors, battery packs, and modified cutters. Jed's retirement hobby is a full-time job."
       }
+    ],
+    "npc_presence": [
+      {
+        "npc": "jed",
+        "requires_milestones": [],
+        "forbidden_milestones": [
+          "ms_w1_mq01_jed_talked"
+        ]
+      }
     ]
   },
   {
@@ -156,7 +163,7 @@
     "env": "mine",
     "title": "Pod Row",
     "background_image": "images/rooms/world_1/pit_L2_corridor_v5.png",
-    "description": "Sleeping pods stack up the walls like drawers for tired people. The whole corridor buzzes with distant drills, loose cables, and the tiny glow of personal charms tucked into the seams.",
+    "description": "Sleeping pods stack up the walls like drawers for tired people. Old posters curl beside loose cables, personal charms, and the low buzz of distant drills.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -220,7 +227,7 @@
     "env": "mine",
     "title": "Supply Closet",
     "background_image": "images/rooms/world_1/pit_storage_v5.png",
-    "description": "Cleaning drums, dead filters, and cracked plastic bins crowd the closet. Behind them, your little scrap pile waits in the flicker of a bulb that sounds ready to quit.",
+    "description": "Supplies crowd the closet in cracked bins, with filter units stacked beside drums of industrial soap. Behind them, your little scrap pile waits in the flicker of a bulb that sounds ready to quit.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -286,7 +293,7 @@
     "env": "mine",
     "title": "Shared Showers",
     "background_image": "images/rooms/world_1/pit_showers_v5.png",
-    "description": "Lukewarm water spits from dented shower heads and turns orange dust into lazy streaks. The broken soap dispenser rattles with every vent cycle, as if offended by the idea of cleanliness.",
+    "description": "Lukewarm water spits from dented shower heads and turns orange dust into lazy streaks across the tiles. The broken soap dispenser rattles with every vent cycle, as if offended by the idea of cleanliness.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -346,13 +353,17 @@
     "env": "mine",
     "title": "Main Bench",
     "background_image": "images/rooms/world_1/workshop_floor_v3.png",
-    "description": "Warm work lights spill across Jed's main bench, catching on solder smoke and bright little tool handles. Your illegal cutter parts sit in the middle of it all, dangerous, necessary, and almost ready.",
+    "description": "Warm work lights spill across Jed's workbench, catching on solder smoke and bright little tool handles. Your illegal mining cutter sits in the middle of it all, dangerous, necessary, and almost ready.",
     "npcs": [],
     "npc_presence": [
       {
         "npc": "jed",
         "requires_milestones": [
           "ms_w1_mq01_jed_talked"
+        ],
+        "forbidden_milestones": [
+          "ms_w1_mq04_complete",
+          "ms_w1_mq03_complete"
         ]
       }
     ],
@@ -371,10 +382,9 @@
     "state": {},
     "actions": [
       {
-        "name": "workbench",
+        "name": "Workbench",
         "type": "tinkering",
-        "condition_unmet_message": "Jed's workbench is ready. Time to prove you remember which end of the soldering iron gets hot.",
-        "action_event": "open_tinkering"
+        "condition_unmet_message": "Jed's workbench is ready. Time to prove you remember which end of the soldering iron gets hot."
       },
       {
         "name": "mining cutter",
@@ -423,7 +433,7 @@
     "env": "mine",
     "title": "Parts Loft",
     "background_image": "images/rooms/world_1/workshop_loft_v3.png",
-    "description": "The loft hangs above the shop on beams that complain about every step. Jed keeps the good parts up here, wrapped in cloth and labeled with a code only he pretends is obvious.",
+    "description": "The loft hangs above the workshop floor on beams that complain about every step. Jed keeps the good parts up here, wrapped in cloth and labeled with a code only he pretends is obvious.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -453,7 +463,7 @@
     "env": "mine",
     "title": "Tool Shed",
     "background_image": "images/rooms/world_1/workshop_shed_v3.png",
-    "description": "Every tool has a hook, a shine, and probably a story about how Jed stole it back from Dominion twice. The heavy toolbox on the low shelf looks older than most of the colony.",
+    "description": "Every set of tools has a hook, a shine, and probably a story about how Jed stole it back from Dominion twice. The heavy toolbox on the low shelf looks older than most of the colony.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -485,7 +495,7 @@
     "env": "mine",
     "title": "Flooded Basement",
     "background_image": "images/rooms/world_1/workshop_basement_v3.png",
-    "description": "Water glimmers between the floor plates below the shop, reflecting conduit light in wobbly stripes. The air smells like wet stone, hot wire, and secrets Jed has not admitted are secrets.",
+    "description": "Water glimmers around a scrap pile below the shop, reflecting conduit light in wobbly stripes. The air smells like wet stone, hot wire, and secrets Jed has not admitted are secrets.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -502,7 +512,7 @@
         "name": "scrap pile",
         "type": "container",
         "items": [
-          "scrap_metal_i"
+          "scrap_metal"
         ],
         "condition_unmet_message": "You dig through the pile and find a useful piece of alloy."
       },
@@ -519,12 +529,18 @@
     "title": "Loading Dock",
     "background_image": "images/rooms/world_1/workshop_dock_v3.png",
     "description": "A cargo rail vanishes into the dark beyond the shutter. A battered loader waits beside a fresh scrap pile, while a scarred riot shield trainer makes the whole dock feel like a lesson waiting to happen.",
-    "npcs": [
-      "foreman_bogs"
-    ],
+    "npcs": [],
     "items": [],
     "enemies": [
       "acoustic_bulwark"
+    ],
+    "enemy_instances": [
+      {
+        "enemy_id": "acoustic_bulwark",
+        "hp": 9,
+        "vitality": 0,
+        "stability": 6
+      }
     ],
     "connections": {
       "west": "workshop_shed",
@@ -552,6 +568,15 @@
         "name": "scrap",
         "type": "generic",
         "condition_unmet_message": "A fresh delivery of salvaged engine parts, still warm from use."
+      }
+    ],
+    "npc_presence": [
+      {
+        "npc": "foreman_bogs",
+        "requires_milestones": [],
+        "forbidden_milestones": [
+          "ms_w1_mq02_complete"
+        ]
       }
     ]
   },
@@ -585,7 +610,7 @@
     "env": "mine",
     "title": "Triage Hall",
     "background_image": "images/rooms/world_1/medbay_hall_v3.png",
-    "description": "Grimy benches line the hall under flickering clinical lights. Doc works north of here, while a chemical haze seeps from the vent access to the east.",
+    "description": "Grimy benches line the hall under flickering clinical lights. A tired bio-scanner blinks near Doc's door while a chemical haze seeps from the vent access to the east.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -617,7 +642,7 @@
     "env": "mine",
     "title": "Doc's Exam Room",
     "background_image": "images/rooms/world_1/medbay_exam1_v3.png",
-    "description": "Doc's exam room tries hard to look clean and loses by inches. Stained tiles, taped scanner leads, and overused med trays turn every injury into paperwork with a pulse. The med station is patched together, but it still works.",
+    "description": "Doc's exam room tries hard to look clean and loses by inches. A glitching monitor, taped scanner leads, and overused med trays turn every injury into paperwork with a pulse. The med station is patched together, but it still works.",
     "npcs": [
       "doc"
     ],
@@ -650,7 +675,7 @@
     "env": "mine",
     "title": "Med Supply Closet",
     "background_image": "images/rooms/world_1/medbay_storage_v3.png",
-    "description": "Empty shelves, expired packets, and carefully rationed bandages make the closet feel picked over before the emergency even starts. One locked cold cabinet still hums like it is guarding treasure.",
+    "description": "Supplies sit in thin, careful rows: expired packets, rationed bandages, and disinfectant bottles already half-empty. One locked cold cabinet still hums like it is guarding treasure.",
     "npcs": [],
     "items": [
       "medkit_i"
@@ -682,11 +707,11 @@
     "env": "mine",
     "title": "Ventilation Hub",
     "background_image": "images/rooms/world_1/medbay_vents_v3.png",
-    "description": "Rusted fans and patched pipes keep the med-bay breathing by sheer habit. A cracked vent hisses chemical haze into the room, tinting the air a sickly green where your lights cut through it.",
+    "description": "Rusted fans and patched pipes keep the med-bay breathing by sheer habit. A cracked vent hisses chemical haze into the room, and a skimmer nests in the toxic updraft.",
     "npcs": [],
     "items": [],
     "enemies": [
-      "echo_borer"
+      "siren_skimmer"
     ],
     "connections": {
       "west": "medbay_hall",
@@ -721,7 +746,7 @@
     "env": "mine",
     "title": "Exhaust Mouth",
     "background_image": "images/rooms/world_1/medbay_exhaust_v3.png",
-    "description": "The exhaust pipe opens wide to the canyon, framing the orange mining pit far below. Wind claws through the grate, carrying dust, cold metal, and the faint roar of machines that never clock out.",
+    "description": "The vent pipe opens wide to the canyon, framing the orange mining pit far below. Wind claws through the grate, carrying dust, cold metal, and the faint roar of machines that never clock out.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -807,7 +832,7 @@
     "env": "market",
     "title": "Trade Row Gate",
     "background_image": "images/rooms/world_1/trade_entrance_v3.png",
-    "description": "A crooked neon arch marks the start of Trade Row, buzzing bright against the carved rock. Beyond it, voices, power cells, and sizzling food all compete to sell you something.",
+    "description": "A crooked archway and a stack of flickering signs mark the start of Trade Row, buzzing bright against the carved rock. Beyond them, voices, power cells, and sizzling food all compete to sell you something.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -838,7 +863,7 @@
     "env": "market",
     "title": "Market Strip",
     "background_image": "images/rooms/world_1/trade_strip_v3.png",
-    "description": "Makeshift stalls crowd the corridor with patched tarps, glowing batteries, and noodles fried in questionable oil. Scrapper's stall sits north behind a curtain of hanging cables, and a scanner-dead corner waits to the east.",
+    "description": "Makeshift stalls crowd the corridor with patched tarps, power cells, and noodles fried in questionable oil. Scrapper's stall sits north behind a curtain of hanging cables, and a scanner-dead corner waits to the east.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -871,7 +896,7 @@
     "env": "market",
     "title": "Scrapper's Stall",
     "background_image": "images/rooms/world_1/trade_scrapper_v3.png",
-    "description": "Illegal tech, salvaged weapons, and mystery parts spill from Scrapper's reinforced stall in tidy little disasters. He prices everything like a favor, watches every shadow, and keeps the contraband worth buying under the counter.",
+    "description": "Illegal tech, salvaged weapons, and a locked datapad spill from Scrapper's reinforced stall in tidy little disasters. He prices everything like a favor, watches every shadow, and keeps the contraband worth buying under the counter.",
     "npcs": [
       "scrapper"
     ],
@@ -915,7 +940,7 @@
     "env": "market",
     "title": "The Hidden Stash",
     "background_image": "images/rooms/world_1/trade_stash_v3.png",
-    "description": "The back corner is dark, damp, and just boring enough to be useful. Under a heap of industrial netting, a rebel cache buzzes softly with a field meant to make scanners look elsewhere.",
+    "description": "The back corner is dark, damp, and just boring enough to be useful. Under a heap of industrial netting, a rebel cache buzzes softly behind a security field meant to make scanners look elsewhere.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -985,7 +1010,7 @@
     "env": "market",
     "title": "Card Den",
     "background_image": "images/rooms/world_1/trade_den_v3.png",
-    "description": "A holo-card table flickers in the haze, dealing bad odds with cheerful colors. Miners bet tiny stacks of scrip and pretend the next hand could change anything.",
+    "description": "A holo-card table flickers in the haze, one of several card games dealing bad odds with cheerful colors. Miners bet tiny stacks of scrip and pretend the next hand could change anything.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -1045,7 +1070,7 @@
     "env": "market",
     "title": "Upper Gantry",
     "background_image": "images/rooms/world_1/trade_gantry_v3.png",
-    "description": "The gantry overlooks Trade Row's bright, noisy clutter from a railing slick with condensation. From up here, the whole market looks like a carnival built out of unpaid invoices.",
+    "description": "The gantry overlooks Trade Row's bright, noisy clutter from railings slick with condensation. From up here, the whole market looks like a carnival built out of unpaid invoices.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -1100,7 +1125,7 @@
     "env": "mine",
     "title": "Shift Queue",
     "background_image": "images/rooms/world_1/checkpoint_queue_v3.png",
-    "description": "A low corridor funnels miners toward the checkpoint one badge at a time. White lights bleach the color out of everything, leaving only scuffed boots, tired faces, and the beep of the scanner.",
+    "description": "A low corridor funnels miners toward the checkpoint one badge at a time. White lights bleach the color out of every suit, leaving only scuffed boots, tired faces, and the beep of the scanner.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -1165,9 +1190,7 @@
     "title": "Zeke's Booth",
     "background_image": "images/rooms/world_1/checkpoint_booth_v3.png",
     "description": "Zeke's window sits behind reinforced glass, half buried in badge readers and liability screens. The speaker crackles before he says anything, like even the booth is nervous.",
-    "npcs": [
-      "zeke"
-    ],
+    "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
@@ -1190,6 +1213,15 @@
         "type": "generic",
         "condition_unmet_message": "A cheap, buzzing intercom. It's the only way to talk to the clerks."
       }
+    ],
+    "npc_presence": [
+      {
+        "npc": "zeke",
+        "requires_milestones": [],
+        "forbidden_milestones": [
+          "ms_w1_mq02_complete"
+        ]
+      }
     ]
   },
   {
@@ -1197,7 +1229,7 @@
     "env": "mine",
     "title": "Holding Cell",
     "background_image": "images/rooms/world_1/checkpoint_cell_v3.png",
-    "description": "A temporary cage waits beside the checkpoint for anyone Dominion needs to sort later. Scratched names cover the wall behind a bolted metal bench, stubborn proof that people were here.",
+    "description": "A temporary cage waits beside the checkpoint for anyone Dominion needs to sort later. Graffiti and scratched names cover the wall behind a bolted metal bench, stubborn proof that people were here.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -1227,7 +1259,7 @@
     "env": "mine",
     "title": "Blast Door A",
     "background_image": "images/rooms/world_1/checkpoint_door_v3.png",
-    "description": "Blast Door A fills the passage with scarred alloy and stubborn red lock lights. It does not look dramatic; it looks expensive, official, and perfectly happy to ruin your day.",
+    "description": "Blast Door A fills the passage with scarred alloy, a locked console, and stubborn red lights. It does not look dramatic; it looks expensive, official, and perfectly happy to ruin your day.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -1294,9 +1326,7 @@
     "title": "Concourse Lobby",
     "background_image": "images/rooms/world_1/admin_lobby.png",
     "description": "The grand entrance is a massive, open space with floor-to-ceiling windows overlooking the mining pit. The air is filtered and perfectly chilled, a stark contrast to the grit of the Homestead.",
-    "npcs": [
-      "foreman_bogs"
-    ],
+    "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
@@ -1315,6 +1345,17 @@
         "name": "windows",
         "type": "generic",
         "condition_unmet_message": "The mining pit is a sea of orange lights and grinding steel, miles below."
+      }
+    ],
+    "npc_presence": [
+      {
+        "npc": "foreman_bogs",
+        "requires_milestones": [
+          "ms_w1_mq02_complete"
+        ],
+        "forbidden_milestones": [
+          "ms_w1_mq03_complete"
+        ]
       }
     ]
   },
@@ -1356,9 +1397,7 @@
     "title": "Customer Service",
     "background_image": "images/rooms/world_1/admin_window.png",
     "description": "A row of identical glass booths where the colony's bureaucracy processes the living and the dead. The silence is broken only by the soft chime of verified badges.",
-    "npcs": [
-      "zeke"
-    ],
+    "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
@@ -1381,6 +1420,17 @@
         "name": "badges",
         "type": "generic",
         "condition_unmet_message": "The sound of shift-clearance is the only music this sector knows."
+      }
+    ],
+    "npc_presence": [
+      {
+        "npc": "zeke",
+        "requires_milestones": [
+          "ms_w1_mq02_complete"
+        ],
+        "forbidden_milestones": [
+          "ms_w1_mq03_complete"
+        ]
       }
     ]
   },
@@ -1903,10 +1953,12 @@
     "env": "mine",
     "title": "Conveyor Belt",
     "background_image": "images/rooms/world_1/mine_conveyor.png",
-    "description": "A massive conveyor belt stretches into the darkness, its rubber surface stained with ore dust. The motor at the end of the line groans with a sound like grinding teeth.",
+    "description": "A massive conveyor belt stretches into the darkness, its rubber surface stained with ore dust. A pressure hauler idles beside the motor, groaning with a sound like grinding teeth.",
     "npcs": [],
     "items": [],
-    "enemies": [],
+    "enemies": [
+      "pressure_hauler"
+    ],
     "connections": {
       "west": "mine_junction",
       "north": "mine_sifter"
@@ -2375,7 +2427,8 @@
     "items": [],
     "enemies": [],
     "connections": {
-      "west": "launch_access"
+      "west": "launch_access",
+      "south": "launch_fuel"
     },
     "pos": [
       1,
@@ -2405,10 +2458,10 @@
     "items": [],
     "enemies": [],
     "connections": {
-      "north": "launch_access"
+      "north": "launch_gantry"
     },
     "pos": [
-      0,
+      1,
       -1
     ],
     "state": {},
@@ -2430,10 +2483,8 @@
     "env": "logistics",
     "title": "Cargo Lift",
     "background_image": "images/rooms/world_1/launch_lift.png",
-    "description": "A heavy industrial platform where Jed stands by the manual override panel. The hydraulics scream as the lift begins its ascent, carrying you away from the only home you've ever known.",
-    "npcs": [
-      "jed"
-    ],
+    "description": "A heavy industrial platform beside a manual override panel. The hydraulics scream as the lift begins its ascent, carrying you away from the only home you've ever known.",
+    "npcs": [],
     "items": [],
     "enemies": [
       "acoustic_bulwark"
@@ -2451,7 +2502,7 @@
       {
         "name": "override panel",
         "type": "generic",
-        "condition_unmet_message": "Jed is holding the controls. He isn't moving."
+        "condition_unmet_message": "The controls are locked in place, holding the lift open by force."
       },
       {
         "name": "hydraulics",
@@ -2464,18 +2515,36 @@
         "type": "enemy",
         "message_locked": "A hostile Acoustic Bulwark blocks access to the security checkpoint."
       }
-    }
+    },
+    "npc_presence": [
+      {
+        "npc": "jed",
+        "requires_milestones": [
+          "ms_w1_mq03_complete"
+        ],
+        "forbidden_milestones": [
+          "ms_w1_mq04_complete"
+        ]
+      }
+    ]
   },
   {
     "id": "launch_checkpoint",
     "env": "logistics",
     "title": "Security Checkpoint B",
     "background_image": "images/rooms/world_1/launch_checkpoint.png",
-    "description": "A fortified checkpoint where the air smells of ozone and static. Harsh white floodlights sweep the room, searching for any asset attempting to reach the pods.",
+    "description": "A fortified checkpoint where the air smells of ozone and static. A Dominion dampener coordinates with a hovering security drone as floodlights sweep for any asset attempting to reach the pods.",
     "npcs": [],
     "items": [],
     "enemies": [
+      "dominion_dampener",
       "resonance_buoy"
+    ],
+    "enemy_parties": [
+      [
+        "dominion_dampener",
+        "resonance_buoy"
+      ]
     ],
     "connections": {
       "south": "launch_lift",
@@ -2501,7 +2570,7 @@
     "blocked_directions": {
       "north": {
         "type": "enemy",
-        "message_locked": "A security drone scans the gateway, blocking the route to the pods."
+        "message_locked": "A Dominion Dampener and security drone lock down the route to the pods."
       }
     }
   },
@@ -2512,8 +2581,7 @@
     "background_image": "images/rooms/world_1/launch_bay.png",
     "description": "The massive cargo rails stretch up toward the planetary shield, glowing with an emergency red. A single escape pod sits on the pad, its engines humming. [npc:The Warden] blocks the way, while [npc:Zeke] frantically attempts to hack the hatch controls.",
     "npcs": [
-      "the_warden",
-      "zeke"
+      "the_warden"
     ],
     "items": [],
     "enemies": [
@@ -2554,7 +2622,18 @@
           }
         ]
       }
-    }
+    },
+    "npc_presence": [
+      {
+        "npc": "zeke",
+          "requires_milestones": [
+            "ms_w1_mq04_complete"
+          ],
+          "forbidden_milestones": [
+            "ms_w1_zeke_directed_to_pod"
+          ]
+        }
+      ]
   },
   {
     "id": "launch_pod",
@@ -2562,9 +2641,7 @@
     "title": "The Pod Core",
     "background_image": "images/rooms/world_1/launch_pod.png",
     "description": "Inside the cramped pod, the air is thick with the scent of recycled oxygen and panic. Zeke hammers at the navigation console, his hands shaking as the countdown blares from the overhead speaker.",
-    "npcs": [
-      "zeke"
-    ],
+    "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
@@ -2592,6 +2669,17 @@
         "name": "speaker",
         "type": "generic",
         "condition_unmet_message": "The countdown is deafening in the small space."
+      }
+    ],
+    "npc_presence": [
+      {
+          "npc": "zeke",
+          "requires_milestones": [
+            "ms_w1_zeke_directed_to_pod"
+          ],
+          "forbidden_milestones": [
+            "ms_w1_mq05_complete"
+        ]
       }
     ]
   },
@@ -2635,10 +2723,8 @@
     "env": "swamp",
     "title": "Crash Site",
     "background_image": "images/rooms/world_2/crash_site.png",
-    "description": "The escape pod is half-submerged in warm, glowing water. Thick vines hang from concrete struts, and a low, resonant hum like waves on a distant shore fills the air. Zeke sits coughing on the hull.",
-    "npcs": [
-      "zeke"
-    ],
+    "description": "The escape pod wreckage is half-submerged in warm glow-water. The cracked pod core ticks under a scorched access panel while thick vines hang from concrete struts. Zeke sits coughing on the hull as a low, resonant hum rolls through the air.",
+    "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
@@ -2665,6 +2751,15 @@
         "name": "glow-water",
         "type": "generic",
         "condition_unmet_message": "The water is warm and vibrates with a gentle frequency. It feels soothing to touch."
+      }
+    ],
+    "npc_presence": [
+      {
+        "npc": "zeke",
+        "requires_milestones": [
+          "ms_w1_mq05_complete"
+        ],
+        "forbidden_milestones": []
       }
     ]
   },
@@ -2701,7 +2796,7 @@
     "env": "swamp",
     "title": "Glow-Water Stream",
     "background_image": "images/rooms/world_2/glow_stream.png",
-    "description": "A gentle stream of mineral-rich water flows through the concrete ruins. The water vibrates, creating visible patterns of standing waves on the surface.",
+    "description": "A gentle stream of mineral-rich water flows through the concrete ruins. The water vibrates, creating visible standing waves on the surface. Fish the glow-water here and every ripple answers with a low chord.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -2724,6 +2819,65 @@
         "type": "fishing",
         "zone_id": "sector9_stream",
         "condition_unmet_message": "The stream is calm enough for fishing."
+      }
+    ]
+  },
+  {
+    "id": "debug_presence_stress",
+    "env": "logistics",
+    "title": "Presence Stress Test",
+    "background_image": "images/rooms/world_1/launch_checkpoint.png",
+    "description": "A debug-only staging floor packed with friendly contacts, loose supplies, and multiple hostile patrol groups for checking the exploration presence UI under pressure.",
+    "npcs": [
+      "zeke",
+      "scrapper",
+      "guard_hank"
+    ],
+    "items": [
+      "medkit_i",
+      "ration_pack",
+      "scrap_metal",
+      "battery"
+    ],
+    "enemies": [
+      "dominion_dampener",
+      "resonance_buoy",
+      "acoustic_bulwark",
+      "echo_borer",
+      "siren_skimmer"
+    ],
+    "enemy_instances": [
+      {
+        "enemy_id": "acoustic_bulwark",
+        "hp": 9,
+        "vitality": 0,
+        "stability": 6
+      }
+    ],
+    "enemy_parties": [
+      [
+        "dominion_dampener",
+        "resonance_buoy"
+      ],
+      [
+        "acoustic_bulwark"
+      ],
+      [
+        "echo_borer",
+        "siren_skimmer"
+      ]
+    ],
+    "connections": {},
+    "pos": [
+      99,
+      99
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "debug manifest",
+        "type": "generic",
+        "condition_unmet_message": "This room exists only to inspect crowded exploration presence layout."
       }
     ]
   }

@@ -188,7 +188,16 @@ class AppServices(context: Context) {
         DialogueTriggerHandler { trigger ->
             val handled = dialogueTriggerListener?.invoke(trigger) == true
             if (!handled) {
-                handleDialogueTrigger(trigger, sessionStore, questRuntimeManager, inventoryService)
+                handleDialogueTrigger(
+                    trigger = trigger,
+                    sessionStore = sessionStore,
+                    questRuntimeManager = questRuntimeManager,
+                    inventoryService = inventoryService,
+                    onMilestoneSet = { milestone ->
+                        milestoneManager.handleMilestone(milestone, null)
+                        milestoneManager.applyEffectsFor(milestone)
+                    }
+                )
             }
         }
     )
@@ -814,6 +823,327 @@ class AppServices(context: Context) {
         }
     }
 
+    fun startNewGameAtFirstCombat(): Boolean {
+        return runCatching {
+            if (!startNewGame(debugFullInventory = true)) return false
+            val inventory = sessionStore.state.value.inventory.toMutableMap()
+            inventory["mine_access_badge"] = (inventory["mine_access_badge"] ?: 0).coerceAtLeast(1)
+            inventoryService.restore(inventory)
+            sessionStore.setInventory(inventory)
+            sessionStore.completeQuest("w1_mq01")
+            sessionStore.completeQuest("w1_mq02")
+            sessionStore.setMilestone("ms_w1_mq01_complete")
+            sessionStore.setMilestone("ms_w1_mq02_complete")
+            sessionStore.startQuest("w1_mq03", track = true)
+            sessionStore.setQuestStage("w1_mq03", "deep_mine_descent")
+            sessionStore.setQuestTasksCompleted(
+                questId = "w1_mq03",
+                taskIds = setOf("enter_logistics_sector", "talk_to_bogs", "use_deep_elevator")
+            )
+            sessionStore.setWorld("world_1")
+            sessionStore.setHub("hub_2_logistics")
+            sessionStore.setRoom("mine_landing")
+            true
+        }.getOrElse { err ->
+            Log.e("AppServices", "Failed to start debug first-combat game.", err)
+            false
+        }
+    }
+
+    fun startNewGameAtEnemyPartyCombat(): Boolean {
+        return runCatching {
+            if (!startNewGame(debugFullInventory = true)) return false
+            val inventory = sessionStore.state.value.inventory.toMutableMap()
+            inventory["mine_access_badge"] = (inventory["mine_access_badge"] ?: 0).coerceAtLeast(1)
+            inventory["tuning_fork"] = (inventory["tuning_fork"] ?: 0).coerceAtLeast(1)
+            inventory["ghost_signal_cell"] = (inventory["ghost_signal_cell"] ?: 0).coerceAtLeast(1)
+            inventoryService.restore(inventory)
+            sessionStore.setInventory(inventory)
+            listOf("w1_mq01", "w1_mq02", "w1_mq03", "w1_mq04").forEach(sessionStore::completeQuest)
+            listOf(
+                "ms_w1_mq01_complete",
+                "ms_w1_mq02_complete",
+                "ms_w1_mq03_complete",
+                "ms_w1_mq04_complete"
+            ).forEach(sessionStore::setMilestone)
+            sessionStore.startQuest("w1_mq05", track = true)
+            sessionStore.setQuestStage("w1_mq05", "reach_pod_bay")
+            sessionStore.setQuestTasksCompleted(
+                questId = "w1_mq05",
+                taskIds = emptySet()
+            )
+            sessionStore.setWorld("world_1")
+            sessionStore.setHub("hub_2_logistics")
+            sessionStore.setRoom("launch_checkpoint")
+            true
+        }.getOrElse { err ->
+            Log.e("AppServices", "Failed to start debug enemy-party combat game.", err)
+            false
+        }
+    }
+
+    fun startNewGameAtPresenceStress(): Boolean {
+        return runCatching {
+            if (!startNewGame(debugFullInventory = false)) return false
+            bootstrapCinematics.clear()
+            bootstrapPlayerActions.clear()
+            sessionStore.completeQuest("w1_mq01")
+            sessionStore.setMilestone("ms_w1_mq01_complete")
+            sessionStore.setWorld("world_1")
+            sessionStore.setHub("hub_2_logistics")
+            sessionStore.setRoom("debug_presence_stress")
+            sessionStore.unlockSkill("nova_hydraulic_kick")
+            sessionStore.setPlayerLevel(3)
+            sessionStore.setPlayerXp(250)
+            sessionStore.setPartyMemberLevel("nova", 3)
+            sessionStore.setPartyMemberXp("nova", 250)
+            sessionStore.markTutorialCompleted("swipe_move")
+            sessionStore.markTutorialCompleted("movement")
+            true
+        }.getOrElse { err ->
+            Log.e("AppServices", "Failed to start debug presence-stress game.", err)
+            false
+        }
+    }
+
+    fun startNewGameAtRoomItems(): Boolean {
+        return runCatching {
+            if (!startNewGame(debugFullInventory = true)) return false
+            bootstrapCinematics.clear()
+            bootstrapPlayerActions.clear()
+            sessionStore.completeQuest("w1_mq01")
+            sessionStore.setMilestone("ms_w1_mq01_complete")
+            sessionStore.setWorld("world_1")
+            sessionStore.setHub("hub_1_homestead")
+            sessionStore.setRoom("medbay_storage")
+            sessionStore.markTutorialCompleted("swipe_move")
+            sessionStore.markTutorialCompleted("movement")
+            true
+        }.getOrElse { err ->
+            Log.e("AppServices", "Failed to start debug room-items game.", err)
+            false
+        }
+    }
+
+    fun startNewGameAtScavengerStash(): Boolean {
+        return runCatching {
+            if (!startNewGame(debugFullInventory = false)) return false
+            bootstrapCinematics.clear()
+            bootstrapPlayerActions.clear()
+            sessionStore.completeQuest("w1_mq01")
+            sessionStore.setMilestone("ms_w1_mq01_complete")
+            sessionStore.setWorld("world_1")
+            sessionStore.setHub("hub_1_homestead")
+            sessionStore.setRoom("trade_scrapper")
+            sessionStore.markTutorialCompleted("swipe_move")
+            sessionStore.markTutorialCompleted("movement")
+            true
+        }.getOrElse { err ->
+            Log.e("AppServices", "Failed to start debug Scavenger's Stash game.", err)
+            false
+        }
+    }
+
+    fun startNewGameAtHeavyLifting(): Boolean {
+        return runCatching {
+            if (!startNewGame(debugFullInventory = false)) return false
+            bootstrapCinematics.clear()
+            bootstrapPlayerActions.clear()
+            sessionStore.completeQuest("w1_mq01")
+            sessionStore.setMilestone("ms_w1_mq01_complete")
+            sessionStore.setWorld("world_1")
+            sessionStore.setHub("hub_1_homestead")
+            sessionStore.setRoom("workshop_dock")
+            sessionStore.markTutorialCompleted("swipe_move")
+            sessionStore.markTutorialCompleted("movement")
+            true
+        }.getOrElse { err ->
+            Log.e("AppServices", "Failed to start debug Heavy Lifting game.", err)
+            false
+        }
+    }
+
+    fun startNewGameAtCheckpoint(): Boolean {
+        return runCatching {
+            if (!startNewGame(debugFullInventory = false)) return false
+            bootstrapCinematics.clear()
+            bootstrapPlayerActions.clear()
+            sessionStore.completeQuest("w1_mq01")
+            sessionStore.setMilestone("ms_w1_mq01_complete")
+            sessionStore.setWorld("world_1")
+            sessionStore.setHub("hub_1_homestead")
+            sessionStore.setRoom("checkpoint_queue")
+            sessionStore.markTutorialCompleted("swipe_move")
+            sessionStore.markTutorialCompleted("movement")
+            true
+        }.getOrElse { err ->
+            Log.e("AppServices", "Failed to start debug checkpoint game.", err)
+            false
+        }
+    }
+
+    fun startNewGameAtDeepMine(): Boolean {
+        return runCatching {
+            if (!startNewGame(debugFullInventory = true)) return false
+            bootstrapCinematics.clear()
+            bootstrapPlayerActions.clear()
+            val inventory = sessionStore.state.value.inventory.toMutableMap()
+            inventory["mine_access_badge"] = (inventory["mine_access_badge"] ?: 0).coerceAtLeast(1)
+            inventoryService.restore(inventory)
+            sessionStore.setInventory(inventory)
+            listOf("w1_mq01", "w1_mq02", "w1_sq03").forEach(sessionStore::completeQuest)
+            listOf(
+                "ms_w1_mq01_complete",
+                "ms_w1_mq02_complete",
+                "ms_w1_sq03_started",
+                "ms_w1_guardbreak_trained"
+            ).forEach(sessionStore::setMilestone)
+            sessionStore.unlockSkill("nova_hydraulic_kick")
+            sessionStore.startQuest("w1_mq03", track = true)
+            sessionStore.setQuestStage("w1_mq03", "sector_four_assignment")
+            sessionStore.setQuestTasksCompleted(
+                questId = "w1_mq03",
+                taskIds = setOf(
+                    "enter_logistics_sector",
+                    "clear_first_mine_encounter",
+                    "break_riot_guard"
+                )
+            )
+            sessionStore.setRoomState("mine_alpha", debugEncounterClearedStateKey("echo_borer"), true)
+            sessionStore.setRoomState("mine_checkpoint", debugEncounterClearedStateKey("acoustic_bulwark"), true)
+            sessionStore.setRoomState("mine_conveyor", debugEncounterClearedStateKey("pressure_hauler"), true)
+            sessionStore.setPlayerLevel(3)
+            sessionStore.setPlayerXp(250)
+            sessionStore.setPartyMembers(listOf("nova", "zeke"))
+            sessionStore.setPartyMemberLevel("nova", 3)
+            sessionStore.setPartyMemberXp("nova", 250)
+            sessionStore.setPartyMemberLevel("zeke", 3)
+            sessionStore.setPartyMemberXp("zeke", 250)
+            sessionStore.setWorld("world_1")
+            sessionStore.setHub("hub_2_logistics")
+            sessionStore.setRoom("admin_lobby")
+            sessionStore.markTutorialCompleted("swipe_move")
+            sessionStore.markTutorialCompleted("movement")
+            true
+        }.getOrElse { err ->
+            Log.e("AppServices", "Failed to start debug Deep Mine game.", err)
+            false
+        }
+    }
+
+    fun startNewGameAtRedAlert(): Boolean {
+        return runCatching {
+            if (!startNewGame(debugFullInventory = true)) return false
+            bootstrapCinematics.clear()
+            bootstrapPlayerActions.clear()
+            val inventory = sessionStore.state.value.inventory.toMutableMap()
+            inventory["mine_access_badge"] = (inventory["mine_access_badge"] ?: 0).coerceAtLeast(1)
+            inventory["tuning_fork"] = (inventory["tuning_fork"] ?: 0).coerceAtLeast(1)
+            inventoryService.restore(inventory)
+            sessionStore.setInventory(inventory)
+            listOf("w1_mq01", "w1_mq02", "w1_sq03", "w1_mq03").forEach(sessionStore::completeQuest)
+            listOf(
+                "ms_w1_mq01_complete",
+                "ms_w1_mq02_complete",
+                "ms_w1_sq03_started",
+                "ms_w1_guardbreak_trained",
+                "ms_w1_mq03_complete"
+            ).forEach(sessionStore::setMilestone)
+            sessionStore.unlockSkill("nova_hydraulic_kick")
+            sessionStore.unlockSkill("nova_blast_wave")
+            sessionStore.startQuest("w1_mq04", track = true)
+            sessionStore.setQuestStage("w1_mq04", "cargo_lift_sacrifice")
+            sessionStore.setQuestTasksCompleted(
+                questId = "w1_mq04",
+                taskIds = setOf(
+                    "survive_lockdown_broadcast",
+                    "clear_escape_gauntlet"
+                )
+            )
+            sessionStore.setRoomState("launch_access", debugEncounterClearedStateKey("resonance_buoy"), true)
+            sessionStore.setRoomState("launch_lift", debugEncounterClearedStateKey("acoustic_bulwark"), true)
+            sessionStore.setPlayerLevel(4)
+            sessionStore.setPlayerXp(450)
+            sessionStore.setPartyMembers(listOf("nova", "zeke"))
+            sessionStore.setPartyMemberLevel("nova", 4)
+            sessionStore.setPartyMemberXp("nova", 450)
+            sessionStore.setPartyMemberLevel("zeke", 4)
+            sessionStore.setPartyMemberXp("zeke", 450)
+            sessionStore.setWorld("world_1")
+            sessionStore.setHub("hub_2_logistics")
+            sessionStore.setRoom("echo_exit")
+            sessionStore.markTutorialCompleted("swipe_move")
+            sessionStore.markTutorialCompleted("movement")
+            true
+        }.getOrElse { err ->
+            Log.e("AppServices", "Failed to start debug Red Alert game.", err)
+            false
+        }
+    }
+
+    fun startNewGameAtLaunch(): Boolean {
+        return runCatching {
+            if (!startNewGame(debugFullInventory = true)) return false
+            bootstrapCinematics.clear()
+            bootstrapPlayerActions.clear()
+            val inventory = sessionStore.state.value.inventory.toMutableMap()
+            inventory["mine_access_badge"] = (inventory["mine_access_badge"] ?: 0).coerceAtLeast(1)
+            inventory["tuning_fork"] = (inventory["tuning_fork"] ?: 0).coerceAtLeast(1)
+            inventory["ghost_signal_cell"] = (inventory["ghost_signal_cell"] ?: 0).coerceAtLeast(1)
+            inventoryService.restore(inventory)
+            sessionStore.setInventory(inventory)
+            listOf("w1_mq01", "w1_mq02", "w1_sq03", "w1_mq03", "w1_mq04").forEach(sessionStore::completeQuest)
+            listOf(
+                "ms_w1_mq01_complete",
+                "ms_w1_mq02_complete",
+                "ms_w1_sq03_started",
+                "ms_w1_guardbreak_trained",
+                "ms_w1_mq03_complete",
+                "ms_w1_mq04_complete"
+            ).forEach(sessionStore::setMilestone)
+            sessionStore.unlockSkill("nova_hydraulic_kick")
+            sessionStore.unlockSkill("nova_blast_wave")
+            sessionStore.startQuest("w1_mq05", track = true)
+            sessionStore.setQuestStage("w1_mq05", "launch_pod")
+            sessionStore.setQuestTasksCompleted(
+                questId = "w1_mq05",
+                taskIds = setOf(
+                    "fight_through_launch_access",
+                    "reach_pod_bay",
+                    "survive_warden_intro",
+                    "break_warden_guard",
+                    "defeat_the_warden"
+                )
+            )
+            sessionStore.setRoomState("launch_checkpoint", debugEncounterClearedStateKey("dominion_dampener", "resonance_buoy"), true)
+            sessionStore.setRoomState("launch_bay", debugEncounterClearedStateKey("the_iron_warden"), true)
+            sessionStore.setRoomState("launch_bay", "warden_defeated", true)
+            sessionStore.setPlayerLevel(5)
+            sessionStore.setPlayerXp(700)
+            sessionStore.setPartyMembers(listOf("nova", "zeke"))
+            sessionStore.setPartyMemberLevel("nova", 5)
+            sessionStore.setPartyMemberXp("nova", 700)
+            sessionStore.setPartyMemberLevel("zeke", 5)
+            sessionStore.setPartyMemberXp("zeke", 700)
+            sessionStore.setWorld("world_1")
+            sessionStore.setHub("hub_2_logistics")
+            sessionStore.setRoom("launch_bay")
+            sessionStore.markTutorialCompleted("swipe_move")
+            sessionStore.markTutorialCompleted("movement")
+            true
+        }.getOrElse { err ->
+            Log.e("AppServices", "Failed to start debug Launch game.", err)
+            false
+        }
+    }
+
+    private fun debugEncounterClearedStateKey(vararg enemyIds: String): String =
+        "encounter_cleared:" + enemyIds
+            .map { it.trim() }
+            .filter { it.isNotBlank() }
+            .sorted()
+            .joinToString("|")
+
     fun drainPendingCinematics(): List<String> =
         bootstrapCinematics.toList().also { bootstrapCinematics.clear() }
 
@@ -994,7 +1324,8 @@ internal fun handleDialogueTrigger(
     trigger: String,
     sessionStore: GameSessionStore,
     questRuntimeManager: QuestRuntimeManager,
-    inventoryService: InventoryService? = null
+    inventoryService: InventoryService? = null,
+    onMilestoneSet: ((String) -> Unit)? = null
 ) {
     val actions = DialogueTriggerParser.parse(trigger)
     if (actions.isEmpty()) return
@@ -1013,7 +1344,10 @@ internal fun handleDialogueTrigger(
                 sessionStore.failQuest(it)
                 questRuntimeManager.markQuestFailed(it)
             }
-            "set_milestone" -> action.milestone?.let { sessionStore.setMilestone(it) }
+            "set_milestone" -> action.milestone?.let {
+                sessionStore.setMilestone(it)
+                onMilestoneSet?.invoke(it)
+            }
             "clear_milestone" -> action.milestone?.let { sessionStore.clearMilestone(it) }
             "track_quest" -> sessionStore.setTrackedQuest(action.questId)
             "untrack_quest" -> sessionStore.setTrackedQuest(null)

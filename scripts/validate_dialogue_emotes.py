@@ -15,6 +15,9 @@ from pathlib import Path
 from typing import Any, Iterable
 
 DEFAULT_PORTRAIT = "images/characters/communicator_portrait.png"
+MIN_IMAGE_BYTES = 4096
+MIN_DIALOGUE_IMAGE_SIZE = 512
+PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
 STANDARD_CHARACTER_EMOTES = {
     "angry",
     "confident",
@@ -79,6 +82,33 @@ def existing_asset(root: Path, asset_path: str | None) -> bool:
     return bool(asset_path) and (root / "app" / "src" / "main" / "assets" / asset_path).is_file()
 
 
+def asset_file(root: Path, asset_path: str) -> Path:
+    return root / "app" / "src" / "main" / "assets" / asset_path
+
+
+def image_asset_issue(root: Path, asset_path: str, min_size: int = MIN_DIALOGUE_IMAGE_SIZE) -> str | None:
+    path = asset_file(root, asset_path)
+    size = path.stat().st_size
+    if size < MIN_IMAGE_BYTES:
+        return f"only {size} bytes"
+    suffix = path.suffix.lower()
+    if suffix == ".png":
+        header = path.read_bytes()[:24]
+        if len(header) < 24:
+            return "shorter than a PNG header"
+        if not header.startswith(PNG_SIGNATURE):
+            return "missing PNG signature"
+        if header[12:16] != b"IHDR":
+            return "missing IHDR chunk"
+        width = int.from_bytes(header[16:20], "big")
+        height = int.from_bytes(header[20:24], "big")
+        if width < min_size or height < min_size:
+            return f"{width}x{height}, expected at least {min_size}x{min_size}"
+    elif suffix not in {".jpg", ".jpeg", ".webp"}:
+        return f"unsupported image extension {path.suffix}"
+    return None
+
+
 def speaker_keys(name: str | None, speaker_id: str | None = None, aliases: Iterable[str] = ()) -> set[str]:
     keys = {norm_key(name), norm_key(speaker_id)}
     keys.update(norm_key(alias) for alias in aliases)
@@ -118,12 +148,17 @@ def build_speaker_index(root: Path) -> dict[str, SpeakerRef]:
             for key, value in (npc.get("emotes") or {}).items()
             if normalize_emote(key)
         }
+        inherited_emotes: dict[str, str] = {}
+        for key in speaker_keys(npc.get("name"), nid, npc.get("aliases") or []):
+            existing = index.get(key)
+            if existing:
+                inherited_emotes.update(existing.emotes)
         ref = SpeakerRef(
             kind="npc",
             id=nid,
             name=npc.get("name") or nid,
             portrait=npc.get("portrait"),
-            emotes=emotes,
+            emotes={**inherited_emotes, **emotes},
         )
         for key in speaker_keys(ref.name, ref.id, npc.get("aliases") or []):
             index[key] = ref
@@ -154,6 +189,12 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Validate Starborn dialogue portrait/emote references.")
     parser.add_argument("--root", default=".", help="Repo root")
     parser.add_argument("--fail-on-missing", action="store_true")
+    parser.add_argument(
+        "--min-uses",
+        type=int,
+        default=0,
+        help="Fail if fewer than this many dialogue/cinematic/shop emote references are found.",
+    )
     args = parser.parse_args()
 
     root = Path(args.root).resolve()
@@ -164,6 +205,10 @@ def main() -> int:
         portrait = normalize_path(ref.portrait, default_dir="images/npcs" if ref.kind == "npc" else "images/characters")
         if portrait and not existing_asset(root, portrait):
             missing.append(f"base portrait missing: {ref.kind} {ref.name} -> {portrait}")
+        elif portrait:
+            issue = image_asset_issue(root, portrait)
+            if issue:
+                missing.append(f"base portrait invalid: {ref.kind} {ref.name} -> {portrait} ({issue})")
 
     sources = [
         root / "app" / "src" / "main" / "assets" / "dialogue.json",
@@ -188,6 +233,14 @@ def main() -> int:
             continue
         if not existing_asset(root, path):
             missing.append(f"missing emote asset: {label} -> {path}")
+            continue
+        issue = image_asset_issue(root, path)
+        if issue:
+            missing.append(f"invalid emote asset: {label} -> {path} ({issue})")
+
+    usage_errors: list[str] = []
+    if len(uses) < args.min_uses:
+        usage_errors.append(f"expected at least {args.min_uses} used emote reference(s), found {len(uses)}")
 
     if missing:
         print("Dialogue portrait/emote validation found missing assets:")
@@ -197,7 +250,12 @@ def main() -> int:
         print("Dialogue portrait/emote validation passed: no missing used emotes.")
 
     print(f"Checked {len(uses)} used emote reference(s).")
-    return 1 if missing and args.fail_on_missing else 0
+    if usage_errors:
+        print("Dialogue emote usage validation failed:")
+        for item in usage_errors:
+            print(f"- {item}")
+
+    return 1 if (missing and args.fail_on_missing) or usage_errors else 0
 
 
 if __name__ == "__main__":
