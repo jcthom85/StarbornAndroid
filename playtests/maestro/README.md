@@ -48,8 +48,11 @@ Then run a flow. If more than one Android device is connected, pass the device i
 .\scripts\maestro.ps1 --device 46121JEKB11849 test .\playtests\maestro\heavy_lifting_training.yaml
 .\scripts\maestro.ps1 --device 46121JEKB11849 test .\playtests\maestro\checkpoint_badge_gate.yaml
 .\scripts\maestro.ps1 --device 46121JEKB11849 test .\playtests\maestro\mainquest_the_echo.yaml
+.\scripts\maestro.ps1 --device 46121JEKB11849 test .\playtests\maestro\dynamic_enemy_movement.yaml
 .\scripts\maestro.ps1 --device 46121JEKB11849 test .\playtests\maestro\mainquest_red_alert.yaml
 .\scripts\maestro.ps1 --device 46121JEKB11849 test .\playtests\maestro\mainquest_the_launch.yaml
+.\scripts\maestro.ps1 --device 46121JEKB11849 test .\playtests\maestro\debug_hub1.yaml
+.\scripts\maestro.ps1 --device 46121JEKB11849 test .\playtests\maestro\debug_hub2.yaml
 .\scripts\maestro.ps1 --device 46121JEKB11849 test .\playtests\maestro\first_combat_entry.yaml
 .\scripts\maestro.ps1 --device 46121JEKB11849 test .\playtests\maestro\enemy_party_combat.yaml
 .\scripts\maestro.ps1 --device 46121JEKB11849 test .\playtests\maestro\combat_target_prompt.yaml
@@ -80,14 +83,18 @@ Then run a flow. If more than one Android device is connected, pass the device i
 - `heavy_lifting_training.yaml`: starts from the Loading Dock debug checkpoint, verifies Bogs starts `Heavy Lifting`, loader/cargo actions update the quest, Nova learns `Hydraulic Kick`, the Acoustic Bulwark training fight resolves through spoils and level-up, and the quest completion popup dismisses back to exploration.
 - `checkpoint_badge_gate.yaml`: starts from the Transit Checkpoint debug checkpoint, verifies Hank's denial, Zeke's override/badge grant, quest completion, the Mine Access Badge opening Blast Door A, `The Echo` starting in Concourse Lobby, and Bogs redirecting an untrained Nova into Heavy Lifting.
 - `mainquest_the_echo.yaml`: starts from the Deep Mine debug checkpoint, verifies Bogs' MQ03 assignment, Deep Elevator progression, persisted cleared-encounter suppression along the Deep Mine route, threshold/Echo Chamber quest updates, the Tuning Fork relic cinematic, and the handoff from `The Echo` into `Red Alert`.
+- `dynamic_enemy_movement.yaml`: starts in the Deep Mine patrol pilot, verifies the Pressure Hauler presence and aggression warning, then waits for the ten-second automatic combat transition.
 - `mainquest_red_alert.yaml`: starts from the Red Alert debug checkpoint, verifies Zeke's comms route out of the Echo Chamber, persisted cleared-encounter suppression through Maintenance Access and Cargo Lift, Jed's sacrifice dialogue and Chime handoff, and the handoff from `Red Alert` into `The Launch`.
 - `mainquest_the_launch.yaml`: starts from the Launch debug checkpoint, verifies the post-Warden Pod Bay state, Zeke's Chime-splice dialogue, pod-core navigation-console interaction, the Planetary Impact cinematic, `The Launch` completion, the `A Strange Coast` World 2 handoff, and the Crash Site return to exploration.
+- `debug_hub1.yaml`: opens Homestead Quarter directly and verifies all five illustrated node destinations are visible.
+- `debug_hub2.yaml`: opens Logistics Sector directly and verifies all five illustrated node destinations are visible without overlap hiding a selector.
 - `first_combat_entry.yaml`: starts from a debug MQ03 Deep Mine checkpoint, swipes into `Main Tunnel Alpha`, taps the Echo-Borer hostile, and verifies the combat command UI appears.
 - `enemy_party_combat.yaml`: starts from the debug enemy-party checkpoint, engages a multi-enemy Dominion party, and verifies the combat screen presents the encounter correctly.
 - `presence_stress.yaml`: starts from a debug-only unreachable room with several NPCs, item pickups, and distinct hostile-party chips, then captures the crowded exploration presence tray for layout review.
 - `presence_combat_return.yaml`: starts from the same crowded debug room, clears one hostile party, then verifies the defeated party disappears while remaining NPCs, items, and enemy parties stay visible after returning from combat.
 - `combat_target_prompt.yaml`: verifies the redesigned top target prompt/cancel path does not cover target selection.
 - `combat_command_menu.yaml`: verifies the combat command menu opens with the expected actions and stays anchored without shifting the party layout.
+- `combat_abilities_menu.yaml`: verifies the redesigned abilities list, ability detail popup, return path, and integration with the item menu.
 - `combat_menu_dismiss.yaml`: verifies tapping the active character again dismisses the combat command menu without firing an accidental action.
 - `combat_enemy_status_rail.yaml`: verifies enemy status/effect presentation uses the compact rail instead of stretching enemy health cards.
 - `combat_flashbang_fx.yaml`: waits for the Flashbang enemy action and verifies blind status applies to the party without square portrait artifacts.

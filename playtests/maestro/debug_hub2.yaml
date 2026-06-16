@@ -1,0 +1,17 @@
+appId: com.junewiregames.starborn.prealpha
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "Debug: Hub 2"
+    timeout: 60000
+- tapOn: "Debug: Hub 2"
+- extendedWaitUntil:
+    visible: "Logistics Sector"
+    timeout: 15000
+- assertVisible: "Admin Concourse"
+- assertVisible: "Server Room"
+- assertVisible: "Deep Mine"
+- assertVisible: "Echo Chamber"
+- assertVisible: "Launch Bay"
+- takeScreenshot: debug-hub2

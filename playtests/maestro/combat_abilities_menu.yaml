@@ -1,0 +1,56 @@
+appId: com.junewiregames.starborn.prealpha
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "New Game"
+    timeout: 60000
+- swipe:
+    direction: UP
+- swipe:
+    direction: UP
+- extendedWaitUntil:
+    visible: "Debug: Enemy Party"
+    timeout: 10000
+- tapOn: "Debug: Enemy Party"
+- extendedWaitUntil:
+    visible: "Security Checkpoint B"
+    timeout: 15000
+- extendedWaitUntil:
+    visible: "Engage Dominion Dampener + Resonance Buoy party"
+    timeout: 10000
+- tapOn: "Engage Dominion Dampener + Resonance Buoy party"
+- extendedWaitUntil:
+    visible: "HOSTILE CONTACT"
+    timeout: 60000
+- tapOn: "Orion"
+- extendedWaitUntil:
+    visible: "Abilities"
+    timeout: 15000
+- tapOn: "Abilities"
+- extendedWaitUntil:
+    visible: "Abilities"
+    timeout: 10000
+- assertVisible: "Stasis Stitch"
+- tapOn: "Details for Stasis Stitch"
+- extendedWaitUntil:
+    visible: "Back to Abilities"
+    timeout: 10000
+- assertVisible: "Target"
+- assertVisible: "Cooldown"
+- assertVisible: "Uses nanites to heal an ally and grant a minor barrier."
+- takeScreenshot: combat-ability-details
+- tapOn: "Back to Abilities"
+- extendedWaitUntil:
+    visible: "Stasis Stitch"
+    timeout: 10000
+- tapOn: "Close"
+- extendedWaitUntil:
+    visible: "Items"
+    timeout: 10000
+- tapOn: "Items"
+- extendedWaitUntil:
+    visible: "Items"
+    timeout: 10000
+- assertVisible: "Close"
+- takeScreenshot: combat-menus-integrated

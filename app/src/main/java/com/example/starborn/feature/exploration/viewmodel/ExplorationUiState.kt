@@ -12,6 +12,7 @@ import com.example.starborn.domain.prompt.UIPrompt
 import com.example.starborn.domain.milestone.MilestoneEvent
 import com.example.starborn.domain.quest.QuestLogEntryType
 import com.example.starborn.domain.tutorial.TutorialRuntimeState
+import com.example.starborn.domain.movement.EnemyAggressionState
 
 data class ExplorationUiState(
     val isLoading: Boolean = true,
@@ -76,6 +77,9 @@ data class ExplorationUiState(
     val skillTreeOverlay: SkillTreeOverlayUi? = null,
     val partyMemberDetails: PartyMemberDetailsUi? = null,
     val eventAnnouncement: EventAnnouncementUi? = null,
+    val enemyAggression: EnemyAggressionState? = null,
+    val enemyMovementNotice: String? = null,
+    val nearbyThreatDirection: String? = null,
     val forceBlackScreen: Boolean = false,
     val fadeOverlay: FadeOverlayCommand? = null,
     val tutorialState: TutorialRuntimeState = TutorialRuntimeState()
@@ -261,7 +265,8 @@ data class DirectionIndicatorUi(
 enum class DirectionIndicatorStatus {
     UNEXPLORED,
     LOCKED,
-    ENEMY
+    ENEMY,
+    NEARBY_THREAT
 }
 
 data class ActionHintUi(

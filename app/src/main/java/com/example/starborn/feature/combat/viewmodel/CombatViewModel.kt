@@ -29,6 +29,7 @@ import com.example.starborn.domain.combat.CombatWeapon
 import com.example.starborn.domain.combat.LootDrop
 import com.example.starborn.domain.combat.ResistanceProfile
 import com.example.starborn.domain.combat.StatBlock
+import com.example.starborn.domain.combat.StatusEffect
 import com.example.starborn.domain.combat.StatusRegistry
 import com.example.starborn.domain.combat.WeaponAttack
 import com.example.starborn.domain.inventory.InventoryEntry
@@ -50,7 +51,9 @@ import com.example.starborn.domain.model.SkillTreeNode
 import com.example.starborn.domain.model.StatusDefinition
 import com.example.starborn.domain.model.Drop
 import com.example.starborn.domain.session.GameSessionStore
+import com.example.starborn.domain.session.GameSessionState
 import com.example.starborn.domain.theme.EnvironmentThemeManager
+import com.example.starborn.domain.theme.defaultWeatherForEnvironment
 import java.util.Locale
 import kotlin.random.Random
 import kotlin.math.roundToInt
@@ -92,7 +95,9 @@ class CombatViewModel(
     private val themeRepository: ThemeRepository,
     private val environmentThemeManager: EnvironmentThemeManager,
     private val encounterCoordinator: EncounterCoordinator,
-    enemyIds: List<String>
+    enemyIds: List<String>,
+    private val tutorialsEnabled: Boolean = true,
+    private val elapsedRealtime: () -> Long = SystemClock::elapsedRealtime
 ) : ViewModel() {
 
     val player: Player?
@@ -132,6 +137,7 @@ class CombatViewModel(
     val roomBackground: String?
     val locationTitle: String?
     val encounterTitle: String
+    val encounterSourcePartyId: String?
     private val timedPromptLock = Any()
     private var timedPromptDeferred: CompletableDeferred<Boolean>? = null
     private val _timedPrompt = MutableStateFlow<TimedPromptState?>(null)
@@ -158,6 +164,8 @@ class CombatViewModel(
     private var bannerSession: BannerSession? = null
     private val _combatBanner = MutableStateFlow<CombatBannerMessage?>(null)
     val combatBanner: StateFlow<CombatBannerMessage?> = _combatBanner.asStateFlow()
+    private val _combatTutorial = MutableStateFlow<CombatTutorialState?>(null)
+    val combatTutorial: StateFlow<CombatTutorialState?> = _combatTutorial.asStateFlow()
 
     private val _state = MutableStateFlow<CombatState?>(null)
     val state: StateFlow<CombatState?> = _state.asStateFlow()
@@ -190,7 +198,13 @@ class CombatViewModel(
     private var lastShieldBlockCueAtMs: Long = 0L
     private var lastShieldBreakCueAtMs: Long = 0L
 
-    private fun isAtbPaused(): Boolean = atbMenuPaused || atbAnimationPauses > 0
+    private fun isAtbPaused(): Boolean =
+        atbMenuPaused || atbAnimationPauses > 0 || _combatTutorial.value?.paused == true
+
+    private fun clearCombatBanner() {
+        bannerSession = null
+        _combatBanner.value = null
+    }
 
     private fun pauseAtbForAnimation() {
         atbAnimationPauses += 1
@@ -284,6 +298,7 @@ class CombatViewModel(
         player = playerParty.firstOrNull()
         playerDefaultSkillIds = playerParty.associate { member -> member.id to member.skills.toSet() }
         val pendingEncounter = encounterCoordinator.consumePendingEncounter()
+        encounterSourcePartyId = pendingEncounter?.sourcePartyId
         val pendingSlots = pendingEncounter?.enemies.orEmpty()
         val slots = enemyIds
             .mapIndexedNotNull { index, id ->
@@ -307,7 +322,7 @@ class CombatViewModel(
         val currentRoomId = sessionSnapshot.roomId
         val currentRoom: Room? = currentRoomId?.let { id -> rooms.firstOrNull { it.id == id } }
         environmentId = currentRoom?.env
-        weatherId = currentRoom?.weather
+        weatherId = currentRoom?.weather ?: defaultWeatherForEnvironment(currentRoom?.env)
         theme = environmentId?.let { themeRepository.getTheme(it) }
         roomBackground = currentRoom?.backgroundImage
         locationTitle = currentRoom?.title
@@ -364,7 +379,13 @@ class CombatViewModel(
             statusRegistry = statusRegistry,
             skillLookup = { id -> skillById[id] },
             consumeItem = { itemId -> inventoryService.useItem(itemId) },
-            itemLookup = { itemId -> itemCatalog.findItem(itemId) }
+            itemLookup = { itemId -> itemCatalog.findItem(itemId) },
+            forcePhysicalHit = { attackerId, targetId ->
+                val tutorial = _combatTutorial.value
+                tutorial?.step == CombatTutorialStep.AWAIT_BASIC_RESULT &&
+                    attackerId == COMBAT_TUTORIAL_PLAYER_ID &&
+                    targetId == tutorial.targetId
+            }
         )
         initializeEnemyBrains()
 
@@ -375,7 +396,11 @@ class CombatViewModel(
                     enemyParty = enemyCombatants
                 )
             )
-            _state.value = seeded
+            _state.value = if (isCombatTutorialEligible(sessionSnapshot, currentRoomId)) {
+                seedCombatTutorial(seeded)
+            } else {
+                seeded
+            }
             startAtbTicker()
         }
         refreshSelection(_state.value)
@@ -383,6 +408,13 @@ class CombatViewModel(
 
     fun playerAttack(targetIdOverride: String? = null) {
         val attackerId = _awaitingAction.value ?: return
+        clearCombatBanner()
+        val tutorial = _combatTutorial.value
+        if (tutorial != null) {
+            if (tutorial.step != CombatTutorialStep.TARGET_BASIC_ATTACK) return
+            if (attackerId != COMBAT_TUTORIAL_PLAYER_ID || targetIdOverride != tutorial.targetId) return
+            setCombatTutorialStep(CombatTutorialStep.AWAIT_BASIC_RESULT)
+        }
         val snapshot = _state.value ?: return
         val attackerState = snapshot.combatants[attackerId]
         if (attackerState?.isAlive != true) {
@@ -396,6 +428,18 @@ class CombatViewModel(
 
     fun useSkill(skill: Skill, explicitTargets: List<String>? = null) {
         val attackerId = _awaitingAction.value ?: return
+        val tutorial = _combatTutorial.value
+        if (tutorial != null) {
+            val targetId = explicitTargets?.singleOrNull()
+            if (tutorial.step != CombatTutorialStep.TARGET_HYDRAULIC_KICK) return
+            if (attackerId != COMBAT_TUTORIAL_PLAYER_ID ||
+                skill.id != COMBAT_TUTORIAL_SKILL_ID ||
+                targetId != tutorial.targetId
+            ) {
+                return
+            }
+            setCombatTutorialStep(CombatTutorialStep.AWAIT_SHIELD_BREAK)
+        }
         if (!canUseSkill(attackerId, skill)) {
             playUiCue("error")
             return
@@ -421,13 +465,7 @@ class CombatViewModel(
             val resolved = actionProcessor.execute(current, action, ::victoryReward)
             val withRewards = resolved.applyOutcomeResults(current)
             if (supportTargets.isNotEmpty()) {
-                combatFxEvents.tryEmit(
-                    CombatFxEvent.SupportCue(
-                        actorId = attackerId,
-                        skillName = skill.name,
-                        targetIds = supportTargets
-                    )
-                )
+                emitSupportCue(attackerId, skill.name, supportTargets, ACTION_INTRO_PAUSE_MS)
             }
             executed = true
             withRewards
@@ -438,7 +476,7 @@ class CombatViewModel(
                 skillUsageCounts[key] = skillUsageCounts.getOrDefault(key, 0) + 1
             }
             val animStyle = resolveSkillAnimationStyle(skill)
-            triggerAttackLunge(attackerId, animStyle)
+            triggerAttackLunge(attackerId, animStyle, ACTION_INTRO_PAUSE_MS)
             clearAwaitingAction(attackerId)
             concludeActorTurn(attackerId)
         }
@@ -501,8 +539,19 @@ class CombatViewModel(
 
     private fun triggerAttackLunge(
         actorId: String,
-        style: AttackLungeStyle = AttackLungeStyle.MELEE
+        style: AttackLungeStyle = AttackLungeStyle.MELEE,
+        introDelayMs: Long = 0L
     ) {
+        if (introDelayMs > 0L) {
+            pauseAtbForAnimation()
+            viewModelScope.launch {
+                delay(introDelayMs)
+                _lungeStyle.value = style
+                _lungeToken.value = _lungeToken.value + 1
+                _lungeActorId.value = actorId
+            }
+            return
+        }
         pauseAtbForAnimation()
         _lungeStyle.value = style
         _lungeToken.value = _lungeToken.value + 1
@@ -543,7 +592,7 @@ class CombatViewModel(
             resolved.applyOutcomeResults(current)
         }
         if (executed) {
-            triggerAttackLunge(attackerId, AttackLungeStyle.ITEM)
+            triggerAttackLunge(attackerId, AttackLungeStyle.ITEM, ACTION_INTRO_PAUSE_MS)
             clearAwaitingAction(attackerId)
             concludeActorTurn(attackerId)
         }
@@ -637,7 +686,7 @@ class CombatViewModel(
             snack.effect?.usesPerBattle?.let {
                 snackUsageCounts[key] = snackUsageCounts.getOrDefault(key, 0) + 1
             }
-            triggerAttackLunge(attackerId, AttackLungeStyle.SNACK)
+            triggerAttackLunge(attackerId, AttackLungeStyle.SNACK, ACTION_INTRO_PAUSE_MS)
             clearAwaitingAction(attackerId)
             concludeActorTurn(attackerId)
         }
@@ -673,6 +722,13 @@ class CombatViewModel(
     }
 
     fun selectReadyPlayer(actorId: String) {
+        clearCombatBanner()
+        val tutorial = _combatTutorial.value
+        if (tutorial != null) {
+            val validStep = tutorial.step == CombatTutorialStep.SELECT_NOVA_ATTACK ||
+                tutorial.step == CombatTutorialStep.SELECT_NOVA_SKILL
+            if (!validStep || actorId != COMBAT_TUTORIAL_PLAYER_ID) return
+        }
         val state = _state.value ?: return
         if (actorId !in playerIdList) return
         if (!readyQueue.contains(actorId)) return
@@ -685,11 +741,155 @@ class CombatViewModel(
             updateActiveActorFromQueue(state)
         }
         setAwaitingAction(actorId)
+        when (tutorial?.step) {
+            CombatTutorialStep.SELECT_NOVA_ATTACK -> setCombatTutorialStep(CombatTutorialStep.CHOOSE_ATTACK)
+            CombatTutorialStep.SELECT_NOVA_SKILL -> setCombatTutorialStep(CombatTutorialStep.CHOOSE_SKILLS)
+            else -> Unit
+        }
     }
 
     fun dismissActionMenu(actorId: String) {
+        if (_combatTutorial.value != null) return
+        clearCombatBanner()
         deferEnemyTurns(MENU_DISMISS_ENEMY_GRACE_MS)
         clearAwaitingAction(actorId)
+    }
+
+    fun onCombatTutorialContinue() {
+        when (_combatTutorial.value?.step) {
+            CombatTutorialStep.BRIEF -> {
+                primeTutorialTurn()
+                setCombatTutorialStep(CombatTutorialStep.SELECT_NOVA_ATTACK)
+            }
+            CombatTutorialStep.BLOCKED_EXPLANATION -> {
+                primeTutorialTurn()
+                setCombatTutorialStep(CombatTutorialStep.SELECT_NOVA_SKILL)
+            }
+            CombatTutorialStep.SUCCESS -> completeCombatTutorial()
+            else -> Unit
+        }
+    }
+
+    fun skipCombatTutorial() {
+        if (_combatTutorial.value == null) return
+        completeCombatTutorial()
+    }
+
+    fun onCombatTutorialCommand(command: String): Boolean {
+        val tutorial = _combatTutorial.value ?: return true
+        return when {
+            command.equals("Attack", ignoreCase = true) &&
+                tutorial.step == CombatTutorialStep.CHOOSE_ATTACK -> {
+                setCombatTutorialStep(CombatTutorialStep.TARGET_BASIC_ATTACK)
+                true
+            }
+            command.equals("Skills", ignoreCase = true) &&
+                tutorial.step == CombatTutorialStep.CHOOSE_SKILLS -> {
+                setCombatTutorialStep(CombatTutorialStep.CHOOSE_HYDRAULIC_KICK)
+                true
+            }
+            else -> false
+        }
+    }
+
+    fun onCombatTutorialSkillSelected(skillId: String): Boolean {
+        val tutorial = _combatTutorial.value ?: return true
+        if (tutorial.step != CombatTutorialStep.CHOOSE_HYDRAULIC_KICK ||
+            skillId != COMBAT_TUTORIAL_SKILL_ID
+        ) {
+            return false
+        }
+        setCombatTutorialStep(CombatTutorialStep.TARGET_HYDRAULIC_KICK)
+        return true
+    }
+
+    fun onCombatTutorialSkillDialogDismissed() {
+        if (_combatTutorial.value?.step == CombatTutorialStep.CHOOSE_HYDRAULIC_KICK) {
+            setCombatTutorialStep(CombatTutorialStep.CHOOSE_SKILLS)
+        }
+    }
+
+    fun onCombatTutorialTargetCancelled() {
+        when (_combatTutorial.value?.step) {
+            CombatTutorialStep.TARGET_BASIC_ATTACK ->
+                setCombatTutorialStep(CombatTutorialStep.CHOOSE_ATTACK)
+            CombatTutorialStep.TARGET_HYDRAULIC_KICK ->
+                setCombatTutorialStep(CombatTutorialStep.CHOOSE_SKILLS)
+            else -> Unit
+        }
+    }
+
+    fun isCombatTutorialCommandEnabled(command: String): Boolean {
+        val step = _combatTutorial.value?.step ?: return true
+        return when (step) {
+            CombatTutorialStep.CHOOSE_ATTACK -> command.equals("Attack", ignoreCase = true)
+            CombatTutorialStep.CHOOSE_SKILLS -> command.equals("Skills", ignoreCase = true)
+            else -> false
+        }
+    }
+
+    fun isCombatTutorialTargetEnabled(targetId: String): Boolean {
+        val tutorial = _combatTutorial.value ?: return true
+        return targetId == tutorial.targetId && (
+            tutorial.step == CombatTutorialStep.TARGET_BASIC_ATTACK ||
+                tutorial.step == CombatTutorialStep.TARGET_HYDRAULIC_KICK
+            )
+    }
+
+    private fun isCombatTutorialEligible(
+        session: GameSessionState,
+        currentRoomId: String?
+    ): Boolean {
+        if (!tutorialsEnabled) return false
+        if (!currentRoomId.equals(COMBAT_TUTORIAL_ROOM_ID, ignoreCase = true)) return false
+        if (encounterEnemyIdList.size != 1 ||
+            !encounterEnemyIdList.first().equals(COMBAT_TUTORIAL_ENEMY_ID, ignoreCase = true)
+        ) {
+            return false
+        }
+        if (session.questStageById[COMBAT_TUTORIAL_QUEST_ID] != COMBAT_TUTORIAL_QUEST_STAGE) return false
+        if (COMBAT_TUTORIAL_SKILL_ID !in session.unlockedSkills) return false
+        return session.tutorialCompleted.none { it.equals(COMBAT_BASICS_TUTORIAL_ID, ignoreCase = true) }
+    }
+
+    private fun seedCombatTutorial(state: CombatState): CombatState {
+        val targetId = enemyIdList.singleOrNull() ?: return state
+        val target = state.combatants[targetId] ?: return state
+        val shieldedTarget = target.copy(
+            statusEffects = target.statusEffects
+                .filterNot { it.id.equals("invulnerable", ignoreCase = true) } +
+                StatusEffect(id = "invulnerable", remainingTurns = 99)
+        )
+        _combatTutorial.value = CombatTutorialState(
+            step = CombatTutorialStep.BRIEF,
+            targetId = targetId
+        )
+        sessionStore.markTutorialSeen(COMBAT_BASICS_TUTORIAL_ID)
+        return state.copy(combatants = state.combatants + (targetId to shieldedTarget))
+    }
+
+    private fun setCombatTutorialStep(step: CombatTutorialStep) {
+        val current = _combatTutorial.value ?: return
+        _combatTutorial.value = current.copy(step = step)
+    }
+
+    private fun primeTutorialTurn() {
+        val state = _state.value ?: return
+        val nova = state.combatants[COMBAT_TUTORIAL_PLAYER_ID] ?: return
+        if (!nova.isAlive || state.outcome != null) return
+        readyQueue.remove(COMBAT_TUTORIAL_PLAYER_ID)
+        readyQueue.add(0, COMBAT_TUTORIAL_PLAYER_ID)
+        _atbMeters.update { meters -> meters + (COMBAT_TUTORIAL_PLAYER_ID to 1f) }
+        setAwaitingAction(null)
+        updateActiveActorFromQueue(state)
+    }
+
+    private fun completeCombatTutorial() {
+        sessionStore.markTutorialCompleted(COMBAT_BASICS_TUTORIAL_ID)
+        _combatTutorial.value = null
+        if (!isAtbPaused()) {
+            tryProcessEnemyTurns()
+        }
     }
 
     fun toggleEnemyTarget(enemyId: String) {
@@ -1390,6 +1590,7 @@ class CombatViewModel(
                 }
                 is CombatLogEntry.Damage -> {
                     playCharacterAttackSound(entry.sourceId)
+                    val effectDelayMs = actionEffectDelayMs(currentAction)
                     if (entry.amount == 0 && entry.element == "miss") {
                         val targetIsPlayer = entry.targetId in playerIdList
                         if (!targetIsPlayer && entry.targetId !in suppressMissLungeTargets) {
@@ -1403,30 +1604,38 @@ class CombatViewModel(
                     val fxElement = resolveImpactElement(entry, updated)
                     if (fxElement == "blocked" && entry.sourceId in playerIdList) {
                         maybePlayShieldBlockCue()
+                        val tutorial = _combatTutorial.value
+                        if (tutorial?.step == CombatTutorialStep.AWAIT_BASIC_RESULT &&
+                            entry.sourceId == COMBAT_TUTORIAL_PLAYER_ID &&
+                            entry.targetId == tutorial.targetId
+                        ) {
+                            setCombatTutorialStep(CombatTutorialStep.BLOCKED_EXPLANATION)
+                        }
                     }
                     if (shouldEmitShieldBreak(entry, currentAction, previous, updated)) {
-                        combatFxEvents.tryEmit(CombatFxEvent.ShieldBreak(targetId = entry.targetId))
+                        emitShieldBreak(entry.targetId, effectDelayMs)
                         maybePlayShieldBreakCue()
+                        val tutorial = _combatTutorial.value
+                        if (tutorial?.step == CombatTutorialStep.AWAIT_SHIELD_BREAK &&
+                            entry.sourceId == COMBAT_TUTORIAL_PLAYER_ID &&
+                            entry.targetId == tutorial.targetId
+                        ) {
+                            setCombatTutorialStep(CombatTutorialStep.SUCCESS)
+                        }
                     }
-                    emitImpact(entry, fxElement, showAttackFx, targetDefeated, 0L)
+                    emitImpact(entry, fxElement, showAttackFx, targetDefeated, effectDelayMs)
                     setCombatBanner(entry, updated)
                 }
                 is CombatLogEntry.WeaknessReward -> {
                     // Handled reactively in CombatActionProcessor/CombatState
                 }
                 is CombatLogEntry.Heal -> {
-                    combatFxEvents.tryEmit(
-                        CombatFxEvent.Heal(
-                            sourceId = entry.sourceId,
-                            targetId = entry.targetId,
-                            amount = entry.amount
-                        )
-                    )
+                    emitHeal(entry, actionEffectDelayMs(currentAction))
                     setCombatBanner(entry, updated)
                 }
                 is CombatLogEntry.StatusApplied -> {
-                    emitStatusApplied(entry, 0L)
-                    setCombatBanner(entry, updated)
+                    emitStatusApplied(entry, actionEffectDelayMs(currentAction))
+                    setCombatBanner(entry, updated, currentAction)
                 }
                 is CombatLogEntry.Outcome -> {
                     val outcomeType = when (entry.result) {
@@ -1461,6 +1670,9 @@ class CombatViewModel(
                 else -> Unit
             }
         }
+        if (currentAction != null) {
+            bannerSession = null
+        }
         val newlyBroken = updated.combatants.mapNotNull { (id, updatedState) ->
             val before = previous.combatants[id]?.breakTurns ?: 0
             if (before <= 0 && updatedState.breakTurns > 0) id else null
@@ -1472,6 +1684,14 @@ class CombatViewModel(
             newlyBroken.forEach { removeFromReadyQueue(it) }
         }
     }
+
+    private fun actionEffectDelayMs(action: CombatAction?): Long =
+        when (action) {
+            is CombatAction.SkillUse,
+            is CombatAction.ItemUse,
+            is CombatAction.SnackUse -> ACTION_INTRO_PAUSE_MS
+            else -> 0L
+        }
 
     private fun shouldShowAttackFx(
         entry: CombatLogEntry.Damage,
@@ -1544,15 +1764,77 @@ class CombatViewModel(
         return if (blocked) "blocked" else entry.element
     }
 
+    private fun emitHeal(entry: CombatLogEntry.Heal, delayMs: Long) {
+        if (delayMs <= 0L) {
+            combatFxEvents.tryEmit(
+                CombatFxEvent.Heal(
+                    sourceId = entry.sourceId,
+                    targetId = entry.targetId,
+                    amount = entry.amount
+                )
+            )
+            return
+        }
+        viewModelScope.launch {
+            delay(delayMs)
+            combatFxEvents.tryEmit(
+                CombatFxEvent.Heal(
+                    sourceId = entry.sourceId,
+                    targetId = entry.targetId,
+                    amount = entry.amount
+                )
+            )
+        }
+    }
+
+    private fun emitShieldBreak(targetId: String, delayMs: Long) {
+        if (delayMs <= 0L) {
+            combatFxEvents.tryEmit(CombatFxEvent.ShieldBreak(targetId = targetId))
+            return
+        }
+        viewModelScope.launch {
+            delay(delayMs)
+            combatFxEvents.tryEmit(CombatFxEvent.ShieldBreak(targetId = targetId))
+        }
+    }
+
+    private fun emitSupportCue(
+        actorId: String,
+        skillName: String,
+        targetIds: List<String>,
+        delayMs: Long
+    ) {
+        if (delayMs <= 0L) {
+            combatFxEvents.tryEmit(
+                CombatFxEvent.SupportCue(
+                    actorId = actorId,
+                    skillName = skillName,
+                    targetIds = targetIds
+                )
+            )
+            return
+        }
+        viewModelScope.launch {
+            delay(delayMs)
+            combatFxEvents.tryEmit(
+                CombatFxEvent.SupportCue(
+                    actorId = actorId,
+                    skillName = skillName,
+                    targetIds = targetIds
+                )
+            )
+        }
+    }
+
     private fun maybePlayShieldBlockCue() {
-        val now = SystemClock.elapsedRealtime()
+        val now = elapsedRealtime()
         if (now - lastShieldBlockCueAtMs < 280L) return
         lastShieldBlockCueAtMs = now
         playBattleCue("shield_block")
     }
 
     private fun maybePlayShieldBreakCue() {
-        val now = SystemClock.elapsedRealtime()
+        val now = elapsedRealtime()
         if (now - lastShieldBreakCueAtMs < 280L) return
         lastShieldBreakCueAtMs = now
         playBattleCue("shield_break")
@@ -1617,10 +1899,10 @@ class CombatViewModel(
     private fun startAtbTicker() {
         if (atbJob != null) return
         atbJob = viewModelScope.launch {
-            var last = SystemClock.elapsedRealtime()
+            var last = elapsedRealtime()
             while (isActive) {
                 delay(50)
-                val now = SystemClock.elapsedRealtime()
+                val now = elapsedRealtime()
                 val delta = (now - last) / 1000f
                 last = now
                 advanceAtb(delta)
@@ -1754,7 +2036,7 @@ class CombatViewModel(
             is CombatLogEntry.ActionQueued -> bannerForActionQueued(entry, state)
             is CombatLogEntry.Damage -> bannerForDamage(entry, state)
             is CombatLogEntry.Heal -> bannerForHeal(entry, state, currentAction)
-            is CombatLogEntry.StatusApplied -> bannerForStatusApplied(entry, state)
+            is CombatLogEntry.StatusApplied -> bannerForStatusApplied(entry, state, currentAction)
             is CombatLogEntry.StatusExpired -> bannerForStatusExpired(entry, state)
             is CombatLogEntry.TurnSkipped -> bannerForTurnSkipped(entry, state)
             is CombatLogEntry.Outcome -> bannerForOutcome(entry)
@@ -1762,6 +2044,8 @@ class CombatViewModel(
         }
         if (update != null) {
             _combatBanner.value = update
+        } else if (entry is CombatLogEntry.ActionQueued) {
+            clearCombatBanner()
         }
     }
 
@@ -1770,7 +2054,7 @@ class CombatViewModel(
         state: CombatState
     ): CombatBannerMessage? {
         if (entry.action is CombatAction.BasicAttack) {
-            bannerSession = null
+            clearCombatBanner()
             return null
         }
         val actorId = entry.actorId
@@ -1830,7 +2114,8 @@ class CombatViewModel(
 
     private fun bannerForStatusApplied(
         entry: CombatLogEntry.StatusApplied,
-        state: CombatState
+        state: CombatState,
+        currentAction: CombatAction?
     ): CombatBannerMessage? {
         val targetIsPlayer = entry.targetId in playerIdList
         if (combatTextVerbosity != CombatTextVerbosity.VERBOSE && !targetIsPlayer) return null
@@ -1838,7 +2123,7 @@ class CombatViewModel(
         val statusName = statusDisplayName(entry.statusId)
         val stacksSuffix = if (entry.stacks > 1) " x${entry.stacks}" else ""
         val importance = if (targetIsPlayer) CombatBannerImportance.IMPORTANT else CombatBannerImportance.NORMAL
-        val session = bannerSession
+        val session = bannerSession?.takeIf { actionOwnsStatusBanner(currentAction, entry) }
         val primary = session?.primary ?: "$statusName$stacksSuffix"
         return CombatBannerMessage(
             id = session?.id ?: UUID.randomUUID().toString(),
@@ -1849,6 +2134,24 @@ class CombatViewModel(
             importance = importance
         )
     }
+
+    private fun actionOwnsStatusBanner(
+        action: CombatAction?,
+        entry: CombatLogEntry.StatusApplied
+    ): Boolean =
+        when (action) {
+            is CombatAction.SkillUse -> {
+                action.targetIds.isEmpty() ||
+                    entry.targetId == action.actorId ||
+                    entry.targetId in action.targetIds ||
+                    skillById[action.skillId]?.let { skill ->
+                        isSupportSkill(skill) && entry.targetId in playerIdList
+                    } == true
+            }
+            is CombatAction.ItemUse -> entry.targetId == action.actorId || entry.targetId == action.targetId
+            is CombatAction.SnackUse -> entry.targetId == action.actorId || entry.targetId == action.targetId
+            else -> false
+        }
 
     private fun bannerForStatusExpired(
         entry: CombatLogEntry.StatusExpired,
@@ -3019,9 +3322,15 @@ private fun determineSkillTargeting(skill: Skill): SkillTargeting {
     }
 
     companion object {
+        private const val COMBAT_TUTORIAL_PLAYER_ID = "nova"
+        private const val COMBAT_TUTORIAL_ENEMY_ID = "acoustic_bulwark"
+        private const val COMBAT_TUTORIAL_ROOM_ID = "workshop_dock"
+        private const val COMBAT_TUTORIAL_QUEST_ID = "w1_sq03"
+        private const val COMBAT_TUTORIAL_QUEST_STAGE = "guard_break_training"
         private const val STATUS_SOURCE_PREFIX = "status_"
         private const val ATB_SPEED_SCALE = 90f
         private const val ATTACK_ANIMATION_PAUSE_MS = 500L
+        private const val ACTION_INTRO_PAUSE_MS = 360L
         private const val MENU_DISMISS_ENEMY_GRACE_MS = 260L
         private const val ENEMY_ACTION_MEMORY = 3
         private const val ENEMY_BASIC_ACTION_MARKER = "__basic_attack__"
@@ -3030,7 +3339,7 @@ private fun determineSkillTargeting(skill: Skill): SkillTargeting {
         private const val TIMED_GUARD_WINDOW_MS = 700L
         private const val TIMED_GUARD_DEF_BONUS = 10
         private const val ZEKE_SUPPORT_ATB_BONUS = 0.25f
-        private const val SNACK_COOLDOWN_TURNS = 5
+        private const val SNACK_COOLDOWN_TURNS = 3
 
         private val BLOCKING_STATUS_IDS = setOf("invulnerable", "shield", "guard", "defend")
         private val ELEMENT_TAGS = setOf("burn", "freeze", "shock", "acid", "source", "physical")

@@ -6,7 +6,8 @@ import com.example.starborn.di.AppServices
 
 class CombatViewModelFactory(
     private val services: AppServices,
-    private val enemyIds: List<String>
+    private val enemyIds: List<String>,
+    private val tutorialsEnabled: Boolean = true
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(CombatViewModel::class.java)) {
@@ -23,7 +24,8 @@ class CombatViewModelFactory(
                 themeRepository = services.themeRepository,
                 environmentThemeManager = services.environmentThemeManager,
                 encounterCoordinator = services.encounterCoordinator,
-                enemyIds = enemyIds
+                enemyIds = enemyIds,
+                tutorialsEnabled = tutorialsEnabled
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")

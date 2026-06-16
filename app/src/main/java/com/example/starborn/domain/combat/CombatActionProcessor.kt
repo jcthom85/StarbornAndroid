@@ -14,7 +14,8 @@ class CombatActionProcessor(
     private val statusRegistry: StatusRegistry,
     private val skillLookup: (String) -> Skill?,
     private val consumeItem: ((String) -> ItemUseResult?)? = null,
-    private val itemLookup: ((String) -> Item?)? = null
+    private val itemLookup: ((String) -> Item?)? = null,
+    private val forcePhysicalHit: (attackerId: String, targetId: String) -> Boolean = { _, _ -> false }
 ) {
 
     fun execute(
@@ -95,7 +96,8 @@ class CombatActionProcessor(
                     attackerId = action.actorId,
                     preferredTargetId = action.targetId,
                     multiplier = attack.powerMultiplier,
-                    element = attack.element ?: PHYSICAL_ELEMENT
+                    element = attack.element ?: PHYSICAL_ELEMENT,
+                    forceHit = forcePhysicalHit(action.actorId, action.targetId)
                 )
             }
             is WeaponAttack.AllEnemies -> {
@@ -130,7 +132,14 @@ class CombatActionProcessor(
         ) ?: return state
         val target = state.combatants[targetId] ?: return state
         val critBonus = targetLockCritBonus(target)
-        val hit = rollPhysicalHit(attacker, target, critBonus = critBonus)
+        val hit = if (forcePhysicalHit(action.actorId, targetId)) {
+            HitRoll.Hit(
+                damage = basePhysicalDamage(attacker, target),
+                critical = false
+            )
+        } else {
+            rollPhysicalHit(attacker, target, critBonus = critBonus)
+        }
         if (hit is HitRoll.Miss) {
             return state.logMiss(action.actorId, targetId)
         }
@@ -654,7 +663,7 @@ class CombatActionProcessor(
         val hasBuff = effect.singleBuff != null || !effect.buffs.isNullOrEmpty()
 
         // Set snackCooldown + 1 because tickEndOfTurn will immediately decrement it by 1 at the end of the turn.
-        val baseCooldown = effect.cooldown?.takeIf { it > 0 } ?: 5
+        val baseCooldown = effect.cooldown?.takeIf { it > 0 } ?: 3
         val updatedActor = actor.copy(snackCooldown = baseCooldown + 1)
         val stateWithCooldown = state.copy(combatants = state.combatants + (action.actorId to updatedActor))
 

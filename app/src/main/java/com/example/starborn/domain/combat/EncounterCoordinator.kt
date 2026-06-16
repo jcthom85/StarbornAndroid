@@ -5,22 +5,29 @@ import java.util.concurrent.atomic.AtomicReference
 
 class EncounterCoordinator {
     private val pendingDescriptor = AtomicReference<EncounterDescriptor?>(null)
+    private val activeSourcePartyId = AtomicReference<String?>(null)
 
     fun setPendingEncounter(descriptor: EncounterDescriptor) {
         pendingDescriptor.set(descriptor)
     }
 
     fun consumePendingEncounter(): EncounterDescriptor? {
-        return pendingDescriptor.getAndSet(null)
+        val descriptor = pendingDescriptor.getAndSet(null)
+        activeSourcePartyId.set(descriptor?.sourcePartyId)
+        return descriptor
     }
+
+    fun currentSourcePartyId(): String? = activeSourcePartyId.get()
 
     fun clear() {
         pendingDescriptor.set(null)
+        activeSourcePartyId.set(null)
     }
 }
 
 data class EncounterDescriptor(
-    val enemies: List<EncounterEnemyInstance>
+    val enemies: List<EncounterEnemyInstance>,
+    val sourcePartyId: String? = null
 )
 
 data class EncounterEnemyInstance(

@@ -13,6 +13,7 @@ import com.example.starborn.domain.model.StatusDefinition
 import com.example.starborn.domain.model.World
 import com.example.starborn.domain.leveling.LevelingData
 import com.example.starborn.domain.leveling.ProgressionData
+import com.example.starborn.domain.movement.EnemyMovementCatalog
 
 class WorldAssetDataSource(
     private val assetReader: AssetJsonReader
@@ -28,6 +29,9 @@ class WorldAssetDataSource(
     fun loadCharacters(): List<Player> = assetReader.readList("characters.json")
 
     fun loadEnemies(): List<Enemy> = assetReader.readList("enemies.json")
+
+    fun loadEnemyMovement(): EnemyMovementCatalog =
+        assetReader.readObject<EnemyMovementCatalog>("enemy_movement.json") ?: EnemyMovementCatalog()
 
     fun loadNpcs(): List<Npc> = assetReader.readList("npcs.json")
 

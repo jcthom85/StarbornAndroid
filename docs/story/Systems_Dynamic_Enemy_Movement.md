@@ -1,12 +1,10 @@
 # Dynamic Enemy Movement
 
-Status: Deferred future system. Do not treat this as a World 1 vertical-slice requirement.
+Status: Implemented as a reusable system with a balanced Deep Mine pilot.
 
 ## Purpose
 
-Dynamic enemy movement could make Starborn's rooms feel more alive by allowing some hostile parties to patrol, wander, or pursue the player across bounded areas. The system should add pressure and atmosphere without breaking authored quest gates, mobile readability, or the player's ability to read dialogue and room text.
-
-For the current World 1 vertical slice, enemy placement should remain deterministic. Use room text, audio, and event flavor to imply nearby patrols instead of implementing live roaming enemies.
+Dynamic enemy movement makes Starborn's rooms feel more alive by allowing selected hostile parties to patrol across bounded areas. The system adds pressure and atmosphere without breaking authored quest gates, mobile readability, or the player's ability to read dialogue and room text.
 
 ## Core Rules
 
@@ -22,9 +20,9 @@ For the current World 1 vertical slice, enemy placement should remain determinis
 | --- | --- | --- |
 | `stationary` | Enemy never changes room unless an event explicitly removes it. | Exit blockers, bosses, tutorial fights, story gates. |
 | `patrol` | Enemy follows a small route or semi-random route inside a zone. | Security patrols, drones, mine creatures moving through tunnels. |
-| `wander` | Enemy moves within a zone without a fixed route, avoiding protected rooms. | Wildlife, malfunctioning machines, ambient hazards. |
-| `hunter` | Enemy can follow or pursue the player after being alerted. | Rare pressure encounters, late-game threats, stealth/pursuit sequences. |
-| `scripted` | Enemy moves only through events or quest state. | Cutscene beats, quest-specific repositioning. |
+| `wander` | Reserved. Enemy moves within a zone without a fixed route. | Future wildlife and ambient hazards. |
+| `hunter` | Reserved. Enemy pursues the player after being alerted. | Future rare pressure encounters. |
+| `scripted` | Reserved. Enemy moves only through authored events. | Future quest-specific repositioning. |
 
 ## Aggression Levels
 
@@ -32,7 +30,7 @@ For the current World 1 vertical slice, enemy placement should remain determinis
 | --- | --- | --- |
 | `passive` | Player must initiate combat. | Safe to inspect, read, and prepare. |
 | `aggressive` | Enemy warns/pressures the player, then initiates combat after a grace period. | Clear warning, enough time to leave or engage. |
-| `very_aggressive` | Shorter grace period, possible pursuit within the movement zone. | Rare and clearly signaled; should feel dangerous, not cheap. |
+| `very_aggressive` | Five-second warning before combat. | Rare and clearly signaled; should feel dangerous, not cheap. |
 
 Aggression should be per enemy party, not only per enemy type. The same enemy can be passive in a tutorial context and aggressive in a later zone.
 
@@ -50,18 +48,16 @@ Do not silently start combat from a hidden timer. If the player is reading or in
 
 ## Data Shape Draft
 
-This is a conceptual shape, not an implementation contract:
+Movement is authored in `app/src/main/assets/enemy_movement.json`:
 
 ```json
 {
-  "movement_zone": "w1_deep_mine_patrols",
+  "zone_id": "w1_deep_mine_side_loop",
   "behavior": "patrol",
   "aggression": "aggressive",
-  "route": ["mine_landing", "mine_alpha", "mine_junction"],
-  "safe_rooms": ["mine_elevator"],
-  "stationary_when_blocking_exit": true,
+  "route": ["mine_conveyor", "mine_sifter", "mine_shoring"],
   "move_interval_seconds": 25,
-  "engage_delay_seconds": 8,
+  "engage_delay_seconds": 10,
   "signals": {
     "enter_room": "A patrol rounds the corner.",
     "leave_room": "The patrol moves deeper into the tunnel.",
@@ -79,6 +75,16 @@ This is a conceptual shape, not an implementation contract:
 - Retreat should leave the party alive and positioned according to explicit retreat rules.
 - Maestro coverage should include: enemy enters current room, enemy leaves current room, aggressive warning pauses during overlays, combat victory removes only the defeated party, save/load preserves movement state, and stationary blockers never move.
 
-## World 1 Decision
+## Runtime Rules
 
-Do not implement dynamic enemy movement for the current World 1 vertical-slice goal. World 1 should prioritize stable quest progression, deterministic encounter placement, clear room presence, and reliable save/load. Revisit this system after World 1 is playable start-to-finish and stable.
+- Exploration time advances only while exploration is visible and no blocking overlay is open.
+- Room changes reconcile the party's current position immediately; app suspension and offline time do not advance patrols.
+- Aggressive parties initiate combat after 10 seconds. Very aggressive parties use 5 seconds.
+- Retreat grants 15 seconds of grace before aggression can restart.
+- Combat carries the stable movement-party ID, so victory removes only that party and retreat preserves it.
+- Exact room, route direction, movement timer, aggression timer, retreat grace, and defeated state persist across save/load.
+- Current-room entry/exit notices and adjacent-direction threat pulses tell the player where movement occurred.
+
+## World 1 Pilot
+
+The Pressure Hauler patrols `mine_conveyor -> mine_sifter -> mine_shoring` and reverses at each endpoint while `w1_mq03` is active. It moves every 25 seconds and uses aggressive timing. Deep Mine blockers, tutorial encounters, bosses, and progression gates remain stationary.

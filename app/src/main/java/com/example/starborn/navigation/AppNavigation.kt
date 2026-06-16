@@ -96,6 +96,12 @@ fun NavigationHost(
                         launchSingleTop = true
                     }
                 },
+                onStartHub = {
+                    navController.navigate(Hub.route) {
+                        popUpTo(MainMenu.route) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                },
                 onSlotLoaded = {
                     navController.navigate(Exploration.route) {
                         popUpTo(MainMenu.route) { inclusive = true }
@@ -177,7 +183,7 @@ fun NavigationHost(
                                 CombatResultPayload.Outcome.DEFEAT ->
                                     explorationViewModel.onCombatDefeat(result.enemyIds)
                                 CombatResultPayload.Outcome.RETREAT ->
-                                    explorationViewModel.onCombatRetreat(result.enemyIds)
+                                    explorationViewModel.onCombatRetreat(result)
                             }
                             backStackEntry.savedStateHandle["combat_result"] = CombatResultPayload.EMPTY
                         }
@@ -406,7 +412,11 @@ fun NavigationHost(
                 ?.ifEmpty { null }
             if (enemyIds != null) {
                 val combatViewModel: CombatViewModel = viewModel(
-                    factory = CombatViewModelFactory(services, enemyIds)
+                    factory = CombatViewModelFactory(
+                        services = services,
+                        enemyIds = enemyIds,
+                        tutorialsEnabled = userSettings.tutorialsEnabled
+                    )
                 )
                 CombatScreen(
                     navController = navController,

@@ -1,4 +1,4 @@
-appId: com.example.starborn
+appId: com.junewiregames.starborn.prealpha
 ---
 - launchApp:
     clearState: false
@@ -9,4 +9,4 @@ appId: com.example.starborn
 - assertVisible: "Debug: Full Inventory"
 - swipe:
     direction: UP
-- assertVisible: "Load Game"
+- assertVisible: "Debug: Deep Mine"

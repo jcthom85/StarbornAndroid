@@ -1,10 +1,15 @@
-appId: com.example.starborn
+appId: com.junewiregames.starborn.prealpha
 ---
 - launchApp:
     clearState: true
 - extendedWaitUntil:
-    visible: "Debug: Deep Mine"
+    visible: "New Game"
     timeout: 60000
+- swipe:
+    direction: UP
+- extendedWaitUntil:
+    visible: "Debug: Deep Mine"
+    timeout: 10000
 - tapOn: "Debug: Deep Mine"
 - extendedWaitUntil:
     visible: "Concourse Lobby"

@@ -1,4 +1,4 @@
-appId: com.example.starborn
+appId: com.junewiregames.starborn.prealpha
 ---
 - launchApp:
     clearState: true
@@ -60,32 +60,64 @@ appId: com.example.starborn
     timeout: 10000
 - tapOn: "Engage Acoustic Bulwark"
 - extendedWaitUntil:
-    visible: "HOSTILE CONTACT"
+    visible: "Foreman Bogs"
     timeout: 60000
-- assertVisible: "Acoustic Bulwark"
+- assertVisible: "That trainer eats direct hits.*"
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible: "Foreman Bogs"
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: "Tap Nova when her action is ready."
+    timeout: 10000
 - tapOn: "Nova"
 - extendedWaitUntil:
-    visible: "Attack"
-    timeout: 20000
-- tapOn: "Skills"
-- extendedWaitUntil:
-    visible: "Skills"
+    visible: "Choose Attack. First, test the shield."
     timeout: 10000
-- assertVisible: "Hydraulic Kick"
-- tapOn: "Hydraulic Kick"
+- tapOn: "Attack"
 - extendedWaitUntil:
-    visible: "CHOOSE AN ENEM.*"
+    visible: "CHOOSE A TARGET"
+    timeout: 10000
+- assertVisible: "Acoustic Bulwark"
+- tapOn: "Acoustic Bulwark"
+- extendedWaitUntil:
+    visible: "Direct Hit: Blocked"
+    timeout: 20000
+- assertVisible: "The shield reduced the attack to zero.*"
+- tapOn: "Break The Guard"
+- extendedWaitUntil:
+    visible: "Nova is ready again.*"
+    timeout: 10000
+- tapOn: "Nova"
+- extendedWaitUntil:
+    visible: "Open Abilities to find a guard-breaking move."
+    timeout: 20000
+- tapOn: "Abilities"
+- extendedWaitUntil:
+    visible: "Abilities"
+    timeout: 10000
+- assertVisible: ".*Hydraulic Kick.*"
+- tapOn:
+    text: "Use"
+    index: 1
+- extendedWaitUntil:
+    visible: "Choose an enemy for Hydraulic Kick"
     timeout: 10000
 - tapOn: "Acoustic Bulwark"
-- waitForAnimationToEnd:
-    timeout: 8000
+- extendedWaitUntil:
+    visible: "Guard Broken"
+    timeout: 20000
+- assertVisible: "Hydraulic Kick stripped the shield.*"
+- tapOn: "Finish The Fight"
 - extendedWaitUntil:
     visible: "Spoils Recovered"
     timeout: 60000
+- takeScreenshot: combat-spoils-redesign
 - tapOn: "Next"
 - extendedWaitUntil:
     visible: "Level Up!"
     timeout: 10000
+- takeScreenshot: combat-level-up-redesign
 - tapOn: "Continue"
 - extendedWaitUntil:
     visible: "Quest Completed"
@@ -95,4 +127,5 @@ appId: com.example.starborn
 - extendedWaitUntil:
     notVisible: "Quest Completed"
     timeout: 10000
+- assertVisible: "People in room"
 - takeScreenshot: heavy-lifting-complete

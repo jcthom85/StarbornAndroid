@@ -1,0 +1,46 @@
+{
+  "zones": [
+    {
+      "id": "w1_deep_mine_side_loop",
+      "rooms": [
+        "mine_junction",
+        "mine_conveyor",
+        "mine_sifter",
+        "mine_shoring"
+      ],
+      "protected_rooms": [
+        "mine_landing",
+        "mine_alpha",
+        "mine_shunt",
+        "mine_checkpoint",
+        "mine_gas",
+        "mine_threshold"
+      ]
+    }
+  ],
+  "parties": [
+    {
+      "id": "w1_deep_mine_pressure_patrol",
+      "zone_id": "w1_deep_mine_side_loop",
+      "enemies": [
+        "pressure_hauler"
+      ],
+      "start_room": "mine_conveyor",
+      "route": [
+        "mine_conveyor",
+        "mine_sifter",
+        "mine_shoring"
+      ],
+      "behavior": "patrol",
+      "aggression": "aggressive",
+      "move_interval_seconds": 25,
+      "engage_delay_seconds": 10,
+      "requires_active_quest": "w1_mq03",
+      "signals": {
+        "enter_room": "A pressure hauler rounds the bend.",
+        "leave_room": "The hauler grinds deeper into the mine.",
+        "adjacent": "Heavy treads echo nearby."
+      }
+    }
+  ]
+}

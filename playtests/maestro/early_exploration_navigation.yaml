@@ -1,4 +1,4 @@
-appId: com.example.starborn
+appId: com.junewiregames.starborn.prealpha
 ---
 - launchApp:
     clearState: true

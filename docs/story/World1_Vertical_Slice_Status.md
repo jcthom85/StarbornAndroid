@@ -1,6 +1,6 @@
 # World 1 Vertical Slice Status
 
-Last updated: 2026-06-12
+Last updated: 2026-06-13
 
 ## Verified Gates
 
@@ -11,6 +11,10 @@ Run from the repo root:
 ```
 
 The verification script runs `validateWorld1Assets`, `runAssetIntegrity`, `testDebugUnitTest`, and `lintDebug`. If an Android device is visible to `adb`, it also runs the Maestro smoke flows. Use `-SkipMaestro` for static verification only, or `-InstallDebug` to install the debug APK before Maestro. The script configures a repo-local `.gradle-codex` cache, Java temp directory, Android user home, and Kotlin in-process compilation settings so it can run in locked-down shells without writing Kotlin daemon or Android metrics files under the Windows user profile.
+
+Release-candidate verification completed on the Pixel 8a (`46121JEKB11849`) on 2026-06-13. World 1 asset/integrity validators, all 133 JVM tests, and Android lint passed. The 31-flow gated Maestro set passed across the full run and focused reruns after stale selectors were updated for the redesigned abilities menu and expanded debug menu. This includes Hub 1, Hub 2, combat abilities/details, combat menu integration, all main quests, all gated side quests, save/load, and combat presentation checks. The optional `dynamic_enemy_movement.yaml` flow also passed separately.
+
+The Deep Mine debug checkpoint now persists the Pressure Hauler moving patrol as defeated so deterministic MQ03 verification cannot be interrupted by the optional patrol system. `Debug: Dynamic Patrol` explicitly restores that patrol for its dedicated scenario. The exploration movement ticker now starts only when movement parties exist and uses JVM-safe monotonic time, preventing local unit-test coroutine leaks and infinite `advanceUntilIdle()` runs.
 
 The `validateWorld1Assets` task covers World 1 room/content references, room topology, room action wiring, room NPC/shop interaction wiring, room NPC presence, audio catalog references, progression/milestone/dialogue references, balance guardrails, and dialogue emote references. Room topology validation checks every node entry room, verifies that every room in a World 1 node is reachable from that node's entry room, and rejects one-way north/south/east/west links inside World 1. Room action validation checks player-action event ids, milestone gates, container item ids, shop ids, and whether each World 1 room action name appears in its room description so it can be highlighted and tapped inline. Shop validation checks reachable World 1 shop stock, rotating stock, gate keys, gate milestones, and sell blacklist entries against the item catalog. Content polish validation rejects placeholder/default/demo copy in World 1 hub, node, room, room action, blocked-exit, NPC, dialogue, quest, stage, and task display text, and in all cinematic titles and step text. Combat validation checks World 1 enemy stats, drops, enemy-only abilities, and runtime affinity data, and rejects legacy `weaknesses` fields because combat reads `resistances`. Strict art/audio validation also checks PNG signatures and minimum dimensions for World 1 room, hub, node, playable character, NPC, enemy combat portrait, and used dialogue emote art, plus MP3/WAV headers and minimum file size for referenced audio cues.
 
@@ -24,9 +28,9 @@ World 1 audio now has dedicated generated ambience loops for Homestead colony sp
 
 ## Current Non-Blocking Issues
 
-- Dynamic enemy movement/patrols are documented in `docs/story/Systems_Dynamic_Enemy_Movement.md` as a future exploration system, but are intentionally excluded from the current World 1 vertical-slice gate. World 1 encounter placement should remain deterministic until the start-to-finish slice is stable.
+- Dynamic enemy movement/patrols remain excluded from the standard World 1 release gate, but the dedicated `dynamic_enemy_movement.yaml` Pixel flow passed on 2026-06-13.
 - `verify_world1.ps1` was hardened on 2026-06-12 to isolate Gradle, Java temp, Android user-home, and Kotlin compiler state under `.gradle-codex`. Focused checks passed after the change: `.\scripts\verify_world1.ps1 -SkipGradle -SkipTests -SkipLint -SkipMaestro`, `.\scripts\verify_world1.ps1 -SkipTests -SkipLint -SkipMaestro`, and `.\scripts\verify_world1.ps1 -SkipGradle -SkipLint -SkipMaestro`.
-- A full static gate passed on 2026-06-12 before the final shop-layout change. After that change, `compileDebugKotlin`, `assembleDebug`, all World 1 asset/integrity validators, and JVM tests passed again. The final fresh lint rerun was interrupted and its Gradle process later stalled at zero CPU, so current lint evidence remains the earlier June 12 full pass rather than a post-shop rerun.
+- A fresh post-stabilization static gate passed on 2026-06-13: World 1 asset/integrity validators, all JVM tests, and Android lint.
 - Static verification passed on 2026-06-10 with `.\scripts\verify_world1.ps1 -SkipMaestro`, covering World 1 validators, asset integrity, JVM tests, and lint. Follow-up focused static gates also passed after the compact room entity tray redesign and again on 2026-06-11 after adding the checkpoint, Scavenger's Stash, Heavy Lifting device coverage, and strict inline room-action validation.
 - Static verification passed again on 2026-06-11 after the prioritized room-presence dock pass with `.\scripts\verify_world1.ps1 -SkipMaestro`, covering World 1 validators, asset integrity, JVM tests, and lint.
 - The full scripted Maestro gate passed on the connected Pixel 8a on 2026-06-10 with `.\scripts\verify_world1.ps1 -SkipGradle -SkipTests -SkipLint -Device 46121JEKB11849`. That run covered `smoke_launch.yaml`, `start_new_game.yaml`, `early_tutorial_dismiss.yaml`, `early_exploration_navigation.yaml`, `room_keyword_inspection.yaml`, `early_jed_dialogue.yaml`, `room_entities_tray.yaml`, `room_item_pickup.yaml`, `first_combat_entry.yaml`, `enemy_party_combat.yaml`, `combat_target_prompt.yaml`, `combat_command_menu.yaml`, `combat_menu_dismiss.yaml`, `combat_enemy_status_rail.yaml`, `combat_flashbang_fx.yaml`, `save_load_roundtrip.yaml`, and `debug_full_inventory_menu.yaml`.

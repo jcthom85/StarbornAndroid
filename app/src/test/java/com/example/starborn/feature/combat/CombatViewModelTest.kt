@@ -28,10 +28,15 @@ import com.example.starborn.domain.model.Enemy
 import com.example.starborn.domain.model.Item
 import com.example.starborn.domain.model.Player
 import com.example.starborn.domain.model.Resistances
+import com.example.starborn.domain.model.Room
 import com.example.starborn.domain.model.Skill
+import com.example.starborn.domain.model.StatusDefinition
 import com.example.starborn.domain.session.GameSessionStore
 import com.example.starborn.domain.theme.EnvironmentThemeManager
 import com.example.starborn.feature.combat.viewmodel.CombatViewModel
+import com.example.starborn.feature.combat.viewmodel.COMBAT_BASICS_TUTORIAL_ID
+import com.example.starborn.feature.combat.viewmodel.COMBAT_TUTORIAL_SKILL_ID
+import com.example.starborn.feature.combat.viewmodel.CombatTutorialStep
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -1131,6 +1136,54 @@ class CombatViewModelTest {
         assertNull(enemyTurnJobField.get(viewModel))
     }
 
+    @Test
+    fun heavyLiftingTutorialGuidesBlockedHitThenGuardBreak() {
+        val fixture = createHeavyLiftingTutorialViewModel()
+        val viewModel = fixture.viewModel
+
+        assertEquals(CombatTutorialStep.BRIEF, viewModel.combatTutorial.value?.step)
+        viewModel.onCombatTutorialContinue()
+        assertEquals(CombatTutorialStep.SELECT_NOVA_ATTACK, viewModel.combatTutorial.value?.step)
+
+        viewModel.selectReadyPlayer("nova")
+        assertEquals(CombatTutorialStep.CHOOSE_ATTACK, viewModel.combatTutorial.value?.step)
+        assertTrue(viewModel.onCombatTutorialCommand("Attack"))
+        viewModel.playerAttack("acoustic_bulwark")
+        assertEquals(CombatTutorialStep.BLOCKED_EXPLANATION, viewModel.combatTutorial.value?.step)
+
+        viewModel.onCombatTutorialContinue()
+        viewModel.selectReadyPlayer("nova")
+        assertEquals(CombatTutorialStep.CHOOSE_SKILLS, viewModel.combatTutorial.value?.step)
+        assertTrue(viewModel.onCombatTutorialCommand("Skills"))
+        assertTrue(viewModel.onCombatTutorialSkillSelected(COMBAT_TUTORIAL_SKILL_ID))
+        val hydraulicKick = viewModel.skillsForPlayer("nova").first { it.id == COMBAT_TUTORIAL_SKILL_ID }
+        viewModel.useSkill(hydraulicKick, listOf("acoustic_bulwark"))
+
+        assertEquals(CombatTutorialStep.SUCCESS, viewModel.combatTutorial.value?.step)
+        viewModel.onCombatTutorialContinue()
+        assertNull(viewModel.combatTutorial.value)
+        assertTrue(COMBAT_BASICS_TUTORIAL_ID in fixture.sessionStore.state.value.tutorialCompleted)
+    }
+
+    @Test
+    fun heavyLiftingTutorialPausePreventsReadyEnemyTurn() {
+        val fixture = createHeavyLiftingTutorialViewModel()
+        val viewModel = fixture.viewModel
+        val readyQueueField = CombatViewModel::class.java.getDeclaredField("readyQueue")
+        readyQueueField.isAccessible = true
+        @Suppress("UNCHECKED_CAST")
+        val readyQueue = readyQueueField.get(viewModel) as MutableList<String>
+        readyQueue.add("acoustic_bulwark")
+
+        val tryProcessEnemyTurns = CombatViewModel::class.java.getDeclaredMethod("tryProcessEnemyTurns")
+        tryProcessEnemyTurns.isAccessible = true
+        tryProcessEnemyTurns.invoke(viewModel)
+
+        val enemyTurnJobField = CombatViewModel::class.java.getDeclaredField("enemyTurnJob")
+        enemyTurnJobField.isAccessible = true
+        assertNull(enemyTurnJobField.get(viewModel))
+    }
+
     private fun createMinimalCombatViewModel(enemySkillId: String): CombatViewModel {
         val player = Player(
             id = "nova",
@@ -1235,6 +1288,130 @@ class CombatViewModelTest {
             encounterCoordinator = EncounterCoordinator(),
             enemyIds = listOf(enemy.id)
         )
+    }
+
+    private data class TutorialFixture(
+        val viewModel: CombatViewModel,
+        val sessionStore: GameSessionStore
+    )
+
+    private fun createHeavyLiftingTutorialViewModel(): TutorialFixture {
+        val player = Player(
+            id = "nova",
+            name = "Nova",
+            level = 1,
+            xp = 0,
+            hp = 120,
+            strength = 10,
+            vitality = 8,
+            agility = 6,
+            focus = 5,
+            luck = 4,
+            skills = listOf("nova_strike", COMBAT_TUTORIAL_SKILL_ID),
+            miniIconPath = "images/portraits/nova.png"
+        )
+        val enemy = Enemy(
+            id = "acoustic_bulwark",
+            name = "Acoustic Bulwark",
+            tier = "elite",
+            hp = 120,
+            strength = 7,
+            vitality = 8,
+            agility = 1,
+            focus = 5,
+            luck = 1,
+            speed = 7,
+            element = "physical",
+            resistances = Resistances(),
+            abilities = emptyList(),
+            flavor = "",
+            xpReward = 100,
+            creditReward = 40,
+            drops = emptyList(),
+            description = "Shield trainer.",
+            portrait = "",
+            sprite = emptyList(),
+            attack = 8,
+            apReward = 0
+        )
+        val strike = Skill(
+            id = "nova_strike",
+            name = "Attack",
+            character = "nova",
+            type = "attack",
+            basePower = 20,
+            cooldown = 0,
+            description = "A direct hit."
+        )
+        val hydraulicKick = Skill(
+            id = COMBAT_TUTORIAL_SKILL_ID,
+            name = "Hydraulic Kick",
+            character = "nova",
+            type = "active",
+            description = "Breaks guards.",
+            combatTags = listOf("dmg", "guard_break"),
+            basePower = 110,
+            cooldown = 2
+        )
+        val room = Room(
+            id = "workshop_dock",
+            env = "mine",
+            title = "Loading Dock",
+            backgroundImage = "",
+            description = "",
+            npcs = emptyList(),
+            items = emptyList(),
+            enemies = listOf(enemy.id),
+            connections = emptyMap(),
+            pos = listOf(0, 0),
+            state = emptyMap(),
+            actions = emptyList()
+        )
+        val worldAssets = mock<WorldAssetDataSource> {
+            on { loadCharacters() } doReturn listOf(player)
+            on { loadEnemies() } doReturn listOf(enemy)
+            on { loadSkills() } doReturn listOf(strike, hydraulicKick)
+            on { loadRooms() } doReturn listOf(room)
+            on { loadSkillNodes() } doReturn emptyMap()
+        }
+        val statusRegistry = StatusRegistry(
+            listOf(
+                StatusDefinition(
+                    id = "invulnerable",
+                    incomingMultiplier = 0.0,
+                    target = "enemy"
+                )
+            )
+        )
+        val sessionStore = GameSessionStore().apply {
+            setRoom("workshop_dock")
+            startQuest("w1_sq03", track = true)
+            setQuestStage("w1_sq03", "guard_break_training")
+            unlockSkill(COMBAT_TUTORIAL_SKILL_ID)
+        }
+        val inventoryService = InventoryService(FakeItemCatalog()).apply { loadItems() }
+        val themeRepository = mock<ThemeRepository> {
+            on { getTheme(any()) } doReturn null
+            on { getStyle(any()) } doReturn null
+        }
+        val viewModel = CombatViewModel(
+            worldAssets = worldAssets,
+            combatEngine = CombatEngine(statusRegistry = statusRegistry),
+            statusRegistry = statusRegistry,
+            sessionStore = sessionStore,
+            inventoryService = inventoryService,
+            itemCatalog = FakeItemCatalog(),
+            levelingManager = LevelingManager(LevelingData(mapOf("1" to 0, "2" to 100))),
+            progressionData = ProgressionData(),
+            audioRouter = AudioRouter(AudioBindings()),
+            themeRepository = themeRepository,
+            environmentThemeManager = EnvironmentThemeManager(themeRepository),
+            encounterCoordinator = EncounterCoordinator(),
+            enemyIds = listOf(enemy.id),
+            tutorialsEnabled = true,
+            elapsedRealtime = { 1_000L }
+        )
+        return TutorialFixture(viewModel, sessionStore)
     }
 
     private class FakeItemCatalog : ItemCatalog {

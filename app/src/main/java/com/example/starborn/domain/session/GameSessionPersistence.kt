@@ -6,11 +6,13 @@ import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.dataStoreFile
 import com.example.starborn.datastore.GameSessionProto
+import com.example.starborn.datastore.EnemyPartyStateProto
 import com.example.starborn.datastore.InventoryEntryProto
 import com.example.starborn.datastore.QuestTaskListProto
 import com.example.starborn.datastore.RoomStateProto
 import com.example.starborn.domain.inventory.GearRules
 import com.example.starborn.domain.inventory.ItemCatalog
+import com.example.starborn.domain.movement.EnemyPartyRuntimeState
 import java.io.File
 import java.util.Locale
 import java.io.IOException
@@ -255,7 +257,18 @@ private fun GameSessionProto.toState(): GameSessionState = GameSessionState(
         .filterKeys { it.isNotBlank() }
         .mapValues { (_, stateProto) ->
             stateProto.statesMap.filterKeys { it.isNotBlank() }
-        }
+        },
+    enemyPartyStates = enemyPartyStatesMap.mapValues { (_, state) ->
+        EnemyPartyRuntimeState(
+            roomId = state.roomId,
+            routeIndex = state.routeIndex,
+            routeDirection = state.routeDirection,
+            moveRemainingMs = state.moveRemainingMs,
+            aggressionRemainingMs = state.aggressionRemainingMs.takeIf { state.hasAggressionTimer },
+            retreatGraceRemainingMs = state.retreatGraceRemainingMs,
+            defeated = state.defeated
+        )
+    }
 )
 
 private fun GameSessionState.toProto(savedAt: Long = System.currentTimeMillis()): GameSessionProto = GameSessionProto.newBuilder().apply {
@@ -320,6 +333,23 @@ private fun GameSessionState.toProto(savedAt: Long = System.currentTimeMillis())
                     .build()
             )
         }
+    }
+    clearEnemyPartyStates()
+    this@toProto.enemyPartyStates.forEach { (partyId, state) ->
+        if (partyId.isBlank()) return@forEach
+        putEnemyPartyStates(
+            partyId,
+            EnemyPartyStateProto.newBuilder()
+                .setRoomId(state.roomId)
+                .setRouteIndex(state.routeIndex)
+                .setRouteDirection(state.routeDirection)
+                .setMoveRemainingMs(state.moveRemainingMs)
+                .setAggressionRemainingMs(state.aggressionRemainingMs ?: 0)
+                .setHasAggressionTimer(state.aggressionRemainingMs != null)
+                .setRetreatGraceRemainingMs(state.retreatGraceRemainingMs)
+                .setDefeated(state.defeated)
+                .build()
+        )
     }
     putAllQuestStage(this@toProto.questStageById)
     // Quest tasks use a map so we only persist non-empty sets.

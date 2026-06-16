@@ -25,6 +25,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTransformGestures
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -32,8 +33,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -63,15 +62,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.Flag
-import androidx.compose.material.icons.filled.Inventory2
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material.icons.outlined.School
 import androidx.compose.material.icons.rounded.AutoAwesome
 import androidx.compose.material.icons.outlined.RadioButtonUnchecked
@@ -119,7 +113,6 @@ import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.pointer.pointerInput
@@ -128,7 +121,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
@@ -160,6 +152,7 @@ import com.example.starborn.domain.audio.AudioCuePlayer
 import com.example.starborn.domain.inventory.GearRules
 import com.example.starborn.domain.inventory.ItemUseResult
 import com.example.starborn.domain.milestone.MilestoneEvent
+import com.example.starborn.domain.model.ContainerAction
 import com.example.starborn.domain.model.EventReward
 import com.example.starborn.domain.model.FirstAidAction
 import com.example.starborn.data.local.Theme
@@ -168,10 +161,12 @@ import com.example.starborn.domain.model.RoomAction
 import com.example.starborn.domain.model.ShopAction
 import com.example.starborn.domain.model.TinkeringAction
 import com.example.starborn.domain.model.GenericAction
+import com.example.starborn.domain.model.ToggleAction
 import com.example.starborn.domain.model.Equipment
 import com.example.starborn.domain.model.Item
 import com.example.starborn.domain.model.actionKey
 import com.example.starborn.domain.model.serviceTag
+import com.example.starborn.domain.theme.defaultWeatherForEnvironment
 import com.example.starborn.domain.tutorial.TutorialEntry
 import com.example.starborn.ui.background.rememberAssetPainter
 import com.example.starborn.ui.components.ItemTargetSelectionDialog
@@ -269,6 +264,10 @@ fun ExplorationScreen(
     val fxBursts = remember { mutableStateListOf<UiFxBurst>() }
     var saveLoadMode by remember { mutableStateOf<String?>(null) } // "save" or "load"
     var slotSummaries by remember { mutableStateOf<List<SaveSlotSummary>>(emptyList()) }
+    var debugWeatherOverride by remember { mutableStateOf<String?>(null) }
+    val weatherCycles = remember {
+        listOf(null, "dust", "rain", "storm", "snow", "cave_drip", "starfall", "steam", "fog", "gas", "resonance", "sparks")
+    }
     val coroutineScope = rememberCoroutineScope()
     val blockingOverlayActive =
         uiState.isMenuOverlayVisible ||
@@ -384,40 +383,43 @@ fun ExplorationScreen(
         }
     }
 
-    val roomTravelGestureModifier = if (blockingOverlayActive) {
-        Modifier
-    } else {
-        Modifier.pointerInput(uiState.availableConnections, uiState.blockedDirections, swipeThresholdPx) {
-            detectDragGestures(
-                onDragStart = { dragDelta = Offset.Zero },
-                onDrag = { _, dragAmount -> dragDelta += dragAmount },
-                onDragEnd = {
-                    val dx = dragDelta.x
-                    val dy = dragDelta.y
-                    val absDx = abs(dx)
-                    val absDy = abs(dy)
-                    var direction: String? = null
-                    if (absDx > absDy && absDx > swipeThresholdPx) {
-                        direction = if (dx < 0f) "west" else "east"
-                    } else if (absDy > swipeThresholdPx) {
-                        direction = if (dy < 0f) "north" else "south"
-                    }
-                    direction?.let { dir ->
-                        val targetDir = uiState.availableConnections.keys.firstOrNull { key ->
-                            key.equals(dir, ignoreCase = true)
-                        }
-                        val blocked = uiState.blockedDirections.any { it.equals(dir, ignoreCase = true) }
-                        if (targetDir != null && !blocked) {
-                            viewModel.travel(targetDir)
-                        }
-                    }
-                }
-            )
-        }
-    }
     val baseModifier = Modifier
         .fillMaxSize()
-        .then(roomTravelGestureModifier)
+        .pointerInput(uiState.availableConnections, uiState.blockedDirections, blockingOverlayActive) {
+            if (blockingOverlayActive) {
+                detectTapGestures(
+                    onPress = {
+                        tryAwaitRelease()
+                    }
+                )
+            } else {
+                detectDragGestures(
+                    onDragStart = { dragDelta = Offset.Zero },
+                    onDrag = { _, dragAmount -> dragDelta += dragAmount },
+                    onDragEnd = {
+                        val dx = dragDelta.x
+                        val dy = dragDelta.y
+                        val absDx = abs(dx)
+                        val absDy = abs(dy)
+                        var direction: String? = null
+                        if (absDx > absDy && absDx > swipeThresholdPx) {
+                            direction = if (dx < 0f) "west" else "east"
+                        } else if (absDy > swipeThresholdPx) {
+                            direction = if (dy < 0f) "north" else "south"
+                        }
+                        direction?.let { dir ->
+                            val targetDir = uiState.availableConnections.keys.firstOrNull { key ->
+                                key.equals(dir, ignoreCase = true)
+                            }
+                            val blocked = uiState.blockedDirections.any { it.equals(dir, ignoreCase = true) }
+                            if (targetDir != null && !blocked) {
+                                viewModel.travel(targetDir)
+                            }
+                        }
+                    }
+                )
+            }
+        }
 
     Box(modifier = modifier.fillMaxSize().background(Color.Black)) {
         Box(modifier = baseModifier) {
@@ -429,6 +431,12 @@ fun ExplorationScreen(
             )
 
         val currentRoom = uiState.currentRoom
+        val isWeatherLab = currentRoom?.id == "weather_lab"
+        fun cycleDebugWeather(offset: Int) {
+            val currentIndex = weatherCycles.indexOf(debugWeatherOverride).takeIf { it >= 0 } ?: 0
+            val nextIndex = Math.floorMod(currentIndex + offset, weatherCycles.size)
+            debugWeatherOverride = weatherCycles[nextIndex]
+        }
         val isRoomDark = remember(currentRoom, uiState.roomState, uiState.mineGeneratorOnline, uiState.darkCapableRooms) {
             val darkState = uiState.roomState["dark"]
             val lightState = uiState.roomState["light_on"]
@@ -450,7 +458,11 @@ fun ExplorationScreen(
         }
         val baseRoomDescription = remember(currentRoom, uiState.roomState, isRoomDark) {
             currentRoom?.let { room ->
-                if (isRoomDark && !room.descriptionDark.isNullOrBlank()) room.descriptionDark else room.description
+                if (isRoomDark) {
+                    "It is too dark to see anything."
+                } else {
+                    room.description
+                }
             }
         }
 
@@ -465,8 +477,9 @@ fun ExplorationScreen(
                     .background(Color(0xFF050B18).copy(alpha = darknessAlpha))
             )
         }
+        val activeWeatherId = debugWeatherOverride ?: currentRoom?.weather ?: defaultWeatherForEnvironment(currentRoom?.env)
         WeatherOverlay(
-            weatherId = currentRoom?.weather,
+            weatherId = activeWeatherId,
             modifier = Modifier.fillMaxSize()
         )
         val vignetteIntensity = if (isRoomDark) 0.2f else 0.0f
@@ -497,8 +510,23 @@ fun ExplorationScreen(
         val descriptionForPanel = baseRoomDescription
         val fallbackNpcs = uiState.npcs
         val roomEnemyParties = remember(currentRoom) {
-            currentRoom?.let { roomEnemyParties(it) }.orEmpty()
+            currentRoom?.let { room ->
+                val partyCandidates = room.enemyParties
+                    .orEmpty()
+                    .mapNotNull { party ->
+                        party.mapNotNull { id -> id.trim().takeIf { trimmed -> trimmed.isNotBlank() } }
+                            .takeIf { it.isNotEmpty() }
+                    }
+                if (partyCandidates.isNotEmpty()) {
+                    partyCandidates
+                } else {
+                    room.enemies
+                        .mapNotNull { id -> id.trim().takeIf { trimmed -> trimmed.isNotBlank() } }
+                        .map { listOf(it) }
+                }
+            }.orEmpty()
         }
+        val roomItemFlavor = currentRoom?.itemFlavor.orEmpty()
         val hasRoomEntities = fallbackNpcs.isNotEmpty() ||
             roomEnemyParties.isNotEmpty() ||
             uiState.groundItems.isNotEmpty()
@@ -569,7 +597,6 @@ fun ExplorationScreen(
                 .statusBarsPadding()
             .padding(horizontal = 24.dp, vertical = 24.dp)
         ) {
-            val descriptionTopPadding = remember(maxHeight) { maxHeight * 0.2f }
             val actionAccentColor = themeColor(activeTheme?.accent, Color(0xFF80E0FF))
             ThemeBandOverlay(
                 theme = activeTheme,
@@ -583,109 +610,118 @@ fun ExplorationScreen(
             val minimapSize = 78.dp
             val titleColor = themeColor(activeTheme?.accent, Color(0xFFBEE9FF))
             val warmTitleColor = Color(0xFFFF9F2E)
-            Surface(
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .fillMaxWidth(0.9f),
-                shape = RoundedCornerShape(14.dp),
-                color = Color(0xFF061018).copy(alpha = if (isRoomDark) 0.72f else 0.46f),
-                border = BorderStroke(1.dp, titleColor.copy(alpha = if (isRoomDark) 0.50f else 0.38f))
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 16.dp, top = 10.dp, end = 10.dp, bottom = 10.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column(
-                        modifier = Modifier.weight(1f),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        Text(
-                            text = uiState.currentRoom?.title ?: "Unknown area",
-                            style = MaterialTheme.typography.headlineSmall.copy(
-                                fontSize = 26.sp,
-                                lineHeight = 30.sp,
-                                shadow = Shadow(
-                                    color = Color.Black.copy(alpha = 0.62f),
-                                    offset = Offset(0f, 1.25f),
-                                    blurRadius = 1.5f
-                                )
-                            ),
-                            color = warmTitleColor,
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(2.dp)
-                                .background(
-                                    Brush.horizontalGradient(
-                                        colors = listOf(
-                                            warmTitleColor.copy(alpha = 0.76f),
-                                            titleColor.copy(alpha = 0.34f),
-                                            Color.Transparent
-                                        )
-                                    )
-                                )
-                        )
-                    }
-                    MinimapWidget(
-                        minimap = uiState.minimap,
-                        onLegend = {
-                            viewModel.selectMenuTab(MenuTab.MAP)
-                            viewModel.openMenuOverlay(MenuTab.MAP)
-                        },
-                        obscured = isRoomDark,
-                        modifier = Modifier.requiredSize(minimapSize)
-                    )
-                }
-            }
-
             Column(
                 modifier = Modifier
                     .align(Alignment.TopCenter)
-                    .padding(top = descriptionTopPadding)
                     .fillMaxWidth(0.9f),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.spacedBy(14.dp)
             ) {
-                RoomDescriptionPanel(
-                    currentRoom = currentRoom,
-                    description = descriptionForPanel,
-                    plan = inlinePlan,
-                    isDark = isRoomDark,
-                    onAction = { action -> viewModel.onActionSelected(action) },
-                    onNpcClick = { name -> viewModel.onNpcInteraction(name) },
-                    onEnemyClick = { enemyId -> viewModel.engageEnemy(enemyId) },
-                    borderColor = panelBorderColor,
-                    backgroundColor = panelBackgroundColor,
-                    accentColor = actionAccentColor,
-                    textColor = roomTextColor,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .heightIn(min = 132.dp, max = 292.dp)
-                )
-                if (hasRoomEntities) {
-                    RoomEntitySection(
-                        npcs = fallbackNpcs,
-                        enemyParties = roomEnemyParties,
-                        groundItems = uiState.groundItems,
-                        itemDisplayName = { itemId -> viewModel.itemDisplayName(itemId) },
-                        itemDetailLabel = { itemId -> viewModel.roomItemDetailLabel(itemId) },
-                        itemIsEquipment = { itemId -> viewModel.roomItemIsEquipment(itemId) },
-                        enemyTiers = uiState.enemyTiers,
-                        enemyIcons = uiState.enemyIcons,
-                        accentColor = actionAccentColor,
-                        borderColor = panelBorderColor,
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(14.dp),
+                    color = Color(0xFF061018).copy(alpha = if (isRoomDark) 0.72f else 0.46f),
+                    border = BorderStroke(1.dp, titleColor.copy(alpha = if (isRoomDark) 0.50f else 0.38f))
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 16.dp, top = 10.dp, end = 10.dp, bottom = 10.dp),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .weight(1f)
+                                .clickable {
+                                    val nextIdx = (weatherCycles.indexOf(debugWeatherOverride) + 1) % weatherCycles.size
+                                    debugWeatherOverride = weatherCycles[nextIdx]
+                                },
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Text(
+                                text = if (isRoomDark) "" else (uiState.currentRoom?.title ?: "Unknown area"),
+                                style = MaterialTheme.typography.headlineSmall.copy(
+                                    fontSize = 26.sp,
+                                    lineHeight = 30.sp,
+                                    shadow = Shadow(
+                                        color = Color.Black.copy(alpha = 0.62f),
+                                        offset = Offset(0f, 1.25f),
+                                        blurRadius = 1.5f
+                                    )
+                                ),
+                                color = warmTitleColor,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                            if (!isRoomDark) {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(2.dp)
+                                        .background(
+                                            Brush.horizontalGradient(
+                                                colors = listOf(
+                                                    warmTitleColor.copy(alpha = 0.76f),
+                                                    titleColor.copy(alpha = 0.34f),
+                                                    Color.Transparent
+                                                )
+                                            )
+                                        )
+                                )
+                            }
+                        }
+                        MinimapWidget(
+                            minimap = uiState.minimap,
+                            onLegend = {
+                                viewModel.selectMenuTab(MenuTab.MAP)
+                                viewModel.openMenuOverlay(MenuTab.MAP)
+                            },
+                            obscured = isRoomDark,
+                            modifier = Modifier.requiredSize(minimapSize)
+                        )
+                    }
+                }
+
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    RoomDescriptionPanel(
+                        currentRoom = currentRoom,
+                        description = descriptionForPanel,
+                        plan = inlinePlan,
                         isDark = isRoomDark,
+                        onAction = { action -> viewModel.onActionSelected(action) },
                         onNpcClick = { name -> viewModel.onNpcInteraction(name) },
                         onEnemyClick = { enemyId -> viewModel.engageEnemy(enemyId) },
-                        onCollectItem = { itemId -> viewModel.collectGroundItem(itemId) },
-                        onCollectAll = { viewModel.collectAllGroundItems() },
-                        modifier = Modifier.fillMaxWidth()
+                        borderColor = panelBorderColor,
+                        backgroundColor = panelBackgroundColor,
+                        accentColor = actionAccentColor,
+                        textColor = roomTextColor,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .heightIn(min = 132.dp, max = 292.dp)
                     )
+                    if (hasRoomEntities) {
+                        RoomEntitySection(
+                            npcs = fallbackNpcs,
+                            enemyParties = roomEnemyParties,
+                            groundItems = uiState.groundItems,
+                            itemFlavor = roomItemFlavor,
+                            itemDisplayName = { itemId -> viewModel.itemDisplayName(itemId) },
+                            itemDetailLabel = { itemId -> viewModel.roomItemDetailLabel(itemId) },
+                            itemIsEquipment = { itemId -> viewModel.roomItemIsEquipment(itemId) },
+                            enemyTiers = uiState.enemyTiers,
+                            enemyIcons = uiState.enemyIcons,
+                            accentColor = actionAccentColor,
+                            borderColor = panelBorderColor,
+                            isDark = isRoomDark,
+                            onNpcClick = { name -> viewModel.onNpcInteraction(name) },
+                            onEnemyClick = { enemyId -> viewModel.engageEnemy(enemyId) },
+                            onCollectItem = { itemId -> viewModel.collectGroundItem(itemId) },
+                            onCollectAll = { viewModel.collectAllGroundItems() }
+                        )
+                    }
                 }
             }
 
@@ -708,6 +744,19 @@ fun ExplorationScreen(
                             .align(Alignment.CenterHorizontally)
                     )
                 }
+            }
+            if (isWeatherLab) {
+                WeatherLabPanel(
+                    activeWeatherId = activeWeatherId,
+                    onPrevious = { cycleDebugWeather(-1) },
+                    onNext = { cycleDebugWeather(1) },
+                    accentColor = actionAccentColor,
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .fillMaxWidth()
+                        .padding(start = 20.dp, end = 20.dp, bottom = 104.dp)
+                        .zIndex(8f)
+                )
             }
         }
         uiState.narrationPrompt?.let { narration ->
@@ -806,17 +855,15 @@ fun ExplorationScreen(
                 onToggleVignette = { viewModel.setVignetteEnabled(it) },
                 onQuickSave = { viewModel.quickSave() },
                 onSaveGame = {
-                    slotSummaries = viewModel.placeholderSaveSlots()
-                    saveLoadMode = "save"
                     coroutineScope.launch {
                         slotSummaries = viewModel.fetchSaveSlots()
+                        saveLoadMode = "save"
                     }
                 },
                 onLoadGame = {
-                    slotSummaries = viewModel.placeholderSaveSlots()
-                    saveLoadMode = "load"
                     coroutineScope.launch {
                         slotSummaries = viewModel.fetchSaveSlots()
+                        saveLoadMode = "load"
                     }
                 },
                 partyStatus = uiState.partyStatus,
@@ -862,77 +909,65 @@ fun ExplorationScreen(
         }
 
         if (showInventoryTargetDialog && pendingInventoryItem != null) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .zIndex(2f)
-            ) {
-                val targetOptions = menuPartyMembers.map {
-                    TargetSelectionOption(
-                        id = it.id,
-                        name = it.name,
-                        detail = it.hpLabel
-                    )
-                }
-                ItemTargetSelectionDialog(
-                    itemName = pendingInventoryItem!!.name,
-                    targets = targetOptions,
-                    onSelect = { targetId ->
-                        viewModel.useInventoryItem(pendingInventoryItem!!.id, targetId)
-                        pendingInventoryItem = null
-                        showInventoryTargetDialog = false
-                    },
-                    onDismiss = {
-                        pendingInventoryItem = null
-                        showInventoryTargetDialog = false
-                    },
-                    backgroundColor = themeColor(activeTheme?.bg, Color.Black).copy(alpha = 0.7f),
-                    borderColor = themeColor(activeTheme?.border, Color.White.copy(alpha = 0.3f)),
-                    textColor = themeColor(activeTheme?.fg, Color.White),
-                    accentColor = themeColor(activeTheme?.accent, Color.White)
+            val targetOptions = menuPartyMembers.map {
+                TargetSelectionOption(
+                    id = it.id,
+                    name = it.name,
+                    detail = it.hpLabel
                 )
             }
+            ItemTargetSelectionDialog(
+                itemName = pendingInventoryItem!!.name,
+                targets = targetOptions,
+                onSelect = { targetId ->
+                    viewModel.useInventoryItem(pendingInventoryItem!!.id, targetId)
+                    pendingInventoryItem = null
+                    showInventoryTargetDialog = false
+                },
+                onDismiss = {
+                    pendingInventoryItem = null
+                    showInventoryTargetDialog = false
+                },
+                backgroundColor = themeColor(activeTheme?.bg, Color.Black).copy(alpha = 0.7f),
+                borderColor = themeColor(activeTheme?.border, Color.White.copy(alpha = 0.3f)),
+                textColor = themeColor(activeTheme?.fg, Color.White),
+                accentColor = themeColor(activeTheme?.accent, Color.White)
+            )
         }
         if (saveLoadMode != null) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .zIndex(2f)
-            ) {
-                SaveLoadDialog(
-                    mode = saveLoadMode!!,
-                    slots = slotSummaries,
-                    onSave = { slot ->
-                        coroutineScope.launch {
-                            viewModel.saveGame(slot)
-                            slotSummaries = viewModel.fetchSaveSlots()
-                            saveLoadMode = null
-                        }
-                    },
-                    onLoad = { slot ->
-                        coroutineScope.launch {
-                            viewModel.loadGame(slot)
-                            saveLoadMode = null
-                        }
-                    },
-                    onDelete = { slot ->
-                        coroutineScope.launch {
-                            viewModel.deleteGame(slot)
-                            slotSummaries = viewModel.fetchSaveSlots()
-                        }
-                    },
-                    onRefresh = {
-                        coroutineScope.launch {
-                            slotSummaries = viewModel.fetchSaveSlots()
-                        }
-                    },
-                    onDismiss = { saveLoadMode = null },
-                    accentColor = themeColor(activeTheme?.accent, Color(0xFF7BE4FF)),
-                    panelColor = themeColor(activeTheme?.bg, Color(0xFF0B111A)).copy(alpha = 0.96f),
-                    borderColor = themeColor(activeTheme?.border, Color.White.copy(alpha = 0.16f)),
-                    textColor = themeColor(activeTheme?.fg, Color.White)
-                )
-            }
+            SaveLoadDialog(
+                mode = saveLoadMode!!,
+                slots = slotSummaries,
+                onSave = { slot ->
+                    coroutineScope.launch {
+                        viewModel.saveGame(slot)
+                        slotSummaries = viewModel.fetchSaveSlots()
+                        saveLoadMode = null
+                    }
+                },
+                onLoad = { slot ->
+                    coroutineScope.launch {
+                        viewModel.loadGame(slot)
+                        saveLoadMode = null
+                    }
+                },
+                onDelete = { slot ->
+                    coroutineScope.launch {
+                        viewModel.deleteGame(slot)
+                        slotSummaries = viewModel.fetchSaveSlots()
+                    }
+                },
+                onRefresh = {
+                    coroutineScope.launch {
+                        slotSummaries = viewModel.fetchSaveSlots()
+                    }
+                },
+                onDismiss = { saveLoadMode = null },
+                accentColor = themeColor(activeTheme?.accent, Color(0xFF7BE4FF)),
+                panelColor = themeColor(activeTheme?.bg, Color(0xFF0B111A)).copy(alpha = 0.96f),
+                borderColor = themeColor(activeTheme?.border, Color.White.copy(alpha = 0.16f)),
+                textColor = themeColor(activeTheme?.fg, Color.White)
+            )
         }
 
         if (fadeOverlayAnim.value > 0.01f) {
@@ -976,13 +1011,15 @@ fun ExplorationScreen(
             }
         }
 
-        CinematicOverlayHost(
-            state = uiState.cinematic,
-            onAdvance = { viewModel.advanceCinematic() },
-            modifier = Modifier
-                .fillMaxSize()
-                .zIndex(8f)
-        )
+        uiState.cinematic?.let { cinematic ->
+            CinematicOverlay(
+                state = cinematic,
+                onAdvance = { viewModel.advanceCinematic() },
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(24.dp)
+            )
+        }
 
         uiState.skillTreeOverlay?.let { overlay ->
             SkillTreeOverlay(
@@ -1133,8 +1170,6 @@ fun ExplorationScreen(
             modifier = Modifier
                 .align(Alignment.Center)
                 .fillMaxSize()
-                .statusBarsPadding()
-                .navigationBarsPadding()
                 .padding(12.dp)
         )
     }
@@ -1380,6 +1415,7 @@ private fun DirectionIndicatorsOverlay(
                             DirectionIndicatorStatus.UNEXPLORED -> "Travel $direction"
                             DirectionIndicatorStatus.LOCKED -> "$direction exit locked"
                             DirectionIndicatorStatus.ENEMY -> "$direction exit blocked by enemy"
+                            DirectionIndicatorStatus.NEARBY_THREAT -> "Threat nearby in $direction direction"
                         }
                     }
                     .clickable(
@@ -1406,11 +1442,13 @@ private fun DirectionIndicatorIcon(
         DirectionIndicatorStatus.UNEXPLORED -> Color(0.56f, 0.78f, 1.0f)
         DirectionIndicatorStatus.LOCKED -> Color(0.70f, 0.72f, 0.80f)
         DirectionIndicatorStatus.ENEMY -> Color(1.0f, 0.32f, 0.32f)
+        DirectionIndicatorStatus.NEARBY_THREAT -> Color(1.0f, 0.5f, 0.2f)
     }
     when (status) {
         DirectionIndicatorStatus.UNEXPLORED -> DirectionArrowIndicator(direction, baseSize, color)
         DirectionIndicatorStatus.LOCKED -> DirectionLockIndicator(direction, baseSize, color)
         DirectionIndicatorStatus.ENEMY -> DirectionEnemyIndicator(direction, baseSize, color)
+        DirectionIndicatorStatus.NEARBY_THREAT -> DirectionEnemyIndicator(direction, baseSize, color)
     }
 }
 
@@ -2002,62 +2040,28 @@ private fun MenuOverlay(
                                 color = warmAccent
                             )
                         }
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            verticalAlignment = Alignment.CenterVertically
+                        Surface(
+                            onClick = onClose,
+                            shape = RoundedCornerShape(10.dp),
+                            color = Color(0xFF061018).copy(alpha = 0.42f),
+                            border = BorderStroke(1.dp, accentColor.copy(alpha = 0.45f))
                         ) {
-                            Surface(
-                                onClick = { onSelectTab(MenuTab.SETTINGS) },
-                                shape = RoundedCornerShape(10.dp),
-                                color = if (selectedTab == MenuTab.SETTINGS) {
-                                    accentColor.copy(alpha = 0.18f)
-                                } else {
-                                    Color(0xFF061018).copy(alpha = 0.42f)
-                                },
-                                border = BorderStroke(1.dp, accentColor.copy(alpha = 0.45f))
+                            Row(
+                                modifier = Modifier.padding(horizontal = 10.dp, vertical = 7.dp),
+                                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Row(
-                                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 7.dp),
-                                    horizontalArrangement = Arrangement.spacedBy(6.dp),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Filled.Settings,
-                                        contentDescription = null,
-                                        tint = accentColor,
-                                        modifier = Modifier.size(16.dp)
-                                    )
-                                    Text(
-                                        text = "Settings",
-                                        style = MaterialTheme.typography.labelLarge,
-                                        color = accentColor,
-                                        maxLines = 1
-                                    )
-                                }
-                            }
-                            Surface(
-                                onClick = onClose,
-                                shape = RoundedCornerShape(10.dp),
-                                color = Color(0xFF061018).copy(alpha = 0.42f),
-                                border = BorderStroke(1.dp, accentColor.copy(alpha = 0.45f))
-                            ) {
-                                Row(
-                                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 7.dp),
-                                    horizontalArrangement = Arrangement.spacedBy(6.dp),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Filled.Close,
-                                        contentDescription = null,
-                                        tint = accentColor,
-                                        modifier = Modifier.size(16.dp)
-                                    )
-                                    Text(
-                                        text = "Close",
-                                        style = MaterialTheme.typography.labelLarge,
-                                        color = accentColor
-                                    )
-                                }
+                                Icon(
+                                    imageVector = Icons.Filled.Close,
+                                    contentDescription = null,
+                                    tint = accentColor,
+                                    modifier = Modifier.size(16.dp)
+                                )
+                                Text(
+                                    text = "Close",
+                                    style = MaterialTheme.typography.labelLarge,
+                                    color = accentColor
+                                )
                             }
                         }
                     }
@@ -4240,7 +4244,6 @@ private fun PartyMemberDetailsDialog(
     )
 }
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun EventAnnouncementOverlay(
     announcement: EventAnnouncementUi,
@@ -4250,33 +4253,22 @@ private fun EventAnnouncementOverlay(
 ) {
     val eventAccent = Color(announcement.accentColor)
     val accentColor = themeColor(theme?.accent, eventAccent)
-    val outlineColor = themeColor(theme?.border, eventAccent.copy(alpha = 0.7f))
-    val backgroundColor = themeColor(theme?.bg, Color(0xFF050B14)).copy(alpha = 0.96f)
+    val outlineColor = themeColor(theme?.border, eventAccent.copy(alpha = 0.8f))
+    val backgroundColor = themeColor(theme?.bg, Color(0xFF040914)).copy(alpha = 0.98f)
     val hasTitle = !announcement.title.isNullOrBlank()
-    val recoveredItems = announcement.items.filter { it.isNotBlank() }
-    val isLoot = recoveredItems.isNotEmpty()
-    val eyebrow = announcement.eyebrow?.takeIf { it.isNotBlank() }
-        ?: if (isLoot) "Recovered" else "Event"
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(Color.Black.copy(alpha = if (isLoot) 0.46f else 0.42f))
+            .background(Color.Black.copy(alpha = 0.38f))
             .padding(horizontal = 24.dp, vertical = 32.dp),
         contentAlignment = Alignment.Center
     ) {
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
-                .widthIn(max = if (isLoot) 460.dp else 540.dp)
-                .semantics {
-                    contentDescription = "Dismiss Event Announcement"
-                    onClick("Dismiss event announcement") {
-                        onDismiss()
-                        true
-                    }
-                }
+                .widthIn(max = 540.dp)
                 .clickable(onClick = onDismiss),
-            shape = RoundedCornerShape(22.dp),
+            shape = RoundedCornerShape(28.dp),
             border = BorderStroke(1.dp, outlineColor),
             color = backgroundColor,
             tonalElevation = 12.dp
@@ -4291,100 +4283,31 @@ private fun EventAnnouncementOverlay(
                             )
                         )
                     )
-                    .padding(20.dp),
-                verticalArrangement = Arrangement.spacedBy(14.dp)
+                    .padding(start = 32.dp, top = 28.dp, end = 32.dp, bottom = 36.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(14.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(52.dp)
-                            .clip(RoundedCornerShape(15.dp))
-                            .background(accentColor.copy(alpha = 0.18f))
-                            .border(1.dp, accentColor.copy(alpha = 0.5f), RoundedCornerShape(15.dp)),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = if (isLoot) Icons.Filled.Inventory2 else Icons.Rounded.AutoAwesome,
-                            contentDescription = null,
-                            tint = accentColor,
-                            modifier = Modifier.size(28.dp)
-                        )
-                    }
-                    Column(
-                        modifier = Modifier.weight(1f),
-                        verticalArrangement = Arrangement.spacedBy(2.dp)
-                    ) {
-                        Text(
-                            text = eyebrow,
-                            style = MaterialTheme.typography.labelMedium,
-                            color = accentColor,
-                            fontWeight = FontWeight.Bold,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                        Text(
-                            text = announcement.title?.takeIf { it.isNotBlank() }
-                                ?: if (isLoot) "Item recovered" else "Update",
-                            style = (if (isLoot) MaterialTheme.typography.titleLarge else MaterialTheme.typography.headlineSmall).copy(
-                                shadow = Shadow(
-                                    color = accentColor.copy(alpha = 0.45f),
-                                    blurRadius = 14f
-                                )
-                            ),
-                            color = Color.White,
-                            fontWeight = FontWeight.Bold,
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    }
-                    Icon(
-                        imageVector = Icons.Filled.Close,
-                        contentDescription = null,
-                        tint = Color.White.copy(alpha = 0.6f),
-                        modifier = Modifier.size(22.dp)
-                    )
-                }
-                HorizontalDivider(color = accentColor.copy(alpha = 0.3f))
-                if (isLoot) {
-                    FlowRow(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        recoveredItems.forEach { item ->
-                            Surface(
-                                shape = RoundedCornerShape(12.dp),
-                                color = accentColor.copy(alpha = 0.13f),
-                                border = BorderStroke(1.dp, accentColor.copy(alpha = 0.42f))
-                            ) {
-                                Text(
-                                    text = item,
-                                    style = MaterialTheme.typography.titleMedium,
-                                    color = Color.White,
-                                    fontWeight = FontWeight.SemiBold,
-                                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp)
-                                )
-                            }
-                        }
-                    }
+                if (hasTitle) {
                     Text(
-                        text = "Added to inventory",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = Color.White.copy(alpha = 0.72f)
+                        text = announcement.title!!,
+                        style = MaterialTheme.typography.headlineSmall.copy(
+                            shadow = Shadow(
+                                color = accentColor.copy(alpha = 0.65f),
+                                blurRadius = 18f
+                            )
+                        ),
+                        color = accentColor,
+                        textAlign = TextAlign.Center
                     )
-                } else {
-                    Text(
-                        text = announcement.message,
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = Color.White,
-                        textAlign = if (hasTitle) TextAlign.Start else TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth()
-                    )
+                    HorizontalDivider(color = accentColor.copy(alpha = 0.4f))
                 }
+                Text(
+                    text = announcement.message,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = Color.White,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(top = if (hasTitle) 8.dp else 8.dp)
+                )
             }
         }
     }
@@ -4449,6 +4372,68 @@ private fun StatusTicker(
             color = Color.White,
             style = MaterialTheme.typography.bodyMedium
         )
+    }
+}
+
+@Composable
+private fun WeatherLabPanel(
+    activeWeatherId: String?,
+    onPrevious: () -> Unit,
+    onNext: () -> Unit,
+    accentColor: Color,
+    modifier: Modifier = Modifier
+) {
+    val label = activeWeatherId
+        ?.replace('_', ' ')
+        ?.uppercase(Locale.getDefault())
+        ?: "NONE"
+    Surface(
+        modifier = modifier,
+        shape = RoundedCornerShape(14.dp),
+        color = Color(0xE6071018),
+        border = BorderStroke(1.dp, accentColor.copy(alpha = 0.62f))
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            OutlinedButton(
+                onClick = onPrevious,
+                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
+                border = BorderStroke(1.dp, accentColor.copy(alpha = 0.72f)),
+                colors = ButtonDefaults.outlinedButtonColors(
+                    contentColor = Color.White
+                )
+            ) {
+                Text("PREV")
+            }
+            Column(
+                modifier = Modifier.weight(1f),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "WEATHER LAB",
+                    color = accentColor,
+                    style = MaterialTheme.typography.labelSmall
+                )
+                Text(
+                    text = label,
+                    color = Color.White,
+                    style = MaterialTheme.typography.titleMedium
+                )
+            }
+            Button(
+                onClick = onNext,
+                contentPadding = PaddingValues(horizontal = 14.dp, vertical = 8.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = accentColor,
+                    contentColor = Color.Black
+                )
+            ) {
+                Text("NEXT")
+            }
+        }
     }
 }
 
@@ -4605,53 +4590,29 @@ private fun SettingsPanel(
                 onCheckedChange = onToggleTutorials
             )
         }
-        SettingsActionButton(
-            label = "Save",
-            contentDescription = "Open Save Slots",
-            onClick = onSaveGame
-        )
-        SettingsActionButton(
-            label = "Load",
-            contentDescription = "Open Load Slots",
-            onClick = onLoadGame
-        )
-        SettingsActionButton(
-            label = "Quick Save",
-            contentDescription = "Quick Save",
-            onClick = onQuickSave
-        )
+        Button(
+            onClick = onSaveGame,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Save")
+        }
+        Button(
+            onClick = onLoadGame,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Load")
+        }
+        Button(
+            onClick = onQuickSave,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Quick Save")
+        }
         Text(
             text = "Quicksave writes your current progress immediately without leaving the game.",
             color = Color.White.copy(alpha = 0.7f),
             style = MaterialTheme.typography.bodySmall
         )
-    }
-}
-
-@Composable
-private fun SettingsActionButton(
-    label: String,
-    contentDescription: String,
-    onClick: () -> Unit
-) {
-    Surface(
-        onClick = onClick,
-        modifier = Modifier
-            .fillMaxWidth()
-            .semantics { this.contentDescription = contentDescription },
-        shape = RoundedCornerShape(999.dp),
-        color = Color(0xFFFFB39D)
-    ) {
-        Box(
-            modifier = Modifier.padding(horizontal = 18.dp, vertical = 14.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = label,
-                color = Color(0xFF5D2A1F),
-                style = MaterialTheme.typography.labelLarge
-            )
-        }
     }
 }
 
@@ -5721,10 +5682,7 @@ private fun RoomDescription(
     if (description.isNullOrBlank()) {
         Text(
             text = "No description available.",
-            style = MaterialTheme.typography.bodyMedium.copy(
-                fontSize = 16.sp,
-                lineHeight = 22.sp
-            ),
+            style = MaterialTheme.typography.bodyLarge,
             color = textColor.copy(alpha = 0.92f),
             textAlign = TextAlign.Start,
             modifier = modifier
@@ -5734,10 +5692,7 @@ private fun RoomDescription(
     if (plan == null) {
         Text(
             text = description,
-            style = MaterialTheme.typography.bodyMedium.copy(
-                fontSize = 16.sp,
-                lineHeight = 22.sp
-            ),
+            style = MaterialTheme.typography.bodyLarge,
             color = textColor,
             textAlign = TextAlign.Start,
             modifier = modifier
@@ -5759,7 +5714,7 @@ private fun RoomDescription(
                     is InlineActionTarget.Enemy -> Triple(enemyAccent, FontWeight.SemiBold, TextDecoration.Underline)
                     is InlineActionTarget.Room -> {
                         val clr = if (segment.locked) disabledColor else highlightColor
-                        Triple(clr, FontWeight.Bold, TextDecoration.Underline)
+                        Triple(clr, FontWeight.Bold, if (segment.locked) TextDecoration.None else TextDecoration.Underline)
                     }
                 }
                 addStyle(
@@ -5783,120 +5738,20 @@ private fun RoomDescription(
     val actionLookup = remember(plan) {
         plan.segments.associateBy { it.id }
     }
-    val bodyStyle = MaterialTheme.typography.bodyMedium.copy(
-        color = defaultColor,
-        fontSize = 16.sp,
-        lineHeight = 22.sp,
-        textAlign = TextAlign.Start
-    )
-
-    fun activateSegment(segment: InlineActionSegment) {
-        when (val target = segment.target) {
-            is InlineActionTarget.Room -> onAction(target.action)
-            is InlineActionTarget.Npc -> onNpcClick(target.name)
-            is InlineActionTarget.Enemy -> onEnemyClick(target.id)
-        }
-    }
-
-    var textLayout by remember(plan, annotatedText) { mutableStateOf<TextLayoutResult?>(null) }
-    val density = LocalDensity.current
-    val minimumTargetWidthPx = with(density) { 32.dp.toPx() }
-    val horizontalHitSlopPx = with(density) { 6.dp.toPx() }
-    val verticalHitSlopPx = with(density) { 5.dp.toPx() }
-
-    Box(modifier = modifier) {
-        ClickableText(
-            text = annotatedText,
-            modifier = Modifier.fillMaxWidth(),
-            style = bodyStyle,
-            onTextLayout = { textLayout = it }
-        ) { offset ->
-            annotatedText.getStringAnnotations(ACTION_TAG, offset, offset).firstOrNull()?.let { annotation ->
-                val segment = actionLookup[annotation.item] ?: return@ClickableText
-                activateSegment(segment)
+    val bodyStyle = MaterialTheme.typography.bodyLarge.copy(color = defaultColor, textAlign = TextAlign.Start)
+    ClickableText(
+        text = annotatedText,
+        modifier = modifier,
+        style = bodyStyle
+    ) { offset ->
+        annotatedText.getStringAnnotations(ACTION_TAG, offset, offset).firstOrNull()?.let { annotation ->
+            val segment = actionLookup[annotation.item] ?: return@ClickableText
+            when (val target = segment.target) {
+                is InlineActionTarget.Room -> if (!segment.locked) onAction(target.action)
+                is InlineActionTarget.Npc -> onNpcClick(target.name)
+                is InlineActionTarget.Enemy -> onEnemyClick(target.id)
             }
         }
-        val layout = textLayout
-        if (layout != null) {
-            plan.segments.forEach { segment ->
-                InlineActionHitTargets(
-                    segment = segment,
-                    textLayout = layout,
-                    minimumTargetWidthPx = minimumTargetWidthPx,
-                    horizontalHitSlopPx = horizontalHitSlopPx,
-                    verticalHitSlopPx = verticalHitSlopPx,
-                    onActivate = { activateSegment(segment) }
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun InlineActionHitTargets(
-    segment: InlineActionSegment,
-    textLayout: TextLayoutResult,
-    minimumTargetWidthPx: Float,
-    horizontalHitSlopPx: Float,
-    verticalHitSlopPx: Float,
-    onActivate: () -> Unit
-) {
-    val start = segment.start.coerceIn(0, textLayout.layoutInput.text.length)
-    val end = segment.end.coerceIn(start, textLayout.layoutInput.text.length)
-    if (start >= end) return
-
-    val startLine = textLayout.getLineForOffset(start)
-    val endLine = textLayout.getLineForOffset((end - 1).coerceAtLeast(start))
-    val label = segment.accessibilityLabel()
-    val interactionSource = remember(segment.id) { MutableInteractionSource() }
-
-    for (line in startLine..endLine) {
-        val lineStartOffset = textLayout.getLineStart(line)
-        val lineEndOffset = textLayout.getLineEnd(line, visibleEnd = true).coerceAtLeast(lineStartOffset)
-        val segmentStart = maxOf(start, lineStartOffset)
-        val segmentEnd = minOf(end, lineEndOffset)
-        if (segmentStart >= segmentEnd) continue
-
-        val rawStartX = textLayout.getHorizontalPosition(segmentStart, usePrimaryDirection = true)
-        val rawEndX = textLayout.getHorizontalPosition(segmentEnd, usePrimaryDirection = true)
-        val left = minOf(rawStartX, rawEndX)
-        val right = maxOf(rawStartX, rawEndX)
-        val top = textLayout.getLineTop(line)
-        val bottom = textLayout.getLineBottom(line)
-        val width = (right - left).coerceAtLeast(1f)
-        val height = (bottom - top).coerceAtLeast(1f)
-        val horizontalPadding = ((minimumTargetWidthPx - width) / 2f)
-            .coerceIn(0f, horizontalHitSlopPx)
-        val targetWidth = width + horizontalPadding * 2f
-        val targetHeight = height + verticalHitSlopPx * 2f
-        val targetLeft = (left - horizontalPadding).coerceAtLeast(0f)
-        val targetTop = (top - verticalHitSlopPx).coerceAtLeast(0f)
-
-        Box(
-            modifier = Modifier
-                .offset {
-                    IntOffset(
-                        x = targetLeft.roundToInt(),
-                        y = targetTop.roundToInt()
-                    )
-                }
-                .size(
-                    width = with(LocalDensity.current) { targetWidth.toDp() },
-                    height = with(LocalDensity.current) { targetHeight.toDp() }
-                )
-                .semantics {
-                    contentDescription = label
-                    onClick(label = label) {
-                        onActivate()
-                        true
-                    }
-                }
-                .clickable(
-                    interactionSource = interactionSource,
-                    indication = null,
-                    onClick = onActivate
-                )
-        )
     }
 }
 
@@ -5978,7 +5833,6 @@ private fun ReturnHubButton(
         modifier = modifier
             .height(54.dp)
             .widthIn(min = 116.dp)
-            .semantics { contentDescription = "Return to Hub" }
             .clickable(onClick = onClick),
         shape = RoundedCornerShape(14.dp),
         color = Color(0xFF061018).copy(alpha = 0.58f),
@@ -6054,7 +5908,7 @@ private fun ServiceActionTray(
 ) {
     if (actions.isEmpty()) return
 
-    val trayShape = RoundedCornerShape(18.dp)
+    val trayShape = RoundedCornerShape(22.dp)
     val borderColor = accentColor.copy(alpha = 0.4f)
     val iconBackground = remember(accentColor, backgroundColor) {
         Brush.radialGradient(
@@ -6083,9 +5937,9 @@ private fun ServiceActionTray(
     ) {
         Row(
             modifier = Modifier
-                .padding(horizontal = 12.dp, vertical = 8.dp)
+                .padding(horizontal = 16.dp, vertical = 12.dp)
                 .horizontalScroll(rememberScrollState()),
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            horizontalArrangement = Arrangement.spacedBy(14.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             actions.forEach { action ->
@@ -6100,17 +5954,16 @@ private fun ServiceActionTray(
                 val scale = 1f + 0.012f * wave
                 Column(
                     modifier = Modifier
-                        .widthIn(min = 68.dp, max = 92.dp)
-                        .clip(RoundedCornerShape(14.dp))
-                        .semantics { contentDescription = "Open ${action.label}" }
+                        .widthIn(min = 78.dp)
+                        .clip(RoundedCornerShape(16.dp))
                         .clickable { onAction(action.roomAction) }
-                        .padding(horizontal = 5.dp, vertical = 3.dp),
+                        .padding(horizontal = 6.dp, vertical = 4.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                    verticalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                     Box(
                         modifier = Modifier
-                            .size(44.dp)
+                            .size(56.dp)
                             .graphicsLayer {
                                 translationY = bobPx
                                 scaleX = scale
@@ -6125,20 +5978,19 @@ private fun ServiceActionTray(
                         Image(
                             painter = painterResource(action.iconRes),
                             contentDescription = action.label,
-                            modifier = Modifier.size(27.dp),
+                            modifier = Modifier.size(34.dp),
                             colorFilter = ColorFilter.tint(accentColor.copy(alpha = 0.9f + 0.08f * glow))
                         )
                     }
                     Text(
                         text = action.label,
                         style = MaterialTheme.typography.labelSmall.copy(
-                            fontSize = 11.sp,
+                            fontSize = 12.sp,
                             fontWeight = FontWeight.SemiBold
                         ),
                         color = Color.White.copy(alpha = 0.92f),
                         textAlign = TextAlign.Center,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
+                        maxLines = 1
                     )
                 }
             }
@@ -6164,20 +6016,6 @@ private data class InlineActionPlan(
     val description: String,
     val segments: List<InlineActionSegment>
 )
-
-private fun InlineActionSegment.accessibilityLabel(): String = when (val inlineTarget = target) {
-    is InlineActionTarget.Room -> "Inspect ${inlineActionDisplayName(inlineTarget.action.name)}"
-    is InlineActionTarget.Npc -> "Talk to ${inlineActionDisplayName(inlineTarget.name)}"
-    is InlineActionTarget.Enemy -> "Inspect ${inlineActionDisplayName(inlineTarget.label)}"
-}
-
-private fun inlineActionDisplayName(value: String): String {
-    val trimmed = value.trim()
-    if (trimmed.isEmpty()) return "item"
-    return trimmed.replaceFirstChar { char ->
-        if (char.isLowerCase()) char.titlecase(Locale.getDefault()) else char.toString()
-    }
-}
 
 private const val ACTION_TAG = "action"
 private const val ENEMY_FLAVOR_TAG = "enemy_flavor"
@@ -6624,7 +6462,7 @@ private fun RoomDescriptionPanel(
     }
     Surface(
         modifier = modifier,
-        color = backgroundColor.copy(alpha = if (isDark) 0.78f else 0.58f),
+        color = Color(0xFF061018).copy(alpha = if (isDark) 0.76f else 0.50f),
         shape = RoundedCornerShape(12.dp),
         border = BorderStroke(1.dp, borderColor.copy(alpha = if (isDark) 0.72f else 0.42f))
     ) {
@@ -6641,8 +6479,8 @@ private fun RoomDescriptionPanel(
                     )
                 )
                 .verticalScroll(scrollState)
-                .padding(horizontal = 16.dp, vertical = 13.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+                .padding(horizontal = 20.dp, vertical = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Box(
                 modifier = Modifier
@@ -6674,28 +6512,12 @@ private fun RoomDescriptionPanel(
 }
 
 
-private fun roomEnemyParties(room: Room): List<List<String>> {
-    val partyCandidates = room.enemyParties
-        .orEmpty()
-        .mapNotNull { party ->
-            party.mapNotNull { id -> id.trim().takeIf { trimmed -> trimmed.isNotBlank() } }
-                .takeIf { it.isNotEmpty() }
-        }
-    return if (partyCandidates.isNotEmpty()) {
-        partyCandidates
-    } else {
-        room.enemies
-            .mapNotNull { id -> id.trim().takeIf { trimmed -> trimmed.isNotBlank() } }
-            .map { listOf(it) }
-    }
-}
-
-
 @Composable
 private fun RoomEntitySection(
     npcs: List<String>,
     enemyParties: List<List<String>>,
     groundItems: Map<String, Int>,
+    itemFlavor: Map<String, String>,
     itemDisplayName: (String) -> String,
     itemDetailLabel: (String) -> String?,
     itemIsEquipment: (String) -> Boolean,
@@ -6707,69 +6529,23 @@ private fun RoomEntitySection(
     onNpcClick: (String) -> Unit,
     onEnemyClick: (String) -> Unit,
     onCollectItem: (String) -> Unit,
-    onCollectAll: () -> Unit,
-    modifier: Modifier = Modifier
+    onCollectAll: () -> Unit
 ) {
-    val itemEntries = groundItems.entries.sortedWith(
-        compareByDescending<Map.Entry<String, Int>> { itemIsEquipment(it.key) }
-            .thenBy { itemDisplayName(it.key).lowercase(Locale.getDefault()) }
-    )
-    val visibleGroupCount = listOf(
-        enemyParties.isNotEmpty(),
-        npcs.isNotEmpty(),
-        itemEntries.isNotEmpty()
-    ).count { it }
-    val showCategoryMarkers = visibleGroupCount > 1
-    val totalPresenceItems = enemyParties.size + npcs.size + itemEntries.size
-    val capTrayHeight = visibleGroupCount == 3 || totalPresenceItems > 5
-    val trayScrollState = rememberScrollState()
     Surface(
-        modifier = modifier.then(
-            if (capTrayHeight) Modifier.heightIn(max = 124.dp) else Modifier
-        ),
-        shape = RoundedCornerShape(8.dp),
-        color = Color(0xFF030B12).copy(alpha = if (isDark) 0.78f else 0.70f),
-        border = BorderStroke(1.dp, borderColor.copy(alpha = if (isDark) 0.44f else 0.32f))
+        shape = RoundedCornerShape(12.dp),
+        color = Color.Black.copy(alpha = if (isDark) 0.18f else 0.10f),
+        border = BorderStroke(1.dp, borderColor.copy(alpha = if (isDark) 0.22f else 0.13f))
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .then(if (capTrayHeight) Modifier.verticalScroll(trayScrollState) else Modifier)
-                .padding(horizontal = 6.dp, vertical = 4.dp),
-            verticalArrangement = Arrangement.spacedBy(3.dp)
+                .padding(horizontal = 10.dp, vertical = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            if (enemyParties.isNotEmpty()) {
-                PresenceCategoryRow(
-                    icon = Icons.Filled.Warning,
-                    contentDescription = "Hostiles in room",
-                    accentColor = Color(0xFFFF8A80),
-                    priority = PresencePriority.High,
-                    showMarker = showCategoryMarkers
-                ) {
-                    EnemyPartyStrip(
-                        parties = enemyParties,
-                        enemyTiers = enemyTiers,
-                        enemyIcons = enemyIcons,
-                        accentColor = accentColor,
-                        borderColor = borderColor,
-                        isDark = isDark,
-                        compact = true,
-                        onPartyClick = { leaderId ->
-                            if (leaderId.isNotBlank()) onEnemyClick(leaderId)
-                        }
-                    )
-                }
-            }
             if (npcs.isNotEmpty()) {
-                PresenceCategoryRow(
-                    icon = Icons.Filled.Person,
-                    contentDescription = "People in room",
-                    accentColor = accentColor,
-                    priority = PresencePriority.Medium,
-                    showMarker = showCategoryMarkers
-                ) {
+                CompactEntityRow(label = "People") {
                     npcs.forEach { npc ->
-                        CompactNpcChip(
+                        RoomActionChip(
                             label = npcDisplayLabel(npc),
                             accentColor = accentColor,
                             onClick = { onNpcClick(npc) }
@@ -6777,32 +6553,166 @@ private fun RoomEntitySection(
                     }
                 }
             }
-            if (itemEntries.isNotEmpty()) {
-                PresenceCategoryRow(
-                    icon = Icons.Filled.Inventory2,
-                    contentDescription = "Items in room",
+            if (groundItems.isNotEmpty()) {
+                CompactFindsRow(
+                    items = groundItems,
+                    itemFlavor = itemFlavor,
+                    itemDisplayName = itemDisplayName,
+                    itemDetailLabel = itemDetailLabel,
+                    itemIsEquipment = itemIsEquipment,
                     accentColor = accentColor,
-                    priority = PresencePriority.Low,
-                    showMarker = showCategoryMarkers,
-                    scrollHorizontally = true
+                    borderColor = borderColor,
+                    isDark = isDark,
+                    onCollectItem = onCollectItem,
+                    onCollectAll = onCollectAll
+                )
+            }
+            if (enemyParties.isNotEmpty()) {
+                CompactHostilesRow(
+                    enemyParties = enemyParties,
+                    enemyTiers = enemyTiers,
+                    enemyIcons = enemyIcons,
+                    accentColor = accentColor,
+                    borderColor = borderColor,
+                    isDark = isDark,
+                    onEnemyClick = onEnemyClick
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun CompactEntityRow(
+    label: String,
+    content: @Composable () -> Unit
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = label,
+            color = Color.White.copy(alpha = 0.58f),
+            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.SemiBold),
+            modifier = Modifier.width(52.dp)
+        )
+        Row(
+            modifier = Modifier
+                .weight(1f)
+                .horizontalScroll(rememberScrollState()),
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            content()
+        }
+    }
+}
+
+@Composable
+private fun CompactHostilesRow(
+    enemyParties: List<List<String>>,
+    enemyTiers: Map<String, String>,
+    enemyIcons: Map<String, EnemyIconUi>,
+    accentColor: Color,
+    borderColor: Color,
+    isDark: Boolean,
+    onEnemyClick: (String) -> Unit
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = "Hostiles",
+            color = Color.White.copy(alpha = 0.58f),
+            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.SemiBold),
+            modifier = Modifier.width(52.dp)
+        )
+        Box(modifier = Modifier.weight(1f)) {
+            EnemyPartyStrip(
+                parties = enemyParties,
+                enemyTiers = enemyTiers,
+                enemyIcons = enemyIcons,
+                accentColor = accentColor,
+                borderColor = borderColor,
+                isDark = isDark,
+                onPartyClick = { leaderId ->
+                    if (leaderId.isNotBlank()) onEnemyClick(leaderId)
+                }
+            )
+        }
+    }
+}
+@Composable
+private fun CompactFindsRow(
+    items: Map<String, Int>,
+    itemFlavor: Map<String, String>,
+    itemDisplayName: (String) -> String,
+    itemDetailLabel: (String) -> String?,
+    itemIsEquipment: (String) -> Boolean,
+    accentColor: Color,
+    borderColor: Color,
+    isDark: Boolean,
+    onCollectItem: (String) -> Unit,
+    onCollectAll: () -> Unit
+) {
+    val entries = items.entries.sortedWith(
+        compareByDescending<Map.Entry<String, Int>> { itemIsEquipment(it.key) }
+            .thenBy { itemDisplayName(it.key).lowercase(Locale.getDefault()) }
+    )
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalAlignment = Alignment.Top
+    ) {
+        Text(
+            text = if (entries.any { itemIsEquipment(it.key) }) "Finds" else "Items",
+            color = Color.White.copy(alpha = 0.58f),
+            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.SemiBold),
+            modifier = Modifier
+                .width(52.dp)
+                .padding(top = 8.dp)
+        )
+        Row(
+            modifier = Modifier
+                .weight(1f)
+                .horizontalScroll(rememberScrollState()),
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
+            verticalAlignment = Alignment.Top
+        ) {
+            entries.forEach { (itemId, quantity) ->
+                CompactFindCard(
+                    itemId = itemId,
+                    quantity = quantity,
+                    name = itemDisplayName(itemId),
+                    detail = itemDetailLabel(itemId),
+                    flavor = itemFlavor[itemId].orEmpty(),
+                    isEquipment = itemIsEquipment(itemId),
+                    accentColor = accentColor,
+                    borderColor = borderColor,
+                    isDark = isDark,
+                    onCollectItem = onCollectItem
+                )
+            }
+            if (entries.size > 1) {
+                Surface(
+                    onClick = onCollectAll,
+                    shape = RoundedCornerShape(12.dp),
+                    color = accentColor.copy(alpha = 0.12f),
+                    border = BorderStroke(1.dp, accentColor.copy(alpha = 0.58f)),
+                    modifier = Modifier
+                        .width(88.dp)
+                        .height(76.dp)
                 ) {
-                    itemEntries.forEach { (itemId, quantity) ->
-                        CompactFindChip(
-                            itemId = itemId,
-                            quantity = quantity,
-                            name = itemDisplayName(itemId),
-                            detail = itemDetailLabel(itemId),
-                            isEquipment = itemIsEquipment(itemId),
-                            accentColor = accentColor,
-                            borderColor = borderColor,
-                            isDark = isDark,
-                            onCollectItem = onCollectItem
-                        )
-                    }
-                    if (itemEntries.size > 1) {
-                        CompactCollectAllChip(
-                            accentColor = accentColor,
-                            onCollectAll = onCollectAll
+                    Box(contentAlignment = Alignment.Center) {
+                        Text(
+                            text = "Pick Up\nAll",
+                            color = Color.White,
+                            textAlign = TextAlign.Center,
+                            style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold)
                         )
                     }
                 }
@@ -6811,239 +6721,62 @@ private fun RoomEntitySection(
     }
 }
 
-private enum class PresencePriority { High, Medium, Low }
-
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun PresenceCategoryRow(
-    icon: ImageVector,
-    contentDescription: String,
-    accentColor: Color,
-    priority: PresencePriority,
-    showMarker: Boolean,
-    scrollHorizontally: Boolean = false,
-    content: @Composable () -> Unit
-) {
-    val rowMinHeight = if (priority == PresencePriority.High) 38.dp else 28.dp
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .heightIn(min = rowMinHeight),
-        horizontalArrangement = Arrangement.spacedBy(if (showMarker) 5.dp else 0.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        if (showMarker) {
-            PresenceGroupMarker(
-                icon = icon,
-                contentDescription = contentDescription,
-                accentColor = accentColor,
-                priority = priority,
-                modifier = Modifier.align(Alignment.CenterVertically)
-            )
-        }
-        if (scrollHorizontally) {
-            val horizontalScrollState = rememberScrollState()
-            Row(
-                modifier = Modifier
-                    .weight(1f)
-                    .heightIn(min = rowMinHeight)
-                    .horizontalScroll(horizontalScrollState),
-                horizontalArrangement = Arrangement.spacedBy(5.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                content()
-            }
-        } else {
-            FlowRow(
-                modifier = Modifier
-                    .weight(1f)
-                    .heightIn(min = rowMinHeight),
-                horizontalArrangement = Arrangement.spacedBy(5.dp),
-                verticalArrangement = Arrangement.spacedBy(3.dp)
-            ) {
-                content()
-            }
-        }
-    }
-}
-
-@Composable
-private fun PresenceGroupMarker(
-    icon: ImageVector,
-    contentDescription: String,
-    accentColor: Color,
-    priority: PresencePriority,
-    modifier: Modifier = Modifier
-) {
-    val markerSize = if (priority == PresencePriority.High) 28.dp else 24.dp
-    val iconSize = if (priority == PresencePriority.High) 15.dp else 13.dp
-    val markerAlpha = when (priority) {
-        PresencePriority.High -> 0.16f
-        PresencePriority.Medium -> 0.09f
-        PresencePriority.Low -> 0.07f
-    }
-    val borderAlpha = when (priority) {
-        PresencePriority.High -> 0.34f
-        PresencePriority.Medium -> 0.22f
-        PresencePriority.Low -> 0.18f
-    }
-    Surface(
-        shape = RoundedCornerShape(999.dp),
-        color = accentColor.copy(alpha = markerAlpha),
-        border = BorderStroke(1.dp, accentColor.copy(alpha = borderAlpha)),
-        modifier = modifier
-            .size(markerSize)
-            .semantics { this.contentDescription = contentDescription }
-    ) {
-        Box(contentAlignment = Alignment.Center) {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                tint = accentColor.copy(alpha = if (priority == PresencePriority.Low) 0.7f else 0.92f),
-                modifier = Modifier.size(iconSize)
-            )
-        }
-    }
-}
-
-@Composable
-private fun PresenceSeparator(
-    borderColor: Color,
-    isDark: Boolean
-) {
-    Spacer(
-        modifier = Modifier
-            .height(28.dp)
-            .width(1.dp)
-            .background(borderColor.copy(alpha = if (isDark) 0.24f else 0.14f))
-    )
-}
-
-@Composable
-private fun CompactCollectAllChip(
-    accentColor: Color,
-    onCollectAll: () -> Unit
-) {
-    Surface(
-        onClick = onCollectAll,
-        shape = RoundedCornerShape(999.dp),
-        color = accentColor.copy(alpha = 0.16f),
-        border = BorderStroke(1.dp, accentColor.copy(alpha = 0.42f)),
-        modifier = Modifier
-            .height(28.dp)
-            .width(36.dp)
-            .semantics { contentDescription = "Pick up all" }
-    ) {
-        Box(contentAlignment = Alignment.Center) {
-            Icon(
-                imageVector = Icons.Filled.Add,
-                contentDescription = null,
-                tint = Color.White.copy(alpha = 0.94f),
-                modifier = Modifier.size(16.dp)
-            )
-        }
-    }
-}
-
-@Composable
-private fun CompactFindChip(
+private fun CompactFindCard(
     itemId: String,
     quantity: Int,
     name: String,
     detail: String?,
+    flavor: String,
     isEquipment: Boolean,
     accentColor: Color,
     borderColor: Color,
     isDark: Boolean,
     onCollectItem: (String) -> Unit
 ) {
-    val stat = compactRoomItemDetail(detail, isEquipment)
     Surface(
         onClick = { onCollectItem(itemId) },
-        shape = RoundedCornerShape(999.dp),
-        color = Color.White.copy(alpha = if (isDark) 0.15f else 0.12f),
-        border = BorderStroke(1.dp, if (isEquipment) accentColor.copy(alpha = 0.58f) else borderColor.copy(alpha = 0.34f)),
+        shape = RoundedCornerShape(12.dp),
+        color = Color.White.copy(alpha = if (isDark) 0.07f else 0.05f),
+        border = BorderStroke(1.dp, if (isEquipment) accentColor.copy(alpha = 0.58f) else borderColor.copy(alpha = 0.28f)),
         modifier = Modifier
-            .height(28.dp)
-            .defaultMinSize(minWidth = 46.dp)
-            .widthIn(max = 126.dp)
-            .semantics { contentDescription = "Pick up $name" }
+            .width(174.dp)
+            .height(82.dp)
     ) {
-        Row(
-            modifier = Modifier
-                .height(28.dp)
-                .padding(start = 4.dp, end = 6.dp),
-            horizontalArrangement = Arrangement.spacedBy(3.dp),
-            verticalAlignment = Alignment.CenterVertically
+        Column(
+            modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            Surface(
-                shape = CircleShape,
-                color = accentColor.copy(alpha = if (isEquipment) 0.20f else 0.13f)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Image(
-                    painter = painterResource(roomItemIconRes(name, detail, isEquipment)),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(18.dp)
-                        .padding(3.dp),
-                    contentScale = ContentScale.Fit
+                Text(
+                    text = name,
+                    color = Color.White,
+                    style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f)
                 )
+                if (quantity > 1) EntityCountPill("x$quantity", accentColor)
             }
+            val secondary = detail?.takeIf { it.isNotBlank() }
+                ?: flavor.takeIf { it.isNotBlank() }
+                ?: if (isEquipment) "Gear" else "Pick up"
             Text(
-                text = name,
-                color = Color.White,
-                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.SemiBold),
-                textAlign = TextAlign.Center,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.widthIn(max = if (stat != null || quantity > 1) 68.dp else 86.dp)
-            )
-            if (quantity > 1) {
-                EntityCountPill("x$quantity", accentColor)
-            } else if (stat != null) {
-                EntityCountPill(stat, accentColor)
-            }
-        }
-    }
-}
-
-@Composable
-private fun CompactNpcChip(
-    label: String,
-    accentColor: Color,
-    onClick: () -> Unit
-) {
-    val actionLabel = "Talk to ${label.ifBlank { "NPC" }}"
-    Surface(
-        onClick = onClick,
-        shape = RoundedCornerShape(999.dp),
-        color = Color.White.copy(alpha = 0.14f),
-        border = BorderStroke(1.dp, accentColor.copy(alpha = 0.54f)),
-        modifier = Modifier
-            .height(28.dp)
-            .defaultMinSize(minWidth = 34.dp)
-            .widthIn(max = 92.dp)
-            .semantics {
-                contentDescription = actionLabel
-                onClick(label = actionLabel) {
-                    onClick()
-                    true
-                }
-            }
-    ) {
-        Box(
-            modifier = Modifier
-                .height(28.dp)
-                .padding(horizontal = 8.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = label.ifBlank { "NPC" },
-                color = Color.White,
-                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
-                textAlign = TextAlign.Center,
+                text = secondary,
+                color = Color.White.copy(alpha = 0.68f),
+                style = MaterialTheme.typography.bodySmall,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
+            )
+            Text(
+                text = "Tap to collect",
+                color = accentColor.copy(alpha = 0.9f),
+                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                maxLines = 1
             )
         }
     }
@@ -7059,46 +6792,12 @@ private fun EntityCountPill(label: String, accentColor: Color) {
         Text(
             text = label,
             color = accentColor.copy(alpha = 0.92f),
-            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+            style = MaterialTheme.typography.labelSmall,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.padding(horizontal = 5.dp, vertical = 0.dp)
+            modifier = Modifier.padding(horizontal = 7.dp, vertical = 2.dp)
         )
     }
-}
-
-@DrawableRes
-private fun roomItemIconRes(name: String, detail: String?, isEquipment: Boolean): Int {
-    val normalized = "$name ${detail.orEmpty()}".lowercase(Locale.getDefault())
-    return when {
-        normalized.contains("gun") -> R.drawable.item_icon_gun
-        normalized.contains("glove") -> R.drawable.item_icon_gloves
-        normalized.contains("pendant") -> R.drawable.item_icon_pendant
-        normalized.contains("accessory") -> R.drawable.item_icon_accessory
-        normalized.contains("armor") || normalized.contains("def") -> R.drawable.item_icon_armor
-        normalized.contains("food") || normalized.contains("snack") || normalized.contains("ration") -> R.drawable.item_icon_food
-        normalized.contains("fish") -> R.drawable.item_icon_fish
-        normalized.contains("lure") -> R.drawable.item_icon_lure
-        normalized.contains("ingredient") -> R.drawable.item_icon_ingredient
-        normalized.contains("material") || normalized.contains("component") || normalized.contains("part") -> R.drawable.item_icon_material
-        normalized.contains("weapon") || normalized.contains("dmg") || normalized.contains("blade") || normalized.contains("sword") -> R.drawable.item_icon_sword
-        isEquipment -> R.drawable.item_icon_generic
-        else -> R.drawable.item_icon_generic
-    }
-}
-
-private fun compactRoomItemDetail(detail: String?, isEquipment: Boolean): String? {
-    val trimmed = detail?.trim()?.takeIf { it.isNotBlank() } ?: return if (isEquipment) "GEAR" else null
-    val parts = trimmed.split('|').map { it.trim() }.filter { it.isNotBlank() }
-    val stat = parts.firstOrNull { part ->
-        part.contains("DMG", ignoreCase = true) ||
-            part.contains("DEF", ignoreCase = true) ||
-            part.contains("HP", ignoreCase = true)
-    } ?: if (isEquipment) parts.lastOrNull() else null
-    return stat
-        ?.uppercase(Locale.getDefault())
-        ?.replace("WEAPON", "GEAR")
-        ?.take(12)
 }
 
 private fun npcDisplayLabel(npc: String): String = npc
@@ -7111,6 +6810,42 @@ private fun npcDisplayLabel(npc: String): String = npc
         }
     }
     .ifBlank { npc }
+private fun actionLabelFallback(action: RoomAction): String = when (action) {
+    is ContainerAction -> "Search"
+    is ToggleAction -> "Toggle"
+    is TinkeringAction -> "Tinkering"
+    is FirstAidAction -> "First Aid"
+    is ShopAction -> "Shop"
+    is GenericAction -> action.type.ifBlank { "Action" }.replaceFirstChar { ch ->
+        if (ch.isLowerCase()) ch.titlecase(Locale.getDefault()) else ch.toString()
+    }
+    else -> "Action"
+}
+
+@Composable
+private fun RoomActionChip(
+    label: String,
+    accentColor: Color,
+    locked: Boolean = false,
+    onClick: () -> Unit
+) {
+    val background = if (locked) Color.White.copy(alpha = 0.05f) else Color.Transparent
+    val borderColor = accentColor.copy(alpha = if (locked) 0.2f else 0.8f)
+    Surface(
+        onClick = onClick,
+        enabled = !locked,
+        shape = RoundedCornerShape(12.dp),
+        color = background,
+        border = BorderStroke(1.dp, borderColor)
+    ) {
+        Text(
+            text = label.ifBlank { "Interact" },
+            color = if (locked) Color.White.copy(alpha = 0.6f) else Color.White,
+            style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+        )
+    }
+}
 
 @Composable
 private fun FlavorBlock(
@@ -7309,7 +7044,6 @@ private fun EnemyFlavorBlock(
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun EnemyPartyStrip(
     parties: List<List<String>>,
@@ -7318,7 +7052,6 @@ private fun EnemyPartyStrip(
     accentColor: Color,
     borderColor: Color,
     isDark: Boolean,
-    compact: Boolean = false,
     onPartyClick: (String) -> Unit
 ) {
     val motion = rememberInfiniteTransition(label = "hostilesMotion")
@@ -7331,91 +7064,33 @@ private fun EnemyPartyStrip(
         ),
         label = "hostilesMotionCycle"
     )
-    val horizontalPadding = if (compact) 0.dp else 12.dp
-    val verticalPadding = if (compact) 0.dp else 10.dp
-    val itemSpacing = if (compact) 6.dp else 10.dp
-    val scrollState = rememberScrollState()
-    Column(verticalArrangement = Arrangement.spacedBy(if (compact) 4.dp else 8.dp)) {
-        if (compact) {
-            FlowRow(
-                modifier = Modifier.padding(horizontal = horizontalPadding, vertical = verticalPadding),
-                horizontalArrangement = Arrangement.spacedBy(itemSpacing),
-                verticalArrangement = Arrangement.spacedBy(3.dp)
-            ) {
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Row(
+            modifier = Modifier
+                .padding(horizontal = 12.dp, vertical = 10.dp)
+                .fillMaxWidth()
+                .horizontalScroll(rememberScrollState()),
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
                 parties.forEach { party ->
-                    EnemyPartyToken(
-                        party = party,
-                        enemyTiers = enemyTiers,
-                        enemyIcons = enemyIcons,
+                    val leaderId = party.firstOrNull()?.trim().orEmpty()
+                    if (leaderId.isBlank()) return@forEach
+                    val partySize = party.count { it.trim().isNotBlank() }.coerceAtLeast(1)
+                    val tier = parseEnemyTier(enemyTiers[leaderId])
+                    EnemyPartyChip(
+                        leaderId = leaderId,
+                        partySize = partySize,
+                        tier = tier,
                         motionCycle = motionCycle,
                         accentColor = accentColor,
                         borderColor = borderColor,
                         isDark = isDark,
-                        compact = true,
-                        onPartyClick = onPartyClick
-                    )
-                }
-            }
-        } else {
-            Row(
-                modifier = Modifier
-                    .padding(horizontal = horizontalPadding, vertical = verticalPadding)
-                    .fillMaxWidth()
-                    .horizontalScroll(scrollState),
-                horizontalArrangement = Arrangement.spacedBy(itemSpacing),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                parties.forEach { party ->
-                    EnemyPartyToken(
-                        party = party,
-                        enemyTiers = enemyTiers,
-                        enemyIcons = enemyIcons,
-                        motionCycle = motionCycle,
-                        accentColor = accentColor,
-                        borderColor = borderColor,
-                        isDark = isDark,
-                        compact = false,
-                        onPartyClick = onPartyClick
-                    )
-                }
+                        icon = enemyIcons[leaderId],
+                        onClick = { onPartyClick(leaderId) }
+                )
             }
         }
     }
-}
-
-@Composable
-private fun EnemyPartyToken(
-    party: List<String>,
-    enemyTiers: Map<String, String>,
-    enemyIcons: Map<String, EnemyIconUi>,
-    motionCycle: Float,
-    accentColor: Color,
-    borderColor: Color,
-    isDark: Boolean,
-    compact: Boolean,
-    onPartyClick: (String) -> Unit
-) {
-    val leaderId = party.firstOrNull()?.trim().orEmpty()
-    if (leaderId.isBlank()) return
-    val partySize = party.count { it.trim().isNotBlank() }.coerceAtLeast(1)
-    val partyLabel = party
-        .map { it.trim() }
-        .filter { it.isNotBlank() }
-        .joinToString(" + ") { enemyAccessibleName(it) }
-    val tier = parseEnemyTier(enemyTiers[leaderId])
-    EnemyPartyChip(
-        leaderId = leaderId,
-        partySize = partySize,
-        partyLabel = partyLabel,
-        tier = tier,
-        motionCycle = motionCycle,
-        accentColor = accentColor,
-        borderColor = borderColor,
-        isDark = isDark,
-        compact = compact,
-        icon = enemyIcons[leaderId],
-        onClick = { onPartyClick(leaderId) }
-    )
 }
 
 private enum class EnemyTier { COMMON, ELITE, BOSS }
@@ -7435,47 +7110,23 @@ private fun parseEnemyTier(value: String?): EnemyTier {
     }
 }
 
-private fun enemyAccessibleName(enemyId: String): String =
-    enemyId
-        .split('_', '-', ' ')
-        .filter { it.isNotBlank() }
-        .joinToString(" ") { part ->
-            part.replaceFirstChar { char ->
-                if (char.isLowerCase()) char.titlecase(Locale.getDefault()) else char.toString()
-            }
-        }
-
 @Composable
 private fun EnemyPartyChip(
     leaderId: String,
     partySize: Int,
-    partyLabel: String,
     tier: EnemyTier,
     motionCycle: Float,
     accentColor: Color,
     borderColor: Color,
     isDark: Boolean,
-    compact: Boolean,
     icon: EnemyIconUi?,
     onClick: () -> Unit
 ) {
-    val shape = if (compact) {
-        RoundedCornerShape(topStart = 16.dp, topEnd = 10.dp, bottomEnd = 16.dp, bottomStart = 10.dp)
-    } else {
-        RoundedCornerShape(topStart = 20.dp, topEnd = 12.dp, bottomEnd = 20.dp, bottomStart = 12.dp)
-    }
-    val accessibleLabel = partyLabel.ifBlank { enemyAccessibleName(leaderId) }
+    val shape = RoundedCornerShape(topStart = 20.dp, topEnd = 12.dp, bottomEnd = 20.dp, bottomStart = 12.dp)
     Surface(
         onClick = onClick,
         shape = shape,
-        color = Color.Transparent,
-        modifier = Modifier.semantics {
-            contentDescription = if (partySize > 1) {
-                "Engage $accessibleLabel party"
-            } else {
-                "Engage $accessibleLabel"
-            }
-        }
+        color = Color.Transparent
     ) {
         EnemyPartyLeaderIcon(
             enemyId = leaderId,
@@ -7485,7 +7136,6 @@ private fun EnemyPartyChip(
             accentColor = accentColor,
             borderColor = borderColor,
             isDark = isDark,
-            compact = compact,
             icon = icon
         )
     }
@@ -7500,7 +7150,6 @@ private fun EnemyPartyLeaderIcon(
     accentColor: Color,
     borderColor: Color,
     isDark: Boolean,
-    compact: Boolean,
     icon: EnemyIconUi?
 ) {
     val iconPath = icon?.spritePath ?: remember(enemyId) { "images/enemies/${enemyId}_combat.png" }
@@ -7512,9 +7161,14 @@ private fun EnemyPartyLeaderIcon(
         EnemyTier.COMMON -> accentColor
     }
     val tierBorderWidth = when (tier) {
-        EnemyTier.BOSS -> if (compact) 2.4.dp else 3.2.dp
-        EnemyTier.ELITE -> if (compact) 1.8.dp else 2.4.dp
+        EnemyTier.BOSS -> 3.2.dp
+        EnemyTier.ELITE -> 2.4.dp
         EnemyTier.COMMON -> 0.dp
+    }
+    val tierLabel = when (tier) {
+        EnemyTier.BOSS -> "☠"
+        EnemyTier.ELITE -> "★"
+        EnemyTier.COMMON -> null
     }
     val density = LocalDensity.current
     val phaseOffset = remember(enemyId) {
@@ -7523,37 +7177,26 @@ private fun EnemyPartyLeaderIcon(
     val t = (motionCycle + phaseOffset) % 1f
     val wave = kotlin.math.sin(t * Math.PI * 2.0).toFloat()
     val glow = (0.5f + 0.5f * wave).coerceIn(0f, 1f)
-    val bobAmplitude = if (compact) {
-        if (isDark) 0.7.dp else 1.0.dp
-    } else {
-        if (isDark) 1.2.dp else 2.0.dp
-    }
+    val bobAmplitude = if (isDark) 1.2.dp else 2.0.dp
     val bobPx = with(density) { bobAmplitude.toPx() } * wave
-    val scale = 1f + (if (compact) 0.008f else if (isDark) 0.012f else 0.02f) * wave
-    val outerSize = if (compact) 38.dp else 80.dp
-    val innerSize = if (compact) 34.dp else 72.dp
-    val iconPadding = if (compact) 4.dp else 10.dp
-    val shape = if (compact) {
-        RoundedCornerShape(topStart = 16.dp, topEnd = 10.dp, bottomEnd = 16.dp, bottomStart = 10.dp)
-    } else {
-        RoundedCornerShape(topStart = 20.dp, topEnd = 12.dp, bottomEnd = 20.dp, bottomStart = 12.dp)
-    }
+    val scale = 1f + (if (isDark) 0.012f else 0.02f) * wave
+    val shape = RoundedCornerShape(topStart = 20.dp, topEnd = 12.dp, bottomEnd = 20.dp, bottomStart = 12.dp)
     val background = remember(accentColor, isDark, tierAccent, tier) {
         val highlight = if (tier == EnemyTier.COMMON) accentColor else tierAccent
         Brush.radialGradient(
             colors = listOf(
-                highlight.copy(alpha = if (compact) 0.20f else if (isDark) 0.26f else 0.38f),
-                Color(0xFF050A10).copy(alpha = if (compact) 0.82f else if (isDark) 0.92f else 0.88f)
+                highlight.copy(alpha = if (isDark) 0.26f else 0.38f),
+                Color(0xFF050A10).copy(alpha = if (isDark) 0.92f else 0.88f)
             )
         )
     }
     Box(
-        modifier = Modifier.size(outerSize),
+        modifier = Modifier.size(80.dp),
         contentAlignment = Alignment.Center
     ) {
         Box(
             modifier = Modifier
-                .size(innerSize)
+                .size(72.dp)
                 .graphicsLayer {
                     translationY = bobPx
                     scaleX = scale
@@ -7563,15 +7206,15 @@ private fun EnemyPartyLeaderIcon(
                 .background(background)
                 .border(
                     BorderStroke(
-                        if (compact) 1.dp else 1.35.dp,
-                        borderColor.copy(alpha = (if (compact) 0.42f else if (isDark) 0.75f else 0.55f) * (0.9f + 0.1f * glow))
+                        1.35.dp,
+                        borderColor.copy(alpha = (if (isDark) 0.75f else 0.55f) * (0.9f + 0.1f * glow))
                     ),
                     shape
                 )
                 .border(
                     BorderStroke(
-                        if (compact) 0.9.dp else 1.15.dp,
-                        accentColor.copy(alpha = (if (compact) 0.38f else if (isDark) 0.45f else 0.65f) * (0.75f + 0.25f * glow))
+                        1.15.dp,
+                        accentColor.copy(alpha = (if (isDark) 0.45f else 0.65f) * (0.75f + 0.25f * glow))
                     ),
                     shape
                 )
@@ -7580,7 +7223,7 @@ private fun EnemyPartyLeaderIcon(
                         Modifier.border(
                             BorderStroke(
                                 tierBorderWidth,
-                                tierAccent.copy(alpha = if (tier == EnemyTier.BOSS) 0.78f else 0.66f)
+                                tierAccent.copy(alpha = if (tier == EnemyTier.BOSS) 0.9f else 0.8f)
                             ),
                             shape
                         )
@@ -7592,7 +7235,7 @@ private fun EnemyPartyLeaderIcon(
     ) {
             val iconModifier = Modifier
                 .fillMaxSize()
-                .padding(iconPadding)
+                .padding(10.dp)
             val composite = icon?.composite
             if (composite != null) {
                 CompositeEnemyIcon(
@@ -7610,9 +7253,9 @@ private fun EnemyPartyLeaderIcon(
                 )
             }
         Canvas(modifier = Modifier.fillMaxSize()) {
-            val strokeWidth = with(density) { if (compact) 1.4.dp.toPx() else 2.dp.toPx() }
+            val strokeWidth = with(density) { 2.dp.toPx() }
             val inset = strokeWidth / 2f + with(density) { 1.dp.toPx() }
-            val arcColor = accentColor.copy(alpha = (if (compact) 0.08f else if (isDark) 0.12f else 0.18f) + 0.08f * glow)
+            val arcColor = accentColor.copy(alpha = (if (isDark) 0.12f else 0.18f) + 0.1f * glow)
                 drawArc(
                     color = arcColor,
                     startAngle = t * 360f,
@@ -7645,86 +7288,50 @@ private fun EnemyPartyLeaderIcon(
                 )
             }
         }
-        if (partySize > 1) {
+        if (partySize > 1 && tier != EnemyTier.BOSS) {
             Surface(
                 shape = CircleShape,
-                color = accentColor.copy(alpha = if (compact) 0.9f else 0.95f),
+                color = accentColor.copy(alpha = 0.95f),
                 modifier = Modifier
                         .align(Alignment.BottomEnd)
-                        .padding(if (compact) 1.dp else 2.dp)
+                        .padding(2.dp)
                 ) {
                     Text(
                         text = partySize.toString(),
                         style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
                         color = Color.Black,
-                        modifier = Modifier.padding(
-                            horizontal = if (compact) 5.dp else 6.dp,
-                            vertical = if (compact) 1.dp else 2.dp
-                        )
+                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
                 )
             }
         }
-        if (tier != EnemyTier.COMMON) {
-            EnemyTierCornerBadge(
-                tier = tier,
-                color = tierAccent,
-                compact = compact,
+        if (tierLabel != null) {
+            val badgeTextStyle = MaterialTheme.typography.labelSmall.copy(
+                fontWeight = FontWeight.Bold,
+                fontSize = if (tier == EnemyTier.BOSS) 20.sp else 11.sp
+            )
+            val badgePadding = if (tier == EnemyTier.BOSS) {
+                PaddingValues(horizontal = 6.dp, vertical = 2.dp)
+            } else {
+                PaddingValues(horizontal = 6.dp, vertical = 2.dp)
+            }
+            Surface(
+                shape = RoundedCornerShape(8.dp),
+                color = tierAccent.copy(alpha = 0.98f),
                 modifier = Modifier
                     .align(Alignment.TopStart)
-                    .padding(if (compact) 3.dp else 4.dp)
-            )
+                    .padding(4.dp)
+            ) {
+                Text(
+                    text = tierLabel,
+                    style = badgeTextStyle,
+                    color = Color.Black,
+                    modifier = Modifier.padding(badgePadding)
+                )
+            }
         }
     }
 }
 
-}
-
-@Composable
-private fun EnemyTierCornerBadge(
-    tier: EnemyTier,
-    color: Color,
-    compact: Boolean,
-    modifier: Modifier = Modifier
-) {
-    val badgeSize = if (compact) 13.dp else 18.dp
-    Canvas(modifier = modifier.size(badgeSize)) {
-        when (tier) {
-            EnemyTier.BOSS -> {
-                drawCircle(color = color.copy(alpha = 0.96f))
-                val stroke = size.minDimension * 0.12f
-                drawLine(
-                    color = Color.Black.copy(alpha = 0.85f),
-                    start = Offset(size.width * 0.25f, size.height * 0.38f),
-                    end = Offset(size.width * 0.75f, size.height * 0.38f),
-                    strokeWidth = stroke,
-                    cap = StrokeCap.Round
-                )
-                drawLine(
-                    color = Color.Black.copy(alpha = 0.85f),
-                    start = Offset(size.width * 0.36f, size.height * 0.62f),
-                    end = Offset(size.width * 0.64f, size.height * 0.62f),
-                    strokeWidth = stroke,
-                    cap = StrokeCap.Round
-                )
-            }
-            EnemyTier.ELITE -> {
-                val path = Path().apply {
-                    moveTo(size.width * 0.5f, 0f)
-                    lineTo(size.width, size.height * 0.5f)
-                    lineTo(size.width * 0.5f, size.height)
-                    lineTo(0f, size.height * 0.5f)
-                    close()
-                }
-                drawPath(path, color.copy(alpha = 0.92f))
-                drawCircle(
-                    color = Color.Black.copy(alpha = 0.72f),
-                    radius = size.minDimension * 0.13f,
-                    center = center
-                )
-            }
-            EnemyTier.COMMON -> Unit
-        }
-    }
 }
 
 @Composable
@@ -8481,39 +8088,11 @@ fun CinematicOverlayHost(
         modifier = modifier
     ) {
         displayedState?.let { cinematic ->
-            val speaker = cinematic.step.speaker?.takeIf { it.isNotBlank() }
-            if (speaker != null) {
-                val dialogueLine = DialogueLine(
-                    id = "${cinematic.sceneId}_${cinematic.stepIndex}",
-                    speaker = speaker,
-                    text = cinematic.step.text,
-                    portrait = cinematic.step.portrait,
-                    voiceCue = null
-                )
-                val dialogueUi = DialogueUi(
-                    line = dialogueLine,
-                    portrait = cinematic.step.portrait,
-                    voiceCue = null
-                )
-                Box(modifier = Modifier.fillMaxSize()) {
-                    DialogueOverlay(
-                        dialogue = dialogueUi,
-                        choices = emptyList(),
-                        onAdvance = onAdvance,
-                        onChoice = { onAdvance() },
-                        onPlayVoice = {},
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .padding(24.dp)
-                    )
-                }
-            } else {
-                CinematicOverlay(
-                    state = cinematic,
-                    onAdvance = onAdvance,
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
+            CinematicOverlay(
+                state = cinematic,
+                onAdvance = onAdvance,
+                modifier = Modifier.fillMaxSize()
+            )
         }
     }
 }
@@ -8524,176 +8103,78 @@ fun CinematicOverlay(
     onAdvance: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val fullText = state.step.text
-    var visibleChars by remember(state.sceneId, state.stepIndex, fullText) { mutableStateOf(0) }
-    var textVisible by remember(state.sceneId, state.stepIndex, state.step.text) { mutableStateOf(false) }
-    LaunchedEffect(state.sceneId, state.stepIndex, fullText) {
-        visibleChars = 0
-        textVisible = true
-        val revealDurationMillis = cinematicRevealDurationMillis(fullText)
-        val frameMillis = 32L
-        var elapsedMillis = 0L
-        while (visibleChars < fullText.length) {
-            delay(frameMillis)
-            elapsedMillis += frameMillis
-            val progress = (elapsedMillis.toFloat() / revealDurationMillis).coerceIn(0f, 1f)
-            visibleChars = (fullText.length * progress)
-                .toInt()
-                .coerceAtLeast(1)
-                .coerceAtMost(fullText.length)
-        }
-    }
-    val textAlpha by animateFloatAsState(
-        targetValue = if (textVisible) 1f else 0f,
-        animationSpec = tween(durationMillis = 260, easing = FastOutSlowInEasing),
-        label = "cinematicTextAlpha"
-    )
-    val textOffset by animateFloatAsState(
-        targetValue = if (textVisible) 0f else 18f,
-        animationSpec = tween(durationMillis = 320, easing = FastOutSlowInEasing),
-        label = "cinematicTextOffset"
-    )
-    val promptPulse = rememberInfiniteTransition(label = "cinematicPromptPulse")
-    val promptAlpha by promptPulse.animateFloat(
-        initialValue = 0.35f,
-        targetValue = 0.95f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 980, easing = FastOutSlowInEasing),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "cinematicPromptAlpha"
-    )
-    val visibleText = fullText.take(visibleChars.coerceIn(0, fullText.length))
-    val advanceOrComplete = {
-        if (visibleChars < fullText.length) {
-            visibleChars = fullText.length
-        } else {
-            onAdvance()
-        }
-    }
-
-    Box(
-        modifier = modifier
-            .background(
-                Brush.verticalGradient(
-                    0f to Color.Black.copy(alpha = 0.82f),
-                    0.48f to Color(0xFF06111E).copy(alpha = 0.78f),
-                    1f to Color.Black.copy(alpha = 0.86f)
-                )
-            )
-            .clickable(
-                indication = null,
-                interactionSource = remember { MutableInteractionSource() },
-                onClick = advanceOrComplete
-            )
-            .semantics {
-                contentDescription = "Cinematic Popup. Tap to continue"
-                onClick(label = "Continue cinematic") {
-                    advanceOrComplete()
-                    true
-                }
-            }
-    ) {
-        Box(
-            modifier = Modifier
-                .matchParentSize()
-                .background(
-                    Brush.radialGradient(
-                        colors = listOf(
-                            Color(0xFF53D7FF).copy(alpha = 0.12f),
-                            Color.Transparent
-                        ),
-                        center = Offset.Unspecified,
-                        radius = 720f
-                    )
-                )
+    val speaker = state.step.speaker?.takeIf { it.isNotBlank() }
+    if (speaker != null) {
+        val dialogueLine = DialogueLine(
+            id = "${state.sceneId}_${state.stepIndex}",
+            speaker = speaker,
+            text = state.step.text,
+            portrait = state.step.portrait,
+            voiceCue = null
         )
-        Surface(
+        val dialogueUi = DialogueUi(
+            line = dialogueLine,
+            portrait = state.step.portrait,
+            voiceCue = null
+        )
+        DialogueOverlay(
+            dialogue = dialogueUi,
+            choices = emptyList(),
+            onAdvance = onAdvance,
+            onChoice = { onAdvance() },
+            onPlayVoice = {},
+            modifier = modifier
+        )
+        return
+    }
+    Surface(
+        modifier = modifier
+            .fillMaxWidth(0.94f)
+            .navigationBarsPadding(),
+        color = Color(0xFF03070F).copy(alpha = 0.95f),
+        shape = RoundedCornerShape(32.dp),
+        border = BorderStroke(1.dp, Color.White.copy(alpha = 0.18f))
+    ) {
+        Column(
             modifier = Modifier
-                .align(Alignment.Center)
-                .fillMaxWidth(0.86f)
-                .widthIn(max = 560.dp)
-                .navigationBarsPadding()
-                .statusBarsPadding(),
-            color = Color(0xFF07101A).copy(alpha = 0.94f),
-            shape = RoundedCornerShape(8.dp),
-            border = BorderStroke(1.dp, Color(0xFFFFB347).copy(alpha = 0.48f))
+                .padding(horizontal = 24.dp, vertical = 20.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            Column(
-                modifier = Modifier
-                    .background(
-                        Brush.verticalGradient(
-                            listOf(
-                                Color.White.copy(alpha = 0.04f),
-                                Color.Transparent,
-                                Color.Black.copy(alpha = 0.14f)
-                            )
-                        )
-                    )
-                    .padding(horizontal = 24.dp, vertical = 22.dp),
-                verticalArrangement = Arrangement.spacedBy(18.dp)
+            state.title?.let {
+                Text(
+                    text = it,
+                    color = Color.White,
+                    style = MaterialTheme.typography.titleMedium
+                )
+            }
+            state.step.speaker?.takeIf { it.isNotBlank() }?.let { speaker ->
+                Text(
+                    text = speaker,
+                    color = Color.White.copy(alpha = 0.7f),
+                    style = MaterialTheme.typography.labelMedium
+                )
+            }
+            Text(
+                text = state.step.text,
+                color = Color.White.copy(alpha = 0.92f),
+                style = MaterialTheme.typography.bodyLarge
+            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Box(
-                    modifier = Modifier
-                        .height(2.dp)
-                        .fillMaxWidth(0.62f)
-                        .background(
-                            Brush.horizontalGradient(
-                                listOf(
-                                    Color(0xFFFFB347).copy(alpha = 0.9f),
-                                    Color(0xFF53D7FF).copy(alpha = 0.45f),
-                                    Color.Transparent
-                                )
-                            )
-                        )
+                Text(
+                    text = "${state.stepIndex + 1} / ${state.stepCount}",
+                    color = Color.White.copy(alpha = 0.7f),
+                    style = MaterialTheme.typography.labelSmall
                 )
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .heightIn(min = 200.dp, max = 430.dp),
-                    contentAlignment = Alignment.CenterStart
-                ) {
-                    Text(
-                        text = visibleText,
-                        color = Color.White.copy(alpha = 0.95f),
-                        style = MaterialTheme.typography.bodyLarge.copy(
-                            fontSize = 22.sp,
-                            lineHeight = 32.sp
-                        ),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .graphicsLayer {
-                                alpha = textAlpha
-                                translationY = textOffset
-                            }
-                            .verticalScroll(rememberScrollState())
-                    )
+                Button(onClick = onAdvance) {
+                    Text(if (state.stepIndex + 1 >= state.stepCount) "Continue" else "Next")
                 }
-
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.End)
-                        .width(42.dp)
-                        .height(3.dp)
-                        .background(
-                            Brush.horizontalGradient(
-                                listOf(
-                                    Color.Transparent,
-                                    Color(0xFFFFB347).copy(alpha = promptAlpha),
-                                    Color(0xFF53D7FF).copy(alpha = promptAlpha * 0.7f)
-                                )
-                            )
-                        )
-                )
             }
         }
     }
-}
-
-private fun cinematicRevealDurationMillis(text: String): Long {
-    if (text.isBlank()) return 0L
-    return (text.length * 22L).coerceIn(1_500L, 3_000L)
 }
 
 

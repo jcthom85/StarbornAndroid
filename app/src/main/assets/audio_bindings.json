@@ -48,7 +48,13 @@
     "dust": "amb_dust_storm",
     "rain": "amb_cave_drips",
     "cave_drip": "amb_cave_drips",
-    "industrial": "amb_vent"
+    "industrial": "amb_vent",
+    "steam": "amb_vent",
+    "fog": "amb_dust_storm",
+    "gas": "amb_vent",
+    "resonance": "amb_cave_drips",
+    "snow": "amb_server_cold",
+    "storm": "amb_dust_storm"
   },
   "ui": {
     "click": "ui_click",

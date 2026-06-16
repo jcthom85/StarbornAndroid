@@ -859,7 +859,7 @@
       },
       {
         "type": "show_message",
-        "message": "Hydraulic Kick training unlocked."
+        "message": "Hydraulic Kick online. The shield trainer is ready."
       }
     ]
   },
@@ -1112,7 +1112,7 @@
     "actions": [
       {
         "type": "set_room_state",
-        "room_id": "mines_2",
+        "room_id": "mine_junction",
         "state_key": "power_on",
         "value": true
       },
@@ -1122,133 +1122,109 @@
       },
       {
         "type": "set_room_state",
-        "room_id": "mines_1",
+        "room_id": "mine_shunt",
         "state_key": "dark",
         "value": false
       },
       {
         "type": "set_room_state",
-        "room_id": "mines_1",
+        "room_id": "mine_shunt",
         "state_key": "light_on",
         "value": true
       },
       {
         "type": "set_room_state",
-        "room_id": "mines_3",
+        "room_id": "mine_conveyor",
         "state_key": "dark",
         "value": false
       },
       {
         "type": "set_room_state",
-        "room_id": "mines_3",
+        "room_id": "mine_conveyor",
         "state_key": "light_on",
         "value": true
       },
       {
         "type": "set_room_state",
-        "room_id": "mines_4",
+        "room_id": "mine_checkpoint",
         "state_key": "dark",
         "value": false
       },
       {
         "type": "set_room_state",
-        "room_id": "mines_4",
+        "room_id": "mine_checkpoint",
         "state_key": "light_on",
         "value": true
       },
       {
         "type": "set_room_state",
-        "room_id": "mines_5",
+        "room_id": "mine_sifter",
         "state_key": "dark",
         "value": false
       },
       {
         "type": "set_room_state",
-        "room_id": "mines_5",
+        "room_id": "mine_sifter",
         "state_key": "light_on",
         "value": true
       },
       {
         "type": "set_room_state",
-        "room_id": "mines_6",
+        "room_id": "mine_gas",
         "state_key": "dark",
         "value": false
       },
       {
         "type": "set_room_state",
-        "room_id": "mines_6",
+        "room_id": "mine_gas",
         "state_key": "light_on",
         "value": true
       },
       {
         "type": "set_room_state",
-        "room_id": "mines_7",
+        "room_id": "mine_shoring",
         "state_key": "dark",
         "value": false
       },
       {
         "type": "set_room_state",
-        "room_id": "mines_7",
+        "room_id": "mine_shoring",
         "state_key": "light_on",
         "value": true
       },
       {
         "type": "set_room_state",
-        "room_id": "mines_8",
+        "room_id": "mine_threshold",
         "state_key": "dark",
         "value": false
       },
       {
         "type": "set_room_state",
-        "room_id": "mines_8",
+        "room_id": "mine_threshold",
         "state_key": "light_on",
         "value": true
       },
       {
         "type": "set_room_state",
-        "room_id": "mines_9",
+        "room_id": "mine_slope",
         "state_key": "dark",
         "value": false
       },
       {
         "type": "set_room_state",
-        "room_id": "mines_9",
+        "room_id": "mine_slope",
         "state_key": "light_on",
         "value": true
       },
       {
         "type": "set_room_state",
-        "room_id": "mines_10",
+        "room_id": "mine_antechamber",
         "state_key": "dark",
         "value": false
       },
       {
         "type": "set_room_state",
-        "room_id": "mines_10",
-        "state_key": "light_on",
-        "value": true
-      },
-      {
-        "type": "set_room_state",
-        "room_id": "mines_11",
-        "state_key": "dark",
-        "value": false
-      },
-      {
-        "type": "set_room_state",
-        "room_id": "mines_11",
-        "state_key": "light_on",
-        "value": true
-      },
-      {
-        "type": "set_room_state",
-        "room_id": "mines_12",
-        "state_key": "dark",
-        "value": false
-      },
-      {
-        "type": "set_room_state",
-        "room_id": "mines_12",
+        "room_id": "mine_antechamber",
         "state_key": "light_on",
         "value": true
       }
@@ -1265,139 +1241,115 @@
     "actions": [
       {
         "type": "set_room_state",
-        "room_id": "mines_2",
+        "room_id": "mine_junction",
         "state_key": "power_on",
         "value": false
       },
       {
         "type": "set_room_state",
-        "room_id": "mines_1",
+        "room_id": "mine_shunt",
         "state_key": "light_on",
         "value": false
       },
       {
         "type": "set_room_state",
-        "room_id": "mines_3",
+        "room_id": "mine_conveyor",
         "state_key": "light_on",
         "value": false
       },
       {
         "type": "set_room_state",
-        "room_id": "mines_4",
+        "room_id": "mine_checkpoint",
         "state_key": "light_on",
         "value": false
       },
       {
         "type": "set_room_state",
-        "room_id": "mines_5",
+        "room_id": "mine_sifter",
         "state_key": "light_on",
         "value": false
       },
       {
         "type": "set_room_state",
-        "room_id": "mines_6",
+        "room_id": "mine_gas",
         "state_key": "light_on",
         "value": false
       },
       {
         "type": "set_room_state",
-        "room_id": "mines_7",
+        "room_id": "mine_shoring",
         "state_key": "light_on",
         "value": false
       },
       {
         "type": "set_room_state",
-        "room_id": "mines_8",
+        "room_id": "mine_threshold",
         "state_key": "light_on",
         "value": false
       },
       {
         "type": "set_room_state",
-        "room_id": "mines_9",
+        "room_id": "mine_slope",
         "state_key": "light_on",
         "value": false
       },
       {
         "type": "set_room_state",
-        "room_id": "mines_10",
+        "room_id": "mine_antechamber",
         "state_key": "light_on",
         "value": false
       },
       {
         "type": "set_room_state",
-        "room_id": "mines_11",
-        "state_key": "light_on",
-        "value": false
-      },
-      {
-        "type": "set_room_state",
-        "room_id": "mines_12",
-        "state_key": "light_on",
-        "value": false
-      },
-      {
-        "type": "set_room_state",
-        "room_id": "mines_1",
+        "room_id": "mine_shunt",
         "state_key": "dark",
         "value": true
       },
       {
         "type": "set_room_state",
-        "room_id": "mines_3",
+        "room_id": "mine_conveyor",
         "state_key": "dark",
         "value": true
       },
       {
         "type": "set_room_state",
-        "room_id": "mines_4",
+        "room_id": "mine_checkpoint",
         "state_key": "dark",
         "value": true
       },
       {
         "type": "set_room_state",
-        "room_id": "mines_5",
+        "room_id": "mine_sifter",
         "state_key": "dark",
         "value": true
       },
       {
         "type": "set_room_state",
-        "room_id": "mines_6",
+        "room_id": "mine_gas",
         "state_key": "dark",
         "value": true
       },
       {
         "type": "set_room_state",
-        "room_id": "mines_7",
+        "room_id": "mine_shoring",
         "state_key": "dark",
         "value": true
       },
       {
         "type": "set_room_state",
-        "room_id": "mines_8",
+        "room_id": "mine_threshold",
         "state_key": "dark",
         "value": true
       },
       {
         "type": "set_room_state",
-        "room_id": "mines_9",
+        "room_id": "mine_slope",
         "state_key": "dark",
         "value": true
       },
       {
         "type": "set_room_state",
-        "room_id": "mines_10",
-        "state_key": "dark",
-        "value": true
-      },
-      {
-        "type": "set_room_state",
-        "room_id": "mines_11",
-        "state_key": "dark",
-        "value": true
-      },
-      {
-        "type": "set_room_state",
-        "room_id": "mines_12",
+        "room_id": "mine_antechamber",
         "state_key": "dark",
         "value": true
       }
@@ -1414,7 +1366,7 @@
     "actions": [
       {
         "type": "set_room_state",
-        "room_id": "mines_8",
+        "room_id": "mine_gas",
         "state_key": "breaker_on",
         "value": true
       }
@@ -1431,7 +1383,7 @@
     "actions": [
       {
         "type": "set_room_state",
-        "room_id": "mines_8",
+        "room_id": "mine_gas",
         "state_key": "breaker_on",
         "value": false
       }
@@ -1448,7 +1400,7 @@
     "actions": [
       {
         "type": "set_room_state",
-        "room_id": "mines_9",
+        "room_id": "mine_sifter",
         "state_key": "breaker_on",
         "value": true
       }
@@ -1465,7 +1417,7 @@
     "actions": [
       {
         "type": "set_room_state",
-        "room_id": "mines_9",
+        "room_id": "mine_sifter",
         "state_key": "breaker_on",
         "value": false
       }

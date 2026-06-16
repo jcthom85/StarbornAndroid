@@ -1,0 +1,80 @@
+appId: com.junewiregames.starborn.prealpha
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "New Game"
+    timeout: 60000
+- assertVisible: "New Game"
+- tapOn: "New Game"
+
+# Handle tutorial prompt dismiss
+- extendedWaitUntil:
+    visible: "GOT IT"
+    timeout: 20000
+- tapOn: "GOT IT"
+
+# Wait until we enter exploration screen and starter room title (Nova's Bunk) is shown
+- extendedWaitUntil:
+    visible: "Nova's Bunk"
+    timeout: 10000
+
+# Cycle 1: dust
+- tapOn: "Nova's Bunk"
+- runScript: sleep.js
+- takeScreenshot: debug_weather_1_dust
+
+# Cycle 2: rain
+- tapOn: "Nova's Bunk"
+- runScript: sleep.js
+- takeScreenshot: debug_weather_2_rain
+
+# Cycle 3: storm
+- tapOn: "Nova's Bunk"
+- runScript: sleep.js
+- takeScreenshot: debug_weather_3_storm
+
+# Cycle 4: snow
+- tapOn: "Nova's Bunk"
+- runScript: sleep.js
+- takeScreenshot: debug_weather_4_snow
+
+# Cycle 5: cave_drip
+- tapOn: "Nova's Bunk"
+- runScript: sleep.js
+- takeScreenshot: debug_weather_5_cave_drip
+
+# Cycle 6: starfall
+- tapOn: "Nova's Bunk"
+- runScript: sleep.js
+- takeScreenshot: debug_weather_6_starfall
+
+# Cycle 7: steam
+- tapOn: "Nova's Bunk"
+- runScript: sleep.js
+- takeScreenshot: debug_weather_7_steam
+
+# Cycle 8: fog
+- tapOn: "Nova's Bunk"
+- runScript: sleep.js
+- takeScreenshot: debug_weather_8_fog
+
+# Cycle 9: gas
+- tapOn: "Nova's Bunk"
+- runScript: sleep.js
+- takeScreenshot: debug_weather_9_gas
+
+# Cycle 10: resonance
+- tapOn: "Nova's Bunk"
+- runScript: sleep.js
+- takeScreenshot: debug_weather_10_resonance
+
+# Cycle 11: sparks
+- tapOn: "Nova's Bunk"
+- runScript: sleep.js
+- takeScreenshot: debug_weather_11_sparks
+
+# Cycle 12: back to null (original)
+- tapOn: "Nova's Bunk"
+- runScript: sleep.js
+- takeScreenshot: debug_weather_12_original

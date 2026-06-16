@@ -41,6 +41,12 @@ android {
     buildFeatures {
         compose = true
     }
+    sourceSets {
+        getByName("debug") {
+            assets.srcDirs("src/debug/assets", "../world_assets/src/main/assets")
+        }
+    }
+    assetPacks += listOf(":world_assets")
 }
 
 dependencies {
@@ -56,6 +62,7 @@ dependencies {
     testImplementation("androidx.test:core:1.5.0")
     testImplementation("org.robolectric:robolectric:4.11.1")
     testImplementation("io.mockk:mockk:1.13.11")
+    testImplementation("org.json:json:20240303")
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
@@ -96,6 +103,21 @@ tasks.withType<Test>().configureEach {
     }
 }
 
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.25.1"
+    }
+    generateProtoTasks {
+        all().forEach { task ->
+            task.builtins {
+                maybeCreate("java").apply {
+                    option("lite")
+                }
+            }
+        }
+    }
+}
+
 val isWindowsHost = System.getProperty("os.name").lowercase().contains("windows")
 val powerShellExecutable = if (isWindowsHost) "powershell" else "pwsh"
 val powerShellBaseArgs = if (isWindowsHost) {
@@ -115,10 +137,7 @@ fun registerPowerShellValidationTask(
     group = "verification"
     workingDir = rootProject.projectDir
     commandLine(
-        listOf(powerShellExecutable) +
-            powerShellBaseArgs +
-            listOf(scriptPath) +
-            scriptArgs.toList()
+        listOf(powerShellExecutable) + powerShellBaseArgs + listOf(scriptPath) + scriptArgs.toList()
     )
 }
 
@@ -159,6 +178,12 @@ val validateWorld1Balance = registerPowerShellValidationTask(
     "-Strict"
 )
 
+val validateEnemyMovement = registerPowerShellValidationTask(
+    "validateEnemyMovement",
+    "Validates enemy movement zones, routes, parties, and safety boundaries.",
+    "scripts/validate_enemy_movement.ps1"
+)
+
 val validateDialogueEmotes = tasks.register<Exec>("validateDialogueEmotes") {
     description = "Validates used dialogue/cinematic/shop emote references and minimum emote coverage."
     group = "verification"
@@ -181,23 +206,9 @@ val validateWorld1Assets = tasks.register("validateWorld1Assets") {
         validateAudioReferences,
         validateProgressionReferences,
         validateWorld1Balance,
+        validateEnemyMovement,
         validateDialogueEmotes
     )
-}
-
-protobuf {
-    protoc {
-        artifact = "com.google.protobuf:protoc:3.25.1"
-    }
-    generateProtoTasks {
-        all().forEach { task ->
-            task.builtins {
-                maybeCreate("java").apply {
-                    option("lite")
-                }
-            }
-        }
-    }
 }
 
 afterEvaluate {

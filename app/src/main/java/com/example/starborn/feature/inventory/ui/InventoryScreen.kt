@@ -1,6 +1,10 @@
 package com.example.starborn.feature.inventory.ui
 
 import androidx.annotation.DrawableRes
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -32,6 +36,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
@@ -42,6 +47,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -52,6 +58,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -59,6 +66,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -70,6 +78,7 @@ import com.example.starborn.domain.model.Item
 import com.example.starborn.domain.model.Equipment
 import com.example.starborn.domain.model.ItemEffect
 import com.example.starborn.feature.inventory.InventoryViewModel
+import com.example.starborn.feature.inventory.InventoryVisualEvent
 import com.example.starborn.feature.inventory.PartyMemberStatus
 import com.example.starborn.ui.background.rememberAssetPainter
 import com.example.starborn.ui.background.rememberRoomBackgroundPainter
@@ -77,6 +86,7 @@ import com.example.starborn.ui.components.ItemTargetSelectionDialog
 import com.example.starborn.ui.components.TargetSelectionOption
 import com.example.starborn.ui.theme.themeColor
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.text.NumberFormat
 import java.util.Locale
@@ -107,6 +117,11 @@ private data class WeaponOption(
 private data class ArmorOption(
     val id: String,
     val item: Item
+)
+
+private data class InventoryHealPulse(
+    val id: Long,
+    val amount: Int
 )
 
 private fun Item.categoryKey(): String {
@@ -160,6 +175,7 @@ fun InventoryRoute(
     val equippedArmors by viewModel.equippedArmors.collectAsStateWithLifecycle()
     val partyMembers by viewModel.partyMembers.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
+    val healPulses = remember { mutableStateMapOf<String, InventoryHealPulse>() }
 
     LaunchedEffect(Unit) {
         viewModel.syncFromSession()
@@ -168,6 +184,26 @@ fun InventoryRoute(
     LaunchedEffect(Unit) {
         viewModel.messages.collectLatest { message ->
             snackbarHostState.showSnackbar(message)
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.visualEvents.collect { event ->
+            when (event) {
+                is InventoryVisualEvent.Heal -> {
+                    val pulse = InventoryHealPulse(
+                        id = System.nanoTime(),
+                        amount = event.amount
+                    )
+                    healPulses[event.targetId] = pulse
+                    launch {
+                        delay(1000)
+                        if (healPulses[event.targetId]?.id == pulse.id) {
+                            healPulses.remove(event.targetId)
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -180,6 +216,7 @@ fun InventoryRoute(
         unlockedArmors = unlockedArmors,
         equippedArmors = equippedArmors,
         partyMembers = partyMembers,
+        healPulses = healPulses,
         snackbarHostState = snackbarHostState,
         onUseItem = viewModel::useItem,
         onEquipItem = viewModel::equipItem,
@@ -211,6 +248,7 @@ private fun InventoryScreen(
     unlockedArmors: Set<String>,
     equippedArmors: Map<String, String>,
     partyMembers: List<PartyMemberStatus>,
+    healPulses: Map<String, InventoryHealPulse>,
     snackbarHostState: SnackbarHostState,
     onUseItem: (String, String?) -> Unit,
     onEquipItem: (String, String?, String?) -> Unit,
@@ -598,12 +636,16 @@ private fun InventoryScreen(
                                 onSelectCategory = { selectedCategory = it },
                                 items = filteredSupplies,
                                 selectedItem = selectedSupplyEntry,
+                                partyMembers = partyMembers,
+                                selectedCharacterId = selectedCharacterId,
+                                healPulses = healPulses,
                                 onSelectItem = { entry ->
                                     selectedSupplyEntry = entry
                                     if (entry.item.effect != null) {
                                         promptUse(entry)
                                     }
                                 },
+                                onSelectCharacter = { id -> selectedCharacterId = id },
                                 onUseItem = { entry ->
                                     promptUse(entry)
                                 },
@@ -630,6 +672,7 @@ private fun InventoryScreen(
                                     WeaponGearTabContent(
                                         partyMembers = partyMembers,
                                         selectedCharacterId = selectedCharacterId,
+                                        healPulses = healPulses,
                                         slots = slotOptions,
                                         selectedSlot = selectedSlot,
                                         equippedItems = loadoutEquippedItems,
@@ -664,6 +707,7 @@ private fun InventoryScreen(
                                     ArmorGearTabContent(
                                         partyMembers = partyMembers,
                                         selectedCharacterId = selectedCharacterId,
+                                        healPulses = healPulses,
                                         slots = slotOptions,
                                         selectedSlot = selectedSlot,
                                         equippedItems = loadoutEquippedItems,
@@ -707,6 +751,7 @@ private fun InventoryScreen(
                                     GearTabContent(
                                         partyMembers = partyMembers,
                                         selectedCharacterId = selectedCharacterId,
+                                        healPulses = healPulses,
                                         slots = slotOptions,
                                         selectedSlot = selectedSlot,
                                         equippedItems = loadoutEquippedItems,
@@ -1102,7 +1147,11 @@ private fun SuppliesTabContent(
     onSelectCategory: (String) -> Unit,
     items: List<InventoryEntry>,
     selectedItem: InventoryEntry?,
+    partyMembers: List<PartyMemberStatus>,
+    selectedCharacterId: String?,
+    healPulses: Map<String, InventoryHealPulse>,
     onSelectItem: (InventoryEntry) -> Unit,
+    onSelectCharacter: (String) -> Unit,
     onUseItem: (InventoryEntry) -> Unit,
     credits: Int,
     accentColor: Color,
@@ -1128,7 +1177,7 @@ private fun SuppliesTabContent(
         )
         InventoryItemsColumn(
             modifier = Modifier
-                .weight(0.5f)
+                .weight(0.42f)
                 .fillMaxHeight(),
             items = items,
             selectedItem = selectedItem,
@@ -1141,7 +1190,7 @@ private fun SuppliesTabContent(
         )
         InventoryDetailPanel(
             modifier = Modifier
-                .weight(0.4f)
+                .weight(0.34f)
                 .fillMaxHeight(),
             entry = selectedItem,
             accentColor = accentColor,
@@ -1151,6 +1200,17 @@ private fun SuppliesTabContent(
             primaryActionLabel = selectedItem?.let { "Use Item" },
             primaryActionEnabled = selectedItem?.item?.effect != null,
             onPrimaryAction = selectedItem?.let { entry -> { onUseItem(entry) } }
+        )
+        PartyMemberSidebar(
+            modifier = Modifier
+                .weight(0.24f)
+                .fillMaxHeight(),
+            partyMembers = partyMembers,
+            selectedCharacterId = selectedCharacterId,
+            healPulses = healPulses,
+            onSelectCharacter = onSelectCharacter,
+            accentColor = accentColor,
+            borderColor = borderColor
         )
     }
 }
@@ -1202,6 +1262,7 @@ private fun KeyItemsTabContent(
 private fun GearTabContent(
     partyMembers: List<PartyMemberStatus>,
     selectedCharacterId: String?,
+    healPulses: Map<String, InventoryHealPulse>,
     slots: List<String>,
     selectedSlot: String,
     equippedItems: Map<String, String>,
@@ -1235,6 +1296,7 @@ private fun GearTabContent(
                 .fillMaxHeight(),
             partyMembers = partyMembers,
             selectedCharacterId = selectedCharacterId,
+            healPulses = healPulses,
             onSelectCharacter = onSelectCharacter,
             accentColor = accentColor,
             borderColor = borderColor
@@ -1270,6 +1332,7 @@ private fun GearTabContent(
 private fun WeaponGearTabContent(
     partyMembers: List<PartyMemberStatus>,
     selectedCharacterId: String?,
+    healPulses: Map<String, InventoryHealPulse>,
     slots: List<String>,
     selectedSlot: String,
     equippedItems: Map<String, String>,
@@ -1300,6 +1363,7 @@ private fun WeaponGearTabContent(
                 .fillMaxHeight(),
             partyMembers = partyMembers,
             selectedCharacterId = selectedCharacterId,
+            healPulses = healPulses,
             onSelectCharacter = onSelectCharacter,
             accentColor = accentColor,
             borderColor = borderColor
@@ -1342,6 +1406,7 @@ private fun WeaponGearTabContent(
 private fun ArmorGearTabContent(
     partyMembers: List<PartyMemberStatus>,
     selectedCharacterId: String?,
+    healPulses: Map<String, InventoryHealPulse>,
     slots: List<String>,
     selectedSlot: String,
     equippedItems: Map<String, String>,
@@ -1372,6 +1437,7 @@ private fun ArmorGearTabContent(
                 .fillMaxHeight(),
             partyMembers = partyMembers,
             selectedCharacterId = selectedCharacterId,
+            healPulses = healPulses,
             onSelectCharacter = onSelectCharacter,
             accentColor = accentColor,
             borderColor = borderColor
@@ -1607,6 +1673,7 @@ private fun PartyMemberSidebar(
     modifier: Modifier,
     partyMembers: List<PartyMemberStatus>,
     selectedCharacterId: String?,
+    healPulses: Map<String, InventoryHealPulse>,
     onSelectCharacter: (String) -> Unit,
     accentColor: Color,
     borderColor: Color
@@ -1632,6 +1699,7 @@ private fun PartyMemberSidebar(
                     PartyMemberItem(
                         member = member,
                         isSelected = member.id == selectedCharacterId,
+                        healPulse = healPulses[member.id],
                         onClick = { onSelectCharacter(member.id) },
                         accentColor = accentColor
                     )
@@ -1645,44 +1713,129 @@ private fun PartyMemberSidebar(
 private fun PartyMemberItem(
     member: PartyMemberStatus,
     isSelected: Boolean,
+    healPulse: InventoryHealPulse?,
     onClick: () -> Unit,
     accentColor: Color
 ) {
     val background = if (isSelected) accentColor.copy(alpha = 0.2f) else Color.Transparent
     val border = if (isSelected) accentColor else Color.Transparent
     val portraitPainter = rememberAssetPainter(member.portraitPath, painterResource(R.drawable.main_menu_background))
+    val hpRatio = if (member.maxHp <= 0) 0f else member.hp.coerceIn(0, member.maxHp).toFloat() / member.maxHp.toFloat()
+    val displayedHpRatio = remember { Animatable(hpRatio) }
+    LaunchedEffect(hpRatio) {
+        displayedHpRatio.animateTo(
+            hpRatio,
+            animationSpec = tween(durationMillis = 520, easing = FastOutSlowInEasing)
+        )
+    }
 
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .height(64.dp)
+            .height(78.dp)
             .clip(RoundedCornerShape(16.dp))
             .clickable { onClick() },
         color = background,
         border = BorderStroke(1.dp, border)
     ) {
-        Row(
-            modifier = Modifier.padding(8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Image(
-                painter = portraitPainter,
-                contentDescription = null,
-                modifier = Modifier
-                    .size(48.dp)
-                    .clip(RoundedCornerShape(12.dp)),
-                contentScale = ContentScale.Crop
-            )
-            Text(
-                text = member.name,
-                style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
-                color = Color.White,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
+        Box(modifier = Modifier.fillMaxSize()) {
+            Row(
+                modifier = Modifier.padding(8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Image(
+                    painter = portraitPainter,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(48.dp)
+                        .clip(RoundedCornerShape(12.dp)),
+                    contentScale = ContentScale.Crop
+                )
+                Column(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(5.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = member.name,
+                            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                            color = Color.White,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.weight(1f)
+                        )
+                        Text(
+                            text = "${member.hp}/${member.maxHp}",
+                            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                            color = Color.White.copy(alpha = 0.75f),
+                            maxLines = 1
+                        )
+                    }
+                    LinearProgressIndicator(
+                        progress = { displayedHpRatio.value.coerceIn(0f, 1f) },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(7.dp)
+                            .clip(RoundedCornerShape(999.dp)),
+                        color = Color(0xFF66E38A),
+                        trackColor = Color.Black.copy(alpha = 0.42f)
+                    )
+                }
+            }
+            healPulse?.let { pulse ->
+                InventoryHealPulseText(
+                    pulse = pulse,
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(top = 2.dp, end = 8.dp)
+                )
+            }
         }
     }
+}
+
+@Composable
+private fun InventoryHealPulseText(
+    pulse: InventoryHealPulse,
+    modifier: Modifier = Modifier
+) {
+    val y = remember { Animatable(0f) }
+    val alphaAnim = remember { Animatable(1f) }
+    val scale = remember { Animatable(1.18f) }
+    LaunchedEffect(pulse.id) {
+        y.snapTo(0f)
+        alphaAnim.snapTo(1f)
+        scale.snapTo(1.18f)
+        launch {
+            y.animateTo(-28f, tween(durationMillis = 720, easing = LinearEasing))
+        }
+        launch {
+            delay(420)
+            alphaAnim.animateTo(0f, tween(durationMillis = 320, easing = LinearEasing))
+        }
+        launch {
+            scale.animateTo(1f, tween(durationMillis = 360, easing = FastOutSlowInEasing))
+        }
+    }
+    Text(
+        text = "+${pulse.amount}",
+        style = MaterialTheme.typography.labelLarge.copy(
+            fontWeight = FontWeight.Black,
+            fontSize = 16.sp
+        ),
+        color = Color(0xFF9CFFB6),
+        modifier = modifier.graphicsLayer {
+            translationY = y.value
+            alpha = alphaAnim.value
+            scaleX = scale.value
+            scaleY = scale.value
+        }
+    )
 }
 
 @Composable

@@ -63,7 +63,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-private enum class StartMode { NORMAL, DEBUG, ROOM_ITEMS, SCAVENGER, HEAVY_LIFTING, CHECKPOINT, DEEP_MINE, RED_ALERT, LAUNCH, FIRST_COMBAT, ENEMY_PARTY, PRESENCE_STRESS }
+private enum class StartMode { NORMAL, DEBUG, HUB_1, HUB_2, ROOM_ITEMS, SCAVENGER, HEAVY_LIFTING, LIFT_SHAFT, WEATHER_LAB, CHECKPOINT, DEEP_MINE, DYNAMIC_PATROL, RED_ALERT, LAUNCH, FIRST_COMBAT, ENEMY_PARTY, PRESENCE_STRESS }
 
 private val TitleGold = Color(0xFFFFC857)
 private val TitleAmber = Color(0xFFFF9F2E)
@@ -78,6 +78,7 @@ fun MainMenuScreen(
     audioCuePlayer: AudioCuePlayer,
     audioRouter: AudioRouter,
     onStartGame: () -> Unit,
+    onStartHub: () -> Unit,
     onSlotLoaded: () -> Unit
 ) {
     var pendingStartMode by remember { mutableStateOf<StartMode?>(null) }
@@ -166,6 +167,18 @@ fun MainMenuScreen(
                     onFailure = onFailure
                 )
             }
+            StartMode.HUB_2 -> {
+                viewModel.startNewGameAtHub2(
+                    onComplete = { onStartHub() },
+                    onFailure = onFailure
+                )
+            }
+            StartMode.HUB_1 -> {
+                viewModel.startNewGameAtHub1(
+                    onComplete = { onStartHub() },
+                    onFailure = onFailure
+                )
+            }
             StartMode.SCAVENGER -> {
                 viewModel.startNewGameAtScavengerStash(
                     onComplete = { onStartGame() },
@@ -178,6 +191,18 @@ fun MainMenuScreen(
                     onFailure = onFailure
                 )
             }
+            StartMode.LIFT_SHAFT -> {
+                viewModel.startNewGameAtLiftShaft(
+                    onComplete = { onStartGame() },
+                    onFailure = onFailure
+                )
+            }
+            StartMode.WEATHER_LAB -> {
+                viewModel.startNewGameAtWeatherLab(
+                    onComplete = { onStartGame() },
+                    onFailure = onFailure
+                )
+            }
             StartMode.CHECKPOINT -> {
                 viewModel.startNewGameAtCheckpoint(
                     onComplete = { onStartGame() },
@@ -186,6 +211,12 @@ fun MainMenuScreen(
             }
             StartMode.DEEP_MINE -> {
                 viewModel.startNewGameAtDeepMine(
+                    onComplete = { onStartGame() },
+                    onFailure = onFailure
+                )
+            }
+            StartMode.DYNAMIC_PATROL -> {
+                viewModel.startNewGameAtDynamicPatrol(
                     onComplete = { onStartGame() },
                     onFailure = onFailure
                 )
@@ -286,6 +317,16 @@ fun MainMenuScreen(
                 enabled = pendingStartMode == null
             )
             StarbornTitleButton(
+                text = "Debug: Hub 1",
+                onClick = { pendingStartMode = StartMode.HUB_1 },
+                enabled = pendingStartMode == null
+            )
+            StarbornTitleButton(
+                text = "Debug: Hub 2",
+                onClick = { pendingStartMode = StartMode.HUB_2 },
+                enabled = pendingStartMode == null
+            )
+            StarbornTitleButton(
                 text = "Debug: Room Items",
                 onClick = { pendingStartMode = StartMode.ROOM_ITEMS },
                 enabled = pendingStartMode == null
@@ -301,6 +342,16 @@ fun MainMenuScreen(
                 enabled = pendingStartMode == null
             )
             StarbornTitleButton(
+                text = "Debug: Lift Shaft",
+                onClick = { pendingStartMode = StartMode.LIFT_SHAFT },
+                enabled = pendingStartMode == null
+            )
+            StarbornTitleButton(
+                text = "Debug: Weather Lab",
+                onClick = { pendingStartMode = StartMode.WEATHER_LAB },
+                enabled = pendingStartMode == null
+            )
+            StarbornTitleButton(
                 text = "Debug: Checkpoint",
                 onClick = { pendingStartMode = StartMode.CHECKPOINT },
                 enabled = pendingStartMode == null
@@ -308,6 +359,11 @@ fun MainMenuScreen(
             StarbornTitleButton(
                 text = "Debug: Deep Mine",
                 onClick = { pendingStartMode = StartMode.DEEP_MINE },
+                enabled = pendingStartMode == null
+            )
+            StarbornTitleButton(
+                text = "Debug: Dynamic Patrol",
+                onClick = { pendingStartMode = StartMode.DYNAMIC_PATROL },
                 enabled = pendingStartMode == null
             )
             StarbornTitleButton(

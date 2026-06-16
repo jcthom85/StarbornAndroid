@@ -1,10 +1,15 @@
-appId: com.example.starborn
+appId: com.junewiregames.starborn.prealpha
 ---
 - launchApp:
     clearState: true
 - extendedWaitUntil:
-    visible: "Debug: Red Alert"
+    visible: "New Game"
     timeout: 60000
+- swipe:
+    direction: UP
+- extendedWaitUntil:
+    visible: "Debug: Red Alert"
+    timeout: 10000
 - tapOn: "Debug: Red Alert"
 - extendedWaitUntil:
     visible: "Zeke:.*bypassed the emergency exit.*"

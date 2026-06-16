@@ -44,6 +44,9 @@ import com.example.starborn.domain.leveling.LevelUpSummary
 import com.example.starborn.domain.leveling.LevelingManager
 import com.example.starborn.domain.milestone.MilestoneEvent
 import com.example.starborn.domain.milestone.MilestoneRuntimeManager
+import com.example.starborn.domain.movement.EnemyMovementManager
+import com.example.starborn.domain.movement.EnemyMovementCatalog
+import com.example.starborn.domain.movement.EnemyMovementParty
 import com.example.starborn.domain.model.BlockedDirection
 import com.example.starborn.domain.model.ContainerAction
 import com.example.starborn.domain.model.DialogueLine
@@ -104,6 +107,8 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -113,16 +118,16 @@ private const val MILESTONE_BAND_LIMIT = 3
 private const val FULL_MAP_COLUMNS = 16
 private const val FULL_MAP_ROWS = 8
 private const val EVENT_ANNOUNCEMENT_ACCENT = 0xFF7BE4FF
-private const val STELLARIUM_GENERATOR_ROOM_ID = "mines_2"
+private const val STELLARIUM_GENERATOR_ROOM_ID = "mine_junction"
 private const val STELLARIUM_ENV_ID = "mine"
 private const val STELLARIUM_GENERATOR_ON_EVENT = "evt_mine_power_on"
 private const val STELLARIUM_GENERATOR_OFF_EVENT = "evt_mine_power_off"
 private const val STELLARIUM_GENERATOR_ON_MESSAGE_FALLBACK = "The Stellarium generator roars to life."
 private const val STELLARIUM_GENERATOR_OFF_MESSAGE = "The Stellarium generator winds down into silence."
 private const val STELLARIUM_GENERATOR_OFF_ACCENT = 0xFFFF5252
-private const val STELLARIUM_BREAKER_W_ROOM_ID = "mines_8"
-private const val STELLARIUM_BREAKER_E_ROOM_ID = "mines_9"
-private const val STELLARIUM_SWITCHBACK_HUB_ROOM_ID = "mines_7"
+private const val STELLARIUM_BREAKER_W_ROOM_ID = "mine_gas"
+private const val STELLARIUM_BREAKER_E_ROOM_ID = "mine_sifter"
+private const val STELLARIUM_SWITCHBACK_HUB_ROOM_ID = "mine_threshold"
 private const val STELLARIUM_BREAKER_STATE_KEY = "breaker_on"
 private const val STELLARIUM_BREAKER_ALERT_STATE_KEY = "breaker_alert_shown"
 private const val STELLARIUM_BREAKER_FIRST_MESSAGE = "Power hums toward the hub."
@@ -531,6 +536,12 @@ class ExplorationViewModel(
     }
 
     private var roomsById: Map<String, Room> = emptyMap()
+    private var enemyMovementManager: EnemyMovementManager? = null
+    private var enemyMovementJob: Job? = null
+    private var explorationVisible: Boolean = false
+    private var explorationInteractionBlocked: Boolean = true
+    private var movementCombatRequested: Boolean = false
+    private var movementNoticeExpiresAtMs: Long = 0L
     private var themeByRoomId: Map<String, Theme?> = emptyMap()
     private var themeStyleByRoomId: Map<String, ThemeStyle?> = emptyMap()
     private val roomStates: MutableMap<String, MutableMap<String, Boolean>> = mutableMapOf()
@@ -628,10 +639,20 @@ class ExplorationViewModel(
     private var nextEventAnnouncementId: Long = 0L
 
     override fun onCleared() {
+        enemyMovementJob?.cancel()
         inventoryService.removeOnItemAddedListener(inventoryAddListener)
         dialogueTriggerBinder(null)
         cinematicCoordinator.setCallbacks()
         super.onCleared()
+    }
+
+    fun setExplorationVisible(visible: Boolean) {
+        explorationVisible = visible
+        if (!visible) movementCombatRequested = false
+    }
+
+    fun setExplorationInteractionBlocked(blocked: Boolean) {
+        explorationInteractionBlocked = blocked
     }
 
     private fun emitEvent(event: ExplorationEvent) {
@@ -774,6 +795,11 @@ class ExplorationViewModel(
     }
 
     fun onCombatVictory(result: CombatResultPayload) {
+        result.sourcePartyId?.let { partyId ->
+            enemyMovementManager?.markDefeated(partyId)
+            persistEnemyMovementState()
+            refreshMovementPresence()
+        }
         val enemyIds = result.enemyIds
         val rewardParts = mutableListOf<String>()
         if (result.rewardXp > 0) rewardParts += "${result.rewardXp} XP"
@@ -857,6 +883,15 @@ class ExplorationViewModel(
             )
         )
         playRoomAudio(sessionStore.state.value.hubId, _uiState.value.currentRoom?.id)
+    }
+
+    fun onCombatRetreat(result: CombatResultPayload) {
+        result.sourcePartyId?.let { partyId ->
+            enemyMovementManager?.applyRetreatGrace(partyId)
+            persistEnemyMovementState()
+            refreshMovementPresence()
+        }
+        onCombatRetreat(result.enemyIds)
     }
 
     fun showStatusMessage(message: String) {
@@ -1243,7 +1278,10 @@ class ExplorationViewModel(
         return room.connections.filterKeys { it.equals(allowed, ignoreCase = true) }
     }
 
-    private fun buildDirectionIndicators(room: Room?): Map<String, DirectionIndicatorUi> {
+    private fun buildDirectionIndicators(
+        room: Room?,
+        nearbyThreatDirection: String? = _uiState.value.nearbyThreatDirection
+    ): Map<String, DirectionIndicatorUi> {
         if (room == null) return emptyMap()
         val indicators = mutableMapOf<String, DirectionIndicatorUi>()
         val visibleDirections = visibleConnections(room).keys
@@ -1264,6 +1302,18 @@ class ExplorationViewModel(
                 )
             }
         }
+        nearbyThreatDirection
+            ?.lowercase(Locale.getDefault())
+            ?.takeIf { it in visibleDirections }
+            ?.let { direction ->
+                val existing = indicators[direction]
+                if (existing == null || existing.status == DirectionIndicatorStatus.UNEXPLORED) {
+                    indicators[direction] = DirectionIndicatorUi(
+                        direction = direction,
+                        status = DirectionIndicatorStatus.NEARBY_THREAT
+                    )
+                }
+            }
         return indicators
     }
 
@@ -1744,6 +1794,11 @@ class ExplorationViewModel(
             }
 
             roomsById = rooms.associateBy { it.id }
+            val movementCatalog = worldAssets.loadEnemyMovement() ?: EnemyMovementCatalog()
+            enemyMovementManager = EnemyMovementManager(movementCatalog, rooms).also { manager ->
+                manager.restore(existingState.enemyPartyStates, existingState)
+                sessionStore.setEnemyPartyStates(manager.stateSnapshot())
+            }
             themeByRoomId = rooms.associate { it.id to themeRepository.getTheme(it.env) }
             themeStyleByRoomId = rooms.associate { it.id to themeRepository.getStyle(it.env) }
             darkCapableRoomIds = rooms.filter { room ->
@@ -1774,10 +1829,11 @@ class ExplorationViewModel(
                 preselectedHubId?.let { id -> hubs.firstOrNull { it.id == id } }
                     ?: initialWorld?.let { world -> hubs.firstOrNull { it.worldId == world.id } }
                     ?: hubs.firstOrNull()
-            val initialRoom =
+            val initialRoomBase =
                 preselectedRoomId?.let { id -> roomsById[id] }
                     ?: rooms.firstOrNull { it.id.equals("pit_nova_bunk", ignoreCase = true) }
                     ?: rooms.firstOrNull()
+            val initialRoom = initialRoomBase?.let(::roomWithMovement)
             val initialThemeId = initialRoom?.env
             val initialTheme = initialRoom?.let { themeByRoomId[it.id] }
             val initialThemeStyle = initialRoom?.let { themeStyleByRoomId[it.id] }
@@ -1898,6 +1954,9 @@ class ExplorationViewModel(
             updateMinimap(initialRoom)
             initialRoom?.let { eventManager.handleTrigger("enter_room", EventPayload.EnterRoom(it.id)) }
             processBootstrapQueues()
+            if (movementCatalog.parties.isNotEmpty()) {
+                startEnemyMovementTicker()
+            }
         }
     }
 
@@ -1914,7 +1973,7 @@ class ExplorationViewModel(
         }
         val evaluation = evaluateDirection(currentRoom, direction, DirectionEvaluationMode.ATTEMPT)
         if (evaluation.blocked) {
-            val message = evaluation.message ?: "The path is blocked."
+            val message = evaluation.message ?: lockedDirectionFallback(direction, evaluation.block)
             showBlockedDirectionPrompt(direction, message, evaluation.block)
             return
         }
@@ -1982,6 +2041,7 @@ class ExplorationViewModel(
         playRoomAudio(nextHub?.id ?: sessionState.hubId, nextRoom.id)
         handleRoomEntryTutorials(nextRoom)
         eventManager.handleTrigger("enter_room", EventPayload.EnterRoom(nextRoom.id))
+        reconcileMovementAfterRoomChange(nextRoom.id)
     }
 
     private fun visibleNpcsForRoom(room: Room?, completedMilestones: Set<String> = sessionStore.state.value.completedMilestones): List<String> {
@@ -2063,6 +2123,7 @@ class ExplorationViewModel(
         playRoomAudio(nextHub?.id ?: sessionStore.state.value.hubId, nextRoom.id)
         handleRoomEntryTutorials(nextRoom)
         eventManager.handleTrigger("enter_room", EventPayload.EnterRoom(nextRoom.id))
+        reconcileMovementAfterRoomChange(nextRoom.id)
     }
 
     private fun startImmediateDialogue(npcName: String): Boolean {
@@ -2853,6 +2914,104 @@ class ExplorationViewModel(
             userSettingsStore.setVignetteEnabled(enabled)
         }
     }
+
+    private fun startEnemyMovementTicker() {
+        if (enemyMovementJob != null) return
+        enemyMovementJob = viewModelScope.launch(dispatchers.main) {
+            var last = monotonicTimeMs()
+            while (true) {
+                delay(250L)
+                val now = monotonicTimeMs()
+                val delta = (now - last).coerceIn(0L, 1_000L)
+                last = now
+                if (!explorationVisible || explorationInteractionBlocked || _uiState.value.isLoading) continue
+                val manager = enemyMovementManager ?: continue
+                val tick = manager.tick(delta, _uiState.value.currentRoom?.id, sessionStore.state.value)
+                sessionStore.setEnemyPartyStates(tick.states)
+                val event = tick.events.lastOrNull()
+                if (event != null) movementNoticeExpiresAtMs = now + 3_500L
+                _uiState.update { current ->
+                    current.copy(
+                        enemyAggression = tick.aggression,
+                        enemyMovementNotice = event?.message
+                            ?: current.enemyMovementNotice.takeIf { now < movementNoticeExpiresAtMs },
+                        nearbyThreatDirection = nearbyThreatDirection(current.currentRoom?.id.orEmpty())
+                    )
+                }
+                refreshMovementPresence()
+                val partyId = tick.autoEngagePartyId
+                if (partyId != null && !movementCombatRequested) {
+                    movementCombatRequested = true
+                    engageMovingParty(partyId)
+                }
+            }
+        }
+    }
+
+    private fun monotonicTimeMs(): Long = System.nanoTime() / 1_000_000L
+
+    private fun reconcileMovementAfterRoomChange(roomId: String) {
+        movementCombatRequested = false
+        val manager = enemyMovementManager ?: return
+        val tick = manager.onPlayerRoomChanged(roomId, sessionStore.state.value)
+        sessionStore.setEnemyPartyStates(tick.states)
+        _uiState.update {
+            it.copy(
+                enemyAggression = tick.aggression,
+                enemyMovementNotice = null,
+                nearbyThreatDirection = nearbyThreatDirection(roomId)
+            )
+        }
+        refreshMovementPresence()
+    }
+
+    private fun persistEnemyMovementState() {
+        enemyMovementManager?.stateSnapshot()?.let(sessionStore::setEnemyPartyStates)
+    }
+
+    private fun roomWithMovement(room: Room): Room {
+        val moving = enemyMovementManager
+            ?.partiesInRoom(room.id, sessionStore.state.value)
+            .orEmpty()
+            .map { it.enemies }
+        if (moving.isEmpty()) return room
+        val combined = roomEnemyParties(room) + moving
+        return room.copy(enemyParties = combined, enemies = combined.flatten())
+    }
+
+    private fun refreshMovementPresence() {
+        val currentId = _uiState.value.currentRoom?.id ?: return
+        val baseRoom = roomsById[currentId] ?: return
+        val displayRoom = roomWithMovement(baseRoom)
+        _uiState.update { current ->
+            current.copy(
+                currentRoom = displayRoom,
+                enemies = roomEnemyParties(displayRoom).flatten(),
+                enemyTiers = buildEnemyTierMap(displayRoom),
+                enemyIcons = buildEnemyIconMap(displayRoom),
+                blockedDirections = computeBlockedDirections(displayRoom),
+                directionIndicators = buildDirectionIndicators(displayRoom, current.nearbyThreatDirection)
+            )
+        }
+    }
+
+    private fun nearbyThreatDirection(roomId: String): String? {
+        val room = roomsById[roomId] ?: return null
+        val manager = enemyMovementManager ?: return null
+        val session = sessionStore.state.value
+        return room.connections.entries.firstOrNull { (_, destination) ->
+            manager.partiesInRoom(destination, session).isNotEmpty()
+        }?.key
+    }
+
+    private fun engageMovingParty(partyId: String) {
+        val manager = enemyMovementManager ?: return
+        val party = manager.party(partyId) ?: return
+        val room = _uiState.value.currentRoom ?: return
+        preparePendingEncounter(room, party.enemies, party.id)
+        emitEvent(ExplorationEvent.EnterCombat(party.enemies))
+    }
+
     fun engageEnemy(enemyId: String) {
         val room = _uiState.value.currentRoom
         val parties = room?.let { roomEnemyParties(it) }.orEmpty()
@@ -2867,24 +3026,36 @@ class ExplorationViewModel(
             } ?: parties.firstOrNull().orEmpty()
         }
         if (encounterIds.isNotEmpty()) {
-            room?.let { preparePendingEncounter(it, encounterIds) } ?: encounterCoordinator.clear()
+            val sourcePartyId = room?.id?.let { roomId ->
+                enemyMovementManager
+                    ?.partiesInRoom(roomId, sessionStore.state.value)
+                    ?.firstOrNull { party ->
+                        party.enemies.any { it.equals(normalizedEnemyId, ignoreCase = true) }
+                    }
+                    ?.id
+            }
+            room?.let { preparePendingEncounter(it, encounterIds, sourcePartyId) } ?: encounterCoordinator.clear()
             emitEvent(ExplorationEvent.EnterCombat(encounterIds))
         } else {
             encounterCoordinator.clear()
         }
     }
 
-    private fun preparePendingEncounter(room: Room, encounterIds: List<String>) {
-        val descriptor = buildEncounterDescriptor(room, encounterIds)
+    private fun preparePendingEncounter(room: Room, encounterIds: List<String>, sourcePartyId: String? = null) {
+        val descriptor = buildEncounterDescriptor(room, encounterIds, sourcePartyId)
         encounterCoordinator.setPendingEncounter(descriptor)
     }
 
-    private fun buildEncounterDescriptor(room: Room, encounterIds: List<String>): EncounterDescriptor {
+    private fun buildEncounterDescriptor(
+        room: Room,
+        encounterIds: List<String>,
+        sourcePartyId: String? = null
+    ): EncounterDescriptor {
         val overridesByEnemy = room.enemyInstances.orEmpty().groupBy { it.enemyId }
         if (overridesByEnemy.isEmpty()) {
             return EncounterDescriptor(encounterIds.map { enemyId ->
                 EncounterEnemyInstance(enemyId = enemyId)
-            })
+            }, sourcePartyId = sourcePartyId)
         }
         val usedOverrides = mutableSetOf<RoomEnemyInstance>()
         val occurrenceCounters = mutableMapOf<String, Int>()
@@ -2906,7 +3077,7 @@ class ExplorationViewModel(
                 extraDrops = match?.extraDrops.orEmpty()
             )
         }
-        return EncounterDescriptor(slots)
+        return EncounterDescriptor(slots, sourcePartyId = sourcePartyId)
     }
 
     private fun handleRoomEntryTutorials(room: Room) {
@@ -4277,7 +4448,7 @@ class ExplorationViewModel(
                     if (mode == DirectionEvaluationMode.ATTEMPT) {
                         handleBlockedDirectionCinematic(room.id, normalized, block)
                     }
-                    DirectionEvaluation(true, block.messageLocked ?: "Enemies block the path.", block)
+                    DirectionEvaluation(true, block.messageLocked ?: lockedDirectionFallback(normalized, block), block)
                 } else {
                     if (mode == DirectionEvaluationMode.ATTEMPT) {
                         unlockDirection(room.id, normalized, block, silent = true)
@@ -4290,11 +4461,11 @@ class ExplorationViewModel(
                     if (mode == DirectionEvaluationMode.ATTEMPT) {
                         handleBlockedDirectionCinematic(room.id, normalized, block)
                     }
-                    return DirectionEvaluation(true, block.messageLocked ?: "It won't budge.", block)
+                    return DirectionEvaluation(true, block.messageLocked ?: lockedDirectionFallback(normalized, block), block)
                 }
                 val keyId = block.keyId?.takeIf { it.isNotBlank() }
                 if (keyId != null && !inventoryService.hasItem(keyId)) {
-                    val requirementMessage = block.messageLocked ?: "Requires ${inventoryService.itemDisplayName(keyId)}."
+                    val requirementMessage = block.messageLocked ?: lockedDirectionFallback(normalized, block)
                     if (mode == DirectionEvaluationMode.ATTEMPT) {
                         handleBlockedDirectionCinematic(room.id, normalized, block)
                     }
@@ -4312,7 +4483,22 @@ class ExplorationViewModel(
                 }
                 DirectionEvaluation(blocked = false)
             }
-            else -> DirectionEvaluation(true, block.messageLocked ?: "The path is blocked.", block)
+            else -> DirectionEvaluation(true, block.messageLocked ?: lockedDirectionFallback(normalized, block), block)
+        }
+    }
+
+    private fun lockedDirectionFallback(direction: String, block: BlockedDirection?): String {
+        val label = direction.replaceFirstChar { char ->
+            if (char.isLowerCase()) char.titlecase(Locale.getDefault()) else char.toString()
+        }
+        val type = block?.type?.trim()?.lowercase(Locale.getDefault())
+        val keyId = block?.keyId?.takeIf { it.isNotBlank() }
+        return when {
+            keyId != null -> "$label exit locked. Requires ${inventoryService.itemDisplayName(keyId)}."
+            type == "enemy" -> "$label exit blocked. Hostiles are holding the route."
+            type == "key" || type == "lock" -> "$label exit locked. Find the access route or required clearance."
+            type != null -> "$label exit blocked."
+            else -> "$label exit blocked."
         }
     }
 

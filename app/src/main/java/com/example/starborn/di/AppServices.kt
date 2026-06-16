@@ -58,6 +58,7 @@ import com.example.starborn.domain.leveling.LevelingManager
 import com.example.starborn.domain.fx.UiFxBus
 import com.example.starborn.domain.fishing.FishingService
 import com.example.starborn.domain.milestone.MilestoneRuntimeManager
+import com.example.starborn.domain.movement.EnemyPartyRuntimeState
 import com.example.starborn.domain.quest.QuestRuntimeManager
 import com.example.starborn.domain.prompt.UIPromptManager
 import com.example.starborn.domain.tutorial.TutorialRuntimeManager
@@ -906,6 +907,44 @@ class AppServices(context: Context) {
         }
     }
 
+    fun startNewGameAtHub2(): Boolean {
+        return runCatching {
+            if (!startNewGame(debugFullInventory = true)) return false
+            bootstrapCinematics.clear()
+            bootstrapPlayerActions.clear()
+            sessionStore.completeQuest("w1_mq01")
+            sessionStore.completeQuest("w1_mq02")
+            sessionStore.setMilestone("ms_w1_mq01_complete")
+            sessionStore.setMilestone("ms_w1_mq02_complete")
+            sessionStore.setWorld("world_1")
+            sessionStore.setHub("hub_2_logistics")
+            sessionStore.setRoom("admin_lobby")
+            sessionStore.markTutorialCompleted("swipe_move")
+            sessionStore.markTutorialCompleted("movement")
+            true
+        }.getOrElse { err ->
+            Log.e("AppServices", "Failed to start debug Hub 2 game.", err)
+            false
+        }
+    }
+
+    fun startNewGameAtHub1(): Boolean {
+        return runCatching {
+            if (!startNewGame(debugFullInventory = true)) return false
+            bootstrapCinematics.clear()
+            bootstrapPlayerActions.clear()
+            sessionStore.setWorld("world_1")
+            sessionStore.setHub("hub_1_homestead")
+            sessionStore.setRoom(null)
+            sessionStore.markTutorialCompleted("swipe_move")
+            sessionStore.markTutorialCompleted("movement")
+            true
+        }.getOrElse { err ->
+            Log.e("AppServices", "Failed to start debug Hub 1 game.", err)
+            false
+        }
+    }
+
     fun startNewGameAtRoomItems(): Boolean {
         return runCatching {
             if (!startNewGame(debugFullInventory = true)) return false
@@ -963,6 +1002,42 @@ class AppServices(context: Context) {
         }
     }
 
+    fun startNewGameAtLiftShaft(): Boolean {
+        return runCatching {
+            if (!startNewGame(debugFullInventory = false)) return false
+            bootstrapCinematics.clear()
+            bootstrapPlayerActions.clear()
+            sessionStore.completeQuest("w1_mq01")
+            sessionStore.setMilestone("ms_w1_mq01_complete")
+            sessionStore.setWorld("world_1")
+            sessionStore.setHub("hub_1_homestead")
+            sessionStore.setRoom("pit_shaft")
+            sessionStore.markTutorialCompleted("swipe_move")
+            sessionStore.markTutorialCompleted("movement")
+            true
+        }.getOrElse { err ->
+            Log.e("AppServices", "Failed to start debug Lift Shaft game.", err)
+            false
+        }
+    }
+
+    fun startNewGameAtWeatherLab(): Boolean {
+        return runCatching {
+            if (!startNewGame(debugFullInventory = false)) return false
+            bootstrapCinematics.clear()
+            bootstrapPlayerActions.clear()
+            sessionStore.setWorld("world_1")
+            sessionStore.setHub("hub_1_homestead")
+            sessionStore.setRoom("weather_lab")
+            sessionStore.markTutorialCompleted("swipe_move")
+            sessionStore.markTutorialCompleted("movement")
+            true
+        }.getOrElse { err ->
+            Log.e("AppServices", "Failed to start debug Weather Lab game.", err)
+            false
+        }
+    }
+
     fun startNewGameAtCheckpoint(): Boolean {
         return runCatching {
             if (!startNewGame(debugFullInventory = false)) return false
@@ -1012,6 +1087,11 @@ class AppServices(context: Context) {
             sessionStore.setRoomState("mine_alpha", debugEncounterClearedStateKey("echo_borer"), true)
             sessionStore.setRoomState("mine_checkpoint", debugEncounterClearedStateKey("acoustic_bulwark"), true)
             sessionStore.setRoomState("mine_conveyor", debugEncounterClearedStateKey("pressure_hauler"), true)
+            sessionStore.setEnemyPartyStates(
+                mapOf(
+                    "w1_deep_mine_pressure_patrol" to deepMinePressurePatrolState(defeated = true)
+                )
+            )
             sessionStore.setPlayerLevel(3)
             sessionStore.setPlayerXp(250)
             sessionStore.setPartyMembers(listOf("nova", "zeke"))
@@ -1030,6 +1110,29 @@ class AppServices(context: Context) {
             false
         }
     }
+
+    fun startNewGameAtDynamicPatrol(): Boolean {
+        return runCatching {
+            if (!startNewGameAtDeepMine()) return false
+            sessionStore.setEnemyPartyStates(
+                mapOf(
+                    "w1_deep_mine_pressure_patrol" to deepMinePressurePatrolState(defeated = false)
+                )
+            )
+            sessionStore.setRoom("mine_conveyor")
+            true
+        }.getOrElse { err ->
+            Log.e("AppServices", "Failed to start debug dynamic patrol game.", err)
+            false
+        }
+    }
+
+    private fun deepMinePressurePatrolState(defeated: Boolean) = EnemyPartyRuntimeState(
+        roomId = "mine_conveyor",
+        routeIndex = 0,
+        moveRemainingMs = 25_000L,
+        defeated = defeated
+    )
 
     fun startNewGameAtRedAlert(): Boolean {
         return runCatching {

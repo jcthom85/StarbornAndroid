@@ -1,4 +1,4 @@
-appId: com.example.starborn
+appId: com.junewiregames.starborn.prealpha
 ---
 - launchApp:
     clearState: true
@@ -25,15 +25,17 @@ appId: com.example.starborn
     timeout: 60000
 - tapOn: "Zeke"
 - extendedWaitUntil:
-    visible: "Skills"
+    visible: "Abilities"
     timeout: 15000
-- tapOn: "Skills"
+- tapOn: "Abilities"
 - extendedWaitUntil:
     visible: "Shatter Blow"
     timeout: 15000
-- tapOn: "Shatter Blow"
+- tapOn:
+    text: "Use"
+    index: 0
 - extendedWaitUntil:
-    visible: "CHOOSE AN ENEM.*"
+    visible: "Choose an enemy for Shatter Blow"
     timeout: 5000
 - tapOn: "Dominion Dampener"
 - extendedWaitUntil:

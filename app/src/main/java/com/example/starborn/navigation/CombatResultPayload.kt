@@ -11,6 +11,7 @@ data class CombatResultPayload(
     val rewardCredits: Int = 0,
     val rewardItems: Map<String, Int> = emptyMap(),
     val levelUps: List<LevelUpSummary> = emptyList(),
+    val sourcePartyId: String? = null,
     val isPlaceholder: Boolean = false
 ) : Serializable {
     enum class Outcome : Serializable {

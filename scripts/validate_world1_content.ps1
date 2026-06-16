@@ -7,6 +7,7 @@ param(
 $ErrorActionPreference = "Stop"
 $root = Split-Path -Parent $PSScriptRoot
 $assets = Join-Path $root "app/src/main/assets"
+$assetPackAssets = Join-Path $root "world_assets/src/main/assets"
 $rawDir = Join-Path $root "app/src/main/res/raw"
 $minImageBytes = 4096
 $minAudioBytes = 4096
@@ -63,9 +64,13 @@ function Get-PngInfo($path) {
 
 function Get-AssetFile($relativePath) {
     if ([string]::IsNullOrWhiteSpace($relativePath)) { return $null }
-    $path = Join-Path $assets $relativePath
-    if (-not (Test-Path -LiteralPath $path)) { return $null }
-    return Get-Item -LiteralPath $path
+    foreach ($assetRoot in @($assets, $assetPackAssets)) {
+        $path = Join-Path $assetRoot $relativePath
+        if (Test-Path -LiteralPath $path) {
+            return Get-Item -LiteralPath $path
+        }
+    }
+    return $null
 }
 
 function Has-Asset($relativePath) {

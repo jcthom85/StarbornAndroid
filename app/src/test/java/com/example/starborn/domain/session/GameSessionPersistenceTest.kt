@@ -2,6 +2,7 @@ package com.example.starborn.domain.session
 
 import com.example.starborn.domain.inventory.ItemCatalog
 import com.example.starborn.domain.model.Item
+import com.example.starborn.domain.movement.EnemyPartyRuntimeState
 import java.io.File
 import java.util.Locale
 import kotlinx.coroutines.runBlocking
@@ -289,6 +290,27 @@ class GameSessionPersistenceTest {
         }.orEmpty()
         assertTrue("Expected backup files to be created", backups.isNotEmpty())
         assertTrue("Should keep at most 3 backups", backups.size <= 3)
+    }
+
+    @Test
+    fun enemyPartyMovementStateRoundTripsWithoutAdvancingTime() = runBlocking {
+        val partyState = EnemyPartyRuntimeState(
+            roomId = "mine_sifter",
+            routeIndex = 1,
+            routeDirection = -1,
+            moveRemainingMs = 12_345,
+            aggressionRemainingMs = 4_321,
+            retreatGraceRemainingMs = 9_876,
+            defeated = false
+        )
+        persistence.writeSlot(
+            1,
+            GameSessionState(enemyPartyStates = mapOf("mine_patrol" to partyState))
+        )
+
+        val restored = persistence.readSlot(1)
+
+        assertEquals(partyState, restored?.enemyPartyStates?.get("mine_patrol"))
     }
 
     private fun clearStores() {

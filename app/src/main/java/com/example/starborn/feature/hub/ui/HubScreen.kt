@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
@@ -146,28 +147,28 @@ private fun HubNodeLayer(
     modifier: Modifier = Modifier
 ) {
     BoxWithConstraints(modifier = modifier) {
-        val density = LocalDensity.current
         val widthPx = constraints.maxWidth.toFloat()
         val heightPx = constraints.maxHeight.toFloat()
+        val density = LocalDensity.current
 
         nodes.forEach { node ->
-            val sizePx = node.sizeHint.coerceIn(240f, 460f)
+            val composition = hubNodeComposition(node)
+            val markerWidthPx = with(density) { composition.width.toPx() }
+            val markerHeightPx = with(density) { composition.height.toPx() }
             val centerX = widthPx * node.centerX
             val centerY = heightPx * (1f - node.centerY)
-            val extraHeight = 80.dp
-            val extraHeightPx = with(density) { extraHeight.toPx() }
-            val extraWidth = 24.dp
-            val extraWidthPx = with(density) { extraWidth.toPx() }
-            val totalWidth = sizePx + extraWidthPx
-            val offsetX = (centerX - totalWidth / 2f).roundToInt()
-            val offsetY = (centerY - (sizePx + extraHeightPx) / 2f).roundToInt()
-            val sizeDp = with(density) { sizePx.toDp() }
+            val offsetX = (centerX - markerWidthPx * composition.anchorX)
+                .coerceIn(0f, (widthPx - markerWidthPx).coerceAtLeast(0f))
+                .roundToInt()
+            val offsetY = (centerY - markerHeightPx * composition.anchorY)
+                .coerceIn(0f, (heightPx - markerHeightPx).coerceAtLeast(0f))
+                .roundToInt()
             HubNodeMarker(
                 node = node,
                 selected = selectedId == node.id,
                 modifier = Modifier
-                    .width(sizeDp + extraWidth)
-                    .height(sizeDp + extraHeight)
+                    .width(composition.width)
+                    .height(composition.height)
                     .offset { IntOffset(offsetX, offsetY) },
                 onClick = { onNodeSelected(node) }
             )
@@ -183,6 +184,7 @@ private fun HubNodeMarker(
     onClick: () -> Unit
 ) {
     val iconPainter = rememberHubNodePainter(node.iconPath)
+    val composition = hubNodeComposition(node)
     val highlight by animateFloatAsState(
         targetValue = if (selected) 1f else 0f,
         animationSpec = tween(durationMillis = 260),
@@ -203,87 +205,93 @@ private fun HubNodeMarker(
         animationSpec = tween(durationMillis = 260),
         label = "hubNodeScaleEase"
     )
-    val baseShape = RoundedCornerShape(28.dp)
-    val borderColor = Color(0xFF9AE6FF).copy(alpha = highlight * 0.8f + 0.2f)
     Column(
         modifier = modifier
-            .clip(baseShape)
             .semantics { contentDescription = "Enter ${node.title}" }
             .clickable(onClick = onClick)
             .graphicsLayer {
                 scaleX = scale
                 scaleY = scale
-            }
-            .background(Color.Transparent),
+            },
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
+        verticalArrangement = Arrangement.Bottom
     ) {
-        Surface(
+        Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(1f)
-                .padding(vertical = 4.dp),
-            shape = baseShape,
-            tonalElevation = 0.dp,
-            shadowElevation = 0.dp,
-            color = Color.Transparent
+                .weight(1f)
+                .fillMaxWidth(),
+            contentAlignment = Alignment.BottomCenter
         ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 6.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                if (iconPainter != null) {
-                    Image(
-                        painter = iconPainter,
-                        contentDescription = node.title,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.fillMaxSize()
-                    )
-                } else {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(
-                                Brush.radialGradient(
-                                    colors = listOf(
-                                        Color(0xFF1F2F3C),
-                                        Color(0xFF0B141A)
-                                    )
-                                )
+            if (iconPainter != null) {
+                Image(
+                    painter = iconPainter,
+                    contentDescription = null,
+                    contentScale = ContentScale.Fit,
+                    alpha = if (node.discovered) 1f else 0.38f,
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .widthIn(max = composition.imageWidth)
+                )
+            } else {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(
+                            Brush.radialGradient(
+                                colors = listOf(Color(0xFF1F2F3C), Color(0xFF0B141A))
                             )
-                    )
-                }
-
-                if (!node.discovered) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(Color.Black.copy(alpha = 0.55f))
-                    )
-                    Text(
-                        text = "Unknown",
-                        style = MaterialTheme.typography.labelMedium,
-                        color = Color.White.copy(alpha = 0.85f),
-                        modifier = Modifier.align(Alignment.Center)
-                    )
-                }
+                        )
+                )
             }
         }
 
+        Surface(
+            shape = RoundedCornerShape(7.dp),
+            color = Color(0xDC080C11),
+            border = androidx.compose.foundation.BorderStroke(
+                1.dp,
+                Color.White.copy(alpha = if (selected) 0.34f else 0.16f)
+            ),
+            shadowElevation = 4.dp
+        ) {
             Text(
-                text = node.title,
-                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
+                text = if (node.discovered) node.title else "Unknown",
+                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.SemiBold),
                 color = Color.White,
                 textAlign = TextAlign.Center,
                 maxLines = 2,
                 softWrap = true,
-                overflow = TextOverflow.Clip,
+                overflow = TextOverflow.Ellipsis,
                 modifier = Modifier
-                    .padding(vertical = 2.dp)
-                    .fillMaxWidth()
+                    .widthIn(max = 132.dp)
+                    .padding(horizontal = 8.dp, vertical = 4.dp)
             )
+        }
+    }
+}
+
+private data class HubNodeComposition(
+    val width: androidx.compose.ui.unit.Dp,
+    val height: androidx.compose.ui.unit.Dp,
+    val imageWidth: androidx.compose.ui.unit.Dp = width,
+    val anchorX: Float = 0.5f,
+    val anchorY: Float = 0.5f
+)
+
+private fun hubNodeComposition(node: HubNodeUi): HubNodeComposition = when (node.id) {
+    "pit" -> HubNodeComposition(width = 132.dp, height = 132.dp, imageWidth = 116.dp, anchorX = 0.48f, anchorY = 0.68f)
+    "workshop" -> HubNodeComposition(width = 166.dp, height = 180.dp, anchorX = 0.5f, anchorY = 0.72f)
+    "med_bay" -> HubNodeComposition(width = 132.dp, height = 134.dp, imageWidth = 118.dp, anchorX = 0.5f, anchorY = 0.58f)
+    "trade_row" -> HubNodeComposition(width = 132.dp, height = 128.dp, imageWidth = 112.dp, anchorX = 0.5f, anchorY = 0.68f)
+    "admin_gate" -> HubNodeComposition(width = 150.dp, height = 126.dp, imageWidth = 110.dp, anchorX = 0.56f, anchorY = 0.62f)
+    "admin_concourse" -> HubNodeComposition(width = 142.dp, height = 126.dp, imageWidth = 106.dp, anchorX = 0.5f, anchorY = 0.62f)
+    "server_room" -> HubNodeComposition(width = 136.dp, height = 132.dp, imageWidth = 108.dp, anchorX = 0.5f, anchorY = 0.68f)
+    "deep_mine" -> HubNodeComposition(width = 132.dp, height = 138.dp, imageWidth = 114.dp, anchorX = 0.5f, anchorY = 0.66f)
+    "echo_chamber" -> HubNodeComposition(width = 142.dp, height = 130.dp, imageWidth = 110.dp, anchorX = 0.5f, anchorY = 0.62f)
+    "launch_bay" -> HubNodeComposition(width = 132.dp, height = 136.dp, imageWidth = 114.dp, anchorX = 0.5f, anchorY = 0.62f)
+    else -> {
+        val size = node.sizeHint.coerceIn(180f, 340f).dp
+        HubNodeComposition(width = size, height = size + 32.dp, anchorY = 0.56f)
     }
 }
 

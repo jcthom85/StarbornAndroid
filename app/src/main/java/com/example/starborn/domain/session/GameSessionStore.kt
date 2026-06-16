@@ -1,5 +1,6 @@
 package com.example.starborn.domain.session
 
+import com.example.starborn.domain.movement.EnemyPartyRuntimeState
 import java.util.Locale
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -345,6 +346,12 @@ class GameSessionStore {
                 val updatedRoom = existing + (normalizedKey to value)
                 state.copy(roomStates = state.roomStates + (normalizedRoomId to updatedRoom))
             }
+        }
+    }
+
+    fun setEnemyPartyStates(states: Map<String, EnemyPartyRuntimeState>) {
+        _state.update { current ->
+            if (current.enemyPartyStates == states) current else current.copy(enemyPartyStates = states)
         }
     }
 

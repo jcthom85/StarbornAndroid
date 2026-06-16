@@ -1,5 +1,6 @@
 package com.example.starborn.domain.session
 
+import com.example.starborn.domain.movement.EnemyPartyRuntimeState
 import java.security.MessageDigest
 import java.util.Locale
 import kotlin.text.Charsets
@@ -39,7 +40,8 @@ data class GameSessionState(
     val questStageById: Map<String, String> = emptyMap(),
     val questTasksCompleted: Map<String, Set<String>> = emptyMap(),
     val completedEvents: Set<String> = emptySet(),
-    val roomStates: Map<String, Map<String, Boolean>> = emptyMap()
+    val roomStates: Map<String, Map<String, Boolean>> = emptyMap(),
+    val enemyPartyStates: Map<String, EnemyPartyRuntimeState> = emptyMap()
 )
 
 fun GameSessionState.fingerprint(): String {
@@ -112,6 +114,16 @@ fun GameSessionState.fingerprint(): String {
             }
         }
         builder.append('|')
+    }
+    enemyPartyStates.entries.sortedBy { it.key }.forEach { (partyId, state) ->
+        builder.append("ENEMY_PARTY:").append(partyId).append('=')
+            .append(state.roomId).append(':')
+            .append(state.routeIndex).append(':')
+            .append(state.routeDirection).append(':')
+            .append(state.moveRemainingMs).append(':')
+            .append(state.aggressionRemainingMs ?: -1).append(':')
+            .append(state.retreatGraceRemainingMs).append(':')
+            .append(if (state.defeated) '1' else '0').append('|')
     }
     val digest = MessageDigest.getInstance("SHA-1")
     val hash = digest.digest(builder.toString().toByteArray(Charsets.UTF_8))

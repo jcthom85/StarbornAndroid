@@ -1,0 +1,24 @@
+appId: com.junewiregames.starborn.prealpha
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "New Game"
+    timeout: 60000
+- swipe:
+    direction: UP
+- extendedWaitUntil:
+    visible: "Debug: Dynamic Patrol"
+    timeout: 10000
+- tapOn: "Debug: Dynamic Patrol"
+- extendedWaitUntil:
+    visible: "Conveyor Belt"
+    timeout: 15000
+- assertVisible: "HOSTILES CLOSING"
+- assertVisible: "Engage"
+- assertVisible: "Pressure Hauler"
+- extendedWaitUntil:
+    visible: "HOSTILE CONTACT"
+    timeout: 15000
+- assertVisible: "Pressure Hauler"
+- takeScreenshot: dynamic-enemy-movement

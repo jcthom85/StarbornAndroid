@@ -163,6 +163,38 @@ class MainMenuViewModel(
         }
     }
 
+    fun startNewGameAtHub2(
+        onComplete: (() -> Unit)? = null,
+        onFailure: (() -> Unit)? = null
+    ) {
+        viewModelScope.launch {
+            val success = services.startNewGameAtHub2()
+            if (success) {
+                services.syncInventoryFromSession()
+                onComplete?.invoke()
+            } else {
+                emitMessage("Failed to start debug Hub 2 game.")
+                onFailure?.invoke()
+            }
+        }
+    }
+
+    fun startNewGameAtHub1(
+        onComplete: (() -> Unit)? = null,
+        onFailure: (() -> Unit)? = null
+    ) {
+        viewModelScope.launch {
+            val success = services.startNewGameAtHub1()
+            if (success) {
+                services.syncInventoryFromSession()
+                onComplete?.invoke()
+            } else {
+                emitMessage("Failed to start debug Hub 1 game.")
+                onFailure?.invoke()
+            }
+        }
+    }
+
     fun startNewGameAtRoomItems(
         onComplete: (() -> Unit)? = null,
         onFailure: (() -> Unit)? = null
@@ -211,6 +243,38 @@ class MainMenuViewModel(
         }
     }
 
+    fun startNewGameAtLiftShaft(
+        onComplete: (() -> Unit)? = null,
+        onFailure: (() -> Unit)? = null
+    ) {
+        viewModelScope.launch {
+            val success = services.startNewGameAtLiftShaft()
+            if (success) {
+                services.syncInventoryFromSession()
+                onComplete?.invoke()
+            } else {
+                emitMessage("Failed to start debug Lift Shaft game.")
+                onFailure?.invoke()
+            }
+        }
+    }
+
+    fun startNewGameAtWeatherLab(
+        onComplete: (() -> Unit)? = null,
+        onFailure: (() -> Unit)? = null
+    ) {
+        viewModelScope.launch {
+            val success = services.startNewGameAtWeatherLab()
+            if (success) {
+                services.syncInventoryFromSession()
+                onComplete?.invoke()
+            } else {
+                emitMessage("Failed to start debug Weather Lab game.")
+                onFailure?.invoke()
+            }
+        }
+    }
+
     fun startNewGameAtCheckpoint(
         onComplete: (() -> Unit)? = null,
         onFailure: (() -> Unit)? = null
@@ -238,6 +302,22 @@ class MainMenuViewModel(
                 onComplete?.invoke()
             } else {
                 emitMessage("Failed to start debug Deep Mine game.")
+                onFailure?.invoke()
+            }
+        }
+    }
+
+    fun startNewGameAtDynamicPatrol(
+        onComplete: (() -> Unit)? = null,
+        onFailure: (() -> Unit)? = null
+    ) {
+        viewModelScope.launch {
+            val success = services.startNewGameAtDynamicPatrol()
+            if (success) {
+                services.syncInventoryFromSession()
+                onComplete?.invoke()
+            } else {
+                emitMessage("Failed to start debug dynamic patrol game.")
                 onFailure?.invoke()
             }
         }

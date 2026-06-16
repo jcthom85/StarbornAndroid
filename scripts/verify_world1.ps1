@@ -115,7 +115,7 @@ try {
         }
     }
 
-    if ($SkipMaestro) {
+    if ($SkipMaestro -and -not $InstallDebug) {
         Write-Host ""
         Write-Host "Skipping Maestro flows by request."
         return
@@ -144,6 +144,12 @@ try {
         }
     }
 
+    if ($SkipMaestro) {
+        Write-Host ""
+        Write-Host "Skipping Maestro flows by request."
+        return
+    }
+
     $flows = @(
         "smoke_launch.yaml",
         "start_new_game.yaml",
@@ -164,10 +170,13 @@ try {
         "mainquest_the_echo.yaml",
         "mainquest_red_alert.yaml",
         "mainquest_the_launch.yaml",
+        "debug_hub1.yaml",
+        "debug_hub2.yaml",
         "first_combat_entry.yaml",
         "enemy_party_combat.yaml",
         "combat_target_prompt.yaml",
         "combat_command_menu.yaml",
+        "combat_abilities_menu.yaml",
         "combat_menu_dismiss.yaml",
         "combat_enemy_status_rail.yaml",
         "combat_flashbang_fx.yaml",

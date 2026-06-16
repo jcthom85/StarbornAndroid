@@ -79,11 +79,15 @@ def normalize_path(path: str | None, default_dir: str = "images/characters") -> 
 
 
 def existing_asset(root: Path, asset_path: str | None) -> bool:
-    return bool(asset_path) and (root / "app" / "src" / "main" / "assets" / asset_path).is_file()
+    return bool(asset_path) and asset_file(root, asset_path).is_file()
 
 
 def asset_file(root: Path, asset_path: str) -> Path:
-    return root / "app" / "src" / "main" / "assets" / asset_path
+    candidates = (
+        root / "app" / "src" / "main" / "assets" / asset_path,
+        root / "world_assets" / "src" / "main" / "assets" / asset_path,
+    )
+    return next((path for path in candidates if path.is_file()), candidates[0])
 
 
 def image_asset_issue(root: Path, asset_path: str, min_size: int = MIN_DIALOGUE_IMAGE_SIZE) -> str | None:

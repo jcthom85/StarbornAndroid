@@ -2,6 +2,7 @@
   {
     "id": "pit_L1_landing",
     "env": "mine",
+    "weather": "dust",
     "title": "Pit Landing",
     "background_image": "images/rooms/world_1/pit_L1_landing_v5.png",
     "description": "A cramped landing bolts the Pit to the rest of the colony. The bulkhead wheezes with every pressure shift, and warm amber lights make the scuffed metal glow like old lunch trays.",
@@ -90,6 +91,7 @@
   {
     "id": "pit_shaft",
     "env": "mine",
+    "weather": "steam",
     "title": "Lift Shaft",
     "background_image": "images/rooms/world_1/pit_shaft_v5.png",
     "description": "A rusted ladder and narrow lift cage climb through the Pit's stacked levels. A sweating pipe vents steam around the rails, turning the hazard stripes glossy and slick.",
@@ -120,6 +122,23 @@
     ]
   },
   {
+    "id": "weather_lab",
+    "env": "weather_lab",
+    "title": "Weather Lab",
+    "background_image": "images/rooms/world_1/pit_L1_landing_v5.png",
+    "description": "A debug-only lighting and effects room for checking environmental overlays against a real exploration background.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {},
+    "pos": [
+      0,
+      1
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
     "id": "pit_jed_bunk",
     "env": "mine",
     "title": "Jed's Bunk",
@@ -131,7 +150,7 @@
     "connections": {
       "east": "pit_shaft"
     },
-    "pos": [
+"pos": [
       -1,
       1
     ],
@@ -321,6 +340,7 @@
   {
     "id": "workshop_yard",
     "env": "mine",
+    "weather": "dust",
     "title": "Scrap Yard",
     "background_image": "images/rooms/world_1/workshop_yard_v3.png",
     "description": "Rusted scrap, busted loaders, and retired drone shells pile up around Jed's shutter. It looks like junk until you know which pieces he has been saving for you.",
@@ -1551,6 +1571,21 @@
       0
     ],
     "state": {},
+    "blocked_directions": {
+      "north": {
+        "type": "lock",
+        "consume": false,
+        "message_locked": "The retinal scanner flashes red: Access Denied. The lift controls won't unlock until Foreman Bogs authorizes your deep mine descent.",
+        "message_unlock": "The retinal scanner chirps green. Foreman Bogs' authorization is registered, and the lift controls unlock.",
+        "requires": [
+          {
+            "room_id": "admin_lobby",
+            "state_key": "bogs_talked",
+            "value": true
+          }
+        ]
+      }
+    },
     "actions": [
       {
         "name": "warning signs",
@@ -1664,6 +1699,7 @@
   {
     "id": "server_cooling",
     "env": "market",
+    "weather": "snow",
     "title": "Cooling Unit B",
     "background_image": "images/rooms/world_1/server_cooling.png",
     "description": "Massive fans pull freezing air through the stacks with a roar that drowns out all other sound. A layer of frost coats the walls, shimmering in the pale light of the server LEDs.",
@@ -1816,6 +1852,7 @@
   {
     "id": "mine_landing",
     "env": "mine",
+    "weather": "cave_drip",
     "title": "Elevator Landing",
     "background_image": "images/rooms/world_1/mine_landing.png",
     "description": "The base of the industrial lift opens into a world of raw rock and red safety beacons. The air is thick with the taste of stone and the metallic tang of heavy machinery.",
@@ -1901,7 +1938,9 @@
       1,
       1
     ],
-    "state": {},
+    "state": {
+      "dark": true
+    },
     "actions": [
       {
         "name": "crates",
@@ -1939,11 +1978,19 @@
       0,
       2
     ],
-    "state": {},
+    "state": {
+      "power_on": false
+    },
     "actions": [
       {
         "name": "support pillar",
-        "type": "generic",
+        "type": "toggle",
+        "state_key": "power_on",
+        "popup_title": "Stellarium Generator",
+        "label_on": "Restore power",
+        "label_off": "Cut power",
+        "action_event_on": "evt_mine_power_on",
+        "action_event_off": "evt_mine_power_off",
         "condition_unmet_message": "The heart of the sector's structural integrity. It's covered in Dominion stress-sensors."
       }
     ]
@@ -1953,12 +2000,10 @@
     "env": "mine",
     "title": "Conveyor Belt",
     "background_image": "images/rooms/world_1/mine_conveyor.png",
-    "description": "A massive conveyor belt stretches into the darkness, its rubber surface stained with ore dust. A pressure hauler idles beside the motor, groaning with a sound like grinding teeth.",
+    "description": "A massive conveyor belt stretches into the darkness, its rubber surface stained with ore dust. Heavy tread marks circle the motor housing and disappear into the adjoining tunnels.",
     "npcs": [],
     "items": [],
-    "enemies": [
-      "pressure_hauler"
-    ],
+    "enemies": [],
     "connections": {
       "west": "mine_junction",
       "north": "mine_sifter"
@@ -1967,7 +2012,9 @@
       1,
       2
     ],
-    "state": {},
+    "state": {
+      "dark": true
+    },
     "actions": [
       {
         "name": "conveyor belt",
@@ -2000,7 +2047,9 @@
       0,
       3
     ],
-    "state": {},
+    "state": {
+      "dark": true
+    },
     "actions": [
       {
         "name": "sentry post",
@@ -2022,6 +2071,7 @@
   {
     "id": "mine_sifter",
     "env": "mine",
+    "weather": "dust",
     "title": "Ore Sifter",
     "background_image": "images/rooms/world_1/mine_sifter.png",
     "description": "Loud, vibrating machinery sorts rock from ore with a deafening roar. A cloud of fine dust hangs in the air, catching the light of the overhead safety strobes.",
@@ -2036,7 +2086,9 @@
       1,
       3
     ],
-    "state": {},
+    "state": {
+      "dark": true
+    },
     "actions": [
       {
         "name": "machinery",
@@ -2058,6 +2110,7 @@
   {
     "id": "mine_gas",
     "env": "mine",
+    "weather": "gas",
     "title": "Toxic Pocket",
     "background_image": "images/rooms/world_1/mine_gas.png",
     "description": "Corrosive fumes fill the air, turning the lights into blurred, orange smears. A cracked pipe hisses with a yellow gas that tastes like copper and makes your eyes water.",
@@ -2071,7 +2124,9 @@
       -1,
       3
     ],
-    "state": {},
+    "state": {
+      "dark": true
+    },
     "actions": [
       {
         "name": "pipe",
@@ -2097,7 +2152,9 @@
       1,
       4
     ],
-    "state": {},
+    "state": {
+      "dark": true
+    },
     "actions": [
       {
         "name": "support beams",
@@ -2128,7 +2185,9 @@
       1,
       5
     ],
-    "state": {},
+    "state": {
+      "dark": true
+    },
     "actions": [
       {
         "name": "geometry",
@@ -2159,7 +2218,9 @@
       0,
       5
     ],
-    "state": {},
+    "state": {
+      "dark": true
+    },
     "actions": [
       {
         "name": "pillar",
@@ -2185,7 +2246,9 @@
       0,
       6
     ],
-    "state": {},
+    "state": {
+      "dark": true
+    },
     "actions": [
       {
         "name": "ceiling",
@@ -2264,6 +2327,7 @@
   {
     "id": "echo_heart",
     "env": "space",
+    "weather": "resonance",
     "title": "The Heart",
     "background_image": "images/rooms/world_1/echo_heart.png",
     "description": "The tuning fork hums in the center of the room, held in a cradle of white geometry. The air here vibrates with a pressure that feels like a physical weight against your chest.",
@@ -2721,6 +2785,7 @@
   {
     "id": "sector9_crash_site",
     "env": "swamp",
+    "weather": "fog",
     "title": "Crash Site",
     "background_image": "images/rooms/world_2/crash_site.png",
     "description": "The escape pod wreckage is half-submerged in warm glow-water. The cracked pod core ticks under a scorched access panel while thick vines hang from concrete struts. Zeke sits coughing on the hull as a low, resonant hum rolls through the air.",
@@ -2766,6 +2831,7 @@
   {
     "id": "sector9_canopy",
     "env": "swamp",
+    "weather": "resonance",
     "title": "Resonant Canopy",
     "background_image": "images/rooms/world_2/resonant_canopy.png",
     "description": "The canopy of the ruins is covered in giant, crystalline ferns that catch the dim light and buzz with low-frequency standing waves.",
@@ -2794,6 +2860,7 @@
   {
     "id": "sector9_stream",
     "env": "swamp",
+    "weather": "fog",
     "title": "Glow-Water Stream",
     "background_image": "images/rooms/world_2/glow_stream.png",
     "description": "A gentle stream of mineral-rich water flows through the concrete ruins. The water vibrates, creating visible standing waves on the surface. Fish the glow-water here and every ripple answers with a low chord.",

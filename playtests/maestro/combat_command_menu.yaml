@@ -1,4 +1,4 @@
-appId: com.example.starborn
+appId: com.junewiregames.starborn.prealpha
 ---
 - launchApp:
     clearState: true
@@ -27,7 +27,7 @@ appId: com.example.starborn
 - extendedWaitUntil:
     visible: "Attack"
     timeout: 15000
-- assertVisible: "Skills"
+- assertVisible: "Abilities"
 - assertVisible: "Items"
 - assertVisible: "Retreat"
 - extendedWaitUntil:

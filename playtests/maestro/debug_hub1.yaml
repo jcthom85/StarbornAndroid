@@ -1,0 +1,17 @@
+appId: com.junewiregames.starborn.prealpha
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "Debug: Hub 1"
+    timeout: 60000
+- tapOn: "Debug: Hub 1"
+- extendedWaitUntil:
+    visible: "Homestead Quarter"
+    timeout: 15000
+- assertVisible: "The Pit"
+- assertVisible: "Jed's Workshop"
+- assertVisible: "Med-Bay"
+- assertVisible: "Trade Row"
+- assertVisible: "Transit Checkpoint"
+- takeScreenshot: debug-hub1

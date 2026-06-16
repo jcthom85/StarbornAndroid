@@ -8,6 +8,7 @@ import com.example.starborn.domain.combat.CombatFormulas
 import com.example.starborn.domain.inventory.InventoryEntry
 import com.example.starborn.domain.inventory.InventoryService
 import com.example.starborn.domain.inventory.ItemUseController
+import com.example.starborn.domain.inventory.ItemUseResult
 import com.example.starborn.domain.inventory.GearRules
 import com.example.starborn.domain.model.Equipment
 import com.example.starborn.domain.model.Item
@@ -133,14 +134,46 @@ class InventoryViewModel(
 
     private val _messages = MutableSharedFlow<String>()
     val messages: SharedFlow<String> = _messages.asSharedFlow()
+    private val _visualEvents = MutableSharedFlow<InventoryVisualEvent>()
+    val visualEvents: SharedFlow<InventoryVisualEvent> = _visualEvents.asSharedFlow()
 
     fun useItem(itemId: String, targetId: String? = null) {
         viewModelScope.launch {
+            val beforeHp = sessionStore.state.value.partyMemberHp
             when (val outcome = itemUseController.useItem(itemId, targetId)) {
-                is ItemUseController.Result.Success -> _messages.emit(outcome.message)
+                is ItemUseController.Result.Success -> {
+                    _messages.emit(outcome.message)
+                    emitHealVisuals(outcome.result, beforeHp)
+                }
                 is ItemUseController.Result.Failure -> _messages.emit(outcome.message)
             }
             sessionStore.setInventory(inventoryService.snapshot())
+        }
+    }
+
+    private suspend fun emitHealVisuals(
+        result: ItemUseResult,
+        beforeHp: Map<String, Int>
+    ) {
+        if (result !is ItemUseResult.Restore) return
+        val afterState = sessionStore.state.value
+        val partyIds = afterState.partyMembers.ifEmpty {
+            listOfNotNull(afterState.playerId ?: charactersById.keys.firstOrNull())
+        }
+        partyIds.forEach { memberId ->
+            val character = charactersById[memberId] ?: return@forEach
+            val maxHp = CombatFormulas.maxHp(character.hp, character.vitality)
+            val before = beforeHp[memberId] ?: maxHp
+            val after = afterState.partyMemberHp[memberId] ?: maxHp
+            val restored = (after - before).coerceAtLeast(0)
+            if (restored > 0) {
+                _visualEvents.emit(
+                    InventoryVisualEvent.Heal(
+                        targetId = memberId,
+                        amount = restored
+                    )
+                )
+            }
         }
     }
 
@@ -270,6 +303,13 @@ data class PartyMemberStatus(
     val maxHp: Int,
     val portraitPath: String?
 )
+
+sealed interface InventoryVisualEvent {
+    data class Heal(
+        val targetId: String,
+        val amount: Int
+    ) : InventoryVisualEvent
+}
 
 private fun com.example.starborn.domain.model.Item.isWeaponItem(): Boolean {
     val normalizedType = type.trim().lowercase(Locale.getDefault())

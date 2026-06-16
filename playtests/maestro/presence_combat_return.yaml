@@ -1,4 +1,4 @@
-appId: com.example.starborn
+appId: com.junewiregames.starborn.prealpha
 ---
 - launchApp:
     clearState: true
@@ -30,13 +30,15 @@ appId: com.example.starborn
 - extendedWaitUntil:
     visible: "Attack"
     timeout: 20000
-- tapOn: "Skills"
+- tapOn: "Abilities"
 - extendedWaitUntil:
     visible: "Hydraulic Kick"
     timeout: 10000
-- tapOn: "Hydraulic Kick"
+- tapOn:
+    text: "Use"
+    index: 1
 - extendedWaitUntil:
-    visible: "CHOOSE AN ENEM.*"
+    visible: "Choose an enemy for Hydraulic Kick"
     timeout: 10000
 - tapOn: "Acoustic Bulwark"
 - waitForAnimationToEnd:
@@ -53,8 +55,11 @@ appId: com.example.starborn
     timeout: 10000
 - assertVisible: "Talk to Zeke"
 - assertVisible: "Talk to Scrapper"
+- assertVisible: "People in room"
 - assertVisible: "Pick up Medkit I"
 - assertVisible: "Pick up Scrap Metal"
+- assertVisible: "Items in room"
 - assertVisible: "Engage Dominion Dampener \\+ Resonance Buoy party"
 - assertVisible: "Engage Echo Borer \\+ Siren Skimmer party"
+- assertVisible: "Hostiles in room"
 - takeScreenshot: presence-combat-return

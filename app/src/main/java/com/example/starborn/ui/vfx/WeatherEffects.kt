@@ -31,6 +31,27 @@ sealed interface WeatherEffect {
     data class Starfall(
         val color: Color
     ) : WeatherEffect
+
+    data class Steam(
+        val color: Color
+    ) : WeatherEffect
+
+    data class Fog(
+        val color: Color,
+        val density: Float
+    ) : WeatherEffect
+
+    data class Gas(
+        val color: Color
+    ) : WeatherEffect
+
+    data class Resonance(
+        val color: Color
+    ) : WeatherEffect
+
+    data class Sparks(
+        val color: Color
+    ) : WeatherEffect
 }
 
 data class Particle(
