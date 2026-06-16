@@ -56,6 +56,7 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
@@ -924,7 +925,6 @@ fun CombatScreen(
             val partyDockHeightPx = remember(playerParty.size) { mutableStateOf(0) }
             val partyDockHeight = with(density) { partyDockHeightPx.value.toDp() }
             val contentPadding = PaddingValues(horizontal = 16.dp, vertical = 24.dp)
-
             BoxWithConstraints(
                 modifier = Modifier
                     .fillMaxSize()
@@ -4311,38 +4311,92 @@ private fun OutcomeOverlay(
     outcomeType: CombatFxEvent.CombatOutcomeFx.OutcomeType,
     party: List<Player>
 ) {
-    val message = when (outcomeType) {
-        CombatFxEvent.CombatOutcomeFx.OutcomeType.VICTORY -> "Victory!"
-        CombatFxEvent.CombatOutcomeFx.OutcomeType.DEFEAT -> "Defeated..."
-        CombatFxEvent.CombatOutcomeFx.OutcomeType.RETREAT -> "Retreat Successful"
+    val isVictory = outcomeType == CombatFxEvent.CombatOutcomeFx.OutcomeType.VICTORY
+    val isRetreat = outcomeType == CombatFxEvent.CombatOutcomeFx.OutcomeType.RETREAT
+    val accentColor = when (outcomeType) {
+        CombatFxEvent.CombatOutcomeFx.OutcomeType.VICTORY -> Color(0xFFFF922B)
+        CombatFxEvent.CombatOutcomeFx.OutcomeType.DEFEAT -> Color(0xFFE65D5D)
+        CombatFxEvent.CombatOutcomeFx.OutcomeType.RETREAT -> Color(0xFF7CD8FF)
+    }
+    val eyebrow = when (outcomeType) {
+        CombatFxEvent.CombatOutcomeFx.OutcomeType.VICTORY -> "Combat Result"
+        CombatFxEvent.CombatOutcomeFx.OutcomeType.DEFEAT -> "Party Status"
+        CombatFxEvent.CombatOutcomeFx.OutcomeType.RETREAT -> "Tactical Exit"
+    }
+    val title = when (outcomeType) {
+        CombatFxEvent.CombatOutcomeFx.OutcomeType.VICTORY -> "Victory"
+        CombatFxEvent.CombatOutcomeFx.OutcomeType.DEFEAT -> "Defeated"
+        CombatFxEvent.CombatOutcomeFx.OutcomeType.RETREAT -> "Retreat"
+    }
+    val subtitle = when (outcomeType) {
+        CombatFxEvent.CombatOutcomeFx.OutcomeType.VICTORY -> "Hostile contact resolved"
+        CombatFxEvent.CombatOutcomeFx.OutcomeType.DEFEAT -> "The party collapses"
+        CombatFxEvent.CombatOutcomeFx.OutcomeType.RETREAT -> "Disengaged from combat"
     }
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black.copy(alpha = 0.45f)),
+            .background(Color.Black.copy(alpha = if (isVictory) 0.62f else 0.52f))
+            .padding(horizontal = 22.dp),
         contentAlignment = Alignment.Center
     ) {
         Surface(
-            color = Color.Black.copy(alpha = 0.7f),
-            shape = RoundedCornerShape(18.dp),
-            border = BorderStroke(2.dp, Color.White.copy(alpha = 0.6f))
+            color = Color(0xFF15100D).copy(alpha = 0.92f),
+            shape = RoundedCornerShape(24.dp),
+            border = BorderStroke(1.25.dp, accentColor.copy(alpha = 0.72f)),
+            shadowElevation = 18.dp,
+            modifier = Modifier.widthIn(max = 520.dp)
         ) {
             Column(
-                modifier = Modifier.padding(horizontal = 28.dp, vertical = 18.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                modifier = Modifier
+                    .background(
+                        Brush.verticalGradient(
+                            listOf(accentColor.copy(alpha = 0.18f), Color.Transparent)
+                        )
+                    )
+                    .padding(horizontal = 20.dp, vertical = 18.dp),
+                verticalArrangement = Arrangement.spacedBy(14.dp)
             ) {
-                Text(
-                    text = message,
-                    style = MaterialTheme.typography.headlineSmall,
-                    color = Color.White
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                        Text(
+                            text = eyebrow,
+                            style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
+                            color = accentColor
+                        )
+                        Text(
+                            text = title,
+                            style = MaterialTheme.typography.headlineMedium.copy(
+                                fontFamily = CombatNameFont,
+                                fontWeight = FontWeight.Bold
+                            ),
+                            color = Color.White
+                        )
+                    }
+                    Icon(
+                        imageVector = if (isVictory) Icons.Filled.EmojiEvents else Icons.Rounded.Warning,
+                        contentDescription = null,
+                        tint = accentColor,
+                        modifier = Modifier.size(30.dp)
+                    )
+                }
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(1.2.dp)
+                        .background(accentColor.copy(alpha = 0.44f))
                 )
-                if (outcomeType != CombatFxEvent.CombatOutcomeFx.OutcomeType.RETREAT) {
+                if (!isRetreat) {
                     Row(
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        party.forEach { player ->
+                        party.take(4).forEach { player ->
                             val emotePath = when (outcomeType) {
                                 CombatFxEvent.CombatOutcomeFx.OutcomeType.VICTORY ->
                                     "images/characters/emotes/${player.id}_cool.png"
@@ -4351,16 +4405,47 @@ private fun OutcomeOverlay(
                                 else -> null
                             }
                             if (emotePath != null) {
-                                Image(
-                                    painter = rememberAssetPainter(emotePath, painterResource(R.drawable.main_menu_background)),
-                                    contentDescription = player.name,
-                                    modifier = Modifier.size(72.dp),
-                                    contentScale = ContentScale.Crop
-                                )
+                                Surface(
+                                    shape = RoundedCornerShape(18.dp),
+                                    color = Color.Black.copy(alpha = 0.32f),
+                                    border = BorderStroke(1.dp, accentColor.copy(alpha = 0.36f)),
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .height(if (isVictory) 96.dp else 82.dp)
+                                ) {
+                                    Box {
+                                        Image(
+                                            painter = rememberAssetPainter(emotePath, painterResource(R.drawable.main_menu_background)),
+                                            contentDescription = player.name,
+                                            modifier = Modifier
+                                                .matchParentSize()
+                                                .graphicsLayer {
+                                                    scaleX = if (isVictory) 1.18f else 1f
+                                                    scaleY = if (isVictory) 1.18f else 1f
+                                                },
+                                            contentScale = ContentScale.Crop
+                                        )
+                                        Box(
+                                            modifier = Modifier
+                                                .matchParentSize()
+                                                .background(
+                                                    Brush.verticalGradient(
+                                                        listOf(Color.Transparent, Color.Black.copy(alpha = 0.36f))
+                                                    )
+                                                )
+                                        )
+                                    }
+                                }
                             }
                         }
                     }
                 }
+                Text(
+                    text = subtitle,
+                    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
+                    color = Color.White.copy(alpha = 0.78f),
+                    modifier = Modifier.fillMaxWidth()
+                )
             }
         }
     }
@@ -4444,79 +4529,117 @@ private fun VictoryDialog(
         VictoryDialogStage.SPOILS -> "Spoils Recovered"
         VictoryDialogStage.LEVEL_UPS -> "Level Up!"
     }
-    val panelBase = themeColor(theme?.bg, Color(0xFF0F1118))
-    val panelColor = panelBase.copy(alpha = if (highContrastMode) 0.98f else 0.95f)
-    val borderColor = themeColor(theme?.border, Color.White.copy(alpha = if (highContrastMode) 0.65f else 0.45f))
-    val accentColor = themeColor(
-        theme?.accent,
-        when (stage) {
-            VictoryDialogStage.SPOILS -> Color(0xFFFFD54F)
-            VictoryDialogStage.LEVEL_UPS -> Color(0xFF7CD8FF)
-        }
-    )
+    val eyebrow = when (stage) {
+        VictoryDialogStage.SPOILS -> "Battle Rewards"
+        VictoryDialogStage.LEVEL_UPS -> "Progression"
+    }
+    val panelColor = Color(0xFF21130D).copy(alpha = if (highContrastMode) 0.98f else 0.94f)
+    val cardColor = Color(0xFF171A24).copy(alpha = if (highContrastMode) 0.98f else 0.92f)
+    val borderColor = Color(0xFFFF922B)
+    val accentColor = Color(0xFFFF922B)
     val titleIcon = when (stage) {
         VictoryDialogStage.SPOILS -> Icons.Filled.EmojiEvents
         VictoryDialogStage.LEVEL_UPS -> Icons.Outlined.School
     }
+    val dialogMaxWidth = 470.dp
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black.copy(alpha = 0.72f)),
+            .background(Color.Black.copy(alpha = 0.66f))
+            .padding(horizontal = 24.dp),
         contentAlignment = Alignment.Center
     ) {
         Surface(
             color = panelColor,
-            shape = RoundedCornerShape(32.dp),
+            shape = RoundedCornerShape(20.dp),
             shadowElevation = 18.dp,
             tonalElevation = 8.dp,
-            border = BorderStroke(1.5.dp, borderColor),
-            modifier = Modifier
-                .padding(24.dp)
-                .widthIn(max = 520.dp)
+            border = BorderStroke(1.2.dp, borderColor.copy(alpha = 0.74f)),
+            modifier = Modifier.widthIn(max = dialogMaxWidth)
         ) {
             Column(
                 modifier = Modifier
                     .background(
                         Brush.verticalGradient(
-                            listOf(accentColor.copy(alpha = 0.18f), Color.Transparent)
+                            listOf(accentColor.copy(alpha = 0.16f), Color.Transparent)
                         )
                     )
-                    .padding(horizontal = 28.dp, vertical = 24.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                    .padding(horizontal = 18.dp, vertical = 18.dp),
+                verticalArrangement = Arrangement.spacedBy(14.dp)
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    horizontalArrangement = Arrangement.spacedBy(14.dp)
                 ) {
-                    Icon(
-                        imageVector = titleIcon,
-                        contentDescription = null,
-                        tint = accentColor
-                    )
-                    Text(
-                        text = title,
-                        style = MaterialTheme.typography.headlineSmall,
-                        color = Color.White
-                    )
+                    Surface(
+                        shape = RoundedCornerShape(12.dp),
+                        color = accentColor.copy(alpha = 0.16f),
+                        border = BorderStroke(1.2.dp, accentColor.copy(alpha = 0.66f)),
+                        modifier = Modifier.size(50.dp)
+                    ) {
+                        Box(contentAlignment = Alignment.Center) {
+                            Icon(
+                                imageVector = titleIcon,
+                                contentDescription = null,
+                                tint = accentColor,
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
+                    }
+                    Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                        Text(
+                            text = eyebrow,
+                            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                            color = accentColor
+                        )
+                        Text(
+                            text = title,
+                            style = MaterialTheme.typography.titleLarge.copy(
+                                fontFamily = CombatNameFont,
+                                fontWeight = FontWeight.Bold
+                            ),
+                            color = Color.White
+                        )
+                    }
                 }
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(1.dp)
+                        .background(accentColor.copy(alpha = 0.48f))
+                )
                 when (stage) {
-                    VictoryDialogStage.SPOILS -> VictorySpoilsContent(payload, itemNameResolver)
+                    VictoryDialogStage.SPOILS -> VictorySpoilsContent(
+                        payload = payload,
+                        itemNameResolver = itemNameResolver,
+                        cardColor = cardColor,
+                        accentColor = accentColor
+                    )
                     VictoryDialogStage.LEVEL_UPS -> VictoryLevelUpContent(
                         levelUps = payload.levelUps,
                         portraitById = portraitById,
                         accentColor = accentColor,
                         borderColor = borderColor,
+                        cardColor = cardColor,
                         highContrastMode = highContrastMode
                     )
                 }
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End
+                Button(
+                    onClick = onContinue,
+                    shape = RoundedCornerShape(20.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = accentColor,
+                        contentColor = Color.Black
+                    ),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp)
                 ) {
-                    Button(onClick = onContinue) {
-                        Text(buttonLabel)
-                    }
+                    Text(
+                        text = buttonLabel,
+                        style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold)
+                    )
                 }
             }
         }
@@ -4526,7 +4649,9 @@ private fun VictoryDialog(
 @Composable
 private fun VictorySpoilsContent(
     payload: CombatResultPayload,
-    itemNameResolver: (String) -> String
+    itemNameResolver: (String) -> String,
+    cardColor: Color,
+    accentColor: Color
 ) {
     val resourceEntries = buildList {
         if (payload.rewardXp > 0) add("Experience" to "+${payload.rewardXp} XP")
@@ -4551,19 +4676,26 @@ private fun VictorySpoilsContent(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .heightIn(min = 120.dp, max = 360.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+            .heightIn(min = 120.dp, max = 300.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         if (resourceEntries.isNotEmpty()) {
-            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                resourceEntries.forEach { (label, value) ->
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(text = label, color = Color.White, style = MaterialTheme.typography.bodyLarge)
-                        Text(text = value, color = Color(0xFF80E8F5), style = MaterialTheme.typography.bodyLarge)
+            resourceEntries.chunked(2).forEach { row ->
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    row.forEach { (label, value) ->
+                        RewardStatCard(
+                            label = label,
+                            value = value,
+                            cardColor = cardColor,
+                            accentColor = accentColor,
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+                    if (row.size == 1) {
+                        Spacer(modifier = Modifier.weight(1f))
                     }
                 }
             }
@@ -4604,11 +4736,49 @@ private fun VictorySpoilsContent(
 }
 
 @Composable
+private fun RewardStatCard(
+    label: String,
+    value: String,
+    cardColor: Color,
+    accentColor: Color,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        color = cardColor.copy(alpha = 0.45f),
+        shape = RoundedCornerShape(12.dp),
+        border = BorderStroke(1.1.dp, accentColor.copy(alpha = 0.54f)),
+        modifier = modifier.heightIn(min = 74.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 9.dp),
+            verticalArrangement = Arrangement.spacedBy(5.dp)
+        ) {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.labelMedium,
+                color = Color.White.copy(alpha = 0.72f)
+            )
+            Text(
+                text = value,
+                style = MaterialTheme.typography.titleMedium.copy(
+                    fontFamily = CombatNameFont,
+                    fontWeight = FontWeight.Bold
+                ),
+                color = Color.White,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+    }
+}
+
+@Composable
 private fun VictoryLevelUpContent(
     levelUps: List<LevelUpSummary>,
     portraitById: Map<String, String>,
     accentColor: Color,
     borderColor: Color,
+    cardColor: Color,
     highContrastMode: Boolean
 ) {
     if (levelUps.isEmpty()) {
@@ -4624,8 +4794,8 @@ private fun VictoryLevelUpContent(
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
-            .heightIn(min = 140.dp, max = 360.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+            .heightIn(min = 104.dp, max = 260.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         items(levelUps, key = { summary -> summary.characterId }) { summary ->
             LevelUpCard(
@@ -4633,6 +4803,7 @@ private fun VictoryLevelUpContent(
                 portraitPath = portraitById[summary.characterId],
                 accentColor = accentColor,
                 borderColor = borderColor,
+                cardColor = cardColor,
                 highContrastMode = highContrastMode
             )
         }
@@ -4645,26 +4816,21 @@ private fun LevelUpCard(
     portraitPath: String?,
     accentColor: Color,
     borderColor: Color,
+    cardColor: Color,
     highContrastMode: Boolean
 ) {
     val portraitPainter = rememberAssetPainter(portraitPath, painterResource(R.drawable.main_menu_background))
-    val cardColor = Color(0xFF151C2A).copy(alpha = if (highContrastMode) 0.96f else 0.9f)
     Surface(
         color = cardColor,
-        shape = RoundedCornerShape(24.dp),
+        shape = RoundedCornerShape(14.dp),
         tonalElevation = 2.dp,
-        border = BorderStroke(1.25.dp, borderColor.copy(alpha = if (highContrastMode) 0.75f else 0.55f)),
+        border = BorderStroke(1.1.dp, borderColor.copy(alpha = if (highContrastMode) 0.78f else 0.54f)),
         modifier = Modifier.fillMaxWidth()
     ) {
         Column(
             modifier = Modifier
-                .background(
-                    Brush.horizontalGradient(
-                        listOf(accentColor.copy(alpha = 0.16f), Color.Transparent)
-                    )
-                )
-                .padding(horizontal = 18.dp, vertical = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+                .padding(horizontal = 12.dp, vertical = 12.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -4672,16 +4838,10 @@ private fun LevelUpCard(
             ) {
                 Box(
                     modifier = Modifier
-                        .width(5.dp)
-                        .height(52.dp)
+                        .size(54.dp)
                         .clip(RoundedCornerShape(12.dp))
-                        .background(accentColor.copy(alpha = 0.9f))
-                )
-                Box(
-                    modifier = Modifier
-                        .size(56.dp)
-                        .clip(RoundedCornerShape(18.dp))
-                        .background(Color(0xFF0B0F15)),
+                        .background(Color(0xFF0B0F15))
+                        .border(1.dp, accentColor.copy(alpha = 0.56f), RoundedCornerShape(12.dp)),
                     contentAlignment = Alignment.Center
                 ) {
                     Image(
@@ -4689,43 +4849,27 @@ private fun LevelUpCard(
                         contentDescription = summary.characterName,
                         modifier = Modifier
                             .matchParentSize()
-                            .padding(6.dp),
+                            .padding(4.dp),
                         contentScale = ContentScale.Crop
                     )
                 }
                 Column(
                     modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(2.dp)
+                    verticalArrangement = Arrangement.spacedBy(3.dp)
                 ) {
                     Text(
                         text = summary.characterName,
-                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontFamily = CombatNameFont,
+                            fontWeight = FontWeight.Bold
+                        ),
                         color = Color.White
                     )
                     Text(
-                        text = "Reached Lv. ${summary.newLevel} (+${summary.levelsGained})",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = accentColor.copy(alpha = 0.92f)
+                        text = "LEVEL ${summary.newLevel}",
+                        style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
+                        color = accentColor
                     )
-                }
-            }
-
-            if (summary.statChanges.isNotEmpty()) {
-                LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    items(summary.statChanges, key = { delta -> delta.label }) { delta ->
-                        Surface(
-                            shape = RoundedCornerShape(999.dp),
-                            color = Color.White.copy(alpha = 0.06f),
-                            border = BorderStroke(1.dp, borderColor.copy(alpha = 0.35f))
-                        ) {
-                            Text(
-                                text = "${delta.label} ${delta.value}",
-                                style = MaterialTheme.typography.labelMedium,
-                                color = Color.White.copy(alpha = 0.92f),
-                                modifier = Modifier.padding(horizontal = 12.dp, vertical = 7.dp)
-                            )
-                        }
-                    }
                 }
             }
 
