@@ -181,7 +181,7 @@ private fun ShopScreen(
                     onBack = onBack,
                     highContrastMode = highContrastMode,
                     largeTouchTargets = largeTouchTargets,
-                    actionLabel = "Leave"
+                    actionContentDescription = "Close Shop"
                 )
             }
         ) { innerPadding ->

@@ -11,7 +11,7 @@ plugins {
 
 android {
     namespace = "com.example.starborn"
-    compileSdk = 34
+    compileSdk = 35
     val keystoreProperties = Properties().apply {
         val propertiesFile = rootProject.file("keystore.properties")
         if (propertiesFile.exists()) {
@@ -22,7 +22,7 @@ android {
     defaultConfig {
         applicationId = "com.junewiregames.starborn.prealpha"
         minSdk = 26
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 3
         versionName = "1.1.1"
 

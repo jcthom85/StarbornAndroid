@@ -25,3 +25,16 @@ data class MilestonePrompt(
 ) : UIPrompt {
     override val id: String = "milestone_${event.id}"
 }
+
+data class ItemGrantedPrompt(
+    val itemName: String,
+    val quantity: Int,
+    private val onDismissCallback: (() -> Unit)? = null
+) : UIPrompt {
+    override val id: String = "item_granted_${itemName}_${quantity}_${java.util.UUID.randomUUID()}"
+
+    override fun onDismiss() {
+        onDismissCallback?.invoke()
+    }
+}
+

@@ -539,14 +539,9 @@ fun ExplorationScreen(
         val serviceQuickActions = remember(uiState.actions, uiState.actionHints, currentRoom?.id, inlinePlan) {
             val unique = LinkedHashSet<String>()
             val items = mutableListOf<QuickMenuAction>()
-            val inlinedActionKeys = inlinePlan?.segments?.mapNotNull { segment ->
-                (segment.target as? InlineActionTarget.Room)?.action?.actionKey()
-            }?.toSet().orEmpty()
-
             uiState.actions.forEach { action ->
                 val hint = uiState.actionHints[action.actionKey()]
                 if (hint?.locked == true) return@forEach
-                if (action.actionKey() in inlinedActionKeys) return@forEach
                 when (action) {
                     is ShopAction -> {
                         val shopId = action.shopId ?: return@forEach
@@ -1178,6 +1173,8 @@ fun ExplorationScreen(
             modifier = Modifier
                 .align(Alignment.Center)
                 .fillMaxSize()
+                .statusBarsPadding()
+                .navigationBarsPadding()
                 .padding(12.dp)
         )
     }
@@ -1421,13 +1418,14 @@ private fun DirectionIndicatorsOverlay(
                     .semantics {
                         contentDescription = when (indicator.status) {
                             DirectionIndicatorStatus.UNEXPLORED -> "Travel $direction"
+                            DirectionIndicatorStatus.EXPLORED -> "Travel $direction to visited room"
                             DirectionIndicatorStatus.LOCKED -> "$direction exit locked"
                             DirectionIndicatorStatus.ENEMY -> "$direction exit blocked by enemy"
                             DirectionIndicatorStatus.NEARBY_THREAT -> "Threat nearby in $direction direction"
                         }
                     }
                     .clickable(
-                        enabled = indicator.status == DirectionIndicatorStatus.UNEXPLORED,
+                        enabled = indicator.status == DirectionIndicatorStatus.UNEXPLORED || indicator.status == DirectionIndicatorStatus.EXPLORED,
                         onClick = { onTravel(indicator.direction) }
                     )
             ) {
@@ -1448,12 +1446,14 @@ private fun DirectionIndicatorIcon(
     val baseSize = 36.dp
     val color = when (status) {
         DirectionIndicatorStatus.UNEXPLORED -> Color(0.56f, 0.78f, 1.0f)
+        DirectionIndicatorStatus.EXPLORED -> Color(0.48f, 0.62f, 0.78f)
         DirectionIndicatorStatus.LOCKED -> Color(0.70f, 0.72f, 0.80f)
         DirectionIndicatorStatus.ENEMY -> Color(1.0f, 0.32f, 0.32f)
         DirectionIndicatorStatus.NEARBY_THREAT -> Color(1.0f, 0.5f, 0.2f)
     }
     when (status) {
-        DirectionIndicatorStatus.UNEXPLORED -> DirectionArrowIndicator(direction, baseSize, color)
+        DirectionIndicatorStatus.UNEXPLORED -> DirectionArrowIndicator(direction, baseSize, color, isExplored = false)
+        DirectionIndicatorStatus.EXPLORED -> DirectionArrowIndicator(direction, baseSize, color, isExplored = true)
         DirectionIndicatorStatus.LOCKED -> DirectionLockIndicator(direction, baseSize, color)
         DirectionIndicatorStatus.ENEMY -> DirectionEnemyIndicator(direction, baseSize, color)
         DirectionIndicatorStatus.NEARBY_THREAT -> DirectionEnemyIndicator(direction, baseSize, color)
@@ -1461,7 +1461,7 @@ private fun DirectionIndicatorIcon(
 }
 
 @Composable
-private fun DirectionArrowIndicator(direction: String, size: Dp, color: Color) {
+private fun DirectionArrowIndicator(direction: String, size: Dp, color: Color, isExplored: Boolean = false) {
     val rotation = when (direction.lowercase(Locale.getDefault())) {
         "east" -> 90f
         "south" -> 180f
@@ -1486,11 +1486,16 @@ private fun DirectionArrowIndicator(direction: String, size: Dp, color: Color) {
             lineTo(midX - wing, baseY)
             close()
         }
-        // Glow
-        drawCircle(color = color.copy(alpha = 0.25f), radius = w * 0.55f, center = Offset(midX, midX))
-        drawCircle(color = color.copy(alpha = 0.35f), radius = w * 0.42f, center = Offset(midX, midX))
-        drawPath(path, color = color)
-        drawPath(path, color = Color.White.copy(alpha = 0.4f), style = Stroke(width = w * 0.05f))
+        if (isExplored) {
+            drawPath(path, color = color.copy(alpha = 0.3f))
+            drawPath(path, color = color.copy(alpha = 0.8f), style = Stroke(width = w * 0.05f))
+        } else {
+            // Glow
+            drawCircle(color = color.copy(alpha = 0.25f), radius = w * 0.55f, center = Offset(midX, midX))
+            drawCircle(color = color.copy(alpha = 0.35f), radius = w * 0.42f, center = Offset(midX, midX))
+            drawPath(path, color = color)
+            drawPath(path, color = Color.White.copy(alpha = 0.4f), style = Stroke(width = w * 0.05f))
+        }
     }
 }
 
@@ -8067,6 +8072,28 @@ fun MilestoneBanner(
         message = prompt.message,
         accentColor = Color(0xFFFFD27F),
         actionLabel = "Nice",
+        onAction = onDismiss,
+        modifier = modifier
+    )
+}
+
+@Composable
+fun ItemGrantedBanner(
+    itemName: String,
+    quantity: Int,
+    onDismiss: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val message = if (quantity > 1) {
+        "Acquired $quantity x $itemName"
+    } else {
+        "Acquired $itemName"
+    }
+    PromptBanner(
+        title = "Item Obtained",
+        message = message,
+        accentColor = Color(0xFFA5D6A7),
+        actionLabel = "Got it",
         onAction = onDismiss,
         modifier = modifier
     )

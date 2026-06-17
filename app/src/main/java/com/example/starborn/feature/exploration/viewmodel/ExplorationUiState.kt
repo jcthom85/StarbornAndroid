@@ -266,10 +266,12 @@ data class DirectionIndicatorUi(
 
 enum class DirectionIndicatorStatus {
     UNEXPLORED,
+    EXPLORED,
     LOCKED,
     ENEMY,
     NEARBY_THREAT
 }
+
 
 data class ActionHintUi(
     val locked: Boolean,

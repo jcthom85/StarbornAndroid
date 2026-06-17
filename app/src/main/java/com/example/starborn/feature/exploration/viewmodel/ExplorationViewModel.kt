@@ -79,6 +79,7 @@ import com.example.starborn.domain.model.ToggleAction
 import com.example.starborn.domain.model.actionKey
 import com.example.starborn.domain.prompt.UIPromptManager
 import com.example.starborn.domain.prompt.TutorialPrompt
+import com.example.starborn.domain.prompt.ItemGrantedPrompt
 import com.example.starborn.domain.quest.QuestJournalEntry
 import com.example.starborn.domain.quest.QuestLogEntry
 import com.example.starborn.domain.quest.QuestRuntimeManager
@@ -391,6 +392,7 @@ class ExplorationViewModel(
                 postStatus("Received $quantity x $name")
                 refreshCurrentRoomBlockedDirections()
                 emitEvent(ExplorationEvent.ItemGranted(name, quantity))
+                promptManager.enqueue(ItemGrantedPrompt(name, quantity))
             },
             onTakeItem = { itemId, quantity ->
                 val normalizedQuantity = quantity.coerceAtLeast(1)
@@ -1298,9 +1300,11 @@ class ExplorationViewModel(
         }
         visibleDirections.forEach { direction ->
             if (!indicators.containsKey(direction)) {
+                val destId = getConnection(room, direction)
+                val isVisited = destId != null && visitedRooms.contains(destId)
                 indicators[direction] = DirectionIndicatorUi(
                     direction = direction,
-                    status = DirectionIndicatorStatus.UNEXPLORED
+                    status = if (isVisited) DirectionIndicatorStatus.EXPLORED else DirectionIndicatorStatus.UNEXPLORED
                 )
             }
         }
@@ -1309,7 +1313,7 @@ class ExplorationViewModel(
             ?.takeIf { it in visibleDirections }
             ?.let { direction ->
                 val existing = indicators[direction]
-                if (existing == null || existing.status == DirectionIndicatorStatus.UNEXPLORED) {
+                if (existing == null || existing.status == DirectionIndicatorStatus.UNEXPLORED || existing.status == DirectionIndicatorStatus.EXPLORED) {
                     indicators[direction] = DirectionIndicatorUi(
                         direction = direction,
                         status = DirectionIndicatorStatus.NEARBY_THREAT
@@ -1417,6 +1421,7 @@ class ExplorationViewModel(
             val name = inventoryService.itemDisplayName(item.itemId)
             parts.add("$qty x $name")
             emitEvent(ExplorationEvent.ItemGranted(name, qty))
+            promptManager.enqueue(ItemGrantedPrompt(name, qty))
         }
         if (parts.isNotEmpty()) {
             postStatus("Reward: ${parts.joinToString(", ")}")
@@ -3538,6 +3543,7 @@ class ExplorationViewModel(
             it.copy(groundItems = getGroundItemsSnapshot(roomId))
         }
         emitEvent(ExplorationEvent.ItemGranted(displayName, quantity))
+        promptManager.enqueue(ItemGrantedPrompt(displayName, quantity))
     }
 
     fun collectAllGroundItems() {
@@ -3551,6 +3557,7 @@ class ExplorationViewModel(
             val displayName = inventoryService.itemDisplayName(itemId)
             collectedMessages += if (quantity > 1) "$quantity × $displayName" else displayName
             emitEvent(ExplorationEvent.ItemGranted(displayName, quantity))
+            promptManager.enqueue(ItemGrantedPrompt(displayName, quantity))
         }
         items.clear()
         roomGroundItems.remove(roomId)
@@ -4474,6 +4481,7 @@ class ExplorationViewModel(
             inventoryService.addItem(itemId, 1)
             val displayName = inventoryService.itemDisplayName(itemId)
             emitEvent(ExplorationEvent.ItemGranted(displayName, 1))
+            promptManager.enqueue(ItemGrantedPrompt(displayName, 1))
             displayName
         }
 
