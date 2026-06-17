@@ -8419,14 +8419,23 @@ fun CinematicOverlay(
             portrait = state.step.portrait,
             voiceCue = null
         )
-        DialogueOverlay(
-            dialogue = dialogueUi,
-            choices = emptyList(),
-            onAdvance = onAdvance,
-            onChoice = { onAdvance() },
-            onPlayVoice = {},
+        Box(
             modifier = modifier
-        )
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.72f)),
+            contentAlignment = Alignment.BottomCenter
+        ) {
+            DialogueOverlay(
+                dialogue = dialogueUi,
+                choices = emptyList(),
+                onAdvance = onAdvance,
+                onChoice = { onAdvance() },
+                onPlayVoice = {},
+                modifier = Modifier
+                    .navigationBarsPadding()
+                    .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 24.dp)
+            )
+        }
         return
     }
 
