@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.protobuf)
+    alias(libs.plugins.play.publisher)
 }
 
 android {
@@ -67,6 +68,11 @@ android {
         }
     }
     assetPacks += listOf(":world_assets")
+}
+
+play {
+    serviceAccountCredentials.set(rootProject.file("play-service-account.json"))
+    track.set("internal")
 }
 
 dependencies {
