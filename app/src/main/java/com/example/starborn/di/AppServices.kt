@@ -286,6 +286,14 @@ class AppServices(context: Context) {
         val item = itemRepository.findItem(itemId) ?: return
         if (!item.isArmorItem()) return
         sessionStore.unlockArmor(item.id)
+        val ownerId = armorOwnerFor(item)
+        if (!ownerId.isNullOrBlank()) {
+            val normalizedOwner = ownerId.lowercase(Locale.getDefault())
+            val equipped = sessionStore.state.value.equippedArmors[normalizedOwner]
+            if (equipped.isNullOrBlank()) {
+                sessionStore.setEquippedArmor(ownerId, item.id)
+            }
+        }
         inventoryService.removeItem(item.id, quantity)
     }
 
@@ -373,6 +381,13 @@ class AppServices(context: Context) {
         }
     }
 
+    private fun equipNovaStarterGear() {
+        sessionStore.unlockWeapon("mining_pistol")
+        sessionStore.setEquippedWeapon("nova", "mining_pistol")
+        sessionStore.unlockArmor("nova_flux_liner")
+        sessionStore.setEquippedArmor("nova", "nova_flux_liner")
+    }
+
     private fun seedDefaultWeaponsForCharacters(characterIds: List<String>) {
         if (characterIds.isEmpty()) return
         itemRepository.load()
@@ -384,6 +399,7 @@ class AppServices(context: Context) {
             .filter { it.isNotBlank() }
             .distinct()
             .forEach { normalizedId ->
+                if (normalizedId == "nova") return@forEach
                 val equipped = sessionStore.state.value.equippedWeapons[normalizedId]
                 if (!equipped.isNullOrBlank()) {
                     sessionStore.unlockWeapon(equipped)
@@ -405,6 +421,7 @@ class AppServices(context: Context) {
             .filter { it.isNotBlank() }
             .distinct()
             .forEach { normalizedId ->
+                if (normalizedId == "nova") return@forEach
                 val equipped = sessionStore.state.value.equippedArmors[normalizedId]
                 if (!equipped.isNullOrBlank()) {
                     sessionStore.unlockArmor(equipped)
@@ -448,6 +465,7 @@ class AppServices(context: Context) {
             .filter { it.isNotBlank() }
             .distinct()
             .forEach { normalizedId ->
+                if (!unlockAll && normalizedId == "nova") return@forEach
                 val chosen = pickDefaultWeaponForCharacter(normalizedId, weaponItems, rng) ?: return@forEach
                 unlocked += chosen.id
                 equipped.putIfAbsent(normalizedId, chosen.id)
@@ -476,6 +494,7 @@ class AppServices(context: Context) {
             .filter { it.isNotBlank() }
             .distinct()
             .forEach { normalizedId ->
+                if (!unlockAll && normalizedId == "nova") return@forEach
                 val chosen = pickDefaultArmorForCharacter(normalizedId, armorItems, rng) ?: return@forEach
                 unlocked += chosen.id
                 equipped.putIfAbsent(normalizedId, chosen.id)
@@ -516,6 +535,14 @@ class AppServices(context: Context) {
         val normalizedType = item.type.trim().lowercase(Locale.getDefault())
         return normalizedType.takeIf { GearRules.isArmorType(it) }
     }
+
+    private fun armorOwnerFor(item: Item): String? {
+        val armorType = item.type.trim().lowercase(Locale.getDefault())
+        return GearRules.characterForArmorType(armorType)
+    }
+
+    private fun armorOwnerFor(itemId: String): String? =
+        itemRepository.findItem(itemId)?.let { armorOwnerFor(it) }
 
     private fun pickDefaultWeaponForCharacter(
         characterId: String,
@@ -888,6 +915,7 @@ class AppServices(context: Context) {
             if (!startNewGame(debugFullInventory = false)) return false
             bootstrapCinematics.clear()
             bootstrapPlayerActions.clear()
+            equipNovaStarterGear()
             sessionStore.completeQuest("w1_mq01")
             sessionStore.setMilestone("ms_w1_mq01_complete")
             sessionStore.setWorld("world_1")
@@ -912,6 +940,7 @@ class AppServices(context: Context) {
             if (!startNewGame(debugFullInventory = false)) return false
             bootstrapCinematics.clear()
             bootstrapPlayerActions.clear()
+            equipNovaStarterGear()
             sessionStore.completeQuest("w1_mq01")
             sessionStore.setMilestone("ms_w1_mq01_complete")
             sessionStore.setWorld("world_1")
@@ -993,6 +1022,7 @@ class AppServices(context: Context) {
             if (!startNewGame(debugFullInventory = false)) return false
             bootstrapCinematics.clear()
             bootstrapPlayerActions.clear()
+            equipNovaStarterGear()
             sessionStore.completeQuest("w1_mq01")
             sessionStore.setMilestone("ms_w1_mq01_complete")
             sessionStore.setWorld("world_1")
@@ -1012,6 +1042,7 @@ class AppServices(context: Context) {
             if (!startNewGame(debugFullInventory = false)) return false
             bootstrapCinematics.clear()
             bootstrapPlayerActions.clear()
+            equipNovaStarterGear()
             sessionStore.completeQuest("w1_mq01")
             sessionStore.setMilestone("ms_w1_mq01_complete")
             sessionStore.setWorld("world_1")
@@ -1031,6 +1062,7 @@ class AppServices(context: Context) {
             if (!startNewGame(debugFullInventory = false)) return false
             bootstrapCinematics.clear()
             bootstrapPlayerActions.clear()
+            equipNovaStarterGear()
             sessionStore.completeQuest("w1_mq01")
             sessionStore.setMilestone("ms_w1_mq01_complete")
             sessionStore.setWorld("world_1")
@@ -1067,6 +1099,7 @@ class AppServices(context: Context) {
             if (!startNewGame(debugFullInventory = false)) return false
             bootstrapCinematics.clear()
             bootstrapPlayerActions.clear()
+            equipNovaStarterGear()
             sessionStore.completeQuest("w1_mq01")
             sessionStore.setMilestone("ms_w1_mq01_complete")
             sessionStore.setWorld("world_1")

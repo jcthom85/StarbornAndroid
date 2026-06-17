@@ -1865,8 +1865,16 @@ class ExplorationViewModel(
 
             visitedRooms.clear()
             discoveredRooms.clear()
+            existingState.roomStates.forEach { (roomId, states) ->
+                if (states["discovered"] == true) {
+                    discoveredRooms.add(roomId)
+                }
+                if (states["visited"] == true) {
+                    visitedRooms.add(roomId)
+                }
+            }
             initialRoom?.let {
-                visitedRooms.add(it.id)
+                markVisited(it.id)
                 markDiscovered(it)
             }
             blockedCinematicsShown.clear()
@@ -1959,7 +1967,7 @@ class ExplorationViewModel(
             initialRoom?.let { room ->
                 handleRoomEntryTutorials(room)
                 if (!isRoomDark(room)) {
-                    visitedRooms.add(room.id)
+                    markVisited(room.id)
                     markDiscovered(room)
                 }
             }
@@ -2011,7 +2019,7 @@ class ExplorationViewModel(
 
         sessionStore.setRoom(nextRoom.id)
         if (!nextRoomIsDark) {
-            visitedRooms.add(nextRoom.id)
+            markVisited(nextRoom.id)
             markDiscovered(nextRoom)
             darkRoomEntryDirection.remove(nextRoom.id)
         } else {
@@ -2099,7 +2107,7 @@ class ExplorationViewModel(
         }
 
         if (!nextRoomIsDark) {
-            visitedRooms.add(nextRoom.id)
+            markVisited(nextRoom.id)
             markDiscovered(nextRoom)
             darkRoomEntryDirection.remove(nextRoom.id)
         }
@@ -3212,7 +3220,7 @@ class ExplorationViewModel(
             if (stateKey.equals("light_on", ignoreCase = true) && value) {
                 darkRoomEntryDirection.remove(roomId)
                 if (!visitedRooms.contains(roomId)) {
-                    visitedRooms.add(roomId)
+                    markVisited(roomId)
                     markDiscovered(resolvedRoom)
                 }
             }
@@ -3220,7 +3228,7 @@ class ExplorationViewModel(
                 if (!value) {
                     darkRoomEntryDirection.remove(roomId)
                     if (!visitedRooms.contains(roomId)) {
-                        visitedRooms.add(roomId)
+                        markVisited(roomId)
                         markDiscovered(resolvedRoom)
                     }
                 } else {
@@ -3810,9 +3818,15 @@ class ExplorationViewModel(
         }
     }
 
+    private fun markVisited(roomId: String) {
+        visitedRooms.add(roomId)
+        applyRoomStateValue(roomId, "visited", true)
+    }
+
     private fun markDiscovered(room: Room) {
         if (isRoomDark(room)) return
         discoveredRooms.add(room.id)
+        applyRoomStateValue(room.id, "discovered", true)
     }
 
     private fun updateUnlockedAreas(areas: Set<String>) {

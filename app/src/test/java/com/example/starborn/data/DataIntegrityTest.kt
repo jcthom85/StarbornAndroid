@@ -233,6 +233,40 @@ class DataIntegrityTest {
         }
     }
 
+    @Test
+    fun shopItemsAndMilestonesAreValid() {
+        val items = readList("src/main/assets/items.json", ItemSummary::class.java)
+            .map { it.id }
+            .toSet()
+        val milestones = readList("src/main/assets/milestones.json", MilestoneDefinition::class.java)
+            .map { it.id }
+            .toSet()
+
+        val allMilestones = milestones + setOf("MET_MECHANIC")
+
+        val shops = readMap("src/main/assets/shops.json", String::class.java, ShopRawSummary::class.java)
+        val missingItems = mutableListOf<String>()
+        val missingMilestones = mutableListOf<String>()
+
+        shops.forEach { (shopId, shop) ->
+            shop.sells.items.forEach { itemId ->
+                if (itemId !in items) {
+                    missingItems += "$shopId:$itemId"
+                }
+            }
+            shop.sells.gates.forEach { (itemId, gate) ->
+                gate.milestones.forEach { milestoneId ->
+                    if (milestoneId !in allMilestones) {
+                        missingMilestones += "$shopId:$itemId:$milestoneId"
+                    }
+                }
+            }
+        }
+
+        assertTrue("Shop items must exist in items.json (missing: $missingItems)", missingItems.isEmpty())
+        assertTrue("Shop gates must exist in milestones.json (missing: $missingMilestones)", missingMilestones.isEmpty())
+    }
+
     private fun isUnlockValid(unlock: MilestoneExitUnlock, rooms: Map<String, RoomSummary>): Boolean {
         val roomId = unlock.roomId?.takeIf { it.isNotBlank() } ?: return false
         val direction = unlock.direction?.takeIf { it.isNotBlank() } ?: return false
@@ -292,6 +326,16 @@ class DataIntegrityTest {
             "Failed to parse $path"
         }
     }
+
+    private fun <K, V> readMap(path: String, keyClazz: Class<K>, valClazz: Class<V>): Map<K, V> {
+        val file = File(path)
+        require(file.exists()) { "$path not found" }
+        val mapType = Types.newParameterizedType(Map::class.java, keyClazz, valClazz)
+        val adapter = moshi.adapter<Map<K, V>>(mapType)
+        return requireNotNull(adapter.fromJson(file.readText())) {
+            "Failed to parse $path"
+        }
+    }
 }
 
 data class RoomSummary(
@@ -300,4 +344,21 @@ data class RoomSummary(
 
 data class TutorialScriptSummary(
     val id: String?
+)
+
+data class ItemSummary(
+    val id: String
+)
+
+data class ShopRawSummary(
+    val sells: ShopSellsSummary = ShopSellsSummary()
+)
+
+data class ShopSellsSummary(
+    val items: List<String> = emptyList(),
+    val gates: Map<String, ShopGateSummary> = emptyMap()
+)
+
+data class ShopGateSummary(
+    val milestones: List<String> = emptyList()
 )

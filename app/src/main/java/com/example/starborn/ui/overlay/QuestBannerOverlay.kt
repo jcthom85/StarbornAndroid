@@ -63,6 +63,8 @@ private data class Banner(
     val objectives: List<QuestObjectiveStatus>
 )
 
+private const val QUEST_BANNER_AUTO_DISMISS_MS = 5_000L
+
 @Composable
 fun QuestBannerOverlay(
     uiEventBus: UiEventBus,
@@ -117,6 +119,17 @@ fun QuestBannerOverlay(
             Haptics.pulse(context, type)
         }
     }
+
+    LaunchedEffect(current, isShowing) {
+        val banner = current
+        if (banner != null && isShowing) {
+            delay(QUEST_BANNER_AUTO_DISMISS_MS)
+            if (current == banner && isShowing) {
+                isShowing = false
+            }
+        }
+    }
+
     LaunchedEffect(isShowing) {
         if (!isShowing && current != null) {
             delay(180)

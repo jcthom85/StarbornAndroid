@@ -9,16 +9,16 @@
     },
     "sells": {
       "items": [
-        "Medkit",
-        "Grenade",
-        "Utility Vest"
+        "medkit",
+        "pulse_grenade",
+        "basic_vest"
       ],
       "rules": {
         "types_in": [],
         "subtypes_in": []
       },
       "gates": {
-        "Utility Vest": {
+        "basic_vest": {
           "milestones": [
             "MET_MECHANIC"
           ]
@@ -91,24 +91,64 @@
     },
     "sells": {
       "items": [
-        "Laser Pistol",
-        "Pyro-Blade",
-        "Toxic Dagger",
-        "Grenade"
+        "nova_laser_blaster",
+        "zeke_shock_fists",
+        "orion_prism_focus",
+        "gh0st_whisperblade",
+        "basic_slingshot",
+        "pulse_grenade",
+        "nova_plasma_shotgun",
+        "zeke_quake_knuckles",
+        "orion_halo_array",
+        "gh0st_splitter_edge",
+        "nova_rocket_launcher",
+        "zeke_maul_gauntlet",
+        "orion_stasis_core",
+        "gh0st_void_fang"
       ],
       "rules": {
         "types_in": [],
         "subtypes_in": []
       },
       "gates": {
-        "Pyro-Blade": {
+        "nova_plasma_shotgun": {
           "milestones": [
-            "REACHED_WORLD_2"
+            "ms_w1_mq03_complete"
           ]
         },
-        "Toxic Dagger": {
+        "zeke_quake_knuckles": {
           "milestones": [
-            "REACHED_WORLD_2"
+            "ms_w1_mq03_complete"
+          ]
+        },
+        "orion_halo_array": {
+          "milestones": [
+            "ms_w1_mq03_complete"
+          ]
+        },
+        "gh0st_splitter_edge": {
+          "milestones": [
+            "ms_w1_mq03_complete"
+          ]
+        },
+        "nova_rocket_launcher": {
+          "milestones": [
+            "ms_w1_mq05_complete"
+          ]
+        },
+        "zeke_maul_gauntlet": {
+          "milestones": [
+            "ms_w1_mq05_complete"
+          ]
+        },
+        "orion_stasis_core": {
+          "milestones": [
+            "ms_w1_mq05_complete"
+          ]
+        },
+        "gh0st_void_fang": {
+          "milestones": [
+            "ms_w1_mq05_complete"
           ]
         }
       }
@@ -135,23 +175,75 @@
     },
     "sells": {
       "items": [
-        "Utility Vest",
-        "Heat-Shield Vest",
-        "Cryo-Coat"
+        "nova_flux_liner",
+        "zeke_surge_harness",
+        "orion_channeler_mantle",
+        "gh0st_phaseweave_jacket",
+        "basic_vest",
+        "nova_starline_jacket",
+        "zeke_brawler_rig",
+        "orion_driftweave_cloak",
+        "gh0st_killer_harness",
+        "basic_jacket",
+        "nova_helioguard_plate",
+        "zeke_bulwark_plate",
+        "orion_ward_coat",
+        "gh0st_nullguard_coat",
+        "ollie_canopy_mantle"
       ],
       "rules": {
         "types_in": [],
         "subtypes_in": []
       },
       "gates": {
-        "Heat-Shield Vest": {
+        "nova_starline_jacket": {
           "milestones": [
-            "REACHED_WORLD_3"
+            "ms_w1_mq03_complete"
           ]
         },
-        "Cryo-Coat": {
+        "zeke_brawler_rig": {
           "milestones": [
-            "REACHED_WORLD_3"
+            "ms_w1_mq03_complete"
+          ]
+        },
+        "orion_driftweave_cloak": {
+          "milestones": [
+            "ms_w1_mq03_complete"
+          ]
+        },
+        "gh0st_killer_harness": {
+          "milestones": [
+            "ms_w1_mq03_complete"
+          ]
+        },
+        "basic_jacket": {
+          "milestones": [
+            "ms_w1_mq03_complete"
+          ]
+        },
+        "nova_helioguard_plate": {
+          "milestones": [
+            "ms_w1_mq05_complete"
+          ]
+        },
+        "zeke_bulwark_plate": {
+          "milestones": [
+            "ms_w1_mq05_complete"
+          ]
+        },
+        "orion_ward_coat": {
+          "milestones": [
+            "ms_w1_mq05_complete"
+          ]
+        },
+        "gh0st_nullguard_coat": {
+          "milestones": [
+            "ms_w1_mq05_complete"
+          ]
+        },
+        "ollie_canopy_mantle": {
+          "milestones": [
+            "ms_w1_mq05_complete"
           ]
         }
       }
@@ -177,15 +269,34 @@
     },
     "sells": {
       "items": [
-        "Grounding Boots",
-        "Re-Breather Mask",
-        "Adrenaline Shot"
+        "lucky_talisman",
+        "precision_sight",
+        "stability_gyro",
+        "vital_signet",
+        "kinetic_bracelet",
+        "focus_conduit"
       ],
       "rules": {
         "types_in": [],
         "subtypes_in": []
       },
-      "gates": {}
+      "gates": {
+        "vital_signet": {
+          "milestones": [
+            "ms_w1_mq03_complete"
+          ]
+        },
+        "kinetic_bracelet": {
+          "milestones": [
+            "ms_w1_mq03_complete"
+          ]
+        },
+        "focus_conduit": {
+          "milestones": [
+            "ms_w1_mq03_complete"
+          ]
+        }
+      }
     },
     "buys": {
       "accept_types": [
@@ -209,18 +320,24 @@
     },
     "sells": {
       "items": [
-        "Medkit",
-        "Antidote",
-        "Power Cell",
-        "Smokescreen",
-        "Scrap Metal",
-        "Wiring Bundle"
+        "medkit_i",
+        "medkit",
+        "ration_pack",
+        "power_cell",
+        "scrap_metal",
+        "wiring_bundle"
       ],
       "rules": {
         "types_in": [],
         "subtypes_in": []
       },
-      "gates": {}
+      "gates": {
+        "medkit": {
+          "milestones": [
+            "ms_w1_mq03_complete"
+          ]
+        }
+      }
     },
     "buys": {
       "accept_types": [
