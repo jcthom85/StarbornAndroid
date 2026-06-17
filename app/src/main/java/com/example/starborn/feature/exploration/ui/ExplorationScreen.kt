@@ -125,6 +125,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -8555,56 +8556,79 @@ fun CinematicOverlay(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 28.dp, vertical = 26.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    // Title
-                    state.title?.let { title ->
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(10.dp)
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(4.dp, 18.dp)
-                                    .clip(RoundedCornerShape(999.dp))
-                                    .background(accentColor.copy(alpha = 0.8f))
-                            )
-                            Text(
-                                text = title.uppercase(Locale.getDefault()),
-                                color = accentColor.copy(alpha = 0.9f),
-                                style = MaterialTheme.typography.labelMedium.copy(
-                                    fontWeight = FontWeight.Bold,
-                                    letterSpacing = 2.sp
+                    // Decorative top accent bar
+                    Box(
+                        modifier = Modifier
+                            .width(40.dp)
+                            .height(3.dp)
+                            .clip(RoundedCornerShape(999.dp))
+                            .background(
+                                Brush.horizontalGradient(
+                                    listOf(
+                                        accentColor.copy(alpha = 0.0f),
+                                        accentColor.copy(alpha = 0.7f),
+                                        accentColor.copy(alpha = 0.0f)
+                                    )
                                 )
                             )
-                        }
-                    }
+                    )
 
                     // Narration text with typewriter reveal
                     Text(
                         text = displayedText,
                         color = Color.White.copy(alpha = 0.92f),
                         style = MaterialTheme.typography.bodyLarge.copy(
+                            fontStyle = FontStyle.Italic,
                             lineHeight = 28.sp,
                             letterSpacing = 0.3.sp
-                        )
+                        ),
+                        modifier = Modifier.fillMaxWidth()
                     )
 
-                    // Tap hint
+                    // Tap hint with ornament
                     AnimatedVisibility(
                         visible = revealFinished,
                         enter = fadeIn(animationSpec = tween(durationMillis = 500))
                     ) {
-                        Text(
-                            text = if (state.stepIndex + 1 >= state.stepCount) "Tap to continue" else "Tap to continue ▸",
-                            color = accentColor.copy(alpha = 0.5f),
-                            style = MaterialTheme.typography.labelSmall.copy(
-                                letterSpacing = 1.sp
-                            ),
+                        Row(
                             modifier = Modifier.fillMaxWidth(),
-                            textAlign = TextAlign.End
-                        )
+                            horizontalArrangement = Arrangement.End,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "✦  ",
+                                color = accentColor.copy(alpha = 0.35f),
+                                style = MaterialTheme.typography.labelSmall
+                            )
+                            Text(
+                                text = if (state.stepIndex + 1 >= state.stepCount) "Tap to continue" else "Tap to continue ▸",
+                                color = accentColor.copy(alpha = 0.5f),
+                                style = MaterialTheme.typography.labelSmall.copy(
+                                    letterSpacing = 1.sp
+                                )
+                            )
+                        }
                     }
+
+                    // Decorative bottom accent bar
+                    Box(
+                        modifier = Modifier
+                            .width(40.dp)
+                            .height(3.dp)
+                            .clip(RoundedCornerShape(999.dp))
+                            .background(
+                                Brush.horizontalGradient(
+                                    listOf(
+                                        accentColor.copy(alpha = 0.0f),
+                                        accentColor.copy(alpha = 0.7f),
+                                        accentColor.copy(alpha = 0.0f)
+                                    )
+                                )
+                            )
+                    )
                 }
             }
         }
