@@ -83,7 +83,8 @@ data class ExplorationUiState(
     val nearbyThreatDirection: String? = null,
     val forceBlackScreen: Boolean = false,
     val fadeOverlay: FadeOverlayCommand? = null,
-    val tutorialState: TutorialRuntimeState = TutorialRuntimeState()
+    val tutorialState: TutorialRuntimeState = TutorialRuntimeState(),
+    val visualEnemyParties: List<VisualEnemyParty> = emptyList()
 )
 
 data class EnemyIconUi(
@@ -424,3 +425,10 @@ enum class MenuTab {
         SETTINGS -> "Settings"
     }
 }
+
+data class VisualEnemyParty(
+    val id: String,
+    val enemies: List<String>,
+    val enteringFrom: String? = null,
+    val leavingTo: String? = null
+)

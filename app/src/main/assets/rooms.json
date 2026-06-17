@@ -2967,12 +2967,61 @@
       "starbar_crunch"
     ],
     "enemies": [
+      "dominion_dampener"
+    ],
+    "enemy_parties": [
+      [
+        "dominion_dampener"
+      ]
+    ],
+    "connections": {
+      "north": "debug_enemy_party_sizes_north",
+      "west": "debug_enemy_party_sizes_west",
+      "east": "debug_enemy_party_sizes_east",
+      "south": "debug_enemy_party_sizes_south"
+    },
+    "pos": [
+      100,
+      99
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "debug manifest",
+        "type": "generic",
+        "condition_unmet_message": "This room exists only to inspect one-, two-, and three-member enemy party layouts."
+      },
+      {
+        "name": "Workbench",
+        "type": "tinkering",
+        "condition_unmet_message": "Jed's workbench is ready. Time to prove you remember which end of the soldering iron gets hot."
+      },
+      {
+        "name": "Contraband",
+        "type": "shop",
+        "shop_id": "scrappers_contraband",
+        "dialogue_id": "scrapper_shop_intro"
+      }
+    ]
+  },
+  {
+    "id": "debug_enemy_party_sizes_west",
+    "env": "logistics",
+    "title": "Congested Enemy Party Test",
+    "background_image": "images/rooms/world_1/launch_checkpoint.png",
+    "description": "Debug layout room with five stationary enemy parties for congested placement checks.",
+    "npcs": [],
+    "items": [],
+    "enemies": [
       "dominion_dampener",
       "echo_borer",
       "echo_borer",
       "siren_skimmer",
       "siren_skimmer",
-      "siren_skimmer"
+      "siren_skimmer",
+      "acoustic_bulwark",
+      "pressure_hauler",
+      "dominion_dampener"
     ],
     "enemy_parties": [
       [
@@ -2986,11 +3035,20 @@
         "siren_skimmer",
         "siren_skimmer",
         "siren_skimmer"
+      ],
+      [
+        "acoustic_bulwark"
+      ],
+      [
+        "pressure_hauler",
+        "dominion_dampener"
       ]
     ],
-    "connections": {},
+    "connections": {
+      "east": "debug_enemy_party_sizes"
+    },
     "pos": [
-      100,
+      99,
       99
     ],
     "state": {},
@@ -2998,8 +3056,68 @@
       {
         "name": "debug manifest",
         "type": "generic",
-        "condition_unmet_message": "This room exists only to inspect one-, two-, and three-member enemy party layouts."
+        "condition_unmet_message": "This room exists only to inspect five stationary enemy parties in a congested layout."
       }
     ]
+  },
+  {
+    "id": "debug_enemy_party_sizes_north",
+    "env": "logistics",
+    "title": "North Movement Test",
+    "background_image": "images/rooms/world_1/launch_checkpoint.png",
+    "description": "Debug room for testing enemy parties entering and leaving from the north.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "enemy_parties": [],
+    "connections": {
+      "south": "debug_enemy_party_sizes"
+    },
+    "pos": [
+      100,
+      98
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "debug_enemy_party_sizes_south",
+    "env": "logistics",
+    "title": "South Movement Test",
+    "background_image": "images/rooms/world_1/launch_checkpoint.png",
+    "description": "Debug room for testing enemy parties entering and leaving from the south.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "enemy_parties": [],
+    "connections": {
+      "north": "debug_enemy_party_sizes"
+    },
+    "pos": [
+      100,
+      100
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "debug_enemy_party_sizes_east",
+    "env": "logistics",
+    "title": "East Test Area",
+    "background_image": "images/rooms/world_1/launch_checkpoint.png",
+    "description": "An empty adjacent room for testing enemy entry/exit animations.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "enemy_parties": [],
+    "connections": {
+      "west": "debug_enemy_party_sizes"
+    },
+    "pos": [
+      101,
+      99
+    ],
+    "state": {},
+    "actions": []
   }
 ]

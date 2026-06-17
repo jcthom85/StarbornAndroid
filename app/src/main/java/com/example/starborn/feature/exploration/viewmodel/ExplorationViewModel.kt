@@ -48,6 +48,7 @@ import com.example.starborn.domain.movement.EnemyMovementManager
 import com.example.starborn.domain.movement.EnemyMovementCatalog
 import com.example.starborn.domain.movement.EnemyMovementParty
 import com.example.starborn.domain.movement.MAX_ACTIVE_ENEMY_PARTIES_PER_ROOM
+import com.example.starborn.domain.movement.EnemyMovementEvent
 import com.example.starborn.domain.model.BlockedDirection
 import com.example.starborn.domain.model.ContainerAction
 import com.example.starborn.domain.model.DialogueLine
@@ -1943,6 +1944,15 @@ class ExplorationViewModel(
                     equippedWeapons = sessionState.equippedWeapons,
                     unlockedArmors = sessionState.unlockedArmors,
                     equippedArmors = sessionState.equippedArmors,
+                    visualEnemyParties = initialRoom?.let { room ->
+                        val staticVisuals = roomEnemyParties(room).mapIndexed { index, members ->
+                            VisualEnemyParty(id = "static_$index", enemies = members)
+                        }
+                        val movingVisuals = enemyMovementManager?.partiesInRoom(room.id, sessionState).orEmpty().map { party ->
+                            VisualEnemyParty(id = "moving_${party.id}", enemies = party.enemies)
+                        }
+                        staticVisuals + movingVisuals
+                    }.orEmpty(),
                     forceBlackScreen = startWithBlackScreen
                 )
             }
@@ -2941,7 +2951,7 @@ class ExplorationViewModel(
                         nearbyThreatDirection = nearbyThreatDirection(current.currentRoom?.id.orEmpty())
                     )
                 }
-                refreshMovementPresence()
+                refreshMovementPresence(tick.events)
                 val partyId = tick.autoEngagePartyId
                 if (partyId != null && !movementCombatRequested) {
                     movementCombatRequested = true
@@ -2965,6 +2975,14 @@ class ExplorationViewModel(
                 nearbyThreatDirection = nearbyThreatDirection(roomId)
             )
         }
+        val room = roomsById[roomId]
+        val staticVisuals = room?.let { roomEnemyParties(it) }.orEmpty().mapIndexed { index, members ->
+            VisualEnemyParty(id = "static_$index", enemies = members)
+        }
+        val movingVisuals = manager.partiesInRoom(roomId, sessionStore.state.value).map { party ->
+            VisualEnemyParty(id = "moving_${party.id}", enemies = party.enemies)
+        }
+        _uiState.update { it.copy(visualEnemyParties = staticVisuals + movingVisuals) }
         refreshMovementPresence()
     }
 
@@ -2982,18 +3000,106 @@ class ExplorationViewModel(
         return room.copy(enemyParties = combined, enemies = combined.flatten())
     }
 
-    private fun refreshMovementPresence() {
+    private fun refreshMovementPresence(events: List<EnemyMovementEvent> = emptyList()) {
         val currentId = _uiState.value.currentRoom?.id ?: return
         val baseRoom = roomsById[currentId] ?: return
         val displayRoom = roomWithMovement(baseRoom)
+        val session = sessionStore.state.value
+        val manager = enemyMovementManager
+
         _uiState.update { current ->
+            val staticVisuals = roomEnemyParties(baseRoom).mapIndexed { index, members ->
+                VisualEnemyParty(id = "static_$index", enemies = members)
+            }
+            val activeMovingParties = manager?.partiesInRoom(currentId, session).orEmpty()
+            val prevVisuals = current.visualEnemyParties
+
+            val nextVisuals = mutableListOf<VisualEnemyParty>()
+            nextVisuals.addAll(staticVisuals)
+
+            val activeMovingIds = activeMovingParties.map { "moving_${it.id}" }.toSet()
+
+            prevVisuals.forEach { prev ->
+                if (prev.id.startsWith("static_")) return@forEach
+                if (prev.id in activeMovingIds) {
+                    val hasEnteringEvent = events.any { it.type == EnemyMovementEvent.Type.ENTERED && "moving_${it.partyId}" == prev.id }
+                    if (hasEnteringEvent) {
+                        nextVisuals.add(prev)
+                    } else {
+                        nextVisuals.add(prev.copy(enteringFrom = null))
+                    }
+                } else if (prev.leavingTo != null) {
+                    nextVisuals.add(prev)
+                }
+            }
+
+            activeMovingParties.forEach { activeParty ->
+                val partyId = "moving_${activeParty.id}"
+                val alreadyExists = nextVisuals.any { it.id == partyId }
+                if (!alreadyExists) {
+                    val enterEvent = events.firstOrNull { it.type == EnemyMovementEvent.Type.ENTERED && it.partyId == activeParty.id }
+                    val enteringFrom = if (enterEvent != null && enterEvent.fromRoomId != null) {
+                        baseRoom.connections.entries.firstOrNull { it.value == enterEvent.fromRoomId }?.key
+                    } else {
+                        null
+                    }
+                    nextVisuals.add(
+                        VisualEnemyParty(
+                            id = partyId,
+                            enemies = activeParty.enemies,
+                            enteringFrom = enteringFrom
+                        )
+                    )
+                }
+            }
+
+            prevVisuals.forEach { prev ->
+                if (prev.id.startsWith("static_")) return@forEach
+                if (prev.id !in activeMovingIds && prev.leavingTo == null) {
+                    val activeId = prev.id.removePrefix("moving_")
+                    val leaveEvent = events.firstOrNull { it.type == EnemyMovementEvent.Type.LEFT && it.partyId == activeId }
+                    val leavingTo = if (leaveEvent != null && leaveEvent.roomId != null) {
+                        leaveEvent.direction
+                    } else {
+                        val currentPartyState = manager?.stateSnapshot()?.get(activeId)
+                        if (currentPartyState != null) {
+                            baseRoom.connections.entries.firstOrNull { it.value == currentPartyState.roomId }?.key
+                        } else {
+                            null
+                        }
+                    }
+
+                    val leavingParty = prev.copy(enteringFrom = null, leavingTo = leavingTo)
+                    nextVisuals.add(leavingParty)
+
+                    viewModelScope.launch(dispatchers.main) {
+                        delay(1_000L)
+                        _uiState.update { state ->
+                            state.copy(
+                                visualEnemyParties = state.visualEnemyParties.filterNot { it.id == prev.id }
+                            )
+                        }
+                    }
+                }
+            }
+
+            val finalVisuals = if (prevVisuals.isEmpty()) {
+                val movingVisuals = activeMovingParties.map { party ->
+                    VisualEnemyParty(id = "moving_${party.id}", enemies = party.enemies)
+                }
+                staticVisuals + movingVisuals
+            } else {
+                nextVisuals
+            }
+
             current.copy(
                 currentRoom = displayRoom,
                 enemies = roomEnemyParties(displayRoom).flatten(),
                 enemyTiers = buildEnemyTierMap(displayRoom),
                 enemyIcons = buildEnemyIconMap(displayRoom),
                 blockedDirections = computeBlockedDirections(displayRoom),
-                directionIndicators = buildDirectionIndicators(displayRoom, current.nearbyThreatDirection)
+                directionIndicators = buildDirectionIndicators(displayRoom, current.nearbyThreatDirection),
+                visualEnemyParties = finalVisuals
             )
         }
     }

@@ -84,6 +84,7 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.Switch
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -210,6 +211,7 @@ import com.example.starborn.feature.exploration.viewmodel.ShopDialogueChoiceUi
 import com.example.starborn.feature.exploration.viewmodel.ShopDialogueLineUi
 import com.example.starborn.feature.exploration.viewmodel.ShopGreetingUi
 import com.example.starborn.feature.exploration.viewmodel.TogglePromptUi
+import com.example.starborn.feature.exploration.viewmodel.VisualEnemyParty
 import com.example.starborn.feature.exploration.viewmodel.SettingsUiState
 import com.example.starborn.feature.exploration.viewmodel.SkillTreeBranchUi
 import com.example.starborn.feature.exploration.viewmodel.SkillTreeNodeUi
@@ -221,6 +223,7 @@ import kotlin.math.abs
 import kotlin.math.roundToInt
 import kotlin.text.buildString
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -284,6 +287,15 @@ fun ExplorationScreen(
             uiState.isFullMapVisible ||
             uiState.isMapLegendVisible ||
             uiState.tutorialState.current != null
+
+    DisposableEffect(Unit) {
+        viewModel.setExplorationVisible(true)
+        viewModel.setExplorationInteractionBlocked(false)
+        onDispose {
+            viewModel.setExplorationVisible(false)
+            viewModel.setExplorationInteractionBlocked(true)
+        }
+    }
 
     LaunchedEffect(Unit) {
         viewModel.events.collect { event ->
@@ -524,14 +536,17 @@ fun ExplorationScreen(
                 }
             }.orEmpty()
         }
-        val hasRoomEntities = fallbackNpcs.isNotEmpty() ||
-            uiState.groundItems.isNotEmpty()
-        val serviceQuickActions = remember(uiState.actions, uiState.actionHints, currentRoom?.id) {
+        val serviceQuickActions = remember(uiState.actions, uiState.actionHints, currentRoom?.id, inlinePlan) {
             val unique = LinkedHashSet<String>()
             val items = mutableListOf<QuickMenuAction>()
+            val inlinedActionKeys = inlinePlan?.segments?.mapNotNull { segment ->
+                (segment.target as? InlineActionTarget.Room)?.action?.actionKey()
+            }?.toSet().orEmpty()
+
             uiState.actions.forEach { action ->
                 val hint = uiState.actionHints[action.actionKey()]
                 if (hint?.locked == true) return@forEach
+                if (action.actionKey() in inlinedActionKeys) return@forEach
                 when (action) {
                     is ShopAction -> {
                         val shopId = action.shopId ?: return@forEach
@@ -586,6 +601,9 @@ fun ExplorationScreen(
             }
             items
         }
+        val hasRoomEntities = fallbackNpcs.isNotEmpty() ||
+            uiState.groundItems.isNotEmpty() ||
+            serviceQuickActions.isNotEmpty()
 
         BoxWithConstraints(
             modifier = Modifier
@@ -695,13 +713,14 @@ fun ExplorationScreen(
                         textColor = roomTextColor,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .heightIn(min = 104.dp, max = 236.dp)
+                            .heightIn(min = 104.dp, max = 280.dp)
                     )
                     if (hasRoomEntities) {
                         RoomEntitySection(
                             npcs = fallbackNpcs,
                             npcPortraitPaths = uiState.npcPortraitPaths,
                             groundItems = uiState.groundItems,
+                            serviceActions = serviceQuickActions,
                             itemDisplayName = { itemId -> viewModel.itemDisplayName(itemId) },
                             itemDetailLabel = { itemId -> viewModel.roomItemDetailLabel(itemId) },
                             itemIsEquipment = { itemId -> viewModel.roomItemIsEquipment(itemId) },
@@ -710,15 +729,16 @@ fun ExplorationScreen(
                             isDark = isRoomDark,
                             onNpcClick = { name -> viewModel.onNpcInteraction(name) },
                             onCollectItem = { itemId -> viewModel.collectGroundItem(itemId) },
-                            onCollectAll = { viewModel.collectAllGroundItems() }
+                            onCollectAll = { viewModel.collectAllGroundItems() },
+                            onAction = { action -> viewModel.onActionSelected(action) }
                         )
                     }
                 }
             }
 
-            if (roomEnemyParties.isNotEmpty()) {
+            if (uiState.visualEnemyParties.isNotEmpty()) {
                 EnemyPresenceStage(
-                    parties = roomEnemyParties,
+                    visualParties = uiState.visualEnemyParties,
                     enemyTiers = uiState.enemyTiers,
                     enemyIcons = uiState.enemyIcons,
                     accentColor = actionAccentColor,
@@ -732,26 +752,7 @@ fun ExplorationScreen(
                 )
             }
 
-            if (serviceQuickActions.isNotEmpty()) {
-                Column(
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .fillMaxWidth()
-                        .padding(start = 24.dp, end = 24.dp, bottom = 112.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    ServiceActionTray(
-                        actions = serviceQuickActions,
-                        onAction = { viewModel.onActionSelected(it) },
-                        backgroundColor = panelBackgroundColor.copy(alpha = if (isRoomDark) 0.65f else 0.8f),
-                        accentColor = actionAccentColor,
-                        modifier = Modifier
-                            .wrapContentWidth(Alignment.CenterHorizontally)
-                            .align(Alignment.CenterHorizontally)
-                    )
-                }
-            }
+
             if (isWeatherLab) {
                 WeatherLabPanel(
                     activeWeatherId = activeWeatherId,
@@ -5907,106 +5908,6 @@ private data class QuickMenuAction(
     val roomAction: RoomAction
 )
 
-@Composable
-private fun ServiceActionTray(
-    actions: List<QuickMenuAction>,
-    onAction: (RoomAction) -> Unit,
-    backgroundColor: Color,
-    accentColor: Color,
-    modifier: Modifier = Modifier
-) {
-    if (actions.isEmpty()) return
-
-    val trayShape = RoundedCornerShape(22.dp)
-    val borderColor = accentColor.copy(alpha = 0.4f)
-    val iconBackground = remember(accentColor, backgroundColor) {
-        Brush.radialGradient(
-            colors = listOf(
-                accentColor.copy(alpha = 0.25f),
-                backgroundColor.copy(alpha = 0.9f)
-            )
-        )
-    }
-    val motion = rememberInfiniteTransition(label = "serviceTrayMotion")
-    val motionCycle by motion.animateFloat(
-        initialValue = 0f,
-        targetValue = 1f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 7_200, easing = LinearEasing),
-            repeatMode = RepeatMode.Restart
-        ),
-        label = "serviceTrayMotionCycle"
-    )
-    Surface(
-        modifier = modifier.widthIn(max = 1200.dp),
-        shape = trayShape,
-        color = backgroundColor.copy(alpha = 0.75f),
-        border = BorderStroke(1.2.dp, borderColor),
-        shadowElevation = 14.dp
-    ) {
-        Row(
-            modifier = Modifier
-                .padding(horizontal = 16.dp, vertical = 12.dp)
-                .widthIn(max = 1200.dp)
-                .horizontalScroll(rememberScrollState()),
-            horizontalArrangement = Arrangement.spacedBy(14.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            actions.forEach { action ->
-                val density = LocalDensity.current
-                val phaseOffset = remember(action.label, action.iconRes) {
-                    (abs("${action.label}:${action.iconRes}".lowercase(Locale.getDefault()).hashCode()) % 1000) / 1000f
-                }
-                val t = (motionCycle + phaseOffset) % 1f
-                val wave = kotlin.math.sin(t * Math.PI * 2.0).toFloat()
-                val glow = (0.5f + 0.5f * wave).coerceIn(0f, 1f)
-                val bobPx = with(density) { 1.2.dp.toPx() } * wave
-                val scale = 1f + 0.012f * wave
-                Column(
-                    modifier = Modifier
-                        .widthIn(min = 78.dp)
-                        .clip(RoundedCornerShape(16.dp))
-                        .clickable { onAction(action.roomAction) }
-                        .padding(horizontal = 6.dp, vertical = 4.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(6.dp)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(56.dp)
-                            .graphicsLayer {
-                                translationY = bobPx
-                                scaleX = scale
-                                scaleY = scale
-                            }
-                            .clip(CircleShape)
-                            .background(iconBackground)
-                            .border(BorderStroke(1.25.dp, borderColor.copy(alpha = 0.65f * (0.85f + 0.15f * glow))), CircleShape)
-                            .border(BorderStroke(1.dp, accentColor.copy(alpha = 0.55f * (0.8f + 0.2f * glow))), CircleShape),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Image(
-                            painter = painterResource(action.iconRes),
-                            contentDescription = action.label,
-                            modifier = Modifier.size(34.dp),
-                            colorFilter = ColorFilter.tint(accentColor.copy(alpha = 0.9f + 0.08f * glow))
-                        )
-                    }
-                    Text(
-                        text = action.label,
-                        style = MaterialTheme.typography.labelSmall.copy(
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.SemiBold
-                        ),
-                        color = Color.White.copy(alpha = 0.92f),
-                        textAlign = TextAlign.Center,
-                        maxLines = 1
-                    )
-                }
-            }
-        }
-    }
-}
 
 private sealed interface InlineActionTarget {
     data class Room(val action: RoomAction) : InlineActionTarget
@@ -6507,7 +6408,7 @@ private fun RoomDescriptionPanel(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .heightIn(max = 190.dp)
+                    .weight(1f, fill = false)
                     .verticalScroll(scrollState)
             ) {
                 RoomDescription(
@@ -6526,12 +6427,47 @@ private fun RoomDescriptionPanel(
     }
 }
 
+@Composable
+private fun CompactServiceChip(
+    action: QuickMenuAction,
+    accentColor: Color,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        onClick = onClick,
+        shape = RoundedCornerShape(16.dp),
+        color = Color(0xFF0F1B2A).copy(alpha = 0.85f),
+        border = BorderStroke(1.dp, accentColor.copy(alpha = 0.5f)),
+        modifier = modifier
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                painter = painterResource(id = action.iconRes),
+                contentDescription = null,
+                tint = accentColor,
+                modifier = Modifier.size(16.dp)
+            )
+            Text(
+                text = action.label.uppercase(Locale.getDefault()),
+                color = Color.White,
+                style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold)
+            )
+        }
+    }
+}
+
 
 @Composable
 private fun RoomEntitySection(
     npcs: List<String>,
     npcPortraitPaths: Map<String, String>,
     groundItems: Map<String, Int>,
+    serviceActions: List<QuickMenuAction> = emptyList(),
     itemDisplayName: (String) -> String,
     itemDetailLabel: (String) -> String?,
     itemIsEquipment: (String) -> Boolean,
@@ -6540,7 +6476,8 @@ private fun RoomEntitySection(
     isDark: Boolean,
     onNpcClick: (String) -> Unit,
     onCollectItem: (String) -> Unit,
-    onCollectAll: () -> Unit
+    onCollectAll: () -> Unit,
+    onAction: (RoomAction) -> Unit
 ) {
     val itemEntries = remember(groundItems, itemDisplayName, itemIsEquipment) {
         groundItems.entries.sortedWith(
@@ -6574,6 +6511,19 @@ private fun RoomEntitySection(
                             borderColor = borderColor,
                             isDark = isDark,
                             onClick = { onNpcClick(npc) }
+                        )
+                    }
+                }
+            }
+            if (serviceActions.isNotEmpty()) {
+                PresenceRailRow {
+                    serviceActions.forEach { action ->
+                        ServicePresenceChip(
+                            action = action,
+                            accentColor = accentColor,
+                            borderColor = borderColor,
+                            isDark = isDark,
+                            onClick = { onAction(action.roomAction) }
                         )
                     }
                 }
@@ -6615,6 +6565,55 @@ private fun RoomEntitySection(
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun ServicePresenceChip(
+    action: QuickMenuAction,
+    accentColor: Color,
+    borderColor: Color,
+    isDark: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        onClick = onClick,
+        shape = RoundedCornerShape(10.dp),
+        color = Color.White.copy(alpha = if (isDark) 0.09f else 0.07f),
+        border = BorderStroke(1.dp, borderColor.copy(alpha = if (isDark) 0.36f else 0.24f)),
+        modifier = modifier
+            .widthIn(min = 124.dp)
+            .height(42.dp)
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Surface(
+                shape = CircleShape,
+                color = accentColor.copy(alpha = 0.18f),
+                border = BorderStroke(1.dp, accentColor.copy(alpha = 0.52f)),
+                modifier = Modifier.size(28.dp)
+            ) {
+                Box(contentAlignment = Alignment.Center) {
+                    Icon(
+                        painter = painterResource(id = action.iconRes),
+                        contentDescription = null,
+                        tint = accentColor,
+                        modifier = Modifier.size(18.dp)
+                    )
+                }
+            }
+            Text(
+                text = action.label.uppercase(Locale.getDefault()),
+                color = Color.White,
+                style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
         }
     }
 }
@@ -7022,84 +7021,128 @@ private fun EnemyFlavorBlock(
 
 @Composable
 private fun EnemyPartyStrip(
-    parties: List<List<String>>,
+    visualParties: List<VisualEnemyParty>,
     enemyTiers: Map<String, String>,
     enemyIcons: Map<String, EnemyIconUi>,
     accentColor: Color,
     isDark: Boolean,
     onPartyClick: (String) -> Unit
 ) {
-    val visibleParties = parties.mapNotNull { party ->
-        party.mapNotNull { id -> id.trim().takeIf { it.isNotBlank() } }
-            .takeIf { it.isNotEmpty() }
-    }
-    if (visibleParties.isEmpty()) return
+    if (visualParties.isEmpty()) return
 
-    val motion = rememberInfiniteTransition(label = "hostilesMotion")
-    val motionCycle by motion.animateFloat(
-        initialValue = 0f,
-        targetValue = 1f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 6_400, easing = LinearEasing),
-            repeatMode = RepeatMode.Restart
-        ),
-        label = "hostilesMotionCycle"
-    )
     BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
-        val memberSize = when {
-            maxWidth < 380.dp -> 164.dp
-            maxWidth < 520.dp -> 184.dp
-            else -> 200.dp
+        val stageWidth = maxWidth
+        val baseMemberSize = when {
+            stageWidth < 380.dp -> 132.dp
+            stageWidth < 520.dp -> 148.dp
+            else -> 172.dp
         }
-        val laneRise = (memberSize * 0.36f).coerceAtLeast(88.dp)
+        val laneRise = (baseMemberSize * 0.72f).coerceAtLeast(88.dp)
         fun overlapFor(members: Int): Float = when {
             members >= 4 -> 0.78f
             members == 3 -> 0.74f
             members == 2 -> 0.70f
             else -> 0f
         }
-        fun clusterWidth(members: List<String>): Dp {
+        fun clusterWidthFactor(members: List<String>): Float {
             val count = members.size.coerceAtLeast(1)
             val overlap = overlapFor(count)
-            return memberSize * (1f + (count - 1) * (1f - overlap))
+            return 1f + (count - 1) * (1f - overlap)
         }
-        val placements = visibleParties.mapIndexed { index, members ->
-            val laneIndex = if (visibleParties.size == 1) 0 else index
-            val alignment = when {
-                visibleParties.size == 1 -> Alignment.BottomCenter
-                index % 2 == 0 -> Alignment.BottomStart
-                else -> Alignment.BottomEnd
+        fun clusterWidth(members: List<String>, memberSize: Dp): Dp {
+            return memberSize * clusterWidthFactor(members)
+        }
+
+        val slotAssignments = remember { mutableMapOf<String, Int>() }
+        val orderedParties = remember(visualParties) {
+            visualParties
+                .sortedWith(compareBy<VisualEnemyParty> { it.leavingTo != null }.thenBy { it.id })
+        }
+        val activePartyIds = orderedParties.map { it.id }.toSet()
+        slotAssignments.keys.removeAll { it !in activePartyIds }
+
+        val normalizedAssignments = mutableMapOf<String, Int>()
+        slotAssignments.entries
+            .sortedWith(compareBy<Map.Entry<String, Int>> { it.value }.thenBy { it.key })
+            .forEach { (partyId, slotIndex) ->
+                if (slotIndex in ENEMY_PARTY_SLOTS.indices && slotIndex !in normalizedAssignments.values) {
+                    normalizedAssignments[partyId] = slotIndex
+                }
             }
-            Triple(members, alignment, laneIndex)
+        slotAssignments.clear()
+        slotAssignments.putAll(normalizedAssignments)
+
+        orderedParties.forEach { party ->
+            if (slotAssignments.containsKey(party.id)) return@forEach
+            val preferredSlot = preferredEnemyPartySlot(party)
+                .takeIf { it in ENEMY_PARTY_SLOTS.indices && it !in slotAssignments.values }
+            val openSlot = preferredSlot ?: ENEMY_PARTY_SLOTS.indices.firstOrNull { it !in slotAssignments.values }
+            if (openSlot != null) {
+                slotAssignments[party.id] = openSlot
+            }
         }
-        val maxLaneIndex = placements.maxOf { it.third }
+
+        val placements = orderedParties.mapNotNull { party ->
+            slotAssignments[party.id]?.let { slotIndex ->
+                Triple(party, ENEMY_PARTY_SLOTS[slotIndex], slotIndex)
+            }
+        }
+
         Box(
             modifier = Modifier
                 .widthIn(max = 1200.dp)
                 .fillMaxWidth()
-                .height(memberSize + 28.dp + laneRise * maxLaneIndex),
+                .height(baseMemberSize + 28.dp + laneRise),
             contentAlignment = Alignment.BottomCenter
         ) {
-            placements.forEach { (members, alignment, laneIndex) ->
-                val xNudge = when (alignment) {
-                    Alignment.BottomStart -> 4.dp
-                    Alignment.BottomEnd -> (-4).dp
-                    else -> 0.dp
+            val renderPlacements = placements.sortedWith(
+                compareBy<Triple<VisualEnemyParty, EnemyPartySlot, Int>> { (party, _, _) ->
+                    if (party.enteringFrom != null || party.leavingTo != null) 0 else 1
+                }.thenBy { (_, _, slotIndex) -> slotIndex }
+            )
+            renderPlacements.forEach { (party, slot, slotIndex) ->
+                val memberSize = baseMemberSize
+                val width = clusterWidth(party.enemies, memberSize)
+                val centerX = stageWidth * slot.centerFraction
+                val xOffset = centerX - (width / 2f)
+                val yOffset = -laneRise * slot.row
+                val stageHeight = baseMemberSize + 28.dp + laneRise
+                val offscreenPadding = 72.dp
+                fun transitionOffsetX(direction: String?): Float = when (direction) {
+                    "east" -> (stageWidth - xOffset + offscreenPadding).value
+                    "west" -> -(xOffset + width + offscreenPadding).value
+                    else -> 0f
+                }
+                fun transitionOffsetY(direction: String?): Float = when (direction) {
+                    "north" -> -(stageHeight + yOffset + offscreenPadding).value
+                    "south" -> (baseMemberSize + 28.dp - yOffset + offscreenPadding).value
+                    "east", "west" -> 0f
+                    else -> if (slot.row == 0) 36f else -36f
+                }
+                val transitionDirection = party.leavingTo ?: party.enteringFrom
+                val transitionOffsetX = transitionOffsetX(transitionDirection)
+                val transitionOffsetY = transitionOffsetY(transitionDirection)
+                val transitionZ = if (party.enteringFrom != null || party.leavingTo != null) {
+                    0f
+                } else {
+                    (ENEMY_PARTY_SLOTS.size - slotIndex + 10).toFloat()
                 }
                 EnemyPartyCluster(
-                    enemyIds = members,
+                    party = party,
                     enemyTiers = enemyTiers,
                     enemyIcons = enemyIcons,
-                    motionCycle = motionCycle,
                     accentColor = accentColor,
                     isDark = isDark,
                     memberSize = memberSize,
-                    overlapFraction = overlapFor(members.size),
+                    overlapFraction = overlapFor(party.enemies.size),
+                    transitionDirection = transitionDirection,
+                    transitionOffsetX = transitionOffsetX,
+                    transitionOffsetY = transitionOffsetY,
                     modifier = Modifier
-                        .align(alignment)
-                        .offset(x = xNudge, y = -laneRise * laneIndex)
-                        .zIndex((maxLaneIndex - laneIndex + 1).toFloat())
-                        .width(clusterWidth(members)),
+                        .align(Alignment.BottomStart)
+                        .offset(x = xOffset, y = yOffset)
+                        .zIndex(transitionZ)
+                        .width(width),
                     onEnemyClick = onPartyClick
                 )
             }
@@ -7107,9 +7150,28 @@ private fun EnemyPartyStrip(
     }
 }
 
+private data class EnemyPartySlot(
+    val centerFraction: Float,
+    val row: Int
+)
+
+private val ENEMY_PARTY_SLOTS = listOf(
+    EnemyPartySlot(centerFraction = 0.30f, row = 0),
+    EnemyPartySlot(centerFraction = 0.70f, row = 0),
+    EnemyPartySlot(centerFraction = 1f / 6f, row = 1),
+    EnemyPartySlot(centerFraction = 0.50f, row = 1),
+    EnemyPartySlot(centerFraction = 5f / 6f, row = 1)
+)
+
+private fun preferredEnemyPartySlot(party: VisualEnemyParty): Int {
+    val staticIndex = party.id.removePrefix("static_").toIntOrNull()
+    if (staticIndex != null) return staticIndex
+    return abs(party.id.hashCode()) % ENEMY_PARTY_SLOTS.size
+}
+
 @Composable
 private fun EnemyPresenceStage(
-    parties: List<List<String>>,
+    visualParties: List<VisualEnemyParty>,
     enemyTiers: Map<String, String>,
     enemyIcons: Map<String, EnemyIconUi>,
     accentColor: Color,
@@ -7128,7 +7190,7 @@ private fun EnemyPresenceStage(
             contentAlignment = Alignment.BottomCenter
         ) {
             EnemyPartyStrip(
-                parties = parties,
+                visualParties = visualParties,
                 enemyTiers = enemyTiers,
                 enemyIcons = enemyIcons,
                 accentColor = accentColor,
@@ -7158,33 +7220,134 @@ private fun parseEnemyTier(value: String?): EnemyTier {
 
 @Composable
 private fun EnemyPartyCluster(
-    enemyIds: List<String>,
+    party: VisualEnemyParty,
     enemyTiers: Map<String, String>,
     enemyIcons: Map<String, EnemyIconUi>,
-    motionCycle: Float,
     accentColor: Color,
     isDark: Boolean,
     memberSize: Dp,
     overlapFraction: Float,
+    transitionDirection: String?,
+    transitionOffsetX: Float,
+    transitionOffsetY: Float,
     modifier: Modifier = Modifier,
     onEnemyClick: (String) -> Unit
 ) {
+    val density = LocalDensity.current
+    val verticalWiggle = transitionDirection == "north" || transitionDirection == "south"
+    val transitionActive = party.enteringFrom != null || party.leavingTo != null
+    val motionCycle = if (transitionActive) {
+        0f
+    } else {
+        val motion = rememberInfiniteTransition(label = "hostilesMotion-${party.id}")
+        val cycle by motion.animateFloat(
+            initialValue = 0f,
+            targetValue = 1f,
+            animationSpec = infiniteRepeatable(
+                animation = tween(durationMillis = 6_400, easing = LinearEasing),
+                repeatMode = RepeatMode.Restart
+            ),
+            label = "hostilesMotionCycle-${party.id}"
+        )
+        cycle
+    }
+    val animX = remember(party.id) { androidx.compose.animation.core.Animatable(
+        if (party.enteringFrom != null) transitionOffsetX else 0f
+    ) }
+    val animY = remember(party.id) { androidx.compose.animation.core.Animatable(
+        if (party.enteringFrom != null) transitionOffsetY else 0f
+    ) }
+    val animAlpha = remember(party.id) { androidx.compose.animation.core.Animatable(1f) }
+
+    LaunchedEffect(party.enteringFrom, party.leavingTo, transitionOffsetX, transitionOffsetY) {
+        when {
+            party.leavingTo != null -> {
+                animAlpha.snapTo(1f)
+                val wiggleSpeed = 52
+                if (verticalWiggle) {
+                    animY.animateTo(-10f, animationSpec = tween(wiggleSpeed, easing = androidx.compose.animation.core.LinearEasing))
+                    animY.animateTo(10f, animationSpec = tween(wiggleSpeed, easing = androidx.compose.animation.core.LinearEasing))
+                    animY.animateTo(-5f, animationSpec = tween(wiggleSpeed, easing = androidx.compose.animation.core.LinearEasing))
+                    animY.animateTo(5f, animationSpec = tween(wiggleSpeed, easing = androidx.compose.animation.core.LinearEasing))
+                    animY.animateTo(0f, animationSpec = tween(wiggleSpeed, easing = androidx.compose.animation.core.LinearEasing))
+                } else {
+                    animX.animateTo(-10f, animationSpec = tween(wiggleSpeed, easing = androidx.compose.animation.core.LinearEasing))
+                    animX.animateTo(10f, animationSpec = tween(wiggleSpeed, easing = androidx.compose.animation.core.LinearEasing))
+                    animX.animateTo(-5f, animationSpec = tween(wiggleSpeed, easing = androidx.compose.animation.core.LinearEasing))
+                    animX.animateTo(5f, animationSpec = tween(wiggleSpeed, easing = androidx.compose.animation.core.LinearEasing))
+                    animX.animateTo(0f, animationSpec = tween(wiggleSpeed, easing = androidx.compose.animation.core.LinearEasing))
+                }
+                coroutineScope {
+                    launch {
+                        animX.animateTo(transitionOffsetX, animationSpec = tween(520, easing = androidx.compose.animation.core.FastOutLinearInEasing))
+                    }
+                    launch {
+                        animY.animateTo(transitionOffsetY, animationSpec = tween(520, easing = androidx.compose.animation.core.FastOutLinearInEasing))
+                    }
+                    launch {
+                        animAlpha.animateTo(0f, animationSpec = tween(420, delayMillis = 80, easing = androidx.compose.animation.core.FastOutLinearInEasing))
+                    }
+                }
+            }
+            party.enteringFrom != null -> {
+                animAlpha.snapTo(1f)
+                animX.snapTo(transitionOffsetX)
+                animY.snapTo(transitionOffsetY)
+
+                coroutineScope {
+                    launch {
+                        animX.animateTo(0f, animationSpec = tween(500, easing = androidx.compose.animation.core.LinearOutSlowInEasing))
+                    }
+                    launch {
+                        animY.animateTo(0f, animationSpec = tween(500, easing = androidx.compose.animation.core.LinearOutSlowInEasing))
+                    }
+                }
+
+                val wiggleSpeed = 60
+                if (verticalWiggle) {
+                    animY.animateTo(-12f, animationSpec = tween(wiggleSpeed, easing = androidx.compose.animation.core.LinearEasing))
+                    animY.animateTo(12f, animationSpec = tween(wiggleSpeed, easing = androidx.compose.animation.core.LinearEasing))
+                    animY.animateTo(-6f, animationSpec = tween(wiggleSpeed, easing = androidx.compose.animation.core.LinearEasing))
+                    animY.animateTo(6f, animationSpec = tween(wiggleSpeed, easing = androidx.compose.animation.core.LinearEasing))
+                    animY.animateTo(0f, animationSpec = tween(wiggleSpeed, easing = androidx.compose.animation.core.LinearEasing))
+                } else {
+                    animX.animateTo(-12f, animationSpec = tween(wiggleSpeed, easing = androidx.compose.animation.core.LinearEasing))
+                    animX.animateTo(12f, animationSpec = tween(wiggleSpeed, easing = androidx.compose.animation.core.LinearEasing))
+                    animX.animateTo(-6f, animationSpec = tween(wiggleSpeed, easing = androidx.compose.animation.core.LinearEasing))
+                    animX.animateTo(6f, animationSpec = tween(wiggleSpeed, easing = androidx.compose.animation.core.LinearEasing))
+                    animX.animateTo(0f, animationSpec = tween(wiggleSpeed, easing = androidx.compose.animation.core.LinearEasing))
+                }
+            }
+            else -> {
+                animX.snapTo(0f)
+                animY.snapTo(0f)
+                animAlpha.snapTo(1f)
+            }
+        }
+    }
+
     Row(
-        modifier = modifier,
+        modifier = modifier
+            .graphicsLayer {
+                translationX = with(density) { animX.value.dp.toPx() }
+                translationY = with(density) { animY.value.dp.toPx() }
+                alpha = animAlpha.value
+            },
         horizontalArrangement = Arrangement.spacedBy(-(memberSize * overlapFraction), Alignment.CenterHorizontally),
         verticalAlignment = Alignment.Bottom
     ) {
-        enemyIds.forEachIndexed { index, enemyId ->
+        party.enemies.forEachIndexed { index, enemyId ->
             EnemyPartyStandee(
                 enemyId = enemyId,
-                instanceKey = "$enemyId-$index",
+                instanceKey = "${party.id}-$enemyId-$index",
                 tier = parseEnemyTier(enemyTiers[enemyId]),
                 motionCycle = motionCycle,
                 accentColor = accentColor,
                 isDark = isDark,
+                transitionActive = transitionActive,
                 icon = enemyIcons[enemyId],
                 size = memberSize,
-                modifier = Modifier.zIndex((enemyIds.size - index).toFloat()),
+                modifier = Modifier.zIndex((party.enemies.size - index).toFloat()),
                 onClick = { onEnemyClick(enemyId) }
             )
         }
@@ -7199,6 +7362,7 @@ private fun EnemyPartyStandee(
     motionCycle: Float,
     accentColor: Color,
     isDark: Boolean,
+    transitionActive: Boolean,
     icon: EnemyIconUi?,
     size: Dp,
     modifier: Modifier = Modifier,
@@ -7224,6 +7388,7 @@ private fun EnemyPartyStandee(
             motionCycle = motionCycle,
             accentColor = accentColor,
             isDark = isDark,
+            transitionActive = transitionActive,
             icon = icon,
             iconSize = size
         )
@@ -7238,11 +7403,12 @@ private fun EnemyPartyLeaderIcon(
     motionCycle: Float,
     accentColor: Color,
     isDark: Boolean,
+    transitionActive: Boolean,
     icon: EnemyIconUi?,
     iconSize: Dp = 80.dp
 ) {
     val iconPath = icon?.spritePath ?: remember(enemyId) { "images/enemies/${enemyId}_combat.png" }
-    val painter = rememberAssetPainter(iconPath, painterResource(R.drawable.inventory_icon))
+    val painter = rememberAssetPainter(iconPath, painterResource(R.drawable.inventory_icon), async = transitionActive)
     val tierAccent = enemyTierAccent(tier, accentColor)
     val tierBadge = when (tier) {
         EnemyTier.BOSS -> "☠"
@@ -7259,7 +7425,7 @@ private fun EnemyPartyLeaderIcon(
         (abs(instanceKey.lowercase(Locale.getDefault()).hashCode()) % 1000) / 1000f
     }
     val t = (motionCycle + phaseOffset) % 1f
-    val wave = kotlin.math.sin(t * Math.PI * 2.0).toFloat()
+    val wave = if (transitionActive) 0f else kotlin.math.sin(t * Math.PI * 2.0).toFloat()
     val glow = (0.5f + 0.5f * wave).coerceIn(0f, 1f)
     val bobAmplitude = if (isDark) 1.2.dp else 2.0.dp
     val bobPx = with(density) { bobAmplitude.toPx() } * wave
@@ -7279,14 +7445,16 @@ private fun EnemyPartyLeaderIcon(
         modifier = Modifier.size(iconSize),
         contentAlignment = Alignment.Center
     ) {
-        EnemyPresenceShadow(
-            isDark = isDark,
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(bottom = iconSize * 0.01f)
-                .width(iconSize * 0.72f)
-                .height(iconSize * 0.18f)
-        )
+        if (!transitionActive) {
+            EnemyPresenceShadow(
+                isDark = isDark,
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = iconSize * 0.01f)
+                    .width(iconSize * 0.72f)
+                    .height(iconSize * 0.18f)
+            )
+        }
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -7296,10 +7464,17 @@ private fun EnemyPartyLeaderIcon(
                     scaleX = scale * spriteScale
                     scaleY = scale * spriteScale
                 }
-                .clip(shape)
-                .background(background),
-        contentAlignment = Alignment.Center
-    ) {
+                .let { base ->
+                    if (transitionActive) {
+                        base
+                    } else {
+                        base
+                            .clip(shape)
+                            .background(background)
+                    }
+                },
+            contentAlignment = Alignment.Center
+        ) {
             val iconModifier = Modifier
                 .fillMaxSize()
                 .padding(8.dp)
@@ -7317,39 +7492,88 @@ private fun EnemyPartyLeaderIcon(
                     contentScale = ContentScale.Fit
                 )
             }
-        val tierBadgeText = when (tier) {
-            EnemyTier.BOSS -> "\u2620"
-            EnemyTier.ELITE -> "\u2605"
-            EnemyTier.COMMON -> null
-        }
-        if (tierBadgeText != null) {
-            val badgeTextStyle = MaterialTheme.typography.labelSmall.copy(
-                fontWeight = FontWeight.Bold,
-                fontSize = if (tier == EnemyTier.BOSS) 20.sp else 11.sp
-            )
-            val badgePadding = if (tier == EnemyTier.BOSS) {
-                PaddingValues(horizontal = 6.dp, vertical = 2.dp)
-            } else {
-                PaddingValues(horizontal = 6.dp, vertical = 2.dp)
-            }
-            Surface(
-                shape = RoundedCornerShape(8.dp),
-                color = tierAccent.copy(alpha = 0.98f),
+        if (tier != EnemyTier.COMMON && !transitionActive) {
+            EnemyTierBadge(
+                tier = tier,
+                accentColor = tierAccent,
                 modifier = Modifier
                     .align(Alignment.TopStart)
                     .padding(4.dp)
-            ) {
-                Text(
-                    text = tierBadgeText,
-                    style = badgeTextStyle,
-                    color = Color.Black,
-                    modifier = Modifier.padding(badgePadding)
-                )
-            }
+                    .size(if (tier == EnemyTier.BOSS) 30.dp else 24.dp)
+            )
         }
     }
 }
 
+}
+
+@Composable
+private fun EnemyTierBadge(
+    tier: EnemyTier,
+    accentColor: Color,
+    modifier: Modifier = Modifier
+) {
+    Canvas(modifier = modifier) {
+        val stroke = Stroke(width = size.minDimension * 0.08f, cap = StrokeCap.Round)
+        val outer = Path().apply {
+            moveTo(size.width * 0.50f, size.height * 0.04f)
+            lineTo(size.width * 0.92f, size.height * 0.28f)
+            lineTo(size.width * 0.92f, size.height * 0.72f)
+            lineTo(size.width * 0.50f, size.height * 0.96f)
+            lineTo(size.width * 0.08f, size.height * 0.72f)
+            lineTo(size.width * 0.08f, size.height * 0.28f)
+            close()
+        }
+        drawPath(outer, Color(0xFF07131D).copy(alpha = 0.90f))
+        drawPath(outer, accentColor.copy(alpha = 0.96f), style = stroke)
+        drawCircle(
+            color = Color.White.copy(alpha = 0.16f),
+            radius = size.minDimension * 0.27f,
+            center = Offset(size.width * 0.50f, size.height * 0.50f)
+        )
+        when (tier) {
+            EnemyTier.ELITE -> {
+                val diamond = Path().apply {
+                    moveTo(size.width * 0.50f, size.height * 0.18f)
+                    lineTo(size.width * 0.74f, size.height * 0.50f)
+                    lineTo(size.width * 0.50f, size.height * 0.82f)
+                    lineTo(size.width * 0.26f, size.height * 0.50f)
+                    close()
+                }
+                drawPath(diamond, accentColor.copy(alpha = 0.34f))
+                drawPath(diamond, Color.White.copy(alpha = 0.94f), style = stroke)
+                drawLine(
+                    color = accentColor.copy(alpha = 0.96f),
+                    start = Offset(size.width * 0.35f, size.height * 0.50f),
+                    end = Offset(size.width * 0.65f, size.height * 0.50f),
+                    strokeWidth = size.minDimension * 0.08f,
+                    cap = StrokeCap.Round
+                )
+            }
+            EnemyTier.BOSS -> {
+                val crest = Path().apply {
+                    moveTo(size.width * 0.22f, size.height * 0.72f)
+                    lineTo(size.width * 0.30f, size.height * 0.32f)
+                    lineTo(size.width * 0.44f, size.height * 0.56f)
+                    lineTo(size.width * 0.50f, size.height * 0.20f)
+                    lineTo(size.width * 0.56f, size.height * 0.56f)
+                    lineTo(size.width * 0.70f, size.height * 0.32f)
+                    lineTo(size.width * 0.78f, size.height * 0.72f)
+                    close()
+                }
+                drawPath(crest, accentColor.copy(alpha = 0.34f))
+                drawPath(crest, Color.White.copy(alpha = 0.94f), style = stroke)
+                drawLine(
+                    color = accentColor.copy(alpha = 0.98f),
+                    start = Offset(size.width * 0.28f, size.height * 0.72f),
+                    end = Offset(size.width * 0.72f, size.height * 0.72f),
+                    strokeWidth = size.minDimension * 0.10f,
+                    cap = StrokeCap.Round
+                )
+            }
+            EnemyTier.COMMON -> Unit
+        }
+    }
 }
 
 @Composable
@@ -7429,7 +7653,7 @@ private fun CompositeEnemyIcon(
             val offsetX = baseSize * (part.offsetX + groupOffsetX - centerX)
             val offsetY = baseSize * (part.offsetY + groupOffsetY - centerY)
             Image(
-                painter = rememberAssetPainter(part.spritePath, painterResource(R.drawable.inventory_icon)),
+                painter = rememberAssetPainter(part.spritePath, painterResource(R.drawable.inventory_icon), async = true),
                 contentDescription = null,
                 contentScale = ContentScale.Fit,
                 modifier = Modifier

@@ -86,6 +86,16 @@ class EnemyMovementManagerTest {
         assertFalse(result.states.containsKey("patrol"))
     }
 
+    @Test
+    fun patrolWaitsWhenDestinationAlreadyHasFiveEnemyParties() {
+        val manager = manager(authoredPartiesByRoom = mapOf("sifter" to 5))
+        manager.restore(emptyMap(), activeSession())
+
+        manager.tick(25_000, "junction", activeSession())
+
+        assertEquals("conveyor", manager.stateSnapshot().getValue("patrol").roomId)
+    }
+
     private fun manager(startRoom: String = "conveyor"): EnemyMovementManager {
         val route = listOf("conveyor", "sifter", "shoring")
         val rooms = listOf(
@@ -116,9 +126,50 @@ class EnemyMovementManagerTest {
         )
     }
 
+    private fun manager(
+        startRoom: String = "conveyor",
+        authoredPartiesByRoom: Map<String, Int>
+    ): EnemyMovementManager {
+        val route = listOf("conveyor", "sifter", "shoring")
+        val rooms = listOf(
+            room("junction", mapOf("east" to "conveyor")),
+            room("conveyor", mapOf("west" to "junction", "north" to "sifter")),
+            room(
+                "sifter",
+                mapOf("south" to "conveyor", "north" to "shoring"),
+                authoredEnemyPartyCount = authoredPartiesByRoom["sifter"] ?: 0
+            ),
+            room("shoring", mapOf("south" to "sifter"))
+        )
+        return EnemyMovementManager(
+            EnemyMovementCatalog(
+                zones = listOf(EnemyMovementZone("zone", route)),
+                parties = listOf(
+                    EnemyMovementParty(
+                        id = "patrol",
+                        zoneId = "zone",
+                        enemies = listOf("pressure_hauler"),
+                        startRoom = startRoom,
+                        route = route,
+                        behavior = "patrol",
+                        aggression = "aggressive",
+                        moveIntervalSeconds = 25,
+                        engageDelaySeconds = 10,
+                        requiresActiveQuest = "quest"
+                    )
+                )
+            ),
+            rooms
+        )
+    }
+
     private fun activeSession() = GameSessionState(activeQuests = setOf("quest"))
 
-    private fun room(id: String, connections: Map<String, String>) = Room(
+    private fun room(
+        id: String,
+        connections: Map<String, String>,
+        authoredEnemyPartyCount: Int = 0
+    ) = Room(
         id = id,
         env = "mine",
         title = id,
@@ -127,6 +178,7 @@ class EnemyMovementManagerTest {
         npcs = emptyList(),
         items = emptyList(),
         enemies = emptyList(),
+        enemyParties = List(authoredEnemyPartyCount) { index -> listOf("authored_$index") },
         connections = connections,
         pos = listOf(0, 0),
         state = emptyMap(),

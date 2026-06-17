@@ -16,6 +16,16 @@
         "mine_gas",
         "mine_threshold"
       ]
+    },
+    {
+      "id": "debug_zone",
+      "rooms": [
+        "debug_enemy_party_sizes",
+        "debug_enemy_party_sizes_east",
+        "debug_enemy_party_sizes_north",
+        "debug_enemy_party_sizes_south"
+      ],
+      "protected_rooms": []
     }
   ],
   "parties": [
@@ -40,6 +50,137 @@
         "enter_room": "A pressure hauler rounds the bend.",
         "leave_room": "The hauler grinds deeper into the mine.",
         "adjacent": "Heavy treads echo nearby."
+      }
+    },
+    {
+      "id": "debug_patrol_2",
+      "zone_id": "debug_zone",
+      "enemies": [
+        "echo_borer",
+        "echo_borer"
+      ],
+      "start_room": "debug_enemy_party_sizes",
+      "route": [
+        "debug_enemy_party_sizes",
+        "debug_enemy_party_sizes_east"
+      ],
+      "behavior": "patrol",
+      "aggression": "passive",
+      "move_interval_seconds": 12,
+      "engage_delay_seconds": 10,
+      "signals": {
+        "enter_room": "An echo borer swarm enters the room.",
+        "leave_room": "The echo borer swarm moves away.",
+        "adjacent": "Heavy vibrations echo nearby."
+      }
+    },
+    {
+      "id": "debug_patrol_3",
+      "zone_id": "debug_zone",
+      "enemies": [
+        "siren_skimmer",
+        "siren_skimmer",
+        "siren_skimmer"
+      ],
+      "start_room": "debug_enemy_party_sizes_east",
+      "route": [
+        "debug_enemy_party_sizes_east",
+        "debug_enemy_party_sizes"
+      ],
+      "behavior": "patrol",
+      "aggression": "passive",
+      "move_interval_seconds": 12,
+      "engage_delay_seconds": 10,
+      "signals": {
+        "enter_room": "A siren skimmer flock glides in.",
+        "leave_room": "The siren skimmer flock glides out.",
+        "adjacent": "A high-pitched resonance echoes nearby."
+      }
+    },
+    {
+      "id": "debug_patrol_north_1",
+      "zone_id": "debug_zone",
+      "enemies": [
+        "acoustic_bulwark"
+      ],
+      "start_room": "debug_enemy_party_sizes_north",
+      "route": [
+        "debug_enemy_party_sizes_north",
+        "debug_enemy_party_sizes"
+      ],
+      "behavior": "patrol",
+      "aggression": "passive",
+      "move_interval_seconds": 10,
+      "engage_delay_seconds": 10,
+      "signals": {
+        "enter_room": "An acoustic bulwark drops in from the north.",
+        "leave_room": "The acoustic bulwark withdraws north.",
+        "adjacent": "A shielded pulse hums north of here."
+      }
+    },
+    {
+      "id": "debug_patrol_north_2",
+      "zone_id": "debug_zone",
+      "enemies": [
+        "echo_borer",
+        "siren_skimmer"
+      ],
+      "start_room": "debug_enemy_party_sizes_north",
+      "route": [
+        "debug_enemy_party_sizes_north",
+        "debug_enemy_party_sizes"
+      ],
+      "behavior": "patrol",
+      "aggression": "passive",
+      "move_interval_seconds": 14,
+      "engage_delay_seconds": 10,
+      "signals": {
+        "enter_room": "A mixed patrol slips in from the north.",
+        "leave_room": "The mixed patrol slips back north.",
+        "adjacent": "Scratching and wingbeats echo north of here."
+      }
+    },
+    {
+      "id": "debug_patrol_south_1",
+      "zone_id": "debug_zone",
+      "enemies": [
+        "pressure_hauler"
+      ],
+      "start_room": "debug_enemy_party_sizes_south",
+      "route": [
+        "debug_enemy_party_sizes_south",
+        "debug_enemy_party_sizes"
+      ],
+      "behavior": "patrol",
+      "aggression": "passive",
+      "move_interval_seconds": 11,
+      "engage_delay_seconds": 10,
+      "signals": {
+        "enter_room": "A pressure hauler rolls in from the south.",
+        "leave_room": "The pressure hauler rolls south.",
+        "adjacent": "Hydraulic treads rumble south of here."
+      }
+    },
+    {
+      "id": "debug_patrol_south_2",
+      "zone_id": "debug_zone",
+      "enemies": [
+        "dominion_dampener",
+        "echo_borer"
+      ],
+      "start_room": "debug_enemy_party_sizes_south",
+      "route": [
+        "debug_enemy_party_sizes_south",
+        "debug_enemy_party_sizes"
+      ],
+      "behavior": "patrol",
+      "aggression": "passive",
+      "move_interval_seconds": 15,
+      "engage_delay_seconds": 10,
+      "signals": {
+        "enter_room": "A Dominion escort advances from the south.",
+        "leave_room": "The Dominion escort falls back south.",
+        "adjacent": "Bootsteps and chittering echo south of here."
       }
     }
   ]

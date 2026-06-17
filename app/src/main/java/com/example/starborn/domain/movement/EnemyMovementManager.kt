@@ -4,7 +4,7 @@ import com.example.starborn.domain.model.Room
 import com.example.starborn.domain.session.GameSessionState
 import java.util.Locale
 
-const val MAX_ACTIVE_ENEMY_PARTIES_PER_ROOM: Int = 3
+const val MAX_ACTIVE_ENEMY_PARTIES_PER_ROOM: Int = 5
 
 class EnemyMovementManager(
     private val catalog: EnemyMovementCatalog,
