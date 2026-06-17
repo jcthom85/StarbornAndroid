@@ -1,5 +1,6 @@
 import org.gradle.api.tasks.Exec
 import org.gradle.api.tasks.testing.Test
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
@@ -11,20 +12,39 @@ plugins {
 android {
     namespace = "com.example.starborn"
     compileSdk = 34
+    val keystoreProperties = Properties().apply {
+        val propertiesFile = rootProject.file("keystore.properties")
+        if (propertiesFile.exists()) {
+            propertiesFile.inputStream().use(::load)
+        }
+    }
 
     defaultConfig {
         applicationId = "com.example.starborn"
         minSdk = 26
         targetSdk = 34
-        versionCode = 2
-        versionName = "1.1.0"
+        versionCode = 3
+        versionName = "1.1.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        create("release") {
+            val configuredStoreFile = keystoreProperties.getProperty("storeFile")
+            if (!configuredStoreFile.isNullOrBlank()) {
+                storeFile = rootProject.file(configuredStoreFile)
+            }
+            storePassword = keystoreProperties.getProperty("storePassword")
+            keyAlias = keystoreProperties.getProperty("keyAlias")
+            keyPassword = keystoreProperties.getProperty("keyPassword")
+        }
     }
 
     buildTypes {
         release {
             isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("release")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
