@@ -4,6 +4,8 @@ import com.example.starborn.domain.model.Room
 import com.example.starborn.domain.session.GameSessionState
 import java.util.Locale
 
+const val MAX_ACTIVE_ENEMY_PARTIES_PER_ROOM: Int = 3
+
 class EnemyMovementManager(
     private val catalog: EnemyMovementCatalog,
     rooms: List<Room>
@@ -156,12 +158,13 @@ class EnemyMovementManager(
             return state.copy(moveRemainingMs = intervalMs(definition)) to null
         }
         val destination = definition.route[nextIndex]
-        val occupied = definitionsById.values.any { other ->
-            other.id != definition.id &&
-                isActive(other, session) &&
-                currentStates[other.id]?.let { !it.defeated && it.roomId == destination } == true
+        val destinationPartyCount = authoredPartyCount(destination) + currentStates.count { (partyId, otherState) ->
+            partyId != definition.id &&
+                !otherState.defeated &&
+                otherState.roomId == destination &&
+                definitionsById[partyId]?.let { isActive(it, session) } == true
         }
-        if (occupied) {
+        if (destinationPartyCount >= MAX_ACTIVE_ENEMY_PARTIES_PER_ROOM) {
             return state.copy(moveRemainingMs = intervalMs(definition)) to null
         }
         val directionName = directionBetween(state.roomId, destination)
@@ -219,6 +222,15 @@ class EnemyMovementManager(
 
     private fun directionBetween(fromRoomId: String, toRoomId: String): String? =
         roomsById[fromRoomId]?.connections?.entries?.firstOrNull { it.value == toRoomId }?.key
+
+    private fun authoredPartyCount(roomId: String): Int {
+        val room = roomsById[roomId] ?: return 0
+        val parties = room.enemyParties
+            ?.map { party -> party.map { it.trim() }.filter { it.isNotEmpty() } }
+            ?.filter { it.isNotEmpty() }
+        if (!parties.isNullOrEmpty()) return parties.size
+        return room.enemies.map { it.trim() }.count { it.isNotEmpty() }
+    }
 
     private fun seedMissing(session: GameSessionState) {
         val mutable = states.toMutableMap()

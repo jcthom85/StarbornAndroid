@@ -10,12 +10,12 @@ appId: com.junewiregames.starborn.prealpha
     visible: "Med Supply Closet"
     timeout: 15000
 - extendedWaitUntil:
-    visible: "Pick up Medkit I"
+    visible: "Medkit I"
     timeout: 10000
 - assertVisible: "Medkit I"
 - takeScreenshot: room-item-chip
-- tapOn: "Pick up Medkit I"
+- tapOn: "Medkit I"
 - extendedWaitUntil:
-    notVisible: "Pick up Medkit I"
+    notVisible: "Medkit I"
     timeout: 10000
 - takeScreenshot: room-item-pickup

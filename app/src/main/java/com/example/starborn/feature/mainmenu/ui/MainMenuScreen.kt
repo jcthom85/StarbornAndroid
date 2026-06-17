@@ -63,7 +63,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-private enum class StartMode { NORMAL, DEBUG, HUB_1, HUB_2, ROOM_ITEMS, SCAVENGER, HEAVY_LIFTING, LIFT_SHAFT, WEATHER_LAB, CHECKPOINT, DEEP_MINE, DYNAMIC_PATROL, RED_ALERT, LAUNCH, FIRST_COMBAT, ENEMY_PARTY, PRESENCE_STRESS }
+private enum class StartMode { NORMAL, DEBUG, HUB_1, HUB_2, ROOM_ITEMS, SCAVENGER, HEAVY_LIFTING, LIFT_SHAFT, WEATHER_LAB, CHECKPOINT, DEEP_MINE, DYNAMIC_PATROL, RED_ALERT, LAUNCH, FIRST_COMBAT, ENEMY_PARTY, ENEMY_PARTY_SIZES, PRESENCE_STRESS }
 
 private val TitleGold = Color(0xFFFFC857)
 private val TitleAmber = Color(0xFFFF9F2E)
@@ -245,6 +245,12 @@ fun MainMenuScreen(
                     onFailure = onFailure
                 )
             }
+            StartMode.ENEMY_PARTY_SIZES -> {
+                viewModel.startNewGameAtEnemyPartySizes(
+                    onComplete = { onStartGame() },
+                    onFailure = onFailure
+                )
+            }
             StartMode.PRESENCE_STRESS -> {
                 viewModel.startNewGameAtPresenceStress(
                     onComplete = { onStartGame() },
@@ -384,6 +390,11 @@ fun MainMenuScreen(
             StarbornTitleButton(
                 text = "Debug: Enemy Party",
                 onClick = { pendingStartMode = StartMode.ENEMY_PARTY },
+                enabled = pendingStartMode == null
+            )
+            StarbornTitleButton(
+                text = "Debug: Party Sizes",
+                onClick = { pendingStartMode = StartMode.ENEMY_PARTY_SIZES },
                 enabled = pendingStartMode == null
             )
             StarbornTitleButton(

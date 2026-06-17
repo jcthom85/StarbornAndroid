@@ -907,6 +907,30 @@ class AppServices(context: Context) {
         }
     }
 
+    fun startNewGameAtEnemyPartySizes(): Boolean {
+        return runCatching {
+            if (!startNewGame(debugFullInventory = false)) return false
+            bootstrapCinematics.clear()
+            bootstrapPlayerActions.clear()
+            sessionStore.completeQuest("w1_mq01")
+            sessionStore.setMilestone("ms_w1_mq01_complete")
+            sessionStore.setWorld("world_1")
+            sessionStore.setHub("hub_2_logistics")
+            sessionStore.setRoom("debug_enemy_party_sizes")
+            sessionStore.unlockSkill("nova_hydraulic_kick")
+            sessionStore.setPlayerLevel(3)
+            sessionStore.setPlayerXp(250)
+            sessionStore.setPartyMemberLevel("nova", 3)
+            sessionStore.setPartyMemberXp("nova", 250)
+            sessionStore.markTutorialCompleted("swipe_move")
+            sessionStore.markTutorialCompleted("movement")
+            true
+        }.getOrElse { err ->
+            Log.e("AppServices", "Failed to start debug enemy-party-size game.", err)
+            false
+        }
+    }
+
     fun startNewGameAtHub2(): Boolean {
         return runCatching {
             if (!startNewGame(debugFullInventory = true)) return false

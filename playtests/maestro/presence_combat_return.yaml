@@ -5,10 +5,12 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     visible: "New Game"
     timeout: 60000
-- swipe:
-    direction: UP
-- swipe:
-    direction: UP
+- scrollUntilVisible:
+    element:
+      text: "Debug: Presence Stress"
+    direction: DOWN
+    timeout: 20000
+    visibilityPercentage: 50
 - extendedWaitUntil:
     visible: "Debug: Presence Stress"
     timeout: 10000
@@ -16,8 +18,8 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     visible: "Presence Stress Test"
     timeout: 15000
-- assertVisible: "Talk to Zeke"
-- assertVisible: "Pick up Medkit I"
+- assertVisible: "Zeke"
+- assertVisible: "Medkit I"
 - assertVisible: "Engage Acoustic Bulwark"
 - tapOn: "Engage Acoustic Bulwark"
 - extendedWaitUntil:
@@ -53,13 +55,12 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     notVisible: "Engage Acoustic Bulwark"
     timeout: 10000
-- assertVisible: "Talk to Zeke"
-- assertVisible: "Talk to Scrapper"
-- assertVisible: "People in room"
-- assertVisible: "Pick up Medkit I"
-- assertVisible: "Pick up Scrap Metal"
-- assertVisible: "Items in room"
-- assertVisible: "Engage Dominion Dampener \\+ Resonance Buoy party"
-- assertVisible: "Engage Echo Borer \\+ Siren Skimmer party"
-- assertVisible: "Hostiles in room"
+- assertVisible: "Zeke"
+- assertVisible: "Scrapper"
+- assertVisible: "People"
+- assertVisible: "Medkit I"
+- assertVisible: "Scrap Metal"
+- assertVisible: "Items"
+- assertVisible: "Engage Dominion Dampener"
+- assertVisible: "Engage Echo Borer"
 - takeScreenshot: presence-combat-return

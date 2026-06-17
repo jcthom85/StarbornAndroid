@@ -1,6 +1,5 @@
 package com.example.starborn.feature.exploration.ui
 
-import android.graphics.BitmapFactory
 import androidx.annotation.DrawableRes
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
@@ -113,7 +112,6 @@ import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
@@ -526,9 +524,7 @@ fun ExplorationScreen(
                 }
             }.orEmpty()
         }
-        val roomItemFlavor = currentRoom?.itemFlavor.orEmpty()
         val hasRoomEntities = fallbackNpcs.isNotEmpty() ||
-            roomEnemyParties.isNotEmpty() ||
             uiState.groundItems.isNotEmpty()
         val serviceQuickActions = remember(uiState.actions, uiState.actionHints, currentRoom?.id) {
             val unique = LinkedHashSet<String>()
@@ -695,34 +691,44 @@ fun ExplorationScreen(
                         onNpcClick = { name -> viewModel.onNpcInteraction(name) },
                         onEnemyClick = { enemyId -> viewModel.engageEnemy(enemyId) },
                         borderColor = panelBorderColor,
-                        backgroundColor = panelBackgroundColor,
                         accentColor = actionAccentColor,
                         textColor = roomTextColor,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .heightIn(min = 132.dp, max = 292.dp)
+                            .heightIn(min = 104.dp, max = 236.dp)
                     )
                     if (hasRoomEntities) {
                         RoomEntitySection(
                             npcs = fallbackNpcs,
-                            enemyParties = roomEnemyParties,
                             groundItems = uiState.groundItems,
-                            itemFlavor = roomItemFlavor,
                             itemDisplayName = { itemId -> viewModel.itemDisplayName(itemId) },
                             itemDetailLabel = { itemId -> viewModel.roomItemDetailLabel(itemId) },
                             itemIsEquipment = { itemId -> viewModel.roomItemIsEquipment(itemId) },
-                            enemyTiers = uiState.enemyTiers,
-                            enemyIcons = uiState.enemyIcons,
                             accentColor = actionAccentColor,
                             borderColor = panelBorderColor,
                             isDark = isRoomDark,
                             onNpcClick = { name -> viewModel.onNpcInteraction(name) },
-                            onEnemyClick = { enemyId -> viewModel.engageEnemy(enemyId) },
                             onCollectItem = { itemId -> viewModel.collectGroundItem(itemId) },
                             onCollectAll = { viewModel.collectAllGroundItems() }
                         )
                     }
                 }
+            }
+
+            if (roomEnemyParties.isNotEmpty()) {
+                EnemyPresenceStage(
+                    parties = roomEnemyParties,
+                    enemyTiers = uiState.enemyTiers,
+                    enemyIcons = uiState.enemyIcons,
+                    accentColor = actionAccentColor,
+                    isDark = isRoomDark,
+                    onPartyClick = { enemyId -> viewModel.engageEnemy(enemyId) },
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .fillMaxWidth()
+                        .heightIn(min = 190.dp, max = 290.dp)
+                        .padding(start = 4.dp, end = 4.dp, bottom = 64.dp)
+                )
             }
 
             if (serviceQuickActions.isNotEmpty()) {
@@ -2170,6 +2176,7 @@ private fun MenuTabRow(
 ) {
     Row(
         modifier = Modifier
+            .widthIn(max = 1200.dp)
             .fillMaxWidth()
             .clip(RoundedCornerShape(12.dp))
             .background(Color(0xFF061018).copy(alpha = 0.38f))
@@ -4861,6 +4868,7 @@ private fun SkillTreeBranchTabs(
     }
     Row(
         modifier = Modifier
+            .widthIn(max = 1200.dp)
             .fillMaxWidth()
             .horizontalScroll(rememberScrollState()),
         horizontalArrangement = Arrangement.spacedBy(10.dp)
@@ -5929,7 +5937,7 @@ private fun ServiceActionTray(
         label = "serviceTrayMotionCycle"
     )
     Surface(
-        modifier = modifier,
+        modifier = modifier.widthIn(max = 1200.dp),
         shape = trayShape,
         color = backgroundColor.copy(alpha = 0.75f),
         border = BorderStroke(1.2.dp, borderColor),
@@ -5938,6 +5946,7 @@ private fun ServiceActionTray(
         Row(
             modifier = Modifier
                 .padding(horizontal = 16.dp, vertical = 12.dp)
+                .widthIn(max = 1200.dp)
                 .horizontalScroll(rememberScrollState()),
             horizontalArrangement = Arrangement.spacedBy(14.dp),
             verticalAlignment = Alignment.CenterVertically
@@ -6451,7 +6460,6 @@ private fun RoomDescriptionPanel(
     onNpcClick: (String) -> Unit,
     onEnemyClick: (String) -> Unit,
     borderColor: Color,
-    backgroundColor: Color,
     accentColor: Color,
     modifier: Modifier = Modifier
 ) {
@@ -6478,8 +6486,7 @@ private fun RoomDescriptionPanel(
                         )
                     )
                 )
-                .verticalScroll(scrollState)
-                .padding(horizontal = 20.dp, vertical = 16.dp),
+                .padding(horizontal = 20.dp, vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Box(
@@ -6496,17 +6503,24 @@ private fun RoomDescriptionPanel(
                         )
                     )
             )
-            RoomDescription(
-                plan = plan,
-                description = description,
-                isDark = isDark,
-                textColor = textColor,
-                onAction = onAction,
-                onNpcClick = onNpcClick,
-                onEnemyClick = onEnemyClick,
-                accentColor = accentColor,
-                modifier = Modifier.fillMaxWidth()
-            )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(max = 190.dp)
+                    .verticalScroll(scrollState)
+            ) {
+                RoomDescription(
+                    plan = plan,
+                    description = description,
+                    isDark = isDark,
+                    textColor = textColor,
+                    onAction = onAction,
+                    onNpcClick = onNpcClick,
+                    onEnemyClick = onEnemyClick,
+                    accentColor = accentColor,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
         }
     }
 }
@@ -6515,219 +6529,188 @@ private fun RoomDescriptionPanel(
 @Composable
 private fun RoomEntitySection(
     npcs: List<String>,
-    enemyParties: List<List<String>>,
     groundItems: Map<String, Int>,
-    itemFlavor: Map<String, String>,
     itemDisplayName: (String) -> String,
     itemDetailLabel: (String) -> String?,
     itemIsEquipment: (String) -> Boolean,
-    enemyTiers: Map<String, String>,
-    enemyIcons: Map<String, EnemyIconUi>,
     accentColor: Color,
     borderColor: Color,
     isDark: Boolean,
     onNpcClick: (String) -> Unit,
-    onEnemyClick: (String) -> Unit,
     onCollectItem: (String) -> Unit,
     onCollectAll: () -> Unit
 ) {
+    val itemEntries = remember(groundItems, itemDisplayName, itemIsEquipment) {
+        groundItems.entries.sortedWith(
+            compareByDescending<Map.Entry<String, Int>> { itemIsEquipment(it.key) }
+                .thenBy { itemDisplayName(it.key).lowercase(Locale.getDefault()) }
+        )
+    }
     Surface(
-        shape = RoundedCornerShape(12.dp),
-        color = Color.Black.copy(alpha = if (isDark) 0.18f else 0.10f),
-        border = BorderStroke(1.dp, borderColor.copy(alpha = if (isDark) 0.22f else 0.13f))
+        shape = RoundedCornerShape(10.dp),
+        color = Color(0xFF050A10).copy(alpha = if (isDark) 0.60f else 0.44f),
+        border = BorderStroke(1.dp, borderColor.copy(alpha = if (isDark) 0.30f else 0.18f))
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 10.dp, vertical = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
             if (npcs.isNotEmpty()) {
-                CompactEntityRow(label = "People") {
+                PresenceRailRow(label = "People") {
                     npcs.forEach { npc ->
-                        RoomActionChip(
-                            label = npcDisplayLabel(npc),
+                        NpcPresenceChip(
+                            npc = npc,
                             accentColor = accentColor,
+                            borderColor = borderColor,
+                            isDark = isDark,
                             onClick = { onNpcClick(npc) }
                         )
                     }
                 }
             }
-            if (groundItems.isNotEmpty()) {
-                CompactFindsRow(
-                    items = groundItems,
-                    itemFlavor = itemFlavor,
-                    itemDisplayName = itemDisplayName,
-                    itemDetailLabel = itemDetailLabel,
-                    itemIsEquipment = itemIsEquipment,
-                    accentColor = accentColor,
-                    borderColor = borderColor,
-                    isDark = isDark,
-                    onCollectItem = onCollectItem,
-                    onCollectAll = onCollectAll
-                )
-            }
-            if (enemyParties.isNotEmpty()) {
-                CompactHostilesRow(
-                    enemyParties = enemyParties,
-                    enemyTiers = enemyTiers,
-                    enemyIcons = enemyIcons,
-                    accentColor = accentColor,
-                    borderColor = borderColor,
-                    isDark = isDark,
-                    onEnemyClick = onEnemyClick
-                )
+            if (itemEntries.isNotEmpty()) {
+                PresenceRailRow(label = "Items") {
+                    itemEntries.forEach { (itemId, quantity) ->
+                        FindPresenceChip(
+                            itemId = itemId,
+                            quantity = quantity,
+                            name = itemDisplayName(itemId),
+                            detail = itemDetailLabel(itemId),
+                            isEquipment = itemIsEquipment(itemId),
+                            accentColor = accentColor,
+                            borderColor = borderColor,
+                            isDark = isDark,
+                            onCollectItem = onCollectItem
+                        )
+                    }
+                    if (itemEntries.size > 1) {
+                        Surface(
+                            onClick = onCollectAll,
+                            shape = RoundedCornerShape(10.dp),
+                            color = accentColor.copy(alpha = 0.12f),
+                            border = BorderStroke(1.dp, accentColor.copy(alpha = 0.42f)),
+                            modifier = Modifier
+                                .width(54.dp)
+                                .height(44.dp)
+                        ) {
+                            Box(contentAlignment = Alignment.Center) {
+                                Text(
+                                    text = "All",
+                                    color = Color.White.copy(alpha = 0.88f),
+                                    style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                                    maxLines = 1
+                                )
+                            }
+                        }
+                    }
+                }
             }
         }
     }
 }
 
 @Composable
-private fun CompactEntityRow(
+private fun PresenceRailRow(
     label: String,
     content: @Composable () -> Unit
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = label,
-            color = Color.White.copy(alpha = 0.58f),
-            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.SemiBold),
-            modifier = Modifier.width(52.dp)
-        )
-        Row(
-            modifier = Modifier
-                .weight(1f)
-                .horizontalScroll(rememberScrollState()),
-            horizontalArrangement = Arrangement.spacedBy(6.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            content()
-        }
-    }
-}
-
-@Composable
-private fun CompactHostilesRow(
-    enemyParties: List<List<String>>,
-    enemyTiers: Map<String, String>,
-    enemyIcons: Map<String, EnemyIconUi>,
-    accentColor: Color,
-    borderColor: Color,
-    isDark: Boolean,
-    onEnemyClick: (String) -> Unit
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = "Hostiles",
-            color = Color.White.copy(alpha = 0.58f),
-            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.SemiBold),
-            modifier = Modifier.width(52.dp)
-        )
-        Box(modifier = Modifier.weight(1f)) {
-            EnemyPartyStrip(
-                parties = enemyParties,
-                enemyTiers = enemyTiers,
-                enemyIcons = enemyIcons,
-                accentColor = accentColor,
-                borderColor = borderColor,
-                isDark = isDark,
-                onPartyClick = { leaderId ->
-                    if (leaderId.isNotBlank()) onEnemyClick(leaderId)
-                }
-            )
-        }
-    }
-}
-@Composable
-private fun CompactFindsRow(
-    items: Map<String, Int>,
-    itemFlavor: Map<String, String>,
-    itemDisplayName: (String) -> String,
-    itemDetailLabel: (String) -> String?,
-    itemIsEquipment: (String) -> Boolean,
-    accentColor: Color,
-    borderColor: Color,
-    isDark: Boolean,
-    onCollectItem: (String) -> Unit,
-    onCollectAll: () -> Unit
-) {
-    val entries = items.entries.sortedWith(
-        compareByDescending<Map.Entry<String, Int>> { itemIsEquipment(it.key) }
-            .thenBy { itemDisplayName(it.key).lowercase(Locale.getDefault()) }
-    )
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.Top
     ) {
-        Text(
-            text = if (entries.any { itemIsEquipment(it.key) }) "Finds" else "Items",
-            color = Color.White.copy(alpha = 0.58f),
-            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.SemiBold),
+        Column(
             modifier = Modifier
-                .width(52.dp)
-                .padding(top = 8.dp)
-        )
-        Row(
-            modifier = Modifier
-                .weight(1f)
-                .horizontalScroll(rememberScrollState()),
-            horizontalArrangement = Arrangement.spacedBy(6.dp),
-            verticalAlignment = Alignment.Top
+                .width(58.dp)
+                .padding(top = 11.dp),
+            verticalArrangement = Arrangement.spacedBy(2.dp)
         ) {
-            entries.forEach { (itemId, quantity) ->
-                CompactFindCard(
-                    itemId = itemId,
-                    quantity = quantity,
-                    name = itemDisplayName(itemId),
-                    detail = itemDetailLabel(itemId),
-                    flavor = itemFlavor[itemId].orEmpty(),
-                    isEquipment = itemIsEquipment(itemId),
-                    accentColor = accentColor,
-                    borderColor = borderColor,
-                    isDark = isDark,
-                    onCollectItem = onCollectItem
-                )
-            }
-            if (entries.size > 1) {
-                Surface(
-                    onClick = onCollectAll,
-                    shape = RoundedCornerShape(12.dp),
-                    color = accentColor.copy(alpha = 0.12f),
-                    border = BorderStroke(1.dp, accentColor.copy(alpha = 0.58f)),
-                    modifier = Modifier
-                        .width(88.dp)
-                        .height(76.dp)
-                ) {
-                    Box(contentAlignment = Alignment.Center) {
-                        Text(
-                            text = "Pick Up\nAll",
-                            color = Color.White,
-                            textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold)
-                        )
-                    }
-                }
+            Text(
+                text = label,
+                color = Color.White.copy(alpha = 0.70f),
+                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold, fontSize = 11.sp),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+        Box(
+            modifier = Modifier
+                .weight(1f, fill = true)
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .horizontalScroll(rememberScrollState()),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.Top
+            ) {
+                content()
             }
         }
     }
 }
 
 @Composable
-private fun CompactFindCard(
+private fun NpcPresenceChip(
+    npc: String,
+    accentColor: Color,
+    borderColor: Color,
+    isDark: Boolean,
+    onClick: () -> Unit
+) {
+    val label = npcDisplayLabel(npc)
+    Surface(
+        onClick = onClick,
+        shape = RoundedCornerShape(10.dp),
+        color = Color.White.copy(alpha = if (isDark) 0.09f else 0.07f),
+        border = BorderStroke(1.dp, borderColor.copy(alpha = if (isDark) 0.36f else 0.24f)),
+        modifier = Modifier
+            .widthIn(min = 118.dp)
+            .height(44.dp)
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Surface(
+                shape = CircleShape,
+                color = accentColor.copy(alpha = 0.18f),
+                border = BorderStroke(1.dp, accentColor.copy(alpha = 0.52f)),
+                modifier = Modifier.size(28.dp)
+            ) {
+                Box(contentAlignment = Alignment.Center) {
+                    Text(
+                        text = label.firstOrNull()?.uppercaseChar()?.toString().orEmpty(),
+                        color = Color.White,
+                        style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold)
+                    )
+                }
+            }
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = label,
+                    color = Color.White,
+                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun FindPresenceChip(
     itemId: String,
     quantity: Int,
     name: String,
     detail: String?,
-    flavor: String,
     isEquipment: Boolean,
     accentColor: Color,
     borderColor: Color,
@@ -6736,48 +6719,49 @@ private fun CompactFindCard(
 ) {
     Surface(
         onClick = { onCollectItem(itemId) },
-        shape = RoundedCornerShape(12.dp),
-        color = Color.White.copy(alpha = if (isDark) 0.07f else 0.05f),
-        border = BorderStroke(1.dp, if (isEquipment) accentColor.copy(alpha = 0.58f) else borderColor.copy(alpha = 0.28f)),
+        shape = RoundedCornerShape(10.dp),
+        color = Color.White.copy(alpha = if (isDark) 0.08f else 0.06f),
+        border = BorderStroke(1.dp, if (isEquipment) accentColor.copy(alpha = 0.48f) else borderColor.copy(alpha = 0.22f)),
         modifier = Modifier
-            .width(174.dp)
-            .height(82.dp)
+            .widthIn(min = 136.dp)
+            .height(44.dp)
     ) {
-        Column(
-            modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp)
+        Row(
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(6.dp),
-                verticalAlignment = Alignment.CenterVertically
+            Surface(
+                shape = RoundedCornerShape(8.dp),
+                color = if (isEquipment) accentColor.copy(alpha = 0.20f) else Color.White.copy(alpha = 0.07f),
+                border = BorderStroke(1.dp, if (isEquipment) accentColor.copy(alpha = 0.52f) else borderColor.copy(alpha = 0.22f)),
+                modifier = Modifier.size(28.dp)
             ) {
-                Text(
-                    text = name,
-                    color = Color.White,
-                    style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.weight(1f)
-                )
-                if (quantity > 1) EntityCountPill("x$quantity", accentColor)
+                Box(contentAlignment = Alignment.Center) {
+                    Icon(
+                        painter = painterResource(roomPresenceItemIconRes(detail, isEquipment)),
+                        contentDescription = null,
+                        tint = if (isEquipment) accentColor.copy(alpha = 0.92f) else Color.White.copy(alpha = 0.78f),
+                        modifier = Modifier.size(16.dp)
+                    )
+                }
             }
-            val secondary = detail?.takeIf { it.isNotBlank() }
-                ?: flavor.takeIf { it.isNotBlank() }
-                ?: if (isEquipment) "Gear" else "Pick up"
-            Text(
-                text = secondary,
-                color = Color.White.copy(alpha = 0.68f),
-                style = MaterialTheme.typography.bodySmall,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-            Text(
-                text = "Tap to collect",
-                color = accentColor.copy(alpha = 0.9f),
-                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
-                maxLines = 1
-            )
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.Center
+            ) {
+                Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = name,
+                        color = Color.White,
+                        style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f)
+                    )
+                    if (quantity > 1) EntityCountPill("x$quantity", accentColor)
+                }
+            }
         }
     }
 }
@@ -6798,6 +6782,11 @@ private fun EntityCountPill(label: String, accentColor: Color) {
             modifier = Modifier.padding(horizontal = 7.dp, vertical = 2.dp)
         )
     }
+}
+
+@DrawableRes
+private fun roomPresenceItemIconRes(detail: String?, isEquipment: Boolean): Int {
+    return previewItemIconRes(detail ?: if (isEquipment) "weapon" else null)
 }
 
 private fun npcDisplayLabel(npc: String): String = npc
@@ -7050,10 +7039,15 @@ private fun EnemyPartyStrip(
     enemyTiers: Map<String, String>,
     enemyIcons: Map<String, EnemyIconUi>,
     accentColor: Color,
-    borderColor: Color,
     isDark: Boolean,
     onPartyClick: (String) -> Unit
 ) {
+    val visibleParties = parties.mapNotNull { party ->
+        party.mapNotNull { id -> id.trim().takeIf { it.isNotBlank() } }
+            .takeIf { it.isNotEmpty() }
+    }
+    if (visibleParties.isEmpty()) return
+
     val motion = rememberInfiniteTransition(label = "hostilesMotion")
     val motionCycle by motion.animateFloat(
         initialValue = 0f,
@@ -7064,31 +7058,96 @@ private fun EnemyPartyStrip(
         ),
         label = "hostilesMotionCycle"
     )
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Row(
+    BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
+        val memberSize = when {
+            maxWidth < 380.dp -> 164.dp
+            maxWidth < 520.dp -> 184.dp
+            else -> 200.dp
+        }
+        val laneRise = (memberSize * 0.36f).coerceAtLeast(88.dp)
+        fun overlapFor(members: Int): Float = when {
+            members >= 4 -> 0.78f
+            members == 3 -> 0.74f
+            members == 2 -> 0.70f
+            else -> 0f
+        }
+        fun clusterWidth(members: List<String>): Dp {
+            val count = members.size.coerceAtLeast(1)
+            val overlap = overlapFor(count)
+            return memberSize * (1f + (count - 1) * (1f - overlap))
+        }
+        val placements = visibleParties.mapIndexed { index, members ->
+            val laneIndex = if (visibleParties.size == 1) 0 else index
+            val alignment = when {
+                visibleParties.size == 1 -> Alignment.BottomCenter
+                index % 2 == 0 -> Alignment.BottomStart
+                else -> Alignment.BottomEnd
+            }
+            Triple(members, alignment, laneIndex)
+        }
+        val maxLaneIndex = placements.maxOf { it.third }
+        Box(
             modifier = Modifier
-                .padding(horizontal = 12.dp, vertical = 10.dp)
+                .widthIn(max = 1200.dp)
                 .fillMaxWidth()
-                .horizontalScroll(rememberScrollState()),
-            horizontalArrangement = Arrangement.spacedBy(10.dp)
+                .height(memberSize + 28.dp + laneRise * maxLaneIndex),
+            contentAlignment = Alignment.BottomCenter
         ) {
-                parties.forEach { party ->
-                    val leaderId = party.firstOrNull()?.trim().orEmpty()
-                    if (leaderId.isBlank()) return@forEach
-                    val partySize = party.count { it.trim().isNotBlank() }.coerceAtLeast(1)
-                    val tier = parseEnemyTier(enemyTiers[leaderId])
-                    EnemyPartyChip(
-                        leaderId = leaderId,
-                        partySize = partySize,
-                        tier = tier,
-                        motionCycle = motionCycle,
-                        accentColor = accentColor,
-                        borderColor = borderColor,
-                        isDark = isDark,
-                        icon = enemyIcons[leaderId],
-                        onClick = { onPartyClick(leaderId) }
+            placements.forEach { (members, alignment, laneIndex) ->
+                val xNudge = when (alignment) {
+                    Alignment.BottomStart -> 4.dp
+                    Alignment.BottomEnd -> (-4).dp
+                    else -> 0.dp
+                }
+                EnemyPartyCluster(
+                    enemyIds = members,
+                    enemyTiers = enemyTiers,
+                    enemyIcons = enemyIcons,
+                    motionCycle = motionCycle,
+                    accentColor = accentColor,
+                    isDark = isDark,
+                    memberSize = memberSize,
+                    overlapFraction = overlapFor(members.size),
+                    modifier = Modifier
+                        .align(alignment)
+                        .offset(x = xNudge, y = -laneRise * laneIndex)
+                        .zIndex((maxLaneIndex - laneIndex + 1).toFloat())
+                        .width(clusterWidth(members)),
+                    onEnemyClick = onPartyClick
                 )
             }
+        }
+    }
+}
+
+@Composable
+private fun EnemyPresenceStage(
+    parties: List<List<String>>,
+    enemyTiers: Map<String, String>,
+    enemyIcons: Map<String, EnemyIconUi>,
+    accentColor: Color,
+    isDark: Boolean,
+    onPartyClick: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.BottomCenter
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 6.dp),
+            contentAlignment = Alignment.BottomCenter
+        ) {
+            EnemyPartyStrip(
+                parties = parties,
+                enemyTiers = enemyTiers,
+                enemyIcons = enemyIcons,
+                accentColor = accentColor,
+                isDark = isDark,
+                onPartyClick = onPartyClick
+            )
         }
     }
 }
@@ -7111,32 +7170,75 @@ private fun parseEnemyTier(value: String?): EnemyTier {
 }
 
 @Composable
-private fun EnemyPartyChip(
-    leaderId: String,
-    partySize: Int,
+private fun EnemyPartyCluster(
+    enemyIds: List<String>,
+    enemyTiers: Map<String, String>,
+    enemyIcons: Map<String, EnemyIconUi>,
+    motionCycle: Float,
+    accentColor: Color,
+    isDark: Boolean,
+    memberSize: Dp,
+    overlapFraction: Float,
+    modifier: Modifier = Modifier,
+    onEnemyClick: (String) -> Unit
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(-(memberSize * overlapFraction), Alignment.CenterHorizontally),
+        verticalAlignment = Alignment.Bottom
+    ) {
+        enemyIds.forEachIndexed { index, enemyId ->
+            EnemyPartyStandee(
+                enemyId = enemyId,
+                instanceKey = "$enemyId-$index",
+                tier = parseEnemyTier(enemyTiers[enemyId]),
+                motionCycle = motionCycle,
+                accentColor = accentColor,
+                isDark = isDark,
+                icon = enemyIcons[enemyId],
+                size = memberSize,
+                modifier = Modifier.zIndex((enemyIds.size - index).toFloat()),
+                onClick = { onEnemyClick(enemyId) }
+            )
+        }
+    }
+}
+
+@Composable
+private fun EnemyPartyStandee(
+    enemyId: String,
+    instanceKey: String,
     tier: EnemyTier,
     motionCycle: Float,
     accentColor: Color,
-    borderColor: Color,
     isDark: Boolean,
     icon: EnemyIconUi?,
+    size: Dp,
+    modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
-    val shape = RoundedCornerShape(topStart = 20.dp, topEnd = 12.dp, bottomEnd = 20.dp, bottomStart = 12.dp)
-    Surface(
-        onClick = onClick,
-        shape = shape,
-        color = Color.Transparent
+    val interactionSource = remember(instanceKey) { MutableInteractionSource() }
+    Box(
+        modifier = modifier
+            .width(size)
+            .height(size + 28.dp)
+            .semantics { contentDescription = "Engage ${enemyDisplayLabel(enemyId)}" }
+            .clickable(
+                interactionSource = interactionSource,
+                indication = null,
+                onClick = onClick
+            ),
+        contentAlignment = Alignment.BottomCenter
     ) {
         EnemyPartyLeaderIcon(
-            enemyId = leaderId,
-            partySize = partySize,
+            enemyId = enemyId,
+            instanceKey = instanceKey,
             tier = tier,
             motionCycle = motionCycle,
             accentColor = accentColor,
-            borderColor = borderColor,
             isDark = isDark,
-            icon = icon
+            icon = icon,
+            iconSize = size
         )
     }
 }
@@ -7144,26 +7246,21 @@ private fun EnemyPartyChip(
 @Composable
 private fun EnemyPartyLeaderIcon(
     enemyId: String,
-    partySize: Int,
+    instanceKey: String,
     tier: EnemyTier,
     motionCycle: Float,
     accentColor: Color,
-    borderColor: Color,
     isDark: Boolean,
-    icon: EnemyIconUi?
+    icon: EnemyIconUi?,
+    iconSize: Dp = 80.dp
 ) {
     val iconPath = icon?.spritePath ?: remember(enemyId) { "images/enemies/${enemyId}_combat.png" }
     val painter = rememberAssetPainter(iconPath, painterResource(R.drawable.inventory_icon))
-    val iconTint = accentColor.copy(alpha = if (isDark) 0.72f else 0.92f)
-    val tierAccent = when (tier) {
-        EnemyTier.BOSS -> Color(0xFFFFD54F)
-        EnemyTier.ELITE -> Color(0xFFFFB74D)
-        EnemyTier.COMMON -> accentColor
-    }
-    val tierBorderWidth = when (tier) {
-        EnemyTier.BOSS -> 3.2.dp
-        EnemyTier.ELITE -> 2.4.dp
-        EnemyTier.COMMON -> 0.dp
+    val tierAccent = enemyTierAccent(tier, accentColor)
+    val tierBadge = when (tier) {
+        EnemyTier.BOSS -> "☠"
+        EnemyTier.ELITE -> "★"
+        EnemyTier.COMMON -> null
     }
     val tierLabel = when (tier) {
         EnemyTier.BOSS -> "☠"
@@ -7171,8 +7268,8 @@ private fun EnemyPartyLeaderIcon(
         EnemyTier.COMMON -> null
     }
     val density = LocalDensity.current
-    val phaseOffset = remember(enemyId) {
-        (abs(enemyId.lowercase(Locale.getDefault()).hashCode()) % 1000) / 1000f
+    val phaseOffset = remember(instanceKey) {
+        (abs(instanceKey.lowercase(Locale.getDefault()).hashCode()) % 1000) / 1000f
     }
     val t = (motionCycle + phaseOffset) % 1f
     val wave = kotlin.math.sin(t * Math.PI * 2.0).toFloat()
@@ -7180,67 +7277,49 @@ private fun EnemyPartyLeaderIcon(
     val bobAmplitude = if (isDark) 1.2.dp else 2.0.dp
     val bobPx = with(density) { bobAmplitude.toPx() } * wave
     val scale = 1f + (if (isDark) 0.012f else 0.02f) * wave
+    val spriteScale = when (tier) {
+        EnemyTier.BOSS -> 1.0f
+        EnemyTier.ELITE -> 1.6f
+        EnemyTier.COMMON -> 1.4f
+    }
     val shape = RoundedCornerShape(topStart = 20.dp, topEnd = 12.dp, bottomEnd = 20.dp, bottomStart = 12.dp)
-    val background = remember(accentColor, isDark, tierAccent, tier) {
-        val highlight = if (tier == EnemyTier.COMMON) accentColor else tierAccent
+    val background = remember {
         Brush.radialGradient(
-            colors = listOf(
-                highlight.copy(alpha = if (isDark) 0.26f else 0.38f),
-                Color(0xFF050A10).copy(alpha = if (isDark) 0.92f else 0.88f)
-            )
+            colors = listOf(Color.Transparent, Color.Transparent)
         )
     }
     Box(
-        modifier = Modifier.size(80.dp),
+        modifier = Modifier.size(iconSize),
         contentAlignment = Alignment.Center
     ) {
+        EnemyPresenceShadow(
+            isDark = isDark,
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = iconSize * 0.01f)
+                .width(iconSize * 0.72f)
+                .height(iconSize * 0.18f)
+        )
         Box(
             modifier = Modifier
-                .size(72.dp)
+                .fillMaxSize()
+                .padding(4.dp)
                 .graphicsLayer {
                     translationY = bobPx
-                    scaleX = scale
-                    scaleY = scale
+                    scaleX = scale * spriteScale
+                    scaleY = scale * spriteScale
                 }
                 .clip(shape)
-                .background(background)
-                .border(
-                    BorderStroke(
-                        1.35.dp,
-                        borderColor.copy(alpha = (if (isDark) 0.75f else 0.55f) * (0.9f + 0.1f * glow))
-                    ),
-                    shape
-                )
-                .border(
-                    BorderStroke(
-                        1.15.dp,
-                        accentColor.copy(alpha = (if (isDark) 0.45f else 0.65f) * (0.75f + 0.25f * glow))
-                    ),
-                    shape
-                )
-                .then(
-                    if (tierBorderWidth > 0.dp) {
-                        Modifier.border(
-                            BorderStroke(
-                                tierBorderWidth,
-                                tierAccent.copy(alpha = if (tier == EnemyTier.BOSS) 0.9f else 0.8f)
-                            ),
-                            shape
-                        )
-                    } else {
-                        Modifier
-                    }
-                ),
+                .background(background),
         contentAlignment = Alignment.Center
     ) {
             val iconModifier = Modifier
                 .fillMaxSize()
-                .padding(10.dp)
+                .padding(8.dp)
             val composite = icon?.composite
             if (composite != null) {
                 CompositeEnemyIcon(
                     composite = composite,
-                    tint = iconTint,
                     modifier = iconModifier
                 )
             } else {
@@ -7248,63 +7327,15 @@ private fun EnemyPartyLeaderIcon(
                     painter = painter,
                     contentDescription = enemyId,
                     modifier = iconModifier,
-                    contentScale = ContentScale.Fit,
-                    colorFilter = ColorFilter.tint(iconTint)
+                    contentScale = ContentScale.Fit
                 )
             }
-        Canvas(modifier = Modifier.fillMaxSize()) {
-            val strokeWidth = with(density) { 2.dp.toPx() }
-            val inset = strokeWidth / 2f + with(density) { 1.dp.toPx() }
-            val arcColor = accentColor.copy(alpha = (if (isDark) 0.12f else 0.18f) + 0.1f * glow)
-                drawArc(
-                    color = arcColor,
-                    startAngle = t * 360f,
-                    sweepAngle = 80f,
-                    useCenter = false,
-                    topLeft = Offset(inset, inset),
-                    size = Size(size.width - inset * 2f, size.height - inset * 2f),
-                style = Stroke(width = strokeWidth, cap = StrokeCap.Round)
-            )
+        val tierBadgeText = when (tier) {
+            EnemyTier.BOSS -> "\u2620"
+            EnemyTier.ELITE -> "\u2605"
+            EnemyTier.COMMON -> null
         }
-        if (tier == EnemyTier.ELITE) {
-            Canvas(modifier = Modifier.fillMaxSize()) {
-                val stroke = with(density) { 1.6.dp.toPx() }
-                val inset = with(density) { 6.dp.toPx() }
-                val mark = with(density) { 10.dp.toPx() }
-                val markColor = tierAccent.copy(alpha = if (tier == EnemyTier.BOSS) 0.95f else 0.85f)
-                drawLine(
-                    color = markColor,
-                    start = Offset(inset, inset + mark),
-                    end = Offset(inset + mark, inset),
-                    strokeWidth = stroke,
-                    cap = StrokeCap.Round
-                )
-                drawLine(
-                    color = markColor,
-                    start = Offset(size.width - inset - mark, inset),
-                    end = Offset(size.width - inset, inset + mark),
-                    strokeWidth = stroke,
-                    cap = StrokeCap.Round
-                )
-            }
-        }
-        if (partySize > 1 && tier != EnemyTier.BOSS) {
-            Surface(
-                shape = CircleShape,
-                color = accentColor.copy(alpha = 0.95f),
-                modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .padding(2.dp)
-                ) {
-                    Text(
-                        text = partySize.toString(),
-                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
-                        color = Color.Black,
-                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
-                )
-            }
-        }
-        if (tierLabel != null) {
+        if (tierBadgeText != null) {
             val badgeTextStyle = MaterialTheme.typography.labelSmall.copy(
                 fontWeight = FontWeight.Bold,
                 fontSize = if (tier == EnemyTier.BOSS) 20.sp else 11.sp
@@ -7322,7 +7353,7 @@ private fun EnemyPartyLeaderIcon(
                     .padding(4.dp)
             ) {
                 Text(
-                    text = tierLabel,
+                    text = tierBadgeText,
                     style = badgeTextStyle,
                     color = Color.Black,
                     modifier = Modifier.padding(badgePadding)
@@ -7335,9 +7366,45 @@ private fun EnemyPartyLeaderIcon(
 }
 
 @Composable
+private fun EnemyPresenceShadow(
+    isDark: Boolean,
+    modifier: Modifier = Modifier
+) {
+    Canvas(modifier = modifier) {
+        drawOval(
+            color = Color.Black.copy(alpha = if (isDark) 0.52f else 0.34f),
+            topLeft = Offset(size.width * 0.08f, size.height * 0.18f),
+            size = Size(size.width * 0.84f, size.height * 0.58f)
+        )
+        drawOval(
+            color = Color.Black.copy(alpha = if (isDark) 0.26f else 0.16f),
+            topLeft = Offset.Zero,
+            size = size
+        )
+    }
+}
+
+private fun enemyTierAccent(tier: EnemyTier, accentColor: Color): Color = when (tier) {
+    EnemyTier.BOSS -> Color(0xFFFFD54F)
+    EnemyTier.ELITE -> Color(0xFFFFB74D)
+    EnemyTier.COMMON -> accentColor
+}
+
+private fun enemyDisplayLabel(enemyId: String): String = enemyId
+    .replace('_', ' ')
+    .replace('-', ' ')
+    .split(' ')
+    .filter { it.isNotBlank() }
+    .joinToString(" ") { part ->
+        part.replaceFirstChar { ch ->
+            if (ch.isLowerCase()) ch.titlecase(Locale.getDefault()) else ch.toString()
+        }
+    }
+    .ifBlank { enemyId }
+
+@Composable
 private fun CompositeEnemyIcon(
     composite: EnemyCompositeIconUi,
-    tint: Color,
     modifier: Modifier = Modifier
 ) {
     val parts = composite.parts
@@ -7378,7 +7445,6 @@ private fun CompositeEnemyIcon(
                 painter = rememberAssetPainter(part.spritePath, painterResource(R.drawable.inventory_icon)),
                 contentDescription = null,
                 contentScale = ContentScale.Fit,
-                colorFilter = ColorFilter.tint(tint),
                 modifier = Modifier
                     .size(width = partWidth, height = partHeight)
                     .offset(x = offsetX, y = offsetY)

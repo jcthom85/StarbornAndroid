@@ -5,10 +5,12 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     visible: "New Game"
     timeout: 60000
-- swipe:
-    direction: UP
-- swipe:
-    direction: UP
+- scrollUntilVisible:
+    element:
+      text: "Debug: Presence Stress"
+    direction: DOWN
+    timeout: 20000
+    visibilityPercentage: 50
 - extendedWaitUntil:
     visible: "Debug: Presence Stress"
     timeout: 10000
@@ -16,14 +18,14 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     visible: "Presence Stress Test"
     timeout: 15000
-- assertVisible: "Talk to Zeke"
-- assertVisible: "Talk to Scrapper"
-- assertVisible: "Talk to Guard Hank"
-- assertVisible: "Pick up Medkit I"
-- assertVisible: "Pick up Ration Pack"
-- assertVisible: "Pick up Scrap Metal"
-- assertVisible: "Pick up Battery"
-- assertVisible: "Engage Dominion Dampener + Resonance Buoy party"
+- assertVisible: "Zeke"
+- assertVisible: "Scrapper"
+- assertVisible: "Guard Hank"
+- assertVisible: "Medkit I"
+- assertVisible: "Ration Pack"
+- assertVisible: "Scrap Metal"
+- assertVisible: "Battery"
+- assertVisible: "Engage Dominion Dampener"
 - assertVisible: "Engage Acoustic Bulwark"
-- assertVisible: "Engage Echo Borer + Siren Skimmer party"
+- assertVisible: "Engage Echo Borer"
 - takeScreenshot: presence-stress

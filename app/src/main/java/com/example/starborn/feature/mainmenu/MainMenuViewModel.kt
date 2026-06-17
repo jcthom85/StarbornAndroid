@@ -163,6 +163,22 @@ class MainMenuViewModel(
         }
     }
 
+    fun startNewGameAtEnemyPartySizes(
+        onComplete: (() -> Unit)? = null,
+        onFailure: (() -> Unit)? = null
+    ) {
+        viewModelScope.launch {
+            val success = services.startNewGameAtEnemyPartySizes()
+            if (success) {
+                services.syncInventoryFromSession()
+                onComplete?.invoke()
+            } else {
+                emitMessage("Failed to start debug enemy-party-size game.")
+                onFailure?.invoke()
+            }
+        }
+    }
+
     fun startNewGameAtHub2(
         onComplete: (() -> Unit)? = null,
         onFailure: (() -> Unit)? = null

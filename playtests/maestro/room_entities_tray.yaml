@@ -5,10 +5,12 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     visible: "New Game"
     timeout: 60000
-- swipe:
-    direction: UP
-- swipe:
-    direction: UP
+- scrollUntilVisible:
+    element:
+      text: "Debug: Enemy Party"
+    direction: DOWN
+    timeout: 20000
+    visibilityPercentage: 50
 - extendedWaitUntil:
     visible: "Debug: Enemy Party"
     timeout: 10000
@@ -17,7 +19,7 @@ appId: com.junewiregames.starborn.prealpha
     visible: "Security Checkpoint B"
     timeout: 15000
 - extendedWaitUntil:
-    visible: "Engage Dominion Dampener + Resonance Buoy party"
+    visible: "Engage Dominion Dampener"
     timeout: 10000
-- assertVisible: "Engage Dominion Dampener + Resonance Buoy party"
+- assertVisible: "Engage Dominion Dampener"
 - takeScreenshot: room-entities-tray

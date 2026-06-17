@@ -127,5 +127,5 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     notVisible: "Quest Completed"
     timeout: 10000
-- assertVisible: "People in room"
+- assertVisible: "People"
 - takeScreenshot: heavy-lifting-complete

@@ -2947,5 +2947,59 @@
         "condition_unmet_message": "This room exists only to inspect crowded exploration presence layout."
       }
     ]
+  },
+  {
+    "id": "debug_enemy_party_sizes",
+    "env": "logistics",
+    "title": "Enemy Party Size Test",
+    "background_image": "images/rooms/world_1/launch_checkpoint.png",
+    "description": "Debug layout room for enemy party sizes.",
+    "npcs": [
+      "zeke",
+      "scrapper",
+      "guard_hank"
+    ],
+    "items": [
+      "nova_laser_blaster",
+      "medkit_i",
+      "medkit_i",
+      "battery_pack",
+      "starbar_crunch"
+    ],
+    "enemies": [
+      "dominion_dampener",
+      "echo_borer",
+      "echo_borer",
+      "siren_skimmer",
+      "siren_skimmer",
+      "siren_skimmer"
+    ],
+    "enemy_parties": [
+      [
+        "dominion_dampener"
+      ],
+      [
+        "echo_borer",
+        "echo_borer"
+      ],
+      [
+        "siren_skimmer",
+        "siren_skimmer",
+        "siren_skimmer"
+      ]
+    ],
+    "connections": {},
+    "pos": [
+      100,
+      99
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "debug manifest",
+        "type": "generic",
+        "condition_unmet_message": "This room exists only to inspect one-, two-, and three-member enemy party layouts."
+      }
+    ]
   }
 ]

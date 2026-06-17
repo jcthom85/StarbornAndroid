@@ -2077,11 +2077,12 @@ private fun CompositeEnemyRoster(
         ) {
             if (topRowEntries.isNotEmpty()) {
                 LazyRow(
-                    horizontalArrangement = Arrangement.spacedBy(10.dp),
-                    contentPadding = PaddingValues(horizontal = 12.dp),
                     modifier = Modifier
+                        .widthIn(max = 1200.dp)
                         .fillMaxWidth()
-                        .offset(x = groupOffsetXDp, y = topLabelOffset + groupOffsetYDp)
+                        .offset(x = groupOffsetXDp, y = topLabelOffset + groupOffsetYDp),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    contentPadding = PaddingValues(horizontal = 12.dp)
                 ) {
                     items(topRowEntries) { entry ->
                         CompositePartStatus(
@@ -2730,6 +2731,7 @@ private fun StatusBadges(statuses: List<StatusEffect>, buffs: List<ActiveBuff>) 
     val entries = statusChipsFor(statuses, buffs)
     if (entries.isEmpty()) return
     LazyRow(
+        modifier = Modifier.widthIn(max = 1200.dp),
         horizontalArrangement = Arrangement.spacedBy(4.dp),
         contentPadding = PaddingValues(horizontal = 2.dp)
     ) {
@@ -4890,7 +4892,10 @@ private fun LevelUpCard(
                             color = Color(0xFFFFE082)
                         )
                     }
-                    LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    LazyRow(
+                        modifier = Modifier.widthIn(max = 1200.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
                         items(summary.unlockedSkills, key = { skill -> skill.id }) { skill ->
                             Surface(
                                 shape = RoundedCornerShape(999.dp),

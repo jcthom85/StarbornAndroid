@@ -47,6 +47,7 @@ import com.example.starborn.domain.milestone.MilestoneRuntimeManager
 import com.example.starborn.domain.movement.EnemyMovementManager
 import com.example.starborn.domain.movement.EnemyMovementCatalog
 import com.example.starborn.domain.movement.EnemyMovementParty
+import com.example.starborn.domain.movement.MAX_ACTIVE_ENEMY_PARTIES_PER_ROOM
 import com.example.starborn.domain.model.BlockedDirection
 import com.example.starborn.domain.model.ContainerAction
 import com.example.starborn.domain.model.DialogueLine
@@ -4712,7 +4713,9 @@ private fun sanitizeEnemyList(source: List<String>): List<String> =
 
 private fun sanitizeEnemyParties(raw: List<List<String>>?): List<List<String>>? {
     if (raw.isNullOrEmpty()) return null
-    val sanitized = raw.map { sanitizeEnemyList(it) }.filter { it.isNotEmpty() }
+    val sanitized = raw.map { sanitizeEnemyList(it) }
+        .filter { it.isNotEmpty() }
+        .take(MAX_ACTIVE_ENEMY_PARTIES_PER_ROOM)
     return sanitized.takeIf { it.isNotEmpty() }
 }
 
