@@ -700,6 +700,7 @@ fun ExplorationScreen(
                     if (hasRoomEntities) {
                         RoomEntitySection(
                             npcs = fallbackNpcs,
+                            npcPortraitPaths = uiState.npcPortraitPaths,
                             groundItems = uiState.groundItems,
                             itemDisplayName = { itemId -> viewModel.itemDisplayName(itemId) },
                             itemDetailLabel = { itemId -> viewModel.roomItemDetailLabel(itemId) },
@@ -6529,6 +6530,7 @@ private fun RoomDescriptionPanel(
 @Composable
 private fun RoomEntitySection(
     npcs: List<String>,
+    npcPortraitPaths: Map<String, String>,
     groundItems: Map<String, Int>,
     itemDisplayName: (String) -> String,
     itemDetailLabel: (String) -> String?,
@@ -6557,12 +6559,18 @@ private fun RoomEntitySection(
                 .padding(horizontal = 10.dp, vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
+            Text(
+                text = "Also here",
+                color = Color.White.copy(alpha = 0.72f),
+                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                maxLines = 1
+            )
             if (npcs.isNotEmpty()) {
-                PresenceRailRow(label = "People") {
+                PresenceRailRow {
                     npcs.forEach { npc ->
                         NpcPresenceChip(
                             npc = npc,
-                            accentColor = accentColor,
+                            portraitPath = npcPortraitPaths[npc.normalizedNpcKey()],
                             borderColor = borderColor,
                             isDark = isDark,
                             onClick = { onNpcClick(npc) }
@@ -6571,7 +6579,7 @@ private fun RoomEntitySection(
                 }
             }
             if (itemEntries.isNotEmpty()) {
-                PresenceRailRow(label = "Items") {
+                PresenceRailRow {
                     itemEntries.forEach { (itemId, quantity) ->
                         FindPresenceChip(
                             itemId = itemId,
@@ -6613,41 +6621,19 @@ private fun RoomEntitySection(
 
 @Composable
 private fun PresenceRailRow(
-    label: String,
     content: @Composable () -> Unit
 ) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalAlignment = Alignment.Top
+    Box(
+        modifier = Modifier.fillMaxWidth()
     ) {
-        Column(
+        Row(
             modifier = Modifier
-                .width(58.dp)
-                .padding(top = 11.dp),
-            verticalArrangement = Arrangement.spacedBy(2.dp)
+                .fillMaxWidth()
+                .horizontalScroll(rememberScrollState()),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.Top
         ) {
-            Text(
-                text = label,
-                color = Color.White.copy(alpha = 0.70f),
-                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold, fontSize = 11.sp),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-        }
-        Box(
-            modifier = Modifier
-                .weight(1f, fill = true)
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .horizontalScroll(rememberScrollState()),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.Top
-            ) {
-                content()
-            }
+            content()
         }
     }
 }
@@ -6655,40 +6641,38 @@ private fun PresenceRailRow(
 @Composable
 private fun NpcPresenceChip(
     npc: String,
-    accentColor: Color,
+    portraitPath: String?,
     borderColor: Color,
     isDark: Boolean,
     onClick: () -> Unit
 ) {
     val label = npcDisplayLabel(npc)
+    val portraitPainter = rememberAssetPainter(
+        portraitPath,
+        painterResource(R.drawable.inventory_icon)
+    )
     Surface(
         onClick = onClick,
         shape = RoundedCornerShape(10.dp),
         color = Color.White.copy(alpha = if (isDark) 0.09f else 0.07f),
         border = BorderStroke(1.dp, borderColor.copy(alpha = if (isDark) 0.36f else 0.24f)),
         modifier = Modifier
-            .widthIn(min = 118.dp)
-            .height(44.dp)
+            .widthIn(min = 124.dp)
+            .height(42.dp)
     ) {
         Row(
             modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Surface(
-                shape = CircleShape,
-                color = accentColor.copy(alpha = 0.18f),
-                border = BorderStroke(1.dp, accentColor.copy(alpha = 0.52f)),
-                modifier = Modifier.size(28.dp)
-            ) {
-                Box(contentAlignment = Alignment.Center) {
-                    Text(
-                        text = label.firstOrNull()?.uppercaseChar()?.toString().orEmpty(),
-                        color = Color.White,
-                        style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold)
-                    )
-                }
-            }
+            Image(
+                painter = portraitPainter,
+                contentDescription = label,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(28.dp)
+                    .clip(CircleShape)
+            )
             Column(
                 modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.Center
@@ -6704,6 +6688,9 @@ private fun NpcPresenceChip(
         }
     }
 }
+
+private fun String.normalizedNpcKey(): String =
+    trim().lowercase(Locale.getDefault())
 
 @Composable
 private fun FindPresenceChip(

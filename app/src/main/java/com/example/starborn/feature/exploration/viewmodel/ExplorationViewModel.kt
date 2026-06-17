@@ -1860,6 +1860,7 @@ class ExplorationViewModel(
                 registerPortrait(npc.portrait, *keys.toTypedArray())
                 registerEmotes(npc.emotes, *keys.toTypedArray())
             }
+            val npcPortraitPaths = buildNpcPortraitMap(npcs)
 
             visitedRooms.clear()
             discoveredRooms.clear()
@@ -1909,6 +1910,7 @@ class ExplorationViewModel(
                     currentRoom = initialRoom,
                     availableConnections = initialConnections,
                     npcs = visibleNpcsForRoom(initialRoom, sessionState.completedMilestones),
+                    npcPortraitPaths = npcPortraitPaths,
                     actions = initialActions,
                     actionHints = buildActionHints(initialRoom, initialActions),
                     enemies = initialRoom?.let { roomEnemyParties(it).flatten() }.orEmpty(),
@@ -3866,6 +3868,25 @@ class ExplorationViewModel(
             .forEach { key ->
                 emotesBySpeaker[key] = normalizedEmotes
             }
+    }
+
+    private fun buildNpcPortraitMap(npcs: List<com.example.starborn.domain.model.Npc>): Map<String, String> {
+        val map = mutableMapOf<String, String>()
+        npcs.forEach { npc ->
+            val portrait = resolvePortraitKey(npc.name) ?: DEFAULT_PORTRAIT
+            val keys = buildList<String?> {
+                add(npc.name)
+                add(npc.id)
+                addAll(npc.aliases)
+                add(npc.name.substringAfterLast(' ', missingDelimiterValue = npc.name))
+                add(npc.name.substringBefore(' ', missingDelimiterValue = npc.name))
+            }
+            keys.mapNotNull { it?.trim()?.takeIf { value -> value.isNotEmpty() } }
+                .map { it.normalizedKey() }
+                .filter { it.isNotEmpty() }
+                .forEach { key -> map[key] = portrait }
+        }
+        return map
     }
 
     private fun resolvePortraitKey(speaker: String): String? {
