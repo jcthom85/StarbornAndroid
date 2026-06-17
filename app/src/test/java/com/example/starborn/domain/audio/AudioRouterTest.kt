@@ -61,4 +61,40 @@ class AudioRouterTest {
         assertEquals(AudioCueType.MUSIC, stop.type)
         assertEquals("theme_alpha", stop.cueId)
     }
+
+    @Test
+    fun voiceoverPlanDoesNotDuckLayersByDefault() {
+        val router = AudioRouter(
+            AudioBindings(
+                music = mapOf("hub_alpha" to "theme_alpha"),
+                ambience = mapOf("room_one" to "wind_gentle")
+            ),
+            AudioCatalog(cues = listOf(AudioCueMetadata(id = "intro_vo", category = "voice")))
+        )
+        router.commandsForRoom(hubId = "hub_alpha", roomId = "room_one")
+
+        val plan = router.voiceoverPlan("intro_vo")
+
+        requireNotNull(plan)
+        assertTrue(plan.commands.none { it is AudioCommand.Duck })
+        assertTrue(plan.commands.any { it is AudioCommand.Play && it.type == AudioCueType.VOICE })
+    }
+
+    @Test
+    fun voiceoverPlanCanDuckLayersWhenRequested() {
+        val router = AudioRouter(
+            AudioBindings(
+                music = mapOf("hub_alpha" to "theme_alpha"),
+                ambience = mapOf("room_one" to "wind_gentle")
+            ),
+            AudioCatalog(cues = listOf(AudioCueMetadata(id = "intro_vo", category = "voice")))
+        )
+        router.commandsForRoom(hubId = "hub_alpha", roomId = "room_one")
+
+        val plan = router.voiceoverPlan("intro_vo", duckLayers = true)
+
+        requireNotNull(plan)
+        assertEquals(2, plan.commands.count { it is AudioCommand.Duck })
+        assertTrue(plan.commands.any { it is AudioCommand.Play && it.type == AudioCueType.VOICE })
+    }
 }

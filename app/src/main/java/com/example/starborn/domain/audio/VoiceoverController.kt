@@ -24,7 +24,7 @@ class VoiceoverController(
     private var currentJob: Job? = null
     private var isPlaying = false
 
-    fun enqueue(cueId: String, duckLayers: Boolean = true) {
+    fun enqueue(cueId: String, duckLayers: Boolean = false) {
         val trimmed = cueId.trim()
         if (trimmed.isEmpty()) return
         queue += VoiceRequest(trimmed, duckLayers)

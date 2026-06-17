@@ -144,7 +144,7 @@ class AudioRouter(
         return commands
     }
 
-    fun voiceoverPlan(cueId: String, duckLayers: Boolean = true): VoiceoverPlan? {
+    fun voiceoverPlan(cueId: String, duckLayers: Boolean = false): VoiceoverPlan? {
         val normalized = cueId.normalize() ?: return null
         val commands = mutableListOf<AudioCommand>()
         if (duckLayers) {

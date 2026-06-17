@@ -290,10 +290,7 @@ class ExplorationViewModel(
         inventoryService.loadItems()
         inventoryService.addOnItemAddedListener(inventoryAddListener)
         dialogueTriggerBinder(::handleDialogueTrigger)
-        cinematicCoordinator.setCallbacks(
-            onSceneStart = { emitAudioCommands(audioRouter.duckForCinematic()) },
-            onSceneEnd = { emitAudioCommands(audioRouter.restoreAfterCinematic()) }
-        )
+        cinematicCoordinator.setCallbacks()
         observeUserSettings()
     }
 
