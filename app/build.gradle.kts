@@ -20,7 +20,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.starborn"
+        applicationId = "com.junewiregames.starborn.prealpha"
         minSdk = 26
         targetSdk = 34
         versionCode = 3
