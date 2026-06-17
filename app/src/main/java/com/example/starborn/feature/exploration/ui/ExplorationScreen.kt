@@ -1018,9 +1018,7 @@ fun ExplorationScreen(
             CinematicOverlay(
                 state = cinematic,
                 onAdvance = { viewModel.advanceCinematic() },
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(24.dp)
+                modifier = Modifier.fillMaxSize()
             )
         }
 
@@ -8431,50 +8429,173 @@ fun CinematicOverlay(
         )
         return
     }
-    Surface(
+
+    // --- Narration mode: cinematic popup ---
+
+    // Typewriter text reveal
+    val fullText = state.step.text
+    val textKey = remember(state.sceneId, state.stepIndex) { "${state.sceneId}_${state.stepIndex}" }
+    var revealedCount by remember(textKey) { mutableStateOf(0) }
+    var revealFinished by remember(textKey) { mutableStateOf(false) }
+
+    LaunchedEffect(textKey) {
+        revealedCount = 0
+        revealFinished = false
+        for (i in 1..fullText.length) {
+            revealedCount = i
+            delay(28L)
+        }
+        revealFinished = true
+    }
+
+    val displayedText = if (revealFinished) fullText else fullText.substring(0, revealedCount)
+
+    // Scrim fade-in
+    val scrimAlpha by animateFloatAsState(
+        targetValue = 0.72f,
+        animationSpec = tween(durationMillis = 400, easing = FastOutSlowInEasing),
+        label = "cinematicScrimAlpha"
+    )
+
+    // Card slide-up + fade-in
+    val cardAlpha by animateFloatAsState(
+        targetValue = 1f,
+        animationSpec = tween(durationMillis = 500, delayMillis = 100, easing = FastOutSlowInEasing),
+        label = "cinematicCardAlpha"
+    )
+    val cardOffsetY by animateFloatAsState(
+        targetValue = 0f,
+        animationSpec = tween(durationMillis = 500, delayMillis = 100, easing = FastOutSlowInEasing),
+        label = "cinematicCardOffsetY"
+    )
+
+    // Accent glow pulse
+    val infiniteTransition = rememberInfiniteTransition(label = "cinematicGlow")
+    val glowAlpha by infiniteTransition.animateFloat(
+        initialValue = 0.25f,
+        targetValue = 0.55f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 2200, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "cinematicGlowPulse"
+    )
+
+    val accentColor = Color(0xFF7BE8FF)
+    val cardShape = RoundedCornerShape(28.dp)
+    val tapInteraction = remember { MutableInteractionSource() }
+
+    Box(
         modifier = modifier
-            .fillMaxWidth(0.94f)
-            .navigationBarsPadding(),
-        color = Color(0xFF03070F).copy(alpha = 0.95f),
-        shape = RoundedCornerShape(32.dp),
-        border = BorderStroke(1.dp, Color.White.copy(alpha = 0.18f))
-    ) {
-        Column(
-            modifier = Modifier
-                .padding(horizontal = 24.dp, vertical = 20.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
-        ) {
-            state.title?.let {
-                Text(
-                    text = it,
-                    color = Color.White,
-                    style = MaterialTheme.typography.titleMedium
-                )
-            }
-            state.step.speaker?.takeIf { it.isNotBlank() }?.let { speaker ->
-                Text(
-                    text = speaker,
-                    color = Color.White.copy(alpha = 0.7f),
-                    style = MaterialTheme.typography.labelMedium
-                )
-            }
-            Text(
-                text = state.step.text,
-                color = Color.White.copy(alpha = 0.92f),
-                style = MaterialTheme.typography.bodyLarge
-            )
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+            .fillMaxSize()
+            .background(Color.Black.copy(alpha = scrimAlpha))
+            .clickable(
+                interactionSource = tapInteraction,
+                indication = null
             ) {
-                Text(
-                    text = "${state.stepIndex + 1} / ${state.stepCount}",
-                    color = Color.White.copy(alpha = 0.7f),
-                    style = MaterialTheme.typography.labelSmall
-                )
-                Button(onClick = onAdvance) {
-                    Text(if (state.stepIndex + 1 >= state.stepCount) "Continue" else "Next")
+                if (revealFinished) {
+                    onAdvance()
+                } else {
+                    revealedCount = fullText.length
+                    revealFinished = true
+                }
+            },
+        contentAlignment = Alignment.Center
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth(0.88f)
+                .graphicsLayer {
+                    alpha = cardAlpha
+                    translationY = (1f - cardAlpha) * 48f + cardOffsetY
+                }
+        ) {
+            // Outer glow
+            Box(
+                modifier = Modifier
+                    .matchParentSize()
+                    .graphicsLayer { alpha = glowAlpha }
+                    .background(
+                        brush = Brush.radialGradient(
+                            colors = listOf(
+                                accentColor.copy(alpha = 0.12f),
+                                Color.Transparent
+                            ),
+                            radius = 400f
+                        ),
+                        shape = cardShape
+                    )
+            )
+
+            Surface(
+                color = Color(0xFF060B14).copy(alpha = 0.96f),
+                shape = cardShape,
+                border = BorderStroke(
+                    1.2.dp,
+                    Brush.linearGradient(
+                        listOf(
+                            accentColor.copy(alpha = 0.45f),
+                            accentColor.copy(alpha = 0.12f),
+                            accentColor.copy(alpha = 0.30f)
+                        )
+                    )
+                ),
+                shadowElevation = 16.dp
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 28.dp, vertical = 26.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    // Title
+                    state.title?.let { title ->
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(10.dp)
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .size(4.dp, 18.dp)
+                                    .clip(RoundedCornerShape(999.dp))
+                                    .background(accentColor.copy(alpha = 0.8f))
+                            )
+                            Text(
+                                text = title.uppercase(Locale.getDefault()),
+                                color = accentColor.copy(alpha = 0.9f),
+                                style = MaterialTheme.typography.labelMedium.copy(
+                                    fontWeight = FontWeight.Bold,
+                                    letterSpacing = 2.sp
+                                )
+                            )
+                        }
+                    }
+
+                    // Narration text with typewriter reveal
+                    Text(
+                        text = displayedText,
+                        color = Color.White.copy(alpha = 0.92f),
+                        style = MaterialTheme.typography.bodyLarge.copy(
+                            lineHeight = 28.sp,
+                            letterSpacing = 0.3.sp
+                        )
+                    )
+
+                    // Tap hint
+                    AnimatedVisibility(
+                        visible = revealFinished,
+                        enter = fadeIn(animationSpec = tween(durationMillis = 500))
+                    ) {
+                        Text(
+                            text = if (state.stepIndex + 1 >= state.stepCount) "Tap to continue" else "Tap to continue ▸",
+                            color = accentColor.copy(alpha = 0.5f),
+                            style = MaterialTheme.typography.labelSmall.copy(
+                                letterSpacing = 1.sp
+                            ),
+                            modifier = Modifier.fillMaxWidth(),
+                            textAlign = TextAlign.End
+                        )
+                    }
                 }
             }
         }
