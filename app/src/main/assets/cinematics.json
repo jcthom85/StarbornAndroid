@@ -1,5 +1,24 @@
 [
     {
+        "id": "cinematic_narrative_test",
+        "title": "Cosmic Resonance",
+        "steps": [
+            {
+                "type": "narration",
+                "text": "A low harmonic resonance vibrates through the metal floor plates, rising from the deep oceanic current below."
+            },
+            {
+                "type": "dialogue",
+                "speaker": "Nova",
+                "text": "Do you feel that? The pressure... it's changing."
+            },
+            {
+                "type": "narration",
+                "text": "The air grows heavy, carrying the distant echo of a song long forgotten."
+            }
+        ]
+    },
+    {
         "id": "scene_encounter_defeat_tip",
         "title": "Tactical Review",
         "steps": [

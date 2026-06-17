@@ -1,5 +1,20 @@
 [
   {
+    "id": "trigger_cinematic_narrative_test",
+    "description": "Trigger cinematic narrative test on corridor entry.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "pit_L2_corridor"
+    },
+    "repeatable": true,
+    "actions": [
+      {
+        "type": "play_cinematic",
+        "scene_id": "cinematic_narrative_test"
+      }
+    ]
+  },
+  {
     "id": "enter_camera_gallery",
     "description": "Camera moves demo.",
     "trigger": {
