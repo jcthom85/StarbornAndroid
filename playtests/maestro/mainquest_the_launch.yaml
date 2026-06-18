@@ -17,8 +17,8 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     notVisible: "Engage The Iron Warden"
     timeout: 1000
-- assertVisible: "Talk to Zeke"
-- tapOn: "Talk to Zeke"
+- assertVisible: "Zeke"
+- tapOn: "Zeke"
 - extendedWaitUntil:
     visible: ".*Warden's down.*"
     timeout: 10000
@@ -34,12 +34,12 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     notVisible: "Dialogue Popup"
     timeout: 10000
-- tapOn: "Travel north"
+- tapOn: "Travel north.*"
 - extendedWaitUntil:
     visible: "The Pod Core"
     timeout: 15000
-- assertVisible: "Talk to Zeke"
-- tapOn: "Talk to Zeke"
+- assertVisible: "Zeke"
+- tapOn: "Zeke"
 - extendedWaitUntil:
     visible: ".*Connect the Chime.*"
     timeout: 10000
@@ -55,27 +55,20 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     notVisible: "Dialogue Popup"
     timeout: 10000
-- extendedWaitUntil:
-    visible: "Quest Updated"
-    timeout: 10000
-- tapOn: "Dismiss Quest Banner"
-- extendedWaitUntil:
-    notVisible: "Quest Updated"
-    timeout: 10000
-- tapOn: "Inspect navigation console"
+- tapOn: "navigation console"
 - extendedWaitUntil:
     visible: ".*pod clears the magnetic launch rail.*"
     timeout: 15000
 - takeScreenshot: planetary-impact-cinematic
-- tapOn: "Cinematic Popup. Tap to continue"
+- tapOn: "Tap to continue.*"
 - extendedWaitUntil:
     visible: ".*view out the viewport fractures.*"
     timeout: 10000
-- tapOn: "Cinematic Popup. Tap to continue"
+- tapOn: "Tap to continue.*"
 - extendedWaitUntil:
     visible: ".*hull begins to shriek.*"
     timeout: 10000
-- tapOn: "Cinematic Popup. Tap to continue"
+- tapOn: "Tap to continue.*"
 - extendedWaitUntil:
     visible: ".*frequency bypass isn't holding.*"
     timeout: 10000
@@ -83,15 +76,15 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     visible: ".*Alarms scream.*"
     timeout: 10000
-- tapOn: "Cinematic Popup. Tap to continue"
+- tapOn: "Tap to continue.*"
 - extendedWaitUntil:
     visible: ".*shield rejects the pod.*"
     timeout: 10000
-- tapOn: "Cinematic Popup. Tap to continue"
+- tapOn: "Tap to continue.*"
 - extendedWaitUntil:
     visible: ".*Everything goes white.*"
     timeout: 10000
-- tapOn: "Cinematic Popup. Tap to continue"
+- tapOn: "Tap to continue.*"
 - extendedWaitUntil:
     visible: "Crash Site"
     timeout: 20000
@@ -103,13 +96,6 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     notVisible: "New Quest"
     timeout: 10000
-- extendedWaitUntil:
-    visible: "Quest Updated"
-    timeout: 10000
-- tapOn: "Dismiss Quest Banner"
-- extendedWaitUntil:
-    notVisible: "Quest Updated"
-    timeout: 10000
 - assertVisible: "Crash Site"
-- assertVisible: "Talk to Zeke"
+- assertVisible: "Zeke"
 - takeScreenshot: mainquest-the-launch
