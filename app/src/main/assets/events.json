@@ -1889,6 +1889,15 @@
             "quantity": 1
           },
           {
+            "type": "unlock_skill",
+            "skill_id": "nova_blast_wave"
+          },
+          {
+            "type": "system_tutorial",
+            "scene_id": "source_art_unlock",
+            "context": "The Heart"
+          },
+          {
             "type": "complete_quest",
             "quest_id": "w1_mq03"
           },

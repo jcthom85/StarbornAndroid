@@ -12,8 +12,8 @@ Last updated: June 18, 2026.
   - Completing `w1_mq01` starts/tracks `w1_mq02`.
   - Completing `w1_mq02` starts/tracks `w1_mq03`.
 - Phase 2 Required Tutorial Coverage: In progress.
-  - Implemented and device-verified: early hotspot/action prompt, journal prompt, NPC talk prompt, Logistics commitment warning, mandatory Guard Break training.
-  - Deferred decisions: save/rest, Source Art unlock, party basics, deeper combat micro-tutorials.
+  - Implemented and device-verified: early hotspot/action prompt, journal prompt, NPC talk prompt, Logistics commitment warning, mandatory Guard Break training, Source Art unlock prompt.
+  - Deferred decisions: save/rest, party basics, deeper combat micro-tutorials.
 - Phase 3 Quest Text and Objective Polish: Implemented for the known mismatch.
   - `w1_mq02` keeps internal task id `spoof_liability_form` for save/test stability.
   - Player-facing text now reads: `Let Zeke bury the liability flag under grid-instability paperwork.`
@@ -38,7 +38,7 @@ World 1's main story spine is coherent at the event/data level:
 9. Receive Jed's Chime at the cargo lift.
 10. Defeat the Warden, splice the Chime, launch, and crash into Sector 9.
 
-The main story spine is now coherent and device-verified through chapter flows. Remaining risk is limited to deferred tutorial/design decisions: save/rest, whether the Tuning Fork should unlock a usable Source Art in W1, party basics timing, and deeper combat micro-tutorials.
+The main story spine is now coherent and device-verified through chapter flows. Remaining risk is limited to deferred tutorial/design decisions: save/rest, party basics timing, and deeper combat micro-tutorials.
 
 ## Evidence From Audit
 
@@ -258,21 +258,16 @@ Acceptance:
 
 ### 12. Source Art acquisition tutorial
 
-Problem: the tutorial map says the Tuning Fork should teach Source Art acquisition. Current data gives `tuning_fork` and sets `ms_w1_mq03_complete`, but no W1 milestone effect clearly unlocks and teaches a Source Art.
+Status: implemented. The Tuning Fork relic sync now grants `tuning_fork`, unlocks `nova_blast_wave`, and shows the `source_art_unlock` tutorial before the `Red Alert` handoff.
 
-Decision needed:
+Implemented prompt:
 
-- If Nova should gain a Source Art in W1, add an ability unlock effect to the relic sync milestone and show a short tutorial prompt.
-- If Source Arts begin in World 2, update the tutorial map and relic sync copy to avoid promising a combat unlock.
-
-Recommended:
-
-- Add a minimal W1 unlock if combat design supports it.
-- Prompt: `Source Art unlocked. These relic techniques are powerful skills with longer cooldowns.`
+- `Source Art unlocked: Blast Wave. Relic techniques are powerful skills with longer cooldowns.`
 
 Acceptance:
 
-- The relic sync either visibly unlocks a usable ability or the docs no longer claim it should.
+- `Hub1CriticalFlowTest` asserts `nova_blast_wave` is unlocked after `touch_relic`.
+- `mainquest_the_echo.yaml` verifies the Source Art tutorial appears after the Tuning Fork item popup and before `Red Alert`.
 
 ### 13. Snack, cooldown, weakness, and status tutorials
 
@@ -418,7 +413,7 @@ Acceptance:
 3. Rename MQ02 spoof task or build the actual interaction.
 4. Add journal and hotspot tutorials.
 5. Add point-of-no-return warning.
-6. Decide Source Art and party-basics placement.
+6. Decide party-basics placement.
 7. Update docs to match implementation.
 8. Repair Maestro flows.
 9. Run validation suite.

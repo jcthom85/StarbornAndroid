@@ -91,5 +91,14 @@
                 "delay_ms": 2200
             }
         ]
+    },
+    {
+        "id": "source_art_unlock",
+        "steps": [
+            {
+                "message": "Source Art unlocked: Blast Wave. Relic techniques are powerful skills with longer cooldowns.",
+                "context": "Source Art"
+            }
+        ]
     }
 ]

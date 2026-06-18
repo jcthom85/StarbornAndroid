@@ -2343,7 +2343,7 @@ class ExplorationViewModel(
             STELLARIUM_GENERATOR_OFF_MESSAGE
         }
         val accentColor = if (targetState) EVENT_ANNOUNCEMENT_ACCENT else STELLARIUM_GENERATOR_OFF_ACCENT
-        enqueueEventAnnouncement(title, message, accentColor)
+        enqueueEventAnnouncement(title = null, message = message, accentColor = accentColor)
     }
 
     private fun isStellariumGeneratorToggle(action: ToggleAction): Boolean {

@@ -311,6 +311,7 @@ class Hub1CriticalFlowTest {
         assertTrue(state.activeQuests.contains("w1_mq04"))
         assertTrue(state.questTasksCompleted["w1_mq04"].orEmpty().contains("survive_lockdown_broadcast"))
         assertTrue(state.inventory["tuning_fork"].orZero() >= 1)
+        assertTrue(state.unlockedSkills.contains("nova_blast_wave"))
 
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("echo_exit"))
         harness.events.handleTrigger(

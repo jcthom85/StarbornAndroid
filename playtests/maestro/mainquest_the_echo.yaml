@@ -102,12 +102,6 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     visible: "Ancient Threshold"
     timeout: 15000
-- extendedWaitUntil:
-    visible: "Quest Updated"
-    timeout: 10000
-- extendedWaitUntil:
-    notVisible: "Quest Updated"
-    timeout: 10000
 - tapOn: "Travel west.*"
 - extendedWaitUntil:
     visible: "The Long Slope"
@@ -120,12 +114,6 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     visible: "Geometric Gap"
     timeout: 15000
-- extendedWaitUntil:
-    visible: "Quest Updated"
-    timeout: 10000
-- extendedWaitUntil:
-    notVisible: "Quest Updated"
-    timeout: 10000
 - tapOn: "Travel north.*"
 - extendedWaitUntil:
     visible: "Silent Walkway"
@@ -159,6 +147,10 @@ appId: com.junewiregames.starborn.prealpha
     visible: "ITEM OBTAINED"
     timeout: 15000
 - assertVisible: "Acquired The Tuning Fork"
+- tapOn: "GOT IT"
+- extendedWaitUntil:
+    visible: "Source Art unlocked: Blast Wave.*"
+    timeout: 15000
 - tapOn: "GOT IT"
 - extendedWaitUntil:
     visible: "New Quest"
