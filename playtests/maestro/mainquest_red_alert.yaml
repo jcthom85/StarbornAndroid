@@ -21,32 +21,30 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     visible: "Quest Updated"
     timeout: 10000
-- tapOn: "Dismiss Quest Banner"
 - extendedWaitUntil:
     notVisible: "Quest Updated"
     timeout: 10000
-- tapOn: "Travel north"
+- tapOn: "Travel north.*"
 - extendedWaitUntil:
     visible: "Maintenance Access"
     timeout: 15000
 - extendedWaitUntil:
     notVisible: "Engage Resonance Buoy"
     timeout: 1000
-- tapOn: "Travel north"
+- tapOn: "Travel north.*"
 - extendedWaitUntil:
     visible: "Cargo Lift"
     timeout: 15000
 - extendedWaitUntil:
     visible: "Quest Updated"
     timeout: 10000
-- tapOn: "Dismiss Quest Banner"
 - extendedWaitUntil:
     notVisible: "Quest Updated"
     timeout: 10000
 - extendedWaitUntil:
     notVisible: "Engage Acoustic Bulwark"
     timeout: 1000
-- tapOn: "Talk to Jed"
+- tapOn: "Jed"
 - extendedWaitUntil:
     visible: ".*alarm broadcast.*"
     timeout: 10000
@@ -69,6 +67,14 @@ appId: com.junewiregames.starborn.prealpha
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
     notVisible: "Dialogue Popup"
+    timeout: 10000
+- extendedWaitUntil:
+    visible: "ITEM OBTAINED"
+    timeout: 15000
+- assertVisible: "Acquired Ghost Signal Cell"
+- tapOn: "GOT IT"
+- extendedWaitUntil:
+    notVisible: "ITEM OBTAINED"
     timeout: 10000
 - extendedWaitUntil:
     visible: "New Quest"
