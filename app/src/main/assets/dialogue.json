@@ -394,7 +394,7 @@
         "speaker": "Zeke",
         "emote": "confident",
         "text": "I'm flagging it as grid instability. Temporary override. Take the badge before I remember how rules work.",
-        "trigger": "set_quest_task_done:w1_mq02:meet_zeke,set_quest_task_done:w1_mq02:spoof_liability_form,set_quest_task_done:w1_mq02:receive_mine_access_badge,give_item:mine_access_badge,complete_quest:w1_mq02,set_milestone:ms_w1_mq02_zeke_override,set_milestone:ms_w1_mq02_complete"
+        "trigger": "set_quest_task_done:w1_mq02:meet_zeke,set_quest_task_done:w1_mq02:spoof_liability_form,set_quest_task_done:w1_mq02:receive_mine_access_badge,give_item:mine_access_badge,complete_quest:w1_mq02,set_milestone:ms_w1_mq02_zeke_override,set_milestone:ms_w1_mq02_complete,start_quest:w1_mq03,track_quest:w1_mq03,advance_quest_stage:w1_mq03:sector_four_assignment"
     },
     {
         "id": "zeke_default_talk",

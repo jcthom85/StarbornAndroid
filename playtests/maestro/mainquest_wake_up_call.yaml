@@ -6,16 +6,10 @@ appId: com.junewiregames.starborn.prealpha
     visible: "New Game"
     timeout: 60000
 - tapOn: "New Game"
-- tapOn:
-    text: "New Game"
-    optional: true
 - extendedWaitUntil:
     visible: "GOT IT"
     timeout: 20000
 - tapOn: "GOT IT"
-- tapOn:
-    text: "Continue"
-    optional: true
 - extendedWaitUntil:
     visible: "Nova's Bunk"
     timeout: 10000
@@ -24,20 +18,11 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 10000
 - tapOn: "GOT IT"
 - tapOn:
-    text: "Continue"
-    optional: true
-- tapOn:
     point: "31%,25%"
 - extendedWaitUntil:
     visible: ".*bunk is hard.*"
     timeout: 10000
 - tapOn: "Got it"
-- tapOn:
-    text: "Dismiss Quest Banner"
-    optional: true
-- tapOn:
-    text: "Close"
-    optional: true
 - tapOn: "Travel west"
 - extendedWaitUntil:
     visible: "Pod Row"
@@ -66,6 +51,14 @@ appId: com.junewiregames.starborn.prealpha
     visible: "Tap the dialogue card.*"
     timeout: 15000
 - tapOn: "GOT IT"
+- extendedWaitUntil:
+    visible: "New Quest"
+    timeout: 10000
+- assertVisible: "Wake Up Call"
+- tapOn: "Continue"
+- extendedWaitUntil:
+    notVisible: "New Quest"
+    timeout: 10000
 - tapOn: "Jed"
 - extendedWaitUntil:
     visible: ".*pressure leak.*"
@@ -87,9 +80,6 @@ appId: com.junewiregames.starborn.prealpha
     visible: ".*I know the math.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
-- tapOn:
-    text: ".*I know the math.*"
-    optional: true
 - extendedWaitUntil:
     notVisible: ".*I know the math.*"
     timeout: 10000
@@ -113,9 +103,6 @@ appId: com.junewiregames.starborn.prealpha
     visible: "ITEM OBTAINED"
     timeout: 15000
 - tapOn: "GOT IT"
-- tapOn:
-    text: "Dismiss Quest Banner"
-    optional: true
 - extendedWaitUntil:
     visible: "Use the bottom menu button.*"
     timeout: 15000
@@ -149,12 +136,6 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     visible: "Main Bench"
     timeout: 15000
-- tapOn:
-    text: "Dismiss Quest Banner"
-    optional: true
-- tapOn:
-    text: "Close"
-    optional: true
 - tapOn: "WORKBENCH"
 - extendedWaitUntil:
     visible: "Jed's Bench"

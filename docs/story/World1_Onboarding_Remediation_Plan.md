@@ -4,7 +4,7 @@ Purpose: make the full World 1 player journey consistently understandable from N
 
 ## Implementation Status
 
-Last updated: June 17, 2026.
+Last updated: June 18, 2026.
 
 - Phase 1 Critical Path Clarity: Implemented.
   - `w1_mq01` now points to Jed's Bunk before Jed's Workshop.
@@ -12,16 +12,16 @@ Last updated: June 17, 2026.
   - Completing `w1_mq01` starts/tracks `w1_mq02`.
   - Completing `w1_mq02` starts/tracks `w1_mq03`.
 - Phase 2 Required Tutorial Coverage: In progress.
-  - Implemented: early hotspot/action prompt, journal prompt, Logistics commitment warning.
+  - Implemented and device-verified: early hotspot/action prompt, journal prompt, NPC talk prompt, Logistics commitment warning, mandatory Guard Break training.
   - Deferred decisions: save/rest, Source Art unlock, party basics, deeper combat micro-tutorials.
 - Phase 3 Quest Text and Objective Polish: Implemented for the known mismatch.
   - `w1_mq02` keeps internal task id `spoof_liability_form` for save/test stability.
   - Player-facing text now reads: `Let Zeke bury the liability flag under grid-instability paperwork.`
-- Phase 4 Maestro and Automated Coverage Repair: In progress.
+- Phase 4 Maestro and Automated Coverage Repair: Implemented for the World 1 critical path.
   - `smoke_launch.yaml` passes against `com.junewiregames.starborn.prealpha`.
-  - `mainquest_wake_up_call.yaml` has been updated for hotspot/journal/NPC tutorial order and now reaches Jed's intro dialogue on device.
-  - Remaining blocker: Maestro 2.6.0 intermittently fails `launchApp` immediately after app data is cleared; use ADB preflight during repair runs.
-- Phase 5 Documentation Cleanup: In progress.
+  - `mainquest_wake_up_call.yaml`, `checkpoint_badge_gate.yaml`, `heavy_lifting_training.yaml`, `mainquest_the_echo.yaml`, `mainquest_red_alert.yaml`, and `mainquest_the_launch.yaml` pass standalone on the Pixel 8a.
+  - Known tooling note: Maestro 2.6.0 can still intermittently fail `launchApp` immediately after app data is cleared; use ADB preflight during repair runs.
+- Phase 5 Documentation Cleanup: Updated for the June 18 critical-path pass.
 
 ## Current Assessment
 
@@ -38,14 +38,14 @@ World 1's main story spine is coherent at the event/data level:
 9. Receive Jed's Chime at the cargo lift.
 10. Defeat the Warden, splice the Chime, launch, and crash into Sector 9.
 
-The main risk is not that the story is incoherent. The risk is that several required player-literacy moments are either taught in the wrong place, only implied, or documented as required but not currently wired into the game.
+The main story spine is now coherent and device-verified through chapter flows. Remaining risk is limited to deferred tutorial/design decisions: save/rest, whether the Tuning Fork should unlock a usable Source Art in W1, party basics timing, and deeper combat micro-tutorials.
 
 ## Evidence From Audit
 
 - `Hub1CriticalFlowTest` passes the World 1 critical path through the crash handoff.
-- `:app:runAssetIntegrity` passes after fixing the progression validator's item quantity parser.
-- Main quest tasks are connected once dialogue triggers are included.
-- The existing Maestro World 1 chapter flows are stale. A focused run failed on selector/checkpoint assumptions such as `Inspect Bunk`, `Debug: Checkpoint`, and `Talk to Zeke`. Treat those failures as test-maintenance work, not proof that the data graph is broken.
+- `:app:runAssetIntegrity` passes with zero World 1 validator warnings.
+- Device coverage now verifies Wake Up Call, Paperwork/Badge Gate, Heavy Lifting, The Echo, Red Alert, and The Launch as standalone chapter flows.
+- The MQ02 -> MQ03 handoff now starts/tracks `The Echo` immediately when Zeke grants the Mine Access Badge, so the player has a visible next objective before walking to Logistics.
 
 ## Guiding Principles
 
@@ -350,9 +350,12 @@ Flows that failed in the focused audit:
 Current repair status:
 
 - `smoke_launch.yaml`: passes.
-- `mainquest_wake_up_call.yaml`: updated for current W1 onboarding route; partial device run passes through bunk inspection, movement, journal prompt, NPC tutorial, and Jed intro dialogue. Remaining work is completing the route after Jed and normalizing clean-state preflight.
-- `checkpoint_badge_gate.yaml`: updated for MQ02 -> MQ03 automatic handoff and debug menu scroll; still needs device rerun.
-- `heavy_lifting_training.yaml`, `mainquest_the_echo.yaml`, `mainquest_red_alert.yaml`, `mainquest_the_launch.yaml`: launch state changed to avoid Maestro's broken inline clear; still need focused reruns.
+- `mainquest_wake_up_call.yaml`: passes from fresh New Game through bunk inspection, hotspot/journal/NPC/inventory/tutorial prompts, Jed intro, Jed's Workshop, tinkering, Functional Cryo-Inductor craft, `Wake Up Call` completion, and `Paperwork` handoff.
+- `checkpoint_badge_gate.yaml`: passes through Hank denial, Zeke override, Mine Access Badge grant, immediate `The Echo` handoff, gate unlock, and Bogs' Heavy Lifting redirect for an untrained Nova.
+- `heavy_lifting_training.yaml`: passes through Bogs' setup, inline loader/cargo interactions, Guard Break tutorial gating, Hydraulic Kick usage, Acoustic Bulwark victory, spoils, level-up, reward item popups, and quest completion.
+- `mainquest_the_echo.yaml`: passes through Bogs' Sector 4 assignment, Deep Mine route, generator restore, cleared encounter suppression, Tuning Fork cinematic, relic item reward, and `Red Alert` handoff.
+- `mainquest_red_alert.yaml`: passes through Zeke comms, escape route, cleared encounter suppression, Jed sacrifice, Ghost Signal Cell reward, and `The Launch` handoff.
+- `mainquest_the_launch.yaml`: passes through Zeke/Chime splice, navigation-console launch, Planetary Impact cinematic, `A Strange Coast` handoff, and Crash Site return.
 
 Failure pattern:
 
@@ -371,8 +374,8 @@ Fix approach:
 
 Acceptance:
 
-- The five chapter flows pass individually.
-- Then run the focused W1 suite:
+- The chapter flows pass individually.
+- Focused W1 suite:
   - `mainquest_wake_up_call.yaml`
   - `checkpoint_badge_gate.yaml`
   - `heavy_lifting_training.yaml`

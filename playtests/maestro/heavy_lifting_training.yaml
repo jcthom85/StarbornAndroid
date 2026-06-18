@@ -35,23 +35,12 @@ appId: com.junewiregames.starborn.prealpha
     notVisible: "New Quest"
     timeout: 10000
 - tapOn: "loader"
-- extendedWaitUntil:
-    visible: "Quest Updated"
-    timeout: 10000
-- extendedWaitUntil:
-    notVisible: "Quest Updated"
-    timeout: 10000
 - waitForAnimationToEnd:
     timeout: 2000
 - tapOn: "cargo rail"
-- extendedWaitUntil:
-    visible: "Quest Updated"
-    timeout: 10000
-- extendedWaitUntil:
-    notVisible: "Quest Updated"
-    timeout: 10000
 - waitForAnimationToEnd:
     timeout: 2000
+- assertVisible: "Engage Acoustic Bulwark"
 - tapOn: "Engage Acoustic Bulwark"
 - waitForAnimationToEnd:
     timeout: 3000
@@ -118,6 +107,11 @@ appId: com.junewiregames.starborn.prealpha
 - assertVisible: "Acquired Hydraulic Fluid"
 - tapOn: "GOT IT"
 - extendedWaitUntil:
+    visible: "ITEM OBTAINED"
+    timeout: 15000
+- assertVisible: "Acquired Heavy Gear"
+- tapOn: "GOT IT"
+- extendedWaitUntil:
     visible: "Quest Completed"
     timeout: 30000
 - assertVisible: "Heavy Lifting"
@@ -125,5 +119,6 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     notVisible: "Quest Completed"
     timeout: 10000
-- assertVisible: "People"
+- assertVisible: "Loading Dock"
+- assertVisible: "Foreman Bogs"
 - takeScreenshot: heavy-lifting-complete
