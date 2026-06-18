@@ -326,6 +326,13 @@ function Validate-Tutorial($context, $tutorialId) {
     }
 }
 
+function Validate-Skill($context, $skillId) {
+    if ([string]::IsNullOrWhiteSpace($skillId)) { return }
+    if (-not (Has-SetValue $skillIds $skillId)) {
+        $errors.Add("$context references unknown skill '$skillId'.")
+    }
+}
+
 function Validate-AudioCue($context, $cueId) {
     if ([string]::IsNullOrWhiteSpace($cueId)) { return }
     if (-not (Has-SetValue $audioIds $cueId)) {
@@ -489,6 +496,16 @@ function Validate-Action($action, $context) {
         "show_message" {
             if ([string]::IsNullOrWhiteSpace((Get-Prop $action "message"))) {
                 $errors.Add("$actionContext is missing message text.")
+            }
+        }
+        "unlock_skill" {
+            $skillId = Get-Prop $action "skill_id"
+            if ([string]::IsNullOrWhiteSpace($skillId)) { $skillId = Get-Prop $action "item_id" }
+            if ([string]::IsNullOrWhiteSpace($skillId)) { $skillId = Get-Prop $action "item" }
+            if ([string]::IsNullOrWhiteSpace($skillId)) {
+                $errors.Add("$actionContext is missing skill_id.")
+            } else {
+                Validate-Skill $actionContext $skillId
             }
         }
         "narrate" {

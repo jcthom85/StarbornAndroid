@@ -222,6 +222,13 @@ class EventManager(
                     action.message?.let { eventHooks.onMessage(it) }
                     true
                 }
+                "unlock_skill" -> {
+                    val skillId = action.skillId ?: action.itemId ?: action.item
+                    skillId?.takeIf { it.isNotBlank() }?.let {
+                        sessionStore.unlockSkill(it)
+                        true
+                    } ?: false
+                }
                 "give_reward", "grant_reward" -> {
                     eventHooks.onReward(toReward(action))
                     true

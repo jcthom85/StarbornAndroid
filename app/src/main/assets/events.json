@@ -966,6 +966,10 @@
         "milestone": "ms_w1_sq03_hydraulic_kick_ready"
       },
       {
+        "type": "unlock_skill",
+        "skill_id": "nova_hydraulic_kick"
+      },
+      {
         "type": "show_message",
         "message": "Hydraulic Kick online. The shield trainer is ready."
       }

@@ -166,6 +166,8 @@ import com.example.starborn.feature.combat.viewmodel.CombatBannerIcon
 import com.example.starborn.feature.combat.viewmodel.CombatBannerMessage
 import com.example.starborn.feature.combat.viewmodel.CombatViewModel
 import com.example.starborn.feature.combat.viewmodel.CombatViewModel.TimedPromptState
+import com.example.starborn.feature.combat.viewmodel.CombatTutorialState
+import com.example.starborn.feature.combat.viewmodel.CombatTutorialStep
 import com.example.starborn.feature.combat.viewmodel.CombatFxEvent
 import com.example.starborn.feature.combat.ui.animations.CombatSide
 import com.example.starborn.feature.combat.ui.animations.LungeAxis
@@ -387,6 +389,7 @@ fun CombatScreen(
     val missLungeActorId by viewModel.missLungeActorId.collectAsStateWithLifecycle(null)
     val missLungeToken by viewModel.missLungeToken.collectAsStateWithLifecycle(0L)
     val timedPromptState by viewModel.timedPrompt.collectAsStateWithLifecycle()
+    val combatTutorial by viewModel.combatTutorial.collectAsStateWithLifecycle()
     val awaitingActionId by viewModel.awaitingAction.collectAsStateWithLifecycle()
     val combatBanner by viewModel.combatBanner.collectAsStateWithLifecycle()
         val cinematicPlayback = cinematicState
@@ -716,6 +719,14 @@ fun CombatScreen(
         }
 
         fun executePendingAction(request: PendingTargetRequest, targetId: String) {
+            val tutorial = combatTutorial
+            if (tutorial != null &&
+                request.accepts(TargetFilter.ENEMY) &&
+                !viewModel.isCombatTutorialTargetEnabled(targetId)
+            ) {
+                pendingInstruction = request.instruction
+                return
+            }
             when (request) {
                 PendingTargetRequest.Attack -> {
                     viewModel.focusEnemyTarget(targetId)
@@ -764,6 +775,7 @@ fun CombatScreen(
         }
 
         fun handleSkillSelection(skill: Skill) {
+            if (!viewModel.onCombatTutorialSkillSelected(skill.id)) return
             when (viewModel.targetRequirementFor(skill)) {
                 TargetRequirement.ENEMY -> requestTarget(
                     PendingTargetRequest.SkillRequest(
@@ -1062,11 +1074,17 @@ fun CombatScreen(
                 canAttack = hasTargets,
                 hasSkills = menuActorSkills.isNotEmpty(),
                 hasItems = inventoryEntries.isNotEmpty(),
-                onAttack = { requestTarget(PendingTargetRequest.Attack) },
+                onAttack = {
+                    if (viewModel.onCombatTutorialCommand("Attack")) {
+                        requestTarget(PendingTargetRequest.Attack)
+                    }
+                },
                 onSkills = {
-                    showSkillsDialog.value = true
-                    pendingTargetRequest = null
-                    pendingInstruction = null
+                    if (viewModel.onCombatTutorialCommand("Skills")) {
+                        showSkillsDialog.value = true
+                        pendingTargetRequest = null
+                        pendingInstruction = null
+                    }
                 },
                 onItems = {
                     showItemsDialog.value = true
@@ -1128,6 +1146,19 @@ fun CombatScreen(
                 TimedPromptOverlay(
                     prompt = prompt,
                     onTap = { viewModel.registerTimedPromptTap() }
+                )
+            }
+            combatTutorial?.let { tutorial ->
+                CombatTutorialOverlay(
+                    tutorial = tutorial,
+                    theme = viewModel.theme,
+                    highContrastMode = highContrastMode,
+                    onContinue = viewModel::onCombatTutorialContinue,
+                    onSkip = viewModel::skipCombatTutorial,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(contentPadding)
+                        .zIndex(22f)
                 )
             }
             val victoryPayload = pendingVictoryPayload
@@ -1284,6 +1315,124 @@ private fun CombatEncounterHeader(
                         )
                     )
             )
+        }
+    }
+}
+
+@Composable
+private fun CombatTutorialOverlay(
+    tutorial: CombatTutorialState,
+    theme: Theme?,
+    highContrastMode: Boolean,
+    onContinue: () -> Unit,
+    onSkip: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val accent = themeColor(theme?.accent, Color(0xFF7BE4FF))
+    val border = themeColor(theme?.border, Color(0xFF5CCBE8))
+    val panel = themeColor(theme?.bg, Color(0xFF061018))
+    val title = when (tutorial.step) {
+        CombatTutorialStep.BRIEF -> "Guard Break Training"
+        CombatTutorialStep.BLOCKED_EXPLANATION -> "Direct Hit: Blocked"
+        CombatTutorialStep.SUCCESS -> "Guard Broken"
+        else -> "Training"
+    }
+    val message = when (tutorial.step) {
+        CombatTutorialStep.BRIEF ->
+            "That trainer eats direct hits. First, test the shield, then break its guard with Hydraulic Kick."
+        CombatTutorialStep.SELECT_NOVA_ATTACK -> "Tap Nova when her action is ready."
+        CombatTutorialStep.CHOOSE_ATTACK -> "Choose Attack. First, test the shield."
+        CombatTutorialStep.TARGET_BASIC_ATTACK -> "Choose the Acoustic Bulwark."
+        CombatTutorialStep.AWAIT_BASIC_RESULT -> "Watch how the shield handles a direct hit."
+        CombatTutorialStep.BLOCKED_EXPLANATION ->
+            "The shield reduced the attack to zero. Guard Break strips protection before you commit damage."
+        CombatTutorialStep.SELECT_NOVA_SKILL -> "Nova is ready again. Tap Nova to break the guard."
+        CombatTutorialStep.CHOOSE_SKILLS -> "Open Abilities to find a guard-breaking move."
+        CombatTutorialStep.CHOOSE_HYDRAULIC_KICK -> "Use Hydraulic Kick."
+        CombatTutorialStep.TARGET_HYDRAULIC_KICK -> "Choose an enemy for Hydraulic Kick."
+        CombatTutorialStep.AWAIT_SHIELD_BREAK -> "Watch the guard break."
+        CombatTutorialStep.SUCCESS ->
+            "Hydraulic Kick stripped the shield. Now finish the fight."
+    }
+    if (tutorial.showsModal) {
+        Box(modifier = modifier, contentAlignment = Alignment.Center) {
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp),
+                shape = RoundedCornerShape(16.dp),
+                color = panel.copy(alpha = if (highContrastMode) 0.98f else 0.94f),
+                border = BorderStroke(1.dp, border.copy(alpha = 0.72f)),
+                shadowElevation = 12.dp
+            ) {
+                Column(
+                    modifier = Modifier.padding(18.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    Text(
+                        text = title,
+                        style = MaterialTheme.typography.titleLarge.copy(
+                            fontFamily = CombatNameFont,
+                            fontWeight = FontWeight.Bold
+                        ),
+                        color = Color.White
+                    )
+                    Text(
+                        text = message,
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = Color.White.copy(alpha = 0.88f)
+                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        TextButton(onClick = onSkip) {
+                            Text("Skip Training", color = Color.White.copy(alpha = 0.72f))
+                        }
+                        Button(
+                            onClick = onContinue,
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = accent.copy(alpha = 0.92f),
+                                contentColor = Color(0xFF041018)
+                            )
+                        ) {
+                            Text(
+                                text = when (tutorial.step) {
+                                    CombatTutorialStep.BRIEF -> "Start Training"
+                                    CombatTutorialStep.BLOCKED_EXPLANATION -> "Break The Guard"
+                                    CombatTutorialStep.SUCCESS -> "Finish The Fight"
+                                    else -> "Continue"
+                                },
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    } else {
+        Box(
+            modifier = modifier,
+            contentAlignment = Alignment.BottomCenter
+        ) {
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .navigationBarsPadding()
+                    .padding(bottom = 190.dp),
+                shape = RoundedCornerShape(12.dp),
+                color = panel.copy(alpha = if (highContrastMode) 0.96f else 0.88f),
+                border = BorderStroke(1.dp, accent.copy(alpha = 0.62f)),
+                shadowElevation = 8.dp
+            ) {
+                Text(
+                    text = message,
+                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 12.dp),
+                    style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold),
+                    color = Color.White
+                )
+            }
         }
     }
 }
@@ -5149,7 +5298,7 @@ private fun CommandPalette(
                     } else {
                         val commands = listOf(
                             CommandEntry("Attack", Icons.Rounded.Whatshot, canAttack, onAttack),
-                            CommandEntry("Skills", Icons.Rounded.AutoAwesome, hasSkills, onSkills),
+                            CommandEntry("Abilities", Icons.Rounded.AutoAwesome, hasSkills, onSkills),
                             CommandEntry("Items", Icons.Rounded.Inventory2, hasItems, onItems),
                             CommandEntry(snackLabel, Icons.Rounded.Restaurant, canSnack, onSnack, cooldown = snackCooldown),
                             CommandEntry("Retreat", Icons.Rounded.ExitToApp, true, onRetreat)

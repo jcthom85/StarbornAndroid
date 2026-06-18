@@ -120,6 +120,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
@@ -146,6 +147,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import kotlin.math.roundToInt
 import com.example.starborn.R
 import com.example.starborn.domain.model.DialogueLine
 import com.example.starborn.domain.audio.AudioCuePlayer
@@ -5753,21 +5755,127 @@ private fun RoomDescription(
         plan.segments.associateBy { it.id }
     }
     val bodyStyle = MaterialTheme.typography.bodyLarge.copy(color = defaultColor, textAlign = TextAlign.Start)
-    ClickableText(
-        text = annotatedText,
-        modifier = modifier,
-        style = bodyStyle
-    ) { offset ->
-        annotatedText.getStringAnnotations(ACTION_TAG, offset, offset).firstOrNull()?.let { annotation ->
-            val segment = actionLookup[annotation.item] ?: return@ClickableText
-            when (val target = segment.target) {
-                is InlineActionTarget.Room -> if (!segment.locked) onAction(target.action)
-                is InlineActionTarget.Npc -> onNpcClick(target.name)
-                is InlineActionTarget.Enemy -> onEnemyClick(target.id)
+    var textLayout by remember(plan) { mutableStateOf<TextLayoutResult?>(null) }
+
+    fun activateSegment(segment: InlineActionSegment) {
+        when (val target = segment.target) {
+            is InlineActionTarget.Room -> if (!segment.locked) onAction(target.action)
+            is InlineActionTarget.Npc -> onNpcClick(target.name)
+            is InlineActionTarget.Enemy -> onEnemyClick(target.id)
+        }
+    }
+
+    Box(modifier = modifier) {
+        ClickableText(
+            text = annotatedText,
+            style = bodyStyle,
+            onTextLayout = { textLayout = it }
+        ) { offset ->
+            annotatedText.getStringAnnotations(ACTION_TAG, offset, offset).firstOrNull()?.let { annotation ->
+                val segment = actionLookup[annotation.item] ?: return@ClickableText
+                activateSegment(segment)
             }
+        }
+
+        val hitBoxes = remember(textLayout, plan) {
+            textLayout?.let { buildInlineActionHitBoxes(plan.segments, it) }.orEmpty()
+        }
+
+        hitBoxes.forEach { hitBox ->
+            val segment = hitBox.segment
+            val label = segment.accessibilityLabel()
+            val interactionSource = remember(segment.id, hitBox.line) { MutableInteractionSource() }
+            Box(
+                modifier = Modifier
+                    .offset {
+                        IntOffset(
+                            x = hitBox.left.roundToInt(),
+                            y = hitBox.top.roundToInt()
+                        )
+                    }
+                    .size(
+                        width = with(LocalDensity.current) { hitBox.width.toDp() },
+                        height = with(LocalDensity.current) { hitBox.height.toDp() }
+                    )
+                    .semantics {
+                        contentDescription = label
+                        if (!segment.locked) {
+                            onClick(label = label) {
+                                activateSegment(segment)
+                                true
+                            }
+                        }
+                    }
+                    .clickable(
+                        enabled = !segment.locked,
+                        interactionSource = interactionSource,
+                        indication = null
+                    ) {
+                        activateSegment(segment)
+                    }
+            )
         }
     }
 }
+
+private data class InlineActionHitBox(
+    val segment: InlineActionSegment,
+    val line: Int,
+    val left: Float,
+    val top: Float,
+    val right: Float,
+    val bottom: Float
+) {
+    val width: Float get() = (right - left).coerceAtLeast(1f)
+    val height: Float get() = (bottom - top).coerceAtLeast(1f)
+}
+
+private fun InlineActionSegment.accessibilityLabel(): String =
+    when (val target = target) {
+        is InlineActionTarget.Room -> target.action.name
+        is InlineActionTarget.Npc -> target.name
+        is InlineActionTarget.Enemy -> target.label
+    }
+
+private fun buildInlineActionHitBoxes(
+    segments: List<InlineActionSegment>,
+    layout: TextLayoutResult
+): List<InlineActionHitBox> =
+    buildList {
+        segments.forEach { segment ->
+            val start = segment.start.coerceIn(0, layout.layoutInput.text.length)
+            val end = segment.end.coerceIn(start, layout.layoutInput.text.length)
+            if (start >= end) return@forEach
+
+            val lineBounds = linkedMapOf<Int, Rect>()
+            for (offset in start until end) {
+                val bounds = layout.getBoundingBox(offset)
+                if (bounds.width <= 0f || bounds.height <= 0f) continue
+                val line = layout.getLineForOffset(offset)
+                lineBounds[line] = lineBounds[line]?.let { existing ->
+                    Rect(
+                        left = minOf(existing.left, bounds.left),
+                        top = minOf(existing.top, bounds.top),
+                        right = maxOf(existing.right, bounds.right),
+                        bottom = maxOf(existing.bottom, bounds.bottom)
+                    )
+                } ?: bounds
+            }
+
+            lineBounds.forEach { (line, bounds) ->
+                add(
+                    InlineActionHitBox(
+                        segment = segment,
+                        line = line,
+                        left = bounds.left,
+                        top = bounds.top,
+                        right = bounds.right,
+                        bottom = bounds.bottom
+                    )
+                )
+            }
+        }
+    }
 
 @Composable
 private fun MenuToggleButton(
@@ -6590,6 +6698,7 @@ private fun ServicePresenceChip(
         modifier = modifier
             .widthIn(min = 124.dp)
             .height(42.dp)
+            .semantics { contentDescription = action.label }
     ) {
         Row(
             modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
@@ -6662,6 +6771,7 @@ private fun NpcPresenceChip(
         modifier = Modifier
             .widthIn(min = 124.dp)
             .height(42.dp)
+            .semantics { contentDescription = label }
     ) {
         Row(
             modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp),

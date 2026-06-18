@@ -57,6 +57,8 @@ data class EventAction(
     val item: String? = null,
     @Json(name = "item_id")
     val itemId: String? = null,
+    @Json(name = "skill_id")
+    val skillId: String? = null,
     val quantity: Int? = null,
     val xp: Int? = null,
     val credits: Int? = null,

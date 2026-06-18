@@ -10,7 +10,7 @@ appId: com.junewiregames.starborn.prealpha
     visible: "Loading Dock"
     timeout: 15000
 - assertVisible: "Engage Acoustic Bulwark"
-- tapOn: "Talk to Foreman Bogs"
+- tapOn: "Foreman Bogs"
 - extendedWaitUntil:
     visible: ".*Loader's sitting idle.*"
     timeout: 10000
@@ -34,42 +34,35 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     notVisible: "New Quest"
     timeout: 10000
+- tapOn: "loader"
 - extendedWaitUntil:
     visible: "Quest Updated"
     timeout: 10000
-- tapOn: "Dismiss Quest Banner"
 - extendedWaitUntil:
     notVisible: "Quest Updated"
     timeout: 10000
-- tapOn: "Inspect Loader"
+- waitForAnimationToEnd:
+    timeout: 2000
+- tapOn: "cargo rail"
 - extendedWaitUntil:
     visible: "Quest Updated"
     timeout: 10000
-- tapOn: "Dismiss Quest Banner"
 - extendedWaitUntil:
     notVisible: "Quest Updated"
     timeout: 10000
-- tapOn: "Inspect Cargo rail"
-- extendedWaitUntil:
-    visible: "Quest Updated"
-    timeout: 10000
-- assertVisible: "Learn Hydraulic Kick."
-- tapOn: "Dismiss Quest Banner"
-- extendedWaitUntil:
-    notVisible: "Quest Updated"
-    timeout: 10000
+- waitForAnimationToEnd:
+    timeout: 2000
 - tapOn: "Engage Acoustic Bulwark"
-- extendedWaitUntil:
-    visible: "Foreman Bogs"
-    timeout: 60000
-- assertVisible: "That trainer eats direct hits.*"
 - waitForAnimationToEnd:
     timeout: 3000
-- assertVisible: "Foreman Bogs"
-- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: "Guard Break Training"
+    timeout: 60000
+- assertVisible: "That trainer eats direct hits.*"
+- tapOn: "Start Training"
 - extendedWaitUntil:
     visible: "Tap Nova when her action is ready."
-    timeout: 10000
+    timeout: 60000
 - tapOn: "Nova"
 - extendedWaitUntil:
     visible: "Choose Attack. First, test the shield."
@@ -119,6 +112,11 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 10000
 - takeScreenshot: combat-level-up-redesign
 - tapOn: "Continue"
+- extendedWaitUntil:
+    visible: "ITEM OBTAINED"
+    timeout: 15000
+- assertVisible: "Acquired Hydraulic Fluid"
+- tapOn: "GOT IT"
 - extendedWaitUntil:
     visible: "Quest Completed"
     timeout: 30000

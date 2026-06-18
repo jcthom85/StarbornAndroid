@@ -576,7 +576,7 @@
         "name": "cargo rail",
         "type": "generic",
         "action_event": "w1_sq03_move_cargo",
-        "condition_unmet_message": "The rail leads straight into the heart of the Logistics Sector."
+        "condition_unmet_message": "The loader shoves the cargo along the rail, clearing enough space for the trapped workers to breathe."
       },
       {
         "name": "loader",
