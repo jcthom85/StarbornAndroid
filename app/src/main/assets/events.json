@@ -1233,6 +1233,11 @@
         "milestone": "ms_mine_power_on"
       },
       {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_mq03",
+        "task_id": "restore_deep_mine_power"
+      },
+      {
         "type": "set_room_state",
         "room_id": "mine_shunt",
         "state_key": "dark",

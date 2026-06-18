@@ -146,8 +146,12 @@
       {
         "id": "deep_mine_descent",
         "title": "Deep Mine Descent",
-        "description": "Push through the old tunnels and learn how to break shielded enemies.",
+        "description": "Restore the mine lights, push through the old tunnels, and use Guard Break against shielded enemies.",
         "tasks": [
+          {
+            "id": "restore_deep_mine_power",
+            "text": "Restore power at the Cavern Junction support pillar."
+          },
           {
             "id": "clear_first_mine_encounter",
             "text": "Clear the first Deep Mine encounter."

@@ -551,7 +551,7 @@
     {
         "id": "bogs_w1_mq03_intro_5",
         "speaker": "Foreman Bogs",
-        "text": "You've got that Mine Access Badge Zeke signed off on. My scanner's updated. Use the elevator to go down, and don't come back until the relays stop humming.",
+        "text": "You've got that Mine Access Badge Zeke signed off on. My scanner's updated. Use the elevator, restore power at the Cavern Junction support pillar, then follow the relays until the humming stops.",
         "trigger": "set_quest_task_done:w1_mq03:talk_to_bogs,player_action:bogs_talked,set_milestone:ms_w1_mq03_bogs_talked"
     },
     {
