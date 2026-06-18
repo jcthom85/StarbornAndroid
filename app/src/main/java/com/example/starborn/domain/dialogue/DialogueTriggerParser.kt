@@ -85,16 +85,23 @@ object DialogueTriggerParser {
     private fun parseIdQuantity(raw: String): Pair<String, Int>? {
         val trimmed = raw.trim()
         if (trimmed.isEmpty()) return null
-        val delimiters = listOf('*', 'x', '|')
         var id = trimmed
         var qty = 1
         run breaking@{
-            delimiters.forEach { delimiter ->
+            listOf('*', '|').forEach { delimiter ->
                 val idx = trimmed.indexOf(delimiter)
                 if (idx > 0) {
                     id = trimmed.substring(0, idx).trim()
                     qty = trimmed.substring(idx + 1).trim().toIntOrNull() ?: 1
                     return@breaking
+                }
+            }
+            val xIndex = trimmed.indexOf('x')
+            if (xIndex > 0) {
+                val quantityText = trimmed.substring(xIndex + 1).trim()
+                if (quantityText.isNotEmpty() && quantityText.all { it.isDigit() }) {
+                    id = trimmed.substring(0, xIndex).trim()
+                    qty = quantityText.toIntOrNull() ?: 1
                 }
             }
         }

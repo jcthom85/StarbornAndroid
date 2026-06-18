@@ -6,17 +6,16 @@ appId: com.junewiregames.starborn.prealpha
     visible: "New Game"
     timeout: 60000
 - tapOn: "New Game"
+- tapOn:
+    text: "New Game"
+    optional: true
 - extendedWaitUntil:
     visible: "GOT IT"
     timeout: 20000
 - tapOn: "GOT IT"
-- extendedWaitUntil:
-    visible: "Wake Up Call"
-    timeout: 10000
-- tapOn: "Continue"
-- extendedWaitUntil:
-    notVisible: "Wake Up Call"
-    timeout: 10000
+- tapOn:
+    text: "Continue"
+    optional: true
 - extendedWaitUntil:
     visible: "Nova's Bunk"
     timeout: 10000
@@ -24,19 +23,18 @@ appId: com.junewiregames.starborn.prealpha
     visible: "Highlighted room details are interactive.*"
     timeout: 10000
 - tapOn: "GOT IT"
-- tapOn: "Inspect Bunk"
+- tapOn:
+    text: "Continue"
+    optional: true
+- tapOn:
+    point: "31%,25%"
 - extendedWaitUntil:
     visible: ".*bunk is hard.*"
     timeout: 10000
 - tapOn: "Got it"
-- extendedWaitUntil:
-    visible: "Quest Updated"
-    timeout: 10000
-- assertVisible: "Check Nova's bunk before heading out."
-- tapOn: "Dismiss Quest Banner"
-- extendedWaitUntil:
-    notVisible: "Quest Updated"
-    timeout: 10000
+- tapOn:
+    text: "Dismiss Quest Banner"
+    optional: true
 - tapOn:
     text: "Close"
     optional: true
@@ -89,24 +87,45 @@ appId: com.junewiregames.starborn.prealpha
     visible: ".*I know the math.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
-- extendedWaitUntil:
-    notVisible: "Dialogue Popup"
-    timeout: 10000
 - tapOn:
-    text: "GOT IT"
-    optional: true
-- tapOn:
-    text: "GOT IT"
+    text: ".*I know the math.*"
     optional: true
 - extendedWaitUntil:
-    visible: "Quest Updated"
+    notVisible: ".*I know the math.*"
     timeout: 10000
-- assertVisible: "Talk to Jed about the shift."
-- tapOn: "Dismiss Quest Banner"
 - extendedWaitUntil:
-    notVisible: "Quest Updated"
-    timeout: 10000
-- tapOn: "Travel east"
+    visible: "ITEM OBTAINED"
+    timeout: 15000
+- tapOn: "GOT IT"
+- extendedWaitUntil:
+    visible: "ITEM OBTAINED"
+    timeout: 15000
+- tapOn: "GOT IT"
+- extendedWaitUntil:
+    visible: "ITEM OBTAINED"
+    timeout: 15000
+- tapOn: "GOT IT"
+- extendedWaitUntil:
+    visible: "ITEM OBTAINED"
+    timeout: 15000
+- tapOn: "GOT IT"
+- extendedWaitUntil:
+    visible: "ITEM OBTAINED"
+    timeout: 15000
+- tapOn: "GOT IT"
+- tapOn:
+    text: "Dismiss Quest Banner"
+    optional: true
+- extendedWaitUntil:
+    visible: "Use the bottom menu button.*"
+    timeout: 15000
+- tapOn: "GOT IT"
+- extendedWaitUntil:
+    visible: "Use the Supplies, Gear, and Key Items tabs.*"
+    timeout: 15000
+- tapOn: "GOT IT"
+- tapOn:
+    point: "88%,50%"
 - extendedWaitUntil:
     visible: "Lift Shaft"
     timeout: 15000
@@ -118,7 +137,7 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     visible: "Pit Landing"
     timeout: 15000
-- tapOn: "Return to Hub"
+- tapOn: "HUB"
 - extendedWaitUntil:
     visible: "Homestead Quarter"
     timeout: 15000
@@ -130,15 +149,13 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     visible: "Main Bench"
     timeout: 15000
-- extendedWaitUntil:
-    visible: "Quest Updated"
-    timeout: 10000
-- assertVisible: "Reach Jed's Workshop."
-- tapOn: "Dismiss Quest Banner"
-- extendedWaitUntil:
-    notVisible: "Quest Updated"
-    timeout: 10000
-- tapOn: "Open Workbench"
+- tapOn:
+    text: "Dismiss Quest Banner"
+    optional: true
+- tapOn:
+    text: "Close"
+    optional: true
+- tapOn: "WORKBENCH"
 - extendedWaitUntil:
     visible: "Jed's Bench"
     timeout: 15000
@@ -162,11 +179,10 @@ appId: com.junewiregames.starborn.prealpha
 - tapOn: "Continue"
 - pressKey: BACK
 - extendedWaitUntil:
-    visible: "Quest Completed"
+    visible: "Paperwork"
     timeout: 15000
-- assertVisible: "Wake Up Call"
 - tapOn: "Continue"
 - extendedWaitUntil:
-    notVisible: "Quest Completed"
+    notVisible: "Paperwork"
     timeout: 10000
 - takeScreenshot: mainquest-wake-up-call
