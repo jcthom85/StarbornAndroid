@@ -375,7 +375,14 @@
       },
       {
         "type": "play_cinematic",
-        "scene_id": "new_game_fade_in"
+        "scene_id": "new_game_fade_in",
+        "on_complete": [
+          {
+            "type": "system_tutorial",
+            "scene_id": "hotspot_actions",
+            "context": "Nova's Bunk"
+          }
+        ]
       }
     ]
   },
@@ -498,6 +505,42 @@
         "type": "advance_quest_stage",
         "quest_id": "w1_mq01",
         "to_stage_id": "report_to_jed"
+      },
+      {
+        "type": "system_tutorial",
+        "scene_id": "scene_market_journal",
+        "context": "Nova's Bunk"
+      }
+    ]
+  },
+  {
+    "id": "w1_mq01_find_jed",
+    "description": "Marks the first encounter route to Jed and teaches NPC interaction.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "pit_jed_bunk"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w1_mq01"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w1_mq01",
+        "task_id": "find_jed"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_mq01",
+        "task_id": "find_jed"
+      },
+      {
+        "type": "system_tutorial",
+        "scene_id": "npc_talk",
+        "context": "Jed's Bunk"
       }
     ]
   },
@@ -524,10 +567,36 @@
         "type": "set_quest_task_done",
         "quest_id": "w1_mq01",
         "task_id": "reach_workshop"
+      }
+    ]
+  },
+  {
+    "id": "w1_mq01_route_to_workshop_hint",
+    "description": "Shows the route locator after Jed points Nova toward the Workshop.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "pit_shaft"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w1_mq01"
       },
       {
+        "type": "quest_task_done",
+        "quest_id": "w1_mq01",
+        "task_id": "talk_to_jed"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w1_mq01",
+        "task_id": "reach_workshop"
+      }
+    ],
+    "actions": [
+      {
         "type": "system_tutorial",
-        "scene_id": "npc_talk",
+        "scene_id": "scene_market_locator",
         "context": "Jed's Workshop"
       }
     ]
@@ -607,6 +676,19 @@
         "milestone": "ms_w1_mq01_complete"
       },
       {
+        "type": "start_quest",
+        "quest_id": "w1_mq02"
+      },
+      {
+        "type": "track_quest",
+        "quest_id": "w1_mq02"
+      },
+      {
+        "type": "advance_quest_stage",
+        "quest_id": "w1_mq02",
+        "to_stage_id": "reach_checkpoint"
+      },
+      {
         "type": "show_message",
         "message": "Quest complete: Wake Up Call"
       }
@@ -643,6 +725,32 @@
         "quest_id": "w1_mq02",
         "to_stage_id": "reach_checkpoint"
       },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_mq02",
+        "task_id": "approach_admin_gate"
+      }
+    ]
+  },
+  {
+    "id": "w1_mq02_approach_checkpoint",
+    "description": "Marks the checkpoint approach for Paperwork once Nova reaches the queue.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "checkpoint_queue"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w1_mq02"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w1_mq02",
+        "task_id": "approach_admin_gate"
+      }
+    ],
+    "actions": [
       {
         "type": "set_quest_task_done",
         "quest_id": "w1_mq02",
@@ -1509,6 +1617,57 @@
         "quest_id": "w1_mq03",
         "to_stage_id": "sector_four_assignment"
       },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_mq03",
+        "task_id": "enter_logistics_sector"
+      }
+    ]
+  },
+  {
+    "id": "w1_mq03_logistics_commitment_warning",
+    "description": "Warns before Logistics advances the main story away from Homestead errands.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "admin_lobby"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w1_mq03"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w1_mq03",
+        "task_id": "enter_logistics_sector"
+      }
+    ],
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "Entering Logistics advances the main story. Finish Homestead errands first if you want to complete them now."
+      }
+    ]
+  },
+  {
+    "id": "w1_mq03_enter_logistics_sector",
+    "description": "Marks the Logistics Sector entry when The Echo is already active.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "admin_lobby"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w1_mq03"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w1_mq03",
+        "task_id": "enter_logistics_sector"
+      }
+    ],
+    "actions": [
       {
         "type": "set_quest_task_done",
         "quest_id": "w1_mq03",

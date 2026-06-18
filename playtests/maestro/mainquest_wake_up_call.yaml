@@ -1,7 +1,7 @@
 appId: com.junewiregames.starborn.prealpha
 ---
 - launchApp:
-    clearState: true
+    clearState: false
 - extendedWaitUntil:
     visible: "New Game"
     timeout: 60000
@@ -20,6 +20,10 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     visible: "Nova's Bunk"
     timeout: 10000
+- extendedWaitUntil:
+    visible: "Highlighted room details are interactive.*"
+    timeout: 10000
+- tapOn: "GOT IT"
 - tapOn: "Inspect Bunk"
 - extendedWaitUntil:
     visible: ".*bunk is hard.*"
@@ -33,40 +37,38 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     notVisible: "Quest Updated"
     timeout: 10000
-- swipe:
-    direction: LEFT
-    duration: 450
+- tapOn:
+    text: "Close"
+    optional: true
+- tapOn: "Travel west"
 - extendedWaitUntil:
     visible: "Pod Row"
     timeout: 15000
-- swipe:
-    direction: DOWN
-    duration: 450
+- tapOn: "Travel south"
 - extendedWaitUntil:
     visible: "Lift Shaft"
     timeout: 15000
 - extendedWaitUntil:
-    visible: "Head out of the Pit toward Jed's Workshop.*"
+    visible: "Open your journal from the menu.*"
     timeout: 10000
 - tapOn: "GOT IT"
-- swipe:
-    direction: LEFT
-    duration: 450
+- extendedWaitUntil:
+    visible: "Use the journal tabs.*"
+    timeout: 15000
+- tapOn: "GOT IT"
+- tapOn: "Travel west"
 - extendedWaitUntil:
     visible: "Jed's Bunk"
     timeout: 15000
 - extendedWaitUntil:
-    visible: "Quest Updated"
+    visible: "Tap a highlighted character name.*"
     timeout: 10000
-- assertVisible: "Reach Jed's Workshop."
-- assertVisible: "Talk to Jed about the shift."
-- tapOn: "Dismiss Quest Banner"
-- tapOn:
-    point: "86%,18%"
+- tapOn: "GOT IT"
 - extendedWaitUntil:
-    notVisible: "Quest Updated"
-    timeout: 10000
-- tapOn: "Talk to Jed"
+    visible: "Tap the dialogue card.*"
+    timeout: 15000
+- tapOn: "GOT IT"
+- tapOn: "Jed"
 - extendedWaitUntil:
     visible: ".*pressure leak.*"
     timeout: 10000
@@ -90,14 +92,12 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     notVisible: "Dialogue Popup"
     timeout: 10000
-- extendedWaitUntil:
-    visible: "Use the bottom menu button.*"
-    timeout: 10000
-- tapOn: "GOT IT"
-- extendedWaitUntil:
-    visible: "Use the Supplies, Gear, and Key Items tabs.*"
-    timeout: 15000
-- tapOn: "GOT IT"
+- tapOn:
+    text: "GOT IT"
+    optional: true
+- tapOn:
+    text: "GOT IT"
+    optional: true
 - extendedWaitUntil:
     visible: "Quest Updated"
     timeout: 10000
@@ -106,15 +106,15 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     notVisible: "Quest Updated"
     timeout: 10000
-- swipe:
-    direction: RIGHT
-    duration: 450
+- tapOn: "Travel east"
 - extendedWaitUntil:
     visible: "Lift Shaft"
     timeout: 15000
-- swipe:
-    direction: DOWN
-    duration: 450
+- extendedWaitUntil:
+    visible: "Head out of the Pit toward Jed's Workshop.*"
+    timeout: 10000
+- tapOn: "GOT IT"
+- tapOn: "Travel south"
 - extendedWaitUntil:
     visible: "Pit Landing"
     timeout: 15000
@@ -130,14 +130,6 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     visible: "Main Bench"
     timeout: 15000
-- extendedWaitUntil:
-    visible: "Tap a highlighted character name.*"
-    timeout: 10000
-- tapOn: "GOT IT"
-- extendedWaitUntil:
-    visible: "Tap the dialogue card.*"
-    timeout: 15000
-- tapOn: "GOT IT"
 - extendedWaitUntil:
     visible: "Quest Updated"
     timeout: 10000

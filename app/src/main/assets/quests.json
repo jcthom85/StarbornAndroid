@@ -3,7 +3,7 @@
     "id": "w1_mq01",
     "title": "Wake Up Call",
     "summary": "Nova wakes for another shift in the Pit and reports to Jed before the colony day starts.",
-    "description": "Learn the basics of moving through the Homestead, check your bunk, report to Jed's Workshop, and get your gear ready for another quota run.",
+    "description": "Learn the basics of moving through the Homestead, check your bunk, find Jed, and get your gear ready for another quota run.",
     "flavor": "For Nova, survival starts before breakfast.",
     "giver": "Jed",
     "hub_id": "hub_1_homestead",
@@ -27,16 +27,19 @@
       {
         "id": "report_to_jed",
         "title": "Report to Jed",
-        "description": "Jed is waiting in the Workshop with another warning and another repair job.",
+        "description": "Find Jed in the Pit, then follow his directions to the Workshop.",
         "tasks": [
           {
-            "id": "reach_workshop",
-            "text": "Reach Jed's Workshop.",
-            "tutorial_id": "scene_market_locator"
+            "id": "find_jed",
+            "text": "Find Jed in his bunk."
           },
           {
             "id": "talk_to_jed",
             "text": "Talk to Jed about the shift."
+          },
+          {
+            "id": "reach_workshop",
+            "text": "Reach Jed's Workshop."
           },
           {
             "id": "equip_starter_gear",
@@ -91,7 +94,7 @@
           },
           {
             "id": "spoof_liability_form",
-            "text": "Spoof the liability form to blame the surge on grid instability."
+            "text": "Let Zeke bury the liability flag under grid-instability paperwork."
           },
           {
             "id": "receive_mine_access_badge",

@@ -1,7 +1,7 @@
 appId: com.junewiregames.starborn.prealpha
 ---
 - launchApp:
-    clearState: true
+    clearState: false
 - extendedWaitUntil:
     visible: "Debug: Heavy Lifting"
     timeout: 60000

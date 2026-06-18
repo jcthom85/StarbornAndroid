@@ -81,13 +81,20 @@ function Has-ItemLookupValue($set, $raw) {
 function Parse-IdQuantity($raw) {
     $text = ([string]$raw).Trim()
     if ([string]::IsNullOrWhiteSpace($text)) { return $null }
-    foreach ($delimiter in @("*", "x", "|")) {
+    foreach ($delimiter in @("*", "|")) {
         $index = $text.IndexOf($delimiter)
         if ($index -gt 0) {
             return @{
                 Id = $text.Substring(0, $index).Trim()
                 Quantity = $text.Substring($index + 1).Trim()
             }
+        }
+    }
+    $quantityMatch = [regex]::Match($text, "^(?<id>.+)x(?<quantity>\d+)$")
+    if ($quantityMatch.Success) {
+        return @{
+            Id = $quantityMatch.Groups["id"].Value.Trim()
+            Quantity = $quantityMatch.Groups["quantity"].Value.Trim()
         }
     }
     return @{ Id = $text; Quantity = "1" }

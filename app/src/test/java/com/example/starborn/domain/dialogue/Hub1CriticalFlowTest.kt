@@ -20,32 +20,58 @@ import kotlinx.coroutines.runBlocking
 class Hub1CriticalFlowTest {
 
     @Test
+    fun newGameAndFirstRoomTransitionTeachHotspotsAndJournal() {
+        val harness = Hub1Harness()
+
+        harness.events.handleTrigger("player_action", EventPayload.Action("new_game_spawn_player_and_fade"))
+        assertTrue(harness.tutorialRequests.contains("hotspot_actions" to "Nova's Bunk"))
+
+        harness.events.handleTrigger("player_action", EventPayload.Action("w1_mq01_check_bunk"))
+        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("pit_shaft"))
+        assertTrue(harness.tutorialRequests.contains("scene_market_journal" to "Nova's Bunk"))
+    }
+
+    @Test
     fun wakeUpCallCompletesFromBunkToJedToCryoInductorRepair() {
         val harness = Hub1Harness()
 
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("pit_nova_bunk"))
         harness.events.handleTrigger("player_action", EventPayload.Action("w1_mq01_check_bunk"))
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("pit_shaft"))
-        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("workshop_floor"))
+        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("pit_jed_bunk"))
+
+        var state = harness.store.state.value
+        assertTrue(state.questTasksCompleted["w1_mq01"].orEmpty().contains("find_jed"))
+        assertTrue(!state.questTasksCompleted["w1_mq01"].orEmpty().contains("reach_workshop"))
+        assertTrue(harness.tutorialRequests.contains("npc_talk" to "Jed's Bunk"))
 
         val jed = harness.dialogue.startDialogue("Jed")
         assertEquals("jed_w1_mq01_intro_1", jed?.current()?.id)
         jed?.advanceUntilFinished()
 
-        harness.store.setQuestTaskCompleted("w1_mq01", "equip_starter_gear", true)
+        state = harness.store.state.value
+        assertTrue(state.questTasksCompleted["w1_mq01"].orEmpty().contains("talk_to_jed"))
+        assertTrue(state.questTasksCompleted["w1_mq01"].orEmpty().contains("equip_starter_gear"))
+
+        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("pit_shaft"))
+        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("workshop_floor"))
         harness.events.handleTrigger("player_action", EventPayload.Action("tinkering_screen_entered"))
 
         val afterBenchEntry = harness.store.state.value
         assertTrue(afterBenchEntry.activeQuests.contains("w1_mq01"))
         assertTrue(!afterBenchEntry.completedQuests.contains("w1_mq01"))
+        assertTrue(afterBenchEntry.questTasksCompleted["w1_mq01"].orEmpty().contains("reach_workshop"))
         assertTrue(!afterBenchEntry.questTasksCompleted["w1_mq01"].orEmpty().contains("use_tinkering_table"))
 
         harness.events.handleTrigger("player_action", EventPayload.Action("tinkering_craft", "functional_cryo_inductor"))
 
-        val state = harness.store.state.value
+        state = harness.store.state.value
         assertTrue(state.completedQuests.contains("w1_mq01"))
         assertTrue(state.completedMilestones.contains("ms_w1_mq01_complete"))
         assertTrue(state.questTasksCompleted["w1_mq01"].orEmpty().contains("use_tinkering_table"))
+        assertTrue(state.activeQuests.contains("w1_mq02"))
+        assertEquals("w1_mq02", state.trackedQuestId)
+        assertEquals("reach_checkpoint", state.questStageById["w1_mq02"])
         assertTrue(state.inventory["ration_pack"].orZero() >= 1)
     }
 
@@ -228,7 +254,15 @@ class Hub1CriticalFlowTest {
         assertTrue(completedTasks.contains("meet_zeke"))
         assertTrue(completedTasks.contains("spoof_liability_form"))
         assertTrue(completedTasks.contains("receive_mine_access_badge"))
+        assertTrue(state.activeQuests.contains("w1_mq03"))
+        assertEquals("w1_mq03", state.trackedQuestId)
+        assertEquals("sector_four_assignment", state.questStageById["w1_mq03"])
         assertTrue(state.inventory["mine_access_badge"].orZero() >= 1)
+
+        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("admin_lobby"))
+        val afterLobby = harness.store.state.value
+        assertTrue(afterLobby.questTasksCompleted["w1_mq03"].orEmpty().contains("enter_logistics_sector"))
+        assertTrue(harness.messages.contains("Entering Logistics advances the main story. Finish Homestead errands first if you want to complete them now."))
     }
 
     @Test
@@ -476,6 +510,8 @@ class Hub1CriticalFlowTest {
         val store = GameSessionStore()
         val events: EventManager
         val dialogue: DialogueService
+        val messages = mutableListOf<String>()
+        val tutorialRequests = mutableListOf<Pair<String?, String?>>()
 
         init {
             initialState?.let(store::restore)
@@ -483,6 +519,11 @@ class Hub1CriticalFlowTest {
                 events = loadEvents(),
                 sessionStore = store,
                 eventHooks = EventHooks(
+                    onMessage = { messages += it },
+                    onSystemTutorial = { sceneId, context, done ->
+                        tutorialRequests += sceneId to context
+                        done()
+                    },
                     onQuestTaskUpdated = { questId, taskId ->
                         if (!questId.isNullOrBlank() && !taskId.isNullOrBlank()) {
                             store.setQuestTaskCompleted(questId, taskId, true)

@@ -1,10 +1,15 @@
 appId: com.junewiregames.starborn.prealpha
 ---
 - launchApp:
-    clearState: true
+    clearState: false
+- extendedWaitUntil:
+    visible: "New Game"
+    timeout: 60000
+- swipe:
+    direction: UP
 - extendedWaitUntil:
     visible: "Debug: Checkpoint"
-    timeout: 60000
+    timeout: 10000
 - tapOn: "Debug: Checkpoint"
 - extendedWaitUntil:
     visible: "Shift Queue"
@@ -89,6 +94,14 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     notVisible: "Quest Completed"
     timeout: 10000
+- extendedWaitUntil:
+    visible: "New Quest"
+    timeout: 10000
+- assertVisible: "The Echo"
+- tapOn: "Dismiss"
+- extendedWaitUntil:
+    notVisible: "New Quest"
+    timeout: 10000
 - tapOn: "Travel west"
 - extendedWaitUntil:
     visible: "Search Bay"
@@ -106,12 +119,18 @@ appId: com.junewiregames.starborn.prealpha
     visible: "Concourse Lobby"
     timeout: 15000
 - extendedWaitUntil:
-    visible: "New Quest"
+    visible: "Entering Logistics advances the main story.*"
     timeout: 10000
-- assertVisible: "The Echo"
 - tapOn: "Dismiss"
 - extendedWaitUntil:
-    notVisible: "New Quest"
+    notVisible: "Entering Logistics advances the main story.*"
+    timeout: 10000
+- extendedWaitUntil:
+    visible: "Quest Updated"
+    timeout: 10000
+- tapOn: "Dismiss Quest Banner"
+- extendedWaitUntil:
+    notVisible: "Quest Updated"
     timeout: 10000
 - tapOn: "Talk to Foreman Bogs"
 - extendedWaitUntil:

@@ -23,6 +23,15 @@
         ]
     },
     {
+        "id": "hotspot_actions",
+        "steps": [
+            {
+                "message": "Highlighted room details are interactive. Tap one to inspect it or use its available action.",
+                "context": "Exploration"
+            }
+        ]
+    },
+    {
         "id": "scene_tinkering_tutorial",
         "steps": [
             {

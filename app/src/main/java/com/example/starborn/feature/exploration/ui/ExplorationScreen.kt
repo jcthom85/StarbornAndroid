@@ -590,6 +590,21 @@ fun ExplorationScreen(
                                     roomAction = action
                                 )
                             }
+                        } else if (!action.actionEvent.isNullOrBlank()) {
+                            val key = action.actionKey()
+                            if (unique.add(key)) {
+                                val actionName = action.name
+                                    .takeIf { it.isNotBlank() }
+                                    ?.replaceFirstChar { ch ->
+                                        if (ch.isLowerCase()) ch.titlecase(Locale.getDefault()) else ch.toString()
+                                    }
+                                    ?: actionLabelFallback(action)
+                                items += QuickMenuAction(
+                                    iconRes = R.drawable.item_icon_generic,
+                                    label = "Inspect $actionName",
+                                    roomAction = action
+                                )
+                            }
                         }
                     }
                     else -> Unit

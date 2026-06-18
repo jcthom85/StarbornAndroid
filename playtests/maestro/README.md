@@ -64,6 +64,15 @@ Then run a flow. If more than one Android device is connected, pass the device i
 .\scripts\maestro.ps1 --device 46121JEKB11849 test .\playtests\maestro\debug_full_inventory_menu.yaml
 ```
 
+For focused World 1 repair runs, Maestro 2.6.0 can intermittently fail `launchApp` immediately after clearing app data. Use this ADB preflight when a clean app state is required:
+
+```powershell
+.\scripts\adb.ps1 -s 46121JEKB11849 shell pm clear com.junewiregames.starborn.prealpha
+.\scripts\adb.ps1 -s 46121JEKB11849 shell am start -n com.junewiregames.starborn.prealpha/com.example.starborn.MainActivity
+Start-Sleep -Seconds 2
+.\scripts\maestro.ps1 --device 46121JEKB11849 test .\playtests\maestro\mainquest_wake_up_call.yaml
+```
+
 `verify_world1.ps1` sends best-effort wake and keyguard-dismiss commands before running Maestro. Keep the device unlocked while Maestro is running. A failed first assertion with a lock-screen screenshot usually means the app never launched into the foreground; run `.\scripts\adb.ps1 -s <device-id> shell input keyevent KEYCODE_WAKEUP` and `.\scripts\adb.ps1 -s <device-id> shell wm dismiss-keyguard`, then rerun the flow.
 
 ## Current Flows

@@ -61,16 +61,16 @@ If it is something the player must understand to play well, it goes here.
 
 | Teaches | Delivery | Where (exact) | Mandatory | Notes / Implementation hook |
 | --- | --- | --- | --- | --- |
-| Swipe movement between rooms (N/S/E/W) | Script + Gated Step | W1_MQ01 "Wake Up Call" -> Node 1: The Pit -> Nova's Bunk: leave the room | Yes | Script: `movement` or `scene_swipe_movement`. Gate the first exit until the player swipes once. |
+| Swipe movement between rooms (N/S/E/W) | Script + Gated Step | W1_MQ01 "Wake Up Call" -> Node 1: The Pit -> Nova's Bunk: leave the room | Yes | Implemented script: `movement`. Gate the first exit until the player swipes once. |
 | Exits/minimap meaning (what is currently reachable) | Prompt | W1_MQ01 -> first successful swipe to a new room | Yes | Keep text short. Reinforce by pulsing the open exit indicators for ~2s. |
-| Highlighted words/hotspots are tappable (no typing) | Implicit UI + Prompt | W1_MQ01 -> Nova's Bunk: first interactive noun in the room description | Yes | Pulse the first highlighted word once; prompt only if player pauses. |
-| Action menu (Examine/Use/Talk/Take) from a hotspot | Gated Step | W1_MQ01 -> Nova's Bunk: interact with 1 object that has multiple actions | Yes | Make the first hotspot have exactly 2 actions so the menu concept is clear. |
-| NPC interaction (tap name -> choose Talk) | Script + Gated Step | W1_MQ01 -> first mandatory NPC conversation (Jed) | Yes | Script: `npc_talk`. Gate only the first conversation until the player selects Talk once. |
+| Highlighted words/hotspots are tappable (no typing) | Script + Implicit UI | W1_MQ01 -> Nova's Bunk: after `new_game_fade_in` completes | Yes | Implemented script: `hotspot_actions`. |
+| Action menu / direct hotspot action from a room detail | Script + Implicit UI | W1_MQ01 -> Nova's Bunk: first interactive noun in the room description | Yes | Current build uses direct room action buttons, not a multi-action Examine/Use menu. `hotspot_actions` is the shipped teach. |
+| NPC interaction (tap name -> choose Talk) | Script + Gated Step | W1_MQ01 -> Jed's Bunk: first mandatory NPC conversation | Yes | Implemented script: `npc_talk`, triggered by `w1_mq01_find_jed`. |
 | "Room state" changes (the text updates after actions) | Implicit UI | W1_MQ01 -> Nova's Bunk: after examining/taking an item | Yes | Teach by doing: change the room description line immediately. |
-| Save/Rest at bed (safe point) | Dialogue + Prompt | W1_MQ01 -> Nova's Bunk: interact with bed | Yes | One-line: "If you need to reset, use the bunk." Show that HP/snack charges restore (or explicitly say what restores). |
-| Quest start + objective is pinned/tracked | Prompt | W1_MQ01 -> after talking to Jed in Node 2: Jed's Workshop | Yes | Immediately show the tracked objective UI and the "pinned" marker. |
-| Objective navigation (locator highlight / "go here next") | Script | W1_MQ01 -> first time leaving Jed's Workshop with an active objective | Yes | Script: `scene_market_locator` (or equivalent). Teach that the minimap/locator is a hint, not a GPS. |
-| Journal/Quest Log UI | Prompt + Practice | W1_MQ01 -> Jed: "Check your journal if you forget." | Yes | Script: `scene_market_journal` (if still used). Gate nothing; just prompt + ask player to open/close journal once. |
+| Save/Rest at bed (safe point) | Backlog decision | W1_MQ01 -> Nova's Bunk: interact with bed | No | Not shipped in current W1 data. Make mandatory only if a bed/rest action is implemented. |
+| Quest start + objective is pinned/tracked | Prompt + Implicit UI | W1_MQ01 -> new game spawn and fallback bunk entry | Yes | Implemented by `new_game_spawn_player_and_fade` and `w1_mq01_start_on_bunk_entry`; both start/track `w1_mq01`. |
+| Objective navigation (locator highlight / "go here next") | Script | W1_MQ01 -> leaving Jed's Bunk after Jed sends Nova to the Workshop | Yes | Implemented script: `scene_market_locator`, triggered by `w1_mq01_route_to_workshop_hint`. |
+| Journal/Quest Log UI | Script | W1_MQ01 -> first transition out of Nova's Bunk after the quest starts | Yes | Implemented script: `scene_market_journal`, triggered by `w1_mq01_leave_sleeping_level`. |
 | Bag/Inventory UI (open/close) | Script + Practice | W1_MQ01 -> first time player receives an item reward | Yes | Script: `bag_basics`. Consider auto-opening the bag once with a "Dismiss" to reduce hunting. |
 | Auto-loot behavior (picked items go to bag) | Dialogue | W1_MQ01 -> first pickup | Yes | One-line reinforcement so player trusts they did not "lose" the item. |
 | Equip a weapon/armor (difference between loot and equipped) | Gated Step | W1_MQ01 -> Jed's Workshop: "Equip your cutter/pistol before you leave." | Yes | Gate the exit from Workshop until weapon is equipped (single step). |
@@ -81,23 +81,23 @@ If it is something the player must understand to play well, it goes here.
 | Mods exist (and may be locked by milestones) | Implicit UI + Prompt | When player receives first weapon mod reward (W1_SQ02 Corrosive Rounds) | Optional | Show mod sockets UI in equipment detail. If sockets locked, label: "Unlocks after Main Story milestone." |
 | Combat entry, readiness, action selection, and single-target selection | Script + Gated Step | W1_SQ03 "Heavy Lifting" -> Loading Dock -> engage the Acoustic Bulwark after Hydraulic Kick comes online | Yes (soft gate) | Dominion safety module pauses ATB/enemy turns at every required response. Guide Nova -> Attack -> Acoustic Bulwark, then Nova -> Skills -> Hydraulic Kick -> Acoustic Bulwark. Allow Skip Training; skipping permanently dismisses this tutorial. |
 | Guard Break / Stagger as the primary "puzzle key" | Practice + Feedback + Gated Step | W1_SQ03 "Heavy Lifting" -> Loading Dock -> Acoustic Bulwark training fight | Yes (soft gate) | The guided basic attack is guaranteed to connect but deals **0 damage** into Guard. Pause on the blocked-hit explanation, then require Hydraulic Kick and confirm Guard Broken before combat resumes. Strongly signpost this before Logistics. |
-| Point-of-no-return warning language | Prompt | Node 4: Admin Gate -> first time approaching the Gate | Yes | "Crossing the checkpoint may lock out unfinished errands." Keep it honest and specific. |
+| Point-of-no-return warning language | Prompt | W1_MQ03 -> first entry into `admin_lobby` while `enter_logistics_sector` is incomplete | Yes | Implemented by `w1_mq03_logistics_commitment_warning`. Text: "Entering Logistics advances the main story. Finish Homestead errands first if you want to complete them now." |
 
 ### Hub 1.2 - Logistics Sector (First Dungeon + Escape)
 
 | Teaches | Delivery | Where (exact) | Mandatory | Notes / Implementation hook |
 | --- | --- | --- | --- | --- |
-| Hacking interaction (no typing, puzzle UI) | Script + Gated Step | W1_MQ02 "Paperwork" -> Admin Gate/Window: clearance denial -> hack | Yes | This is the first "minigame" style tutorial. Keep failure cheap, give clear feedback. |
+| Hacking interaction (no typing, puzzle UI) | Backlog decision | W1_MQ02 "Paperwork" -> Admin Gate/Window | No | Not shipped in current W1 data. Zeke performs the override through dialogue; do not mark hacking mandatory until a playable interaction exists. |
 | Combat entry/readiness reinforcement | Implicit UI | W1_MQ03 "The Echo" -> Node 2B: Deep Mine -> first mandatory fight trigger | Yes | Heavy Lifting owns the explicit combat tutorial. Keep this encounter moving unless that tutorial was skipped or disabled; do not stack another full prompt. |
 | Targeting reinforcement (single target vs multi target) | Practice + Feedback | W1_MQ03 -> first fight with 2 enemies | Yes | Reinforce switching targets and reading target info after Heavy Lifting teaches single-target selection. |
 | Shielded enemies reinforcement | Practice + Feedback | W1_MQ03 -> first shielded route enemy | Yes | Reuse the blocked-hit feedback if needed, but do not repeat the full Heavy Lifting script. This is the pre-boss reinforcement for The Warden's shield. |
 | Cooldowns as primary resource (no MP) | Prompt + Practice | W1_MQ03 -> first time player taps a skill on cooldown | Yes | Make the UI do the teaching (cooldown badge), prompt only on first confusion. |
 | Elemental weakness (+ tempo/stagger payoff) | Practice + Feedback | W1_MQ03 -> first enemy with clear weakness (e.g., Drone weak to Shock) | Yes | First weakness hit triggers a small "Weakness! Cooldowns -1" style toast. |
 | Status effects (DoT, stun, blind) basics | Practice + Feedback | W1_SQ02 (if completed) OR W1_MQ03 second combat | Yes (fallback) | Keep World 1 reactive/brute-force only. Do not tutorial **Jammed** or **Marked** until World 2 (Zeke joins too late). |
-| Source Art acquisition (Relic sync unlocks a new ability) | Cinematic + Prompt | W1_MQ03 -> Node 3: Echo Chamber -> Ancient Chamber -> sync with Tuning Fork | Yes | Immediately show the new skill in combat UI with a "Source Art" label. |
+| Source Art acquisition (Relic sync unlocks a new ability) | Backlog decision | W1_MQ03 -> Echo Chamber -> sync with Tuning Fork | No | Current data grants `tuning_fork` and completes `w1_mq03`; no usable W1 Source Art unlock is wired yet. |
 | Chase/gauntlet pacing (fast movement, limited detours) | Dialogue + Prompt | W1_MQ04 "Red Alert" -> Maintenance Tunnels | Yes | Use Zeke comms as the "tutorial voice" here: minimal UI prompts. |
 | Boss telegraphs (read intent, don't auto-attack) | Practice + Feedback | W1_MQ05 "The Launch" -> Boss: The Warden | Yes | The first boss should explicitly telegraph at least one move; tooltip-on-first-telegraph. |
-| Party member joins (Zeke) + party UI basics | Script + Practice | W1_MQ05 end: Zeke joins party (post-boss / escape) | Yes | Script: (new) `party_basics` - portraits, swapping, role hint. Avoid teaching Zeke's advanced status layer (Jam/Mark) here; first teach in World 2. |
+| Party member joins (Zeke) + party UI basics | Backlog / World 2 | First controllable Nova+Zeke combat | No for W1 | W1 ends immediately after launch/crash; move this teach to World 2 unless a pre-crash party combat is added. |
 | Synergy skills / combo conditions | Practice + Feedback | First post-recruit fight with Nova+Zeke | Yes | Teach one "obvious" synergy with a highlighted button when conditions are met. |
 | Snack slot in combat (reusable cooldown tool, not item spam) | Prompt + Practice | First combat after player equips a snack OR first time snack button is available | Yes | Use a single line: "Snacks recharge; cooldown limits use." Reinforce by showing cooldown after use. |
 
@@ -227,20 +227,21 @@ These are not placed in the story flow; they trigger as-needed anywhere the acti
 
 ---
 
-## Appendix A - Tutorial Script Inventory (Current)
+## Appendix A - Tutorial Script Inventory
 
-This maps existing script IDs in `app/src/main/assets/tutorial_scripts.json` to their intended placement in the plan above.
+This maps script IDs to their intended placement in the plan above. Live script IDs currently present in `app/src/main/assets/tutorial_scripts.json`: `movement`, `npc_talk`, `hotspot_actions`, `scene_tinkering_tutorial`, `first_aid_failure`, `scene_market_locator`, `scene_market_journal`, `bag_basics`.
 
-If a script exists but does not have a clear placement, either (1) assign it a placement, or (2) delete/merge it to reduce drift.
+Rows marked planned/backlog are retained as design targets only and should not be treated as shipped tutorial coverage.
 
 | Script ID | Teaches | Primary placement (exact) | Fallback / Notes |
 | --- | --- | --- | --- |
 | `movement` | Swipe movement basics | World 1 -> Hub 1.1 -> W1_MQ01 -> Nova's Bunk exit | Merge with `scene_swipe_movement` if redundant. |
-| `scene_swipe_movement` | Swipe movement basics (duplicate) | World 1 -> Hub 1.1 -> W1_MQ01 -> Nova's Bunk exit | Candidate for removal once `movement` is canonical. |
-| `npc_talk` | NPC interaction menu + Talk | World 1 -> Hub 1.1 -> first mandatory conversation with Jed | Used by current `talk_to_jed` quest tasks in assets. |
+| `hotspot_actions` | Tappable room details and direct actions | World 1 -> Hub 1.1 -> W1_MQ01 -> after `new_game_fade_in` | Live. |
+| `scene_swipe_movement` | Swipe movement basics (duplicate) | World 1 -> Hub 1.1 -> W1_MQ01 -> Nova's Bunk exit | Planned/backlog only; not currently in `tutorial_scripts.json`. |
+| `npc_talk` | NPC interaction menu + Talk | World 1 -> Hub 1.1 -> Jed's Bunk before first mandatory conversation | Live; triggered by `w1_mq01_find_jed`. |
 | `bag_basics` | Open bag + filters | World 1 -> Hub 1.1 -> first item reward | Also ok as fallback on first "inventory full" warning. |
-| `scene_market_locator` | Objective navigation / locator cue | World 1 -> Hub 1.1 -> leaving Jed with an active objective | Currently referenced by `talk_to_jed` quest tasks in assets. |
-| `scene_market_journal` | Journal / quest tracking | World 1 -> Hub 1.1 -> after first quest is started and tracked | Keep this short; player should not feel punished for closing it. |
+| `scene_market_locator` | Objective navigation / locator cue | World 1 -> Hub 1.1 -> leaving Jed's Bunk after Jed sends Nova to the Workshop | Live; triggered by `w1_mq01_route_to_workshop_hint`. |
+| `scene_market_journal` | Journal / quest tracking | World 1 -> Hub 1.1 -> first transition out of Nova's Bunk | Live; triggered by `w1_mq01_leave_sleeping_level`. |
 | `scene_tinkering_tutorial` | Tinkering minigame basics | World 1 -> Hub 1.1 -> Jed's Workshop -> Tinkering Table | Use for the "first ever craft" only. |
 | `scene_fixers_favor_jed` | Tinkering tutorial beat: talk to Jed | World 1 -> Hub 1.1 -> "Fixer's Favor" onboarding quest (if used) | Optional quest-chain framing; keep aligned with canonical W1_MQ01 tinkering moment. |
 | `scene_fixers_favor_table` | Tinkering tutorial beat: open table | World 1 -> Hub 1.1 -> Fixer's Favor -> open table | Same as above. |
