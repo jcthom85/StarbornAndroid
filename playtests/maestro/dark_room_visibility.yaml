@@ -17,10 +17,6 @@ appId: com.junewiregames.starborn.prealpha
 - assertVisible: "It's too dark to see what's here."
 - assertNotVisible: "It's too dark to make out the room."
 - assertNotVisible: "Conveyor Belt"
-- assertNotVisible: "Engage"
 - assertNotVisible: "Pressure Hauler"
-- extendedWaitUntil:
-    visible: "HOSTILE CONTACT"
-    timeout: 20000
-- assertVisible: "Pressure Hauler"
-- takeScreenshot: dynamic-enemy-movement
+- assertNotVisible: "Engage"
+- takeScreenshot: dark-room-visibility

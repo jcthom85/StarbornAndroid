@@ -489,7 +489,7 @@ fun ExplorationScreen(
         val baseRoomDescription = remember(currentRoom, uiState.roomState, isRoomDark) {
             currentRoom?.let { room ->
                 if (isRoomDark) {
-                    "It is too dark to see anything."
+                    "It's too dark to make out the room."
                 } else {
                     room.description
                 }
@@ -538,24 +538,8 @@ fun ExplorationScreen(
             )
         }
         val descriptionForPanel = baseRoomDescription
-        val fallbackNpcs = uiState.npcs
-        val roomEnemyParties = remember(currentRoom) {
-            currentRoom?.let { room ->
-                val partyCandidates = room.enemyParties
-                    .orEmpty()
-                    .mapNotNull { party ->
-                        party.mapNotNull { id -> id.trim().takeIf { trimmed -> trimmed.isNotBlank() } }
-                            .takeIf { it.isNotEmpty() }
-                    }
-                if (partyCandidates.isNotEmpty()) {
-                    partyCandidates
-                } else {
-                    room.enemies
-                        .mapNotNull { id -> id.trim().takeIf { trimmed -> trimmed.isNotBlank() } }
-                        .map { listOf(it) }
-                }
-            }.orEmpty()
-        }
+        val visibleNpcs = if (isRoomDark) emptyList() else uiState.npcs
+        val visibleGroundItems = if (isRoomDark) emptyMap() else uiState.groundItems
         val serviceQuickActions = remember(uiState.actions, uiState.actionHints, currentRoom?.id, inlinePlan) {
             val unique = LinkedHashSet<String>()
             val items = mutableListOf<QuickMenuAction>()
@@ -616,8 +600,8 @@ fun ExplorationScreen(
             }
             items
         }
-        val hasRoomEntities = fallbackNpcs.isNotEmpty() ||
-            uiState.groundItems.isNotEmpty() ||
+        val hasRoomEntities = visibleNpcs.isNotEmpty() ||
+            visibleGroundItems.isNotEmpty() ||
             serviceQuickActions.isNotEmpty()
 
         BoxWithConstraints(
@@ -645,114 +629,67 @@ fun ExplorationScreen(
                     .fillMaxWidth(0.9f),
                 verticalArrangement = Arrangement.spacedBy(14.dp)
             ) {
-                Surface(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(14.dp),
-                    color = Color(0xFF061018).copy(alpha = if (isRoomDark) 0.72f else 0.46f),
-                    border = BorderStroke(1.dp, titleColor.copy(alpha = if (isRoomDark) 0.50f else 0.38f))
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = 16.dp, top = 10.dp, end = 10.dp, bottom = 10.dp),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .weight(1f)
-                                .clickable {
-                                    val nextIdx = (weatherCycles.indexOf(debugWeatherOverride) + 1) % weatherCycles.size
-                                    debugWeatherOverride = weatherCycles[nextIdx]
-                                },
-                            verticalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            Text(
-                                text = if (isRoomDark) "" else (uiState.currentRoom?.title ?: "Unknown area"),
-                                style = MaterialTheme.typography.headlineSmall.copy(
-                                    fontSize = 26.sp,
-                                    lineHeight = 30.sp,
-                                    shadow = Shadow(
-                                        color = Color.Black.copy(alpha = 0.62f),
-                                        offset = Offset(0f, 1.25f),
-                                        blurRadius = 1.5f
-                                    )
-                                ),
-                                color = warmTitleColor,
-                                maxLines = 2,
-                                overflow = TextOverflow.Ellipsis
-                            )
-                            if (!isRoomDark) {
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .height(2.dp)
-                                        .background(
-                                            Brush.horizontalGradient(
-                                                colors = listOf(
-                                                    warmTitleColor.copy(alpha = 0.76f),
-                                                    titleColor.copy(alpha = 0.34f),
-                                                    Color.Transparent
-                                                )
-                                            )
-                                        )
-                                )
-                            }
-                        }
-                        MinimapWidget(
-                            minimap = uiState.minimap,
-                            onLegend = {
-                                viewModel.selectMenuTab(MenuTab.MAP)
-                                viewModel.openMenuOverlay(MenuTab.MAP)
-                            },
-                            obscured = isRoomDark,
-                            modifier = Modifier.requiredSize(minimapSize)
-                        )
+                RoomHeaderPanel(
+                    roomTitle = uiState.currentRoom?.title ?: "Unknown area",
+                    isDark = isRoomDark,
+                    titleColor = titleColor,
+                    warmTitleColor = warmTitleColor,
+                    minimap = uiState.minimap,
+                    minimapSize = minimapSize,
+                    onTitleClick = {
+                        val nextIdx = (weatherCycles.indexOf(debugWeatherOverride) + 1) % weatherCycles.size
+                        debugWeatherOverride = weatherCycles[nextIdx]
+                    },
+                    onMapClick = {
+                        viewModel.selectMenuTab(MenuTab.MAP)
+                        viewModel.openMenuOverlay(MenuTab.MAP)
                     }
-                }
+                )
 
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    RoomDescriptionPanel(
-                        currentRoom = currentRoom,
-                        description = descriptionForPanel,
-                        plan = inlinePlan,
-                        isDark = isRoomDark,
-                        onAction = { action -> viewModel.onActionSelected(action) },
-                        onNpcClick = { name -> viewModel.onNpcInteraction(name) },
-                        onEnemyClick = { enemyId -> viewModel.engageEnemy(enemyId) },
-                        borderColor = panelBorderColor,
-                        accentColor = actionAccentColor,
-                        textColor = roomTextColor,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .heightIn(min = 104.dp, max = 280.dp)
-                    )
-                    if (hasRoomEntities) {
-                        RoomEntitySection(
-                            npcs = fallbackNpcs,
-                            npcPresenceNames = uiState.npcPresenceNames,
-                            npcPortraitPaths = uiState.npcPortraitPaths,
-                            groundItems = uiState.groundItems,
-                            serviceActions = serviceQuickActions,
-                            itemDisplayName = { itemId -> viewModel.itemDisplayName(itemId) },
-                            itemDetailLabel = { itemId -> viewModel.roomItemDetailLabel(itemId) },
-                            itemIsEquipment = { itemId -> viewModel.roomItemIsEquipment(itemId) },
-                            accentColor = actionAccentColor,
-                            borderColor = panelBorderColor,
-                            isDark = isRoomDark,
+                if (!isRoomDark) {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        RoomDescriptionPanel(
+                            currentRoom = currentRoom,
+                            description = descriptionForPanel,
+                            plan = inlinePlan,
+                            isDark = false,
+                            onAction = { action -> viewModel.onActionSelected(action) },
                             onNpcClick = { name -> viewModel.onNpcInteraction(name) },
-                            onCollectItem = { itemId -> viewModel.collectGroundItem(itemId) },
-                            onCollectAll = { viewModel.collectAllGroundItems() },
-                            onAction = { action -> viewModel.onActionSelected(action) }
+                            onEnemyClick = { enemyId -> viewModel.engageEnemy(enemyId) },
+                            borderColor = panelBorderColor,
+                            accentColor = actionAccentColor,
+                            textColor = roomTextColor,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .heightIn(min = 104.dp, max = 280.dp)
                         )
+                        if (hasRoomEntities) {
+                            RoomEntitySection(
+                                npcs = visibleNpcs,
+                                npcPresenceNames = uiState.npcPresenceNames,
+                                npcPortraitPaths = uiState.npcPortraitPaths,
+                                groundItems = visibleGroundItems,
+                                serviceActions = serviceQuickActions,
+                                itemDisplayName = { itemId -> viewModel.itemDisplayName(itemId) },
+                                itemDetailLabel = { itemId -> viewModel.roomItemDetailLabel(itemId) },
+                                itemIsEquipment = { itemId -> viewModel.roomItemIsEquipment(itemId) },
+                                accentColor = actionAccentColor,
+                                borderColor = panelBorderColor,
+                                isDark = false,
+                                onNpcClick = { name -> viewModel.onNpcInteraction(name) },
+                                onCollectItem = { itemId -> viewModel.collectGroundItem(itemId) },
+                                onCollectAll = { viewModel.collectAllGroundItems() },
+                                onAction = { action -> viewModel.onActionSelected(action) }
+                            )
+                        }
                     }
                 }
             }
 
-            if (uiState.visualEnemyParties.isNotEmpty()) {
+            if (!isRoomDark && uiState.visualEnemyParties.isNotEmpty()) {
                 EnemyPresenceStage(
                     visualParties = uiState.visualEnemyParties,
                     enemyTiers = uiState.enemyTiers,
@@ -1200,6 +1137,132 @@ fun ExplorationScreen(
         )
     }
 }
+}
+
+@Composable
+private fun RoomHeaderPanel(
+    roomTitle: String,
+    isDark: Boolean,
+    titleColor: Color,
+    warmTitleColor: Color,
+    minimap: MinimapUiState?,
+    minimapSize: Dp,
+    onTitleClick: () -> Unit,
+    onMapClick: () -> Unit
+) {
+    if (isDark) {
+        Surface(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(8.dp),
+            color = Color(0xFF02060D).copy(alpha = 0.76f),
+            border = BorderStroke(1.dp, Color.White.copy(alpha = 0.22f))
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onTitleClick() }
+                    .padding(horizontal = 18.dp, vertical = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(5.dp)
+            ) {
+                Text(
+                    text = "Dark Room",
+                    color = Color.White.copy(alpha = 0.92f),
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        fontWeight = FontWeight.Bold
+                    ),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Text(
+                    text = "It's too dark to see what's here.",
+                    color = Color.White.copy(alpha = 0.66f),
+                    style = MaterialTheme.typography.bodyMedium,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+        }
+        return
+    }
+
+    val shape = RoundedCornerShape(10.dp)
+    val panelColor = Color(0xFF061018).copy(alpha = 0.54f)
+    val borderColor = titleColor.copy(alpha = 0.36f)
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = shape,
+        color = panelColor,
+        border = BorderStroke(1.dp, borderColor)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(
+                    Brush.horizontalGradient(
+                        colors = listOf(
+                            warmTitleColor.copy(alpha = 0.08f),
+                            titleColor.copy(alpha = 0.05f),
+                            Color.Transparent
+                        )
+                    )
+                )
+                .padding(start = 14.dp, top = 10.dp, end = 10.dp, bottom = 10.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .clickable { onTitleClick() },
+                verticalArrangement = Arrangement.spacedBy(7.dp)
+            ) {
+                Text(
+                    text = "CURRENT AREA",
+                    color = titleColor.copy(alpha = 0.76f),
+                    style = MaterialTheme.typography.labelSmall.copy(
+                        fontWeight = FontWeight.Bold
+                    ),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Text(
+                    text = roomTitle,
+                    style = MaterialTheme.typography.headlineSmall.copy(
+                        fontSize = 26.sp,
+                        lineHeight = 30.sp,
+                        shadow = Shadow(
+                            color = Color.Black.copy(alpha = 0.62f),
+                            offset = Offset(0f, 1.25f),
+                            blurRadius = 1.5f
+                        )
+                    ),
+                    color = warmTitleColor,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(2.dp)
+                        .background(
+                            Brush.horizontalGradient(
+                                colors = listOf(
+                                    warmTitleColor.copy(alpha = 0.76f),
+                                    titleColor.copy(alpha = 0.34f),
+                                    Color.Transparent
+                                )
+                            )
+                        )
+                )
+            }
+            MinimapWidget(
+                minimap = minimap,
+                onLegend = onMapClick,
+                obscured = isDark,
+                modifier = Modifier.requiredSize(minimapSize)
+            )
+        }
+    }
 }
 
 private fun serviceOffsets(count: Int, spacing: Float): List<Pair<Float, Float>> = when (count) {

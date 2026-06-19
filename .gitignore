@@ -65,6 +65,7 @@ local.properties
 /enemy-party-sizes*.png
 /first-combat-entry.png
 /dynamic-enemy-movement.png
+/dark-room-*.png
 /hub*_*.png
 /hub*.png
 /maestro-current.png
