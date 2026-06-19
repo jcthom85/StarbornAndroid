@@ -15,8 +15,8 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     visible: "Concourse Lobby"
     timeout: 15000
-- assertVisible: "Foreman Bogs"
-- tapOn: "Foreman Bogs"
+- assertVisible: "Foreman Boggs"
+- tapOn: "Foreman Boggs"
 - extendedWaitUntil:
     visible: ".*caused that surge.*"
     timeout: 10000

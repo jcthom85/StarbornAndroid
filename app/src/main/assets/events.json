@@ -1691,7 +1691,7 @@
   },
   {
     "id": "w1_mq03_bogs_dialogue_complete",
-    "description": "Sets the room state for admin_lobby when the player finishes talking to Bogs.",
+    "description": "Sets the room state for admin_lobby when the player finishes talking to Boggs.",
     "trigger": {
       "type": "player_action",
       "action": "bogs_talked"

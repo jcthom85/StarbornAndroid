@@ -118,16 +118,16 @@
   {
     "id": "w1_mq03",
     "title": "The Echo",
-    "summary": "Bogs sends Nova to Sector 4 to clear interference, but the signal is older than Dominion.",
+    "summary": "Boggs sends Nova to Sector 4 to clear interference, but the signal is older than Dominion.",
     "description": "Enter the Logistics Sector, descend into the Deep Mine, fight through Sector 4, and find the source of the impossible hum.",
     "flavor": "The mine was never quiet. Nova just had not heard what was underneath.",
-    "giver": "Foreman Bogs",
+    "giver": "Foreman Boggs",
     "hub_id": "hub_2_logistics",
     "stages": [
       {
         "id": "sector_four_assignment",
         "title": "Sector 4 Assignment",
-        "description": "Bogs turns Nova's breaker surge into punishment duty.",
+        "description": "Boggs turns Nova's breaker surge into punishment duty.",
         "tasks": [
           {
             "id": "enter_logistics_sector",
@@ -135,7 +135,7 @@
           },
           {
             "id": "talk_to_bogs",
-            "text": "Get the Sector 4 assignment from Foreman Bogs."
+            "text": "Get the Sector 4 assignment from Foreman Boggs."
           },
           {
             "id": "use_deep_elevator",
@@ -435,20 +435,20 @@
   {
     "id": "w1_sq03",
     "title": "Heavy Lifting",
-    "summary": "Bogs needs cargo moved and cares more about the shipment clock than the workers trapped behind it.",
+    "summary": "Boggs needs cargo moved and cares more about the shipment clock than the workers trapped behind it.",
     "description": "Use a loader to clear the collapsed cargo route, save the trapped workers, and learn why shielded enemies need to be broken before they can be hurt.",
-    "flavor": "Bogs calls it labor efficiency. Nova calls it not letting people die under a crate.",
-    "giver": "Foreman Bogs",
+    "flavor": "Boggs calls it labor efficiency. Nova calls it not letting people die under a crate.",
+    "giver": "Foreman Boggs",
     "hub_id": "hub_1_homestead",
     "stages": [
       {
         "id": "clear_cargo_collapse",
         "title": "Clear the Cargo Collapse",
-        "description": "A cargo collapse is blocking the loading route, and Bogs wants it fixed now.",
+        "description": "A cargo collapse is blocking the loading route, and Boggs wants it fixed now.",
         "tasks": [
           {
             "id": "talk_to_bogs",
-            "text": "Talk to Foreman Bogs about the blocked route."
+            "text": "Talk to Foreman Boggs about the blocked route."
           },
           {
             "id": "start_loader",

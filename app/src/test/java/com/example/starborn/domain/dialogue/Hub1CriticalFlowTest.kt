@@ -84,9 +84,9 @@ class Hub1CriticalFlowTest {
         val harness = Hub1Harness()
         harness.store.completeQuest("w1_mq01")
 
-        val bogs = harness.dialogue.startDialogue("Foreman Bogs")
-        assertEquals("bogs_w1_sq03_intro_1", bogs?.current()?.id)
-        bogs?.advanceUntilFinished()
+        val boggs = harness.dialogue.startDialogue("Foreman Boggs")
+        assertEquals("bogs_w1_sq03_intro_1", boggs?.current()?.id)
+        boggs?.advanceUntilFinished()
 
         harness.events.handleTrigger("player_action", EventPayload.Action("w1_sq03_start_loader"))
         harness.events.handleTrigger("player_action", EventPayload.Action("w1_sq03_move_cargo"))
@@ -119,9 +119,9 @@ class Hub1CriticalFlowTest {
 
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("admin_lobby"))
 
-        val bogs = harness.dialogue.startDialogue("Foreman Bogs")
-        assertEquals("bogs_w1_mq03_guardbreak_gate_1", bogs?.current()?.id)
-        bogs?.advanceUntilFinished()
+        val boggs = harness.dialogue.startDialogue("Foreman Boggs")
+        assertEquals("bogs_w1_mq03_guardbreak_gate_1", boggs?.current()?.id)
+        boggs?.advanceUntilFinished()
 
         val state = harness.store.state.value
         assertTrue(state.activeQuests.contains("w1_mq03"))
@@ -283,9 +283,9 @@ class Hub1CriticalFlowTest {
         assertTrue(state.activeQuests.contains("w1_mq03"))
         assertTrue(state.questTasksCompleted["w1_mq03"].orEmpty().contains("enter_logistics_sector"))
 
-        val bogs = harness.dialogue.startDialogue("Foreman Bogs")
-        assertEquals("bogs_w1_mq03_intro_1", bogs?.current()?.id)
-        bogs?.advanceUntilFinished()
+        val boggs = harness.dialogue.startDialogue("Foreman Boggs")
+        assertEquals("bogs_w1_mq03_intro_1", boggs?.current()?.id)
+        boggs?.advanceUntilFinished()
 
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("mine_landing"))
         harness.events.handleTrigger(
@@ -387,9 +387,9 @@ class Hub1CriticalFlowTest {
         harness.store.setInventory(mapOf("mine_access_badge" to 1))
 
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("admin_lobby"))
-        val bogs = harness.dialogue.startDialogue("Foreman Bogs")
-        assertEquals("bogs_w1_mq03_intro_1", bogs?.current()?.id)
-        bogs?.advanceUntilFinished()
+        val boggs = harness.dialogue.startDialogue("Foreman Boggs")
+        assertEquals("bogs_w1_mq03_intro_1", boggs?.current()?.id)
+        boggs?.advanceUntilFinished()
 
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("mine_landing"))
         harness.events.handleTrigger(

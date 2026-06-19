@@ -20,7 +20,7 @@ DEFAULT_CFG = {
     "test_level": 5,
     "baseline_ttk_turns": 4.0,
     "baseline_survive_turns": 4.0,
-    "rp_regen_per_turn": 6,
+    "cooldown_availability_divisor": 6,
     "crit_chance": 0.05,
     "crit_mult": 1.5,
     "dodge_chance": 0.03,
@@ -39,7 +39,7 @@ DEFAULT_CFG = {
       "heal_value": 0.6,
       "buff_flat_point": 0.15,
       "buff_mult_point": 1.0,
-      "rp_cost_weight": 0.06
+      "cooldown_cost_weight": 0.06
     }
   },
   "targets": {

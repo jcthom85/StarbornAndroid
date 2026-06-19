@@ -1,5 +1,7 @@
 package com.example.starborn.feature.exploration.viewmodel
 
+import com.example.starborn.feature.exploration.viewmodel.helpers.*
+
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -139,21 +141,7 @@ private const val EXIT_KEY_SEPARATOR = "::"
 private const val ENCOUNTER_CLEARED_STATE_PREFIX = "encounter_cleared:"
 private const val BAG_TUTORIAL_ID = "bag_basics"
 
-private data class ShopDialogueSession(
-    val shopId: String,
-    val baseLines: List<ShopDialogueLineUi>,
-    val topics: Map<String, ShopDialogueTopicState>,
-    val tradeLabel: String,
-    val leaveLabel: String,
-    val visitedTopics: MutableSet<String> = mutableSetOf()
-)
 
-private data class ShopDialogueTopicState(
-    val id: String,
-    val label: String,
-    val responseLines: List<ShopDialogueLineUi>,
-    val voiceCue: String?
-)
 
 private class SystemTutorialCoordinator(
     private val tutorialManager: TutorialRuntimeManager,
@@ -492,6 +480,15 @@ class ExplorationViewModel(
         )
     )
 
+    private val combatHandler = ExplorationCombatHandler(
+        inventoryService = inventoryService,
+        sessionStore = sessionStore,
+        eventManager = eventManager,
+        postStatus = ::postStatus,
+        emitEvent = ::emitEvent,
+        normalizeLootItemId = { normalizeLootItemId(it) }
+    )
+
     private fun handleEventQuestCompleted(questId: String?) {
         questId?.let {
             questRuntimeManager.markQuestCompleted(it)
@@ -796,92 +793,34 @@ class ExplorationViewModel(
     }
 
     fun onCombatVictory(result: CombatResultPayload) {
-        result.sourcePartyId?.let { partyId ->
-            enemyMovementManager?.markDefeated(partyId)
-            persistEnemyMovementState()
-            refreshMovementPresence()
-        }
-        val enemyIds = result.enemyIds
-        val rewardParts = mutableListOf<String>()
-        if (result.rewardXp > 0) rewardParts += "${result.rewardXp} XP"
-        if (result.rewardAp > 0) rewardParts += "${result.rewardAp} AP"
-        if (result.rewardCredits > 0) rewardParts += "${result.rewardCredits} credits"
-        val grantedItems = mutableListOf<String>()
-        result.rewardItems.forEach { (itemId, quantity) ->
-            val qty = quantity.coerceAtLeast(0)
-            if (qty <= 0) return@forEach
-            val canonicalId = normalizeLootItemId(itemId)
-            val name = inventoryService.itemDisplayName(canonicalId)
-            rewardParts += "$qty x $name"
-            emitEvent(ExplorationEvent.ItemGranted(name, qty))
-            inventoryService.addItem(canonicalId, qty)
-            grantedItems += "$qty x $name"
-        }
-        if (grantedItems.isNotEmpty()) {
-            sessionStore.setInventory(inventoryService.snapshot())
-        }
-        eventManager.handleTrigger(
-            type = "encounter_victory",
-            payload = EventPayload.EncounterOutcome(
-                enemyIds = enemyIds,
-                outcome = EventPayload.EncounterOutcome.Outcome.VICTORY
-            )
-        )
-        refreshCurrentRoomBlockedDirections()
-        val outcomeMessage = if (rewardParts.isNotEmpty()) {
-            "Victory reward: ${rewardParts.joinToString(", ")}"
-        } else {
-            "Encounter cleared."
-        }
-        postStatus(outcomeMessage)
-        emitEvent(
-            ExplorationEvent.CombatOutcome(
-                outcome = CombatResultPayload.Outcome.VICTORY,
-                enemyIds = enemyIds,
-                message = outcomeMessage
-            )
+        val outcomeMessage = combatHandler.processVictory(
+            result = result,
+            enemyMovementManager = enemyMovementManager,
+            onVictoryProcessed = {
+                persistEnemyMovementState()
+                refreshMovementPresence()
+                refreshCurrentRoomBlockedDirections()
+            }
         )
         playRoomAudio(sessionStore.state.value.hubId, _uiState.value.currentRoom?.id)
     }
 
     fun onCombatDefeat(enemyIds: List<String>) {
-        eventManager.handleTrigger(
-            type = "encounter_defeat",
-            payload = EventPayload.EncounterOutcome(
-                enemyIds = enemyIds,
-                outcome = EventPayload.EncounterOutcome.Outcome.DEFEAT
-            )
-        )
-        val message = "Overwhelmed by the enemy. Regroup and recover."
-        postStatus(message)
-        refreshCurrentRoomBlockedDirections()
-        emitEvent(
-            ExplorationEvent.CombatOutcome(
-                outcome = CombatResultPayload.Outcome.DEFEAT,
-                enemyIds = enemyIds,
-                message = message
-            )
+        combatHandler.processDefeat(
+            enemyIds = enemyIds,
+            onDefeatProcessed = {
+                refreshCurrentRoomBlockedDirections()
+            }
         )
         playRoomAudio(sessionStore.state.value.hubId, _uiState.value.currentRoom?.id)
     }
 
     fun onCombatRetreat(enemyIds: List<String>) {
-        eventManager.handleTrigger(
-            type = "encounter_retreat",
-            payload = EventPayload.EncounterOutcome(
-                enemyIds = enemyIds,
-                outcome = EventPayload.EncounterOutcome.Outcome.RETREAT
-            )
-        )
-        val message = "Retreated from combat."
-        postStatus(message)
-        refreshCurrentRoomBlockedDirections()
-        emitEvent(
-            ExplorationEvent.CombatOutcome(
-                outcome = CombatResultPayload.Outcome.RETREAT,
-                enemyIds = enemyIds,
-                message = message
-            )
+        combatHandler.processRetreat(
+            enemyIds = enemyIds,
+            onRetreatProcessed = {
+                refreshCurrentRoomBlockedDirections()
+            }
         )
         playRoomAudio(sessionStore.state.value.hubId, _uiState.value.currentRoom?.id)
     }
@@ -1061,63 +1000,21 @@ class ExplorationViewModel(
         }
     }
 
-    private fun scrubDescription(text: String?, tokens: List<String>): String? {
-        if (text.isNullOrBlank()) return null
-        val source = requireNotNull(text)
-        var updated = source
-        tokens.forEach { token ->
-            if (token.isNotBlank()) {
-                updated = updated.replace(token, " ")
-            }
-        }
-        val normalized = updated
-            .replace(Regex("\\s{2,}"), " ")
-            .replace(" ,", ",")
-            .replace(" .", ".")
-            .trim()
-        val original = source.trim()
-        return if (normalized.isEmpty() || normalized == original) null else normalized
-    }
+        private fun scrubDescription(text: String?, tokens: List<String>): String? =
+        CinematicPlaybackManager.scrubDescription(text, tokens)
+
+
 
     fun advanceCinematic() {
         cinematicCoordinator.advance()
     }
 
-    private fun CinematicPlaybackState.toUiState(): CinematicUiState {
-        val steps = scene.steps
-        if (steps.isEmpty()) {
-            return CinematicUiState(
-                sceneId = scene.id,
-                title = scene.title,
-                stepIndex = 0,
-                stepCount = 0,
-                step = CinematicStepUi(
-                    type = CinematicStepType.NARRATION,
-                    speaker = null,
-                    text = "",
-                    portrait = null
-                )
-            )
-        }
-        val safeIndex = stepIndex.coerceIn(0, steps.lastIndex)
-        val step = steps[safeIndex]
-        val portrait = step.speaker?.let { speaker ->
-            resolveEmotePortrait(speaker, step.emote) ?: resolvePortraitKey(speaker)
-        }
-        val stepUi = CinematicStepUi(
-            type = step.type,
-            speaker = step.speaker,
-            text = step.text,
-            portrait = portrait
+    private fun CinematicPlaybackState.toUiState(): CinematicUiState =
+        CinematicPlaybackManager.toUiState(
+            playback = this,
+            resolveEmotePortrait = ::resolveEmotePortrait,
+            resolvePortraitKey = ::resolvePortraitKey
         )
-        return CinematicUiState(
-            sceneId = scene.id,
-            title = scene.title,
-            stepIndex = safeIndex,
-            stepCount = steps.size,
-            step = stepUi
-        )
-    }
 
     private fun processBootstrapQueues() {
         if (bootstrapCinematicQueue.isEmpty() && bootstrapActionQueue.isEmpty()) return
@@ -1139,109 +1036,50 @@ class ExplorationViewModel(
     }
 
     private fun buildMinimapState(currentRoom: Room): MinimapUiState {
-        val currentPos = roomPosition(currentRoom)
-        val currentBlocked = computeBlockedDirections(currentRoom)
-        val openConnections = currentRoom.connections.mapNotNull { (direction, targetId) ->
-            val normalized = direction.lowercase(Locale.getDefault())
-            val dest = targetId?.takeIf { it.isNotBlank() } ?: return@mapNotNull null
-            if (normalized in currentBlocked) return@mapNotNull null
-            normalized to dest
-        }.toMap()
-
-        val roomsInContext = roomsForMaps(currentRoom)
-        val cells = roomsInContext.mapNotNull { room ->
-            val pos = roomPosition(room)
-            val dx = pos.first - currentPos.first
-            val dy = pos.second - currentPos.second
-            if (abs(dx) > 2 || abs(dy) > 2) return@mapNotNull null
-            val isVisible = room.id == currentRoom.id ||
-                visitedRooms.contains(room.id) ||
-                discoveredRooms.contains(room.id)
-            if (!isVisible) return@mapNotNull null
-            val connections = room.connections.mapNotNull { (direction, targetId) ->
-                targetId?.let { direction.lowercase(Locale.getDefault()) to it }
-            }.toMap()
-            val blocked = computeBlockedDirections(room)
-            val pathHints = when (room.id) {
-                currentRoom.id -> openConnections.keys
-                else -> {
-                    val incoming = openConnections.entries.firstOrNull { it.value == room.id }?.key
-                    incoming?.let { listOfNotNull(oppositeDirection(it)).toSet() } ?: emptySet()
-                }
+        return MapStateBuilder.buildMinimapState(
+            currentRoom = currentRoom,
+            roomsInContext = roomsForMaps(currentRoom),
+            visitedRooms = visitedRooms,
+            discoveredRooms = discoveredRooms,
+            isRoomDark = ::isRoomDark,
+            roomHasEnemies = { roomEnemyParties(it).isNotEmpty() },
+            computeBlockedDirections = ::computeBlockedDirections,
+            parseRoomServices = { room ->
+                parseActions(room).mapNotNull { action ->
+                    when (action) {
+                        is ShopAction -> MinimapService.SHOP
+                        is FirstAidAction -> MinimapService.FIRST_AID
+                        is TinkeringAction -> MinimapService.TINKERING
+                        else -> null
+                    }
+                }.toSet()
             }
-            val services = parseActions(room).mapNotNull { action ->
-                when (action) {
-                    is ShopAction -> MinimapService.SHOP
-                    is FirstAidAction -> MinimapService.FIRST_AID
-                    is TinkeringAction -> MinimapService.TINKERING
-                    else -> null
-                }
-            }.toSet()
-            MinimapCellUi(
-                roomId = room.id,
-                offsetX = dx,
-                offsetY = dy,
-                gridX = pos.first,
-                gridY = pos.second,
-                visited = visitedRooms.contains(room.id),
-                discovered = discoveredRooms.contains(room.id),
-                isCurrent = room.id == currentRoom.id,
-                hasEnemies = roomEnemyParties(room).isNotEmpty(),
-                blockedDirections = blocked,
-                connections = connections,
-                pathHints = pathHints,
-                services = services,
-                isDark = isRoomDark(room)
-            )
-        }
-        return MinimapUiState(cells = cells)
+        )
     }
 
     private fun buildFullMapState(currentRoom: Room): FullMapUiState {
-        val currentPos = roomPosition(currentRoom)
-        val roomsInContext = roomsForMaps(currentRoom)
-        val cells = roomsInContext.mapNotNull { room ->
-            val isVisible = room.id == currentRoom.id ||
-                visitedRooms.contains(room.id) ||
-                discoveredRooms.contains(room.id)
-            if (!isVisible) return@mapNotNull null
-            val pos = roomPosition(room)
-            val connections = room.connections.mapNotNull { (direction, targetId) ->
-                targetId?.let { direction.lowercase(Locale.getDefault()) to it }
-            }.toMap()
-            val blocked = computeBlockedDirections(room)
-            val services = parseActions(room).mapNotNull { action ->
-                when (action) {
-                    is ShopAction -> MinimapService.SHOP
-                    is FirstAidAction -> MinimapService.FIRST_AID
-                    is TinkeringAction -> MinimapService.TINKERING
-                    else -> null
-                }
-            }.toSet()
-            MinimapCellUi(
-                roomId = room.id,
-                offsetX = pos.first - currentPos.first,
-                offsetY = pos.second - currentPos.second,
-                gridX = pos.first,
-                gridY = pos.second,
-                visited = visitedRooms.contains(room.id),
-                discovered = discoveredRooms.contains(room.id),
-                isCurrent = room.id == currentRoom.id,
-                hasEnemies = roomEnemyParties(room).isNotEmpty(),
-                blockedDirections = blocked,
-                connections = connections,
-                services = services,
-                isDark = isRoomDark(room)
-            )
-        }
-        return FullMapUiState(cells = cells)
+        return MapStateBuilder.buildFullMapState(
+            currentRoom = currentRoom,
+            roomsInContext = roomsForMaps(currentRoom),
+            visitedRooms = visitedRooms,
+            discoveredRooms = discoveredRooms,
+            isRoomDark = ::isRoomDark,
+            roomHasEnemies = { roomEnemyParties(it).isNotEmpty() },
+            computeBlockedDirections = ::computeBlockedDirections,
+            parseRoomServices = { room ->
+                parseActions(room).mapNotNull { action ->
+                    when (action) {
+                        is ShopAction -> MinimapService.SHOP
+                        is FirstAidAction -> MinimapService.FIRST_AID
+                        is TinkeringAction -> MinimapService.TINKERING
+                        else -> null
+                    }
+                }.toSet()
+            }
+        )
     }
 
-    private fun roomPosition(room: Room): Pair<Int, Int> {
-        val x = room.pos.getOrNull(0) ?: 0
-        val y = room.pos.getOrNull(1) ?: 0
-        return x to y
-    }
+    private fun roomPosition(room: Room): Pair<Int, Int> = MapStateBuilder.roomPosition(room)
 
     private fun roomsForMaps(anchor: Room): List<Room> {
         val nodeId = nodeIdByRoomId[anchor.id]
@@ -1864,6 +1702,7 @@ class ExplorationViewModel(
                 registerEmotes(npc.emotes, *keys.toTypedArray())
             }
             val npcPortraitPaths = buildNpcPortraitMap(npcs)
+            val npcPresenceNames = buildNpcPresenceNameMap(npcs)
 
             visitedRooms.clear()
             discoveredRooms.clear()
@@ -1921,6 +1760,7 @@ class ExplorationViewModel(
                     currentRoom = initialRoom,
                     availableConnections = initialConnections,
                     npcs = visibleNpcsForRoom(initialRoom, sessionState.completedMilestones),
+                    npcPresenceNames = npcPresenceNames,
                     npcPortraitPaths = npcPortraitPaths,
                     actions = initialActions,
                     actionHints = buildActionHints(initialRoom, initialActions),
@@ -4013,6 +3853,28 @@ class ExplorationViewModel(
         return map
     }
 
+    private fun buildNpcPresenceNameMap(npcs: List<com.example.starborn.domain.model.Npc>): Map<String, String> {
+        val map = mutableMapOf<String, String>()
+        npcs.forEach { npc ->
+            val label = npc.shortName?.trim()?.takeIf { it.isNotEmpty() }
+                ?: npc.name.trim().takeIf { it.isNotEmpty() }
+                ?: npc.id.orEmpty().trim()
+            if (label.isBlank()) return@forEach
+            val keys = buildList<String?> {
+                add(npc.name)
+                add(npc.id)
+                addAll(npc.aliases)
+                add(npc.name.substringAfterLast(' ', missingDelimiterValue = npc.name))
+                add(npc.name.substringBefore(' ', missingDelimiterValue = npc.name))
+            }
+            keys.mapNotNull { it?.trim()?.takeIf { value -> value.isNotEmpty() } }
+                .map { it.normalizedKey() }
+                .filter { it.isNotEmpty() }
+                .forEach { key -> map[key] = label }
+        }
+        return map
+    }
+
     private fun resolvePortraitKey(speaker: String): String? {
         val normalized = speaker.normalizedKey()
         portraitBySpeaker[normalized]?.let { return it }
@@ -4173,65 +4035,16 @@ class ExplorationViewModel(
     }
 
     private fun showShopGreeting(shop: ShopDefinition, fallbackGreeting: String) {
-        val dialogue = shop.dialogue
-        val baseLines = if (dialogue?.preface.isNullOrEmpty()) {
-            listOf(
-                ShopDialogueLineUi(
-                    id = "${shop.id}_preface_0",
-                    speaker = lineSpeakerFallback(shop.name),
-                    text = fallbackGreeting,
-                    voiceCue = shop.voCue
-                )
-            )
-        } else {
-            dialogue.preface.mapIndexed { index, line ->
-                ShopDialogueLineUi(
-                    id = "${shop.id}_preface_$index",
-                    speaker = line.speaker?.takeIf { it.isNotBlank() } ?: shop.name.takeIf { it.isNotBlank() },
-                    text = line.text,
-                    voiceCue = line.voiceCue
-                )
-            }
-        }
-        val topics = dialogue?.smalltalk.orEmpty().associate { topic ->
-            topic.id to ShopDialogueTopicState(
-                id = topic.id,
-                label = topic.label,
-                responseLines = topic.response.mapIndexed { idx, line ->
-                    ShopDialogueLineUi(
-                        id = "${shop.id}_${topic.id}_$idx",
-                        speaker = line.speaker?.takeIf { it.isNotBlank() } ?: shop.name.takeIf { it.isNotBlank() },
-                        text = line.text,
-                        voiceCue = line.voiceCue
-                    )
-                },
-                voiceCue = topic.voiceCue
-            )
-        }
-        val tradeLabel = dialogue?.tradeLabel?.takeIf { it.isNotBlank() } ?: "Browse stock"
-        val leaveLabel = dialogue?.leaveLabel?.takeIf { it.isNotBlank() } ?: "Not now"
-        val session = ShopDialogueSession(
-            shopId = shop.id,
-            baseLines = baseLines,
-            topics = topics,
-            tradeLabel = tradeLabel,
-            leaveLabel = leaveLabel
-        )
+        val session = ShopDialogueSessionManager.createSession(shop, fallbackGreeting)
         activeShopDialogue = session
         _uiState.update {
             it.copy(
-                shopGreeting = ShopGreetingUi(
-                    shopId = shop.id,
-                    shopName = shop.name.ifBlank { "Shopkeeper" },
-                    portraitPath = shop.portrait,
-                    lines = baseLines,
-                    choices = buildShopChoices(session)
-                ),
+                shopGreeting = ShopDialogueSessionManager.buildGreetingUi(session, shop),
                 pendingShopId = shop.id
             )
         }
         playShopCue(shop)
-        baseLines.firstOrNull { !it.voiceCue.isNullOrBlank() }?.voiceCue?.let { playShopVoice(it) }
+        session.baseLines.firstOrNull { !it.voiceCue.isNullOrBlank() }?.voiceCue?.let { playShopVoice(it) }
     }
 
     private fun playShopCue(shop: ShopDefinition) {
@@ -4255,7 +4068,7 @@ class ExplorationViewModel(
             state.copy(
                 shopGreeting = current.copy(
                     lines = updatedLines,
-                    choices = buildShopChoices(session)
+                    choices = ShopDialogueSessionManager.buildShopChoices(session)
                 )
             )
         }
@@ -4267,37 +4080,6 @@ class ExplorationViewModel(
             postStatus("You've heard the latest from $speaker.")
         }
     }
-
-    private fun buildShopChoices(session: ShopDialogueSession): List<ShopDialogueChoiceUi> {
-        val tradeChoice = ShopDialogueChoiceUi(
-            id = "enter_shop_${session.shopId}",
-            label = session.tradeLabel,
-            action = ShopDialogueAction.ENTER_SHOP
-        )
-        val topicChoices = session.topics.values
-            .sortedBy { it.label.lowercase(Locale.getDefault()) }
-            .map { topic ->
-                ShopDialogueChoiceUi(
-                    id = topic.id,
-                    label = topic.label,
-                    action = ShopDialogueAction.SMALLTALK,
-                    enabled = topic.id !in session.visitedTopics
-                )
-            }
-        val leaveChoice = ShopDialogueChoiceUi(
-            id = "leave_shop_${session.shopId}",
-            label = session.leaveLabel,
-            action = ShopDialogueAction.LEAVE
-        )
-        return buildList {
-            add(tradeChoice)
-            addAll(topicChoices)
-            add(leaveChoice)
-        }
-    }
-
-    private fun lineSpeakerFallback(shopName: String): String =
-        shopName.takeIf { it.isNotBlank() } ?: "Shopkeeper"
 
     private fun collectRequiredMilestones(single: String?, many: List<String>?): Set<String> {
         val combined = mutableSetOf<String>()
@@ -4673,13 +4455,7 @@ class ExplorationViewModel(
         return room.connections.entries.firstOrNull { it.key.equals(normalized, ignoreCase = true) }?.value
     }
 
-    private fun oppositeDirection(direction: String): String? = when (direction.lowercase(Locale.getDefault())) {
-        "north" -> "south"
-        "south" -> "north"
-        "east" -> "west"
-        "west" -> "east"
-        else -> null
-    }
+    private fun oppositeDirection(direction: String): String? = MapStateBuilder.oppositeDirection(direction)
 
     private fun isDirectionUnlocked(roomId: String, direction: String): Boolean {
         val normalized = direction.lowercase(Locale.getDefault())

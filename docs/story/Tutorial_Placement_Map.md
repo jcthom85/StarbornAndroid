@@ -68,7 +68,7 @@ If it is something the player must understand to play well, it goes here.
 | NPC interaction (tap name -> choose Talk) | Script + Gated Step | W1_MQ01 -> Jed's Bunk: first mandatory NPC conversation | Yes | Implemented script: `npc_talk`, triggered by `w1_mq01_find_jed`. |
 | "Room state" changes (the text updates after actions) | Implicit UI | W1_MQ01 -> Nova's Bunk: after examining/taking an item | Yes | Teach by doing: change the room description line immediately. |
 | Menu save | Script | W1_MQ01 -> first arrival at Jed's Workshop | Yes | Implemented script: `menu_save`, triggered by `w1_mq01_reach_workshop`. Saving is through the bottom menu, not Nova's bunk. |
-| Rest at bed / recovery point | Backlog decision | First real bed or quarters recovery interaction | No for W1 | Do not teach in Nova's Bunk unless resting actually restores HP/resources. |
+| Rest at bed / recovery point | Script | Astra -> Quarters -> first bed interaction | No for W1 | Nova's Bunk is narrative flavor only. Do not add rest recovery there; the first safe rest should be on the Astra. |
 | Quest start + objective is pinned/tracked | Prompt + Implicit UI | W1_MQ01 -> new game spawn and fallback bunk entry | Yes | Implemented by `new_game_spawn_player_and_fade` and `w1_mq01_start_on_bunk_entry`; both start/track `w1_mq01`. |
 | Objective navigation (locator highlight / "go here next") | Script | W1_MQ01 -> leaving Jed's Bunk after Jed sends Nova to the Workshop | Yes | Implemented script: `scene_market_locator`, triggered by `w1_mq01_route_to_workshop_hint`. |
 | Journal/Quest Log UI | Script | W1_MQ01 -> first transition out of Nova's Bunk after the quest starts | Yes | Implemented script: `scene_market_journal`, triggered by `w1_mq01_leave_sleeping_level`. |
@@ -98,9 +98,9 @@ If it is something the player must understand to play well, it goes here.
 | Source Art acquisition (Relic sync unlocks a new ability) | Prompt | W1_MQ03 -> Echo Chamber -> sync with Tuning Fork | Yes | Tuning Fork sync unlocks `nova_blast_wave` and shows `source_art_unlock` before `Red Alert`. |
 | Chase/gauntlet pacing (fast movement, limited detours) | Dialogue + Prompt | W1_MQ04 "Red Alert" -> Maintenance Tunnels | Yes | Use Zeke comms as the "tutorial voice" here: minimal UI prompts. |
 | Boss telegraphs (read intent, don't auto-attack) | Practice + Feedback | W1_MQ05 "The Launch" -> Boss: The Warden | Yes | The first boss should explicitly telegraph at least one move; tooltip-on-first-telegraph. |
-| Party member joins (Zeke) + party UI basics | Join implemented; tutorial in World 2 | Zeke joins at W2 crash-site check-in; tutorial at first controllable Nova+Zeke combat | No tutorial for W1 | `zeke_w2_crash_4` recruits Zeke after `check_on_zeke`. Teach party UI only when a real Nova+Zeke combat starts. |
+| Party member joins (Zeke) + party UI basics | Script | Zeke joins at W2 crash-site check-in; tutorial at first controllable Nova+Zeke combat | No tutorial for W1 | Script: `party_basics`. Trigger only when combat starts with 2+ party members. `zeke_w2_crash_4` recruits Zeke after `check_on_zeke`. |
 | Synergy skills / combo conditions | Practice + Feedback | First post-recruit fight with Nova+Zeke | Yes | Teach one "obvious" synergy with a highlighted button when conditions are met. |
-| Snack slot in combat (reusable cooldown tool, not item spam) | Prompt + Practice | First combat after player equips a snack OR first time snack button is available | Yes | Use a single line: "Snacks recharge; cooldown limits use." Reinforce by showing cooldown after use. |
+| Snack slot in combat (reusable cooldown tool, not item spam) | Script | First snack command use in combat | Yes | Script: `snack_slot`. Do not add a W1 guaranteed snack reward just to teach this; teach it when the player actually uses the command. |
 
 ---
 
@@ -230,7 +230,7 @@ These are not placed in the story flow; they trigger as-needed anywhere the acti
 
 ## Appendix A - Tutorial Script Inventory
 
-This maps script IDs to their intended placement in the plan above. Live script IDs currently present in `app/src/main/assets/tutorial_scripts.json`: `movement`, `npc_talk`, `hotspot_actions`, `scene_tinkering_tutorial`, `first_aid_failure`, `scene_market_locator`, `scene_market_journal`, `bag_basics`.
+This maps script IDs to their intended placement in the plan above. Live script IDs currently present in `app/src/main/assets/tutorial_scripts.json`: `movement`, `npc_talk`, `hotspot_actions`, `scene_tinkering_tutorial`, `first_aid_failure`, `scene_market_locator`, `scene_market_journal`, `bag_basics`, `menu_save`, `source_art_unlock`, `party_basics`, `snack_slot`.
 
 Rows marked planned/backlog are retained as design targets only and should not be treated as shipped tutorial coverage.
 
@@ -244,6 +244,10 @@ Rows marked planned/backlog are retained as design targets only and should not b
 | `scene_market_locator` | Objective navigation / locator cue | World 1 -> Hub 1.1 -> leaving Jed's Bunk after Jed sends Nova to the Workshop | Live; triggered by `w1_mq01_route_to_workshop_hint`. |
 | `scene_market_journal` | Journal / quest tracking | World 1 -> Hub 1.1 -> first transition out of Nova's Bunk | Live; triggered by `w1_mq01_leave_sleeping_level`. |
 | `scene_tinkering_tutorial` | Tinkering minigame basics | World 1 -> Hub 1.1 -> Jed's Workshop -> Tinkering Table | Use for the "first ever craft" only. |
+| `menu_save` | Menu save | World 1 -> Hub 1.1 -> Jed's Workshop arrival | Live; triggered by `w1_mq01_reach_workshop`. |
+| `source_art_unlock` | Source Art unlock pattern | World 1 -> Hub 1.2 -> Echo Chamber -> sync with Tuning Fork | Live; triggered before Red Alert. |
+| `party_basics` | Active character switching and party roles | World 2 -> first combat with 2+ party members | Stubbed now; wire during World 2 event/combat scripting. |
+| `snack_slot` | Snack slot as reusable cooldown combat tool | First snack command use in combat | Stubbed now; trigger on use, not acquisition. |
 | `scene_fixers_favor_jed` | Tinkering tutorial beat: talk to Jed | World 1 -> Hub 1.1 -> "Fixer's Favor" onboarding quest (if used) | Optional quest-chain framing; keep aligned with canonical W1_MQ01 tinkering moment. |
 | `scene_fixers_favor_table` | Tinkering tutorial beat: open table | World 1 -> Hub 1.1 -> Fixer's Favor -> open table | Same as above. |
 | `scene_fixers_favor_craft` | Tinkering tutorial beat: craft | World 1 -> Hub 1.1 -> Fixer's Favor -> craft first repair | Same as above. |

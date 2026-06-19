@@ -109,5 +109,23 @@
                 "context": "Source Art"
             }
         ]
+    },
+    {
+        "id": "party_basics",
+        "steps": [
+            {
+                "message": "Tap a portrait to switch the active character. Each party member has unique skills.",
+                "context": "Combat"
+            }
+        ]
+    },
+    {
+        "id": "snack_slot",
+        "steps": [
+            {
+                "message": "Snacks are reusable combat tools. Use them like skills - they recharge after a cooldown.",
+                "context": "Combat"
+            }
+        ]
     }
 ]

@@ -506,7 +506,7 @@
     },
     {
         "id": "bogs_w1_mq03_guardbreak_gate_1",
-        "speaker": "Foreman Bogs",
+        "speaker": "Foreman Boggs",
         "text": "You heading down without shield training? That's how assets become floor paste.",
         "condition": "quest_active:w1_mq03,milestone_not_set:ms_w1_guardbreak_trained",
         "next": "bogs_w1_mq03_guardbreak_gate_2"
@@ -519,13 +519,13 @@
     },
     {
         "id": "bogs_w1_mq03_guardbreak_gate_3",
-        "speaker": "Foreman Bogs",
+        "speaker": "Foreman Boggs",
         "text": "Loading Dock. Riot shield trainer. Bring the loader online, move my cargo, learn Hydraulic Kick, then go play hero in Sector 4.",
         "trigger": "start_quest:w1_sq03,track_quest:w1_sq03,set_quest_task_done:w1_sq03:talk_to_bogs,set_milestone:ms_w1_sq03_started"
     },
     {
         "id": "bogs_w1_mq03_intro_1",
-        "speaker": "Foreman Bogs",
+        "speaker": "Foreman Boggs",
         "text": "You. Cutter girl. Zeke said you're the one who caused that surge in the Pit.",
         "condition": "quest_active:w1_mq03,milestone_not_set:ms_w1_mq03_bogs_talked",
         "next": "bogs_w1_mq03_intro_2"
@@ -533,12 +533,12 @@
     {
         "id": "bogs_w1_mq03_intro_2",
         "speaker": "Nova",
-        "text": "It was grid instability, Bogs. I just work the cutters.",
+        "text": "It was grid instability, Boggs. I just work the cutters.",
         "next": "bogs_w1_mq03_intro_3"
     },
     {
         "id": "bogs_w1_mq03_intro_3",
-        "speaker": "Foreman Bogs",
+        "speaker": "Foreman Boggs",
         "text": "Sure it was. Anyway, the interference is overloading the relays in Sector 4. I'm putting you on punishment duty. Descend and clear it.",
         "next": "bogs_w1_mq03_intro_4"
     },
@@ -550,13 +550,13 @@
     },
     {
         "id": "bogs_w1_mq03_intro_5",
-        "speaker": "Foreman Bogs",
+        "speaker": "Foreman Boggs",
         "text": "You've got that Mine Access Badge Zeke signed off on. My scanner's updated. Use the elevator, restore power at the Cavern Junction support pillar, then follow the relays until the humming stops.",
         "trigger": "set_quest_task_done:w1_mq03:talk_to_bogs,player_action:bogs_talked,set_milestone:ms_w1_mq03_bogs_talked"
     },
     {
         "id": "bogs_w1_sq03_intro_1",
-        "speaker": "Foreman Bogs",
+        "speaker": "Foreman Boggs",
         "text": "You. Cutter girl. Loader's sitting idle and cargo's blocking my schedule.",
         "condition": "quest_completed:w1_mq01,quest_not_started:w1_sq03",
         "next": "bogs_w1_sq03_intro_2"
@@ -569,19 +569,19 @@
     },
     {
         "id": "bogs_w1_sq03_intro_3",
-        "speaker": "Foreman Bogs",
+        "speaker": "Foreman Boggs",
         "text": "Then move it faster. Shipment clock doesn't pause for feelings.",
         "trigger": "start_quest:w1_sq03,track_quest:w1_sq03,set_quest_task_done:w1_sq03:talk_to_bogs,set_milestone:ms_w1_sq03_started"
     },
     {
         "id": "bogs_w1_sq03_complete",
-        "speaker": "Foreman Bogs",
+        "speaker": "Foreman Boggs",
         "text": "Route's clear, workers are breathing, and somehow I'm still behind schedule.",
         "condition": "quest_completed:w1_sq03"
     },
     {
         "id": "bogs_default_talk",
-        "speaker": "Foreman Bogs",
+        "speaker": "Foreman Boggs",
         "text": "Company time ain't charity. Move."
     },
     {

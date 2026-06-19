@@ -21,6 +21,7 @@ data class ExplorationUiState(
     val currentRoom: Room? = null,
     val availableConnections: Map<String, String?> = emptyMap(),
     val npcs: List<String> = emptyList(),
+    val npcPresenceNames: Map<String, String> = emptyMap(),
     val npcPortraitPaths: Map<String, String> = emptyMap(),
     val actions: List<RoomAction> = emptyList(),
     val actionHints: Map<String, ActionHintUi> = emptyMap(),

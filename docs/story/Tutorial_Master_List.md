@@ -36,15 +36,20 @@ This document catalogues every tutorialized mechanic in the game, its trigger lo
 | **Targeting** | Implicit UI | First Multi-Enemy Fight | Pulse enemy portraits. |
 | **Shields (0 Dmg)** | Feedback | W1_MQ03: Hit Shielded Enemy | "Guard Up! Use Guard Break skill." |
 | **Weakness** | Feedback | W1_MQ03: Hit Weakness | "Weakness Hit! Cooldowns -1." |
-| **Snack Slot** | Prompt | First Snack Equip/Combat | "Snacks are reusable..." |
+| **Snack Slot** | Script (`snack_slot`) | First snack command use in combat | "Snacks are reusable..." |
 
 ## 5. Advanced Combat (World 2+)
 | Mechanic | Method | Location / Trigger | Notes |
 | :--- | :--- | :--- | :--- |
-| **Party Switching** | Script (`scene_ollie_recruitment`) | Recruit Zeke/Ollie | "Tap portrait to swap..." |
+| **Party Switching** | Script (`party_basics`) | First combat with 2+ party members | "Tap portrait to swap..." |
 | **Status Effects** | Tooltips | World 1 Late / World 2 | Tap icons for info. |
 | **Jammed (Silence)** | Feedback | World 2: Sector 9 | "Jammed! Skills disabled." |
 | **Marked (Crit)** | Feedback | World 2: Sector 9 | "Marked! Next hit critical." |
+
+## 5A. Recovery (World 2+)
+| Mechanic | Method | Location / Trigger | Notes |
+| :--- | :--- | :--- | :--- |
+| **Rest Recovery** | Prompt + Practice | Astra Quarters: first bed interaction | Do not teach or enable rest at Nova's Bunk; Astra is the first true safe rest point. |
 
 ## 6. Survival & Minigames (World 2+)
 | Mechanic | Method | Location / Trigger | Notes |

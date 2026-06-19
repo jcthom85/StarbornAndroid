@@ -134,7 +134,7 @@ class SkillEval:
     name: str
     power_score: float
     dpr_estimate: float
-    rp_cost: float
+    cd_turns: float
     notes: str
 
 class SkillAnalyzer:
@@ -145,7 +145,7 @@ class SkillAnalyzer:
         self.w_heal_value  = float(w.get("heal_value", 0.6))
         self.w_buff_flat   = float(w.get("buff_flat_point", 0.15))
         self.w_buff_mult   = float(w.get("buff_mult_point", 1.0))
-        self.w_rp          = float(w.get("rp_cost_weight", 0.06))
+        self.w_cd          = float(w.get("cooldown_cost_weight", 0.06))
 
     def _expected_damage_from_mult(self, atk: float, mult: float) -> float:
         crit = 1 + (self.f.crit_mult - 1) * self.f.crit_chance
@@ -154,26 +154,26 @@ class SkillAnalyzer:
 
     def score_skill(self, node: Dict[str, Any], atk: float) -> Optional[SkillEval]:
         eff = node.get("effect") or {}
-        rp = float(eff.get("rp_cost", 0))
+        cd = float(node.get("cooldown", eff.get("cooldown", 0)))
         name = node.get("name", node.get("id", "skill"))
         sid = node.get("id", name)
         if eff.get("type") == "damage":
             mult = float(eff.get("mult", 1.0))
             dmg = self._expected_damage_from_mult(atk, mult)
             dpr = dmg
-            score = dmg * self.w_damage_mult - rp * self.w_rp
-            return SkillEval(sid, name, score, dpr, rp, "damage")
+            score = dmg * self.w_damage_mult - cd * self.w_cd
+            return SkillEval(sid, name, score, dpr, cd, "damage")
         if eff.get("type") == "heal":
             val = float(eff.get("value", 0))
-            score = val * self.w_heal_value - rp * self.w_rp
-            return SkillEval(sid, name, score, 0.0, rp, "heal")
+            score = val * self.w_heal_value - cd * self.w_cd
+            return SkillEval(sid, name, score, 0.0, cd, "heal")
         if eff.get("type") == "buff":
             val = float(eff.get("value", 0))
             btype = eff.get("buff_type", "attack")
-            score = val * (self.w_buff_mult if btype in ("attack","defense") else self.w_buff_flat) - rp * self.w_rp
-            return SkillEval(sid, name, score, 0.0, rp, f"buff:{btype}")
+            score = val * (self.w_buff_mult if btype in ("attack","defense") else self.w_buff_flat) - cd * self.w_cd
+            return SkillEval(sid, name, score, 0.0, cd, f"buff:{btype}")
         if eff.get("type") == "utility":
-            return SkillEval(sid, name, -rp * self.w_rp * 0.5, 0.0, rp, eff.get("subtype", "utility"))
+            return SkillEval(sid, name, -cd * self.w_cd * 0.5, 0.0, cd, eff.get("subtype", "utility"))
         return None
 
     def best_single_target_dpr(self, skills: List[SkillEval], base_atk_dpr: float) -> Tuple[SkillEval, float]:
@@ -182,9 +182,9 @@ class SkillAnalyzer:
         dmg_skills = [s for s in skills if s.notes == "damage"]
         if not dmg_skills:
             return SkillEval("basic_attack","Basic Attack", base_atk_dpr, base_atk_dpr, 0,"basic"), base_atk_dpr
-        regen = float(self.cfg.defaults.get("rp_regen_per_turn", 6))
-        best = max(dmg_skills, key=lambda s: s.dpr_estimate * (min(1.0, regen / max(1.0, s.rp_cost)) if s.rp_cost>0 else 1.0))
-        availability = 1.0 if best.rp_cost <= 0 else min(1.0, regen / best.rp_cost)
+        divisor = float(self.cfg.defaults.get("cooldown_availability_divisor", 6))
+        best = max(dmg_skills, key=lambda s: s.dpr_estimate * (min(1.0, divisor / max(1.0, s.cd_turns)) if s.cd_turns>0 else 1.0))
+        availability = 1.0 if best.cd_turns <= 0 else min(1.0, divisor / best.cd_turns)
         return best, max(base_atk_dpr, best.dpr_estimate * availability)
 
 @dataclass
@@ -390,7 +390,6 @@ def _snapshot_to_combat_unit(snap: UnitSnapshot, cfg: BalanceConfig, skills: lis
         crit_mult=float(cfg.defaults.get("crit_mult", 1.5)),
         dodge_chance=float(cfg.defaults.get("dodge_chance", 0.03)),
         skills=skills or [],
-        rp_regen=int(cfg.defaults.get("rp_regen_per_turn", 6)),
     )
 
 

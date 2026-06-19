@@ -71,8 +71,12 @@
     },
     {
         "id": "foreman_bogs",
-        "name": "Foreman Bogs",
-        "aliases": [],
+        "name": "Foreman Boggs",
+        "aliases": [
+            "Foreman Bogs",
+            "Bogs"
+        ],
+        "short_name": "Boggs",
         "role": "Supervisor",
         "description": "A loud, bureaucratic bully who prioritizes quotas over lives.",
         "portrait": "images/npcs/bogs.png",

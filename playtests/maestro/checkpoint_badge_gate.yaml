@@ -109,7 +109,7 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 15000
 - waitForAnimationToEnd:
     timeout: 2000
-- tapOn: "Foreman Bogs"
+- tapOn: "Foreman Boggs"
 - extendedWaitUntil:
     visible: ".*without shield training.*"
     timeout: 10000

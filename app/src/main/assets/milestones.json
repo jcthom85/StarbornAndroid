@@ -210,7 +210,7 @@
     {
         "id": "ms_w1_mq03_bogs_talked",
         "name": "Sector 4 Assignment",
-        "description": "Foreman Bogs sent Nova into Sector 4 to clear the interference.",
+        "description": "Foreman Boggs sent Nova into Sector 4 to clear the interference.",
         "toast": "Sector 4 assignment received."
     },
     {
@@ -282,7 +282,7 @@
     {
         "id": "ms_w1_sq03_started",
         "name": "Cargo Collapse",
-        "description": "Foreman Bogs assigned Nova to clear the blocked cargo route.",
+        "description": "Foreman Boggs assigned Nova to clear the blocked cargo route.",
         "toast": "Heavy Lifting started."
     },
     {

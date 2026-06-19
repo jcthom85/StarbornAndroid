@@ -7,6 +7,8 @@ data class Npc(
     val aliases: List<String>,
     val dialogue: Map<String, String>,
     val interactions: List<Interaction>,
+    @Json(name = "short_name")
+    val shortName: String? = null,
     val role: String? = null,
     val description: String? = null,
     val id: String? = null,

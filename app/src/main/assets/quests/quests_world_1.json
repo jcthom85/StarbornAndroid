@@ -67,7 +67,7 @@
     "steps": [
       {
         "id": "step_1",
-        "description": "Talk to Foreman Bogs.",
+        "description": "Talk to Foreman Boggs.",
         "target_node": "logistics_concourse",
         "action": "talk_bogs"
       },

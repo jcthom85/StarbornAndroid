@@ -1459,7 +1459,7 @@
     "env": "market",
     "title": "Foreman's Office",
     "background_image": "images/rooms/world_1/admin_office.png",
-    "description": "Bogs' local HQ is filled with humming server racks and stacks of physical shipment logs. A large map of the colony is projected onto the wall, glowing with Dominion blue.",
+    "description": "Boggs' local HQ is filled with humming server racks and stacks of physical shipment logs. A large map of the colony is projected onto the wall, glowing with Dominion blue.",
     "npcs": [],
     "items": [
       "shipment_log"
@@ -1575,8 +1575,8 @@
       "north": {
         "type": "lock",
         "consume": false,
-        "message_locked": "The retinal scanner flashes red: Access Denied. The lift controls won't unlock until Foreman Bogs authorizes your deep mine descent.",
-        "message_unlock": "The retinal scanner chirps green. Foreman Bogs' authorization is registered, and the lift controls unlock.",
+        "message_locked": "The retinal scanner flashes red: Access Denied. The lift controls won't unlock until Foreman Boggs authorizes your deep mine descent.",
+        "message_unlock": "The retinal scanner chirps green. Foreman Boggs' authorization is registered, and the lift controls unlock.",
         "requires": [
           {
             "room_id": "admin_lobby",
@@ -1872,7 +1872,7 @@
       {
         "name": "lift",
         "type": "generic",
-        "condition_unmet_message": "The only way back up. It's currently locked by Foreman Bogs."
+        "condition_unmet_message": "The only way back up. It's currently locked by Foreman Boggs."
       },
       {
         "name": "beacons",

@@ -1,0 +1,29 @@
+appId: com.junewiregames.starborn.prealpha
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "New Game"
+    timeout: 60000
+- swipe:
+    direction: UP
+- swipe:
+    direction: UP
+- extendedWaitUntil:
+    visible: "Debug: Enemy Party"
+    timeout: 10000
+- tapOn: "Debug: Enemy Party"
+- extendedWaitUntil:
+    visible: "Security Checkpoint B"
+    timeout: 15000
+- extendedWaitUntil:
+    visible: "Engage Dominion Dampener"
+    timeout: 10000
+- tapOn: "Engage Dominion Dampener"
+- extendedWaitUntil:
+    visible: "HOSTILE CONTACT"
+    timeout: 60000
+- extendedWaitUntil:
+    visible: "Dominion Dampener"
+    timeout: 15000
+- takeScreenshot: combat-enemy-shadows

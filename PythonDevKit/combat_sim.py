@@ -4,7 +4,7 @@ Turn-by-turn combat simulator for Starborn balance testing.
 
 Uses the same formula backbone as balance_lab.py (Formulae, DerivedStats)
 but resolves each turn individually with hit/crit/dodge rolls, skill
-cooldowns, RP management, and speed-based turn ordering.
+cooldowns and speed-based turn ordering.
 """
 from __future__ import annotations
 
@@ -30,8 +30,6 @@ class CombatUnit:
     crit_mult: float
     dodge_chance: float  # 0-1
     skills: List[Dict[str, Any]] = field(default_factory=list)
-    rp_max: int = 100
-    rp_regen: int = 6
 
 
 @dataclass
@@ -44,14 +42,11 @@ class SkillState:
 class FighterState:
     unit: CombatUnit
     hp: int = 0
-    rp: int = 0
     skill_states: List[SkillState] = field(default_factory=list)
 
     def __post_init__(self):
         if self.hp == 0:
             self.hp = self.unit.max_hp
-        if self.rp == 0:
-            self.rp = self.unit.rp_max
         if not self.skill_states:
             self.skill_states = [SkillState(s) for s in self.unit.skills]
 
@@ -189,9 +184,6 @@ class CombatSimulator:
         if not actor.alive or not target.alive:
             return
 
-        # RP regen
-        actor.rp = min(actor.unit.rp_max, actor.rp + actor.unit.rp_regen)
-
         # Tick cooldowns
         for ss in actor.skill_states:
             if ss.cooldown_left > 0:
@@ -203,8 +195,6 @@ class CombatSimulator:
         if chosen_skill is not None:
             skill_def = chosen_skill.skill
             action_name = skill_def.get("name", skill_def.get("id", "skill"))
-            rp_cost = int(skill_def.get("effect", {}).get("rp_cost", 0))
-            actor.rp -= rp_cost
             chosen_skill.cooldown_left = int(skill_def.get("cooldown", skill_def.get("effect", {}).get("cooldown", 0)))
             mult = float(skill_def.get("effect", {}).get("mult", 1.0))
             base_power = float(skill_def.get("base_power", 100)) / 100.0
@@ -247,9 +237,6 @@ class CombatSimulator:
                 continue
             eff = ss.skill.get("effect", {})
             if eff.get("type") not in ("damage", None):
-                continue
-            rp_cost = int(eff.get("rp_cost", 0))
-            if rp_cost > actor.rp:
                 continue
             mult = float(eff.get("mult", 1.0))
             base_power = float(ss.skill.get("base_power", 100)) / 100.0
