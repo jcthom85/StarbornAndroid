@@ -52,6 +52,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.starborn.BuildConfig
 import com.example.starborn.R
 import com.example.starborn.domain.audio.AudioCuePlayer
 import com.example.starborn.domain.audio.AudioCueType
@@ -101,6 +102,9 @@ fun MainMenuScreen(
     }
     val fadeInAlpha = remember { Animatable(1f) }
     val fadeOutAlpha = remember { Animatable(0f) }
+    val versionLabel = remember {
+        "v${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
+    }
 
     LaunchedEffect(Unit) {
         fadeInAlpha.animateTo(
@@ -303,11 +307,17 @@ fun MainMenuScreen(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .systemBarsPadding()
+                .padding(bottom = 34.dp)
                 .widthIn(max = 460.dp)
                 .fillMaxWidth()
                 .heightIn(max = if (compactHeight) 430.dp else 560.dp)
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = 30.dp, vertical = if (compactHeight) 22.dp else 34.dp),
+                .padding(
+                    start = 30.dp,
+                    top = if (compactHeight) 22.dp else 34.dp,
+                    end = 30.dp,
+                    bottom = if (compactHeight) 22.dp else 34.dp
+                ),
             verticalArrangement = Arrangement.spacedBy(13.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -408,6 +418,18 @@ fun MainMenuScreen(
                 enabled = pendingStartMode == null
             )
         }
+
+        Text(
+            text = versionLabel,
+            color = TitleMutedText.copy(alpha = 0.62f),
+            fontSize = 11.sp,
+            fontWeight = FontWeight.Medium,
+            letterSpacing = 0.sp,
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .systemBarsPadding()
+                .padding(bottom = 10.dp)
+        )
 
         SnackbarHost(
             hostState = snackbarHostState,

@@ -1,0 +1,9 @@
+appId: com.junewiregames.starborn.prealpha
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "New Game"
+    timeout: 60000
+- assertVisible: "v1.1.4 (6)"
+- takeScreenshot: title-menu-version
