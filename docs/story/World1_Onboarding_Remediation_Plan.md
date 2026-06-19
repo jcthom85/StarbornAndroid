@@ -13,7 +13,8 @@ Last updated: June 18, 2026.
   - Completing `w1_mq02` starts/tracks `w1_mq03`.
 - Phase 2 Required Tutorial Coverage: In progress.
   - Implemented and device-verified: early hotspot/action prompt, journal prompt, NPC talk prompt, Logistics commitment warning, mandatory Guard Break training, Source Art unlock prompt.
-  - Deferred decisions: save/rest, party basics, deeper combat micro-tutorials.
+  - Implemented in focused unit coverage: weakness reward feedback banner.
+  - Deferred decisions: bed/rest recovery, first-party-combat tutorial timing, snack/status micro-tutorials.
 - Phase 3 Quest Text and Objective Polish: Implemented for the known mismatch.
   - `w1_mq02` keeps internal task id `spoof_liability_form` for save/test stability.
   - Player-facing text now reads: `Let Zeke bury the liability flag under grid-instability paperwork.`
@@ -38,7 +39,7 @@ World 1's main story spine is coherent at the event/data level:
 9. Receive Jed's Chime at the cargo lift.
 10. Defeat the Warden, splice the Chime, launch, and crash into Sector 9.
 
-The main story spine is now coherent and device-verified through chapter flows. Remaining risk is limited to deferred tutorial/design decisions: save/rest, party basics timing, and deeper combat micro-tutorials.
+The main story spine is now coherent and device-verified through chapter flows. Remaining risk is limited to deferred tutorial/design decisions: bed/rest recovery, first-party-combat tutorial timing, and optional snack/status micro-tutorials.
 
 ## Evidence From Audit
 
@@ -190,19 +191,24 @@ Acceptance:
 - Before the player must inspect the bunk, the UI teaches that highlighted/actionable room details are interactive.
 - The tutorial text matches the actual control scheme.
 
-### 8. Save/rest tutorial
+### 8. Menu save and bed/rest tutorial
 
-Problem: the placement map says bed/rest should be taught in Nova's Bunk. Current W1 data does not clearly expose a save/rest teach there.
+Status: menu saving is now taught in World 1. Bed/rest recovery is not taught because Nova's bunk is not currently a real HP/resource recovery mechanic.
 
-Decision needed:
+Implemented:
 
-- If bed/rest is in scope for the current build, add a `Rest` or `Save` action to `pit_nova_bunk` and teach it once.
-- If not in scope, downgrade this from mandatory in the tutorial map.
+- Added `menu_save` tutorial script.
+- Triggered `menu_save` on first arrival at Jed's Workshop via `w1_mq01_reach_workshop`.
+- Tutorial copy points to the bottom menu and Save action only; it does not mention beds or rest.
 
-Acceptance if implemented:
+Deferred:
 
-- The bunk has a clear action.
-- The first use explains exactly what restores or saves.
+- Add a bed/rest tutorial only when a bed or quarters interaction actually restores HP, snacks, daily resources, or another persistent recovery resource.
+
+Acceptance:
+
+- `Hub1CriticalFlowTest.wakeUpCallCompletesFromBunkToJedToCryoInductorRepair` asserts `menu_save` appears at Jed's Workshop.
+- The tutorial explains save access without implying Nova's bunk restores HP.
 
 ### 9. Point-of-no-return warning
 
@@ -274,39 +280,41 @@ Acceptance:
 Current state:
 
 - Cooldowns and snack cooldown labels exist in combat UI.
-- Weakness reward exists in combat logic.
+- Weakness reward exists in combat logic and now shows a brief `Weakness hit / Cooldowns reduced` banner when a player-triggered weakness hit grants the cooldown reward.
 - Snacks exist as item type and combat command.
-- No clear World 1 tutorial prompt teaches these explicitly.
+- No additional modal tutorial prompt teaches these explicitly.
 
-Recommended sequencing:
+Decision:
 
 - Do not add all of these as popups in early World 1.
-- Add one contextual prompt for cooldown the first time a player opens Skills in combat.
-- Add one contextual toast for first weakness hit if not already visible enough.
-- Add a snack prompt only after the player has a snack equipped and enters combat.
-- Teach status effects via actual enemy/status encounter only if main W1 requires the player to react to it.
+- Treat cooldowns as UI-first: skill/snack cooldown numbers are already visible, and the weakness banner explains the most important cooldown payoff when it actually happens.
+- Keep snack teaching implicit until the player has a snack equipped and chooses to use it. Add a prompt later only if playtests show players missing the command.
+- Teach status effects through enemy feedback and combat log/status chips only. Do not tutorial Jammed/Marked in W1; those are Zeke/World 2 mechanics.
 
 Acceptance:
 
 - No combat tutorial stack appears before the player has control.
 - Each tutorial fires only when the mechanic is visible and usable.
+- `CombatViewModelTest.weaknessHitShowsCooldownRewardBanner` verifies first-order weakness reward feedback.
 
 ### 14. Party basics and Zeke
 
-Problem: the tutorial map says party basics should be taught when Zeke joins, but W1 ends immediately after launch. If Zeke is not controllable until World 2, teaching party basics in W1 is premature.
+Status: Zeke now joins mechanically during the W2 crash-site check-in, after the player talks to him and completes `check_on_zeke`. Party basics still should not be taught in W1 because there is no Nova+Zeke combat before the crash.
 
 Decision:
 
-- If there is no Nova+Zeke combat before the crash, move party basics to World 2.
-- If a post-Warden/pre-launch fight is added, teach party basics there.
+- Keep the Zeke join at `zeke_w2_crash_4` via `recruit:zeke`.
+- Move party basics to the first actual Nova+Zeke combat in World 2.
+- If a post-Warden/pre-launch fight is added later, revisit this placement.
 
 Recommended:
 
-- Move party basics to `w2_mq01` or the first World 2 combat with Zeke.
+- Teach party basics in the first World 2 combat where Zeke is visible, controllable, and tactically relevant.
 
 Acceptance:
 
-- The tutorial appears when the player can actually use party mechanics.
+- `Hub1CriticalFlowTest.sector9CrashSiteAndStrangeCoastQuestFlow` asserts Zeke is in `partyMembers` after the crash-site check-in.
+- The party tutorial appears only when the player can actually use party mechanics.
 
 ## Phase 3: Quest Text and Objective Polish
 

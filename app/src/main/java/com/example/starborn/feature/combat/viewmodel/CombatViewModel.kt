@@ -1627,7 +1627,7 @@ class CombatViewModel(
                     setCombatBanner(entry, updated)
                 }
                 is CombatLogEntry.WeaknessReward -> {
-                    // Handled reactively in CombatActionProcessor/CombatState
+                    setCombatBanner(entry, updated)
                 }
                 is CombatLogEntry.Heal -> {
                     emitHeal(entry, actionEffectDelayMs(currentAction))
@@ -2040,7 +2040,7 @@ class CombatViewModel(
             is CombatLogEntry.StatusExpired -> bannerForStatusExpired(entry, state)
             is CombatLogEntry.TurnSkipped -> bannerForTurnSkipped(entry, state)
             is CombatLogEntry.Outcome -> bannerForOutcome(entry)
-            is CombatLogEntry.WeaknessReward -> null
+            is CombatLogEntry.WeaknessReward -> bannerForWeaknessReward(entry)
         }
         if (update != null) {
             _combatBanner.value = update
@@ -2176,6 +2176,19 @@ class CombatViewModel(
             accent = CombatBannerAccent.DEFAULT,
             icon = if (chargingWeapon != null) CombatBannerIcon.ATTACK else CombatBannerIcon.STATUS,
             importance = if (chargingWeapon != null) CombatBannerImportance.IMPORTANT else CombatBannerImportance.IMPORTANT
+        )
+    }
+
+    private fun bannerForWeaknessReward(entry: CombatLogEntry.WeaknessReward): CombatBannerMessage {
+        bannerSession = null
+        return CombatBannerMessage(
+            id = UUID.randomUUID().toString(),
+            primary = "Weakness hit",
+            secondary = "Cooldowns reduced",
+            accent = CombatBannerAccent.SHOCK,
+            icon = CombatBannerIcon.BURST,
+            tags = listOf("Cooldown -1"),
+            importance = CombatBannerImportance.IMPORTANT
         )
     }
 
@@ -3293,7 +3306,7 @@ private fun determineSkillTargeting(skill: Skill): SkillTargeting {
                 val actorName = state.combatants[entry.actorId]?.combatant?.name ?: entry.actorId
                 "$actorName lines up an action"
             }
-            is CombatLogEntry.WeaknessReward -> null
+            is CombatLogEntry.WeaknessReward -> "Weakness hit. Cooldowns reduced."
             is CombatLogEntry.Outcome -> when (entry.result) {
                 is CombatOutcome.Victory -> "All foes defeated!"
                 is CombatOutcome.Defeat -> "Party overwhelmed..."

@@ -34,6 +34,9 @@ import com.example.starborn.domain.model.StatusDefinition
 import com.example.starborn.domain.session.GameSessionStore
 import com.example.starborn.domain.theme.EnvironmentThemeManager
 import com.example.starborn.feature.combat.viewmodel.CombatViewModel
+import com.example.starborn.feature.combat.viewmodel.CombatBannerAccent
+import com.example.starborn.feature.combat.viewmodel.CombatBannerIcon
+import com.example.starborn.feature.combat.viewmodel.CombatBannerImportance
 import com.example.starborn.feature.combat.viewmodel.COMBAT_BASICS_TUTORIAL_ID
 import com.example.starborn.feature.combat.viewmodel.COMBAT_TUTORIAL_SKILL_ID
 import com.example.starborn.feature.combat.viewmodel.CombatTutorialStep
@@ -1184,6 +1187,28 @@ class CombatViewModelTest {
         assertNull(enemyTurnJobField.get(viewModel))
     }
 
+    @Test
+    fun weaknessHitShowsCooldownRewardBanner() {
+        val viewModel = createWeaknessRewardViewModel()
+        val shockSkill = viewModel.skillsForPlayer("nova").first { it.id == "nova_shock_probe" }
+        val readyQueueField = CombatViewModel::class.java.getDeclaredField("readyQueue")
+        readyQueueField.isAccessible = true
+        @Suppress("UNCHECKED_CAST")
+        val readyQueue = readyQueueField.get(viewModel) as MutableList<String>
+        readyQueue.add("nova")
+
+        viewModel.selectReadyPlayer("nova")
+        viewModel.useSkill(shockSkill, listOf("shock_weak_drone"))
+
+        val banner = viewModel.combatBanner.value
+        assertEquals("Weakness hit", banner?.primary)
+        assertEquals("Cooldowns reduced", banner?.secondary)
+        assertEquals(CombatBannerAccent.SHOCK, banner?.accent)
+        assertEquals(CombatBannerIcon.BURST, banner?.icon)
+        assertEquals(CombatBannerImportance.IMPORTANT, banner?.importance)
+        assertTrue(banner?.tags.orEmpty().contains("Cooldown -1"))
+    }
+
     private fun createMinimalCombatViewModel(enemySkillId: String): CombatViewModel {
         val player = Player(
             id = "nova",
@@ -1287,6 +1312,86 @@ class CombatViewModelTest {
             environmentThemeManager = EnvironmentThemeManager(themeRepository),
             encounterCoordinator = EncounterCoordinator(),
             enemyIds = listOf(enemy.id)
+        )
+    }
+
+    private fun createWeaknessRewardViewModel(): CombatViewModel {
+        val player = Player(
+            id = "nova",
+            name = "Nova",
+            level = 1,
+            xp = 0,
+            hp = 120,
+            strength = 10,
+            vitality = 8,
+            agility = 6,
+            focus = 5,
+            luck = 4,
+            skills = listOf("nova_shock_probe"),
+            miniIconPath = "images/portraits/nova.png"
+        )
+        val enemy = Enemy(
+            id = "shock_weak_drone",
+            name = "Shock-Weak Drone",
+            tier = "normal",
+            hp = 90,
+            strength = 8,
+            vitality = 6,
+            agility = 5,
+            focus = 3,
+            luck = 2,
+            speed = 4,
+            element = "physical",
+            resistances = Resistances(shock = -100),
+            abilities = emptyList(),
+            flavor = "",
+            xpReward = 40,
+            creditReward = 20,
+            drops = emptyList(),
+            description = "A drone vulnerable to shock.",
+            portrait = "",
+            sprite = emptyList(),
+            attack = 12,
+            apReward = 1
+        )
+        val shockSkill = Skill(
+            id = "nova_shock_probe",
+            name = "Shock Probe",
+            character = player.id,
+            type = "active",
+            basePower = 20,
+            cooldown = 2,
+            description = "A testing spark.",
+            combatTags = listOf("shock")
+        )
+        val worldAssets = mock<WorldAssetDataSource> {
+            on { loadCharacters() } doReturn listOf(player)
+            on { loadEnemies() } doReturn listOf(enemy)
+            on { loadSkills() } doReturn listOf(shockSkill)
+            on { loadRooms() } doReturn emptyList()
+            on { loadSkillNodes() } doReturn emptyMap()
+        }
+        val inventoryService = InventoryService(FakeItemCatalog()).apply { loadItems() }
+        val themeRepository = mock<ThemeRepository> {
+            on { getTheme(any()) } doReturn null
+            on { getStyle(any()) } doReturn null
+        }
+        return CombatViewModel(
+            worldAssets = worldAssets,
+            combatEngine = CombatEngine(statusRegistry = StatusRegistry()),
+            statusRegistry = StatusRegistry(),
+            sessionStore = GameSessionStore(),
+            inventoryService = inventoryService,
+            itemCatalog = FakeItemCatalog(),
+            levelingManager = LevelingManager(LevelingData(mapOf("1" to 0, "2" to 100))),
+            progressionData = ProgressionData(),
+            audioRouter = AudioRouter(AudioBindings()),
+            themeRepository = themeRepository,
+            environmentThemeManager = EnvironmentThemeManager(themeRepository),
+            encounterCoordinator = EncounterCoordinator(),
+            enemyIds = listOf(enemy.id),
+            tutorialsEnabled = false,
+            elapsedRealtime = { 1_000L }
         )
     }
 

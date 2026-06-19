@@ -567,6 +567,11 @@
         "type": "set_quest_task_done",
         "quest_id": "w1_mq01",
         "task_id": "reach_workshop"
+      },
+      {
+        "type": "system_tutorial",
+        "scene_id": "menu_save",
+        "context": "Jed's Workshop"
       }
     ]
   },

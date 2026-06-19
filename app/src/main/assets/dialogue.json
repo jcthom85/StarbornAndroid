@@ -676,7 +676,7 @@
         "id": "zeke_w2_crash_4",
         "speaker": "Zeke",
         "text": "Check the core housing in the wreckage. If the Chime is still intact, we need to recover it before this swamp water short-circuits it completely.",
-        "trigger": "set_quest_task_done:w2_mq01:check_on_zeke"
+        "trigger": "set_quest_task_done:w2_mq01:check_on_zeke,recruit:zeke"
     },
     {
         "id": "zeke_w2_crash_repeat_1",

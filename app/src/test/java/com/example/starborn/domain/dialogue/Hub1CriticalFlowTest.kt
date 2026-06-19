@@ -65,6 +65,7 @@ class Hub1CriticalFlowTest {
         assertTrue(!afterBenchEntry.completedQuests.contains("w1_mq01"))
         assertTrue(afterBenchEntry.questTasksCompleted["w1_mq01"].orEmpty().contains("reach_workshop"))
         assertTrue(!afterBenchEntry.questTasksCompleted["w1_mq01"].orEmpty().contains("use_tinkering_table"))
+        assertTrue(harness.tutorialRequests.contains("menu_save" to "Jed's Workshop"))
 
         harness.events.handleTrigger("player_action", EventPayload.Action("tinkering_craft", "functional_cryo_inductor"))
 
@@ -491,6 +492,7 @@ class Hub1CriticalFlowTest {
 
         val stateAfterZeke = harness.store.state.value
         assertTrue(stateAfterZeke.questTasksCompleted["w2_mq01"].orEmpty().contains("check_on_zeke"))
+        assertTrue(stateAfterZeke.partyMembers.contains("zeke"))
 
         // 2. Examine the pod core
         harness.events.handleTrigger("player_action", EventPayload.Action("w2_mq01_examine_pod"))

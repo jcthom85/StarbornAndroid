@@ -93,6 +93,15 @@
         ]
     },
     {
+        "id": "menu_save",
+        "steps": [
+            {
+                "message": "You can save from the menu. Open the bottom menu anytime, then choose Save to store your progress.",
+                "context": "Save"
+            }
+        ]
+    },
+    {
         "id": "source_art_unlock",
         "steps": [
             {
