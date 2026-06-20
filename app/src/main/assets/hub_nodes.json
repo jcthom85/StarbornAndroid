@@ -278,6 +278,789 @@
     "entry_room": "sector9_crash_site",
     "icon_image": "images/nodes/sector9_landing.png",
     "pos_hint": {
+      "center_x": 0.15,
+      "center_y": 0.7
+    },
+    "size": [
+      220,
+      220
+    ],
+    "rooms": [
+      "sector9_crash_site"
+    ],
+    "discovered": true
+  },
+  {
+    "id": "razor_vine_path",
+    "world_id": "world_2",
+    "hub_id": "hub_3_sector9",
+    "title": "Razor-Vine Path",
+    "entry_room": "sector9_canopy",
+    "icon_image": "images/nodes/mine.png",
+    "pos_hint": {
+      "center_x": 0.38,
+      "center_y": 0.5
+    },
+    "size": [
+      200,
+      200
+    ],
+    "rooms": [
+      "sector9_canopy"
+    ],
+    "discovered": false
+  },
+  {
+    "id": "tideglass_beach",
+    "world_id": "world_2",
+    "hub_id": "hub_3_sector9",
+    "title": "Tideglass Beach",
+    "entry_room": "sector9_stream",
+    "icon_image": "images/nodes/trade_row.png",
+    "pos_hint": {
+      "center_x": 0.4,
+      "center_y": 0.85
+    },
+    "size": [
+      200,
+      200
+    ],
+    "rooms": [
+      "sector9_stream"
+    ],
+    "discovered": false
+  },
+  {
+    "id": "canopy_ridge",
+    "world_id": "world_2",
+    "hub_id": "hub_3_sector9",
+    "title": "Canopy Ridge",
+    "entry_room": "sector9_canopy_ridge",
+    "icon_image": "images/nodes/pit.png",
+    "pos_hint": {
+      "center_x": 0.68,
+      "center_y": 0.55
+    },
+    "size": [
+      220,
+      220
+    ],
+    "rooms": [
+      "sector9_canopy_ridge"
+    ],
+    "discovered": false
+  },
+  {
+    "id": "temple_gate",
+    "world_id": "world_2",
+    "hub_id": "hub_3_sector9",
+    "title": "Temple Gate",
+    "entry_room": "sector9_temple_gate",
+    "icon_image": "images/nodes/checkpoint.png",
+    "pos_hint": {
+      "center_x": 0.85,
+      "center_y": 0.35
+    },
+    "size": [
+      220,
+      220
+    ],
+    "rooms": [
+      "sector9_temple_gate"
+    ],
+    "discovered": false
+  },
+  {
+    "id": "hall_of_echoes",
+    "world_id": "world_2",
+    "hub_id": "hub_4_facility",
+    "title": "Hall of Echoes",
+    "entry_room": "sector9_hall_of_echoes",
+    "icon_image": "images/nodes/echo.png",
+    "pos_hint": {
+      "center_x": 0.15,
+      "center_y": 0.5
+    },
+    "size": [
+      220,
+      220
+    ],
+    "rooms": [
+      "sector9_hall_of_echoes"
+    ],
+    "discovered": false
+  },
+  {
+    "id": "stasis_chamber",
+    "world_id": "world_2",
+    "hub_id": "hub_4_facility",
+    "title": "Stasis Chamber",
+    "entry_room": "sector9_stasis_chamber",
+    "icon_image": "images/nodes/medbay.png",
+    "pos_hint": {
+      "center_x": 0.45,
+      "center_y": 0.35
+    },
+    "size": [
+      200,
+      200
+    ],
+    "rooms": [
+      "sector9_stasis_chamber"
+    ],
+    "discovered": false
+  },
+  {
+    "id": "source_gate",
+    "world_id": "world_2",
+    "hub_id": "hub_4_facility",
+    "title": "Source Gate",
+    "entry_room": "sector9_source_gate",
+    "icon_image": "images/nodes/server.png",
+    "pos_hint": {
+      "center_x": 0.5,
+      "center_y": 0.65
+    },
+    "size": [
+      200,
+      200
+    ],
+    "rooms": [
+      "sector9_source_gate"
+    ],
+    "discovered": false
+  },
+  {
+    "id": "hangar_bay",
+    "world_id": "world_2",
+    "hub_id": "hub_4_facility",
+    "title": "Hangar Bay",
+    "entry_room": "sector9_hangar_bay",
+    "icon_image": "images/nodes/launch.png",
+    "pos_hint": {
+      "center_x": 0.8,
+      "center_y": 0.5
+    },
+    "size": [
+      240,
+      240
+    ],
+    "rooms": [
+      "sector9_hangar_bay"
+    ],
+    "discovered": false
+  },
+  {
+    "id": "the_sky",
+    "world_id": "world_2",
+    "hub_id": "hub_4_facility",
+    "title": "The Sky",
+    "entry_room": "sector9_the_sky",
+    "icon_image": "images/nodes/launch.png",
+    "pos_hint": {
+      "center_x": 0.9,
+      "center_y": 0.2
+    },
+    "size": [
+      200,
+      200
+    ],
+    "rooms": [
+      "sector9_the_sky"
+    ],
+    "discovered": false
+  },
+  {
+    "id": "spire_vent_output",
+    "world_id": "world_3",
+    "hub_id": "hub_5_lower_city",
+    "title": "Vent Output",
+    "entry_room": "spire_vent_output",
+    "icon_image": "images/nodes/world_3/spire_vent_output.png",
+    "pos_hint": {
+      "center_x": 0.15,
+      "center_y": 0.5
+    },
+    "size": [
+      200,
+      200
+    ],
+    "rooms": [
+      "spire_vent_output"
+    ],
+    "discovered": true
+  },
+  {
+    "id": "spire_the_static",
+    "world_id": "world_3",
+    "hub_id": "hub_5_lower_city",
+    "title": "The Static",
+    "entry_room": "spire_the_static",
+    "icon_image": "images/nodes/world_3/spire_the_static.png",
+    "pos_hint": {
+      "center_x": 0.4,
+      "center_y": 0.5
+    },
+    "size": [
+      220,
+      220
+    ],
+    "rooms": [
+      "spire_the_static",
+      "spire_zekes_apartment"
+    ],
+    "discovered": false
+  },
+  {
+    "id": "spire_night_market",
+    "world_id": "world_3",
+    "hub_id": "hub_5_lower_city",
+    "title": "Night Market",
+    "entry_room": "spire_night_market",
+    "icon_image": "images/nodes/world_3/spire_night_market.png",
+    "pos_hint": {
+      "center_x": 0.65,
+      "center_y": 0.3
+    },
+    "size": [
+      200,
+      200
+    ],
+    "rooms": [
+      "spire_night_market"
+    ],
+    "discovered": false
+  },
+  {
+    "id": "spire_sewers",
+    "world_id": "world_3",
+    "hub_id": "hub_5_lower_city",
+    "title": "The Sewers",
+    "entry_room": "spire_sewers_landing",
+    "icon_image": "images/nodes/world_3/spire_sewers.png",
+    "pos_hint": {
+      "center_x": 0.65,
+      "center_y": 0.7
+    },
+    "size": [
+      220,
+      220
+    ],
+    "rooms": [
+      "spire_sewers_landing",
+      "spire_sewers_passage"
+    ],
+    "discovered": false
+  },
+  {
+    "id": "spire_transit_plaza",
+    "world_id": "world_3",
+    "hub_id": "hub_5_lower_city",
+    "title": "Transit Plaza",
+    "entry_room": "spire_transit_plaza",
+    "icon_image": "images/nodes/world_3/spire_transit_plaza.png",
+    "pos_hint": {
+      "center_x": 0.9,
+      "center_y": 0.5
+    },
+    "size": [
+      240,
+      240
+    ],
+    "rooms": [
+      "spire_transit_plaza"
+    ],
+    "discovered": false
+  },
+  {
+    "id": "spire_laundry",
+    "world_id": "world_3",
+    "hub_id": "hub_6_upper_city",
+    "title": "Laundry Service",
+    "entry_room": "spire_laundry_service",
+    "icon_image": "images/nodes/world_3/spire_laundry.png",
+    "pos_hint": {
+      "center_x": 0.12,
+      "center_y": 0.62
+    },
+    "size": [
+      210,
+      210
+    ],
+    "rooms": [
+      "spire_laundry_service"
+    ],
+    "discovered": true
+  },
+  {
+    "id": "spire_skypark",
+    "world_id": "world_3",
+    "hub_id": "hub_6_upper_city",
+    "title": "Skypark",
+    "entry_room": "spire_skypark_dome",
+    "icon_image": "images/nodes/world_3/spire_skypark.png",
+    "pos_hint": {
+      "center_x": 0.34,
+      "center_y": 0.3
+    },
+    "size": [
+      210,
+      210
+    ],
+    "rooms": [
+      "spire_skypark_dome"
+    ],
+    "discovered": false
+  },
+  {
+    "id": "spire_exec_lounge",
+    "world_id": "world_3",
+    "hub_id": "hub_6_upper_city",
+    "title": "Exec Lounge",
+    "entry_room": "spire_exec_lounge_bar",
+    "icon_image": "images/nodes/world_3/spire_exec_lounge.png",
+    "pos_hint": {
+      "center_x": 0.34,
+      "center_y": 0.76
+    },
+    "size": [
+      210,
+      210
+    ],
+    "rooms": [
+      "spire_exec_lounge_bar"
+    ],
+    "discovered": false
+  },
+  {
+    "id": "spire_archive",
+    "world_id": "world_3",
+    "hub_id": "hub_6_upper_city",
+    "title": "The Archive",
+    "entry_room": "spire_archive_vault",
+    "icon_image": "images/nodes/world_3/spire_archive.png",
+    "pos_hint": {
+      "center_x": 0.64,
+      "center_y": 0.5
+    },
+    "size": [
+      230,
+      230
+    ],
+    "rooms": [
+      "spire_archive_vault"
+    ],
+    "discovered": false
+  },
+  {
+    "id": "spire_landing_pad",
+    "world_id": "world_3",
+    "hub_id": "hub_6_upper_city",
+    "title": "Landing Pad",
+    "entry_room": "spire_landing_pad_roof",
+    "icon_image": "images/nodes/world_3/spire_landing_pad.png",
+    "pos_hint": {
+      "center_x": 0.9,
+      "center_y": 0.5
+    },
+    "size": [
+      240,
+      240
+    ],
+    "rooms": [
+      "spire_landing_pad_roof"
+    ],
+    "discovered": false
+  },
+  {
+    "id": "foundry_obsidian_shelf",
+    "world_id": "world_4",
+    "hub_id": "hub_7_slag_pits",
+    "title": "Obsidian Shelf",
+    "entry_room": "foundry_slag_landing",
+    "icon_image": "images/nodes/world_4/foundry_obsidian_shelf.png",
+    "pos_hint": {
+      "center_x": 0.12,
+      "center_y": 0.55
+    },
+    "size": [
+      220,
+      220
+    ],
+    "rooms": [
+      "foundry_slag_landing"
+    ],
+    "discovered": true
+  },
+  {
+    "id": "foundry_slag_river",
+    "world_id": "world_4",
+    "hub_id": "hub_7_slag_pits",
+    "title": "Slag River",
+    "entry_room": "foundry_slag_river",
+    "icon_image": "images/nodes/world_4/foundry_slag_river.png",
+    "pos_hint": {
+      "center_x": 0.36,
+      "center_y": 0.34
+    },
+    "size": [
+      220,
+      220
+    ],
+    "rooms": [
+      "foundry_slag_river"
+    ],
+    "discovered": false
+  },
+  {
+    "id": "foundry_cooling_springs",
+    "world_id": "world_4",
+    "hub_id": "hub_7_slag_pits",
+    "title": "Cooling Springs",
+    "entry_room": "foundry_cooling_springs",
+    "icon_image": "images/nodes/world_4/foundry_cooling_springs.png",
+    "pos_hint": {
+      "center_x": 0.36,
+      "center_y": 0.74
+    },
+    "size": [
+      220,
+      220
+    ],
+    "rooms": [
+      "foundry_cooling_springs"
+    ],
+    "discovered": false
+  },
+  {
+    "id": "foundry_waste_intake",
+    "world_id": "world_4",
+    "hub_id": "hub_7_slag_pits",
+    "title": "Waste Intake",
+    "entry_room": "foundry_waste_intake",
+    "icon_image": "images/nodes/world_4/foundry_waste_intake.png",
+    "pos_hint": {
+      "center_x": 0.64,
+      "center_y": 0.5
+    },
+    "size": [
+      230,
+      230
+    ],
+    "rooms": [
+      "foundry_waste_intake"
+    ],
+    "discovered": false
+  },
+  {
+    "id": "foundry_service_airlock",
+    "world_id": "world_4",
+    "hub_id": "hub_7_slag_pits",
+    "title": "Service Airlock",
+    "entry_room": "foundry_service_airlock",
+    "icon_image": "images/nodes/world_4/foundry_service_airlock.png",
+    "pos_hint": {
+      "center_x": 0.9,
+      "center_y": 0.5
+    },
+    "size": [
+      230,
+      230
+    ],
+    "rooms": [
+      "foundry_service_airlock"
+    ],
+    "discovered": false
+  },
+  {
+    "id": "foundry_conveyor_belt",
+    "world_id": "world_4",
+    "hub_id": "hub_8_assembly_line",
+    "title": "Conveyor Belt",
+    "entry_room": "foundry_conveyor_belt",
+    "icon_image": "images/nodes/world_4/foundry_conveyor_belt.png",
+    "pos_hint": {
+      "center_x": 0.12,
+      "center_y": 0.52
+    },
+    "size": [
+      220,
+      220
+    ],
+    "rooms": [
+      "foundry_conveyor_belt"
+    ],
+    "discovered": true
+  },
+  {
+    "id": "foundry_conditioning",
+    "world_id": "world_4",
+    "hub_id": "hub_8_assembly_line",
+    "title": "Conditioning",
+    "entry_room": "foundry_conditioning_chamber",
+    "icon_image": "images/nodes/world_4/foundry_conditioning.png",
+    "pos_hint": {
+      "center_x": 0.36,
+      "center_y": 0.3
+    },
+    "size": [
+      220,
+      220
+    ],
+    "rooms": [
+      "foundry_conditioning_chamber"
+    ],
+    "discovered": false
+  },
+  {
+    "id": "foundry_forge",
+    "world_id": "world_4",
+    "hub_id": "hub_8_assembly_line",
+    "title": "The Forge",
+    "entry_room": "foundry_forge_anvil",
+    "icon_image": "images/nodes/world_4/foundry_forge.png",
+    "pos_hint": {
+      "center_x": 0.36,
+      "center_y": 0.74
+    },
+    "size": [
+      220,
+      220
+    ],
+    "rooms": [
+      "foundry_forge_anvil"
+    ],
+    "discovered": false
+  },
+  {
+    "id": "foundry_power_core",
+    "world_id": "world_4",
+    "hub_id": "hub_8_assembly_line",
+    "title": "Power Core",
+    "entry_room": "foundry_power_core",
+    "icon_image": "images/nodes/world_4/foundry_power_core.png",
+    "pos_hint": {
+      "center_x": 0.64,
+      "center_y": 0.5
+    },
+    "size": [
+      230,
+      230
+    ],
+    "rooms": [
+      "foundry_power_core"
+    ],
+    "discovered": false
+  },
+  {
+    "id": "foundry_titan_dock",
+    "world_id": "world_4",
+    "hub_id": "hub_8_assembly_line",
+    "title": "Titan Dock",
+    "entry_room": "foundry_titan_dock",
+    "icon_image": "images/nodes/world_4/foundry_titan_dock.png",
+    "pos_hint": {
+      "center_x": 0.9,
+      "center_y": 0.5
+    },
+    "size": [
+      240,
+      240
+    ],
+    "rooms": [
+      "foundry_titan_dock"
+    ],
+    "discovered": false
+  },
+  {
+    "id": "orbital_executive_dock",
+    "world_id": "world_5",
+    "hub_id": "hub_9_orbital_ring",
+    "title": "Executive Dock",
+    "entry_room": "orbital_executive_dock",
+    "icon_image": "images/nodes/world_5/orbital_executive_dock.png",
+    "pos_hint": {
+      "center_x": 0.12,
+      "center_y": 0.5
+    },
+    "size": [
+      220,
+      220
+    ],
+    "rooms": [
+      "orbital_executive_dock"
+    ],
+    "discovered": true
+  },
+  {
+    "id": "orbital_grand_concourse",
+    "world_id": "world_5",
+    "hub_id": "hub_9_orbital_ring",
+    "title": "Grand Concourse",
+    "entry_room": "orbital_grand_concourse",
+    "icon_image": "images/nodes/world_5/orbital_grand_concourse.png",
+    "pos_hint": {
+      "center_x": 0.35,
+      "center_y": 0.28
+    },
+    "size": [
+      220,
+      220
+    ],
+    "rooms": [
+      "orbital_grand_concourse"
+    ],
+    "discovered": false
+  },
+  {
+    "id": "orbital_solarium",
+    "world_id": "world_5",
+    "hub_id": "hub_9_orbital_ring",
+    "title": "Solarium",
+    "entry_room": "orbital_solarium",
+    "icon_image": "images/nodes/world_5/orbital_solarium.png",
+    "pos_hint": {
+      "center_x": 0.35,
+      "center_y": 0.72
+    },
+    "size": [
+      220,
+      220
+    ],
+    "rooms": [
+      "orbital_solarium"
+    ],
+    "discovered": false
+  },
+  {
+    "id": "orbital_security_hub",
+    "world_id": "world_5",
+    "hub_id": "hub_9_orbital_ring",
+    "title": "Security Hub",
+    "entry_room": "orbital_security_hub",
+    "icon_image": "images/nodes/world_5/orbital_security_hub.png",
+    "pos_hint": {
+      "center_x": 0.63,
+      "center_y": 0.5
+    },
+    "size": [
+      230,
+      230
+    ],
+    "rooms": [
+      "orbital_security_hub"
+    ],
+    "discovered": false
+  },
+  {
+    "id": "orbital_service_shaft",
+    "world_id": "world_5",
+    "hub_id": "hub_9_orbital_ring",
+    "title": "Service Shaft",
+    "entry_room": "orbital_service_shaft",
+    "icon_image": "images/nodes/world_5/orbital_service_shaft.png",
+    "pos_hint": {
+      "center_x": 0.89,
+      "center_y": 0.5
+    },
+    "size": [
+      240,
+      240
+    ],
+    "rooms": [
+      "orbital_service_shaft",
+      "orbital_server_farm"
+    ],
+    "discovered": false
+  },
+  {
+    "id": "deep_server_farm",
+    "world_id": "world_5",
+    "hub_id": "hub_10_deep_ring",
+    "title": "Server Farm",
+    "entry_room": "orbital_server_farm",
+    "icon_image": "images/nodes/world_5/deep_server_farm.png",
+    "pos_hint": {
+      "center_x": 0.14,
+      "center_y": 0.5
+    },
+    "size": [
+      230,
+      230
+    ],
+    "rooms": [
+      "orbital_server_farm"
+    ],
+    "discovered": true
+  },
+  {
+    "id": "deep_anchor_chamber",
+    "world_id": "world_5",
+    "hub_id": "hub_10_deep_ring",
+    "title": "Anchor Chamber",
+    "entry_room": "deep_anchor_chamber",
+    "icon_image": "images/nodes/world_5/deep_anchor_chamber.png",
+    "pos_hint": {
+      "center_x": 0.39,
+      "center_y": 0.5
+    },
+    "size": [
+      230,
+      230
+    ],
+    "rooms": [
+      "deep_anchor_chamber"
+    ],
+    "discovered": false
+  },
+  {
+    "id": "deep_throne_room",
+    "world_id": "world_5",
+    "hub_id": "hub_10_deep_ring",
+    "title": "Throne Room",
+    "entry_room": "deep_throne_room",
+    "icon_image": "images/nodes/world_5/deep_throne_room.png",
+    "pos_hint": {
+      "center_x": 0.65,
+      "center_y": 0.5
+    },
+    "size": [
+      230,
+      230
+    ],
+    "rooms": [
+      "deep_throne_room"
+    ],
+    "discovered": false
+  },
+  {
+    "id": "deep_tear",
+    "world_id": "world_5",
+    "hub_id": "hub_10_deep_ring",
+    "title": "The Tear",
+    "entry_room": "deep_tear",
+    "icon_image": "images/nodes/world_5/deep_tear.png",
+    "pos_hint": {
+      "center_x": 0.9,
+      "center_y": 0.5
+    },
+    "size": [
+      250,
+      250
+    ],
+    "rooms": [
+      "deep_tear"
+    ],
+    "discovered": false
+  },
+  {
+    "id": "source_campfire_node",
+    "world_id": "world_6",
+    "hub_id": "hub_11_event_horizon",
+    "title": "The Campfire",
+    "entry_room": "source_campfire",
+    "icon_image": "images/nodes/world_6/source_campfire_node.png",
+    "pos_hint": {
       "center_x": 0.5,
       "center_y": 0.5
     },
@@ -286,10 +1069,189 @@
       250
     ],
     "rooms": [
-      "sector9_crash_site",
-      "sector9_canopy",
-      "sector9_stream"
+      "source_campfire"
     ],
     "discovered": true
+  },
+  {
+    "id": "source_zeke_nightmare_node",
+    "world_id": "world_6",
+    "hub_id": "hub_11_event_horizon",
+    "title": "Infinite Cubicle",
+    "entry_room": "source_zeke_nightmare",
+    "icon_image": "images/nodes/world_6/source_zeke_nightmare_node.png",
+    "pos_hint": {
+      "center_x": 0.2,
+      "center_y": 0.25
+    },
+    "size": [
+      220,
+      220
+    ],
+    "rooms": [
+      "source_zeke_nightmare"
+    ],
+    "discovered": false
+  },
+  {
+    "id": "source_gh0st_nightmare_node",
+    "world_id": "world_6",
+    "hub_id": "hub_11_event_horizon",
+    "title": "Endless War",
+    "entry_room": "source_gh0st_nightmare",
+    "icon_image": "images/nodes/world_6/source_gh0st_nightmare_node.png",
+    "pos_hint": {
+      "center_x": 0.5,
+      "center_y": 0.18
+    },
+    "size": [
+      220,
+      220
+    ],
+    "rooms": [
+      "source_gh0st_nightmare"
+    ],
+    "discovered": false
+  },
+  {
+    "id": "source_orion_nightmare_node",
+    "world_id": "world_6",
+    "hub_id": "hub_11_event_horizon",
+    "title": "Silent Shore",
+    "entry_room": "source_orion_nightmare",
+    "icon_image": "images/nodes/world_6/source_orion_nightmare_node.png",
+    "pos_hint": {
+      "center_x": 0.8,
+      "center_y": 0.25
+    },
+    "size": [
+      220,
+      220
+    ],
+    "rooms": [
+      "source_orion_nightmare"
+    ],
+    "discovered": false
+  },
+  {
+    "id": "source_echo_mines_node",
+    "world_id": "world_6",
+    "hub_id": "hub_11_event_horizon",
+    "title": "Echo of the Mines",
+    "entry_room": "source_echo_mines",
+    "icon_image": "images/nodes/world_6/source_echo_mines_node.png",
+    "pos_hint": {
+      "center_x": 0.3,
+      "center_y": 0.76
+    },
+    "size": [
+      230,
+      230
+    ],
+    "rooms": [
+      "source_echo_mines",
+      "source_echo_elevator"
+    ],
+    "discovered": false
+  },
+  {
+    "id": "source_memory_bridge_node",
+    "world_id": "world_6",
+    "hub_id": "hub_11_event_horizon",
+    "title": "Memory Bridge",
+    "entry_room": "source_memory_bridge",
+    "icon_image": "images/nodes/world_6/source_memory_bridge_node.png",
+    "pos_hint": {
+      "center_x": 0.7,
+      "center_y": 0.76
+    },
+    "size": [
+      240,
+      240
+    ],
+    "rooms": [
+      "source_memory_bridge"
+    ],
+    "discovered": false
+  },
+  {
+    "id": "source_memory_stair_node",
+    "world_id": "world_6",
+    "hub_id": "hub_12_singularity",
+    "title": "Memory Stair",
+    "entry_room": "source_memory_stair",
+    "icon_image": "images/nodes/world_6/source_memory_stair_node.png",
+    "pos_hint": {
+      "center_x": 0.15,
+      "center_y": 0.5
+    },
+    "size": [
+      240,
+      240
+    ],
+    "rooms": [
+      "source_memory_stair"
+    ],
+    "discovered": true
+  },
+  {
+    "id": "source_spire_thought_node",
+    "world_id": "world_6",
+    "hub_id": "hub_12_singularity",
+    "title": "Spire of Thought",
+    "entry_room": "source_spire_thought",
+    "icon_image": "images/nodes/world_6/source_spire_thought_node.png",
+    "pos_hint": {
+      "center_x": 0.4,
+      "center_y": 0.5
+    },
+    "size": [
+      240,
+      240
+    ],
+    "rooms": [
+      "source_spire_thought"
+    ],
+    "discovered": false
+  },
+  {
+    "id": "source_center_node",
+    "world_id": "world_6",
+    "hub_id": "hub_12_singularity",
+    "title": "The Center",
+    "entry_room": "source_center",
+    "icon_image": "images/nodes/world_6/source_center_node.png",
+    "pos_hint": {
+      "center_x": 0.68,
+      "center_y": 0.5
+    },
+    "size": [
+      260,
+      260
+    ],
+    "rooms": [
+      "source_center"
+    ],
+    "discovered": false
+  },
+  {
+    "id": "source_new_world_node",
+    "world_id": "world_6",
+    "hub_id": "hub_12_singularity",
+    "title": "New World",
+    "entry_room": "source_new_world",
+    "icon_image": "images/nodes/world_6/source_new_world_node.png",
+    "pos_hint": {
+      "center_x": 0.92,
+      "center_y": 0.5
+    },
+    "size": [
+      250,
+      250
+    ],
+    "rooms": [
+      "source_new_world"
+    ],
+    "discovered": false
   }
 ]

@@ -18,9 +18,81 @@
   {
     "id": "hub_3_sector9",
     "world_id": "world_2",
-    "title": "Sector 9 Ruins",
-    "description": "A flooded, overgrown zone once used for logistics, now swallowed by Aethel resonance.",
+    "title": "Jungle Ruins",
+    "description": "Bioluminescent jungle reclaiming ancient Aethel stone ruins.",
     "background_image": "images/hubs/sector9.png",
     "discovered": true
+  },
+  {
+    "id": "hub_4_facility",
+    "world_id": "world_2",
+    "title": "Sector 9 Ruins",
+    "description": "The ancient Aethel facility buried beneath the jungle.",
+    "background_image": "images/hubs/facility.png",
+    "discovered": false
+  },
+  {
+    "id": "hub_5_lower_city",
+    "world_id": "world_3",
+    "title": "Lower City",
+    "description": "A neon-lit foundation of vertical slums under constant rain and surveillance.",
+    "background_image": "images/hubs/hub_5_lower_city.png",
+    "discovered": false
+  },
+  {
+    "id": "hub_6_upper_city",
+    "world_id": "world_3",
+    "title": "Upper City",
+    "description": "A sterile cloud district of white marble, gold glass, false sunlight, and silent Dominion wealth.",
+    "background_image": "images/hubs/hub_6_upper_city.png",
+    "discovered": false
+  },
+  {
+    "id": "hub_7_slag_pits",
+    "world_id": "world_4",
+    "title": "Slag Pits",
+    "description": "Sector 7, a geothermal war factory built into volcanic glass and rivers of slag.",
+    "background_image": "images/hubs/hub_7_slag_pits.png",
+    "discovered": false
+  },
+  {
+    "id": "hub_8_assembly_line",
+    "world_id": "world_4",
+    "title": "Assembly Line",
+    "description": "The Foundry interior: conveyor belts, conditioning rooms, relic forges, and the volcano core that powers Dominion war machines.",
+    "background_image": "images/hubs/hub_8_assembly_line.png",
+    "discovered": false
+  },
+  {
+    "id": "hub_9_orbital_ring",
+    "world_id": "world_5",
+    "title": "Dominion Orbital Ring",
+    "description": "A sterile halo of executive luxury, compliance checkpoints, and machinery suspended above the planet.",
+    "background_image": "images/hubs/hub_9_orbital_ring.png",
+    "discovered": false
+  },
+  {
+    "id": "hub_10_deep_ring",
+    "world_id": "world_5",
+    "title": "Deep Ring",
+    "description": "The frozen core of the Orbital Ring: firewall labyrinths, the Anchor Chamber, Vale's throne, and the breach beyond reality.",
+    "background_image": "images/hubs/hub_10_deep_ring.png",
+    "discovered": false
+  },
+  {
+    "id": "hub_11_event_horizon",
+    "world_id": "world_6",
+    "title": "Event Horizon",
+    "description": "A fractured realm where perception replaces physics.",
+    "background_image": "images/hubs/hub_11_event_horizon.png",
+    "discovered": false
+  },
+  {
+    "id": "hub_12_singularity",
+    "world_id": "world_6",
+    "title": "The Singularity",
+    "description": "The final ascent through a spiral of memory toward the center of the Source.",
+    "background_image": "images/hubs/hub_12_singularity.png",
+    "discovered": false
   }
 ]

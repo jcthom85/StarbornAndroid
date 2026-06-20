@@ -4,7 +4,7 @@
 
 ### Orion (The Ancient)
 *   **Role:** The Guide / Healer.
-*   **Location:** Stasis Chamber (MQ_08) -> The Astra.
+*   **Location:** Stasis Chamber (w2_mq03) -> The Astra.
 *   **State of Mind:** **Grief-Stricken.** He went to sleep expecting to wake up to a rescue; he woke up to a dead civilization.
 *   **Dialogue Style:** Formal, archaic, soft-spoken.
 *   **Key Line:** "The music stopped. Why is the world so quiet?"

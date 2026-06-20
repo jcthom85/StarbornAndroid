@@ -2529,5 +2529,5046 @@
         "message": "Quest Complete: A Strange Coast\n\nYou trace the glowing water to a wider path leading deeper into the ancient ruins. The resonance of the planet surface hums in your Echo marks."
       }
     ]
+  },
+  {
+    "id": "w2_mq02_clear_canopy",
+    "description": "Triggered when defeating the echo-borer on Canopy Ridge.",
+    "trigger": {
+      "type": "encounter_victory",
+      "enemies": [
+        "echo_borer"
+      ]
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_mq02"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w2_mq02",
+        "task_id": "clear_canopy_path"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w2_mq02",
+        "task_id": "clear_canopy_path"
+      },
+      {
+        "type": "show_message",
+        "message": "The echo-borer is defeated, clearing the way ahead."
+      }
+    ]
+  },
+  {
+    "id": "w2_mq02_locate_gate",
+    "description": "Triggered when entering Temple Gate.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "sector9_temple_gate"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_mq02"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w2_mq02",
+        "task_id": "locate_temple_gate"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w2_mq02",
+        "task_id": "locate_temple_gate"
+      }
+    ]
+  },
+  {
+    "id": "w2_mq02_unlock_temple",
+    "description": "Triggered when using the Chime at Temple Gate.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_mq02_use_chime"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_mq02"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w2_mq02",
+        "task_id": "locate_temple_gate"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w2_mq02",
+        "task_id": "clear_canopy_path"
+      }
+    ],
+    "actions": [
+      {
+        "type": "complete_quest",
+        "quest_id": "w2_mq02"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_mq02_complete"
+      },
+      {
+        "type": "warp",
+        "room_id": "sector9_hall_of_echoes"
+      },
+      {
+        "type": "start_quest",
+        "quest_id": "w2_mq03"
+      },
+      {
+        "type": "track_quest",
+        "quest_id": "w2_mq03"
+      },
+      {
+        "type": "show_message",
+        "message": "Quest Complete: The Signal\n\nYou place the Chime into the gate's pedestal. The stone resonators slide open, pulling you into the ancient Hall of Echoes."
+      }
+    ]
+  },
+  {
+    "id": "w2_mq03_inspect_murals",
+    "description": "Triggered when inspecting the murals in the Hall of Echoes.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_mq03_inspect_murals"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_mq03"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w2_mq03",
+        "task_id": "inspect_murals"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w2_mq03",
+        "task_id": "inspect_murals"
+      },
+      {
+        "type": "show_message",
+        "message": "You inspect the resonance murals. They map out the harmonic alignments of the facility."
+      }
+    ]
+  },
+  {
+    "id": "w2_mq03_find_stasis",
+    "description": "Triggered when entering the stasis chamber.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "sector9_stasis_chamber"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_mq03"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w2_mq03",
+        "task_id": "find_stasis_chamber"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w2_mq03",
+        "task_id": "find_stasis_chamber"
+      }
+    ]
+  },
+  {
+    "id": "w2_mq03_align_complete",
+    "description": "Triggered on stasis ring alignment completion.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_mq03_align_complete"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_mq03"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w2_mq03",
+        "task_id": "align_stasis_rings"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w2_mq03",
+        "task_id": "align_stasis_rings"
+      },
+      {
+        "type": "add_party_member",
+        "item_id": "orion"
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w2_mq03"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_mq03_complete"
+      },
+      {
+        "type": "start_quest",
+        "quest_id": "w2_mq04"
+      },
+      {
+        "type": "track_quest",
+        "quest_id": "w2_mq04"
+      },
+      {
+        "type": "show_message",
+        "message": "Quest Complete: Sleeping Giant\n\nThe pod pressure releases with a deep chord. Orion steps out, taking in a breath of the resonant air. Orion has joined your party!"
+      }
+    ]
+  },
+  {
+    "id": "w2_mq04_reach_canopy",
+    "description": "Triggered when entering Canopy Ridge.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "sector9_canopy_ridge"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_mq04"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w2_mq04",
+        "task_id": "reach_canopy_ridge"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w2_mq04",
+        "task_id": "reach_canopy_ridge"
+      }
+    ]
+  },
+  {
+    "id": "w2_mq04_confront",
+    "description": "Triggered when confronting Gh0st.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_mq04_confront"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_mq04"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w2_mq04",
+        "task_id": "confront_stalker"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w2_mq04",
+        "task_id": "confront_stalker"
+      }
+    ]
+  },
+  {
+    "id": "w2_mq04_victory",
+    "description": "Triggered when defeating the mutated beast on Canopy Ridge.",
+    "trigger": {
+      "type": "encounter_victory",
+      "enemies": [
+        "the_beast"
+      ]
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_mq04"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w2_mq04",
+        "task_id": "confront_stalker"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w2_mq04",
+        "task_id": "defeat_the_beast"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w2_mq04",
+        "task_id": "defeat_the_beast"
+      },
+      {
+        "type": "add_party_member",
+        "item_id": "gh0st"
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w2_mq04"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_mq04_complete"
+      },
+      {
+        "type": "start_quest",
+        "quest_id": "w2_mq05"
+      },
+      {
+        "type": "track_quest",
+        "quest_id": "w2_mq05"
+      },
+      {
+        "type": "show_message",
+        "message": "Quest Complete: The Hunter\n\nThe mutated beast dissolves into Source dust. Gh0st lowers his rifle, acknowledging the Warden's harmonic key. Gh0st has joined your party!"
+      }
+    ]
+  },
+  {
+    "id": "w2_mq05_reach_gate",
+    "description": "Triggered when entering the Source Gate room.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "sector9_source_gate"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_mq05"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w2_mq05",
+        "task_id": "bypass_source_gate"
+      }
+    ],
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "A massive barrier of energy blocks the way. It vibrates with intense dissonance. Speak to Orion to decipher the resonator alignment."
+      }
+    ]
+  },
+  {
+    "id": "w2_mq05_bypass_gate",
+    "description": "Triggered when Source Gate resonator puzzle is solved.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_mq05_bypass_gate"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_mq05"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w2_mq05",
+        "task_id": "bypass_source_gate"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w2_mq05",
+        "task_id": "bypass_source_gate"
+      },
+      {
+        "type": "warp",
+        "room_id": "sector9_hangar_bay"
+      },
+      {
+        "type": "show_message",
+        "message": "Orion tunes the lock to a perfect octave. The energy barrier dissolves, revealing the hangar bay ahead."
+      }
+    ]
+  },
+  {
+    "id": "w2_mq05_inspect_astra",
+    "description": "Triggered when player inspects the Astra ship.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_mq05_inspect_astra"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_mq05"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w2_mq05",
+        "task_id": "bypass_source_gate"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w2_mq05",
+        "task_id": "inspect_astra"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w2_mq05",
+        "task_id": "inspect_astra"
+      },
+      {
+        "type": "show_message",
+        "message": "The Astra console is dark. Zeke notes that the ship's power lines are completely dead—you'll need power conduits from the pod wreckage to jump-start them. Talk to Zeke to begin salvage."
+      }
+    ]
+  },
+  {
+    "id": "w2_mq05_collect_conduits",
+    "description": "Triggered when collecting conduits from the pod wreckage.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_mq05_collect_conduits"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_mq05"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w2_mq05",
+        "task_id": "inspect_astra"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w2_mq05",
+        "task_id": "collect_power_conduits"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w2_mq05",
+        "task_id": "collect_power_conduits"
+      },
+      {
+        "type": "show_message",
+        "message": "You recover the power conduits from the pod core wreckage."
+      }
+    ]
+  },
+  {
+    "id": "w2_mq05_reboot",
+    "description": "Triggered when rebooting the bridge relic.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_mq05_reboot"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_mq05"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w2_mq05",
+        "task_id": "collect_power_conduits"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w2_mq05",
+        "task_id": "reboot_bridge_relic"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w2_mq05",
+        "task_id": "reboot_bridge_relic"
+      },
+      {
+        "type": "show_message",
+        "message": "You connect the conduits and place the Chime in the center slot. The Bridge Relic flares green, booting the primary systems of the Astra!"
+      }
+    ]
+  },
+  {
+    "id": "w2_mq05_launch",
+    "description": "Triggered when player launches the ship.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_mq05_launch"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_mq05"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w2_mq05",
+        "task_id": "reboot_bridge_relic"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w2_mq05",
+        "task_id": "launch_ship"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w2_mq05",
+        "task_id": "launch_ship"
+      },
+      {
+        "type": "warp",
+        "room_id": "spire_sewers_landing"
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w2_mq05"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_mq05_complete"
+      },
+      {
+        "type": "start_quest",
+        "quest_id": "w3_mq11"
+      },
+      {
+        "type": "show_message",
+        "message": "The Astra climbs rapidly, colliding with the Planetary Shield. Sound waves ripple and warp as you bypass the curtain, crash-landing into the Spire's sewage pipelines."
+      }
+    ]
+  },
+  {
+    "id": "w2_sq01_scan_ferns",
+    "description": "Triggered when scanning ferns in the canopy.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_sq01_scan_ferns"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_sq01"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w2_sq01",
+        "task_id": "scan_flora_1"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w2_sq01",
+        "task_id": "scan_flora_1"
+      },
+      {
+        "type": "show_message",
+        "message": "You scan the giant crystalline ferns. Their structure resonates with the background wind chords."
+      }
+    ]
+  },
+  {
+    "id": "w2_sq01_scan_weeds",
+    "description": "Triggered when scanning weeds near the stream.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_sq01_scan_weeds"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_sq01"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w2_sq01",
+        "task_id": "scan_flora_2"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w2_sq01",
+        "task_id": "scan_flora_2"
+      },
+      {
+        "type": "show_message",
+        "message": "You scan the bioluminescent weeds. The light emission is synchronized with the stream's sound waves."
+      }
+    ]
+  },
+  {
+    "id": "w2_sq01_scan_moss",
+    "description": "Triggered when scanning moss on the pod wreckage.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_sq01_scan_moss"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_sq01"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w2_sq01",
+        "task_id": "scan_flora_3"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w2_sq01",
+        "task_id": "scan_flora_3"
+      },
+      {
+        "type": "show_message",
+        "message": "You scan the moss. It emits a soft, slow vibration that dampens ambient sound."
+      }
+    ]
+  },
+  {
+    "id": "w2_sq01_scan_spores",
+    "description": "Triggered when scanning razor-vine spores in the path.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_sq01_scan_spores"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_sq01"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w2_sq01",
+        "task_id": "scan_flora_4"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w2_sq01",
+        "task_id": "scan_flora_4"
+      },
+      {
+        "type": "show_message",
+        "message": "You scan the razor-vine spores. They hum with a high-pitched alarm frequency."
+      }
+    ]
+  },
+  {
+    "id": "w2_sq01_scan_roots",
+    "description": "Triggered when scanning ancient roots in stasis chamber.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_sq01_scan_roots"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_sq01"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w2_sq01",
+        "task_id": "scan_flora_5"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w2_sq01",
+        "task_id": "scan_flora_5"
+      },
+      {
+        "type": "show_message",
+        "message": "You scan the ancient roots. The deep resonance suggests they are drawing power directly from the facility core."
+      }
+    ]
+  },
+  {
+    "id": "w2_sq02_start_and_complete",
+    "description": "Triggered when scavenging dead soldier body. Starts and completes Lost Patrol.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_sq02_scavenge_body"
+    },
+    "conditions": [
+      {
+        "type": "quest_not_started",
+        "quest_id": "w2_sq02"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_quest",
+        "quest_id": "w2_sq02"
+      },
+      {
+        "type": "track_quest",
+        "quest_id": "w2_sq02"
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w2_sq02",
+        "task_id": "find_logs_task"
+      },
+      {
+        "type": "give_item",
+        "item_id": "mod_corrosive_rounds",
+        "quantity": 1
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w2_sq02"
+      },
+      {
+        "type": "show_message",
+        "message": "Quest Complete: Lost Patrol\\n\\nYou salvage the scout's encrypted transceiver. The logs contain weapon mod calibrations, and you recover a Corrosive Rounds weapon mod!"
+      }
+    ]
+  },
+  {
+    "id": "w2_sq03_visit",
+    "description": "Triggered when entering Tideglass Beach.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "sector9_stream"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_sq03"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w2_sq03",
+        "task_id": "visit_beach"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w2_sq03",
+        "task_id": "visit_beach"
+      },
+      {
+        "type": "show_message",
+        "message": "You discover the quiet tideglass beach. Mineral spikes line the water."
+      }
+    ]
+  },
+  {
+    "id": "w2_sq03_gather",
+    "description": "Triggered when gathering tideglass.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_sq03_gather_tideglass"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_sq03"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w2_sq03",
+        "task_id": "visit_beach"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w2_sq03",
+        "task_id": "collect_food"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w2_sq03",
+        "task_id": "collect_food"
+      },
+      {
+        "type": "give_item",
+        "item_id": "painkillers",
+        "quantity": 2
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w2_sq03"
+      },
+      {
+        "type": "show_message",
+        "message": "Quest Complete: Tideglass Day\\n\\nYou harvest the glowing tideglass skewers. Orion helps prepare them over a portable heat cell. The resonant warmth stabilizes your neural erosion."
+      }
+    ]
+  },
+  {
+    "id": "w2_sq04_complete",
+    "description": "Triggered when Ancient Echoes mural tuning is successful.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_sq04_complete"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_sq04"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w2_sq04",
+        "task_id": "mural_tuning"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w2_sq04",
+        "task_id": "mural_tuning"
+      },
+      {
+        "type": "give_item",
+        "item_id": "source_resin",
+        "quantity": 1
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w2_sq04"
+      },
+      {
+        "type": "show_message",
+        "message": "Quest Complete: Ancient Echoes\\n\\nThe light-murals shine with pure, stable brilliance, singing a choral hymn of the Architects. A container slides open, presenting a Source Resin mod."
+      }
+    ]
+  },
+  {
+    "id": "w2_sq05_find_transmitter",
+    "description": "Triggered when searching maintenance vents.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_sq05_search_vents"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_sq05"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w2_sq05",
+        "task_id": "recover_transmitter"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w2_sq05",
+        "task_id": "recover_transmitter"
+      },
+      {
+        "type": "give_item",
+        "item_id": "rapid_capacitor",
+        "quantity": 1
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w2_sq05"
+      },
+      {
+        "type": "show_message",
+        "message": "Quest Complete: Stolen Tech\n\nYou reach into the dusty vent and retrieve the Dominion transmitter. Gh0st decodes the firmware, rewarding you with a Rapid Capacitor mod."
+      }
+    ]
+  },
+  {
+    "id": "w3_mq11_clear_landing",
+    "description": "Triggered when clearing the sewers.",
+    "trigger": {
+      "type": "encounter_victory"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w3_mq11"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w3_mq11",
+        "task_id": "clear_landing"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w3_mq11",
+        "task_id": "clear_landing"
+      },
+      {
+        "type": "show_message",
+        "message": "The sewer guards are disabled. The landing pad is secure."
+      }
+    ]
+  },
+  {
+    "id": "w3_mq11_reach_vent",
+    "description": "Triggered when reaching the Vent Output.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "spire_vent_output"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w3_mq11"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w3_mq11",
+        "task_id": "clear_landing"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w3_mq11",
+        "task_id": "reach_vent"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w3_mq11",
+        "task_id": "reach_vent"
+      },
+      {
+        "type": "advance_quest_stage",
+        "quest_id": "w3_mq11",
+        "to_stage_id": "find_safehouse"
+      },
+      {
+        "type": "show_message",
+        "message": "You climb the access ladder and pull yourself out into the acidic rain of the Lower City."
+      }
+    ]
+  },
+  {
+    "id": "w3_mq11_find_apartment",
+    "description": "Triggered when entering Zeke's old apartment.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "spire_zekes_apartment"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w3_mq11"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w3_mq11",
+        "task_id": "find_apartment"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w3_mq11",
+        "task_id": "find_apartment"
+      },
+      {
+        "type": "show_message",
+        "message": "You slide the door open. Zeke's old apartment is bare, but safe from Dominion scanners."
+      }
+    ]
+  },
+  {
+    "id": "w3_mq11_establish_shield",
+    "description": "Triggered by completing the safehouse setup.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w3_mq11_establish_shield"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w3_mq11"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w3_mq11",
+        "task_id": "find_apartment"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w3_mq11",
+        "task_id": "establish_shield"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w3_mq11",
+        "task_id": "establish_shield"
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w3_mq11"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w3_mq11_complete"
+      },
+      {
+        "type": "start_quest",
+        "quest_id": "w3_mq12"
+      },
+      {
+        "type": "show_message",
+        "message": "Quest Complete: Homecoming\n\nOrion activates a compact resonance transmitter, establishing a localized shield. Zeke's apartment is now a fully secured safehouse."
+      }
+    ]
+  },
+  {
+    "id": "w3_mq12_talk_jax",
+    "description": "Triggered when talking to Jax.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w3_mq12_talk_jax"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w3_mq12"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w3_mq12",
+        "task_id": "talk_jax"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w3_mq12",
+        "task_id": "talk_jax"
+      },
+      {
+        "type": "show_message",
+        "message": "Jax nods gruffly and slides a data drive across the counter. 'Curfew schedules. Don't say where you got them.'"
+      }
+    ]
+  },
+  {
+    "id": "w3_mq12_interrogate_guard",
+    "description": "Triggered when searching plaza database.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w3_mq12_interrogate_guard"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w3_mq12"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w3_mq12",
+        "task_id": "interrogate_guard"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w3_mq12",
+        "task_id": "interrogate_guard"
+      },
+      {
+        "type": "show_message",
+        "message": "You search the plaza terminal, extraction codes and routing coordinates have been successfully downloaded."
+      }
+    ]
+  },
+  {
+    "id": "w3_mq12_hack_blueprints",
+    "description": "Triggered when hacking blueprints.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w3_mq12_hack_blueprints"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w3_mq12"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w3_mq12",
+        "task_id": "hack_blueprints"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w3_mq12",
+        "task_id": "hack_blueprints"
+      },
+      {
+        "type": "show_message",
+        "message": "The terminal display flickers as Zeke's algorithms compile the elevator blueprints. Secure encryption bypassed."
+      }
+    ]
+  },
+  {
+    "id": "w3_mq12_assemble_planning",
+    "description": "Triggered when coordinating the heist plan.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w3_mq12_assemble_planning"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w3_mq12"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w3_mq12",
+        "task_id": "talk_jax"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w3_mq12",
+        "task_id": "interrogate_guard"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w3_mq12",
+        "task_id": "hack_blueprints"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w3_mq12",
+        "task_id": "assemble_table"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w3_mq12",
+        "task_id": "assemble_table"
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w3_mq12"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w3_mq12_complete"
+      },
+      {
+        "type": "show_message",
+        "message": "Quest Complete: The Plan\n\nYou lay the hacked files on the table. The blueprints are complete. You are ready to infiltrate the Upper City."
+      }
+    ]
+  },
+  {
+    "id": "w3_sq11_inspect_sign",
+    "description": "Triggered when inspecting the Static bar sign.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w3_sq11_inspect_sign"
+    },
+    "conditions": [
+      {
+        "type": "quest_not_started",
+        "quest_id": "w3_sq11"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_quest",
+        "quest_id": "w3_sq11"
+      },
+      {
+        "type": "show_message",
+        "message": "You inspect the buzzing neon sign. Its power core is burnt out. Jax needs a replacement core."
+      }
+    ]
+  },
+  {
+    "id": "w3_sq11_install_core",
+    "description": "Triggered when installing neon core.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w3_sq11_install_core"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w3_sq11"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w3_sq11",
+        "task_id": "install_core"
+      },
+      {
+        "type": "item",
+        "item_id": "neon_sign_core"
+      }
+    ],
+    "actions": [
+      {
+        "type": "take_item",
+        "item_id": "neon_sign_core",
+        "quantity": 1
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w3_sq11",
+        "task_id": "install_core"
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w3_sq11"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w3_streetwise_unlocked"
+      },
+      {
+        "type": "show_message",
+        "message": "Quest Complete: Neon Fix\n\nThe sign flickers and flares back to life, bathing the subway car in neon purple. Jax grunts in approval and promises a permanent shop discount."
+      }
+    ]
+  },
+  {
+    "id": "w3_sq12_access_terminal",
+    "description": "Triggered when searching security terminal.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w3_sq12_access_terminal"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w3_sq12"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w3_sq12",
+        "task_id": "access_terminal"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w3_sq12",
+        "task_id": "access_terminal"
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w3_sq12"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w3_ghost_skill_unlocked"
+      },
+      {
+        "type": "show_message",
+        "message": "Quest Complete: Cold Case\n\nYou download the archive files. Gh0st finds a deleted report linking Elara's transfer to the orbital ring. He unlocks the Intercept skill."
+      }
+    ]
+  },
+  {
+    "id": "w3_sq13_fix_market_lights",
+    "description": "Triggered when fixing lanterns.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w3_sq13_fix_market_lights"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w3_sq13"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w3_sq13",
+        "task_id": "fix_market_lights"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w3_sq13",
+        "task_id": "fix_market_lights"
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w3_sq13"
+      },
+      {
+        "type": "give_item",
+        "item_id": "neon_band",
+        "quantity": 1
+      },
+      {
+        "type": "show_message",
+        "message": "Quest Complete: Night Market Run\n\nThe market string lights burst with warm illumination. Mika hands you a Neon Band accessory as a thank you."
+      }
+    ]
+  },
+  {
+    "id": "w3_mq12_to_w3_mq13",
+    "description": "Begin the Upper City heist after the Lower City plan is complete.",
+    "trigger": {
+      "type": "quest_stage_complete",
+      "quest_id": "w3_mq12"
+    },
+    "conditions": [
+      {
+        "type": "quest_completed",
+        "quest_id": "w3_mq12"
+      },
+      {
+        "type": "quest_not_started",
+        "quest_id": "w3_mq13"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_quest",
+        "quest_id": "w3_mq13"
+      },
+      {
+        "type": "track_quest",
+        "quest_id": "w3_mq13"
+      },
+      {
+        "type": "warp",
+        "room_id": "spire_laundry_service"
+      },
+      {
+        "type": "show_message",
+        "message": "The heist begins. The service elevator opens into the Upper City laundry guts."
+      }
+    ]
+  },
+  {
+    "id": "w3_mq13_blend_in",
+    "description": "Acquire Skypark guest access.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w3_mq13_blend_in"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w3_mq13"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w3_mq13",
+        "task_id": "blend_in"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w3_mq13",
+        "task_id": "blend_in"
+      },
+      {
+        "type": "show_message",
+        "message": "The Skypark registry accepts the forged guest profile. Nova smiles like she has done this her whole life."
+      }
+    ]
+  },
+  {
+    "id": "w3_mq13_disable_sensors",
+    "description": "Zeke and Orion disable sensors from Laundry Service.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w3_mq13_disable_sensors"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w3_mq13"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w3_mq13",
+        "task_id": "disable_sensors"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w3_mq13",
+        "task_id": "disable_sensors"
+      },
+      {
+        "type": "show_message",
+        "message": "Zeke ghosts the scanner grid while Orion dampens the Source noise. The penthouse sensors blink blind."
+      }
+    ]
+  },
+  {
+    "id": "w3_mq13_enter_lobby",
+    "description": "Nova and Gh0st pass the lobby scanners.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w3_mq13_enter_lobby"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w3_mq13"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w3_mq13",
+        "task_id": "blend_in"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w3_mq13",
+        "task_id": "disable_sensors"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w3_mq13",
+        "task_id": "enter_lobby"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w3_mq13",
+        "task_id": "enter_lobby"
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w3_mq13"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w3_mq13_complete"
+      },
+      {
+        "type": "start_quest",
+        "quest_id": "w3_mq14"
+      },
+      {
+        "type": "track_quest",
+        "quest_id": "w3_mq14"
+      },
+      {
+        "type": "show_message",
+        "message": "Quest Complete: Social Engineering\n\nThe scanners wave Nova and Gh0st through. The Archive doors are ahead."
+      }
+    ]
+  },
+  {
+    "id": "w3_mq14_enter_archive",
+    "description": "Enter the Archive.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "spire_archive_vault"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w3_mq14"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w3_mq14",
+        "task_id": "enter_archive"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w3_mq14",
+        "task_id": "enter_archive"
+      },
+      {
+        "type": "show_message",
+        "message": "The Archive recognizes no guest access. It recognizes only power."
+      }
+    ]
+  },
+  {
+    "id": "w3_mq14_solve_light_puzzle",
+    "description": "Orion solves the light puzzle.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w3_mq14_solve_light_puzzle"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w3_mq14"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w3_mq14",
+        "task_id": "enter_archive"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w3_mq14",
+        "task_id": "solve_light_puzzle"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w3_mq14",
+        "task_id": "solve_light_puzzle"
+      },
+      {
+        "type": "advance_quest_stage",
+        "quest_id": "w3_mq14",
+        "to_stage_id": "claim_lens"
+      },
+      {
+        "type": "show_message",
+        "message": "Orion tunes the prism array until glass, light, and Source hum in the same key. The containment field drops."
+      }
+    ]
+  },
+  {
+    "id": "w3_mq14_take_lens",
+    "description": "Take the Lens and trigger the alarm.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w3_mq14_take_lens"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w3_mq14"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w3_mq14",
+        "task_id": "solve_light_puzzle"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w3_mq14",
+        "task_id": "take_lens"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w3_mq14",
+        "task_id": "take_lens"
+      },
+      {
+        "type": "give_item",
+        "item_id": "the_lens",
+        "quantity": 1
+      },
+      {
+        "type": "unlock_skill",
+        "skill_id": "source_art_scan"
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w3_mq14"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w3_mq14_complete"
+      },
+      {
+        "type": "start_quest",
+        "quest_id": "w3_mq15"
+      },
+      {
+        "type": "track_quest",
+        "quest_id": "w3_mq15"
+      },
+      {
+        "type": "show_message",
+        "message": "Quest Complete: The Lens\n\nThe relic burns cold in Nova's hand. The Shield above the Spire becomes visible as rotating chords. Alarm text blooms across the air: ANOMALY DETECTED."
+      }
+    ]
+  },
+  {
+    "id": "w3_mq15_reach_landing_pad",
+    "description": "Reach the landing pad under alarm.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "spire_landing_pad_roof"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w3_mq15"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w3_mq15",
+        "task_id": "reach_landing_pad"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w3_mq15",
+        "task_id": "reach_landing_pad"
+      },
+      {
+        "type": "show_message",
+        "message": "Wind tears across the roof. The Astra is still here. So is the Administrator."
+      }
+    ]
+  },
+  {
+    "id": "w3_mq15_defeat_administrator",
+    "description": "Defeat the Administrator boss.",
+    "trigger": {
+      "type": "encounter_victory",
+      "enemies": [
+        "administrator_boss"
+      ]
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w3_mq15"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w3_mq15",
+        "task_id": "defeat_administrator"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w3_mq15",
+        "task_id": "defeat_administrator"
+      },
+      {
+        "type": "advance_quest_stage",
+        "quest_id": "w3_mq15",
+        "to_stage_id": "launch_to_foundry"
+      },
+      {
+        "type": "show_message",
+        "message": "The Administrator frame collapses, still smiling through sparking teeth. The Shield gap opens for less than a second."
+      }
+    ]
+  },
+  {
+    "id": "w3_mq15_launch_astra",
+    "description": "Launch the Astra through the Shield toward World 4.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w3_mq15_launch_astra"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w3_mq15"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w3_mq15",
+        "task_id": "defeat_administrator"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w3_mq15",
+        "task_id": "launch_astra"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w3_mq15",
+        "task_id": "launch_astra"
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w3_mq15"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w3_mq15_complete"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w4_access_unlocked"
+      },
+      {
+        "type": "start_quest",
+        "quest_id": "w4_mq16"
+      },
+      {
+        "type": "track_quest",
+        "quest_id": "w4_mq16"
+      },
+      {
+        "type": "warp",
+        "room_id": "foundry_slag_landing"
+      },
+      {
+        "type": "show_message",
+        "message": "Quest Complete: Burn Notice\n\nThe Astra slips the Shield on Orion's count. Low orbit coughs the ship back toward the Foundry. Time to find a bigger engine."
+      }
+    ]
+  },
+  {
+    "id": "w3_sq14_start",
+    "description": "Start Corporate Espionage from the lounge safe.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w3_sq14_start"
+    },
+    "conditions": [
+      {
+        "type": "quest_not_started",
+        "quest_id": "w3_sq14"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_quest",
+        "quest_id": "w3_sq14"
+      },
+      {
+        "type": "track_quest",
+        "quest_id": "w3_sq14"
+      },
+      {
+        "type": "show_message",
+        "message": "Side Quest Started: Corporate Espionage"
+      }
+    ]
+  },
+  {
+    "id": "w3_sq14_steal_ledger",
+    "description": "Steal the encrypted ledger.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w3_sq14_steal_ledger"
+    },
+    "conditions": [
+      {
+        "type": "quest_not_completed",
+        "quest_id": "w3_sq14"
+      }
+    ],
+    "actions": [
+      {
+        "type": "if_quest_not_started",
+        "quest_id": "w3_sq14",
+        "do": [
+          {
+            "type": "start_quest",
+            "quest_id": "w3_sq14"
+          }
+        ]
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w3_sq14",
+        "task_id": "steal_ledger"
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w3_sq14"
+      },
+      {
+        "type": "give_item",
+        "item_id": "encrypted_ledger",
+        "quantity": 1
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w3_blackmail_unlocked"
+      },
+      {
+        "type": "show_message",
+        "message": "Quest Complete: Corporate Espionage\n\nThe encrypted ledger is yours. Upper City prices suddenly look negotiable."
+      }
+    ]
+  },
+  {
+    "id": "w3_sq15_start",
+    "description": "Start Prototype Testing from the lab terminal.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w3_sq15_start"
+    },
+    "conditions": [
+      {
+        "type": "quest_not_started",
+        "quest_id": "w3_sq15"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_quest",
+        "quest_id": "w3_sq15"
+      },
+      {
+        "type": "track_quest",
+        "quest_id": "w3_sq15"
+      },
+      {
+        "type": "show_message",
+        "message": "Side Quest Started: Prototype Testing"
+      }
+    ]
+  },
+  {
+    "id": "w3_sq15_test_weapon",
+    "description": "Test the prototype weapon and earn Phase Rounds.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w3_sq15_test_weapon"
+    },
+    "conditions": [
+      {
+        "type": "quest_not_completed",
+        "quest_id": "w3_sq15"
+      }
+    ],
+    "actions": [
+      {
+        "type": "if_quest_not_started",
+        "quest_id": "w3_sq15",
+        "do": [
+          {
+            "type": "start_quest",
+            "quest_id": "w3_sq15"
+          }
+        ]
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w3_sq15",
+        "task_id": "test_weapon"
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w3_sq15"
+      },
+      {
+        "type": "give_item",
+        "item_id": "phase_rounds",
+        "quantity": 1
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w3_prototype_tested"
+      },
+      {
+        "type": "show_message",
+        "message": "Quest Complete: Prototype Testing\n\nThe weapon trial leaves three drones in pieces and a Phase Rounds mod in your kit."
+      }
+    ]
+  },
+  {
+    "id": "w4_mq16_land_shelf",
+    "description": "Secure the Obsidian Shelf landing.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w4_mq16_land_shelf"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w4_mq16"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w4_mq16",
+        "task_id": "land_shelf"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w4_mq16",
+        "task_id": "land_shelf"
+      },
+      {
+        "type": "show_message",
+        "message": "The Astra settles onto volcanic glass. Sector 7 welcomes you with ash, heat, and a compliance bulletin."
+      }
+    ]
+  },
+  {
+    "id": "w4_compliance_bulletin",
+    "description": "Vale announces the Foundry audit.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w4_compliance_bulletin"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w4_mq16"
+      },
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w4_compliance_bulletin"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w4_compliance_bulletin"
+      },
+      {
+        "type": "show_message",
+        "message": "ORBITAL COMPLIANCE: Sector 7 is under audit. Unregistered craft detected. No departures until the anomaly is resolved."
+      }
+    ]
+  },
+  {
+    "id": "w4_mq16_cross_slag_river",
+    "description": "Complete Slag River hazard crossing.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w4_mq16_cross_slag_river"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w4_mq16"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w4_mq16",
+        "task_id": "land_shelf"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w4_mq16",
+        "task_id": "cross_slag_river"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w4_mq16",
+        "task_id": "cross_slag_river"
+      },
+      {
+        "type": "show_message",
+        "message": "You learn the rhythm of the Source flares and cross the slag channel with boots smoking."
+      }
+    ]
+  },
+  {
+    "id": "w4_mq16_hack_cooling_vents",
+    "description": "Hack cooling vents at Waste Intake.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w4_mq16_hack_cooling_vents"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w4_mq16"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w4_mq16",
+        "task_id": "cross_slag_river"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w4_mq16",
+        "task_id": "hack_cooling_vents"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w4_mq16",
+        "task_id": "hack_cooling_vents"
+      },
+      {
+        "type": "advance_quest_stage",
+        "quest_id": "w4_mq16",
+        "to_stage_id": "open_airlock"
+      },
+      {
+        "type": "show_message",
+        "message": "Zeke forces the vent cycle into maintenance mode. The airlock temperature drops from lethal to merely insulting."
+      }
+    ]
+  },
+  {
+    "id": "w4_mq16_enter_airlock",
+    "description": "Cycle the service airlock and complete MQ16.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w4_mq16_enter_airlock"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w4_mq16"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w4_mq16",
+        "task_id": "hack_cooling_vents"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w4_mq16",
+        "task_id": "enter_airlock"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w4_mq16",
+        "task_id": "enter_airlock"
+      },
+      {
+        "type": "give_item",
+        "item_id": "heat_liner",
+        "quantity": 1
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w4_mq16"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w4_mq16_complete"
+      },
+      {
+        "type": "start_quest",
+        "quest_id": "w4_mq17"
+      },
+      {
+        "type": "track_quest",
+        "quest_id": "w4_mq17"
+      },
+      {
+        "type": "show_message",
+        "message": "Quest Complete: Into the Fire\n\nThe service airlock cycles open. You have a route into the factory and a heat liner that might keep your skin attached."
+      }
+    ]
+  },
+  {
+    "id": "w4_mq17_access_phantom_terminal",
+    "description": "Access Project Phantom terminal.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w4_mq17_access_phantom_terminal"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w4_mq17"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w4_mq17",
+        "task_id": "access_phantom_terminal"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w4_mq17",
+        "task_id": "access_phantom_terminal"
+      },
+      {
+        "type": "advance_quest_stage",
+        "quest_id": "w4_mq17",
+        "to_stage_id": "cooling_springs"
+      },
+      {
+        "type": "show_message",
+        "message": "PROJECT PHANTOM opens. Elara's neural map. Gh0st's chip insertion. The truth lands harder than the pistons."
+      }
+    ]
+  },
+  {
+    "id": "w4_mq17_regroup_springs",
+    "description": "Regroup after Project Phantom truth.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w4_mq17_regroup_springs"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w4_mq17"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w4_mq17",
+        "task_id": "access_phantom_terminal"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w4_mq17",
+        "task_id": "regroup_springs"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w4_mq17",
+        "task_id": "regroup_springs"
+      },
+      {
+        "type": "give_item",
+        "item_id": "gh0st_override_key",
+        "quantity": 1
+      },
+      {
+        "type": "unlock_skill",
+        "skill_id": "gh0st_phase_counter"
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w4_mq17"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w4_mq17_complete"
+      },
+      {
+        "type": "start_quest",
+        "quest_id": "w4_mq18"
+      },
+      {
+        "type": "track_quest",
+        "quest_id": "w4_mq18"
+      },
+      {
+        "type": "warp",
+        "room_id": "foundry_conveyor_belt"
+      },
+      {
+        "type": "show_message",
+        "message": "Quest Complete: Ghost in the Machine\n\nGh0st gives Nova his override key. The first time was programming. The second time was choice."
+      }
+    ]
+  },
+  {
+    "id": "w4_sq16_start",
+    "description": "Start Sabotage.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w4_sq16_start"
+    },
+    "conditions": [
+      {
+        "type": "quest_not_started",
+        "quest_id": "w4_sq16"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_quest",
+        "quest_id": "w4_sq16"
+      },
+      {
+        "type": "track_quest",
+        "quest_id": "w4_sq16"
+      }
+    ]
+  },
+  {
+    "id": "w4_sq16_destroy_crate_alpha",
+    "description": "Destroy Slag River ammo crate.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w4_sq16_destroy_crate_alpha"
+    },
+    "conditions": [
+      {
+        "type": "quest_not_completed",
+        "quest_id": "w4_sq16"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w4_sq16",
+        "task_id": "crate_alpha"
+      }
+    ],
+    "actions": [
+      {
+        "type": "if_quest_not_started",
+        "quest_id": "w4_sq16",
+        "do": [
+          {
+            "type": "start_quest",
+            "quest_id": "w4_sq16"
+          }
+        ]
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w4_sq16",
+        "task_id": "crate_alpha"
+      },
+      {
+        "type": "show_message",
+        "message": "Ammo crate alpha cooks off into the slag haze."
+      }
+    ]
+  },
+  {
+    "id": "w4_sq16_destroy_crate_beta",
+    "description": "Destroy Waste Intake ammo crate.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w4_sq16_destroy_crate_beta"
+    },
+    "conditions": [
+      {
+        "type": "quest_not_completed",
+        "quest_id": "w4_sq16"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w4_sq16",
+        "task_id": "crate_beta"
+      }
+    ],
+    "actions": [
+      {
+        "type": "if_quest_not_started",
+        "quest_id": "w4_sq16",
+        "do": [
+          {
+            "type": "start_quest",
+            "quest_id": "w4_sq16"
+          }
+        ]
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w4_sq16",
+        "task_id": "crate_beta"
+      },
+      {
+        "type": "show_message",
+        "message": "Ammo crate beta vanishes under the intake pistons."
+      }
+    ]
+  },
+  {
+    "id": "w4_sq16_destroy_crate_gamma",
+    "description": "Destroy Service Airlock ammo crate and complete Sabotage.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w4_sq16_destroy_crate_gamma"
+    },
+    "conditions": [
+      {
+        "type": "quest_not_completed",
+        "quest_id": "w4_sq16"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w4_sq16",
+        "task_id": "crate_alpha"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w4_sq16",
+        "task_id": "crate_beta"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w4_sq16",
+        "task_id": "crate_gamma"
+      }
+    ],
+    "actions": [
+      {
+        "type": "if_quest_not_started",
+        "quest_id": "w4_sq16",
+        "do": [
+          {
+            "type": "start_quest",
+            "quest_id": "w4_sq16"
+          }
+        ]
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w4_sq16",
+        "task_id": "crate_gamma"
+      },
+      {
+        "type": "give_item",
+        "item_id": "explosive_tip",
+        "quantity": 1
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w4_sq16"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w4_sabotage_complete"
+      },
+      {
+        "type": "show_message",
+        "message": "Quest Complete: Sabotage\n\nThe final crate erupts against the decon pumps. Explosive Tip acquired."
+      }
+    ]
+  },
+  {
+    "id": "w4_sq17_find_worker",
+    "description": "Find missing worker tablet.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w4_sq17_find_worker"
+    },
+    "conditions": [
+      {
+        "type": "quest_not_completed",
+        "quest_id": "w4_sq17"
+      }
+    ],
+    "actions": [
+      {
+        "type": "if_quest_not_started",
+        "quest_id": "w4_sq17",
+        "do": [
+          {
+            "type": "start_quest",
+            "quest_id": "w4_sq17"
+          }
+        ]
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w4_sq17",
+        "task_id": "find_worker"
+      },
+      {
+        "type": "give_item",
+        "item_id": "coolant_system",
+        "quantity": 1
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w4_sq17"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w4_lost_worker_complete"
+      },
+      {
+        "type": "show_message",
+        "message": "Quest Complete: Lost Worker\n\nThe engineer is gone, but the coolant rig survived. Coolant System acquired."
+      }
+    ]
+  },
+  {
+    "id": "w4_sq18_salvage_mechs",
+    "description": "Salvage destroyed mechs.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w4_sq18_salvage_mechs"
+    },
+    "conditions": [
+      {
+        "type": "quest_not_completed",
+        "quest_id": "w4_sq18"
+      }
+    ],
+    "actions": [
+      {
+        "type": "if_quest_not_started",
+        "quest_id": "w4_sq18",
+        "do": [
+          {
+            "type": "start_quest",
+            "quest_id": "w4_sq18"
+          }
+        ]
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w4_sq18",
+        "task_id": "salvage_mechs"
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w4_sq18"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w4_scavenger_unlocked"
+      },
+      {
+        "type": "show_message",
+        "message": "Quest Complete: The Scrap Heap\n\nYou strip three wrecked mechs before the slag can eat them. Scavenger unlocked."
+      }
+    ]
+  },
+  {
+    "id": "w4_mq18_navigate_conveyors",
+    "description": "Navigate Assembly conveyor belts.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w4_mq18_navigate_conveyors"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w4_mq18"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w4_mq18",
+        "task_id": "navigate_conveyors"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w4_mq18",
+        "task_id": "navigate_conveyors"
+      },
+      {
+        "type": "show_message",
+        "message": "You catch the belt rhythm between crushers and moving heat shields."
+      }
+    ]
+  },
+  {
+    "id": "w4_mq18_defeat_prototypes",
+    "description": "Defeat Phantom Prototype wave.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w4_mq18_defeat_prototypes"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w4_mq18"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w4_mq18",
+        "task_id": "navigate_conveyors"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w4_mq18",
+        "task_id": "defeat_prototypes"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w4_mq18",
+        "task_id": "defeat_prototypes"
+      },
+      {
+        "type": "advance_quest_stage",
+        "quest_id": "w4_mq18",
+        "to_stage_id": "matrix_overload"
+      },
+      {
+        "type": "show_message",
+        "message": "The Phantom wave drops one by one. Gh0st says nothing, but his blade shakes once before going still."
+      }
+    ]
+  },
+  {
+    "id": "w4_mq18_overload_matrix",
+    "description": "Overload the fabrication matrix.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w4_mq18_overload_matrix"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w4_mq18"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w4_mq18",
+        "task_id": "defeat_prototypes"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w4_mq18",
+        "task_id": "overload_matrix"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w4_mq18",
+        "task_id": "overload_matrix"
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w4_mq18"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w4_mq18_complete"
+      },
+      {
+        "type": "start_quest",
+        "quest_id": "w4_mq19"
+      },
+      {
+        "type": "track_quest",
+        "quest_id": "w4_mq19"
+      },
+      {
+        "type": "show_message",
+        "message": "Quest Complete: The Assembly\n\nThe fabrication matrix screams itself silent. No more Phantom shells leave this floor."
+      }
+    ]
+  },
+  {
+    "id": "w4_mq19_reach_core_chamber",
+    "description": "Reach the Forge core chamber.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "foundry_forge_anvil"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w4_mq19"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w4_mq19",
+        "task_id": "reach_core_chamber"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w4_mq19",
+        "task_id": "reach_core_chamber"
+      }
+    ]
+  },
+  {
+    "id": "w4_mq19_solve_conveyor_puzzle",
+    "description": "Solve conveyor puzzle.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w4_mq19_solve_conveyor_puzzle"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w4_mq19"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w4_mq19",
+        "task_id": "reach_core_chamber"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w4_mq19",
+        "task_id": "solve_conveyor_puzzle"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w4_mq19",
+        "task_id": "solve_conveyor_puzzle"
+      },
+      {
+        "type": "advance_quest_stage",
+        "quest_id": "w4_mq19",
+        "to_stage_id": "claim_anvil"
+      },
+      {
+        "type": "show_message",
+        "message": "Orion times the crushers while Nova shifts the belt pattern. The Anvil cradle opens."
+      }
+    ]
+  },
+  {
+    "id": "w4_mq19_take_anvil",
+    "description": "Acquire the Anvil relic.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w4_mq19_take_anvil"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w4_mq19"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w4_mq19",
+        "task_id": "solve_conveyor_puzzle"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w4_mq19",
+        "task_id": "take_anvil"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w4_mq19",
+        "task_id": "take_anvil"
+      },
+      {
+        "type": "give_item",
+        "item_id": "the_anvil",
+        "quantity": 1
+      },
+      {
+        "type": "unlock_skill",
+        "skill_id": "source_art_construct"
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w4_mq19"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w4_mq19_complete"
+      },
+      {
+        "type": "start_quest",
+        "quest_id": "w4_mq20"
+      },
+      {
+        "type": "track_quest",
+        "quest_id": "w4_mq20"
+      },
+      {
+        "type": "show_message",
+        "message": "Quest Complete: The Anvil\n\nThe relic answers Nova too fast. Her first Construct twists, collapses, and nearly drops her into slag before Gh0st catches her."
+      }
+    ]
+  },
+  {
+    "id": "w4_mq20_confront_rylos",
+    "description": "Confront Rylos.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w4_mq20_confront_rylos"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w4_mq20"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w4_mq20",
+        "task_id": "confront_rylos"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w4_mq20",
+        "task_id": "confront_rylos"
+      },
+      {
+        "type": "show_message",
+        "message": "Rylos: Unit 734. Submit for correction. Pain is just data leaving the body."
+      }
+    ]
+  },
+  {
+    "id": "w4_mq20_defeat_titan_walker",
+    "description": "Defeat Titan Walker.",
+    "trigger": {
+      "type": "encounter_victory",
+      "enemies": [
+        "titan_walker_boss"
+      ]
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w4_mq20"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w4_mq20",
+        "task_id": "defeat_titan_walker"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w4_mq20",
+        "task_id": "defeat_titan_walker"
+      },
+      {
+        "type": "advance_quest_stage",
+        "quest_id": "w4_mq20",
+        "to_stage_id": "steal_and_escape"
+      },
+      {
+        "type": "show_message",
+        "message": "The Titan Walker buckles into the platform. Gh0st lowers his blade. Choice is the point."
+      }
+    ]
+  },
+  {
+    "id": "w4_mq20_steal_engine",
+    "description": "Steal Deep-Core Engine.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w4_mq20_steal_engine"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w4_mq20"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w4_mq20",
+        "task_id": "defeat_titan_walker"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w4_mq20",
+        "task_id": "steal_engine"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w4_mq20",
+        "task_id": "steal_engine"
+      },
+      {
+        "type": "give_item",
+        "item_id": "deep_core_engine",
+        "quantity": 1
+      },
+      {
+        "type": "show_message",
+        "message": "The Deep-Core Engine tears free of the cradle, taking Vale's timeline with it."
+      }
+    ]
+  },
+  {
+    "id": "w4_mq20_steal_arrays",
+    "description": "Steal Phase-Cutter Arrays.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w4_mq20_steal_arrays"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w4_mq20"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w4_mq20",
+        "task_id": "defeat_titan_walker"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w4_mq20",
+        "task_id": "steal_arrays"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w4_mq20",
+        "task_id": "steal_arrays"
+      },
+      {
+        "type": "give_item",
+        "item_id": "phase_cutter_arrays",
+        "quantity": 1
+      },
+      {
+        "type": "show_message",
+        "message": "Phase-Cutter Arrays secured. The Astra is no longer just running. It can fight."
+      }
+    ]
+  },
+  {
+    "id": "w4_mq20_escape_launch",
+    "description": "Escape Foundry and unlock World 5.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w4_mq20_escape_launch"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w4_mq20"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w4_mq20",
+        "task_id": "steal_engine"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w4_mq20",
+        "task_id": "steal_arrays"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w4_mq20",
+        "task_id": "escape_launch"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w4_mq20",
+        "task_id": "escape_launch"
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w4_mq20"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w4_mq20_complete"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w5_access_unlocked"
+      },
+      {
+        "type": "start_quest",
+        "quest_id": "w5_mq21"
+      },
+      {
+        "type": "track_quest",
+        "quest_id": "w5_mq21"
+      },
+      {
+        "type": "warp",
+        "room_id": "orbital_executive_dock"
+      },
+      {
+        "type": "show_message",
+        "message": "Quest Complete: Meltdown\n\nVale denies Rylos extraction, relieves Thorne, and locks every sector. The Astra punches for high orbit with the Foundry burning below."
+      }
+    ]
+  },
+  {
+    "id": "w4_sq19_reprogram_units",
+    "description": "Resolve defective units.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w4_sq19_reprogram_units"
+    },
+    "conditions": [
+      {
+        "type": "quest_not_completed",
+        "quest_id": "w4_sq19"
+      }
+    ],
+    "actions": [
+      {
+        "type": "if_quest_not_started",
+        "quest_id": "w4_sq19",
+        "do": [
+          {
+            "type": "start_quest",
+            "quest_id": "w4_sq19"
+          }
+        ]
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w4_sq19",
+        "task_id": "resolve_units"
+      },
+      {
+        "type": "unlock_skill",
+        "skill_id": "gh0st_harden"
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w4_sq19"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w4_quality_control_complete"
+      },
+      {
+        "type": "show_message",
+        "message": "Quest Complete: Quality Control\n\nThe defective units keep their spark. Gh0st compiles the combat data into Harden."
+      }
+    ]
+  },
+  {
+    "id": "w4_sq20_survive_waves",
+    "description": "Survive overclocked test waves.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w4_sq20_survive_waves"
+    },
+    "conditions": [
+      {
+        "type": "quest_not_completed",
+        "quest_id": "w4_sq20"
+      }
+    ],
+    "actions": [
+      {
+        "type": "if_quest_not_started",
+        "quest_id": "w4_sq20",
+        "do": [
+          {
+            "type": "start_quest",
+            "quest_id": "w4_sq20"
+          }
+        ]
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w4_sq20",
+        "task_id": "survive_waves"
+      },
+      {
+        "type": "give_item",
+        "item_id": "thermal_clip",
+        "quantity": 1
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w4_sq20"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w4_overclocked_complete"
+      },
+      {
+        "type": "show_message",
+        "message": "Quest Complete: Overclocked\n\nThree hazard waves later, the terminal dispenses a Thermal Clip like this was normal."
+      }
+    ]
+  },
+  {
+    "id": "w5_mq21_arrive_halo",
+    "description": "Begin the orbital approach.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "orbital_executive_dock"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w5_mq21"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w5_mq21",
+        "task_id": "approach_halo"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w5_mq21",
+        "task_id": "approach_halo"
+      },
+      {
+        "type": "show_message",
+        "message": "The Halo fills the viewport. Orbital Compliance assumes control, and a fighter screen unfolds from the Ring."
+      }
+    ]
+  },
+  {
+    "id": "w5_mq21_fighters_down",
+    "description": "Defeat the Compliance fighter screen.",
+    "trigger": {
+      "type": "encounter_victory",
+      "enemies": [
+        "orbital_fighter"
+      ]
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w5_mq21"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w5_mq21",
+        "task_id": "shoot_down_fighters"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w5_mq21",
+        "task_id": "shoot_down_fighters"
+      },
+      {
+        "type": "advance_quest_stage",
+        "quest_id": "w5_mq21",
+        "to_stage_id": "forced_docking"
+      },
+      {
+        "type": "show_message",
+        "message": "The last fighter shears away. Zeke drives the damaged Astra straight at the Executive Dock."
+      }
+    ]
+  },
+  {
+    "id": "w5_mq21_force_dock",
+    "description": "Force dock on the Ring.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w5_mq21_force_dock"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w5_mq21"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w5_mq21",
+        "task_id": "shoot_down_fighters"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w5_mq21",
+        "task_id": "force_dock"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w5_mq21",
+        "task_id": "force_dock"
+      },
+      {
+        "type": "show_message",
+        "message": "The Astra hits the docking collar hard enough to bend it. The station airlock stays sealed."
+      }
+    ]
+  },
+  {
+    "id": "w5_mq21_hack_airlock",
+    "description": "Hack the Executive Dock airlock.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w5_mq21_hack_airlock"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w5_mq21"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w5_mq21",
+        "task_id": "force_dock"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w5_mq21",
+        "task_id": "hack_airlock"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w5_mq21",
+        "task_id": "hack_airlock"
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w5_mq21"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w5_mq21_complete"
+      },
+      {
+        "type": "start_quest",
+        "quest_id": "w5_mq22"
+      },
+      {
+        "type": "track_quest",
+        "quest_id": "w5_mq22"
+      },
+      {
+        "type": "show_message",
+        "message": "Quest Complete: Docking Procedure\n\nThe airlock opens onto disinfectant, money, and Vale's polite Compliance greeting. Every door locks at once."
+      }
+    ]
+  },
+  {
+    "id": "w5_mq22_cross_solarium",
+    "description": "Cross the false paradise.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w5_mq22_cross_solarium"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w5_mq22"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w5_mq22",
+        "task_id": "cross_solarium"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w5_mq22",
+        "task_id": "cross_solarium"
+      },
+      {
+        "type": "show_message",
+        "message": "Real sand, clean water, and fruit rot beneath an artificial sun. Nova presses her hand into the warmth. Remember this. Their cage is not a gift."
+      }
+    ]
+  },
+  {
+    "id": "w5_mq22_clear_security",
+    "description": "Break the Security Hub patrol.",
+    "trigger": {
+      "type": "encounter_victory",
+      "enemies": [
+        "compliance_officer",
+        "null_g_drone"
+      ]
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w5_mq22"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w5_mq22",
+        "task_id": "clear_security"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w5_mq22",
+        "task_id": "clear_security"
+      },
+      {
+        "type": "advance_quest_stage",
+        "quest_id": "w5_mq22",
+        "to_stage_id": "zero_g_descent"
+      }
+    ]
+  },
+  {
+    "id": "w5_mq22_traverse_shaft",
+    "description": "Traverse the zero-g service shaft.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w5_mq22_traverse_shaft"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w5_mq22"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w5_mq22",
+        "task_id": "clear_security"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w5_mq22",
+        "task_id": "traverse_shaft"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w5_mq22",
+        "task_id": "traverse_shaft"
+      },
+      {
+        "type": "show_message",
+        "message": "The crew pulls through dead gravity while Hunter-Killers scrape past on the far wall. Fighting one would be suicide. Timing is enough."
+      }
+    ]
+  },
+  {
+    "id": "w5_mq22_access_mainframe",
+    "description": "Access the Great Silence log.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w5_mq22_access_mainframe"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w5_mq22"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w5_mq22",
+        "task_id": "traverse_shaft"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w5_mq22",
+        "task_id": "access_mainframe"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w5_mq22",
+        "task_id": "access_mainframe"
+      },
+      {
+        "type": "show_message",
+        "message": "ARCHITECT PROTOCOL: GREAT SILENCE. Harmony is not philosophy. It is infrastructure: phase corridors, chordprint locks, relay augments, and a labor world engineered never to resist."
+      }
+    ]
+  },
+  {
+    "id": "w5_mq22_find_thorne",
+    "description": "Find deposed Director Thorne.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w5_mq22_find_thorne"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w5_mq22"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w5_mq22",
+        "task_id": "access_mainframe"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w5_mq22",
+        "task_id": "find_thorne"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w5_mq22",
+        "task_id": "find_thorne"
+      },
+      {
+        "type": "give_item",
+        "item_id": "grav_boots",
+        "quantity": 1
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w5_mq22"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w5_mq22_complete"
+      },
+      {
+        "type": "start_quest",
+        "quest_id": "w5_mq23"
+      },
+      {
+        "type": "track_quest",
+        "quest_id": "w5_mq23"
+      },
+      {
+        "type": "show_message",
+        "message": "Quest Complete: Zero G\n\nThorne gives up the core access route. Harmony was her product-cage. Vale has turned it into a faith with one surviving voice."
+      }
+    ]
+  },
+  {
+    "id": "w5_sq21_director_logs",
+    "description": "Read Thorne's private logs.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w5_sq21_director_logs"
+    },
+    "conditions": [
+      {
+        "type": "quest_not_completed",
+        "quest_id": "w5_sq21"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_quest",
+        "quest_id": "w5_sq21"
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w5_sq21",
+        "task_id": "read_logs"
+      },
+      {
+        "type": "unlock_skill",
+        "skill_id": "corporate_insight"
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w5_sq21"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w5_corporate_insight_unlocked"
+      },
+      {
+        "type": "show_message",
+        "message": "Employee of the Month complete. Thorne's logs reduce people to leverage, liability, and throughput. Corporate Insight unlocked."
+      }
+    ]
+  },
+  {
+    "id": "w5_sq22_realign_mirrors",
+    "description": "Restore the Solarium mirrors.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w5_sq22_realign_mirrors"
+    },
+    "conditions": [
+      {
+        "type": "quest_not_completed",
+        "quest_id": "w5_sq22"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_quest",
+        "quest_id": "w5_sq22"
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w5_sq22",
+        "task_id": "realign_mirrors"
+      },
+      {
+        "type": "unlock_skill",
+        "skill_id": "orion_sunbeam"
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w5_sq22"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w5_solar_maintenance_complete"
+      },
+      {
+        "type": "show_message",
+        "message": "Solar Maintenance complete. The mirror array burns the void-moss away, and Orion learns to carry a fragment of the false sun."
+      }
+    ]
+  },
+  {
+    "id": "w5_sq23_vacuum_seal",
+    "description": "Seal the Executive Dock breaches.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w5_sq23_vacuum_seal"
+    },
+    "conditions": [
+      {
+        "type": "quest_not_completed",
+        "quest_id": "w5_sq23"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_quest",
+        "quest_id": "w5_sq23"
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w5_sq23",
+        "task_id": "seal_breaches"
+      },
+      {
+        "type": "give_item",
+        "item_id": "mag_boots",
+        "quantity": 1
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w5_sq23"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w5_vacuum_seal_complete"
+      },
+      {
+        "type": "show_message",
+        "message": "Vacuum Seal complete. Three bulkheads slam shut before the Executive Dock vents to space. Mag-Boots acquired."
+      }
+    ]
+  },
+  {
+    "id": "w5_mq23_navigate_maze",
+    "description": "Zeke maps the repeating aisles by coolant pulse instead of rack number. The three firewall nodes resolve out of the maze.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w5_mq23_navigate_maze"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w5_mq23"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w5_mq23",
+        "task_id": "navigate_maze"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w5_mq23",
+        "task_id": "navigate_maze"
+      },
+      {
+        "type": "show_message",
+        "message": "Zeke maps the repeating aisles by coolant pulse instead of rack number. The three firewall nodes resolve out of the maze."
+      }
+    ]
+  },
+  {
+    "id": "w5_mq23_firewall_alpha",
+    "description": "Firewall Alpha drops. One layer of the Anchor lock goes dark.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w5_mq23_firewall_alpha"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w5_mq23"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w5_mq23",
+        "task_id": "navigate_maze"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w5_mq23",
+        "task_id": "firewall_alpha"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w5_mq23",
+        "task_id": "firewall_alpha"
+      },
+      {
+        "type": "show_message",
+        "message": "Firewall Alpha drops. One layer of the Anchor lock goes dark."
+      }
+    ]
+  },
+  {
+    "id": "w5_mq23_firewall_beta",
+    "description": "Firewall Beta folds into its own recursion and burns out.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w5_mq23_firewall_beta"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w5_mq23"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w5_mq23",
+        "task_id": "firewall_alpha"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w5_mq23",
+        "task_id": "firewall_beta"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w5_mq23",
+        "task_id": "firewall_beta"
+      },
+      {
+        "type": "show_message",
+        "message": "Firewall Beta folds into its own recursion and burns out."
+      }
+    ]
+  },
+  {
+    "id": "w5_mq23_firewall_gamma",
+    "description": "Firewall Gamma fails. Its last defense compiles itself into a hard-light body.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w5_mq23_firewall_gamma"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w5_mq23"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w5_mq23",
+        "task_id": "firewall_beta"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w5_mq23",
+        "task_id": "firewall_gamma"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w5_mq23",
+        "task_id": "firewall_gamma"
+      },
+      {
+        "type": "advance_quest_stage",
+        "quest_id": "w5_mq23",
+        "to_stage_id": "construct"
+      },
+      {
+        "type": "show_message",
+        "message": "Firewall Gamma fails. Its last defense compiles itself into a hard-light body."
+      }
+    ]
+  },
+  {
+    "id": "w5_mq23_defeat_construct",
+    "description": "Defeat the Firewall Construct.",
+    "trigger": {
+      "type": "encounter_victory",
+      "enemies": [
+        "firewall_construct"
+      ]
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w5_mq23"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w5_mq23",
+        "task_id": "firewall_gamma"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w5_mq23",
+        "task_id": "defeat_construct"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w5_mq23",
+        "task_id": "defeat_construct"
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w5_mq23"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w5_mq23_complete"
+      },
+      {
+        "type": "start_quest",
+        "quest_id": "w5_mq24"
+      },
+      {
+        "type": "track_quest",
+        "quest_id": "w5_mq24"
+      },
+      {
+        "type": "show_message",
+        "message": "Quest Complete: The Core Approach\n\nThe construct shatters into dead glyphs. The Anchor Chamber opens, and Gh0st hears Elara across the Source."
+      }
+    ]
+  },
+  {
+    "id": "w5_mq24_enter_chamber",
+    "description": "Enter the Anchor Chamber.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "deep_anchor_chamber"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w5_mq24"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w5_mq24",
+        "task_id": "enter_chamber"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w5_mq24",
+        "task_id": "enter_chamber"
+      }
+    ]
+  },
+  {
+    "id": "w5_mq24_find_elara",
+    "description": "Elara forces the blast doors open from inside the system. She is present, fighting, and running out of time.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w5_mq24_find_elara"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w5_mq24"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w5_mq24",
+        "task_id": "enter_chamber"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w5_mq24",
+        "task_id": "find_elara"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w5_mq24",
+        "task_id": "find_elara"
+      },
+      {
+        "type": "advance_quest_stage",
+        "quest_id": "w5_mq24",
+        "to_stage_id": "take_relic"
+      },
+      {
+        "type": "show_message",
+        "message": "Elara forces the blast doors open from inside the system. She is present, fighting, and running out of time."
+      }
+    ]
+  },
+  {
+    "id": "w5_mq24_take_anchor",
+    "description": "Quest Complete: The Anchor\n\nNova takes the relic and fixes the charging Hunter-Killer in a single frozen moment. Stasis unlocked.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w5_mq24_take_anchor"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w5_mq24"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w5_mq24",
+        "task_id": "find_elara"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w5_mq24",
+        "task_id": "take_anchor"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w5_mq24",
+        "task_id": "take_anchor"
+      },
+      {
+        "type": "give_item",
+        "item_id": "anchor_relic",
+        "quantity": 1
+      },
+      {
+        "type": "unlock_skill",
+        "skill_id": "source_art_stasis"
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w5_mq24"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w5_mq24_complete"
+      },
+      {
+        "type": "start_quest",
+        "quest_id": "w5_mq25"
+      },
+      {
+        "type": "track_quest",
+        "quest_id": "w5_mq25"
+      },
+      {
+        "type": "show_message",
+        "message": "Quest Complete: The Anchor\n\nNova takes the relic and fixes the charging Hunter-Killer in a single frozen moment. Stasis unlocked."
+      }
+    ]
+  },
+  {
+    "id": "w5_mq25_reach_throne",
+    "description": "Reach the Throne Room.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "deep_throne_room"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w5_mq25"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w5_mq25",
+        "task_id": "reach_throne"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w5_mq25",
+        "task_id": "reach_throne"
+      }
+    ]
+  },
+  {
+    "id": "w5_mq25_soloist",
+    "description": "Stasis washes over Vale and fails. He executes Thorne, absorbs the Ring's energy, and tears space open. The Compliance Avatar blocks the breach.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w5_mq25_soloist"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w5_mq25"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w5_mq25",
+        "task_id": "reach_throne"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w5_mq25",
+        "task_id": "witness_soloist"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w5_mq25",
+        "task_id": "witness_soloist"
+      },
+      {
+        "type": "advance_quest_stage",
+        "quest_id": "w5_mq25",
+        "to_stage_id": "critical_escape"
+      },
+      {
+        "type": "show_message",
+        "message": "Stasis washes over Vale and fails. He executes Thorne, absorbs the Ring's energy, and tears space open. The Compliance Avatar blocks the breach."
+      }
+    ]
+  },
+  {
+    "id": "w5_mq25_defeat_avatar",
+    "description": "Defeat the Compliance Avatar.",
+    "trigger": {
+      "type": "encounter_victory",
+      "enemies": [
+        "compliance_avatar"
+      ]
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w5_mq25"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w5_mq25",
+        "task_id": "witness_soloist"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w5_mq25",
+        "task_id": "defeat_avatar"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w5_mq25",
+        "task_id": "defeat_avatar"
+      },
+      {
+        "type": "show_message",
+        "message": "The Avatar loses cohesion. Gravity stutters, the Ring splits, and the Tear pulls every loose fragment upward."
+      }
+    ]
+  },
+  {
+    "id": "w5_mq25_enter_tear",
+    "description": "Quest Complete: Critical Mass\n\nNova refuses to leave Elara or Vale beyond the breach. The crew leaps together and wakes beside a blue waveform fire.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w5_mq25_enter_tear"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w5_mq25"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w5_mq25",
+        "task_id": "defeat_avatar"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w5_mq25",
+        "task_id": "enter_tear"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w5_mq25",
+        "task_id": "enter_tear"
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w5_mq25"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w5_mq25_complete"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w6_access_unlocked"
+      },
+      {
+        "type": "warp",
+        "room_id": "source_campfire"
+      },
+      {
+        "type": "start_quest",
+        "quest_id": "w6_mq26"
+      },
+      {
+        "type": "track_quest",
+        "quest_id": "w6_mq26"
+      },
+      {
+        "type": "show_message",
+        "message": "Quest Complete: Critical Mass\n\nNova refuses to leave Elara or Vale beyond the breach. The crew leaps together and wakes beside a blue waveform fire."
+      }
+    ]
+  },
+  {
+    "id": "w5_sq24_recover_backup",
+    "description": "Recover purged defensive routines.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w5_sq24_recover_backup"
+    },
+    "conditions": [
+      {
+        "type": "quest_not_completed",
+        "quest_id": "w5_sq24"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_quest",
+        "quest_id": "w5_sq24"
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w5_sq24",
+        "task_id": "recover_backup"
+      },
+      {
+        "type": "unlock_skill",
+        "skill_id": "data_shield"
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w5_sq24"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w5_data_shield_unlocked"
+      },
+      {
+        "type": "show_message",
+        "message": "Ghost in the Shell complete. Zeke restores a defensive routine Vale marked for deletion. Data Shield unlocked."
+      }
+    ]
+  },
+  {
+    "id": "w5_sq25_find_keycard",
+    "description": "Recover the SysAdmin keycard.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w5_sq25_find_keycard"
+    },
+    "conditions": [
+      {
+        "type": "quest_not_completed",
+        "quest_id": "w5_sq25"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w5_sq25",
+        "task_id": "find_keycard"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_quest",
+        "quest_id": "w5_sq25"
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w5_sq25",
+        "task_id": "find_keycard"
+      },
+      {
+        "type": "advance_quest_stage",
+        "quest_id": "w5_sq25",
+        "to_stage_id": "armory"
+      },
+      {
+        "type": "give_item",
+        "item_id": "sysadmin_keycard",
+        "quantity": 1
+      },
+      {
+        "type": "show_message",
+        "message": "SysAdmin keycard acquired. Its last access record points to the executive armory."
+      }
+    ]
+  },
+  {
+    "id": "w5_sq25_open_armory",
+    "description": "Open the executive armory.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w5_sq25_open_armory"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w5_sq25"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w5_sq25",
+        "task_id": "find_keycard"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w5_sq25",
+        "task_id": "open_armory"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w5_sq25",
+        "task_id": "open_armory"
+      },
+      {
+        "type": "give_item",
+        "item_id": "void_clip",
+        "quantity": 1
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w5_sq25"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w5_admin_privileges_complete"
+      },
+      {
+        "type": "show_message",
+        "message": "Admin Privileges complete. The armory opens on a rack of phase-tuned ammunition. Void Clip acquired."
+      }
+    ]
+  },
+  {
+    "id": "w6_mq26_rescue_zeke",
+    "description": "Zeke stops performing the smile the loop demands. I quit. The cubicles shatter into burning checklists.",
+    "trigger": {
+      "type": "encounter_victory",
+      "enemies": [
+        "manager_projection"
+      ]
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w6_mq26"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w6_mq26",
+        "task_id": "rescue_zeke"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w6_mq26",
+        "task_id": "rescue_zeke"
+      },
+      {
+        "type": "show_message",
+        "message": "Zeke stops performing the smile the loop demands. I quit. The cubicles shatter into burning checklists."
+      }
+    ]
+  },
+  {
+    "id": "w6_mq26_rescue_gh0st",
+    "description": "Stasis interrupts the kill-suite. Gh0st crushes the override key and drops the rifle. No more orders.",
+    "trigger": {
+      "type": "encounter_victory",
+      "enemies": [
+        "endless_war_echo"
+      ]
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w6_mq26"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w6_mq26",
+        "task_id": "rescue_gh0st"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w6_mq26",
+        "task_id": "rescue_gh0st"
+      },
+      {
+        "type": "show_message",
+        "message": "Stasis interrupts the kill-suite. Gh0st crushes the override key and drops the rifle. No more orders."
+      }
+    ]
+  },
+  {
+    "id": "w6_mq26_rescue_orion",
+    "description": "Orion hums a question into the black water. A chorus answers from below: We are here.",
+    "trigger": {
+      "type": "encounter_victory",
+      "enemies": [
+        "silent_shore_wraith"
+      ]
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w6_mq26"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w6_mq26",
+        "task_id": "rescue_orion"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w6_mq26",
+        "task_id": "rescue_orion"
+      },
+      {
+        "type": "show_message",
+        "message": "Orion hums a question into the black water. A chorus answers from below: We are here."
+      }
+    ]
+  },
+  {
+    "id": "w6_mq26_reassemble",
+    "description": "Reassemble at the Campfire and claim the Key.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w6_mq26_reassemble"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w6_mq26"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w6_mq26",
+        "task_id": "rescue_zeke"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w6_mq26",
+        "task_id": "rescue_gh0st"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w6_mq26",
+        "task_id": "rescue_orion"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w6_mq26",
+        "task_id": "reassemble_team"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w6_mq26",
+        "task_id": "reassemble_team"
+      },
+      {
+        "type": "advance_quest_stage",
+        "quest_id": "w6_mq26",
+        "to_stage_id": "reassembly"
+      },
+      {
+        "type": "give_item",
+        "item_id": "key_relic",
+        "quantity": 1
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w6_mq26"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w6_mq26_complete"
+      },
+      {
+        "type": "start_quest",
+        "quest_id": "w6_mq27"
+      },
+      {
+        "type": "track_quest",
+        "quest_id": "w6_mq27"
+      },
+      {
+        "type": "warp",
+        "room_id": "source_echo_mines"
+      },
+      {
+        "type": "show_message",
+        "message": "Quest Complete: Fractured Minds\n\nThe Source stitches the crew back together around the song-fire. The Key manifests with root authority and the universe recognizes Nova's hand."
+      }
+    ]
+  },
+  {
+    "id": "w6_mq27_enter_mines",
+    "description": "Enter the distorted Mines.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "source_echo_mines"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w6_mq27"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w6_mq27",
+        "task_id": "enter_mines"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w6_mq27",
+        "task_id": "enter_mines"
+      }
+    ]
+  },
+  {
+    "id": "w6_mq27_evade_manager",
+    "description": "Avoid the Manager projections.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w6_mq27_evade_manager"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w6_mq27"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w6_mq27",
+        "task_id": "enter_mines"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w6_mq27",
+        "task_id": "evade_manager"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w6_mq27",
+        "task_id": "evade_manager"
+      },
+      {
+        "type": "show_message",
+        "message": "Nova moves between the projections by following details Vale cannot counterfeit: Jed's bad weld, Zeke's scratched initials, the smell of real machine oil."
+      }
+    ]
+  },
+  {
+    "id": "w6_mq27_reach_elevator",
+    "description": "Reach the memory elevator.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "source_echo_elevator"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w6_mq27"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w6_mq27",
+        "task_id": "evade_manager"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w6_mq27",
+        "task_id": "reach_elevator"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w6_mq27",
+        "task_id": "reach_elevator"
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w6_mq27"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w6_mq27_complete"
+      },
+      {
+        "type": "start_quest",
+        "quest_id": "w6_mq28"
+      },
+      {
+        "type": "track_quest",
+        "quest_id": "w6_mq28"
+      },
+      {
+        "type": "warp",
+        "room_id": "source_memory_bridge"
+      },
+      {
+        "type": "show_message",
+        "message": "Quest Complete: The Echo of the Mines\n\nThe elevator rises through white noise. Nova leaves the beginning intact instead of letting Vale improve it into a lie."
+      }
+    ]
+  },
+  {
+    "id": "w6_mq28_build_bridge",
+    "description": "Build the bridge from shared memories.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w6_mq28_build_bridge"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w6_mq28"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w6_mq28",
+        "task_id": "build_bridge"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w6_mq28",
+        "task_id": "build_bridge"
+      },
+      {
+        "type": "show_message",
+        "message": "Tideglass sand, Foundry heat, Spire rain, and the Astra's engine note become solid sections of bridge."
+      }
+    ]
+  },
+  {
+    "id": "w6_mq28_final_banter",
+    "description": "Share the Campfire promise.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w6_mq28_final_banter"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w6_mq28"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w6_mq28",
+        "task_id": "build_bridge"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w6_mq28",
+        "task_id": "final_banter"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w6_mq28",
+        "task_id": "final_banter"
+      },
+      {
+        "type": "show_message",
+        "message": "Nova: Vale thinks being alone will stop pain. Zeke: Being alone is pain. Gh0st sets one hand on the bridge. Point me. They move together."
+      }
+    ]
+  },
+  {
+    "id": "w6_mq28_reach_singularity",
+    "description": "Cross into the Singularity.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w6_mq28_reach_singularity"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w6_mq28"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w6_mq28",
+        "task_id": "final_banter"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w6_mq28",
+        "task_id": "reach_singularity"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w6_mq28",
+        "task_id": "reach_singularity"
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w6_mq28"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w6_mq28_complete"
+      },
+      {
+        "type": "warp",
+        "room_id": "source_memory_stair"
+      },
+      {
+        "type": "start_quest",
+        "quest_id": "w6_mq29"
+      },
+      {
+        "type": "track_quest",
+        "quest_id": "w6_mq29"
+      },
+      {
+        "type": "show_message",
+        "message": "Quest Complete: The Crossing\n\nThe bridge reaches the Memory Stair. Vale offers Nova a perfect world without grief. She lets the image fade. Jed did not die so she could live in a lie."
+      }
+    ]
+  },
+  {
+    "id": "w6_sq26_jed_echo",
+    "description": "Speak with Jed's echo.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w6_sq26_jed_echo"
+    },
+    "conditions": [
+      {
+        "type": "quest_not_completed",
+        "quest_id": "w6_sq26"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_quest",
+        "quest_id": "w6_sq26"
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w6_sq26",
+        "task_id": "talk_to_jed"
+      },
+      {
+        "type": "unlock_skill",
+        "skill_id": "nova_legacy"
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w6_sq26"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w6_legacy_unlocked"
+      },
+      {
+        "type": "show_message",
+        "message": "Jed's Echo complete. The memory cannot answer, but Nova remembers what survival was supposed to protect. Legacy unlocked."
+      }
+    ]
+  },
+  {
+    "id": "w6_sq27_delete_record",
+    "description": "Delete Zeke's HR record.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w6_sq27_delete_record"
+    },
+    "conditions": [
+      {
+        "type": "quest_not_completed",
+        "quest_id": "w6_sq27"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_quest",
+        "quest_id": "w6_sq27"
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w6_sq27",
+        "task_id": "delete_record"
+      },
+      {
+        "type": "unlock_skill",
+        "skill_id": "zeke_unshackled"
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w6_sq27"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w6_unshackled_unlocked"
+      },
+      {
+        "type": "show_message",
+        "message": "The HR Record complete. Zeke deletes the file, its backups, and the version of himself that still asks permission. Unshackled unlocked."
+      }
+    ]
+  },
+  {
+    "id": "w6_sq28_elara_song",
+    "description": "Recover Elara's uncorrupted song.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w6_sq28_elara_song"
+    },
+    "conditions": [
+      {
+        "type": "quest_not_completed",
+        "quest_id": "w6_sq28"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_quest",
+        "quest_id": "w6_sq28"
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w6_sq28",
+        "task_id": "recover_song"
+      },
+      {
+        "type": "unlock_skill",
+        "skill_id": "gh0st_source_balance"
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w6_sq28"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w6_source_balance_unlocked"
+      },
+      {
+        "type": "show_message",
+        "message": "Elara's Song complete. Gh0st hears her voice without a command hidden inside it. Source Balance unlocked."
+      }
+    ]
+  },
+  {
+    "id": "w6_mq29_climb_stair",
+    "description": "Begin the final ascent.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "source_memory_stair"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w6_mq29"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w6_mq29",
+        "task_id": "climb_stair"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w6_mq29",
+        "task_id": "climb_stair"
+      },
+      {
+        "type": "show_message",
+        "message": "The stair climbs through every world the crew survived. Vale offers perfect revisions. Nova keeps the scars."
+      }
+    ]
+  },
+  {
+    "id": "w6_mq29_shadow_wave",
+    "description": "Defeat the Source Shadow wave.",
+    "trigger": {
+      "type": "encounter_victory",
+      "enemies": [
+        "source_shadow",
+        "distorted_sentinel",
+        "glitch_hound"
+      ]
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w6_mq29"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w6_mq29",
+        "task_id": "climb_stair"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w6_mq29",
+        "task_id": "defeat_shadow_wave"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w6_mq29",
+        "task_id": "defeat_shadow_wave"
+      },
+      {
+        "type": "advance_quest_stage",
+        "quest_id": "w6_mq29",
+        "to_stage_id": "spire_arena"
+      }
+    ]
+  },
+  {
+    "id": "w6_mq29_memory_guard",
+    "description": "Defeat the Spire memory defenses.",
+    "trigger": {
+      "type": "encounter_victory",
+      "enemies": [
+        "memory_leak",
+        "nightmare_guard"
+      ]
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w6_mq29"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w6_mq29",
+        "task_id": "defeat_shadow_wave"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w6_mq29",
+        "task_id": "defeat_memory_guard"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w6_mq29",
+        "task_id": "defeat_memory_guard"
+      },
+      {
+        "type": "show_message",
+        "message": "The nightmare faces dissolve. Memory remains, but it no longer gets a vote."
+      }
+    ]
+  },
+  {
+    "id": "w6_mq29_reach_center",
+    "description": "Reach the Center.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "source_center"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w6_mq29"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w6_mq29",
+        "task_id": "defeat_memory_guard"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w6_mq29",
+        "task_id": "reach_center"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w6_mq29",
+        "task_id": "reach_center"
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w6_mq29"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w6_mq29_complete"
+      },
+      {
+        "type": "start_quest",
+        "quest_id": "w6_mq30"
+      },
+      {
+        "type": "track_quest",
+        "quest_id": "w6_mq30"
+      },
+      {
+        "type": "show_message",
+        "message": "Quest Complete: The Spire of Thought\n\nThe Starborn step onto the white ocean. Vale waits at the center, serene and certain."
+      }
+    ]
+  },
+  {
+    "id": "w6_mq30_confront_vale",
+    "description": "Confront Vale.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w6_mq30_confront_vale"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w6_mq30"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w6_mq30",
+        "task_id": "confront_vale"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w6_mq30",
+        "task_id": "confront_vale"
+      },
+      {
+        "type": "show_message",
+        "message": "Vale: I will melt the ice. Everyone becomes part of the current. No one is ever alone again.\n\nNova: You are not saving them. You are dissolving them."
+      }
+    ]
+  },
+  {
+    "id": "w6_mq30_defeat_vale",
+    "description": "Defeat the Soloist.",
+    "trigger": {
+      "type": "encounter_victory",
+      "enemies": [
+        "ascended_vale"
+      ]
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w6_mq30"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w6_mq30",
+        "task_id": "confront_vale"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w6_mq30",
+        "task_id": "defeat_vale"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w6_mq30",
+        "task_id": "defeat_vale"
+      },
+      {
+        "type": "advance_quest_stage",
+        "quest_id": "w6_mq30",
+        "to_stage_id": "singularity"
+      },
+      {
+        "type": "show_message",
+        "message": "Vale's human outline cracks like porcelain. Blinding geometry unfolds from inside it. The Silence begins."
+      }
+    ]
+  },
+  {
+    "id": "w6_mq30_defeat_god",
+    "description": "Defeat the Ascended god-form.",
+    "trigger": {
+      "type": "encounter_victory",
+      "enemies": [
+        "ascended_god"
+      ]
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w6_mq30"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w6_mq30",
+        "task_id": "defeat_vale"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w6_mq30",
+        "task_id": "defeat_god_form"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w6_mq30",
+        "task_id": "defeat_god_form"
+      },
+      {
+        "type": "advance_quest_stage",
+        "quest_id": "w6_mq30",
+        "to_stage_id": "final_note"
+      },
+      {
+        "type": "show_message",
+        "message": "The god-form collapses. The universe keeps breaking. Vale's code is still blocking the signal, and the Key is the only route left."
+      }
+    ]
+  },
+  {
+    "id": "w6_mq30_tune_world",
+    "description": "Use the Key and tune the world.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w6_mq30_tune_world"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w6_mq30"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w6_mq30",
+        "task_id": "defeat_god_form"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w6_mq30",
+        "task_id": "tune_world"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w6_mq30",
+        "task_id": "use_key"
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w6_mq30",
+        "task_id": "tune_world"
+      },
+      {
+        "type": "unlock_skill",
+        "skill_id": "source_art_tune_world"
+      },
+      {
+        "type": "play_cinematic",
+        "scene_id": "scene_w6_final_note",
+        "on_complete": [
+          {
+            "type": "complete_quest",
+            "quest_id": "w6_mq30"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w6_mq30_complete"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_game_complete"
+          },
+          {
+            "type": "warp",
+            "room_id": "source_new_world"
+          },
+          {
+            "type": "play_cinematic",
+            "scene_id": "scene_w6_epilogue_credits",
+            "on_complete": [
+              {
+                "type": "set_milestone",
+                "milestone": "ms_credits_seen"
+              },
+              {
+                "type": "untrack_quest"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "w6_sq29_aethel_grave",
+    "description": "Find the Aethel Grave.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w6_sq29_aethel_grave"
+    },
+    "conditions": [
+      {
+        "type": "quest_not_completed",
+        "quest_id": "w6_sq29"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_quest",
+        "quest_id": "w6_sq29"
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w6_sq29",
+        "task_id": "find_grave"
+      },
+      {
+        "type": "unlock_skill",
+        "skill_id": "orion_ancestral_grace"
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w6_sq29"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w6_ancestral_grace_unlocked"
+      },
+      {
+        "type": "show_message",
+        "message": "The Aethel Grave complete. Orion hears the first Architects resting inside the current, not erased but carried. Ancestral Grace unlocked."
+      }
+    ]
+  },
+  {
+    "id": "w6_sq30_final_scavenge",
+    "description": "Recover the future Astra hull.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w6_sq30_final_scavenge"
+    },
+    "conditions": [
+      {
+        "type": "quest_not_completed",
+        "quest_id": "w6_sq30"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_quest",
+        "quest_id": "w6_sq30"
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w6_sq30",
+        "task_id": "recover_hull"
+      },
+      {
+        "type": "give_item",
+        "item_id": "starborn_mod",
+        "quantity": 1
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w6_sq30"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w6_final_scavenge_complete"
+      },
+      {
+        "type": "show_message",
+        "message": "The Final Scavenge complete. Zeke extracts a future fragment of the Astra and turns it into the Starborn mod."
+      }
+    ]
+  },
+  {
+    "id": "w6_replay_epilogue",
+    "description": "Replay the epilogue.",
+    "repeatable": true,
+    "trigger": {
+      "type": "player_action",
+      "action": "w6_replay_epilogue"
+    },
+    "conditions": [
+      {
+        "type": "milestone_set",
+        "milestone": "ms_game_complete"
+      }
+    ],
+    "actions": [
+      {
+        "type": "play_cinematic",
+        "scene_id": "scene_w6_epilogue_credits"
+      }
+    ]
   }
 ]

@@ -4,7 +4,7 @@
   "hubs": [
     {
       "id": "hub_3_sector9",
-      "name": "Sector 9 Ruins",
+      "name": "Jungle Ruins",
       "nodes": [
         {
           "id": "sector9_landing",
@@ -19,6 +19,119 @@
             }
           ],
           "npcs": ["zeke"],
+          "exits": ["razor_vine_path", "tideglass_beach"]
+        },
+        {
+          "id": "razor_vine_path",
+          "name": "Razor-Vine Path",
+          "description": "A narrow trail choked with glowing, thorny vines. The air is thick with purple spores.",
+          "interactions": [],
+          "combat_zone": true,
+          "enemy_pool": ["echo_borer", "shard_hound", "spore_spitter", "razor_vine"],
+          "exits": ["sector9_landing", "canopy_ridge"]
+        },
+        {
+          "id": "tideglass_beach",
+          "name": "Tideglass Beach",
+          "description": "A hidden cove where the jungle meets a glowing, resonant lake. Shimmering tide pools hum softly.",
+          "interactions": [
+            {
+              "id": "fish_spot",
+              "type": "examine",
+              "text": "The glowing water is calm here, perfect for fishing.",
+              "action": "fish_tideglass"
+            }
+          ],
+          "exits": ["sector9_landing", "canopy_ridge"]
+        },
+        {
+          "id": "canopy_ridge",
+          "name": "Canopy Ridge",
+          "description": "A wind-carved stone shelf high above the jungle. The Planetary Shield curves across the sky above.",
+          "boss_arena": true,
+          "boss_id": "the_beast",
+          "exits": ["razor_vine_path", "tideglass_beach", "temple_gate"]
+        },
+        {
+          "id": "temple_gate",
+          "name": "Temple Gate",
+          "description": "A massive stone door, perfectly smooth and engraved with glowing cymatic patterns.",
+          "interactions": [
+            {
+              "id": "temple_lock",
+              "type": "examine",
+              "text": "A smooth stone resonator lock. It has a slot shaped like the Chime.",
+              "action": "use_chime_on_gate"
+            }
+          ],
+          "exits": ["canopy_ridge"]
+        }
+      ]
+    },
+    {
+      "id": "hub_4_facility",
+      "name": "Sector 9 Ruins",
+      "nodes": [
+        {
+          "id": "hall_of_echoes",
+          "name": "Hall of Echoes",
+          "description": "A grand corridor of clean, ancient geometry. Shifting light-murals on the walls depict the history of the Architects.",
+          "interactions": [
+            {
+              "id": "murals",
+              "type": "examine",
+              "text": "Shifting murals made of light. They shimmer when you approach.",
+              "action": "inspect_murals"
+            }
+          ],
+          "exits": ["stasis_chamber"]
+        },
+        {
+          "id": "stasis_chamber",
+          "name": "Stasis Chamber",
+          "description": "A circular room dominated by a single, humming pod. Shimmering rings of energy hover around it.",
+          "interactions": [
+            {
+              "id": "stasis_pod",
+              "type": "examine",
+              "text": "A sealed pod containing a sleeping figure. Shimmering stasis rings hover out of alignment.",
+              "action": "inspect_stasis_pod"
+            }
+          ],
+          "exits": ["hall_of_echoes", "source_gate"]
+        },
+        {
+          "id": "source_gate",
+          "name": "Source Gate",
+          "description": "A giant barrier of humming energy blocking access to the hangar.",
+          "interactions": [
+            {
+              "id": "resonator_lock",
+              "type": "examine",
+              "text": "A massive acoustic lock. It vibrates with three discordant frequencies.",
+              "action": "inspect_resonator"
+            }
+          ],
+          "exits": ["stasis_chamber", "hangar_bay"]
+        },
+        {
+          "id": "hangar_bay",
+          "name": "Hangar Bay",
+          "description": "A vast underground cavern open to the sky. The Astra sits silent on the launch pad.",
+          "interactions": [
+            {
+              "id": "astra_ship",
+              "type": "examine",
+              "text": "The Astra. Her hull is scorched and her bridge systems are dark.",
+              "action": "inspect_astra"
+            }
+          ],
+          "exits": ["source_gate", "the_sky"]
+        },
+        {
+          "id": "the_sky",
+          "name": "The Sky",
+          "description": "Flying high above the cloud layer, approaching the violet glow of the Planetary Shield.",
           "exits": []
         }
       ]

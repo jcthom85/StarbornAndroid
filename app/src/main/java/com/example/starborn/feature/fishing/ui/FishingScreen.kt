@@ -2,8 +2,15 @@ package com.example.starborn.feature.fishing.ui
 
 import android.hardware.SensorManager
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.background
@@ -82,8 +89,15 @@ fun FishingScreen(
             when (event) {
                 FishingEvent.Nibble -> haptics.nibble()
                 FishingEvent.Bite -> haptics.bite()
+                FishingEvent.Warning -> haptics.warning()
+                FishingEvent.LineSnap -> haptics.lineSnap()
+                FishingEvent.CatchSuccess -> haptics.catchSuccess()
             }
         }
+    }
+
+    LaunchedEffect(hookDetector, uiState.hookSensitivity) {
+        hookDetector.threshold = uiState.hookSensitivity.thresholdValue
     }
 
     LaunchedEffect(hookDetector) {
@@ -141,6 +155,7 @@ fun FishingScreen(
                             state = uiState,
                             onSelectRod = viewModel::selectRod,
                             onSelectLure = viewModel::selectLure,
+                            onSelectSensitivity = viewModel::selectSensitivity,
                             onStart = viewModel::startFishing,
                             onCancel = onBack,
                             highContrastMode = highContrastMode,
@@ -318,6 +333,7 @@ private fun FishingSetupSection(
     state: FishingUiState,
     onSelectRod: (com.example.starborn.domain.fishing.FishingRod) -> Unit,
     onSelectLure: (com.example.starborn.domain.fishing.FishingLure) -> Unit,
+    onSelectSensitivity: (com.example.starborn.feature.fishing.viewmodel.HookSensitivity) -> Unit,
     onStart: () -> Unit,
     onCancel: () -> Unit,
     highContrastMode: Boolean,
@@ -383,6 +399,60 @@ private fun FishingSetupSection(
             }
         }
 
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Text("Jerk Detection Sensitivity", style = MaterialTheme.typography.labelLarge)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                com.example.starborn.feature.fishing.viewmodel.HookSensitivity.entries.forEach { sensitivity ->
+                    val selected = state.hookSensitivity == sensitivity
+                    val surfaceColor = if (selected) {
+                        if (highContrastMode) Color(0xFF1D5A91) else MaterialTheme.colorScheme.primaryContainer
+                    } else {
+                        if (highContrastMode) Color(0xFF111A25) else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                    }
+                    val textColor = if (selected) {
+                        if (highContrastMode) Color.White else MaterialTheme.colorScheme.onPrimaryContainer
+                    } else {
+                        if (highContrastMode) Color.White.copy(alpha = 0.6f) else MaterialTheme.colorScheme.onSurfaceVariant
+                    }
+                    val border = if (selected) BorderStroke(1.dp, if (highContrastMode) Color(0xFF8AC4FF) else MaterialTheme.colorScheme.primary) else null
+                    Surface(
+                        modifier = Modifier
+                            .weight(1f)
+                            .clickable { onSelectSensitivity(sensitivity) },
+                        shape = RoundedCornerShape(10.dp),
+                        color = surfaceColor,
+                        border = border
+                    ) {
+                        Box(
+                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 8.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                                Text(
+                                    text = sensitivity.name,
+                                    fontWeight = FontWeight.Bold,
+                                    style = MaterialTheme.typography.labelLarge,
+                                    color = textColor
+                                )
+                                Text(
+                                    text = when(sensitivity) {
+                                        com.example.starborn.feature.fishing.viewmodel.HookSensitivity.HIGH -> "3.0 m/s²"
+                                        com.example.starborn.feature.fishing.viewmodel.HookSensitivity.MEDIUM -> "4.5 m/s²"
+                                        com.example.starborn.feature.fishing.viewmodel.HookSensitivity.LOW -> "6.0 m/s²"
+                                    },
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = textColor.copy(alpha = 0.75f)
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             Button(onClick = onStart, enabled = state.selectedRod != null && state.selectedLure != null, modifier = Modifier.heightIn(min = buttonHeight)) {
                 Text("Cast Line")
@@ -414,7 +484,7 @@ private fun FishingWaitingSection(
             color = if (highContrastMode) Color.White else MaterialTheme.colorScheme.onSurface
         )
         LinearProgressIndicator(
-            progress = progress,
+            progress = { progress },
             modifier = Modifier.fillMaxWidth(),
             trackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
         )
@@ -441,6 +511,18 @@ private fun FishingHookSection(
 ) {
     val remaining = hookState?.timeRemainingMs ?: 0L
     val seconds = remaining.coerceAtLeast(0L) / 1000f
+
+    val infiniteTransition = rememberInfiniteTransition(label = "arrowBypass")
+    val arrowOffset by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = -35f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(800, easing = LinearEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "arrowOffset"
+    )
+
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -451,8 +533,35 @@ private fun FishingHookSection(
             style = MaterialTheme.typography.titleMedium,
             color = if (highContrastMode) Color.White else MaterialTheme.colorScheme.onSurface
         )
+
+        // Bouncing Upward Arrow Animation
+        Box(
+            modifier = Modifier
+                .height(80.dp)
+                .width(60.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Canvas(modifier = Modifier.fillMaxSize()) {
+                val path = androidx.compose.ui.graphics.Path().apply {
+                    val startY = size.height * 0.7f + arrowOffset
+                    moveTo(size.width * 0.1f, startY)
+                    lineTo(size.width * 0.5f, startY - 30f)
+                    lineTo(size.width * 0.9f, startY)
+
+                    moveTo(size.width * 0.1f, startY + 20f)
+                    lineTo(size.width * 0.5f, startY - 10f)
+                    lineTo(size.width * 0.9f, startY + 20f)
+                }
+                drawPath(
+                    path = path,
+                    color = if (highContrastMode) Color(0xFF8AC4FF) else Color(0xFF1D8BF2),
+                    style = Stroke(width = 8f, cap = androidx.compose.ui.graphics.StrokeCap.Round, join = androidx.compose.ui.graphics.StrokeJoin.Round)
+                )
+            }
+        }
+
         Text(
-            text = "Jerk the device upward${if (hookState?.fallbackVisible == true) " or tap below" else ""}.",
+            text = "Jerk the device upward quickly as if pulling a fishing rod, ${if (hookState?.fallbackVisible == true) "or tap the button below." else "to set the hook!"}",
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Center,
             color = if (highContrastMode) Color.White.copy(alpha = 0.8f) else MaterialTheme.colorScheme.onSurfaceVariant

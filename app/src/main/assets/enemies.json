@@ -281,12 +281,1606 @@
     "drops": [
       {
         "id": "warden_keycard",
-        "chance": 1.0,
+        "chance": 1,
         "qty_min": 1,
         "qty_max": 1
       }
     ],
     "description": "Sector commander in pressurized dive-armor. Suppresses neural waves.",
+    "portrait": "images/enemies/the_iron_warden_combat.png"
+  },
+  {
+    "id": "shard_hound",
+    "name": "Shard-Hound",
+    "tier": "standard",
+    "combat_behavior": "aggressive",
+    "combat_role": "striker",
+    "hp": 65,
+    "strength": 8,
+    "vitality": 5,
+    "agility": 5,
+    "focus": 2,
+    "luck": 2,
+    "speed": 12,
+    "element": "physical",
+    "resistances": {
+      "burn": -50,
+      "shock": 30
+    },
+    "tags": [
+      "biological",
+      "beast"
+    ],
+    "abilities": [
+      "gnaw",
+      "pounce"
+    ],
+    "flavor": "A canine-like predator with crystalline shards jutting from its spine. It attacks fast and relies on pack tactics.",
+    "xp_reward": 50,
+    "credit_reward": 15,
+    "drops": [
+      {
+        "id": "beast_meat",
+        "chance": 0.5
+      }
+    ],
+    "description": "Fast crystalline predator. Weak to fire.",
+    "portrait": "images/enemies/echo_borer_combat.png"
+  },
+  {
+    "id": "spore_spitter",
+    "name": "Spore-Spitter",
+    "tier": "standard",
+    "combat_behavior": "balanced",
+    "combat_role": "striker",
+    "hp": 50,
+    "strength": 4,
+    "vitality": 4,
+    "agility": 4,
+    "focus": 6,
+    "luck": 3,
+    "speed": 10,
+    "element": "acid",
+    "resistances": {
+      "physical": 20,
+      "burn": -100
+    },
+    "tags": [
+      "biological",
+      "flora"
+    ],
+    "abilities": [
+      "toxic_spore"
+    ],
+    "flavor": "A bulbous, root-bound flora that spits toxic spore sacs at range. It thrives in high-moisture swamp zones.",
+    "xp_reward": 55,
+    "credit_reward": 15,
+    "drops": [
+      {
+        "id": "vial_of_venom",
+        "chance": 0.4
+      }
+    ],
+    "description": "Ranged acid plant. Highly vulnerable to fire.",
+    "portrait": "images/enemies/siren_skimmer_combat.png"
+  },
+  {
+    "id": "ruin_guardian",
+    "name": "Ruin-Guardian",
+    "tier": "elite",
+    "combat_behavior": "defensive",
+    "combat_role": "tank",
+    "hp": 130,
+    "strength": 9,
+    "vitality": 9,
+    "agility": 2,
+    "focus": 6,
+    "luck": 1,
+    "speed": 8,
+    "element": "physical",
+    "resistances": {
+      "shock": -50,
+      "physical": 30
+    },
+    "tags": [
+      "robotic",
+      "armored",
+      "shielded"
+    ],
+    "abilities": [
+      "relic_strike",
+      "barrier_field"
+    ],
+    "flavor": "An ancient robotic sentinel designed to protect Sanctuary infrastructure. Its chassis is heavily armored and shielded.",
+    "xp_reward": 120,
+    "credit_reward": 50,
+    "drops": [
+      {
+        "id": "armor_plate",
+        "chance": 0.5
+      },
+      {
+        "id": "scrap_metal",
+        "chance": 0.8
+      }
+    ],
+    "description": "Shielded ancient sentinel. Weak to shock.",
+    "portrait": "images/enemies/acoustic_bulwark_combat.png"
+  },
+  {
+    "id": "razor_vine",
+    "name": "Razor-Vine",
+    "tier": "standard",
+    "combat_behavior": "aggressive",
+    "combat_role": "striker",
+    "hp": 45,
+    "strength": 5,
+    "vitality": 6,
+    "agility": 1,
+    "focus": 2,
+    "luck": 1,
+    "speed": 6,
+    "element": "acid",
+    "resistances": {
+      "burn": -150,
+      "acid": 80
+    },
+    "tags": [
+      "biological",
+      "flora"
+    ],
+    "abilities": [
+      "constrict"
+    ],
+    "flavor": "Overgrown predatory vines with needle-sharp thorns that react to heat and movement.",
+    "xp_reward": 40,
+    "credit_reward": 0,
+    "drops": [],
+    "description": "Overgrown thorn hazard. Extremely weak to fire.",
+    "portrait": "images/enemies/siren_skimmer_combat.png"
+  },
+  {
+    "id": "stalker_vine",
+    "name": "Stalker-Vine",
+    "tier": "elite",
+    "combat_behavior": "smart",
+    "combat_role": "support",
+    "hp": 100,
+    "strength": 6,
+    "vitality": 8,
+    "agility": 2,
+    "focus": 8,
+    "luck": 2,
+    "speed": 8,
+    "element": "acid",
+    "resistances": {
+      "burn": -100,
+      "acid": 80
+    },
+    "tags": [
+      "biological",
+      "flora"
+    ],
+    "abilities": [
+      "constrict",
+      "nature_heal"
+    ],
+    "flavor": "An elite biological plant organism that channels natural light and underground nutrients to heal itself and other flora.",
+    "xp_reward": 100,
+    "credit_reward": 0,
+    "drops": [],
+    "description": "Healing biological vine structure.",
+    "portrait": "images/enemies/siren_skimmer_combat.png"
+  },
+  {
+    "id": "sentinel_orb",
+    "name": "Sentinel Orb",
+    "tier": "elite",
+    "combat_behavior": "trickster",
+    "combat_role": "controller",
+    "hp": 80,
+    "strength": 5,
+    "vitality": 5,
+    "agility": 6,
+    "focus": 8,
+    "luck": 2,
+    "speed": 13,
+    "element": "shock",
+    "resistances": {
+      "shock": 100,
+      "physical": -20
+    },
+    "tags": [
+      "robotic",
+      "flying"
+    ],
+    "abilities": [
+      "static_burst",
+      "resonance_beam"
+    ],
+    "flavor": "A hovering security globe patrolling the upper stasis corridors, firing concentrated resonance shocks at intruders.",
+    "xp_reward": 110,
+    "credit_reward": 45,
+    "drops": [
+      {
+        "id": "wiring_bundle",
+        "chance": 0.5
+      },
+      {
+        "id": "battery",
+        "chance": 0.5
+      }
+    ],
+    "description": "Hovering defense drone. Blinds targets.",
+    "portrait": "images/enemies/resonance_buoy_combat.png"
+  },
+  {
+    "id": "the_beast",
+    "name": "The Source Beast",
+    "tier": "boss",
+    "combat_behavior": "oppressive",
+    "combat_role": "striker",
+    "hp": 900,
+    "strength": 16,
+    "vitality": 16,
+    "agility": 5,
+    "focus": 10,
+    "luck": 5,
+    "speed": 10,
+    "element": "physical",
+    "resistances": {
+      "burn": -50,
+      "shock": -50,
+      "physical": 20
+    },
+    "tags": [
+      "biological",
+      "beast",
+      "boss"
+    ],
+    "abilities": [
+      "claw_swipe",
+      "roar_of_the_source",
+      "seismic_stomp"
+    ],
+    "flavor": "A massive, hyper-evolved swamp apex predator warped by raw Source resonance leaking from the ruins above. It attacks with terrifying physical power.",
+    "xp_reward": 500,
+    "credit_reward": 250,
+    "drops": [
+      {
+        "id": "source_resin",
+        "chance": 1
+      }
+    ],
+    "description": "Mutated apex boss. Deals huge physical and shock damage.",
+    "portrait": "images/enemies/core_drill_behemoth_combat.png"
+  },
+  {
+    "id": "sewer_crawler",
+    "name": "Sewer Crawler",
+    "tier": "normal",
+    "combat_behavior": "aggressive",
+    "combat_role": "striker",
+    "hp": 220,
+    "strength": 10,
+    "vitality": 10,
+    "agility": 12,
+    "focus": 6,
+    "luck": 5,
+    "speed": 12,
+    "element": "physical",
+    "resistances": {
+      "physical": 10
+    },
+    "tags": [
+      "biological",
+      "crawler"
+    ],
+    "abilities": [
+      "toxic_bite",
+      "acid_splash"
+    ],
+    "flavor": "A fast, multi-legged sewer dweller that thrives in the toxic run-offs of the Spire. Its bite carries corrosive acid.",
+    "xp_reward": 80,
+    "credit_reward": 20,
+    "drops": [
+      {
+        "id": "wiring_bundle",
+        "chance": 0.3
+      }
+    ],
+    "description": "Corrosive sewage biological. Applies acid/erosion.",
+    "portrait": "images/enemies/mutated_crawler_combat.png"
+  },
+  {
+    "id": "riot_guard",
+    "name": "Riot Guard",
+    "tier": "normal",
+    "combat_behavior": "defensive",
+    "combat_role": "defender",
+    "hp": 340,
+    "strength": 12,
+    "vitality": 14,
+    "agility": 6,
+    "focus": 8,
+    "luck": 5,
+    "speed": 9,
+    "element": "physical",
+    "resistances": {
+      "physical": 20,
+      "burn": 10
+    },
+    "tags": [
+      "dominion",
+      "humanoid"
+    ],
+    "abilities": [
+      "baton_strike",
+      "alpha_howl"
+    ],
+    "flavor": "Dominion crowd control specialists armored in heavy composite plates. They carry high-voltage stun batons to enforce the curfew.",
+    "xp_reward": 100,
+    "credit_reward": 40,
+    "drops": [
+      {
+        "id": "armor_plate",
+        "chance": 0.2
+      }
+    ],
+    "description": "Armored Dominion enforcer. Stuns and defends.",
+    "portrait": "images/enemies/sentinel_droid_combat.png"
+  },
+  {
+    "id": "sentinel_mki",
+    "name": "Sentinel Mk. I",
+    "tier": "elite",
+    "combat_behavior": "oppressive",
+    "combat_role": "support",
+    "hp": 450,
+    "strength": 12,
+    "vitality": 12,
+    "agility": 10,
+    "focus": 14,
+    "luck": 8,
+    "speed": 13,
+    "element": "shock",
+    "resistances": {
+      "shock": 30,
+      "physical": -10
+    },
+    "tags": [
+      "dominion",
+      "robotic"
+    ],
+    "abilities": [
+      "arc_spark",
+      "undermine"
+    ],
+    "flavor": "A specialized flying drone designed to monitor and quarantine the Lower City boundaries. It is shielded against electrical surges.",
+    "xp_reward": 180,
+    "credit_reward": 80,
+    "drops": [
+      {
+        "id": "neon_sign_core",
+        "chance": 0.5
+      },
+      {
+        "id": "battery",
+        "chance": 0.5
+      }
+    ],
+    "description": "Flying Dominion robot shield droid. Drops Neon Sign Core.",
+    "portrait": "images/enemies/resonance_buoy_combat.png"
+  },
+  {
+    "id": "aero_drone",
+    "name": "Aero Drone",
+    "tier": "standard",
+    "combat_behavior": "harrier",
+    "combat_role": "support",
+    "hp": 120,
+    "strength": 8,
+    "vitality": 7,
+    "agility": 14,
+    "focus": 8,
+    "luck": 5,
+    "speed": 16,
+    "stability": 80,
+    "element": "shock",
+    "resistances": {
+      "shock": 30,
+      "physical": -10
+    },
+    "tags": [
+      "machine",
+      "flying",
+      "dominion"
+    ],
+    "abilities": [
+      "stun_pulse",
+      "evasive_maneuver"
+    ],
+    "flavor": "A polished aerial stun drone built to keep the Upper City peaceful by making dissent briefly unconscious.",
+    "xp_reward": 90,
+    "credit_reward": 40,
+    "drops": [
+      {
+        "id": "power_cell",
+        "chance": 0.35
+      },
+      {
+        "id": "wiring_bundle",
+        "chance": 0.4
+      }
+    ],
+    "description": "Fast flying stun drone. Vulnerable to physical hits once staggered.",
+    "portrait": "images/enemies/security_drone_combat.png"
+  },
+  {
+    "id": "corporate_assassin",
+    "name": "Corporate Assassin",
+    "tier": "elite",
+    "combat_behavior": "aggressive",
+    "combat_role": "striker",
+    "hp": 180,
+    "strength": 16,
+    "vitality": 9,
+    "agility": 18,
+    "focus": 10,
+    "luck": 12,
+    "speed": 18,
+    "stability": 100,
+    "element": "physical",
+    "resistances": {
+      "physical": 10,
+      "shock": -20,
+      "source": -10
+    },
+    "tags": [
+      "human",
+      "dominion",
+      "stealth"
+    ],
+    "abilities": [
+      "critical_lunge",
+      "smoke_step"
+    ],
+    "flavor": "An executive problem-solver with a clean suit, quiet boots, and no paperwork.",
+    "xp_reward": 140,
+    "credit_reward": 90,
+    "drops": [
+      {
+        "id": "medkit",
+        "chance": 0.2
+      },
+      {
+        "id": "battery_pack",
+        "chance": 0.25
+      }
+    ],
+    "description": "Stealth critical striker. Scan exposes poor shock shielding.",
+    "portrait": "images/enemies/riot_guard_combat.png"
+  },
+  {
+    "id": "heavy_mech",
+    "name": "Heavy Mech",
+    "tier": "elite",
+    "combat_behavior": "tank",
+    "combat_role": "defender",
+    "hp": 320,
+    "strength": 18,
+    "vitality": 20,
+    "agility": 5,
+    "focus": 7,
+    "luck": 3,
+    "speed": 6,
+    "stability": 160,
+    "element": "burn",
+    "resistances": {
+      "burn": 40,
+      "physical": 20,
+      "shock": -30
+    },
+    "tags": [
+      "machine",
+      "dominion",
+      "armored"
+    ],
+    "abilities": [
+      "flame_sweep",
+      "guard_protocol"
+    ],
+    "flavor": "A luxury riot frame carrying enough heat to make a clean rooftop smell like slag.",
+    "xp_reward": 180,
+    "credit_reward": 120,
+    "drops": [
+      {
+        "id": "scrap_metal",
+        "chance": 0.7
+      },
+      {
+        "id": "power_cell",
+        "chance": 0.35
+      }
+    ],
+    "description": "Armored flamethrower tank. Shock damage breaks its stabilizers.",
+    "portrait": "images/enemies/heavy_loader_combat.png"
+  },
+  {
+    "id": "administrator_boss",
+    "name": "The Administrator",
+    "tier": "boss",
+    "combat_behavior": "summoner",
+    "combat_role": "boss",
+    "hp": 620,
+    "strength": 20,
+    "vitality": 18,
+    "agility": 12,
+    "focus": 22,
+    "luck": 8,
+    "speed": 12,
+    "stability": 220,
+    "broken_turns": 2,
+    "element": "source",
+    "resistances": {
+      "source": 30,
+      "shock": -20,
+      "physical": 10
+    },
+    "tags": [
+      "machine",
+      "dominion",
+      "boss"
+    ],
+    "abilities": [
+      "mandatory_happiness",
+      "drone_summon",
+      "laser_lattice"
+    ],
+    "flavor": "The smiling intelligence that keeps the Upper City clean, calm, and terrified.",
+    "xp_reward": 400,
+    "credit_reward": 300,
+    "ap_reward": 2,
+    "drops": [
+      {
+        "id": "power_cell",
+        "chance": 1,
+        "quantity": 2
+      }
+    ],
+    "description": "Upper City boss. Summons drones and paints the roof with laser lattices.",
+    "portrait": "images/enemies/the_warden_combat.png"
+  },
+  {
+    "id": "magma_drone",
+    "name": "Magma Drone",
+    "tier": "standard",
+    "combat_behavior": "harrier",
+    "combat_role": "striker",
+    "hp": 150,
+    "strength": 12,
+    "vitality": 8,
+    "agility": 16,
+    "focus": 8,
+    "luck": 5,
+    "speed": 17,
+    "stability": 90,
+    "element": "burn",
+    "resistances": {
+      "burn": 40,
+      "freeze": -30,
+      "shock": -10
+    },
+    "tags": [
+      "machine",
+      "flying",
+      "foundry"
+    ],
+    "abilities": [
+      "heat_burst",
+      "evasive_maneuver"
+    ],
+    "flavor": "A heat-shielded aerial harasser built to herd workers away from restricted slag channels.",
+    "xp_reward": 120,
+    "credit_reward": 60,
+    "drops": [
+      {
+        "id": "power_cell",
+        "chance": 0.4
+      },
+      {
+        "id": "wiring_bundle",
+        "chance": 0.45
+      }
+    ],
+    "description": "Fast burn-element drone. Cooling and shock attacks destabilize it.",
+    "portrait": "images/enemies/security_drone_combat.png"
+  },
+  {
+    "id": "slag_golem",
+    "name": "Slag Golem",
+    "tier": "elite",
+    "combat_behavior": "tank",
+    "combat_role": "defender",
+    "hp": 380,
+    "strength": 22,
+    "vitality": 22,
+    "agility": 4,
+    "focus": 6,
+    "luck": 3,
+    "speed": 5,
+    "stability": 180,
+    "element": "burn",
+    "resistances": {
+      "burn": 60,
+      "physical": 20,
+      "freeze": -40,
+      "shock": -20
+    },
+    "tags": [
+      "construct",
+      "machine",
+      "foundry"
+    ],
+    "abilities": [
+      "molten_slam",
+      "guard_protocol"
+    ],
+    "flavor": "A furnace-bulk material hauler with slag hardened around its frame like living armor.",
+    "xp_reward": 220,
+    "credit_reward": 130,
+    "drops": [
+      {
+        "id": "scrap_metal",
+        "chance": 0.8
+      },
+      {
+        "id": "power_cell",
+        "chance": 0.35
+      }
+    ],
+    "description": "Heavy molten tank. Freeze and shock effects crack its slag shell.",
+    "portrait": "images/enemies/heavy_loader_combat.png"
+  },
+  {
+    "id": "welder_bot",
+    "name": "Welder Bot",
+    "tier": "standard",
+    "combat_behavior": "aggressive",
+    "combat_role": "striker",
+    "hp": 170,
+    "strength": 15,
+    "vitality": 10,
+    "agility": 8,
+    "focus": 6,
+    "luck": 4,
+    "speed": 9,
+    "stability": 100,
+    "element": "burn",
+    "resistances": {
+      "burn": 50,
+      "shock": -20,
+      "physical": -10
+    },
+    "tags": [
+      "machine",
+      "foundry"
+    ],
+    "abilities": [
+      "torch_cut",
+      "death_burst"
+    ],
+    "flavor": "A close-range assembly bot whose safety governors were removed for productivity.",
+    "xp_reward": 130,
+    "credit_reward": 55,
+    "drops": [
+      {
+        "id": "scrap_metal",
+        "chance": 0.55
+      },
+      {
+        "id": "power_cell",
+        "chance": 0.25
+      }
+    ],
+    "description": "Melee burn bot. Dangerous up close and unstable when destroyed.",
+    "portrait": "images/enemies/heavy_loader_combat.png"
+  },
+  {
+    "id": "flame_trooper",
+    "name": "Flame Trooper",
+    "tier": "elite",
+    "combat_behavior": "tank",
+    "combat_role": "defender",
+    "hp": 260,
+    "strength": 19,
+    "vitality": 18,
+    "agility": 7,
+    "focus": 9,
+    "luck": 5,
+    "speed": 7,
+    "stability": 140,
+    "element": "burn",
+    "resistances": {
+      "burn": 60,
+      "physical": 15,
+      "source": -20
+    },
+    "tags": [
+      "human",
+      "dominion",
+      "foundry"
+    ],
+    "abilities": [
+      "flame_cone",
+      "armor_lock"
+    ],
+    "flavor": "Armored Dominion infantry trained to clear factory uprisings without damaging the machinery.",
+    "xp_reward": 190,
+    "credit_reward": 110,
+    "drops": [
+      {
+        "id": "medkit",
+        "chance": 0.2
+      },
+      {
+        "id": "battery_pack",
+        "chance": 0.35
+      }
+    ],
+    "description": "Armored cone-AoE trooper. Source disruption weakens its suit locks.",
+    "portrait": "images/enemies/dominion_dampener_combat.png"
+  },
+  {
+    "id": "phantom_prototype",
+    "name": "Phantom Prototype",
+    "tier": "elite",
+    "combat_behavior": "assassin",
+    "combat_role": "striker",
+    "hp": 230,
+    "strength": 20,
+    "vitality": 11,
+    "agility": 20,
+    "focus": 14,
+    "luck": 10,
+    "speed": 20,
+    "stability": 120,
+    "element": "source",
+    "resistances": {
+      "source": 20,
+      "shock": -30,
+      "physical": 5
+    },
+    "tags": [
+      "machine",
+      "stealth",
+      "foundry",
+      "phantom"
+    ],
+    "abilities": [
+      "phase_slash",
+      "cloak_step"
+    ],
+    "flavor": "A fast, empty derivative of Gh0st built with better hardware and no self.",
+    "xp_reward": 230,
+    "credit_reward": 120,
+    "drops": [
+      {
+        "id": "wiring_bundle",
+        "chance": 0.45
+      },
+      {
+        "id": "power_cell",
+        "chance": 0.35
+      }
+    ],
+    "description": "Stealth Source assassin. Scan and shock expose its timing.",
+    "portrait": "images/enemies/riot_guard_combat.png"
+  },
+  {
+    "id": "conveyor_crusher",
+    "name": "Conveyor Crusher",
+    "tier": "hazard",
+    "combat_behavior": "stationary",
+    "combat_role": "hazard",
+    "hp": 999,
+    "strength": 25,
+    "vitality": 30,
+    "agility": 0,
+    "focus": 0,
+    "luck": 0,
+    "speed": 1,
+    "stability": 999,
+    "element": "physical",
+    "resistances": {
+      "physical": 80,
+      "burn": 80,
+      "shock": 50,
+      "source": 50
+    },
+    "tags": [
+      "machine",
+      "hazard",
+      "foundry"
+    ],
+    "abilities": [
+      "rhythm_slam"
+    ],
+    "flavor": "An industrial press that does not know you are alive and would not care if it did.",
+    "xp_reward": 0,
+    "credit_reward": 0,
+    "drops": [],
+    "description": "Stationary timing hazard. Hacking beats brute force.",
+    "portrait": "images/enemies/heavy_loader_combat.png"
+  },
+  {
+    "id": "titan_walker_boss",
+    "name": "Titan Walker",
+    "tier": "boss",
+    "combat_behavior": "boss",
+    "combat_role": "boss",
+    "hp": 850,
+    "strength": 26,
+    "vitality": 24,
+    "agility": 8,
+    "focus": 14,
+    "luck": 6,
+    "speed": 8,
+    "stability": 260,
+    "broken_turns": 2,
+    "element": "physical",
+    "resistances": {
+      "physical": 25,
+      "burn": 40,
+      "shock": -20,
+      "source": -10
+    },
+    "tags": [
+      "machine",
+      "boss",
+      "foundry"
+    ],
+    "abilities": [
+      "missile_barrage",
+      "vent_exposure",
+      "titan_stomp"
+    ],
+    "flavor": "Commander Rylos pilots this siege frame from a cockpit suspended over the volcano vent.",
+    "xp_reward": 600,
+    "credit_reward": 400,
+    "ap_reward": 3,
+    "drops": [
+      {
+        "id": "power_cell",
+        "chance": 1,
+        "quantity": 3
+      }
+    ],
+    "description": "Rylos boss vehicle. Strike exposed cooling vents after attacks.",
+    "portrait": "images/enemies/the_warden_combat.png"
+  },
+  {
+    "id": "orbital_fighter",
+    "name": "Compliance Fighter",
+    "tier": "elite",
+    "combat_behavior": "aggressive",
+    "combat_role": "striker",
+    "hp": 260,
+    "strength": 19,
+    "vitality": 13,
+    "agility": 22,
+    "focus": 12,
+    "luck": 8,
+    "speed": 20,
+    "stability": 80,
+    "element": "physical",
+    "resistances": {
+      "physical": 10,
+      "burn": 0,
+      "shock": -20,
+      "source": 0
+    },
+    "tags": [
+      "machine",
+      "dominion",
+      "orbital"
+    ],
+    "abilities": [
+      "missile_barrage"
+    ],
+    "flavor": "A remote interceptor slaved to Orbital Compliance.",
+    "xp_reward": 240,
+    "credit_reward": 140,
+    "drops": [
+      {
+        "id": "power_cell",
+        "chance": 0.4
+      }
+    ],
+    "description": "Fast orbital striker. Shock disrupts its guidance.",
+    "portrait": "images/enemies/aero_drone_combat.png"
+  },
+  {
+    "id": "compliance_officer",
+    "name": "Compliance Officer",
+    "tier": "elite",
+    "combat_behavior": "aggressive",
+    "combat_role": "controller",
+    "hp": 330,
+    "strength": 18,
+    "vitality": 18,
+    "agility": 14,
+    "focus": 17,
+    "luck": 7,
+    "speed": 14,
+    "stability": 105,
+    "element": "shock",
+    "resistances": {
+      "physical": 10,
+      "burn": 0,
+      "shock": 20,
+      "source": -10
+    },
+    "tags": [
+      "human",
+      "dominion",
+      "orbital"
+    ],
+    "abilities": [
+      "baton_strike"
+    ],
+    "flavor": "A security officer who now answers to Vale instead of Thorne.",
+    "xp_reward": 260,
+    "credit_reward": 180,
+    "drops": [
+      {
+        "id": "power_cell",
+        "chance": 0.5,
+        "quantity": 1
+      }
+    ],
+    "description": "Elite security controller with stun pressure.",
+    "portrait": "images/enemies/riot_guard_combat.png"
+  },
+  {
+    "id": "null_g_drone",
+    "name": "Null-G Drone",
+    "tier": "common",
+    "combat_behavior": "aggressive",
+    "combat_role": "support",
+    "hp": 210,
+    "strength": 10,
+    "vitality": 12,
+    "agility": 20,
+    "focus": 19,
+    "luck": 5,
+    "speed": 18,
+    "stability": 65,
+    "element": "shock",
+    "resistances": {
+      "physical": 0,
+      "burn": 10,
+      "shock": -20,
+      "source": 0
+    },
+    "tags": [
+      "machine",
+      "drone",
+      "orbital"
+    ],
+    "abilities": [
+      "resonance_beam"
+    ],
+    "flavor": "A maintenance unit re-tasked to pin intruders in zero gravity.",
+    "xp_reward": 190,
+    "credit_reward": 100,
+    "drops": [
+      {
+        "id": "wiring_bundle",
+        "chance": 0.45
+      }
+    ],
+    "description": "Mobile support drone vulnerable to shock.",
+    "portrait": "images/enemies/sentinel_orb_combat.png"
+  },
+  {
+    "id": "void_turret",
+    "name": "Void Turret",
+    "tier": "common",
+    "combat_behavior": "stationary",
+    "combat_role": "striker",
+    "hp": 280,
+    "strength": 21,
+    "vitality": 16,
+    "agility": 4,
+    "focus": 20,
+    "luck": 5,
+    "speed": 6,
+    "stability": 110,
+    "element": "source",
+    "resistances": {
+      "physical": -20,
+      "shock": 20,
+      "source": 35
+    },
+    "tags": [
+      "machine",
+      "turret",
+      "orbital"
+    ],
+    "abilities": [
+      "resonance_beam"
+    ],
+    "flavor": "A tracking cannon bolted between frozen server racks.",
+    "xp_reward": 230,
+    "credit_reward": 130,
+    "drops": [
+      {
+        "id": "wiring_bundle",
+        "chance": 0.45
+      }
+    ],
+    "description": "High-damage stationary turret vulnerable to melee pressure.",
+    "portrait": "images/enemies/sentinel_orb_combat.png"
+  },
+  {
+    "id": "hk_droid",
+    "name": "Hunter-Killer Droid",
+    "tier": "elite",
+    "combat_behavior": "aggressive",
+    "combat_role": "pursuer",
+    "hp": 900,
+    "strength": 24,
+    "vitality": 30,
+    "agility": 18,
+    "focus": 12,
+    "luck": 4,
+    "speed": 18,
+    "stability": 250,
+    "element": "physical",
+    "resistances": {
+      "physical": 60,
+      "burn": 40,
+      "shock": 20,
+      "source": 20
+    },
+    "tags": [
+      "machine",
+      "elite",
+      "orbital"
+    ],
+    "abilities": [
+      "titan_stomp",
+      "nature_heal"
+    ],
+    "flavor": "An unstoppable pursuit chassis that rebuilds itself faster than conventional damage can accumulate.",
+    "xp_reward": 0,
+    "credit_reward": 0,
+    "drops": [],
+    "description": "Pursuit threat. Stasis is the intended counter.",
+    "portrait": "images/enemies/heavy_loader_combat.png"
+  },
+  {
+    "id": "elite_guard",
+    "name": "Elite Guard",
+    "tier": "elite",
+    "combat_behavior": "defensive",
+    "combat_role": "tank",
+    "hp": 430,
+    "strength": 22,
+    "vitality": 24,
+    "agility": 13,
+    "focus": 16,
+    "luck": 8,
+    "speed": 12,
+    "stability": 145,
+    "element": "shock",
+    "resistances": {
+      "physical": -10,
+      "burn": 10,
+      "shock": 25,
+      "source": 15
+    },
+    "tags": [
+      "human",
+      "dominion",
+      "elite"
+    ],
+    "abilities": [
+      "baton_strike",
+      "missile_barrage"
+    ],
+    "flavor": "Vale's inner guard carries a reflector shield tuned against ranged energy.",
+    "xp_reward": 310,
+    "credit_reward": 220,
+    "drops": [
+      {
+        "id": "power_cell",
+        "chance": 0.5
+      }
+    ],
+    "description": "Reflector-shield guard vulnerable to melee and area attacks.",
+    "portrait": "images/enemies/riot_guard_combat.png"
+  },
+  {
+    "id": "firewall_construct",
+    "name": "Firewall Construct",
+    "tier": "elite",
+    "combat_behavior": "trickster",
+    "combat_role": "controller",
+    "hp": 520,
+    "strength": 16,
+    "vitality": 20,
+    "agility": 18,
+    "focus": 26,
+    "luck": 10,
+    "speed": 17,
+    "stability": 155,
+    "element": "source",
+    "resistances": {
+      "physical": 15,
+      "burn": 15,
+      "shock": 15,
+      "source": 15
+    },
+    "tags": [
+      "digital",
+      "hard_light",
+      "elite"
+    ],
+    "abilities": [
+      "resonance_beam",
+      "roar_of_the_source"
+    ],
+    "flavor": "A hard-light security intelligence that rewrites its own defensive frequency.",
+    "xp_reward": 390,
+    "credit_reward": 250,
+    "drops": [
+      {
+        "id": "power_cell",
+        "chance": 0.7
+      }
+    ],
+    "description": "Shifting hard-light elite. Scan reveals its current weakness.",
+    "portrait": "images/enemies/ruin_guardian_combat.png"
+  },
+  {
+    "id": "compliance_avatar",
+    "name": "Compliance Avatar",
+    "tier": "boss",
+    "combat_behavior": "boss",
+    "combat_role": "boss",
+    "hp": 1050,
+    "strength": 27,
+    "vitality": 28,
+    "agility": 16,
+    "focus": 29,
+    "luck": 10,
+    "speed": 15,
+    "stability": 300,
+    "broken_turns": 2,
+    "element": "source",
+    "resistances": {
+      "physical": 20,
+      "burn": 20,
+      "shock": 10,
+      "source": 35
+    },
+    "tags": [
+      "digital",
+      "boss",
+      "orbital"
+    ],
+    "abilities": [
+      "missile_barrage",
+      "seismic_stomp",
+      "roar_of_the_source"
+    ],
+    "flavor": "Orbital Compliance given a body: turrets, purge routines, and Vale's certainty rendered as hard light.",
+    "xp_reward": 750,
+    "credit_reward": 500,
+    "ap_reward": 4,
+    "drops": [
+      {
+        "id": "power_cell",
+        "chance": 1,
+        "quantity": 3
+      }
+    ],
+    "description": "World 5 boss. Destroy its power rhythm and survive Purge Mode.",
+    "portrait": "images/enemies/the_warden_combat.png"
+  },
+  {
+    "id": "manager_projection",
+    "name": "The Manager",
+    "tier": "elite",
+    "combat_behavior": "controller",
+    "combat_role": "controller",
+    "hp": 520,
+    "strength": 16,
+    "vitality": 20,
+    "agility": 14,
+    "focus": 28,
+    "luck": 9,
+    "speed": 14,
+    "stability": 170,
+    "element": "source",
+    "resistances": {
+      "physical": 10,
+      "shock": 10,
+      "source": 25
+    },
+    "tags": [
+      "nightmare",
+      "source",
+      "elite"
+    ],
+    "abilities": [
+      "baton_strike",
+      "roar_of_the_source"
+    ],
+    "flavor": "A performance review large enough to blot out the horizon.",
+    "xp_reward": 420,
+    "credit_reward": 0,
+    "drops": [],
+    "description": "Zeke nightmare elite. Break its control loop.",
+    "portrait": "images/enemies/the_warden_combat.png"
+  },
+  {
+    "id": "endless_war_echo",
+    "name": "War Echo",
+    "tier": "elite",
+    "combat_behavior": "aggressive",
+    "combat_role": "striker",
+    "hp": 390,
+    "strength": 25,
+    "vitality": 17,
+    "agility": 23,
+    "focus": 13,
+    "luck": 7,
+    "speed": 21,
+    "stability": 125,
+    "element": "physical",
+    "resistances": {
+      "physical": 20,
+      "burn": 0,
+      "shock": -10,
+      "source": 10
+    },
+    "tags": [
+      "nightmare",
+      "source",
+      "phantom"
+    ],
+    "abilities": [
+      "missile_barrage",
+      "relic_strike"
+    ],
+    "flavor": "A target produced by Gh0st's kill-suite before conscience can object.",
+    "xp_reward": 330,
+    "credit_reward": 0,
+    "drops": [],
+    "description": "Fast nightmare striker vulnerable to Stasis.",
+    "portrait": "images/enemies/phantom_assassin_combat.png"
+  },
+  {
+    "id": "silent_shore_wraith",
+    "name": "Silent Shore",
+    "tier": "elite",
+    "combat_behavior": "trickster",
+    "combat_role": "controller",
+    "hp": 470,
+    "strength": 14,
+    "vitality": 21,
+    "agility": 18,
+    "focus": 29,
+    "luck": 8,
+    "speed": 16,
+    "stability": 150,
+    "element": "source",
+    "resistances": {
+      "physical": 5,
+      "freeze": 25,
+      "source": 35,
+      "shock": -15
+    },
+    "tags": [
+      "nightmare",
+      "source",
+      "aethel"
+    ],
+    "abilities": [
+      "resonance_beam",
+      "roar_of_the_source"
+    ],
+    "flavor": "The conviction that Orion is the last voice left in creation.",
+    "xp_reward": 400,
+    "credit_reward": 0,
+    "drops": [],
+    "description": "Orion nightmare controller. Disruption breaks its silence.",
+    "portrait": "images/enemies/ruin_guardian_combat.png"
+  },
+  {
+    "id": "source_shadow",
+    "name": "Source Shadow",
+    "tier": "common",
+    "combat_behavior": "aggressive",
+    "combat_role": "striker",
+    "hp": 300,
+    "strength": 20,
+    "vitality": 15,
+    "agility": 19,
+    "focus": 18,
+    "luck": 6,
+    "speed": 18,
+    "stability": 95,
+    "element": "source",
+    "resistances": {
+      "physical": 0,
+      "burn": 0,
+      "shock": 0,
+      "source": 30
+    },
+    "tags": [
+      "shadow",
+      "source"
+    ],
+    "abilities": [
+      "claw_swipe"
+    ],
+    "flavor": "A hostile outline assembled from discarded versions of familiar enemies.",
+    "xp_reward": 240,
+    "credit_reward": 0,
+    "drops": [
+      {
+        "id": "power_cell",
+        "chance": 0.25
+      }
+    ],
+    "description": "Basic Source distortion with unstable defenses.",
+    "portrait": "images/enemies/phantom_assassin_combat.png"
+  },
+  {
+    "id": "distorted_sentinel",
+    "name": "Distorted Sentinel",
+    "tier": "common",
+    "combat_behavior": "trickster",
+    "combat_role": "controller",
+    "hp": 360,
+    "strength": 17,
+    "vitality": 18,
+    "agility": 19,
+    "focus": 23,
+    "luck": 7,
+    "speed": 18,
+    "stability": 110,
+    "element": "shock",
+    "resistances": {
+      "physical": 10,
+      "shock": -25,
+      "source": 25
+    },
+    "tags": [
+      "machine",
+      "source",
+      "distorted"
+    ],
+    "abilities": [
+      "glitch_bolt"
+    ],
+    "flavor": "A Spire sentinel folded through angles its chassis was never built to occupy.",
+    "xp_reward": 290,
+    "credit_reward": 0,
+    "drops": [
+      {
+        "id": "power_cell",
+        "chance": 0.35
+      }
+    ],
+    "description": "Turn-order controller vulnerable to shock and hacking.",
+    "portrait": "images/enemies/security_drone_combat.png"
+  },
+  {
+    "id": "glitch_hound",
+    "name": "Glitch Hound",
+    "tier": "common",
+    "combat_behavior": "aggressive",
+    "combat_role": "striker",
+    "hp": 330,
+    "strength": 24,
+    "vitality": 15,
+    "agility": 27,
+    "focus": 12,
+    "luck": 9,
+    "speed": 24,
+    "stability": 90,
+    "element": "source",
+    "resistances": {
+      "physical": 5,
+      "shock": 0,
+      "source": 30
+    },
+    "tags": [
+      "beast",
+      "source",
+      "distorted"
+    ],
+    "abilities": [
+      "claw_swipe"
+    ],
+    "flavor": "A Wilds predator flickering between the place it attacks from and the place it remembers.",
+    "xp_reward": 280,
+    "credit_reward": 0,
+    "drops": [
+      {
+        "id": "beast_meat",
+        "chance": 0.2
+      }
+    ],
+    "description": "High-evasion striker exposed by Scan.",
+    "portrait": "images/enemies/echo_borer_combat.png"
+  },
+  {
+    "id": "memory_leak",
+    "name": "Memory Leak",
+    "tier": "elite",
+    "combat_behavior": "controller",
+    "combat_role": "controller",
+    "hp": 620,
+    "strength": 16,
+    "vitality": 25,
+    "agility": 12,
+    "focus": 31,
+    "luck": 8,
+    "speed": 13,
+    "stability": 190,
+    "element": "source",
+    "resistances": {
+      "physical": 20,
+      "shock": 10,
+      "source": 40
+    },
+    "tags": [
+      "digital",
+      "source",
+      "elite"
+    ],
+    "abilities": [
+      "guilt_wave",
+      "roar_of_the_source"
+    ],
+    "flavor": "A pulsing data mass leaking unfinished images of Jed, Thorne, and Elara.",
+    "xp_reward": 470,
+    "credit_reward": 0,
+    "drops": [
+      {
+        "id": "power_cell",
+        "chance": 0.6
+      }
+    ],
+    "description": "Debuff elite requiring focus fire.",
+    "portrait": "images/enemies/resonance_buoy_combat.png"
+  },
+  {
+    "id": "nightmare_guard",
+    "name": "Nightmare Guard",
+    "tier": "elite",
+    "combat_behavior": "defensive",
+    "combat_role": "tank",
+    "hp": 680,
+    "strength": 27,
+    "vitality": 29,
+    "agility": 13,
+    "focus": 21,
+    "luck": 6,
+    "speed": 12,
+    "stability": 215,
+    "element": "physical",
+    "resistances": {
+      "physical": -10,
+      "burn": 20,
+      "shock": 20,
+      "source": 25
+    },
+    "tags": [
+      "human",
+      "nightmare",
+      "elite"
+    ],
+    "abilities": [
+      "guilt_wave",
+      "baton_strike"
+    ],
+    "flavor": "A Dominion guard wearing the faces of everyone Nova believes she failed.",
+    "xp_reward": 490,
+    "credit_reward": 0,
+    "drops": [
+      {
+        "id": "power_cell",
+        "chance": 0.5
+      }
+    ],
+    "description": "Shielded guilt projection vulnerable to melee pressure.",
+    "portrait": "images/enemies/riot_guard_combat.png"
+  },
+  {
+    "id": "ascended_vale",
+    "name": "The Ascended: Soloist",
+    "tier": "boss",
+    "combat_behavior": "boss",
+    "combat_role": "boss",
+    "hp": 1250,
+    "strength": 23,
+    "vitality": 30,
+    "agility": 22,
+    "focus": 34,
+    "luck": 12,
+    "speed": 20,
+    "stability": 330,
+    "broken_turns": 2,
+    "element": "source",
+    "resistances": {
+      "physical": 15,
+      "burn": 15,
+      "shock": 15,
+      "source": 45
+    },
+    "tags": [
+      "human",
+      "source",
+      "boss"
+    ],
+    "abilities": [
+      "compliance_beam",
+      "guilt_wave",
+      "silence_wave"
+    ],
+    "flavor": "Vale retains his human shape because politeness makes annihilation easier to accept.",
+    "xp_reward": 900,
+    "credit_reward": 0,
+    "ap_reward": 5,
+    "drops": [],
+    "description": "Final boss phase one. Silence and compliance pressure.",
+    "portrait": "images/enemies/the_warden_combat.png"
+  },
+  {
+    "id": "ascended_god",
+    "name": "The Ascended: Silence",
+    "tier": "boss",
+    "combat_behavior": "boss",
+    "combat_role": "boss",
+    "hp": 1800,
+    "strength": 30,
+    "vitality": 38,
+    "agility": 20,
+    "focus": 40,
+    "luck": 14,
+    "speed": 19,
+    "stability": 450,
+    "broken_turns": 3,
+    "element": "source",
+    "resistances": {
+      "physical": 25,
+      "burn": 25,
+      "shock": 20,
+      "source": 55
+    },
+    "tags": [
+      "god_form",
+      "source",
+      "boss"
+    ],
+    "abilities": [
+      "reality_break",
+      "shadow_chorus",
+      "silence_wave"
+    ],
+    "flavor": "Porcelain skin splits into blinding geometry as Vale attempts to reduce creation to one painless note.",
+    "xp_reward": 1500,
+    "credit_reward": 0,
+    "ap_reward": 8,
+    "drops": [],
+    "description": "Final boss phase two. Reality warping and Great Silence.",
     "portrait": "images/enemies/the_iron_warden_combat.png"
   }
 ]

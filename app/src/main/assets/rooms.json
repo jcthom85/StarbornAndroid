@@ -150,7 +150,7 @@
     "connections": {
       "east": "pit_shaft"
     },
-"pos": [
+    "pos": [
       -1,
       1
     ],
@@ -2690,14 +2690,14 @@
     "npc_presence": [
       {
         "npc": "zeke",
-          "requires_milestones": [
-            "ms_w1_mq04_complete"
-          ],
-          "forbidden_milestones": [
-            "ms_w1_zeke_directed_to_pod"
-          ]
-        }
-      ]
+        "requires_milestones": [
+          "ms_w1_mq04_complete"
+        ],
+        "forbidden_milestones": [
+          "ms_w1_zeke_directed_to_pod"
+        ]
+      }
+    ]
   },
   {
     "id": "launch_pod",
@@ -2737,12 +2737,12 @@
     ],
     "npc_presence": [
       {
-          "npc": "zeke",
-          "requires_milestones": [
-            "ms_w1_zeke_directed_to_pod"
-          ],
-          "forbidden_milestones": [
-            "ms_w1_mq05_complete"
+        "npc": "zeke",
+        "requires_milestones": [
+          "ms_w1_zeke_directed_to_pod"
+        ],
+        "forbidden_milestones": [
+          "ms_w1_mq05_complete"
         ]
       }
     ]
@@ -2792,9 +2792,7 @@
     "npcs": [],
     "items": [],
     "enemies": [],
-    "connections": {
-      "north": "sector9_canopy"
-    },
+    "connections": {},
     "pos": [
       0,
       0
@@ -2816,6 +2814,12 @@
         "name": "glow-water",
         "type": "generic",
         "condition_unmet_message": "The water is warm and vibrates with a gentle frequency. It feels soothing to touch."
+      },
+      {
+        "name": "Scan moss",
+        "type": "generic",
+        "action_event": "w2_sq01_scan_moss",
+        "condition_unmet_message": "The moss on the hull vibrates under your scanner."
       }
     ],
     "npc_presence": [
@@ -2824,7 +2828,9 @@
         "requires_milestones": [
           "ms_w1_mq05_complete"
         ],
-        "forbidden_milestones": []
+        "forbidden_milestones": [
+          "ms_w2_mq01_complete"
+        ]
       }
     ]
   },
@@ -2840,10 +2846,7 @@
     "enemies": [
       "echo_borer"
     ],
-    "connections": {
-      "south": "sector9_crash_site",
-      "east": "sector9_stream"
-    },
+    "connections": {},
     "pos": [
       0,
       1
@@ -2854,6 +2857,24 @@
         "name": "ferns",
         "type": "generic",
         "condition_unmet_message": "Their leaves vibrate like harp strings when touched, ringing out a quiet chord."
+      },
+      {
+        "name": "Scan ferns",
+        "type": "generic",
+        "action_event": "w2_sq01_scan_ferns",
+        "condition_unmet_message": "The giant crystalline ferns echo in harmony."
+      },
+      {
+        "name": "Scan spores",
+        "type": "generic",
+        "action_event": "w2_sq01_scan_spores",
+        "condition_unmet_message": "The razor-vine spores vibrate with high energy."
+      },
+      {
+        "name": "Scavenge remains",
+        "type": "generic",
+        "action_event": "w2_sq02_scavenge_body",
+        "condition_unmet_message": "A fallen Dominion scout lies tangled in the vines."
       }
     ]
   },
@@ -2867,9 +2888,7 @@
     "npcs": [],
     "items": [],
     "enemies": [],
-    "connections": {
-      "west": "sector9_canopy"
-    },
+    "connections": {},
     "pos": [
       1,
       1
@@ -2886,8 +2905,246 @@
         "type": "fishing",
         "zone_id": "sector9_stream",
         "condition_unmet_message": "The stream is calm enough for fishing."
+      },
+      {
+        "name": "Scan weeds",
+        "type": "generic",
+        "action_event": "w2_sq01_scan_weeds",
+        "condition_unmet_message": "The bioluminescent weeds glow when scanned."
+      },
+      {
+        "name": "Gather tideglass",
+        "type": "generic",
+        "action_event": "w2_sq03_gather_tideglass",
+        "condition_unmet_message": "Glowing tideglass skewers are harvested from the shore."
       }
     ]
+  },
+  {
+    "id": "sector9_canopy_ridge",
+    "env": "swamp",
+    "weather": "resonance",
+    "title": "Canopy Ridge",
+    "background_image": "images/rooms/world_2/canopy_ridge.png",
+    "description": "A wind-carved stone shelf high above the jungle. The canopy rolls like an ocean below, and the Planetary Shield lattice curves across the sky above. A huge shadow shifts in the brush.",
+    "npcs": [],
+    "items": [],
+    "enemies": [
+      "the_beast"
+    ],
+    "connections": {},
+    "pos": [
+      0,
+      2
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "Look at Shield",
+        "type": "generic",
+        "condition_unmet_message": "The Planetary Shield curves across the sky, pulsing in a timed pattern."
+      },
+      {
+        "name": "Confront stalker",
+        "type": "generic",
+        "action_event": "w2_mq04_confront",
+        "condition_unmet_message": "Confront the hunter waiting in the shadows."
+      }
+    ]
+  },
+  {
+    "id": "sector9_temple_gate",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Temple Gate",
+    "background_image": "images/rooms/world_2/temple_gate.png",
+    "description": "A massive stone door, perfectly smooth, stands embedded in the cliff. It is engraved with glowing cymatic patterns. A slot shaped like the Chime sits in the center of a metal resonator.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {},
+    "pos": [
+      0,
+      3
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "Stone Lock",
+        "type": "generic",
+        "action_event": "w2_mq02_use_chime",
+        "condition_unmet_message": "The stone lock hums softly, waiting for its matching resonance."
+      }
+    ]
+  },
+  {
+    "id": "sector9_hall_of_echoes",
+    "env": "swamp",
+    "weather": "resonance",
+    "title": "Hall of Echoes",
+    "background_image": "images/rooms/world_2/hall_of_echoes.png",
+    "description": "A grand corridor of clean, ancient geometry. The air is cool and dry. Shifting light-murals on the walls depict the history of the Architects.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {},
+    "pos": [
+      0,
+      0
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "murals",
+        "type": "generic",
+        "action_event": "w2_mq03_inspect_murals",
+        "condition_unmet_message": "Shifting murals made of light. They shimmer when you approach."
+      },
+      {
+        "name": "Tune murals",
+        "type": "generic",
+        "action_event": "w2_sq04_tune_murals",
+        "condition_unmet_message": "The ancient console flickers, its resonance matrix misaligned."
+      }
+    ]
+  },
+  {
+    "id": "sector9_stasis_chamber",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Stasis Chamber",
+    "background_image": "images/rooms/world_2/stasis_chamber.png",
+    "description": "A circular room dominated by a single, humming pod. Dust has lain undisturbed for years. Shimmering rings of stasis energy hover around it out of alignment.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {},
+    "pos": [
+      0,
+      1
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "Stasis Pod",
+        "type": "generic",
+        "action_event": "w2_mq03_inspect_pod",
+        "condition_unmet_message": "A sealed pod containing a sleeping figure."
+      },
+      {
+        "name": "Scan roots",
+        "type": "generic",
+        "action_event": "w2_sq01_scan_roots",
+        "condition_unmet_message": "The ancient roots are pulsing in slow rhythm."
+      },
+      {
+        "name": "Search vents",
+        "type": "generic",
+        "action_event": "w2_sq05_search_vents",
+        "condition_unmet_message": "A narrow ventilation shaft runs along the upper ceiling."
+      }
+    ],
+    "npc_presence": [
+      {
+        "npc": "zeke",
+        "requires_milestones": [
+          "ms_w2_mq01_complete"
+        ],
+        "forbidden_milestones": [
+          "ms_w2_mq03_complete"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "sector9_source_gate",
+    "env": "swamp",
+    "weather": "resonance",
+    "title": "Source Gate",
+    "background_image": "images/rooms/world_2/source_gate.png",
+    "description": "A giant barrier of humming energy blocking access to the hangar. It vibrates with three discordant, howling frequencies.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {},
+    "pos": [
+      0,
+      2
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "Acoustic Lock",
+        "type": "generic",
+        "action_event": "w2_mq05_inspect_resonator",
+        "condition_unmet_message": "The acoustic lock hums with intense dissonance."
+      }
+    ],
+    "npc_presence": [
+      {
+        "npc": "orion",
+        "requires_milestones": [
+          "ms_w2_mq03_complete"
+        ],
+        "forbidden_milestones": [
+          "ms_w2_mq05_complete"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "sector9_hangar_bay",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Hangar Bay",
+    "background_image": "images/rooms/world_2/hangar_bay.png",
+    "description": "A vast underground cavern open to the sky. The Astra sits silent on the launch pad. Her hull is scorched and her bridge systems are dark.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {},
+    "pos": [
+      0,
+      3
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "Astra Console",
+        "type": "generic",
+        "action_event": "w2_mq05_inspect_astra",
+        "condition_unmet_message": "The ship's main console. The primary power conduit is completely severed."
+      }
+    ],
+    "npc_presence": [
+      {
+        "npc": "zeke",
+        "requires_milestones": [
+          "ms_w2_mq03_complete"
+        ],
+        "forbidden_milestones": [
+          "ms_w2_mq05_complete"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "sector9_the_sky",
+    "env": "swamp",
+    "weather": "resonance",
+    "title": "The Sky",
+    "background_image": "images/rooms/world_2/the_sky.png",
+    "description": "Flying high above the cloud layer, approaching the violet glow of the Planetary Shield. Zeke grins, but the console starts to beep frantically.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {},
+    "pos": [
+      0,
+      4
+    ],
+    "state": {},
+    "actions": []
   },
   {
     "id": "debug_presence_stress",
@@ -3119,5 +3376,1546 @@
     ],
     "state": {},
     "actions": []
+  },
+  {
+    "id": "spire_sewers_landing",
+    "env": "neon",
+    "title": "Sewer Landing Pad",
+    "background_image": "images/rooms/world_3/spire_sewers_landing.png",
+    "description": "The Astra sits powered down, its hull reflecting the dim bioluminescent glow of sewer algae. The air is damp, smelling of ozone and ancient pipes.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "east": "spire_sewers_passage"
+    },
+    "pos": [
+      0,
+      2
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "astra",
+        "type": "generic",
+        "condition_unmet_message": "The Astra's engines are silent. The resonance shield holds the ship trapped here."
+      }
+    ]
+  },
+  {
+    "id": "spire_sewers_passage",
+    "env": "neon",
+    "title": "Sewer Passage",
+    "background_image": "images/rooms/world_3/spire_sewers_passage.png",
+    "description": "A long, concrete run-off tunnel under the Spire. Water drips from rusted pipes overhead. Dark shapes move in the shadows ahead.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "spire_sewers_landing",
+      "north": "spire_vent_output",
+      "east": "spire_transit_plaza"
+    },
+    "pos": [
+      1,
+      2
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "vent pipes",
+        "type": "generic",
+        "condition_unmet_message": "Heavy steam pipes running up to the lower city."
+      }
+    ]
+  },
+  {
+    "id": "spire_vent_output",
+    "env": "neon",
+    "title": "Vent Output",
+    "background_image": "images/rooms/world_3/spire_vent_output.png",
+    "description": "Acid rain falls from a synthetic sky, steaming as it hits hot exhaust vents. You stand in a trash-filled alleyway between looming vertical blocks.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "south": "spire_sewers_passage",
+      "east": "spire_the_static"
+    },
+    "pos": [
+      1,
+      1
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "trash pile",
+        "type": "generic",
+        "condition_unmet_message": "Wet cardboard, empty food cartons, and discarded tech parts."
+      }
+    ]
+  },
+  {
+    "id": "spire_the_static",
+    "env": "neon",
+    "title": "The Static",
+    "background_image": "images/rooms/world_3/spire_the_static.png",
+    "description": "A dark dive bar built inside a derelict subway car. Neon signs pulse erratically, casting a purple glow over the patrons.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "spire_vent_output",
+      "north": "spire_zekes_apartment",
+      "south": "spire_transit_plaza"
+    },
+    "pos": [
+      2,
+      1
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "sign",
+        "type": "generic",
+        "action_event": "w3_sq11_inspect_sign",
+        "condition_unmet_message": "The bar's neon sign. It buzzes loudly but is mostly dark."
+      }
+    ],
+    "npc_presence": [
+      {
+        "npc": "jax",
+        "requires_milestones": [
+          "ms_w2_mq05_complete"
+        ],
+        "forbidden_milestones": []
+      }
+    ]
+  },
+  {
+    "id": "spire_zekes_apartment",
+    "env": "neon",
+    "title": "Zeke's Apartment",
+    "background_image": "images/rooms/world_3/spire_zekes_apartment.png",
+    "description": "Zeke's old apartment. The furniture is sparse, and the shelves are empty. A workstation hums on a table in the center of the room.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "south": "spire_the_static"
+    },
+    "pos": [
+      2,
+      0
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "workstation",
+        "type": "generic",
+        "action_event": "w3_mq12_hack_blueprints",
+        "condition_unmet_message": "A terminal displaying lines of data and Spire blueprints."
+      },
+      {
+        "name": "planning table",
+        "type": "generic",
+        "action_event": "w3_mq12_assemble_planning",
+        "condition_unmet_message": "A table in the center of the room. Ready for Heist planning."
+      }
+    ],
+    "npc_presence": [
+      {
+        "npc": "zeke",
+        "requires_milestones": [
+          "ms_w3_mq11_complete"
+        ],
+        "forbidden_milestones": []
+      }
+    ]
+  },
+  {
+    "id": "spire_night_market",
+    "env": "neon",
+    "title": "Night Market",
+    "background_image": "images/rooms/world_3/spire_night_market.png",
+    "description": "A lively, shoulder-to-shoulder market street. Colorful lanterns swing on wires overhead, and food stalls sizzle in the damp air.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "spire_transit_plaza"
+    },
+    "pos": [
+      3,
+      2
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "lanterns",
+        "type": "generic",
+        "action_event": "w3_sq13_inspect_lanterns",
+        "condition_unmet_message": "String lights hung across the alley. Some are flickering out."
+      }
+    ],
+    "npc_presence": [
+      {
+        "npc": "mika",
+        "requires_milestones": [
+          "ms_w2_mq05_complete"
+        ],
+        "forbidden_milestones": []
+      }
+    ]
+  },
+  {
+    "id": "spire_transit_plaza",
+    "env": "neon",
+    "title": "Transit Plaza",
+    "background_image": "images/rooms/world_3/spire_transit_plaza.png",
+    "description": "A wide square dominated by the base of the Great Elevator. Dominion guards patrol behind heavy barriers.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "north": "spire_the_static",
+      "west": "spire_sewers_passage",
+      "east": "spire_night_market"
+    },
+    "pos": [
+      2,
+      2
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "elevator controls",
+        "type": "generic",
+        "action_event": "w3_mq12_use_elevator",
+        "condition_unmet_message": "The elevator controls require high-level Spire authorization."
+      }
+    ]
+  },
+  {
+    "id": "spire_laundry_service",
+    "env": "neon",
+    "title": "Laundry Service",
+    "background_image": "images/rooms/world_3/spire_laundry_service.png",
+    "description": "Concrete service corridors run beneath the Cloud District, packed with steam pipes, laundry chutes, cleaning bots, and the only honest noise in the Upper City.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "north": "spire_skypark_dome",
+      "east": "spire_archive_vault",
+      "south": "spire_exec_lounge_bar"
+    },
+    "pos": [
+      0,
+      1
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "sensor console",
+        "type": "generic",
+        "action_event": "w3_mq13_disable_sensors",
+        "condition_unmet_message": "A service console tied into the penthouse scanner grid."
+      },
+      {
+        "name": "service chute",
+        "type": "generic",
+        "action_event": "w3_mq13_enter_lobby",
+        "condition_unmet_message": "A narrow laundry chute marked for priority penthouse delivery."
+      }
+    ]
+  },
+  {
+    "id": "spire_skypark_dome",
+    "env": "neon",
+    "title": "Skypark Dome",
+    "background_image": "images/rooms/world_3/spire_skypark_dome.png",
+    "description": "A rooftop garden under a force-field dome. The sun is fake, the trees are perfect clones, and every smile looks practiced.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "south": "spire_laundry_service",
+      "east": "spire_archive_vault"
+    },
+    "pos": [
+      1,
+      0
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "guest registry",
+        "type": "generic",
+        "action_event": "w3_mq13_blend_in",
+        "condition_unmet_message": "A velvet-rope kiosk where the city decides who belongs."
+      }
+    ],
+    "npc_presence": [
+      {
+        "npc": "curator",
+        "requires_milestones": [
+          "ms_w3_mq12_complete"
+        ],
+        "forbidden_milestones": [
+          "ms_w3_mq13_complete"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "spire_exec_lounge_bar",
+    "env": "neon",
+    "title": "Exec Lounge",
+    "background_image": "images/rooms/world_3/spire_exec_lounge_bar.png",
+    "description": "A bar floats on a grav-platform above a silent atrium. VIP booths glitter with privacy glass and quiet blackmail.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "north": "spire_laundry_service",
+      "east": "spire_archive_vault"
+    },
+    "pos": [
+      1,
+      2
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "private safe",
+        "type": "generic",
+        "action_event": "w3_sq14_steal_ledger",
+        "condition_unmet_message": "A private executive safe hidden behind a decorative gravity-well sculpture."
+      },
+      {
+        "name": "concierge terminal",
+        "type": "shop",
+        "shop_id": "upper_city_lounge",
+        "dialogue_id": "upper_city_lounge_shop_intro",
+        "condition_unmet_message": "A silent concierge terminal offering premium equipment with premium contempt."
+      }
+    ],
+    "npc_presence": [
+      {
+        "npc": "lab_terminal",
+        "requires_milestones": [
+          "ms_w3_mq13_complete"
+        ],
+        "forbidden_milestones": [
+          "ms_w3_prototype_tested"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "spire_archive_vault",
+    "env": "neon",
+    "title": "Archive Vault",
+    "background_image": "images/rooms/world_3/spire_archive_vault.png",
+    "description": "Crystal shards rise in endless indexed stacks over a glass floor that looks down two hundred stories. The Lens hangs in a containment field, humming like a held note.",
+    "npcs": [],
+    "items": [],
+    "enemies": [
+      "corporate_assassin"
+    ],
+    "connections": {
+      "west": "spire_laundry_service",
+      "north": "spire_skypark_dome",
+      "south": "spire_exec_lounge_bar",
+      "east": "spire_landing_pad_roof"
+    },
+    "pos": [
+      2,
+      1
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "light puzzle",
+        "type": "generic",
+        "action_event": "w3_mq14_solve_light_puzzle",
+        "condition_unmet_message": "A prism array waits for Orion to tune its acoustic frequencies."
+      },
+      {
+        "name": "lens relic",
+        "type": "generic",
+        "action_event": "w3_mq14_take_lens",
+        "condition_unmet_message": "The Lens floats inside a containment field."
+      },
+      {
+        "name": "prototype rack",
+        "type": "generic",
+        "action_event": "w3_sq15_test_weapon",
+        "condition_unmet_message": "A dangerous experimental weapon rack waits beside a drone testing alcove."
+      }
+    ],
+    "enemy_flavor": {
+      "corporate_assassin": "A corporate assassin flickers between shard stacks, waiting for the alarm to justify murder."
+    }
+  },
+  {
+    "id": "spire_landing_pad_roof",
+    "env": "neon",
+    "title": "Landing Pad Roof",
+    "background_image": "images/rooms/world_3/spire_landing_pad_roof.png",
+    "description": "The Spire roof shudders under violent wind. The Astra waits on the pad while the Planetary Shield rotates overhead in impossible chords.",
+    "npcs": [],
+    "items": [],
+    "enemies": [
+      "aero_drone",
+      "heavy_mech",
+      "administrator_boss"
+    ],
+    "enemy_parties": [
+      [
+        "aero_drone",
+        "heavy_mech"
+      ],
+      [
+        "administrator_boss",
+        "aero_drone"
+      ]
+    ],
+    "connections": {
+      "west": "spire_archive_vault"
+    },
+    "pos": [
+      3,
+      1
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "launch astra",
+        "type": "generic",
+        "action_event": "w3_mq15_launch_astra",
+        "condition_unmet_message": "The Astra can slip the Shield only after the Administrator is down."
+      }
+    ],
+    "enemy_flavor": {
+      "administrator_boss": "The Administrator descends in a polished security frame, its voice still gentle while the roof guns arm."
+    }
+  },
+  {
+    "id": "foundry_slag_landing",
+    "env": "foundry",
+    "title": "Obsidian Shelf",
+    "background_image": "images/rooms/world_4/foundry_slag_landing.png",
+    "description": "The Astra cools on a shelf of black volcanic glass above a river of magma. Heat shields glow cherry-red while ash falls like dirty snow.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "east": "foundry_slag_river",
+      "south": "foundry_cooling_springs"
+    },
+    "pos": [
+      0,
+      1
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "astra",
+        "type": "generic",
+        "action_event": "w4_mq16_land_shelf",
+        "condition_unmet_message": "The Astra ticks and cools on the landing gantry."
+      },
+      {
+        "name": "compliance bulletin",
+        "type": "generic",
+        "action_event": "w4_compliance_bulletin",
+        "condition_unmet_message": "The factory PA hisses through layers of heat distortion."
+      }
+    ]
+  },
+  {
+    "id": "foundry_slag_river",
+    "env": "foundry",
+    "title": "Slag River",
+    "background_image": "images/rooms/world_4/foundry_slag_river.png",
+    "description": "Broken stepping stones cross a flowing lava channel. Source flares erupt from pressure cracks without warning, bending the heat into bright, violent chords.",
+    "npcs": [],
+    "items": [],
+    "enemies": [
+      "magma_drone"
+    ],
+    "connections": {
+      "west": "foundry_slag_landing",
+      "east": "foundry_waste_intake"
+    },
+    "pos": [
+      1,
+      0
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "slag crossing",
+        "type": "generic",
+        "action_event": "w4_mq16_cross_slag_river",
+        "condition_unmet_message": "The crossing teaches respect fast: watch the flare rhythm or burn."
+      },
+      {
+        "name": "ammo crate alpha",
+        "type": "generic",
+        "action_event": "w4_sq16_destroy_crate_alpha",
+        "condition_unmet_message": "A Dominion ammo crate is chained to a basalt pylon."
+      }
+    ],
+    "enemy_flavor": {
+      "magma_drone": "A heat-shielded drone skims low over the slag, pushing you toward bad footing."
+    }
+  },
+  {
+    "id": "foundry_cooling_springs",
+    "env": "foundry",
+    "title": "Cooling Springs",
+    "background_image": "images/rooms/world_4/foundry_cooling_springs.png",
+    "description": "A hidden maintenance pocket where condensed steam collects in clear hot pools. The factory noise drops to a distant pulse, giving the crew room to breathe.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "north": "foundry_slag_landing",
+      "east": "foundry_waste_intake"
+    },
+    "pos": [
+      1,
+      2
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "steam pool",
+        "type": "generic",
+        "action_event": "w4_mq17_regroup_springs",
+        "condition_unmet_message": "A rare quiet pocket in the Foundry heat."
+      },
+      {
+        "name": "worker tablet",
+        "type": "generic",
+        "action_event": "w4_sq17_find_worker",
+        "condition_unmet_message": "A cracked tablet pings weakly from beside a maintenance pool."
+      }
+    ]
+  },
+  {
+    "id": "foundry_waste_intake",
+    "env": "foundry",
+    "title": "Waste Intake",
+    "background_image": "images/rooms/world_4/foundry_waste_intake.png",
+    "description": "Massive pistons slam raw scrap into furnace mouths. Compactor chains drag wrecked mechs through ash and sparks toward the factory interior.",
+    "npcs": [],
+    "items": [],
+    "enemies": [
+      "slag_golem",
+      "magma_drone"
+    ],
+    "enemy_parties": [
+      [
+        "slag_golem"
+      ],
+      [
+        "slag_golem",
+        "magma_drone"
+      ]
+    ],
+    "connections": {
+      "west": "foundry_slag_river",
+      "south": "foundry_cooling_springs",
+      "east": "foundry_service_airlock"
+    },
+    "pos": [
+      2,
+      1
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "cooling vent controls",
+        "type": "generic",
+        "action_event": "w4_mq16_hack_cooling_vents",
+        "condition_unmet_message": "Vent controls cycle scalding air through the service airlock."
+      },
+      {
+        "name": "project phantom terminal",
+        "type": "generic",
+        "action_event": "w4_mq17_access_phantom_terminal",
+        "condition_unmet_message": "A classified terminal waits behind cracked thermal glass."
+      },
+      {
+        "name": "ammo crate beta",
+        "type": "generic",
+        "action_event": "w4_sq16_destroy_crate_beta",
+        "condition_unmet_message": "A crate of shaped charges sits too close to the intake pistons."
+      },
+      {
+        "name": "scrap mech pile",
+        "type": "generic",
+        "action_event": "w4_sq18_salvage_mechs",
+        "condition_unmet_message": "Three destroyed mechs lie half-melted in the lava-flow debris."
+      }
+    ],
+    "enemy_flavor": {
+      "slag_golem": "A slag golem drags itself out of the intake channel, armor still molten at the seams."
+    }
+  },
+  {
+    "id": "foundry_service_airlock",
+    "env": "foundry",
+    "title": "Service Airlock",
+    "background_image": "images/rooms/world_4/foundry_service_airlock.png",
+    "description": "A heavy pressurized door separates volcanic exterior from sterile factory interior. Decon lights sweep the chamber in hard white bands.",
+    "npcs": [],
+    "items": [],
+    "enemies": [
+      "slag_golem"
+    ],
+    "connections": {
+      "west": "foundry_waste_intake"
+    },
+    "pos": [
+      3,
+      1
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "airlock door",
+        "type": "generic",
+        "action_event": "w4_mq16_enter_airlock",
+        "condition_unmet_message": "The airlock will not cycle until the cooling vents are under control."
+      },
+      {
+        "name": "ammo crate gamma",
+        "type": "generic",
+        "action_event": "w4_sq16_destroy_crate_gamma",
+        "condition_unmet_message": "A final ammo crate is stacked beside the decon pumps."
+      }
+    ]
+  },
+  {
+    "id": "foundry_conveyor_belt",
+    "env": "foundry",
+    "title": "Conveyor Belt",
+    "background_image": "images/rooms/world_4/foundry_conveyor_belt.png",
+    "description": "Conveyor belts carry half-assembled droids under hammering presses. Some bins are stamped BIOLOGICAL COMPONENTS in language too clean for what it means.",
+    "npcs": [],
+    "items": [],
+    "enemies": [
+      "welder_bot",
+      "phantom_prototype"
+    ],
+    "enemy_parties": [
+      [
+        "welder_bot",
+        "welder_bot"
+      ],
+      [
+        "phantom_prototype"
+      ]
+    ],
+    "connections": {
+      "east": "foundry_conditioning_chamber",
+      "south": "foundry_forge_anvil"
+    },
+    "pos": [
+      0,
+      1
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "belt timing console",
+        "type": "generic",
+        "action_event": "w4_mq18_navigate_conveyors",
+        "condition_unmet_message": "The belts move in brutal industrial rhythm."
+      },
+      {
+        "name": "rejected droid",
+        "type": "generic",
+        "action_event": "w4_sq19_reprogram_units",
+        "condition_unmet_message": "A rejected droid twitches beside a bin of defective units."
+      }
+    ],
+    "enemy_flavor": {
+      "phantom_prototype": "A proto-Gh0st unit blinks into view with an energy blade already raised."
+    }
+  },
+  {
+    "id": "foundry_conditioning_chamber",
+    "env": "foundry",
+    "title": "Conditioning Chamber",
+    "background_image": "images/rooms/world_4/foundry_conditioning_chamber.png",
+    "description": "Sterile white tiles are stained with oil. Rows of empty chairs with restraints face a wall of Spectral ID calibration screens.",
+    "npcs": [],
+    "items": [],
+    "enemies": [
+      "flame_trooper"
+    ],
+    "connections": {
+      "west": "foundry_conveyor_belt",
+      "east": "foundry_power_core"
+    },
+    "pos": [
+      1,
+      0
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "conditioning records",
+        "type": "generic",
+        "action_event": "w4_mq18_defeat_prototypes",
+        "condition_unmet_message": "Production records list Phantom units as batches, not people."
+      }
+    ]
+  },
+  {
+    "id": "foundry_forge_anvil",
+    "env": "foundry",
+    "title": "The Forge",
+    "background_image": "images/rooms/world_4/foundry_forge_anvil.png",
+    "description": "A massive hammer falls over a relic mount. The Anvil hums beneath the impact rhythm, shaping raw ore like the factory is teaching metal to obey.",
+    "npcs": [],
+    "items": [],
+    "enemies": [
+      "conveyor_crusher"
+    ],
+    "connections": {
+      "north": "foundry_conveyor_belt",
+      "east": "foundry_power_core"
+    },
+    "pos": [
+      1,
+      2
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "fabrication matrix",
+        "type": "generic",
+        "action_event": "w4_mq18_overload_matrix",
+        "condition_unmet_message": "The fabrication matrix feeds the conveyor floor with Phantom shells."
+      },
+      {
+        "name": "conveyor puzzle",
+        "type": "generic",
+        "action_event": "w4_mq19_solve_conveyor_puzzle",
+        "condition_unmet_message": "The Anvil mount is locked behind moving belt plates and timed crushers."
+      },
+      {
+        "name": "anvil relic",
+        "type": "generic",
+        "action_event": "w4_mq19_take_anvil",
+        "condition_unmet_message": "The Anvil waits in the hammer cradle, hot enough to glow without flame."
+      },
+      {
+        "name": "test chamber terminal",
+        "type": "generic",
+        "action_event": "w4_sq20_survive_waves",
+        "condition_unmet_message": "An overclocked trial program offers rewards with no concern for survival."
+      }
+    ]
+  },
+  {
+    "id": "foundry_power_core",
+    "env": "foundry",
+    "title": "Power Core",
+    "background_image": "images/rooms/world_4/foundry_power_core.png",
+    "description": "The Deep-Core Engine pulses in the center of the factory, feeding heat and psionic current into a cradle mount built for something far larger than a ship.",
+    "npcs": [],
+    "items": [],
+    "enemies": [
+      "flame_trooper",
+      "phantom_prototype"
+    ],
+    "connections": {
+      "west": "foundry_conditioning_chamber",
+      "south": "foundry_forge_anvil",
+      "east": "foundry_titan_dock"
+    },
+    "pos": [
+      2,
+      1
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "engine mount",
+        "type": "generic",
+        "action_event": "w4_mq20_steal_engine",
+        "condition_unmet_message": "The Deep-Core Engine is locked under thermal clamps."
+      },
+      {
+        "name": "phase-cutter arrays",
+        "type": "generic",
+        "action_event": "w4_mq20_steal_arrays",
+        "condition_unmet_message": "A rack of ship-scale Phase-Cutter Arrays is wired to the engine cradle."
+      }
+    ]
+  },
+  {
+    "id": "foundry_titan_dock",
+    "env": "foundry",
+    "title": "Titan Dock",
+    "background_image": "images/rooms/world_4/foundry_titan_dock.png",
+    "description": "A circular platform hangs over the volcano primary vent. Catwalks tremble above orange depth while a Titan Walker waits in its launch cradle.",
+    "npcs": [],
+    "items": [],
+    "enemies": [
+      "titan_walker_boss"
+    ],
+    "enemy_parties": [
+      [
+        "titan_walker_boss"
+      ]
+    ],
+    "connections": {
+      "west": "foundry_power_core"
+    },
+    "pos": [
+      3,
+      1
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "commander rylos",
+        "type": "generic",
+        "action_event": "w4_mq20_confront_rylos",
+        "condition_unmet_message": "Rylos waits on the Titan Walker, chrome face lit by the volcano."
+      },
+      {
+        "name": "escape launch",
+        "type": "generic",
+        "action_event": "w4_mq20_escape_launch",
+        "condition_unmet_message": "The Astra can launch once the engine and arrays are aboard."
+      }
+    ],
+    "enemy_flavor": {
+      "titan_walker_boss": "Rylos brings the Titan Walker down like a judgment made of missiles and steel."
+    }
+  },
+  {
+    "id": "orbital_executive_dock",
+    "env": "void",
+    "title": "Executive Dock",
+    "background_image": "images/rooms/world_5/orbital_executive_dock.png",
+    "description": "The Astra hangs beneath the Ring while Compliance fighters rake the hull. Beyond the airlock, a red carpet floats over bright-white flooring and the bodies of Thorne loyalists drift in dead gravity pockets.",
+    "npcs": [
+      "gh0st"
+    ],
+    "items": [],
+    "enemies": [
+      "orbital_fighter"
+    ],
+    "enemy_parties": [
+      [
+        "orbital_fighter",
+        "orbital_fighter"
+      ]
+    ],
+    "connections": {
+      "east": "orbital_grand_concourse",
+      "south": "orbital_solarium"
+    },
+    "pos": [
+      0,
+      1
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "docking controls",
+        "type": "generic",
+        "action_event": "w5_mq21_force_dock",
+        "condition_unmet_message": "Compliance has the Astra in a tractor lock."
+      },
+      {
+        "name": "airlock console",
+        "type": "generic",
+        "action_event": "w5_sq23_vacuum_seal",
+        "condition_unmet_message": "Three hull breach warnings pulse across the pressure map."
+      }
+    ],
+    "enemy_flavor": {
+      "orbital_fighter": "Compliance interceptors pivot around the Ring with machine-perfect formation."
+    }
+  },
+  {
+    "id": "orbital_grand_concourse",
+    "env": "void",
+    "title": "Grand Concourse",
+    "background_image": "images/rooms/world_5/orbital_grand_concourse.png",
+    "description": "Golden Architect statues tower over an immaculate promenade. Every wall repeats Vale's compliance notices between advertisements for Harmony.",
+    "npcs": [],
+    "items": [],
+    "enemies": [
+      "compliance_officer"
+    ],
+    "connections": {
+      "west": "orbital_executive_dock",
+      "east": "orbital_security_hub"
+    },
+    "pos": [
+      1,
+      0
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "director logs",
+        "type": "generic",
+        "action_event": "w5_sq21_director_logs",
+        "condition_unmet_message": "A private archive waits behind the Director's biometric lock."
+      }
+    ]
+  },
+  {
+    "id": "orbital_solarium",
+    "env": "void",
+    "title": "Solarium",
+    "background_image": "images/rooms/world_5/orbital_solarium.png",
+    "description": "Real soil, tropical trees, and a pale strip of sand sit beneath a fusion lamp. The fruit is rotting in a paradise built for executives.",
+    "npcs": [
+      "maintenance_bot"
+    ],
+    "items": [],
+    "enemies": [
+      "null_g_drone"
+    ],
+    "connections": {
+      "north": "orbital_executive_dock",
+      "east": "orbital_security_hub"
+    },
+    "pos": [
+      1,
+      2
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "fake beach",
+        "type": "generic",
+        "action_event": "w5_mq22_cross_solarium",
+        "condition_unmet_message": "The artificial sun warms sand inside a station-sized cage."
+      }
+    ]
+  },
+  {
+    "id": "orbital_security_hub",
+    "env": "void",
+    "title": "Security Hub",
+    "background_image": "images/rooms/world_5/orbital_security_hub.png",
+    "description": "A fortified checkpoint seals the lift to the core. Compliance officers move without conversation while Null-G drones cling to the ceiling.",
+    "npcs": [],
+    "items": [],
+    "enemies": [
+      "compliance_officer",
+      "null_g_drone"
+    ],
+    "enemy_parties": [
+      [
+        "compliance_officer",
+        "null_g_drone"
+      ]
+    ],
+    "connections": {
+      "west": "orbital_grand_concourse",
+      "south": "orbital_solarium",
+      "east": "orbital_service_shaft"
+    },
+    "pos": [
+      2,
+      1
+    ],
+    "state": {}
+  },
+  {
+    "id": "orbital_service_shaft",
+    "env": "void",
+    "title": "Service Shaft",
+    "background_image": "images/rooms/world_5/orbital_service_shaft.png",
+    "description": "Gravity ends at the hatch. Cables descend through a vertical dark while Hunter-Killer droids scrape along distant walls, too armored to fight head-on.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "orbital_security_hub",
+      "down": "orbital_server_farm"
+    },
+    "pos": [
+      3,
+      1
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "zero-g cables",
+        "type": "generic",
+        "action_event": "w5_mq22_traverse_shaft",
+        "condition_unmet_message": "The drop requires careful movement between patrol sweeps."
+      }
+    ]
+  },
+  {
+    "id": "orbital_server_farm",
+    "env": "void",
+    "title": "Server Farm",
+    "background_image": "images/rooms/world_5/orbital_server_farm.png",
+    "description": "Server columns vanish into cold mist. Architect notation bleeds through the Dominion interface, and someone is breathing inside the cooling vents.",
+    "npcs": [
+      "thorne"
+    ],
+    "items": [],
+    "enemies": [
+      "void_turret"
+    ],
+    "connections": {
+      "up": "orbital_service_shaft",
+      "east": "deep_anchor_chamber"
+    },
+    "pos": [
+      3,
+      2
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "mainframe terminal",
+        "type": "generic",
+        "action_event": "w5_mq22_access_mainframe",
+        "condition_unmet_message": "The terminal carries both Harmony and Architect root directories."
+      },
+      {
+        "name": "server maze",
+        "type": "generic",
+        "action_event": "w5_mq23_navigate_maze",
+        "condition_unmet_message": "Cold aisles repeat around the same impossible rack numbers."
+      },
+      {
+        "name": "firewall node alpha",
+        "type": "generic",
+        "action_event": "w5_mq23_firewall_alpha",
+        "condition_unmet_message": "The first firewall node shifts its cipher every few seconds."
+      },
+      {
+        "name": "firewall node beta",
+        "type": "generic",
+        "action_event": "w5_mq23_firewall_beta",
+        "condition_unmet_message": "The second node is protected by a recursive Dominion lock."
+      },
+      {
+        "name": "firewall node gamma",
+        "type": "generic",
+        "action_event": "w5_mq23_firewall_gamma",
+        "condition_unmet_message": "The final node projects a hard-light guardian into the aisle."
+      },
+      {
+        "name": "purged backup rack",
+        "type": "generic",
+        "action_event": "w5_sq24_recover_backup",
+        "condition_unmet_message": "A server marked PURGED still carries a faint diagnostic pulse."
+      },
+      {
+        "name": "dead sysadmin",
+        "type": "generic",
+        "action_event": "w5_sq25_find_keycard",
+        "condition_unmet_message": "A station administrator floats behind a coolant pipe, keycard still clipped to the uniform."
+      }
+    ],
+    "enemy_parties": [
+      [
+        "void_turret",
+        "void_turret"
+      ],
+      [
+        "firewall_construct"
+      ]
+    ]
+  },
+  {
+    "id": "deep_anchor_chamber",
+    "env": "void",
+    "title": "Anchor Chamber",
+    "background_image": "images/rooms/world_5/deep_anchor_chamber.png",
+    "description": "A tank of conductive fluid hangs inside a cathedral of cables. Elara floats at its center, wired into the Ring as a living processor while the Anchor relic turns beside her.",
+    "npcs": [
+      "elara"
+    ],
+    "items": [],
+    "enemies": [
+      "hk_droid"
+    ],
+    "connections": {
+      "west": "orbital_server_farm",
+      "east": "deep_throne_room"
+    },
+    "pos": [
+      4,
+      2
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "anchor relic",
+        "type": "generic",
+        "action_event": "w5_mq24_take_anchor",
+        "condition_unmet_message": "The Anchor remains locked to Elara's failing firewall."
+      }
+    ],
+    "enemy_flavor": {
+      "hk_droid": "The Hunter-Killer repairs every wound before it finishes opening. Only Stasis can stop its pursuit."
+    }
+  },
+  {
+    "id": "deep_throne_room",
+    "env": "void",
+    "title": "Throne Room",
+    "background_image": "images/rooms/world_5/deep_throne_room.png",
+    "description": "A glass observation deck looks down on the planet and its failing Shield. Thorne's containment field faces a command dais where Vale waits without blinking.",
+    "npcs": [
+      "vale"
+    ],
+    "items": [],
+    "enemies": [
+      "elite_guard"
+    ],
+    "connections": {
+      "west": "deep_anchor_chamber",
+      "east": "deep_tear"
+    },
+    "pos": [
+      5,
+      2
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "containment field",
+        "type": "generic",
+        "action_event": "w5_mq25_soloist",
+        "condition_unmet_message": "Thorne is trapped behind the field while Vale watches the Anchor."
+      },
+      {
+        "name": "executive armory",
+        "type": "generic",
+        "action_event": "w5_sq25_open_armory",
+        "condition_unmet_message": "The executive armory requires a station administrator's keycard."
+      }
+    ]
+  },
+  {
+    "id": "deep_tear",
+    "env": "void",
+    "title": "The Tear",
+    "background_image": "images/rooms/world_5/deep_tear.png",
+    "description": "The Ring breaks into slow impossible angles around a wound in reality. Music exists here without air, speakers, or permission.",
+    "npcs": [],
+    "items": [],
+    "enemies": [
+      "compliance_avatar"
+    ],
+    "enemy_parties": [
+      [
+        "compliance_avatar"
+      ]
+    ],
+    "connections": {
+      "west": "deep_throne_room"
+    },
+    "pos": [
+      6,
+      2
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "reality breach",
+        "type": "generic",
+        "action_event": "w5_mq25_enter_tear",
+        "condition_unmet_message": "The Compliance Avatar still anchors Vale's control of the breach."
+      }
+    ],
+    "enemy_flavor": {
+      "compliance_avatar": "Vale's security intelligence condenses into a towering hard-light execution protocol."
+    }
+  },
+  {
+    "id": "source_campfire",
+    "env": "source",
+    "title": "The Campfire",
+    "background_image": "images/rooms/world_6/source_campfire.png",
+    "description": "The Crash Site fire burns again, rebuilt from blue waveforms on an island of memory. Beyond it, every world fractures across the same impossible sky.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "northwest": "source_zeke_nightmare",
+      "north": "source_gh0st_nightmare",
+      "northeast": "source_orion_nightmare",
+      "south": "source_echo_mines"
+    },
+    "pos": [
+      0,
+      0
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "song-fire",
+        "type": "generic",
+        "action_event": "w6_mq26_reassemble",
+        "condition_unmet_message": "The blue fire waits for every missing voice to return."
+      }
+    ]
+  },
+  {
+    "id": "source_zeke_nightmare",
+    "env": "source",
+    "title": "Infinite Cubicle",
+    "background_image": "images/rooms/world_6/source_zeke_nightmare.png",
+    "description": "Identical desks stretch beyond sight beneath fluorescent panels. The same performance review repeats while a manager assembled from office hardware leans over every partition.",
+    "npcs": [],
+    "items": [],
+    "enemies": [
+      "manager_projection"
+    ],
+    "enemy_parties": [
+      [
+        "manager_projection"
+      ]
+    ],
+    "connections": {
+      "southeast": "source_campfire"
+    },
+    "pos": [
+      -1,
+      -1
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "employee file",
+        "type": "generic",
+        "action_event": "w6_sq27_delete_record",
+        "condition_unmet_message": "Zeke's employee record refreshes every time someone tries to close it."
+      }
+    ],
+    "enemy_flavor": {
+      "manager_projection": "The Manager weaponizes every fear that usefulness is the price of belonging."
+    }
+  },
+  {
+    "id": "source_gh0st_nightmare",
+    "env": "source",
+    "title": "Endless War",
+    "background_image": "images/rooms/world_6/source_gh0st_nightmare.png",
+    "description": "A corridor repeats under muzzle flashes without guns. Every target wears a Spectral ID, and Gh0st's kill-suite supplies the order before anyone speaks.",
+    "npcs": [],
+    "items": [],
+    "enemies": [
+      "endless_war_echo"
+    ],
+    "enemy_parties": [
+      [
+        "endless_war_echo",
+        "endless_war_echo"
+      ]
+    ],
+    "connections": {
+      "south": "source_campfire"
+    },
+    "pos": [
+      0,
+      -1
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "pure audio log",
+        "type": "generic",
+        "action_event": "w6_sq28_elara_song",
+        "condition_unmet_message": "One clean recording of Elara survives beneath the kill-suite noise."
+      }
+    ],
+    "enemy_flavor": {
+      "endless_war_echo": "The loop gives every memory a weapon and every weapon Gh0st's hands."
+    }
+  },
+  {
+    "id": "source_orion_nightmare",
+    "env": "source",
+    "title": "Silent Shore",
+    "background_image": "images/rooms/world_6/source_orion_nightmare.png",
+    "description": "A black ocean lies perfectly still beneath an empty sky. Every Aethel note dies at the waterline before Orion can hear an answer.",
+    "npcs": [],
+    "items": [],
+    "enemies": [
+      "silent_shore_wraith"
+    ],
+    "enemy_parties": [
+      [
+        "silent_shore_wraith"
+      ]
+    ],
+    "connections": {
+      "southwest": "source_campfire"
+    },
+    "pos": [
+      1,
+      -1
+    ],
+    "state": {},
+    "enemy_flavor": {
+      "silent_shore_wraith": "Silence wears the outline of the last survivor and insists there is nobody left to answer."
+    }
+  },
+  {
+    "id": "source_echo_mines",
+    "env": "source",
+    "title": "Echo of the Mines",
+    "background_image": "images/rooms/world_6/source_echo_mines.png",
+    "description": "Jed's workshop, the mine checkpoint, and the first shelter occupy the same impossible room. Manager projections patrol routes drawn from Nova's oldest fear.",
+    "npcs": [],
+    "items": [],
+    "enemies": [
+      "source_shadow"
+    ],
+    "connections": {
+      "north": "source_campfire",
+      "east": "source_echo_elevator"
+    },
+    "pos": [
+      -1,
+      1
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "manager patrol",
+        "type": "generic",
+        "action_event": "w6_mq27_evade_manager",
+        "condition_unmet_message": "The projections reset the memory whenever they see Nova."
+      },
+      {
+        "name": "jed echo",
+        "type": "generic",
+        "action_event": "w6_sq26_jed_echo",
+        "condition_unmet_message": "Jed's workbench remains exactly where memory left it."
+      }
+    ]
+  },
+  {
+    "id": "source_echo_elevator",
+    "env": "source",
+    "title": "The Elevator",
+    "background_image": "images/rooms/world_6/source_echo_elevator.png",
+    "description": "The mine elevator doors open onto white noise instead of a shaft. Its floor remembers every departure Nova could not stop.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "source_echo_mines",
+      "east": "source_memory_bridge"
+    },
+    "pos": [
+      0,
+      1
+    ],
+    "state": {}
+  },
+  {
+    "id": "source_memory_bridge",
+    "env": "source",
+    "title": "Memory Bridge",
+    "background_image": "images/rooms/world_6/source_memory_bridge.png",
+    "description": "A platform of static extends over the raw Source. Each honest memory spoken aloud becomes another section of bridge.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "source_echo_elevator",
+      "east": "source_memory_stair"
+    },
+    "pos": [
+      1,
+      1
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "unfinished bridge",
+        "type": "generic",
+        "action_event": "w6_mq28_build_bridge",
+        "condition_unmet_message": "The static needs memories the Source cannot counterfeit."
+      },
+      {
+        "name": "campfire promise",
+        "type": "generic",
+        "action_event": "w6_mq28_final_banter",
+        "condition_unmet_message": "The crew has one quiet moment before the final ascent."
+      },
+      {
+        "name": "singularity threshold",
+        "type": "generic",
+        "action_event": "w6_mq28_reach_singularity",
+        "condition_unmet_message": "The path forward exists only when the whole circuit is ready."
+      }
+    ]
+  },
+  {
+    "id": "source_memory_stair",
+    "env": "source",
+    "title": "Memory Stair",
+    "background_image": "images/rooms/world_6/source_memory_stair.png",
+    "description": "Jed's workshop door opens into jungle canopy, Spire glass, Foundry catwalk, and Ring metal arranged as an ascending spiral.",
+    "npcs": [],
+    "items": [],
+    "enemies": [
+      "source_shadow",
+      "distorted_sentinel",
+      "glitch_hound"
+    ],
+    "connections": {
+      "west": "source_memory_bridge",
+      "east": "source_spire_thought"
+    },
+    "pos": [
+      2,
+      1
+    ],
+    "state": {},
+    "enemy_parties": [
+      [
+        "source_shadow",
+        "distorted_sentinel",
+        "glitch_hound"
+      ]
+    ],
+    "actions": [
+      {
+        "name": "aethel grave",
+        "type": "generic",
+        "action_event": "w6_sq29_aethel_grave",
+        "condition_unmet_message": "Names written in resonance drift beneath the stair."
+      }
+    ]
+  },
+  {
+    "id": "source_spire_thought",
+    "env": "source",
+    "title": "Spire of Thought",
+    "background_image": "images/rooms/world_6/source_spire_thought.png",
+    "description": "A spiral arena assembles itself from the Warden's checkpoint, jungle ruins, Spire glass, Foundry steel, and Ring servers. Every discarded memory has learned how to fight.",
+    "npcs": [],
+    "items": [],
+    "enemies": [
+      "memory_leak",
+      "nightmare_guard"
+    ],
+    "enemy_parties": [
+      [
+        "memory_leak",
+        "nightmare_guard"
+      ]
+    ],
+    "connections": {
+      "west": "source_memory_stair",
+      "east": "source_center"
+    },
+    "pos": [
+      3,
+      1
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "future astra hull",
+        "type": "generic",
+        "action_event": "w6_sq30_final_scavenge",
+        "condition_unmet_message": "A scorched section of the Astra protrudes from a future that has not happened."
+      }
+    ],
+    "enemy_flavor": {
+      "memory_leak": "The leak pulses with Jed, Thorne, and Elara in the same unfinished frame.",
+      "nightmare_guard": "The guard changes faces every time Nova recognizes someone she could not save."
+    }
+  },
+  {
+    "id": "source_center",
+    "env": "source",
+    "title": "The Center",
+    "background_image": "images/rooms/world_6/source_center.png",
+    "description": "A single platform rests on an infinite white ocean. There is no floor beneath it, only the collective decision to stand.",
+    "npcs": [],
+    "items": [],
+    "enemies": [
+      "ascended_vale",
+      "ascended_god"
+    ],
+    "enemy_parties": [
+      [
+        "ascended_vale"
+      ],
+      [
+        "ascended_god"
+      ]
+    ],
+    "connections": {
+      "west": "source_spire_thought",
+      "east": "source_new_world"
+    },
+    "pos": [
+      4,
+      1
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "tuning focus",
+        "type": "generic",
+        "action_event": "w6_mq30_tune_world",
+        "condition_unmet_message": "Vale's code still blocks the Source. The Key cannot tune the world until both forms fall."
+      }
+    ],
+    "enemy_flavor": {
+      "ascended_vale": "Vale stands peacefully at the center of the universe, offering extinction as relief.",
+      "ascended_god": "The human outline breaks. A blinding geometry rises from the white ocean and calls itself silence."
+    }
+  },
+  {
+    "id": "source_new_world",
+    "env": "source",
+    "title": "New World",
+    "background_image": "images/rooms/world_6/source_new_world.png",
+    "description": "Morning reaches the Colony without a Shield overhead. At Zeke's diner, a community board holds a beach photograph and the memories Nova can no longer access alone.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "source_center"
+    },
+    "pos": [
+      5,
+      1
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "beach photograph",
+        "type": "generic",
+        "action_event": "w6_replay_epilogue",
+        "condition_unmet_message": "The photograph remembers Tideglass Beach for everyone in it."
+      }
+    ]
   }
 ]

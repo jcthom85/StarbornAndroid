@@ -1,159 +1,333 @@
 [
-    {
-        "id": "jed",
-        "name": "Jed",
-        "aliases": [],
-        "role": "Mentor",
-        "description": "A tall, gruff man with a low voice. He is a tinkerer and Nova's surrogate father.",
-        "portrait": "images/npcs/jed.png",
-        "dialogue": {},
-        "interactions": [
-            {
-                "label": "Talk",
-                "type": "talk",
-                "dialogue_id": "jed_default_talk"
-            }
-        ]
-    },
-    {
-        "id": "zeke",
-        "name": "Zeke",
-        "aliases": [],
-        "role": "Administrator",
-        "description": "A nervous Dominion clerk who chooses truth over safety.",
-        "portrait": "images/npcs/zeke.png",
-        "dialogue": {},
-        "interactions": [
-            {
-                "label": "Talk",
-                "type": "talk",
-                "dialogue_id": "zeke_default_talk"
-            }
-        ]
-    },
-    {
-        "id": "scrapper",
-        "name": "Scrapper",
-        "aliases": [],
-        "role": "Fence",
-        "description": "A paranoid black-market vendor who deals in illegal tech.",
-        "portrait": "images/npcs/scrapper.png",
-        "dialogue": {},
-        "interactions": [
-            {
-                "label": "Shop",
-                "type": "shop",
-                "shop_id": "scrappers_contraband",
-                "dialogue_id": "scrapper_shop_intro"
-            },
-            {
-                "label": "Talk",
-                "type": "talk",
-                "dialogue_id": "scrapper_default_talk"
-            }
-        ]
-    },
-    {
-        "id": "doc",
-        "name": "Doc",
-        "aliases": [],
-        "role": "Medic",
-        "description": "The colony's cynical and overworked medical officer.",
-        "portrait": "images/npcs/doc.png",
-        "dialogue": {},
-        "interactions": [
-            {
-                "label": "Talk",
-                "type": "talk",
-                "dialogue_id": "doc_default_talk"
-            }
-        ]
-    },
-    {
-        "id": "foreman_bogs",
-        "name": "Foreman Boggs",
-        "aliases": [
-            "Foreman Bogs",
-            "Bogs"
-        ],
-        "short_name": "Boggs",
-        "role": "Supervisor",
-        "description": "A loud, bureaucratic bully who prioritizes quotas over lives.",
-        "portrait": "images/npcs/bogs.png",
-        "dialogue": {},
-        "interactions": [
-            {
-                "label": "Talk",
-                "type": "talk",
-                "dialogue_id": "bogs_default_talk"
-            }
-        ]
-    },
-    {
-        "id": "guard_hank",
-        "name": "Guard Hank",
-        "aliases": [],
-        "role": "Security",
-        "description": "A bored Dominion guard who's seen it all.",
-        "portrait": "images/npcs/guard_hank.png",
-        "dialogue": {},
-        "interactions": [
-            {
-                "label": "Talk",
-                "type": "talk",
-                "dialogue_id": "hank_default_talk"
-            }
-        ]
-    },
-    {
-        "id": "miner_bill",
-        "name": "Miner Bill",
-        "aliases": [],
-        "role": "Worker",
-        "description": "A weary miner who spends his meager scrip at the bar.",
-        "portrait": "images/npcs/miner_bill.png",
-        "dialogue": {},
-        "interactions": [
-            {
-                "label": "Talk",
-                "type": "talk",
-                "dialogue_id": "bill_default_talk"
-            }
-        ]
-    },
-    {
-        "id": "ollie",
-        "name": "Ollie",
-        "aliases": [],
-        "role": "Guide",
-        "description": "A scrappy kid who knows every shortcut in the colony.",
-        "portrait": "images/characters/ollie_portrait.png",
-        "dialogue": {},
-        "interactions": [
-            {
-                "label": "Talk",
-                "type": "talk",
-                "dialogue_id": "ollie_quest_prompt"
-            }
-        ]
-    }
-,
-    {
-        "id": "the_warden",
-        "name": "The Warden",
-        "aliases": [
-            "warden",
-            "iron warden"
-        ],
-        "role": "Dominion Commander",
-        "description": "The armored Sector Commander who enforces Dominion asset policy with ritual calm.",
-        "portrait": "images/characters/communicator_portrait.png",
-        "dialogue": {},
-        "interactions": [
-            {
-                "label": "Confront",
-                "type": "talk",
-                "dialogue_id": "warden_boss_intro_1"
-            }
-        ]
-    }]
+  {
+    "id": "jed",
+    "name": "Jed",
+    "aliases": [],
+    "role": "Mentor",
+    "description": "A tall, gruff man with a low voice. He is a tinkerer and Nova's surrogate father.",
+    "portrait": "images/npcs/jed.png",
+    "dialogue": {},
+    "interactions": [
+      {
+        "label": "Talk",
+        "type": "talk",
+        "dialogue_id": "jed_default_talk"
+      }
+    ]
+  },
+  {
+    "id": "zeke",
+    "name": "Zeke",
+    "aliases": [],
+    "role": "Administrator",
+    "description": "A nervous Dominion clerk who chooses truth over safety.",
+    "portrait": "images/npcs/zeke.png",
+    "dialogue": {},
+    "interactions": [
+      {
+        "label": "Talk",
+        "type": "talk",
+        "dialogue_id": "zeke_default_talk"
+      }
+    ]
+  },
+  {
+    "id": "scrapper",
+    "name": "Scrapper",
+    "aliases": [],
+    "role": "Fence",
+    "description": "A paranoid black-market vendor who deals in illegal tech.",
+    "portrait": "images/npcs/scrapper.png",
+    "dialogue": {},
+    "interactions": [
+      {
+        "label": "Shop",
+        "type": "shop",
+        "shop_id": "scrappers_contraband",
+        "dialogue_id": "scrapper_shop_intro"
+      },
+      {
+        "label": "Talk",
+        "type": "talk",
+        "dialogue_id": "scrapper_default_talk"
+      }
+    ]
+  },
+  {
+    "id": "doc",
+    "name": "Doc",
+    "aliases": [],
+    "role": "Medic",
+    "description": "The colony's cynical and overworked medical officer.",
+    "portrait": "images/npcs/doc.png",
+    "dialogue": {},
+    "interactions": [
+      {
+        "label": "Talk",
+        "type": "talk",
+        "dialogue_id": "doc_default_talk"
+      }
+    ]
+  },
+  {
+    "id": "foreman_bogs",
+    "name": "Foreman Boggs",
+    "aliases": [
+      "Foreman Bogs",
+      "Bogs"
+    ],
+    "short_name": "Boggs",
+    "role": "Supervisor",
+    "description": "A loud, bureaucratic bully who prioritizes quotas over lives.",
+    "portrait": "images/npcs/bogs.png",
+    "dialogue": {},
+    "interactions": [
+      {
+        "label": "Talk",
+        "type": "talk",
+        "dialogue_id": "bogs_default_talk"
+      }
+    ]
+  },
+  {
+    "id": "guard_hank",
+    "name": "Guard Hank",
+    "aliases": [],
+    "role": "Security",
+    "description": "A bored Dominion guard who's seen it all.",
+    "portrait": "images/npcs/guard_hank.png",
+    "dialogue": {},
+    "interactions": [
+      {
+        "label": "Talk",
+        "type": "talk",
+        "dialogue_id": "hank_default_talk"
+      }
+    ]
+  },
+  {
+    "id": "miner_bill",
+    "name": "Miner Bill",
+    "aliases": [],
+    "role": "Worker",
+    "description": "A weary miner who spends his meager scrip at the bar.",
+    "portrait": "images/npcs/miner_bill.png",
+    "dialogue": {},
+    "interactions": [
+      {
+        "label": "Talk",
+        "type": "talk",
+        "dialogue_id": "bill_default_talk"
+      }
+    ]
+  },
+  {
+    "id": "ollie",
+    "name": "Ollie",
+    "aliases": [],
+    "role": "Guide",
+    "description": "A scrappy kid who knows every shortcut in the colony.",
+    "portrait": "images/characters/ollie_portrait.png",
+    "dialogue": {},
+    "interactions": [
+      {
+        "label": "Talk",
+        "type": "talk",
+        "dialogue_id": "ollie_quest_prompt"
+      }
+    ]
+  },
+  {
+    "id": "the_warden",
+    "name": "The Warden",
+    "aliases": [
+      "warden",
+      "iron warden"
+    ],
+    "role": "Dominion Commander",
+    "description": "The armored Sector Commander who enforces Dominion asset policy with ritual calm.",
+    "portrait": "images/npcs/the_warden.png",
+    "dialogue": {},
+    "interactions": [
+      {
+        "label": "Confront",
+        "type": "talk",
+        "dialogue_id": "warden_boss_intro_1"
+      }
+    ]
+  },
+  {
+    "id": "orion",
+    "name": "Orion",
+    "aliases": [],
+    "role": "Architect Tuner",
+    "description": "An ancient human awakened from stasis, possessing high focus and connection to Architect resonance.",
+    "portrait": "images/characters/orion_portrait.png",
+    "dialogue": {},
+    "interactions": [
+      {
+        "label": "Talk",
+        "type": "talk",
+        "dialogue_id": "orion_default_talk"
+      }
+    ]
+  },
+  {
+    "id": "gh0st",
+    "name": "Gh0st",
+    "aliases": [
+      "ghost"
+    ],
+    "role": "Assassination Specialist",
+    "description": "A quiet hunter equipped with a high-accuracy sniper rifle and stealth gear.",
+    "portrait": "images/characters/gh0st_portrait.png",
+    "dialogue": {},
+    "interactions": [
+      {
+        "label": "Talk",
+        "type": "talk",
+        "dialogue_id": "ghost_default_talk"
+      }
+    ]
+  },
+  {
+    "id": "jax",
+    "name": "Jax",
+    "aliases": [],
+    "role": "Bartender",
+    "description": "A gruff information broker and bartender at The Static with a cybernetic loader claw.",
+    "portrait": "images/npcs/jax.png",
+    "dialogue": {},
+    "interactions": [
+      {
+        "label": "Talk",
+        "type": "talk",
+        "dialogue_id": "w3_mq12_jax_intro"
+      }
+    ]
+  },
+  {
+    "id": "mika",
+    "name": "Mika",
+    "aliases": [],
+    "role": "Street Vendor",
+    "description": "An optimistic street food vendor in the Night Market.",
+    "portrait": "images/npcs/mika.png",
+    "dialogue": {},
+    "interactions": [
+      {
+        "label": "Talk",
+        "type": "talk",
+        "dialogue_id": "w3_sq13_mika_intro"
+      }
+    ]
+  },
+  {
+    "id": "curator",
+    "name": "Museum Curator",
+    "aliases": [
+      "curator"
+    ],
+    "role": "Upper City Curator",
+    "description": "A velvet-robed cultural gatekeeper who treats living people like mislabeled exhibits.",
+    "portrait": "images/npcs/curator.png",
+    "dialogue": {},
+    "interactions": [
+      {
+        "label": "Talk",
+        "type": "talk",
+        "dialogue_id": "curator_w3_mq13_intro"
+      }
+    ]
+  },
+  {
+    "id": "lab_terminal",
+    "name": "Hacked Lab Terminal",
+    "aliases": [
+      "terminal"
+    ],
+    "role": "Prototype Console",
+    "description": "A lab terminal running weapon trials with the liability flags disabled.",
+    "portrait": "images/npcs/lab_terminal.png",
+    "dialogue": {},
+    "interactions": [
+      {
+        "label": "Run Trial",
+        "type": "talk",
+        "dialogue_id": "lab_terminal_w3_sq15_intro"
+      }
+    ]
+  },
+  {
+    "id": "thorne",
+    "name": "Director Mara Thorne",
+    "aliases": [
+      "thorne",
+      "director"
+    ],
+    "role": "Deposed Director",
+    "description": "The former Dominion director, stripped of command and hiding in her own Server Farm.",
+    "portrait": "images/npcs/thorne.png",
+    "dialogue": {},
+    "interactions": [
+      {
+        "label": "Talk",
+        "type": "talk",
+        "dialogue_id": "thorne_w5_mq22_intro"
+      }
+    ]
+  },
+  {
+    "id": "maintenance_bot",
+    "name": "Maintenance Bot",
+    "aliases": [
+      "bot"
+    ],
+    "role": "Solarium Caretaker",
+    "description": "A dented horticultural machine still trying to keep executive paradise alive.",
+    "portrait": "images/npcs/maintenance_bot.png",
+    "dialogue": {},
+    "interactions": [
+      {
+        "label": "Talk",
+        "type": "talk",
+        "dialogue_id": "maintenance_bot_w5_sq22_intro"
+      }
+    ]
+  },
+  {
+    "id": "elara",
+    "name": "Elara",
+    "aliases": [],
+    "role": "Living CPU",
+    "description": "Gh0st's sister, conscious inside the Source while Dominion uses her body and chordprint as Ring infrastructure.",
+    "portrait": "images/npcs/elara.png",
+    "dialogue": {},
+    "interactions": [
+      {
+        "label": "Talk",
+        "type": "talk",
+        "dialogue_id": "elara_w5_mq24_reunion"
+      }
+    ]
+  },
+  {
+    "id": "vale",
+    "name": "Lieutenant Arden Vale",
+    "short_name": "Vale",
+    "aliases": [
+      "arden"
+    ],
+    "role": "Orbital Compliance Commander",
+    "description": "The calm architect of the coup, now using Harmony to replace every voice with his own.",
+    "portrait": "images/npcs/vale.png",
+    "dialogue": {},
+    "interactions": [
+      {
+        "label": "Confront",
+        "type": "talk",
+        "dialogue_id": "vale_w5_mq25_soloist"
+      }
+    ]
+  }
+]

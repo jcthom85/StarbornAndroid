@@ -494,5 +494,68 @@
       "trade_label": "Browse provisions",
       "leave_label": "Back"
     }
+  },
+  "upper_city_lounge": {
+    "name": "Upper City Concierge",
+    "portrait": "images/portraits/jeweler.png",
+    "greeting": "Concierge: Premium equipment is available to guests with verified altitude clearance.",
+    "pricing": {
+      "sell_markup": 1.35,
+      "buy_markdown": 0.45
+    },
+    "sells": {
+      "items": [
+        "medkit",
+        "battery_pack",
+        "precision_sight",
+        "focus_conduit",
+        "phase_rounds"
+      ],
+      "rules": {
+        "types_in": [],
+        "subtypes_in": []
+      },
+      "gates": {
+        "phase_rounds": {
+          "milestones": [
+            "ms_w3_prototype_tested"
+          ]
+        }
+      }
+    },
+    "buys": {
+      "accept_types": [
+        "consumable",
+        "weapon",
+        "armor",
+        "accessory",
+        "ingredient",
+        "component",
+        "mod"
+      ],
+      "blacklist": []
+    },
+    "dialogue": {
+      "preface": [
+        {
+          "speaker": "Concierge",
+          "text": "Premium equipment is available to guests with verified altitude clearance."
+        }
+      ],
+      "smalltalk": [
+        {
+          "id": "shop_upper_city_gossip",
+          "label": "Ask about security",
+          "response": [
+            {
+              "speaker": "Concierge",
+              "text": "Security is invisible because visible security upsets the residents."
+            }
+          ]
+        }
+      ],
+      "trade_label": "Browse premium stock",
+      "leave_label": "Step away"
+    }
   }
 }

@@ -11,7 +11,8 @@ import kotlin.math.abs
  * Uses the linear acceleration sensor when available, falling back to the general accelerometer.
  */
 class HookMotionDetector(
-    private val sensorManager: SensorManager?
+    private val sensorManager: SensorManager?,
+    var threshold: Float = DEFAULT_UPWARD_THRESHOLD
 ) : SensorEventListener {
 
     private var sensor: Sensor? = null
@@ -41,7 +42,7 @@ class HookMotionDetector(
         if (now - lastTriggerTime < COOLDOWN_MS) return
         val axisY = event.values.getOrNull(1) ?: return
         val axisZ = event.values.getOrNull(2) ?: 0f
-        val jerkDetected = -axisY > UPWARD_THRESHOLD && abs(axisZ) < Z_FILTER
+        val jerkDetected = -axisY > threshold && abs(axisZ) < Z_FILTER
         if (jerkDetected) {
             lastTriggerTime = now
             callback?.invoke()
@@ -58,7 +59,7 @@ class HookMotionDetector(
     }
 
     companion object {
-        private const val UPWARD_THRESHOLD = 4.5f
+        const val DEFAULT_UPWARD_THRESHOLD = 4.5f
         private const val Z_FILTER = 5f
         private const val COOLDOWN_MS = 400L
     }

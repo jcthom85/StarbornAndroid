@@ -1,561 +1,645 @@
 [
-    {
-        "id": "cinematic_narrative_test",
-        "title": "Cosmic Resonance",
-        "steps": [
-            {
-                "type": "narration",
-                "text": "A low harmonic resonance vibrates through the metal floor plates, rising from the deep oceanic current below."
-            },
-            {
-                "type": "dialogue",
-                "speaker": "Nova",
-                "text": "Do you feel that? The pressure... it's changing."
-            },
-            {
-                "type": "narration",
-                "text": "The air grows heavy, carrying the distant echo of a song long forgotten."
-            }
-        ]
-    },
-    {
-        "id": "scene_encounter_defeat_tip",
-        "title": "Tactical Review",
-        "steps": [
-            {
-                "type": "narration",
-                "text": "The squad retreats to regroup after the defeat."
-            },
-            {
-                "type": "narration",
-                "text": "Patch up, recharge shields, and consider buffing allies before re-engaging. Status items and defensive skills can swing the next encounter."
-            }
-        ]
-    },
-    {
-        "id": "scene_blocked_lock",
-        "title": "Access Denied",
-        "steps": [
-            {
-                "type": "narration",
-                "text": "A security lock halts your progress."
-            },
-            {
-                "type": "narration",
-                "text": "Check your objectives or inventory—certain rooms need power restored or a keycard before they open."
-            }
-        ]
-    },
-    {
-        "id": "scene_blocked_enemy",
-        "title": "Hostile Presence",
-        "steps": [
-            {
-                "type": "narration",
-                "text": "Sensors flag movement beyond the doorway."
-            },
-            {
-                "type": "narration",
-                "text": "Clear nearby threats or prepare a pre-emptive strike—some exits stay sealed until the ambush is dealt with."
-            }
-        ]
-    },
-    {
-        "id": "ollie_intro_scene",
-        "title": "Main Road Encounter",
-        "steps": [
-            {
-                "type": "dialogue",
-                "speaker": "Ollie",
-                "text": "Nova! There you are! We're late to meet Jed."
-            },
-            {
-                "type": "dialogue",
-                "speaker": "Ollie",
-                "text": "Touch my name on your HUD, choose Talk, and let's catch up to him before he locks up."
-            }
-        ]
-    },
-    {
-        "id": "scene_mine_restore",
-        "title": "Power Restored",
-        "steps": [
-            {
-                "type": "narration",
-                "text": "The generator hums to life, flooding the tunnels with light."
-            },
-            {
-                "type": "narration",
-                "text": "Somewhere deeper within the mine, heavy locks release."
-            }
-        ]
-    },
-    {
-        "id": "scene_collect_display",
-        "title": "Collector",
-        "steps": [
-            {
-                "type": "narration",
-                "text": "Ellie carefully packs the shattered display into a crate for repair."
-            }
-        ]
-    },
-    {
-        "id": "scene_collect_grinder",
-        "title": "Collector",
-        "steps": [
-            {
-                "type": "narration",
-                "text": "Maddie hands over the grinder, hopeful you can repair it."
-            }
-        ]
-    },
-    {
-        "id": "scene_collect_projector",
-        "title": "Collector",
-        "steps": [
-            {
-                "type": "narration",
-                "text": "Kasey reluctantly passes you the cracked projector lens."
-            }
-        ]
-    },
-    {
-        "id": "scene_complete_gather_broken_gear",
-        "title": "Mission Complete",
-        "steps": [
-            {
-                "type": "narration",
-                "text": "Jed celebrates as all three relics return to the workshop."
-            }
-        ]
-    },
-    {
-        "id": "camera_gallery_demo",
-        "title": "Camera Gallery",
-        "steps": [
-            {
-                "type": "narration",
-                "text": "Colony camera feeds cycle through wide, close, and tracking angles for visual calibration."
-            }
-        ]
-    },
-    {
-        "id": "camera_test",
-        "title": "Camera Calibration",
-        "steps": [
-            {
-                "type": "narration",
-                "text": "The view locks, drifts, then settles as the scene framing comes online."
-            }
-        ]
-    },
-    {
-        "id": "caption_cycle",
-        "title": "Caption Cycle",
-        "steps": [
-            {
-                "type": "narration",
-                "text": "Status captions pulse across the feed, translating colony alarms into something readable."
-            }
-        ]
-    },
-    {
-        "id": "caption_demo",
-        "title": "Caption Timing",
-        "steps": [
-            {
-                "type": "narration",
-                "text": "The caption layer holds long enough to read before the next warning takes its place."
-            }
-        ]
-    },
-    {
-        "id": "cinematic_text_demo",
-        "title": "Cinematic Text",
-        "steps": [
-            {
-                "type": "narration",
-                "text": "Narration settles over the scene like a system log with a pulse."
-            }
-        ]
-    },
-    {
-        "id": "color_filter_demo",
-        "title": "Color Filter Pass",
-        "steps": [
-            {
-                "type": "narration",
-                "text": "Emergency color grading washes the image in warning reds and cold industrial blues."
-            }
-        ]
-    },
-    {
-        "id": "fade_demo",
-        "title": "Fade Sequence",
-        "steps": [
-            {
-                "type": "narration",
-                "text": "The scene fades down until only the colony hum remains."
-            }
-        ]
-    },
-    {
-        "id": "flash_demo",
-        "title": "Impact Flash",
-        "steps": [
-            {
-                "type": "narration",
-                "text": "A white impact flare swallows the frame, then snaps back to the room."
-            }
-        ]
-    },
-    {
-        "id": "flashback_demo",
-        "title": "Memory Flashback",
-        "steps": [
-            {
-                "type": "narration",
-                "text": "A fractured memory cuts through the present, bright at the edges and gone too fast."
-            }
-        ]
-    },
-    {
-        "id": "letterbox_demo",
-        "title": "Letterbox Frame",
-        "steps": [
-            {
-                "type": "narration",
-                "text": "The frame narrows, focusing attention on the single choice left in front of Nova."
-            }
-        ]
-    },
-    {
-        "id": "market_plaza_intro",
-        "title": "Market Plaza Intro",
-        "steps": [
-            {
-                "type": "narration",
-                "text": "Trade Row opens into noise, heat, and a dozen quiet deals pretending to be legal."
-            }
-        ]
-    },
-    {
-        "id": "master_showcase",
-        "title": "Master Showcase",
-        "steps": [
-            {
-                "type": "narration",
-                "text": "Every visual layer stacks together: motion, captions, filters, and the pressure of the moment."
-            }
-        ]
-    },
-    {
-        "id": "narration_demo",
-        "title": "Narration Pass",
-        "steps": [
-            {
-                "type": "narration",
-                "text": "The narrator catches the quiet detail the alarms are too loud to notice."
-            }
-        ]
-    },
-    {
-        "id": "new_game_fade_in",
-        "title": "New Game Fade In",
-        "steps": [
-            {
-                "type": "narration",
-                "text": "The bunk wall hums awake around you. Somewhere below, the colony drills begin their morning rhythm."
-            }
-        ]
-    },
-    {
-        "id": "pan_only_demo",
-        "title": "Slow Pan",
-        "steps": [
-            {
-                "type": "narration",
-                "text": "The camera glides across the room, letting the damage tell the story first."
-            }
-        ]
-    },
-    {
-        "id": "particles_demo",
-        "title": "Particle Field",
-        "steps": [
-            {
-                "type": "narration",
-                "text": "Dust, sparks, and tiny motes of resonance drift through the light."
-            }
-        ]
-    },
-    {
-        "id": "ring_demo",
-        "title": "Resonance Ring",
-        "steps": [
-            {
-                "type": "narration",
-                "text": "A ring of pressure ripples outward, bending the air into visible sound."
-            }
-        ]
-    },
-    {
-        "id": "scene_jed_tinkering_prompt",
-        "title": "Tinkering Bench",
-        "steps": [
-            {
-                "type": "narration",
-                "text": "Jed taps the bench twice, already watching to see whether Nova remembers the first rule: power off before hands in."
-            }
-        ]
-    },
-    {
-        "id": "scene_jed_tinkering_wrapup",
-        "title": "Repair Complete",
-        "steps": [
-            {
-                "type": "narration",
-                "text": "The cutter settles into a steady hum. Jed tries not to look proud and fails by half an inch."
-            }
-        ]
-    },
-    {
-        "id": "scene_return_display",
-        "title": "Display Returned",
-        "steps": [
-            {
-                "type": "narration",
-                "text": "The shattered display slides onto Jed's bench, another broken thing waiting for stubborn hands."
-            }
-        ]
-    },
-    {
-        "id": "scene_return_grinder",
-        "title": "Grinder Returned",
-        "steps": [
-            {
-                "type": "narration",
-                "text": "The grinder lands with a heavy clunk, smelling of dust, old grease, and useful trouble."
-            }
-        ]
-    },
-    {
-        "id": "scene_return_projector",
-        "title": "Projector Returned",
-        "steps": [
-            {
-                "type": "narration",
-                "text": "The cracked projector lens catches the work light, splitting it into tired little rainbows."
-            }
-        ]
-    },
-    {
-        "id": "shake_demo",
-        "title": "Camera Shake",
-        "steps": [
-            {
-                "type": "narration",
-                "text": "The frame jolts as something heavy hits nearby."
-            }
-        ]
-    },
-    {
-        "id": "speed_lines_demo",
-        "title": "Launch Speed Lines",
-        "steps": [
-            {
-                "type": "narration",
-                "text": "Motion streaks tear past the viewport as the launch rail takes hold."
-            }
-        ]
-    },
-    {
-        "id": "tilt_demo",
-        "title": "Dutch Tilt",
-        "steps": [
-            {
-                "type": "narration",
-                "text": "The horizon tips sideways, making the corridor feel even less trustworthy."
-            }
-        ]
-    },
-    {
-        "id": "town_square_intro",
-        "title": "Town Square Intro",
-        "steps": [
-            {
-                "type": "narration",
-                "text": "The open square catches every sound at once: boots, vendors, distant machinery, and the low electric buzz of surveillance."
-            }
-        ]
-    },
-    {
-        "id": "vfx_stage_demo",
-        "title": "Visual Effects Stage",
-        "steps": [
-            {
-                "type": "narration",
-                "text": "The visual effects layer blooms across the frame, then folds back into the scene."
-            }
-        ]
-    },
-    {
-        "id": "vignette_demo",
-        "title": "Vignette Focus",
-        "steps": [
-            {
-                "type": "narration",
-                "text": "The edges darken, pulling the eye toward the one detail that matters."
-            }
-        ]
-    },
-    {
-        "id": "wipe_demo",
-        "title": "Wipe Transition",
-        "steps": [
-            {
-                "type": "narration",
-                "text": "A hard transition sweeps the old room away and leaves the next danger waiting."
-            }
-        ]
-    },
-    {
-        "id": "zoom_only_demo",
-        "title": "Slow Zoom",
-        "steps": [
-            {
-                "type": "narration",
-                "text": "The view tightens slowly, closing the distance before anyone moves."
-            }
-        ]
-    },
-    {
-        "id": "zoom_pan_demo",
-        "title": "Zoom Pan",
-        "steps": [
-            {
-                "type": "narration",
-                "text": "The camera pushes forward and tracks sideways, following the line of trouble through the room."
-            }
-        ]
-    },
-    {
-        "id": "ollie_intro_scene",
-        "title": "Main Road Encounter",
-        "steps": [
-            {
-                "type": "dialogue",
-                "speaker": "Ollie",
-                "text": "Nova! There you are! We're late to meet Jed."
-            },
-            {
-                "type": "dialogue",
-                "speaker": "Ollie",
-                "text": "Touch my name on your HUD, choose Talk, and let's catch up to him before he locks up."
-            }
-        ]
-    },
-    {
-        "id": "scene_relic_sync",
-        "title": "The Tuning Fork Synchronized",
-        "steps": [
-            {
-                "type": "narration",
-                "text": "Your hand touches the Tuning Fork. Instantly, the subsystem hum in your teeth flares into a deafening pressure. It isn't sound; it is weight, pushing down from the roof of the chamber."
-            },
-            {
-                "type": "narration",
-                "text": "The stone under your fingers doesn't feel solid. It feels like standing waves, a vibration held in place by sheer resonance."
-            },
-            {
-                "type": "narration",
-                "text": "A cold current surges up your arm, rippling through your neural link. The old songs in your eyes flicker and warp, replaced by a deep, oceanic pressure."
-            },
-            {
-                "type": "narration",
-                "text": "You hear it. Not a protocol error. A song. The Chorus. Standing waves of a resonance older than the colony, pressing against your mind."
-            },
-            {
-                "type": "narration",
-                "text": "You pull your hand back as the resonance stabilizes. The hum remains, settled deep in your chest."
-            }
-        ]
-    },
-    {
-        "id": "scene_launch_crash",
-        "title": "Planetary Impact",
-        "steps": [
-            {
-                "type": "narration",
-                "text": "The pod clears the magnetic launch rail, shooting up into the upper atmosphere. The glowing canyons of the colony shrink into a tiny gray scar below."
-            },
-            {
-                "type": "narration",
-                "text": "Suddenly, the view out the viewport fractures. A blinding web of blue resonance—the planetary shield—flashes in front of you."
-            },
-            {
-                "type": "narration",
-                "text": "The pod's hull begins to shriek and buckle as it collides with the shield's standing wave frequency."
-            },
-            {
-                "type": "dialogue",
-                "speaker": "Zeke",
-                "emote": "scared",
-                "text": "Nova! Hold on! The navigation console is burning out—the frequency bypass isn't holding!"
-            },
-            {
-                "type": "narration",
-                "text": "Alarms scream. The navigation console sparks and dies. Zeke holds onto the frame, yelling over the sound of tearing metal."
-            },
-            {
-                "type": "narration",
-                "text": "The shield rejects the pod, throwing it back into the atmosphere in a spinning descent toward the overgrown ruins of Sector 9."
-            },
-            {
-                "type": "narration",
-                "text": "Everything goes white as the thrusters fail and the ground rushes up to meet you."
-            }
-        ]
-    },
-    {
-        "id": "scene_sq04_hack",
-        "title": "Protocol Decryption",
-        "steps": [
-            {
-                "type": "narration",
-                "text": "You plug your datapad into the console's debugging interface. The screen immediately cascades with thousands of lines of encrypted compiler scripts."
-            },
-            {
-                "type": "narration",
-                "text": "A hidden data block decrypts. The signature on the package is marked by standing waves and acoustic patterns, signed by the 'Chorus'."
-            },
-            {
-                "type": "narration",
-                "text": "The terminal chimes. 'Protocol override successfully broadcast. Local admin privileges established.'"
-            }
-        ]
-    },
-    {
-        "id": "scene_sq05_datapad",
-        "title": "The Last Shift Logs",
-        "steps": [
-            {
-                "type": "narration",
-                "text": "You boot up the discarded datapad. The battery is critically low, but the final text log is intact."
-            },
-            {
-                "type": "narration",
-                "text": "Log Entry: 'They sealed the doors from the outside. Said the collapse was a biohazard risk, but we only hit a pocket of hum.'"
-            },
-            {
-                "type": "narration",
-                "text": "Log Entry: 'The resonance is beautiful. It doesn't sound like a machine. It sounds like currents in a deep ocean. I'm not afraid of the dark anymore.'"
-            },
-            {
-                "type": "narration",
-                "text": "The screen flickers and goes dark permanently, leaving you in the cold silence of the mine."
-            }
-        ]
-    }
+  {
+    "id": "cinematic_narrative_test",
+    "title": "Cosmic Resonance",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "A low harmonic resonance vibrates through the metal floor plates, rising from the deep oceanic current below."
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Nova",
+        "text": "Do you feel that? The pressure... it's changing."
+      },
+      {
+        "type": "narration",
+        "text": "The air grows heavy, carrying the distant echo of a song long forgotten."
+      }
+    ]
+  },
+  {
+    "id": "scene_encounter_defeat_tip",
+    "title": "Tactical Review",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "The squad retreats to regroup after the defeat."
+      },
+      {
+        "type": "narration",
+        "text": "Patch up, recharge shields, and consider buffing allies before re-engaging. Status items and defensive skills can swing the next encounter."
+      }
+    ]
+  },
+  {
+    "id": "scene_blocked_lock",
+    "title": "Access Denied",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "A security lock halts your progress."
+      },
+      {
+        "type": "narration",
+        "text": "Check your objectives or inventory—certain rooms need power restored or a keycard before they open."
+      }
+    ]
+  },
+  {
+    "id": "scene_blocked_enemy",
+    "title": "Hostile Presence",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Sensors flag movement beyond the doorway."
+      },
+      {
+        "type": "narration",
+        "text": "Clear nearby threats or prepare a pre-emptive strike—some exits stay sealed until the ambush is dealt with."
+      }
+    ]
+  },
+  {
+    "id": "ollie_intro_scene",
+    "title": "Main Road Encounter",
+    "steps": [
+      {
+        "type": "dialogue",
+        "speaker": "Ollie",
+        "text": "Nova! There you are! We're late to meet Jed."
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Ollie",
+        "text": "Touch my name on your HUD, choose Talk, and let's catch up to him before he locks up."
+      }
+    ]
+  },
+  {
+    "id": "scene_mine_restore",
+    "title": "Power Restored",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "The generator hums to life, flooding the tunnels with light."
+      },
+      {
+        "type": "narration",
+        "text": "Somewhere deeper within the mine, heavy locks release."
+      }
+    ]
+  },
+  {
+    "id": "scene_collect_display",
+    "title": "Collector",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Ellie carefully packs the shattered display into a crate for repair."
+      }
+    ]
+  },
+  {
+    "id": "scene_collect_grinder",
+    "title": "Collector",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Maddie hands over the grinder, hopeful you can repair it."
+      }
+    ]
+  },
+  {
+    "id": "scene_collect_projector",
+    "title": "Collector",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Kasey reluctantly passes you the cracked projector lens."
+      }
+    ]
+  },
+  {
+    "id": "scene_complete_gather_broken_gear",
+    "title": "Mission Complete",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Jed celebrates as all three relics return to the workshop."
+      }
+    ]
+  },
+  {
+    "id": "camera_gallery_demo",
+    "title": "Camera Gallery",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Colony camera feeds cycle through wide, close, and tracking angles for visual calibration."
+      }
+    ]
+  },
+  {
+    "id": "camera_test",
+    "title": "Camera Calibration",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "The view locks, drifts, then settles as the scene framing comes online."
+      }
+    ]
+  },
+  {
+    "id": "caption_cycle",
+    "title": "Caption Cycle",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Status captions pulse across the feed, translating colony alarms into something readable."
+      }
+    ]
+  },
+  {
+    "id": "caption_demo",
+    "title": "Caption Timing",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "The caption layer holds long enough to read before the next warning takes its place."
+      }
+    ]
+  },
+  {
+    "id": "cinematic_text_demo",
+    "title": "Cinematic Text",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Narration settles over the scene like a system log with a pulse."
+      }
+    ]
+  },
+  {
+    "id": "color_filter_demo",
+    "title": "Color Filter Pass",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Emergency color grading washes the image in warning reds and cold industrial blues."
+      }
+    ]
+  },
+  {
+    "id": "fade_demo",
+    "title": "Fade Sequence",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "The scene fades down until only the colony hum remains."
+      }
+    ]
+  },
+  {
+    "id": "flash_demo",
+    "title": "Impact Flash",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "A white impact flare swallows the frame, then snaps back to the room."
+      }
+    ]
+  },
+  {
+    "id": "flashback_demo",
+    "title": "Memory Flashback",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "A fractured memory cuts through the present, bright at the edges and gone too fast."
+      }
+    ]
+  },
+  {
+    "id": "letterbox_demo",
+    "title": "Letterbox Frame",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "The frame narrows, focusing attention on the single choice left in front of Nova."
+      }
+    ]
+  },
+  {
+    "id": "market_plaza_intro",
+    "title": "Market Plaza Intro",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Trade Row opens into noise, heat, and a dozen quiet deals pretending to be legal."
+      }
+    ]
+  },
+  {
+    "id": "master_showcase",
+    "title": "Master Showcase",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Every visual layer stacks together: motion, captions, filters, and the pressure of the moment."
+      }
+    ]
+  },
+  {
+    "id": "narration_demo",
+    "title": "Narration Pass",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "The narrator catches the quiet detail the alarms are too loud to notice."
+      }
+    ]
+  },
+  {
+    "id": "new_game_fade_in",
+    "title": "New Game Fade In",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "The bunk wall hums awake around you. Somewhere below, the colony drills begin their morning rhythm."
+      }
+    ]
+  },
+  {
+    "id": "pan_only_demo",
+    "title": "Slow Pan",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "The camera glides across the room, letting the damage tell the story first."
+      }
+    ]
+  },
+  {
+    "id": "particles_demo",
+    "title": "Particle Field",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Dust, sparks, and tiny motes of resonance drift through the light."
+      }
+    ]
+  },
+  {
+    "id": "ring_demo",
+    "title": "Resonance Ring",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "A ring of pressure ripples outward, bending the air into visible sound."
+      }
+    ]
+  },
+  {
+    "id": "scene_jed_tinkering_prompt",
+    "title": "Tinkering Bench",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Jed taps the bench twice, already watching to see whether Nova remembers the first rule: power off before hands in."
+      }
+    ]
+  },
+  {
+    "id": "scene_jed_tinkering_wrapup",
+    "title": "Repair Complete",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "The cutter settles into a steady hum. Jed tries not to look proud and fails by half an inch."
+      }
+    ]
+  },
+  {
+    "id": "scene_return_display",
+    "title": "Display Returned",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "The shattered display slides onto Jed's bench, another broken thing waiting for stubborn hands."
+      }
+    ]
+  },
+  {
+    "id": "scene_return_grinder",
+    "title": "Grinder Returned",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "The grinder lands with a heavy clunk, smelling of dust, old grease, and useful trouble."
+      }
+    ]
+  },
+  {
+    "id": "scene_return_projector",
+    "title": "Projector Returned",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "The cracked projector lens catches the work light, splitting it into tired little rainbows."
+      }
+    ]
+  },
+  {
+    "id": "shake_demo",
+    "title": "Camera Shake",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "The frame jolts as something heavy hits nearby."
+      }
+    ]
+  },
+  {
+    "id": "speed_lines_demo",
+    "title": "Launch Speed Lines",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Motion streaks tear past the viewport as the launch rail takes hold."
+      }
+    ]
+  },
+  {
+    "id": "tilt_demo",
+    "title": "Dutch Tilt",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "The horizon tips sideways, making the corridor feel even less trustworthy."
+      }
+    ]
+  },
+  {
+    "id": "town_square_intro",
+    "title": "Town Square Intro",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "The open square catches every sound at once: boots, vendors, distant machinery, and the low electric buzz of surveillance."
+      }
+    ]
+  },
+  {
+    "id": "vfx_stage_demo",
+    "title": "Visual Effects Stage",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "The visual effects layer blooms across the frame, then folds back into the scene."
+      }
+    ]
+  },
+  {
+    "id": "vignette_demo",
+    "title": "Vignette Focus",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "The edges darken, pulling the eye toward the one detail that matters."
+      }
+    ]
+  },
+  {
+    "id": "wipe_demo",
+    "title": "Wipe Transition",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "A hard transition sweeps the old room away and leaves the next danger waiting."
+      }
+    ]
+  },
+  {
+    "id": "zoom_only_demo",
+    "title": "Slow Zoom",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "The view tightens slowly, closing the distance before anyone moves."
+      }
+    ]
+  },
+  {
+    "id": "zoom_pan_demo",
+    "title": "Zoom Pan",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "The camera pushes forward and tracks sideways, following the line of trouble through the room."
+      }
+    ]
+  },
+  {
+    "id": "ollie_intro_scene",
+    "title": "Main Road Encounter",
+    "steps": [
+      {
+        "type": "dialogue",
+        "speaker": "Ollie",
+        "text": "Nova! There you are! We're late to meet Jed."
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Ollie",
+        "text": "Touch my name on your HUD, choose Talk, and let's catch up to him before he locks up."
+      }
+    ]
+  },
+  {
+    "id": "scene_relic_sync",
+    "title": "The Tuning Fork Synchronized",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Your hand touches the Tuning Fork. Instantly, the subsystem hum in your teeth flares into a deafening pressure. It isn't sound; it is weight, pushing down from the roof of the chamber."
+      },
+      {
+        "type": "narration",
+        "text": "The stone under your fingers doesn't feel solid. It feels like standing waves, a vibration held in place by sheer resonance."
+      },
+      {
+        "type": "narration",
+        "text": "A cold current surges up your arm, rippling through your neural link. The old songs in your eyes flicker and warp, replaced by a deep, oceanic pressure."
+      },
+      {
+        "type": "narration",
+        "text": "You hear it. Not a protocol error. A song. The Chorus. Standing waves of a resonance older than the colony, pressing against your mind."
+      },
+      {
+        "type": "narration",
+        "text": "You pull your hand back as the resonance stabilizes. The hum remains, settled deep in your chest."
+      }
+    ]
+  },
+  {
+    "id": "scene_launch_crash",
+    "title": "Planetary Impact",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "The pod clears the magnetic launch rail, shooting up into the upper atmosphere. The glowing canyons of the colony shrink into a tiny gray scar below."
+      },
+      {
+        "type": "narration",
+        "text": "Suddenly, the view out the viewport fractures. A blinding web of blue resonance—the planetary shield—flashes in front of you."
+      },
+      {
+        "type": "narration",
+        "text": "The pod's hull begins to shriek and buckle as it collides with the shield's standing wave frequency."
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Zeke",
+        "emote": "scared",
+        "text": "Nova! Hold on! The navigation console is burning out—the frequency bypass isn't holding!"
+      },
+      {
+        "type": "narration",
+        "text": "Alarms scream. The navigation console sparks and dies. Zeke holds onto the frame, yelling over the sound of tearing metal."
+      },
+      {
+        "type": "narration",
+        "text": "The shield rejects the pod, throwing it back into the atmosphere in a spinning descent toward the overgrown ruins of Sector 9."
+      },
+      {
+        "type": "narration",
+        "text": "Everything goes white as the thrusters fail and the ground rushes up to meet you."
+      }
+    ]
+  },
+  {
+    "id": "scene_sq04_hack",
+    "title": "Protocol Decryption",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "You plug your datapad into the console's debugging interface. The screen immediately cascades with thousands of lines of encrypted compiler scripts."
+      },
+      {
+        "type": "narration",
+        "text": "A hidden data block decrypts. The signature on the package is marked by standing waves and acoustic patterns, signed by the 'Chorus'."
+      },
+      {
+        "type": "narration",
+        "text": "The terminal chimes. 'Protocol override successfully broadcast. Local admin privileges established.'"
+      }
+    ]
+  },
+  {
+    "id": "scene_sq05_datapad",
+    "title": "The Last Shift Logs",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "You boot up the discarded datapad. The battery is critically low, but the final text log is intact."
+      },
+      {
+        "type": "narration",
+        "text": "Log Entry: 'They sealed the doors from the outside. Said the collapse was a biohazard risk, but we only hit a pocket of hum.'"
+      },
+      {
+        "type": "narration",
+        "text": "Log Entry: 'The resonance is beautiful. It doesn't sound like a machine. It sounds like currents in a deep ocean. I'm not afraid of the dark anymore.'"
+      },
+      {
+        "type": "narration",
+        "text": "The screen flickers and goes dark permanently, leaving you in the cold silence of the mine."
+      }
+    ]
+  },
+  {
+    "id": "scene_w6_final_note",
+    "title": "The Final Note",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "The Ascended falls, but Vale's code remains inside the collapsing Source. Six Echoes hum behind safety latches that cannot carry enough signal."
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Nova",
+        "text": "I am not a cup. I am a wire. Form the circuit."
+      },
+      {
+        "type": "narration",
+        "text": "Zeke takes her right hand and grounds the current. Gh0st braces her back as his armor vents white heat. Orion grips her shoulder and tunes the chaos into one answer."
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Orion",
+        "text": "No. We are Starborn."
+      },
+      {
+        "type": "narration",
+        "text": "Nova opens the Key. The Source hits them like an ocean of white light. They hold together, fire the Tuned Note, and the Tear closes."
+      },
+      {
+        "type": "narration",
+        "text": "They fall together."
+      }
+    ]
+  },
+  {
+    "id": "scene_w6_epilogue_credits",
+    "title": "A Long Story",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Morning in the Colony. The Shield is gone. The sky looks larger, as if someone finally removed a ceiling."
+      },
+      {
+        "type": "narration",
+        "text": "At Zeke's diner, Nova studies a photograph of the crew at Tideglass Beach. She knows the face is hers, but the sand and salt are missing."
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Zeke",
+        "text": "Do not strain a processor. It was a Tuesday. It smelled like salt. You complained about the humidity."
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Gh0st",
+        "text": "You also threw a canteen at me. Accuracy: 94%."
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Nova",
+        "text": "I cannot hear the music anymore."
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Orion",
+        "text": "Good. Now you can hear the wind."
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Nova",
+        "text": "Sounds like a good day. Fill me in on the rest?"
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Zeke",
+        "text": "Pull up a chair. It is a long story."
+      },
+      {
+        "type": "narration",
+        "text": "STAR BORN"
+      },
+      {
+        "type": "narration",
+        "text": "Created by the Starborn team. Thank you for playing."
+      }
+    ]
+  }
 ]

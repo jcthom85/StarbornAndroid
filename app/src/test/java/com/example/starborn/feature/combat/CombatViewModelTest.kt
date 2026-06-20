@@ -30,6 +30,8 @@ import com.example.starborn.domain.model.Player
 import com.example.starborn.domain.model.Resistances
 import com.example.starborn.domain.model.Room
 import com.example.starborn.domain.model.Skill
+import com.example.starborn.domain.model.SkillNodeEffect
+import com.example.starborn.domain.model.SkillTreeNode
 import com.example.starborn.domain.model.StatusDefinition
 import com.example.starborn.domain.session.GameSessionStore
 import com.example.starborn.domain.theme.EnvironmentThemeManager
@@ -1207,6 +1209,93 @@ class CombatViewModelTest {
         assertEquals(CombatBannerIcon.BURST, banner?.icon)
         assertEquals(CombatBannerImportance.IMPORTANT, banner?.importance)
         assertTrue(banner?.tags.orEmpty().contains("Cooldown -1"))
+    }
+
+    @Test
+    fun testPassiveSkillTreeStatBonusesAreAppliedToCombatant() {
+        val player = Player(
+            id = "nova",
+            name = "Nova",
+            level = 1,
+            xp = 0,
+            hp = 500,
+            strength = 10,
+            vitality = 10,
+            agility = 10,
+            focus = 10,
+            luck = 10,
+            skills = listOf("nova_strike"),
+            miniIconPath = "",
+            combatIconPath = ""
+        )
+        val enemy = Enemy(
+            id = "echo_borer",
+            name = "Echo-Borer",
+            tier = "standard",
+            hp = 55,
+            strength = 6,
+            vitality = 5,
+            agility = 2,
+            focus = 1,
+            luck = 1,
+            speed = 8,
+            element = "physical",
+            resistances = Resistances(),
+            abilities = emptyList(),
+            flavor = "",
+            xpReward = 40,
+            creditReward = 10,
+            drops = emptyList(),
+            description = "",
+            portrait = "",
+            sprite = emptyList(),
+            attack = 6,
+            apReward = 0
+        )
+        val passiveNode = SkillTreeNode(
+            id = "nova_quiet_steps",
+            name = "Quiet Steps",
+            costAp = 1,
+            effect = SkillNodeEffect(
+                type = "buff",
+                buffType = "speed",
+                value = 5
+            )
+        )
+        val worldAssets = mock<WorldAssetDataSource> {
+            on { loadCharacters() } doReturn listOf(player)
+            on { loadEnemies() } doReturn listOf(enemy)
+            on { loadSkills() } doReturn emptyList()
+            on { loadRooms() } doReturn emptyList()
+            on { loadSkillNodes() } doReturn mapOf("nova_quiet_steps" to passiveNode)
+        }
+        val sessionStore = GameSessionStore().apply {
+            unlockSkill("nova_quiet_steps")
+        }
+        val themeRepository = mock<ThemeRepository> {
+            on { getTheme(any()) } doReturn null
+            on { getStyle(any()) } doReturn null
+        }
+        val viewModel = CombatViewModel(
+            worldAssets = worldAssets,
+            combatEngine = CombatEngine(statusRegistry = StatusRegistry()),
+            statusRegistry = StatusRegistry(),
+            sessionStore = sessionStore,
+            inventoryService = InventoryService(FakeItemCatalog()),
+            itemCatalog = FakeItemCatalog(),
+            levelingManager = LevelingManager(LevelingData(mapOf("1" to 0, "2" to 100))),
+            progressionData = ProgressionData(),
+            audioRouter = AudioRouter(AudioBindings()),
+            themeRepository = themeRepository,
+            environmentThemeManager = EnvironmentThemeManager(themeRepository),
+            encounterCoordinator = EncounterCoordinator(),
+            enemyIds = listOf(enemy.id),
+            tutorialsEnabled = false,
+            elapsedRealtime = { 1_000L }
+        )
+        val combatant = viewModel.combatState?.combatants?.get("nova")?.combatant
+        assertNotNull(combatant)
+        assertEquals(17, combatant!!.stats.speed)
     }
 
     private fun createMinimalCombatViewModel(enemySkillId: String): CombatViewModel {

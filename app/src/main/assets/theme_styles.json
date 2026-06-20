@@ -5,7 +5,12 @@
       "dark_boost": 0.35,
       "feather": 0.24,
       "margin_dp": 24,
-      "color": [0.02, 0.03, 0.07, 1.0]
+      "color": [
+        0.02,
+        0.03,
+        0.07,
+        1
+      ]
     },
     "bands": {
       "base_alpha": 0.68,
@@ -22,7 +27,12 @@
       "dark_boost": 0.3,
       "feather": 0.28,
       "margin_dp": 16,
-      "color": [0.01, 0.05, 0.02, 1.0]
+      "color": [
+        0.01,
+        0.05,
+        0.02,
+        1
+      ]
     },
     "bands": {
       "base_alpha": 0.62,
@@ -39,7 +49,12 @@
       "dark_boost": 0.3,
       "feather": 0.26,
       "margin_dp": 18,
-      "color": [0.06, 0.03, 0.01, 1.0]
+      "color": [
+        0.06,
+        0.03,
+        0.01,
+        1
+      ]
     },
     "bands": {
       "base_alpha": 0.7,
@@ -56,7 +71,12 @@
       "dark_boost": 0.38,
       "feather": 0.22,
       "margin_dp": 26,
-      "color": [0.03, 0.04, 0.08, 1.0]
+      "color": [
+        0.03,
+        0.04,
+        0.08,
+        1
+      ]
     },
     "bands": {
       "base_alpha": 0.74,
@@ -73,7 +93,12 @@
       "dark_boost": 0.35,
       "feather": 0.2,
       "margin_dp": 24,
-      "color": [0.02, 0.02, 0.08, 1.0]
+      "color": [
+        0.02,
+        0.02,
+        0.08,
+        1
+      ]
     },
     "bands": {
       "base_alpha": 0.72,
@@ -90,7 +115,12 @@
       "dark_boost": 0.35,
       "feather": 0.18,
       "margin_dp": 30,
-      "color": [0.03, 0.0, 0.08, 1.0]
+      "color": [
+        0.03,
+        0,
+        0.08,
+        1
+      ]
     },
     "bands": {
       "base_alpha": 0.78,
@@ -107,7 +137,12 @@
       "dark_boost": 0.34,
       "feather": 0.2,
       "margin_dp": 26,
-      "color": [0.02, 0.03, 0.09, 1.0]
+      "color": [
+        0.02,
+        0.03,
+        0.09,
+        1
+      ]
     },
     "bands": {
       "base_alpha": 0.7,
@@ -117,5 +152,69 @@
       "min_height_dp": 64,
       "max_height_dp": 240
     }
+  },
+  "neon": {
+    "vignette": {
+      "base_intensity": 0.21,
+      "dark_boost": 0.34,
+      "feather": 0.2,
+      "margin_dp": 26,
+      "color": [
+        0.02,
+        0.03,
+        0.09,
+        1
+      ]
+    },
+    "bands": {
+      "base_alpha": 0.7,
+      "dark_boost": 0.4,
+      "highlight_alpha": 0.52,
+      "noise_alpha": 0.05,
+      "min_height_dp": 64,
+      "max_height_dp": 240
+    }
+  },
+  "foundry": {
+    "id": "foundry",
+    "gradient": [
+      "#1a0f0c",
+      "#3a160d",
+      "#201414"
+    ],
+    "surface": "#241511",
+    "surface_alt": "#342019",
+    "border": "#7a3b21",
+    "text": "#fff0df",
+    "text_muted": "#d8aa86",
+    "accent": "#ff8a3d"
+  },
+  "void": {
+    "id": "void",
+    "gradient": [
+      "#070b12",
+      "#18212a",
+      "#0d1719"
+    ],
+    "surface": "#111820",
+    "surface_alt": "#1b252d",
+    "border": "#54717c",
+    "text": "#f1f7fa",
+    "text_muted": "#a9bdc4",
+    "accent": "#42d9ca"
+  },
+  "source": {
+    "id": "source",
+    "gradient": [
+      "#10051f",
+      "#25344a",
+      "#3b124f"
+    ],
+    "surface": "#171020",
+    "surface_alt": "#252033",
+    "border": "#8b68a8",
+    "text": "#fff7ff",
+    "text_muted": "#c9b6d4",
+    "accent": "#55e4ee"
   }
 }

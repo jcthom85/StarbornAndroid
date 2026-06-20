@@ -614,5 +614,1910 @@
         "amount": 150
       }
     ]
+  },
+  {
+    "id": "w2_mq02",
+    "title": "The Signal",
+    "summary": "Follow the distress beacon's frequency through the jungle ruins to find its source.",
+    "description": "Follow the signal pulse through the dangerous Razor-Vine path and find a way through the Temple Gate.",
+    "flavor": "A clean frequency in a world of static.",
+    "giver": "Zeke",
+    "hub_id": "hub_3_sector9",
+    "stages": [
+      {
+        "id": "reach_temple_gate",
+        "title": "The Sanctuary Threshold",
+        "description": "Reach the massive Temple Gate blocking the path deeper into the ruins.",
+        "tasks": [
+          {
+            "id": "clear_canopy_path",
+            "text": "Clear the hostile paths through the canopy."
+          },
+          {
+            "id": "locate_temple_gate",
+            "text": "Locate the massive Temple Gate."
+          },
+          {
+            "id": "insert_chime",
+            "text": "Slot the Chime into the Temple Gate's resonator."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 200
+      }
+    ]
+  },
+  {
+    "id": "w2_mq03",
+    "title": "Sleeping Giant",
+    "summary": "Waking Orion from stasis requires bypassing stasis safety alignment protocols.",
+    "description": "Enter the Sanctuary facility, explore the Hall of Echoes, locate Orion's stasis chamber, and solve the alignment lock.",
+    "flavor": "Twenty years of sleep, waiting for a chord that never came.",
+    "giver": "Orion",
+    "hub_id": "hub_4_facility",
+    "stages": [
+      {
+        "id": "investigate_murals",
+        "title": "Ancient Geometry",
+        "description": "Examine the shifting murals in the Hall of Echoes to unlock the facility route.",
+        "tasks": [
+          {
+            "id": "inspect_murals",
+            "text": "Examine the shifting light murals in the Hall of Echoes."
+          },
+          {
+            "id": "find_stasis_chamber",
+            "text": "Locate Orion's stasis chamber."
+          }
+        ]
+      },
+      {
+        "id": "override_stasis",
+        "title": "Awaken the Tuner",
+        "description": "Align the stasis pod energy rings to awaken Orion.",
+        "tasks": [
+          {
+            "id": "align_stasis_rings",
+            "text": "Solve the stasis pod ring alignment code."
+          },
+          {
+            "id": "talk_to_orion",
+            "text": "Talk to the awakened Orion."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 250
+      }
+    ]
+  },
+  {
+    "id": "w2_mq04",
+    "title": "The Hunter",
+    "summary": "A Dominion stalker is tracking the crew. Confront them before they strike.",
+    "description": "Travel to Canopy Ridge to scout the hunter, confront the assassin Gh0st, and survive the apex beast ambush.",
+    "flavor": "He has a code, but the armor wears the orders.",
+    "giver": "Gh0st",
+    "hub_id": "hub_3_sector9",
+    "stages": [
+      {
+        "id": "canopy_ridge",
+        "title": "Confrontation",
+        "description": "Travel to the high Canopy Ridge and deal with the stalker.",
+        "tasks": [
+          {
+            "id": "reach_canopy_ridge",
+            "text": "Travel to the wind-swept Canopy Ridge."
+          },
+          {
+            "id": "confront_stalker",
+            "text": "Confront the hunter waiting in the shadows."
+          },
+          {
+            "id": "defeat_the_beast",
+            "text": "Defeat the mutated Source Beast."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 300
+      }
+    ]
+  },
+  {
+    "id": "w2_mq05",
+    "title": "Liftoff",
+    "summary": "Repair the Astra to cross the phase curtain and reach the Spire.",
+    "description": "Find parts to repair the Astra, configure the Bridge Relic, and launch into the sky.",
+    "flavor": "A vessel of old songs, ready to fly again.",
+    "giver": "Orion",
+    "hub_id": "hub_4_facility",
+    "stages": [
+      {
+        "id": "repair_astra",
+        "title": "Rebuild the Circuit",
+        "description": "Bypass the energy gate, gather pod parts, and boot the Astra.",
+        "tasks": [
+          {
+            "id": "bypass_source_gate",
+            "text": "Deactivate the Source Gate energy barrier."
+          },
+          {
+            "id": "inspect_astra",
+            "text": "Examine the Astra console."
+          },
+          {
+            "id": "collect_power_conduits",
+            "text": "Recover power conduits from the pod wreckage."
+          },
+          {
+            "id": "reboot_bridge_relic",
+            "text": "Reroute the Chime on the Astra bridge."
+          },
+          {
+            "id": "launch_ship",
+            "text": "Launch the Astra."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 350
+      }
+    ]
+  },
+  {
+    "id": "w2_sq01",
+    "title": "Botanist",
+    "summary": "Zeke wants to scan 5 unique plants to make sense of the local environment.",
+    "description": "Find and scan unique flora in Sector 9.",
+    "flavor": "Cataloging the weeds to forget the bugs.",
+    "giver": "Zeke",
+    "hub_id": "hub_3_sector9",
+    "stages": [
+      {
+        "id": "scan_plants",
+        "title": "Ecological Scan",
+        "description": "Find and scan unique plant specimens.",
+        "tasks": [
+          {
+            "id": "scan_flora_1",
+            "text": "Scan the giant crystalline ferns in the canopy."
+          },
+          {
+            "id": "scan_flora_2",
+            "text": "Scan the bioluminescent weeds near the stream."
+          },
+          {
+            "id": "scan_flora_3",
+            "text": "Scan the moss clinging to the pod wreckage."
+          },
+          {
+            "id": "scan_flora_4",
+            "text": "Scan the razor-vine spores in the path."
+          },
+          {
+            "id": "scan_flora_5",
+            "text": "Scan the ancient roots in the stasis chamber."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 100
+      }
+    ]
+  },
+  {
+    "id": "w2_sq02",
+    "title": "Lost Patrol",
+    "summary": "Locate the logs of a lost Dominion squad to scavenge weapon parts.",
+    "description": "Locate the logs of a lost squad in the Sector 9 ruins.",
+    "flavor": "Steel rusts faster than bones here.",
+    "giver": "Dead Soldier",
+    "hub_id": "hub_3_sector9",
+    "stages": [
+      {
+        "id": "find_logs",
+        "title": "Dominion Downfall",
+        "description": "Locate the squad's encrypted transceiver.",
+        "tasks": [
+          {
+            "id": "find_logs_task",
+            "text": "Search the razor-vine path for the squad's remains."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 100
+      }
+    ]
+  },
+  {
+    "id": "w2_sq03",
+    "title": "Tideglass Day",
+    "summary": "Orion suggests collecting glowing tideglass skewers from the beach for a hot meal.",
+    "description": "Visit Tideglass Beach and gather glowing tideglass skewers.",
+    "flavor": "Sometimes a hot meal is the only shield you have left.",
+    "giver": "Orion",
+    "hub_id": "hub_3_sector9",
+    "stages": [
+      {
+        "id": "scavenge_food",
+        "title": "A Breather by the Waves",
+        "description": "Gather tideglass skewers from the glowing shore.",
+        "tasks": [
+          {
+            "id": "visit_beach",
+            "text": "Discover Tideglass Beach."
+          },
+          {
+            "id": "collect_food",
+            "text": "Scavenge 3 tideglass skewers."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 150
+      }
+    ]
+  },
+  {
+    "id": "w2_sq04",
+    "title": "Ancient Echoes",
+    "summary": "Help Orion calibrate the resonance murals in the Hall of Echoes.",
+    "description": "Calibrate the light-murals to hear their full song.",
+    "flavor": "The stones remember when the choir was whole.",
+    "giver": "Orion",
+    "hub_id": "hub_4_facility",
+    "stages": [
+      {
+        "id": "calibrate_murals",
+        "title": "Chorus Tuning",
+        "description": "Restore the frequency mapping on the mural console.",
+        "tasks": [
+          {
+            "id": "mural_tuning",
+            "text": "Align the mural frequency chord to C#m7."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 150
+      }
+    ]
+  },
+  {
+    "id": "w2_sq05",
+    "title": "Stolen Tech",
+    "summary": "Recover a stolen Dominion transmitter from the facility maintenance vents for Gh0st.",
+    "description": "Scavenge the maintenance vents for the transmitter.",
+    "flavor": "It's not stealing if they're all dead.",
+    "giver": "Gh0st",
+    "hub_id": "hub_4_facility",
+    "stages": [
+      {
+        "id": "recover_tech",
+        "title": "Ventilation Scramble",
+        "description": "Search the stasis chamber vents.",
+        "tasks": [
+          {
+            "id": "recover_transmitter",
+            "text": "Find the Dominion transmitter."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 150
+      }
+    ]
+  },
+  {
+    "id": "w3_mq11",
+    "title": "Homecoming",
+    "summary": "Land the Astra and secure a hidden base of operations in the lower city sewers.",
+    "description": "Avoid Dominion surveillance by landing in the sewers, clear the landing zone of local hostiles, and let Zeke lead you to his old apartment safehouse.",
+    "flavor": "Returning to a home that forgot you ever existed.",
+    "giver": "Zeke",
+    "hub_id": "hub_5_lower_city",
+    "stages": [
+      {
+        "id": "secure_landing_zone",
+        "title": "Securing the Sewers",
+        "description": "Clear the sewers of local security and set up a landing site.",
+        "tasks": [
+          {
+            "id": "clear_landing",
+            "text": "Clear local hostile forces at the landing pad."
+          },
+          {
+            "id": "reach_vent",
+            "text": "Follow the run-off tunnels up to the Vent Output."
+          }
+        ]
+      },
+      {
+        "id": "find_safehouse",
+        "title": "Zeke's Safehouse",
+        "description": "Locate Zeke's old apartment and set up a base.",
+        "tasks": [
+          {
+            "id": "find_apartment",
+            "text": "Locate Zeke's apartment inside The Static block."
+          },
+          {
+            "id": "establish_shield",
+            "text": "Wait for Orion to set up a Source Shield in the apartment."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 400
+      }
+    ]
+  },
+  {
+    "id": "w3_mq12",
+    "title": "The Plan",
+    "summary": "Gather intel from the lower city to plan a heist into the Upper City.",
+    "description": "Talk to the bartender Jax, scan Dominion databases with Gh0st, hack Spire elevator blueprints, and coordinate at the safehouse planning table.",
+    "flavor": "Every lock has a chord. You just have to find the keys.",
+    "giver": "Zeke",
+    "hub_id": "hub_5_lower_city",
+    "stages": [
+      {
+        "id": "gather_intel",
+        "title": "Intelligence Gathering",
+        "description": "Search for info on Spire security and elevator passcodes.",
+        "tasks": [
+          {
+            "id": "talk_jax",
+            "text": "Talk to Jax at The Static bar."
+          },
+          {
+            "id": "interrogate_guard",
+            "text": "Search security databases in the plaza."
+          },
+          {
+            "id": "hack_blueprints",
+            "text": "Hack Spire elevator blueprints at Zeke's workstation."
+          }
+        ]
+      },
+      {
+        "id": "assemble_heist",
+        "title": "The Assembly",
+        "description": "Assemble at the planning table to coordinate the heist.",
+        "tasks": [
+          {
+            "id": "assemble_table",
+            "text": "Examine the planning table to coordinate."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 450
+      }
+    ]
+  },
+  {
+    "id": "w3_sq11",
+    "title": "Neon Fix",
+    "summary": "Help Jax repair his bar's flickering neon sign to keep Dominion security away.",
+    "description": "Inspect the flickering sign at The Static and install a replacement neon sign core.",
+    "flavor": "In the Lower City, darkness is a shield. Neon is just advertisement.",
+    "giver": "Jax",
+    "hub_id": "hub_5_lower_city",
+    "stages": [
+      {
+        "id": "fix_sign",
+        "title": "Sign Repair",
+        "description": "Replace the neon sign's burnt core.",
+        "tasks": [
+          {
+            "id": "inspect_sign",
+            "text": "Inspect the flickering sign outside The Static."
+          },
+          {
+            "id": "install_core",
+            "text": "Install the replacement neon sign core."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 200
+      }
+    ]
+  },
+  {
+    "id": "w3_sq12",
+    "title": "Cold Case",
+    "summary": "Help Gh0st search Spire security databases for records on his sister Elara.",
+    "description": "Examine terminal records in the Transit Plaza to find clues about Elara.",
+    "flavor": "A name is just data, until it becomes a song you can't stop humming.",
+    "giver": "Gh0st",
+    "hub_id": "hub_5_lower_city",
+    "stages": [
+      {
+        "id": "search_records",
+        "title": "Database Breach",
+        "description": "Search Dominion security databases in the plaza.",
+        "tasks": [
+          {
+            "id": "access_terminal",
+            "text": "Search terminal records at Transit Plaza."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 200
+      }
+    ]
+  },
+  {
+    "id": "w3_sq13",
+    "title": "Night Market Run",
+    "summary": "Help Mika repair the Night Market's string lanterns under patrol pressure.",
+    "description": "Search the alleyways and fix the flickering lanterns to light up the market.",
+    "flavor": "Light doesn't just show the way; it shows we are still here.",
+    "giver": "Mika",
+    "hub_id": "hub_5_lower_city",
+    "stages": [
+      {
+        "id": "fix_lanterns",
+        "title": "Lighting the Market",
+        "description": "Fix the flickering market lanterns.",
+        "tasks": [
+          {
+            "id": "fix_market_lights",
+            "text": "Fix the flickering lanterns in the Night Market."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 200
+      },
+      {
+        "type": "item",
+        "item_id": "neon_band",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "w3_mq13",
+    "title": "Social Engineering",
+    "summary": "Infiltrate the Upper City and pass the penthouse scanners by splitting the crew.",
+    "description": "Blend in at the Skypark, let Zeke and Orion disable the sensor grid from Laundry Service, and send Nova and Gh0st through the lobby in disguise.",
+    "flavor": "The cleanest rooms hide the dirtiest locks.",
+    "giver": "Zeke",
+    "hub_id": "hub_6_upper_city",
+    "stages": [
+      {
+        "id": "gain_access",
+        "title": "Guest Access",
+        "description": "Create a believable path into the penthouse.",
+        "tasks": [
+          {
+            "id": "blend_in",
+            "text": "Blend in at the Skypark and acquire guest access."
+          },
+          {
+            "id": "disable_sensors",
+            "text": "Have Zeke and Orion disable the scanner grid from Laundry Service."
+          }
+        ]
+      },
+      {
+        "id": "infiltrate_lobby",
+        "title": "Pass the Scanners",
+        "description": "Move Nova and Gh0st through the lobby while security is blind.",
+        "tasks": [
+          {
+            "id": "enter_lobby",
+            "text": "Enter the penthouse lobby in disguise."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 500
+      }
+    ]
+  },
+  {
+    "id": "w3_mq14",
+    "title": "The Lens",
+    "summary": "Enter the Archive, solve the light puzzle, and steal the Lens relic.",
+    "description": "Break into the Archive vault, tune the prism array with Orion, and claim the Lens before Dominion security closes around you.",
+    "flavor": "A relic does not show truth. It makes hiding harder.",
+    "giver": "Orion",
+    "hub_id": "hub_6_upper_city",
+    "stages": [
+      {
+        "id": "archive_infiltration",
+        "title": "Archive Infiltration",
+        "description": "Reach the vault and open the containment field.",
+        "tasks": [
+          {
+            "id": "enter_archive",
+            "text": "Enter the Archive vault."
+          },
+          {
+            "id": "solve_light_puzzle",
+            "text": "Tune the light puzzle frequencies."
+          }
+        ]
+      },
+      {
+        "id": "claim_lens",
+        "title": "Claim the Relic",
+        "description": "Take the Lens and survive the alarm.",
+        "tasks": [
+          {
+            "id": "take_lens",
+            "text": "Acquire the Lens relic."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 550
+      },
+      {
+        "type": "item",
+        "item_id": "the_lens",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "w3_mq15",
+    "title": "Burn Notice",
+    "summary": "Escape the Upper City after the Archive alarm exposes the crew.",
+    "description": "Fight through the lockdown, defeat the Administrator on the landing pad, and use the Lens to time the Astra through the Shield toward the Foundry.",
+    "flavor": "When paradise burns, it smells like cleaning chemicals.",
+    "giver": "Nova",
+    "hub_id": "hub_6_upper_city",
+    "stages": [
+      {
+        "id": "escape_lockdown",
+        "title": "Escape Lockdown",
+        "description": "Break out of the Archive and fight to the roof.",
+        "tasks": [
+          {
+            "id": "reach_landing_pad",
+            "text": "Reach the landing pad under alarm."
+          },
+          {
+            "id": "defeat_administrator",
+            "text": "Defeat the Administrator."
+          }
+        ]
+      },
+      {
+        "id": "launch_to_foundry",
+        "title": "Slip the Shield",
+        "description": "Use the Lens to find the Shield gap and launch the Astra.",
+        "tasks": [
+          {
+            "id": "launch_astra",
+            "text": "Launch the Astra toward the Foundry."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 700
+      }
+    ]
+  },
+  {
+    "id": "w3_sq14",
+    "title": "Corporate Espionage",
+    "summary": "Steal an encrypted ledger from the Exec Lounge.",
+    "description": "Lift a rival executive ledger from a private safe and turn their secrets into leverage.",
+    "flavor": "The rich call it leverage when the poor call it theft.",
+    "giver": "Datapad",
+    "hub_id": "hub_6_upper_city",
+    "stages": [
+      {
+        "id": "steal_ledger",
+        "title": "Private Safe",
+        "description": "Crack the lounge safe and take the ledger.",
+        "tasks": [
+          {
+            "id": "steal_ledger",
+            "text": "Steal the encrypted ledger from the Exec Lounge safe."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 250
+      },
+      {
+        "type": "item",
+        "item_id": "encrypted_ledger",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "w3_sq15",
+    "title": "Prototype Testing",
+    "summary": "Test a dangerous experimental weapon on Upper City drones.",
+    "description": "Use a hacked lab terminal to run a weapon trial against Dominion drones and claim the Phase Rounds mod.",
+    "flavor": "Quality assurance is easier when the product hates you back.",
+    "giver": "Hacked Lab Terminal",
+    "hub_id": "hub_6_upper_city",
+    "stages": [
+      {
+        "id": "weapon_trial",
+        "title": "Weapon Trial",
+        "description": "Run the prototype against drones in the Archive test alcove.",
+        "tasks": [
+          {
+            "id": "test_weapon",
+            "text": "Test the experimental weapon on security drones."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 300
+      },
+      {
+        "type": "item",
+        "item_id": "phase_rounds",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "w4_mq16",
+    "title": "Into the Fire",
+    "summary": "Land in Sector 7 and force a route into the Foundry factory.",
+    "description": "Secure the Obsidian Shelf, learn the Slag River hazards, and hack the cooling vents so the service airlock can open.",
+    "flavor": "The Foundry does not guard its doors. It lets the heat do that.",
+    "giver": "Nova",
+    "hub_id": "hub_7_slag_pits",
+    "stages": [
+      {
+        "id": "secure_landing",
+        "title": "Obsidian Shelf",
+        "description": "Land the Astra and orient in the Foundry heat.",
+        "tasks": [
+          {
+            "id": "land_shelf",
+            "text": "Secure the Astra on the Obsidian Shelf."
+          },
+          {
+            "id": "cross_slag_river",
+            "text": "Navigate the Slag River hazard crossing."
+          }
+        ]
+      },
+      {
+        "id": "open_airlock",
+        "title": "Cooling the Gate",
+        "description": "Hack the vent controls and enter the service airlock.",
+        "tasks": [
+          {
+            "id": "hack_cooling_vents",
+            "text": "Hack the cooling vent controls at Waste Intake."
+          },
+          {
+            "id": "enter_airlock",
+            "text": "Cycle the Service Airlock."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 750
+      },
+      {
+        "type": "item",
+        "item_id": "heat_liner",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "w4_mq17",
+    "title": "Ghost in the Machine",
+    "summary": "Recover Gh0st's blueprint data from Project Phantom records.",
+    "description": "Access the Project Phantom terminal, discover the truth about Gh0st and Elara, and regroup at the Cooling Springs before climbing deeper into the factory.",
+    "flavor": "A weapon can learn the name it was denied.",
+    "giver": "Gh0st",
+    "hub_id": "hub_7_slag_pits",
+    "stages": [
+      {
+        "id": "phantom_records",
+        "title": "Project Phantom",
+        "description": "Find the records that explain Gh0st's origin.",
+        "tasks": [
+          {
+            "id": "access_phantom_terminal",
+            "text": "Access the Project Phantom terminal."
+          }
+        ]
+      },
+      {
+        "id": "cooling_springs",
+        "title": "Breather",
+        "description": "Regroup at the Cooling Springs after the truth lands.",
+        "tasks": [
+          {
+            "id": "regroup_springs",
+            "text": "Regroup with Gh0st at the Cooling Springs."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 800
+      },
+      {
+        "type": "item",
+        "item_id": "gh0st_override_key",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "w4_sq16",
+    "title": "Sabotage",
+    "summary": "Destroy Dominion ammo crates staged around the Slag Pits.",
+    "description": "A resistance contact marks three crates feeding the factory guns. Destroy all three before pushing inside.",
+    "flavor": "Every crate that does not fire at you later is a good crate.",
+    "giver": "Resistance Contact",
+    "hub_id": "hub_7_slag_pits",
+    "stages": [
+      {
+        "id": "destroy_crates",
+        "title": "Ammo Crates",
+        "description": "Destroy the three marked Dominion ammo crates.",
+        "tasks": [
+          {
+            "id": "crate_alpha",
+            "text": "Destroy the crate at the Slag River."
+          },
+          {
+            "id": "crate_beta",
+            "text": "Destroy the crate at Waste Intake."
+          },
+          {
+            "id": "crate_gamma",
+            "text": "Destroy the crate at the Service Airlock."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 350
+      },
+      {
+        "type": "item",
+        "item_id": "explosive_tip",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "w4_sq17",
+    "title": "Lost Worker",
+    "summary": "Find a missing engineer in the lava tube maintenance paths.",
+    "description": "Follow a cracked worker tablet signal into the Cooling Springs and recover the engineer's coolant rig.",
+    "flavor": "In the Foundry, a missed check-in usually means the heat collected its debt.",
+    "giver": "Worker Tablet",
+    "hub_id": "hub_7_slag_pits",
+    "stages": [
+      {
+        "id": "find_engineer",
+        "title": "Tablet Signal",
+        "description": "Trace the missing worker signal.",
+        "tasks": [
+          {
+            "id": "find_worker",
+            "text": "Find the missing engineer's tablet at the Cooling Springs."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 300
+      },
+      {
+        "type": "item",
+        "item_id": "coolant_system",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "w4_sq18",
+    "title": "The Scrap Heap",
+    "summary": "Salvage parts from destroyed mechs in the lava-flow debris.",
+    "description": "A scrapper drone wants the good parts from three wrecked machines near Waste Intake.",
+    "flavor": "The Foundry throws nothing away. It just waits for someone desperate enough to pick it up.",
+    "giver": "Scrapper Drone",
+    "hub_id": "hub_7_slag_pits",
+    "stages": [
+      {
+        "id": "salvage_mechs",
+        "title": "Mech Wrecks",
+        "description": "Strip usable parts from destroyed mechs.",
+        "tasks": [
+          {
+            "id": "salvage_mechs",
+            "text": "Salvage parts from three destroyed mechs."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 300
+      }
+    ]
+  },
+  {
+    "id": "w4_mq18",
+    "title": "The Assembly",
+    "summary": "Fight through the Foundry production floor and break the Phantom fabrication line.",
+    "description": "Navigate conveyor belts, survive Phantom Prototype waves, and overload the fabrication matrix feeding Gh0st's mass-production successors.",
+    "flavor": "The machine of war sounds like work until it starts printing faces.",
+    "giver": "Gh0st",
+    "hub_id": "hub_8_assembly_line",
+    "stages": [
+      {
+        "id": "production_floor",
+        "title": "Production Floor",
+        "description": "Cross the conveyor belts and survive the gauntlet.",
+        "tasks": [
+          {
+            "id": "navigate_conveyors",
+            "text": "Navigate the conveyor belts."
+          },
+          {
+            "id": "defeat_prototypes",
+            "text": "Defeat the Phantom Prototype wave."
+          }
+        ]
+      },
+      {
+        "id": "matrix_overload",
+        "title": "Overload",
+        "description": "Break the fabrication matrix.",
+        "tasks": [
+          {
+            "id": "overload_matrix",
+            "text": "Overload the fabrication matrix."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 900
+      }
+    ]
+  },
+  {
+    "id": "w4_mq19",
+    "title": "The Anvil",
+    "summary": "Reach the Forge and steal the Anvil relic.",
+    "description": "Solve the conveyor-crusher puzzle, claim the Anvil, and unlock Construct after Nova's first failed attempt to shape the slag river.",
+    "flavor": "Creation answers intent. Doubt becomes debris.",
+    "giver": "Orion",
+    "hub_id": "hub_8_assembly_line",
+    "stages": [
+      {
+        "id": "forge_access",
+        "title": "Forge Access",
+        "description": "Open the Anvil cradle.",
+        "tasks": [
+          {
+            "id": "reach_core_chamber",
+            "text": "Reach the Forge core chamber."
+          },
+          {
+            "id": "solve_conveyor_puzzle",
+            "text": "Solve the conveyor belt puzzle."
+          }
+        ]
+      },
+      {
+        "id": "claim_anvil",
+        "title": "Claim the Relic",
+        "description": "Take the Anvil and learn what Construct costs.",
+        "tasks": [
+          {
+            "id": "take_anvil",
+            "text": "Acquire the Anvil relic."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 950
+      },
+      {
+        "type": "item",
+        "item_id": "the_anvil",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "w4_mq20",
+    "title": "Meltdown",
+    "summary": "Defeat Rylos, steal the Deep-Core Engine, and escape the Foundry.",
+    "description": "Face Commander Rylos and the Titan Walker, steal the Deep-Core Engine and Phase-Cutter Arrays, then launch before Vale locks down the sector.",
+    "flavor": "The Foundry built instruments for silence. You steal the noise.",
+    "giver": "Nova",
+    "hub_id": "hub_8_assembly_line",
+    "stages": [
+      {
+        "id": "rylos_showdown",
+        "title": "Rylos",
+        "description": "Confront Commander Rylos on the Titan Dock.",
+        "tasks": [
+          {
+            "id": "confront_rylos",
+            "text": "Confront Commander Rylos."
+          },
+          {
+            "id": "defeat_titan_walker",
+            "text": "Defeat the Titan Walker."
+          }
+        ]
+      },
+      {
+        "id": "steal_and_escape",
+        "title": "Steal the Heart",
+        "description": "Grab the engine, arrays, and escape before meltdown.",
+        "tasks": [
+          {
+            "id": "steal_engine",
+            "text": "Steal the Deep-Core Engine."
+          },
+          {
+            "id": "steal_arrays",
+            "text": "Steal the Phase-Cutter Arrays."
+          },
+          {
+            "id": "escape_launch",
+            "text": "Escape the Foundry aboard the Astra."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 1200
+      },
+      {
+        "type": "item",
+        "item_id": "deep_core_engine",
+        "quantity": 1
+      },
+      {
+        "type": "item",
+        "item_id": "phase_cutter_arrays",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "w4_sq19",
+    "title": "Quality Control",
+    "summary": "Resolve the rejected defective units becoming sentient.",
+    "description": "A rejected droid points you to five defective units that are waking up inside the quality-control queue. Reprogram them or shut them down cleanly.",
+    "flavor": "The line calls it defect. Gh0st calls it a choice.",
+    "giver": "Rejected Droid",
+    "hub_id": "hub_8_assembly_line",
+    "stages": [
+      {
+        "id": "defective_units",
+        "title": "Defective Units",
+        "description": "Choose what to do with the waking units.",
+        "tasks": [
+          {
+            "id": "resolve_units",
+            "text": "Resolve the defective units in quality control."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 400
+      }
+    ]
+  },
+  {
+    "id": "w4_sq20",
+    "title": "Overclocked",
+    "summary": "Survive three overclocked test chamber waves.",
+    "description": "A lab terminal activates environmental hazards in the Forge test chamber. Survive the three-wave trial for a Thermal Clip mod.",
+    "flavor": "The Foundry's safety protocol is a waiver it signs for you.",
+    "giver": "Lab Terminal",
+    "hub_id": "hub_8_assembly_line",
+    "stages": [
+      {
+        "id": "test_waves",
+        "title": "Hazard Trial",
+        "description": "Survive the overclocked test chamber.",
+        "tasks": [
+          {
+            "id": "survive_waves",
+            "text": "Survive three waves with environmental hazards active."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 450
+      },
+      {
+        "type": "item",
+        "item_id": "thermal_clip",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "w5_mq21",
+    "title": "Docking Procedure",
+    "summary": "Fight through Orbital Compliance and force the Astra onto the Ring.",
+    "description": "Survive the fighter screen, force a dock at the Executive Spire, and let Gh0st break the airlock.",
+    "flavor": "The Halo does not welcome visitors. It processes them.",
+    "giver": "Nova",
+    "hub_id": "hub_9_orbital_ring",
+    "stages": [
+      {
+        "id": "approach",
+        "title": "The Halo",
+        "description": "Reach the Ring through the Compliance screen.",
+        "tasks": [
+          {
+            "id": "approach_halo",
+            "text": "Approach the Orbital Ring."
+          },
+          {
+            "id": "shoot_down_fighters",
+            "text": "Shoot down the Compliance fighters."
+          }
+        ]
+      },
+      {
+        "id": "forced_docking",
+        "title": "Forced Docking",
+        "description": "Take control of the Executive Dock.",
+        "tasks": [
+          {
+            "id": "force_dock",
+            "text": "Force dock on the Executive Spire."
+          },
+          {
+            "id": "hack_airlock",
+            "text": "Help Gh0st hack the airlock."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 1000
+      }
+    ]
+  },
+  {
+    "id": "w5_mq22",
+    "title": "Zero G",
+    "summary": "Cross the Ring and uncover the truth behind Project Harmony.",
+    "description": "Move through the Solarium, break the Security Hub, descend the zero-gravity service shaft, and access the Server Farm.",
+    "flavor": "Paradise above. A cage below. Silence everywhere.",
+    "giver": "Gh0st",
+    "hub_id": "hub_9_orbital_ring",
+    "stages": [
+      {
+        "id": "ring_crossing",
+        "title": "False Paradise",
+        "description": "Cross the executive decks and reach the core lift.",
+        "tasks": [
+          {
+            "id": "cross_solarium",
+            "text": "Cross the Solarium Deck."
+          },
+          {
+            "id": "clear_security",
+            "text": "Defeat the Security Hub patrol."
+          }
+        ]
+      },
+      {
+        "id": "zero_g_descent",
+        "title": "Zero G",
+        "description": "Descend past the Hunter-Killer patrols.",
+        "tasks": [
+          {
+            "id": "traverse_shaft",
+            "text": "Navigate the maintenance shaft."
+          },
+          {
+            "id": "access_mainframe",
+            "text": "Access the Server Farm mainframe."
+          },
+          {
+            "id": "find_thorne",
+            "text": "Find Director Thorne."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 1100
+      },
+      {
+        "type": "item",
+        "item_id": "grav_boots",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "w5_sq21",
+    "title": "Employee of the Month",
+    "summary": "Read the Director's personal logs.",
+    "description": "Open Thorne's private archive and learn how Dominion executives think.",
+    "flavor": "Every empire keeps minutes.",
+    "giver": "Director Terminal",
+    "hub_id": "hub_9_orbital_ring",
+    "stages": [
+      {
+        "id": "read_logs",
+        "title": "Private Archive",
+        "description": "Read the Director's logs.",
+        "tasks": [
+          {
+            "id": "read_logs",
+            "text": "Read the Director's personal logs."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 400
+      }
+    ]
+  },
+  {
+    "id": "w5_sq22",
+    "title": "Solar Maintenance",
+    "summary": "Realign the Solarium mirrors and burn away void-moss.",
+    "description": "Help the maintenance bot recover the fusion lamp mirrors from invasive void-moss.",
+    "flavor": "Even a false sun needs someone to clean it.",
+    "giver": "Maintenance Bot",
+    "hub_id": "hub_9_orbital_ring",
+    "stages": [
+      {
+        "id": "realign_mirrors",
+        "title": "Mirror Array",
+        "description": "Restore the Solarium mirror array.",
+        "tasks": [
+          {
+            "id": "realign_mirrors",
+            "text": "Realign the Solarium mirrors."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 400
+      }
+    ]
+  },
+  {
+    "id": "w5_sq23",
+    "title": "Vacuum Seal",
+    "summary": "Seal three hull breaches before the dock loses pressure.",
+    "description": "Use the Executive Dock pressure console to isolate three ruptured compartments.",
+    "flavor": "Space is patient. Seals are not.",
+    "giver": "Airlock Console",
+    "hub_id": "hub_9_orbital_ring",
+    "stages": [
+      {
+        "id": "seal_breaches",
+        "title": "Pressure Loss",
+        "description": "Seal the damaged hull sections.",
+        "tasks": [
+          {
+            "id": "seal_breaches",
+            "text": "Seal three hull breaches."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 450
+      },
+      {
+        "type": "item",
+        "item_id": "mag_boots",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "w5_mq23",
+    "title": "The Core Approach",
+    "summary": "Breach the Deep Ring firewall and reach the inner sanctum.",
+    "description": "Navigate the Server Farm, hack three firewall nodes, and destroy the hard-light construct guarding the Anchor Chamber.",
+    "flavor": "The cold is deliberate. So is the maze.",
+    "giver": "Thorne",
+    "hub_id": "hub_10_deep_ring",
+    "stages": [
+      {
+        "id": "firewall_maze",
+        "title": "Firewall Maze",
+        "description": "Find and disable the three firewall nodes.",
+        "tasks": [
+          {
+            "id": "navigate_maze",
+            "text": "Navigate the Server Farm maze."
+          },
+          {
+            "id": "firewall_alpha",
+            "text": "Hack Firewall Node Alpha."
+          },
+          {
+            "id": "firewall_beta",
+            "text": "Hack Firewall Node Beta."
+          },
+          {
+            "id": "firewall_gamma",
+            "text": "Hack Firewall Node Gamma."
+          }
+        ]
+      },
+      {
+        "id": "construct",
+        "title": "Hard-Light Guardian",
+        "description": "Defeat the Firewall Construct.",
+        "tasks": [
+          {
+            "id": "defeat_construct",
+            "text": "Defeat the Firewall Construct."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 1200
+      }
+    ]
+  },
+  {
+    "id": "w5_mq24",
+    "title": "The Anchor",
+    "summary": "Find Elara and recover the relic at the heart of the Ring.",
+    "description": "Enter the Anchor Chamber, reunite Gh0st with Elara, and take the Anchor before Vale rewrites the root system.",
+    "flavor": "A person is not a key, a battery, or a weapon blueprint.",
+    "giver": "Gh0st",
+    "hub_id": "hub_10_deep_ring",
+    "stages": [
+      {
+        "id": "reunion",
+        "title": "The Living CPU",
+        "description": "Reach Elara inside the Anchor Chamber.",
+        "tasks": [
+          {
+            "id": "enter_chamber",
+            "text": "Enter the Anchor Chamber."
+          },
+          {
+            "id": "find_elara",
+            "text": "Find Elara wired into the Ring."
+          }
+        ]
+      },
+      {
+        "id": "take_relic",
+        "title": "The Anchor",
+        "description": "Take the relic and escape the chamber.",
+        "tasks": [
+          {
+            "id": "take_anchor",
+            "text": "Acquire the Anchor relic."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 1300
+      },
+      {
+        "type": "item",
+        "item_id": "anchor_relic",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "w5_mq25",
+    "title": "Critical Mass",
+    "summary": "Survive Vale's coup and escape the collapsing Ring through the Tear.",
+    "description": "Reach the Throne Room, witness the Soloist, defeat the Compliance Avatar, and follow Vale beyond reality.",
+    "flavor": "One voice is not peace. It is the end of everyone else.",
+    "giver": "Nova",
+    "hub_id": "hub_10_deep_ring",
+    "stages": [
+      {
+        "id": "soloist",
+        "title": "The Soloist",
+        "description": "Confront Vale in the Throne Room.",
+        "tasks": [
+          {
+            "id": "reach_throne",
+            "text": "Reach the Throne Room."
+          },
+          {
+            "id": "witness_soloist",
+            "text": "Confront Vale and witness the Soloist."
+          }
+        ]
+      },
+      {
+        "id": "critical_escape",
+        "title": "Critical Mass",
+        "description": "Break the Avatar and reach the Tear.",
+        "tasks": [
+          {
+            "id": "defeat_avatar",
+            "text": "Defeat the Compliance Avatar."
+          },
+          {
+            "id": "enter_tear",
+            "text": "Enter the Tear."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 1600
+      }
+    ]
+  },
+  {
+    "id": "w5_sq24",
+    "title": "Ghost in the Shell",
+    "summary": "Recover backup data from a purged server rack.",
+    "description": "Extract the last intact defensive routines from a server Vale ordered erased.",
+    "flavor": "Deleted is not the same as gone.",
+    "giver": "Purged Terminal",
+    "hub_id": "hub_10_deep_ring",
+    "stages": [
+      {
+        "id": "recover_backup",
+        "title": "Purged Rack",
+        "description": "Recover the defensive backup.",
+        "tasks": [
+          {
+            "id": "recover_backup",
+            "text": "Recover the purged backup data."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 500
+      }
+    ]
+  },
+  {
+    "id": "w5_sq25",
+    "title": "Admin Privileges",
+    "summary": "Use a dead administrator's keycard to open the executive armory.",
+    "description": "Recover the keycard in the Server Farm and carry it to the Throne Room armory.",
+    "flavor": "Privilege survives its owner.",
+    "giver": "Dead SysAdmin",
+    "hub_id": "hub_10_deep_ring",
+    "stages": [
+      {
+        "id": "keycard",
+        "title": "Administrator Key",
+        "description": "Find the executive armory credential.",
+        "tasks": [
+          {
+            "id": "find_keycard",
+            "text": "Recover the SysAdmin keycard."
+          }
+        ]
+      },
+      {
+        "id": "armory",
+        "title": "Executive Armory",
+        "description": "Open the armory.",
+        "tasks": [
+          {
+            "id": "open_armory",
+            "text": "Unlock the executive armory."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 550
+      },
+      {
+        "type": "item",
+        "item_id": "void_clip",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "w6_mq26",
+    "title": "Fractured Minds",
+    "summary": "Rescue the crew from three nightmares and reassemble the Starborn.",
+    "description": "Break Zeke's infinite office, Gh0st's endless war, and Orion's silent shore before the Source makes those fears permanent.",
+    "flavor": "Reality is subjective here. So is the way out.",
+    "giver": "Nova",
+    "hub_id": "hub_11_event_horizon",
+    "stages": [
+      {
+        "id": "nightmares",
+        "title": "Three Nightmares",
+        "description": "Find each missing member of the crew.",
+        "tasks": [
+          {
+            "id": "rescue_zeke",
+            "text": "Rescue Zeke from the Infinite Cubicle."
+          },
+          {
+            "id": "rescue_gh0st",
+            "text": "Rescue Gh0st from the Endless War."
+          },
+          {
+            "id": "rescue_orion",
+            "text": "Rescue Orion from the Silent Shore."
+          }
+        ]
+      },
+      {
+        "id": "reassembly",
+        "title": "The Key",
+        "description": "Return to the Campfire and reassemble the crew.",
+        "tasks": [
+          {
+            "id": "reassemble_team",
+            "text": "Reassemble the team at the Campfire."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 1700
+      },
+      {
+        "type": "item",
+        "item_id": "key_relic",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "w6_mq27",
+    "title": "The Echo of the Mines",
+    "summary": "Cross the distorted beginning of Nova's journey.",
+    "description": "Navigate the memory of the colony, avoid the Manager projections, and reach the elevator out of the loop.",
+    "flavor": "The beginning remembers you differently.",
+    "giver": "Nova",
+    "hub_id": "hub_11_event_horizon",
+    "stages": [
+      {
+        "id": "distorted_mines",
+        "title": "The Beginning",
+        "description": "Find a route through the distorted colony.",
+        "tasks": [
+          {
+            "id": "enter_mines",
+            "text": "Enter the Echo of the Mines."
+          },
+          {
+            "id": "evade_manager",
+            "text": "Avoid the Manager projections."
+          },
+          {
+            "id": "reach_elevator",
+            "text": "Reach the elevator."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 1400
+      }
+    ]
+  },
+  {
+    "id": "w6_mq28",
+    "title": "The Crossing",
+    "summary": "Build a bridge from memory and reach the final ascent.",
+    "description": "Let the crew's memories stabilize a path across the static, then cross into the Singularity together.",
+    "flavor": "No one crosses alone.",
+    "giver": "Orion",
+    "hub_id": "hub_11_event_horizon",
+    "stages": [
+      {
+        "id": "memory_bridge",
+        "title": "Bridge of Memories",
+        "description": "Build and cross the bridge.",
+        "tasks": [
+          {
+            "id": "build_bridge",
+            "text": "Build the bridge from shared memories."
+          },
+          {
+            "id": "final_banter",
+            "text": "Share one final moment with the crew."
+          },
+          {
+            "id": "reach_singularity",
+            "text": "Reach the Singularity entrance."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 1500
+      }
+    ]
+  },
+  {
+    "id": "w6_sq26",
+    "title": "Jed's Echo",
+    "summary": "Speak with Jed's memory at his old workbench.",
+    "description": "Return to the workbench where Nova learned what survival was supposed to protect.",
+    "flavor": "A memory cannot answer, but it can remind.",
+    "giver": "Memory of Jed",
+    "hub_id": "hub_11_event_horizon",
+    "stages": [
+      {
+        "id": "workbench",
+        "title": "Old Workbench",
+        "description": "Talk to Jed's echo.",
+        "tasks": [
+          {
+            "id": "talk_to_jed",
+            "text": "Talk to Jed's echo."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 600
+      }
+    ]
+  },
+  {
+    "id": "w6_sq27",
+    "title": "The HR Record",
+    "summary": "Let Zeke delete the employee file that still defines him.",
+    "description": "Find Zeke's Dominion record inside the Infinite Cubicle and erase its authority over him.",
+    "flavor": "Employment status is not identity.",
+    "giver": "HR Terminal",
+    "hub_id": "hub_11_event_horizon",
+    "stages": [
+      {
+        "id": "delete_record",
+        "title": "Personnel File",
+        "description": "Delete Zeke's record.",
+        "tasks": [
+          {
+            "id": "delete_record",
+            "text": "Delete Zeke's employee file."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 600
+      }
+    ]
+  },
+  {
+    "id": "w6_sq28",
+    "title": "Elara's Song",
+    "summary": "Recover a pure recording of Elara's voice.",
+    "description": "Separate Elara's original song from the command layers built over Gh0st's memories.",
+    "flavor": "Before she was a key, she was a voice.",
+    "giver": "Audio Log",
+    "hub_id": "hub_11_event_horizon",
+    "stages": [
+      {
+        "id": "recover_song",
+        "title": "Clean Signal",
+        "description": "Recover Elara's song.",
+        "tasks": [
+          {
+            "id": "recover_song",
+            "text": "Recover the pure recording."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 600
+      }
+    ]
+  },
+  {
+    "id": "w6_mq29",
+    "title": "The Spire of Thought",
+    "summary": "Climb the memory spiral and defeat the Source shadows guarding the Center.",
+    "description": "Cross debris from every world, survive the shadow wave, and break the Memory Leak and Nightmare Guard at the top.",
+    "flavor": "The universe keeps every version you almost became.",
+    "giver": "Nova",
+    "hub_id": "hub_12_singularity",
+    "stages": [
+      {
+        "id": "memory_ascent",
+        "title": "Memory Stair",
+        "description": "Climb through fragments of the journey.",
+        "tasks": [
+          {
+            "id": "climb_stair",
+            "text": "Climb the Memory Stair."
+          },
+          {
+            "id": "defeat_shadow_wave",
+            "text": "Defeat the Source Shadow wave."
+          }
+        ]
+      },
+      {
+        "id": "spire_arena",
+        "title": "Spire of Thought",
+        "description": "Break the final memory defenses.",
+        "tasks": [
+          {
+            "id": "defeat_memory_guard",
+            "text": "Defeat the Memory Leak and Nightmare Guard."
+          },
+          {
+            "id": "reach_center",
+            "text": "Reach the Center."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 2000
+      }
+    ]
+  },
+  {
+    "id": "w6_mq30",
+    "title": "The Final Note",
+    "summary": "Defeat the Ascended and tune the world.",
+    "description": "Confront Vale, survive his god-form, and use the Key to form the Starborn circuit before the Great Silence consumes every voice.",
+    "flavor": "Not fate. Not one voice. A choice made together.",
+    "giver": "Nova",
+    "hub_id": "hub_12_singularity",
+    "stages": [
+      {
+        "id": "soloist",
+        "title": "The Soloist",
+        "description": "Defeat Vale's human form.",
+        "tasks": [
+          {
+            "id": "confront_vale",
+            "text": "Confront Vale at the Center."
+          },
+          {
+            "id": "defeat_vale",
+            "text": "Defeat the Ascended: Soloist."
+          }
+        ]
+      },
+      {
+        "id": "singularity",
+        "title": "The Singularity",
+        "description": "Defeat the Ascended god-form.",
+        "tasks": [
+          {
+            "id": "defeat_god_form",
+            "text": "Defeat the Ascended: Silence."
+          }
+        ]
+      },
+      {
+        "id": "final_note",
+        "title": "Tune the World",
+        "description": "Use the Key and complete the circuit.",
+        "tasks": [
+          {
+            "id": "use_key",
+            "text": "Use the Key."
+          },
+          {
+            "id": "tune_world",
+            "text": "Tune the World."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 3000
+      }
+    ]
+  },
+  {
+    "id": "w6_sq29",
+    "title": "The Aethel Grave",
+    "summary": "Find the first Architects' burial ground in the Source.",
+    "description": "Help Orion identify the resonance where the first Aethel surrendered their bodies to the current.",
+    "flavor": "A grave is also proof that someone was here.",
+    "giver": "Orion",
+    "hub_id": "hub_12_singularity",
+    "stages": [
+      {
+        "id": "grave",
+        "title": "First Architects",
+        "description": "Find the Aethel burial ground.",
+        "tasks": [
+          {
+            "id": "find_grave",
+            "text": "Find the Aethel Grave."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 750
+      }
+    ]
+  },
+  {
+    "id": "w6_sq30",
+    "title": "The Final Scavenge",
+    "summary": "Recover a piece of the Astra from an impossible future.",
+    "description": "A Scrapper Memory has located a future fragment of the crew's ship inside the Spire of Thought.",
+    "flavor": "Nothing is junk if it got you home.",
+    "giver": "Scrapper Memory",
+    "hub_id": "hub_12_singularity",
+    "stages": [
+      {
+        "id": "future_hull",
+        "title": "Future Wreckage",
+        "description": "Recover the Astra hull fragment.",
+        "tasks": [
+          {
+            "id": "recover_hull",
+            "text": "Recover the future Astra hull."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 800
+      },
+      {
+        "type": "item",
+        "item_id": "starborn_mod",
+        "quantity": 1
+      }
+    ]
   }
 ]

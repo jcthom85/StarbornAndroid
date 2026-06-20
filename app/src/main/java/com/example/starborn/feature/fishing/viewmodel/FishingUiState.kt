@@ -18,8 +18,15 @@ data class FishingUiState(
     val hookState: FishingHookState? = null,
     val reelState: FishingReelState? = null,
     val lastCatchResult: FishingResult? = null,
-    val lastResult: MinigameResult? = null
+    val lastResult: MinigameResult? = null,
+    val hookSensitivity: HookSensitivity = HookSensitivity.MEDIUM
 )
+
+enum class HookSensitivity(val label: String, val thresholdValue: Float) {
+    HIGH("High Sensitivity (3.0 m/s²)", 3.0f),
+    MEDIUM("Medium Sensitivity (4.5 m/s²)", 4.5f),
+    LOW("Low Sensitivity (6.0 m/s²)", 6.0f)
+}
 
 enum class FishingState {
     SETUP,

@@ -10,5 +10,29 @@
     "title": "Sector 9",
     "description": "Overgrown ruins of an abandoned Dominion shipping sector, reclaimed by swamp and resonance.",
     "default_theme": "swamp"
+  },
+  {
+    "id": "world_3",
+    "title": "The Spire",
+    "description": "A massive vertical city, dominated by synthetic skies and heavy surveillance.",
+    "default_theme": "neon"
+  },
+  {
+    "id": "world_4",
+    "title": "The Foundry",
+    "description": "A furnace world of slag pits, pressure doors, and Deep-Core engine yards.",
+    "default_theme": "foundry"
+  },
+  {
+    "id": "world_5",
+    "title": "The Void",
+    "description": "The Dominion Orbital Ring, where Project Harmony is becoming something colder than control.",
+    "default_theme": "void"
+  },
+  {
+    "id": "world_6",
+    "title": "The Source",
+    "description": "Reality beyond the Tear, where memory, emotion, and physical law collapse into the same raw signal.",
+    "default_theme": "source"
   }
 ]

@@ -1,305 +1,616 @@
 [
-    {
-        "id": "ms_talked_to_jed",
-        "name": "Jed's Briefing",
-        "description": "You listened to Jed outline the plan inside Nova's House.",
-        "toast": "Jed's briefing is complete."
-    },
-    {
-        "id": "ms_scrap_run_started",
-        "name": "Scrap Run Accepted",
-        "description": "Tyson asked you to run his ration errand.",
-        "toast": "Tyson needs that ration pack."
-    },
-    {
-        "id": "ms_scrap_run_talked_tyson",
-        "name": "Tyson Briefed You",
-        "description": "You talked to Tyson and heard about the ration crate.",
-        "toast": "Tyson told you where the rations are stashed."
-    },
-    {
-        "id": "ms_scrap_run_rations_collected",
-        "name": "Ration Pack Collected",
-        "description": "You grabbed the ration pack from Tyson's back room.",
-        "toast": "You pocket the ration pack."
-    },
-    {
-        "id": "ms_scrap_run_complete",
-        "name": "Scrap Run Complete",
-        "description": "You delivered the ration pack to Ollie.",
-        "toast": "Ollie devours the ration pack."
-    },
-    {
-        "id": "ms_fixers_favor_started",
-        "name": "Fixer's Favor Accepted",
-        "description": "Jed asked you to take over the repairs on his bench.",
-        "toast": "Jed wants you at the tinkering table."
-    },
-    {
-        "id": "ms_fixers_favor_talked_jed",
-        "name": "Jed Briefed You",
-        "description": "You talked with Jed about the pending repairs.",
-        "toast": "Jed hands you a basket of parts."
-    },
-    {
-        "id": "ms_fixers_favor_table_opened",
-        "name": "Bench Opened",
-        "description": "You opened the tinkering table to begin Jed's tutorial.",
-        "toast": "The bench is ready for repairs."
-    },
-    {
-        "id": "ms_fixers_favor_first_repair",
-        "name": "First Repair Complete",
-        "description": "You finished the first repair during Jed's tutorial.",
-        "toast": "Jed nods approvingly."
-    },
-    {
-        "id": "ms_fixers_favor_complete",
-        "name": "Fixer's Favor Complete",
-        "description": "You finished the tutorial and debriefed with Jed.",
-        "toast": "Jed trusts you with the bench now."
-    },
-    {
-        "id": "ms_lights_out_started",
-        "name": "Lights Out",
-        "description": "A blackout hit Nova's house and the breaker needs attention.",
-        "toast": "Find the breaker and restore power."
-    },
-    {
-        "id": "ms_lights_out_complete",
-        "name": "House Lights Restored",
-        "description": "Nova brought the lights back online and can leave the house.",
-        "toast": "Nova's house is lit once more."
-    },
-    {
-        "id": "ms_ellie_display_collected",
-        "name": "Recovered Ellie's Display",
-        "description": "You have the busted arcade display that Ellie asked for.",
-        "toast": "Recovered Ellie's arcade display.",
-        "trigger": {
-            "type": "event",
-            "event_id": "evt_item_display_pickup"
-        }
-    },
-    {
-        "id": "ms_maddie_grinder_collected",
-        "name": "Recovered Maddie's Grinder",
-        "description": "You salvaged Maddie's coffee grinder.",
-        "toast": "Recovered Maddie's coffee grinder.",
-        "trigger": {
-            "type": "event",
-            "event_id": "evt_item_grinder_pickup"
-        }
-    },
-    {
-        "id": "ms_kasey_projector_collected",
-        "name": "Recovered Kasey's Projector",
-        "description": "You found Kasey's projector lens.",
-        "toast": "Recovered Kasey's broken projector.",
-        "trigger": {
-            "type": "event",
-            "event_id": "evt_item_projector_pickup"
-        }
-    },
-    {
-        "id": "ms_repair_bundle_delivered",
-        "name": "Delivered Repair Bundle",
-        "description": "Jed received all three broken devices.",
-        "toast": "Jed received the bundle of broken devices."
-    },
-    {
-        "id": "ms_return_items_stage_active",
-        "name": "Repairs Finished",
-        "description": "Jed finished the repairs and sent you to return the gear.",
-        "toast": "Return the fixed gear to their owners."
-    },
-    {
-        "id": "ms_display_returned",
-        "name": "Returned Ellie's Display",
-        "description": "You brought the repaired arcade display back to Ellie.",
-        "toast": "Delivered Ellie's repaired display."
-    },
-    {
-        "id": "ms_grinder_returned",
-        "name": "Returned Maddie's Grinder",
-        "description": "You returned the repaired coffee grinder to Maddie.",
-        "toast": "Delivered Maddie's repaired grinder."
-    },
-    {
-        "id": "ms_projector_returned",
-        "name": "Returned Kasey's Projector",
-        "description": "You returned the repaired projector to Schoolteacher Kasey.",
-        "toast": "Delivered Kasey's repaired projector."
-    },
-    {
-        "id": "ms_return_items_complete",
-        "name": "Delivered Repaired Gear",
-        "description": "All three repaired items are back where they belong.",
-        "toast": "Repaired gear returned across town."
-    },
-    {
-        "id": "ms_tinkering_prompt_active",
-        "name": "Tinkering Unlocked",
-        "description": "Jed opened the tinkering table and the tutorial is ready.",
-        "toast": "Jed unlocked tinkering. Head to the table to continue."
-    },
-    {
-        "id": "ms_tinkering_tutorial_done",
-        "name": "Tinkering Tutorial",
-        "description": "You completed Jed's tinkering tutorial.",
-        "toast": "Tinkering tutorial complete."
-    },
-    {
-        "id": "ms_ollie_met",
-        "name": "Met Ollie",
-        "description": "You bumped into Ollie on Main Road and heard his warning.",
-        "toast": "Met Ollie outside Nova's House.",
-        "trigger": {
-            "type": "event",
-            "event_id": "ollie_first_meeting"
-        }
-    },
-    {
-        "id": "ms_ollie_recruited",
-        "name": "Ollie Joined",
-        "description": "Ollie agreed to tag along after you checked in with him on the Main Road.",
-        "toast": "Ollie joined your party."
-    },
-    {
-        "id": "ms_mine_power_on",
-        "name": "Restored Mine Power",
-        "description": "The Stellarium generator roared back to life.",
-        "toast": "The Stellarium generator roars to life."
-    },
-    {
-        "id": "ms_w1_mq01_jed_talked",
-        "name": "Jed Checked In",
-        "description": "You reached Jed after waking up and heard the pressure behind his latest repair job.",
-        "toast": "Jed is waiting at the main bench."
-    },
-    {
-        "id": "ms_w1_mq01_checked_bunk",
-        "name": "Bunk Checked",
-        "description": "Nova checked the bunk and gathered herself before leaving the Pit.",
-        "toast": "Bunk checked."
-    },
-    {
-        "id": "ms_w1_mq01_complete",
-        "name": "Homestead Operations",
-        "description": "You completed Nova's onboarding and tinkering training with Jed.",
-        "toast": "Homestead operations briefing completed."
-    },
-    {
-        "id": "ms_w1_mq02_hank_denied",
-        "name": "Checkpoint Denial",
-        "description": "Guard Hank blocked Nova at the Transit Checkpoint and sent her to the Admin window.",
-        "toast": "Checkpoint clearance denied."
-    },
-    {
-        "id": "ms_w1_mq02_zeke_override",
-        "name": "Zeke's Override",
-        "description": "Zeke buried Nova's retirement flag and issued the mine access badge.",
-        "toast": "Zeke falsified the override."
-    },
-    {
-        "id": "ms_w1_mq02_complete",
-        "name": "Admin Gate Breach",
-        "description": "You spoofed the liability form and bypassed Hank to unlock the Admin Gate.",
-        "toast": "Admin Gate breached. Logistics accessible."
-    },
-    {
-        "id": "ms_w1_mq03_bogs_talked",
-        "name": "Sector 4 Assignment",
-        "description": "Foreman Boggs sent Nova into Sector 4 to clear the interference.",
-        "toast": "Sector 4 assignment received."
-    },
-    {
-        "id": "ms_w1_mq03_complete",
-        "name": "Relic Synchronized",
-        "description": "You synchronized with the Tuning Fork relic deep within the mines.",
-        "toast": "A heavy frequency vibrates in your mind."
-    },
-    {
-        "id": "ms_w1_mq04_complete",
-        "name": "Cargo Lift Escape",
-        "description": "Jed stayed behind to hold the lift controls, allowing you to escape to the Launch Bay with the Chime.",
-        "toast": "Jed stays behind. You hold the Chime."
-    },
-    {
-        "id": "ms_w1_chime_spliced",
-        "name": "Chime Spliced",
-        "description": "You connected Jed's Chime to the launch pod core and forced the colony systems to accept the escape route.",
-        "toast": "The Chime locks into the pod core."
-    },
-    {
-        "id": "ms_w1_zeke_directed_to_pod",
-        "name": "Pod Path Clear",
-        "description": "Zeke opened the pod hatch after Nova defeated the Warden and moved to secure the launch core.",
-        "toast": "Zeke opens the pod hatch."
-    },
-    {
-        "id": "ms_w1_mq05_complete",
-        "name": "The Crash",
-        "description": "You launched the cargo pod and crashed into Sector 9 after colliding with the planetary resonance shield.",
-        "toast": "The sky was a wall. You crashed."
-    },
-    {
-        "id": "ms_w1_sq01_started",
-        "name": "Scavenger Tip",
-        "description": "Scrapper told Nova about an old rebel cache hidden near Trade Row.",
-        "toast": "Scrapper marked a hidden cache."
-    },
-    {
-        "id": "ms_w1_sq01_cache_opened",
-        "name": "Cache Opened",
-        "description": "Nova opened the old rebel cache and found proof for Scrapper.",
-        "toast": "The rebel cache is open."
-    },
-    {
-        "id": "ms_w1_sq01_complete",
-        "name": "Stash Settled",
-        "description": "Nova returned the cache proof to Scrapper and collected the grenades.",
-        "toast": "The Scavenger's Stash is complete."
-    },
-    {
-        "id": "ms_w1_sq02_started",
-        "name": "Vent Trouble",
-        "description": "Doc asked Nova to clear the contaminated med-bay vents.",
-        "toast": "Doc needs the vents cleared."
-    },
-    {
-        "id": "ms_w1_sq02_vent_patched",
-        "name": "Vent Patched",
-        "description": "Nova patched the toxic vent blockage feeding fumes into the med-bay.",
-        "toast": "The med-bay vents clear."
-    },
-    {
-        "id": "ms_w1_sq02_complete",
-        "name": "System Flush Complete",
-        "description": "Nova reported the vent repair to Doc and received the corrosive round mod.",
-        "toast": "System Flush is complete."
-    },
-    {
-        "id": "ms_w1_sq03_started",
-        "name": "Cargo Collapse",
-        "description": "Foreman Boggs assigned Nova to clear the blocked cargo route.",
-        "toast": "Heavy Lifting started."
-    },
-    {
-        "id": "ms_w1_sq03_hydraulic_kick_ready",
-        "name": "Hydraulic Kick Ready",
-        "description": "Nova brought the loader online and unlocked the guard-break training moment.",
-        "toast": "Hydraulic Kick training is ready.",
-        "effects": {
-            "unlock_abilities": [
-                "nova_hydraulic_kick"
-            ]
-        }
-    },
-    {
-        "id": "ms_w1_guardbreak_trained",
-        "name": "Guard Break Trained",
-        "description": "Nova learned how to break shielded enemies before committing damage.",
-        "toast": "Guard Break training complete."
+  {
+    "id": "ms_talked_to_jed",
+    "name": "Jed's Briefing",
+    "description": "You listened to Jed outline the plan inside Nova's House.",
+    "toast": "Jed's briefing is complete."
+  },
+  {
+    "id": "ms_scrap_run_started",
+    "name": "Scrap Run Accepted",
+    "description": "Tyson asked you to run his ration errand.",
+    "toast": "Tyson needs that ration pack."
+  },
+  {
+    "id": "ms_scrap_run_talked_tyson",
+    "name": "Tyson Briefed You",
+    "description": "You talked to Tyson and heard about the ration crate.",
+    "toast": "Tyson told you where the rations are stashed."
+  },
+  {
+    "id": "ms_scrap_run_rations_collected",
+    "name": "Ration Pack Collected",
+    "description": "You grabbed the ration pack from Tyson's back room.",
+    "toast": "You pocket the ration pack."
+  },
+  {
+    "id": "ms_scrap_run_complete",
+    "name": "Scrap Run Complete",
+    "description": "You delivered the ration pack to Ollie.",
+    "toast": "Ollie devours the ration pack."
+  },
+  {
+    "id": "ms_fixers_favor_started",
+    "name": "Fixer's Favor Accepted",
+    "description": "Jed asked you to take over the repairs on his bench.",
+    "toast": "Jed wants you at the tinkering table."
+  },
+  {
+    "id": "ms_fixers_favor_talked_jed",
+    "name": "Jed Briefed You",
+    "description": "You talked with Jed about the pending repairs.",
+    "toast": "Jed hands you a basket of parts."
+  },
+  {
+    "id": "ms_fixers_favor_table_opened",
+    "name": "Bench Opened",
+    "description": "You opened the tinkering table to begin Jed's tutorial.",
+    "toast": "The bench is ready for repairs."
+  },
+  {
+    "id": "ms_fixers_favor_first_repair",
+    "name": "First Repair Complete",
+    "description": "You finished the first repair during Jed's tutorial.",
+    "toast": "Jed nods approvingly."
+  },
+  {
+    "id": "ms_fixers_favor_complete",
+    "name": "Fixer's Favor Complete",
+    "description": "You finished the tutorial and debriefed with Jed.",
+    "toast": "Jed trusts you with the bench now."
+  },
+  {
+    "id": "ms_lights_out_started",
+    "name": "Lights Out",
+    "description": "A blackout hit Nova's house and the breaker needs attention.",
+    "toast": "Find the breaker and restore power."
+  },
+  {
+    "id": "ms_lights_out_complete",
+    "name": "House Lights Restored",
+    "description": "Nova brought the lights back online and can leave the house.",
+    "toast": "Nova's house is lit once more."
+  },
+  {
+    "id": "ms_ellie_display_collected",
+    "name": "Recovered Ellie's Display",
+    "description": "You have the busted arcade display that Ellie asked for.",
+    "toast": "Recovered Ellie's arcade display.",
+    "trigger": {
+      "type": "event",
+      "event_id": "evt_item_display_pickup"
     }
+  },
+  {
+    "id": "ms_maddie_grinder_collected",
+    "name": "Recovered Maddie's Grinder",
+    "description": "You salvaged Maddie's coffee grinder.",
+    "toast": "Recovered Maddie's coffee grinder.",
+    "trigger": {
+      "type": "event",
+      "event_id": "evt_item_grinder_pickup"
+    }
+  },
+  {
+    "id": "ms_kasey_projector_collected",
+    "name": "Recovered Kasey's Projector",
+    "description": "You found Kasey's projector lens.",
+    "toast": "Recovered Kasey's broken projector.",
+    "trigger": {
+      "type": "event",
+      "event_id": "evt_item_projector_pickup"
+    }
+  },
+  {
+    "id": "ms_repair_bundle_delivered",
+    "name": "Delivered Repair Bundle",
+    "description": "Jed received all three broken devices.",
+    "toast": "Jed received the bundle of broken devices."
+  },
+  {
+    "id": "ms_return_items_stage_active",
+    "name": "Repairs Finished",
+    "description": "Jed finished the repairs and sent you to return the gear.",
+    "toast": "Return the fixed gear to their owners."
+  },
+  {
+    "id": "ms_display_returned",
+    "name": "Returned Ellie's Display",
+    "description": "You brought the repaired arcade display back to Ellie.",
+    "toast": "Delivered Ellie's repaired display."
+  },
+  {
+    "id": "ms_grinder_returned",
+    "name": "Returned Maddie's Grinder",
+    "description": "You returned the repaired coffee grinder to Maddie.",
+    "toast": "Delivered Maddie's repaired grinder."
+  },
+  {
+    "id": "ms_projector_returned",
+    "name": "Returned Kasey's Projector",
+    "description": "You returned the repaired projector to Schoolteacher Kasey.",
+    "toast": "Delivered Kasey's repaired projector."
+  },
+  {
+    "id": "ms_return_items_complete",
+    "name": "Delivered Repaired Gear",
+    "description": "All three repaired items are back where they belong.",
+    "toast": "Repaired gear returned across town."
+  },
+  {
+    "id": "ms_tinkering_prompt_active",
+    "name": "Tinkering Unlocked",
+    "description": "Jed opened the tinkering table and the tutorial is ready.",
+    "toast": "Jed unlocked tinkering. Head to the table to continue."
+  },
+  {
+    "id": "ms_tinkering_tutorial_done",
+    "name": "Tinkering Tutorial",
+    "description": "You completed Jed's tinkering tutorial.",
+    "toast": "Tinkering tutorial complete."
+  },
+  {
+    "id": "ms_ollie_met",
+    "name": "Met Ollie",
+    "description": "You bumped into Ollie on Main Road and heard his warning.",
+    "toast": "Met Ollie outside Nova's House.",
+    "trigger": {
+      "type": "event",
+      "event_id": "ollie_first_meeting"
+    }
+  },
+  {
+    "id": "ms_ollie_recruited",
+    "name": "Ollie Joined",
+    "description": "Ollie agreed to tag along after you checked in with him on the Main Road.",
+    "toast": "Ollie joined your party."
+  },
+  {
+    "id": "ms_mine_power_on",
+    "name": "Restored Mine Power",
+    "description": "The Stellarium generator roared back to life.",
+    "toast": "The Stellarium generator roars to life."
+  },
+  {
+    "id": "ms_w1_mq01_jed_talked",
+    "name": "Jed Checked In",
+    "description": "You reached Jed after waking up and heard the pressure behind his latest repair job.",
+    "toast": "Jed is waiting at the main bench."
+  },
+  {
+    "id": "ms_w1_mq01_checked_bunk",
+    "name": "Bunk Checked",
+    "description": "Nova checked the bunk and gathered herself before leaving the Pit.",
+    "toast": "Bunk checked."
+  },
+  {
+    "id": "ms_w1_mq01_complete",
+    "name": "Homestead Operations",
+    "description": "You completed Nova's onboarding and tinkering training with Jed.",
+    "toast": "Homestead operations briefing completed."
+  },
+  {
+    "id": "ms_w1_mq02_hank_denied",
+    "name": "Checkpoint Denial",
+    "description": "Guard Hank blocked Nova at the Transit Checkpoint and sent her to the Admin window.",
+    "toast": "Checkpoint clearance denied."
+  },
+  {
+    "id": "ms_w1_mq02_zeke_override",
+    "name": "Zeke's Override",
+    "description": "Zeke buried Nova's retirement flag and issued the mine access badge.",
+    "toast": "Zeke falsified the override."
+  },
+  {
+    "id": "ms_w1_mq02_complete",
+    "name": "Admin Gate Breach",
+    "description": "You spoofed the liability form and bypassed Hank to unlock the Admin Gate.",
+    "toast": "Admin Gate breached. Logistics accessible."
+  },
+  {
+    "id": "ms_w1_mq03_bogs_talked",
+    "name": "Sector 4 Assignment",
+    "description": "Foreman Boggs sent Nova into Sector 4 to clear the interference.",
+    "toast": "Sector 4 assignment received."
+  },
+  {
+    "id": "ms_w1_mq03_complete",
+    "name": "Relic Synchronized",
+    "description": "You synchronized with the Tuning Fork relic deep within the mines.",
+    "toast": "A heavy frequency vibrates in your mind."
+  },
+  {
+    "id": "ms_w1_mq04_complete",
+    "name": "Cargo Lift Escape",
+    "description": "Jed stayed behind to hold the lift controls, allowing you to escape to the Launch Bay with the Chime.",
+    "toast": "Jed stays behind. You hold the Chime."
+  },
+  {
+    "id": "ms_w1_chime_spliced",
+    "name": "Chime Spliced",
+    "description": "You connected Jed's Chime to the launch pod core and forced the colony systems to accept the escape route.",
+    "toast": "The Chime locks into the pod core."
+  },
+  {
+    "id": "ms_w1_zeke_directed_to_pod",
+    "name": "Pod Path Clear",
+    "description": "Zeke opened the pod hatch after Nova defeated the Warden and moved to secure the launch core.",
+    "toast": "Zeke opens the pod hatch."
+  },
+  {
+    "id": "ms_w1_mq05_complete",
+    "name": "The Crash",
+    "description": "You launched the cargo pod and crashed into Sector 9 after colliding with the planetary resonance shield.",
+    "toast": "The sky was a wall. You crashed."
+  },
+  {
+    "id": "ms_w1_sq01_started",
+    "name": "Scavenger Tip",
+    "description": "Scrapper told Nova about an old rebel cache hidden near Trade Row.",
+    "toast": "Scrapper marked a hidden cache."
+  },
+  {
+    "id": "ms_w1_sq01_cache_opened",
+    "name": "Cache Opened",
+    "description": "Nova opened the old rebel cache and found proof for Scrapper.",
+    "toast": "The rebel cache is open."
+  },
+  {
+    "id": "ms_w1_sq01_complete",
+    "name": "Stash Settled",
+    "description": "Nova returned the cache proof to Scrapper and collected the grenades.",
+    "toast": "The Scavenger's Stash is complete."
+  },
+  {
+    "id": "ms_w1_sq02_started",
+    "name": "Vent Trouble",
+    "description": "Doc asked Nova to clear the contaminated med-bay vents.",
+    "toast": "Doc needs the vents cleared."
+  },
+  {
+    "id": "ms_w1_sq02_vent_patched",
+    "name": "Vent Patched",
+    "description": "Nova patched the toxic vent blockage feeding fumes into the med-bay.",
+    "toast": "The med-bay vents clear."
+  },
+  {
+    "id": "ms_w1_sq02_complete",
+    "name": "System Flush Complete",
+    "description": "Nova reported the vent repair to Doc and received the corrosive round mod.",
+    "toast": "System Flush is complete."
+  },
+  {
+    "id": "ms_w1_sq03_started",
+    "name": "Cargo Collapse",
+    "description": "Foreman Boggs assigned Nova to clear the blocked cargo route.",
+    "toast": "Heavy Lifting started."
+  },
+  {
+    "id": "ms_w1_sq03_hydraulic_kick_ready",
+    "name": "Hydraulic Kick Ready",
+    "description": "Nova brought the loader online and unlocked the guard-break training moment.",
+    "toast": "Hydraulic Kick training is ready.",
+    "effects": {
+      "unlock_abilities": [
+        "nova_hydraulic_kick"
+      ]
+    }
+  },
+  {
+    "id": "ms_w1_guardbreak_trained",
+    "name": "Guard Break Trained",
+    "description": "Nova learned how to break shielded enemies before committing damage.",
+    "toast": "Guard Break training complete."
+  },
+  {
+    "id": "ms_w2_chime_recovered",
+    "name": "Chime Recovered",
+    "description": "You recovered the Chime from the crashed pod core.",
+    "toast": "The Chime is safe."
+  },
+  {
+    "id": "ms_w2_mq01_complete",
+    "name": "Ruins Discovered",
+    "description": "You followed the stream and completed the trek into Sector 9 Ruins.",
+    "toast": "A Strange Coast is complete."
+  },
+  {
+    "id": "ms_w2_mq02_complete",
+    "name": "Sanctuary Gate Opened",
+    "description": "You placed the Chime into the Temple Gate and entered the sanctuary facility.",
+    "toast": "The Signal is complete."
+  },
+  {
+    "id": "ms_w2_mq03_complete",
+    "name": "Awakened the Tuner",
+    "description": "You solved the stasis alignment and woke Orion.",
+    "toast": "Sleeping Giant is complete."
+  },
+  {
+    "id": "ms_w2_mq04_complete",
+    "name": "Assailant Truce",
+    "description": "You defeated the Source Beast on Canopy Ridge and recruited Gh0st.",
+    "toast": "The Hunter is complete."
+  },
+  {
+    "id": "ms_w2_mq05_complete",
+    "name": "Planetary Escape",
+    "description": "You launched the Astra ship and transitioned to the Spire.",
+    "toast": "Liftoff is complete."
+  },
+  {
+    "id": "ms_w3_mq11_complete",
+    "name": "Base Secured",
+    "description": "You secured a base of operations in Zeke's old apartment and established a Source shield.",
+    "toast": "Homecoming is complete."
+  },
+  {
+    "id": "ms_w3_mq12_complete",
+    "name": "The Plan Formulated",
+    "description": "You gathered all necessary data and finalized the heist strategy at the planning table.",
+    "toast": "The Plan is complete."
+  },
+  {
+    "id": "ms_w3_streetwise_unlocked",
+    "name": "Streetwise",
+    "description": "Jax granted you a discount in the local shops for repairing The Static's sign.",
+    "toast": "Jax's favor complete."
+  },
+  {
+    "id": "ms_w3_ghost_skill_unlocked",
+    "name": "Gh0st: Intercept",
+    "description": "Gh0st unlocked his Intercept combat skill after finding archives on Elara.",
+    "toast": "Gh0st unlocked Intercept.",
+    "effects": {
+      "unlock_abilities": [
+        "gh0st_intercept"
+      ]
+    }
+  },
+  {
+    "id": "ms_w3_mq13_complete",
+    "name": "Upper City Access",
+    "description": "You infiltrated the Upper City and passed the penthouse scanners.",
+    "toast": "Social Engineering is complete."
+  },
+  {
+    "id": "ms_w3_mq14_complete",
+    "name": "Lens Acquired",
+    "description": "You stole the Lens relic from the Archive and unlocked Scan.",
+    "toast": "The Lens is complete."
+  },
+  {
+    "id": "ms_w3_mq15_complete",
+    "name": "Spire Escaped",
+    "description": "You defeated the Administrator and escaped the Spire aboard the Astra.",
+    "toast": "Burn Notice is complete."
+  },
+  {
+    "id": "ms_w4_access_unlocked",
+    "name": "Foundry Course Set",
+    "description": "The Astra is headed for the Foundry to hunt a Deep-Core Engine.",
+    "toast": "World 4 unlocked."
+  },
+  {
+    "id": "ms_w3_blackmail_unlocked",
+    "name": "Blackmail Leverage",
+    "description": "You stole an executive ledger and gained leverage over Upper City prices.",
+    "toast": "Blackmail unlocked."
+  },
+  {
+    "id": "ms_w3_prototype_tested",
+    "name": "Phase Trial Complete",
+    "description": "You completed the prototype weapon trial and earned Phase Rounds.",
+    "toast": "Prototype Testing complete."
+  },
+  {
+    "id": "ms_w4_compliance_bulletin",
+    "name": "Compliance Bulletin Heard",
+    "description": "Vale announced the Sector 7 audit over the Foundry PA.",
+    "toast": "Sector 7 is under audit."
+  },
+  {
+    "id": "ms_w4_mq16_complete",
+    "name": "Foundry Gate Opened",
+    "description": "You crossed the Slag River and opened the Service Airlock into the factory.",
+    "toast": "Into the Fire is complete."
+  },
+  {
+    "id": "ms_w4_mq17_complete",
+    "name": "Project Phantom Revealed",
+    "description": "Gh0st learned the truth about Project Phantom and gave Nova his override key.",
+    "toast": "Ghost in the Machine is complete."
+  },
+  {
+    "id": "ms_w4_sabotage_complete",
+    "name": "Foundry Ammo Sabotaged",
+    "description": "You destroyed three Dominion ammo crates in the Slag Pits.",
+    "toast": "Sabotage complete."
+  },
+  {
+    "id": "ms_w4_lost_worker_complete",
+    "name": "Lost Worker Found",
+    "description": "You recovered the missing engineer's coolant rig.",
+    "toast": "Lost Worker complete."
+  },
+  {
+    "id": "ms_w4_scavenger_unlocked",
+    "name": "Scavenger",
+    "description": "You salvaged useful machine parts from destroyed Foundry mechs.",
+    "toast": "Scavenger unlocked."
+  },
+  {
+    "id": "ms_w4_mq18_complete",
+    "name": "Assembly Line Broken",
+    "description": "You overloaded the Phantom fabrication matrix.",
+    "toast": "The Assembly is complete."
+  },
+  {
+    "id": "ms_w4_mq19_complete",
+    "name": "Anvil Acquired",
+    "description": "You stole the Anvil relic and unlocked Construct.",
+    "toast": "The Anvil is complete."
+  },
+  {
+    "id": "ms_w4_mq20_complete",
+    "name": "Foundry Meltdown",
+    "description": "You defeated Rylos, stole the Deep-Core Engine, and escaped the Foundry.",
+    "toast": "Meltdown is complete."
+  },
+  {
+    "id": "ms_w5_access_unlocked",
+    "name": "Void Course Set",
+    "description": "The Astra can now reach high orbit and push toward the Void.",
+    "toast": "World 5 unlocked."
+  },
+  {
+    "id": "ms_w4_quality_control_complete",
+    "name": "Quality Control Resolved",
+    "description": "You resolved the sentient defective unit queue.",
+    "toast": "Quality Control complete."
+  },
+  {
+    "id": "ms_w4_overclocked_complete",
+    "name": "Overclocked Trial Complete",
+    "description": "You survived the Foundry hazard trial.",
+    "toast": "Overclocked complete."
+  },
+  {
+    "id": "ms_w5_mq21_complete",
+    "name": "Ring Boarded",
+    "description": "You broke the Compliance fighter screen and forced entry through the Executive Dock.",
+    "toast": "Docking Procedure is complete."
+  },
+  {
+    "id": "ms_w5_mq22_complete",
+    "name": "Great Silence Revealed",
+    "description": "You found Thorne and learned that Harmony is an Architect atrocity repackaged as infrastructure.",
+    "toast": "Zero G is complete."
+  },
+  {
+    "id": "ms_w5_corporate_insight_unlocked",
+    "name": "Corporate Insight",
+    "description": "Thorne's personal logs exposed Dominion command habits.",
+    "toast": "Corporate Insight unlocked."
+  },
+  {
+    "id": "ms_w5_solar_maintenance_complete",
+    "name": "Solarium Restored",
+    "description": "You realigned the Solarium mirrors and cleared the void-moss.",
+    "toast": "Solar Maintenance complete."
+  },
+  {
+    "id": "ms_w5_vacuum_seal_complete",
+    "name": "Vacuum Sealed",
+    "description": "You sealed the Executive Dock hull breaches.",
+    "toast": "Vacuum Seal complete."
+  },
+  {
+    "id": "ms_w5_mq23_complete",
+    "name": "Core Firewall Breached",
+    "description": "You disabled the three firewall nodes and destroyed their hard-light guardian.",
+    "toast": "The Core Approach is complete."
+  },
+  {
+    "id": "ms_w5_mq24_complete",
+    "name": "Anchor Acquired",
+    "description": "You found Elara, recovered the Anchor, and unlocked Stasis.",
+    "toast": "The Anchor is complete."
+  },
+  {
+    "id": "ms_w5_mq25_complete",
+    "name": "Into the Tear",
+    "description": "You defeated the Compliance Avatar and followed Vale beyond reality.",
+    "toast": "Critical Mass is complete."
+  },
+  {
+    "id": "ms_w6_access_unlocked",
+    "name": "Source Access",
+    "description": "The crew crossed the Tear into the Source.",
+    "toast": "World 6 unlocked."
+  },
+  {
+    "id": "ms_w5_data_shield_unlocked",
+    "name": "Data Shield",
+    "description": "You recovered defensive routines from a purged server.",
+    "toast": "Data Shield unlocked."
+  },
+  {
+    "id": "ms_w5_admin_privileges_complete",
+    "name": "Admin Privileges",
+    "description": "You opened the executive armory with the SysAdmin keycard.",
+    "toast": "Admin Privileges complete."
+  },
+  {
+    "id": "ms_w6_mq26_complete",
+    "name": "Starborn Reassembled",
+    "description": "You freed Zeke, Gh0st, and Orion from their nightmares and claimed the Key.",
+    "toast": "Fractured Minds is complete."
+  },
+  {
+    "id": "ms_w6_mq27_complete",
+    "name": "Beginning Faced",
+    "description": "Nova crossed the distorted memory of the Mines without accepting its judgment.",
+    "toast": "The Echo of the Mines is complete."
+  },
+  {
+    "id": "ms_w6_mq28_complete",
+    "name": "Singularity Reached",
+    "description": "The crew built the memory bridge and reached the final ascent together.",
+    "toast": "The Crossing is complete."
+  },
+  {
+    "id": "ms_w6_legacy_unlocked",
+    "name": "Legacy",
+    "description": "Jed's echo reminded Nova what survival protects.",
+    "toast": "Legacy unlocked."
+  },
+  {
+    "id": "ms_w6_unshackled_unlocked",
+    "name": "Unshackled",
+    "description": "Zeke deleted the record that reduced him to company property.",
+    "toast": "Unshackled unlocked."
+  },
+  {
+    "id": "ms_w6_source_balance_unlocked",
+    "name": "Source Balance",
+    "description": "Gh0st recovered Elara's voice without Dominion command layers.",
+    "toast": "Source Balance unlocked."
+  },
+  {
+    "id": "ms_w6_mq29_complete",
+    "name": "Center Reached",
+    "description": "The Starborn crossed the memory spiral and broke the last nightmare defenses.",
+    "toast": "The Spire of Thought is complete."
+  },
+  {
+    "id": "ms_w6_mq30_complete",
+    "name": "Final Note",
+    "description": "The Starborn circuit defeated Vale and closed the Tear.",
+    "toast": "The Final Note is complete."
+  },
+  {
+    "id": "ms_game_complete",
+    "name": "Starborn",
+    "description": "Nova tuned the world without surrendering anyone's voice.",
+    "toast": "STAR BORN"
+  },
+  {
+    "id": "ms_credits_seen",
+    "name": "A Long Story",
+    "description": "The crew gathered at Zeke's diner beneath an open sky.",
+    "toast": "Game complete."
+  },
+  {
+    "id": "ms_w6_ancestral_grace_unlocked",
+    "name": "Ancestral Grace",
+    "description": "Orion found the first Architects' resting current.",
+    "toast": "Ancestral Grace unlocked."
+  },
+  {
+    "id": "ms_w6_final_scavenge_complete",
+    "name": "Starborn Mod",
+    "description": "You recovered the Astra's future hull and forged the ultimate weapon mod.",
+    "toast": "The Final Scavenge complete."
+  }
 ]

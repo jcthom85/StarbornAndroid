@@ -1,693 +1,1292 @@
 [
-    {
-        "id": "dlg_bran_intro",
-        "speaker": "Innkeeper Bran",
-        "text": "Beds are clean, tea is questionable. You staying?",
-        "next": "dlg_bran_intro_2"
-    },
-    {
-        "id": "dlg_bran_intro_2",
-        "speaker": "Player",
-        "text": "Just passing through.",
-        "next": "dlg_bran_intro_3"
-    },
-    {
-        "id": "dlg_bran_intro_3",
-        "speaker": "Innkeeper Bran",
-        "text": "Then pass through warm. Wind bites at night."
-    },
-    {
-        "id": "dlg_iva_intro",
-        "speaker": "Caretaker Iva",
-        "text": "Mind the chalk lines—they’re a fierce tournament.",
-        "next": "dlg_iva_intro_2"
-    },
-    {
-        "id": "dlg_iva_intro_2",
-        "speaker": "Player",
-        "text": "What’s the prize?",
-        "next": "dlg_iva_intro_3"
-    },
-    {
-        "id": "dlg_iva_intro_3",
-        "speaker": "Caretaker Iva",
-        "text": "Bragging. Best currency in the yard."
-    },
-    {
-        "id": "dlg_juno_intro",
-        "speaker": "Juno",
-        "text": "Courier on a deadline—talk fast or walk with me.",
-        "next": "dlg_juno_intro_2"
-    },
-    {
-        "id": "dlg_juno_intro_2",
-        "speaker": "Player",
-        "text": "Any news?",
-        "next": "dlg_juno_intro_3"
-    },
-    {
-        "id": "dlg_juno_intro_3",
-        "speaker": "Juno",
-        "text": "Packages go missing near the docks. Someone’s skimming. Keep your eyes open."
-    },
-    {
-        "id": "dlg_leto_intro",
-        "speaker": "Sergeant Leto",
-        "text": "Papers, please. Ha—kidding. We’re short on papers today.",
-        "next": "dlg_leto_intro_2"
-    },
-    {
-        "id": "dlg_leto_intro_2",
-        "speaker": "Player",
-        "text": "Anything we should avoid?",
-        "next": "dlg_leto_intro_3"
-    },
-    {
-        "id": "dlg_leto_intro_3",
-        "speaker": "Sergeant Leto",
-        "text": "Back alley after midnight. Unless you like buying trouble twice."
-    },
-    {
-        "id": "dlg_pasha_intro",
-        "speaker": "Pasha",
-        "text": "Step right up—today's lots are honest and only mildly cursed!",
-        "next": "dlg_pasha_intro_2"
-    },
-    {
-        "id": "dlg_pasha_intro_2",
-        "speaker": "Player",
-        "text": "We're just looking.",
-        "next": "dlg_pasha_intro_3"
-    },
-    {
-        "id": "dlg_pasha_intro_3",
-        "speaker": "Pasha",
-        "text": "Looking is free. Advice, too: bids rise when the drones clock off—late evenings are fierce."
-    },
-    {
-        "id": "dlg_rana_intro",
-        "speaker": "Rana",
-        "text": "Watch your step. Half these pallets wobble worse than a drunk loader.",
-        "next": "dlg_rana_intro_2"
-    },
-    {
-        "id": "dlg_rana_intro_2",
-        "speaker": "Player",
-        "text": "Busy day?",
-        "next": "dlg_rana_intro_3"
-    },
-    {
-        "id": "dlg_rana_intro_3",
-        "speaker": "Rana",
-        "text": "Always. If a crate's tagged in blue, it’s bound for the mine. Don’t touch blue."
-    },
-    {
-        "id": "dlg_sedge_intro",
-        "speaker": "Sedge",
-        "text": "You look like someone who can mind a secret.",
-        "next": "dlg_sedge_intro_2"
-    },
-    {
-        "id": "dlg_sedge_intro_2",
-        "speaker": "Player",
-        "text": "Depends on the secret.",
-        "next": "dlg_sedge_intro_3"
-    },
-    {
-        "id": "dlg_sedge_intro_3",
-        "speaker": "Sedge",
-        "text": "Then it depends on the price. Come back when you’ve got something to trade."
-    },
-    {
-        "id": "dlg_sera_intro",
-        "speaker": "Doctor Sera",
-        "text": "If you’re bleeding, sit. If you’re not, don’t start.",
-        "next": "dlg_sera_intro_2"
-    },
-    {
-        "id": "dlg_sera_intro_2",
-        "speaker": "Player",
-        "text": "We’re fine.",
-        "next": "dlg_sera_intro_3"
-    },
-    {
-        "id": "dlg_sera_intro_3",
-        "speaker": "Doctor Sera",
-        "text": "Good. I’m running low on synth-gel and patience in equal measure."
-    },
-    {
-        "id": "dlg_sima_intro",
-        "speaker": "Sima",
-        "text": "Noodles hot, pepper hotter. Want steam or fire?",
-        "next": "dlg_sima_intro_2"
-    },
-    {
-        "id": "dlg_sima_intro_2",
-        "speaker": "Player",
-        "text": "Surprise me.",
-        "next": "dlg_sima_intro_3"
-    },
-    {
-        "id": "dlg_sima_intro_3",
-        "speaker": "Sima",
-        "text": "Bold. I like bold. Here—don’t breathe in too deep."
-    },
-    {
-        "id": "dlg_tallo_intro",
-        "speaker": "Tallo",
-        "text": "New faces? Welcome. Roof leaks, hearts don’t.",
-        "next": "dlg_tallo_intro_2"
-    },
-    {
-        "id": "dlg_tallo_intro_2",
-        "speaker": "Player",
-        "text": "Nice place.",
-        "next": "dlg_tallo_intro_3"
-    },
-    {
-        "id": "dlg_tallo_intro_3",
-        "speaker": "Tallo",
-        "text": "It’s home. The trick is to keep it ours."
-    },
-    {
-        "id": "ellie_default_talk",
-        "speaker": "Ellie",
-        "text": "Just swapping out panels before the sparks get ambitious. What do you need?"
-    },
-    {
-        "id": "ellie_return_display",
-        "speaker": "Ellie",
-        "text": "The arcade's alive again! Here, a little something for keeping the lights bright.",
-        "condition": "quest_active:gather_broken_gear"
-    },
-    {
-        "id": "jed_w1_mq04_sacrifice_1",
-        "speaker": "Jed",
-        "text": "Nova! Thank the currents. I heard the alarm broadcast. The Warden's security is descending, sealing everything.",
-        "condition": "quest_active:w1_mq04,quest_stage:w1_mq04:cargo_lift_sacrifice",
-        "next": "jed_w1_mq04_sacrifice_2"
-    },
-    {
-        "id": "jed_w1_mq04_sacrifice_2",
-        "speaker": "Nova",
-        "emote": "scared",
-        "text": "Jed, they're calling me a contaminant. Zeke's overriding the gates, but we have to move now. Come on!",
-        "next": "jed_w1_mq04_sacrifice_3"
-    },
-    {
-        "id": "jed_w1_mq04_sacrifice_3",
-        "speaker": "Jed",
-        "text": "I can't, girl. The manual override panel for this lift is failing. If I let go of this handle, the lift locks down, and they pin you in this shaft.",
-        "next": "jed_w1_mq04_sacrifice_4"
-    },
-    {
-        "id": "jed_w1_mq04_sacrifice_4",
-        "speaker": "Nova",
-        "emote": "crying",
-        "text": "No! We can jam the gears! I'm not leaving you behind!",
-        "next": "jed_w1_mq04_sacrifice_5"
-    },
-    {
-        "id": "jed_w1_mq04_sacrifice_5",
-        "speaker": "Jed",
-        "text": "This isn't a quota run, Nova. You have to launch. Here—take this Chime. It was in the generator core housing. It's the only thing that will bypass the launch bay locks. Now run, and don't look back.",
-        "trigger": "set_quest_task_done:w1_mq04:receive_chime,player_action:jed_sacrifice"
-    },
-    {
-        "id": "jed_w1_mq01_intro_1",
-        "speaker": "Jed",
-        "text": "You look like a pressure leak with boots. Tell me you slept.",
-        "condition": "quest_active:w1_mq01,milestone_not_set:ms_w1_mq01_jed_talked",
-        "next": "jed_w1_mq01_intro_2"
-    },
-    {
-        "id": "jed_w1_mq01_intro_2",
-        "speaker": "Nova",
-        "emote": "puzzled",
-        "text": "I slept enough. Quota doesn't care how rested I am.",
-        "next": "jed_w1_mq01_intro_3"
-    },
-    {
-        "id": "jed_w1_mq01_intro_3",
-        "speaker": "Jed",
-        "text": "Quota also doesn't care if that cutter pops and takes your hand with it. I do.",
-        "next": "jed_w1_mq01_intro_4"
-    },
-    {
-        "id": "jed_w1_mq01_intro_4",
-        "speaker": "Nova",
-        "emote": "worried",
-        "text": "If I don't push it, I miss count. If I miss count, I lose scrip. If I lose scrip...",
-        "next": "jed_w1_mq01_intro_5"
-    },
-    {
-        "id": "jed_w1_mq01_intro_5",
-        "speaker": "Jed",
-        "text": "I know the math. I hate the math. Check your gear, then use the bench. And take the ration bar before you pretend you aren't hungry.",
-        "trigger": "set_quest_task_done:w1_mq01:find_jed,set_quest_task_done:w1_mq01:talk_to_jed,give_item:mining_pistol,give_item:nova_flux_liner,give_item:cryo_inductor,give_item:scrap_metal*2,set_quest_task_done:w1_mq01:equip_starter_gear,set_milestone:ms_w1_mq01_jed_talked,give_item:ration_pack,system_tutorial:bag_basics|Jed's Workshop"
-    },
-    {
-        "id": "jed_default_talk",
-        "speaker": "Jed",
-        "text": "Grab a seat if you're sticking around. If something starts smoking, hand me the wrench first."
-    },
-    {
-        "id": "jed_energy_core_turnin_1",
-        "speaker": "Jed",
-        "text": "You made it back in one piece. That surge settle down once you pulled the core?",
-        "next": "nova_energy_core_turnin_1",
-        "condition": "quest_active:stellarium_mine_investigation"
-    },
-    {
-        "id": "jed_energy_core_turnin_2",
-        "speaker": "Jed",
-        "text": "Then we learn what they wanted. I'll crack the housing and see how far the signal goes. Nice work bringing it home."
-    },
-    {
-        "id": "jed_return_wrapup",
-        "speaker": "Jed",
-        "text": "Town runs smoother thanks to you. Keep pace like that and we'll stay ahead of the scrappers.",
-        "condition": "quest_completed:stellarium_mine_investigation"
-    },
-    {
-        "id": "jed_signal_complete",
-        "speaker": "Jed",
-        "text": "Stellarium core is cooling on my workbench thanks to you. We'll make good use of it.",
-        "condition": "milestone:ms_energy_core_returned"
-    },
-    {
-        "id": "jed_signal_core_ready",
-        "speaker": "Jed",
-        "text": "Smell that ozone? That's the core spool. Hand it over before it cooks through your belt.",
-        "condition": "milestone:ms_energy_core_claimed,milestone_not_set:ms_energy_core_returned"
-    },
-    {
-        "id": "jed_signal_instructions",
-        "speaker": "Jed",
-        "text": "Track that pulse to its source. If the deep mine lit up, something below Sector 4 is chewing through power.",
-        "condition": "quest_active:w1_mq03,milestone_not_set:ms_w1_mq03_complete"
-    },
-    {
-        "id": "jed_tinkering_complete",
-        "speaker": "Jed",
-        "text": "Nice work. That's all of 'em. Now, get this gear back to their owners. They've been pestering me for days.",
-        "condition": "quest_active:gather_broken_gear"
-    },
-    {
-        "id": "kasey_default_talk",
-        "speaker": "Schoolteacher Kasey",
-        "text": "Quiet feet, please. The little ones are mapping constellations they have never been allowed to see."
-    },
-    {
-        "id": "kasey_return_projector",
-        "speaker": "Schoolteacher Kasey",
-        "text": "Wonderful! The kids will be back under the stars tonight. Please, take this for your trouble.",
-        "condition": "quest_active:gather_broken_gear"
-    },
-    {
-        "id": "maddie_default_talk",
-        "speaker": "Maddie",
-        "text": "Beans are roasting, and for once the grinder is not threatening to explode. Did you need something?"
-    },
-    {
-        "id": "maddie_return_grinder",
-        "speaker": "Maddie",
-        "text": "You fixed it! Oh, thank you! Take these credits - may your next cup be on me.",
-        "condition": "quest_active:gather_broken_gear"
-    },
-    {
-        "id": "nova_energy_core_turnin_1",
-        "speaker": "Nova",
-        "text": "Burrower was feeding on it. Nest is quiet now, but whoever rigged the chamber knew what they were doing.",
-        "next": "jed_energy_core_turnin_2"
-    },
-    {
-        "id": "hank_w1_mq02_denial_1",
-        "speaker": "Guard Hank",
-        "text": "Badge.",
-        "condition": "quest_active:w1_mq02,milestone_not_set:ms_w1_mq02_hank_denied",
-        "next": "hank_w1_mq02_denial_2"
-    },
-    {
-        "id": "hank_w1_mq02_denial_2",
-        "speaker": "Nova",
-        "emote": "confident",
-        "text": "Morning to you too.",
-        "next": "hank_w1_mq02_denial_3"
-    },
-    {
-        "id": "hank_w1_mq02_denial_3",
-        "speaker": "Guard Hank",
-        "text": "Morning costs extra. Badge is mandatory. Booth window, then maybe the door likes you.",
-        "trigger": "set_quest_task_done:w1_mq02:request_clearance,set_milestone:ms_w1_mq02_hank_denied"
-    },
-    {
-        "id": "hank_default_talk",
-        "speaker": "Guard Hank",
-        "text": "Keep the line moving. The door doesn't care about your reasons."
-    },
-    {
-        "id": "zeke_w1_mq02_override_1",
-        "speaker": "Zeke",
-        "emote": "surprised",
-        "text": "Name? ID? Clearance sco--oh. It's you. The volunteer.",
-        "condition": "quest_active:w1_mq02,milestone_not_set:ms_w1_mq02_zeke_override",
-        "next": "zeke_w1_mq02_override_2"
-    },
-    {
-        "id": "zeke_w1_mq02_override_2",
-        "speaker": "Nova",
-        "emote": "cool",
-        "text": "I need a mining pass, suit. Shift starts in ten.",
-        "next": "zeke_w1_mq02_override_3"
-    },
-    {
-        "id": "zeke_w1_mq02_override_3",
-        "speaker": "Zeke",
-        "emote": "worried",
-        "text": "Right. Eligibility check. Completely routine. Very normal.",
-        "next": "zeke_w1_mq02_override_4"
-    },
-    {
-        "id": "zeke_w1_mq02_override_4",
-        "speaker": "Zeke",
-        "emote": "scared",
-        "text": "...Mandatory Retirement. Asset Liability exceeds projected value. Recycle.",
-        "next": "zeke_w1_mq02_override_5"
-    },
-    {
-        "id": "zeke_w1_mq02_override_5",
-        "speaker": "Nova",
-        "emote": "surprised",
-        "text": "Recycle means fired, right?",
-        "next": "zeke_w1_mq02_override_6"
-    },
-    {
-        "id": "zeke_w1_mq02_override_6",
-        "speaker": "Zeke",
-        "emote": "sad",
-        "text": "It means bio-reclamation. Death. For a breaker surge.",
-        "next": "zeke_w1_mq02_override_7"
-    },
-    {
-        "id": "zeke_w1_mq02_override_7",
-        "speaker": "Zeke",
-        "emote": "confident",
-        "text": "I'm flagging it as grid instability. Temporary override. Take the badge before I remember how rules work.",
-        "trigger": "set_quest_task_done:w1_mq02:meet_zeke,set_quest_task_done:w1_mq02:spoof_liability_form,set_quest_task_done:w1_mq02:receive_mine_access_badge,give_item:mine_access_badge,complete_quest:w1_mq02,set_milestone:ms_w1_mq02_zeke_override,set_milestone:ms_w1_mq02_complete,start_quest:w1_mq03,track_quest:w1_mq03,advance_quest_stage:w1_mq03:sector_four_assignment"
-    },
-    {
-        "id": "zeke_default_talk",
-        "speaker": "Zeke",
-        "text": "The system logged something. I should not have said that out loud."
-    },
-    {
-        "id": "scrapper_w1_sq01_turnin_1",
-        "speaker": "Scrapper",
-        "text": "You opened it? No alarm? No sweep team? Hah. They really did forget the dead.",
-        "condition": "quest_active:w1_sq01,milestone:ms_w1_sq01_cache_opened",
-        "next": "scrapper_w1_sq01_turnin_2"
-    },
-    {
-        "id": "scrapper_w1_sq01_turnin_2",
-        "speaker": "Nova",
-        "text": "They scratched names into the lid.",
-        "next": "scrapper_w1_sq01_turnin_3"
-    },
-    {
-        "id": "scrapper_w1_sq01_turnin_3",
-        "speaker": "Scrapper",
-        "text": "Then remember them quiet. Loud gets people recycled. Take the grenades and forget who told you.",
-        "trigger": "set_quest_task_done:w1_sq01:return_cache_proof,give_item:pulse_grenade*2,give_xp:80,complete_quest:w1_sq01,set_milestone:ms_w1_sq01_complete"
-    },
-    {
-        "id": "scrapper_w1_sq01_intro_1",
-        "speaker": "Scrapper",
-        "text": "You want something useful, cutter girl? There's a cache behind the strip. Old resistance stock.",
-        "condition": "quest_completed:w1_mq01,quest_not_started:w1_sq01",
-        "next": "scrapper_w1_sq01_intro_2"
-    },
-    {
-        "id": "scrapper_w1_sq01_intro_2",
-        "speaker": "Nova",
-        "text": "Why not grab it yourself?",
-        "next": "scrapper_w1_sq01_intro_3"
-    },
-    {
-        "id": "scrapper_w1_sq01_intro_3",
-        "speaker": "Scrapper",
-        "text": "Because I like breathing. Find the crate, open it clean, and bring me proof it wasn't a trap.",
-        "trigger": "start_quest:w1_sq01,track_quest:w1_sq01,set_quest_task_done:w1_sq01:talk_to_scrapper,set_milestone:ms_w1_sq01_started"
-    },
-    {
-        "id": "scrapper_w1_sq01_complete",
-        "speaker": "Scrapper",
-        "text": "Those grenades are loud history. Use them before history uses you.",
-        "condition": "quest_completed:w1_sq01"
-    },
-    {
-        "id": "scrapper_default_talk",
-        "speaker": "Scrapper",
-        "text": "Keep your voice down. Dominion buys echoes cheaper than scrap."
-    },
-    {
-        "id": "scrapper_shop_intro",
-        "speaker": "Scrapper",
-        "text": "Buying, selling, or just looking guilty? Keep it quick either way."
-    },
-    {
-        "id": "doc_w1_sq02_turnin_1",
-        "speaker": "Doc",
-        "text": "The coughing stopped. Either you fixed the vents or everyone finally died.",
-        "condition": "quest_active:w1_sq02,milestone:ms_w1_sq02_vent_patched",
-        "next": "doc_w1_sq02_turnin_2"
-    },
-    {
-        "id": "doc_w1_sq02_turnin_2",
-        "speaker": "Nova",
-        "text": "Fixed. Mostly. Dominion's maintenance request is still doing nothing.",
-        "next": "doc_w1_sq02_turnin_3"
-    },
-    {
-        "id": "doc_w1_sq02_turnin_3",
-        "speaker": "Doc",
-        "text": "Then this is faster than paperwork. Corrosive rounds. Ugly medicine for armored problems.",
-        "trigger": "set_quest_task_done:w1_sq02:return_to_doc,give_item:mod_corrosive_rounds,give_xp:90,complete_quest:w1_sq02,set_milestone:ms_w1_sq02_complete"
-    },
-    {
-        "id": "doc_w1_sq02_intro_1",
-        "speaker": "Doc",
-        "text": "Don't inhale too deep. The vents are backing poison into my patients again.",
-        "condition": "quest_completed:w1_mq01,quest_not_started:w1_sq02",
-        "next": "doc_w1_sq02_intro_2"
-    },
-    {
-        "id": "doc_w1_sq02_intro_2",
-        "speaker": "Nova",
-        "text": "Again?",
-        "next": "doc_w1_sq02_intro_3"
-    },
-    {
-        "id": "doc_w1_sq02_intro_3",
-        "speaker": "Doc",
-        "text": "Dominion denies repairs faster than I can file them. Patch the cracked vent before the ward turns blue.",
-        "trigger": "start_quest:w1_sq02,track_quest:w1_sq02,set_quest_task_done:w1_sq02:talk_to_doc,set_milestone:ms_w1_sq02_started"
-    },
-    {
-        "id": "doc_w1_sq02_complete",
-        "speaker": "Doc",
-        "text": "Air's still bad, but now it's regular bad. That's what passes for medicine here.",
-        "condition": "quest_completed:w1_sq02"
-    },
-    {
-        "id": "doc_default_talk",
-        "speaker": "Doc",
-        "text": "If you're bleeding, sit. If you're not, don't start."
-    },
-    {
-        "id": "bogs_w1_mq03_guardbreak_gate_1",
-        "speaker": "Foreman Boggs",
-        "text": "You heading down without shield training? That's how assets become floor paste.",
-        "condition": "quest_active:w1_mq03,milestone_not_set:ms_w1_guardbreak_trained",
-        "next": "bogs_w1_mq03_guardbreak_gate_2"
-    },
-    {
-        "id": "bogs_w1_mq03_guardbreak_gate_2",
-        "speaker": "Nova",
-        "text": "Shield training?",
-        "next": "bogs_w1_mq03_guardbreak_gate_3"
-    },
-    {
-        "id": "bogs_w1_mq03_guardbreak_gate_3",
-        "speaker": "Foreman Boggs",
-        "text": "Loading Dock. Riot shield trainer. Bring the loader online, move my cargo, learn Hydraulic Kick, then go play hero in Sector 4.",
-        "trigger": "start_quest:w1_sq03,track_quest:w1_sq03,set_quest_task_done:w1_sq03:talk_to_bogs,set_milestone:ms_w1_sq03_started"
-    },
-    {
-        "id": "bogs_w1_mq03_intro_1",
-        "speaker": "Foreman Boggs",
-        "text": "You. Cutter girl. Zeke said you're the one who caused that surge in the Pit.",
-        "condition": "quest_active:w1_mq03,milestone_not_set:ms_w1_mq03_bogs_talked",
-        "next": "bogs_w1_mq03_intro_2"
-    },
-    {
-        "id": "bogs_w1_mq03_intro_2",
-        "speaker": "Nova",
-        "text": "It was grid instability, Boggs. I just work the cutters.",
-        "next": "bogs_w1_mq03_intro_3"
-    },
-    {
-        "id": "bogs_w1_mq03_intro_3",
-        "speaker": "Foreman Boggs",
-        "text": "Sure it was. Anyway, the interference is overloading the relays in Sector 4. I'm putting you on punishment duty. Descend and clear it.",
-        "next": "bogs_w1_mq03_intro_4"
-    },
-    {
-        "id": "bogs_w1_mq03_intro_4",
-        "speaker": "Nova",
-        "text": "Sector 4? That's deep mine. The lift is locked.",
-        "next": "bogs_w1_mq03_intro_5"
-    },
-    {
-        "id": "bogs_w1_mq03_intro_5",
-        "speaker": "Foreman Boggs",
-        "text": "You've got that Mine Access Badge Zeke signed off on. My scanner's updated. Use the elevator, restore power at the Cavern Junction support pillar, then follow the relays until the humming stops.",
-        "trigger": "set_quest_task_done:w1_mq03:talk_to_bogs,player_action:bogs_talked,set_milestone:ms_w1_mq03_bogs_talked"
-    },
-    {
-        "id": "bogs_w1_sq03_intro_1",
-        "speaker": "Foreman Boggs",
-        "text": "You. Cutter girl. Loader's sitting idle and cargo's blocking my schedule.",
-        "condition": "quest_completed:w1_mq01,quest_not_started:w1_sq03",
-        "next": "bogs_w1_sq03_intro_2"
-    },
-    {
-        "id": "bogs_w1_sq03_intro_2",
-        "speaker": "Nova",
-        "text": "There are workers behind that pile.",
-        "next": "bogs_w1_sq03_intro_3"
-    },
-    {
-        "id": "bogs_w1_sq03_intro_3",
-        "speaker": "Foreman Boggs",
-        "text": "Then move it faster. Shipment clock doesn't pause for feelings.",
-        "trigger": "start_quest:w1_sq03,track_quest:w1_sq03,set_quest_task_done:w1_sq03:talk_to_bogs,set_milestone:ms_w1_sq03_started"
-    },
-    {
-        "id": "bogs_w1_sq03_complete",
-        "speaker": "Foreman Boggs",
-        "text": "Route's clear, workers are breathing, and somehow I'm still behind schedule.",
-        "condition": "quest_completed:w1_sq03"
-    },
-    {
-        "id": "bogs_default_talk",
-        "speaker": "Foreman Boggs",
-        "text": "Company time ain't charity. Move."
-    },
-    {
-        "id": "bill_default_talk",
-        "speaker": "Miner Bill",
-        "text": "Bar's quiet if you ignore the vents. I recommend ignoring the vents."
-    },
-    {
-        "id": "warden_boss_intro_1",
-        "speaker": "The Warden",
-        "text": "Nova. Asset 942-D. Retinal scan flagged for recycling, grid interference logs, and now unauthorized transit.",
-        "condition": "quest_active:w1_mq05,quest_stage:w1_mq05:defeat_warden,quest_task_not_done:w1_mq05:survive_warden_intro",
-        "next": "warden_boss_intro_2"
-    },
-    {
-        "id": "warden_boss_intro_2",
-        "speaker": "Player",
-        "emote": "angry",
-        "text": "We're leaving, Warden. Out of our way.",
-        "next": "warden_boss_intro_3"
-    },
-    {
-        "id": "warden_boss_intro_3",
-        "speaker": "The Warden",
-        "text": "Leave? There is nowhere to go. The dome isn't just physical. It's a lock. And I hold the frequency. You are a standing wave that has lost its pitch. I will quiet you myself.",
-        "trigger": "set_quest_task_done:w1_mq05:fight_through_launch_access,set_quest_task_done:w1_mq05:reach_pod_bay,advance_quest_stage:w1_mq05:defeat_warden,set_quest_task_done:w1_mq05:survive_warden_intro"
-    },
-    {
-        "id": "zeke_w1_mq05_defeat_warden_1",
-        "speaker": "Zeke",
-        "emote": "surprised",
-        "text": "Nova! You actually did it. The Warden's down. The way to the pod is clear, but security is going to reboot the grid any second.",
-        "condition": "quest_active:w1_mq05,quest_stage:w1_mq05:launch_pod,quest_task_not_done:w1_mq05:splice_chime,milestone_not_set:ms_w1_zeke_directed_to_pod",
-        "next": "zeke_w1_mq05_defeat_warden_2"
-    },
-    {
-        "id": "zeke_w1_mq05_defeat_warden_2",
-        "speaker": "Player",
-        "emote": "worried",
-        "text": "Let's move. Jed said the Chime is the key.",
-        "next": "zeke_w1_mq05_defeat_warden_3"
-    },
-    {
-        "id": "zeke_w1_mq05_defeat_warden_3",
-        "speaker": "Zeke",
-        "emote": "worried",
-        "text": "Get inside the pod! I'll secure the hatch. We need to splice that Chime into the console inside.",
-        "trigger": "set_milestone:ms_w1_zeke_directed_to_pod"
-    },
-    {
-        "id": "zeke_w1_mq05_pod_core_1",
-        "speaker": "Zeke",
-        "emote": "worried",
-        "text": "Nova! Connect the Chime to that port on the console. If Jed's math is right, it should establish a resonance that overrides the colony's lock on the pod launchers.",
-        "condition": "quest_active:w1_mq05,quest_stage:w1_mq05:launch_pod,quest_task_not_done:w1_mq05:splice_chime,milestone:ms_w1_zeke_directed_to_pod",
-        "next": "zeke_w1_mq05_pod_core_2"
-    },
-    {
-        "id": "zeke_w1_mq05_pod_core_2",
-        "speaker": "Player",
-        "emote": "worried",
-        "text": "I'm inserting it now. Let's hope the frequency matches.",
-        "next": "zeke_w1_mq05_pod_core_3"
-    },
-    {
-        "id": "zeke_w1_mq05_pod_core_3",
-        "speaker": "Zeke",
-        "emote": "happy",
-        "text": "Yes! The core is spooling up. The console's active! We're green for launch. Nova, initiate the sequence on the navigation console!",
-        "trigger": "set_quest_task_done:w1_mq05:splice_chime,take_item:ghost_signal_cell,set_milestone:ms_w1_chime_spliced"
-    },
-    {
-        "id": "zeke_w2_crash_1",
-        "speaker": "Zeke",
-        "text": "Nova... *cough*... My head feels like a reactor breach. Are you intact?",
-        "condition": "quest_active:w2_mq01,quest_task_not_done:w2_mq01:check_on_zeke",
-        "next": "zeke_w2_crash_2"
-    },
-    {
-        "id": "zeke_w2_crash_2",
-        "speaker": "Nova",
-        "text": "I'm fine, Zeke. The pod took the brunt of the impact. How are you holding up?",
-        "next": "zeke_w2_crash_3"
-    },
-    {
-        "id": "zeke_w2_crash_3",
-        "speaker": "Zeke",
-        "text": "Everything is bruised, but my suit's recycler is still pumping. We're on the surface, Nova. We actually crossed the barrier... but the pod's core is completely fried.",
-        "next": "zeke_w2_crash_4"
-    },
-    {
-        "id": "zeke_w2_crash_4",
-        "speaker": "Zeke",
-        "text": "Check the core housing in the wreckage. If the Chime is still intact, we need to recover it before this swamp water short-circuits it completely.",
-        "trigger": "set_quest_task_done:w2_mq01:check_on_zeke,recruit:zeke"
-    },
-    {
-        "id": "zeke_w2_crash_repeat_1",
-        "speaker": "Zeke",
-        "text": "Check the wreckage of the pod core. We can't leave the Chime behind.",
-        "condition": "quest_active:w2_mq01,quest_task_done:w2_mq01:check_on_zeke,quest_task_not_done:w2_mq01:examine_pod"
-    },
-    {
-        "id": "zeke_w2_crash_repeat_2",
-        "speaker": "Zeke",
-        "text": "The stream of glow-water seems to flow deeper into the concrete structures. Follow it, Nova. I'll catch my breath and catch up.",
-        "condition": "quest_active:w2_mq01,quest_task_done:w2_mq01:check_on_zeke,quest_task_done:w2_mq01:examine_pod"
-    }
+  {
+    "id": "dlg_bran_intro",
+    "speaker": "Innkeeper Bran",
+    "text": "Beds are clean, tea is questionable. You staying?",
+    "next": "dlg_bran_intro_2"
+  },
+  {
+    "id": "dlg_bran_intro_2",
+    "speaker": "Player",
+    "text": "Just passing through.",
+    "next": "dlg_bran_intro_3"
+  },
+  {
+    "id": "dlg_bran_intro_3",
+    "speaker": "Innkeeper Bran",
+    "text": "Then pass through warm. Wind bites at night."
+  },
+  {
+    "id": "dlg_iva_intro",
+    "speaker": "Caretaker Iva",
+    "text": "Mind the chalk lines—they’re a fierce tournament.",
+    "next": "dlg_iva_intro_2"
+  },
+  {
+    "id": "dlg_iva_intro_2",
+    "speaker": "Player",
+    "text": "What’s the prize?",
+    "next": "dlg_iva_intro_3"
+  },
+  {
+    "id": "dlg_iva_intro_3",
+    "speaker": "Caretaker Iva",
+    "text": "Bragging. Best currency in the yard."
+  },
+  {
+    "id": "dlg_juno_intro",
+    "speaker": "Juno",
+    "text": "Courier on a deadline—talk fast or walk with me.",
+    "next": "dlg_juno_intro_2"
+  },
+  {
+    "id": "dlg_juno_intro_2",
+    "speaker": "Player",
+    "text": "Any news?",
+    "next": "dlg_juno_intro_3"
+  },
+  {
+    "id": "dlg_juno_intro_3",
+    "speaker": "Juno",
+    "text": "Packages go missing near the docks. Someone’s skimming. Keep your eyes open."
+  },
+  {
+    "id": "dlg_leto_intro",
+    "speaker": "Sergeant Leto",
+    "text": "Papers, please. Ha—kidding. We’re short on papers today.",
+    "next": "dlg_leto_intro_2"
+  },
+  {
+    "id": "dlg_leto_intro_2",
+    "speaker": "Player",
+    "text": "Anything we should avoid?",
+    "next": "dlg_leto_intro_3"
+  },
+  {
+    "id": "dlg_leto_intro_3",
+    "speaker": "Sergeant Leto",
+    "text": "Back alley after midnight. Unless you like buying trouble twice."
+  },
+  {
+    "id": "dlg_pasha_intro",
+    "speaker": "Pasha",
+    "text": "Step right up—today's lots are honest and only mildly cursed!",
+    "next": "dlg_pasha_intro_2"
+  },
+  {
+    "id": "dlg_pasha_intro_2",
+    "speaker": "Player",
+    "text": "We're just looking.",
+    "next": "dlg_pasha_intro_3"
+  },
+  {
+    "id": "dlg_pasha_intro_3",
+    "speaker": "Pasha",
+    "text": "Looking is free. Advice, too: bids rise when the drones clock off—late evenings are fierce."
+  },
+  {
+    "id": "dlg_rana_intro",
+    "speaker": "Rana",
+    "text": "Watch your step. Half these pallets wobble worse than a drunk loader.",
+    "next": "dlg_rana_intro_2"
+  },
+  {
+    "id": "dlg_rana_intro_2",
+    "speaker": "Player",
+    "text": "Busy day?",
+    "next": "dlg_rana_intro_3"
+  },
+  {
+    "id": "dlg_rana_intro_3",
+    "speaker": "Rana",
+    "text": "Always. If a crate's tagged in blue, it’s bound for the mine. Don’t touch blue."
+  },
+  {
+    "id": "dlg_sedge_intro",
+    "speaker": "Sedge",
+    "text": "You look like someone who can mind a secret.",
+    "next": "dlg_sedge_intro_2"
+  },
+  {
+    "id": "dlg_sedge_intro_2",
+    "speaker": "Player",
+    "text": "Depends on the secret.",
+    "next": "dlg_sedge_intro_3"
+  },
+  {
+    "id": "dlg_sedge_intro_3",
+    "speaker": "Sedge",
+    "text": "Then it depends on the price. Come back when you’ve got something to trade."
+  },
+  {
+    "id": "dlg_sera_intro",
+    "speaker": "Doctor Sera",
+    "text": "If you’re bleeding, sit. If you’re not, don’t start.",
+    "next": "dlg_sera_intro_2"
+  },
+  {
+    "id": "dlg_sera_intro_2",
+    "speaker": "Player",
+    "text": "We’re fine.",
+    "next": "dlg_sera_intro_3"
+  },
+  {
+    "id": "dlg_sera_intro_3",
+    "speaker": "Doctor Sera",
+    "text": "Good. I’m running low on synth-gel and patience in equal measure."
+  },
+  {
+    "id": "dlg_sima_intro",
+    "speaker": "Sima",
+    "text": "Noodles hot, pepper hotter. Want steam or fire?",
+    "next": "dlg_sima_intro_2"
+  },
+  {
+    "id": "dlg_sima_intro_2",
+    "speaker": "Player",
+    "text": "Surprise me.",
+    "next": "dlg_sima_intro_3"
+  },
+  {
+    "id": "dlg_sima_intro_3",
+    "speaker": "Sima",
+    "text": "Bold. I like bold. Here—don’t breathe in too deep."
+  },
+  {
+    "id": "dlg_tallo_intro",
+    "speaker": "Tallo",
+    "text": "New faces? Welcome. Roof leaks, hearts don’t.",
+    "next": "dlg_tallo_intro_2"
+  },
+  {
+    "id": "dlg_tallo_intro_2",
+    "speaker": "Player",
+    "text": "Nice place.",
+    "next": "dlg_tallo_intro_3"
+  },
+  {
+    "id": "dlg_tallo_intro_3",
+    "speaker": "Tallo",
+    "text": "It’s home. The trick is to keep it ours."
+  },
+  {
+    "id": "ellie_default_talk",
+    "speaker": "Ellie",
+    "text": "Just swapping out panels before the sparks get ambitious. What do you need?"
+  },
+  {
+    "id": "ellie_return_display",
+    "speaker": "Ellie",
+    "text": "The arcade's alive again! Here, a little something for keeping the lights bright.",
+    "condition": "quest_active:gather_broken_gear"
+  },
+  {
+    "id": "jed_w1_mq04_sacrifice_1",
+    "speaker": "Jed",
+    "text": "Nova! Thank the currents. I heard the alarm broadcast. The Warden's security is descending, sealing everything.",
+    "condition": "quest_active:w1_mq04,quest_stage:w1_mq04:cargo_lift_sacrifice",
+    "next": "jed_w1_mq04_sacrifice_2"
+  },
+  {
+    "id": "jed_w1_mq04_sacrifice_2",
+    "speaker": "Nova",
+    "emote": "scared",
+    "text": "Jed, they're calling me a contaminant. Zeke's overriding the gates, but we have to move now. Come on!",
+    "next": "jed_w1_mq04_sacrifice_3"
+  },
+  {
+    "id": "jed_w1_mq04_sacrifice_3",
+    "speaker": "Jed",
+    "text": "I can't, girl. The manual override panel for this lift is failing. If I let go of this handle, the lift locks down, and they pin you in this shaft.",
+    "next": "jed_w1_mq04_sacrifice_4"
+  },
+  {
+    "id": "jed_w1_mq04_sacrifice_4",
+    "speaker": "Nova",
+    "emote": "crying",
+    "text": "No! We can jam the gears! I'm not leaving you behind!",
+    "next": "jed_w1_mq04_sacrifice_5"
+  },
+  {
+    "id": "jed_w1_mq04_sacrifice_5",
+    "speaker": "Jed",
+    "text": "This isn't a quota run, Nova. You have to launch. Here—take this Chime. It was in the generator core housing. It's the only thing that will bypass the launch bay locks. Now run, and don't look back.",
+    "trigger": "set_quest_task_done:w1_mq04:receive_chime,player_action:jed_sacrifice"
+  },
+  {
+    "id": "jed_w1_mq01_intro_1",
+    "speaker": "Jed",
+    "text": "You look like a pressure leak with boots. Tell me you slept.",
+    "condition": "quest_active:w1_mq01,milestone_not_set:ms_w1_mq01_jed_talked",
+    "next": "jed_w1_mq01_intro_2"
+  },
+  {
+    "id": "jed_w1_mq01_intro_2",
+    "speaker": "Nova",
+    "emote": "puzzled",
+    "text": "I slept enough. Quota doesn't care how rested I am.",
+    "next": "jed_w1_mq01_intro_3"
+  },
+  {
+    "id": "jed_w1_mq01_intro_3",
+    "speaker": "Jed",
+    "text": "Quota also doesn't care if that cutter pops and takes your hand with it. I do.",
+    "next": "jed_w1_mq01_intro_4"
+  },
+  {
+    "id": "jed_w1_mq01_intro_4",
+    "speaker": "Nova",
+    "emote": "worried",
+    "text": "If I don't push it, I miss count. If I miss count, I lose scrip. If I lose scrip...",
+    "next": "jed_w1_mq01_intro_5"
+  },
+  {
+    "id": "jed_w1_mq01_intro_5",
+    "speaker": "Jed",
+    "text": "I know the math. I hate the math. Check your gear, then use the bench. And take the ration bar before you pretend you aren't hungry.",
+    "trigger": "set_quest_task_done:w1_mq01:find_jed,set_quest_task_done:w1_mq01:talk_to_jed,give_item:mining_pistol,give_item:nova_flux_liner,give_item:cryo_inductor,give_item:scrap_metal*2,set_quest_task_done:w1_mq01:equip_starter_gear,set_milestone:ms_w1_mq01_jed_talked,give_item:ration_pack,system_tutorial:bag_basics|Jed's Workshop"
+  },
+  {
+    "id": "jed_default_talk",
+    "speaker": "Jed",
+    "text": "Grab a seat if you're sticking around. If something starts smoking, hand me the wrench first."
+  },
+  {
+    "id": "jed_energy_core_turnin_1",
+    "speaker": "Jed",
+    "text": "You made it back in one piece. That surge settle down once you pulled the core?",
+    "next": "nova_energy_core_turnin_1",
+    "condition": "quest_active:stellarium_mine_investigation"
+  },
+  {
+    "id": "jed_energy_core_turnin_2",
+    "speaker": "Jed",
+    "text": "Then we learn what they wanted. I'll crack the housing and see how far the signal goes. Nice work bringing it home."
+  },
+  {
+    "id": "jed_return_wrapup",
+    "speaker": "Jed",
+    "text": "Town runs smoother thanks to you. Keep pace like that and we'll stay ahead of the scrappers.",
+    "condition": "quest_completed:stellarium_mine_investigation"
+  },
+  {
+    "id": "jed_signal_complete",
+    "speaker": "Jed",
+    "text": "Stellarium core is cooling on my workbench thanks to you. We'll make good use of it.",
+    "condition": "milestone:ms_energy_core_returned"
+  },
+  {
+    "id": "jed_signal_core_ready",
+    "speaker": "Jed",
+    "text": "Smell that ozone? That's the core spool. Hand it over before it cooks through your belt.",
+    "condition": "milestone:ms_energy_core_claimed,milestone_not_set:ms_energy_core_returned"
+  },
+  {
+    "id": "jed_signal_instructions",
+    "speaker": "Jed",
+    "text": "Track that pulse to its source. If the deep mine lit up, something below Sector 4 is chewing through power.",
+    "condition": "quest_active:w1_mq03,milestone_not_set:ms_w1_mq03_complete"
+  },
+  {
+    "id": "jed_tinkering_complete",
+    "speaker": "Jed",
+    "text": "Nice work. That's all of 'em. Now, get this gear back to their owners. They've been pestering me for days.",
+    "condition": "quest_active:gather_broken_gear"
+  },
+  {
+    "id": "kasey_default_talk",
+    "speaker": "Schoolteacher Kasey",
+    "text": "Quiet feet, please. The little ones are mapping constellations they have never been allowed to see."
+  },
+  {
+    "id": "kasey_return_projector",
+    "speaker": "Schoolteacher Kasey",
+    "text": "Wonderful! The kids will be back under the stars tonight. Please, take this for your trouble.",
+    "condition": "quest_active:gather_broken_gear"
+  },
+  {
+    "id": "maddie_default_talk",
+    "speaker": "Maddie",
+    "text": "Beans are roasting, and for once the grinder is not threatening to explode. Did you need something?"
+  },
+  {
+    "id": "maddie_return_grinder",
+    "speaker": "Maddie",
+    "text": "You fixed it! Oh, thank you! Take these credits - may your next cup be on me.",
+    "condition": "quest_active:gather_broken_gear"
+  },
+  {
+    "id": "nova_energy_core_turnin_1",
+    "speaker": "Nova",
+    "text": "Burrower was feeding on it. Nest is quiet now, but whoever rigged the chamber knew what they were doing.",
+    "next": "jed_energy_core_turnin_2"
+  },
+  {
+    "id": "hank_w1_mq02_denial_1",
+    "speaker": "Guard Hank",
+    "text": "Badge.",
+    "condition": "quest_active:w1_mq02,milestone_not_set:ms_w1_mq02_hank_denied",
+    "next": "hank_w1_mq02_denial_2"
+  },
+  {
+    "id": "hank_w1_mq02_denial_2",
+    "speaker": "Nova",
+    "emote": "confident",
+    "text": "Morning to you too.",
+    "next": "hank_w1_mq02_denial_3"
+  },
+  {
+    "id": "hank_w1_mq02_denial_3",
+    "speaker": "Guard Hank",
+    "text": "Morning costs extra. Badge is mandatory. Booth window, then maybe the door likes you.",
+    "trigger": "set_quest_task_done:w1_mq02:request_clearance,set_milestone:ms_w1_mq02_hank_denied"
+  },
+  {
+    "id": "hank_default_talk",
+    "speaker": "Guard Hank",
+    "text": "Keep the line moving. The door doesn't care about your reasons."
+  },
+  {
+    "id": "zeke_w1_mq02_override_1",
+    "speaker": "Zeke",
+    "emote": "surprised",
+    "text": "Name? ID? Clearance sco--oh. It's you. The volunteer.",
+    "condition": "quest_active:w1_mq02,milestone_not_set:ms_w1_mq02_zeke_override",
+    "next": "zeke_w1_mq02_override_2"
+  },
+  {
+    "id": "zeke_w1_mq02_override_2",
+    "speaker": "Nova",
+    "emote": "cool",
+    "text": "I need a mining pass, suit. Shift starts in ten.",
+    "next": "zeke_w1_mq02_override_3"
+  },
+  {
+    "id": "zeke_w1_mq02_override_3",
+    "speaker": "Zeke",
+    "emote": "worried",
+    "text": "Right. Eligibility check. Completely routine. Very normal.",
+    "next": "zeke_w1_mq02_override_4"
+  },
+  {
+    "id": "zeke_w1_mq02_override_4",
+    "speaker": "Zeke",
+    "emote": "scared",
+    "text": "...Mandatory Retirement. Asset Liability exceeds projected value. Recycle.",
+    "next": "zeke_w1_mq02_override_5"
+  },
+  {
+    "id": "zeke_w1_mq02_override_5",
+    "speaker": "Nova",
+    "emote": "surprised",
+    "text": "Recycle means fired, right?",
+    "next": "zeke_w1_mq02_override_6"
+  },
+  {
+    "id": "zeke_w1_mq02_override_6",
+    "speaker": "Zeke",
+    "emote": "sad",
+    "text": "It means bio-reclamation. Death. For a breaker surge.",
+    "next": "zeke_w1_mq02_override_7"
+  },
+  {
+    "id": "zeke_w1_mq02_override_7",
+    "speaker": "Zeke",
+    "emote": "confident",
+    "text": "I'm flagging it as grid instability. Temporary override. Take the badge before I remember how rules work.",
+    "trigger": "set_quest_task_done:w1_mq02:meet_zeke,set_quest_task_done:w1_mq02:spoof_liability_form,set_quest_task_done:w1_mq02:receive_mine_access_badge,give_item:mine_access_badge,complete_quest:w1_mq02,set_milestone:ms_w1_mq02_zeke_override,set_milestone:ms_w1_mq02_complete,start_quest:w1_mq03,track_quest:w1_mq03,advance_quest_stage:w1_mq03:sector_four_assignment"
+  },
+  {
+    "id": "zeke_default_talk",
+    "speaker": "Zeke",
+    "text": "The system logged something. I should not have said that out loud."
+  },
+  {
+    "id": "scrapper_w1_sq01_turnin_1",
+    "speaker": "Scrapper",
+    "text": "You opened it? No alarm? No sweep team? Hah. They really did forget the dead.",
+    "condition": "quest_active:w1_sq01,milestone:ms_w1_sq01_cache_opened",
+    "next": "scrapper_w1_sq01_turnin_2"
+  },
+  {
+    "id": "scrapper_w1_sq01_turnin_2",
+    "speaker": "Nova",
+    "text": "They scratched names into the lid.",
+    "next": "scrapper_w1_sq01_turnin_3"
+  },
+  {
+    "id": "scrapper_w1_sq01_turnin_3",
+    "speaker": "Scrapper",
+    "text": "Then remember them quiet. Loud gets people recycled. Take the grenades and forget who told you.",
+    "trigger": "set_quest_task_done:w1_sq01:return_cache_proof,give_item:pulse_grenade*2,give_xp:80,complete_quest:w1_sq01,set_milestone:ms_w1_sq01_complete"
+  },
+  {
+    "id": "scrapper_w1_sq01_intro_1",
+    "speaker": "Scrapper",
+    "text": "You want something useful, cutter girl? There's a cache behind the strip. Old resistance stock.",
+    "condition": "quest_completed:w1_mq01,quest_not_started:w1_sq01",
+    "next": "scrapper_w1_sq01_intro_2"
+  },
+  {
+    "id": "scrapper_w1_sq01_intro_2",
+    "speaker": "Nova",
+    "text": "Why not grab it yourself?",
+    "next": "scrapper_w1_sq01_intro_3"
+  },
+  {
+    "id": "scrapper_w1_sq01_intro_3",
+    "speaker": "Scrapper",
+    "text": "Because I like breathing. Find the crate, open it clean, and bring me proof it wasn't a trap.",
+    "trigger": "start_quest:w1_sq01,track_quest:w1_sq01,set_quest_task_done:w1_sq01:talk_to_scrapper,set_milestone:ms_w1_sq01_started"
+  },
+  {
+    "id": "scrapper_w1_sq01_complete",
+    "speaker": "Scrapper",
+    "text": "Those grenades are loud history. Use them before history uses you.",
+    "condition": "quest_completed:w1_sq01"
+  },
+  {
+    "id": "scrapper_default_talk",
+    "speaker": "Scrapper",
+    "text": "Keep your voice down. Dominion buys echoes cheaper than scrap."
+  },
+  {
+    "id": "scrapper_shop_intro",
+    "speaker": "Scrapper",
+    "text": "Buying, selling, or just looking guilty? Keep it quick either way."
+  },
+  {
+    "id": "doc_w1_sq02_turnin_1",
+    "speaker": "Doc",
+    "text": "The coughing stopped. Either you fixed the vents or everyone finally died.",
+    "condition": "quest_active:w1_sq02,milestone:ms_w1_sq02_vent_patched",
+    "next": "doc_w1_sq02_turnin_2"
+  },
+  {
+    "id": "doc_w1_sq02_turnin_2",
+    "speaker": "Nova",
+    "text": "Fixed. Mostly. Dominion's maintenance request is still doing nothing.",
+    "next": "doc_w1_sq02_turnin_3"
+  },
+  {
+    "id": "doc_w1_sq02_turnin_3",
+    "speaker": "Doc",
+    "text": "Then this is faster than paperwork. Corrosive rounds. Ugly medicine for armored problems.",
+    "trigger": "set_quest_task_done:w1_sq02:return_to_doc,give_item:mod_corrosive_rounds,give_xp:90,complete_quest:w1_sq02,set_milestone:ms_w1_sq02_complete"
+  },
+  {
+    "id": "doc_w1_sq02_intro_1",
+    "speaker": "Doc",
+    "text": "Don't inhale too deep. The vents are backing poison into my patients again.",
+    "condition": "quest_completed:w1_mq01,quest_not_started:w1_sq02",
+    "next": "doc_w1_sq02_intro_2"
+  },
+  {
+    "id": "doc_w1_sq02_intro_2",
+    "speaker": "Nova",
+    "text": "Again?",
+    "next": "doc_w1_sq02_intro_3"
+  },
+  {
+    "id": "doc_w1_sq02_intro_3",
+    "speaker": "Doc",
+    "text": "Dominion denies repairs faster than I can file them. Patch the cracked vent before the ward turns blue.",
+    "trigger": "start_quest:w1_sq02,track_quest:w1_sq02,set_quest_task_done:w1_sq02:talk_to_doc,set_milestone:ms_w1_sq02_started"
+  },
+  {
+    "id": "doc_w1_sq02_complete",
+    "speaker": "Doc",
+    "text": "Air's still bad, but now it's regular bad. That's what passes for medicine here.",
+    "condition": "quest_completed:w1_sq02"
+  },
+  {
+    "id": "doc_default_talk",
+    "speaker": "Doc",
+    "text": "If you're bleeding, sit. If you're not, don't start."
+  },
+  {
+    "id": "bogs_w1_mq03_guardbreak_gate_1",
+    "speaker": "Foreman Boggs",
+    "text": "You heading down without shield training? That's how assets become floor paste.",
+    "condition": "quest_active:w1_mq03,milestone_not_set:ms_w1_guardbreak_trained",
+    "next": "bogs_w1_mq03_guardbreak_gate_2"
+  },
+  {
+    "id": "bogs_w1_mq03_guardbreak_gate_2",
+    "speaker": "Nova",
+    "text": "Shield training?",
+    "next": "bogs_w1_mq03_guardbreak_gate_3"
+  },
+  {
+    "id": "bogs_w1_mq03_guardbreak_gate_3",
+    "speaker": "Foreman Boggs",
+    "text": "Loading Dock. Riot shield trainer. Bring the loader online, move my cargo, learn Hydraulic Kick, then go play hero in Sector 4.",
+    "trigger": "start_quest:w1_sq03,track_quest:w1_sq03,set_quest_task_done:w1_sq03:talk_to_bogs,set_milestone:ms_w1_sq03_started"
+  },
+  {
+    "id": "bogs_w1_mq03_intro_1",
+    "speaker": "Foreman Boggs",
+    "text": "You. Cutter girl. Zeke said you're the one who caused that surge in the Pit.",
+    "condition": "quest_active:w1_mq03,milestone_not_set:ms_w1_mq03_bogs_talked",
+    "next": "bogs_w1_mq03_intro_2"
+  },
+  {
+    "id": "bogs_w1_mq03_intro_2",
+    "speaker": "Nova",
+    "text": "It was grid instability, Boggs. I just work the cutters.",
+    "next": "bogs_w1_mq03_intro_3"
+  },
+  {
+    "id": "bogs_w1_mq03_intro_3",
+    "speaker": "Foreman Boggs",
+    "text": "Sure it was. Anyway, the interference is overloading the relays in Sector 4. I'm putting you on punishment duty. Descend and clear it.",
+    "next": "bogs_w1_mq03_intro_4"
+  },
+  {
+    "id": "bogs_w1_mq03_intro_4",
+    "speaker": "Nova",
+    "text": "Sector 4? That's deep mine. The lift is locked.",
+    "next": "bogs_w1_mq03_intro_5"
+  },
+  {
+    "id": "bogs_w1_mq03_intro_5",
+    "speaker": "Foreman Boggs",
+    "text": "You've got that Mine Access Badge Zeke signed off on. My scanner's updated. Use the elevator, restore power at the Cavern Junction support pillar, then follow the relays until the humming stops.",
+    "trigger": "set_quest_task_done:w1_mq03:talk_to_bogs,player_action:bogs_talked,set_milestone:ms_w1_mq03_bogs_talked"
+  },
+  {
+    "id": "bogs_w1_sq03_intro_1",
+    "speaker": "Foreman Boggs",
+    "text": "You. Cutter girl. Loader's sitting idle and cargo's blocking my schedule.",
+    "condition": "quest_completed:w1_mq01,quest_not_started:w1_sq03",
+    "next": "bogs_w1_sq03_intro_2"
+  },
+  {
+    "id": "bogs_w1_sq03_intro_2",
+    "speaker": "Nova",
+    "text": "There are workers behind that pile.",
+    "next": "bogs_w1_sq03_intro_3"
+  },
+  {
+    "id": "bogs_w1_sq03_intro_3",
+    "speaker": "Foreman Boggs",
+    "text": "Then move it faster. Shipment clock doesn't pause for feelings.",
+    "trigger": "start_quest:w1_sq03,track_quest:w1_sq03,set_quest_task_done:w1_sq03:talk_to_bogs,set_milestone:ms_w1_sq03_started"
+  },
+  {
+    "id": "bogs_w1_sq03_complete",
+    "speaker": "Foreman Boggs",
+    "text": "Route's clear, workers are breathing, and somehow I'm still behind schedule.",
+    "condition": "quest_completed:w1_sq03"
+  },
+  {
+    "id": "bogs_default_talk",
+    "speaker": "Foreman Boggs",
+    "text": "Company time ain't charity. Move."
+  },
+  {
+    "id": "bill_default_talk",
+    "speaker": "Miner Bill",
+    "text": "Bar's quiet if you ignore the vents. I recommend ignoring the vents."
+  },
+  {
+    "id": "warden_boss_intro_1",
+    "speaker": "The Warden",
+    "text": "Nova. Asset 942-D. Retinal scan flagged for recycling, grid interference logs, and now unauthorized transit.",
+    "condition": "quest_active:w1_mq05,quest_stage:w1_mq05:defeat_warden,quest_task_not_done:w1_mq05:survive_warden_intro",
+    "next": "warden_boss_intro_2"
+  },
+  {
+    "id": "warden_boss_intro_2",
+    "speaker": "Player",
+    "emote": "angry",
+    "text": "We're leaving, Warden. Out of our way.",
+    "next": "warden_boss_intro_3"
+  },
+  {
+    "id": "warden_boss_intro_3",
+    "speaker": "The Warden",
+    "text": "Leave? There is nowhere to go. The dome isn't just physical. It's a lock. And I hold the frequency. You are a standing wave that has lost its pitch. I will quiet you myself.",
+    "trigger": "set_quest_task_done:w1_mq05:fight_through_launch_access,set_quest_task_done:w1_mq05:reach_pod_bay,advance_quest_stage:w1_mq05:defeat_warden,set_quest_task_done:w1_mq05:survive_warden_intro"
+  },
+  {
+    "id": "zeke_w1_mq05_defeat_warden_1",
+    "speaker": "Zeke",
+    "emote": "surprised",
+    "text": "Nova! You actually did it. The Warden's down. The way to the pod is clear, but security is going to reboot the grid any second.",
+    "condition": "quest_active:w1_mq05,quest_stage:w1_mq05:launch_pod,quest_task_not_done:w1_mq05:splice_chime,milestone_not_set:ms_w1_zeke_directed_to_pod",
+    "next": "zeke_w1_mq05_defeat_warden_2"
+  },
+  {
+    "id": "zeke_w1_mq05_defeat_warden_2",
+    "speaker": "Player",
+    "emote": "worried",
+    "text": "Let's move. Jed said the Chime is the key.",
+    "next": "zeke_w1_mq05_defeat_warden_3"
+  },
+  {
+    "id": "zeke_w1_mq05_defeat_warden_3",
+    "speaker": "Zeke",
+    "emote": "worried",
+    "text": "Get inside the pod! I'll secure the hatch. We need to splice that Chime into the console inside.",
+    "trigger": "set_milestone:ms_w1_zeke_directed_to_pod"
+  },
+  {
+    "id": "zeke_w1_mq05_pod_core_1",
+    "speaker": "Zeke",
+    "emote": "worried",
+    "text": "Nova! Connect the Chime to that port on the console. If Jed's math is right, it should establish a resonance that overrides the colony's lock on the pod launchers.",
+    "condition": "quest_active:w1_mq05,quest_stage:w1_mq05:launch_pod,quest_task_not_done:w1_mq05:splice_chime,milestone:ms_w1_zeke_directed_to_pod",
+    "next": "zeke_w1_mq05_pod_core_2"
+  },
+  {
+    "id": "zeke_w1_mq05_pod_core_2",
+    "speaker": "Player",
+    "emote": "worried",
+    "text": "I'm inserting it now. Let's hope the frequency matches.",
+    "next": "zeke_w1_mq05_pod_core_3"
+  },
+  {
+    "id": "zeke_w1_mq05_pod_core_3",
+    "speaker": "Zeke",
+    "emote": "happy",
+    "text": "Yes! The core is spooling up. The console's active! We're green for launch. Nova, initiate the sequence on the navigation console!",
+    "trigger": "set_quest_task_done:w1_mq05:splice_chime,take_item:ghost_signal_cell,set_milestone:ms_w1_chime_spliced"
+  },
+  {
+    "id": "zeke_w2_crash_1",
+    "speaker": "Zeke",
+    "text": "Nova... *cough*... My head feels like a reactor breach. Are you intact?",
+    "condition": "quest_active:w2_mq01,quest_task_not_done:w2_mq01:check_on_zeke",
+    "next": "zeke_w2_crash_2"
+  },
+  {
+    "id": "zeke_w2_crash_2",
+    "speaker": "Nova",
+    "text": "I'm fine, Zeke. The pod took the brunt of the impact. How are you holding up?",
+    "next": "zeke_w2_crash_3"
+  },
+  {
+    "id": "zeke_w2_crash_3",
+    "speaker": "Zeke",
+    "text": "Everything is bruised, but my suit's recycler is still pumping. We're on the surface, Nova. We actually crossed the barrier... but the pod's core is completely fried.",
+    "next": "zeke_w2_crash_4"
+  },
+  {
+    "id": "zeke_w2_crash_4",
+    "speaker": "Zeke",
+    "text": "Check the core housing in the wreckage. If the Chime is still intact, we need to recover it before this swamp water short-circuits it completely.",
+    "trigger": "set_quest_task_done:w2_mq01:check_on_zeke,recruit:zeke"
+  },
+  {
+    "id": "zeke_w2_crash_repeat_1",
+    "speaker": "Zeke",
+    "text": "Check the wreckage of the pod core. We can't leave the Chime behind.",
+    "condition": "quest_active:w2_mq01,quest_task_done:w2_mq01:check_on_zeke,quest_task_not_done:w2_mq01:examine_pod"
+  },
+  {
+    "id": "zeke_w2_crash_repeat_2",
+    "speaker": "Zeke",
+    "text": "The stream of glow-water seems to flow deeper into the concrete structures. Follow it, Nova. I'll catch my breath and catch up.",
+    "condition": "quest_active:w2_mq01,quest_task_done:w2_mq01:check_on_zeke,quest_task_done:w2_mq01:examine_pod"
+  },
+  {
+    "id": "zeke_w2_mq02_intro_1",
+    "speaker": "Zeke",
+    "text": "The beacon's pulse is strong. It's coming from that massive stone gate up ahead. But the path is covered in thick razor-vines. Be careful, Nova.",
+    "condition": "quest_active:w2_mq02,quest_task_not_done:w2_mq02:locate_temple_gate"
+  },
+  {
+    "id": "zeke_w2_mq03_puzzle_hint_1",
+    "speaker": "Zeke",
+    "text": "The stasis pod is completely locked down by safety alignment rings. According to the console, it needs a stable chord of 136Hz. That's a C#m7 resonance. Adjust the rings using my frequency broadcast.",
+    "condition": "quest_active:w2_mq03,quest_task_not_done:w2_mq03:align_stasis_rings",
+    "options": [
+      {
+        "id": "zeke_w2_mq03_choose_csharp",
+        "text": "Broadcast C# Minor 7 (136.1 Hz)",
+        "next": "zeke_w2_mq03_puzzle_success"
+      },
+      {
+        "id": "zeke_w2_mq03_choose_dmaj",
+        "text": "Broadcast D Major (146.8 Hz)",
+        "next": "zeke_w2_mq03_puzzle_fail"
+      },
+      {
+        "id": "zeke_w2_mq03_choose_gmin",
+        "text": "Broadcast G Minor (196.0 Hz)",
+        "next": "zeke_w2_mq03_puzzle_fail"
+      }
+    ]
+  },
+  {
+    "id": "zeke_w2_mq03_puzzle_success",
+    "speaker": "Zeke",
+    "text": "It worked! The stasis rings are locking into alignment. The pod is venting pressure!",
+    "trigger": "player_action:w2_mq03_align_complete"
+  },
+  {
+    "id": "zeke_w2_mq03_puzzle_fail",
+    "speaker": "Zeke",
+    "text": "No, the rings are still oscillating. The frequency is discordant. Let's try again."
+  },
+  {
+    "id": "zeke_w2_sq01_turnin_1",
+    "speaker": "Zeke",
+    "text": "Fascinating scans! The cellular structure of these crystalline ferns behaves like an acoustic chamber. Here, take some spare stabilizers for your help.",
+    "condition": "quest_active:w2_sq01,quest_task_done:w2_sq01:scan_flora_1,quest_task_done:w2_sq01:scan_flora_2,quest_task_done:w2_sq01:scan_flora_3,quest_task_done:w2_sq01:scan_flora_4,quest_task_done:w2_sq01:scan_flora_5",
+    "trigger": "complete_quest:w2_sq01,give_item:painkillers*2"
+  },
+  {
+    "id": "zeke_w2_sq01_intro_1",
+    "speaker": "Zeke",
+    "text": "Nova, this surface is incredible. The plants here respond directly to resonance frequencies. If you scan 5 unique flora specimens, I can compile an ecological catalog. Can you do that?",
+    "condition": "quest_not_started:w2_sq01,quest_completed:w2_mq01",
+    "options": [
+      {
+        "id": "zeke_w2_sq01_accept",
+        "text": "Sure, I'll scan them.",
+        "trigger": "start_quest:w2_sq01,track_quest:w2_sq01"
+      },
+      {
+        "id": "zeke_w2_sq01_decline",
+        "text": "Not right now."
+      }
+    ]
+  },
+  {
+    "id": "orion_w2_mq05_gate_1",
+    "speaker": "Orion",
+    "text": "This energy barrier blocks access to the hangar. It vibrates with intense discordance. We must introduce a resolving harmonic lock at C#m7 to bypass it.",
+    "condition": "quest_active:w2_mq05,quest_task_not_done:w2_mq05:bypass_source_gate",
+    "options": [
+      {
+        "id": "orion_w2_mq05_gate_csharp",
+        "text": "Tune resonator to C# Minor 7 (136.1 Hz)",
+        "next": "orion_w2_mq05_gate_success"
+      },
+      {
+        "id": "orion_w2_mq05_gate_emaj",
+        "text": "Tune resonator to E Major (164.8 Hz)",
+        "next": "orion_w2_mq05_gate_fail"
+      }
+    ]
+  },
+  {
+    "id": "orion_w2_mq05_gate_success",
+    "speaker": "Orion",
+    "text": "Perfect! The frequencies match, and the barrier dissolves. Hangar access is clear.",
+    "trigger": "player_action:w2_mq05_bypass_gate"
+  },
+  {
+    "id": "orion_w2_mq05_gate_fail",
+    "speaker": "Orion",
+    "text": "The barrier hums louder, pushing us back. That frequency is rejected. Let's try again."
+  },
+  {
+    "id": "orion_w2_sq04_tune_1",
+    "speaker": "Orion",
+    "text": "The mural's resonance is discordant. Which chord should we feed into the console to balance the light?",
+    "condition": "quest_active:w2_sq04,quest_task_not_done:w2_sq04:mural_tuning",
+    "options": [
+      {
+        "id": "orion_w2_sq04_tune_csharp",
+        "text": "Tune console to C# Minor 7",
+        "next": "orion_w2_sq04_tune_success"
+      },
+      {
+        "id": "orion_w2_sq04_tune_dmaj",
+        "text": "Tune console to D Major",
+        "next": "orion_w2_sq04_tune_fail"
+      }
+    ]
+  },
+  {
+    "id": "orion_w2_sq04_tune_success",
+    "speaker": "Orion",
+    "text": "The light-murals stabilize, singing a beautiful choral note of my ancestors. Look, a storage cache opened!",
+    "trigger": "player_action:w2_sq04_complete"
+  },
+  {
+    "id": "orion_w2_sq04_tune_fail",
+    "speaker": "Orion",
+    "text": "No, the colors are shifting erratically. The pitch is incorrect."
+  },
+  {
+    "id": "orion_w2_sq03_intro_1",
+    "speaker": "Orion",
+    "text": "Nova, Tideglass Beach is nearby. The wet shore has mineral deposits that make a hot, stabilizing meal. Let's gather 3 tideglass skewers.",
+    "condition": "quest_not_started:w2_sq03,quest_completed:w2_mq03",
+    "options": [
+      {
+        "id": "orion_w2_sq03_accept",
+        "text": "Let's go.",
+        "trigger": "start_quest:w2_sq03,track_quest:w2_sq03"
+      },
+      {
+        "id": "orion_w2_sq03_decline",
+        "text": "Maybe later."
+      }
+    ]
+  },
+  {
+    "id": "orion_w2_sq04_intro_1",
+    "speaker": "Orion",
+    "text": "Nova, the console in the Hall of Echoes controls the light-murals. They've drifted off-pitch. We can tune them to C#m7 to restore the old song.",
+    "condition": "quest_not_started:w2_sq04,quest_completed:w2_mq03",
+    "options": [
+      {
+        "id": "orion_w2_sq04_accept",
+        "text": "I can help with that.",
+        "trigger": "start_quest:w2_sq04,track_quest:w2_sq04"
+      },
+      {
+        "id": "orion_w2_sq04_decline",
+        "text": "Not right now."
+      }
+    ]
+  },
+  {
+    "id": "orion_default_talk",
+    "speaker": "Orion",
+    "text": "The current of this place is strong, Nova. I can hear the ocean's resonance."
+  },
+  {
+    "id": "ghost_confrontation_1",
+    "speaker": "Gh0st",
+    "text": "You do not belong on this frequency. My orders are simple: erase the anomaly.",
+    "condition": "quest_active:w2_mq04,quest_task_not_done:w2_mq04:confront_stalker",
+    "next": "ghost_confrontation_2"
+  },
+  {
+    "id": "ghost_confrontation_2",
+    "speaker": "Player",
+    "text": "Wait, we aren't here to fight. The Warden sent us!",
+    "next": "ghost_confrontation_3"
+  },
+  {
+    "id": "ghost_confrontation_3",
+    "speaker": "Gh0st",
+    "text": "The Warden... *static*... error. System logic loop detected. Harmonic lock override...",
+    "trigger": "set_quest_task_done:w2_mq04:confront_stalker"
+  },
+  {
+    "id": "ghost_w2_sq05_intro_1",
+    "speaker": "Gh0st",
+    "text": "Nova, local drones dragged a Dominion transmitter into the stasis chamber vents. Retrieve it. We can salvage rapid capacitors from it.",
+    "condition": "quest_not_started:w2_sq05,quest_completed:w2_mq04",
+    "options": [
+      {
+        "id": "ghost_w2_sq05_accept",
+        "text": "I'll fetch it.",
+        "trigger": "start_quest:w2_sq05,track_quest:w2_sq05"
+      },
+      {
+        "id": "ghost_w2_sq05_decline",
+        "text": "Maybe later."
+      }
+    ]
+  },
+  {
+    "id": "ghost_default_talk",
+    "speaker": "Gh0st",
+    "text": "My blades are quiet, but my sensors are alert."
+  },
+  {
+    "id": "zeke_w3_mq11_safehouse_intro",
+    "speaker": "Zeke",
+    "condition": "quest_active:w3_mq11,quest_stage:w3_mq11:find_safehouse,quest_task_not_done:w3_mq11:establish_shield",
+    "text": "Welcome to my safehouse... or what's left of it. They reformatted my life, Nova. Discarded my files, my memories. But the physical terminals... they are still wired.",
+    "next": "zeke_w3_mq11_safehouse_next"
+  },
+  {
+    "id": "zeke_w3_mq11_safehouse_next",
+    "speaker": "Nova",
+    "text": "We'll take it back, Zeke. For now, Orion, set up the shield. Let's make sure Vale can't hear us.",
+    "next": "zeke_w3_mq11_safehouse_end"
+  },
+  {
+    "id": "zeke_w3_mq11_safehouse_end",
+    "speaker": "Orion",
+    "text": "Establishing resonance lock. There. The Source is quiet here. They won't detect us.",
+    "trigger": "player_action:w3_mq11_establish_shield"
+  },
+  {
+    "id": "w3_mq12_jax_intro",
+    "speaker": "Jax",
+    "condition": "quest_active:w3_mq12,quest_task_not_done:w3_mq12:talk_jax",
+    "text": "Don't ask what's in the drink. Don't ask who was sitting there yesterday. Rules of the house. You looking for elevator passcodes?",
+    "options": [
+      {
+        "id": "jax_w3_mq12_request_codes",
+        "text": "Yes, Zeke said you have the schedules.",
+        "next": "w3_mq12_jax_success"
+      }
+    ]
+  },
+  {
+    "id": "w3_mq12_jax_success",
+    "speaker": "Jax",
+    "text": "Schedules are on this drive. Keep it out of sight. The Suits are watching.",
+    "trigger": "player_action:w3_mq12_talk_jax"
+  },
+  {
+    "id": "w3_sq11_jax_intro",
+    "speaker": "Jax",
+    "condition": "quest_not_started:w3_sq11,quest_completed:w3_mq11",
+    "text": "The neon sign outside is dead. Can't run a bar in the dark. Bring me a neon core from the street sweepers, and I'll make it worth your while.",
+    "options": [
+      {
+        "id": "jax_w3_sq11_accept",
+        "text": "I'll get a core for you.",
+        "trigger": "start_quest:w3_sq11,track_quest:w3_sq11"
+      },
+      {
+        "id": "jax_w3_sq11_decline",
+        "text": "Maybe later."
+      }
+    ]
+  },
+  {
+    "id": "w3_sq11_jax_turnin",
+    "speaker": "Jax",
+    "condition": "quest_active:w3_sq11,item:neon_sign_core,quest_task_not_done:w3_sq11:install_core",
+    "text": "You got the core. Install it on the sign console over there.",
+    "options": [
+      {
+        "id": "jax_w3_sq11_install",
+        "text": "Install neon core.",
+        "trigger": "player_action:w3_sq11_install_core"
+      }
+    ]
+  },
+  {
+    "id": "w3_sq12_ghost_intro",
+    "speaker": "Gh0st",
+    "condition": "quest_not_started:w3_sq12,quest_completed:w3_mq11",
+    "text": "Nova. Dominion databases at the Transit Plaza might hold records on... Elara. My sister. I cannot access the terminal without triggering security alerts. Will you search it?",
+    "options": [
+      {
+        "id": "ghost_w3_sq12_accept",
+        "text": "I'll search the records.",
+        "trigger": "start_quest:w3_sq12,track_quest:w3_sq12"
+      },
+      {
+        "id": "ghost_w3_sq12_decline",
+        "text": "Not now."
+      }
+    ]
+  },
+  {
+    "id": "w3_sq12_ghost_terminal",
+    "speaker": "System",
+    "condition": "quest_active:w3_sq12,quest_task_not_done:w3_sq12:access_terminal",
+    "text": "Downloading Spire security archives... file transfer complete.",
+    "trigger": "player_action:w3_sq12_access_terminal"
+  },
+  {
+    "id": "w3_sq13_mika_intro",
+    "speaker": "Mika",
+    "condition": "quest_not_started:w3_sq13,quest_completed:w3_mq11",
+    "text": "Try the skewers! Real protein today, I promise. No recycled paste. Also... can you help me fix these lanterns? The rain is shorting them out.",
+    "options": [
+      {
+        "id": "mika_w3_sq13_accept",
+        "text": "I'll help you fix them.",
+        "trigger": "start_quest:w3_sq13,track_quest:w3_sq13"
+      },
+      {
+        "id": "mika_w3_sq13_decline",
+        "text": "I'm busy."
+      }
+    ]
+  },
+  {
+    "id": "w3_sq13_mika_lights",
+    "speaker": "Mika",
+    "condition": "quest_active:w3_sq13,quest_task_not_done:w3_sq13:fix_market_lights",
+    "text": "Just redirect the primary power coupling to light them up.",
+    "options": [
+      {
+        "id": "mika_w3_sq13_fix",
+        "text": "Fix lanterns.",
+        "trigger": "player_action:w3_sq13_fix_market_lights"
+      }
+    ]
+  },
+  {
+    "id": "w3_mq12_workstation_dialogue",
+    "speaker": "System",
+    "condition": "quest_active:w3_mq12,quest_task_not_done:w3_mq12:hack_blueprints",
+    "text": "Zeke's decryption algorithms are running... blueprints downloaded.",
+    "trigger": "player_action:w3_mq12_hack_blueprints"
+  },
+  {
+    "id": "w3_mq12_planning_table_dialogue",
+    "speaker": "System",
+    "condition": "quest_active:w3_mq12,quest_task_done:w3_mq12:talk_jax,quest_task_done:w3_mq12:interrogate_guard,quest_task_done:w3_mq12:hack_blueprints,quest_task_not_done:w3_mq12:assemble_table",
+    "text": "All data feeds are connected. The planning table is active.",
+    "options": [
+      {
+        "id": "w3_mq12_assemble_confirm",
+        "text": "Coordinate heist plan.",
+        "trigger": "player_action:w3_mq12_assemble_planning"
+      }
+    ]
+  },
+  {
+    "id": "curator_w3_mq13_intro",
+    "speaker": "Curator",
+    "condition": "quest_active:w3_mq13,quest_task_not_done:w3_mq13:blend_in",
+    "text": "Fascinating refraction. Sector 9 lineage?",
+    "next": "curator_w3_mq13_insult"
+  },
+  {
+    "id": "curator_w3_mq13_insult",
+    "speaker": "Curator",
+    "text": "A Starborn stray. Control your pet, or I will call security.",
+    "next": "zeke_w3_mq13_cover"
+  },
+  {
+    "id": "zeke_w3_mq13_cover",
+    "speaker": "Zeke",
+    "text": "Sir, this is a commemorative statue. Very lifelike. Move along.",
+    "trigger": "player_action:w3_mq13_blend_in"
+  },
+  {
+    "id": "zeke_w3_mq13_console_intro",
+    "speaker": "Zeke",
+    "condition": "quest_active:w3_mq13,quest_task_not_done:w3_mq13:disable_sensors",
+    "text": "Standard Dominion scanner grid. They think nobody smart enough to break it would ever want to leave.",
+    "next": "zeke_w3_mq13_console_end"
+  },
+  {
+    "id": "zeke_w3_mq13_console_end",
+    "speaker": "Zeke",
+    "text": "You deleted my employee ID? Fine. I am deleting your admin privileges.",
+    "trigger": "player_action:w3_mq13_disable_sensors"
+  },
+  {
+    "id": "orion_w3_mq14_puzzle_intro",
+    "speaker": "Orion",
+    "condition": "quest_active:w3_mq14,quest_task_done:w3_mq14:enter_archive,quest_task_not_done:w3_mq14:solve_light_puzzle",
+    "text": "The puzzle is not light. It is pressure in visible form. Tune the quiet frequencies first.",
+    "next": "orion_w3_mq14_puzzle_end"
+  },
+  {
+    "id": "orion_w3_mq14_puzzle_end",
+    "speaker": "Orion",
+    "text": "There. The door is listening now.",
+    "trigger": "player_action:w3_mq14_solve_light_puzzle"
+  },
+  {
+    "id": "zeke_w3_mq14_lens_warning",
+    "speaker": "Zeke",
+    "condition": "quest_active:w3_mq14,quest_task_done:w3_mq14:solve_light_puzzle,quest_task_not_done:w3_mq14:take_lens",
+    "text": "Wait. Energy density is spiking. If you touch that, the feedback loop lights us up like a flare.",
+    "next": "nova_w3_mq14_lens_take"
+  },
+  {
+    "id": "nova_w3_mq14_lens_take",
+    "speaker": "Nova",
+    "text": "We do not have time for safe mode. I can tune it out.",
+    "trigger": "player_action:w3_mq14_take_lens"
+  },
+  {
+    "id": "thorne_w3_mq14_trap_intro",
+    "speaker": "Thorne",
+    "condition": "quest_completed:w3_mq14,quest_active:w3_mq15",
+    "text": "You just tripped a station-wide audit. Do you have any idea what you have done?",
+    "next": "thorne_w3_mq14_trap_vale"
+  },
+  {
+    "id": "thorne_w3_mq14_trap_vale",
+    "speaker": "Thorne",
+    "text": "He is coming. And he does not leave survivors. I cannot let him find you here."
+  },
+  {
+    "id": "vale_w3_mq15_override",
+    "speaker": "Vale",
+    "condition": "quest_active:w3_mq15,quest_task_not_done:w3_mq15:defeat_administrator",
+    "text": "Anomaly detected in the Archive. Administrator, lock the district. I want no ungoverned noise leaving Sector 0."
+  },
+  {
+    "id": "upper_city_lounge_shop_intro",
+    "speaker": "Concierge",
+    "text": "Welcome to the altitude where price is proof of citizenship."
+  },
+  {
+    "id": "lab_terminal_w3_sq15_intro",
+    "speaker": "Lab Terminal",
+    "condition": "quest_not_completed:w3_sq15",
+    "text": "Prototype trial armed. Warning: liability has been transferred to the test subject.",
+    "trigger": "player_action:w3_sq15_test_weapon"
+  },
+  {
+    "id": "gh0st_w4_landing_intro",
+    "speaker": "Gh0st",
+    "condition": "quest_active:w4_mq16,quest_task_not_done:w4_mq16:land_shelf",
+    "text": "I know where the vents are. I crawled through them when I was small.",
+    "trigger": "player_action:w4_mq16_land_shelf"
+  },
+  {
+    "id": "zeke_w4_vents_intro",
+    "speaker": "Zeke",
+    "condition": "quest_active:w4_mq16,quest_task_done:w4_mq16:cross_slag_river,quest_task_not_done:w4_mq16:hack_cooling_vents",
+    "text": "These vents are running hot enough to cook a tank. Give me thirty seconds and a reason to hate this place more.",
+    "trigger": "player_action:w4_mq16_hack_cooling_vents"
+  },
+  {
+    "id": "gh0st_w4_phantom_intro",
+    "speaker": "Gh0st",
+    "condition": "quest_active:w4_mq17,quest_task_not_done:w4_mq17:access_phantom_terminal",
+    "text": "Project Phantom. That name is on the inside of my skull.",
+    "next": "nova_w4_phantom_prompt"
+  },
+  {
+    "id": "nova_w4_phantom_prompt",
+    "speaker": "Nova",
+    "text": "Open it. We face what it says together.",
+    "trigger": "player_action:w4_mq17_access_phantom_terminal"
+  },
+  {
+    "id": "gh0st_w4_springs_intro",
+    "speaker": "Gh0st",
+    "condition": "quest_active:w4_mq17,quest_task_done:w4_mq17:access_phantom_terminal,quest_task_not_done:w4_mq17:regroup_springs",
+    "text": "My kill-suite reads Spectral IDs. When you channel the Source, you ring close enough to Elara that the failsafe grabs the wheel.",
+    "next": "gh0st_w4_springs_key"
+  },
+  {
+    "id": "gh0st_w4_springs_key",
+    "speaker": "Gh0st",
+    "text": "If I ever draw on you again, use this override key. No hesitation.",
+    "trigger": "player_action:w4_mq17_regroup_springs"
+  },
+  {
+    "id": "vale_w4_compliance_bulletin",
+    "speaker": "Vale",
+    "condition": "quest_active:w4_mq16,milestone_not_set:ms_w4_compliance_bulletin",
+    "text": "Sector 7 is under audit. Unregistered craft detected. No departures until the anomaly is resolved.",
+    "trigger": "player_action:w4_compliance_bulletin"
+  },
+  {
+    "id": "gh0st_w4_mq18_floor_intro",
+    "speaker": "Gh0st",
+    "condition": "quest_active:w4_mq18,quest_task_not_done:w4_mq18:navigate_conveyors",
+    "text": "These belts carried bodies before they carried machines. Watch the timing.",
+    "trigger": "player_action:w4_mq18_navigate_conveyors"
+  },
+  {
+    "id": "gh0st_w4_mq18_prototypes",
+    "speaker": "Gh0st",
+    "condition": "quest_active:w4_mq18,quest_task_done:w4_mq18:navigate_conveyors,quest_task_not_done:w4_mq18:defeat_prototypes",
+    "text": "They made more of me. Faster. Emptier. Put them down before the line teaches them pain.",
+    "trigger": "player_action:w4_mq18_defeat_prototypes"
+  },
+  {
+    "id": "orion_w4_mq19_puzzle_intro",
+    "speaker": "Orion",
+    "condition": "quest_active:w4_mq19,quest_task_done:w4_mq19:reach_core_chamber,quest_task_not_done:w4_mq19:solve_conveyor_puzzle",
+    "text": "The puzzle is a factory rhythm. Belts, crushers, then silence. Move on the silence.",
+    "trigger": "player_action:w4_mq19_solve_conveyor_puzzle"
+  },
+  {
+    "id": "nova_w4_mq19_anvil_intro",
+    "speaker": "Nova",
+    "condition": "quest_active:w4_mq19,quest_task_done:w4_mq19:solve_conveyor_puzzle,quest_task_not_done:w4_mq19:take_anvil",
+    "text": "It wants to build. I can feel it pulling shape out of me.",
+    "trigger": "player_action:w4_mq19_take_anvil"
+  },
+  {
+    "id": "rylos_w4_mq20_intro",
+    "speaker": "Rylos",
+    "condition": "quest_active:w4_mq20,quest_task_not_done:w4_mq20:confront_rylos",
+    "text": "You are malfunctioning, Unit 734. Submit for correction. Pain is just data leaving the body.",
+    "trigger": "player_action:w4_mq20_confront_rylos"
+  },
+  {
+    "id": "vale_w4_mq20_coup",
+    "speaker": "Vale",
+    "condition": "quest_completed:w4_mq20,milestone_set:ms_w5_access_unlocked",
+    "text": "Commander Rylos. Audit complete. Denied. Director Thorne is relieved. All sectors: lockdown."
+  },
+  {
+    "id": "gh0st_w5_mq21_airlock",
+    "speaker": "Gh0st",
+    "condition": "quest_active:w5_mq21,quest_task_done:w5_mq21:force_dock,quest_task_not_done:w5_mq21:hack_airlock",
+    "text": "Vale locked the Ring to Thorne's old cipher. I know the scar tissue in this code. Give me ten seconds.",
+    "trigger": "player_action:w5_mq21_hack_airlock"
+  },
+  {
+    "id": "maintenance_bot_w5_sq22_intro",
+    "speaker": "Maintenance Bot",
+    "condition": "quest_not_completed:w5_sq22",
+    "text": "SOLAR ARRAY OCCLUDED. HORTICULTURAL LOSSES EXCEED EXECUTIVE PRESENTATION LIMITS.",
+    "trigger": "player_action:w5_sq22_realign_mirrors"
+  },
+  {
+    "id": "thorne_w5_mq22_intro",
+    "speaker": "Thorne",
+    "condition": "quest_active:w5_mq22,quest_task_done:w5_mq22:access_mainframe,quest_task_not_done:w5_mq22:find_thorne",
+    "text": "I built the cage. I thought Harmony would be controllable. Sellable. Vale is not trying to own the world. He is trying to erase every voice but his.",
+    "trigger": "player_action:w5_mq22_find_thorne"
+  },
+  {
+    "id": "vale_w5_compliance_greeting",
+    "speaker": "Vale",
+    "condition": "quest_active:w5_mq22",
+    "text": "Welcome to the Ring. Director Thorne is unavailable. Orbital Compliance is acting command. For your safety, remain where you are."
+  },
+  {
+    "id": "thorne_w5_mq23_core",
+    "speaker": "Thorne",
+    "condition": "quest_active:w5_mq23,quest_task_not_done:w5_mq23:navigate_maze",
+    "text": "Three firewall nodes. I designed the maze to keep everyone else out. Vale changed the locks and left me inside it.",
+    "trigger": "player_action:w5_mq23_navigate_maze"
+  },
+  {
+    "id": "elara_w5_mq24_reunion",
+    "speaker": "Elara",
+    "condition": "quest_active:w5_mq24,quest_task_done:w5_mq24:enter_chamber,quest_task_not_done:w5_mq24:find_elara",
+    "text": "734. You are late. I cannot hold the door and the firewall. Take the Anchor. Get them out. That is a direct order, brother.",
+    "trigger": "player_action:w5_mq24_find_elara"
+  },
+  {
+    "id": "vale_w5_mq25_soloist",
+    "speaker": "Vale",
+    "condition": "quest_active:w5_mq25,quest_task_done:w5_mq25:reach_throne,quest_task_not_done:w5_mq25:witness_soloist",
+    "text": "A choir still contains variance. Variance contains pain. One voice. A solo.",
+    "trigger": "player_action:w5_mq25_soloist"
+  },
+  {
+    "id": "zeke_w6_nightmare_release",
+    "speaker": "Zeke",
+    "condition": "quest_active:w6_mq26,quest_task_done:w6_mq26:rescue_zeke",
+    "text": "I kept telling myself I was surviving the system. I quit. And I do not need to be useful to deserve this family."
+  },
+  {
+    "id": "gh0st_w6_nightmare_release",
+    "speaker": "Gh0st",
+    "condition": "quest_active:w6_mq26,quest_task_done:w6_mq26:rescue_gh0st",
+    "text": "I could not save her. I can stop earning my right to exist by bleeding. No more orders."
+  },
+  {
+    "id": "orion_w6_nightmare_release",
+    "speaker": "Orion",
+    "condition": "quest_active:w6_mq26,quest_task_done:w6_mq26:rescue_orion",
+    "text": "They are not dead. They are still in the current. I was frozen. Now I have to remain on the shore a little longer."
+  },
+  {
+    "id": "vale_w6_final_confrontation",
+    "speaker": "Vale",
+    "condition": "quest_active:w6_mq30,quest_task_not_done:w6_mq30:confront_vale",
+    "text": "Thorne wanted to bottle the ocean. I will break the glass. No bodies to starve. No minds to break. Why do you struggle to add the friction back?",
+    "trigger": "player_action:w6_mq30_confront_vale"
+  },
+  {
+    "id": "nova_w6_final_answer",
+    "speaker": "Nova",
+    "condition": "quest_active:w6_mq30,quest_task_done:w6_mq30:confront_vale,quest_task_not_done:w6_mq30:defeat_vale",
+    "text": "You are not saving them. You are building a mass grave and calling the silence peace."
+  }
 ]

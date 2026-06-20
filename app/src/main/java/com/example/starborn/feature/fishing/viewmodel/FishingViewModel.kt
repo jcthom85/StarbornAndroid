@@ -88,6 +88,10 @@ class FishingViewModel(
         _uiState.update { it.copy(selectedLure = lure) }
     }
 
+    fun selectSensitivity(sensitivity: HookSensitivity) {
+        _uiState.update { it.copy(hookSensitivity = sensitivity) }
+    }
+
     fun startFishing() {
         val zone = _uiState.value.currentZone ?: return
         val rod = _uiState.value.selectedRod ?: return
@@ -281,6 +285,9 @@ class FishingViewModel(
             reelTension = (reelTension - TENSION_RECOVERY / rod.stability.toFloat() + totalPull * 0.12f).coerceIn(0f, 1.2f)
         }
         highestProgress = max(highestProgress, reelProgress)
+        if (reelTension > 0.75f && random.nextFloat() < 0.35f) {
+            viewModelScope.launch { _events.emit(FishingEvent.Warning) }
+        }
         if (reelTension >= 1f) {
             finishReeling(success = false, message = "The line snapped under too much tension.")
             return
@@ -313,6 +320,10 @@ class FishingViewModel(
         isReeling = false
         val encounter = currentEncounter
         if (!success || encounter == null) {
+            val isSnap = message.contains("tension")
+            viewModelScope.launch {
+                if (isSnap) _events.emit(FishingEvent.LineSnap)
+            }
             emitResult(
                 FishingResult(itemId = "", quantity = 0, message = message),
                 MinigameResult.FAIL
@@ -326,6 +337,9 @@ class FishingViewModel(
             MinigameResult.SUCCESS
         }
         val result = fishingService.resolveEncounter(encounter, resultType)
+        viewModelScope.launch {
+            _events.emit(FishingEvent.CatchSuccess)
+        }
         emitResult(result, resultType)
         currentEncounter = null
     }
@@ -355,6 +369,9 @@ class FishingViewModel(
     sealed interface FishingEvent {
         object Nibble : FishingEvent
         object Bite : FishingEvent
+        object Warning : FishingEvent
+        object CatchSuccess : FishingEvent
+        object LineSnap : FishingEvent
     }
 
     companion object {

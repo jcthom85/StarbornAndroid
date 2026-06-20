@@ -1048,5 +1048,489 @@
     "status_applications": [
       "stagger"
     ]
+  },
+  {
+    "id": "pounce",
+    "name": "Pounce",
+    "character": "shard_hound",
+    "type": "enemy",
+    "description": "A rapid pouncing attack that catches the target off-guard.",
+    "combat_tags": [
+      "dmg"
+    ],
+    "base_power": 100,
+    "scaling": "atk",
+    "cooldown": 2,
+    "status_applications": []
+  },
+  {
+    "id": "toxic_spore",
+    "name": "Toxic Spore",
+    "character": "spore_spitter",
+    "type": "enemy",
+    "description": "Spits a ball of venomous moss that weakens the target.",
+    "combat_tags": [
+      "dmg"
+    ],
+    "base_power": 80,
+    "scaling": "focus",
+    "cooldown": 1,
+    "status_applications": [
+      "weak"
+    ]
+  },
+  {
+    "id": "relic_strike",
+    "name": "Relic Strike",
+    "character": "ruin_guardian",
+    "type": "enemy",
+    "description": "A heavy strike with an ancient relic blade, staggering the opponent.",
+    "combat_tags": [
+      "dmg"
+    ],
+    "base_power": 130,
+    "scaling": "atk",
+    "cooldown": 2,
+    "status_applications": [
+      "stagger"
+    ]
+  },
+  {
+    "id": "constrict",
+    "name": "Constrict",
+    "character": "razor_vine",
+    "type": "enemy",
+    "description": "Entangles and constricts the target, weakening them.",
+    "combat_tags": [
+      "dmg"
+    ],
+    "base_power": 60,
+    "scaling": "atk",
+    "cooldown": 1,
+    "status_applications": [
+      "weak"
+    ]
+  },
+  {
+    "id": "nature_heal",
+    "name": "Nature Heal",
+    "character": "stalker_vine",
+    "type": "heal",
+    "description": "Draws nutrients from the surrounding soil to restore health.",
+    "combat_tags": [
+      "heal"
+    ],
+    "base_power": 100,
+    "scaling": "focus",
+    "cooldown": 2,
+    "status_applications": []
+  },
+  {
+    "id": "resonance_beam",
+    "name": "Resonance Beam",
+    "character": "sentinel_orb",
+    "type": "enemy",
+    "description": "Fires a concentrated beam of sound energy that blinds the target.",
+    "combat_tags": [
+      "dmg"
+    ],
+    "base_power": 120,
+    "scaling": "focus",
+    "cooldown": 2,
+    "status_applications": [
+      "blind"
+    ]
+  },
+  {
+    "id": "claw_swipe",
+    "name": "Claw Swipe",
+    "character": "the_beast",
+    "type": "enemy",
+    "description": "A heavy swipe from massive razor-sharp claws.",
+    "combat_tags": [
+      "dmg"
+    ],
+    "base_power": 150,
+    "scaling": "atk",
+    "cooldown": 0,
+    "status_applications": []
+  },
+  {
+    "id": "roar_of_the_source",
+    "name": "Roar of the Source",
+    "character": "the_beast",
+    "type": "enemy",
+    "description": "A deafening roar that echoes the chaotic currents of the Source.",
+    "combat_tags": [
+      "debuff"
+    ],
+    "base_power": 0,
+    "scaling": "focus",
+    "cooldown": 3,
+    "status_applications": [
+      "weak",
+      "stagger"
+    ]
+  },
+  {
+    "id": "seismic_stomp",
+    "name": "Seismic Stomp",
+    "character": "the_beast",
+    "type": "enemy",
+    "description": "Stomps the ground, triggering shockwaves that stagger the team.",
+    "combat_tags": [
+      "dmg"
+    ],
+    "base_power": 120,
+    "scaling": "atk",
+    "cooldown": 2,
+    "status_applications": [
+      "stagger"
+    ]
+  },
+  {
+    "id": "baton_strike",
+    "name": "Baton Strike",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Enforcer baton strike that shocks and stuns the target.",
+    "combat_tags": [
+      "dmg"
+    ],
+    "base_power": 90,
+    "scaling": "atk",
+    "cooldown": 1,
+    "status_applications": [
+      "stun"
+    ]
+  },
+  {
+    "id": "gh0st_intercept",
+    "name": "Intercept",
+    "character": "gh0st",
+    "type": "active",
+    "description": "Gh0st intercepts attacks targeting an ally, gaining Guard.",
+    "combat_tags": [
+      "defend",
+      "support"
+    ],
+    "base_power": 0,
+    "scaling": "defense",
+    "cooldown": 2,
+    "status_applications": [
+      "guard"
+    ]
+  },
+  {
+    "id": "source_art_scan",
+    "name": "Scan",
+    "character": "nova",
+    "type": "active",
+    "description": "Use the Lens to reveal hidden routes and expose enemy harmonic weaknesses.",
+    "combat_tags": [
+      "support",
+      "debuff"
+    ],
+    "base_power": 0,
+    "scaling": "focus",
+    "cooldown": 2,
+    "status_applications": [
+      "weak"
+    ]
+  },
+  {
+    "id": "gh0st_phase_counter",
+    "name": "Phase Counter",
+    "character": "gh0st",
+    "type": "active",
+    "description": "Gh0st uses the override key discipline to counter an incoming strike and mark the attacker.",
+    "combat_tags": [
+      "counter",
+      "debuff"
+    ],
+    "base_power": 110,
+    "scaling": "atk",
+    "cooldown": 3,
+    "status_applications": [
+      "weak"
+    ]
+  },
+  {
+    "id": "source_art_construct",
+    "name": "Construct",
+    "character": "nova",
+    "type": "active",
+    "description": "Use the Anvil to shape Source intent into a temporary barrier or strike.",
+    "combat_tags": [
+      "support",
+      "dmg"
+    ],
+    "base_power": 130,
+    "scaling": "focus",
+    "cooldown": 3,
+    "status_applications": [
+      "guard"
+    ]
+  },
+  {
+    "id": "gh0st_harden",
+    "name": "Harden",
+    "character": "gh0st",
+    "type": "active",
+    "description": "Gh0st hardens his stance with Phantom combat data, gaining Guard and stability.",
+    "combat_tags": [
+      "defend",
+      "buff"
+    ],
+    "base_power": 0,
+    "scaling": "defense",
+    "cooldown": 3,
+    "status_applications": [
+      "guard"
+    ]
+  },
+  {
+    "id": "corporate_insight",
+    "name": "Corporate Insight",
+    "character": "nova",
+    "type": "passive",
+    "description": "Dominion command patterns expose predictable weaknesses in corporate security units.",
+    "combat_tags": [
+      "buff"
+    ],
+    "base_power": 0,
+    "scaling": "luck",
+    "cooldown": 0,
+    "status_applications": []
+  },
+  {
+    "id": "orion_sunbeam",
+    "name": "Sunbeam",
+    "character": "orion",
+    "type": "active",
+    "description": "Orion focuses stored solar energy into a burning Source beam.",
+    "combat_tags": [
+      "dmg"
+    ],
+    "base_power": 145,
+    "scaling": "focus",
+    "cooldown": 3,
+    "status_applications": [
+      "burn"
+    ]
+  },
+  {
+    "id": "source_art_stasis",
+    "name": "Stasis",
+    "character": "nova",
+    "type": "source_art",
+    "description": "Use the Anchor to freeze a target in a fixed moment, stopping even self-repairing machines.",
+    "combat_tags": [
+      "freeze",
+      "control"
+    ],
+    "base_power": 70,
+    "scaling": "focus",
+    "cooldown": 4,
+    "status_applications": [
+      "freeze",
+      "stun"
+    ]
+  },
+  {
+    "id": "data_shield",
+    "name": "Data Shield",
+    "character": "zeke",
+    "type": "passive",
+    "description": "Purged defensive routines harden the party against signal disruption and Silence.",
+    "combat_tags": [
+      "support",
+      "buff"
+    ],
+    "base_power": 0,
+    "scaling": "focus",
+    "cooldown": 0,
+    "status_applications": []
+  },
+  {
+    "id": "nova_legacy",
+    "name": "Legacy",
+    "character": "nova",
+    "type": "passive",
+    "description": "Jed's memory steadies Nova's aim when the cost matters most.",
+    "combat_tags": [
+      "buff"
+    ],
+    "base_power": 0,
+    "scaling": "luck",
+    "cooldown": 0,
+    "status_applications": []
+  },
+  {
+    "id": "zeke_unshackled",
+    "name": "Unshackled",
+    "character": "zeke",
+    "type": "passive",
+    "description": "Zeke moves faster once usefulness is no longer the price of belonging.",
+    "combat_tags": [
+      "buff"
+    ],
+    "base_power": 0,
+    "scaling": "agility",
+    "cooldown": 0,
+    "status_applications": []
+  },
+  {
+    "id": "gh0st_source_balance",
+    "name": "Source Balance",
+    "character": "gh0st",
+    "type": "passive",
+    "description": "Elara's uncorrupted song stabilizes Gh0st against physical and Source pressure.",
+    "combat_tags": [
+      "defend",
+      "buff"
+    ],
+    "base_power": 0,
+    "scaling": "defense",
+    "cooldown": 0,
+    "status_applications": []
+  },
+  {
+    "id": "orion_ancestral_grace",
+    "name": "Ancestral Grace",
+    "character": "orion",
+    "type": "passive",
+    "description": "The first Architects' current continuously restores Orion while he remains in the fight.",
+    "combat_tags": [
+      "heal",
+      "buff"
+    ],
+    "base_power": 0,
+    "scaling": "focus",
+    "cooldown": 0,
+    "status_applications": [
+      "regen"
+    ]
+  },
+  {
+    "id": "source_art_tune_world",
+    "name": "Tune World",
+    "character": "nova",
+    "type": "source_art",
+    "description": "Open the Starborn circuit and rewrite one catastrophic resonance through collective intent.",
+    "combat_tags": [
+      "source",
+      "aoe",
+      "support"
+    ],
+    "base_power": 300,
+    "scaling": "focus",
+    "cooldown": 6,
+    "status_applications": [
+      "stun"
+    ]
+  },
+  {
+    "id": "glitch_bolt",
+    "name": "Glitch Bolt",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "A corrupted projectile that disrupts timing and focus.",
+    "combat_tags": [
+      "dmg",
+      "debuff"
+    ],
+    "base_power": 115,
+    "scaling": "focus",
+    "cooldown": 2,
+    "status_applications": [
+      "confuse"
+    ]
+  },
+  {
+    "id": "guilt_wave",
+    "name": "Guilt",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "A memory weapon that turns regret into silence.",
+    "combat_tags": [
+      "debuff",
+      "aoe"
+    ],
+    "base_power": 55,
+    "scaling": "focus",
+    "cooldown": 3,
+    "status_applications": [
+      "silence",
+      "weak"
+    ]
+  },
+  {
+    "id": "compliance_beam",
+    "name": "Compliance Beam",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "A precise Source beam that punishes deviation.",
+    "combat_tags": [
+      "dmg"
+    ],
+    "base_power": 155,
+    "scaling": "focus",
+    "cooldown": 2,
+    "status_applications": [
+      "silence"
+    ]
+  },
+  {
+    "id": "silence_wave",
+    "name": "Great Silence",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "A room-wide collapse toward one voice.",
+    "combat_tags": [
+      "aoe",
+      "debuff"
+    ],
+    "base_power": 175,
+    "scaling": "focus",
+    "cooldown": 4,
+    "status_applications": [
+      "silence",
+      "weak"
+    ]
+  },
+  {
+    "id": "reality_break",
+    "name": "Reality Break",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "The Ascended fractures local physical law into a Source detonation.",
+    "combat_tags": [
+      "aoe",
+      "dmg"
+    ],
+    "base_power": 210,
+    "scaling": "focus",
+    "cooldown": 3,
+    "status_applications": [
+      "stagger"
+    ]
+  },
+  {
+    "id": "shadow_chorus",
+    "name": "Shadow Chorus",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Summons hostile impressions of the Starborn circuit.",
+    "combat_tags": [
+      "aoe",
+      "debuff"
+    ],
+    "base_power": 135,
+    "scaling": "focus",
+    "cooldown": 3,
+    "status_applications": [
+      "confuse"
+    ]
   }
 ]

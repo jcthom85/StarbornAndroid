@@ -1,7 +1,7 @@
 # Events — World 2: The Wilds
 
 ## EVT_W2_01: The Hall of Echoes
-*   **Trigger:** Entering the Sanctuary murals (MQ_07).
+*   **Trigger:** Entering the Sanctuary murals (w2_mq02).
 *   **Action:**
     *   The Sanctuary’s main hall is lined with stone panels that aren’t carved—they’re *tuned*. When Nova gets close, the engravings shimmer like a waveform finding a speaker.
     *   The murals depict tall, faceless figures—the Architects—standing in a circle.
@@ -14,7 +14,7 @@
     *   Nova touches the panel and hears it—not words, not a voice, just a chilling *instruction*: *merge / stabilize / silence.*
 
 ## EVT_W2_02: The Awakening
-*   **Trigger:** MQ_08 (Reinitializing the Pod).
+*   **Trigger:** w2_mq03 (Reinitializing the Pod).
 *   **Action:**
     *   Pod hisses open.
     *   Orion falls out, coughing blue fluid.
@@ -50,7 +50,7 @@
     *   He looks at the ship console. "**The Bridge** (Relic) is intact. With this, we can fly."
 
 ## EVT_W2_02A: Canopy Ridge (Breather)
-*   **Trigger:** Traveling toward the canopy (mid-MQ_09, mandatory beat).
+*   **Trigger:** Traveling toward the canopy (mid-w2_mq04, mandatory beat).
 *   **Action:**
     *   The jungle thins. The air cools. The crew climbs out onto a ridge of black stone.
     *   Suddenly: open sky.
@@ -70,7 +70,7 @@
     *   Zeke’s humor evaporates. "Cool. Great. Love that for us."
 
 ## EVT_W2_03: The Glitch & The Beast
-*   **Trigger:** MQ_09 (Confronting Gh0st).
+*   **Trigger:** w2_mq04 (Confronting Gh0st).
 *   **Action:**
     *   Gh0st drops from the canopy, blocking their path.
     *   **Cinematic Battle Sequence:**
@@ -99,7 +99,7 @@
     *   **Gh0st:** "My systems won't allow it. Truce. Until I get answers."
 
 ## EVT_W2_04: Anchor Drill
-*   **Trigger:** First rest after Gh0st's truce (post-MQ_09, safe node).
+*   **Trigger:** First rest after Gh0st's truce (post-w2_mq04, safe node).
 *   **Action:**
     *   Night in the ruins. Bioluminescent spores drift like slow snow.
     *   Zeke is bandaging a cut. Nova reaches for Link again—trying to help—and the connection shrieks. Her vision fuzzes with static.
@@ -123,7 +123,7 @@
     *   **Orion:** "Better. Again tomorrow."
 
 ## EVT_W2_04A: Tideglass Beach (Optional Breather)
-*   **Trigger:** Visiting Tideglass Beach (SQ_12, optional).
+*   **Trigger:** Visiting Tideglass Beach (w2_sq03, optional).
 *   **Action:**
     *   The jungle finally opens onto a shoreline—warm sand that glitters like powdered stars.
     *   Tide pools glow faintly blue. Half-submerged Architect stones hum when waves hit them, like the ocean is strumming a chord.
