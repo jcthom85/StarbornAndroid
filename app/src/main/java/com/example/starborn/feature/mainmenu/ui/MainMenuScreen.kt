@@ -12,10 +12,12 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,9 +26,16 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -58,13 +67,15 @@ import com.example.starborn.domain.audio.AudioCuePlayer
 import com.example.starborn.domain.audio.AudioCueType
 import com.example.starborn.domain.audio.AudioRouter
 import com.example.starborn.feature.mainmenu.MainMenuViewModel
+import com.example.starborn.feature.mainmenu.DebugScenario
+import com.example.starborn.feature.mainmenu.DebugScenarioCatalog
+import com.example.starborn.feature.mainmenu.DebugScenarioCategory
+import com.example.starborn.feature.mainmenu.DebugScenarioDestination
 import com.example.starborn.ui.components.SaveLoadDialog
 import com.example.starborn.ui.theme.themeColor
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-
-private enum class StartMode { NORMAL, DEBUG, HUB_1, HUB_2, ROOM_ITEMS, SCAVENGER, HEAVY_LIFTING, LIFT_SHAFT, WEATHER_LAB, CHECKPOINT, DEEP_MINE, DYNAMIC_PATROL, RED_ALERT, LAUNCH, FIRST_COMBAT, ENEMY_PARTY, ENEMY_PARTY_SIZES, PRESENCE_STRESS }
 
 private val TitleGold = Color(0xFFFFC857)
 private val TitleAmber = Color(0xFFFF9F2E)
@@ -82,7 +93,9 @@ fun MainMenuScreen(
     onStartHub: () -> Unit,
     onSlotLoaded: () -> Unit
 ) {
-    var pendingStartMode by remember { mutableStateOf<StartMode?>(null) }
+    var startingGame by remember { mutableStateOf(false) }
+    var pendingScenario by remember { mutableStateOf<DebugScenario?>(null) }
+    var showDebugBrowser by remember { mutableStateOf(false) }
     var saveLoadMode by remember { mutableStateOf<String?>(null) }
     val snackbarHostState = remember { SnackbarHostState() }
     val slots by viewModel.slots.collectAsStateWithLifecycle()
@@ -134,8 +147,8 @@ fun MainMenuScreen(
         }
     }
 
-    LaunchedEffect(pendingStartMode) {
-        if (pendingStartMode == null) {
+    LaunchedEffect(startingGame, pendingScenario) {
+        if (!startingGame && pendingScenario == null) {
             fadeOutAlpha.animateTo(
                 targetValue = 0f,
                 animationSpec = tween(durationMillis = 260, easing = FastOutSlowInEasing)
@@ -151,117 +164,24 @@ fun MainMenuScreen(
         )
         // Give the frame a beat to present the black overlay before loading.
         delay(120)
-        val onFailure: () -> Unit = { pendingStartMode = null }
-        when (pendingStartMode) {
-            StartMode.NORMAL -> {
-                viewModel.startNewGame(
-                    onComplete = { onStartGame() },
-                    onFailure = onFailure
-                )
-            }
-            StartMode.DEBUG -> {
-                viewModel.startNewGameWithFullInventory(
-                    onComplete = { onStartGame() },
-                    onFailure = onFailure
-                )
-            }
-            StartMode.ROOM_ITEMS -> {
-                viewModel.startNewGameAtRoomItems(
-                    onComplete = { onStartGame() },
-                    onFailure = onFailure
-                )
-            }
-            StartMode.HUB_2 -> {
-                viewModel.startNewGameAtHub2(
-                    onComplete = { onStartHub() },
-                    onFailure = onFailure
-                )
-            }
-            StartMode.HUB_1 -> {
-                viewModel.startNewGameAtHub1(
-                    onComplete = { onStartHub() },
-                    onFailure = onFailure
-                )
-            }
-            StartMode.SCAVENGER -> {
-                viewModel.startNewGameAtScavengerStash(
-                    onComplete = { onStartGame() },
-                    onFailure = onFailure
-                )
-            }
-            StartMode.HEAVY_LIFTING -> {
-                viewModel.startNewGameAtHeavyLifting(
-                    onComplete = { onStartGame() },
-                    onFailure = onFailure
-                )
-            }
-            StartMode.LIFT_SHAFT -> {
-                viewModel.startNewGameAtLiftShaft(
-                    onComplete = { onStartGame() },
-                    onFailure = onFailure
-                )
-            }
-            StartMode.WEATHER_LAB -> {
-                viewModel.startNewGameAtWeatherLab(
-                    onComplete = { onStartGame() },
-                    onFailure = onFailure
-                )
-            }
-            StartMode.CHECKPOINT -> {
-                viewModel.startNewGameAtCheckpoint(
-                    onComplete = { onStartGame() },
-                    onFailure = onFailure
-                )
-            }
-            StartMode.DEEP_MINE -> {
-                viewModel.startNewGameAtDeepMine(
-                    onComplete = { onStartGame() },
-                    onFailure = onFailure
-                )
-            }
-            StartMode.DYNAMIC_PATROL -> {
-                viewModel.startNewGameAtDynamicPatrol(
-                    onComplete = { onStartGame() },
-                    onFailure = onFailure
-                )
-            }
-            StartMode.RED_ALERT -> {
-                viewModel.startNewGameAtRedAlert(
-                    onComplete = { onStartGame() },
-                    onFailure = onFailure
-                )
-            }
-            StartMode.LAUNCH -> {
-                viewModel.startNewGameAtLaunch(
-                    onComplete = { onStartGame() },
-                    onFailure = onFailure
-                )
-            }
-            StartMode.FIRST_COMBAT -> {
-                viewModel.startNewGameAtFirstCombat(
-                    onComplete = { onStartGame() },
-                    onFailure = onFailure
-                )
-            }
-            StartMode.ENEMY_PARTY -> {
-                viewModel.startNewGameAtEnemyPartyCombat(
-                    onComplete = { onStartGame() },
-                    onFailure = onFailure
-                )
-            }
-            StartMode.ENEMY_PARTY_SIZES -> {
-                viewModel.startNewGameAtEnemyPartySizes(
-                    onComplete = { onStartGame() },
-                    onFailure = onFailure
-                )
-            }
-            StartMode.PRESENCE_STRESS -> {
-                viewModel.startNewGameAtPresenceStress(
-                    onComplete = { onStartGame() },
-                    onFailure = onFailure
-                )
-            }
-            null -> Unit
+        val onFailure: () -> Unit = {
+            startingGame = false
+            pendingScenario = null
+        }
+        val scenario = pendingScenario
+        if (scenario != null) {
+            viewModel.startDebugScenario(
+                scenario = scenario,
+                onComplete = {
+                    when (scenario.destination) {
+                        DebugScenarioDestination.HUB -> onStartHub()
+                        DebugScenarioDestination.EXPLORATION -> onStartGame()
+                    }
+                },
+                onFailure = onFailure
+            )
+        } else if (startingGame) {
+            viewModel.startNewGame(onComplete = { onStartGame() }, onFailure = onFailure)
         }
     }
 
@@ -323,99 +243,21 @@ fun MainMenuScreen(
         ) {
             StarbornTitleButton(
                 text = "New Game",
-                onClick = { pendingStartMode = StartMode.NORMAL },
-                enabled = pendingStartMode == null,
+                onClick = { startingGame = true },
+                enabled = !startingGame && pendingScenario == null,
                 primary = true
             )
-            StarbornTitleButton(
-                text = "Debug: Full Inventory",
-                onClick = { pendingStartMode = StartMode.DEBUG },
-                enabled = pendingStartMode == null
-            )
-            StarbornTitleButton(
-                text = "Debug: Hub 1",
-                onClick = { pendingStartMode = StartMode.HUB_1 },
-                enabled = pendingStartMode == null
-            )
-            StarbornTitleButton(
-                text = "Debug: Hub 2",
-                onClick = { pendingStartMode = StartMode.HUB_2 },
-                enabled = pendingStartMode == null
-            )
-            StarbornTitleButton(
-                text = "Debug: Room Items",
-                onClick = { pendingStartMode = StartMode.ROOM_ITEMS },
-                enabled = pendingStartMode == null
-            )
-            StarbornTitleButton(
-                text = "Debug: Scavenger",
-                onClick = { pendingStartMode = StartMode.SCAVENGER },
-                enabled = pendingStartMode == null
-            )
-            StarbornTitleButton(
-                text = "Debug: Heavy Lifting",
-                onClick = { pendingStartMode = StartMode.HEAVY_LIFTING },
-                enabled = pendingStartMode == null
-            )
-            StarbornTitleButton(
-                text = "Debug: Lift Shaft",
-                onClick = { pendingStartMode = StartMode.LIFT_SHAFT },
-                enabled = pendingStartMode == null
-            )
-            StarbornTitleButton(
-                text = "Debug: Weather Lab",
-                onClick = { pendingStartMode = StartMode.WEATHER_LAB },
-                enabled = pendingStartMode == null
-            )
-            StarbornTitleButton(
-                text = "Debug: Checkpoint",
-                onClick = { pendingStartMode = StartMode.CHECKPOINT },
-                enabled = pendingStartMode == null
-            )
-            StarbornTitleButton(
-                text = "Debug: Deep Mine",
-                onClick = { pendingStartMode = StartMode.DEEP_MINE },
-                enabled = pendingStartMode == null
-            )
-            StarbornTitleButton(
-                text = "Debug: Dynamic Patrol",
-                onClick = { pendingStartMode = StartMode.DYNAMIC_PATROL },
-                enabled = pendingStartMode == null
-            )
-            StarbornTitleButton(
-                text = "Debug: Red Alert",
-                onClick = { pendingStartMode = StartMode.RED_ALERT },
-                enabled = pendingStartMode == null
-            )
-            StarbornTitleButton(
-                text = "Debug: The Launch",
-                onClick = { pendingStartMode = StartMode.LAUNCH },
-                enabled = pendingStartMode == null
-            )
-            StarbornTitleButton(
-                text = "Debug: First Combat",
-                onClick = { pendingStartMode = StartMode.FIRST_COMBAT },
-                enabled = pendingStartMode == null
-            )
-            StarbornTitleButton(
-                text = "Debug: Enemy Party",
-                onClick = { pendingStartMode = StartMode.ENEMY_PARTY },
-                enabled = pendingStartMode == null
-            )
-            StarbornTitleButton(
-                text = "Debug: Party Sizes",
-                onClick = { pendingStartMode = StartMode.ENEMY_PARTY_SIZES },
-                enabled = pendingStartMode == null
-            )
-            StarbornTitleButton(
-                text = "Debug: Presence Stress",
-                onClick = { pendingStartMode = StartMode.PRESENCE_STRESS },
-                enabled = pendingStartMode == null
-            )
+            if (BuildConfig.DEBUG) {
+                StarbornTitleButton(
+                    text = "Debug Scenarios",
+                    onClick = { showDebugBrowser = true },
+                    enabled = !startingGame && pendingScenario == null
+                )
+            }
             StarbornTitleButton(
                 text = "Load Game",
                 onClick = { saveLoadMode = "load" },
-                enabled = pendingStartMode == null
+                enabled = !startingGame && pendingScenario == null
             )
         }
 
@@ -472,6 +314,16 @@ fun MainMenuScreen(
             )
         }
 
+        if (BuildConfig.DEBUG && showDebugBrowser) {
+            DebugScenarioDialog(
+                onLaunch = { scenario ->
+                    showDebugBrowser = false
+                    pendingScenario = scenario
+                },
+                onDismiss = { showDebugBrowser = false }
+            )
+        }
+
         if (fadeOutAlpha.value > 0.01f) {
             Box(
                 modifier = Modifier
@@ -488,6 +340,82 @@ fun MainMenuScreen(
             )
         }
     }
+}
+
+@Composable
+private fun DebugScenarioDialog(
+    onLaunch: (DebugScenario) -> Unit,
+    onDismiss: () -> Unit
+) {
+    var query by remember { mutableStateOf("") }
+    var category by remember { mutableStateOf<DebugScenarioCategory?>(null) }
+    val filtered = remember(query, category) {
+        DebugScenarioCatalog.scenarios.filter { scenario ->
+            (category == null || scenario.category == category) &&
+                (query.isBlank() || listOf(scenario.title, scenario.description, scenario.worldLabel)
+                    .any { it.contains(query, ignoreCase = true) })
+        }
+    }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Debug Scenarios", fontWeight = FontWeight.Black) },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                Text("Launching replaces the current unsaved session.", color = TitleMutedText, fontSize = 13.sp)
+                OutlinedTextField(
+                    value = query,
+                    onValueChange = { query = it },
+                    label = { Text("Search world, quest, room, or system") },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    DebugScenarioCategory.entries.forEach { option ->
+                        FilterChip(
+                            selected = category == option,
+                            onClick = { category = option.takeUnless { it == category } },
+                            label = { Text(option.label, fontSize = 11.sp) }
+                        )
+                    }
+                }
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(6.dp),
+                    modifier = Modifier.heightIn(min = 180.dp, max = 430.dp)
+                ) {
+                    items(filtered, key = { it.id }) { scenario ->
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { onLaunch(scenario) }
+                                .background(TitleCyan.copy(alpha = 0.07f), RoundedCornerShape(10.dp))
+                                .padding(12.dp)
+                        ) {
+                            Text(scenario.title, fontWeight = FontWeight.Bold, color = TitleText)
+                            Text(
+                                "${scenario.category.label}  |  ${scenario.worldLabel}",
+                                color = TitleCyan,
+                                fontSize = 11.sp
+                            )
+                            Text(scenario.description, color = TitleMutedText, fontSize = 13.sp)
+                        }
+                    }
+                    if (filtered.isEmpty()) {
+                        item { Text("No matching scenarios.", color = TitleMutedText) }
+                    }
+                }
+                HorizontalDivider(color = TitleCyan.copy(alpha = 0.2f))
+            }
+        },
+        confirmButton = {},
+        dismissButton = { OutlinedButton(onClick = onDismiss) { Text("Close") } },
+        containerColor = TitlePanel,
+        titleContentColor = TitleText,
+        textContentColor = TitleMutedText
+    )
 }
 
 @Composable

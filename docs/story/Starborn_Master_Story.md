@@ -33,6 +33,35 @@ The journey drops into survival before returning to the City, allowing the party
 
 ---
 
+## IIa. Progressive Campaign Playtime & Scaling Blueprint
+
+To achieve a cohesive **12–15 hour total game length** without making the content feel front-loaded or bloated, the campaign follows a progressive scaling curve. Later worlds expand in physical room scale and mechanical complexity as the party gathers relics and upgrades *The Astra*.
+
+### Campaign Target Matrix
+
+| Seq. | World/Chapter | Target Playtime | Room Target | NPC Density | Relic / Mechanic Focus |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **1** | **The Mines** | **1.5 – 2.0 hrs** | 81 rooms (Actual) | High (~8 NPCs) | Onboarding, Hacking, Guard Break |
+| **-** | **The Crash** | **0.25 hrs** | Interlude | N/A | Escaping, Splicing the Chime |
+| **2** | **The Wilds** | **2.0 – 2.5 hrs** | 91 rooms (Actual) | Low (2 new NPCs) | Camping, Cooking, Tinkering, Erosion |
+| **3** | **The Spire** | **2.5 – 3.0 hrs** | ~100–110 rooms | High (~8-10 NPCs) | Lens Relic (Scan), Grid Phase Heist |
+| **4** | **The Foundry** | **2.5 – 3.0 hrs** | ~100–110 rooms | Low (0-2 NPCs) | Anvil Relic (Construct), Verticality |
+| **5** | **The Void** | **3.0 – 4.0 hrs** | ~120–130 rooms | Medium (~4 NPCs) | Station Infiltration, Relic Integration |
+| **6** | **The Source** | **1.5 – 2.0 hrs** | ~40–50 rooms | Zero (Core Party) | Climax, Memory Sacrifice, Final Boss |
+| **Total**| **Campaign** | **13.0 – 16.5 hrs**| **~530–590 rooms**| **Balanced Hubs** | **Phase Progression Spine** |
+
+### World-by-World Pacing Strategy
+
+1. **World 1 (Stellarium Colony 4):** Linear corridors and corporate offices. High density of social dialogue and tutorial messaging to ground the player.
+2. **World 2 (Sector 9):** Abandoned wilderness and overgrown ruins. Pacing slows down to emphasize survival, camping, and rebuilding *The Astra*. A sparse NPC count emphasizes isolation.
+3. **World 3 (Sector 0):** Dense, vertical neon city. Returns to high NPC density (bars, streets, shops) to make the urban heist feel populated and dangerous. Traversal requires scanning phase lines.
+4. **World 4 (The Foundry):** Industrial forge built into geo-thermal magma vents. A combat-heavy dungeon crawl focusing on environmental hazards and construct path generation.
+5. **World 5 (Orbital Ring):** A massive space station. Highly complex layout requiring the player to merge all previous mechanics to disable sector firewalls.
+6. **World 6 (The Source):** A surreal, hyper-focused final ascent. Mostly boss gauntlets and dialogue choices as the player decides what memories to sacrifice.
+
+
+---
+
 # III. Detailed World Outlines
 
 ## PROLOGUE: THE SIGNAL (Cold Open)

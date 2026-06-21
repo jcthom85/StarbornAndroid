@@ -65,8 +65,48 @@ fun rememberAssetPainter(
 }
 
 @Composable
-fun rememberRoomBackgroundPainter(imagePath: String?): Painter =
-    rememberAssetPainter(imagePath, fallback = ColorPainter(Color.Black))
+fun rememberRoomBackgroundPainter(imagePath: String?): Painter {
+    val context = LocalContext.current
+    if (!imagePath.isNullOrBlank()) {
+        val resourceName = remember(imagePath) {
+            imagePath
+                .substringAfterLast('/')
+                .substringBeforeLast('.')
+                .lowercase(Locale.getDefault())
+        }
+        val resolvedId = remember(imagePath) {
+            context.resources.getIdentifier(resourceName, "drawable", context.packageName)
+        }
+        if (resolvedId != 0) {
+            return painterResource(resolvedId)
+        }
+
+        val exists = remember(imagePath) {
+            runCatching {
+                context.assets.open(imagePath).use { }
+                true
+            }.getOrDefault(false)
+        }
+        if (exists) {
+            return rememberAssetPainter(imagePath, fallback = ColorPainter(Color.Black))
+        }
+
+        if (imagePath.contains("world_2") || imagePath.contains("sector9")) {
+            return remember {
+                androidx.compose.ui.graphics.painter.BrushPainter(
+                    androidx.compose.ui.graphics.Brush.verticalGradient(
+                        colors = listOf(
+                            Color(0xFF030D14),
+                            Color(0xFF051D18),
+                            Color(0xFF020E15)
+                        )
+                    )
+                )
+            }
+        }
+    }
+    return rememberAssetPainter(imagePath, fallback = ColorPainter(Color.Black))
+}
 
 private fun loadAssetImage(
     context: android.content.Context,

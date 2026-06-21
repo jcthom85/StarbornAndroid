@@ -1,0 +1,61 @@
+appId: com.junewiregames.starborn.prealpha
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "Debug Scenarios"
+    timeout: 60000
+- tapOn: "Debug Scenarios"
+- extendedWaitUntil:
+    visible: "Search world, quest, room, or system"
+    timeout: 10000
+- tapOn: "Search world, quest, room, or system"
+- inputText: "Sector 9 Ruins"
+- hideKeyboard
+- tapOn: "World 2 / Sector 9 Ruins"
+- extendedWaitUntil:
+    visible: "Sector 9 Ruins"
+    timeout: 30000
+
+- tapOn: "Enter Hall of Echoes"
+- extendedWaitUntil:
+    visible: "Hall of Echoes"
+    timeout: 15000
+- tapOn: "HUB"
+- extendedWaitUntil:
+    visible: "Sector 9 Ruins"
+    timeout: 15000
+
+- tapOn: "Enter Stasis Chamber"
+- extendedWaitUntil:
+    visible: "Stasis Chamber"
+    timeout: 15000
+- tapOn: "HUB"
+- extendedWaitUntil:
+    visible: "Sector 9 Ruins"
+    timeout: 15000
+
+- tapOn: "Enter Source Gate"
+- extendedWaitUntil:
+    visible: "Source Gate"
+    timeout: 15000
+- tapOn: "HUB"
+- extendedWaitUntil:
+    visible: "Sector 9 Ruins"
+    timeout: 15000
+
+- tapOn: "Enter Hangar Bay"
+- extendedWaitUntil:
+    visible: "Hangar Bay"
+    timeout: 15000
+- tapOn: "HUB"
+- extendedWaitUntil:
+    visible: "Sector 9 Ruins"
+    timeout: 15000
+
+- tapOn: "Enter The Sky"
+- extendedWaitUntil:
+    visible: "The Sky"
+    timeout: 15000
+- assertNotVisible: "Nova's Bunk"
+- takeScreenshot: world2-facility-all-node-navigation

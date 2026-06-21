@@ -505,7 +505,7 @@ class Hub1CriticalFlowTest {
         assertTrue(stateAfterPod.inventory["basic_lure"].orZero() >= 1)
 
         // 3. Move to the stream
-        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("sector9_stream"))
+        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("sector9_landing_stream"))
 
         val finalState = harness.store.state.value
         assertTrue(finalState.completedQuests.contains("w2_mq01"))

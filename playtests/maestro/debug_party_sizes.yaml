@@ -3,18 +3,20 @@ appId: com.junewiregames.starborn.prealpha
 - launchApp:
     clearState: true
 - extendedWaitUntil:
-    visible: "New Game"
+    visible: "Debug Scenarios"
     timeout: 60000
+- tapOn: "Debug Scenarios"
+- extendedWaitUntil:
+    visible: "Systems"
+    timeout: 10000
+- tapOn: "Systems"
 - scrollUntilVisible:
     element:
-      text: "Debug: Party Sizes"
+      text: "Enemy Party Sizes"
     direction: DOWN
-    timeout: 20000
-    visibilityPercentage: 50
-- extendedWaitUntil:
-    visible: "Debug: Party Sizes"
     timeout: 10000
-- tapOn: "Debug: Party Sizes"
+    visibilityPercentage: 70
+- tapOn: "Enemy Party Sizes"
 - extendedWaitUntil:
     visible: "Enemy Party Size Test"
     timeout: 15000

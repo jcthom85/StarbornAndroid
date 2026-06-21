@@ -1,0 +1,103 @@
+appId: com.junewiregames.starborn.prealpha
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "Debug Scenarios"
+    timeout: 60000
+- tapOn: "Debug Scenarios"
+- extendedWaitUntil:
+    visible: "Search world, quest, room, or system"
+    timeout: 10000
+- tapOn: "Search world, quest, room, or system"
+- inputText: "Jungle Ruins"
+- hideKeyboard
+- tapOn: "World 2 / Jungle Ruins"
+- extendedWaitUntil:
+    visible: "Jungle Ruins"
+    timeout: 30000
+- assertVisible: "Crash Site"
+- tapOn: "Enter Crash Site"
+- extendedWaitUntil:
+    visible: "Crash Site"
+    timeout: 30000
+
+# Assert that the CURRENT AREA/CURRENT ROOM label is NOT visible
+- assertNotVisible: "CURRENT AREA"
+- assertNotVisible: "CURRENT ROOM"
+
+# 1. Talk to Zeke at the Crash Site (dialogue zeke_w2_crash_1)
+- assertVisible: "Zeke"
+- tapOn: "Zeke"
+- extendedWaitUntil:
+    visible: "Nova... *cough*... My head feels like a reactor breach. Are you intact?"
+    timeout: 15000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: "I'm fine, Zeke. The pod took the brunt of the impact. How are you holding up?"
+    timeout: 10000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: ".*suit's recycler is still pumping.*"
+    timeout: 10000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: ".*Check the core housing.*"
+    timeout: 10000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    notVisible: "Dialogue Popup"
+    timeout: 10000
+
+# 2. Examine the pod core in the wreckage
+- assertVisible: "pod core"
+- tapOn: "pod core"
+- extendedWaitUntil:
+    visible: "ITEM OBTAINED"
+    timeout: 15000
+- tapOn: "GOT IT"
+- extendedWaitUntil:
+    visible: "ITEM OBTAINED"
+    timeout: 15000
+- tapOn: "GOT IT"
+- extendedWaitUntil:
+    visible: "ITEM OBTAINED"
+    timeout: 15000
+- tapOn: "GOT IT"
+- extendedWaitUntil:
+    visible: "ITEM OBTAINED"
+    timeout: 15000
+- tapOn: "GOT IT"
+- extendedWaitUntil:
+    notVisible: "ITEM OBTAINED"
+    timeout: 10000
+
+# 3. Travel east to Stream Bank
+- assertVisible: "Travel east"
+- tapOn: "Travel east"
+- extendedWaitUntil:
+    visible: "Stream Bank"
+    timeout: 15000
+
+# 4. Travel southwest to Scorched Brush (the new diagonal connection!)
+- assertVisible: "Travel southwest"
+- tapOn: "Travel southwest"
+- extendedWaitUntil:
+    visible: "Scorched Brush"
+    timeout: 15000
+
+# 5. Travel northeast back to Stream Bank
+- assertVisible: "Travel northeast"
+- tapOn: "Travel northeast"
+- extendedWaitUntil:
+    visible: "Stream Bank"
+    timeout: 15000
+
+# 6. Return to HUB
+- tapOn: "HUB"
+- extendedWaitUntil:
+    visible: "Jungle Ruins"
+    timeout: 15000
+
+# Take screenshot to verify World 2 start
+- takeScreenshot: mainquest-world2-start

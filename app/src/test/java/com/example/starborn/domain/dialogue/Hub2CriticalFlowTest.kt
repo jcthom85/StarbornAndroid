@@ -213,7 +213,7 @@ class Hub2CriticalFlowTest {
         assertTrue(harness.store.state.value.activeQuests.contains("w2_sq03"))
 
         // Visit beach
-        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("sector9_stream"))
+        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("sector9_stream_pools"))
         assertTrue(harness.store.state.value.questTasksCompleted["w2_sq03"].orEmpty().contains("visit_beach"))
 
         // Gather tideglass

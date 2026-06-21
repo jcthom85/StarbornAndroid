@@ -325,7 +325,7 @@
       }
     ],
     "description": "Fast crystalline predator. Weak to fire.",
-    "portrait": "images/enemies/echo_borer_combat.png"
+    "portrait": "images/enemies/shard_hound_combat.png"
   },
   {
     "id": "spore_spitter",
@@ -362,7 +362,7 @@
       }
     ],
     "description": "Ranged acid plant. Highly vulnerable to fire.",
-    "portrait": "images/enemies/siren_skimmer_combat.png"
+    "portrait": "images/enemies/spore_spitter_combat.png"
   },
   {
     "id": "ruin_guardian",
@@ -553,7 +553,7 @@
       }
     ],
     "description": "Mutated apex boss. Deals huge physical and shock damage.",
-    "portrait": "images/enemies/core_drill_behemoth_combat.png"
+    "portrait": "images/enemies/the_beast_combat.png"
   },
   {
     "id": "sewer_crawler",

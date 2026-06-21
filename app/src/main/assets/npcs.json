@@ -329,5 +329,31 @@
         "dialogue_id": "vale_w5_mq25_soloist"
       }
     ]
+  },
+  {
+    "id": "sentinel_3",
+    "name": "Sentinel-3",
+    "aliases": [
+      "sentinel",
+      "drone",
+      "tuner drone"
+    ],
+    "role": "Tuner Drone",
+    "description": "An ancient, glitchy Architect drone that speaks in acoustic tuning terminology. It operates as a local scrap merchant.",
+    "portrait": "images/npcs/sentinel_3.png",
+    "dialogue": {},
+    "interactions": [
+      {
+        "label": "Shop",
+        "type": "shop",
+        "shop_id": "sentinel_scraps",
+        "dialogue_id": "sentinel_shop_intro"
+      },
+      {
+        "label": "Talk",
+        "type": "talk",
+        "dialogue_id": "sentinel_default_talk"
+      }
+    ]
   }
 ]

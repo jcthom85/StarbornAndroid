@@ -171,5 +171,39 @@
     "result": "glowfish_broth",
     "description": "Stabilize glow-water fish into a mineral broth that steadies the hands.",
     "success_message": "You brew a bowl of Glowfish Broth."
+  },
+  {
+    "id": "mod_source_resin",
+    "name": "Source Resin Mod",
+    "category": "gear",
+    "method": "mod",
+    "base": "herb",
+    "components": [
+      "beast_meat"
+    ],
+    "ingredients": {
+      "herb": 1,
+      "beast_meat": 1
+    },
+    "result": "source_resin",
+    "description": "Process beast meat and jungle herbs into a thick, protective Source-insulating resin.",
+    "success_message": "You synthesize a jar of Source Resin."
+  },
+  {
+    "id": "mod_rapid_capacitor",
+    "name": "Rapid Capacitor Mod",
+    "category": "gear",
+    "method": "mod",
+    "base": "scrap_metal",
+    "components": [
+      "wiring_bundle"
+    ],
+    "ingredients": {
+      "scrap_metal": 1,
+      "wiring_bundle": 1
+    },
+    "result": "rapid_capacitor",
+    "description": "Combine scrap metal and insulated wiring into an overclocked rapid capacitor.",
+    "success_message": "You assemble a humming Rapid Capacitor."
   }
 ]

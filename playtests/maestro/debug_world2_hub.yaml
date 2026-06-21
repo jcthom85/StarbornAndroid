@@ -1,0 +1,70 @@
+appId: com.junewiregames.starborn.prealpha
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "Debug Scenarios"
+    timeout: 60000
+- tapOn: "Debug Scenarios"
+- extendedWaitUntil:
+    visible: "Search world, quest, room, or system"
+    timeout: 10000
+- tapOn: "Search world, quest, room, or system"
+- inputText: "Jungle Ruins"
+- hideKeyboard
+- tapOn: "World 2 / Jungle Ruins"
+- extendedWaitUntil:
+    visible: "Jungle Ruins"
+    timeout: 30000
+- assertVisible: "Crash Site"
+- assertVisible: "Unknown"
+- takeScreenshot: world2-hub-layout
+- tapOn: "Enter Crash Site"
+- extendedWaitUntil:
+    visible: "Crash Site"
+    timeout: 30000
+- assertVisible: "Travel south"
+- takeScreenshot: world2-crash-site-navigation
+- tapOn: "HUB"
+- extendedWaitUntil:
+    visible: "Jungle Ruins"
+    timeout: 15000
+
+- tapOn: "Enter Razor-Vine Path"
+- extendedWaitUntil:
+    visible: "Resonant Canopy"
+    timeout: 15000
+- takeScreenshot: world2-canopy-enemy-layout
+- tapOn: "HUB"
+- extendedWaitUntil:
+    visible: "Jungle Ruins"
+    timeout: 15000
+
+- tapOn: "Enter Tideglass Beach"
+- extendedWaitUntil:
+    visible: "Mist Pools"
+    timeout: 15000
+- assertNotVisible: "Nova's Bunk"
+- tapOn: "HUB"
+- extendedWaitUntil:
+    visible: "Jungle Ruins"
+    timeout: 15000
+
+- tapOn: "Enter Canopy Ridge"
+- extendedWaitUntil:
+    visible: "Canopy Ridge"
+    timeout: 15000
+- tapOn: "HUB"
+- extendedWaitUntil:
+    visible: "Jungle Ruins"
+    timeout: 15000
+
+- tapOn: "Enter Temple Gate"
+- extendedWaitUntil:
+    visible: "Temple Gate"
+    timeout: 15000
+- tapOn: "HUB"
+- extendedWaitUntil:
+    visible: "Jungle Ruins"
+    timeout: 15000
+- takeScreenshot: world2-jungle-all-node-navigation

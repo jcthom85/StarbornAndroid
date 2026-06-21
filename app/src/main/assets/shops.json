@@ -557,5 +557,62 @@
       "trade_label": "Browse premium stock",
       "leave_label": "Step away"
     }
+  },
+  "sentinel_scraps": {
+    "name": "Sentinel Scraps",
+    "portrait": "images/portraits/sentinel_3.png",
+    "greeting": "Sentinel-3: [Static crackle]... Resonant frequencies aligned. Salvaged materials catalogued and ready for distribution.",
+    "pricing": {
+      "sell_markup": 1.15,
+      "buy_markdown": 0.45
+    },
+    "sells": {
+      "items": [
+        "painkillers",
+        "scrap_metal",
+        "wiring_bundle",
+        "beast_meat",
+        "herb"
+      ],
+      "rules": {
+        "types_in": [],
+        "subtypes_in": []
+      },
+      "gates": {}
+    },
+    "buys": {
+      "accept_types": [
+        "consumable",
+        "weapon",
+        "armor",
+        "accessory",
+        "ingredient",
+        "component",
+        "mod"
+      ],
+      "blacklist": []
+    },
+    "dialogue": {
+      "preface": [
+        {
+          "speaker": "Sentinel-3",
+          "text": "[High-pitched hum]... Trading local flora and remnants for standardized currency units."
+        }
+      ],
+      "smalltalk": [
+        {
+          "id": "shop_sentinel_waves",
+          "label": "Ask about the humming",
+          "response": [
+            {
+              "speaker": "Sentinel-3",
+              "text": "The ground sings. The canopy sings. Even the wreckage hums at 432 Hz. You must learn to listen."
+            }
+          ]
+        }
+      ],
+      "trade_label": "Tune resonance (Shop)",
+      "leave_label": "Disconnect"
+    }
   }
 }

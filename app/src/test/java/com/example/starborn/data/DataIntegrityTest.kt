@@ -12,6 +12,8 @@ import com.example.starborn.domain.model.HubNode
 import com.example.starborn.domain.model.MilestoneDefinition
 import com.example.starborn.domain.model.MilestoneExitUnlock
 import com.example.starborn.domain.model.Quest
+import com.example.starborn.domain.model.Room
+import com.example.starborn.data.local.Theme
 import com.squareup.moshi.Types
 import java.io.File
 import org.junit.Assert.assertEquals
@@ -31,6 +33,55 @@ class DataIntegrityTest {
         "scrap_run",
         "tutorial_smoke"
     )
+
+    @Test
+    fun runtimeThemesUseRgbaArrays() {
+        val themes = readMap("src/main/assets/themes.json", String::class.java, Theme::class.java)
+
+        assertTrue("Runtime themes should not be empty", themes.isNotEmpty())
+        themes.forEach { (id, theme) ->
+            listOf(theme.bg, theme.fg, theme.border, theme.accent).forEach { color ->
+                assertEquals("$id colors must have four RGBA components", 4, color.size)
+                assertTrue("$id colors must be normalized", color.all { it in 0f..1f })
+            }
+        }
+    }
+
+    @Test
+    fun runtimeRoomsDeserializeWithRequiredFields() {
+        val rooms = readList("src/main/assets/rooms.json", Room::class.java)
+
+        assertTrue("Runtime rooms should not be empty", rooms.isNotEmpty())
+        assertEquals("Room ids must be unique", rooms.size, rooms.map { it.id }.distinct().size)
+    }
+
+    @Test
+    fun worldTwoRoomsFormReciprocalNavigationGraphs() {
+        val rooms = readList("src/main/assets/rooms.json", Room::class.java)
+            .filter { it.id.startsWith("sector9_") }
+            .associateBy { it.id }
+        val opposite = mapOf(
+            "north" to "south",
+            "south" to "north",
+            "east" to "west",
+            "west" to "east",
+            "northeast" to "southwest",
+            "southwest" to "northeast",
+            "northwest" to "southeast",
+            "southeast" to "northwest"
+        )
+
+        assertEquals("World 2 should expose all authored rooms", 91, rooms.size)
+        rooms.values.forEach { room ->
+            assertTrue("${room.id} should not be an isolated scene", room.connections.isNotEmpty())
+            room.connections.forEach { (direction, targetId) ->
+                val target = rooms[targetId]
+                assertTrue("${room.id} points to missing World 2 room $targetId", target != null)
+                val reverse = opposite[direction]
+                assertEquals("$room.id -> $targetId must be reciprocal", room.id, target?.connections?.get(reverse))
+            }
+        }
+    }
 
     @Test
     fun playCinematicActionsReferenceExistingScenes() {
@@ -230,6 +281,19 @@ class DataIntegrityTest {
             assertTrue("$nodeId entry room must belong to the node", entryRoomId in node.rooms)
             assertTrue("$nodeId entry room must exist", entryRoomId in roomIds)
             assertEquals("$nodeId should list its entry room first", entryRoomId, node.rooms.firstOrNull())
+        }
+    }
+
+    @Test
+    fun allHubNodeEntriesExistAndBelongToTheirNodes() {
+        val nodes = readList("src/main/assets/hub_nodes.json", HubNode::class.java)
+        val roomIds = readList("src/main/assets/rooms.json", RoomSummary::class.java)
+            .map { it.id }
+            .toSet()
+
+        nodes.forEach { node ->
+            assertTrue("${node.id} entry room must exist", node.entryRoom in roomIds)
+            assertTrue("${node.id} entry room must belong to the node", node.entryRoom in node.rooms)
         }
     }
 

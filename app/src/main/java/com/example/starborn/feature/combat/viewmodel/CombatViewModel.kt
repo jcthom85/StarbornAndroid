@@ -335,6 +335,9 @@ class CombatViewModel(
             member.id to allSkills.filter { it.character == member.id }
         }
 
+        skillById = allSkills.associateBy { it.id }
+        skillNodesById = worldAssets.loadSkillNodes()
+
         playerCombatants = playerParty.map {
             it.toCombatant(
                 equippedItemsSnapshot,
@@ -375,8 +378,6 @@ class CombatViewModel(
         readyQueue.clear()
         initializeAtbMeters()
 
-        skillById = allSkills.associateBy { it.id }
-        skillNodesById = worldAssets.loadSkillNodes()
         actionProcessor = CombatActionProcessor(
             engine = combatEngine,
             statusRegistry = statusRegistry,
@@ -2424,6 +2425,31 @@ class CombatViewModel(
         var evasionBonus = 0.0
         var critBonus = 0.0
         var flatDamageReduction = 0
+
+        val unlockedSkills = sessionStore.state.value.unlockedSkills
+        unlockedSkills.forEach { skillId ->
+            if (skillId.startsWith("${characterId}_")) {
+                val node = skillNodesById[skillId]
+                if (node?.effect?.type == "buff") {
+                    val value = node.effect.value ?: 0
+                    val buffType = node.effect.buffType
+                    if (buffType != null && value != 0) {
+                        when (canonicalModKey(buffType)) {
+                            "strength" -> strength += value
+                            "vitality" -> vitality += value
+                            "agility" -> agility += value
+                            "focus" -> focus += value
+                            "luck" -> luck += value
+                            "speed" -> speed += value
+                            "accuracy" -> accuracyBonus += value
+                            "evasion" -> evasionBonus += value
+                            "crit_rate" -> critBonus += value
+                            "flat_defense" -> flatDamageReduction += value
+                        }
+                    }
+                }
+            }
+        }
 
         val baseSlots = listOf("weapon", "armor", "accessory", "snack")
         val weaponId = equippedWeaponId(characterId, equippedWeapons)

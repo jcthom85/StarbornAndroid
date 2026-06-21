@@ -207,11 +207,10 @@ fun CommandPalette(
                         val commands = listOf(
                             CommandEntry("Attack", Icons.Rounded.Whatshot, canAttack, onAttack),
                             CommandEntry("Abilities", Icons.Rounded.AutoAwesome, hasSkills, onSkills),
-                            CommandEntry("Items", Icons.Rounded.Inventory2, hasItems, onItems),
                             CommandEntry(snackLabel, Icons.Rounded.Restaurant, canSnack, onSnack, cooldown = snackCooldown),
                             CommandEntry("Retreat", Icons.Rounded.ExitToApp, true, onRetreat)
                         )
-                        val rows = listOf(commands.take(3), commands.drop(3))
+                        val rows = listOf(commands.take(2), commands.drop(2))
                         rows.forEach { chunk ->
                             if (chunk.isNotEmpty()) {
                                 Row(

@@ -1288,5 +1288,15 @@
     "speaker": "Nova",
     "condition": "quest_active:w6_mq30,quest_task_done:w6_mq30:confront_vale,quest_task_not_done:w6_mq30:defeat_vale",
     "text": "You are not saving them. You are building a mass grave and calling the silence peace."
+  },
+  {
+    "id": "sentinel_shop_intro",
+    "speaker": "Sentinel-3",
+    "text": "[High-pitched tone]... Trading interface established. Select components for exchange."
+  },
+  {
+    "id": "sentinel_default_talk",
+    "speaker": "Sentinel-3",
+    "text": "Core status: 89% coherence. Atmospheric humidity: high. The canopy resonance is vibrating at key G minor today."
   }
 ]

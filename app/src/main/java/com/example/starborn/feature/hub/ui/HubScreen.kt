@@ -31,6 +31,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -133,7 +134,7 @@ private fun HubScreenContent(
                 modifier = Modifier
                     .align(Alignment.Center)
                     .fillMaxSize()
-                    .padding(horizontal = 16.dp, vertical = 32.dp)
+                    .padding(start = 16.dp, top = 156.dp, end = 16.dp, bottom = 24.dp)
             )
         }
     }
@@ -156,7 +157,7 @@ private fun HubNodeLayer(
             val markerWidthPx = with(density) { composition.width.toPx() }
             val markerHeightPx = with(density) { composition.height.toPx() }
             val centerX = widthPx * node.centerX
-            val centerY = heightPx * (1f - node.centerY)
+            val centerY = heightPx * node.centerY
             val offsetX = (centerX - markerWidthPx * composition.anchorX)
                 .coerceIn(0f, (widthPx - markerWidthPx).coerceAtLeast(0f))
                 .roundToInt()
@@ -235,13 +236,23 @@ private fun HubNodeMarker(
             } else {
                 Box(
                     modifier = Modifier
-                        .fillMaxSize()
+                        .size(composition.imageWidth * 0.62f)
+                        .clip(CircleShape)
                         .background(
                             Brush.radialGradient(
-                                colors = listOf(Color(0xFF1F2F3C), Color(0xFF0B141A))
+                                colors = listOf(Color(0xFF24536A), Color(0xFF0B1820))
                             )
                         )
-                )
+                        .border(1.5.dp, TitleMarkerBorder, CircleShape),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = if (node.discovered) node.title.take(1).uppercase() else "?",
+                        color = Color.White,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Black
+                    )
+                }
             }
         }
 
@@ -290,10 +301,13 @@ private fun hubNodeComposition(node: HubNodeUi): HubNodeComposition = when (node
     "echo_chamber" -> HubNodeComposition(width = 142.dp, height = 130.dp, imageWidth = 110.dp, anchorX = 0.5f, anchorY = 0.62f)
     "launch_bay" -> HubNodeComposition(width = 132.dp, height = 136.dp, imageWidth = 114.dp, anchorX = 0.5f, anchorY = 0.62f)
     else -> {
-        val size = node.sizeHint.coerceIn(180f, 340f).dp
-        HubNodeComposition(width = size, height = size + 32.dp, anchorY = 0.56f)
+        // Asset metadata uses source-pixel hints, not density-independent screen sizes.
+        val size = (node.sizeHint * 0.36f).coerceIn(72f, 96f).dp
+        HubNodeComposition(width = size, height = size + 28.dp, imageWidth = size, anchorY = 0.62f)
     }
 }
+
+private val TitleMarkerBorder = Color(0xFF7BE4FF).copy(alpha = 0.72f)
 
 @Composable
 private fun rememberHubNodePainter(iconPath: String?): Painter? {

@@ -276,7 +276,7 @@
     "hub_id": "hub_3_sector9",
     "title": "Crash Site",
     "entry_room": "sector9_crash_site",
-    "icon_image": "images/nodes/sector9_landing.png",
+    "icon_image": "images/nodes/world_2/sector9_landing.png",
     "pos_hint": {
       "center_x": 0.15,
       "center_y": 0.7
@@ -286,7 +286,13 @@
       220
     ],
     "rooms": [
-      "sector9_crash_site"
+      "sector9_crash_site",
+      "sector9_pod_interior",
+      "sector9_landing_brush",
+      "sector9_landing_glade",
+      "sector9_landing_stream",
+      "sector9_landing_perimeter",
+      "sector9_landing_drop"
     ],
     "discovered": true
   },
@@ -296,7 +302,7 @@
     "hub_id": "hub_3_sector9",
     "title": "Razor-Vine Path",
     "entry_room": "sector9_canopy",
-    "icon_image": "images/nodes/mine.png",
+    "icon_image": "images/nodes/world_2/razor_vine_path.png",
     "pos_hint": {
       "center_x": 0.38,
       "center_y": 0.5
@@ -306,7 +312,17 @@
       200
     ],
     "rooms": [
-      "sector9_canopy"
+      "sector9_canopy",
+      "sector9_wilds_thickets",
+      "sector9_wilds_nest",
+      "sector9_wilds_hollow",
+      "sector9_wilds_grave",
+      "sector9_wilds_overlook",
+      "sector9_wilds_canopy_walk",
+      "sector9_wilds_archway",
+      "sector9_wilds_dense_brush",
+      "sector9_wilds_clearance",
+      "sector9_wilds_lookout"
     ],
     "discovered": false
   },
@@ -315,8 +331,8 @@
     "world_id": "world_2",
     "hub_id": "hub_3_sector9",
     "title": "Tideglass Beach",
-    "entry_room": "sector9_stream",
-    "icon_image": "images/nodes/trade_row.png",
+    "entry_room": "sector9_stream_pools",
+    "icon_image": "images/nodes/world_2/tideglass_beach.png",
     "pos_hint": {
       "center_x": 0.4,
       "center_y": 0.85
@@ -326,7 +342,22 @@
       200
     ],
     "rooms": [
-      "sector9_stream"
+      "sector9_stream_pools",
+      "sector9_stream_wetlands",
+      "sector9_stream_flats",
+      "sector9_stream_falls",
+      "sector9_stream_tidepools",
+      "sector9_stream_cave_entrance",
+      "sector9_stream_cave_depths",
+      "sector9_stream_sunken_passage",
+      "sector9_beach_cliffs",
+      "sector9_beach_cove",
+      "sector9_beach_pools",
+      "sector9_beach_cargo",
+      "sector9_beach_cave",
+      "sector9_beach_pillar",
+      "sector9_beach_grotto",
+      "sector9_beach_dunes"
     ],
     "discovered": false
   },
@@ -336,7 +367,7 @@
     "hub_id": "hub_3_sector9",
     "title": "Canopy Ridge",
     "entry_room": "sector9_canopy_ridge",
-    "icon_image": "images/nodes/pit.png",
+    "icon_image": "images/nodes/world_2/canopy_ridge.png",
     "pos_hint": {
       "center_x": 0.68,
       "center_y": 0.55
@@ -346,7 +377,14 @@
       220
     ],
     "rooms": [
-      "sector9_canopy_ridge"
+      "sector9_ridge_climb",
+      "sector9_ridge_ledges",
+      "sector9_ridge_overhang",
+      "sector9_canopy_ridge",
+      "sector9_ridge_viewpoint",
+      "sector9_ridge_sniper_perch",
+      "sector9_ridge_crevice",
+      "sector9_ridge_plateau"
     ],
     "discovered": false
   },
@@ -356,7 +394,7 @@
     "hub_id": "hub_3_sector9",
     "title": "Temple Gate",
     "entry_room": "sector9_temple_gate",
-    "icon_image": "images/nodes/checkpoint.png",
+    "icon_image": "images/nodes/world_2/temple_gate.png",
     "pos_hint": {
       "center_x": 0.85,
       "center_y": 0.35
@@ -366,6 +404,11 @@
       220
     ],
     "rooms": [
+      "sector9_temple_plaza",
+      "sector9_temple_vestibule",
+      "sector9_temple_lock_chamber",
+      "sector9_temple_left_wing",
+      "sector9_temple_right_wing",
       "sector9_temple_gate"
     ],
     "discovered": false
@@ -376,7 +419,7 @@
     "hub_id": "hub_4_facility",
     "title": "Hall of Echoes",
     "entry_room": "sector9_hall_of_echoes",
-    "icon_image": "images/nodes/echo.png",
+    "icon_image": "images/nodes/world_2/hall_of_echoes.png",
     "pos_hint": {
       "center_x": 0.15,
       "center_y": 0.5
@@ -386,7 +429,23 @@
       220
     ],
     "rooms": [
-      "sector9_hall_of_echoes"
+      "sector9_foyer_grand_hall",
+      "sector9_foyer_left_gallery",
+      "sector9_foyer_right_gallery",
+      "sector9_foyer_security_hub",
+      "sector9_foyer_vault_door",
+      "sector9_conduit_crawlspace",
+      "sector9_conduit_junction",
+      "sector9_conduit_breaker_room",
+      "sector9_conduit_access_shaft",
+      "sector9_hall_of_echoes",
+      "sector9_hall_echo_alcoves",
+      "sector9_hall_acoustics_lab",
+      "sector9_hall_reflection_pool",
+      "sector9_archive_vault",
+      "sector9_archive_reading_room",
+      "sector9_archive_tuning_bay",
+      "sector9_archive_secret_stash"
     ],
     "discovered": false
   },
@@ -396,7 +455,7 @@
     "hub_id": "hub_4_facility",
     "title": "Stasis Chamber",
     "entry_room": "sector9_stasis_chamber",
-    "icon_image": "images/nodes/medbay.png",
+    "icon_image": "images/nodes/world_2/stasis_chamber.png",
     "pos_hint": {
       "center_x": 0.45,
       "center_y": 0.35
@@ -406,7 +465,13 @@
       200
     ],
     "rooms": [
-      "sector9_stasis_chamber"
+      "sector9_stasis_chamber",
+      "sector9_stasis_ring_array",
+      "sector9_stasis_coolant_lines",
+      "sector9_stasis_observation",
+      "sector9_vents_gantry",
+      "sector9_vents_access_grate",
+      "sector9_vents_tech_alcove"
     ],
     "discovered": false
   },
@@ -416,7 +481,7 @@
     "hub_id": "hub_4_facility",
     "title": "Source Gate",
     "entry_room": "sector9_source_gate",
-    "icon_image": "images/nodes/server.png",
+    "icon_image": "images/nodes/world_2/source_gate.png",
     "pos_hint": {
       "center_x": 0.5,
       "center_y": 0.65
@@ -426,7 +491,13 @@
       200
     ],
     "rooms": [
-      "sector9_source_gate"
+      "sector9_power_turbine",
+      "sector9_power_manifold",
+      "sector9_power_breaker_deck",
+      "sector9_power_valve",
+      "sector9_source_gate",
+      "sector9_gate_emitter_left",
+      "sector9_gate_emitter_right"
     ],
     "discovered": false
   },
@@ -436,7 +507,7 @@
     "hub_id": "hub_4_facility",
     "title": "Hangar Bay",
     "entry_room": "sector9_hangar_bay",
-    "icon_image": "images/nodes/launch.png",
+    "icon_image": "images/nodes/world_2/hangar_bay.png",
     "pos_hint": {
       "center_x": 0.8,
       "center_y": 0.5
@@ -446,7 +517,12 @@
       240
     ],
     "rooms": [
-      "sector9_hangar_bay"
+      "sector9_hangar_bay",
+      "sector9_hangar_scaffolding",
+      "sector9_hangar_staging",
+      "sector9_hangar_tower",
+      "sector9_hangar_fuel_lines",
+      "sector9_hangar_lock"
     ],
     "discovered": false
   },
@@ -456,7 +532,7 @@
     "hub_id": "hub_4_facility",
     "title": "The Sky",
     "entry_room": "sector9_the_sky",
-    "icon_image": "images/nodes/launch.png",
+    "icon_image": "images/nodes/world_2/the_sky.png",
     "pos_hint": {
       "center_x": 0.9,
       "center_y": 0.2
@@ -466,7 +542,12 @@
       200
     ],
     "rooms": [
-      "sector9_the_sky"
+      "sector9_the_sky",
+      "sector9_sky_mesosphere",
+      "sector9_sky_shield_threshold",
+      "sector9_sky_sensor_buoy",
+      "sector9_sky_barrier_core",
+      "sector9_sky_hard_deck"
     ],
     "discovered": false
   },

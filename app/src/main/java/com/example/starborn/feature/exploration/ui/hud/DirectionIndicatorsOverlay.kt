@@ -42,6 +42,10 @@ fun DirectionIndicatorsOverlay(
                 "south" -> Alignment.BottomCenter to PaddingValues(bottom = 4.dp)
                 "east" -> Alignment.CenterEnd to PaddingValues(end = 4.dp)
                 "west" -> Alignment.CenterStart to PaddingValues(start = 4.dp)
+                "northeast" -> Alignment.TopEnd to PaddingValues(top = 4.dp, end = 4.dp)
+                "southeast" -> Alignment.BottomEnd to PaddingValues(bottom = 4.dp, end = 4.dp)
+                "southwest" -> Alignment.BottomStart to PaddingValues(bottom = 4.dp, start = 4.dp)
+                "northwest" -> Alignment.TopStart to PaddingValues(top = 4.dp, start = 4.dp)
                 else -> Alignment.Center to PaddingValues(0.dp)
             }
             val loop = rememberInfiniteTransition(label = "dirPulse-$direction")
@@ -117,9 +121,13 @@ private fun DirectionIndicatorIcon(
 @Composable
 private fun DirectionArrowIndicator(direction: String, size: Dp, color: Color, isExplored: Boolean = false) {
     val rotation = when (direction.lowercase(Locale.getDefault())) {
+        "northeast" -> 45f
         "east" -> 90f
+        "southeast" -> 135f
         "south" -> 180f
+        "southwest" -> 225f
         "west" -> 270f
+        "northwest" -> 315f
         else -> 0f
     }
     Canvas(
@@ -156,9 +164,13 @@ private fun DirectionArrowIndicator(direction: String, size: Dp, color: Color, i
 @Composable
 private fun DirectionLockIndicator(direction: String, size: Dp, color: Color) {
     val rotation = when (direction.lowercase(Locale.getDefault())) {
+        "northeast" -> 45f
         "east" -> 90f
+        "southeast" -> 135f
         "south" -> 180f
+        "southwest" -> 225f
         "west" -> 270f
+        "northwest" -> 315f
         else -> 0f
     }
     Canvas(
@@ -228,9 +240,13 @@ private fun DirectionLockIndicator(direction: String, size: Dp, color: Color) {
 @Composable
 private fun DirectionEnemyIndicator(direction: String, size: Dp, color: Color) {
     val rotation = when (direction.lowercase(Locale.getDefault())) {
+        "northeast" -> 45f
         "east" -> 90f
+        "southeast" -> 135f
         "south" -> 180f
+        "southwest" -> 225f
         "west" -> 270f
+        "northwest" -> 315f
         else -> 0f
     }
     Canvas(

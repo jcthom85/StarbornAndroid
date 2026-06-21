@@ -351,12 +351,31 @@
     "background_image": ""
   },
   "foundry": {
-    "id": "foundry",
-    "name": "Foundry",
-    "background": "#1a0f0c",
-    "primary": "#ff6a2a",
-    "accent": "#ffd166",
-    "text": "#fff0df"
+    "bg": [
+      0.102,
+      0.059,
+      0.047,
+      1
+    ],
+    "fg": [
+      1,
+      0.941,
+      0.875,
+      1
+    ],
+    "border": [
+      1,
+      0.416,
+      0.165,
+      1
+    ],
+    "accent": [
+      1,
+      0.82,
+      0.4,
+      1
+    ],
+    "background_image": ""
   },
   "void": {
     "bg": [

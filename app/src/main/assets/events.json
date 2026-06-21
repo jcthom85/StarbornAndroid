@@ -2492,7 +2492,7 @@
     "description": "Completes A Strange Coast when entering the glow-water stream.",
     "trigger": {
       "type": "enter_room",
-      "room": "sector9_stream"
+      "room": "sector9_landing_stream"
     },
     "conditions": [
       {
@@ -3265,7 +3265,7 @@
     "description": "Triggered when entering Tideglass Beach.",
     "trigger": {
       "type": "enter_room",
-      "room": "sector9_stream"
+      "room": "sector9_stream_pools"
     },
     "conditions": [
       {

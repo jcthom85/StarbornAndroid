@@ -1029,7 +1029,16 @@ class ExplorationViewModel(
     }
 
     private fun updateMinimap(currentRoom: Room?) {
-        currentRoom?.let { markDiscovered(it) }
+        currentRoom?.let { room ->
+            markDiscovered(room)
+            room.connections.values.forEach { destId ->
+                if (!destId.isNullOrBlank()) {
+                    roomsById[destId]?.let { destRoom ->
+                        markDiscovered(destRoom)
+                    }
+                }
+            }
+        }
         val minimap = currentRoom?.let { buildMinimapState(it) }
         val fullMap = currentRoom?.let { buildFullMapState(it) }
         _uiState.update { it.copy(minimap = minimap, fullMap = fullMap) }

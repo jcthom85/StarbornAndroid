@@ -696,11 +696,12 @@ fun ExplorationScreen(
                     enemyIcons = uiState.enemyIcons,
                     accentColor = actionAccentColor,
                     isDark = isRoomDark,
+                    roomId = uiState.currentRoom?.id,
                     onPartyClick = { enemyId -> viewModel.engageEnemy(enemyId) },
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
                         .fillMaxWidth()
-                        .heightIn(min = 190.dp, max = 290.dp)
+                        .heightIn(min = 250.dp, max = 410.dp)
                         .padding(start = 4.dp, end = 4.dp, bottom = 64.dp)
                 )
             }
@@ -1216,15 +1217,6 @@ private fun RoomHeaderPanel(
                     .clickable { onTitleClick() },
                 verticalArrangement = Arrangement.spacedBy(7.dp)
             ) {
-                Text(
-                    text = "CURRENT AREA",
-                    color = titleColor.copy(alpha = 0.76f),
-                    style = MaterialTheme.typography.labelSmall.copy(
-                        fontWeight = FontWeight.Bold
-                    ),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
                 Text(
                     text = roomTitle,
                     style = MaterialTheme.typography.headlineSmall.copy(
@@ -4025,6 +4017,7 @@ private fun EnemyPartyStrip(
     enemyIcons: Map<String, EnemyIconUi>,
     accentColor: Color,
     isDark: Boolean,
+    roomId: String?,
     onPartyClick: (String) -> Unit
 ) {
     if (visualParties.isEmpty()) return
@@ -4032,15 +4025,15 @@ private fun EnemyPartyStrip(
     BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
         val stageWidth = maxWidth
         val baseMemberSize = when {
-            stageWidth < 380.dp -> 132.dp
-            stageWidth < 520.dp -> 148.dp
-            else -> 172.dp
+            stageWidth < 380.dp -> 160.dp
+            stageWidth < 520.dp -> 185.dp
+            else -> 210.dp
         }
         val laneRise = (baseMemberSize * 0.72f).coerceAtLeast(88.dp)
         fun overlapFor(members: Int): Float = when {
-            members >= 4 -> 0.78f
-            members == 3 -> 0.74f
-            members == 2 -> 0.70f
+            members >= 4 -> 0.42f
+            members == 3 -> 0.36f
+            members == 2 -> 0.28f
             else -> 0f
         }
         fun clusterWidthFactor(members: List<String>): Float {
@@ -4052,7 +4045,7 @@ private fun EnemyPartyStrip(
             return memberSize * clusterWidthFactor(members)
         }
 
-        val slotAssignments = remember { mutableMapOf<String, Int>() }
+        val slotAssignments = remember(roomId) { mutableMapOf<String, Int>() }
         val orderedParties = remember(visualParties) {
             visualParties
                 .sortedWith(compareBy<VisualEnemyParty> { it.leavingTo != null }.thenBy { it.id })
@@ -4175,6 +4168,7 @@ private fun EnemyPresenceStage(
     enemyIcons: Map<String, EnemyIconUi>,
     accentColor: Color,
     isDark: Boolean,
+    roomId: String?,
     onPartyClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -4194,6 +4188,7 @@ private fun EnemyPresenceStage(
                 enemyIcons = enemyIcons,
                 accentColor = accentColor,
                 isDark = isDark,
+                roomId = roomId,
                 onPartyClick = onPartyClick
             )
         }
@@ -4217,7 +4212,7 @@ private fun parseEnemyTier(value: String?): EnemyTier {
     }
 }
 
-private val EnemyPresenceShadowDrop = 18.dp
+private val EnemyPresenceShadowDrop = 0.dp
 
 @Composable
 private fun EnemyPartyCluster(
@@ -4327,17 +4322,22 @@ private fun EnemyPartyCluster(
         }
     }
 
-    Row(
+    Box(
         modifier = modifier
             .graphicsLayer {
                 translationX = with(density) { animX.value.dp.toPx() }
                 translationY = with(density) { animY.value.dp.toPx() }
                 alpha = animAlpha.value
             },
-        horizontalArrangement = Arrangement.spacedBy(-(memberSize * overlapFraction), Alignment.CenterHorizontally),
-        verticalAlignment = Alignment.Bottom
+        contentAlignment = Alignment.BottomCenter
     ) {
         party.enemies.forEachIndexed { index, enemyId ->
+            val step = (index + 1) / 2
+            val isLeft = index % 2 == 1
+            val offsetX = if (index == 0) 0.dp else (if (isLeft) -24.dp else 24.dp) * step
+            val offsetY = if (index == 0) 0.dp else -16.dp * step
+            val scale = if (index == 0) 1f else (1f - 0.08f * step).coerceAtLeast(0.8f)
+
             EnemyPartyStandee(
                 enemyId = enemyId,
                 instanceKey = "${party.id}-$enemyId-$index",
@@ -4348,7 +4348,13 @@ private fun EnemyPartyCluster(
                 transitionActive = transitionActive,
                 icon = enemyIcons[enemyId],
                 size = memberSize,
-                modifier = Modifier.zIndex((party.enemies.size - index).toFloat()),
+                modifier = Modifier
+                    .zIndex((party.enemies.size - index).toFloat())
+                    .offset(x = offsetX, y = offsetY)
+                    .graphicsLayer {
+                        scaleX = scale
+                        scaleY = scale
+                    },
                 onClick = { onEnemyClick(enemyId) }
             )
         }
@@ -4432,9 +4438,9 @@ private fun EnemyPartyLeaderIcon(
     val bobPx = with(density) { bobAmplitude.toPx() } * wave
     val scale = 1f + (if (isDark) 0.012f else 0.02f) * wave
     val spriteScale = when (tier) {
-        EnemyTier.BOSS -> 1.0f
-        EnemyTier.ELITE -> 1.6f
-        EnemyTier.COMMON -> 1.4f
+        EnemyTier.BOSS -> 1.12f
+        EnemyTier.ELITE -> 1.06f
+        EnemyTier.COMMON -> 1.0f
     }
     val shape = RoundedCornerShape(topStart = 20.dp, topEnd = 12.dp, bottomEnd = 20.dp, bottomStart = 12.dp)
     val background = remember {

@@ -663,7 +663,7 @@ class CombatActionProcessor(
         val hasBuff = effect.singleBuff != null || !effect.buffs.isNullOrEmpty()
 
         // Set snackCooldown + 1 because tickEndOfTurn will immediately decrement it by 1 at the end of the turn.
-        val baseCooldown = effect.cooldown?.takeIf { it > 0 } ?: 3
+        val baseCooldown = 5
         val updatedActor = actor.copy(snackCooldown = baseCooldown + 1)
         val stateWithCooldown = state.copy(combatants = state.combatants + (action.actorId to updatedActor))
 

@@ -2783,370 +2783,6 @@
     ]
   },
   {
-    "id": "sector9_crash_site",
-    "env": "swamp",
-    "weather": "fog",
-    "title": "Crash Site",
-    "background_image": "images/rooms/world_2/crash_site.png",
-    "description": "The escape pod wreckage is half-submerged in warm glow-water. The cracked pod core ticks under a scorched access panel while thick vines hang from concrete struts. Zeke sits coughing on the hull as a low, resonant hum rolls through the air.",
-    "npcs": [],
-    "items": [],
-    "enemies": [],
-    "connections": {},
-    "pos": [
-      0,
-      0
-    ],
-    "state": {},
-    "actions": [
-      {
-        "name": "wreckage",
-        "type": "generic",
-        "condition_unmet_message": "The pod's thrusters are completely fused. It won't fly again."
-      },
-      {
-        "name": "pod core",
-        "type": "generic",
-        "action_event": "w2_mq01_examine_pod",
-        "condition_unmet_message": "Examining the pod's sub-critical core..."
-      },
-      {
-        "name": "glow-water",
-        "type": "generic",
-        "condition_unmet_message": "The water is warm and vibrates with a gentle frequency. It feels soothing to touch."
-      },
-      {
-        "name": "Scan moss",
-        "type": "generic",
-        "action_event": "w2_sq01_scan_moss",
-        "condition_unmet_message": "The moss on the hull vibrates under your scanner."
-      }
-    ],
-    "npc_presence": [
-      {
-        "npc": "zeke",
-        "requires_milestones": [
-          "ms_w1_mq05_complete"
-        ],
-        "forbidden_milestones": [
-          "ms_w2_mq01_complete"
-        ]
-      }
-    ]
-  },
-  {
-    "id": "sector9_canopy",
-    "env": "swamp",
-    "weather": "resonance",
-    "title": "Resonant Canopy",
-    "background_image": "images/rooms/world_2/resonant_canopy.png",
-    "description": "The canopy of the ruins is covered in giant, crystalline ferns that catch the dim light and buzz with low-frequency standing waves.",
-    "npcs": [],
-    "items": [],
-    "enemies": [
-      "echo_borer"
-    ],
-    "connections": {},
-    "pos": [
-      0,
-      1
-    ],
-    "state": {},
-    "actions": [
-      {
-        "name": "ferns",
-        "type": "generic",
-        "condition_unmet_message": "Their leaves vibrate like harp strings when touched, ringing out a quiet chord."
-      },
-      {
-        "name": "Scan ferns",
-        "type": "generic",
-        "action_event": "w2_sq01_scan_ferns",
-        "condition_unmet_message": "The giant crystalline ferns echo in harmony."
-      },
-      {
-        "name": "Scan spores",
-        "type": "generic",
-        "action_event": "w2_sq01_scan_spores",
-        "condition_unmet_message": "The razor-vine spores vibrate with high energy."
-      },
-      {
-        "name": "Scavenge remains",
-        "type": "generic",
-        "action_event": "w2_sq02_scavenge_body",
-        "condition_unmet_message": "A fallen Dominion scout lies tangled in the vines."
-      }
-    ]
-  },
-  {
-    "id": "sector9_stream",
-    "env": "swamp",
-    "weather": "fog",
-    "title": "Glow-Water Stream",
-    "background_image": "images/rooms/world_2/glow_stream.png",
-    "description": "A gentle stream of mineral-rich water flows through the concrete ruins. The water vibrates, creating visible standing waves on the surface. Fish the glow-water here and every ripple answers with a low chord.",
-    "npcs": [],
-    "items": [],
-    "enemies": [],
-    "connections": {},
-    "pos": [
-      1,
-      1
-    ],
-    "state": {},
-    "actions": [
-      {
-        "name": "stream",
-        "type": "generic",
-        "condition_unmet_message": "The water hums with a deep subsonic tone, washing away local static."
-      },
-      {
-        "name": "Fish the glow-water",
-        "type": "fishing",
-        "zone_id": "sector9_stream",
-        "condition_unmet_message": "The stream is calm enough for fishing."
-      },
-      {
-        "name": "Scan weeds",
-        "type": "generic",
-        "action_event": "w2_sq01_scan_weeds",
-        "condition_unmet_message": "The bioluminescent weeds glow when scanned."
-      },
-      {
-        "name": "Gather tideglass",
-        "type": "generic",
-        "action_event": "w2_sq03_gather_tideglass",
-        "condition_unmet_message": "Glowing tideglass skewers are harvested from the shore."
-      }
-    ]
-  },
-  {
-    "id": "sector9_canopy_ridge",
-    "env": "swamp",
-    "weather": "resonance",
-    "title": "Canopy Ridge",
-    "background_image": "images/rooms/world_2/canopy_ridge.png",
-    "description": "A wind-carved stone shelf high above the jungle. The canopy rolls like an ocean below, and the Planetary Shield lattice curves across the sky above. A huge shadow shifts in the brush.",
-    "npcs": [],
-    "items": [],
-    "enemies": [
-      "the_beast"
-    ],
-    "connections": {},
-    "pos": [
-      0,
-      2
-    ],
-    "state": {},
-    "actions": [
-      {
-        "name": "Look at Shield",
-        "type": "generic",
-        "condition_unmet_message": "The Planetary Shield curves across the sky, pulsing in a timed pattern."
-      },
-      {
-        "name": "Confront stalker",
-        "type": "generic",
-        "action_event": "w2_mq04_confront",
-        "condition_unmet_message": "Confront the hunter waiting in the shadows."
-      }
-    ]
-  },
-  {
-    "id": "sector9_temple_gate",
-    "env": "swamp",
-    "weather": "fog",
-    "title": "Temple Gate",
-    "background_image": "images/rooms/world_2/temple_gate.png",
-    "description": "A massive stone door, perfectly smooth, stands embedded in the cliff. It is engraved with glowing cymatic patterns. A slot shaped like the Chime sits in the center of a metal resonator.",
-    "npcs": [],
-    "items": [],
-    "enemies": [],
-    "connections": {},
-    "pos": [
-      0,
-      3
-    ],
-    "state": {},
-    "actions": [
-      {
-        "name": "Stone Lock",
-        "type": "generic",
-        "action_event": "w2_mq02_use_chime",
-        "condition_unmet_message": "The stone lock hums softly, waiting for its matching resonance."
-      }
-    ]
-  },
-  {
-    "id": "sector9_hall_of_echoes",
-    "env": "swamp",
-    "weather": "resonance",
-    "title": "Hall of Echoes",
-    "background_image": "images/rooms/world_2/hall_of_echoes.png",
-    "description": "A grand corridor of clean, ancient geometry. The air is cool and dry. Shifting light-murals on the walls depict the history of the Architects.",
-    "npcs": [],
-    "items": [],
-    "enemies": [],
-    "connections": {},
-    "pos": [
-      0,
-      0
-    ],
-    "state": {},
-    "actions": [
-      {
-        "name": "murals",
-        "type": "generic",
-        "action_event": "w2_mq03_inspect_murals",
-        "condition_unmet_message": "Shifting murals made of light. They shimmer when you approach."
-      },
-      {
-        "name": "Tune murals",
-        "type": "generic",
-        "action_event": "w2_sq04_tune_murals",
-        "condition_unmet_message": "The ancient console flickers, its resonance matrix misaligned."
-      }
-    ]
-  },
-  {
-    "id": "sector9_stasis_chamber",
-    "env": "swamp",
-    "weather": "fog",
-    "title": "Stasis Chamber",
-    "background_image": "images/rooms/world_2/stasis_chamber.png",
-    "description": "A circular room dominated by a single, humming pod. Dust has lain undisturbed for years. Shimmering rings of stasis energy hover around it out of alignment.",
-    "npcs": [],
-    "items": [],
-    "enemies": [],
-    "connections": {},
-    "pos": [
-      0,
-      1
-    ],
-    "state": {},
-    "actions": [
-      {
-        "name": "Stasis Pod",
-        "type": "generic",
-        "action_event": "w2_mq03_inspect_pod",
-        "condition_unmet_message": "A sealed pod containing a sleeping figure."
-      },
-      {
-        "name": "Scan roots",
-        "type": "generic",
-        "action_event": "w2_sq01_scan_roots",
-        "condition_unmet_message": "The ancient roots are pulsing in slow rhythm."
-      },
-      {
-        "name": "Search vents",
-        "type": "generic",
-        "action_event": "w2_sq05_search_vents",
-        "condition_unmet_message": "A narrow ventilation shaft runs along the upper ceiling."
-      }
-    ],
-    "npc_presence": [
-      {
-        "npc": "zeke",
-        "requires_milestones": [
-          "ms_w2_mq01_complete"
-        ],
-        "forbidden_milestones": [
-          "ms_w2_mq03_complete"
-        ]
-      }
-    ]
-  },
-  {
-    "id": "sector9_source_gate",
-    "env": "swamp",
-    "weather": "resonance",
-    "title": "Source Gate",
-    "background_image": "images/rooms/world_2/source_gate.png",
-    "description": "A giant barrier of humming energy blocking access to the hangar. It vibrates with three discordant, howling frequencies.",
-    "npcs": [],
-    "items": [],
-    "enemies": [],
-    "connections": {},
-    "pos": [
-      0,
-      2
-    ],
-    "state": {},
-    "actions": [
-      {
-        "name": "Acoustic Lock",
-        "type": "generic",
-        "action_event": "w2_mq05_inspect_resonator",
-        "condition_unmet_message": "The acoustic lock hums with intense dissonance."
-      }
-    ],
-    "npc_presence": [
-      {
-        "npc": "orion",
-        "requires_milestones": [
-          "ms_w2_mq03_complete"
-        ],
-        "forbidden_milestones": [
-          "ms_w2_mq05_complete"
-        ]
-      }
-    ]
-  },
-  {
-    "id": "sector9_hangar_bay",
-    "env": "swamp",
-    "weather": "fog",
-    "title": "Hangar Bay",
-    "background_image": "images/rooms/world_2/hangar_bay.png",
-    "description": "A vast underground cavern open to the sky. The Astra sits silent on the launch pad. Her hull is scorched and her bridge systems are dark.",
-    "npcs": [],
-    "items": [],
-    "enemies": [],
-    "connections": {},
-    "pos": [
-      0,
-      3
-    ],
-    "state": {},
-    "actions": [
-      {
-        "name": "Astra Console",
-        "type": "generic",
-        "action_event": "w2_mq05_inspect_astra",
-        "condition_unmet_message": "The ship's main console. The primary power conduit is completely severed."
-      }
-    ],
-    "npc_presence": [
-      {
-        "npc": "zeke",
-        "requires_milestones": [
-          "ms_w2_mq03_complete"
-        ],
-        "forbidden_milestones": [
-          "ms_w2_mq05_complete"
-        ]
-      }
-    ]
-  },
-  {
-    "id": "sector9_the_sky",
-    "env": "swamp",
-    "weather": "resonance",
-    "title": "The Sky",
-    "background_image": "images/rooms/world_2/the_sky.png",
-    "description": "Flying high above the cloud layer, approaching the violet glow of the Planetary Shield. Zeke grins, but the console starts to beep frantically.",
-    "npcs": [],
-    "items": [],
-    "enemies": [],
-    "connections": {},
-    "pos": [
-      0,
-      4
-    ],
-    "state": {},
-    "actions": []
-  },
-  {
     "id": "debug_presence_stress",
     "env": "logistics",
     "title": "Presence Stress Test",
@@ -4337,7 +3973,8 @@
       2,
       1
     ],
-    "state": {}
+    "state": {},
+    "actions": []
   },
   {
     "id": "orbital_service_shaft",
@@ -4677,7 +4314,8 @@
     "state": {},
     "enemy_flavor": {
       "silent_shore_wraith": "Silence wears the outline of the last survivor and insists there is nobody left to answer."
-    }
+    },
+    "actions": []
   },
   {
     "id": "source_echo_mines",
@@ -4731,7 +4369,8 @@
       0,
       1
     ],
-    "state": {}
+    "state": {},
+    "actions": []
   },
   {
     "id": "source_memory_bridge",
@@ -4917,5 +4556,2199 @@
         "condition_unmet_message": "The photograph remembers Tideglass Beach for everyone in it."
       }
     ]
+  },
+  {
+    "id": "sector9_crash_site",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Crash Site",
+    "background_image": "images/rooms/world_2/crash_site.png",
+    "description": "The escape pod wreckage is half-submerged in warm glow-water. The cracked pod core ticks under a scorched access panel while thick vines hang from concrete struts. Zeke sits coughing on the hull as a low, resonant hum rolls through the air.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "north": "sector9_pod_interior",
+      "south": "sector9_canopy",
+      "west": "sector9_landing_glade",
+      "east": "sector9_landing_stream"
+    },
+    "pos": [
+      0,
+      0
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "wreckage",
+        "type": "generic",
+        "condition_unmet_message": "The pod's thrusters are completely fused. It won't fly again."
+      },
+      {
+        "name": "pod core",
+        "type": "generic",
+        "action_event": "w2_mq01_examine_pod",
+        "condition_unmet_message": "Examining the pod's sub-critical core..."
+      },
+      {
+        "name": "glow-water",
+        "type": "generic",
+        "condition_unmet_message": "The water is warm and vibrates with a gentle frequency. It feels soothing to touch."
+      },
+      {
+        "name": "Scan moss",
+        "type": "generic",
+        "action_event": "w2_sq01_scan_moss",
+        "condition_unmet_message": "The moss on the hull vibrates under your scanner."
+      }
+    ],
+    "npc_presence": [
+      {
+        "npc": "zeke",
+        "requires_milestones": [
+          "ms_w1_mq05_complete"
+        ],
+        "forbidden_milestones": [
+          "ms_w2_mq01_complete"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "sector9_pod_interior",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Escape Pod Interior",
+    "background_image": "images/rooms/world_2/pod_interior.png",
+    "description": "The cramped interior of the escape pod is scorched and smells of melted plastic. Sparks shower from the console frame, and a dented emergency storage locker hangs open.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "south": "sector9_crash_site"
+    },
+    "pos": [
+      0,
+      1
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "locker",
+        "type": "generic",
+        "condition_unmet_message": "A basic emergency kit contains field dressings and mineral water."
+      }
+    ]
+  },
+  {
+    "id": "sector9_landing_brush",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Scorched Brush",
+    "background_image": "images/rooms/world_2/landing_brush.png",
+    "description": "Shattered vines and charred branches litter the muddy clearing where the pod plowed through. The thick purple leaves are still warm to the touch, venting thin plumes of gray steam.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "northeast": "sector9_landing_stream",
+      "east": "sector9_landing_drop"
+    },
+    "pos": [
+      0,
+      -1
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_landing_glade",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Overgrown Glade",
+    "background_image": "images/rooms/world_2/landing_glade.png",
+    "description": "A dense grove of giant broadleaf ferns arches overhead, filtering the dim sky into a green haze. Bioluminescent mushrooms grow in thick clumps along a decaying log.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "east": "sector9_crash_site",
+      "north": "sector9_landing_perimeter"
+    },
+    "pos": [
+      -1,
+      0
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_landing_stream",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Stream Bank",
+    "background_image": "images/rooms/world_2/landing_stream.png",
+    "description": "A narrow bank where the swamp mud gives way to smooth pebbles. A gentle current of glowing blue water runs eastward, gurgling softly as it cuts through the roots.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "sector9_crash_site",
+      "east": "sector9_stream_pools",
+      "southwest": "sector9_landing_brush"
+    },
+    "pos": [
+      1,
+      0
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_landing_perimeter",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Security Perimeter",
+    "background_image": "images/rooms/world_2/landing_perimeter.png",
+    "description": "A smashed Dominion surveillance drone lies wedged between two stone blocks. Its primary scanner lens is shattered, but a small backup light still flashes a slow warning code.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "south": "sector9_landing_glade"
+    },
+    "pos": [
+      -1,
+      1
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "drone",
+        "type": "generic",
+        "condition_unmet_message": "The chassis is crushed, but its recording cells hum faintly."
+      }
+    ]
+  },
+  {
+    "id": "sector9_landing_drop",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Pod Fragment",
+    "background_image": "images/rooms/world_2/landing_drop.png",
+    "description": "A metal cargo panel from the escape pod has sheared off and sits wedged in the mud. Underneath it, several empty battery cells and a bundle of diagnostic wires lie scattered.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "sector9_landing_brush"
+    },
+    "pos": [
+      1,
+      -1
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_stream_pools",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Mist Pools",
+    "background_image": "images/rooms/world_2/stream_pools.png",
+    "description": "Deep wetlands where the glowing water pools into wide, still basins. Mineral-rich fog clings to the surface of the water, making the patrolling Echo-Borer look like a floating shadow.",
+    "npcs": [],
+    "items": [],
+    "enemies": [
+      "echo_borer"
+    ],
+    "connections": {
+      "west": "sector9_landing_stream",
+      "east": "sector9_stream_flats",
+      "south": "sector9_stream_wetlands"
+    },
+    "pos": [
+      2,
+      0
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_stream_wetlands",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Resonant Sedge",
+    "background_image": "images/rooms/world_2/stream_wetlands.png",
+    "description": "Thick marshes filled with glowing reeds. The wind passing through the reeds creates a low, musical whisper that seems to rise directly from the damp soil.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "north": "sector9_stream_pools"
+    },
+    "pos": [
+      2,
+      -1
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_stream_flats",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Crystalline Flats",
+    "background_image": "images/rooms/world_2/stream_flats.png",
+    "description": "A wide, sandy delta where the stream spreads thin. The crystalline sand catch the blue light of the water, shimmering and vibrating with a faint hum when stepped on.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "sector9_stream_pools",
+      "east": "sector9_stream_falls",
+      "north": "sector9_stream_cave_entrance"
+    },
+    "pos": [
+      3,
+      0
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_stream_falls",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Resonant Falls",
+    "background_image": "images/rooms/world_2/stream_falls.png",
+    "description": "The stream cascades over three massive Architect stone pillars. The falling water strikes the resonant stone, ringing out a quiet, rhythmic chord that echoes off the cliff face.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "sector9_stream_flats",
+      "east": "sector9_beach_cliffs",
+      "north": "sector9_stream_tidepools"
+    },
+    "pos": [
+      4,
+      0
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_stream_tidepools",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Beach Transition",
+    "background_image": "images/rooms/world_2/stream_tidepools.png",
+    "description": "The stream widens into brackish coastal pools. The water here is calm, and a fine layer of star-shaped crystals has settled along the shallow margins.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "south": "sector9_stream_falls",
+      "north": "sector9_beach_pools"
+    },
+    "pos": [
+      4,
+      1
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_stream_cave_entrance",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Cavern Entrance",
+    "background_image": "images/rooms/world_2/stream_cave_entrance.png",
+    "description": "A dark cavern opening behind the main waterfall shelf. Wet mist fills the air, and the stone walls are smooth, almost completely covered in dripping moss.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "south": "sector9_stream_flats",
+      "north": "sector9_stream_cave_depths"
+    },
+    "pos": [
+      3,
+      1
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_stream_cave_depths",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Glow-Moss Cavern",
+    "background_image": "images/rooms/world_2/stream_cave_depths.png",
+    "description": "A quiet cavern chamber lit entirely by thick sheets of glowing blue moss. The damp walls echo the distant sound of the waterfall with a hollow rhythm.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "south": "sector9_stream_cave_entrance",
+      "east": "sector9_stream_sunken_passage"
+    },
+    "pos": [
+      3,
+      2
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_stream_sunken_passage",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Waterlogged Tunnel",
+    "background_image": "images/rooms/world_2/stream_sunken_passage.png",
+    "description": "A narrow tunnel where the cavern roof dips close to the glowing water. A current of warm water runs through it, gurgling as it flows toward the beach grotto.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "sector9_stream_cave_depths",
+      "north": "sector9_beach_grotto"
+    },
+    "pos": [
+      4,
+      2
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_beach_cliffs",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Beach Cliffs",
+    "background_image": "images/rooms/world_2/beach_cliffs.png",
+    "description": "High overlooking cliffs of black basalt. Below, the glowing shoreline of Tideglass Beach curves into the mist, its warm sands shimmering in the dark.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "sector9_stream_falls",
+      "south": "sector9_beach_cove"
+    },
+    "pos": [
+      5,
+      0
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_beach_cove",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Sandy Cove",
+    "background_image": "images/rooms/world_2/beach_cove.png",
+    "description": "A sheltered, sandy beach protected by tall stone walls. The sand is warm and dry, making it a safe place to set up a campfire and rest.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "north": "sector9_beach_cliffs",
+      "east": "sector9_beach_pools"
+    },
+    "pos": [
+      5,
+      -1
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "campfire",
+        "type": "generic",
+        "condition_unmet_message": "The fire burns with a warm, steady glow, throwing long shadows on the stone walls."
+      }
+    ]
+  },
+  {
+    "id": "sector9_beach_pools",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Tide Pools",
+    "background_image": "images/rooms/world_2/beach_pools.png",
+    "description": "Glowing tide pools containing fish species. The water is calm, and the sand pools hum softly. Fish the glow-water here and every ripple answers with a low chord.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "sector9_beach_cove",
+      "east": "sector9_beach_cargo",
+      "north": "sector9_beach_cave",
+      "south": "sector9_stream_tidepools"
+    },
+    "pos": [
+      5,
+      -2
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "pools",
+        "type": "generic",
+        "condition_unmet_message": "The water hums with a deep subsonic tone, washing away local static."
+      },
+      {
+        "name": "Fish the pools",
+        "type": "fishing",
+        "zone_id": "sector9_stream",
+        "condition_unmet_message": "The tide pools are calm enough for fishing."
+      },
+      {
+        "name": "Scan weeds",
+        "type": "generic",
+        "action_event": "w2_sq01_scan_weeds",
+        "condition_unmet_message": "The bioluminescent weeds glow when scanned."
+      },
+      {
+        "name": "Gather tideglass",
+        "type": "generic",
+        "action_event": "w2_sq03_gather_tideglass",
+        "condition_unmet_message": "Glowing tideglass skewers are harvested from the shore."
+      }
+    ]
+  },
+  {
+    "id": "sector9_beach_cargo",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Beached Cargo Wreck",
+    "background_image": "images/rooms/world_2/beach_cargo.png",
+    "description": "A rusted Dominion cargo container lies split open on the sand, its doors torn off. Sea-grass has claimed the interior, but crates of scrap metal are still visible.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "sector9_beach_pools",
+      "north": "sector9_beach_dunes"
+    },
+    "pos": [
+      6,
+      -2
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "crates",
+        "type": "generic",
+        "condition_unmet_message": "The crates contain heavy scrap metal and industrial spare parts."
+      }
+    ]
+  },
+  {
+    "id": "sector9_beach_cave",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Sea Cavern",
+    "background_image": "images/rooms/world_2/beach_cave.png",
+    "description": "A high-ceilinged cavern carved by the waves. Water drains through fissures in the stone, creating hissing blowholes that spray fine mist into the dark.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "south": "sector9_beach_pools",
+      "north": "sector9_beach_pillar",
+      "east": "sector9_beach_grotto"
+    },
+    "pos": [
+      5,
+      -3
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_beach_pillar",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Sunken Obelisk",
+    "background_image": "images/rooms/world_2/beach_pillar.png",
+    "description": "A colossal stone obelisk sits half-submerged in the surf. Ancient cymatic engravings cover the obelisk, glowing faintly as the tide rolls over them.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "south": "sector9_beach_cave"
+    },
+    "pos": [
+      5,
+      -4
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_beach_grotto",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Hidden Grotto",
+    "background_image": "images/rooms/world_2/beach_grotto.png",
+    "description": "A small, dry alcove hidden behind a basalt pillar. The cave walls are lined with smooth crystal clusters that glow with a cool, steady blue light.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "sector9_beach_cave",
+      "south": "sector9_stream_sunken_passage"
+    },
+    "pos": [
+      6,
+      -3
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "cache",
+        "type": "generic",
+        "action_event": "w2_sq03_gather_relic",
+        "condition_unmet_message": "A weathered stone pedestal holds the Source Resin weapon mod."
+      }
+    ]
+  },
+  {
+    "id": "sector9_beach_dunes",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Star-Sand Dunes",
+    "background_image": "images/rooms/world_2/beach_dunes.png",
+    "description": "Rolling dunes of fine crystalline sand that sparkle in the dim light. The dunes hum like hollow chimes when walked on, each step ringing softly.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "south": "sector9_beach_cargo"
+    },
+    "pos": [
+      6,
+      -1
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_canopy",
+    "env": "swamp",
+    "weather": "resonance",
+    "title": "Resonant Canopy",
+    "background_image": "images/rooms/world_2/resonant_canopy.png",
+    "description": "The canopy of the ruins is covered in giant, crystalline ferns that catch the dim light and buzz with low-frequency standing waves.",
+    "npcs": [],
+    "items": [],
+    "enemies": [
+      "echo_borer"
+    ],
+    "connections": {
+      "north": "sector9_crash_site",
+      "south": "sector9_wilds_thickets"
+    },
+    "pos": [
+      0,
+      -2
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "ferns",
+        "type": "generic",
+        "condition_unmet_message": "Their leaves vibrate like harp strings when touched, ringing out a quiet chord."
+      },
+      {
+        "name": "Scan ferns",
+        "type": "generic",
+        "action_event": "w2_sq01_scan_ferns",
+        "condition_unmet_message": "The giant crystalline ferns echo in harmony."
+      },
+      {
+        "name": "Scan spores",
+        "type": "generic",
+        "action_event": "w2_sq01_scan_spores",
+        "condition_unmet_message": "The razor-vine spores vibrate with high energy."
+      },
+      {
+        "name": "Scavenge remains",
+        "type": "generic",
+        "action_event": "w2_sq02_scavenge_body",
+        "condition_unmet_message": "A fallen Dominion scout lies tangled in the vines."
+      }
+    ]
+  },
+  {
+    "id": "sector9_wilds_thickets",
+    "env": "swamp",
+    "weather": "resonance",
+    "title": "Spore Thickets",
+    "background_image": "images/rooms/world_2/wilds_thickets.png",
+    "description": "A dense tangle of glowing vines and thorned thickets. The air is thick with purple spores that drift from pods and hum like static electricity.",
+    "npcs": [],
+    "items": [],
+    "enemies": [
+      "spore_spitter"
+    ],
+    "connections": {
+      "north": "sector9_canopy",
+      "east": "sector9_wilds_nest",
+      "south": "sector9_wilds_hollow"
+    },
+    "pos": [
+      0,
+      -3
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_wilds_nest",
+    "env": "swamp",
+    "weather": "resonance",
+    "title": "Hound Nest",
+    "background_image": "images/rooms/world_2/wilds_nest.png",
+    "description": "A clearing surrounded by jagged stone slabs. Scavenged bones are piled in the center, and the growl of shard hounds echoes from the surrounding shadows.",
+    "npcs": [],
+    "items": [],
+    "enemies": [
+      "shard_hound"
+    ],
+    "connections": {
+      "west": "sector9_wilds_thickets"
+    },
+    "pos": [
+      1,
+      -3
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_wilds_hollow",
+    "env": "swamp",
+    "weather": "resonance",
+    "title": "Poison Hollow",
+    "background_image": "images/rooms/world_2/wilds_hollow.png",
+    "description": "A low-lying hollow filled with a thick, stagnant layer of toxic purple spores. The air feels heavy, and every breath drains guard rapidly.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "north": "sector9_wilds_thickets",
+      "south": "sector9_wilds_grave"
+    },
+    "pos": [
+      0,
+      -4
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_wilds_grave",
+    "env": "swamp",
+    "weather": "resonance",
+    "title": "Patrol Graveyard",
+    "background_image": "images/rooms/world_2/wilds_grave.png",
+    "description": "The rusted remains of a Dominion scouting squad lie scattered among the vines. Their suits are cracked, and one body holds a functional cutter tool.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "north": "sector9_wilds_hollow",
+      "east": "sector9_ridge_climb",
+      "south": "sector9_wilds_overlook"
+    },
+    "pos": [
+      0,
+      -5
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "transceiver",
+        "type": "generic",
+        "action_event": "w2_sq02_scavenge_body",
+        "condition_unmet_message": "A fallen soldier holds an encrypted datapad and a Thermal Cutter."
+      }
+    ]
+  },
+  {
+    "id": "sector9_wilds_overlook",
+    "env": "swamp",
+    "weather": "resonance",
+    "title": "Canopy Edge",
+    "background_image": "images/rooms/world_2/wilds_overlook.png",
+    "description": "A sheer ledge looking out over the endless green canopy of Sector 9. The Planetary Shield grid waves are visible, curving across the sky.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "north": "sector9_wilds_grave",
+      "east": "sector9_wilds_canopy_walk"
+    },
+    "pos": [
+      0,
+      -6
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_wilds_canopy_walk",
+    "env": "swamp",
+    "weather": "resonance",
+    "title": "Hanging Root Bridge",
+    "background_image": "images/rooms/world_2/wilds_canopy_walk.png",
+    "description": "A natural bridge formed by giant woven tree roots hanging over the gorge. The bridge sways in the wind, creaking like a ship's timber.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "sector9_wilds_overlook",
+      "south": "sector9_wilds_archway",
+      "north": "sector9_ridge_climb"
+    },
+    "pos": [
+      1,
+      -6
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_wilds_archway",
+    "env": "swamp",
+    "weather": "resonance",
+    "title": "Architect Gateway",
+    "background_image": "images/rooms/world_2/wilds_archway.png",
+    "description": "A massive, partially collapsed archway of smooth Architect stone. Faint cymatic glyphs flicker along the edges, pulsing in slow cycles.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "north": "sector9_wilds_canopy_walk",
+      "east": "sector9_wilds_dense_brush"
+    },
+    "pos": [
+      1,
+      -5
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_wilds_dense_brush",
+    "env": "swamp",
+    "weather": "resonance",
+    "title": "Beast Run",
+    "background_image": "images/rooms/world_2/wilds_dense_brush.png",
+    "description": "A wide trail of trampled vines and broken tree trunks. Giant claw marks are scarred into the bark of the crystalline ferns.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "sector9_wilds_archway",
+      "north": "sector9_wilds_clearance"
+    },
+    "pos": [
+      2,
+      -5
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_wilds_clearance",
+    "env": "swamp",
+    "weather": "resonance",
+    "title": "Burned Glade",
+    "background_image": "images/rooms/world_2/wilds_clearance.png",
+    "description": "An open clearing cleared of vegetation by old energy discharges. The ground is glazed like black glass, reflecting the sky.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "south": "sector9_wilds_dense_brush",
+      "north": "sector9_wilds_lookout"
+    },
+    "pos": [
+      2,
+      -4
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_wilds_lookout",
+    "env": "swamp",
+    "weather": "resonance",
+    "title": "Hunter's Blind",
+    "background_image": "images/rooms/world_2/wilds_lookout.png",
+    "description": "A high, ruined lookout platform constructed from ancient blocks. Spent sniper casings litter the stone, still warm.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "south": "sector9_wilds_clearance"
+    },
+    "pos": [
+      2,
+      -3
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_ridge_climb",
+    "env": "swamp",
+    "weather": "resonance",
+    "title": "Vine Climb",
+    "background_image": "images/rooms/world_2/ridge_climb.png",
+    "description": "A sheer cliff wall covered in thick, climbable root-vines. The climb is steep, but the roots are strong and offer stable handholds.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "sector9_wilds_grave",
+      "south": "sector9_wilds_canopy_walk",
+      "north": "sector9_ridge_ledges"
+    },
+    "pos": [
+      1,
+      -5
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_ridge_ledges",
+    "env": "swamp",
+    "weather": "resonance",
+    "title": "Windy Ledges",
+    "background_image": "images/rooms/world_2/ridge_ledges.png",
+    "description": "High stone shelves swept by cold upper-atmosphere wind. The ambient sound of the winds whistling through the gaps forms a low chord.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "south": "sector9_ridge_climb",
+      "north": "sector9_ridge_overhang"
+    },
+    "pos": [
+      1,
+      -4
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_ridge_overhang",
+    "env": "swamp",
+    "weather": "resonance",
+    "title": "Beast Lair Approach",
+    "background_image": "images/rooms/world_2/ridge_overhang.png",
+    "description": "The approach to a massive dark overhang in the cliff face. A heavy, musky scent hangs in the cold air, and deep growls echo.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "south": "sector9_ridge_ledges",
+      "north": "sector9_canopy_ridge"
+    },
+    "pos": [
+      1,
+      -3
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_canopy_ridge",
+    "env": "swamp",
+    "weather": "resonance",
+    "title": "Canopy Ridge",
+    "background_image": "images/rooms/world_2/canopy_ridge.png",
+    "description": "A wind-carved stone shelf high above the jungle. The canopy rolls like an ocean below, and the Planetary Shield lattice curves across the sky above. A huge shadow shifts in the brush.",
+    "npcs": [],
+    "items": [],
+    "enemies": [
+      "the_beast"
+    ],
+    "connections": {
+      "south": "sector9_ridge_overhang",
+      "east": "sector9_ridge_viewpoint"
+    },
+    "pos": [
+      1,
+      -2
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "Look at Shield",
+        "type": "generic",
+        "condition_unmet_message": "The Planetary Shield curves across the sky, pulsing in a timed pattern."
+      },
+      {
+        "name": "Confront stalker",
+        "type": "generic",
+        "action_event": "w2_mq04_confront",
+        "condition_unmet_message": "Confront the hunter waiting in the shadows."
+      }
+    ]
+  },
+  {
+    "id": "sector9_ridge_viewpoint",
+    "env": "swamp",
+    "weather": "resonance",
+    "title": "Shield Viewpoint",
+    "background_image": "images/rooms/world_2/ridge_viewpoint.png",
+    "description": "An open observation platform on the edge of the ridge. The Planetary Shield grid is directly visible, pulsing in timed waves.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "sector9_canopy_ridge",
+      "north": "sector9_ridge_sniper_perch"
+    },
+    "pos": [
+      2,
+      -2
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_ridge_sniper_perch",
+    "env": "swamp",
+    "weather": "resonance",
+    "title": "Sniper Lookout",
+    "background_image": "images/rooms/world_2/ridge_sniper_perch.png",
+    "description": "A narrow shelf near the summit offering a perfect view of the Canopy Ridge. Spotting gear and ammo cases lie abandoned here.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "south": "sector9_ridge_viewpoint",
+      "east": "sector9_ridge_crevice"
+    },
+    "pos": [
+      2,
+      -1
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_ridge_crevice",
+    "env": "swamp",
+    "weather": "resonance",
+    "title": "High Pass",
+    "background_image": "images/rooms/world_2/ridge_crevice.png",
+    "description": "A narrow crevice split into the mountain stone. The walls are so close they block out the wind, creating an eerie, absolute silence.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "sector9_ridge_sniper_perch",
+      "east": "sector9_ridge_plateau"
+    },
+    "pos": [
+      3,
+      -1
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_ridge_plateau",
+    "env": "swamp",
+    "weather": "resonance",
+    "title": "Sanctuary Outlook",
+    "background_image": "images/rooms/world_2/ridge_plateau.png",
+    "description": "A high stone plateau directly facing the Temple facades. The stone steps leading to the gateway are worn but stable.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "sector9_ridge_crevice",
+      "east": "sector9_temple_plaza"
+    },
+    "pos": [
+      4,
+      -1
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_temple_plaza",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Stone Courtyard",
+    "background_image": "images/rooms/world_2/temple_plaza.png",
+    "description": "A symmetric stone plaza in front of the gate. Geometric lines are carved into the ground, pulsing with a faint blue light.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "sector9_ridge_plateau",
+      "east": "sector9_temple_lock_chamber",
+      "north": "sector9_temple_vestibule"
+    },
+    "pos": [
+      5,
+      -1
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_temple_vestibule",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Outer Guard Post",
+    "background_image": "images/rooms/world_2/temple_vestibule.png",
+    "description": "A ruined outpost containing deactivated Dominion defense turrets. Rust and moss have fused the gears together.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "south": "sector9_temple_plaza"
+    },
+    "pos": [
+      5,
+      0
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_temple_lock_chamber",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Resonator Chamber",
+    "background_image": "images/rooms/world_2/temple_lock_chamber.png",
+    "description": "The resonator console chamber in front of the gate. Two tuning wings flank a central slot designed to hold the Chime.",
+    "npcs": [
+      "sentinel_3"
+    ],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "sector9_temple_plaza",
+      "north": "sector9_temple_left_wing",
+      "south": "sector9_temple_right_wing",
+      "east": "sector9_temple_gate"
+    },
+    "pos": [
+      6,
+      -1
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_temple_left_wing",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Left Tuner Column",
+    "background_image": "images/rooms/world_2/temple_left_wing.png",
+    "description": "The left resonator battery column. A tall stone pillar covered in copper wiring that vibrates in resonance.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "south": "sector9_temple_lock_chamber"
+    },
+    "pos": [
+      6,
+      0
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_temple_right_wing",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Right Tuner Column",
+    "background_image": "images/rooms/world_2/temple_right_wing.png",
+    "description": "The right frequency dampener column. It filters out local seismic noise to align the lock frequency.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "north": "sector9_temple_lock_chamber"
+    },
+    "pos": [
+      6,
+      -2
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_temple_gate",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Temple Gate",
+    "background_image": "images/rooms/world_2/temple_gate.png",
+    "description": "A massive stone door, perfectly smooth, stands embedded in the cliff. It is engraved with glowing cymatic patterns. A slot shaped like the Chime sits in the center of a metal resonator.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "sector9_temple_lock_chamber",
+      "east": "sector9_foyer_grand_hall"
+    },
+    "pos": [
+      7,
+      -1
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "Stone Lock",
+        "type": "generic",
+        "action_event": "w2_mq02_use_chime",
+        "condition_unmet_message": "The stone lock hums softly, waiting for its matching resonance."
+      }
+    ]
+  },
+  {
+    "id": "sector9_foyer_grand_hall",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Sanctuary Grand Hall",
+    "background_image": "images/rooms/world_2/foyer_grand_hall.png",
+    "description": "A colossal foyer of clean, ancient geometry. The air is cool and dry, and faint bands of light shimmer along the floor.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "sector9_temple_gate",
+      "north": "sector9_foyer_left_gallery",
+      "south": "sector9_foyer_right_gallery",
+      "east": "sector9_hall_of_echoes"
+    },
+    "pos": [
+      0,
+      0
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_foyer_left_gallery",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Left Reliquary",
+    "background_image": "images/rooms/world_2/foyer_left_gallery.png",
+    "description": "A wide alcove showing cracked Architect resonance crystals displayed on stone pedestals. The crystals hum in discord.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "south": "sector9_foyer_grand_hall",
+      "west": "sector9_foyer_security_hub"
+    },
+    "pos": [
+      0,
+      1
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_foyer_right_gallery",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Right Archives",
+    "background_image": "images/rooms/world_2/foyer_right_gallery.png",
+    "description": "A gallery lined with stone data columns. The columns show old wave logs and frequency diagrams etched in light.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "north": "sector9_foyer_grand_hall",
+      "east": "sector9_foyer_vault_door"
+    },
+    "pos": [
+      0,
+      -1
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_foyer_security_hub",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Dominion Outpost",
+    "background_image": "images/rooms/world_2/foyer_security_hub.png",
+    "description": "An abandoned security outpost setup. A console screen glows orange, reporting a breach in the stasis grid.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "east": "sector9_foyer_left_gallery"
+    },
+    "pos": [
+      -1,
+      1
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "terminal",
+        "type": "generic",
+        "condition_unmet_message": "Hacking the security database reports status: LOCKDOWN."
+      }
+    ]
+  },
+  {
+    "id": "sector9_foyer_vault_door",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Hangar Portal",
+    "background_image": "images/rooms/world_2/foyer_vault_door.png",
+    "description": "A heavy blast door blocking access to the hangar bay. Security conduits run from the door frame into the vents.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "sector9_foyer_right_gallery",
+      "east": "sector9_conduit_crawlspace"
+    },
+    "pos": [
+      1,
+      -1
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_conduit_crawlspace",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Maintenance Conduit",
+    "background_image": "images/rooms/world_2/conduit_crawlspace.png",
+    "description": "A dark, cramped ventilation crawlspace filled with bundles of thick optical wires and cooling conduits.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "sector9_foyer_vault_door",
+      "east": "sector9_conduit_junction"
+    },
+    "pos": [
+      2,
+      -1
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_conduit_junction",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "T-Junction Wiring",
+    "background_image": "images/rooms/world_2/conduit_junction.png",
+    "description": "A junction point inside the crawlspace. Wire channels split off to the stasis deck and generator breakers.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "sector9_conduit_crawlspace",
+      "north": "sector9_conduit_access_shaft",
+      "south": "sector9_conduit_breaker_room"
+    },
+    "pos": [
+      3,
+      -1
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_conduit_breaker_room",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Breaker Deck",
+    "background_image": "images/rooms/world_2/conduit_breaker_room.png",
+    "description": "An auxiliary generator cabin. Offline breakers hum with static, ready to be flipped to align stasis diagnostics.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "north": "sector9_conduit_junction"
+    },
+    "pos": [
+      3,
+      -2
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "breakers",
+        "type": "generic",
+        "condition_unmet_message": "Flipping the auxiliary breaker alignment..."
+      }
+    ]
+  },
+  {
+    "id": "sector9_conduit_access_shaft",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Access Shaft",
+    "background_image": "images/rooms/world_2/conduit_access_shaft.png",
+    "description": "A vertical access shaft with a rusted ladder. Steam vents from pipes along the shaft walls, making the rungs slick.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "south": "sector9_conduit_junction",
+      "north": "sector9_vents_gantry"
+    },
+    "pos": [
+      3,
+      0
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_hall_of_echoes",
+    "env": "swamp",
+    "weather": "resonance",
+    "title": "Hall of Echoes",
+    "background_image": "images/rooms/world_2/hall_of_echoes.png",
+    "description": "A grand corridor of clean, ancient geometry. The air is cool and dry. Shifting light-murals on the walls depict the history of the Architects.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "sector9_foyer_grand_hall",
+      "north": "sector9_hall_echo_alcoves",
+      "east": "sector9_archive_vault",
+      "south": "sector9_stasis_chamber"
+    },
+    "pos": [
+      0,
+      -2
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "murals",
+        "type": "generic",
+        "action_event": "w2_mq03_inspect_murals",
+        "condition_unmet_message": "Shifting murals made of light. They shimmer when you approach."
+      },
+      {
+        "name": "Tune murals",
+        "type": "generic",
+        "action_event": "w2_sq04_tune_murals",
+        "condition_unmet_message": "The ancient console flickers, its resonance matrix misaligned."
+      }
+    ]
+  },
+  {
+    "id": "sector9_hall_echo_alcoves",
+    "env": "swamp",
+    "weather": "resonance",
+    "title": "Echo Alcoves",
+    "background_image": "images/rooms/world_2/hall_echo_alcoves.png",
+    "description": "Small side alcoves designed for private study. Shifting light waveforms details the connection of minds.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "south": "sector9_hall_of_echoes",
+      "north": "sector9_hall_acoustics_lab",
+      "east": "sector9_hall_reflection_pool"
+    },
+    "pos": [
+      0,
+      -3
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_hall_acoustics_lab",
+    "env": "swamp",
+    "weather": "resonance",
+    "title": "Acoustics Lab",
+    "background_image": "images/rooms/world_2/hall_acoustics_lab.png",
+    "description": "A laboratory bay containing Dominion logging sensors focused on the cymatic pool fluctuations.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "south": "sector9_hall_echo_alcoves"
+    },
+    "pos": [
+      0,
+      -4
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_hall_reflection_pool",
+    "env": "swamp",
+    "weather": "resonance",
+    "title": "Cymatic Basin",
+    "background_image": "images/rooms/world_2/hall_reflection_pool.png",
+    "description": "A circular basin of heavy mineral water. The waves forming on the surface form standing geometric shapes.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "sector9_hall_echo_alcoves"
+    },
+    "pos": [
+      1,
+      -3
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_archive_vault",
+    "env": "swamp",
+    "weather": "resonance",
+    "title": "Archive Vault",
+    "background_image": "images/rooms/world_2/archive_vault.png",
+    "description": "A circular archive vault filled with hollow stone cylinders. The cylinders hum softly when touched.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "sector9_hall_of_echoes",
+      "east": "sector9_archive_reading_room"
+    },
+    "pos": [
+      1,
+      -2
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_archive_reading_room",
+    "env": "swamp",
+    "weather": "resonance",
+    "title": "Interface Console",
+    "background_image": "images/rooms/world_2/archive_reading_room.png",
+    "description": "A console room with a glowing interface panel. Old Architect diagnostics flicker in slow wave loops.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "sector9_archive_vault",
+      "south": "sector9_archive_tuning_bay"
+    },
+    "pos": [
+      2,
+      -2
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_archive_tuning_bay",
+    "env": "swamp",
+    "weather": "resonance",
+    "title": "Tuning Matrix",
+    "background_image": "images/rooms/world_2/archive_tuning_bay.png",
+    "description": "A tuning matrix room containing four sound resonator columns. They must be tuned to C#m7.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "north": "sector9_archive_reading_room",
+      "east": "sector9_archive_secret_stash"
+    },
+    "pos": [
+      2,
+      -3
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "resonator",
+        "type": "generic",
+        "action_event": "w2_sq04_tune_murals",
+        "condition_unmet_message": "Tuning the resonator columns..."
+      }
+    ]
+  },
+  {
+    "id": "sector9_archive_secret_stash",
+    "env": "swamp",
+    "weather": "resonance",
+    "title": "Hidden Reliquary",
+    "background_image": "images/rooms/world_2/archive_secret_stash.png",
+    "description": "A hidden reliquary vault. A glowing stone pedestal holds the **Link Relic** upgrade.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "sector9_archive_tuning_bay"
+    },
+    "pos": [
+      3,
+      -3
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "pedestal",
+        "type": "generic",
+        "action_event": "w2_sq04_collect_relic",
+        "condition_unmet_message": "A pedestal holds the Link Relic upgrade."
+      }
+    ]
+  },
+  {
+    "id": "sector9_stasis_chamber",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Stasis Chamber",
+    "background_image": "images/rooms/world_2/stasis_chamber.png",
+    "description": "A circular room dominated by a single, humming pod. Dust has lain undisturbed for years. Shimmering rings of stasis energy hover around it out of alignment.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "north": "sector9_hall_of_echoes",
+      "east": "sector9_stasis_ring_array",
+      "south": "sector9_source_gate"
+    },
+    "pos": [
+      0,
+      -3
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "Stasis Pod",
+        "type": "generic",
+        "action_event": "w2_mq03_inspect_pod",
+        "condition_unmet_message": "A sealed pod containing a sleeping figure."
+      },
+      {
+        "name": "Scan roots",
+        "type": "generic",
+        "action_event": "w2_sq01_scan_roots",
+        "condition_unmet_message": "The ancient roots are pulsing in slow rhythm."
+      },
+      {
+        "name": "Search vents",
+        "type": "generic",
+        "action_event": "w2_sq05_search_vents",
+        "condition_unmet_message": "A narrow ventilation shaft runs along the upper ceiling."
+      }
+    ],
+    "npc_presence": [
+      {
+        "npc": "zeke",
+        "requires_milestones": [
+          "ms_w2_mq01_complete"
+        ],
+        "forbidden_milestones": [
+          "ms_w2_mq03_complete"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "sector9_stasis_ring_array",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Ring Array",
+    "background_image": "images/rooms/world_2/stasis_ring_array.png",
+    "description": "The console room controlling the three concentric stasis rings. The alignment indicators hum with discordant tones.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "sector9_stasis_chamber",
+      "south": "sector9_stasis_coolant_lines",
+      "north": "sector9_stasis_observation"
+    },
+    "pos": [
+      1,
+      -3
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "console",
+        "type": "generic",
+        "action_event": "w2_mq03_align_rings",
+        "condition_unmet_message": "Bypassing the stasis ring alignment security lock..."
+      }
+    ]
+  },
+  {
+    "id": "sector9_stasis_coolant_lines",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Coolant Lines",
+    "background_image": "images/rooms/world_2/stasis_coolant_lines.png",
+    "description": "A maintenance bay filled with stasis coolant lines. Stabilizing fluids hum inside the thick pipes.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "north": "sector9_stasis_ring_array",
+      "east": "sector9_power_turbine"
+    },
+    "pos": [
+      1,
+      -4
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_stasis_observation",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Observation Deck",
+    "background_image": "images/rooms/world_2/stasis_observation.png",
+    "description": "A glass-shielded viewing balcony overlooking the stasis deck. The terminal displays vital signs.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "south": "sector9_stasis_ring_array",
+      "north": "sector9_vents_access_grate"
+    },
+    "pos": [
+      1,
+      -2
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_vents_gantry",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "High Gantry",
+    "background_image": "images/rooms/world_2/vents_gantry.png",
+    "description": "Walkway gantries suspended high above the stasis pod. The metal beams are covered in thick dust.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "south": "sector9_conduit_access_shaft",
+      "east": "sector9_vents_access_grate"
+    },
+    "pos": [
+      2,
+      -2
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_vents_access_grate",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Infiltration Hatch",
+    "background_image": "images/rooms/world_2/vents_access_grate.png",
+    "description": "A ventilation access grate that has been sliced open from the inside. Scrap metal shavings litter the grate.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "sector9_vents_gantry",
+      "north": "sector9_vents_tech_alcove",
+      "south": "sector9_stasis_observation"
+    },
+    "pos": [
+      3,
+      -2
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_vents_tech_alcove",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Transmitter Site",
+    "background_image": "images/rooms/world_2/vents_tech_alcove.png",
+    "description": "A narrow tech alcove behind the pipes. A locked briefcase contains a stolen Dominion transceiver.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "south": "sector9_vents_access_grate"
+    },
+    "pos": [
+      3,
+      -3
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "case",
+        "type": "generic",
+        "action_event": "w2_sq05_collect_tech",
+        "condition_unmet_message": "A cargo case contains the Dominion Transmitter."
+      }
+    ]
+  },
+  {
+    "id": "sector9_power_turbine",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Source Dynamo",
+    "background_image": "images/rooms/world_2/power_turbine.png",
+    "description": "A massive dynamo spinning in a cylinder of glowing blue fluid, generating intense resonance.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "sector9_stasis_coolant_lines",
+      "east": "sector9_power_manifold"
+    },
+    "pos": [
+      2,
+      -4
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_power_manifold",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Distribution Manifold",
+    "background_image": "images/rooms/world_2/power_manifold.png",
+    "description": "Heavy manifolds routing fluid to the gate emitters. The pipes shake in time with the barrier hum.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "sector9_power_turbine",
+      "south": "sector9_power_breaker_deck"
+    },
+    "pos": [
+      3,
+      -4
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_power_breaker_deck",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Generator Controls",
+    "background_image": "images/rooms/world_2/power_breaker_deck.png",
+    "description": "The control station containing generator breakers. Flipping these overrides will drop the gate barrier.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "north": "sector9_power_manifold",
+      "east": "sector9_power_valve"
+    },
+    "pos": [
+      3,
+      -5
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "breakers",
+        "type": "generic",
+        "action_event": "w2_mq05_overload_breakers",
+        "condition_unmet_message": "Overloading the main generator breakers..."
+      }
+    ]
+  },
+  {
+    "id": "sector9_power_valve",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Purge Valve",
+    "background_image": "images/rooms/world_2/power_valve.png",
+    "description": "An emergency valve used to purge overloaded static charges from the dynamo lines.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "sector9_power_breaker_deck"
+    },
+    "pos": [
+      4,
+      -5
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_source_gate",
+    "env": "swamp",
+    "weather": "resonance",
+    "title": "Source Gate",
+    "background_image": "images/rooms/world_2/source_gate.png",
+    "description": "A giant barrier of humming energy blocking access to the hangar. It vibrates with three discordant, howling frequencies.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "north": "sector9_stasis_chamber",
+      "west": "sector9_gate_emitter_left",
+      "south": "sector9_gate_emitter_right",
+      "east": "sector9_hangar_bay"
+    },
+    "pos": [
+      0,
+      -4
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "Acoustic Lock",
+        "type": "generic",
+        "action_event": "w2_mq05_inspect_resonator",
+        "condition_unmet_message": "The acoustic lock hums with intense dissonance."
+      }
+    ],
+    "npc_presence": [
+      {
+        "npc": "orion",
+        "requires_milestones": [
+          "ms_w2_mq03_complete"
+        ],
+        "forbidden_milestones": [
+          "ms_w2_mq05_complete"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "sector9_gate_emitter_left",
+    "env": "swamp",
+    "weather": "resonance",
+    "title": "Harmonic Horn",
+    "background_image": "images/rooms/world_2/gate_emitter_left.png",
+    "description": "The left emitter tower focusing the lock frequency. The copper horn vibrates violently.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "east": "sector9_source_gate"
+    },
+    "pos": [
+      -1,
+      -4
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_gate_emitter_right",
+    "env": "swamp",
+    "weather": "resonance",
+    "title": "Resonance Cup",
+    "background_image": "images/rooms/world_2/gate_emitter_right.png",
+    "description": "The right receiver cup grounding the barrier. The stone container is glowing white-hot.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "north": "sector9_source_gate"
+    },
+    "pos": [
+      0,
+      -5
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_hangar_bay",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Hangar Bay",
+    "background_image": "images/rooms/world_2/hangar_bay.png",
+    "description": "A vast underground cavern open to the sky. The Astra sits silent on the launch pad. Her hull is scorched and her bridge systems are dark.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "sector9_source_gate",
+      "north": "sector9_hangar_scaffolding",
+      "south": "sector9_hangar_staging"
+    },
+    "pos": [
+      1,
+      -4
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "Astra Console",
+        "type": "generic",
+        "action_event": "w2_mq05_inspect_astra",
+        "condition_unmet_message": "The ship's main console. The primary power conduit is completely severed."
+      }
+    ],
+    "npc_presence": [
+      {
+        "npc": "zeke",
+        "requires_milestones": [
+          "ms_w2_mq03_complete"
+        ],
+        "forbidden_milestones": [
+          "ms_w2_mq05_complete"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "sector9_hangar_scaffolding",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Maintenance Catwalks",
+    "background_image": "images/rooms/world_2/hangar_scaffolding.png",
+    "description": "catwalks suspended around the Astra's charred hull. Cables run from the scaffold into the ship.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "south": "sector9_hangar_bay",
+      "east": "sector9_hangar_tower"
+    },
+    "pos": [
+      1,
+      -3
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_hangar_staging",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Freight Lift",
+    "background_image": "images/rooms/world_2/hangar_staging.png",
+    "description": "A freight lift used to load fuel cells onto the launch pad. The control motor is offline.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "north": "sector9_hangar_bay"
+    },
+    "pos": [
+      1,
+      -5
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_hangar_tower",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Control Console",
+    "background_image": "images/rooms/world_2/hangar_tower.png",
+    "description": "The launch computer towers. Conduits from the stasis core are routed here to boot systems.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "sector9_hangar_scaffolding",
+      "south": "sector9_hangar_fuel_lines",
+      "north": "sector9_hangar_lock"
+    },
+    "pos": [
+      2,
+      -3
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_hangar_fuel_lines",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Fuel Intake Lines",
+    "background_image": "images/rooms/world_2/hangar_fuel_lines.png",
+    "description": "Fuel intake lines. Fused fuel manifolds require manual routing to deliver starter fluid.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "north": "sector9_hangar_tower"
+    },
+    "pos": [
+      2,
+      -4
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_hangar_lock",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Launch Blast Shield",
+    "background_image": "images/rooms/world_2/hangar_lock.png",
+    "description": "The ceiling blast shields covering the hangar. Massive gear teeth lock the shields in place.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "south": "sector9_hangar_tower",
+      "north": "sector9_the_sky"
+    },
+    "pos": [
+      2,
+      -2
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_the_sky",
+    "env": "swamp",
+    "weather": "resonance",
+    "title": "The Sky",
+    "background_image": "images/rooms/world_2/the_sky.png",
+    "description": "Flying high above the cloud layer, approaching the violet glow of the Planetary Shield. Zeke grins, but the console starts to beep frantically.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "south": "sector9_hangar_lock",
+      "north": "sector9_sky_mesosphere"
+    },
+    "pos": [
+      2,
+      -1
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_sky_mesosphere",
+    "env": "swamp",
+    "weather": "resonance",
+    "title": "Mesosphere Storm",
+    "background_image": "images/rooms/world_2/sky_mesosphere.png",
+    "description": "Ascending through violent storm clouds. Static charges discharge across the cockpit glass.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "south": "sector9_the_sky",
+      "north": "sector9_sky_shield_threshold"
+    },
+    "pos": [
+      2,
+      0
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_sky_shield_threshold",
+    "env": "swamp",
+    "weather": "resonance",
+    "title": "Shield Threshold",
+    "background_image": "images/rooms/world_2/sky_shield_threshold.png",
+    "description": "Directly facing the violet Shield lattice. The cockpit vibrates, systems reporting terminal warnings.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "south": "sector9_sky_mesosphere",
+      "east": "sector9_sky_sensor_buoy",
+      "north": "sector9_sky_barrier_core",
+      "west": "sector9_sky_hard_deck"
+    },
+    "pos": [
+      2,
+      1
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_sky_sensor_buoy",
+    "env": "swamp",
+    "weather": "resonance",
+    "title": "Security Buoy",
+    "background_image": "images/rooms/world_2/sky_sensor_buoy.png",
+    "description": "A security buoy logging flight data. Its status arrays glow violet in key with the Shield.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "sector9_sky_shield_threshold"
+    },
+    "pos": [
+      3,
+      1
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_sky_barrier_core",
+    "env": "swamp",
+    "weather": "resonance",
+    "title": "Barrier Controller",
+    "background_image": "images/rooms/world_2/sky_barrier_core.png",
+    "description": "The shield control node. It hums with the master curfew frequency of Sector 9.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "south": "sector9_sky_shield_threshold"
+    },
+    "pos": [
+      2,
+      2
+    ],
+    "state": {},
+    "actions": []
+  },
+  {
+    "id": "sector9_sky_hard_deck",
+    "env": "swamp",
+    "weather": "resonance",
+    "title": "Pushback Node",
+    "background_image": "images/rooms/world_2/sky_hard_deck.png",
+    "description": "The boundary altitude. Flight thrusters shut down automatically to prevent disintegration.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "east": "sector9_sky_shield_threshold"
+    },
+    "pos": [
+      1,
+      1
+    ],
+    "state": {},
+    "actions": []
   }
 ]

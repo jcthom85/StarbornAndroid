@@ -851,6 +851,57 @@ class AppServices(context: Context) {
         }
     }
 
+    fun startDebugScenario(id: String): Boolean = when (id) {
+        "story_w1_start" -> startNewGame()
+        "full_inventory" -> startNewGame(debugFullInventory = true)
+        "first_combat" -> startNewGameAtFirstCombat()
+        "enemy_party" -> startNewGameAtEnemyPartyCombat()
+        "presence_stress" -> startNewGameAtPresenceStress()
+        "party_sizes" -> startNewGameAtEnemyPartySizes()
+        "room_items" -> startNewGameAtRoomItems()
+        "scavenger" -> startNewGameAtScavengerStash()
+        "heavy_lifting" -> startNewGameAtHeavyLifting()
+        "lift_shaft" -> startNewGameAtLiftShaft()
+        "weather_lab" -> startNewGameAtWeatherLab()
+        "checkpoint" -> startNewGameAtCheckpoint()
+        "deep_mine" -> startNewGameAtDeepMine()
+        "dynamic_patrol" -> startNewGameAtDynamicPatrol()
+        "red_alert" -> startNewGameAtRedAlert()
+        "launch" -> startNewGameAtLaunch()
+        else -> if (id.startsWith("hub_")) startNewGameAtDebugHub(id) else false
+    }
+
+    private fun startNewGameAtDebugHub(hubId: String): Boolean = runCatching {
+        val hubs = worldDataSource.loadHubs()
+        val hub = hubs.firstOrNull { it.id == hubId } ?: return false
+        if (!startNewGame(debugFullInventory = true)) return false
+        bootstrapCinematics.clear()
+        bootstrapPlayerActions.clear()
+
+        val mainQuests = questRepository.allQuests()
+            .filter { it.id.matches(Regex("w\\d+_mq\\d+")) }
+            .sortedBy { it.id.substringAfter("_mq").toIntOrNull() ?: Int.MAX_VALUE }
+        val targetQuest = mainQuests.firstOrNull { it.hubId == hubId }
+        if (targetQuest != null) {
+            mainQuests.takeWhile { it.id != targetQuest.id }.forEach { quest ->
+                sessionStore.completeQuest(quest.id)
+                sessionStore.setMilestone("ms_${quest.id}_complete")
+            }
+            sessionStore.startQuest(targetQuest.id, track = true)
+            sessionStore.setQuestStage(targetQuest.id, targetQuest.stages.firstOrNull()?.id)
+        }
+
+        sessionStore.setWorld(hub.worldId)
+        sessionStore.setHub(hub.id)
+        sessionStore.setRoom(null)
+        sessionStore.markTutorialCompleted("swipe_move")
+        sessionStore.markTutorialCompleted("movement")
+        true
+    }.getOrElse { err ->
+        Log.e("AppServices", "Failed to start debug hub $hubId.", err)
+        false
+    }
+
     fun startNewGameAtFirstCombat(): Boolean {
         return runCatching {
             if (!startNewGame(debugFullInventory = true)) return false
