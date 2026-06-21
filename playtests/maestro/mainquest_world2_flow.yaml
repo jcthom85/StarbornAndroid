@@ -93,11 +93,171 @@ appId: com.junewiregames.starborn.prealpha
     visible: "Stream Bank"
     timeout: 15000
 
-# 6. Return to HUB
-- tapOn: "HUB"
+# 6. Travel west to Crash Site
+- assertVisible: "Travel west"
+- tapOn: "Travel west"
 - extendedWaitUntil:
-    visible: "Jungle Ruins"
+    visible: "Crash Site"
     timeout: 15000
 
-# Take screenshot to verify World 2 start
-- takeScreenshot: mainquest-world2-start
+# 7. Travel south to Resonant Canopy (combat zone)
+- assertVisible: "Travel south"
+- tapOn: "Travel south"
+- extendedWaitUntil:
+    visible: "Resonant Canopy"
+    timeout: 15000
+
+# 8. Engage the Echo-Borer
+- assertVisible: "Engage Echo Borer"
+- tapOn: "Engage Echo Borer"
+- extendedWaitUntil:
+    visible: "Echo-Borer"
+    timeout: 60000
+
+# 9. Perform Hydraulic Kick combat command
+- tapOn: "Nova"
+- extendedWaitUntil:
+    visible: "Attack"
+    timeout: 20000
+- tapOn: "Abilities"
+- extendedWaitUntil:
+    visible: "Hydraulic Kick"
+    timeout: 10000
+- tapOn:
+    text: "Use"
+    index: 1
+- extendedWaitUntil:
+    visible: "Choose an enemy for Hydraulic Kick"
+    timeout: 10000
+- tapOn: "Echo-Borer"
+- waitForAnimationToEnd:
+    timeout: 8000
+
+# 10. Win combat and return to Resonant Canopy
+- extendedWaitUntil:
+    visible: "Spoils Recovered"
+    timeout: 60000
+- tapOn: "Continue"
+- extendedWaitUntil:
+    visible: "Resonant Canopy"
+    timeout: 15000
+
+# 11. Navigate to the Resonator Chamber
+# Spore Thickets
+- assertVisible: "Travel south"
+- tapOn: "Travel south"
+- extendedWaitUntil:
+    visible: "Spore Thickets"
+    timeout: 15000
+
+# Poison Hollow
+- assertVisible: "Travel south"
+- tapOn: "Travel south"
+- extendedWaitUntil:
+    visible: "Poison Hollow"
+    timeout: 15000
+
+# Patrol Graveyard
+- assertVisible: "Travel south"
+- tapOn: "Travel south"
+- extendedWaitUntil:
+    visible: "Patrol Graveyard"
+    timeout: 15000
+
+# Vine Climb
+- assertVisible: "Travel east"
+- tapOn: "Travel east"
+- extendedWaitUntil:
+    visible: "Vine Climb"
+    timeout: 15000
+
+# Windy Ledges
+- assertVisible: "Travel north"
+- tapOn: "Travel north"
+- extendedWaitUntil:
+    visible: "Windy Ledges"
+    timeout: 15000
+
+# Beast Lair Approach
+- assertVisible: "Travel north"
+- tapOn: "Travel north"
+- extendedWaitUntil:
+    visible: "Beast Lair Approach"
+    timeout: 15000
+
+# Canopy Ridge
+- assertVisible: "Travel north"
+- tapOn: "Travel north"
+- extendedWaitUntil:
+    visible: "Canopy Ridge"
+    timeout: 15000
+
+# Shield Viewpoint
+- assertVisible: "Travel east"
+- tapOn: "Travel east"
+- extendedWaitUntil:
+    visible: "Shield Viewpoint"
+    timeout: 15000
+
+# Sniper Lookout
+- assertVisible: "Travel north"
+- tapOn: "Travel north"
+- extendedWaitUntil:
+    visible: "Sniper Lookout"
+    timeout: 15000
+
+# High Pass
+- assertVisible: "Travel east"
+- tapOn: "Travel east"
+- extendedWaitUntil:
+    visible: "High Pass"
+    timeout: 15000
+
+# Sanctuary Outlook
+- assertVisible: "Travel east"
+- tapOn: "Travel east"
+- extendedWaitUntil:
+    visible: "Sanctuary Outlook"
+    timeout: 15000
+
+# Stone Courtyard
+- assertVisible: "Travel east"
+- tapOn: "Travel east"
+- extendedWaitUntil:
+    visible: "Stone Courtyard"
+    timeout: 15000
+
+# Resonator Chamber
+- assertVisible: "Travel east"
+- tapOn: "Travel east"
+- extendedWaitUntil:
+    visible: "Resonator Chamber"
+    timeout: 15000
+
+# 12. Interact with Sentinel-3 shop
+- assertVisible: "Shop"
+- tapOn: "Shop"
+- extendedWaitUntil:
+    visible: "Select components for exchange"
+    timeout: 15000
+- tapOn: "Leave"
+- extendedWaitUntil:
+    visible: "Resonator Chamber"
+    timeout: 15000
+
+# 13. Walk to Temple Gate
+- assertVisible: "Travel east"
+- tapOn: "Travel east"
+- extendedWaitUntil:
+    visible: "Temple Gate"
+    timeout: 15000
+
+# 14. Use the Chime on the Stone Lock to warp to Hall of Echoes
+- assertVisible: "Stone Lock"
+- tapOn: "Stone Lock"
+- extendedWaitUntil:
+    visible: "Hall of Echoes"
+    timeout: 20000
+
+# Take screenshot to verify World 2 completion
+- takeScreenshot: mainquest-world2-completed

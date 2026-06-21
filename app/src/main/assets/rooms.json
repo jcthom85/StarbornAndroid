@@ -5651,7 +5651,14 @@
       -1
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "Shop",
+        "type": "shop",
+        "shop_id": "sentinel_scraps",
+        "dialogue_id": "sentinel_shop_intro"
+      }
+    ]
   },
   {
     "id": "sector9_temple_left_wing",

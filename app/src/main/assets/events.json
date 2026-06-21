@@ -2525,6 +2525,10 @@
         "milestone": "ms_w2_mq01_complete"
       },
       {
+        "type": "start_quest",
+        "quest_id": "w2_mq02"
+      },
+      {
         "type": "show_message",
         "message": "Quest Complete: A Strange Coast\n\nYou trace the glowing water to a wider path leading deeper into the ancient ruins. The resonance of the planet surface hums in your Echo marks."
       }
