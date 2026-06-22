@@ -44,11 +44,10 @@ These were generated as 1088x1920 PNG files with `gpt-image-2` at low quality, v
 
 ## Recommended Next Work
 
-1. Audit and create missing NPC portraits and enemy combat sprites, then run the dialogue-emote validator.
-2. Audit music and sound-effect references, generate required audio with ElevenLabs, install it in the established asset locations, and validate every reference.
-3. Run a full campaign playtest and balance pass from a clean save, followed by the complete automated regression suite.
+1. Audit music and sound-effect references, generate required audio with ElevenLabs, install it in the established asset locations, and validate every reference.
+2. Run a full campaign playtest and balance pass from a clean save, followed by the complete automated regression suite.
 
-The portrait/sprite audit is complete. Nine NPC identities still borrow generic or unrelated art: `the_warden`, `jax`, `mika`, `curator`, `lab_terminal`, `thorne`, `maintenance_bot`, `elara`, and `vale`. Seven enemy image references are missing on disk: `core_drill_behemoth_combat.png`, `mutated_crawler_combat.png`, `sentinel_droid_combat.png`, `aero_drone_combat.png`, `sentinel_orb_combat.png`, `ruin_guardian_combat.png`, and `phantom_assassin_combat.png`. Treat this list as the next bounded production manifest.
+The portrait/sprite production block is complete. The nine NPC portrait files (`the_warden`, `jax`, `mika`, `curator`, `lab_terminal`, `thorne`, `maintenance_bot`, `elara`, and `vale`) and the seven enemy combat sprites (`core_drill_behemoth_combat.png`, `mutated_crawler_combat.png`, `sentinel_droid_combat.png`, `aero_drone_combat.png`, `sentinel_orb_combat.png`, `ruin_guardian_combat.png`, and `phantom_assassin_combat.png`) are installed under `world_assets/src/main/assets/images/`. On 2026-06-22, `the_warden.png` and `vale.png` were repadded to fix opaque corner pixels, with originals archived under `world_assets/src/main/assets/images/npcs/_archive/20260622_canvas_padding_fix/`. The referenced NPC/enemy portrait audit reports 0 missing paths, `validate_dialogue_emotes.py --fail-on-missing --min-uses 12` passes, and `:app:testDebugUnitTest :app:runAssetIntegrity` passes.
 
 ## Required Reading Order
 
