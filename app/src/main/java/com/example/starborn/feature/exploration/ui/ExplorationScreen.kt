@@ -195,8 +195,6 @@ import com.example.starborn.feature.exploration.viewmodel.ExplorationUiState
 import com.example.starborn.feature.exploration.viewmodel.ExplorationViewModel
 import com.example.starborn.feature.exploration.viewmodel.LevelUpPrompt
 import com.example.starborn.feature.exploration.viewmodel.InventoryPreviewItemUi
-import com.example.starborn.feature.inventory.ui.InventoryLaunchOptions
-import com.example.starborn.feature.inventory.ui.InventoryTab
 import com.example.starborn.feature.exploration.viewmodel.MilestoneBandUi
 import com.example.starborn.feature.exploration.viewmodel.FullMapUiState
 import com.example.starborn.feature.exploration.viewmodel.MinimapCellUi
@@ -269,7 +267,6 @@ fun ExplorationScreen(
     uiEventBus: UiEventBus,
     modifier: Modifier = Modifier,
     onEnemySelected: (List<String>) -> Unit = {},
-    onOpenInventory: (InventoryLaunchOptions) -> Unit = {},
     onOpenTinkering: (String?) -> Unit = {},
     onOpenFirstAid: (String?) -> Unit = {},
     onOpenFishing: (String?) -> Unit = {},
@@ -796,9 +793,8 @@ fun ExplorationScreen(
                 selectedTab = uiState.menuTab,
                 onSelectTab = { viewModel.selectMenuTab(it) },
                 onClose = { viewModel.closeMenuOverlay() },
-                onOpenInventory = { options ->
-                    viewModel.closeMenuOverlay()
-                    onOpenInventory(options)
+                onOpenInventory = {
+                    viewModel.openMenuOverlay(MenuTab.INVENTORY)
                 },
                 onOpenJournal = {
                     viewModel.closeMenuOverlay()
@@ -1533,7 +1529,7 @@ private fun MenuOverlay(
     selectedTab: MenuTab,
     onSelectTab: (MenuTab) -> Unit,
     onClose: () -> Unit,
-    onOpenInventory: (InventoryLaunchOptions) -> Unit,
+    onOpenInventory: () -> Unit,
     onOpenJournal: () -> Unit,
     onOpenMapLegend: () -> Unit,
     onOpenFullMap: () -> Unit,
@@ -1899,7 +1895,7 @@ private fun MenuTabContentArea(
     fullMap: FullMapUiState?,
     settings: SettingsUiState,
     onMenuAction: () -> Unit,
-    onOpenInventory: (InventoryLaunchOptions) -> Unit,
+    onOpenInventory: () -> Unit,
     onOpenJournal: () -> Unit,
     onOpenMapLegend: () -> Unit,
     onOpenFullMap: () -> Unit,
@@ -2150,7 +2146,7 @@ private fun WeatherLabPanel(
 
 @Composable
 private fun QuickContextActions(
-    onOpenInventory: (InventoryLaunchOptions) -> Unit,
+    onOpenInventory: () -> Unit,
     onOpenJournal: () -> Unit,
     onMenuAction: () -> Unit,
     accentColor: Color
@@ -2168,7 +2164,7 @@ private fun QuickContextActions(
                 modifier = Modifier.weight(1f),
                 onClick = {
                     onMenuAction()
-                    onOpenInventory(InventoryLaunchOptions())
+                    onOpenInventory()
                 }
             )
             ThemedMenuButton(

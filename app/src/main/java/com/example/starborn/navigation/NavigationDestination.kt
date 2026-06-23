@@ -12,7 +12,6 @@ sealed class NavigationDestination(val route: String) {
             return "combat/$payload"
         }
     }
-    data object Inventory : NavigationDestination("inventory")
     data object Tinkering : NavigationDestination("tinkering")
     data object FirstAid : NavigationDestination("first_aid")
     data object Fishing : NavigationDestination("fishing?zoneId={zoneId}") {

@@ -27,16 +27,10 @@ import com.example.starborn.feature.mainmenu.MainMenuViewModel
 import com.example.starborn.feature.mainmenu.MainMenuViewModelFactory
 import com.example.starborn.feature.exploration.ui.ExplorationScreen
 import com.example.starborn.feature.exploration.ui.CombatTransitionOverlay
-import com.example.starborn.feature.inventory.InventoryViewModel
-import com.example.starborn.feature.inventory.InventoryViewModelFactory
-import com.example.starborn.feature.inventory.ui.InventoryRoute
-import com.example.starborn.feature.inventory.ui.InventoryTab
-import com.example.starborn.feature.inventory.ui.InventoryLaunchOptions
 import com.example.starborn.navigation.NavigationDestination.Combat
 import com.example.starborn.navigation.NavigationDestination.Exploration
 import com.example.starborn.navigation.NavigationDestination.MainMenu
 import com.example.starborn.navigation.NavigationDestination.Hub
-import com.example.starborn.navigation.NavigationDestination.Inventory
 import com.example.starborn.navigation.NavigationDestination.Tinkering
 import com.example.starborn.navigation.NavigationDestination.FirstAid
 import com.example.starborn.navigation.NavigationDestination.Shop
@@ -65,7 +59,6 @@ import com.example.starborn.feature.hub.viewmodel.HubViewModel
 import com.example.starborn.feature.hub.viewmodel.HubViewModelFactory
 import com.example.starborn.data.local.UserSettings
 import com.example.starborn.ui.events.UiEvent
-import java.util.Locale
 import androidx.compose.runtime.DisposableEffect
 import com.example.starborn.feature.exploration.ui.TransitionMode
 import androidx.compose.ui.draw.scale
@@ -228,22 +221,6 @@ fun NavigationHost(
                         pendingCombatEnemyIds = enemyIds
                         combatTransitionVisible = true
                     },
-                    onOpenInventory = { options ->
-                        val tabParam = options.initialTab?.name?.lowercase(Locale.getDefault())
-                        val slotParam = options.focusSlot?.lowercase(Locale.getDefault())
-                        val characterParam = options.initialCharacterId?.lowercase(Locale.getDefault())
-                        val queryParts = buildList {
-                            tabParam?.let { add("tab=${Uri.encode(it)}") }
-                            slotParam?.let { add("slot=${Uri.encode(it)}") }
-                            characterParam?.let { add("character=${Uri.encode(it)}") }
-                        }
-                        val destination = if (queryParts.isEmpty()) {
-                            Inventory.route
-                        } else {
-                            "${Inventory.route}?${queryParts.joinToString("&")}"
-                        }
-                        navController.navigate(destination)
-                    },
                     onOpenTinkering = {
                         backStackEntry.savedStateHandle["tinkering_closed"] = false
                         backStackEntry.savedStateHandle["tinkering_craft"] = ""
@@ -280,54 +257,6 @@ fun NavigationHost(
                     }
                 )
             }
-        }
-        composable(
-            route = "${Inventory.route}?tab={tab}&slot={slot}&character={character}",
-            arguments = listOf(
-                navArgument("tab") {
-                    type = NavType.StringType
-                    nullable = true
-                    defaultValue = null
-                },
-                navArgument("slot") {
-                    type = NavType.StringType
-                    nullable = true
-                    defaultValue = null
-                },
-                navArgument("character") {
-                    type = NavType.StringType
-                    nullable = true
-                    defaultValue = null
-                }
-            )
-        ) { backStackEntry ->
-            val inventoryViewModel: InventoryViewModel = viewModel(
-                factory = InventoryViewModelFactory(
-                    services.inventoryService,
-                    services.craftingService,
-                    services.sessionStore,
-                    services.worldDataSource.loadCharacters()
-                )
-            )
-            val tabArg = backStackEntry.arguments?.getString("tab")
-            val slotArg = backStackEntry.arguments?.getString("slot")
-            val characterArg = backStackEntry.arguments?.getString("character")
-            val initialTab = tabArg?.let { arg ->
-                InventoryTab.values().firstOrNull { it.name.equals(arg, ignoreCase = true) }
-            }
-            val initialSlot = slotArg?.takeIf { it.isNotBlank() }?.lowercase(Locale.getDefault())
-            val initialCharacter = characterArg?.takeIf { it.isNotBlank() }
-            InventoryRoute(
-                viewModel = inventoryViewModel,
-                onBack = { navController.popBackStack() },
-                highContrastMode = userSettings.highContrastMode,
-                largeTouchTargets = userSettings.largeTouchTargets,
-                theme = environmentThemeState.theme,
-                credits = sessionState.playerCredits,
-                initialTab = initialTab,
-                focusSlot = initialSlot,
-                initialCharacterId = initialCharacter
-            )
         }
         composable(Tinkering.route) {
             val craftingViewModel: CraftingViewModel = viewModel(
