@@ -159,6 +159,30 @@ class GameSessionPersistenceTest {
     }
 
     @Test
+    fun nodeProgressAndAstraReturnLocationPersist() = runBlocking {
+        val state = GameSessionState(
+            revealedNodes = setOf("node_hidden"),
+            unlockedNodes = setOf("node_open"),
+            visitedNodes = setOf("node_visited"),
+            completedNodes = setOf("node_complete"),
+            astraReturnWorldId = "world_3",
+            astraReturnHubId = "hub_5_lower_city",
+            astraReturnRoomId = "spire_vent_output"
+        )
+
+        persistence.writeSlot(1, state)
+        val restored = requireNotNull(persistence.slotInfo(1)?.state)
+
+        assertEquals(state.revealedNodes, restored.revealedNodes)
+        assertEquals(state.unlockedNodes, restored.unlockedNodes)
+        assertEquals(state.visitedNodes, restored.visitedNodes)
+        assertEquals(state.completedNodes, restored.completedNodes)
+        assertEquals("world_3", restored.astraReturnWorldId)
+        assertEquals("hub_5_lower_city", restored.astraReturnHubId)
+        assertEquals("spire_vent_output", restored.astraReturnRoomId)
+    }
+
+    @Test
     fun quickSaveRoundTrip() = runBlocking {
         val state = GameSessionState(
             worldId = "nova_prime",

@@ -68,6 +68,8 @@ data class EventAction(
     val tapToDismiss: Boolean? = null,
     @Json(name = "room_id")
     val roomId: String? = null,
+    @Json(name = "node_id")
+    val nodeId: String? = null,
     @Json(name = "state_key")
     val stateKey: String? = null,
     val value: Boolean? = null,

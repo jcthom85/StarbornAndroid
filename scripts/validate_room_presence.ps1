@@ -75,6 +75,13 @@ function Test-DebugRoom($room) {
         $roomId.StartsWith("test_", [System.StringComparison]::OrdinalIgnoreCase)
 }
 
+function Get-PresenceContext($room) {
+    if ($null -ne $room -and ([string]$room.id).StartsWith("astra_", [System.StringComparison]::OrdinalIgnoreCase)) {
+        return "astra"
+    }
+    return "regional"
+}
+
 function Expand-CompletedMilestones($requirements) {
     $completed = @()
     foreach ($milestone in @($requirements) | Where-Object { $_ }) {
@@ -171,14 +178,18 @@ foreach ($phaseName in $phaseMap.Keys) {
             }
         }
         foreach ($npcId in @($visible | Sort-Object -Unique)) {
-            if (-not $byNpc.ContainsKey($npcId)) { $byNpc[$npcId] = New-Object System.Collections.Generic.List[string] }
-            $byNpc[$npcId].Add($room.id)
+            $presenceKey = (Get-PresenceContext $room) + "|" + $npcId
+            if (-not $byNpc.ContainsKey($presenceKey)) { $byNpc[$presenceKey] = New-Object System.Collections.Generic.List[string] }
+            $byNpc[$presenceKey].Add($room.id)
         }
     }
-    foreach ($npcId in $byNpc.Keys) {
-        $locations = @($byNpc[$npcId]) | Sort-Object -Unique
+    foreach ($presenceKey in $byNpc.Keys) {
+        $separator = $presenceKey.IndexOf("|")
+        $context = $presenceKey.Substring(0, $separator)
+        $npcId = $presenceKey.Substring($separator + 1)
+        $locations = @($byNpc[$presenceKey]) | Sort-Object -Unique
         if ($locations.Count -gt 1) {
-            $warnings.Add("Phase '$phaseName': NPC '$npcId' is visible in multiple rooms: $($locations -join ', ').")
+            $warnings.Add("Phase '$phaseName': NPC '$npcId' is visible in multiple $context rooms: $($locations -join ', ').")
         }
     }
 }

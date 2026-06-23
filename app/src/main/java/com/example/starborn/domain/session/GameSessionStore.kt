@@ -66,6 +66,7 @@ class GameSessionStore {
         _state.update {
             it.copy(
                 activeQuests = it.activeQuests + questId,
+                completedQuests = it.completedQuests - questId,
                 failedQuests = it.failedQuests - questId,
                 trackedQuestId = if (track || it.trackedQuestId.isNullOrBlank()) questId else it.trackedQuestId
             )
@@ -73,6 +74,7 @@ class GameSessionStore {
     }
 
     fun completeQuest(questId: String) {
+        if (questId.isBlank()) return
         _state.update {
             it.copy(
                 activeQuests = it.activeQuests - questId,
@@ -180,6 +182,60 @@ class GameSessionStore {
     fun unlockArea(areaId: String) {
         if (areaId.isBlank()) return
         _state.update { it.copy(unlockedAreas = it.unlockedAreas + areaId) }
+    }
+
+    fun revealNode(nodeId: String) {
+        val id = nodeId.trim().takeIf { it.isNotEmpty() } ?: return
+        _state.update { it.copy(revealedNodes = it.revealedNodes + id) }
+    }
+
+    fun unlockNode(nodeId: String) {
+        val id = nodeId.trim().takeIf { it.isNotEmpty() } ?: return
+        _state.update {
+            it.copy(
+                revealedNodes = it.revealedNodes + id,
+                unlockedNodes = it.unlockedNodes + id
+            )
+        }
+    }
+
+    fun visitNode(nodeId: String) {
+        val id = nodeId.trim().takeIf { it.isNotEmpty() } ?: return
+        _state.update {
+            it.copy(
+                revealedNodes = it.revealedNodes + id,
+                unlockedNodes = it.unlockedNodes + id,
+                visitedNodes = it.visitedNodes + id
+            )
+        }
+    }
+
+    fun completeNode(nodeId: String) {
+        val id = nodeId.trim().takeIf { it.isNotEmpty() } ?: return
+        _state.update {
+            it.copy(
+                revealedNodes = it.revealedNodes + id,
+                unlockedNodes = it.unlockedNodes + id,
+                visitedNodes = it.visitedNodes + id,
+                completedNodes = it.completedNodes + id
+            )
+        }
+    }
+
+    fun setAstraReturnLocation(worldId: String?, hubId: String?, roomId: String?) {
+        _state.update {
+            it.copy(
+                astraReturnWorldId = worldId?.takeIf(String::isNotBlank),
+                astraReturnHubId = hubId?.takeIf(String::isNotBlank),
+                astraReturnRoomId = roomId?.takeIf(String::isNotBlank)
+            )
+        }
+    }
+
+    fun clearAstraReturnLocation() {
+        _state.update {
+            it.copy(astraReturnWorldId = null, astraReturnHubId = null, astraReturnRoomId = null)
+        }
     }
 
     fun unlockExit(roomId: String?, direction: String?) {

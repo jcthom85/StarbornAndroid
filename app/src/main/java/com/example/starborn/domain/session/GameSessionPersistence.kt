@@ -253,6 +253,13 @@ private fun GameSessionProto.toState(): GameSessionState = GameSessionState(
     completedEvents = completedEventsList.toSet(),
     unlockedAreas = unlockedAreasList.toSet(),
     unlockedExits = unlockedExitsList.toSet(),
+    revealedNodes = revealedNodesList.toSet(),
+    unlockedNodes = unlockedNodesList.toSet(),
+    visitedNodes = visitedNodesList.toSet(),
+    completedNodes = completedNodesList.toSet(),
+    astraReturnWorldId = astraReturnWorldId.takeIf { it.isNotBlank() },
+    astraReturnHubId = astraReturnHubId.takeIf { it.isNotBlank() },
+    astraReturnRoomId = astraReturnRoomId.takeIf { it.isNotBlank() },
     roomStates = roomStatesMap
         .filterKeys { it.isNotBlank() }
         .mapValues { (_, stateProto) ->
@@ -320,6 +327,17 @@ private fun GameSessionState.toProto(savedAt: Long = System.currentTimeMillis())
     addAllUnlockedAreas(this@toProto.unlockedAreas)
     clearUnlockedExits()
     addAllUnlockedExits(this@toProto.unlockedExits)
+    clearRevealedNodes()
+    addAllRevealedNodes(this@toProto.revealedNodes)
+    clearUnlockedNodes()
+    addAllUnlockedNodes(this@toProto.unlockedNodes)
+    clearVisitedNodes()
+    addAllVisitedNodes(this@toProto.visitedNodes)
+    clearCompletedNodes()
+    addAllCompletedNodes(this@toProto.completedNodes)
+    astraReturnWorldId = this@toProto.astraReturnWorldId.orEmpty()
+    astraReturnHubId = this@toProto.astraReturnHubId.orEmpty()
+    astraReturnRoomId = this@toProto.astraReturnRoomId.orEmpty()
     clearRoomStates()
     this@toProto.roomStates.forEach { (roomId, states) ->
         val normalizedRoom = roomId.trim()

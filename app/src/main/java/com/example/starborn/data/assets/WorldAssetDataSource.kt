@@ -4,6 +4,7 @@ import com.example.starborn.domain.model.Enemy
 import com.example.starborn.domain.model.Hub
 import com.example.starborn.domain.model.HubNode
 import com.example.starborn.domain.model.Npc
+import com.example.starborn.domain.model.NodeTransition
 import com.example.starborn.domain.model.Player
 import com.example.starborn.domain.model.Room
 import com.example.starborn.domain.model.Skill
@@ -23,6 +24,7 @@ class WorldAssetDataSource(
 
     fun loadHubs(): List<Hub> = assetReader.readList("hubs.json")
     fun loadHubNodes(): List<HubNode> = assetReader.readList("hub_nodes.json")
+    fun loadNodeTransitions(): List<NodeTransition> = assetReader.readList("node_transitions.json")
 
     fun loadRooms(): List<Room> = assetReader.readList("rooms.json")
 

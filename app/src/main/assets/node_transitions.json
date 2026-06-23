@@ -1,0 +1,1064 @@
+[
+  {
+    "id": "admin_concourse__north__deep_mine",
+    "from_node": "admin_concourse",
+    "from_room": "admin_elevator",
+    "direction": "north",
+    "to_node": "deep_mine",
+    "to_room": "mine_landing",
+    "transition_text": "Travel to Deep Mine."
+  },
+  {
+    "id": "admin_concourse__south__admin_gate",
+    "from_node": "admin_concourse",
+    "from_room": "admin_lobby",
+    "direction": "south",
+    "to_node": "admin_gate",
+    "to_room": "checkpoint_tunnel",
+    "transition_text": "Travel to Transit Checkpoint."
+  },
+  {
+    "id": "admin_gate__north__admin_concourse",
+    "from_node": "admin_gate",
+    "from_room": "checkpoint_tunnel",
+    "direction": "north",
+    "to_node": "admin_concourse",
+    "to_room": "admin_lobby",
+    "transition_text": "Travel to Admin Concourse."
+  },
+  {
+    "id": "astra_bridge_node__south__astra_common_node",
+    "from_node": "astra_bridge_node",
+    "from_room": "astra_bridge",
+    "direction": "south",
+    "to_node": "astra_common_node",
+    "to_room": "astra_common_room",
+    "transition_text": "Travel to Common Room."
+  },
+  {
+    "id": "astra_cargo_node__east__astra_common_node",
+    "from_node": "astra_cargo_node",
+    "from_room": "astra_cargo_bay",
+    "direction": "east",
+    "to_node": "astra_common_node",
+    "to_room": "astra_common_room",
+    "transition_text": "Travel to Common Room."
+  },
+  {
+    "id": "astra_common_node__east__astra_quarters_node",
+    "from_node": "astra_common_node",
+    "from_room": "astra_common_room",
+    "direction": "east",
+    "to_node": "astra_quarters_node",
+    "to_room": "astra_quarters",
+    "transition_text": "Travel to Living Quarters."
+  },
+  {
+    "id": "astra_common_node__north__astra_bridge_node",
+    "from_node": "astra_common_node",
+    "from_room": "astra_common_room",
+    "direction": "north",
+    "to_node": "astra_bridge_node",
+    "to_room": "astra_bridge",
+    "transition_text": "Travel to Bridge."
+  },
+  {
+    "id": "astra_common_node__south__astra_simulation_node",
+    "from_node": "astra_common_node",
+    "from_room": "astra_common_room",
+    "direction": "south",
+    "to_node": "astra_simulation_node",
+    "to_room": "astra_simulation_deck",
+    "transition_text": "Travel to Simulation Deck."
+  },
+  {
+    "id": "astra_common_node__west__astra_cargo_node",
+    "from_node": "astra_common_node",
+    "from_room": "astra_common_room",
+    "direction": "west",
+    "to_node": "astra_cargo_node",
+    "to_room": "astra_cargo_bay",
+    "transition_text": "Travel to Cargo Bay."
+  },
+  {
+    "id": "astra_quarters_node__west__astra_common_node",
+    "from_node": "astra_quarters_node",
+    "from_room": "astra_quarters",
+    "direction": "west",
+    "to_node": "astra_common_node",
+    "to_room": "astra_common_room",
+    "transition_text": "Travel to Common Room."
+  },
+  {
+    "id": "astra_simulation_node__north__astra_common_node",
+    "from_node": "astra_simulation_node",
+    "from_room": "astra_simulation_deck",
+    "direction": "north",
+    "to_node": "astra_common_node",
+    "to_room": "astra_common_room",
+    "transition_text": "Travel to Common Room."
+  },
+  {
+    "id": "canopy_ridge__east__temple_gate",
+    "from_node": "canopy_ridge",
+    "from_room": "sector9_ridge_plateau",
+    "direction": "east",
+    "to_node": "temple_gate",
+    "to_room": "sector9_temple_plaza",
+    "transition_text": "Travel to Temple Gate."
+  },
+  {
+    "id": "canopy_ridge__south__razor_vine_path",
+    "from_node": "canopy_ridge",
+    "from_room": "sector9_ridge_climb",
+    "direction": "south",
+    "to_node": "razor_vine_path",
+    "to_room": "sector9_wilds_canopy_walk",
+    "transition_text": "Travel to Razor-Vine Path."
+  },
+  {
+    "id": "canopy_ridge__west__razor_vine_path",
+    "from_node": "canopy_ridge",
+    "from_room": "sector9_ridge_climb",
+    "direction": "west",
+    "to_node": "razor_vine_path",
+    "to_room": "sector9_wilds_grave",
+    "transition_text": "Travel to Razor-Vine Path."
+  },
+  {
+    "id": "deep_anchor_chamber__east__deep_throne_room",
+    "from_node": "deep_anchor_chamber",
+    "from_room": "deep_anchor_chamber",
+    "direction": "east",
+    "to_node": "deep_throne_room",
+    "to_room": "deep_throne_room",
+    "transition_text": "Travel to Throne Room."
+  },
+  {
+    "id": "deep_anchor_chamber__west__deep_server_farm",
+    "from_node": "deep_anchor_chamber",
+    "from_room": "deep_anchor_chamber",
+    "direction": "west",
+    "to_node": "deep_server_farm",
+    "to_room": "orbital_server_farm",
+    "transition_text": "Travel to Server Farm."
+  },
+  {
+    "id": "deep_mine__north__echo_chamber",
+    "from_node": "deep_mine",
+    "from_room": "mine_antechamber",
+    "direction": "north",
+    "to_node": "echo_chamber",
+    "to_room": "echo_gap",
+    "transition_text": "Travel to Echo Chamber."
+  },
+  {
+    "id": "deep_mine__south__admin_concourse",
+    "from_node": "deep_mine",
+    "from_room": "mine_landing",
+    "direction": "south",
+    "to_node": "admin_concourse",
+    "to_room": "admin_elevator",
+    "transition_text": "Travel to Admin Concourse."
+  },
+  {
+    "id": "deep_server_farm__east__deep_anchor_chamber",
+    "from_node": "deep_server_farm",
+    "from_room": "orbital_server_farm",
+    "direction": "east",
+    "to_node": "deep_anchor_chamber",
+    "to_room": "deep_anchor_chamber",
+    "transition_text": "Travel to Anchor Chamber."
+  },
+  {
+    "id": "deep_server_farm__up__orbital_service_shaft",
+    "from_node": "deep_server_farm",
+    "from_room": "orbital_server_farm",
+    "direction": "up",
+    "to_node": "orbital_service_shaft",
+    "to_room": "orbital_service_shaft",
+    "transition_text": "Travel to Service Shaft."
+  },
+  {
+    "id": "deep_tear__west__deep_throne_room",
+    "from_node": "deep_tear",
+    "from_room": "deep_tear",
+    "direction": "west",
+    "to_node": "deep_throne_room",
+    "to_room": "deep_throne_room",
+    "transition_text": "Travel to Throne Room."
+  },
+  {
+    "id": "deep_throne_room__east__deep_tear",
+    "from_node": "deep_throne_room",
+    "from_room": "deep_throne_room",
+    "direction": "east",
+    "to_node": "deep_tear",
+    "to_room": "deep_tear",
+    "transition_text": "Travel to The Tear."
+  },
+  {
+    "id": "deep_throne_room__west__deep_anchor_chamber",
+    "from_node": "deep_throne_room",
+    "from_room": "deep_throne_room",
+    "direction": "west",
+    "to_node": "deep_anchor_chamber",
+    "to_room": "deep_anchor_chamber",
+    "transition_text": "Travel to Anchor Chamber."
+  },
+  {
+    "id": "echo_chamber__north__launch_bay",
+    "from_node": "echo_chamber",
+    "from_room": "echo_exit",
+    "direction": "north",
+    "to_node": "launch_bay",
+    "to_room": "launch_access",
+    "transition_text": "Travel to Launch Bay."
+  },
+  {
+    "id": "echo_chamber__south__deep_mine",
+    "from_node": "echo_chamber",
+    "from_room": "echo_gap",
+    "direction": "south",
+    "to_node": "deep_mine",
+    "to_room": "mine_antechamber",
+    "transition_text": "Travel to Deep Mine."
+  },
+  {
+    "id": "foundry_conditioning__east__foundry_power_core",
+    "from_node": "foundry_conditioning",
+    "from_room": "foundry_conditioning_chamber",
+    "direction": "east",
+    "to_node": "foundry_power_core",
+    "to_room": "foundry_power_core",
+    "transition_text": "Travel to Power Core."
+  },
+  {
+    "id": "foundry_conditioning__west__foundry_conveyor_belt",
+    "from_node": "foundry_conditioning",
+    "from_room": "foundry_conditioning_chamber",
+    "direction": "west",
+    "to_node": "foundry_conveyor_belt",
+    "to_room": "foundry_conveyor_belt",
+    "transition_text": "Travel to Conveyor Belt."
+  },
+  {
+    "id": "foundry_conveyor_belt__east__foundry_conditioning",
+    "from_node": "foundry_conveyor_belt",
+    "from_room": "foundry_conveyor_belt",
+    "direction": "east",
+    "to_node": "foundry_conditioning",
+    "to_room": "foundry_conditioning_chamber",
+    "transition_text": "Travel to Conditioning."
+  },
+  {
+    "id": "foundry_conveyor_belt__south__foundry_forge",
+    "from_node": "foundry_conveyor_belt",
+    "from_room": "foundry_conveyor_belt",
+    "direction": "south",
+    "to_node": "foundry_forge",
+    "to_room": "foundry_forge_anvil",
+    "transition_text": "Travel to The Forge."
+  },
+  {
+    "id": "foundry_cooling_springs__east__foundry_waste_intake",
+    "from_node": "foundry_cooling_springs",
+    "from_room": "foundry_cooling_springs",
+    "direction": "east",
+    "to_node": "foundry_waste_intake",
+    "to_room": "foundry_waste_intake",
+    "transition_text": "Travel to Waste Intake."
+  },
+  {
+    "id": "foundry_cooling_springs__north__foundry_obsidian_shelf",
+    "from_node": "foundry_cooling_springs",
+    "from_room": "foundry_cooling_springs",
+    "direction": "north",
+    "to_node": "foundry_obsidian_shelf",
+    "to_room": "foundry_slag_landing",
+    "transition_text": "Travel to Obsidian Shelf."
+  },
+  {
+    "id": "foundry_forge__east__foundry_power_core",
+    "from_node": "foundry_forge",
+    "from_room": "foundry_forge_anvil",
+    "direction": "east",
+    "to_node": "foundry_power_core",
+    "to_room": "foundry_power_core",
+    "transition_text": "Travel to Power Core."
+  },
+  {
+    "id": "foundry_forge__north__foundry_conveyor_belt",
+    "from_node": "foundry_forge",
+    "from_room": "foundry_forge_anvil",
+    "direction": "north",
+    "to_node": "foundry_conveyor_belt",
+    "to_room": "foundry_conveyor_belt",
+    "transition_text": "Travel to Conveyor Belt."
+  },
+  {
+    "id": "foundry_obsidian_shelf__east__foundry_slag_river",
+    "from_node": "foundry_obsidian_shelf",
+    "from_room": "foundry_slag_landing",
+    "direction": "east",
+    "to_node": "foundry_slag_river",
+    "to_room": "foundry_slag_river",
+    "transition_text": "Travel to Slag River."
+  },
+  {
+    "id": "foundry_obsidian_shelf__south__foundry_cooling_springs",
+    "from_node": "foundry_obsidian_shelf",
+    "from_room": "foundry_slag_landing",
+    "direction": "south",
+    "to_node": "foundry_cooling_springs",
+    "to_room": "foundry_cooling_springs",
+    "transition_text": "Travel to Cooling Springs."
+  },
+  {
+    "id": "foundry_power_core__east__foundry_titan_dock",
+    "from_node": "foundry_power_core",
+    "from_room": "foundry_power_core",
+    "direction": "east",
+    "to_node": "foundry_titan_dock",
+    "to_room": "foundry_titan_dock",
+    "transition_text": "Travel to Titan Dock."
+  },
+  {
+    "id": "foundry_power_core__south__foundry_forge",
+    "from_node": "foundry_power_core",
+    "from_room": "foundry_power_core",
+    "direction": "south",
+    "to_node": "foundry_forge",
+    "to_room": "foundry_forge_anvil",
+    "transition_text": "Travel to The Forge."
+  },
+  {
+    "id": "foundry_power_core__west__foundry_conditioning",
+    "from_node": "foundry_power_core",
+    "from_room": "foundry_power_core",
+    "direction": "west",
+    "to_node": "foundry_conditioning",
+    "to_room": "foundry_conditioning_chamber",
+    "transition_text": "Travel to Conditioning."
+  },
+  {
+    "id": "foundry_service_airlock__west__foundry_waste_intake",
+    "from_node": "foundry_service_airlock",
+    "from_room": "foundry_service_airlock",
+    "direction": "west",
+    "to_node": "foundry_waste_intake",
+    "to_room": "foundry_waste_intake",
+    "transition_text": "Travel to Waste Intake."
+  },
+  {
+    "id": "foundry_slag_river__east__foundry_waste_intake",
+    "from_node": "foundry_slag_river",
+    "from_room": "foundry_slag_river",
+    "direction": "east",
+    "to_node": "foundry_waste_intake",
+    "to_room": "foundry_waste_intake",
+    "transition_text": "Travel to Waste Intake."
+  },
+  {
+    "id": "foundry_slag_river__west__foundry_obsidian_shelf",
+    "from_node": "foundry_slag_river",
+    "from_room": "foundry_slag_river",
+    "direction": "west",
+    "to_node": "foundry_obsidian_shelf",
+    "to_room": "foundry_slag_landing",
+    "transition_text": "Travel to Obsidian Shelf."
+  },
+  {
+    "id": "foundry_titan_dock__west__foundry_power_core",
+    "from_node": "foundry_titan_dock",
+    "from_room": "foundry_titan_dock",
+    "direction": "west",
+    "to_node": "foundry_power_core",
+    "to_room": "foundry_power_core",
+    "transition_text": "Travel to Power Core."
+  },
+  {
+    "id": "foundry_waste_intake__east__foundry_service_airlock",
+    "from_node": "foundry_waste_intake",
+    "from_room": "foundry_waste_intake",
+    "direction": "east",
+    "to_node": "foundry_service_airlock",
+    "to_room": "foundry_service_airlock",
+    "transition_text": "Travel to Service Airlock."
+  },
+  {
+    "id": "foundry_waste_intake__south__foundry_cooling_springs",
+    "from_node": "foundry_waste_intake",
+    "from_room": "foundry_waste_intake",
+    "direction": "south",
+    "to_node": "foundry_cooling_springs",
+    "to_room": "foundry_cooling_springs",
+    "transition_text": "Travel to Cooling Springs."
+  },
+  {
+    "id": "foundry_waste_intake__west__foundry_slag_river",
+    "from_node": "foundry_waste_intake",
+    "from_room": "foundry_waste_intake",
+    "direction": "west",
+    "to_node": "foundry_slag_river",
+    "to_room": "foundry_slag_river",
+    "transition_text": "Travel to Slag River."
+  },
+  {
+    "id": "hall_of_echoes__north__stasis_chamber",
+    "from_node": "hall_of_echoes",
+    "from_room": "sector9_conduit_access_shaft",
+    "direction": "north",
+    "to_node": "stasis_chamber",
+    "to_room": "sector9_vents_gantry",
+    "transition_text": "Travel to Stasis Chamber."
+  },
+  {
+    "id": "hall_of_echoes__south__stasis_chamber",
+    "from_node": "hall_of_echoes",
+    "from_room": "sector9_hall_of_echoes",
+    "direction": "south",
+    "to_node": "stasis_chamber",
+    "to_room": "sector9_stasis_chamber",
+    "transition_text": "Travel to Stasis Chamber."
+  },
+  {
+    "id": "hall_of_echoes__west__temple_gate",
+    "from_node": "hall_of_echoes",
+    "from_room": "sector9_foyer_grand_hall",
+    "direction": "west",
+    "to_node": "temple_gate",
+    "to_room": "sector9_temple_gate",
+    "transition_text": "Travel to Temple Gate."
+  },
+  {
+    "id": "hangar_bay__north__the_sky",
+    "from_node": "hangar_bay",
+    "from_room": "sector9_hangar_lock",
+    "direction": "north",
+    "to_node": "the_sky",
+    "to_room": "sector9_the_sky",
+    "transition_text": "Travel to The Sky."
+  },
+  {
+    "id": "hangar_bay__west__source_gate",
+    "from_node": "hangar_bay",
+    "from_room": "sector9_hangar_bay",
+    "direction": "west",
+    "to_node": "source_gate",
+    "to_room": "sector9_source_gate",
+    "transition_text": "Travel to Source Gate."
+  },
+  {
+    "id": "launch_bay__south__echo_chamber",
+    "from_node": "launch_bay",
+    "from_room": "launch_access",
+    "direction": "south",
+    "to_node": "echo_chamber",
+    "to_room": "echo_exit",
+    "transition_text": "Travel to Echo Chamber."
+  },
+  {
+    "id": "orbital_executive_dock__east__orbital_grand_concourse",
+    "from_node": "orbital_executive_dock",
+    "from_room": "orbital_executive_dock",
+    "direction": "east",
+    "to_node": "orbital_grand_concourse",
+    "to_room": "orbital_grand_concourse",
+    "transition_text": "Travel to Grand Concourse."
+  },
+  {
+    "id": "orbital_executive_dock__south__orbital_solarium",
+    "from_node": "orbital_executive_dock",
+    "from_room": "orbital_executive_dock",
+    "direction": "south",
+    "to_node": "orbital_solarium",
+    "to_room": "orbital_solarium",
+    "transition_text": "Travel to Solarium."
+  },
+  {
+    "id": "orbital_grand_concourse__east__orbital_security_hub",
+    "from_node": "orbital_grand_concourse",
+    "from_room": "orbital_grand_concourse",
+    "direction": "east",
+    "to_node": "orbital_security_hub",
+    "to_room": "orbital_security_hub",
+    "transition_text": "Travel to Security Hub."
+  },
+  {
+    "id": "orbital_grand_concourse__west__orbital_executive_dock",
+    "from_node": "orbital_grand_concourse",
+    "from_room": "orbital_grand_concourse",
+    "direction": "west",
+    "to_node": "orbital_executive_dock",
+    "to_room": "orbital_executive_dock",
+    "transition_text": "Travel to Executive Dock."
+  },
+  {
+    "id": "orbital_security_hub__east__orbital_service_shaft",
+    "from_node": "orbital_security_hub",
+    "from_room": "orbital_security_hub",
+    "direction": "east",
+    "to_node": "orbital_service_shaft",
+    "to_room": "orbital_service_shaft",
+    "transition_text": "Travel to Service Shaft."
+  },
+  {
+    "id": "orbital_security_hub__south__orbital_solarium",
+    "from_node": "orbital_security_hub",
+    "from_room": "orbital_security_hub",
+    "direction": "south",
+    "to_node": "orbital_solarium",
+    "to_room": "orbital_solarium",
+    "transition_text": "Travel to Solarium."
+  },
+  {
+    "id": "orbital_security_hub__west__orbital_grand_concourse",
+    "from_node": "orbital_security_hub",
+    "from_room": "orbital_security_hub",
+    "direction": "west",
+    "to_node": "orbital_grand_concourse",
+    "to_room": "orbital_grand_concourse",
+    "transition_text": "Travel to Grand Concourse."
+  },
+  {
+    "id": "orbital_service_shaft__down__deep_server_farm",
+    "from_node": "orbital_service_shaft",
+    "from_room": "orbital_service_shaft",
+    "direction": "down",
+    "to_node": "deep_server_farm",
+    "to_room": "orbital_server_farm",
+    "transition_text": "Travel to Server Farm."
+  },
+  {
+    "id": "orbital_service_shaft__west__orbital_security_hub",
+    "from_node": "orbital_service_shaft",
+    "from_room": "orbital_service_shaft",
+    "direction": "west",
+    "to_node": "orbital_security_hub",
+    "to_room": "orbital_security_hub",
+    "transition_text": "Travel to Security Hub."
+  },
+  {
+    "id": "orbital_solarium__east__orbital_security_hub",
+    "from_node": "orbital_solarium",
+    "from_room": "orbital_solarium",
+    "direction": "east",
+    "to_node": "orbital_security_hub",
+    "to_room": "orbital_security_hub",
+    "transition_text": "Travel to Security Hub."
+  },
+  {
+    "id": "orbital_solarium__north__orbital_executive_dock",
+    "from_node": "orbital_solarium",
+    "from_room": "orbital_solarium",
+    "direction": "north",
+    "to_node": "orbital_executive_dock",
+    "to_room": "orbital_executive_dock",
+    "transition_text": "Travel to Executive Dock."
+  },
+  {
+    "id": "razor_vine_path__east__canopy_ridge",
+    "from_node": "razor_vine_path",
+    "from_room": "sector9_wilds_grave",
+    "direction": "east",
+    "to_node": "canopy_ridge",
+    "to_room": "sector9_ridge_climb",
+    "transition_text": "Travel to Canopy Ridge."
+  },
+  {
+    "id": "razor_vine_path__north__canopy_ridge",
+    "from_node": "razor_vine_path",
+    "from_room": "sector9_wilds_canopy_walk",
+    "direction": "north",
+    "to_node": "canopy_ridge",
+    "to_room": "sector9_ridge_climb",
+    "transition_text": "Travel to Canopy Ridge."
+  },
+  {
+    "id": "razor_vine_path__north__sector9_landing",
+    "from_node": "razor_vine_path",
+    "from_room": "sector9_canopy",
+    "direction": "north",
+    "to_node": "sector9_landing",
+    "to_room": "sector9_crash_site",
+    "transition_text": "Travel to Crash Site."
+  },
+  {
+    "id": "sector9_landing__east__tideglass_beach",
+    "from_node": "sector9_landing",
+    "from_room": "sector9_landing_stream",
+    "direction": "east",
+    "to_node": "tideglass_beach",
+    "to_room": "sector9_stream_pools",
+    "transition_text": "Travel to Tideglass Beach."
+  },
+  {
+    "id": "sector9_landing__south__razor_vine_path",
+    "from_node": "sector9_landing",
+    "from_room": "sector9_crash_site",
+    "direction": "south",
+    "to_node": "razor_vine_path",
+    "to_room": "sector9_canopy",
+    "transition_text": "Travel to Razor-Vine Path."
+  },
+  {
+    "id": "source_campfire_node__north__source_gh0st_nightmare_node",
+    "from_node": "source_campfire_node",
+    "from_room": "source_campfire",
+    "direction": "north",
+    "to_node": "source_gh0st_nightmare_node",
+    "to_room": "source_gh0st_nightmare",
+    "transition_text": "Travel to Endless War."
+  },
+  {
+    "id": "source_campfire_node__northeast__source_orion_nightmare_node",
+    "from_node": "source_campfire_node",
+    "from_room": "source_campfire",
+    "direction": "northeast",
+    "to_node": "source_orion_nightmare_node",
+    "to_room": "source_orion_nightmare",
+    "transition_text": "Travel to Silent Shore."
+  },
+  {
+    "id": "source_campfire_node__northwest__source_zeke_nightmare_node",
+    "from_node": "source_campfire_node",
+    "from_room": "source_campfire",
+    "direction": "northwest",
+    "to_node": "source_zeke_nightmare_node",
+    "to_room": "source_zeke_nightmare",
+    "transition_text": "Travel to Infinite Cubicle."
+  },
+  {
+    "id": "source_campfire_node__south__source_echo_mines_node",
+    "from_node": "source_campfire_node",
+    "from_room": "source_campfire",
+    "direction": "south",
+    "to_node": "source_echo_mines_node",
+    "to_room": "source_echo_mines",
+    "transition_text": "Travel to Echo of the Mines."
+  },
+  {
+    "id": "source_center_node__east__source_new_world_node",
+    "from_node": "source_center_node",
+    "from_room": "source_center",
+    "direction": "east",
+    "to_node": "source_new_world_node",
+    "to_room": "source_new_world",
+    "transition_text": "Travel to New World."
+  },
+  {
+    "id": "source_center_node__west__source_spire_thought_node",
+    "from_node": "source_center_node",
+    "from_room": "source_center",
+    "direction": "west",
+    "to_node": "source_spire_thought_node",
+    "to_room": "source_spire_thought",
+    "transition_text": "Travel to Spire of Thought."
+  },
+  {
+    "id": "source_echo_mines_node__east__source_memory_bridge_node",
+    "from_node": "source_echo_mines_node",
+    "from_room": "source_echo_elevator",
+    "direction": "east",
+    "to_node": "source_memory_bridge_node",
+    "to_room": "source_memory_bridge",
+    "transition_text": "Travel to Memory Bridge."
+  },
+  {
+    "id": "source_echo_mines_node__north__source_campfire_node",
+    "from_node": "source_echo_mines_node",
+    "from_room": "source_echo_mines",
+    "direction": "north",
+    "to_node": "source_campfire_node",
+    "to_room": "source_campfire",
+    "transition_text": "Travel to The Campfire."
+  },
+  {
+    "id": "source_gate__east__hangar_bay",
+    "from_node": "source_gate",
+    "from_room": "sector9_source_gate",
+    "direction": "east",
+    "to_node": "hangar_bay",
+    "to_room": "sector9_hangar_bay",
+    "transition_text": "Travel to Hangar Bay."
+  },
+  {
+    "id": "source_gate__north__stasis_chamber",
+    "from_node": "source_gate",
+    "from_room": "sector9_source_gate",
+    "direction": "north",
+    "to_node": "stasis_chamber",
+    "to_room": "sector9_stasis_chamber",
+    "transition_text": "Travel to Stasis Chamber."
+  },
+  {
+    "id": "source_gate__west__stasis_chamber",
+    "from_node": "source_gate",
+    "from_room": "sector9_power_turbine",
+    "direction": "west",
+    "to_node": "stasis_chamber",
+    "to_room": "sector9_stasis_coolant_lines",
+    "transition_text": "Travel to Stasis Chamber."
+  },
+  {
+    "id": "source_gh0st_nightmare_node__south__source_campfire_node",
+    "from_node": "source_gh0st_nightmare_node",
+    "from_room": "source_gh0st_nightmare",
+    "direction": "south",
+    "to_node": "source_campfire_node",
+    "to_room": "source_campfire",
+    "transition_text": "Travel to The Campfire."
+  },
+  {
+    "id": "source_memory_bridge_node__east__source_memory_stair_node",
+    "from_node": "source_memory_bridge_node",
+    "from_room": "source_memory_bridge",
+    "direction": "east",
+    "to_node": "source_memory_stair_node",
+    "to_room": "source_memory_stair",
+    "transition_text": "Travel to Memory Stair."
+  },
+  {
+    "id": "source_memory_bridge_node__west__source_echo_mines_node",
+    "from_node": "source_memory_bridge_node",
+    "from_room": "source_memory_bridge",
+    "direction": "west",
+    "to_node": "source_echo_mines_node",
+    "to_room": "source_echo_elevator",
+    "transition_text": "Travel to Echo of the Mines."
+  },
+  {
+    "id": "source_memory_stair_node__east__source_spire_thought_node",
+    "from_node": "source_memory_stair_node",
+    "from_room": "source_memory_stair",
+    "direction": "east",
+    "to_node": "source_spire_thought_node",
+    "to_room": "source_spire_thought",
+    "transition_text": "Travel to Spire of Thought."
+  },
+  {
+    "id": "source_memory_stair_node__west__source_memory_bridge_node",
+    "from_node": "source_memory_stair_node",
+    "from_room": "source_memory_stair",
+    "direction": "west",
+    "to_node": "source_memory_bridge_node",
+    "to_room": "source_memory_bridge",
+    "transition_text": "Travel to Memory Bridge."
+  },
+  {
+    "id": "source_new_world_node__west__source_center_node",
+    "from_node": "source_new_world_node",
+    "from_room": "source_new_world",
+    "direction": "west",
+    "to_node": "source_center_node",
+    "to_room": "source_center",
+    "transition_text": "Travel to The Center."
+  },
+  {
+    "id": "source_orion_nightmare_node__southwest__source_campfire_node",
+    "from_node": "source_orion_nightmare_node",
+    "from_room": "source_orion_nightmare",
+    "direction": "southwest",
+    "to_node": "source_campfire_node",
+    "to_room": "source_campfire",
+    "transition_text": "Travel to The Campfire."
+  },
+  {
+    "id": "source_spire_thought_node__east__source_center_node",
+    "from_node": "source_spire_thought_node",
+    "from_room": "source_spire_thought",
+    "direction": "east",
+    "to_node": "source_center_node",
+    "to_room": "source_center",
+    "transition_text": "Travel to The Center."
+  },
+  {
+    "id": "source_spire_thought_node__west__source_memory_stair_node",
+    "from_node": "source_spire_thought_node",
+    "from_room": "source_spire_thought",
+    "direction": "west",
+    "to_node": "source_memory_stair_node",
+    "to_room": "source_memory_stair",
+    "transition_text": "Travel to Memory Stair."
+  },
+  {
+    "id": "source_zeke_nightmare_node__southeast__source_campfire_node",
+    "from_node": "source_zeke_nightmare_node",
+    "from_room": "source_zeke_nightmare",
+    "direction": "southeast",
+    "to_node": "source_campfire_node",
+    "to_room": "source_campfire",
+    "transition_text": "Travel to The Campfire."
+  },
+  {
+    "id": "spire_archive__east__spire_landing_pad",
+    "from_node": "spire_archive",
+    "from_room": "spire_archive_vault",
+    "direction": "east",
+    "to_node": "spire_landing_pad",
+    "to_room": "spire_landing_pad_roof",
+    "transition_text": "Travel to Landing Pad."
+  },
+  {
+    "id": "spire_archive__north__spire_skypark",
+    "from_node": "spire_archive",
+    "from_room": "spire_archive_vault",
+    "direction": "north",
+    "to_node": "spire_skypark",
+    "to_room": "spire_skypark_dome",
+    "transition_text": "Travel to Skypark."
+  },
+  {
+    "id": "spire_archive__south__spire_exec_lounge",
+    "from_node": "spire_archive",
+    "from_room": "spire_archive_vault",
+    "direction": "south",
+    "to_node": "spire_exec_lounge",
+    "to_room": "spire_exec_lounge_bar",
+    "transition_text": "Travel to Exec Lounge."
+  },
+  {
+    "id": "spire_archive__west__spire_laundry",
+    "from_node": "spire_archive",
+    "from_room": "spire_archive_vault",
+    "direction": "west",
+    "to_node": "spire_laundry",
+    "to_room": "spire_laundry_service",
+    "transition_text": "Travel to Laundry Service."
+  },
+  {
+    "id": "spire_exec_lounge__east__spire_archive",
+    "from_node": "spire_exec_lounge",
+    "from_room": "spire_exec_lounge_bar",
+    "direction": "east",
+    "to_node": "spire_archive",
+    "to_room": "spire_archive_vault",
+    "transition_text": "Travel to The Archive."
+  },
+  {
+    "id": "spire_exec_lounge__north__spire_laundry",
+    "from_node": "spire_exec_lounge",
+    "from_room": "spire_exec_lounge_bar",
+    "direction": "north",
+    "to_node": "spire_laundry",
+    "to_room": "spire_laundry_service",
+    "transition_text": "Travel to Laundry Service."
+  },
+  {
+    "id": "spire_landing_pad__west__spire_archive",
+    "from_node": "spire_landing_pad",
+    "from_room": "spire_landing_pad_roof",
+    "direction": "west",
+    "to_node": "spire_archive",
+    "to_room": "spire_archive_vault",
+    "transition_text": "Travel to The Archive."
+  },
+  {
+    "id": "spire_laundry__east__spire_archive",
+    "from_node": "spire_laundry",
+    "from_room": "spire_laundry_service",
+    "direction": "east",
+    "to_node": "spire_archive",
+    "to_room": "spire_archive_vault",
+    "transition_text": "Travel to The Archive."
+  },
+  {
+    "id": "spire_laundry__north__spire_skypark",
+    "from_node": "spire_laundry",
+    "from_room": "spire_laundry_service",
+    "direction": "north",
+    "to_node": "spire_skypark",
+    "to_room": "spire_skypark_dome",
+    "transition_text": "Travel to Skypark."
+  },
+  {
+    "id": "spire_laundry__south__spire_exec_lounge",
+    "from_node": "spire_laundry",
+    "from_room": "spire_laundry_service",
+    "direction": "south",
+    "to_node": "spire_exec_lounge",
+    "to_room": "spire_exec_lounge_bar",
+    "transition_text": "Travel to Exec Lounge."
+  },
+  {
+    "id": "spire_night_market__west__spire_transit_plaza",
+    "from_node": "spire_night_market",
+    "from_room": "spire_night_market",
+    "direction": "west",
+    "to_node": "spire_transit_plaza",
+    "to_room": "spire_transit_plaza",
+    "transition_text": "Travel to Transit Plaza."
+  },
+  {
+    "id": "spire_sewers__east__spire_transit_plaza",
+    "from_node": "spire_sewers",
+    "from_room": "spire_sewers_passage",
+    "direction": "east",
+    "to_node": "spire_transit_plaza",
+    "to_room": "spire_transit_plaza",
+    "transition_text": "Travel to Transit Plaza."
+  },
+  {
+    "id": "spire_sewers__north__spire_vent_output",
+    "from_node": "spire_sewers",
+    "from_room": "spire_sewers_passage",
+    "direction": "north",
+    "to_node": "spire_vent_output",
+    "to_room": "spire_vent_output",
+    "transition_text": "Travel to Vent Output."
+  },
+  {
+    "id": "spire_skypark__east__spire_archive",
+    "from_node": "spire_skypark",
+    "from_room": "spire_skypark_dome",
+    "direction": "east",
+    "to_node": "spire_archive",
+    "to_room": "spire_archive_vault",
+    "transition_text": "Travel to The Archive."
+  },
+  {
+    "id": "spire_skypark__south__spire_laundry",
+    "from_node": "spire_skypark",
+    "from_room": "spire_skypark_dome",
+    "direction": "south",
+    "to_node": "spire_laundry",
+    "to_room": "spire_laundry_service",
+    "transition_text": "Travel to Laundry Service."
+  },
+  {
+    "id": "spire_the_static__south__spire_transit_plaza",
+    "from_node": "spire_the_static",
+    "from_room": "spire_the_static",
+    "direction": "south",
+    "to_node": "spire_transit_plaza",
+    "to_room": "spire_transit_plaza",
+    "transition_text": "Travel to Transit Plaza."
+  },
+  {
+    "id": "spire_the_static__west__spire_vent_output",
+    "from_node": "spire_the_static",
+    "from_room": "spire_the_static",
+    "direction": "west",
+    "to_node": "spire_vent_output",
+    "to_room": "spire_vent_output",
+    "transition_text": "Travel to Vent Output."
+  },
+  {
+    "id": "spire_transit_plaza__east__spire_night_market",
+    "from_node": "spire_transit_plaza",
+    "from_room": "spire_transit_plaza",
+    "direction": "east",
+    "to_node": "spire_night_market",
+    "to_room": "spire_night_market",
+    "transition_text": "Travel to Night Market."
+  },
+  {
+    "id": "spire_transit_plaza__north__spire_the_static",
+    "from_node": "spire_transit_plaza",
+    "from_room": "spire_transit_plaza",
+    "direction": "north",
+    "to_node": "spire_the_static",
+    "to_room": "spire_the_static",
+    "transition_text": "Travel to The Static."
+  },
+  {
+    "id": "spire_transit_plaza__west__spire_sewers",
+    "from_node": "spire_transit_plaza",
+    "from_room": "spire_transit_plaza",
+    "direction": "west",
+    "to_node": "spire_sewers",
+    "to_room": "spire_sewers_passage",
+    "transition_text": "Travel to The Sewers."
+  },
+  {
+    "id": "spire_vent_output__east__spire_the_static",
+    "from_node": "spire_vent_output",
+    "from_room": "spire_vent_output",
+    "direction": "east",
+    "to_node": "spire_the_static",
+    "to_room": "spire_the_static",
+    "transition_text": "Travel to The Static."
+  },
+  {
+    "id": "spire_vent_output__south__spire_sewers",
+    "from_node": "spire_vent_output",
+    "from_room": "spire_vent_output",
+    "direction": "south",
+    "to_node": "spire_sewers",
+    "to_room": "spire_sewers_passage",
+    "transition_text": "Travel to The Sewers."
+  },
+  {
+    "id": "stasis_chamber__east__source_gate",
+    "from_node": "stasis_chamber",
+    "from_room": "sector9_stasis_coolant_lines",
+    "direction": "east",
+    "to_node": "source_gate",
+    "to_room": "sector9_power_turbine",
+    "transition_text": "Travel to Source Gate."
+  },
+  {
+    "id": "stasis_chamber__north__hall_of_echoes",
+    "from_node": "stasis_chamber",
+    "from_room": "sector9_stasis_chamber",
+    "direction": "north",
+    "to_node": "hall_of_echoes",
+    "to_room": "sector9_hall_of_echoes",
+    "transition_text": "Travel to Hall of Echoes."
+  },
+  {
+    "id": "stasis_chamber__south__hall_of_echoes",
+    "from_node": "stasis_chamber",
+    "from_room": "sector9_vents_gantry",
+    "direction": "south",
+    "to_node": "hall_of_echoes",
+    "to_room": "sector9_conduit_access_shaft",
+    "transition_text": "Travel to Hall of Echoes."
+  },
+  {
+    "id": "stasis_chamber__south__source_gate",
+    "from_node": "stasis_chamber",
+    "from_room": "sector9_stasis_chamber",
+    "direction": "south",
+    "to_node": "source_gate",
+    "to_room": "sector9_source_gate",
+    "transition_text": "Travel to Source Gate."
+  },
+  {
+    "id": "temple_gate__east__hall_of_echoes",
+    "from_node": "temple_gate",
+    "from_room": "sector9_temple_gate",
+    "direction": "east",
+    "to_node": "hall_of_echoes",
+    "to_room": "sector9_foyer_grand_hall",
+    "transition_text": "Travel to Hall of Echoes."
+  },
+  {
+    "id": "temple_gate__west__canopy_ridge",
+    "from_node": "temple_gate",
+    "from_room": "sector9_temple_plaza",
+    "direction": "west",
+    "to_node": "canopy_ridge",
+    "to_room": "sector9_ridge_plateau",
+    "transition_text": "Travel to Canopy Ridge."
+  },
+  {
+    "id": "the_sky__south__hangar_bay",
+    "from_node": "the_sky",
+    "from_room": "sector9_the_sky",
+    "direction": "south",
+    "to_node": "hangar_bay",
+    "to_room": "sector9_hangar_lock",
+    "transition_text": "Travel to Hangar Bay."
+  },
+  {
+    "id": "tideglass_beach__west__sector9_landing",
+    "from_node": "tideglass_beach",
+    "from_room": "sector9_stream_pools",
+    "direction": "west",
+    "to_node": "sector9_landing",
+    "to_room": "sector9_landing_stream",
+    "transition_text": "Travel to Crash Site."
+  }
+]

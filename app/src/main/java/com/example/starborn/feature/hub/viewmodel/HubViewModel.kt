@@ -9,6 +9,8 @@ import com.example.starborn.data.assets.WorldAssetDataSource
 import com.example.starborn.domain.model.Hub
 import com.example.starborn.domain.model.HubNode
 import com.example.starborn.domain.model.Room
+import com.example.starborn.domain.node.NodeProgressionEvaluator
+import com.example.starborn.domain.node.NodeVisibility
 import com.example.starborn.domain.session.GameSessionStore
 import java.util.Locale
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,6 +30,7 @@ class HubViewModel(
 
     private var hubsById: Map<String, Hub> = emptyMap()
     private var nodesByHub: Map<String, List<HubNode>> = emptyMap()
+    private val nodeProgression = NodeProgressionEvaluator()
 
     init {
         loadHub()
@@ -49,12 +52,16 @@ class HubViewModel(
             hubsById = hubs.associateBy { it.id }
             nodesByHub = nodes.groupBy { it.hubId }
 
+            val preSession = sessionStore.state.value
+            nodes.firstOrNull { preSession.roomId in it.rooms }?.let { sessionStore.visitNode(it.id) }
             val session = sessionStore.state.value
             val preferredHubId = session.hubId ?: hubs.firstOrNull()?.id
             val currentHub = preferredHubId?.let { hubsById[it] } ?: hubs.firstOrNull()
 
             val uiNodes = currentHub?.let { hub ->
-                nodesByHub[hub.id].orEmpty().map { node ->
+                nodesByHub[hub.id].orEmpty().mapNotNull { node ->
+                    val availability = nodeProgression.evaluate(node, session)
+                    if (availability.visibility == NodeVisibility.HIDDEN) return@mapNotNull null
                     HubNodeUi(
                         id = node.id,
                         title = node.title,
@@ -62,10 +69,21 @@ class HubViewModel(
                         centerX = node.position.centerX.coerceIn(0f, 1f),
                         centerY = node.position.centerY.coerceIn(0f, 1f),
                         sizeHint = node.size.firstOrNull()?.toFloat() ?: 220f,
-                        discovered = node.discovered,
+                        discovered = availability.visited,
                         iconPath = node.iconImage,
-                        subtitle = buildNodeSubtitle(node, roomsById)
+                        subtitle = buildNodeSubtitle(node, roomsById),
+                        unlocked = availability.unlocked,
+                        visited = availability.visited,
+                        completed = availability.completed,
+                        canEnter = availability.canEnterFromHub,
+                        lockReason = availability.unmetRequirement
                     )
+                }.toMutableList().apply {
+                    if (hub.id != ASTRA_HUB_ID && ASTRA_UNLOCK_MILESTONE in session.completedMilestones) {
+                        add(astraAccessNode())
+                    } else if (hub.id == ASTRA_HUB_ID && session.astraReturnHubId != null) {
+                        add(astraDisembarkNode())
+                    }
                 }
             }.orEmpty()
 
@@ -92,13 +110,69 @@ class HubViewModel(
         val node = state.nodes.firstOrNull { it.id == nodeId } ?: return
         val hub = state.hub ?: return
 
+        if (!node.canEnter) {
+            _uiState.update {
+                it.copy(selectedNodeId = nodeId, statusMessage = node.lockReason ?: "Reach this location through exploration first.")
+            }
+            return
+        }
+
+        if (node.special == SPECIAL_ASTRA) {
+            val session = sessionStore.state.value
+            sessionStore.setAstraReturnLocation(session.worldId, session.hubId, session.roomId)
+            sessionStore.setWorld(ASTRA_WORLD_ID)
+            sessionStore.setHub(ASTRA_HUB_ID)
+            sessionStore.setRoom(ASTRA_BRIDGE_ROOM_ID)
+            sessionStore.visitNode(ASTRA_BRIDGE_NODE_ID)
+            onEnter(node)
+            return
+        }
+
+        if (node.special == SPECIAL_DISEMBARK) {
+            val session = sessionStore.state.value
+            sessionStore.setWorld(session.astraReturnWorldId)
+            sessionStore.setHub(session.astraReturnHubId)
+            sessionStore.setRoom(session.astraReturnRoomId)
+            sessionStore.clearAstraReturnLocation()
+            onEnter(node)
+            return
+        }
+
         sessionStore.setHub(hub.id)
         sessionStore.setWorld(hub.worldId)
         sessionStore.setRoom(node.entryRoom)
+        sessionStore.visitNode(node.id)
 
-        _uiState.update { it.copy(selectedNodeId = nodeId) }
+        _uiState.update { it.copy(selectedNodeId = nodeId, statusMessage = null) }
         onEnter(node)
     }
+
+    private fun astraAccessNode() = HubNodeUi(
+        id = ASTRA_ACCESS_ID,
+        title = "The Astra",
+        entryRoom = ASTRA_BRIDGE_ROOM_ID,
+        centerX = 0.5f,
+        centerY = 0.88f,
+        sizeHint = 240f,
+        discovered = true,
+        iconPath = "images/nodes/world_2/hangar_bay.png",
+        subtitle = "Mobile home base",
+        visited = true,
+        special = SPECIAL_ASTRA
+    )
+
+    private fun astraDisembarkNode() = HubNodeUi(
+        id = ASTRA_DISEMBARK_ID,
+        title = "Disembark",
+        entryRoom = "",
+        centerX = 0.12f,
+        centerY = 0.88f,
+        sizeHint = 180f,
+        discovered = true,
+        subtitle = "Return to the regional hub",
+        visited = true,
+        special = SPECIAL_DISEMBARK
+    )
 
     private fun buildNodeSubtitle(node: HubNode, roomsById: Map<String, Room>): String? {
         val services = node.rooms.flatMap { roomId ->
@@ -125,5 +199,17 @@ class HubViewModel(
                 else -> null
             }
         }.distinct()
+    }
+
+    companion object {
+        const val ASTRA_HUB_ID = "hub_astra"
+        const val ASTRA_WORLD_ID = "world_astra"
+        const val ASTRA_BRIDGE_NODE_ID = "astra_bridge_node"
+        const val ASTRA_BRIDGE_ROOM_ID = "astra_bridge"
+        const val ASTRA_ACCESS_ID = "astra_access"
+        const val ASTRA_DISEMBARK_ID = "astra_disembark"
+        const val ASTRA_UNLOCK_MILESTONE = "ms_w2_mq05_complete"
+        const val SPECIAL_ASTRA = "astra"
+        const val SPECIAL_DISEMBARK = "disembark"
     }
 }

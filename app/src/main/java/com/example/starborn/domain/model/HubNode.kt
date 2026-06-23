@@ -14,7 +14,11 @@ data class HubNode(
     val size: List<Int> = emptyList(),
     val rooms: List<String> = emptyList(),
     val discovered: Boolean = false,
-    @Json(name = "title_gap") val titleGap: Int? = null
+    @Json(name = "title_gap") val titleGap: Int? = null,
+    @Json(name = "initial_visibility") val initialVisibility: String? = null,
+    @Json(name = "entry_policy") val entryPolicy: String = "hub",
+    @Json(name = "unlock_conditions") val unlockConditions: List<NodeRequirement> = emptyList(),
+    @Json(name = "return_policy") val returnPolicy: String = "entry"
 ) {
     @JsonClass(generateAdapter = true)
     data class PositionHint(
@@ -22,3 +26,12 @@ data class HubNode(
         @Json(name = "center_y") val centerY: Float = 0.5f
     )
 }
+
+@JsonClass(generateAdapter = true)
+data class NodeRequirement(
+    val type: String,
+    val id: String? = null,
+    @Json(name = "quest_id") val questId: String? = null,
+    @Json(name = "task_id") val taskId: String? = null,
+    @Json(name = "item_id") val itemId: String? = null
+)

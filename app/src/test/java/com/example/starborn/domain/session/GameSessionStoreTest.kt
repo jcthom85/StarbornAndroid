@@ -13,4 +13,16 @@ class GameSessionStoreTest {
         val state = store.state.value
         assertTrue(state.unlockedExits.contains("town_9::north"))
     }
+
+    @Test
+    fun visitingNodeAlsoRevealsAndUnlocksIt() {
+        val store = GameSessionStore()
+
+        store.visitNode("canopy_ridge")
+
+        val state = store.state.value
+        assertTrue("canopy_ridge" in state.revealedNodes)
+        assertTrue("canopy_ridge" in state.unlockedNodes)
+        assertTrue("canopy_ridge" in state.visitedNodes)
+    }
 }

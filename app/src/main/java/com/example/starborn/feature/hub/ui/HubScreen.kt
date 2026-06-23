@@ -124,6 +124,14 @@ private fun HubScreenContent(
                 style = MaterialTheme.typography.bodySmall,
                 color = Color.White.copy(alpha = 0.75f)
             )
+            uiState.statusMessage?.let { message ->
+                Text(
+                    text = message,
+                    style = MaterialTheme.typography.labelMedium,
+                    color = Color(0xFFFFCC80),
+                    textAlign = TextAlign.Center
+                )
+            }
         }
 
         if (!uiState.isLoading) {
@@ -228,7 +236,7 @@ private fun HubNodeMarker(
                     painter = iconPainter,
                     contentDescription = null,
                     contentScale = ContentScale.Fit,
-                    alpha = if (node.discovered) 1f else 0.38f,
+                    alpha = if (node.unlocked) 1f else 0.38f,
                     modifier = Modifier
                         .fillMaxHeight()
                         .widthIn(max = composition.imageWidth)
@@ -247,7 +255,7 @@ private fun HubNodeMarker(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = if (node.discovered) node.title.take(1).uppercase() else "?",
+                        text = if (node.unlocked) node.title.take(1).uppercase() else "?",
                         color = Color.White,
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Black
@@ -266,7 +274,11 @@ private fun HubNodeMarker(
             shadowElevation = 4.dp
         ) {
             Text(
-                text = if (node.discovered) node.title else "Unknown",
+                text = when {
+                    !node.unlocked -> "${node.title} - Locked"
+                    node.completed -> "${node.title} - Complete"
+                    else -> node.title
+                },
                 style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.SemiBold),
                 color = Color.White,
                 textAlign = TextAlign.Center,

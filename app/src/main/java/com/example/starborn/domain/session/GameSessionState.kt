@@ -41,7 +41,14 @@ data class GameSessionState(
     val questTasksCompleted: Map<String, Set<String>> = emptyMap(),
     val completedEvents: Set<String> = emptySet(),
     val roomStates: Map<String, Map<String, Boolean>> = emptyMap(),
-    val enemyPartyStates: Map<String, EnemyPartyRuntimeState> = emptyMap()
+    val enemyPartyStates: Map<String, EnemyPartyRuntimeState> = emptyMap(),
+    val revealedNodes: Set<String> = emptySet(),
+    val unlockedNodes: Set<String> = emptySet(),
+    val visitedNodes: Set<String> = emptySet(),
+    val completedNodes: Set<String> = emptySet(),
+    val astraReturnWorldId: String? = null,
+    val astraReturnHubId: String? = null,
+    val astraReturnRoomId: String? = null
 )
 
 fun GameSessionState.fingerprint(): String {
@@ -97,6 +104,13 @@ fun GameSessionState.fingerprint(): String {
     unlockedExits.map { it.lowercase(normalizedLocale) }.sorted().forEach {
         builder.append("EXIT:").append(it).append('|')
     }
+    revealedNodes.map { it.lowercase(normalizedLocale) }.sorted().forEach { builder.append("NODE_REVEALED:").append(it).append('|') }
+    unlockedNodes.map { it.lowercase(normalizedLocale) }.sorted().forEach { builder.append("NODE_UNLOCKED:").append(it).append('|') }
+    visitedNodes.map { it.lowercase(normalizedLocale) }.sorted().forEach { builder.append("NODE_VISITED:").append(it).append('|') }
+    completedNodes.map { it.lowercase(normalizedLocale) }.sorted().forEach { builder.append("NODE_COMPLETED:").append(it).append('|') }
+    builder.append("ASTRA_RETURN_WORLD:").append(astraReturnWorldId.orEmpty()).append('|')
+    builder.append("ASTRA_RETURN_HUB:").append(astraReturnHubId.orEmpty()).append('|')
+    builder.append("ASTRA_RETURN_ROOM:").append(astraReturnRoomId.orEmpty()).append('|')
     completedEvents.map { it.lowercase(normalizedLocale) }.sorted().forEach {
         builder.append("EVT:").append(it).append('|')
     }

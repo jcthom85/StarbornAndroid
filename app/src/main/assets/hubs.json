@@ -94,5 +94,13 @@
     "description": "The final ascent through a spiral of memory toward the center of the Source.",
     "background_image": "images/hubs/hub_12_singularity.png",
     "discovered": false
+  },
+  {
+    "id": "hub_astra",
+    "world_id": "world_astra",
+    "title": "The Astra",
+    "description": "A warm, battered ship that serves as the crew's home between missions.",
+    "background_image": "images/hubs/astra_interior.png",
+    "discovered": false
   }
 ]

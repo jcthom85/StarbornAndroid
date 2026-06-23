@@ -34,5 +34,11 @@
     "title": "The Source",
     "description": "Reality beyond the Tear, where memory, emotion, and physical law collapse into the same raw signal.",
     "default_theme": "source"
+  },
+  {
+    "id": "world_astra",
+    "title": "The Astra",
+    "description": "The crew's mobile home aboard a repaired Dominion survey vessel.",
+    "default_theme": "spaceship"
   }
 ]

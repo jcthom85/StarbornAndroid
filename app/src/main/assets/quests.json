@@ -825,20 +825,39 @@
   {
     "id": "w2_sq02",
     "title": "Lost Patrol",
-    "summary": "Locate the logs of a lost Dominion squad to scavenge weapon parts.",
+    "summary": "Trace a lost patrol through three distress signatures, recover its transceiver, and salvage its Thermal Cutter.",
     "description": "Locate the logs of a lost squad in the Sector 9 ruins.",
     "flavor": "Steel rusts faster than bones here.",
     "giver": "Dead Soldier",
     "hub_id": "hub_3_sector9",
     "stages": [
       {
-        "id": "find_logs",
-        "title": "Dominion Downfall",
-        "description": "Locate the squad's encrypted transceiver.",
+        "id": "trace_beacons",
+        "title": "Broken Signals",
+        "description": "Triangulate the scattered patrol signatures.",
         "tasks": [
           {
-            "id": "find_logs_task",
-            "text": "Search the razor-vine path for the squad's remains."
+            "id": "trace_alpha",
+            "text": "Trace the beacon in the wilds thickets."
+          },
+          {
+            "id": "trace_beta",
+            "text": "Decode the beacon in the patrol hollow."
+          },
+          {
+            "id": "trace_gamma",
+            "text": "Confirm the signal from the ridge perch."
+          }
+        ]
+      },
+      {
+        "id": "recover_patrol",
+        "title": "Dominion Downfall",
+        "description": "Follow the combined vector to the patrol cache.",
+        "tasks": [
+          {
+            "id": "recover_transceiver",
+            "text": "Recover the encrypted transceiver and Thermal Cutter."
           }
         ]
       }
@@ -885,20 +904,39 @@
   {
     "id": "w2_sq04",
     "title": "Ancient Echoes",
-    "summary": "Help Orion calibrate the resonance murals in the Hall of Echoes.",
+    "summary": "Retrieve three wing crystals and use their harmonics to align the stasis chamber murals.",
     "description": "Calibrate the light-murals to hear their full song.",
     "flavor": "The stones remember when the choir was whole.",
     "giver": "Orion",
     "hub_id": "hub_4_facility",
     "stages": [
       {
+        "id": "gather_resonance",
+        "title": "Scattered Chorus",
+        "description": "Recover resonance crystals from the Sanctuary wings.",
+        "tasks": [
+          {
+            "id": "crystal_west",
+            "text": "Retrieve the western wing resonance crystal."
+          },
+          {
+            "id": "crystal_east",
+            "text": "Retrieve the eastern wing resonance crystal."
+          },
+          {
+            "id": "crystal_north",
+            "text": "Retrieve the acoustics lab resonance crystal."
+          }
+        ]
+      },
+      {
         "id": "calibrate_murals",
         "title": "Chorus Tuning",
-        "description": "Restore the frequency mapping on the mural console.",
+        "description": "Seat the crystals and restore the stasis mural chord.",
         "tasks": [
           {
             "id": "mural_tuning",
-            "text": "Align the mural frequency chord to C#m7."
+            "text": "Align the stasis chamber mural frequency to C#m7."
           }
         ]
       }
@@ -913,20 +951,35 @@
   {
     "id": "w2_sq05",
     "title": "Stolen Tech",
-    "summary": "Recover a stolen Dominion transmitter from the facility maintenance vents for Gh0st.",
+    "summary": "Infiltrate the guarded maintenance vents, hack their security grid, and recover the stolen transmitter.",
     "description": "Scavenge the maintenance vents for the transmitter.",
     "flavor": "It's not stealing if they're all dead.",
     "giver": "Gh0st",
     "hub_id": "hub_4_facility",
     "stages": [
       {
+        "id": "breach_vents",
+        "title": "Silent Frequency",
+        "description": "Defeat the vent security without alerting the facility.",
+        "tasks": [
+          {
+            "id": "hack_security_grid",
+            "text": "Hack the vent security grid."
+          },
+          {
+            "id": "bypass_guard_systems",
+            "text": "Slip past the guard-system scan pattern."
+          }
+        ]
+      },
+      {
         "id": "recover_tech",
         "title": "Ventilation Scramble",
-        "description": "Search the stasis chamber vents.",
+        "description": "Reach the tech alcove beyond the grid.",
         "tasks": [
           {
             "id": "recover_transmitter",
-            "text": "Find the Dominion transmitter."
+            "text": "Recover the Dominion transmitter."
           }
         ]
       }

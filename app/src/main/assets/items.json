@@ -2445,5 +2445,14 @@
         "luck": 3
       }
     }
+  },
+  {
+    "id": "thermal_cutter",
+    "name": "Thermal Cutter",
+    "description": "A Dominion salvage torch tuned to cauterize Sector 9 razor-vines before they release toxic spores.",
+    "type": "quest",
+    "value": 0,
+    "rarity": "uncommon",
+    "unsellable": true
   }
 ]

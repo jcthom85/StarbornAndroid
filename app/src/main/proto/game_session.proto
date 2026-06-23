@@ -41,6 +41,13 @@ message GameSessionProto {
   map<string, string> equipped_armors = 40;
   map<string, RoomStateProto> room_states = 41;
   map<string, EnemyPartyStateProto> enemy_party_states = 42;
+  repeated string revealed_nodes = 43;
+  repeated string unlocked_nodes = 44;
+  repeated string visited_nodes = 45;
+  repeated string completed_nodes = 46;
+  string astra_return_world_id = 47;
+  string astra_return_hub_id = 48;
+  string astra_return_room_id = 49;
 
   reserved 19;
   reserved 28, 29, 30, 31;

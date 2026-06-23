@@ -48,6 +48,13 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     notVisible: "Dialogue Popup"
     timeout: 10000
+- extendedWaitUntil:
+    visible: "Zeke joined the party."
+    timeout: 10000
+- tapOn: "Event Announcement. Tap to continue"
+- extendedWaitUntil:
+    notVisible: "Zeke joined the party."
+    timeout: 10000
 
 # 2. Examine the pod core in the wreckage
 - assertVisible: "pod core"
@@ -78,6 +85,32 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     visible: "Stream Bank"
     timeout: 15000
+
+# Dismiss "Quest Complete: A Strange Coast" if it is shown
+- extendedWaitUntil:
+    visible: "Quest Complete"
+    timeout: 10000
+    optional: true
+- tapOn:
+    text: "Got it"
+    optional: true
+- extendedWaitUntil:
+    notVisible: "Quest Complete"
+    timeout: 10000
+    optional: true
+
+# Dismiss "New Quest: The Signal" if it is shown
+- extendedWaitUntil:
+    visible: "New Quest"
+    timeout: 10000
+    optional: true
+- tapOn:
+    text: "Continue"
+    optional: true
+- extendedWaitUntil:
+    notVisible: "New Quest"
+    timeout: 10000
+    optional: true
 
 # 4. Travel southwest to Scorched Brush (the new diagonal connection!)
 - assertVisible: "Travel southwest"
@@ -127,11 +160,165 @@ appId: com.junewiregames.starborn.prealpha
     text: "Use"
     index: 1
 - extendedWaitUntil:
-    visible: "Choose an enemy for Hydraulic Kick"
+    visible: "Cancel"
     timeout: 10000
 - tapOn: "Echo-Borer"
 - waitForAnimationToEnd:
     timeout: 8000
+
+# 9b. Perform Zeke standard attack
+- tapOn:
+    text: "Zeke"
+    optional: true
+- extendedWaitUntil:
+    visible: "Attack"
+    timeout: 10000
+    optional: true
+- tapOn:
+    text: "Attack"
+    optional: true
+- extendedWaitUntil:
+    visible: "Cancel"
+    timeout: 10000
+    optional: true
+- tapOn:
+    text: "Echo-Borer"
+    optional: true
+- waitForAnimationToEnd:
+    timeout: 8000
+    optional: true
+
+# 9c. Perform Orion standard attack
+- tapOn:
+    text: "Orion"
+    optional: true
+- extendedWaitUntil:
+    visible: "Attack"
+    timeout: 10000
+    optional: true
+- tapOn:
+    text: "Attack"
+    optional: true
+- extendedWaitUntil:
+    visible: "Cancel"
+    timeout: 10000
+    optional: true
+- tapOn:
+    text: "Echo-Borer"
+    optional: true
+- waitForAnimationToEnd:
+    timeout: 8000
+    optional: true
+
+# 9d. Perform Gh0st standard attack
+- tapOn:
+    text: "Gh0st"
+    optional: true
+- extendedWaitUntil:
+    visible: "Attack"
+    timeout: 10000
+    optional: true
+- tapOn:
+    text: "Attack"
+    optional: true
+- extendedWaitUntil:
+    visible: "Cancel"
+    timeout: 10000
+    optional: true
+- tapOn:
+    text: "Echo-Borer"
+    optional: true
+- waitForAnimationToEnd:
+    timeout: 8000
+    optional: true
+
+# 9e. Perform Nova standard attack
+- tapOn:
+    text: "Nova"
+    optional: true
+- extendedWaitUntil:
+    visible: "Attack"
+    timeout: 10000
+    optional: true
+- tapOn:
+    text: "Attack"
+    optional: true
+- extendedWaitUntil:
+    visible: "Cancel"
+    timeout: 10000
+    optional: true
+- tapOn:
+    text: "Echo-Borer"
+    optional: true
+- waitForAnimationToEnd:
+    timeout: 8000
+    optional: true
+
+# 9f. Perform Zeke standard attack
+- tapOn:
+    text: "Zeke"
+    optional: true
+- extendedWaitUntil:
+    visible: "Attack"
+    timeout: 10000
+    optional: true
+- tapOn:
+    text: "Attack"
+    optional: true
+- extendedWaitUntil:
+    visible: "Cancel"
+    timeout: 10000
+    optional: true
+- tapOn:
+    text: "Echo-Borer"
+    optional: true
+- waitForAnimationToEnd:
+    timeout: 8000
+    optional: true
+
+# 9g. Perform Orion standard attack
+- tapOn:
+    text: "Orion"
+    optional: true
+- extendedWaitUntil:
+    visible: "Attack"
+    timeout: 10000
+    optional: true
+- tapOn:
+    text: "Attack"
+    optional: true
+- extendedWaitUntil:
+    visible: "Cancel"
+    timeout: 10000
+    optional: true
+- tapOn:
+    text: "Echo-Borer"
+    optional: true
+- waitForAnimationToEnd:
+    timeout: 8000
+    optional: true
+
+# 9h. Perform Gh0st standard attack
+- tapOn:
+    text: "Gh0st"
+    optional: true
+- extendedWaitUntil:
+    visible: "Attack"
+    timeout: 10000
+    optional: true
+- tapOn:
+    text: "Attack"
+    optional: true
+- extendedWaitUntil:
+    visible: "Cancel"
+    timeout: 10000
+    optional: true
+- tapOn:
+    text: "Echo-Borer"
+    optional: true
+- waitForAnimationToEnd:
+    timeout: 8000
+    optional: true
 
 # 10. Win combat and return to Resonant Canopy
 - extendedWaitUntil:

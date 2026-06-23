@@ -3229,48 +3229,6 @@
     ]
   },
   {
-    "id": "w2_sq02_start_and_complete",
-    "description": "Triggered when scavenging dead soldier body. Starts and completes Lost Patrol.",
-    "trigger": {
-      "type": "player_action",
-      "action": "w2_sq02_scavenge_body"
-    },
-    "conditions": [
-      {
-        "type": "quest_not_started",
-        "quest_id": "w2_sq02"
-      }
-    ],
-    "actions": [
-      {
-        "type": "start_quest",
-        "quest_id": "w2_sq02"
-      },
-      {
-        "type": "track_quest",
-        "quest_id": "w2_sq02"
-      },
-      {
-        "type": "set_quest_task_done",
-        "quest_id": "w2_sq02",
-        "task_id": "find_logs_task"
-      },
-      {
-        "type": "give_item",
-        "item_id": "mod_corrosive_rounds",
-        "quantity": 1
-      },
-      {
-        "type": "complete_quest",
-        "quest_id": "w2_sq02"
-      },
-      {
-        "type": "show_message",
-        "message": "Quest Complete: Lost Patrol\\n\\nYou salvage the scout's encrypted transceiver. The logs contain weapon mod calibrations, and you recover a Corrosive Rounds weapon mod!"
-      }
-    ]
-  },
-  {
     "id": "w2_sq03_visit",
     "description": "Triggered when entering Tideglass Beach.",
     "trigger": {
@@ -3341,84 +3299,6 @@
       {
         "type": "show_message",
         "message": "Quest Complete: Tideglass Day\\n\\nYou harvest the glowing tideglass skewers. Orion helps prepare them over a portable heat cell. The resonant warmth stabilizes your neural erosion."
-      }
-    ]
-  },
-  {
-    "id": "w2_sq04_complete",
-    "description": "Triggered when Ancient Echoes mural tuning is successful.",
-    "trigger": {
-      "type": "player_action",
-      "action": "w2_sq04_complete"
-    },
-    "conditions": [
-      {
-        "type": "quest_active",
-        "quest_id": "w2_sq04"
-      },
-      {
-        "type": "quest_task_not_done",
-        "quest_id": "w2_sq04",
-        "task_id": "mural_tuning"
-      }
-    ],
-    "actions": [
-      {
-        "type": "set_quest_task_done",
-        "quest_id": "w2_sq04",
-        "task_id": "mural_tuning"
-      },
-      {
-        "type": "give_item",
-        "item_id": "source_resin",
-        "quantity": 1
-      },
-      {
-        "type": "complete_quest",
-        "quest_id": "w2_sq04"
-      },
-      {
-        "type": "show_message",
-        "message": "Quest Complete: Ancient Echoes\\n\\nThe light-murals shine with pure, stable brilliance, singing a choral hymn of the Architects. A container slides open, presenting a Source Resin mod."
-      }
-    ]
-  },
-  {
-    "id": "w2_sq05_find_transmitter",
-    "description": "Triggered when searching maintenance vents.",
-    "trigger": {
-      "type": "player_action",
-      "action": "w2_sq05_search_vents"
-    },
-    "conditions": [
-      {
-        "type": "quest_active",
-        "quest_id": "w2_sq05"
-      },
-      {
-        "type": "quest_task_not_done",
-        "quest_id": "w2_sq05",
-        "task_id": "recover_transmitter"
-      }
-    ],
-    "actions": [
-      {
-        "type": "set_quest_task_done",
-        "quest_id": "w2_sq05",
-        "task_id": "recover_transmitter"
-      },
-      {
-        "type": "give_item",
-        "item_id": "rapid_capacitor",
-        "quantity": 1
-      },
-      {
-        "type": "complete_quest",
-        "quest_id": "w2_sq05"
-      },
-      {
-        "type": "show_message",
-        "message": "Quest Complete: Stolen Tech\n\nYou reach into the dusty vent and retrieve the Dominion transmitter. Gh0st decodes the firmware, rewarding you with a Rapid Capacitor mod."
       }
     ]
   },
@@ -7578,6 +7458,694 @@
       {
         "type": "play_cinematic",
         "scene_id": "scene_w6_epilogue_credits"
+      }
+    ]
+  },
+  {
+    "id": "w2_forage_herb_landing",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_forage_herb_landing"
+    },
+    "conditions": [],
+    "actions": [
+      {
+        "type": "give_item",
+        "item_id": "herb",
+        "quantity": 1
+      },
+      {
+        "type": "show_message",
+        "message": "You gather charred starleaf for trail cooking."
+      }
+    ]
+  },
+  {
+    "id": "w2_forage_herb_glade",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_forage_herb_glade"
+    },
+    "conditions": [],
+    "actions": [
+      {
+        "type": "give_item",
+        "item_id": "herb",
+        "quantity": 1
+      },
+      {
+        "type": "show_message",
+        "message": "You harvest luminous mushroom caps."
+      }
+    ]
+  },
+  {
+    "id": "w2_forage_herb_reeds",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_forage_herb_reeds"
+    },
+    "conditions": [],
+    "actions": [
+      {
+        "type": "give_item",
+        "item_id": "herb",
+        "quantity": 1
+      },
+      {
+        "type": "show_message",
+        "message": "You gather resonant reed bulbs."
+      }
+    ]
+  },
+  {
+    "id": "w2_forage_herb_ridge",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_forage_herb_ridge"
+    },
+    "conditions": [],
+    "actions": [
+      {
+        "type": "give_item",
+        "item_id": "herb",
+        "quantity": 1
+      },
+      {
+        "type": "show_message",
+        "message": "You gather bitter blue fronds."
+      }
+    ]
+  },
+  {
+    "id": "w2_forage_meat_tidepool",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_forage_meat_tidepool"
+    },
+    "conditions": [],
+    "actions": [
+      {
+        "type": "give_item",
+        "item_id": "beast_meat",
+        "quantity": 1
+      },
+      {
+        "type": "show_message",
+        "message": "You dress the tidepool crawler for camp."
+      }
+    ]
+  },
+  {
+    "id": "w2_forage_meat_cave",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_forage_meat_cave"
+    },
+    "conditions": [],
+    "actions": [
+      {
+        "type": "give_item",
+        "item_id": "beast_meat",
+        "quantity": 1
+      },
+      {
+        "type": "show_message",
+        "message": "You salvage clean meat from the echo nest."
+      }
+    ]
+  },
+  {
+    "id": "w2_forage_meat_dunes",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_forage_meat_dunes"
+    },
+    "conditions": [],
+    "actions": [
+      {
+        "type": "give_item",
+        "item_id": "beast_meat",
+        "quantity": 1
+      },
+      {
+        "type": "show_message",
+        "message": "You preserve grazer meat for a trail meal."
+      }
+    ]
+  },
+  {
+    "id": "w2_forage_meat_nest",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_forage_meat_nest"
+    },
+    "conditions": [],
+    "actions": [
+      {
+        "type": "give_item",
+        "item_id": "beast_meat",
+        "quantity": 1
+      },
+      {
+        "type": "show_message",
+        "message": "You recover a clean cut from the shard-hound nest."
+      }
+    ]
+  },
+  {
+    "id": "w2_camp_stream_falls",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_camp_stream_falls"
+    },
+    "conditions": [],
+    "actions": [
+      {
+        "type": "give_item",
+        "item_id": "painkillers",
+        "quantity": 1
+      },
+      {
+        "type": "show_message",
+        "message": "The falls mask the campfire. Food, quiet, and a Neural Stabilizer ease the pressure of Erosion."
+      }
+    ]
+  },
+  {
+    "id": "w2_camp_wilds_lookout",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_camp_wilds_lookout"
+    },
+    "conditions": [],
+    "actions": [
+      {
+        "type": "give_item",
+        "item_id": "painkillers",
+        "quantity": 1
+      },
+      {
+        "type": "show_message",
+        "message": "The heat ring holds steady while your thoughts settle back into one rhythm."
+      }
+    ]
+  },
+  {
+    "id": "w2_camp_ridge_plateau",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_camp_ridge_plateau"
+    },
+    "conditions": [],
+    "actions": [
+      {
+        "type": "give_item",
+        "item_id": "painkillers",
+        "quantity": 1
+      },
+      {
+        "type": "show_message",
+        "message": "The party rests, cooks, and listens until the Ocean feels distant enough to bear."
+      }
+    ]
+  },
+  {
+    "id": "w2_camp_power_manifold",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_camp_power_manifold"
+    },
+    "conditions": [],
+    "actions": [
+      {
+        "type": "give_item",
+        "item_id": "painkillers",
+        "quantity": 1
+      },
+      {
+        "type": "show_message",
+        "message": "The sterile heat plate becomes a campsite; the Neural Stabilizer anchors your mind while you rest."
+      }
+    ]
+  },
+  {
+    "id": "w2_sq02_start_trace_alpha",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_sq02_trace_alpha"
+    },
+    "conditions": [
+      {
+        "type": "quest_not_started",
+        "quest_id": "w2_sq02"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_quest",
+        "quest_id": "w2_sq02"
+      },
+      {
+        "type": "track_quest",
+        "quest_id": "w2_sq02"
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w2_sq02",
+        "task_id": "trace_alpha"
+      },
+      {
+        "type": "show_message",
+        "message": "Lost Patrol started: the first signal points deeper into the Wilds."
+      }
+    ]
+  },
+  {
+    "id": "w2_sq02_trace_alpha",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_sq02_trace_alpha"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_sq02"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w2_sq02",
+        "task_id": "trace_alpha"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w2_sq02",
+        "task_id": "trace_alpha"
+      },
+      {
+        "type": "show_message",
+        "message": "First distress signature triangulated."
+      }
+    ]
+  },
+  {
+    "id": "w2_sq02_trace_beta",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_sq02_trace_beta"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_sq02"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w2_sq02",
+        "task_id": "trace_beta"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w2_sq02",
+        "task_id": "trace_beta"
+      },
+      {
+        "type": "show_message",
+        "message": "Second distress signature decoded."
+      }
+    ]
+  },
+  {
+    "id": "w2_sq02_trace_gamma",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_sq02_trace_gamma"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_sq02"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w2_sq02",
+        "task_id": "trace_gamma"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w2_sq02",
+        "task_id": "trace_gamma"
+      },
+      {
+        "type": "show_message",
+        "message": "Third signature confirms the patrol cache location."
+      }
+    ]
+  },
+  {
+    "id": "w2_sq02_trace_cliffs",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_sq02_trace_cliffs"
+    },
+    "conditions": [],
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "Tideglass reflections corroborate the patrol vector toward the ridge."
+      }
+    ]
+  },
+  {
+    "id": "w2_sq02_recover_transceiver",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_sq02_recover_transceiver"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_sq02"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w2_sq02",
+        "task_id": "recover_transceiver"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w2_sq02",
+        "task_id": "trace_alpha"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w2_sq02",
+        "task_id": "trace_beta"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w2_sq02",
+        "task_id": "trace_gamma"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w2_sq02",
+        "task_id": "recover_transceiver"
+      },
+      {
+        "type": "show_message",
+        "message": "Quest Complete: Lost Patrol\n\nThe transceiver yields corrosive calibrations. Its Thermal Cutter can burn through Sector 9 razor-vines."
+      },
+      {
+        "type": "give_item",
+        "item_id": "thermal_cutter",
+        "quantity": 1
+      },
+      {
+        "type": "give_item",
+        "item_id": "mod_corrosive_rounds",
+        "quantity": 1
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w2_sq02"
+      }
+    ]
+  },
+  {
+    "id": "w2_sq04_crystal_west",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_sq04_crystal_west"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_sq04"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w2_sq04",
+        "task_id": "crystal_west"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w2_sq04",
+        "task_id": "crystal_west"
+      },
+      {
+        "type": "show_message",
+        "message": "The west resonance crystal joins the recovered chord."
+      }
+    ]
+  },
+  {
+    "id": "w2_sq04_crystal_east",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_sq04_crystal_east"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_sq04"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w2_sq04",
+        "task_id": "crystal_east"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w2_sq04",
+        "task_id": "crystal_east"
+      },
+      {
+        "type": "show_message",
+        "message": "The east resonance crystal joins the recovered chord."
+      }
+    ]
+  },
+  {
+    "id": "w2_sq04_crystal_north",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_sq04_crystal_north"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_sq04"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w2_sq04",
+        "task_id": "crystal_north"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w2_sq04",
+        "task_id": "crystal_north"
+      },
+      {
+        "type": "show_message",
+        "message": "The north resonance crystal joins the recovered chord."
+      }
+    ]
+  },
+  {
+    "id": "w2_sq04_complete",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_sq04_complete"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_sq04"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w2_sq04",
+        "task_id": "mural_tuning"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w2_sq04",
+        "task_id": "crystal_west"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w2_sq04",
+        "task_id": "crystal_east"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w2_sq04",
+        "task_id": "crystal_north"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w2_sq04",
+        "task_id": "mural_tuning"
+      },
+      {
+        "type": "show_message",
+        "message": "Quest Complete: Ancient Echoes\n\nThree crystal voices align the stasis mural. The song remembers humans as Ice held safely within the Ocean."
+      },
+      {
+        "type": "give_item",
+        "item_id": "source_resin",
+        "quantity": 1
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w2_sq04"
+      }
+    ]
+  },
+  {
+    "id": "w2_sq05_hack_grid",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_sq05_hack_grid"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_sq05"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w2_sq05",
+        "task_id": "hack_security_grid"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w2_sq05",
+        "task_id": "hack_security_grid"
+      },
+      {
+        "type": "show_message",
+        "message": "Gh0st folds your signal into the grid noise. Security is blind for ninety seconds."
+      }
+    ]
+  },
+  {
+    "id": "w2_sq05_bypass_guards",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_sq05_bypass_guards"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_sq05"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w2_sq05",
+        "task_id": "bypass_guard_systems"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w2_sq05",
+        "task_id": "hack_security_grid"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w2_sq05",
+        "task_id": "bypass_guard_systems"
+      },
+      {
+        "type": "show_message",
+        "message": "You pass between the guard-system sweeps without raising an alert."
+      }
+    ]
+  },
+  {
+    "id": "w2_sq05_find_transmitter",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_sq05_search_vents"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_sq05"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w2_sq05",
+        "task_id": "recover_transmitter"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w2_sq05",
+        "task_id": "hack_security_grid"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w2_sq05",
+        "task_id": "bypass_guard_systems"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w2_sq05",
+        "task_id": "recover_transmitter"
+      },
+      {
+        "type": "show_message",
+        "message": "Quest Complete: Stolen Tech\n\nBeyond the disabled grid, you recover the transmitter. Gh0st extracts a Rapid Capacitor."
+      },
+      {
+        "type": "give_item",
+        "item_id": "rapid_capacitor",
+        "quantity": 1
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w2_sq05"
+      }
+    ]
+  },
+  {
+    "id": "astra_rest_party",
+    "description": "Restores the active party aboard the Astra.",
+    "trigger": {
+      "type": "player_action",
+      "action": "astra_rest_party"
+    },
+    "repeatable": true,
+    "actions": [
+      {
+        "type": "rest_party"
+      },
+      {
+        "type": "show_message",
+        "message": "The crew rests aboard the Astra. Wounds close, nerves settle, and the pressure of Erosion recedes."
       }
     ]
   }

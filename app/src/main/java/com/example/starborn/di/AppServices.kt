@@ -868,7 +868,79 @@ class AppServices(context: Context) {
         "dynamic_patrol" -> startNewGameAtDynamicPatrol()
         "red_alert" -> startNewGameAtRedAlert()
         "launch" -> startNewGameAtLaunch()
+        "node_progression_w1" -> startNewGameAtWorld1NodeProgression()
+        "node_progression_w2" -> startNewGameAtWorld2NodeProgression()
+        "astra_access" -> startNewGameAtAstraAccess()
+        "astra_home" -> startNewGameAboardAstra()
         else -> if (id.startsWith("hub_")) startNewGameAtDebugHub(id) else false
+    }
+
+    private fun startNewGameAtWorld1NodeProgression(): Boolean = runCatching {
+        if (!startNewGame(debugFullInventory = true)) return false
+        clearDebugBootstrap()
+        sessionStore.setWorld("world_1")
+        sessionStore.setHub("hub_1_homestead")
+        sessionStore.setRoom("pit_L1_landing")
+        sessionStore.visitNode("pit")
+        true
+    }.getOrElse { false }
+
+    private fun startNewGameAtWorld2NodeProgression(): Boolean = runCatching {
+        if (!startNewGame(debugFullInventory = true)) return false
+        clearDebugBootstrap()
+        (1..5).forEach { number ->
+            val questId = "w1_mq0$number"
+            sessionStore.completeQuest(questId)
+            sessionStore.setMilestone("ms_${questId}_complete")
+        }
+        sessionStore.setPartyMembers(listOf("nova", "zeke"))
+        sessionStore.startQuest("w2_mq01", track = true)
+        sessionStore.setQuestStage("w2_mq01", "assess_crash_site")
+        sessionStore.setWorld("world_2")
+        sessionStore.setHub("hub_3_sector9")
+        sessionStore.setRoom("sector9_crash_site")
+        sessionStore.visitNode("sector9_landing")
+        true
+    }.getOrElse { false }
+
+    private fun startNewGameAtAstraAccess(): Boolean = runCatching {
+        if (!prepareAstraDebugState()) return false
+        true
+    }.getOrElse { false }
+
+    private fun startNewGameAboardAstra(): Boolean = runCatching {
+        if (!prepareAstraDebugState()) return false
+        sessionStore.setAstraReturnLocation("world_3", "hub_5_lower_city", "spire_vent_output")
+        sessionStore.setWorld("world_astra")
+        sessionStore.setHub("hub_astra")
+        sessionStore.setRoom("astra_bridge")
+        sessionStore.visitNode("astra_bridge_node")
+        true
+    }.getOrElse { false }
+
+    private fun prepareAstraDebugState(): Boolean {
+        if (!startNewGame(debugFullInventory = true)) return false
+        clearDebugBootstrap()
+        listOf(
+            "w1_mq01", "w1_mq02", "w1_mq03", "w1_mq04", "w1_mq05",
+            "w2_mq01", "w2_mq02", "w2_mq03", "w2_mq04", "w2_mq05"
+        ).forEach { questId ->
+            sessionStore.completeQuest(questId)
+            sessionStore.setMilestone("ms_${questId}_complete")
+        }
+        sessionStore.setPartyMembers(listOf("nova", "zeke", "orion", "gh0st"))
+        sessionStore.startQuest("w3_mq11", track = true)
+        sessionStore.setQuestStage("w3_mq11", "secure_landing_zone")
+        sessionStore.setWorld("world_3")
+        sessionStore.setHub("hub_5_lower_city")
+        sessionStore.setRoom("spire_vent_output")
+        sessionStore.visitNode("spire_vent_output")
+        return true
+    }
+
+    private fun clearDebugBootstrap() {
+        bootstrapCinematics.clear()
+        bootstrapPlayerActions.clear()
     }
 
     private fun startNewGameAtDebugHub(hubId: String): Boolean = runCatching {
@@ -880,7 +952,10 @@ class AppServices(context: Context) {
 
         val mainQuests = questRepository.allQuests()
             .filter { it.id.matches(Regex("w\\d+_mq\\d+")) }
-            .sortedBy { it.id.substringAfter("_mq").toIntOrNull() ?: Int.MAX_VALUE }
+            .sortedWith(compareBy(
+                { it.id.substringBefore("_mq").removePrefix("w").toIntOrNull() ?: 0 },
+                { it.id.substringAfter("_mq").toIntOrNull() ?: Int.MAX_VALUE }
+            ))
         val targetQuest = mainQuests.firstOrNull { it.hubId == hubId }
         if (targetQuest != null) {
             mainQuests.takeWhile { it.id != targetQuest.id }.forEach { quest ->
@@ -894,6 +969,9 @@ class AppServices(context: Context) {
         sessionStore.setWorld(hub.worldId)
         sessionStore.setHub(hub.id)
         sessionStore.setRoom(null)
+        worldDataSource.loadHubNodes()
+            .filter { it.hubId == hub.id }
+            .forEach { sessionStore.visitNode(it.id) }
         sessionStore.markTutorialCompleted("swipe_move")
         sessionStore.markTutorialCompleted("movement")
         true

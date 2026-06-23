@@ -1,0 +1,670 @@
+appId: com.junewiregames.starborn.prealpha
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "Debug Scenarios"
+    timeout: 60000
+- tapOn: "Debug Scenarios"
+- extendedWaitUntil:
+    visible: "Search world, quest, room, or system"
+    timeout: 10000
+- tapOn: "Search world, quest, room, or system"
+- inputText: "Sector 9 Ruins"
+- hideKeyboard
+- tapOn: "World 2 / Sector 9 Ruins"
+- extendedWaitUntil:
+    visible: "Sector 9 Ruins"
+    timeout: 30000
+
+# 1. Enter Hall of Echoes
+- tapOn: "Enter Hall of Echoes"
+- extendedWaitUntil:
+    visible: "Hall of Echoes"
+    timeout: 15000
+
+# 2. Inspect the murals
+- assertVisible: "murals"
+- tapOn: "murals"
+- extendedWaitUntil:
+    visible: "You inspect the resonance murals. They map out the harmonic alignments of the facility."
+    timeout: 10000
+- tapOn: "You inspect the resonance murals. They map out the harmonic alignments of the facility."
+
+# 3. Enter Stasis Chamber
+- assertVisible: "Travel south"
+- tapOn: "Travel south"
+- extendedWaitUntil:
+    visible: "Stasis Chamber"
+    timeout: 15000
+
+# 4. Talk to Zeke to wake Orion
+- assertVisible: "Zeke"
+- tapOn: "Zeke"
+- extendedWaitUntil:
+    visible: "The stasis pod is completely locked down by safety alignment rings.*"
+    timeout: 15000
+- tapOn: ".*Broadcast C# Minor 7.*"
+- extendedWaitUntil:
+    visible: "It worked! The stasis rings are locking into alignment.*"
+    timeout: 15000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: "Quest Complete"
+    timeout: 15000
+- assertVisible: "Sleeping Giant"
+- tapOn: "Got it"
+- extendedWaitUntil:
+    notVisible: "Quest Complete"
+    timeout: 10000
+
+# Walk back to Canopy Ridge
+# 5. Hall of Echoes
+- assertVisible: "Travel north"
+- tapOn: "Travel north"
+- extendedWaitUntil:
+    visible: "Hall of Echoes"
+    timeout: 15000
+
+# 6. Sanctuary Grand Hall
+- assertVisible: "Travel west"
+- tapOn: "Travel west"
+- extendedWaitUntil:
+    visible: "Sanctuary Grand Hall"
+    timeout: 15000
+
+# 7. Temple Gate
+- assertVisible: "Travel west"
+- tapOn: "Travel west"
+- extendedWaitUntil:
+    visible: "Temple Gate"
+    timeout: 15000
+
+# 8. Resonator Chamber
+- assertVisible: "Travel west"
+- tapOn: "Travel west"
+- extendedWaitUntil:
+    visible: "Resonator Chamber"
+    timeout: 15000
+
+# 9. Stone Courtyard
+- assertVisible: "Travel west"
+- tapOn: "Travel west"
+- extendedWaitUntil:
+    visible: "Stone Courtyard"
+    timeout: 15000
+
+# 10. Sanctuary Outlook
+- assertVisible: "Travel west"
+- tapOn: "Travel west"
+- extendedWaitUntil:
+    visible: "Sanctuary Outlook"
+    timeout: 15000
+
+# 11. High Pass
+- assertVisible: "Travel west"
+- tapOn: "Travel west"
+- extendedWaitUntil:
+    visible: "High Pass"
+    timeout: 15000
+
+# 12. Sniper Lookout
+- assertVisible: "Travel west"
+- tapOn: "Travel west"
+- extendedWaitUntil:
+    visible: "Sniper Lookout"
+    timeout: 15000
+
+# 13. Shield Viewpoint
+- assertVisible: "Travel south"
+- tapOn: "Travel south"
+- extendedWaitUntil:
+    visible: "Shield Viewpoint"
+    timeout: 15000
+
+# 14. Canopy Ridge
+- assertVisible: "Travel west"
+- tapOn: "Travel west"
+- extendedWaitUntil:
+    visible: "Canopy Ridge"
+    timeout: 15000
+
+# 15. Confront the hunter
+- assertVisible: "Confront stalker"
+- tapOn: "Confront stalker"
+- extendedWaitUntil:
+    visible: "Confront the hunter waiting in the shadows."
+    timeout: 15000
+- tapOn: "Confront the hunter waiting in the shadows."
+
+# 16. Engage and defeat The Source Beast
+- assertVisible: "Engage The Source Beast"
+- tapOn: "Engage The Source Beast"
+- extendedWaitUntil:
+    visible: "The Source Beast"
+    timeout: 60000
+
+- tapOn: "Nova"
+- extendedWaitUntil:
+    visible: "Attack"
+    timeout: 20000
+- tapOn: "Abilities"
+- extendedWaitUntil:
+    visible: "Hydraulic Kick"
+    timeout: 10000
+- tapOn:
+    text: "Use"
+    index: 1
+- extendedWaitUntil:
+    visible: "Cancel"
+    timeout: 10000
+- tapOn: "The Source Beast"
+- waitForAnimationToEnd:
+    timeout: 8000
+
+# Perform Zeke standard attack
+- tapOn:
+    text: "Zeke"
+    optional: true
+- extendedWaitUntil:
+    visible: "Attack"
+    timeout: 10000
+    optional: true
+- tapOn:
+    text: "Attack"
+    optional: true
+- extendedWaitUntil:
+    visible: "Cancel"
+    timeout: 10000
+    optional: true
+- tapOn:
+    text: "The Source Beast"
+    optional: true
+- waitForAnimationToEnd:
+    timeout: 8000
+    optional: true
+
+# Perform Orion standard attack
+- tapOn:
+    text: "Orion"
+    optional: true
+- extendedWaitUntil:
+    visible: "Attack"
+    timeout: 10000
+    optional: true
+- tapOn:
+    text: "Attack"
+    optional: true
+- extendedWaitUntil:
+    visible: "Cancel"
+    timeout: 10000
+    optional: true
+- tapOn:
+    text: "The Source Beast"
+    optional: true
+- waitForAnimationToEnd:
+    timeout: 8000
+    optional: true
+
+# Perform Gh0st standard attack
+- tapOn:
+    text: "Gh0st"
+    optional: true
+- extendedWaitUntil:
+    visible: "Attack"
+    timeout: 10000
+    optional: true
+- tapOn:
+    text: "Attack"
+    optional: true
+- extendedWaitUntil:
+    visible: "Cancel"
+    timeout: 10000
+    optional: true
+- tapOn:
+    text: "The Source Beast"
+    optional: true
+- waitForAnimationToEnd:
+    timeout: 8000
+    optional: true
+
+# Perform Nova standard attack
+- tapOn:
+    text: "Nova"
+    optional: true
+- extendedWaitUntil:
+    visible: "Attack"
+    timeout: 10000
+    optional: true
+- tapOn:
+    text: "Attack"
+    optional: true
+- extendedWaitUntil:
+    visible: "Cancel"
+    timeout: 10000
+    optional: true
+- tapOn:
+    text: "The Source Beast"
+    optional: true
+- waitForAnimationToEnd:
+    timeout: 8000
+    optional: true
+
+# Perform Zeke standard attack (round 2)
+- tapOn:
+    text: "Zeke"
+    optional: true
+- extendedWaitUntil:
+    visible: "Attack"
+    timeout: 10000
+    optional: true
+- tapOn:
+    text: "Attack"
+    optional: true
+- extendedWaitUntil:
+    visible: "Cancel"
+    timeout: 10000
+    optional: true
+- tapOn:
+    text: "The Source Beast"
+    optional: true
+- waitForAnimationToEnd:
+    timeout: 8000
+    optional: true
+
+# Perform Orion standard attack (round 2)
+- tapOn:
+    text: "Orion"
+    optional: true
+- extendedWaitUntil:
+    visible: "Attack"
+    timeout: 10000
+    optional: true
+- tapOn:
+    text: "Attack"
+    optional: true
+- extendedWaitUntil:
+    visible: "Cancel"
+    timeout: 10000
+    optional: true
+- tapOn:
+    text: "The Source Beast"
+    optional: true
+- waitForAnimationToEnd:
+    timeout: 8000
+    optional: true
+
+# Perform Gh0st standard attack (round 2)
+- tapOn:
+    text: "Gh0st"
+    optional: true
+- extendedWaitUntil:
+    visible: "Attack"
+    timeout: 10000
+    optional: true
+- tapOn:
+    text: "Attack"
+    optional: true
+- extendedWaitUntil:
+    visible: "Cancel"
+    timeout: 10000
+    optional: true
+- tapOn:
+    text: "The Source Beast"
+    optional: true
+- waitForAnimationToEnd:
+    timeout: 8000
+    optional: true
+
+
+- extendedWaitUntil:
+    visible: "Spoils Recovered"
+    timeout: 60000
+- tapOn: "Continue"
+- extendedWaitUntil:
+    visible: "Quest Complete"
+    timeout: 15000
+- assertVisible: "The Hunter"
+- tapOn: "Got it"
+- extendedWaitUntil:
+    visible: "Canopy Ridge"
+    timeout: 15000
+
+# 17. Go to Source Gate via HUB
+- tapOn: "HUB"
+- extendedWaitUntil:
+    visible: "Sector 9 Ruins"
+    timeout: 15000
+- tapOn: "Enter Source Gate"
+- extendedWaitUntil:
+    visible: "Source Gate"
+    timeout: 15000
+
+# 18. Talk to Orion at the Source Gate
+- assertVisible: "Orion"
+- tapOn: "Orion"
+- extendedWaitUntil:
+    visible: "This energy barrier blocks access to the hangar.*"
+    timeout: 15000
+- tapOn: ".*Tune resonator to C# Minor 7.*"
+- extendedWaitUntil:
+    visible: "Perfect! The frequencies match, and the barrier dissolves.*"
+    timeout: 15000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: "Hangar Bay"
+    timeout: 20000
+
+# 19. Inspect the Astra Console
+- assertVisible: "Astra Console"
+- tapOn: "Astra Console"
+- extendedWaitUntil:
+    visible: "The ship's main console. The primary power conduit is completely severed."
+    timeout: 15000
+
+# Walk from Hangar Bay to Pod Fragment (Crash Site area)
+- assertVisible: "Travel west"
+- tapOn: "Travel west"
+- extendedWaitUntil:
+    visible: "Source Gate"
+    timeout: 15000
+
+- assertVisible: "Travel north"
+- tapOn: "Travel north"
+- extendedWaitUntil:
+    visible: "Stasis Chamber"
+    timeout: 15000
+
+- assertVisible: "Travel north"
+- tapOn: "Travel north"
+- extendedWaitUntil:
+    visible: "Hall of Echoes"
+    timeout: 15000
+
+- assertVisible: "Travel west"
+- tapOn: "Travel west"
+- extendedWaitUntil:
+    visible: "Sanctuary Grand Hall"
+    timeout: 15000
+
+- assertVisible: "Travel west"
+- tapOn: "Travel west"
+- extendedWaitUntil:
+    visible: "Temple Gate"
+    timeout: 15000
+
+- assertVisible: "Travel west"
+- tapOn: "Travel west"
+- extendedWaitUntil:
+    visible: "Resonator Chamber"
+    timeout: 15000
+
+- assertVisible: "Travel west"
+- tapOn: "Travel west"
+- extendedWaitUntil:
+    visible: "Stone Courtyard"
+    timeout: 15000
+
+- assertVisible: "Travel west"
+- tapOn: "Travel west"
+- extendedWaitUntil:
+    visible: "Sanctuary Outlook"
+    timeout: 15000
+
+- assertVisible: "Travel west"
+- tapOn: "Travel west"
+- extendedWaitUntil:
+    visible: "High Pass"
+    timeout: 15000
+
+- assertVisible: "Travel west"
+- tapOn: "Travel west"
+- extendedWaitUntil:
+    visible: "Sniper Lookout"
+    timeout: 15000
+
+- assertVisible: "Travel south"
+- tapOn: "Travel south"
+- extendedWaitUntil:
+    visible: "Shield Viewpoint"
+    timeout: 15000
+
+- assertVisible: "Travel west"
+- tapOn: "Travel west"
+- extendedWaitUntil:
+    visible: "Canopy Ridge"
+    timeout: 15000
+
+- assertVisible: "Travel south"
+- tapOn: "Travel south"
+- extendedWaitUntil:
+    visible: "Beast Lair Approach"
+    timeout: 15000
+
+- assertVisible: "Travel south"
+- tapOn: "Travel south"
+- extendedWaitUntil:
+    visible: "Windy Ledges"
+    timeout: 15000
+
+- assertVisible: "Travel south"
+- tapOn: "Travel south"
+- extendedWaitUntil:
+    visible: "Vine Climb"
+    timeout: 15000
+
+- assertVisible: "Travel west"
+- tapOn: "Travel west"
+- extendedWaitUntil:
+    visible: "Patrol Graveyard"
+    timeout: 15000
+
+- assertVisible: "Travel north"
+- tapOn: "Travel north"
+- extendedWaitUntil:
+    visible: "Poison Hollow"
+    timeout: 15000
+
+- assertVisible: "Travel north"
+- tapOn: "Travel north"
+- extendedWaitUntil:
+    visible: "Spore Thickets"
+    timeout: 15000
+
+- assertVisible: "Travel north"
+- tapOn: "Travel north"
+- extendedWaitUntil:
+    visible: "Resonant Canopy"
+    timeout: 15000
+
+- assertVisible: "Travel north"
+- tapOn: "Travel north"
+- extendedWaitUntil:
+    visible: "Crash Site"
+    timeout: 15000
+
+- assertVisible: "Travel east"
+- tapOn: "Travel east"
+- extendedWaitUntil:
+    visible: "Stream Bank"
+    timeout: 15000
+
+- assertVisible: "Travel southwest"
+- tapOn: "Travel southwest"
+- extendedWaitUntil:
+    visible: "Scorched Brush"
+    timeout: 15000
+
+- assertVisible: "Travel east"
+- tapOn: "Travel east"
+- extendedWaitUntil:
+    visible: "Pod Fragment"
+    timeout: 15000
+
+# 20. Salvage the power conduits
+- assertVisible: "Salvage conduits"
+- tapOn: "Salvage conduits"
+- extendedWaitUntil:
+    visible: "Salvaging power conduits from the pod wreckage..."
+    timeout: 15000
+- tapOn: "Salvaging power conduits from the pod wreckage..."
+
+# Walk from Pod Fragment back to Hangar Bay
+- assertVisible: "Travel west"
+- tapOn: "Travel west"
+- extendedWaitUntil:
+    visible: "Scorched Brush"
+    timeout: 15000
+
+- assertVisible: "Travel northeast"
+- tapOn: "Travel northeast"
+- extendedWaitUntil:
+    visible: "Stream Bank"
+    timeout: 15000
+
+- assertVisible: "Travel west"
+- tapOn: "Travel west"
+- extendedWaitUntil:
+    visible: "Crash Site"
+    timeout: 15000
+
+- assertVisible: "Travel south"
+- tapOn: "Travel south"
+- extendedWaitUntil:
+    visible: "Resonant Canopy"
+    timeout: 15000
+
+- assertVisible: "Travel south"
+- tapOn: "Travel south"
+- extendedWaitUntil:
+    visible: "Spore Thickets"
+    timeout: 15000
+
+- assertVisible: "Travel south"
+- tapOn: "Travel south"
+- extendedWaitUntil:
+    visible: "Poison Hollow"
+    timeout: 15000
+
+- assertVisible: "Travel south"
+- tapOn: "Travel south"
+- extendedWaitUntil:
+    visible: "Patrol Graveyard"
+    timeout: 15000
+
+- assertVisible: "Travel east"
+- tapOn: "Travel east"
+- extendedWaitUntil:
+    visible: "Vine Climb"
+    timeout: 15000
+
+- assertVisible: "Travel north"
+- tapOn: "Travel north"
+- extendedWaitUntil:
+    visible: "Windy Ledges"
+    timeout: 15000
+
+- assertVisible: "Travel north"
+- tapOn: "Travel north"
+- extendedWaitUntil:
+    visible: "Beast Lair Approach"
+    timeout: 15000
+
+- assertVisible: "Travel north"
+- tapOn: "Travel north"
+- extendedWaitUntil:
+    visible: "Canopy Ridge"
+    timeout: 15000
+
+- assertVisible: "Travel east"
+- tapOn: "Travel east"
+- extendedWaitUntil:
+    visible: "Shield Viewpoint"
+    timeout: 15000
+
+- assertVisible: "Travel north"
+- tapOn: "Travel north"
+- extendedWaitUntil:
+    visible: "Sniper Lookout"
+    timeout: 15000
+
+- assertVisible: "Travel east"
+- tapOn: "Travel east"
+- extendedWaitUntil:
+    visible: "High Pass"
+    timeout: 15000
+
+- assertVisible: "Travel east"
+- tapOn: "Travel east"
+- extendedWaitUntil:
+    visible: "Sanctuary Outlook"
+    timeout: 15000
+
+- assertVisible: "Travel east"
+- tapOn: "Travel east"
+- extendedWaitUntil:
+    visible: "Stone Courtyard"
+    timeout: 15000
+
+- assertVisible: "Travel east"
+- tapOn: "Travel east"
+- extendedWaitUntil:
+    visible: "Resonator Chamber"
+    timeout: 15000
+
+- assertVisible: "Travel east"
+- tapOn: "Travel east"
+- extendedWaitUntil:
+    visible: "Temple Gate"
+    timeout: 15000
+
+- assertVisible: "Travel east"
+- tapOn: "Travel east"
+- extendedWaitUntil:
+    visible: "Sanctuary Grand Hall"
+    timeout: 15000
+
+- assertVisible: "Travel east"
+- tapOn: "Travel east"
+- extendedWaitUntil:
+    visible: "Hall of Echoes"
+    timeout: 15000
+
+- assertVisible: "Travel south"
+- tapOn: "Travel south"
+- extendedWaitUntil:
+    visible: "Stasis Chamber"
+    timeout: 15000
+
+- assertVisible: "Travel south"
+- tapOn: "Travel south"
+- extendedWaitUntil:
+    visible: "Source Gate"
+    timeout: 15000
+
+- assertVisible: "Travel east"
+- tapOn: "Travel east"
+- extendedWaitUntil:
+    visible: "Hangar Bay"
+    timeout: 15000
+
+# 21. Reboot the Bridge
+- assertVisible: "Reboot Bridge"
+- tapOn: "Reboot Bridge"
+- extendedWaitUntil:
+    visible: "Connecting conduits and rebooting bridge systems..."
+    timeout: 15000
+- tapOn: "Connecting conduits and rebooting bridge systems..."
+
+# 22. Launch the Astra
+- assertVisible: "Launch the Astra"
+- tapOn: "Launch the Astra"
+- extendedWaitUntil:
+    visible: "Quest Complete"
+    timeout: 30000
+- assertVisible: "Liftoff"
+- tapOn: "Got it"
+- extendedWaitUntil:
+    visible: "Sewer Landing Pad"
+    timeout: 15000
+- takeScreenshot: mainquest-the-launch-completed

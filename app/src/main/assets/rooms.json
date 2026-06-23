@@ -4659,7 +4659,14 @@
       -1
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "charred starleaf",
+        "type": "generic",
+        "action_event": "w2_forage_herb_landing",
+        "condition_unmet_message": "Beneath the scorched canopy, starleaf shoots glow blue where Source-rich water reaches them."
+      }
+    ]
   },
   {
     "id": "sector9_landing_glade",
@@ -4680,7 +4687,14 @@
       0
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "luminous mushrooms",
+        "type": "generic",
+        "action_event": "w2_forage_herb_glade",
+        "condition_unmet_message": "The mushrooms pulse in a slow rhythm. Their caps are edible once the toxic silver gills are removed."
+      }
+    ]
   },
   {
     "id": "sector9_landing_stream",
@@ -4702,7 +4716,13 @@
       0
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "glow-water current",
+        "type": "generic",
+        "condition_unmet_message": "The current carries warm notes through the roots, like the Ocean breathing under the swamp."
+      }
+    ]
   },
   {
     "id": "sector9_landing_perimeter",
@@ -4748,7 +4768,14 @@
       -1
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "Salvage conduits",
+        "type": "generic",
+        "action_event": "w2_mq05_collect_conduits",
+        "condition_unmet_message": "Salvaging power conduits from the pod wreckage..."
+      }
+    ]
   },
   {
     "id": "sector9_stream_pools",
@@ -4772,7 +4799,14 @@
       0
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "reed bulbs",
+        "type": "generic",
+        "action_event": "w2_forage_herb_reeds",
+        "condition_unmet_message": "You cut away two resonant reed bulbs before their defensive spores can open."
+      }
+    ]
   },
   {
     "id": "sector9_stream_wetlands",
@@ -4783,7 +4817,9 @@
     "description": "Thick marshes filled with glowing reeds. The wind passing through the reeds creates a low, musical whisper that seems to rise directly from the damp soil.",
     "npcs": [],
     "items": [],
-    "enemies": [],
+    "enemies": [
+      "spore_spitter"
+    ],
     "connections": {
       "north": "sector9_stream_pools"
     },
@@ -4792,7 +4828,13 @@
       -1
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "spore warning",
+        "type": "generic",
+        "condition_unmet_message": "Amber sacs inflate along the path. Aethel markers identify the cloud as neurotoxic and harmful to Erosion control."
+      }
+    ]
   },
   {
     "id": "sector9_stream_flats",
@@ -4814,7 +4856,13 @@
       0
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "half-sunken causeway",
+        "type": "generic",
+        "condition_unmet_message": "Carved stones under the mud form an Aethel causeway aimed toward the Sanctuary Facility."
+      }
+    ]
   },
   {
     "id": "sector9_stream_falls",
@@ -4836,7 +4884,14 @@
       0
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "sheltered cookfire",
+        "type": "generic",
+        "action_event": "w2_camp_stream_falls",
+        "condition_unmet_message": "A dry recess behind the falls makes a defensible campsite. The steady water-chord quiets the mental strain."
+      }
+    ]
   },
   {
     "id": "sector9_stream_tidepools",
@@ -4857,7 +4912,14 @@
       1
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "tidepool crawler",
+        "type": "generic",
+        "action_event": "w2_forage_meat_tidepool",
+        "condition_unmet_message": "A plated crawler is trapped between mineral spines; its clean flank can be dressed for the fire."
+      }
+    ]
   },
   {
     "id": "sector9_stream_cave_entrance",
@@ -4878,7 +4940,13 @@
       1
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "cave glyphs",
+        "type": "generic",
+        "condition_unmet_message": "A light-mural maps surface water into the facility cooling system, joining swamp and Sanctuary as one machine."
+      }
+    ]
   },
   {
     "id": "sector9_stream_cave_depths",
@@ -4889,7 +4957,9 @@
     "description": "A quiet cavern chamber lit entirely by thick sheets of glowing blue moss. The damp walls echo the distant sound of the waterfall with a hollow rhythm.",
     "npcs": [],
     "items": [],
-    "enemies": [],
+    "enemies": [
+      "echo_borer"
+    ],
     "connections": {
       "south": "sector9_stream_cave_entrance",
       "east": "sector9_stream_sunken_passage"
@@ -4899,7 +4969,14 @@
       2
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "echo nest",
+        "type": "generic",
+        "action_event": "w2_forage_meat_cave",
+        "condition_unmet_message": "Fresh claw marks ring a nest lined with bioluminescent moss."
+      }
+    ]
   },
   {
     "id": "sector9_stream_sunken_passage",
@@ -4920,7 +4997,13 @@
       2
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "drowned console",
+        "type": "generic",
+        "condition_unmet_message": "The Aethel console still projects one phrase: THE OCEAN ENTERS THROUGH EVERY CRACK."
+      }
+    ]
   },
   {
     "id": "sector9_beach_cliffs",
@@ -4941,7 +5024,14 @@
       0
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "signal reflection",
+        "type": "generic",
+        "action_event": "w2_sq02_trace_cliffs",
+        "condition_unmet_message": "Three distant beacon reflections stutter across the tideglass. One carries a Dominion patrol code."
+      }
+    ]
   },
   {
     "id": "sector9_beach_cove",
@@ -5064,7 +5154,13 @@
       -3
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "mineral shelter",
+        "type": "generic",
+        "condition_unmet_message": "Old bedroll hooks and a soot-blackened ceiling mark a patrol shelter abandoned in a hurry."
+      }
+    ]
   },
   {
     "id": "sector9_beach_pillar",
@@ -5084,7 +5180,13 @@
       -4
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "resonant pillar",
+        "type": "generic",
+        "condition_unmet_message": "Touching the pillar sends a clean note through the beach and answers a deeper tone beneath the facility."
+      }
+    ]
   },
   {
     "id": "sector9_beach_grotto",
@@ -5132,7 +5234,14 @@
       -1
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "burrowing grazer",
+        "type": "generic",
+        "action_event": "w2_forage_meat_dunes",
+        "condition_unmet_message": "You flush a small grazer from the warm sand and preserve enough meat for a trail meal."
+      }
+    ]
   },
   {
     "id": "sector9_canopy",
@@ -5176,7 +5285,7 @@
       {
         "name": "Scavenge remains",
         "type": "generic",
-        "action_event": "w2_sq02_scavenge_body",
+        "action_event": "w2_sq02_trace_alpha",
         "condition_unmet_message": "A fallen Dominion scout lies tangled in the vines."
       }
     ]
@@ -5203,7 +5312,14 @@
       -3
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "distress signature alpha",
+        "type": "generic",
+        "action_event": "w2_sq02_trace_alpha",
+        "condition_unmet_message": "The first beacon signature repeats beneath the spore hiss. Its vector points toward the patrol hollow."
+      }
+    ]
   },
   {
     "id": "sector9_wilds_nest",
@@ -5225,7 +5341,14 @@
       -3
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "shard-hound remains",
+        "type": "generic",
+        "action_event": "w2_forage_meat_nest",
+        "condition_unmet_message": "The nest contains a recent kill untouched by the spores. You salvage a clean cut."
+      }
+    ]
   },
   {
     "id": "sector9_wilds_hollow",
@@ -5246,7 +5369,14 @@
       -4
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "distress signature beta",
+        "type": "generic",
+        "action_event": "w2_sq02_trace_beta",
+        "condition_unmet_message": "A second beacon is wedged inside a root. Its final packet names a cutter team near the ridge."
+      }
+    ]
   },
   {
     "id": "sector9_wilds_grave",
@@ -5272,7 +5402,7 @@
       {
         "name": "transceiver",
         "type": "generic",
-        "action_event": "w2_sq02_scavenge_body",
+        "action_event": "w2_sq02_trace_beta",
         "condition_unmet_message": "A fallen soldier holds an encrypted datapad and a Thermal Cutter."
       }
     ]
@@ -5296,7 +5426,13 @@
       -6
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "canopy route",
+        "type": "generic",
+        "condition_unmet_message": "From here the luminous waterways reveal a continuous route from crash site to temple ruins."
+      }
+    ]
   },
   {
     "id": "sector9_wilds_canopy_walk",
@@ -5311,14 +5447,30 @@
     "connections": {
       "west": "sector9_wilds_overlook",
       "south": "sector9_wilds_archway",
-      "north": "sector9_ridge_climb"
+      "north": "sector9_ridge_climb",
+      "east": "sector9_wilds_lookout"
     },
     "pos": [
       1,
       -6
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "razor-vine shortcut",
+        "type": "generic",
+        "condition_unmet_message": "The Thermal Cutter burns a clean path through the razor-vines, reopening the old canopy loop."
+      }
+    ],
+    "blocked_directions": {
+      "east": {
+        "type": "key",
+        "key_id": "thermal_cutter",
+        "consume": false,
+        "message_locked": "Razor-vines choke the passage. The barbed stems will burst into toxic spores if cut cold.",
+        "message_unlock": "The Thermal Cutter cauterizes the razor-vines. The old shortcut is open."
+      }
+    }
   },
   {
     "id": "sector9_wilds_archway",
@@ -5329,7 +5481,9 @@
     "description": "A massive, partially collapsed archway of smooth Architect stone. Faint cymatic glyphs flicker along the edges, pulsing in slow cycles.",
     "npcs": [],
     "items": [],
-    "enemies": [],
+    "enemies": [
+      "shard_hound"
+    ],
     "connections": {
       "north": "sector9_wilds_canopy_walk",
       "east": "sector9_wilds_dense_brush"
@@ -5339,7 +5493,13 @@
       -5
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "Aethel boundary stones",
+        "type": "generic",
+        "condition_unmet_message": "The archway translates swamp resonance into geometric light, the first threshold of the Sanctuary."
+      }
+    ]
   },
   {
     "id": "sector9_wilds_dense_brush",
@@ -5360,7 +5520,13 @@
       -5
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "toxic bloom",
+        "type": "generic",
+        "condition_unmet_message": "A violet bloom exhales corrosive spores. Holding your breath, you mark a safer return path."
+      }
+    ]
   },
   {
     "id": "sector9_wilds_clearance",
@@ -5381,7 +5547,14 @@
       -4
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "patrol transceiver",
+        "type": "generic",
+        "action_event": "w2_sq02_recover_transceiver",
+        "condition_unmet_message": "The last distress signal resolves under a collapsed slab. Beside it lies the patrol Thermal Cutter."
+      }
+    ]
   },
   {
     "id": "sector9_wilds_lookout",
@@ -5394,14 +5567,31 @@
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "sector9_wilds_clearance"
+      "south": "sector9_wilds_clearance",
+      "west": "sector9_wilds_canopy_walk"
     },
     "pos": [
       2,
       -3
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "ridge campsite",
+        "type": "generic",
+        "action_event": "w2_camp_wilds_lookout",
+        "condition_unmet_message": "A Dominion heat ring still works. Resting beside it lets a Neural Stabilizer settle the worst Erosion tremors."
+      }
+    ],
+    "blocked_directions": {
+      "west": {
+        "type": "key",
+        "key_id": "thermal_cutter",
+        "consume": false,
+        "message_locked": "Razor-vines choke the passage. The barbed stems will burst into toxic spores if cut cold.",
+        "message_unlock": "The Thermal Cutter cauterizes the razor-vines. The old shortcut is open."
+      }
+    }
   },
   {
     "id": "sector9_ridge_climb",
@@ -5423,7 +5613,13 @@
       -5
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "medic satchel",
+        "type": "generic",
+        "condition_unmet_message": "The satchel is empty except for notes describing Neural Stabilizers as temporary anchors against Erosion."
+      }
+    ]
   },
   {
     "id": "sector9_ridge_ledges",
@@ -5434,7 +5630,9 @@
     "description": "High stone shelves swept by cold upper-atmosphere wind. The ambient sound of the winds whistling through the gaps forms a low chord.",
     "npcs": [],
     "items": [],
-    "enemies": [],
+    "enemies": [
+      "echo_borer"
+    ],
     "connections": {
       "south": "sector9_ridge_climb",
       "north": "sector9_ridge_overhang"
@@ -5444,7 +5642,14 @@
       -4
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "blue-frond cluster",
+        "type": "generic",
+        "action_event": "w2_forage_herb_ridge",
+        "condition_unmet_message": "Hardy blue fronds grow beyond the spore line and make a bitter but safe cooking herb."
+      }
+    ]
   },
   {
     "id": "sector9_ridge_overhang",
@@ -5465,7 +5670,13 @@
       -3
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "weathered mural",
+        "type": "generic",
+        "condition_unmet_message": "Rain exposes a mural: human figures rendered as ice, listening to the vast Ocean beneath them."
+      }
+    ]
   },
   {
     "id": "sector9_canopy_ridge",
@@ -5521,7 +5732,13 @@
       -2
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "facility sightline",
+        "type": "generic",
+        "condition_unmet_message": "Sterile white towers emerge from living green. Root and conduit follow the same branching pattern."
+      }
+    ]
   },
   {
     "id": "sector9_ridge_sniper_perch",
@@ -5542,7 +5759,14 @@
       -1
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "distress signature gamma",
+        "type": "generic",
+        "action_event": "w2_sq02_trace_gamma",
+        "condition_unmet_message": "A directional scope confirms the patrol signal terminates in the clearance below."
+      }
+    ]
   },
   {
     "id": "sector9_ridge_crevice",
@@ -5563,7 +5787,13 @@
       -1
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "razor-vine cache",
+        "type": "generic",
+        "condition_unmet_message": "The Thermal Cutter parts the thorn mat without bursting its toxic seed pods, exposing an old supply niche."
+      }
+    ]
   },
   {
     "id": "sector9_ridge_plateau",
@@ -5584,7 +5814,14 @@
       -1
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "plateau camp",
+        "type": "generic",
+        "action_event": "w2_camp_ridge_plateau",
+        "condition_unmet_message": "The stone remains warm after sunset. A small cookfire and shared food restore focus before the temple."
+      }
+    ]
   },
   {
     "id": "sector9_temple_plaza",
@@ -5595,7 +5832,9 @@
     "description": "A symmetric stone plaza in front of the gate. Geometric lines are carved into the ground, pulsing with a faint blue light.",
     "npcs": [],
     "items": [],
-    "enemies": [],
+    "enemies": [
+      "spore_spitter"
+    ],
     "connections": {
       "west": "sector9_ridge_plateau",
       "east": "sector9_temple_lock_chamber",
@@ -5606,7 +5845,13 @@
       -1
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "processional mural",
+        "type": "generic",
+        "condition_unmet_message": "Light figures carry bowls of Ocean-water inward while crystalline human shapes carry memory outward."
+      }
+    ]
   },
   {
     "id": "sector9_temple_vestibule",
@@ -5626,7 +5871,13 @@
       0
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "sanitation console",
+        "type": "generic",
+        "condition_unmet_message": "The console once stripped toxic spores from pilgrims before admitting them to the Sanctuary."
+      }
+    ]
   },
   {
     "id": "sector9_temple_lock_chamber",
@@ -5678,7 +5929,14 @@
       0
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "western resonance crystal",
+        "type": "generic",
+        "action_event": "w2_sq04_crystal_west",
+        "condition_unmet_message": "A violet crystal stores the low harmony missing from the stasis mural."
+      }
+    ]
   },
   {
     "id": "sector9_temple_right_wing",
@@ -5698,7 +5956,14 @@
       -2
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "eastern resonance crystal",
+        "type": "generic",
+        "action_event": "w2_sq04_crystal_east",
+        "condition_unmet_message": "A cyan crystal holds the answering harmonic from the facility east wing."
+      }
+    ]
   },
   {
     "id": "sector9_temple_gate",
@@ -5749,7 +6014,13 @@
       0
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "welcome console",
+        "type": "generic",
+        "condition_unmet_message": "Aethel text calls this place a shore: a safe edge where minds of Ice could approach the Ocean."
+      }
+    ]
   },
   {
     "id": "sector9_foyer_left_gallery",
@@ -5760,7 +6031,9 @@
     "description": "A wide alcove showing cracked Architect resonance crystals displayed on stone pedestals. The crystals hum in discord.",
     "npcs": [],
     "items": [],
-    "enemies": [],
+    "enemies": [
+      "shard_hound"
+    ],
     "connections": {
       "south": "sector9_foyer_grand_hall",
       "west": "sector9_foyer_security_hub"
@@ -5770,7 +6043,13 @@
       1
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "botanical research log",
+        "type": "generic",
+        "condition_unmet_message": "The log confirms the swamp was cultivated to filter Source resonance, not allowed to overtake the facility."
+      }
+    ]
   },
   {
     "id": "sector9_foyer_right_gallery",
@@ -5791,7 +6070,13 @@
       -1
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "light-mural procession",
+        "type": "generic",
+        "condition_unmet_message": "Sterile panels bloom into wetland colors as you pass, erasing the boundary between vault and jungle."
+      }
+    ]
   },
   {
     "id": "sector9_foyer_security_hub",
@@ -5838,7 +6123,13 @@
       -1
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "security palimpsest",
+        "type": "generic",
+        "condition_unmet_message": "Layered warnings describe resonance overload as Erosion and prescribe chemical neural stabilization."
+      }
+    ]
   },
   {
     "id": "sector9_conduit_crawlspace",
@@ -5859,7 +6150,13 @@
       -1
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "maintenance spores",
+        "type": "generic",
+        "condition_unmet_message": "Bioluminescent fungus feeds on warm conduit leakage. Its spores numb exposed skin."
+      }
+    ]
   },
   {
     "id": "sector9_conduit_junction",
@@ -5870,7 +6167,9 @@
     "description": "A junction point inside the crawlspace. Wire channels split off to the stasis deck and generator breakers.",
     "npcs": [],
     "items": [],
-    "enemies": [],
+    "enemies": [
+      "echo_borer"
+    ],
     "connections": {
       "west": "sector9_conduit_crawlspace",
       "north": "sector9_conduit_access_shaft",
@@ -5881,7 +6180,13 @@
       -1
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "service map",
+        "type": "generic",
+        "condition_unmet_message": "The map reveals a return duct linking the Hall of Echoes to the foyer security hub."
+      }
+    ]
   },
   {
     "id": "sector9_conduit_breaker_room",
@@ -5928,7 +6233,22 @@
       0
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "shaft shortcut",
+        "type": "generic",
+        "condition_unmet_message": "The Thermal Cutter clears roots fused around the access ladder, reopening the climb into the vents."
+      }
+    ],
+    "blocked_directions": {
+      "north": {
+        "type": "key",
+        "key_id": "thermal_cutter",
+        "consume": false,
+        "message_locked": "Razor-vines choke the passage. The barbed stems will burst into toxic spores if cut cold.",
+        "message_unlock": "The Thermal Cutter cauterizes the razor-vines. The old shortcut is open."
+      }
+    }
   },
   {
     "id": "sector9_hall_of_echoes",
@@ -5986,7 +6306,13 @@
       -3
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "choir alcove log",
+        "type": "generic",
+        "condition_unmet_message": "Each alcove preserved one voice so no single mind had to hold the Ocean alone."
+      }
+    ]
   },
   {
     "id": "sector9_hall_acoustics_lab",
@@ -5997,7 +6323,9 @@
     "description": "A laboratory bay containing Dominion logging sensors focused on the cymatic pool fluctuations.",
     "npcs": [],
     "items": [],
-    "enemies": [],
+    "enemies": [
+      "spore_spitter"
+    ],
     "connections": {
       "south": "sector9_hall_echo_alcoves"
     },
@@ -6006,7 +6334,14 @@
       -4
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "northern resonance crystal",
+        "type": "generic",
+        "action_event": "w2_sq04_crystal_north",
+        "condition_unmet_message": "A gold crystal vibrates at the mural alignment frequency."
+      }
+    ]
   },
   {
     "id": "sector9_hall_reflection_pool",
@@ -6026,7 +6361,13 @@
       -3
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "reflection pool",
+        "type": "generic",
+        "condition_unmet_message": "Your reflection fractures into ice-bright facets while the water beneath remains a single dark Ocean."
+      }
+    ]
   },
   {
     "id": "sector9_archive_vault",
@@ -6047,7 +6388,13 @@
       -2
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "Aethel extinction log",
+        "type": "generic",
+        "condition_unmet_message": "The final entry rejects conquest: pain came from treating the Source as an object rather than an Ocean."
+      }
+    ]
   },
   {
     "id": "sector9_archive_reading_room",
@@ -6068,7 +6415,13 @@
       -2
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "research terminal",
+        "type": "generic",
+        "condition_unmet_message": "A clinical note defines Erosion as cognitive shear caused by incompatible resonance memories."
+      }
+    ]
   },
   {
     "id": "sector9_archive_tuning_bay",
@@ -6225,7 +6578,13 @@
       -4
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "coolant garden",
+        "type": "generic",
+        "condition_unmet_message": "Facility coolant nourishes the same luminous vines seen outside, proving both ecosystems share one circulation."
+      }
+    ]
   },
   {
     "id": "sector9_stasis_observation",
@@ -6246,7 +6605,13 @@
       -2
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "stasis mural overview",
+        "type": "generic",
+        "condition_unmet_message": "Three empty sockets surround the chamber mural, waiting for west, east, and north wing crystals."
+      }
+    ]
   },
   {
     "id": "sector9_vents_gantry",
@@ -6257,7 +6622,9 @@
     "description": "Walkway gantries suspended high above the stasis pod. The metal beams are covered in thick dust.",
     "npcs": [],
     "items": [],
-    "enemies": [],
+    "enemies": [
+      "shard_hound"
+    ],
     "connections": {
       "south": "sector9_conduit_access_shaft",
       "east": "sector9_vents_access_grate"
@@ -6267,7 +6634,23 @@
       -2
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "security grid",
+        "type": "generic",
+        "action_event": "w2_sq05_hack_grid",
+        "condition_unmet_message": "Guard sensors sweep the vent junction. Gh0st can ghost their timing while you breach the grid."
+      }
+    ],
+    "blocked_directions": {
+      "south": {
+        "type": "key",
+        "key_id": "thermal_cutter",
+        "consume": false,
+        "message_locked": "Razor-vines choke the shaft. The barbed stems will burst into toxic spores if cut cold.",
+        "message_unlock": "The Thermal Cutter cauterizes the razor-vines. The shaft route is open."
+      }
+    }
   },
   {
     "id": "sector9_vents_access_grate",
@@ -6289,7 +6672,14 @@
       -2
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "guard-system bypass",
+        "type": "generic",
+        "action_event": "w2_sq05_bypass_guards",
+        "condition_unmet_message": "You crawl between scan pulses, using Gh0st's timing marks to pass the dormant sentries."
+      }
+    ]
   },
   {
     "id": "sector9_vents_tech_alcove",
@@ -6337,7 +6727,13 @@
       -4
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "turbine inscription",
+        "type": "generic",
+        "condition_unmet_message": "Power was tuned like music here; every machine was expected to harmonize with the living swamp."
+      }
+    ]
   },
   {
     "id": "sector9_power_manifold",
@@ -6358,7 +6754,14 @@
       -4
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "facility camp station",
+        "type": "generic",
+        "action_event": "w2_camp_power_manifold",
+        "condition_unmet_message": "A maintenance heat plate offers sterile shelter. Food and a Neural Stabilizer bring Erosion back under control."
+      }
+    ]
   },
   {
     "id": "sector9_power_breaker_deck",
@@ -6406,7 +6809,13 @@
       -5
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "root pressure gauge",
+        "type": "generic",
+        "condition_unmet_message": "Roots outside regulate pressure inside. Severing either system would kill both."
+      }
+    ]
   },
   {
     "id": "sector9_source_gate",
@@ -6467,7 +6876,13 @@
       -4
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "emitter memory",
+        "type": "generic",
+        "condition_unmet_message": "The emitter remembers thousands of minds crossing toward the Ocean, each held distinct like ice in current."
+      }
+    ]
   },
   {
     "id": "sector9_gate_emitter_right",
@@ -6487,7 +6902,13 @@
       -5
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "emitter service log",
+        "type": "generic",
+        "condition_unmet_message": "Technicians used Neural Stabilizers only as anchors; lasting recovery required rest and trusted voices."
+      }
+    ]
   },
   {
     "id": "sector9_hangar_bay",
@@ -6515,6 +6936,18 @@
         "type": "generic",
         "action_event": "w2_mq05_inspect_astra",
         "condition_unmet_message": "The ship's main console. The primary power conduit is completely severed."
+      },
+      {
+        "name": "Reboot Bridge",
+        "type": "generic",
+        "action_event": "w2_mq05_reboot",
+        "condition_unmet_message": "Connecting conduits and rebooting bridge systems..."
+      },
+      {
+        "name": "Launch the Astra",
+        "type": "generic",
+        "action_event": "w2_mq05_launch",
+        "condition_unmet_message": "Powering up the primary thrusters..."
       }
     ],
     "npc_presence": [
@@ -6548,7 +6981,13 @@
       -3
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "hangar overlook",
+        "type": "generic",
+        "condition_unmet_message": "Vines lace the roof while immaculate Aethel rails descend below, a final union of wild growth and design."
+      }
+    ]
   },
   {
     "id": "sector9_hangar_staging",
@@ -6757,5 +7196,176 @@
     ],
     "state": {},
     "actions": []
+  },
+  {
+    "id": "astra_bridge",
+    "env": "spaceship",
+    "weather": "industrial",
+    "title": "Astra Bridge",
+    "background_image": "images/rooms/astra/bridge.png",
+    "description": "A cramped cockpit of amber CRTs, exposed wiring, and four mismatched flight seats. The nav console waits beneath a web of handwritten route notes while the Chime hums in its shielded cradle.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "south": "astra_common_room"
+    },
+    "pos": [
+      0,
+      0
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "nav console",
+        "type": "generic",
+        "condition_unmet_message": "The atmospheric route map is online. Inter-world travel will unlock as destinations and the Astra flight systems become available."
+      },
+      {
+        "name": "Chime",
+        "type": "generic",
+        "condition_unmet_message": "The Chime steadies the ship around a low Ocean-note, keeping the crew distinct as Ice inside the current."
+      }
+    ],
+    "npc_presence": [
+      {
+        "npc": "zeke",
+        "requires_milestones": [
+          "ms_w2_mq05_complete"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "astra_common_room",
+    "env": "spaceship",
+    "weather": "industrial",
+    "title": "Astra Common Room",
+    "background_image": "images/rooms/astra/common_room.png",
+    "description": "Coffee rings stain the central table. A patched kitchenette faces a couch bolted to the deck, and the shielded relic array occupies one warm corner. This is where the crew stops being a formation and becomes a family.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "north": "astra_bridge",
+      "east": "astra_quarters",
+      "west": "astra_cargo_bay",
+      "south": "astra_simulation_deck"
+    },
+    "pos": [
+      0,
+      -1
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "relic array",
+        "type": "generic",
+        "condition_unmet_message": "The shielded array can eventually synchronize late-joining crew members with recovered relics."
+      },
+      {
+        "name": "central table",
+        "type": "generic",
+        "condition_unmet_message": "Meals, arguments, route plans, and the quiet work of becoming a crew all collect here."
+      }
+    ],
+    "npc_presence": [
+      {
+        "npc": "orion",
+        "requires_milestones": [
+          "ms_w2_mq05_complete"
+        ]
+      },
+      {
+        "npc": "gh0st",
+        "requires_milestones": [
+          "ms_w2_mq05_complete"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "astra_quarters",
+    "env": "spaceship",
+    "weather": "industrial",
+    "title": "Astra Living Quarters",
+    "background_image": "images/rooms/astra/quarters.png",
+    "description": "A short bunk corridor gives every crew member a narrow door and a little privacy. Nova's bed is plain but clean, and the ship's vibration feels safer than silence.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "astra_common_room"
+    },
+    "pos": [
+      1,
+      -1
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "Nova's bed",
+        "type": "generic",
+        "action_event": "astra_rest_party",
+        "condition_unmet_message": "Rest aboard the Astra fully restores the active party."
+      }
+    ]
+  },
+  {
+    "id": "astra_cargo_bay",
+    "env": "spaceship",
+    "weather": "industrial",
+    "title": "Astra Cargo Bay",
+    "background_image": "images/rooms/astra/cargo_bay.png",
+    "description": "Cargo nets, sealed crates, and replacement conduits crowd the lower deck. A compact repair bench is powered beside a damaged storage terminal.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "east": "astra_common_room"
+    },
+    "pos": [
+      -1,
+      -1
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "repair bench",
+        "type": "tinkering",
+        "condition_unmet_message": "The Astra bench supports field modifications between missions."
+      },
+      {
+        "name": "storage terminal",
+        "type": "generic",
+        "condition_unmet_message": "Long-term cargo storage is still offline while Zeke rebuilds its index."
+      }
+    ]
+  },
+  {
+    "id": "astra_simulation_deck",
+    "env": "spaceship",
+    "weather": "industrial",
+    "title": "Astra Simulation Deck",
+    "background_image": "images/rooms/astra/simulation_deck.png",
+    "description": "Cold blue projectors surround a circular training floor. Combat telemetry and recovered cinematic fragments wait behind a half-repaired archive console.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "north": "astra_common_room"
+    },
+    "pos": [
+      0,
+      -2
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "archive console",
+        "type": "generic",
+        "condition_unmet_message": "Combat replay and cinematic archives are installed but await the simulation runtime."
+      }
+    ]
   }
 ]

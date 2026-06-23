@@ -224,6 +224,22 @@ class EventManager(
                     action.message?.let { eventHooks.onMessage(it) }
                     true
                 }
+                "rest_party" -> {
+                    eventHooks.onRestParty()
+                    true
+                }
+                "reveal_node" -> action.nodeId?.let {
+                    eventHooks.onRevealNode(it)
+                    true
+                } ?: false
+                "unlock_node" -> action.nodeId?.let {
+                    eventHooks.onUnlockNode(it)
+                    true
+                } ?: false
+                "complete_node" -> action.nodeId?.let {
+                    eventHooks.onCompleteNode(it)
+                    true
+                } ?: false
                 "unlock_skill" -> {
                     val skillId = action.skillId ?: action.itemId ?: action.item
                     skillId?.takeIf { it.isNotBlank() }?.let {
@@ -568,5 +584,9 @@ data class EventHooks(
     val onUnlockRoomSearch: (roomId: String?, note: String?) -> Unit = { _, _ -> },
     val onEventCompleted: (eventId: String) -> Unit = {},
     val onPartyMemberJoined: (memberId: String) -> Unit = {},
+    val onRestParty: () -> Unit = {},
+    val onRevealNode: (nodeId: String) -> Unit = {},
+    val onUnlockNode: (nodeId: String) -> Unit = {},
+    val onCompleteNode: (nodeId: String) -> Unit = {},
     val onAudioLayerCommand: (AudioLayerCommandSpec) -> Unit = {}
 )

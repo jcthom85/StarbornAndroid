@@ -15,11 +15,18 @@ This document tracks implementation status of the tasks defined in the [World 2 
 | **Phase 2: Code** | ⚔️ Combat Cooldown System | **Completed** | Confirmed skills function natively on turn-based cooldown system |
 | **Phase 3: Assets** | World 2 production art | **Completed** | Added and wired 91 room backgrounds, 2 hub maps, 10 node icons, 3 enemy sprites, and Sentinel-3 portrait |
 | **Phase 4: Device QA** | All-node hub navigation | **Completed** | Pixel 8a Maestro coverage passes for all 10 World 2 hub nodes |
-| **Phase 4: Device QA** | Main quest end-to-end flow | **Next** | Cover crash, Gh0st/Source Beast, Orion, Astra launch, and World 3 handoff |
+| **Phase 4: Device QA** | Main quest end-to-end flow | **Completed** | Fixed narration dismissal in UI, updated playtest selectors, and verified flow on emulator |
 
 ---
 
 ## Log of Changes
+
+### 2026-06-22
+* **Fixed Playtest Narration Overlay Dismissal:** Modified `InspectionOverlay` inside [ExplorationScreen.kt](file:///C:/Users/jctho/StudioProjects/StarbornAndroid/app/src/main/java/com/example/starborn/feature/exploration/ui/ExplorationScreen.kt#L5240-L5253) to trigger `onDismiss` when clicking the card itself if `tapToDismiss` is enabled, permitting playtests to successfully advance narration popups.
+* **Aligned Playtest Assertions:**
+  * Updated stasis dialogue choice taps to use regex wildcards (`.*Broadcast C# Minor 7.*`, `.*Tune resonator to C# Minor 7.*`) in [mainquest_world2_facility_flow.yaml](file:///C:/Users/jctho/StudioProjects/StarbornAndroid/playtests/maestro/mainquest_world2_facility_flow.yaml) to avoid regex parenthesis matching issues.
+  * Standardized quest completion banner assertions to `"Quest Complete"` and changed dismiss buttons to `"Got it"` in both World 2 playtest files.
+  * Verified successful APK packaging, installation, and targeted device execution using serial environment variables on the local emulator.
 
 ### 2026-06-21
 * **Completed World 2 Art Production:** Added and wired production art for all 91 rooms, both hubs, all 10 nodes, the Shard-Hound, Spore-Spitter, Source Beast, and Sentinel-3.

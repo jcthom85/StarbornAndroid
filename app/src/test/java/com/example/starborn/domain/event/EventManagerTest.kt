@@ -12,6 +12,38 @@ import org.junit.Test
 class EventManagerTest {
 
     @Test
+    fun nodeProgressActionsDelegateToHooks() {
+        val sessionStore = GameSessionStore()
+        val calls = mutableListOf<String>()
+        val event = GameEvent(
+            id = "evt_nodes",
+            trigger = EventTrigger(type = "custom"),
+            repeatable = true,
+            actions = listOf(
+                EventAction(type = "reveal_node", nodeId = "hidden_node"),
+                EventAction(type = "unlock_node", nodeId = "locked_node"),
+                EventAction(type = "complete_node", nodeId = "finished_node")
+            )
+        )
+        val manager = EventManager(
+            events = listOf(event),
+            sessionStore = sessionStore,
+            eventHooks = EventHooks(
+                onRevealNode = { calls += "reveal:$it" },
+                onUnlockNode = { calls += "unlock:$it" },
+                onCompleteNode = { calls += "complete:$it" }
+            )
+        )
+
+        manager.handleTrigger("custom")
+
+        assertEquals(
+            listOf("reveal:hidden_node", "unlock:locked_node", "complete:finished_node"),
+            calls
+        )
+    }
+
+    @Test
     fun playCinematicExecutesFollowUpActions() {
         val sessionStore = GameSessionStore()
         var cinematicTriggered: String? = null

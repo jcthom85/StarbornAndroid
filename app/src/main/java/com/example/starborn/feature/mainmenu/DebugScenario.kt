@@ -42,6 +42,11 @@ object DebugScenarioCatalog {
         hub("hub_11_event_horizon", "World 6 / Event Horizon", "The Source", "Start the first main quest beyond the Tear."),
         hub("hub_12_singularity", "World 6 / Singularity", "The Source", "Orient at the final hub."),
 
+        hubScenario("node_progression_w1", "Node Progression / World 1", "The Mines", "Open Homestead with normal discovery state and the Transit Checkpoint visibly locked."),
+        hubScenario("node_progression_w2", "Node Progression / World 2", "Sector 9", "Open Jungle Ruins with only the Crash Site discovered; reveal other nodes through exploration."),
+        hubScenario("astra_access", "Astra Access / Regional Hub", "The Spire", "Open the Lower City after repairing the Astra and test entering the ship from a regional hub."),
+        hubScenario("astra_home", "Astra Home Base", "The Astra", "Start aboard the Astra with crew conversations, rest, disembark, and staged room locks available."),
+
         scenario("scavenger", "Scavenger's Stash", "Test the Trade Row side-quest entry state.", DebugScenarioCategory.CONTENT),
         scenario("heavy_lifting", "Heavy Lifting", "Test the Workshop training side quest.", DebugScenarioCategory.CONTENT),
         scenario("checkpoint", "Transit Checkpoint", "Test the guarded checkpoint sequence.", DebugScenarioCategory.CONTENT),
@@ -73,5 +78,14 @@ object DebugScenarioCatalog {
         category = DebugScenarioCategory.WORLD,
         destination = DebugScenarioDestination.HUB,
         worldLabel = title.substringBefore(" /") + ": $world"
+    )
+
+    private fun hubScenario(id: String, title: String, world: String, description: String) = DebugScenario(
+        id = id,
+        title = title,
+        description = description,
+        category = DebugScenarioCategory.SYSTEM,
+        destination = DebugScenarioDestination.HUB,
+        worldLabel = world
     )
 }

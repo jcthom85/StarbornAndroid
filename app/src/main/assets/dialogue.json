@@ -792,8 +792,8 @@
   {
     "id": "orion_w2_sq04_tune_1",
     "speaker": "Orion",
-    "text": "The mural's resonance is discordant. Which chord should we feed into the console to balance the light?",
-    "condition": "quest_active:w2_sq04,quest_task_not_done:w2_sq04:mural_tuning",
+    "text": "All three crystal voices are seated. Which chord will align the stasis mural and hold each human memory like Ice within the Ocean?",
+    "condition": "quest_active:w2_sq04,quest_task_done:w2_sq04:crystal_west,quest_task_done:w2_sq04:crystal_east,quest_task_done:w2_sq04:crystal_north,quest_task_not_done:w2_sq04:mural_tuning",
     "options": [
       {
         "id": "orion_w2_sq04_tune_csharp",
@@ -810,7 +810,7 @@
   {
     "id": "orion_w2_sq04_tune_success",
     "speaker": "Orion",
-    "text": "The light-murals stabilize, singing a beautiful choral note of my ancestors. Look, a storage cache opened!",
+    "text": "C#m7. The mural stabilizes: many minds, distinct as Ice, carried without dissolving in the Ocean.",
     "trigger": "player_action:w2_sq04_complete"
   },
   {
@@ -838,7 +838,7 @@
   {
     "id": "orion_w2_sq04_intro_1",
     "speaker": "Orion",
-    "text": "Nova, the console in the Hall of Echoes controls the light-murals. They've drifted off-pitch. We can tune them to C#m7 to restore the old song.",
+    "text": "The stasis mural is missing three resonance crystals from the Sanctuary wings. Recover their voices, then we can align the chord without letting the Ocean overwhelm us.",
     "condition": "quest_not_started:w2_sq04,quest_completed:w2_mq03",
     "options": [
       {
@@ -879,7 +879,7 @@
   {
     "id": "ghost_w2_sq05_intro_1",
     "speaker": "Gh0st",
-    "text": "Nova, local drones dragged a Dominion transmitter into the stasis chamber vents. Retrieve it. We can salvage rapid capacitors from it.",
+    "text": "The transmitter is beyond an active vent security grid. Hack its timing, pass the guard systems without an alert, then retrieve the hardware.",
     "condition": "quest_not_started:w2_sq05,quest_completed:w2_mq04",
     "options": [
       {
@@ -1304,5 +1304,29 @@
     "id": "sentinel_default_talk",
     "speaker": "Sentinel-3",
     "text": "Core status: 89% coherence. Atmospheric humidity: high. The canopy resonance is vibrating at key G minor today."
+  },
+  {
+    "id": "zeke_w2_sq02_patrol_hint",
+    "speaker": "Zeke",
+    "text": "Patrol beacons scatter their signatures across the Wilds. Triangulate all three before trusting the final vector. Their cutter team may have carried something useful.",
+    "condition": "quest_active:w2_sq02,quest_task_not_done:w2_sq02:recover_transceiver"
+  },
+  {
+    "id": "orion_w2_camp_rest",
+    "speaker": "Orion",
+    "text": "Rest is not surrender. The Ocean presses against every thought; food, trusted voices, and a Neural Stabilizer give the Ice time to hold its shape.",
+    "condition": "quest_completed:w2_mq03"
+  },
+  {
+    "id": "orion_w2_vine_gate",
+    "speaker": "Orion",
+    "text": "Those razor-vines carry toxic spores. A heated edge could cauterize them as it cuts. The lost patrol transceiver may lead us to one.",
+    "condition": "quest_active:w2_sq02,quest_task_not_done:w2_sq02:recover_transceiver"
+  },
+  {
+    "id": "ghost_w2_sq05_grid_hint",
+    "speaker": "Gh0st",
+    "text": "Do not touch the transmitter yet. First blind the security grid on the gantry, then cross the access grate between guard sweeps.",
+    "condition": "quest_active:w2_sq05,quest_task_not_done:w2_sq05:hack_security_grid"
   }
 ]

@@ -69,6 +69,8 @@ import com.example.starborn.domain.model.Hub
 import com.example.starborn.domain.model.World
 import com.example.starborn.domain.model.Requirement
 import com.example.starborn.domain.model.Room
+import com.example.starborn.domain.model.NodeTransition
+import com.example.starborn.domain.model.edgeKey
 import com.example.starborn.domain.model.RoomEnemyInstance
 import com.example.starborn.domain.model.RoomAction
 import com.example.starborn.domain.model.ShopAction
@@ -476,6 +478,16 @@ class ExplorationViewModel(
             onPartyMemberJoined = { memberId ->
                 handlePartyMemberJoined(memberId)
             },
+            onRestParty = {
+                val session = sessionStore.state.value
+                val restored = session.partyMembers.associateWith { memberId ->
+                    charactersById[memberId]?.hp ?: session.partyMemberHp[memberId] ?: 1
+                }
+                sessionStore.updatePartyVitals(restored)
+            },
+            onRevealNode = sessionStore::revealNode,
+            onUnlockNode = sessionStore::unlockNode,
+            onCompleteNode = sessionStore::completeNode,
             onAudioLayerCommand = { handleAudioLayerCommand(it) }
         )
     )
@@ -550,6 +562,7 @@ class ExplorationViewModel(
     private var roomsByEnvironment: Map<String, List<Room>> = emptyMap()
     private var roomsByNodeId: Map<String, List<Room>> = emptyMap()
     private var nodeIdByRoomId: Map<String, String> = emptyMap()
+    private var nodeTransitionByEdge: Map<String, NodeTransition> = emptyMap()
     private val portraitBySpeaker: MutableMap<String, String> = mutableMapOf()
     private val emotesBySpeaker: MutableMap<String, Map<String, String>> = mutableMapOf()
     private val portraitOverrides: Map<String, String> = mapOf(
@@ -1031,13 +1044,6 @@ class ExplorationViewModel(
     private fun updateMinimap(currentRoom: Room?) {
         currentRoom?.let { room ->
             markDiscovered(room)
-            room.connections.values.forEach { destId ->
-                if (!destId.isNullOrBlank()) {
-                    roomsById[destId]?.let { destRoom ->
-                        markDiscovered(destRoom)
-                    }
-                }
-            }
         }
         val minimap = currentRoom?.let { buildMinimapState(it) }
         val fullMap = currentRoom?.let { buildFullMapState(it) }
@@ -1602,6 +1608,7 @@ class ExplorationViewModel(
             val worlds = worldAssets.loadWorlds()
             val hubs = worldAssets.loadHubs()
             val nodes = worldAssets.loadHubNodes()
+            nodeTransitionByEdge = worldAssets.loadNodeTransitions().associateBy { it.edgeKey() }
             entryRoomIds = nodes.mapNotNull { node ->
                 node.entryRoom.takeIf { it.isNotBlank() }
             }.toSet()
@@ -1726,6 +1733,7 @@ class ExplorationViewModel(
             initialRoom?.let {
                 markVisited(it.id)
                 markDiscovered(it)
+                markNodeVisited(it)
             }
             blockedCinematicsShown.clear()
             if (preselectedRoomId.isNullOrBlank()) {
@@ -1855,6 +1863,18 @@ class ExplorationViewModel(
 
         val nextRoomId = getConnection(currentRoom, direction) ?: return
         val nextRoom = roomsById[nextRoomId] ?: return
+        val currentNodeId = nodeIdByRoomId[currentRoom.id]
+        val nextNodeId = nodeIdByRoomId[nextRoom.id]
+        if (currentNodeId != null && nextNodeId != null && currentNodeId != nextNodeId) {
+            val edgeKey = "${currentRoom.id.lowercase()}::${normalizedDirection}"
+            val transition = nodeTransitionByEdge[edgeKey]
+            if (transition == null || transition.toNode != nextNodeId || transition.toRoom != nextRoom.id) {
+                postStatus("This route is not registered on the regional map.")
+                playUiCue("error")
+                return
+            }
+            transition.transitionText?.takeIf { it.isNotBlank() }?.let(::postStatus)
+        }
         val nextRoomIsDark = isRoomDark(nextRoom)
         val nextTheme = themeByRoomId[nextRoom.id]
         val nextThemeStyle = themeStyleByRoomId[nextRoom.id]
@@ -1869,6 +1889,7 @@ class ExplorationViewModel(
         }
 
         sessionStore.setRoom(nextRoom.id)
+        markNodeVisited(nextRoom)
         if (!nextRoomIsDark) {
             markVisited(nextRoom.id)
             markDiscovered(nextRoom)

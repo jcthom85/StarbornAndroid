@@ -11,6 +11,7 @@ import com.example.starborn.domain.model.GameEvent
 import com.example.starborn.domain.model.HubNode
 import com.example.starborn.domain.model.MilestoneDefinition
 import com.example.starborn.domain.model.MilestoneExitUnlock
+import com.example.starborn.domain.model.NodeTransition
 import com.example.starborn.domain.model.Quest
 import com.example.starborn.domain.model.Room
 import com.example.starborn.data.local.Theme
@@ -295,6 +296,39 @@ class DataIntegrityTest {
             assertTrue("${node.id} entry room must exist", node.entryRoom in roomIds)
             assertTrue("${node.id} entry room must belong to the node", node.entryRoom in node.rooms)
         }
+    }
+
+    @Test
+    fun roomsHaveOneNodeOwnerAndCrossNodeExitsHaveTransitions() {
+        val nodes = readList("src/main/assets/hub_nodes.json", HubNode::class.java)
+        val rooms = readList("src/main/assets/rooms.json", Room::class.java).associateBy { it.id }
+        val transitions = readList("src/main/assets/node_transitions.json", NodeTransition::class.java)
+        val owners = mutableMapOf<String, String>()
+        val duplicateOwners = mutableListOf<String>()
+
+        nodes.forEach { node ->
+            node.rooms.forEach { roomId ->
+                val previous = owners.put(roomId, node.id)
+                if (previous != null) duplicateOwners += "$roomId:$previous:${node.id}"
+            }
+        }
+        assertTrue("Rooms must belong to only one node: $duplicateOwners", duplicateOwners.isEmpty())
+        assertEquals("Transition ids must be unique", transitions.size, transitions.map { it.id }.distinct().size)
+
+        val transitionByEdge = transitions.associateBy { "${it.fromRoom}::${it.direction.lowercase()}" }
+        val missing = mutableListOf<String>()
+        owners.forEach { (roomId, fromNode) ->
+            rooms[roomId]?.connections.orEmpty().forEach { (direction, targetRoom) ->
+                val toNode = owners[targetRoom]
+                if (toNode != null && toNode != fromNode) {
+                    val transition = transitionByEdge["$roomId::${direction.lowercase()}"]
+                    if (transition?.fromNode != fromNode || transition.toNode != toNode || transition.toRoom != targetRoom) {
+                        missing += "$roomId::$direction->$targetRoom"
+                    }
+                }
+            }
+        }
+        assertTrue("Cross-node room exits require explicit node transitions: $missing", missing.isEmpty())
     }
 
     @Test

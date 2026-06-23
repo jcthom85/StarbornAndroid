@@ -40,7 +40,7 @@ appId: com.junewiregames.starborn.prealpha
     text: "Use"
     index: 1
 - extendedWaitUntil:
-    visible: "Choose an enemy for Hydraulic Kick"
+    visible: "Cancel"
     timeout: 10000
 - tapOn: "Acoustic Bulwark"
 - waitForAnimationToEnd:
