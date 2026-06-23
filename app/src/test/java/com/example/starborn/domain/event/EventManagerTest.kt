@@ -83,6 +83,50 @@ class EventManagerTest {
     }
 
     @Test
+    fun encounterVictoryCanBeScopedToRoom() {
+        val sessionStore = GameSessionStore()
+        var messageCount = 0
+        val event = GameEvent(
+            id = "evt_room_scoped_victory",
+            trigger = EventTrigger(
+                type = "encounter_victory",
+                room = "mine_checkpoint",
+                enemies = listOf("acoustic_bulwark")
+            ),
+            actions = listOf(
+                EventAction(type = "show_message", message = "Correct bulwark defeated")
+            )
+        )
+        val manager = EventManager(
+            events = listOf(event),
+            sessionStore = sessionStore,
+            eventHooks = EventHooks(
+                onMessage = { messageCount++ }
+            )
+        )
+
+        manager.handleTrigger(
+            "encounter_victory",
+            EventPayload.EncounterOutcome(
+                enemyIds = listOf("acoustic_bulwark"),
+                outcome = EventPayload.EncounterOutcome.Outcome.VICTORY,
+                roomId = "workshop_dock"
+            )
+        )
+        manager.handleTrigger(
+            "encounter_victory",
+            EventPayload.EncounterOutcome(
+                enemyIds = listOf("acoustic_bulwark"),
+                outcome = EventPayload.EncounterOutcome.Outcome.VICTORY,
+                roomId = "mine_checkpoint"
+            )
+        )
+
+        assertEquals(1, messageCount)
+        assertTrue(sessionStore.state.value.completedEvents.contains("evt_room_scoped_victory"))
+    }
+
+    @Test
     fun questStageConditionMatches() {
         val sessionStore = GameSessionStore()
         sessionStore.startQuest("quest_intro")

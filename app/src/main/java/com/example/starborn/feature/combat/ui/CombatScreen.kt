@@ -508,14 +508,18 @@ fun CombatScreen(
                     rewardAp = rewards.ap,
                     rewardCredits = rewards.credits,
                     rewardItems = rewards.drops.associate { it.itemId to it.quantity },
-                    levelUps = viewModel.consumeLevelUpSummaries()
+                    levelUps = viewModel.consumeLevelUpSummaries(),
+                    sourcePartyId = viewModel.encounterSourcePartyId,
+                    roomId = viewModel.encounterRoomId
                 )
                 victoryDialogStage = VictoryDialogStage.SPOILS
             }
             is CombatOutcome.Defeat -> {
                 val payload = CombatResultPayload(
                     outcome = CombatResultPayload.Outcome.DEFEAT,
-                    enemyIds = viewModel.encounterEnemyIds
+                    enemyIds = viewModel.encounterEnemyIds,
+                    sourcePartyId = viewModel.encounterSourcePartyId,
+                    roomId = viewModel.encounterRoomId
                 )
                 handle?.set("combat_result", payload)
                 pendingOutcome = null
@@ -525,7 +529,9 @@ fun CombatScreen(
             CombatOutcome.Retreat -> {
                 val payload = CombatResultPayload(
                     outcome = CombatResultPayload.Outcome.RETREAT,
-                    enemyIds = viewModel.encounterEnemyIds
+                    enemyIds = viewModel.encounterEnemyIds,
+                    sourcePartyId = viewModel.encounterSourcePartyId,
+                    roomId = viewModel.encounterRoomId
                 )
                 handle?.set("combat_result", payload)
                 pendingOutcome = null

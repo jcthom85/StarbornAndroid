@@ -71,12 +71,14 @@ class EventManager(
                 true
             }
             "quest_stage_complete" -> payload is EventPayload.QuestStage && payload.questId == trigger.questId
-            "encounter_victory" -> matchesOutcome(trigger, payload, EventPayload.EncounterOutcome.Outcome.VICTORY)
+            "encounter_victory" -> matchesOutcome(trigger, payload, EventPayload.EncounterOutcome.Outcome.VICTORY, state)
             "encounter_defeat" -> payload is EventPayload.EncounterOutcome &&
                 payload.outcome == EventPayload.EncounterOutcome.Outcome.DEFEAT &&
+                matchesOutcomeRoom(trigger, payload, state) &&
                 (trigger.enemies.isNullOrEmpty() || payload.enemyIds.any { it in trigger.enemies })
             "encounter_retreat" -> payload is EventPayload.EncounterOutcome &&
                 payload.outcome == EventPayload.EncounterOutcome.Outcome.RETREAT &&
+                matchesOutcomeRoom(trigger, payload, state) &&
                 (trigger.enemies.isNullOrEmpty() || payload.enemyIds.any { it in trigger.enemies })
             "item_acquired" -> {
                 val itemPayload = (payload as? EventPayload.ItemAcquired)?.itemId
@@ -477,15 +479,28 @@ class EventManager(
     private fun matchesOutcome(
         trigger: EventTrigger,
         payload: EventPayload,
-        expected: EventPayload.EncounterOutcome.Outcome
+        expected: EventPayload.EncounterOutcome.Outcome,
+        state: GameSessionState
     ): Boolean {
         return when (payload) {
             is EventPayload.EnemyVictory -> expected == EventPayload.EncounterOutcome.Outcome.VICTORY &&
                 (trigger.enemies.isNullOrEmpty() || payload.enemyIds.any { it in trigger.enemies })
             is EventPayload.EncounterOutcome -> payload.outcome == expected &&
+                matchesOutcomeRoom(trigger, payload, state) &&
                 (trigger.enemies.isNullOrEmpty() || payload.enemyIds.any { it in trigger.enemies })
             else -> false
         }
+    }
+
+    private fun matchesOutcomeRoom(
+        trigger: EventTrigger,
+        payload: EventPayload.EncounterOutcome,
+        state: GameSessionState
+    ): Boolean {
+        val triggerRoom = trigger.roomId ?: trigger.room
+        if (triggerRoom.isNullOrBlank()) return true
+        val payloadRoom = payload.roomId ?: state.roomId
+        return payloadRoom.equals(triggerRoom, ignoreCase = true)
     }
 
     private fun toReward(action: EventAction): EventReward {
@@ -508,7 +523,8 @@ sealed interface EventPayload {
     data class ItemAcquired(val itemId: String) : EventPayload
     data class EncounterOutcome(
         val enemyIds: List<String>,
-        val outcome: Outcome
+        val outcome: Outcome,
+        val roomId: String? = null
     ) : EventPayload {
         enum class Outcome {
             VICTORY,

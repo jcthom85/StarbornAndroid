@@ -141,6 +141,7 @@ class CombatViewModel(
     val locationTitle: String?
     val encounterTitle: String
     val encounterSourcePartyId: String?
+    val encounterRoomId: String?
     private val timedPromptLock = Any()
     private var timedPromptDeferred: CompletableDeferred<Boolean>? = null
     private val _timedPrompt = MutableStateFlow<TimedPromptState?>(null)
@@ -323,6 +324,7 @@ class CombatViewModel(
         encounterEnemyIdList = slots.map { it.canonicalId }
 
         val currentRoomId = sessionSnapshot.roomId
+        encounterRoomId = currentRoomId
         val currentRoom: Room? = currentRoomId?.let { id -> rooms.firstOrNull { it.id == id } }
         environmentId = currentRoom?.env
         weatherId = currentRoom?.weather ?: defaultWeatherForEnvironment(currentRoom?.env)

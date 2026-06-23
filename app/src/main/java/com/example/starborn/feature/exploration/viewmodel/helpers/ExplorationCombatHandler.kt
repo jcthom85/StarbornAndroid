@@ -47,7 +47,8 @@ class ExplorationCombatHandler(
             type = "encounter_victory",
             payload = EventPayload.EncounterOutcome(
                 enemyIds = enemyIds,
-                outcome = EventPayload.EncounterOutcome.Outcome.VICTORY
+                outcome = EventPayload.EncounterOutcome.Outcome.VICTORY,
+                roomId = result.roomId
             )
         )
         onVictoryProcessed()
@@ -72,7 +73,8 @@ class ExplorationCombatHandler(
             type = "encounter_defeat",
             payload = EventPayload.EncounterOutcome(
                 enemyIds = enemyIds,
-                outcome = EventPayload.EncounterOutcome.Outcome.DEFEAT
+                outcome = EventPayload.EncounterOutcome.Outcome.DEFEAT,
+                roomId = sessionStore.state.value.roomId
             )
         )
         val message = "Overwhelmed by the enemy. Regroup and recover."
@@ -92,7 +94,8 @@ class ExplorationCombatHandler(
             type = "encounter_retreat",
             payload = EventPayload.EncounterOutcome(
                 enemyIds = enemyIds,
-                outcome = EventPayload.EncounterOutcome.Outcome.RETREAT
+                outcome = EventPayload.EncounterOutcome.Outcome.RETREAT,
+                roomId = sessionStore.state.value.roomId
             )
         )
         val message = "Retreated from combat."

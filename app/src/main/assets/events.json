@@ -985,6 +985,7 @@
     "description": "Completes Heavy Lifting when Nova defeats the shielded training guard.",
     "trigger": {
       "type": "encounter_victory",
+      "room": "workshop_dock",
       "enemies": [
         "acoustic_bulwark"
       ]
@@ -1741,6 +1742,7 @@
     "description": "Marks the first deep mine encounter complete when Nova defeats the rock borer.",
     "trigger": {
       "type": "encounter_victory",
+      "room": "mine_alpha",
       "enemies": [
         "echo_borer"
       ]
@@ -1769,6 +1771,7 @@
     "description": "Marks the Acoustic Bulwark task complete when Nova defeats the Acoustic Bulwark.",
     "trigger": {
       "type": "encounter_victory",
+      "room": "mine_checkpoint",
       "enemies": [
         "acoustic_bulwark"
       ]
@@ -1995,7 +1998,8 @@
     "id": "w1_mq04_gauntlet_victory",
     "description": "Marks the escape gauntlet task done when Nova defeats a security drone or enforcer.",
     "trigger": {
-      "type": "encounter_victory"
+      "type": "encounter_victory",
+      "room": "launch_lift"
     },
     "conditions": [
       {
@@ -2113,6 +2117,7 @@
     "description": "Marks launch access gauntlet task done when security drone is defeated.",
     "trigger": {
       "type": "encounter_victory",
+      "room": "launch_checkpoint",
       "enemies": [
         "resonance_buoy"
       ]
@@ -2177,6 +2182,7 @@
     "description": "Sets warden_defeated room state and advances quest to launch stage when Warden is defeated.",
     "trigger": {
       "type": "encounter_victory",
+      "room": "launch_bay",
       "enemies": [
         "the_iron_warden"
       ]

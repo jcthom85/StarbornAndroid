@@ -347,11 +347,17 @@
     "text": "Keep the line moving. The door doesn't care about your reasons."
   },
   {
+    "id": "zeke_w1_mq02_wait_for_hank",
+    "speaker": "Zeke",
+    "text": "Hank has to reject your clearance before I can touch the file. Let the scanner make it official, then come back to my window.",
+    "condition": "quest_active:w1_mq02,milestone_not_set:ms_w1_mq02_hank_denied,milestone_not_set:ms_w1_mq02_zeke_override"
+  },
+  {
     "id": "zeke_w1_mq02_override_1",
     "speaker": "Zeke",
     "emote": "surprised",
     "text": "Name? ID? Clearance sco--oh. It's you. The volunteer.",
-    "condition": "quest_active:w1_mq02,milestone_not_set:ms_w1_mq02_zeke_override",
+    "condition": "quest_active:w1_mq02,milestone:ms_w1_mq02_hank_denied,milestone_not_set:ms_w1_mq02_zeke_override",
     "next": "zeke_w1_mq02_override_2"
   },
   {
