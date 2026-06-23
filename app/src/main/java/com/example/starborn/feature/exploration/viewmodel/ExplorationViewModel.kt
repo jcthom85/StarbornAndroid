@@ -69,8 +69,6 @@ import com.example.starborn.domain.model.Hub
 import com.example.starborn.domain.model.World
 import com.example.starborn.domain.model.Requirement
 import com.example.starborn.domain.model.Room
-import com.example.starborn.domain.model.NodeTransition
-import com.example.starborn.domain.model.edgeKey
 import com.example.starborn.domain.model.RoomEnemyInstance
 import com.example.starborn.domain.model.RoomAction
 import com.example.starborn.domain.model.ShopAction
@@ -478,16 +476,6 @@ class ExplorationViewModel(
             onPartyMemberJoined = { memberId ->
                 handlePartyMemberJoined(memberId)
             },
-            onRestParty = {
-                val session = sessionStore.state.value
-                val restored = session.partyMembers.associateWith { memberId ->
-                    charactersById[memberId]?.hp ?: session.partyMemberHp[memberId] ?: 1
-                }
-                sessionStore.updatePartyVitals(restored)
-            },
-            onRevealNode = sessionStore::revealNode,
-            onUnlockNode = sessionStore::unlockNode,
-            onCompleteNode = sessionStore::completeNode,
             onAudioLayerCommand = { handleAudioLayerCommand(it) }
         )
     )
@@ -562,7 +550,6 @@ class ExplorationViewModel(
     private var roomsByEnvironment: Map<String, List<Room>> = emptyMap()
     private var roomsByNodeId: Map<String, List<Room>> = emptyMap()
     private var nodeIdByRoomId: Map<String, String> = emptyMap()
-    private var nodeTransitionByEdge: Map<String, NodeTransition> = emptyMap()
     private val portraitBySpeaker: MutableMap<String, String> = mutableMapOf()
     private val emotesBySpeaker: MutableMap<String, Map<String, String>> = mutableMapOf()
     private val portraitOverrides: Map<String, String> = mapOf(
@@ -1608,7 +1595,6 @@ class ExplorationViewModel(
             val worlds = worldAssets.loadWorlds()
             val hubs = worldAssets.loadHubs()
             val nodes = worldAssets.loadHubNodes()
-            nodeTransitionByEdge = worldAssets.loadNodeTransitions().associateBy { it.edgeKey() }
             entryRoomIds = nodes.mapNotNull { node ->
                 node.entryRoom.takeIf { it.isNotBlank() }
             }.toSet()
@@ -1733,7 +1719,6 @@ class ExplorationViewModel(
             initialRoom?.let {
                 markVisited(it.id)
                 markDiscovered(it)
-                markNodeVisited(it)
             }
             blockedCinematicsShown.clear()
             if (preselectedRoomId.isNullOrBlank()) {
@@ -1863,18 +1848,6 @@ class ExplorationViewModel(
 
         val nextRoomId = getConnection(currentRoom, direction) ?: return
         val nextRoom = roomsById[nextRoomId] ?: return
-        val currentNodeId = nodeIdByRoomId[currentRoom.id]
-        val nextNodeId = nodeIdByRoomId[nextRoom.id]
-        if (currentNodeId != null && nextNodeId != null && currentNodeId != nextNodeId) {
-            val edgeKey = "${currentRoom.id.lowercase()}::${normalizedDirection}"
-            val transition = nodeTransitionByEdge[edgeKey]
-            if (transition == null || transition.toNode != nextNodeId || transition.toRoom != nextRoom.id) {
-                postStatus("This route is not registered on the regional map.")
-                playUiCue("error")
-                return
-            }
-            transition.transitionText?.takeIf { it.isNotBlank() }?.let(::postStatus)
-        }
         val nextRoomIsDark = isRoomDark(nextRoom)
         val nextTheme = themeByRoomId[nextRoom.id]
         val nextThemeStyle = themeStyleByRoomId[nextRoom.id]
@@ -1889,7 +1862,6 @@ class ExplorationViewModel(
         }
 
         sessionStore.setRoom(nextRoom.id)
-        markNodeVisited(nextRoom)
         if (!nextRoomIsDark) {
             markVisited(nextRoom.id)
             markDiscovered(nextRoom)
@@ -4180,7 +4152,7 @@ class ExplorationViewModel(
         }
     }
 
-    private fun showInspection(message: String) {
+    fun showInspection(message: String) {
         postStatus(message)
         showNarration(message, tapToDismiss = true)
     }
@@ -4629,9 +4601,33 @@ private fun buildQuestDetail(
             completed = done
         )
     }
+    val stageIndex = quest.stages.indexOf(stage).takeIf { it >= 0 } ?: 0
+    val visibleStages = if (isCompleted) {
+        quest.stages
+    } else {
+        quest.stages.take(stageIndex + 1)
+    }
+    val stageSections = visibleStages.mapIndexed { index, questStage ->
+        val stageCompleted = isCompleted || index < stageIndex
+        val isCurrent = !isCompleted && index == stageIndex
+        QuestStageDetailUi(
+            id = questStage.id,
+            title = questStage.title,
+            description = questStage.description.takeIf { it.isNotBlank() },
+            objectives = questStage.tasks.map { task ->
+                QuestObjectiveUi(
+                    id = task.id,
+                    text = task.text,
+                    completed = stageCompleted || task.done || completedTasks.contains(task.id)
+                )
+            },
+            stageIndex = index,
+            current = isCurrent,
+            completed = stageCompleted
+        )
+    }
     val summary = quest.summary.takeIf { it.isNotBlank() } ?: quest.description.takeIf { it.isNotBlank() } ?: ""
     val rewards = quest.rewards.map { formatQuestReward(it, inventoryService) }
-    val stageIndex = quest.stages.indexOf(stage).takeIf { it >= 0 } ?: 0
     return QuestDetailUi(
         id = quest.id,
         title = quest.title,
@@ -4643,7 +4639,9 @@ private fun buildQuestDetail(
         rewards = rewards,
         stageIndex = stageIndex,
         totalStages = quest.stages.size.coerceAtLeast(1),
-        tracked = questState.trackedQuestId?.equals(questId, ignoreCase = true) == true
+        tracked = questState.trackedQuestId?.equals(questId, ignoreCase = true) == true,
+        stages = stageSections,
+        completed = isCompleted
     )
 }
 

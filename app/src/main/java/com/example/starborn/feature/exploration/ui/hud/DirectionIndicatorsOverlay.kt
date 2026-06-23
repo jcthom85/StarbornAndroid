@@ -38,14 +38,14 @@ fun DirectionIndicatorsOverlay(
         indicators.values.forEach { indicator ->
             val direction = indicator.direction.lowercase(Locale.getDefault())
             val (alignment, padding) = when (direction) {
-                "north" -> Alignment.TopCenter to PaddingValues(top = 4.dp)
+                "north" -> Alignment.TopCenter to PaddingValues(top = 112.dp)
                 "south" -> Alignment.BottomCenter to PaddingValues(bottom = 4.dp)
                 "east" -> Alignment.CenterEnd to PaddingValues(end = 4.dp)
                 "west" -> Alignment.CenterStart to PaddingValues(start = 4.dp)
-                "northeast" -> Alignment.TopEnd to PaddingValues(top = 4.dp, end = 4.dp)
+                "northeast" -> Alignment.TopEnd to PaddingValues(top = 112.dp, end = 4.dp)
                 "southeast" -> Alignment.BottomEnd to PaddingValues(bottom = 4.dp, end = 4.dp)
                 "southwest" -> Alignment.BottomStart to PaddingValues(bottom = 4.dp, start = 4.dp)
-                "northwest" -> Alignment.TopStart to PaddingValues(top = 4.dp, start = 4.dp)
+                "northwest" -> Alignment.TopStart to PaddingValues(top = 112.dp, start = 4.dp)
                 else -> Alignment.Center to PaddingValues(0.dp)
             }
             val loop = rememberInfiniteTransition(label = "dirPulse-$direction")
@@ -76,7 +76,7 @@ fun DirectionIndicatorsOverlay(
                     .semantics {
                         contentDescription = when (indicator.status) {
                             DirectionIndicatorStatus.UNEXPLORED -> "Travel $direction"
-                            DirectionIndicatorStatus.EXPLORED -> "Travel $direction to visited room"
+                            DirectionIndicatorStatus.EXPLORED -> "Travel $direction"
                             DirectionIndicatorStatus.LOCKED -> "$direction exit locked"
                             DirectionIndicatorStatus.ENEMY -> "$direction exit blocked by enemy"
                             DirectionIndicatorStatus.NEARBY_THREAT -> "Threat nearby in $direction direction"

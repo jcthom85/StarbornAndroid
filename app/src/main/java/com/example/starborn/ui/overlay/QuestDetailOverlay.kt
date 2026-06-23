@@ -16,9 +16,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -30,6 +32,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -43,6 +46,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.starborn.ui.events.QuestBannerType
 import com.example.starborn.ui.events.UiEvent
@@ -55,6 +59,7 @@ fun QuestDetailOverlay(
     gradientColor: Color,
     outlineColor: Color,
     deferShowing: Boolean = false,
+    modifier: Modifier = Modifier,
     onShowDetails: (String) -> Unit
 ) {
     var current by remember { mutableStateOf<UiEvent.ShowQuestDetail?>(null) }
@@ -74,7 +79,7 @@ AnimatedVisibility(
         exit = slideOutVertically(targetOffsetY = { it }) + fadeOut()
     ) {
         Box(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxSize()
                 .padding(horizontal = 24.dp, vertical = 48.dp),
             contentAlignment = Alignment.Center
@@ -104,60 +109,85 @@ private fun QuestDetailCard(
     val icon = when (detail.type) {
         QuestBannerType.NEW -> Icons.Filled.Star
         QuestBannerType.COMPLETED -> Icons.Filled.CheckCircle
-        QuestBannerType.FAILED -> Icons.Filled.CheckCircle
+        QuestBannerType.FAILED -> Icons.Filled.Warning
         QuestBannerType.PROGRESS -> Icons.Filled.CheckCircle
+    }
+    val heading = when (detail.type) {
+        QuestBannerType.NEW -> "New Quest"
+        QuestBannerType.COMPLETED -> "Quest Completed"
+        QuestBannerType.FAILED -> "Quest Failed"
+        QuestBannerType.PROGRESS -> "Quest Updated"
     }
 
     Card(
-        modifier = Modifier.semantics { contentDescription = "Quest Detail Popup" },
-        shape = RoundedCornerShape(28.dp),
-        elevation = CardDefaults.cardElevation(18.dp),
-        border = BorderStroke(1.5.dp, outlineColor),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF03070F))
+        modifier = Modifier
+            .fillMaxWidth(0.92f)
+            .widthIn(max = 520.dp)
+            .semantics { contentDescription = "Quest Detail Popup" },
+        shape = RoundedCornerShape(14.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+        border = BorderStroke(1.dp, outlineColor.copy(alpha = 0.55f)),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF061018).copy(alpha = 0.98f))
     ) {
         Column(
             modifier = Modifier
                 .background(
-                    Brush.verticalGradient(
-                        listOf(accent.copy(alpha = 0.5f), Color.Transparent)
+                    Brush.horizontalGradient(
+                        listOf(
+                            accent.copy(alpha = 0.30f),
+                            Color.Transparent
+                        )
                     )
                 )
-                .padding(horizontal = 28.dp, vertical = 26.dp)
-                .widthIn(min = 320.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+                .padding(horizontal = 14.dp, vertical = 12.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(icon, contentDescription = null, tint = accent)
-                    Text(
-                        text = when (detail.type) {
-                            QuestBannerType.NEW -> "New Quest"
-                            QuestBannerType.COMPLETED -> "Quest Completed"
-                            QuestBannerType.FAILED -> "Quest Failed"
-                            QuestBannerType.PROGRESS -> "Quest Updated"
-                        },
-                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
-                        color = accent,
-                        modifier = Modifier.padding(start = 8.dp)
+                Row(
+                    modifier = Modifier.weight(1f),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    Icon(
+                        imageVector = icon,
+                        contentDescription = null,
+                        tint = accent,
+                        modifier = Modifier.size(20.dp)
                     )
+                    Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                        Text(
+                            text = heading.uppercase(),
+                            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                            color = accent,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                        Text(
+                            text = detail.questTitle,
+                            style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
+                            color = Color.White,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
                 }
                 IconButton(onClick = onDismiss) {
-                    Icon(Icons.Filled.Close, contentDescription = "Dismiss", tint = Color.White)
+                    Icon(
+                        Icons.Filled.Close,
+                        contentDescription = "Dismiss",
+                        tint = Color.White.copy(alpha = 0.72f),
+                        modifier = Modifier.size(20.dp)
+                    )
                 }
             }
             Text(
-                text = detail.questTitle,
-                style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
-                color = Color.White
-            )
-            Text(
                 text = detail.summary,
                 style = MaterialTheme.typography.bodyMedium,
-                color = Color.White.copy(alpha = 0.9f)
+                color = Color.White.copy(alpha = 0.86f)
             )
             if (detail.objectives.isNotEmpty()) {
                 Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -165,7 +195,9 @@ private fun QuestDetailCard(
                         Text(
                             text = "- $line",
                             style = MaterialTheme.typography.bodySmall,
-                            color = Color.White.copy(alpha = 0.85f)
+                            color = Color.White.copy(alpha = 0.78f),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
                         )
                     }
                 }
@@ -174,15 +206,22 @@ private fun QuestDetailCard(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End
             ) {
-                TextButton(onClick = {
-                    onDismiss()
-                    onShowDetails(detail.questId)
-                }) {
-                    Text("Details")
+                TextButton(
+                    onClick = {
+                        onDismiss()
+                        onShowDetails(detail.questId)
+                    }
+                ) {
+                    Text("Details", color = accent)
                 }
                 Spacer(modifier = Modifier.width(8.dp))
                 Button(
-                    onClick = onDismiss
+                    onClick = onDismiss,
+                    shape = RoundedCornerShape(12.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = accent.copy(alpha = 0.22f),
+                        contentColor = Color.White
+                    )
                 ) {
                     Text("Continue")
                 }

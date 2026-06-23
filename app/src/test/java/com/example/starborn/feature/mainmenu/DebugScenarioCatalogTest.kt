@@ -24,7 +24,7 @@ class DebugScenarioCatalogTest {
     fun `catalog covers every authored hub and each scenario category`() {
         val scenarios = DebugScenarioCatalog.scenarios
         val hubIds = scenarios
-            .filter { it.destination == DebugScenarioDestination.HUB }
+            .filter { it.destination == DebugScenarioDestination.HUB && it.id.startsWith("hub_") }
             .map { it.id }
             .toSet()
 
@@ -34,6 +34,11 @@ class DebugScenarioCatalogTest {
         }
         DebugScenarioCategory.entries.forEach { category ->
             assertTrue(scenarios.any { it.category == category })
+        }
+        listOf("node_progression_w1", "node_progression_w2", "astra_access", "astra_home").forEach { id ->
+            val scenario = DebugScenarioCatalog.find(id)
+            assertNotNull(scenario)
+            assertEquals(DebugScenarioDestination.HUB, scenario?.destination)
         }
     }
 }

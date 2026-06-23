@@ -1,12 +1,18 @@
 package com.example.starborn.feature.exploration.ui.tabs
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Flag
+import androidx.compose.material.icons.outlined.RadioButtonUnchecked
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -15,7 +21,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.starborn.feature.exploration.ui.MenuSectionCard
 import com.example.starborn.feature.exploration.viewmodel.QuestSummaryUi
@@ -155,59 +164,172 @@ private fun QuestListPanel(
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         items(quests, key = { it.id }) { quest ->
-            val shape = RoundedCornerShape(16.dp)
-            Surface(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(shape)
-                    .clickable { onQuestSelected(quest.id) },
-                color = Color.White.copy(alpha = 0.04f),
-                border = BorderStroke(1.dp, borderColor.copy(alpha = 0.4f)),
-                shape = shape
+            QuestJournalRow(
+                quest = quest,
+                accentColor = accentColor,
+                borderColor = borderColor,
+                onClick = { onQuestSelected(quest.id) }
+            )
+        }
+    }
+}
+
+@Composable
+fun QuestJournalRow(
+    quest: QuestSummaryUi,
+    accentColor: Color,
+    borderColor: Color,
+    onClick: () -> Unit
+) {
+    val shape = RoundedCornerShape(12.dp)
+    val icon = if (quest.completed) Icons.Filled.CheckCircle else Icons.Filled.Flag
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(shape)
+            .clickable { onClick() },
+        color = Color(0xFF061018).copy(alpha = 0.58f),
+        border = BorderStroke(1.dp, borderColor.copy(alpha = 0.38f)),
+        shape = shape
+    ) {
+        Row(
+            modifier = Modifier
+                .background(
+                    Brush.horizontalGradient(
+                        listOf(
+                            accentColor.copy(alpha = if (quest.completed) 0.12f else 0.18f),
+                            Color.Transparent
+                        )
+                    )
+                )
+                .padding(horizontal = 12.dp, vertical = 10.dp),
+            verticalAlignment = Alignment.Top,
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = accentColor.copy(alpha = if (quest.completed) 0.72f else 0.9f),
+                modifier = Modifier.size(18.dp)
+            )
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                Column(
-                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp),
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
                         text = quest.title,
-                        style = MaterialTheme.typography.titleSmall,
-                        color = Color.White
+                        style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
+                        color = Color.White,
+                        modifier = Modifier.weight(1f),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
-                    quest.stageTitle?.takeIf { it.isNotBlank() }?.let { stage ->
-                        Text(
-                            text = stage,
-                            style = MaterialTheme.typography.labelMedium,
-                            color = accentColor.copy(alpha = 0.85f)
-                        )
-                    }
-                    val objectives = quest.objectives.take(2)
-                    if (objectives.isNotEmpty()) {
-                        objectives.forEach { obj ->
-                            Text(
-                                text = "• $obj",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = Color.White.copy(alpha = 0.78f)
+                    Text(
+                        text = if (quest.completed) "COMPLETED" else "ACTIVE",
+                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                        color = accentColor.copy(alpha = if (quest.completed) 0.62f else 0.82f)
+                    )
+                }
+                quest.stageTitle?.takeIf { it.isNotBlank() && !quest.completed }?.let { stage ->
+                    Text(
+                        text = stage,
+                        style = MaterialTheme.typography.labelMedium,
+                        color = accentColor.copy(alpha = 0.82f),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+                val objectives = quest.objectives.take(3)
+                if (objectives.isNotEmpty()) {
+                    Column(verticalArrangement = Arrangement.spacedBy(3.dp)) {
+                        objectives.forEach { objective ->
+                            QuestObjectiveLine(
+                                text = objective,
+                                completed = quest.completed,
+                                accentColor = accentColor
                             )
                         }
-                    } else {
-                        quest.summary.takeIf { it.isNotBlank() }?.let { summary ->
-                            Text(
-                                text = summary,
-                                style = MaterialTheme.typography.bodySmall,
-                                color = Color.White.copy(alpha = 0.78f)
-                            )
-                        }
                     }
-                    if (quest.completed) {
+                } else {
+                    quest.summary.takeIf { it.isNotBlank() }?.let { summary ->
                         Text(
-                            text = "Completed",
-                            style = MaterialTheme.typography.labelSmall,
-                            color = accentColor.copy(alpha = 0.9f)
+                            text = summary,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = Color.White.copy(alpha = 0.74f),
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis
                         )
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun QuestObjectiveLine(
+    text: String,
+    completed: Boolean,
+    accentColor: Color
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(7.dp)
+    ) {
+        Icon(
+            imageVector = if (completed) Icons.Filled.CheckCircle else Icons.Outlined.RadioButtonUnchecked,
+            contentDescription = null,
+            tint = if (completed) accentColor.copy(alpha = 0.62f) else Color.White.copy(alpha = 0.56f),
+            modifier = Modifier.size(13.dp)
+        )
+        Text(
+            text = text,
+            style = MaterialTheme.typography.bodySmall,
+            color = Color.White.copy(alpha = if (completed) 0.62f else 0.78f),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
+    }
+}
+
+@Composable
+fun QuestJournalSectionCard(
+    title: String,
+    modifier: Modifier = Modifier,
+    content: @Composable ColumnScope.() -> Unit
+) {
+    Surface(
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(12.dp),
+        color = Color(0xFF061018).copy(alpha = 0.58f),
+        border = BorderStroke(1.dp, Color.White.copy(alpha = 0.14f))
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(
+                    Brush.verticalGradient(
+                        listOf(
+                            Color.White.copy(alpha = 0.05f),
+                            Color.Transparent
+                        )
+                    )
+                )
+                .padding(12.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text(
+                title.uppercase(),
+                color = Color.White.copy(alpha = 0.82f),
+                style = MaterialTheme.typography.labelMedium,
+                fontWeight = FontWeight.Bold
+            )
+            content()
         }
     }
 }

@@ -10,6 +10,7 @@ import com.example.starborn.ui.events.QuestSummaryEntry
 import com.example.starborn.ui.events.UiEvent
 import com.example.starborn.ui.events.UiEventBus
 import com.example.starborn.ui.events.QuestObjectiveStatus
+import com.example.starborn.ui.events.QuestObjectiveRole
 import java.util.ArrayDeque
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -189,7 +190,9 @@ class QuestRuntimeManager(
                     sessionStore.setQuestTaskCompleted(questId, taskId, completed = true)
                     maybeProgressQuestLocked(questId, quest, tasks, newlyCompleted)
                     emitStateLocked(sessionStore.state.value)
-                    emitQuestProgressBanner(questId, quest)
+                    if (questId !in newlyCompleted && questId !in sessionStore.state.value.completedQuests) {
+                        emitQuestProgressBanner(questId, quest, completedTaskId = taskId)
+                    }
                 }
             }
             newlyCompleted.forEach { notifyQuestCompleted(it) }
@@ -200,6 +203,7 @@ class QuestRuntimeManager(
         scope.launch {
             mutex.withLock {
                 val quest = questRepository.questById(questId) ?: return@withLock
+                sessionStore.completeQuest(questId)
                 val finalStage = quest.stages.lastOrNull()
                 if (finalStage != null) {
                     stageProgress[questId] = finalStage.id
@@ -557,31 +561,70 @@ class QuestRuntimeManager(
 
     private fun emitQuestProgressBanner(
         questId: String,
-        quest: Quest? = null
+        quest: Quest? = null,
+        completedTaskId: String? = null
     ) {
         if (!SHOW_PROGRESS_BANNERS) return
         val data = quest ?: questRepository.questById(questId) ?: return
-        val objectives = questObjectivesForBanner(questId, data)
+        val bannerObjectives = questObjectivesForBanner(questId, data, completedTaskId)
         uiEventBus.tryEmit(
             UiEvent.ShowQuestBanner(
                 type = QuestBannerType.PROGRESS,
                 questId = questId,
                 questTitle = data.title,
-                objectives = objectives
+                objectives = bannerObjectives.objectives,
+                remainingObjectiveCount = bannerObjectives.remainingObjectiveCount
             )
         )
     }
 
-    private fun questObjectivesForBanner(questId: String, quest: Quest): List<QuestObjectiveStatus> {
+    private data class QuestBannerObjectives(
+        val objectives: List<QuestObjectiveStatus>,
+        val remainingObjectiveCount: Int
+    )
+
+    private fun questObjectivesForBanner(
+        questId: String,
+        quest: Quest,
+        completedTaskId: String?
+    ): QuestBannerObjectives {
         val stageId = stageProgress[questId]
         val stage = quest.stages.firstOrNull { it.id == stageId } ?: quest.stages.firstOrNull()
         val completed = completedTasks[questId].orEmpty()
-        return stage?.tasks.orEmpty().map { task ->
+        val justCompleted = completedTaskId?.let { id ->
+            quest.stages.asSequence()
+                .flatMap { it.tasks.asSequence() }
+                .firstOrNull { it.id == id }
+        }?.let { task ->
             QuestObjectiveStatus(
                 id = task.id,
                 text = task.text,
-                completed = task.done || completed.contains(task.id)
+                completed = true,
+                role = QuestObjectiveRole.JUST_COMPLETED
             )
         }
+        val remaining = stage?.tasks.orEmpty()
+            .filterNot { task -> task.done || completed.contains(task.id) }
+        val next = remaining.firstOrNull()?.let { task ->
+            QuestObjectiveStatus(
+                id = task.id,
+                text = task.text,
+                completed = false,
+                role = QuestObjectiveRole.NEXT
+            )
+        }
+        val objectives = listOfNotNull(justCompleted, next).ifEmpty {
+            stage?.tasks.orEmpty().take(1).map { task ->
+                QuestObjectiveStatus(
+                    id = task.id,
+                    text = task.text,
+                    completed = task.done || completed.contains(task.id)
+                )
+            }
+        }
+        return QuestBannerObjectives(
+            objectives = objectives,
+            remainingObjectiveCount = (remaining.size - 1).coerceAtLeast(0)
+        )
     }
 }

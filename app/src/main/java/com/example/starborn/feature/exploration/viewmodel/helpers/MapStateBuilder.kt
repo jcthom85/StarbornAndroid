@@ -33,9 +33,14 @@ object MapStateBuilder {
             val dx = pos.first - currentPos.first
             val dy = pos.second - currentPos.second
             if (abs(dx) > 2 || abs(dy) > 2) return@mapNotNull null
+            val isPreview = openConnections.values.contains(room.id) &&
+                !visitedRooms.contains(room.id) &&
+                !discoveredRooms.contains(room.id) &&
+                !isRoomDark(room)
             val isVisible = room.id == currentRoom.id ||
                 visitedRooms.contains(room.id) ||
-                discoveredRooms.contains(room.id)
+                discoveredRooms.contains(room.id) ||
+                isPreview
             if (!isVisible) return@mapNotNull null
             val connections = room.connections.mapNotNull { (direction, targetId) ->
                 targetId?.let { direction.lowercase(Locale.getDefault()) to it }
@@ -63,7 +68,8 @@ object MapStateBuilder {
                 connections = connections,
                 pathHints = pathHints,
                 services = services,
-                isDark = isRoomDark(room)
+                isDark = isRoomDark(room),
+                isPreview = isPreview
             )
         }
         return MinimapUiState(cells = cells)
@@ -121,6 +127,10 @@ object MapStateBuilder {
         "south" -> "north"
         "east" -> "west"
         "west" -> "east"
+        "northeast" -> "southwest"
+        "southwest" -> "northeast"
+        "southeast" -> "northwest"
+        "northwest" -> "southeast"
         "up" -> "down"
         "down" -> "up"
         else -> null

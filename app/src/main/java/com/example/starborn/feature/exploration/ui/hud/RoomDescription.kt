@@ -154,23 +154,28 @@ fun RoomDescription(
     val disabledColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.45f)
     val enemyAccent = Color(0xFFFF8A80)
 
-    val annotatedText = remember(plan, highlightColor, disabledColor, accentColor) {
+    val annotatedText = remember(plan, highlightColor, disabledColor, accentColor, isDark) {
         buildAnnotatedString {
             append(plan.description)
             plan.segments.forEach { segment ->
                 val (color, weight, decoration) = when (segment.target) {
-                    is InlineActionTarget.Npc -> Triple(accentColor, FontWeight.Bold, TextDecoration.Underline)
+                    is InlineActionTarget.Npc -> Triple(Color.White, FontWeight.Bold, TextDecoration.Underline)
                     is InlineActionTarget.Enemy -> Triple(enemyAccent, FontWeight.SemiBold, TextDecoration.Underline)
                     is InlineActionTarget.Room -> {
                         val clr = if (segment.locked) disabledColor else highlightColor
                         Triple(clr, FontWeight.Bold, if (segment.locked) TextDecoration.None else TextDecoration.Underline)
                     }
                 }
+                val backgroundColor = when (segment.target) {
+                    is InlineActionTarget.Npc -> accentColor.copy(alpha = if (isDark) 0.34f else 0.26f)
+                    else -> Color.Transparent
+                }
                 addStyle(
                     SpanStyle(
                         color = color,
                         fontWeight = weight,
-                        textDecoration = decoration
+                        textDecoration = decoration,
+                        background = backgroundColor
                     ),
                     start = segment.start,
                     end = segment.end

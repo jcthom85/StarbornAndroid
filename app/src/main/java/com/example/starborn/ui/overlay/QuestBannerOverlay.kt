@@ -6,6 +6,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -44,10 +45,10 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.example.starborn.ui.events.QuestBannerType
 import com.example.starborn.ui.events.QuestObjectiveStatus
+import com.example.starborn.ui.events.QuestObjectiveRole
 import com.example.starborn.ui.events.UiEvent
 import com.example.starborn.ui.events.UiEventBus
 import com.example.starborn.ui.haptics.HapticType
@@ -60,7 +61,8 @@ private data class Banner(
     val type: QuestBannerType,
     val questId: String,
     val title: String,
-    val objectives: List<QuestObjectiveStatus>
+    val objectives: List<QuestObjectiveStatus>,
+    val remainingObjectiveCount: Int
 )
 
 private const val QUEST_BANNER_AUTO_DISMISS_MS = 5_000L
@@ -87,7 +89,7 @@ fun QuestBannerOverlay(
                 val last = recent[key]
                 if (last == null || now - last > dedupeWindowMs) {
                     recent[key] = now
-                    queue.add(Banner(ev.type, ev.questId, ev.questTitle, ev.objectives))
+                    queue.add(Banner(ev.type, ev.questId, ev.questTitle, ev.objectives, ev.remainingObjectiveCount))
                 }
             }
         }
@@ -193,7 +195,8 @@ private fun QuestBannerCard(
             .semantics { contentDescription = "Quest Banner" },
         shape = RoundedCornerShape(14.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.98f))
+        border = BorderStroke(1.dp, accent.copy(alpha = 0.38f)),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF061018).copy(alpha = 0.98f))
     ) {
         Row(
             modifier = Modifier
@@ -226,13 +229,22 @@ private fun QuestBannerCard(
                 Text(
                     text = banner.title,
                     style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
-                    color = MaterialTheme.colorScheme.onSurface,
+                    color = Color.White,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
                 if (banner.type == QuestBannerType.PROGRESS && banner.objectives.isNotEmpty()) {
-                    banner.objectives.take(2).forEach { objective ->
+                    banner.objectives.forEach { objective ->
                         BannerObjectiveRow(objective = objective, accentColor = accent)
+                    }
+                    if (banner.remainingObjectiveCount > 0) {
+                        Text(
+                            text = "+${banner.remainingObjectiveCount} more objectives",
+                            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.SemiBold),
+                            color = Color.White.copy(alpha = 0.68f),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
                     }
                 }
             }
@@ -240,7 +252,7 @@ private fun QuestBannerCard(
                 Icon(
                     imageVector = Icons.Filled.Close,
                     contentDescription = "Dismiss Quest Banner",
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    tint = Color.White.copy(alpha = 0.68f),
                     modifier = Modifier.size(20.dp)
                 )
             }
@@ -266,11 +278,14 @@ private fun BannerObjectiveRow(
             modifier = Modifier.size(16.dp)
         )
         Text(
-            text = objective.text,
+            text = when (objective.role) {
+                QuestObjectiveRole.JUST_COMPLETED -> "Completed: ${objective.text}"
+                QuestObjectiveRole.NEXT -> "Next: ${objective.text}"
+                QuestObjectiveRole.STANDARD -> objective.text
+            },
             style = MaterialTheme.typography.bodySmall.copy(
-                color = Color.White.copy(alpha = if (objective.completed) 0.8f else 1f),
+                color = Color.White.copy(alpha = if (objective.completed) 0.74f else 0.96f),
                 fontWeight = if (objective.completed) FontWeight.Medium else FontWeight.SemiBold,
-                textDecoration = if (objective.completed) TextDecoration.LineThrough else TextDecoration.None
             ),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis

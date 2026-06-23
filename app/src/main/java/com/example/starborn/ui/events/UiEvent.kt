@@ -5,7 +5,8 @@ sealed interface UiEvent {
         val type: QuestBannerType,
         val questId: String,
         val questTitle: String,
-        val objectives: List<QuestObjectiveStatus> = emptyList()
+        val objectives: List<QuestObjectiveStatus> = emptyList(),
+        val remainingObjectiveCount: Int = 0
     ) : UiEvent
 
     data class ShowToast(
@@ -44,5 +45,8 @@ enum class SummaryType { ACCEPTED, UPDATED, COMPLETED, FAILED }
 data class QuestObjectiveStatus(
     val id: String,
     val text: String,
-    val completed: Boolean
+    val completed: Boolean,
+    val role: QuestObjectiveRole = QuestObjectiveRole.STANDARD
 )
+
+enum class QuestObjectiveRole { STANDARD, JUST_COMPLETED, NEXT }

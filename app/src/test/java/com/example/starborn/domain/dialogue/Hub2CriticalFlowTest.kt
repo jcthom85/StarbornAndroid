@@ -193,10 +193,14 @@ class Hub2CriticalFlowTest {
         assertTrue(state.completedQuests.contains("w2_sq01"))
         assertTrue(state.inventory["painkillers"].orZero() >= 2)
 
-        // --- SQ02: Lost Patrol (Dead Soldier Scavenge) ---
-        harness.events.handleTrigger("player_action", EventPayload.Action("w2_sq02_scavenge_body"))
+        // --- SQ02: Lost Patrol (triangulate three signals, then recover the cache) ---
+        harness.events.handleTrigger("player_action", EventPayload.Action("w2_sq02_trace_alpha"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w2_sq02_trace_beta"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w2_sq02_trace_gamma"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w2_sq02_recover_transceiver"))
         state = harness.store.state.value
         assertTrue(state.completedQuests.contains("w2_sq02"))
+        assertTrue(state.inventory["thermal_cutter"].orZero() >= 1)
         assertTrue(state.inventory["mod_corrosive_rounds"].orZero() >= 1)
 
         // --- SQ03: Tideglass Day (Orion) ---
@@ -231,6 +235,11 @@ class Hub2CriticalFlowTest {
 
         assertTrue(harness.store.state.value.activeQuests.contains("w2_sq04"))
 
+        // Recover all three Sanctuary wing crystals before the mural can be tuned.
+        harness.events.handleTrigger("player_action", EventPayload.Action("w2_sq04_crystal_west"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w2_sq04_crystal_east"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w2_sq04_crystal_north"))
+
         // Start tune dialogue
         harness.store.setRoom("sector9_hall_of_echoes")
         val tuneMural = harness.dialogue.startDialogue("Orion")
@@ -258,7 +267,9 @@ class Hub2CriticalFlowTest {
 
         assertTrue(harness.store.state.value.activeQuests.contains("w2_sq05"))
 
-        // Search vents in stasis chamber
+        // Blind the security grid, pass its guard pattern, then search the tech alcove.
+        harness.events.handleTrigger("player_action", EventPayload.Action("w2_sq05_hack_grid"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w2_sq05_bypass_guards"))
         harness.events.handleTrigger("player_action", EventPayload.Action("w2_sq05_search_vents"))
         state = harness.store.state.value
         assertTrue(state.completedQuests.contains("w2_sq05"))

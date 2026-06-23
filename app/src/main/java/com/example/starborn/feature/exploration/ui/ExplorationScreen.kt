@@ -211,6 +211,7 @@ import com.example.starborn.feature.exploration.viewmodel.QuestLogEntryUi
 import com.example.starborn.feature.exploration.viewmodel.QuestSummaryUi
 import com.example.starborn.feature.exploration.viewmodel.QuestDetailUi
 import com.example.starborn.feature.exploration.viewmodel.QuestObjectiveUi
+import com.example.starborn.feature.exploration.viewmodel.QuestStageDetailUi
 import com.example.starborn.feature.exploration.viewmodel.ShopDialogueAction
 import com.example.starborn.feature.exploration.viewmodel.ShopDialogueChoiceUi
 import com.example.starborn.feature.exploration.viewmodel.ShopDialogueLineUi
@@ -254,6 +255,8 @@ import com.example.starborn.feature.exploration.ui.tabs.JournalTabContent
 import com.example.starborn.feature.exploration.ui.tabs.MapTabContent
 import com.example.starborn.feature.exploration.ui.tabs.StatsTabContent
 import com.example.starborn.feature.exploration.ui.tabs.SettingsTabContent
+import com.example.starborn.feature.exploration.ui.tabs.QuestJournalRow
+import com.example.starborn.feature.exploration.ui.tabs.QuestJournalSectionCard
 import com.example.starborn.feature.exploration.ui.tabs.QuestJournalToggle
 import com.example.starborn.feature.exploration.ui.tabs.QuestJournalPage
 
@@ -319,7 +322,7 @@ fun ExplorationScreen(
             when (event) {
                 is ExplorationEvent.EnterCombat -> onEnemySelected(event.enemyIds)
                 is ExplorationEvent.PlayCinematic -> Unit
-                is ExplorationEvent.ShowMessage -> viewModel.showStatusMessage(event.message)
+                is ExplorationEvent.ShowMessage -> viewModel.showInspection(event.message)
                 is ExplorationEvent.ShowToast -> uiEventBus.tryEmit(
                     UiEvent.ShowToast(
                         id = event.id,
@@ -1014,6 +1017,8 @@ fun ExplorationScreen(
             )
         }
 
+        val questAccentColor = themeColor(activeTheme?.accent, Color(0xFF80E0FF))
+
         if (uiState.isQuestLogVisible) {
             QuestJournalOverlay(
                 trackedQuest = uiState.questLogActive.firstOrNull { it.id == uiState.trackedQuestId },
@@ -1021,6 +1026,7 @@ fun ExplorationScreen(
                 completedQuests = uiState.questLogCompleted,
                 failedQuests = uiState.failedQuests,
                 questLog = uiState.questLogEntries,
+                accentColor = questAccentColor,
                 onClose = { viewModel.closeQuestLog() },
                 onSelectQuest = { questId ->
                     viewModel.openQuestDetails(questId)
@@ -1066,8 +1072,6 @@ fun ExplorationScreen(
             )
         }
 
-        val questAccentColor = themeColor(activeTheme?.accent, Color(0xFF80E0FF))
-
         QuestBannerOverlay(
             uiEventBus = uiEventBus,
             deferShowing = blockingOverlayActive,
@@ -1075,6 +1079,7 @@ fun ExplorationScreen(
             modifier = Modifier
                 .align(Alignment.TopCenter)
                 .fillMaxWidth()
+                .zIndex(30f)
         )
 
         ProgressToastOverlay(
@@ -1091,13 +1096,17 @@ fun ExplorationScreen(
             deferShowing = blockingOverlayActive,
             onShowDetails = { questId ->
                 viewModel.openQuestDetails(questId)
-            }
+            },
+            modifier = Modifier.zIndex(30f)
         )
 
         QuestSummaryOverlay(
             uiEventBus = uiEventBus,
             isSceneBlocking = blockingOverlayActive,
-            modifier = Modifier.align(Alignment.Center),
+            accentColor = questAccentColor,
+            modifier = Modifier
+                .align(Alignment.Center)
+                .zIndex(30f),
             onShowDetails = { questId ->
                 viewModel.openQuestDetails(questId)
             }
@@ -1122,16 +1131,19 @@ fun ExplorationScreen(
             modifier = Modifier.fillMaxSize()
         )
 
-        DirectionIndicatorsOverlay(
-            indicators = uiState.directionIndicators,
-            onTravel = viewModel::travel,
-            modifier = Modifier
-                .align(Alignment.Center)
-                .fillMaxSize()
-                .statusBarsPadding()
-                .navigationBarsPadding()
-                .padding(12.dp)
-        )
+        if (!blockingOverlayActive && !showInventoryTargetDialog && saveLoadMode == null) {
+            DirectionIndicatorsOverlay(
+                indicators = uiState.directionIndicators,
+                onTravel = viewModel::travel,
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .fillMaxSize()
+                    .statusBarsPadding()
+                    .navigationBarsPadding()
+                    .padding(12.dp)
+                    .zIndex(1f)
+            )
+        }
     }
 }
 }
@@ -1274,104 +1286,174 @@ private fun QuestDetailSheet(
     modifier: Modifier = Modifier
 ) {
     val scrollState = rememberScrollState()
+    val sections = detail.stages.ifEmpty {
+        listOf(
+            QuestStageDetailUi(
+                id = "current",
+                title = detail.stageTitle ?: "Current Stage",
+                description = detail.stageDescription,
+                objectives = detail.objectives,
+                stageIndex = detail.stageIndex,
+                current = !detail.completed,
+                completed = detail.completed
+            )
+        )
+    }
     Surface(
         modifier = modifier
             .fillMaxWidth(0.92f)
             .fillMaxHeight(0.85f),
-        shape = RoundedCornerShape(32.dp),
-        color = Color(0xF00A111E),
-        border = BorderStroke(1.dp, accentColor.copy(alpha = 0.5f))
+        shape = RoundedCornerShape(16.dp),
+        color = Color(0xF0061018),
+        border = BorderStroke(1.dp, accentColor.copy(alpha = 0.48f)),
+        shadowElevation = 14.dp
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(24.dp)
+                .background(
+                    Brush.verticalGradient(
+                        listOf(
+                            accentColor.copy(alpha = 0.16f),
+                            Color.Transparent,
+                            Color.Black.copy(alpha = 0.12f)
+                        )
+                    )
+                )
+                .padding(18.dp)
                 .verticalScroll(scrollState),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.Top
             ) {
-                Column {
-                    Text(
-                        text = detail.title,
-                        style = MaterialTheme.typography.headlineSmall,
-                        color = Color.White
-                    )
-                    Text(
-                        text = "Stage ${detail.stageIndex + 1} of ${detail.totalStages}",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = Color.White.copy(alpha = 0.75f)
-                    )
+                Row(
+                    modifier = Modifier.weight(1f),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalAlignment = Alignment.Top
+                ) {
+                    Surface(
+                        shape = RoundedCornerShape(10.dp),
+                        color = accentColor.copy(alpha = 0.16f),
+                        border = BorderStroke(1.dp, accentColor.copy(alpha = 0.38f))
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Flag,
+                            contentDescription = null,
+                            tint = accentColor,
+                            modifier = Modifier
+                                .padding(9.dp)
+                                .size(20.dp)
+                        )
+                    }
+                    Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                        Text(
+                            text = "QUEST FILE",
+                            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                            color = accentColor.copy(alpha = 0.88f),
+                            letterSpacing = 1.1.sp
+                        )
+                        Text(
+                            text = detail.title,
+                            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                            color = Color.White,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            QuestStatusPill(
+                                text = if (detail.completed) "COMPLETED" else "ACTIVE",
+                                accentColor = accentColor,
+                                filled = detail.completed
+                            )
+                            if (!detail.completed) {
+                                QuestStatusPill(
+                                    text = "STAGE ${detail.stageIndex + 1}/${detail.totalStages}",
+                                    accentColor = Color.White.copy(alpha = 0.7f),
+                                    filled = false
+                                )
+                            }
+                            if (detail.tracked) {
+                                QuestStatusPill(
+                                    text = "TRACKED",
+                                    accentColor = accentColor,
+                                    filled = false
+                                )
+                            }
+                        }
+                    }
                 }
                 IconButton(onClick = onClose) {
                     Icon(
                         imageVector = Icons.Filled.Close,
                         contentDescription = "Close",
-                        tint = Color.White
+                        tint = Color.White.copy(alpha = 0.74f)
                     )
                 }
             }
+            HorizontalDivider(color = accentColor.copy(alpha = 0.22f))
             detail.summary.takeIf { it.isNotBlank() }?.let { summary ->
-                Text(
-                    text = summary,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = Color.White.copy(alpha = 0.85f)
-                )
+                Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                    Text(
+                        text = "SUMMARY",
+                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                        color = Color.White.copy(alpha = 0.58f),
+                        letterSpacing = 0.8.sp
+                    )
+                    Text(
+                        text = summary,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.White.copy(alpha = 0.84f)
+                    )
+                }
             }
             detail.description?.takeIf { it.isNotBlank() }?.let { description ->
                 Text(
                     text = description,
                     style = MaterialTheme.typography.bodySmall,
-                    color = Color.White.copy(alpha = 0.75f)
+                    color = Color.White.copy(alpha = 0.62f)
                 )
             }
-            detail.stageTitle?.let { stageTitle ->
+            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 Text(
-                    text = stageTitle,
-                    style = MaterialTheme.typography.titleMedium.copy(color = accentColor),
-                    color = accentColor
+                    text = if (detail.completed) "STAGE ARCHIVE" else "MISSION STATUS",
+                    style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                    color = accentColor.copy(alpha = 0.9f),
+                    letterSpacing = 0.8.sp
                 )
-            }
-            detail.stageDescription?.takeIf { it.isNotBlank() }?.let { stageDescription ->
-                Text(
-                    text = stageDescription,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = Color.White.copy(alpha = 0.8f)
-                )
-            }
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text(
-                    text = "Objectives",
-                    style = MaterialTheme.typography.titleSmall,
-                    color = Color.White
-                )
-                if (detail.objectives.isEmpty()) {
+                if (sections.all { it.objectives.isEmpty() }) {
                     Text(
                         text = "No objectives listed.",
                         style = MaterialTheme.typography.bodySmall,
                         color = Color.White.copy(alpha = 0.6f)
                     )
                 } else {
-                    detail.objectives.forEach { objective ->
-                        QuestObjectiveRow(objective = objective, accentColor = accentColor)
+                    sections.forEachIndexed { index, stage ->
+                        QuestStageSection(stage = stage, accentColor = accentColor)
+                        if (index != sections.lastIndex) {
+                            HorizontalDivider(color = Color.White.copy(alpha = 0.08f))
+                        }
                     }
                 }
             }
             if (detail.rewards.isNotEmpty()) {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Text(
-                        text = "Rewards",
-                        style = MaterialTheme.typography.titleSmall,
-                        color = Color.White
+                        text = "REWARDS",
+                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                        color = accentColor.copy(alpha = 0.9f),
+                        letterSpacing = 0.8.sp
                     )
                     detail.rewards.forEach { reward ->
                         Surface(
-                            color = Color.White.copy(alpha = 0.06f),
-                            shape = RoundedCornerShape(12.dp),
-                            border = BorderStroke(1.dp, accentColor.copy(alpha = 0.4f))
+                            color = Color.White.copy(alpha = 0.045f),
+                            shape = RoundedCornerShape(10.dp),
+                            border = BorderStroke(1.dp, Color.White.copy(alpha = 0.12f))
                         ) {
                             Text(
                                 text = reward,
@@ -1385,6 +1467,7 @@ private fun QuestDetailSheet(
                     }
                 }
             }
+            HorizontalDivider(color = Color.White.copy(alpha = 0.08f))
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -1393,6 +1476,7 @@ private fun QuestDetailSheet(
                 Button(
                     onClick = { onToggleTrack(detail.id) },
                     modifier = Modifier.weight(1f),
+                    shape = RoundedCornerShape(10.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = if (detail.tracked) accentColor else Color.Transparent,
                         contentColor = if (detail.tracked) Color(0xFF010308) else accentColor
@@ -1403,7 +1487,9 @@ private fun QuestDetailSheet(
                 }
                 OutlinedButton(
                     onClick = onClose,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    shape = RoundedCornerShape(10.dp),
+                    border = BorderStroke(1.dp, Color.White.copy(alpha = 0.22f))
                 ) {
                     Text("Close")
                 }
@@ -1413,9 +1499,108 @@ private fun QuestDetailSheet(
 }
 
 @Composable
+private fun QuestStatusPill(
+    text: String,
+    accentColor: Color,
+    filled: Boolean
+) {
+    Surface(
+        shape = RoundedCornerShape(999.dp),
+        color = if (filled) accentColor.copy(alpha = 0.24f) else Color.White.copy(alpha = 0.045f),
+        border = BorderStroke(1.dp, accentColor.copy(alpha = if (filled) 0.38f else 0.24f))
+    ) {
+        Text(
+            text = text,
+            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+            color = if (filled) accentColor else Color.White.copy(alpha = 0.72f),
+            modifier = Modifier.padding(horizontal = 9.dp, vertical = 4.dp),
+            maxLines = 1
+        )
+    }
+}
+
+@Composable
+private fun QuestStageSection(
+    stage: QuestStageDetailUi,
+    accentColor: Color
+) {
+    val statusLabel = when {
+        stage.current -> "CURRENT"
+        stage.completed -> "COMPLETE"
+        else -> ""
+    }
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(
+                Brush.horizontalGradient(
+                    listOf(
+                        if (stage.current) accentColor.copy(alpha = 0.09f) else Color.White.copy(alpha = 0.035f),
+                        Color.Transparent
+                    )
+                )
+            )
+            .padding(horizontal = 10.dp, vertical = 9.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Row(
+                modifier = Modifier.weight(1f),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(7.dp)
+                        .background(
+                            if (stage.current) accentColor else Color.White.copy(alpha = 0.38f),
+                            CircleShape
+                        )
+                )
+                Text(
+                    text = "Stage ${stage.stageIndex + 1}: ${stage.title}",
+                    style = MaterialTheme.typography.titleSmall.copy(fontWeight = if (stage.current) FontWeight.Bold else FontWeight.SemiBold),
+                    color = if (stage.current) accentColor else Color.White,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+            if (statusLabel.isNotBlank()) {
+                Text(
+                    text = statusLabel,
+                    style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                    color = if (stage.current) accentColor else Color.White.copy(alpha = 0.56f)
+                )
+            }
+        }
+        stage.description?.takeIf { it.isNotBlank() }?.let { description ->
+            Text(
+                text = description,
+                style = MaterialTheme.typography.bodySmall,
+                color = Color.White.copy(alpha = if (stage.current) 0.72f else 0.56f)
+            )
+        }
+        Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+            stage.objectives.forEach { objective ->
+                QuestObjectiveRow(
+                    objective = objective,
+                    accentColor = accentColor,
+                    subdued = stage.completed && !stage.current
+                )
+            }
+        }
+    }
+}
+
+@Composable
 private fun QuestObjectiveRow(
     objective: QuestObjectiveUi,
-    accentColor: Color
+    accentColor: Color,
+    subdued: Boolean = false
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -1427,12 +1612,13 @@ private fun QuestObjectiveRow(
         Icon(
             imageVector = icon,
             contentDescription = null,
-            tint = tint
+            tint = tint.copy(alpha = if (subdued) 0.62f else 1f),
+            modifier = Modifier.size(17.dp)
         )
         Text(
             text = objective.text,
             style = MaterialTheme.typography.bodyMedium,
-            color = Color.White
+            color = Color.White.copy(alpha = if (subdued) 0.62f else 0.9f)
         )
     }
 }
@@ -2995,6 +3181,7 @@ private fun QuestJournalOverlay(
     completedQuests: List<QuestSummaryUi>,
     failedQuests: Set<String>,
     questLog: List<QuestLogEntryUi>,
+    accentColor: Color,
     onClose: () -> Unit,
     onSelectQuest: (String) -> Unit,
     modifier: Modifier = Modifier
@@ -3014,13 +3201,24 @@ private fun QuestJournalOverlay(
         modifier = modifier
             .fillMaxWidth(0.9f)
             .fillMaxHeight(0.8f),
-        shape = RoundedCornerShape(32.dp),
-        color = Color(0xF0102030)
+        shape = RoundedCornerShape(16.dp),
+        color = Color(0xF0061018),
+        border = BorderStroke(1.dp, accentColor.copy(alpha = 0.42f)),
+        shadowElevation = 14.dp
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(24.dp),
+                .background(
+                    Brush.verticalGradient(
+                        listOf(
+                            accentColor.copy(alpha = 0.12f),
+                            Color.Transparent,
+                            Color.Black.copy(alpha = 0.12f)
+                        )
+                    )
+                )
+                .padding(18.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Row(
@@ -3029,9 +3227,10 @@ private fun QuestJournalOverlay(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Quest Journal",
-                    style = MaterialTheme.typography.titleLarge,
-                    color = Color.White
+                    text = "QUEST JOURNAL",
+                    style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
+                    color = accentColor,
+                    letterSpacing = 1.1.sp
                 )
                 Text(
                     text = "$totalCount quests",
@@ -3040,20 +3239,21 @@ private fun QuestJournalOverlay(
                 )
                 Text(
                     text = "Close",
-                    color = Color.White.copy(alpha = 0.85f),
+                    color = accentColor.copy(alpha = 0.92f),
                     style = MaterialTheme.typography.labelLarge,
                     modifier = Modifier
-                        .clip(RoundedCornerShape(12.dp))
+                        .clip(RoundedCornerShape(10.dp))
+                        .border(1.dp, accentColor.copy(alpha = 0.28f), RoundedCornerShape(10.dp))
                         .clickable { onClose() }
-                        .padding(horizontal = 8.dp, vertical = 4.dp)
+                        .padding(horizontal = 10.dp, vertical = 5.dp)
                 )
             }
 
             QuestJournalToggle(
                 current = page,
                 onSelect = { page = it },
-                accentColor = Color.White.copy(alpha = 0.9f),
-                borderColor = Color.White.copy(alpha = 0.3f)
+                accentColor = accentColor,
+                borderColor = accentColor.copy(alpha = 0.34f)
             )
 
             LazyColumn(
@@ -3064,16 +3264,17 @@ private fun QuestJournalOverlay(
                     QuestJournalPage.ACTIVE -> {
                         trackedQuest?.let { quest ->
                             item {
-                                SectionCard(title = "Tracked Quest") {
-                                    QuestSummaryDetails(
+                                QuestJournalSectionCard(title = "Tracked Quest") {
+                                    QuestJournalRow(
                                         quest = quest,
-                                        emphasize = true,
+                                        accentColor = accentColor,
+                                        borderColor = accentColor.copy(alpha = 0.34f),
                                         onClick = { onSelectQuest(quest.id) }
                                     )
                                 }
                             }
                         } ?: item {
-                            SectionCard(title = "Tracked Quest") {
+                            QuestJournalSectionCard(title = "Tracked Quest") {
                                 Text(
                                     text = "No quest tracked. Select one below.",
                                     color = Color.White.copy(alpha = 0.75f),
@@ -3084,7 +3285,7 @@ private fun QuestJournalOverlay(
 
                         if (recentLog.isNotEmpty()) {
                             item {
-                                SectionCard(title = "Recent Updates") {
+                                QuestJournalSectionCard(title = "Recent Updates") {
                                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                                         recentLog.forEach { entry ->
                                             QuestLogEntryRow(entry)
@@ -3096,11 +3297,13 @@ private fun QuestJournalOverlay(
 
                         if (otherActive.isNotEmpty()) {
                             item {
-                                SectionCard(title = "Active Quests") {
+                                QuestJournalSectionCard(title = "Active Quests") {
                                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                                         otherActive.forEach { quest ->
-                                            QuestSummaryDetails(
+                                            QuestJournalRow(
                                                 quest = quest,
+                                                accentColor = accentColor,
+                                                borderColor = accentColor.copy(alpha = 0.34f),
                                                 onClick = { onSelectQuest(quest.id) }
                                             )
                                         }
@@ -3109,7 +3312,7 @@ private fun QuestJournalOverlay(
                             }
                         } else {
                             item {
-                                SectionCard(title = "Active Quests") {
+                                QuestJournalSectionCard(title = "Active Quests") {
                                     Text(
                                         text = "No active quests yet.",
                                         color = Color.White.copy(alpha = 0.75f),
@@ -3122,17 +3325,14 @@ private fun QuestJournalOverlay(
                     QuestJournalPage.COMPLETED -> {
                         if (completedQuests.isNotEmpty()) {
                             item {
-                                SectionCard(title = "Completed Quests") {
-                                    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                                QuestJournalSectionCard(title = "Completed Quests") {
+                                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                                         completedQuests.take(8).forEach { quest ->
-                                            Text(
-                                                text = "• ${quest.title}",
-                                                style = MaterialTheme.typography.bodySmall.copy(fontSize = 14.sp),
-                                                color = Color.White.copy(alpha = 0.85f),
-                                                modifier = Modifier
-                                                    .clip(RoundedCornerShape(8.dp))
-                                                    .clickable { onSelectQuest(quest.id) }
-                                                    .padding(horizontal = 4.dp, vertical = 2.dp)
+                                            QuestJournalRow(
+                                                quest = quest,
+                                                accentColor = accentColor,
+                                                borderColor = accentColor.copy(alpha = 0.34f),
+                                                onClick = { onSelectQuest(quest.id) }
                                             )
                                         }
                                         if (completedQuests.size > 8) {
@@ -3147,7 +3347,7 @@ private fun QuestJournalOverlay(
                             }
                         } else {
                             item {
-                                SectionCard(title = "Completed Quests") {
+                                QuestJournalSectionCard(title = "Completed Quests") {
                                     Text(
                                         text = "You haven't finished any quests yet.",
                                         color = Color.White.copy(alpha = 0.75f),
@@ -3159,7 +3359,7 @@ private fun QuestJournalOverlay(
 
                         if (failedQuests.isNotEmpty()) {
                             item {
-                                SectionCard(title = "Failed Quests") {
+                                QuestJournalSectionCard(title = "Failed Quests") {
                                     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                                         failedQuests.take(8).forEach { questId ->
                                             Text(
@@ -3184,131 +3384,6 @@ private fun QuestJournalOverlay(
                             }
                         }
                     }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun QuestJournalToggle(
-    current: QuestJournalPage,
-    onSelect: (QuestJournalPage) -> Unit,
-    accentColor: Color,
-    borderColor: Color
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .border(BorderStroke(1.dp, borderColor), RoundedCornerShape(50.dp))
-            .padding(6.dp),
-        horizontalArrangement = Arrangement.spacedBy(6.dp)
-    ) {
-        JournalToggleButton(
-            label = "Active",
-            selected = current == QuestJournalPage.ACTIVE,
-            accentColor = accentColor,
-            onClick = { onSelect(QuestJournalPage.ACTIVE) },
-            modifier = Modifier.weight(1f)
-        )
-        JournalToggleButton(
-            label = "Completed",
-            selected = current == QuestJournalPage.COMPLETED,
-            accentColor = accentColor,
-            onClick = { onSelect(QuestJournalPage.COMPLETED) },
-            modifier = Modifier.weight(1f)
-        )
-    }
-}
-
-@Composable
-private fun JournalToggleButton(
-    label: String,
-    selected: Boolean,
-    accentColor: Color,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val background = if (selected) accentColor.copy(alpha = 0.2f) else Color.Transparent
-    Surface(
-        modifier = modifier
-            .clip(RoundedCornerShape(40.dp))
-            .clickable { onClick() },
-        color = background,
-        shape = RoundedCornerShape(40.dp)
-    ) {
-        Box(
-            modifier = Modifier.padding(vertical = 10.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = label,
-                style = MaterialTheme.typography.titleSmall,
-                color = if (selected) Color.White else Color.White.copy(alpha = 0.8f)
-            )
-        }
-    }
-}
-
-@Composable
-private fun QuestSummaryDetails(
-    quest: QuestSummaryUi,
-    emphasize: Boolean = false,
-    onClick: (() -> Unit)? = null
-) {
-    val shape = RoundedCornerShape(18.dp)
-    val modifier = if (onClick != null) {
-        Modifier
-            .clip(shape)
-            .background(Color.White.copy(alpha = 0.05f))
-            .clickable { onClick() }
-            .padding(14.dp)
-    } else {
-        Modifier
-    }
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(6.dp)
-    ) {
-        Text(
-            text = quest.title,
-            style = if (emphasize) MaterialTheme.typography.titleMedium else MaterialTheme.typography.bodyLarge,
-            color = Color.White
-        )
-        quest.summary.takeIf { it.isNotBlank() }?.let { summary ->
-            Text(
-                text = summary,
-                style = MaterialTheme.typography.bodySmall.copy(fontSize = 14.sp),
-                color = Color.White.copy(alpha = 0.8f)
-            )
-        }
-        Text(
-            text = "Stage ${quest.stageIndex + 1} of ${quest.totalStages}",
-            style = MaterialTheme.typography.labelSmall.copy(fontSize = 12.sp),
-            color = Color.White.copy(alpha = 0.7f)
-        )
-        quest.stageTitle?.takeIf { it.isNotBlank() }?.let { stageTitle ->
-            Text(
-                text = stageTitle,
-                style = MaterialTheme.typography.bodySmall.copy(fontSize = 14.sp),
-                color = Color.White.copy(alpha = 0.75f)
-            )
-        }
-        quest.stageDescription?.takeIf { it.isNotBlank() }?.let { desc ->
-            Text(
-                text = desc,
-                style = MaterialTheme.typography.bodySmall.copy(fontSize = 13.sp),
-                color = Color.White.copy(alpha = 0.7f)
-            )
-        }
-        if (quest.objectives.isNotEmpty()) {
-            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                quest.objectives.forEach { objective ->
-                    Text(
-                        text = "• $objective",
-                        style = MaterialTheme.typography.bodySmall.copy(fontSize = 13.sp),
-                        color = Color.White.copy(alpha = 0.9f)
-                    )
                 }
             }
         }
@@ -3493,6 +3568,7 @@ private fun RoomEntitySection(
                             npc = npc,
                             label = npcPresenceNames[npc.normalizedNpcKey()] ?: npcDisplayLabel(npc),
                             portraitPath = npcPortraitPaths[npc.normalizedNpcKey()],
+                            accentColor = accentColor,
                             borderColor = borderColor,
                             isDark = isDark,
                             onClick = { onNpcClick(npc) }
@@ -3531,17 +3607,27 @@ private fun RoomEntitySection(
                     if (itemEntries.size > 1) {
                         Surface(
                             onClick = onCollectAll,
-                            shape = RoundedCornerShape(10.dp),
-                            color = accentColor.copy(alpha = 0.12f),
-                            border = BorderStroke(1.dp, accentColor.copy(alpha = 0.42f)),
+                            shape = RoundedCornerShape(12.dp),
+                            color = Color(0xFF071018).copy(alpha = if (isDark) 0.86f else 0.72f),
+                            border = BorderStroke(1.dp, accentColor.copy(alpha = if (isDark) 0.62f else 0.50f)),
                             modifier = Modifier
-                                .width(54.dp)
-                                .height(44.dp)
+                                .width(62.dp)
+                                .height(46.dp)
                         ) {
-                            Box(contentAlignment = Alignment.Center) {
+                            Box(
+                                modifier = Modifier.background(
+                                    Brush.horizontalGradient(
+                                        colors = listOf(
+                                            accentColor.copy(alpha = if (isDark) 0.20f else 0.15f),
+                                            Color.Transparent
+                                        )
+                                    )
+                                ),
+                                contentAlignment = Alignment.Center
+                            ) {
                                 Text(
                                     text = "All",
-                                    color = Color.White.copy(alpha = 0.88f),
+                                    color = Color.White,
                                     style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
                                     maxLines = 1
                                 )
@@ -3565,24 +3651,34 @@ private fun ServicePresenceChip(
 ) {
     Surface(
         onClick = onClick,
-        shape = RoundedCornerShape(10.dp),
-        color = Color.White.copy(alpha = if (isDark) 0.09f else 0.07f),
-        border = BorderStroke(1.dp, borderColor.copy(alpha = if (isDark) 0.36f else 0.24f)),
+        shape = RoundedCornerShape(12.dp),
+        color = Color(0xFF071018).copy(alpha = if (isDark) 0.86f else 0.72f),
+        border = BorderStroke(1.dp, accentColor.copy(alpha = if (isDark) 0.58f else 0.46f)),
         modifier = modifier
-            .widthIn(min = 124.dp)
-            .height(42.dp)
+            .widthIn(min = 132.dp)
+            .height(46.dp)
             .semantics { contentDescription = action.label }
     ) {
         Row(
-            modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+            modifier = Modifier
+                .background(
+                    Brush.horizontalGradient(
+                        colors = listOf(
+                            accentColor.copy(alpha = if (isDark) 0.18f else 0.14f),
+                            borderColor.copy(alpha = 0.08f),
+                            Color.Transparent
+                        )
+                    )
+                )
+                .padding(horizontal = 9.dp, vertical = 7.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Surface(
                 shape = CircleShape,
-                color = accentColor.copy(alpha = 0.18f),
-                border = BorderStroke(1.dp, accentColor.copy(alpha = 0.52f)),
-                modifier = Modifier.size(28.dp)
+                color = accentColor.copy(alpha = 0.16f),
+                border = BorderStroke(1.dp, accentColor.copy(alpha = 0.62f)),
+                modifier = Modifier.size(32.dp)
             ) {
                 Box(contentAlignment = Alignment.Center) {
                     Icon(
@@ -3628,6 +3724,7 @@ private fun NpcPresenceChip(
     npc: String,
     label: String,
     portraitPath: String?,
+    accentColor: Color,
     borderColor: Color,
     isDark: Boolean,
     onClick: () -> Unit
@@ -3638,27 +3735,44 @@ private fun NpcPresenceChip(
     )
     Surface(
         onClick = onClick,
-        shape = RoundedCornerShape(10.dp),
-        color = Color.White.copy(alpha = if (isDark) 0.09f else 0.07f),
-        border = BorderStroke(1.dp, borderColor.copy(alpha = if (isDark) 0.36f else 0.24f)),
+        shape = RoundedCornerShape(12.dp),
+        color = Color(0xFF071018).copy(alpha = if (isDark) 0.88f else 0.76f),
+        border = BorderStroke(1.dp, accentColor.copy(alpha = if (isDark) 0.68f else 0.54f)),
         modifier = Modifier
-            .widthIn(min = 124.dp)
-            .height(42.dp)
+            .widthIn(min = 142.dp)
+            .height(46.dp)
             .semantics { contentDescription = label }
     ) {
         Row(
-            modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp),
+            modifier = Modifier
+                .background(
+                    Brush.horizontalGradient(
+                        colors = listOf(
+                            accentColor.copy(alpha = if (isDark) 0.22f else 0.18f),
+                            borderColor.copy(alpha = 0.08f),
+                            Color.Transparent
+                        )
+                    )
+                )
+                .padding(horizontal = 9.dp, vertical = 7.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Image(
-                painter = portraitPainter,
-                contentDescription = label,
-                contentScale = ContentScale.Crop,
+            Box(
                 modifier = Modifier
-                    .size(28.dp)
-                    .clip(CircleShape)
-            )
+                    .size(32.dp)
+                    .border(1.dp, accentColor.copy(alpha = 0.72f), CircleShape)
+                    .padding(2.dp)
+            ) {
+                Image(
+                    painter = portraitPainter,
+                    contentDescription = label,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clip(CircleShape)
+                )
+            }
             Column(
                 modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.Center
@@ -3666,7 +3780,14 @@ private fun NpcPresenceChip(
                 Text(
                     text = label,
                     color = Color.White,
-                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                    style = MaterialTheme.typography.labelMedium.copy(
+                        fontWeight = FontWeight.Bold,
+                        shadow = Shadow(
+                            color = Color.Black.copy(alpha = 0.55f),
+                            offset = Offset(0f, 1f),
+                            blurRadius = 2f
+                        )
+                    ),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -3692,30 +3813,42 @@ private fun FindPresenceChip(
 ) {
     Surface(
         onClick = { onCollectItem(itemId) },
-        shape = RoundedCornerShape(10.dp),
-        color = Color.White.copy(alpha = if (isDark) 0.08f else 0.06f),
-        border = BorderStroke(1.dp, if (isEquipment) accentColor.copy(alpha = 0.48f) else borderColor.copy(alpha = 0.22f)),
+        shape = RoundedCornerShape(12.dp),
+        color = Color(0xFF071018).copy(alpha = if (isDark) 0.84f else 0.70f),
+        border = BorderStroke(
+            1.dp,
+            if (isEquipment) accentColor.copy(alpha = if (isDark) 0.62f else 0.50f) else borderColor.copy(alpha = if (isDark) 0.38f else 0.28f)
+        ),
         modifier = Modifier
-            .widthIn(min = 136.dp)
-            .height(44.dp)
+            .widthIn(min = 142.dp)
+            .height(46.dp)
     ) {
         Row(
-            modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp),
+            modifier = Modifier
+                .background(
+                    Brush.horizontalGradient(
+                        colors = listOf(
+                            if (isEquipment) accentColor.copy(alpha = if (isDark) 0.20f else 0.15f) else borderColor.copy(alpha = 0.10f),
+                            Color.Transparent
+                        )
+                    )
+                )
+                .padding(horizontal = 9.dp, vertical = 7.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Surface(
-                shape = RoundedCornerShape(8.dp),
-                color = if (isEquipment) accentColor.copy(alpha = 0.20f) else Color.White.copy(alpha = 0.07f),
-                border = BorderStroke(1.dp, if (isEquipment) accentColor.copy(alpha = 0.52f) else borderColor.copy(alpha = 0.22f)),
-                modifier = Modifier.size(28.dp)
+                shape = RoundedCornerShape(9.dp),
+                color = if (isEquipment) accentColor.copy(alpha = 0.17f) else Color.White.copy(alpha = 0.07f),
+                border = BorderStroke(1.dp, if (isEquipment) accentColor.copy(alpha = 0.62f) else borderColor.copy(alpha = 0.32f)),
+                modifier = Modifier.size(32.dp)
             ) {
                 Box(contentAlignment = Alignment.Center) {
                     Icon(
                         painter = painterResource(roomPresenceItemIconRes(detail, isEquipment)),
                         contentDescription = null,
                         tint = if (isEquipment) accentColor.copy(alpha = 0.92f) else Color.White.copy(alpha = 0.78f),
-                        modifier = Modifier.size(16.dp)
+                        modifier = Modifier.size(17.dp)
                     )
                 }
             }
@@ -5021,14 +5154,31 @@ private fun SectionCard(
     title: String,
     content: @Composable ColumnScope.() -> Unit
 ) {
-    Surface(color = Color.Black.copy(alpha = 0.55f)) {
+    Surface(
+        shape = RoundedCornerShape(12.dp),
+        color = Color(0xFF061018).copy(alpha = 0.58f),
+        border = BorderStroke(1.dp, Color.White.copy(alpha = 0.14f))
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
+                .background(
+                    Brush.verticalGradient(
+                        listOf(
+                            Color.White.copy(alpha = 0.05f),
+                            Color.Transparent
+                        )
+                    )
+                )
                 .padding(12.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Text(title, color = Color.White, fontWeight = FontWeight.SemiBold)
+            Text(
+                title.uppercase(Locale.getDefault()),
+                color = Color.White.copy(alpha = 0.82f),
+                style = MaterialTheme.typography.labelMedium,
+                fontWeight = FontWeight.Bold
+            )
             content()
         }
     }
@@ -5044,9 +5194,10 @@ fun TutorialBanner(
         title = "Tutorial",
         message = prompt.message,
         accentColor = Color(0xFF7BE8FF),
-        actionLabel = "Got it",
+        actionLabel = "Continue",
         onAction = onDismiss,
-        modifier = modifier
+        modifier = modifier,
+        tapToDismiss = true
     )
 }
 
@@ -5060,9 +5211,11 @@ fun MilestoneBanner(
         title = "Milestone",
         message = prompt.message,
         accentColor = Color(0xFFFFD27F),
-        actionLabel = "Nice",
+        actionLabel = "Dismiss",
         onAction = onDismiss,
-        modifier = modifier
+        modifier = modifier,
+        showTitle = false,
+        tapToDismiss = true
     )
 }
 
@@ -5082,9 +5235,11 @@ fun ItemGrantedBanner(
         title = "Item Obtained",
         message = message,
         accentColor = Color(0xFFA5D6A7),
-        actionLabel = "Got it",
+        actionLabel = "Dismiss",
         onAction = onDismiss,
-        modifier = modifier
+        modifier = modifier,
+        showTitle = false,
+        tapToDismiss = true
     )
 }
 
@@ -5096,9 +5251,11 @@ private fun PromptBanner(
     backgroundColor: Color = Color(0xFF060B13).copy(alpha = 0.92f),
     actionLabel: String,
     onAction: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    showTitle: Boolean = true,
+    tapToDismiss: Boolean = false
 ) {
-    val shape = RoundedCornerShape(24.dp)
+    val shape = RoundedCornerShape(if (showTitle) 24.dp else 18.dp)
     val badgeLabel = title.uppercase(Locale.getDefault())
     val badgeIcon = remember(badgeLabel) {
         when {
@@ -5113,99 +5270,162 @@ private fun PromptBanner(
         modifier = modifier
             .navigationBarsPadding()
             .fillMaxWidth()
-            .padding(horizontal = 12.dp)
-            .widthIn(min = 320.dp, max = 860.dp),
+            .padding(horizontal = if (showTitle) 12.dp else 20.dp)
+            .widthIn(min = if (showTitle) 320.dp else 280.dp, max = if (showTitle) 860.dp else 560.dp),
         color = Color.Transparent,
         shape = shape,
-        shadowElevation = 10.dp
+        shadowElevation = if (showTitle) 10.dp else 14.dp
     ) {
         Box(
             modifier = Modifier
                 .clip(shape)
+                .clickable(
+                    enabled = tapToDismiss,
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() },
+                    onClick = onAction
+                )
                 .background(
                     brush = Brush.linearGradient(
                         listOf(
                             backgroundColor.copy(alpha = 0.94f),
                             backgroundColor.copy(alpha = 0.90f),
-                            backgroundColor.copy(alpha = 0.94f)
+                            if (showTitle) backgroundColor.copy(alpha = 0.94f) else accentColor.copy(alpha = 0.14f)
                         )
                     )
                 )
-                .border(1.2.dp, accentColor.copy(alpha = 0.50f), shape)
+                .border(if (showTitle) 1.2.dp else 1.dp, accentColor.copy(alpha = if (showTitle) 0.50f else 0.42f), shape)
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp, vertical = 18.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(20.dp)
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(64.dp)
-                        .clip(RoundedCornerShape(20.dp))
-                        .background(
-                            brush = Brush.linearGradient(
-                                listOf(
-                                    accentColor.copy(alpha = 0.65f),
-                                    accentColor.copy(alpha = 0.2f)
-                                )
-                            )
-                        )
-                        .border(1.dp, accentColor.copy(alpha = 0.6f), RoundedCornerShape(20.dp)),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = badgeIcon,
-                        contentDescription = null,
-                        tint = Color.White,
-                        modifier = Modifier.size(28.dp)
-                    )
-                }
+            if (showTitle) {
                 Column(
-                    modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp, vertical = 18.dp),
+                    verticalArrangement = Arrangement.spacedBy(14.dp)
                 ) {
                     Row(
+                        modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        horizontalArrangement = Arrangement.spacedBy(14.dp)
                     ) {
                         Box(
                             modifier = Modifier
+                                .size(50.dp)
+                                .clip(RoundedCornerShape(16.dp))
                                 .background(
-                                    color = accentColor.copy(alpha = 0.18f),
-                                    shape = RoundedCornerShape(999.dp)
+                                    brush = Brush.linearGradient(
+                                        listOf(
+                                            accentColor.copy(alpha = 0.62f),
+                                            accentColor.copy(alpha = 0.18f)
+                                        )
+                                    )
                                 )
-                                .padding(horizontal = 12.dp, vertical = 4.dp)
+                                .border(1.dp, accentColor.copy(alpha = 0.55f), RoundedCornerShape(16.dp)),
+                            contentAlignment = Alignment.Center
                         ) {
-                            Text(
-                                text = badgeLabel,
-                                color = accentColor,
-                                style = MaterialTheme.typography.labelSmall,
-                                fontWeight = FontWeight.Bold
+                            Icon(
+                                imageVector = badgeIcon,
+                                contentDescription = null,
+                                tint = Color.White,
+                                modifier = Modifier.size(24.dp)
                             )
                         }
-                        Spacer(
-                            modifier = Modifier
-                                .height(1.dp)
-                                .weight(1f)
-                                .background(accentColor.copy(alpha = 0.25f))
+                        Row(
+                            modifier = Modifier.weight(1f),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .background(
+                                        color = accentColor.copy(alpha = 0.18f),
+                                        shape = RoundedCornerShape(999.dp)
+                                    )
+                                    .padding(horizontal = 12.dp, vertical = 4.dp)
+                            ) {
+                                Text(
+                                    text = badgeLabel,
+                                    color = accentColor,
+                                    style = MaterialTheme.typography.labelSmall,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                            Spacer(
+                                modifier = Modifier
+                                    .height(1.dp)
+                                    .weight(1f)
+                                    .background(accentColor.copy(alpha = 0.25f))
+                            )
+                        }
+                    }
+                    Text(
+                        text = message,
+                        color = Color.White,
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontWeight = FontWeight.Normal,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Button(
+                            onClick = onAction,
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = accentColor,
+                                contentColor = Color.Black.copy(alpha = 0.85f)
+                            ),
+                            shape = RoundedCornerShape(18.dp)
+                        ) {
+                            Text(actionLabel.uppercase(Locale.getDefault()))
+                        }
+                    }
+                }
+            } else {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 18.dp, vertical = 14.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(14.dp)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(42.dp)
+                            .clip(RoundedCornerShape(14.dp))
+                            .background(
+                                brush = Brush.linearGradient(
+                                    listOf(
+                                        accentColor.copy(alpha = 0.42f),
+                                        accentColor.copy(alpha = 0.12f)
+                                    )
+                                )
+                            )
+                            .border(1.dp, accentColor.copy(alpha = 0.55f), RoundedCornerShape(14.dp)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = badgeIcon,
+                            contentDescription = null,
+                            tint = Color.White,
+                            modifier = Modifier.size(20.dp)
                         )
                     }
                     Text(
                         text = message,
                         color = Color.White,
-                        style = MaterialTheme.typography.bodyLarge
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.SemiBold,
+                        modifier = Modifier.weight(1f)
                     )
-                    Button(
-                        onClick = onAction,
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = accentColor,
-                            contentColor = Color.Black.copy(alpha = 0.85f)
-                        ),
-                        shape = RoundedCornerShape(18.dp)
-                    ) {
-                        Text(actionLabel.uppercase(Locale.getDefault()))
+                    TextButton(onClick = onAction) {
+                        Text(
+                            text = actionLabel.uppercase(Locale.getDefault()),
+                            color = accentColor,
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.Bold
+                        )
                     }
                 }
             }
@@ -5240,7 +5460,9 @@ fun InspectionOverlay(
                 .clickable(
                     indication = null,
                     interactionSource = remember { MutableInteractionSource() },
-                    onClick = {}
+                    onClick = {
+                        if (prompt.tapToDismiss) onDismiss()
+                    }
                 ),
             onDismiss = onDismiss
         )
@@ -5307,7 +5529,7 @@ fun NarrationCard(
                 colors = ButtonDefaults.textButtonColors(contentColor = accentColor)
             ) {
                 Text(
-                    text = if (prompt.tapToDismiss) "Got it" else "Dismiss",
+                    text = "Continue",
                     style = MaterialTheme.typography.labelLarge
                 )
             }
@@ -5356,7 +5578,7 @@ fun BlockedPromptCard(
             Text("Path Blocked", color = Color.White, fontWeight = FontWeight.SemiBold)
             Text(prompt.message, color = Color.White.copy(alpha = 0.85f))
             prompt.requiresItemLabel?.let { Text(it, color = Color.White.copy(alpha = 0.7f)) }
-            Button(onClick = onDismiss, modifier = Modifier.align(Alignment.End)) { Text("Okay") }
+            Button(onClick = onDismiss, modifier = Modifier.align(Alignment.End)) { Text("Close") }
         }
     }
 }

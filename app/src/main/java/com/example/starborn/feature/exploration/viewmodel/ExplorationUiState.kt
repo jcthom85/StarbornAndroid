@@ -158,12 +158,24 @@ data class QuestDetailUi(
     val rewards: List<String>,
     val stageIndex: Int,
     val totalStages: Int,
-    val tracked: Boolean
+    val tracked: Boolean,
+    val stages: List<QuestStageDetailUi> = emptyList(),
+    val completed: Boolean = false
 )
 
 data class QuestObjectiveUi(
     val id: String,
     val text: String,
+    val completed: Boolean
+)
+
+data class QuestStageDetailUi(
+    val id: String,
+    val title: String,
+    val description: String?,
+    val objectives: List<QuestObjectiveUi>,
+    val stageIndex: Int,
+    val current: Boolean,
     val completed: Boolean
 )
 
@@ -191,6 +203,7 @@ data class InventoryPreviewItemUi(
     val name: String,
     val quantity: Int,
     val type: String,
+    val description: String? = null,
     val effect: ItemEffect? = null,
     val equipment: Equipment? = null
 )
@@ -238,7 +251,8 @@ data class MinimapCellUi(
     val connections: Map<String, String>,
     val pathHints: Set<String> = emptySet(),
     val services: Set<MinimapService> = emptySet(),
-    val isDark: Boolean = false
+    val isDark: Boolean = false,
+    val isPreview: Boolean = false
 )
 
 enum class MinimapService {

@@ -42,6 +42,7 @@ fun MinimapWidget(
     val clrGrid = Color(0xFF7FE6FF).copy(alpha = 0.16f)
     val clrTile = Color(0xFF8FD9FF).copy(alpha = 0.72f)
     val clrTileGlow = Color(0xFFE8FCFF)
+    val clrPreview = Color.White.copy(alpha = 0.38f)
     val clrPlayer = Color(0xFFFFC857)
 
     val playerPulse = remember { CoreAnimatable(1f) }
@@ -114,7 +115,9 @@ fun MinimapWidget(
 
                 minimap?.let { state ->
                     val cellsInViewport = state.cells.filter {
-                        abs(it.offsetX) <= 2 && abs(it.offsetY) <= 2 && (it.discovered || it.isCurrent)
+                        abs(it.offsetX) <= 2 &&
+                            abs(it.offsetY) <= 2 &&
+                            (it.visited || it.discovered || it.isPreview || it.isCurrent)
                     }
                     val idToCell = state.cells.associateBy { it.roomId }
 
@@ -126,14 +129,19 @@ fun MinimapWidget(
                                 if (neighbor != null &&
                                     abs(neighbor.offsetX) <= 2 &&
                                     abs(neighbor.offsetY) <= 2 &&
-                                    (neighbor.discovered || neighbor.isCurrent)
+                                    (neighbor.visited || neighbor.discovered || neighbor.isPreview || neighbor.isCurrent)
                                 ) {
                                     val x1 = cx + cell.offsetX * step
                                     val y1 = cy - cell.offsetY * step
                                     val x2 = cx + neighbor.offsetX * step
                                     val y2 = cy - neighbor.offsetY * step
+                                    val lineColor = if (cell.isPreview || neighbor.isPreview) {
+                                        clrPreview.copy(alpha = 0.5f)
+                                    } else {
+                                        clrBorder.copy(alpha = 0.42f)
+                                    }
                                     drawLine(
-                                        color = clrBorder.copy(alpha = 0.42f),
+                                        color = lineColor,
                                         start = Offset(x1, y1),
                                         end = Offset(x2, y2),
                                         strokeWidth = 1.5f.dp.toPx(),
@@ -150,7 +158,11 @@ fun MinimapWidget(
                         val center = Offset(px, py)
 
                         val isCurrent = cell.isCurrent
-                        val baseColor = if (isCurrent) clrTileGlow else clrTile
+                        val baseColor = when {
+                            isCurrent -> clrTileGlow
+                            cell.isPreview -> clrPreview
+                            else -> clrTile
+                        }
                         val pipColor = baseColor.copy(alpha = if (cell.isDark) baseColor.alpha * 0.6f else baseColor.alpha)
                         val pipSize = g * if (isCurrent) 0.95f else 0.58f
 

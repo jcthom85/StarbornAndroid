@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -31,6 +32,7 @@ import com.example.starborn.R
 import com.example.starborn.domain.inventory.GearRules
 import com.example.starborn.domain.model.Equipment
 import com.example.starborn.domain.model.Item
+import com.example.starborn.domain.model.ItemEffect
 import com.example.starborn.feature.exploration.ui.MenuSectionCard
 import com.example.starborn.feature.exploration.ui.components.GearSelectionDialog
 import com.example.starborn.feature.exploration.ui.components.previewItemIconRes
@@ -70,6 +72,7 @@ fun InventoryTabContent(
         inventoryItems.filterNot { it.isKeyItem() }
     }
     val keyItems = remember(inventoryItems) { inventoryItems.filter { it.isKeyItem() } }
+    var detailItem by remember { mutableStateOf<InventoryPreviewItemUi?>(null) }
     MenuSectionCard(
         title = "Inventory Overview",
         accentColor = accentColor,
@@ -85,9 +88,11 @@ fun InventoryTabContent(
         when (page) {
             InventoryCarouselPage.SUPPLIES -> InventoryItemsPreview(
                 items = supplies,
+                accentColor = accentColor,
                 borderColor = borderColor,
                 emptyMessage = "No supplies collected yet. Explore rooms to gather materials.",
-                onItemClick = onUseConsumable
+                onItemClick = onUseConsumable,
+                onShowDetails = { detailItem = it }
             )
             InventoryCarouselPage.GEAR -> InventoryEquipmentPreview(
                 inventoryItems = inventoryItems,
@@ -109,8 +114,10 @@ fun InventoryTabContent(
             )
             InventoryCarouselPage.KEY_ITEMS -> InventoryItemsPreview(
                 items = keyItems,
+                accentColor = accentColor,
                 borderColor = borderColor,
-                emptyMessage = "No key items collected yet."
+                emptyMessage = "No key items collected yet.",
+                onShowDetails = { detailItem = it }
             )
         }
         Spacer(modifier = Modifier.height(8.dp))
@@ -119,6 +126,20 @@ fun InventoryTabContent(
             accentColor = accentColor,
             borderColor = borderColor,
             modifier = Modifier.align(Alignment.End)
+        )
+    }
+    detailItem?.let { item ->
+        PreviewItemDetailsDialog(
+            item = item,
+            accentColor = accentColor,
+            borderColor = borderColor,
+            onUse = if (item.effect != null && !item.isKeyItem()) {
+                {
+                    detailItem = null
+                    onUseConsumable(item)
+                }
+            } else null,
+            onDismiss = { detailItem = null }
         )
     }
 }
@@ -194,9 +215,11 @@ private fun InventoryCarouselButton(
 @Composable
 private fun InventoryItemsPreview(
     items: List<InventoryPreviewItemUi>,
+    accentColor: Color,
     borderColor: Color,
     emptyMessage: String,
-    onItemClick: ((InventoryPreviewItemUi) -> Unit)? = null
+    onItemClick: ((InventoryPreviewItemUi) -> Unit)? = null,
+    onShowDetails: (InventoryPreviewItemUi) -> Unit
 ) {
     if (items.isEmpty()) {
         Text(
@@ -239,7 +262,7 @@ private fun InventoryItemsPreview(
                         modifier = Modifier
                             .size(28.dp)
                     )
-                    Column {
+                    Column(modifier = Modifier.weight(1f)) {
                         Text(
                             text = item.name,
                             style = MaterialTheme.typography.titleSmall,
@@ -248,19 +271,175 @@ private fun InventoryItemsPreview(
                             overflow = TextOverflow.Ellipsis
                         )
                         Text(
-                            text = item.type,
+                            text = item.type.readableInventoryLabel(),
                             style = MaterialTheme.typography.bodySmall,
                             color = Color.White.copy(alpha = if (isUsable) 0.7f else 0.5f)
                         )
                     }
                 }
-                Text(
-                    text = "x${item.quantity}",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = Color.White
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    Text(
+                        text = "x${item.quantity}",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = Color.White
+                    )
+                    IconButton(
+                        onClick = { onShowDetails(item) },
+                        modifier = Modifier.size(36.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Info,
+                            contentDescription = "Item details",
+                            tint = accentColor.copy(alpha = 0.94f),
+                            modifier = Modifier.size(19.dp)
+                        )
+                    }
+                }
             }
         }
+    }
+}
+
+@Composable
+private fun PreviewItemDetailsDialog(
+    item: InventoryPreviewItemUi,
+    accentColor: Color,
+    borderColor: Color,
+    onUse: (() -> Unit)?,
+    onDismiss: () -> Unit
+) {
+    Dialog(
+        onDismissRequest = onDismiss,
+        properties = DialogProperties(usePlatformDefaultWidth = false)
+    ) {
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth(0.92f)
+                .widthIn(max = 560.dp),
+            shape = RoundedCornerShape(18.dp),
+            color = Color(0xF0061018),
+            border = BorderStroke(1.dp, accentColor.copy(alpha = 0.48f)),
+            shadowElevation = 16.dp
+        ) {
+            Column(
+                modifier = Modifier
+                    .background(
+                        Brush.verticalGradient(
+                            listOf(
+                                accentColor.copy(alpha = 0.16f),
+                                Color.Transparent,
+                                Color.Black.copy(alpha = 0.12f)
+                            )
+                        )
+                    )
+                    .padding(18.dp),
+                verticalArrangement = Arrangement.spacedBy(14.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalAlignment = Alignment.Top
+                ) {
+                    Image(
+                        painter = painterResource(previewItemIconRes(item.type)),
+                        contentDescription = null,
+                        modifier = Modifier.size(52.dp)
+                    )
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = item.name,
+                            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                            color = Color.White,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                        Text(
+                            text = item.type.readableInventoryLabel().uppercase(Locale.getDefault()),
+                            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                            color = accentColor.copy(alpha = 0.9f)
+                        )
+                    }
+                }
+                Text(
+                    text = item.description?.takeIf { it.isNotBlank() } ?: "No field description is available for this item.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.White.copy(alpha = 0.82f)
+                )
+                HorizontalDivider(color = borderColor.copy(alpha = 0.24f))
+                PreviewDetailRow("Quantity", "x${item.quantity}", accentColor)
+                PreviewDetailRow("Type", item.type.readableInventoryLabel(), accentColor)
+                item.effect?.let { effect ->
+                    HorizontalDivider(color = borderColor.copy(alpha = 0.24f))
+                    Text(
+                        text = "EFFECTS",
+                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                        color = accentColor
+                    )
+                    previewEffectRows(effect).forEach { (label, value) ->
+                        PreviewDetailRow(label, value, accentColor)
+                    }
+                }
+                Surface(
+                    shape = RoundedCornerShape(12.dp),
+                    color = Color.White.copy(alpha = 0.045f),
+                    border = BorderStroke(1.dp, Color.White.copy(alpha = 0.10f))
+                ) {
+                    Text(
+                        text = previewFlavorText(item),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color.White.copy(alpha = 0.68f),
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp)
+                    )
+                }
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    OutlinedButton(
+                        onClick = onDismiss,
+                        modifier = Modifier.weight(1f),
+                        shape = RoundedCornerShape(10.dp),
+                        border = BorderStroke(1.dp, Color.White.copy(alpha = 0.22f))
+                    ) {
+                        Text("Close")
+                    }
+                    Button(
+                        onClick = { onUse?.invoke() },
+                        enabled = onUse != null,
+                        modifier = Modifier.weight(1f),
+                        shape = RoundedCornerShape(10.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = accentColor,
+                            contentColor = Color(0xFF010308),
+                            disabledContainerColor = Color.White.copy(alpha = 0.09f),
+                            disabledContentColor = Color.White.copy(alpha = 0.38f)
+                        )
+                    ) {
+                        Text("Use Item")
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun PreviewDetailRow(label: String, value: String, accentColor: Color) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(label, style = MaterialTheme.typography.bodySmall, color = Color.White.copy(alpha = 0.62f))
+        Text(
+            value,
+            style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
+            color = accentColor,
+            textAlign = TextAlign.End
+        )
     }
 }
 
@@ -298,6 +477,46 @@ private fun WalletPill(
 private fun InventoryPreviewItemUi.isKeyItem(): Boolean {
     val normalized = type.lowercase(Locale.getDefault())
     return normalized == "key" || normalized == "key_item" || normalized == "quest"
+}
+
+private fun previewEffectRows(effect: ItemEffect): List<Pair<String, String>> = buildList {
+    effect.type?.takeIf { it.isNotBlank() }?.let { add("Effect Type" to it.readableInventoryLabel()) }
+    effect.target?.takeIf { it.isNotBlank() }?.let { add("Target" to it.readableInventoryLabel()) }
+    effect.restoreHp?.takeIf { it > 0 }?.let { add("Restore HP" to "+$it") }
+    effect.damage?.takeIf { it > 0 }?.let { add("Damage" to it.toString()) }
+    effect.amount?.takeIf { it != 0 }?.let { add("Amount" to it.toString()) }
+    effect.status?.takeIf { it.isNotBlank() }?.let { add("Status" to it.readableInventoryLabel()) }
+    effect.duration?.takeIf { it > 0 }?.let { add("Duration" to "$it turn${if (it == 1) "" else "s"}") }
+    effect.learnSchematic?.takeIf { it.isNotBlank() }?.let { add("Schematic" to it.readableInventoryLabel()) }
+    effect.singleBuff?.let { add("Buff" to "${it.stat.readableInventoryLabel()} ${if (it.value >= 0) "+${it.value}" else it.value.toString()}") }
+    effect.buffs?.forEach { buff ->
+        add("Buff" to "${buff.stat.readableInventoryLabel()} ${if (buff.value >= 0) "+${buff.value}" else buff.value.toString()}")
+    }
+    if (isEmpty()) add("Effect" to "Usable item")
+}
+
+private fun String.readableInventoryLabel(): String =
+    replace('_', ' ')
+        .replace('-', ' ')
+        .trim()
+        .split(Regex("\\s+"))
+        .filter { it.isNotBlank() }
+        .joinToString(" ") { token ->
+            token.lowercase(Locale.getDefault()).replaceFirstChar { char ->
+                if (char.isLowerCase()) char.titlecase(Locale.getDefault()) else char.toString()
+            }
+        }
+        .ifBlank { this }
+
+private fun previewFlavorText(item: InventoryPreviewItemUi): String {
+    return when {
+        item.isKeyItem() -> "Kept because someone, somewhere, will ask for it when the lights are low."
+        item.effect != null -> "Small comfort, practical chemistry, or both."
+        item.equipment != null -> "Tuned for survival, patched for the realities of the colony."
+        item.type.contains("component", ignoreCase = true) || item.type.contains("material", ignoreCase = true) ->
+            "The kind of part Jed would save twice before admitting it was useful."
+        else -> "Another piece of the colony that found its way into your pack."
+    }
 }
 
 @Composable
