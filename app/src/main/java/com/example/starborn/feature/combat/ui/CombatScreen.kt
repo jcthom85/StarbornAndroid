@@ -271,6 +271,9 @@ fun CombatScreen(
     val enemyCombatantIds = viewModel.enemyCombatantIds
     val combatState by viewModel.state.collectAsState(initial = viewModel.combatState)
     val inventoryEntries by viewModel.inventory.collectAsStateWithLifecycle()
+    val battleUsableItems = remember(inventoryEntries) {
+        inventoryEntries.filter { it.isBattleUsableItem() }
+    }
     val atbMeters by viewModel.atbMeters.collectAsStateWithLifecycle()
     val lungeActorId by viewModel.lungeActorId.collectAsStateWithLifecycle(null)
     val lungeToken by viewModel.lungeToken.collectAsStateWithLifecycle(0L)
@@ -739,7 +742,7 @@ fun CombatScreen(
 
         if (showItemsDialog.value && !combatLocked && !menuActorCannotAct && menuActor != null) {
             CombatItemsDialog(
-                items = inventoryEntries,
+                items = battleUsableItems,
                 theme = viewModel.theme,
                 highContrastMode = highContrastMode,
                 onItemSelected = { entry ->
@@ -968,7 +971,7 @@ fun CombatScreen(
                 atbProgress = commandActor?.let { atbMeters[it.id] } ?: 0f,
                 canAttack = hasTargets,
                 hasSkills = menuActorSkills.isNotEmpty(),
-                hasItems = inventoryEntries.isNotEmpty(),
+                hasItems = battleUsableItems.isNotEmpty(),
                 onAttack = {
                     if (viewModel.onCombatTutorialCommand("Attack")) {
                         requestTarget(PendingTargetRequest.Attack)
@@ -1317,12 +1320,22 @@ private fun InventoryEntry.targetFilter(): TargetFilter? {
     val effect = item.effect ?: return null
     val declared = effect.target?.lowercase()
     return when {
-        declared == "enemy" -> TargetFilter.ENEMY
-        declared == "ally" -> TargetFilter.ALLY
+        declared == "enemy" || declared == "single_enemy" -> TargetFilter.ENEMY
+        declared == "ally" || declared == "single_ally" -> TargetFilter.ALLY
         declared == "any" -> TargetFilter.ANY
+        declared == "self" || declared == "party" || declared == "enemy_group" || declared == "all_enemies" -> null
         effect.damage?.let { it > 0 } == true -> TargetFilter.ENEMY
         effect.restoreHp?.let { it > 0 } == true -> TargetFilter.ALLY
         effect.singleBuff != null || !effect.buffs.isNullOrEmpty() -> TargetFilter.ALLY
         else -> null
     }
+}
+
+private fun InventoryEntry.isBattleUsableItem(): Boolean {
+    if (quantity <= 0) return false
+    val effect = item.effect ?: return false
+    return effect.restoreHp?.let { it > 0 } == true ||
+        effect.damage?.let { it > 0 } == true ||
+        effect.singleBuff != null ||
+        !effect.buffs.isNullOrEmpty()
 }

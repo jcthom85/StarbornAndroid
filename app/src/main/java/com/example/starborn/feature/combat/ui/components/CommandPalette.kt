@@ -207,6 +207,7 @@ fun CommandPalette(
                         val commands = listOf(
                             CommandEntry("Attack", Icons.Rounded.Whatshot, canAttack, onAttack),
                             CommandEntry("Abilities", Icons.Rounded.AutoAwesome, hasSkills, onSkills),
+                            CommandEntry("Items", Icons.Rounded.Inventory2, hasItems, onItems),
                             CommandEntry(snackLabel, Icons.Rounded.Restaurant, canSnack, onSnack, cooldown = snackCooldown),
                             CommandEntry("Retreat", Icons.Rounded.ExitToApp, true, onRetreat)
                         )
@@ -414,21 +415,29 @@ fun CombatItemsDialog(
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                                Column(
+                                    modifier = Modifier.weight(1f),
+                                    verticalArrangement = Arrangement.spacedBy(2.dp)
+                                ) {
                                     Text(
                                         text = entry.item.name,
                                         style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium),
-                                        color = Color.White
+                                        color = Color.White,
+                                        maxLines = 2,
+                                        overflow = TextOverflow.Ellipsis
                                     )
                                     Text(
-                                        text = "x${entry.quantity}",
+                                        text = "${combatItemEffectSummary(entry)} / x${entry.quantity}",
                                         style = MaterialTheme.typography.labelSmall,
-                                        color = accent.copy(alpha = 0.86f)
+                                        color = accent.copy(alpha = 0.86f),
+                                        maxLines = 2,
+                                        overflow = TextOverflow.Ellipsis
                                     )
                                 }
                                 Button(
                                     onClick = { onItemSelected(entry) },
-                                    enabled = entry.quantity > 0
+                                    enabled = entry.quantity > 0,
+                                    modifier = Modifier.widthIn(min = 76.dp)
                                 ) {
                                     Text("Use")
                                 }
@@ -450,6 +459,34 @@ fun CombatItemsDialog(
             }
         }
     )
+}
+
+private fun combatItemEffectSummary(entry: InventoryEntry): String {
+    val effect = entry.item.effect ?: return "No battle effect"
+    val parts = mutableListOf<String>()
+    effect.restoreHp?.takeIf { it > 0 }?.let { parts += "Restore $it HP" }
+    effect.damage?.takeIf { it > 0 }?.let { parts += "Deal $it damage" }
+    effect.singleBuff?.let { buff -> parts += "${buff.stat.uppercase(Locale.getDefault())} +${buff.value}" }
+    effect.buffs?.forEach { buff -> parts += "${buff.stat.uppercase(Locale.getDefault())} +${buff.value}" }
+    val target = when (effect.target?.trim()?.lowercase(Locale.getDefault())) {
+        "enemy" -> "Enemy"
+        "single_enemy" -> "Enemy"
+        "enemy_group", "all_enemies" -> "All enemies"
+        "ally" -> "Ally"
+        "single_ally" -> "Ally"
+        "party", "all_allies" -> "Party"
+        "self" -> "Self"
+        "any" -> "Any target"
+        else -> when {
+            (effect.damage ?: 0) > 0 -> "Enemy"
+            (effect.restoreHp ?: 0) > 0 || effect.singleBuff != null || !effect.buffs.isNullOrEmpty() -> "Ally"
+            else -> null
+        }
+    }
+    return buildString {
+        append(parts.joinToString(", ").ifBlank { "Battle effect" })
+        target?.let { append(" - ").append(it) }
+    }
 }
 
 @Composable

@@ -816,7 +816,11 @@ class CombatActionProcessor(
         result: ItemUseResult.Restore
     ): CombatState {
         var working = state
-        val targets = resolveTargetsForItem(state, action, Targeting.SELF)
+        val targets = resolveTargetsForItem(
+            state = state,
+            action = action,
+            fallback = itemSupportTargeting(result.item.effect?.target)
+        )
         targets.forEach { targetId ->
             if (result.hp > 0) {
                 working = engine.applyHeal(
@@ -842,7 +846,11 @@ class CombatActionProcessor(
         return applyDamage(
             state = state,
             attackerId = action.actorId,
-            explicitTargets = resolveTargetsForItem(state, action, Targeting.ENEMY),
+            explicitTargets = resolveTargetsForItem(
+                state = state,
+                action = action,
+                fallback = itemOffenseTargeting(result.item.effect?.target)
+            ),
             damageMode = damageMode
         )
     }
@@ -852,7 +860,11 @@ class CombatActionProcessor(
         action: CombatAction.ItemUse,
         result: ItemUseResult.Buff
     ): CombatState {
-        val targets = resolveTargetsForItem(state, action, Targeting.SELF)
+        val targets = resolveTargetsForItem(
+            state = state,
+            action = action,
+            fallback = itemSupportTargeting(result.item.effect?.target)
+        )
         var working = state
         targets.forEach { targetId ->
             working = engine.applyBuffs(
@@ -874,6 +886,18 @@ class CombatActionProcessor(
         val explicit = listOfNotNull(action.targetId).takeUnless { it.isEmpty() } ?: emptyList()
         return actionTargets(state, actorState, explicit, fallback)
     }
+
+    private fun itemOffenseTargeting(target: String?): Targeting =
+        when (target?.trim()?.lowercase()) {
+            "enemy_group", "all_enemies" -> Targeting.ENEMY
+            else -> Targeting.ENEMY
+        }
+
+    private fun itemSupportTargeting(target: String?): Targeting =
+        when (target?.trim()?.lowercase()) {
+            "party", "all_allies" -> Targeting.ALLY
+            else -> Targeting.SELF
+        }
 
     private fun actionTargets(
         state: CombatState,

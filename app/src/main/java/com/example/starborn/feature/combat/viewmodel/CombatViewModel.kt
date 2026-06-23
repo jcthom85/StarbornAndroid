@@ -612,8 +612,10 @@ class CombatViewModel(
                 clearAwaitingAction(attackerId)
                 return@updateState current
             }
+            val targetMode = entry.item.effect?.target?.trim()?.lowercase()
             val resolvedTarget = targetId ?: when {
-                entry.item.effect?.damage?.let { it > 0 } == true -> resolveEnemyTargets(current).firstOrNull()
+                entry.item.effect?.damage?.let { it > 0 } == true &&
+                    targetMode !in setOf("enemy_group", "all_enemies") -> resolveEnemyTargets(current).firstOrNull()
                 else -> null
             }
             playUiCue("confirm")
