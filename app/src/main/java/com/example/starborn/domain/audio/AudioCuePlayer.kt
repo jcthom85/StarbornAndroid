@@ -50,6 +50,9 @@ class AudioCuePlayer(private val context: Context) {
     private var userSfxGain: Float = 1f
     private var userVoiceGain: Float = 1f
     private var hapticsEnabled: Boolean = true
+    private var pausedForBackground: Boolean = false
+    private var resumeMusicAfterBackground: Boolean = false
+    private var resumeAmbientAfterBackground: Boolean = false
     private val vibrator: Vibrator? = context.getSystemService()
 
     fun play(cueId: String) {
@@ -167,6 +170,29 @@ class AudioCuePlayer(private val context: Context) {
         ambientPlayer.release()
         fadeAnimators.values.forEach(ValueAnimator::cancel)
         fadeAnimators.clear()
+    }
+
+    fun pauseForBackground() {
+        if (pausedForBackground) return
+        pausedForBackground = true
+        resumeMusicAfterBackground = musicPlayer.playWhenReady && currentMusicCue != null
+        resumeAmbientAfterBackground = ambientPlayer.playWhenReady && currentAmbientCue != null
+        musicPlayer.pause()
+        ambientPlayer.pause()
+        soundPool.autoPause()
+    }
+
+    fun resumeFromBackground() {
+        if (!pausedForBackground) return
+        pausedForBackground = false
+        if (resumeMusicAfterBackground && currentMusicCue != null) {
+            musicPlayer.play()
+        }
+        if (resumeAmbientAfterBackground && currentAmbientCue != null) {
+            ambientPlayer.play()
+        }
+        resumeMusicAfterBackground = false
+        resumeAmbientAfterBackground = false
     }
 
     private fun scheduleGain(type: AudioCueType, targetGain: Float, durationMs: Long, onComplete: (() -> Unit)? = null) {

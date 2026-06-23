@@ -62,6 +62,9 @@ import com.example.starborn.ui.events.UiEvent
 import androidx.compose.runtime.DisposableEffect
 import com.example.starborn.feature.exploration.ui.TransitionMode
 import androidx.compose.ui.draw.scale
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 
 @Composable
 fun NavigationHost(
@@ -69,10 +72,26 @@ fun NavigationHost(
     showCombatActionText: Boolean = true
 ) {
     val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
     val services = remember { AppServices(context) }
     val userSettings by services.userSettingsStore.settings.collectAsState(initial = UserSettings())
     val sessionState by services.sessionStore.state.collectAsState()
     val environmentThemeState by services.environmentThemeManager.state.collectAsState()
+
+    DisposableEffect(lifecycleOwner, services) {
+        val observer = LifecycleEventObserver { _, event ->
+            when (event) {
+                Lifecycle.Event.ON_STOP -> services.audioCuePlayer.pauseForBackground()
+                Lifecycle.Event.ON_START -> services.audioCuePlayer.resumeFromBackground()
+                else -> Unit
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
     NavHost(
         navController = navController,
         startDestination = MainMenu.route
