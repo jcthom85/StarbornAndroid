@@ -31,7 +31,6 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -53,7 +52,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.toArgb
@@ -64,6 +62,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.starborn.R
 import com.example.starborn.data.local.Theme
 import com.example.starborn.domain.crafting.CraftingOutcome
@@ -107,7 +106,7 @@ fun TinkeringRoute(
             viewModel.messages.collectLatest { message ->
                 announcement = EventAnnouncementUi(
                     id = System.currentTimeMillis(),
-                    title = "Tinkering",
+                    title = null,
                     message = message,
                     accentColor = accentColor.toArgb().toLong()
                 )
@@ -1308,69 +1307,98 @@ private fun CraftAnnouncementOverlay(
 ) {
     val eventAccent = Color(announcement.accentColor)
     val accentColor = themeColor(theme?.accent, eventAccent)
-    val outlineColor = themeColor(theme?.border, accentColor.copy(alpha = 0.8f))
-    val backgroundColor = themeColor(theme?.bg, Color(0xFF040914)).copy(alpha = 0.95f)
-    val hasTitle = !announcement.title.isNullOrBlank()
+    val outlineColor = themeColor(theme?.border, eventAccent.copy(alpha = 0.55f))
+    val backgroundColor = themeColor(theme?.bg, Color(0xFF060B14)).copy(alpha = 0.96f)
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(Color.Black.copy(alpha = 0.6f))
+            .background(Color.Black.copy(alpha = 0.30f))
             .padding(horizontal = 24.dp, vertical = 32.dp),
         contentAlignment = Alignment.Center
     ) {
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
-                .widthIn(max = 540.dp),
-            shape = RoundedCornerShape(28.dp),
-            border = BorderStroke(1.dp, outlineColor),
+                .widthIn(max = 540.dp)
+                .semantics { contentDescription = "Tinkering result. Tap to continue" }
+                .clickable(onClick = onDismiss),
+            shape = RoundedCornerShape(6.dp),
+            border = BorderStroke(
+                1.2.dp,
+                Brush.linearGradient(
+                    listOf(
+                        accentColor.copy(alpha = 0.44f),
+                        outlineColor.copy(alpha = 0.18f),
+                        accentColor.copy(alpha = 0.28f)
+                    )
+                )
+            ),
             color = backgroundColor,
-            tonalElevation = 12.dp
+            shadowElevation = 14.dp
         ) {
             Column(
                 modifier = Modifier
                     .background(
-                        Brush.verticalGradient(
+                        Brush.radialGradient(
                             listOf(
-                                accentColor.copy(alpha = 0.18f),
+                                accentColor.copy(alpha = 0.14f),
                                 Color.Transparent
-                            )
+                            ),
+                            radius = 460f
                         )
                     )
-                    .padding(horizontal = 32.dp, vertical = 28.dp),
+                    .padding(horizontal = 28.dp, vertical = 24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                verticalArrangement = Arrangement.spacedBy(14.dp)
             ) {
-                if (hasTitle) {
-                    Text(
-                        text = announcement.title!!,
-                        style = MaterialTheme.typography.headlineSmall.copy(
-                            shadow = Shadow(
-                                color = accentColor.copy(alpha = 0.65f),
-                                blurRadius = 18f
+                Box(
+                    modifier = Modifier
+                        .width(42.dp)
+                        .height(3.dp)
+                        .clip(RoundedCornerShape(999.dp))
+                        .background(
+                            Brush.horizontalGradient(
+                                listOf(
+                                    accentColor.copy(alpha = 0.0f),
+                                    accentColor.copy(alpha = 0.65f),
+                                    accentColor.copy(alpha = 0.0f)
+                                )
                             )
-                        ),
-                        color = accentColor,
-                        textAlign = TextAlign.Center
-                    )
-                    HorizontalDivider(color = accentColor.copy(alpha = 0.4f))
-                }
+                        )
+                )
                 Text(
                     text = announcement.message,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = Color.White,
-                    textAlign = TextAlign.Center
+                    style = MaterialTheme.typography.bodyLarge.copy(lineHeight = 26.sp),
+                    color = Color.White.copy(alpha = 0.88f),
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
                 )
-                Button(
-                    onClick = onDismiss,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = accentColor.copy(alpha = 0.4f),
-                        contentColor = Color.White
-                    ),
-                    shape = RoundedCornerShape(999.dp)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("Continue")
+                    Text(
+                        text = "Tap to continue",
+                        style = MaterialTheme.typography.labelSmall.copy(letterSpacing = 0.8.sp),
+                        color = accentColor.copy(alpha = 0.55f)
+                    )
                 }
+                Box(
+                    modifier = Modifier
+                        .width(42.dp)
+                        .height(3.dp)
+                        .clip(RoundedCornerShape(999.dp))
+                        .background(
+                            Brush.horizontalGradient(
+                                listOf(
+                                    accentColor.copy(alpha = 0.0f),
+                                    accentColor.copy(alpha = 0.55f),
+                                    accentColor.copy(alpha = 0.0f)
+                                )
+                            )
+                        )
+                )
             }
         }
     }
