@@ -80,6 +80,8 @@ data class EventAction(
     @Json(name = "action")
     val action: String? = null,
     val context: String? = null,
+    @Json(name = "delay_ms")
+    val delayMs: Long? = null,
     @Json(name = "layer")
     val audioLayer: String? = null,
     @Json(name = "cue_id")

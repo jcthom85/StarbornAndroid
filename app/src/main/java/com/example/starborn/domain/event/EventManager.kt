@@ -347,7 +347,7 @@ class EventManager(
                 }
                 "system_tutorial" -> {
                     var callbackInvoked = false
-                    eventHooks.onSystemTutorial(action.sceneId, action.context) {
+                    eventHooks.onSystemTutorial(action.sceneId, action.context, action.delayMs ?: 0L) {
                         if (!callbackInvoked) {
                             callbackInvoked = true
                             action.onComplete?.let { executeActions(it, state) }
@@ -578,7 +578,7 @@ data class EventHooks(
     val onQuestCompleted: (questId: String?) -> Unit = {},
     val onQuestFailed: (questId: String?, reason: String?) -> Unit = { _, _ -> },
     val onBeginNode: (roomId: String?) -> Unit = {},
-    val onSystemTutorial: (sceneId: String?, context: String?, onComplete: () -> Unit) -> Unit = { _, _, done -> done() },
+    val onSystemTutorial: (sceneId: String?, context: String?, delayMs: Long, onComplete: () -> Unit) -> Unit = { _, _, _, done -> done() },
     val onNarration: (message: String, tapToDismiss: Boolean) -> Unit = { _, _ -> },
     val onSpawnGroundItem: (roomId: String?, itemId: String, quantity: Int) -> Unit = { _, _, _ -> },
     val onUnlockRoomSearch: (roomId: String?, note: String?) -> Unit = { _, _ -> },

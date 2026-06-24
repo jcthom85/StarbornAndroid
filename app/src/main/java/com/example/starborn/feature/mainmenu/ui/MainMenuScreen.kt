@@ -305,7 +305,6 @@ fun MainMenuScreen(
                         viewModel.deleteSlot(slot)
                     }
                 },
-                onRefresh = { viewModel.refreshSlots() },
                 onDismiss = { saveLoadMode = null },
                 accentColor = accentColor,
                 panelColor = panelColor,

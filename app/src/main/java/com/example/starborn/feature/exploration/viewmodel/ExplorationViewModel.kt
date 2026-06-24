@@ -147,18 +147,29 @@ private class SystemTutorialCoordinator(
     private val tutorialManager: TutorialRuntimeManager,
     private val tutorialsEnabled: () -> Boolean = { true }
 ) {
-    fun play(sceneId: String?, context: String?, onComplete: () -> Unit): Boolean {
+    fun play(sceneId: String?, context: String?, delayMs: Long = 0L, onComplete: () -> Unit): Boolean {
         if (!tutorialsEnabled()) {
             onComplete()
             return false
         }
         val normalizedScene = sceneId?.takeIf { it.isNotBlank() }
         if (normalizedScene != null) {
-            val scheduled = tutorialManager.playScript(
-                scriptId = normalizedScene,
-                allowDuplicates = false,
-                onComplete = onComplete
-            )
+            val scheduled = if (delayMs > 0L) {
+                tutorialManager.scheduleScript(
+                    key = "event_script:$normalizedScene:${context.orEmpty()}",
+                    scriptId = normalizedScene,
+                    delayMs = delayMs,
+                    allowDuplicates = false,
+                    onComplete = onComplete
+                )
+                true
+            } else {
+                tutorialManager.playScript(
+                    scriptId = normalizedScene,
+                    allowDuplicates = false,
+                    onComplete = onComplete
+                )
+            }
             if (scheduled) return true
         }
         val message = buildMessage(normalizedScene, context)
@@ -171,6 +182,7 @@ private class SystemTutorialCoordinator(
                 metadata = mapOf("source" to "system")
             ),
             allowDuplicates = false,
+            delayMs = delayMs.coerceAtLeast(0L),
             onDismiss = onComplete
         )
         return true
@@ -425,8 +437,8 @@ class ExplorationViewModel(
                 roomId?.let { roomsById[it]?.let { room -> markDiscovered(room) } }
                 emitEvent(ExplorationEvent.BeginNode(roomId))
             },
-            onSystemTutorial = { sceneId, context, done ->
-                val handled = systemTutorialCoordinator.play(sceneId, context) { done() }
+            onSystemTutorial = { sceneId, context, delayMs, done ->
+                val handled = systemTutorialCoordinator.play(sceneId, context, delayMs) { done() }
                 emitEvent(ExplorationEvent.TutorialRequested(sceneId, context))
                 if (!handled) {
                     done()
@@ -534,6 +546,8 @@ class ExplorationViewModel(
     }
 
     private var roomsById: Map<String, Room> = emptyMap()
+    private var hubsById: Map<String, Hub> = emptyMap()
+    private var worldsById: Map<String, World> = emptyMap()
     private var enemyMovementManager: EnemyMovementManager? = null
     private var enemyMovementJob: Job? = null
     private var explorationVisible: Boolean = false
@@ -1616,6 +1630,7 @@ class ExplorationViewModel(
             val npcs = worldAssets.loadNpcs()
             val enemies = worldAssets.loadEnemies()
 
+            worldsById = worlds.associateBy { it.id }
             charactersById = players.associateBy { it.id }
             skillsById = skills.associateBy { it.id }
             skillTreesByCharacter = skillTrees.associateBy { it.character }
@@ -1638,6 +1653,7 @@ class ExplorationViewModel(
             }
 
             roomsById = rooms.associateBy { it.id }
+            hubsById = hubs.associateBy { it.id }
             val movementCatalog = worldAssets.loadEnemyMovement() ?: EnemyMovementCatalog()
             enemyMovementManager = EnemyMovementManager(movementCatalog, rooms).also { manager ->
                 manager.restore(existingState.enemyPartyStates, existingState)
@@ -2663,17 +2679,19 @@ class ExplorationViewModel(
         }
         val location = buildList {
             state.roomId?.let { rid ->
-                roomsById[rid]?.title?.takeIf { it.isNotBlank() }?.let { add(it) } ?: add(rid)
+                add(roomsById[rid]?.title?.takeIf { it.isNotBlank() } ?: rid.readableSaveLabel())
             }
-            state.hubId?.let { add(it) }
-        }.takeIf { it.isNotEmpty() }?.joinToString(" · ") ?: if (isQuick) "Quicksave" else "Unknown Location"
-        val summary = "Level ${state.playerLevel} · ${state.playerCredits} credits"
+            state.hubId?.let { hubId ->
+                add(hubsById[hubId]?.title?.takeIf { it.isNotBlank() } ?: hubId.readableSaveLabel())
+            }
+        }.distinct().takeIf { it.isNotEmpty() }?.joinToString(" - ") ?: if (isQuick) "Quicksave" else "Unknown Location"
+        val summary = saveDetails(state)
         val savedLabel = savedAt?.let {
             runCatching {
-                Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("MMM d • HH:mm"))
+                Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("MMM d - HH:mm"))
             }.getOrNull()
         }
-        val subtitle = listOfNotNull(summary, savedLabel).joinToString(" • ")
+        val subtitle = listOfNotNull(summary, savedLabel).joinToString(" - ")
         return SaveSlotSummary(
             slot = slot,
             state = state,
@@ -2682,7 +2700,8 @@ class ExplorationViewModel(
             isEmpty = false,
             isQuickSave = isQuick,
             isAutosave = false,
-            savedAtMillis = savedAt
+            savedAtMillis = savedAt,
+            partyPortraits = partyPortraitsFor(state)
         )
     }
 
@@ -2694,6 +2713,36 @@ class ExplorationViewModel(
             completedQuests.isEmpty() &&
             completedMilestones.isEmpty()
     }
+
+    private fun partyPortraitsFor(state: GameSessionState): List<String> {
+        val partyIds = state.partyMembers.ifEmpty { listOfNotNull(state.playerId) }
+        return partyIds.mapNotNull { id ->
+            charactersById[id]?.miniIconPath?.takeIf { it.isNotBlank() }
+        }
+    }
+
+    private fun saveDetails(state: GameSessionState): String {
+        val world = state.worldId?.let { worldId ->
+            worldsById[worldId]?.title?.takeIf { it.isNotBlank() } ?: worldId.readableSaveLabel()
+        }
+        return listOfNotNull(
+            world,
+            "Level ${state.playerLevel}",
+            "${state.playerCredits} credits"
+        ).joinToString(" - ")
+    }
+
+    private fun String.readableSaveLabel(): String =
+        replace('_', ' ')
+            .replace('-', ' ')
+            .split(' ')
+            .filter { it.isNotBlank() }
+            .joinToString(" ") { token ->
+                token.lowercase(Locale.getDefault()).replaceFirstChar { ch ->
+                    if (ch.isLowerCase()) ch.titlecase(Locale.getDefault()) else ch.toString()
+                }
+            }
+            .ifBlank { this }
 
     fun selectMenuTab(tab: MenuTab) {
         lastMenuTab = tab

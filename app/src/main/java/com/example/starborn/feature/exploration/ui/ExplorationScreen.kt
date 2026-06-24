@@ -918,16 +918,14 @@ fun ExplorationScreen(
                         slotSummaries = viewModel.fetchSaveSlots()
                     }
                 },
-                onRefresh = {
-                    coroutineScope.launch {
-                        slotSummaries = viewModel.fetchSaveSlots()
-                    }
-                },
                 onDismiss = { saveLoadMode = null },
                 accentColor = themeColor(activeTheme?.accent, Color(0xFF7BE4FF)),
-                panelColor = themeColor(activeTheme?.bg, Color(0xFF0B111A)).copy(alpha = 0.96f),
+                panelColor = themeColor(activeTheme?.bg, Color(0xFF0B111A)),
                 borderColor = themeColor(activeTheme?.border, Color.White.copy(alpha = 0.16f)),
-                textColor = themeColor(activeTheme?.fg, Color.White)
+                textColor = themeColor(activeTheme?.fg, Color.White),
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .zIndex(90f)
             )
         }
 

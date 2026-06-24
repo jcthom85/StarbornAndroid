@@ -28,7 +28,8 @@ data class SaveSlotSummary(
     val isEmpty: Boolean,
     val isAutosave: Boolean = false,
     val isQuickSave: Boolean = false,
-    val savedAtMillis: Long? = null
+    val savedAtMillis: Long? = null,
+    val partyPortraits: List<String> = emptyList()
 )
 
 class MainMenuViewModel(
@@ -43,6 +44,10 @@ class MainMenuViewModel(
 
     val mainMenuTheme: Theme? = services.themeRepository.getTheme(MAIN_MENU_THEME_ID)
         ?: services.themeRepository.getTheme(DEFAULT_THEME_ID)
+    private val worldsById = services.worldDataSource.loadWorlds().associateBy { it.id }
+    private val roomsById = services.worldDataSource.loadRooms().associateBy { it.id }
+    private val hubsById = services.worldDataSource.loadHubs().associateBy { it.id }
+    private val charactersById = services.worldDataSource.loadCharacters().associateBy { it.id }
 
     init {
         refreshSlots()
@@ -191,12 +196,9 @@ class MainMenuViewModel(
             )
         }
         val savedAt = this.savedAtMillis
-        val location = buildList {
-            state.roomId?.let { add("Room $it") }
-            state.hubId?.let { add("Hub $it") }
-        }.takeIf { it.isNotEmpty() }?.joinToString(" · ") ?: "Quicksave"
-        val details = "Level ${state.playerLevel} · ${state.playerCredits} credits"
-        val subtitle = listOfNotNull(details, formatTimestamp(savedAt)).joinToString(" • ")
+        val location = saveLocationTitle(state, fallback = "Quicksave")
+        val details = saveDetails(state)
+        val subtitle = listOfNotNull(details, formatTimestamp(savedAt)).joinToString(" - ")
         return SaveSlotSummary(
             slot = QUICKSAVE_SLOT,
             state = state,
@@ -204,7 +206,8 @@ class MainMenuViewModel(
             subtitle = subtitle,
             isEmpty = false,
             isQuickSave = true,
-            savedAtMillis = savedAt
+            savedAtMillis = savedAt,
+            partyPortraits = partyPortraitsFor(state)
         )
     }
 
@@ -221,19 +224,17 @@ class MainMenuViewModel(
                 savedAtMillis = null
             )
         }
-        val location = buildList {
-            state.roomId?.let { add("Room $it") }
-            state.hubId?.let { add("Hub $it") }
-        }.takeIf { it.isNotEmpty() }?.joinToString(" · ") ?: "Unknown Location"
-        val summary = "Level ${state.playerLevel} · ${state.playerCredits} credits"
-        val subtitle = listOfNotNull(summary, formatTimestamp(savedAt)).joinToString(" • ")
+        val location = saveLocationTitle(state, fallback = "Unknown Location")
+        val summary = saveDetails(state)
+        val subtitle = listOfNotNull(summary, formatTimestamp(savedAt)).joinToString(" - ")
         return SaveSlotSummary(
             slot = slot,
             state = state,
             title = location,
             subtitle = subtitle,
             isEmpty = false,
-            savedAtMillis = savedAt
+            savedAtMillis = savedAt,
+            partyPortraits = partyPortraitsFor(state)
         )
     }
 
@@ -259,12 +260,9 @@ class MainMenuViewModel(
                 savedAtMillis = null
             )
         } else {
-            val location = buildList {
-                state.roomId?.let { add("Room $it") }
-                state.hubId?.let { add("Hub $it") }
-            }.takeIf { it.isNotEmpty() }?.joinToString(" · ") ?: "Autosave"
-            val details = "Level ${state.playerLevel} · ${state.playerCredits} credits"
-            val subtitle = listOfNotNull(details, formatTimestamp(savedAt)).joinToString(" • ")
+            val location = saveLocationTitle(state, fallback = "Autosave")
+            val details = saveDetails(state)
+            val subtitle = listOfNotNull(details, formatTimestamp(savedAt)).joinToString(" - ")
             SaveSlotSummary(
                 slot = AUTOSAVE_SLOT,
                 state = state,
@@ -272,7 +270,8 @@ class MainMenuViewModel(
                 subtitle = subtitle,
                 isEmpty = false,
                 isAutosave = true,
-                savedAtMillis = savedAt
+                savedAtMillis = savedAt,
+                partyPortraits = partyPortraitsFor(state)
             )
         }
     }
@@ -281,11 +280,55 @@ class MainMenuViewModel(
         return worldId == null && hubId == null && roomId == null && inventory.isEmpty() && activeQuests.isEmpty()
     }
 
+    private fun saveLocationTitle(state: GameSessionState, fallback: String): String {
+        val room = state.roomId?.let { roomId ->
+            roomsById[roomId]?.title?.takeIf { it.isNotBlank() } ?: roomId.readableSaveLabel()
+        }
+        val hub = state.hubId?.let { hubId ->
+            hubsById[hubId]?.title?.takeIf { it.isNotBlank() } ?: hubId.readableSaveLabel()
+        }
+        return listOfNotNull(room, hub)
+            .distinct()
+            .takeIf { it.isNotEmpty() }
+            ?.joinToString(" - ")
+            ?: fallback
+    }
+
+    private fun partyPortraitsFor(state: GameSessionState): List<String> {
+        val partyIds = state.partyMembers.ifEmpty { listOfNotNull(state.playerId) }
+        return partyIds.mapNotNull { id ->
+            charactersById[id]?.miniIconPath?.takeIf { it.isNotBlank() }
+        }
+    }
+
+    private fun saveDetails(state: GameSessionState): String {
+        val world = state.worldId?.let { worldId ->
+            worldsById[worldId]?.title?.takeIf { it.isNotBlank() } ?: worldId.readableSaveLabel()
+        }
+        return listOfNotNull(
+            world,
+            "Level ${state.playerLevel}",
+            "${state.playerCredits} credits"
+        ).joinToString(" - ")
+    }
+
+    private fun String.readableSaveLabel(): String =
+        replace('_', ' ')
+            .replace('-', ' ')
+            .split(' ')
+            .filter { it.isNotBlank() }
+            .joinToString(" ") { token ->
+                token.lowercase(Locale.getDefault()).replaceFirstChar { ch ->
+                    if (ch.isLowerCase()) ch.titlecase(Locale.getDefault()) else ch.toString()
+                }
+            }
+            .ifBlank { this }
+
     private fun formatTimestamp(millis: Long?): String? {
         val value = millis ?: return null
         if (value <= 0L) return null
         return runCatching {
-            val formatter = DateTimeFormatter.ofPattern("MMM d • HH:mm")
+            val formatter = DateTimeFormatter.ofPattern("MMM d - HH:mm")
                 .withLocale(Locale.getDefault())
                 .withZone(ZoneId.systemDefault())
             formatter.format(Instant.ofEpochMilli(value))
