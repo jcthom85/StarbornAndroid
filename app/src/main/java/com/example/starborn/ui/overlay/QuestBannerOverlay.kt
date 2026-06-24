@@ -72,7 +72,8 @@ fun QuestBannerOverlay(
     uiEventBus: UiEventBus,
     deferShowing: Boolean,
     accentColor: Color,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onPresentationBusyChanged: (Boolean) -> Unit = {}
 ) {
     val queue = remember { mutableStateListOf<Banner>() }
     var current by remember { mutableStateOf<Banner?>(null) }
@@ -137,6 +138,10 @@ fun QuestBannerOverlay(
             delay(180)
             current = null
         }
+    }
+
+    LaunchedEffect(queue.size, current) {
+        onPresentationBusyChanged(current != null || queue.isNotEmpty())
     }
 
     val visible = isShowing && current != null

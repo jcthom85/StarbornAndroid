@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
@@ -49,7 +50,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -193,7 +193,6 @@ private fun ShopScreen(
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 ShopControlPanel(
-                    shopName = state.shopName,
                     activeTab = state.activeTab,
                     credits = state.credits,
                     onTabSelected = onTabSelected,
@@ -298,7 +297,6 @@ private fun ShopScreen(
 
 @Composable
 private fun ShopControlPanel(
-    shopName: String,
     activeTab: ShopTab,
     credits: Int,
     onTabSelected: (ShopTab) -> Unit,
@@ -332,33 +330,11 @@ private fun ShopControlPanel(
                 horizontalArrangement = Arrangement.spacedBy(10.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Column(
-                    modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(2.dp)
-                ) {
-                    Text(
-                        text = "BLACK-MARKET LEDGER",
-                        color = colors.accent.copy(alpha = 0.92f),
-                        style = MaterialTheme.typography.labelSmall,
-                        fontWeight = FontWeight.Bold,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                    Text(
-                        text = shopName.ifBlank { "Shop" },
-                        color = colors.textPrimary,
-                        style = MaterialTheme.typography.titleMedium.copy(
-                            shadow = Shadow(
-                                color = colors.accent.copy(alpha = 0.35f),
-                                blurRadius = 12f
-                            )
-                        ),
-                        fontWeight = FontWeight.Bold,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
-                CreditsPill(credits = credits, colors = colors)
+                CreditsPill(
+                    credits = credits,
+                    colors = colors,
+                    modifier = Modifier.weight(1f)
+                )
             }
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -796,30 +772,61 @@ private fun ShopDialogueBar(
     modifier: Modifier = Modifier
 ) {
     val line = lines.lastOrNull() ?: return
-    val padding = if (largeTouchTargets) 14.dp else 12.dp
     val speaker = line.speaker?.takeIf { it.isNotBlank() } ?: shopName.ifBlank { "Shopkeeper" }
-    Surface(
-        modifier = modifier,
-        color = colors.panel.copy(alpha = 0.86f),
-        contentColor = Color.White,
-        shadowElevation = 9.dp,
-        tonalElevation = 3.dp,
-        shape = RoundedCornerShape(18.dp),
-        border = BorderStroke(1.dp, colors.border.copy(alpha = 0.72f))
-    ) {
+    val portraitSize = if (largeTouchTargets) 68.dp else 60.dp
+    Box(modifier = modifier.padding(top = portraitSize * 0.42f)) {
+        Surface(
+            modifier = Modifier.fillMaxWidth(),
+            color = colors.panel.copy(alpha = 0.94f),
+            contentColor = Color.White,
+            shadowElevation = 10.dp,
+            tonalElevation = 3.dp,
+            shape = RoundedCornerShape(18.dp),
+            border = BorderStroke(1.dp, colors.accent.copy(alpha = 0.42f))
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        Brush.horizontalGradient(
+                            colors = listOf(
+                                colors.accent.copy(alpha = 0.14f),
+                                colors.accentAlt.copy(alpha = 0.06f),
+                                Color.Transparent
+                            )
+                        )
+                    )
+                    .padding(start = 18.dp, top = 40.dp, end = 18.dp, bottom = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .height(2.dp)
+                        .fillMaxWidth()
+                        .background(
+                            Brush.horizontalGradient(
+                                listOf(
+                                    colors.accent.copy(alpha = 0.70f),
+                                    colors.accent.copy(alpha = 0.10f),
+                                    Color.Transparent
+                                )
+                            )
+                        )
+                )
+                Text(
+                    text = line.text,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = Color.White.copy(alpha = 0.93f),
+                    maxLines = 4,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+        }
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(
-                    Brush.horizontalGradient(
-                        colors = listOf(
-                            colors.accent.copy(alpha = 0.13f),
-                            colors.accentAlt.copy(alpha = 0.06f),
-                            Color.Transparent
-                        )
-                    )
-                )
-                .padding(padding),
+                .align(Alignment.TopStart)
+                .offset(x = 14.dp, y = (-portraitSize * 0.42f)),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -828,15 +835,15 @@ private fun ShopDialogueBar(
                     painter = painterResource(id = portraitRes),
                     contentDescription = speaker,
                     modifier = Modifier
-                        .size(if (largeTouchTargets) 56.dp else 48.dp)
+                        .size(portraitSize)
                         .clip(CircleShape)
-                        .background(Color.Black.copy(alpha = 0.24f)),
+                        .background(Color.Black.copy(alpha = 0.34f)),
                     contentScale = ContentScale.Crop
                 )
             } else {
                 Surface(
                     modifier = Modifier
-                        .size(if (largeTouchTargets) 52.dp else 46.dp)
+                        .size(portraitSize)
                         .clip(CircleShape),
                     color = colors.accent.copy(alpha = 0.14f),
                     border = BorderStroke(1.dp, colors.accent.copy(alpha = 0.36f))
@@ -851,23 +858,18 @@ private fun ShopDialogueBar(
                     }
                 }
             }
-            Column(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(2.dp)
+            Surface(
+                color = Color(0xE6080C11),
+                shape = RoundedCornerShape(999.dp),
+                border = BorderStroke(1.dp, colors.accent.copy(alpha = 0.28f))
             ) {
                 Text(
                     text = speaker,
-                    style = MaterialTheme.typography.labelLarge,
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                    style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Bold,
                     color = colors.accent,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Text(
-                    text = line.text,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color.White.copy(alpha = 0.92f),
-                    maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
             }

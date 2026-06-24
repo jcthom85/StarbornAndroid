@@ -356,7 +356,7 @@ class EventManagerTest {
             events = listOf(event),
             sessionStore = sessionStore,
             eventHooks = EventHooks(
-                onSystemTutorial = { sceneId, context, done ->
+                onSystemTutorial = { sceneId, context, _, done ->
                     receivedScene = sceneId
                     receivedContext = context
                     done()

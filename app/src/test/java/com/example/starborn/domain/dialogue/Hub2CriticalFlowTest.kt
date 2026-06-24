@@ -289,7 +289,7 @@ class Hub2CriticalFlowTest {
                 sessionStore = store,
                 eventHooks = EventHooks(
                     onMessage = { messages += it },
-                    onSystemTutorial = { _, _, done -> done() },
+                    onSystemTutorial = { _, _, _, done -> done() },
                     onQuestTaskUpdated = { questId, taskId ->
                         if (!questId.isNullOrBlank() && !taskId.isNullOrBlank()) {
                             store.setQuestTaskCompleted(questId, taskId, true)

@@ -662,7 +662,7 @@
     "env": "mine",
     "title": "Doc's Exam Room",
     "background_image": "images/rooms/world_1/medbay_exam1_v3.png",
-    "description": "Doc's exam room tries hard to look clean and loses by inches. A glitching monitor, taped scanner leads, and overused med trays turn every injury into paperwork with a pulse. The med station is patched together, but it still works.",
+    "description": "Doc's exam room tries hard to look clean and loses by inches. A glitching monitor, taped scanner leads, and overused med trays turn every injury into paperwork with a pulse.",
     "npcs": [
       "doc"
     ],
@@ -682,11 +682,6 @@
         "name": "monitor",
         "type": "generic",
         "condition_unmet_message": "The display is covered in status errors. Dominion's latest update seems to have broken the diagnostic tools."
-      },
-      {
-        "name": "Med Station",
-        "type": "first_aid",
-        "station_id": "doc_med_station"
       }
     ]
   },
@@ -916,7 +911,7 @@
     "env": "market",
     "title": "Scrapper's Stall",
     "background_image": "images/rooms/world_1/trade_scrapper_v3.png",
-    "description": "Illegal tech, salvaged weapons, and a locked datapad spill from Scrapper's reinforced stall in tidy little disasters. He prices everything like a favor, watches every shadow, and keeps the contraband worth buying under the counter.",
+    "description": "Illegal tech, salvaged weapons, and a locked datapad spill from Scrapper's reinforced stall in tidy little disasters. He prices everything like a favor, watches every shadow, and keeps the best stock under the counter.",
     "npcs": [
       "scrapper"
     ],
@@ -5066,7 +5061,7 @@
     "weather": "fog",
     "title": "Tide Pools",
     "background_image": "images/rooms/world_2/beach_pools.png",
-    "description": "Glowing tide pools containing fish species. The water is calm, and the sand pools hum softly. Fish the glow-water here and every ripple answers with a low chord.",
+    "description": "Glowing tide pools collect in the sand, calm enough to reflect the fog in pale blue sheets. Something beneath the glow-water answers every ripple with a low chord.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -5088,7 +5083,7 @@
         "condition_unmet_message": "The water hums with a deep subsonic tone, washing away local static."
       },
       {
-        "name": "Fish the pools",
+        "name": "Tide Fishing",
         "type": "fishing",
         "zone_id": "sector9_stream",
         "condition_unmet_message": "The tide pools are calm enough for fishing."
@@ -5904,7 +5899,7 @@
     "state": {},
     "actions": [
       {
-        "name": "Shop",
+        "name": "Sentinel Scraps",
         "type": "shop",
         "shop_id": "sentinel_scraps",
         "dialogue_id": "sentinel_shop_intro"

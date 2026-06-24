@@ -1074,6 +1074,7 @@ fun ExplorationScreen(
             uiEventBus = uiEventBus,
             deferShowing = blockingOverlayActive,
             accentColor = questAccentColor,
+            onPresentationBusyChanged = viewModel::setQuestBannerPresentationBusy,
             modifier = Modifier
                 .align(Alignment.TopCenter)
                 .fillMaxWidth()
@@ -4868,7 +4869,7 @@ private fun buildInlineActionPlan(
         return null
     }
 
-    actions.forEach { action ->
+    actions.filter { it.isInlineDescriptionAction() }.forEach { action ->
         val baseName = action.name
         if (baseName.isBlank()) return@forEach
         val range = findRange(baseName) ?: return@forEach
@@ -4883,20 +4884,6 @@ private fun buildInlineActionPlan(
             locked = locked
         )
     }
-
-    room?.npcs.orEmpty()
-        .filter { it.isNotBlank() }
-        .forEach { npc ->
-            val range = findRange(npc) ?: return@forEach
-            occupied += range
-            segments += InlineActionSegment(
-                id = "npc:$npc",
-                target = InlineActionTarget.Npc(npc),
-                start = range.first,
-                end = range.last + 1,
-                locked = false
-            )
-        }
 
     room?.enemies.orEmpty()
         .filter { it.isNotBlank() }
@@ -4916,6 +4903,15 @@ private fun buildInlineActionPlan(
     if (segments.isEmpty()) return null
     segments.sortBy { it.start }
     return InlineActionPlan(description = parsedDescription, segments = segments)
+}
+
+private fun RoomAction.isInlineDescriptionAction(): Boolean = when (this) {
+    is ShopAction,
+    is TinkeringAction,
+    is FirstAidAction -> false
+    is GenericAction -> !type.equals("fish", ignoreCase = true) &&
+        !type.equals("fishing", ignoreCase = true)
+    else -> true
 }
 
 private fun rangesOverlap(a: IntRange, b: IntRange): Boolean =

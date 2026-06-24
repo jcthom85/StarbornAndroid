@@ -112,7 +112,14 @@ class HubViewModel(
 
         if (!node.canEnter) {
             _uiState.update {
-                it.copy(selectedNodeId = nodeId, statusMessage = node.lockReason ?: "Reach this location through exploration first.")
+                it.copy(
+                    selectedNodeId = nodeId,
+                    statusMessage = null,
+                    lockedPrompt = HubLockedPrompt(
+                        title = node.title,
+                        message = node.lockReason ?: "Reach this location through exploration first."
+                    )
+                )
             }
             return
         }
@@ -145,6 +152,10 @@ class HubViewModel(
 
         _uiState.update { it.copy(selectedNodeId = nodeId, statusMessage = null) }
         onEnter(node)
+    }
+
+    fun dismissLockedPrompt() {
+        _uiState.update { it.copy(lockedPrompt = null) }
     }
 
     private fun astraAccessNode() = HubNodeUi(

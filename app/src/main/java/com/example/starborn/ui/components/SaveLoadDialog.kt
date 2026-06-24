@@ -216,12 +216,6 @@ private fun SaveSlotRow(
         summary.isAutosave -> "Autosave"
         else -> "Slot ${summary.slot}"
     }
-    val slotKind = when {
-        summary.isQuickSave -> "Quick"
-        summary.isAutosave -> "Auto"
-        summary.isEmpty -> "Empty"
-        else -> "Manual"
-    }
     val occupied = summary.state != null && !summary.isEmpty
 
     Surface(
@@ -247,33 +241,20 @@ private fun SaveSlotRow(
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(9.dp)
-                            .clip(CircleShape)
-                            .background(if (occupied) accent else textColor.copy(alpha = 0.24f))
-                    )
-                    Text(
-                        text = slotLabel,
-                        color = if (occupied) Color.White else textColor.copy(alpha = 0.72f),
-                        style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold)
-                    )
-                }
-                if (!occupied) {
-                    Text(
-                        text = slotKind.uppercase(Locale.getDefault()),
-                        color = textColor.copy(alpha = 0.5f),
-                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold)
-                    )
-                }
+                Box(
+                    modifier = Modifier
+                        .size(9.dp)
+                        .clip(CircleShape)
+                        .background(if (occupied) accent else textColor.copy(alpha = 0.24f))
+                )
+                Text(
+                    text = slotLabel,
+                    color = if (occupied) Color.White else textColor.copy(alpha = 0.72f),
+                    style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold)
+                )
             }
             Text(
                 text = summary.title,

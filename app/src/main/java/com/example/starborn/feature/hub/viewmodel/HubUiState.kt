@@ -8,7 +8,13 @@ data class HubUiState(
     val nodes: List<HubNodeUi> = emptyList(),
     val backgroundImage: String? = null,
     val selectedNodeId: String? = null,
-    val statusMessage: String? = null
+    val statusMessage: String? = null,
+    val lockedPrompt: HubLockedPrompt? = null
+)
+
+data class HubLockedPrompt(
+    val title: String,
+    val message: String
 )
 
 data class HubNodeUi(

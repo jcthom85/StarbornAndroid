@@ -33,7 +33,12 @@ class NodeProgressionEvaluator {
             visited = visited,
             completed = node.id in state.completedNodes,
             canEnterFromHub = canEnter,
-            unmetRequirement = node.unlockConditions.firstOrNull { !requirementMet(it, state) }?.let(::describe)
+            unmetRequirement = if (requirementsMet) {
+                null
+            } else {
+                node.lockedMessage?.takeIf { it.isNotBlank() }
+                    ?: node.unlockConditions.firstOrNull { !requirementMet(it, state) }?.let(::describe)
+            }
         )
     }
 

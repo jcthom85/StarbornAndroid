@@ -9,6 +9,7 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -60,8 +61,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.starborn.R
+import com.example.starborn.feature.hub.viewmodel.HubLockedPrompt
 import com.example.starborn.feature.hub.viewmodel.HubNodeUi
 import com.example.starborn.feature.hub.viewmodel.HubUiState
 import com.example.starborn.feature.hub.viewmodel.HubViewModel
@@ -80,6 +83,7 @@ fun HubScreen(
         onNodeSelected = { node ->
             viewModel.enterNode(node.id, onEnterNode)
         },
+        onLockedPromptDismiss = viewModel::dismissLockedPrompt,
         modifier = modifier
     )
 }
@@ -88,6 +92,7 @@ fun HubScreen(
 private fun HubScreenContent(
     uiState: HubUiState,
     onNodeSelected: (HubNodeUi) -> Unit,
+    onLockedPromptDismiss: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val backgroundPainter = rememberHubBackgroundPainter(uiState.backgroundImage)
@@ -144,6 +149,116 @@ private fun HubScreenContent(
                     .fillMaxSize()
                     .padding(start = 16.dp, top = 156.dp, end = 16.dp, bottom = 24.dp)
             )
+        }
+
+        uiState.lockedPrompt?.let { prompt ->
+            HubLockedPromptOverlay(
+                prompt = prompt,
+                onDismiss = onLockedPromptDismiss,
+                modifier = Modifier.fillMaxSize()
+            )
+        }
+    }
+}
+
+@Composable
+private fun HubLockedPromptOverlay(
+    prompt: HubLockedPrompt,
+    onDismiss: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val accent = Color(0xFF7BE4FF)
+    Box(
+        modifier = modifier
+            .background(Color.Black.copy(alpha = 0.34f))
+            .padding(horizontal = 24.dp, vertical = 32.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .widthIn(max = 540.dp)
+                .semantics { contentDescription = "Locked Location. Tap to continue" }
+                .clickable(onClick = onDismiss),
+            shape = RoundedCornerShape(6.dp),
+            border = BorderStroke(
+                1.2.dp,
+                Brush.linearGradient(
+                    listOf(
+                        accent.copy(alpha = 0.44f),
+                        Color.White.copy(alpha = 0.10f),
+                        accent.copy(alpha = 0.24f)
+                    )
+                )
+            ),
+            color = Color(0xFF060B14).copy(alpha = 0.97f),
+            shadowElevation = 14.dp
+        ) {
+            Column(
+                modifier = Modifier
+                    .background(
+                        Brush.radialGradient(
+                            listOf(
+                                accent.copy(alpha = 0.13f),
+                                Color.Transparent
+                            ),
+                            radius = 460f
+                        )
+                    )
+                    .padding(horizontal = 28.dp, vertical = 24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(14.dp)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .width(42.dp)
+                        .height(3.dp)
+                        .clip(RoundedCornerShape(999.dp))
+                        .background(
+                            Brush.horizontalGradient(
+                                listOf(
+                                    accent.copy(alpha = 0f),
+                                    accent.copy(alpha = 0.65f),
+                                    accent.copy(alpha = 0f)
+                                )
+                            )
+                        )
+                )
+                Text(
+                    text = prompt.title,
+                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
+                    color = Color.White.copy(alpha = 0.95f),
+                    textAlign = TextAlign.Center
+                )
+                Text(
+                    text = prompt.message,
+                    style = MaterialTheme.typography.bodyLarge.copy(lineHeight = 26.sp),
+                    color = Color.White.copy(alpha = 0.88f),
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Text(
+                    text = "Tap to continue",
+                    style = MaterialTheme.typography.labelSmall.copy(letterSpacing = 0.8.sp),
+                    color = accent.copy(alpha = 0.55f),
+                    modifier = Modifier.align(Alignment.End)
+                )
+                Box(
+                    modifier = Modifier
+                        .width(42.dp)
+                        .height(3.dp)
+                        .clip(RoundedCornerShape(999.dp))
+                        .background(
+                            Brush.horizontalGradient(
+                                listOf(
+                                    accent.copy(alpha = 0f),
+                                    accent.copy(alpha = 0.55f),
+                                    accent.copy(alpha = 0f)
+                                )
+                            )
+                        )
+                )
+            }
         }
     }
 }

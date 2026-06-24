@@ -509,8 +509,7 @@
       {
         "type": "system_tutorial",
         "scene_id": "scene_market_journal",
-        "context": "Nova's Bunk",
-        "delay_ms": 5600
+        "context": "Nova's Bunk"
       }
     ]
   },

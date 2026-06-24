@@ -526,7 +526,7 @@ class Hub1CriticalFlowTest {
                 sessionStore = store,
                 eventHooks = EventHooks(
                     onMessage = { messages += it },
-                    onSystemTutorial = { sceneId, context, done ->
+                    onSystemTutorial = { sceneId, context, _, done ->
                         tutorialRequests += sceneId to context
                         done()
                     },

@@ -18,7 +18,8 @@ data class HubNode(
     @Json(name = "initial_visibility") val initialVisibility: String? = null,
     @Json(name = "entry_policy") val entryPolicy: String = "hub",
     @Json(name = "unlock_conditions") val unlockConditions: List<NodeRequirement> = emptyList(),
-    @Json(name = "return_policy") val returnPolicy: String = "entry"
+    @Json(name = "return_policy") val returnPolicy: String = "entry",
+    @Json(name = "locked_message") val lockedMessage: String? = null
 ) {
     @JsonClass(generateAdapter = true)
     data class PositionHint(
