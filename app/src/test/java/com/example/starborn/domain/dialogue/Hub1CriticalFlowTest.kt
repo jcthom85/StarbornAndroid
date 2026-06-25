@@ -54,6 +54,21 @@ class Hub1CriticalFlowTest {
     }
 
     @Test
+    fun hotspotTutorialIsSkippedIfBunkLightTurnsOnBeforeFadeCompletes() {
+        val harness = Hub1Harness(autoCompleteCinematics = false)
+
+        harness.events.handleTrigger("player_action", EventPayload.Action("new_game_spawn_player_and_fade"))
+        assertTrue(harness.tutorialRequests.none { it.first == "hotspot_actions" })
+
+        harness.events.handleTrigger("player_action", EventPayload.Action("w1_mq01_turn_on_bunk_light"))
+        assertTrue(harness.store.state.value.completedMilestones.contains("ms_w1_mq01_bunk_light_on"))
+
+        harness.completePendingCinematics()
+        assertTrue(harness.tutorialRequests.none { it.first == "hotspot_actions" })
+        assertTrue(harness.tutorialRequests.contains("movement" to "Nova's Bunk"))
+    }
+
+    @Test
     fun wakeUpCallCompletesFromBunkToJedToCryoInductorRepair() {
         val harness = Hub1Harness()
 
@@ -534,12 +549,16 @@ class Hub1CriticalFlowTest {
         assertTrue(finalState.completedMilestones.contains("ms_w2_mq01_complete"))
     }
 
-    private class Hub1Harness(initialState: GameSessionState? = null) {
+    private class Hub1Harness(
+        initialState: GameSessionState? = null,
+        private val autoCompleteCinematics: Boolean = true
+    ) {
         val store = GameSessionStore()
         val events: EventManager
         val dialogue: DialogueService
         val messages = mutableListOf<String>()
         val tutorialRequests = mutableListOf<Pair<String?, String?>>()
+        private val pendingCinematics = mutableListOf<() -> Unit>()
 
         init {
             initialState?.let(store::restore)
@@ -551,6 +570,13 @@ class Hub1CriticalFlowTest {
                     onSystemTutorial = { sceneId, context, _, done ->
                         tutorialRequests += sceneId to context
                         done()
+                    },
+                    onPlayCinematic = { _, done ->
+                        if (autoCompleteCinematics) {
+                            done()
+                        } else {
+                            pendingCinematics += done
+                        }
                     },
                     onQuestTaskUpdated = { questId, taskId ->
                         if (!questId.isNullOrBlank() && !taskId.isNullOrBlank()) {
@@ -603,6 +629,12 @@ class Hub1CriticalFlowTest {
                 DialogueConditionEvaluator { condition -> conditionMet(condition, store.state.value) },
                 DialogueTriggerHandler { trigger -> events.performActions(DialogueTriggerParser.parse(trigger)) }
             )
+        }
+
+        fun completePendingCinematics() {
+            val callbacks = pendingCinematics.toList()
+            pendingCinematics.clear()
+            callbacks.forEach { it() }
         }
 
         private fun handleQuestCompleted(questId: String?) {

@@ -378,9 +378,15 @@
         "scene_id": "new_game_fade_in",
         "on_complete": [
           {
-            "type": "system_tutorial",
-            "scene_id": "hotspot_actions",
-            "context": "Nova's Bunk"
+            "type": "if_milestone_not_set",
+            "milestone": "ms_w1_mq01_bunk_light_on",
+            "do": [
+              {
+                "type": "system_tutorial",
+                "scene_id": "hotspot_actions",
+                "context": "Nova's Bunk"
+              }
+            ]
           }
         ]
       }

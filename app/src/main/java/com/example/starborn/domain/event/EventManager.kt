@@ -207,14 +207,14 @@ class EventManager(
                 "play_cinematic", "trigger_cutscene" -> {
                     val sceneId = action.sceneId
                     if (sceneId.isNullOrBlank()) {
-                        action.onComplete?.let { executeActions(it, state) }
+                        executeOnComplete(action)
                         action.onComplete != null
                     } else {
                         var callbackInvoked = false
                         eventHooks.onPlayCinematic(sceneId) {
                             if (!callbackInvoked) {
                                 callbackInvoked = true
-                                action.onComplete?.let { executeActions(it, state) }
+                                executeOnComplete(action)
                             }
                         }
                         true
@@ -350,7 +350,7 @@ class EventManager(
                     eventHooks.onSystemTutorial(action.sceneId, action.context, action.delayMs ?: 0L) {
                         if (!callbackInvoked) {
                             callbackInvoked = true
-                            action.onComplete?.let { executeActions(it, state) }
+                            executeOnComplete(action)
                         }
                     }
                     true
@@ -490,6 +490,10 @@ class EventManager(
     ): Boolean {
         val branch = if (condition) action.`do` else action.elseDo
         return branch?.let { executeActions(it, state) } ?: false
+    }
+
+    private fun executeOnComplete(action: EventAction): Boolean {
+        return action.onComplete?.let { executeActions(it, sessionStore.state.value) } ?: false
     }
 
     private fun matchesOutcome(
