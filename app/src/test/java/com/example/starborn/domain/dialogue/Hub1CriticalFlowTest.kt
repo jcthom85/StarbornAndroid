@@ -25,8 +25,30 @@ class Hub1CriticalFlowTest {
 
         harness.events.handleTrigger("player_action", EventPayload.Action("new_game_spawn_player_and_fade"))
         assertTrue(harness.tutorialRequests.contains("hotspot_actions" to "Nova's Bunk"))
+        assertTrue(harness.tutorialRequests.none { it.first == "movement" })
 
         harness.events.handleTrigger("player_action", EventPayload.Action("w1_mq01_check_bunk"))
+        assertTrue(harness.tutorialRequests.none { it.first == "movement" })
+
+        harness.events.handleTrigger("player_action", EventPayload.Action("w1_mq01_turn_on_bunk_light"))
+        assertTrue(harness.tutorialRequests.contains("movement" to "Nova's Bunk"))
+        val hotspotIndex = harness.tutorialRequests.indexOf("hotspot_actions" to "Nova's Bunk")
+        val movementIndex = harness.tutorialRequests.indexOf("movement" to "Nova's Bunk")
+        assertTrue(hotspotIndex >= 0)
+        assertTrue(movementIndex > hotspotIndex)
+        val state = harness.store.state.value
+        assertTrue(state.questTasksCompleted["w1_mq01"].orEmpty().contains("turn_on_bunk_light"))
+        assertTrue(state.completedMilestones.contains("ms_w1_mq01_bunk_light_on"))
+        assertEquals(true, state.roomStates["pit_nova_bunk"].orEmpty()["light_on"])
+        assertEquals(false, state.roomStates["pit_nova_bunk"].orEmpty()["dark"])
+        val movementTutorialCount = harness.tutorialRequests.count { it == "movement" to "Nova's Bunk" }
+        harness.store.setRoomState("pit_nova_bunk", "light_on", false)
+        harness.store.setRoomState("pit_nova_bunk", "dark", true)
+        harness.events.handleTrigger("player_action", EventPayload.Action("w1_mq01_turn_on_bunk_light"))
+        val relitState = harness.store.state.value
+        assertEquals(true, relitState.roomStates["pit_nova_bunk"].orEmpty()["light_on"])
+        assertEquals(false, relitState.roomStates["pit_nova_bunk"].orEmpty()["dark"])
+        assertEquals(movementTutorialCount, harness.tutorialRequests.count { it == "movement" to "Nova's Bunk" })
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("pit_shaft"))
         assertTrue(harness.tutorialRequests.contains("scene_market_journal" to "Nova's Bunk"))
     }
@@ -36,7 +58,7 @@ class Hub1CriticalFlowTest {
         val harness = Hub1Harness()
 
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("pit_nova_bunk"))
-        harness.events.handleTrigger("player_action", EventPayload.Action("w1_mq01_check_bunk"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w1_mq01_turn_on_bunk_light"))
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("pit_shaft"))
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("pit_jed_bunk"))
 
@@ -538,6 +560,14 @@ class Hub1CriticalFlowTest {
                     onQuestStageAdvanced = { questId, stageId ->
                         if (!questId.isNullOrBlank() && !stageId.isNullOrBlank()) {
                             store.setQuestStage(questId, stageId)
+                        }
+                    },
+                    onSetRoomState = { roomId, stateKey, value ->
+                        if (!roomId.isNullOrBlank() && stateKey.isNotBlank()) {
+                            store.setRoomState(roomId, stateKey, value)
+                            if (stateKey.equals("light_on", ignoreCase = true)) {
+                                store.setRoomState(roomId, "dark", !value)
+                            }
                         }
                     },
                     onGiveItem = { itemId, quantity ->

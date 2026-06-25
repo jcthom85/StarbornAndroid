@@ -35,6 +35,7 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
@@ -60,21 +61,41 @@ fun QuestDetailOverlay(
     outlineColor: Color,
     deferShowing: Boolean = false,
     modifier: Modifier = Modifier,
+    onPresentationVisibleChanged: (Boolean) -> Unit = {},
     onShowDetails: (String) -> Unit
 ) {
+    val queue = remember { mutableStateListOf<UiEvent.ShowQuestDetail>() }
     var current by remember { mutableStateOf<UiEvent.ShowQuestDetail?>(null) }
     var visible by remember { mutableStateOf(false) }
 
     LaunchedEffect(uiEventBus) {
         uiEventBus.events.collectLatest { event ->
             if (event is UiEvent.ShowQuestDetail) {
-                current = event
-                visible = true
+                val alreadyPending =
+                    current?.questId == event.questId && current?.type == event.type ||
+                        queue.any { it.questId == event.questId && it.type == event.type }
+                if (alreadyPending) return@collectLatest
+                if (current == null) {
+                    current = event
+                } else {
+                    queue.add(event)
+                }
             }
         }
     }
-AnimatedVisibility(
-        visible = visible && !deferShowing && current != null,
+
+    LaunchedEffect(current, deferShowing, visible) {
+        if (current != null && !visible && !deferShowing) {
+            visible = true
+        }
+    }
+
+    LaunchedEffect(visible, current) {
+        onPresentationVisibleChanged(visible && current != null)
+    }
+
+    AnimatedVisibility(
+        visible = visible && current != null,
         enter = slideInVertically(initialOffsetY = { it }) + fadeIn(),
         exit = slideOutVertically(targetOffsetY = { it }) + fadeOut()
     ) {
@@ -89,7 +110,10 @@ AnimatedVisibility(
                     detail = detail,
                     gradientColor = gradientColor,
                     outlineColor = outlineColor,
-                    onDismiss = { visible = false },
+                    onDismiss = {
+                        visible = false
+                        current = if (queue.isNotEmpty()) queue.removeAt(0) else null
+                    },
                     onShowDetails = onShowDetails
                 )
             }

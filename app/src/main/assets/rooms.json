@@ -212,9 +212,11 @@
   {
     "id": "pit_nova_bunk",
     "env": "mine",
+    "weather": "dust",
     "title": "Nova's Bunk",
     "background_image": "images/rooms/world_1/pit_nova_bunk_v5.png",
-    "description": "Your bunk is a narrow shelf in the colony wall, barely wide enough to dream sideways. Cargo netting holds your tools, your spare ration, and the little pieces of yourself Dominion has not inventoried yet.",
+    "description": "Your bunk is a narrow shelf in the colony wall, barely wide enough to dream sideways. The bunk light buzzes above cargo netting that holds your tools, your spare ration, and the little pieces of yourself Dominion has not inventoried yet.",
+    "description_dark": "The room is dead black except for the emergency glow around your bunk light.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -225,8 +227,35 @@
       1,
       2
     ],
-    "state": {},
+    "state": {
+      "dark": true,
+      "light_on": false
+    },
+    "dark": true,
+    "blocked_directions": {
+      "west": {
+        "type": "lock",
+        "requires": [
+          {
+            "room_id": "pit_nova_bunk",
+            "state_key": "light_on",
+            "value": true
+          }
+        ],
+        "message_locked": "You can't pick a safe path through the bunkroom until the light is on.",
+        "message_unlock": "The bunkroom light steadies, and the way out is clear."
+      }
+    },
     "actions": [
+      {
+        "name": "bunk light",
+        "type": "toggle",
+        "state_key": "light_on",
+        "label_on": "Turn on",
+        "label_off": "Turn off",
+        "action_event_on": "w1_mq01_turn_on_bunk_light",
+        "condition_unmet_message": "The wall switch is cold under your fingers."
+      },
       {
         "name": "bunk",
         "type": "generic",
@@ -911,7 +940,7 @@
     "env": "market",
     "title": "Scrapper's Stall",
     "background_image": "images/rooms/world_1/trade_scrapper_v3.png",
-    "description": "Illegal tech, salvaged weapons, and a locked datapad spill from Scrapper's reinforced stall in tidy little disasters. He prices everything like a favor, watches every shadow, and keeps the best stock under the counter.",
+    "description": "Illegal tech, salvaged weapons, and a locked datapad spill from Scrapper's reinforced stall in tidy little disasters. He prices everything like a favor, watches every shadow, and keeps the best contraband under the counter.",
     "npcs": [
       "scrapper"
     ],

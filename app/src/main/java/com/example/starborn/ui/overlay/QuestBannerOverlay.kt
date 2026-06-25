@@ -7,6 +7,7 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -70,10 +71,8 @@ private const val QUEST_BANNER_AUTO_DISMISS_MS = 5_000L
 @Composable
 fun QuestBannerOverlay(
     uiEventBus: UiEventBus,
-    deferShowing: Boolean,
     accentColor: Color,
-    modifier: Modifier = Modifier,
-    onPresentationBusyChanged: (Boolean) -> Unit = {}
+    modifier: Modifier = Modifier
 ) {
     val queue = remember { mutableStateListOf<Banner>() }
     var current by remember { mutableStateOf<Banner?>(null) }
@@ -85,6 +84,7 @@ fun QuestBannerOverlay(
     LaunchedEffect(uiEventBus) {
         uiEventBus.events.collectLatest { ev ->
             if (ev is UiEvent.ShowQuestBanner) {
+                if (ev.type != QuestBannerType.PROGRESS) return@collectLatest
                 val key = "${ev.type}_${ev.questId}"
                 val now = System.currentTimeMillis()
                 val last = recent[key]
@@ -96,16 +96,8 @@ fun QuestBannerOverlay(
         }
     }
 
-    LaunchedEffect(deferShowing) {
-        if (deferShowing && current != null) {
-            queue.add(0, current!!)
-            current = null
-            isShowing = false
-        }
-    }
-
-    LaunchedEffect(queue.size, deferShowing, current, isShowing) {
-        if (current == null && queue.isNotEmpty() && !deferShowing) {
+    LaunchedEffect(queue.size, current, isShowing) {
+        if (current == null && queue.isNotEmpty()) {
             current = queue.removeAt(0)
             isShowing = true
         }
@@ -140,9 +132,6 @@ fun QuestBannerOverlay(
         }
     }
 
-    LaunchedEffect(queue.size, current) {
-        onPresentationBusyChanged(current != null || queue.isNotEmpty())
-    }
 
     val visible = isShowing && current != null
 
@@ -197,6 +186,7 @@ private fun QuestBannerCard(
         modifier = Modifier
             .fillMaxWidth(0.92f)
             .widthIn(max = 520.dp)
+            .clickable(onClick = onDismiss)
             .semantics { contentDescription = "Quest Banner" },
         shape = RoundedCornerShape(14.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),

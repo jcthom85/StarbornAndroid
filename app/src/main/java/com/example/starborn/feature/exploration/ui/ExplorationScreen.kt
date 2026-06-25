@@ -226,6 +226,7 @@ import com.example.starborn.feature.mainmenu.SaveSlotSummary
 import android.text.format.DateUtils
 import java.util.LinkedHashSet
 import kotlin.math.abs
+import kotlin.math.max
 import kotlin.math.roundToInt
 import kotlin.text.buildString
 import kotlinx.coroutines.delay
@@ -286,6 +287,7 @@ fun ExplorationScreen(
     var saveLoadMode by remember { mutableStateOf<String?>(null) } // "save" or "load"
     var slotSummaries by remember { mutableStateOf<List<SaveSlotSummary>>(emptyList()) }
     var debugWeatherOverride by remember { mutableStateOf<String?>(null) }
+    var importantQuestPopupVisible by remember { mutableStateOf(false) }
     val weatherCycles = remember {
         listOf(null, "dust", "rain", "storm", "snow", "cave_drip", "starfall", "steam", "fog", "gas", "resonance", "sparks")
     }
@@ -306,6 +308,23 @@ fun ExplorationScreen(
             uiState.isQuestLogVisible ||
             uiState.isFullMapVisible ||
             uiState.isMapLegendVisible ||
+            uiState.tutorialState.current != null
+    val questDetailBlockingOverlayActive =
+        uiState.isMenuOverlayVisible ||
+            uiState.togglePrompt != null ||
+            uiState.activeDialogue != null ||
+            uiState.shopGreeting != null ||
+            uiState.narrationPrompt != null ||
+            uiState.cinematic != null ||
+            uiState.skillTreeOverlay != null ||
+            uiState.partyMemberDetails != null ||
+            uiState.isMilestoneGalleryVisible ||
+            uiState.eventAnnouncement != null ||
+            uiState.levelUpPrompt != null ||
+            uiState.isQuestLogVisible ||
+            uiState.isFullMapVisible ||
+            uiState.isMapLegendVisible ||
+            uiState.prompt != null ||
             uiState.tutorialState.current != null
 
     DisposableEffect(Unit) {
@@ -462,6 +481,11 @@ fun ExplorationScreen(
 
         val currentRoom = uiState.currentRoom
         val isWeatherLab = currentRoom?.id == "weather_lab"
+        LaunchedEffect(currentRoom?.id) {
+            if (currentRoom?.id != "weather_lab") {
+                debugWeatherOverride = null
+            }
+        }
         fun cycleDebugWeather(offset: Int) {
             val currentIndex = weatherCycles.indexOf(debugWeatherOverride).takeIf { it >= 0 } ?: 0
             val nextIndex = Math.floorMod(currentIndex + offset, weatherCycles.size)
@@ -489,30 +513,30 @@ fun ExplorationScreen(
         val baseRoomDescription = remember(currentRoom, uiState.roomState, isRoomDark) {
             currentRoom?.let { room ->
                 if (isRoomDark) {
-                    "It's too dark to make out the room."
+                    room.descriptionDark?.takeIf { it.isNotBlank() }
+                        ?: "It's too dark to make out the room."
                 } else {
                     room.description
                 }
             }
         }
 
-        val darknessAlpha by animateFloatAsState(
-            targetValue = if (isRoomDark) 0.9f else 0f,
-            animationSpec = tween(durationMillis = 320)
-        )
-        if (darknessAlpha > 0.01f) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color(0xFF050B18).copy(alpha = darknessAlpha))
-            )
-        }
         val activeWeatherId = debugWeatherOverride ?: currentRoom?.weather ?: defaultWeatherForEnvironment(currentRoom?.env)
         WeatherOverlay(
             weatherId = activeWeatherId,
             modifier = Modifier.fillMaxSize()
         )
-        val vignetteIntensity = if (isRoomDark) 0.2f else 0.0f
+        val darknessAlpha by animateFloatAsState(
+            targetValue = if (isRoomDark) 1f else 0f,
+            animationSpec = tween(durationMillis = 850, easing = FastOutSlowInEasing)
+        )
+        if (darknessAlpha > 0.01f) {
+            DarkRoomAtmosphereOverlay(
+                darkness = darknessAlpha,
+                modifier = Modifier.fillMaxSize()
+            )
+        }
+        val vignetteIntensity = 0.48f * darknessAlpha
         VignetteOverlay(
             visible = uiState.settings.vignetteEnabled && vignetteIntensity > 0f,
             intensity = vignetteIntensity,
@@ -637,8 +661,10 @@ fun ExplorationScreen(
                     minimap = uiState.minimap,
                     minimapSize = minimapSize,
                     onTitleClick = {
-                        val nextIdx = (weatherCycles.indexOf(debugWeatherOverride) + 1) % weatherCycles.size
-                        debugWeatherOverride = weatherCycles[nextIdx]
+                        if (isWeatherLab) {
+                            val nextIdx = (weatherCycles.indexOf(debugWeatherOverride) + 1) % weatherCycles.size
+                            debugWeatherOverride = weatherCycles[nextIdx]
+                        }
                     },
                     onMapClick = {
                         viewModel.selectMenuTab(MenuTab.MAP)
@@ -646,45 +672,43 @@ fun ExplorationScreen(
                     }
                 )
 
-                if (!isRoomDark) {
-                    Column(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        RoomDescriptionPanel(
-                            currentRoom = currentRoom,
-                            description = descriptionForPanel,
-                            plan = inlinePlan,
-                            isDark = false,
-                            onAction = { action -> viewModel.onActionSelected(action) },
-                            onNpcClick = { name -> viewModel.onNpcInteraction(name) },
-                            onEnemyClick = { enemyId -> viewModel.engageEnemy(enemyId) },
-                            borderColor = panelBorderColor,
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    RoomDescriptionPanel(
+                        currentRoom = currentRoom,
+                        description = descriptionForPanel,
+                        plan = inlinePlan,
+                        isDark = isRoomDark,
+                        onAction = { action -> viewModel.onActionSelected(action) },
+                        onNpcClick = { name -> viewModel.onNpcInteraction(name) },
+                        onEnemyClick = { enemyId -> viewModel.engageEnemy(enemyId) },
+                        borderColor = panelBorderColor,
+                        accentColor = actionAccentColor,
+                        textColor = roomTextColor,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .heightIn(min = 104.dp, max = 280.dp)
+                    )
+                    if (hasRoomEntities) {
+                        RoomEntitySection(
+                            npcs = visibleNpcs,
+                            npcPresenceNames = uiState.npcPresenceNames,
+                            npcPortraitPaths = uiState.npcPortraitPaths,
+                            groundItems = visibleGroundItems,
+                            serviceActions = serviceQuickActions,
+                            itemDisplayName = { itemId -> viewModel.itemDisplayName(itemId) },
+                            itemDetailLabel = { itemId -> viewModel.roomItemDetailLabel(itemId) },
+                            itemIsEquipment = { itemId -> viewModel.roomItemIsEquipment(itemId) },
                             accentColor = actionAccentColor,
-                            textColor = roomTextColor,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .heightIn(min = 104.dp, max = 280.dp)
+                            borderColor = panelBorderColor,
+                            isDark = isRoomDark,
+                            onNpcClick = { name -> viewModel.onNpcInteraction(name) },
+                            onCollectItem = { itemId -> viewModel.collectGroundItem(itemId) },
+                            onCollectAll = { viewModel.collectAllGroundItems() },
+                            onAction = { action -> viewModel.onActionSelected(action) }
                         )
-                        if (hasRoomEntities) {
-                            RoomEntitySection(
-                                npcs = visibleNpcs,
-                                npcPresenceNames = uiState.npcPresenceNames,
-                                npcPortraitPaths = uiState.npcPortraitPaths,
-                                groundItems = visibleGroundItems,
-                                serviceActions = serviceQuickActions,
-                                itemDisplayName = { itemId -> viewModel.itemDisplayName(itemId) },
-                                itemDetailLabel = { itemId -> viewModel.roomItemDetailLabel(itemId) },
-                                itemIsEquipment = { itemId -> viewModel.roomItemIsEquipment(itemId) },
-                                accentColor = actionAccentColor,
-                                borderColor = panelBorderColor,
-                                isDark = false,
-                                onNpcClick = { name -> viewModel.onNpcInteraction(name) },
-                                onCollectItem = { itemId -> viewModel.collectGroundItem(itemId) },
-                                onCollectAll = { viewModel.collectAllGroundItems() },
-                                onAction = { action -> viewModel.onActionSelected(action) }
-                            )
-                        }
                     }
                 }
             }
@@ -1062,7 +1086,7 @@ fun ExplorationScreen(
             )
         }
 
-        if (uiState.eventAnnouncement == null && !uiState.isMenuOverlayVisible) {
+        if (uiState.eventAnnouncement == null && !uiState.isMenuOverlayVisible && !importantQuestPopupVisible) {
             UIPromptOverlay(
                 prompt = uiState.prompt,
                 onDismiss = { viewModel.dismissPrompt() },
@@ -1072,9 +1096,7 @@ fun ExplorationScreen(
 
         QuestBannerOverlay(
             uiEventBus = uiEventBus,
-            deferShowing = blockingOverlayActive,
             accentColor = questAccentColor,
-            onPresentationBusyChanged = viewModel::setQuestBannerPresentationBusy,
             modifier = Modifier
                 .align(Alignment.TopCenter)
                 .fillMaxWidth()
@@ -1092,7 +1114,8 @@ fun ExplorationScreen(
             uiEventBus = uiEventBus,
             gradientColor = questAccentColor,
             outlineColor = panelBorderColor,
-            deferShowing = blockingOverlayActive,
+            deferShowing = questDetailBlockingOverlayActive,
+            onPresentationVisibleChanged = { importantQuestPopupVisible = it },
             onShowDetails = { questId ->
                 viewModel.openQuestDetails(questId)
             },
@@ -1158,44 +1181,13 @@ private fun RoomHeaderPanel(
     onTitleClick: () -> Unit,
     onMapClick: () -> Unit
 ) {
-    if (isDark) {
-        Surface(
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(8.dp),
-            color = Color(0xFF02060D).copy(alpha = 0.76f),
-            border = BorderStroke(1.dp, Color.White.copy(alpha = 0.22f))
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { onTitleClick() }
-                    .padding(horizontal = 18.dp, vertical = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(5.dp)
-            ) {
-                Text(
-                    text = "Dark Room",
-                    color = Color.White.copy(alpha = 0.92f),
-                    style = MaterialTheme.typography.titleMedium.copy(
-                        fontWeight = FontWeight.Bold
-                    ),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Text(
-                    text = "It's too dark to see what's here.",
-                    color = Color.White.copy(alpha = 0.66f),
-                    style = MaterialTheme.typography.bodyMedium,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
-        }
-        return
-    }
-
     val shape = RoundedCornerShape(10.dp)
-    val panelColor = Color(0xFF061018).copy(alpha = 0.54f)
-    val borderColor = titleColor.copy(alpha = 0.36f)
+    val panelColor = Color(0xFF061018).copy(alpha = if (isDark) 0.68f else 0.54f)
+    val borderColor = if (isDark) {
+        Color.White.copy(alpha = 0.22f)
+    } else {
+        titleColor.copy(alpha = 0.36f)
+    }
     Surface(
         modifier = Modifier.fillMaxWidth(),
         shape = shape,
@@ -1208,8 +1200,8 @@ private fun RoomHeaderPanel(
                 .background(
                     Brush.horizontalGradient(
                         colors = listOf(
-                            warmTitleColor.copy(alpha = 0.08f),
-                            titleColor.copy(alpha = 0.05f),
+                            warmTitleColor.copy(alpha = if (isDark) 0.05f else 0.08f),
+                            titleColor.copy(alpha = if (isDark) 0.03f else 0.05f),
                             Color.Transparent
                         )
                     )
@@ -1225,7 +1217,7 @@ private fun RoomHeaderPanel(
                 verticalArrangement = Arrangement.spacedBy(7.dp)
             ) {
                 Text(
-                    text = roomTitle,
+                    text = if (isDark) "???" else roomTitle,
                     style = MaterialTheme.typography.headlineSmall.copy(
                         fontSize = 26.sp,
                         lineHeight = 30.sp,
@@ -1235,7 +1227,7 @@ private fun RoomHeaderPanel(
                             blurRadius = 1.5f
                         )
                     ),
-                    color = warmTitleColor,
+                    color = if (isDark) Color.White.copy(alpha = 0.92f) else warmTitleColor,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -1246,8 +1238,8 @@ private fun RoomHeaderPanel(
                         .background(
                             Brush.horizontalGradient(
                                 colors = listOf(
-                                    warmTitleColor.copy(alpha = 0.76f),
-                                    titleColor.copy(alpha = 0.34f),
+                                    warmTitleColor.copy(alpha = if (isDark) 0.38f else 0.76f),
+                                    titleColor.copy(alpha = if (isDark) 0.18f else 0.34f),
                                     Color.Transparent
                                 )
                             )
@@ -5174,6 +5166,73 @@ private fun SectionCard(
                 fontWeight = FontWeight.Bold
             )
             content()
+        }
+    }
+}
+
+@Composable
+private fun DarkRoomAtmosphereOverlay(
+    darkness: Float,
+    modifier: Modifier = Modifier
+) {
+    val clampedDarkness = darkness.coerceIn(0f, 1f)
+    val scanlineSpacing = with(LocalDensity.current) { 7.dp.toPx() }
+    val scanlineStroke = with(LocalDensity.current) { 1.dp.toPx() }
+
+    Canvas(modifier = modifier) {
+        val width = size.width
+        val height = size.height
+        val longestSide = max(width, height)
+        val shortestSide = min(width, height)
+        val center = Offset(width * 0.5f, height * 0.42f)
+
+        drawRect(
+            color = Color(0xFF02050A).copy(alpha = 0.62f * clampedDarkness)
+        )
+        drawRect(
+            brush = Brush.radialGradient(
+                colors = listOf(
+                    Color.Transparent,
+                    Color(0xFF02050A).copy(alpha = 0.80f * clampedDarkness)
+                ),
+                center = center,
+                radius = longestSide * 0.74f
+            )
+        )
+        drawCircle(
+            brush = Brush.radialGradient(
+                colors = listOf(
+                    Color(0xFF3C6A88).copy(alpha = 0.10f * clampedDarkness),
+                    Color.Transparent
+                ),
+                center = Offset(width * 0.52f, height * 0.34f),
+                radius = shortestSide * 0.52f
+            ),
+            radius = shortestSide * 0.52f,
+            center = Offset(width * 0.52f, height * 0.34f)
+        )
+        drawCircle(
+            brush = Brush.radialGradient(
+                colors = listOf(
+                    Color(0xFFFFA44A).copy(alpha = 0.08f * clampedDarkness),
+                    Color.Transparent
+                ),
+                center = Offset(width * 0.58f, height * 0.38f),
+                radius = shortestSide * 0.28f
+            ),
+            radius = shortestSide * 0.28f,
+            center = Offset(width * 0.58f, height * 0.38f)
+        )
+
+        var y = 0f
+        while (y < height) {
+            drawLine(
+                color = Color.White.copy(alpha = 0.025f * clampedDarkness),
+                start = Offset(0f, y),
+                end = Offset(width, y),
+                strokeWidth = scanlineStroke
+            )
+            y += scanlineSpacing
         }
     }
 }

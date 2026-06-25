@@ -178,6 +178,12 @@
     "toast": "Jed is waiting at the main bench."
   },
   {
+    "id": "ms_w1_mq01_bunk_light_on",
+    "name": "Bunk Light On",
+    "description": "Nova turned on the bunk light before leaving her room.",
+    "toast": "Bunk light restored."
+  },
+  {
     "id": "ms_w1_mq01_checked_bunk",
     "name": "Bunk Checked",
     "description": "Nova checked the bunk and gathered herself before leaving the Pit.",

@@ -141,28 +141,24 @@ private const val STELLARIUM_BREAKER_SECOND_MESSAGE = "You hear something loud i
 private const val EXIT_KEY_SEPARATOR = "::"
 private const val ENCOUNTER_CLEARED_STATE_PREFIX = "encounter_cleared:"
 private const val BAG_TUTORIAL_ID = "bag_basics"
-private const val QUEST_PRESENTATION_RESERVATION_MS = 5_400L
 
 
 
 private class SystemTutorialCoordinator(
     private val tutorialManager: TutorialRuntimeManager,
     private val scope: CoroutineScope,
-    private val tutorialsEnabled: () -> Boolean = { true },
-    private val questPresentationHoldUntil: () -> Long = { 0L },
-    private val questBannerBusy: () -> Boolean = { false }
+    private val tutorialsEnabled: () -> Boolean = { true }
 ) {
     fun play(sceneId: String?, context: String?, delayMs: Long = 0L, onComplete: () -> Unit): Boolean {
         if (!tutorialsEnabled()) {
             onComplete()
             return false
         }
-        if (delayMs > 0L || shouldWaitForQuestPresentation()) {
+        if (delayMs > 0L) {
             scope.launch {
                 if (delayMs > 0L) {
                     delay(delayMs)
                 }
-                waitForQuestPresentation()
                 playNow(sceneId, context, onComplete)
             }
             return true
@@ -195,18 +191,6 @@ private class SystemTutorialCoordinator(
         return true
     }
 
-    private fun shouldWaitForQuestPresentation(): Boolean =
-        questBannerBusy() || questPresentationHoldUntil() > System.currentTimeMillis()
-
-    private suspend fun waitForQuestPresentation() {
-        var attempts = 0
-        while (attempts < 120) {
-            val holdRemaining = questPresentationHoldUntil() - System.currentTimeMillis()
-            if (holdRemaining <= 0L && !questBannerBusy()) return
-            delay(holdRemaining.coerceIn(80L, 250L))
-            attempts += 1
-        }
-    }
 
     private fun buildMessage(sceneId: String?, context: String?): String {
         val formattedScene = sceneId?.let { formatSceneId(it) }
@@ -275,8 +259,6 @@ class ExplorationViewModel(
     private var npcDialogueNameByKey: Map<String, String> = emptyMap()
     private var skillTreesByCharacter: Map<String, SkillTreeDefinition> = emptyMap()
     private var tutorialsEnabled: Boolean = true
-    private val questPresentationHoldUntil = MutableStateFlow(0L)
-    private val questBannerBusy = MutableStateFlow(false)
     private val itemUseController = ItemUseController(
         inventoryService = inventoryService,
         craftingService = craftingService,
@@ -290,9 +272,7 @@ class ExplorationViewModel(
     private val systemTutorialCoordinator = SystemTutorialCoordinator(
         tutorialManager,
         scope = viewModelScope,
-        tutorialsEnabled = { tutorialsEnabled },
-        questPresentationHoldUntil = { questPresentationHoldUntil.value },
-        questBannerBusy = { questBannerBusy.value }
+        tutorialsEnabled = { tutorialsEnabled }
     )
     private fun buildPreviewFromSnapshot(snapshot: Map<String, Int>): List<InventoryPreviewItemUi> {
         return snapshot
@@ -441,29 +421,24 @@ class ExplorationViewModel(
             onQuestUpdated = {},
             onQuestTaskUpdated = { questId, taskId ->
                 if (!questId.isNullOrEmpty() && !taskId.isNullOrEmpty()) {
-                    reserveQuestPresentation()
                     questRuntimeManager.markTaskComplete(questId, taskId)
                 }
             },
             onQuestStageAdvanced = { questId, stageId ->
                 if (!questId.isNullOrEmpty() && !stageId.isNullOrEmpty()) {
-                    reserveQuestPresentation()
                     questRuntimeManager.setStage(questId, stageId)
                 }
             },
             onQuestStarted = { questId ->
                 questId?.let {
-                    reserveQuestPresentation()
                     questRuntimeManager.recordQuestStarted(it)
                 }
             },
             onQuestCompleted = { questId ->
-                reserveQuestPresentation()
                 handleEventQuestCompleted(questId)
             },
             onQuestFailed = { questId, reason ->
                 questId?.let {
-                    reserveQuestPresentation()
                     questRuntimeManager.markQuestFailed(it, reason)
                 }
             },
@@ -701,16 +676,6 @@ class ExplorationViewModel(
         explorationInteractionBlocked = blocked
     }
 
-    fun setQuestBannerPresentationBusy(busy: Boolean) {
-        questBannerBusy.value = busy
-    }
-
-    private fun reserveQuestPresentation() {
-        val reservedUntil = System.currentTimeMillis() + QUEST_PRESENTATION_RESERVATION_MS
-        if (reservedUntil > questPresentationHoldUntil.value) {
-            questPresentationHoldUntil.value = reservedUntil
-        }
-    }
 
     private fun emitEvent(event: ExplorationEvent) {
         viewModelScope.launch(dispatchers.main) {
@@ -942,7 +907,7 @@ class ExplorationViewModel(
                 triggerFadeOverlay(
                     fromAlpha = 1f,
                     toAlpha = 0f,
-                    durationMillis = 18000,
+                    durationMillis = 5000,
                     onComplete = onComplete
                 )
                 true
@@ -3140,15 +3105,6 @@ class ExplorationViewModel(
         tutorialManager.cancel("light_switch_hint")
         tutorialManager.cancel("swipe_hint")
         tutorialManager.markRoomVisited(room.id)
-        if (room.id.equals("pit_nova_bunk", ignoreCase = true)) {
-            if (!tutorialManager.hasCompleted("swipe_move")) {
-                tutorialManager.scheduleScript(
-                    key = "swipe_hint",
-                    scriptId = "movement",
-                    delayMs = 4000L
-                )
-            }
-        }
     }
 
     private fun onRoomStateChanged(roomId: String, stateKey: String, value: Boolean) {
