@@ -3146,7 +3146,7 @@ private fun ReturnHubButton(
                 )
             }
             Text(
-                text = "HUB",
+                text = "LEAVE",
                 color = Color.White.copy(alpha = 0.94f),
                 style = MaterialTheme.typography.labelLarge,
                 fontWeight = FontWeight.Black,

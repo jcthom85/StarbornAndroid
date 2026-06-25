@@ -730,6 +730,11 @@
         "to_stage_id": "reach_checkpoint"
       },
       {
+        "type": "narrate",
+        "message": "The repaired Cryo-Inductor settles into a steady hum. A Dominion shift chime crackles over the Workshop speaker: 'All Pit workers report to Transit Checkpoint for mine clearance. Late arrivals forfeit ration credit.'",
+        "tap_to_dismiss": true
+      },
+      {
         "type": "show_message",
         "message": "Quest complete: Wake Up Call"
       }

@@ -141,6 +141,7 @@ private const val STELLARIUM_BREAKER_SECOND_MESSAGE = "You hear something loud i
 private const val EXIT_KEY_SEPARATOR = "::"
 private const val ENCOUNTER_CLEARED_STATE_PREFIX = "encounter_cleared:"
 private const val BAG_TUTORIAL_ID = "bag_basics"
+private const val PIT_ENTRY_ROOM_ID = "pit_L1_landing"
 
 
 
@@ -1596,7 +1597,7 @@ class ExplorationViewModel(
             "scene_fixers_favor_return" -> "Close the bench and talk to Jed again to wrap up the repair session."
             "scene_ollie_recruitment" -> "Tap ally portraits on the HUD to swap party members or hear their guidance."
             "scene_market_locator" -> "Use the minimap to follow open connections through the Scrap Yard to reach Jed's Workshop."
-            "scene_market_journal" -> "Open your journal from the HUD to track errands and hub summaries."
+            "scene_market_journal" -> "Open your journal from the HUD to track errands and area summaries."
             else -> null
         }
     }
@@ -2444,7 +2445,7 @@ class ExplorationViewModel(
             val currentRoom = _uiState.value.currentRoom
             if (!canReturnToHub(currentRoom)) {
                 playUiCue("error")
-                postStatus("You can only return to the hub from the node entrance.")
+                postStatus(returnToHubBlockedMessage(currentRoom))
                 return@launch
             }
             playUiCue("menu_action")
@@ -3632,8 +3633,27 @@ class ExplorationViewModel(
     private fun isMineGeneratorOnline(): Boolean =
         roomStates[STELLARIUM_GENERATOR_ROOM_ID]?.get("power_on") == true
 
-    private fun canReturnToHub(room: Room?): Boolean =
-        room?.id?.let { entryRoomIds.contains(it) } == true
+    private fun canReturnToHub(room: Room?): Boolean {
+        val roomId = room?.id ?: return false
+        if (!entryRoomIds.contains(roomId)) return false
+        if (roomId.equals(PIT_ENTRY_ROOM_ID, ignoreCase = true) && !hasJedSentNovaToWorkshop()) return false
+        return true
+    }
+
+    private fun returnToHubBlockedMessage(room: Room?): String {
+        val roomId = room?.id
+        return when {
+            roomId.equals(PIT_ENTRY_ROOM_ID, ignoreCase = true) && !hasJedSentNovaToWorkshop() ->
+                "Jed is waiting upstairs. Nova should check in before heading out."
+            else -> "You can only leave from the area entrance."
+        }
+    }
+
+    private fun hasJedSentNovaToWorkshop(): Boolean {
+        val session = sessionStore.state.value
+        return "ms_w1_mq01_jed_talked" in session.completedMilestones ||
+            "w1_mq01" in session.completedQuests
+    }
 
     private fun toggleRoomStateValue(
         roomIdOrNull: String?,

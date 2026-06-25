@@ -114,6 +114,7 @@ class Hub1CriticalFlowTest {
         assertEquals("w1_mq02", state.trackedQuestId)
         assertEquals("reach_checkpoint", state.questStageById["w1_mq02"])
         assertTrue(state.inventory["ration_pack"].orZero() >= 1)
+        assertTrue(harness.narrationMessages.any { it.contains("report to Transit Checkpoint for mine clearance") })
     }
 
     @Test
@@ -557,6 +558,7 @@ class Hub1CriticalFlowTest {
         val events: EventManager
         val dialogue: DialogueService
         val messages = mutableListOf<String>()
+        val narrationMessages = mutableListOf<String>()
         val tutorialRequests = mutableListOf<Pair<String?, String?>>()
         private val pendingCinematics = mutableListOf<() -> Unit>()
 
@@ -567,6 +569,7 @@ class Hub1CriticalFlowTest {
                 sessionStore = store,
                 eventHooks = EventHooks(
                     onMessage = { messages += it },
+                    onNarration = { message, _ -> narrationMessages += message },
                     onSystemTutorial = { sceneId, context, _, done ->
                         tutorialRequests += sceneId to context
                         done()

@@ -120,7 +120,7 @@ private fun HubScreenContent(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Text(
-                text = uiState.hub?.title ?: "Hub",
+                text = uiState.hub?.title ?: "Region",
                 style = MaterialTheme.typography.headlineMedium,
                 color = Color.White
             )

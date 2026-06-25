@@ -79,7 +79,7 @@ private fun MapPreviewPanel(
             }
         } else {
             Text(
-                text = "Survey more rooms in this node to unlock the full map.",
+                text = "Survey more rooms in this area to unlock the full map.",
                 color = Color.White.copy(alpha = 0.75f),
                 style = MaterialTheme.typography.bodySmall
             )
