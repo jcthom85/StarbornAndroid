@@ -2,6 +2,7 @@ package com.example.starborn.di
 
 import com.example.starborn.domain.quest.QuestRuntimeManager
 import com.example.starborn.domain.session.GameSessionStore
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.mockito.kotlin.mock
@@ -30,5 +31,22 @@ class DialogueTriggerHandlingTest {
         assertTrue(state.completedMilestones.contains("ms_dialogue_unlock"))
         assertTrue(callbackWasCalled)
         assertTrue(state.unlockedSkills.contains("nova_hydraulic_kick"))
+    }
+
+    @Test
+    fun startQuestTriggerTracksNewlyAssignedQuest() {
+        val sessionStore = GameSessionStore()
+        val questRuntimeManager = mock<QuestRuntimeManager>()
+        sessionStore.startQuest("old_quest", track = true)
+
+        handleDialogueTrigger(
+            trigger = "start_quest:new_quest",
+            sessionStore = sessionStore,
+            questRuntimeManager = questRuntimeManager
+        )
+
+        val state = sessionStore.state.value
+        assertTrue(state.activeQuests.contains("new_quest"))
+        assertEquals("new_quest", state.trackedQuestId)
     }
 }

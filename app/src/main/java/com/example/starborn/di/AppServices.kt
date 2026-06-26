@@ -1621,7 +1621,7 @@ internal fun handleDialogueTrigger(
     actions.forEach { action ->
         when (action.type.lowercase(Locale.getDefault())) {
             "start_quest" -> action.startQuest?.let {
-                sessionStore.startQuest(it)
+                sessionStore.startQuest(it, track = true)
                 questRuntimeManager.recordQuestStarted(it)
             }
             "complete_quest" -> action.completeQuest?.let {

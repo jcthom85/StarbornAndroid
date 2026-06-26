@@ -503,6 +503,9 @@ class ExplorationViewModel(
             onPartyMemberJoined = { memberId ->
                 handlePartyMemberJoined(memberId)
             },
+            onRestParty = {
+                handleRestParty()
+            },
             onAudioLayerCommand = { handleAudioLayerCommand(it) }
         )
     )
@@ -866,6 +869,17 @@ class ExplorationViewModel(
 
     fun showStatusMessage(message: String) {
         postStatus(message)
+    }
+
+    private fun handleRestParty() {
+        val state = sessionStore.state.value
+        val partyIds = state.partyMembers.ifEmpty { listOfNotNull(state.playerId) }
+        val restoredHp = partyIds.mapNotNull { memberId ->
+            val maxHp = charactersById[memberId]?.hp?.takeIf { it > 0 } ?: return@mapNotNull null
+            memberId to maxHp
+        }.toMap()
+        if (restoredHp.isEmpty()) return
+        sessionStore.updatePartyVitals(restoredHp)
     }
 
     private fun postStatus(message: String) {

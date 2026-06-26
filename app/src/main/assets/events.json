@@ -607,7 +607,31 @@
       {
         "type": "start_dialogue",
         "npc": "Jed"
+      }
+    ]
+  },
+  {
+    "id": "w1_mq02_save_prompt_after_workshop",
+    "description": "Shows the save tutorial after Nova leaves Jed's Workshop with Shift Clearance active.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "pit_shaft"
+    },
+    "conditions": [
+      {
+        "type": "quest_completed",
+        "quest_id": "w1_mq01"
       },
+      {
+        "type": "quest_active",
+        "quest_id": "w1_mq02"
+      },
+      {
+        "type": "tutorial_not_completed",
+        "tutorial_id": "menu_save"
+      }
+    ],
+    "actions": [
       {
         "type": "system_tutorial",
         "scene_id": "menu_save",
@@ -723,10 +747,6 @@
       {
         "type": "start_dialogue",
         "npc": "Jed"
-      },
-      {
-        "type": "show_message",
-        "message": "Quest complete: Wake Up Call"
       }
     ]
   },
@@ -1060,10 +1080,6 @@
       {
         "type": "complete_quest",
         "quest_id": "w1_sq03"
-      },
-      {
-        "type": "show_message",
-        "message": "Quest complete: Heavy Lifting."
       }
     ]
   },
@@ -1943,10 +1959,6 @@
           {
             "type": "set_milestone",
             "milestone": "ms_w1_mq03_complete"
-          },
-          {
-            "type": "show_message",
-            "message": "Main Quest complete: The Echo."
           }
         ]
       }
@@ -2123,10 +2135,6 @@
       {
         "type": "set_milestone",
         "milestone": "ms_w1_mq04_complete"
-      },
-      {
-        "type": "show_message",
-        "message": "Main Quest complete: Red Alert."
       },
       {
         "type": "start_quest",
@@ -2321,10 +2329,6 @@
               },
               {
                 "type": "show_message",
-                "message": "Main Quest complete: The Launch."
-              },
-              {
-                "type": "show_message",
                 "message": "A new chapter begins."
               }
             ]
@@ -2382,10 +2386,6 @@
       {
         "type": "complete_quest",
         "quest_id": "w1_sq04"
-      },
-      {
-        "type": "show_message",
-        "message": "Quest complete: Protocol Override."
       }
     ]
   },
@@ -2458,10 +2458,6 @@
       {
         "type": "complete_quest",
         "quest_id": "w1_sq05"
-      },
-      {
-        "type": "show_message",
-        "message": "Quest complete: The Lost Shift."
       }
     ]
   },
@@ -8172,11 +8168,16 @@
     "repeatable": true,
     "actions": [
       {
+        "type": "system_tutorial",
+        "scene_id": "rest_recovery",
+        "context": "Astra Quarters"
+      },
+      {
         "type": "rest_party"
       },
       {
         "type": "show_message",
-        "message": "The crew rests aboard the Astra. Wounds close, nerves settle, and the pressure of Erosion recedes."
+        "message": "The crew rests aboard the Astra. Wounds close, nerves settle, and the ship feels like home for a while."
       }
     ]
   }

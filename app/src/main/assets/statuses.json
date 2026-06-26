@@ -101,6 +101,32 @@
     "target": "enemy"
   },
   {
+    "id": "freeze",
+    "name": "Frozen",
+    "default_duration": 1,
+    "skip_reason": "is frozen in stasis",
+    "target": "enemy",
+    "aliases": [
+      "frozen",
+      "ice"
+    ]
+  },
+  {
+    "id": "silence",
+    "name": "Silenced",
+    "default_duration": 2,
+    "block_skills": true,
+    "target": "enemy"
+  },
+  {
+    "id": "confuse",
+    "name": "Confused",
+    "default_duration": 2,
+    "accuracy_multiplier": 0.65,
+    "outgoing_multiplier": 0.85,
+    "target": "enemy"
+  },
+  {
     "id": "regen",
     "name": "Regen",
     "default_duration": 3,

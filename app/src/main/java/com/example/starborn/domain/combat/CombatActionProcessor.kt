@@ -663,7 +663,7 @@ class CombatActionProcessor(
         val hasBuff = effect.singleBuff != null || !effect.buffs.isNullOrEmpty()
 
         // Set snackCooldown + 1 because tickEndOfTurn will immediately decrement it by 1 at the end of the turn.
-        val baseCooldown = 5
+        val baseCooldown = effect.cooldown?.coerceAtLeast(0) ?: DEFAULT_SNACK_COOLDOWN
         val updatedActor = actor.copy(snackCooldown = baseCooldown + 1)
         val stateWithCooldown = state.copy(combatants = state.combatants + (action.actorId to updatedActor))
 
@@ -1368,6 +1368,7 @@ class CombatActionProcessor(
         private const val GHOST_TARGET_LOCK_CRIT_BONUS = 25.0
         private const val GHOST_TARGET_LOCK_DR_BONUS = 4
         private const val DEFAULT_STATUS_DURATION = 2
+        private const val DEFAULT_SNACK_COOLDOWN = 5
         private const val MIN_HIT_CHANCE = 5.0
         private const val MAX_HIT_CHANCE = 99.0
         private const val PHYSICAL_VARIANCE_MIN = -2

@@ -166,7 +166,7 @@ class EventManager(
                 "start_quest" -> {
                     val questId = action.startQuest ?: action.questId
                     val updated = questId?.let {
-                        sessionStore.startQuest(it)
+                        sessionStore.startQuest(it, track = true)
                         eventHooks.onQuestStarted(it)
                         true
                     } ?: false

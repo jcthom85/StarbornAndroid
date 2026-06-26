@@ -1,5 +1,6 @@
 package com.example.starborn.feature.mainmenu.ui
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode
@@ -159,6 +160,15 @@ fun MainMenuScreen(
     LaunchedEffect(saveLoadMode) {
         if (saveLoadMode != null) {
             viewModel.refreshSlots()
+        }
+    }
+
+    BackHandler {
+        when {
+            saveLoadMode != null -> saveLoadMode = null
+            showDebugBrowser -> showDebugBrowser = false
+            showSettings -> showSettings = false
+            else -> Unit
         }
     }
 

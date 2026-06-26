@@ -70,6 +70,12 @@ class WorldAssetDataSource(
             .flatMap { tree -> tree.branches.values.flatten() }
             .associateBy { node -> node.id }
 
+    fun loadHubNodeDescriptions(): Map<String, String> =
+        assetReader.readMap("hub_node_descriptions.json")
+
+    fun loadHubNodeLockedPreviews(): Map<String, String> =
+        assetReader.readMap("hub_node_locked_previews.json")
+
     fun missingHubAssets(hubs: List<Hub>, nodes: List<HubNode>): List<String> {
         val missing = mutableSetOf<String>()
         hubs.mapNotNull { it.backgroundImage.takeIf { path -> path.isNotBlank() } }

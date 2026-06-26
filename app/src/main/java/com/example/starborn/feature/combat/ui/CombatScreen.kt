@@ -1121,7 +1121,7 @@ fun CombatScreen(
                 text = "Preparing encounter...",
                 style = MaterialTheme.typography.bodyLarge,
                 color = Color.White.copy(alpha = 0.85f)
-            )
+        )
         }
     }
 }

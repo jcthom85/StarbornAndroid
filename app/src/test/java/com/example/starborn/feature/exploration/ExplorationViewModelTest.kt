@@ -146,6 +146,44 @@ class ExplorationViewModelTest {
     }
 
     @Test
+    fun restPartyRestoresCurrentPartyHpToMax() {
+        val viewModel = createViewModel()
+        val sessionStore = getPrivateField<GameSessionStore>(viewModel, "sessionStore")
+        val characterNova = Player(
+            id = "nova",
+            name = "Nova",
+            level = 1,
+            xp = 0,
+            hp = 120,
+            strength = 10,
+            vitality = 8,
+            agility = 6,
+            focus = 5,
+            luck = 4,
+            skills = emptyList(),
+            miniIconPath = "images/portraits/nova.png"
+        )
+        val characterZeke = characterNova.copy(id = "zeke", name = "Zeke", hp = 150)
+        setPrivateField(
+            viewModel,
+            "charactersById",
+            mapOf(characterNova.id to characterNova, characterZeke.id to characterZeke)
+        )
+
+        sessionStore.setPlayer("nova")
+        sessionStore.setPartyMembers(listOf("nova", "zeke"))
+        sessionStore.updatePartyVitals(mapOf("nova" to 12, "zeke" to 40))
+
+        val method = ExplorationViewModel::class.java.getDeclaredMethod("handleRestParty")
+        method.isAccessible = true
+        method.invoke(viewModel)
+
+        val state = sessionStore.state.value
+        assertEquals(120, state.partyMemberHp["nova"])
+        assertEquals(150, state.partyMemberHp["zeke"])
+    }
+
+    @Test
     fun openingInventoryTabBeforeJedDoesNotQueueBagTutorial() {
         val viewModel = createViewModel()
         val promptManager = getPrivateField<UIPromptManager>(viewModel, "promptManager")

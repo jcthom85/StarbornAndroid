@@ -152,11 +152,28 @@ fun NavigationHost(
             val hubViewModel: HubViewModel = viewModel(
                 factory = HubViewModelFactory(
                     services.worldDataSource,
+                    services.questRepository,
                     services.sessionStore
                 )
             )
             HubScreen(
                 viewModel = hubViewModel,
+                userSettings = userSettings,
+                onMusicVolumeChange = { value ->
+                    settingsScope.launch { services.userSettingsStore.setMusicVolume(value) }
+                },
+                onSfxVolumeChange = { value ->
+                    settingsScope.launch { services.userSettingsStore.setSfxVolume(value) }
+                },
+                onToggleTutorials = { enabled ->
+                    settingsScope.launch { services.userSettingsStore.setTutorialsEnabled(enabled) }
+                },
+                onToggleVignette = { enabled ->
+                    settingsScope.launch { services.userSettingsStore.setVignetteEnabled(enabled) }
+                },
+                onQuickSave = {
+                    settingsScope.launch { services.quickSave() }
+                },
                 onEnterNode = { node ->
                     navController.navigate(Exploration.route) {
                         popUpTo(Hub.route) { inclusive = false }

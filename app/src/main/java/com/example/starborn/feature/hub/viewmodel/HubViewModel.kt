@@ -6,13 +6,14 @@ import androidx.lifecycle.viewModelScope
 import com.example.starborn.core.DefaultDispatcherProvider
 import com.example.starborn.core.DispatcherProvider
 import com.example.starborn.data.assets.WorldAssetDataSource
+import com.example.starborn.data.repository.QuestRepository
 import com.example.starborn.domain.model.Hub
 import com.example.starborn.domain.model.HubNode
-import com.example.starborn.domain.model.Room
+import com.example.starborn.domain.model.Quest
 import com.example.starborn.domain.node.NodeProgressionEvaluator
 import com.example.starborn.domain.node.NodeVisibility
+import com.example.starborn.domain.session.GameSessionState
 import com.example.starborn.domain.session.GameSessionStore
-import java.util.Locale
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,6 +22,7 @@ import kotlinx.coroutines.launch
 
 class HubViewModel(
     private val worldAssets: WorldAssetDataSource,
+    private val questRepository: QuestRepository,
     private val sessionStore: GameSessionStore,
     private val dispatchers: DispatcherProvider = DefaultDispatcherProvider
 ) : ViewModel() {
@@ -40,7 +42,8 @@ class HubViewModel(
         viewModelScope.launch(dispatchers.io) {
             val hubs = worldAssets.loadHubs()
             val nodes = worldAssets.loadHubNodes()
-            val roomsById = worldAssets.loadRooms().associateBy { it.id }
+            val nodeDescriptions = worldAssets.loadHubNodeDescriptions()
+            val lockedPreviews = worldAssets.loadHubNodeLockedPreviews()
 
             val missingAssets = worldAssets.missingHubAssets(hubs, nodes)
             if (missingAssets.isNotEmpty()) {
@@ -57,6 +60,7 @@ class HubViewModel(
             val session = sessionStore.state.value
             val preferredHubId = session.hubId ?: hubs.firstOrNull()?.id
             val currentHub = preferredHubId?.let { hubsById[it] } ?: hubs.firstOrNull()
+            val trackedQuest = buildTrackedQuest(session)
 
             val uiNodes = currentHub?.let { hub ->
                 nodesByHub[hub.id].orEmpty().mapNotNull { node ->
@@ -71,7 +75,8 @@ class HubViewModel(
                         sizeHint = node.size.firstOrNull()?.toFloat() ?: 220f,
                         discovered = availability.visited,
                         iconPath = node.iconImage,
-                        subtitle = buildNodeSubtitle(node, roomsById),
+                        description = nodeDescriptions[node.id],
+                        lockedPreview = lockedPreviews[node.id],
                         unlocked = availability.unlocked,
                         visited = availability.visited,
                         completed = availability.completed,
@@ -95,7 +100,8 @@ class HubViewModel(
                     hub = currentHub,
                     backgroundImage = currentHub?.backgroundImage,
                     nodes = uiNodes,
-                    selectedNodeId = firstDiscovered?.id
+                    selectedNodeId = firstDiscovered?.id,
+                    trackedQuest = trackedQuest
                 )
             }
         }
@@ -158,6 +164,33 @@ class HubViewModel(
         _uiState.update { it.copy(lockedPrompt = null) }
     }
 
+    private fun buildTrackedQuest(session: GameSessionState): HubQuestUi? {
+        val questId = session.trackedQuestId
+            ?.takeIf { it.isNotBlank() }
+            ?: session.activeQuests.firstOrNull()
+            ?: return null
+        if (!session.activeQuests.contains(questId)) return null
+        val quest = questRepository.questById(questId) ?: return null
+        val stage = activeStage(quest, session)
+        val completedTasks = session.questTasksCompleted[quest.id].orEmpty()
+        val objective = stage?.tasks
+            ?.firstOrNull { task -> !completedTasks.contains(task.id) }
+            ?.text
+            ?: stage?.description.takeIf { !it.isNullOrBlank() }
+            ?: quest.summary.takeIf { it.isNotBlank() }
+        return HubQuestUi(
+            id = quest.id,
+            title = quest.title,
+            objective = objective,
+            stageTitle = stage?.title?.takeIf { it.isNotBlank() }
+        )
+    }
+
+    private fun activeStage(quest: Quest, session: GameSessionState) =
+        session.questStageById[quest.id]
+            ?.let { stageId -> quest.stages.firstOrNull { it.id.equals(stageId, ignoreCase = true) } }
+            ?: quest.stages.firstOrNull()
+
     private fun astraAccessNode() = HubNodeUi(
         id = ASTRA_ACCESS_ID,
         title = "The Astra",
@@ -167,7 +200,7 @@ class HubViewModel(
         sizeHint = 240f,
         discovered = true,
         iconPath = "images/nodes/world_2/hangar_bay.png",
-        subtitle = "Mobile home base",
+        description = "A battered ship with warm lights in the windows and enough scars to count as history.",
         visited = true,
         special = SPECIAL_ASTRA
     )
@@ -180,37 +213,10 @@ class HubViewModel(
         centerY = 0.88f,
         sizeHint = 180f,
         discovered = true,
-        subtitle = "Return to the regional hub",
+        description = "The ramp waits open, pointing back toward the trouble you left behind.",
         visited = true,
         special = SPECIAL_DISEMBARK
     )
-
-    private fun buildNodeSubtitle(node: HubNode, roomsById: Map<String, Room>): String? {
-        val services = node.rooms.flatMap { roomId ->
-            serviceTagsForRoom(roomsById[roomId])
-        }.distinct()
-        if (services.isNotEmpty()) {
-            val label = services.joinToString(" • ")
-            if (label.isNotBlank()) return label
-        }
-        val titles = node.rooms.mapNotNull { roomId ->
-            roomsById[roomId]?.title?.takeIf { it.isNotBlank() }
-        }.distinct()
-        val headline = titles.take(3).joinToString(" • ")
-        return headline.ifBlank { null }
-    }
-
-    private fun serviceTagsForRoom(room: Room?): List<String> {
-        if (room == null) return emptyList()
-        return room.actions.mapNotNull { action ->
-            when ((action["type"] as? String)?.lowercase(Locale.getDefault())) {
-                "shop" -> (action["name"] as? String)?.ifBlank { null } ?: "Shop"
-                "tinkering" -> (action["name"] as? String)?.ifBlank { null } ?: "Tinkering"
-                "first_aid", "firstaid" -> (action["name"] as? String)?.ifBlank { null } ?: "First Aid"
-                else -> null
-            }
-        }.distinct()
-    }
 
     companion object {
         const val ASTRA_HUB_ID = "hub_astra"

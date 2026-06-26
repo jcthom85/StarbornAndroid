@@ -193,6 +193,32 @@ class EventManagerTest {
     }
 
     @Test
+    fun startQuestActionTracksNewlyAssignedQuest() {
+        val sessionStore = GameSessionStore()
+        sessionStore.startQuest("old_quest", track = true)
+        val event = GameEvent(
+            id = "evt_start_quest",
+            trigger = EventTrigger(type = "custom"),
+            repeatable = true,
+            actions = listOf(
+                EventAction(
+                    type = "start_quest",
+                    questId = "new_quest"
+                )
+            )
+        )
+        val manager = EventManager(
+            events = listOf(event),
+            sessionStore = sessionStore
+        )
+
+        manager.handleTrigger("custom")
+
+        assertTrue(sessionStore.state.value.activeQuests.contains("new_quest"))
+        assertEquals("new_quest", sessionStore.state.value.trackedQuestId)
+    }
+
+    @Test
     fun takeItemDelegatesToHook() {
         val sessionStore = GameSessionStore()
         var removedItemId: String? = null

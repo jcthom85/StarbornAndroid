@@ -104,7 +104,7 @@ class Hub1CriticalFlowTest {
         assertTrue(afterBenchEntry.questTasksCompleted["w1_mq01"].orEmpty().contains("reach_workshop"))
         assertTrue(!afterBenchEntry.questTasksCompleted["w1_mq01"].orEmpty().contains("use_tinkering_table"))
         assertTrue(afterBenchEntry.completedMilestones.contains("ms_w1_mq01_workshop_briefed"))
-        assertTrue(harness.tutorialRequests.contains("menu_save" to "Jed's Workshop"))
+        assertTrue(harness.tutorialRequests.none { it.first == "menu_save" })
 
         harness.events.handleTrigger("player_action", EventPayload.Action("tinkering_craft", "functional_cryo_inductor"))
 
@@ -119,6 +119,9 @@ class Hub1CriticalFlowTest {
         assertEquals("reach_checkpoint", state.questStageById["w1_mq02"])
         assertTrue(state.inventory["ration_pack"].orZero() >= 1)
         assertTrue(harness.narrationMessages.none { it.contains("Transit Checkpoint") })
+
+        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("pit_shaft"))
+        assertTrue(harness.tutorialRequests.contains("menu_save" to "Jed's Workshop"))
     }
 
     @Test

@@ -47,6 +47,39 @@ class SnackUseTest {
     }
 
     @Test
+    fun `snack cooldown uses item effect cooldown`() {
+        val snacks = mapOf(
+            "heal_snack" to Item(
+                id = "heal_snack",
+                name = "Heal Snack",
+                type = "snack",
+                effect = ItemEffect(
+                    restoreHp = 20,
+                    target = "self",
+                    cooldown = 3
+                )
+            )
+        )
+        val processor = CombatActionProcessor(
+            engine = engine,
+            statusRegistry = statusRegistry,
+            skillLookup = { null },
+            itemLookup = { id -> snacks[id] }
+        )
+
+        val nova = player("nova")
+        val enemy = enemy("enemy")
+        val state = engine.beginEncounter(CombatSetup(playerParty = listOf(nova), enemyParty = listOf(enemy)))
+
+        val result = processor.execute(
+            state = state,
+            action = CombatAction.SnackUse(actorId = nova.id, snackItemId = "heal_snack")
+        ) { CombatReward() }
+
+        assertEquals(3, result.combatants.getValue(nova.id).snackCooldown)
+    }
+
+    @Test
     fun `snack buff applies a temporary buff to self`() {
         val snacks = mapOf(
             "buff_snack" to Item(
@@ -189,4 +222,3 @@ class SnackUseTest {
         )
     }
 }
-

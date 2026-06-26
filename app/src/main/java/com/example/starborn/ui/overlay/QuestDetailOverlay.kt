@@ -1,6 +1,11 @@
 ﻿package com.example.starborn.ui.overlay
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
@@ -19,6 +24,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckBox
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material.icons.outlined.CheckBoxOutlineBlank
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -28,11 +40,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.filled.Warning
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateListOf
@@ -42,6 +49,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -122,6 +131,37 @@ fun QuestDetailOverlay(
 }
 
 @Composable
+private fun QuestDetailObjectiveRow(
+    text: String,
+    completed: Boolean,
+    accentColor: Color
+) {
+    val icon = if (completed) Icons.Filled.CheckBox else Icons.Outlined.CheckBoxOutlineBlank
+    val iconTint = if (completed) accentColor else Color.White.copy(alpha = 0.70f)
+
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = if (completed) "Completed objective" else "Incomplete objective",
+            tint = iconTint,
+            modifier = Modifier.size(16.dp)
+        )
+        Text(
+            text = text,
+            style = MaterialTheme.typography.bodySmall,
+            color = Color.White.copy(alpha = if (completed) 0.78f else 0.86f),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.weight(1f)
+        )
+    }
+}
+
+@Composable
 private fun QuestDetailCard(
     detail: UiEvent.ShowQuestDetail,
     gradientColor: Color,
@@ -130,6 +170,21 @@ private fun QuestDetailCard(
     onShowDetails: (String) -> Unit
 ) {
     val accent = gradientColor
+    val isNewQuest = detail.type == QuestBannerType.NEW
+    val shimmerSweep = if (isNewQuest) {
+        val transition = rememberInfiniteTransition(label = "new_quest_shimmer")
+        transition.animateFloat(
+            initialValue = -0.35f,
+            targetValue = 1.25f,
+            animationSpec = infiniteRepeatable(
+                animation = tween(durationMillis = 2600),
+                repeatMode = RepeatMode.Restart
+            ),
+            label = "new_quest_shimmer_sweep"
+        ).value
+    } else {
+        0f
+    }
     val icon = when (detail.type) {
         QuestBannerType.NEW -> Icons.Filled.Star
         QuestBannerType.COMPLETED -> Icons.Filled.CheckCircle
@@ -162,6 +217,28 @@ private fun QuestDetailCard(
                             Color.Transparent
                         )
                     )
+                )
+                .then(
+                    if (isNewQuest) {
+                        Modifier.drawWithContent {
+                            drawContent()
+                            val x = size.width * shimmerSweep
+                            drawRect(
+                                brush = Brush.linearGradient(
+                                    colors = listOf(
+                                        Color.Transparent,
+                                        accent.copy(alpha = 0.08f),
+                                        Color.White.copy(alpha = 0.07f),
+                                        Color.Transparent
+                                    ),
+                                    start = Offset(x - size.width * 0.22f, 0f),
+                                    end = Offset(x + size.width * 0.10f, size.height)
+                                )
+                            )
+                        }
+                    } else {
+                        Modifier
+                    }
                 )
                 .padding(horizontal = 14.dp, vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp)
@@ -216,12 +293,10 @@ private fun QuestDetailCard(
             if (detail.objectives.isNotEmpty()) {
                 Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                     detail.objectives.forEach { line ->
-                        Text(
-                            text = "- $line",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = Color.White.copy(alpha = 0.78f),
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
+                        QuestDetailObjectiveRow(
+                            text = line,
+                            completed = detail.type == QuestBannerType.COMPLETED,
+                            accentColor = accent
                         )
                     }
                 }

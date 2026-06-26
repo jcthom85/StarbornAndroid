@@ -102,6 +102,15 @@
         ]
     },
     {
+        "id": "rest_recovery",
+        "steps": [
+            {
+                "message": "Beds aboard the Astra restore the party. Use Nova's bed when the crew needs to recover between missions.",
+                "context": "Astra Quarters"
+            }
+        ]
+    },
+    {
         "id": "source_art_unlock",
         "steps": [
             {
