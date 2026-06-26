@@ -751,7 +751,7 @@
     "env": "mine",
     "title": "Ventilation Hub",
     "background_image": "images/rooms/world_1/medbay_vents_v3.png",
-    "description": "Rusted fans and patched pipes keep the med-bay breathing by sheer habit. A cracked vent hisses chemical haze into the room, and a skimmer nests in the toxic updraft.",
+    "description": "Rusted fans and patched pipes keep the med-bay breathing by sheer habit. A cracked vent hisses chemical haze into the room, and a toxic blockage swells in the updraft while a skimmer circles overhead.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -775,13 +775,20 @@
       {
         "name": "fans",
         "type": "generic",
-        "condition_unmet_message": "They're barely spinning, struggling to move the heavy, toxic air."
+        "action_event": "w1_sq02_reroute_airflow",
+        "condition_unmet_message": "The fans cough and stutter, shoving pressure through the wrong part of the vent line."
       },
       {
         "name": "vent",
         "type": "generic",
         "action_event": "w1_sq02_patch_vent",
-        "condition_unmet_message": "You patch the cracked vent. The green haze thins as the med-bay starts breathing clean air again."
+        "condition_unmet_message": "The cracked vent is leaking poison because pressure is backed up behind the fans."
+      },
+      {
+        "name": "toxic blockage",
+        "type": "generic",
+        "action_event": "w1_sq02_clear_toxic_blockage",
+        "condition_unmet_message": "The toxic blockage pulses in the redirected updraft, close enough to clear if the airflow is stable."
       }
     ]
   },
@@ -1756,7 +1763,7 @@
     "env": "market",
     "title": "The Core Hub",
     "background_image": "images/rooms/world_1/server_hub.png",
-    "description": "The primary mainframe terminal glows with a sterile blue light. The console is covered in a fine layer of condensation that feels like ice against your fingertips.",
+    "description": "The primary mainframe terminal glows with sterile blue light. A frozen console sits below it, its keys filmed with condensation and old fingerprints.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -1775,11 +1782,12 @@
         "name": "terminal",
         "type": "generic",
         "action_event": "start_hack_sq04",
-        "condition_unmet_message": "A high-security interface. This is the heart of the colony's data network."
+        "condition_unmet_message": "A high-security interface. The rebel spoof is buried under Dominion compliance layers."
       },
       {
         "name": "console",
         "type": "generic",
+        "action_event": "w1_sq04_thaw_console",
         "condition_unmet_message": "The buttons are frozen stiff. You'll need to be careful with the input."
       }
     ]
@@ -2471,7 +2479,7 @@
     "env": "logistics",
     "title": "Maintenance Access",
     "background_image": "images/rooms/world_1/launch_access.png",
-    "description": "A final, narrow crawl through the colony's gut, filled with humming conduits and hot pipes. The sound of sirens is muffled here, replaced by the rhythmic thumping of the cargo lift.",
+    "description": "A final, narrow crawl through the colony's gut, filled with humming conduits, hot pipes, and red strobes racing toward the cargo lift. The sirens are muffled here, but the walls thump like something huge is closing in.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -2491,17 +2499,17 @@
       {
         "name": "conduits",
         "type": "generic",
-        "condition_unmet_message": "Vibrating with the sheer amount of power being rerouted for the lockdown."
+        "condition_unmet_message": "The conduits vibrate with lockdown power, every surge stealing light from somewhere behind you."
       },
       {
         "name": "pipes",
         "type": "generic",
-        "condition_unmet_message": "Clattering against their brackets as the pressure surges."
+        "condition_unmet_message": "The pipes clatter against their brackets hard enough to sound like boots in the walls."
       },
       {
         "name": "lift",
         "type": "generic",
-        "condition_unmet_message": "The cargo lift. It's the only way up to the pod bay."
+        "condition_unmet_message": "The cargo lift shudders at the end of the route, half-open because Zeke is still lying to its gate."
       }
     ]
   },
@@ -2571,7 +2579,7 @@
     "env": "logistics",
     "title": "Cargo Lift",
     "background_image": "images/rooms/world_1/launch_lift.png",
-    "description": "A heavy industrial platform beside a manual override panel. The hydraulics scream as the lift begins its ascent, carrying you away from the only home you've ever known.",
+    "description": "A heavy industrial platform bucks beside a manual override panel. The hydraulics scream under emergency power, and security shutters keep trying to bite the lift closed.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -2590,12 +2598,12 @@
       {
         "name": "override panel",
         "type": "generic",
-        "condition_unmet_message": "The controls are locked in place, holding the lift open by force."
+        "condition_unmet_message": "The override panel is jammed in a forced-open state. If Zeke loses the spoof, the lift will seal itself."
       },
       {
         "name": "hydraulics",
         "type": "generic",
-        "condition_unmet_message": "They're failing under the strain of the lockdown."
+        "condition_unmet_message": "The hydraulics are failing under the strain of the lockdown, but they are still moving."
       }
     ],
     "blocked_directions": {

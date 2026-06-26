@@ -928,7 +928,7 @@
   },
   {
     "id": "w1_sq02_patch_vent",
-    "description": "Marks the toxic vent patch and sends Nova back to Doc.",
+    "description": "Lets Nova inspect the cracked vent before rerouting airflow.",
     "trigger": {
       "type": "player_action",
       "action": "w1_sq02_patch_vent"
@@ -937,6 +937,131 @@
       {
         "type": "quest_active",
         "quest_id": "w1_sq02"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w1_sq02",
+        "task_id": "inspect_cracked_vent"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_sq02",
+        "task_id": "inspect_cracked_vent"
+      },
+      {
+        "type": "show_message",
+        "message": "The crack is not the real problem. Pressure is backing up behind the fans, forcing poison through every weak seam."
+      }
+    ]
+  },
+  {
+    "id": "w1_sq02_vent_after_inspection",
+    "description": "Gives updated vent context after Nova has found the pressure problem.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w1_sq02_patch_vent"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w1_sq02"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w1_sq02",
+        "task_id": "inspect_cracked_vent"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w1_sq02",
+        "task_id": "reroute_airflow"
+      }
+    ],
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "The cracked vent is only the symptom. Until the fans pull pressure away from it, every patch will blow loose."
+      }
+    ]
+  },
+  {
+    "id": "w1_sq02_reroute_airflow",
+    "description": "Reroutes the med-bay vent fans so the toxic blockage can be cleared.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w1_sq02_reroute_airflow"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w1_sq02"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w1_sq02",
+        "task_id": "inspect_cracked_vent"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w1_sq02",
+        "task_id": "reroute_airflow"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_sq02",
+        "task_id": "reroute_airflow"
+      },
+      {
+        "type": "show_message",
+        "message": "The fans grind into reverse. Green haze pulls away from the med-bay and gathers around the cracked vent."
+      }
+    ]
+  },
+  {
+    "id": "w1_sq02_fans_before_vent",
+    "description": "Explains why the fans cannot be meaningfully rerouted before inspecting the vent.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w1_sq02_reroute_airflow"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w1_sq02"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w1_sq02",
+        "task_id": "inspect_cracked_vent"
+      }
+    ],
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "The fan panel rattles with bad readings. Nova needs to find where the pressure is leaking before she can reroute anything safely."
+      }
+    ]
+  },
+  {
+    "id": "w1_sq02_clear_toxic_blockage",
+    "description": "Clears the toxic vent blockage and sends Nova back to Doc.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w1_sq02_clear_toxic_blockage"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w1_sq02"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w1_sq02",
+        "task_id": "reroute_airflow"
       },
       {
         "type": "quest_task_not_done",
@@ -1080,6 +1205,31 @@
       {
         "type": "complete_quest",
         "quest_id": "w1_sq03"
+      }
+    ]
+  },
+  {
+    "id": "w1_sq02_blockage_before_airflow",
+    "description": "Explains why the toxic blockage cannot be cleared before airflow is rerouted.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w1_sq02_clear_toxic_blockage"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w1_sq02"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w1_sq02",
+        "task_id": "reroute_airflow"
+      }
+    ],
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "The toxic haze is too dense to reach through. The fans need to pull it away before Nova can clear the blockage."
       }
     ]
   },
@@ -2032,7 +2182,87 @@
       },
       {
         "type": "narrate",
-        "message": "Zeke: 'Nova! Do you hear me? The Warden sealed the core, but I've bypassed the emergency exit. Get to the cargo lift! I'll try to hold the security gates from here!'",
+        "message": "Zeke: 'Nova! Do you hear me? I forced open a maintenance route, but the Warden is closing doors as fast as I can confuse them. Follow the red strobes to the cargo lift!'",
+        "tap_to_dismiss": true
+      }
+    ]
+  },
+  {
+    "id": "w1_mq04_emergency_route_pressure",
+    "description": "Adds pressure as Nova leaves the emergency tunnel.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "echo_exit"
+    },
+    "repeatable": false,
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w1_mq04"
+      },
+      {
+        "type": "quest_stage",
+        "quest_id": "w1_mq04",
+        "stage_id": "lockdown_escape"
+      }
+    ],
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "Red strobes chase each other down the maintenance tunnel. Every alarm pulse makes the walls feel narrower."
+      }
+    ]
+  },
+  {
+    "id": "w1_mq04_launch_access_pressure",
+    "description": "Adds lockdown pressure as Nova commits to the launch access route.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "launch_access"
+    },
+    "repeatable": false,
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w1_mq04"
+      },
+      {
+        "type": "quest_stage",
+        "quest_id": "w1_mq04",
+        "stage_id": "lockdown_escape"
+      }
+    ],
+    "actions": [
+      {
+        "type": "narrate",
+        "message": "A blast door slams shut somewhere behind Nova. Zeke's voice crackles through the alarm: 'Keep moving. I can keep the lift gate confused, but not for long.'",
+        "tap_to_dismiss": true
+      }
+    ]
+  },
+  {
+    "id": "w1_mq04_lift_pressure",
+    "description": "Adds pressure as Nova reaches the cargo lift.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "launch_lift"
+    },
+    "repeatable": false,
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w1_mq04"
+      },
+      {
+        "type": "quest_stage",
+        "quest_id": "w1_mq04",
+        "stage_id": "lockdown_escape"
+      }
+    ],
+    "actions": [
+      {
+        "type": "narrate",
+        "message": "The cargo lift shudders awake under emergency power. Zeke: 'That lift is your window, Nova. Anything standing on it is part of the lockdown now.'",
         "tap_to_dismiss": true
       }
     ]
@@ -2338,8 +2568,8 @@
     ]
   },
   {
-    "id": "w1_sq04_start_and_complete",
-    "description": "Triggered when player interacts with the hacked terminal in server hub. Starts and completes SQ04.",
+    "id": "w1_sq04_locate_terminal",
+    "description": "Starts Protocol Override and locates the rebel terminal.",
     "trigger": {
       "type": "player_action",
       "action": "start_hack_sq04"
@@ -2370,13 +2600,128 @@
         "task_id": "locate_hacked_terminal"
       },
       {
+        "type": "show_message",
+        "message": "A dead rebel login answers from under the Dominion shell: IF YOU ARE READING THIS, WE FAILED. THE SPOOF STILL WORKS."
+      }
+    ]
+  },
+  {
+    "id": "w1_sq04_thaw_console_controls",
+    "description": "Thaws the frozen console controls so the spoof can be restored.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w1_sq04_thaw_console"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w1_sq04"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w1_sq04",
+        "task_id": "locate_hacked_terminal"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w1_sq04",
+        "task_id": "restore_protocol_spoof"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_sq04",
+        "task_id": "restore_protocol_spoof"
+      },
+      {
+        "type": "show_message",
+        "message": "Nova warms the console contacts with a careful power bleed. The frozen keys wake one at a time, enough for the rebel spoof to accept input."
+      }
+    ]
+  },
+  {
+    "id": "w1_sq04_console_before_terminal",
+    "description": "Explains why the frozen console is not useful before the rebel terminal is located.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w1_sq04_thaw_console"
+    },
+    "conditions": [
+      {
+        "type": "quest_not_started",
+        "quest_id": "w1_sq04"
+      }
+    ],
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "The console is frozen stiff. Without a live terminal session, thawing random keys would only trip the Dominion audit."
+      }
+    ]
+  },
+  {
+    "id": "w1_sq04_terminal_before_console",
+    "description": "Explains why the spoof cannot be restored before the console controls are thawed.",
+    "trigger": {
+      "type": "player_action",
+      "action": "start_hack_sq04"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w1_sq04"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w1_sq04",
+        "task_id": "locate_hacked_terminal"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w1_sq04",
+        "task_id": "restore_protocol_spoof"
+      }
+    ],
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "The spoof is alive, but the frozen console drops every third input. Nova needs stable controls before she risks compiling it."
+      }
+    ]
+  },
+  {
+    "id": "w1_sq04_apply_access_override",
+    "description": "Applies the rebel access override and completes Protocol Override.",
+    "trigger": {
+      "type": "player_action",
+      "action": "start_hack_sq04"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w1_sq04"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w1_sq04",
+        "task_id": "restore_protocol_spoof"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w1_sq04",
+        "task_id": "apply_access_override"
+      }
+    ],
+    "actions": [
+      {
         "type": "play_cinematic",
         "scene_id": "scene_sq04_hack"
       },
       {
         "type": "set_quest_task_done",
         "quest_id": "w1_sq04",
-        "task_id": "restore_protocol_spoof"
+        "task_id": "apply_access_override"
       },
       {
         "type": "give_item",
@@ -2386,6 +2731,10 @@
       {
         "type": "complete_quest",
         "quest_id": "w1_sq04"
+      },
+      {
+        "type": "show_message",
+        "message": "Protocol Override complete. The dead cell's access key burns itself onto a cracked circuit board before Dominion can notice the theft."
       }
     ]
   },

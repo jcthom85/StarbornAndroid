@@ -446,7 +446,44 @@
     "speaker": "Zeke",
     "emote": "sad",
     "text": "It means bio-reclamation. Death. For a breaker surge.",
-    "next": "zeke_w1_mq02_override_7"
+    "next": "zeke_w1_mq02_override_choice"
+  },
+  {
+    "id": "zeke_w1_mq02_override_choice",
+    "speaker": "Zeke",
+    "emote": "worried",
+    "text": "I can bury this if we give the system a culprit it likes better than a person. Pick the lie that sounds most like policy.",
+    "options": [
+      {
+        "id": "zeke_w1_mq02_choose_grid_instability",
+        "text": "Grid Instability",
+        "next": "zeke_w1_mq02_override_7"
+      },
+      {
+        "id": "zeke_w1_mq02_choose_operator_error",
+        "text": "Operator Error",
+        "next": "zeke_w1_mq02_override_wrong_operator"
+      },
+      {
+        "id": "zeke_w1_mq02_choose_unauthorized_mod",
+        "text": "Unauthorized Modification",
+        "next": "zeke_w1_mq02_override_wrong_mod"
+      }
+    ]
+  },
+  {
+    "id": "zeke_w1_mq02_override_wrong_operator",
+    "speaker": "Zeke",
+    "emote": "scared",
+    "text": "Operator Error pins it on you. The file goes straight back to recycling with your name underlined.",
+    "next": "zeke_w1_mq02_override_choice"
+  },
+  {
+    "id": "zeke_w1_mq02_override_wrong_mod",
+    "speaker": "Zeke",
+    "emote": "scared",
+    "text": "Unauthorized Modification gives them intent. Dominion loves intent. We need something it can blame on its own equipment.",
+    "next": "zeke_w1_mq02_override_choice"
   },
   {
     "id": "zeke_w1_mq02_override_7",

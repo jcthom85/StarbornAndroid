@@ -93,7 +93,7 @@
           },
           {
             "id": "spoof_liability_form",
-            "text": "Let Zeke bury the liability flag under grid-instability paperwork."
+            "text": "Choose the paperwork category Zeke can use to bury the liability flag."
           },
           {
             "id": "receive_mine_access_badge",
@@ -402,6 +402,14 @@
             "text": "Enter the ventilation hub."
           },
           {
+            "id": "inspect_cracked_vent",
+            "text": "Inspect the cracked vent."
+          },
+          {
+            "id": "reroute_airflow",
+            "text": "Reroute the failing fans."
+          },
+          {
             "id": "clear_toxic_blockage",
             "text": "Clear the toxic blockage."
           }
@@ -520,7 +528,11 @@
           },
           {
             "id": "restore_protocol_spoof",
-            "text": "Restore the protocol spoof."
+            "text": "Thaw the frozen console controls."
+          },
+          {
+            "id": "apply_access_override",
+            "text": "Restore the spoof and apply the rebel access override."
           }
         ]
       }

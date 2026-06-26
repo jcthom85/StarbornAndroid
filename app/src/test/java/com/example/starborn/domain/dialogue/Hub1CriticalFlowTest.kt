@@ -216,7 +216,18 @@ class Hub1CriticalFlowTest {
         doc?.advanceUntilFinished()
 
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("medbay_vents"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w1_sq02_reroute_airflow"))
+        assertTrue(!harness.store.state.value.questTasksCompleted["w1_sq02"].orEmpty().contains("reroute_airflow"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w1_sq02_clear_toxic_blockage"))
+        assertTrue(!harness.store.state.value.questTasksCompleted["w1_sq02"].orEmpty().contains("clear_toxic_blockage"))
         harness.events.handleTrigger("player_action", EventPayload.Action("w1_sq02_patch_vent"))
+        assertTrue(harness.store.state.value.questTasksCompleted["w1_sq02"].orEmpty().contains("inspect_cracked_vent"))
+        assertTrue(!harness.store.state.value.questTasksCompleted["w1_sq02"].orEmpty().contains("clear_toxic_blockage"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w1_sq02_patch_vent"))
+        assertTrue(!harness.store.state.value.questTasksCompleted["w1_sq02"].orEmpty().contains("reroute_airflow"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w1_sq02_reroute_airflow"))
+        assertTrue(harness.store.state.value.questTasksCompleted["w1_sq02"].orEmpty().contains("reroute_airflow"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w1_sq02_clear_toxic_blockage"))
 
         val turnIn = harness.dialogue.startDialogue("Doc")
         assertEquals("doc_w1_sq02_turnin_1", turnIn?.current()?.id)
@@ -228,6 +239,8 @@ class Hub1CriticalFlowTest {
         assertTrue(state.completedMilestones.contains("ms_w1_sq02_complete"))
         assertTrue(completedTasks.contains("talk_to_doc"))
         assertTrue(completedTasks.contains("enter_ventilation_hub"))
+        assertTrue(completedTasks.contains("inspect_cracked_vent"))
+        assertTrue(completedTasks.contains("reroute_airflow"))
         assertTrue(completedTasks.contains("clear_toxic_blockage"))
         assertTrue(completedTasks.contains("return_to_doc"))
         assertTrue(state.inventory["mod_corrosive_rounds"].orZero() >= 1)
@@ -242,15 +255,37 @@ class Hub1CriticalFlowTest {
         harness.store.setInventory(mapOf("mine_access_badge" to 1))
 
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("server_hub"))
-        harness.events.handleTrigger("player_action", EventPayload.Action("start_hack_sq04"))
-
-        val state = harness.store.state.value
-        val completedTasks = state.questTasksCompleted["w1_sq04"].orEmpty()
-        assertTrue(state.completedQuests.contains("w1_sq04"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w1_sq04_thaw_console"))
+        var state = harness.store.state.value
         assertTrue(!state.activeQuests.contains("w1_sq04"))
+
+        harness.events.handleTrigger("player_action", EventPayload.Action("start_hack_sq04"))
+        state = harness.store.state.value
+        var completedTasks = state.questTasksCompleted["w1_sq04"].orEmpty()
+        assertTrue(state.activeQuests.contains("w1_sq04"))
         assertTrue(completedTasks.contains("enter_server_room"))
         assertTrue(completedTasks.contains("locate_hacked_terminal"))
+        assertTrue(!completedTasks.contains("restore_protocol_spoof"))
+
+        harness.events.handleTrigger("player_action", EventPayload.Action("start_hack_sq04"))
+        state = harness.store.state.value
+        completedTasks = state.questTasksCompleted["w1_sq04"].orEmpty()
+        assertTrue(state.activeQuests.contains("w1_sq04"))
+        assertTrue(!completedTasks.contains("restore_protocol_spoof"))
+        assertTrue(!completedTasks.contains("apply_access_override"))
+
+        harness.events.handleTrigger("player_action", EventPayload.Action("w1_sq04_thaw_console"))
+        state = harness.store.state.value
+        completedTasks = state.questTasksCompleted["w1_sq04"].orEmpty()
         assertTrue(completedTasks.contains("restore_protocol_spoof"))
+        assertTrue(!completedTasks.contains("apply_access_override"))
+
+        harness.events.handleTrigger("player_action", EventPayload.Action("start_hack_sq04"))
+        state = harness.store.state.value
+        completedTasks = state.questTasksCompleted["w1_sq04"].orEmpty()
+        assertTrue(state.completedQuests.contains("w1_sq04"))
+        assertTrue(!state.activeQuests.contains("w1_sq04"))
+        assertTrue(completedTasks.contains("apply_access_override"))
         assertTrue(state.inventory["circuit_board"].orZero() >= 1)
     }
 
@@ -294,7 +329,20 @@ class Hub1CriticalFlowTest {
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("checkpoint_booth"))
         val zeke = harness.dialogue.startDialogue("Zeke")
         assertEquals("zeke_w1_mq02_override_1", zeke?.current()?.id)
-        zeke?.advanceUntilFinished()
+        assertNotNull(zeke)
+        val zekeSession = zeke!!
+        while (zekeSession.current()?.id != "zeke_w1_mq02_override_choice") {
+            zekeSession.advance()
+        }
+        assertTrue(zekeSession.choices().any { it.id == "zeke_w1_mq02_choose_grid_instability" })
+        zekeSession.choose("zeke_w1_mq02_choose_operator_error")
+        assertEquals("zeke_w1_mq02_override_wrong_operator", zekeSession.current()?.id)
+        assertTrue(!harness.store.state.value.completedQuests.contains("w1_mq02"))
+        zekeSession.advance()
+        assertEquals("zeke_w1_mq02_override_choice", zekeSession.current()?.id)
+        zekeSession.choose("zeke_w1_mq02_choose_grid_instability")
+        assertEquals("zeke_w1_mq02_override_7", zekeSession.current()?.id)
+        zekeSession.advanceUntilFinished()
 
         val state = harness.store.state.value
         val completedTasks = state.questTasksCompleted["w1_mq02"].orEmpty()
@@ -363,6 +411,7 @@ class Hub1CriticalFlowTest {
         assertTrue(state.unlockedSkills.contains("nova_blast_wave"))
 
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("echo_exit"))
+        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("launch_access"))
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("launch_lift"))
         harness.events.handleTrigger(
             "encounter_victory",

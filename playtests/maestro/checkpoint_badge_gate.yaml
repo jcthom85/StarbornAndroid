@@ -74,6 +74,10 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
+    visible: "Grid Instability"
+    timeout: 10000
+- tapOn: "Grid Instability"
+- extendedWaitUntil:
     visible: ".*Take the badge.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"

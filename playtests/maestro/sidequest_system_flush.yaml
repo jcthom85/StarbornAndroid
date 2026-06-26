@@ -66,6 +66,24 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     visible: "Quest Updated"
     timeout: 10000
+- assertVisible: "Inspect the cracked vent."
+- tapOn: "Dismiss Quest Banner"
+- extendedWaitUntil:
+    notVisible: "Quest Updated"
+    timeout: 10000
+- tapOn: "Inspect Fans"
+- extendedWaitUntil:
+    visible: "Quest Updated"
+    timeout: 10000
+- assertVisible: "Reroute the failing fans."
+- tapOn: "Dismiss Quest Banner"
+- extendedWaitUntil:
+    notVisible: "Quest Updated"
+    timeout: 10000
+- tapOn: "Inspect Toxic Blockage"
+- extendedWaitUntil:
+    visible: "Quest Updated"
+    timeout: 10000
 - assertVisible: "Return to Doc."
 - tapOn: "Dismiss Quest Banner"
 - extendedWaitUntil:

@@ -12,7 +12,7 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 10000
 - tapOn: "Debug: Red Alert"
 - extendedWaitUntil:
-    visible: "Zeke:.*bypassed the emergency exit.*"
+    visible: "Zeke:.*Follow the red strobes.*"
     timeout: 15000
 - tapOn: "Got it"
 - extendedWaitUntil:
@@ -29,12 +29,20 @@ appId: com.junewiregames.starborn.prealpha
     visible: "Maintenance Access"
     timeout: 15000
 - extendedWaitUntil:
+    visible: ".*Keep moving.*"
+    timeout: 10000
+- tapOn: "Got it"
+- extendedWaitUntil:
     notVisible: "Engage Resonance Buoy"
     timeout: 1000
 - tapOn: "Travel north.*"
 - extendedWaitUntil:
     visible: "Cargo Lift"
     timeout: 15000
+- extendedWaitUntil:
+    visible: ".*That lift is your window.*"
+    timeout: 10000
+- tapOn: "Got it"
 - extendedWaitUntil:
     visible: "Quest Updated"
     timeout: 10000
