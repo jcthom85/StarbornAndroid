@@ -27,6 +27,7 @@ fun SettingsTabContent(
     settings: SettingsUiState,
     accentColor: Color,
     borderColor: Color,
+    showSaveData: Boolean = true,
     onMusicVolumeChange: (Float) -> Unit,
     onSfxVolumeChange: (Float) -> Unit,
     onToggleTutorials: (Boolean) -> Unit,
@@ -36,18 +37,20 @@ fun SettingsTabContent(
     onLoadGame: () -> Unit
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
-        MenuSectionCard(
-            title = "Save Data",
-            accentColor = accentColor,
-            borderColor = borderColor
-        ) {
-            SaveDataPanel(
+        if (showSaveData) {
+            MenuSectionCard(
+                title = "Save Data",
                 accentColor = accentColor,
-                borderColor = borderColor,
-                onQuickSave = onQuickSave,
-                onSaveGame = onSaveGame,
-                onLoadGame = onLoadGame
-            )
+                borderColor = borderColor
+            ) {
+                SaveDataPanel(
+                    accentColor = accentColor,
+                    borderColor = borderColor,
+                    onQuickSave = onQuickSave,
+                    onSaveGame = onSaveGame,
+                    onLoadGame = onLoadGame
+                )
+            }
         }
         MenuSectionCard(
             title = "Audio & Display",

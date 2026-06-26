@@ -345,6 +345,15 @@ class EventManager(
                     eventHooks.onBeginNode(action.roomId)
                     true
                 }
+                "start_dialogue" -> {
+                    val npc = action.npc ?: action.context
+                    if (!npc.isNullOrBlank()) {
+                        eventHooks.onStartDialogue(npc)
+                        true
+                    } else {
+                        false
+                    }
+                }
                 "system_tutorial" -> {
                     var callbackInvoked = false
                     eventHooks.onSystemTutorial(action.sceneId, action.context, action.delayMs ?: 0L) {
@@ -582,6 +591,7 @@ data class EventHooks(
     val onQuestCompleted: (questId: String?) -> Unit = {},
     val onQuestFailed: (questId: String?, reason: String?) -> Unit = { _, _ -> },
     val onBeginNode: (roomId: String?) -> Unit = {},
+    val onStartDialogue: (npcName: String) -> Unit = {},
     val onSystemTutorial: (sceneId: String?, context: String?, delayMs: Long, onComplete: () -> Unit) -> Unit = { _, _, _, done -> done() },
     val onNarration: (message: String, tapToDismiss: Boolean) -> Unit = { _, _ -> },
     val onSpawnGroundItem: (roomId: String?, itemId: String, quantity: Int) -> Unit = { _, _, _ -> },

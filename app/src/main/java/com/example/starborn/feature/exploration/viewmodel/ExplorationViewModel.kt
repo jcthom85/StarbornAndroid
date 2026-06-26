@@ -353,7 +353,9 @@ class ExplorationViewModel(
                 onComplete()
             },
             onMessage = { message ->
-                postStatus(message)
+                if (!isQuestCompletionStatusMessage(message)) {
+                    postStatus(message)
+                }
                 emitEvent(ExplorationEvent.ShowMessage(message))
             },
             onReward = { reward ->
@@ -446,6 +448,9 @@ class ExplorationViewModel(
             onBeginNode = { roomId ->
                 roomId?.let { roomsById[it]?.let { room -> markDiscovered(room) } }
                 emitEvent(ExplorationEvent.BeginNode(roomId))
+            },
+            onStartDialogue = { npcName ->
+                startImmediateDialogue(npcName)
             },
             onSystemTutorial = { sceneId, context, delayMs, done ->
                 val handled = systemTutorialCoordinator.play(sceneId, context, delayMs) { done() }
@@ -869,6 +874,14 @@ class ExplorationViewModel(
         viewModelScope.launch(dispatchers.main) {
             _uiState.update { it.copy(statusMessage = trimmed) }
         }
+    }
+
+    private fun isQuestCompletionStatusMessage(message: String): Boolean {
+        val trimmed = message.trim()
+        return trimmed.startsWith("Quest complete:", ignoreCase = true) ||
+            trimmed.startsWith("Main Quest complete:", ignoreCase = true) ||
+            trimmed.equals("Quest completed", ignoreCase = true) ||
+            trimmed.equals("Quest complete", ignoreCase = true)
     }
 
     private fun enqueueLevelUps(summaries: List<LevelUpSummary>) {

@@ -190,6 +190,12 @@
     "toast": "Bunk checked."
   },
   {
+    "id": "ms_w1_mq01_workshop_briefed",
+    "name": "Workbench Briefing",
+    "description": "Jed told Nova to repair the Cryo-Inductor at his workbench.",
+    "toast": "Jed points you to the workbench."
+  },
+  {
     "id": "ms_w1_mq01_complete",
     "name": "Homestead Operations",
     "description": "You completed Nova's onboarding and tinkering training with Jed.",
@@ -200,6 +206,12 @@
     "name": "Checkpoint Denial",
     "description": "Guard Hank blocked Nova at the Transit Checkpoint and sent her to the Admin window.",
     "toast": "Checkpoint clearance denied."
+  },
+  {
+    "id": "ms_w1_mq02_clearance_ordered",
+    "name": "Shift Clearance Ordered",
+    "description": "Jed sent Nova to the Transit Checkpoint for mandatory mine clearance.",
+    "toast": "Jed sends you to shift clearance."
   },
   {
     "id": "ms_w1_mq02_zeke_override",

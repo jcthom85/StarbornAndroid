@@ -582,7 +582,7 @@
   },
   {
     "id": "w1_mq01_reach_workshop",
-    "description": "Marks arrival at Jed's Workshop.",
+    "description": "Marks arrival at Jed's Workshop and has Jed brief Nova on the bench repair.",
     "trigger": {
       "type": "enter_room",
       "room": "workshop_floor"
@@ -603,6 +603,10 @@
         "type": "set_quest_task_done",
         "quest_id": "w1_mq01",
         "task_id": "reach_workshop"
+      },
+      {
+        "type": "start_dialogue",
+        "npc": "Jed"
       },
       {
         "type": "system_tutorial",
@@ -644,7 +648,7 @@
   },
   {
     "id": "w1_mq01_tinkering_entered",
-    "description": "Shows the tinkering tutorial when Nova opens Jed's workbench after talking to him.",
+    "description": "Shows the workbench tutorial when Nova opens Jed's workbench after talking to him.",
     "trigger": {
       "type": "player_action",
       "action": "tinkering_screen_entered"
@@ -675,7 +679,7 @@
   },
   {
     "id": "w1_mq01_cryo_inductor_repaired",
-    "description": "Completes Wake Up Call when Nova repairs the Cryo-Inductor at Jed's workbench.",
+    "description": "Completes Wake Up Call and has Jed send Nova to shift clearance after the Cryo-Inductor repair.",
     "trigger": {
       "type": "player_action",
       "action": "tinkering_craft",
@@ -717,22 +721,8 @@
         "milestone": "ms_w1_mq01_complete"
       },
       {
-        "type": "start_quest",
-        "quest_id": "w1_mq02"
-      },
-      {
-        "type": "track_quest",
-        "quest_id": "w1_mq02"
-      },
-      {
-        "type": "advance_quest_stage",
-        "quest_id": "w1_mq02",
-        "to_stage_id": "reach_checkpoint"
-      },
-      {
-        "type": "narrate",
-        "message": "The repaired Cryo-Inductor settles into a steady hum. A Dominion shift chime crackles over the Workshop speaker: 'All Pit workers report to Transit Checkpoint for mine clearance. Late arrivals forfeit ration credit.'",
-        "tap_to_dismiss": true
+        "type": "start_dialogue",
+        "npc": "Jed"
       },
       {
         "type": "show_message",
@@ -742,7 +732,7 @@
   },
   {
     "id": "w1_mq02_start_at_checkpoint",
-    "description": "Starts Paperwork when Nova reaches the Transit Checkpoint after Wake Up Call.",
+    "description": "Starts Shift Clearance if Nova reaches the Transit Checkpoint after Wake Up Call without Jed's handoff.",
     "trigger": {
       "type": "enter_room",
       "room": "checkpoint_queue"
@@ -780,7 +770,7 @@
   },
   {
     "id": "w1_mq02_approach_checkpoint",
-    "description": "Marks the checkpoint approach for Paperwork once Nova reaches the queue.",
+    "description": "Marks the checkpoint approach for Shift Clearance once Nova reaches the queue.",
     "trigger": {
       "type": "enter_room",
       "room": "checkpoint_queue"

@@ -9,6 +9,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavType
@@ -77,6 +78,18 @@ fun NavigationHost(
     val userSettings by services.userSettingsStore.settings.collectAsState(initial = UserSettings())
     val sessionState by services.sessionStore.state.collectAsState()
     val environmentThemeState by services.environmentThemeManager.state.collectAsState()
+    val settingsScope = rememberCoroutineScope()
+
+    LaunchedEffect(
+        services.audioCuePlayer,
+        userSettings.musicVolume,
+        userSettings.sfxVolume,
+        userSettings.voiceVolume
+    ) {
+        services.audioCuePlayer.setUserMusicGain(userSettings.musicVolume)
+        services.audioCuePlayer.setUserSfxGain(userSettings.sfxVolume)
+        services.audioCuePlayer.setUserVoiceGain(userSettings.voiceVolume)
+    }
 
     DisposableEffect(lifecycleOwner, services) {
         val observer = LifecycleEventObserver { _, event ->
@@ -102,6 +115,19 @@ fun NavigationHost(
                 viewModel = mainMenuViewModel,
                 audioCuePlayer = services.audioCuePlayer,
                 audioRouter = services.audioRouter,
+                userSettings = userSettings,
+                onMusicVolumeChange = { value ->
+                    settingsScope.launch { services.userSettingsStore.setMusicVolume(value) }
+                },
+                onSfxVolumeChange = { value ->
+                    settingsScope.launch { services.userSettingsStore.setSfxVolume(value) }
+                },
+                onToggleTutorials = { enabled ->
+                    settingsScope.launch { services.userSettingsStore.setTutorialsEnabled(enabled) }
+                },
+                onToggleVignette = { enabled ->
+                    settingsScope.launch { services.userSettingsStore.setVignetteEnabled(enabled) }
+                },
                 onStartGame = {
                     navController.navigate(Exploration.route) {
                         popUpTo(MainMenu.route) { inclusive = true }

@@ -247,6 +247,59 @@
     "trigger": "set_quest_task_done:w1_mq01:find_jed,set_quest_task_done:w1_mq01:talk_to_jed,give_item:mining_pistol,give_item:nova_flux_liner,give_item:cryo_inductor,give_item:scrap_metal*2,set_quest_task_done:w1_mq01:equip_starter_gear,set_milestone:ms_w1_mq01_jed_talked,give_item:ration_pack,system_tutorial:bag_basics|Jed's Workshop"
   },
   {
+    "id": "jed_w1_mq01_workshop_brief_1",
+    "speaker": "Jed",
+    "text": "There you are. Set the Cryo-Inductor on the workbench before that cutter shakes itself apart.",
+    "condition": "quest_active:w1_mq01,milestone:ms_w1_mq01_jed_talked,milestone_not_set:ms_w1_mq01_workshop_briefed",
+    "next": "jed_w1_mq01_workshop_brief_2"
+  },
+  {
+    "id": "jed_w1_mq01_workshop_brief_2",
+    "speaker": "Nova",
+    "emote": "puzzled",
+    "text": "The Cryo-Inductor? That's the cold-loop part, right?",
+    "next": "jed_w1_mq01_workshop_brief_3"
+  },
+  {
+    "id": "jed_w1_mq01_workshop_brief_3",
+    "speaker": "Jed",
+    "text": "Right. Use the workbench to repair it into a Functional Cryo-Inductor. One scrap plate, one steady hand. Then your cutter can survive shift clearance.",
+    "trigger": "set_milestone:ms_w1_mq01_workshop_briefed"
+  },
+  {
+    "id": "jed_w1_mq01_repair_done_1",
+    "speaker": "Jed",
+    "text": "That's the hum. Good. Your cutter can pass a load check without cooking your wrist now.",
+    "condition": "quest_completed:w1_mq01,quest_not_started:w1_mq02",
+    "next": "jed_w1_mq01_repair_done_2"
+  },
+  {
+    "id": "jed_w1_mq01_repair_done_2",
+    "speaker": "Nova",
+    "emote": "puzzled",
+    "text": "So I can work the mine.",
+    "next": "jed_w1_mq01_repair_done_3"
+  },
+  {
+    "id": "jed_w1_mq01_repair_done_3",
+    "speaker": "Jed",
+    "text": "If Dominion clears you. Hear that chime? Every Pit worker reports to Transit Checkpoint before the first cage drops. No clearance, no badge. No badge, no mine floor. No mine floor, no quota or scrip.",
+    "next": "jed_w1_mq01_repair_done_4"
+  },
+  {
+    "id": "jed_w1_mq01_repair_done_4",
+    "speaker": "Nova",
+    "emote": "worried",
+    "text": "And Boggs marks me absent.",
+    "next": "jed_w1_mq01_repair_done_5"
+  },
+  {
+    "id": "jed_w1_mq01_repair_done_5",
+    "speaker": "Jed",
+    "text": "Exactly. Get to the checkpoint, let Hank's scanner reject whatever it wants, then find Zeke at the Admin window if the system gets stupid. Move.",
+    "trigger": "start_quest:w1_mq02,track_quest:w1_mq02,advance_quest_stage:w1_mq02:reach_checkpoint,set_milestone:ms_w1_mq02_clearance_ordered"
+  },
+  {
     "id": "jed_default_talk",
     "speaker": "Jed",
     "text": "Grab a seat if you're sticking around. If something starts smoking, hand me the wrench first."

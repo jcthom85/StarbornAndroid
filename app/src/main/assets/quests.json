@@ -46,7 +46,7 @@
           },
           {
             "id": "use_tinkering_table",
-            "text": "Use Jed's tinkering table once."
+            "text": "Use Jed's workbench to craft the Functional Cryo-Inductor."
           }
         ]
       }
@@ -60,9 +60,9 @@
   },
   {
     "id": "w1_mq02",
-    "title": "Paperwork",
-    "summary": "Nova reports for mine shift clearance, but the checkpoint finds something worse than a missing form.",
-    "description": "Report for shift clearance at the Transit Checkpoint, meet Zeke at the Admin window, and survive the Dominion math that marked Nova for recycling.",
+    "title": "Shift Clearance",
+    "summary": "Nova has to clear the Transit Checkpoint before she can work the mine and keep her quota alive.",
+    "description": "Report for shift clearance at the Transit Checkpoint, get a mine badge, and survive the Dominion math that marked Nova for recycling.",
     "flavor": "The system does not hate you. It calculated you.",
     "giver": "Zeke",
     "hub_id": "hub_1_homestead",
@@ -70,7 +70,7 @@
       {
         "id": "reach_checkpoint",
         "title": "Report for Shift Clearance",
-        "description": "Dominion makes every worker pass through the Transit Checkpoint before entering the mine.",
+        "description": "Jed repaired Nova's cutter, but Dominion still makes every worker clear the Transit Checkpoint before entering the mine.",
         "tasks": [
           {
             "id": "approach_admin_gate",

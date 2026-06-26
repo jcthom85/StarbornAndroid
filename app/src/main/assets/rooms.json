@@ -431,9 +431,9 @@
     "state": {},
     "actions": [
       {
-        "name": "Workbench",
+        "name": "workbench",
         "type": "tinkering",
-        "condition_unmet_message": "Jed's workbench is ready. Time to prove you remember which end of the soldering iron gets hot."
+        "condition_unmet_message": "Jed's workbench is ready. Repair the Cryo-Inductor into a Functional Cryo-Inductor before shift clearance."
       },
       {
         "name": "mining cutter",

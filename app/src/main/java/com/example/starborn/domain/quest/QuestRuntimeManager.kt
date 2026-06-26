@@ -301,16 +301,6 @@ class QuestRuntimeManager(
                 appendQuestCompletedLog(questId)
                 emitStateLocked(sessionStore.state.value)
                 val quest = questRepository.questById(questId)
-                val title = quest?.title?.takeIf { it.isNotBlank() } ?: questId
-                if (SHOW_QUEST_BANNERS) {
-                    uiEventBus.tryEmit(
-                        UiEvent.ShowQuestBanner(
-                            type = QuestBannerType.COMPLETED,
-                            questId = questId,
-                            questTitle = title
-                        )
-                    )
-                }
                 uiEventBus.tryEmit(UiEvent.JournalBadgeDelta(+1))
                 quest?.let {
                     val stage = it.stages.lastOrNull()
@@ -521,16 +511,6 @@ class QuestRuntimeManager(
         }
         appendQuestCompletedLog(questId)
         emitStateLocked(sessionStore.state.value)
-        val title = quest.title.takeIf { it.isNotBlank() } ?: questId
-        if (SHOW_QUEST_BANNERS) {
-            uiEventBus.tryEmit(
-                UiEvent.ShowQuestBanner(
-                    type = QuestBannerType.COMPLETED,
-                    questId = questId,
-                    questTitle = title
-                )
-            )
-        }
         uiEventBus.tryEmit(UiEvent.JournalBadgeDelta(+1))
         val stage = quest.stages.lastOrNull()
         emitQuestDetail(QuestBannerType.COMPLETED, quest, stage)

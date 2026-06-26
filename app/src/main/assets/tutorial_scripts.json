@@ -35,12 +35,12 @@
         "id": "scene_tinkering_tutorial",
         "steps": [
             {
-                "message": "At Jed's bench, choose a recipe or tap a slot to pick the item you want to work on.",
-                "context": "Tinkering"
+                "message": "At Jed's workbench, choose the Functional Cryo-Inductor recipe or tap a slot to pick the item you want to repair.",
+                "context": "Workbench"
             },
             {
                 "message": "Check the requirements, add any missing parts, then press Craft when the bench is ready.",
-                "context": "Tinkering",
+                "context": "Workbench",
                 "delay_ms": 2500
             }
         ]
@@ -72,7 +72,7 @@
                 "context": "Market Plaza"
             },
             {
-                "message": "Use the journal tabs to review ally requests and hub summaries as they unlock.",
+                "message": "Use the journal tabs to review active quests, completed quests, and recent updates.",
                 "context": "Market Plaza",
                 "delay_ms": 2000
             }

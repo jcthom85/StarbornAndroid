@@ -43,6 +43,7 @@ data class EventAction(
     val milestones: List<String>? = null,
     @Json(name = "scene_id")
     val sceneId: String? = null,
+    val npc: String? = null,
     val message: String? = null,
     val note: String? = null,
     val reward: EventReward? = null,

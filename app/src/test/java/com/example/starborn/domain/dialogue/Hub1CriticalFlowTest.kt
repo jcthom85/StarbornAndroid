@@ -95,6 +95,7 @@ class Hub1CriticalFlowTest {
 
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("pit_shaft"))
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("workshop_floor"))
+        assertTrue(harness.autoStartedDialogueIds.contains("jed_w1_mq01_workshop_brief_1"))
         harness.events.handleTrigger("player_action", EventPayload.Action("tinkering_screen_entered"))
 
         val afterBenchEntry = harness.store.state.value
@@ -102,6 +103,7 @@ class Hub1CriticalFlowTest {
         assertTrue(!afterBenchEntry.completedQuests.contains("w1_mq01"))
         assertTrue(afterBenchEntry.questTasksCompleted["w1_mq01"].orEmpty().contains("reach_workshop"))
         assertTrue(!afterBenchEntry.questTasksCompleted["w1_mq01"].orEmpty().contains("use_tinkering_table"))
+        assertTrue(afterBenchEntry.completedMilestones.contains("ms_w1_mq01_workshop_briefed"))
         assertTrue(harness.tutorialRequests.contains("menu_save" to "Jed's Workshop"))
 
         harness.events.handleTrigger("player_action", EventPayload.Action("tinkering_craft", "functional_cryo_inductor"))
@@ -110,11 +112,13 @@ class Hub1CriticalFlowTest {
         assertTrue(state.completedQuests.contains("w1_mq01"))
         assertTrue(state.completedMilestones.contains("ms_w1_mq01_complete"))
         assertTrue(state.questTasksCompleted["w1_mq01"].orEmpty().contains("use_tinkering_table"))
+        assertTrue(harness.autoStartedDialogueIds.contains("jed_w1_mq01_repair_done_1"))
+        assertTrue(state.completedMilestones.contains("ms_w1_mq02_clearance_ordered"))
         assertTrue(state.activeQuests.contains("w1_mq02"))
         assertEquals("w1_mq02", state.trackedQuestId)
         assertEquals("reach_checkpoint", state.questStageById["w1_mq02"])
         assertTrue(state.inventory["ration_pack"].orZero() >= 1)
-        assertTrue(harness.narrationMessages.any { it.contains("report to Transit Checkpoint for mine clearance") })
+        assertTrue(harness.narrationMessages.none { it.contains("Transit Checkpoint") })
     }
 
     @Test
@@ -128,11 +132,13 @@ class Hub1CriticalFlowTest {
 
         harness.events.handleTrigger("player_action", EventPayload.Action("w1_sq03_start_loader"))
         harness.events.handleTrigger("player_action", EventPayload.Action("w1_sq03_move_cargo"))
+        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("workshop_dock"))
         harness.events.handleTrigger(
             "encounter_victory",
             EventPayload.EncounterOutcome(
                 enemyIds = listOf("acoustic_bulwark"),
-                outcome = EventPayload.EncounterOutcome.Outcome.VICTORY
+                outcome = EventPayload.EncounterOutcome.Outcome.VICTORY,
+                roomId = "workshop_dock"
             )
         )
 
@@ -337,7 +343,8 @@ class Hub1CriticalFlowTest {
             "encounter_victory",
             EventPayload.EncounterOutcome(
                 enemyIds = listOf("acoustic_bulwark"),
-                outcome = EventPayload.EncounterOutcome.Outcome.VICTORY
+                outcome = EventPayload.EncounterOutcome.Outcome.VICTORY,
+                roomId = "launch_lift"
             )
         )
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("mine_threshold"))
@@ -353,14 +360,15 @@ class Hub1CriticalFlowTest {
         assertTrue(state.unlockedSkills.contains("nova_blast_wave"))
 
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("echo_exit"))
+        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("launch_lift"))
         harness.events.handleTrigger(
             "encounter_victory",
             EventPayload.EncounterOutcome(
                 enemyIds = listOf("acoustic_bulwark"),
-                outcome = EventPayload.EncounterOutcome.Outcome.VICTORY
+                outcome = EventPayload.EncounterOutcome.Outcome.VICTORY,
+                roomId = "launch_lift"
             )
         )
-        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("launch_lift"))
 
         val jed = harness.dialogue.startDialogue("Jed")
         assertEquals("jed_w1_mq04_sacrifice_1", jed?.current()?.id)
@@ -388,7 +396,8 @@ class Hub1CriticalFlowTest {
             "encounter_victory",
             EventPayload.EncounterOutcome(
                 enemyIds = listOf("the_iron_warden"),
-                outcome = EventPayload.EncounterOutcome.Outcome.VICTORY
+                outcome = EventPayload.EncounterOutcome.Outcome.VICTORY,
+                roomId = "launch_bay"
             )
         )
 
@@ -441,7 +450,8 @@ class Hub1CriticalFlowTest {
             "encounter_victory",
             EventPayload.EncounterOutcome(
                 enemyIds = listOf("acoustic_bulwark"),
-                outcome = EventPayload.EncounterOutcome.Outcome.VICTORY
+                outcome = EventPayload.EncounterOutcome.Outcome.VICTORY,
+                roomId = "launch_lift"
             )
         )
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("mine_threshold"))
@@ -463,14 +473,15 @@ class Hub1CriticalFlowTest {
         assertTrue(harness.store.state.value.activeQuests.contains("w1_mq04"))
 
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("echo_exit"))
+        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("launch_lift"))
         harness.events.handleTrigger(
             "encounter_victory",
             EventPayload.EncounterOutcome(
                 enemyIds = listOf("acoustic_bulwark"),
-                outcome = EventPayload.EncounterOutcome.Outcome.VICTORY
+                outcome = EventPayload.EncounterOutcome.Outcome.VICTORY,
+                roomId = "launch_lift"
             )
         )
-        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("launch_lift"))
 
         val jed = harness.dialogue.startDialogue("Jed")
         assertEquals("jed_w1_mq04_sacrifice_1", jed?.current()?.id)
@@ -497,7 +508,8 @@ class Hub1CriticalFlowTest {
             "encounter_victory",
             EventPayload.EncounterOutcome(
                 enemyIds = listOf("the_iron_warden"),
-                outcome = EventPayload.EncounterOutcome.Outcome.VICTORY
+                outcome = EventPayload.EncounterOutcome.Outcome.VICTORY,
+                roomId = "launch_bay"
             )
         )
 
@@ -556,10 +568,11 @@ class Hub1CriticalFlowTest {
     ) {
         val store = GameSessionStore()
         val events: EventManager
-        val dialogue: DialogueService
+        lateinit var dialogue: DialogueService
         val messages = mutableListOf<String>()
         val narrationMessages = mutableListOf<String>()
         val tutorialRequests = mutableListOf<Pair<String?, String?>>()
+        val autoStartedDialogueIds = mutableListOf<String?>()
         private val pendingCinematics = mutableListOf<() -> Unit>()
 
         init {
@@ -579,6 +592,13 @@ class Hub1CriticalFlowTest {
                             done()
                         } else {
                             pendingCinematics += done
+                        }
+                    },
+                    onStartDialogue = { npcName ->
+                        val session = dialogue.startDialogue(npcName)
+                        autoStartedDialogueIds += session?.current()?.id
+                        while (session?.isFinished() == false) {
+                            session.advance()
                         }
                     },
                     onQuestTaskUpdated = { questId, taskId ->

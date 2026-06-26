@@ -63,9 +63,12 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.starborn.BuildConfig
 import com.example.starborn.R
+import com.example.starborn.data.local.UserSettings
 import com.example.starborn.domain.audio.AudioCuePlayer
 import com.example.starborn.domain.audio.AudioCueType
 import com.example.starborn.domain.audio.AudioRouter
+import com.example.starborn.feature.exploration.ui.tabs.SettingsTabContent
+import com.example.starborn.feature.exploration.viewmodel.SettingsUiState
 import com.example.starborn.feature.mainmenu.MainMenuViewModel
 import com.example.starborn.feature.mainmenu.DebugScenario
 import com.example.starborn.feature.mainmenu.DebugScenarioCatalog
@@ -89,6 +92,11 @@ fun MainMenuScreen(
     viewModel: MainMenuViewModel,
     audioCuePlayer: AudioCuePlayer,
     audioRouter: AudioRouter,
+    userSettings: UserSettings,
+    onMusicVolumeChange: (Float) -> Unit,
+    onSfxVolumeChange: (Float) -> Unit,
+    onToggleTutorials: (Boolean) -> Unit,
+    onToggleVignette: (Boolean) -> Unit,
     onStartGame: () -> Unit,
     onStartHub: () -> Unit,
     onSlotLoaded: () -> Unit
@@ -96,6 +104,7 @@ fun MainMenuScreen(
     var startingGame by remember { mutableStateOf(false) }
     var pendingScenario by remember { mutableStateOf<DebugScenario?>(null) }
     var showDebugBrowser by remember { mutableStateOf(false) }
+    var showSettings by remember { mutableStateOf(false) }
     var saveLoadMode by remember { mutableStateOf<String?>(null) }
     val snackbarHostState = remember { SnackbarHostState() }
     val slots by viewModel.slots.collectAsStateWithLifecycle()
@@ -135,6 +144,12 @@ fun MainMenuScreen(
                 loop = true
             )
         )
+    }
+
+    LaunchedEffect(audioCuePlayer, userSettings.musicVolume, userSettings.sfxVolume, userSettings.voiceVolume) {
+        audioCuePlayer.setUserMusicGain(userSettings.musicVolume)
+        audioCuePlayer.setUserSfxGain(userSettings.sfxVolume)
+        audioCuePlayer.setUserVoiceGain(userSettings.voiceVolume)
     }
 
     LaunchedEffect(Unit) {
@@ -259,6 +274,11 @@ fun MainMenuScreen(
                 onClick = { saveLoadMode = "load" },
                 enabled = !startingGame && pendingScenario == null
             )
+            StarbornTitleButton(
+                text = "Settings",
+                onClick = { showSettings = true },
+                enabled = !startingGame && pendingScenario == null
+            )
         }
 
         Text(
@@ -323,6 +343,24 @@ fun MainMenuScreen(
             )
         }
 
+        if (showSettings) {
+            TitleSettingsDialog(
+                settings = SettingsUiState(
+                    musicVolume = userSettings.musicVolume,
+                    sfxVolume = userSettings.sfxVolume,
+                    vignetteEnabled = userSettings.vignetteEnabled,
+                    tutorialsEnabled = userSettings.tutorialsEnabled
+                ),
+                accentColor = accentColor,
+                borderColor = borderColor,
+                onMusicVolumeChange = onMusicVolumeChange,
+                onSfxVolumeChange = onSfxVolumeChange,
+                onToggleTutorials = onToggleTutorials,
+                onToggleVignette = onToggleVignette,
+                onDismiss = { showSettings = false }
+            )
+        }
+
         if (fadeOutAlpha.value > 0.01f) {
             Box(
                 modifier = Modifier
@@ -339,6 +377,50 @@ fun MainMenuScreen(
             )
         }
     }
+}
+
+@Composable
+private fun TitleSettingsDialog(
+    settings: SettingsUiState,
+    accentColor: Color,
+    borderColor: Color,
+    onMusicVolumeChange: (Float) -> Unit,
+    onSfxVolumeChange: (Float) -> Unit,
+    onToggleTutorials: (Boolean) -> Unit,
+    onToggleVignette: (Boolean) -> Unit,
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Settings", fontWeight = FontWeight.Black) },
+        text = {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(max = 520.dp)
+                    .verticalScroll(rememberScrollState())
+            ) {
+                SettingsTabContent(
+                    settings = settings,
+                    accentColor = accentColor,
+                    borderColor = borderColor,
+                    showSaveData = false,
+                    onMusicVolumeChange = onMusicVolumeChange,
+                    onSfxVolumeChange = onSfxVolumeChange,
+                    onToggleTutorials = onToggleTutorials,
+                    onToggleVignette = onToggleVignette,
+                    onQuickSave = {},
+                    onSaveGame = {},
+                    onLoadGame = {}
+                )
+            }
+        },
+        confirmButton = {},
+        dismissButton = { OutlinedButton(onClick = onDismiss) { Text("Close") } },
+        containerColor = TitlePanel,
+        titleContentColor = TitleText,
+        textContentColor = TitleMutedText
+    )
 }
 
 @Composable

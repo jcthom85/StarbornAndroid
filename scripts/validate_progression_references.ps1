@@ -518,6 +518,11 @@ function Validate-Action($action, $context) {
         "system_tutorial" {
             Validate-Tutorial $actionContext (Get-Prop $action "scene_id")
         }
+        "start_dialogue" {
+            if ([string]::IsNullOrWhiteSpace((Get-Prop $action "npc"))) {
+                $errors.Add("$actionContext is missing npc.")
+            }
+        }
         { $_ -in @("begin_node", "set_room", "warp", "set_room_state", "toggle_room_state", "unlock_room_search") } {
             Validate-Room $actionContext (Get-Prop $action "room_id")
         }
