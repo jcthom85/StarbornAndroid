@@ -1,5 +1,10 @@
 # World 1 Vertical Slice Status
 
+## Stateful Room Description Pillar
+
+- World 1 now treats highlighted room words as stateful world interactions, not just embedded buttons. Key onboarding and quest rooms use `description_variants` so room prose changes after actions such as turning on Nova's bunk light, inspecting/rerouting/clearing the Med-Bay vents, thawing the Server Room console, and entering Red Alert escape states.
+- Authoring standard: immediate feedback can appear in a popup, but the room description should preserve the changed truth once the popup is gone. Validators check base, dark, and variant descriptions for inline action discoverability.
+
 Last updated: 2026-06-13
 
 ## Verified Gates
@@ -25,6 +30,8 @@ World 1 reward and economy scripting now has explicit guardrails in progression 
 The current World 1 combat placement covers all seven authored enemy types: Echo-Borer, Siren Skimmer, Dominion Dampener, Acoustic Bulwark, Resonance Buoy, Pressure Hauler, and The Iron Warden. The balance validator distinguishes standard, elite, and boss reward/HP ranges.
 
 World 1 audio now has dedicated generated ambience loops for Homestead colony spaces, Logistics machinery, cold server rooms, emergency launch areas, and Stellarium dust weather. The bindings no longer use forest birds for mine or logistics ambience. Strict audio validation also guards runtime-required title and victory music in addition to bound World 1 exploration/combat/cinematic cues, and `validateWorld1Assets` now rejects World 1 hubs/rooms that cannot resolve both music and ambience through their room or hub binding. Weather-tagged World 1 rooms must also resolve a weather audio layer.
+
+World 1 audio polish now includes short one-shot cues for quest detail presentation, bunk light toggles, terminal bootups, workshop repair success, lockdown escalation, Warden entry, Chime handoff, pod launch, and crash impact. Quest presentation cues are routed through semantic UI bindings, while story and room-state beats use authored `audio_layer` event actions.
 
 ## Current Non-Blocking Issues
 

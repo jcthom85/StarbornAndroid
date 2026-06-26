@@ -68,6 +68,9 @@ To support the "no typing" interaction model, room descriptions use a system of 
 *   **Casing Rule:** Use normal sentence casing. Keywords should not be artificially capitalized unless they start a sentence or are proper nouns.
 *   **Interaction Requirement:** Every keyword found in a description **must** have a corresponding entry in the `actions` array.
 *   **Feedback Loop:** If a keyword is purely for investigation (lore/flavor), use a `GenericAction` with a `condition_unmet_message` to provide the "Examine" text.
+*   **Stateful Text:** Meaningful interactions should update room text through `description_variants` when the environment changes, a clue is revealed, a puzzle advances, or a quest changes the room's meaning.
+*   **Persistent Truth:** Use popups for the immediate moment, but use the room description for what remains true after the action. If a vent clears, a console thaws, a light turns on, or an alarm changes the route, the room text should say so.
+*   **Variant Keywords:** Each description variant should include the actionable words that remain relevant in that state. Do not keep dead keywords in variant prose just to satisfy density.
 
 ---
 

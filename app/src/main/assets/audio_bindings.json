@@ -106,7 +106,10 @@
     "back": "ui_back",
     "menu_open": "ui_confirm",
     "menu_close": "ui_back",
-    "menu_action": "ui_click"
+    "menu_action": "ui_click",
+    "quest_new": "quest_new_stinger",
+    "quest_complete": "quest_complete_stinger",
+    "quest_update": "quest_update_tick"
   },
   "battle": {
     "start": "battle_start",

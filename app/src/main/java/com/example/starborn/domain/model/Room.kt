@@ -33,8 +33,22 @@ data class Room(
     val dark: Boolean? = null,
     @Json(name = "description_dark")
     val descriptionDark: String? = null,
+    @Json(name = "description_variants")
+    val descriptionVariants: List<RoomDescriptionVariant> = emptyList(),
     @Json(name = "title_options")
     val titleOptions: TitleOptions? = null
+)
+
+data class RoomDescriptionVariant(
+    val description: String,
+    @Json(name = "requires_state")
+    val requiresState: Map<String, Boolean> = emptyMap(),
+    @Json(name = "forbidden_state")
+    val forbiddenState: Map<String, Boolean> = emptyMap(),
+    @Json(name = "requires_milestones")
+    val requiresMilestones: List<String> = emptyList(),
+    @Json(name = "forbidden_milestones")
+    val forbiddenMilestones: List<String> = emptyList()
 )
 
 

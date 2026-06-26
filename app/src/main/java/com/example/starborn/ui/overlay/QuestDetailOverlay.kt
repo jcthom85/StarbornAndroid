@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.keyframes
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -71,6 +72,7 @@ fun QuestDetailOverlay(
     deferShowing: Boolean = false,
     modifier: Modifier = Modifier,
     onPresentationVisibleChanged: (Boolean) -> Unit = {},
+    onPresentationStarted: (QuestBannerType) -> Unit = {},
     onShowDetails: (String) -> Unit
 ) {
     val queue = remember { mutableStateListOf<UiEvent.ShowQuestDetail>() }
@@ -95,6 +97,7 @@ fun QuestDetailOverlay(
 
     LaunchedEffect(current, deferShowing, visible) {
         if (current != null && !visible && !deferShowing) {
+            onPresentationStarted(current!!.type)
             visible = true
         }
     }
@@ -174,10 +177,16 @@ private fun QuestDetailCard(
     val shimmerSweep = if (isNewQuest) {
         val transition = rememberInfiniteTransition(label = "new_quest_shimmer")
         transition.animateFloat(
-            initialValue = -0.35f,
-            targetValue = 1.25f,
+            initialValue = -1.0f,
+            targetValue = -1.0f,
             animationSpec = infiniteRepeatable(
-                animation = tween(durationMillis = 2600),
+                animation = keyframes {
+                    durationMillis = 3400
+                    -1.0f at 0
+                    -1.0f at 350
+                    2.0f at 2250
+                    2.0f at 3400
+                },
                 repeatMode = RepeatMode.Restart
             ),
             label = "new_quest_shimmer_sweep"

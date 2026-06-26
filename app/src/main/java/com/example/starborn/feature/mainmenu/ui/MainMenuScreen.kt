@@ -6,6 +6,7 @@ import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.keyframes
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
@@ -531,10 +532,16 @@ private fun StarbornTitleLogo(modifier: Modifier = Modifier) {
         label = "starborn_title_logo_scale"
     )
     val shimmerSweep by transition.animateFloat(
-        initialValue = -0.55f,
-        targetValue = 1.35f,
+        initialValue = -1.1f,
+        targetValue = -1.1f,
         animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 5600),
+            animation = keyframes {
+                durationMillis = 6400
+                -1.1f at 0
+                -1.1f at 900
+                2.1f at 5000
+                2.1f at 6400
+            },
             repeatMode = RepeatMode.Restart
         ),
         label = "starborn_title_logo_sweep"

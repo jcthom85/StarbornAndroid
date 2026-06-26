@@ -222,12 +222,15 @@ class Hub1CriticalFlowTest {
         assertTrue(!harness.store.state.value.questTasksCompleted["w1_sq02"].orEmpty().contains("clear_toxic_blockage"))
         harness.events.handleTrigger("player_action", EventPayload.Action("w1_sq02_patch_vent"))
         assertTrue(harness.store.state.value.questTasksCompleted["w1_sq02"].orEmpty().contains("inspect_cracked_vent"))
+        assertEquals(true, harness.store.state.value.roomStates["medbay_vents"].orEmpty()["vent_inspected"])
         assertTrue(!harness.store.state.value.questTasksCompleted["w1_sq02"].orEmpty().contains("clear_toxic_blockage"))
         harness.events.handleTrigger("player_action", EventPayload.Action("w1_sq02_patch_vent"))
         assertTrue(!harness.store.state.value.questTasksCompleted["w1_sq02"].orEmpty().contains("reroute_airflow"))
         harness.events.handleTrigger("player_action", EventPayload.Action("w1_sq02_reroute_airflow"))
         assertTrue(harness.store.state.value.questTasksCompleted["w1_sq02"].orEmpty().contains("reroute_airflow"))
+        assertEquals(true, harness.store.state.value.roomStates["medbay_vents"].orEmpty()["airflow_rerouted"])
         harness.events.handleTrigger("player_action", EventPayload.Action("w1_sq02_clear_toxic_blockage"))
+        assertEquals(true, harness.store.state.value.roomStates["medbay_vents"].orEmpty()["toxic_blockage_cleared"])
 
         val turnIn = harness.dialogue.startDialogue("Doc")
         assertEquals("doc_w1_sq02_turnin_1", turnIn?.current()?.id)
@@ -263,6 +266,7 @@ class Hub1CriticalFlowTest {
         state = harness.store.state.value
         var completedTasks = state.questTasksCompleted["w1_sq04"].orEmpty()
         assertTrue(state.activeQuests.contains("w1_sq04"))
+        assertEquals(true, state.roomStates["server_hub"].orEmpty()["rebel_terminal_found"])
         assertTrue(completedTasks.contains("enter_server_room"))
         assertTrue(completedTasks.contains("locate_hacked_terminal"))
         assertTrue(!completedTasks.contains("restore_protocol_spoof"))
@@ -277,6 +281,7 @@ class Hub1CriticalFlowTest {
         harness.events.handleTrigger("player_action", EventPayload.Action("w1_sq04_thaw_console"))
         state = harness.store.state.value
         completedTasks = state.questTasksCompleted["w1_sq04"].orEmpty()
+        assertEquals(true, state.roomStates["server_hub"].orEmpty()["console_thawed"])
         assertTrue(completedTasks.contains("restore_protocol_spoof"))
         assertTrue(!completedTasks.contains("apply_access_override"))
 
@@ -285,6 +290,7 @@ class Hub1CriticalFlowTest {
         completedTasks = state.questTasksCompleted["w1_sq04"].orEmpty()
         assertTrue(state.completedQuests.contains("w1_sq04"))
         assertTrue(!state.activeQuests.contains("w1_sq04"))
+        assertEquals(true, state.roomStates["server_hub"].orEmpty()["override_applied"])
         assertTrue(completedTasks.contains("apply_access_override"))
         assertTrue(state.inventory["circuit_board"].orZero() >= 1)
     }

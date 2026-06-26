@@ -118,6 +118,54 @@ SFX_CATALOG = {
         "text": "A soft, downward acoustic wood click, clean decay, back button feedback",
         "duration": 0.5,
     },
+    "quest_new_stinger": {
+        "text": "A short JRPG quest accepted stinger, warm acoustic chime over a dry metal tick, hopeful upward motion, dusty sci-fi interface, clean 1 second tail",
+        "duration": 1.4,
+    },
+    "quest_complete_stinger": {
+        "text": "A short JRPG quest complete stinger, warm acoustic guitar harmonic and soft brass swell, dry industrial room tone, satisfying resolution, clean 2 second tail",
+        "duration": 2.2,
+    },
+    "quest_update_tick": {
+        "text": "A compact quest log update tick, dry mechanical relay click followed by a small wooden chime, subtle positive UI feedback, very short tail",
+        "duration": 0.7,
+    },
+    "sfx_bunk_light_on": {
+        "text": "A dusty bunkroom light switch clicks on, tired fluorescent tube buzzes and warms up, small electrical pop, dry cramped metal room, no rain, no storm",
+        "duration": 1.2,
+    },
+    "sfx_bunk_light_off": {
+        "text": "A dusty bunkroom light switch clicks off, fluorescent buzz drops into silence, tiny electrical tick, dry cramped metal room, no rain, no storm",
+        "duration": 0.9,
+    },
+    "sfx_terminal_boot": {
+        "text": "A Dominion terminal boots under cold corporate power, dry relay clicks, soft CRT hum, tiny data chirps, sterile sci-fi console, no melody",
+        "duration": 1.6,
+    },
+    "sfx_workshop_success": {
+        "text": "A tinkering bench repair succeeds, small ratchet twist, solder pop, warm metal chime, dusty workshop acoustics, satisfying handcrafted sci-fi gadget sound",
+        "duration": 1.4,
+    },
+    "sfx_security_lockdown": {
+        "text": "A Dominion lockdown alarm sting, heavy blast door thud, red warning siren pulse, dry industrial hallway, urgent but short, no music",
+        "duration": 2.0,
+    },
+    "sfx_warden_entry": {
+        "text": "A massive security mech powers up, heavy servo rise, low metal footstep impact, hydraulic pressure release, intimidating industrial boss entrance, short tail",
+        "duration": 2.3,
+    },
+    "sfx_chime_splice": {
+        "text": "A relic chime splices into a sci-fi console, crystalline resonance overtakes dry circuitry, harmonic shimmer, deep sub pressure, clean magical technology sound",
+        "duration": 2.0,
+    },
+    "sfx_pod_launch": {
+        "text": "A mining escape pod launches from a rail, hydraulic clamps release, engine ignition roar, metal tunnel rush, urgent dry industrial sci-fi launch",
+        "duration": 3.0,
+    },
+    "sfx_crash_impact": {
+        "text": "A violent escape pod crash impact, metal hull buckles, glass-safe debris scatter, deep sub hit, abrupt air pressure drop, cinematic short tail",
+        "duration": 2.0,
+    },
     "battle_start": {
         "text": "A dramatic orchestral brass stab, rising energy, JRPG combat transition sound, low rumble impact",
         "duration": 1.5,

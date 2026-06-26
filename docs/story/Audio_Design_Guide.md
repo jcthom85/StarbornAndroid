@@ -150,6 +150,14 @@ To ensure consistent character voices during generation using the ElevenLabs API
 ## 4. ElevenLabs Sound Effects (SFX) Prompting Catalog
 For generating sound effects that fit the tactile, acoustic nature of Starborn, use the following prompt templates:
 
+### Vertical Slice Quest & Story Feedback
+World 1 uses short one-shot cues to make the room text and quest beats feel authored rather than silent UI state changes.
+
+* **Quest Detail Popups:** `quest_new_stinger`, `quest_complete_stinger`, and `quest_update_tick` are bound through `audio_bindings.json` and should fire when the popup becomes visible, not when it is queued.
+* **Room-State Actions:** state-changing room actions should use `audio_layer` event actions for tactile feedback. Example cues: `sfx_bunk_light_on`, `sfx_bunk_light_off`, `sfx_terminal_boot`, and `sfx_workshop_success`.
+* **Major Story Stingers:** high-stakes World 1 beats should use short `stinger`/battle-layer cues such as `sfx_security_lockdown`, `sfx_warden_entry`, `sfx_chime_splice`, `sfx_pod_launch`, and `sfx_crash_impact`.
+* **Tone Rule:** World 1 SFX should stay dry, dusty, mechanical, and close-miked unless Source resonance is explicitly involved.
+
 ### UI / System Cues
 *   **Menu Navigation Click:**  
     `"A short, dry, high-pitched mechanical wood-and-metal click, transient spike, clean tail, user interface sound"`

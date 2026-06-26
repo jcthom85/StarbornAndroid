@@ -238,6 +238,7 @@ import com.example.starborn.ui.background.rememberRoomBackgroundPainter
 import java.util.Locale
 import com.example.starborn.ui.events.UiEvent
 import com.example.starborn.ui.events.UiEventBus
+import com.example.starborn.ui.events.QuestBannerType
 import com.example.starborn.ui.overlay.ProgressToastOverlay
 import com.example.starborn.ui.overlay.QuestBannerOverlay
 import com.example.starborn.ui.overlay.QuestDetailOverlay
@@ -510,15 +511,13 @@ fun ExplorationScreen(
             }
             resolved
         }
-        val baseRoomDescription = remember(currentRoom, uiState.roomState, isRoomDark) {
-            currentRoom?.let { room ->
-                if (isRoomDark) {
-                    room.descriptionDark?.takeIf { it.isNotBlank() }
-                        ?: "It's too dark to make out the room."
-                } else {
-                    room.description
-                }
-            }
+        val baseRoomDescription = remember(currentRoom, uiState.roomState, uiState.completedMilestones, isRoomDark) {
+            resolveRoomDescription(
+                room = currentRoom,
+                roomState = uiState.roomState,
+                completedMilestones = uiState.completedMilestones,
+                isRoomDark = isRoomDark
+            )
         }
 
         val activeWeatherId = debugWeatherOverride ?: currentRoom?.weather ?: defaultWeatherForEnvironment(currentRoom?.env)
@@ -1116,6 +1115,15 @@ fun ExplorationScreen(
             outlineColor = panelBorderColor,
             deferShowing = questDetailBlockingOverlayActive,
             onPresentationVisibleChanged = { importantQuestPopupVisible = it },
+            onPresentationStarted = { type ->
+                val cueKey = when (type) {
+                    QuestBannerType.NEW -> "quest_new"
+                    QuestBannerType.COMPLETED -> "quest_complete"
+                    QuestBannerType.PROGRESS -> "quest_update"
+                    QuestBannerType.FAILED -> "error"
+                }
+                viewModel.playQuestPresentationCue(cueKey)
+            },
             onShowDetails = { questId ->
                 viewModel.openQuestDetails(questId)
             },
@@ -4895,6 +4903,27 @@ private fun buildInlineActionPlan(
     if (segments.isEmpty()) return null
     segments.sortBy { it.start }
     return InlineActionPlan(description = parsedDescription, segments = segments)
+}
+
+fun resolveRoomDescription(
+    room: Room?,
+    roomState: Map<String, Boolean>,
+    completedMilestones: Set<String>,
+    isRoomDark: Boolean
+): String? {
+    if (room == null) return null
+    if (isRoomDark) {
+        return room.descriptionDark?.takeIf { it.isNotBlank() }
+            ?: "It's too dark to make out the room."
+    }
+    val variant = room.descriptionVariants.firstOrNull { variant ->
+        variant.description.isNotBlank() &&
+            variant.requiresState.all { (key, expected) -> roomState[key] == expected } &&
+            variant.forbiddenState.none { (key, forbidden) -> roomState[key] == forbidden } &&
+            variant.requiresMilestones.all { it in completedMilestones } &&
+            variant.forbiddenMilestones.none { it in completedMilestones }
+    }
+    return variant?.description ?: room.description
 }
 
 private fun RoomAction.isInlineDescriptionAction(): Boolean = when (this) {

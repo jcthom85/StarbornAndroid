@@ -429,13 +429,13 @@
       "action": "w1_mq01_turn_on_bunk_light"
     },
     "repeatable": true,
-    "conditions": [
-      {
-        "type": "quest_active",
-        "quest_id": "w1_mq01"
-      }
-    ],
     "actions": [
+      {
+        "type": "audio_layer",
+        "layer": "ui",
+        "cue_id": "sfx_bunk_light_on",
+        "fade_ms": 0
+      },
       {
         "type": "set_room_state",
         "room_id": "pit_nova_bunk",
@@ -470,6 +470,34 @@
     ]
   },
   {
+    "id": "w1_mq01_turn_off_bunk_light",
+    "description": "Turns off Nova's bunk light and returns the room to darkness.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w1_mq01_turn_off_bunk_light"
+    },
+    "repeatable": true,
+    "actions": [
+      {
+        "type": "audio_layer",
+        "layer": "ui",
+        "cue_id": "sfx_bunk_light_off",
+        "fade_ms": 0
+      },
+      {
+        "type": "set_room_state",
+        "room_id": "pit_nova_bunk",
+        "state_key": "light_on",
+        "value": false
+      },
+      {
+        "type": "narrate",
+        "message": "The bunk light clicks off. Darkness folds back over the room, leaving only the hum of old vents.",
+        "tap_to_dismiss": true
+      }
+    ]
+  },
+  {
     "id": "w1_mq01_check_bunk",
     "description": "Lets Nova inspect her bunk during Wake Up Call.",
     "trigger": {
@@ -484,6 +512,12 @@
       }
     ],
     "actions": [
+      {
+        "type": "set_room_state",
+        "room_id": "pit_nova_bunk",
+        "state_key": "bunk_checked",
+        "value": true
+      },
       {
         "type": "narrate",
         "message": "The bunk is hard, narrow, and still warm from the few hours of sleep you stole from the shift clock. It is not much, but it is yours.",
@@ -732,6 +766,12 @@
     ],
     "actions": [
       {
+        "type": "audio_layer",
+        "layer": "ui",
+        "cue_id": "sfx_workshop_success",
+        "fade_ms": 0
+      },
+      {
         "type": "set_quest_task_done",
         "quest_id": "w1_mq01",
         "task_id": "use_tinkering_table"
@@ -828,6 +868,12 @@
       }
     ],
     "actions": [
+      {
+        "type": "audio_layer",
+        "layer": "ui",
+        "cue_id": "sfx_terminal_boot",
+        "fade_ms": 0
+      },
       {
         "type": "advance_quest_stage",
         "quest_id": "w1_mq02",
@@ -946,6 +992,12 @@
     ],
     "actions": [
       {
+        "type": "set_room_state",
+        "room_id": "medbay_vents",
+        "state_key": "vent_inspected",
+        "value": true
+      },
+      {
         "type": "set_quest_task_done",
         "quest_id": "w1_sq02",
         "task_id": "inspect_cracked_vent"
@@ -1011,6 +1063,12 @@
     ],
     "actions": [
       {
+        "type": "set_room_state",
+        "room_id": "medbay_vents",
+        "state_key": "airflow_rerouted",
+        "value": true
+      },
+      {
         "type": "set_quest_task_done",
         "quest_id": "w1_sq02",
         "task_id": "reroute_airflow"
@@ -1070,6 +1128,12 @@
       }
     ],
     "actions": [
+      {
+        "type": "set_room_state",
+        "room_id": "medbay_vents",
+        "state_key": "toxic_blockage_cleared",
+        "value": true
+      },
       {
         "type": "set_quest_task_done",
         "quest_id": "w1_sq02",
@@ -2133,6 +2197,12 @@
     ],
     "actions": [
       {
+        "type": "audio_layer",
+        "layer": "stinger",
+        "cue_id": "sfx_security_lockdown",
+        "fade_ms": 0
+      },
+      {
         "type": "start_quest",
         "quest_id": "w1_mq04"
       },
@@ -2233,6 +2303,12 @@
       }
     ],
     "actions": [
+      {
+        "type": "audio_layer",
+        "layer": "stinger",
+        "cue_id": "sfx_security_lockdown",
+        "fade_ms": 0
+      },
       {
         "type": "narrate",
         "message": "A blast door slams shut somewhere behind Nova. Zeke's voice crackles through the alarm: 'Keep moving. I can keep the lift gate confused, but not for long.'",
@@ -2344,6 +2420,12 @@
     ],
     "actions": [
       {
+        "type": "audio_layer",
+        "layer": "stinger",
+        "cue_id": "sfx_chime_splice",
+        "fade_ms": 0
+      },
+      {
         "type": "set_quest_task_done",
         "quest_id": "w1_mq04",
         "task_id": "receive_chime"
@@ -2429,6 +2511,12 @@
       }
     ],
     "actions": [
+      {
+        "type": "audio_layer",
+        "layer": "stinger",
+        "cue_id": "sfx_warden_entry",
+        "fade_ms": 0
+      },
       {
         "type": "set_quest_task_done",
         "quest_id": "w1_mq05",
@@ -2524,6 +2612,12 @@
         "milestone": "ms_w1_chime_spliced",
         "do": [
           {
+            "type": "audio_layer",
+            "layer": "stinger",
+            "cue_id": "sfx_pod_launch",
+            "fade_ms": 0
+          },
+          {
             "type": "set_quest_task_done",
             "quest_id": "w1_mq05",
             "task_id": "launch_from_colony"
@@ -2532,6 +2626,12 @@
             "type": "play_cinematic",
             "scene_id": "scene_launch_crash",
             "on_complete": [
+              {
+                "type": "audio_layer",
+                "layer": "stinger",
+                "cue_id": "sfx_crash_impact",
+                "fade_ms": 0
+              },
               {
                 "type": "set_quest_task_done",
                 "quest_id": "w1_mq05",
@@ -2582,8 +2682,20 @@
     ],
     "actions": [
       {
+        "type": "audio_layer",
+        "layer": "ui",
+        "cue_id": "sfx_terminal_boot",
+        "fade_ms": 0
+      },
+      {
         "type": "start_quest",
         "quest_id": "w1_sq04"
+      },
+      {
+        "type": "set_room_state",
+        "room_id": "server_hub",
+        "state_key": "rebel_terminal_found",
+        "value": true
       },
       {
         "type": "track_quest",
@@ -2629,6 +2741,18 @@
       }
     ],
     "actions": [
+      {
+        "type": "audio_layer",
+        "layer": "ui",
+        "cue_id": "sfx_terminal_boot",
+        "fade_ms": 0
+      },
+      {
+        "type": "set_room_state",
+        "room_id": "server_hub",
+        "state_key": "console_thawed",
+        "value": true
+      },
       {
         "type": "set_quest_task_done",
         "quest_id": "w1_sq04",
@@ -2714,6 +2838,12 @@
       }
     ],
     "actions": [
+      {
+        "type": "set_room_state",
+        "room_id": "server_hub",
+        "state_key": "override_applied",
+        "value": true
+      },
       {
         "type": "play_cinematic",
         "scene_id": "scene_sq04_hack"

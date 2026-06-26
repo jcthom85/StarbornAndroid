@@ -215,6 +215,29 @@ function Test-InlineActionNameAppearsInDescription([string]$label, [string]$desc
     return $false
 }
 
+function Get-RoomInlineDescriptions($room) {
+    $descriptions = New-Object System.Collections.Generic.List[string]
+    if (-not [string]::IsNullOrWhiteSpace([string]$room.description)) {
+        [void]$descriptions.Add([string]$room.description)
+    }
+    if (-not [string]::IsNullOrWhiteSpace([string]$room.description_dark)) {
+        [void]$descriptions.Add([string]$room.description_dark)
+    }
+    foreach ($variant in As-Array $room.description_variants) {
+        if (-not [string]::IsNullOrWhiteSpace([string]$variant.description)) {
+            [void]$descriptions.Add([string]$variant.description)
+        }
+    }
+    return @($descriptions)
+}
+
+function Test-InlineActionNameAppearsInAnyDescription([string]$label, $room) {
+    foreach ($description in Get-RoomInlineDescriptions $room) {
+        if (Test-InlineActionNameAppearsInDescription $label $description) { return $true }
+    }
+    return $false
+}
+
 function Validate-PolishedCopy($context, $text) {
     if (Has-PlaceholderCopy $text) {
         $errors.Add("$context contains placeholder copy: '$text'.")
@@ -314,6 +337,11 @@ foreach ($room in $world1Rooms) {
     foreach ($entry in $room.enemy_flavor.PSObject.Properties) {
         Validate-OptionalCopy "Room '$($room.id)' enemy_flavor '$($entry.Name)'" $entry.Value
     }
+    $variantIndex = 0
+    foreach ($variant in As-Array $room.description_variants) {
+        $variantIndex++
+        Validate-RequiredCopy "Room '$($room.id)' description variant $variantIndex" $variant.description
+    }
     foreach ($entry in $room.blocked_directions.PSObject.Properties) {
         $block = $entry.Value
         Validate-OptionalCopy "Room '$($room.id)' blocked '$($entry.Name)' locked message" $block.message_locked
@@ -325,8 +353,8 @@ foreach ($room in $world1Rooms) {
         Validate-OptionalCopy "$actionContext condition_unmet_message" $action.condition_unmet_message
         Validate-OptionalCopy "$actionContext already_open_message" $action.already_open_message
         Validate-OptionalCopy "$actionContext popup_title" $action.popup_title
-        if (-not (Test-InlineActionNameAppearsInDescription ([string]$action.name) ([string]$room.description))) {
-            $warnings.Add("$actionContext is not mentioned in the room description, so it cannot be highlighted or tapped inline.")
+        if (-not (Test-InlineActionNameAppearsInAnyDescription ([string]$action.name) $room)) {
+            $warnings.Add("$actionContext is not mentioned in any room description, so it cannot be highlighted or tapped inline.")
         }
     }
 }

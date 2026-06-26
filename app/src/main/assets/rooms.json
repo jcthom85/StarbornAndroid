@@ -217,6 +217,21 @@
     "background_image": "images/rooms/world_1/pit_nova_bunk_v5.png",
     "description": "Your bunk is a narrow shelf in the colony wall, barely wide enough to dream sideways. The bunk light buzzes above cargo netting that holds your tools, your spare ration, and the little pieces of yourself Dominion has not inventoried yet.",
     "description_dark": "The room is dead black except for the emergency glow around your bunk light.",
+    "description_variants": [
+      {
+        "requires_state": {
+          "light_on": true,
+          "bunk_checked": true
+        },
+        "description": "The bunk light steadies into a cheap yellow halo. Your bunk is still hard and narrow, the netting still sags with tools and rations, but now the door seam is visible enough to leave without cracking your shin."
+      },
+      {
+        "requires_state": {
+          "light_on": true
+        },
+        "description": "The bunk light buzzes awake, sketching the room back into shape: your narrow bunk, the cargo netting, the scratched floor, and the door out to the sleeping level."
+      }
+    ],
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -254,6 +269,7 @@
         "label_on": "Turn on",
         "label_off": "Turn off",
         "action_event_on": "w1_mq01_turn_on_bunk_light",
+        "action_event_off": "w1_mq01_turn_off_bunk_light",
         "condition_unmet_message": "The wall switch is cold under your fingers."
       },
       {
@@ -752,6 +768,26 @@
     "title": "Ventilation Hub",
     "background_image": "images/rooms/world_1/medbay_vents_v3.png",
     "description": "Rusted fans and patched pipes keep the med-bay breathing by sheer habit. A cracked vent hisses chemical haze into the room, and a toxic blockage swells in the updraft while a skimmer circles overhead.",
+    "description_variants": [
+      {
+        "requires_state": {
+          "toxic_blockage_cleared": true
+        },
+        "description": "The fans settle into a cleaner rhythm, and the cracked vent only ticks as it cools. The toxic blockage is gone; patched pipes still complain, but the med-bay can finally breathe."
+      },
+      {
+        "requires_state": {
+          "airflow_rerouted": true
+        },
+        "description": "The fans grind in reverse, pulling green haze away from the cracked vent and bunching it around the toxic blockage. Patched pipes shudder as the system tries to remember how clean air works."
+      },
+      {
+        "requires_state": {
+          "vent_inspected": true
+        },
+        "description": "The cracked vent leaks because pressure is trapped behind the fans. Patched pipes hammer in the walls, and the toxic blockage swells each time the airflow stutters."
+      }
+    ],
     "npcs": [],
     "items": [],
     "enemies": [
@@ -1764,6 +1800,26 @@
     "title": "The Core Hub",
     "background_image": "images/rooms/world_1/server_hub.png",
     "description": "The primary mainframe terminal glows with sterile blue light. A frozen console sits below it, its keys filmed with condensation and old fingerprints.",
+    "description_variants": [
+      {
+        "requires_state": {
+          "override_applied": true
+        },
+        "description": "The mainframe terminal has gone carefully blank, hiding the stolen access route under ordinary Dominion silence. The console is thawed now, its last rebel command burned into a cracked circuit board."
+      },
+      {
+        "requires_state": {
+          "console_thawed": true
+        },
+        "description": "The frozen console has thawed just enough for input, and the mainframe terminal waits with the rebel spoof queued beneath Dominion compliance layers."
+      },
+      {
+        "requires_state": {
+          "rebel_terminal_found": true
+        },
+        "description": "A dead rebel login flickers beneath the mainframe terminal while the frozen console drops inputs through stiff, ice-slick keys."
+      }
+    ],
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -2480,6 +2536,17 @@
     "title": "Maintenance Access",
     "background_image": "images/rooms/world_1/launch_access.png",
     "description": "A final, narrow crawl through the colony's gut, filled with humming conduits, hot pipes, and red strobes racing toward the cargo lift. The sirens are muffled here, but the walls thump like something huge is closing in.",
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w1_mq03_complete"
+        ],
+        "forbidden_milestones": [
+          "ms_w1_mq04_complete"
+        ],
+        "description": "Red strobes race along the conduits toward the cargo lift while pipes hammer hard enough to sound like pursuit. Zeke's spoof is holding the gate open somewhere ahead, but the route feels like it is shrinking behind you."
+      }
+    ],
     "npcs": [],
     "items": [],
     "enemies": [
@@ -2580,6 +2647,17 @@
     "title": "Cargo Lift",
     "background_image": "images/rooms/world_1/launch_lift.png",
     "description": "A heavy industrial platform bucks beside a manual override panel. The hydraulics scream under emergency power, and security shutters keep trying to bite the lift closed.",
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w1_mq03_complete"
+        ],
+        "forbidden_milestones": [
+          "ms_w1_mq04_complete"
+        ],
+        "description": "The cargo lift bucks under emergency power, trapped between the override panel and a hostile lockdown. The hydraulics scream as security shutters try to close around the platform."
+      }
+    ],
     "npcs": [],
     "items": [],
     "enemies": [

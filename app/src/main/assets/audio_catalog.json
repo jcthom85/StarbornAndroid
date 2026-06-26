@@ -251,6 +251,114 @@
       "fade_out_ms": 140
     },
     {
+      "id": "quest_new_stinger",
+      "category": "ui",
+      "priority": 4,
+      "gain": 0.82,
+      "fade_in_ms": 0,
+      "fade_out_ms": 260,
+      "duration_ms": 1400
+    },
+    {
+      "id": "quest_complete_stinger",
+      "category": "ui",
+      "priority": 4,
+      "gain": 0.86,
+      "fade_in_ms": 0,
+      "fade_out_ms": 360,
+      "duration_ms": 2200
+    },
+    {
+      "id": "quest_update_tick",
+      "category": "ui",
+      "priority": 2,
+      "gain": 0.72,
+      "fade_in_ms": 0,
+      "fade_out_ms": 140,
+      "duration_ms": 700
+    },
+    {
+      "id": "sfx_bunk_light_on",
+      "category": "ui",
+      "priority": 3,
+      "gain": 0.82,
+      "fade_in_ms": 0,
+      "fade_out_ms": 220,
+      "duration_ms": 1200
+    },
+    {
+      "id": "sfx_bunk_light_off",
+      "category": "ui",
+      "priority": 3,
+      "gain": 0.78,
+      "fade_in_ms": 0,
+      "fade_out_ms": 180,
+      "duration_ms": 900
+    },
+    {
+      "id": "sfx_terminal_boot",
+      "category": "ui",
+      "priority": 3,
+      "gain": 0.78,
+      "fade_in_ms": 0,
+      "fade_out_ms": 260,
+      "duration_ms": 1600
+    },
+    {
+      "id": "sfx_workshop_success",
+      "category": "ui",
+      "priority": 3,
+      "gain": 0.82,
+      "fade_in_ms": 0,
+      "fade_out_ms": 220,
+      "duration_ms": 1400
+    },
+    {
+      "id": "sfx_security_lockdown",
+      "category": "battle",
+      "priority": 5,
+      "gain": 0.9,
+      "fade_in_ms": 0,
+      "fade_out_ms": 320,
+      "duration_ms": 2000
+    },
+    {
+      "id": "sfx_warden_entry",
+      "category": "battle",
+      "priority": 5,
+      "gain": 0.92,
+      "fade_in_ms": 0,
+      "fade_out_ms": 380,
+      "duration_ms": 2300
+    },
+    {
+      "id": "sfx_chime_splice",
+      "category": "battle",
+      "priority": 5,
+      "gain": 0.88,
+      "fade_in_ms": 0,
+      "fade_out_ms": 360,
+      "duration_ms": 2000
+    },
+    {
+      "id": "sfx_pod_launch",
+      "category": "battle",
+      "priority": 5,
+      "gain": 0.94,
+      "fade_in_ms": 0,
+      "fade_out_ms": 420,
+      "duration_ms": 3000
+    },
+    {
+      "id": "sfx_crash_impact",
+      "category": "battle",
+      "priority": 5,
+      "gain": 0.96,
+      "fade_in_ms": 0,
+      "fade_out_ms": 420,
+      "duration_ms": 2000
+    },
+    {
       "id": "battle_start",
       "category": "battle",
       "priority": 5,

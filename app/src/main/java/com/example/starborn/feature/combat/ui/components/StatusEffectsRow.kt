@@ -280,10 +280,16 @@ fun ShieldFieldOverlay(
         label = "shield_pulse"
     )
     val sweep by transition.animateFloat(
-        initialValue = 0f,
-        targetValue = 1f,
+        initialValue = -1f,
+        targetValue = -1f,
         animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 1900, easing = LinearEasing),
+            animation = keyframes {
+                durationMillis = 2600
+                -1f at 0
+                -1f at 260
+                2f at 1800
+                2f at 2600
+            },
             repeatMode = RepeatMode.Restart
         ),
         label = "shield_sweep"
@@ -306,7 +312,7 @@ fun ShieldFieldOverlay(
         drawRect(brush = base, blendMode = maskBlend)
 
         val bandWidth = size.minDimension * 0.55f
-        val x = (size.width + bandWidth) * sweep - bandWidth
+        val x = size.width * sweep
         val shimmer = Brush.linearGradient(
             colors = listOf(
                 Color.Transparent,

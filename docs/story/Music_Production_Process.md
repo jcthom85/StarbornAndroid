@@ -143,6 +143,17 @@ Add your assets to the game's data catalogs.
     }
     ```
 
+For one-shot story or quest cues, also register the cue under `cues` in `audio_catalog.json`. Use `audio_bindings.json` only for semantic UI keys such as `quest_new`, `quest_complete`, and `quest_update`; story events should reference the concrete cue through an `audio_layer` action.
+
+```json
+{
+  "type": "audio_layer",
+  "layer": "ui",
+  "cue_id": "sfx_terminal_boot",
+  "fade_ms": 0
+}
+```
+
 ### Step 4: Real-time Debugging & Verification
 1.  Run the application locally.
 2.  Verify the transition from Homestead Quarter to combat:

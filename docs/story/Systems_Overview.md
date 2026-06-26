@@ -30,7 +30,9 @@ Known tooling direction: a growing suite of editors and an AI assistant panel to
 - Screen is portrait. Main text window occupies ~75% of the top portion with the room title above it (stylized pixel font).
 - Room description includes highlighted/interactive words (bold/glow).
 - Tapping a highlighted word opens an action menu (e.g., examine, use, talk, take, toggle), or triggers the action directly if only one logical option exists (accompanied by a narrative popup).
-- Actions can change the room description (stateful text).
+- Actions can change the room description (stateful text). This is a core exploration pillar: highlighted words are not just buttons, they are ways for the player to change what the room is, what it reveals, or what it proves.
+- Room descriptions can define authored `description_variants` that resolve from persistent room state and milestones. Use them when an interaction changes environmental truth, clue visibility, danger, objective context, or post-quest aftermath.
+- Popups should deliver immediate feedback; the room description should carry the persistent changed state after the popup is dismissed.
 - Discovered exits persist for navigation clarity.
 - No typing: all movement and actions are UI-driven.
 

@@ -2146,6 +2146,11 @@ class ExplorationViewModel(
         playVoiceCue(cueId, force = true)
     }
 
+    fun playQuestPresentationCue(key: String) {
+        if (key.isBlank()) return
+        playUiCue(key)
+    }
+
     private fun resolveNpcDialogueName(npcName: String): String {
         val key = npcName.trim().lowercase(Locale.getDefault())
         return npcDialogueNameByKey[key] ?: npcName
@@ -2159,9 +2164,11 @@ class ExplorationViewModel(
     }
 
     fun onActionSelected(action: RoomAction) {
-        playUiCue("click")
-        dismissBlockedPrompt()
         val actionHint = _uiState.value.actionHints[action.actionKey()]
+        if (actionHint?.locked != true && !action.hasAuthoredAudioCue()) {
+            playUiCue("click")
+        }
+        dismissBlockedPrompt()
         if (actionHint?.locked == true) {
             val message = actionHint.message?.takeIf { it.isNotBlank() }
                 ?: "That isn't available yet."
@@ -2184,6 +2191,31 @@ class ExplorationViewModel(
         }
         updateActionHints(_uiState.value.currentRoom)
     }
+
+    private fun RoomAction.hasAuthoredAudioCue(): Boolean =
+        eventIdsForAction().any { eventId -> eventHasAudioCue(eventId) }
+
+    private fun RoomAction.eventIdsForAction(): List<String> = when (this) {
+        is ToggleAction -> {
+            val currentState = _uiState.value.roomState[stateKey] ?: false
+            val eventId = if (!currentState) actionEventOn else actionEventOff
+            listOfNotNull(eventId?.takeIf { it.isNotBlank() })
+        }
+        is ContainerAction -> listOfNotNull(actionEvent?.takeIf { it.isNotBlank() })
+        is FirstAidAction -> listOfNotNull(actionEvent?.takeIf { it.isNotBlank() })
+        is ShopAction -> listOfNotNull(actionEvent?.takeIf { it.isNotBlank() })
+        is GenericAction -> listOfNotNull(actionEvent?.takeIf { it.isNotBlank() })
+        else -> emptyList()
+    }
+
+    private fun eventHasAudioCue(eventId: String): Boolean =
+        eventsById[eventId]?.actions.orEmpty().any(::eventActionHasAudioCue)
+
+    private fun eventActionHasAudioCue(action: EventAction): Boolean =
+        action.type.equals("audio_layer", ignoreCase = true) ||
+            action.onComplete.orEmpty().any(::eventActionHasAudioCue) ||
+            action.`do`.orEmpty().any(::eventActionHasAudioCue) ||
+            action.elseDo.orEmpty().any(::eventActionHasAudioCue)
 
     private fun handleToggleAction(action: ToggleAction) {
         val stateKey = action.stateKey
