@@ -41,13 +41,14 @@ class AudioRouter(
         hubId: String?,
         roomId: String?,
         weatherId: String? = null,
-        tags: Set<String> = emptySet()
+        tags: Set<String> = emptySet(),
+        suppressMusic: Boolean = false
     ): List<AudioCommand> {
         val commands = mutableListOf<AudioCommand>()
 
-        var desiredMusic = hubId?.let { bindings.music[it] }.normalize()
+        var desiredMusic = if (suppressMusic) null else hubId?.let { bindings.music[it] }.normalize()
         if (desiredMusic == null) {
-            desiredMusic = findTracksByTags(tags, AudioCueType.MUSIC).firstOrNull()
+            desiredMusic = if (suppressMusic) null else findTracksByTags(tags, AudioCueType.MUSIC).firstOrNull()
         }
 
         val desiredAmbientLayers = parseCueLayers(

@@ -125,7 +125,7 @@ class AppServices(context: Context) {
     fun cinematicStateFlow() = cinematicCoordinator.state
     private val audioBindings: AudioBindings = assetReader.readObject<AudioBindings>("audio_bindings.json") ?: AudioBindings()
     private val audioCatalog: AudioCatalog = assetReader.readObject<AudioCatalog>("audio_catalog.json") ?: AudioCatalog()
-    val audioCuePlayer = AudioCuePlayer(context)
+    val audioCuePlayer = AudioCuePlayer(context, preloadCueIds = audioCatalog.cues.map { it.id })
     val audioRouter = AudioRouter(audioBindings, audioCatalog)
     val uiFxBus = UiFxBus()
     val uiEventBus = UiEventBus()

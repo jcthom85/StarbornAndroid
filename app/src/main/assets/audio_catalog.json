@@ -145,6 +145,15 @@
       "tags": ["industrial"]
     },
     {
+      "id": "amb_bunkroom_hum",
+      "type": "ambient",
+      "loop": true,
+      "fade_in_ms": 700,
+      "fade_out_ms": 900,
+      "gain": 0.48,
+      "tags": ["world_1", "homestead", "bunkroom", "industrial"]
+    },
+    {
       "id": "amb_forest_birds",
       "type": "ambient",
       "loop": true,

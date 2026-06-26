@@ -212,7 +212,6 @@
   {
     "id": "pit_nova_bunk",
     "env": "mine",
-    "weather": "dust",
     "title": "Nova's Bunk",
     "background_image": "images/rooms/world_1/pit_nova_bunk_v5.png",
     "description": "Your bunk is a narrow shelf in the colony wall, barely wide enough to dream sideways. The bunk light buzzes above cargo netting that holds your tools, your spare ration, and the little pieces of yourself Dominion has not inventoried yet.",

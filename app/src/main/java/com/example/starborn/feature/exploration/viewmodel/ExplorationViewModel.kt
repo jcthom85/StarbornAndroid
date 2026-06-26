@@ -744,11 +744,21 @@ class ExplorationViewModel(
     private fun playRoomAudio(hubId: String?, roomId: String?) {
         val room = roomId?.let { roomsById[it] } ?: _uiState.value.currentRoom
         val weatherId = room?.weather?.takeUnless { it.isBlank() }
+        val suppressMusic = shouldSuppressRoomMusic(room)
         val tags = buildSet {
             room?.env?.takeIf { it.isNotBlank() }?.let { add(it.lowercase(Locale.getDefault())) }
             weatherId?.takeIf { it.isNotBlank() }?.let { add(it.lowercase(Locale.getDefault())) }
         }
-        emitAudioCommands(audioRouter.commandsForRoom(hubId, roomId, weatherId, tags))
+        emitAudioCommands(audioRouter.commandsForRoom(hubId, roomId, weatherId, tags, suppressMusic))
+    }
+
+    private fun shouldSuppressRoomMusic(room: Room?): Boolean {
+        val roomId = room?.id ?: return false
+        if (!roomId.equals("pit_nova_bunk", ignoreCase = true)) return false
+        val sessionState = sessionStore.state.value
+        val firstLightSeen = "ms_w1_mq01_bunk_light_on" in sessionState.completedMilestones
+        val lightOn = roomStates[roomId]?.get("light_on") == true
+        return !firstLightSeen && !lightOn
     }
 
     private fun playUiCue(key: String) {
@@ -3177,6 +3187,7 @@ class ExplorationViewModel(
                     markVisited(roomId)
                     markDiscovered(resolvedRoom)
                 }
+                playRoomAudio(sessionStore.state.value.hubId, roomId)
             }
             if (stateKey.equals("dark", ignoreCase = true)) {
                 if (!value) {

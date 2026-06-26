@@ -190,6 +190,10 @@ SFX_CATALOG = {
         "text": "A constant, low-frequency industrial ventilation hum, deep rhythmic white noise, air flowing through a hollow pipe, loopable ambient background noise",
         "duration": 30.0,
     },
+    "amb_bunkroom_hum": {
+        "text": "Very quiet loopable sci-fi sleeping alcove ambience, low ventilation hum behind metal walls, distant muffled colony machinery, occasional soft pipe creak, dry cramped bunkroom, no melody, no storm, no rain",
+        "duration": 30.0,
+    },
     "amb_forest_birds": {
         "text": "Soft outdoor breeze blowing through tree leaves, gentle chirping of distant forest birds, peaceful loopable nature soundscape",
         "duration": 30.0,

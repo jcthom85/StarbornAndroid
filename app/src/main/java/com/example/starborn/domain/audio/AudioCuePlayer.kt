@@ -23,8 +23,17 @@ import java.util.concurrent.ConcurrentHashMap
 private const val TAG = "AudioCuePlayer"
 private const val MISSING_SOUND_ID = -1
 
+private data class PendingShortCue(
+    val type: AudioCueType,
+    val cueId: String,
+    val command: AudioCommand.Play
+)
+
 @OptIn(UnstableApi::class)
-class AudioCuePlayer(private val context: Context) {
+class AudioCuePlayer(
+    private val context: Context,
+    preloadCueIds: Collection<String> = emptyList()
+) {
 
     private val soundPool: SoundPool = SoundPool.Builder()
         .setAudioAttributes(
@@ -40,6 +49,7 @@ class AudioCuePlayer(private val context: Context) {
     private val ambientPlayer: ExoPlayer = ExoPlayer.Builder(context).build()
 
     private val soundCache = ConcurrentHashMap<String, Int>()
+    private val pendingShortCues = ConcurrentHashMap<Int, MutableList<PendingShortCue>>()
     private val activeStreams = ConcurrentHashMap<Pair<AudioCueType, String>, Int>()
     private val fadeAnimators = EnumMap<AudioCueType, ValueAnimator>(AudioCueType::class.java)
     private var currentMusicCue: String? = null
@@ -54,6 +64,24 @@ class AudioCuePlayer(private val context: Context) {
     private var resumeMusicAfterBackground: Boolean = false
     private var resumeAmbientAfterBackground: Boolean = false
     private val vibrator: Vibrator? = context.getSystemService()
+
+    init {
+        soundPool.setOnLoadCompleteListener { _, sampleId, status ->
+            val pending = pendingShortCues.remove(sampleId).orEmpty()
+            if (status != 0) {
+                pending.forEach { Log.d(TAG, "Unable to load audio cue '${it.cueId}'") }
+                return@setOnLoadCompleteListener
+            }
+            pending.forEach { playLoadedShort(sampleId, it.type, it.cueId, it.command) }
+        }
+        preloadCueIds.forEach { cueId ->
+            cueId.trim()
+                .lowercase()
+                .replace('-', '_')
+                .takeIf { it.isNotBlank() }
+                ?.let(::ensureSound)
+        }
+    }
 
     fun play(cueId: String) {
         val normalized = cueId.trim().lowercase().replace('-', '_')
@@ -107,6 +135,15 @@ class AudioCuePlayer(private val context: Context) {
 
     private fun playShort(type: AudioCueType, cueId: String, command: AudioCommand.Play) {
         val soundId = ensureSound(cueId) ?: return
+        playLoadedShort(soundId, type, cueId, command)
+    }
+
+    private fun playLoadedShort(
+        soundId: Int,
+        type: AudioCueType,
+        cueId: String,
+        command: AudioCommand.Play
+    ) {
         val key = type to cueId
         activeStreams.remove(key)?.let { soundPool.stop(it) }
         val loopMode = if (command.loop) -1 else 0
@@ -118,12 +155,27 @@ class AudioCuePlayer(private val context: Context) {
         val scaledGain = (baseGain * userGain).coerceIn(0f, 1f)
         val streamId = soundPool.play(soundId, scaledGain, scaledGain, /*priority*/ 1, loopMode, /*rate*/ 1f)
         if (streamId == 0) {
-            Log.d(TAG, "Unable to play audio cue '$cueId'")
+            queuePendingShort(soundId, type, cueId, command)
             return
         }
         activeStreams[key] = streamId
         setLayerGainImmediate(type, baseGain)
         triggerHapticIfNeeded(command)
+    }
+
+    private fun queuePendingShort(
+        soundId: Int,
+        type: AudioCueType,
+        cueId: String,
+        command: AudioCommand.Play
+    ) {
+        pendingShortCues.compute(soundId) { _, current ->
+            val list = current ?: mutableListOf()
+            if (list.none { it.type == type && it.cueId == cueId }) {
+                list += PendingShortCue(type, cueId, command)
+            }
+            list
+        }
     }
 
     private fun playStreaming(player: ExoPlayer, type: AudioCueType, cueId: String, command: AudioCommand.Play) {
