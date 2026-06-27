@@ -1,6 +1,7 @@
 package com.example.starborn.domain.event
 
 import com.example.starborn.domain.model.EventAction
+import com.example.starborn.domain.model.EventCondition
 import com.example.starborn.domain.model.EventReward
 import com.example.starborn.domain.model.EventTrigger
 import com.example.starborn.domain.model.GameEvent
@@ -41,6 +42,38 @@ class EventManagerTest {
             listOf("reveal:hidden_node", "unlock:locked_node", "complete:finished_node"),
             calls
         )
+        val state = sessionStore.state.value
+        assertTrue(state.revealedNodes.contains("hidden_node"))
+        assertTrue(state.unlockedNodes.contains("locked_node"))
+        assertTrue(state.completedNodes.contains("finished_node"))
+    }
+
+    @Test
+    fun laterEventsInSameTriggerSeeStateChangedByEarlierEvents() {
+        val sessionStore = GameSessionStore()
+        var message: String? = null
+        val manager = EventManager(
+            events = listOf(
+                GameEvent(
+                    id = "evt_start_quest",
+                    trigger = EventTrigger(type = "custom"),
+                    actions = listOf(EventAction(type = "start_quest", questId = "handoff_quest"))
+                ),
+                GameEvent(
+                    id = "evt_react_to_started_quest",
+                    trigger = EventTrigger(type = "custom"),
+                    conditions = listOf(EventCondition(type = "quest_active", questId = "handoff_quest")),
+                    actions = listOf(EventAction(type = "show_message", message = "Quest is active"))
+                )
+            ),
+            sessionStore = sessionStore,
+            eventHooks = EventHooks(onMessage = { message = it })
+        )
+
+        manager.handleTrigger("custom")
+
+        assertTrue(sessionStore.state.value.activeQuests.contains("handoff_quest"))
+        assertEquals("Quest is active", message)
     }
 
     @Test
@@ -172,7 +205,7 @@ class EventManagerTest {
                 EventAction(type = "show_message", message = "Stage reached")
             ),
             conditions = listOf(
-                com.example.starborn.domain.model.EventCondition(
+                EventCondition(
                     type = "quest_stage",
                     questId = "quest_intro",
                     stageId = "stage_one"

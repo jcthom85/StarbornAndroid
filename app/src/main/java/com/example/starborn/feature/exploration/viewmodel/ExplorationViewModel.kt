@@ -1373,8 +1373,26 @@ class ExplorationViewModel(
                     val visibleNpcs = current.currentRoom?.let { room ->
                         visibleNpcsForRoom(room, newState.completedMilestones)
                     } ?: current.npcs
+                    val activeJournal = buildQuestSummariesFromSession(
+                        questIds = newState.activeQuests,
+                        session = newState,
+                        completed = false,
+                        questRepository = questRepository
+                    )
+                    val completedJournal = buildQuestSummariesFromSession(
+                        questIds = newState.completedQuests,
+                        session = newState,
+                        completed = true,
+                        questRepository = questRepository
+                    )
                     current.copy(
                         completedMilestones = newState.completedMilestones,
+                        activeQuests = newState.activeQuests,
+                        completedQuests = newState.completedQuests,
+                        failedQuests = newState.failedQuests,
+                        trackedQuestId = newState.trackedQuestId,
+                        questLogActive = activeJournal,
+                        questLogCompleted = completedJournal,
                         npcs = visibleNpcs,
                         partyStatus = partyStatus,
                         progressionSummary = progressionSummary,
@@ -1511,14 +1529,39 @@ class ExplorationViewModel(
                     val relevantLogs = questState.recentLog.filter { entry ->
                         questState.trackedQuestId.isNullOrBlank() || entry.questId.equals(questState.trackedQuestId, ignoreCase = true)
                     }
+                    val sessionSnapshot = sessionStore.state.value
+                    val activeJournal = questState.activeJournal
+                        .map { it.toUiSummary() }
+                        .ifEmpty {
+                            buildQuestSummariesFromSession(
+                                questIds = questState.activeQuestIds.ifEmpty { sessionSnapshot.activeQuests },
+                                session = sessionSnapshot,
+                                completed = false,
+                                questRepository = questRepository
+                            )
+                        }
+                    val completedJournal = questState.completedJournal
+                        .map { it.toUiSummary() }
+                        .ifEmpty {
+                            buildQuestSummariesFromSession(
+                                questIds = questState.completedQuestIds.ifEmpty { sessionSnapshot.completedQuests },
+                                session = sessionSnapshot,
+                                completed = true,
+                                questRepository = questRepository
+                            )
+                        }
+                    val activeQuestIds = questState.activeQuestIds.ifEmpty { sessionSnapshot.activeQuests }
+                    val completedQuestIds = questState.completedQuestIds.ifEmpty { sessionSnapshot.completedQuests }
+                    val failedQuestIds = questState.failedQuestIds.ifEmpty { sessionSnapshot.failedQuests }
+                    val trackedQuestId = questState.trackedQuestId ?: sessionSnapshot.trackedQuestId
                     var updated = current.copy(
-                        activeQuests = questState.activeQuestIds,
-                        completedQuests = questState.completedQuestIds,
-                        failedQuests = questState.failedQuestIds,
-                        trackedQuestId = questState.trackedQuestId,
+                        activeQuests = activeQuestIds,
+                        completedQuests = completedQuestIds,
+                        failedQuests = failedQuestIds,
+                        trackedQuestId = trackedQuestId,
                         questLogEntries = relevantLogs.map { it.toUiEntry(questRepository) },
-                        questLogActive = questState.activeJournal.map { it.toUiSummary() },
-                        questLogCompleted = questState.completedJournal.map { it.toUiSummary() }
+                        questLogActive = activeJournal,
+                        questLogCompleted = completedJournal
                     )
                     current.questDetail?.id?.let { openId ->
                         val refreshed = buildQuestDetail(
@@ -1818,6 +1861,18 @@ class ExplorationViewModel(
             )
             val initialActions = parseActions(initialRoom)
             val initialConnections = initialRoom?.let { visibleConnections(it) }.orEmpty()
+            val activeJournal = buildQuestSummariesFromSession(
+                questIds = sessionState.activeQuests,
+                session = sessionState,
+                completed = false,
+                questRepository = questRepository
+            )
+            val completedJournal = buildQuestSummariesFromSession(
+                questIds = sessionState.completedQuests,
+                session = sessionState,
+                completed = true,
+                questRepository = questRepository
+            )
             _uiState.update {
                 ExplorationUiState(
                     isLoading = false,
@@ -1840,6 +1895,10 @@ class ExplorationViewModel(
                     activeDialogue = null,
                     activeQuests = sessionState.activeQuests,
                     completedQuests = sessionState.completedQuests,
+                    failedQuests = sessionState.failedQuests,
+                    trackedQuestId = sessionState.trackedQuestId,
+                    questLogActive = activeJournal,
+                    questLogCompleted = completedJournal,
                     completedMilestones = sessionState.completedMilestones,
                     theme = initialTheme,
                     themeStyle = initialThemeStyle,
@@ -4875,6 +4934,42 @@ private fun QuestJournalEntry.toUiSummary(): QuestSummaryUi = QuestSummaryUi(
     stageIndex = stageIndex,
     totalStages = totalStages
 )
+
+private fun buildQuestSummariesFromSession(
+    questIds: Set<String>,
+    session: GameSessionState,
+    completed: Boolean,
+    questRepository: QuestRepository
+): List<QuestSummaryUi> {
+    return questIds.mapNotNull { questId ->
+        val quest = questRepository.questById(questId) ?: return@mapNotNull null
+        val stage = if (completed) {
+            quest.stages.lastOrNull()
+        } else {
+            session.questStageById[quest.id]
+                ?.let { stageId -> quest.stages.firstOrNull { it.id.equals(stageId, ignoreCase = true) } }
+                ?: quest.stages.firstOrNull()
+        }
+        val stageIndex = stage?.let { quest.stages.indexOf(it).takeIf { index -> index >= 0 } } ?: 0
+        val completedTasks = session.questTasksCompleted[quest.id].orEmpty()
+        QuestSummaryUi(
+            id = quest.id,
+            title = quest.title,
+            summary = quest.summary.takeIf { it.isNotBlank() }
+                ?: quest.description.takeIf { it.isNotBlank() }
+                ?: "",
+            stageTitle = stage?.title,
+            stageDescription = stage?.description?.takeIf { it.isNotBlank() },
+            objectives = stage?.tasks.orEmpty().map { task ->
+                val status = if (completed || task.done || completedTasks.contains(task.id)) "âœ“" else "â—‹"
+                "$status ${task.text}"
+            },
+            completed = completed,
+            stageIndex = stageIndex,
+            totalStages = quest.stages.size.coerceAtLeast(1)
+        )
+    }
+}
 
 private fun QuestLogEntry.toUiEntry(questRepository: QuestRepository): QuestLogEntryUi {
     val quest = questRepository.questById(questId)

@@ -17,18 +17,16 @@ class EventManager(
 
     fun handleTrigger(type: String, payload: EventPayload = EventPayload.Empty) {
         val candidates = eventsByTriggerType[type.lowercase()].orEmpty()
-        val state = sessionStore.state.value
-        val completedEvents = state.completedEvents.toMutableSet()
         for (event in candidates) {
+            val state = sessionStore.state.value
             val eventId = event.id
-            if (!event.repeatable && completedEvents.contains(eventId)) {
+            if (!event.repeatable && state.completedEvents.contains(eventId)) {
                 continue
             }
             if (!conditionsSatisfied(event.conditions, state)) continue
             if (!matchesTrigger(event.trigger, payload, state)) continue
-            if (executeActions(event.actions, state)) {
+            if (executeActions(event.actions)) {
                 if (!event.repeatable) {
-                    completedEvents.add(eventId)
                     sessionStore.markEventCompleted(eventId)
                 }
                 if (eventId.isNotBlank()) {
@@ -40,7 +38,7 @@ class EventManager(
 
     fun performActions(actions: List<EventAction>) {
         if (actions.isEmpty()) return
-        executeActions(actions, sessionStore.state.value)
+        executeActions(actions)
     }
 
     private fun matchesTrigger(
@@ -93,9 +91,10 @@ class EventManager(
         }
     }
 
-    private fun executeActions(actions: List<EventAction>, state: GameSessionState): Boolean {
+    private fun executeActions(actions: List<EventAction>): Boolean {
         var executed = false
         for (action in actions) {
+            val state = sessionStore.state.value
             executed = when (action.type.lowercase()) {
                 "if_quest_active" -> executeConditionalBranch(
                     action.questId?.let { it in state.activeQuests } ?: false,
@@ -229,14 +228,17 @@ class EventManager(
                     true
                 }
                 "reveal_node" -> action.nodeId?.let {
+                    sessionStore.revealNode(it)
                     eventHooks.onRevealNode(it)
                     true
                 } ?: false
                 "unlock_node" -> action.nodeId?.let {
+                    sessionStore.unlockNode(it)
                     eventHooks.onUnlockNode(it)
                     true
                 } ?: false
                 "complete_node" -> action.nodeId?.let {
+                    sessionStore.completeNode(it)
                     eventHooks.onCompleteNode(it)
                     true
                 } ?: false
@@ -498,11 +500,11 @@ class EventManager(
         state: GameSessionState
     ): Boolean {
         val branch = if (condition) action.`do` else action.elseDo
-        return branch?.let { executeActions(it, state) } ?: false
+        return branch?.let { executeActions(it) } ?: false
     }
 
     private fun executeOnComplete(action: EventAction): Boolean {
-        return action.onComplete?.let { executeActions(it, sessionStore.state.value) } ?: false
+        return action.onComplete?.let { executeActions(it) } ?: false
     }
 
     private fun matchesOutcome(

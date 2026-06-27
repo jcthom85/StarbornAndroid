@@ -17,6 +17,7 @@ import com.example.starborn.domain.session.GameSessionStore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -32,18 +33,21 @@ class HubViewModel(
 
     private var hubsById: Map<String, Hub> = emptyMap()
     private var nodesByHub: Map<String, List<HubNode>> = emptyMap()
+    private var nodeDescriptionsById: Map<String, String> = emptyMap()
+    private var lockedPreviewsById: Map<String, String> = emptyMap()
     private val nodeProgression = NodeProgressionEvaluator()
 
     init {
         loadHub()
+        observeSession()
     }
 
     private fun loadHub() {
         viewModelScope.launch(dispatchers.io) {
             val hubs = worldAssets.loadHubs()
             val nodes = worldAssets.loadHubNodes()
-            val nodeDescriptions = worldAssets.loadHubNodeDescriptions()
-            val lockedPreviews = worldAssets.loadHubNodeLockedPreviews()
+            nodeDescriptionsById = worldAssets.loadHubNodeDescriptions()
+            lockedPreviewsById = worldAssets.loadHubNodeLockedPreviews()
 
             val missingAssets = worldAssets.missingHubAssets(hubs, nodes)
             if (missingAssets.isNotEmpty()) {
@@ -60,38 +64,7 @@ class HubViewModel(
             val session = sessionStore.state.value
             val preferredHubId = session.hubId ?: hubs.firstOrNull()?.id
             val currentHub = preferredHubId?.let { hubsById[it] } ?: hubs.firstOrNull()
-            val trackedQuest = buildTrackedQuest(session)
-
-            val uiNodes = currentHub?.let { hub ->
-                nodesByHub[hub.id].orEmpty().mapNotNull { node ->
-                    val availability = nodeProgression.evaluate(node, session)
-                    if (availability.visibility == NodeVisibility.HIDDEN) return@mapNotNull null
-                    HubNodeUi(
-                        id = node.id,
-                        title = node.title,
-                        entryRoom = node.entryRoom,
-                        centerX = node.position.centerX.coerceIn(0f, 1f),
-                        centerY = node.position.centerY.coerceIn(0f, 1f),
-                        sizeHint = node.size.firstOrNull()?.toFloat() ?: 220f,
-                        discovered = availability.visited,
-                        iconPath = node.iconImage,
-                        description = nodeDescriptions[node.id],
-                        lockedPreview = lockedPreviews[node.id],
-                        unlocked = availability.unlocked,
-                        visited = availability.visited,
-                        completed = availability.completed,
-                        canEnter = availability.canEnterFromHub,
-                        lockReason = availability.unmetRequirement
-                    )
-                }.toMutableList().apply {
-                    if (hub.id != ASTRA_HUB_ID && ASTRA_UNLOCK_MILESTONE in session.completedMilestones) {
-                        add(astraAccessNode())
-                    } else if (hub.id == ASTRA_HUB_ID && session.astraReturnHubId != null) {
-                        add(astraDisembarkNode())
-                    }
-                }
-            }.orEmpty()
-
+            val uiNodes = buildUiNodes(currentHub, session)
             val firstDiscovered = uiNodes.firstOrNull { it.discovered } ?: uiNodes.firstOrNull()
 
             _uiState.update {
@@ -101,10 +74,69 @@ class HubViewModel(
                     backgroundImage = currentHub?.backgroundImage,
                     nodes = uiNodes,
                     selectedNodeId = firstDiscovered?.id,
-                    trackedQuest = trackedQuest
+                    trackedQuest = buildTrackedQuest(session)
                 )
             }
         }
+    }
+
+    private fun observeSession() {
+        viewModelScope.launch(dispatchers.io) {
+            sessionStore.state.drop(1).collect { session ->
+                if (hubsById.isEmpty() || nodesByHub.isEmpty()) return@collect
+                val preferredHubId = session.hubId ?: _uiState.value.hub?.id ?: hubsById.values.firstOrNull()?.id
+                val currentHub = preferredHubId?.let { hubsById[it] } ?: hubsById.values.firstOrNull()
+                val uiNodes = buildUiNodes(currentHub, session)
+                val currentSelection = _uiState.value.selectedNodeId
+                val selectedNodeId = currentSelection
+                    ?.takeIf { selected -> uiNodes.any { it.id == selected } }
+                    ?: uiNodes.firstOrNull { it.discovered }?.id
+                    ?: uiNodes.firstOrNull()?.id
+
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        hub = currentHub,
+                        backgroundImage = currentHub?.backgroundImage,
+                        nodes = uiNodes,
+                        selectedNodeId = selectedNodeId,
+                        trackedQuest = buildTrackedQuest(session)
+                    )
+                }
+            }
+        }
+    }
+
+    private fun buildUiNodes(currentHub: Hub?, session: GameSessionState): List<HubNodeUi> {
+        return currentHub?.let { hub ->
+            nodesByHub[hub.id].orEmpty().mapNotNull { node ->
+                val availability = nodeProgression.evaluate(node, session)
+                if (availability.visibility == NodeVisibility.HIDDEN) return@mapNotNull null
+                HubNodeUi(
+                    id = node.id,
+                    title = node.title,
+                    entryRoom = node.entryRoom,
+                    centerX = node.position.centerX.coerceIn(0f, 1f),
+                    centerY = node.position.centerY.coerceIn(0f, 1f),
+                    sizeHint = node.size.firstOrNull()?.toFloat() ?: 220f,
+                    discovered = availability.visited,
+                    iconPath = node.iconImage,
+                    description = nodeDescriptionsById[node.id],
+                    lockedPreview = lockedPreviewsById[node.id],
+                    unlocked = availability.unlocked,
+                    visited = availability.visited,
+                    completed = availability.completed,
+                    canEnter = availability.canEnterFromHub,
+                    lockReason = availability.unmetRequirement
+                )
+            }.toMutableList().apply {
+                if (hub.id != ASTRA_HUB_ID && ASTRA_UNLOCK_MILESTONE in session.completedMilestones) {
+                    add(astraAccessNode())
+                } else if (hub.id == ASTRA_HUB_ID && session.astraReturnHubId != null) {
+                    add(astraDisembarkNode())
+                }
+            }
+        }.orEmpty()
     }
 
     fun selectNode(nodeId: String) {
