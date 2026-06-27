@@ -105,6 +105,7 @@ fun MainMenuScreen(
 ) {
     var startingGame by remember { mutableStateOf(false) }
     var pendingScenario by remember { mutableStateOf<DebugScenario?>(null) }
+    var loadingSavedGame by remember { mutableStateOf(false) }
     var showDebugBrowser by remember { mutableStateOf(false) }
     var showSettings by remember { mutableStateOf(false) }
     var saveLoadMode by remember { mutableStateOf<String?>(null) }
@@ -173,8 +174,8 @@ fun MainMenuScreen(
         }
     }
 
-    LaunchedEffect(startingGame, pendingScenario) {
-        if (!startingGame && pendingScenario == null) {
+    LaunchedEffect(startingGame, pendingScenario, loadingSavedGame) {
+        if (!startingGame && pendingScenario == null && !loadingSavedGame) {
             fadeOutAlpha.animateTo(
                 targetValue = 0f,
                 animationSpec = tween(durationMillis = 260, easing = FastOutSlowInEasing)
@@ -183,6 +184,13 @@ fun MainMenuScreen(
         }
         fadeOutAlpha.stop()
         fadeOutAlpha.snapTo(0f)
+        audioCuePlayer.execute(
+            audioRouter.commandsForLayerOverride(
+                layer = AudioCueType.MUSIC,
+                fadeMs = 560L,
+                stop = true
+            )
+        )
         // Smooth fade out before heavy work begins.
         fadeOutAlpha.animateTo(
             targetValue = 1f,
@@ -193,6 +201,7 @@ fun MainMenuScreen(
         val onFailure: () -> Unit = {
             startingGame = false
             pendingScenario = null
+            loadingSavedGame = false
         }
         val scenario = pendingScenario
         if (scenario != null) {
@@ -206,6 +215,8 @@ fun MainMenuScreen(
                 },
                 onFailure = onFailure
             )
+        } else if (loadingSavedGame) {
+            onSlotLoaded()
         } else if (startingGame) {
             viewModel.startNewGame(onComplete = { onStartGame() }, onFailure = onFailure)
         }
@@ -270,25 +281,25 @@ fun MainMenuScreen(
             StarbornTitleButton(
                 text = "New Game",
                 onClick = { startingGame = true },
-                enabled = !startingGame && pendingScenario == null,
+                enabled = !startingGame && pendingScenario == null && !loadingSavedGame,
                 primary = true
             )
             if (BuildConfig.DEBUG) {
                 StarbornTitleButton(
                     text = "Debug Scenarios",
                     onClick = { showDebugBrowser = true },
-                    enabled = !startingGame && pendingScenario == null
+                    enabled = !startingGame && pendingScenario == null && !loadingSavedGame
                 )
             }
             StarbornTitleButton(
                 text = "Load Game",
                 onClick = { saveLoadMode = "load" },
-                enabled = !startingGame && pendingScenario == null
+                enabled = !startingGame && pendingScenario == null && !loadingSavedGame
             )
             StarbornTitleButton(
                 text = "Settings",
                 onClick = { showSettings = true },
-                enabled = !startingGame && pendingScenario == null
+                enabled = !startingGame && pendingScenario == null && !loadingSavedGame
             )
         }
 
@@ -327,7 +338,7 @@ fun MainMenuScreen(
                         val success = viewModel.loadSlot(slot)
                         if (success) {
                             saveLoadMode = null
-                            onSlotLoaded()
+                            loadingSavedGame = true
                         }
                     }
                 },

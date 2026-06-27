@@ -54,6 +54,8 @@ import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.CompositingStrategy
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -177,15 +179,15 @@ private fun QuestDetailCard(
     val shimmerSweep = if (isNewQuest) {
         val transition = rememberInfiniteTransition(label = "new_quest_shimmer")
         transition.animateFloat(
-            initialValue = -1.0f,
-            targetValue = -1.0f,
+            initialValue = -1.25f,
+            targetValue = -1.25f,
             animationSpec = infiniteRepeatable(
                 animation = keyframes {
                     durationMillis = 3400
-                    -1.0f at 0
-                    -1.0f at 350
-                    2.0f at 2250
-                    2.0f at 3400
+                    -1.25f at 0
+                    -1.25f at 420
+                    2.25f at 2320
+                    2.25f at 3400
                 },
                 repeatMode = RepeatMode.Restart
             ),
@@ -229,6 +231,15 @@ private fun QuestDetailCard(
                 )
                 .then(
                     if (isNewQuest) {
+                        Modifier.graphicsLayer {
+                            compositingStrategy = CompositingStrategy.Offscreen
+                        }
+                    } else {
+                        Modifier
+                    }
+                )
+                .then(
+                    if (isNewQuest) {
                         Modifier.drawWithContent {
                             drawContent()
                             val x = size.width * shimmerSweep
@@ -236,12 +247,13 @@ private fun QuestDetailCard(
                                 brush = Brush.linearGradient(
                                     colors = listOf(
                                         Color.Transparent,
-                                        accent.copy(alpha = 0.08f),
-                                        Color.White.copy(alpha = 0.07f),
+                                        accent.copy(alpha = 0.13f),
+                                        Color.White.copy(alpha = 0.12f),
+                                        accent.copy(alpha = 0.09f),
                                         Color.Transparent
                                     ),
-                                    start = Offset(x - size.width * 0.22f, 0f),
-                                    end = Offset(x + size.width * 0.10f, size.height)
+                                    start = Offset(x - size.width * 0.30f, 0f),
+                                    end = Offset(x + size.width * 0.16f, size.height)
                                 )
                             )
                         }

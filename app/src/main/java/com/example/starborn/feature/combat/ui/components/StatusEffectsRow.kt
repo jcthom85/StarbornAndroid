@@ -280,15 +280,15 @@ fun ShieldFieldOverlay(
         label = "shield_pulse"
     )
     val sweep by transition.animateFloat(
-        initialValue = -1f,
-        targetValue = -1f,
+        initialValue = -1.25f,
+        targetValue = -1.25f,
         animationSpec = infiniteRepeatable(
             animation = keyframes {
                 durationMillis = 2600
-                -1f at 0
-                -1f at 260
-                2f at 1800
-                2f at 2600
+                -1.25f at 0
+                -1.25f at 340
+                2.25f at 1880
+                2.25f at 2600
             },
             repeatMode = RepeatMode.Restart
         ),
