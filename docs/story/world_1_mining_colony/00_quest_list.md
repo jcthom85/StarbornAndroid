@@ -8,10 +8,10 @@ Canonical key item name: Mine Access Badge (UI can label it "Mining Pass" if nee
 | ID | Title | Primary Objective | Key Beats (canonical) | Rewards / Unlocks |
 | :--- | :--- | :--- | :--- | :--- |
 | **W1_MQ01** | **Wake Up Call** | Report to Jed | Wake -> Workshop tutorial -> basic hub onboarding | Opens Hub 1 exploration |
-| **W1_MQ02** | **Paperwork** | Get mine clearance | Gate Guard / bureaucracy -> meet/notice Zeke (If met in EVT_W1_00: 'Oh, it's the volunteer again.') -> clearance granted | Mine Access Badge; unlocks Transit Checkpoint / Mine access |
-| **W1_MQ03** | **The Echo** | Clear interference -> Investigate Signal | Travel to Logistics -> Deep Elevator -> Sector 4 -> Ancient Chamber -> Sync with Relic | Relic acquired: The Tuning Fork (Echo Relic); Nova gains Source Art: Blast Wave |
-| **W1_MQ04** | **Red Alert** | Escape the lockdown | Lockdown triggers -> chase/gauntlet through tunnels -> Zeke guides via comms -> Cargo Lift | Jed's sacrifice + Chime handoff (Ghost Signal Cell); opens Launch Bay path |
-| **W1_MQ05** | **The Launch** | Hijack a pod and get off-world | Fight through Logistics -> Pod Bay -> Boss: The Warden -> launch sequence -> shield/nav lock -> crash | Zeke joins party; Zeke syncs -> Source Art: Signal Jammer (tutorialized in World 2); transition to World 2 (crash interlude) |
+| **W1_MQ02** | **Shift Clearance** | Survive mine clearance | Hank/scanner rejection -> Zeke finds the Mandatory Retirement flag -> paperwork spoof saves Nova by moving the liability target -> Mine Access Badge granted as temporary usable-labor status | Mine Access Badge; unlocks Transit Checkpoint / Admin path |
+| **W1_MQ03** | **The Echo** | Punishment duty becomes discovery | Travel to Logistics -> Boggs uses Nova's override to send her into Sector 4 -> Deep Elevator -> restore power -> push through Deep Mine -> Ancient Chamber -> sync with Relic | Relic acquired: The Tuning Fork (Echo Relic); Nova gains Source Art: Blast Wave |
+| **W1_MQ04** | **Red Alert** | Escape the lockdown | Relic exposes Nova as an anomaly -> sector lockdown -> Zeke guides via comms -> chase/gauntlet through tunnels -> Cargo Lift -> Jed's Chime handoff | Chime (Ghost Signal Cell); opens Launch Bay path |
+| **W1_MQ05** | **The Launch** | Hijack a pod and reject Dominion's asset lock | Fight through Logistics -> Pod Bay -> Boss: The Warden -> Chime spoofs the launch frequency -> launch sequence -> shield/nav lock -> crash | Zeke joins party; Zeke syncs -> Source Art: Signal Jammer (tutorialized in World 2); transition to World 2 (crash interlude) |
 
 ## Side Quests (World 1)
 

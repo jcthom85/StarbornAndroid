@@ -2085,6 +2085,14 @@
         "task_id": "reach_architect_threshold"
       },
       {
+        "type": "reveal_node",
+        "node_id": "echo_chamber"
+      },
+      {
+        "type": "unlock_node",
+        "node_id": "echo_chamber"
+      },
+      {
         "type": "advance_quest_stage",
         "quest_id": "w1_mq03",
         "to_stage_id": "relic_sync"
@@ -2177,6 +2185,14 @@
           {
             "type": "set_milestone",
             "milestone": "ms_w1_mq03_complete"
+          },
+          {
+            "type": "reveal_node",
+            "node_id": "launch_bay"
+          },
+          {
+            "type": "unlock_node",
+            "node_id": "launch_bay"
           }
         ]
       }
@@ -2226,7 +2242,7 @@
       },
       {
         "type": "show_message",
-        "message": "WARNING: Biological contamination detected. Sector lockdown active."
+        "message": "WARNING: unregistered resonance event detected. Asset 942-D reclassified from labor to containment threat. Sector lockdown active."
       }
     ]
   },
@@ -2451,6 +2467,14 @@
       {
         "type": "set_milestone",
         "milestone": "ms_w1_mq04_complete"
+      },
+      {
+        "type": "reveal_node",
+        "node_id": "launch_bay"
+      },
+      {
+        "type": "unlock_node",
+        "node_id": "launch_bay"
       },
       {
         "type": "start_quest",

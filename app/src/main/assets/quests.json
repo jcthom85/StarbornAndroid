@@ -61,7 +61,7 @@
   {
     "id": "w1_mq02",
     "title": "Shift Clearance",
-    "summary": "Nova has to clear the Transit Checkpoint before she can work the mine and keep her quota alive.",
+    "summary": "Nova has to clear the Transit Checkpoint before Dominion's paperwork turns her into a liability.",
     "description": "Report for shift clearance at the Transit Checkpoint, get a mine badge, and survive the Dominion math that marked Nova for recycling.",
     "flavor": "The system does not hate you. It calculated you.",
     "giver": "Zeke",
@@ -78,7 +78,7 @@
           },
           {
             "id": "request_clearance",
-            "text": "Request mine clearance at the booth."
+            "text": "Let the scanner reject Nova so Zeke can reach the file."
           }
         ]
       },
@@ -97,7 +97,7 @@
           },
           {
             "id": "receive_mine_access_badge",
-            "text": "Take the Mine Access Badge from Zeke."
+            "text": "Take the temporary Mine Access Badge before the system notices the override."
           }
         ]
       }
@@ -117,7 +117,7 @@
   {
     "id": "w1_mq03",
     "title": "The Echo",
-    "summary": "Boggs sends Nova to Sector 4 to clear interference, but the signal is older than Dominion.",
+    "summary": "Boggs turns Nova's temporary clearance into punishment duty below Sector 4, where the interference is older than Dominion.",
     "description": "Enter the Logistics Sector, descend into the Deep Mine, fight through Sector 4, and find the source of the impossible hum.",
     "flavor": "The mine was never quiet. Nova just had not heard what was underneath.",
     "giver": "Foreman Boggs",
@@ -126,26 +126,26 @@
       {
         "id": "sector_four_assignment",
         "title": "Sector 4 Assignment",
-        "description": "Boggs turns Nova's breaker surge into punishment duty.",
+        "description": "Zeke's override kept Nova alive, but Boggs uses the same paperwork to send her into the dangerous part of the mine.",
         "tasks": [
           {
             "id": "enter_logistics_sector",
-            "text": "Enter the Logistics Sector."
+            "text": "Cross into the Logistics Sector before the temporary override attracts attention."
           },
           {
             "id": "talk_to_bogs",
-            "text": "Get the Sector 4 assignment from Foreman Boggs."
+            "text": "Report to Foreman Boggs and learn how he is using Nova's clearance."
           },
           {
             "id": "use_deep_elevator",
-            "text": "Use the Mine Access Badge at the Deep Elevator."
+            "text": "Use the Mine Access Badge and Boggs' authorization at the Deep Elevator."
           }
         ]
       },
       {
         "id": "deep_mine_descent",
         "title": "Deep Mine Descent",
-        "description": "Restore the mine lights, push through the old tunnels, and use Guard Break against shielded enemies.",
+        "description": "Restore the mine lights, push through the old tunnels, and feel the signal become stranger than a broken relay.",
         "tasks": [
           {
             "id": "restore_deep_mine_power",
@@ -153,7 +153,7 @@
           },
           {
             "id": "clear_first_mine_encounter",
-            "text": "Clear the first Deep Mine encounter."
+            "text": "Survive the first thing stirred up by the interference."
           },
           {
             "id": "break_riot_guard",
@@ -161,22 +161,22 @@
           },
           {
             "id": "reach_architect_threshold",
-            "text": "Reach the Architect threshold below Sector 4."
+            "text": "Follow the hum to the Architect threshold below Sector 4."
           }
         ]
       },
       {
         "id": "relic_sync",
         "title": "The Tuning Fork",
-        "description": "The interference is a relic signal, and touching it changes Nova.",
+        "description": "The interference is a relic signal, and touching it changes Nova loudly enough for the colony to notice.",
         "tasks": [
           {
             "id": "reach_echo_chamber",
-            "text": "Reach the Echo Chamber."
+            "text": "Step through the threshold into the impossible chamber."
           },
           {
             "id": "touch_tuning_fork",
-            "text": "Touch the Tuning Fork."
+            "text": "Touch the Tuning Fork at the center of the signal."
           },
           {
             "id": "survive_source_sync",
@@ -201,7 +201,7 @@
     "id": "w1_mq04",
     "title": "Red Alert",
     "summary": "The relic trips the lockdown and the colony Nova knew turns hostile.",
-    "description": "Escape the Deep Mine under lockdown, follow Zeke's comm guidance, and reach the Cargo Lift before the Warden's security teams close in.",
+    "description": "Escape the Deep Mine under lockdown, follow Zeke's comm guidance, and reach the Cargo Lift before the Warden turns Nova's anomaly into an execution order.",
     "flavor": "The system stopped ignoring Nova. That was worse.",
     "giver": "Zeke",
     "hub_id": "hub_2_logistics",
@@ -213,22 +213,22 @@
         "tasks": [
           {
             "id": "survive_lockdown_broadcast",
-            "text": "Survive the lockdown broadcast."
+            "text": "Survive the broadcast that names Nova as a containment threat."
           },
           {
             "id": "follow_zeke_comms",
-            "text": "Follow Zeke's comm instructions through the escape route."
+            "text": "Follow Zeke's stolen comm route while the sector seals itself behind Nova."
           },
           {
             "id": "clear_escape_gauntlet",
-            "text": "Fight through the lockdown gauntlet."
+            "text": "Fight through the security teams collapsing on the escape route."
           }
         ]
       },
       {
         "id": "cargo_lift_sacrifice",
         "title": "Cargo Lift",
-        "description": "Jed catches up at the lift with one last piece of impossible scrap.",
+        "description": "Jed catches up at the lift with one last piece of impossible scrap and makes Nova's escape bigger than quota.",
         "tasks": [
           {
             "id": "reach_cargo_lift",
@@ -236,11 +236,11 @@
           },
           {
             "id": "receive_chime",
-            "text": "Receive the Chime from Jed."
+            "text": "Take Jed's Chime and the cost of using it."
           },
           {
             "id": "escape_to_launch_bay",
-            "text": "Escape toward the Launch Bay."
+            "text": "Run for the Launch Bay before Jed's opening closes."
           }
         ]
       }
@@ -260,7 +260,7 @@
   {
     "id": "w1_mq05",
     "title": "The Launch",
-    "summary": "Nova and Zeke hijack a cargo pod, but the sky is another wall.",
+    "summary": "Nova and Zeke hijack a cargo pod, but the sky is another Dominion lock.",
     "description": "Fight to the Pod Bay, defeat the Warden, splice the Chime into the pod core, and launch into the crash that ends Nova's old life.",
     "flavor": "Escaping the colony is not the same thing as escaping the planet.",
     "giver": "Zeke",
@@ -269,15 +269,15 @@
       {
         "id": "reach_pod_bay",
         "title": "Reach the Pod Bay",
-        "description": "Security is collapsing toward the launch rail.",
+        "description": "Security is collapsing toward the launch rail, and the pod bay is the only direction left that is not a cell.",
         "tasks": [
           {
             "id": "fight_through_launch_access",
-            "text": "Fight through Launch Bay access."
+            "text": "Fight through Launch Bay access before security reboots the route."
           },
           {
             "id": "reach_pod_bay",
-            "text": "Reach the Pod Bay."
+            "text": "Reach the Pod Bay while Zeke keeps the hatch controls confused."
           }
         ]
       },
@@ -303,7 +303,7 @@
       {
         "id": "launch_pod",
         "title": "Launch",
-        "description": "The Chime wakes the pod core, but the auto-nav locks onto an unknown signal.",
+        "description": "The Chime wakes the pod core, but the sky itself answers with another lock.",
         "tasks": [
           {
             "id": "splice_chime",

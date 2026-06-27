@@ -6,7 +6,7 @@
     "direction": "north",
     "to_node": "deep_mine",
     "to_room": "mine_landing",
-    "transition_text": "Travel to Deep Mine."
+    "transition_text": "Ride Boggs' authorized lift down into Sector 4."
   },
   {
     "id": "admin_concourse__south__admin_gate",
@@ -15,7 +15,7 @@
     "direction": "south",
     "to_node": "admin_gate",
     "to_room": "checkpoint_tunnel",
-    "transition_text": "Travel to Transit Checkpoint."
+    "transition_text": "Return through the checkpoint corridor."
   },
   {
     "id": "admin_gate__north__admin_concourse",
@@ -24,7 +24,7 @@
     "direction": "north",
     "to_node": "admin_concourse",
     "to_room": "admin_lobby",
-    "transition_text": "Travel to Admin Concourse."
+    "transition_text": "Cross into the chilled Dominion concourse."
   },
   {
     "id": "astra_bridge_node__south__astra_common_node",
@@ -150,7 +150,7 @@
     "direction": "north",
     "to_node": "echo_chamber",
     "to_room": "echo_gap",
-    "transition_text": "Travel to Echo Chamber."
+    "transition_text": "Cross the Architect threshold into the impossible chamber."
   },
   {
     "id": "deep_mine__south__admin_concourse",
@@ -213,7 +213,7 @@
     "direction": "north",
     "to_node": "launch_bay",
     "to_room": "launch_access",
-    "transition_text": "Travel to Launch Bay."
+    "transition_text": "Follow Zeke's emergency route toward the launch rail."
   },
   {
     "id": "echo_chamber__south__deep_mine",

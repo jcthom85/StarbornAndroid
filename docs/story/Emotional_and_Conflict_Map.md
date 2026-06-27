@@ -13,6 +13,12 @@
 *   **External Conflict:** **Nova vs. The System.** The Warden, the guards, the locked doors.
 *   **Internal Conflict:** **Comfort vs. Freedom.** Nova is safe here (she has a bed, a job, Jed), but she feels trapped.
 *   **Interpersonal Conflict:** **Nova vs. Jed.** Jed wants to protect her (stay); Nova wants to fly (go).
+*   **World 1 emotional ramp:** **Routine survival -> bureaucratic threat -> coerced punishment -> impossible discovery -> hunted escape -> grief -> launch.** Each main quest handoff should make Nova's next objective feel like the emotional consequence of the previous one, not a random task assignment.
+    *   **Wake Up Call:** Nova is tired but functional; the pressure is quota, hunger, and Jed's worried care.
+    *   **Shift Clearance:** The pressure becomes personal. Dominion paperwork marks Nova for recycling, and Zeke saves her by moving the system's target rather than truly freeing her.
+    *   **The Echo:** Relief curdles into coercion. Boggs uses the temporary clearance to send Nova into Sector 4 as expendable labor.
+    *   **Red Alert:** Discovery becomes exposure. The relic makes Nova visible to the system as an anomaly, and the colony becomes a trap.
+    *   **The Launch:** Survival becomes separation. Jed's Chime turns escape into a sacrifice, and the Warden makes the launch a rejection of Dominion's right to define Nova as an asset.
 *   **Cost Beat:** Nova’s first Source flare is uncontrolled—she feels the feedback (erosion/memory-skip) and Dominion sensors light up.
 *   **Emotional Climax:** **Grief.** Jed sacrifices himself. The safety net is cut. Nova is truly alone for the first time.
 *   **The Drive:** **Survival.** She *cannot* go back.

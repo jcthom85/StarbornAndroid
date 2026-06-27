@@ -1411,7 +1411,7 @@
     "env": "market",
     "title": "Concourse Lobby",
     "background_image": "images/rooms/world_1/admin_lobby.png",
-    "description": "The grand entrance is a massive, open space with floor-to-ceiling windows overlooking the mining pit. The air is filtered and perfectly chilled, a stark contrast to the grit of the Homestead.",
+    "description": "The grand entrance is a massive, open space with floor-to-ceiling windows overlooking the mining pit. The air is filtered and perfectly chilled, and every badge reader seems to remember Nova was almost erased from the roster.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -1430,7 +1430,7 @@
       {
         "name": "windows",
         "type": "generic",
-        "condition_unmet_message": "The mining pit is a sea of orange lights and grinding steel, miles below."
+        "condition_unmet_message": "The mining pit is a sea of orange lights and grinding steel, miles below. Somewhere down there, the system has already found a worse use for you."
       }
     ],
     "npc_presence": [
@@ -1624,7 +1624,7 @@
     "env": "market",
     "title": "Elevator Lobby",
     "background_image": "images/rooms/world_1/admin_elevator.png",
-    "description": "The entry to the Deep Mine lift is marked by heavy warning signs and a biometric scanner. The lift cables groan in the distance, a deep sound that vibrates through the floor.",
+    "description": "The entry to the Deep Mine lift is marked by heavy warning signs and a biometric scanner. Boggs' authorization sits in the system like a dare, and the lift cables groan beneath the floor.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -1642,7 +1642,7 @@
         "type": "lock",
         "consume": false,
         "message_locked": "The retinal scanner flashes red: Access Denied. The lift controls won't unlock until Foreman Boggs authorizes your deep mine descent.",
-        "message_unlock": "The retinal scanner chirps green. Foreman Boggs' authorization is registered, and the lift controls unlock.",
+        "message_unlock": "The retinal scanner chirps green. Foreman Boggs' authorization and Zeke's temporary override agree just long enough for the lift to unlock.",
         "requires": [
           {
             "room_id": "admin_lobby",
@@ -1661,7 +1661,7 @@
       {
         "name": "scanner",
         "type": "generic",
-        "condition_unmet_message": "A retinal scanner. It's waiting for a verified Foreman to authorize the descent."
+        "condition_unmet_message": "A retinal scanner. It does not care whether Boggs is sending you to work or to disappear."
       },
       {
         "name": "cables",
@@ -1942,7 +1942,7 @@
     "weather": "cave_drip",
     "title": "Elevator Landing",
     "background_image": "images/rooms/world_1/mine_landing.png",
-    "description": "The base of the industrial lift opens into a world of raw rock and red safety beacons. The air is thick with the taste of stone and the metallic tang of heavy machinery.",
+    "description": "The base of the industrial lift opens into raw rock, red safety beacons, and a pressure that makes the ceiling feel closer than it is. The override got Nova down here; it does not promise a way back.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -1959,7 +1959,7 @@
       {
         "name": "lift",
         "type": "generic",
-        "condition_unmet_message": "The only way back up. It's currently locked by Foreman Boggs."
+        "condition_unmet_message": "The only way back up. Boggs can pretend it is a work assignment because the lock agrees with him."
       },
       {
         "name": "beacons",
@@ -1978,7 +1978,7 @@
     "env": "mine",
     "title": "Main Tunnel Alpha",
     "background_image": "images/rooms/world_1/mine_alpha.png",
-    "description": "The start of the deep excavation tunnels where the walls are scarred by giant drills. A rusted ore cart sits abandoned on its tracks, its wheels welded to the rail by rust.",
+    "description": "The start of the deep excavation tunnels where the walls are scarred by giant drills. The official route markers blink toward Sector 4, but the hum underneath them feels older than the mine.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -2052,7 +2052,7 @@
     "env": "mine",
     "title": "Cavern Junction",
     "background_image": "images/rooms/world_1/mine_junction.png",
-    "description": "A cavernous hub where the tunnels branch out like the veins of a beast. A central support pillar is covered in sensors that blink with the yellow light of 'Equipment Failure'.",
+    "description": "A cavernous hub where the tunnels branch out like the veins of a beast. A central support pillar blinks 'Equipment Failure,' but the rhythm beneath the alarm feels deliberate.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -2078,7 +2078,7 @@
         "label_off": "Cut power",
         "action_event_on": "evt_mine_power_on",
         "action_event_off": "evt_mine_power_off",
-        "condition_unmet_message": "The heart of the sector's structural integrity. It's covered in Dominion stress-sensors."
+        "condition_unmet_message": "The heart of the sector's structural integrity. If Nova brings the lights back, she also gives the thing under them a clearer path to sing."
       }
     ]
   },
@@ -2120,7 +2120,7 @@
     "env": "mine",
     "title": "Riot Control Post",
     "background_image": "images/rooms/world_1/mine_checkpoint.png",
-    "description": "A fortified sentry post with reinforced walls and a row of high-intensity floodlights. A riot shield is propped against the desk, its surface scarred by many impacts.",
+    "description": "A fortified sentry post with reinforced walls and high-intensity floodlights aimed inward. Dominion did not build this to keep monsters out; it built it to keep workers moving.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -2227,7 +2227,7 @@
     "env": "mine",
     "title": "Deep Shoring",
     "background_image": "images/rooms/world_1/mine_shoring.png",
-    "description": "Unstable metal support beams groan under the weight of the canyon walls above. A pile of debris blocks part of the tunnel, its edges sharp and fresh from a recent collapse.",
+    "description": "Unstable metal support beams groan under the canyon walls above. Past the fresh collapse, the industrial noise thins until only the impossible hum remains.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -2260,7 +2260,7 @@
     "env": "mine",
     "title": "Ancient Threshold",
     "background_image": "images/rooms/world_1/mine_threshold.png",
-    "description": "The rock gives way to smooth, impossible geometry that doesn't belong in a mine. The walls are cool to the touch and hum with a frequency you can feel in your teeth.",
+    "description": "The rock gives way to smooth, impossible geometry that does not belong in a mine. This is no longer punishment duty. This is something Dominion dug into and then lied about.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -2321,7 +2321,7 @@
     "env": "mine",
     "title": "Echo Antechamber",
     "background_image": "images/rooms/world_1/mine_antechamber.png",
-    "description": "A vast, silent room that tastes like ozone and old static. The ceiling is lost in shadow, and the floor is a single, seamless sheet of black stone.",
+    "description": "A vast, silent room that tastes like ozone and old static. The ceiling is lost in shadow, and the floor is a single, seamless sheet of black stone pulling every alarm and quota behind Nova into irrelevance.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -2354,7 +2354,7 @@
     "env": "space",
     "title": "Geometric Gap",
     "background_image": "images/rooms/world_1/echo_gap.png",
-    "description": "This is where the colony's industrial paint meets the ancient stone of the Architects. The transition line is surgically precise, as if the mine had been cut away by a laser.",
+    "description": "This is where the colony's industrial paint meets the ancient stone of the Architects. The transition line is surgically precise, and crossing it feels like stepping out of Dominion's story into something that was waiting first.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -2508,7 +2508,7 @@
     "env": "space",
     "title": "Emergency Exit",
     "background_image": "images/rooms/world_1/echo_exit.png",
-    "description": "A hidden door that dissolves into mist as you approach. Beyond it, a dark maintenance tunnel leads back toward the industrial sectors of the colony.",
+    "description": "A hidden door dissolves into mist as alarms bleed through the impossible quiet. Beyond it, a dark maintenance tunnel leads back into the colony that has finally noticed Nova.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -2525,7 +2525,7 @@
       {
         "name": "maintenance tunnel",
         "type": "generic",
-        "condition_unmet_message": "Back into the grit. The noise of the sirens is already filtering through."
+        "condition_unmet_message": "Back into the grit. The sirens make it clear the mine is no longer a workplace; it is a trap closing around you."
       }
     ]
   },
@@ -2534,7 +2534,7 @@
     "env": "logistics",
     "title": "Maintenance Access",
     "background_image": "images/rooms/world_1/launch_access.png",
-    "description": "A final, narrow crawl through the colony's gut, filled with humming conduits, hot pipes, and red strobes racing toward the cargo lift. The sirens are muffled here, but the walls thump like something huge is closing in.",
+    "description": "A final, narrow crawl through the colony's gut, filled with humming conduits, hot pipes, and red strobes racing toward the cargo lift. Zeke's route is open by seconds, not permission.",
     "description_variants": [
       {
         "requires_milestones": [
@@ -2706,7 +2706,7 @@
     "env": "logistics",
     "title": "Security Checkpoint B",
     "background_image": "images/rooms/world_1/launch_checkpoint.png",
-    "description": "A fortified checkpoint where the air smells of ozone and static. A Dominion dampener coordinates with a hovering security drone as floodlights sweep for any asset attempting to reach the pods.",
+    "description": "A fortified checkpoint where the air smells of ozone and static. A Dominion dampener coordinates with a hovering security drone as floodlights sweep for any asset trying to become a person instead.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -2752,7 +2752,7 @@
     "env": "logistics",
     "title": "Pod Bay",
     "background_image": "images/rooms/world_1/launch_bay.png",
-    "description": "The massive cargo rails stretch up toward the planetary shield, glowing with an emergency red. A single escape pod sits on the pad, its engines humming. [npc:The Warden] blocks the way, while [npc:Zeke] frantically attempts to hack the hatch controls.",
+    "description": "The massive cargo rails stretch up toward the planetary shield, glowing with emergency red. A single cargo pod waits on the pad, ugly and barely alive. [npc:The Warden] blocks the hatch while [npc:Zeke] frantically lies to the controls.",
     "npcs": [
       "the_warden"
     ],
@@ -2773,12 +2773,12 @@
       {
         "name": "cargo rails",
         "type": "generic",
-        "condition_unmet_message": "Magnetic launchers designed to shoot ore into orbit. Today they're your only hope."
+        "condition_unmet_message": "Magnetic launchers designed to shoot ore into orbit. Dominion built them for cargo, not escape."
       },
       {
         "name": "escape pod",
         "type": "generic",
-        "condition_unmet_message": "A 'Life-Saver' class pod. It doesn't look very sturdy."
+        "condition_unmet_message": "A cargo pod with life-support bolted in like an afterthought. It looks less like rescue than a chance."
       }
     ],
     "blocked_directions": {
