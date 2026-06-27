@@ -1,11 +1,8 @@
 ﻿package com.example.starborn.ui.overlay
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.keyframes
-import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -64,6 +61,7 @@ import androidx.compose.ui.unit.dp
 import com.example.starborn.ui.events.QuestBannerType
 import com.example.starborn.ui.events.UiEvent
 import com.example.starborn.ui.events.UiEventBus
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
@@ -176,26 +174,21 @@ private fun QuestDetailCard(
 ) {
     val accent = gradientColor
     val isNewQuest = detail.type == QuestBannerType.NEW
-    val shimmerSweep = if (isNewQuest) {
-        val transition = rememberInfiniteTransition(label = "new_quest_shimmer")
-        transition.animateFloat(
-            initialValue = -1.25f,
-            targetValue = -1.25f,
-            animationSpec = infiniteRepeatable(
-                animation = keyframes {
-                    durationMillis = 3400
-                    -1.25f at 0
-                    -1.25f at 420
-                    2.25f at 2320
-                    2.25f at 3400
-                },
-                repeatMode = RepeatMode.Restart
-            ),
-            label = "new_quest_shimmer_sweep"
-        ).value
-    } else {
-        0f
+    val shimmerSweep = remember(detail.questId, detail.type) { Animatable(-1.55f) }
+
+    LaunchedEffect(isNewQuest, detail.questId, detail.type) {
+        if (isNewQuest) {
+            while (true) {
+                shimmerSweep.snapTo(-1.55f)
+                shimmerSweep.animateTo(
+                    targetValue = 2.55f,
+                    animationSpec = tween(durationMillis = 2300, easing = LinearEasing)
+                )
+                delay(850)
+            }
+        }
     }
+
     val icon = when (detail.type) {
         QuestBannerType.NEW -> Icons.Filled.Star
         QuestBannerType.COMPLETED -> Icons.Filled.CheckCircle
@@ -242,20 +235,30 @@ private fun QuestDetailCard(
                     if (isNewQuest) {
                         Modifier.drawWithContent {
                             drawContent()
-                            val x = size.width * shimmerSweep
-                            drawRect(
-                                brush = Brush.linearGradient(
-                                    colors = listOf(
-                                        Color.Transparent,
-                                        accent.copy(alpha = 0.13f),
-                                        Color.White.copy(alpha = 0.12f),
-                                        accent.copy(alpha = 0.09f),
-                                        Color.Transparent
-                                    ),
-                                    start = Offset(x - size.width * 0.30f, 0f),
-                                    end = Offset(x + size.width * 0.16f, size.height)
+                            val sweep = shimmerSweep.value
+                            val shimmerAlpha = when {
+                                sweep < -1.05f -> 0f
+                                sweep < -0.60f -> ((sweep + 1.05f) / 0.45f).coerceIn(0f, 1f)
+                                sweep > 2.05f -> 0f
+                                sweep > 1.60f -> ((2.05f - sweep) / 0.45f).coerceIn(0f, 1f)
+                                else -> 1f
+                            }
+                            if (shimmerAlpha > 0f) {
+                                val x = size.width * sweep
+                                drawRect(
+                                    brush = Brush.linearGradient(
+                                        colors = listOf(
+                                            Color.Transparent,
+                                            accent.copy(alpha = 0.13f * shimmerAlpha),
+                                            Color.White.copy(alpha = 0.12f * shimmerAlpha),
+                                            accent.copy(alpha = 0.09f * shimmerAlpha),
+                                            Color.Transparent
+                                        ),
+                                        start = Offset(x - size.width * 0.30f, 0f),
+                                        end = Offset(x + size.width * 0.16f, size.height)
+                                    )
                                 )
-                            )
+                            }
                         }
                     } else {
                         Modifier

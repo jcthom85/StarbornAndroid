@@ -88,6 +88,7 @@ private val TitleCyan = Color(0xFF63E6FF)
 private val TitlePanel = Color(0xFF061018)
 private val TitleText = Color(0xFFF7FBFF)
 private val TitleMutedText = Color(0xFFD7EAF4)
+private const val TITLE_LOAD_BLACKOUT_HOLD_MS = 1400L
 
 @Composable
 fun MainMenuScreen(
@@ -105,7 +106,7 @@ fun MainMenuScreen(
 ) {
     var startingGame by remember { mutableStateOf(false) }
     var pendingScenario by remember { mutableStateOf<DebugScenario?>(null) }
-    var loadingSavedGame by remember { mutableStateOf(false) }
+    var pendingLoadSlot by remember { mutableStateOf<Int?>(null) }
     var showDebugBrowser by remember { mutableStateOf(false) }
     var showSettings by remember { mutableStateOf(false) }
     var saveLoadMode by remember { mutableStateOf<String?>(null) }
@@ -174,8 +175,8 @@ fun MainMenuScreen(
         }
     }
 
-    LaunchedEffect(startingGame, pendingScenario, loadingSavedGame) {
-        if (!startingGame && pendingScenario == null && !loadingSavedGame) {
+    LaunchedEffect(startingGame, pendingScenario, pendingLoadSlot) {
+        if (!startingGame && pendingScenario == null && pendingLoadSlot == null) {
             fadeOutAlpha.animateTo(
                 targetValue = 0f,
                 animationSpec = tween(durationMillis = 260, easing = FastOutSlowInEasing)
@@ -201,10 +202,13 @@ fun MainMenuScreen(
         val onFailure: () -> Unit = {
             startingGame = false
             pendingScenario = null
-            loadingSavedGame = false
+            pendingLoadSlot = null
         }
         val scenario = pendingScenario
+        val loadSlot = pendingLoadSlot
         if (scenario != null) {
+            // Give the frame a beat to present the black overlay before loading debug state.
+            delay(120)
             viewModel.startDebugScenario(
                 scenario = scenario,
                 onComplete = {
@@ -215,9 +219,16 @@ fun MainMenuScreen(
                 },
                 onFailure = onFailure
             )
-        } else if (loadingSavedGame) {
-            onSlotLoaded()
+        } else if (loadSlot != null) {
+            delay(TITLE_LOAD_BLACKOUT_HOLD_MS)
+            val success = viewModel.loadSlot(loadSlot)
+            if (success) {
+                onSlotLoaded()
+            } else {
+                onFailure()
+            }
         } else if (startingGame) {
+            delay(TITLE_LOAD_BLACKOUT_HOLD_MS)
             viewModel.startNewGame(onComplete = { onStartGame() }, onFailure = onFailure)
         }
     }
@@ -281,25 +292,25 @@ fun MainMenuScreen(
             StarbornTitleButton(
                 text = "New Game",
                 onClick = { startingGame = true },
-                enabled = !startingGame && pendingScenario == null && !loadingSavedGame,
+                enabled = !startingGame && pendingScenario == null && pendingLoadSlot == null,
                 primary = true
             )
             if (BuildConfig.DEBUG) {
                 StarbornTitleButton(
                     text = "Debug Scenarios",
                     onClick = { showDebugBrowser = true },
-                    enabled = !startingGame && pendingScenario == null && !loadingSavedGame
+                    enabled = !startingGame && pendingScenario == null && pendingLoadSlot == null
                 )
             }
             StarbornTitleButton(
                 text = "Load Game",
                 onClick = { saveLoadMode = "load" },
-                enabled = !startingGame && pendingScenario == null && !loadingSavedGame
+                enabled = !startingGame && pendingScenario == null && pendingLoadSlot == null
             )
             StarbornTitleButton(
                 text = "Settings",
                 onClick = { showSettings = true },
-                enabled = !startingGame && pendingScenario == null && !loadingSavedGame
+                enabled = !startingGame && pendingScenario == null && pendingLoadSlot == null
             )
         }
 
@@ -334,13 +345,8 @@ fun MainMenuScreen(
                     }
                 },
                 onLoad = { slot ->
-                    scope.launch {
-                        val success = viewModel.loadSlot(slot)
-                        if (success) {
-                            saveLoadMode = null
-                            loadingSavedGame = true
-                        }
-                    }
+                    saveLoadMode = null
+                    pendingLoadSlot = slot
                 },
                 onDelete = { slot ->
                     scope.launch {
