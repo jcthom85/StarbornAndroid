@@ -42,6 +42,15 @@ object DialogueTriggerParser {
             "clear_milestone" -> value.takeIf { it.isNotBlank() }?.let {
                 EventAction(type = "clear_milestone", milestone = it)
             }
+            "reveal_node" -> value.takeIf { it.isNotBlank() }?.let {
+                EventAction(type = "reveal_node", nodeId = it)
+            }
+            "unlock_node" -> value.takeIf { it.isNotBlank() }?.let {
+                EventAction(type = "unlock_node", nodeId = it)
+            }
+            "complete_node" -> value.takeIf { it.isNotBlank() }?.let {
+                EventAction(type = "complete_node", nodeId = it)
+            }
             "give_item" -> parseIdQuantity(value)?.let { (itemId, qty) ->
                 EventAction(type = "give_item", itemId = itemId, quantity = qty)
             }

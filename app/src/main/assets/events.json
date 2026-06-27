@@ -785,6 +785,10 @@
         "milestone": "ms_w1_mq01_complete"
       },
       {
+        "type": "unlock_node",
+        "node_id": "admin_gate"
+      },
+      {
         "type": "start_dialogue",
         "npc": "Jed"
       }

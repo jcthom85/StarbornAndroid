@@ -297,7 +297,7 @@
     "id": "jed_w1_mq01_repair_done_5",
     "speaker": "Jed",
     "text": "Exactly. Get to the checkpoint, let Hank's scanner reject whatever it wants, then find Zeke at the Admin window if the system gets stupid. Move.",
-    "trigger": "start_quest:w1_mq02,track_quest:w1_mq02,advance_quest_stage:w1_mq02:reach_checkpoint,set_milestone:ms_w1_mq02_clearance_ordered"
+    "trigger": "start_quest:w1_mq02,track_quest:w1_mq02,advance_quest_stage:w1_mq02:reach_checkpoint,set_milestone:ms_w1_mq02_clearance_ordered,unlock_node:admin_gate"
   },
   {
     "id": "jed_default_talk",
