@@ -11,6 +11,7 @@ import com.example.starborn.domain.session.GameSessionStore
 import com.squareup.moshi.Types
 import java.io.File
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -28,6 +29,9 @@ class Hub4CriticalFlowTest {
         var state = harness.store.state.value
         assertTrue(state.activeQuests.contains("w3_mq13"))
         assertEquals("spire_laundry_service", state.roomId)
+
+        harness.events.handleTrigger("player_action", EventPayload.Action("w3_mq13_disable_sensors"))
+        assertFalse(harness.store.state.value.questTasksCompleted["w3_mq13"].orEmpty().contains("disable_sensors"))
 
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("spire_skypark_dome"))
         val curator = harness.dialogue.startDialogue("Curator")

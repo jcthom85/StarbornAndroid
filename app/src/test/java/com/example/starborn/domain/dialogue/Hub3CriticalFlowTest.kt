@@ -11,6 +11,7 @@ import com.example.starborn.domain.session.GameSessionStore
 import com.squareup.moshi.Types
 import java.io.File
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -78,6 +79,10 @@ class Hub3CriticalFlowTest {
         // 1. Talk to Jax
         harness.events.handleTrigger("player_action", EventPayload.Action("w3_mq12_talk_jax"))
         assertTrue(harness.store.state.value.questTasksCompleted["w3_mq12"].orEmpty().contains("talk_jax"))
+
+        // Workstation blueprints should stay locked until the heist prep pieces are gathered.
+        harness.events.handleTrigger("player_action", EventPayload.Action("w3_mq12_hack_blueprints"))
+        assertFalse(harness.store.state.value.questTasksCompleted["w3_mq12"].orEmpty().contains("hack_blueprints"))
 
         // 2. Study patrol timing at the underrail platform
         harness.events.handleTrigger("player_action", EventPayload.Action("w3_mq12_map_patrols"))

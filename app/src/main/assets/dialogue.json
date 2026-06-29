@@ -1183,7 +1183,7 @@
   {
     "id": "zeke_w3_mq13_console_intro",
     "speaker": "Zeke",
-    "condition": "quest_active:w3_mq13,quest_task_not_done:w3_mq13:disable_sensors",
+    "condition": "quest_active:w3_mq13,quest_task_done:w3_mq13:blend_in,quest_task_not_done:w3_mq13:disable_sensors",
     "text": "Standard Dominion scanner grid, routed through Laundry Service because the people who clean their lives are invisible by design.",
     "next": "zeke_w3_mq13_console_end"
   },

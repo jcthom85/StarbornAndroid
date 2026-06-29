@@ -4357,6 +4357,31 @@
         "quest_id": "w3_mq12"
       },
       {
+        "type": "quest_task_done",
+        "quest_id": "w3_mq12",
+        "task_id": "talk_jax"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w3_mq12",
+        "task_id": "map_patrols"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w3_mq12",
+        "task_id": "interrogate_guard"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w3_mq12",
+        "task_id": "copy_badges"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w3_mq12",
+        "task_id": "source_disguises"
+      },
+      {
         "type": "quest_task_not_done",
         "quest_id": "w3_mq12",
         "task_id": "hack_blueprints"
@@ -4683,6 +4708,11 @@
       {
         "type": "quest_active",
         "quest_id": "w3_mq13"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w3_mq13",
+        "task_id": "blend_in"
       },
       {
         "type": "quest_task_not_done",
