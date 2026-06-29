@@ -4506,6 +4506,15 @@
         "quest_id": "w3_sq11"
       },
       {
+        "type": "track_quest",
+        "quest_id": "w3_sq11"
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w3_sq11",
+        "task_id": "inspect_sign"
+      },
+      {
         "type": "show_message",
         "message": "You inspect the buzzing neon sign. Its power core is burnt out, leaving The Static looking abandoned enough for patrols to get curious. Jax needs a replacement core."
       }
@@ -5296,7 +5305,7 @@
       },
       {
         "type": "show_message",
-        "message": "Side Quest Started: Corporate Espionage"
+        "message": "Side Quest Started: Corporate Espionage\n\nThe private safe is careless in the specific way rich people get when nobody has ever told them no. Its ledger could turn Upper City arrogance into leverage."
       }
     ]
   },
@@ -5372,7 +5381,7 @@
       },
       {
         "type": "show_message",
-        "message": "Side Quest Started: Prototype Testing"
+        "message": "Side Quest Started: Prototype Testing\n\nThe lab terminal offers a Dominion weapon trial with no ethical waiver, no safety stop, and a reward cache still attached. The drones are already marked expendable."
       }
     ]
   },

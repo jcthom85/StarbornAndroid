@@ -121,14 +121,17 @@ class Hub3CriticalFlowTest {
         // --- SQ11: Neon Fix (Jax) ---
         // Inspect sign to trigger quest accept
         harness.events.handleTrigger("player_action", EventPayload.Action("w3_sq11_inspect_sign"))
-        assertTrue(harness.store.state.value.activeQuests.contains("w3_sq11"))
+        var state = harness.store.state.value
+        assertTrue(state.activeQuests.contains("w3_sq11"))
+        assertEquals("w3_sq11", state.trackedQuestId)
+        assertTrue(state.questTasksCompleted["w3_sq11"].orEmpty().contains("inspect_sign"))
 
         // Give player the sign core
         harness.store.setInventory(mapOf("neon_sign_core" to 1))
 
         // Install core
         harness.events.handleTrigger("player_action", EventPayload.Action("w3_sq11_install_core"))
-        var state = harness.store.state.value
+        state = harness.store.state.value
         assertTrue(state.completedQuests.contains("w3_sq11"))
         assertTrue(state.completedMilestones.contains("ms_w3_streetwise_unlocked"))
 
@@ -150,6 +153,30 @@ class Hub3CriticalFlowTest {
         assertTrue(state.completedQuests.contains("w3_sq13"))
         assertTrue(state.completedMilestones.contains("ms_w3_market_lit"))
         assertTrue(state.inventory["neon_band"].orZero() >= 1)
+
+        // --- SQ14: Corporate Espionage ---
+        harness.events.handleTrigger("player_action", EventPayload.Action("w3_sq14_start"))
+        state = harness.store.state.value
+        assertTrue(state.activeQuests.contains("w3_sq14"))
+        assertEquals("w3_sq14", state.trackedQuestId)
+
+        harness.events.handleTrigger("player_action", EventPayload.Action("w3_sq14_steal_ledger"))
+        state = harness.store.state.value
+        assertTrue(state.completedQuests.contains("w3_sq14"))
+        assertTrue(state.completedMilestones.contains("ms_w3_blackmail_unlocked"))
+        assertTrue(state.inventory["encrypted_ledger"].orZero() >= 1)
+
+        // --- SQ15: Prototype Testing ---
+        harness.events.handleTrigger("player_action", EventPayload.Action("w3_sq15_start"))
+        state = harness.store.state.value
+        assertTrue(state.activeQuests.contains("w3_sq15"))
+        assertEquals("w3_sq15", state.trackedQuestId)
+
+        harness.events.handleTrigger("player_action", EventPayload.Action("w3_sq15_test_weapon"))
+        state = harness.store.state.value
+        assertTrue(state.completedQuests.contains("w3_sq15"))
+        assertTrue(state.completedMilestones.contains("ms_w3_prototype_tested"))
+        assertTrue(state.inventory["phase_rounds"].orZero() >= 1)
     }
 
     private class Hub3Harness(initialState: GameSessionState? = null) {
