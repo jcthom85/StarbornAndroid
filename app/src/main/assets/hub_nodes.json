@@ -636,7 +636,10 @@
     "rooms": [
       "spire_vent_output",
       "spire_rain_gutter_alley",
-      "spire_underrail_platform"
+      "spire_underrail_platform",
+      "spire_vent_output_scale_01",
+      "spire_vent_output_scale_02",
+      "spire_vent_output_scale_03"
     ],
     "discovered": false,
     "initial_visibility": "hidden",
@@ -663,7 +666,10 @@
       "spire_old_subway_car",
       "spire_signal_stairwell",
       "spire_zekes_apartment",
-      "spire_safehouse_roof"
+      "spire_safehouse_roof",
+      "spire_the_static_scale_01",
+      "spire_the_static_scale_02",
+      "spire_the_static_scale_03"
     ],
     "discovered": false,
     "initial_visibility": "hidden",
@@ -689,7 +695,10 @@
       "spire_night_market",
       "spire_noodle_row",
       "spire_lantern_bridge",
-      "spire_backstreet_clinic"
+      "spire_backstreet_clinic",
+      "spire_night_market_scale_01",
+      "spire_night_market_scale_02",
+      "spire_night_market_scale_03"
     ],
     "discovered": false,
     "initial_visibility": "hidden",
@@ -715,7 +724,10 @@
       "spire_sewers_landing",
       "spire_runoff_lock",
       "spire_sewers_passage",
-      "spire_maintenance_sluice"
+      "spire_maintenance_sluice",
+      "spire_sewers_scale_01",
+      "spire_sewers_scale_02",
+      "spire_sewers_scale_03"
     ],
     "discovered": true,
     "initial_visibility": "unlocked",
@@ -741,7 +753,10 @@
       "spire_transit_plaza",
       "spire_checkpoint_queue",
       "spire_security_kiosk",
-      "spire_elevator_service_gate"
+      "spire_elevator_service_gate",
+      "spire_transit_plaza_scale_01",
+      "spire_transit_plaza_scale_02",
+      "spire_transit_plaza_scale_03"
     ],
     "discovered": false,
     "initial_visibility": "hidden",
@@ -767,7 +782,10 @@
       "spire_laundry_service",
       "spire_uniform_sorting",
       "spire_service_lift",
-      "spire_staff_checkpoint"
+      "spire_staff_checkpoint",
+      "spire_laundry_scale_01",
+      "spire_laundry_scale_02",
+      "spire_laundry_scale_03"
     ],
     "discovered": true,
     "initial_visibility": "unlocked",
@@ -792,7 +810,10 @@
     "rooms": [
       "spire_skypark_dome",
       "spire_glasswalk",
-      "spire_donor_gallery"
+      "spire_donor_gallery",
+      "spire_skypark_scale_01",
+      "spire_skypark_scale_02",
+      "spire_skypark_scale_03"
     ],
     "discovered": false,
     "initial_visibility": "hidden",
@@ -815,7 +836,12 @@
       210
     ],
     "rooms": [
-      "spire_exec_lounge_bar"
+      "spire_exec_lounge_bar",
+      "spire_exec_lounge_scale_01",
+      "spire_exec_lounge_scale_02",
+      "spire_exec_lounge_scale_03",
+      "spire_exec_lounge_scale_04",
+      "spire_exec_lounge_scale_05"
     ],
     "discovered": false,
     "initial_visibility": "hidden",
@@ -840,7 +866,10 @@
     "rooms": [
       "spire_prism_gallery",
       "spire_archive_vault",
-      "spire_drone_test_alcove"
+      "spire_drone_test_alcove",
+      "spire_archive_scale_01",
+      "spire_archive_scale_02",
+      "spire_archive_scale_03"
     ],
     "discovered": false,
     "initial_visibility": "hidden",
@@ -863,7 +892,11 @@
       240
     ],
     "rooms": [
-      "spire_landing_pad_roof"
+      "spire_landing_pad_roof",
+      "spire_landing_pad_scale_01",
+      "spire_landing_pad_scale_02",
+      "spire_landing_pad_scale_03",
+      "spire_landing_pad_scale_04"
     ],
     "discovered": false,
     "initial_visibility": "hidden",
@@ -887,7 +920,12 @@
     ],
     "rooms": [
       "foundry_slag_landing",
-      "foundry_obsidian_overlook"
+      "foundry_obsidian_overlook",
+      "foundry_obsidian_shelf_scale_01",
+      "foundry_obsidian_shelf_scale_02",
+      "foundry_obsidian_shelf_scale_03",
+      "foundry_obsidian_shelf_scale_04",
+      "foundry_obsidian_shelf_scale_final"
     ],
     "discovered": true,
     "initial_visibility": "unlocked",
@@ -911,7 +949,12 @@
     ],
     "rooms": [
       "foundry_slag_river",
-      "foundry_slag_stepping_stones"
+      "foundry_slag_stepping_stones",
+      "foundry_slag_river_scale_01",
+      "foundry_slag_river_scale_02",
+      "foundry_slag_river_scale_03",
+      "foundry_slag_river_scale_04",
+      "foundry_slag_river_scale_final"
     ],
     "discovered": false,
     "initial_visibility": "hidden",
@@ -935,7 +978,12 @@
     ],
     "rooms": [
       "foundry_cooling_springs",
-      "foundry_lava_tube_bypass"
+      "foundry_lava_tube_bypass",
+      "foundry_cooling_springs_scale_01",
+      "foundry_cooling_springs_scale_02",
+      "foundry_cooling_springs_scale_03",
+      "foundry_cooling_springs_scale_04",
+      "foundry_cooling_springs_scale_final"
     ],
     "discovered": false,
     "initial_visibility": "hidden",
@@ -959,7 +1007,12 @@
     ],
     "rooms": [
       "foundry_waste_intake",
-      "foundry_intake_overlook"
+      "foundry_intake_overlook",
+      "foundry_waste_intake_scale_01",
+      "foundry_waste_intake_scale_02",
+      "foundry_waste_intake_scale_03",
+      "foundry_waste_intake_scale_04",
+      "foundry_waste_intake_scale_final"
     ],
     "discovered": false,
     "initial_visibility": "hidden",
@@ -983,7 +1036,12 @@
     ],
     "rooms": [
       "foundry_service_airlock",
-      "foundry_decon_chamber"
+      "foundry_decon_chamber",
+      "foundry_service_airlock_scale_01",
+      "foundry_service_airlock_scale_02",
+      "foundry_service_airlock_scale_03",
+      "foundry_service_airlock_scale_04",
+      "foundry_service_airlock_scale_final"
     ],
     "discovered": false,
     "initial_visibility": "hidden",
@@ -1008,7 +1066,12 @@
     "rooms": [
       "foundry_conveyor_belt",
       "foundry_belt_service_walk",
-      "foundry_reject_bay"
+      "foundry_reject_bay",
+      "foundry_conveyor_belt_scale_01",
+      "foundry_conveyor_belt_scale_02",
+      "foundry_conveyor_belt_scale_03",
+      "foundry_conveyor_belt_scale_04",
+      "foundry_conveyor_belt_scale_final"
     ],
     "discovered": true,
     "initial_visibility": "unlocked",
@@ -1032,7 +1095,12 @@
     ],
     "rooms": [
       "foundry_conditioning_chamber",
-      "foundry_conditioning_observation"
+      "foundry_conditioning_observation",
+      "foundry_conditioning_scale_01",
+      "foundry_conditioning_scale_02",
+      "foundry_conditioning_scale_03",
+      "foundry_conditioning_scale_04",
+      "foundry_conditioning_scale_final"
     ],
     "discovered": false,
     "initial_visibility": "hidden",
@@ -1056,7 +1124,12 @@
     ],
     "rooms": [
       "foundry_forge_anvil",
-      "foundry_forge_control_alcove"
+      "foundry_forge_control_alcove",
+      "foundry_forge_scale_01",
+      "foundry_forge_scale_02",
+      "foundry_forge_scale_03",
+      "foundry_forge_scale_04",
+      "foundry_forge_scale_final"
     ],
     "discovered": false,
     "initial_visibility": "hidden",
@@ -1080,7 +1153,12 @@
     ],
     "rooms": [
       "foundry_power_core",
-      "foundry_engine_service_ring"
+      "foundry_engine_service_ring",
+      "foundry_power_core_scale_01",
+      "foundry_power_core_scale_02",
+      "foundry_power_core_scale_03",
+      "foundry_power_core_scale_04",
+      "foundry_power_core_scale_final"
     ],
     "discovered": false,
     "initial_visibility": "hidden",
@@ -1104,7 +1182,12 @@
     ],
     "rooms": [
       "foundry_titan_dock",
-      "foundry_escape_catwalk"
+      "foundry_escape_catwalk",
+      "foundry_titan_dock_scale_01",
+      "foundry_titan_dock_scale_02",
+      "foundry_titan_dock_scale_03",
+      "foundry_titan_dock_scale_04",
+      "foundry_titan_dock_scale_final"
     ],
     "discovered": false,
     "initial_visibility": "hidden",
@@ -1128,7 +1211,14 @@
     ],
     "rooms": [
       "orbital_executive_dock",
-      "orbital_airlock_gallery"
+      "orbital_airlock_gallery",
+      "orbital_executive_dock_scale_01",
+      "orbital_executive_dock_scale_02",
+      "orbital_executive_dock_scale_03",
+      "orbital_executive_dock_scale_04",
+      "orbital_executive_dock_scale_05",
+      "orbital_executive_dock_scale_06",
+      "orbital_executive_dock_scale_final"
     ],
     "discovered": true,
     "initial_visibility": "unlocked",
@@ -1152,7 +1242,14 @@
     ],
     "rooms": [
       "orbital_grand_concourse",
-      "orbital_customs_lounge"
+      "orbital_customs_lounge",
+      "orbital_grand_concourse_scale_01",
+      "orbital_grand_concourse_scale_02",
+      "orbital_grand_concourse_scale_03",
+      "orbital_grand_concourse_scale_04",
+      "orbital_grand_concourse_scale_05",
+      "orbital_grand_concourse_scale_06",
+      "orbital_grand_concourse_scale_final"
     ],
     "discovered": false,
     "initial_visibility": "hidden",
@@ -1176,7 +1273,14 @@
     ],
     "rooms": [
       "orbital_solarium",
-      "orbital_mirror_walk"
+      "orbital_mirror_walk",
+      "orbital_solarium_scale_01",
+      "orbital_solarium_scale_02",
+      "orbital_solarium_scale_03",
+      "orbital_solarium_scale_04",
+      "orbital_solarium_scale_05",
+      "orbital_solarium_scale_06",
+      "orbital_solarium_scale_final"
     ],
     "discovered": false,
     "initial_visibility": "hidden",
@@ -1200,7 +1304,14 @@
     ],
     "rooms": [
       "orbital_security_hub",
-      "orbital_surveillance_pit"
+      "orbital_surveillance_pit",
+      "orbital_security_hub_scale_01",
+      "orbital_security_hub_scale_02",
+      "orbital_security_hub_scale_03",
+      "orbital_security_hub_scale_04",
+      "orbital_security_hub_scale_05",
+      "orbital_security_hub_scale_06",
+      "orbital_security_hub_scale_final"
     ],
     "discovered": false,
     "initial_visibility": "hidden",
@@ -1224,7 +1335,14 @@
     ],
     "rooms": [
       "orbital_service_shaft",
-      "orbital_zero_g_junction"
+      "orbital_zero_g_junction",
+      "orbital_service_shaft_scale_01",
+      "orbital_service_shaft_scale_02",
+      "orbital_service_shaft_scale_03",
+      "orbital_service_shaft_scale_04",
+      "orbital_service_shaft_scale_05",
+      "orbital_service_shaft_scale_06",
+      "orbital_service_shaft_scale_final"
     ],
     "discovered": false,
     "initial_visibility": "hidden",
@@ -1253,7 +1371,11 @@
       "deep_firewall_beta",
       "deep_firewall_gamma",
       "deep_backup_rack",
-      "deep_sysadmin_nest"
+      "deep_sysadmin_nest",
+      "deep_server_farm_scale_01",
+      "deep_server_farm_scale_02",
+      "deep_server_farm_scale_03",
+      "deep_server_farm_scale_04"
     ],
     "discovered": true,
     "initial_visibility": "unlocked",
@@ -1276,7 +1398,15 @@
       230
     ],
     "rooms": [
-      "deep_anchor_chamber"
+      "deep_anchor_chamber",
+      "deep_anchor_chamber_scale_01",
+      "deep_anchor_chamber_scale_02",
+      "deep_anchor_chamber_scale_03",
+      "deep_anchor_chamber_scale_04",
+      "deep_anchor_chamber_scale_05",
+      "deep_anchor_chamber_scale_06",
+      "deep_anchor_chamber_scale_07",
+      "deep_anchor_chamber_scale_08"
     ],
     "discovered": false,
     "initial_visibility": "hidden",
@@ -1299,7 +1429,14 @@
       230
     ],
     "rooms": [
-      "deep_throne_room"
+      "deep_throne_room",
+      "deep_throne_room_scale_01",
+      "deep_throne_room_scale_02",
+      "deep_throne_room_scale_03",
+      "deep_throne_room_scale_04",
+      "deep_throne_room_scale_05",
+      "deep_throne_room_scale_06",
+      "deep_throne_room_scale_07"
     ],
     "discovered": false,
     "initial_visibility": "hidden",
@@ -1322,7 +1459,13 @@
       250
     ],
     "rooms": [
-      "deep_tear"
+      "deep_tear",
+      "deep_tear_scale_01",
+      "deep_tear_scale_02",
+      "deep_tear_scale_03",
+      "deep_tear_scale_04",
+      "deep_tear_scale_05",
+      "deep_tear_scale_06"
     ],
     "discovered": false,
     "initial_visibility": "hidden",
@@ -1345,7 +1488,12 @@
       250
     ],
     "rooms": [
-      "source_campfire"
+      "source_campfire",
+      "source_campfire_node_scale_01",
+      "source_campfire_node_scale_02",
+      "source_campfire_node_scale_03",
+      "source_campfire_node_scale_04",
+      "source_campfire_node_scale_final"
     ],
     "discovered": true,
     "initial_visibility": "unlocked",
@@ -1368,7 +1516,12 @@
       220
     ],
     "rooms": [
-      "source_zeke_nightmare"
+      "source_zeke_nightmare",
+      "source_zeke_review_loop",
+      "source_zeke_break_room",
+      "source_zeke_nightmare_node_scale_01",
+      "source_zeke_nightmare_node_scale_02",
+      "source_zeke_nightmare_node_scale_03"
     ],
     "discovered": false,
     "initial_visibility": "hidden",
@@ -1391,7 +1544,12 @@
       220
     ],
     "rooms": [
-      "source_gh0st_nightmare"
+      "source_gh0st_nightmare",
+      "source_gh0st_kill_suite",
+      "source_gh0st_elara_signal",
+      "source_gh0st_nightmare_node_scale_01",
+      "source_gh0st_nightmare_node_scale_02",
+      "source_gh0st_nightmare_node_scale_03"
     ],
     "discovered": false,
     "initial_visibility": "hidden",
@@ -1414,7 +1572,12 @@
       220
     ],
     "rooms": [
-      "source_orion_nightmare"
+      "source_orion_nightmare",
+      "source_orion_tide_well",
+      "source_orion_chorus",
+      "source_orion_nightmare_node_scale_01",
+      "source_orion_nightmare_node_scale_02",
+      "source_orion_nightmare_node_scale_03"
     ],
     "discovered": false,
     "initial_visibility": "hidden",
@@ -1438,7 +1601,14 @@
     ],
     "rooms": [
       "source_echo_mines",
-      "source_echo_elevator"
+      "source_echo_workbench",
+      "source_echo_patrol",
+      "source_echo_elevator",
+      "source_echo_mines_node_scale_01",
+      "source_echo_mines_node_scale_02",
+      "source_echo_mines_node_scale_03",
+      "source_echo_mines_node_scale_04",
+      "source_echo_mines_node_scale_final"
     ],
     "discovered": false,
     "initial_visibility": "hidden",
@@ -1461,7 +1631,14 @@
       240
     ],
     "rooms": [
-      "source_memory_bridge"
+      "source_memory_bridge",
+      "source_memory_bridge_span",
+      "source_memory_threshold",
+      "source_memory_bridge_node_scale_01",
+      "source_memory_bridge_node_scale_02",
+      "source_memory_bridge_node_scale_03",
+      "source_memory_bridge_node_scale_04",
+      "source_memory_bridge_node_scale_final"
     ],
     "discovered": false,
     "initial_visibility": "hidden",
@@ -1484,7 +1661,13 @@
       240
     ],
     "rooms": [
-      "source_memory_stair"
+      "source_memory_stair",
+      "source_memory_fragments",
+      "source_memory_stair_node_scale_01",
+      "source_memory_stair_node_scale_02",
+      "source_memory_stair_node_scale_03",
+      "source_memory_stair_node_scale_04",
+      "source_memory_stair_node_scale_final"
     ],
     "discovered": true,
     "initial_visibility": "unlocked",
@@ -1507,7 +1690,13 @@
       240
     ],
     "rooms": [
-      "source_spire_thought"
+      "source_spire_thought",
+      "source_spire_archive",
+      "source_spire_arena",
+      "source_spire_thought_node_scale_01",
+      "source_spire_thought_node_scale_02",
+      "source_spire_thought_node_scale_03",
+      "source_spire_thought_node_scale_04"
     ],
     "discovered": false,
     "initial_visibility": "hidden",
@@ -1530,7 +1719,11 @@
       260
     ],
     "rooms": [
-      "source_center"
+      "source_center",
+      "source_center_node_scale_01",
+      "source_center_node_scale_02",
+      "source_center_node_scale_03",
+      "source_center_node_scale_final"
     ],
     "discovered": false,
     "initial_visibility": "hidden",
@@ -1553,7 +1746,11 @@
       250
     ],
     "rooms": [
-      "source_new_world"
+      "source_new_world",
+      "source_new_world_node_scale_01",
+      "source_new_world_node_scale_02",
+      "source_new_world_node_scale_03",
+      "source_new_world_node_scale_final"
     ],
     "discovered": false,
     "initial_visibility": "hidden",

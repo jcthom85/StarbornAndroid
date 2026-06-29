@@ -888,6 +888,11 @@ class AppServices(context: Context) {
         "w5_core_firewall" -> startNewGameAtW5CoreFirewall()
         "w5_anchor_chamber" -> startNewGameAtW5AnchorChamber()
         "w5_critical_mass" -> startNewGameAtW5CriticalMass()
+        "w6_fractured_minds" -> startNewGameAtW6FracturedMinds()
+        "w6_echo_mines" -> startNewGameAtW6EchoMines()
+        "w6_crossing" -> startNewGameAtW6Crossing()
+        "w6_spire" -> startNewGameAtW6Spire()
+        "w6_finale" -> startNewGameAtW6Finale()
         "node_progression_w1" -> startNewGameAtWorld1NodeProgression()
         "node_progression_w2" -> startNewGameAtWorld2NodeProgression()
         "astra_access" -> startNewGameAtAstraAccess()
@@ -1233,6 +1238,81 @@ class AppServices(context: Context) {
         true
     }.getOrElse { false }
 
+    private fun startNewGameAtW6FracturedMinds(): Boolean = runCatching {
+        if (!prepareWorld6DebugState()) return false
+        sessionStore.startQuest("w6_mq26", track = true)
+        sessionStore.setQuestStage("w6_mq26", "nightmares")
+        sessionStore.setWorld("world_6")
+        sessionStore.setHub("hub_11_event_horizon")
+        sessionStore.setRoom("source_campfire")
+        visitDebugNodes("source_campfire_node")
+        true
+    }.getOrElse { false }
+
+    private fun startNewGameAtW6EchoMines(): Boolean = runCatching {
+        if (!prepareWorld6DebugState(completedW6Quests = listOf("w6_mq26"))) return false
+        inventoryService.addItem("key_relic", 1)
+        sessionStore.setMilestone("ms_w6_mq26_complete")
+        sessionStore.startQuest("w6_mq27", track = true)
+        sessionStore.setQuestStage("w6_mq27", "distorted_mines")
+        sessionStore.setWorld("world_6")
+        sessionStore.setHub("hub_11_event_horizon")
+        sessionStore.setRoom("source_echo_mines")
+        visitDebugNodes(
+            "source_campfire_node",
+            "source_zeke_nightmare_node",
+            "source_gh0st_nightmare_node",
+            "source_orion_nightmare_node",
+            "source_echo_mines_node"
+        )
+        true
+    }.getOrElse { false }
+
+    private fun startNewGameAtW6Crossing(): Boolean = runCatching {
+        if (!prepareWorld6DebugState(completedW6Quests = listOf("w6_mq26", "w6_mq27"))) return false
+        inventoryService.addItem("key_relic", 1)
+        sessionStore.setMilestone("ms_w6_mq26_complete")
+        sessionStore.setMilestone("ms_w6_mq27_complete")
+        sessionStore.startQuest("w6_mq28", track = true)
+        sessionStore.setQuestStage("w6_mq28", "memory_bridge")
+        sessionStore.setWorld("world_6")
+        sessionStore.setHub("hub_11_event_horizon")
+        sessionStore.setRoom("source_memory_bridge")
+        visitDebugNodes("source_echo_mines_node", "source_memory_bridge_node")
+        true
+    }.getOrElse { false }
+
+    private fun startNewGameAtW6Spire(): Boolean = runCatching {
+        if (!prepareWorld6DebugState(completedW6Quests = listOf("w6_mq26", "w6_mq27", "w6_mq28"))) return false
+        inventoryService.addItem("key_relic", 1)
+        sessionStore.setMilestone("ms_w6_mq26_complete")
+        sessionStore.setMilestone("ms_w6_mq27_complete")
+        sessionStore.setMilestone("ms_w6_mq28_complete")
+        sessionStore.startQuest("w6_mq29", track = true)
+        sessionStore.setQuestStage("w6_mq29", "memory_ascent")
+        sessionStore.setWorld("world_6")
+        sessionStore.setHub("hub_12_singularity")
+        sessionStore.setRoom("source_memory_stair")
+        visitDebugNodes("source_memory_stair_node")
+        true
+    }.getOrElse { false }
+
+    private fun startNewGameAtW6Finale(): Boolean = runCatching {
+        if (!prepareWorld6DebugState(completedW6Quests = listOf("w6_mq26", "w6_mq27", "w6_mq28", "w6_mq29"))) return false
+        inventoryService.addItem("key_relic", 1)
+        sessionStore.setMilestone("ms_w6_mq26_complete")
+        sessionStore.setMilestone("ms_w6_mq27_complete")
+        sessionStore.setMilestone("ms_w6_mq28_complete")
+        sessionStore.setMilestone("ms_w6_mq29_complete")
+        sessionStore.startQuest("w6_mq30", track = true)
+        sessionStore.setQuestStage("w6_mq30", "soloist")
+        sessionStore.setWorld("world_6")
+        sessionStore.setHub("hub_12_singularity")
+        sessionStore.setRoom("source_center")
+        visitDebugNodes("source_memory_stair_node", "source_spire_thought_node", "source_center_node")
+        true
+    }.getOrElse { false }
+
     private fun prepareWorld2DebugState(completedW2Quests: List<String> = emptyList()): Boolean {
         if (!startNewGame(debugFullInventory = true)) return false
         clearDebugBootstrap()
@@ -1277,6 +1357,17 @@ class AppServices(context: Context) {
         sessionStore.setPartyMembers(listOf("nova", "zeke", "orion", "gh0st"))
         sessionStore.setMilestone("ms_w5_access_unlocked")
         sessionStore.setAstraReturnLocation("world_5", "hub_9_orbital_ring", "orbital_executive_dock")
+        return true
+    }
+
+    private fun prepareWorld6DebugState(completedW6Quests: List<String> = emptyList()): Boolean {
+        if (!prepareWorld5DebugState(completedW5Quests = listOf("w5_mq21", "w5_mq22", "w5_mq23", "w5_mq24", "w5_mq25"))) return false
+        completeDebugQuests(*completedW6Quests.toTypedArray())
+        inventoryService.addItem("anchor_relic", 1)
+        sessionStore.unlockSkill("source_art_stasis")
+        sessionStore.setPartyMembers(listOf("nova", "zeke", "orion", "gh0st"))
+        sessionStore.setMilestone("ms_w6_access_unlocked")
+        sessionStore.setAstraReturnLocation("world_6", "hub_11_event_horizon", "source_campfire")
         return true
     }
 

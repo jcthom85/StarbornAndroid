@@ -35,7 +35,7 @@
     "id": "hub_5_lower_city",
     "world_id": "world_3",
     "title": "Lower City",
-    "description": "A neon-lit foundation of vertical slums under constant rain and surveillance.",
+    "description": "Lower Spire streets, market roofs, sewer ratlines, and safehouse routes where the heist is assembled from overlooked lives.",
     "background_image": "images/hubs/hub_5_lower_city.png",
     "discovered": false
   },
@@ -43,7 +43,7 @@
     "id": "hub_6_upper_city",
     "world_id": "world_3",
     "title": "Upper City",
-    "description": "A sterile cloud district of white marble, gold glass, false sunlight, and silent Dominion wealth.",
+    "description": "Executive parks, service corridors, lounges, archives, and rooftop escape paths where politeness becomes the security system.",
     "background_image": "images/hubs/hub_6_upper_city.png",
     "discovered": false
   },
@@ -51,7 +51,7 @@
     "id": "hub_7_slag_pits",
     "world_id": "world_4",
     "title": "Slag Pits",
-    "description": "Sector 7, a geothermal war factory built into volcanic glass and rivers of slag.",
+    "description": "A dangerous Foundry outskirts network of slag routes, coolant shelters, waste machinery, and airlock systems around the Astra landing site.",
     "background_image": "images/hubs/hub_7_slag_pits.png",
     "discovered": false
   },
@@ -59,7 +59,7 @@
     "id": "hub_8_assembly_line",
     "world_id": "world_4",
     "title": "Assembly Line",
-    "description": "The Foundry interior: conveyor belts, conditioning rooms, relic forges, and the volcano core that powers Dominion war machines.",
+    "description": "The Foundry interior: conveyor timing, conditioning chambers, forge machinery, power-core theft, and the Titan escape route.",
     "background_image": "images/hubs/hub_8_assembly_line.png",
     "discovered": false
   },
@@ -67,7 +67,7 @@
     "id": "hub_9_orbital_ring",
     "world_id": "world_5",
     "title": "Dominion Orbital Ring",
-    "description": "A sterile halo of executive luxury, compliance checkpoints, and machinery suspended above the planet.",
+    "description": "The Ring surface: forced-dock scars, executive luxury, false paradise, security control, and zero-g service routes.",
     "background_image": "images/hubs/hub_9_orbital_ring.png",
     "discovered": false
   },
@@ -75,7 +75,7 @@
     "id": "hub_10_deep_ring",
     "world_id": "world_5",
     "title": "Deep Ring",
-    "description": "The frozen core of the Orbital Ring: firewall labyrinths, the Anchor Chamber, Vale's throne, and the breach beyond reality.",
+    "description": "The frozen core of the Orbital Ring: server crypts, firewall infrastructure, Elara's Anchor cathedral, Vale's throne, and the breach beyond reality.",
     "background_image": "images/hubs/hub_10_deep_ring.png",
     "discovered": false
   },
@@ -83,7 +83,7 @@
     "id": "hub_11_event_horizon",
     "world_id": "world_6",
     "title": "Event Horizon",
-    "description": "A fractured realm where perception replaces physics.",
+    "description": "A fractured realm where perception replaces physics, crew fears become walkable places, and the way forward is built from trust.",
     "background_image": "images/hubs/hub_11_event_horizon.png",
     "discovered": false
   },
@@ -91,7 +91,7 @@
     "id": "hub_12_singularity",
     "world_id": "world_6",
     "title": "The Singularity",
-    "description": "The final ascent through a spiral of memory toward the center of the Source.",
+    "description": "The final ascent through every memory the crew survived, ending at the white center where Vale tries to turn silence into salvation.",
     "background_image": "images/hubs/hub_12_singularity.png",
     "discovered": false
   },

@@ -662,7 +662,7 @@
     "from_room": "source_center",
     "direction": "west",
     "to_node": "source_spire_thought_node",
-    "to_room": "source_spire_thought",
+    "to_room": "source_spire_arena",
     "transition_text": "Travel to Spire of Thought."
   },
   {
@@ -722,7 +722,7 @@
   {
     "id": "source_memory_bridge_node__east__source_memory_stair_node",
     "from_node": "source_memory_bridge_node",
-    "from_room": "source_memory_bridge",
+    "from_room": "source_memory_threshold",
     "direction": "east",
     "to_node": "source_memory_stair_node",
     "to_room": "source_memory_stair",
@@ -740,7 +740,7 @@
   {
     "id": "source_memory_stair_node__east__source_spire_thought_node",
     "from_node": "source_memory_stair_node",
-    "from_room": "source_memory_stair",
+    "from_room": "source_memory_fragments",
     "direction": "east",
     "to_node": "source_spire_thought_node",
     "to_room": "source_spire_thought",
@@ -752,7 +752,7 @@
     "from_room": "source_memory_stair",
     "direction": "west",
     "to_node": "source_memory_bridge_node",
-    "to_room": "source_memory_bridge",
+    "to_room": "source_memory_threshold",
     "transition_text": "Travel to Memory Bridge."
   },
   {
@@ -776,7 +776,7 @@
   {
     "id": "source_spire_thought_node__east__source_center_node",
     "from_node": "source_spire_thought_node",
-    "from_room": "source_spire_thought",
+    "from_room": "source_spire_arena",
     "direction": "east",
     "to_node": "source_center_node",
     "to_room": "source_center",
@@ -788,7 +788,7 @@
     "from_room": "source_spire_thought",
     "direction": "west",
     "to_node": "source_memory_stair_node",
-    "to_room": "source_memory_stair",
+    "to_room": "source_memory_fragments",
     "transition_text": "Travel to Memory Stair."
   },
   {

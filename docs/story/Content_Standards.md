@@ -55,7 +55,18 @@ To ensure locations feel like lived-in environments rather than single-purpose s
 | **Major / Home** | **8–12** | 1 Entry, 2-3 Main (Shops/Home), 4-5 Flavor/Loot, 2-3 Transition. |
 | **Dungeon / Combat** | **10–15** | 1 Entry, 3-4 Combat Arenas, 1-2 Puzzle/Gating, 4-5 Lore/Loot, 1 Boss/Relic. |
 
-**Progression Note:** This is the baseline for World 1. Later worlds (W3+) should increase these counts by ~50% (e.g., 15–20 rooms for a dungeon) as complexity and player traversal capabilities grow.
+**Progression Note:** This is the baseline for World 1. Later worlds should generally grow in perceived scale, complexity, and authored density rather than shrinking into quest corridors. World 6 may be tighter than World 5 because it is a finale, but it must still feel premium, dense, and climactic rather than compressed.
+
+Current world room-count targets:
+
+| World | Room Count Intent |
+| :--- | :--- |
+| **World 1** | ~80 rooms; onboarding baseline with dense tutorials and grounded colony spaces. |
+| **World 2** | ~90 rooms; first broad exploration world with large wilderness/facility routes. |
+| **World 3** | ~60-70 rooms; heist city with layered lower/upper city traversal and social infiltration. |
+| **World 4** | ~70 rooms; industrial dungeon world where every node reads as part of one Foundry system. |
+| **World 5** | ~80 rooms; late-game megastructure with luxury, security, server, Anchor, throne, and Tear spaces. |
+| **World 6** | ~60-70 rooms; slightly tighter finale focused on surreal density, memory spaces, and emotional resolution. |
 
 ---
 

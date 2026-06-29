@@ -48,6 +48,11 @@ object DebugScenarioCatalog {
         scenario("w5_core_firewall", "W5 / Core Firewall", "Resume The Core Approach inside the Server Farm.", DebugScenarioCategory.STORY),
         scenario("w5_anchor_chamber", "W5 / Anchor Chamber", "Resume The Anchor at Elara's chamber.", DebugScenarioCategory.STORY),
         scenario("w5_critical_mass", "W5 / Critical Mass", "Resume Critical Mass in Vale's Throne Room.", DebugScenarioCategory.STORY),
+        scenario("w6_fractured_minds", "W6 / Fractured Minds", "Start World 6 at the Source Campfire with the crew trapped in nightmares.", DebugScenarioCategory.STORY),
+        scenario("w6_echo_mines", "W6 / Echo Mines", "Resume The Echo of the Mines after reassembling the crew.", DebugScenarioCategory.STORY),
+        scenario("w6_crossing", "W6 / The Crossing", "Resume The Crossing at the Memory Bridge with the Key recovered.", DebugScenarioCategory.STORY),
+        scenario("w6_spire", "W6 / Spire Ascent", "Resume The Spire of Thought at the Memory Stair.", DebugScenarioCategory.STORY),
+        scenario("w6_finale", "W6 / Finale", "Resume The Final Note at the Center before confronting Vale.", DebugScenarioCategory.STORY),
 
         hub("hub_1_homestead", "World 1 / Homestead Quarter", "The Mines", "Orient at the first World 1 hub."),
         hub("hub_2_logistics", "World 1 / Logistics Sector", "The Mines", "Orient at the second World 1 hub."),
