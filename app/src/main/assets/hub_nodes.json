@@ -638,9 +638,9 @@
       "spire_rain_gutter_alley",
       "spire_underrail_platform"
     ],
-    "discovered": true,
-    "initial_visibility": "unlocked",
-    "entry_policy": "hub",
+    "discovered": false,
+    "initial_visibility": "hidden",
+    "entry_policy": "transition",
     "return_policy": "entry"
   },
   {
@@ -717,9 +717,9 @@
       "spire_sewers_passage",
       "spire_maintenance_sluice"
     ],
-    "discovered": false,
-    "initial_visibility": "hidden",
-    "entry_policy": "transition",
+    "discovered": true,
+    "initial_visibility": "unlocked",
+    "entry_policy": "hub",
     "return_policy": "entry"
   },
   {

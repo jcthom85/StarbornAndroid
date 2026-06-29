@@ -329,6 +329,27 @@ class DataIntegrityTest {
     }
 
     @Test
+    fun worldThreeHubStartsMatchStoryEntryPoints() {
+        val nodes = readList("src/main/assets/hub_nodes.json", HubNode::class.java)
+            .filter { it.hubId in setOf("hub_5_lower_city", "hub_6_upper_city") }
+            .associateBy { it.id }
+
+        val sewers = requireNotNull(nodes["spire_sewers"]) { "Missing World 3 Sewers node" }
+        assertEquals("spire_sewers_landing", sewers.entryRoom)
+        assertEquals("unlocked", sewers.initialVisibility)
+        assertEquals("hub", sewers.entryPolicy)
+
+        val ventOutput = requireNotNull(nodes["spire_vent_output"]) { "Missing World 3 Vent Output node" }
+        assertEquals("hidden", ventOutput.initialVisibility)
+        assertEquals("transition", ventOutput.entryPolicy)
+
+        val laundry = requireNotNull(nodes["spire_laundry"]) { "Missing World 3 Laundry Service node" }
+        assertEquals("spire_laundry_service", laundry.entryRoom)
+        assertEquals("unlocked", laundry.initialVisibility)
+        assertEquals("hub", laundry.entryPolicy)
+    }
+
+    @Test
     fun allHubNodeEntriesExistAndBelongToTheirNodes() {
         val nodes = readList("src/main/assets/hub_nodes.json", HubNode::class.java)
         val roomIds = readList("src/main/assets/rooms.json", RoomSummary::class.java)

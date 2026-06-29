@@ -933,8 +933,8 @@ class AppServices(context: Context) {
         sessionStore.setQuestStage("w3_mq11", "secure_landing_zone")
         sessionStore.setWorld("world_3")
         sessionStore.setHub("hub_5_lower_city")
-        sessionStore.setRoom("spire_vent_output")
-        sessionStore.visitNode("spire_vent_output")
+        sessionStore.setRoom("spire_sewers_landing")
+        sessionStore.visitNode("spire_sewers")
         return true
     }
 
