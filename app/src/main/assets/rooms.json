@@ -3747,6 +3747,7 @@
       {
         "name": "freight badges",
         "type": "generic",
+        "action_event": "w3_mq12_copy_badges",
         "condition_unmet_message": "The freight badges hanging at the booth are blank until a shift captain activates them."
       }
     ]
@@ -3770,6 +3771,14 @@
       1
     ],
     "state": {},
+    "description_variants": [
+      {
+        "description": "Laundry Service runs beneath the Cloud District under red lockdown strobes now. Steam pipes hiss around the sensor console and service chute while cleaning bots repeat evacuation instructions no worker has time to obey.",
+        "requires_milestones": [
+          "ms_w3_mq14_complete"
+        ]
+      }
+    ],
     "actions": [
       {
         "name": "sensor console",
@@ -3804,6 +3813,14 @@
       6
     ],
     "state": {},
+    "description_variants": [
+      {
+        "description": "Uniform sorting smells like detergent, fear, and overheated brakes. Uniform racks stand abandoned in lockdown rows while laundry tags flicker with route closures the Upper City never shows its guests.",
+        "requires_milestones": [
+          "ms_w3_mq14_complete"
+        ]
+      }
+    ],
     "actions": [
       {
         "name": "uniform racks",
@@ -3837,6 +3854,14 @@
       6
     ],
     "state": {},
+    "description_variants": [
+      {
+        "description": "The service lift judders between lockdown floors. The lift panel flashes CLOSED CORRIDOR warnings, and the inspection hatch rattles like the city is trying to shake the crew loose.",
+        "requires_milestones": [
+          "ms_w3_mq14_complete"
+        ]
+      }
+    ],
     "actions": [
       {
         "name": "lift panel",
@@ -4034,7 +4059,7 @@
     "env": "neon",
     "title": "Archive Vault",
     "background_image": "images/rooms/world_3/spire_archive_vault.png",
-    "description": "The Archive Vault rises in indexed crystal stacks over a glass floor two hundred stories high. The lens relic hangs in a containment field that hums toward Nova before she touches it, while side passages lead to prisms, donors, service routes, and drone testing.",
+    "description": "The Archive Vault rises in indexed crystal stacks over a glass floor two hundred stories high. The lens relic hangs in a containment field that hums toward Nova before she touches it, a dormant scan tether-lines overlay waits beyond normal sight, and side passages lead to prisms, donors, service routes, and drone testing.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -4051,12 +4076,26 @@
       1
     ],
     "state": {},
+    "description_variants": [
+      {
+        "description": "The Archive Vault is red now. Indexed crystal stacks strobe with alarm text, the empty containment field screams around the stolen lens relic, and Scan reveals black tether-lines running from the Administrator's system into the room's geometry.",
+        "requires_milestones": [
+          "ms_w3_mq14_complete"
+        ]
+      }
+    ],
     "actions": [
       {
         "name": "lens relic",
         "type": "generic",
         "action_event": "w3_mq14_take_lens",
         "condition_unmet_message": "The Lens floats inside a containment field, already reacting like it recognizes something in Nova."
+      },
+      {
+        "name": "scan tether-lines",
+        "type": "generic",
+        "action_event": "w3_scan_archive_tethers",
+        "condition_unmet_message": "Without the Lens, the Archive's deeper structure is only glass, light, and ownership."
       }
     ],
     "enemy_flavor": {
@@ -4068,7 +4107,7 @@
     "env": "neon",
     "title": "Prism Gallery",
     "background_image": "images/rooms/world_3/spire_archive_vault.png",
-    "description": "The prism gallery bends Archive light into visible music. A light puzzle waits in the center, its prisms tuned to frequencies Orion can hear before anyone else can see them.",
+    "description": "The prism gallery bends Archive light into visible music. A light puzzle waits in the center, its prisms tuned to frequencies Orion can hear before anyone else can see them, and scan alarm chords marks the pattern the Lens will make legible.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -4081,6 +4120,14 @@
       6
     ],
     "state": {},
+    "description_variants": [
+      {
+        "description": "The prism gallery fractures the lockdown lights into visible alarm chords. The solved light puzzle is still warm, and Scan shows a narrow timing path threaded through the noise toward the roof.",
+        "requires_milestones": [
+          "ms_w3_mq14_complete"
+        ]
+      }
+    ],
     "actions": [
       {
         "name": "light puzzle",
@@ -4092,6 +4139,12 @@
         "name": "visible music",
         "type": "generic",
         "condition_unmet_message": "The visible music shivers in the air, beautiful enough to make the alarm grid feel holy."
+      },
+      {
+        "name": "scan alarm chords",
+        "type": "generic",
+        "action_event": "w3_scan_prism_alarm_chords",
+        "condition_unmet_message": "The alarm chords are visible only after the Lens teaches Nova how to look between colors."
       }
     ]
   },
@@ -4100,7 +4153,7 @@
     "env": "neon",
     "title": "Drone Test Alcove",
     "background_image": "images/rooms/world_3/spire_archive_vault.png",
-    "description": "The drone test alcove is sealed behind scratched glass and warning tape. A prototype rack waits beside a row of sleeping security drones.",
+    "description": "The drone test alcove is sealed behind scratched glass and warning tape. A prototype rack waits beside a row of sleeping security drones, and scan targeting paths will matter if they wake up.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -4113,6 +4166,14 @@
       6
     ],
     "state": {},
+    "description_variants": [
+      {
+        "description": "The drone test alcove is awake. Red warning tape snaps in fanwash, security drones twitch in their nests, and Scan paints every targeting path as a cold line across Nova's ribs.",
+        "requires_milestones": [
+          "ms_w3_mq14_complete"
+        ]
+      }
+    ],
     "actions": [
       {
         "name": "prototype rack",
@@ -4124,6 +4185,12 @@
         "name": "security drones",
         "type": "generic",
         "condition_unmet_message": "The security drones sleep in charging nests, which is not the same thing as harmless."
+      },
+      {
+        "name": "scan targeting paths",
+        "type": "generic",
+        "action_event": "w3_scan_drone_paths",
+        "condition_unmet_message": "The targeting paths are invisible until the Lens turns threat into geometry."
       }
     ]
   },
@@ -4132,7 +4199,7 @@
     "env": "neon",
     "title": "Landing Pad Roof",
     "background_image": "images/rooms/world_3/spire_landing_pad_roof.png",
-    "description": "The Landing Pad Roof shudders under violent wind and red lockdown light. The Astra waits beyond the drone test alcove while the Planetary Shield rotates overhead in impossible chords, Vale's lockdown closes below, and launch astra becomes the only clean verb left.",
+    "description": "The Landing Pad Roof shudders under violent wind and red lockdown light. The Astra waits beyond the drone test alcove while the Planetary Shield rotates overhead in impossible chords, scan shield gap flickers at the edge of sight, Vale's lockdown closes below, and launch astra becomes the only clean verb left.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -4158,7 +4225,21 @@
       1
     ],
     "state": {},
+    "description_variants": [
+      {
+        "description": "The Landing Pad Roof shudders under violent wind and red lockdown light. The Astra waits beyond the drone test alcove while Scan reveals the Planetary Shield as a rotating wound in the sky, open for less than a heartbeat.",
+        "requires_milestones": [
+          "ms_w3_mq14_complete"
+        ]
+      }
+    ],
     "actions": [
+      {
+        "name": "scan shield gap",
+        "type": "generic",
+        "action_event": "w3_scan_shield_gap",
+        "condition_unmet_message": "The Shield is still an impossible wall until the Lens shows Nova the gap."
+      },
       {
         "name": "launch astra",
         "type": "generic",

@@ -75,6 +75,15 @@ class Hub4CriticalFlowTest {
         assertTrue(state.unlockedSkills.contains("source_art_scan"))
         assertTrue(state.activeQuests.contains("w3_mq15"))
 
+        harness.events.handleTrigger("player_action", EventPayload.Action("w3_scan_archive_tethers"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w3_scan_prism_alarm_chords"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w3_scan_drone_paths"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w3_scan_shield_gap"))
+        assertTrue(harness.messages.any { it.contains("command tethers", ignoreCase = true) })
+        assertTrue(harness.messages.any { it.contains("service route, drone alcove, roof", ignoreCase = true) })
+        assertTrue(harness.messages.any { it.contains("drone nest", ignoreCase = true) })
+        assertTrue(harness.messages.any { it.contains("Administrator's targeting lattice", ignoreCase = true) })
+
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("spire_drone_test_alcove"))
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("spire_landing_pad_roof"))
         assertTrue(harness.store.state.value.questTasksCompleted["w3_mq15"].orEmpty().contains("reach_landing_pad"))
@@ -89,6 +98,9 @@ class Hub4CriticalFlowTest {
         state = harness.store.state.value
         assertTrue(state.questTasksCompleted["w3_mq15"].orEmpty().contains("defeat_administrator"))
         assertEquals("launch_to_foundry", state.questStageById["w3_mq15"])
+
+        harness.events.handleTrigger("player_action", EventPayload.Action("w3_scan_shield_gap"))
+        assertTrue(harness.messages.any { it.contains("one launch window", ignoreCase = true) })
 
         harness.events.handleTrigger("player_action", EventPayload.Action("w3_mq15_launch_astra"))
         state = harness.store.state.value
@@ -122,6 +134,7 @@ class Hub4CriticalFlowTest {
         val store = GameSessionStore()
         val events: EventManager
         val dialogue: DialogueService
+        val messages = mutableListOf<String>()
 
         init {
             initialState?.let(store::restore)
@@ -129,6 +142,7 @@ class Hub4CriticalFlowTest {
                 events = loadEvents(),
                 sessionStore = store,
                 eventHooks = EventHooks(
+                    onMessage = { messages += it },
                     onQuestTaskUpdated = { questId, taskId ->
                         if (!questId.isNullOrBlank() && !taskId.isNullOrBlank()) {
                             store.setQuestTaskCompleted(questId, taskId, true)

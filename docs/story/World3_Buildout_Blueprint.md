@@ -25,6 +25,7 @@ Nova lands below the Spire, climbs from runoff tunnels into the Lower City, reac
 - The heist plan should be legible through spaces: access, disguise, surveillance, route, target, escape.
 - Side quests should reinforce class pressure, crew capability, or the cost of living under Dominion.
 - Room actions should feel like environmental investigation and preparation, not isolated buttons.
+- After Nova takes the Lens, Scan should make rooms more legible and more dangerous at the same time: hidden command tethers, alarm chords, drone targeting paths, and Shield timing become visible under pressure.
 
 ## First Buildout Pass
 

@@ -4919,6 +4919,121 @@
     ]
   },
   {
+    "id": "w3_scan_archive_tethers",
+    "description": "Use the Lens to read the Archive's hidden tether-lines.",
+    "repeatable": true,
+    "trigger": {
+      "type": "player_action",
+      "action": "w3_scan_archive_tethers"
+    },
+    "conditions": [
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w3_mq14_complete"
+      }
+    ],
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "Scan resolves the Archive into two layers: crystal shelves above, command tethers below. The Administrator is not guarding the Archive from outside. It is wired through it like a nervous system."
+      }
+    ]
+  },
+  {
+    "id": "w3_scan_prism_alarm_chords",
+    "description": "Use the Lens to read the Prism Gallery alarm pattern.",
+    "repeatable": true,
+    "trigger": {
+      "type": "player_action",
+      "action": "w3_scan_prism_alarm_chords"
+    },
+    "conditions": [
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w3_mq14_complete"
+      }
+    ],
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "Scan turns the red alarm wash into visible chords. Orion points to the quietest line: service route, drone alcove, roof. The escape is not safe, but it is legible."
+      }
+    ]
+  },
+  {
+    "id": "w3_scan_drone_paths",
+    "description": "Use the Lens to read drone targeting paths.",
+    "repeatable": true,
+    "trigger": {
+      "type": "player_action",
+      "action": "w3_scan_drone_paths"
+    },
+    "conditions": [
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w3_mq14_complete"
+      }
+    ],
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "Scan sketches pale lines from every drone nest to Nova's center mass. The paths stutter where the prototype rack overloaded, leaving just enough dead space to run."
+      }
+    ]
+  },
+  {
+    "id": "w3_scan_shield_gap",
+    "description": "Use the Lens to read the Shield gap while the Administrator still blocks the launch.",
+    "repeatable": true,
+    "trigger": {
+      "type": "player_action",
+      "action": "w3_scan_shield_gap"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w3_mq15"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w3_mq15",
+        "task_id": "defeat_administrator"
+      }
+    ],
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "Scan reveals the Shield gap opening and closing above the roof, smaller than courage and faster than panic. The Administrator's targeting lattice crosses every launch line."
+      }
+    ]
+  },
+  {
+    "id": "w3_scan_shield_gap_clear",
+    "description": "Use the Lens to read the Shield gap after the Administrator falls.",
+    "repeatable": true,
+    "trigger": {
+      "type": "player_action",
+      "action": "w3_scan_shield_gap"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w3_mq15"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w3_mq15",
+        "task_id": "defeat_administrator"
+      }
+    ],
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "Scan catches the Shield gap on its next rotation. Orion counts under his breath. Zeke has the Astra hot. Nova has one launch window and no room left for fear."
+      }
+    ]
+  },
+  {
     "id": "w3_mq15_reach_landing_pad",
     "description": "Reach the landing pad under alarm.",
     "trigger": {
