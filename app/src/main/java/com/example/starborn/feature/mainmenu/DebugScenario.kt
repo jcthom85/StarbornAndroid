@@ -43,6 +43,11 @@ object DebugScenarioCatalog {
         scenario("w4_assembly_floor", "W4 / Assembly Floor", "Resume The Assembly on the Foundry conveyor floor.", DebugScenarioCategory.STORY),
         scenario("w4_anvil_forge", "W4 / Anvil Forge", "Resume The Anvil inside the Forge.", DebugScenarioCategory.STORY),
         scenario("w4_meltdown_escape", "W4 / Meltdown Escape", "Resume Meltdown after the Titan Walker fight with the core ready to steal.", DebugScenarioCategory.STORY),
+        scenario("w5_docking_procedure", "W5 / Docking Procedure", "Start Docking Procedure at the Executive Dock.", DebugScenarioCategory.STORY),
+        scenario("w5_zero_g", "W5 / Zero G", "Resume Zero G after boarding the Orbital Ring.", DebugScenarioCategory.STORY),
+        scenario("w5_core_firewall", "W5 / Core Firewall", "Resume The Core Approach inside the Server Farm.", DebugScenarioCategory.STORY),
+        scenario("w5_anchor_chamber", "W5 / Anchor Chamber", "Resume The Anchor at Elara's chamber.", DebugScenarioCategory.STORY),
+        scenario("w5_critical_mass", "W5 / Critical Mass", "Resume Critical Mass in Vale's Throne Room.", DebugScenarioCategory.STORY),
 
         hub("hub_1_homestead", "World 1 / Homestead Quarter", "The Mines", "Orient at the first World 1 hub."),
         hub("hub_2_logistics", "World 1 / Logistics Sector", "The Mines", "Orient at the second World 1 hub."),

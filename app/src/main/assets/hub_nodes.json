@@ -1127,7 +1127,8 @@
       220
     ],
     "rooms": [
-      "orbital_executive_dock"
+      "orbital_executive_dock",
+      "orbital_airlock_gallery"
     ],
     "discovered": true,
     "initial_visibility": "unlocked",
@@ -1150,7 +1151,8 @@
       220
     ],
     "rooms": [
-      "orbital_grand_concourse"
+      "orbital_grand_concourse",
+      "orbital_customs_lounge"
     ],
     "discovered": false,
     "initial_visibility": "hidden",
@@ -1173,7 +1175,8 @@
       220
     ],
     "rooms": [
-      "orbital_solarium"
+      "orbital_solarium",
+      "orbital_mirror_walk"
     ],
     "discovered": false,
     "initial_visibility": "hidden",
@@ -1196,7 +1199,8 @@
       230
     ],
     "rooms": [
-      "orbital_security_hub"
+      "orbital_security_hub",
+      "orbital_surveillance_pit"
     ],
     "discovered": false,
     "initial_visibility": "hidden",
@@ -1219,7 +1223,8 @@
       240
     ],
     "rooms": [
-      "orbital_service_shaft"
+      "orbital_service_shaft",
+      "orbital_zero_g_junction"
     ],
     "discovered": false,
     "initial_visibility": "hidden",
@@ -1242,7 +1247,13 @@
       230
     ],
     "rooms": [
-      "orbital_server_farm"
+      "orbital_server_farm",
+      "deep_mainframe_nave",
+      "deep_firewall_alpha",
+      "deep_firewall_beta",
+      "deep_firewall_gamma",
+      "deep_backup_rack",
+      "deep_sysadmin_nest"
     ],
     "discovered": true,
     "initial_visibility": "unlocked",

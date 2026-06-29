@@ -6813,8 +6813,12 @@
         "task_id": "approach_halo"
       },
       {
+        "type": "set_milestone",
+        "milestone": "ms_w5_halo_approached"
+      },
+      {
         "type": "show_message",
-        "message": "The Halo fills the viewport. Orbital Compliance assumes control, and a fighter screen unfolds from the Ring."
+        "message": "The Halo fills the viewport. The stolen Deep-Core Engine holds the climb while the Phase-Cutter Arrays warm under the hull. Orbital Compliance assumes control anyway, and a fighter screen unfolds from the Ring."
       }
     ]
   },
@@ -6845,13 +6849,17 @@
         "task_id": "shoot_down_fighters"
       },
       {
+        "type": "set_milestone",
+        "milestone": "ms_w5_fighter_screen_broken"
+      },
+      {
         "type": "advance_quest_stage",
         "quest_id": "w5_mq21",
         "to_stage_id": "forced_docking"
       },
       {
         "type": "show_message",
-        "message": "The last fighter shears away. Zeke drives the damaged Astra straight at the Executive Dock."
+        "message": "The last fighter shears away under the Phase-Cutter Arrays. Zeke does not ask permission; he drives the damaged Astra straight at the Executive Dock before Compliance can rebuild the screen."
       }
     ]
   },
@@ -6885,8 +6893,12 @@
         "task_id": "force_dock"
       },
       {
+        "type": "set_milestone",
+        "milestone": "ms_w5_forced_dock"
+      },
+      {
         "type": "show_message",
-        "message": "The Astra hits the docking collar hard enough to bend it. The station airlock stays sealed."
+        "message": "The Astra hits the docking collar hard enough to bend it. Foundry steel keeps the ship intact; the station airlock stays sealed."
       }
     ]
   },
@@ -6920,6 +6932,10 @@
         "task_id": "hack_airlock"
       },
       {
+        "type": "set_milestone",
+        "milestone": "ms_w5_airlock_hacked"
+      },
+      {
         "type": "complete_quest",
         "quest_id": "w5_mq21"
       },
@@ -6937,7 +6953,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Docking Procedure\n\nThe airlock opens onto disinfectant, money, and Vale's polite Compliance greeting. Every door locks at once."
+        "message": "Quest Complete: Docking Procedure\n\nGh0st breaks Thorne's old cipher by following the scar tissue Vale left behind. The airlock opens onto disinfectant, money, and a Compliance greeting so polite it sounds pre-recorded for survivors. The Ring is not welcoming the crew; it is deciding how to process them."
       }
     ]
   },
@@ -6966,8 +6982,12 @@
         "task_id": "cross_solarium"
       },
       {
+        "type": "set_milestone",
+        "milestone": "ms_w5_solarium_crossed"
+      },
+      {
         "type": "show_message",
-        "message": "Real sand, clean water, and fruit rot beneath an artificial sun. Nova presses her hand into the warmth. Remember this. Their cage is not a gift."
+        "message": "Real sand, clean water, and fruit rot beneath an artificial sun. Nova presses her hand into the warmth and thinks of the Mines. The Ring has paradise. It just kept it upstairs."
       }
     ]
   },
@@ -6999,9 +7019,17 @@
         "task_id": "clear_security"
       },
       {
+        "type": "set_milestone",
+        "milestone": "ms_w5_security_hub_cleared"
+      },
+      {
         "type": "advance_quest_stage",
         "quest_id": "w5_mq22",
         "to_stage_id": "zero_g_descent"
+      },
+      {
+        "type": "show_message",
+        "message": "The Security Hub falls quiet. Every red lens stays open, but the core lift lock drops from DENIED to ROUTE EXPOSED."
       }
     ]
   },
@@ -7033,6 +7061,10 @@
         "type": "set_quest_task_done",
         "quest_id": "w5_mq22",
         "task_id": "traverse_shaft"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w5_shaft_traversed"
       },
       {
         "type": "show_message",
@@ -7070,8 +7102,12 @@
         "task_id": "access_mainframe"
       },
       {
+        "type": "set_milestone",
+        "milestone": "ms_w5_mainframe_accessed"
+      },
+      {
         "type": "show_message",
-        "message": "ARCHITECT PROTOCOL: GREAT SILENCE. Harmony is not philosophy. It is infrastructure: phase corridors, chordprint locks, relay augments, and a labor world engineered never to resist."
+        "message": "ARCHITECT PROTOCOL: GREAT SILENCE. Harmony is not philosophy. It is infrastructure: phase corridors, chordprint locks, relay augments, and a labor world engineered never to resist. Thorne sold the cage. Vale decided the cage was too merciful."
       }
     ]
   },
@@ -7105,6 +7141,10 @@
         "task_id": "find_thorne"
       },
       {
+        "type": "set_milestone",
+        "milestone": "ms_w5_thorne_found"
+      },
+      {
         "type": "give_item",
         "item_id": "grav_boots",
         "quantity": 1
@@ -7127,7 +7167,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Zero G\n\nThorne gives up the core access route. Harmony was her product-cage. Vale has turned it into a faith with one surviving voice."
+        "message": "Quest Complete: Zero G\n\nThorne gives up the core access route because Vale has locked her inside her own product. Harmony was her cage with branding. Vale has turned it into a faith with one surviving voice, and Elara is wired into the altar."
       }
     ]
   },
@@ -7168,7 +7208,7 @@
       },
       {
         "type": "show_message",
-        "message": "Employee of the Month complete. Thorne's logs reduce people to leverage, liability, and throughput. Corporate Insight unlocked."
+        "message": "Quest Complete: Employee of the Month\n\nThorne's logs reduce people to leverage, liability, and throughput. The horrifying part is not that Vale betrayed her; it is how much of his doctrine she already built for him. Corporate Insight unlocked."
       }
     ]
   },
@@ -7209,7 +7249,7 @@
       },
       {
         "type": "show_message",
-        "message": "Solar Maintenance complete. The mirror array burns the void-moss away, and Orion learns to carry a fragment of the false sun."
+        "message": "Quest Complete: Solar Maintenance\n\nThe mirror array burns the void-moss away. The Solarium looks beautiful again, which somehow makes it worse. Orion learns to carry a fragment of the false sun."
       }
     ]
   },
@@ -7237,6 +7277,10 @@
         "task_id": "seal_breaches"
       },
       {
+        "type": "set_milestone",
+        "milestone": "ms_w5_breaches_sealed"
+      },
+      {
         "type": "give_item",
         "item_id": "mag_boots",
         "quantity": 1
@@ -7251,7 +7295,7 @@
       },
       {
         "type": "show_message",
-        "message": "Vacuum Seal complete. Three bulkheads slam shut before the Executive Dock vents to space. Mag-Boots acquired."
+        "message": "Quest Complete: Vacuum Seal\n\nThree bulkheads slam shut before the Executive Dock vents to space. The Ring's luxury facade survives because someone still does the emergency work. Mag-Boots acquired."
       }
     ]
   },
@@ -7280,8 +7324,12 @@
         "task_id": "navigate_maze"
       },
       {
+        "type": "set_milestone",
+        "milestone": "ms_w5_server_maze_mapped"
+      },
+      {
         "type": "show_message",
-        "message": "Zeke maps the repeating aisles by coolant pulse instead of rack number. The three firewall nodes resolve out of the maze."
+        "message": "Zeke maps the repeating aisles by coolant pulse instead of rack number. Thorne's old architecture is under Vale's edits, and the three firewall nodes resolve out of the maze like wounds reopening."
       }
     ]
   },
@@ -7315,8 +7363,12 @@
         "task_id": "firewall_alpha"
       },
       {
+        "type": "set_milestone",
+        "milestone": "ms_w5_firewall_alpha_down"
+      },
+      {
         "type": "show_message",
-        "message": "Firewall Alpha drops. One layer of the Anchor lock goes dark."
+        "message": "Firewall Alpha drops. One layer of the Anchor lock goes dark, and Elara's signal stops sounding like static for half a second."
       }
     ]
   },
@@ -7350,8 +7402,12 @@
         "task_id": "firewall_beta"
       },
       {
+        "type": "set_milestone",
+        "milestone": "ms_w5_firewall_beta_down"
+      },
+      {
         "type": "show_message",
-        "message": "Firewall Beta folds into its own recursion and burns out."
+        "message": "Firewall Beta folds into its own recursion and burns out. The Server Farm stutters, then repeats Gh0st's old unit number in Elara's voice."
       }
     ]
   },
@@ -7385,13 +7441,17 @@
         "task_id": "firewall_gamma"
       },
       {
+        "type": "set_milestone",
+        "milestone": "ms_w5_firewall_gamma_down"
+      },
+      {
         "type": "advance_quest_stage",
         "quest_id": "w5_mq23",
         "to_stage_id": "construct"
       },
       {
         "type": "show_message",
-        "message": "Firewall Gamma fails. Its last defense compiles itself into a hard-light body."
+        "message": "Firewall Gamma fails. The system stops pretending this is security and compiles its last defense into a hard-light body."
       }
     ]
   },
@@ -7444,7 +7504,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: The Core Approach\n\nThe construct shatters into dead glyphs. The Anchor Chamber opens, and Gh0st hears Elara across the Source."
+        "message": "Quest Complete: The Core Approach\n\nThe construct shatters into dead glyphs. The Anchor Chamber opens, and Gh0st hears Elara across the Source. Thorne's route worked, but every open door now points at the person Dominion turned into infrastructure."
       }
     ]
   },
@@ -7471,6 +7531,10 @@
         "type": "set_quest_task_done",
         "quest_id": "w5_mq24",
         "task_id": "enter_chamber"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w5_anchor_chamber_entered"
       }
     ]
   },
@@ -7504,19 +7568,23 @@
         "task_id": "find_elara"
       },
       {
+        "type": "set_milestone",
+        "milestone": "ms_w5_elara_found"
+      },
+      {
         "type": "advance_quest_stage",
         "quest_id": "w5_mq24",
         "to_stage_id": "take_relic"
       },
       {
         "type": "show_message",
-        "message": "Elara forces the blast doors open from inside the system. She is present, fighting, and running out of time."
+        "message": "Elara forces the blast doors open from inside the system. She is present, fighting, and running out of time. Gh0st reaches for the tank and stops when he sees the cables move with her breathing."
       }
     ]
   },
   {
     "id": "w5_mq24_take_anchor",
-    "description": "Quest Complete: The Anchor\n\nNova takes the relic and fixes the charging Hunter-Killer in a single frozen moment. Stasis unlocked.",
+    "description": "Claim the Anchor and unlock Stasis.",
     "trigger": {
       "type": "player_action",
       "action": "w5_mq24_take_anchor"
@@ -7542,6 +7610,10 @@
         "type": "set_quest_task_done",
         "quest_id": "w5_mq24",
         "task_id": "take_anchor"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w5_anchor_taken"
       },
       {
         "type": "give_item",
@@ -7570,7 +7642,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: The Anchor\n\nNova takes the relic and fixes the charging Hunter-Killer in a single frozen moment. Stasis unlocked."
+        "message": "Quest Complete: The Anchor\n\nNova takes the relic from the system using Elara as a battery and fixes the charging Hunter-Killer in a single frozen moment. Stasis unlocked. Elara is free enough to scream, but not free enough to leave."
       }
     ]
   },
@@ -7597,12 +7669,16 @@
         "type": "set_quest_task_done",
         "quest_id": "w5_mq25",
         "task_id": "reach_throne"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w5_throne_reached"
       }
     ]
   },
   {
     "id": "w5_mq25_soloist",
-    "description": "Stasis washes over Vale and fails. He executes Thorne, absorbs the Ring's energy, and tears space open. The Compliance Avatar blocks the breach.",
+    "description": "Witness Vale activate the Soloist.",
     "trigger": {
       "type": "player_action",
       "action": "w5_mq25_soloist"
@@ -7630,13 +7706,17 @@
         "task_id": "witness_soloist"
       },
       {
+        "type": "set_milestone",
+        "milestone": "ms_w5_soloist_witnessed"
+      },
+      {
         "type": "advance_quest_stage",
         "quest_id": "w5_mq25",
         "to_stage_id": "critical_escape"
       },
       {
         "type": "show_message",
-        "message": "Stasis washes over Vale and fails. He executes Thorne, absorbs the Ring's energy, and tears space open. The Compliance Avatar blocks the breach."
+        "message": "Stasis washes over Vale and fails. He smiles like Nova has confirmed his thesis, executes Thorne for building too small, absorbs the Ring's energy, and tears space open. The Compliance Avatar blocks the breach."
       }
     ]
   },
@@ -7672,14 +7752,18 @@
         "task_id": "defeat_avatar"
       },
       {
+        "type": "set_milestone",
+        "milestone": "ms_w5_avatar_defeated"
+      },
+      {
         "type": "show_message",
-        "message": "The Avatar loses cohesion. Gravity stutters, the Ring splits, and the Tear pulls every loose fragment upward."
+        "message": "The Avatar loses cohesion. Gravity stutters, the Ring splits, and the Tear pulls every loose fragment upward. Vale is already beyond it with Elara's signal bleeding through the static."
       }
     ]
   },
   {
     "id": "w5_mq25_enter_tear",
-    "description": "Quest Complete: Critical Mass\n\nNova refuses to leave Elara or Vale beyond the breach. The crew leaps together and wakes beside a blue waveform fire.",
+    "description": "Enter the Tear and unlock World 6.",
     "trigger": {
       "type": "player_action",
       "action": "w5_mq25_enter_tear"
@@ -7732,7 +7816,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Critical Mass\n\nNova refuses to leave Elara or Vale beyond the breach. The crew leaps together and wakes beside a blue waveform fire."
+        "message": "Quest Complete: Critical Mass\n\nNova refuses to leave Elara or Vale beyond the breach. The Ring collapses behind them, the crew leaps together, and every voice becomes a thread in the dark before they wake beside a blue waveform fire."
       }
     ]
   },
@@ -7773,7 +7857,7 @@
       },
       {
         "type": "show_message",
-        "message": "Ghost in the Shell complete. Zeke restores a defensive routine Vale marked for deletion. Data Shield unlocked."
+        "message": "Quest Complete: Ghost in the Shell\n\nZeke restores a defensive routine Vale marked for deletion. The code is ugly, stubborn, and alive in the way all survival tools are. Data Shield unlocked."
       }
     ]
   },
@@ -7806,6 +7890,10 @@
         "task_id": "find_keycard"
       },
       {
+        "type": "set_milestone",
+        "milestone": "ms_w5_sysadmin_keycard_found"
+      },
+      {
         "type": "advance_quest_stage",
         "quest_id": "w5_sq25",
         "to_stage_id": "armory"
@@ -7817,7 +7905,7 @@
       },
       {
         "type": "show_message",
-        "message": "SysAdmin keycard acquired. Its last access record points to the executive armory."
+        "message": "SysAdmin keycard acquired. Its last access record points to the executive armory, because even during a coup the Ring still knows who used to matter."
       }
     ]
   },
@@ -7865,7 +7953,7 @@
       },
       {
         "type": "show_message",
-        "message": "Admin Privileges complete. The armory opens on a rack of phase-tuned ammunition. Void Clip acquired."
+        "message": "Quest Complete: Admin Privileges\n\nThe armory opens on a rack of phase-tuned ammunition. Dead privilege becomes live leverage. Void Clip acquired."
       }
     ]
   },

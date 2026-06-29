@@ -171,6 +171,15 @@
     "transition_text": "Travel to Anchor Chamber."
   },
   {
+    "id": "deep_firewall_gamma__east__deep_anchor_chamber",
+    "from_node": "deep_server_farm",
+    "from_room": "deep_firewall_gamma",
+    "direction": "east",
+    "to_node": "deep_anchor_chamber",
+    "to_room": "deep_anchor_chamber",
+    "transition_text": "Travel to Anchor Chamber."
+  },
+  {
     "id": "deep_server_farm__up__orbital_service_shaft",
     "from_node": "deep_server_farm",
     "from_room": "orbital_server_farm",

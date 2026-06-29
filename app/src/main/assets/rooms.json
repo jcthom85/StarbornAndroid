@@ -5381,6 +5381,7 @@
       ]
     ],
     "connections": {
+      "north": "orbital_airlock_gallery",
       "east": "orbital_grand_concourse",
       "south": "orbital_solarium"
     },
@@ -5389,12 +5390,32 @@
       1
     ],
     "state": {},
+    "description_variants": [
+      {
+        "description": "The Astra is locked hard to the Executive Dock, docking collar bent around stolen Foundry hardware. The fighter screen is gone, but the sealed airlock still treats the crew like cargo to be rejected.",
+        "requires_milestones": [
+          "ms_w5_fighter_screen_broken"
+        ]
+      },
+      {
+        "description": "The Executive Dock is pressurized and ugly beneath the polish. The airlock console shows three sealed breaches, and the red carpet keeps drifting where gravity pockets fail.",
+        "requires_milestones": [
+          "ms_w5_vacuum_seal_complete"
+        ]
+      }
+    ],
     "actions": [
       {
         "name": "docking controls",
         "type": "generic",
         "action_event": "w5_mq21_force_dock",
         "condition_unmet_message": "Compliance has the Astra in a tractor lock."
+      },
+      {
+        "name": "sealed airlock",
+        "type": "generic",
+        "action_event": "w5_mq21_hack_airlock",
+        "condition_unmet_message": "The station airlock refuses the crew until Gh0st breaks Thorne's old cipher."
       },
       {
         "name": "airlock console",
@@ -5408,6 +5429,45 @@
     }
   },
   {
+    "id": "orbital_airlock_gallery",
+    "env": "void",
+    "title": "Airlock Gallery",
+    "background_image": "images/rooms/world_5/orbital_executive_dock.png",
+    "description": "A glass gallery curves above the docking collar. The planet turns below in perfect silence while the stolen Deep-Core Engine shakes heat through the Astra's spine.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "south": "orbital_executive_dock"
+    },
+    "pos": [
+      0,
+      0
+    ],
+    "state": {},
+    "description_variants": [
+      {
+        "description": "The Airlock Gallery is open now, and the Ring smells like disinfectant over panic. Vale's Compliance greeting loops from hidden speakers with no one left at reception to pretend it is normal.",
+        "requires_milestones": [
+          "ms_w5_mq21_complete"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "name": "docking collar",
+        "type": "generic",
+        "action_event": "w5_mq21_force_dock",
+        "condition_unmet_message": "The docking collar is close enough for the Astra to ram if the fighters stop shooting."
+      },
+      {
+        "name": "compliance greeting",
+        "type": "generic",
+        "condition_unmet_message": "Vale's voice is warm, precise, and already edited to remove the possibility of refusal."
+      }
+    ]
+  },
+  {
     "id": "orbital_grand_concourse",
     "env": "void",
     "title": "Grand Concourse",
@@ -5419,6 +5479,7 @@
       "compliance_officer"
     ],
     "connections": {
+      "north": "orbital_customs_lounge",
       "west": "orbital_executive_dock",
       "east": "orbital_security_hub"
     },
@@ -5427,12 +5488,47 @@
       0
     ],
     "state": {},
+    "description_variants": [
+      {
+        "description": "The Grand Concourse keeps selling Harmony between lockdown warnings. Thorne's director logs are open now, and the gold statues look less like reverence than evidence.",
+        "requires_milestones": [
+          "ms_w5_corporate_insight_unlocked"
+        ]
+      }
+    ],
     "actions": [
       {
         "name": "director logs",
         "type": "generic",
         "action_event": "w5_sq21_director_logs",
         "condition_unmet_message": "A private archive waits behind the Director's biometric lock."
+      }
+    ]
+  },
+  {
+    "id": "orbital_customs_lounge",
+    "env": "void",
+    "title": "Customs Lounge",
+    "background_image": "images/rooms/world_5/orbital_grand_concourse.png",
+    "description": "A silent lounge waits behind velvet queue ropes and biometric gates. Luggage floats in gentle circles where gravity has failed, each case tagged PRIORITY HUMAN CAPITAL.",
+    "npcs": [],
+    "items": [],
+    "enemies": [
+      "compliance_officer"
+    ],
+    "connections": {
+      "south": "orbital_grand_concourse"
+    },
+    "pos": [
+      1,
+      -1
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "biometric gates",
+        "type": "generic",
+        "condition_unmet_message": "The gates do not check identity so much as ownership, priority, and whether a body is approved to keep moving."
       }
     ]
   },
@@ -5451,6 +5547,7 @@
     ],
     "connections": {
       "north": "orbital_executive_dock",
+      "south": "orbital_mirror_walk",
       "east": "orbital_security_hub"
     },
     "pos": [
@@ -5458,12 +5555,68 @@
       2
     ],
     "state": {},
+    "description_variants": [
+      {
+        "description": "The Solarium mirror array burns clean again. The false sun is still false, but its light no longer feeds void-moss across the executive trees.",
+        "requires_milestones": [
+          "ms_w5_solar_maintenance_complete"
+        ]
+      },
+      {
+        "description": "The fake beach has been crossed. Its sand keeps the shape of Nova's hand like paradise is trying to remember being real.",
+        "requires_milestones": [
+          "ms_w5_solarium_crossed"
+        ]
+      }
+    ],
     "actions": [
       {
         "name": "fake beach",
         "type": "generic",
         "action_event": "w5_mq22_cross_solarium",
         "condition_unmet_message": "The artificial sun warms sand inside a station-sized cage."
+      },
+      {
+        "name": "mirror array",
+        "type": "generic",
+        "action_event": "w5_sq22_realign_mirrors",
+        "condition_unmet_message": "Void-moss crawls over the Solarium mirrors, dimming the false sun."
+      }
+    ]
+  },
+  {
+    "id": "orbital_mirror_walk",
+    "env": "void",
+    "title": "Mirror Walk",
+    "background_image": "images/rooms/world_5/orbital_solarium.png",
+    "description": "Polished mirror panels line a humid maintenance walk behind the Solarium. Each panel reflects a different angle of the same fake sun.",
+    "npcs": [],
+    "items": [],
+    "enemies": [
+      "null_g_drone"
+    ],
+    "connections": {
+      "north": "orbital_solarium"
+    },
+    "pos": [
+      1,
+      3
+    ],
+    "state": {},
+    "description_variants": [
+      {
+        "description": "The Mirror Walk is painfully bright after realignment. Burnt void-moss flakes from the panel seams like ash from a polite disaster.",
+        "requires_milestones": [
+          "ms_w5_solar_maintenance_complete"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "name": "mirror panels",
+        "type": "generic",
+        "action_event": "w5_sq22_realign_mirrors",
+        "condition_unmet_message": "The panels can burn away the void-moss if their angles are restored."
       }
     ]
   },
@@ -5486,6 +5639,7 @@
       ]
     ],
     "connections": {
+      "north": "orbital_surveillance_pit",
       "west": "orbital_grand_concourse",
       "south": "orbital_solarium",
       "east": "orbital_service_shaft"
@@ -5495,7 +5649,43 @@
       1
     ],
     "state": {},
+    "description_variants": [
+      {
+        "description": "The Security Hub patrol is down. Red lenses keep watching anyway, now more nervous than patient, while the service shaft lock blinks green.",
+        "requires_milestones": [
+          "ms_w5_security_hub_cleared"
+        ]
+      }
+    ],
     "actions": []
+  },
+  {
+    "id": "orbital_surveillance_pit",
+    "env": "void",
+    "title": "Surveillance Pit",
+    "background_image": "images/rooms/world_5/orbital_security_hub.png",
+    "description": "A sunken room of red lenses tracks every corridor on the executive deck. The screens flag posture, pulse, hesitation, and anything else a frightened system calls intent.",
+    "npcs": [],
+    "items": [],
+    "enemies": [
+      "compliance_officer",
+      "null_g_drone"
+    ],
+    "connections": {
+      "south": "orbital_security_hub"
+    },
+    "pos": [
+      2,
+      0
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "red lenses",
+        "type": "generic",
+        "condition_unmet_message": "The lenses measure behavior, not guilt. Dominion has always preferred predictions to people."
+      }
+    ]
   },
   {
     "id": "orbital_service_shaft",
@@ -5508,6 +5698,7 @@
     "enemies": [],
     "connections": {
       "west": "orbital_security_hub",
+      "east": "orbital_zero_g_junction",
       "down": "orbital_server_farm"
     },
     "pos": [
@@ -5515,6 +5706,14 @@
       1
     ],
     "state": {},
+    "description_variants": [
+      {
+        "description": "The service shaft route is marked by grip scratches, cable tags, and one clear timing pattern through the Hunter-Killer sweeps. The drop is still awful, but it is no longer unreadable.",
+        "requires_milestones": [
+          "ms_w5_shaft_traversed"
+        ]
+      }
+    ],
     "actions": [
       {
         "name": "zero-g cables",
@@ -5525,20 +5724,47 @@
     ]
   },
   {
+    "id": "orbital_zero_g_junction",
+    "env": "void",
+    "title": "Zero-G Junction",
+    "background_image": "images/rooms/world_5/orbital_service_shaft.png",
+    "description": "Three maintenance tubes meet in a dead-gravity junction. Tools hover where workers dropped them, frozen into a quiet diagram of someone leaving in a hurry.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "orbital_service_shaft"
+    },
+    "pos": [
+      4,
+      1
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "patrol timing",
+        "type": "generic",
+        "action_event": "w5_mq22_traverse_shaft",
+        "condition_unmet_message": "The Hunter-Killer sweeps leave exactly enough dead space for a careful crew."
+      }
+    ]
+  },
+  {
     "id": "orbital_server_farm",
     "env": "void",
     "title": "Server Farm",
     "background_image": "images/rooms/world_5/orbital_server_farm.png",
     "description": "Server columns vanish into cold mist. Architect notation bleeds through the Dominion interface, and someone is breathing inside the cooling vents.",
-    "npcs": [
-      "thorne"
-    ],
+    "npcs": [],
     "items": [],
     "enemies": [
       "void_turret"
     ],
     "connections": {
       "up": "orbital_service_shaft",
+      "north": "deep_mainframe_nave",
+      "south": "deep_backup_rack",
+      "west": "deep_sysadmin_nest",
       "east": "deep_anchor_chamber"
     },
     "pos": [
@@ -5546,6 +5772,20 @@
       2
     ],
     "state": {},
+    "description_variants": [
+      {
+        "description": "The Server Farm no longer pretends to be endless. Zeke's coolant-pulse map marks the mainframe nave, three firewall nodes, a purged backup rack, and the route to Elara.",
+        "requires_milestones": [
+          "ms_w5_server_maze_mapped"
+        ]
+      },
+      {
+        "description": "The Server Farm is wounded open. Firewall nodes alpha, beta, and gamma are dark, and the Anchor Chamber door answers Gh0st's voice from the far end of the cold.",
+        "requires_milestones": [
+          "ms_w5_firewall_gamma_down"
+        ]
+      }
+    ],
     "actions": [
       {
         "name": "mainframe terminal",
@@ -5601,6 +5841,244 @@
     ]
   },
   {
+    "id": "deep_mainframe_nave",
+    "env": "void",
+    "title": "Mainframe Nave",
+    "background_image": "images/rooms/world_5/orbital_server_farm.png",
+    "description": "Server columns form a cold cathedral around the mainframe terminal. Harmony's directory tree overlays older Architect notation like a luxury label pasted on a weapon.",
+    "npcs": [
+      "thorne"
+    ],
+    "items": [],
+    "enemies": [
+      "void_turret"
+    ],
+    "connections": {
+      "south": "orbital_server_farm",
+      "east": "deep_firewall_alpha"
+    },
+    "pos": [
+      3,
+      1
+    ],
+    "state": {},
+    "description_variants": [
+      {
+        "description": "The Great Silence log is open on the mainframe terminal. Thorne's containment trace pulses beside it, proof that the person who built the cage finally got locked in it.",
+        "requires_milestones": [
+          "ms_w5_mainframe_accessed"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "name": "mainframe terminal",
+        "type": "generic",
+        "action_event": "w5_mq22_access_mainframe",
+        "condition_unmet_message": "The terminal carries both Harmony and Architect root directories."
+      },
+      {
+        "name": "thorne trace",
+        "type": "generic",
+        "action_event": "w5_mq22_find_thorne",
+        "condition_unmet_message": "Thorne's emergency trace is buried behind the Great Silence log."
+      }
+    ]
+  },
+  {
+    "id": "deep_firewall_alpha",
+    "env": "void",
+    "title": "Firewall Alpha",
+    "background_image": "images/rooms/world_5/orbital_server_farm.png",
+    "description": "The first firewall node hangs in a cage of blue hard-light. Its cipher keeps rewriting itself in Thorne's old notation with Vale's edits layered over the top.",
+    "npcs": [],
+    "items": [],
+    "enemies": [
+      "void_turret"
+    ],
+    "connections": {
+      "west": "deep_mainframe_nave",
+      "east": "deep_firewall_beta"
+    },
+    "pos": [
+      4,
+      1
+    ],
+    "state": {},
+    "description_variants": [
+      {
+        "description": "Firewall Alpha is dark. Its hard-light cage has collapsed into harmless blue dust across the server aisle.",
+        "requires_milestones": [
+          "ms_w5_firewall_alpha_down"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "name": "firewall node alpha",
+        "type": "generic",
+        "action_event": "w5_mq23_firewall_alpha",
+        "condition_unmet_message": "The first firewall node shifts its cipher every few seconds."
+      }
+    ]
+  },
+  {
+    "id": "deep_firewall_beta",
+    "env": "void",
+    "title": "Firewall Beta",
+    "background_image": "images/rooms/world_5/orbital_server_farm.png",
+    "description": "The second firewall node loops through recursion windows. Each window shows a slightly different version of the same locked door.",
+    "npcs": [],
+    "items": [],
+    "enemies": [
+      "void_turret"
+    ],
+    "connections": {
+      "west": "deep_firewall_alpha",
+      "east": "deep_firewall_gamma"
+    },
+    "pos": [
+      5,
+      1
+    ],
+    "state": {},
+    "description_variants": [
+      {
+        "description": "Firewall Beta has folded into itself and gone still. The recursion windows show only the cold aisle ahead.",
+        "requires_milestones": [
+          "ms_w5_firewall_beta_down"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "name": "firewall node beta",
+        "type": "generic",
+        "action_event": "w5_mq23_firewall_beta",
+        "condition_unmet_message": "The second node is protected by a recursive Dominion lock."
+      }
+    ]
+  },
+  {
+    "id": "deep_firewall_gamma",
+    "env": "void",
+    "title": "Firewall Gamma",
+    "background_image": "images/rooms/world_5/orbital_server_farm.png",
+    "description": "The final firewall node projects a half-built hard-light body into the aisle. Its face is blank because the system has not decided who it wants to execute yet.",
+    "npcs": [],
+    "items": [],
+    "enemies": [
+      "firewall_construct"
+    ],
+    "enemy_parties": [
+      [
+        "firewall_construct"
+      ]
+    ],
+    "connections": {
+      "west": "deep_firewall_beta",
+      "east": "deep_anchor_chamber"
+    },
+    "pos": [
+      6,
+      1
+    ],
+    "state": {},
+    "description_variants": [
+      {
+        "description": "Firewall Gamma is gone. The hard-light body has shattered into dead glyphs, and the Anchor Chamber answers from beyond the final aisle.",
+        "requires_milestones": [
+          "ms_w5_mq23_complete"
+        ]
+      },
+      {
+        "description": "Firewall Gamma has failed into violence. The hard-light body is complete now, blocking the Anchor Chamber with a blank execution face.",
+        "requires_milestones": [
+          "ms_w5_firewall_gamma_down"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "name": "firewall node gamma",
+        "type": "generic",
+        "action_event": "w5_mq23_firewall_gamma",
+        "condition_unmet_message": "The final node projects a hard-light guardian into the aisle."
+      }
+    ],
+    "enemy_flavor": {
+      "firewall_construct": "A hard-light construct assembles from defensive code, all angles and corporate certainty."
+    }
+  },
+  {
+    "id": "deep_backup_rack",
+    "env": "void",
+    "title": "Purged Backup Rack",
+    "background_image": "images/rooms/world_5/orbital_server_farm.png",
+    "description": "A low server rack marked PURGED still blinks through a layer of frost. Vale's deletion order missed one defensive routine hiding under old checksum names.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "north": "orbital_server_farm"
+    },
+    "pos": [
+      3,
+      3
+    ],
+    "state": {},
+    "description_variants": [
+      {
+        "description": "The Purged Backup Rack is dark. Zeke has the defensive routine now, and Vale's deletion order has one clean failure in it.",
+        "requires_milestones": [
+          "ms_w5_data_shield_unlocked"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "name": "purged backup rack",
+        "type": "generic",
+        "action_event": "w5_sq24_recover_backup",
+        "condition_unmet_message": "A server marked PURGED still carries a faint diagnostic pulse."
+      }
+    ]
+  },
+  {
+    "id": "deep_sysadmin_nest",
+    "env": "void",
+    "title": "SysAdmin Nest",
+    "background_image": "images/rooms/world_5/orbital_server_farm.png",
+    "description": "A cramped admin station floats behind coolant pipes, abandoned halfway through an evacuation. A dead sysadmin still clutches a warning printout nobody above listened to.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "east": "orbital_server_farm"
+    },
+    "pos": [
+      2,
+      2
+    ],
+    "state": {},
+    "description_variants": [
+      {
+        "description": "The SysAdmin Nest is empty of anything useful now. The keycard is in Nova's kit, still warm from a system that thinks privilege survives the person carrying it.",
+        "requires_milestones": [
+          "ms_w5_sysadmin_keycard_found"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "name": "dead sysadmin",
+        "type": "generic",
+        "action_event": "w5_sq25_find_keycard",
+        "condition_unmet_message": "A station administrator floats behind a coolant pipe, keycard still clipped to the uniform."
+      }
+    ]
+  },
+  {
     "id": "deep_anchor_chamber",
     "env": "void",
     "title": "Anchor Chamber",
@@ -5622,7 +6100,27 @@
       2
     ],
     "state": {},
+    "description_variants": [
+      {
+        "description": "The conductive tank is emptying around Elara's cables. The Anchor relic is gone, and the Hunter-Killer's charge is frozen in a perfect Stasis moment.",
+        "requires_milestones": [
+          "ms_w5_mq24_complete"
+        ]
+      },
+      {
+        "description": "Elara's firewall is open from the inside. She is present, fighting, and running out of time while the Anchor relic turns beside her like a lock waiting to be stolen.",
+        "requires_milestones": [
+          "ms_w5_elara_found"
+        ]
+      }
+    ],
     "actions": [
+      {
+        "name": "elara",
+        "type": "generic",
+        "action_event": "w5_mq24_find_elara",
+        "condition_unmet_message": "Elara is inside the system, fighting through command layers to open the chamber from within."
+      },
       {
         "name": "anchor relic",
         "type": "generic",
@@ -5656,6 +6154,26 @@
       2
     ],
     "state": {},
+    "description_variants": [
+      {
+        "description": "The executive armory is open, its rack stripped of the Void Clip. Privilege survived its owner just long enough to be useful against Vale.",
+        "requires_milestones": [
+          "ms_w5_admin_privileges_complete"
+        ]
+      },
+      {
+        "description": "Thorne is dead. Vale is gone through the breach. The Throne Room is no longer a command center; it is wreckage arranged around a missing voice.",
+        "requires_milestones": [
+          "ms_w5_soloist_witnessed"
+        ]
+      },
+      {
+        "description": "Vale's command dais is split by stolen light from the Anchor. Thorne's containment field flickers, and the executive armory still waits behind dead privilege.",
+        "requires_milestones": [
+          "ms_w5_mq24_complete"
+        ]
+      }
+    ],
     "actions": [
       {
         "name": "containment field",
@@ -5695,6 +6213,14 @@
       2
     ],
     "state": {},
+    "description_variants": [
+      {
+        "description": "The Compliance Avatar has lost cohesion. The Tear pulls at every loose fragment of the Ring, and music exists here without air, speakers, or permission.",
+        "requires_milestones": [
+          "ms_w5_avatar_defeated"
+        ]
+      }
+    ],
     "actions": [
       {
         "name": "reality breach",

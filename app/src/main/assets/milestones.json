@@ -632,10 +632,64 @@
     "toast": "Docking Procedure is complete."
   },
   {
+    "id": "ms_w5_halo_approached",
+    "name": "Halo Approached",
+    "description": "The Astra reached the Orbital Ring on stolen Foundry hardware.",
+    "toast": "Halo approach confirmed."
+  },
+  {
+    "id": "ms_w5_fighter_screen_broken",
+    "name": "Fighter Screen Broken",
+    "description": "The Astra's Phase-Cutter Arrays broke the Compliance fighter screen.",
+    "toast": "Fighter screen broken."
+  },
+  {
+    "id": "ms_w5_forced_dock",
+    "name": "Forced Dock",
+    "description": "The Astra rammed the Executive Dock collar and survived.",
+    "toast": "Forced dock complete."
+  },
+  {
+    "id": "ms_w5_airlock_hacked",
+    "name": "Airlock Hacked",
+    "description": "Gh0st broke the Ring airlock's old Thorne cipher.",
+    "toast": "Airlock hacked."
+  },
+  {
     "id": "ms_w5_mq22_complete",
     "name": "Great Silence Revealed",
     "description": "You found Thorne and learned that Harmony is an Architect atrocity repackaged as infrastructure.",
     "toast": "Zero G is complete."
+  },
+  {
+    "id": "ms_w5_solarium_crossed",
+    "name": "Solarium Crossed",
+    "description": "Nova crossed the Ring's curated false paradise.",
+    "toast": "Solarium crossed."
+  },
+  {
+    "id": "ms_w5_security_hub_cleared",
+    "name": "Security Hub Cleared",
+    "description": "You broke the Security Hub patrol.",
+    "toast": "Security Hub cleared."
+  },
+  {
+    "id": "ms_w5_shaft_traversed",
+    "name": "Zero-G Shaft Traversed",
+    "description": "The crew timed the Hunter-Killer sweeps through the zero-g service shaft.",
+    "toast": "Zero-G route mapped."
+  },
+  {
+    "id": "ms_w5_mainframe_accessed",
+    "name": "Mainframe Accessed",
+    "description": "You opened the Great Silence log in the Ring mainframe.",
+    "toast": "Mainframe accessed."
+  },
+  {
+    "id": "ms_w5_thorne_found",
+    "name": "Thorne Found",
+    "description": "You found Director Thorne trapped inside Vale's Ring lockdown.",
+    "toast": "Thorne found."
   },
   {
     "id": "ms_w5_corporate_insight_unlocked",
@@ -656,10 +710,40 @@
     "toast": "Vacuum Seal complete."
   },
   {
+    "id": "ms_w5_breaches_sealed",
+    "name": "Hull Breaches Sealed",
+    "description": "The Executive Dock breach map is sealed and stable.",
+    "toast": "Hull breaches sealed."
+  },
+  {
     "id": "ms_w5_mq23_complete",
     "name": "Core Firewall Breached",
     "description": "You disabled the three firewall nodes and destroyed their hard-light guardian.",
     "toast": "The Core Approach is complete."
+  },
+  {
+    "id": "ms_w5_server_maze_mapped",
+    "name": "Server Maze Mapped",
+    "description": "Zeke mapped the Deep Ring server maze by coolant pulse.",
+    "toast": "Server maze mapped."
+  },
+  {
+    "id": "ms_w5_firewall_alpha_down",
+    "name": "Firewall Alpha Down",
+    "description": "You disabled Firewall Node Alpha.",
+    "toast": "Firewall Alpha down."
+  },
+  {
+    "id": "ms_w5_firewall_beta_down",
+    "name": "Firewall Beta Down",
+    "description": "You disabled Firewall Node Beta.",
+    "toast": "Firewall Beta down."
+  },
+  {
+    "id": "ms_w5_firewall_gamma_down",
+    "name": "Firewall Gamma Down",
+    "description": "You disabled Firewall Node Gamma and exposed the hard-light construct.",
+    "toast": "Firewall Gamma down."
   },
   {
     "id": "ms_w5_mq24_complete",
@@ -668,10 +752,46 @@
     "toast": "The Anchor is complete."
   },
   {
+    "id": "ms_w5_anchor_chamber_entered",
+    "name": "Anchor Chamber Entered",
+    "description": "The crew reached Elara's Anchor Chamber.",
+    "toast": "Anchor Chamber reached."
+  },
+  {
+    "id": "ms_w5_elara_found",
+    "name": "Elara Found",
+    "description": "Gh0st found Elara alive inside the Ring.",
+    "toast": "Elara found."
+  },
+  {
+    "id": "ms_w5_anchor_taken",
+    "name": "Anchor Taken",
+    "description": "Nova took the Anchor and unlocked Stasis.",
+    "toast": "Anchor taken."
+  },
+  {
     "id": "ms_w5_mq25_complete",
     "name": "Into the Tear",
     "description": "You defeated the Compliance Avatar and followed Vale beyond reality.",
     "toast": "Critical Mass is complete."
+  },
+  {
+    "id": "ms_w5_throne_reached",
+    "name": "Throne Reached",
+    "description": "Nova reached Vale's Throne Room.",
+    "toast": "Throne Room reached."
+  },
+  {
+    "id": "ms_w5_soloist_witnessed",
+    "name": "Soloist Witnessed",
+    "description": "Vale executed Thorne and activated the Soloist beyond Stasis.",
+    "toast": "Soloist witnessed."
+  },
+  {
+    "id": "ms_w5_avatar_defeated",
+    "name": "Compliance Avatar Defeated",
+    "description": "You defeated Vale's Compliance Avatar at the Tear.",
+    "toast": "Compliance Avatar defeated."
   },
   {
     "id": "ms_w6_access_unlocked",
@@ -690,6 +810,12 @@
     "name": "Admin Privileges",
     "description": "You opened the executive armory with the SysAdmin keycard.",
     "toast": "Admin Privileges complete."
+  },
+  {
+    "id": "ms_w5_sysadmin_keycard_found",
+    "name": "SysAdmin Keycard Found",
+    "description": "You recovered the dead SysAdmin's keycard.",
+    "toast": "SysAdmin keycard found."
   },
   {
     "id": "ms_w6_mq26_complete",

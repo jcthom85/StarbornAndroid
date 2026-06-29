@@ -73,6 +73,7 @@ To support the "no typing" interaction model, room descriptions use a system of 
 *   **Variant Keywords:** Each description variant should include the actionable words that remain relevant in that state. Do not keep dead keywords in variant prose just to satisfy density.
 *   **World 3 Heist Text:** World 3 should use stateful room text as an infiltration readout. Intel, disguises, copied credentials, disabled scanners, Archive alarm states, and Lens/Scan revelations should persist in the room descriptions so the heist feels assembled and then disrupted in the actual play space.
 *   **World 4 Foundry Text:** World 4 should use stateful room text as an industrial pressure gauge. Landing damage, heat routing, Phantom records, conveyor timing, matrix overload, Anvil access, Titan defeat, engine theft, and array theft should leave readable changes in the affected rooms so the Foundry feels like a system Nova is breaking, not a sequence of buttons.
+*   **World 5 Ring Text:** World 5 should contrast luxury surfaces with machine-cold control. Forced docking, security lockdown, Solarium maintenance, zero-g traversal, mainframe discovery, firewall breaches, Elara's chamber state, Vale's Soloist reveal, and the Tear should visibly alter room descriptions so the Orbital Ring feels like a polite cage failing in real time.
 
 ---
 

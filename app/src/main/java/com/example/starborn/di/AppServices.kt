@@ -883,6 +883,11 @@ class AppServices(context: Context) {
         "w4_assembly_floor" -> startNewGameAtW4AssemblyFloor()
         "w4_anvil_forge" -> startNewGameAtW4AnvilForge()
         "w4_meltdown_escape" -> startNewGameAtW4MeltdownEscape()
+        "w5_docking_procedure" -> startNewGameAtW5DockingProcedure()
+        "w5_zero_g" -> startNewGameAtW5ZeroG()
+        "w5_core_firewall" -> startNewGameAtW5CoreFirewall()
+        "w5_anchor_chamber" -> startNewGameAtW5AnchorChamber()
+        "w5_critical_mass" -> startNewGameAtW5CriticalMass()
         "node_progression_w1" -> startNewGameAtWorld1NodeProgression()
         "node_progression_w2" -> startNewGameAtWorld2NodeProgression()
         "astra_access" -> startNewGameAtAstraAccess()
@@ -1152,6 +1157,82 @@ class AppServices(context: Context) {
         true
     }.getOrElse { false }
 
+    private fun startNewGameAtW5DockingProcedure(): Boolean = runCatching {
+        if (!prepareWorld5DebugState()) return false
+        sessionStore.startQuest("w5_mq21", track = true)
+        sessionStore.setQuestStage("w5_mq21", "approach")
+        sessionStore.setWorld("world_5")
+        sessionStore.setHub("hub_9_orbital_ring")
+        sessionStore.setRoom("orbital_executive_dock")
+        visitDebugNodes("orbital_executive_dock")
+        true
+    }.getOrElse { false }
+
+    private fun startNewGameAtW5ZeroG(): Boolean = runCatching {
+        if (!prepareWorld5DebugState(completedW5Quests = listOf("w5_mq21"))) return false
+        sessionStore.setMilestone("ms_w5_halo_approached")
+        sessionStore.setMilestone("ms_w5_fighter_screen_broken")
+        sessionStore.setMilestone("ms_w5_forced_dock")
+        sessionStore.setMilestone("ms_w5_airlock_hacked")
+        sessionStore.startQuest("w5_mq22", track = true)
+        sessionStore.setQuestStage("w5_mq22", "ring_crossing")
+        sessionStore.setWorld("world_5")
+        sessionStore.setHub("hub_9_orbital_ring")
+        sessionStore.setRoom("orbital_solarium")
+        visitDebugNodes("orbital_executive_dock", "orbital_grand_concourse", "orbital_solarium", "orbital_security_hub")
+        true
+    }.getOrElse { false }
+
+    private fun startNewGameAtW5CoreFirewall(): Boolean = runCatching {
+        if (!prepareWorld5DebugState(completedW5Quests = listOf("w5_mq21", "w5_mq22"))) return false
+        inventoryService.addItem("grav_boots", 1)
+        sessionStore.setMilestone("ms_w5_solarium_crossed")
+        sessionStore.setMilestone("ms_w5_security_hub_cleared")
+        sessionStore.setMilestone("ms_w5_shaft_traversed")
+        sessionStore.setMilestone("ms_w5_mainframe_accessed")
+        sessionStore.setMilestone("ms_w5_thorne_found")
+        sessionStore.startQuest("w5_mq23", track = true)
+        sessionStore.setQuestStage("w5_mq23", "firewall_maze")
+        sessionStore.setWorld("world_5")
+        sessionStore.setHub("hub_10_deep_ring")
+        sessionStore.setRoom("orbital_server_farm")
+        visitDebugNodes("deep_server_farm")
+        true
+    }.getOrElse { false }
+
+    private fun startNewGameAtW5AnchorChamber(): Boolean = runCatching {
+        if (!prepareWorld5DebugState(completedW5Quests = listOf("w5_mq21", "w5_mq22", "w5_mq23"))) return false
+        inventoryService.addItem("grav_boots", 1)
+        sessionStore.setMilestone("ms_w5_server_maze_mapped")
+        sessionStore.setMilestone("ms_w5_firewall_alpha_down")
+        sessionStore.setMilestone("ms_w5_firewall_beta_down")
+        sessionStore.setMilestone("ms_w5_firewall_gamma_down")
+        sessionStore.startQuest("w5_mq24", track = true)
+        sessionStore.setQuestStage("w5_mq24", "reunion")
+        sessionStore.setWorld("world_5")
+        sessionStore.setHub("hub_10_deep_ring")
+        sessionStore.setRoom("deep_anchor_chamber")
+        visitDebugNodes("deep_server_farm", "deep_anchor_chamber")
+        true
+    }.getOrElse { false }
+
+    private fun startNewGameAtW5CriticalMass(): Boolean = runCatching {
+        if (!prepareWorld5DebugState(completedW5Quests = listOf("w5_mq21", "w5_mq22", "w5_mq23", "w5_mq24"))) return false
+        inventoryService.addItem("grav_boots", 1)
+        inventoryService.addItem("anchor_relic", 1)
+        sessionStore.unlockSkill("source_art_stasis")
+        sessionStore.setMilestone("ms_w5_anchor_chamber_entered")
+        sessionStore.setMilestone("ms_w5_elara_found")
+        sessionStore.setMilestone("ms_w5_anchor_taken")
+        sessionStore.startQuest("w5_mq25", track = true)
+        sessionStore.setQuestStage("w5_mq25", "soloist")
+        sessionStore.setWorld("world_5")
+        sessionStore.setHub("hub_10_deep_ring")
+        sessionStore.setRoom("deep_throne_room")
+        visitDebugNodes("deep_server_farm", "deep_anchor_chamber", "deep_throne_room")
+        true
+    }.getOrElse { false }
+
     private fun prepareWorld2DebugState(completedW2Quests: List<String> = emptyList()): Boolean {
         if (!startNewGame(debugFullInventory = true)) return false
         clearDebugBootstrap()
@@ -1181,6 +1262,21 @@ class AppServices(context: Context) {
         sessionStore.setAstraReturnLocation("world_4", "hub_7_slag_pits", "foundry_slag_landing")
         sessionStore.markTutorialCompleted("swipe_move")
         sessionStore.markTutorialCompleted("movement")
+        return true
+    }
+
+    private fun prepareWorld5DebugState(completedW5Quests: List<String> = emptyList()): Boolean {
+        if (!prepareWorld4DebugState(completedW4Quests = listOf("w4_mq16", "w4_mq17", "w4_mq18", "w4_mq19", "w4_mq20"))) return false
+        completeDebugQuests(*completedW5Quests.toTypedArray())
+        inventoryService.addItem("deep_core_engine", 1)
+        inventoryService.addItem("phase_cutter_arrays", 1)
+        inventoryService.addItem("the_anvil", 1)
+        inventoryService.addItem("gh0st_override_key", 1)
+        sessionStore.unlockSkill("gh0st_phase_counter")
+        sessionStore.unlockSkill("source_art_construct")
+        sessionStore.setPartyMembers(listOf("nova", "zeke", "orion", "gh0st"))
+        sessionStore.setMilestone("ms_w5_access_unlocked")
+        sessionStore.setAstraReturnLocation("world_5", "hub_9_orbital_ring", "orbital_executive_dock")
         return true
     }
 
