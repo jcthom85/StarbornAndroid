@@ -4136,8 +4136,16 @@
         "to_stage_id": "find_safehouse"
       },
       {
+        "type": "reveal_node",
+        "node_id": "spire_the_static"
+      },
+      {
+        "type": "unlock_node",
+        "node_id": "spire_the_static"
+      },
+      {
         "type": "show_message",
-        "message": "You climb the access ladder and pull yourself out into the acidic rain of the Lower City."
+        "message": "You climb the access ladder into acidic Lower City rain. Zeke points through the neon smear toward The Static, where his old apartment still hides above a bar the city forgot to erase."
       }
     ]
   },
@@ -4223,8 +4231,24 @@
         "quest_id": "w3_mq12"
       },
       {
+        "type": "reveal_node",
+        "node_id": "spire_night_market"
+      },
+      {
+        "type": "unlock_node",
+        "node_id": "spire_night_market"
+      },
+      {
+        "type": "reveal_node",
+        "node_id": "spire_transit_plaza"
+      },
+      {
+        "type": "unlock_node",
+        "node_id": "spire_transit_plaza"
+      },
+      {
         "type": "show_message",
-        "message": "Quest Complete: Homecoming\n\nOrion folds a quiet Source shield around Zeke's erased apartment. Outside, the Spire keeps listening to itself. Inside, the crew finally has a room the city cannot own."
+        "message": "Quest Complete: Homecoming\n\nOrion folds a quiet Source shield around Zeke's erased apartment. Outside, the Spire keeps listening to itself. Inside, the crew has a room the city cannot own. Zeke names the next problem: the Upper City can only be reached through workers, schedules, badges, and people the rich refuse to see."
       }
     ]
   },
@@ -4251,6 +4275,22 @@
         "type": "set_quest_task_done",
         "quest_id": "w3_mq12",
         "task_id": "talk_jax"
+      },
+      {
+        "type": "reveal_node",
+        "node_id": "spire_vent_output"
+      },
+      {
+        "type": "unlock_node",
+        "node_id": "spire_vent_output"
+      },
+      {
+        "type": "reveal_node",
+        "node_id": "spire_transit_plaza"
+      },
+      {
+        "type": "unlock_node",
+        "node_id": "spire_transit_plaza"
       },
       {
         "type": "show_message",
@@ -4496,8 +4536,36 @@
         "milestone": "ms_w3_mq12_complete"
       },
       {
+        "type": "start_quest",
+        "quest_id": "w3_mq13"
+      },
+      {
+        "type": "track_quest",
+        "quest_id": "w3_mq13"
+      },
+      {
+        "type": "reveal_node",
+        "node_id": "spire_laundry"
+      },
+      {
+        "type": "unlock_node",
+        "node_id": "spire_laundry"
+      },
+      {
+        "type": "reveal_node",
+        "node_id": "spire_skypark"
+      },
+      {
+        "type": "unlock_node",
+        "node_id": "spire_skypark"
+      },
+      {
+        "type": "warp",
+        "room_id": "spire_laundry_service"
+      },
+      {
         "type": "show_message",
-        "message": "Quest Complete: The Plan\n\nCurfews, patrol gaps, copied badges, disguises, security records, and Zeke's blueprints lock into one ugly route. Nova assigns the roles. Nobody is ready, which is why everyone has to trust the assignment."
+        "message": "Quest Complete: The Plan\n\nCurfews, patrol gaps, copied badges, disguises, security records, and Zeke's blueprints lock into one ugly route. Nova assigns the roles. The service lift swallows the crew into the clean machinery of the Upper City, where the only way forward is to look like labor nobody is paid to notice."
       }
     ]
   },
@@ -4739,6 +4807,14 @@
         "task_id": "blend_in"
       },
       {
+        "type": "reveal_node",
+        "node_id": "spire_laundry"
+      },
+      {
+        "type": "unlock_node",
+        "node_id": "spire_laundry"
+      },
+      {
         "type": "show_message",
         "message": "The Skypark guest registry accepts the forged profile. Nova smiles like she belongs here while the Curator's insult keeps burning behind her teeth. Gh0st stands perfectly still and somehow looks expensive."
       }
@@ -4836,8 +4912,16 @@
         "quest_id": "w3_mq14"
       },
       {
+        "type": "reveal_node",
+        "node_id": "spire_archive"
+      },
+      {
+        "type": "unlock_node",
+        "node_id": "spire_archive"
+      },
+      {
         "type": "show_message",
-        "message": "Quest Complete: Social Engineering\n\nThe service chute spits Nova and Gh0st past the scanners while Zeke and Orion keep the grid blind. The crew has fooled the Upper City by becoming the people it refuses to see, and every second now has teeth."
+        "message": "Quest Complete: Social Engineering\n\nThe service chute spits Nova and Gh0st past the scanners while Zeke and Orion keep the grid blind. The crew has fooled the Upper City by becoming the people it refuses to see. The Archive opens ahead, and every second now has teeth."
       }
     ]
   },
@@ -4966,8 +5050,16 @@
         "quest_id": "w3_mq15"
       },
       {
+        "type": "reveal_node",
+        "node_id": "spire_landing_pad"
+      },
+      {
+        "type": "unlock_node",
+        "node_id": "spire_landing_pad"
+      },
+      {
         "type": "show_message",
-        "message": "Quest Complete: The Lens\n\nThe relic burns cold in Nova's hand. The Shield above the Spire becomes visible as rotating chords, and so does the thin old thread running through her own signal. Alarm text blooms across the air: ANOMALY DETECTED."
+        "message": "Quest Complete: The Lens\n\nThe relic burns cold in Nova's hand. The Shield above the Spire becomes visible as rotating chords, and so does the thin old thread running through her own signal. Alarm text blooms across the air: ANOMALY DETECTED. The only route left is through the drone alcove and up to the roof, where the Astra has one impossible launch window."
       }
     ]
   },
