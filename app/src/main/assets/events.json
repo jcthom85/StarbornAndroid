@@ -3290,6 +3290,12 @@
     ],
     "actions": [
       {
+        "type": "audio_layer",
+        "layer": "stinger",
+        "cue_id": "sfx_w2_chime_gate",
+        "fade_ms": 0
+      },
+      {
         "type": "set_quest_task_done",
         "quest_id": "w2_mq02",
         "task_id": "insert_chime"
@@ -3407,6 +3413,12 @@
       }
     ],
     "actions": [
+      {
+        "type": "audio_layer",
+        "layer": "stinger",
+        "cue_id": "sfx_w2_stasis_release",
+        "fade_ms": 0
+      },
       {
         "type": "set_quest_task_done",
         "quest_id": "w2_mq03",
@@ -3709,6 +3721,12 @@
     ],
     "actions": [
       {
+        "type": "audio_layer",
+        "layer": "ui",
+        "cue_id": "sfx_w2_astra_reboot",
+        "fade_ms": 0
+      },
+      {
         "type": "set_quest_task_done",
         "quest_id": "w2_mq05",
         "task_id": "reboot_bridge_relic"
@@ -3743,6 +3761,12 @@
       }
     ],
     "actions": [
+      {
+        "type": "audio_layer",
+        "layer": "stinger",
+        "cue_id": "sfx_w2_astra_launch",
+        "fade_ms": 0
+      },
       {
         "type": "set_quest_task_done",
         "quest_id": "w2_mq05",
@@ -4171,6 +4195,12 @@
       }
     ],
     "actions": [
+      {
+        "type": "audio_layer",
+        "layer": "stinger",
+        "cue_id": "sfx_w3_shield_anchor",
+        "fade_ms": 0
+      },
       {
         "type": "set_quest_task_done",
         "quest_id": "w3_mq11",
@@ -4778,6 +4808,12 @@
       }
     ],
     "actions": [
+      {
+        "type": "audio_layer",
+        "layer": "stinger",
+        "cue_id": "sfx_w3_elevator_rise",
+        "fade_ms": 0
+      },
       {
         "type": "set_quest_task_done",
         "quest_id": "w3_mq13",

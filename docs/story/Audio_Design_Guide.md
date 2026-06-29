@@ -186,6 +186,20 @@ World 1 uses short one-shot cues to make the room text and quest beats feel auth
 *   **Tideglass Beach Ambience:**  
     `"Slow, heavy waves crashing on glass-like sand, crystalline tinkling water retreat, soft acoustic wind, distant low hum"`
 
+### World 2 and World 3 Regional Ambience
+World 2 and World 3 use region-level ambience loops rather than unique loops for every room. Room groups should bind to the loop that defines their current authored identity:
+
+* **World 2 crash/jungle:** `amb_w2_crash_jungle`
+* **World 2 glow-water paths:** `amb_w2_glow_stream`
+* **World 2 Tideglass shore:** `amb_w2_tideglass_shore`
+* **World 2 canopy/ridge:** `amb_w2_canopy_resonance`
+* **World 2 Architect facility:** `amb_w2_architect_facility`
+* **World 2 stasis/hangar/Astra:** `amb_w2_stasis_chamber`, `amb_w2_hangar_power`, `amb_astra_interior`
+* **World 3 lower city:** `amb_w3_sewers`, `amb_w3_rain_alley`, `amb_w3_underrail_static`, `amb_w3_night_market`, `amb_w3_checkpoint`
+* **World 3 upper city:** `amb_w3_upper_service`, `amb_w3_skypark`, `amb_w3_corporate_archive`
+
+Weather audio should support the region's tone. `fog` and `resonance` are currently World 2-heavy tags, so their fallback audio should sound like humid wilds and ancient Source architecture, not Stellarium dust or generic cave drips.
+
 ---
 
 ## 5. Implementation & Runtime Integration

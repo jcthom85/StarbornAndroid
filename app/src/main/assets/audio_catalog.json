@@ -7,7 +7,12 @@
       "fade_in_ms": 1500,
       "fade_out_ms": 1200,
       "gain": 0.85,
-      "tags": ["title", "explore", "acoustic", "orchestral"]
+      "tags": [
+        "title",
+        "explore",
+        "acoustic",
+        "orchestral"
+      ]
     },
     {
       "id": "music_w1_homestead_explore",
@@ -16,7 +21,12 @@
       "fade_in_ms": 1200,
       "fade_out_ms": 1000,
       "gain": 0.85,
-      "tags": ["world_1", "explore", "blues", "acoustic"]
+      "tags": [
+        "world_1",
+        "explore",
+        "blues",
+        "acoustic"
+      ]
     },
     {
       "id": "music_w1_logistics_explore",
@@ -25,7 +35,12 @@
       "fade_in_ms": 1200,
       "fade_out_ms": 1000,
       "gain": 0.85,
-      "tags": ["world_1", "explore", "blues", "industrial"]
+      "tags": [
+        "world_1",
+        "explore",
+        "blues",
+        "industrial"
+      ]
     },
     {
       "id": "music_w1_combat",
@@ -33,8 +48,12 @@
       "loop": true,
       "fade_in_ms": 600,
       "fade_out_ms": 800,
-      "gain": 1.0,
-      "tags": ["world_1", "combat", "rock"]
+      "gain": 1,
+      "tags": [
+        "world_1",
+        "combat",
+        "rock"
+      ]
     },
     {
       "id": "music_crash_flight",
@@ -42,8 +61,12 @@
       "loop": false,
       "fade_in_ms": 500,
       "fade_out_ms": 500,
-      "gain": 1.0,
-      "tags": ["interlude", "tension", "orchestral"]
+      "gain": 1,
+      "tags": [
+        "interlude",
+        "tension",
+        "orchestral"
+      ]
     },
     {
       "id": "music_w2_sector9_explore",
@@ -52,7 +75,12 @@
       "fade_in_ms": 1400,
       "fade_out_ms": 1200,
       "gain": 0.85,
-      "tags": ["world_2", "explore", "acoustic", "orchestral"]
+      "tags": [
+        "world_2",
+        "explore",
+        "acoustic",
+        "orchestral"
+      ]
     },
     {
       "id": "music_w2_combat",
@@ -60,8 +88,13 @@
       "loop": true,
       "fade_in_ms": 600,
       "fade_out_ms": 800,
-      "gain": 1.0,
-      "tags": ["world_2", "combat", "tribal", "orchestral"]
+      "gain": 1,
+      "tags": [
+        "world_2",
+        "combat",
+        "tribal",
+        "orchestral"
+      ]
     },
     {
       "id": "music_w3_spire_explore",
@@ -70,7 +103,12 @@
       "fade_in_ms": 1200,
       "fade_out_ms": 1000,
       "gain": 0.85,
-      "tags": ["world_3", "explore", "jazz", "rock"]
+      "tags": [
+        "world_3",
+        "explore",
+        "jazz",
+        "rock"
+      ]
     },
     {
       "id": "music_w3_combat",
@@ -78,8 +116,13 @@
       "loop": true,
       "fade_in_ms": 600,
       "fade_out_ms": 800,
-      "gain": 1.0,
-      "tags": ["world_3", "combat", "funk", "rock"]
+      "gain": 1,
+      "tags": [
+        "world_3",
+        "combat",
+        "funk",
+        "rock"
+      ]
     },
     {
       "id": "music_w4_foundry_explore",
@@ -88,7 +131,12 @@
       "fade_in_ms": 1000,
       "fade_out_ms": 1000,
       "gain": 0.85,
-      "tags": ["world_4", "explore", "industrial", "drone"]
+      "tags": [
+        "world_4",
+        "explore",
+        "industrial",
+        "drone"
+      ]
     },
     {
       "id": "music_w4_combat",
@@ -96,8 +144,13 @@
       "loop": true,
       "fade_in_ms": 600,
       "fade_out_ms": 800,
-      "gain": 1.0,
-      "tags": ["world_4", "combat", "metal", "punk"]
+      "gain": 1,
+      "tags": [
+        "world_4",
+        "combat",
+        "metal",
+        "punk"
+      ]
     },
     {
       "id": "music_w5_void_explore",
@@ -105,8 +158,13 @@
       "loop": true,
       "fade_in_ms": 1500,
       "fade_out_ms": 1500,
-      "gain": 0.80,
-      "tags": ["world_5", "explore", "piano", "classical"]
+      "gain": 0.8,
+      "tags": [
+        "world_5",
+        "explore",
+        "piano",
+        "classical"
+      ]
     },
     {
       "id": "music_w5_combat",
@@ -114,8 +172,13 @@
       "loop": true,
       "fade_in_ms": 600,
       "fade_out_ms": 800,
-      "gain": 1.0,
-      "tags": ["world_5", "combat", "metal", "orchestral"]
+      "gain": 1,
+      "tags": [
+        "world_5",
+        "combat",
+        "metal",
+        "orchestral"
+      ]
     },
     {
       "id": "music_w6_source_explore",
@@ -124,7 +187,12 @@
       "fade_in_ms": 1600,
       "fade_out_ms": 1600,
       "gain": 0.85,
-      "tags": ["world_6", "explore", "choral", "modal"]
+      "tags": [
+        "world_6",
+        "explore",
+        "choral",
+        "modal"
+      ]
     },
     {
       "id": "music_w6_combat",
@@ -132,8 +200,14 @@
       "loop": true,
       "fade_in_ms": 600,
       "fade_out_ms": 800,
-      "gain": 1.0,
-      "tags": ["world_6", "combat", "symphonic", "rock", "choir"]
+      "gain": 1,
+      "tags": [
+        "world_6",
+        "combat",
+        "symphonic",
+        "rock",
+        "choir"
+      ]
     },
     {
       "id": "amb_vent",
@@ -142,7 +216,9 @@
       "fade_in_ms": 900,
       "fade_out_ms": 900,
       "gain": 0.85,
-      "tags": ["industrial"]
+      "tags": [
+        "industrial"
+      ]
     },
     {
       "id": "amb_bunkroom_hum",
@@ -151,7 +227,12 @@
       "fade_in_ms": 700,
       "fade_out_ms": 900,
       "gain": 0.48,
-      "tags": ["world_1", "homestead", "bunkroom", "industrial"]
+      "tags": [
+        "world_1",
+        "homestead",
+        "bunkroom",
+        "industrial"
+      ]
     },
     {
       "id": "amb_forest_birds",
@@ -160,7 +241,10 @@
       "fade_in_ms": 800,
       "fade_out_ms": 800,
       "gain": 0.8,
-      "tags": ["outdoor", "forest"]
+      "tags": [
+        "outdoor",
+        "forest"
+      ]
     },
     {
       "id": "amb_cave_drips",
@@ -169,7 +253,10 @@
       "fade_in_ms": 850,
       "fade_out_ms": 850,
       "gain": 0.82,
-      "tags": ["cave", "moist"]
+      "tags": [
+        "cave",
+        "moist"
+      ]
     },
     {
       "id": "amb_colony_vent_crowd",
@@ -178,7 +265,12 @@
       "fade_in_ms": 900,
       "fade_out_ms": 900,
       "gain": 0.72,
-      "tags": ["world_1", "homestead", "industrial", "crowd"]
+      "tags": [
+        "world_1",
+        "homestead",
+        "industrial",
+        "crowd"
+      ]
     },
     {
       "id": "amb_logistics_machinery",
@@ -187,7 +279,12 @@
       "fade_in_ms": 900,
       "fade_out_ms": 900,
       "gain": 0.78,
-      "tags": ["world_1", "logistics", "industrial", "machinery"]
+      "tags": [
+        "world_1",
+        "logistics",
+        "industrial",
+        "machinery"
+      ]
     },
     {
       "id": "amb_server_cold",
@@ -196,7 +293,12 @@
       "fade_in_ms": 900,
       "fade_out_ms": 900,
       "gain": 0.76,
-      "tags": ["world_1", "server", "cold", "electronics"]
+      "tags": [
+        "world_1",
+        "server",
+        "cold",
+        "electronics"
+      ]
     },
     {
       "id": "amb_launch_alarm",
@@ -204,8 +306,13 @@
       "loop": true,
       "fade_in_ms": 700,
       "fade_out_ms": 900,
-      "gain": 0.80,
-      "tags": ["world_1", "launch", "alarm", "industrial"]
+      "gain": 0.8,
+      "tags": [
+        "world_1",
+        "launch",
+        "alarm",
+        "industrial"
+      ]
     },
     {
       "id": "amb_dust_storm",
@@ -214,7 +321,12 @@
       "fade_in_ms": 900,
       "fade_out_ms": 900,
       "gain": 0.78,
-      "tags": ["world_1", "dust", "wind", "industrial"]
+      "tags": [
+        "world_1",
+        "dust",
+        "wind",
+        "industrial"
+      ]
     },
     {
       "id": "music_victory_theme",
@@ -223,7 +335,249 @@
       "fade_in_ms": 500,
       "fade_out_ms": 800,
       "gain": 0.85,
-      "tags": ["victory", "fanfare", "celebrate"]
+      "tags": [
+        "victory",
+        "fanfare",
+        "celebrate"
+      ]
+    },
+    {
+      "id": "amb_w2_crash_jungle",
+      "type": "ambient",
+      "loop": true,
+      "fade_in_ms": 900,
+      "fade_out_ms": 900,
+      "gain": 0.76,
+      "tags": [
+        "world_2",
+        "sector9",
+        "jungle",
+        "crash",
+        "outdoor"
+      ]
+    },
+    {
+      "id": "amb_w2_glow_stream",
+      "type": "ambient",
+      "loop": true,
+      "fade_in_ms": 900,
+      "fade_out_ms": 900,
+      "gain": 0.76,
+      "tags": [
+        "world_2",
+        "sector9",
+        "stream",
+        "glow_water",
+        "outdoor"
+      ]
+    },
+    {
+      "id": "amb_w2_tideglass_shore",
+      "type": "ambient",
+      "loop": true,
+      "fade_in_ms": 900,
+      "fade_out_ms": 900,
+      "gain": 0.76,
+      "tags": [
+        "world_2",
+        "sector9",
+        "beach",
+        "tideglass",
+        "outdoor"
+      ]
+    },
+    {
+      "id": "amb_w2_canopy_resonance",
+      "type": "ambient",
+      "loop": true,
+      "fade_in_ms": 900,
+      "fade_out_ms": 900,
+      "gain": 0.76,
+      "tags": [
+        "world_2",
+        "sector9",
+        "canopy",
+        "resonance",
+        "outdoor"
+      ]
+    },
+    {
+      "id": "amb_w2_architect_facility",
+      "type": "ambient",
+      "loop": true,
+      "fade_in_ms": 900,
+      "fade_out_ms": 900,
+      "gain": 0.76,
+      "tags": [
+        "world_2",
+        "sector9",
+        "architect",
+        "facility",
+        "resonance"
+      ]
+    },
+    {
+      "id": "amb_w2_stasis_chamber",
+      "type": "ambient",
+      "loop": true,
+      "fade_in_ms": 900,
+      "fade_out_ms": 900,
+      "gain": 0.76,
+      "tags": [
+        "world_2",
+        "sector9",
+        "stasis",
+        "facility",
+        "resonance"
+      ]
+    },
+    {
+      "id": "amb_w2_hangar_power",
+      "type": "ambient",
+      "loop": true,
+      "fade_in_ms": 900,
+      "fade_out_ms": 900,
+      "gain": 0.76,
+      "tags": [
+        "world_2",
+        "sector9",
+        "hangar",
+        "ship",
+        "facility"
+      ]
+    },
+    {
+      "id": "amb_astra_interior",
+      "type": "ambient",
+      "loop": true,
+      "fade_in_ms": 900,
+      "fade_out_ms": 900,
+      "gain": 0.76,
+      "tags": [
+        "world_2",
+        "astra",
+        "ship",
+        "interior"
+      ]
+    },
+    {
+      "id": "amb_w3_sewers",
+      "type": "ambient",
+      "loop": true,
+      "fade_in_ms": 900,
+      "fade_out_ms": 900,
+      "gain": 0.76,
+      "tags": [
+        "world_3",
+        "spire",
+        "sewers",
+        "lower_city"
+      ]
+    },
+    {
+      "id": "amb_w3_rain_alley",
+      "type": "ambient",
+      "loop": true,
+      "fade_in_ms": 900,
+      "fade_out_ms": 900,
+      "gain": 0.76,
+      "tags": [
+        "world_3",
+        "spire",
+        "rain",
+        "alley",
+        "lower_city"
+      ]
+    },
+    {
+      "id": "amb_w3_underrail_static",
+      "type": "ambient",
+      "loop": true,
+      "fade_in_ms": 900,
+      "fade_out_ms": 900,
+      "gain": 0.76,
+      "tags": [
+        "world_3",
+        "spire",
+        "underrail",
+        "static",
+        "lower_city"
+      ]
+    },
+    {
+      "id": "amb_w3_night_market",
+      "type": "ambient",
+      "loop": true,
+      "fade_in_ms": 900,
+      "fade_out_ms": 900,
+      "gain": 0.7,
+      "tags": [
+        "world_3",
+        "spire",
+        "market",
+        "crowd",
+        "lower_city"
+      ]
+    },
+    {
+      "id": "amb_w3_checkpoint",
+      "type": "ambient",
+      "loop": true,
+      "fade_in_ms": 900,
+      "fade_out_ms": 900,
+      "gain": 0.76,
+      "tags": [
+        "world_3",
+        "spire",
+        "checkpoint",
+        "dominion",
+        "transit"
+      ]
+    },
+    {
+      "id": "amb_w3_upper_service",
+      "type": "ambient",
+      "loop": true,
+      "fade_in_ms": 900,
+      "fade_out_ms": 900,
+      "gain": 0.76,
+      "tags": [
+        "world_3",
+        "spire",
+        "upper_city",
+        "service",
+        "corporate"
+      ]
+    },
+    {
+      "id": "amb_w3_skypark",
+      "type": "ambient",
+      "loop": true,
+      "fade_in_ms": 900,
+      "fade_out_ms": 900,
+      "gain": 0.76,
+      "tags": [
+        "world_3",
+        "spire",
+        "upper_city",
+        "skypark",
+        "luxury"
+      ]
+    },
+    {
+      "id": "amb_w3_corporate_archive",
+      "type": "ambient",
+      "loop": true,
+      "fade_in_ms": 900,
+      "fade_out_ms": 900,
+      "gain": 0.76,
+      "tags": [
+        "world_3",
+        "spire",
+        "upper_city",
+        "archive",
+        "corporate"
+      ]
     }
   ],
   "cues": [
@@ -371,7 +725,7 @@
       "id": "battle_start",
       "category": "battle",
       "priority": 5,
-      "gain": 1.0,
+      "gain": 1,
       "fade_in_ms": 0,
       "fade_out_ms": 400
     },
@@ -387,7 +741,7 @@
       "id": "shield_break",
       "category": "battle",
       "priority": 4,
-      "gain": 1.0,
+      "gain": 1,
       "fade_in_ms": 0,
       "fade_out_ms": 220
     },
@@ -395,7 +749,7 @@
       "id": "victory_fanfare",
       "category": "battle",
       "priority": 5,
-      "gain": 1.0,
+      "gain": 1,
       "fade_in_ms": 60,
       "fade_out_ms": 600
     },
@@ -403,7 +757,7 @@
       "id": "defeat_sting",
       "category": "battle",
       "priority": 5,
-      "gain": 1.0,
+      "gain": 1,
       "fade_in_ms": 80,
       "fade_out_ms": 800
     },
@@ -411,7 +765,7 @@
       "id": "ui_title_start",
       "category": "ui",
       "priority": 5,
-      "gain": 1.0,
+      "gain": 1,
       "fade_in_ms": 0,
       "fade_out_ms": 400
     },
@@ -455,7 +809,7 @@
       "id": "voice_murmur_male_01",
       "category": "voice",
       "priority": 1,
-      "gain": 0.50,
+      "gain": 0.5,
       "fade_in_ms": 0,
       "fade_out_ms": 40,
       "duration_ms": 140
@@ -518,6 +872,60 @@
       "gain": 0.9,
       "fade_in_ms": 0,
       "fade_out_ms": 100
+    },
+    {
+      "id": "sfx_w2_chime_gate",
+      "category": "battle",
+      "priority": 5,
+      "gain": 0.9,
+      "fade_in_ms": 0,
+      "fade_out_ms": 300,
+      "duration_ms": 2000
+    },
+    {
+      "id": "sfx_w2_stasis_release",
+      "category": "battle",
+      "priority": 5,
+      "gain": 0.88,
+      "fade_in_ms": 0,
+      "fade_out_ms": 360,
+      "duration_ms": 2500
+    },
+    {
+      "id": "sfx_w2_astra_reboot",
+      "category": "ui",
+      "priority": 4,
+      "gain": 0.86,
+      "fade_in_ms": 0,
+      "fade_out_ms": 300,
+      "duration_ms": 2200
+    },
+    {
+      "id": "sfx_w2_astra_launch",
+      "category": "battle",
+      "priority": 5,
+      "gain": 0.94,
+      "fade_in_ms": 0,
+      "fade_out_ms": 420,
+      "duration_ms": 3000
+    },
+    {
+      "id": "sfx_w3_shield_anchor",
+      "category": "battle",
+      "priority": 5,
+      "gain": 0.88,
+      "fade_in_ms": 0,
+      "fade_out_ms": 300,
+      "duration_ms": 2000
+    },
+    {
+      "id": "sfx_w3_elevator_rise",
+      "category": "battle",
+      "priority": 4,
+      "gain": 0.82,
+      "fade_in_ms": 0,
+      "fade_out_ms": 320,
+      "duration_ms": 2400
     }
   ]
 }

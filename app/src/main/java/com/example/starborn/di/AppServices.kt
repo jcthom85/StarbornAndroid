@@ -868,6 +868,16 @@ class AppServices(context: Context) {
         "dynamic_patrol" -> startNewGameAtDynamicPatrol()
         "red_alert" -> startNewGameAtRedAlert()
         "launch" -> startNewGameAtLaunch()
+        "w2_crash_start" -> startNewGameAtW2CrashStart()
+        "w2_temple_gate" -> startNewGameAtW2TempleGate()
+        "w2_stasis_chamber" -> startNewGameAtW2StasisChamber()
+        "w2_hunter_canopy" -> startNewGameAtW2HunterCanopy()
+        "w2_astra_repair" -> startNewGameAtW2AstraRepair()
+        "w3_sewers_entry" -> startNewGameAtW3SewersEntry()
+        "w3_safehouse_plan" -> startNewGameAtW3SafehousePlan()
+        "w3_checkpoint_infiltration" -> startNewGameAtW3CheckpointInfiltration()
+        "w3_lens_archive" -> startNewGameAtW3LensArchive()
+        "w3_lockdown_escape" -> startNewGameAtW3LockdownEscape()
         "node_progression_w1" -> startNewGameAtWorld1NodeProgression()
         "node_progression_w2" -> startNewGameAtWorld2NodeProgression()
         "astra_access" -> startNewGameAtAstraAccess()
@@ -908,6 +918,117 @@ class AppServices(context: Context) {
         true
     }.getOrElse { false }
 
+    private fun startNewGameAtW2CrashStart(): Boolean = runCatching {
+        if (!prepareWorld2DebugState()) return false
+        sessionStore.startQuest("w2_mq01", track = true)
+        sessionStore.setQuestStage("w2_mq01", "assess_crash_site")
+        sessionStore.setWorld("world_2")
+        sessionStore.setHub("hub_3_sector9")
+        sessionStore.setRoom("sector9_crash_site")
+        visitDebugNodes("sector9_landing")
+        true
+    }.getOrElse { false }
+
+    private fun startNewGameAtW2TempleGate(): Boolean = runCatching {
+        if (!prepareWorld2DebugState(completedW2Quests = listOf("w2_mq01"))) return false
+        sessionStore.startQuest("w2_mq02", track = true)
+        sessionStore.setQuestStage("w2_mq02", "reach_temple_gate")
+        sessionStore.setQuestTasksCompleted("w2_mq02", setOf("clear_canopy_path"))
+        sessionStore.setWorld("world_2")
+        sessionStore.setHub("hub_3_sector9")
+        sessionStore.setRoom("sector9_temple_gate")
+        visitDebugNodes("sector9_landing", "razor_vine_path", "canopy_ridge", "temple_gate")
+        true
+    }.getOrElse { false }
+
+    private fun startNewGameAtW2StasisChamber(): Boolean = runCatching {
+        if (!prepareWorld2DebugState(completedW2Quests = listOf("w2_mq01", "w2_mq02"))) return false
+        sessionStore.startQuest("w2_mq03", track = true)
+        sessionStore.setQuestStage("w2_mq03", "override_stasis")
+        sessionStore.setQuestTasksCompleted("w2_mq03", setOf("inspect_murals"))
+        sessionStore.setWorld("world_2")
+        sessionStore.setHub("hub_4_facility")
+        sessionStore.setRoom("sector9_stasis_chamber")
+        visitDebugNodes("hall_of_echoes", "stasis_chamber")
+        true
+    }.getOrElse { false }
+
+    private fun startNewGameAtW2HunterCanopy(): Boolean = runCatching {
+        if (!prepareWorld2DebugState(completedW2Quests = listOf("w2_mq01", "w2_mq02", "w2_mq03"))) return false
+        sessionStore.setPartyMembers(listOf("nova", "zeke", "orion"))
+        sessionStore.startQuest("w2_mq04", track = true)
+        sessionStore.setQuestStage("w2_mq04", "canopy_ridge")
+        sessionStore.setWorld("world_2")
+        sessionStore.setHub("hub_3_sector9")
+        sessionStore.setRoom("sector9_canopy_ridge")
+        visitDebugNodes("sector9_landing", "razor_vine_path", "canopy_ridge", "temple_gate")
+        true
+    }.getOrElse { false }
+
+    private fun startNewGameAtW2AstraRepair(): Boolean = runCatching {
+        if (!prepareWorld2DebugState(completedW2Quests = listOf("w2_mq01", "w2_mq02", "w2_mq03", "w2_mq04"))) return false
+        sessionStore.setPartyMembers(listOf("nova", "zeke", "orion", "gh0st"))
+        sessionStore.startQuest("w2_mq05", track = true)
+        sessionStore.setQuestStage("w2_mq05", "repair_astra")
+        sessionStore.setQuestTasksCompleted("w2_mq05", setOf("bypass_source_gate"))
+        sessionStore.setWorld("world_2")
+        sessionStore.setHub("hub_4_facility")
+        sessionStore.setRoom("sector9_hangar_bay")
+        visitDebugNodes("hall_of_echoes", "stasis_chamber", "source_gate", "hangar_bay")
+        true
+    }.getOrElse { false }
+
+    private fun startNewGameAtW3SewersEntry(): Boolean = runCatching {
+        if (!prepareAstraDebugState()) return false
+        true
+    }.getOrElse { false }
+
+    private fun startNewGameAtW3SafehousePlan(): Boolean = runCatching {
+        if (!prepareWorld3DebugState(completedW3Quests = listOf("w3_mq11"))) return false
+        sessionStore.startQuest("w3_mq12", track = true)
+        sessionStore.setQuestStage("w3_mq12", "gather_intel")
+        sessionStore.setWorld("world_3")
+        sessionStore.setHub("hub_5_lower_city")
+        sessionStore.setRoom("spire_zekes_apartment")
+        visitDebugNodes("spire_sewers", "spire_vent_output", "spire_the_static", "spire_night_market", "spire_transit_plaza")
+        true
+    }.getOrElse { false }
+
+    private fun startNewGameAtW3CheckpointInfiltration(): Boolean = runCatching {
+        if (!prepareWorld3DebugState(completedW3Quests = listOf("w3_mq11", "w3_mq12"))) return false
+        sessionStore.startQuest("w3_mq13", track = true)
+        sessionStore.setQuestStage("w3_mq13", "gain_access")
+        sessionStore.setWorld("world_3")
+        sessionStore.setHub("hub_6_upper_city")
+        sessionStore.setRoom("spire_laundry_service")
+        visitDebugNodes("spire_laundry", "spire_skypark")
+        true
+    }.getOrElse { false }
+
+    private fun startNewGameAtW3LensArchive(): Boolean = runCatching {
+        if (!prepareWorld3DebugState(completedW3Quests = listOf("w3_mq11", "w3_mq12", "w3_mq13"))) return false
+        sessionStore.startQuest("w3_mq14", track = true)
+        sessionStore.setQuestStage("w3_mq14", "archive_infiltration")
+        sessionStore.setWorld("world_3")
+        sessionStore.setHub("hub_6_upper_city")
+        sessionStore.setRoom("spire_archive_vault")
+        visitDebugNodes("spire_laundry", "spire_skypark", "spire_archive")
+        true
+    }.getOrElse { false }
+
+    private fun startNewGameAtW3LockdownEscape(): Boolean = runCatching {
+        if (!prepareWorld3DebugState(completedW3Quests = listOf("w3_mq11", "w3_mq12", "w3_mq13", "w3_mq14"))) return false
+        inventoryService.addItem("the_lens", 1)
+        sessionStore.unlockSkill("source_art_scan")
+        sessionStore.startQuest("w3_mq15", track = true)
+        sessionStore.setQuestStage("w3_mq15", "escape_lockdown")
+        sessionStore.setWorld("world_3")
+        sessionStore.setHub("hub_6_upper_city")
+        sessionStore.setRoom("spire_prism_gallery")
+        visitDebugNodes("spire_laundry", "spire_skypark", "spire_archive", "spire_landing_pad")
+        true
+    }.getOrElse { false }
+
     private fun startNewGameAboardAstra(): Boolean = runCatching {
         if (!prepareAstraDebugState()) return false
         sessionStore.setAstraReturnLocation("world_3", "hub_5_lower_city", "spire_vent_output")
@@ -918,16 +1039,43 @@ class AppServices(context: Context) {
         true
     }.getOrElse { false }
 
-    private fun prepareAstraDebugState(): Boolean {
+    private fun prepareWorld2DebugState(completedW2Quests: List<String> = emptyList()): Boolean {
         if (!startNewGame(debugFullInventory = true)) return false
         clearDebugBootstrap()
-        listOf(
-            "w1_mq01", "w1_mq02", "w1_mq03", "w1_mq04", "w1_mq05",
-            "w2_mq01", "w2_mq02", "w2_mq03", "w2_mq04", "w2_mq05"
-        ).forEach { questId ->
+        completeDebugQuests("w1_mq01", "w1_mq02", "w1_mq03", "w1_mq04", "w1_mq05")
+        completeDebugQuests(*completedW2Quests.toTypedArray())
+        sessionStore.setPartyMembers(listOf("nova", "zeke"))
+        sessionStore.markTutorialCompleted("swipe_move")
+        sessionStore.markTutorialCompleted("movement")
+        return true
+    }
+
+    private fun prepareWorld3DebugState(completedW3Quests: List<String> = emptyList()): Boolean {
+        if (!prepareAstraDebugState()) return false
+        completeDebugQuests(*completedW3Quests.toTypedArray())
+        sessionStore.setPartyMembers(listOf("nova", "zeke", "orion", "gh0st"))
+        sessionStore.setAstraReturnLocation("world_3", "hub_5_lower_city", "spire_vent_output")
+        return true
+    }
+
+    private fun completeDebugQuests(vararg questIds: String) {
+        questIds.forEach { questId ->
             sessionStore.completeQuest(questId)
             sessionStore.setMilestone("ms_${questId}_complete")
         }
+    }
+
+    private fun visitDebugNodes(vararg nodeIds: String) {
+        nodeIds.forEach(sessionStore::visitNode)
+    }
+
+    private fun prepareAstraDebugState(): Boolean {
+        if (!startNewGame(debugFullInventory = true)) return false
+        clearDebugBootstrap()
+        completeDebugQuests(*listOf(
+            "w1_mq01", "w1_mq02", "w1_mq03", "w1_mq04", "w1_mq05",
+            "w2_mq01", "w2_mq02", "w2_mq03", "w2_mq04", "w2_mq05"
+        ).toTypedArray())
         sessionStore.setPartyMembers(listOf("nova", "zeke", "orion", "gh0st"))
         sessionStore.startQuest("w3_mq11", track = true)
         sessionStore.setQuestStage("w3_mq11", "secure_landing_zone")

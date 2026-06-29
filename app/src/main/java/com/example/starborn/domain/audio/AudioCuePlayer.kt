@@ -46,14 +46,13 @@ class AudioCuePlayer(
         .build()
 
     private val musicPlayer: ExoPlayer = ExoPlayer.Builder(context).build()
-    private val ambientPlayer: ExoPlayer = ExoPlayer.Builder(context).build()
+    private val ambientPlayers = ConcurrentHashMap<String, ExoPlayer>()
 
     private val soundCache = ConcurrentHashMap<String, Int>()
     private val pendingShortCues = ConcurrentHashMap<Int, MutableList<PendingShortCue>>()
     private val activeStreams = ConcurrentHashMap<Pair<AudioCueType, String>, Int>()
     private val fadeAnimators = EnumMap<AudioCueType, ValueAnimator>(AudioCueType::class.java)
     private var currentMusicCue: String? = null
-    private var currentAmbientCue: String? = null
     private var musicGain: Float = 1f
     private var ambientGain: Float = 1f
     private var userMusicGain: Float = 1f
@@ -105,7 +104,7 @@ class AudioCuePlayer(
         if (normalized.isBlank()) return
         when (command.type) {
             AudioCueType.MUSIC -> playStreaming(musicPlayer, AudioCueType.MUSIC, normalized, command)
-            AudioCueType.AMBIENT -> playStreaming(ambientPlayer, AudioCueType.AMBIENT, normalized, command)
+            AudioCueType.AMBIENT -> playAmbientStreaming(normalized, command)
             else -> playShort(command.type, normalized, command)
         }
     }
@@ -115,7 +114,7 @@ class AudioCuePlayer(
         if (normalized.isBlank()) return
         when (command.type) {
             AudioCueType.MUSIC -> stopStreaming(musicPlayer, AudioCueType.MUSIC, command.fadeMs)
-            AudioCueType.AMBIENT -> stopStreaming(ambientPlayer, AudioCueType.AMBIENT, command.fadeMs)
+            AudioCueType.AMBIENT -> stopAmbientStreaming(normalized, command.fadeMs)
             else -> {
                 val key = command.type to normalized
                 val stopAction: () -> Unit = {
@@ -183,13 +182,24 @@ class AudioCuePlayer(
         cancelFade(type)
         when (type) {
             AudioCueType.MUSIC -> currentMusicCue = cueId
-            AudioCueType.AMBIENT -> currentAmbientCue = cueId
             else -> Unit
         }
         player.stop()
         player.setMediaItem(MediaItem.fromUri(uri))
         player.repeatMode = if (command.loop) Player.REPEAT_MODE_ONE else Player.REPEAT_MODE_OFF
         setLayerGainImmediate(type, command.gain)
+        player.prepare()
+        player.playWhenReady = true
+    }
+
+    private fun playAmbientStreaming(cueId: String, command: AudioCommand.Play) {
+        val uri = resolveRawResourceUri(cueId) ?: return
+        val player = ambientPlayers.getOrPut(cueId) { ExoPlayer.Builder(context).build() }
+        player.stop()
+        player.setMediaItem(MediaItem.fromUri(uri))
+        player.repeatMode = if (command.loop) Player.REPEAT_MODE_ONE else Player.REPEAT_MODE_OFF
+        ambientGain = command.gain.coerceIn(0f, 1f)
+        player.volume = ambientGain * userMusicGain
         player.prepare()
         player.playWhenReady = true
     }
@@ -201,7 +211,6 @@ class AudioCuePlayer(
                 player.stop()
                 when (type) {
                     AudioCueType.MUSIC -> currentMusicCue = null
-                    AudioCueType.AMBIENT -> currentAmbientCue = null
                     else -> Unit
                 }
             }
@@ -209,17 +218,35 @@ class AudioCuePlayer(
             player.stop()
             when (type) {
                 AudioCueType.MUSIC -> currentMusicCue = null
-                AudioCueType.AMBIENT -> currentAmbientCue = null
                 else -> Unit
             }
             setLayerGainImmediate(type, 0f)
         }
     }
 
+    private fun stopAmbientStreaming(cueId: String, fadeMs: Long) {
+        val player = ambientPlayers[cueId] ?: return
+        if (fadeMs > 0) {
+            scheduleAmbientCueGain(cueId, player, 0f, fadeMs) {
+                player.stop()
+                player.release()
+                ambientPlayers.remove(cueId)
+            }
+        } else {
+            player.stop()
+            player.release()
+            ambientPlayers.remove(cueId)
+        }
+    }
+
     fun release() {
         soundPool.release()
         musicPlayer.release()
-        ambientPlayer.release()
+        ambientPlayers.values.forEach { player ->
+            player.stop()
+            player.release()
+        }
+        ambientPlayers.clear()
         fadeAnimators.values.forEach(ValueAnimator::cancel)
         fadeAnimators.clear()
     }
@@ -228,9 +255,9 @@ class AudioCuePlayer(
         if (pausedForBackground) return
         pausedForBackground = true
         resumeMusicAfterBackground = musicPlayer.playWhenReady && currentMusicCue != null
-        resumeAmbientAfterBackground = ambientPlayer.playWhenReady && currentAmbientCue != null
+        resumeAmbientAfterBackground = ambientPlayers.values.any { it.playWhenReady }
         musicPlayer.pause()
-        ambientPlayer.pause()
+        ambientPlayers.values.forEach { it.pause() }
         soundPool.autoPause()
     }
 
@@ -240,8 +267,8 @@ class AudioCuePlayer(
         if (resumeMusicAfterBackground && currentMusicCue != null) {
             musicPlayer.play()
         }
-        if (resumeAmbientAfterBackground && currentAmbientCue != null) {
-            ambientPlayer.play()
+        if (resumeAmbientAfterBackground) {
+            ambientPlayers.values.forEach { it.play() }
         }
         resumeMusicAfterBackground = false
         resumeAmbientAfterBackground = false
@@ -302,7 +329,7 @@ class AudioCuePlayer(
             }
             AudioCueType.AMBIENT -> {
                 ambientGain = clamped
-                ambientPlayer.volume = clamped * userMusicGain
+                ambientPlayers.values.forEach { it.volume = clamped * userMusicGain }
             }
             else -> activeStreams.forEach { (key, streamId) ->
                 if (key.first == type) {
@@ -349,7 +376,36 @@ class AudioCuePlayer(
     fun setUserMusicGain(gain: Float) {
         userMusicGain = gain.coerceIn(0f, 1f)
         musicPlayer.volume = musicGain * userMusicGain
-        ambientPlayer.volume = ambientGain * userMusicGain
+        ambientPlayers.values.forEach { it.volume = ambientGain * userMusicGain }
+    }
+
+    private fun scheduleAmbientCueGain(
+        cueId: String,
+        player: ExoPlayer,
+        targetGain: Float,
+        durationMs: Long,
+        onComplete: (() -> Unit)? = null
+    ) {
+        val clampedTarget = targetGain.coerceIn(0f, 1f)
+        val start = player.volume
+        if (durationMs <= 0L) {
+            player.volume = clampedTarget * userMusicGain
+            onComplete?.invoke()
+            return
+        }
+        val animator = ValueAnimator.ofFloat(start, clampedTarget * userMusicGain).apply {
+            duration = durationMs
+            addUpdateListener { animation ->
+                val gain = (animation.animatedValue as Float).coerceIn(0f, 1f)
+                ambientPlayers[cueId]?.volume = gain
+            }
+            addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+                    onComplete?.invoke()
+                }
+            })
+        }
+        animator.start()
     }
 
     fun setUserSfxGain(gain: Float) {

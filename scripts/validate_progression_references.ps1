@@ -147,6 +147,8 @@ foreach ($node in $nodes) {
 
 $roomIds = New-StringSet
 foreach ($room in $rooms) { Add-SetValue $roomIds $room.id }
+$nodeIds = New-StringSet
+foreach ($node in $nodes) { Add-SetValue $nodeIds $node.id }
 $itemIds = New-StringSet
 $itemLookupKeys = New-StringSet
 $itemGateKeys = New-StringSet
@@ -526,6 +528,14 @@ function Validate-Action($action, $context) {
         { $_ -in @("begin_node", "set_room", "warp", "set_room_state", "toggle_room_state", "unlock_room_search") } {
             Validate-Room $actionContext (Get-Prop $action "room_id")
         }
+        { $_ -in @("reveal_node", "unlock_node", "complete_node") } {
+            $nodeId = Get-Prop $action "node_id"
+            if ([string]::IsNullOrWhiteSpace($nodeId)) {
+                $errors.Add("$actionContext is missing node_id.")
+            } elseif (-not (Has-SetValue $nodeIds $nodeId)) {
+                $errors.Add("$actionContext references unknown node '$nodeId'.")
+            }
+        }
         "spawn_encounter" {
             if ([string]::IsNullOrWhiteSpace((Get-Prop $action "encounter_id"))) {
                 $errors.Add("$actionContext is missing encounter_id.")
@@ -667,6 +677,13 @@ function Validate-DialogueExpression($raw, $context) {
             }
             "play_cinematic" {
                 Validate-Cinematic $tokenContext $value
+            }
+            { $_ -in @("reveal_node", "unlock_node", "complete_node") } {
+                if ([string]::IsNullOrWhiteSpace($value)) {
+                    $errors.Add("$tokenContext is missing node id.")
+                } elseif (-not (Has-SetValue $nodeIds $value)) {
+                    $errors.Add("$tokenContext references unknown node '$value'.")
+                }
             }
             { $_ -in @("give_xp", "give_credits", "player_action", "untrack_quest") } {
                 if ($type -eq "give_xp") { Validate-RequiredInteger "$tokenContext amount" $value 1 }

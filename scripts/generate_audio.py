@@ -222,6 +222,94 @@ SFX_CATALOG = {
         "text": "Loopable Stellarium mine dust storm ambience, low rushing wind through hollow pipes, dry sandy grit scratching metal walls, distant industrial hum, no melody",
         "duration": 30.0,
     },
+    "amb_w2_crash_jungle": {
+        "text": "Loopable Sector 9 crash-site jungle ambience, humid bioluminescent forest at night, distant insects, soft alien birds, damaged escape pod cooling ticks, low ancient resonance under the trees, no melody",
+        "duration": 30.0,
+    },
+    "amb_w2_glow_stream": {
+        "text": "Loopable glowing stream ambience, gentle water flowing over glassy stones, crystalline water tinkles, soft harmonic chord in the current, warm jungle air, distant insects, no melody",
+        "duration": 30.0,
+    },
+    "amb_w2_tideglass_shore": {
+        "text": "Loopable Tideglass shore ambience, slow heavy waves on glass-like sand, crystalline retreating water, sea cave breath, soft wind through ruins, mysterious but calm, no melody",
+        "duration": 30.0,
+    },
+    "amb_w2_canopy_resonance": {
+        "text": "Loopable high jungle canopy ambience, leaves moving in warm wind, distant wildlife calls, hollow stone archways filtering wind into soft chords, faint Source resonance, no melody",
+        "duration": 30.0,
+    },
+    "amb_w2_architect_facility": {
+        "text": "Loopable ancient Architect facility ambience, cold stone halls, quiet cymatic hum, distant water drips, subtle electrical relic pulses, wide resonant reverb, no melody",
+        "duration": 30.0,
+    },
+    "amb_w2_stasis_chamber": {
+        "text": "Loopable stasis chamber ambience, deep suspended pod hum, slow ring rotation, cold air vents, soft harmonic pressure, ancient medical machinery asleep but alive, no melody",
+        "duration": 30.0,
+    },
+    "amb_w2_hangar_power": {
+        "text": "Loopable ruined hangar ambience, old ship bay power cycling weakly, distant hydraulic groans, loose cables sparking quietly, cavernous metal and stone space, no melody",
+        "duration": 30.0,
+    },
+    "amb_astra_interior": {
+        "text": "Loopable small starship interior ambience, steady life support hum, soft console pings, gentle hull creaks, warm enclosed cabin, repaired but old spacecraft, no melody",
+        "duration": 30.0,
+    },
+    "amb_w3_sewers": {
+        "text": "Loopable Spire sewer ambience, wet concrete tunnel, dirty runoff trickling, distant city machinery overhead, low ventilation rumble, occasional pipe knock, claustrophobic, no melody",
+        "duration": 30.0,
+    },
+    "amb_w3_rain_alley": {
+        "text": "Loopable neon city rain alley ambience, rain on metal awnings, distant traffic hum, buzzing signs, muffled voices through walls, lower-city grime, late night, no melody",
+        "duration": 30.0,
+    },
+    "amb_w3_underrail_static": {
+        "text": "Loopable abandoned underrail platform ambience, distant train thunder, electrical static, old speaker crackle, dripping ceiling, concrete tunnel air, tense but not musical",
+        "duration": 30.0,
+    },
+    "amb_w3_night_market": {
+        "text": "Loopable crowded night market ambience in rain, muffled vendors, sizzling food stall, lantern wires creaking, soft synth busker far away, human warmth under corporate surveillance",
+        "duration": 30.0,
+    },
+    "amb_w3_checkpoint": {
+        "text": "Loopable Dominion transit checkpoint ambience, scanner gates humming, security drones passing overhead, PA system static, orderly crowd murmur, cold corporate control, no melody",
+        "duration": 30.0,
+    },
+    "amb_w3_upper_service": {
+        "text": "Loopable upper-city service corridor ambience, polished ventilation, laundry machinery, quiet elevator motors, distant luxury crowd through thick walls, sterile expensive calm, no melody",
+        "duration": 30.0,
+    },
+    "amb_w3_skypark": {
+        "text": "Loopable upper-city skypark ambience, high-altitude wind against glass, artificial garden water, distant soft drones, luxury dome ventilation, beautiful but controlled, no melody",
+        "duration": 30.0,
+    },
+    "amb_w3_corporate_archive": {
+        "text": "Loopable corporate archive ambience, pristine glass gallery, quiet surveillance drones, soft data servers, polished room reverb, cold curated silence, no melody",
+        "duration": 30.0,
+    },
+    "sfx_w2_chime_gate": {
+        "text": "An ancient chime slots into a stone gate, crystalline harmonic lock turns, heavy stone breath opens, warm Source resonance blooms then settles, short magical technology sound",
+        "duration": 2.0,
+    },
+    "sfx_w2_stasis_release": {
+        "text": "Ancient stasis pod releases, deep pod seal unlatched, cold vapor, rotating rings slow to a stop, harmonic pressure dissolves, emotional sci-fi awakening sting",
+        "duration": 2.5,
+    },
+    "sfx_w2_astra_reboot": {
+        "text": "Old starship systems reboot, power conduits lock in, console relays wake, life support rises, warm engine core pulse, satisfying repaired spacecraft sound",
+        "duration": 2.2,
+    },
+    "sfx_w2_astra_launch": {
+        "text": "Small repaired starship launches from ruined hangar, clamps release, engines spool, metal bay resonance, rushing ascent through shield turbulence, cinematic but short",
+        "duration": 3.0,
+    },
+    "sfx_w3_shield_anchor": {
+        "text": "Improvised safehouse shield comes online, electric relay snap, soft protective resonance expands, rain muffles outside, warm barrier hum stabilizes, hopeful short sci-fi sting",
+        "duration": 2.0,
+    },
+    "sfx_w3_elevator_rise": {
+        "text": "Glass elevator rises from lower city to upper city, smooth magnetic lift, city rumble falling away, pressure change, elegant corporate ascent, short transition sound",
+        "duration": 2.4,
+    },
     "wpn_nova_laser": {
         "text": "A sharp sci-fi laser gun blast, high-tech energy projectile discharge, crisp futuristic weapon sound effect, short decay",
         "duration": 0.8,
