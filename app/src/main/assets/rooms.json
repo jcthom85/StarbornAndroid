@@ -3314,6 +3314,14 @@
       0
     ],
     "state": {},
+    "description_variants": [
+      {
+        "description": "An abandoned underrail platform trembles whenever the city trains pass overhead. The underrail map is now scarred with Nova's route marks, patrol timing windows, and a service-gap path toward the Great Elevator.",
+        "requires_milestones": [
+          "ms_w3_patrols_mapped"
+        ]
+      }
+    ],
     "actions": [
       {
         "name": "underrail map",
@@ -3453,6 +3461,30 @@
       0
     ],
     "state": {},
+    "description_variants": [
+      {
+        "description": "Zeke's apartment sits quiet inside Orion's shield. The planning table is empty now except for coffee rings, route burns, and the shape of a plan already in motion.",
+        "requires_milestones": [
+          "ms_w3_mq12_complete"
+        ]
+      },
+      {
+        "description": "Zeke's apartment has become a heist board with walls. The workstation glows with hacked blueprints, the planning table holds every role in the crew, and roof access opens onto the skyline the plan is about to challenge.",
+        "requires_milestones": [
+          "ms_w3_blueprints_hacked"
+        ]
+      },
+      {
+        "description": "Zeke's apartment is still sparse, but the safehouse is starting to look intentional. The workstation holds stolen timing and badge data, the planning table is crowded with route notes, and roof access opens toward disguise materials snapping on the line.",
+        "requires_milestones": [
+          "ms_w3_jax_intel",
+          "ms_w3_patrols_mapped",
+          "ms_w3_badges_copied",
+          "ms_w3_disguises_sourced",
+          "ms_w3_security_records_pulled"
+        ]
+      }
+    ],
     "actions": [
       {
         "name": "workstation",
@@ -3494,6 +3526,14 @@
       -3
     ],
     "state": {},
+    "description_variants": [
+      {
+        "description": "The safehouse roof is barely larger than the apartment below it. The skyline rises beyond laundry lines now sorted into disguise materials, and the shield shimmer turns the clouds into a visible cage.",
+        "requires_milestones": [
+          "ms_w3_disguises_sourced"
+        ]
+      }
+    ],
     "actions": [
       {
         "name": "skyline",
@@ -3664,6 +3704,22 @@
       2
     ],
     "state": {},
+    "description_variants": [
+      {
+        "description": "Transit Plaza spreads beneath the Great Elevator with copied badge timing, pulled security records, and mapped patrol gaps hiding inside its clean routines. The elevator controls still look impossible until the planning table makes those pieces into one route.",
+        "requires_milestones": [
+          "ms_w3_badges_copied",
+          "ms_w3_security_records_pulled",
+          "ms_w3_patrols_mapped"
+        ]
+      },
+      {
+        "description": "Transit Plaza spreads beneath the Great Elevator, all surveillance glass, guard lanes, and crowded hesitation. The elevator controls still tower above the checkpoint queue, but the security kiosk now carries Gh0st's pull marks in the system.",
+        "requires_milestones": [
+          "ms_w3_security_records_pulled"
+        ]
+      }
+    ],
     "actions": [
       {
         "name": "elevator controls",
@@ -3692,6 +3748,14 @@
       1
     ],
     "state": {},
+    "description_variants": [
+      {
+        "description": "The checkpoint queue snakes between metal rails and glass cameras. A queue display still assigns threat scores, but copied freight badge timing now blinks inside the service gate schedule.",
+        "requires_milestones": [
+          "ms_w3_badges_copied"
+        ]
+      }
+    ],
     "actions": [
       {
         "name": "queue display",
@@ -3722,6 +3786,14 @@
       2
     ],
     "state": {},
+    "description_variants": [
+      {
+        "description": "The security kiosk sits under the plaza stairs with its software pride wounded. The security terminal still glows behind cracked glass, and the case records show fresh extraction marks from Gh0st's search.",
+        "requires_milestones": [
+          "ms_w3_security_records_pulled"
+        ]
+      }
+    ],
     "actions": [
       {
         "name": "security terminal",
@@ -3754,6 +3826,14 @@
       0
     ],
     "state": {},
+    "description_variants": [
+      {
+        "description": "The side service gate hides in the Great Elevator's shadow. Freight crews still pass with eyes down, but the freight badges now carry a copied service pattern Gh0st can fake for one climb.",
+        "requires_milestones": [
+          "ms_w3_badges_copied"
+        ]
+      }
+    ],
     "actions": [
       {
         "name": "service gate",
@@ -3792,6 +3872,18 @@
         "description": "Laundry Service runs beneath the Cloud District under red lockdown strobes now. Steam pipes hiss around the sensor console and service chute while cleaning bots repeat evacuation instructions no worker has time to obey.",
         "requires_milestones": [
           "ms_w3_mq14_complete"
+        ]
+      },
+      {
+        "description": "Laundry Service runs beneath the Cloud District, packed with steam pipes, cleaning bots, a sensor console, and a service chute. The guest profile is accepted, but the scanners still need to blink blind before Nova and Gh0st can move.",
+        "requires_milestones": [
+          "ms_w3_guest_profile_accepted"
+        ]
+      },
+      {
+        "description": "Laundry Service runs beneath the Cloud District with its scanner grid blind for one narrow window. Steam pipes, cleaning bots, the sensor console, and the service chute all feel like parts of the same breathless route now.",
+        "requires_milestones": [
+          "ms_w3_scanners_blinded"
         ]
       }
     ],
@@ -3909,6 +4001,20 @@
       4
     ],
     "state": {},
+    "description_variants": [
+      {
+        "description": "The staff checkpoint stays clean and polite while its scanner grid lies blind. The badge scanner chirps anyway, and the wall display keeps grading smiles for a system that cannot see the crew slip past.",
+        "requires_milestones": [
+          "ms_w3_scanners_blinded"
+        ]
+      },
+      {
+        "description": "The staff checkpoint is clean, bright, and cruelly polite. The badge scanner chirps at every worker while a wall display grades smiles, but Nova's accepted profile now sits in the queue like a borrowed face.",
+        "requires_milestones": [
+          "ms_w3_guest_profile_accepted"
+        ]
+      }
+    ],
     "actions": [
       {
         "name": "badge scanner",
@@ -3941,6 +4047,20 @@
       0
     ],
     "state": {},
+    "description_variants": [
+      {
+        "description": "The Skypark Dome's fake sun shines on perfect trees while the guest registry quietly logs a forged success. Beyond the glasswalk, blind scanner coverage gives the crew seconds to turn politeness into trespass.",
+        "requires_milestones": [
+          "ms_w3_scanners_blinded"
+        ]
+      },
+      {
+        "description": "The Skypark Dome offers fake sun, perfect trees, and a guest registry that has decided Nova belongs as long as she keeps smiling. The glasswalk curves along the edge, making the Lower City decorative enough for rich people to ignore.",
+        "requires_milestones": [
+          "ms_w3_guest_profile_accepted"
+        ]
+      }
+    ],
     "actions": [
       {
         "name": "guest registry",
@@ -4098,6 +4218,12 @@
         "requires_milestones": [
           "ms_w3_mq14_complete"
         ]
+      },
+      {
+        "description": "The Archive Vault rises in indexed crystal stacks over a glass floor two hundred stories high. The lens relic hangs in a containment field, the solved prism route humming through the glass like permission stolen from light.",
+        "requires_milestones": [
+          "ms_w3_prism_solved"
+        ]
       }
     ],
     "actions": [
@@ -4141,6 +4267,12 @@
         "description": "The prism gallery fractures the lockdown lights into visible alarm chords. The solved light puzzle is still warm, and Scan shows a narrow timing path threaded through the noise toward the roof.",
         "requires_milestones": [
           "ms_w3_mq14_complete"
+        ]
+      },
+      {
+        "description": "The prism gallery bends Archive light into visible music. The solved light puzzle now holds the containment field open, its prisms trembling at frequencies Orion can hear and Nova can no longer ignore.",
+        "requires_milestones": [
+          "ms_w3_prism_solved"
         ]
       }
     ],
@@ -4274,11 +4406,12 @@
     "env": "foundry",
     "title": "Obsidian Shelf",
     "background_image": "images/rooms/world_4/foundry_slag_landing.png",
-    "description": "The Astra cools on a shelf of black volcanic glass above a river of magma. Heat shields glow cherry-red while ash falls like dirty snow.",
+    "description": "The Astra cools on a shelf of black volcanic glass above a river of magma. Heat shields glow cherry-red while ash falls like dirty snow, and the Lens still shows the Shield gap closing behind you.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
+      "north": "foundry_obsidian_overlook",
       "east": "foundry_slag_river",
       "south": "foundry_cooling_springs"
     },
@@ -4287,6 +4420,20 @@
       1
     ],
     "state": {},
+    "description_variants": [
+      {
+        "description": "The Obsidian Shelf trembles under distant factory alarms. The Astra waits with its hold open, ready for the engine and Phase-Cutter Arrays that can carry the crew into high orbit.",
+        "requires_milestones": [
+          "ms_w4_anvil_claimed"
+        ]
+      },
+      {
+        "description": "The Astra sits secured on volcanic glass, engines clicking through emergency cool-down. The Lens proved the Shield has seams, but the ship does not have the muscle to climb any higher without a Foundry-grade engine.",
+        "requires_milestones": [
+          "ms_w4_landing_secured"
+        ]
+      }
+    ],
     "actions": [
       {
         "name": "astra",
@@ -4303,6 +4450,44 @@
     ]
   },
   {
+    "id": "foundry_obsidian_overlook",
+    "env": "foundry",
+    "title": "Obsidian Overlook",
+    "background_image": "images/rooms/world_4/foundry_slag_landing.png",
+    "description": "A cracked overlook juts above the Foundry basin. The whole sector glows below: slag rivers, intake pistons, and the factory spine Vale built to feed something larger than war.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "south": "foundry_slag_landing"
+    },
+    "pos": [
+      0,
+      0
+    ],
+    "state": {},
+    "description_variants": [
+      {
+        "description": "From the overlook, the route has shape: cross the slag, tame the vents, breach the airlock. Zeke tags the engine cradle deep inside the factory, too hot and too guarded to reach from outside.",
+        "requires_milestones": [
+          "ms_w4_landing_secured"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "name": "foundry basin",
+        "type": "generic",
+        "condition_unmet_message": "The Foundry basin is not a building so much as an appetite: scrap in, weapons out, nobody counted."
+      },
+      {
+        "name": "shield gap telemetry",
+        "type": "generic",
+        "condition_unmet_message": "The Lens telemetry still flickers with the Shield gap. Astra survived the slip, but not cleanly enough to climb to the Orbital Ring."
+      }
+    ]
+  },
+  {
     "id": "foundry_slag_river",
     "env": "foundry",
     "title": "Slag River",
@@ -4315,6 +4500,7 @@
     ],
     "connections": {
       "west": "foundry_slag_landing",
+      "north": "foundry_slag_stepping_stones",
       "east": "foundry_waste_intake"
     },
     "pos": [
@@ -4322,6 +4508,20 @@
       0
     ],
     "state": {},
+    "description_variants": [
+      {
+        "description": "Broken stepping stones cross the lava channel. The ammo crate alpha chain is snapped, its blast mark still smoking against the basalt pylon.",
+        "requires_milestones": [
+          "ms_w4_crate_alpha_destroyed"
+        ]
+      },
+      {
+        "description": "The slag crossing is mapped now: three safe stones, one false rhythm, and a flare pattern that tries to punish confidence. Smoke from the Astra's descent still hangs behind you.",
+        "requires_milestones": [
+          "ms_w4_slag_crossed"
+        ]
+      }
+    ],
     "actions": [
       {
         "name": "slag crossing",
@@ -4341,6 +4541,37 @@
     }
   },
   {
+    "id": "foundry_slag_stepping_stones",
+    "env": "foundry",
+    "title": "Stepping Stones",
+    "background_image": "images/rooms/world_4/foundry_slag_river.png",
+    "description": "Basalt stones rise from the lava channel in a crooked line. Each flare throws blue-white Source fire across a different step, turning the crossing into a timing puzzle.",
+    "npcs": [],
+    "items": [],
+    "enemies": [
+      "magma_drone"
+    ],
+    "connections": {
+      "south": "foundry_slag_river"
+    },
+    "pos": [
+      1,
+      -1
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "flare rhythm",
+        "type": "generic",
+        "action_event": "w4_mq16_cross_slag_river",
+        "condition_unmet_message": "The flare rhythm leaves a narrow crossing window if Nova waits instead of rushing."
+      }
+    ],
+    "enemy_flavor": {
+      "magma_drone": "A magma drone darts between flare bursts, using the crossing itself as a weapon."
+    }
+  },
+  {
     "id": "foundry_cooling_springs",
     "env": "foundry",
     "title": "Cooling Springs",
@@ -4351,6 +4582,7 @@
     "enemies": [],
     "connections": {
       "north": "foundry_slag_landing",
+      "south": "foundry_lava_tube_bypass",
       "east": "foundry_waste_intake"
     },
     "pos": [
@@ -4358,6 +4590,33 @@
       2
     ],
     "state": {},
+    "description_variants": [
+      {
+        "description": "The springs are no longer a hiding place, and the worker tablet's last ping has gone quiet. Gh0st's override key is in Nova's kit; the recovered coolant rig is useful, but it cannot make the factory merciful.",
+        "requires_milestones": [
+          "ms_w4_springs_regrouped",
+          "ms_w4_worker_traced"
+        ]
+      },
+      {
+        "description": "The cooling springs are quiet after the worker tablet's last ping. The engineer is gone, but the recovered coolant rig makes the maintenance pocket feel less like a dead end.",
+        "requires_milestones": [
+          "ms_w4_worker_traced"
+        ]
+      },
+      {
+        "description": "The springs are no longer a hiding place. Gh0st's override key is in Nova's kit, and the factory interior waits beyond the airlock like a wound under bandage.",
+        "requires_milestones": [
+          "ms_w4_springs_regrouped"
+        ]
+      },
+      {
+        "description": "The cooling springs are quiet enough for the Phantom records to hurt properly. Steam curls around Gh0st while he decides what the files mean and what they do not get to mean.",
+        "requires_milestones": [
+          "ms_w4_phantom_records_found"
+        ]
+      }
+    ],
     "actions": [
       {
         "name": "steam pool",
@@ -4370,6 +4629,31 @@
         "type": "generic",
         "action_event": "w4_sq17_find_worker",
         "condition_unmet_message": "A cracked tablet pings weakly from beside a maintenance pool."
+      }
+    ]
+  },
+  {
+    "id": "foundry_lava_tube_bypass",
+    "env": "foundry",
+    "title": "Lava Tube Bypass",
+    "background_image": "images/rooms/world_4/foundry_cooling_springs.png",
+    "description": "A service crawlspace cuts under the cooling springs. Mineral fans beat hot air into steam, and old worker tags hang from pipe valves like small prayers.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "north": "foundry_cooling_springs"
+    },
+    "pos": [
+      1,
+      3
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "pipe valves",
+        "type": "generic",
+        "condition_unmet_message": "The valves route coolant to exterior vents, interior presses, and one sealed line marked PHANTOM."
       }
     ]
   },
@@ -4396,6 +4680,7 @@
     ],
     "connections": {
       "west": "foundry_slag_river",
+      "north": "foundry_intake_overlook",
       "south": "foundry_cooling_springs",
       "east": "foundry_service_airlock"
     },
@@ -4404,6 +4689,40 @@
       1
     ],
     "state": {},
+    "description_variants": [
+      {
+        "description": "The Project Phantom terminal is open, the ammo crate beta is gone, and stripped mech frames lie cooling beside the intake. Dominion's machine keeps moving, but this corner no longer feeds it cleanly.",
+        "requires_milestones": [
+          "ms_w4_phantom_records_found",
+          "ms_w4_crate_beta_destroyed",
+          "ms_w4_mechs_salvaged"
+        ]
+      },
+      {
+        "description": "The intake pistons still hammer, but the ammo crate beta is gone, scattered into slag-bright fragments beneath the compactor teeth.",
+        "requires_milestones": [
+          "ms_w4_crate_beta_destroyed"
+        ]
+      },
+      {
+        "description": "The scrap mech pile has been stripped before the lava could finish it. A few useful housings are missing, and the rest is finally just wreckage.",
+        "requires_milestones": [
+          "ms_w4_mechs_salvaged"
+        ]
+      },
+      {
+        "description": "The Project Phantom terminal is open and impossible to unread. The intake keeps swallowing scrap like the factory has not just confessed what it did to Elara and Gh0st.",
+        "requires_milestones": [
+          "ms_w4_phantom_records_found"
+        ]
+      },
+      {
+        "description": "The intake breathes cooler now, hacked vents dragging the worst heat away from the service airlock. The piston rhythm exposes a protected terminal bay between compactor cycles.",
+        "requires_milestones": [
+          "ms_w4_cooling_vents_hacked"
+        ]
+      }
+    ],
     "actions": [
       {
         "name": "cooling vent controls",
@@ -4435,6 +4754,31 @@
     }
   },
   {
+    "id": "foundry_intake_overlook",
+    "env": "foundry",
+    "title": "Intake Overlook",
+    "background_image": "images/rooms/world_4/foundry_waste_intake.png",
+    "description": "A grated balcony watches the intake pistons chew ruined machines into feedstock. Every impact shakes loose sparks, serial plates, and pieces of stories Dominion filed as material.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "south": "foundry_waste_intake"
+    },
+    "pos": [
+      2,
+      0
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "intake pistons",
+        "type": "generic",
+        "condition_unmet_message": "The pistons are timed to waste nothing: broken armor, failed prototypes, worker tools, all of it becomes heat."
+      }
+    ]
+  },
+  {
     "id": "foundry_service_airlock",
     "env": "foundry",
     "title": "Service Airlock",
@@ -4446,6 +4790,7 @@
       "slag_golem"
     ],
     "connections": {
+      "east": "foundry_decon_chamber",
       "west": "foundry_waste_intake"
     },
     "pos": [
@@ -4453,6 +4798,26 @@
       1
     ],
     "state": {},
+    "description_variants": [
+      {
+        "description": "The service airlock stands open, and the ammo crate gamma is nothing but scorched brackets beside the decon pumps. The Foundry exterior has fewer teeth now.",
+        "requires_milestones": [
+          "ms_w4_crate_gamma_destroyed"
+        ]
+      },
+      {
+        "description": "The service airlock has cooled enough to cycle. Decon lights sweep the chamber in hard white bands while the interior door unlocks one reluctant bolt at a time.",
+        "requires_milestones": [
+          "ms_w4_cooling_vents_hacked"
+        ]
+      },
+      {
+        "description": "The service airlock stands open behind you, ash on one side and factory sterility on the other. The Foundry no longer feels unreachable; it feels angry.",
+        "requires_milestones": [
+          "ms_w4_mq16_complete"
+        ]
+      }
+    ],
     "actions": [
       {
         "name": "airlock door",
@@ -4465,6 +4830,33 @@
         "type": "generic",
         "action_event": "w4_sq16_destroy_crate_gamma",
         "condition_unmet_message": "A final ammo crate is stacked beside the decon pumps."
+      }
+    ]
+  },
+  {
+    "id": "foundry_decon_chamber",
+    "env": "foundry",
+    "title": "Decon Chamber",
+    "background_image": "images/rooms/world_4/foundry_service_airlock.png",
+    "description": "Chemical mist hangs in a narrow decon chamber. The walls are too clean, the drains too large, and the emergency shower is bolted shut from the wrong side.",
+    "npcs": [],
+    "items": [],
+    "enemies": [
+      "slag_golem"
+    ],
+    "connections": {
+      "west": "foundry_service_airlock"
+    },
+    "pos": [
+      4,
+      1
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "decon cycle",
+        "type": "generic",
+        "condition_unmet_message": "The decon cycle is calibrated for equipment, not people. That says enough about who was expected to survive it."
       }
     ]
   },
@@ -4490,6 +4882,8 @@
       ]
     ],
     "connections": {
+      "north": "foundry_belt_service_walk",
+      "west": "foundry_reject_bay",
       "east": "foundry_conditioning_chamber",
       "south": "foundry_forge_anvil"
     },
@@ -4498,6 +4892,26 @@
       1
     ],
     "state": {},
+    "description_variants": [
+      {
+        "description": "The fabrication matrix has gone silent. The conveyor belt still moves, but the factory floor has lost the rhythm that made new Phantom shells.",
+        "requires_milestones": [
+          "ms_w4_matrix_overloaded"
+        ]
+      },
+      {
+        "description": "Broken Phantom prototypes lie among half-built shells. Gh0st keeps his eyes on the belt instead of the faces Dominion tried to stamp into obedience.",
+        "requires_milestones": [
+          "ms_w4_prototypes_defeated"
+        ]
+      },
+      {
+        "description": "The belt timing is yours now. Presses still slam and shields still move, but Nova has marked the safe steps in the rhythm instead of being dragged by it.",
+        "requires_milestones": [
+          "ms_w4_conveyors_timed"
+        ]
+      }
+    ],
     "actions": [
       {
         "name": "belt timing console",
@@ -4517,6 +4931,70 @@
     }
   },
   {
+    "id": "foundry_belt_service_walk",
+    "env": "foundry",
+    "title": "Service Walk",
+    "background_image": "images/rooms/world_4/foundry_conveyor_belt.png",
+    "description": "A narrow service walk runs above the conveyor feed. Warning lamps blink in strict sequence, spelling out when the crushers fall and when a person can move.",
+    "npcs": [],
+    "items": [],
+    "enemies": [
+      "welder_bot"
+    ],
+    "connections": {
+      "south": "foundry_conveyor_belt"
+    },
+    "pos": [
+      0,
+      0
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "warning lamps",
+        "type": "generic",
+        "action_event": "w4_mq18_navigate_conveyors",
+        "condition_unmet_message": "The warning lamps turn the conveyor into a readable, dangerous rhythm."
+      }
+    ]
+  },
+  {
+    "id": "foundry_reject_bay",
+    "env": "foundry",
+    "title": "Reject Bay",
+    "background_image": "images/rooms/world_4/foundry_conveyor_belt.png",
+    "description": "Defective units are dumped into a low bay before the furnace eats them. Some still twitch when the conveyor shudders, hands opening and closing around nothing.",
+    "npcs": [],
+    "items": [],
+    "enemies": [
+      "phantom_prototype"
+    ],
+    "connections": {
+      "east": "foundry_conveyor_belt"
+    },
+    "pos": [
+      -1,
+      1
+    ],
+    "state": {},
+    "description_variants": [
+      {
+        "description": "The Reject Bay is quieter now. The defective units still twitch, but no longer toward the furnace; Gh0st's override leaves them holding onto the small, stubborn spark Dominion called a defect.",
+        "requires_milestones": [
+          "ms_w4_defective_units_spared"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "name": "rejected droid",
+        "type": "generic",
+        "action_event": "w4_sq19_reprogram_units",
+        "condition_unmet_message": "A rejected droid twitches beside a bin of defective units."
+      }
+    ]
+  },
+  {
     "id": "foundry_conditioning_chamber",
     "env": "foundry",
     "title": "Conditioning Chamber",
@@ -4528,6 +5006,7 @@
       "flame_trooper"
     ],
     "connections": {
+      "north": "foundry_conditioning_observation",
       "west": "foundry_conveyor_belt",
       "east": "foundry_power_core"
     },
@@ -4536,12 +5015,51 @@
       0
     ],
     "state": {},
+    "description_variants": [
+      {
+        "description": "Conditioning records scroll across the screens with names missing and batch numbers intact. The room makes cruelty look like a maintenance checklist.",
+        "requires_milestones": [
+          "ms_w4_prototypes_defeated"
+        ]
+      },
+      {
+        "description": "With the fabrication matrix overloaded, the calibration screens stutter through failed Phantom profiles. Dominion can still hurt people here, but this line is no longer making an army.",
+        "requires_milestones": [
+          "ms_w4_matrix_overloaded"
+        ]
+      }
+    ],
     "actions": [
       {
         "name": "conditioning records",
         "type": "generic",
         "action_event": "w4_mq18_defeat_prototypes",
         "condition_unmet_message": "Production records list Phantom units as batches, not people."
+      }
+    ]
+  },
+  {
+    "id": "foundry_conditioning_observation",
+    "env": "foundry",
+    "title": "Observation Booth",
+    "background_image": "images/rooms/world_4/foundry_conditioning_chamber.png",
+    "description": "Tinted glass looks down on the restraint chairs. The operator console grades fear response, compliance, and identity degradation in neat green columns.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "south": "foundry_conditioning_chamber"
+    },
+    "pos": [
+      1,
+      -1
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "operator console",
+        "type": "generic",
+        "condition_unmet_message": "The console does not ask whether the subject survived as a person, only whether the unit passed."
       }
     ]
   },
@@ -4558,6 +5076,7 @@
     ],
     "connections": {
       "north": "foundry_conveyor_belt",
+      "west": "foundry_forge_control_alcove",
       "east": "foundry_power_core"
     },
     "pos": [
@@ -4565,6 +5084,33 @@
       2
     ],
     "state": {},
+    "description_variants": [
+      {
+        "description": "The Anvil cradle is empty and the test chamber terminal has gone dark after the overclocked trial. The Forge no longer sounds confident; it sounds robbed.",
+        "requires_milestones": [
+          "ms_w4_anvil_claimed",
+          "ms_w4_hazard_trial_cleared"
+        ]
+      },
+      {
+        "description": "The Anvil cradle is empty. The hammer still falls, but the Forge sounds hollow now, like the factory has lost the tool it built its confidence around.",
+        "requires_milestones": [
+          "ms_w4_anvil_claimed"
+        ]
+      },
+      {
+        "description": "The belt plates are locked in a safe pattern. The Anvil sits in its cradle like a dare, bright enough to cast Nova's shadow up the hammer wall.",
+        "requires_milestones": [
+          "ms_w4_conveyor_puzzle_solved"
+        ]
+      },
+      {
+        "description": "The Forge bucks without the fabrication matrix feeding it clean instructions. The Anvil mount is exposed, but the moving plates still protect it with industrial indifference.",
+        "requires_milestones": [
+          "ms_w4_matrix_overloaded"
+        ]
+      }
+    ],
     "actions": [
       {
         "name": "fabrication matrix",
@@ -4593,6 +5139,32 @@
     ]
   },
   {
+    "id": "foundry_forge_control_alcove",
+    "env": "foundry",
+    "title": "Control Alcove",
+    "background_image": "images/rooms/world_4/foundry_forge_anvil.png",
+    "description": "A shielded alcove controls the Forge's moving belt plates. The panel is burned around the edges where previous operators tried to override the hammer timing by hand.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "east": "foundry_forge_anvil"
+    },
+    "pos": [
+      0,
+      2
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "hammer timing",
+        "type": "generic",
+        "action_event": "w4_mq19_solve_conveyor_puzzle",
+        "condition_unmet_message": "The hammer timing can open the Anvil cradle if Nova and Orion split the pattern cleanly."
+      }
+    ]
+  },
+  {
     "id": "foundry_power_core",
     "env": "foundry",
     "title": "Power Core",
@@ -4605,6 +5177,7 @@
       "phantom_prototype"
     ],
     "connections": {
+      "north": "foundry_engine_service_ring",
       "west": "foundry_conditioning_chamber",
       "south": "foundry_forge_anvil",
       "east": "foundry_titan_dock"
@@ -4614,6 +5187,32 @@
       1
     ],
     "state": {},
+    "description_variants": [
+      {
+        "description": "The Power Core is stripped: engine gone, Phase-Cutter Arrays gone, alarms climbing into panic. The Astra can reach high orbit now if the crew can launch before the factory seals.",
+        "requires_milestones": [
+          "ms_w4_arrays_stolen"
+        ]
+      },
+      {
+        "description": "The engine cradle is torn open. Without the Deep-Core Engine, the Foundry pulses unevenly, and Vale's Ascension Cradle timeline just lost its heart.",
+        "requires_milestones": [
+          "ms_w4_engine_stolen"
+        ]
+      },
+      {
+        "description": "The Titan Walker is down, and the Power Core no longer has a champion. Thermal clamps still grip the Deep-Core Engine while Phase-Cutter Arrays wait in a rack beside the cradle.",
+        "requires_milestones": [
+          "ms_w4_titan_defeated"
+        ]
+      },
+      {
+        "description": "The Deep-Core Engine hammers at the center of the factory while the Anvil burns in Nova's kit. The theft is finally possible, which means every alarm is about to become honest.",
+        "requires_milestones": [
+          "ms_w4_anvil_claimed"
+        ]
+      }
+    ],
     "actions": [
       {
         "name": "engine mount",
@@ -4626,6 +5225,40 @@
         "type": "generic",
         "action_event": "w4_mq20_steal_arrays",
         "condition_unmet_message": "A rack of ship-scale Phase-Cutter Arrays is wired to the engine cradle."
+      }
+    ]
+  },
+  {
+    "id": "foundry_engine_service_ring",
+    "env": "foundry",
+    "title": "Engine Service Ring",
+    "background_image": "images/rooms/world_4/foundry_power_core.png",
+    "description": "A maintenance ring circles the Deep-Core Engine at arm's length from impossible heat. Every clamp is labeled with launch-grade tolerances the Astra does not currently meet.",
+    "npcs": [],
+    "items": [],
+    "enemies": [
+      "flame_trooper"
+    ],
+    "connections": {
+      "south": "foundry_power_core"
+    },
+    "pos": [
+      2,
+      0
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "thermal clamps",
+        "type": "generic",
+        "action_event": "w4_mq20_steal_engine",
+        "condition_unmet_message": "The clamps hold the Deep-Core Engine in place until the Titan Walker is no longer guarding the core."
+      },
+      {
+        "name": "array rack",
+        "type": "generic",
+        "action_event": "w4_mq20_steal_arrays",
+        "condition_unmet_message": "The array rack stores ship-scale Phase-Cutter Arrays meant for something far larger than the Astra."
       }
     ]
   },
@@ -4646,6 +5279,7 @@
       ]
     ],
     "connections": {
+      "north": "foundry_escape_catwalk",
       "west": "foundry_power_core"
     },
     "pos": [
@@ -4653,6 +5287,27 @@
       1
     ],
     "state": {},
+    "description_variants": [
+      {
+        "description": "Factory alarms turn the Titan Dock red. The Astra waits beyond the escape catwalk with a stolen engine, stolen arrays, and not much time.",
+        "requires_milestones": [
+          "ms_w4_engine_stolen",
+          "ms_w4_arrays_stolen"
+        ]
+      },
+      {
+        "description": "The Titan Walker lies broken in its launch cradle. The dock still trembles over the primary vent, but the path back to the Power Core is open.",
+        "requires_milestones": [
+          "ms_w4_titan_defeated"
+        ]
+      },
+      {
+        "description": "Rylos has stepped into the Titan Walker, chrome face bright in the volcano glare. He calls Gh0st a unit because calling him a person would admit the crime.",
+        "requires_milestones": [
+          "ms_w4_rylos_confronted"
+        ]
+      }
+    ],
     "actions": [
       {
         "name": "commander rylos",
@@ -4670,6 +5325,41 @@
     "enemy_flavor": {
       "titan_walker_boss": "Rylos brings the Titan Walker down like a judgment made of missiles and steel."
     }
+  },
+  {
+    "id": "foundry_escape_catwalk",
+    "env": "foundry",
+    "title": "Escape Catwalk",
+    "background_image": "images/rooms/world_4/foundry_titan_dock.png",
+    "description": "A shaking catwalk runs from the Titan Dock toward the emergency gantry. Heat rolls up through the grate in hard orange sheets.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "south": "foundry_titan_dock"
+    },
+    "pos": [
+      3,
+      0
+    ],
+    "state": {},
+    "description_variants": [
+      {
+        "description": "The escape catwalk rattles under lockdown shutters. With the engine and arrays aboard, this is the last clean line back to the Astra before the Foundry seals itself.",
+        "requires_milestones": [
+          "ms_w4_engine_stolen",
+          "ms_w4_arrays_stolen"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "name": "escape gantry",
+        "type": "generic",
+        "action_event": "w4_mq20_escape_launch",
+        "condition_unmet_message": "The escape gantry leads back to the Astra, but leaving empty would make all of this heat pointless."
+      }
+    ]
   },
   {
     "id": "orbital_executive_dock",

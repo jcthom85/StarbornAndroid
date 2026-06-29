@@ -71,6 +71,8 @@ To support the "no typing" interaction model, room descriptions use a system of 
 *   **Stateful Text:** Meaningful interactions should update room text through `description_variants` when the environment changes, a clue is revealed, a puzzle advances, or a quest changes the room's meaning.
 *   **Persistent Truth:** Use popups for the immediate moment, but use the room description for what remains true after the action. If a vent clears, a console thaws, a light turns on, or an alarm changes the route, the room text should say so.
 *   **Variant Keywords:** Each description variant should include the actionable words that remain relevant in that state. Do not keep dead keywords in variant prose just to satisfy density.
+*   **World 3 Heist Text:** World 3 should use stateful room text as an infiltration readout. Intel, disguises, copied credentials, disabled scanners, Archive alarm states, and Lens/Scan revelations should persist in the room descriptions so the heist feels assembled and then disrupted in the actual play space.
+*   **World 4 Foundry Text:** World 4 should use stateful room text as an industrial pressure gauge. Landing damage, heat routing, Phantom records, conveyor timing, matrix overload, Anvil access, Titan defeat, engine theft, and array theft should leave readable changes in the affected rooms so the Foundry feels like a system Nova is breaking, not a sequence of buttons.
 
 ---
 

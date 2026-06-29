@@ -878,6 +878,11 @@ class AppServices(context: Context) {
         "w3_checkpoint_infiltration" -> startNewGameAtW3CheckpointInfiltration()
         "w3_lens_archive" -> startNewGameAtW3LensArchive()
         "w3_lockdown_escape" -> startNewGameAtW3LockdownEscape()
+        "w4_foundry_start" -> startNewGameAtW4FoundryStart()
+        "w4_phantom_records" -> startNewGameAtW4PhantomRecords()
+        "w4_assembly_floor" -> startNewGameAtW4AssemblyFloor()
+        "w4_anvil_forge" -> startNewGameAtW4AnvilForge()
+        "w4_meltdown_escape" -> startNewGameAtW4MeltdownEscape()
         "node_progression_w1" -> startNewGameAtWorld1NodeProgression()
         "node_progression_w2" -> startNewGameAtWorld2NodeProgression()
         "astra_access" -> startNewGameAtAstraAccess()
@@ -1039,6 +1044,114 @@ class AppServices(context: Context) {
         true
     }.getOrElse { false }
 
+    private fun startNewGameAtW4FoundryStart(): Boolean = runCatching {
+        if (!prepareWorld4DebugState()) return false
+        sessionStore.startQuest("w4_mq16", track = true)
+        sessionStore.setQuestStage("w4_mq16", "secure_landing")
+        sessionStore.setWorld("world_4")
+        sessionStore.setHub("hub_7_slag_pits")
+        sessionStore.setRoom("foundry_slag_landing")
+        visitDebugNodes("foundry_obsidian_shelf")
+        true
+    }.getOrElse { false }
+
+    private fun startNewGameAtW4PhantomRecords(): Boolean = runCatching {
+        if (!prepareWorld4DebugState(completedW4Quests = listOf("w4_mq16"))) return false
+        inventoryService.addItem("heat_liner", 1)
+        sessionStore.setMilestone("ms_w4_landing_secured")
+        sessionStore.setMilestone("ms_w4_slag_crossed")
+        sessionStore.setMilestone("ms_w4_cooling_vents_hacked")
+        sessionStore.startQuest("w4_mq17", track = true)
+        sessionStore.setQuestStage("w4_mq17", "phantom_records")
+        sessionStore.setWorld("world_4")
+        sessionStore.setHub("hub_7_slag_pits")
+        sessionStore.setRoom("foundry_waste_intake")
+        visitDebugNodes(
+            "foundry_obsidian_shelf",
+            "foundry_slag_river",
+            "foundry_cooling_springs",
+            "foundry_waste_intake",
+            "foundry_service_airlock"
+        )
+        true
+    }.getOrElse { false }
+
+    private fun startNewGameAtW4AssemblyFloor(): Boolean = runCatching {
+        if (!prepareWorld4DebugState(completedW4Quests = listOf("w4_mq16", "w4_mq17"))) return false
+        inventoryService.addItem("heat_liner", 1)
+        inventoryService.addItem("gh0st_override_key", 1)
+        sessionStore.unlockSkill("gh0st_phase_counter")
+        sessionStore.setMilestone("ms_w4_landing_secured")
+        sessionStore.setMilestone("ms_w4_slag_crossed")
+        sessionStore.setMilestone("ms_w4_cooling_vents_hacked")
+        sessionStore.setMilestone("ms_w4_phantom_records_found")
+        sessionStore.setMilestone("ms_w4_springs_regrouped")
+        sessionStore.startQuest("w4_mq18", track = true)
+        sessionStore.setQuestStage("w4_mq18", "production_floor")
+        sessionStore.setWorld("world_4")
+        sessionStore.setHub("hub_8_assembly_line")
+        sessionStore.setRoom("foundry_conveyor_belt")
+        visitDebugNodes("foundry_conveyor_belt")
+        true
+    }.getOrElse { false }
+
+    private fun startNewGameAtW4AnvilForge(): Boolean = runCatching {
+        if (!prepareWorld4DebugState(completedW4Quests = listOf("w4_mq16", "w4_mq17", "w4_mq18"))) return false
+        inventoryService.addItem("heat_liner", 1)
+        inventoryService.addItem("gh0st_override_key", 1)
+        sessionStore.unlockSkill("gh0st_phase_counter")
+        sessionStore.setMilestone("ms_w4_landing_secured")
+        sessionStore.setMilestone("ms_w4_slag_crossed")
+        sessionStore.setMilestone("ms_w4_cooling_vents_hacked")
+        sessionStore.setMilestone("ms_w4_phantom_records_found")
+        sessionStore.setMilestone("ms_w4_springs_regrouped")
+        sessionStore.setMilestone("ms_w4_conveyors_timed")
+        sessionStore.setMilestone("ms_w4_prototypes_defeated")
+        sessionStore.setMilestone("ms_w4_matrix_overloaded")
+        sessionStore.startQuest("w4_mq19", track = true)
+        sessionStore.setQuestStage("w4_mq19", "forge_access")
+        sessionStore.setWorld("world_4")
+        sessionStore.setHub("hub_8_assembly_line")
+        sessionStore.setRoom("foundry_forge_anvil")
+        visitDebugNodes("foundry_conveyor_belt", "foundry_conditioning", "foundry_forge", "foundry_power_core")
+        true
+    }.getOrElse { false }
+
+    private fun startNewGameAtW4MeltdownEscape(): Boolean = runCatching {
+        if (!prepareWorld4DebugState(completedW4Quests = listOf("w4_mq16", "w4_mq17", "w4_mq18", "w4_mq19"))) return false
+        inventoryService.addItem("heat_liner", 1)
+        inventoryService.addItem("gh0st_override_key", 1)
+        inventoryService.addItem("the_anvil", 1)
+        sessionStore.unlockSkill("gh0st_phase_counter")
+        sessionStore.unlockSkill("source_art_construct")
+        sessionStore.setMilestone("ms_w4_landing_secured")
+        sessionStore.setMilestone("ms_w4_slag_crossed")
+        sessionStore.setMilestone("ms_w4_cooling_vents_hacked")
+        sessionStore.setMilestone("ms_w4_phantom_records_found")
+        sessionStore.setMilestone("ms_w4_springs_regrouped")
+        sessionStore.setMilestone("ms_w4_conveyors_timed")
+        sessionStore.setMilestone("ms_w4_prototypes_defeated")
+        sessionStore.setMilestone("ms_w4_matrix_overloaded")
+        sessionStore.setMilestone("ms_w4_conveyor_puzzle_solved")
+        sessionStore.setMilestone("ms_w4_anvil_claimed")
+        sessionStore.setMilestone("ms_w4_rylos_confronted")
+        sessionStore.setMilestone("ms_w4_titan_defeated")
+        sessionStore.startQuest("w4_mq20", track = true)
+        sessionStore.setQuestStage("w4_mq20", "steal_and_escape")
+        sessionStore.setQuestTasksCompleted("w4_mq20", setOf("confront_rylos", "defeat_titan_walker"))
+        sessionStore.setWorld("world_4")
+        sessionStore.setHub("hub_8_assembly_line")
+        sessionStore.setRoom("foundry_power_core")
+        visitDebugNodes(
+            "foundry_conveyor_belt",
+            "foundry_conditioning",
+            "foundry_forge",
+            "foundry_power_core",
+            "foundry_titan_dock"
+        )
+        true
+    }.getOrElse { false }
+
     private fun prepareWorld2DebugState(completedW2Quests: List<String> = emptyList()): Boolean {
         if (!startNewGame(debugFullInventory = true)) return false
         clearDebugBootstrap()
@@ -1055,6 +1168,19 @@ class AppServices(context: Context) {
         completeDebugQuests(*completedW3Quests.toTypedArray())
         sessionStore.setPartyMembers(listOf("nova", "zeke", "orion", "gh0st"))
         sessionStore.setAstraReturnLocation("world_3", "hub_5_lower_city", "spire_vent_output")
+        return true
+    }
+
+    private fun prepareWorld4DebugState(completedW4Quests: List<String> = emptyList()): Boolean {
+        if (!prepareWorld3DebugState(completedW3Quests = listOf("w3_mq11", "w3_mq12", "w3_mq13", "w3_mq14", "w3_mq15"))) return false
+        completeDebugQuests(*completedW4Quests.toTypedArray())
+        inventoryService.addItem("the_lens", 1)
+        sessionStore.unlockSkill("source_art_scan")
+        sessionStore.setPartyMembers(listOf("nova", "zeke", "orion", "gh0st"))
+        sessionStore.setMilestone("ms_w4_access_unlocked")
+        sessionStore.setAstraReturnLocation("world_4", "hub_7_slag_pits", "foundry_slag_landing")
+        sessionStore.markTutorialCompleted("swipe_move")
+        sessionStore.markTutorialCompleted("movement")
         return true
     }
 

@@ -26,6 +26,7 @@ Nova lands below the Spire, climbs from runoff tunnels into the Lower City, reac
 - Side quests should reinforce class pressure, crew capability, or the cost of living under Dominion.
 - Room actions should feel like environmental investigation and preparation, not isolated buttons.
 - After Nova takes the Lens, Scan should make rooms more legible and more dangerous at the same time: hidden command tethers, alarm chords, drone targeting paths, and Shield timing become visible under pressure.
+- World 3 room text should act like a heist board. When Nova learns patrol timing, copies badges, steals records, blinds scanners, solves the prism array, or triggers lockdown, the affected rooms should change their descriptions so the player can read the current infiltration state from the environment instead of relying only on popups.
 
 ## First Buildout Pass
 

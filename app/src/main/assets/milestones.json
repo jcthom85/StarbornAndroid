@@ -434,6 +434,36 @@
     "toast": "Sector 7 is under audit."
   },
   {
+    "id": "ms_w4_landing_secured",
+    "name": "Obsidian Shelf Secured",
+    "description": "The Astra landed in Sector 7 and confirmed it needs Foundry hardware to climb higher.",
+    "toast": "Landing secured."
+  },
+  {
+    "id": "ms_w4_slag_crossed",
+    "name": "Slag River Crossed",
+    "description": "You learned the flare rhythm and crossed the Slag River.",
+    "toast": "Slag crossing mapped."
+  },
+  {
+    "id": "ms_w4_cooling_vents_hacked",
+    "name": "Cooling Vents Hacked",
+    "description": "Zeke forced the Foundry vents into maintenance mode.",
+    "toast": "Cooling vents hacked."
+  },
+  {
+    "id": "ms_w4_phantom_records_found",
+    "name": "Phantom Records Found",
+    "description": "You opened the Project Phantom records and exposed Gh0st's origin.",
+    "toast": "Project Phantom exposed."
+  },
+  {
+    "id": "ms_w4_springs_regrouped",
+    "name": "Gh0st Regrouped",
+    "description": "Gh0st chose his own path and gave Nova his override key.",
+    "toast": "Override key secured."
+  },
+  {
     "id": "ms_w4_mq16_complete",
     "name": "Foundry Gate Opened",
     "description": "You crossed the Slag River and opened the Service Airlock into the factory.",
@@ -452,6 +482,30 @@
     "toast": "Sabotage complete."
   },
   {
+    "id": "ms_w4_crate_alpha_destroyed",
+    "name": "Crate Alpha Destroyed",
+    "description": "You destroyed the ammo crate at the Slag River.",
+    "toast": "Crate alpha destroyed."
+  },
+  {
+    "id": "ms_w4_crate_beta_destroyed",
+    "name": "Crate Beta Destroyed",
+    "description": "You destroyed the ammo crate at Waste Intake.",
+    "toast": "Crate beta destroyed."
+  },
+  {
+    "id": "ms_w4_crate_gamma_destroyed",
+    "name": "Crate Gamma Destroyed",
+    "description": "You destroyed the ammo crate at the Service Airlock.",
+    "toast": "Crate gamma destroyed."
+  },
+  {
+    "id": "ms_w4_worker_traced",
+    "name": "Worker Traced",
+    "description": "You found the missing engineer's tablet and coolant rig.",
+    "toast": "Worker trail traced."
+  },
+  {
     "id": "ms_w4_lost_worker_complete",
     "name": "Lost Worker Found",
     "description": "You recovered the missing engineer's coolant rig.",
@@ -464,10 +518,46 @@
     "toast": "Scavenger unlocked."
   },
   {
+    "id": "ms_w4_mechs_salvaged",
+    "name": "Mechs Salvaged",
+    "description": "You stripped usable parts from the wrecked mechs at Waste Intake.",
+    "toast": "Mechs salvaged."
+  },
+  {
     "id": "ms_w4_mq18_complete",
     "name": "Assembly Line Broken",
     "description": "You overloaded the Phantom fabrication matrix.",
     "toast": "The Assembly is complete."
+  },
+  {
+    "id": "ms_w4_conveyors_timed",
+    "name": "Conveyors Timed",
+    "description": "You learned the production floor's crusher rhythm.",
+    "toast": "Conveyor timing learned."
+  },
+  {
+    "id": "ms_w4_prototypes_defeated",
+    "name": "Prototypes Defeated",
+    "description": "You defeated the Phantom Prototype wave.",
+    "toast": "Prototype wave defeated."
+  },
+  {
+    "id": "ms_w4_matrix_overloaded",
+    "name": "Matrix Overloaded",
+    "description": "You broke the fabrication matrix feeding the Phantom line.",
+    "toast": "Fabrication matrix overloaded."
+  },
+  {
+    "id": "ms_w4_conveyor_puzzle_solved",
+    "name": "Anvil Cradle Opened",
+    "description": "You solved the Forge timing puzzle and opened the Anvil cradle.",
+    "toast": "Anvil cradle opened."
+  },
+  {
+    "id": "ms_w4_anvil_claimed",
+    "name": "Anvil Claimed",
+    "description": "Nova claimed the Anvil and unlocked Construct.",
+    "toast": "The Anvil is yours."
   },
   {
     "id": "ms_w4_mq19_complete",
@@ -482,6 +572,30 @@
     "toast": "Meltdown is complete."
   },
   {
+    "id": "ms_w4_rylos_confronted",
+    "name": "Rylos Confronted",
+    "description": "Gh0st faced Commander Rylos and rejected his unit number.",
+    "toast": "Rylos confronted."
+  },
+  {
+    "id": "ms_w4_titan_defeated",
+    "name": "Titan Walker Defeated",
+    "description": "You defeated Rylos's Titan Walker.",
+    "toast": "Titan Walker down."
+  },
+  {
+    "id": "ms_w4_engine_stolen",
+    "name": "Deep-Core Engine Stolen",
+    "description": "You stole the Deep-Core Engine from Vale's Ascension Cradle supply chain.",
+    "toast": "Deep-Core Engine stolen."
+  },
+  {
+    "id": "ms_w4_arrays_stolen",
+    "name": "Phase-Cutter Arrays Stolen",
+    "description": "You stole the Phase-Cutter Arrays for the Astra.",
+    "toast": "Phase-Cutter Arrays stolen."
+  },
+  {
     "id": "ms_w5_access_unlocked",
     "name": "Void Course Set",
     "description": "The Astra can now reach high orbit and push toward the Void.",
@@ -492,6 +606,18 @@
     "name": "Quality Control Resolved",
     "description": "You resolved the sentient defective unit queue.",
     "toast": "Quality Control complete."
+  },
+  {
+    "id": "ms_w4_defective_units_spared",
+    "name": "Defective Units Spared",
+    "description": "You let the waking defective units keep their spark.",
+    "toast": "Defective units spared."
+  },
+  {
+    "id": "ms_w4_hazard_trial_cleared",
+    "name": "Hazard Trial Cleared",
+    "description": "You survived the overclocked Forge hazard waves.",
+    "toast": "Hazard trial cleared."
   },
   {
     "id": "ms_w4_overclocked_complete",

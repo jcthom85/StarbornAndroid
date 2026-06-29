@@ -38,6 +38,11 @@ object DebugScenarioCatalog {
         scenario("w3_checkpoint_infiltration", "W3 / Checkpoint Infiltration", "Resume Social Engineering at the Upper City service route.", DebugScenarioCategory.STORY),
         scenario("w3_lens_archive", "W3 / Lens Archive", "Resume The Lens inside the Archive approach.", DebugScenarioCategory.STORY),
         scenario("w3_lockdown_escape", "W3 / Lockdown Escape", "Resume Burn Notice after the Lens alarm.", DebugScenarioCategory.STORY),
+        scenario("w4_foundry_start", "W4 / Foundry Start", "Start Into the Fire on the Obsidian Shelf after the Astra slips the Shield.", DebugScenarioCategory.STORY),
+        scenario("w4_phantom_records", "W4 / Phantom Records", "Resume Ghost in the Machine at the Waste Intake records terminal.", DebugScenarioCategory.STORY),
+        scenario("w4_assembly_floor", "W4 / Assembly Floor", "Resume The Assembly on the Foundry conveyor floor.", DebugScenarioCategory.STORY),
+        scenario("w4_anvil_forge", "W4 / Anvil Forge", "Resume The Anvil inside the Forge.", DebugScenarioCategory.STORY),
+        scenario("w4_meltdown_escape", "W4 / Meltdown Escape", "Resume Meltdown after the Titan Walker fight with the core ready to steal.", DebugScenarioCategory.STORY),
 
         hub("hub_1_homestead", "World 1 / Homestead Quarter", "The Mines", "Orient at the first World 1 hub."),
         hub("hub_2_logistics", "World 1 / Logistics Sector", "The Mines", "Orient at the second World 1 hub."),

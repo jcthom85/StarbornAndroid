@@ -1424,8 +1424,8 @@
   {
     "id": "w4_mq16",
     "title": "Into the Fire",
-    "summary": "Land in Sector 7 and force a route into the Foundry factory.",
-    "description": "Secure the Obsidian Shelf, learn the Slag River hazards, and hack the cooling vents so the service airlock can open.",
+    "summary": "Land in Sector 7 because the damaged Astra needs Foundry hardware to reach high orbit.",
+    "description": "Secure the Obsidian Shelf, confirm the Astra cannot climb to the Orbital Ring as-is, cross the Slag River, and hack the cooling vents so the service airlock can open.",
     "flavor": "The Foundry does not guard its doors. It lets the heat do that.",
     "giver": "Nova",
     "hub_id": "hub_7_slag_pits",
@@ -1476,8 +1476,8 @@
   {
     "id": "w4_mq17",
     "title": "Ghost in the Machine",
-    "summary": "Recover Gh0st's blueprint data from Project Phantom records.",
-    "description": "Access the Project Phantom terminal, discover the truth about Gh0st and Elara, and regroup at the Cooling Springs before climbing deeper into the factory.",
+    "summary": "Recover Project Phantom records before pushing toward the engine line.",
+    "description": "Access the Project Phantom terminal, discover the truth about Gh0st and Elara, and regroup at the Cooling Springs before breaking into the factory floor that is still building successors.",
     "flavor": "A weapon can learn the name it was denied.",
     "giver": "Gh0st",
     "hub_id": "hub_7_slag_pits",
@@ -1622,7 +1622,7 @@
   {
     "id": "w4_mq18",
     "title": "The Assembly",
-    "summary": "Fight through the Foundry production floor and break the Phantom fabrication line.",
+    "summary": "Fight through the Foundry production floor and break the Phantom fabrication line blocking the engine route.",
     "description": "Navigate conveyor belts, survive Phantom Prototype waves, and overload the fabrication matrix feeding Gh0st's mass-production successors.",
     "flavor": "The machine of war sounds like work until it starts printing faces.",
     "giver": "Gh0st",
@@ -1665,8 +1665,8 @@
   {
     "id": "w4_mq19",
     "title": "The Anvil",
-    "summary": "Reach the Forge and steal the Anvil relic.",
-    "description": "Solve the conveyor-crusher puzzle, claim the Anvil, and unlock Construct after Nova's first failed attempt to shape the slag river.",
+    "summary": "Reach the Forge and steal the Anvil relic before Rylos seals the core.",
+    "description": "Solve the conveyor-crusher puzzle, claim the Anvil, and unlock Construct after Nova's first failed attempt to shape the Foundry's heat into a path.",
     "flavor": "Creation answers intent. Doubt becomes debris.",
     "giver": "Orion",
     "hub_id": "hub_8_assembly_line",
@@ -1713,8 +1713,8 @@
   {
     "id": "w4_mq20",
     "title": "Meltdown",
-    "summary": "Defeat Rylos, steal the Deep-Core Engine, and escape the Foundry.",
-    "description": "Face Commander Rylos and the Titan Walker, steal the Deep-Core Engine and Phase-Cutter Arrays, then launch before Vale locks down the sector.",
+    "summary": "Defeat Rylos, steal the Deep-Core Engine and Phase-Cutter Arrays, and make the Astra high-orbit capable.",
+    "description": "Face Commander Rylos and the Titan Walker, steal the hardware Vale needs for the Ascension Cradle, then launch before the Foundry seals around the crew.",
     "flavor": "The Foundry built instruments for silence. You steal the noise.",
     "giver": "Nova",
     "hub_id": "hub_8_assembly_line",
@@ -1835,8 +1835,8 @@
   {
     "id": "w5_mq21",
     "title": "Docking Procedure",
-    "summary": "Fight through Orbital Compliance and force the Astra onto the Ring.",
-    "description": "Survive the fighter screen, force a dock at the Executive Spire, and let Gh0st break the airlock.",
+    "summary": "Use the stolen Foundry hardware to force the Astra onto the Orbital Ring.",
+    "description": "Survive the fighter screen with the Deep-Core Engine and Phase-Cutter Arrays, force a dock at the Executive Spire, and let Gh0st break the airlock.",
     "flavor": "The Halo does not welcome visitors. It processes them.",
     "giver": "Nova",
     "hub_id": "hub_9_orbital_ring",

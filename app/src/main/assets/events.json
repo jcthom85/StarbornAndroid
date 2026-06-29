@@ -4174,6 +4174,10 @@
         "task_id": "find_apartment"
       },
       {
+        "type": "set_milestone",
+        "milestone": "ms_w3_safehouse_found"
+      },
+      {
         "type": "show_message",
         "message": "You slide the door open. Zeke's old apartment is bare, but safe from Dominion scanners."
       }
@@ -4277,6 +4281,10 @@
         "task_id": "talk_jax"
       },
       {
+        "type": "set_milestone",
+        "milestone": "ms_w3_jax_intel"
+      },
+      {
         "type": "reveal_node",
         "node_id": "spire_vent_output"
       },
@@ -4323,6 +4331,10 @@
         "task_id": "map_patrols"
       },
       {
+        "type": "set_milestone",
+        "milestone": "ms_w3_patrols_mapped"
+      },
+      {
         "type": "show_message",
         "message": "Nova marks patrol timing from the underrail map. Every gap is built from someone else's late shift, unpaid break, or fear of being noticed."
       }
@@ -4351,6 +4363,10 @@
         "type": "set_quest_task_done",
         "quest_id": "w3_mq12",
         "task_id": "copy_badges"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w3_badges_copied"
       },
       {
         "type": "show_message",
@@ -4383,6 +4399,10 @@
         "task_id": "source_disguises"
       },
       {
+        "type": "set_milestone",
+        "milestone": "ms_w3_disguises_sourced"
+      },
+      {
         "type": "show_message",
         "message": "Nova studies the patched coats and laundry lines on the safehouse roof. The disguise will not survive conversation, but the Upper City rarely speaks to workers long enough to notice."
       }
@@ -4411,6 +4431,10 @@
         "type": "set_quest_task_done",
         "quest_id": "w3_mq12",
         "task_id": "interrogate_guard"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w3_security_records_pulled"
       },
       {
         "type": "show_message",
@@ -4466,6 +4490,10 @@
         "type": "set_quest_task_done",
         "quest_id": "w3_mq12",
         "task_id": "hack_blueprints"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w3_blueprints_hacked"
       },
       {
         "type": "show_message",
@@ -4807,6 +4835,10 @@
         "task_id": "blend_in"
       },
       {
+        "type": "set_milestone",
+        "milestone": "ms_w3_guest_profile_accepted"
+      },
+      {
         "type": "reveal_node",
         "node_id": "spire_laundry"
       },
@@ -4848,6 +4880,10 @@
         "type": "set_quest_task_done",
         "quest_id": "w3_mq13",
         "task_id": "disable_sensors"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w3_scanners_blinded"
       },
       {
         "type": "show_message",
@@ -4950,6 +4986,10 @@
         "task_id": "enter_archive"
       },
       {
+        "type": "set_milestone",
+        "milestone": "ms_w3_archive_entered"
+      },
+      {
         "type": "show_message",
         "message": "The Archive recognizes no guest access. It recognizes only ownership. The Lens waits deeper inside, bright enough to make every lie in the room visible, including Nova's."
       }
@@ -4983,6 +5023,10 @@
         "type": "set_quest_task_done",
         "quest_id": "w3_mq14",
         "task_id": "solve_light_puzzle"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w3_prism_solved"
       },
       {
         "type": "advance_quest_stage",
@@ -5405,7 +5449,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Burn Notice\n\nThe Astra slips the Shield on Orion's count, using the Lens to ride a gap nobody was supposed to see. The crew does not beat the cage; they squeeze through before it closes. Low orbit coughs the ship toward the Foundry. Time to steal a bigger engine."
+        "message": "Quest Complete: Burn Notice\n\nThe Astra slips the Shield on Orion's count, using the Lens to ride a gap nobody was supposed to see. The crew survives the cage, but the ship cannot climb to the Orbital Ring on damaged drives. Zeke tags Sector 7's Foundry: a Deep-Core Engine for altitude, Phase-Cutter Arrays for teeth, and no legal way to take either."
       }
     ]
   },
@@ -5586,8 +5630,12 @@
         "task_id": "land_shelf"
       },
       {
+        "type": "set_milestone",
+        "milestone": "ms_w4_landing_secured"
+      },
+      {
         "type": "show_message",
-        "message": "The Astra settles onto volcanic glass. Sector 7 welcomes you with ash, heat, and a compliance bulletin."
+        "message": "The Astra settles onto volcanic glass, still hot from the Shield slip. Orion confirms the bad news: surviving low orbit is not the same as reaching high orbit."
       }
     ]
   },
@@ -5649,6 +5697,10 @@
         "task_id": "cross_slag_river"
       },
       {
+        "type": "set_milestone",
+        "milestone": "ms_w4_slag_crossed"
+      },
+      {
         "type": "show_message",
         "message": "You learn the rhythm of the Source flares and cross the slag channel with boots smoking."
       }
@@ -5682,6 +5734,10 @@
         "type": "set_quest_task_done",
         "quest_id": "w4_mq16",
         "task_id": "hack_cooling_vents"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w4_cooling_vents_hacked"
       },
       {
         "type": "advance_quest_stage",
@@ -5746,7 +5802,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Into the Fire\n\nThe service airlock cycles open. You have a route into the factory and a heat liner that might keep your skin attached."
+        "message": "Quest Complete: Into the Fire\n\nThe service airlock cycles open. You have a route inside, a heat liner that might keep your skin attached, and Zeke's engine ping buried deeper in the factory."
       }
     ]
   },
@@ -5775,13 +5831,17 @@
         "task_id": "access_phantom_terminal"
       },
       {
+        "type": "set_milestone",
+        "milestone": "ms_w4_phantom_records_found"
+      },
+      {
         "type": "advance_quest_stage",
         "quest_id": "w4_mq17",
         "to_stage_id": "cooling_springs"
       },
       {
         "type": "show_message",
-        "message": "PROJECT PHANTOM opens. Elara's neural map. Gh0st's chip insertion. The truth lands harder than the pistons."
+        "message": "PROJECT PHANTOM opens. Elara's neural map. Gh0st's chip insertion. A factory process built from a person. The truth lands harder than the pistons."
       }
     ]
   },
@@ -5815,6 +5875,10 @@
         "task_id": "regroup_springs"
       },
       {
+        "type": "set_milestone",
+        "milestone": "ms_w4_springs_regrouped"
+      },
+      {
         "type": "give_item",
         "item_id": "gh0st_override_key",
         "quantity": 1
@@ -5845,7 +5909,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Ghost in the Machine\n\nGh0st gives Nova his override key. The first time was programming. The second time was choice."
+        "message": "Quest Complete: Ghost in the Machine\n\nGh0st gives Nova his override key. The first time was programming. The second time is choice. The Assembly floor is still making more bodies for the same crime."
       }
     ]
   },
@@ -5908,8 +5972,12 @@
         "task_id": "crate_alpha"
       },
       {
+        "type": "set_milestone",
+        "milestone": "ms_w4_crate_alpha_destroyed"
+      },
+      {
         "type": "show_message",
-        "message": "Ammo crate alpha cooks off into the slag haze."
+        "message": "Ammo crate alpha cooks off into the slag haze. One less box feeding the guns above the Shelf."
       }
     ]
   },
@@ -5948,8 +6016,12 @@
         "task_id": "crate_beta"
       },
       {
+        "type": "set_milestone",
+        "milestone": "ms_w4_crate_beta_destroyed"
+      },
+      {
         "type": "show_message",
-        "message": "Ammo crate beta vanishes under the intake pistons."
+        "message": "Ammo crate beta vanishes under the intake pistons, turning Dominion logistics into hot shrapnel."
       }
     ]
   },
@@ -5996,6 +6068,10 @@
         "type": "set_quest_task_done",
         "quest_id": "w4_sq16",
         "task_id": "crate_gamma"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w4_crate_gamma_destroyed"
       },
       {
         "type": "give_item",
@@ -6046,6 +6122,10 @@
         "task_id": "find_worker"
       },
       {
+        "type": "set_milestone",
+        "milestone": "ms_w4_worker_traced"
+      },
+      {
         "type": "give_item",
         "item_id": "coolant_system",
         "quantity": 1
@@ -6094,6 +6174,10 @@
         "task_id": "salvage_mechs"
       },
       {
+        "type": "set_milestone",
+        "milestone": "ms_w4_mechs_salvaged"
+      },
+      {
         "type": "complete_quest",
         "quest_id": "w4_sq18"
       },
@@ -6132,6 +6216,10 @@
         "task_id": "navigate_conveyors"
       },
       {
+        "type": "set_milestone",
+        "milestone": "ms_w4_conveyors_timed"
+      },
+      {
         "type": "show_message",
         "message": "You catch the belt rhythm between crushers and moving heat shields."
       }
@@ -6165,6 +6253,10 @@
         "type": "set_quest_task_done",
         "quest_id": "w4_mq18",
         "task_id": "defeat_prototypes"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w4_prototypes_defeated"
       },
       {
         "type": "advance_quest_stage",
@@ -6207,6 +6299,10 @@
         "task_id": "overload_matrix"
       },
       {
+        "type": "set_milestone",
+        "milestone": "ms_w4_matrix_overloaded"
+      },
+      {
         "type": "complete_quest",
         "quest_id": "w4_mq18"
       },
@@ -6224,7 +6320,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: The Assembly\n\nThe fabrication matrix screams itself silent. No more Phantom shells leave this floor."
+        "message": "Quest Complete: The Assembly\n\nThe fabrication matrix screams itself silent. No more Phantom shells leave this floor, and the Forge below loses the rhythm protecting the Anvil."
       }
     ]
   },
@@ -6284,6 +6380,10 @@
         "task_id": "solve_conveyor_puzzle"
       },
       {
+        "type": "set_milestone",
+        "milestone": "ms_w4_conveyor_puzzle_solved"
+      },
+      {
         "type": "advance_quest_stage",
         "quest_id": "w4_mq19",
         "to_stage_id": "claim_anvil"
@@ -6324,6 +6424,10 @@
         "task_id": "take_anvil"
       },
       {
+        "type": "set_milestone",
+        "milestone": "ms_w4_anvil_claimed"
+      },
+      {
         "type": "give_item",
         "item_id": "the_anvil",
         "quantity": 1
@@ -6350,7 +6454,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: The Anvil\n\nThe relic answers Nova too fast. Her first Construct twists, collapses, and nearly drops her into slag before Gh0st catches her."
+        "message": "Quest Complete: The Anvil\n\nThe relic answers Nova too fast. Her first Construct twists, collapses, and nearly drops her into slag before Gh0st catches her. Rylos moves the Titan Walker to the Power Core; the engine theft just became a fight."
       }
     ]
   },
@@ -6379,8 +6483,12 @@
         "task_id": "confront_rylos"
       },
       {
+        "type": "set_milestone",
+        "milestone": "ms_w4_rylos_confronted"
+      },
+      {
         "type": "show_message",
-        "message": "Rylos: Unit 734. Submit for correction. Pain is just data leaving the body."
+        "message": "Rylos: Unit 734. Submit for correction. Pain is just data leaving the body.\n\nGh0st steps forward anyway. \"My name is not a unit number.\""
       }
     ]
   },
@@ -6409,6 +6517,10 @@
         "type": "set_quest_task_done",
         "quest_id": "w4_mq20",
         "task_id": "defeat_titan_walker"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w4_titan_defeated"
       },
       {
         "type": "advance_quest_stage",
@@ -6451,13 +6563,17 @@
         "task_id": "steal_engine"
       },
       {
+        "type": "set_milestone",
+        "milestone": "ms_w4_engine_stolen"
+      },
+      {
         "type": "give_item",
         "item_id": "deep_core_engine",
         "quantity": 1
       },
       {
         "type": "show_message",
-        "message": "The Deep-Core Engine tears free of the cradle, taking Vale's timeline with it."
+        "message": "The Deep-Core Engine tears free of the cradle. The Astra can climb now, and Vale's Ascension Cradle just lost the part it needed most."
       }
     ]
   },
@@ -6491,13 +6607,17 @@
         "task_id": "steal_arrays"
       },
       {
+        "type": "set_milestone",
+        "milestone": "ms_w4_arrays_stolen"
+      },
+      {
         "type": "give_item",
         "item_id": "phase_cutter_arrays",
         "quantity": 1
       },
       {
         "type": "show_message",
-        "message": "Phase-Cutter Arrays secured. The Astra is no longer just running. It can fight."
+        "message": "Phase-Cutter Arrays secured. The Astra is no longer just running; it can cut a path through high-orbit defenses."
       }
     ]
   },
@@ -6561,7 +6681,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Meltdown\n\nVale denies Rylos extraction, relieves Thorne, and locks every sector. The Astra punches for high orbit with the Foundry burning below."
+        "message": "Quest Complete: Meltdown\n\nThe stolen engine kicks the Astra into high orbit while the Phase-Cutter Arrays carve open the pursuit net. Below, the Foundry burns and Vale's Ascension Cradle slips behind schedule. He relieves Thorne before the signal even clears and activates a Soloist variant no one in the room is brave enough to question."
       }
     ]
   },
@@ -6593,6 +6713,10 @@
         "type": "set_quest_task_done",
         "quest_id": "w4_sq19",
         "task_id": "resolve_units"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w4_defective_units_spared"
       },
       {
         "type": "unlock_skill",
@@ -6640,6 +6764,10 @@
         "type": "set_quest_task_done",
         "quest_id": "w4_sq20",
         "task_id": "survive_waves"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w4_hazard_trial_cleared"
       },
       {
         "type": "give_item",
