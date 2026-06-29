@@ -57,6 +57,7 @@ class Hub2CriticalFlowTest {
         harness.events.handleTrigger("player_action", EventPayload.Action("w2_mq02_use_chime"))
         state = harness.store.state.value
         assertTrue(state.completedQuests.contains("w2_mq02"))
+        assertTrue(state.questTasksCompleted["w2_mq02"].orEmpty().contains("insert_chime"))
         assertTrue(state.completedMilestones.contains("ms_w2_mq02_complete"))
         assertEquals("sector9_hall_of_echoes", state.roomId)
         assertTrue(state.activeQuests.contains("w2_mq03"))
@@ -87,6 +88,7 @@ class Hub2CriticalFlowTest {
 
         state = harness.store.state.value
         assertTrue(state.questTasksCompleted["w2_mq03"].orEmpty().contains("align_stasis_rings"))
+        assertTrue(state.questTasksCompleted["w2_mq03"].orEmpty().contains("talk_to_orion"))
         assertTrue(state.partyMembers.contains("orion"))
         assertTrue(state.completedQuests.contains("w2_mq03"))
         assertTrue(state.completedMilestones.contains("ms_w2_mq03_complete"))
@@ -99,6 +101,11 @@ class Hub2CriticalFlowTest {
 
         // Confront Gh0st
         harness.events.handleTrigger("player_action", EventPayload.Action("w2_mq04_confront"))
+        assertEquals("Gh0st", harness.startedDialogues.lastOrNull())
+        val ghostConfrontation = harness.dialogue.startDialogue("Gh0st")
+        assertNotNull(ghostConfrontation)
+        assertEquals("ghost_confrontation_1", ghostConfrontation?.current()?.id)
+        ghostConfrontation?.advanceUntilFinished()
         assertTrue(harness.store.state.value.questTasksCompleted["w2_mq04"].orEmpty().contains("confront_stalker"))
 
         // Defeat mutated Source Beast
@@ -158,6 +165,8 @@ class Hub2CriticalFlowTest {
         assertTrue(state.completedQuests.contains("w2_mq05"))
         assertTrue(state.completedMilestones.contains("ms_w2_mq05_complete"))
         assertEquals("spire_sewers_landing", state.roomId) // Transitioned to World 3!
+        assertTrue(state.activeQuests.contains("w3_mq11"))
+        assertEquals("w3_mq11", state.trackedQuestId)
     }
 
     @Test
@@ -199,9 +208,16 @@ class Hub2CriticalFlowTest {
         harness.events.handleTrigger("player_action", EventPayload.Action("w2_sq02_trace_gamma"))
         harness.events.handleTrigger("player_action", EventPayload.Action("w2_sq02_recover_transceiver"))
         state = harness.store.state.value
-        assertTrue(state.completedQuests.contains("w2_sq02"))
-        assertTrue(state.inventory["thermal_cutter"].orZero() >= 1)
+        assertTrue(state.completedQuests.none { it == "w2_sq02" })
+        assertTrue(state.inventory["damaged_thermal_cutter"].orZero() >= 1)
+        assertTrue(state.inventory["schematic_thermal_cutter"].orZero() >= 1)
         assertTrue(state.inventory["mod_corrosive_rounds"].orZero() >= 1)
+
+        harness.store.setInventory(harness.store.state.value.inventory + ("thermal_cutter" to 1))
+        harness.events.handleTrigger("player_action", EventPayload.Action("tinkering_craft", "thermal_cutter"))
+        state = harness.store.state.value
+        assertTrue(state.completedQuests.contains("w2_sq02"))
+        assertTrue(state.questTasksCompleted["w2_sq02"].orEmpty().contains("repair_thermal_cutter"))
 
         // --- SQ03: Tideglass Day (Orion) ---
         // Setup Orion in party
@@ -223,7 +239,17 @@ class Hub2CriticalFlowTest {
         // Gather tideglass
         harness.events.handleTrigger("player_action", EventPayload.Action("w2_sq03_gather_tideglass"))
         state = harness.store.state.value
+        assertTrue(state.completedQuests.none { it == "w2_sq03" })
+        assertTrue(state.inventory["schematic_source_resin"].orZero() >= 1)
+        assertTrue(state.inventory["herb"].orZero() >= 1)
+        assertTrue(state.inventory["beast_meat"].orZero() >= 1)
+
+        harness.store.setInventory(harness.store.state.value.inventory + ("source_resin" to 1))
+        harness.events.handleTrigger("player_action", EventPayload.Action("tinkering_craft", "source_resin"))
+        state = harness.store.state.value
         assertTrue(state.completedQuests.contains("w2_sq03"))
+        assertTrue(state.questTasksCompleted["w2_sq03"].orEmpty().contains("craft_source_resin"))
+        assertTrue(state.inventory["source_resin"].orZero() >= 1)
         assertTrue(state.inventory["painkillers"].orZero() >= 2) // additional painkillers
 
         // --- SQ04: Ancient Echoes (Orion mural tuning) ---
@@ -253,7 +279,7 @@ class Hub2CriticalFlowTest {
 
         state = harness.store.state.value
         assertTrue(state.completedQuests.contains("w2_sq04"))
-        assertTrue(state.inventory["source_resin"].orZero() >= 1)
+        assertTrue(state.inventory["focus_conduit"].orZero() >= 1)
 
         // --- SQ05: Stolen Tech (Gh0st search vents) ---
         harness.store.addPartyMember("gh0st")
@@ -272,7 +298,15 @@ class Hub2CriticalFlowTest {
         harness.events.handleTrigger("player_action", EventPayload.Action("w2_sq05_bypass_guards"))
         harness.events.handleTrigger("player_action", EventPayload.Action("w2_sq05_search_vents"))
         state = harness.store.state.value
+        assertTrue(state.completedQuests.none { it == "w2_sq05" })
+        assertTrue(state.inventory["dominion_transmitter_core"].orZero() >= 1)
+        assertTrue(state.inventory["schematic_rapid_capacitor"].orZero() >= 1)
+
+        harness.store.setInventory(harness.store.state.value.inventory + ("rapid_capacitor" to 1))
+        harness.events.handleTrigger("player_action", EventPayload.Action("tinkering_craft", "rapid_capacitor"))
+        state = harness.store.state.value
         assertTrue(state.completedQuests.contains("w2_sq05"))
+        assertTrue(state.questTasksCompleted["w2_sq05"].orEmpty().contains("assemble_capacitor"))
         assertTrue(state.inventory["rapid_capacitor"].orZero() >= 1)
     }
 
@@ -281,6 +315,7 @@ class Hub2CriticalFlowTest {
         val events: EventManager
         val dialogue: DialogueService
         val messages = mutableListOf<String>()
+        val startedDialogues = mutableListOf<String>()
 
         init {
             initialState?.let(store::restore)
@@ -300,6 +335,7 @@ class Hub2CriticalFlowTest {
                             store.setQuestStage(questId, stageId)
                         }
                     },
+                    onStartDialogue = { npcName -> startedDialogues += npcName },
                     onGiveItem = { itemId, quantity ->
                         val current = store.state.value.inventory
                         val next = current + (itemId to (current[itemId].orZero() + quantity.coerceAtLeast(1)))

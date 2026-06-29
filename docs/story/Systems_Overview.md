@@ -130,6 +130,12 @@ Tinkering is a core crafting system accessible via the **Main Menu** (anytime/Ca
 - **Puzzle Solving:** Combining Key Items (e.g., "Broken Key" + "Glue").
 - **Field Survival:** Crafting basic supplies.
 
+**World Role:**
+- **World 1:** Tinkering is introduced as repair and trust. Jed teaches Nova to turn the damaged Cryo-Inductor into the Functional Cryo-Inductor, proving she can survive by fixing what Dominion leaves broken.
+- **World 2:** Tinkering becomes field survival and salvage. The player should recover damaged tools, schematics, and living materials, then craft the useful result at a camp or the Astra repair bench.
+- **Later Worlds:** Tinkering should stay story-motivated: infiltration devices in World 3, foundry/ship engineering in World 4, Source/Anchor prototypes in World 5, and legacy/Jed-themed final upgrades in World 6.
+- **Design Rule:** Do not use tinkering as a generic lock-and-key tax. Require it only when the fiction clearly says Nova needs to build, repair, stabilize, or adapt something.
+
 # 7) Progression & Scope (Summary)
 
 *   **Core Skills (6):** Establish consistency and mastery. Learned via leveling/quests.

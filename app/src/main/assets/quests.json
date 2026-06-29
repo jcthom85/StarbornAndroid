@@ -117,24 +117,24 @@
   {
     "id": "w1_mq03",
     "title": "The Echo",
-    "summary": "Boggs turns Nova's temporary clearance into punishment duty below Sector 4, where the interference is older than Dominion.",
-    "description": "Enter the Logistics Sector, descend into the Deep Mine, fight through Sector 4, and find the source of the impossible hum.",
+    "summary": "Zeke's temporary override sends Nova to Logistics review, where Boggs turns her clearance into Sector 4 punishment duty.",
+    "description": "Report to Logistics, survive Boggs' required shield training, descend into the Deep Mine, and find the source of the impossible hum.",
     "flavor": "The mine was never quiet. Nova just had not heard what was underneath.",
     "giver": "Foreman Boggs",
     "hub_id": "hub_2_logistics",
     "stages": [
       {
         "id": "sector_four_assignment",
-        "title": "Sector 4 Assignment",
-        "description": "Zeke's override kept Nova alive, but Boggs uses the same paperwork to send her into the dangerous part of the mine.",
+        "title": "Logistics Review",
+        "description": "Zeke kept Nova alive, but the override routes her through Foreman Boggs before she can work the mine.",
         "tasks": [
           {
             "id": "enter_logistics_sector",
-            "text": "Cross into the Logistics Sector before the temporary override attracts attention."
+            "text": "Cross into Logistics before the temporary override expires."
           },
           {
             "id": "talk_to_bogs",
-            "text": "Report to Foreman Boggs and learn how he is using Nova's clearance."
+            "text": "Report to Foreman Boggs and survive the work assignment he finds in Nova's file."
           },
           {
             "id": "use_deep_elevator",
@@ -442,8 +442,8 @@
   {
     "id": "w1_sq03",
     "title": "Heavy Lifting",
-    "summary": "Boggs needs cargo moved and cares more about the shipment clock than the workers trapped behind it.",
-    "description": "Use a loader to clear the collapsed cargo route, save the trapped workers, and learn why shielded enemies need to be broken before they can be hurt.",
+    "summary": "Boggs turns combat certification into cargo work before he will authorize Sector 4.",
+    "description": "Bring the loader online, clear Boggs' cargo, save the trapped workers, and learn why shielded enemies need to be broken before they can be hurt.",
     "flavor": "Boggs calls it labor efficiency. Nova calls it not letting people die under a crate.",
     "giver": "Foreman Boggs",
     "hub_id": "hub_1_homestead",
@@ -455,7 +455,7 @@
         "tasks": [
           {
             "id": "talk_to_bogs",
-            "text": "Talk to Foreman Boggs about the blocked route."
+            "text": "Report to Foreman Boggs about the required shield training."
           },
           {
             "id": "start_loader",
@@ -593,8 +593,8 @@
   {
     "id": "w2_mq01",
     "title": "A Strange Coast",
-    "summary": "The pod crashed in the overgrown ruins of Sector 9. Establish a foothold and find a way forward.",
-    "description": "Examine the wreckage, check on Zeke, and explore the surrounding overgrown area of Sector 9.",
+    "summary": "The pod crashed in the overgrown ruins of Sector 9. Keep Zeke alive, recover the Chime, and find a safer route away from the wreck.",
+    "description": "Check on Zeke, recover the Chime and emergency supplies from the pod, stabilize him, then follow the glow-water stream toward shelter.",
     "flavor": "The air smells of ozone and crushed green ferns. The metal hull is cold.",
     "giver": "Zeke",
     "hub_id": "hub_3_sector9",
@@ -613,6 +613,10 @@
             "text": "Examine the sub-critical pod core."
           },
           {
+            "id": "stabilize_zeke",
+            "text": "Use the emergency medkit to stabilize Zeke."
+          },
+          {
             "id": "follow_stream",
             "text": "Follow the glow-water stream into the ruins."
           }
@@ -629,8 +633,8 @@
   {
     "id": "w2_mq02",
     "title": "The Signal",
-    "summary": "Follow the distress beacon's frequency through the jungle ruins to find its source.",
-    "description": "Follow the signal pulse through the dangerous Razor-Vine path and find a way through the Temple Gate.",
+    "summary": "A clean distress frequency cuts through the jungle static, pointing toward an ancient gate.",
+    "description": "Push through the hostile canopy, find the Temple Gate, and use the recovered Chime to open the route into Sanctuary.",
     "flavor": "A clean frequency in a world of static.",
     "giver": "Zeke",
     "hub_id": "hub_3_sector9",
@@ -665,8 +669,8 @@
   {
     "id": "w2_mq03",
     "title": "Sleeping Giant",
-    "summary": "Waking Orion from stasis requires bypassing stasis safety alignment protocols.",
-    "description": "Enter the Sanctuary facility, explore the Hall of Echoes, locate Orion's stasis chamber, and solve the alignment lock.",
+    "summary": "Someone has been asleep inside Sanctuary for twenty years, and the facility will not wake him without the right chord.",
+    "description": "Read the Hall of Echoes murals, locate Orion's stasis chamber, align the safety rings, and bring the tuner back into the world.",
     "flavor": "Twenty years of sleep, waiting for a chord that never came.",
     "giver": "Orion",
     "hub_id": "hub_4_facility",
@@ -712,8 +716,8 @@
   {
     "id": "w2_mq04",
     "title": "The Hunter",
-    "summary": "A Dominion stalker is tracking the crew. Confront them before they strike.",
-    "description": "Travel to Canopy Ridge to scout the hunter, confront the assassin Gh0st, and survive the apex beast ambush.",
+    "summary": "A Dominion stalker is tracking the crew, but their orders are starting to fracture.",
+    "description": "Travel to Canopy Ridge, force Gh0st into the open, survive the Source Beast ambush, and turn a hunter into an uneasy ally.",
     "flavor": "He has a code, but the armor wears the orders.",
     "giver": "Gh0st",
     "hub_id": "hub_3_sector9",
@@ -748,8 +752,8 @@
   {
     "id": "w2_mq05",
     "title": "Liftoff",
-    "summary": "Repair the Astra to cross the phase curtain and reach the Spire.",
-    "description": "Find parts to repair the Astra, configure the Bridge Relic, and launch into the sky.",
+    "summary": "The Astra is the only way off Sector 9, but Sanctuary's gate, dead power lines, and the orbital shield stand in the way.",
+    "description": "Bypass the Source Gate, inspect the Astra, salvage power conduits, reboot the Bridge Relic with the Chime, and launch toward the Spire.",
     "flavor": "A vessel of old songs, ready to fly again.",
     "giver": "Orion",
     "hub_id": "hub_4_facility",
@@ -836,8 +840,8 @@
   {
     "id": "w2_sq02",
     "title": "Lost Patrol",
-    "summary": "Trace a lost patrol through three distress signatures, recover its transceiver, and salvage its Thermal Cutter.",
-    "description": "Locate the logs of a lost squad in the Sector 9 ruins.",
+    "summary": "Trace a lost patrol through three distress signatures, recover its transceiver, and repair its Thermal Cutter.",
+    "description": "Locate the logs of a lost squad in the Sector 9 ruins and turn their damaged cutter into a useful field tool.",
     "flavor": "Steel rusts faster than bones here.",
     "giver": "Dead Soldier",
     "hub_id": "hub_3_sector9",
@@ -868,7 +872,11 @@
         "tasks": [
           {
             "id": "recover_transceiver",
-            "text": "Recover the encrypted transceiver and Thermal Cutter."
+            "text": "Recover the encrypted transceiver and damaged Thermal Cutter."
+          },
+          {
+            "id": "repair_thermal_cutter",
+            "text": "Repair the Thermal Cutter at a tinkering station."
           }
         ]
       }
@@ -900,7 +908,11 @@
           },
           {
             "id": "collect_food",
-            "text": "Scavenge 3 tideglass skewers."
+            "text": "Scavenge tideglass herbs and clean meat."
+          },
+          {
+            "id": "craft_source_resin",
+            "text": "Craft Source Resin from the gathered materials."
           }
         ]
       }
@@ -990,7 +1002,11 @@
         "tasks": [
           {
             "id": "recover_transmitter",
-            "text": "Recover the Dominion transmitter."
+            "text": "Recover the Dominion transmitter core."
+          },
+          {
+            "id": "assemble_capacitor",
+            "text": "Assemble the Rapid Capacitor from the transmitter core."
           }
         ]
       }

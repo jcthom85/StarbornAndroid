@@ -80,4 +80,4 @@ The crew is not a happy team; they are a collection of loose ends. Zeke carries 
 ## IV. Thematic Integration with Mechanics
 - **Erosion System:** Exploration actions and combat turns cause Erosion. Nova must manage her mental/neurological strain by resting at campfires or taking **Painkillers** (Neural Stabilizers).
 - **The Snack Slot:** Each character has 1 Snack Slot for consumables (like Painkillers). Snacks have a 5-turn cooldown in combat and are self-targeted.
-- **Tinkering Tab:** Accessed via the Main Menu or exploration campsites. Nova can craft mods (like **Source Resin**) using salvaged jungle components to add elemental or utility effects to equipment.
+- **Tinkering Tab:** Accessed via the Main Menu, exploration campsites, or the Astra repair bench. World 2 should use tinkering as field survival: Nova repairs damaged Dominion salvage, stabilizes living jungle materials into **Source Resin**, and turns recovered transmitter hardware into the **Rapid Capacitor**.

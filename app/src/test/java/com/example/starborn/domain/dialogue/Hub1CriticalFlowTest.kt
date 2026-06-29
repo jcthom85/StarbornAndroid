@@ -167,7 +167,7 @@ class Hub1CriticalFlowTest {
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("admin_lobby"))
 
         val boggs = harness.dialogue.startDialogue("Foreman Boggs")
-        assertEquals("bogs_w1_mq03_guardbreak_gate_1", boggs?.current()?.id)
+        assertEquals("bogs_w1_mq03_review_1", boggs?.current()?.id)
         boggs?.advanceUntilFinished()
 
         val state = harness.store.state.value
@@ -177,6 +177,45 @@ class Hub1CriticalFlowTest {
         assertTrue(state.completedMilestones.contains("ms_w1_sq03_started"))
         assertTrue(state.questTasksCompleted["w1_sq03"].orEmpty().contains("talk_to_bogs"))
         assertTrue(!state.completedMilestones.contains("ms_w1_mq03_bogs_talked"))
+    }
+
+    @Test
+    fun mandatoryGuardBreakTrainingReturnsToBoggsForDeepMineAuthorization() {
+        val harness = Hub1Harness()
+        harness.store.completeQuest("w1_mq01")
+        harness.store.completeQuest("w1_mq02")
+        harness.store.setInventory(mapOf("mine_access_badge" to 1))
+
+        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("admin_lobby"))
+        val review = harness.dialogue.startDialogue("Foreman Boggs")
+        assertEquals("bogs_w1_mq03_review_1", review?.current()?.id)
+        review?.advanceUntilFinished()
+
+        harness.events.handleTrigger("player_action", EventPayload.Action("w1_sq03_start_loader"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w1_sq03_move_cargo"))
+        harness.events.handleTrigger(
+            "encounter_victory",
+            EventPayload.EncounterOutcome(
+                enemyIds = listOf("acoustic_bulwark"),
+                outcome = EventPayload.EncounterOutcome.Outcome.VICTORY,
+                roomId = "workshop_dock"
+            )
+        )
+
+        var state = harness.store.state.value
+        assertTrue(state.completedQuests.contains("w1_sq03"))
+        assertTrue(state.completedMilestones.contains("ms_w1_guardbreak_trained"))
+        assertEquals("w1_mq03", state.trackedQuestId)
+        assertTrue(harness.messages.contains("Shield training complete. Report back to Boggs for Sector 4 authorization."))
+
+        val assignment = harness.dialogue.startDialogue("Foreman Boggs")
+        assertEquals("bogs_w1_mq03_intro_1", assignment?.current()?.id)
+        assignment?.advanceUntilFinished()
+
+        state = harness.store.state.value
+        assertTrue(state.questTasksCompleted["w1_mq03"].orEmpty().contains("talk_to_bogs"))
+        assertTrue(state.completedMilestones.contains("ms_w1_mq03_bogs_talked"))
+        assertEquals(true, state.roomStates["admin_lobby"].orEmpty()["bogs_talked"])
     }
 
     @Test
@@ -367,7 +406,7 @@ class Hub1CriticalFlowTest {
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("admin_lobby"))
         val afterLobby = harness.store.state.value
         assertTrue(afterLobby.questTasksCompleted["w1_mq03"].orEmpty().contains("enter_logistics_sector"))
-        assertTrue(harness.messages.contains("Entering Logistics advances the main story. Finish Homestead errands first if you want to complete them now."))
+        assertTrue(harness.messages.contains("Zeke's override opens the Logistics gate, but the badge display flashes FOREMAN REVIEW REQUIRED."))
     }
 
     @Test
@@ -612,12 +651,22 @@ class Hub1CriticalFlowTest {
         assertTrue(stateAfterPod.inventory["wooden_rod"].orZero() >= 1)
         assertTrue(stateAfterPod.inventory["basic_lure"].orZero() >= 1)
 
-        // 3. Move to the stream
+        // 3. The stream does not complete the quest until Zeke is stabilized.
+        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("sector9_landing_stream"))
+        assertTrue(harness.store.state.value.completedQuests.none { it == "w2_mq01" })
+
+        harness.events.handleTrigger("player_action", EventPayload.Action("w2_mq01_stabilize_zeke"))
+        val stateAfterStabilize = harness.store.state.value
+        assertTrue(stateAfterStabilize.questTasksCompleted["w2_mq01"].orEmpty().contains("stabilize_zeke"))
+
+        // 4. Move to the stream.
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("sector9_landing_stream"))
 
         val finalState = harness.store.state.value
         assertTrue(finalState.completedQuests.contains("w2_mq01"))
         assertTrue(finalState.completedMilestones.contains("ms_w2_mq01_complete"))
+        assertTrue(finalState.activeQuests.contains("w2_mq02"))
+        assertEquals("w2_mq02", finalState.trackedQuestId)
     }
 
     private class Hub1Harness(

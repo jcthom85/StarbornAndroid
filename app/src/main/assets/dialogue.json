@@ -489,7 +489,7 @@
     "id": "zeke_w1_mq02_override_7",
     "speaker": "Zeke",
     "emote": "confident",
-    "text": "I'm flagging it as grid instability. Temporary override. It keeps you alive, but it also makes you usable labor again. Take the badge before the system realizes I moved the target instead of removing it.",
+    "text": "I'm flagging it as grid instability. Temporary override. It keeps you alive, but it routes your file to Logistics review before the override expires. Take the badge, get through the checkpoint, and find whoever owns the foreman review. I think that's Boggs. Sorry.",
     "trigger": "set_quest_task_done:w1_mq02:meet_zeke,set_quest_task_done:w1_mq02:spoof_liability_form,set_quest_task_done:w1_mq02:receive_mine_access_badge,give_item:mine_access_badge,complete_quest:w1_mq02,set_milestone:ms_w1_mq02_zeke_override,set_milestone:ms_w1_mq02_complete,start_quest:w1_mq03,track_quest:w1_mq03,advance_quest_stage:w1_mq03:sector_four_assignment"
   },
   {
@@ -601,41 +601,66 @@
     "text": "If you're bleeding, sit. If you're not, don't start."
   },
   {
+    "id": "bogs_w1_mq03_review_1",
+    "speaker": "Foreman Boggs",
+    "text": "You. Cutter girl. I'm Foreman Boggs, which means I decide whether that temporary badge becomes work or a holding cell.",
+    "condition": "quest_active:w1_mq03,milestone_not_set:ms_w1_guardbreak_trained,milestone_not_set:ms_w1_sq03_started",
+    "next": "bogs_w1_mq03_review_2"
+  },
+  {
+    "id": "bogs_w1_mq03_review_2",
+    "speaker": "Nova",
+    "text": "Zeke said my file got routed to Logistics review.",
+    "next": "bogs_w1_mq03_review_3"
+  },
+  {
+    "id": "bogs_w1_mq03_review_3",
+    "speaker": "Foreman Boggs",
+    "text": "It did. Review says you're usable labor with a breaker surge on your record. Sector 4 needs bodies, but I'm not sending you down there until you can crack a shield.",
+    "next": "bogs_w1_mq03_review_4"
+  },
+  {
+    "id": "bogs_w1_mq03_review_4",
+    "speaker": "Foreman Boggs",
+    "text": "Loading Dock. Bring the loader online, move my cargo, and break the riot shield trainer with Hydraulic Kick. Pass that, then I'll authorize the Deep Elevator.",
+    "trigger": "start_quest:w1_sq03,track_quest:w1_sq03,set_quest_task_done:w1_sq03:talk_to_bogs,set_milestone:ms_w1_sq03_started"
+  },
+  {
     "id": "bogs_w1_mq03_guardbreak_gate_1",
     "speaker": "Foreman Boggs",
-    "text": "You heading down without shield training? That's how assets become floor paste.",
-    "condition": "quest_active:w1_mq03,milestone_not_set:ms_w1_guardbreak_trained",
+    "text": "I said Loading Dock. Riot shield trainer. Sector 4 doesn't open until the training log says you can break a guard.",
+    "condition": "quest_active:w1_mq03,milestone:ms_w1_sq03_started,milestone_not_set:ms_w1_guardbreak_trained",
     "next": "bogs_w1_mq03_guardbreak_gate_2"
   },
   {
     "id": "bogs_w1_mq03_guardbreak_gate_2",
     "speaker": "Nova",
-    "text": "Shield training?",
+    "text": "And if I don't?",
     "next": "bogs_w1_mq03_guardbreak_gate_3"
   },
   {
     "id": "bogs_w1_mq03_guardbreak_gate_3",
     "speaker": "Foreman Boggs",
-    "text": "Loading Dock. Riot shield trainer. Bring the loader online, move my cargo, learn Hydraulic Kick, then go play hero in Sector 4.",
-    "trigger": "start_quest:w1_sq03,track_quest:w1_sq03,set_quest_task_done:w1_sq03:talk_to_bogs,set_milestone:ms_w1_sq03_started"
+    "text": "Then the elevator keeps saying no, and I let the override clock eat you. Move.",
+    "trigger": "track_quest:w1_sq03"
   },
   {
     "id": "bogs_w1_mq03_intro_1",
     "speaker": "Foreman Boggs",
-    "text": "You. Cutter girl. Zeke's override says you're usable again, and his report says your breaker surge started this mess.",
-    "condition": "quest_active:w1_mq03,milestone_not_set:ms_w1_mq03_bogs_talked",
+    "text": "Training's logged. Good. Now we talk Sector 4.",
+    "condition": "quest_active:w1_mq03,milestone:ms_w1_guardbreak_trained,milestone_not_set:ms_w1_mq03_bogs_talked",
     "next": "bogs_w1_mq03_intro_2"
   },
   {
     "id": "bogs_w1_mq03_intro_2",
     "speaker": "Nova",
-    "text": "It was grid instability, Boggs. Zeke filed it that way.",
+    "text": "You said the Deep Elevator opens after the shield training.",
     "next": "bogs_w1_mq03_intro_3"
   },
   {
     "id": "bogs_w1_mq03_intro_3",
     "speaker": "Foreman Boggs",
-    "text": "Then the grid can pay you back. The interference is overloading the relays in Sector 4, and I need someone expendable enough to send first. Congratulations.",
+    "text": "It does. The interference is overloading the relays in Sector 4, and your temporary clearance makes you expendable enough to send first. Congratulations.",
     "next": "bogs_w1_mq03_intro_4"
   },
   {
@@ -783,8 +808,14 @@
   {
     "id": "zeke_w2_crash_repeat_2",
     "speaker": "Zeke",
-    "text": "The stream of glow-water seems to flow deeper into the concrete structures. Follow it, Nova. I'll catch my breath and catch up.",
-    "condition": "quest_active:w2_mq01,quest_task_done:w2_mq01:check_on_zeke,quest_task_done:w2_mq01:examine_pod"
+    "text": "That kit from the pod should keep me upright. Patch me up, then we follow the glow-water together.",
+    "condition": "quest_active:w2_mq01,quest_task_done:w2_mq01:check_on_zeke,quest_task_done:w2_mq01:examine_pod,quest_task_not_done:w2_mq01:stabilize_zeke"
+  },
+  {
+    "id": "zeke_w2_crash_repeat_3",
+    "speaker": "Zeke",
+    "text": "The stream of glow-water seems to flow deeper into the concrete structures. Let's move before the wreck draws company.",
+    "condition": "quest_active:w2_mq01,quest_task_done:w2_mq01:stabilize_zeke,quest_task_not_done:w2_mq01:follow_stream"
   },
   {
     "id": "zeke_w2_mq02_intro_1",
@@ -911,7 +942,7 @@
   {
     "id": "orion_w2_sq03_intro_1",
     "speaker": "Orion",
-    "text": "Nova, Tideglass Beach is nearby. The wet shore has mineral deposits that make a hot, stabilizing meal. Let's gather 3 tideglass skewers.",
+    "text": "Nova, Tideglass Beach is nearby. The wet shore grows herbs that can bind Source residue into something useful. Gather the clean materials and I'll show you how to make resin that will not poison your hands.",
     "condition": "quest_not_started:w2_sq03,quest_completed:w2_mq03",
     "options": [
       {
@@ -969,7 +1000,7 @@
   {
     "id": "ghost_w2_sq05_intro_1",
     "speaker": "Gh0st",
-    "text": "The transmitter is beyond an active vent security grid. Hack its timing, pass the guard systems without an alert, then retrieve the hardware.",
+    "text": "The transmitter is beyond an active vent security grid. Hack its timing, pass the guard systems without an alert, then retrieve the core. You can build something faster from its timing crystal.",
     "condition": "quest_not_started:w2_sq05,quest_completed:w2_mq04",
     "options": [
       {
@@ -1410,7 +1441,7 @@
   {
     "id": "orion_w2_vine_gate",
     "speaker": "Orion",
-    "text": "Those razor-vines carry toxic spores. A heated edge could cauterize them as it cuts. The lost patrol transceiver may lead us to one.",
+    "text": "Those razor-vines carry toxic spores. A heated edge could cauterize them as it cuts. The lost patrol transceiver may lead us to a cutter you can repair.",
     "condition": "quest_active:w2_sq02,quest_task_not_done:w2_sq02:recover_transceiver"
   },
   {

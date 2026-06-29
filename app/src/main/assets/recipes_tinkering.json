@@ -190,15 +190,36 @@
     "success_message": "You synthesize a jar of Source Resin."
   },
   {
+    "id": "repair_thermal_cutter",
+    "name": "Thermal Cutter",
+    "category": "repair",
+    "method": "repair",
+    "base": "damaged_thermal_cutter",
+    "components": [
+      "wiring_bundle",
+      "scrap_metal"
+    ],
+    "ingredients": {
+      "damaged_thermal_cutter": 1,
+      "wiring_bundle": 1,
+      "scrap_metal": 1
+    },
+    "result": "thermal_cutter",
+    "description": "Rebuild the Dominion cutter head into a controlled tool for cauterizing razor-vines.",
+    "success_message": "You repair the Thermal Cutter. Its edge glows hot enough to seal razor-vines as it cuts."
+  },
+  {
     "id": "mod_rapid_capacitor",
     "name": "Rapid Capacitor Mod",
     "category": "gear",
     "method": "mod",
-    "base": "scrap_metal",
+    "base": "dominion_transmitter_core",
     "components": [
+      "scrap_metal",
       "wiring_bundle"
     ],
     "ingredients": {
+      "dominion_transmitter_core": 1,
       "scrap_metal": 1,
       "wiring_bundle": 1
     },

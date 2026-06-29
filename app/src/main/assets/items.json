@@ -1197,6 +1197,60 @@
     }
   },
   {
+    "id": "schematic_thermal_cutter",
+    "name": "Schematic: Thermal Cutter Repair",
+    "description": "Dominion field notes for rebuilding a vine-cauterizing thermal cutter.",
+    "type": "schematic",
+    "value": 180,
+    "buy_price": 360,
+    "rarity": "uncommon",
+    "effect": {
+      "learn_schematic": "repair_thermal_cutter"
+    }
+  },
+  {
+    "id": "schematic_source_resin",
+    "name": "Schematic: Source Resin",
+    "description": "Orion's notes for stabilizing jungle organics into Source-insulating resin.",
+    "type": "schematic",
+    "value": 220,
+    "buy_price": 440,
+    "rarity": "rare",
+    "effect": {
+      "learn_schematic": "mod_source_resin"
+    }
+  },
+  {
+    "id": "schematic_rapid_capacitor",
+    "name": "Schematic: Rapid Capacitor",
+    "description": "Gh0st's clipped schematic for turning Dominion transmitter salvage into an overclocked capacitor.",
+    "type": "schematic",
+    "value": 220,
+    "buy_price": 440,
+    "rarity": "rare",
+    "effect": {
+      "learn_schematic": "mod_rapid_capacitor"
+    }
+  },
+  {
+    "id": "damaged_thermal_cutter",
+    "name": "Damaged Thermal Cutter",
+    "description": "A cracked Dominion cutter head. The heating coil still works if Nova can rebuild the handle.",
+    "type": "component",
+    "value": 0,
+    "rarity": "uncommon",
+    "unsellable": true
+  },
+  {
+    "id": "dominion_transmitter_core",
+    "name": "Dominion Transmitter Core",
+    "description": "A stolen transmitter core with a clean timing crystal inside.",
+    "type": "component",
+    "value": 0,
+    "rarity": "rare",
+    "unsellable": true
+  },
+  {
     "id": "mine_access_badge",
     "name": "Mine Access Badge",
     "aliases": [

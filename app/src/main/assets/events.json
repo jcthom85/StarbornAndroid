@@ -1277,6 +1277,45 @@
     ]
   },
   {
+    "id": "w1_sq03_main_path_return_to_boggs",
+    "description": "Returns tracking to The Echo after mandatory shield training on the main path.",
+    "trigger": {
+      "type": "encounter_victory",
+      "room": "workshop_dock",
+      "enemies": [
+        "acoustic_bulwark"
+      ]
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w1_mq03"
+      },
+      {
+        "type": "quest_completed",
+        "quest_id": "w1_sq03"
+      },
+      {
+        "type": "milestone",
+        "milestone": "ms_w1_guardbreak_trained"
+      },
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w1_mq03_bogs_talked"
+      }
+    ],
+    "actions": [
+      {
+        "type": "track_quest",
+        "quest_id": "w1_mq03"
+      },
+      {
+        "type": "show_message",
+        "message": "Shield training complete. Report back to Boggs for Sector 4 authorization."
+      }
+    ]
+  },
+  {
     "id": "w1_sq02_blockage_before_airflow",
     "description": "Explains why the toxic blockage cannot be cleared before airflow is rerouted.",
     "trigger": {
@@ -1906,7 +1945,7 @@
   },
   {
     "id": "w1_mq03_logistics_commitment_warning",
-    "description": "Warns before Logistics advances the main story away from Homestead errands.",
+    "description": "Frames the Logistics review when Nova enters with Zeke's temporary override.",
     "trigger": {
       "type": "enter_room",
       "room": "admin_lobby"
@@ -1925,7 +1964,7 @@
     "actions": [
       {
         "type": "show_message",
-        "message": "Entering Logistics advances the main story. Finish Homestead errands first if you want to complete them now."
+        "message": "Zeke's override opens the Logistics gate, but the badge display flashes FOREMAN REVIEW REQUIRED."
       }
     ]
   },
@@ -3009,6 +3048,11 @@
       },
       {
         "type": "give_item",
+        "item_id": "ration_pack",
+        "quantity": 1
+      },
+      {
+        "type": "give_item",
         "item_id": "wooden_rod",
         "quantity": 1
       },
@@ -3024,6 +3068,50 @@
       {
         "type": "show_message",
         "message": "You open the steaming access panel of the pod core. Inside, the Chime is intact, humming in a quiet, stable resonance. You recover it along with an emergency medkit and compact field fishing kit from the crash reserves."
+      }
+    ]
+  },
+  {
+    "id": "w2_mq01_stabilize_zeke",
+    "description": "Use the emergency medkit from the pod to stabilize Zeke before leaving the crash site.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_mq01_stabilize_zeke"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_mq01"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w2_mq01",
+        "task_id": "examine_pod"
+      },
+      {
+        "type": "item",
+        "item_id": "medkit"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w2_mq01",
+        "task_id": "stabilize_zeke"
+      }
+    ],
+    "actions": [
+      {
+        "type": "take_item",
+        "item_id": "medkit",
+        "quantity": 1
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w2_mq01",
+        "task_id": "stabilize_zeke"
+      },
+      {
+        "type": "show_message",
+        "message": "You seal Zeke's worst cuts and steady his breathing. He can move again, but the crash site is no place to stay."
       }
     ]
   },
@@ -3048,6 +3136,11 @@
         "type": "quest_task_done",
         "quest_id": "w2_mq01",
         "task_id": "examine_pod"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w2_mq01",
+        "task_id": "stabilize_zeke"
       }
     ],
     "actions": [
@@ -3069,8 +3162,28 @@
         "quest_id": "w2_mq02"
       },
       {
+        "type": "track_quest",
+        "quest_id": "w2_mq02"
+      },
+      {
+        "type": "reveal_node",
+        "node_id": "tideglass_beach"
+      },
+      {
+        "type": "unlock_node",
+        "node_id": "tideglass_beach"
+      },
+      {
+        "type": "reveal_node",
+        "node_id": "razor_vine_path"
+      },
+      {
+        "type": "unlock_node",
+        "node_id": "razor_vine_path"
+      },
+      {
         "type": "show_message",
-        "message": "Quest Complete: A Strange Coast\n\nYou trace the glowing water to a wider path leading deeper into the ancient ruins. The resonance of the planet surface hums in your Echo marks."
+        "message": "Quest Complete: A Strange Coast\n\nWith Zeke stable and the Chime recovered, the wreck stops being shelter and starts being a signal flare. The glow-water carries a clean pulse east, deep into Sector 9."
       }
     ]
   },
@@ -3101,8 +3214,24 @@
         "task_id": "clear_canopy_path"
       },
       {
+        "type": "reveal_node",
+        "node_id": "canopy_ridge"
+      },
+      {
+        "type": "unlock_node",
+        "node_id": "canopy_ridge"
+      },
+      {
+        "type": "reveal_node",
+        "node_id": "temple_gate"
+      },
+      {
+        "type": "unlock_node",
+        "node_id": "temple_gate"
+      },
+      {
         "type": "show_message",
-        "message": "The echo-borer is defeated, clearing the way ahead."
+        "message": "The canopy goes quiet after the echo-borer falls. Zeke catches the distress pulse again; it is coming from a stone gate beyond the ridge."
       }
     ]
   },
@@ -3129,6 +3258,10 @@
         "type": "set_quest_task_done",
         "quest_id": "w2_mq02",
         "task_id": "locate_temple_gate"
+      },
+      {
+        "type": "show_message",
+        "message": "The Temple Gate answers the Chime before Nova even lifts it. Whatever sent the signal knew this key would survive the crash."
       }
     ]
   },
@@ -3157,12 +3290,25 @@
     ],
     "actions": [
       {
+        "type": "set_quest_task_done",
+        "quest_id": "w2_mq02",
+        "task_id": "insert_chime"
+      },
+      {
         "type": "complete_quest",
         "quest_id": "w2_mq02"
       },
       {
         "type": "set_milestone",
         "milestone": "ms_w2_mq02_complete"
+      },
+      {
+        "type": "reveal_node",
+        "node_id": "hall_of_echoes"
+      },
+      {
+        "type": "unlock_node",
+        "node_id": "hall_of_echoes"
       },
       {
         "type": "warp",
@@ -3178,7 +3324,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: The Signal\n\nYou place the Chime into the gate's pedestal. The stone resonators slide open, pulling you into the ancient Hall of Echoes."
+        "message": "Quest Complete: The Signal\n\nNova slots the Chime into the gate. The distress pulse becomes a voice-shaped chord, and the stone opens onto a facility built to preserve someone from the old world."
       }
     ]
   },
@@ -3208,7 +3354,7 @@
       },
       {
         "type": "show_message",
-        "message": "You inspect the resonance murals. They map out the harmonic alignments of the facility."
+        "message": "The murals are not decoration. They show a stasis system built around memory, identity, and a tuner named Orion."
       }
     ]
   },
@@ -3235,6 +3381,10 @@
         "type": "set_quest_task_done",
         "quest_id": "w2_mq03",
         "task_id": "find_stasis_chamber"
+      },
+      {
+        "type": "show_message",
+        "message": "The stasis pod bears Orion's name. Its ring array is still protecting him, but the safeties are locked in a chord Zeke can help decode."
       }
     ]
   },
@@ -3263,6 +3413,11 @@
         "task_id": "align_stasis_rings"
       },
       {
+        "type": "set_quest_task_done",
+        "quest_id": "w2_mq03",
+        "task_id": "talk_to_orion"
+      },
+      {
         "type": "add_party_member",
         "item_id": "orion"
       },
@@ -3284,7 +3439,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Sleeping Giant\n\nThe pod pressure releases with a deep chord. Orion steps out, taking in a breath of the resonant air. Orion has joined your party!"
+        "message": "Quest Complete: Sleeping Giant\n\nThe pod opens around a man who remembers Sector 9 before Dominion buried it. Orion joins because the signal was his, and because the Astra still knows the way through the shield."
       }
     ]
   },
@@ -3311,6 +3466,10 @@
         "type": "set_quest_task_done",
         "quest_id": "w2_mq04",
         "task_id": "reach_canopy_ridge"
+      },
+      {
+        "type": "show_message",
+        "message": "The ridge gives Nova a view of the shield and the first clean angle on the stalker. Gh0st is close enough to talk, or to shoot."
       }
     ]
   },
@@ -3334,9 +3493,8 @@
     ],
     "actions": [
       {
-        "type": "set_quest_task_done",
-        "quest_id": "w2_mq04",
-        "task_id": "confront_stalker"
+        "type": "start_dialogue",
+        "npc": "Gh0st"
       }
     ]
   },
@@ -3393,7 +3551,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: The Hunter\n\nThe mutated beast dissolves into Source dust. Gh0st lowers his rifle, acknowledging the Warden's harmonic key. Gh0st has joined your party!"
+        "message": "Quest Complete: The Hunter\n\nThe beast's death breaks Gh0st's clean order set. He lowers the rifle, not out of trust, but because Dominion's command no longer matches what he has seen. Gh0st has joined your party."
       }
     ]
   },
@@ -3487,7 +3645,7 @@
       },
       {
         "type": "show_message",
-        "message": "The Astra console is dark. Zeke notes that the ship's power lines are completely dead—you'll need power conduits from the pod wreckage to jump-start them. Talk to Zeke to begin salvage."
+        "message": "The Astra console is dark. Zeke notes that the ship's power lines are completely dead. You'll need power conduits from the pod wreckage to jump-start them."
       }
     ]
   },
@@ -3522,7 +3680,7 @@
       },
       {
         "type": "show_message",
-        "message": "You recover the power conduits from the pod core wreckage."
+        "message": "You recover the power conduits from the pod wreckage. The same crash that stranded you is going to help the Astra leave."
       }
     ]
   },
@@ -3607,8 +3765,12 @@
         "quest_id": "w3_mq11"
       },
       {
+        "type": "track_quest",
+        "quest_id": "w3_mq11"
+      },
+      {
         "type": "show_message",
-        "message": "The Astra climbs rapidly, colliding with the Planetary Shield. Sound waves ripple and warp as you bypass the curtain, crash-landing into the Spire's sewage pipelines."
+        "message": "The Astra climbs through the shield's timed corridor until Dominion interference snaps the window shut. The ship punches through half-clean and crash-lands beneath the Spire."
       }
     ]
   },
@@ -3823,6 +3985,56 @@
       },
       {
         "type": "give_item",
+        "item_id": "herb",
+        "quantity": 1
+      },
+      {
+        "type": "give_item",
+        "item_id": "beast_meat",
+        "quantity": 1
+      },
+      {
+        "type": "give_item",
+        "item_id": "schematic_source_resin",
+        "quantity": 1
+      },
+      {
+        "type": "show_message",
+        "message": "You harvest clean tideglass herbs and meat from the shore. Orion marks the proportions for Source Resin; the useful part is making it hold together."
+      }
+    ]
+  },
+  {
+    "id": "w2_sq03_craft_source_resin",
+    "trigger": {
+      "type": "player_action",
+      "action": "tinkering_craft",
+      "item_id": "source_resin"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_sq03"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w2_sq03",
+        "task_id": "collect_food"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w2_sq03",
+        "task_id": "craft_source_resin"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w2_sq03",
+        "task_id": "craft_source_resin"
+      },
+      {
+        "type": "give_item",
         "item_id": "painkillers",
         "quantity": 2
       },
@@ -3832,7 +4044,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Tideglass Day\\n\\nYou harvest the glowing tideglass skewers. Orion helps prepare them over a portable heat cell. The resonant warmth stabilizes your neural erosion."
+        "message": "Quest Complete: Tideglass Day\n\nThe finished Source Resin holds a steady warmth. Orion was right: this place can feed you if you learn how to listen to it."
       }
     ]
   },
@@ -4122,6 +4334,22 @@
       {
         "type": "show_message",
         "message": "Quest Complete: The Plan\n\nYou lay the hacked files on the table. The blueprints are complete. You are ready to infiltrate the Upper City."
+      }
+    ]
+  },
+  {
+    "id": "w3_mq12_use_elevator",
+    "description": "Explains why the Great Elevator cannot be used before the Lower City heist plan is complete.",
+    "repeatable": true,
+    "trigger": {
+      "type": "player_action",
+      "action": "w3_mq12_use_elevator"
+    },
+    "conditions": [],
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "The Great Elevator rejects every surface credential you have. Jax's schedules, Gh0st's database pull, and Zeke's blueprints all need to meet at the planning table before Nova can risk a climb."
       }
     ]
   },
@@ -8396,17 +8624,67 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Lost Patrol\n\nThe transceiver yields corrosive calibrations. Its Thermal Cutter can burn through Sector 9 razor-vines."
+        "message": "The patrol cache holds a cracked Thermal Cutter, a repair schematic, and enough salvage to rebuild the handle. Nova will have to make it usable before it can cut razor-vines."
       },
       {
         "type": "give_item",
-        "item_id": "thermal_cutter",
+        "item_id": "damaged_thermal_cutter",
+        "quantity": 1
+      },
+      {
+        "type": "give_item",
+        "item_id": "schematic_thermal_cutter",
+        "quantity": 1
+      },
+      {
+        "type": "give_item",
+        "item_id": "wiring_bundle",
+        "quantity": 1
+      },
+      {
+        "type": "give_item",
+        "item_id": "scrap_metal",
         "quantity": 1
       },
       {
         "type": "give_item",
         "item_id": "mod_corrosive_rounds",
         "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "w2_sq02_repair_thermal_cutter",
+    "trigger": {
+      "type": "player_action",
+      "action": "tinkering_craft",
+      "item_id": "thermal_cutter"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_sq02"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w2_sq02",
+        "task_id": "recover_transceiver"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w2_sq02",
+        "task_id": "repair_thermal_cutter"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w2_sq02",
+        "task_id": "repair_thermal_cutter"
+      },
+      {
+        "type": "show_message",
+        "message": "Quest Complete: Lost Patrol\n\nNova rebuilds the Thermal Cutter from Dominion salvage. The heated edge can cauterize Sector 9 razor-vines before they burst."
       },
       {
         "type": "complete_quest",
@@ -8545,7 +8823,7 @@
       },
       {
         "type": "give_item",
-        "item_id": "source_resin",
+        "item_id": "focus_conduit",
         "quantity": 1
       },
       {
@@ -8652,16 +8930,176 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Stolen Tech\n\nBeyond the disabled grid, you recover the transmitter. Gh0st extracts a Rapid Capacitor."
+        "message": "Beyond the disabled grid, you recover the transmitter core. Gh0st strips the timing crystal and sends you a capacitor schematic terse enough to count as a threat."
       },
       {
         "type": "give_item",
-        "item_id": "rapid_capacitor",
+        "item_id": "dominion_transmitter_core",
         "quantity": 1
+      },
+      {
+        "type": "give_item",
+        "item_id": "schematic_rapid_capacitor",
+        "quantity": 1
+      },
+      {
+        "type": "give_item",
+        "item_id": "wiring_bundle",
+        "quantity": 1
+      },
+      {
+        "type": "give_item",
+        "item_id": "scrap_metal",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "w2_sq05_assemble_capacitor",
+    "trigger": {
+      "type": "player_action",
+      "action": "tinkering_craft",
+      "item_id": "rapid_capacitor"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_sq05"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w2_sq05",
+        "task_id": "recover_transmitter"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w2_sq05",
+        "task_id": "assemble_capacitor"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w2_sq05",
+        "task_id": "assemble_capacitor"
+      },
+      {
+        "type": "show_message",
+        "message": "Quest Complete: Stolen Tech\n\nNova assembles the Rapid Capacitor from stolen Dominion timing hardware. Gh0st approves by not correcting anything."
       },
       {
         "type": "complete_quest",
         "quest_id": "w2_sq05"
+      }
+    ]
+  },
+  {
+    "id": "w2_sq03_gather_relic",
+    "repeatable": true,
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_sq03_gather_relic"
+    },
+    "conditions": [],
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "The grotto crystals are inert. Orion's Source Resin comes from living tideglass materials, not a finished relic waiting on a pedestal."
+      }
+    ]
+  },
+  {
+    "id": "w2_sq04_tune_murals",
+    "repeatable": true,
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_sq04_tune_murals"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_sq04"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_dialogue",
+        "npc": "Orion"
+      }
+    ]
+  },
+  {
+    "id": "w2_sq04_collect_relic",
+    "repeatable": true,
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_sq04_collect_relic"
+    },
+    "conditions": [],
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "The reliquary pedestal is keyed to the facility chorus. It will not release anything until the mural chord is stable."
+      }
+    ]
+  },
+  {
+    "id": "w2_mq03_inspect_pod",
+    "repeatable": true,
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_mq03_inspect_pod"
+    },
+    "conditions": [],
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "The stasis pod is intact, but the ring alignment is locked behind a frequency puzzle. Zeke needs to read the broadcast before you touch it."
+      }
+    ]
+  },
+  {
+    "id": "w2_mq03_align_rings",
+    "repeatable": true,
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_mq03_align_rings"
+    },
+    "conditions": [],
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "The ring console rejects manual input. Talk to Zeke and use his frequency broadcast to align the rings."
+      }
+    ]
+  },
+  {
+    "id": "w2_mq05_overload_breakers",
+    "repeatable": true,
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_mq05_overload_breakers"
+    },
+    "conditions": [],
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "The breakers are locked behind the Source Gate's harmonic safety system. Orion needs to tune the resonator first."
+      }
+    ]
+  },
+  {
+    "id": "w2_mq05_inspect_resonator",
+    "repeatable": true,
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_mq05_inspect_resonator"
+    },
+    "conditions": [],
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "The acoustic lock howls in three clashing bands. Orion can hear the resolving chord better than the console can display it."
       }
     ]
   },
