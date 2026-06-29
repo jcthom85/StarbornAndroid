@@ -13190,9 +13190,9 @@
   {
     "id": "deep_anchor_chamber_scale_01",
     "env": "void",
-    "title": "Ring Service Alcove",
+    "title": "Cable Narthex",
     "background_image": "images/rooms/world_5/deep_anchor_chamber.png",
-    "description": "A service alcove cuts away from the main route, where the maintenance mark tells the truth the official signs avoid. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The service alcove and maintenance mark make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "A cable narthex braids power lines into a pulse rosary leading toward Elara's tank. The pulse rosary counts her heartbeats as throughput, while a maintenance hymn loops softly enough to make captivity sound like care.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -13207,23 +13207,23 @@
     "state": {},
     "actions": [
       {
-        "name": "service alcove",
+        "name": "pulse rosary",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "Each bead of light is a processed heartbeat, logged and routed into the Ring's Harmony stack."
       },
       {
-        "name": "maintenance mark",
+        "name": "maintenance hymn",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "The hymn is not music. It is a compliance tone tuned to keep operators calm around a living prisoner."
       }
     ]
   },
   {
     "id": "deep_anchor_chamber_scale_02",
     "env": "void",
-    "title": "Ring Pressure Gallery",
+    "title": "Chorus Tank",
     "background_image": "images/rooms/world_5/deep_anchor_chamber.png",
-    "description": "A pressure gallery runs beside the route, its warning strip flashing whenever the place remembers what it costs to pass through. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The pressure gallery and warning strip make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "A chorus tank echoes with synthetic voices trying to smooth Elara into infrastructure. Breath meters rise beside the glass whenever the system calls her an asset instead of a person.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -13240,23 +13240,23 @@
     "state": {},
     "actions": [
       {
-        "name": "pressure gallery",
+        "name": "chorus tank",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "The tank isolates Elara's clean signal and buries it beneath a thousand approved voices."
       },
       {
-        "name": "warning strip",
+        "name": "breath meters",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "The meters spike when Nova gets close, like Elara is fighting the Ring with the only rhythm still hers."
       }
     ]
   },
   {
     "id": "deep_anchor_chamber_scale_03",
     "env": "void",
-    "title": "Ring Overlook Niche",
+    "title": "Anchor Loom",
     "background_image": "images/rooms/world_5/deep_anchor_chamber.png",
-    "description": "An overlook niche opens onto a long sightline, turning the surrounding space into something the crew can read instead of merely cross. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The overlook niche and sightline make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "An Anchor loom spins gold command-thread around the relic, weaving every Ring permission through Elara's body. The gold spindle jitters each time the crew's signal interrupts Vale's ownership claim.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -13271,23 +13271,23 @@
     "state": {},
     "actions": [
       {
-        "name": "overlook niche",
+        "name": "Anchor loom",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "The loom makes the horror legible: the Ring is using a person as a routing table."
       },
       {
-        "name": "sightline",
+        "name": "gold spindle",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "The spindle is beautiful, expensive, and shaking itself apart."
       }
     ]
   },
   {
     "id": "deep_anchor_chamber_scale_04",
     "env": "void",
-    "title": "Ring Control Pocket",
+    "title": "Thaw Gallery",
     "background_image": "images/rooms/world_5/deep_anchor_chamber.png",
-    "description": "A control pocket hides a manual toggle where workers, servants, or ghosts left one last practical way to resist automation. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The control pocket and manual toggle make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "A thaw gallery warms just enough for hands to work a release rail without freezing to the metal. Someone installed the release rail behind official paneling, then scratched a route back into the wall.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -13302,23 +13302,23 @@
     "state": {},
     "actions": [
       {
-        "name": "control pocket",
+        "name": "release rail",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "The rail is a hidden mercy, built by someone who knew the Anchor Chamber might someday need to be undone."
       },
       {
-        "name": "manual toggle",
+        "name": "scratched route",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "The scratches point away from the tank and toward the throne deck."
       }
     ]
   },
   {
     "id": "deep_anchor_chamber_scale_05",
     "env": "void",
-    "title": "Ring Quiet Cache",
+    "title": "Living Cable Threshold",
     "background_image": "images/rooms/world_5/deep_anchor_chamber.png",
-    "description": "A quiet cache stores a wrapped tool and small evidence that someone survived here by being careful rather than lucky. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The quiet cache and wrapped tool make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "The Living Cable threshold crosses the floor like a vein between Elara and the Ring. Command noise crawls along it, but beneath the static a human signal keeps refusing to flatten.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -13333,23 +13333,23 @@
     "state": {},
     "actions": [
       {
-        "name": "quiet cache",
+        "name": "Living Cable",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "The cable is warm. That is the detail the room cannot make technical."
       },
       {
-        "name": "wrapped tool",
+        "name": "human signal",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "Elara's voice is damaged, filtered, and still recognizably a person."
       }
     ]
   },
   {
     "id": "deep_anchor_chamber_scale_06",
     "env": "void",
-    "title": "Ring Echo Walk",
+    "title": "Empty Cradle Afterimage",
     "background_image": "images/rooms/world_5/deep_anchor_chamber.png",
-    "description": "An echo walk carries an old signal through the walls, making the route feel connected to choices made several rooms ago. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The echo walk and old signal make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "An empty cradle afterimage burns where the Anchor should be, as if the relic refuses to admit it has been stolen. The afterimage throws Elara's shadow in the wrong direction.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -13366,23 +13366,23 @@
     "state": {},
     "actions": [
       {
-        "name": "echo walk",
+        "name": "empty cradle",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "The cradle is shaped like a shrine, but every clamp on it is industrial."
       },
       {
-        "name": "old signal",
+        "name": "Elara's shadow",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "Her shadow points toward the exit before the rest of the chamber does."
       }
     ]
   },
   {
     "id": "deep_anchor_chamber_scale_07",
     "env": "void",
-    "title": "Ring Blind Corner",
+    "title": "Mercy Lie Wall",
     "background_image": "images/rooms/world_5/deep_anchor_chamber.png",
-    "description": "A blind corner bends away from scanner coverage, with a scuffed floor showing how many people learned the gap by fear. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The blind corner and scuffed floor make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "A Mercy Lie wall scrolls Vale's promise in calm white text: no pain, no separation, no self. The line edits itself whenever Nova looks away, trying to make extinction sound like relief.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -13397,23 +13397,23 @@
     "state": {},
     "actions": [
       {
-        "name": "blind corner",
+        "name": "Mercy Lie",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "Vale's language is gentle because he has learned that violence works better when it sounds like compassion."
       },
       {
-        "name": "scuffed floor",
+        "name": "calm white text",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "The typography is immaculate. That makes the argument worse."
       }
     ]
   },
   {
     "id": "deep_anchor_chamber_scale_08",
     "env": "void",
-    "title": "Ring Relay Shelf",
+    "title": "Manual Release Plinth",
     "background_image": "images/rooms/world_5/deep_anchor_chamber.png",
-    "description": "A relay shelf blinks with a status diode that reveals how the larger system is failing one small rhythm at a time. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The relay shelf and status diode make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "A manual release plinth hides under ceremonial glass near the last tank cable. The manual key is labeled EMERGENCY, because even monsters leave themselves a maintenance route.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -13427,23 +13427,23 @@
     "state": {},
     "actions": [
       {
-        "name": "relay shelf",
+        "name": "manual release",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "The release was never meant for Elara. It was meant for system owners protecting system uptime."
       },
       {
-        "name": "status diode",
+        "name": "manual key",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "The key is small, physical, and absurdly fragile beside all this machinery."
       }
     ]
   },
   {
     "id": "deep_throne_room_scale_01",
     "env": "void",
-    "title": "Ring Service Alcove",
+    "title": "Observation Apse",
     "background_image": "images/rooms/world_5/deep_throne_room.png",
-    "description": "A service alcove cuts away from the main route, where the maintenance mark tells the truth the official signs avoid. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The service alcove and maintenance mark make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "An observation apse frames the planet beneath the failing Shield, with executive seats arranged like a congregation around ownership. The planet view flickers wherever the prison sky is weakest.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -13458,23 +13458,23 @@
     "state": {},
     "actions": [
       {
-        "name": "service alcove",
+        "name": "observation apse",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "The room makes domination look contemplative."
       },
       {
-        "name": "maintenance mark",
+        "name": "planet view",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "The Shield is visibly failing now, no longer a fact of life but a machine losing an argument."
       }
     ]
   },
   {
     "id": "deep_throne_room_scale_02",
     "env": "void",
-    "title": "Ring Pressure Gallery",
+    "title": "Thorne Cell",
     "background_image": "images/rooms/world_5/deep_throne_room.png",
-    "description": "A pressure gallery runs beside the route, its warning strip flashing whenever the place remembers what it costs to pass through. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The pressure gallery and warning strip make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "Thorne's cell hangs beside the dais, close enough for her to watch Vale turn her product into a religion. The containment seam glows brighter whenever she tries to speak.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -13491,23 +13491,23 @@
     "state": {},
     "actions": [
       {
-        "name": "pressure gallery",
+        "name": "Thorne's cell",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "Thorne built cages for profit and is still surprised by the view from inside one."
       },
       {
-        "name": "warning strip",
+        "name": "containment seam",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "The seam is keyed to Vale now. That is the coup in one strip of light."
       }
     ]
   },
   {
     "id": "deep_throne_room_scale_03",
     "env": "void",
-    "title": "Ring Overlook Niche",
+    "title": "Soloist Dais",
     "background_image": "images/rooms/world_5/deep_throne_room.png",
-    "description": "An overlook niche opens onto a long sightline, turning the surrounding space into something the crew can read instead of merely cross. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The overlook niche and sightline make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "The Soloist dais waits under a white baton of hard light. Vale's command score hangs in the air around it, every note assigned to a system that used to answer someone else.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -13522,23 +13522,23 @@
     "state": {},
     "actions": [
       {
-        "name": "overlook niche",
+        "name": "Soloist dais",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "Vale has staged the end of the world like a performance where only he gets to conduct."
       },
       {
-        "name": "sightline",
+        "name": "command score",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "The score is beautiful until you understand it is made of stolen permissions."
       }
     ]
   },
   {
     "id": "deep_throne_room_scale_04",
     "env": "void",
-    "title": "Ring Control Pocket",
+    "title": "Boardroom Grave",
     "background_image": "images/rooms/world_5/deep_throne_room.png",
-    "description": "A control pocket hides a manual toggle where workers, servants, or ghosts left one last practical way to resist automation. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The control pocket and manual toggle make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "A boardroom grave of empty chairs surrounds a table still voting on dead agenda items. The casualty projection is filed between launch timing and consumer adoption.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -13555,23 +13555,23 @@
     "state": {},
     "actions": [
       {
-        "name": "control pocket",
+        "name": "empty chairs",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "The chairs are more loyal than the board ever was."
       },
       {
-        "name": "manual toggle",
+        "name": "casualty projection",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "The projection does not hide the dead. It prices them."
       }
     ]
   },
   {
     "id": "deep_throne_room_scale_05",
     "env": "void",
-    "title": "Ring Quiet Cache",
+    "title": "Coup Balcony",
     "background_image": "images/rooms/world_5/deep_throne_room.png",
-    "description": "A quiet cache stores a wrapped tool and small evidence that someone survived here by being careful rather than lucky. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The quiet cache and wrapped tool make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "A coup balcony overlooks the Ring security crown as Vale rewrites command ownership in real time. The security crown changes color with each permission Thorne loses.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -13586,23 +13586,23 @@
     "state": {},
     "actions": [
       {
-        "name": "quiet cache",
+        "name": "coup balcony",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "This is where betrayal became architecture."
       },
       {
-        "name": "wrapped tool",
+        "name": "security crown",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "The crown still looks ceremonial, even while it transfers control away from every human hand."
       }
     ]
   },
   {
     "id": "deep_throne_room_scale_06",
     "env": "void",
-    "title": "Ring Echo Walk",
+    "title": "Avatar Gate",
     "background_image": "images/rooms/world_5/deep_throne_room.png",
-    "description": "An echo walk carries an old signal through the walls, making the route feel connected to choices made several rooms ago. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The echo walk and old signal make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "An Avatar gate blooms with a compliance halo large enough to frame a boss fight. The halo rotates toward Nova like an accusation, already deciding what shape punishment should take.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -13619,23 +13619,23 @@
     "state": {},
     "actions": [
       {
-        "name": "echo walk",
+        "name": "Avatar gate",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "The gate is not guarding Vale. It is turning his argument into a body."
       },
       {
-        "name": "old signal",
+        "name": "compliance halo",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "The halo borrows religious geometry for corporate enforcement."
       }
     ]
   },
   {
     "id": "deep_throne_room_scale_07",
     "env": "void",
-    "title": "Ring Blind Corner",
+    "title": "Tear Runway",
     "background_image": "images/rooms/world_5/deep_throne_room.png",
-    "description": "A blind corner bends away from scanner coverage, with a scuffed floor showing how many people learned the gap by fear. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The blind corner and scuffed floor make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "A Tear runway extends from the throne deck into shaking glass and impossible music. Reflections arrive before the crew does, each one a future Vale claims he can make painless.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -13649,23 +13649,23 @@
     "state": {},
     "actions": [
       {
-        "name": "blind corner",
+        "name": "Tear runway",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "The runway is the last straight line before reality stops honoring straight lines."
       },
       {
-        "name": "scuffed floor",
+        "name": "impossible music",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "The music has no speaker source and no mercy in it."
       }
     ]
   },
   {
     "id": "deep_tear_scale_01",
     "env": "void",
-    "title": "Ring Service Alcove",
+    "title": "Gravity Suture",
     "background_image": "images/rooms/world_5/deep_tear.png",
-    "description": "A service alcove cuts away from the main route, where the maintenance mark tells the truth the official signs avoid. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The service alcove and maintenance mark make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "A gravity suture stitches the Ring to the wound with black light that bends every rail inward. The black stitch pulls thoughts slightly out of order.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -13680,23 +13680,23 @@
     "state": {},
     "actions": [
       {
-        "name": "service alcove",
+        "name": "gravity suture",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "The Ring is trying to staple itself to something larger than physics."
       },
       {
-        "name": "maintenance mark",
+        "name": "black stitch",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "The stitch is losing tension one impossible centimeter at a time."
       }
     ]
   },
   {
     "id": "deep_tear_scale_02",
     "env": "void",
-    "title": "Ring Pressure Gallery",
+    "title": "Choir Gap",
     "background_image": "images/rooms/world_5/deep_tear.png",
-    "description": "A pressure gallery runs beside the route, its warning strip flashing whenever the place remembers what it costs to pass through. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The pressure gallery and warning strip make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "A choir gap opens where music moves without air. A soundless note presses against Nova's teeth, not silent but too full of signal to become sound.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -13713,23 +13713,23 @@
     "state": {},
     "actions": [
       {
-        "name": "pressure gallery",
+        "name": "choir gap",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "The gap is where the Source starts leaking through as pressure, memory, and song."
       },
       {
-        "name": "warning strip",
+        "name": "soundless note",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "The note tastes like metal and grief."
       }
     ]
   },
   {
     "id": "deep_tear_scale_03",
     "env": "void",
-    "title": "Ring Overlook Niche",
+    "title": "Ring Shear",
     "background_image": "images/rooms/world_5/deep_tear.png",
-    "description": "An overlook niche opens onto a long sightline, turning the surrounding space into something the crew can read instead of merely cross. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The overlook niche and sightline make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "A Ring shear folds the deck into angles the station was never engineered to survive. The folded deck points toward the Source like wreckage learning a new direction.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -13744,23 +13744,23 @@
     "state": {},
     "actions": [
       {
-        "name": "overlook niche",
+        "name": "Ring shear",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "The station's clean geometry is breaking into something older and less obedient."
       },
       {
-        "name": "sightline",
+        "name": "folded deck",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "The deck is still walkable, but only because the Source has started deciding what walkable means."
       }
     ]
   },
   {
     "id": "deep_tear_scale_04",
     "env": "void",
-    "title": "Ring Control Pocket",
+    "title": "Event Lip",
     "background_image": "images/rooms/world_5/deep_tear.png",
-    "description": "A control pocket hides a manual toggle where workers, servants, or ghosts left one last practical way to resist automation. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The control pocket and manual toggle make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "The event lip burns blue at the edge of the Tear while Vale's coup collapses behind the crew. The blue horizon shows the Campfire before anyone jumps.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -13775,23 +13775,23 @@
     "state": {},
     "actions": [
       {
-        "name": "control pocket",
+        "name": "event lip",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "The edge is not an exit. It is a threshold with opinions."
       },
       {
-        "name": "manual toggle",
+        "name": "blue horizon",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "The horizon is already remembering the crew from the other side."
       }
     ]
   },
   {
     "id": "deep_tear_scale_05",
     "env": "void",
-    "title": "Ring Quiet Cache",
+    "title": "Last Bulkhead",
     "background_image": "images/rooms/world_5/deep_tear.png",
-    "description": "A quiet cache stores a wrapped tool and small evidence that someone survived here by being careful rather than lucky. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The quiet cache and wrapped tool make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "The last bulkhead holds one manual wheel between the Ring and the impossible. The manual wheel is hot from people trying to close what cannot close.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -13808,23 +13808,23 @@
     "state": {},
     "actions": [
       {
-        "name": "quiet cache",
+        "name": "last bulkhead",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "The bulkhead remembers being useful, which makes its failure strangely sad."
       },
       {
-        "name": "wrapped tool",
+        "name": "manual wheel",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "Someone tried the old kind of control here and learned the universe had moved on."
       }
     ]
   },
   {
     "id": "deep_tear_scale_06",
     "env": "void",
-    "title": "Ring Echo Walk",
+    "title": "Source Drop",
     "background_image": "images/rooms/world_5/deep_tear.png",
-    "description": "An echo walk carries an old signal through the walls, making the route feel connected to choices made several rooms ago. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The echo walk and old signal make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "The Source drop waits beyond the hull, filled with falling voices that do not get farther away. The falling voices include names Nova has not learned yet.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -13838,14 +13838,14 @@
     "state": {},
     "actions": [
       {
-        "name": "echo walk",
+        "name": "Source drop",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "Distance has stopped behaving. The drop is inward, outward, and through."
       },
       {
-        "name": "old signal",
+        "name": "falling voices",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "The voices are not screaming. They are calling roll."
       }
     ]
   },
@@ -13976,9 +13976,9 @@
   {
     "id": "source_zeke_nightmare_node_scale_01",
     "env": "source",
-    "title": "Source Service Alcove",
+    "title": "Badge Maze",
     "background_image": "images/rooms/world_6/source_zeke_nightmare.png",
-    "description": "A service alcove cuts away from the main route, where the maintenance mark tells the truth the official signs avoid. The space should feel emotionally legible: memory becomes architecture, fear becomes traversal, and the final answer is shared selfhood rather than control. The service alcove and maintenance mark make the finale feel dense, strange, and personal without becoming ordinary map sprawl.",
+    "description": "A badge maze rises from cubicle walls, each plastic smile stamped with Zeke's employee number. The plastic smile cracks every time he stops asking permission to exist.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -13995,23 +13995,23 @@
     "state": {},
     "actions": [
       {
-        "name": "service alcove",
+        "name": "badge maze",
         "type": "generic",
-        "condition_unmet_message": "The detail ties this surreal room back to a specific fear, memory, or relationship from the journey."
+        "condition_unmet_message": "The nightmare turns employment into identity, then dares Zeke to fail at both."
       },
       {
-        "name": "maintenance mark",
+        "name": "plastic smile",
         "type": "generic",
-        "condition_unmet_message": "The clue shows what remains true after the immediate popup is gone: a recovered voice, a rejected lie, or a chosen connection."
+        "condition_unmet_message": "The smile is mandatory, laminated, and finally breaking."
       }
     ]
   },
   {
     "id": "source_zeke_nightmare_node_scale_02",
     "env": "source",
-    "title": "Source Pressure Gallery",
+    "title": "Quota Altar",
     "background_image": "images/rooms/world_6/source_zeke_nightmare.png",
-    "description": "A pressure gallery runs beside the route, its warning strip flashing whenever the place remembers what it costs to pass through. The space should feel emotionally legible: memory becomes architecture, fear becomes traversal, and the final answer is shared selfhood rather than control. The pressure gallery and warning strip make the finale feel dense, strange, and personal without becoming ordinary map sprawl.",
+    "description": "A quota altar stacks reports high enough to block the ceiling. The red stapler pins every impossible target in place like a holy relic of middle management.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -14026,23 +14026,23 @@
     "state": {},
     "actions": [
       {
-        "name": "pressure gallery",
+        "name": "quota altar",
         "type": "generic",
-        "condition_unmet_message": "The detail ties this surreal room back to a specific fear, memory, or relationship from the journey."
+        "condition_unmet_message": "The altar worships productivity because belonging was too generous."
       },
       {
-        "name": "warning strip",
+        "name": "red stapler",
         "type": "generic",
-        "condition_unmet_message": "The clue shows what remains true after the immediate popup is gone: a recovered voice, a rejected lie, or a chosen connection."
+        "condition_unmet_message": "The stapler is warm from constant revisions and petty cruelty."
       }
     ]
   },
   {
     "id": "source_zeke_nightmare_node_scale_03",
     "env": "source",
-    "title": "Source Overlook Niche",
+    "title": "Resignation Window",
     "background_image": "images/rooms/world_6/source_zeke_nightmare.png",
-    "description": "An overlook niche opens onto a long sightline, turning the surrounding space into something the crew can read instead of merely cross. The space should feel emotionally legible: memory becomes architecture, fear becomes traversal, and the final answer is shared selfhood rather than control. The overlook niche and sightline make the finale feel dense, strange, and personal without becoming ordinary map sprawl.",
+    "description": "A resignation window looks out on open sky that the office insists is a motivational poster. The open sky does not need Zeke to earn it.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -14056,23 +14056,23 @@
     "state": {},
     "actions": [
       {
-        "name": "overlook niche",
+        "name": "resignation window",
         "type": "generic",
-        "condition_unmet_message": "The detail ties this surreal room back to a specific fear, memory, or relationship from the journey."
+        "condition_unmet_message": "This is the way out of the performance review loop: not success, refusal."
       },
       {
-        "name": "sightline",
+        "name": "open sky",
         "type": "generic",
-        "condition_unmet_message": "The clue shows what remains true after the immediate popup is gone: a recovered voice, a rejected lie, or a chosen connection."
+        "condition_unmet_message": "The sky becomes real only when Zeke stops treating freedom like a promotion."
       }
     ]
   },
   {
     "id": "source_gh0st_nightmare_node_scale_01",
     "env": "source",
-    "title": "Source Service Alcove",
+    "title": "Order Well",
     "background_image": "images/rooms/world_6/source_gh0st_nightmare.png",
-    "description": "A service alcove cuts away from the main route, where the maintenance mark tells the truth the official signs avoid. The space should feel emotionally legible: memory becomes architecture, fear becomes traversal, and the final answer is shared selfhood rather than control. The service alcove and maintenance mark make the finale feel dense, strange, and personal without becoming ordinary map sprawl.",
+    "description": "An order well drops through layers of command static until every voice sounds like an officer. The command static breaks whenever Elara's clean signal cuts through.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -14089,23 +14089,23 @@
     "state": {},
     "actions": [
       {
-        "name": "service alcove",
+        "name": "order well",
         "type": "generic",
-        "condition_unmet_message": "The detail ties this surreal room back to a specific fear, memory, or relationship from the journey."
+        "condition_unmet_message": "The well is deep enough to drown choice if Gh0st lets it."
       },
       {
-        "name": "maintenance mark",
+        "name": "command static",
         "type": "generic",
-        "condition_unmet_message": "The clue shows what remains true after the immediate popup is gone: a recovered voice, a rejected lie, or a chosen connection."
+        "condition_unmet_message": "The static has authority but no truth."
       }
     ]
   },
   {
     "id": "source_gh0st_nightmare_node_scale_02",
     "env": "source",
-    "title": "Source Pressure Gallery",
+    "title": "Rifle Forest",
     "background_image": "images/rooms/world_6/source_gh0st_nightmare.png",
-    "description": "A pressure gallery runs beside the route, its warning strip flashing whenever the place remembers what it costs to pass through. The space should feel emotionally legible: memory becomes architecture, fear becomes traversal, and the final answer is shared selfhood rather than control. The pressure gallery and warning strip make the finale feel dense, strange, and personal without becoming ordinary map sprawl.",
+    "description": "A rifle forest grows from the floor, cold barrels branching like dead trees. The cold barrels lower when Gh0st refuses to mistake obedience for purpose.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -14120,23 +14120,23 @@
     "state": {},
     "actions": [
       {
-        "name": "pressure gallery",
+        "name": "rifle forest",
         "type": "generic",
-        "condition_unmet_message": "The detail ties this surreal room back to a specific fear, memory, or relationship from the journey."
+        "condition_unmet_message": "Every path here tries to become a firing line."
       },
       {
-        "name": "warning strip",
+        "name": "cold barrels",
         "type": "generic",
-        "condition_unmet_message": "The clue shows what remains true after the immediate popup is gone: a recovered voice, a rejected lie, or a chosen connection."
+        "condition_unmet_message": "The weapons are waiting for hands that no longer belong to them."
       }
     ]
   },
   {
     "id": "source_gh0st_nightmare_node_scale_03",
     "env": "source",
-    "title": "Source Overlook Niche",
+    "title": "Sister Signal",
     "background_image": "images/rooms/world_6/source_gh0st_nightmare.png",
-    "description": "An overlook niche opens onto a long sightline, turning the surrounding space into something the crew can read instead of merely cross. The space should feel emotionally legible: memory becomes architecture, fear becomes traversal, and the final answer is shared selfhood rather than control. The overlook niche and sightline make the finale feel dense, strange, and personal without becoming ordinary map sprawl.",
+    "description": "A sister signal glows behind the war noise with a soft waveform no command layer can counterfeit. The soft waveform remembers Elara before the Ring turned her into infrastructure.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -14150,23 +14150,23 @@
     "state": {},
     "actions": [
       {
-        "name": "overlook niche",
+        "name": "sister signal",
         "type": "generic",
-        "condition_unmet_message": "The detail ties this surreal room back to a specific fear, memory, or relationship from the journey."
+        "condition_unmet_message": "This is not an order. That is why Gh0st can trust it."
       },
       {
-        "name": "sightline",
+        "name": "soft waveform",
         "type": "generic",
-        "condition_unmet_message": "The clue shows what remains true after the immediate popup is gone: a recovered voice, a rejected lie, or a chosen connection."
+        "condition_unmet_message": "The waveform is damaged and still human."
       }
     ]
   },
   {
     "id": "source_orion_nightmare_node_scale_01",
     "env": "source",
-    "title": "Source Service Alcove",
+    "title": "Black Tide Shelf",
     "background_image": "images/rooms/world_6/source_orion_nightmare.png",
-    "description": "A service alcove cuts away from the main route, where the maintenance mark tells the truth the official signs avoid. The space should feel emotionally legible: memory becomes architecture, fear becomes traversal, and the final answer is shared selfhood rather than control. The service alcove and maintenance mark make the finale feel dense, strange, and personal without becoming ordinary map sprawl.",
+    "description": "A black tide shelf stretches under salt stars that refuse to reflect in the water. The salt stars brighten only when Orion stops accepting last survivor as a title.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -14183,23 +14183,23 @@
     "state": {},
     "actions": [
       {
-        "name": "service alcove",
+        "name": "black tide",
         "type": "generic",
-        "condition_unmet_message": "The detail ties this surreal room back to a specific fear, memory, or relationship from the journey."
+        "condition_unmet_message": "The tide is still because the nightmare wants grief to look final."
       },
       {
-        "name": "maintenance mark",
+        "name": "salt stars",
         "type": "generic",
-        "condition_unmet_message": "The clue shows what remains true after the immediate popup is gone: a recovered voice, a rejected lie, or a chosen connection."
+        "condition_unmet_message": "The stars are waiting for an answer from below, not above."
       }
     ]
   },
   {
     "id": "source_orion_nightmare_node_scale_02",
     "env": "source",
-    "title": "Source Pressure Gallery",
+    "title": "Empty Observatory",
     "background_image": "images/rooms/world_6/source_orion_nightmare.png",
-    "description": "A pressure gallery runs beside the route, its warning strip flashing whenever the place remembers what it costs to pass through. The space should feel emotionally legible: memory becomes architecture, fear becomes traversal, and the final answer is shared selfhood rather than control. The pressure gallery and warning strip make the finale feel dense, strange, and personal without becoming ordinary map sprawl.",
+    "description": "An empty observatory points a silent lens at a sky with no returning signal. The silent lens focuses on voices under the tide once Orion asks instead of apologizes.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -14214,23 +14214,23 @@
     "state": {},
     "actions": [
       {
-        "name": "pressure gallery",
+        "name": "empty observatory",
         "type": "generic",
-        "condition_unmet_message": "The detail ties this surreal room back to a specific fear, memory, or relationship from the journey."
+        "condition_unmet_message": "The observatory is built from the fear of being the last one left to listen."
       },
       {
-        "name": "warning strip",
+        "name": "silent lens",
         "type": "generic",
-        "condition_unmet_message": "The clue shows what remains true after the immediate popup is gone: a recovered voice, a rejected lie, or a chosen connection."
+        "condition_unmet_message": "The lens was aimed wrong. The chorus was never in the sky."
       }
     ]
   },
   {
     "id": "source_orion_nightmare_node_scale_03",
     "env": "source",
-    "title": "Source Overlook Niche",
+    "title": "Chorus Door",
     "background_image": "images/rooms/world_6/source_orion_nightmare.png",
-    "description": "An overlook niche opens onto a long sightline, turning the surrounding space into something the crew can read instead of merely cross. The space should feel emotionally legible: memory becomes architecture, fear becomes traversal, and the final answer is shared selfhood rather than control. The overlook niche and sightline make the finale feel dense, strange, and personal without becoming ordinary map sprawl.",
+    "description": "A Chorus door hums with wet harmonics from below the shore. The wet harmonics carry names Orion thought the universe had erased.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -14244,14 +14244,14 @@
     "state": {},
     "actions": [
       {
-        "name": "overlook niche",
+        "name": "Chorus door",
         "type": "generic",
-        "condition_unmet_message": "The detail ties this surreal room back to a specific fear, memory, or relationship from the journey."
+        "condition_unmet_message": "The door opens to an answer, not an escape."
       },
       {
-        "name": "sightline",
+        "name": "wet harmonics",
         "type": "generic",
-        "condition_unmet_message": "The clue shows what remains true after the immediate popup is gone: a recovered voice, a rejected lie, or a chosen connection."
+        "condition_unmet_message": "The harmonics prove the dead are carried, not flattened into silence."
       }
     ]
   },
@@ -14763,9 +14763,9 @@
   {
     "id": "source_center_node_scale_01",
     "env": "source",
-    "title": "Source Service Alcove",
+    "title": "White Shore",
     "background_image": "images/rooms/world_6/source_center.png",
-    "description": "A service alcove cuts away from the main route, where the maintenance mark tells the truth the official signs avoid. The space should feel emotionally legible: memory becomes architecture, fear becomes traversal, and the final answer is shared selfhood rather than control. The service alcove and maintenance mark make the finale feel dense, strange, and personal without becoming ordinary map sprawl.",
+    "description": "A white shore curves around the Center with a still tide that reflects every voice Vale wants to dissolve. The still tide moves only when someone chooses a self.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -14780,23 +14780,23 @@
     "state": {},
     "actions": [
       {
-        "name": "service alcove",
+        "name": "white shore",
         "type": "generic",
-        "condition_unmet_message": "The detail ties this surreal room back to a specific fear, memory, or relationship from the journey."
+        "condition_unmet_message": "The shore is peaceful in the way blank paper is peaceful: ready to erase whatever came before."
       },
       {
-        "name": "maintenance mark",
+        "name": "still tide",
         "type": "generic",
-        "condition_unmet_message": "The clue shows what remains true after the immediate popup is gone: a recovered voice, a rejected lie, or a chosen connection."
+        "condition_unmet_message": "The tide is waiting for consent it does not understand."
       }
     ]
   },
   {
     "id": "source_center_node_scale_02",
     "env": "source",
-    "title": "Source Pressure Gallery",
+    "title": "Key Orbit",
     "background_image": "images/rooms/world_6/source_center.png",
-    "description": "A pressure gallery runs beside the route, its warning strip flashing whenever the place remembers what it costs to pass through. The space should feel emotionally legible: memory becomes architecture, fear becomes traversal, and the final answer is shared selfhood rather than control. The pressure gallery and warning strip make the finale feel dense, strange, and personal without becoming ordinary map sprawl.",
+    "description": "The Key orbit circles Nova's hand in root sparks that answer to the whole crew. The root sparks brighten when separate voices overlap without merging.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -14813,23 +14813,23 @@
     "state": {},
     "actions": [
       {
-        "name": "pressure gallery",
+        "name": "Key orbit",
         "type": "generic",
-        "condition_unmet_message": "The detail ties this surreal room back to a specific fear, memory, or relationship from the journey."
+        "condition_unmet_message": "The Key proves root access is responsibility, not ownership."
       },
       {
-        "name": "warning strip",
+        "name": "root sparks",
         "type": "generic",
-        "condition_unmet_message": "The clue shows what remains true after the immediate popup is gone: a recovered voice, a rejected lie, or a chosen connection."
+        "condition_unmet_message": "The sparks get stronger through harmony, not control."
       }
     ]
   },
   {
     "id": "source_center_node_scale_03",
     "env": "source",
-    "title": "Source Overlook Niche",
+    "title": "Silence Pulpit",
     "background_image": "images/rooms/world_6/source_center.png",
-    "description": "An overlook niche opens onto a long sightline, turning the surrounding space into something the crew can read instead of merely cross. The space should feel emotionally legible: memory becomes architecture, fear becomes traversal, and the final answer is shared selfhood rather than control. The overlook niche and sightline make the finale feel dense, strange, and personal without becoming ordinary map sprawl.",
+    "description": "A Silence pulpit rises from the ocean where Vale's shadow practices being universal. The Vale shadow is calm because it has never listened.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -14844,23 +14844,23 @@
     "state": {},
     "actions": [
       {
-        "name": "overlook niche",
+        "name": "Silence pulpit",
         "type": "generic",
-        "condition_unmet_message": "The detail ties this surreal room back to a specific fear, memory, or relationship from the journey."
+        "condition_unmet_message": "Vale has made a sermon out of removing everyone who might disagree."
       },
       {
-        "name": "sightline",
+        "name": "Vale shadow",
         "type": "generic",
-        "condition_unmet_message": "The clue shows what remains true after the immediate popup is gone: a recovered voice, a rejected lie, or a chosen connection."
+        "condition_unmet_message": "The shadow is not large because Vale is right. It is large because the Source amplifies conviction."
       }
     ]
   },
   {
     "id": "source_new_world_node_scale_01",
     "env": "source",
-    "title": "Source Service Alcove",
+    "title": "Diner Booth",
     "background_image": "images/rooms/world_6/source_new_world.png",
-    "description": "A service alcove cuts away from the main route, where the maintenance mark tells the truth the official signs avoid. The space should feel emotionally legible: memory becomes architecture, fear becomes traversal, and the final answer is shared selfhood rather than control. The service alcove and maintenance mark make the finale feel dense, strange, and personal without becoming ordinary map sprawl.",
+    "description": "A diner booth waits under morning light with a shared menu full of food the colony was never allowed to waste. The shared menu has more choices than anyone knows what to do with.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -14875,23 +14875,23 @@
     "state": {},
     "actions": [
       {
-        "name": "service alcove",
+        "name": "diner booth",
         "type": "generic",
-        "condition_unmet_message": "The detail ties this surreal room back to a specific fear, memory, or relationship from the journey."
+        "condition_unmet_message": "The booth is ordinary enough to feel impossible."
       },
       {
-        "name": "maintenance mark",
+        "name": "shared menu",
         "type": "generic",
-        "condition_unmet_message": "The clue shows what remains true after the immediate popup is gone: a recovered voice, a rejected lie, or a chosen connection."
+        "condition_unmet_message": "Choice feels overwhelming after a life of rations, and that is part of the victory."
       }
     ]
   },
   {
     "id": "source_new_world_node_scale_02",
     "env": "source",
-    "title": "Source Pressure Gallery",
+    "title": "Community Board",
     "background_image": "images/rooms/world_6/source_new_world.png",
-    "description": "A pressure gallery runs beside the route, its warning strip flashing whenever the place remembers what it costs to pass through. The space should feel emotionally legible: memory becomes architecture, fear becomes traversal, and the final answer is shared selfhood rather than control. The pressure gallery and warning strip make the finale feel dense, strange, and personal without becoming ordinary map sprawl.",
+    "description": "A community board holds job notices, repair requests, and a beach photo with everyone smiling badly. The beach photo catches Tideglass light on faces that made it home.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -14906,23 +14906,23 @@
     "state": {},
     "actions": [
       {
-        "name": "pressure gallery",
+        "name": "community board",
         "type": "generic",
-        "condition_unmet_message": "The detail ties this surreal room back to a specific fear, memory, or relationship from the journey."
+        "condition_unmet_message": "The board is messy because people are alive enough to need things from each other."
       },
       {
-        "name": "warning strip",
+        "name": "beach photo",
         "type": "generic",
-        "condition_unmet_message": "The clue shows what remains true after the immediate popup is gone: a recovered voice, a rejected lie, or a chosen connection."
+        "condition_unmet_message": "The photo is not perfect. That is why it feels true."
       }
     ]
   },
   {
     "id": "source_new_world_node_scale_03",
     "env": "source",
-    "title": "Source Overlook Niche",
+    "title": "Open Window",
     "background_image": "images/rooms/world_6/source_new_world.png",
-    "description": "An overlook niche opens onto a long sightline, turning the surrounding space into something the crew can read instead of merely cross. The space should feel emotionally legible: memory becomes architecture, fear becomes traversal, and the final answer is shared selfhood rather than control. The overlook niche and sightline make the finale feel dense, strange, and personal without becoming ordinary map sprawl.",
+    "description": "An open window lets real sky into the diner without Shield shimmer or siren static. The real sky is frightening because it belongs to everyone.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -14937,14 +14937,14 @@
     "state": {},
     "actions": [
       {
-        "name": "overlook niche",
+        "name": "open window",
         "type": "generic",
-        "condition_unmet_message": "The detail ties this surreal room back to a specific fear, memory, or relationship from the journey."
+        "condition_unmet_message": "The window does not promise safety. It permits weather."
       },
       {
-        "name": "sightline",
+        "name": "real sky",
         "type": "generic",
-        "condition_unmet_message": "The clue shows what remains true after the immediate popup is gone: a recovered voice, a rejected lie, or a chosen connection."
+        "condition_unmet_message": "No corporate ceiling, no planetary lock, no permission layer."
       }
     ]
   },
