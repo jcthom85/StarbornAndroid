@@ -3300,7 +3300,7 @@
     "env": "neon",
     "title": "Underrail Platform",
     "background_image": "images/rooms/world_3/spire_transit_plaza.png",
-    "description": "An abandoned underrail platform trembles whenever the city trains pass overhead. The underrail map is scratched with routes, curfews, and warnings written in marker.",
+    "description": "An abandoned underrail platform trembles whenever the city trains pass overhead. The underrail map is scratched with routes, curfews, patrol timing, and warnings written in marker.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -3319,6 +3319,12 @@
         "name": "underrail map",
         "type": "generic",
         "condition_unmet_message": "The underrail map shows which transit lines still run, which ones are watched, and which ones ate people."
+      },
+      {
+        "name": "patrol timing",
+        "type": "generic",
+        "action_event": "w3_mq12_map_patrols",
+        "condition_unmet_message": "The patrol timing is written into the underrail map in marker, shortcuts, and fear."
       }
     ]
   },
@@ -3468,7 +3474,7 @@
     "env": "neon",
     "title": "Safehouse Roof",
     "background_image": "images/rooms/world_3/spire_zekes_apartment.png",
-    "description": "The safehouse roof is barely larger than the apartment below it. A skyline of corporate towers rises beyond laundry lines, and the shield shimmer turns the clouds into a cage.",
+    "description": "The safehouse roof is barely larger than the apartment below it. A skyline of corporate towers rises beyond laundry lines full of patched coats and disguise materials, and the shield shimmer turns the clouds into a cage.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -3489,7 +3495,8 @@
       {
         "name": "laundry lines",
         "type": "generic",
-        "condition_unmet_message": "The laundry lines snap in polluted wind, full of patched coats and borrowed uniforms."
+        "condition_unmet_message": "Nova studies the patched laundry lines for uniforms, coats, and enough fabric to fake a service crew silhouette.",
+        "action_event": "w3_mq12_source_disguises"
       }
     ]
   },
@@ -3768,13 +3775,13 @@
         "name": "sensor console",
         "type": "generic",
         "action_event": "w3_mq13_disable_sensors",
-        "condition_unmet_message": "A service console tied into the penthouse scanner grid."
+        "condition_unmet_message": "The sensor console is tied into the penthouse scanner grid. Zeke can cut coverage once Nova has guest access."
       },
       {
         "name": "service chute",
         "type": "generic",
         "action_event": "w3_mq13_enter_lobby",
-        "condition_unmet_message": "A narrow laundry chute marked for priority penthouse delivery."
+        "condition_unmet_message": "The service chute is the disguised route toward the Archive approach, but the scanners need to be blind first."
       }
     ]
   },
@@ -3801,7 +3808,7 @@
       {
         "name": "uniform racks",
         "type": "generic",
-        "condition_unmet_message": "The uniform racks are full of disguises if the crew can match fabric, timing, and nerve."
+        "condition_unmet_message": "The uniform racks confirm the plan: correct silhouette, correct badge timing, no extra conversation."
       },
       {
         "name": "laundry tags",
@@ -4125,7 +4132,7 @@
     "env": "neon",
     "title": "Landing Pad Roof",
     "background_image": "images/rooms/world_3/spire_landing_pad_roof.png",
-    "description": "The Landing Pad Roof shudders under violent wind. The Astra waits beyond the drone test alcove while the Planetary Shield rotates overhead in impossible chords and launch astra becomes the only clean verb left.",
+    "description": "The Landing Pad Roof shudders under violent wind and red lockdown light. The Astra waits beyond the drone test alcove while the Planetary Shield rotates overhead in impossible chords and launch astra becomes the only clean verb left.",
     "npcs": [],
     "items": [],
     "enemies": [

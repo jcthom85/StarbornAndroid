@@ -79,15 +79,27 @@ class Hub3CriticalFlowTest {
         harness.events.handleTrigger("player_action", EventPayload.Action("w3_mq12_talk_jax"))
         assertTrue(harness.store.state.value.questTasksCompleted["w3_mq12"].orEmpty().contains("talk_jax"))
 
-        // 2. Interrogate guard (database terminal)
+        // 2. Study patrol timing at the underrail platform
+        harness.events.handleTrigger("player_action", EventPayload.Action("w3_mq12_map_patrols"))
+        assertTrue(harness.store.state.value.questTasksCompleted["w3_mq12"].orEmpty().contains("map_patrols"))
+
+        // 3. Pull security records at the plaza kiosk
         harness.events.handleTrigger("player_action", EventPayload.Action("w3_mq12_interrogate_guard"))
         assertTrue(harness.store.state.value.questTasksCompleted["w3_mq12"].orEmpty().contains("interrogate_guard"))
 
-        // 3. Hack blueprints at workstation
+        // 4. Copy service badge patterns at the elevator service gate
+        harness.events.handleTrigger("player_action", EventPayload.Action("w3_mq12_copy_badges"))
+        assertTrue(harness.store.state.value.questTasksCompleted["w3_mq12"].orEmpty().contains("copy_badges"))
+
+        // 5. Source disguise materials at the safehouse roof
+        harness.events.handleTrigger("player_action", EventPayload.Action("w3_mq12_source_disguises"))
+        assertTrue(harness.store.state.value.questTasksCompleted["w3_mq12"].orEmpty().contains("source_disguises"))
+
+        // 6. Hack blueprints at workstation
         harness.events.handleTrigger("player_action", EventPayload.Action("w3_mq12_hack_blueprints"))
         assertTrue(harness.store.state.value.questTasksCompleted["w3_mq12"].orEmpty().contains("hack_blueprints"))
 
-        // 4. Assemble at planning table
+        // 7. Assemble at planning table
         harness.events.handleTrigger("player_action", EventPayload.Action("w3_mq12_assemble_planning"))
         state = harness.store.state.value
         assertTrue(state.questTasksCompleted["w3_mq12"].orEmpty().contains("assemble_table"))

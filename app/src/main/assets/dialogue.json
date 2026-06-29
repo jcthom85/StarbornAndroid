@@ -1042,7 +1042,7 @@
     "id": "w3_mq12_jax_intro",
     "speaker": "Jax",
     "condition": "quest_active:w3_mq12,quest_task_not_done:w3_mq12:talk_jax",
-    "text": "Don't ask what's in the drink. Don't ask who was sitting there yesterday. Rules of the house. You looking for elevator passcodes?",
+    "text": "You want the Upper City? Then you want six things: timing, credentials, a route, a costume, a terminal pull, and the nerve to look bored while lying.",
     "options": [
       {
         "id": "jax_w3_mq12_request_codes",
@@ -1054,7 +1054,7 @@
   {
     "id": "w3_mq12_jax_success",
     "speaker": "Jax",
-    "text": "Schedules are on this drive. Keep it out of sight. The Suits are watching.",
+    "text": "Schedules are on this drive. Start with the underrail map for patrol timing, then the plaza kiosk, the service gate, the safehouse roof laundry lines, and Zeke's workstation. Bring it all back to the planning table.",
     "trigger": "player_action:w3_mq12_talk_jax"
   },
   {
@@ -1144,15 +1144,15 @@
   {
     "id": "w3_mq12_workstation_dialogue",
     "speaker": "System",
-    "condition": "quest_active:w3_mq12,quest_task_not_done:w3_mq12:hack_blueprints",
-    "text": "Zeke's decryption algorithms are running... blueprints downloaded.",
+    "condition": "quest_active:w3_mq12,quest_task_done:w3_mq12:talk_jax,quest_task_done:w3_mq12:map_patrols,quest_task_done:w3_mq12:interrogate_guard,quest_task_done:w3_mq12:copy_badges,quest_task_done:w3_mq12:source_disguises,quest_task_not_done:w3_mq12:hack_blueprints",
+    "text": "Zeke's workstation accepts the stolen timing, badge pattern, disguise notes, and plaza pull. Blueprints compile into a service-elevator route.",
     "trigger": "player_action:w3_mq12_hack_blueprints"
   },
   {
     "id": "w3_mq12_planning_table_dialogue",
     "speaker": "System",
-    "condition": "quest_active:w3_mq12,quest_task_done:w3_mq12:talk_jax,quest_task_done:w3_mq12:interrogate_guard,quest_task_done:w3_mq12:hack_blueprints,quest_task_not_done:w3_mq12:assemble_table",
-    "text": "All data feeds are connected. The planning table is active.",
+    "condition": "quest_active:w3_mq12,quest_task_done:w3_mq12:talk_jax,quest_task_done:w3_mq12:map_patrols,quest_task_done:w3_mq12:interrogate_guard,quest_task_done:w3_mq12:copy_badges,quest_task_done:w3_mq12:source_disguises,quest_task_done:w3_mq12:hack_blueprints,quest_task_not_done:w3_mq12:assemble_table",
+    "text": "The planning table lights every thread at once: patrol timing, badges, uniforms, security records, and the elevator route. Nova can assign the heist roles now.",
     "options": [
       {
         "id": "w3_mq12_assemble_confirm",
@@ -1184,7 +1184,7 @@
     "id": "zeke_w3_mq13_console_intro",
     "speaker": "Zeke",
     "condition": "quest_active:w3_mq13,quest_task_not_done:w3_mq13:disable_sensors",
-    "text": "Standard Dominion scanner grid. They think nobody smart enough to break it would ever want to leave.",
+    "text": "Standard Dominion scanner grid, routed through Laundry Service because the people who clean their lives are invisible by design.",
     "next": "zeke_w3_mq13_console_end"
   },
   {
@@ -1197,7 +1197,7 @@
     "id": "orion_w3_mq14_puzzle_intro",
     "speaker": "Orion",
     "condition": "quest_active:w3_mq14,quest_task_done:w3_mq14:enter_archive,quest_task_not_done:w3_mq14:solve_light_puzzle",
-    "text": "The puzzle is not light. It is pressure in visible form. Tune the quiet frequencies first.",
+    "text": "The Prism Gallery is not solving light. It is forcing pressure to become visible. Tune the quiet frequencies first.",
     "next": "orion_w3_mq14_puzzle_end"
   },
   {
@@ -1235,7 +1235,7 @@
     "id": "vale_w3_mq15_override",
     "speaker": "Vale",
     "condition": "quest_active:w3_mq15,quest_task_not_done:w3_mq15:defeat_administrator",
-    "text": "Anomaly detected in the Archive. Administrator, lock the district. I want no ungoverned noise leaving Sector 0."
+    "text": "Anomaly detected in the Archive. Administrator, lock the district. Seal the drone test alcove and the roof. I want no ungoverned noise leaving Sector 0."
   },
   {
     "id": "upper_city_lounge_shop_intro",

@@ -29,6 +29,7 @@ class Hub4CriticalFlowTest {
         assertTrue(state.activeQuests.contains("w3_mq13"))
         assertEquals("spire_laundry_service", state.roomId)
 
+        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("spire_skypark_dome"))
         val curator = harness.dialogue.startDialogue("Curator")
         assertNotNull(curator)
         assertEquals("curator_w3_mq13_intro", curator?.current()?.id)
@@ -47,6 +48,7 @@ class Hub4CriticalFlowTest {
         assertTrue(state.completedMilestones.contains("ms_w3_mq13_complete"))
         assertTrue(state.activeQuests.contains("w3_mq14"))
 
+        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("spire_prism_gallery"))
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("spire_archive_vault"))
         assertTrue(harness.store.state.value.questTasksCompleted["w3_mq14"].orEmpty().contains("enter_archive"))
 
@@ -69,6 +71,7 @@ class Hub4CriticalFlowTest {
         assertTrue(state.unlockedSkills.contains("source_art_scan"))
         assertTrue(state.activeQuests.contains("w3_mq15"))
 
+        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("spire_drone_test_alcove"))
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("spire_landing_pad_roof"))
         assertTrue(harness.store.state.value.questTasksCompleted["w3_mq15"].orEmpty().contains("reach_landing_pad"))
 

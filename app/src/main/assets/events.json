@@ -4220,7 +4220,97 @@
       },
       {
         "type": "show_message",
-        "message": "Jax nods gruffly and slides a data drive across the counter. 'Curfew schedules. Don't say where you got them.'"
+        "message": "Jax slides a data drive across the counter. 'Curfew schedules, elevator shift gossip, and a list of guards who owe me. Don't make me regret liking Zeke.'"
+      }
+    ]
+  },
+  {
+    "id": "w3_mq12_map_patrols",
+    "description": "Study Lower City patrol timing from the underrail map.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w3_mq12_map_patrols"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w3_mq12"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w3_mq12",
+        "task_id": "map_patrols"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w3_mq12",
+        "task_id": "map_patrols"
+      },
+      {
+        "type": "show_message",
+        "message": "Nova marks patrol timing from the underrail map. The gaps are short, ugly, and usable."
+      }
+    ]
+  },
+  {
+    "id": "w3_mq12_copy_badges",
+    "description": "Copy service badge patterns at the elevator service gate.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w3_mq12_copy_badges"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w3_mq12"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w3_mq12",
+        "task_id": "copy_badges"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w3_mq12",
+        "task_id": "copy_badges"
+      },
+      {
+        "type": "show_message",
+        "message": "Gh0st ghosts the freight badge handshake long enough to copy a service pattern. The climb has a door now."
+      }
+    ]
+  },
+  {
+    "id": "w3_mq12_source_disguises",
+    "description": "Identify workable disguise materials on the safehouse roof.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w3_mq12_source_disguises"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w3_mq12"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w3_mq12",
+        "task_id": "source_disguises"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w3_mq12",
+        "task_id": "source_disguises"
+      },
+      {
+        "type": "show_message",
+        "message": "Nova studies the patched coats and laundry lines on the safehouse roof. The disguise will not survive conversation, but it should survive a scanner glance."
       }
     ]
   },
@@ -4250,7 +4340,7 @@
       },
       {
         "type": "show_message",
-        "message": "You search the plaza terminal, extraction codes and routing coordinates have been successfully downloaded."
+        "message": "Gh0st strips the plaza kiosk for extraction codes, staff routes, and archived case numbers. One file has Elara stamped in a deleted transfer chain."
       }
     ]
   },
@@ -4280,7 +4370,7 @@
       },
       {
         "type": "show_message",
-        "message": "The terminal display flickers as Zeke's algorithms compile the elevator blueprints. Secure encryption bypassed."
+        "message": "Zeke's workstation folds the stolen timing, badges, and security pull into a usable elevator route. The plan is becoming less impossible."
       }
     ]
   },
@@ -4304,7 +4394,22 @@
       {
         "type": "quest_task_done",
         "quest_id": "w3_mq12",
+        "task_id": "map_patrols"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w3_mq12",
         "task_id": "interrogate_guard"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w3_mq12",
+        "task_id": "copy_badges"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w3_mq12",
+        "task_id": "source_disguises"
       },
       {
         "type": "quest_task_done",
@@ -4333,7 +4438,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: The Plan\n\nYou lay the hacked files on the table. The blueprints are complete. You are ready to infiltrate the Upper City."
+        "message": "Quest Complete: The Plan\n\nCurfews, patrol gaps, copied badges, disguises, security records, and Zeke's blueprints lock into one ugly route. Nova assigns the roles. The crew is not ready, but the plan is."
       }
     ]
   },
@@ -4349,7 +4454,7 @@
     "actions": [
       {
         "type": "show_message",
-        "message": "The Great Elevator rejects every surface credential you have. Jax's schedules, Gh0st's database pull, and Zeke's blueprints all need to meet at the planning table before Nova can risk a climb."
+        "message": "The Great Elevator rejects every surface credential you have. Curfews, patrol timing, copied badges, disguises, security records, and Zeke's blueprints all need to meet at the planning table before Nova can risk a climb."
       }
     ]
   },
@@ -4533,7 +4638,7 @@
       },
       {
         "type": "show_message",
-        "message": "The heist begins. The service elevator opens into the Upper City laundry guts."
+        "message": "The heist begins. The copied badges hold just long enough for the service lift to swallow the crew into the clean machinery of the Upper City."
       }
     ]
   },
@@ -4563,7 +4668,7 @@
       },
       {
         "type": "show_message",
-        "message": "The Skypark registry accepts the forged guest profile. Nova smiles like she has done this her whole life."
+        "message": "The Skypark guest registry accepts the forged profile. Nova smiles like she belongs here. Gh0st stands perfectly still and somehow looks expensive."
       }
     ]
   },
@@ -4593,7 +4698,7 @@
       },
       {
         "type": "show_message",
-        "message": "Zeke ghosts the scanner grid while Orion dampens the Source noise. The penthouse sensors blink blind."
+        "message": "Zeke ghosts the scanner grid from the Laundry Service sensor console while Orion dampens the Source noise. The penthouse sensors blink blind for one narrow window."
       }
     ]
   },
@@ -4649,7 +4754,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Social Engineering\n\nThe scanners wave Nova and Gh0st through. The Archive doors are ahead."
+        "message": "Quest Complete: Social Engineering\n\nThe service chute spits Nova and Gh0st past the scanners while Zeke and Orion keep the grid blind. The Archive route is open, but every second now has teeth."
       }
     ]
   },
@@ -4679,7 +4784,7 @@
       },
       {
         "type": "show_message",
-        "message": "The Archive recognizes no guest access. It recognizes only power."
+        "message": "The Archive recognizes no guest access. It recognizes only ownership. The Lens waits deeper inside, bright enough to make every lie in the room visible."
       }
     ]
   },
@@ -4719,7 +4824,7 @@
       },
       {
         "type": "show_message",
-        "message": "Orion tunes the prism array until glass, light, and Source hum in the same key. The containment field drops."
+        "message": "In the Prism Gallery, Orion tunes the array until glass, light, and Source hum in the same key. The containment field drops like a held breath."
       }
     ]
   },
@@ -4809,7 +4914,7 @@
       },
       {
         "type": "show_message",
-        "message": "Wind tears across the roof. The Astra is still here. So is the Administrator."
+        "message": "The drone test alcove erupts behind you as the crew reaches the roof. Wind tears across the pad. The Astra is still here. So is the Administrator."
       }
     ]
   },
@@ -4905,7 +5010,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Burn Notice\n\nThe Astra slips the Shield on Orion's count. Low orbit coughs the ship back toward the Foundry. Time to find a bigger engine."
+        "message": "Quest Complete: Burn Notice\n\nThe Astra slips the Shield on Orion's count, using the Lens to ride a gap nobody was supposed to see. Low orbit coughs the ship toward the Foundry. Time to steal a bigger engine."
       }
     ]
   },

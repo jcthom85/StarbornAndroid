@@ -1068,8 +1068,8 @@
   {
     "id": "w3_mq12",
     "title": "The Plan",
-    "summary": "Gather intel from the lower city to plan a heist into the Upper City.",
-    "description": "Talk to the bartender Jax, scan Dominion databases with Gh0st, hack Spire elevator blueprints, and coordinate at the safehouse planning table.",
+    "summary": "Case the Lower City, gather credentials, and assemble a real heist plan for the Upper City climb.",
+    "description": "Use Jax's curfew schedules, Gh0st's security pull, Zeke's elevator blueprints, patrol timing, service gate badges, and safehouse disguise materials to build a plan the crew can actually execute.",
     "flavor": "Every lock has a chord. You just have to find the keys.",
     "giver": "Zeke",
     "hub_id": "hub_5_lower_city",
@@ -1077,15 +1077,27 @@
       {
         "id": "gather_intel",
         "title": "Intelligence Gathering",
-        "description": "Search for info on Spire security and elevator passcodes.",
+        "description": "Collect the timing, credentials, route, and disguise pieces needed to make the Upper City infiltration believable.",
         "tasks": [
           {
             "id": "talk_jax",
-            "text": "Talk to Jax at The Static bar."
+            "text": "Get curfew schedules from Jax at The Static."
+          },
+          {
+            "id": "map_patrols",
+            "text": "Study patrol timing from the underrail map."
           },
           {
             "id": "interrogate_guard",
-            "text": "Search security databases in the plaza."
+            "text": "Pull security records from the plaza kiosk."
+          },
+          {
+            "id": "copy_badges",
+            "text": "Copy freight badge patterns at the service gate."
+          },
+          {
+            "id": "source_disguises",
+            "text": "Source disguise materials from the safehouse roof laundry lines."
           },
           {
             "id": "hack_blueprints",
@@ -1096,11 +1108,11 @@
       {
         "id": "assemble_heist",
         "title": "The Assembly",
-        "description": "Assemble at the planning table to coordinate the heist.",
+        "description": "Bring every intel thread back to the safehouse planning table and assign crew roles.",
         "tasks": [
           {
             "id": "assemble_table",
-            "text": "Examine the planning table to coordinate."
+            "text": "Use the planning table to assign roles and launch the heist."
           }
         ]
       }
@@ -1208,8 +1220,8 @@
   {
     "id": "w3_mq13",
     "title": "Social Engineering",
-    "summary": "Infiltrate the Upper City and pass the penthouse scanners by splitting the crew.",
-    "description": "Blend in at the Skypark, let Zeke and Orion disable the sensor grid from Laundry Service, and send Nova and Gh0st through the lobby in disguise.",
+    "summary": "Infiltrate the Upper City by using service routes, guest access, and scanner sabotage.",
+    "description": "Move through Laundry Service, pull disguises from Uniform Sorting, pass the Staff Checkpoint, blend in at the Skypark, disable scanner coverage, and send Nova and Gh0st through the service chute toward the Archive.",
     "flavor": "The cleanest rooms hide the dirtiest locks.",
     "giver": "Zeke",
     "hub_id": "hub_6_upper_city",
@@ -1221,11 +1233,11 @@
         "tasks": [
           {
             "id": "blend_in",
-            "text": "Blend in at the Skypark and acquire guest access."
+            "text": "Blend in at the Skypark guest registry and acquire guest access."
           },
           {
             "id": "disable_sensors",
-            "text": "Have Zeke and Orion disable the scanner grid from Laundry Service."
+            "text": "Have Zeke and Orion blind the scanner grid from Laundry Service."
           }
         ]
       },
@@ -1236,7 +1248,7 @@
         "tasks": [
           {
             "id": "enter_lobby",
-            "text": "Enter the penthouse lobby in disguise."
+            "text": "Use the service chute to pass into the Archive approach in disguise."
           }
         ]
       }
@@ -1251,8 +1263,8 @@
   {
     "id": "w3_mq14",
     "title": "The Lens",
-    "summary": "Enter the Archive, solve the light puzzle, and steal the Lens relic.",
-    "description": "Break into the Archive vault, tune the prism array with Orion, and claim the Lens before Dominion security closes around you.",
+    "summary": "Reach the Archive through the prism gallery, solve the light array, and steal the Lens relic.",
+    "description": "Enter the Archive, tune the Prism Gallery array with Orion, and take the Lens knowing the theft will expose Nova as an anomaly.",
     "flavor": "A relic does not show truth. It makes hiding harder.",
     "giver": "Orion",
     "hub_id": "hub_6_upper_city",
@@ -1264,11 +1276,11 @@
         "tasks": [
           {
             "id": "enter_archive",
-            "text": "Enter the Archive vault."
+            "text": "Enter the Archive vault from the service route."
           },
           {
             "id": "solve_light_puzzle",
-            "text": "Tune the light puzzle frequencies."
+            "text": "Tune the Prism Gallery light puzzle frequencies."
           }
         ]
       },
@@ -1279,7 +1291,7 @@
         "tasks": [
           {
             "id": "take_lens",
-            "text": "Acquire the Lens relic."
+            "text": "Take the Lens relic and survive the alarm."
           }
         ]
       }
@@ -1300,7 +1312,7 @@
     "id": "w3_mq15",
     "title": "Burn Notice",
     "summary": "Escape the Upper City after the Archive alarm exposes the crew.",
-    "description": "Fight through the lockdown, defeat the Administrator on the landing pad, and use the Lens to time the Astra through the Shield toward the Foundry.",
+    "description": "Fight through the lockdown, cross the drone test alcove, defeat the Administrator on the landing pad, and use the Lens to time the Astra through the Shield toward the Foundry.",
     "flavor": "When paradise burns, it smells like cleaning chemicals.",
     "giver": "Nova",
     "hub_id": "hub_6_upper_city",
@@ -1312,11 +1324,11 @@
         "tasks": [
           {
             "id": "reach_landing_pad",
-            "text": "Reach the landing pad under alarm."
+            "text": "Cut through the drone test alcove and reach the landing pad under alarm."
           },
           {
             "id": "defeat_administrator",
-            "text": "Defeat the Administrator."
+            "text": "Defeat the Administrator on the roof."
           }
         ]
       },
