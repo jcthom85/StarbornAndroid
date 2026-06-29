@@ -74,6 +74,7 @@ class Hub3CriticalFlowTest {
         assertTrue(state.completedQuests.contains("w3_mq11"))
         assertTrue(state.completedMilestones.contains("ms_w3_mq11_complete"))
         assertTrue(state.activeQuests.contains("w3_mq12"))
+        assertEquals("w3_mq12", state.trackedQuestId)
 
         // --- MQ12: The Plan ---
         // 1. Talk to Jax

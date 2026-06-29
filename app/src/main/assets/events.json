@@ -4189,6 +4189,10 @@
         "quest_id": "w3_mq12"
       },
       {
+        "type": "track_quest",
+        "quest_id": "w3_mq12"
+      },
+      {
         "type": "show_message",
         "message": "Quest Complete: Homecoming\n\nOrion folds a quiet Source shield around Zeke's erased apartment. Outside, the Spire keeps listening to itself. Inside, the crew finally has a room the city cannot own."
       }
