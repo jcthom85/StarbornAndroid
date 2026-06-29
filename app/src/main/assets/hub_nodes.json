@@ -634,7 +634,9 @@
       200
     ],
     "rooms": [
-      "spire_vent_output"
+      "spire_vent_output",
+      "spire_rain_gutter_alley",
+      "spire_underrail_platform"
     ],
     "discovered": true,
     "initial_visibility": "unlocked",
@@ -658,7 +660,10 @@
     ],
     "rooms": [
       "spire_the_static",
-      "spire_zekes_apartment"
+      "spire_old_subway_car",
+      "spire_signal_stairwell",
+      "spire_zekes_apartment",
+      "spire_safehouse_roof"
     ],
     "discovered": false,
     "initial_visibility": "hidden",
@@ -681,7 +686,10 @@
       200
     ],
     "rooms": [
-      "spire_night_market"
+      "spire_night_market",
+      "spire_noodle_row",
+      "spire_lantern_bridge",
+      "spire_backstreet_clinic"
     ],
     "discovered": false,
     "initial_visibility": "hidden",
@@ -705,7 +713,9 @@
     ],
     "rooms": [
       "spire_sewers_landing",
-      "spire_sewers_passage"
+      "spire_runoff_lock",
+      "spire_sewers_passage",
+      "spire_maintenance_sluice"
     ],
     "discovered": false,
     "initial_visibility": "hidden",
@@ -728,7 +738,10 @@
       240
     ],
     "rooms": [
-      "spire_transit_plaza"
+      "spire_transit_plaza",
+      "spire_checkpoint_queue",
+      "spire_security_kiosk",
+      "spire_elevator_service_gate"
     ],
     "discovered": false,
     "initial_visibility": "hidden",
@@ -751,7 +764,10 @@
       210
     ],
     "rooms": [
-      "spire_laundry_service"
+      "spire_laundry_service",
+      "spire_uniform_sorting",
+      "spire_service_lift",
+      "spire_staff_checkpoint"
     ],
     "discovered": true,
     "initial_visibility": "unlocked",
@@ -774,7 +790,9 @@
       210
     ],
     "rooms": [
-      "spire_skypark_dome"
+      "spire_skypark_dome",
+      "spire_glasswalk",
+      "spire_donor_gallery"
     ],
     "discovered": false,
     "initial_visibility": "hidden",
@@ -820,7 +838,9 @@
       230
     ],
     "rooms": [
-      "spire_archive_vault"
+      "spire_prism_gallery",
+      "spire_archive_vault",
+      "spire_drone_test_alcove"
     ],
     "discovered": false,
     "initial_visibility": "hidden",

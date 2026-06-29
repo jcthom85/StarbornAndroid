@@ -792,204 +792,6 @@
     "transition_text": "Travel to The Campfire."
   },
   {
-    "id": "spire_archive__east__spire_landing_pad",
-    "from_node": "spire_archive",
-    "from_room": "spire_archive_vault",
-    "direction": "east",
-    "to_node": "spire_landing_pad",
-    "to_room": "spire_landing_pad_roof",
-    "transition_text": "Travel to Landing Pad."
-  },
-  {
-    "id": "spire_archive__north__spire_skypark",
-    "from_node": "spire_archive",
-    "from_room": "spire_archive_vault",
-    "direction": "north",
-    "to_node": "spire_skypark",
-    "to_room": "spire_skypark_dome",
-    "transition_text": "Travel to Skypark."
-  },
-  {
-    "id": "spire_archive__south__spire_exec_lounge",
-    "from_node": "spire_archive",
-    "from_room": "spire_archive_vault",
-    "direction": "south",
-    "to_node": "spire_exec_lounge",
-    "to_room": "spire_exec_lounge_bar",
-    "transition_text": "Travel to Exec Lounge."
-  },
-  {
-    "id": "spire_archive__west__spire_laundry",
-    "from_node": "spire_archive",
-    "from_room": "spire_archive_vault",
-    "direction": "west",
-    "to_node": "spire_laundry",
-    "to_room": "spire_laundry_service",
-    "transition_text": "Travel to Laundry Service."
-  },
-  {
-    "id": "spire_exec_lounge__east__spire_archive",
-    "from_node": "spire_exec_lounge",
-    "from_room": "spire_exec_lounge_bar",
-    "direction": "east",
-    "to_node": "spire_archive",
-    "to_room": "spire_archive_vault",
-    "transition_text": "Travel to The Archive."
-  },
-  {
-    "id": "spire_exec_lounge__north__spire_laundry",
-    "from_node": "spire_exec_lounge",
-    "from_room": "spire_exec_lounge_bar",
-    "direction": "north",
-    "to_node": "spire_laundry",
-    "to_room": "spire_laundry_service",
-    "transition_text": "Travel to Laundry Service."
-  },
-  {
-    "id": "spire_landing_pad__west__spire_archive",
-    "from_node": "spire_landing_pad",
-    "from_room": "spire_landing_pad_roof",
-    "direction": "west",
-    "to_node": "spire_archive",
-    "to_room": "spire_archive_vault",
-    "transition_text": "Travel to The Archive."
-  },
-  {
-    "id": "spire_laundry__east__spire_archive",
-    "from_node": "spire_laundry",
-    "from_room": "spire_laundry_service",
-    "direction": "east",
-    "to_node": "spire_archive",
-    "to_room": "spire_archive_vault",
-    "transition_text": "Travel to The Archive."
-  },
-  {
-    "id": "spire_laundry__north__spire_skypark",
-    "from_node": "spire_laundry",
-    "from_room": "spire_laundry_service",
-    "direction": "north",
-    "to_node": "spire_skypark",
-    "to_room": "spire_skypark_dome",
-    "transition_text": "Travel to Skypark."
-  },
-  {
-    "id": "spire_laundry__south__spire_exec_lounge",
-    "from_node": "spire_laundry",
-    "from_room": "spire_laundry_service",
-    "direction": "south",
-    "to_node": "spire_exec_lounge",
-    "to_room": "spire_exec_lounge_bar",
-    "transition_text": "Travel to Exec Lounge."
-  },
-  {
-    "id": "spire_night_market__west__spire_transit_plaza",
-    "from_node": "spire_night_market",
-    "from_room": "spire_night_market",
-    "direction": "west",
-    "to_node": "spire_transit_plaza",
-    "to_room": "spire_transit_plaza",
-    "transition_text": "Travel to Transit Plaza."
-  },
-  {
-    "id": "spire_sewers__east__spire_transit_plaza",
-    "from_node": "spire_sewers",
-    "from_room": "spire_sewers_passage",
-    "direction": "east",
-    "to_node": "spire_transit_plaza",
-    "to_room": "spire_transit_plaza",
-    "transition_text": "Travel to Transit Plaza."
-  },
-  {
-    "id": "spire_sewers__north__spire_vent_output",
-    "from_node": "spire_sewers",
-    "from_room": "spire_sewers_passage",
-    "direction": "north",
-    "to_node": "spire_vent_output",
-    "to_room": "spire_vent_output",
-    "transition_text": "Travel to Vent Output."
-  },
-  {
-    "id": "spire_skypark__east__spire_archive",
-    "from_node": "spire_skypark",
-    "from_room": "spire_skypark_dome",
-    "direction": "east",
-    "to_node": "spire_archive",
-    "to_room": "spire_archive_vault",
-    "transition_text": "Travel to The Archive."
-  },
-  {
-    "id": "spire_skypark__south__spire_laundry",
-    "from_node": "spire_skypark",
-    "from_room": "spire_skypark_dome",
-    "direction": "south",
-    "to_node": "spire_laundry",
-    "to_room": "spire_laundry_service",
-    "transition_text": "Travel to Laundry Service."
-  },
-  {
-    "id": "spire_the_static__south__spire_transit_plaza",
-    "from_node": "spire_the_static",
-    "from_room": "spire_the_static",
-    "direction": "south",
-    "to_node": "spire_transit_plaza",
-    "to_room": "spire_transit_plaza",
-    "transition_text": "Travel to Transit Plaza."
-  },
-  {
-    "id": "spire_the_static__west__spire_vent_output",
-    "from_node": "spire_the_static",
-    "from_room": "spire_the_static",
-    "direction": "west",
-    "to_node": "spire_vent_output",
-    "to_room": "spire_vent_output",
-    "transition_text": "Travel to Vent Output."
-  },
-  {
-    "id": "spire_transit_plaza__east__spire_night_market",
-    "from_node": "spire_transit_plaza",
-    "from_room": "spire_transit_plaza",
-    "direction": "east",
-    "to_node": "spire_night_market",
-    "to_room": "spire_night_market",
-    "transition_text": "Travel to Night Market."
-  },
-  {
-    "id": "spire_transit_plaza__north__spire_the_static",
-    "from_node": "spire_transit_plaza",
-    "from_room": "spire_transit_plaza",
-    "direction": "north",
-    "to_node": "spire_the_static",
-    "to_room": "spire_the_static",
-    "transition_text": "Travel to The Static."
-  },
-  {
-    "id": "spire_transit_plaza__west__spire_sewers",
-    "from_node": "spire_transit_plaza",
-    "from_room": "spire_transit_plaza",
-    "direction": "west",
-    "to_node": "spire_sewers",
-    "to_room": "spire_sewers_passage",
-    "transition_text": "Travel to The Sewers."
-  },
-  {
-    "id": "spire_vent_output__east__spire_the_static",
-    "from_node": "spire_vent_output",
-    "from_room": "spire_vent_output",
-    "direction": "east",
-    "to_node": "spire_the_static",
-    "to_room": "spire_the_static",
-    "transition_text": "Travel to The Static."
-  },
-  {
-    "id": "spire_vent_output__south__spire_sewers",
-    "from_node": "spire_vent_output",
-    "from_room": "spire_vent_output",
-    "direction": "south",
-    "to_node": "spire_sewers",
-    "to_room": "spire_sewers_passage",
-    "transition_text": "Travel to The Sewers."
-  },
-  {
     "id": "stasis_chamber__east__source_gate",
     "from_node": "stasis_chamber",
     "from_room": "sector9_stasis_coolant_lines",
@@ -1060,5 +862,266 @@
     "to_node": "sector9_landing",
     "to_room": "sector9_landing_stream",
     "transition_text": "Travel to Crash Site."
+  },
+  {
+    "id": "spire_archive__spire_archive_vault__north__spire_skypark",
+    "from_node": "spire_archive",
+    "from_room": "spire_archive_vault",
+    "direction": "north",
+    "to_node": "spire_skypark",
+    "to_room": "spire_donor_gallery",
+    "transition_text": "Travel to Skypark."
+  },
+  {
+    "id": "spire_archive__spire_archive_vault__south__spire_exec_lounge",
+    "from_node": "spire_archive",
+    "from_room": "spire_archive_vault",
+    "direction": "south",
+    "to_node": "spire_exec_lounge",
+    "to_room": "spire_exec_lounge_bar",
+    "transition_text": "Travel to Exec Lounge."
+  },
+  {
+    "id": "spire_transit_plaza__spire_checkpoint_queue__east__spire_night_market",
+    "from_node": "spire_transit_plaza",
+    "from_room": "spire_checkpoint_queue",
+    "direction": "east",
+    "to_node": "spire_night_market",
+    "to_room": "spire_night_market",
+    "transition_text": "Travel to Night Market."
+  },
+  {
+    "id": "spire_skypark__spire_donor_gallery__south__spire_archive",
+    "from_node": "spire_skypark",
+    "from_room": "spire_donor_gallery",
+    "direction": "south",
+    "to_node": "spire_archive",
+    "to_room": "spire_archive_vault",
+    "transition_text": "Travel to The Archive."
+  },
+  {
+    "id": "spire_archive__spire_drone_test_alcove__east__spire_landing_pad",
+    "from_node": "spire_archive",
+    "from_room": "spire_drone_test_alcove",
+    "direction": "east",
+    "to_node": "spire_landing_pad",
+    "to_room": "spire_landing_pad_roof",
+    "transition_text": "Travel to Landing Pad."
+  },
+  {
+    "id": "spire_exec_lounge__spire_exec_lounge_bar__north__spire_laundry",
+    "from_node": "spire_exec_lounge",
+    "from_room": "spire_exec_lounge_bar",
+    "direction": "north",
+    "to_node": "spire_laundry",
+    "to_room": "spire_uniform_sorting",
+    "transition_text": "Travel to Laundry Service."
+  },
+  {
+    "id": "spire_exec_lounge__spire_exec_lounge_bar__west__spire_laundry",
+    "from_node": "spire_exec_lounge",
+    "from_room": "spire_exec_lounge_bar",
+    "direction": "west",
+    "to_node": "spire_laundry",
+    "to_room": "spire_service_lift",
+    "transition_text": "Travel to Laundry Service."
+  },
+  {
+    "id": "spire_exec_lounge__spire_exec_lounge_bar__east__spire_archive",
+    "from_node": "spire_exec_lounge",
+    "from_room": "spire_exec_lounge_bar",
+    "direction": "east",
+    "to_node": "spire_archive",
+    "to_room": "spire_archive_vault",
+    "transition_text": "Travel to The Archive."
+  },
+  {
+    "id": "spire_skypark__spire_glasswalk__south__spire_archive",
+    "from_node": "spire_skypark",
+    "from_room": "spire_glasswalk",
+    "direction": "south",
+    "to_node": "spire_archive",
+    "to_room": "spire_archive_vault",
+    "transition_text": "Travel to The Archive."
+  },
+  {
+    "id": "spire_landing_pad__spire_landing_pad_roof__west__spire_archive",
+    "from_node": "spire_landing_pad",
+    "from_room": "spire_landing_pad_roof",
+    "direction": "west",
+    "to_node": "spire_archive",
+    "to_room": "spire_drone_test_alcove",
+    "transition_text": "Travel to The Archive."
+  },
+  {
+    "id": "spire_laundry__spire_laundry_service__east__spire_archive",
+    "from_node": "spire_laundry",
+    "from_room": "spire_laundry_service",
+    "direction": "east",
+    "to_node": "spire_archive",
+    "to_room": "spire_prism_gallery",
+    "transition_text": "Travel to The Archive."
+  },
+  {
+    "id": "spire_night_market__spire_night_market__west__spire_transit_plaza",
+    "from_node": "spire_night_market",
+    "from_room": "spire_night_market",
+    "direction": "west",
+    "to_node": "spire_transit_plaza",
+    "to_room": "spire_checkpoint_queue",
+    "transition_text": "Travel to Transit Plaza."
+  },
+  {
+    "id": "spire_archive__spire_prism_gallery__west__spire_laundry",
+    "from_node": "spire_archive",
+    "from_room": "spire_prism_gallery",
+    "direction": "west",
+    "to_node": "spire_laundry",
+    "to_room": "spire_laundry_service",
+    "transition_text": "Travel to Laundry Service."
+  },
+  {
+    "id": "spire_laundry__spire_service_lift__north__spire_skypark",
+    "from_node": "spire_laundry",
+    "from_room": "spire_service_lift",
+    "direction": "north",
+    "to_node": "spire_skypark",
+    "to_room": "spire_skypark_dome",
+    "transition_text": "Travel to Skypark."
+  },
+  {
+    "id": "spire_laundry__spire_service_lift__east__spire_archive",
+    "from_node": "spire_laundry",
+    "from_room": "spire_service_lift",
+    "direction": "east",
+    "to_node": "spire_archive",
+    "to_room": "spire_archive_vault",
+    "transition_text": "Travel to The Archive."
+  },
+  {
+    "id": "spire_laundry__spire_service_lift__south__spire_exec_lounge",
+    "from_node": "spire_laundry",
+    "from_room": "spire_service_lift",
+    "direction": "south",
+    "to_node": "spire_exec_lounge",
+    "to_room": "spire_exec_lounge_bar",
+    "transition_text": "Travel to Exec Lounge."
+  },
+  {
+    "id": "spire_sewers__spire_sewers_passage__north__spire_vent_output",
+    "from_node": "spire_sewers",
+    "from_room": "spire_sewers_passage",
+    "direction": "north",
+    "to_node": "spire_vent_output",
+    "to_room": "spire_vent_output",
+    "transition_text": "Travel to Vent Output."
+  },
+  {
+    "id": "spire_sewers__spire_sewers_passage__east__spire_transit_plaza",
+    "from_node": "spire_sewers",
+    "from_room": "spire_sewers_passage",
+    "direction": "east",
+    "to_node": "spire_transit_plaza",
+    "to_room": "spire_transit_plaza",
+    "transition_text": "Travel to Transit Plaza."
+  },
+  {
+    "id": "spire_skypark__spire_skypark_dome__south__spire_laundry",
+    "from_node": "spire_skypark",
+    "from_room": "spire_skypark_dome",
+    "direction": "south",
+    "to_node": "spire_laundry",
+    "to_room": "spire_service_lift",
+    "transition_text": "Travel to Laundry Service."
+  },
+  {
+    "id": "spire_skypark__spire_skypark_dome__west__spire_laundry",
+    "from_node": "spire_skypark",
+    "from_room": "spire_skypark_dome",
+    "direction": "west",
+    "to_node": "spire_laundry",
+    "to_room": "spire_staff_checkpoint",
+    "transition_text": "Travel to Laundry Service."
+  },
+  {
+    "id": "spire_laundry__spire_staff_checkpoint__east__spire_skypark",
+    "from_node": "spire_laundry",
+    "from_room": "spire_staff_checkpoint",
+    "direction": "east",
+    "to_node": "spire_skypark",
+    "to_room": "spire_skypark_dome",
+    "transition_text": "Travel to Skypark."
+  },
+  {
+    "id": "spire_the_static__spire_the_static__west__spire_vent_output",
+    "from_node": "spire_the_static",
+    "from_room": "spire_the_static",
+    "direction": "west",
+    "to_node": "spire_vent_output",
+    "to_room": "spire_underrail_platform",
+    "transition_text": "Travel to Vent Output."
+  },
+  {
+    "id": "spire_the_static__spire_the_static__south__spire_transit_plaza",
+    "from_node": "spire_the_static",
+    "from_room": "spire_the_static",
+    "direction": "south",
+    "to_node": "spire_transit_plaza",
+    "to_room": "spire_transit_plaza",
+    "transition_text": "Travel to Transit Plaza."
+  },
+  {
+    "id": "spire_transit_plaza__spire_transit_plaza__north__spire_the_static",
+    "from_node": "spire_transit_plaza",
+    "from_room": "spire_transit_plaza",
+    "direction": "north",
+    "to_node": "spire_the_static",
+    "to_room": "spire_the_static",
+    "transition_text": "Travel to The Static."
+  },
+  {
+    "id": "spire_transit_plaza__spire_transit_plaza__west__spire_sewers",
+    "from_node": "spire_transit_plaza",
+    "from_room": "spire_transit_plaza",
+    "direction": "west",
+    "to_node": "spire_sewers",
+    "to_room": "spire_sewers_passage",
+    "transition_text": "Travel to The Sewers."
+  },
+  {
+    "id": "spire_vent_output__spire_underrail_platform__east__spire_the_static",
+    "from_node": "spire_vent_output",
+    "from_room": "spire_underrail_platform",
+    "direction": "east",
+    "to_node": "spire_the_static",
+    "to_room": "spire_the_static",
+    "transition_text": "Travel to The Static."
+  },
+  {
+    "id": "spire_vent_output__spire_underrail_platform__south__spire_transit_plaza",
+    "from_node": "spire_vent_output",
+    "from_room": "spire_underrail_platform",
+    "direction": "south",
+    "to_node": "spire_transit_plaza",
+    "to_room": "spire_transit_plaza",
+    "transition_text": "Travel to Transit Plaza."
+  },
+  {
+    "id": "spire_laundry__spire_uniform_sorting__south__spire_exec_lounge",
+    "from_node": "spire_laundry",
+    "from_room": "spire_uniform_sorting",
+    "direction": "south",
+    "to_node": "spire_exec_lounge",
+    "to_room": "spire_exec_lounge_bar",
+    "transition_text": "Travel to Exec Lounge."
+  },
+  {
+    "id": "spire_vent_output__spire_vent_output__south__spire_sewers",
+    "from_node": "spire_vent_output",
+    "from_room": "spire_vent_output",
+    "direction": "south",
+    "to_node": "spire_sewers",
+    "to_room": "spire_sewers_passage",
+    "transition_text": "Travel to The Sewers."
   }
 ]

@@ -101,6 +101,33 @@ class DataIntegrityTest {
     }
 
     @Test
+    fun worldThreeHasBuiltoutRoomGraph() {
+        val rooms = readList("src/main/assets/rooms.json", Room::class.java)
+        val roomIds = rooms.map { it.id }.toSet()
+        val worldThreeRooms = rooms.filter { it.id.startsWith("spire_") }
+        val events = readList("src/main/assets/events.json", GameEvent::class.java)
+            .map { it.id }
+            .toSet()
+        val nodes = readList("src/main/assets/hub_nodes.json", HubNode::class.java)
+            .filter { it.hubId in setOf("hub_5_lower_city", "hub_6_upper_city") }
+
+        assertTrue("World 3 should be built out beyond the initial skeleton", worldThreeRooms.size >= 32)
+
+        val missingNodeRooms = nodes.flatMap { node ->
+            node.rooms.filterNot { it in roomIds }.map { "${node.id}:$it" }
+        }
+        val missingActionEvents = worldThreeRooms.flatMap { room ->
+            room.actions.mapNotNull { action ->
+                val eventId = action["action_event"] as? String
+                if (!eventId.isNullOrBlank() && eventId !in events) "${room.id}:$eventId" else null
+            }
+        }
+
+        assertTrue("World 3 hub nodes should reference valid rooms (missing: $missingNodeRooms)", missingNodeRooms.isEmpty())
+        assertTrue("World 3 room actions should reference valid events (missing: $missingActionEvents)", missingActionEvents.isEmpty())
+    }
+
+    @Test
     fun playCinematicActionsReferenceExistingScenes() {
         val events = readList("src/main/assets/events.json", GameEvent::class.java)
         val cinematics = readCinematics()

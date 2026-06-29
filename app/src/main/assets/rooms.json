@@ -3127,12 +3127,12 @@
     "env": "neon",
     "title": "Sewer Landing Pad",
     "background_image": "images/rooms/world_3/spire_sewers_landing.png",
-    "description": "The Astra sits powered down, its hull reflecting the dim bioluminescent glow of sewer algae. The air is damp, smelling of ozone and ancient pipes.",
+    "description": "The Astra sits powered down beside a sewer landing pad, its hull reflecting algae-glow and warning strobes from the runoff lock ahead. The air is damp, smelling of ozone, old pipes, and a city trying not to notice you arrived.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "east": "spire_sewers_passage"
+      "east": "spire_runoff_lock"
     },
     "pos": [
       0,
@@ -3148,18 +3148,51 @@
     ]
   },
   {
-    "id": "spire_sewers_passage",
+    "id": "spire_runoff_lock",
     "env": "neon",
-    "title": "Sewer Passage",
+    "title": "Runoff Lock",
     "background_image": "images/rooms/world_3/spire_sewers_passage.png",
-    "description": "A long, concrete run-off tunnel under the Spire. Water drips from rusted pipes overhead. Dark shapes move in the shadows ahead.",
+    "description": "A rusted runoff lock divides the sewer landing from the city drains. Green water slaps against a sealed floodgate while a ladder cage climbs into steam.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
       "west": "spire_sewers_landing",
+      "east": "spire_sewers_passage",
+      "north": "spire_maintenance_sluice"
+    },
+    "pos": [
+      1,
+      2
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "floodgate",
+        "type": "generic",
+        "condition_unmet_message": "The floodgate is old Dominion infrastructure: too heavy to force, but useful cover from city scans."
+      },
+      {
+        "name": "ladder cage",
+        "type": "generic",
+        "condition_unmet_message": "The ladder cage rattles under runoff spray and disappears into the maintenance level."
+      }
+    ]
+  },
+  {
+    "id": "spire_sewers_passage",
+    "env": "neon",
+    "title": "Sewer Passage",
+    "background_image": "images/rooms/world_3/spire_sewers_passage.png",
+    "description": "A long concrete sewer passage carries warm runoff under the Spire. Water drips from rusted vent pipes overhead while the tunnel splits toward maintenance heat, rainlight, and the guarded city above.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "spire_runoff_lock",
       "north": "spire_vent_output",
-      "east": "spire_transit_plaza"
+      "east": "spire_transit_plaza",
+      "south": "spire_maintenance_sluice"
     },
     "pos": [
       1,
@@ -3175,17 +3208,49 @@
     ]
   },
   {
+    "id": "spire_maintenance_sluice",
+    "env": "neon",
+    "title": "Maintenance Sluice",
+    "background_image": "images/rooms/world_3/spire_sewers_passage.png",
+    "description": "The maintenance sluice runs above the main tunnel, narrow and hot with valve heat. A maintenance panel blinks beside a pipe map nobody has updated in years.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "south": "spire_runoff_lock",
+      "east": "spire_sewers_passage"
+    },
+    "pos": [
+      1,
+      1
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "maintenance panel",
+        "type": "generic",
+        "condition_unmet_message": "The maintenance panel shows pressure routes under the Lower City and several unmapped service risers."
+      },
+      {
+        "name": "pipe map",
+        "type": "generic",
+        "condition_unmet_message": "The pipe map marks old access routes that Zeke still remembers by smell."
+      }
+    ]
+  },
+  {
     "id": "spire_vent_output",
     "env": "neon",
     "title": "Vent Output",
     "background_image": "images/rooms/world_3/spire_vent_output.png",
-    "description": "Acid rain falls from a synthetic sky, steaming as it hits hot exhaust vents. You stand in a trash-filled alleyway between looming vertical blocks.",
+    "description": "The vent output coughs the crew into acid rain and neon exhaust. Trash piles clog the curb, and Rain Gutter Alley vanishes west between buildings that lean like they are tired.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
       "south": "spire_sewers_passage",
-      "east": "spire_the_static"
+      "west": "spire_rain_gutter_alley",
+      "east": "spire_underrail_platform"
     },
     "pos": [
       1,
@@ -3201,17 +3266,75 @@
     ]
   },
   {
-    "id": "spire_the_static",
+    "id": "spire_rain_gutter_alley",
     "env": "neon",
-    "title": "The Static",
-    "background_image": "images/rooms/world_3/spire_the_static.png",
-    "description": "A dark dive bar built inside a derelict subway car. Neon signs pulse erratically, casting a purple glow over the patrons.",
+    "title": "Rain Gutter Alley",
+    "background_image": "images/rooms/world_3/spire_vent_output.png",
+    "description": "Rainwater sheets through Rain Gutter Alley in oily ribbons. A patrol mirror hangs above a cracked stairwell, giving the alley eyes even when no guard is present.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "east": "spire_vent_output"
+    },
+    "pos": [
+      -1,
+      0
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "patrol mirror",
+        "type": "generic",
+        "condition_unmet_message": "The patrol mirror bends the alley into a surveillance angle. Someone learned to watch without standing in the rain."
+      },
+      {
+        "name": "cracked stairwell",
+        "type": "generic",
+        "condition_unmet_message": "The cracked stairwell is blocked by collapsed plascrete and old eviction notices."
+      }
+    ]
+  },
+  {
+    "id": "spire_underrail_platform",
+    "env": "neon",
+    "title": "Underrail Platform",
+    "background_image": "images/rooms/world_3/spire_transit_plaza.png",
+    "description": "An abandoned underrail platform trembles whenever the city trains pass overhead. The underrail map is scratched with routes, curfews, and warnings written in marker.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
       "west": "spire_vent_output",
-      "north": "spire_zekes_apartment",
+      "east": "spire_the_static",
+      "south": "spire_transit_plaza"
+    },
+    "pos": [
+      1,
+      0
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "underrail map",
+        "type": "generic",
+        "condition_unmet_message": "The underrail map shows which transit lines still run, which ones are watched, and which ones ate people."
+      }
+    ]
+  },
+  {
+    "id": "spire_the_static",
+    "env": "neon",
+    "title": "The Static",
+    "background_image": "images/rooms/world_3/spire_the_static.png",
+    "description": "The Static is a dark dive bar built around an old subway car. Neon signs pulse erratically, the sign outside keeps failing, and the signal stairwell behind the bar hums with pirate broadcasts.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "spire_underrail_platform",
+      "east": "spire_old_subway_car",
+      "north": "spire_signal_stairwell",
       "south": "spire_transit_plaza"
     },
     "pos": [
@@ -3238,16 +3361,78 @@
     ]
   },
   {
-    "id": "spire_zekes_apartment",
+    "id": "spire_old_subway_car",
     "env": "neon",
-    "title": "Zeke's Apartment",
-    "background_image": "images/rooms/world_3/spire_zekes_apartment.png",
-    "description": "Zeke's old apartment. The furniture is sparse, and the shelves are empty. A workstation hums on a table in the center of the room.",
+    "title": "Old Subway Car",
+    "background_image": "images/rooms/world_3/spire_the_static.png",
+    "description": "The Static spills into an old subway car bolted beside the bar. Torn booth seats, stickered windows, and a silent jukebox make the car feel half shrine, half hiding place.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "spire_the_static"
+      "east": "spire_the_static"
+    },
+    "pos": [
+      1,
+      -1
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "silent jukebox",
+        "type": "generic",
+        "condition_unmet_message": "The silent jukebox has no power, but every title card is a protest song Dominion tried to erase."
+      },
+      {
+        "name": "stickered windows",
+        "type": "generic",
+        "condition_unmet_message": "The stickered windows turn patrol lights into broken color."
+      }
+    ]
+  },
+  {
+    "id": "spire_signal_stairwell",
+    "env": "neon",
+    "title": "Signal Stairwell",
+    "background_image": "images/rooms/world_3/spire_the_static.png",
+    "description": "A signal stairwell climbs behind The Static, each landing crowded with antenna wire and old mail slots. The whole shaft hums with pirate broadcasts.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "south": "spire_the_static",
+      "north": "spire_zekes_apartment"
+    },
+    "pos": [
+      2,
+      -1
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "antenna wire",
+        "type": "generic",
+        "condition_unmet_message": "The antenna wire carries bar gossip, coded warnings, and cheap music through the block."
+      },
+      {
+        "name": "mail slots",
+        "type": "generic",
+        "condition_unmet_message": "The mail slots still hold notices addressed to people Dominion says never lived here."
+      }
+    ]
+  },
+  {
+    "id": "spire_zekes_apartment",
+    "env": "neon",
+    "title": "Zeke's Apartment",
+    "background_image": "images/rooms/world_3/spire_zekes_apartment.png",
+    "description": "Zeke's old apartment is sparse enough to feel erased. A workstation hums on a table, a planning table waits under bad light, and roof access opens toward the impossible skyline.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "south": "spire_signal_stairwell",
+      "north": "spire_safehouse_roof"
     },
     "pos": [
       2,
@@ -3279,16 +3464,49 @@
     ]
   },
   {
-    "id": "spire_night_market",
+    "id": "spire_safehouse_roof",
     "env": "neon",
-    "title": "Night Market",
-    "background_image": "images/rooms/world_3/spire_night_market.png",
-    "description": "A lively, shoulder-to-shoulder market street. Colorful lanterns swing on wires overhead, and food stalls sizzle in the damp air.",
+    "title": "Safehouse Roof",
+    "background_image": "images/rooms/world_3/spire_zekes_apartment.png",
+    "description": "The safehouse roof is barely larger than the apartment below it. A skyline of corporate towers rises beyond laundry lines, and the shield shimmer turns the clouds into a cage.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "west": "spire_transit_plaza"
+      "south": "spire_zekes_apartment"
+    },
+    "pos": [
+      2,
+      -3
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "skyline",
+        "type": "generic",
+        "condition_unmet_message": "The skyline makes the heist look impossible, which is probably why Zeke keeps staring at it."
+      },
+      {
+        "name": "laundry lines",
+        "type": "generic",
+        "condition_unmet_message": "The laundry lines snap in polluted wind, full of patched coats and borrowed uniforms."
+      }
+    ]
+  },
+  {
+    "id": "spire_night_market",
+    "env": "neon",
+    "title": "Night Market",
+    "background_image": "images/rooms/world_3/spire_night_market.png",
+    "description": "The Night Market is loud enough to feel alive on purpose. Lanterns swing over food steam, Noodle Row shouts through the rain, and a lantern bridge crosses above the drain like a string of stubborn stars.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "spire_checkpoint_queue",
+      "east": "spire_noodle_row",
+      "north": "spire_lantern_bridge",
+      "south": "spire_backstreet_clinic"
     },
     "pos": [
       3,
@@ -3314,18 +3532,109 @@
     ]
   },
   {
+    "id": "spire_noodle_row",
+    "env": "neon",
+    "title": "Noodle Row",
+    "background_image": "images/rooms/world_3/spire_night_market.png",
+    "description": "Noodle Row steams under plastic awnings. The soup counter never stops moving, and every bowl comes with news if you know how to listen.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "spire_night_market"
+    },
+    "pos": [
+      6,
+      0
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "soup counter",
+        "type": "generic",
+        "condition_unmet_message": "The soup counter smells like pepper oil, broth, and a city refusing to become quiet."
+      },
+      {
+        "name": "plastic awnings",
+        "type": "generic",
+        "condition_unmet_message": "The plastic awnings drum with rain hard enough to hide a whispered plan."
+      }
+    ]
+  },
+  {
+    "id": "spire_lantern_bridge",
+    "env": "neon",
+    "title": "Lantern Bridge",
+    "background_image": "images/rooms/world_3/spire_night_market.png",
+    "description": "A narrow lantern bridge crosses above the market drain. Paper charms flutter from the rail, each one carrying a name, a debt, or a prayer.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "south": "spire_night_market"
+    },
+    "pos": [
+      5,
+      -1
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "paper charms",
+        "type": "generic",
+        "condition_unmet_message": "The paper charms are cheap, handmade, and treated with more respect than any Dominion permit."
+      },
+      {
+        "name": "market drain",
+        "type": "generic",
+        "condition_unmet_message": "The market drain carries spilled rain and contraband wrappers toward the old sewer channels."
+      }
+    ]
+  },
+  {
+    "id": "spire_backstreet_clinic",
+    "env": "neon",
+    "title": "Backstreet Clinic",
+    "background_image": "images/rooms/world_3/spire_night_market.png",
+    "description": "The backstreet clinic is one room behind a noodle stall, lit by battery lamps and stubborn mercy. A triage curtain gives patients more dignity than privacy.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "north": "spire_night_market"
+    },
+    "pos": [
+      5,
+      1
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "triage curtain",
+        "type": "generic",
+        "condition_unmet_message": "The triage curtain is patched from old uniforms, hospital sheets, and someone's lucky scarf."
+      },
+      {
+        "name": "battery lamps",
+        "type": "generic",
+        "condition_unmet_message": "The battery lamps are dim, warm, and worth more than anything sterile in the Upper City."
+      }
+    ]
+  },
+  {
     "id": "spire_transit_plaza",
     "env": "neon",
     "title": "Transit Plaza",
     "background_image": "images/rooms/world_3/spire_transit_plaza.png",
-    "description": "A wide square dominated by the base of the Great Elevator. Dominion guards patrol behind heavy barriers.",
+    "description": "Transit Plaza spreads beneath the Great Elevator, all surveillance glass, guard lanes, and crowded hesitation. The elevator controls tower above a checkpoint queue while a security kiosk glows under the stairs.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
       "north": "spire_the_static",
       "west": "spire_sewers_passage",
-      "east": "spire_night_market"
+      "east": "spire_checkpoint_queue",
+      "south": "spire_security_kiosk"
     },
     "pos": [
       2,
@@ -3342,18 +3651,112 @@
     ]
   },
   {
-    "id": "spire_laundry_service",
+    "id": "spire_checkpoint_queue",
     "env": "neon",
-    "title": "Laundry Service",
-    "background_image": "images/rooms/world_3/spire_laundry_service.png",
-    "description": "Concrete service corridors run beneath the Cloud District, packed with steam pipes, laundry chutes, cleaning bots, and the only honest noise in the Upper City.",
+    "title": "Checkpoint Queue",
+    "background_image": "images/rooms/world_3/spire_transit_plaza.png",
+    "description": "The checkpoint queue snakes between metal rails and glass cameras. A queue display assigns wait times, threat scores, and fines before anyone reaches a guard.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "north": "spire_skypark_dome",
-      "east": "spire_archive_vault",
-      "south": "spire_exec_lounge_bar"
+      "west": "spire_transit_plaza",
+      "east": "spire_night_market",
+      "north": "spire_elevator_service_gate"
+    },
+    "pos": [
+      4,
+      1
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "queue display",
+        "type": "generic",
+        "condition_unmet_message": "The queue display marks lower-city residents as delays, not people."
+      },
+      {
+        "name": "glass cameras",
+        "type": "generic",
+        "condition_unmet_message": "The glass cameras follow faces with gentle mechanical patience."
+      }
+    ]
+  },
+  {
+    "id": "spire_security_kiosk",
+    "env": "neon",
+    "title": "Security Kiosk",
+    "background_image": "images/rooms/world_3/spire_transit_plaza.png",
+    "description": "A security kiosk sits under the plaza stairs, unattended because the guards trust the software more than each other. The security terminal and case records glow behind cracked glass.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "north": "spire_transit_plaza"
+    },
+    "pos": [
+      3,
+      2
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "security terminal",
+        "type": "generic",
+        "action_event": "w3_mq12_interrogate_guard",
+        "condition_unmet_message": "You search the security terminal for shift rotations, extraction codes, and elevator routing."
+      },
+      {
+        "name": "case records",
+        "type": "generic",
+        "action_event": "w3_sq12_access_terminal",
+        "condition_unmet_message": "The case records include sealed entries Gh0st can pull apart for traces of Elara."
+      }
+    ]
+  },
+  {
+    "id": "spire_elevator_service_gate",
+    "env": "neon",
+    "title": "Elevator Service Gate",
+    "background_image": "images/rooms/world_3/spire_transit_plaza.png",
+    "description": "A side service gate hides in the shadow of the Great Elevator. Freight crews pass through with eyes down, freight badges out, and no interest in heroics.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "south": "spire_checkpoint_queue"
+    },
+    "pos": [
+      4,
+      0
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "service gate",
+        "type": "generic",
+        "condition_unmet_message": "The service gate is the kind of access point a good plan can turn into a door."
+      },
+      {
+        "name": "freight badges",
+        "type": "generic",
+        "condition_unmet_message": "The freight badges hanging at the booth are blank until a shift captain activates them."
+      }
+    ]
+  },
+  {
+    "id": "spire_laundry_service",
+    "env": "neon",
+    "title": "Laundry Service",
+    "background_image": "images/rooms/world_3/spire_laundry_service.png",
+    "description": "Laundry Service runs beneath the Cloud District, packed with steam pipes, cleaning bots, a sensor console, and a service chute for invisible workers. Uniform sorting and the staff checkpoint turn labor into security theater.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "north": "spire_staff_checkpoint",
+      "east": "spire_prism_gallery",
+      "south": "spire_uniform_sorting"
     },
     "pos": [
       0,
@@ -3376,17 +3779,114 @@
     ]
   },
   {
-    "id": "spire_skypark_dome",
+    "id": "spire_uniform_sorting",
     "env": "neon",
-    "title": "Skypark Dome",
-    "background_image": "images/rooms/world_3/spire_skypark_dome.png",
-    "description": "A rooftop garden under a force-field dome. The sun is fake, the trees are perfect clones, and every smile looks practiced.",
+    "title": "Uniform Sorting",
+    "background_image": "images/rooms/world_3/spire_laundry_service.png",
+    "description": "Uniform sorting smells like detergent and fear. Uniform racks roll in strict rows, and laundry tags mark each sleeve for a life the Upper City will never notice.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "north": "spire_laundry_service",
+      "east": "spire_service_lift",
+      "south": "spire_exec_lounge_bar"
+    },
+    "pos": [
+      0,
+      6
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "uniform racks",
+        "type": "generic",
+        "condition_unmet_message": "The uniform racks are full of disguises if the crew can match fabric, timing, and nerve."
+      },
+      {
+        "name": "laundry tags",
+        "type": "generic",
+        "condition_unmet_message": "The laundry tags expose which staff routes reach the Archive level."
+      }
+    ]
+  },
+  {
+    "id": "spire_service_lift",
+    "env": "neon",
+    "title": "Service Lift",
+    "background_image": "images/rooms/world_3/spire_laundry_service.png",
+    "description": "A service lift rises through the bones of the Upper City. The lift panel lists kitchens, gardens, galleries, and floors that have no public name, while an inspection hatch rattles overhead.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "spire_uniform_sorting",
+      "north": "spire_skypark_dome",
+      "east": "spire_archive_vault",
+      "south": "spire_exec_lounge_bar"
+    },
+    "pos": [
+      1,
+      6
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "lift panel",
+        "type": "generic",
+        "condition_unmet_message": "The lift panel proves the Upper City has a servant map hidden under the guest map."
+      },
+      {
+        "name": "inspection hatch",
+        "type": "generic",
+        "condition_unmet_message": "The inspection hatch is narrow enough for Gh0st and worrying enough for everyone else."
+      }
+    ]
+  },
+  {
+    "id": "spire_staff_checkpoint",
+    "env": "neon",
+    "title": "Staff Checkpoint",
+    "background_image": "images/rooms/world_3/spire_laundry_service.png",
+    "description": "The staff checkpoint is clean, bright, and cruelly polite. A badge scanner chirps at every worker while a wall display grades smiles for guest readiness.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
       "south": "spire_laundry_service",
-      "east": "spire_archive_vault"
+      "east": "spire_skypark_dome"
+    },
+    "pos": [
+      0,
+      4
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "badge scanner",
+        "type": "generic",
+        "condition_unmet_message": "The badge scanner cares about uniforms, posture, and timing. It does not care about truth."
+      },
+      {
+        "name": "wall display",
+        "type": "generic",
+        "condition_unmet_message": "The wall display rotates staff infractions beside inspirational slogans."
+      }
+    ]
+  },
+  {
+    "id": "spire_skypark_dome",
+    "env": "neon",
+    "title": "Skypark Dome",
+    "background_image": "images/rooms/world_3/spire_skypark_dome.png",
+    "description": "The Skypark Dome offers fake sun, perfect trees, and guest registry smiles polished thin. The glasswalk curves along the edge, showing the Lower City far enough below to become decoration.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "south": "spire_service_lift",
+      "west": "spire_staff_checkpoint",
+      "east": "spire_glasswalk"
     },
     "pos": [
       1,
@@ -3414,16 +3914,80 @@
     ]
   },
   {
-    "id": "spire_exec_lounge_bar",
+    "id": "spire_glasswalk",
     "env": "neon",
-    "title": "Exec Lounge",
-    "background_image": "images/rooms/world_3/spire_exec_lounge_bar.png",
-    "description": "A bar floats on a grav-platform above a silent atrium. VIP booths glitter with privacy glass and quiet blackmail.",
+    "title": "Glasswalk",
+    "background_image": "images/rooms/world_3/spire_skypark_dome.png",
+    "description": "The glasswalk curves along the dome edge with the whole Lower City visible far below. A camera seam runs under the handrail like a vein.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "north": "spire_laundry_service",
+      "west": "spire_skypark_dome",
+      "east": "spire_donor_gallery",
+      "south": "spire_archive_vault"
+    },
+    "pos": [
+      3,
+      4
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "camera seam",
+        "type": "generic",
+        "condition_unmet_message": "The camera seam is nearly invisible until you know where expensive paranoia hides."
+      },
+      {
+        "name": "handrail",
+        "type": "generic",
+        "condition_unmet_message": "The handrail is warm, spotless, and probably listening."
+      }
+    ]
+  },
+  {
+    "id": "spire_donor_gallery",
+    "env": "neon",
+    "title": "Donor Gallery",
+    "background_image": "images/rooms/world_3/spire_skypark_dome.png",
+    "description": "The donor gallery displays smiling portraits of executives who bought pieces of the sky. A donor wall and portrait plaques thank families whose names appear in half the city laws.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "spire_glasswalk",
+      "south": "spire_archive_vault"
+    },
+    "pos": [
+      4,
+      4
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "donor wall",
+        "type": "generic",
+        "condition_unmet_message": "The donor wall is less history than ownership paperwork made decorative."
+      },
+      {
+        "name": "portrait plaques",
+        "type": "generic",
+        "condition_unmet_message": "The portrait plaques list charity gifts beside private security contracts."
+      }
+    ]
+  },
+  {
+    "id": "spire_exec_lounge_bar",
+    "env": "neon",
+    "title": "Exec Lounge",
+    "background_image": "images/rooms/world_3/spire_exec_lounge_bar.png",
+    "description": "The Exec Lounge floats on a grav-platform above a silent atrium. A private safe hides behind sculpture, the concierge terminal sells contempt, and every booth looks designed for blackmail.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "north": "spire_uniform_sorting",
+      "west": "spire_service_lift",
       "east": "spire_archive_vault"
     },
     "pos": [
@@ -3463,21 +4027,51 @@
     "env": "neon",
     "title": "Archive Vault",
     "background_image": "images/rooms/world_3/spire_archive_vault.png",
-    "description": "Crystal shards rise in endless indexed stacks over a glass floor that looks down two hundred stories. The Lens hangs in a containment field, humming like a held note.",
+    "description": "The Archive Vault rises in indexed crystal stacks over a glass floor two hundred stories high. The lens relic hangs in a containment field while side passages lead to prisms, donors, service routes, and drone testing.",
     "npcs": [],
     "items": [],
     "enemies": [
       "corporate_assassin"
     ],
     "connections": {
-      "west": "spire_laundry_service",
-      "north": "spire_skypark_dome",
+      "west": "spire_prism_gallery",
+      "north": "spire_donor_gallery",
       "south": "spire_exec_lounge_bar",
-      "east": "spire_landing_pad_roof"
+      "east": "spire_drone_test_alcove"
     },
     "pos": [
       2,
       1
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "lens relic",
+        "type": "generic",
+        "action_event": "w3_mq14_take_lens",
+        "condition_unmet_message": "The Lens floats inside a containment field."
+      }
+    ],
+    "enemy_flavor": {
+      "corporate_assassin": "A corporate assassin flickers between shard stacks, waiting for the alarm to justify murder."
+    }
+  },
+  {
+    "id": "spire_prism_gallery",
+    "env": "neon",
+    "title": "Prism Gallery",
+    "background_image": "images/rooms/world_3/spire_archive_vault.png",
+    "description": "The prism gallery bends Archive light into visible music. A light puzzle waits in the center, its prisms tuned to frequencies Orion can hear before anyone else can see them.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "spire_laundry_service",
+      "east": "spire_archive_vault"
+    },
+    "pos": [
+      3,
+      6
     ],
     "state": {},
     "actions": [
@@ -3488,28 +4082,50 @@
         "condition_unmet_message": "A prism array waits for Orion to tune its acoustic frequencies."
       },
       {
-        "name": "lens relic",
+        "name": "visible music",
         "type": "generic",
-        "action_event": "w3_mq14_take_lens",
-        "condition_unmet_message": "The Lens floats inside a containment field."
-      },
+        "condition_unmet_message": "The visible music shivers in the air, beautiful enough to make the alarm grid feel holy."
+      }
+    ]
+  },
+  {
+    "id": "spire_drone_test_alcove",
+    "env": "neon",
+    "title": "Drone Test Alcove",
+    "background_image": "images/rooms/world_3/spire_archive_vault.png",
+    "description": "The drone test alcove is sealed behind scratched glass and warning tape. A prototype rack waits beside a row of sleeping security drones.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "spire_archive_vault",
+      "east": "spire_landing_pad_roof"
+    },
+    "pos": [
+      5,
+      6
+    ],
+    "state": {},
+    "actions": [
       {
         "name": "prototype rack",
         "type": "generic",
         "action_event": "w3_sq15_test_weapon",
         "condition_unmet_message": "A dangerous experimental weapon rack waits beside a drone testing alcove."
+      },
+      {
+        "name": "security drones",
+        "type": "generic",
+        "condition_unmet_message": "The security drones sleep in charging nests, which is not the same thing as harmless."
       }
-    ],
-    "enemy_flavor": {
-      "corporate_assassin": "A corporate assassin flickers between shard stacks, waiting for the alarm to justify murder."
-    }
+    ]
   },
   {
     "id": "spire_landing_pad_roof",
     "env": "neon",
     "title": "Landing Pad Roof",
     "background_image": "images/rooms/world_3/spire_landing_pad_roof.png",
-    "description": "The Spire roof shudders under violent wind. The Astra waits on the pad while the Planetary Shield rotates overhead in impossible chords.",
+    "description": "The Landing Pad Roof shudders under violent wind. The Astra waits beyond the drone test alcove while the Planetary Shield rotates overhead in impossible chords and launch astra becomes the only clean verb left.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -3528,7 +4144,7 @@
       ]
     ],
     "connections": {
-      "west": "spire_archive_vault"
+      "west": "spire_drone_test_alcove"
     },
     "pos": [
       3,
