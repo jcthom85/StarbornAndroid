@@ -4923,6 +4923,33 @@
     ]
   },
   {
+    "id": "w3_mq14_assassin_down",
+    "description": "Acknowledge defeating the Archive assassin.",
+    "trigger": {
+      "type": "encounter_victory",
+      "enemies": [
+        "corporate_assassin"
+      ]
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w3_mq14"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w3_mq14",
+        "task_id": "take_lens"
+      }
+    ],
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "The assassin drops between crystal stacks without a scream. The Archive stays beautiful, expensive, and absolutely willing to kill for the Lens."
+      }
+    ]
+  },
+  {
     "id": "w3_scan_archive_tethers",
     "description": "Use the Lens to read the Archive's hidden tether-lines.",
     "repeatable": true,
@@ -5073,6 +5100,39 @@
       {
         "type": "show_message",
         "message": "The drone test alcove erupts behind you as the crew reaches the roof. Wind tears across the pad. The Astra is still here. So is the Administrator, smiling with every weapon the city calls peacekeeping."
+      }
+    ]
+  },
+  {
+    "id": "w3_mq15_rooftop_security_down",
+    "description": "Acknowledge clearing the rooftop security wave before the Administrator.",
+    "trigger": {
+      "type": "encounter_victory",
+      "enemies": [
+        "aero_drone",
+        "heavy_mech"
+      ]
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w3_mq15"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w3_mq15",
+        "task_id": "reach_landing_pad"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w3_mq15",
+        "task_id": "defeat_administrator"
+      }
+    ],
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "The rooftop security line buckles. The Astra is close enough to smell hot metal through the wind, and the Administrator stops pretending this is only an arrest."
       }
     ]
   },

@@ -4264,6 +4264,8 @@
       }
     ],
     "enemy_flavor": {
+      "aero_drone": "Aero drones knife through the rain of red warning light, their stun emitters searching for a clean angle.",
+      "heavy_mech": "A heavy mech plants itself between the crew and the Astra, vents glowing hot enough to warp the landing paint.",
       "administrator_boss": "The Administrator descends in a polished security frame, its voice still gentle while the roof guns arm."
     }
   },

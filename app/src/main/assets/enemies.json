@@ -730,7 +730,7 @@
         "chance": 0.4
       }
     ],
-    "description": "Fast flying stun drone. Vulnerable to physical hits once staggered.",
+    "description": "Fast stun drone that dodges clean hits until its pattern is read. Scan marks the opening; physical strikes finish it once staggered.",
     "portrait": "images/enemies/security_drone_combat.png"
   },
   {
@@ -775,7 +775,7 @@
         "chance": 0.25
       }
     ],
-    "description": "Stealth critical striker. Scan exposes poor shock shielding.",
+    "description": "Stealth critical striker that punishes blind attacks. Scan exposes its poor shock shielding before it can vanish again.",
     "portrait": "images/enemies/riot_guard_combat.png"
   },
   {
@@ -820,7 +820,7 @@
         "chance": 0.35
       }
     ],
-    "description": "Armored flamethrower tank. Shock damage breaks its stabilizers.",
+    "description": "Armored flamethrower tank with heavy stability. Scan calls out its exposed stabilizers; shock damage breaks them fastest.",
     "portrait": "images/enemies/heavy_loader_combat.png"
   },
   {
@@ -865,7 +865,7 @@
         "quantity": 2
       }
     ],
-    "description": "Upper City boss. Summons drones and paints the roof with laser lattices.",
+    "description": "Upper City boss that weaponizes drones, lasers, and polite control. Scan exposes timing gaps in its shield lattice; shock breaks its frame fastest.",
     "portrait": "images/enemies/the_warden_combat.png"
   },
   {
