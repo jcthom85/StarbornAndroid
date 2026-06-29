@@ -23,6 +23,7 @@ class Hub5CriticalFlowTest {
 
         harness.store.startQuest("w3_mq15")
         harness.store.setQuestTaskCompleted("w3_mq15", "defeat_administrator", true)
+        harness.store.setQuestTaskCompleted("w3_mq15", "scan_shield_gap", true)
         harness.events.handleTrigger("player_action", EventPayload.Action("w3_mq15_launch_astra"))
 
         var state = harness.store.state.value

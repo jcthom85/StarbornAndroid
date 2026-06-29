@@ -386,6 +386,12 @@
     }
   },
   {
+    "id": "ms_w3_market_lit",
+    "name": "Night Market Lit",
+    "description": "You restored the Night Market lanterns before patrols could use the darkness as an excuse to clear the stalls.",
+    "toast": "Night Market lights restored."
+  },
+  {
     "id": "ms_w3_mq13_complete",
     "name": "Upper City Access",
     "description": "You infiltrated the Upper City and passed the penthouse scanners.",

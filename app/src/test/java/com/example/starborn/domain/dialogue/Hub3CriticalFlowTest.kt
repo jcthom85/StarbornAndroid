@@ -147,6 +147,7 @@ class Hub3CriticalFlowTest {
         harness.events.handleTrigger("player_action", EventPayload.Action("w3_sq13_fix_market_lights"))
         state = harness.store.state.value
         assertTrue(state.completedQuests.contains("w3_sq13"))
+        assertTrue(state.completedMilestones.contains("ms_w3_market_lit"))
         assertTrue(state.inventory["neon_band"].orZero() >= 1)
     }
 

@@ -3348,6 +3348,14 @@
       1
     ],
     "state": {},
+    "description_variants": [
+      {
+        "description": "The Static is a dark dive bar built around an old subway car. The repaired sign outside throws enough neon to make patrols look bored, and the signal stairwell behind the bar hums with pirate broadcasts.",
+        "requires_milestones": [
+          "ms_w3_streetwise_unlocked"
+        ]
+      }
+    ],
     "actions": [
       {
         "name": "sign",
@@ -3520,6 +3528,14 @@
       2
     ],
     "state": {},
+    "description_variants": [
+      {
+        "description": "The Night Market is loud enough to feel alive on purpose. Repaired lanterns swing over food steam, Noodle Row shouts through the rain, and a lantern bridge crosses above the drain like a string of stubborn stars.",
+        "requires_milestones": [
+          "ms_w3_market_lit"
+        ]
+      }
+    ],
     "actions": [
       {
         "name": "lanterns",

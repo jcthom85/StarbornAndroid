@@ -4626,6 +4626,10 @@
         "quantity": 1
       },
       {
+        "type": "set_milestone",
+        "milestone": "ms_w3_market_lit"
+      },
+      {
         "type": "show_message",
         "message": "Quest Complete: Night Market Run\n\nThe market string lights burst with warm illumination. Conversations rise under the glow before patrols can call the place abandoned. Mika hands you a Neon Band accessory as a thank you."
       }
@@ -5010,7 +5014,6 @@
   {
     "id": "w3_scan_shield_gap_clear",
     "description": "Use the Lens to read the Shield gap after the Administrator falls.",
-    "repeatable": true,
     "trigger": {
       "type": "player_action",
       "action": "w3_scan_shield_gap"
@@ -5024,9 +5027,19 @@
         "type": "quest_task_done",
         "quest_id": "w3_mq15",
         "task_id": "defeat_administrator"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w3_mq15",
+        "task_id": "scan_shield_gap"
       }
     ],
     "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w3_mq15",
+        "task_id": "scan_shield_gap"
+      },
       {
         "type": "show_message",
         "message": "Scan catches the Shield gap on its next rotation. Orion counts under his breath. Zeke has the Astra hot. Nova has one launch window and no room left for fear."
@@ -5101,6 +5114,37 @@
     ]
   },
   {
+    "id": "w3_mq15_launch_needs_scan",
+    "description": "Explain that the Astra cannot launch until Nova scans the Shield gap.",
+    "repeatable": true,
+    "trigger": {
+      "type": "player_action",
+      "action": "w3_mq15_launch_astra"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w3_mq15"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w3_mq15",
+        "task_id": "defeat_administrator"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w3_mq15",
+        "task_id": "scan_shield_gap"
+      }
+    ],
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "The Astra screams ready, but the Shield is still a wall of lethal timing. Nova needs to scan the shield gap before Orion can call the launch window."
+      }
+    ]
+  },
+  {
     "id": "w3_mq15_launch_astra",
     "description": "Launch the Astra through the Shield toward World 4.",
     "trigger": {
@@ -5116,6 +5160,11 @@
         "type": "quest_task_done",
         "quest_id": "w3_mq15",
         "task_id": "defeat_administrator"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w3_mq15",
+        "task_id": "scan_shield_gap"
       },
       {
         "type": "quest_task_not_done",

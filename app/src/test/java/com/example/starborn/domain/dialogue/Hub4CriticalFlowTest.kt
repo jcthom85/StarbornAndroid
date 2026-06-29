@@ -99,7 +99,14 @@ class Hub4CriticalFlowTest {
         assertTrue(state.questTasksCompleted["w3_mq15"].orEmpty().contains("defeat_administrator"))
         assertEquals("launch_to_foundry", state.questStageById["w3_mq15"])
 
+        harness.events.handleTrigger("player_action", EventPayload.Action("w3_mq15_launch_astra"))
+        state = harness.store.state.value
+        assertFalse(state.completedQuests.contains("w3_mq15"))
+        assertFalse(state.roomId == "foundry_slag_landing")
+        assertTrue(harness.messages.any { it.contains("scan the shield gap", ignoreCase = true) })
+
         harness.events.handleTrigger("player_action", EventPayload.Action("w3_scan_shield_gap"))
+        assertTrue(harness.store.state.value.questTasksCompleted["w3_mq15"].orEmpty().contains("scan_shield_gap"))
         assertTrue(harness.messages.any { it.contains("one launch window", ignoreCase = true) })
 
         harness.events.handleTrigger("player_action", EventPayload.Action("w3_mq15_launch_astra"))

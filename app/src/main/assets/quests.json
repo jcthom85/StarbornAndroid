@@ -1329,6 +1329,10 @@
           {
             "id": "defeat_administrator",
             "text": "Defeat the Administrator on the roof."
+          },
+          {
+            "id": "scan_shield_gap",
+            "text": "Use Scan to read the Shield gap."
           }
         ]
       },
