@@ -122,6 +122,9 @@ fun NavigationHost(
                 onSfxVolumeChange = { value ->
                     settingsScope.launch { services.userSettingsStore.setSfxVolume(value) }
                 },
+                onVoiceVolumeChange = { value ->
+                    settingsScope.launch { services.userSettingsStore.setVoiceVolume(value) }
+                },
                 onToggleTutorials = { enabled ->
                     settingsScope.launch { services.userSettingsStore.setTutorialsEnabled(enabled) }
                 },
@@ -164,6 +167,9 @@ fun NavigationHost(
                 },
                 onSfxVolumeChange = { value ->
                     settingsScope.launch { services.userSettingsStore.setSfxVolume(value) }
+                },
+                onVoiceVolumeChange = { value ->
+                    settingsScope.launch { services.userSettingsStore.setVoiceVolume(value) }
                 },
                 onToggleTutorials = { enabled ->
                     settingsScope.launch { services.userSettingsStore.setTutorialsEnabled(enabled) }

@@ -310,6 +310,7 @@ data class TogglePromptUi(
 data class SettingsUiState(
     val musicVolume: Float = 1f,
     val sfxVolume: Float = 1f,
+    val voiceVolume: Float = 1f,
     val vignetteEnabled: Boolean = true,
     val tutorialsEnabled: Boolean = true
 )

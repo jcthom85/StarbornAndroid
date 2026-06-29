@@ -98,6 +98,7 @@ fun HubScreen(
     userSettings: UserSettings,
     onMusicVolumeChange: (Float) -> Unit,
     onSfxVolumeChange: (Float) -> Unit,
+    onVoiceVolumeChange: (Float) -> Unit,
     onToggleTutorials: (Boolean) -> Unit,
     onToggleVignette: (Boolean) -> Unit,
     onQuickSave: () -> Unit,
@@ -109,6 +110,7 @@ fun HubScreen(
         SettingsUiState(
             musicVolume = userSettings.musicVolume,
             sfxVolume = userSettings.sfxVolume,
+            voiceVolume = userSettings.voiceVolume,
             vignetteEnabled = userSettings.vignetteEnabled,
             tutorialsEnabled = userSettings.tutorialsEnabled
         )
@@ -122,6 +124,7 @@ fun HubScreen(
         onLockedPromptDismiss = viewModel::dismissLockedPrompt,
         onMusicVolumeChange = onMusicVolumeChange,
         onSfxVolumeChange = onSfxVolumeChange,
+        onVoiceVolumeChange = onVoiceVolumeChange,
         onToggleTutorials = onToggleTutorials,
         onToggleVignette = onToggleVignette,
         onQuickSave = onQuickSave,
@@ -138,6 +141,7 @@ private fun HubScreenContent(
     onLockedPromptDismiss: () -> Unit,
     onMusicVolumeChange: (Float) -> Unit,
     onSfxVolumeChange: (Float) -> Unit,
+    onVoiceVolumeChange: (Float) -> Unit,
     onToggleTutorials: (Boolean) -> Unit,
     onToggleVignette: (Boolean) -> Unit,
     onQuickSave: () -> Unit,
@@ -232,6 +236,7 @@ private fun HubScreenContent(
                 trackedQuest = uiState.trackedQuest,
                 onMusicVolumeChange = onMusicVolumeChange,
                 onSfxVolumeChange = onSfxVolumeChange,
+                onVoiceVolumeChange = onVoiceVolumeChange,
                 onToggleTutorials = onToggleTutorials,
                 onToggleVignette = onToggleVignette,
                 onQuickSave = onQuickSave,
@@ -472,6 +477,7 @@ private fun HubMenuOverlay(
     trackedQuest: HubQuestUi?,
     onMusicVolumeChange: (Float) -> Unit,
     onSfxVolumeChange: (Float) -> Unit,
+    onVoiceVolumeChange: (Float) -> Unit,
     onToggleTutorials: (Boolean) -> Unit,
     onToggleVignette: (Boolean) -> Unit,
     onQuickSave: () -> Unit,
@@ -532,6 +538,7 @@ private fun HubMenuOverlay(
                     settings = settings,
                     onMusicVolumeChange = onMusicVolumeChange,
                     onSfxVolumeChange = onSfxVolumeChange,
+                    onVoiceVolumeChange = onVoiceVolumeChange,
                     onToggleTutorials = onToggleTutorials,
                     onToggleVignette = onToggleVignette
                 )
@@ -600,12 +607,14 @@ private fun HubMenuSettings(
     settings: SettingsUiState,
     onMusicVolumeChange: (Float) -> Unit,
     onSfxVolumeChange: (Float) -> Unit,
+    onVoiceVolumeChange: (Float) -> Unit,
     onToggleTutorials: (Boolean) -> Unit,
     onToggleVignette: (Boolean) -> Unit
 ) {
     HubMenuSection(title = "Settings", icon = Icons.Rounded.Settings) {
         HubSliderRow("Music", settings.musicVolume, onMusicVolumeChange)
         HubSliderRow("Effects", settings.sfxVolume, onSfxVolumeChange)
+        HubSliderRow("Voice", settings.voiceVolume, onVoiceVolumeChange)
         HubSwitchRow("Room Vignette", settings.vignetteEnabled, onToggleVignette)
         HubSwitchRow("Tutorials", settings.tutorialsEnabled, onToggleTutorials)
     }

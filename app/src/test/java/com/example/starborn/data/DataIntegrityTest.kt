@@ -57,6 +57,22 @@ class DataIntegrityTest {
     }
 
     @Test
+    fun dialogueVoiceProfilesCoverAuthoredSpeakers() {
+        val dialogueText = File("src/main/assets/dialogue.json").readText()
+        val speakers = Regex("\"speaker\"\\s*:\\s*\"([^\"]+)\"")
+            .findAll(dialogueText)
+            .map { it.groupValues[1] }
+            .toSet()
+        val profiles = readObject("src/main/assets/dialogue_voice_profiles.json", DialogueVoiceProfilesSummary::class.java)
+        val validProfiles = setOf("female", "male", "none")
+        val missing = speakers - profiles.profiles.keys
+        val invalid = profiles.profiles.filterValues { it !in validProfiles }
+
+        assertTrue("Dialogue voice profiles should cover all speakers (missing: $missing)", missing.isEmpty())
+        assertTrue("Dialogue voice profiles should use valid values (invalid: $invalid)", invalid.isEmpty())
+    }
+
+    @Test
     fun worldTwoRoomsFormReciprocalNavigationGraphs() {
         val rooms = readList("src/main/assets/rooms.json", Room::class.java)
             .filter { it.id.startsWith("sector9_") }
@@ -434,6 +450,15 @@ class DataIntegrityTest {
             "Failed to parse $path"
         }
     }
+
+    private fun <T> readObject(path: String, clazz: Class<T>): T {
+        val file = File(path)
+        require(file.exists()) { "$path not found" }
+        val adapter = moshi.adapter(clazz)
+        return requireNotNull(adapter.fromJson(file.readText())) {
+            "Failed to parse $path"
+        }
+    }
 }
 
 data class RoomSummary(
@@ -442,6 +467,11 @@ data class RoomSummary(
 
 data class TutorialScriptSummary(
     val id: String?
+)
+
+data class DialogueVoiceProfilesSummary(
+    val default: String = "male",
+    val profiles: Map<String, String> = emptyMap()
 )
 
 data class ItemSummary(

@@ -42,7 +42,7 @@ class AudioCuePlayer(
                 .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
                 .build()
         )
-        .setMaxStreams(2)
+        .setMaxStreams(8)
         .build()
 
     private val musicPlayer: ExoPlayer = ExoPlayer.Builder(context).build()

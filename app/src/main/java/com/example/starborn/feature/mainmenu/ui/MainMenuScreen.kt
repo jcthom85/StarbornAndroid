@@ -98,6 +98,7 @@ fun MainMenuScreen(
     userSettings: UserSettings,
     onMusicVolumeChange: (Float) -> Unit,
     onSfxVolumeChange: (Float) -> Unit,
+    onVoiceVolumeChange: (Float) -> Unit,
     onToggleTutorials: (Boolean) -> Unit,
     onToggleVignette: (Boolean) -> Unit,
     onStartGame: () -> Unit,
@@ -376,6 +377,7 @@ fun MainMenuScreen(
                 settings = SettingsUiState(
                     musicVolume = userSettings.musicVolume,
                     sfxVolume = userSettings.sfxVolume,
+                    voiceVolume = userSettings.voiceVolume,
                     vignetteEnabled = userSettings.vignetteEnabled,
                     tutorialsEnabled = userSettings.tutorialsEnabled
                 ),
@@ -383,6 +385,7 @@ fun MainMenuScreen(
                 borderColor = borderColor,
                 onMusicVolumeChange = onMusicVolumeChange,
                 onSfxVolumeChange = onSfxVolumeChange,
+                onVoiceVolumeChange = onVoiceVolumeChange,
                 onToggleTutorials = onToggleTutorials,
                 onToggleVignette = onToggleVignette,
                 onDismiss = { showSettings = false }
@@ -414,6 +417,7 @@ private fun TitleSettingsDialog(
     borderColor: Color,
     onMusicVolumeChange: (Float) -> Unit,
     onSfxVolumeChange: (Float) -> Unit,
+    onVoiceVolumeChange: (Float) -> Unit,
     onToggleTutorials: (Boolean) -> Unit,
     onToggleVignette: (Boolean) -> Unit,
     onDismiss: () -> Unit
@@ -435,6 +439,7 @@ private fun TitleSettingsDialog(
                     showSaveData = false,
                     onMusicVolumeChange = onMusicVolumeChange,
                     onSfxVolumeChange = onSfxVolumeChange,
+                    onVoiceVolumeChange = onVoiceVolumeChange,
                     onToggleTutorials = onToggleTutorials,
                     onToggleVignette = onToggleVignette,
                     onQuickSave = {},

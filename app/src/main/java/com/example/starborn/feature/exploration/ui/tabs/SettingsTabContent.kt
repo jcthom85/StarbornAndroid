@@ -30,6 +30,7 @@ fun SettingsTabContent(
     showSaveData: Boolean = true,
     onMusicVolumeChange: (Float) -> Unit,
     onSfxVolumeChange: (Float) -> Unit,
+    onVoiceVolumeChange: (Float) -> Unit,
     onToggleTutorials: (Boolean) -> Unit,
     onToggleVignette: (Boolean) -> Unit,
     onQuickSave: () -> Unit,
@@ -61,6 +62,7 @@ fun SettingsTabContent(
                 settings = settings,
                 onMusicVolumeChange = onMusicVolumeChange,
                 onSfxVolumeChange = onSfxVolumeChange,
+                onVoiceVolumeChange = onVoiceVolumeChange,
                 onToggleTutorials = onToggleTutorials,
                 onToggleVignette = onToggleVignette
             )
@@ -73,6 +75,7 @@ private fun SettingsPanel(
     settings: SettingsUiState,
     onMusicVolumeChange: (Float) -> Unit,
     onSfxVolumeChange: (Float) -> Unit,
+    onVoiceVolumeChange: (Float) -> Unit,
     onToggleTutorials: (Boolean) -> Unit,
     onToggleVignette: (Boolean) -> Unit
 ) {
@@ -98,6 +101,18 @@ private fun SettingsPanel(
             Slider(
                 value = settings.sfxVolume,
                 onValueChange = onSfxVolumeChange,
+                valueRange = 0f..1f
+            )
+        }
+        Column {
+            Text(
+                text = "Voice Volume ${ (settings.voiceVolume * 100).roundToInt() }%",
+                color = Color.White.copy(alpha = 0.85f),
+                style = MaterialTheme.typography.bodySmall
+            )
+            Slider(
+                value = settings.voiceVolume,
+                onValueChange = onVoiceVolumeChange,
                 valueRange = 0f..1f
             )
         }

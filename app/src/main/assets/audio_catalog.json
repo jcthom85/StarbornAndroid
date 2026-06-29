@@ -416,6 +416,78 @@
       "fade_out_ms": 400
     },
     {
+      "id": "voice_murmur_female_01",
+      "category": "voice",
+      "priority": 1,
+      "gain": 0.48,
+      "fade_in_ms": 0,
+      "fade_out_ms": 40,
+      "duration_ms": 130
+    },
+    {
+      "id": "voice_murmur_female_02",
+      "category": "voice",
+      "priority": 1,
+      "gain": 0.46,
+      "fade_in_ms": 0,
+      "fade_out_ms": 40,
+      "duration_ms": 150
+    },
+    {
+      "id": "voice_murmur_female_03",
+      "category": "voice",
+      "priority": 1,
+      "gain": 0.47,
+      "fade_in_ms": 0,
+      "fade_out_ms": 40,
+      "duration_ms": 120
+    },
+    {
+      "id": "voice_murmur_female_04",
+      "category": "voice",
+      "priority": 1,
+      "gain": 0.45,
+      "fade_in_ms": 0,
+      "fade_out_ms": 40,
+      "duration_ms": 160
+    },
+    {
+      "id": "voice_murmur_male_01",
+      "category": "voice",
+      "priority": 1,
+      "gain": 0.50,
+      "fade_in_ms": 0,
+      "fade_out_ms": 40,
+      "duration_ms": 140
+    },
+    {
+      "id": "voice_murmur_male_02",
+      "category": "voice",
+      "priority": 1,
+      "gain": 0.48,
+      "fade_in_ms": 0,
+      "fade_out_ms": 40,
+      "duration_ms": 160
+    },
+    {
+      "id": "voice_murmur_male_03",
+      "category": "voice",
+      "priority": 1,
+      "gain": 0.49,
+      "fade_in_ms": 0,
+      "fade_out_ms": 40,
+      "duration_ms": 130
+    },
+    {
+      "id": "voice_murmur_male_04",
+      "category": "voice",
+      "priority": 1,
+      "gain": 0.47,
+      "fade_in_ms": 0,
+      "fade_out_ms": 40,
+      "duration_ms": 170
+    },
+    {
       "id": "wpn_nova_laser",
       "category": "battle",
       "priority": 3,

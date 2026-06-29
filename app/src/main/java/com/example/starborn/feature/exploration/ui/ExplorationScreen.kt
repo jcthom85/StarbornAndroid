@@ -154,6 +154,8 @@ import androidx.constraintlayout.compose.Dimension
 import kotlin.math.roundToInt
 import com.example.starborn.R
 import com.example.starborn.domain.model.DialogueLine
+import com.example.starborn.domain.audio.AudioCommand
+import com.example.starborn.domain.audio.AudioCueType
 import com.example.starborn.domain.audio.AudioCuePlayer
 import com.example.starborn.domain.inventory.GearRules
 import com.example.starborn.domain.inventory.ItemUseResult
@@ -370,6 +372,7 @@ fun ExplorationScreen(
                 is ExplorationEvent.AudioSettingsChanged -> {
                     audioCuePlayer.setUserMusicGain(event.musicVolume)
                     audioCuePlayer.setUserSfxGain(event.sfxVolume)
+                    audioCuePlayer.setUserVoiceGain(event.voiceVolume)
                 }
                 is ExplorationEvent.ReturnToHub -> onReturnToHub()
             }
@@ -769,6 +772,19 @@ fun ExplorationScreen(
                 onAdvance = { viewModel.advanceDialogue() },
                 onChoice = { viewModel.onDialogueChoiceSelected(it) },
                 onPlayVoice = { viewModel.onDialogueVoiceRequested(it) },
+                onPlayMurmur = { cueId ->
+                    audioCuePlayer.execute(
+                        listOf(
+                            AudioCommand.Play(
+                                AudioCueType.VOICE,
+                                cueId,
+                                loop = false,
+                                fadeMs = 0L,
+                                gain = 0.85f
+                            )
+                        )
+                    )
+                },
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .navigationBarsPadding()
@@ -835,6 +851,7 @@ fun ExplorationScreen(
                 settings = uiState.settings,
                 onMusicVolumeChange = { viewModel.updateMusicVolume(it) },
                 onSfxVolumeChange = { viewModel.updateSfxVolume(it) },
+                onVoiceVolumeChange = { viewModel.updateVoiceVolume(it) },
                 onToggleTutorials = { viewModel.updateTutorialsEnabled(it) },
                 onToggleVignette = { viewModel.setVignetteEnabled(it) },
                 onQuickSave = { viewModel.quickSave() },
@@ -1721,6 +1738,7 @@ private fun MenuOverlay(
     settings: SettingsUiState,
     onMusicVolumeChange: (Float) -> Unit,
     onSfxVolumeChange: (Float) -> Unit,
+    onVoiceVolumeChange: (Float) -> Unit,
     onToggleTutorials: (Boolean) -> Unit,
     onToggleVignette: (Boolean) -> Unit,
     onQuickSave: () -> Unit,
@@ -1922,6 +1940,7 @@ private fun MenuOverlay(
                         onOpenFullMap = onOpenFullMap,
                         onMusicVolumeChange = onMusicVolumeChange,
                         onSfxVolumeChange = onSfxVolumeChange,
+                        onVoiceVolumeChange = onVoiceVolumeChange,
                         onToggleTutorials = onToggleTutorials,
                         onToggleVignette = onToggleVignette,
                         onQuickSave = onQuickSave,
@@ -2086,6 +2105,7 @@ private fun MenuTabContentArea(
     onOpenFullMap: () -> Unit,
     onMusicVolumeChange: (Float) -> Unit,
     onSfxVolumeChange: (Float) -> Unit,
+    onVoiceVolumeChange: (Float) -> Unit,
     onToggleTutorials: (Boolean) -> Unit,
     onToggleVignette: (Boolean) -> Unit,
     onQuickSave: () -> Unit,
@@ -2163,6 +2183,7 @@ private fun MenuTabContentArea(
                 borderColor = borderColor,
                 onMusicVolumeChange = onMusicVolumeChange,
                 onSfxVolumeChange = onSfxVolumeChange,
+                onVoiceVolumeChange = onVoiceVolumeChange,
                 onToggleTutorials = onToggleTutorials,
                 onToggleVignette = onToggleVignette,
                 onQuickSave = onQuickSave,

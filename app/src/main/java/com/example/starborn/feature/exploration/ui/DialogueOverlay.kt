@@ -31,10 +31,15 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
@@ -54,7 +59,9 @@ import com.example.starborn.ui.background.rememberAssetPainter
 import androidx.compose.ui.graphics.painter.Painter
 import com.example.starborn.feature.exploration.viewmodel.DialogueChoiceUi
 import com.example.starborn.feature.exploration.viewmodel.DialogueUi
+import kotlinx.coroutines.delay
 import java.util.Locale
+import kotlin.random.Random
 
 @Composable
 fun DialogueOverlay(
@@ -63,9 +70,35 @@ fun DialogueOverlay(
     onAdvance: () -> Unit,
     onChoice: (String) -> Unit,
     onPlayVoice: (String) -> Unit,
+    onPlayMurmur: (String) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val line = dialogue.line
+    val fullText = line.text
+    var revealedCount by remember(line.id, fullText) { mutableIntStateOf(0) }
+    val revealFinished = revealedCount >= fullText.length
+    val displayedText = fullText.take(revealedCount.coerceIn(0, fullText.length))
+    val voiceProfile = remember(line.speaker) { DialogueVoiceProfile.forSpeaker(line.speaker) }
+    val latestOnPlayMurmur by rememberUpdatedState(onPlayMurmur)
+
+    LaunchedEffect(line.id, fullText, voiceProfile) {
+        revealedCount = 0
+        if (fullText.isBlank()) {
+            revealedCount = fullText.length
+            return@LaunchedEffect
+        }
+        val random = Random(line.id.hashCode())
+        for (index in fullText.indices) {
+            if (revealedCount >= fullText.length) return@LaunchedEffect
+            revealedCount = index + 1
+            val char = fullText[index]
+            if (voiceProfile != DialogueVoiceProfile.NONE && shouldPlayMurmur(fullText, index)) {
+                latestOnPlayMurmur(voiceProfile.randomCue(random))
+            }
+            delay(revealDelayMs(char))
+        }
+    }
+
     val portraitPath = remember(dialogue.portrait) {
         dialogue.portrait?.takeIf { it.isNotBlank() }
     }
@@ -74,7 +107,7 @@ fun DialogueOverlay(
     val accentColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.85f)
     val outlineColor = accentColor.copy(alpha = 0.55f)
     val surfaceColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.98f)
-    val canDismissByTap = choices.isEmpty()
+    val canDismissByTap = choices.isEmpty() || !revealFinished
     val tapInteraction = remember { MutableInteractionSource() }
     val containerModifier = Modifier
         .fillMaxWidth()
@@ -84,7 +117,13 @@ fun DialogueOverlay(
                 base.clickable(
                     interactionSource = tapInteraction,
                     indication = null
-                ) { onAdvance() }
+                ) {
+                    if (!revealFinished) {
+                        revealedCount = fullText.length
+                    } else {
+                        onAdvance()
+                    }
+                }
             } else {
                 base
             }
@@ -146,15 +185,24 @@ fun DialogueOverlay(
                             .clip(RoundedCornerShape(999.dp))
                             .background(accentColor.copy(alpha = 0.7f))
                     )
-                    Text(
-                        text = line.text,
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        textAlign = TextAlign.Left
-                    )
+                    Box(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = fullText,
+                            modifier = Modifier.alpha(0f),
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            textAlign = TextAlign.Left
+                        )
+                        Text(
+                            text = displayedText,
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            textAlign = TextAlign.Left
+                        )
+                    }
                 }
 
-                if (choices.isNotEmpty()) {
+                if (choices.isNotEmpty() && revealFinished) {
                     Text(
                         text = "Responses",
                         style = MaterialTheme.typography.labelSmall,
@@ -392,6 +440,60 @@ private fun String.toChoiceTag(): ChoiceTag? = when (this.lowercase(Locale.getDe
     "tutorial" -> ChoiceTag.TUTORIAL
     "milestone" -> ChoiceTag.MILESTONE
     else -> null
+}
+
+private enum class DialogueVoiceProfile(private val cuePrefix: String?) {
+    FEMALE("voice_murmur_female"),
+    MALE("voice_murmur_male"),
+    NONE(null);
+
+    fun randomCue(random: Random): String {
+        val prefix = cuePrefix ?: return ""
+        val variant = random.nextInt(1, 5)
+        return "${prefix}_${variant.toString().padStart(2, '0')}"
+    }
+
+    companion object {
+        fun forSpeaker(speaker: String): DialogueVoiceProfile {
+            val normalized = speaker.trim().lowercase(Locale.getDefault())
+            return when (normalized) {
+                "nova",
+                "player",
+                "maddie",
+                "ellie",
+                "mika",
+                "vale",
+                "elara",
+                "caretaker iva",
+                "doctor sera",
+                "juno",
+                "pasha",
+                "rana",
+                "sima",
+                "schoolteacher kasey" -> FEMALE
+
+                "system",
+                "lab terminal",
+                "maintenance bot",
+                "sentinel-3" -> NONE
+
+                else -> MALE
+            }
+        }
+    }
+}
+
+private fun shouldPlayMurmur(text: String, index: Int): Boolean {
+    val char = text[index]
+    if (!char.isLetterOrDigit()) return false
+    val spokenCharsBefore = text.take(index).count { it.isLetterOrDigit() }
+    return spokenCharsBefore % 3 == 0
+}
+
+private fun revealDelayMs(char: Char): Long = when (char) {
+    '.', '!', '?' -> 95L
+    ',', ';', ':' -> 55L
+    else -> 26L
 }
 
 private val PortraitSize = 80.dp

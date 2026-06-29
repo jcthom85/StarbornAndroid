@@ -540,12 +540,15 @@ class ExplorationViewModel(
     private fun applyUserSettings(settings: UserSettings) {
         val newMusic = settings.musicVolume.coerceIn(0f, 1f)
         val newSfx = settings.sfxVolume.coerceIn(0f, 1f)
+        val newVoice = settings.voiceVolume.coerceIn(0f, 1f)
         val newVignette = settings.vignetteEnabled
         val newTutorialsEnabled = settings.tutorialsEnabled
         val musicChanged = abs(newMusic - userMusicVolume) > 0.001f
         val sfxChanged = abs(newSfx - userSfxVolume) > 0.001f
+        val voiceChanged = abs(newVoice - userVoiceVolume) > 0.001f
         userMusicVolume = newMusic
         userSfxVolume = newSfx
+        userVoiceVolume = newVoice
         isVignetteEnabled = newVignette
         tutorialsEnabled = newTutorialsEnabled
         _uiState.update { state ->
@@ -553,13 +556,14 @@ class ExplorationViewModel(
                 settings = state.settings.copy(
                     musicVolume = userMusicVolume,
                     sfxVolume = userSfxVolume,
+                    voiceVolume = userVoiceVolume,
                     vignetteEnabled = isVignetteEnabled,
                     tutorialsEnabled = tutorialsEnabled
                 )
             )
         }
-        if (musicChanged || sfxChanged) {
-            emitEvent(ExplorationEvent.AudioSettingsChanged(userMusicVolume, userSfxVolume))
+        if (musicChanged || sfxChanged || voiceChanged) {
+            emitEvent(ExplorationEvent.AudioSettingsChanged(userMusicVolume, userSfxVolume, userVoiceVolume))
         }
     }
 
@@ -664,6 +668,7 @@ class ExplorationViewModel(
     private val pendingFadeCallbacks: MutableMap<Long, () -> Unit> = mutableMapOf()
     private var userMusicVolume: Float = 1f
     private var userSfxVolume: Float = 1f
+    private var userVoiceVolume: Float = 1f
     private var isVignetteEnabled: Boolean = true
     private val eventAnnouncementQueue: ArrayDeque<EventAnnouncementUi> = ArrayDeque()
     private var nextEventAnnouncementId: Long = 0L
@@ -1910,6 +1915,7 @@ class ExplorationViewModel(
                     settings = SettingsUiState(
                         musicVolume = userMusicVolume,
                         sfxVolume = userSfxVolume,
+                        voiceVolume = userVoiceVolume,
                         vignetteEnabled = isVignetteEnabled,
                         tutorialsEnabled = tutorialsEnabled
                     ),
@@ -2896,7 +2902,7 @@ class ExplorationViewModel(
         _uiState.update { state ->
             state.copy(settings = state.settings.copy(musicVolume = clamped))
         }
-        emitEvent(ExplorationEvent.AudioSettingsChanged(userMusicVolume, userSfxVolume))
+        emitEvent(ExplorationEvent.AudioSettingsChanged(userMusicVolume, userSfxVolume, userVoiceVolume))
         viewModelScope.launch(dispatchers.io) {
             userSettingsStore.setMusicVolume(clamped)
         }
@@ -2909,9 +2915,22 @@ class ExplorationViewModel(
         _uiState.update { state ->
             state.copy(settings = state.settings.copy(sfxVolume = clamped))
         }
-        emitEvent(ExplorationEvent.AudioSettingsChanged(userMusicVolume, userSfxVolume))
+        emitEvent(ExplorationEvent.AudioSettingsChanged(userMusicVolume, userSfxVolume, userVoiceVolume))
         viewModelScope.launch(dispatchers.io) {
             userSettingsStore.setSfxVolume(clamped)
+        }
+    }
+
+    fun updateVoiceVolume(volume: Float) {
+        val clamped = volume.coerceIn(0f, 1f)
+        if (abs(clamped - userVoiceVolume) < 0.001f) return
+        userVoiceVolume = clamped
+        _uiState.update { state ->
+            state.copy(settings = state.settings.copy(voiceVolume = clamped))
+        }
+        emitEvent(ExplorationEvent.AudioSettingsChanged(userMusicVolume, userSfxVolume, userVoiceVolume))
+        viewModelScope.launch(dispatchers.io) {
+            userSettingsStore.setVoiceVolume(clamped)
         }
     }
 
@@ -5015,7 +5034,11 @@ sealed interface ExplorationEvent {
         val message: String
     ) : ExplorationEvent
     data class AudioCommands(val commands: List<AudioCommand>) : ExplorationEvent
-    data class AudioSettingsChanged(val musicVolume: Float, val sfxVolume: Float) : ExplorationEvent
+    data class AudioSettingsChanged(
+        val musicVolume: Float,
+        val sfxVolume: Float,
+        val voiceVolume: Float
+    ) : ExplorationEvent
     data object ReturnToHub : ExplorationEvent
 }
 
