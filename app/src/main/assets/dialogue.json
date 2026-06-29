@@ -1023,26 +1023,26 @@
     "id": "zeke_w3_mq11_safehouse_intro",
     "speaker": "Zeke",
     "condition": "quest_active:w3_mq11,quest_stage:w3_mq11:find_safehouse,quest_task_not_done:w3_mq11:establish_shield",
-    "text": "Welcome to my safehouse... or what's left of it. They reformatted my life, Nova. Discarded my files, my memories. But the physical terminals... they are still wired.",
+    "text": "Welcome to my safehouse... or what's left of it. They scrubbed my lease, my work history, my access tags. But the pipes still know me, and the walls still carry my old wiring.",
     "next": "zeke_w3_mq11_safehouse_next"
   },
   {
     "id": "zeke_w3_mq11_safehouse_next",
     "speaker": "Nova",
-    "text": "We'll take it back, Zeke. For now, Orion, set up the shield. Let's make sure Vale can't hear us.",
+    "text": "Then we use what they forgot to erase. Orion, shield the room. If the city hears us breathing, the heist dies before it starts.",
     "next": "zeke_w3_mq11_safehouse_end"
   },
   {
     "id": "zeke_w3_mq11_safehouse_end",
     "speaker": "Orion",
-    "text": "Establishing resonance lock. There. The Source is quiet here. They won't detect us.",
+    "text": "Establishing resonance lock. There. The Source is quiet here. The city will hear only rain, faulty neon, and its own arrogance.",
     "trigger": "player_action:w3_mq11_establish_shield"
   },
   {
     "id": "w3_mq12_jax_intro",
     "speaker": "Jax",
     "condition": "quest_active:w3_mq12,quest_task_not_done:w3_mq12:talk_jax",
-    "text": "You want the Upper City? Then you want six things: timing, credentials, a route, a costume, a terminal pull, and the nerve to look bored while lying.",
+    "text": "You want the Upper City? Then you want six things: timing, credentials, a route, a costume, a terminal pull, and the nerve to look bored while people decide whether you count as human.",
     "options": [
       {
         "id": "jax_w3_mq12_request_codes",
@@ -1054,14 +1054,14 @@
   {
     "id": "w3_mq12_jax_success",
     "speaker": "Jax",
-    "text": "Schedules are on this drive. Start with the underrail map for patrol timing, then the plaza kiosk, the service gate, the safehouse roof laundry lines, and Zeke's workstation. Bring it all back to the planning table.",
+    "text": "Schedules are on this drive. The rich don't guard what workers touch, so start there: underrail map, plaza kiosk, service gate, safehouse roof laundry lines, then Zeke's workstation. Bring it all back to the planning table before courage turns stupid.",
     "trigger": "player_action:w3_mq12_talk_jax"
   },
   {
     "id": "w3_sq11_jax_intro",
     "speaker": "Jax",
     "condition": "quest_not_started:w3_sq11,quest_completed:w3_mq11",
-    "text": "The neon sign outside is dead. Can't run a bar in the dark. Bring me a neon core from the street sweepers, and I'll make it worth your while.",
+    "text": "The neon sign outside is dead. Can't run a bar in the dark, and I don't mean ambience. Patrols ignore a place that looks open and watched. Bring me a neon core from the street sweepers, and I'll make it worth your while.",
     "options": [
       {
         "id": "jax_w3_sq11_accept",
@@ -1091,7 +1091,7 @@
     "id": "w3_sq12_ghost_intro",
     "speaker": "Gh0st",
     "condition": "quest_not_started:w3_sq12,quest_completed:w3_mq11",
-    "text": "Nova. Dominion databases at the Transit Plaza might hold records on... Elara. My sister. I cannot access the terminal without triggering security alerts. Will you search it?",
+    "text": "Nova. Dominion databases at the Transit Plaza might hold records on... Elara. My sister. If I touch the terminal, old flags may wake up. If you search it, maybe I learn whether grief has an address.",
     "options": [
       {
         "id": "ghost_w3_sq12_accept",
@@ -1108,14 +1108,14 @@
     "id": "w3_sq12_ghost_terminal",
     "speaker": "System",
     "condition": "quest_active:w3_sq12,quest_task_not_done:w3_sq12:access_terminal",
-    "text": "Downloading Spire security archives... file transfer complete.",
+    "text": "Downloading Spire security archives... deleted transfer chain recovered. Elara was not lost. She was routed.",
     "trigger": "player_action:w3_sq12_access_terminal"
   },
   {
     "id": "w3_sq13_mika_intro",
     "speaker": "Mika",
     "condition": "quest_not_started:w3_sq13,quest_completed:w3_mq11",
-    "text": "Try the skewers! Real protein today, I promise. No recycled paste. Also... can you help me fix these lanterns? The rain is shorting them out.",
+    "text": "Try the skewers! Real protein today, I promise. No recycled paste. Also... can you help me fix these lanterns? When the lights fail, patrols call us a hazard and clear the stalls.",
     "options": [
       {
         "id": "mika_w3_sq13_accept",
@@ -1132,7 +1132,7 @@
     "id": "w3_sq13_mika_lights",
     "speaker": "Mika",
     "condition": "quest_active:w3_sq13,quest_task_not_done:w3_sq13:fix_market_lights",
-    "text": "Just redirect the primary power coupling to light them up.",
+    "text": "Just redirect the primary power coupling to light them up. Nothing heroic. Just enough glow to remind people the market is still ours.",
     "options": [
       {
         "id": "mika_w3_sq13_fix",
@@ -1145,14 +1145,14 @@
     "id": "w3_mq12_workstation_dialogue",
     "speaker": "System",
     "condition": "quest_active:w3_mq12,quest_task_done:w3_mq12:talk_jax,quest_task_done:w3_mq12:map_patrols,quest_task_done:w3_mq12:interrogate_guard,quest_task_done:w3_mq12:copy_badges,quest_task_done:w3_mq12:source_disguises,quest_task_not_done:w3_mq12:hack_blueprints",
-    "text": "Zeke's workstation accepts the stolen timing, badge pattern, disguise notes, and plaza pull. Blueprints compile into a service-elevator route.",
+    "text": "Zeke's workstation accepts the stolen timing, badge pattern, disguise notes, and plaza pull. The old employee profile it builds from his erased life compiles into a service-elevator route.",
     "trigger": "player_action:w3_mq12_hack_blueprints"
   },
   {
     "id": "w3_mq12_planning_table_dialogue",
     "speaker": "System",
     "condition": "quest_active:w3_mq12,quest_task_done:w3_mq12:talk_jax,quest_task_done:w3_mq12:map_patrols,quest_task_done:w3_mq12:interrogate_guard,quest_task_done:w3_mq12:copy_badges,quest_task_done:w3_mq12:source_disguises,quest_task_done:w3_mq12:hack_blueprints,quest_task_not_done:w3_mq12:assemble_table",
-    "text": "The planning table lights every thread at once: patrol timing, badges, uniforms, security records, and the elevator route. Nova can assign the heist roles now.",
+    "text": "The planning table lights every thread at once: patrol timing, badges, uniforms, security records, and the elevator route. Nova sees the weak part of the whole system: it depends on everyone staying in their assigned place.",
     "options": [
       {
         "id": "w3_mq12_assemble_confirm",
@@ -1165,77 +1165,77 @@
     "id": "curator_w3_mq13_intro",
     "speaker": "Curator",
     "condition": "quest_active:w3_mq13,quest_task_not_done:w3_mq13:blend_in",
-    "text": "Fascinating refraction. Sector 9 lineage?",
+    "text": "Fascinating refraction. Sector 9 lineage? No, not lineage. Salvage.",
     "next": "curator_w3_mq13_insult"
   },
   {
     "id": "curator_w3_mq13_insult",
     "speaker": "Curator",
-    "text": "A Starborn stray. Control your pet, or I will call security.",
+    "text": "A Starborn stray in guest light. Control your pet, or I will call sanitation and security in whichever order is more entertaining.",
     "next": "zeke_w3_mq13_cover"
   },
   {
     "id": "zeke_w3_mq13_cover",
     "speaker": "Zeke",
-    "text": "Sir, this is a commemorative statue. Very lifelike. Move along.",
+    "text": "Sir, this is a commemorative installation. Very lifelike. Very expensive. Touch it again and I will have to invent paperwork neither of us wants to read.",
     "trigger": "player_action:w3_mq13_blend_in"
   },
   {
     "id": "zeke_w3_mq13_console_intro",
     "speaker": "Zeke",
     "condition": "quest_active:w3_mq13,quest_task_done:w3_mq13:blend_in,quest_task_not_done:w3_mq13:disable_sensors",
-    "text": "Standard Dominion scanner grid, routed through Laundry Service because the people who clean their lives are invisible by design.",
+    "text": "Standard Dominion scanner grid, routed through Laundry Service because the people who clean their lives are invisible by design. That makes us ugly, useful math.",
     "next": "zeke_w3_mq13_console_end"
   },
   {
     "id": "zeke_w3_mq13_console_end",
     "speaker": "Zeke",
-    "text": "You deleted my employee ID? Fine. I am deleting your admin privileges.",
+    "text": "You deleted my employee ID? Fine. I am deleting your admin privileges. Resignation accepted.",
     "trigger": "player_action:w3_mq13_disable_sensors"
   },
   {
     "id": "orion_w3_mq14_puzzle_intro",
     "speaker": "Orion",
     "condition": "quest_active:w3_mq14,quest_task_done:w3_mq14:enter_archive,quest_task_not_done:w3_mq14:solve_light_puzzle",
-    "text": "The Prism Gallery is not solving light. It is forcing pressure to become visible. Tune the quiet frequencies first.",
+    "text": "The Prism Gallery is not solving light. It is forcing pressure to become visible. Dominion wrapped a cage in beauty and called it scholarship. Tune the quiet frequencies first.",
     "next": "orion_w3_mq14_puzzle_end"
   },
   {
     "id": "orion_w3_mq14_puzzle_end",
     "speaker": "Orion",
-    "text": "There. The door is listening now.",
+    "text": "There. The door is listening now. Do not mistake permission for mercy.",
     "trigger": "player_action:w3_mq14_solve_light_puzzle"
   },
   {
     "id": "zeke_w3_mq14_lens_warning",
     "speaker": "Zeke",
     "condition": "quest_active:w3_mq14,quest_task_done:w3_mq14:solve_light_puzzle,quest_task_not_done:w3_mq14:take_lens",
-    "text": "Wait. Energy density is spiking. If you touch that, the feedback loop lights us up like a flare.",
+    "text": "Wait. Energy density is spiking before you even touch it. Nova, it is reading you back. If you grab that thing, the feedback loop lights us up like a flare.",
     "next": "nova_w3_mq14_lens_take"
   },
   {
     "id": "nova_w3_mq14_lens_take",
     "speaker": "Nova",
-    "text": "We do not have time for safe mode. I can tune it out.",
+    "text": "We did not come this far to ask a cage for permission. I can tune it out.",
     "trigger": "player_action:w3_mq14_take_lens"
   },
   {
     "id": "thorne_w3_mq14_trap_intro",
     "speaker": "Thorne",
     "condition": "quest_completed:w3_mq14,quest_active:w3_mq15",
-    "text": "You just tripped a station-wide audit. Do you have any idea what you have done?",
+    "text": "You just tripped a station-wide audit. Do you have any idea what you have done, or are you still calling this courage?",
     "next": "thorne_w3_mq14_trap_vale"
   },
   {
     "id": "thorne_w3_mq14_trap_vale",
     "speaker": "Thorne",
-    "text": "He is coming. And he does not leave survivors. I cannot let him find you here."
+    "text": "He is coming. And he does not leave survivors. I cannot let him find you here. He is not city security. He is what city security fears."
   },
   {
     "id": "vale_w3_mq15_override",
     "speaker": "Vale",
     "condition": "quest_active:w3_mq15,quest_task_not_done:w3_mq15:defeat_administrator",
-    "text": "Anomaly detected in the Archive. Administrator, lock the district. Seal the drone test alcove and the roof. I want no ungoverned noise leaving Sector 0."
+    "text": "Anomaly detected in the Archive. Administrator, lock the district. Seal the drone test alcove and the roof. I want no ungoverned noise leaving Sector 0, especially if it has learned to sing."
   },
   {
     "id": "upper_city_lounge_shop_intro",

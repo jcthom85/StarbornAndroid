@@ -3432,7 +3432,7 @@
     "env": "neon",
     "title": "Zeke's Apartment",
     "background_image": "images/rooms/world_3/spire_zekes_apartment.png",
-    "description": "Zeke's old apartment is sparse enough to feel erased. A workstation hums on a table, a planning table waits under bad light, and roof access opens toward the impossible skyline.",
+    "description": "Zeke's old apartment is sparse enough to feel erased. A workstation hums on a table with his deleted employee ghost still buried inside it, a planning table waits under bad light, and roof access opens toward the impossible skyline.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -3450,13 +3450,13 @@
         "name": "workstation",
         "type": "generic",
         "action_event": "w3_mq12_hack_blueprints",
-        "condition_unmet_message": "A terminal displaying lines of data and Spire blueprints."
+        "condition_unmet_message": "The workstation still carries Zeke's old authorization scars, but the blueprints need the crew's stolen intel before they become a route."
       },
       {
         "name": "planning table",
         "type": "generic",
         "action_event": "w3_mq12_assemble_planning",
-        "condition_unmet_message": "A table in the center of the room. Ready for Heist planning."
+        "condition_unmet_message": "The planning table waits for every stolen thread before Nova can turn nervous people into assigned roles."
       }
     ],
     "npc_presence": [
@@ -3474,7 +3474,7 @@
     "env": "neon",
     "title": "Safehouse Roof",
     "background_image": "images/rooms/world_3/spire_zekes_apartment.png",
-    "description": "The safehouse roof is barely larger than the apartment below it. A skyline of corporate towers rises beyond laundry lines full of patched coats and disguise materials, and the shield shimmer turns the clouds into a cage.",
+    "description": "The safehouse roof is barely larger than the apartment below it. A skyline of corporate towers rises beyond laundry lines full of patched coats and disguise materials, and the shield shimmer turns the clouds into a visible cage.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -3633,7 +3633,7 @@
     "env": "neon",
     "title": "Transit Plaza",
     "background_image": "images/rooms/world_3/spire_transit_plaza.png",
-    "description": "Transit Plaza spreads beneath the Great Elevator, all surveillance glass, guard lanes, and crowded hesitation. The elevator controls tower above a checkpoint queue while a security kiosk glows under the stairs.",
+    "description": "Transit Plaza spreads beneath the Great Elevator, all surveillance glass, guard lanes, and crowded hesitation. The elevator controls tower above a checkpoint queue where fear moves faster than the line, while a security kiosk glows under the stairs.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -3653,7 +3653,7 @@
         "name": "elevator controls",
         "type": "generic",
         "action_event": "w3_mq12_use_elevator",
-        "condition_unmet_message": "The elevator controls require high-level Spire authorization."
+        "condition_unmet_message": "The elevator controls require high-level Spire authorization, which is just another way to say the city decides who gets to rise."
       }
     ]
   },
@@ -3886,7 +3886,7 @@
     "env": "neon",
     "title": "Skypark Dome",
     "background_image": "images/rooms/world_3/spire_skypark_dome.png",
-    "description": "The Skypark Dome offers fake sun, perfect trees, and guest registry smiles polished thin. The glasswalk curves along the edge, showing the Lower City far enough below to become decoration.",
+    "description": "The Skypark Dome offers fake sun, perfect trees, and guest registry smiles polished thin. The glasswalk curves along the edge, showing the Lower City far enough below to become decoration instead of accusation.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -3905,7 +3905,7 @@
         "name": "guest registry",
         "type": "generic",
         "action_event": "w3_mq13_blend_in",
-        "condition_unmet_message": "A velvet-rope kiosk where the city decides who belongs."
+        "condition_unmet_message": "The guest registry smiles while deciding who belongs, which makes it more frightening than a locked door."
       }
     ],
     "npc_presence": [
@@ -4034,7 +4034,7 @@
     "env": "neon",
     "title": "Archive Vault",
     "background_image": "images/rooms/world_3/spire_archive_vault.png",
-    "description": "The Archive Vault rises in indexed crystal stacks over a glass floor two hundred stories high. The lens relic hangs in a containment field while side passages lead to prisms, donors, service routes, and drone testing.",
+    "description": "The Archive Vault rises in indexed crystal stacks over a glass floor two hundred stories high. The lens relic hangs in a containment field that hums toward Nova before she touches it, while side passages lead to prisms, donors, service routes, and drone testing.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -4056,7 +4056,7 @@
         "name": "lens relic",
         "type": "generic",
         "action_event": "w3_mq14_take_lens",
-        "condition_unmet_message": "The Lens floats inside a containment field."
+        "condition_unmet_message": "The Lens floats inside a containment field, already reacting like it recognizes something in Nova."
       }
     ],
     "enemy_flavor": {
@@ -4132,7 +4132,7 @@
     "env": "neon",
     "title": "Landing Pad Roof",
     "background_image": "images/rooms/world_3/spire_landing_pad_roof.png",
-    "description": "The Landing Pad Roof shudders under violent wind and red lockdown light. The Astra waits beyond the drone test alcove while the Planetary Shield rotates overhead in impossible chords and launch astra becomes the only clean verb left.",
+    "description": "The Landing Pad Roof shudders under violent wind and red lockdown light. The Astra waits beyond the drone test alcove while the Planetary Shield rotates overhead in impossible chords, Vale's lockdown closes below, and launch astra becomes the only clean verb left.",
     "npcs": [],
     "items": [],
     "enemies": [

@@ -49,10 +49,17 @@
 
 ## World 3: The Spire (The Heist)
 *   **The Beat:** Returning to the city to steal the Lens Relic.
-*   **Emotional Tone:** **Cool & Tense.** Neon lights, slick disguises, feeling like an impostor in high society.
+*   **Emotional Tone:** **Cool & Tense -> Exposed & Hunted.** Neon confidence and heist swagger should tighten into quiet class violence, forced visibility, and a rooftop escape under compliance lockdown.
 *   **Breather Beat:** **Night Market** (optional) is loud, colorful resilience; **Skypark** (mandatory) is bright “utopia” that’s secretly a costume.
 *   **External Conflict:** **The Underdog vs. The Elite.** Outsmarting the Administrator.
 *   **Internal Conflict:** **Nova's Leadership.** She isn't a soldier or a spy; she's a miner. Can she lead this team?
+*   **Interpersonal Conflict:** **Zeke vs. His Erasure.** The Spire deleted his identity, but the heist forces him to weaponize old access, old shame, and old rooms. Gh0st's Elara lead should quietly remind the player that Dominion erases people administratively before it erases them physically.
+*   **World 3 emotional ramp:** **Homecoming shame -> improvised crew trust -> class humiliation -> relic exposure -> compliance hunt -> narrow escape.**
+    *   **Homecoming:** Zeke returns to a city that erased him. The safehouse is not cozy; it is proof that systems forget people less completely than they intend.
+    *   **The Plan:** Lower City prep should feel like turning overlooked labor routes, patched clothes, favors, and deleted records into a heist. This is where Nova becomes a coordinator, not just the person pressing buttons.
+    *   **Social Engineering:** Upper City pressure is polite and sterile. The Skypark is mandatory because it teaches the player the emotional rule of the hub: cruelty here smiles and files paperwork.
+    *   **The Lens:** The relic recognizes Nova before she controls it. This is the point of no return and should feel like confidence crossing into arrogance.
+    *   **Burn Notice:** The escape is not a clean win. Vale's compliance net reframes the threat from city security to orbital authority, and the crew survives by squeezing through a tiny Shield gap.
 *   **Cost Beat:** The Lens tags Nova as an anomaly—alarms rise early and the plan turns into improvisation.
 *   **Emotional Climax:** **Validation.** The Heist succeeds. The team clicks. They aren't just survivors anymore; they are a *crew*.
 *   **The Drive:** **Ambition.** They beat the City. Now they need to beat the Sky (Planetary Shield).

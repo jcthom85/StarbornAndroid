@@ -1021,9 +1021,9 @@
   {
     "id": "w3_mq11",
     "title": "Homecoming",
-    "summary": "Land the Astra and secure a hidden base of operations in the lower city sewers.",
-    "description": "Avoid Dominion surveillance by landing in the sewers, clear the landing zone of local hostiles, and let Zeke lead you to his old apartment safehouse.",
-    "flavor": "Returning to a home that forgot you ever existed.",
+    "summary": "Land beneath the Spire and follow Zeke back into the city that erased him.",
+    "description": "Avoid Dominion surveillance by landing in the sewers, clear the landing zone, climb into the Lower City, and let Zeke turn his old apartment into a safehouse before the city notices he came home.",
+    "flavor": "A homecoming is still a homecoming when the locks have forgotten your name.",
     "giver": "Zeke",
     "hub_id": "hub_5_lower_city",
     "stages": [
@@ -1045,7 +1045,7 @@
       {
         "id": "find_safehouse",
         "title": "Zeke's Safehouse",
-        "description": "Locate Zeke's old apartment and set up a base.",
+        "description": "Reach Zeke's old apartment, let him face what Dominion deleted, and set up a shielded base before the city can hear the crew breathing.",
         "tasks": [
           {
             "id": "find_apartment",
@@ -1053,7 +1053,7 @@
           },
           {
             "id": "establish_shield",
-            "text": "Wait for Orion to set up a Source Shield in the apartment."
+            "text": "Let Orion shield Zeke's apartment from Dominion scans."
           }
         ]
       }
@@ -1068,16 +1068,16 @@
   {
     "id": "w3_mq12",
     "title": "The Plan",
-    "summary": "Case the Lower City, gather credentials, and assemble a real heist plan for the Upper City climb.",
-    "description": "Use Jax's curfew schedules, Gh0st's security pull, Zeke's elevator blueprints, patrol timing, service gate badges, and safehouse disguise materials to build a plan the crew can actually execute.",
-    "flavor": "Every lock has a chord. You just have to find the keys.",
+    "summary": "Case the Lower City, gather what the rich overlook, and turn survival scraps into an Upper City heist.",
+    "description": "Use Jax's curfew schedules, Gh0st's security pull, Zeke's elevator blueprints, patrol timing, service gate badges, and safehouse disguise materials to build a plan that depends on the crew trusting each other under pressure.",
+    "flavor": "A heist is just hope with a schedule.",
     "giver": "Zeke",
     "hub_id": "hub_5_lower_city",
     "stages": [
       {
         "id": "gather_intel",
         "title": "Intelligence Gathering",
-        "description": "Collect the timing, credentials, route, and disguise pieces needed to make the Upper City infiltration believable.",
+        "description": "Collect timing, credentials, route data, and disguise pieces from people and places the Upper City thinks are beneath notice.",
         "tasks": [
           {
             "id": "talk_jax",
@@ -1108,11 +1108,11 @@
       {
         "id": "assemble_heist",
         "title": "The Assembly",
-        "description": "Bring every intel thread back to the safehouse planning table and assign crew roles.",
+        "description": "Bring every intel thread back to the safehouse planning table and decide who risks being seen.",
         "tasks": [
           {
             "id": "assemble_table",
-            "text": "Use the planning table to assign roles and launch the heist."
+            "text": "Use the planning table to assign roles, commit the crew, and launch the heist."
           }
         ]
       }
@@ -1220,20 +1220,20 @@
   {
     "id": "w3_mq13",
     "title": "Social Engineering",
-    "summary": "Infiltrate the Upper City by using service routes, guest access, and scanner sabotage.",
-    "description": "Move through Laundry Service, pull disguises from Uniform Sorting, pass the Staff Checkpoint, blend in at the Skypark, disable scanner coverage, and send Nova and Gh0st through the service chute toward the Archive.",
-    "flavor": "The cleanest rooms hide the dirtiest locks.",
+    "summary": "Enter the Upper City and survive its politeness long enough to become invisible.",
+    "description": "Move through Laundry Service, borrow the shape of workers the city refuses to see, pass the Staff Checkpoint, endure the Skypark's perfect contempt, blind scanner coverage, and send Nova and Gh0st through the service chute toward the Archive.",
+    "flavor": "The cleanest room is where they wash the blood off the rules.",
     "giver": "Zeke",
     "hub_id": "hub_6_upper_city",
     "stages": [
       {
         "id": "gain_access",
         "title": "Guest Access",
-        "description": "Create a believable path into the penthouse.",
+        "description": "Create a believable path into the penthouse by letting the city mistake cruelty for order.",
         "tasks": [
           {
             "id": "blend_in",
-            "text": "Blend in at the Skypark guest registry and acquire guest access."
+            "text": "Survive the Skypark guest registry and acquire guest access."
           },
           {
             "id": "disable_sensors",
@@ -1263,9 +1263,9 @@
   {
     "id": "w3_mq14",
     "title": "The Lens",
-    "summary": "Reach the Archive through the prism gallery, solve the light array, and steal the Lens relic.",
-    "description": "Enter the Archive, tune the Prism Gallery array with Orion, and take the Lens knowing the theft will expose Nova as an anomaly.",
-    "flavor": "A relic does not show truth. It makes hiding harder.",
+    "summary": "Reach the Archive, tune the light array, and take the Lens even when it recognizes Nova first.",
+    "description": "Enter the Archive, tune the Prism Gallery array with Orion, and take the Lens knowing the relic will expose more than the crew planned to steal.",
+    "flavor": "Truth is not a light. It is a wound that glows.",
     "giver": "Orion",
     "hub_id": "hub_6_upper_city",
     "stages": [
@@ -1287,11 +1287,11 @@
       {
         "id": "claim_lens",
         "title": "Claim the Relic",
-        "description": "Take the Lens and survive the alarm.",
+        "description": "Take the Lens, accept the cost of being seen, and survive the alarm.",
         "tasks": [
           {
             "id": "take_lens",
-            "text": "Take the Lens relic and survive the alarm."
+            "text": "Take the Lens relic after Zeke's warning and survive the alarm."
           }
         ]
       }
@@ -1311,16 +1311,16 @@
   {
     "id": "w3_mq15",
     "title": "Burn Notice",
-    "summary": "Escape the Upper City after the Archive alarm exposes the crew.",
-    "description": "Fight through the lockdown, cross the drone test alcove, defeat the Administrator on the landing pad, and use the Lens to time the Astra through the Shield toward the Foundry.",
-    "flavor": "When paradise burns, it smells like cleaning chemicals.",
+    "summary": "Escape the Upper City after Nova's signal turns the heist into a sector-wide hunt.",
+    "description": "Fight through the lockdown, cross the drone test alcove, defeat the Administrator on the landing pad, and use the Lens to time the Astra through the Shield toward the Foundry before Vale's compliance net closes.",
+    "flavor": "When paradise burns, the sprinklers dispense policy.",
     "giver": "Nova",
     "hub_id": "hub_6_upper_city",
     "stages": [
       {
         "id": "escape_lockdown",
         "title": "Escape Lockdown",
-        "description": "Break out of the Archive and fight to the roof.",
+        "description": "Break out of the Archive after the plan collapses and fight to the roof before the city seals itself around the crew.",
         "tasks": [
           {
             "id": "reach_landing_pad",

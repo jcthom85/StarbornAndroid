@@ -4190,7 +4190,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Homecoming\n\nOrion activates a compact resonance transmitter, establishing a localized shield. Zeke's apartment is now a fully secured safehouse."
+        "message": "Quest Complete: Homecoming\n\nOrion folds a quiet Source shield around Zeke's erased apartment. Outside, the Spire keeps listening to itself. Inside, the crew finally has a room the city cannot own."
       }
     ]
   },
@@ -4220,7 +4220,7 @@
       },
       {
         "type": "show_message",
-        "message": "Jax slides a data drive across the counter. 'Curfew schedules, elevator shift gossip, and a list of guards who owe me. Don't make me regret liking Zeke.'"
+        "message": "Jax slides a data drive across the counter. 'Curfew schedules, elevator shift gossip, and a list of guards who owe me. Don't make me regret remembering Zeke before the city deleted him.'"
       }
     ]
   },
@@ -4250,7 +4250,7 @@
       },
       {
         "type": "show_message",
-        "message": "Nova marks patrol timing from the underrail map. The gaps are short, ugly, and usable."
+        "message": "Nova marks patrol timing from the underrail map. Every gap is built from someone else's late shift, unpaid break, or fear of being noticed."
       }
     ]
   },
@@ -4280,7 +4280,7 @@
       },
       {
         "type": "show_message",
-        "message": "Gh0st ghosts the freight badge handshake long enough to copy a service pattern. The climb has a door now."
+        "message": "Gh0st ghosts the freight badge handshake long enough to copy a service pattern. The climb has a door now, but only if everyone looks like they belong beneath it."
       }
     ]
   },
@@ -4310,7 +4310,7 @@
       },
       {
         "type": "show_message",
-        "message": "Nova studies the patched coats and laundry lines on the safehouse roof. The disguise will not survive conversation, but it should survive a scanner glance."
+        "message": "Nova studies the patched coats and laundry lines on the safehouse roof. The disguise will not survive conversation, but the Upper City rarely speaks to workers long enough to notice."
       }
     ]
   },
@@ -4340,7 +4340,7 @@
       },
       {
         "type": "show_message",
-        "message": "Gh0st strips the plaza kiosk for extraction codes, staff routes, and archived case numbers. One file has Elara stamped in a deleted transfer chain."
+        "message": "Gh0st strips the plaza kiosk for extraction codes, staff routes, and archived case numbers. One file has Elara stamped in a deleted transfer chain, and his voice goes flat enough to hurt."
       }
     ]
   },
@@ -4395,7 +4395,7 @@
       },
       {
         "type": "show_message",
-        "message": "Zeke's workstation folds the stolen timing, badges, and security pull into a usable elevator route. The plan is becoming less impossible."
+        "message": "Zeke's workstation folds the stolen timing, badges, and security pull into a usable elevator route. For once, the system that erased him has to open a door with his name still buried in it."
       }
     ]
   },
@@ -4463,7 +4463,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: The Plan\n\nCurfews, patrol gaps, copied badges, disguises, security records, and Zeke's blueprints lock into one ugly route. Nova assigns the roles. The crew is not ready, but the plan is."
+        "message": "Quest Complete: The Plan\n\nCurfews, patrol gaps, copied badges, disguises, security records, and Zeke's blueprints lock into one ugly route. Nova assigns the roles. Nobody is ready, which is why everyone has to trust the assignment."
       }
     ]
   },
@@ -4479,7 +4479,7 @@
     "actions": [
       {
         "type": "show_message",
-        "message": "The Great Elevator rejects every surface credential you have. Curfews, patrol timing, copied badges, disguises, security records, and Zeke's blueprints all need to meet at the planning table before Nova can risk a climb."
+        "message": "The Great Elevator rejects every surface credential you have. Curfews, patrol timing, copied badges, disguises, security records, and Zeke's blueprints all need to meet at the planning table before Nova can risk turning the crew into a headline."
       }
     ]
   },
@@ -4503,7 +4503,7 @@
       },
       {
         "type": "show_message",
-        "message": "You inspect the buzzing neon sign. Its power core is burnt out. Jax needs a replacement core."
+        "message": "You inspect the buzzing neon sign. Its power core is burnt out, leaving The Static looking abandoned enough for patrols to get curious. Jax needs a replacement core."
       }
     ]
   },
@@ -4550,7 +4550,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Neon Fix\n\nThe sign flickers and flares back to life, bathing the subway car in neon purple. Jax grunts in approval and promises a permanent shop discount."
+        "message": "Quest Complete: Neon Fix\n\nThe sign flickers and flares back to life, bathing the subway car in neon purple. The bar looks watched, open, and ordinary again, which is the safest kind of lie. Jax grunts in approval and promises a permanent shop discount."
       }
     ]
   },
@@ -4588,7 +4588,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Cold Case\n\nYou download the archive files. Gh0st finds a deleted report linking Elara's transfer to the orbital ring. He unlocks the Intercept skill."
+        "message": "Quest Complete: Cold Case\n\nYou download the archive files. Gh0st finds a deleted report linking Elara's transfer to the orbital ring. For a second he says nothing, then quietly rewrites his combat routines. He unlocks the Intercept skill."
       }
     ]
   },
@@ -4627,7 +4627,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Night Market Run\n\nThe market string lights burst with warm illumination. Mika hands you a Neon Band accessory as a thank you."
+        "message": "Quest Complete: Night Market Run\n\nThe market string lights burst with warm illumination. Conversations rise under the glow before patrols can call the place abandoned. Mika hands you a Neon Band accessory as a thank you."
       }
     ]
   },
@@ -4663,7 +4663,7 @@
       },
       {
         "type": "show_message",
-        "message": "The heist begins. The copied badges hold just long enough for the service lift to swallow the crew into the clean machinery of the Upper City."
+        "message": "The heist begins. The copied badges hold just long enough for the service lift to swallow the crew into the clean machinery of the Upper City, where nobody screams because nobody has to."
       }
     ]
   },
@@ -4693,7 +4693,7 @@
       },
       {
         "type": "show_message",
-        "message": "The Skypark guest registry accepts the forged profile. Nova smiles like she belongs here. Gh0st stands perfectly still and somehow looks expensive."
+        "message": "The Skypark guest registry accepts the forged profile. Nova smiles like she belongs here while the Curator's insult keeps burning behind her teeth. Gh0st stands perfectly still and somehow looks expensive."
       }
     ]
   },
@@ -4728,7 +4728,7 @@
       },
       {
         "type": "show_message",
-        "message": "Zeke ghosts the scanner grid from the Laundry Service sensor console while Orion dampens the Source noise. The penthouse sensors blink blind for one narrow window."
+        "message": "Zeke ghosts the scanner grid from the Laundry Service sensor console while Orion dampens the Source noise. The penthouse sensors blink blind for one narrow window, and the crew moves before fear can vote."
       }
     ]
   },
@@ -4784,7 +4784,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Social Engineering\n\nThe service chute spits Nova and Gh0st past the scanners while Zeke and Orion keep the grid blind. The Archive route is open, but every second now has teeth."
+        "message": "Quest Complete: Social Engineering\n\nThe service chute spits Nova and Gh0st past the scanners while Zeke and Orion keep the grid blind. The crew has fooled the Upper City by becoming the people it refuses to see, and every second now has teeth."
       }
     ]
   },
@@ -4814,7 +4814,7 @@
       },
       {
         "type": "show_message",
-        "message": "The Archive recognizes no guest access. It recognizes only ownership. The Lens waits deeper inside, bright enough to make every lie in the room visible."
+        "message": "The Archive recognizes no guest access. It recognizes only ownership. The Lens waits deeper inside, bright enough to make every lie in the room visible, including Nova's."
       }
     ]
   },
@@ -4854,7 +4854,7 @@
       },
       {
         "type": "show_message",
-        "message": "In the Prism Gallery, Orion tunes the array until glass, light, and Source hum in the same key. The containment field drops like a held breath."
+        "message": "In the Prism Gallery, Orion tunes the array until glass, light, and Source hum in the same key. The containment field drops like a held breath, and the room feels suddenly less like a museum than a trap."
       }
     ]
   },
@@ -4914,7 +4914,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: The Lens\n\nThe relic burns cold in Nova's hand. The Shield above the Spire becomes visible as rotating chords. Alarm text blooms across the air: ANOMALY DETECTED."
+        "message": "Quest Complete: The Lens\n\nThe relic burns cold in Nova's hand. The Shield above the Spire becomes visible as rotating chords, and so does the thin old thread running through her own signal. Alarm text blooms across the air: ANOMALY DETECTED."
       }
     ]
   },
@@ -4944,7 +4944,7 @@
       },
       {
         "type": "show_message",
-        "message": "The drone test alcove erupts behind you as the crew reaches the roof. Wind tears across the pad. The Astra is still here. So is the Administrator."
+        "message": "The drone test alcove erupts behind you as the crew reaches the roof. Wind tears across the pad. The Astra is still here. So is the Administrator, smiling with every weapon the city calls peacekeeping."
       }
     ]
   },
@@ -4981,7 +4981,7 @@
       },
       {
         "type": "show_message",
-        "message": "The Administrator frame collapses, still smiling through sparking teeth. The Shield gap opens for less than a second."
+        "message": "The Administrator frame collapses, still smiling through sparking teeth. The Shield gap opens for less than a second, and Nova can finally see exactly how small freedom is."
       }
     ]
   },
@@ -5040,7 +5040,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Burn Notice\n\nThe Astra slips the Shield on Orion's count, using the Lens to ride a gap nobody was supposed to see. Low orbit coughs the ship toward the Foundry. Time to steal a bigger engine."
+        "message": "Quest Complete: Burn Notice\n\nThe Astra slips the Shield on Orion's count, using the Lens to ride a gap nobody was supposed to see. The crew does not beat the cage; they squeeze through before it closes. Low orbit coughs the ship toward the Foundry. Time to steal a bigger engine."
       }
     ]
   },
@@ -5116,7 +5116,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Corporate Espionage\n\nThe encrypted ledger is yours. Upper City prices suddenly look negotiable."
+        "message": "Quest Complete: Corporate Espionage\n\nThe encrypted ledger is yours. Every account line is proof that the Upper City runs on crimes with better stationery. Prices suddenly look negotiable."
       }
     ]
   },
@@ -5192,7 +5192,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Prototype Testing\n\nThe weapon trial leaves three drones in pieces and a Phase Rounds mod in your kit."
+        "message": "Quest Complete: Prototype Testing\n\nThe weapon trial leaves three drones in pieces and a Phase Rounds mod in your kit. The lab terminal marks the failure as acceptable losses, which tells Nova exactly what Dominion thinks of anything with a pulse."
       }
     ]
   },
