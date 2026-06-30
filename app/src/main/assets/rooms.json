@@ -9814,9 +9814,9 @@
   {
     "id": "spire_vent_output_scale_01",
     "env": "neon",
-    "title": "Spire Service Alcove",
+    "title": "Condensate Run",
     "background_image": "images/rooms/world_3/spire_vent_output.png",
-    "description": "A service alcove cuts away from the main route, where the maintenance mark tells the truth the official signs avoid. This part of the city should feel larger than the heist objective alone: lived-in, watched, and full of routes built by people Dominion ignores. The service alcove and maintenance mark make the heist feel assembled from place, class pressure, and local knowledge instead of UI buttons.",
+    "description": "A condensate run channels warm rainwater down the back of the Vent Output. The scan drip under the pipe maps footsteps from the street above, while the rust initials prove lower-city kids have used this route for years.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -9831,23 +9831,23 @@
     "state": {},
     "actions": [
       {
-        "name": "service alcove",
+        "name": "condensate run",
         "type": "generic",
-        "condition_unmet_message": "The detail gives Nova a practical read on patrol rhythm, access, or local survival habits."
+        "condition_unmet_message": "The runoff carries soap, engine oil, and expensive perfume from districts that pretend the lower city is invisible."
       },
       {
-        "name": "maintenance mark",
+        "name": "scan drip",
         "type": "generic",
-        "condition_unmet_message": "The clue reinforces that the Spire is a social machine before it is a physical obstacle."
+        "condition_unmet_message": "The drip pulses in a pattern Zeke can turn into a patrol estimate."
       }
     ]
   },
   {
     "id": "spire_vent_output_scale_02",
     "env": "neon",
-    "title": "Spire Pressure Gallery",
+    "title": "Maintenance Crawl",
     "background_image": "images/rooms/world_3/spire_vent_output.png",
-    "description": "A pressure gallery runs beside the route, its warning strip flashing whenever the place remembers what it costs to pass through. This part of the city should feel larger than the heist objective alone: lived-in, watched, and full of routes built by people Dominion ignores. The pressure gallery and warning strip make the heist feel assembled from place, class pressure, and local knowledge instead of UI buttons.",
+    "description": "A maintenance crawl squeezes between coolant pipes and old warning paint. The old stencil says unauthorized workers become infrastructure, and the pipe gap is just wide enough for a desperate crew.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -9862,23 +9862,23 @@
     "state": {},
     "actions": [
       {
-        "name": "pressure gallery",
+        "name": "maintenance crawl",
         "type": "generic",
-        "condition_unmet_message": "The detail gives Nova a practical read on patrol rhythm, access, or local survival habits."
+        "condition_unmet_message": "The crawl is cramped but recently used; someone has been moving around the Spire without permission."
       },
       {
-        "name": "warning strip",
+        "name": "old stencil",
         "type": "generic",
-        "condition_unmet_message": "The clue reinforces that the Spire is a social machine before it is a physical obstacle."
+        "condition_unmet_message": "The stencil has been painted over three times and still bleeds through."
       }
     ]
   },
   {
     "id": "spire_vent_output_scale_03",
     "env": "neon",
-    "title": "Spire Overlook Niche",
+    "title": "Rain Grate Overlook",
     "background_image": "images/rooms/world_3/spire_vent_output.png",
-    "description": "An overlook niche opens onto a long sightline, turning the surrounding space into something the crew can read instead of merely cross. This part of the city should feel larger than the heist objective alone: lived-in, watched, and full of routes built by people Dominion ignores. The overlook niche and sightline make the heist feel assembled from place, class pressure, and local knowledge instead of UI buttons.",
+    "description": "A rain grate opens above the lower street where upper runoff falls clean before hitting rust. The upper runoff and patrol reflection make the route feel watched from both directions.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -9892,23 +9892,23 @@
     "state": {},
     "actions": [
       {
-        "name": "overlook niche",
+        "name": "rain grate",
         "type": "generic",
-        "condition_unmet_message": "The detail gives Nova a practical read on patrol rhythm, access, or local survival habits."
+        "condition_unmet_message": "The grate gives the crew a quiet look at patrol rhythm without stepping into the street."
       },
       {
-        "name": "sightline",
+        "name": "upper runoff",
         "type": "generic",
-        "condition_unmet_message": "The clue reinforces that the Spire is a social machine before it is a physical obstacle."
+        "condition_unmet_message": "The runoff smells filtered before the city dirt catches it."
       }
     ]
   },
   {
     "id": "spire_the_static_scale_01",
     "env": "neon",
-    "title": "Spire Service Alcove",
+    "title": "Back Bar Ledger",
     "background_image": "images/rooms/world_3/spire_the_static.png",
-    "description": "A service alcove cuts away from the main route, where the maintenance mark tells the truth the official signs avoid. This part of the city should feel larger than the heist objective alone: lived-in, watched, and full of routes built by people Dominion ignores. The service alcove and maintenance mark make the heist feel assembled from place, class pressure, and local knowledge instead of UI buttons.",
+    "description": "The Static's back bar hides cracked glasses, ration labels, and a favor slate no customer admits to reading. A chipped tumbler sits beside the slate, marked with names Jax only says after closing.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -9923,23 +9923,23 @@
     "state": {},
     "actions": [
       {
-        "name": "service alcove",
+        "name": "back bar",
         "type": "generic",
-        "condition_unmet_message": "The detail gives Nova a practical read on patrol rhythm, access, or local survival habits."
+        "condition_unmet_message": "The back bar is where Jax keeps the real accounts."
       },
       {
-        "name": "maintenance mark",
+        "name": "favor slate",
         "type": "generic",
-        "condition_unmet_message": "The clue reinforces that the Spire is a social machine before it is a physical obstacle."
+        "condition_unmet_message": "The favor slate lists names in shorthand only locals understand."
       }
     ]
   },
   {
     "id": "spire_the_static_scale_02",
     "env": "neon",
-    "title": "Spire Pressure Gallery",
+    "title": "Roof Stairwell",
     "background_image": "images/rooms/world_3/spire_the_static.png",
-    "description": "A pressure gallery runs beside the route, its warning strip flashing whenever the place remembers what it costs to pass through. This part of the city should feel larger than the heist objective alone: lived-in, watched, and full of routes built by people Dominion ignores. The pressure gallery and warning strip make the heist feel assembled from place, class pressure, and local knowledge instead of UI buttons.",
+    "description": "Concrete roof stairs climb past curfew chalk and old burn marks from drone sweeps. The curfew chalk changes every night, but the scorch line never moves.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -9954,23 +9954,23 @@
     "state": {},
     "actions": [
       {
-        "name": "pressure gallery",
+        "name": "roof stairs",
         "type": "generic",
-        "condition_unmet_message": "The detail gives Nova a practical read on patrol rhythm, access, or local survival habits."
+        "condition_unmet_message": "The stairs are ugly, exposed, and faster than the official route."
       },
       {
-        "name": "warning strip",
+        "name": "curfew chalk",
         "type": "generic",
-        "condition_unmet_message": "The clue reinforces that the Spire is a social machine before it is a physical obstacle."
+        "condition_unmet_message": "The chalk is local infrastructure: temporary, illegal, and more useful than the city map."
       }
     ]
   },
   {
     "id": "spire_the_static_scale_03",
     "env": "neon",
-    "title": "Spire Overlook Niche",
+    "title": "Tenant Shrine",
     "background_image": "images/rooms/world_3/spire_the_static.png",
-    "description": "An overlook niche opens onto a long sightline, turning the surrounding space into something the crew can read instead of merely cross. This part of the city should feel larger than the heist objective alone: lived-in, watched, and full of routes built by people Dominion ignores. The overlook niche and sightline make the heist feel assembled from place, class pressure, and local knowledge instead of UI buttons.",
+    "description": "A tenant shrine of folded notices, dead neon, and cheap candles turns eviction paperwork into a memorial wall. The dead neon still flickers when transit drones pass overhead.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -9984,23 +9984,23 @@
     "state": {},
     "actions": [
       {
-        "name": "overlook niche",
+        "name": "tenant shrine",
         "type": "generic",
-        "condition_unmet_message": "The detail gives Nova a practical read on patrol rhythm, access, or local survival habits."
+        "condition_unmet_message": "The shrine is small enough to hide, which is the point."
       },
       {
-        "name": "sightline",
+        "name": "folded notices",
         "type": "generic",
-        "condition_unmet_message": "The clue reinforces that the Spire is a social machine before it is a physical obstacle."
+        "condition_unmet_message": "The notices are all stamped by different departments and the same contempt."
       }
     ]
   },
   {
     "id": "spire_night_market_scale_01",
     "env": "neon",
-    "title": "Spire Service Alcove",
+    "title": "Lantern Roof",
     "background_image": "images/rooms/world_3/spire_night_market.png",
-    "description": "A service alcove cuts away from the main route, where the maintenance mark tells the truth the official signs avoid. This part of the city should feel larger than the heist objective alone: lived-in, watched, and full of routes built by people Dominion ignores. The service alcove and maintenance mark make the heist feel assembled from place, class pressure, and local knowledge instead of UI buttons.",
+    "description": "String lights cross the lantern roof in careful knots above the Night Market. The anchor knots keep them up when patrol drones skim too low, and the lantern shadows hide handoffs under color.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -10015,23 +10015,23 @@
     "state": {},
     "actions": [
       {
-        "name": "service alcove",
+        "name": "lantern roof",
         "type": "generic",
-        "condition_unmet_message": "The detail gives Nova a practical read on patrol rhythm, access, or local survival habits."
+        "condition_unmet_message": "The roof looks festive until the drone scratches are visible."
       },
       {
-        "name": "maintenance mark",
+        "name": "anchor knots",
         "type": "generic",
-        "condition_unmet_message": "The clue reinforces that the Spire is a social machine before it is a physical obstacle."
+        "condition_unmet_message": "The knots are sailor work, not electrician work."
       }
     ]
   },
   {
     "id": "spire_night_market_scale_02",
     "env": "neon",
-    "title": "Spire Pressure Gallery",
+    "title": "Spice Alley",
     "background_image": "images/rooms/world_3/spire_night_market.png",
-    "description": "A pressure gallery runs beside the route, its warning strip flashing whenever the place remembers what it costs to pass through. This part of the city should feel larger than the heist objective alone: lived-in, watched, and full of routes built by people Dominion ignores. The pressure gallery and warning strip make the heist feel assembled from place, class pressure, and local knowledge instead of UI buttons.",
+    "description": "Spice alley smells like heat, fried protein, and ozone. Vendor codes are scratched under every awning, telling locals which stalls sell food, data, or silence.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -10046,23 +10046,23 @@
     "state": {},
     "actions": [
       {
-        "name": "pressure gallery",
+        "name": "spice alley",
         "type": "generic",
-        "condition_unmet_message": "The detail gives Nova a practical read on patrol rhythm, access, or local survival habits."
+        "condition_unmet_message": "The alley hides half the city's trade in plain sight."
       },
       {
-        "name": "warning strip",
+        "name": "vendor codes",
         "type": "generic",
-        "condition_unmet_message": "The clue reinforces that the Spire is a social machine before it is a physical obstacle."
+        "condition_unmet_message": "The codes mark which sellers move food, data, or favors."
       }
     ]
   },
   {
     "id": "spire_night_market_scale_03",
     "env": "neon",
-    "title": "Spire Overlook Niche",
+    "title": "Rain Cache",
     "background_image": "images/rooms/world_3/spire_night_market.png",
-    "description": "An overlook niche opens onto a long sightline, turning the surrounding space into something the crew can read instead of merely cross. This part of the city should feel larger than the heist objective alone: lived-in, watched, and full of routes built by people Dominion ignores. The overlook niche and sightline make the heist feel assembled from place, class pressure, and local knowledge instead of UI buttons.",
+    "description": "A rain cache beneath a torn canopy keeps wrapped tools dry beside counterfeit guest pins. The guest pins are cheap, but the route printed on the underside is current.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -10076,23 +10076,23 @@
     "state": {},
     "actions": [
       {
-        "name": "overlook niche",
+        "name": "rain cache",
         "type": "generic",
-        "condition_unmet_message": "The detail gives Nova a practical read on patrol rhythm, access, or local survival habits."
+        "condition_unmet_message": "The cache is exactly the kind of place the rich never think to search."
       },
       {
-        "name": "sightline",
+        "name": "wrapped tools",
         "type": "generic",
-        "condition_unmet_message": "The clue reinforces that the Spire is a social machine before it is a physical obstacle."
+        "condition_unmet_message": "The tools are cheap, mismatched, and perfect for quiet work."
       }
     ]
   },
   {
     "id": "spire_sewers_scale_01",
     "env": "neon",
-    "title": "Spire Service Alcove",
+    "title": "Pump Gallery",
     "background_image": "images/rooms/world_3/spire_sewers_landing.png",
-    "description": "A service alcove cuts away from the main route, where the maintenance mark tells the truth the official signs avoid. This part of the city should feel larger than the heist objective alone: lived-in, watched, and full of routes built by people Dominion ignores. The service alcove and maintenance mark make the heist feel assembled from place, class pressure, and local knowledge instead of UI buttons.",
+    "description": "The pump gallery beats under the city like a bad heart. A pressure map flashes routes the official grid denies exist, and the pump rhythm covers small mistakes.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -10107,23 +10107,23 @@
     "state": {},
     "actions": [
       {
-        "name": "service alcove",
+        "name": "pump gallery",
         "type": "generic",
-        "condition_unmet_message": "The detail gives Nova a practical read on patrol rhythm, access, or local survival habits."
+        "condition_unmet_message": "The pumps are louder than patrol scanners."
       },
       {
-        "name": "maintenance mark",
+        "name": "pressure map",
         "type": "generic",
-        "condition_unmet_message": "The clue reinforces that the Spire is a social machine before it is a physical obstacle."
+        "condition_unmet_message": "The pressure map proves the lower city has always had hidden arteries."
       }
     ]
   },
   {
     "id": "spire_sewers_scale_02",
     "env": "neon",
-    "title": "Spire Pressure Gallery",
+    "title": "Filter Sluice",
     "background_image": "images/rooms/world_3/spire_sewers_landing.png",
-    "description": "A pressure gallery runs beside the route, its warning strip flashing whenever the place remembers what it costs to pass through. This part of the city should feel larger than the heist objective alone: lived-in, watched, and full of routes built by people Dominion ignores. The pressure gallery and warning strip make the heist feel assembled from place, class pressure, and local knowledge instead of UI buttons.",
+    "description": "A filter sluice strains glittering trash from black water. A caught badge spins behind the grate, too damaged to pass but clean enough to copy.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -10138,23 +10138,23 @@
     "state": {},
     "actions": [
       {
-        "name": "pressure gallery",
+        "name": "filter sluice",
         "type": "generic",
-        "condition_unmet_message": "The detail gives Nova a practical read on patrol rhythm, access, or local survival habits."
+        "condition_unmet_message": "The sluice is disgusting but useful; rich people drop credentials like everything else."
       },
       {
-        "name": "warning strip",
+        "name": "caught badge",
         "type": "generic",
-        "condition_unmet_message": "The clue reinforces that the Spire is a social machine before it is a physical obstacle."
+        "condition_unmet_message": "The badge is ruined, but its access pattern can still teach Zeke something."
       }
     ]
   },
   {
     "id": "spire_sewers_scale_03",
     "env": "neon",
-    "title": "Spire Overlook Niche",
+    "title": "Ratline Nook",
     "background_image": "images/rooms/world_3/spire_sewers_landing.png",
-    "description": "An overlook niche opens onto a long sightline, turning the surrounding space into something the crew can read instead of merely cross. This part of the city should feel larger than the heist objective alone: lived-in, watched, and full of routes built by people Dominion ignores. The overlook niche and sightline make the heist feel assembled from place, class pressure, and local knowledge instead of UI buttons.",
+    "description": "A dry ratline nook branches away from the main sewer. Chalk arrows mark which exits are watched this week, and the dry ledge smells faintly of smoke and noodle broth.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -10168,23 +10168,23 @@
     "state": {},
     "actions": [
       {
-        "name": "overlook niche",
+        "name": "ratline nook",
         "type": "generic",
-        "condition_unmet_message": "The detail gives Nova a practical read on patrol rhythm, access, or local survival habits."
+        "condition_unmet_message": "The nook is old resistance infrastructure hiding inside utility neglect."
       },
       {
-        "name": "sightline",
+        "name": "chalk arrows",
         "type": "generic",
-        "condition_unmet_message": "The clue reinforces that the Spire is a social machine before it is a physical obstacle."
+        "condition_unmet_message": "The arrows have been updated recently enough to trust."
       }
     ]
   },
   {
     "id": "spire_transit_plaza_scale_01",
     "env": "neon",
-    "title": "Spire Service Alcove",
+    "title": "Ad Bay",
     "background_image": "images/rooms/world_3/spire_transit_plaza.png",
-    "description": "A service alcove cuts away from the main route, where the maintenance mark tells the truth the official signs avoid. This part of the city should feel larger than the heist objective alone: lived-in, watched, and full of routes built by people Dominion ignores. The service alcove and maintenance mark make the heist feel assembled from place, class pressure, and local knowledge instead of UI buttons.",
+    "description": "The ad bay projects a smiling loop of citizens thanking Dominion for clean air. The smiling loop glitches whenever a real worker walks past, and the dead speaker clicks through missing applause.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -10199,23 +10199,23 @@
     "state": {},
     "actions": [
       {
-        "name": "service alcove",
+        "name": "ad bay",
         "type": "generic",
-        "condition_unmet_message": "The detail gives Nova a practical read on patrol rhythm, access, or local survival habits."
+        "condition_unmet_message": "The ad copy is too polished to be believed."
       },
       {
-        "name": "maintenance mark",
+        "name": "smiling loop",
         "type": "generic",
-        "condition_unmet_message": "The clue reinforces that the Spire is a social machine before it is a physical obstacle."
+        "condition_unmet_message": "The loop breaks exactly where the lower-city crowd crosses the frame."
       }
     ]
   },
   {
     "id": "spire_transit_plaza_scale_02",
     "env": "neon",
-    "title": "Spire Pressure Gallery",
+    "title": "Ticket Shadow",
     "background_image": "images/rooms/world_3/spire_transit_plaza.png",
-    "description": "A pressure gallery runs beside the route, its warning strip flashing whenever the place remembers what it costs to pass through. This part of the city should feel larger than the heist objective alone: lived-in, watched, and full of routes built by people Dominion ignores. The pressure gallery and warning strip make the heist feel assembled from place, class pressure, and local knowledge instead of UI buttons.",
+    "description": "A ticket shadow behind the fare kiosk keeps commuters out of scanner sight for three blessed seconds. The fare kiosk accepts payment faster than guilt, but its blind spot is real.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -10230,23 +10230,23 @@
     "state": {},
     "actions": [
       {
-        "name": "pressure gallery",
+        "name": "ticket shadow",
         "type": "generic",
-        "condition_unmet_message": "The detail gives Nova a practical read on patrol rhythm, access, or local survival habits."
+        "condition_unmet_message": "The blind spot is small, but it is real."
       },
       {
-        "name": "warning strip",
+        "name": "fare kiosk",
         "type": "generic",
-        "condition_unmet_message": "The clue reinforces that the Spire is a social machine before it is a physical obstacle."
+        "condition_unmet_message": "The kiosk is more interested in charging people than protecting Dominion. Useful."
       }
     ]
   },
   {
     "id": "spire_transit_plaza_scale_03",
     "env": "neon",
-    "title": "Spire Overlook Niche",
+    "title": "Underrail Map Room",
     "background_image": "images/rooms/world_3/spire_transit_plaza.png",
-    "description": "An overlook niche opens onto a long sightline, turning the surrounding space into something the crew can read instead of merely cross. This part of the city should feel larger than the heist objective alone: lived-in, watched, and full of routes built by people Dominion ignores. The overlook niche and sightline make the heist feel assembled from place, class pressure, and local knowledge instead of UI buttons.",
+    "description": "The underrail map room stores obsolete route boards and a service legend that still matches the staff tunnels. A taped transfer notice explains why Dominion forgot to update the old map.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -10260,23 +10260,23 @@
     "state": {},
     "actions": [
       {
-        "name": "overlook niche",
+        "name": "underrail map",
         "type": "generic",
-        "condition_unmet_message": "The detail gives Nova a practical read on patrol rhythm, access, or local survival habits."
+        "condition_unmet_message": "The old map is more honest than the live one."
       },
       {
-        "name": "sightline",
+        "name": "service legend",
         "type": "generic",
-        "condition_unmet_message": "The clue reinforces that the Spire is a social machine before it is a physical obstacle."
+        "condition_unmet_message": "The legend marks doors hidden from guest-facing overlays."
       }
     ]
   },
   {
     "id": "spire_laundry_scale_01",
     "env": "neon",
-    "title": "Spire Service Alcove",
+    "title": "Steam Rack",
     "background_image": "images/rooms/world_3/spire_laundry_service.png",
-    "description": "A service alcove cuts away from the main route, where the maintenance mark tells the truth the official signs avoid. This part of the city should feel larger than the heist objective alone: lived-in, watched, and full of routes built by people Dominion ignores. The service alcove and maintenance mark make the heist feel assembled from place, class pressure, and local knowledge instead of UI buttons.",
+    "description": "The steam rack turns executive uniforms ghost-white. Badge thread glints inside the cuffs, and the hiss of pressurized water makes the room safe for whispered planning.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -10291,23 +10291,23 @@
     "state": {},
     "actions": [
       {
-        "name": "service alcove",
+        "name": "steam rack",
         "type": "generic",
-        "condition_unmet_message": "The detail gives Nova a practical read on patrol rhythm, access, or local survival habits."
+        "condition_unmet_message": "The rack hisses loudly enough to cover a whispered plan."
       },
       {
-        "name": "maintenance mark",
+        "name": "badge thread",
         "type": "generic",
-        "condition_unmet_message": "The clue reinforces that the Spire is a social machine before it is a physical obstacle."
+        "condition_unmet_message": "The thread carries the access pattern, not the wearer."
       }
     ]
   },
   {
     "id": "spire_laundry_scale_02",
     "env": "neon",
-    "title": "Spire Pressure Gallery",
+    "title": "Press Line",
     "background_image": "images/rooms/world_3/spire_laundry_service.png",
-    "description": "A pressure gallery runs beside the route, its warning strip flashing whenever the place remembers what it costs to pass through. This part of the city should feel larger than the heist objective alone: lived-in, watched, and full of routes built by people Dominion ignores. The pressure gallery and warning strip make the heist feel assembled from place, class pressure, and local knowledge instead of UI buttons.",
+    "description": "The press line stamps every guest crease to the same perfect angle. A guest crease becomes a social password here, and the heat plate can make cheap cloth look expensive from scanner distance.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -10322,23 +10322,23 @@
     "state": {},
     "actions": [
       {
-        "name": "pressure gallery",
+        "name": "press line",
         "type": "generic",
-        "condition_unmet_message": "The detail gives Nova a practical read on patrol rhythm, access, or local survival habits."
+        "condition_unmet_message": "The line can make cheap cloth look expensive from scanner distance."
       },
       {
-        "name": "warning strip",
+        "name": "guest crease",
         "type": "generic",
-        "condition_unmet_message": "The clue reinforces that the Spire is a social machine before it is a physical obstacle."
+        "condition_unmet_message": "The crease is a social password. The rich just call it taste."
       }
     ]
   },
   {
     "id": "spire_laundry_scale_03",
     "env": "neon",
-    "title": "Spire Overlook Niche",
+    "title": "Service Bin",
     "background_image": "images/rooms/world_3/spire_laundry_service.png",
-    "description": "An overlook niche opens onto a long sightline, turning the surrounding space into something the crew can read instead of merely cross. This part of the city should feel larger than the heist objective alone: lived-in, watched, and full of routes built by people Dominion ignores. The overlook niche and sightline make the heist feel assembled from place, class pressure, and local knowledge instead of UI buttons.",
+    "description": "A service bin overflows with ruined napkins, broken jewelry, and a discarded pass snapped in half. The discarded pass is dead, but its route stamp is still readable.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -10352,23 +10352,23 @@
     "state": {},
     "actions": [
       {
-        "name": "overlook niche",
+        "name": "service bin",
         "type": "generic",
-        "condition_unmet_message": "The detail gives Nova a practical read on patrol rhythm, access, or local survival habits."
+        "condition_unmet_message": "The bin is where privilege throws away useful things."
       },
       {
-        "name": "sightline",
+        "name": "discarded pass",
         "type": "generic",
-        "condition_unmet_message": "The clue reinforces that the Spire is a social machine before it is a physical obstacle."
+        "condition_unmet_message": "The pass is dead, but the route printed on it is not."
       }
     ]
   },
   {
     "id": "spire_skypark_scale_01",
     "env": "neon",
-    "title": "Spire Service Alcove",
+    "title": "Orchid Walk",
     "background_image": "images/rooms/world_3/spire_skypark_dome.png",
-    "description": "A service alcove cuts away from the main route, where the maintenance mark tells the truth the official signs avoid. This part of the city should feel larger than the heist objective alone: lived-in, watched, and full of routes built by people Dominion ignores. The service alcove and maintenance mark make the heist feel assembled from place, class pressure, and local knowledge instead of UI buttons.",
+    "description": "The orchid walk blooms under artificial rain. A donor plaque thanks families who bought their way above the smog, while root sensors drink more clean water than Trade Row sees in a week.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -10383,23 +10383,23 @@
     "state": {},
     "actions": [
       {
-        "name": "service alcove",
+        "name": "orchid walk",
         "type": "generic",
-        "condition_unmet_message": "The detail gives Nova a practical read on patrol rhythm, access, or local survival habits."
+        "condition_unmet_message": "The flowers are real; the gratitude is not."
       },
       {
-        "name": "maintenance mark",
+        "name": "donor plaque",
         "type": "generic",
-        "condition_unmet_message": "The clue reinforces that the Spire is a social machine before it is a physical obstacle."
+        "condition_unmet_message": "The plaque lists names worth avoiding."
       }
     ]
   },
   {
     "id": "spire_skypark_scale_02",
     "env": "neon",
-    "title": "Spire Pressure Gallery",
+    "title": "Registry Pavilion",
     "background_image": "images/rooms/world_3/spire_skypark_dome.png",
-    "description": "A pressure gallery runs beside the route, its warning strip flashing whenever the place remembers what it costs to pass through. This part of the city should feel larger than the heist objective alone: lived-in, watched, and full of routes built by people Dominion ignores. The pressure gallery and warning strip make the heist feel assembled from place, class pressure, and local knowledge instead of UI buttons.",
+    "description": "A registry pavilion floats over the park with a guest ledger projected in polite gold. The guest ledger shows which false identity can survive the next checkpoint.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -10414,23 +10414,23 @@
     "state": {},
     "actions": [
       {
-        "name": "pressure gallery",
+        "name": "registry pavilion",
         "type": "generic",
-        "condition_unmet_message": "The detail gives Nova a practical read on patrol rhythm, access, or local survival habits."
+        "condition_unmet_message": "The pavilion watches smiles more carefully than weapons."
       },
       {
-        "name": "warning strip",
+        "name": "guest ledger",
         "type": "generic",
-        "condition_unmet_message": "The clue reinforces that the Spire is a social machine before it is a physical obstacle."
+        "condition_unmet_message": "The ledger shows which false identity can survive the next checkpoint."
       }
     ]
   },
   {
     "id": "spire_skypark_scale_03",
     "env": "neon",
-    "title": "Spire Overlook Niche",
+    "title": "Glass Lawn",
     "background_image": "images/rooms/world_3/spire_skypark_dome.png",
-    "description": "An overlook niche opens onto a long sightline, turning the surrounding space into something the crew can read instead of merely cross. This part of the city should feel larger than the heist objective alone: lived-in, watched, and full of routes built by people Dominion ignores. The overlook niche and sightline make the heist feel assembled from place, class pressure, and local knowledge instead of UI buttons.",
+    "description": "The glass lawn is transparent all the way down to the city it refuses to see. Scanner mist drifts between ornamental trees, checking posture, fabric, and fear.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -10444,23 +10444,23 @@
     "state": {},
     "actions": [
       {
-        "name": "overlook niche",
+        "name": "glass lawn",
         "type": "generic",
-        "condition_unmet_message": "The detail gives Nova a practical read on patrol rhythm, access, or local survival habits."
+        "condition_unmet_message": "Standing here feels like being displayed."
       },
       {
-        "name": "sightline",
+        "name": "scanner mist",
         "type": "generic",
-        "condition_unmet_message": "The clue reinforces that the Spire is a social machine before it is a physical obstacle."
+        "condition_unmet_message": "The mist checks posture, fabric, and fear."
       }
     ]
   },
   {
     "id": "spire_archive_scale_01",
     "env": "neon",
-    "title": "Spire Service Alcove",
+    "title": "Catalog Atrium",
     "background_image": "images/rooms/world_3/spire_archive_vault.png",
-    "description": "A service alcove cuts away from the main route, where the maintenance mark tells the truth the official signs avoid. This part of the city should feel larger than the heist objective alone: lived-in, watched, and full of routes built by people Dominion ignores. The service alcove and maintenance mark make the heist feel assembled from place, class pressure, and local knowledge instead of UI buttons.",
+    "description": "The catalog atrium sings file numbers in a soft index choir. Each note points to a life Dominion turned into property, and the index choir never wonders who is listening.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -10475,23 +10475,23 @@
     "state": {},
     "actions": [
       {
-        "name": "service alcove",
+        "name": "catalog atrium",
         "type": "generic",
-        "condition_unmet_message": "The detail gives Nova a practical read on patrol rhythm, access, or local survival habits."
+        "condition_unmet_message": "The atrium is beautiful in a way that should be illegal."
       },
       {
-        "name": "maintenance mark",
+        "name": "index choir",
         "type": "generic",
-        "condition_unmet_message": "The clue reinforces that the Spire is a social machine before it is a physical obstacle."
+        "condition_unmet_message": "The choir treats people like folders because that is what it was built to do."
       }
     ]
   },
   {
     "id": "spire_archive_scale_02",
     "env": "neon",
-    "title": "Spire Pressure Gallery",
+    "title": "Prism Service Bay",
     "background_image": "images/rooms/world_3/spire_archive_vault.png",
-    "description": "A pressure gallery runs beside the route, its warning strip flashing whenever the place remembers what it costs to pass through. This part of the city should feel larger than the heist objective alone: lived-in, watched, and full of routes built by people Dominion ignores. The pressure gallery and warning strip make the heist feel assembled from place, class pressure, and local knowledge instead of UI buttons.",
+    "description": "The prism service bay stores a light wrench and replacement lenses for the gallery array. The light wrench proves the holy-looking Archive still needs maintenance.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -10506,23 +10506,23 @@
     "state": {},
     "actions": [
       {
-        "name": "pressure gallery",
+        "name": "prism service bay",
         "type": "generic",
-        "condition_unmet_message": "The detail gives Nova a practical read on patrol rhythm, access, or local survival habits."
+        "condition_unmet_message": "The bay proves the holy-looking Archive still needs maintenance."
       },
       {
-        "name": "warning strip",
+        "name": "light wrench",
         "type": "generic",
-        "condition_unmet_message": "The clue reinforces that the Spire is a social machine before it is a physical obstacle."
+        "condition_unmet_message": "The wrench bends light just enough to lie to a sensor."
       }
     ]
   },
   {
     "id": "spire_archive_scale_03",
     "env": "neon",
-    "title": "Spire Overlook Niche",
+    "title": "Alarm Spine",
     "background_image": "images/rooms/world_3/spire_archive_vault.png",
-    "description": "An overlook niche opens onto a long sightline, turning the surrounding space into something the crew can read instead of merely cross. This part of the city should feel larger than the heist objective alone: lived-in, watched, and full of routes built by people Dominion ignores. The overlook niche and sightline make the heist feel assembled from place, class pressure, and local knowledge instead of UI buttons.",
+    "description": "The alarm spine runs behind the vault in red conduits. Every conduit is labeled with a consequence instead of a destination, and the red conduits pulse faster when Nova gets close.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -10536,23 +10536,23 @@
     "state": {},
     "actions": [
       {
-        "name": "overlook niche",
+        "name": "alarm spine",
         "type": "generic",
-        "condition_unmet_message": "The detail gives Nova a practical read on patrol rhythm, access, or local survival habits."
+        "condition_unmet_message": "The spine turns theft into a city-wide weather event."
       },
       {
-        "name": "sightline",
+        "name": "red conduits",
         "type": "generic",
-        "condition_unmet_message": "The clue reinforces that the Spire is a social machine before it is a physical obstacle."
+        "condition_unmet_message": "The conduits pulse faster when Nova gets close."
       }
     ]
   },
   {
     "id": "spire_exec_lounge_scale_01",
     "env": "neon",
-    "title": "Spire Service Alcove",
+    "title": "Velvet Hall",
     "background_image": "images/rooms/world_3/spire_exec_lounge_bar.png",
-    "description": "A service alcove cuts away from the main route, where the maintenance mark tells the truth the official signs avoid. This part of the city should feel larger than the heist objective alone: lived-in, watched, and full of routes built by people Dominion ignores. The service alcove and maintenance mark make the heist feel assembled from place, class pressure, and local knowledge instead of UI buttons.",
+    "description": "A velvet hall swallows footsteps with expensive sound baffles. The sound baffles make every conversation private until someone pays more.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -10567,23 +10567,23 @@
     "state": {},
     "actions": [
       {
-        "name": "service alcove",
+        "name": "velvet hall",
         "type": "generic",
-        "condition_unmet_message": "The detail gives Nova a practical read on patrol rhythm, access, or local survival habits."
+        "condition_unmet_message": "The hall is built for secrets that expect service."
       },
       {
-        "name": "maintenance mark",
+        "name": "sound baffles",
         "type": "generic",
-        "condition_unmet_message": "The clue reinforces that the Spire is a social machine before it is a physical obstacle."
+        "condition_unmet_message": "The baffles can hide a crew moving fast."
       }
     ]
   },
   {
     "id": "spire_exec_lounge_scale_02",
     "env": "neon",
-    "title": "Spire Pressure Gallery",
+    "title": "Private Booth",
     "background_image": "images/rooms/world_3/spire_exec_lounge_bar.png",
-    "description": "A pressure gallery runs beside the route, its warning strip flashing whenever the place remembers what it costs to pass through. This part of the city should feel larger than the heist objective alone: lived-in, watched, and full of routes built by people Dominion ignores. The pressure gallery and warning strip make the heist feel assembled from place, class pressure, and local knowledge instead of UI buttons.",
+    "description": "A private booth overlooks the atrium. A half-empty glass sweats beside a terminal still logged into a director account.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -10600,23 +10600,23 @@
     "state": {},
     "actions": [
       {
-        "name": "pressure gallery",
+        "name": "private booth",
         "type": "generic",
-        "condition_unmet_message": "The detail gives Nova a practical read on patrol rhythm, access, or local survival habits."
+        "condition_unmet_message": "The booth smells like citrus and leverage."
       },
       {
-        "name": "warning strip",
+        "name": "half-empty glass",
         "type": "generic",
-        "condition_unmet_message": "The clue reinforces that the Spire is a social machine before it is a physical obstacle."
+        "condition_unmet_message": "The glass has lipstick on one side and tremor marks on the other."
       }
     ]
   },
   {
     "id": "spire_exec_lounge_scale_03",
     "env": "neon",
-    "title": "Spire Overlook Niche",
+    "title": "Blackmail Balcony",
     "background_image": "images/rooms/world_3/spire_exec_lounge_bar.png",
-    "description": "An overlook niche opens onto a long sightline, turning the surrounding space into something the crew can read instead of merely cross. This part of the city should feel larger than the heist objective alone: lived-in, watched, and full of routes built by people Dominion ignores. The overlook niche and sightline make the heist feel assembled from place, class pressure, and local knowledge instead of UI buttons.",
+    "description": "The blackmail balcony angles every table toward a camera seam disguised as decorative brass. The camera seam records everything except ownership.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -10631,23 +10631,23 @@
     "state": {},
     "actions": [
       {
-        "name": "overlook niche",
+        "name": "blackmail balcony",
         "type": "generic",
-        "condition_unmet_message": "The detail gives Nova a practical read on patrol rhythm, access, or local survival habits."
+        "condition_unmet_message": "The balcony makes corruption look like architecture."
       },
       {
-        "name": "sightline",
+        "name": "camera seam",
         "type": "generic",
-        "condition_unmet_message": "The clue reinforces that the Spire is a social machine before it is a physical obstacle."
+        "condition_unmet_message": "The seam records everything except ownership."
       }
     ]
   },
   {
     "id": "spire_exec_lounge_scale_04",
     "env": "neon",
-    "title": "Spire Control Pocket",
+    "title": "Ledger Office",
     "background_image": "images/rooms/world_3/spire_exec_lounge_bar.png",
-    "description": "A control pocket hides a manual toggle where workers, servants, or ghosts left one last practical way to resist automation. This part of the city should feel larger than the heist objective alone: lived-in, watched, and full of routes built by people Dominion ignores. The control pocket and manual toggle make the heist feel assembled from place, class pressure, and local knowledge instead of UI buttons.",
+    "description": "A ledger office behind the lounge safe stores an encrypted ledger under layers of concierge niceties. The encrypted ledger hums with executive panic.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -10662,23 +10662,23 @@
     "state": {},
     "actions": [
       {
-        "name": "control pocket",
+        "name": "ledger office",
         "type": "generic",
-        "condition_unmet_message": "The detail gives Nova a practical read on patrol rhythm, access, or local survival habits."
+        "condition_unmet_message": "The office is smaller than the crimes it tracks."
       },
       {
-        "name": "manual toggle",
+        "name": "encrypted ledger",
         "type": "generic",
-        "condition_unmet_message": "The clue reinforces that the Spire is a social machine before it is a physical obstacle."
+        "condition_unmet_message": "The ledger hums with executive panic."
       }
     ]
   },
   {
     "id": "spire_exec_lounge_scale_05",
     "env": "neon",
-    "title": "Spire Quiet Cache",
+    "title": "Service Dumbwaiter",
     "background_image": "images/rooms/world_3/spire_exec_lounge_bar.png",
-    "description": "A quiet cache stores a wrapped tool and small evidence that someone survived here by being careful rather than lucky. This part of the city should feel larger than the heist objective alone: lived-in, watched, and full of routes built by people Dominion ignores. The quiet cache and wrapped tool make the heist feel assembled from place, class pressure, and local knowledge instead of UI buttons.",
+    "description": "A Service Dumbwaiter drops toward the kitchen levels with a silver tray still balanced inside. The silver tray reflects the patrol outside better than the room's polished cameras.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -10694,23 +10694,23 @@
     "state": {},
     "actions": [
       {
-        "name": "quiet cache",
+        "name": "Service Dumbwaiter",
         "type": "generic",
-        "condition_unmet_message": "The detail gives Nova a practical read on patrol rhythm, access, or local survival habits."
+        "condition_unmet_message": "The dumbwaiter was designed for plates, not fugitives, but design is negotiable."
       },
       {
-        "name": "wrapped tool",
+        "name": "silver tray",
         "type": "generic",
-        "condition_unmet_message": "The clue reinforces that the Spire is a social machine before it is a physical obstacle."
+        "condition_unmet_message": "The tray is polished enough to reflect the patrol outside."
       }
     ]
   },
   {
     "id": "spire_landing_pad_scale_01",
     "env": "neon",
-    "title": "Spire Service Alcove",
+    "title": "Fuel Bridge",
     "background_image": "images/rooms/world_3/spire_landing_pad_roof.png",
-    "description": "A service alcove cuts away from the main route, where the maintenance mark tells the truth the official signs avoid. This part of the city should feel larger than the heist objective alone: lived-in, watched, and full of routes built by people Dominion ignores. The service alcove and maintenance mark make the heist feel assembled from place, class pressure, and local knowledge instead of UI buttons.",
+    "description": "A fuel bridge rattles between the roof and the Astra. Wind shear shoves rain sideways through warning lights and reveals the Shield rhythm in the clouds.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -10727,23 +10727,23 @@
     "state": {},
     "actions": [
       {
-        "name": "service alcove",
+        "name": "fuel bridge",
         "type": "generic",
-        "condition_unmet_message": "The detail gives Nova a practical read on patrol rhythm, access, or local survival habits."
+        "condition_unmet_message": "The bridge is too exposed for comfort and too direct to ignore."
       },
       {
-        "name": "maintenance mark",
+        "name": "wind shear",
         "type": "generic",
-        "condition_unmet_message": "The clue reinforces that the Spire is a social machine before it is a physical obstacle."
+        "condition_unmet_message": "The shear reveals the Shield rhythm in the clouds."
       }
     ]
   },
   {
     "id": "spire_landing_pad_scale_02",
     "env": "neon",
-    "title": "Spire Pressure Gallery",
+    "title": "Shield Sightline",
     "background_image": "images/rooms/world_3/spire_landing_pad_roof.png",
-    "description": "A pressure gallery runs beside the route, its warning strip flashing whenever the place remembers what it costs to pass through. This part of the city should feel larger than the heist objective alone: lived-in, watched, and full of routes built by people Dominion ignores. The pressure gallery and warning strip make the heist feel assembled from place, class pressure, and local knowledge instead of UI buttons.",
+    "description": "The shield sightline lines up with a tiny gap shimmer rotating through the storm. The gap shimmer lasts less than a breath.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -10758,23 +10758,23 @@
     "state": {},
     "actions": [
       {
-        "name": "pressure gallery",
+        "name": "shield sightline",
         "type": "generic",
-        "condition_unmet_message": "The detail gives Nova a practical read on patrol rhythm, access, or local survival habits."
+        "condition_unmet_message": "The sightline lasts less than a breath."
       },
       {
-        "name": "warning strip",
+        "name": "gap shimmer",
         "type": "generic",
-        "condition_unmet_message": "The clue reinforces that the Spire is a social machine before it is a physical obstacle."
+        "condition_unmet_message": "The shimmer is proof the prison has seams."
       }
     ]
   },
   {
     "id": "spire_landing_pad_scale_03",
     "env": "neon",
-    "title": "Spire Overlook Niche",
+    "title": "Drone Wreck Roof",
     "background_image": "images/rooms/world_3/spire_landing_pad_roof.png",
-    "description": "An overlook niche opens onto a long sightline, turning the surrounding space into something the crew can read instead of merely cross. This part of the city should feel larger than the heist objective alone: lived-in, watched, and full of routes built by people Dominion ignores. The overlook niche and sightline make the heist feel assembled from place, class pressure, and local knowledge instead of UI buttons.",
+    "description": "A drone wreck skids across the roof, its broken rotor still trying to obey a command that no longer matters. The broken rotor twitches whenever the alarm network speaks.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -10791,23 +10791,23 @@
     "state": {},
     "actions": [
       {
-        "name": "overlook niche",
+        "name": "drone wreck",
         "type": "generic",
-        "condition_unmet_message": "The detail gives Nova a practical read on patrol rhythm, access, or local survival habits."
+        "condition_unmet_message": "The wreck sparks with rich-city panic."
       },
       {
-        "name": "sightline",
+        "name": "broken rotor",
         "type": "generic",
-        "condition_unmet_message": "The clue reinforces that the Spire is a social machine before it is a physical obstacle."
+        "condition_unmet_message": "The rotor twitches whenever the alarm network speaks."
       }
     ]
   },
   {
     "id": "spire_landing_pad_scale_04",
     "env": "neon",
-    "title": "Spire Control Pocket",
+    "title": "Boarding Causeway",
     "background_image": "images/rooms/world_3/spire_landing_pad_roof.png",
-    "description": "A control pocket hides a manual toggle where workers, servants, or ghosts left one last practical way to resist automation. This part of the city should feel larger than the heist objective alone: lived-in, watched, and full of routes built by people Dominion ignores. The control pocket and manual toggle make the heist feel assembled from place, class pressure, and local knowledge instead of UI buttons.",
+    "description": "The boarding causeway stretches toward the Astra hatch under lockdown strobes. The Astra hatch light blinks like a heartbeat through rain and warning static.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -10821,23 +10821,23 @@
     "state": {},
     "actions": [
       {
-        "name": "control pocket",
+        "name": "boarding causeway",
         "type": "generic",
-        "condition_unmet_message": "The detail gives Nova a practical read on patrol rhythm, access, or local survival habits."
+        "condition_unmet_message": "The causeway is a straight line through a storm of bad odds."
       },
       {
-        "name": "manual toggle",
+        "name": "Astra hatch",
         "type": "generic",
-        "condition_unmet_message": "The clue reinforces that the Spire is a social machine before it is a physical obstacle."
+        "condition_unmet_message": "The hatch light blinks like a heartbeat."
       }
     ]
   },
   {
     "id": "foundry_obsidian_shelf_scale_01",
     "env": "foundry",
-    "title": "Foundry Service Alcove",
+    "title": "Ash Survey Point",
     "background_image": "images/rooms/world_4/foundry_slag_landing.png",
-    "description": "A service alcove cuts away from the main route, where the maintenance mark tells the truth the official signs avoid. The machinery has visible cause and effect, so heat, pressure, fabrication, and worker improvisation all read as part of one industrial body. The service alcove and maintenance mark make the Foundry feel like a system Nova is breaking rather than a chain of isolated combat rooms.",
+    "description": "An ash survey point overlooks the Astra's landing scorch and a field of black glass. The landing scorch shows how hard the Astra hit, while the survey marker rates the shelf as disposable.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -10852,23 +10852,23 @@
     "state": {},
     "actions": [
       {
-        "name": "service alcove",
+        "name": "ash survey",
         "type": "generic",
-        "condition_unmet_message": "The inspection exposes how the Foundry routes heat, pressure, or production through this node."
+        "condition_unmet_message": "The survey marker rates the shelf as disposable."
       },
       {
-        "name": "maintenance mark",
+        "name": "landing scorch",
         "type": "generic",
-        "condition_unmet_message": "The detail suggests a worker workaround, sabotage angle, or hazard pattern Nova can exploit."
+        "condition_unmet_message": "The scorch shows how hard the Astra hit and how little margin remains."
       }
     ]
   },
   {
     "id": "foundry_obsidian_shelf_scale_02",
     "env": "foundry",
-    "title": "Foundry Pressure Gallery",
+    "title": "Heat Shadow Alcove",
     "background_image": "images/rooms/world_4/foundry_slag_landing.png",
-    "description": "A pressure gallery runs beside the route, its warning strip flashing whenever the place remembers what it costs to pass through. The machinery has visible cause and effect, so heat, pressure, fabrication, and worker improvisation all read as part of one industrial body. The pressure gallery and warning strip make the Foundry feel like a system Nova is breaking rather than a chain of isolated combat rooms.",
+    "description": "A heat shadow alcove hides behind stacked coolant tags fluttering in furnace wind. The coolant tags mark batches diverted from worker safety.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -10885,23 +10885,23 @@
     "state": {},
     "actions": [
       {
-        "name": "pressure gallery",
+        "name": "heat shadow",
         "type": "generic",
-        "condition_unmet_message": "The inspection exposes how the Foundry routes heat, pressure, or production through this node."
+        "condition_unmet_message": "The alcove is the first place where breathing feels possible."
       },
       {
-        "name": "warning strip",
+        "name": "coolant tags",
         "type": "generic",
-        "condition_unmet_message": "The detail suggests a worker workaround, sabotage angle, or hazard pattern Nova can exploit."
+        "condition_unmet_message": "The tags mark coolant batches diverted from worker safety."
       }
     ]
   },
   {
     "id": "foundry_obsidian_shelf_scale_03",
     "env": "foundry",
-    "title": "Foundry Overlook Niche",
+    "title": "Slag Signal Post",
     "background_image": "images/rooms/world_4/foundry_slag_landing.png",
-    "description": "An overlook niche opens onto a long sightline, turning the surrounding space into something the crew can read instead of merely cross. The machinery has visible cause and effect, so heat, pressure, fabrication, and worker improvisation all read as part of one industrial body. The overlook niche and sightline make the Foundry feel like a system Nova is breaking rather than a chain of isolated combat rooms.",
+    "description": "A slag signal post leans over the shelf with a range mast welded from spare rail. The range mast can ping the next safe rock when the river flares.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -10916,23 +10916,23 @@
     "state": {},
     "actions": [
       {
-        "name": "overlook niche",
+        "name": "slag signal",
         "type": "generic",
-        "condition_unmet_message": "The inspection exposes how the Foundry routes heat, pressure, or production through this node."
+        "condition_unmet_message": "The signal keeps dropping behind the heat shimmer."
       },
       {
-        "name": "sightline",
+        "name": "range mast",
         "type": "generic",
-        "condition_unmet_message": "The detail suggests a worker workaround, sabotage angle, or hazard pattern Nova can exploit."
+        "condition_unmet_message": "The mast can ping the next safe rock when the river flares."
       }
     ]
   },
   {
     "id": "foundry_obsidian_shelf_scale_04",
     "env": "foundry",
-    "title": "Foundry Control Pocket",
+    "title": "Survey Cache",
     "background_image": "images/rooms/world_4/foundry_slag_landing.png",
-    "description": "A control pocket hides a manual toggle where workers, servants, or ghosts left one last practical way to resist automation. The machinery has visible cause and effect, so heat, pressure, fabrication, and worker improvisation all read as part of one industrial body. The control pocket and manual toggle make the Foundry feel like a system Nova is breaking rather than a chain of isolated combat rooms.",
+    "description": "A survey cache contains a cracked scope and old hazard notes from crews who stopped reporting. The cracked scope still reads heat pockets through the smoke.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -10947,23 +10947,23 @@
     "state": {},
     "actions": [
       {
-        "name": "control pocket",
+        "name": "survey cache",
         "type": "generic",
-        "condition_unmet_message": "The inspection exposes how the Foundry routes heat, pressure, or production through this node."
+        "condition_unmet_message": "The cache is orderly in a way that feels like a last will."
       },
       {
-        "name": "manual toggle",
+        "name": "cracked scope",
         "type": "generic",
-        "condition_unmet_message": "The detail suggests a worker workaround, sabotage angle, or hazard pattern Nova can exploit."
+        "condition_unmet_message": "The scope still reads heat pockets through the smoke."
       }
     ]
   },
   {
     "id": "foundry_slag_river_scale_01",
     "env": "foundry",
-    "title": "Foundry Service Alcove",
+    "title": "Basalt Switchback",
     "background_image": "images/rooms/world_4/foundry_slag_river.png",
-    "description": "A service alcove cuts away from the main route, where the maintenance mark tells the truth the official signs avoid. The machinery has visible cause and effect, so heat, pressure, fabrication, and worker improvisation all read as part of one industrial body. The service alcove and maintenance mark make the Foundry feel like a system Nova is breaking rather than a chain of isolated combat rooms.",
+    "description": "A basalt switchback crawls along the slag river wall beside a heat ladder glowing red at the edges. The heat ladder expands and contracts like it is breathing.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -10978,23 +10978,23 @@
     "state": {},
     "actions": [
       {
-        "name": "service alcove",
+        "name": "basalt switchback",
         "type": "generic",
-        "condition_unmet_message": "The inspection exposes how the Foundry routes heat, pressure, or production through this node."
+        "condition_unmet_message": "The switchback is safer than the river only by comparison."
       },
       {
-        "name": "maintenance mark",
+        "name": "heat ladder",
         "type": "generic",
-        "condition_unmet_message": "The detail suggests a worker workaround, sabotage angle, or hazard pattern Nova can exploit."
+        "condition_unmet_message": "The ladder expands and contracts like it is breathing."
       }
     ]
   },
   {
     "id": "foundry_slag_river_scale_02",
     "env": "foundry",
-    "title": "Foundry Pressure Gallery",
+    "title": "Coolant Spillway",
     "background_image": "images/rooms/world_4/foundry_slag_river.png",
-    "description": "A pressure gallery runs beside the route, its warning strip flashing whenever the place remembers what it costs to pass through. The machinery has visible cause and effect, so heat, pressure, fabrication, and worker improvisation all read as part of one industrial body. The pressure gallery and warning strip make the Foundry feel like a system Nova is breaking rather than a chain of isolated combat rooms.",
+    "description": "A coolant spillway pours chemical blue into orange slag, raising a steam curtain thick enough to hide movement. The steam curtain turns patrol silhouettes into guesswork.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -11011,23 +11011,23 @@
     "state": {},
     "actions": [
       {
-        "name": "pressure gallery",
+        "name": "coolant spillway",
         "type": "generic",
-        "condition_unmet_message": "The inspection exposes how the Foundry routes heat, pressure, or production through this node."
+        "condition_unmet_message": "The spillway is wasteful, toxic, and useful."
       },
       {
-        "name": "warning strip",
+        "name": "steam curtain",
         "type": "generic",
-        "condition_unmet_message": "The detail suggests a worker workaround, sabotage angle, or hazard pattern Nova can exploit."
+        "condition_unmet_message": "The curtain turns patrol silhouettes into guesswork."
       }
     ]
   },
   {
     "id": "foundry_slag_river_scale_03",
     "env": "foundry",
-    "title": "Foundry Overlook Niche",
+    "title": "Slag Ferry Winch",
     "background_image": "images/rooms/world_4/foundry_slag_river.png",
-    "description": "An overlook niche opens onto a long sightline, turning the surrounding space into something the crew can read instead of merely cross. The machinery has visible cause and effect, so heat, pressure, fabrication, and worker improvisation all read as part of one industrial body. The overlook niche and sightline make the Foundry feel like a system Nova is breaking rather than a chain of isolated combat rooms.",
+    "description": "A slag ferry hangs from a winch with half its teeth stripped smooth by heat. The winch teeth catch every third crank.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -11044,23 +11044,23 @@
     "state": {},
     "actions": [
       {
-        "name": "overlook niche",
+        "name": "slag ferry",
         "type": "generic",
-        "condition_unmet_message": "The inspection exposes how the Foundry routes heat, pressure, or production through this node."
+        "condition_unmet_message": "The ferry was not meant for people, which explains the handholds."
       },
       {
-        "name": "sightline",
+        "name": "winch teeth",
         "type": "generic",
-        "condition_unmet_message": "The detail suggests a worker workaround, sabotage angle, or hazard pattern Nova can exploit."
+        "condition_unmet_message": "The teeth catch every third crank."
       }
     ]
   },
   {
     "id": "foundry_slag_river_scale_04",
     "env": "foundry",
-    "title": "Foundry Control Pocket",
+    "title": "River Gauge Station",
     "background_image": "images/rooms/world_4/foundry_slag_river.png",
-    "description": "A control pocket hides a manual toggle where workers, servants, or ghosts left one last practical way to resist automation. The machinery has visible cause and effect, so heat, pressure, fabrication, and worker improvisation all read as part of one industrial body. The control pocket and manual toggle make the Foundry feel like a system Nova is breaking rather than a chain of isolated combat rooms.",
+    "description": "A river gauge station measures flow surges with a red needle bent past every printed warning. The red needle jumps before the river throws fire.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -11075,23 +11075,23 @@
     "state": {},
     "actions": [
       {
-        "name": "control pocket",
+        "name": "river gauge",
         "type": "generic",
-        "condition_unmet_message": "The inspection exposes how the Foundry routes heat, pressure, or production through this node."
+        "condition_unmet_message": "The station has been screaming danger for years."
       },
       {
-        "name": "manual toggle",
+        "name": "red needle",
         "type": "generic",
-        "condition_unmet_message": "The detail suggests a worker workaround, sabotage angle, or hazard pattern Nova can exploit."
+        "condition_unmet_message": "The needle jumps before the river throws fire."
       }
     ]
   },
   {
     "id": "foundry_cooling_springs_scale_01",
     "env": "foundry",
-    "title": "Foundry Service Alcove",
+    "title": "Mist Basin",
     "background_image": "images/rooms/world_4/foundry_cooling_springs.png",
-    "description": "A service alcove cuts away from the main route, where the maintenance mark tells the truth the official signs avoid. The machinery has visible cause and effect, so heat, pressure, fabrication, and worker improvisation all read as part of one industrial body. The service alcove and maintenance mark make the Foundry feel like a system Nova is breaking rather than a chain of isolated combat rooms.",
+    "description": "A mist basin steams under mineral crust thick enough to write in. The mineral crust records every surge in brittle rings.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -11106,23 +11106,23 @@
     "state": {},
     "actions": [
       {
-        "name": "service alcove",
+        "name": "mist basin",
         "type": "generic",
-        "condition_unmet_message": "The inspection exposes how the Foundry routes heat, pressure, or production through this node."
+        "condition_unmet_message": "The basin cools metal and burns lungs."
       },
       {
-        "name": "maintenance mark",
+        "name": "mineral crust",
         "type": "generic",
-        "condition_unmet_message": "The detail suggests a worker workaround, sabotage angle, or hazard pattern Nova can exploit."
+        "condition_unmet_message": "The crust records every surge in brittle rings."
       }
     ]
   },
   {
     "id": "foundry_cooling_springs_scale_02",
     "env": "foundry",
-    "title": "Foundry Pressure Gallery",
+    "title": "Worker Marker",
     "background_image": "images/rooms/world_4/foundry_cooling_springs.png",
-    "description": "A pressure gallery runs beside the route, its warning strip flashing whenever the place remembers what it costs to pass through. The machinery has visible cause and effect, so heat, pressure, fabrication, and worker improvisation all read as part of one industrial body. The pressure gallery and warning strip make the Foundry feel like a system Nova is breaking rather than a chain of isolated combat rooms.",
+    "description": "A worker marker stands beside a dead helmet light and a name scratched into pipe insulation. The helmet light died facing the exit.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -11139,23 +11139,23 @@
     "state": {},
     "actions": [
       {
-        "name": "pressure gallery",
+        "name": "worker marker",
         "type": "generic",
-        "condition_unmet_message": "The inspection exposes how the Foundry routes heat, pressure, or production through this node."
+        "condition_unmet_message": "The marker is not an official memorial, which makes it honest."
       },
       {
-        "name": "warning strip",
+        "name": "helmet light",
         "type": "generic",
-        "condition_unmet_message": "The detail suggests a worker workaround, sabotage angle, or hazard pattern Nova can exploit."
+        "condition_unmet_message": "The light died facing the exit."
       }
     ]
   },
   {
     "id": "foundry_cooling_springs_scale_03",
     "env": "foundry",
-    "title": "Foundry Overlook Niche",
+    "title": "Spring Valve Nest",
     "background_image": "images/rooms/world_4/foundry_cooling_springs.png",
-    "description": "An overlook niche opens onto a long sightline, turning the surrounding space into something the crew can read instead of merely cross. The machinery has visible cause and effect, so heat, pressure, fabrication, and worker improvisation all read as part of one industrial body. The overlook niche and sightline make the Foundry feel like a system Nova is breaking rather than a chain of isolated combat rooms.",
+    "description": "A spring valve nest knots pipes around a pressure wheel painted with old handprints. The pressure wheel can lower the heat if it still turns.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -11170,23 +11170,23 @@
     "state": {},
     "actions": [
       {
-        "name": "overlook niche",
+        "name": "spring valve",
         "type": "generic",
-        "condition_unmet_message": "The inspection exposes how the Foundry routes heat, pressure, or production through this node."
+        "condition_unmet_message": "The valve can lower the heat if the wheel still turns."
       },
       {
-        "name": "sightline",
+        "name": "pressure wheel",
         "type": "generic",
-        "condition_unmet_message": "The detail suggests a worker workaround, sabotage angle, or hazard pattern Nova can exploit."
+        "condition_unmet_message": "The handprints are layered by shift and desperation."
       }
     ]
   },
   {
     "id": "foundry_cooling_springs_scale_04",
     "env": "foundry",
-    "title": "Foundry Control Pocket",
+    "title": "Thermal Shelf",
     "background_image": "images/rooms/world_4/foundry_cooling_springs.png",
-    "description": "A control pocket hides a manual toggle where workers, servants, or ghosts left one last practical way to resist automation. The machinery has visible cause and effect, so heat, pressure, fabrication, and worker improvisation all read as part of one industrial body. The control pocket and manual toggle make the Foundry feel like a system Nova is breaking rather than a chain of isolated combat rooms.",
+    "description": "A thermal shelf catches runoff in a cool seam beneath the slag wall. The cool seam is a natural flaw the Foundry never managed to monetize.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -11201,23 +11201,23 @@
     "state": {},
     "actions": [
       {
-        "name": "control pocket",
+        "name": "thermal shelf",
         "type": "generic",
-        "condition_unmet_message": "The inspection exposes how the Foundry routes heat, pressure, or production through this node."
+        "condition_unmet_message": "The shelf offers one narrow breath before the next furnace route."
       },
       {
-        "name": "manual toggle",
+        "name": "cool seam",
         "type": "generic",
-        "condition_unmet_message": "The detail suggests a worker workaround, sabotage angle, or hazard pattern Nova can exploit."
+        "condition_unmet_message": "The seam is a natural flaw the Foundry never managed to monetize."
       }
     ]
   },
   {
     "id": "foundry_waste_intake_scale_01",
     "env": "foundry",
-    "title": "Foundry Service Alcove",
+    "title": "Crusher Throat",
     "background_image": "images/rooms/world_4/foundry_waste_intake.png",
-    "description": "A service alcove cuts away from the main route, where the maintenance mark tells the truth the official signs avoid. The machinery has visible cause and effect, so heat, pressure, fabrication, and worker improvisation all read as part of one industrial body. The service alcove and maintenance mark make the Foundry feel like a system Nova is breaking rather than a chain of isolated combat rooms.",
+    "description": "The crusher throat opens below the intake platform. A jammed tooth holds back a mountain of rejected parts.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -11232,23 +11232,23 @@
     "state": {},
     "actions": [
       {
-        "name": "service alcove",
+        "name": "crusher throat",
         "type": "generic",
-        "condition_unmet_message": "The inspection exposes how the Foundry routes heat, pressure, or production through this node."
+        "condition_unmet_message": "The throat eats whole machines and complains only when they fight back."
       },
       {
-        "name": "maintenance mark",
+        "name": "jammed tooth",
         "type": "generic",
-        "condition_unmet_message": "The detail suggests a worker workaround, sabotage angle, or hazard pattern Nova can exploit."
+        "condition_unmet_message": "The tooth is cracked by something too large to be scrap."
       }
     ]
   },
   {
     "id": "foundry_waste_intake_scale_02",
     "env": "foundry",
-    "title": "Foundry Pressure Gallery",
+    "title": "Records Shed",
     "background_image": "images/rooms/world_4/foundry_waste_intake.png",
-    "description": "A pressure gallery runs beside the route, its warning strip flashing whenever the place remembers what it costs to pass through. The machinery has visible cause and effect, so heat, pressure, fabrication, and worker improvisation all read as part of one industrial body. The pressure gallery and warning strip make the Foundry feel like a system Nova is breaking rather than a chain of isolated combat rooms.",
+    "description": "A records shed lists Phantom labels on crates that officially never existed. The Phantom labels use budget codes instead of names.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -11265,23 +11265,23 @@
     "state": {},
     "actions": [
       {
-        "name": "pressure gallery",
+        "name": "records shed",
         "type": "generic",
-        "condition_unmet_message": "The inspection exposes how the Foundry routes heat, pressure, or production through this node."
+        "condition_unmet_message": "The shed smells like hot dust and erased accountability."
       },
       {
-        "name": "warning strip",
+        "name": "Phantom labels",
         "type": "generic",
-        "condition_unmet_message": "The detail suggests a worker workaround, sabotage angle, or hazard pattern Nova can exploit."
+        "condition_unmet_message": "The labels use budget codes instead of names."
       }
     ]
   },
   {
     "id": "foundry_waste_intake_scale_03",
     "env": "foundry",
-    "title": "Foundry Overlook Niche",
+    "title": "Magnet Ramp",
     "background_image": "images/rooms/world_4/foundry_waste_intake.png",
-    "description": "An overlook niche opens onto a long sightline, turning the surrounding space into something the crew can read instead of merely cross. The machinery has visible cause and effect, so heat, pressure, fabrication, and worker improvisation all read as part of one industrial body. The overlook niche and sightline make the Foundry feel like a system Nova is breaking rather than a chain of isolated combat rooms.",
+    "description": "A magnet ramp drags loose filings uphill in glittering streams toward the sorting drums. The loose filings point toward live current under the floor.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -11298,23 +11298,23 @@
     "state": {},
     "actions": [
       {
-        "name": "overlook niche",
+        "name": "magnet ramp",
         "type": "generic",
-        "condition_unmet_message": "The inspection exposes how the Foundry routes heat, pressure, or production through this node."
+        "condition_unmet_message": "The ramp makes metal behave like weather."
       },
       {
-        "name": "sightline",
+        "name": "loose filings",
         "type": "generic",
-        "condition_unmet_message": "The detail suggests a worker workaround, sabotage angle, or hazard pattern Nova can exploit."
+        "condition_unmet_message": "The filings point toward live current under the floor."
       }
     ]
   },
   {
     "id": "foundry_waste_intake_scale_04",
     "env": "foundry",
-    "title": "Foundry Control Pocket",
+    "title": "Intake Catwalk",
     "background_image": "images/rooms/world_4/foundry_waste_intake.png",
-    "description": "A control pocket hides a manual toggle where workers, servants, or ghosts left one last practical way to resist automation. The machinery has visible cause and effect, so heat, pressure, fabrication, and worker improvisation all read as part of one industrial body. The control pocket and manual toggle make the Foundry feel like a system Nova is breaking rather than a chain of isolated combat rooms.",
+    "description": "An intake catwalk sways above the waste pit on braces patched with hurry and prayer. The sway braces were signed by workers who expected them to fail.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -11329,23 +11329,23 @@
     "state": {},
     "actions": [
       {
-        "name": "control pocket",
+        "name": "intake catwalk",
         "type": "generic",
-        "condition_unmet_message": "The inspection exposes how the Foundry routes heat, pressure, or production through this node."
+        "condition_unmet_message": "The catwalk moves too much, but the view is useful."
       },
       {
-        "name": "manual toggle",
+        "name": "sway braces",
         "type": "generic",
-        "condition_unmet_message": "The detail suggests a worker workaround, sabotage angle, or hazard pattern Nova can exploit."
+        "condition_unmet_message": "The braces were signed by workers who expected them to fail."
       }
     ]
   },
   {
     "id": "foundry_service_airlock_scale_01",
     "env": "foundry",
-    "title": "Foundry Service Alcove",
+    "title": "Seal Control Nook",
     "background_image": "images/rooms/world_4/foundry_service_airlock.png",
-    "description": "A service alcove cuts away from the main route, where the maintenance mark tells the truth the official signs avoid. The machinery has visible cause and effect, so heat, pressure, fabrication, and worker improvisation all read as part of one industrial body. The service alcove and maintenance mark make the Foundry feel like a system Nova is breaking rather than a chain of isolated combat rooms.",
+    "description": "A seal control nook watches the airlock doors with a cycle lever polished by emergency use. The cycle lever sticks halfway between safe and fast.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -11360,23 +11360,23 @@
     "state": {},
     "actions": [
       {
-        "name": "service alcove",
+        "name": "seal control",
         "type": "generic",
-        "condition_unmet_message": "The inspection exposes how the Foundry routes heat, pressure, or production through this node."
+        "condition_unmet_message": "The nook is all warning lights and no comfort."
       },
       {
-        "name": "maintenance mark",
+        "name": "cycle lever",
         "type": "generic",
-        "condition_unmet_message": "The detail suggests a worker workaround, sabotage angle, or hazard pattern Nova can exploit."
+        "condition_unmet_message": "The lever sticks halfway between safe and fast."
       }
     ]
   },
   {
     "id": "foundry_service_airlock_scale_02",
     "env": "foundry",
-    "title": "Foundry Pressure Gallery",
+    "title": "Decon Drain",
     "background_image": "images/rooms/world_4/foundry_service_airlock.png",
-    "description": "A pressure gallery runs beside the route, its warning strip flashing whenever the place remembers what it costs to pass through. The machinery has visible cause and effect, so heat, pressure, fabrication, and worker improvisation all read as part of one industrial body. The pressure gallery and warning strip make the Foundry feel like a system Nova is breaking rather than a chain of isolated combat rooms.",
+    "description": "A decon drain foams with chemical runoff beneath cracked grating. The chemical foam carries metal flakes like stars.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -11393,23 +11393,23 @@
     "state": {},
     "actions": [
       {
-        "name": "pressure gallery",
+        "name": "decon drain",
         "type": "generic",
-        "condition_unmet_message": "The inspection exposes how the Foundry routes heat, pressure, or production through this node."
+        "condition_unmet_message": "The drain strips slag dust from boots and paint from steel."
       },
       {
-        "name": "warning strip",
+        "name": "chemical foam",
         "type": "generic",
-        "condition_unmet_message": "The detail suggests a worker workaround, sabotage angle, or hazard pattern Nova can exploit."
+        "condition_unmet_message": "The foam carries metal flakes like stars."
       }
     ]
   },
   {
     "id": "foundry_service_airlock_scale_03",
     "env": "foundry",
-    "title": "Foundry Overlook Niche",
+    "title": "Pressure Lock Gallery",
     "background_image": "images/rooms/world_4/foundry_service_airlock.png",
-    "description": "An overlook niche opens onto a long sightline, turning the surrounding space into something the crew can read instead of merely cross. The machinery has visible cause and effect, so heat, pressure, fabrication, and worker improvisation all read as part of one industrial body. The overlook niche and sightline make the Foundry feel like a system Nova is breaking rather than a chain of isolated combat rooms.",
+    "description": "A pressure lock gallery blinks yellow gauges at anyone foolish enough to trust the seal. The yellow gauges disagree in small terrifying ways.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -11424,23 +11424,23 @@
     "state": {},
     "actions": [
       {
-        "name": "overlook niche",
+        "name": "pressure lock",
         "type": "generic",
-        "condition_unmet_message": "The inspection exposes how the Foundry routes heat, pressure, or production through this node."
+        "condition_unmet_message": "The gallery feels like a held breath."
       },
       {
-        "name": "sightline",
+        "name": "yellow gauges",
         "type": "generic",
-        "condition_unmet_message": "The detail suggests a worker workaround, sabotage angle, or hazard pattern Nova can exploit."
+        "condition_unmet_message": "The gauges disagree in small terrifying ways."
       }
     ]
   },
   {
     "id": "foundry_service_airlock_scale_04",
     "env": "foundry",
-    "title": "Foundry Control Pocket",
+    "title": "Maintenance Shelf",
     "background_image": "images/rooms/world_4/foundry_service_airlock.png",
-    "description": "A control pocket hides a manual toggle where workers, servants, or ghosts left one last practical way to resist automation. The machinery has visible cause and effect, so heat, pressure, fabrication, and worker improvisation all read as part of one industrial body. The control pocket and manual toggle make the Foundry feel like a system Nova is breaking rather than a chain of isolated combat rooms.",
+    "description": "A maintenance shelf holds spare gasket rings, burnt gloves, and a note reading DO NOT CYCLE TWICE. The spare gasket is warped but usable.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -11455,23 +11455,23 @@
     "state": {},
     "actions": [
       {
-        "name": "control pocket",
+        "name": "maintenance shelf",
         "type": "generic",
-        "condition_unmet_message": "The inspection exposes how the Foundry routes heat, pressure, or production through this node."
+        "condition_unmet_message": "The shelf is the closest thing the airlock has to mercy."
       },
       {
-        "name": "manual toggle",
+        "name": "spare gasket",
         "type": "generic",
-        "condition_unmet_message": "The detail suggests a worker workaround, sabotage angle, or hazard pattern Nova can exploit."
+        "condition_unmet_message": "The gasket is warped but usable."
       }
     ]
   },
   {
     "id": "foundry_conveyor_belt_scale_01",
     "env": "foundry",
-    "title": "Foundry Service Alcove",
+    "title": "Timing Tower",
     "background_image": "images/rooms/world_4/foundry_conveyor_belt.png",
-    "description": "A service alcove cuts away from the main route, where the maintenance mark tells the truth the official signs avoid. The machinery has visible cause and effect, so heat, pressure, fabrication, and worker improvisation all read as part of one industrial body. The service alcove and maintenance mark make the Foundry feel like a system Nova is breaking rather than a chain of isolated combat rooms.",
+    "description": "A timing tower ticks above the conveyor, its pulse board turning worker mistakes into production data. The pulse board predicts crush points before they happen.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -11486,23 +11486,23 @@
     "state": {},
     "actions": [
       {
-        "name": "service alcove",
+        "name": "timing tower",
         "type": "generic",
-        "condition_unmet_message": "The inspection exposes how the Foundry routes heat, pressure, or production through this node."
+        "condition_unmet_message": "The tower controls rhythm more than speed."
       },
       {
-        "name": "maintenance mark",
+        "name": "pulse board",
         "type": "generic",
-        "condition_unmet_message": "The detail suggests a worker workaround, sabotage angle, or hazard pattern Nova can exploit."
+        "condition_unmet_message": "The board predicts crush points before they happen."
       }
     ]
   },
   {
     "id": "foundry_conveyor_belt_scale_02",
     "env": "foundry",
-    "title": "Foundry Pressure Gallery",
+    "title": "Reject Chute",
     "background_image": "images/rooms/world_4/foundry_conveyor_belt.png",
-    "description": "A pressure gallery runs beside the route, its warning strip flashing whenever the place remembers what it costs to pass through. The machinery has visible cause and effect, so heat, pressure, fabrication, and worker improvisation all read as part of one industrial body. The pressure gallery and warning strip make the Foundry feel like a system Nova is breaking rather than a chain of isolated combat rooms.",
+    "description": "A reject chute spits scrap rain into a pit where defective parts keep twitching. The scrap rain hides small parts worth stealing.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -11519,23 +11519,23 @@
     "state": {},
     "actions": [
       {
-        "name": "pressure gallery",
+        "name": "reject chute",
         "type": "generic",
-        "condition_unmet_message": "The inspection exposes how the Foundry routes heat, pressure, or production through this node."
+        "condition_unmet_message": "The chute is where failed machines go before they become useful again."
       },
       {
-        "name": "warning strip",
+        "name": "scrap rain",
         "type": "generic",
-        "condition_unmet_message": "The detail suggests a worker workaround, sabotage angle, or hazard pattern Nova can exploit."
+        "condition_unmet_message": "The rain hides small parts worth stealing."
       }
     ]
   },
   {
     "id": "foundry_conveyor_belt_scale_03",
     "env": "foundry",
-    "title": "Foundry Overlook Niche",
+    "title": "Roller Underpass",
     "background_image": "images/rooms/world_4/foundry_conveyor_belt.png",
-    "description": "An overlook niche opens onto a long sightline, turning the surrounding space into something the crew can read instead of merely cross. The machinery has visible cause and effect, so heat, pressure, fabrication, and worker improvisation all read as part of one industrial body. The overlook niche and sightline make the Foundry feel like a system Nova is breaking rather than a chain of isolated combat rooms.",
+    "description": "A roller underpass runs beneath the belt through grease marks and warning paint. The grease marks show where previous crews crawled.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -11552,23 +11552,23 @@
     "state": {},
     "actions": [
       {
-        "name": "overlook niche",
+        "name": "roller underpass",
         "type": "generic",
-        "condition_unmet_message": "The inspection exposes how the Foundry routes heat, pressure, or production through this node."
+        "condition_unmet_message": "The underpass is low, loud, and safer than the belt surface."
       },
       {
-        "name": "sightline",
+        "name": "grease marks",
         "type": "generic",
-        "condition_unmet_message": "The detail suggests a worker workaround, sabotage angle, or hazard pattern Nova can exploit."
+        "condition_unmet_message": "The marks show where previous crews crawled."
       }
     ]
   },
   {
     "id": "foundry_conveyor_belt_scale_04",
     "env": "foundry",
-    "title": "Foundry Control Pocket",
+    "title": "Control Perch",
     "background_image": "images/rooms/world_4/foundry_conveyor_belt.png",
-    "description": "A control pocket hides a manual toggle where workers, servants, or ghosts left one last practical way to resist automation. The machinery has visible cause and effect, so heat, pressure, fabrication, and worker improvisation all read as part of one industrial body. The control pocket and manual toggle make the Foundry feel like a system Nova is breaking rather than a chain of isolated combat rooms.",
+    "description": "A control perch hangs over the belt with an override paddle locked behind mesh. The override paddle can pause one section if the mesh comes loose.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -11583,23 +11583,23 @@
     "state": {},
     "actions": [
       {
-        "name": "control pocket",
+        "name": "control perch",
         "type": "generic",
-        "condition_unmet_message": "The inspection exposes how the Foundry routes heat, pressure, or production through this node."
+        "condition_unmet_message": "The perch was built for supervisors, not saboteurs."
       },
       {
-        "name": "manual toggle",
+        "name": "override paddle",
         "type": "generic",
-        "condition_unmet_message": "The detail suggests a worker workaround, sabotage angle, or hazard pattern Nova can exploit."
+        "condition_unmet_message": "The paddle can pause one section if the mesh comes loose."
       }
     ]
   },
   {
     "id": "foundry_conditioning_scale_01",
     "env": "foundry",
-    "title": "Foundry Service Alcove",
+    "title": "Heat-Soak Chamber",
     "background_image": "images/rooms/world_4/foundry_conditioning_chamber.png",
-    "description": "A service alcove cuts away from the main route, where the maintenance mark tells the truth the official signs avoid. The machinery has visible cause and effect, so heat, pressure, fabrication, and worker improvisation all read as part of one industrial body. The service alcove and maintenance mark make the Foundry feel like a system Nova is breaking rather than a chain of isolated combat rooms.",
+    "description": "A heat-soak chamber wraps Phantom frames in orange coils until their armor remembers pain. The orange coils pulse in sequence with the fabrication line.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -11614,23 +11614,23 @@
     "state": {},
     "actions": [
       {
-        "name": "service alcove",
+        "name": "heat-soak chamber",
         "type": "generic",
-        "condition_unmet_message": "The inspection exposes how the Foundry routes heat, pressure, or production through this node."
+        "condition_unmet_message": "The chamber treats machines like meat."
       },
       {
-        "name": "maintenance mark",
+        "name": "orange coils",
         "type": "generic",
-        "condition_unmet_message": "The detail suggests a worker workaround, sabotage angle, or hazard pattern Nova can exploit."
+        "condition_unmet_message": "The coils pulse in sequence with the fabrication line."
       }
     ]
   },
   {
     "id": "foundry_conditioning_scale_02",
     "env": "foundry",
-    "title": "Foundry Pressure Gallery",
+    "title": "Quench Lane",
     "background_image": "images/rooms/world_4/foundry_conditioning_chamber.png",
-    "description": "A pressure gallery runs beside the route, its warning strip flashing whenever the place remembers what it costs to pass through. The machinery has visible cause and effect, so heat, pressure, fabrication, and worker improvisation all read as part of one industrial body. The pressure gallery and warning strip make the Foundry feel like a system Nova is breaking rather than a chain of isolated combat rooms.",
+    "description": "A quench lane slams prototypes through cold vapor while steam alarms shriek above the track. The steam alarms are calibrated to production loss, not injury.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -11647,23 +11647,23 @@
     "state": {},
     "actions": [
       {
-        "name": "pressure gallery",
+        "name": "quench lane",
         "type": "generic",
-        "condition_unmet_message": "The inspection exposes how the Foundry routes heat, pressure, or production through this node."
+        "condition_unmet_message": "The lane hardens metal and hides footfalls."
       },
       {
-        "name": "warning strip",
+        "name": "steam alarms",
         "type": "generic",
-        "condition_unmet_message": "The detail suggests a worker workaround, sabotage angle, or hazard pattern Nova can exploit."
+        "condition_unmet_message": "The alarms are calibrated to production loss, not injury."
       }
     ]
   },
   {
     "id": "foundry_conditioning_scale_03",
     "env": "foundry",
-    "title": "Foundry Overlook Niche",
+    "title": "Defect Window",
     "background_image": "images/rooms/world_4/foundry_conditioning_chamber.png",
-    "description": "An overlook niche opens onto a long sightline, turning the surrounding space into something the crew can read instead of merely cross. The machinery has visible cause and effect, so heat, pressure, fabrication, and worker improvisation all read as part of one industrial body. The overlook niche and sightline make the Foundry feel like a system Nova is breaking rather than a chain of isolated combat rooms.",
+    "description": "A defect window looks into a bay where a shaking unit refuses to power down. The shaking unit twitches every time the line calls it defective.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -11678,23 +11678,23 @@
     "state": {},
     "actions": [
       {
-        "name": "overlook niche",
+        "name": "defect window",
         "type": "generic",
-        "condition_unmet_message": "The inspection exposes how the Foundry routes heat, pressure, or production through this node."
+        "condition_unmet_message": "The window makes rejection look clinical."
       },
       {
-        "name": "sightline",
+        "name": "shaking unit",
         "type": "generic",
-        "condition_unmet_message": "The detail suggests a worker workaround, sabotage angle, or hazard pattern Nova can exploit."
+        "condition_unmet_message": "The unit twitches every time the line calls it defective."
       }
     ]
   },
   {
     "id": "foundry_conditioning_scale_04",
     "env": "foundry",
-    "title": "Foundry Control Pocket",
+    "title": "Calibration Pit",
     "background_image": "images/rooms/world_4/foundry_conditioning_chamber.png",
-    "description": "A control pocket hides a manual toggle where workers, servants, or ghosts left one last practical way to resist automation. The machinery has visible cause and effect, so heat, pressure, fabrication, and worker improvisation all read as part of one industrial body. The control pocket and manual toggle make the Foundry feel like a system Nova is breaking rather than a chain of isolated combat rooms.",
+    "description": "A calibration pit scores each prototype against load marks carved into ceramic floor. The load marks show failures that were recycled into the next batch.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -11709,23 +11709,23 @@
     "state": {},
     "actions": [
       {
-        "name": "control pocket",
+        "name": "calibration pit",
         "type": "generic",
-        "condition_unmet_message": "The inspection exposes how the Foundry routes heat, pressure, or production through this node."
+        "condition_unmet_message": "The pit is a classroom for violence."
       },
       {
-        "name": "manual toggle",
+        "name": "load marks",
         "type": "generic",
-        "condition_unmet_message": "The detail suggests a worker workaround, sabotage angle, or hazard pattern Nova can exploit."
+        "condition_unmet_message": "The marks show failures that were recycled into the next batch."
       }
     ]
   },
   {
     "id": "foundry_forge_scale_01",
     "env": "foundry",
-    "title": "Foundry Service Alcove",
+    "title": "Bellows Walk",
     "background_image": "images/rooms/world_4/foundry_forge_anvil.png",
-    "description": "A service alcove cuts away from the main route, where the maintenance mark tells the truth the official signs avoid. The machinery has visible cause and effect, so heat, pressure, fabrication, and worker improvisation all read as part of one industrial body. The service alcove and maintenance mark make the Foundry feel like a system Nova is breaking rather than a chain of isolated combat rooms.",
+    "description": "The bellows walk rises beside breath pistons that feed the Forge like lungs. The breath pistons can starve the fire if timed correctly.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -11740,23 +11740,23 @@
     "state": {},
     "actions": [
       {
-        "name": "service alcove",
+        "name": "bellows walk",
         "type": "generic",
-        "condition_unmet_message": "The inspection exposes how the Foundry routes heat, pressure, or production through this node."
+        "condition_unmet_message": "The walk moves with every inhale of the machine."
       },
       {
-        "name": "maintenance mark",
+        "name": "breath pistons",
         "type": "generic",
-        "condition_unmet_message": "The detail suggests a worker workaround, sabotage angle, or hazard pattern Nova can exploit."
+        "condition_unmet_message": "The pistons can starve the fire if timed correctly."
       }
     ]
   },
   {
     "id": "foundry_forge_scale_02",
     "env": "foundry",
-    "title": "Foundry Pressure Gallery",
+    "title": "Anvil Shadow",
     "background_image": "images/rooms/world_4/foundry_forge_anvil.png",
-    "description": "A pressure gallery runs beside the route, its warning strip flashing whenever the place remembers what it costs to pass through. The machinery has visible cause and effect, so heat, pressure, fabrication, and worker improvisation all read as part of one industrial body. The pressure gallery and warning strip make the Foundry feel like a system Nova is breaking rather than a chain of isolated combat rooms.",
+    "description": "The anvil shadow remains on the floor even when the light changes. A relic imprint glows beneath the ash.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -11773,23 +11773,23 @@
     "state": {},
     "actions": [
       {
-        "name": "pressure gallery",
+        "name": "anvil shadow",
         "type": "generic",
-        "condition_unmet_message": "The inspection exposes how the Foundry routes heat, pressure, or production through this node."
+        "condition_unmet_message": "The shadow is older than the Forge around it."
       },
       {
-        "name": "warning strip",
+        "name": "relic imprint",
         "type": "generic",
-        "condition_unmet_message": "The detail suggests a worker workaround, sabotage angle, or hazard pattern Nova can exploit."
+        "condition_unmet_message": "The imprint pulls at Nova's bones."
       }
     ]
   },
   {
     "id": "foundry_forge_scale_03",
     "env": "foundry",
-    "title": "Foundry Overlook Niche",
+    "title": "Mold Library",
     "background_image": "images/rooms/world_4/foundry_forge_anvil.png",
-    "description": "An overlook niche opens onto a long sightline, turning the surrounding space into something the crew can read instead of merely cross. The machinery has visible cause and effect, so heat, pressure, fabrication, and worker improvisation all read as part of one industrial body. The overlook niche and sightline make the Foundry feel like a system Nova is breaking rather than a chain of isolated combat rooms.",
+    "description": "A mold library stores broken casts for weapons Dominion decided were too expensive for ordinary troops. The broken casts are labeled by casualty forecast.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -11806,23 +11806,23 @@
     "state": {},
     "actions": [
       {
-        "name": "overlook niche",
+        "name": "mold library",
         "type": "generic",
-        "condition_unmet_message": "The inspection exposes how the Foundry routes heat, pressure, or production through this node."
+        "condition_unmet_message": "The library is a museum of violence that almost shipped."
       },
       {
-        "name": "sightline",
+        "name": "broken casts",
         "type": "generic",
-        "condition_unmet_message": "The detail suggests a worker workaround, sabotage angle, or hazard pattern Nova can exploit."
+        "condition_unmet_message": "The casts are labeled by casualty forecast."
       }
     ]
   },
   {
     "id": "foundry_forge_scale_04",
     "env": "foundry",
-    "title": "Foundry Control Pocket",
+    "title": "Slag Chapel",
     "background_image": "images/rooms/world_4/foundry_forge_anvil.png",
-    "description": "A control pocket hides a manual toggle where workers, servants, or ghosts left one last practical way to resist automation. The machinery has visible cause and effect, so heat, pressure, fabrication, and worker improvisation all read as part of one industrial body. The control pocket and manual toggle make the Foundry feel like a system Nova is breaking rather than a chain of isolated combat rooms.",
+    "description": "A slag chapel of welded braces and prayer bolts watches over the Forge core. The prayer bolts carry names etched too small for supervisors to notice.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -11837,23 +11837,23 @@
     "state": {},
     "actions": [
       {
-        "name": "control pocket",
+        "name": "slag chapel",
         "type": "generic",
-        "condition_unmet_message": "The inspection exposes how the Foundry routes heat, pressure, or production through this node."
+        "condition_unmet_message": "The chapel was built by workers who did not trust engineering alone."
       },
       {
-        "name": "manual toggle",
+        "name": "prayer bolts",
         "type": "generic",
-        "condition_unmet_message": "The detail suggests a worker workaround, sabotage angle, or hazard pattern Nova can exploit."
+        "condition_unmet_message": "The bolts carry names etched too small for supervisors to notice."
       }
     ]
   },
   {
     "id": "foundry_power_core_scale_01",
     "env": "foundry",
-    "title": "Foundry Service Alcove",
+    "title": "Turbine Balcony",
     "background_image": "images/rooms/world_4/foundry_power_core.png",
-    "description": "A service alcove cuts away from the main route, where the maintenance mark tells the truth the official signs avoid. The machinery has visible cause and effect, so heat, pressure, fabrication, and worker improvisation all read as part of one industrial body. The service alcove and maintenance mark make the Foundry feel like a system Nova is breaking rather than a chain of isolated combat rooms.",
+    "description": "A turbine balcony hangs over spin blur so fast the air becomes a wall. The spin blur hides which blades are damaged.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -11868,23 +11868,23 @@
     "state": {},
     "actions": [
       {
-        "name": "service alcove",
+        "name": "turbine balcony",
         "type": "generic",
-        "condition_unmet_message": "The inspection exposes how the Foundry routes heat, pressure, or production through this node."
+        "condition_unmet_message": "The balcony vibrates through teeth and boot soles."
       },
       {
-        "name": "maintenance mark",
+        "name": "spin blur",
         "type": "generic",
-        "condition_unmet_message": "The detail suggests a worker workaround, sabotage angle, or hazard pattern Nova can exploit."
+        "condition_unmet_message": "The blur hides which blades are damaged."
       }
     ]
   },
   {
     "id": "foundry_power_core_scale_02",
     "env": "foundry",
-    "title": "Foundry Pressure Gallery",
+    "title": "Engine Cradle",
     "background_image": "images/rooms/world_4/foundry_power_core.png",
-    "description": "A pressure gallery runs beside the route, its warning strip flashing whenever the place remembers what it costs to pass through. The machinery has visible cause and effect, so heat, pressure, fabrication, and worker improvisation all read as part of one industrial body. The pressure gallery and warning strip make the Foundry feel like a system Nova is breaking rather than a chain of isolated combat rooms.",
+    "description": "The engine cradle grips the Deep-Core Engine with mount clamps bigger than mining rigs. The mount clamps loosen when the core output spikes.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -11901,23 +11901,23 @@
     "state": {},
     "actions": [
       {
-        "name": "pressure gallery",
+        "name": "engine cradle",
         "type": "generic",
-        "condition_unmet_message": "The inspection exposes how the Foundry routes heat, pressure, or production through this node."
+        "condition_unmet_message": "The cradle was designed to keep theft impossible."
       },
       {
-        "name": "warning strip",
+        "name": "mount clamps",
         "type": "generic",
-        "condition_unmet_message": "The detail suggests a worker workaround, sabotage angle, or hazard pattern Nova can exploit."
+        "condition_unmet_message": "The clamps loosen when the core output spikes."
       }
     ]
   },
   {
     "id": "foundry_power_core_scale_03",
     "env": "foundry",
-    "title": "Foundry Overlook Niche",
+    "title": "Array Lockers",
     "background_image": "images/rooms/world_4/foundry_power_core.png",
-    "description": "An overlook niche opens onto a long sightline, turning the surrounding space into something the crew can read instead of merely cross. The machinery has visible cause and effect, so heat, pressure, fabrication, and worker improvisation all read as part of one industrial body. The overlook niche and sightline make the Foundry feel like a system Nova is breaking rather than a chain of isolated combat rooms.",
+    "description": "Array lockers line the core wall under phase seals and red theft warnings. The phase seals flicker whenever the Anvil wakes.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -11932,23 +11932,23 @@
     "state": {},
     "actions": [
       {
-        "name": "overlook niche",
+        "name": "array lockers",
         "type": "generic",
-        "condition_unmet_message": "The inspection exposes how the Foundry routes heat, pressure, or production through this node."
+        "condition_unmet_message": "The lockers contain the parts the Astra needs to climb."
       },
       {
-        "name": "sightline",
+        "name": "phase seals",
         "type": "generic",
-        "condition_unmet_message": "The detail suggests a worker workaround, sabotage angle, or hazard pattern Nova can exploit."
+        "condition_unmet_message": "The seals flicker whenever the Anvil wakes."
       }
     ]
   },
   {
     "id": "foundry_power_core_scale_04",
     "env": "foundry",
-    "title": "Foundry Control Pocket",
+    "title": "Coolant Choir",
     "background_image": "images/rooms/world_4/foundry_power_core.png",
-    "description": "A control pocket hides a manual toggle where workers, servants, or ghosts left one last practical way to resist automation. The machinery has visible cause and effect, so heat, pressure, fabrication, and worker improvisation all read as part of one industrial body. The control pocket and manual toggle make the Foundry feel like a system Nova is breaking rather than a chain of isolated combat rooms.",
+    "description": "A coolant choir of blue pipes sings against the core heat in wavering chords. The blue pipes fall flat near a damaged valve.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -11963,23 +11963,23 @@
     "state": {},
     "actions": [
       {
-        "name": "control pocket",
+        "name": "coolant choir",
         "type": "generic",
-        "condition_unmet_message": "The inspection exposes how the Foundry routes heat, pressure, or production through this node."
+        "condition_unmet_message": "The pipes are the only reason the room has not become a crater."
       },
       {
-        "name": "manual toggle",
+        "name": "blue pipes",
         "type": "generic",
-        "condition_unmet_message": "The detail suggests a worker workaround, sabotage angle, or hazard pattern Nova can exploit."
+        "condition_unmet_message": "The chord falls flat near a damaged valve."
       }
     ]
   },
   {
     "id": "foundry_titan_dock_scale_01",
     "env": "foundry",
-    "title": "Foundry Service Alcove",
+    "title": "Walker Scaffold",
     "background_image": "images/rooms/world_4/foundry_titan_dock.png",
-    "description": "A service alcove cuts away from the main route, where the maintenance mark tells the truth the official signs avoid. The machinery has visible cause and effect, so heat, pressure, fabrication, and worker improvisation all read as part of one industrial body. The service alcove and maintenance mark make the Foundry feel like a system Nova is breaking rather than a chain of isolated combat rooms.",
+    "description": "A walker scaffold wraps the Titan dock in hydraulic scars and fresh weld smoke. The hydraulic scars show where earlier test pilots lost arguments.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -11994,23 +11994,23 @@
     "state": {},
     "actions": [
       {
-        "name": "service alcove",
+        "name": "walker scaffold",
         "type": "generic",
-        "condition_unmet_message": "The inspection exposes how the Foundry routes heat, pressure, or production through this node."
+        "condition_unmet_message": "The scaffold makes the boss look assembled by a city, not a crew."
       },
       {
-        "name": "maintenance mark",
+        "name": "hydraulic scars",
         "type": "generic",
-        "condition_unmet_message": "The detail suggests a worker workaround, sabotage angle, or hazard pattern Nova can exploit."
+        "condition_unmet_message": "The scars show where earlier test pilots lost arguments."
       }
     ]
   },
   {
     "id": "foundry_titan_dock_scale_02",
     "env": "foundry",
-    "title": "Foundry Pressure Gallery",
+    "title": "Ammo Lift",
     "background_image": "images/rooms/world_4/foundry_titan_dock.png",
-    "description": "A pressure gallery runs beside the route, its warning strip flashing whenever the place remembers what it costs to pass through. The machinery has visible cause and effect, so heat, pressure, fabrication, and worker improvisation all read as part of one industrial body. The pressure gallery and warning strip make the Foundry feel like a system Nova is breaking rather than a chain of isolated combat rooms.",
+    "description": "An ammo lift hauls shells past the dock with a chain brake glowing cherry red. The chain brake will fail before the schedule does.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -12027,23 +12027,23 @@
     "state": {},
     "actions": [
       {
-        "name": "pressure gallery",
+        "name": "ammo lift",
         "type": "generic",
-        "condition_unmet_message": "The inspection exposes how the Foundry routes heat, pressure, or production through this node."
+        "condition_unmet_message": "The lift is overfed and undermaintained."
       },
       {
-        "name": "warning strip",
+        "name": "chain brake",
         "type": "generic",
-        "condition_unmet_message": "The detail suggests a worker workaround, sabotage angle, or hazard pattern Nova can exploit."
+        "condition_unmet_message": "The brake will fail before the schedule does."
       }
     ]
   },
   {
     "id": "foundry_titan_dock_scale_03",
     "env": "foundry",
-    "title": "Foundry Overlook Niche",
+    "title": "Escape Rail",
     "background_image": "images/rooms/world_4/foundry_titan_dock.png",
-    "description": "An overlook niche opens onto a long sightline, turning the surrounding space into something the crew can read instead of merely cross. The machinery has visible cause and effect, so heat, pressure, fabrication, and worker improvisation all read as part of one industrial body. The overlook niche and sightline make the Foundry feel like a system Nova is breaking rather than a chain of isolated combat rooms.",
+    "description": "An escape rail points toward the Astra route, but a cut coupler hangs loose under the track. The cut coupler can be forced if the core surge covers the noise.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -12060,23 +12060,23 @@
     "state": {},
     "actions": [
       {
-        "name": "overlook niche",
+        "name": "escape rail",
         "type": "generic",
-        "condition_unmet_message": "The inspection exposes how the Foundry routes heat, pressure, or production through this node."
+        "condition_unmet_message": "The rail is freedom with a missing piece."
       },
       {
-        "name": "sightline",
+        "name": "cut coupler",
         "type": "generic",
-        "condition_unmet_message": "The detail suggests a worker workaround, sabotage angle, or hazard pattern Nova can exploit."
+        "condition_unmet_message": "The coupler can be forced if the core surge covers the noise."
       }
     ]
   },
   {
     "id": "foundry_titan_dock_scale_04",
     "env": "foundry",
-    "title": "Foundry Control Pocket",
+    "title": "Meltdown View",
     "background_image": "images/rooms/world_4/foundry_titan_dock.png",
-    "description": "A control pocket hides a manual toggle where workers, servants, or ghosts left one last practical way to resist automation. The machinery has visible cause and effect, so heat, pressure, fabrication, and worker improvisation all read as part of one industrial body. The control pocket and manual toggle make the Foundry feel like a system Nova is breaking rather than a chain of isolated combat rooms.",
+    "description": "A meltdown view opens across the core where white fire climbs the walls like weather. The white fire bends toward the stolen engine cradle.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -12091,14 +12091,14 @@
     "state": {},
     "actions": [
       {
-        "name": "control pocket",
+        "name": "meltdown view",
         "type": "generic",
-        "condition_unmet_message": "The inspection exposes how the Foundry routes heat, pressure, or production through this node."
+        "condition_unmet_message": "The view is too beautiful for something trying to kill everyone."
       },
       {
-        "name": "manual toggle",
+        "name": "white fire",
         "type": "generic",
-        "condition_unmet_message": "The detail suggests a worker workaround, sabotage angle, or hazard pattern Nova can exploit."
+        "condition_unmet_message": "The fire bends toward the stolen engine cradle."
       }
     ]
   },
