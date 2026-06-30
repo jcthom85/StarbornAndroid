@@ -1521,27 +1521,27 @@
     "id": "w4_sq16",
     "title": "Sabotage",
     "summary": "Destroy Dominion ammo crates staged around the Slag Pits.",
-    "description": "A resistance contact marks three crates feeding the factory guns. Destroy all three before pushing inside.",
+    "description": "Answer a worker-resistance mark by destroying three ammo crates that feed the guns above the Obsidian Shelf.",
     "flavor": "Every crate that does not fire at you later is a good crate.",
     "giver": "Resistance Contact",
     "hub_id": "hub_7_slag_pits",
     "stages": [
       {
         "id": "destroy_crates",
-        "title": "Ammo Crates",
-        "description": "Destroy the three marked Dominion ammo crates.",
+        "title": "Resistance Marks",
+        "description": "Break the Foundry supply chain without waiting for permission.",
         "tasks": [
           {
             "id": "crate_alpha",
-            "text": "Destroy the crate at the Slag River."
+            "text": "Destroy the marked ammo crate at the Slag River."
           },
           {
             "id": "crate_beta",
-            "text": "Destroy the crate at Waste Intake."
+            "text": "Destroy the marked ammo crate at Waste Intake."
           },
           {
             "id": "crate_gamma",
-            "text": "Destroy the crate at the Service Airlock."
+            "text": "Destroy the marked ammo crate at the Service Airlock."
           }
         ]
       }
@@ -1562,19 +1562,19 @@
     "id": "w4_sq17",
     "title": "Lost Worker",
     "summary": "Find a missing engineer in the lava tube maintenance paths.",
-    "description": "Follow a cracked worker tablet signal into the Cooling Springs and recover the engineer's coolant rig.",
+    "description": "Follow a missing engineer's tablet to the Cooling Springs and recover the coolant rig she hid from Dominion before the Foundry consumed her.",
     "flavor": "In the Foundry, a missed check-in usually means the heat collected its debt.",
     "giver": "Worker Tablet",
     "hub_id": "hub_7_slag_pits",
     "stages": [
       {
         "id": "find_engineer",
-        "title": "Tablet Signal",
-        "description": "Trace the missing worker signal.",
+        "title": "Last Ping",
+        "description": "Trace the engineer's final maintenance ping through the only quiet place in the Foundry.",
         "tasks": [
           {
             "id": "find_worker",
-            "text": "Find the missing engineer's tablet at the Cooling Springs."
+            "text": "Recover the missing engineer's hidden coolant rig."
           }
         ]
       }
@@ -1595,19 +1595,19 @@
     "id": "w4_sq18",
     "title": "The Scrap Heap",
     "summary": "Salvage parts from destroyed mechs in the lava-flow debris.",
-    "description": "A scrapper drone wants the good parts from three wrecked machines near Waste Intake.",
+    "description": "Help a scrapper drone strip useful parts from wrecked machines before the Foundry melts the evidence of its own failures.",
     "flavor": "The Foundry throws nothing away. It just waits for someone desperate enough to pick it up.",
     "giver": "Scrapper Drone",
     "hub_id": "hub_7_slag_pits",
     "stages": [
       {
         "id": "salvage_mechs",
-        "title": "Mech Wrecks",
-        "description": "Strip usable parts from destroyed mechs.",
+        "title": "Useful Failures",
+        "description": "Turn Dominion wreckage into survival tools before the intake eats it.",
         "tasks": [
           {
             "id": "salvage_mechs",
-            "text": "Salvage parts from three destroyed mechs."
+            "text": "Salvage usable parts from the half-melted mech pile."
           }
         ]
       }
@@ -1803,19 +1803,19 @@
     "id": "w4_sq20",
     "title": "Overclocked",
     "summary": "Survive three overclocked test chamber waves.",
-    "description": "A lab terminal activates environmental hazards in the Forge test chamber. Survive the three-wave trial for a Thermal Clip mod.",
+    "description": "Survive an overclocked Forge hazard trial and prove Nova's new Construct discipline can hold under pressure.",
     "flavor": "The Foundry's safety protocol is a waiver it signs for you.",
     "giver": "Lab Terminal",
     "hub_id": "hub_8_assembly_line",
     "stages": [
       {
         "id": "test_waves",
-        "title": "Hazard Trial",
-        "description": "Survive the overclocked test chamber.",
+        "title": "Construct Trial",
+        "description": "Use the Foundry's own hazard program as practice before the Titan fight.",
         "tasks": [
           {
             "id": "survive_waves",
-            "text": "Survive three waves with environmental hazards active."
+            "text": "Survive three overclocked hazard waves."
           }
         ]
       }
@@ -2587,7 +2587,7 @@
     "id": "w6_sq30",
     "title": "The Final Scavenge",
     "summary": "Recover a piece of the Astra from an impossible future.",
-    "description": "A Scrapper Memory has located a future fragment of the crew's ship inside the Spire of Thought.",
+    "description": "Recover a future Astra hull fragment from the Impossible Archive and turn a doomed timeline into one last act of protection.",
     "flavor": "Nothing is junk if it got you home.",
     "giver": "Scrapper Memory",
     "hub_id": "hub_12_singularity",
@@ -2595,11 +2595,11 @@
       {
         "id": "future_hull",
         "title": "Future Wreckage",
-        "description": "Recover the Astra hull fragment.",
+        "description": "Find the Astra fragment from a future the crew still has time to refuse.",
         "tasks": [
           {
             "id": "recover_hull",
-            "text": "Recover the future Astra hull."
+            "text": "Recover the future Astra hull fragment."
           }
         ]
       }

@@ -4545,7 +4545,7 @@
         "name": "ammo crate alpha",
         "type": "generic",
         "action_event": "w4_sq16_destroy_crate_alpha",
-        "condition_unmet_message": "A Dominion ammo crate is chained to a basalt pylon."
+        "condition_unmet_message": "A worker-resistance mark is scratched into the pylon beneath the crate."
       }
     ],
     "enemy_flavor": {
@@ -4641,7 +4641,7 @@
         "name": "worker tablet",
         "type": "generic",
         "action_event": "w4_sq17_find_worker",
-        "condition_unmet_message": "A cracked tablet pings weakly from beside a maintenance pool."
+        "condition_unmet_message": "The cracked tablet pings from beside a maintenance pool, wrapped in a scarf that smells faintly of coolant."
       }
     ]
   },
@@ -4754,13 +4754,13 @@
         "name": "ammo crate beta",
         "type": "generic",
         "action_event": "w4_sq16_destroy_crate_beta",
-        "condition_unmet_message": "A crate of shaped charges sits too close to the intake pistons."
+        "condition_unmet_message": "A crate of shaped charges sits too close to the intake pistons, marked with the same resistance scratch."
       },
       {
         "name": "scrap mech pile",
         "type": "generic",
         "action_event": "w4_sq18_salvage_mechs",
-        "condition_unmet_message": "Three destroyed mechs lie half-melted in the lava-flow debris."
+        "condition_unmet_message": "Three destroyed mechs lie half-melted in the lava-flow debris, still full of parts the Foundry wants erased."
       }
     ],
     "enemy_flavor": {
@@ -4844,7 +4844,7 @@
         "name": "ammo crate gamma",
         "type": "generic",
         "action_event": "w4_sq16_destroy_crate_gamma",
-        "condition_unmet_message": "A final ammo crate is stacked beside the decon pumps."
+        "condition_unmet_message": "A final ammo crate is stacked beside the decon pumps, where a worker left the resistance mark in soot."
       }
     ]
   },
@@ -5152,7 +5152,7 @@
         "name": "test chamber terminal",
         "type": "generic",
         "action_event": "w4_sq20_survive_waves",
-        "condition_unmet_message": "An overclocked trial program offers rewards with no concern for survival."
+        "condition_unmet_message": "The overclocked trial program was built to reject weak Constructs, which makes it useful practice for Nova."
       }
     ]
   },
@@ -6831,7 +6831,7 @@
         "name": "future astra hull",
         "type": "generic",
         "action_event": "w6_sq30_final_scavenge",
-        "condition_unmet_message": "A scorched section of the Astra protrudes from a future that has not happened."
+        "condition_unmet_message": "A scorched section of the Astra protrudes from a future the crew is still trying to refuse."
       }
     ]
   },

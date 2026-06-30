@@ -5977,7 +5977,7 @@
       },
       {
         "type": "show_message",
-        "message": "Ammo crate alpha cooks off into the slag haze. One less box feeding the guns above the Shelf."
+        "message": "Ammo crate alpha cooks off into the slag haze. Somewhere above the Shelf, one gun crew will find an empty feed line when it matters."
       }
     ]
   },
@@ -6021,7 +6021,7 @@
       },
       {
         "type": "show_message",
-        "message": "Ammo crate beta vanishes under the intake pistons, turning Dominion logistics into hot shrapnel."
+        "message": "Ammo crate beta vanishes under the intake pistons. Dominion logistics turns into hot shrapnel, and the worker mark beside it glows once before dying."
       }
     ]
   },
@@ -6088,7 +6088,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Sabotage\n\nThe final crate erupts against the decon pumps. Explosive Tip acquired."
+        "message": "Quest Complete: Sabotage\n\nThe final crate erupts against the decon pumps. The resistance mark burns clean through the soot: not every person in the Foundry is waiting to be saved. Explosive Tip acquired."
       }
     ]
   },
@@ -6140,7 +6140,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Lost Worker\n\nThe engineer is gone, but the coolant rig survived. Coolant System acquired."
+        "message": "Quest Complete: Lost Worker\n\nThe engineer is gone, but her coolant rig is wrapped in a maintenance scarf and hidden exactly where Dominion would never look: beside something peaceful. Coolant System acquired."
       }
     ]
   },
@@ -6187,7 +6187,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: The Scrap Heap\n\nYou strip three wrecked mechs before the slag can eat them. Scavenger unlocked."
+        "message": "Quest Complete: The Scrap Heap\n\nYou strip three wrecked mechs before the slag can eat them. The scrapper drone chirps over each useful part like failure is just another inventory category. Scavenger unlocked."
       }
     ]
   },
@@ -6732,7 +6732,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Quality Control\n\nThe defective units keep their spark. Gh0st compiles the combat data into Harden."
+        "message": "Quest Complete: Quality Control\n\nThe defective units keep their spark. Gh0st watches them choose new orders and says nothing for a long second before compiling their combat data into Harden."
       }
     ]
   },
@@ -6784,7 +6784,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Overclocked\n\nThree hazard waves later, the terminal dispenses a Thermal Clip like this was normal."
+        "message": "Quest Complete: Overclocked\n\nThree hazard waves later, Nova can hold a Construct shape while the room tries to kill her. The terminal dispenses a Thermal Clip like this was only a performance review."
       }
     ]
   },
@@ -8914,7 +8914,7 @@
       },
       {
         "type": "show_message",
-        "message": "The Final Scavenge complete. Zeke extracts a future fragment of the Astra and turns it into the Starborn mod."
+        "message": "The Final Scavenge complete. Zeke extracts the future Astra fragment and refuses the timeline it came from. The Starborn mod is not proof the ship dies; it is proof the crew can still change the ending."
       }
     ]
   },
