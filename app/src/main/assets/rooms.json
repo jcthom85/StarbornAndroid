@@ -6873,19 +6873,15 @@
     "env": "source",
     "title": "The Center",
     "background_image": "images/rooms/world_6/source_center.png",
-    "description": "A single platform rests on an infinite white ocean. Vale waits where every voice in the Source can hear him choose silence for them.",
+    "description": "A single platform rests on an infinite white ocean. Vale waits where every voice in the Source can hear him choose silence for them, and the Key trembles before a choice it cannot make alone.",
     "npcs": [],
     "items": [],
     "enemies": [
-      "ascended_vale",
-      "ascended_god"
+      "ascended_vale"
     ],
     "enemy_parties": [
       [
         "ascended_vale"
-      ],
-      [
-        "ascended_god"
       ]
     ],
     "connections": {
@@ -6899,6 +6895,12 @@
     ],
     "state": {},
     "actions": [
+      {
+        "name": "Vale",
+        "type": "generic",
+        "action_event": "w6_mq30_confront_vale",
+        "condition_unmet_message": "Vale waits at the center of the white ocean, calm enough to make annihilation sound reasonable."
+      },
       {
         "name": "tuning focus",
         "type": "generic",
@@ -14796,12 +14798,10 @@
     "env": "source",
     "title": "Key Orbit",
     "background_image": "images/rooms/world_6/source_center.png",
-    "description": "The Key orbit circles Nova's hand in root sparks that answer to the whole crew. The root sparks brighten when separate voices overlap without merging.",
+    "description": "The Key orbit circles Nova's hand in root sparks that answer to the whole crew. The root sparks brighten after Vale's human shape breaks, pointing toward the larger Silence unfolding above the shore.",
     "npcs": [],
     "items": [],
-    "enemies": [
-      "ascended_vale"
-    ],
+    "enemies": [],
     "connections": {
       "south": "source_center_node_scale_01",
       "north": "source_center_node_scale_03"
@@ -14820,7 +14820,7 @@
       {
         "name": "root sparks",
         "type": "generic",
-        "condition_unmet_message": "The sparks get stronger through harmony, not control."
+        "condition_unmet_message": "The sparks point toward phase two only after harmony survives Vale's first form."
       }
     ]
   },
@@ -14829,10 +14829,12 @@
     "env": "source",
     "title": "Silence Pulpit",
     "background_image": "images/rooms/world_6/source_center.png",
-    "description": "A Silence pulpit rises from the ocean where Vale's shadow practices being universal. The Vale shadow is calm because it has never listened.",
+    "description": "A Silence pulpit rises from the ocean where Vale's broken human outline becomes blinding geometry. The geometry preaches one painless note while every separate voice in the crew pushes back.",
     "npcs": [],
     "items": [],
-    "enemies": [],
+    "enemies": [
+      "ascended_god"
+    ],
     "connections": {
       "south": "source_center_node_scale_02",
       "north": "source_center_node_scale_final"
@@ -14849,10 +14851,15 @@
         "condition_unmet_message": "Vale has made a sermon out of removing everyone who might disagree."
       },
       {
-        "name": "Vale shadow",
+        "name": "blinding geometry",
         "type": "generic",
-        "condition_unmet_message": "The shadow is not large because Vale is right. It is large because the Source amplifies conviction."
+        "condition_unmet_message": "This is not a god revealing itself. It is a man becoming large enough to hide the damage."
       }
+    ],
+    "enemy_parties": [
+      [
+        "ascended_god"
+      ]
     ]
   },
   {
