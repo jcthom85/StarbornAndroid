@@ -6681,7 +6681,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Meltdown\n\nThe stolen engine kicks the Astra into high orbit while the Phase-Cutter Arrays carve open the pursuit net. Below, the Foundry burns and Vale's Ascension Cradle slips behind schedule. He relieves Thorne before the signal even clears and activates a Soloist variant no one in the room is brave enough to question."
+        "message": "Quest Complete: Meltdown\n\nThe stolen engine kicks the Astra into high orbit while the Phase-Cutter Arrays carve open the pursuit net. Below, Gh0st leaves Rylos alive because choice matters more than revenge. Vale loses the Ascension Cradle hardware and stops pretending this is a local audit: he relieves Thorne, locks the Ring, and activates the Soloist variant."
       }
     ]
   },
@@ -6818,7 +6818,7 @@
       },
       {
         "type": "show_message",
-        "message": "The Halo fills the viewport. The stolen Deep-Core Engine holds the climb while the Phase-Cutter Arrays warm under the hull. Orbital Compliance assumes control anyway, and a fighter screen unfolds from the Ring."
+        "message": "The Halo fills the viewport like a crown around the planet. The stolen Deep-Core Engine holds the climb, the Phase-Cutter Arrays warm under the hull, and Vale answers by folding a fighter screen around the Ring. This is not a destination anymore. It is a siege."
       }
     ]
   },
@@ -6898,7 +6898,7 @@
       },
       {
         "type": "show_message",
-        "message": "The Astra hits the docking collar hard enough to bend it. Foundry steel keeps the ship intact; the station airlock stays sealed."
+        "message": "The Astra slams into the docking collar hard enough to bend it. Foundry steel keeps the ship intact, but the station airlock stays sealed while Thorne loyalists drift beyond the glass. Vale is already cleaning house."
       }
     ]
   },
@@ -7504,7 +7504,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: The Core Approach\n\nThe construct shatters into dead glyphs. The Anchor Chamber opens, and Gh0st hears Elara across the Source. Thorne's route worked, but every open door now points at the person Dominion turned into infrastructure."
+        "message": "Quest Complete: The Core Approach\n\nThe construct shatters into dead glyphs. The Anchor Chamber opens, and Gh0st hears Elara through the system Vale stole. Thorne's route worked, but every open door now points at the person Dominion turned into infrastructure."
       }
     ]
   },
@@ -7642,7 +7642,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: The Anchor\n\nNova takes the relic from the system using Elara as a battery and fixes the charging Hunter-Killer in a single frozen moment. Stasis unlocked. Elara is free enough to scream, but not free enough to leave."
+        "message": "Quest Complete: The Anchor\n\nNova takes the relic from the machine using Elara as a living processor and freezes the charging Hunter-Killer in a single clean instant. Stasis unlocked. Elara is free enough to scream, but not free enough to leave before Vale drags the Ring into the Tear."
       }
     ]
   },
@@ -7816,7 +7816,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Critical Mass\n\nNova refuses to leave Elara or Vale beyond the breach. The Ring collapses behind them, the crew leaps together, and every voice becomes a thread in the dark before they wake beside a blue waveform fire."
+        "message": "Quest Complete: Critical Mass\n\nNova refuses to leave Elara behind or let Vale turn the Source into one obedient voice. The Ring collapses around the breach, the crew leaps together, and every separate voice becomes a thread in the dark before they wake beside a blue waveform fire."
       }
     ]
   },
@@ -8124,7 +8124,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Fractured Minds\n\nThe Source stitches the crew back together around the song-fire. The Key manifests with root authority and the universe recognizes Nova's hand."
+        "message": "Quest Complete: Fractured Minds\n\nZeke, Gh0st, and Orion return with the parts of themselves Vale would have edited out. The song-fire gathers those separate voices into the Key, not as ownership, but as permission to carry each other forward."
       }
     ]
   },
@@ -8240,7 +8240,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: The Echo of the Mines\n\nThe elevator rises through white noise. Nova leaves the beginning intact instead of letting Vale improve it into a lie."
+        "message": "Quest Complete: The Echo of the Mines\n\nThe elevator rises through white noise. Vale offers a cleaner beginning with no fear, no Jed, no grief, and no reason for Nova to become herself. She leaves the beginning intact instead of letting him improve it into a lie."
       }
     ]
   },
@@ -8270,7 +8270,7 @@
       },
       {
         "type": "show_message",
-        "message": "Tideglass sand, Foundry heat, Spire rain, and the Astra's engine note become solid sections of bridge."
+        "message": "Tideglass sand, Foundry heat, Spire rain, the Astra's engine note, and the Colony's first real morning become solid sections of bridge. Every piece holds because someone else remembers it too."
       }
     ]
   },
@@ -8305,7 +8305,7 @@
       },
       {
         "type": "show_message",
-        "message": "Nova: Vale thinks being alone will stop pain. Zeke: Being alone is pain. Gh0st sets one hand on the bridge. Point me. They move together."
+        "message": "Nova: Vale thinks being alone will stop pain.\n\nZeke: Being alone is pain.\n\nGh0st sets one hand on the bridge. Orion adds a low harmony. The path steadies when no one tries to carry it by themselves."
       }
     ]
   },
@@ -8360,7 +8360,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: The Crossing\n\nThe bridge reaches the Memory Stair. Vale offers Nova a perfect world without grief. She lets the image fade. Jed did not die so she could live in a lie."
+        "message": "Quest Complete: The Crossing\n\nThe bridge reaches the Memory Stair. Vale offers Nova a perfect world without grief, without Jed's death, without every scar that taught the crew to choose each other. She lets the image fade. Love that cannot survive truth is not love."
       }
     ]
   },
@@ -8513,7 +8513,7 @@
       },
       {
         "type": "show_message",
-        "message": "The stair climbs through every world the crew survived. Vale offers perfect revisions. Nova keeps the scars."
+        "message": "The stair climbs through every world the crew survived. Vale offers polished revisions: a kinder mine, a safer jungle, a cleaner Spire, a Foundry without screaming, a Ring without bodies. Nova keeps the scars because they belong to real people."
       }
     ]
   },
@@ -8642,7 +8642,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: The Spire of Thought\n\nThe Starborn step onto the white ocean. Vale waits at the center, serene and certain."
+        "message": "Quest Complete: The Spire of Thought\n\nThe Starborn step onto the white ocean carrying every unrevised voice. Vale waits at the center, serene and certain, ready to call deletion mercy."
       }
     ]
   },
@@ -8672,7 +8672,7 @@
       },
       {
         "type": "show_message",
-        "message": "Vale: I will melt the ice. Everyone becomes part of the current. No one is ever alone again.\n\nNova: You are not saving them. You are dissolving them."
+        "message": "Vale: I will melt the ice. Everyone becomes part of the current. No one is ever alone again.\n\nNova: You are not saving them. You are dissolving them. A voice that cannot say no is not peace."
       }
     ]
   },
@@ -8756,7 +8756,7 @@
       },
       {
         "type": "show_message",
-        "message": "The god-form collapses. The universe keeps breaking. Vale's code is still blocking the signal, and the Key is the only route left."
+        "message": "The god-form collapses, but the universe keeps breaking. Vale's code still blocks the signal, and the Key will only answer a circuit, not a ruler."
       }
     ]
   },

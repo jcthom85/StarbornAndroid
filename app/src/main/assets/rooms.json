@@ -13852,9 +13852,9 @@
   {
     "id": "source_campfire_node_scale_01",
     "env": "source",
-    "title": "Source Service Alcove",
+    "title": "Blue Ash Circle",
     "background_image": "images/rooms/world_6/source_campfire.png",
-    "description": "A service alcove cuts away from the main route, where the maintenance mark tells the truth the official signs avoid. The space should feel emotionally legible: memory becomes architecture, fear becomes traversal, and the final answer is shared selfhood rather than control. The service alcove and maintenance mark make the finale feel dense, strange, and personal without becoming ordinary map sprawl.",
+    "description": "Blue ash drifts around the Campfire in rings that never close. The open ring leaves space for each missing voice instead of smoothing them into one flame.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -13869,23 +13869,23 @@
     "state": {},
     "actions": [
       {
-        "name": "service alcove",
+        "name": "blue ash",
         "type": "generic",
-        "condition_unmet_message": "The detail ties this surreal room back to a specific fear, memory, or relationship from the journey."
+        "condition_unmet_message": "It smells faintly of the Crash Site, Tideglass rain, and old diner coffee. The memory refuses to choose one home."
       },
       {
-        "name": "maintenance mark",
+        "name": "open ring",
         "type": "generic",
-        "condition_unmet_message": "The clue shows what remains true after the immediate popup is gone: a recovered voice, a rejected lie, or a chosen connection."
+        "condition_unmet_message": "The circle is incomplete until the crew returns as themselves."
       }
     ]
   },
   {
     "id": "source_campfire_node_scale_02",
     "env": "source",
-    "title": "Source Pressure Gallery",
+    "title": "Three Dark Paths",
     "background_image": "images/rooms/world_6/source_campfire.png",
-    "description": "A pressure gallery runs beside the route, its warning strip flashing whenever the place remembers what it costs to pass through. The space should feel emotionally legible: memory becomes architecture, fear becomes traversal, and the final answer is shared selfhood rather than control. The pressure gallery and warning strip make the finale feel dense, strange, and personal without becoming ordinary map sprawl.",
+    "description": "Three dark paths pull away from the song-fire, each tuned to a different kind of fear. The fear tones are ugly, personal, and too specific for Vale to call noise.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -13900,23 +13900,23 @@
     "state": {},
     "actions": [
       {
-        "name": "pressure gallery",
+        "name": "dark paths",
         "type": "generic",
-        "condition_unmet_message": "The detail ties this surreal room back to a specific fear, memory, or relationship from the journey."
+        "condition_unmet_message": "One path smells like office dust, one like gun oil, and one like black salt."
       },
       {
-        "name": "warning strip",
+        "name": "fear tones",
         "type": "generic",
-        "condition_unmet_message": "The clue shows what remains true after the immediate popup is gone: a recovered voice, a rejected lie, or a chosen connection."
+        "condition_unmet_message": "They hurt because they belong to someone real."
       }
     ]
   },
   {
     "id": "source_campfire_node_scale_03",
     "env": "source",
-    "title": "Source Overlook Niche",
+    "title": "Unshared Blanket",
     "background_image": "images/rooms/world_6/source_campfire.png",
-    "description": "An overlook niche opens onto a long sightline, turning the surrounding space into something the crew can read instead of merely cross. The space should feel emotionally legible: memory becomes architecture, fear becomes traversal, and the final answer is shared selfhood rather than control. The overlook niche and sightline make the finale feel dense, strange, and personal without becoming ordinary map sprawl.",
+    "description": "An unshared blanket lies beside the fire, folded with impossible neatness. The empty corner shows where the Source expects Nova to sit alone and call it strength.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -13931,23 +13931,23 @@
     "state": {},
     "actions": [
       {
-        "name": "overlook niche",
+        "name": "unshared blanket",
         "type": "generic",
-        "condition_unmet_message": "The detail ties this surreal room back to a specific fear, memory, or relationship from the journey."
+        "condition_unmet_message": "The fabric is warm, but it feels wrong without someone pulling it crooked."
       },
       {
-        "name": "sightline",
+        "name": "empty corner",
         "type": "generic",
-        "condition_unmet_message": "The clue shows what remains true after the immediate popup is gone: a recovered voice, a rejected lie, or a chosen connection."
+        "condition_unmet_message": "Vale's mercy always leaves enough room for isolation."
       }
     ]
   },
   {
     "id": "source_campfire_node_scale_04",
     "env": "source",
-    "title": "Source Control Pocket",
+    "title": "Key Ember",
     "background_image": "images/rooms/world_6/source_campfire.png",
-    "description": "A control pocket hides a manual toggle where workers, servants, or ghosts left one last practical way to resist automation. The space should feel emotionally legible: memory becomes architecture, fear becomes traversal, and the final answer is shared selfhood rather than control. The control pocket and manual toggle make the finale feel dense, strange, and personal without becoming ordinary map sprawl.",
+    "description": "A key ember turns inside the fire before the Key exists, waiting for the crew to come back with their jagged selves intact. The ember will not answer a single voice.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -13962,14 +13962,14 @@
     "state": {},
     "actions": [
       {
-        "name": "control pocket",
+        "name": "key ember",
         "type": "generic",
-        "condition_unmet_message": "The detail ties this surreal room back to a specific fear, memory, or relationship from the journey."
+        "condition_unmet_message": "It sparks only when more than one rhythm crosses the flame."
       },
       {
-        "name": "manual toggle",
+        "name": "single voice",
         "type": "generic",
-        "condition_unmet_message": "The clue shows what remains true after the immediate popup is gone: a recovered voice, a rejected lie, or a chosen connection."
+        "condition_unmet_message": "The fire gutters when Nova tries to force the note alone."
       }
     ]
   },
@@ -14258,9 +14258,9 @@
   {
     "id": "source_echo_mines_node_scale_01",
     "env": "source",
-    "title": "Source Service Alcove",
+    "title": "Locker Row Loop",
     "background_image": "images/rooms/world_6/source_echo_mines.png",
-    "description": "A service alcove cuts away from the main route, where the maintenance mark tells the truth the official signs avoid. The space should feel emotionally legible: memory becomes architecture, fear becomes traversal, and the final answer is shared selfhood rather than control. The service alcove and maintenance mark make the finale feel dense, strange, and personal without becoming ordinary map sprawl.",
+    "description": "A locker row repeats Nova's first shift number until the digits blur. Jed's sticker cuts through the loop, crooked and stubborn, marking the version of the past Vale cannot sanitize.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -14275,23 +14275,23 @@
     "state": {},
     "actions": [
       {
-        "name": "service alcove",
+        "name": "locker row",
         "type": "generic",
-        "condition_unmet_message": "The detail ties this surreal room back to a specific fear, memory, or relationship from the journey."
+        "condition_unmet_message": "Every locker opens on the same uniform until Nova stops looking for permission."
       },
       {
-        "name": "maintenance mark",
+        "name": "Jed's sticker",
         "type": "generic",
-        "condition_unmet_message": "The clue shows what remains true after the immediate popup is gone: a recovered voice, a rejected lie, or a chosen connection."
+        "condition_unmet_message": "The old sticker is badly placed, badly drawn, and absolutely real."
       }
     ]
   },
   {
     "id": "source_echo_mines_node_scale_02",
     "env": "source",
-    "title": "Source Pressure Gallery",
+    "title": "Pay Stub Drift",
     "background_image": "images/rooms/world_6/source_echo_mines.png",
-    "description": "A pressure gallery runs beside the route, its warning strip flashing whenever the place remembers what it costs to pass through. The space should feel emotionally legible: memory becomes architecture, fear becomes traversal, and the final answer is shared selfhood rather than control. The pressure gallery and warning strip make the finale feel dense, strange, and personal without becoming ordinary map sprawl.",
+    "description": "Pay stubs drift through the air like dead leaves, each one subtracting time from a life. The missing hours glow where Dominion stole more than money.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -14308,23 +14308,23 @@
     "state": {},
     "actions": [
       {
-        "name": "pressure gallery",
+        "name": "pay stubs",
         "type": "generic",
-        "condition_unmet_message": "The detail ties this surreal room back to a specific fear, memory, or relationship from the journey."
+        "condition_unmet_message": "The numbers are small enough to be legal and cruel enough to be policy."
       },
       {
-        "name": "warning strip",
+        "name": "missing hours",
         "type": "generic",
-        "condition_unmet_message": "The clue shows what remains true after the immediate popup is gone: a recovered voice, a rejected lie, or a chosen connection."
+        "condition_unmet_message": "Nova remembers being tired before she remembers being angry."
       }
     ]
   },
   {
     "id": "source_echo_mines_node_scale_03",
     "env": "source",
-    "title": "Source Overlook Niche",
+    "title": "Shelter Plastic",
     "background_image": "images/rooms/world_6/source_echo_mines.png",
-    "description": "An overlook niche opens onto a long sightline, turning the surrounding space into something the crew can read instead of merely cross. The space should feel emotionally legible: memory becomes architecture, fear becomes traversal, and the final answer is shared selfhood rather than control. The overlook niche and sightline make the finale feel dense, strange, and personal without becoming ordinary map sprawl.",
+    "description": "Shelter plastic snaps in a wind that cannot exist underground. Behind it, a false sunrise offers the Colony without hunger, without Jed, and without anyone worth saving.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -14339,23 +14339,23 @@
     "state": {},
     "actions": [
       {
-        "name": "overlook niche",
+        "name": "shelter plastic",
         "type": "generic",
-        "condition_unmet_message": "The detail ties this surreal room back to a specific fear, memory, or relationship from the journey."
+        "condition_unmet_message": "The sound brings back the first night freedom felt like cold."
       },
       {
-        "name": "sightline",
+        "name": "false sunrise",
         "type": "generic",
-        "condition_unmet_message": "The clue shows what remains true after the immediate popup is gone: a recovered voice, a rejected lie, or a chosen connection."
+        "condition_unmet_message": "It is beautiful in the exact way a lie studies beauty."
       }
     ]
   },
   {
     "id": "source_echo_mines_node_scale_04",
     "env": "source",
-    "title": "Source Control Pocket",
+    "title": "Manager Blind Spot",
     "background_image": "images/rooms/world_6/source_echo_mines.png",
-    "description": "A control pocket hides a manual toggle where workers, servants, or ghosts left one last practical way to resist automation. The space should feel emotionally legible: memory becomes architecture, fear becomes traversal, and the final answer is shared selfhood rather than control. The control pocket and manual toggle make the finale feel dense, strange, and personal without becoming ordinary map sprawl.",
+    "description": "A manager blind spot opens between two projection routes. The scuffed floor remembers where workers learned to breathe without being counted.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -14370,23 +14370,23 @@
     "state": {},
     "actions": [
       {
-        "name": "control pocket",
+        "name": "manager blind spot",
         "type": "generic",
-        "condition_unmet_message": "The detail ties this surreal room back to a specific fear, memory, or relationship from the journey."
+        "condition_unmet_message": "Even Dominion bureaucracy has gaps made by tired people helping each other."
       },
       {
-        "name": "manual toggle",
+        "name": "scuffed floor",
         "type": "generic",
-        "condition_unmet_message": "The clue shows what remains true after the immediate popup is gone: a recovered voice, a rejected lie, or a chosen connection."
+        "condition_unmet_message": "The marks are not heroic. That is why Nova trusts them."
       }
     ]
   },
   {
     "id": "source_memory_bridge_node_scale_01",
     "env": "source",
-    "title": "Source Service Alcove",
+    "title": "Tideglass Span",
     "background_image": "images/rooms/world_6/source_memory_bridge.png",
-    "description": "A service alcove cuts away from the main route, where the maintenance mark tells the truth the official signs avoid. The space should feel emotionally legible: memory becomes architecture, fear becomes traversal, and the final answer is shared selfhood rather than control. The service alcove and maintenance mark make the finale feel dense, strange, and personal without becoming ordinary map sprawl.",
+    "description": "A tideglass span forms under the bridge, wet sand hardening into translucent steps. The beach photo flickers inside each step, laughing badly enough to be true.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -14401,23 +14401,23 @@
     "state": {},
     "actions": [
       {
-        "name": "service alcove",
+        "name": "tideglass span",
         "type": "generic",
-        "condition_unmet_message": "The detail ties this surreal room back to a specific fear, memory, or relationship from the journey."
+        "condition_unmet_message": "The step holds because Orion remembers the tide and Zeke remembers complaining about sand."
       },
       {
-        "name": "maintenance mark",
+        "name": "beach photo",
         "type": "generic",
-        "condition_unmet_message": "The clue shows what remains true after the immediate popup is gone: a recovered voice, a rejected lie, or a chosen connection."
+        "condition_unmet_message": "No one in the image is posed correctly. The Source cannot fake that."
       }
     ]
   },
   {
     "id": "source_memory_bridge_node_scale_02",
     "env": "source",
-    "title": "Source Pressure Gallery",
+    "title": "Foundry Heat Rib",
     "background_image": "images/rooms/world_6/source_memory_bridge.png",
-    "description": "A pressure gallery runs beside the route, its warning strip flashing whenever the place remembers what it costs to pass through. The space should feel emotionally legible: memory becomes architecture, fear becomes traversal, and the final answer is shared selfhood rather than control. The pressure gallery and warning strip make the finale feel dense, strange, and personal without becoming ordinary map sprawl.",
+    "description": "A Foundry heat rib locks into the bridge with slag-orange light. Gh0st touches the burn mark and the metal steadies instead of becoming a weapon.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -14432,23 +14432,23 @@
     "state": {},
     "actions": [
       {
-        "name": "pressure gallery",
+        "name": "heat rib",
         "type": "generic",
-        "condition_unmet_message": "The detail ties this surreal room back to a specific fear, memory, or relationship from the journey."
+        "condition_unmet_message": "The Foundry taught violence, but the crew carries out the part that kept them alive."
       },
       {
-        "name": "warning strip",
+        "name": "burn mark",
         "type": "generic",
-        "condition_unmet_message": "The clue shows what remains true after the immediate popup is gone: a recovered voice, a rejected lie, or a chosen connection."
+        "condition_unmet_message": "Gh0st does not flinch from it. He owns the memory now."
       }
     ]
   },
   {
     "id": "source_memory_bridge_node_scale_03",
     "env": "source",
-    "title": "Source Overlook Niche",
+    "title": "Spire Rain Line",
     "background_image": "images/rooms/world_6/source_memory_bridge.png",
-    "description": "An overlook niche opens onto a long sightline, turning the surrounding space into something the crew can read instead of merely cross. The space should feel emotionally legible: memory becomes architecture, fear becomes traversal, and the final answer is shared selfhood rather than control. The overlook niche and sightline make the finale feel dense, strange, and personal without becoming ordinary map sprawl.",
+    "description": "A Spire rain line hangs in the air, every drop reflecting a different stolen route. Zeke laughs once when the route refuses to obey signage.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -14463,23 +14463,23 @@
     "state": {},
     "actions": [
       {
-        "name": "overlook niche",
+        "name": "rain line",
         "type": "generic",
-        "condition_unmet_message": "The detail ties this surreal room back to a specific fear, memory, or relationship from the journey."
+        "condition_unmet_message": "The drops remember service doors, bad disguises, and the joy of getting away with it."
       },
       {
-        "name": "sightline",
+        "name": "stolen route",
         "type": "generic",
-        "condition_unmet_message": "The clue shows what remains true after the immediate popup is gone: a recovered voice, a rejected lie, or a chosen connection."
+        "condition_unmet_message": "The city was never as sealed as it pretended."
       }
     ]
   },
   {
     "id": "source_memory_bridge_node_scale_04",
     "env": "source",
-    "title": "Source Control Pocket",
+    "title": "Astra Engine Note",
     "background_image": "images/rooms/world_6/source_memory_bridge.png",
-    "description": "A control pocket hides a manual toggle where workers, servants, or ghosts left one last practical way to resist automation. The space should feel emotionally legible: memory becomes architecture, fear becomes traversal, and the final answer is shared selfhood rather than control. The control pocket and manual toggle make the finale feel dense, strange, and personal without becoming ordinary map sprawl.",
+    "description": "The Astra engine note becomes a narrow gold rail across the static. It wobbles when Nova tries to lead alone and settles when the others answer.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -14494,23 +14494,23 @@
     "state": {},
     "actions": [
       {
-        "name": "control pocket",
+        "name": "engine note",
         "type": "generic",
-        "condition_unmet_message": "The detail ties this surreal room back to a specific fear, memory, or relationship from the journey."
+        "condition_unmet_message": "The ship sounds damaged, loyal, and alive."
       },
       {
-        "name": "manual toggle",
+        "name": "gold rail",
         "type": "generic",
-        "condition_unmet_message": "The clue shows what remains true after the immediate popup is gone: a recovered voice, a rejected lie, or a chosen connection."
+        "condition_unmet_message": "The bridge is not faith. It is everyone holding the same impossible line."
       }
     ]
   },
   {
     "id": "source_memory_stair_node_scale_01",
     "env": "source",
-    "title": "Source Service Alcove",
+    "title": "Mine Dust Step",
     "background_image": "images/rooms/world_6/source_memory_stair.png",
-    "description": "A service alcove cuts away from the main route, where the maintenance mark tells the truth the official signs avoid. The space should feel emotionally legible: memory becomes architecture, fear becomes traversal, and the final answer is shared selfhood rather than control. The service alcove and maintenance mark make the finale feel dense, strange, and personal without becoming ordinary map sprawl.",
+    "description": "A mine dust step rises first, rough with the place Nova escaped. Vale polishes one half into a painless memory, but the unpolished half carries Jed's handprint.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -14525,23 +14525,23 @@
     "state": {},
     "actions": [
       {
-        "name": "service alcove",
+        "name": "mine dust step",
         "type": "generic",
-        "condition_unmet_message": "The detail ties this surreal room back to a specific fear, memory, or relationship from the journey."
+        "condition_unmet_message": "It scratches Nova's boot like a truth she never asked for."
       },
       {
-        "name": "maintenance mark",
+        "name": "Jed's handprint",
         "type": "generic",
-        "condition_unmet_message": "The clue shows what remains true after the immediate popup is gone: a recovered voice, a rejected lie, or a chosen connection."
+        "condition_unmet_message": "The print is smudged by work, not symbolism."
       }
     ]
   },
   {
     "id": "source_memory_stair_node_scale_02",
     "env": "source",
-    "title": "Source Pressure Gallery",
+    "title": "Canopy Root Step",
     "background_image": "images/rooms/world_6/source_memory_stair.png",
-    "description": "A pressure gallery runs beside the route, its warning strip flashing whenever the place remembers what it costs to pass through. The space should feel emotionally legible: memory becomes architecture, fear becomes traversal, and the final answer is shared selfhood rather than control. The pressure gallery and warning strip make the finale feel dense, strange, and personal without becoming ordinary map sprawl.",
+    "description": "A canopy root step knots through the stair with living green. Beast claw marks and Orion's careful notches share the bark without erasing each other.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -14558,23 +14558,23 @@
     "state": {},
     "actions": [
       {
-        "name": "pressure gallery",
+        "name": "root step",
         "type": "generic",
-        "condition_unmet_message": "The detail ties this surreal room back to a specific fear, memory, or relationship from the journey."
+        "condition_unmet_message": "The jungle was not kind. It was alive, and that mattered."
       },
       {
-        "name": "warning strip",
+        "name": "careful notches",
         "type": "generic",
-        "condition_unmet_message": "The clue shows what remains true after the immediate popup is gone: a recovered voice, a rejected lie, or a chosen connection."
+        "condition_unmet_message": "Orion marked the way for people who could not hear the Chorus yet."
       }
     ]
   },
   {
     "id": "source_memory_stair_node_scale_03",
     "env": "source",
-    "title": "Source Overlook Niche",
+    "title": "Neon Glass Step",
     "background_image": "images/rooms/world_6/source_memory_stair.png",
-    "description": "An overlook niche opens onto a long sightline, turning the surrounding space into something the crew can read instead of merely cross. The space should feel emotionally legible: memory becomes architecture, fear becomes traversal, and the final answer is shared selfhood rather than control. The overlook niche and sightline make the finale feel dense, strange, and personal without becoming ordinary map sprawl.",
+    "description": "A neon glass step reflects the Spire as rain, curfew lights, and stolen elevator codes. The reflected city cracks wherever Zeke remembers being more than an employee number.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -14589,23 +14589,23 @@
     "state": {},
     "actions": [
       {
-        "name": "overlook niche",
+        "name": "glass step",
         "type": "generic",
-        "condition_unmet_message": "The detail ties this surreal room back to a specific fear, memory, or relationship from the journey."
+        "condition_unmet_message": "It is slick with old fear and newer defiance."
       },
       {
-        "name": "sightline",
+        "name": "employee number",
         "type": "generic",
-        "condition_unmet_message": "The clue shows what remains true after the immediate popup is gone: a recovered voice, a rejected lie, or a chosen connection."
+        "condition_unmet_message": "The number tries to stick to Zeke. It fails."
       }
     ]
   },
   {
     "id": "source_memory_stair_node_scale_04",
     "env": "source",
-    "title": "Source Control Pocket",
+    "title": "Ring Silence Step",
     "background_image": "images/rooms/world_6/source_memory_stair.png",
-    "description": "A control pocket hides a manual toggle where workers, servants, or ghosts left one last practical way to resist automation. The space should feel emotionally legible: memory becomes architecture, fear becomes traversal, and the final answer is shared selfhood rather than control. The control pocket and manual toggle make the finale feel dense, strange, and personal without becoming ordinary map sprawl.",
+    "description": "A Ring silence step absorbs sound until Elara's clean note cuts through it. The clean note proves silence was never peace, only a cage with better acoustics.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -14620,23 +14620,23 @@
     "state": {},
     "actions": [
       {
-        "name": "control pocket",
+        "name": "silence step",
         "type": "generic",
-        "condition_unmet_message": "The detail ties this surreal room back to a specific fear, memory, or relationship from the journey."
+        "condition_unmet_message": "For one breath, the whole stair feels like the Orbital Ring."
       },
       {
-        "name": "manual toggle",
+        "name": "clean note",
         "type": "generic",
-        "condition_unmet_message": "The clue shows what remains true after the immediate popup is gone: a recovered voice, a rejected lie, or a chosen connection."
+        "condition_unmet_message": "Elara is not a symbol here. She is a person still pushing back."
       }
     ]
   },
   {
     "id": "source_spire_thought_node_scale_01",
     "env": "source",
-    "title": "Source Service Alcove",
+    "title": "Revision Gallery",
     "background_image": "images/rooms/world_6/source_spire_thought.png",
-    "description": "A service alcove cuts away from the main route, where the maintenance mark tells the truth the official signs avoid. The space should feel emotionally legible: memory becomes architecture, fear becomes traversal, and the final answer is shared selfhood rather than control. The service alcove and maintenance mark make the finale feel dense, strange, and personal without becoming ordinary map sprawl.",
+    "description": "A revision gallery displays better versions of every world: kinder mines, safer wilds, softer cities. The perfect frames fail wherever real names have worn fingerprints into the glass.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -14653,23 +14653,23 @@
     "state": {},
     "actions": [
       {
-        "name": "service alcove",
+        "name": "revision gallery",
         "type": "generic",
-        "condition_unmet_message": "The detail ties this surreal room back to a specific fear, memory, or relationship from the journey."
+        "condition_unmet_message": "Vale can edit pain out of a picture. He cannot make the result alive."
       },
       {
-        "name": "maintenance mark",
+        "name": "fingerprints",
         "type": "generic",
-        "condition_unmet_message": "The clue shows what remains true after the immediate popup is gone: a recovered voice, a rejected lie, or a chosen connection."
+        "condition_unmet_message": "The marks are messy, overlapping, and impossible to standardize."
       }
     ]
   },
   {
     "id": "source_spire_thought_node_scale_02",
     "env": "source",
-    "title": "Source Pressure Gallery",
+    "title": "Choir Fracture",
     "background_image": "images/rooms/world_6/source_spire_thought.png",
-    "description": "A pressure gallery runs beside the route, its warning strip flashing whenever the place remembers what it costs to pass through. The space should feel emotionally legible: memory becomes architecture, fear becomes traversal, and the final answer is shared selfhood rather than control. The pressure gallery and warning strip make the finale feel dense, strange, and personal without becoming ordinary map sprawl.",
+    "description": "A choir fracture splits Vale's single note into separate voices arguing, grieving, and laughing out of tune. The out-of-tune laughter damages the Silence more than any weapon.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -14684,23 +14684,23 @@
     "state": {},
     "actions": [
       {
-        "name": "pressure gallery",
+        "name": "choir fracture",
         "type": "generic",
-        "condition_unmet_message": "The detail ties this surreal room back to a specific fear, memory, or relationship from the journey."
+        "condition_unmet_message": "Harmony survives disagreement. Vale's Soloist does not."
       },
       {
-        "name": "warning strip",
+        "name": "out-of-tune laughter",
         "type": "generic",
-        "condition_unmet_message": "The clue shows what remains true after the immediate popup is gone: a recovered voice, a rejected lie, or a chosen connection."
+        "condition_unmet_message": "It sounds like people, which is exactly the problem for him."
       }
     ]
   },
   {
     "id": "source_spire_thought_node_scale_03",
     "env": "source",
-    "title": "Source Overlook Niche",
+    "title": "Memory Defense Line",
     "background_image": "images/rooms/world_6/source_spire_thought.png",
-    "description": "An overlook niche opens onto a long sightline, turning the surrounding space into something the crew can read instead of merely cross. The space should feel emotionally legible: memory becomes architecture, fear becomes traversal, and the final answer is shared selfhood rather than control. The overlook niche and sightline make the finale feel dense, strange, and personal without becoming ordinary map sprawl.",
+    "description": "A memory defense line assembles from Warden armor, Phantom plating, and Ring hard-light. The patchwork shield exposes Vale's last lie: he calls deletion new, but it is built from old cruelty.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -14717,23 +14717,23 @@
     "state": {},
     "actions": [
       {
-        "name": "overlook niche",
+        "name": "defense line",
         "type": "generic",
-        "condition_unmet_message": "The detail ties this surreal room back to a specific fear, memory, or relationship from the journey."
+        "condition_unmet_message": "Every piece of it has already failed against the crew once."
       },
       {
-        "name": "sightline",
+        "name": "patchwork shield",
         "type": "generic",
-        "condition_unmet_message": "The clue shows what remains true after the immediate popup is gone: a recovered voice, a rejected lie, or a chosen connection."
+        "condition_unmet_message": "The Source remembers systems by the damage they caused."
       }
     ]
   },
   {
     "id": "source_spire_thought_node_scale_04",
     "env": "source",
-    "title": "Source Control Pocket",
+    "title": "No Throne",
     "background_image": "images/rooms/world_6/source_spire_thought.png",
-    "description": "A control pocket hides a manual toggle where workers, servants, or ghosts left one last practical way to resist automation. The space should feel emotionally legible: memory becomes architecture, fear becomes traversal, and the final answer is shared selfhood rather than control. The control pocket and manual toggle make the finale feel dense, strange, and personal without becoming ordinary map sprawl.",
+    "description": "A throne-shaped absence waits at the top of the thought spiral. The absence brightens when Nova refuses to sit, leaving room for a circuit instead of a ruler.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -14749,14 +14749,14 @@
     "state": {},
     "actions": [
       {
-        "name": "control pocket",
+        "name": "throne-shaped absence",
         "type": "generic",
-        "condition_unmet_message": "The detail ties this surreal room back to a specific fear, memory, or relationship from the journey."
+        "condition_unmet_message": "The Source offers power in the shape people expect. Nova lets it stay empty."
       },
       {
-        "name": "manual toggle",
+        "name": "circuit",
         "type": "generic",
-        "condition_unmet_message": "The clue shows what remains true after the immediate popup is gone: a recovered voice, a rejected lie, or a chosen connection."
+        "condition_unmet_message": "The answer needs connection, not command."
       }
     ]
   },
