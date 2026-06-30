@@ -14,6 +14,7 @@ import com.example.starborn.domain.model.MilestoneExitUnlock
 import com.example.starborn.domain.model.NodeTransition
 import com.example.starborn.domain.model.Quest
 import com.example.starborn.domain.model.Room
+import com.example.starborn.domain.model.TuningPuzzle
 import com.example.starborn.data.local.Theme
 import com.squareup.moshi.Types
 import java.io.File
@@ -98,6 +99,55 @@ class DataIntegrityTest {
                 assertEquals("$room.id -> $targetId must be reciprocal", room.id, target?.connections?.get(reverse))
             }
         }
+    }
+
+    @Test
+    fun tuningPuzzleRoomActionsReferenceValidDefinitionsAndEvents() {
+        val rooms = readList("src/main/assets/rooms.json", Room::class.java)
+        val puzzles = readList("src/main/assets/tuning_puzzles.json", TuningPuzzle::class.java)
+        val events = readList("src/main/assets/events.json", GameEvent::class.java)
+        val puzzleIds = puzzles.map { it.id }.toSet()
+        val eventIds = events.map { it.id }.toSet()
+        val roomReferences = rooms.flatMap { room ->
+            room.actions.mapNotNull { action ->
+                val type = action["type"] as? String
+                val puzzleId = action["puzzle_id"] as? String
+                if (type.equals("tuning_puzzle", ignoreCase = true)) {
+                    room.id to puzzleId.orEmpty()
+                } else {
+                    null
+                }
+            }
+        }
+        val missingPuzzles = roomReferences
+            .filter { (_, puzzleId) -> puzzleId !in puzzleIds }
+            .map { (roomId, puzzleId) -> "$roomId -> $puzzleId" }
+        val missingEvents = puzzles
+            .filter { it.successEvent !in eventIds }
+            .map { "${it.id} -> ${it.successEvent}" }
+
+        assertTrue("Tuning puzzle room actions should reference valid puzzle ids: $missingPuzzles", missingPuzzles.isEmpty())
+        assertTrue("Tuning puzzle success events should exist: $missingEvents", missingEvents.isEmpty())
+    }
+
+    @Test
+    fun restStopRoomActionsReferenceValidEvents() {
+        val rooms = readList("src/main/assets/rooms.json", Room::class.java)
+        val events = readList("src/main/assets/events.json", GameEvent::class.java)
+        val eventIds = events.map { it.id }.toSet()
+        val missingEvents = rooms.flatMap { room ->
+            room.actions.mapNotNull { action ->
+                val type = action["type"] as? String
+                val restEvent = action["rest_event"] as? String
+                if (type.equals("rest_stop", ignoreCase = true) && !restEvent.isNullOrBlank() && restEvent !in eventIds) {
+                    "${room.id} -> $restEvent"
+                } else {
+                    null
+                }
+            }
+        }
+
+        assertTrue("Rest stop actions should reference valid rest events: $missingEvents", missingEvents.isEmpty())
     }
 
     @Test

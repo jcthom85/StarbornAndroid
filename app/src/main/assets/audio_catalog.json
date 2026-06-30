@@ -746,6 +746,33 @@
       "fade_out_ms": 220
     },
     {
+      "id": "battle_weakness_resolve",
+      "category": "battle",
+      "priority": 4,
+      "gain": 0.9,
+      "fade_in_ms": 0,
+      "fade_out_ms": 180,
+      "duration_ms": 900
+    },
+    {
+      "id": "battle_stability_shatter",
+      "category": "battle",
+      "priority": 5,
+      "gain": 1,
+      "fade_in_ms": 0,
+      "fade_out_ms": 260,
+      "duration_ms": 1300
+    },
+    {
+      "id": "battle_erosion_warning",
+      "category": "battle",
+      "priority": 4,
+      "gain": 0.62,
+      "fade_in_ms": 0,
+      "fade_out_ms": 300,
+      "duration_ms": 1800
+    },
+    {
       "id": "victory_fanfare",
       "category": "battle",
       "priority": 5,
@@ -842,6 +869,150 @@
       "duration_ms": 170
     },
     {
+      "id": "voice_murmur_nova_01",
+      "category": "voice",
+      "priority": 1,
+      "gain": 0.46,
+      "fade_in_ms": 0,
+      "fade_out_ms": 40,
+      "duration_ms": 140
+    },
+    {
+      "id": "voice_murmur_nova_02",
+      "category": "voice",
+      "priority": 1,
+      "gain": 0.45,
+      "fade_in_ms": 0,
+      "fade_out_ms": 40,
+      "duration_ms": 150
+    },
+    {
+      "id": "voice_murmur_nova_03",
+      "category": "voice",
+      "priority": 1,
+      "gain": 0.44,
+      "fade_in_ms": 0,
+      "fade_out_ms": 40,
+      "duration_ms": 130
+    },
+    {
+      "id": "voice_murmur_nova_04",
+      "category": "voice",
+      "priority": 1,
+      "gain": 0.45,
+      "fade_in_ms": 0,
+      "fade_out_ms": 40,
+      "duration_ms": 160
+    },
+    {
+      "id": "voice_murmur_orion_01",
+      "category": "voice",
+      "priority": 1,
+      "gain": 0.49,
+      "fade_in_ms": 0,
+      "fade_out_ms": 50,
+      "duration_ms": 170
+    },
+    {
+      "id": "voice_murmur_orion_02",
+      "category": "voice",
+      "priority": 1,
+      "gain": 0.48,
+      "fade_in_ms": 0,
+      "fade_out_ms": 50,
+      "duration_ms": 180
+    },
+    {
+      "id": "voice_murmur_orion_03",
+      "category": "voice",
+      "priority": 1,
+      "gain": 0.47,
+      "fade_in_ms": 0,
+      "fade_out_ms": 50,
+      "duration_ms": 160
+    },
+    {
+      "id": "voice_murmur_orion_04",
+      "category": "voice",
+      "priority": 1,
+      "gain": 0.48,
+      "fade_in_ms": 0,
+      "fade_out_ms": 50,
+      "duration_ms": 190
+    },
+    {
+      "id": "voice_murmur_zeke_01",
+      "category": "voice",
+      "priority": 1,
+      "gain": 0.5,
+      "fade_in_ms": 0,
+      "fade_out_ms": 40,
+      "duration_ms": 120
+    },
+    {
+      "id": "voice_murmur_zeke_02",
+      "category": "voice",
+      "priority": 1,
+      "gain": 0.49,
+      "fade_in_ms": 0,
+      "fade_out_ms": 40,
+      "duration_ms": 130
+    },
+    {
+      "id": "voice_murmur_zeke_03",
+      "category": "voice",
+      "priority": 1,
+      "gain": 0.48,
+      "fade_in_ms": 0,
+      "fade_out_ms": 40,
+      "duration_ms": 110
+    },
+    {
+      "id": "voice_murmur_zeke_04",
+      "category": "voice",
+      "priority": 1,
+      "gain": 0.49,
+      "fade_in_ms": 0,
+      "fade_out_ms": 40,
+      "duration_ms": 140
+    },
+    {
+      "id": "voice_murmur_gh0st_01",
+      "category": "voice",
+      "priority": 1,
+      "gain": 0.43,
+      "fade_in_ms": 0,
+      "fade_out_ms": 35,
+      "duration_ms": 110
+    },
+    {
+      "id": "voice_murmur_gh0st_02",
+      "category": "voice",
+      "priority": 1,
+      "gain": 0.42,
+      "fade_in_ms": 0,
+      "fade_out_ms": 35,
+      "duration_ms": 120
+    },
+    {
+      "id": "voice_murmur_gh0st_03",
+      "category": "voice",
+      "priority": 1,
+      "gain": 0.41,
+      "fade_in_ms": 0,
+      "fade_out_ms": 35,
+      "duration_ms": 100
+    },
+    {
+      "id": "voice_murmur_gh0st_04",
+      "category": "voice",
+      "priority": 1,
+      "gain": 0.42,
+      "fade_in_ms": 0,
+      "fade_out_ms": 35,
+      "duration_ms": 130
+    },
+    {
       "id": "wpn_nova_laser",
       "category": "battle",
       "priority": 3,
@@ -872,6 +1043,42 @@
       "gain": 0.9,
       "fade_in_ms": 0,
       "fade_out_ms": 100
+    },
+    {
+      "id": "wpn_nova_resonance_shot",
+      "category": "battle",
+      "priority": 3,
+      "gain": 0.82,
+      "fade_in_ms": 0,
+      "fade_out_ms": 110,
+      "duration_ms": 700
+    },
+    {
+      "id": "wpn_zeke_body_impact",
+      "category": "battle",
+      "priority": 3,
+      "gain": 0.95,
+      "fade_in_ms": 0,
+      "fade_out_ms": 110,
+      "duration_ms": 600
+    },
+    {
+      "id": "wpn_orion_bowl_resonance",
+      "category": "battle",
+      "priority": 3,
+      "gain": 0.84,
+      "fade_in_ms": 0,
+      "fade_out_ms": 140,
+      "duration_ms": 1000
+    },
+    {
+      "id": "wpn_gh0st_wire_slash",
+      "category": "battle",
+      "priority": 3,
+      "gain": 0.86,
+      "fade_in_ms": 0,
+      "fade_out_ms": 100,
+      "duration_ms": 650
     },
     {
       "id": "sfx_w2_chime_gate",

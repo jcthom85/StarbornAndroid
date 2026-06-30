@@ -215,11 +215,14 @@
     "start": "battle_start",
     "shield_block": "shield_block",
     "shield_break": "shield_break",
+    "weakness_resolve": "battle_weakness_resolve",
+    "stability_break": "battle_stability_shatter",
+    "erosion_warning": "battle_erosion_warning",
     "victory": "victory_fanfare",
     "defeat": "defeat_sting",
-    "wpn_nova_laser": "wpn_nova_laser",
-    "wpn_zeke_punch": "wpn_zeke_punch",
-    "wpn_orion_resonance": "wpn_orion_resonance",
-    "wpn_gh0st_slash": "wpn_gh0st_slash"
+    "wpn_nova_laser": "wpn_nova_resonance_shot",
+    "wpn_zeke_punch": "wpn_zeke_body_impact",
+    "wpn_orion_resonance": "wpn_orion_bowl_resonance",
+    "wpn_gh0st_slash": "wpn_gh0st_wire_slash"
   }
 }

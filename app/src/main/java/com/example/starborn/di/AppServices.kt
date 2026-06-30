@@ -858,6 +858,11 @@ class AppServices(context: Context) {
         "enemy_party" -> startNewGameAtEnemyPartyCombat()
         "presence_stress" -> startNewGameAtPresenceStress()
         "party_sizes" -> startNewGameAtEnemyPartySizes()
+        "hub_qa_w1_rest" -> startNewGameAtHubQaW1Rest()
+        "hub_qa_w2_cookfire" -> startNewGameAtHubQaW2Cookfire()
+        "hub_qa_w3_tuning" -> startNewGameAtHubQaW3Tuning()
+        "hub_qa_w4_tuning" -> startNewGameAtHubQaW4Tuning()
+        "hub_qa_w6_source" -> startNewGameAtHubQaW6Source()
         "room_items" -> startNewGameAtRoomItems()
         "scavenger" -> startNewGameAtScavengerStash()
         "heavy_lifting" -> startNewGameAtHeavyLifting()
@@ -899,6 +904,64 @@ class AppServices(context: Context) {
         "astra_home" -> startNewGameAboardAstra()
         else -> if (id.startsWith("hub_")) startNewGameAtDebugHub(id) else false
     }
+
+    private fun startNewGameAtHubQaW1Rest(): Boolean = runCatching {
+        if (!startNewGame(debugFullInventory = true)) return false
+        clearDebugBootstrap()
+        sessionStore.setWorld("world_1")
+        sessionStore.setHub("hub_1_homestead")
+        sessionStore.setRoom("pit_nova_bunk")
+        sessionStore.visitNode("pit")
+        sessionStore.completeQuest("w1_mq01")
+        sessionStore.setMilestone("ms_w1_mq01_complete")
+        sessionStore.setRoomState("pit_nova_bunk", "light_on", true)
+        sessionStore.markTutorialCompleted("swipe_move")
+        sessionStore.markTutorialCompleted("movement")
+        true
+    }.getOrElse { false }
+
+    private fun startNewGameAtHubQaW2Cookfire(): Boolean = runCatching {
+        if (!prepareWorld2DebugState(completedW2Quests = listOf("w2_mq01"))) return false
+        sessionStore.startQuest("w2_mq02", track = true)
+        sessionStore.setQuestStage("w2_mq02", "follow_stream")
+        sessionStore.setWorld("world_2")
+        sessionStore.setHub("hub_3_sector9")
+        sessionStore.setRoom("sector9_stream_falls")
+        visitDebugNodes("sector9_landing", "sector9_stream_path")
+        true
+    }.getOrElse { false }
+
+    private fun startNewGameAtHubQaW3Tuning(): Boolean = runCatching {
+        if (!prepareWorld3DebugState(completedW3Quests = listOf("w3_mq11", "w3_mq12", "w3_mq13"))) return false
+        sessionStore.startQuest("w3_mq14", track = true)
+        sessionStore.setQuestStage("w3_mq14", "archive_infiltration")
+        sessionStore.setWorld("world_3")
+        sessionStore.setHub("hub_6_upper_city")
+        sessionStore.setRoom("spire_prism_gallery")
+        visitDebugNodes("spire_laundry", "spire_skypark", "spire_archive")
+        true
+    }.getOrElse { false }
+
+    private fun startNewGameAtHubQaW4Tuning(): Boolean = runCatching {
+        if (!startNewGameAtW4AnvilForge()) return false
+        sessionStore.setRoom("foundry_forge_anvil")
+        true
+    }.getOrElse { false }
+
+    private fun startNewGameAtHubQaW6Source(): Boolean = runCatching {
+        if (!prepareWorld6DebugState()) return false
+        sessionStore.startQuest("w6_mq26", track = true)
+        sessionStore.setQuestStage("w6_mq26", "nightmares")
+        sessionStore.setQuestTasksCompleted(
+            questId = "w6_mq26",
+            taskIds = setOf("rescue_zeke", "rescue_gh0st", "rescue_orion")
+        )
+        sessionStore.setWorld("world_6")
+        sessionStore.setHub("hub_11_event_horizon")
+        sessionStore.setRoom("source_campfire")
+        visitDebugNodes("source_campfire_node")
+        true
+    }.getOrElse { false }
 
     private fun startNewGameAtWorld1NodeProgression(): Boolean = runCatching {
         if (!startNewGame(debugFullInventory = true)) return false

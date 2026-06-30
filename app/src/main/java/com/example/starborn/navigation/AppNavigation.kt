@@ -43,6 +43,7 @@ import com.example.starborn.feature.exploration.viewmodel.ExplorationViewModel
 import com.example.starborn.feature.exploration.viewmodel.ExplorationViewModelFactory
 import com.example.starborn.feature.crafting.CraftingViewModel
 import com.example.starborn.feature.crafting.CraftingViewModelFactory
+import com.example.starborn.feature.crafting.TinkeringFilter
 import com.example.starborn.feature.crafting.ui.TinkeringRoute
 import com.example.starborn.navigation.CombatResultPayload
 import com.example.starborn.feature.shop.ShopViewModel
@@ -289,10 +290,15 @@ fun NavigationHost(
                         pendingCombatEnemyIds = enemyIds
                         combatTransitionVisible = true
                     },
-                    onOpenTinkering = {
+                    onOpenTinkering = { source ->
                         backStackEntry.savedStateHandle["tinkering_closed"] = false
                         backStackEntry.savedStateHandle["tinkering_craft"] = ""
-                        navController.navigate(Tinkering.route)
+                        navController.navigate(Tinkering.create(source))
+                    },
+                    onOpenFieldKit = {
+                        backStackEntry.savedStateHandle["tinkering_closed"] = false
+                        backStackEntry.savedStateHandle["tinkering_craft"] = ""
+                        navController.navigate(Tinkering.create("field_kit", "provision"))
                     },
                     onOpenFirstAid = { navController.navigate(FirstAid.route) },
                     onOpenFishing = { zoneId -> navController.navigate(Fishing.create(zoneId)) },
@@ -326,7 +332,29 @@ fun NavigationHost(
                 )
             }
         }
-        composable(Tinkering.route) {
+        composable(
+            route = Tinkering.route,
+            arguments = listOf(
+                navArgument("source") {
+                    type = NavType.StringType
+                    nullable = true
+                    defaultValue = null
+                },
+                navArgument("filter") {
+                    type = NavType.StringType
+                    nullable = true
+                    defaultValue = null
+                }
+            )
+        ) { tinkeringEntry ->
+            val source = tinkeringEntry.arguments?.getString("source")
+            val initialFilter = when (tinkeringEntry.arguments?.getString("filter")?.lowercase()) {
+                "provision", "food", "cooking" -> TinkeringFilter.PROVISION
+                "repair" -> TinkeringFilter.REPAIR
+                "gear" -> TinkeringFilter.GEAR
+                "all" -> TinkeringFilter.ALL
+                else -> null
+            }
             val craftingViewModel: CraftingViewModel = viewModel(
                 factory = CraftingViewModelFactory(
                     services.craftingService,
@@ -347,6 +375,8 @@ fun NavigationHost(
                         ?.savedStateHandle
                         ?.set("tinkering_closed", true)
                 },
+                source = source,
+                initialFilter = initialFilter,
                 promptManager = services.promptManager,
                 highContrastMode = userSettings.highContrastMode,
                 largeTouchTargets = userSettings.largeTouchTargets,

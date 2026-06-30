@@ -17,30 +17,59 @@ fun TogglePromptDialog(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    ChoicePromptDialog(
+        title = prompt.title,
+        message = prompt.message,
+        primaryLabel = prompt.enableLabel,
+        secondaryLabel = prompt.disableLabel,
+        dismissLabel = "Cancel",
+        primaryEnabled = !prompt.isOn,
+        secondaryEnabled = prompt.isOn,
+        onPrimary = { onSelect(true) },
+        onSecondary = { onSelect(false) },
+        onDismiss = onDismiss,
+        modifier = modifier
+    )
+}
+
+@Composable
+fun ChoicePromptDialog(
+    title: String,
+    message: String,
+    primaryLabel: String,
+    secondaryLabel: String,
+    dismissLabel: String,
+    onPrimary: () -> Unit,
+    onSecondary: () -> Unit,
+    onDismiss: () -> Unit,
+    modifier: Modifier = Modifier,
+    primaryEnabled: Boolean = true,
+    secondaryEnabled: Boolean = true
+) {
     AlertDialog(
         onDismissRequest = onDismiss,
         modifier = modifier,
-        title = { Text(prompt.title) },
-        text = { Text(prompt.message) },
+        title = { Text(title) },
+        text = { Text(message) },
         confirmButton = {
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 TextButton(
-                    onClick = { onSelect(true) },
-                    enabled = !prompt.isOn
+                    onClick = onPrimary,
+                    enabled = primaryEnabled
                 ) {
-                    Text(prompt.enableLabel)
+                    Text(primaryLabel)
                 }
                 TextButton(
-                    onClick = { onSelect(false) },
-                    enabled = prompt.isOn
+                    onClick = onSecondary,
+                    enabled = secondaryEnabled
                 ) {
-                    Text(prompt.disableLabel)
+                    Text(secondaryLabel)
                 }
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel")
+                Text(dismissLabel)
             }
         }
     )

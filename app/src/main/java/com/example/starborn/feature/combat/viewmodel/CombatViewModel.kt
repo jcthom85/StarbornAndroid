@@ -201,6 +201,8 @@ class CombatViewModel(
     private var suppressMissLungeTargets: Set<String> = emptySet()
     private var lastShieldBlockCueAtMs: Long = 0L
     private var lastShieldBreakCueAtMs: Long = 0L
+    private var lastStabilityBreakCueAtMs: Long = 0L
+    private var lastErosionWarningCueAtMs: Long = 0L
 
     private fun isAtbPaused(): Boolean =
         atbMenuPaused || atbAnimationPauses > 0 || _combatTutorial.value?.paused == true
@@ -1607,6 +1609,7 @@ class CombatViewModel(
                     setCombatBanner(entry, updated)
                 }
                 is CombatLogEntry.WeaknessReward -> {
+                    playBattleCue("weakness_resolve")
                     setCombatBanner(entry, updated)
                 }
                 is CombatLogEntry.Heal -> {
@@ -1614,6 +1617,7 @@ class CombatViewModel(
                     setCombatBanner(entry, updated)
                 }
                 is CombatLogEntry.StatusApplied -> {
+                    maybePlayErosionWarningCue(entry, updated)
                     emitStatusApplied(entry, actionEffectDelayMs(currentAction))
                     setCombatBanner(entry, updated, currentAction)
                 }
@@ -1658,6 +1662,7 @@ class CombatViewModel(
             if (before <= 0 && updatedState.breakTurns > 0) id else null
         }
         if (newlyBroken.isNotEmpty()) {
+            maybePlayStabilityBreakCue()
             _atbMeters.update { existing ->
                 if (existing.isEmpty()) existing else existing + newlyBroken.associateWith { 0f }
             }
@@ -1818,6 +1823,24 @@ class CombatViewModel(
         if (now - lastShieldBreakCueAtMs < 280L) return
         lastShieldBreakCueAtMs = now
         playBattleCue("shield_break")
+    }
+
+    private fun maybePlayStabilityBreakCue() {
+        val now = elapsedRealtime()
+        if (now - lastStabilityBreakCueAtMs < 500L) return
+        lastStabilityBreakCueAtMs = now
+        playBattleCue("stability_break")
+    }
+
+    private fun maybePlayErosionWarningCue(entry: CombatLogEntry.StatusApplied, state: CombatState) {
+        val normalizedStatus = entry.statusId.trim().lowercase(Locale.getDefault())
+        if (normalizedStatus !in EROSION_AUDIO_STATUS_IDS) return
+        val targetSide = state.combatants[entry.targetId]?.combatant?.side ?: return
+        if (targetSide != CombatSide.PLAYER && targetSide != CombatSide.ALLY) return
+        val now = elapsedRealtime()
+        if (now - lastErosionWarningCueAtMs < EROSION_WARNING_AUDIO_COOLDOWN_MS) return
+        lastErosionWarningCueAtMs = now
+        playBattleCue("erosion_warning")
     }
 
     private fun shouldEmitShieldBreak(
@@ -3307,6 +3330,7 @@ private fun determineSkillTargeting(skill: Skill): SkillTargeting {
         private const val ATTACK_ANIMATION_PAUSE_MS = 500L
         private const val ACTION_INTRO_PAUSE_MS = 360L
         private const val MENU_DISMISS_ENEMY_GRACE_MS = 260L
+        private const val EROSION_WARNING_AUDIO_COOLDOWN_MS = 8_000L
         private const val ENEMY_ACTION_MEMORY = 3
         private const val ENEMY_BASIC_ACTION_MARKER = "__basic_attack__"
         private const val ENEMY_DEFEND_ACTION_MARKER = "__defend__"
@@ -3327,6 +3351,7 @@ private fun determineSkillTargeting(skill: Skill): SkillTargeting {
             "erosion",
             "short"
         )
+        private val EROSION_AUDIO_STATUS_IDS = setOf("erosion", "burnout", "meltdown")
     }
 }
 

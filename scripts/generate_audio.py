@@ -178,6 +178,18 @@ SFX_CATALOG = {
         "text": "A violent shearing sound of metal buckling and breaking under immense pressure, sharp shrapnel scatter",
         "duration": 1.2,
     },
+    "battle_weakness_resolve": {
+        "text": "A clean acoustic harmonic resolution for a JRPG weakness hit, two glass chimes forming a perfect fifth, gentle cello harmonic bloom, bright satisfying resonance, no synth, no explosion",
+        "duration": 0.9,
+    },
+    "battle_stability_shatter": {
+        "text": "A glass singing bowl shatters under deep ocean pressure, crystalline bell fracture, sudden muffled underwater pressure drop, low sub swell, dramatic guard break sound, no melody",
+        "duration": 1.3,
+    },
+    "battle_erosion_warning": {
+        "text": "A subtle high tinnitus ring with detuned singing bowl dissonance, mental fatigue warning, thin glass resonance and faint crackle, restrained and uncomfortable, no alarm beep",
+        "duration": 1.8,
+    },
     "victory_fanfare": {
         "text": "A short, triumphant orchestral brass fanfare, JRPG victory sting, positive resolution, bright horn section",
         "duration": 3.0,
@@ -325,6 +337,86 @@ SFX_CATALOG = {
     "wpn_gh0st_slash": {
         "text": "A quick sharp steel sword slash slicing through the air, crisp metallic blade swing swoosh sound effect",
         "duration": 0.7,
+    },
+    "wpn_nova_resonance_shot": {
+        "text": "A compact acoustic resonance shot, plucked glass harp transient, small crystal bow snap, clean focused chime projectile, bright but physical, no laser, no synth",
+        "duration": 0.7,
+    },
+    "wpn_zeke_body_impact": {
+        "text": "A short percussive body blow with leather wrap, wooden staff thump, chesty breath impact, dry close room, physical martial hit, no gore",
+        "duration": 0.6,
+    },
+    "wpn_orion_bowl_resonance": {
+        "text": "A deep singing bowl weapon pulse, low brass breath, cello harmonic swell, resonant acoustic pressure wave, ancient and controlled, no electronic zap",
+        "duration": 1.0,
+    },
+    "wpn_gh0st_wire_slash": {
+        "text": "A clipped wire-and-blade slash, taut metal string pluck, whispery air cut, tiny glass scrape tail, stealthy acoustic strike, no sci-fi laser",
+        "duration": 0.65,
+    },
+    "voice_murmur_nova_01": {
+        "text": "A very short soft feminine nonverbal vocal murmur, melodic minor-third hum, warm breath, no words, no singing phrase",
+        "duration": 0.5,
+    },
+    "voice_murmur_nova_02": {
+        "text": "A tiny soft feminine nonverbal dialogue murmur, gentle rising hum, human breath, intimate and calm, no words",
+        "duration": 0.5,
+    },
+    "voice_murmur_nova_03": {
+        "text": "A very brief soft feminine nonverbal hm sound, minor-third color, close microphone, natural breath, no words",
+        "duration": 0.5,
+    },
+    "voice_murmur_nova_04": {
+        "text": "A short soft feminine nonverbal dialogue hum, warm melodic interval, quiet and expressive, no words",
+        "duration": 0.5,
+    },
+    "voice_murmur_orion_01": {
+        "text": "A very short low masculine nonverbal vocal hum, bass resonance, calm mentor tone, no words, no singing phrase",
+        "duration": 0.5,
+    },
+    "voice_murmur_orion_02": {
+        "text": "A tiny deep masculine dialogue murmur, resonant chest hum, slow and grounded, no words",
+        "duration": 0.5,
+    },
+    "voice_murmur_orion_03": {
+        "text": "A brief low masculine nonverbal hm, bass-frequency warmth, restrained, no words",
+        "duration": 0.5,
+    },
+    "voice_murmur_orion_04": {
+        "text": "A short deep masculine vocal murmur, soft resonant bass hum, thoughtful cadence, no words",
+        "duration": 0.5,
+    },
+    "voice_murmur_zeke_01": {
+        "text": "A very short masculine nonverbal dialogue grunt, percussive rhythmic breath, friendly rugged tone, no words",
+        "duration": 0.5,
+    },
+    "voice_murmur_zeke_02": {
+        "text": "A tiny masculine hm with clipped rhythm, warm rough breath, conversational, no words",
+        "duration": 0.5,
+    },
+    "voice_murmur_zeke_03": {
+        "text": "A brief percussive masculine vocal tick, rugged low murmur, no words",
+        "duration": 0.5,
+    },
+    "voice_murmur_zeke_04": {
+        "text": "A short masculine nonverbal dialogue murmur, rhythmic breath and throat tone, warm and practical, no words",
+        "duration": 0.5,
+    },
+    "voice_murmur_gh0st_01": {
+        "text": "A very short clipped masculine whisper murmur, dry breath, stealthy tone, no words, no electronic glitch",
+        "duration": 0.5,
+    },
+    "voice_murmur_gh0st_02": {
+        "text": "A tiny low whispery nonverbal hm, clipped and controlled, close microphone, no words",
+        "duration": 0.5,
+    },
+    "voice_murmur_gh0st_03": {
+        "text": "A brief dry whisper-breath dialogue murmur, tense and precise, no words",
+        "duration": 0.5,
+    },
+    "voice_murmur_gh0st_04": {
+        "text": "A short clipped masculine nonverbal murmur, airy whisper with faint throat tone, stealthy, no words",
+        "duration": 0.5,
     },
 }
 

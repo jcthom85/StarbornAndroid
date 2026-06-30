@@ -2,6 +2,7 @@ package com.example.starborn.feature.combat
 
 import com.example.starborn.data.assets.WorldAssetDataSource
 import com.example.starborn.data.repository.ThemeRepository
+import com.example.starborn.domain.audio.AudioCommand
 import com.example.starborn.domain.audio.AudioBindings
 import com.example.starborn.domain.audio.AudioRouter
 import com.example.starborn.domain.combat.CombatAction
@@ -39,13 +40,17 @@ import com.example.starborn.feature.combat.viewmodel.CombatViewModel
 import com.example.starborn.feature.combat.viewmodel.CombatBannerAccent
 import com.example.starborn.feature.combat.viewmodel.CombatBannerIcon
 import com.example.starborn.feature.combat.viewmodel.CombatBannerImportance
+import com.example.starborn.feature.combat.viewmodel.CombatFxEvent
 import com.example.starborn.feature.combat.viewmodel.COMBAT_BASICS_TUTORIAL_ID
 import com.example.starborn.feature.combat.viewmodel.COMBAT_TUTORIAL_SKILL_ID
 import com.example.starborn.feature.combat.viewmodel.CombatTutorialStep
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runCurrent
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -1190,8 +1195,17 @@ class CombatViewModelTest {
     }
 
     @Test
-    fun weaknessHitShowsCooldownRewardBanner() {
+    fun weaknessHitShowsCooldownRewardBanner() = runTest {
         val viewModel = createWeaknessRewardViewModel()
+        val audioEvents = mutableListOf<CombatFxEvent.Audio>()
+        backgroundScope.launch {
+            viewModel.fxEvents.collect { event ->
+                if (event is CombatFxEvent.Audio) {
+                    audioEvents += event
+                }
+            }
+        }
+        runCurrent()
         val shockSkill = viewModel.skillsForPlayer("nova").first { it.id == "nova_shock_probe" }
         val readyQueueField = CombatViewModel::class.java.getDeclaredField("readyQueue")
         readyQueueField.isAccessible = true
@@ -1201,6 +1215,7 @@ class CombatViewModelTest {
 
         viewModel.selectReadyPlayer("nova")
         viewModel.useSkill(shockSkill, listOf("shock_weak_drone"))
+        runCurrent()
 
         val banner = viewModel.combatBanner.value
         assertEquals("Weakness hit", banner?.primary)
@@ -1209,6 +1224,11 @@ class CombatViewModelTest {
         assertEquals(CombatBannerIcon.BURST, banner?.icon)
         assertEquals(CombatBannerImportance.IMPORTANT, banner?.importance)
         assertTrue(banner?.tags.orEmpty().contains("Cooldown -1"))
+        assertTrue(
+            audioEvents.flatMap { it.commands }.any {
+                it is AudioCommand.Play && it.cueId == "battle_weakness_resolve"
+            }
+        )
     }
 
     @Test
@@ -1474,7 +1494,14 @@ class CombatViewModelTest {
             itemCatalog = FakeItemCatalog(),
             levelingManager = LevelingManager(LevelingData(mapOf("1" to 0, "2" to 100))),
             progressionData = ProgressionData(),
-            audioRouter = AudioRouter(AudioBindings()),
+            audioRouter = AudioRouter(
+                AudioBindings(
+                    battle = mapOf(
+                        "weakness_resolve" to "battle_weakness_resolve",
+                        "wpn_nova_laser" to "wpn_nova_resonance_shot"
+                    )
+                )
+            ),
             themeRepository = themeRepository,
             environmentThemeManager = EnvironmentThemeManager(themeRepository),
             encounterCoordinator = EncounterCoordinator(),

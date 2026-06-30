@@ -576,7 +576,7 @@ function Validate-Action($action, $context) {
         "audio_layer" {
             Validate-AudioCue $actionContext (Get-Prop $action "cue_id")
         }
-        { $_ -in @("rebuild_ui", "wait_for_draw") } {
+        { $_ -in @("rebuild_ui", "wait_for_draw", "rest_party") } {
         }
         default {
             if (-not [string]::IsNullOrWhiteSpace($type)) {

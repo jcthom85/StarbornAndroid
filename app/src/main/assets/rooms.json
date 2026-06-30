@@ -48,8 +48,9 @@
     "actions": [
       {
         "name": "tables",
-        "type": "generic",
-        "condition_unmet_message": "Bolted to the floor and scarred by a thousand metal spoons."
+        "type": "rest_stop",
+        "rest_event": "w1_rest_mess_hall",
+        "message": "Bolted tables and dented trays make the colony's first shared rest stop. A hot ration is not comfort, but it is a rhythm the body recognizes."
       },
       {
         "name": "monitor",
@@ -273,9 +274,9 @@
       },
       {
         "name": "bunk",
-        "type": "generic",
-        "action_event": "w1_mq01_check_bunk",
-        "condition_unmet_message": "It's hard, it's small, but it's yours."
+        "type": "rest_stop",
+        "rest_event": "w1_rest_nova_bunk",
+        "message": "It's hard, it's small, but it's yours. Resting here steadies Nova before the colony starts asking for pieces of her again."
       },
       {
         "name": "netting",
@@ -1942,7 +1943,7 @@
     "weather": "cave_drip",
     "title": "Elevator Landing",
     "background_image": "images/rooms/world_1/mine_landing.png",
-    "description": "The base of the industrial lift opens into raw rock, red safety beacons, and a pressure that makes the ceiling feel closer than it is. The override got Nova down here; it does not promise a way back.",
+    "description": "The base of the industrial lift opens into raw rock, red safety beacons, and silent machinery, with a pressure that makes the ceiling feel closer than it is. The override got Nova down here; it does not promise a way back.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -1978,7 +1979,7 @@
     "env": "mine",
     "title": "Main Tunnel Alpha",
     "background_image": "images/rooms/world_1/mine_alpha.png",
-    "description": "The start of the deep excavation tunnels where the walls are scarred by giant drills. The official route markers blink toward Sector 4, but the hum underneath them feels older than the mine.",
+    "description": "The start of the deep excavation tunnels where the walls are scarred by giant drills and an empty ore cart sits. The official route markers blink toward Sector 4, but the hum underneath them feels older than the mine.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -2120,7 +2121,7 @@
     "env": "mine",
     "title": "Riot Control Post",
     "background_image": "images/rooms/world_1/mine_checkpoint.png",
-    "description": "A fortified sentry post with reinforced walls and high-intensity floodlights aimed inward. Dominion did not build this to keep monsters out; it built it to keep workers moving.",
+    "description": "A fortified sentry post with reinforced walls, a discarded riot shield, and high-intensity floodlights aimed inward. Dominion did not build this to keep monsters out; it built it to keep workers moving.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -2227,7 +2228,7 @@
     "env": "mine",
     "title": "Deep Shoring",
     "background_image": "images/rooms/world_1/mine_shoring.png",
-    "description": "Unstable metal support beams groan under the canyon walls above. Past the fresh collapse, the industrial noise thins until only the impossible hum remains.",
+    "description": "Unstable metal support beams groan under the canyon walls above. Past the fresh collapse of debris, the industrial noise thins until only the impossible hum remains.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -2260,7 +2261,7 @@
     "env": "mine",
     "title": "Ancient Threshold",
     "background_image": "images/rooms/world_1/mine_threshold.png",
-    "description": "The rock gives way to smooth, impossible geometry that does not belong in a mine. This is no longer punishment duty. This is something Dominion dug into and then lied about.",
+    "description": "The rock gives way to smooth, impossible geometry along the walls that does not belong in a mine. This is no longer punishment duty. This is something Dominion dug into and then lied about.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -2752,7 +2753,7 @@
     "env": "logistics",
     "title": "Pod Bay",
     "background_image": "images/rooms/world_1/launch_bay.png",
-    "description": "The massive cargo rails stretch up toward the planetary shield, glowing with emergency red. A single cargo pod waits on the pad, ugly and barely alive. [npc:The Warden] blocks the hatch while [npc:Zeke] frantically lies to the controls.",
+    "description": "The massive cargo rails stretch up toward the planetary shield, glowing with emergency red. A single escape pod waits on the pad, ugly and barely alive. [npc:The Warden] blocks the hatch while [npc:Zeke] frantically lies to the controls.",
     "npcs": [
       "the_warden"
     ],
@@ -3205,6 +3206,12 @@
         "name": "vent pipes",
         "type": "generic",
         "condition_unmet_message": "Heavy steam pipes running up to the lower city."
+      },
+      {
+        "name": "runoff fishing",
+        "type": "fishing",
+        "zone_id": "spire_runoff",
+        "condition_unmet_message": "The warm runoff carries blind mineral fish through the sewer channel."
       }
     ]
   },
@@ -4288,8 +4295,8 @@
     "actions": [
       {
         "name": "light puzzle",
-        "type": "generic",
-        "action_event": "w3_mq14_solve_light_puzzle",
+        "type": "tuning_puzzle",
+        "puzzle_id": "prism_gallery_light",
         "condition_unmet_message": "A prism array waits for Orion to tune its acoustic frequencies."
       },
       {
@@ -5138,8 +5145,8 @@
       },
       {
         "name": "conveyor puzzle",
-        "type": "generic",
-        "action_event": "w4_mq19_solve_conveyor_puzzle",
+        "type": "tuning_puzzle",
+        "puzzle_id": "forge_conveyor_timing",
         "condition_unmet_message": "The Anvil mount is locked behind moving belt plates and timed crushers."
       },
       {
@@ -5176,8 +5183,8 @@
     "actions": [
       {
         "name": "hammer timing",
-        "type": "generic",
-        "action_event": "w4_mq19_solve_conveyor_puzzle",
+        "type": "tuning_puzzle",
+        "puzzle_id": "forge_conveyor_timing",
         "condition_unmet_message": "The hammer timing can open the Anvil cradle if Nova and Orion split the pattern cleanly."
       }
     ]
@@ -5604,6 +5611,12 @@
         "type": "generic",
         "action_event": "w5_sq22_realign_mirrors",
         "condition_unmet_message": "Void-moss crawls over the Solarium mirrors, dimming the false sun."
+      },
+      {
+        "name": "false tide fishing",
+        "type": "fishing",
+        "zone_id": "orbital_false_tide",
+        "condition_unmet_message": "The Solarium's artificial tide cycles slowly enough to cast a line."
       }
     ]
   },
@@ -6267,7 +6280,7 @@
     "env": "source",
     "title": "The Campfire",
     "background_image": "images/rooms/world_6/source_campfire.png",
-    "description": "The Crash Site fire burns again, rebuilt from blue waveforms on an island of memory. Three unstable paths pull away from the flame, each tuned to a missing crew member.",
+    "description": "The song-fire burns again, rebuilt from blue waveforms on an island of memory. Three unstable paths pull away from the flame, each tuned to a missing crew member.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -6289,6 +6302,12 @@
         "type": "generic",
         "action_event": "w6_mq26_reassemble",
         "condition_unmet_message": "The blue fire waits for every missing voice to return."
+      },
+      {
+        "name": "memory oasis",
+        "type": "rest_stop",
+        "rest_event": "w6_rest_memory_oasis",
+        "message": "The blue fire is quiet enough to cook beside, but every shared bite carries a memory Nova can feel loosening."
       }
     ],
     "description_variants": [
@@ -6698,6 +6717,12 @@
         "type": "generic",
         "action_event": "w6_mq28_final_banter",
         "condition_unmet_message": "The crew has one quiet moment before the final ascent."
+      },
+      {
+        "name": "final meal",
+        "type": "rest_stop",
+        "rest_event": "w6_rest_final_meal",
+        "message": "The last safe span holds long enough for a final shared meal before the Source takes the words apart."
       }
     ]
   },
@@ -6903,8 +6928,8 @@
       },
       {
         "name": "tuning focus",
-        "type": "generic",
-        "action_event": "w6_mq30_tune_world",
+        "type": "tuning_puzzle",
+        "puzzle_id": "source_harmonic_focus",
         "condition_unmet_message": "Vale's code still blocks the Source. The Key cannot tune the world until both forms fall."
       }
     ],
@@ -7196,11 +7221,11 @@
     "weather": "fog",
     "title": "Mist Pools",
     "background_image": "images/rooms/world_2/stream_pools.png",
-    "description": "Deep wetlands where the glowing water pools into wide, still basins. Reed bulbs push through the mineral fog, making the patrolling Echo-Borer look like a floating shadow.",
+    "description": "Deep wetlands where the glowing water pools into wide, still basins. Reed bulbs push through the mineral fog, and a Siren Skimmer darts through the mist with a shrill, disorienting cry.",
     "npcs": [],
     "items": [],
     "enemies": [
-      "echo_borer"
+      "siren_skimmer"
     ],
     "connections": {
       "west": "sector9_landing_stream",
@@ -7300,9 +7325,9 @@
     "actions": [
       {
         "name": "sheltered cookfire",
-        "type": "generic",
-        "action_event": "w2_camp_stream_falls",
-        "condition_unmet_message": "A dry recess behind the falls makes a defensible campsite. The steady water-chord quiets the mental strain."
+        "type": "rest_stop",
+        "rest_event": "w2_camp_stream_falls",
+        "message": "A dry recess behind the falls makes a defensible campsite. The steady water-chord quiets the mental strain."
       }
     ]
   },
@@ -7991,9 +8016,9 @@
     "actions": [
       {
         "name": "ridge campsite",
-        "type": "generic",
-        "action_event": "w2_camp_wilds_lookout",
-        "condition_unmet_message": "A Dominion heat ring still works. Resting beside it lets a Neural Stabilizer settle the worst Erosion tremors."
+        "type": "rest_stop",
+        "rest_event": "w2_camp_wilds_lookout",
+        "message": "A Dominion heat ring still works. Resting beside it lets a Neural Stabilizer settle the worst Erosion tremors."
       }
     ],
     "blocked_directions": {
@@ -8230,9 +8255,9 @@
     "actions": [
       {
         "name": "plateau camp",
-        "type": "generic",
-        "action_event": "w2_camp_ridge_plateau",
-        "condition_unmet_message": "The stone remains warm after sunset. A small cookfire and shared food restore focus before the temple."
+        "type": "rest_stop",
+        "rest_event": "w2_camp_ridge_plateau",
+        "message": "The stone remains warm after sunset. A small cookfire and shared food restore focus before the temple."
       }
     ]
   },
@@ -9186,9 +9211,9 @@
     "actions": [
       {
         "name": "facility camp station",
-        "type": "generic",
-        "action_event": "w2_camp_power_manifold",
-        "condition_unmet_message": "A maintenance heat plate offers sterile shelter. Food and a Neural Stabilizer bring Erosion back under control."
+        "type": "rest_stop",
+        "rest_event": "w2_camp_power_manifold",
+        "message": "A maintenance heat plate offers sterile shelter. Food and a Neural Stabilizer bring Erosion back under control."
       }
     ]
   },

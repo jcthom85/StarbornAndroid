@@ -71,6 +71,11 @@ class DialogEventsLoadingTest {
         assertTrue(tinkering.isNotEmpty())
         assertTrue(firstAid.isNotEmpty())
         assertTrue(fishing.zones.containsKey("sector9_stream"))
+        assertTrue(fishing.zones.containsKey("spire_runoff"))
+        assertTrue(fishing.zones.containsKey("orbital_false_tide"))
+        assertTrue(fishing.rods.any { it.id == "reinforced_resin_rod" })
+        assertTrue(fishing.rods.any { it.id == "harmonic_carbon_rod" })
+        assertTrue(fishing.lures.any { it.id == "harmonic_spool_lure" })
         assertTrue(fishing.rods.isNotEmpty())
         assertTrue(fishing.lures.isNotEmpty())
     }

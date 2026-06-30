@@ -1,0 +1,35 @@
+appId: com.junewiregames.starborn.prealpha
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "Debug Scenarios"
+    timeout: 60000
+- tapOn: "Debug Scenarios"
+- extendedWaitUntil:
+    visible: "Search world, quest, room, or system"
+    timeout: 10000
+- tapOn: "Search world, quest, room, or system"
+- inputText: "W4 Tuning"
+- hideKeyboard
+- tapOn: "Hub QA / W4 Tuning"
+- extendedWaitUntil:
+    visible: "The Forge"
+    timeout: 30000
+- assertVisible: "conveyor puzzle"
+- tapOn: "conveyor puzzle"
+- extendedWaitUntil:
+    visible: "Conveyor Timing Puzzle"
+    timeout: 10000
+- assertVisible: "Stamper Frequency: 120BPM"
+- assertVisible: "Pressure: 80%"
+- assertVisible: "Phase Offset: 210deg"
+- tapOn: "Tune"
+- extendedWaitUntil:
+    visible: "The belt is still rushing the silence.*"
+    timeout: 10000
+- tapOn: "Cancel"
+- extendedWaitUntil:
+    visible: "The Forge"
+    timeout: 10000
+- takeScreenshot: hub-tuning-w4

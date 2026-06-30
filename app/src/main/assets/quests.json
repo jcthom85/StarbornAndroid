@@ -441,21 +441,21 @@
   },
   {
     "id": "w1_sq03",
-    "title": "Heavy Lifting",
-    "summary": "Boggs turns combat certification into cargo work before he will authorize Sector 4.",
-    "description": "Bring the loader online, clear Boggs' cargo, save the trapped workers, and learn why shielded enemies need to be broken before they can be hurt.",
+    "title": "Heavy Lifting: Required Training",
+    "summary": "Required Logistics certification: Boggs will not authorize Sector 4 until Nova proves she can break a shield.",
+    "description": "Bring the loader online, clear Boggs' cargo, save the trapped workers, and complete the mandatory Guard Break drill before the Deep Elevator opens.",
     "flavor": "Boggs calls it labor efficiency. Nova calls it not letting people die under a crate.",
     "giver": "Foreman Boggs",
     "hub_id": "hub_1_homestead",
     "stages": [
       {
         "id": "clear_cargo_collapse",
-        "title": "Clear the Cargo Collapse",
-        "description": "A cargo collapse is blocking the loading route, and Boggs wants it fixed now.",
+        "title": "Required Logistics Certification",
+        "description": "Boggs folds Nova's shield certification into cargo cleanup. The Deep Elevator stays locked until the training log clears.",
         "tasks": [
           {
             "id": "talk_to_bogs",
-            "text": "Report to Foreman Boggs about the required shield training."
+            "text": "Report to Foreman Boggs for mandatory shield training."
           },
           {
             "id": "start_loader",
@@ -469,7 +469,7 @@
       },
       {
         "id": "guard_break_training",
-        "title": "Break the Guard",
+        "title": "Mandatory Guard Break Drill",
         "description": "The loader route becomes a controlled lesson in breaking a shield before attacking.",
         "tasks": [
           {

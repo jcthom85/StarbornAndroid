@@ -65,6 +65,24 @@
     "success_message": "You stitch an Insulated Lining that hums with safety."
   },
   {
+    "id": "gear_portable_stove",
+    "name": "Portable Stove",
+    "category": "gear",
+    "method": "mod",
+    "base": "scrap_metal",
+    "components": [
+      "scrap_metal",
+      "wiring_bundle"
+    ],
+    "ingredients": {
+      "scrap_metal": 2,
+      "wiring_bundle": 1
+    },
+    "result": "portable_stove",
+    "description": "Assemble scrap plates and insulated wiring into a reusable field burner for cooked provisions.",
+    "success_message": "You assemble a Portable Stove. Cooking recipes are now viable anywhere you can work."
+  },
+  {
     "id": "repair_cryo_inductor",
     "name": "Functional Cryo-Inductor",
     "category": "repair",
@@ -142,6 +160,9 @@
       "fiery_pepper": 1,
       "beast_meat": 1
     },
+    "tools": [
+      "portable_stove"
+    ],
     "result": "spicy_ramen",
     "description": "Use the bench heater and pressure cup to turn field supplies into a sharp combat meal.",
     "success_message": "You seal a steaming bowl of Spicy Ramen."
@@ -155,6 +176,9 @@
       "ration_pack": 1,
       "herb": 1
     },
+    "tools": [
+      "portable_stove"
+    ],
     "result": "ration_soup",
     "description": "Stretch a ration pack into a warmer, cleaner recovery meal.",
     "success_message": "You turn the ration pack into a restorative soup."
@@ -168,9 +192,79 @@
       "raw_glowfish": 2,
       "herb": 1
     },
+    "tools": [
+      "portable_stove"
+    ],
     "result": "glowfish_broth",
     "description": "Stabilize glow-water fish into a mineral broth that steadies the hands.",
     "success_message": "You brew a bowl of Glowfish Broth."
+  },
+  {
+    "id": "provision_resonance_carp_stew",
+    "name": "Resonance Carp Stew",
+    "category": "provision",
+    "method": "field_cook",
+    "ingredients": {
+      "resonance_carp": 1,
+      "beast_meat": 1,
+      "herb": 1
+    },
+    "tools": [
+      "portable_stove"
+    ],
+    "result": "resonance_carp_stew",
+    "description": "Simmer resonance carp with meat and herbs until the hum settles into something restorative.",
+    "success_message": "You cook a warm pot of Resonance Carp Stew."
+  },
+  {
+    "id": "provision_chime_minnow_broth",
+    "name": "Chime Minnow Broth",
+    "category": "provision",
+    "method": "field_cook",
+    "ingredients": {
+      "chime_minnow": 1,
+      "raw_glowfish": 1,
+      "herb": 1
+    },
+    "tools": [
+      "portable_stove"
+    ],
+    "result": "chime_minnow_broth",
+    "description": "Clarify a rare chime minnow with glowfish minerals into a bright restorative broth.",
+    "success_message": "You ladle out a clear bowl of Chime Minnow Broth."
+  },
+  {
+    "id": "provision_stellarium_eel_skewer",
+    "name": "Stellarium Eel Skewer",
+    "category": "provision",
+    "method": "field_cook",
+    "ingredients": {
+      "stellarium_eel": 1,
+      "fiery_pepper": 1
+    },
+    "tools": [
+      "portable_stove"
+    ],
+    "result": "stellarium_eel_skewer",
+    "description": "Char a mineral-rich runoff eel over a field burner until the scales stop sparking.",
+    "success_message": "You cook a Stellarium Eel Skewer that snaps with heat."
+  },
+  {
+    "id": "provision_frequency_tetra_consomme",
+    "name": "Frequency Tetra Consomme",
+    "category": "provision",
+    "method": "field_cook",
+    "ingredients": {
+      "frequency_tetra": 1,
+      "chime_minnow": 1,
+      "herb": 1
+    },
+    "tools": [
+      "portable_stove"
+    ],
+    "result": "frequency_tetra_consomme",
+    "description": "Clarify false-tide fish and herbs into a precise broth that rings at the edge of hearing.",
+    "success_message": "You finish a Frequency Tetra Consomme that hums in the cup."
   },
   {
     "id": "mod_source_resin",
@@ -226,5 +320,119 @@
     "result": "rapid_capacitor",
     "description": "Combine scrap metal and insulated wiring into an overclocked rapid capacitor.",
     "success_message": "You assemble a humming Rapid Capacitor."
+  },
+  {
+    "id": "mod_photon_core",
+    "name": "Photon Core Mod",
+    "category": "gear",
+    "method": "mod",
+    "base": "source_resin",
+    "components": [
+      "focusing_lens",
+      "wiring_bundle"
+    ],
+    "ingredients": {
+      "source_resin": 1,
+      "focusing_lens": 1,
+      "wiring_bundle": 1
+    },
+    "result": "photon_core_mod",
+    "description": "Tune Source Resin through a focusing lens to create a compact thermal light-core.",
+    "success_message": "You align the Photon Core Mod until its light holds steady."
+  },
+  {
+    "id": "mod_nanite_plating",
+    "name": "Nanite Plating Mod",
+    "category": "gear",
+    "method": "mod",
+    "base": "armor_plating_mk_i",
+    "components": [
+      "nano_filament",
+      "nano_filament"
+    ],
+    "ingredients": {
+      "armor_plating_mk_i": 1,
+      "nano_filament": 2,
+      "scrap_metal": 1
+    },
+    "result": "nanite_plating_mod",
+    "description": "Thread nano-filament through armor plating so the surface can knit itself under pressure.",
+    "success_message": "You finish a plate that flexes before your fingers touch it."
+  },
+  {
+    "id": "mod_resonance_capacitor",
+    "name": "Resonance Capacitor Mod",
+    "category": "gear",
+    "method": "mod",
+    "base": "rapid_capacitor",
+    "components": [
+      "source_resin",
+      "nano_filament"
+    ],
+    "ingredients": {
+      "rapid_capacitor": 1,
+      "source_resin": 1,
+      "nano_filament": 1
+    },
+    "result": "resonance_capacitor_mod",
+    "description": "Stabilize an overclocked capacitor with Source Resin and nano-filament.",
+    "success_message": "You build a Resonance Capacitor Mod that charges in silence."
+  },
+  {
+    "id": "gear_reinforced_resin_rod",
+    "name": "Reinforced Resin Rod",
+    "category": "gear",
+    "method": "mod",
+    "base": "fiberglass_rod",
+    "components": [
+      "wiring_bundle",
+      "circuit_board"
+    ],
+    "ingredients": {
+      "fiberglass_rod": 1,
+      "wiring_bundle": 1,
+      "circuit_board": 1
+    },
+    "result": "reinforced_resin_rod",
+    "description": "Rewire a Resin Rod with a bite sensor and reinforced guide loops for heavier runoff catches.",
+    "success_message": "You tune a Reinforced Resin Rod that holds steady under pressure."
+  },
+  {
+    "id": "gear_harmonic_carbon_rod",
+    "name": "Harmonic Carbon Rod",
+    "category": "gear",
+    "method": "mod",
+    "base": "carbon_rod",
+    "components": [
+      "source_resin",
+      "nano_filament"
+    ],
+    "ingredients": {
+      "carbon_rod": 1,
+      "source_resin": 1,
+      "nano_filament": 1
+    },
+    "result": "harmonic_carbon_rod",
+    "description": "Stabilize carbon thread with Source Resin and nano-filament so the rod can ride standing waves.",
+    "success_message": "You build a Harmonic Carbon Rod that flexes in time with the air."
+  },
+  {
+    "id": "gear_harmonic_spool_lure",
+    "name": "Harmonic Spool Lure",
+    "category": "gear",
+    "method": "mod",
+    "base": "mystery_lure",
+    "components": [
+      "chime_minnow",
+      "wiring_bundle"
+    ],
+    "ingredients": {
+      "mystery_lure": 1,
+      "chime_minnow": 1,
+      "wiring_bundle": 1
+    },
+    "result": "harmonic_spool_lure",
+    "description": "Tune a Ghost-Signal Lure with a chime minnow bone and insulated wire so it clicks across layered frequencies.",
+    "success_message": "You finish a Harmonic Spool Lure that taps out three rhythms at once."
   }
 ]

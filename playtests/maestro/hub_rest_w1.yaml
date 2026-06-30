@@ -1,0 +1,25 @@
+appId: com.junewiregames.starborn.prealpha
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "Debug Scenarios"
+    timeout: 60000
+- tapOn: "Debug Scenarios"
+- extendedWaitUntil:
+    visible: "Search world, quest, room, or system"
+    timeout: 10000
+- tapOn: "Search world, quest, room, or system"
+- inputText: "W1 Rest"
+- hideKeyboard
+- tapOn: "Hub QA / W1 Rest"
+- extendedWaitUntil:
+    visible: "bunk"
+    timeout: 30000
+- assertVisible: "bunk"
+- tapOn: "bunk"
+- extendedWaitUntil:
+    visible: "Nova rests in the narrow bunk.*"
+    timeout: 15000
+- assertNotVisible: "Cook"
+- takeScreenshot: hub-rest-w1-rest

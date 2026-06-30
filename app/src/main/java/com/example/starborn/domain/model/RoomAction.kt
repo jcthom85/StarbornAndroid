@@ -44,6 +44,24 @@ data class FirstAidAction(
     val actionEvent: String? = null
 ) : RoomAction
 
+data class RestStopAction(
+    override val name: String,
+    @Json(name = "rest_event")
+    val restEvent: String? = null,
+    @Json(name = "cook_source")
+    val cookSource: String? = null,
+    @Json(name = "message")
+    val message: String? = null
+) : RoomAction
+
+data class TuningPuzzleAction(
+    override val name: String,
+    @Json(name = "puzzle_id")
+    val puzzleId: String,
+    @Json(name = "condition_unmet_message")
+    val conditionUnmetMessage: String? = null
+) : RoomAction
+
 data class ShopAction(
     override val name: String,
     @Json(name = "shop_id")
@@ -98,6 +116,8 @@ fun RoomAction.actionKey(): String = when (this) {
     is ToggleAction -> listOf("toggle", stateKey, actionEventOn, actionEventOff, name).joinToString(":")
     is TinkeringAction -> listOf("tinkering", shopId, name).joinToString(":")
     is FirstAidAction -> listOf("first_aid", stationId, actionEvent, name).joinToString(":")
+    is RestStopAction -> listOf("rest_stop", restEvent, cookSource, name).joinToString(":")
+    is TuningPuzzleAction -> listOf("tuning_puzzle", puzzleId, name).joinToString(":")
     is ShopAction -> listOf("shop", shopId, actionEvent, name).joinToString(":")
     is ContainerAction -> listOf("container", stateKey, actionEvent, name).joinToString(":")
     is NpcAction -> listOf("npc", npcKey, interactionLabel, name).joinToString(":")
@@ -108,6 +128,8 @@ fun RoomAction.actionKey(): String = when (this) {
 fun RoomAction.serviceTag(): String? = when (this) {
     is TinkeringAction -> "Tinkering"
     is FirstAidAction -> "First Aid"
+    is RestStopAction -> "Rest"
+    is TuningPuzzleAction -> "Tuning"
     is ShopAction -> "Shop"
     is NpcAction -> interactionLabel
     is EnemyAction -> label

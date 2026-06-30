@@ -11,6 +11,7 @@ import com.example.starborn.domain.model.Skill
 import com.example.starborn.domain.model.SkillTreeDefinition
 import com.example.starborn.domain.model.SkillTreeNode
 import com.example.starborn.domain.model.StatusDefinition
+import com.example.starborn.domain.model.TuningPuzzle
 import com.example.starborn.domain.model.World
 import com.example.starborn.domain.leveling.LevelingData
 import com.example.starborn.domain.leveling.ProgressionData
@@ -40,6 +41,8 @@ class WorldAssetDataSource(
     fun loadSkills(): List<Skill> = assetReader.readList("skills.json")
 
     fun loadStatuses(): List<StatusDefinition> = assetReader.readList("statuses.json")
+
+    fun loadTuningPuzzles(): List<TuningPuzzle> = assetReader.readList("tuning_puzzles.json")
 
     fun loadLevelingData(): LevelingData? = assetReader.readObject("leveling_data.json")
 

@@ -1,106 +1,105 @@
-# Starborn: World 3 Hub 2 (Upper City) Implementation Plan
+# Implementation Plan: Tinkering & Cooking Systems Upgrade
 
-> **Completed historical plan:** World 3 Hub 2 and all subsequent campaign hubs through the ending are implemented. Use `antigravity_handoff.md` for current priorities and `task.md` for the live checklist.
-
-This plan details the implementation strategy for introducing World 3 Hub 2 ("Upper City / Penthouse Heist") into the game. All changes will follow the data-driven model using the game's JSON configuration files.
-
-## Goal Description
-Implement the environments, quests, events, dialogues, items, and combat challenges for World 3 Hub 2: Upper City, detailing the heist setup, the split party infiltration mechanics, retrieving the Lens relic, the boss fight with the Administrator, and escaping the Spire to transition to World 4.
+This plan upgrades the Tinkering and Cooking systems in *Starborn* by combining Option A (adding non-consumed tool requirements, such as a portable stove, to recipes) and Option B (expanding late-game gear mods and integrating cooking with the Resonance Fishing system).
 
 ---
 
 ## User Review Required
 
 > [!IMPORTANT]
-> **Heist Mechanics & Party Split**
-> - **Infiltration Strategy:** The team splits up during `w3_mq13`. Zeke and Orion disable security from the laundry rooms, while Nova and Gh0st infiltrate the main lobby.
-> - **Source Art: Scan (True Sight):** Acquired upon picking up the Lens Relic in `w3_mq14`. It will allow scanning for hidden paths and analyzing corporate assassin weaknesses.
-> - **Transition to World 4:** Slipping through the sub-orbital shield at the end of the Administrator boss fight transitions the campaign to World 4 ("The Foundry").
-
----
-
-## Open Questions
-
-1. **Light Puzzle implementation:** Orion needs to solve a Light Puzzle in the Archive to acquire the Lens. We propose wiring this as a choice dialogue/interaction in the room where Orion must tune the Source to correct acoustic frequencies.
-2. **Shop/Lounge Integration:** The Exec Lounge node features a high-end shop. We should define a new shop in `shops.json` with higher-tier items/modifiers. Do you have specific premium accessories or mods you'd like added there?
+> **Tool Consumability:**
+> In this implementation, tools (e.g., `portable_stove`) are required in the player's inventory to craft/cook, but they are **not consumed** when the recipe is executed. Only the raw ingredients (e.g., `noodles`, `beast_meat`) will be consumed.
+> 
+> **Backwards Compatibility:**
+> The `TinkeringRecipe` constructor is updated with a default parameter for `tools` (`emptyList()`), ensuring that existing tests and Moshi parsers do not break.
 
 ---
 
 ## Proposed Changes
 
-We will register and build out all World 3 Hub 2 content across the following files:
+### 1. Domain Models & Parsing
 
-### World Configs & Topology
-#### [MODIFY] [hubs.json](file:///C:/Users/jctho/StudioProjects/StarbornAndroid/app/src/main/assets/hubs.json)
-- Register `hub_6_upper_city` ("Upper City") mapping to `world_3`.
+#### [MODIFY] [CraftingModels.kt](file:///C:/users/jctho/StudioProjects/StarbornAndroid/app/src/main/java/com/example/starborn/domain/model/CraftingModels.kt)
+*   Add a `tools` parameter to the `TinkeringRecipe` data class to declare non-consumed tool requirements:
+    ```kotlin
+    data class TinkeringRecipe(
+        val id: String,
+        val name: String,
+        val description: String? = null,
+        val category: String = "gear",
+        val method: String? = null,
+        val base: String? = null,
+        val components: List<String> = emptyList(),
+        val ingredients: Map<String, Int> = emptyMap(),
+        val result: String,
+        @Json(name = "result_quantity")
+        val resultQuantity: Int = 1,
+        @Json(name = "success_message")
+        val successMessage: String? = null,
+        val tools: List<String> = emptyList() // New field with default value for compatibility
+    )
+    ```
 
-#### [MODIFY] [hub_nodes.json](file:///C:/Users/jctho/StudioProjects/StarbornAndroid/app/src/main/assets/hub_nodes.json)
-- Register node coordinates and connections for Hub 6:
-  - `spire_laundry` (Laundry Service - Entry)
-  - `spire_skypark` (Skypark - Social/Breather)
-  - `spire_exec_lounge` (Exec Lounge - Shop)
-  - `spire_archive` (The Archive - Vault Climax)
-  - `spire_landing_pad` (Landing Pad - Boss Gate)
+---
 
-#### [MODIFY] [rooms.json](file:///C:/Users/jctho/StudioProjects/StarbornAndroid/app/src/main/assets/rooms.json)
-- Append room data for Upper City rooms:
-  - `spire_laundry_service` (concrete, pipes, steam, laundry chutes)
-  - `spire_skypark_dome` (pristine fake sun garden, velvet ropes)
-  - `spire_exec_lounge_bar` (floating bar, VIP booths)
-  - `spire_archive_vault` (glass floor, shard displays)
-  - `spire_landing_pad_roof` (windy rooftop launch pad)
-- Wire actions: `Disable sensors`, `Solve light puzzle`, `Initiate override`, `Launch Astra`.
+### 2. Crafting Service Logic
 
-### Quests & Logic
-#### [MODIFY] [quests.json](file:///C:/Users/jctho/StudioProjects/StarbornAndroid/app/src/main/assets/quests.json)
-- Add World 3 Hub 2 quests:
-  - `w3_mq13` / **Social Engineering** (Blend in, disable sensors, infiltrate lobby)
-  - `w3_mq14` / **The Lens** (Archive infiltration, light puzzle, steal relic)
-  - `w3_mq15` / **Burn Notice** (Escape alarm, defeat Administrator, fly to Foundry)
-  - `w3_sq14` / **Corporate Espionage** (Ledger theft side quest, reward: Passive Blackmail)
-  - `w3_sq15` / **Prototype Testing** (Weapon trial side quest, reward: Phase Rounds mod)
+#### [MODIFY] [CraftingService.kt](file:///C:/users/jctho/StudioProjects/StarbornAndroid/app/src/main/java/com/example/starborn/domain/crafting/CraftingService.kt)
+*   Update `canCraft(recipe: TinkeringRecipe)` to verify that the player possesses at least one of each required tool listed in the recipe's `tools` list:
+    ```kotlin
+    val hasIngredients = requirementCounts.all { (id, needed) -> (inventoryCounts[id] ?: 0) >= needed }
+    if (!hasIngredients) return false
 
-#### [MODIFY] [events.json](file:///C:/Users/jctho/StudioProjects/StarbornAndroid/app/src/main/assets/events.json)
-- Add transition event from MQ_12 to MQ_13.
-- Define Archive alarm trigger and Thorne's trap event (`EVT_W3_06`) venting the room.
-- Setup final launch of *The Astra* to warp player to World 4.
+    val hasTools = recipe.tools.all { tool ->
+        val normalizedTool = normalizeToken(tool)
+        (inventoryCounts[normalizedTool] ?: 0) >= 1
+    }
+    return hasTools
+    ```
+*   Update `craftTinkering(recipeId: String)` to return a clear error message `CraftingOutcome.Failure("Missing components or tools")` if the `canCraft` check fails.
 
-#### [MODIFY] [dialogue.json](file:///C:/Users/jctho/StudioProjects/StarbornAndroid/app/src/main/assets/dialogue.json)
-- Implement dialogues for the Curator in the Skypark, Zeke's console exorcism, Vale's compliance override broadcast, and Thorne's trap.
+---
 
-### Combat, Skills, and Items
-#### [MODIFY] [enemies.json](file:///C:/Users/jctho/StudioProjects/StarbornAndroid/app/src/main/assets/enemies.json)
-- Add new hostiles:
-  - `aero_drone` (flying stun drone)
-  - `corporate_assassin` (stealth critical striker)
-  - `heavy_mech` (flamethrower tank)
-  - `administrator_boss` (boss: summons drones and fires lasers)
+### 3. Game Assets: Items, Cooking & Late-game Mods
 
-#### [MODIFY] [items.json](file:///C:/Users/jctho/StudioProjects/StarbornAndroid/app/src/main/assets/items.json)
-- Add `the_lens` (relic item).
-- Add `encrypted_ledger` (quest item).
-- Add `phase_rounds` (weapon mod accessory).
+#### [MODIFY] [items.json](file:///C:/users/jctho/StudioProjects/StarbornAndroid/app/src/main/assets/items.json)
+*   **[NEW]** Add the `portable_stove` utility item:
+    ```json
+    {
+      "id": "portable_stove",
+      "name": "Portable Stove",
+      "description": "A compact thermal burner for cooking meals in the field. Reusable.",
+      "type": "utility",
+      "value": 150,
+      "buy_price": 300,
+      "rarity": "uncommon"
+    }
+    ```
+*   **[NEW]** Add new late-game gear mods: `photon_core_mod` (World 4), `nanite_plating_mod` (World 5), `resonance_capacitor_mod` (World 6).
+*   **[NEW]** Add new cooked fish dishes: `resonance_carp_stew`, `chime_minnow_broth`.
 
-### Scripts
-#### [MODIFY] [validate_room_presence.ps1](file:///C:/Users/jctho/StudioProjects/StarbornAndroid/scripts/validate_room_presence.ps1)
-- Append the new milestones (`ms_w3_mq13_complete`, `ms_w3_mq14_complete`, `ms_w3_mq15_complete`) to `$storyMilestoneOrder`.
+#### [MODIFY] [recipes_tinkering.json](file:///C:/users/jctho/StudioProjects/StarbornAndroid/app/src/main/assets/recipes_tinkering.json)
+*   Update all cooking recipes (`provision_spicy_ramen`, `provision_ration_soup`, `provision_glowfish_broth`) to require the `portable_stove` in `tools`.
+*   **[NEW]** Add recipes for the new late-game gear mods and new fish dishes.
 
 ---
 
 ## Verification Plan
 
 ### Automated Tests
-- Run Gradle checks to verify all world structures, progression paths, and dialogue configurations are valid:
-  ```powershell
-  .\gradlew.bat :app:runAssetIntegrity
-  ```
-- Author a new unit test suite [Hub4CriticalFlowTest.kt](file:///C:/Users/jctho/StudioProjects/StarbornAndroid/app/src/test/java/com/example/starborn/domain/dialogue/Hub4CriticalFlowTest.kt) (covering Hub 2 / Penthouse Heist flow):
-  - Simulates MQ_13 social engineering, sensor bypass, and lobby infiltration.
-  - Simulates MQ_14 Archive entry, puzzle resolution, and Lens acquisition.
-  - Simulates MQ_15 alarm breakout, Administrator boss encounter, and Astra launch warp to World 4.
-  - Simulates SQ_14 and SQ_15 completions and checks rewards.
+Run unit tests to verify that:
+1.  Recipes requiring a tool cannot be crafted if the tool is missing.
+2.  Recipes requiring a tool can be crafted if the tool is present.
+3.  The tool itself is **not consumed** during the crafting process.
+4.  Existing recipes without tools continue to craft correctly.
 
-### Manual Verification
-- Deploy build to a connected emulator.
-- Trigger transition warp to `spire_laundry_service`.
-- Test the dialogue triggers in Skypark and the boss battle on the Landing Pad.
+Execute tests using:
+```powershell
+.\gradlew.bat :app:testDebugUnitTest --tests "com.example.starborn.domain.crafting.CraftingServiceTest"
+```
+
+### Static Asset Verification
+Verify all assets compile and reference IDs correctly:
+```powershell
+.\gradlew.bat :app:runAssetIntegrity
+```

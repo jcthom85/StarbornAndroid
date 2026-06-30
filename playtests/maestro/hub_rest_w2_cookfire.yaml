@@ -1,0 +1,45 @@
+appId: com.junewiregames.starborn.prealpha
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "Debug Scenarios"
+    timeout: 60000
+- tapOn: "Debug Scenarios"
+- extendedWaitUntil:
+    visible: "Search world, quest, room, or system"
+    timeout: 10000
+- tapOn: "Search world, quest, room, or system"
+- inputText: "W2 Cookfire"
+- hideKeyboard
+- tapOn: "Hub QA / W2 Cookfire"
+- extendedWaitUntil:
+    visible: "Resonant Falls"
+    timeout: 30000
+- assertVisible: "sheltered cookfire"
+- tapOn: "sheltered cookfire"
+- extendedWaitUntil:
+    visible: "The falls mask the campfire.*"
+    timeout: 15000
+- assertNotVisible: "Cook"
+- tapOn: "Continue"
+- extendedWaitUntil:
+    visible: "DISMISS"
+    timeout: 10000
+- tapOn: "DISMISS"
+- extendedWaitUntil:
+    visible: "sheltered cookfire"
+    timeout: 10000
+- tapOn: "Open menu"
+- extendedWaitUntil:
+    visible: "FIELD MENU"
+    timeout: 10000
+- tapOn: "Field Kit"
+- assertVisible: "Portable Stove"
+- assertVisible: "Cook"
+- tapOn: "Cook"
+- extendedWaitUntil:
+    visible: "Field Kit"
+    timeout: 15000
+- assertVisible: "Food 7"
+- takeScreenshot: hub-rest-w2-rest

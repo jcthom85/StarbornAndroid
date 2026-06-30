@@ -1,0 +1,31 @@
+appId: com.junewiregames.starborn.prealpha
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "Debug Scenarios"
+    timeout: 60000
+- tapOn: "Debug Scenarios"
+- extendedWaitUntil:
+    visible: "Search world, quest, room, or system"
+    timeout: 10000
+- tapOn: "Search world, quest, room, or system"
+- inputText: "W6 Source"
+- hideKeyboard
+- tapOn: "Hub QA / W6 Source"
+- extendedWaitUntil:
+    visible: "The Campfire"
+    timeout: 30000
+- assertVisible: "song-fire"
+- assertVisible: "memory oasis"
+- tapOn: "memory oasis"
+- extendedWaitUntil:
+    visible: "The crew eats around the blue fire.*"
+    timeout: 10000
+- assertNotVisible: "Cook"
+- tapOn: "Continue"
+- extendedWaitUntil:
+    visible: "The Campfire"
+    timeout: 10000
+- assertVisible: "song-fire"
+- takeScreenshot: hub-source-rest-story

@@ -166,10 +166,12 @@ import com.example.starborn.domain.model.FirstAidAction
 import com.example.starborn.data.local.Theme
 import com.example.starborn.domain.model.Room
 import com.example.starborn.domain.model.RoomAction
+import com.example.starborn.domain.model.RestStopAction
 import com.example.starborn.domain.model.ShopAction
 import com.example.starborn.domain.model.TinkeringAction
 import com.example.starborn.domain.model.GenericAction
 import com.example.starborn.domain.model.ToggleAction
+import com.example.starborn.domain.model.TuningPuzzleAction
 import com.example.starborn.domain.model.Equipment
 import com.example.starborn.domain.model.Item
 import com.example.starborn.domain.model.actionKey
@@ -219,6 +221,7 @@ import com.example.starborn.feature.exploration.viewmodel.ShopDialogueChoiceUi
 import com.example.starborn.feature.exploration.viewmodel.ShopDialogueLineUi
 import com.example.starborn.feature.exploration.viewmodel.ShopGreetingUi
 import com.example.starborn.feature.exploration.viewmodel.TogglePromptUi
+import com.example.starborn.feature.exploration.viewmodel.TuningPuzzleUi
 import com.example.starborn.feature.exploration.viewmodel.VisualEnemyParty
 import com.example.starborn.feature.exploration.viewmodel.SettingsUiState
 import com.example.starborn.feature.exploration.viewmodel.SkillTreeBranchUi
@@ -275,6 +278,7 @@ fun ExplorationScreen(
     modifier: Modifier = Modifier,
     onEnemySelected: (List<String>) -> Unit = {},
     onOpenTinkering: (String?) -> Unit = {},
+    onOpenFieldKit: () -> Unit = {},
     onOpenFirstAid: (String?) -> Unit = {},
     onOpenFishing: (String?) -> Unit = {},
     onOpenShop: (String) -> Unit = {},
@@ -298,6 +302,7 @@ fun ExplorationScreen(
     val blockingOverlayActive =
         uiState.isMenuOverlayVisible ||
             uiState.togglePrompt != null ||
+            uiState.tuningPuzzle != null ||
             uiState.activeDialogue != null ||
             uiState.shopGreeting != null ||
             uiState.narrationPrompt != null ||
@@ -315,6 +320,7 @@ fun ExplorationScreen(
     val questDetailBlockingOverlayActive =
         uiState.isMenuOverlayVisible ||
             uiState.togglePrompt != null ||
+            uiState.tuningPuzzle != null ||
             uiState.activeDialogue != null ||
             uiState.shopGreeting != null ||
             uiState.narrationPrompt != null ||
@@ -363,7 +369,7 @@ fun ExplorationScreen(
                 is ExplorationEvent.GroundItemSpawned -> viewModel.showStatusMessage(event.message)
                 is ExplorationEvent.RoomSearchUnlocked -> viewModel.showStatusMessage(event.note ?: "A hidden stash is now accessible")
                 is ExplorationEvent.ItemUsed -> viewModel.showStatusMessage(event.message ?: formatItemUseResult(event.result))
-                is ExplorationEvent.OpenTinkering -> onOpenTinkering(event.shopId)
+                is ExplorationEvent.OpenTinkering -> onOpenTinkering(event.sourceId)
                 is ExplorationEvent.OpenFirstAid -> onOpenFirstAid(event.stationId)
                 is ExplorationEvent.OpenFishing -> onOpenFishing(event.zoneId)
                 is ExplorationEvent.OpenShop -> onOpenShop(event.shopId)
@@ -606,6 +612,28 @@ fun ExplorationScreen(
                             )
                         }
                     }
+                    is RestStopAction -> {
+                        val key = "rest:${action.restEvent.orEmpty()}:${action.cookSource.orEmpty()}"
+                        if (unique.add(key)) {
+                            val label = action.name.takeIf { it.isNotBlank() } ?: "Rest"
+                            items += QuickMenuAction(
+                                iconRes = R.drawable.cooking_icon,
+                                label = label,
+                                roomAction = action
+                            )
+                        }
+                    }
+                    is TuningPuzzleAction -> {
+                        val key = "tuning:${action.puzzleId}"
+                        if (unique.add(key)) {
+                            val label = action.name.takeIf { it.isNotBlank() } ?: "Tuning"
+                            items += QuickMenuAction(
+                                iconRes = R.drawable.tinkering_icon,
+                                label = label,
+                                roomAction = action
+                            )
+                        }
+                    }
                     is GenericAction -> {
                         val type = action.type.lowercase(Locale.getDefault())
                         if (type.contains("fish")) {
@@ -765,6 +793,15 @@ fun ExplorationScreen(
                 modifier = Modifier.align(Alignment.Center)
             )
         }
+        uiState.tuningPuzzle?.let { puzzle ->
+            TuningPuzzleDialog(
+                puzzle = puzzle,
+                onSliderChange = { sliderId, value -> viewModel.updateTuningSlider(sliderId, value) },
+                onSubmit = { viewModel.submitTuningPuzzle() },
+                onDismiss = { viewModel.dismissTuningPuzzle() },
+                modifier = Modifier.align(Alignment.Center)
+            )
+        }
         uiState.activeDialogue?.let { dialogue ->
             DialogueOverlay(
                 dialogue = dialogue,
@@ -847,6 +884,10 @@ fun ExplorationScreen(
                 },
                 onOpenFullMap = {
                     viewModel.openFullMapOverlay()
+                },
+                onOpenFieldKit = {
+                    viewModel.closeMenuOverlay()
+                    onOpenFieldKit()
                 },
                 settings = uiState.settings,
                 onMusicVolumeChange = { viewModel.updateMusicVolume(it) },
@@ -1735,6 +1776,7 @@ private fun MenuOverlay(
     onOpenJournal: () -> Unit,
     onOpenMapLegend: () -> Unit,
     onOpenFullMap: () -> Unit,
+    onOpenFieldKit: () -> Unit,
     settings: SettingsUiState,
     onMusicVolumeChange: (Float) -> Unit,
     onSfxVolumeChange: (Float) -> Unit,
@@ -1938,6 +1980,7 @@ private fun MenuOverlay(
                         onOpenJournal = onOpenJournal,
                         onOpenMapLegend = onOpenMapLegend,
                         onOpenFullMap = onOpenFullMap,
+                        onOpenFieldKit = onOpenFieldKit,
                         onMusicVolumeChange = onMusicVolumeChange,
                         onSfxVolumeChange = onSfxVolumeChange,
                         onVoiceVolumeChange = onVoiceVolumeChange,
@@ -2085,6 +2128,62 @@ private fun MenuTabChip(
 }
 
 @Composable
+private fun TuningPuzzleDialog(
+    puzzle: TuningPuzzleUi,
+    onSliderChange: (String, Float) -> Unit,
+    onSubmit: () -> Unit,
+    onDismiss: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        modifier = modifier,
+        title = { Text(puzzle.title) },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
+                Text(puzzle.prompt)
+                puzzle.feedback?.takeIf { it.isNotBlank() }?.let { feedback ->
+                    Text(
+                        text = feedback,
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+                puzzle.sliders.forEach { slider ->
+                    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                        val valueLabel = buildString {
+                            append(slider.label)
+                            append(": ")
+                            append(slider.value.roundToInt())
+                            slider.unit?.takeIf { it.isNotBlank() }?.let { append(it) }
+                        }
+                        Text(
+                            text = valueLabel,
+                            style = MaterialTheme.typography.labelLarge
+                        )
+                        Slider(
+                            value = slider.value,
+                            onValueChange = { onSliderChange(slider.id, it) },
+                            valueRange = slider.min..slider.max
+                        )
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onSubmit) {
+                Text("Tune")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Cancel")
+            }
+        }
+    )
+}
+
+@Composable
 private fun MenuTabContentArea(
     tab: MenuTab,
     accentColor: Color,
@@ -2103,6 +2202,7 @@ private fun MenuTabContentArea(
     onOpenJournal: () -> Unit,
     onOpenMapLegend: () -> Unit,
     onOpenFullMap: () -> Unit,
+    onOpenFieldKit: () -> Unit,
     onMusicVolumeChange: (Float) -> Unit,
     onSfxVolumeChange: (Float) -> Unit,
     onVoiceVolumeChange: (Float) -> Unit,
@@ -2152,6 +2252,11 @@ private fun MenuTabContentArea(
                 onUseConsumable = onUseInventoryItem,
                 creditsLabel = creditsLabel
             )
+            MenuTab.FIELD_KIT -> FieldKitTabContent(
+                accentColor = accentColor,
+                borderColor = borderColor,
+                onOpenFieldKit = onOpenFieldKit
+            )
             MenuTab.JOURNAL -> JournalTabContent(
                 trackedQuest = trackedQuest,
                 activeQuests = activeQuests,
@@ -2190,6 +2295,42 @@ private fun MenuTabContentArea(
                 onSaveGame = onSaveGame,
                 onLoadGame = onLoadGame
             )
+        }
+    }
+}
+
+@Composable
+private fun FieldKitTabContent(
+    accentColor: Color,
+    borderColor: Color,
+    onOpenFieldKit: () -> Unit
+) {
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(12.dp),
+        color = Color(0xFF061018).copy(alpha = 0.44f),
+        border = BorderStroke(1.dp, borderColor.copy(alpha = 0.45f))
+    ) {
+        Column(
+            modifier = Modifier.padding(14.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Text(
+                text = "Portable Stove",
+                style = MaterialTheme.typography.titleMedium,
+                color = Color.White
+            )
+            Button(
+                onClick = onOpenFieldKit,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = accentColor.copy(alpha = 0.22f),
+                    contentColor = Color.White
+                ),
+                border = BorderStroke(1.dp, accentColor.copy(alpha = 0.55f)),
+                shape = RoundedCornerShape(10.dp)
+            ) {
+                Text("Cook")
+            }
         }
     }
 }
@@ -3064,6 +3205,7 @@ private fun MenuToggleButton(
         modifier = modifier
             .height(54.dp)
             .widthIn(min = 106.dp)
+            .semantics { contentDescription = description }
             .graphicsLayer { this.alpha = alpha }
             .clickable(enabled = enabled, onClick = onToggle),
         shape = RoundedCornerShape(14.dp),
@@ -3930,6 +4072,8 @@ private fun actionLabelFallback(action: RoomAction): String = when (action) {
     is ToggleAction -> "Toggle"
     is TinkeringAction -> "Tinkering"
     is FirstAidAction -> "First Aid"
+    is RestStopAction -> "Rest"
+    is TuningPuzzleAction -> "Tune"
     is ShopAction -> "Shop"
     is GenericAction -> action.type.ifBlank { "Action" }.replaceFirstChar { ch ->
         if (ch.isLowerCase()) ch.titlecase(Locale.getDefault()) else ch.toString()
@@ -4950,7 +5094,8 @@ fun resolveRoomDescription(
 private fun RoomAction.isInlineDescriptionAction(): Boolean = when (this) {
     is ShopAction,
     is TinkeringAction,
-    is FirstAidAction -> false
+    is FirstAidAction,
+    is RestStopAction -> false
     is GenericAction -> !type.equals("fish", ignoreCase = true) &&
         !type.equals("fishing", ignoreCase = true)
     else -> true

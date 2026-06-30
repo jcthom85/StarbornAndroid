@@ -1337,6 +1337,15 @@
     }
   },
   {
+    "id": "portable_stove",
+    "name": "Portable Stove",
+    "description": "A compact thermal burner for cooking meals in the field. Reusable.",
+    "type": "utility",
+    "value": 150,
+    "buy_price": 300,
+    "rarity": "uncommon"
+  },
+  {
     "id": "energy_core",
     "name": "Energy Core",
     "aliases": [
@@ -1517,6 +1526,24 @@
     "rarity": "rare"
   },
   {
+    "id": "reinforced_resin_rod",
+    "name": "Reinforced Resin Rod",
+    "description": "A rewired resin rod with a stabilized bite sensor for heavier runoff catches.",
+    "type": "fishing_rod",
+    "value": 240,
+    "buy_price": 480,
+    "rarity": "rare"
+  },
+  {
+    "id": "harmonic_carbon_rod",
+    "name": "Harmonic Carbon Rod",
+    "description": "A carbon-thread rod tuned to ride standing waves without tearing the line apart.",
+    "type": "fishing_rod",
+    "value": 420,
+    "buy_price": 840,
+    "rarity": "epic"
+  },
+  {
     "id": "basic_lure",
     "name": "Plain Chime Lure",
     "description": "A simple lure that clicks faintly in moving water.",
@@ -1544,6 +1571,15 @@
     "rarity": "rare"
   },
   {
+    "id": "harmonic_spool_lure",
+    "name": "Harmonic Spool Lure",
+    "description": "A tuned lure that clicks in layered frequencies, drawing fish that hunt by vibration.",
+    "type": "fishing_lure",
+    "value": 130,
+    "buy_price": 260,
+    "rarity": "epic"
+  },
+  {
     "id": "raw_glowfish",
     "name": "Raw Glowfish",
     "description": "A small fish with mineral light under its skin. Useful for provisions.",
@@ -1569,6 +1605,24 @@
     "value": 65,
     "buy_price": 130,
     "rarity": "rare"
+  },
+  {
+    "id": "stellarium_eel",
+    "name": "Stellarium Eel",
+    "description": "A blind runoff eel with mineral scales that glitter like ore dust.",
+    "type": "ingredient",
+    "value": 44,
+    "buy_price": 88,
+    "rarity": "uncommon"
+  },
+  {
+    "id": "frequency_tetra",
+    "name": "Frequency Tetra",
+    "description": "A tiny false-tide fish that vibrates between notes when held.",
+    "type": "ingredient",
+    "value": 110,
+    "buy_price": 220,
+    "rarity": "epic"
   },
   {
     "id": "old_boot",
@@ -1605,6 +1659,82 @@
         {
           "stat": "accuracy",
           "value": 5,
+          "duration": 2
+        }
+      ]
+    }
+  },
+  {
+    "id": "resonance_carp_stew",
+    "name": "Resonance Carp Stew",
+    "description": "A deep, humming stew that settles the pulse. Restores 120 HP and improves focus briefly.",
+    "type": "consumable",
+    "value": 120,
+    "buy_price": 240,
+    "rarity": "rare",
+    "effect": {
+      "restore_hp": 120,
+      "buffs": [
+        {
+          "stat": "focus",
+          "value": 6,
+          "duration": 2
+        }
+      ]
+    }
+  },
+  {
+    "id": "chime_minnow_broth",
+    "name": "Chime Minnow Broth",
+    "description": "A clear broth that rings softly in the cup. Restores 90 HP and improves luck briefly.",
+    "type": "consumable",
+    "value": 145,
+    "buy_price": 290,
+    "rarity": "rare",
+    "effect": {
+      "restore_hp": 90,
+      "buffs": [
+        {
+          "stat": "luck",
+          "value": 8,
+          "duration": 2
+        }
+      ]
+    }
+  },
+  {
+    "id": "stellarium_eel_skewer",
+    "name": "Stellarium Eel Skewer",
+    "description": "Charred runoff eel glazed with pepper oil. Restores 100 HP and improves defense briefly.",
+    "type": "consumable",
+    "value": 115,
+    "buy_price": 230,
+    "rarity": "rare",
+    "effect": {
+      "restore_hp": 100,
+      "buffs": [
+        {
+          "stat": "defense",
+          "value": 5,
+          "duration": 2
+        }
+      ]
+    }
+  },
+  {
+    "id": "frequency_tetra_consomme",
+    "name": "Frequency Tetra Consomme",
+    "description": "A precise, high-note broth that steadies the whole body. Restores 140 HP and improves evasion briefly.",
+    "type": "consumable",
+    "value": 190,
+    "buy_price": 380,
+    "rarity": "epic",
+    "effect": {
+      "restore_hp": 140,
+      "buffs": [
+        {
+          "stat": "evasion",
+          "value": 8,
           "duration": 2
         }
       ]
@@ -2245,6 +2375,57 @@
         "speed": 5,
         "agility": 3
       }
+    }
+  },
+  {
+    "id": "photon_core_mod",
+    "name": "Photon Core Mod",
+    "description": "A compact light-core that sharpens Source channels into clean thermal bursts.",
+    "type": "mod",
+    "value": 420,
+    "buy_price": 840,
+    "rarity": "epic",
+    "equipment": {
+      "slot": "mod",
+      "stat_mods": {
+        "focus": 5,
+        "accuracy": 4
+      },
+      "attack_element": "burn"
+    }
+  },
+  {
+    "id": "nanite_plating_mod",
+    "name": "Nanite Plating Mod",
+    "description": "Self-knit armor plating that spreads impact across a living mesh of microfilaments.",
+    "type": "mod",
+    "value": 460,
+    "buy_price": 920,
+    "rarity": "epic",
+    "equipment": {
+      "slot": "mod",
+      "stat_mods": {
+        "defense": 7,
+        "vitality": 4
+      }
+    }
+  },
+  {
+    "id": "resonance_capacitor_mod",
+    "name": "Resonance Capacitor Mod",
+    "description": "A late Source capacitor that stores intent as charge, then releases it at the moment of impact.",
+    "type": "mod",
+    "value": 520,
+    "buy_price": 1040,
+    "rarity": "epic",
+    "equipment": {
+      "slot": "mod",
+      "stat_mods": {
+        "focus": 5,
+        "speed": 4,
+        "crit_rate": 3
+      },
+      "attack_element": "source"
     }
   },
   {

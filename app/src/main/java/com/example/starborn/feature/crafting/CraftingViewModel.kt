@@ -224,6 +224,11 @@ class CraftingViewModel(
         _uiState.update { it.copy(filter = filter) }
     }
 
+    fun setInitialFilter(filter: TinkeringFilter?) {
+        if (filter == null) return
+        _uiState.update { it.copy(filter = filter) }
+    }
+
     fun selectMain(itemId: String?) {
         val bench = _uiState.value.bench.copy(
             mainItemId = itemId,
@@ -359,7 +364,7 @@ class CraftingViewModel(
 
 
     private fun requirementStatuses(recipe: TinkeringRecipe): List<TinkeringRequirementStatus> {
-        return craftingService.ingredientsFor(recipe).map { (item, needed) ->
+        val ingredientStatuses = craftingService.ingredientsFor(recipe).map { (item, needed) ->
             val available = inventoryQuantity(item)
             TinkeringRequirementStatus(
                 label = inventoryService.itemDetail(item)?.name ?: item,
@@ -367,6 +372,14 @@ class CraftingViewModel(
                 available = available
             )
         }
+        val toolStatuses = recipe.tools.filter { it.isNotBlank() }.map { tool ->
+            TinkeringRequirementStatus(
+                label = "Tool: ${inventoryService.itemDetail(tool)?.name ?: tool}",
+                required = 1,
+                available = inventoryQuantity(tool).coerceAtMost(1)
+            )
+        }
+        return ingredientStatuses + toolStatuses
     }
 
     private fun inventoryQuantity(idOrName: String): Int {

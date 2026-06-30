@@ -69,6 +69,7 @@ data class ExplorationUiState(
     val isMenuOverlayVisible: Boolean = false,
     val menuTab: MenuTab = MenuTab.INVENTORY,
     val togglePrompt: TogglePromptUi? = null,
+    val tuningPuzzle: TuningPuzzleUi? = null,
     val settings: SettingsUiState = SettingsUiState(),
     val inventoryPreview: List<InventoryPreviewItemUi> = emptyList(),
     val equippedItems: Map<String, String> = emptyMap(),
@@ -307,6 +308,27 @@ data class TogglePromptUi(
     val offMessage: String?
 )
 
+data class TuningPuzzleUi(
+    val id: String,
+    val title: String,
+    val prompt: String,
+    val sliders: List<TuningSliderUi>,
+    val failureHint: String,
+    val successMessage: String?,
+    val feedback: String? = null
+)
+
+data class TuningSliderUi(
+    val id: String,
+    val label: String,
+    val min: Float,
+    val max: Float,
+    val value: Float,
+    val target: Float,
+    val tolerance: Float,
+    val unit: String?
+)
+
 data class SettingsUiState(
     val musicVolume: Float = 1f,
     val sfxVolume: Float = 1f,
@@ -430,6 +452,7 @@ enum class ShopDialogueAction {
 
 enum class MenuTab {
     INVENTORY,
+    FIELD_KIT,
     JOURNAL,
     MAP,
     STATS,
@@ -437,6 +460,7 @@ enum class MenuTab {
 
     fun label(): String = when (this) {
         INVENTORY -> "Inventory"
+        FIELD_KIT -> "Field Kit"
         JOURNAL -> "Journal"
         MAP -> "Map"
         STATS -> "Stats"

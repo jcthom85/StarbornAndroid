@@ -18,6 +18,19 @@ class CraftingService(
         val requirements = ingredientsFor(recipe)
         if (requirements.isEmpty()) return false
         val requirementCounts = requirements.mapKeys { (item, _) -> normalizeToken(item) }
+        val inventoryCounts = inventoryTokenCounts()
+        val hasIngredients = requirementCounts.all { (id, needed) -> (inventoryCounts[id] ?: 0) >= needed }
+        if (!hasIngredients) return false
+        return recipe.tools.all { tool ->
+            val normalizedTool = normalizeToken(tool)
+            normalizedTool.isNotBlank() && (inventoryCounts[normalizedTool] ?: 0) >= 1
+        }
+    }
+
+    private fun normalizeToken(raw: String): String =
+        raw.trim().lowercase().replace("[^a-z0-9]+".toRegex(), "")
+
+    private fun inventoryTokenCounts(): Map<String, Int> {
         val inventoryCounts = mutableMapOf<String, Int>()
         inventoryService.state.value.forEach { entry ->
             val tokens = buildList {
@@ -29,11 +42,8 @@ class CraftingService(
                 inventoryCounts[key] = inventoryCounts.getOrDefault(key, 0) + entry.quantity
             }
         }
-        return requirementCounts.all { (id, needed) -> (inventoryCounts[id] ?: 0) >= needed }
+        return inventoryCounts
     }
-
-    private fun normalizeToken(raw: String): String =
-        raw.trim().lowercase().replace("[^a-z0-9]+".toRegex(), "")
 
     fun canCraft(recipe: FirstAidRecipe): Boolean = recipe.ingredients.all { (itemId, qty) ->
         inventoryService.hasItem(itemId, qty)
@@ -51,7 +61,7 @@ class CraftingService(
 
     fun craftTinkering(recipeId: String): CraftingOutcome {
         val recipe = tinkeringRecipes.find { it.id == recipeId } ?: return CraftingOutcome.Failure("Unknown recipe")
-        if (!canCraft(recipe)) return CraftingOutcome.Failure("Missing components")
+        if (!canCraft(recipe)) return CraftingOutcome.Failure("Missing components or tools")
         val requirements = ingredientsFor(recipe)
         if (!inventoryService.consumeItems(requirements)) return CraftingOutcome.Failure("Unable to consume components")
         val addedId = addCraftedItem(recipe)

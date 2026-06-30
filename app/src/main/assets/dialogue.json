@@ -678,7 +678,7 @@
   {
     "id": "bogs_w1_sq03_intro_1",
     "speaker": "Foreman Boggs",
-    "text": "You. Cutter girl. Loader's sitting idle and cargo's blocking my schedule.",
+    "text": "You. Cutter girl. Loader's sitting idle, cargo's blocking my schedule, and your certification log is blank.",
     "condition": "quest_completed:w1_mq01,quest_not_started:w1_sq03",
     "next": "bogs_w1_sq03_intro_2"
   },
@@ -691,7 +691,7 @@
   {
     "id": "bogs_w1_sq03_intro_3",
     "speaker": "Foreman Boggs",
-    "text": "Then move it faster. Shipment clock doesn't pause for feelings.",
+    "text": "Then move it faster. Shipment clock doesn't pause for feelings, and nobody gets Deep Elevator clearance without shield training.",
     "trigger": "start_quest:w1_sq03,track_quest:w1_sq03,set_quest_task_done:w1_sq03:talk_to_bogs,set_milestone:ms_w1_sq03_started"
   },
   {

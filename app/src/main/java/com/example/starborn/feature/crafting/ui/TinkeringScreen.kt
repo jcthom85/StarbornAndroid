@@ -90,6 +90,8 @@ fun TinkeringRoute(
     onBack: () -> Unit,
     onCrafted: (CraftingOutcome.Success) -> Unit,
     onClosed: () -> Unit,
+    source: String?,
+    initialFilter: TinkeringFilter? = null,
     promptManager: UIPromptManager,
     highContrastMode: Boolean,
     largeTouchTargets: Boolean,
@@ -100,6 +102,10 @@ fun TinkeringRoute(
     val promptState by promptManager.state.collectAsState()
     var announcement by remember { mutableStateOf<EventAnnouncementUi?>(null) }
     val accentColor = themeColor(theme?.accent, Color(0xFFF5B437))
+
+    LaunchedEffect(initialFilter) {
+        viewModel.setInitialFilter(initialFilter)
+    }
 
     LaunchedEffect(Unit) {
         launch {
@@ -134,6 +140,7 @@ fun TinkeringRoute(
             onScrap = viewModel::scrap,
             onFilterChange = viewModel::setFilter,
             onBack = onBack,
+            source = source,
             highContrastMode = highContrastMode,
             largeTouchTargets = largeTouchTargets,
             theme = theme,
@@ -172,6 +179,7 @@ private fun TinkeringScreen(
     onScrap: (String) -> Unit,
     onFilterChange: (TinkeringFilter) -> Unit,
     onBack: () -> Unit,
+    source: String?,
     highContrastMode: Boolean,
     largeTouchTargets: Boolean,
     theme: Theme?,
@@ -199,7 +207,10 @@ private fun TinkeringScreen(
     }
     var pickerTarget by remember { mutableStateOf<PickerTarget?>(null) }
     var scrapSelection by remember { mutableStateOf<String?>(null) }
-    var selectedSection by remember { mutableStateOf(TinkeringSection.Tinker) }
+    val fieldKitMode = source?.trim()?.equals("field_kit", ignoreCase = true) == true
+    var selectedSection by remember(source) {
+        mutableStateOf(if (fieldKitMode) TinkeringSection.Schematics else TinkeringSection.Tinker)
+    }
     var selectedRecipePreview by remember { mutableStateOf<TinkeringPreview?>(null) }
 
     StationBackground(
@@ -212,7 +223,7 @@ private fun TinkeringScreen(
             containerColor = Color.Transparent,
             topBar = {
                 StationHeader(
-                    title = "Jed's Bench",
+                    title = tinkeringTitle(source),
                     iconRes = R.drawable.tinkering_icon,
                     onBack = onBack,
                     highContrastMode = highContrastMode,
@@ -231,7 +242,8 @@ private fun TinkeringScreen(
                 SectionTabs(
                     selected = selectedSection,
                     onSelect = { selectedSection = it },
-                    colors = colors
+                    colors = colors,
+                    source = source
                 )
                 if (state.scrapChoices.isNotEmpty() && scrapSelection == null) {
                     scrapSelection = state.scrapChoices.firstOrNull()?.id
@@ -312,14 +324,23 @@ private fun TinkeringScreen(
     }
 }
 
+private fun tinkeringTitle(source: String?): String = when (source?.trim()?.lowercase()) {
+    "jeds_bench", "jed_bench", "workshop_floor" -> "Jed's Bench"
+    "astra_bench" -> "Astra Bench"
+    "field_kit" -> "Field Kit"
+    else -> "Field Kit"
+}
+
 @Composable
 private fun SectionTabs(
     selected: TinkeringSection,
     onSelect: (TinkeringSection) -> Unit,
-    colors: TinkeringColors
+    colors: TinkeringColors,
+    source: String?
 ) {
+    val fieldKitMode = source?.trim()?.equals("field_kit", ignoreCase = true) == true
     val tabs = listOf(
-        TinkeringSection.Tinker to "Workbench",
+        TinkeringSection.Tinker to if (fieldKitMode) "Field Kit" else "Workbench",
         TinkeringSection.Schematics to "Schematics",
         TinkeringSection.Scrap to "Reclaim"
     )
@@ -1499,6 +1520,7 @@ fun TinkeringScreenPreview() {
         onScrap = {},
         onFilterChange = {},
         onBack = {},
+        source = "jeds_bench",
         highContrastMode = false,
         largeTouchTargets = false,
         theme = null

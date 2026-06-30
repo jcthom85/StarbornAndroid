@@ -17,7 +17,8 @@ data class TinkeringRecipe(
     @Json(name = "result_quantity")
     val resultQuantity: Int = 1,
     @Json(name = "success_message")
-    val successMessage: String? = null
+    val successMessage: String? = null,
+    val tools: List<String> = emptyList()
 )
 
 @JsonClass(generateAdapter = true)

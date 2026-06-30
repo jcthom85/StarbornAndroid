@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "2",
-    "description": "Sector 9 fishing data for glow-water stream catches."
+    "description": "Fishing data for glow-water, Spire runoff, and Ring false-tide catches."
   },
   "rods": [
     {
@@ -24,6 +24,20 @@
       "description": "A tuned carbon rod that handles sudden glow-water surges.",
       "fishing_power": 1.55,
       "stability": 1.55
+    },
+    {
+      "id": "reinforced_resin_rod",
+      "name": "Reinforced Resin Rod",
+      "description": "A rewired resin rod with a stabilized bite sensor for heavier runoff catches.",
+      "fishing_power": 2.1,
+      "stability": 2.05
+    },
+    {
+      "id": "harmonic_carbon_rod",
+      "name": "Harmonic Carbon Rod",
+      "description": "A carbon-thread rod tuned to ride standing waves without tearing the line apart.",
+      "fishing_power": 3.05,
+      "stability": 2.8
     }
   ],
   "lures": [
@@ -34,10 +48,12 @@
       "rarity_bonus": 0.0,
       "attracts": [
         "raw_glowfish",
-        "old_boot"
+        "old_boot",
+        "stellarium_eel"
       ],
       "zone_bonus": {
-        "sector9_stream": 1
+        "sector9_stream": 1,
+        "spire_runoff": 1
       }
     },
     {
@@ -47,10 +63,13 @@
       "rarity_bonus": 0.2,
       "attracts": [
         "resonance_carp",
-        "chime_minnow"
+        "chime_minnow",
+        "stellarium_eel"
       ],
       "zone_bonus": {
-        "sector9_stream": 2
+        "sector9_stream": 2,
+        "spire_runoff": 2,
+        "orbital_false_tide": 1
       }
     },
     {
@@ -60,10 +79,28 @@
       "rarity_bonus": 0.35,
       "attracts": [
         "chime_minnow",
-        "resonance_carp"
+        "resonance_carp",
+        "frequency_tetra"
       ],
       "zone_bonus": {
-        "sector9_stream": 3
+        "sector9_stream": 3,
+        "spire_runoff": 2,
+        "orbital_false_tide": 3
+      }
+    },
+    {
+      "id": "harmonic_spool_lure",
+      "name": "Harmonic Spool Lure",
+      "description": "A tuned lure that clicks in layered frequencies, drawing fish that hunt by vibration.",
+      "rarity_bonus": 0.5,
+      "attracts": [
+        "frequency_tetra",
+        "stellarium_eel",
+        "chime_minnow"
+      ],
+      "zone_bonus": {
+        "spire_runoff": 3,
+        "orbital_false_tide": 4
       }
     }
   ],
@@ -93,6 +130,64 @@
         "rarity": "rare",
         "behavior_id": "erratic_burst"
       }
+    ],
+    "spire_runoff": [
+      {
+        "item": "raw_glowfish",
+        "weight": 34,
+        "rarity": "common",
+        "behavior_id": "gentle_wobble"
+      },
+      {
+        "item": "stellarium_eel",
+        "weight": 32,
+        "rarity": "uncommon",
+        "behavior_id": "blind_drift"
+      },
+      {
+        "item": "old_boot",
+        "weight": 16,
+        "rarity": "junk",
+        "behavior_id": "gentle_wobble"
+      },
+      {
+        "item": "chime_minnow",
+        "weight": 8,
+        "rarity": "rare",
+        "behavior_id": "erratic_burst"
+      }
+    ],
+    "orbital_false_tide": [
+      {
+        "item": "resonance_carp",
+        "weight": 26,
+        "rarity": "uncommon",
+        "behavior_id": "steady_pull"
+      },
+      {
+        "item": "stellarium_eel",
+        "weight": 18,
+        "rarity": "uncommon",
+        "behavior_id": "blind_drift"
+      },
+      {
+        "item": "chime_minnow",
+        "weight": 16,
+        "rarity": "rare",
+        "behavior_id": "erratic_burst"
+      },
+      {
+        "item": "frequency_tetra",
+        "weight": 10,
+        "rarity": "epic",
+        "behavior_id": "standing_wave"
+      },
+      {
+        "item": "old_boot",
+        "weight": 6,
+        "rarity": "junk",
+        "behavior_id": "gentle_wobble"
+      }
     ]
   },
   "fish_behaviors": {
@@ -113,6 +208,18 @@
       "base_pull": 0.36,
       "burst_pull": 0.34,
       "stamina": 15.0
+    },
+    "blind_drift": {
+      "pattern": "linear",
+      "base_pull": 0.48,
+      "burst_pull": 0.16,
+      "stamina": 14.0
+    },
+    "standing_wave": {
+      "pattern": "burst",
+      "base_pull": 0.52,
+      "burst_pull": 0.42,
+      "stamina": 18.0
     }
   },
   "minigame_rules": {

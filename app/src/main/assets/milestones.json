@@ -299,9 +299,9 @@
   },
   {
     "id": "ms_w1_sq03_started",
-    "name": "Cargo Collapse",
-    "description": "Foreman Boggs assigned Nova to clear the blocked cargo route.",
-    "toast": "Heavy Lifting started."
+    "name": "Required Training",
+    "description": "Foreman Boggs assigned Nova to mandatory shield training through the blocked cargo route.",
+    "toast": "Required training started."
   },
   {
     "id": "ms_w1_sq03_hydraulic_kick_ready",

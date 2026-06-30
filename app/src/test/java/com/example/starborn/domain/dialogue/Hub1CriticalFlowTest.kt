@@ -667,6 +667,7 @@ class Hub1CriticalFlowTest {
         assertTrue(finalState.completedMilestones.contains("ms_w2_mq01_complete"))
         assertTrue(finalState.activeQuests.contains("w2_mq02"))
         assertEquals("w2_mq02", finalState.trackedQuestId)
+        assertTrue(harness.tutorialRequests.contains("world2_debuffs" to "Stream Bank"))
     }
 
     private class Hub1Harness(

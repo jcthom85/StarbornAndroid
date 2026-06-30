@@ -12,7 +12,15 @@ sealed class NavigationDestination(val route: String) {
             return "combat/$payload"
         }
     }
-    data object Tinkering : NavigationDestination("tinkering")
+    data object Tinkering : NavigationDestination("tinkering?source={source}&filter={filter}") {
+        fun create(source: String?, filter: String? = null): String {
+            val params = buildList {
+                source?.takeIf { it.isNotBlank() }?.let { add("source=${Uri.encode(it)}") }
+                filter?.takeIf { it.isNotBlank() }?.let { add("filter=${Uri.encode(it)}") }
+            }
+            return if (params.isEmpty()) "tinkering" else "tinkering?${params.joinToString("&")}"
+        }
+    }
     data object FirstAid : NavigationDestination("first_aid")
     data object Fishing : NavigationDestination("fishing?zoneId={zoneId}") {
         fun create(zoneId: String?): String =

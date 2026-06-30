@@ -3158,6 +3158,11 @@
         "milestone": "ms_w2_mq01_complete"
       },
       {
+        "type": "system_tutorial",
+        "scene_id": "world2_debuffs",
+        "context": "Stream Bank"
+      },
+      {
         "type": "start_quest",
         "quest_id": "w2_mq02"
       },
@@ -9100,6 +9105,9 @@
     "conditions": [],
     "actions": [
       {
+        "type": "rest_party"
+      },
+      {
         "type": "give_item",
         "item_id": "painkillers",
         "quantity": 1
@@ -9118,6 +9126,9 @@
     },
     "conditions": [],
     "actions": [
+      {
+        "type": "rest_party"
+      },
       {
         "type": "give_item",
         "item_id": "painkillers",
@@ -9138,6 +9149,9 @@
     "conditions": [],
     "actions": [
       {
+        "type": "rest_party"
+      },
+      {
         "type": "give_item",
         "item_id": "painkillers",
         "quantity": 1
@@ -9156,6 +9170,9 @@
     },
     "conditions": [],
     "actions": [
+      {
+        "type": "rest_party"
+      },
       {
         "type": "give_item",
         "item_id": "painkillers",
@@ -9816,6 +9833,84 @@
       {
         "type": "show_message",
         "message": "The acoustic lock howls in three clashing bands. Orion can hear the resolving chord better than the console can display it."
+      }
+    ]
+  },
+  {
+    "id": "w1_rest_nova_bunk",
+    "description": "Restores Nova at her bunk.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w1_rest_nova_bunk"
+    },
+    "repeatable": true,
+    "actions": [
+      {
+        "type": "rest_party"
+      },
+      {
+        "type": "set_room_state",
+        "room_id": "pit_nova_bunk",
+        "state_key": "bunk_checked",
+        "value": true
+      },
+      {
+        "type": "show_message",
+        "message": "Nova rests in the narrow bunk until the colony hum settles into something almost gentle."
+      }
+    ]
+  },
+  {
+    "id": "w1_rest_mess_hall",
+    "description": "Restores the party at the Homestead mess hall.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w1_rest_mess_hall"
+    },
+    "repeatable": true,
+    "actions": [
+      {
+        "type": "rest_party"
+      },
+      {
+        "type": "show_message",
+        "message": "A hot ration and the mess hall's ugly old rhythm steady the body for another push."
+      }
+    ]
+  },
+  {
+    "id": "w6_rest_memory_oasis",
+    "description": "Restores the party at the Source memory oasis.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w6_rest_memory_oasis"
+    },
+    "repeatable": true,
+    "actions": [
+      {
+        "type": "rest_party"
+      },
+      {
+        "type": "show_message",
+        "message": "The crew eats around the blue fire while names, jokes, and old fears circle close enough to hold for one more breath."
+      }
+    ]
+  },
+  {
+    "id": "w6_rest_final_meal",
+    "description": "Restores the party before the final Source ascent.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w6_rest_final_meal"
+    },
+    "repeatable": true,
+    "actions": [
+      {
+        "type": "rest_party"
+      },
+      {
+        "type": "show_message",
+        "message": "The last meal is simple, warm, and already fraying at the edges of Nova's memory."
       }
     ]
   },

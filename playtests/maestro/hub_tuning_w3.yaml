@@ -1,0 +1,35 @@
+appId: com.junewiregames.starborn.prealpha
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "Debug Scenarios"
+    timeout: 60000
+- tapOn: "Debug Scenarios"
+- extendedWaitUntil:
+    visible: "Search world, quest, room, or system"
+    timeout: 10000
+- tapOn: "Search world, quest, room, or system"
+- inputText: "W3 Tuning"
+- hideKeyboard
+- tapOn: "Hub QA / W3 Tuning"
+- extendedWaitUntil:
+    visible: "Prism Gallery"
+    timeout: 30000
+- assertVisible: "light puzzle"
+- tapOn: "light puzzle"
+- extendedWaitUntil:
+    visible: "Prism Gallery Light Puzzle"
+    timeout: 10000
+- assertVisible: "Frequency: 240Hz"
+- assertVisible: "Amplitude: 65%"
+- assertVisible: "Phase: 180deg"
+- tapOn: "Tune"
+- extendedWaitUntil:
+    visible: "The chord still beats too fast.*"
+    timeout: 10000
+- tapOn: "Cancel"
+- extendedWaitUntil:
+    visible: "Prism Gallery"
+    timeout: 10000
+- takeScreenshot: hub-tuning-w3

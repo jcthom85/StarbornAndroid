@@ -129,6 +129,20 @@
         ]
     },
     {
+        "id": "world2_debuffs",
+        "steps": [
+            {
+                "message": "World 2 enemies disrupt more than HP. If a status chip appears on a party member, slow down and read it before choosing the next action.",
+                "context": "Combat"
+            },
+            {
+                "message": "Debuffs are temporary. Guard, use a Snack, or switch tactics while they fade; focus controller enemies before they stack more pressure.",
+                "context": "Combat",
+                "delay_ms": 2200
+            }
+        ]
+    },
+    {
         "id": "snack_slot",
         "steps": [
             {

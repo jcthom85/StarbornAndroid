@@ -73,7 +73,7 @@ object DebugScenarioCatalog {
         hubScenario("astra_home", "Astra Home Base", "The Astra", "Start aboard the Astra with crew conversations, rest, disembark, and staged room locks available."),
 
         scenario("scavenger", "Scavenger's Stash", "Test the Trade Row side-quest entry state.", DebugScenarioCategory.CONTENT),
-        scenario("heavy_lifting", "Heavy Lifting", "Test the Workshop training side quest.", DebugScenarioCategory.CONTENT),
+        scenario("heavy_lifting", "Heavy Lifting", "Test the required Workshop shield-training sequence.", DebugScenarioCategory.CONTENT),
         scenario("checkpoint", "Transit Checkpoint", "Test the guarded checkpoint sequence.", DebugScenarioCategory.CONTENT),
         scenario("room_items", "Room Items", "Open the Med-Bay storage room with a full inventory.", DebugScenarioCategory.CONTENT),
         scenario("lift_shaft", "Lift Shaft", "Enter the Pit shaft directly for traversal testing.", DebugScenarioCategory.CONTENT),
@@ -83,7 +83,12 @@ object DebugScenarioCatalog {
         scenario("enemy_party", "Enemy Party Combat", "Test the launch-checkpoint enemy party encounter.", DebugScenarioCategory.SYSTEM),
         scenario("dynamic_patrol", "Dynamic Patrol", "Test a live Deep Mine patrol route.", DebugScenarioCategory.SYSTEM),
         scenario("party_sizes", "Enemy Party Sizes", "Compare supported enemy party layouts.", DebugScenarioCategory.SYSTEM),
-        scenario("presence_stress", "Presence Stress", "Stress-test room NPC and entity presence.", DebugScenarioCategory.SYSTEM)
+        scenario("presence_stress", "Presence Stress", "Stress-test room NPC and entity presence.", DebugScenarioCategory.SYSTEM),
+        scenario("hub_qa_w1_rest", "Hub QA / W1 Rest", "Open Nova's bunk for rest/cook hub testing.", DebugScenarioCategory.SYSTEM),
+        scenario("hub_qa_w2_cookfire", "Hub QA / W2 Cookfire", "Open the Sector 9 falls cookfire for rest/cook hub testing.", DebugScenarioCategory.SYSTEM),
+        scenario("hub_qa_w3_tuning", "Hub QA / W3 Tuning", "Open the Prism Gallery tuning puzzle.", DebugScenarioCategory.SYSTEM),
+        scenario("hub_qa_w4_tuning", "Hub QA / W4 Tuning", "Open the Foundry conveyor timing tuning puzzle.", DebugScenarioCategory.SYSTEM),
+        scenario("hub_qa_w6_source", "Hub QA / W6 Source", "Open the Source campfire with story and rest actions separated.", DebugScenarioCategory.SYSTEM)
     )
 
     fun find(id: String): DebugScenario? = scenarios.firstOrNull { it.id == id }

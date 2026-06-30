@@ -97,4 +97,25 @@ class AudioRouterTest {
         assertEquals(2, plan.commands.count { it is AudioCommand.Duck })
         assertTrue(plan.commands.any { it is AudioCommand.Play && it.type == AudioCueType.VOICE })
     }
+
+    @Test
+    fun resonanceBattleEventsRouteToBattleCues() {
+        val router = AudioRouter(
+            AudioBindings(
+                battle = mapOf(
+                    "weakness_resolve" to "battle_weakness_resolve",
+                    "stability_break" to "battle_stability_shatter",
+                    "erosion_warning" to "battle_erosion_warning"
+                )
+            )
+        )
+
+        val weakness = router.commandsForBattle("weakness_resolve")
+        val stability = router.commandsForBattle("stability_break")
+        val erosion = router.commandsForBattle("erosion_warning")
+
+        assertTrue(weakness.any { it is AudioCommand.Play && it.type == AudioCueType.BATTLE && it.cueId == "battle_weakness_resolve" })
+        assertTrue(stability.any { it is AudioCommand.Play && it.type == AudioCueType.BATTLE && it.cueId == "battle_stability_shatter" })
+        assertTrue(erosion.any { it is AudioCommand.Play && it.type == AudioCueType.BATTLE && it.cueId == "battle_erosion_warning" })
+    }
 }

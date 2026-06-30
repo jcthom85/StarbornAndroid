@@ -68,6 +68,7 @@ import com.example.starborn.domain.model.Enemy
 import com.example.starborn.domain.model.Hub
 import com.example.starborn.domain.model.World
 import com.example.starborn.domain.model.Requirement
+import com.example.starborn.domain.model.RestStopAction
 import com.example.starborn.domain.model.Room
 import com.example.starborn.domain.model.RoomEnemyInstance
 import com.example.starborn.domain.model.RoomAction
@@ -78,6 +79,8 @@ import com.example.starborn.domain.model.SkillTreeDefinition
 import com.example.starborn.domain.model.SkillTreeNode
 import com.example.starborn.domain.model.TinkeringAction
 import com.example.starborn.domain.model.ToggleAction
+import com.example.starborn.domain.model.TuningPuzzle
+import com.example.starborn.domain.model.TuningPuzzleAction
 import com.example.starborn.domain.model.actionKey
 import com.example.starborn.domain.prompt.UIPromptManager
 import com.example.starborn.domain.prompt.TutorialPrompt
@@ -570,6 +573,7 @@ class ExplorationViewModel(
     private var roomsById: Map<String, Room> = emptyMap()
     private var hubsById: Map<String, Hub> = emptyMap()
     private var worldsById: Map<String, World> = emptyMap()
+    private var tuningPuzzlesById: Map<String, TuningPuzzle> = emptyMap()
     private var enemyMovementManager: EnemyMovementManager? = null
     private var enemyMovementJob: Job? = null
     private var explorationVisible: Boolean = false
@@ -1119,6 +1123,7 @@ class ExplorationViewModel(
                         is ShopAction -> MinimapService.SHOP
                         is FirstAidAction -> MinimapService.FIRST_AID
                         is TinkeringAction -> MinimapService.TINKERING
+                        is RestStopAction -> MinimapService.COOKING
                         else -> null
                     }
                 }.toSet()
@@ -1141,6 +1146,7 @@ class ExplorationViewModel(
                         is ShopAction -> MinimapService.SHOP
                         is FirstAidAction -> MinimapService.FIRST_AID
                         is TinkeringAction -> MinimapService.TINKERING
+                        is RestStopAction -> MinimapService.COOKING
                         else -> null
                     }
                 }.toSet()
@@ -1725,8 +1731,10 @@ class ExplorationViewModel(
             val skillTrees = worldAssets.loadSkillTrees()
             val npcs = worldAssets.loadNpcs()
             val enemies = worldAssets.loadEnemies()
+            val tuningPuzzles = worldAssets.loadTuningPuzzles()
 
             worldsById = worlds.associateBy { it.id }
+            tuningPuzzlesById = tuningPuzzles.associateBy { it.id }
             charactersById = players.associateBy { it.id }
             skillsById = skills.associateBy { it.id }
             skillTreesByCharacter = skillTrees.associateBy { it.character }
@@ -2261,6 +2269,8 @@ class ExplorationViewModel(
             )
             is ShopAction -> handleShopAction(action)
             is FirstAidAction -> handleFirstAidAction(action)
+            is RestStopAction -> handleRestStopAction(action)
+            is TuningPuzzleAction -> handleTuningPuzzleAction(action)
             is GenericAction -> handleGenericAction(action)
             else -> Unit
         }
@@ -2279,6 +2289,8 @@ class ExplorationViewModel(
         is ContainerAction -> listOfNotNull(actionEvent?.takeIf { it.isNotBlank() })
         is FirstAidAction -> listOfNotNull(actionEvent?.takeIf { it.isNotBlank() })
         is ShopAction -> listOfNotNull(actionEvent?.takeIf { it.isNotBlank() })
+        is RestStopAction -> listOfNotNull(restEvent?.takeIf { it.isNotBlank() })
+        is TuningPuzzleAction -> listOfNotNull(tuningPuzzlesById[puzzleId]?.successEvent?.takeIf { it.isNotBlank() })
         is GenericAction -> listOfNotNull(actionEvent?.takeIf { it.isNotBlank() })
         else -> emptyList()
     }
@@ -2402,6 +2414,52 @@ class ExplorationViewModel(
 
     fun dismissTogglePrompt() {
         _uiState.update { it.copy(togglePrompt = null) }
+    }
+
+    fun dismissTuningPuzzle() {
+        _uiState.update { it.copy(tuningPuzzle = null) }
+    }
+
+    fun updateTuningSlider(sliderId: String, value: Float) {
+        _uiState.update { state ->
+            val puzzle = state.tuningPuzzle ?: return@update state
+            state.copy(
+                tuningPuzzle = puzzle.copy(
+                    sliders = puzzle.sliders.map { slider ->
+                        if (slider.id == sliderId) {
+                            slider.copy(value = value.coerceIn(slider.min, slider.max))
+                        } else {
+                            slider
+                        }
+                    },
+                    feedback = null
+                )
+            )
+        }
+    }
+
+    fun submitTuningPuzzle() {
+        val ui = _uiState.value.tuningPuzzle ?: return
+        val definition = tuningPuzzlesById[ui.id] ?: run {
+            postStatus("Tuning puzzle data unavailable.")
+            return
+        }
+        val solved = ui.sliders.all { slider ->
+            abs(slider.value - slider.target) <= slider.tolerance
+        }
+        if (!solved) {
+            playUiCue("error")
+            _uiState.update { state ->
+                state.copy(tuningPuzzle = state.tuningPuzzle?.copy(feedback = ui.failureHint))
+            }
+            return
+        }
+        definition.audioCue?.takeIf { it.isNotBlank() }?.let { cue ->
+            emitAudioCommands(audioRouter.commandsForUi(cue))
+        }
+        _uiState.update { it.copy(tuningPuzzle = null) }
+        definition.successMessage?.takeIf { it.isNotBlank() }?.let { postStatus(it) }
+        triggerPlayerAction(definition.successEvent)
     }
 
     fun clearStatusMessage() {
@@ -4162,7 +4220,17 @@ class ExplorationViewModel(
         val display = label.ifBlank { "Tinkering Table" }
         postStatus("Opening $display")
         triggerPlayerAction("tinkering_screen_entered")
-        emitEvent(ExplorationEvent.OpenTinkering(shopId))
+        emitEvent(ExplorationEvent.OpenTinkering(tinkeringSourceId(label, shopId)))
+    }
+
+    private fun tinkeringSourceId(label: String, shopId: String?): String {
+        shopId?.takeIf { it.isNotBlank() }?.let { return it }
+        val roomId = _uiState.value.currentRoom?.id.orEmpty()
+        return when {
+            roomId.equals("workshop_floor", ignoreCase = true) -> "jeds_bench"
+            label.contains("astra", ignoreCase = true) -> "astra_bench"
+            else -> "field_kit"
+        }
     }
 
     private fun handleShopAction(action: ShopAction) {
@@ -4244,6 +4312,43 @@ class ExplorationViewModel(
         action.actionEvent?.takeIf { it.isNotBlank() }?.let { triggerPlayerAction(it) }
         postStatus("Opening ${action.name.ifBlank { "Med Station" }}")
         emitEvent(ExplorationEvent.OpenFirstAid(action.stationId))
+    }
+
+    private fun handleRestStopAction(action: RestStopAction) {
+        action.restEvent?.takeIf { it.isNotBlank() }?.let { triggerPlayerAction(it) } ?: handleRestParty()
+    }
+
+    private fun handleTuningPuzzleAction(action: TuningPuzzleAction) {
+        val puzzle = tuningPuzzlesById[action.puzzleId]
+        if (puzzle == null) {
+            val message = action.conditionUnmetMessage?.takeIf { it.isNotBlank() }
+                ?: "The tuning interface is unavailable."
+            showInspection(message)
+            return
+        }
+        _uiState.update {
+            it.copy(
+                tuningPuzzle = TuningPuzzleUi(
+                    id = puzzle.id,
+                    title = puzzle.title,
+                    prompt = puzzle.prompt,
+                    sliders = puzzle.sliders.map { slider ->
+                        TuningSliderUi(
+                            id = slider.id,
+                            label = slider.label,
+                            min = slider.min,
+                            max = slider.max,
+                            value = slider.initial.coerceIn(slider.min, slider.max),
+                            target = slider.target,
+                            tolerance = slider.tolerance,
+                            unit = slider.unit
+                        )
+                    },
+                    failureHint = puzzle.failureHint,
+                    successMessage = puzzle.successMessage
+                )
+            )
+        }
     }
 
     private fun openShop(shop: ShopDefinition, displayName: String) {
@@ -4774,6 +4879,19 @@ class ExplorationViewModel(
                     conditionUnmetMessage = action["condition_unmet_message"].asStringOrNull(),
                     actionEvent = action["action_event"].asStringOrNull()
                 )
+                "rest_stop", "rest", "camp", "cookfire" -> RestStopAction(
+                    name = name,
+                    restEvent = action["rest_event"].asStringOrNull()
+                        ?: action["action_event"].asStringOrNull(),
+                    cookSource = action["cook_source"].asStringOrNull(),
+                    message = action["message"].asStringOrNull()
+                        ?: action["condition_unmet_message"].asStringOrNull()
+                )
+                "tuning_puzzle", "tuning" -> TuningPuzzleAction(
+                    name = name,
+                    puzzleId = action["puzzle_id"].asStringOrNull().orEmpty(),
+                    conditionUnmetMessage = action["condition_unmet_message"].asStringOrNull()
+                )
                 "shop" -> ShopAction(
                     name = name,
                     shopId = action["shop_id"].asStringOrNull()?.takeIf { it.isNotBlank() },
@@ -5024,7 +5142,7 @@ sealed interface ExplorationEvent {
     data class GroundItemSpawned(val roomId: String?, val itemId: String, val quantity: Int, val message: String) : ExplorationEvent
     data class RoomSearchUnlocked(val roomId: String?, val note: String?) : ExplorationEvent
     data class ItemUsed(val result: ItemUseResult, val message: String? = null) : ExplorationEvent
-    data class OpenTinkering(val shopId: String?) : ExplorationEvent
+    data class OpenTinkering(val sourceId: String?) : ExplorationEvent
     data class OpenFirstAid(val stationId: String?) : ExplorationEvent
     data class OpenFishing(val zoneId: String?) : ExplorationEvent
     data class OpenShop(val shopId: String) : ExplorationEvent
