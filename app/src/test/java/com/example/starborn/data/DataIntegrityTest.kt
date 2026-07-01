@@ -131,6 +131,26 @@ class DataIntegrityTest {
     }
 
     @Test
+    fun roomActionLabelsUseWorldNounsInsteadOfMetaPuzzleTerms() {
+        val rooms = readList("src/main/assets/rooms.json", Room::class.java)
+        val bannedTerms = listOf("puzzle", "maze", "minigame")
+        val offenders = rooms.flatMap { room ->
+            room.actions.mapNotNull { action ->
+                val label = action["name"] as? String ?: return@mapNotNull null
+                val banned = bannedTerms.firstOrNull { term ->
+                    label.contains(term, ignoreCase = true)
+                }
+                if (banned != null) "${room.id}:$label" else null
+            }
+        }
+
+        assertTrue(
+            "Room action labels should be in-world nouns, not meta puzzle terms: $offenders",
+            offenders.isEmpty()
+        )
+    }
+
+    @Test
     fun forgePuzzleSliceUsesEnvironmentalActions() {
         val rooms = readList("src/main/assets/rooms.json", Room::class.java)
         val events = readList("src/main/assets/events.json", GameEvent::class.java)
