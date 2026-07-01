@@ -93,7 +93,22 @@ class EventManager(
 
     private fun executeActions(actions: List<EventAction>): Boolean {
         var executed = false
-        for (action in actions) {
+        val restMessageByActionIndex = mutableMapOf<Int, String>()
+        val consumedRestMessageIndices = mutableSetOf<Int>()
+        actions.forEachIndexed { index, action ->
+            if (!action.type.equals("rest_party", ignoreCase = true)) return@forEachIndexed
+            val messageIndex = ((index + 1) until actions.size).firstOrNull { candidateIndex ->
+                val candidate = actions[candidateIndex]
+                !candidate.type.equals("rest_party", ignoreCase = true) &&
+                    candidate.type.equals("show_message", ignoreCase = true) &&
+                    !candidate.message.isNullOrBlank()
+            }
+            if (messageIndex != null) {
+                restMessageByActionIndex[index] = actions[messageIndex].message.orEmpty()
+                consumedRestMessageIndices += messageIndex
+            }
+        }
+        for ((index, action) in actions.withIndex()) {
             val state = sessionStore.state.value
             executed = when (action.type.lowercase()) {
                 "if_quest_active" -> executeConditionalBranch(
@@ -220,13 +235,15 @@ class EventManager(
                     }
                 }
                 "show_message" -> {
-                    action.message
-                        ?.takeUnless { it.isLegacyQuestCompleteMessage() }
-                        ?.let { eventHooks.onMessage(it) }
+                    if (index !in consumedRestMessageIndices) {
+                        action.message
+                            ?.takeUnless { it.isLegacyQuestCompleteMessage() }
+                            ?.let { eventHooks.onMessage(it) }
+                    }
                     true
                 }
                 "rest_party" -> {
-                    eventHooks.onRestParty()
+                    eventHooks.onRestParty(restMessageByActionIndex[index])
                     true
                 }
                 "reveal_node" -> action.nodeId?.let {
@@ -605,7 +622,7 @@ data class EventHooks(
     val onUnlockRoomSearch: (roomId: String?, note: String?) -> Unit = { _, _ -> },
     val onEventCompleted: (eventId: String) -> Unit = {},
     val onPartyMemberJoined: (memberId: String) -> Unit = {},
-    val onRestParty: () -> Unit = {},
+    val onRestParty: (message: String?) -> Unit = {},
     val onRevealNode: (nodeId: String) -> Unit = {},
     val onUnlockNode: (nodeId: String) -> Unit = {},
     val onCompleteNode: (nodeId: String) -> Unit = {},

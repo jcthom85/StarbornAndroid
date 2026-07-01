@@ -20,14 +20,6 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     visible: "Nova's Bunk"
     timeout: 10000
-- extendedWaitUntil:
-    visible: "netting"
-    timeout: 10000
-- tapOn: "netting"
-- extendedWaitUntil:
-    visible: "The cargo netting holds.*"
-    timeout: 10000
-- tapOn: ".*The cargo netting holds.*"
 - tapOn: "CONTINUE"
 - swipe:
     direction: LEFT

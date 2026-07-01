@@ -19,6 +19,7 @@ import com.example.starborn.data.local.Theme
 import com.squareup.moshi.Types
 import java.io.File
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -151,7 +152,7 @@ class DataIntegrityTest {
     }
 
     @Test
-    fun worldOneBunkTeachesEnvironmentalActionChainBeforeMovement() {
+    fun worldOneBunkTeachesLightBeforeMovementWithoutExtraObjectGate() {
         val rooms = readList("src/main/assets/rooms.json", Room::class.java)
         val events = readList("src/main/assets/events.json", GameEvent::class.java)
         val quests = readList("src/main/assets/quests.json", Quest::class.java)
@@ -171,9 +172,9 @@ class DataIntegrityTest {
             .mapNotNull { it.taskId }
 
         assertTrue("Nova's bunk exit should require the light.", ("pit_nova_bunk" to "light_on") in westRequirements)
-        assertTrue("Nova's bunk exit should require checking the netting.", ("pit_nova_bunk" to "netting_checked") in westRequirements)
-        assertTrue("Wake Up Call should explicitly ask players to check the netting.", "check_netting" in wakeTasks)
-        assertTrue("Netting inspection should complete the onboarding task.", "check_netting" in nettingEventTasks)
+        assertFalse("Nova's bunk exit should not require checking the netting.", ("pit_nova_bunk" to "netting_checked") in westRequirements)
+        assertFalse("Wake Up Call should not hard-require the optional netting inspection.", "check_netting" in wakeTasks)
+        assertTrue("Netting inspection should not complete a required quest task.", nettingEventTasks.isEmpty())
     }
 
     @Test

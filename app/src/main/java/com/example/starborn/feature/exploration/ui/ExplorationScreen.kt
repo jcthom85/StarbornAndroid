@@ -9,6 +9,8 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.core.Animatable as CoreAnimatable
@@ -71,6 +73,7 @@ import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.Flag
 import androidx.compose.material.icons.outlined.School
 import androidx.compose.material.icons.rounded.AutoAwesome
+import androidx.compose.material.icons.rounded.Hotel
 import androidx.compose.material.icons.outlined.RadioButtonUnchecked
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -118,12 +121,14 @@ import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.AnnotatedString
@@ -295,6 +300,7 @@ fun ExplorationScreen(
     var slotSummaries by remember { mutableStateOf<List<SaveSlotSummary>>(emptyList()) }
     var debugWeatherOverride by remember { mutableStateOf<String?>(null) }
     var importantQuestPopupVisible by remember { mutableStateOf(false) }
+    var restRecoveryNotice by remember { mutableStateOf<RestRecoveryNotice?>(null) }
     val weatherCycles = remember {
         listOf(null, "dust", "rain", "storm", "snow", "cave_drip", "starfall", "steam", "fog", "gas", "resonance", "sparks")
     }
@@ -369,6 +375,19 @@ fun ExplorationScreen(
                 is ExplorationEvent.GroundItemSpawned -> viewModel.showStatusMessage(event.message)
                 is ExplorationEvent.RoomSearchUnlocked -> viewModel.showStatusMessage(event.note ?: "A hidden stash is now accessible")
                 is ExplorationEvent.ItemUsed -> viewModel.showStatusMessage(event.message ?: formatItemUseResult(event.result))
+                is ExplorationEvent.RestRecovered -> {
+                    val message = "A Quiet Rest"
+                    restRecoveryNotice = RestRecoveryNotice(
+                        id = System.nanoTime(),
+                        title = message,
+                        detail = event.message?.takeIf { it.isNotBlank() }
+                            ?: if (event.partySize == 1) {
+                                "Nova rests for a while. The colony hum softens, and her breathing steadies."
+                            } else {
+                                "The party rests for a while. Wounds settle, nerves loosen, and the room feels safe enough to breathe."
+                            }
+                    )
+                }
                 is ExplorationEvent.OpenTinkering -> onOpenTinkering(event.sourceId)
                 is ExplorationEvent.OpenFirstAid -> onOpenFirstAid(event.stationId)
                 is ExplorationEvent.OpenFishing -> onOpenFishing(event.zoneId)
@@ -382,6 +401,13 @@ fun ExplorationScreen(
                 }
                 is ExplorationEvent.ReturnToHub -> onReturnToHub()
             }
+        }
+    }
+
+    LaunchedEffect(restRecoveryNotice?.id) {
+        if (restRecoveryNotice != null) {
+            delay(2600L)
+            restRecoveryNotice = null
         }
     }
 
@@ -421,6 +447,7 @@ fun ExplorationScreen(
     var dragDelta by remember { mutableStateOf(Offset.Zero) }
 
     val backgroundPainter = rememberRoomBackgroundPainter(uiState.currentRoom?.backgroundImage)
+    val actionAccentColor = themeColor(uiState.theme?.accent, Color(0xFF80E0FF))
     val fadeCommand = uiState.fadeOverlay
     val fadeOverlayAnim = remember(uiState.forceBlackScreen) {
         CoreAnimatable(if (uiState.forceBlackScreen) 1f else 0f)
@@ -442,8 +469,8 @@ fun ExplorationScreen(
         }
     }
 
-    val baseModifier = Modifier
-        .fillMaxSize()
+    val baseModifier = Modifier.fillMaxSize()
+    val swipeGestureModifier = Modifier
         .pointerInput(uiState.availableConnections, uiState.blockedDirections, blockingOverlayActive) {
             if (blockingOverlayActive) {
                 detectTapGestures(
@@ -487,6 +514,11 @@ fun ExplorationScreen(
                 contentDescription = null,
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
+            )
+            Box(
+                modifier = Modifier
+                    .matchParentSize()
+                    .then(swipeGestureModifier)
             )
 
         val currentRoom = uiState.currentRoom
@@ -572,7 +604,8 @@ fun ExplorationScreen(
         val descriptionForPanel = baseRoomDescription
         val visibleNpcs = if (isRoomDark) emptyList() else uiState.npcs
         val visibleGroundItems = if (isRoomDark) emptyMap() else uiState.groundItems
-        val serviceQuickActions = remember(uiState.actions, uiState.actionHints, currentRoom?.id, inlinePlan) {
+        val serviceQuickActions = remember(uiState.actions, uiState.actionHints, currentRoom?.id, inlinePlan, isRoomDark) {
+            if (isRoomDark) return@remember emptyList()
             val unique = LinkedHashSet<String>()
             val items = mutableListOf<QuickMenuAction>()
             uiState.actions.forEach { action ->
@@ -615,10 +648,22 @@ fun ExplorationScreen(
                     is RestStopAction -> {
                         val key = "rest:${action.restEvent.orEmpty()}:${action.cookSource.orEmpty()}"
                         if (unique.add(key)) {
-                            val label = action.name.takeIf { it.isNotBlank() } ?: "Rest"
+                            val actionName = action.name.trim()
+                            val label = actionName
+                                .takeUnless { it.equals("bunk", ignoreCase = true) }
+                                ?.takeIf { it.isNotBlank() }
+                                ?: "Rest"
+                            val detail = actionName
+                                .takeIf {
+                                    it.isNotBlank() &&
+                                        !it.equals("bunk", ignoreCase = true) &&
+                                        !it.equals(label, ignoreCase = true)
+                                }
+                                ?.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
                             items += QuickMenuAction(
-                                iconRes = R.drawable.cooking_icon,
+                                imageVector = Icons.Rounded.Hotel,
                                 label = label,
+                                detail = detail,
                                 roomAction = action
                             )
                         }
@@ -664,7 +709,6 @@ fun ExplorationScreen(
                 .statusBarsPadding()
             .padding(horizontal = 24.dp, vertical = 24.dp)
         ) {
-            val actionAccentColor = themeColor(activeTheme?.accent, Color(0xFF80E0FF))
             ThemeBandOverlay(
                 theme = activeTheme,
                 bandStyle = activeThemeStyle?.bands,
@@ -775,6 +819,14 @@ fun ExplorationScreen(
                 )
             }
         }
+
+        RestRecoveryOverlay(
+            notice = restRecoveryNotice,
+            accentColor = actionAccentColor,
+            modifier = Modifier
+                .align(Alignment.Center)
+                .zIndex(46f)
+        )
         uiState.narrationPrompt?.let { narration ->
             InspectionOverlay(
                 prompt = narration,
@@ -3327,9 +3379,179 @@ private fun ReturnHubButton(
     }
 }
 
+private data class RestRecoveryNotice(
+    val id: Long,
+    val title: String,
+    val detail: String
+)
+
+@Composable
+private fun RestRecoveryOverlay(
+    notice: RestRecoveryNotice?,
+    accentColor: Color,
+    modifier: Modifier = Modifier
+) {
+    AnimatedVisibility(
+        visible = notice != null,
+        enter = fadeIn(animationSpec = tween(260)) + scaleIn(
+            animationSpec = tween(420, easing = FastOutSlowInEasing),
+            initialScale = 0.88f
+        ),
+        exit = fadeOut(animationSpec = tween(300)) + scaleOut(
+            animationSpec = tween(280, easing = FastOutSlowInEasing),
+            targetScale = 1.04f
+        ),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 30.dp)
+            .zIndex(12f)
+    ) {
+        val currentNotice = notice ?: return@AnimatedVisibility
+        val transition = rememberInfiniteTransition(label = "restRecoveryBreath")
+        val breath by transition.animateFloat(
+            initialValue = 0.985f,
+            targetValue = 1.0f,
+            animationSpec = infiniteRepeatable(
+                animation = tween(1200, easing = FastOutSlowInEasing),
+                repeatMode = RepeatMode.Reverse
+            ),
+            label = "restRecoveryScale"
+        )
+        val glow by transition.animateFloat(
+            initialValue = 0.34f,
+            targetValue = 0.78f,
+            animationSpec = infiniteRepeatable(
+                animation = tween(1400, easing = FastOutSlowInEasing),
+                repeatMode = RepeatMode.Reverse
+            ),
+            label = "restRecoveryGlow"
+        )
+        val sweep by animateFloatAsState(
+            targetValue = 1f,
+            animationSpec = tween(1200, easing = FastOutSlowInEasing),
+            label = "restRecoverySweep"
+        )
+        Surface(
+            shape = RoundedCornerShape(22.dp),
+            color = Color(0xF2071018),
+            border = BorderStroke(1.dp, accentColor.copy(alpha = 0.46f + glow * 0.18f)),
+            shadowElevation = 18.dp,
+            modifier = Modifier
+                .fillMaxWidth()
+                .widthIn(max = 560.dp)
+                .graphicsLayer {
+                    scaleX = breath
+                    scaleY = breath
+                }
+        ) {
+            Box(
+                modifier = Modifier
+                    .background(
+                        Brush.radialGradient(
+                            listOf(
+                                accentColor.copy(alpha = 0.18f + glow * 0.12f),
+                                Color(0xFF102033).copy(alpha = 0.42f),
+                                Color.Transparent
+                            ),
+                            radius = 620f
+                        )
+                    )
+                    .padding(horizontal = 24.dp, vertical = 24.dp)
+            ) {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(14.dp)
+                ) {
+                    Surface(
+                        shape = CircleShape,
+                        color = accentColor.copy(alpha = 0.12f + glow * 0.12f),
+                        border = BorderStroke(1.dp, accentColor.copy(alpha = 0.46f + glow * 0.28f)),
+                        modifier = Modifier.size(62.dp)
+                    ) {
+                        Box(contentAlignment = Alignment.Center) {
+                            Icon(
+                                imageVector = Icons.Rounded.Hotel,
+                                contentDescription = null,
+                                tint = Color.White,
+                                modifier = Modifier
+                                    .size(32.dp)
+                                    .graphicsLayer {
+                                        scaleX = 0.94f + glow * 0.08f
+                                        scaleY = 0.94f + glow * 0.08f
+                                        translationY = -1.5f + glow * 3f
+                                    }
+                            )
+                        }
+                    }
+                    Text(
+                        text = currentNotice.title,
+                        color = Color.White,
+                        style = MaterialTheme.typography.headlineSmall.copy(
+                            fontWeight = FontWeight.Black,
+                            letterSpacing = 0.sp
+                        ),
+                        textAlign = TextAlign.Center
+                    )
+                    Text(
+                        text = currentNotice.detail,
+                        color = Color.White.copy(alpha = 0.82f),
+                        style = MaterialTheme.typography.bodyLarge.copy(lineHeight = 25.sp),
+                        textAlign = TextAlign.Center,
+                        maxLines = 4,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth(0.72f)
+                            .height(3.dp)
+                            .clip(RoundedCornerShape(999.dp))
+                            .background(Color.White.copy(alpha = 0.08f))
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .fillMaxWidth(sweep)
+                                .background(
+                                    Brush.horizontalGradient(
+                                        listOf(
+                                            Color.Transparent,
+                                            accentColor.copy(alpha = 0.42f + glow * 0.32f),
+                                            Color.White.copy(alpha = 0.28f + glow * 0.22f)
+                                        )
+                                    )
+                                )
+                        )
+                    }
+                }
+                Canvas(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(122.dp)
+                        .align(Alignment.Center)
+                        .alpha(0.36f)
+                ) {
+                    val stroke = Stroke(width = 2.5f, cap = StrokeCap.Round)
+                    drawArc(
+                        color = accentColor.copy(alpha = 0.18f + glow * 0.14f),
+                        startAngle = 205f,
+                        sweepAngle = 130f * sweep,
+                        useCenter = false,
+                        topLeft = Offset(size.width * 0.08f, size.height * 0.06f),
+                        size = Size(size.width * 0.84f, size.height * 1.25f),
+                        style = stroke
+                    )
+                }
+            }
+        }
+    }
+}
+
 private data class QuickMenuAction(
-    val iconRes: Int,
+    @DrawableRes val iconRes: Int? = null,
+    val imageVector: ImageVector? = null,
     val label: String,
+    val detail: String? = null,
     val roomAction: RoomAction
 )
 
@@ -3654,26 +3876,36 @@ private fun CompactServiceChip(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val shape = RoundedCornerShape(16.dp)
     Surface(
-        onClick = onClick,
-        shape = RoundedCornerShape(16.dp),
+        shape = shape,
         color = Color(0xFF0F1B2A).copy(alpha = 0.85f),
         border = BorderStroke(1.dp, accentColor.copy(alpha = 0.5f)),
         modifier = modifier
+            .clip(shape)
+            .clickable(onClick = onClick)
+            .clearAndSetSemantics {
+                contentDescription = "${action.label} action"
+                onClick(label = action.label) {
+                    onClick()
+                    true
+                }
+            }
     ) {
         Row(
-            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+            modifier = Modifier
+                .clickable(onClick = onClick)
+                .padding(horizontal = 12.dp, vertical = 6.dp),
             horizontalArrangement = Arrangement.spacedBy(6.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                painter = painterResource(id = action.iconRes),
-                contentDescription = null,
-                tint = accentColor,
+            ServiceActionIcon(
+                action = action,
+                accentColor = accentColor,
                 modifier = Modifier.size(16.dp)
             )
             Text(
-                text = action.label.uppercase(Locale.getDefault()),
+                text = action.label,
                 color = Color.White,
                 style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold)
             )
@@ -3708,21 +3940,15 @@ private fun RoomEntitySection(
     }
     Surface(
         shape = RoundedCornerShape(10.dp),
-        color = Color(0xFF050A10).copy(alpha = if (isDark) 0.60f else 0.44f),
-        border = BorderStroke(1.dp, borderColor.copy(alpha = if (isDark) 0.30f else 0.18f))
+        color = Color(0xFF050A10).copy(alpha = if (isDark) 0.52f else 0.34f),
+        border = BorderStroke(1.dp, borderColor.copy(alpha = if (isDark) 0.22f else 0.12f))
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 10.dp, vertical = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(6.dp)
+                .padding(horizontal = 8.dp, vertical = 6.dp),
+            verticalArrangement = Arrangement.spacedBy(5.dp)
         ) {
-            Text(
-                text = "Also here",
-                color = Color.White.copy(alpha = 0.72f),
-                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
-                maxLines = 1
-            )
             if (npcs.isNotEmpty()) {
                 PresenceRailRow {
                     npcs.forEach { npc ->
@@ -3811,18 +4037,27 @@ private fun ServicePresenceChip(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val shape = RoundedCornerShape(12.dp)
     Surface(
-        onClick = onClick,
-        shape = RoundedCornerShape(12.dp),
+        shape = shape,
         color = Color(0xFF071018).copy(alpha = if (isDark) 0.86f else 0.72f),
         border = BorderStroke(1.dp, accentColor.copy(alpha = if (isDark) 0.58f else 0.46f)),
         modifier = modifier
             .widthIn(min = 132.dp)
             .height(46.dp)
-            .semantics { contentDescription = action.label }
+            .clip(shape)
+            .clickable(onClick = onClick)
+            .clearAndSetSemantics {
+                contentDescription = "${action.label} action"
+                onClick(label = action.label) {
+                    onClick()
+                    true
+                }
+            }
     ) {
         Row(
             modifier = Modifier
+                .clickable(onClick = onClick)
                 .background(
                     Brush.horizontalGradient(
                         colors = listOf(
@@ -3843,22 +4078,58 @@ private fun ServicePresenceChip(
                 modifier = Modifier.size(32.dp)
             ) {
                 Box(contentAlignment = Alignment.Center) {
-                    Icon(
-                        painter = painterResource(id = action.iconRes),
-                        contentDescription = null,
-                        tint = accentColor,
+                    ServiceActionIcon(
+                        action = action,
+                        accentColor = accentColor,
                         modifier = Modifier.size(18.dp)
                     )
                 }
             }
-            Text(
-                text = action.label.uppercase(Locale.getDefault()),
-                color = Color.White,
-                style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
+            Column(
+                modifier = Modifier.weight(1f, fill = false),
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = action.label,
+                    color = Color.White,
+                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                action.detail?.let { detail ->
+                    Text(
+                        text = detail,
+                        color = Color.White.copy(alpha = 0.66f),
+                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+            }
         }
+    }
+}
+
+@Composable
+private fun ServiceActionIcon(
+    action: QuickMenuAction,
+    accentColor: Color,
+    modifier: Modifier = Modifier
+) {
+    action.imageVector?.let { vector ->
+        Icon(
+            imageVector = vector,
+            contentDescription = null,
+            tint = accentColor,
+            modifier = modifier
+        )
+    } ?: action.iconRes?.let { res ->
+        Icon(
+            painter = painterResource(id = res),
+            contentDescription = null,
+            tint = accentColor,
+            modifier = modifier
+        )
     }
 }
 
@@ -3871,8 +4142,7 @@ private fun PresenceRailRow(
     ) {
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .horizontalScroll(rememberScrollState()),
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.Top
         ) {

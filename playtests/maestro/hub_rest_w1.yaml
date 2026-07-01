@@ -14,12 +14,16 @@ appId: com.junewiregames.starborn.prealpha
 - hideKeyboard
 - tapOn: "Hub QA / W1 Rest"
 - extendedWaitUntil:
-    visible: "bunk"
+    visible: "Rest action"
     timeout: 30000
-- assertVisible: "bunk"
-- tapOn: "bunk"
+- assertVisible: "Rest action"
+- tapOn: "Rest action"
+- extendedWaitUntil:
+    visible: "A Quiet Rest"
+    timeout: 10000
 - extendedWaitUntil:
     visible: "Nova rests in the narrow bunk.*"
-    timeout: 15000
+    timeout: 10000
+- assertNotVisible: "Rested"
 - assertNotVisible: "Cook"
 - takeScreenshot: hub-rest-w1-rest

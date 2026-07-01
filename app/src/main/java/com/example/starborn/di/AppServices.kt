@@ -916,6 +916,7 @@ class AppServices(context: Context) {
         sessionStore.completeQuest("w1_mq01")
         sessionStore.setMilestone("ms_w1_mq01_complete")
         sessionStore.setRoomState("pit_nova_bunk", "light_on", true)
+        sessionStore.setRoomState("pit_nova_bunk", "dark", false)
         sessionStore.markTutorialCompleted("swipe_move")
         sessionStore.markTutorialCompleted("movement")
         true

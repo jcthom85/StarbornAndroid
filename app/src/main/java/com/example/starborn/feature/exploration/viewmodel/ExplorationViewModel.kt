@@ -263,6 +263,7 @@ class ExplorationViewModel(
     private var npcDialogueNameByKey: Map<String, String> = emptyMap()
     private var skillTreesByCharacter: Map<String, SkillTreeDefinition> = emptyMap()
     private var tutorialsEnabled: Boolean = true
+    private var pendingInitialQuestPresentation: String? = null
     private val itemUseController = ItemUseController(
         inventoryService = inventoryService,
         craftingService = craftingService,
@@ -437,7 +438,11 @@ class ExplorationViewModel(
             },
             onQuestStarted = { questId ->
                 questId?.let {
-                    questRuntimeManager.recordQuestStarted(it)
+                    if (shouldDeferInitialQuestPresentation(it)) {
+                        pendingInitialQuestPresentation = it
+                    } else {
+                        questRuntimeManager.recordQuestStarted(it)
+                    }
                 }
             },
             onQuestCompleted = { questId ->
@@ -506,8 +511,8 @@ class ExplorationViewModel(
             onPartyMemberJoined = { memberId ->
                 handlePartyMemberJoined(memberId)
             },
-            onRestParty = {
-                handleRestParty()
+            onRestParty = { message ->
+                handleRestParty(message)
             },
             onAudioLayerCommand = { handleAudioLayerCommand(it) }
         )
@@ -890,15 +895,26 @@ class ExplorationViewModel(
         postStatus(message)
     }
 
-    private fun handleRestParty() {
+    private fun handleRestParty(message: String? = null) {
         val state = sessionStore.state.value
         val partyIds = state.partyMembers.ifEmpty { listOfNotNull(state.playerId) }
+        var restoredAmount = 0
         val restoredHp = partyIds.mapNotNull { memberId ->
             val maxHp = charactersById[memberId]?.hp?.takeIf { it > 0 } ?: return@mapNotNull null
+            val currentHp = state.partyMemberHp[memberId] ?: maxHp
+            restoredAmount += (maxHp - currentHp).coerceAtLeast(0)
             memberId to maxHp
         }.toMap()
         if (restoredHp.isEmpty()) return
         sessionStore.updatePartyVitals(restoredHp)
+        emitEvent(
+            ExplorationEvent.RestRecovered(
+                restoredHp = restoredAmount,
+                partySize = restoredHp.size,
+                alreadyFull = restoredAmount == 0,
+                message = message?.takeIf { it.isNotBlank() }
+            )
+        )
     }
 
     private fun postStatus(message: String) {
@@ -996,7 +1012,7 @@ class ExplorationViewModel(
     }
 
     fun onFadeOverlayFinished(commandId: Long) {
-        pendingFadeCallbacks.remove(commandId)?.invoke()
+        val pendingCallback = pendingFadeCallbacks.remove(commandId)
         var consumedInitialFade = false
         _uiState.update { state ->
             val isInitialFade = initialFadePrimed && state.fadeOverlay?.id == commandId
@@ -1006,6 +1022,15 @@ class ExplorationViewModel(
         }
         if (consumedInitialFade) {
             initialFadePrimed = false
+            promotePendingInitialQuestPresentation()
+            pendingCallback?.let { callback ->
+                viewModelScope.launch(dispatchers.main) {
+                    delay(2200L)
+                    callback()
+                }
+            }
+        } else {
+            pendingCallback?.invoke()
         }
     }
 
@@ -1018,6 +1043,21 @@ class ExplorationViewModel(
         if (initialFadePrimed || _uiState.value.forceBlackScreen) {
             initialFadePrimed = false
             _uiState.update { it.copy(forceBlackScreen = false, fadeOverlay = null) }
+            promotePendingInitialQuestPresentation()
+        }
+    }
+
+    private fun shouldDeferInitialQuestPresentation(questId: String): Boolean {
+        if (!questId.equals("w1_mq01", ignoreCase = true)) return false
+        return initialFadePrimed || _uiState.value.forceBlackScreen || _uiState.value.fadeOverlay != null
+    }
+
+    private fun promotePendingInitialQuestPresentation() {
+        val questId = pendingInitialQuestPresentation ?: return
+        pendingInitialQuestPresentation = null
+        viewModelScope.launch(dispatchers.main) {
+            delay(450L)
+            questRuntimeManager.recordQuestStarted(questId)
         }
     }
 
@@ -1204,7 +1244,10 @@ class ExplorationViewModel(
         room.connections.keys.forEach { direction ->
             val status = resolveBlockedIndicatorStatus(room, direction)
             val key = direction.lowercase(Locale.getDefault())
-            if (status != null && (!isRoomDark(room) || visibleDirections.contains(key))) {
+            if (status != null &&
+                !shouldSuppressDirectionIndicator(room, key) &&
+                (!isRoomDark(room) || visibleDirections.contains(key))
+            ) {
                 indicators[key] = DirectionIndicatorUi(direction = key, status = status)
             }
         }
@@ -1231,6 +1274,14 @@ class ExplorationViewModel(
                 }
             }
         return indicators
+    }
+
+    private fun shouldSuppressDirectionIndicator(room: Room, direction: String): Boolean {
+        if (!room.id.equals("pit_nova_bunk", ignoreCase = true)) return false
+        if (!direction.equals("west", ignoreCase = true)) return false
+        return isRoomDark(room) && sessionStore.state.value.completedMilestones.none {
+            it.equals("ms_w1_mq01_bunk_light_on", ignoreCase = true)
+        }
     }
 
     private fun resolveBlockedIndicatorStatus(room: Room, direction: String): DirectionIndicatorStatus? {
@@ -3175,15 +3226,11 @@ class ExplorationViewModel(
                 if (prev.id !in activeMovingIds && prev.leavingTo == null) {
                     val activeId = prev.id.removePrefix("moving_")
                     val leaveEvent = events.firstOrNull { it.type == EnemyMovementEvent.Type.LEFT && it.partyId == activeId }
-                    val leavingTo = if (leaveEvent != null && leaveEvent.roomId != null) {
+                    val leavingTo = if (leaveEvent != null) {
                         leaveEvent.direction
                     } else {
                         val currentPartyState = manager?.stateSnapshot()?.get(activeId)
-                        if (currentPartyState != null) {
-                            baseRoom.connections.entries.firstOrNull { it.value == currentPartyState.roomId }?.key
-                        } else {
-                            null
-                        }
+                        baseRoom.connections.entries.firstOrNull { it.value == currentPartyState?.roomId }?.key
                     }
 
                     val leavingParty = prev.copy(enteringFrom = null, leavingTo = leavingTo)
@@ -5151,6 +5198,12 @@ sealed interface ExplorationEvent {
     data class GroundItemSpawned(val roomId: String?, val itemId: String, val quantity: Int, val message: String) : ExplorationEvent
     data class RoomSearchUnlocked(val roomId: String?, val note: String?) : ExplorationEvent
     data class ItemUsed(val result: ItemUseResult, val message: String? = null) : ExplorationEvent
+    data class RestRecovered(
+        val restoredHp: Int,
+        val partySize: Int,
+        val alreadyFull: Boolean,
+        val message: String? = null
+    ) : ExplorationEvent
     data class OpenTinkering(val sourceId: String?) : ExplorationEvent
     data class OpenFirstAid(val stationId: String?) : ExplorationEvent
     data class OpenFishing(val zoneId: String?) : ExplorationEvent

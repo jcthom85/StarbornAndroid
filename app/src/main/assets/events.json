@@ -547,11 +547,6 @@
         "value": true
       },
       {
-        "type": "set_quest_task_done",
-        "quest_id": "w1_mq01",
-        "task_id": "check_netting"
-      },
-      {
         "type": "set_milestone",
         "milestone": "ms_w1_mq01_netting_checked"
       },
