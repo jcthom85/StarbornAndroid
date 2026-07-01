@@ -7,22 +7,34 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 60000
 - tapOn: "New Game"
 - extendedWaitUntil:
-    visible: "GOT IT"
+    visible: "Wake Up Call"
     timeout: 20000
-- tapOn: "GOT IT"
+- tapOn: "Continue"
+- tapOn: "CONTINUE"
+- assertVisible: "bunk light"
+- tapOn: "bunk light"
+- extendedWaitUntil:
+    visible: "The bunk light snaps on.*"
+    timeout: 10000
+- tapOn: ".*The bunk light snaps on.*"
 - extendedWaitUntil:
     visible: "Nova's Bunk"
     timeout: 10000
+- extendedWaitUntil:
+    visible: "netting"
+    timeout: 10000
+- tapOn: "netting"
+- extendedWaitUntil:
+    visible: "The cargo netting holds.*"
+    timeout: 10000
+- tapOn: ".*The cargo netting holds.*"
+- tapOn: "CONTINUE"
 - swipe:
     direction: LEFT
     duration: 450
 - extendedWaitUntil:
     visible: "Pod Row"
     timeout: 60000
-- extendedWaitUntil:
-    visible: "Wake Up Call"
-    timeout: 10000
-- tapOn: "Continue"
 - extendedWaitUntil:
     notVisible: "Wake Up Call"
     timeout: 10000

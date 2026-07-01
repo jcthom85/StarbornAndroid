@@ -32,14 +32,18 @@ class Hub1CriticalFlowTest {
 
         harness.events.handleTrigger("player_action", EventPayload.Action("w1_mq01_turn_on_bunk_light"))
         assertTrue(harness.tutorialRequests.contains("movement" to "Nova's Bunk"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w1_mq01_check_netting"))
         val hotspotIndex = harness.tutorialRequests.indexOf("hotspot_actions" to "Nova's Bunk")
         val movementIndex = harness.tutorialRequests.indexOf("movement" to "Nova's Bunk")
         assertTrue(hotspotIndex >= 0)
         assertTrue(movementIndex > hotspotIndex)
         val state = harness.store.state.value
         assertTrue(state.questTasksCompleted["w1_mq01"].orEmpty().contains("turn_on_bunk_light"))
+        assertTrue(state.questTasksCompleted["w1_mq01"].orEmpty().contains("check_netting"))
         assertTrue(state.completedMilestones.contains("ms_w1_mq01_bunk_light_on"))
+        assertTrue(state.completedMilestones.contains("ms_w1_mq01_netting_checked"))
         assertEquals(true, state.roomStates["pit_nova_bunk"].orEmpty()["light_on"])
+        assertEquals(true, state.roomStates["pit_nova_bunk"].orEmpty()["netting_checked"])
         assertEquals(false, state.roomStates["pit_nova_bunk"].orEmpty()["dark"])
         val movementTutorialCount = harness.tutorialRequests.count { it == "movement" to "Nova's Bunk" }
         harness.store.setRoomState("pit_nova_bunk", "light_on", false)
@@ -74,6 +78,7 @@ class Hub1CriticalFlowTest {
 
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("pit_nova_bunk"))
         harness.events.handleTrigger("player_action", EventPayload.Action("w1_mq01_turn_on_bunk_light"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w1_mq01_check_netting"))
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("pit_shaft"))
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("pit_jed_bunk"))
 

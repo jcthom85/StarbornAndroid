@@ -541,8 +541,23 @@
     ],
     "actions": [
       {
+        "type": "set_room_state",
+        "room_id": "pit_nova_bunk",
+        "state_key": "netting_checked",
+        "value": true
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_mq01",
+        "task_id": "check_netting"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w1_mq01_netting_checked"
+      },
+      {
         "type": "narrate",
-        "message": "The cargo netting holds a few tools, a spare ration, and the small metal carving Jed made for you when you were younger.",
+        "message": "The cargo netting holds a few tools, a spare ration, and the small metal carving Jed made for you when you were younger. You have enough to face the shift clock.",
         "tap_to_dismiss": true
       }
     ]

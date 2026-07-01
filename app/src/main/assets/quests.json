@@ -18,6 +18,10 @@
             "text": "Turn on the bunk light."
           },
           {
+            "id": "check_netting",
+            "text": "Check the cargo netting."
+          },
+          {
             "id": "leave_sleeping_level",
             "text": "Find your way out of the Pit sleeping level."
           }

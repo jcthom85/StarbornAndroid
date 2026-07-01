@@ -151,6 +151,32 @@ class DataIntegrityTest {
     }
 
     @Test
+    fun worldOneBunkTeachesEnvironmentalActionChainBeforeMovement() {
+        val rooms = readList("src/main/assets/rooms.json", Room::class.java)
+        val events = readList("src/main/assets/events.json", GameEvent::class.java)
+        val quests = readList("src/main/assets/quests.json", Quest::class.java)
+        val bunk = rooms.firstOrNull { it.id == "pit_nova_bunk" }
+        val westRequirements = bunk?.blockedDirections?.get("west")?.requires.orEmpty()
+            .map { it.roomId to it.stateKey }
+        val wakeTasks = quests.firstOrNull { it.id == "w1_mq01" }
+            ?.stages
+            ?.firstOrNull { it.id == "wake_in_the_pit" }
+            ?.tasks
+            ?.map { it.id }
+            .orEmpty()
+        val nettingEventTasks = events.firstOrNull { it.id == "w1_mq01_check_netting" }
+            ?.actions
+            .orEmpty()
+            .filter { it.type == "set_quest_task_done" }
+            .mapNotNull { it.taskId }
+
+        assertTrue("Nova's bunk exit should require the light.", ("pit_nova_bunk" to "light_on") in westRequirements)
+        assertTrue("Nova's bunk exit should require checking the netting.", ("pit_nova_bunk" to "netting_checked") in westRequirements)
+        assertTrue("Wake Up Call should explicitly ask players to check the netting.", "check_netting" in wakeTasks)
+        assertTrue("Netting inspection should complete the onboarding task.", "check_netting" in nettingEventTasks)
+    }
+
+    @Test
     fun forgePuzzleSliceUsesEnvironmentalActions() {
         val rooms = readList("src/main/assets/rooms.json", Room::class.java)
         val events = readList("src/main/assets/events.json", GameEvent::class.java)

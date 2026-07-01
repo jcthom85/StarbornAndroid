@@ -255,10 +255,15 @@
             "room_id": "pit_nova_bunk",
             "state_key": "light_on",
             "value": true
+          },
+          {
+            "room_id": "pit_nova_bunk",
+            "state_key": "netting_checked",
+            "value": true
           }
         ],
-        "message_locked": "You can't pick a safe path through the bunkroom until the light is on.",
-        "message_unlock": "The bunkroom light steadies, and the way out is clear."
+        "message_locked": "You can't pick a safe path through the bunkroom until the light is on and you have checked the cargo netting.",
+        "message_unlock": "The bunk light steadies, your gear is accounted for, and the way out is clear."
       }
     },
     "actions": [

@@ -184,6 +184,12 @@
     "toast": "Bunk light restored."
   },
   {
+    "id": "ms_w1_mq01_netting_checked",
+    "name": "Gear Accounted For",
+    "description": "Nova checked the cargo netting before leaving her bunk.",
+    "toast": "Gear accounted for."
+  },
+  {
     "id": "ms_w1_mq01_checked_bunk",
     "name": "Bunk Checked",
     "description": "Nova checked the bunk and gathered herself before leaving the Pit.",
