@@ -11,6 +11,7 @@ import com.example.starborn.domain.session.GameSessionStore
 import com.squareup.moshi.Types
 import java.io.File
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -66,25 +67,31 @@ class Hub2CriticalFlowTest {
         // Inspect murals in Hall of Echoes
         harness.events.handleTrigger("player_action", EventPayload.Action("w2_mq03_inspect_murals"))
         assertTrue(harness.store.state.value.questTasksCompleted["w2_mq03"].orEmpty().contains("inspect_murals"))
+        assertTrue(harness.store.state.value.completedMilestones.contains("ms_w2_murals_read"))
 
         // Enter Stasis Chamber
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("sector9_stasis_chamber"))
         assertTrue(harness.store.state.value.questTasksCompleted["w2_mq03"].orEmpty().contains("find_stasis_chamber"))
 
-        // Talk to Zeke to solve puzzle (choose C# Minor 7)
-        val zekePuzzle = harness.dialogue.startDialogue("Zeke")
-        assertNotNull(zekePuzzle)
-        assertEquals("zeke_w2_mq03_puzzle_hint_1", zekePuzzle?.current()?.id)
-        
-        // Assert puzzle options are present
-        val options = zekePuzzle?.choices().orEmpty()
-        assertEquals(3, options.size)
-        assertTrue(options.any { it.id == "zeke_w2_mq03_choose_csharp" })
+        // Zeke now hints at the environmental chain instead of presenting answer choices.
+        val zekeHint = harness.dialogue.startDialogue("Zeke")
+        assertNotNull(zekeHint)
+        assertEquals("zeke_w2_mq03_puzzle_hint_1", zekeHint?.current()?.id)
+        assertTrue(zekeHint?.choices().orEmpty().isEmpty())
 
-        // Select correct choice (C#m7)
-        val next = zekePuzzle?.choose("zeke_w2_mq03_choose_csharp")
-        assertEquals("zeke_w2_mq03_puzzle_success", next?.id)
-        zekePuzzle?.advanceUntilFinished()
+        // The ring console cannot complete until the chamber has been read and stabilized.
+        harness.events.handleTrigger("player_action", EventPayload.Action("w2_mq03_align_complete"))
+        assertFalse(harness.store.state.value.questTasksCompleted["w2_mq03"].orEmpty().contains("align_stasis_rings"))
+
+        harness.events.handleTrigger("player_action", EventPayload.Action("w2_mq03_inspect_pod"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w2_mq03_read_mural_overview"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w2_mq03_stabilize_coolant"))
+        state = harness.store.state.value
+        assertTrue(state.completedMilestones.contains("ms_w2_stasis_pod_read"))
+        assertTrue(state.completedMilestones.contains("ms_w2_stasis_overview_read"))
+        assertTrue(state.completedMilestones.contains("ms_w2_coolant_stabilized"))
+
+        harness.events.handleTrigger("player_action", EventPayload.Action("w2_mq03_align_complete"))
 
         state = harness.store.state.value
         assertTrue(state.questTasksCompleted["w2_mq03"].orEmpty().contains("align_stasis_rings"))
@@ -102,11 +109,10 @@ class Hub2CriticalFlowTest {
         // Confront Gh0st
         harness.events.handleTrigger("player_action", EventPayload.Action("w2_mq04_confront"))
         assertEquals("Gh0st", harness.startedDialogues.lastOrNull())
-        val ghostConfrontation = harness.dialogue.startDialogue("Gh0st")
-        assertNotNull(ghostConfrontation)
-        assertEquals("ghost_confrontation_1", ghostConfrontation?.current()?.id)
-        ghostConfrontation?.advanceUntilFinished()
         assertTrue(harness.store.state.value.questTasksCompleted["w2_mq04"].orEmpty().contains("confront_stalker"))
+        val ghostTalk = harness.dialogue.startDialogue("Gh0st")
+        assertNotNull(ghostTalk)
+        assertEquals("ghost_default_talk", ghostTalk?.current()?.id)
 
         // Defeat mutated Source Beast
         harness.store.setRoom("sector9_canopy_ridge")
@@ -128,19 +134,26 @@ class Hub2CriticalFlowTest {
         // Enter Source Gate room
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("sector9_source_gate"))
 
-        // Talk to Orion to solve resonator puzzle (choose C# Minor 7)
-        val orionPuzzle = harness.dialogue.startDialogue("Orion")
-        assertNotNull(orionPuzzle)
-        assertEquals("orion_w2_mq05_gate_1", orionPuzzle?.current()?.id)
+        // Orion now points to the gate hardware instead of offering a chord menu.
+        val orionHint = harness.dialogue.startDialogue("Orion")
+        assertNotNull(orionHint)
+        assertEquals("orion_w2_mq05_gate_1", orionHint?.current()?.id)
+        assertTrue(orionHint?.choices().orEmpty().isEmpty())
 
-        val gateOptions = orionPuzzle?.choices().orEmpty()
-        assertEquals(2, gateOptions.size)
-        assertTrue(gateOptions.any { it.id == "orion_w2_mq05_gate_csharp" })
+        harness.events.handleTrigger("player_action", EventPayload.Action("w2_mq05_bypass_gate"))
+        assertFalse(harness.store.state.value.questTasksCompleted["w2_mq05"].orEmpty().contains("bypass_source_gate"))
 
-        // Select correct option
-        val gateNext = orionPuzzle?.choose("orion_w2_mq05_gate_csharp")
-        assertEquals("orion_w2_mq05_gate_success", gateNext?.id)
-        orionPuzzle?.advanceUntilFinished()
+        harness.events.handleTrigger("player_action", EventPayload.Action("w2_mq05_stabilize_horn"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w2_mq05_ground_cup"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w2_mq05_read_pressure_gauge"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w2_mq05_overload_breakers"))
+        state = harness.store.state.value
+        assertTrue(state.completedMilestones.contains("ms_w2_source_horn_stabilized"))
+        assertTrue(state.completedMilestones.contains("ms_w2_source_cup_grounded"))
+        assertTrue(state.completedMilestones.contains("ms_w2_source_pressure_mapped"))
+        assertTrue(state.completedMilestones.contains("ms_w2_source_breakers_starved"))
+
+        harness.events.handleTrigger("player_action", EventPayload.Action("w2_mq05_bypass_gate"))
 
         state = harness.store.state.value
         assertTrue(state.questTasksCompleted["w2_mq05"].orEmpty().contains("bypass_source_gate"))
@@ -265,16 +278,17 @@ class Hub2CriticalFlowTest {
         harness.events.handleTrigger("player_action", EventPayload.Action("w2_sq04_crystal_west"))
         harness.events.handleTrigger("player_action", EventPayload.Action("w2_sq04_crystal_east"))
         harness.events.handleTrigger("player_action", EventPayload.Action("w2_sq04_crystal_north"))
+        state = harness.store.state.value
+        assertTrue(state.completedMilestones.contains("ms_w2_crystal_west_seated"))
+        assertTrue(state.completedMilestones.contains("ms_w2_crystal_east_seated"))
+        assertTrue(state.completedMilestones.contains("ms_w2_crystal_north_seated"))
 
-        // Start tune dialogue
+        // Orion points the player to the resonator columns instead of offering answer choices.
         harness.store.setRoom("sector9_hall_of_echoes")
         val tuneMural = harness.dialogue.startDialogue("Orion")
         assertNotNull(tuneMural)
         assertEquals("orion_w2_sq04_tune_1", tuneMural?.current()?.id)
-
-        // Select correct C# Minor 7 option
-        val tuneNext = tuneMural?.choose("orion_w2_sq04_tune_csharp")
-        assertEquals("orion_w2_sq04_tune_success", tuneNext?.id)
+        assertTrue(tuneMural?.choices().orEmpty().isEmpty())
         tuneMural?.advanceUntilFinished()
 
         state = harness.store.state.value

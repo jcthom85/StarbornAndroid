@@ -1,0 +1,53 @@
+appId: com.junewiregames.starborn.prealpha
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "Debug Scenarios"
+    timeout: 60000
+- tapOn: "Debug Scenarios"
+- extendedWaitUntil:
+    visible: "Search world, quest, room, or system"
+    timeout: 10000
+- tapOn: "Search world, quest, room, or system"
+- inputText: "Core Firewall"
+- hideKeyboard
+- tapOn: "W5 / Core Firewall"
+- extendedWaitUntil:
+    visible: "Server Farm"
+    timeout: 30000
+- assertNotVisible: "server maze"
+- assertVisible: "coolant-pulse map"
+- tapOn: "coolant-pulse map"
+- extendedWaitUntil:
+    visible: "Zeke maps the repeating aisles.*"
+    timeout: 10000
+- tapOn: ".*Zeke maps the repeating aisles.*"
+- extendedWaitUntil:
+    visible: "Server Farm"
+    timeout: 10000
+- tapOn: "Travel north"
+- extendedWaitUntil:
+    visible: "Mainframe Nave"
+    timeout: 15000
+- tapOn: "Travel east"
+- extendedWaitUntil:
+    visible: "Firewall Alpha"
+    timeout: 15000
+- tapOn: "firewall node alpha"
+- extendedWaitUntil:
+    visible: "Firewall Alpha drops.*"
+    timeout: 10000
+- tapOn: ".*Firewall Alpha drops.*"
+- extendedWaitUntil:
+    visible: "Firewall Alpha"
+    timeout: 10000
+- tapOn: "Travel east"
+- extendedWaitUntil:
+    visible: "Firewall Beta"
+    timeout: 15000
+- tapOn: "firewall node beta"
+- extendedWaitUntil:
+    visible: "Firewall Beta folds.*"
+    timeout: 10000
+- takeScreenshot: w5-firewall-route

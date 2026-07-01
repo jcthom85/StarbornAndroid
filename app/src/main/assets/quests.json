@@ -697,7 +697,7 @@
         "tasks": [
           {
             "id": "align_stasis_rings",
-            "text": "Solve the stasis pod ring alignment code."
+            "text": "Stabilize the stasis pod ring array."
           },
           {
             "id": "talk_to_orion",
@@ -959,7 +959,7 @@
         "tasks": [
           {
             "id": "mural_tuning",
-            "text": "Align the stasis chamber mural frequency to C#m7."
+            "text": "Seat the crystal voices and restore the mural chord."
           }
         ]
       }
@@ -1263,8 +1263,8 @@
   {
     "id": "w3_mq14",
     "title": "The Lens",
-    "summary": "Reach the Archive, tune the light array, and take the Lens even when it recognizes Nova first.",
-    "description": "Enter the Archive, tune the Prism Gallery array with Orion, and take the Lens knowing the relic will expose more than the crew planned to steal.",
+    "summary": "Reach the Archive, resolve the Prism Gallery containment field, and take the Lens even when it recognizes Nova first.",
+    "description": "Enter the Archive, read the Prism Gallery's light machinery with Orion, and take the Lens knowing the relic will expose more than the crew planned to steal.",
     "flavor": "Truth is not a light. It is a wound that glows.",
     "giver": "Orion",
     "hub_id": "hub_6_upper_city",
@@ -1280,7 +1280,7 @@
           },
           {
             "id": "solve_light_puzzle",
-            "text": "Tune the Prism Gallery light puzzle frequencies."
+            "text": "Resolve the Prism Gallery containment field."
           }
         ]
       },
@@ -1666,7 +1666,7 @@
     "id": "w4_mq19",
     "title": "The Anvil",
     "summary": "Reach the Forge and steal the Anvil relic before Rylos seals the core.",
-    "description": "Solve the conveyor-crusher puzzle, claim the Anvil, and unlock Construct after Nova's first failed attempt to shape the Foundry's heat into a path.",
+    "description": "Read the Forge machinery, open the Anvil cradle, and unlock Construct after Nova's first failed attempt to shape the Foundry's heat into a path.",
     "flavor": "Creation answers intent. Doubt becomes debris.",
     "giver": "Orion",
     "hub_id": "hub_8_assembly_line",
@@ -1682,7 +1682,7 @@
           },
           {
             "id": "solve_conveyor_puzzle",
-            "text": "Solve the conveyor belt puzzle."
+            "text": "Open the Anvil cradle."
           }
         ]
       },
@@ -1979,7 +1979,7 @@
         "tasks": [
           {
             "id": "realign_mirrors",
-            "text": "Realign the Solarium mirrors."
+            "text": "Trace the false sun and burn the void-moss off the Solarium mirrors."
           }
         ]
       }
@@ -2007,7 +2007,7 @@
         "tasks": [
           {
             "id": "seal_breaches",
-            "text": "Seal three hull breaches."
+            "text": "Map the dock pressure loss and seal the three hull breaches."
           }
         ]
       }
@@ -2029,18 +2029,18 @@
     "title": "The Core Approach",
     "summary": "Follow Thorne's route through Vale's rewritten firewall and reach Elara.",
     "description": "Navigate the Server Farm, use Thorne's inside knowledge to break three firewall nodes Vale rewrote, and destroy the hard-light construct guarding the Anchor Chamber.",
-    "flavor": "The cold is deliberate. So is the maze.",
+    "flavor": "The cold is deliberate. So is the route.",
     "giver": "Thorne",
     "hub_id": "hub_10_deep_ring",
     "stages": [
       {
         "id": "firewall_maze",
-        "title": "Firewall Maze",
+        "title": "Firewall Route",
         "description": "Find and disable the three firewall nodes.",
         "tasks": [
           {
             "id": "navigate_maze",
-            "text": "Navigate the Server Farm maze."
+            "text": "Map the Server Farm route through Thorne's firewall nodes."
           },
           {
             "id": "firewall_alpha",
@@ -2346,7 +2346,7 @@
         "tasks": [
           {
             "id": "build_bridge",
-            "text": "Build the bridge from shared memories."
+            "text": "Anchor the bridge with the crew's separate memories."
           },
           {
             "id": "final_banter",
@@ -2466,7 +2466,7 @@
         "tasks": [
           {
             "id": "climb_stair",
-            "text": "Climb the Memory Stair."
+            "text": "Reject Vale's revisions and climb the Memory Stair."
           },
           {
             "id": "defeat_shadow_wave",

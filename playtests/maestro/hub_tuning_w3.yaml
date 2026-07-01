@@ -16,19 +16,13 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     visible: "Prism Gallery"
     timeout: 30000
-- assertVisible: "light puzzle"
-- tapOn: "light puzzle"
+- assertNotVisible: "light puzzle"
+- assertVisible: "prism shutters"
+- tapOn: "prism shutters"
 - extendedWaitUntil:
-    visible: "Prism Gallery Light Puzzle"
+    visible: "Orion reads the shutters by ear.*"
     timeout: 10000
-- assertVisible: "Frequency: 240Hz"
-- assertVisible: "Amplitude: 65%"
-- assertVisible: "Phase: 180deg"
-- tapOn: "Tune"
-- extendedWaitUntil:
-    visible: "The chord still beats too fast.*"
-    timeout: 10000
-- tapOn: "Cancel"
+- tapOn: ".*Orion reads the shutters by ear.*"
 - extendedWaitUntil:
     visible: "Prism Gallery"
     timeout: 10000

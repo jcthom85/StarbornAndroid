@@ -826,36 +826,19 @@
   {
     "id": "zeke_w2_mq03_puzzle_hint_1",
     "speaker": "Zeke",
-    "text": "The stasis pod is completely locked down by safety alignment rings. According to the console, it needs a stable chord of 136Hz. That's a C#m7 resonance. Adjust the rings using my frequency broadcast.",
-    "condition": "quest_active:w2_mq03,quest_task_not_done:w2_mq03:align_stasis_rings",
-    "options": [
-      {
-        "id": "zeke_w2_mq03_choose_csharp",
-        "text": "Broadcast C# Minor 7 (136.1 Hz)",
-        "next": "zeke_w2_mq03_puzzle_success"
-      },
-      {
-        "id": "zeke_w2_mq03_choose_dmaj",
-        "text": "Broadcast D Major (146.8 Hz)",
-        "next": "zeke_w2_mq03_puzzle_fail"
-      },
-      {
-        "id": "zeke_w2_mq03_choose_gmin",
-        "text": "Broadcast G Minor (196.0 Hz)",
-        "next": "zeke_w2_mq03_puzzle_fail"
-      }
-    ]
+    "text": "The pod is not asking for a password. It is asking for the room to stop fighting itself. Read the murals, map the pod pressure, check the overview sockets, and stabilize the coolant before you touch the ring console.",
+    "condition": "quest_active:w2_mq03,quest_task_not_done:w2_mq03:align_stasis_rings"
   },
   {
     "id": "zeke_w2_mq03_puzzle_success",
     "speaker": "Zeke",
-    "text": "It worked! The stasis rings are locking into alignment. The pod is venting pressure!",
+    "text": "The chamber finally sounds like one machine. The rings are locking into alignment, and the pod is venting pressure cleanly.",
     "trigger": "player_action:w2_mq03_align_complete"
   },
   {
     "id": "zeke_w2_mq03_puzzle_fail",
     "speaker": "Zeke",
-    "text": "No, the rings are still oscillating. The frequency is discordant. Let's try again."
+    "text": "No, the rings are still oscillating. Something in the chamber is still pushing against the rest of the system."
   },
   {
     "id": "zeke_w2_sq01_turnin_1",
@@ -884,60 +867,37 @@
   {
     "id": "orion_w2_mq05_gate_1",
     "speaker": "Orion",
-    "text": "This energy barrier blocks access to the hangar. It vibrates with intense discordance. We must introduce a resolving harmonic lock at C#m7 to bypass it.",
-    "condition": "quest_active:w2_mq05,quest_task_not_done:w2_mq05:bypass_source_gate",
-    "options": [
-      {
-        "id": "orion_w2_mq05_gate_csharp",
-        "text": "Tune resonator to C# Minor 7 (136.1 Hz)",
-        "next": "orion_w2_mq05_gate_success"
-      },
-      {
-        "id": "orion_w2_mq05_gate_emaj",
-        "text": "Tune resonator to E Major (164.8 Hz)",
-        "next": "orion_w2_mq05_gate_fail"
-      }
-    ]
+    "text": "This barrier is not a lock so much as a living circuit in pain. Steady the horn, ground the cup, read the pressure roots, and starve the breakers. Then the acoustic lock will accept a resolving tone.",
+    "condition": "quest_active:w2_mq05,quest_task_not_done:w2_mq05:bypass_source_gate"
   },
   {
     "id": "orion_w2_mq05_gate_success",
     "speaker": "Orion",
-    "text": "Perfect! The frequencies match, and the barrier dissolves. Hangar access is clear.",
+    "text": "There. The system can breathe again, and the barrier has nothing left to hold.",
     "trigger": "player_action:w2_mq05_bypass_gate"
   },
   {
     "id": "orion_w2_mq05_gate_fail",
     "speaker": "Orion",
-    "text": "The barrier hums louder, pushing us back. That frequency is rejected. Let's try again."
+    "text": "The barrier hums louder, pushing us back. One of its bands is still being forced out of tune."
   },
   {
     "id": "orion_w2_sq04_tune_1",
     "speaker": "Orion",
-    "text": "All three crystal voices are seated. Which chord will align the stasis mural and hold each human memory like Ice within the Ocean?",
+    "text": "All three crystal voices are seated. The mural is ready for the resonator columns; let the room carry the chord instead of forcing it by hand.",
     "condition": "quest_active:w2_sq04,quest_task_done:w2_sq04:crystal_west,quest_task_done:w2_sq04:crystal_east,quest_task_done:w2_sq04:crystal_north,quest_task_not_done:w2_sq04:mural_tuning",
-    "options": [
-      {
-        "id": "orion_w2_sq04_tune_csharp",
-        "text": "Tune console to C# Minor 7",
-        "next": "orion_w2_sq04_tune_success"
-      },
-      {
-        "id": "orion_w2_sq04_tune_dmaj",
-        "text": "Tune console to D Major",
-        "next": "orion_w2_sq04_tune_fail"
-      }
-    ]
+    "trigger": "player_action:w2_sq04_complete"
   },
   {
     "id": "orion_w2_sq04_tune_success",
     "speaker": "Orion",
-    "text": "C#m7. The mural stabilizes: many minds, distinct as Ice, carried without dissolving in the Ocean.",
+    "text": "The mural stabilizes: many minds, distinct as Ice, carried without dissolving in the Ocean.",
     "trigger": "player_action:w2_sq04_complete"
   },
   {
     "id": "orion_w2_sq04_tune_fail",
     "speaker": "Orion",
-    "text": "No, the colors are shifting erratically. The pitch is incorrect."
+    "text": "No, the colors are shifting erratically. The room is missing one of its voices."
   },
   {
     "id": "orion_w2_sq03_intro_1",
@@ -1197,14 +1157,13 @@
     "id": "orion_w3_mq14_puzzle_intro",
     "speaker": "Orion",
     "condition": "quest_active:w3_mq14,quest_task_done:w3_mq14:enter_archive,quest_task_not_done:w3_mq14:solve_light_puzzle",
-    "text": "The Prism Gallery is not solving light. It is forcing pressure to become visible. Dominion wrapped a cage in beauty and called it scholarship. Tune the quiet frequencies first.",
+    "text": "The Prism Gallery is not solving light. It is forcing pressure to become visible. Dominion wrapped a cage in beauty and called it scholarship. Read the containment field, the prism shutters, and the tether-line routing before touching the Lens.",
     "next": "orion_w3_mq14_puzzle_end"
   },
   {
     "id": "orion_w3_mq14_puzzle_end",
     "speaker": "Orion",
-    "text": "There. The door is listening now. Do not mistake permission for mercy.",
-    "trigger": "player_action:w3_mq14_solve_light_puzzle"
+    "text": "When those three systems agree, the containment field will open because the room understands itself again. Do not mistake permission for mercy."
   },
   {
     "id": "zeke_w3_mq14_lens_warning",
@@ -1314,8 +1273,8 @@
     "id": "orion_w4_mq19_puzzle_intro",
     "speaker": "Orion",
     "condition": "quest_active:w4_mq19,quest_task_done:w4_mq19:reach_core_chamber,quest_task_not_done:w4_mq19:solve_conveyor_puzzle",
-    "text": "The puzzle is a factory rhythm. Belts, crushers, then silence. Move on the silence.",
-    "trigger": "player_action:w4_mq19_solve_conveyor_puzzle"
+    "text": "The Forge is breathing in rhythm. Belts, crushers, then silence. Find what controls the silence.",
+    "trigger": "player_action:w4_mq19_open_anvil_cradle"
   },
   {
     "id": "nova_w4_mq19_anvil_intro",
@@ -1368,8 +1327,7 @@
     "id": "thorne_w5_mq23_core",
     "speaker": "Thorne",
     "condition": "quest_active:w5_mq23,quest_task_not_done:w5_mq23:navigate_maze",
-    "text": "Three firewall nodes. I designed the maze to keep everyone else out. Vale changed the locks and left me inside it.",
-    "trigger": "player_action:w5_mq23_navigate_maze"
+    "text": "Three firewall nodes. I designed the server route to keep everyone else out. Vale changed the locks and left me inside it. Map the coolant pulse first, then follow Alpha, Beta, Gamma in order."
   },
   {
     "id": "elara_w5_mq24_reunion",

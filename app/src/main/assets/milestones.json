@@ -550,7 +550,7 @@
   {
     "id": "ms_w4_conveyor_puzzle_solved",
     "name": "Anvil Cradle Opened",
-    "description": "You solved the Forge timing puzzle and opened the Anvil cradle.",
+    "description": "You read the Forge timing rhythm and opened the Anvil cradle.",
     "toast": "Anvil cradle opened."
   },
   {
@@ -723,9 +723,9 @@
   },
   {
     "id": "ms_w5_server_maze_mapped",
-    "name": "Server Maze Mapped",
-    "description": "Zeke mapped the Deep Ring server maze by coolant pulse.",
-    "toast": "Server maze mapped."
+    "name": "Server Route Mapped",
+    "description": "Zeke mapped the Deep Ring firewall route by coolant pulse.",
+    "toast": "Server route mapped."
   },
   {
     "id": "ms_w5_firewall_alpha_down",

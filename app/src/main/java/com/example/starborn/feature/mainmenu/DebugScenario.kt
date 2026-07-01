@@ -32,6 +32,7 @@ object DebugScenarioCatalog {
         scenario("w2_temple_gate", "W2 / Temple Gate", "Resume The Signal at the Temple Gate after clearing the canopy route.", DebugScenarioCategory.STORY),
         scenario("w2_stasis_chamber", "W2 / Stasis Chamber", "Resume Sleeping Giant at Orion's stasis chamber.", DebugScenarioCategory.STORY),
         scenario("w2_hunter_canopy", "W2 / Hunter Canopy", "Resume The Hunter at Canopy Ridge with Orion recruited.", DebugScenarioCategory.STORY),
+        scenario("w2_source_gate", "W2 / Source Gate", "Resume Liftoff at the Source Gate before bypassing the acoustic lock.", DebugScenarioCategory.STORY),
         scenario("w2_astra_repair", "W2 / Astra Repair", "Resume Liftoff in the hangar after recruiting the full crew.", DebugScenarioCategory.STORY),
         scenario("w3_sewers_entry", "W3 / Sewers Entry", "Start Homecoming beneath the Spire.", DebugScenarioCategory.STORY),
         scenario("w3_safehouse_plan", "W3 / Safehouse Plan", "Resume The Plan from Zeke's safehouse.", DebugScenarioCategory.STORY),
@@ -87,7 +88,7 @@ object DebugScenarioCatalog {
         scenario("hub_qa_w1_rest", "Hub QA / W1 Rest", "Open Nova's bunk for rest/cook hub testing.", DebugScenarioCategory.SYSTEM),
         scenario("hub_qa_w2_cookfire", "Hub QA / W2 Cookfire", "Open the Sector 9 falls cookfire for rest/cook hub testing.", DebugScenarioCategory.SYSTEM),
         scenario("hub_qa_w3_tuning", "Hub QA / W3 Tuning", "Open the Prism Gallery tuning puzzle.", DebugScenarioCategory.SYSTEM),
-        scenario("hub_qa_w4_tuning", "Hub QA / W4 Tuning", "Open the Foundry conveyor timing tuning puzzle.", DebugScenarioCategory.SYSTEM),
+        scenario("hub_qa_w4_tuning", "Hub QA / W4 Forge", "Open the Foundry Forge environmental puzzle slice.", DebugScenarioCategory.SYSTEM),
         scenario("hub_qa_w6_source", "Hub QA / W6 Source", "Open the Source campfire with story and rest actions separated.", DebugScenarioCategory.SYSTEM)
     )
 

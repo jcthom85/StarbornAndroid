@@ -86,16 +86,16 @@ appId: com.junewiregames.starborn.prealpha
     visible: "Stream Bank"
     timeout: 15000
 
-# Dismiss "Quest Complete: A Strange Coast" if it is shown
+# Dismiss "Quest Completed: A Strange Coast" if it is shown
 - extendedWaitUntil:
-    visible: "Quest Complete"
+    visible: "Quest Completed"
     timeout: 10000
     optional: true
 - tapOn:
-    text: "Got it"
+    text: "Continue"
     optional: true
 - extendedWaitUntil:
-    notVisible: "Quest Complete"
+    notVisible: "Quest Completed"
     timeout: 10000
     optional: true
 

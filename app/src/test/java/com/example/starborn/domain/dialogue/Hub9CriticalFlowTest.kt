@@ -48,6 +48,19 @@ class Hub9CriticalFlowTest {
         assertEquals("source_memory_bridge", state.roomId)
 
         harness.events.handleTrigger("player_action", EventPayload.Action("w6_mq28_build_bridge"))
+        assertTrue(harness.store.state.value.questTasksCompleted["w6_mq28"].orEmpty().contains("build_bridge").not())
+
+        harness.events.handleTrigger("player_action", EventPayload.Action("w6_mq28_anchor_zeke"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w6_mq28_anchor_ghost"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w6_mq28_anchor_orion"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w6_mq28_anchor_nova"))
+        state = harness.store.state.value
+        assertTrue(state.completedMilestones.contains("ms_w6_bridge_zeke_anchor"))
+        assertTrue(state.completedMilestones.contains("ms_w6_bridge_ghost_anchor"))
+        assertTrue(state.completedMilestones.contains("ms_w6_bridge_orion_anchor"))
+        assertTrue(state.completedMilestones.contains("ms_w6_bridge_nova_anchor"))
+
+        harness.events.handleTrigger("player_action", EventPayload.Action("w6_mq28_build_bridge"))
         harness.events.handleTrigger("player_action", EventPayload.Action("w6_mq28_final_banter"))
         harness.events.handleTrigger("player_action", EventPayload.Action("w6_mq28_reach_singularity"))
         state = harness.store.state.value

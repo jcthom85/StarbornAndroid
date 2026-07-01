@@ -131,6 +131,206 @@ class DataIntegrityTest {
     }
 
     @Test
+    fun forgePuzzleSliceUsesEnvironmentalActions() {
+        val rooms = readList("src/main/assets/rooms.json", Room::class.java)
+        val events = readList("src/main/assets/events.json", GameEvent::class.java)
+        val eventIds = events.map { it.id }.toSet()
+        val forgeRooms = rooms.filter {
+            it.id == "foundry_forge_anvil" ||
+                it.id == "foundry_forge_control_alcove" ||
+                it.id.startsWith("foundry_conveyor_belt_scale_") ||
+                it.id.startsWith("foundry_forge_scale_")
+        }
+        val requiredForgeMilestones = listOf(
+            "ms_w4_pulse_board_read",
+            "ms_w4_grease_route_read",
+            "ms_w4_paddle_thrown",
+            "ms_w4_pistons_starved"
+        )
+        val puzzleLabels = forgeRooms.flatMap { room ->
+            room.actions.mapNotNull { action ->
+                val label = action["name"] as? String
+                if (label?.contains("puzzle", ignoreCase = true) == true) "${room.id}:$label" else null
+            }
+        }
+        val forgeTuningReferences = forgeRooms.flatMap { room ->
+            room.actions.mapNotNull { action ->
+                val type = action["type"] as? String
+                val puzzleId = action["puzzle_id"] as? String
+                if (type.equals("tuning_puzzle", ignoreCase = true) || puzzleId == "forge_conveyor_timing") {
+                    "${room.id}:${puzzleId.orEmpty()}"
+                } else {
+                    null
+                }
+            }
+        }
+        val missingEvents = forgeRooms.flatMap { room ->
+            room.actions.mapNotNull { action ->
+                val eventId = action["action_event"] as? String
+                if (!eventId.isNullOrBlank() && eventId !in eventIds) "${room.id}:$eventId" else null
+            }
+        }
+        val openCradleActions = forgeRooms.flatMap { room ->
+            room.actions.filter { action -> action["action_event"] == "w4_mq19_open_anvil_cradle" }
+                .map { action -> room.id to action }
+        }
+        val cradleActionsMissingRequirements = openCradleActions.mapNotNull { (roomId, action) ->
+            @Suppress("UNCHECKED_CAST")
+            val requires = action["requires_milestones"] as? List<String>
+            if (requires == requiredForgeMilestones) null else "$roomId:${action["name"]}"
+        }
+        val openCradleEvent = events.firstOrNull { it.id == "w4_mq19_open_anvil_cradle" }
+        val openCradleEventMilestones = openCradleEvent?.conditions
+            ?.filter { it.type == "milestone_set" }
+            ?.mapNotNull { it.milestone }
+            .orEmpty()
+
+        assertTrue("Forge puzzle labels should use in-world nouns, not 'puzzle': $puzzleLabels", puzzleLabels.isEmpty())
+        assertTrue("Forge puzzle slice should not use tuning puzzle actions: $forgeTuningReferences", forgeTuningReferences.isEmpty())
+        assertTrue("Forge puzzle action events should exist: $missingEvents", missingEvents.isEmpty())
+        assertTrue("Forge cradle actions should require the environmental chain: $cradleActionsMissingRequirements", cradleActionsMissingRequirements.isEmpty())
+        assertTrue("Forge open-cradle event should require the environmental chain.", openCradleEventMilestones.containsAll(requiredForgeMilestones))
+    }
+
+    @Test
+    fun worldThreePrismGalleryUsesEnvironmentalActions() {
+        val rooms = readList("src/main/assets/rooms.json", Room::class.java)
+        val events = readList("src/main/assets/events.json", GameEvent::class.java)
+        val prismRooms = rooms.filter { it.id == "spire_prism_gallery" || it.id == "spire_archive_vault" }
+        val requiredMilestones = listOf(
+            "ms_w3_containment_field_read",
+            "ms_w3_prism_shutters_read",
+            "ms_w3_command_tethers_traced"
+        )
+        val puzzleLabels = prismRooms.flatMap { room ->
+            room.actions.mapNotNull { action ->
+                val label = action["name"] as? String
+                if (label?.contains("light puzzle", ignoreCase = true) == true) "${room.id}:$label" else null
+            }
+        }
+        val tuningReferences = prismRooms.flatMap { room ->
+            room.actions.mapNotNull { action ->
+                val type = action["type"] as? String
+                val puzzleId = action["puzzle_id"] as? String
+                if (type.equals("tuning_puzzle", ignoreCase = true) || puzzleId == "prism_gallery_light") {
+                    "${room.id}:${puzzleId.orEmpty()}"
+                } else {
+                    null
+                }
+            }
+        }
+        val solveEventMilestones = events.firstOrNull { it.id == "w3_mq14_solve_light_puzzle" }?.conditions
+            ?.filter { it.type == "milestone_set" }
+            ?.mapNotNull { it.milestone }
+            .orEmpty()
+
+        assertTrue("Prism Gallery should not expose a literal light puzzle label: $puzzleLabels", puzzleLabels.isEmpty())
+        assertTrue("Prism Gallery should not use tuning puzzle actions: $tuningReferences", tuningReferences.isEmpty())
+        assertTrue("Prism resolution should require the environmental reads.", solveEventMilestones.containsAll(requiredMilestones))
+    }
+
+    @Test
+    fun lateWorldPuzzleBeatsUseWorldSystems() {
+        val rooms = readList("src/main/assets/rooms.json", Room::class.java)
+        val events = readList("src/main/assets/events.json", GameEvent::class.java)
+        val roomsById = rooms.associateBy { it.id }
+        val eventsById = events.associateBy { it.id }
+        fun requires(roomId: String, actionEvent: String): List<String> {
+            val action = roomsById[roomId]?.actions.orEmpty()
+                .firstOrNull { it["action_event"] == actionEvent }
+            @Suppress("UNCHECKED_CAST")
+            return action?.get("requires_milestones") as? List<String> ?: emptyList()
+        }
+        fun conditionMilestones(eventId: String): List<String> =
+            eventsById[eventId]?.conditions.orEmpty()
+                .filter { it.type == "milestone_set" }
+                .mapNotNull { it.milestone }
+
+        val w5Text = File("src/main/assets/quests.json").readText() +
+            File("src/main/assets/dialogue.json").readText() +
+            File("src/main/assets/events.json").readText()
+        val w6BridgeMilestones = listOf(
+            "ms_w6_bridge_zeke_anchor",
+            "ms_w6_bridge_ghost_anchor",
+            "ms_w6_bridge_orion_anchor",
+            "ms_w6_bridge_nova_anchor"
+        )
+        val w6StairMilestones = listOf(
+            "ms_w6_refused_jed_revision",
+            "ms_w6_refused_astra_revision",
+            "ms_w6_refused_foundry_revision"
+        )
+
+        assertTrue("W5 player-facing text should say server route, not server maze.", !w5Text.contains("server maze", ignoreCase = true))
+        assertTrue("W5 quest flavor should not call the route a maze.", !w5Text.contains("So is the maze.", ignoreCase = true))
+        assertTrue("W6 bridge should require separate memory anchors.", requires("source_memory_bridge", "w6_mq28_build_bridge") == w6BridgeMilestones)
+        assertTrue("W6 bridge event should require separate memory anchors.", conditionMilestones("w6_mq28_build_bridge").containsAll(w6BridgeMilestones))
+        assertTrue("W6 stair should require refusing Vale's revisions.", requires("source_memory_stair", "w6_mq29_climb_stair") == w6StairMilestones)
+        assertTrue("W6 stair event should require refusing Vale's revisions.", conditionMilestones("w6_mq29_climb_stair").containsAll(w6StairMilestones))
+    }
+
+    @Test
+    fun worldTwoPuzzleBeatsUseEnvironmentalChains() {
+        val rooms = readList("src/main/assets/rooms.json", Room::class.java)
+        val events = readList("src/main/assets/events.json", GameEvent::class.java)
+        val eventIds = events.map { it.id }.toSet()
+        val roomsById = rooms.associateBy { it.id }
+        val eventsById = events.associateBy { it.id }
+        val stasisMilestones = listOf(
+            "ms_w2_murals_read",
+            "ms_w2_stasis_pod_read",
+            "ms_w2_stasis_overview_read",
+            "ms_w2_coolant_stabilized"
+        )
+        val sourceMilestones = listOf(
+            "ms_w2_source_horn_stabilized",
+            "ms_w2_source_cup_grounded",
+            "ms_w2_source_pressure_mapped",
+            "ms_w2_source_breakers_starved"
+        )
+        val crystalMilestones = listOf(
+            "ms_w2_crystal_west_seated",
+            "ms_w2_crystal_east_seated",
+            "ms_w2_crystal_north_seated"
+        )
+        fun requires(roomId: String, actionEvent: String): List<String> {
+            val action = roomsById[roomId]?.actions.orEmpty()
+                .firstOrNull { it["action_event"] == actionEvent }
+            @Suppress("UNCHECKED_CAST")
+            return action?.get("requires_milestones") as? List<String> ?: emptyList()
+        }
+        fun conditionMilestones(eventId: String): List<String> =
+            eventsById[eventId]?.conditions.orEmpty()
+                .filter { it.type == "milestone_set" }
+                .mapNotNull { it.milestone }
+
+        val w2PuzzleEvents = listOf(
+            "w2_mq03_align_complete",
+            "w2_mq05_bypass_gate",
+            "w2_sq04_complete",
+            "w2_mq03_read_mural_overview",
+            "w2_mq03_stabilize_coolant",
+            "w2_mq05_stabilize_horn",
+            "w2_mq05_ground_cup",
+            "w2_mq05_read_pressure_gauge",
+            "w2_mq05_overload_breakers"
+        )
+        val missingEvents = w2PuzzleEvents.filterNot { it in eventIds }
+        val dialogueText = File("src/main/assets/dialogue.json").readText()
+        val questText = File("src/main/assets/quests.json").readText()
+
+        assertTrue("W2 puzzle action events should exist: $missingEvents", missingEvents.isEmpty())
+        assertTrue("Stasis ring console should require environmental readings.", requires("sector9_stasis_ring_array", "w2_mq03_align_complete") == stasisMilestones)
+        assertTrue("Stasis completion event should require environmental readings.", conditionMilestones("w2_mq03_align_complete").containsAll(stasisMilestones))
+        assertTrue("Source acoustic lock should require hardware stabilization.", requires("sector9_source_gate", "w2_mq05_bypass_gate") == sourceMilestones)
+        assertTrue("Source Gate completion event should require hardware stabilization.", conditionMilestones("w2_mq05_bypass_gate").containsAll(sourceMilestones))
+        assertTrue("Ancient Echoes mural actions should require crystal voices.", requires("sector9_hall_of_echoes", "w2_sq04_complete") == crystalMilestones)
+        assertTrue("Ancient Echoes completion event should require crystal voices.", conditionMilestones("w2_sq04_complete").containsAll(crystalMilestones))
+        assertTrue("W2 dialogue should not expose old chord-answer menu copy.", !dialogueText.contains("Broadcast C# Minor 7") && !dialogueText.contains("Tune resonator to C# Minor 7"))
+        assertTrue("W2 quest text should not ask players to solve the stasis code.", !questText.contains("Solve the stasis pod ring alignment code."))
+    }
+
+    @Test
     fun restStopRoomActionsReferenceValidEvents() {
         val rooms = readList("src/main/assets/rooms.json", Room::class.java)
         val events = readList("src/main/assets/events.json", GameEvent::class.java)

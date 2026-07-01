@@ -4210,7 +4210,7 @@
     "env": "neon",
     "title": "Archive Vault",
     "background_image": "images/rooms/world_3/spire_archive_vault.png",
-    "description": "The Archive Vault rises in indexed crystal stacks over a glass floor two hundred stories high. The lens relic hangs in a containment field that hums toward Nova before she touches it. Something deeper waits beneath the glass, the kind of structure only Scan could expose.",
+    "description": "The Archive Vault rises in indexed crystal stacks over a glass floor two hundred stories high. The lens relic hangs in a containment field that hums toward Nova before she touches it. Command tether-lines vanish into the glass, routing power back toward the Prism Gallery.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -4236,7 +4236,7 @@
         ]
       },
       {
-        "description": "The Archive Vault rises in indexed crystal stacks over a glass floor two hundred stories high. The lens relic hangs in a containment field, the solved prism route humming through the glass like permission stolen from light.",
+        "description": "The Archive Vault rises in indexed crystal stacks over a glass floor two hundred stories high. The lens relic hangs in an open containment field, the resolved prism route humming through the glass like permission stolen from light.",
         "requires_milestones": [
           "ms_w3_prism_solved"
         ]
@@ -4244,10 +4244,22 @@
     ],
     "actions": [
       {
+        "name": "containment field",
+        "type": "generic",
+        "action_event": "w3_mq14_read_containment_field",
+        "condition_unmet_message": "The field is not a lock so much as a museum label backed by lethal power."
+      },
+      {
         "name": "lens relic",
         "type": "generic",
         "action_event": "w3_mq14_take_lens",
         "condition_unmet_message": "The Lens floats inside a containment field, already reacting like it recognizes something in Nova."
+      },
+      {
+        "name": "command tether-lines",
+        "type": "generic",
+        "action_event": "w3_mq14_trace_command_tethers",
+        "condition_unmet_message": "The tether-lines route the containment field through the Prism Gallery instead of the vault door."
       },
       {
         "name": "scan tether-lines",
@@ -4265,7 +4277,7 @@
     "env": "neon",
     "title": "Prism Gallery",
     "background_image": "images/rooms/world_3/spire_archive_vault.png",
-    "description": "The prism gallery bends Archive light into visible music. A light puzzle waits in the center, its prisms tuned to frequencies Orion can hear before anyone else can see them. Alarm chords sleep inside the color, waiting for the Lens to make them legible.",
+    "description": "The prism gallery bends Archive light into visible music. Prism shutters split the containment field into color bands, and alarm chords sleep inside the glass until the room is read in the right order.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -4280,13 +4292,13 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The prism gallery fractures the lockdown lights into visible alarm chords. The solved light puzzle is still warm, and Scan shows a narrow timing path threaded through the noise toward the roof.",
+        "description": "The prism gallery fractures the lockdown lights into visible alarm chords. The resolved containment route is still warm, and Scan shows a narrow timing path threaded through the noise toward the roof.",
         "requires_milestones": [
           "ms_w3_mq14_complete"
         ]
       },
       {
-        "description": "The prism gallery bends Archive light into visible music. The solved light puzzle now holds the containment field open, its prisms trembling at frequencies Orion can hear and Nova can no longer ignore.",
+        "description": "The prism gallery bends Archive light into visible music. The prism shutters now hold the containment field open, trembling at frequencies Orion can hear and Nova can no longer ignore.",
         "requires_milestones": [
           "ms_w3_prism_solved"
         ]
@@ -4294,15 +4306,21 @@
     ],
     "actions": [
       {
-        "name": "light puzzle",
-        "type": "tuning_puzzle",
-        "puzzle_id": "prism_gallery_light",
-        "condition_unmet_message": "A prism array waits for Orion to tune its acoustic frequencies."
+        "name": "prism shutters",
+        "type": "generic",
+        "action_event": "w3_mq14_read_prism_shutters",
+        "condition_unmet_message": "The shutters split the vault field into three color bands, each feeding a different part of the cage."
       },
       {
         "name": "visible music",
         "type": "generic",
-        "condition_unmet_message": "The visible music shivers in the air, beautiful enough to make the alarm grid feel holy."
+        "action_event": "w3_mq14_solve_light_puzzle",
+        "requires_milestones": [
+          "ms_w3_containment_field_read",
+          "ms_w3_prism_shutters_read",
+          "ms_w3_command_tethers_traced"
+        ],
+        "condition_unmet_message": "The visible music will not resolve until the containment field, prism shutters, and command tether-lines agree."
       },
       {
         "name": "scan alarm chords",
@@ -4564,7 +4582,7 @@
     "env": "foundry",
     "title": "Stepping Stones",
     "background_image": "images/rooms/world_4/foundry_slag_river.png",
-    "description": "Basalt stones rise from the lava channel in a crooked line. Each flare throws blue-white Source fire across a different step, turning the crossing into a timing puzzle.",
+    "description": "Basalt stones rise from the lava channel in a crooked line. Each flare throws blue-white Source fire across a different step, turning the crossing into a readable rhythm.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -5124,13 +5142,22 @@
         ]
       },
       {
-        "description": "The belt plates are locked in a safe pattern. The Anvil sits in its cradle like a dare, bright enough to cast Nova's shadow up the hammer wall.",
+        "description": "The belt plates are locked in a safe pattern, the breath pistons are starved, and the Anvil cradle has opened around the relic like a hand unclenching. The Anvil sits there like a dare, bright enough to cast Nova's shadow up the hammer wall.",
         "requires_milestones": [
           "ms_w4_conveyor_puzzle_solved"
         ]
       },
       {
-        "description": "The Forge bucks without the fabrication matrix feeding it clean instructions. The Anvil mount is exposed, but the moving plates still protect it with industrial indifference.",
+        "description": "The Forge bucks without the fabrication matrix feeding it clean instructions. The belt rhythm is mapped, the crawl marks point to a safe window, and the override paddle has killed one crusher lane. The breath pistons still feed too much heat into the Anvil cradle.",
+        "requires_milestones": [
+          "ms_w4_paddle_thrown"
+        ],
+        "forbidden_milestones": [
+          "ms_w4_conveyor_puzzle_solved"
+        ]
+      },
+      {
+        "description": "The Forge bucks without the fabrication matrix feeding it clean instructions. The Anvil cradle is exposed, but the moving plates still protect it with industrial indifference.",
         "requires_milestones": [
           "ms_w4_matrix_overloaded"
         ]
@@ -5144,10 +5171,16 @@
         "condition_unmet_message": "The fabrication matrix feeds the conveyor floor with Phantom shells."
       },
       {
-        "name": "conveyor puzzle",
-        "type": "tuning_puzzle",
-        "puzzle_id": "forge_conveyor_timing",
-        "condition_unmet_message": "The Anvil mount is locked behind moving belt plates and timed crushers."
+        "name": "anvil cradle",
+        "type": "generic",
+        "action_event": "w4_mq19_open_anvil_cradle",
+        "requires_milestones": [
+          "ms_w4_pulse_board_read",
+          "ms_w4_grease_route_read",
+          "ms_w4_paddle_thrown",
+          "ms_w4_pistons_starved"
+        ],
+        "condition_unmet_message": "The cradle will not open until the belt rhythm, crawl window, override paddle, and breath pistons all agree."
       },
       {
         "name": "anvil relic",
@@ -5168,7 +5201,7 @@
     "env": "foundry",
     "title": "Control Alcove",
     "background_image": "images/rooms/world_4/foundry_forge_anvil.png",
-    "description": "A shielded alcove controls the Forge's moving belt plates. The panel is burned around the edges where previous operators tried to override the hammer timing by hand.",
+    "description": "A shielded alcove controls the Forge's moving belt plates. The panel is burned around the edges where previous operators tried to override the hammer cadence by hand.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -5182,10 +5215,16 @@
     "state": {},
     "actions": [
       {
-        "name": "hammer timing",
-        "type": "tuning_puzzle",
-        "puzzle_id": "forge_conveyor_timing",
-        "condition_unmet_message": "The hammer timing can open the Anvil cradle if Nova and Orion split the pattern cleanly."
+        "name": "hammer cadence",
+        "type": "generic",
+        "action_event": "w4_mq19_open_anvil_cradle",
+        "requires_milestones": [
+          "ms_w4_pulse_board_read",
+          "ms_w4_grease_route_read",
+          "ms_w4_paddle_thrown",
+          "ms_w4_pistons_starved"
+        ],
+        "condition_unmet_message": "The cadence keeps refusing Nova's reach. The belt needs a mapped rhythm, a safe crawl window, an override pause, and starved breath pistons before the cradle will open."
       }
     ]
   },
@@ -5446,9 +5485,18 @@
         "condition_unmet_message": "The station airlock refuses the crew until Gh0st breaks Thorne's old cipher."
       },
       {
+        "name": "pressure map",
+        "type": "generic",
+        "action_event": "w5_sq23_map_pressure_loss",
+        "condition_unmet_message": "The pressure map marks three breach warnings, but the order matters more than the count."
+      },
+      {
         "name": "airlock console",
         "type": "generic",
         "action_event": "w5_sq23_vacuum_seal",
+        "requires_milestones": [
+          "ms_w5_pressure_loss_mapped"
+        ],
         "condition_unmet_message": "Three hull breach warnings pulse across the pressure map."
       }
     ],
@@ -5649,9 +5697,18 @@
     ],
     "actions": [
       {
+        "name": "false sun path",
+        "type": "generic",
+        "action_event": "w5_sq22_trace_false_sun",
+        "condition_unmet_message": "The reflected light path shows where the false sun is being wasted."
+      },
+      {
         "name": "mirror panels",
         "type": "generic",
         "action_event": "w5_sq22_realign_mirrors",
+        "requires_milestones": [
+          "ms_w5_false_sun_traced"
+        ],
         "condition_unmet_message": "The panels can burn away the void-moss if their angles are restored."
       }
     ]
@@ -5792,7 +5849,7 @@
     "env": "void",
     "title": "Server Farm",
     "background_image": "images/rooms/world_5/orbital_server_farm.png",
-    "description": "Server columns vanish into cold mist. Architect notation bleeds through the Dominion interface, and someone is breathing inside the cooling vents.",
+    "description": "Server columns vanish into cold mist. A coolant-pulse map flickers beneath the Dominion interface, and someone is breathing inside the cooling vents.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -5833,28 +5890,10 @@
         "condition_unmet_message": "The terminal carries both Harmony and Architect root directories."
       },
       {
-        "name": "server maze",
+        "name": "coolant-pulse map",
         "type": "generic",
         "action_event": "w5_mq23_navigate_maze",
         "condition_unmet_message": "Cold aisles repeat around the same impossible rack numbers."
-      },
-      {
-        "name": "firewall node alpha",
-        "type": "generic",
-        "action_event": "w5_mq23_firewall_alpha",
-        "condition_unmet_message": "The first firewall node shifts its cipher every few seconds."
-      },
-      {
-        "name": "firewall node beta",
-        "type": "generic",
-        "action_event": "w5_mq23_firewall_beta",
-        "condition_unmet_message": "The second node is protected by a recursive Dominion lock."
-      },
-      {
-        "name": "firewall node gamma",
-        "type": "generic",
-        "action_event": "w5_mq23_firewall_gamma",
-        "condition_unmet_message": "The final node projects a hard-light guardian into the aisle."
       },
       {
         "name": "purged backup rack",
@@ -5929,7 +5968,7 @@
     "env": "void",
     "title": "Firewall Alpha",
     "background_image": "images/rooms/world_5/orbital_server_farm.png",
-    "description": "The first firewall node hangs in a cage of blue hard-light. Its cipher keeps rewriting itself in Thorne's old notation with Vale's edits layered over the top.",
+    "description": "Firewall node alpha hangs in a cage of blue hard-light. Its cipher keeps rewriting itself in Thorne's old notation with Vale's edits layered over the top.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -5966,7 +6005,7 @@
     "env": "void",
     "title": "Firewall Beta",
     "background_image": "images/rooms/world_5/orbital_server_farm.png",
-    "description": "The second firewall node loops through recursion windows. Each window shows a slightly different version of the same locked door.",
+    "description": "Firewall node beta loops through recursion windows. Each window shows a slightly different version of the same locked door.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -6003,7 +6042,7 @@
     "env": "void",
     "title": "Firewall Gamma",
     "background_image": "images/rooms/world_5/orbital_server_farm.png",
-    "description": "The final firewall node projects a half-built hard-light body into the aisle. Its face is blank because the system has not decided who it wants to execute yet.",
+    "description": "Firewall node gamma projects a half-built hard-light body into the aisle. Its face is blank because the system has not decided who it wants to execute yet.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -6670,7 +6709,7 @@
     "env": "source",
     "title": "Memory Bridge",
     "background_image": "images/rooms/world_6/source_memory_bridge.png",
-    "description": "A platform of static extends over the raw Source. Each honest memory spoken aloud becomes another section of bridge.",
+    "description": "A platform of static extends over the raw Source. Zeke's anchor, Gh0st's anchor, Orion's anchor, and Nova's anchor wait where the unfinished bridge should be.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -6686,9 +6725,39 @@
     "state": {},
     "actions": [
       {
+        "name": "Zeke's anchor",
+        "type": "generic",
+        "action_event": "w6_mq28_anchor_zeke",
+        "condition_unmet_message": "The bridge needs the memory of someone who chose family after utility failed."
+      },
+      {
+        "name": "Gh0st's anchor",
+        "type": "generic",
+        "action_event": "w6_mq28_anchor_ghost",
+        "condition_unmet_message": "The bridge needs the memory of someone who stopped mistaking orders for identity."
+      },
+      {
+        "name": "Orion's anchor",
+        "type": "generic",
+        "action_event": "w6_mq28_anchor_orion",
+        "condition_unmet_message": "The bridge needs the memory of someone who woke from preservation into grief."
+      },
+      {
+        "name": "Nova's anchor",
+        "type": "generic",
+        "action_event": "w6_mq28_anchor_nova",
+        "condition_unmet_message": "The bridge needs the memory of someone who refuses a painless lie."
+      },
+      {
         "name": "unfinished bridge",
         "type": "generic",
         "action_event": "w6_mq28_build_bridge",
+        "requires_milestones": [
+          "ms_w6_bridge_zeke_anchor",
+          "ms_w6_bridge_ghost_anchor",
+          "ms_w6_bridge_orion_anchor",
+          "ms_w6_bridge_nova_anchor"
+        ],
         "condition_unmet_message": "The static needs memories the Source cannot counterfeit."
       }
     ]
@@ -6758,7 +6827,7 @@
     "env": "source",
     "title": "Memory Stair",
     "background_image": "images/rooms/world_6/source_memory_stair.png",
-    "description": "Jed's workshop door opens into jungle canopy, Spire glass, Foundry catwalk, and Ring metal arranged as an ascending spiral.",
+    "description": "Jed's door opens into Astra wreckage, Spire glass, Foundry catwalk, and Ring metal arranged around the memory stair.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -6773,6 +6842,35 @@
     ],
     "state": {},
     "actions": [
+      {
+        "name": "Jed's door",
+        "type": "generic",
+        "action_event": "w6_mq29_refuse_jed_revision",
+        "condition_unmet_message": "Vale's stair offers a version of the mine where Jed never died."
+      },
+      {
+        "name": "Astra wreckage",
+        "type": "generic",
+        "action_event": "w6_mq29_refuse_astra_revision",
+        "condition_unmet_message": "A polished Astra waits without crash scars, without Sector 9, and without Orion."
+      },
+      {
+        "name": "Foundry catwalk",
+        "type": "generic",
+        "action_event": "w6_mq29_refuse_foundry_revision",
+        "condition_unmet_message": "The Foundry offers Gh0st a clean origin with no bodies behind it."
+      },
+      {
+        "name": "memory stair",
+        "type": "generic",
+        "action_event": "w6_mq29_climb_stair",
+        "requires_milestones": [
+          "ms_w6_refused_jed_revision",
+          "ms_w6_refused_astra_revision",
+          "ms_w6_refused_foundry_revision"
+        ],
+        "condition_unmet_message": "The stair will not hold until Nova refuses the mine, the Astra, and the Foundry as painless lies."
+      },
       {
         "name": "aethel grave",
         "type": "generic",
@@ -8424,10 +8522,10 @@
     "state": {},
     "actions": [
       {
-        "name": "Stone Lock",
+        "name": "stone lock",
         "type": "generic",
         "action_event": "w2_mq02_use_chime",
-        "condition_unmet_message": "The stone lock hums softly, waiting for its matching resonance."
+        "condition_unmet_message": "The stone lock hums softly, waiting for the Chime to answer it."
       }
     ],
     "description_variants": [
@@ -8727,8 +8825,13 @@
       {
         "name": "tune murals",
         "type": "generic",
-        "action_event": "w2_sq04_tune_murals",
-        "condition_unmet_message": "The ancient console flickers, its resonance matrix misaligned."
+        "action_event": "w2_sq04_complete",
+        "requires_milestones": [
+          "ms_w2_crystal_west_seated",
+          "ms_w2_crystal_east_seated",
+          "ms_w2_crystal_north_seated"
+        ],
+        "condition_unmet_message": "The mural chord will not hold until the west, east, and north crystal voices are seated."
       }
     ]
   },
@@ -8875,7 +8978,7 @@
     "weather": "resonance",
     "title": "Tuning Matrix",
     "background_image": "images/rooms/world_2/archive_tuning_bay.png",
-    "description": "A tuning matrix room containing four sound resonator columns. They must be tuned to C#m7.",
+    "description": "A tuning matrix room containing four sound resonator columns. Empty sockets wait for crystal voices from the west, east, and north wings before the mural chord can settle.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -8892,8 +8995,26 @@
       {
         "name": "resonator",
         "type": "generic",
-        "action_event": "w2_sq04_tune_murals",
-        "condition_unmet_message": "Tuning the resonator columns..."
+        "action_event": "w2_sq04_complete",
+        "requires_milestones": [
+          "ms_w2_crystal_west_seated",
+          "ms_w2_crystal_east_seated",
+          "ms_w2_crystal_north_seated"
+        ],
+        "condition_unmet_message": "The resonator columns need all three crystal voices seated before they can carry the mural chord."
+      }
+    ],
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w2_crystal_west_seated",
+          "ms_w2_crystal_east_seated",
+          "ms_w2_crystal_north_seated"
+        ],
+        "forbidden_milestones": [
+          "ms_w2_sq04_complete"
+        ],
+        "description": "The tuning matrix room holds three seated crystal voices. The resonator columns no longer sound like separate machines; they are waiting for one careful touch to carry the mural chord."
       }
     ]
   },
@@ -8946,10 +9067,10 @@
     "state": {},
     "actions": [
       {
-        "name": "Stasis Pod",
+        "name": "stasis pod",
         "type": "generic",
         "action_event": "w2_mq03_inspect_pod",
-        "condition_unmet_message": "A sealed pod containing a sleeping figure."
+        "condition_unmet_message": "The sealed pod is protecting a sleeping figure by holding his memory inside three pressure rings."
       },
       {
         "name": "scan roots",
@@ -8990,7 +9111,7 @@
     "weather": "fog",
     "title": "Ring Array",
     "background_image": "images/rooms/world_2/stasis_ring_array.png",
-    "description": "The console room controlling the three concentric stasis rings. The alignment indicators hum with discordant tones.",
+    "description": "The ring console controls three concentric stasis rings. The alignment indicators hum with discordant tones, waiting for the mural pattern, pod pressure, overview sockets, and coolant flow to agree.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -9006,10 +9127,30 @@
     "state": {},
     "actions": [
       {
-        "name": "console",
+        "name": "ring console",
         "type": "generic",
-        "action_event": "w2_mq03_align_rings",
-        "condition_unmet_message": "Bypassing the stasis ring alignment security lock..."
+        "action_event": "w2_mq03_align_complete",
+        "requires_milestones": [
+          "ms_w2_murals_read",
+          "ms_w2_stasis_pod_read",
+          "ms_w2_stasis_overview_read",
+          "ms_w2_coolant_stabilized"
+        ],
+        "condition_unmet_message": "The rings refuse to move until the murals are read, the pod pressure is understood, the overview sockets are mapped, and the coolant flow is stabilized."
+      }
+    ],
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w2_murals_read",
+          "ms_w2_stasis_pod_read",
+          "ms_w2_stasis_overview_read",
+          "ms_w2_coolant_stabilized"
+        ],
+        "forbidden_milestones": [
+          "ms_w2_mq03_complete"
+        ],
+        "description": "The three concentric stasis rings hum in a stable pattern now. The ring console is no longer guessing at a code; it is waiting for Nova to let the room breathe in sequence."
       }
     ]
   },
@@ -9019,7 +9160,7 @@
     "weather": "fog",
     "title": "Coolant Lines",
     "background_image": "images/rooms/world_2/stasis_coolant_lines.png",
-    "description": "A maintenance bay filled with stasis coolant lines. Stabilizing fluids hum inside the thick pipes.",
+    "description": "A maintenance bay filled with stasis coolant lines. A coolant garden of luminous vines drinks from the thick pipes and keeps the ring pressure alive.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -9036,7 +9177,16 @@
       {
         "name": "coolant garden",
         "type": "generic",
+        "action_event": "w2_mq03_stabilize_coolant",
         "condition_unmet_message": "Facility coolant nourishes the same luminous vines seen outside, proving both ecosystems share one circulation."
+      }
+    ],
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w2_coolant_stabilized"
+        ],
+        "description": "The coolant lines run steady through the maintenance bay. Luminous vines pulse with the same rhythm as the stasis rings instead of fighting them."
       }
     ]
   },
@@ -9046,7 +9196,7 @@
     "weather": "fog",
     "title": "Observation Deck",
     "background_image": "images/rooms/world_2/stasis_observation.png",
-    "description": "A glass-shielded viewing balcony overlooking the stasis deck. The terminal displays vital signs.",
+    "description": "A glass-shielded viewing balcony overlooking the stasis deck. The stasis mural overview displays vital signs and ring roles over the sleeping chamber.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -9063,7 +9213,16 @@
       {
         "name": "stasis mural overview",
         "type": "generic",
-        "condition_unmet_message": "Three empty sockets surround the chamber mural, waiting for west, east, and north wing crystals."
+        "action_event": "w2_mq03_read_mural_overview",
+        "condition_unmet_message": "Three empty sockets surround the chamber mural, each showing how one ring protects memory from pressure."
+      }
+    ],
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w2_stasis_overview_read"
+        ],
+        "description": "The viewing balcony's overview remains projected over the stasis deck: memory, pressure, and return, each ring with a role instead of a random pitch."
       }
     ]
   },
@@ -9238,10 +9397,18 @@
     "state": {},
     "actions": [
       {
-        "name": "breakers",
+        "name": "generator breakers",
         "type": "generic",
         "action_event": "w2_mq05_overload_breakers",
-        "condition_unmet_message": "Overloading the main generator breakers..."
+        "condition_unmet_message": "The breakers can starve the barrier once the living circuit has somewhere safe to bleed its pressure."
+      }
+    ],
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w2_source_breakers_starved"
+        ],
+        "description": "The generator breakers sit in a staggered emergency pattern. The gate circuit still has shape, but it no longer has enough power to lash out."
       }
     ]
   },
@@ -9251,7 +9418,7 @@
     "weather": "fog",
     "title": "Purge Valve",
     "background_image": "images/rooms/world_2/power_valve.png",
-    "description": "An emergency valve used to purge overloaded static charges from the dynamo lines.",
+    "description": "An emergency valve used to purge overloaded static charges from the dynamo lines. A root pressure gauge trembles where living conduit enters the machinery.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -9267,7 +9434,16 @@
       {
         "name": "root pressure gauge",
         "type": "generic",
+        "action_event": "w2_mq05_read_pressure_gauge",
         "condition_unmet_message": "Roots outside regulate pressure inside. Severing either system would kill both."
+      }
+    ],
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w2_source_pressure_mapped"
+        ],
+        "description": "The root pressure gauge holds a readable pattern now: bleed, ground, starve, resolve. The living roots need relief, not violence."
       }
     ]
   },
@@ -9277,7 +9453,7 @@
     "weather": "resonance",
     "title": "Source Gate",
     "background_image": "images/rooms/world_2/source_gate.png",
-    "description": "A giant barrier of humming energy blocks access to the hangar. The Acoustic Lock vibrates with three discordant, howling frequencies.",
+    "description": "A giant barrier of humming energy blocks access to the hangar. The acoustic lock vibrates with three discordant, howling bands fed by a horn, a cup, pressure roots, and overloaded breakers.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -9294,10 +9470,16 @@
     "state": {},
     "actions": [
       {
-        "name": "Acoustic Lock",
+        "name": "acoustic lock",
         "type": "generic",
-        "action_event": "w2_mq05_inspect_resonator",
-        "condition_unmet_message": "The acoustic lock hums with intense dissonance."
+        "action_event": "w2_mq05_bypass_gate",
+        "requires_milestones": [
+          "ms_w2_source_horn_stabilized",
+          "ms_w2_source_cup_grounded",
+          "ms_w2_source_pressure_mapped",
+          "ms_w2_source_breakers_starved"
+        ],
+        "condition_unmet_message": "The acoustic lock will not resolve until the horn is steadied, the cup is grounded, the pressure roots are mapped, and the breakers are starved."
       }
     ],
     "npc_presence": [
@@ -9317,6 +9499,18 @@
           "ms_w2_mq05_complete"
         ],
         "description": "The Source Gate barrier has collapsed into harmless blue mist. The Acoustic Lock is quiet, and the route to the hangar finally belongs to the crew."
+      },
+      {
+        "requires_milestones": [
+          "ms_w2_source_horn_stabilized",
+          "ms_w2_source_cup_grounded",
+          "ms_w2_source_pressure_mapped",
+          "ms_w2_source_breakers_starved"
+        ],
+        "forbidden_milestones": [
+          "ms_w2_mq05_complete"
+        ],
+        "description": "The Source Gate still blocks the hangar, but the acoustic lock's three howling bands have fallen into a tense, readable chord. The horn, cup, roots, and breakers are finally ready for Orion's resolving tone."
       }
     ]
   },
@@ -9326,7 +9520,7 @@
     "weather": "resonance",
     "title": "Harmonic Horn",
     "background_image": "images/rooms/world_2/gate_emitter_left.png",
-    "description": "The left emitter tower focusing the lock frequency. The copper horn vibrates violently.",
+    "description": "The left emitter tower focuses the lock frequency. The copper horn vibrates violently, and an emitter memory glows inside its service frame.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -9342,7 +9536,16 @@
       {
         "name": "emitter memory",
         "type": "generic",
+        "action_event": "w2_mq05_stabilize_horn",
         "condition_unmet_message": "The emitter remembers thousands of minds crossing toward the Ocean, each held distinct like ice in current."
+      }
+    ],
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w2_source_horn_stabilized"
+        ],
+        "description": "The left emitter tower has stopped shaking against its copper stays. The harmonic horn now breathes in a low, steady band."
       }
     ]
   },
@@ -9352,7 +9555,7 @@
     "weather": "resonance",
     "title": "Resonance Cup",
     "background_image": "images/rooms/world_2/gate_emitter_right.png",
-    "description": "The right receiver cup grounding the barrier. The stone container is glowing white-hot.",
+    "description": "The right receiver cup grounds the barrier. The stone container glows white-hot beside an emitter service log etched into the rim.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -9368,7 +9571,16 @@
       {
         "name": "emitter service log",
         "type": "generic",
+        "action_event": "w2_mq05_ground_cup",
         "condition_unmet_message": "Technicians used Neural Stabilizers only as anchors; lasting recovery required rest and trusted voices."
+      }
+    ],
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w2_source_cup_grounded"
+        ],
+        "description": "The receiver cup no longer glows white-hot. A blue pulse runs around its lip, grounding the barrier without burning the stone."
       }
     ]
   },
@@ -11511,6 +11723,14 @@
       21
     ],
     "state": {},
+    "description_variants": [
+      {
+        "description": "The timing tower keeps ticking, but the pulse board now carries Nova's chalk marks across the fatal beats. The crusher rhythm is readable enough to use.",
+        "requires_milestones": [
+          "ms_w4_pulse_board_read"
+        ]
+      }
+    ],
     "actions": [
       {
         "name": "timing tower",
@@ -11520,6 +11740,7 @@
       {
         "name": "pulse board",
         "type": "generic",
+        "action_event": "w4_mq19_read_pulse_board",
         "condition_unmet_message": "The board predicts crush points before they happen."
       }
     ]
@@ -11577,6 +11798,14 @@
       23
     ],
     "state": {},
+    "description_variants": [
+      {
+        "description": "The roller underpass is still low and loud, but the grease marks now form a route: three breaths under the belt, then stop before the red scrape.",
+        "requires_milestones": [
+          "ms_w4_grease_route_read"
+        ]
+      }
+    ],
     "actions": [
       {
         "name": "roller underpass",
@@ -11586,6 +11815,7 @@
       {
         "name": "grease marks",
         "type": "generic",
+        "action_event": "w4_mq19_read_grease_marks",
         "condition_unmet_message": "The marks show where previous crews crawled."
       }
     ]
@@ -11608,6 +11838,14 @@
       24
     ],
     "state": {},
+    "description_variants": [
+      {
+        "description": "The control perch hangs over a quieter belt lane. The override paddle is down, shuddering against the mesh, and one section of crusher teeth keeps missing its bite.",
+        "requires_milestones": [
+          "ms_w4_paddle_thrown"
+        ]
+      }
+    ],
     "actions": [
       {
         "name": "control perch",
@@ -11617,6 +11855,7 @@
       {
         "name": "override paddle",
         "type": "generic",
+        "action_event": "w4_mq19_throw_override_paddle",
         "condition_unmet_message": "The paddle can pause one section if the mesh comes loose."
       }
     ]
@@ -11765,6 +12004,14 @@
       22
     ],
     "state": {},
+    "description_variants": [
+      {
+        "description": "The bellows walk rises beside breath pistons locked half-closed. The Forge keeps trying to inhale, but the Anvil cradle has lost the heat pressure that kept it clenched.",
+        "requires_milestones": [
+          "ms_w4_pistons_starved"
+        ]
+      }
+    ],
     "actions": [
       {
         "name": "bellows walk",
@@ -11774,6 +12021,7 @@
       {
         "name": "breath pistons",
         "type": "generic",
+        "action_event": "w4_mq19_starve_breath_pistons",
         "condition_unmet_message": "The pistons can starve the fire if timed correctly."
       }
     ]
@@ -14003,9 +14251,9 @@
   {
     "id": "source_zeke_nightmare_node_scale_01",
     "env": "source",
-    "title": "Badge Maze",
+    "title": "Badge Labyrinth",
     "background_image": "images/rooms/world_6/source_zeke_nightmare.png",
-    "description": "A badge maze rises from cubicle walls, each plastic smile stamped with Zeke's employee number. The plastic smile cracks every time he stops asking permission to exist.",
+    "description": "A badge labyrinth rises from cubicle walls, each plastic smile stamped with Zeke's employee number. The plastic smile cracks every time he stops asking permission to exist.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -14022,7 +14270,7 @@
     "state": {},
     "actions": [
       {
-        "name": "badge maze",
+        "name": "badge labyrinth",
         "type": "generic",
         "condition_unmet_message": "The nightmare turns employment into identity, then dares Zeke to fail at both."
       },

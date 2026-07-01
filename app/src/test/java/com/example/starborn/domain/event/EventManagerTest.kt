@@ -148,6 +148,38 @@ class EventManagerTest {
     }
 
     @Test
+    fun legacyQuestCompleteShowMessageIsSuppressed() {
+        val sessionStore = GameSessionStore()
+        val messages = mutableListOf<String>()
+        val completedQuests = mutableListOf<String?>()
+        val event = GameEvent(
+            id = "evt_complete",
+            trigger = EventTrigger(type = "custom"),
+            actions = listOf(
+                EventAction(
+                    type = "show_message",
+                    message = "Quest Complete: Sleeping Giant\n\nLegacy plain popup."
+                ),
+                EventAction(type = "complete_quest", completeQuest = "w2_mq03")
+            )
+        )
+        val manager = EventManager(
+            events = listOf(event),
+            sessionStore = sessionStore,
+            eventHooks = EventHooks(
+                onMessage = messages::add,
+                onQuestCompleted = completedQuests::add
+            )
+        )
+
+        manager.handleTrigger("custom")
+
+        assertTrue(messages.isEmpty())
+        assertEquals(listOf("w2_mq03"), completedQuests)
+        assertTrue(sessionStore.state.value.completedQuests.contains("w2_mq03"))
+    }
+
+    @Test
     fun encounterVictoryCanBeScopedToRoom() {
         val sessionStore = GameSessionStore()
         var messageCount = 0

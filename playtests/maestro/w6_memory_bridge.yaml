@@ -1,0 +1,45 @@
+appId: com.junewiregames.starborn.prealpha
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "Debug Scenarios"
+    timeout: 60000
+- tapOn: "Debug Scenarios"
+- extendedWaitUntil:
+    visible: "Search world, quest, room, or system"
+    timeout: 10000
+- tapOn: "Search world, quest, room, or system"
+- inputText: "The Crossing"
+- hideKeyboard
+- tapOn: "W6 / The Crossing"
+- extendedWaitUntil:
+    visible: "Memory Bridge"
+    timeout: 30000
+- assertVisible: "Zeke's anchor"
+- assertVisible: "Gh0st's anchor"
+- assertVisible: "Orion's anchor"
+- assertVisible: "Nova's anchor"
+- assertVisible: "unfinished bridge"
+- tapOn: "unfinished bridge"
+- extendedWaitUntil:
+    visible: "The static needs memories.*"
+    timeout: 10000
+- tapOn: ".*The static needs memories.*"
+- tapOn: "Zeke's anchor"
+- extendedWaitUntil:
+    visible: "Zeke gives the bridge.*"
+    timeout: 10000
+- tapOn: ".*Zeke gives the bridge.*"
+- extendedWaitUntil:
+    visible: "Memory Bridge"
+    timeout: 10000
+- tapOn: "Gh0st's anchor"
+- extendedWaitUntil:
+    visible: "Gh0st gives the bridge.*"
+    timeout: 10000
+- tapOn: ".*Gh0st gives the bridge.*"
+- extendedWaitUntil:
+    visible: "Memory Bridge"
+    timeout: 10000
+- takeScreenshot: w6-memory-bridge

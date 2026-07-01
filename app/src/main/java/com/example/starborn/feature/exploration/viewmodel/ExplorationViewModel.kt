@@ -4421,8 +4421,15 @@ class ExplorationViewModel(
         when (action.type.lowercase(Locale.getDefault())) {
             "fishing" -> handleFishingAction(action)
             else -> {
+                val required = collectRequiredMilestones(action.requiresMilestone, action.requiresMilestones)
+                val completed = sessionStore.state.value.completedMilestones
+                val locked = required.any { it !in completed }
                 val status = action.conditionUnmetMessage?.takeIf { it.isNotBlank() }
                     ?: "Triggered ${action.name}"
+                if (locked) {
+                    showInspection(status)
+                    return
+                }
                 val eventId = action.actionEvent?.takeIf { it.isNotBlank() }
                 if (eventId == null) {
                     showInspection(status)
@@ -4905,6 +4912,8 @@ class ExplorationViewModel(
                     type = type ?: "generic",
                     actionEvent = action["action_event"].asStringOrNull(),
                     zoneId = action["zone_id"].asStringOrNull(),
+                    requiresMilestones = action["requires_milestones"].asListOrNull(),
+                    requiresMilestone = action["requires_milestone"].asStringOrNull(),
                     conditionUnmetMessage = action["condition_unmet_message"].asStringOrNull()
                 )
             }

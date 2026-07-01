@@ -220,7 +220,9 @@ class EventManager(
                     }
                 }
                 "show_message" -> {
-                    action.message?.let { eventHooks.onMessage(it) }
+                    action.message
+                        ?.takeUnless { it.isLegacyQuestCompleteMessage() }
+                        ?.let { eventHooks.onMessage(it) }
                     true
                 }
                 "rest_party" -> {
@@ -543,6 +545,9 @@ class EventManager(
         return EventReward(xp = xp, credits = credits, ap = ap, items = items)
     }
 }
+
+private fun String.isLegacyQuestCompleteMessage(): Boolean =
+    trimStart().startsWith("Quest Complete:", ignoreCase = true)
 
 sealed interface EventPayload {
     data object Empty : EventPayload

@@ -40,5 +40,8 @@ class DebugScenarioCatalogTest {
             assertNotNull(scenario)
             assertEquals(DebugScenarioDestination.HUB, scenario?.destination)
         }
+        val sourceGate = DebugScenarioCatalog.find("w2_source_gate")
+        assertNotNull(sourceGate)
+        assertEquals(DebugScenarioDestination.EXPLORATION, sourceGate?.destination)
     }
 }

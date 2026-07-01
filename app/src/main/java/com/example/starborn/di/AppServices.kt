@@ -877,6 +877,7 @@ class AppServices(context: Context) {
         "w2_temple_gate" -> startNewGameAtW2TempleGate()
         "w2_stasis_chamber" -> startNewGameAtW2StasisChamber()
         "w2_hunter_canopy" -> startNewGameAtW2HunterCanopy()
+        "w2_source_gate" -> startNewGameAtW2SourceGate()
         "w2_astra_repair" -> startNewGameAtW2AstraRepair()
         "w3_sewers_entry" -> startNewGameAtW3SewersEntry()
         "w3_safehouse_plan" -> startNewGameAtW3SafehousePlan()
@@ -935,6 +936,8 @@ class AppServices(context: Context) {
         if (!prepareWorld3DebugState(completedW3Quests = listOf("w3_mq11", "w3_mq12", "w3_mq13"))) return false
         sessionStore.startQuest("w3_mq14", track = true)
         sessionStore.setQuestStage("w3_mq14", "archive_infiltration")
+        sessionStore.setQuestTaskCompleted("w3_mq14", "enter_archive", true)
+        sessionStore.setMilestone("ms_w3_archive_entered")
         sessionStore.setWorld("world_3")
         sessionStore.setHub("hub_6_upper_city")
         sessionStore.setRoom("spire_prism_gallery")
@@ -1040,6 +1043,18 @@ class AppServices(context: Context) {
         sessionStore.setHub("hub_3_sector9")
         sessionStore.setRoom("sector9_canopy_ridge")
         visitDebugNodes("sector9_landing", "razor_vine_path", "canopy_ridge", "temple_gate")
+        true
+    }.getOrElse { false }
+
+    private fun startNewGameAtW2SourceGate(): Boolean = runCatching {
+        if (!prepareWorld2DebugState(completedW2Quests = listOf("w2_mq01", "w2_mq02", "w2_mq03", "w2_mq04"))) return false
+        sessionStore.setPartyMembers(listOf("nova", "zeke", "orion", "gh0st"))
+        sessionStore.startQuest("w2_mq05", track = true)
+        sessionStore.setQuestStage("w2_mq05", "repair_astra")
+        sessionStore.setWorld("world_2")
+        sessionStore.setHub("hub_4_facility")
+        sessionStore.setRoom("sector9_source_gate")
+        visitDebugNodes("hall_of_echoes", "stasis_chamber", "source_gate")
         true
     }.getOrElse { false }
 
@@ -1264,6 +1279,10 @@ class AppServices(context: Context) {
         sessionStore.setWorld("world_5")
         sessionStore.setHub("hub_10_deep_ring")
         sessionStore.setRoom("orbital_server_farm")
+        sessionStore.setRoomState("orbital_server_farm", debugEncounterClearedStateKey("void_turret", "void_turret"), true)
+        sessionStore.setRoomState("deep_mainframe_nave", debugEncounterClearedStateKey("void_turret"), true)
+        sessionStore.setRoomState("deep_firewall_alpha", debugEncounterClearedStateKey("void_turret"), true)
+        sessionStore.setRoomState("deep_firewall_beta", debugEncounterClearedStateKey("void_turret"), true)
         visitDebugNodes("deep_server_farm")
         true
     }.getOrElse { false }

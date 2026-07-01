@@ -3364,8 +3364,12 @@
         "task_id": "inspect_murals"
       },
       {
+        "type": "set_milestone",
+        "milestone": "ms_w2_murals_read"
+      },
+      {
         "type": "show_message",
-        "message": "The murals are not decoration. They show a stasis system built around memory, identity, and a tuner named Orion."
+        "message": "The murals are not decoration. They show a stasis system built around memory, identity, and a tuner named Orion. The rings protect the mind by letting pressure move around it instead of through it."
       }
     ]
   },
@@ -3412,6 +3416,22 @@
         "quest_id": "w2_mq03"
       },
       {
+        "type": "milestone_set",
+        "milestone": "ms_w2_murals_read"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w2_stasis_pod_read"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w2_stasis_overview_read"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w2_coolant_stabilized"
+      },
+      {
         "type": "quest_task_not_done",
         "quest_id": "w2_mq03",
         "task_id": "align_stasis_rings"
@@ -3456,7 +3476,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Sleeping Giant\n\nThe pod opens around a man who remembers Sector 9 before Dominion buried it. Orion joins because the signal was his, and because the Astra still knows the way through the shield."
+        "message": "Quest Complete: Sleeping Giant\n\nThe mural pattern, pod pressure, overview sockets, and coolant flow finally agree. The pod opens around a man who remembers Sector 9 before Dominion buried it. Orion joins because the signal was his, and because the Astra still knows the way through the shield."
       }
     ]
   },
@@ -3512,6 +3532,11 @@
       {
         "type": "start_dialogue",
         "npc": "Gh0st"
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w2_mq04",
+        "task_id": "confront_stalker"
       }
     ]
   },
@@ -3593,13 +3618,13 @@
     "actions": [
       {
         "type": "show_message",
-        "message": "A massive barrier of energy blocks the way. It vibrates with intense dissonance. Speak to Orion to decipher the resonator alignment."
+        "message": "A massive barrier of energy blocks the way. Its acoustic lock howls through the horn, cup, pressure roots, and generator breakers feeding it."
       }
     ]
   },
   {
     "id": "w2_mq05_bypass_gate",
-    "description": "Triggered when Source Gate resonator puzzle is solved.",
+    "description": "Triggered when the Source Gate acoustic lock is resolved.",
     "trigger": {
       "type": "player_action",
       "action": "w2_mq05_bypass_gate"
@@ -3608,6 +3633,22 @@
       {
         "type": "quest_active",
         "quest_id": "w2_mq05"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w2_source_horn_stabilized"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w2_source_cup_grounded"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w2_source_pressure_mapped"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w2_source_breakers_starved"
       },
       {
         "type": "quest_task_not_done",
@@ -3627,7 +3668,7 @@
       },
       {
         "type": "show_message",
-        "message": "Orion tunes the lock to a perfect octave. The energy barrier dissolves, revealing the hangar bay ahead."
+        "message": "The horn steadies, the receiver cup grounds, the pressure roots bleed safely, and the breakers starve the last howl from the lock. Orion gives the system one clean resolving tone, and the barrier dissolves into blue mist."
       }
     ]
   },
@@ -5001,8 +5042,107 @@
     ]
   },
   {
+    "id": "w3_mq14_read_containment_field",
+    "description": "Read the Archive containment field before resolving the Prism Gallery.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w3_mq14_read_containment_field"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w3_mq14"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w3_mq14",
+        "task_id": "enter_archive"
+      },
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w3_containment_field_read"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w3_containment_field_read"
+      },
+      {
+        "type": "show_message",
+        "message": "The containment field is not a door. It is a pressure circuit, feeding the Lens through three prism shutters so the relic can be admired without ever being free."
+      }
+    ]
+  },
+  {
+    "id": "w3_mq14_read_prism_shutters",
+    "description": "Read the Prism Gallery shutter pattern.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w3_mq14_read_prism_shutters"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w3_mq14"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w3_mq14",
+        "task_id": "enter_archive"
+      },
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w3_prism_shutters_read"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w3_prism_shutters_read"
+      },
+      {
+        "type": "show_message",
+        "message": "Orion reads the shutters by ear: red carries pressure, blue carries return, and gold carries the permission lie Dominion wrapped around both."
+      }
+    ]
+  },
+  {
+    "id": "w3_mq14_trace_command_tethers",
+    "description": "Trace the vault command tether-lines.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w3_mq14_trace_command_tethers"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w3_mq14"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w3_mq14",
+        "task_id": "enter_archive"
+      },
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w3_command_tethers_traced"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w3_command_tethers_traced"
+      },
+      {
+        "type": "show_message",
+        "message": "Zeke follows the command tether-lines through the glass. The vault is not asking for a code; it is waiting for the Prism Gallery to stop contradicting itself."
+      }
+    ]
+  },
+  {
     "id": "w3_mq14_solve_light_puzzle",
-    "description": "Orion solves the light puzzle.",
+    "description": "Resolve the Prism Gallery containment field.",
     "trigger": {
       "type": "player_action",
       "action": "w3_mq14_solve_light_puzzle"
@@ -5016,6 +5156,18 @@
         "type": "quest_task_done",
         "quest_id": "w3_mq14",
         "task_id": "enter_archive"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w3_containment_field_read"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w3_prism_shutters_read"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w3_command_tethers_traced"
       },
       {
         "type": "quest_task_not_done",
@@ -5040,7 +5192,7 @@
       },
       {
         "type": "show_message",
-        "message": "In the Prism Gallery, Orion tunes the array until glass, light, and Source hum in the same key. The containment field drops like a held breath, and the room feels suddenly less like a museum than a trap."
+        "message": "The containment field, prism shutters, and command tether-lines finally agree. The Lens is no longer displayed like property; it hangs loose in the field, bright and waiting."
       }
     ]
   },
@@ -6356,11 +6508,159 @@
     ]
   },
   {
-    "id": "w4_mq19_solve_conveyor_puzzle",
-    "description": "Solve conveyor puzzle.",
+    "id": "w4_mq19_read_pulse_board",
+    "description": "Read the Forge pulse board.",
     "trigger": {
       "type": "player_action",
-      "action": "w4_mq19_solve_conveyor_puzzle"
+      "action": "w4_mq19_read_pulse_board"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w4_mq19"
+      },
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w4_pulse_board_read"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_room_state",
+        "room_id": "foundry_conveyor_belt_scale_01",
+        "state_key": "pulse_board_read",
+        "value": true
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w4_pulse_board_read"
+      },
+      {
+        "type": "show_message",
+        "message": "Nova marks the pulse board's fatal beats. The crushers are not random; they breathe in groups of three."
+      }
+    ]
+  },
+  {
+    "id": "w4_mq19_read_grease_marks",
+    "description": "Read the grease route under the belt.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w4_mq19_read_grease_marks"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w4_mq19"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w4_pulse_board_read"
+      },
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w4_grease_route_read"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_room_state",
+        "room_id": "foundry_conveyor_belt_scale_03",
+        "state_key": "grease_route_read",
+        "value": true
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w4_grease_route_read"
+      },
+      {
+        "type": "show_message",
+        "message": "The grease marks turn into a route once the rhythm is known: crawl on the third breath, stop before the red scrape."
+      }
+    ]
+  },
+  {
+    "id": "w4_mq19_throw_override_paddle",
+    "description": "Throw the Forge override paddle.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w4_mq19_throw_override_paddle"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w4_mq19"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w4_grease_route_read"
+      },
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w4_paddle_thrown"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_room_state",
+        "room_id": "foundry_conveyor_belt_scale_04",
+        "state_key": "paddle_thrown",
+        "value": true
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w4_paddle_thrown"
+      },
+      {
+        "type": "show_message",
+        "message": "Nova throws the override paddle through the mesh. One crusher lane misses its bite, leaving a silence wide enough to matter."
+      }
+    ]
+  },
+  {
+    "id": "w4_mq19_starve_breath_pistons",
+    "description": "Starve the Forge breath pistons.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w4_mq19_starve_breath_pistons"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w4_mq19"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w4_paddle_thrown"
+      },
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w4_pistons_starved"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_room_state",
+        "room_id": "foundry_forge_scale_01",
+        "state_key": "pistons_starved",
+        "value": true
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w4_pistons_starved"
+      },
+      {
+        "type": "show_message",
+        "message": "Orion counts the breath while Nova pins the pistons half-closed. The Forge keeps trying to inhale, but the cradle pressure drops."
+      }
+    ]
+  },
+  {
+    "id": "w4_mq19_open_anvil_cradle",
+    "description": "Open the Anvil cradle.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w4_mq19_open_anvil_cradle"
     },
     "conditions": [
       {
@@ -6376,9 +6676,31 @@
         "type": "quest_task_not_done",
         "quest_id": "w4_mq19",
         "task_id": "solve_conveyor_puzzle"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w4_pulse_board_read"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w4_grease_route_read"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w4_paddle_thrown"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w4_pistons_starved"
       }
     ],
     "actions": [
+      {
+        "type": "set_room_state",
+        "room_id": "foundry_forge_anvil",
+        "state_key": "anvil_cradle_open",
+        "value": true
+      },
       {
         "type": "set_quest_task_done",
         "quest_id": "w4_mq19",
@@ -6395,7 +6717,7 @@
       },
       {
         "type": "show_message",
-        "message": "Orion times the crushers while Nova shifts the belt pattern. The Anvil cradle opens."
+        "message": "The pulse board, grease route, override paddle, and breath pistons finally agree. The Anvil cradle opens with a sound like the Forge losing an argument."
       }
     ]
   },
@@ -7218,6 +7540,38 @@
     ]
   },
   {
+    "id": "w5_sq22_trace_false_sun",
+    "description": "Trace the Solarium false sun before restoring the mirrors.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w5_sq22_trace_false_sun"
+    },
+    "conditions": [
+      {
+        "type": "quest_not_completed",
+        "quest_id": "w5_sq22"
+      },
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w5_false_sun_traced"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_quest",
+        "quest_id": "w5_sq22"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w5_false_sun_traced"
+      },
+      {
+        "type": "show_message",
+        "message": "The Mirror Walk shows the false sun is not weak; it is pointed at executive sightlines instead of the plants. Paradise is losing because presentation outranks life."
+      }
+    ]
+  },
+  {
     "id": "w5_sq22_realign_mirrors",
     "description": "Restore the Solarium mirrors.",
     "trigger": {
@@ -7228,6 +7582,10 @@
       {
         "type": "quest_not_completed",
         "quest_id": "w5_sq22"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w5_false_sun_traced"
       }
     ],
     "actions": [
@@ -7259,6 +7617,38 @@
     ]
   },
   {
+    "id": "w5_sq23_map_pressure_loss",
+    "description": "Map Executive Dock pressure loss before sealing the breaches.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w5_sq23_map_pressure_loss"
+    },
+    "conditions": [
+      {
+        "type": "quest_not_completed",
+        "quest_id": "w5_sq23"
+      },
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w5_pressure_loss_mapped"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_quest",
+        "quest_id": "w5_sq23"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w5_pressure_loss_mapped"
+      },
+      {
+        "type": "show_message",
+        "message": "The pressure map marks three breaches in order of collapse: red carpet seam, docking collar, observation glass. Seal them out of order and the dock vents anyway."
+      }
+    ]
+  },
+  {
     "id": "w5_sq23_vacuum_seal",
     "description": "Seal the Executive Dock breaches.",
     "trigger": {
@@ -7269,6 +7659,10 @@
       {
         "type": "quest_not_completed",
         "quest_id": "w5_sq23"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w5_pressure_loss_mapped"
       }
     ],
     "actions": [
@@ -7306,7 +7700,7 @@
   },
   {
     "id": "w5_mq23_navigate_maze",
-    "description": "Zeke maps the repeating aisles by coolant pulse instead of rack number. The three firewall nodes resolve out of the maze.",
+    "description": "Zeke maps the repeating aisles by coolant pulse instead of rack number. The three firewall nodes resolve out of the server route.",
     "trigger": {
       "type": "player_action",
       "action": "w5_mq23_navigate_maze"
@@ -7334,7 +7728,7 @@
       },
       {
         "type": "show_message",
-        "message": "Zeke maps the repeating aisles by coolant pulse instead of rack number. Thorne's old architecture is under Vale's edits, and the three firewall nodes resolve out of the maze like wounds reopening."
+        "message": "Zeke maps the repeating aisles by coolant pulse instead of rack number. Thorne's old architecture is under Vale's edits, and the three firewall nodes resolve out of the server route like wounds reopening."
       }
     ]
   },
@@ -8250,6 +8644,118 @@
     ]
   },
   {
+    "id": "w6_mq28_anchor_zeke",
+    "description": "Anchor the memory bridge with Zeke's memory.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w6_mq28_anchor_zeke"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w6_mq28"
+      },
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w6_bridge_zeke_anchor"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w6_bridge_zeke_anchor"
+      },
+      {
+        "type": "show_message",
+        "message": "Zeke gives the bridge the memory of choosing the crew after every useful trick ran out. The static holds one narrow plank."
+      }
+    ]
+  },
+  {
+    "id": "w6_mq28_anchor_ghost",
+    "description": "Anchor the memory bridge with Gh0st's memory.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w6_mq28_anchor_ghost"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w6_mq28"
+      },
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w6_bridge_ghost_anchor"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w6_bridge_ghost_anchor"
+      },
+      {
+        "type": "show_message",
+        "message": "Gh0st gives the bridge the memory of lowering the rifle after the command ended. The next plank forms without asking who authorized it."
+      }
+    ]
+  },
+  {
+    "id": "w6_mq28_anchor_orion",
+    "description": "Anchor the memory bridge with Orion's memory.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w6_mq28_anchor_orion"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w6_mq28"
+      },
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w6_bridge_orion_anchor"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w6_bridge_orion_anchor"
+      },
+      {
+        "type": "show_message",
+        "message": "Orion gives the bridge the memory of waking to a world that kept moving without him. The third plank hums like grief refusing to dissolve."
+      }
+    ]
+  },
+  {
+    "id": "w6_mq28_anchor_nova",
+    "description": "Anchor the memory bridge with Nova's memory.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w6_mq28_anchor_nova"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w6_mq28"
+      },
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w6_bridge_nova_anchor"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w6_bridge_nova_anchor"
+      },
+      {
+        "type": "show_message",
+        "message": "Nova gives the bridge Jed's workshop as it was, not as Vale would repair it. The final plank forms with the scar still visible."
+      }
+    ]
+  },
+  {
     "id": "w6_mq28_build_bridge",
     "description": "Build the bridge from shared memories.",
     "trigger": {
@@ -8260,6 +8766,22 @@
       {
         "type": "quest_active",
         "quest_id": "w6_mq28"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w6_bridge_zeke_anchor"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w6_bridge_ghost_anchor"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w6_bridge_orion_anchor"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w6_bridge_nova_anchor"
       },
       {
         "type": "quest_task_not_done",
@@ -8493,16 +9015,112 @@
     ]
   },
   {
-    "id": "w6_mq29_climb_stair",
-    "description": "Begin the final ascent.",
+    "id": "w6_mq29_refuse_jed_revision",
+    "description": "Reject Vale's revised mine memory.",
     "trigger": {
-      "type": "enter_room",
-      "room": "source_memory_stair"
+      "type": "player_action",
+      "action": "w6_mq29_refuse_jed_revision"
     },
     "conditions": [
       {
         "type": "quest_active",
         "quest_id": "w6_mq29"
+      },
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w6_refused_jed_revision"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w6_refused_jed_revision"
+      },
+      {
+        "type": "show_message",
+        "message": "Vale offers a mine where Jed never dies. Nova leaves the real door closed, because love edited into comfort is only another cage."
+      }
+    ]
+  },
+  {
+    "id": "w6_mq29_refuse_astra_revision",
+    "description": "Reject Vale's revised Astra memory.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w6_mq29_refuse_astra_revision"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w6_mq29"
+      },
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w6_refused_astra_revision"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w6_refused_astra_revision"
+      },
+      {
+        "type": "show_message",
+        "message": "Vale offers an Astra that never crashes. Orion touches the impossible hull and lets it pass, because erasing the wreck erases everyone it saved."
+      }
+    ]
+  },
+  {
+    "id": "w6_mq29_refuse_foundry_revision",
+    "description": "Reject Vale's revised Foundry memory.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w6_mq29_refuse_foundry_revision"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w6_mq29"
+      },
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w6_refused_foundry_revision"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w6_refused_foundry_revision"
+      },
+      {
+        "type": "show_message",
+        "message": "Vale offers Gh0st a clean origin with no assembly line and no guilt. Gh0st refuses the lie because choice only matters after the damage is real."
+      }
+    ]
+  },
+  {
+    "id": "w6_mq29_climb_stair",
+    "description": "Begin the final ascent.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w6_mq29_climb_stair"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w6_mq29"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w6_refused_jed_revision"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w6_refused_astra_revision"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w6_refused_foundry_revision"
       },
       {
         "type": "quest_task_not_done",
@@ -9449,8 +10067,12 @@
         "task_id": "crystal_west"
       },
       {
+        "type": "set_milestone",
+        "milestone": "ms_w2_crystal_west_seated"
+      },
+      {
         "type": "show_message",
-        "message": "The west resonance crystal joins the recovered chord."
+        "message": "The west resonance crystal settles into a low supporting voice. The mural will need the answering east voice and the bright north voice before it can sing safely."
       }
     ]
   },
@@ -9478,8 +10100,12 @@
         "task_id": "crystal_east"
       },
       {
+        "type": "set_milestone",
+        "milestone": "ms_w2_crystal_east_seated"
+      },
+      {
         "type": "show_message",
-        "message": "The east resonance crystal joins the recovered chord."
+        "message": "The east resonance crystal answers the west voice with a cleaner harmonic. The mural sockets brighten without flattening into one note."
       }
     ]
   },
@@ -9507,8 +10133,12 @@
         "task_id": "crystal_north"
       },
       {
+        "type": "set_milestone",
+        "milestone": "ms_w2_crystal_north_seated"
+      },
+      {
         "type": "show_message",
-        "message": "The north resonance crystal joins the recovered chord."
+        "message": "The north resonance crystal adds a high stabilizing voice. Three tones now hold apart like Ice in dark water."
       }
     ]
   },
@@ -9542,6 +10172,18 @@
         "type": "quest_task_done",
         "quest_id": "w2_sq04",
         "task_id": "crystal_north"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w2_crystal_west_seated"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w2_crystal_east_seated"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w2_crystal_north_seated"
       }
     ],
     "actions": [
@@ -9558,6 +10200,10 @@
         "type": "give_item",
         "item_id": "focus_conduit",
         "quantity": 1
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_sq04_complete"
       },
       {
         "type": "complete_quest",
@@ -9778,16 +10424,82 @@
   },
   {
     "id": "w2_mq03_inspect_pod",
-    "repeatable": true,
     "trigger": {
       "type": "player_action",
       "action": "w2_mq03_inspect_pod"
     },
-    "conditions": [],
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_mq03"
+      },
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w2_stasis_pod_read"
+      }
+    ],
     "actions": [
       {
+        "type": "set_milestone",
+        "milestone": "ms_w2_stasis_pod_read"
+      },
+      {
         "type": "show_message",
-        "message": "The stasis pod is intact, but the ring alignment is locked behind a frequency puzzle. Zeke needs to read the broadcast before you touch it."
+        "message": "The pod is not a prison. It is a pressure shell, keeping Orion's memories distinct while the Source pushes at them from every side."
+      }
+    ]
+  },
+  {
+    "id": "w2_mq03_read_mural_overview",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_mq03_read_mural_overview"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_mq03"
+      },
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w2_stasis_overview_read"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_stasis_overview_read"
+      },
+      {
+        "type": "show_message",
+        "message": "The overview shows three sockets around the chamber mural. Each socket corresponds to a ring: memory, pressure, and return."
+      }
+    ]
+  },
+  {
+    "id": "w2_mq03_stabilize_coolant",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_mq03_stabilize_coolant"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_mq03"
+      },
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w2_coolant_stabilized"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_coolant_stabilized"
+      },
+      {
+        "type": "show_message",
+        "message": "Nova opens the coolant garden by a fraction. The pipes stop shuddering, and the rings lose their fever-bright edge."
       }
     ]
   },
@@ -9802,22 +10514,115 @@
     "actions": [
       {
         "type": "show_message",
-        "message": "The ring console rejects manual input. Talk to Zeke and use his frequency broadcast to align the rings."
+        "message": "The ring console refuses blind input. The chamber needs a read pattern, pod pressure map, overview socket map, and stable coolant flow before the rings can move safely."
+      }
+    ]
+  },
+  {
+    "id": "w2_mq05_stabilize_horn",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_mq05_stabilize_horn"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_mq05"
+      },
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w2_source_horn_stabilized"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_source_horn_stabilized"
+      },
+      {
+        "type": "show_message",
+        "message": "Orion braces the harmonic horn while Nova loosens the copper stays. The left band stops screaming and begins to breathe."
+      }
+    ]
+  },
+  {
+    "id": "w2_mq05_ground_cup",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_mq05_ground_cup"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_mq05"
+      },
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w2_source_cup_grounded"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_source_cup_grounded"
+      },
+      {
+        "type": "show_message",
+        "message": "The receiver cup cools as Gh0st grounds the casing. Its white-hot glow drops into a steady blue pulse."
+      }
+    ]
+  },
+  {
+    "id": "w2_mq05_read_pressure_gauge",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_mq05_read_pressure_gauge"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_mq05"
+      },
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w2_source_pressure_mapped"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_source_pressure_mapped"
+      },
+      {
+        "type": "show_message",
+        "message": "The root pressure gauge reveals the trick: the barrier is not powered by the roots, it is choking them. The pressure needs a bleed, not a cut."
       }
     ]
   },
   {
     "id": "w2_mq05_overload_breakers",
-    "repeatable": true,
     "trigger": {
       "type": "player_action",
       "action": "w2_mq05_overload_breakers"
     },
-    "conditions": [],
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_mq05"
+      },
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w2_source_breakers_starved"
+      }
+    ],
     "actions": [
       {
+        "type": "set_milestone",
+        "milestone": "ms_w2_source_breakers_starved"
+      },
+      {
         "type": "show_message",
-        "message": "The breakers are locked behind the Source Gate's harmonic safety system. Orion needs to tune the resonator first."
+        "message": "Nova throws the generator breakers in a staggered pattern. The gate keeps glowing, but the last band loses the power to bite."
       }
     ]
   },

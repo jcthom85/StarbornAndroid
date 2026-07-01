@@ -23,18 +23,21 @@ class Hub8CriticalFlowTest {
         harness.events.handleTrigger("player_action", EventPayload.Action("w5_mq22_find_thorne"))
         assertTrue(harness.store.state.value.activeQuests.contains("w5_mq23"))
 
-        listOf(
-            "w5_mq23_navigate_maze",
-            "w5_mq23_firewall_alpha",
-            "w5_mq23_firewall_beta",
-            "w5_mq23_firewall_gamma"
-        ).forEach { action ->
-            harness.events.handleTrigger("player_action", EventPayload.Action(action))
-        }
+        harness.events.handleTrigger("player_action", EventPayload.Action("w5_mq23_firewall_alpha"))
+        assertTrue(harness.store.state.value.questTasksCompleted["w5_mq23"].orEmpty().contains("firewall_alpha").not())
+
+        harness.events.handleTrigger("player_action", EventPayload.Action("w5_mq23_navigate_maze"))
+        var state = harness.store.state.value
+        assertTrue(state.questTasksCompleted["w5_mq23"].orEmpty().contains("navigate_maze"))
+        assertTrue(state.completedMilestones.contains("ms_w5_server_maze_mapped"))
+
+        harness.events.handleTrigger("player_action", EventPayload.Action("w5_mq23_firewall_alpha"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w5_mq23_firewall_beta"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w5_mq23_firewall_gamma"))
         assertEquals("construct", harness.store.state.value.questStageById["w5_mq23"])
 
         harness.winEncounter("firewall_construct")
-        var state = harness.store.state.value
+        state = harness.store.state.value
         assertTrue(state.completedQuests.contains("w5_mq23"))
         assertTrue(state.activeQuests.contains("w5_mq24"))
 
@@ -64,8 +67,26 @@ class Hub8CriticalFlowTest {
     fun deepRingSideQuestFlows() {
         val harness = Hub8Harness()
 
-        harness.events.handleTrigger("player_action", EventPayload.Action("w5_sq24_recover_backup"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w5_sq22_realign_mirrors"))
+        assertTrue(harness.store.state.value.completedQuests.contains("w5_sq22").not())
+
+        harness.events.handleTrigger("player_action", EventPayload.Action("w5_sq22_trace_false_sun"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w5_sq22_realign_mirrors"))
         var state = harness.store.state.value
+        assertTrue(state.completedQuests.contains("w5_sq22"))
+        assertTrue(state.unlockedSkills.contains("orion_sunbeam"))
+
+        harness.events.handleTrigger("player_action", EventPayload.Action("w5_sq23_vacuum_seal"))
+        assertTrue(harness.store.state.value.completedQuests.contains("w5_sq23").not())
+
+        harness.events.handleTrigger("player_action", EventPayload.Action("w5_sq23_map_pressure_loss"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w5_sq23_vacuum_seal"))
+        state = harness.store.state.value
+        assertTrue(state.completedQuests.contains("w5_sq23"))
+        assertTrue(state.inventory["mag_boots"].orZero() >= 1)
+
+        harness.events.handleTrigger("player_action", EventPayload.Action("w5_sq24_recover_backup"))
+        state = harness.store.state.value
         assertTrue(state.completedQuests.contains("w5_sq24"))
         assertTrue(state.unlockedSkills.contains("data_shield"))
 

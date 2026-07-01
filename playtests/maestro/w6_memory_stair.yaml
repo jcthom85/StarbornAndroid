@@ -1,0 +1,44 @@
+appId: com.junewiregames.starborn.prealpha
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "Debug Scenarios"
+    timeout: 60000
+- tapOn: "Debug Scenarios"
+- extendedWaitUntil:
+    visible: "Search world, quest, room, or system"
+    timeout: 10000
+- tapOn: "Search world, quest, room, or system"
+- inputText: "Spire Ascent"
+- hideKeyboard
+- tapOn: "W6 / Spire Ascent"
+- extendedWaitUntil:
+    visible: "Memory Stair"
+    timeout: 30000
+- assertVisible: "Jed's door"
+- assertVisible: "Astra wreckage"
+- assertVisible: "Foundry catwalk"
+- assertVisible: "memory stair"
+- tapOn: "memory stair"
+- extendedWaitUntil:
+    visible: "The stair will not hold.*"
+    timeout: 10000
+- tapOn: ".*The stair will not hold.*"
+- tapOn: "Jed's door"
+- extendedWaitUntil:
+    visible: "Vale offers a mine where Jed never dies.*"
+    timeout: 10000
+- tapOn: ".*Vale offers a mine where Jed never dies.*"
+- extendedWaitUntil:
+    visible: "Memory Stair"
+    timeout: 10000
+- tapOn: "Astra wreckage"
+- extendedWaitUntil:
+    visible: "Vale offers an Astra that never crashes.*"
+    timeout: 10000
+- tapOn: ".*Vale offers an Astra that never crashes.*"
+- extendedWaitUntil:
+    visible: "Memory Stair"
+    timeout: 10000
+- takeScreenshot: w6-memory-stair

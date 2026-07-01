@@ -61,6 +61,21 @@ class Hub4CriticalFlowTest {
         assertEquals("orion_w3_mq14_puzzle_intro", orion?.current()?.id)
         orion?.advanceUntilFinished()
         state = harness.store.state.value
+        assertFalse(state.questTasksCompleted["w3_mq14"].orEmpty().contains("solve_light_puzzle"))
+
+        harness.events.handleTrigger("player_action", EventPayload.Action("w3_mq14_solve_light_puzzle"))
+        assertFalse(harness.store.state.value.questTasksCompleted["w3_mq14"].orEmpty().contains("solve_light_puzzle"))
+
+        harness.events.handleTrigger("player_action", EventPayload.Action("w3_mq14_read_containment_field"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w3_mq14_read_prism_shutters"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w3_mq14_trace_command_tethers"))
+        state = harness.store.state.value
+        assertTrue(state.completedMilestones.contains("ms_w3_containment_field_read"))
+        assertTrue(state.completedMilestones.contains("ms_w3_prism_shutters_read"))
+        assertTrue(state.completedMilestones.contains("ms_w3_command_tethers_traced"))
+
+        harness.events.handleTrigger("player_action", EventPayload.Action("w3_mq14_solve_light_puzzle"))
+        state = harness.store.state.value
         assertTrue(state.questTasksCompleted["w3_mq14"].orEmpty().contains("solve_light_puzzle"))
         assertEquals("claim_lens", state.questStageById["w3_mq14"])
 

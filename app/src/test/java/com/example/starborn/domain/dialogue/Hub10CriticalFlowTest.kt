@@ -27,6 +27,13 @@ class Hub10CriticalFlowTest {
         assertEquals("source_memory_stair", state.roomId)
 
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("source_memory_stair"))
+        assertTrue(harness.store.state.value.questTasksCompleted["w6_mq29"].orEmpty().contains("climb_stair").not())
+
+        harness.events.handleTrigger("player_action", EventPayload.Action("w6_mq29_refuse_jed_revision"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w6_mq29_refuse_astra_revision"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w6_mq29_refuse_foundry_revision"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w6_mq29_climb_stair"))
+        assertTrue(harness.store.state.value.questTasksCompleted["w6_mq29"].orEmpty().contains("climb_stair"))
         harness.winEncounter("source_shadow", "distorted_sentinel", "glitch_hound")
         assertEquals("spire_arena", harness.store.state.value.questStageById["w6_mq29"])
 

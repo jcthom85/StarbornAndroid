@@ -108,6 +108,10 @@ data class GenericAction(
     val actionEvent: String? = null,
     @Json(name = "zone_id")
     val zoneId: String? = null,
+    @Json(name = "requires_milestones")
+    val requiresMilestones: List<String>? = null,
+    @Json(name = "requires_milestone")
+    val requiresMilestone: String? = null,
     @Json(name = "condition_unmet_message")
     val conditionUnmetMessage: String? = null
 ) : RoomAction

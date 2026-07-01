@@ -20,6 +20,10 @@ appId: com.junewiregames.starborn.prealpha
 # 1. Enter Hall of Echoes
 - tapOn: "Enter Hall of Echoes"
 - extendedWaitUntil:
+    visible: "Enter"
+    timeout: 10000
+- tapOn: "Enter"
+- extendedWaitUntil:
     visible: "Hall of Echoes"
     timeout: 15000
 
@@ -27,39 +31,95 @@ appId: com.junewiregames.starborn.prealpha
 - assertVisible: "murals"
 - tapOn: "murals"
 - extendedWaitUntil:
-    visible: "You inspect the resonance murals. They map out the harmonic alignments of the facility."
+    visible: "The murals are not decoration.*"
     timeout: 10000
-- tapOn: "You inspect the resonance murals. They map out the harmonic alignments of the facility."
+- tapOn: ".*The murals are not decoration.*"
 
 # 3. Enter Stasis Chamber
 - assertVisible: "Travel south"
 - tapOn: "Travel south"
 - extendedWaitUntil:
+    visible: "Continue"
+    timeout: 10000
+- tapOn: "Continue"
+- extendedWaitUntil:
     visible: "Stasis Chamber"
     timeout: 15000
 
-# 4. Talk to Zeke to wake Orion
-- assertVisible: "Zeke"
-- tapOn: "Zeke"
+# 4. Read and stabilize the stasis chamber
+- assertVisible: "stasis pod"
+- tapOn: "stasis pod"
 - extendedWaitUntil:
-    visible: "The stasis pod is completely locked down by safety alignment rings.*"
+    visible: "The pod is not a prison.*"
     timeout: 15000
-- tapOn: ".*Broadcast C# Minor 7.*"
+- tapOn: ".*The pod is not a prison.*"
+- assertVisible: "Travel east"
+- tapOn: "Travel east"
 - extendedWaitUntil:
-    visible: "It worked! The stasis rings are locking into alignment.*"
+    visible: "Ring Array"
     timeout: 15000
-- tapOn: "Dialogue Popup. Tap to continue"
+- assertVisible: "ring console"
+- tapOn: "ring console"
 - extendedWaitUntil:
-    visible: "Quest Complete"
+    visible: "The rings refuse to move until.*"
+    timeout: 15000
+- tapOn: ".*The rings refuse to move until.*"
+- assertVisible: "Travel north"
+- tapOn: "Travel north"
+- extendedWaitUntil:
+    visible: "Observation Deck"
+    timeout: 15000
+- assertVisible: "stasis mural overview"
+- tapOn: "stasis mural overview"
+- extendedWaitUntil:
+    visible: "The overview shows three sockets.*"
+    timeout: 15000
+- tapOn: ".*The overview shows three sockets.*"
+- assertVisible: "Travel south"
+- tapOn: "Travel south"
+- extendedWaitUntil:
+    visible: "Ring Array"
+    timeout: 15000
+- assertVisible: "Travel south"
+- tapOn: "Travel south"
+- extendedWaitUntil:
+    visible: "Coolant Lines"
+    timeout: 15000
+- assertVisible: "coolant garden"
+- tapOn: "coolant garden"
+- extendedWaitUntil:
+    visible: "Nova opens the coolant garden.*"
+    timeout: 15000
+- tapOn: ".*Nova opens the coolant garden.*"
+- assertVisible: "Travel north"
+- tapOn: "Travel north"
+- extendedWaitUntil:
+    visible: "Ring Array"
+    timeout: 15000
+- assertVisible: "ring console"
+- tapOn: "ring console"
+- extendedWaitUntil:
+    visible: "Orion joined the party."
+    timeout: 15000
+- tapOn: "Tap to continue"
+- extendedWaitUntil:
+    visible: "Quest Completed"
     timeout: 15000
 - assertVisible: "Sleeping Giant"
-- tapOn: "Got it"
+- tapOn: "Continue"
 - extendedWaitUntil:
-    notVisible: "Quest Complete"
+    notVisible: "Quest Completed"
     timeout: 10000
 
 # Walk back to Canopy Ridge
-# 5. Hall of Echoes
+# 5. Stasis Chamber
+- assertVisible: "Travel west"
+- tapOn: "Travel west"
+- extendedWaitUntil:
+    visible: "Stasis Chamber"
+    timeout: 15000
+
+# 6. Hall of Echoes
 - assertVisible: "Travel north"
 - tapOn: "Travel north"
 - extendedWaitUntil:
@@ -126,6 +186,13 @@ appId: com.junewiregames.starborn.prealpha
 - assertVisible: "Travel west"
 - tapOn: "Travel west"
 - extendedWaitUntil:
+    visible: ".*The ridge gives Nova a view of the shield.*"
+    timeout: 15000
+- tapOn: "Continue"
+- tapOn:
+    text: "Continue"
+    optional: true
+- extendedWaitUntil:
     visible: "Canopy Ridge"
     timeout: 15000
 
@@ -136,10 +203,13 @@ appId: com.junewiregames.starborn.prealpha
     visible: "Confront the hunter waiting in the shadows."
     timeout: 15000
 - tapOn: "Confront the hunter waiting in the shadows."
+- tapOn:
+    text: "Continue"
+    optional: true
 
 # 16. Engage and defeat The Source Beast
-- assertVisible: "Engage The Source Beast"
-- tapOn: "Engage The Source Beast"
+- assertVisible: "Engage The Beast"
+- tapOn: "Engage The Beast"
 - extendedWaitUntil:
     visible: "The Source Beast"
     timeout: 60000
@@ -316,16 +386,192 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 8000
     optional: true
 
+# Perform Nova standard attack (round 3)
+- tapOn:
+    text: "Nova"
+    optional: true
+- extendedWaitUntil:
+    visible: "Attack"
+    timeout: 10000
+    optional: true
+- tapOn:
+    text: "Attack"
+    optional: true
+- extendedWaitUntil:
+    visible: "Cancel"
+    timeout: 10000
+    optional: true
+- tapOn:
+    text: "The Source Beast"
+    optional: true
+- waitForAnimationToEnd:
+    timeout: 8000
+    optional: true
+
+# Perform Zeke standard attack (round 3)
+- tapOn:
+    text: "Zeke"
+    optional: true
+- extendedWaitUntil:
+    visible: "Attack"
+    timeout: 10000
+    optional: true
+- tapOn:
+    text: "Attack"
+    optional: true
+- extendedWaitUntil:
+    visible: "Cancel"
+    timeout: 10000
+    optional: true
+- tapOn:
+    text: "The Source Beast"
+    optional: true
+- waitForAnimationToEnd:
+    timeout: 8000
+    optional: true
+
+# Perform Orion standard attack (round 3)
+- tapOn:
+    text: "Orion"
+    optional: true
+- extendedWaitUntil:
+    visible: "Attack"
+    timeout: 10000
+    optional: true
+- tapOn:
+    text: "Attack"
+    optional: true
+- extendedWaitUntil:
+    visible: "Cancel"
+    timeout: 10000
+    optional: true
+- tapOn:
+    text: "The Source Beast"
+    optional: true
+- waitForAnimationToEnd:
+    timeout: 8000
+    optional: true
+
+# Perform Gh0st standard attack (round 3)
+- tapOn:
+    text: "Gh0st"
+    optional: true
+- extendedWaitUntil:
+    visible: "Attack"
+    timeout: 10000
+    optional: true
+- tapOn:
+    text: "Attack"
+    optional: true
+- extendedWaitUntil:
+    visible: "Cancel"
+    timeout: 10000
+    optional: true
+- tapOn:
+    text: "The Source Beast"
+    optional: true
+- waitForAnimationToEnd:
+    timeout: 8000
+    optional: true
+
+# Perform Nova standard attack (round 4)
+- tapOn:
+    text: "Nova"
+    optional: true
+- extendedWaitUntil:
+    visible: "Attack"
+    timeout: 10000
+    optional: true
+- tapOn:
+    text: "Attack"
+    optional: true
+- extendedWaitUntil:
+    visible: "Cancel"
+    timeout: 10000
+    optional: true
+- tapOn:
+    text: "The Source Beast"
+    optional: true
+- waitForAnimationToEnd:
+    timeout: 8000
+    optional: true
+
+# Perform Zeke standard attack (round 4)
+- tapOn:
+    text: "Zeke"
+    optional: true
+- extendedWaitUntil:
+    visible: "Attack"
+    timeout: 10000
+    optional: true
+- tapOn:
+    text: "Attack"
+    optional: true
+- extendedWaitUntil:
+    visible: "Cancel"
+    timeout: 10000
+    optional: true
+- tapOn:
+    text: "The Source Beast"
+    optional: true
+- waitForAnimationToEnd:
+    timeout: 8000
+    optional: true
+
+# Perform Orion standard attack (round 4)
+- tapOn:
+    text: "Orion"
+    optional: true
+- extendedWaitUntil:
+    visible: "Attack"
+    timeout: 10000
+    optional: true
+- tapOn:
+    text: "Attack"
+    optional: true
+- extendedWaitUntil:
+    visible: "Cancel"
+    timeout: 10000
+    optional: true
+- tapOn:
+    text: "The Source Beast"
+    optional: true
+- waitForAnimationToEnd:
+    timeout: 8000
+    optional: true
+
+# Perform Gh0st standard attack (round 4)
+- tapOn:
+    text: "Gh0st"
+    optional: true
+- extendedWaitUntil:
+    visible: "Attack"
+    timeout: 10000
+    optional: true
+- tapOn:
+    text: "Attack"
+    optional: true
+- extendedWaitUntil:
+    visible: "Cancel"
+    timeout: 10000
+    optional: true
+- tapOn:
+    text: "The Source Beast"
+    optional: true
+- waitForAnimationToEnd:
+    timeout: 8000
+    optional: true
+
 
 - extendedWaitUntil:
     visible: "Spoils Recovered"
     timeout: 60000
 - tapOn: "Continue"
 - extendedWaitUntil:
-    visible: "Quest Complete"
+    visible: "Quest Completed"
     timeout: 15000
 - assertVisible: "The Hunter"
-- tapOn: "Got it"
+- tapOn: "Continue"
 - extendedWaitUntil:
     visible: "Canopy Ridge"
     timeout: 15000
@@ -337,25 +583,148 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 15000
 - tapOn: "Enter Source Gate"
 - extendedWaitUntil:
+    visible: "Enter"
+    timeout: 10000
+- tapOn: "Enter"
+- extendedWaitUntil:
     visible: "Source Gate"
     timeout: 15000
 
-# 18. Talk to Orion at the Source Gate
-- assertVisible: "Orion"
-- tapOn: "Orion"
+- assertVisible: "acoustic lock"
+- tapOn: "acoustic lock"
 - extendedWaitUntil:
-    visible: "This energy barrier blocks access to the hangar.*"
+    visible: "The acoustic lock will not resolve until.*"
     timeout: 15000
-- tapOn: ".*Tune resonator to C# Minor 7.*"
+- tapOn: ".*The acoustic lock will not resolve until.*"
+
+# 18. Stabilize the Source Gate hardware
+- assertVisible: "Travel west"
+- tapOn: "Travel west"
 - extendedWaitUntil:
-    visible: "Perfect! The frequencies match, and the barrier dissolves.*"
+    visible: "Harmonic Horn"
     timeout: 15000
-- tapOn: "Dialogue Popup. Tap to continue"
+- assertVisible: "emitter memory"
+- tapOn: "emitter memory"
+- extendedWaitUntil:
+    visible: "Orion braces the harmonic horn.*"
+    timeout: 15000
+- tapOn: ".*Orion braces the harmonic horn.*"
+- assertVisible: "Travel east"
+- tapOn: "Travel east"
+- extendedWaitUntil:
+    visible: "Source Gate"
+    timeout: 15000
+- assertVisible: "Travel south"
+- tapOn: "Travel south"
+- extendedWaitUntil:
+    visible: "Resonance Cup"
+    timeout: 15000
+- assertVisible: "emitter service log"
+- tapOn: "emitter service log"
+- extendedWaitUntil:
+    visible: "The receiver cup cools.*"
+    timeout: 15000
+- tapOn: ".*The receiver cup cools.*"
+- assertVisible: "Travel north"
+- tapOn: "Travel north"
+- extendedWaitUntil:
+    visible: "Source Gate"
+    timeout: 15000
+- assertVisible: "Travel north"
+- tapOn: "Travel north"
+- extendedWaitUntil:
+    visible: "Stasis Chamber"
+    timeout: 15000
+- assertVisible: "Travel east"
+- tapOn: "Travel east"
+- extendedWaitUntil:
+    visible: "Ring Array"
+    timeout: 15000
+- assertVisible: "Travel south"
+- tapOn: "Travel south"
+- extendedWaitUntil:
+    visible: "Coolant Lines"
+    timeout: 15000
+- assertVisible: "Travel east"
+- tapOn: "Travel east"
+- extendedWaitUntil:
+    visible: "Source Dynamo"
+    timeout: 15000
+- assertVisible: "Travel east"
+- tapOn: "Travel east"
+- extendedWaitUntil:
+    visible: "Distribution Manifold"
+    timeout: 15000
+- assertVisible: "Travel south"
+- tapOn: "Travel south"
+- extendedWaitUntil:
+    visible: "Generator Controls"
+    timeout: 15000
+- assertVisible: "generator breakers"
+- tapOn: "generator breakers"
+- extendedWaitUntil:
+    visible: "Nova throws the generator breakers.*"
+    timeout: 15000
+- tapOn: ".*Nova throws the generator breakers.*"
+- assertVisible: "Travel east"
+- tapOn: "Travel east"
+- extendedWaitUntil:
+    visible: "Purge Valve"
+    timeout: 15000
+- assertVisible: "root pressure gauge"
+- tapOn: "root pressure gauge"
+- extendedWaitUntil:
+    visible: "The root pressure gauge reveals the trick.*"
+    timeout: 15000
+- tapOn: ".*The root pressure gauge reveals the trick.*"
+
+# 19. Return to the Source Gate and resolve the acoustic lock
+- assertVisible: "Travel west"
+- tapOn: "Travel west"
+- extendedWaitUntil:
+    visible: "Generator Controls"
+    timeout: 15000
+- assertVisible: "Travel north"
+- tapOn: "Travel north"
+- extendedWaitUntil:
+    visible: "Distribution Manifold"
+    timeout: 15000
+- assertVisible: "Travel west"
+- tapOn: "Travel west"
+- extendedWaitUntil:
+    visible: "Source Dynamo"
+    timeout: 15000
+- assertVisible: "Travel west"
+- tapOn: "Travel west"
+- extendedWaitUntil:
+    visible: "Coolant Lines"
+    timeout: 15000
+- assertVisible: "Travel north"
+- tapOn: "Travel north"
+- extendedWaitUntil:
+    visible: "Ring Array"
+    timeout: 15000
+- assertVisible: "Travel west"
+- tapOn: "Travel west"
+- extendedWaitUntil:
+    visible: "Stasis Chamber"
+    timeout: 15000
+- assertVisible: "Travel south"
+- tapOn: "Travel south"
+- extendedWaitUntil:
+    visible: "Source Gate"
+    timeout: 15000
+- assertVisible: "acoustic lock"
+- tapOn: "acoustic lock"
+- extendedWaitUntil:
+    visible: "The horn steadies.*"
+    timeout: 15000
+- tapOn: ".*The horn steadies.*"
 - extendedWaitUntil:
     visible: "Hangar Bay"
     timeout: 20000
 
-# 19. Inspect the Astra Console
+# 20. Inspect the Astra Console
 - assertVisible: "Astra Console"
 - tapOn: "Astra Console"
 - extendedWaitUntil:
@@ -660,10 +1029,10 @@ appId: com.junewiregames.starborn.prealpha
 - assertVisible: "Launch the Astra"
 - tapOn: "Launch the Astra"
 - extendedWaitUntil:
-    visible: "Quest Complete"
+    visible: "Quest Completed"
     timeout: 30000
 - assertVisible: "Liftoff"
-- tapOn: "Got it"
+- tapOn: "Continue"
 - extendedWaitUntil:
     visible: "Sewer Landing Pad"
     timeout: 15000
