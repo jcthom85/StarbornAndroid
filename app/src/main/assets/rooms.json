@@ -7025,10 +7025,10 @@
         "condition_unmet_message": "Vale waits at the center of the white ocean, calm enough to make annihilation sound reasonable."
       },
       {
-        "name": "tuning focus",
+        "name": "shared tuning focus",
         "type": "tuning_puzzle",
         "puzzle_id": "source_harmonic_focus",
-        "condition_unmet_message": "Vale's code still blocks the Source. The Key cannot tune the world until both forms fall."
+        "condition_unmet_message": "Vale's code still blocks the Source. The Key will only answer after both Ascended forms fall."
       }
     ],
     "enemy_flavor": {

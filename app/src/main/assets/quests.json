@@ -2254,30 +2254,30 @@
       {
         "id": "nightmares",
         "title": "Three Nightmares",
-        "description": "Find each missing member of the crew.",
+        "description": "Recognize each crew member inside the nightmare Vale would flatten into silence.",
         "tasks": [
           {
             "id": "rescue_zeke",
-            "text": "Rescue Zeke from the Infinite Cubicle."
+            "text": "Remind Zeke he is more than the file."
           },
           {
             "id": "rescue_gh0st",
-            "text": "Rescue Gh0st from the Endless War."
+            "text": "Help Gh0st refuse the order loop."
           },
           {
             "id": "rescue_orion",
-            "text": "Rescue Orion from the Silent Shore."
+            "text": "Help Orion hear the voices under the shore."
           }
         ]
       },
       {
         "id": "reassembly",
         "title": "The Key",
-        "description": "Return to the Campfire and reassemble the crew.",
+        "description": "Return to the Campfire with every separate voice intact.",
         "tasks": [
           {
             "id": "reassemble_team",
-            "text": "Reassemble the team at the Campfire."
+            "text": "Let the song-fire gather the crew into the Key."
           }
         ]
       }
@@ -2306,19 +2306,19 @@
       {
         "id": "distorted_mines",
         "title": "The Beginning",
-        "description": "Find a route through the distorted colony.",
+        "description": "Follow the details Vale cannot counterfeit through the distorted colony.",
         "tasks": [
           {
             "id": "enter_mines",
-            "text": "Enter the Echo of the Mines."
+            "text": "Step back into the beginning as it really was."
           },
           {
             "id": "evade_manager",
-            "text": "Avoid the Manager projections."
+            "text": "Move between the Manager projections by real details."
           },
           {
             "id": "reach_elevator",
-            "text": "Reach the elevator."
+            "text": "Leave the beginning unrevised."
           }
         ]
       }
@@ -2342,7 +2342,7 @@
       {
         "id": "memory_bridge",
         "title": "Bridge of Memories",
-        "description": "Build and cross the bridge.",
+        "description": "Make the bridge hold by giving it memories no one carries alone.",
         "tasks": [
           {
             "id": "build_bridge",
@@ -2350,11 +2350,11 @@
           },
           {
             "id": "final_banter",
-            "text": "Share one final moment with the crew."
+            "text": "Let the crew steady the bridge together."
           },
           {
             "id": "reach_singularity",
-            "text": "Reach the Singularity entrance."
+            "text": "Cross only when every voice is present."
           }
         ]
       }
@@ -2453,8 +2453,8 @@
   {
     "id": "w6_mq29",
     "title": "The Spire of Thought",
-    "summary": "Climb the memory spiral and defeat the Source shadows guarding the Center.",
-    "description": "Climb through the scars of every world, refuse Vale's revisions, survive the shadow wave, and break the memory defenses guarding the Center.",
+    "summary": "Climb the memory spiral and carry the unrevised crew to the Center.",
+    "description": "Climb through the scars of every world, refuse Vale's revisions, survive the shadow wave, and break the defenses built from memories he could not edit away.",
     "flavor": "The universe keeps every version you almost became.",
     "giver": "Nova",
     "hub_id": "hub_12_singularity",
@@ -2470,22 +2470,22 @@
           },
           {
             "id": "defeat_shadow_wave",
-            "text": "Defeat the Source Shadow wave."
+            "text": "Survive the Source Shadow wave without surrendering the scars."
           }
         ]
       },
       {
         "id": "spire_arena",
         "title": "Spire of Thought",
-        "description": "Break the final memory defenses.",
+        "description": "Break the last defenses made from stolen memory.",
         "tasks": [
           {
             "id": "defeat_memory_guard",
-            "text": "Defeat the Memory Leak and Nightmare Guard."
+            "text": "Break the Memory Leak and Nightmare Guard."
           },
           {
             "id": "reach_center",
-            "text": "Reach the Center."
+            "text": "Carry every unrevised voice to the Center."
           }
         ]
       }
@@ -2500,8 +2500,8 @@
   {
     "id": "w6_mq30",
     "title": "The Final Note",
-    "summary": "Defeat the Ascended and tune the world.",
-    "description": "Confront Vale's promise of painless silence, defeat both Ascended forms, and use the Key as a shared circuit instead of a throne.",
+    "summary": "Refuse the Ascended and tune the world together.",
+    "description": "Confront Vale's promise of painless silence, break both Ascended forms, and use the Key as a shared circuit instead of a throne.",
     "flavor": "Not fate. Not one voice. A choice made together.",
     "giver": "Nova",
     "hub_id": "hub_12_singularity",
@@ -2509,7 +2509,7 @@
       {
         "id": "soloist",
         "title": "The Soloist",
-        "description": "Defeat Vale's human form.",
+        "description": "Refuse Vale while he still looks human.",
         "tasks": [
           {
             "id": "confront_vale",
@@ -2517,33 +2517,33 @@
           },
           {
             "id": "defeat_vale",
-            "text": "Defeat the Ascended: Soloist."
+            "text": "Break the Ascended: Soloist."
           }
         ]
       },
       {
         "id": "singularity",
         "title": "The Singularity",
-        "description": "Defeat the Ascended god-form.",
+        "description": "Break the geometry calling itself silence.",
         "tasks": [
           {
             "id": "defeat_god_form",
-            "text": "Defeat the Ascended: Silence."
+            "text": "Shatter the Ascended: Silence."
           }
         ]
       },
       {
         "id": "final_note",
         "title": "Tune the World",
-        "description": "Use the Key and complete the circuit.",
+        "description": "Complete the circuit without letting any voice disappear.",
         "tasks": [
           {
             "id": "use_key",
-            "text": "Use the Key."
+            "text": "Link the crew through the Key."
           },
           {
             "id": "tune_world",
-            "text": "Tune the World."
+            "text": "Tune the world as separate voices."
           }
         ]
       }
