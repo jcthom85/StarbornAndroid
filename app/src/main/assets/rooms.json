@@ -12382,7 +12382,7 @@
     "env": "void",
     "title": "Ring Service Alcove",
     "background_image": "images/rooms/world_5/orbital_executive_dock.png",
-    "description": "A service alcove cuts away from the main route, where the maintenance mark tells the truth the official signs avoid. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The service alcove and maintenance mark make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "A service alcove cuts away from the public route. A maintenance mark has been scratched beneath the brass trim, pointing toward passages the guest maps pretend do not exist.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -12399,12 +12399,12 @@
       {
         "name": "service alcove",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "The mark is small, practical, and placed where only maintenance crews would know to look."
       },
       {
         "name": "maintenance mark",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "The label belongs to the station's emergency layer, not the guest map."
       }
     ]
   },
@@ -12413,7 +12413,7 @@
     "env": "void",
     "title": "Ring Pressure Gallery",
     "background_image": "images/rooms/world_5/orbital_executive_dock.png",
-    "description": "A pressure gallery runs beside the route, its warning strip flashing whenever the place remembers what it costs to pass through. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The pressure gallery and warning strip make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "A pressure gallery runs behind the polished walls. Its warning strip flashes through the trim whenever the Ring remembers there is vacuum outside the hospitality layer.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -12432,12 +12432,12 @@
       {
         "name": "pressure gallery",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "The mark is small, practical, and placed where only maintenance crews would know to look."
       },
       {
         "name": "warning strip",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "The label belongs to the station's emergency layer, not the guest map."
       }
     ]
   },
@@ -12446,7 +12446,7 @@
     "env": "void",
     "title": "Ring Overlook Niche",
     "background_image": "images/rooms/world_5/orbital_executive_dock.png",
-    "description": "An overlook niche opens onto a long sightline, turning the surrounding space into something the crew can read instead of merely cross. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The overlook niche and sightline make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "An overlook niche opens onto a service sightline that cuts past the official route. From here, the Ring looks less like paradise than a machine hiding its load-bearing wounds.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -12463,12 +12463,12 @@
       {
         "name": "overlook niche",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "The mark is small, practical, and placed where only maintenance crews would know to look."
       },
       {
         "name": "sightline",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "The label belongs to the station's emergency layer, not the guest map."
       }
     ]
   },
@@ -12477,7 +12477,7 @@
     "env": "void",
     "title": "Ring Control Pocket",
     "background_image": "images/rooms/world_5/orbital_executive_dock.png",
-    "description": "A control pocket hides a manual toggle where workers, servants, or ghosts left one last practical way to resist automation. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The control pocket and manual toggle make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "A control pocket hides a manual toggle behind a panel dressed as decor. Someone left one practical way to make the automated system hesitate.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -12496,12 +12496,12 @@
       {
         "name": "control pocket",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "The mark is small, practical, and placed where only maintenance crews would know to look."
       },
       {
         "name": "manual toggle",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "The label belongs to the station's emergency layer, not the guest map."
       }
     ]
   },
@@ -12510,7 +12510,7 @@
     "env": "void",
     "title": "Ring Quiet Cache",
     "background_image": "images/rooms/world_5/orbital_executive_dock.png",
-    "description": "A quiet cache stores a wrapped tool and small evidence that someone survived here by being careful rather than lucky. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The quiet cache and wrapped tool make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "A quiet cache stores a wrapped tool, spare seals, and a note written in maintenance shorthand. Survival here depended on being careful where the rich never looked.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -12527,12 +12527,12 @@
       {
         "name": "quiet cache",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "The mark is small, practical, and placed where only maintenance crews would know to look."
       },
       {
         "name": "wrapped tool",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "The label belongs to the station's emergency layer, not the guest map."
       }
     ]
   },
@@ -12541,7 +12541,7 @@
     "env": "void",
     "title": "Ring Echo Walk",
     "background_image": "images/rooms/world_5/orbital_executive_dock.png",
-    "description": "An echo walk carries an old signal through the walls, making the route feel connected to choices made several rooms ago. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The echo walk and old signal make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "An echo walk carries an old signal through the walls. The pulse repeats from room to room, tying the service route together beneath the Ring's polite announcements.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -12560,12 +12560,12 @@
       {
         "name": "echo walk",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "The mark is small, practical, and placed where only maintenance crews would know to look."
       },
       {
         "name": "old signal",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "The label belongs to the station's emergency layer, not the guest map."
       }
     ]
   },
@@ -12574,7 +12574,7 @@
     "env": "void",
     "title": "Ring Service Alcove",
     "background_image": "images/rooms/world_5/orbital_grand_concourse.png",
-    "description": "A service alcove cuts away from the main route, where the maintenance mark tells the truth the official signs avoid. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The service alcove and maintenance mark make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "A service alcove cuts away from the public route. A maintenance mark has been scratched beneath the brass trim, pointing toward passages the guest maps pretend do not exist.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -12591,12 +12591,12 @@
       {
         "name": "service alcove",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "The mark is small, practical, and placed where only maintenance crews would know to look."
       },
       {
         "name": "maintenance mark",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "The label belongs to the station's emergency layer, not the guest map."
       }
     ]
   },
@@ -12605,7 +12605,7 @@
     "env": "void",
     "title": "Ring Pressure Gallery",
     "background_image": "images/rooms/world_5/orbital_grand_concourse.png",
-    "description": "A pressure gallery runs beside the route, its warning strip flashing whenever the place remembers what it costs to pass through. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The pressure gallery and warning strip make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "A pressure gallery runs behind the polished walls. Its warning strip flashes through the trim whenever the Ring remembers there is vacuum outside the hospitality layer.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -12624,12 +12624,12 @@
       {
         "name": "pressure gallery",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "The mark is small, practical, and placed where only maintenance crews would know to look."
       },
       {
         "name": "warning strip",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "The label belongs to the station's emergency layer, not the guest map."
       }
     ]
   },
@@ -12638,7 +12638,7 @@
     "env": "void",
     "title": "Ring Overlook Niche",
     "background_image": "images/rooms/world_5/orbital_grand_concourse.png",
-    "description": "An overlook niche opens onto a long sightline, turning the surrounding space into something the crew can read instead of merely cross. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The overlook niche and sightline make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "An overlook niche opens onto a service sightline that cuts past the official route. From here, the Ring looks less like paradise than a machine hiding its load-bearing wounds.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -12655,12 +12655,12 @@
       {
         "name": "overlook niche",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "The mark is small, practical, and placed where only maintenance crews would know to look."
       },
       {
         "name": "sightline",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "The label belongs to the station's emergency layer, not the guest map."
       }
     ]
   },
@@ -12669,7 +12669,7 @@
     "env": "void",
     "title": "Ring Control Pocket",
     "background_image": "images/rooms/world_5/orbital_grand_concourse.png",
-    "description": "A control pocket hides a manual toggle where workers, servants, or ghosts left one last practical way to resist automation. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The control pocket and manual toggle make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "A control pocket hides a manual toggle behind a panel dressed as decor. Someone left one practical way to make the automated system hesitate.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -12688,12 +12688,12 @@
       {
         "name": "control pocket",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "The mark is small, practical, and placed where only maintenance crews would know to look."
       },
       {
         "name": "manual toggle",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "The label belongs to the station's emergency layer, not the guest map."
       }
     ]
   },
@@ -12702,7 +12702,7 @@
     "env": "void",
     "title": "Ring Quiet Cache",
     "background_image": "images/rooms/world_5/orbital_grand_concourse.png",
-    "description": "A quiet cache stores a wrapped tool and small evidence that someone survived here by being careful rather than lucky. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The quiet cache and wrapped tool make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "A quiet cache stores a wrapped tool, spare seals, and a note written in maintenance shorthand. Survival here depended on being careful where the rich never looked.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -12719,12 +12719,12 @@
       {
         "name": "quiet cache",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "The mark is small, practical, and placed where only maintenance crews would know to look."
       },
       {
         "name": "wrapped tool",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "The label belongs to the station's emergency layer, not the guest map."
       }
     ]
   },
@@ -12733,7 +12733,7 @@
     "env": "void",
     "title": "Ring Echo Walk",
     "background_image": "images/rooms/world_5/orbital_grand_concourse.png",
-    "description": "An echo walk carries an old signal through the walls, making the route feel connected to choices made several rooms ago. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The echo walk and old signal make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "An echo walk carries an old signal through the walls. The pulse repeats from room to room, tying the service route together beneath the Ring's polite announcements.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -12752,12 +12752,12 @@
       {
         "name": "echo walk",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "The mark is small, practical, and placed where only maintenance crews would know to look."
       },
       {
         "name": "old signal",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "The label belongs to the station's emergency layer, not the guest map."
       }
     ]
   },
@@ -12766,7 +12766,7 @@
     "env": "void",
     "title": "Ring Service Alcove",
     "background_image": "images/rooms/world_5/orbital_solarium.png",
-    "description": "A service alcove cuts away from the main route, where the maintenance mark tells the truth the official signs avoid. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The service alcove and maintenance mark make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "A service alcove cuts away from the public route. A maintenance mark has been scratched beneath the brass trim, pointing toward passages the guest maps pretend do not exist.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -12783,12 +12783,12 @@
       {
         "name": "service alcove",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "The mark is small, practical, and placed where only maintenance crews would know to look."
       },
       {
         "name": "maintenance mark",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "The label belongs to the station's emergency layer, not the guest map."
       }
     ]
   },
@@ -12797,7 +12797,7 @@
     "env": "void",
     "title": "Ring Pressure Gallery",
     "background_image": "images/rooms/world_5/orbital_solarium.png",
-    "description": "A pressure gallery runs beside the route, its warning strip flashing whenever the place remembers what it costs to pass through. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The pressure gallery and warning strip make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "A pressure gallery runs behind the polished walls. Its warning strip flashes through the trim whenever the Ring remembers there is vacuum outside the hospitality layer.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -12816,12 +12816,12 @@
       {
         "name": "pressure gallery",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "The mark is small, practical, and placed where only maintenance crews would know to look."
       },
       {
         "name": "warning strip",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "The label belongs to the station's emergency layer, not the guest map."
       }
     ]
   },
@@ -12830,7 +12830,7 @@
     "env": "void",
     "title": "Ring Overlook Niche",
     "background_image": "images/rooms/world_5/orbital_solarium.png",
-    "description": "An overlook niche opens onto a long sightline, turning the surrounding space into something the crew can read instead of merely cross. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The overlook niche and sightline make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "An overlook niche opens onto a service sightline that cuts past the official route. From here, the Ring looks less like paradise than a machine hiding its load-bearing wounds.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -12847,12 +12847,12 @@
       {
         "name": "overlook niche",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "The mark is small, practical, and placed where only maintenance crews would know to look."
       },
       {
         "name": "sightline",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "The label belongs to the station's emergency layer, not the guest map."
       }
     ]
   },
@@ -12861,7 +12861,7 @@
     "env": "void",
     "title": "Ring Control Pocket",
     "background_image": "images/rooms/world_5/orbital_solarium.png",
-    "description": "A control pocket hides a manual toggle where workers, servants, or ghosts left one last practical way to resist automation. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The control pocket and manual toggle make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "A control pocket hides a manual toggle behind a panel dressed as decor. Someone left one practical way to make the automated system hesitate.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -12880,12 +12880,12 @@
       {
         "name": "control pocket",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "The mark is small, practical, and placed where only maintenance crews would know to look."
       },
       {
         "name": "manual toggle",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "The label belongs to the station's emergency layer, not the guest map."
       }
     ]
   },
@@ -12894,7 +12894,7 @@
     "env": "void",
     "title": "Ring Quiet Cache",
     "background_image": "images/rooms/world_5/orbital_solarium.png",
-    "description": "A quiet cache stores a wrapped tool and small evidence that someone survived here by being careful rather than lucky. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The quiet cache and wrapped tool make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "A quiet cache stores a wrapped tool, spare seals, and a note written in maintenance shorthand. Survival here depended on being careful where the rich never looked.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -12911,12 +12911,12 @@
       {
         "name": "quiet cache",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "The mark is small, practical, and placed where only maintenance crews would know to look."
       },
       {
         "name": "wrapped tool",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "The label belongs to the station's emergency layer, not the guest map."
       }
     ]
   },
@@ -12925,7 +12925,7 @@
     "env": "void",
     "title": "Ring Echo Walk",
     "background_image": "images/rooms/world_5/orbital_solarium.png",
-    "description": "An echo walk carries an old signal through the walls, making the route feel connected to choices made several rooms ago. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The echo walk and old signal make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "An echo walk carries an old signal through the walls. The pulse repeats from room to room, tying the service route together beneath the Ring's polite announcements.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -12944,12 +12944,12 @@
       {
         "name": "echo walk",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "The mark is small, practical, and placed where only maintenance crews would know to look."
       },
       {
         "name": "old signal",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "The label belongs to the station's emergency layer, not the guest map."
       }
     ]
   },
@@ -12958,7 +12958,7 @@
     "env": "void",
     "title": "Ring Service Alcove",
     "background_image": "images/rooms/world_5/orbital_security_hub.png",
-    "description": "A service alcove cuts away from the main route, where the maintenance mark tells the truth the official signs avoid. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The service alcove and maintenance mark make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "A service alcove cuts away from the public route. A maintenance mark has been scratched beneath the brass trim, pointing toward passages the guest maps pretend do not exist.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -12975,12 +12975,12 @@
       {
         "name": "service alcove",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "The mark is small, practical, and placed where only maintenance crews would know to look."
       },
       {
         "name": "maintenance mark",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "The label belongs to the station's emergency layer, not the guest map."
       }
     ]
   },
@@ -12989,7 +12989,7 @@
     "env": "void",
     "title": "Ring Pressure Gallery",
     "background_image": "images/rooms/world_5/orbital_security_hub.png",
-    "description": "A pressure gallery runs beside the route, its warning strip flashing whenever the place remembers what it costs to pass through. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The pressure gallery and warning strip make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "A pressure gallery runs behind the polished walls. Its warning strip flashes through the trim whenever the Ring remembers there is vacuum outside the hospitality layer.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -13008,12 +13008,12 @@
       {
         "name": "pressure gallery",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "The mark is small, practical, and placed where only maintenance crews would know to look."
       },
       {
         "name": "warning strip",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "The label belongs to the station's emergency layer, not the guest map."
       }
     ]
   },
@@ -13022,7 +13022,7 @@
     "env": "void",
     "title": "Ring Overlook Niche",
     "background_image": "images/rooms/world_5/orbital_security_hub.png",
-    "description": "An overlook niche opens onto a long sightline, turning the surrounding space into something the crew can read instead of merely cross. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The overlook niche and sightline make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "An overlook niche opens onto a service sightline that cuts past the official route. From here, the Ring looks less like paradise than a machine hiding its load-bearing wounds.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -13039,12 +13039,12 @@
       {
         "name": "overlook niche",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "The mark is small, practical, and placed where only maintenance crews would know to look."
       },
       {
         "name": "sightline",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "The label belongs to the station's emergency layer, not the guest map."
       }
     ]
   },
@@ -13053,7 +13053,7 @@
     "env": "void",
     "title": "Ring Control Pocket",
     "background_image": "images/rooms/world_5/orbital_security_hub.png",
-    "description": "A control pocket hides a manual toggle where workers, servants, or ghosts left one last practical way to resist automation. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The control pocket and manual toggle make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "A control pocket hides a manual toggle behind a panel dressed as decor. Someone left one practical way to make the automated system hesitate.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -13072,12 +13072,12 @@
       {
         "name": "control pocket",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "The mark is small, practical, and placed where only maintenance crews would know to look."
       },
       {
         "name": "manual toggle",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "The label belongs to the station's emergency layer, not the guest map."
       }
     ]
   },
@@ -13086,7 +13086,7 @@
     "env": "void",
     "title": "Ring Quiet Cache",
     "background_image": "images/rooms/world_5/orbital_security_hub.png",
-    "description": "A quiet cache stores a wrapped tool and small evidence that someone survived here by being careful rather than lucky. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The quiet cache and wrapped tool make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "A quiet cache stores a wrapped tool, spare seals, and a note written in maintenance shorthand. Survival here depended on being careful where the rich never looked.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -13103,12 +13103,12 @@
       {
         "name": "quiet cache",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "The mark is small, practical, and placed where only maintenance crews would know to look."
       },
       {
         "name": "wrapped tool",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "The label belongs to the station's emergency layer, not the guest map."
       }
     ]
   },
@@ -13117,7 +13117,7 @@
     "env": "void",
     "title": "Ring Echo Walk",
     "background_image": "images/rooms/world_5/orbital_security_hub.png",
-    "description": "An echo walk carries an old signal through the walls, making the route feel connected to choices made several rooms ago. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The echo walk and old signal make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "An echo walk carries an old signal through the walls. The pulse repeats from room to room, tying the service route together beneath the Ring's polite announcements.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -13136,12 +13136,12 @@
       {
         "name": "echo walk",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "The mark is small, practical, and placed where only maintenance crews would know to look."
       },
       {
         "name": "old signal",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "The label belongs to the station's emergency layer, not the guest map."
       }
     ]
   },
@@ -13150,7 +13150,7 @@
     "env": "void",
     "title": "Ring Service Alcove",
     "background_image": "images/rooms/world_5/orbital_service_shaft.png",
-    "description": "A service alcove cuts away from the main route, where the maintenance mark tells the truth the official signs avoid. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The service alcove and maintenance mark make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "A service alcove cuts away from the public route. A maintenance mark has been scratched beneath the brass trim, pointing toward passages the guest maps pretend do not exist.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -13167,12 +13167,12 @@
       {
         "name": "service alcove",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "The mark is small, practical, and placed where only maintenance crews would know to look."
       },
       {
         "name": "maintenance mark",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "The label belongs to the station's emergency layer, not the guest map."
       }
     ]
   },
@@ -13181,7 +13181,7 @@
     "env": "void",
     "title": "Ring Pressure Gallery",
     "background_image": "images/rooms/world_5/orbital_service_shaft.png",
-    "description": "A pressure gallery runs beside the route, its warning strip flashing whenever the place remembers what it costs to pass through. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The pressure gallery and warning strip make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "A pressure gallery runs behind the polished walls. Its warning strip flashes through the trim whenever the Ring remembers there is vacuum outside the hospitality layer.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -13200,12 +13200,12 @@
       {
         "name": "pressure gallery",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "The mark is small, practical, and placed where only maintenance crews would know to look."
       },
       {
         "name": "warning strip",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "The label belongs to the station's emergency layer, not the guest map."
       }
     ]
   },
@@ -13214,7 +13214,7 @@
     "env": "void",
     "title": "Ring Overlook Niche",
     "background_image": "images/rooms/world_5/orbital_service_shaft.png",
-    "description": "An overlook niche opens onto a long sightline, turning the surrounding space into something the crew can read instead of merely cross. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The overlook niche and sightline make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "An overlook niche opens onto a service sightline that cuts past the official route. From here, the Ring looks less like paradise than a machine hiding its load-bearing wounds.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -13231,12 +13231,12 @@
       {
         "name": "overlook niche",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "The mark is small, practical, and placed where only maintenance crews would know to look."
       },
       {
         "name": "sightline",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "The label belongs to the station's emergency layer, not the guest map."
       }
     ]
   },
@@ -13245,7 +13245,7 @@
     "env": "void",
     "title": "Ring Control Pocket",
     "background_image": "images/rooms/world_5/orbital_service_shaft.png",
-    "description": "A control pocket hides a manual toggle where workers, servants, or ghosts left one last practical way to resist automation. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The control pocket and manual toggle make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "A control pocket hides a manual toggle behind a panel dressed as decor. Someone left one practical way to make the automated system hesitate.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -13264,12 +13264,12 @@
       {
         "name": "control pocket",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "The mark is small, practical, and placed where only maintenance crews would know to look."
       },
       {
         "name": "manual toggle",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "The label belongs to the station's emergency layer, not the guest map."
       }
     ]
   },
@@ -13278,7 +13278,7 @@
     "env": "void",
     "title": "Ring Quiet Cache",
     "background_image": "images/rooms/world_5/orbital_service_shaft.png",
-    "description": "A quiet cache stores a wrapped tool and small evidence that someone survived here by being careful rather than lucky. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The quiet cache and wrapped tool make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "A quiet cache stores a wrapped tool, spare seals, and a note written in maintenance shorthand. Survival here depended on being careful where the rich never looked.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -13295,12 +13295,12 @@
       {
         "name": "quiet cache",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "The mark is small, practical, and placed where only maintenance crews would know to look."
       },
       {
         "name": "wrapped tool",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "The label belongs to the station's emergency layer, not the guest map."
       }
     ]
   },
@@ -13309,7 +13309,7 @@
     "env": "void",
     "title": "Ring Echo Walk",
     "background_image": "images/rooms/world_5/orbital_service_shaft.png",
-    "description": "An echo walk carries an old signal through the walls, making the route feel connected to choices made several rooms ago. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The echo walk and old signal make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "An echo walk carries an old signal through the walls. The pulse repeats from room to room, tying the service route together beneath the Ring's polite announcements.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -13328,12 +13328,12 @@
       {
         "name": "echo walk",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "The mark is small, practical, and placed where only maintenance crews would know to look."
       },
       {
         "name": "old signal",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "The label belongs to the station's emergency layer, not the guest map."
       }
     ]
   },
@@ -13342,7 +13342,7 @@
     "env": "void",
     "title": "Ring Service Alcove",
     "background_image": "images/rooms/world_5/orbital_server_farm.png",
-    "description": "A service alcove cuts away from the main route, where the maintenance mark tells the truth the official signs avoid. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The service alcove and maintenance mark make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "A service alcove cuts away from the public route. A maintenance mark has been scratched beneath the brass trim, pointing toward passages the guest maps pretend do not exist.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -13359,12 +13359,12 @@
       {
         "name": "service alcove",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "The mark is small, practical, and placed where only maintenance crews would know to look."
       },
       {
         "name": "maintenance mark",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "The label belongs to the station's emergency layer, not the guest map."
       }
     ]
   },
@@ -13373,7 +13373,7 @@
     "env": "void",
     "title": "Ring Pressure Gallery",
     "background_image": "images/rooms/world_5/orbital_server_farm.png",
-    "description": "A pressure gallery runs beside the route, its warning strip flashing whenever the place remembers what it costs to pass through. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The pressure gallery and warning strip make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "A pressure gallery runs behind the polished walls. Its warning strip flashes through the trim whenever the Ring remembers there is vacuum outside the hospitality layer.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -13392,12 +13392,12 @@
       {
         "name": "pressure gallery",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "The mark is small, practical, and placed where only maintenance crews would know to look."
       },
       {
         "name": "warning strip",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "The label belongs to the station's emergency layer, not the guest map."
       }
     ]
   },
@@ -13406,7 +13406,7 @@
     "env": "void",
     "title": "Ring Overlook Niche",
     "background_image": "images/rooms/world_5/orbital_server_farm.png",
-    "description": "An overlook niche opens onto a long sightline, turning the surrounding space into something the crew can read instead of merely cross. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The overlook niche and sightline make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "An overlook niche opens onto a service sightline that cuts past the official route. From here, the Ring looks less like paradise than a machine hiding its load-bearing wounds.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -13423,12 +13423,12 @@
       {
         "name": "overlook niche",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "The mark is small, practical, and placed where only maintenance crews would know to look."
       },
       {
         "name": "sightline",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "The label belongs to the station's emergency layer, not the guest map."
       }
     ]
   },
@@ -13437,7 +13437,7 @@
     "env": "void",
     "title": "Ring Control Pocket",
     "background_image": "images/rooms/world_5/orbital_server_farm.png",
-    "description": "A control pocket hides a manual toggle where workers, servants, or ghosts left one last practical way to resist automation. Luxury surfaces keep colliding with machine control, making the Orbital Ring feel expensive, hostile, and too large for any single authority to hold. The control pocket and manual toggle make the late game feel like a megastructure collapsing under its own polite violence.",
+    "description": "A control pocket hides a manual toggle behind a panel dressed as decor. Someone left one practical way to make the automated system hesitate.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -13453,12 +13453,12 @@
       {
         "name": "control pocket",
         "type": "generic",
-        "condition_unmet_message": "The detail reveals the human cost hidden under the Ring's immaculate presentation."
+        "condition_unmet_message": "The mark is small, practical, and placed where only maintenance crews would know to look."
       },
       {
         "name": "manual toggle",
         "type": "generic",
-        "condition_unmet_message": "The clue points to security logic, evacuation hierarchy, or system failure beneath the luxury."
+        "condition_unmet_message": "The label belongs to the station's emergency layer, not the guest map."
       }
     ]
   },

@@ -1836,7 +1836,7 @@
     "id": "w5_mq21",
     "title": "Docking Procedure",
     "summary": "Use the stolen Foundry hardware to breach Vale's Orbital Ring lockdown.",
-    "description": "Use the stolen Foundry hardware to break high orbit, survive Vale's fighter screen, force dock at the Executive Spire, and get inside before the Ring finishes erasing Thorne's command.",
+    "description": "Use the stolen Foundry hardware to break high orbit, survive Vale's fighter screen, ram the Executive Dock collar, and get inside before the Ring finishes erasing Thorne's command.",
     "flavor": "The Halo does not welcome visitors. It processes them.",
     "giver": "Nova",
     "hub_id": "hub_9_orbital_ring",
@@ -1844,11 +1844,11 @@
       {
         "id": "approach",
         "title": "The Halo",
-        "description": "Reach the Ring through the Compliance screen.",
+        "description": "Punch through the Compliance screen and line the Astra up with the Executive Dock.",
         "tasks": [
           {
             "id": "approach_halo",
-            "text": "Approach the Orbital Ring."
+            "text": "Push the Astra into the Ring's fighter screen."
           },
           {
             "id": "shoot_down_fighters",
@@ -1859,15 +1859,15 @@
       {
         "id": "forced_docking",
         "title": "Forced Docking",
-        "description": "Take control of the Executive Dock.",
+        "description": "Bend the docking collar and break the airlock cipher before Compliance recovers.",
         "tasks": [
           {
             "id": "force_dock",
-            "text": "Force dock on the Executive Spire."
+            "text": "Ram the Astra into the Executive Dock collar."
           },
           {
             "id": "hack_airlock",
-            "text": "Help Gh0st hack the airlock."
+            "text": "Help Gh0st break Thorne's airlock cipher."
           }
         ]
       }
@@ -1883,7 +1883,7 @@
     "id": "w5_mq22",
     "title": "Zero G",
     "summary": "Cross the executive paradise and prove Harmony is a cage, not salvation.",
-    "description": "Move through the Solarium's curated paradise, break the Security Hub, descend the zero-gravity service shaft, access the Server Farm, and find Thorne inside the system Vale stole from her.",
+    "description": "Read the Ring's luxury systems as machinery: cross the Solarium's false sun, break the surveillance lock, time the zero-gravity service shaft, open the Server Farm, and find Thorne inside the product Vale stole from her.",
     "flavor": "Paradise above. A cage below. Silence everywhere.",
     "giver": "Gh0st",
     "hub_id": "hub_9_orbital_ring",
@@ -1891,34 +1891,34 @@
       {
         "id": "ring_crossing",
         "title": "False Paradise",
-        "description": "Cross the executive decks and reach the core lift.",
+        "description": "Cross the executive decks by exposing the systems hidden under paradise.",
         "tasks": [
           {
             "id": "cross_solarium",
-            "text": "Cross the Solarium Deck."
+            "text": "Cross the Solarium by following the false sun's maintenance path."
           },
           {
             "id": "clear_security",
-            "text": "Defeat the Security Hub patrol."
+            "text": "Break the Security Hub patrol and expose the service shaft lock."
           }
         ]
       },
       {
         "id": "zero_g_descent",
         "title": "Zero G",
-        "description": "Descend past the Hunter-Killer patrols.",
+        "description": "Use patrol timing and coolant routes to descend into the Ring's cold infrastructure.",
         "tasks": [
           {
             "id": "traverse_shaft",
-            "text": "Navigate the maintenance shaft."
+            "text": "Time the zero-g shaft between Hunter-Killer sweeps."
           },
           {
             "id": "access_mainframe",
-            "text": "Access the Server Farm mainframe."
+            "text": "Open the Great Silence log at the mainframe terminal."
           },
           {
             "id": "find_thorne",
-            "text": "Find Director Thorne."
+            "text": "Trace Thorne through her buried emergency signal."
           }
         ]
       }
@@ -2028,7 +2028,7 @@
     "id": "w5_mq23",
     "title": "The Core Approach",
     "summary": "Follow Thorne's route through Vale's rewritten firewall and reach Elara.",
-    "description": "Navigate the Server Farm, use Thorne's inside knowledge to break three firewall nodes Vale rewrote, and destroy the hard-light construct guarding the Anchor Chamber.",
+    "description": "Map the Server Farm by coolant pulse, use Thorne's inside knowledge to break three rewritten firewall nodes, and destroy the hard-light construct guarding the Anchor Chamber.",
     "flavor": "The cold is deliberate. So is the route.",
     "giver": "Thorne",
     "hub_id": "hub_10_deep_ring",
@@ -2036,23 +2036,23 @@
       {
         "id": "firewall_maze",
         "title": "Firewall Route",
-        "description": "Find and disable the three firewall nodes.",
+        "description": "Resolve the repeating server aisles into three firewall nodes.",
         "tasks": [
           {
             "id": "navigate_maze",
-            "text": "Map the Server Farm route through Thorne's firewall nodes."
+            "text": "Map the Server Farm by coolant pulse."
           },
           {
             "id": "firewall_alpha",
-            "text": "Hack Firewall Node Alpha."
+            "text": "Drop Firewall Node Alpha's shifting cipher."
           },
           {
             "id": "firewall_beta",
-            "text": "Hack Firewall Node Beta."
+            "text": "Burn out Firewall Node Beta's recursion loop."
           },
           {
             "id": "firewall_gamma",
-            "text": "Hack Firewall Node Gamma."
+            "text": "Collapse Firewall Node Gamma's hard-light defense."
           }
         ]
       },

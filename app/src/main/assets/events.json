@@ -7202,7 +7202,7 @@
   },
   {
     "id": "w5_mq21_force_dock",
-    "description": "Force dock on the Ring.",
+    "description": "Ram the Astra into the Executive Dock collar.",
     "trigger": {
       "type": "player_action",
       "action": "w5_mq21_force_dock"
@@ -7241,7 +7241,7 @@
   },
   {
     "id": "w5_mq21_hack_airlock",
-    "description": "Hack the Executive Dock airlock.",
+    "description": "Break Thorne's Executive Dock airlock cipher.",
     "trigger": {
       "type": "player_action",
       "action": "w5_mq21_hack_airlock"
@@ -7296,7 +7296,7 @@
   },
   {
     "id": "w5_mq22_cross_solarium",
-    "description": "Cross the false paradise.",
+    "description": "Cross the Solarium by following the false sun's maintenance path.",
     "trigger": {
       "type": "player_action",
       "action": "w5_mq22_cross_solarium"
@@ -7324,13 +7324,13 @@
       },
       {
         "type": "show_message",
-        "message": "Real sand, clean water, and fruit rot beneath an artificial sun. Nova presses her hand into the warmth and thinks of the Mines. The Ring has paradise. It just kept it upstairs."
+        "message": "Nova follows the maintenance heat instead of the resort path. Real sand, clean water, and fruit rot beneath an artificial sun. The Ring has paradise. It just kept it upstairs."
       }
     ]
   },
   {
     "id": "w5_mq22_clear_security",
-    "description": "Break the Security Hub patrol.",
+    "description": "Break the Security Hub patrol and expose the service shaft lock.",
     "trigger": {
       "type": "encounter_victory",
       "enemies": [
@@ -7372,7 +7372,7 @@
   },
   {
     "id": "w5_mq22_traverse_shaft",
-    "description": "Traverse the zero-g service shaft.",
+    "description": "Time the zero-g service shaft between Hunter-Killer sweeps.",
     "trigger": {
       "type": "player_action",
       "action": "w5_mq22_traverse_shaft"
@@ -7411,7 +7411,7 @@
   },
   {
     "id": "w5_mq22_access_mainframe",
-    "description": "Access the Great Silence log.",
+    "description": "Open the Great Silence log at the mainframe terminal.",
     "trigger": {
       "type": "player_action",
       "action": "w5_mq22_access_mainframe"
@@ -7450,7 +7450,7 @@
   },
   {
     "id": "w5_mq22_find_thorne",
-    "description": "Find deposed Director Thorne.",
+    "description": "Trace Thorne through her buried emergency signal.",
     "trigger": {
       "type": "player_action",
       "action": "w5_mq22_find_thorne"
