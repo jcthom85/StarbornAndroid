@@ -406,7 +406,7 @@ fun ExplorationScreen(
 
     LaunchedEffect(restRecoveryNotice?.id) {
         if (restRecoveryNotice != null) {
-            delay(2600L)
+            delay(5200L)
             restRecoveryNotice = null
         }
     }

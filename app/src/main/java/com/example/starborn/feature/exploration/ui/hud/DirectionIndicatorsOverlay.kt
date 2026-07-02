@@ -17,9 +17,9 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.onClick
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
@@ -64,6 +64,15 @@ fun DirectionIndicatorsOverlay(
             val baseAlphaRange = if (indicator.status == DirectionIndicatorStatus.ENEMY) 0.55f..0.98f else 0.65f..0.95f
             val alpha = lerp(baseAlphaRange.start, baseAlphaRange.endInclusive, pulse)
             val scale = 1f + 0.08f * pulse
+            val canTravel = indicator.status == DirectionIndicatorStatus.UNEXPLORED ||
+                indicator.status == DirectionIndicatorStatus.EXPLORED
+            val actionLabel = when (indicator.status) {
+                DirectionIndicatorStatus.UNEXPLORED -> "Travel $direction"
+                DirectionIndicatorStatus.EXPLORED -> "Travel $direction"
+                DirectionIndicatorStatus.LOCKED -> "$direction exit locked"
+                DirectionIndicatorStatus.ENEMY -> "$direction exit blocked by enemy"
+                DirectionIndicatorStatus.NEARBY_THREAT -> "Threat nearby in $direction direction"
+            }
             Box(
                 modifier = Modifier
                     .align(alignment)
@@ -73,17 +82,17 @@ fun DirectionIndicatorsOverlay(
                         this.scaleY = scale
                         this.alpha = alpha
                     }
-                    .semantics {
-                        contentDescription = when (indicator.status) {
-                            DirectionIndicatorStatus.UNEXPLORED -> "Travel $direction"
-                            DirectionIndicatorStatus.EXPLORED -> "Travel $direction"
-                            DirectionIndicatorStatus.LOCKED -> "$direction exit locked"
-                            DirectionIndicatorStatus.ENEMY -> "$direction exit blocked by enemy"
-                            DirectionIndicatorStatus.NEARBY_THREAT -> "Threat nearby in $direction direction"
+                    .clearAndSetSemantics {
+                        contentDescription = actionLabel
+                        if (canTravel) {
+                            onClick(label = actionLabel) {
+                                onTravel(indicator.direction)
+                                true
+                            }
                         }
                     }
                     .clickable(
-                        enabled = indicator.status == DirectionIndicatorStatus.UNEXPLORED || indicator.status == DirectionIndicatorStatus.EXPLORED,
+                        enabled = canTravel,
                         onClick = { onTravel(indicator.direction) }
                     )
             ) {

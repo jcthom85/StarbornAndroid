@@ -21,15 +21,11 @@ appId: com.junewiregames.starborn.prealpha
     visible: "Nova's Bunk"
     timeout: 10000
 - tapOn: "CONTINUE"
-- swipe:
-    direction: LEFT
-    duration: 450
+- tapOn: "Travel west"
 - extendedWaitUntil:
     visible: "Pod Row"
     timeout: 60000
-- swipe:
-    direction: DOWN
-    duration: 450
+- tapOn: "Travel south"
 - extendedWaitUntil:
     visible: "Lift Shaft"
     timeout: 15000
@@ -41,9 +37,7 @@ appId: com.junewiregames.starborn.prealpha
     visible: "CONTINUE"
     timeout: 10000
 - tapOn: "CONTINUE"
-- swipe:
-    direction: LEFT
-    duration: 450
+- tapOn: "Travel west"
 - extendedWaitUntil:
     visible: "Jed's Bunk"
     timeout: 15000

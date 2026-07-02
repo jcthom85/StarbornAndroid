@@ -1,28 +1,26 @@
 appId: com.junewiregames.starborn.prealpha
 ---
 - launchApp:
-    clearState: false
+    clearState: true
 - extendedWaitUntil:
     visible: "New Game"
     timeout: 60000
 - tapOn: "New Game"
 - extendedWaitUntil:
-    visible: "GOT IT"
+    visible: "Wake Up Call"
     timeout: 20000
-- tapOn: "GOT IT"
+- tapOn: "Continue"
+- tapOn: "CONTINUE"
+- assertVisible: "bunk light"
+- tapOn: "bunk light"
+- extendedWaitUntil:
+    visible: "The bunk light snaps on.*"
+    timeout: 10000
+- tapOn: ".*The bunk light snaps on.*"
 - extendedWaitUntil:
     visible: "Nova's Bunk"
     timeout: 10000
-- extendedWaitUntil:
-    visible: "Highlighted room details are interactive.*"
-    timeout: 10000
-- tapOn: "GOT IT"
-- tapOn:
-    point: "31%,25%"
-- extendedWaitUntil:
-    visible: ".*bunk is hard.*"
-    timeout: 10000
-- tapOn: "Got it"
+- tapOn: "CONTINUE"
 - tapOn: "Travel west"
 - extendedWaitUntil:
     visible: "Pod Row"
@@ -34,11 +32,11 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     visible: "Open your journal from the menu.*"
     timeout: 10000
-- tapOn: "GOT IT"
+- tapOn: "CONTINUE"
 - extendedWaitUntil:
     visible: "Use the journal tabs.*"
     timeout: 15000
-- tapOn: "GOT IT"
+- tapOn: "CONTINUE"
 - tapOn: "Travel west"
 - extendedWaitUntil:
     visible: "Jed's Bunk"
@@ -46,19 +44,11 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     visible: "Tap a highlighted character name.*"
     timeout: 10000
-- tapOn: "GOT IT"
+- tapOn: "CONTINUE"
 - extendedWaitUntil:
     visible: "Tap the dialogue card.*"
     timeout: 15000
-- tapOn: "GOT IT"
-- extendedWaitUntil:
-    visible: "New Quest"
-    timeout: 10000
-- assertVisible: "Wake Up Call"
-- tapOn: "Continue"
-- extendedWaitUntil:
-    notVisible: "New Quest"
-    timeout: 10000
+- tapOn: "CONTINUE"
 - tapOn: "Jed"
 - extendedWaitUntil:
     visible: ".*pressure leak.*"
@@ -84,51 +74,51 @@ appId: com.junewiregames.starborn.prealpha
     notVisible: ".*I know the math.*"
     timeout: 10000
 - extendedWaitUntil:
-    visible: "ITEM OBTAINED"
+    visible: "Acquired Mining Pistol"
     timeout: 15000
-- tapOn: "GOT IT"
+- tapOn: "DISMISS"
 - extendedWaitUntil:
-    visible: "ITEM OBTAINED"
+    visible: "Acquired Flux Liner"
     timeout: 15000
-- tapOn: "GOT IT"
+- tapOn: "DISMISS"
 - extendedWaitUntil:
-    visible: "ITEM OBTAINED"
+    visible: "Acquired Cryo-Inductor"
     timeout: 15000
-- tapOn: "GOT IT"
+- tapOn: "DISMISS"
 - extendedWaitUntil:
-    visible: "ITEM OBTAINED"
+    visible: "Acquired 2 x Scrap Metal"
     timeout: 15000
-- tapOn: "GOT IT"
+- tapOn: "DISMISS"
 - extendedWaitUntil:
-    visible: "ITEM OBTAINED"
+    visible: "Acquired Ration Pack"
     timeout: 15000
-- tapOn: "GOT IT"
+- tapOn: "DISMISS"
 - extendedWaitUntil:
     visible: "Use the bottom menu button.*"
     timeout: 15000
-- tapOn: "GOT IT"
+- tapOn: "CONTINUE"
 - extendedWaitUntil:
     visible: "Use the Supplies, Gear, and Key Items tabs.*"
     timeout: 15000
-- tapOn: "GOT IT"
-- tapOn:
-    point: "88%,50%"
+- tapOn: "CONTINUE"
+- tapOn: "Travel east"
 - extendedWaitUntil:
     visible: "Lift Shaft"
     timeout: 15000
 - extendedWaitUntil:
     visible: "Head out of the Pit toward Jed's Workshop.*"
     timeout: 10000
-- tapOn: "GOT IT"
+- tapOn: "CONTINUE"
 - tapOn: "Travel south"
 - extendedWaitUntil:
     visible: "Pit Landing"
     timeout: 15000
-- tapOn: "HUB"
+- tapOn: "LEAVE"
 - extendedWaitUntil:
     visible: "Homestead Quarter"
     timeout: 15000
 - tapOn: "Enter Jed's Workshop"
+- tapOn: "Enter"
 - extendedWaitUntil:
     visible: "Scrap Yard"
     timeout: 15000
@@ -136,20 +126,32 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     visible: "Main Bench"
     timeout: 15000
-- tapOn: "WORKBENCH"
+- extendedWaitUntil:
+    visible: ".*Set the Cryo-Inductor.*"
+    timeout: 15000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: ".*cold-loop part.*"
+    timeout: 10000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: ".*Functional Cryo-Inductor.*"
+    timeout: 10000
+- tapOn: "Dialogue Popup. Tap to continue"
+- tapOn: "workbench action"
 - extendedWaitUntil:
     visible: "Jed's Bench"
     timeout: 15000
 - extendedWaitUntil:
-    visible: "At Jed's bench.*"
+    visible: "At Jed's workbench.*"
     timeout: 10000
-- tapOn: "GOT IT"
+- tapOn: "CONTINUE"
 - extendedWaitUntil:
     visible: "Check the requirements.*"
     timeout: 15000
-- tapOn: "GOT IT"
+- tapOn: "CONTINUE"
 - tapOn: "Schematics"
-- tapOn: "Repair 4"
+- tapOn: "Repair 5"
 - extendedWaitUntil:
     visible: "Functional Cryo-Inductor"
     timeout: 10000
@@ -157,13 +159,37 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     visible: "The Cryo-Inductor whirs back to life."
     timeout: 10000
-- tapOn: "Continue"
+- tapOn: "Tap to continue"
 - pressKey: BACK
 - extendedWaitUntil:
-    visible: "Paperwork"
+    visible: ".*That's the hum.*"
+    timeout: 15000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: ".*work the mine.*"
+    timeout: 10000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: ".*Transit Checkpoint.*"
+    timeout: 10000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: ".*marks me absent.*"
+    timeout: 10000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: ".*Get to the checkpoint.*"
+    timeout: 10000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: "Wake Up Call"
     timeout: 15000
 - tapOn: "Continue"
 - extendedWaitUntil:
-    notVisible: "Paperwork"
+    visible: "Shift Clearance"
+    timeout: 15000
+- tapOn: "Continue"
+- extendedWaitUntil:
+    notVisible: "Shift Clearance"
     timeout: 10000
 - takeScreenshot: mainquest-wake-up-call
