@@ -8800,7 +8800,7 @@
     "weather": "resonance",
     "title": "Hall of Echoes",
     "background_image": "images/rooms/world_2/hall_of_echoes.png",
-    "description": "A grand corridor of clean, ancient geometry. The air is cool and dry. Shifting light-murals depict the history of the Architects, and a tune murals console flickers beside the central relief.",
+    "description": "A grand corridor of clean, ancient geometry. The air is cool and dry. Shifting murals wash across the walls while a central relief waits beneath three empty crystal shadows.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -8823,7 +8823,7 @@
         "condition_unmet_message": "Shifting murals made of light. They shimmer when you approach."
       },
       {
-        "name": "tune murals",
+        "name": "central relief",
         "type": "generic",
         "action_event": "w2_sq04_complete",
         "requires_milestones": [
@@ -8831,7 +8831,7 @@
           "ms_w2_crystal_east_seated",
           "ms_w2_crystal_north_seated"
         ],
-        "condition_unmet_message": "The mural chord will not hold until the west, east, and north crystal voices are seated."
+        "condition_unmet_message": "The central relief hums out of tune. It needs the west, east, and north crystal voices seated before the mural chord can hold."
       }
     ]
   },
@@ -8841,7 +8841,7 @@
     "weather": "resonance",
     "title": "Echo Alcoves",
     "background_image": "images/rooms/world_2/hall_echo_alcoves.png",
-    "description": "Small side alcoves designed for private study. Shifting light waveforms details the connection of minds.",
+    "description": "Small side alcoves designed for private study. Shifting light waveforms detail how separate minds once held a shared current without dissolving into it.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -8978,7 +8978,7 @@
     "weather": "resonance",
     "title": "Tuning Matrix",
     "background_image": "images/rooms/world_2/archive_tuning_bay.png",
-    "description": "A tuning matrix room containing four sound resonator columns. Empty sockets wait for crystal voices from the west, east, and north wings before the mural chord can settle.",
+    "description": "Four resonator columns stand around a low stone socket bed. Three empty seats wait for crystal voices from the west, east, and north wings before the mural chord can settle.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -8993,7 +8993,7 @@
     "state": {},
     "actions": [
       {
-        "name": "resonator",
+        "name": "resonator columns",
         "type": "generic",
         "action_event": "w2_sq04_complete",
         "requires_milestones": [
@@ -9001,7 +9001,7 @@
           "ms_w2_crystal_east_seated",
           "ms_w2_crystal_north_seated"
         ],
-        "condition_unmet_message": "The resonator columns need all three crystal voices seated before they can carry the mural chord."
+        "condition_unmet_message": "The columns answer with three missing tones. Seat the west, east, and north crystal voices before asking them to carry the mural chord."
       }
     ],
     "description_variants": [
@@ -9051,7 +9051,7 @@
     "weather": "fog",
     "title": "Stasis Chamber",
     "background_image": "images/rooms/world_2/stasis_chamber.png",
-    "description": "A circular room dominated by a single humming Stasis Pod. Scan roots pulse through cracks in the floor, and search vents marks a narrow shaft along the upper ceiling.",
+    "description": "A circular room gathers around a single humming stasis pod. A root lattice pulses through cracks in the floor, and a ceiling vent cuts a narrow shadow above the chamber wall.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -9073,16 +9073,16 @@
         "condition_unmet_message": "The sealed pod is protecting a sleeping figure by holding his memory inside three pressure rings."
       },
       {
-        "name": "scan roots",
+        "name": "root lattice",
         "type": "generic",
         "action_event": "w2_sq01_scan_roots",
-        "condition_unmet_message": "The ancient roots are pulsing in slow rhythm."
+        "condition_unmet_message": "The ancient roots pulse in slow rhythm, feeding the pod without drowning it."
       },
       {
-        "name": "search vents",
+        "name": "ceiling vent",
         "type": "generic",
         "action_event": "w2_sq05_search_vents",
-        "condition_unmet_message": "A narrow ventilation shaft runs along the upper ceiling."
+        "condition_unmet_message": "The ventilation shaft is too narrow for comfort, but its scrape marks are newer than the dust."
       }
     ],
     "npc_presence": [
@@ -9101,7 +9101,7 @@
         "requires_milestones": [
           "ms_w2_mq03_complete"
         ],
-        "description": "Orion's Stasis Pod hangs open in the circular chamber. Scan roots pulse through the floor as if the ruins are waking up with him."
+        "description": "Orion's stasis pod hangs open in the circular chamber. The root lattice pulses through the floor as if the ruins are waking up with him."
       }
     ]
   },
@@ -9382,7 +9382,7 @@
     "weather": "fog",
     "title": "Generator Controls",
     "background_image": "images/rooms/world_2/power_breaker_deck.png",
-    "description": "The control station containing generator breakers. Flipping these overrides will drop the gate barrier.",
+    "description": "A breaker bank hangs over the dynamo lines in a staggered emergency pattern. Each switch starves a different band of the gate's howl, but the living circuit needs somewhere safe to bleed first.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -9400,7 +9400,7 @@
         "name": "generator breakers",
         "type": "generic",
         "action_event": "w2_mq05_overload_breakers",
-        "condition_unmet_message": "The breakers can starve the barrier once the living circuit has somewhere safe to bleed its pressure."
+        "condition_unmet_message": "The breakers can starve the barrier, but the root pressure needs a safe bleed path before the circuit can be cut back."
       }
     ],
     "description_variants": [
@@ -9590,7 +9590,7 @@
     "weather": "fog",
     "title": "Hangar Bay",
     "background_image": "images/rooms/world_2/hangar_bay.png",
-    "description": "A vast underground cavern open to the sky. The Astra sits silent on the launch pad, her Astra Console dark. Reboot Bridge waits on the central dais, and Launch the Astra is impossible until power returns.",
+    "description": "A vast underground cavern opens to the sky. The Astra sits silent on the launch pad, her dark console starved of power. A bridge relic waits on the central dais while the launch cradle holds the ship like a breath not yet released.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -9606,22 +9606,22 @@
     "state": {},
     "actions": [
       {
-        "name": "Astra Console",
+        "name": "dark console",
         "type": "generic",
         "action_event": "w2_mq05_inspect_astra",
-        "condition_unmet_message": "The ship's main console. The primary power conduit is completely severed."
+        "condition_unmet_message": "The ship's main console is cold. The primary power conduit is completely severed."
       },
       {
-        "name": "Reboot Bridge",
+        "name": "bridge relic",
         "type": "generic",
         "action_event": "w2_mq05_reboot",
-        "condition_unmet_message": "Connecting conduits and rebooting bridge systems..."
+        "condition_unmet_message": "The bridge relic can wake the Astra, but it needs the recovered conduits and the Chime routed through it first."
       },
       {
-        "name": "Launch the Astra",
+        "name": "launch cradle",
         "type": "generic",
         "action_event": "w2_mq05_launch",
-        "condition_unmet_message": "Powering up the primary thrusters..."
+        "condition_unmet_message": "The launch cradle will not release the Astra until the bridge relic is awake."
       }
     ],
     "npc_presence": [
@@ -9640,7 +9640,7 @@
         "requires_milestones": [
           "ms_w2_mq05_complete"
         ],
-        "description": "The Astra's launch cradle is empty. Scorched conduits, cracked scaffolding, and a cooling Reboot Bridge mark the place where the crew clawed a route back to the sky."
+        "description": "The Astra's launch cradle is empty. Scorched conduits, cracked scaffolding, and a cooling bridge relic mark the place where the crew clawed a route back to the sky."
       }
     ]
   },

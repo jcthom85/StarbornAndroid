@@ -3379,7 +3379,7 @@
       },
       {
         "type": "show_message",
-        "message": "The murals are not decoration. They show a stasis system built around memory, identity, and a tuner named Orion. The rings protect the mind by letting pressure move around it instead of through it."
+        "message": "The murals are not decoration. They show a stasis system built around memory, identity, and a tuner named Orion. The rings protect the mind by letting pressure move around it instead of through it. The central relief repeats three shapes: memory, pressure, return."
       }
     ]
   },
@@ -3409,7 +3409,7 @@
       },
       {
         "type": "show_message",
-        "message": "The stasis pod bears Orion's name. Its ring array is still protecting him, but the safeties are locked in a chord Zeke can help decode."
+        "message": "The stasis pod bears Orion's name. Its ring array is still protecting him, but the safeties are waiting for proof: mural pattern, pod pressure, overview sockets, and coolant flow all have to agree before the chamber will risk waking him."
       }
     ]
   },
@@ -3628,7 +3628,7 @@
     "actions": [
       {
         "type": "show_message",
-        "message": "A massive barrier of energy blocks the way. Its acoustic lock howls through the horn, cup, pressure roots, and generator breakers feeding it."
+        "message": "A massive barrier of energy blocks the way. Orion hears four systems feeding the same wrong chord: a shaking horn, a burning receiver cup, root pressure with no relief, and breakers still giving the lock too much power."
       }
     ]
   },
@@ -3713,7 +3713,7 @@
       },
       {
         "type": "show_message",
-        "message": "The Astra console is dark. Zeke notes that the ship's power lines are completely dead. You'll need power conduits from the pod wreckage to jump-start them."
+        "message": "The dark console accepts touch, then dies under Nova's fingers. Zeke traces the dead line to a severed conduit bus: the crashed pod still has the same gauge of power conduit, if the wreck has not swallowed it."
       }
     ]
   },
@@ -3748,7 +3748,7 @@
       },
       {
         "type": "show_message",
-        "message": "You recover the power conduits from the pod wreckage. The same crash that stranded you is going to help the Astra leave."
+        "message": "You recover the power conduits from the pod wreckage. The insulation is scorched, but the cores still sing when the Chime gets close. The same crash that stranded you is going to help the Astra leave."
       }
     ]
   },

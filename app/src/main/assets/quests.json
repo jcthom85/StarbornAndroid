@@ -670,7 +670,7 @@
     "id": "w2_mq03",
     "title": "Sleeping Giant",
     "summary": "Someone has been asleep inside Sanctuary for twenty years, and the facility will not wake him without the right chord.",
-    "description": "Read the Hall of Echoes murals, locate Orion's stasis chamber, align the safety rings, and bring the tuner back into the world.",
+    "description": "Read the Hall of Echoes murals, locate Orion's stasis chamber, prove the pod safeties agree, and bring the tuner back into the world.",
     "flavor": "Twenty years of sleep, waiting for a chord that never came.",
     "giver": "Orion",
     "hub_id": "hub_4_facility",
@@ -693,11 +693,11 @@
       {
         "id": "override_stasis",
         "title": "Awaken the Tuner",
-        "description": "Align the stasis pod energy rings to awaken Orion.",
+        "description": "Use the mural pattern, pod pressure, overview sockets, and coolant flow to stabilize the stasis rings.",
         "tasks": [
           {
             "id": "align_stasis_rings",
-            "text": "Stabilize the stasis pod ring array."
+            "text": "Stabilize the stasis rings with the chamber clues."
           },
           {
             "id": "talk_to_orion",
@@ -753,7 +753,7 @@
     "id": "w2_mq05",
     "title": "Liftoff",
     "summary": "The Astra is the only way off Sector 9, but Sanctuary's gate, dead power lines, and the orbital shield stand in the way.",
-    "description": "Bypass the Source Gate, inspect the Astra, salvage power conduits, reboot the Bridge Relic with the Chime, and launch toward the Spire.",
+    "description": "Settle the Source Gate's four feeding systems, inspect the Astra, salvage power conduits, wake the bridge relic with the Chime, and launch toward the Spire.",
     "flavor": "A vessel of old songs, ready to fly again.",
     "giver": "Orion",
     "hub_id": "hub_4_facility",
@@ -761,15 +761,15 @@
       {
         "id": "repair_astra",
         "title": "Rebuild the Circuit",
-        "description": "Bypass the energy gate, gather pod parts, and boot the Astra.",
+        "description": "Resolve the gate chord, gather pod parts, and bring the Astra back online.",
         "tasks": [
           {
             "id": "bypass_source_gate",
-            "text": "Deactivate the Source Gate energy barrier."
+            "text": "Resolve the Source Gate's horn, cup, roots, and breakers."
           },
           {
             "id": "inspect_astra",
-            "text": "Examine the Astra console."
+            "text": "Inspect the Astra's dark console."
           },
           {
             "id": "collect_power_conduits",
@@ -777,11 +777,11 @@
           },
           {
             "id": "reboot_bridge_relic",
-            "text": "Reroute the Chime on the Astra bridge."
+            "text": "Reroute the Chime through the bridge relic."
           },
           {
             "id": "launch_ship",
-            "text": "Launch the Astra."
+            "text": "Release the Astra from the launch cradle."
           }
         ]
       }
