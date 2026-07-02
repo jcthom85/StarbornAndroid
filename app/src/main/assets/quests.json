@@ -283,7 +283,7 @@
       },
       {
         "id": "defeat_warden",
-        "title": "Defeat the Warden",
+        "title": "The Warden",
         "description": "The Warden blocks the pod and forces Nova to prove what she learned in the mines.",
         "tasks": [
           {
@@ -296,7 +296,7 @@
           },
           {
             "id": "defeat_the_warden",
-            "text": "Defeat the Warden."
+            "text": "Break the Warden's launch bay lockdown."
           }
         ]
       },
@@ -737,7 +737,7 @@
           },
           {
             "id": "defeat_the_beast",
-            "text": "Defeat the mutated Source Beast."
+            "text": "Put down the mutated Source Beast."
           }
         ]
       }
@@ -974,7 +974,7 @@
   {
     "id": "w2_sq05",
     "title": "Stolen Tech",
-    "summary": "Infiltrate the guarded maintenance vents, hack their security grid, and recover the stolen transmitter.",
+    "summary": "Slip through the guarded maintenance vents, blind their scan timing, and recover the stolen transmitter.",
     "description": "Scavenge the maintenance vents for the transmitter.",
     "flavor": "It's not stealing if they're all dead.",
     "giver": "Gh0st",
@@ -983,11 +983,11 @@
       {
         "id": "breach_vents",
         "title": "Silent Frequency",
-        "description": "Defeat the vent security without alerting the facility.",
+        "description": "Blind the vent scan pattern without waking the whole facility.",
         "tasks": [
           {
             "id": "hack_security_grid",
-            "text": "Hack the vent security grid."
+            "text": "Blind the vent security grid's timing."
           },
           {
             "id": "bypass_guard_systems",
@@ -1101,7 +1101,7 @@
           },
           {
             "id": "hack_blueprints",
-            "text": "Hack Spire elevator blueprints at Zeke's workstation."
+            "text": "Build the service-elevator route at Zeke's workstation."
           }
         ]
       },
@@ -1328,7 +1328,7 @@
           },
           {
             "id": "defeat_administrator",
-            "text": "Defeat the Administrator on the roof."
+            "text": "Break the Administrator's rooftop lockdown."
           },
           {
             "id": "scan_shield_gap",
@@ -1425,7 +1425,7 @@
     "id": "w4_mq16",
     "title": "Into the Fire",
     "summary": "Land in Sector 7 because the damaged Astra needs Foundry hardware to reach high orbit.",
-    "description": "Secure the Obsidian Shelf, confirm the Astra cannot climb to the Orbital Ring as-is, cross the Slag River, and hack the cooling vents so the service airlock can open.",
+    "description": "Secure the Obsidian Shelf, confirm the Astra cannot climb to the Orbital Ring as-is, cross the Slag River, and starve the cooling vents so the service airlock can open.",
     "flavor": "The Foundry does not guard its doors. It lets the heat do that.",
     "giver": "Nova",
     "hub_id": "hub_7_slag_pits",
@@ -1441,18 +1441,18 @@
           },
           {
             "id": "cross_slag_river",
-            "text": "Navigate the Slag River hazard crossing."
+            "text": "Cross the Slag River by reading the heat breaks."
           }
         ]
       },
       {
         "id": "open_airlock",
         "title": "Cooling the Gate",
-        "description": "Hack the vent controls and enter the service airlock.",
+        "description": "Starve the vent controls and enter the service airlock.",
         "tasks": [
           {
             "id": "hack_cooling_vents",
-            "text": "Hack the cooling vent controls at Waste Intake."
+            "text": "Starve the cooling vent controls at Waste Intake."
           },
           {
             "id": "enter_airlock",
@@ -1477,7 +1477,7 @@
     "id": "w4_mq17",
     "title": "Ghost in the Machine",
     "summary": "Recover Project Phantom records before pushing toward the engine line.",
-    "description": "Access the Project Phantom terminal, discover the truth about Gh0st and Elara, and regroup at the Cooling Springs before breaking into the factory floor that is still building successors.",
+    "description": "Open the Project Phantom terminal, discover the truth about Gh0st and Elara, and regroup at the Cooling Springs before breaking into the factory floor that is still building successors.",
     "flavor": "A weapon can learn the name it was denied.",
     "giver": "Gh0st",
     "hub_id": "hub_7_slag_pits",
@@ -1489,7 +1489,7 @@
         "tasks": [
           {
             "id": "access_phantom_terminal",
-            "text": "Access the Project Phantom terminal."
+            "text": "Open the Project Phantom terminal."
           }
         ]
       },
@@ -1639,7 +1639,7 @@
           },
           {
             "id": "defeat_prototypes",
-            "text": "Defeat the Phantom Prototype wave."
+            "text": "Survive the Phantom Prototype wave."
           }
         ]
       },
@@ -1713,8 +1713,8 @@
   {
     "id": "w4_mq20",
     "title": "Meltdown",
-    "summary": "Defeat Rylos, steal the Deep-Core Engine and Phase-Cutter Arrays, and make the Astra high-orbit capable.",
-    "description": "Defeat Rylos without letting him define Gh0st, steal the Deep-Core Engine and Phase-Cutter Arrays Vale needs for the Ascension Cradle, then launch before the Foundry seals around the crew.",
+    "summary": "Break Rylos' claim over Gh0st, steal the Deep-Core Engine and Phase-Cutter Arrays, and make the Astra high-orbit capable.",
+    "description": "Break Rylos without letting him define Gh0st, steal the Deep-Core Engine and Phase-Cutter Arrays Vale needs for the Ascension Cradle, then launch before the Foundry seals around the crew.",
     "flavor": "The Foundry built instruments for silence. You steal the noise.",
     "giver": "Nova",
     "hub_id": "hub_8_assembly_line",
@@ -1730,7 +1730,7 @@
           },
           {
             "id": "defeat_titan_walker",
-            "text": "Defeat the Titan Walker."
+            "text": "Bring down the Titan Walker."
           }
         ]
       },
@@ -2028,7 +2028,7 @@
     "id": "w5_mq23",
     "title": "The Core Approach",
     "summary": "Follow Thorne's route through Vale's rewritten firewall and reach Elara.",
-    "description": "Map the Server Farm by coolant pulse, use Thorne's inside knowledge to break three rewritten firewall nodes, and destroy the hard-light construct guarding the Anchor Chamber.",
+    "description": "Map the Server Farm by coolant pulse, use Thorne's inside knowledge to break three rewritten firewall nodes, and shatter the hard-light construct guarding the Anchor Chamber.",
     "flavor": "The cold is deliberate. So is the route.",
     "giver": "Thorne",
     "hub_id": "hub_10_deep_ring",
@@ -2059,11 +2059,11 @@
       {
         "id": "construct",
         "title": "Hard-Light Guardian",
-        "description": "Defeat the Firewall Construct.",
+        "description": "Shatter the Firewall Construct.",
         "tasks": [
           {
             "id": "defeat_construct",
-            "text": "Defeat the Firewall Construct."
+            "text": "Shatter the Firewall Construct."
           }
         ]
       }
@@ -2154,7 +2154,7 @@
         "tasks": [
           {
             "id": "defeat_avatar",
-            "text": "Defeat the Compliance Avatar."
+            "text": "Break the Compliance Avatar."
           },
           {
             "id": "enter_tear",

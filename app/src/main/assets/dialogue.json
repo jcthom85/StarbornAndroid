@@ -960,7 +960,7 @@
   {
     "id": "ghost_w2_sq05_intro_1",
     "speaker": "Gh0st",
-    "text": "The transmitter is beyond an active vent security grid. Hack its timing, pass the guard systems without an alert, then retrieve the core. You can build something faster from its timing crystal.",
+    "text": "The transmitter is beyond an active vent security grid. Blind its timing, pass the guard systems without an alert, then retrieve the core. You can build something faster from its timing crystal.",
     "condition": "quest_not_started:w2_sq05,quest_completed:w2_mq04",
     "options": [
       {
@@ -1405,7 +1405,7 @@
   {
     "id": "ghost_w2_sq05_grid_hint",
     "speaker": "Gh0st",
-    "text": "Do not touch the transmitter yet. First blind the security grid on the gantry, then cross the access grate between guard sweeps.",
+    "text": "Do not touch the transmitter yet. First blind the security grid on the gantry, then cross the grate between guard sweeps.",
     "condition": "quest_active:w2_sq05,quest_task_not_done:w2_sq05:hack_security_grid"
   }
 ]

@@ -1321,7 +1321,7 @@
       },
       {
         "type": "show_message",
-        "message": "Shield training complete. Report back to Boggs for Sector 4 authorization."
+        "message": "Boggs nods toward the loader bay gate. The shield lesson is over; now Nova knows how to make a heavy thing vulnerable before trying to break it."
       }
     ]
   },
@@ -2941,7 +2941,7 @@
       },
       {
         "type": "show_message",
-        "message": "Protocol Override complete. The dead cell's access key burns itself onto a cracked circuit board before Dominion can notice the theft."
+        "message": "Quest Complete: Protocol Override\n\nThe dead cell's access key burns itself onto a cracked circuit board before Dominion can notice the theft."
       }
     ]
   },
@@ -8938,7 +8938,7 @@
       },
       {
         "type": "show_message",
-        "message": "Jed's Echo complete. The memory cannot answer, but Nova remembers what survival was supposed to protect. Legacy unlocked."
+        "message": "Quest Complete: Jed's Echo\n\nThe memory cannot answer, but Nova remembers what survival was supposed to protect. Legacy unlocked."
       }
     ]
   },
@@ -8979,7 +8979,7 @@
       },
       {
         "type": "show_message",
-        "message": "The HR Record complete. Zeke deletes the file, its backups, and the version of himself that still asks permission. Unshackled unlocked."
+        "message": "Quest Complete: The HR Record\n\nZeke deletes the file, its backups, and the version of himself that still asks permission. Unshackled unlocked."
       }
     ]
   },
@@ -9020,7 +9020,7 @@
       },
       {
         "type": "show_message",
-        "message": "Elara's Song complete. Gh0st hears her voice without a command hidden inside it. Source Balance unlocked."
+        "message": "Quest Complete: Elara's Song\n\nGh0st hears her voice without a command hidden inside it. Source Balance unlocked."
       }
     ]
   },
@@ -9505,7 +9505,7 @@
       },
       {
         "type": "show_message",
-        "message": "The Aethel Grave complete. Orion hears the first Architects resting inside the current, not erased but carried. Ancestral Grace unlocked."
+        "message": "Quest Complete: The Aethel Grave\n\nOrion hears the first Architects resting inside the current, not erased but carried. Ancestral Grace unlocked."
       }
     ]
   },
@@ -9547,7 +9547,7 @@
       },
       {
         "type": "show_message",
-        "message": "The Final Scavenge complete. Zeke extracts the future Astra fragment and refuses the timeline it came from. The Starborn mod is not proof the ship dies; it is proof the crew can still change the ending."
+        "message": "Quest Complete: The Final Scavenge\n\nZeke extracts the future Astra fragment and refuses the timeline it came from. The Starborn mod is not proof the ship dies; it is proof the crew can still change the ending."
       }
     ]
   },
