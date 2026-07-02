@@ -955,6 +955,11 @@ fun DamageNumberBubble(
                 fontStyle = if (isHealing) FontStyle.Italic else FontStyle.Normal,
                 fontWeight = FontWeight.Black
             )
+            val textModifier = if (isBlocked) {
+                Modifier.requiredWidth(112.dp)
+            } else {
+                Modifier
+            }
 
             // Outline layers
             listOf(
@@ -967,10 +972,13 @@ fun DamageNumberBubble(
                     text = headline,
                     style = textStyle,
                     color = outlineColor,
-                    modifier = Modifier.offset(
+                    modifier = textModifier.offset(
                         x = (offset.x * outlineOffset.value).dp,
                         y = (offset.y * outlineOffset.value).dp
-                    )
+                    ),
+                    maxLines = 1,
+                    softWrap = false,
+                    textAlign = TextAlign.Center
                 )
             }
 
@@ -985,7 +993,10 @@ fun DamageNumberBubble(
                     )
                 ),
                 color = topColor,
-                modifier = if (isBlocked) Modifier.padding(horizontal = 8.dp) else Modifier
+                modifier = textModifier,
+                maxLines = 1,
+                softWrap = false,
+                textAlign = TextAlign.Center
             )
         }
     }

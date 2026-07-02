@@ -443,10 +443,10 @@ private fun String.toChoiceTag(): ChoiceTag? = when (this.lowercase(Locale.getDe
 }
 
 internal enum class DialogueVoiceProfile(private val cuePrefix: String?) {
-    NOVA("voice_murmur_nova"),
-    ORION("voice_murmur_orion"),
-    ZEKE("voice_murmur_zeke"),
-    GH0ST("voice_murmur_gh0st"),
+    NOVA("voice_murmur_female"),
+    ORION("voice_murmur_male"),
+    ZEKE("voice_murmur_male"),
+    GH0ST("voice_murmur_male"),
     FEMALE("voice_murmur_female"),
     MALE("voice_murmur_male"),
     NONE(null);
@@ -474,7 +474,6 @@ internal enum class DialogueVoiceProfile(private val cuePrefix: String?) {
                 "maddie",
                 "ellie",
                 "mika",
-                "vale",
                 "elara",
                 "caretaker iva",
                 "doctor sera",
@@ -488,6 +487,9 @@ internal enum class DialogueVoiceProfile(private val cuePrefix: String?) {
                 "lab terminal",
                 "maintenance bot",
                 "sentinel-3" -> NONE
+
+                "vale",
+                "arden vale" -> MALE
 
                 else -> MALE
             }
