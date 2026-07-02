@@ -84,6 +84,7 @@ import com.example.starborn.domain.model.TuningPuzzleAction
 import com.example.starborn.domain.model.actionKey
 import com.example.starborn.domain.prompt.UIPromptManager
 import com.example.starborn.domain.prompt.TutorialPrompt
+import com.example.starborn.domain.prompt.ItemBatchGrantedPrompt
 import com.example.starborn.domain.prompt.ItemGrantedPrompt
 import com.example.starborn.domain.quest.QuestJournalEntry
 import com.example.starborn.domain.quest.QuestLogEntry
@@ -398,7 +399,6 @@ class ExplorationViewModel(
                 inventoryService.addItem(itemId, quantity)
                 sessionStore.setInventory(inventoryService.snapshot())
                 val name = inventoryService.itemDisplayName(itemId)
-                postStatus("Received $quantity x $name")
                 refreshCurrentRoomBlockedDirections()
                 emitEvent(ExplorationEvent.ItemGranted(name, quantity))
                 promptManager.enqueue(ItemGrantedPrompt(name, quantity))
@@ -3672,12 +3672,6 @@ class ExplorationViewModel(
         playUiCue("confirm")
         inventoryService.addItem(itemId, quantity)
         val displayName = inventoryService.itemDisplayName(itemId)
-        val message = if (quantity > 1) {
-            "Collected $quantity × $displayName."
-        } else {
-            "Collected $displayName."
-        }
-        postStatus(message)
         items.remove(itemId)
         if (items.isEmpty()) {
             roomGroundItems.remove(roomId)
@@ -3694,21 +3688,20 @@ class ExplorationViewModel(
         val items = roomGroundItems[roomId] ?: return
         if (items.isEmpty()) return
         playUiCue("confirm")
-        val collectedMessages = mutableListOf<String>()
+        val collectedItems = mutableListOf<String>()
         items.entries.toList().forEach { (itemId, quantity) ->
             inventoryService.addItem(itemId, quantity)
             val displayName = inventoryService.itemDisplayName(itemId)
-            collectedMessages += if (quantity > 1) "$quantity × $displayName" else displayName
+            collectedItems += if (quantity > 1) "$quantity x $displayName" else displayName
             emitEvent(ExplorationEvent.ItemGranted(displayName, quantity))
-            promptManager.enqueue(ItemGrantedPrompt(displayName, quantity))
         }
         items.clear()
         roomGroundItems.remove(roomId)
         _uiState.update {
             it.copy(groundItems = emptyMap())
         }
-        if (collectedMessages.isNotEmpty()) {
-            postStatus("Collected ${collectedMessages.joinToString(", ")}.")
+        if (collectedItems.isNotEmpty()) {
+            promptManager.enqueue(ItemBatchGrantedPrompt(collectedItems.joinToString(", ")))
         }
     }
 

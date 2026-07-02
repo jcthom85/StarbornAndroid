@@ -38,3 +38,13 @@ data class ItemGrantedPrompt(
     }
 }
 
+data class ItemBatchGrantedPrompt(
+    val summary: String,
+    private val onDismissCallback: (() -> Unit)? = null
+) : UIPrompt {
+    override val id: String = "item_batch_granted_${summary.hashCode()}_${java.util.UUID.randomUUID()}"
+
+    override fun onDismiss() {
+        onDismissCallback?.invoke()
+    }
+}

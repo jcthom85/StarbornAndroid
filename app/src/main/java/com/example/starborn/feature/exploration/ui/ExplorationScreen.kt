@@ -364,7 +364,7 @@ fun ExplorationScreen(
                     )
                 )
                 is ExplorationEvent.RewardGranted -> viewModel.showStatusMessage(formatRewardMessage(event.reward))
-                is ExplorationEvent.ItemGranted -> viewModel.showStatusMessage("Received ${event.quantity} x ${event.itemName}")
+                is ExplorationEvent.ItemGranted -> Unit
                 is ExplorationEvent.XpGained -> viewModel.showStatusMessage("Gained ${event.amount} XP")
                 is ExplorationEvent.QuestAdvanced -> viewModel.showStatusMessage("${event.questId ?: "Quest"} advanced")
                 is ExplorationEvent.QuestUpdated -> viewModel.showStatusMessage("Quest log updated")
@@ -3999,8 +3999,9 @@ private fun RoomEntitySection(
                             color = Color(0xFF071018).copy(alpha = if (isDark) 0.86f else 0.72f),
                             border = BorderStroke(1.dp, accentColor.copy(alpha = if (isDark) 0.62f else 0.50f)),
                             modifier = Modifier
-                                .width(62.dp)
+                                .widthIn(min = 94.dp, max = 118.dp)
                                 .height(46.dp)
+                                .semantics { contentDescription = "Pick up all nearby items" }
                         ) {
                             Box(
                                 modifier = Modifier.background(
@@ -4014,10 +4015,11 @@ private fun RoomEntitySection(
                                 contentAlignment = Alignment.Center
                             ) {
                                 Text(
-                                    text = "All",
+                                    text = "Take all",
                                     color = Color.White,
                                     style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
-                                    maxLines = 1
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
                                 )
                             }
                         }
@@ -4137,12 +4139,40 @@ private fun ServiceActionIcon(
 private fun PresenceRailRow(
     content: @Composable () -> Unit
 ) {
+    val scrollState = rememberScrollState()
     Box(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .drawWithContent {
+                drawContent()
+                val fadeWidth = 22.dp.toPx()
+                if (scrollState.value > 0) {
+                    drawRect(
+                        brush = Brush.horizontalGradient(
+                            colors = listOf(Color(0xFF050A10), Color.Transparent),
+                            startX = 0f,
+                            endX = fadeWidth
+                        ),
+                        size = Size(fadeWidth, size.height)
+                    )
+                }
+                if (scrollState.value < scrollState.maxValue) {
+                    drawRect(
+                        brush = Brush.horizontalGradient(
+                            colors = listOf(Color.Transparent, Color(0xFF050A10)),
+                            startX = size.width - fadeWidth,
+                            endX = size.width
+                        ),
+                        topLeft = Offset(size.width - fadeWidth, 0f),
+                        size = Size(fadeWidth, size.height)
+                    )
+                }
+            }
     ) {
         Row(
             modifier = Modifier
-                .fillMaxWidth(),
+                .horizontalScroll(scrollState)
+                .padding(end = 4.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.Top
         ) {
@@ -4161,19 +4191,15 @@ private fun NpcPresenceChip(
     isDark: Boolean,
     onClick: () -> Unit
 ) {
-    val portraitPainter = rememberAssetPainter(
-        portraitPath,
-        painterResource(R.drawable.inventory_icon)
-    )
     Surface(
         onClick = onClick,
         shape = RoundedCornerShape(12.dp),
         color = Color(0xFF071018).copy(alpha = if (isDark) 0.88f else 0.76f),
         border = BorderStroke(1.dp, accentColor.copy(alpha = if (isDark) 0.68f else 0.54f)),
         modifier = Modifier
-            .widthIn(min = 142.dp)
+            .widthIn(min = 136.dp, max = 176.dp)
             .height(46.dp)
-            .semantics { contentDescription = label }
+            .semantics { contentDescription = "Talk to $label" }
     ) {
         Row(
             modifier = Modifier
@@ -4196,14 +4222,34 @@ private fun NpcPresenceChip(
                     .border(1.dp, accentColor.copy(alpha = 0.72f), CircleShape)
                     .padding(2.dp)
             ) {
-                Image(
-                    painter = portraitPainter,
-                    contentDescription = label,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .clip(CircleShape)
-                )
+                if (portraitPath.isNullOrBlank()) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .clip(CircleShape)
+                            .background(accentColor.copy(alpha = 0.18f)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = label.firstOrNull()?.uppercaseChar()?.toString() ?: "?",
+                            color = Color.White.copy(alpha = 0.92f),
+                            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                            maxLines = 1
+                        )
+                    }
+                } else {
+                    Image(
+                        painter = rememberAssetPainter(
+                            portraitPath,
+                            painterResource(R.drawable.inventory_icon)
+                        ),
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .clip(CircleShape)
+                    )
+                }
             }
             Column(
                 modifier = Modifier.weight(1f),
@@ -4219,6 +4265,16 @@ private fun NpcPresenceChip(
                             offset = Offset(0f, 1f),
                             blurRadius = 2f
                         )
+                    ),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Text(
+                    text = "Talk",
+                    color = accentColor.copy(alpha = 0.86f),
+                    style = MaterialTheme.typography.labelSmall.copy(
+                        fontSize = 10.sp,
+                        fontWeight = FontWeight.SemiBold
                     ),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
@@ -4252,8 +4308,15 @@ private fun FindPresenceChip(
             if (isEquipment) accentColor.copy(alpha = if (isDark) 0.62f else 0.50f) else borderColor.copy(alpha = if (isDark) 0.38f else 0.28f)
         ),
         modifier = Modifier
-            .widthIn(min = 142.dp)
+            .widthIn(min = 136.dp, max = 188.dp)
             .height(46.dp)
+            .semantics {
+                contentDescription = if (quantity > 1) {
+                    "Pick up $quantity $name"
+                } else {
+                    "Pick up $name"
+                }
+            }
     ) {
         Row(
             modifier = Modifier
@@ -5752,6 +5815,24 @@ fun ItemGrantedBanner(
     PromptBanner(
         title = "Item Obtained",
         message = message,
+        accentColor = Color(0xFFA5D6A7),
+        actionLabel = "Dismiss",
+        onAction = onDismiss,
+        modifier = modifier,
+        showTitle = false,
+        tapToDismiss = true
+    )
+}
+
+@Composable
+fun ItemBatchGrantedBanner(
+    summary: String,
+    onDismiss: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    PromptBanner(
+        title = "Items Obtained",
+        message = "Acquired $summary",
         accentColor = Color(0xFFA5D6A7),
         actionLabel = "Dismiss",
         onAction = onDismiss,

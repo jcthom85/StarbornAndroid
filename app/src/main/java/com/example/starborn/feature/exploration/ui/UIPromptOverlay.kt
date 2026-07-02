@@ -2,6 +2,7 @@ package com.example.starborn.feature.exploration.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.example.starborn.domain.prompt.ItemBatchGrantedPrompt
 import com.example.starborn.domain.prompt.ItemGrantedPrompt
 import com.example.starborn.domain.prompt.MilestonePrompt
 import com.example.starborn.domain.prompt.TutorialPrompt
@@ -36,7 +37,13 @@ fun UIPromptOverlay(
                 modifier = modifier
             )
         }
+        is ItemBatchGrantedPrompt -> {
+            ItemBatchGrantedBanner(
+                summary = prompt.summary,
+                onDismiss = onDismiss,
+                modifier = modifier
+            )
+        }
         else -> Unit
     }
 }
-
