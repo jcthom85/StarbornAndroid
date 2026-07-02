@@ -4277,7 +4277,7 @@
     "env": "neon",
     "title": "Prism Gallery",
     "background_image": "images/rooms/world_3/spire_archive_vault.png",
-    "description": "The prism gallery bends Archive light into visible music. Prism shutters split the containment field into color bands, and alarm chords sleep inside the glass until the room is read in the right order.",
+    "description": "The Prism Gallery bends Archive light into audible color. Prism shutters split the containment field into three bands, and a braided chord sleeps inside the glass until the room's evidence agrees.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -4292,13 +4292,13 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The prism gallery fractures the lockdown lights into visible alarm chords. The resolved containment route is still warm, and Scan shows a narrow timing path threaded through the noise toward the roof.",
+        "description": "The Prism Gallery fractures the lockdown lights into visible alarm chords. The resolved containment route is still warm, and Scan shows a narrow timing path threaded through the noise toward the roof.",
         "requires_milestones": [
           "ms_w3_mq14_complete"
         ]
       },
       {
-        "description": "The prism gallery bends Archive light into visible music. The prism shutters now hold the containment field open, trembling at frequencies Orion can hear and Nova can no longer ignore.",
+        "description": "The Prism Gallery bends Archive light into audible color. The prism shutters now hold the containment field open, trembling at frequencies Orion can hear and Nova can no longer ignore.",
         "requires_milestones": [
           "ms_w3_prism_solved"
         ]
@@ -4312,7 +4312,7 @@
         "condition_unmet_message": "The shutters split the vault field into three color bands, each feeding a different part of the cage."
       },
       {
-        "name": "visible music",
+        "name": "braided chord",
         "type": "generic",
         "action_event": "w3_mq14_solve_light_puzzle",
         "requires_milestones": [
@@ -4320,7 +4320,7 @@
           "ms_w3_prism_shutters_read",
           "ms_w3_command_tethers_traced"
         ],
-        "condition_unmet_message": "The visible music will not resolve until the containment field, prism shutters, and command tether-lines agree."
+        "condition_unmet_message": "The braided chord will not resolve until the containment field, prism shutters, and command tether-lines agree."
       },
       {
         "name": "scan alarm chords",
@@ -4418,16 +4418,16 @@
     ],
     "actions": [
       {
-        "name": "scan shield gap",
+        "name": "shield window",
         "type": "generic",
         "action_event": "w3_scan_shield_gap",
-        "condition_unmet_message": "The Shield is still an impossible wall until the Lens shows Nova the gap."
+        "condition_unmet_message": "The Shield is still an impossible wall until the Lens shows Nova the window in its rotation."
       },
       {
-        "name": "launch astra",
+        "name": "launch window",
         "type": "generic",
         "action_event": "w3_mq15_launch_astra",
-        "condition_unmet_message": "The Astra can slip the Shield only after the Administrator is down."
+        "condition_unmet_message": "The Astra can slip the Shield only after the Administrator is down and the Lens has found the window."
       }
     ],
     "enemy_flavor": {
@@ -4441,7 +4441,7 @@
     "env": "foundry",
     "title": "Obsidian Shelf",
     "background_image": "images/rooms/world_4/foundry_slag_landing.png",
-    "description": "The Astra cools on a shelf of black volcanic glass above a river of magma. Heat shields glow cherry-red while ash falls like dirty snow, and the Lens still shows the Shield gap closing behind you.",
+    "description": "The Astra cools on a shelf of black volcanic glass above a river of magma. Heat shields glow cherry-red while ash falls like dirty snow, and the Lens still shows the Shield window closing behind you.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -4517,9 +4517,9 @@
         "condition_unmet_message": "The Foundry basin is not a building so much as an appetite: scrap in, weapons out, nobody counted."
       },
       {
-        "name": "shield gap telemetry",
+        "name": "shield window telemetry",
         "type": "generic",
-        "condition_unmet_message": "The Lens telemetry still flickers with the Shield gap. Astra survived the slip, but not cleanly enough to climb to the Orbital Ring."
+        "condition_unmet_message": "The Lens telemetry still flickers with the Shield window. Astra survived the slip, but not cleanly enough to climb to the Orbital Ring."
       }
     ]
   },

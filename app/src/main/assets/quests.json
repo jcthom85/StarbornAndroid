@@ -1263,8 +1263,8 @@
   {
     "id": "w3_mq14",
     "title": "The Lens",
-    "summary": "Reach the Archive, resolve the Prism Gallery containment field, and take the Lens even when it recognizes Nova first.",
-    "description": "Enter the Archive, read the Prism Gallery's light machinery with Orion, and take the Lens knowing the relic will expose more than the crew planned to steal.",
+    "summary": "Reach the Archive, make the Prism Gallery's containment route agree, and take the Lens even when it recognizes Nova first.",
+    "description": "Enter the Archive, read the vault's light machinery with Orion and Zeke, and take the Lens knowing the relic will expose more than the crew planned to steal.",
     "flavor": "Truth is not a light. It is a wound that glows.",
     "giver": "Orion",
     "hub_id": "hub_6_upper_city",
@@ -1272,7 +1272,7 @@
       {
         "id": "archive_infiltration",
         "title": "Archive Infiltration",
-        "description": "Reach the vault and open the containment field.",
+        "description": "Read the vault field, prism shutters, and command tether-lines until the containment route stops contradicting itself.",
         "tasks": [
           {
             "id": "enter_archive",
@@ -1280,7 +1280,7 @@
           },
           {
             "id": "solve_light_puzzle",
-            "text": "Resolve the Prism Gallery containment field."
+            "text": "Make the containment field, shutters, and tether-lines agree."
           }
         ]
       },
@@ -1332,18 +1332,18 @@
           },
           {
             "id": "scan_shield_gap",
-            "text": "Use Scan to read the Shield gap."
+            "text": "Use Scan to read the Shield's launch window."
           }
         ]
       },
       {
         "id": "launch_to_foundry",
         "title": "Slip the Shield",
-        "description": "Use the Lens to find the Shield gap and launch the Astra.",
+        "description": "Use the Lens to hold the Shield window long enough for the Astra to run.",
         "tasks": [
           {
             "id": "launch_astra",
-            "text": "Launch the Astra toward the Foundry."
+            "text": "Send the Astra through the Shield window."
           }
         ]
       }

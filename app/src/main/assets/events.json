@@ -5053,7 +5053,7 @@
   },
   {
     "id": "w3_mq14_read_containment_field",
-    "description": "Read the Archive containment field before resolving the Prism Gallery.",
+    "description": "Read the Archive containment field before routing the Prism Gallery chord.",
     "trigger": {
       "type": "player_action",
       "action": "w3_mq14_read_containment_field"
@@ -5152,7 +5152,7 @@
   },
   {
     "id": "w3_mq14_solve_light_puzzle",
-    "description": "Resolve the Prism Gallery containment field.",
+    "description": "Route the Prism Gallery chord through the containment field.",
     "trigger": {
       "type": "player_action",
       "action": "w3_mq14_solve_light_puzzle"
@@ -5202,7 +5202,7 @@
       },
       {
         "type": "show_message",
-        "message": "The containment field, prism shutters, and command tether-lines finally agree. The Lens is no longer displayed like property; it hangs loose in the field, bright and waiting."
+        "message": "The containment field, prism shutters, and command tether-lines finally agree. The braided chord slides through red pressure, blue return, and gold permission until the cage forgets how to call itself locked. The Lens hangs loose in the field, bright and waiting."
       }
     ]
   },
@@ -5366,7 +5366,7 @@
   },
   {
     "id": "w3_scan_shield_gap",
-    "description": "Use the Lens to read the Shield gap while the Administrator still blocks the launch.",
+    "description": "Use the Lens to read the Shield window while the Administrator still blocks the launch.",
     "repeatable": true,
     "trigger": {
       "type": "player_action",
@@ -5386,13 +5386,13 @@
     "actions": [
       {
         "type": "show_message",
-        "message": "Scan reveals the Shield gap opening and closing above the roof, smaller than courage and faster than panic. The Administrator's targeting lattice crosses every launch line."
+        "message": "Scan reveals the Shield window opening and closing above the roof, smaller than courage and faster than panic. The Administrator's targeting lattice crosses every launch line."
       }
     ]
   },
   {
     "id": "w3_scan_shield_gap_clear",
-    "description": "Use the Lens to read the Shield gap after the Administrator falls.",
+    "description": "Use the Lens to read the Shield window after the Administrator falls.",
     "trigger": {
       "type": "player_action",
       "action": "w3_scan_shield_gap"
@@ -5421,7 +5421,7 @@
       },
       {
         "type": "show_message",
-        "message": "Scan catches the Shield gap on its next rotation. Orion counts under his breath. Zeke has the Astra hot. Nova has one launch window and no room left for fear."
+        "message": "Scan catches the Shield window on its next rotation. Orion counts under his breath. Zeke has the Astra hot. Nova has one launch window and no room left for fear."
       }
     ]
   },
@@ -5521,13 +5521,13 @@
       },
       {
         "type": "show_message",
-        "message": "The Administrator frame collapses, still smiling through sparking teeth. The Shield gap opens for less than a second, and Nova can finally see exactly how small freedom is."
+        "message": "The Administrator frame collapses, still smiling through sparking teeth. The Shield window opens for less than a second, and Nova can finally see exactly how small freedom is."
       }
     ]
   },
   {
     "id": "w3_mq15_launch_needs_scan",
-    "description": "Explain that the Astra cannot launch until Nova scans the Shield gap.",
+    "description": "Explain that the Astra cannot launch until Nova scans the Shield window.",
     "repeatable": true,
     "trigger": {
       "type": "player_action",
@@ -5552,13 +5552,13 @@
     "actions": [
       {
         "type": "show_message",
-        "message": "The Astra screams ready, but the Shield is still a wall of lethal timing. Nova needs to scan the shield gap before Orion can call the launch window."
+        "message": "The Astra screams ready, but the Shield is still a wall of lethal timing. Nova needs to scan the Shield window before Orion can call the count."
       }
     ]
   },
   {
     "id": "w3_mq15_launch_astra",
-    "description": "Launch the Astra through the Shield toward World 4.",
+    "description": "Send the Astra through the Shield window toward World 4.",
     "trigger": {
       "type": "player_action",
       "action": "w3_mq15_launch_astra"
