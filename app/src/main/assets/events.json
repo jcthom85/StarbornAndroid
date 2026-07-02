@@ -6360,7 +6360,7 @@
   },
   {
     "id": "w4_mq18_navigate_conveyors",
-    "description": "Navigate Assembly conveyor belts.",
+    "description": "Read the Assembly line timing.",
     "trigger": {
       "type": "player_action",
       "action": "w4_mq18_navigate_conveyors"
@@ -6388,7 +6388,7 @@
       },
       {
         "type": "show_message",
-        "message": "You catch the belt rhythm between crushers and moving heat shields."
+        "message": "Nova reads the warning lamps until the Assembly line stops looking random. The safe windows are narrow, but they exist."
       }
     ]
   },
@@ -6667,7 +6667,7 @@
   },
   {
     "id": "w4_mq19_open_anvil_cradle",
-    "description": "Open the Anvil cradle.",
+    "description": "Force the Anvil cradle open.",
     "trigger": {
       "type": "player_action",
       "action": "w4_mq19_open_anvil_cradle"

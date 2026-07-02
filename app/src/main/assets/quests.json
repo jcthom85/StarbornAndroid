@@ -1623,7 +1623,7 @@
     "id": "w4_mq18",
     "title": "The Assembly",
     "summary": "Fight through the Foundry production floor and break the Phantom fabrication line blocking the engine route.",
-    "description": "Navigate conveyor belts, survive Phantom Prototype waves, and overload the fabrication matrix feeding Gh0st's mass-production successors.",
+    "description": "Read the Assembly line, survive Phantom Prototype waves, and overload the fabrication matrix feeding Gh0st's mass-production successors.",
     "flavor": "The machine of war sounds like work until it starts printing faces.",
     "giver": "Gh0st",
     "hub_id": "hub_8_assembly_line",
@@ -1631,11 +1631,11 @@
       {
         "id": "production_floor",
         "title": "Production Floor",
-        "description": "Cross the conveyor belts and survive the gauntlet.",
+        "description": "Cross the Assembly line by reading the belt rhythm and surviving the gauntlet.",
         "tasks": [
           {
             "id": "navigate_conveyors",
-            "text": "Navigate the conveyor belts."
+            "text": "Time the Assembly line's moving belts."
           },
           {
             "id": "defeat_prototypes",
@@ -1674,7 +1674,7 @@
       {
         "id": "forge_access",
         "title": "Forge Access",
-        "description": "Open the Anvil cradle.",
+        "description": "Make the Forge's machinery agree long enough to open the Anvil cradle.",
         "tasks": [
           {
             "id": "reach_core_chamber",
@@ -1682,7 +1682,7 @@
           },
           {
             "id": "solve_conveyor_puzzle",
-            "text": "Open the Anvil cradle."
+            "text": "Force the Anvil cradle open."
           }
         ]
       },

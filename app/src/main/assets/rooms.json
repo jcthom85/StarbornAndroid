@@ -15249,12 +15249,12 @@
       {
         "name": "cracked beacon",
         "type": "generic",
-        "condition_unmet_message": "This added detail makes the node feel like a real late-game space instead of a single quest stop."
+        "condition_unmet_message": "The beacon blinks through heat haze in a pattern workers could follow when the official lights failed."
       },
       {
         "name": "shift tally",
         "type": "generic",
-        "condition_unmet_message": "The clue reinforces the world's larger theme while giving the player another room-level interaction."
+        "condition_unmet_message": "Names and counts scratch across the metal: proof that someone kept track even when Dominion did not."
       }
     ]
   },
@@ -15281,12 +15281,12 @@
       {
         "name": "burned console",
         "type": "generic",
-        "condition_unmet_message": "This added detail makes the node feel like a real late-game space instead of a single quest stop."
+        "condition_unmet_message": "The console is scorched around the manual controls, where somebody chose a person over procedure."
       },
       {
         "name": "rescue hook",
         "type": "generic",
-        "condition_unmet_message": "The clue reinforces the world's larger theme while giving the player another room-level interaction."
+        "condition_unmet_message": "The hook is unlogged, practical, and worn smooth by hands that were not supposed to need saving."
       }
     ]
   },
@@ -15311,12 +15311,12 @@
       {
         "name": "patched pipes",
         "type": "generic",
-        "condition_unmet_message": "This added detail makes the node feel like a real late-game space instead of a single quest stop."
+        "condition_unmet_message": "The patches are ugly and effective, rerouting cold flow through gaps the Foundry never planned for."
       },
       {
         "name": "cool residue",
         "type": "generic",
-        "condition_unmet_message": "The clue reinforces the world's larger theme while giving the player another room-level interaction."
+        "condition_unmet_message": "Blue residue clings to the pipe seams, a small refusal of all this furnace logic."
       }
     ]
   },
@@ -15343,12 +15343,12 @@
       {
         "name": "sorter spine",
         "type": "generic",
-        "condition_unmet_message": "This added detail makes the node feel like a real late-game space instead of a single quest stop."
+        "condition_unmet_message": "The spine sorts ruined parts by usefulness, never asking what ruined them."
       },
       {
         "name": "reject ledger",
         "type": "generic",
-        "condition_unmet_message": "The clue reinforces the world's larger theme while giving the player another room-level interaction."
+        "condition_unmet_message": "The ledger calls every failed unit recoverable material. It never uses the word body."
       }
     ]
   },
@@ -15373,12 +15373,12 @@
       {
         "name": "pressure masks",
         "type": "generic",
-        "condition_unmet_message": "This added detail makes the node feel like a real late-game space instead of a single quest stop."
+        "condition_unmet_message": "The masks hang low enough for workers to grab while running."
       },
       {
         "name": "cycling rules",
         "type": "generic",
-        "condition_unmet_message": "The clue reinforces the world's larger theme while giving the player another room-level interaction."
+        "condition_unmet_message": "The handwritten rules contradict the posted procedure in every way that would keep someone alive."
       }
     ]
   },
@@ -15405,12 +15405,12 @@
       {
         "name": "nerve junction",
         "type": "generic",
-        "condition_unmet_message": "This added detail makes the node feel like a real late-game space instead of a single quest stop."
+        "condition_unmet_message": "The junction pulses in time with the crushers, turning the whole belt into one exposed nerve."
       },
       {
         "name": "target counter",
         "type": "generic",
-        "condition_unmet_message": "The clue reinforces the world's larger theme while giving the player another room-level interaction."
+        "condition_unmet_message": "The counter values throughput over survival. Nova can still use its rhythm against the line."
       }
     ]
   },
@@ -15437,12 +15437,12 @@
       {
         "name": "defect choir",
         "type": "generic",
-        "condition_unmet_message": "This added detail makes the node feel like a real late-game space instead of a single quest stop."
+        "condition_unmet_message": "The rejected units click in uneven rhythm, each delay sounding almost like resistance."
       },
       {
         "name": "glass seam",
         "type": "generic",
-        "condition_unmet_message": "The clue reinforces the world's larger theme while giving the player another room-level interaction."
+        "condition_unmet_message": "The glass seam is weakest where too many hands have struck it from the inside."
       }
     ]
   },
@@ -15467,12 +15467,12 @@
       {
         "name": "relic draft",
         "type": "generic",
-        "condition_unmet_message": "This added detail makes the node feel like a real late-game space instead of a single quest stop."
+        "condition_unmet_message": "The draft moves toward the Anvil's imprint before the fire catches up."
       },
       {
         "name": "ash trail",
         "type": "generic",
-        "condition_unmet_message": "The clue reinforces the world's larger theme while giving the player another room-level interaction."
+        "condition_unmet_message": "The ash curls in old patterns, older than Dominion and less obedient."
       }
     ]
   },
@@ -15499,12 +15499,12 @@
       {
         "name": "core shadow",
         "type": "generic",
-        "condition_unmet_message": "This added detail makes the node feel like a real late-game space instead of a single quest stop."
+        "condition_unmet_message": "The shadow cuts across the clamps at the exact angle Nova will need for the theft."
       },
       {
         "name": "clamp gauge",
         "type": "generic",
-        "condition_unmet_message": "The clue reinforces the world's larger theme while giving the player another room-level interaction."
+        "condition_unmet_message": "The gauge measures thermal grip, but its redline also marks when the engine is movable."
       }
     ]
   },
@@ -15529,12 +15529,12 @@
       {
         "name": "last gantry",
         "type": "generic",
-        "condition_unmet_message": "This added detail makes the node feel like a real late-game space instead of a single quest stop."
+        "condition_unmet_message": "The gantry points away from the dock like somebody already imagined the retreat."
       },
       {
         "name": "release bolt",
         "type": "generic",
-        "condition_unmet_message": "The clue reinforces the world's larger theme while giving the player another room-level interaction."
+        "condition_unmet_message": "The bolt is painted emergency yellow under a layer of old slag dust."
       }
     ]
   },
@@ -15559,12 +15559,12 @@
       {
         "name": "dock memorial",
         "type": "generic",
-        "condition_unmet_message": "This added detail makes the node feel like a real late-game space instead of a single quest stop."
+        "condition_unmet_message": "The memorial keeps the executive names bright and lets the staff names fade first."
       },
       {
         "name": "redaction pulse",
         "type": "generic",
-        "condition_unmet_message": "The clue reinforces the world's larger theme while giving the player another room-level interaction."
+        "condition_unmet_message": "Every pulse erases another line item, but never the titles."
       }
     ]
   },
@@ -15591,12 +15591,12 @@
       {
         "name": "welcome footage",
         "type": "generic",
-        "condition_unmet_message": "This added detail makes the node feel like a real late-game space instead of a single quest stop."
+        "condition_unmet_message": "The footage smiles through alarms, insisting arrival is a privilege."
       },
       {
         "name": "empty chairs",
         "type": "generic",
-        "condition_unmet_message": "The clue reinforces the world's larger theme while giving the player another room-level interaction."
+        "condition_unmet_message": "The chairs are angled toward a welcome no one is alive enough to receive."
       }
     ]
   },
@@ -15621,12 +15621,12 @@
       {
         "name": "false tide",
         "type": "generic",
-        "condition_unmet_message": "This added detail makes the node feel like a real late-game space instead of a single quest stop."
+        "condition_unmet_message": "The tide repeats on a luxury schedule, beautiful until the pumps cough underneath it."
       },
       {
         "name": "climate veins",
         "type": "generic",
-        "condition_unmet_message": "The clue reinforces the world's larger theme while giving the player another room-level interaction."
+        "condition_unmet_message": "The veins carry paradise through the walls like coolant through a machine."
       }
     ]
   },
@@ -15653,12 +15653,12 @@
       {
         "name": "surveillance panes",
         "type": "generic",
-        "condition_unmet_message": "This added detail makes the node feel like a real late-game space instead of a single quest stop."
+        "condition_unmet_message": "Each pane frames a person as a possible breach before it frames them as a person."
       },
       {
         "name": "priority docket",
         "type": "generic",
-        "condition_unmet_message": "The clue reinforces the world's larger theme while giving the player another room-level interaction."
+        "condition_unmet_message": "The docket ranks threats by inconvenience to power."
       }
     ]
   },
@@ -15683,12 +15683,12 @@
       {
         "name": "tether hooks",
         "type": "generic",
-        "condition_unmet_message": "This added detail makes the node feel like a real late-game space instead of a single quest stop."
+        "condition_unmet_message": "The hooks are dented from use, not ceremony."
       },
       {
         "name": "prayer patch",
         "type": "generic",
-        "condition_unmet_message": "The clue reinforces the world's larger theme while giving the player another room-level interaction."
+        "condition_unmet_message": "The patch is sewn crooked onto an emergency blanket: not regulation, just hope."
       }
     ]
   },
@@ -15713,12 +15713,12 @@
       {
         "name": "tide marks",
         "type": "generic",
-        "condition_unmet_message": "This added detail makes the node feel like a real late-game space instead of a single quest stop."
+        "condition_unmet_message": "Each tide mark carries grit from a different world, all of it real enough to remain."
       },
       {
         "name": "blue ash",
         "type": "generic",
-        "condition_unmet_message": "The clue reinforces the world's larger theme while giving the player another room-level interaction."
+        "condition_unmet_message": "The ash glows where the journey should have ended and did not."
       }
     ]
   },
@@ -15743,12 +15743,12 @@
       {
         "name": "first fear",
         "type": "generic",
-        "condition_unmet_message": "This added detail makes the node feel like a real late-game space instead of a single quest stop."
+        "condition_unmet_message": "The corridor remembers the first locked door, but the memory no longer has the final word."
       },
       {
         "name": "inside latch",
         "type": "generic",
-        "condition_unmet_message": "The clue reinforces the world's larger theme while giving the player another room-level interaction."
+        "condition_unmet_message": "The latch opens from Nova's side now."
       }
     ]
   },
@@ -15773,12 +15773,12 @@
       {
         "name": "crew span",
         "type": "generic",
-        "condition_unmet_message": "This added detail makes the node feel like a real late-game space instead of a single quest stop."
+        "condition_unmet_message": "The span brightens only when the crew crosses it as more than separate silhouettes."
       },
       {
         "name": "shared shadow",
         "type": "generic",
-        "condition_unmet_message": "The clue reinforces the world's larger theme while giving the player another room-level interaction."
+        "condition_unmet_message": "The shadow is not a loss of self. It is proof that someone stayed close."
       }
     ]
   },
@@ -15805,12 +15805,12 @@
       {
         "name": "scar step",
         "type": "generic",
-        "condition_unmet_message": "This added detail makes the node feel like a real late-game space instead of a single quest stop."
+        "condition_unmet_message": "The step keeps every dent Vale would smooth away."
       },
       {
         "name": "unpolished edge",
         "type": "generic",
-        "condition_unmet_message": "The clue reinforces the world's larger theme while giving the player another room-level interaction."
+        "condition_unmet_message": "The edge catches light because it was never made harmless."
       }
     ]
   },
@@ -15835,12 +15835,12 @@
       {
         "name": "voice orbit",
         "type": "generic",
-        "condition_unmet_message": "This added detail makes the node feel like a real late-game space instead of a single quest stop."
+        "condition_unmet_message": "The voices circle without collapsing into one command."
       },
       {
         "name": "separate tones",
         "type": "generic",
-        "condition_unmet_message": "The clue reinforces the world's larger theme while giving the player another room-level interaction."
+        "condition_unmet_message": "The tones harmonize because they stay distinct."
       }
     ]
   },
@@ -15865,12 +15865,12 @@
       {
         "name": "repair crews",
         "type": "generic",
-        "condition_unmet_message": "This added detail makes the node feel like a real late-game space instead of a single quest stop."
+        "condition_unmet_message": "The crews argue over tools, timing, and lunch like tomorrow is allowed to be ordinary."
       },
       {
         "name": "real weather",
         "type": "generic",
-        "condition_unmet_message": "The clue reinforces the world's larger theme while giving the player another room-level interaction."
+        "condition_unmet_message": "The weather arrives without permission and leaves mud on the street."
       }
     ]
   }
