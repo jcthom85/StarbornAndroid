@@ -5,5 +5,5 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     visible: "New Game"
     timeout: 60000
-- assertVisible: "v1.1.4 (6)"
+- assertVisible: "v1.1.14 (16)"
 - takeScreenshot: title-menu-version

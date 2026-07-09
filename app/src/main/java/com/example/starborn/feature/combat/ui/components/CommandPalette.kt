@@ -29,6 +29,10 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -276,6 +280,14 @@ fun CombatCommandButton(
             modifier = Modifier
                 .fillMaxWidth()
                 .alpha(if (enabled) 1f else 0.45f)
+                .semantics(mergeDescendants = true) {
+                    role = Role.Button
+                    stateDescription = when {
+                        cooldownRemaining > 0 -> "Ready in $cooldownRemaining turns"
+                        !enabled -> "Unavailable"
+                        else -> "Available"
+                    }
+                }
                 .clickable(
                     enabled = enabled,
                     onClick = onClick,

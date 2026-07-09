@@ -12,9 +12,6 @@ appId: com.junewiregames.starborn.prealpha
 - tapOn: "Continue"
 - tapOn: "CONTINUE"
 - extendedWaitUntil:
-    notVisible: "Wake Up Call"
-    timeout: 10000
-- extendedWaitUntil:
     visible: "bunk light"
     timeout: 10000
 - tapOn: "bunk light"

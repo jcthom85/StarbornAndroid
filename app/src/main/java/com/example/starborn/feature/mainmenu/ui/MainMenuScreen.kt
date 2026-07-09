@@ -161,6 +161,11 @@ fun MainMenuScreen(
         viewModel.messages.collectLatest { snackbarHostState.showSnackbar(it) }
     }
 
+    LaunchedEffect(Unit) {
+        // Keep the Continue button fresh when returning from a play session.
+        viewModel.refreshSlots()
+    }
+
     LaunchedEffect(saveLoadMode) {
         if (saveLoadMode != null) {
             viewModel.refreshSlots()
@@ -290,11 +295,20 @@ fun MainMenuScreen(
             verticalArrangement = Arrangement.spacedBy(13.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            val continueSlot = slots.filter { !it.isEmpty }.maxByOrNull { it.savedAtMillis ?: 0L }
+            if (continueSlot != null) {
+                StarbornTitleButton(
+                    text = "Continue",
+                    onClick = { pendingLoadSlot = continueSlot.slot },
+                    enabled = !startingGame && pendingScenario == null && pendingLoadSlot == null,
+                    primary = true
+                )
+            }
             StarbornTitleButton(
                 text = "New Game",
                 onClick = { startingGame = true },
                 enabled = !startingGame && pendingScenario == null && pendingLoadSlot == null,
-                primary = true
+                primary = continueSlot == null
             )
             if (BuildConfig.DEBUG) {
                 StarbornTitleButton(

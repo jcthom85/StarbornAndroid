@@ -5,6 +5,7 @@ import com.example.starborn.domain.model.Quest
 import com.example.starborn.domain.model.QuestStage
 import com.example.starborn.domain.session.GameSessionState
 import com.example.starborn.domain.session.GameSessionStore
+import com.example.starborn.domain.telemetry.TelemetryLogger
 import com.example.starborn.ui.events.QuestBannerType
 import com.example.starborn.ui.events.QuestSummaryEntry
 import com.example.starborn.ui.events.UiEvent
@@ -70,7 +71,8 @@ class QuestRuntimeManager(
     private val questRepository: QuestRepository,
     private val sessionStore: GameSessionStore,
     private val scope: CoroutineScope,
-    private val uiEventBus: UiEventBus
+    private val uiEventBus: UiEventBus,
+    private val telemetry: TelemetryLogger? = null
 ) {
 
     private companion object {
@@ -425,6 +427,13 @@ class QuestRuntimeManager(
             recentLog.removeFirst()
         }
         recentLog.addLast(logEntry)
+        telemetry?.log(
+            "quest",
+            "quest" to questId,
+            "stage" to stageId,
+            "type" to type.name,
+            "msg" to message
+        )
     }
 
     private fun appendQuestCompletedLog(questId: String) {

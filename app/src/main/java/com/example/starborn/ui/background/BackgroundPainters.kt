@@ -65,7 +65,7 @@ fun rememberAssetPainter(
 }
 
 @Composable
-fun rememberRoomBackgroundPainter(imagePath: String?): Painter {
+fun rememberRoomBackgroundPainter(imagePath: String?, async: Boolean = false): Painter {
     val context = LocalContext.current
     if (!imagePath.isNullOrBlank()) {
         val resourceName = remember(imagePath) {
@@ -88,7 +88,7 @@ fun rememberRoomBackgroundPainter(imagePath: String?): Painter {
             }.getOrDefault(false)
         }
         if (exists) {
-            return rememberAssetPainter(imagePath, fallback = ColorPainter(Color.Black))
+            return rememberAssetPainter(imagePath, fallback = ColorPainter(Color.Black), async = async)
         }
 
         if (imagePath.contains("world_2") || imagePath.contains("sector9")) {
@@ -105,7 +105,7 @@ fun rememberRoomBackgroundPainter(imagePath: String?): Painter {
             }
         }
     }
-    return rememberAssetPainter(imagePath, fallback = ColorPainter(Color.Black))
+    return rememberAssetPainter(imagePath, fallback = ColorPainter(Color.Black), async = async)
 }
 
 private fun loadAssetImage(
@@ -119,5 +119,26 @@ private fun loadAssetImage(
         }
     }.getOrNull()?.also { bitmap ->
         assetImageCache[imagePath] = bitmap
+    }
+}
+
+fun prefetchRoomBackground(context: android.content.Context, imagePath: String?) {
+    if (imagePath.isNullOrBlank()) return
+    val resourceName = imagePath
+        .substringAfterLast('/')
+        .substringBeforeLast('.')
+        .lowercase(Locale.getDefault())
+    val resolvedId = context.resources.getIdentifier(resourceName, "drawable", context.packageName)
+    if (resolvedId != 0) return
+
+    if (!assetImageCache.containsKey(imagePath)) {
+        runCatching {
+            context.assets.open(imagePath).use { stream ->
+                BitmapFactory.decodeStream(stream)?.asImageBitmap()
+            }
+        }.getOrNull()?.also { bitmap ->
+            assetImageCache[imagePath] = bitmap
+            android.util.Log.d("BackgroundPainters", "Pre-fetched background image: $imagePath")
+        }
     }
 }

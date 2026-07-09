@@ -1,6 +1,7 @@
 package com.example.starborn.di
 
 import android.content.Context
+import android.os.SystemClock
 import com.example.starborn.core.MoshiProvider
 import com.example.starborn.data.assets.AssetJsonReader
 import com.example.starborn.data.assets.CinematicAssetDataSource
@@ -64,7 +65,11 @@ import com.example.starborn.domain.prompt.UIPromptManager
 import com.example.starborn.domain.tutorial.TutorialRuntimeManager
 import com.example.starborn.domain.tutorial.TutorialScriptRepository
 import com.example.starborn.data.local.UserSettingsStore
+import com.example.starborn.domain.telemetry.AppVisibility
+import com.example.starborn.domain.telemetry.CrashRecorder
+import com.example.starborn.domain.telemetry.TelemetryLogger
 import com.example.starborn.domain.theme.EnvironmentThemeManager
+import com.example.starborn.ui.events.UiEvent
 import com.example.starborn.ui.events.UiEventBus
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -75,6 +80,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.util.ArrayDeque
 import java.util.Locale
@@ -83,6 +89,7 @@ import kotlin.random.Random
 
 class AppServices(context: Context) {
     private val appContext = context.applicationContext
+    val telemetry = TelemetryLogger.get(appContext)
     private val moshi = MoshiProvider.instance
     private val assetReader = AssetJsonReader(context, moshi)
 
@@ -147,9 +154,13 @@ class AppServices(context: Context) {
     private var autosaveJob: Job? = null
     private var lastAutosaveTimestamp: Long = 0L
     private var lastAutosaveFingerprint: String? = null
+    private val playtimeLock = Any()
+    private var playtimeAnchorMs: Long? = null
+    private var pendingPlaytimeMs: Long = 0L
 
     companion object {
         private const val AUTOSAVE_INTERVAL_MS = 90_000L
+        private const val MIN_PLAYTIME_COMMIT_MS = 1_000L
         private const val AUTOSAVE_SLOT = 0
         private const val SAMPLE_SLOT_ID = -1
         private val SAMPLE_PARTY = setOf("nova", "zeke", "orion", "gh0st")
@@ -202,7 +213,7 @@ class AppServices(context: Context) {
             }
         }
     )
-    val questRuntimeManager = QuestRuntimeManager(questRepository, sessionStore, runtimeScope, uiEventBus)
+    val questRuntimeManager = QuestRuntimeManager(questRepository, sessionStore, runtimeScope, uiEventBus, telemetry)
     val milestoneManager = MilestoneRuntimeManager(
         milestoneRepository,
         sessionStore,
@@ -248,6 +259,59 @@ class AppServices(context: Context) {
                 if (snapshot != sessionStore.state.value.inventory) {
                     sessionStore.setInventory(snapshot)
                 }
+            }
+        }
+        persistenceScope.launch {
+            sessionStore.state
+                .map { Triple(it.worldId, it.hubId, it.roomId) }
+                .distinctUntilChanged()
+                .collect { (worldId, hubId, roomId) ->
+                    telemetry.logRoomEnter(worldId, hubId, roomId)
+                }
+        }
+        persistenceScope.launch {
+            AppVisibility.foreground.collect { visible ->
+                if (visible) startPlaytimeClock() else flushPlaytime()
+            }
+        }
+    }
+
+    private fun startPlaytimeClock() {
+        synchronized(playtimeLock) {
+            playtimeAnchorMs = SystemClock.elapsedRealtime()
+        }
+    }
+
+    /**
+     * Folds foreground time since the last anchor into the session. Small deltas stay pending
+     * so mid-autosave flushes don't spam state changes.
+     */
+    private fun flushPlaytime() {
+        var commit = 0L
+        synchronized(playtimeLock) {
+            val now = SystemClock.elapsedRealtime()
+            playtimeAnchorMs?.let { anchor ->
+                pendingPlaytimeMs += (now - anchor).coerceAtLeast(0L)
+            }
+            playtimeAnchorMs = if (AppVisibility.foreground.value) now else null
+            if (pendingPlaytimeMs >= MIN_PLAYTIME_COMMIT_MS) {
+                commit = pendingPlaytimeMs
+                pendingPlaytimeMs = 0L
+            }
+        }
+        if (commit > 0) {
+            sessionStore.addPlaytime(commit)
+        }
+    }
+
+    /** Drops unflushed foreground time so it isn't credited to a freshly loaded session. */
+    private fun resetPlaytimeClock() {
+        synchronized(playtimeLock) {
+            pendingPlaytimeMs = 0L
+            playtimeAnchorMs = if (AppVisibility.foreground.value) {
+                SystemClock.elapsedRealtime()
+            } else {
+                null
             }
         }
     }
@@ -643,6 +707,8 @@ class AppServices(context: Context) {
     }
 
     suspend fun saveSlot(slot: Int) {
+        flushPlaytime()
+        telemetry.log("save", "slot" to slot)
         sessionPersistence.writeSlot(slot, sessionStore.state.value)
     }
 
@@ -654,6 +720,8 @@ class AppServices(context: Context) {
         migrateLegacyWeapons(state)
         migrateLegacyArmors(state)
         resetAutosaveThrottle()
+        resetPlaytimeClock()
+        telemetry.log("load", "slot" to slot)
         return true
     }
 
@@ -673,6 +741,8 @@ class AppServices(context: Context) {
         migrateLegacyWeapons(state)
         migrateLegacyArmors(state)
         recordAutosaveState(state)
+        resetPlaytimeClock()
+        telemetry.log("load", "slot" to "autosave")
         return true
     }
 
@@ -686,6 +756,8 @@ class AppServices(context: Context) {
     }
 
     suspend fun quickSave(): Boolean {
+        flushPlaytime()
+        telemetry.log("save", "slot" to "quicksave")
         sessionPersistence.writeQuickSave(sessionStore.state.value)
         return true
     }
@@ -698,6 +770,8 @@ class AppServices(context: Context) {
         migrateLegacyWeapons(state)
         migrateLegacyArmors(state)
         recordAutosaveState(state)
+        resetPlaytimeClock()
+        telemetry.log("load", "slot" to "quicksave")
         return true
     }
 
@@ -710,6 +784,9 @@ class AppServices(context: Context) {
     fun syncInventoryFromSession() {
         inventoryService.restore(sessionStore.state.value.inventory)
     }
+
+    /** True once per recorded crash; the main menu uses it to point testers at Report Issue. */
+    fun consumeCrashNotice(): Boolean = CrashRecorder.consumePendingNotice(appContext.filesDir)
 
     suspend fun importLegacySave(file: File): Boolean {
         val imported = sessionPersistence.importLegacySave(file, itemRepository) ?: return false
@@ -1998,9 +2075,11 @@ class AppServices(context: Context) {
         val delayMs = if (elapsed >= AUTOSAVE_INTERVAL_MS) 0L else AUTOSAVE_INTERVAL_MS - elapsed
         autosaveJob = persistenceScope.launch {
             if (delayMs > 0) delay(delayMs)
-            sessionPersistence.writeAutosave(state)
+            flushPlaytime()
+            sessionPersistence.writeAutosave(sessionStore.state.value)
             lastAutosaveTimestamp = System.currentTimeMillis()
             lastAutosaveFingerprint = fingerprint
+            uiEventBus.tryEmit(UiEvent.ShowToast(id = "autosave_$lastAutosaveTimestamp", text = "Autosaved ✓"))
         }
     }
 
@@ -2126,9 +2205,19 @@ internal fun isDialogueConditionMet(
                     state.questStageById[questId]?.equals(stageId, ignoreCase = true) == true
             }
             "quest_stage_not" -> {
-                val (questId, stageId) = parseQuestStageCondition(value)
+                val (questId, stageId) = parseQuestPairCondition(value)
                 questId == null || stageId == null ||
                     state.questStageById[questId]?.equals(stageId, ignoreCase = true) != true
+            }
+            "quest_task_done" -> {
+                val (questId, taskId) = parseQuestPairCondition(value)
+                questId != null && taskId != null &&
+                    state.questTasksCompleted[questId]?.contains(taskId) == true
+            }
+            "quest_task_not_done" -> {
+                val (questId, taskId) = parseQuestPairCondition(value)
+                questId == null || taskId == null ||
+                    state.questTasksCompleted[questId]?.contains(taskId) != true
             }
             "milestone" -> value in state.completedMilestones
             "milestone_not_set" -> value !in state.completedMilestones
@@ -2146,11 +2235,15 @@ internal fun isDialogueConditionMet(
 }
 
 private fun parseQuestStageCondition(raw: String): Pair<String?, String?> {
+    return parseQuestPairCondition(raw)
+}
+
+private fun parseQuestPairCondition(raw: String): Pair<String?, String?> {
     if (raw.isBlank()) return null to null
     val parts = raw.split(':', limit = 2)
     val questId = parts.getOrNull(0)?.trim().takeUnless { it.isNullOrEmpty() }
-    val stageId = parts.getOrNull(1)?.trim().takeUnless { it.isNullOrEmpty() }
-    return questId to stageId
+    val secondId = parts.getOrNull(1)?.trim().takeUnless { it.isNullOrEmpty() }
+    return questId to secondId
 }
 
 internal fun handleDialogueTrigger(

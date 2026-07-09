@@ -25,11 +25,12 @@ def get_api_key(args_key: str | None) -> str:
     sys.exit(1)
 
 def main():
-    parser = argparse.ArgumentParser(description="Generate Starborn image assets using OpenAI DALL-E.")
+    parser = argparse.ArgumentParser(description="Generate Starborn image assets using OpenAI image models.")
     parser.add_argument("--prompt", required=True, help="Prompt for image generation")
     parser.add_argument("--output", required=True, help="Output image file path")
     parser.add_argument("--model", default="dall-e-3", help="DALL-E model to use")
     parser.add_argument("--size", default="1024x1024", help="Image size (default: 1024x1024)")
+    parser.add_argument("--quality", default=None, help="Image quality override, e.g. low, medium, high, standard")
     parser.add_argument("--key", help="OpenAI API Key override")
 
     args = parser.parse_args()
@@ -41,13 +42,18 @@ def main():
     print(f"  {args.prompt}")
 
     try:
-        response = client.images.generate(
-            model=args.model,
-            prompt=args.prompt,
-            n=1,
-            size=args.size,
-            quality="standard" if args.model == "dall-e-3" else None
-        )
+        request = {
+            "model": args.model,
+            "prompt": args.prompt,
+            "n": 1,
+            "size": args.size,
+        }
+        quality = args.quality
+        if quality is None and args.model == "dall-e-3":
+            quality = "standard"
+        if quality is not None:
+            request["quality"] = quality
+        response = client.images.generate(**request)
         
         output_path = Path(args.output).resolve()
         output_path.parent.mkdir(parents=True, exist_ok=True)

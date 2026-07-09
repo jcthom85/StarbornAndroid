@@ -444,11 +444,13 @@ class AudioCuePlayer(
         if (!hapticsEnabled) return
         val vibrator = vibrator ?: return
         try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                vibrator.vibrate(VibrationEffect.createOneShot(32L, VibrationEffect.DEFAULT_AMPLITUDE))
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                vibrator.vibrate(VibrationEffect.createPredefined(VibrationEffect.EFFECT_CLICK))
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                vibrator.vibrate(VibrationEffect.createOneShot(15L, 120))
             } else {
                 @Suppress("DEPRECATION")
-                vibrator.vibrate(32L)
+                vibrator.vibrate(15L)
             }
         } catch (t: Throwable) {
             Log.w(TAG, "Failed to trigger haptic feedback", t)

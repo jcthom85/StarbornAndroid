@@ -48,6 +48,7 @@ message GameSessionProto {
   string astra_return_world_id = 47;
   string astra_return_hub_id = 48;
   string astra_return_room_id = 49;
+  int64 total_playtime_ms = 50;
 
   reserved 19;
   reserved 28, 29, 30, 31;

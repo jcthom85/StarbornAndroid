@@ -24,6 +24,8 @@ import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -39,8 +41,15 @@ data class StatusChip(
     val icon: ImageVector,
     val tint: Color,
     val turns: Int,
-    val value: Int? = null
+    val value: Int? = null,
+    val label: String = ""
 )
+
+fun statusChipAccessibilityLabel(chip: StatusChip): String {
+    val name = chip.label.ifBlank { "Status effect" }
+    val turns = chip.turns.coerceAtLeast(0)
+    return if (turns > 0) "$name, $turns turns remaining" else name
+}
 
 @Composable
 fun EnemyStatusRail(
@@ -98,7 +107,13 @@ fun EnemyStatusRail(
 
 @Composable
 fun EnemyStatusPip(chip: StatusChip) {
-    Box(modifier = Modifier.size(24.dp)) {
+    Box(
+        modifier = Modifier
+            .size(24.dp)
+            .semantics(mergeDescendants = true) {
+                contentDescription = statusChipAccessibilityLabel(chip)
+            }
+    ) {
         Surface(
             color = chip.tint.copy(alpha = 0.88f),
             contentColor = Color.White,
@@ -155,7 +170,11 @@ fun StatusBadges(statuses: List<StatusEffect>, buffs: List<ActiveBuff>) {
                 color = chip.tint.copy(alpha = 0.85f),
                 contentColor = Color.White,
                 shape = CircleShape,
-                modifier = Modifier.height(20.dp)
+                modifier = Modifier
+                    .height(20.dp)
+                    .semantics(mergeDescendants = true) {
+                        contentDescription = statusChipAccessibilityLabel(chip)
+                    }
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -187,7 +206,9 @@ fun statusChipsFor(statuses: List<StatusEffect>, buffs: List<ActiveBuff>): List<
                 StatusChip(
                     icon = iconForStatus(statusEffect.id),
                     tint = colorForStatus(statusEffect.id),
-                    turns = statusEffect.remainingTurns
+                    turns = statusEffect.remainingTurns,
+                    label = statusEffect.id.replace('_', ' ')
+                        .replaceFirstChar { it.titlecase(Locale.getDefault()) }
                 )
             )
         }
@@ -199,7 +220,8 @@ fun statusChipsFor(statuses: List<StatusEffect>, buffs: List<ActiveBuff>): List<
                     icon = iconForStat(stat),
                     tint = if (isPositive) Color(0xFF4CAF50) else Color(0xFFFF5252),
                     turns = buff.remainingTurns,
-                    value = buff.effect.value
+                    value = buff.effect.value,
+                    label = "${stat.uppercase(Locale.getDefault())} ${if (isPositive) "+" else ""}${buff.effect.value}"
                 )
             )
         }

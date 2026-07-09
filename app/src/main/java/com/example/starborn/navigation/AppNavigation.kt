@@ -24,6 +24,8 @@ import com.example.starborn.feature.combat.ui.CombatScreen
 import com.example.starborn.feature.combat.viewmodel.CombatViewModel
 import com.example.starborn.feature.combat.viewmodel.CombatViewModelFactory
 import com.example.starborn.feature.mainmenu.ui.MainMenuScreen
+import com.example.starborn.feature.mainmenu.DebugScenarioCatalog
+import com.example.starborn.feature.mainmenu.DebugScenarioDestination
 import com.example.starborn.feature.mainmenu.MainMenuViewModel
 import com.example.starborn.feature.mainmenu.MainMenuViewModelFactory
 import com.example.starborn.feature.exploration.ui.ExplorationScreen
@@ -71,7 +73,8 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 @Composable
 fun NavigationHost(
     navController: NavHostController = rememberNavController(),
-    showCombatActionText: Boolean = true
+    showCombatActionText: Boolean = true,
+    initialDebugScenarioId: String? = null
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -103,6 +106,23 @@ fun NavigationHost(
         lifecycleOwner.lifecycle.addObserver(observer)
         onDispose {
             lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
+    LaunchedEffect(initialDebugScenarioId) {
+        val scenarioId = initialDebugScenarioId?.takeIf { it.isNotBlank() } ?: return@LaunchedEffect
+        val scenario = DebugScenarioCatalog.find(scenarioId) ?: return@LaunchedEffect
+        val success = services.startDebugScenario(scenario.id)
+        if (success) {
+            services.syncInventoryFromSession()
+            val route = when (scenario.destination) {
+                DebugScenarioDestination.HUB -> Hub.route
+                DebugScenarioDestination.EXPLORATION -> Exploration.route
+            }
+            navController.navigate(route) {
+                popUpTo(MainMenu.route) { inclusive = true }
+                launchSingleTop = true
+            }
         }
     }
 

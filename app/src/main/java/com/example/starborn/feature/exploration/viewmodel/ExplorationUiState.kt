@@ -20,6 +20,7 @@ data class ExplorationUiState(
     val currentHub: Hub? = null,
     val currentRoom: Room? = null,
     val availableConnections: Map<String, String?> = emptyMap(),
+    val adjacentRoomBackgrounds: List<String> = emptyList(),
     val npcs: List<String> = emptyList(),
     val npcPresenceNames: Map<String, String> = emptyMap(),
     val npcPortraitPaths: Map<String, String> = emptyMap(),
@@ -85,6 +86,7 @@ data class ExplorationUiState(
     val nearbyThreatDirection: String? = null,
     val forceBlackScreen: Boolean = false,
     val fadeOverlay: FadeOverlayCommand? = null,
+    val roomTransition: RoomTransitionUi? = null,
     val tutorialState: TutorialRuntimeState = TutorialRuntimeState(),
     val visualEnemyParties: List<VisualEnemyParty> = emptyList()
 )
@@ -114,6 +116,15 @@ data class FadeOverlayCommand(
     val fromAlpha: Float,
     val toAlpha: Float,
     val durationMillis: Int
+)
+
+data class RoomTransitionUi(
+    val id: Long,
+    val direction: String,
+    val fromRoomId: String,
+    val fromRoomTitle: String,
+    val fromBackgroundImage: String,
+    val durationMillis: Int = 190
 )
 
 data class NarrationPrompt(

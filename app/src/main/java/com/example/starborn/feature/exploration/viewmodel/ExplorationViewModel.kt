@@ -1232,6 +1232,11 @@ class ExplorationViewModel(
         return room.connections.filterKeys { it.equals(allowed, ignoreCase = true) }
     }
 
+    private fun getAdjacentBackgrounds(room: Room?): List<String> {
+        if (room == null) return emptyList()
+        return room.connections.values.mapNotNull { roomsById[it]?.backgroundImage }
+    }
+
     private fun buildDirectionIndicators(
         room: Room?,
         nearbyThreatDirection: String? = _uiState.value.nearbyThreatDirection
@@ -1944,6 +1949,7 @@ class ExplorationViewModel(
                     currentHub = initialHub,
                     currentRoom = initialRoom,
                     availableConnections = initialConnections,
+                    adjacentRoomBackgrounds = getAdjacentBackgrounds(initialRoom),
                     npcs = visibleNpcsForRoom(initialRoom, sessionState.completedMilestones),
                     npcPresenceNames = npcPresenceNames,
                     npcPortraitPaths = npcPortraitPaths,
@@ -2014,19 +2020,27 @@ class ExplorationViewModel(
     }
 
     fun travel(direction: String) {
-        val currentRoom = _uiState.value.currentRoom ?: return
+        android.util.Log.d("ExplorationVM", "travel called with direction: $direction")
+        val currentRoom = _uiState.value.currentRoom ?: run {
+            android.util.Log.d("ExplorationVM", "travel: currentRoom is null")
+            return
+        }
         val normalizedDirection = direction.lowercase(Locale.getDefault())
         if (isRoomDark(currentRoom)) {
             val allowedDirection = darkRoomEntryDirection[currentRoom.id]?.lowercase(Locale.getDefault())
+            android.util.Log.d("ExplorationVM", "travel: room is dark. allowedDirection: $allowedDirection, normalizedDirection: $normalizedDirection")
             if (allowedDirection != null && allowedDirection != normalizedDirection) {
+                android.util.Log.d("ExplorationVM", "travel: blocked because room is dark and direction is not allowed")
                 postStatus("It's too dark to feel your way in that direction.")
                 playUiCue("error")
                 return
             }
         }
         val evaluation = evaluateDirection(currentRoom, direction, DirectionEvaluationMode.ATTEMPT)
+        android.util.Log.d("ExplorationVM", "travel: evaluation blocked = ${evaluation.blocked}")
         if (evaluation.blocked) {
             val message = evaluation.message ?: lockedDirectionFallback(direction, evaluation.block)
+            android.util.Log.d("ExplorationVM", "travel: blocked by evaluation. message: $message")
             showBlockedDirectionPrompt(direction, message, evaluation.block)
             return
         }
@@ -2034,8 +2048,15 @@ class ExplorationViewModel(
         dismissBlockedPrompt()
         playUiCue("confirm")
 
-        val nextRoomId = getConnection(currentRoom, direction) ?: return
-        val nextRoom = roomsById[nextRoomId] ?: return
+        val nextRoomId = getConnection(currentRoom, direction) ?: run {
+            android.util.Log.d("ExplorationVM", "travel: getConnection returned null for direction: $direction")
+            return
+        }
+        android.util.Log.d("ExplorationVM", "travel: nextRoomId = $nextRoomId")
+        val nextRoom = roomsById[nextRoomId] ?: run {
+            android.util.Log.d("ExplorationVM", "travel: roomsById does not contain nextRoomId: $nextRoomId")
+            return
+        }
         val nextRoomIsDark = isRoomDark(nextRoom)
         val nextTheme = themeByRoomId[nextRoom.id]
         val nextThemeStyle = themeStyleByRoomId[nextRoom.id]
@@ -2070,6 +2091,7 @@ class ExplorationViewModel(
                 currentHub = nextHub ?: it.currentHub,
                 currentWorld = nextWorld ?: it.currentWorld,
                 availableConnections = visibleConnections(nextRoom),
+                adjacentRoomBackgrounds = getAdjacentBackgrounds(nextRoom),
                 npcs = visibleNpcsForRoom(nextRoom, sessionState.completedMilestones),
                 actions = nextActions,
                 actionHints = buildActionHints(nextRoom, nextActions),
@@ -2095,6 +2117,16 @@ class ExplorationViewModel(
         handleRoomEntryTutorials(nextRoom)
         eventManager.handleTrigger("enter_room", EventPayload.EnterRoom(nextRoom.id))
         reconcileMovementAfterRoomChange(nextRoom.id)
+    }
+
+    fun onRoomTransitionFinished(transitionId: Long) {
+        _uiState.update { state ->
+            if (state.roomTransition?.id == transitionId) {
+                state.copy(roomTransition = null)
+            } else {
+                state
+            }
+        }
     }
 
     private fun visibleNpcsForRoom(room: Room?, completedMilestones: Set<String> = sessionStore.state.value.completedMilestones): List<String> {
@@ -2152,6 +2184,7 @@ class ExplorationViewModel(
                 currentHub = nextHub ?: current.currentHub,
                 currentWorld = nextWorld ?: current.currentWorld,
                 availableConnections = visibleConnections(nextRoom),
+                adjacentRoomBackgrounds = getAdjacentBackgrounds(nextRoom),
                 npcs = visibleNpcsForRoom(nextRoom, sessionState.completedMilestones),
                 actions = nextActions,
                 actionHints = buildActionHints(nextRoom, nextActions),

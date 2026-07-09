@@ -57,6 +57,7 @@ fun WeatherOverlay(
         "starfall" -> WeatherEffect.Starfall(color = Color(0.9f, 0.95f, 1.0f))
         "steam" -> WeatherEffect.Steam(color = Color(0.92f, 0.92f, 0.95f))
         "fog" -> WeatherEffect.Fog(color = Color(0.85f, 0.88f, 0.92f), density = 0.95f)
+        "mist" -> WeatherEffect.Mist(color = Color(0.76f, 0.92f, 0.98f), density = 0.70f)
         "gas" -> WeatherEffect.Gas(color = Color(0.42f, 0.72f, 0.28f))
         "resonance" -> WeatherEffect.Resonance(color = Color(0.45f, 0.7f, 1.0f))
         "sparks" -> WeatherEffect.Sparks(color = Color(1.0f, 0.65f, 0.15f))
@@ -92,6 +93,9 @@ fun WeatherOverlay(
         is WeatherEffect.Fog -> {
             FogEffect(modifier = modifier, color = weatherEffect.color, density = weatherEffect.density)
         }
+        is WeatherEffect.Mist -> {
+            MistEffect(modifier = modifier, color = weatherEffect.color, density = weatherEffect.density)
+        }
         is WeatherEffect.Gas -> {
             GasEffect(modifier = modifier, color = weatherEffect.color)
         }
@@ -120,6 +124,7 @@ private fun WeatherEffect.applyTint(tintColor: Color?, darkness: Float): Weather
         is WeatherEffect.Starfall -> copy(color = color.tintWith(tintColor, darkness, 0.45f))
         is WeatherEffect.Steam -> copy(color = color.tintWith(tintColor, darkness, 0.4f))
         is WeatherEffect.Fog -> copy(color = color.tintWith(tintColor, darkness, 0.6f))
+        is WeatherEffect.Mist -> copy(color = color.tintWith(tintColor, darkness, 0.55f))
         is WeatherEffect.Gas -> copy(color = color.tintWith(tintColor, darkness, 0.2f))
         is WeatherEffect.Resonance -> copy(color = color.tintWith(tintColor, darkness, 0.1f))
         is WeatherEffect.Sparks -> copy(color = color.tintWith(tintColor, darkness, 0.1f))
@@ -832,6 +837,92 @@ fun FogEffect(
                     ),
                     center = center,
                     radius = widthPx * 0.5f
+                ),
+                topLeft = Offset(center.x - widthPx / 2f, center.y - heightPx / 2f),
+                size = Size(widthPx, heightPx)
+            )
+        }
+    }
+}
+
+@Composable
+fun MistEffect(
+    modifier: Modifier = Modifier,
+    color: Color,
+    density: Float
+) {
+    val particles = remember { mutableStateListOf<Particle>() }
+    val random = remember { Random(System.currentTimeMillis()) }
+
+    LaunchedEffect(density) {
+        while (true) {
+            val survivors = particles.filter { it.life > 0 }
+            particles.clear()
+            particles.addAll(survivors)
+
+            val maxCount = (18 * density).toInt().coerceAtLeast(10)
+            if (particles.size < maxCount) {
+                val initialFill = particles.isEmpty()
+                val spawnCount = if (initialFill) maxCount else 1
+                repeat(spawnCount.coerceAtMost(maxCount - particles.size)) {
+                    val x = random.nextFloat() * 1.5f - 0.25f
+                    val y = random.nextFloat() * 0.46f + 0.42f
+                    val width = random.nextFloat() * 0.36f + 0.30f
+                    val height = random.nextFloat() * 0.045f + 0.040f
+                    val vx = random.nextFloat() * 0.00028f + 0.00008f
+                    val vy = (random.nextFloat() - 0.5f) * 0.00008f
+                    val maxLife = random.nextFloat() * 12f + 14f
+                    val life = if (initialFill) maxLife * (random.nextFloat() * 0.8f + 0.15f) else maxLife
+                    val phase = random.nextFloat() * (2f * PI).toFloat()
+                    particles.add(
+                        Particle(
+                            position = Offset(x, y),
+                            velocity = Offset(vx, vy),
+                            size = width to height,
+                            color = color.copy(alpha = random.nextFloat() * 0.035f + 0.045f),
+                            life = life,
+                            maxLife = maxLife,
+                            turbulence = listOf(phase)
+                        )
+                    )
+                }
+            }
+
+            for (p in particles) {
+                val age = p.maxLife - p.life
+                val phase = p.turbulence?.getOrNull(0) ?: 0f
+                val sway = kotlin.math.sin(age * 0.16f + phase) * 0.00016f
+                p.position = Offset(p.position.x + p.velocity.x + sway, p.position.y + p.velocity.y)
+                if (p.position.x > 1.25f) {
+                    p.position = Offset(-0.25f, p.position.y)
+                }
+                p.life -= 0.016f
+            }
+            delay(16)
+        }
+    }
+
+    Canvas(modifier = modifier.fillMaxSize()) {
+        particles.forEach { p ->
+            val remaining = (p.life / p.maxLife).coerceIn(0f, 1f)
+            val age = 1f - remaining
+            val alpha = (kotlin.math.sin(remaining * PI.toFloat()) * p.color.alpha).coerceIn(0f, 0.12f)
+            val widthPx = p.size.first * size.width * (1f + age * 0.45f)
+            val heightPx = p.size.second * size.height
+            val phase = p.turbulence?.getOrNull(0) ?: 0f
+            val center = Offset(
+                x = p.position.x * size.width,
+                y = p.position.y * size.height + kotlin.math.sin(age * 2.8f + phase) * heightPx * 0.25f
+            )
+            drawOval(
+                brush = Brush.radialGradient(
+                    colors = listOf(
+                        p.color.copy(alpha = alpha),
+                        p.color.copy(alpha = alpha * 0.28f),
+                        Color.Transparent
+                    ),
+                    center = center,
+                    radius = widthPx * 0.55f
                 ),
                 topLeft = Offset(center.x - widthPx / 2f, center.y - heightPx / 2f),
                 size = Size(widthPx, heightPx)

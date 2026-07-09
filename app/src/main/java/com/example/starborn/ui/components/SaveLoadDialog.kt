@@ -19,6 +19,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -34,6 +35,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -72,6 +77,8 @@ fun SaveLoadDialog(
     val kicker = if (isSave) "Choose where this run is written." else "Choose a timeline to resume."
     val actionLabel = if (isSave) "Save" else "Load"
     val solidPanel = Color(0xFF07111A)
+    var confirmOverwrite by remember { mutableStateOf<SaveSlotSummary?>(null) }
+    var confirmDelete by remember { mutableStateOf<SaveSlotSummary?>(null) }
 
     Box(
         modifier = modifier
@@ -180,12 +187,13 @@ fun SaveLoadDialog(
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     items(slots) { summary ->
+                        val occupied = summary.state != null && !summary.isEmpty
                         SaveSlotRow(
                             summary = summary,
                             isSave = isSave,
-                            onSave = onSave,
+                            onSave = { slot -> if (occupied) confirmOverwrite = summary else onSave(slot) },
                             onLoad = onLoad,
-                            onDelete = onDelete,
+                            onDelete = { slot -> if (occupied) confirmDelete = summary else onDelete(slot) },
                             accent = accentColor,
                             textColor = textColor,
                             borderColor = borderColor,
@@ -196,7 +204,71 @@ fun SaveLoadDialog(
                 HorizontalDivider(color = Color.White.copy(alpha = 0.12f))
             }
         }
+        confirmOverwrite?.let { summary ->
+            SlotConfirmDialog(
+                title = "Overwrite ${slotLabelOf(summary)}?",
+                body = "\"${summary.title}\" will be replaced with your current progress.",
+                confirmLabel = "Overwrite",
+                accentColor = accentColor,
+                panelColor = solidPanel,
+                onConfirm = {
+                    onSave(summary.slot)
+                    confirmOverwrite = null
+                },
+                onDismiss = { confirmOverwrite = null }
+            )
+        }
+        confirmDelete?.let { summary ->
+            SlotConfirmDialog(
+                title = "${if (summary.isAutosave) "Clear" else "Delete"} ${slotLabelOf(summary)}?",
+                body = "\"${summary.title}\" will be gone for good.",
+                confirmLabel = if (summary.isAutosave) "Clear" else "Delete",
+                accentColor = accentColor,
+                panelColor = solidPanel,
+                onConfirm = {
+                    onDelete(summary.slot)
+                    confirmDelete = null
+                },
+                onDismiss = { confirmDelete = null }
+            )
+        }
     }
+}
+
+@Composable
+private fun SlotConfirmDialog(
+    title: String,
+    body: String,
+    confirmLabel: String,
+    accentColor: Color,
+    panelColor: Color,
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(title, fontWeight = FontWeight.Bold) },
+        text = { Text(body) },
+        confirmButton = {
+            TextButton(onClick = onConfirm) {
+                Text(confirmLabel, color = accentColor, fontWeight = FontWeight.Bold)
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Cancel", color = Color.White.copy(alpha = 0.7f))
+            }
+        },
+        containerColor = panelColor,
+        titleContentColor = Color.White,
+        textContentColor = Color.White.copy(alpha = 0.75f)
+    )
+}
+
+private fun slotLabelOf(summary: SaveSlotSummary): String = when {
+    summary.isQuickSave -> "Quicksave"
+    summary.isAutosave -> "Autosave"
+    else -> "Slot ${summary.slot}"
 }
 
 @Composable
@@ -223,7 +295,9 @@ private fun SaveSlotRow(
         color = solidSaveSlotCardColor(),
         shape = RoundedCornerShape(20.dp),
         border = BorderStroke(1.dp, if (occupied) accent.copy(alpha = 0.36f) else borderColor.copy(alpha = 0.52f)),
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .semantics(mergeDescendants = true) {}
     ) {
         Column(
             modifier = Modifier

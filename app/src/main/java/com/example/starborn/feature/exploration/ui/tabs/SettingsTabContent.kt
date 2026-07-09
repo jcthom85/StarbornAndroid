@@ -1,26 +1,43 @@
 package com.example.starborn.feature.exploration.ui.tabs
 
+import android.content.Context
+import android.content.Intent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.BugReport
 import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material.icons.rounded.FlashOn
 import androidx.compose.material.icons.rounded.Save
 import androidx.compose.material.icons.rounded.Storage
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.core.content.FileProvider
+import com.example.starborn.domain.telemetry.BugReportBuilder
 import com.example.starborn.feature.exploration.ui.MenuSectionCard
 import com.example.starborn.feature.exploration.viewmodel.SettingsUiState
+import java.io.File
 import kotlin.math.roundToInt
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
 fun SettingsTabContent(
@@ -67,6 +84,59 @@ fun SettingsTabContent(
                 onToggleVignette = onToggleVignette
             )
         }
+        MenuSectionCard(
+            title = "Support",
+            accentColor = accentColor,
+            borderColor = borderColor
+        ) {
+            ReportIssuePanel(accentColor = accentColor)
+        }
+    }
+}
+
+@Composable
+private fun ReportIssuePanel(accentColor: Color) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    var building by remember { mutableStateOf(false) }
+    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        Text(
+            text = "Bundles playtest logs, crash records, and save data into a zip you can share with the developer.",
+            color = Color.White.copy(alpha = 0.7f),
+            style = MaterialTheme.typography.bodySmall
+        )
+        SaveActionButton(
+            label = if (building) "Preparing..." else "Report Issue",
+            detail = "Share logs and saves",
+            icon = Icons.Rounded.BugReport,
+            accentColor = accentColor,
+            onClick = {
+                if (!building) {
+                    building = true
+                    scope.launch {
+                        val zip = withContext(Dispatchers.IO) {
+                            runCatching { BugReportBuilder.build(context) }.getOrNull()
+                        }
+                        building = false
+                        zip?.let { shareBugReport(context, it) }
+                    }
+                }
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
+    }
+}
+
+private fun shareBugReport(context: Context, zip: File) {
+    runCatching {
+        val uri = FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", zip)
+        val intent = Intent(Intent.ACTION_SEND).apply {
+            type = "application/zip"
+            putExtra(Intent.EXTRA_STREAM, uri)
+            putExtra(Intent.EXTRA_SUBJECT, "Starborn bug report")
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
+        context.startActivity(Intent.createChooser(intent, "Share bug report"))
     }
 }
 
@@ -89,7 +159,8 @@ private fun SettingsPanel(
             Slider(
                 value = settings.musicVolume,
                 onValueChange = onMusicVolumeChange,
-                valueRange = 0f..1f
+                valueRange = 0f..1f,
+                modifier = Modifier.semantics { contentDescription = "Music volume" }
             )
         }
         Column {
@@ -101,7 +172,8 @@ private fun SettingsPanel(
             Slider(
                 value = settings.sfxVolume,
                 onValueChange = onSfxVolumeChange,
-                valueRange = 0f..1f
+                valueRange = 0f..1f,
+                modifier = Modifier.semantics { contentDescription = "Effects volume" }
             )
         }
         Column {
@@ -113,7 +185,8 @@ private fun SettingsPanel(
             Slider(
                 value = settings.voiceVolume,
                 onValueChange = onVoiceVolumeChange,
-                valueRange = 0f..1f
+                valueRange = 0f..1f,
+                modifier = Modifier.semantics { contentDescription = "Voice volume" }
             )
         }
         Row(

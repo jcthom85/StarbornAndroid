@@ -3,14 +3,20 @@ appId: com.junewiregames.starborn.prealpha
 - launchApp:
     clearState: false
 - extendedWaitUntil:
-    visible: "Debug: Heavy Lifting"
+    visible: "Debug Scenarios"
     timeout: 60000
-- tapOn: "Debug: Heavy Lifting"
+- tapOn: "Debug Scenarios"
+- tapOn: "Search world, quest, room, or system"
+- inputText: "heavy"
+- extendedWaitUntil:
+    visible: "Heavy Lifting"
+    timeout: 10000
+- tapOn: "Heavy Lifting"
 - extendedWaitUntil:
     visible: "Loading Dock"
     timeout: 15000
 - assertVisible: "Engage Acoustic Bulwark"
-- tapOn: "Foreman Boggs"
+- tapOn: "Boggs"
 - extendedWaitUntil:
     visible: ".*Loader's sitting idle.*"
     timeout: 10000
@@ -29,8 +35,8 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     visible: "New Quest"
     timeout: 10000
-- assertVisible: "Heavy Lifting"
-- tapOn: "Dismiss"
+- assertVisible: "Heavy Lifting: Required T.*"
+- tapOn: "Continue"
 - extendedWaitUntil:
     notVisible: "New Quest"
     timeout: 10000
@@ -40,6 +46,10 @@ appId: com.junewiregames.starborn.prealpha
 - tapOn: "cargo rail"
 - waitForAnimationToEnd:
     timeout: 2000
+- extendedWaitUntil:
+    visible: "Hydraulic Kick online.*"
+    timeout: 10000
+- tapOn: "Continue"
 - assertVisible: "Engage Acoustic Bulwark"
 - tapOn: "Engage Acoustic Bulwark"
 - waitForAnimationToEnd:
@@ -102,23 +112,21 @@ appId: com.junewiregames.starborn.prealpha
 - takeScreenshot: combat-level-up-redesign
 - tapOn: "Continue"
 - extendedWaitUntil:
-    visible: "ITEM OBTAINED"
+    visible: "Acquired Hydraulic Fluid"
     timeout: 15000
-- assertVisible: "Acquired Hydraulic Fluid"
-- tapOn: "GOT IT"
+- tapOn: "DISMISS"
 - extendedWaitUntil:
-    visible: "ITEM OBTAINED"
+    visible: "Acquired Heavy Gear"
     timeout: 15000
-- assertVisible: "Acquired Heavy Gear"
-- tapOn: "GOT IT"
+- tapOn: "DISMISS"
 - extendedWaitUntil:
     visible: "Quest Completed"
     timeout: 30000
-- assertVisible: "Heavy Lifting"
+- assertVisible: "Heavy Lifting: Required T.*"
 - tapOn: "Continue"
 - extendedWaitUntil:
     notVisible: "Quest Completed"
     timeout: 10000
 - assertVisible: "Loading Dock"
-- assertVisible: "Foreman Boggs"
+- assertVisible: "Boggs"
 - takeScreenshot: heavy-lifting-complete

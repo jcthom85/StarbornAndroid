@@ -5,22 +5,17 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     visible: "New Game"
     timeout: 60000
-- swipe:
-    direction: UP
+- tapOn: "Debug Scenarios"
+- tapOn: "Search world, quest, room, or system"
+- inputText: "live deep"
+- pressKey: BACK
 - extendedWaitUntil:
-    visible: "Debug: Dynamic Patrol"
+    visible: "Dynamic Patrol"
     timeout: 10000
-- tapOn: "Debug: Dynamic Patrol"
-- extendedWaitUntil:
-    visible: "Dark Room"
-    timeout: 15000
-- assertVisible: "It's too dark to see what's here."
-- assertNotVisible: "It's too dark to make out the room."
-- assertNotVisible: "Conveyor Belt"
-- assertNotVisible: "Engage"
-- assertNotVisible: "Pressure Hauler"
+- tapOn: "Dynamic Patrol"
 - extendedWaitUntil:
     visible: "HOSTILE CONTACT"
     timeout: 20000
+- assertVisible: "Conveyor Belt"
 - assertVisible: "Pressure Hauler"
 - takeScreenshot: dynamic-enemy-movement

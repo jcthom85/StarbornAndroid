@@ -6,7 +6,4 @@ appId: com.junewiregames.starborn.prealpha
     visible: "Starborn"
     timeout: 60000
 - assertVisible: "New Game"
-- assertVisible: "Debug: Full Inventory"
-- swipe:
-    direction: UP
-- assertVisible: "Debug: Deep Mine"
+- assertVisible: "Debug Scenarios"

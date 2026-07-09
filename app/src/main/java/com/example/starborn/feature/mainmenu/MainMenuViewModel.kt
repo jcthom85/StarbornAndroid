@@ -12,6 +12,7 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -51,6 +52,11 @@ class MainMenuViewModel(
 
     init {
         refreshSlots()
+        viewModelScope.launch(Dispatchers.IO) {
+            if (services.consumeCrashNotice()) {
+                _messages.emit("A crash from your last session was recorded. Settings > Report Issue shares the details.")
+            }
+        }
     }
 
     fun refreshSlots() {
@@ -308,8 +314,17 @@ class MainMenuViewModel(
         return listOfNotNull(
             world,
             "Level ${state.playerLevel}",
-            "${state.playerCredits} credits"
+            "${state.playerCredits} credits",
+            formatPlaytime(state.totalPlaytimeMs)
         ).joinToString(" - ")
+    }
+
+    private fun formatPlaytime(totalMs: Long): String? {
+        val totalMinutes = totalMs / 60_000L
+        if (totalMinutes <= 0) return null
+        val hours = totalMinutes / 60
+        val minutes = totalMinutes % 60
+        return if (hours > 0) "${hours}h ${minutes}m" else "${minutes}m"
     }
 
     private fun String.readableSaveLabel(): String =

@@ -7,12 +7,16 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 60000
 - tapOn: "New Game"
 - extendedWaitUntil:
-    visible: "TUTORIAL"
+    visible: "Wake Up Call"
     timeout: 20000
-- assertVisible: "GOT IT"
-- tapOn: "GOT IT"
+- tapOn: "Continue"
 - extendedWaitUntil:
-    notVisible: "GOT IT"
+    visible: ".*tap highlighted words.*|CONTINUE"
     timeout: 10000
-- assertVisible: "Nova's Bunk"
+- assertVisible: "CONTINUE"
+- tapOn: "CONTINUE"
+- extendedWaitUntil:
+    notVisible: "CONTINUE"
+    timeout: 10000
+- assertVisible: "bunk light"
 - takeScreenshot: early-tutorial-dismissed

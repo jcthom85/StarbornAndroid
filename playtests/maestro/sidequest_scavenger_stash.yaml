@@ -3,9 +3,16 @@ appId: com.junewiregames.starborn.prealpha
 - launchApp:
     clearState: true
 - extendedWaitUntil:
-    visible: "Debug: Scavenger"
+    visible: "Debug Scenarios"
     timeout: 60000
-- tapOn: "Debug: Scavenger"
+- tapOn: "Debug Scenarios"
+- tapOn: "Search world, quest, room, or system"
+- inputText: "Trade Row side"
+- pressKey: BACK
+- extendedWaitUntil:
+    visible: "Scavenger's Stash"
+    timeout: 10000
+- tapOn: "Scavenger's Stash"
 - extendedWaitUntil:
     visible: "Scrapper's Stall"
     timeout: 15000
@@ -33,48 +40,39 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     notVisible: "New Quest"
     timeout: 10000
-- extendedWaitUntil:
-    visible: "Quest Updated"
-    timeout: 10000
-- assertVisible: "Talk to Scrapper in Trade Row."
-- tapOn: "Dismiss Quest Banner"
-- extendedWaitUntil:
-    notVisible: "Quest Updated"
-    timeout: 10000
 - tapOn: "Travel south"
 - extendedWaitUntil:
     visible: "Market Strip"
     timeout: 15000
-- tapOn: "Travel east"
+- tapOn:
+    point: "90%,52%"
 - extendedWaitUntil:
     visible: "The Hidden Stash"
     timeout: 15000
 - extendedWaitUntil:
     visible: "Quest Updated"
     timeout: 10000
-- assertVisible: "Find the hidden stash."
-- tapOn: "Dismiss Quest Banner"
+- assertVisible: "Open the old rebel cache."
 - extendedWaitUntil:
     notVisible: "Quest Updated"
     timeout: 10000
-- tapOn: "Inspect Rebel cache"
+- tapOn: "rebel cache"
 - extendedWaitUntil:
     visible: "Rebel Cache"
     timeout: 10000
 - assertVisible: "Pulse Grenade"
-- tapOn: "Dismiss Event Announcement"
+- tapOn: "Tap to continue"
 - extendedWaitUntil:
     notVisible: "Rebel Cache"
     timeout: 10000
+- tapOn: "Continue"
 - extendedWaitUntil:
-    visible: "Quest Updated"
+    visible: "Acquired Pulse Grenade"
     timeout: 10000
+- tapOn: "DISMISS"
 - assertVisible: "Return to Scrapper."
-- tapOn: "Dismiss Quest Banner"
-- extendedWaitUntil:
-    notVisible: "Quest Updated"
-    timeout: 10000
-- tapOn: "Travel west"
+- tapOn:
+    point: "9%,52%"
 - extendedWaitUntil:
     visible: "Market Strip"
     timeout: 15000
@@ -95,6 +93,10 @@ appId: com.junewiregames.starborn.prealpha
     visible: ".*Take the grenades.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: "Acquired 2 x Pulse Grenade"
+    timeout: 10000
+- tapOn: "DISMISS"
 - extendedWaitUntil:
     visible: "Quest Completed"
     timeout: 10000

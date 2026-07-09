@@ -5,33 +5,26 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     visible: "New Game"
     timeout: 60000
-- swipe:
-    direction: UP
+- tapOn: "Debug Scenarios"
+- tapOn: "Search world, quest, room, or system"
+- inputText: "lockdown"
+- pressKey: BACK
 - extendedWaitUntil:
-    visible: "Debug: Red Alert"
+    visible: "Red Alert"
     timeout: 10000
-- tapOn: "Debug: Red Alert"
+- tapOn: "Red Alert"
 - extendedWaitUntil:
     visible: "Zeke:.*Follow the red strobes.*"
     timeout: 15000
-- tapOn: "Got it"
+- tapOn: "Continue"
 - extendedWaitUntil:
     visible: "Emergency Exit"
     timeout: 15000
-- extendedWaitUntil:
-    visible: "Quest Updated"
-    timeout: 10000
-- extendedWaitUntil:
-    notVisible: "Quest Updated"
-    timeout: 10000
+- assertVisible: "Reach the Cargo Lift."
 - tapOn: "Travel north.*"
 - extendedWaitUntil:
     visible: "Maintenance Access"
     timeout: 15000
-- extendedWaitUntil:
-    visible: ".*Keep moving.*"
-    timeout: 10000
-- tapOn: "Got it"
 - extendedWaitUntil:
     notVisible: "Engage Resonance Buoy"
     timeout: 1000
@@ -39,16 +32,7 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     visible: "Cargo Lift"
     timeout: 15000
-- extendedWaitUntil:
-    visible: ".*That lift is your window.*"
-    timeout: 10000
-- tapOn: "Got it"
-- extendedWaitUntil:
-    visible: "Quest Updated"
-    timeout: 10000
-- extendedWaitUntil:
-    notVisible: "Quest Updated"
-    timeout: 10000
+- assertVisible: ".*Take Jed's Chime.*"
 - extendedWaitUntil:
     notVisible: "Engage Acoustic Bulwark"
     timeout: 1000
@@ -77,20 +61,17 @@ appId: com.junewiregames.starborn.prealpha
     notVisible: "Dialogue Popup"
     timeout: 10000
 - extendedWaitUntil:
-    visible: "ITEM OBTAINED"
+    visible: "Acquired Ghost Signal Cell"
     timeout: 15000
-- assertVisible: "Acquired Ghost Signal Cell"
-- tapOn: "GOT IT"
+- tapOn: "DISMISS"
 - extendedWaitUntil:
-    notVisible: "ITEM OBTAINED"
-    timeout: 10000
-- extendedWaitUntil:
-    visible: "New Quest"
+    visible: "Quest Completed"
     timeout: 15000
+- assertVisible: "Red Alert"
 - assertVisible: "The Launch"
 - tapOn: "Continue"
 - extendedWaitUntil:
-    notVisible: "New Quest"
+    notVisible: "Quest Completed"
     timeout: 10000
 - assertVisible: "Cargo Lift"
 - takeScreenshot: mainquest-red-alert

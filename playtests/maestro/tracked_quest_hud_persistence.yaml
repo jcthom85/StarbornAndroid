@@ -1,0 +1,96 @@
+appId: com.junewiregames.starborn.prealpha
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "New Game"
+    timeout: 60000
+- tapOn: "New Game"
+- extendedWaitUntil:
+    visible: "Wake Up Call"
+    timeout: 20000
+- tapOn: "Continue"
+- extendedWaitUntil:
+    visible: ".*tap highlighted words.*|CONTINUE"
+    timeout: 10000
+- assertVisible: "Current objective.*"
+- tapOn: "CONTINUE"
+- extendedWaitUntil:
+    notVisible: "CONTINUE"
+    timeout: 10000
+- assertVisible: "Current objective.*"
+- tapOn: "bunk light"
+- extendedWaitUntil:
+    visible: "The bunk light snaps on.*"
+    timeout: 10000
+- assertVisible: "Current objective.*"
+- tapOn: ".*The bunk light snaps on.*"
+- extendedWaitUntil:
+    visible: "Nova's Bunk"
+    timeout: 10000
+- assertVisible: "Current objective.*"
+- tapOn: "CONTINUE"
+- tapOn: "Travel west"
+- extendedWaitUntil:
+    visible: "Pod Row"
+    timeout: 15000
+- tapOn: "Travel south"
+- extendedWaitUntil:
+    visible: "Lift Shaft"
+    timeout: 15000
+- extendedWaitUntil:
+    visible: "Open your journal from the menu.*"
+    timeout: 10000
+- assertVisible: "Current objective.*"
+- tapOn: "CONTINUE"
+- extendedWaitUntil:
+    visible: "Use the journal tabs.*"
+    timeout: 15000
+- assertVisible: "Current objective.*"
+- tapOn: "CONTINUE"
+- tapOn: "Travel west"
+- extendedWaitUntil:
+    visible: "Jed's Bunk"
+    timeout: 15000
+- extendedWaitUntil:
+    visible: "Tap a highlighted character name.*"
+    timeout: 10000
+- assertVisible: "Current objective.*"
+- tapOn: "CONTINUE"
+- extendedWaitUntil:
+    visible: "Tap the dialogue card.*"
+    timeout: 15000
+- assertVisible: "Current objective.*"
+- tapOn: "CONTINUE"
+- tapOn: "Jed"
+- extendedWaitUntil:
+    visible: ".*pressure leak.*"
+    timeout: 10000
+- assertVisible: "Current objective.*"
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: ".*slept enough.*"
+    timeout: 10000
+- assertVisible: "Current objective.*"
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: ".*cutter pops.*"
+    timeout: 10000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: ".*If I don't push it.*"
+    timeout: 10000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: ".*I know the math.*"
+    timeout: 10000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: "Recovered Mining Pistol."
+    timeout: 15000
+- assertVisible: "Current objective.*"
+- tapOn: "Event Announcement. Tap to continue"
+- extendedWaitUntil:
+    visible: "Recovered Flux Liner."
+    timeout: 15000
+- assertVisible: "Current objective.*"

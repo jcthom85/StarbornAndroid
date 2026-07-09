@@ -22,6 +22,11 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.VectorConverter
+import androidx.compose.animation.core.spring
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
@@ -112,6 +117,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.ClipOp
 import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -274,6 +280,8 @@ import com.example.starborn.feature.exploration.ui.tabs.QuestJournalPage
 
 
 
+
+private enum class DragAxis { HORIZONTAL, VERTICAL }
 
 @Composable
 fun ExplorationScreen(
@@ -444,13 +452,62 @@ fun ExplorationScreen(
     }
 
     val swipeThresholdPx = with(LocalDensity.current) { 72.dp.toPx() }
+    val fallbackSlideDistanceXPx = with(LocalDensity.current) { 360.dp.toPx() }
+    val fallbackSlideDistanceYPx = with(LocalDensity.current) { 640.dp.toPx() }
     var dragDelta by remember { mutableStateOf(Offset.Zero) }
+    var dragOffsetState by remember { mutableStateOf(Offset.Zero) }
+    val dragOffset = remember { CoreAnimatable(Offset.Zero, Offset.VectorConverter) }
+    var isAnimatingBack by remember { mutableStateOf(false) }
+    var dragAxis by remember { mutableStateOf<DragAxis?>(null) }
+    var transitionStartRatio by remember { mutableStateOf(0f) }
+    var parentSize by remember { mutableStateOf(IntSize.Zero) }
 
-    val backgroundPainter = rememberRoomBackgroundPainter(uiState.currentRoom?.backgroundImage)
+    var prevRoomId by remember { mutableStateOf<String?>(null) }
+    var prevRoomTitle by remember { mutableStateOf("") }
+    var prevRoomDesc by remember { mutableStateOf("") }
+
+    var currentRoomIdState by remember { mutableStateOf<String?>(null) }
+    var currentRoomTitleState by remember { mutableStateOf("") }
+    var currentRoomDescState by remember { mutableStateOf("") }
+
+    val currentRoom = uiState.currentRoom
+    if (currentRoom != null && currentRoom.id != currentRoomIdState) {
+        prevRoomId = currentRoomIdState
+        prevRoomTitle = currentRoomTitleState
+        prevRoomDesc = currentRoomDescState
+
+        currentRoomIdState = currentRoom.id
+        currentRoomTitleState = currentRoom.title ?: "Unknown area"
+        currentRoomDescState = currentRoom.description ?: ""
+    }
+
+    val backgroundPainter = rememberRoomBackgroundPainter(uiState.currentRoom?.backgroundImage, async = true)
+    val previousRoomBackgroundPainter = rememberRoomBackgroundPainter(uiState.roomTransition?.fromBackgroundImage, async = true)
     val actionAccentColor = themeColor(uiState.theme?.accent, Color(0xFF80E0FF))
     val fadeCommand = uiState.fadeOverlay
     val fadeOverlayAnim = remember(uiState.forceBlackScreen) {
         CoreAnimatable(if (uiState.forceBlackScreen) 1f else 0f)
+    }
+    val roomTransition = uiState.roomTransition
+    val roomTransitionAnim = remember { CoreAnimatable(1f) }
+    val roomTransitionProgress = roomTransitionAnim.value.coerceIn(0f, 1f)
+    val roomTransitionEasedProgress = FastOutSlowInEasing.transform(roomTransitionProgress)
+    val roomTransitionContentProgress = if (roomTransition != null) {
+        roomTransitionProgress
+    } else {
+        1f
+    }
+    val roomTransitionContentEasedProgress = FastOutSlowInEasing.transform(roomTransitionContentProgress)
+
+    val context = LocalContext.current.applicationContext
+    LaunchedEffect(uiState.adjacentRoomBackgrounds) {
+        uiState.adjacentRoomBackgrounds.forEach { bgPath ->
+            if (bgPath.isNotBlank()) {
+                kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+                    com.example.starborn.ui.background.prefetchRoomBackground(context, bgPath)
+                }
+            }
+        }
     }
 
     LaunchedEffect(fadeCommand?.id) {
@@ -463,6 +520,38 @@ fun ExplorationScreen(
         viewModel.onFadeOverlayFinished(command.id)
     }
 
+    LaunchedEffect(roomTransition?.id) {
+        val transition = roomTransition ?: run {
+            roomTransitionAnim.snapTo(1f)
+            dragOffset.snapTo(Offset.Zero)
+            dragOffsetState = Offset.Zero
+            isAnimatingBack = false
+            return@LaunchedEffect
+        }
+        dragOffset.snapTo(Offset.Zero)
+        dragOffsetState = Offset.Zero
+        val startRatio = transitionStartRatio
+        transitionStartRatio = 0f
+        roomTransitionAnim.snapTo(startRatio)
+        if (startRatio > 0f) {
+            roomTransitionAnim.animateTo(
+                targetValue = 1f,
+                animationSpec = spring(
+                    dampingRatio = Spring.DampingRatioNoBouncy,
+                    stiffness = Spring.StiffnessMedium
+                )
+            )
+        } else {
+            val remainingDuration = (transition.durationMillis * (1f - startRatio)).toInt().coerceAtLeast(50)
+            roomTransitionAnim.animateTo(
+                targetValue = 1f,
+                animationSpec = tween(durationMillis = remainingDuration, easing = FastOutSlowInEasing)
+            )
+        }
+        delay(16)
+        viewModel.onRoomTransitionFinished(transition.id)
+    }
+
     BackHandler {
         if (uiState.isMenuOverlayVisible) {
             viewModel.closeMenuOverlay()
@@ -471,8 +560,9 @@ fun ExplorationScreen(
 
     val baseModifier = Modifier.fillMaxSize()
     val swipeGestureModifier = Modifier
-        .pointerInput(uiState.availableConnections, uiState.blockedDirections, blockingOverlayActive) {
-            if (blockingOverlayActive) {
+        .pointerInput(uiState.availableConnections, uiState.blockedDirections, blockingOverlayActive, roomTransition?.id) {
+            var dragJob: kotlinx.coroutines.Job? = null
+            if (blockingOverlayActive || roomTransition != null) {
                 detectTapGestures(
                     onPress = {
                         tryAwaitRelease()
@@ -480,41 +570,181 @@ fun ExplorationScreen(
                 )
             } else {
                 detectDragGestures(
-                    onDragStart = { dragDelta = Offset.Zero },
-                    onDrag = { _, dragAmount -> dragDelta += dragAmount },
-                    onDragEnd = {
+                    onDragStart = {
+                        dragDelta = Offset.Zero
+                        dragOffsetState = Offset.Zero
+                        dragAxis = null
+                        isAnimatingBack = false
+                        dragJob?.cancel()
+                    },
+                    onDrag = { change, dragAmount ->
+                        change.consume()
+                        dragDelta += dragAmount
+
+                        if (dragAxis == null) {
+                            val touchSlop = 10f
+                            if (dragDelta.getDistance() > touchSlop) {
+                                dragAxis = if (abs(dragDelta.x) > abs(dragDelta.y)) DragAxis.HORIZONTAL else DragAxis.VERTICAL
+                            }
+                        }
+
+                        val hasWest = uiState.availableConnections.keys.any { it.equals("west", ignoreCase = true) } && !uiState.blockedDirections.any { it.equals("west", ignoreCase = true) }
+                        val hasEast = uiState.availableConnections.keys.any { it.equals("east", ignoreCase = true) } && !uiState.blockedDirections.any { it.equals("east", ignoreCase = true) }
+                        val hasNorth = uiState.availableConnections.keys.any { it.equals("north", ignoreCase = true) } && !uiState.blockedDirections.any { it.equals("north", ignoreCase = true) }
+                        val hasSouth = uiState.availableConnections.keys.any { it.equals("south", ignoreCase = true) } && !uiState.blockedDirections.any { it.equals("south", ignoreCase = true) }
+
                         val dx = dragDelta.x
                         val dy = dragDelta.y
-                        val absDx = abs(dx)
-                        val absDy = abs(dy)
-                        var direction: String? = null
-                        if (absDx > absDy && absDx > swipeThresholdPx) {
-                            direction = if (dx < 0f) "west" else "east"
-                        } else if (absDy > swipeThresholdPx) {
-                            direction = if (dy < 0f) "north" else "south"
+
+                        var targetX = 0f
+                        var targetY = 0f
+
+                        if (dragAxis == DragAxis.HORIZONTAL || (dragAxis == null && abs(dx) > abs(dy))) {
+                            if (dx < 0f) {
+                                targetX = if (hasWest) dx else dx * 0.15f
+                            } else {
+                                targetX = if (hasEast) dx else dx * 0.15f
+                            }
+                        } else {
+                            if (dy < 0f) {
+                                targetY = if (hasNorth) dy else dy * 0.15f
+                            } else {
+                                targetY = if (hasSouth) dy else dy * 0.15f
+                            }
                         }
+
+                        dragOffsetState = Offset(targetX, targetY)
+                    },
+                    onDragEnd = {
+                        val finalOffset = dragOffsetState
+                        val absDx = abs(finalOffset.x)
+                        val absDy = abs(finalOffset.y)
+                        var direction: String? = null
+
+                        if (dragAxis == DragAxis.HORIZONTAL || (dragAxis == null && absDx > absDy)) {
+                            if (absDx > swipeThresholdPx) {
+                                direction = if (finalOffset.x < 0f) "west" else "east"
+                            }
+                        } else {
+                            if (absDy > swipeThresholdPx) {
+                                direction = if (finalOffset.y < 0f) "north" else "south"
+                            }
+                        }
+
+                        var traveled = false
+                        android.util.Log.d("ExplorationScreen", "onDragEnd: finalOffset = $finalOffset, absDx = $absDx, absDy = $absDy, swipeThresholdPx = $swipeThresholdPx")
                         direction?.let { dir ->
                             val targetDir = uiState.availableConnections.keys.firstOrNull { key ->
                                 key.equals(dir, ignoreCase = true)
                             }
                             val blocked = uiState.blockedDirections.any { it.equals(dir, ignoreCase = true) }
+                            android.util.Log.d("ExplorationScreen", "onDragEnd: resolved direction = $dir, targetDir = $targetDir, blocked = $blocked")
                             if (targetDir != null && !blocked) {
+                                val slideDistanceX = parentSize.width.toFloat().takeIf { it > 0f } ?: fallbackSlideDistanceXPx
+                                val slideDistanceY = parentSize.height.toFloat().takeIf { it > 0f } ?: fallbackSlideDistanceYPx
+                                
+                                val ratio = when (targetDir.lowercase(Locale.getDefault())) {
+                                    "west" -> (-finalOffset.x / slideDistanceX)
+                                    "east" -> (finalOffset.x / slideDistanceX)
+                                    "north" -> (-finalOffset.y / slideDistanceY)
+                                    "south" -> (finalOffset.y / slideDistanceY)
+                                    else -> 0f
+                                }.coerceIn(0f, 0.9f)
+                                
+                                android.util.Log.d("ExplorationScreen", "onDragEnd: initiating travel to targetDir = $targetDir, ratio = $ratio")
+                                transitionStartRatio = ratio
+                                traveled = true
+                                
                                 viewModel.travel(targetDir)
                             }
+                        }
+
+                        if (!traveled) {
+                            android.util.Log.d("ExplorationScreen", "onDragEnd: travel not initiated, animating back to zero")
+                            isAnimatingBack = true
+                            dragJob = coroutineScope.launch {
+                                dragOffset.snapTo(dragOffsetState)
+                                dragOffsetState = Offset.Zero
+                                dragOffset.animateTo(
+                                    Offset.Zero,
+                                    spring(dampingRatio = Spring.DampingRatioNoBouncy, stiffness = Spring.StiffnessMedium)
+                                )
+                                isAnimatingBack = false
+                            }
+                        }
+                    },
+                    onDragCancel = {
+                        isAnimatingBack = true
+                        dragJob = coroutineScope.launch {
+                            dragOffset.snapTo(dragOffsetState)
+                            dragOffsetState = Offset.Zero
+                            dragOffset.animateTo(
+                                Offset.Zero,
+                                spring(dampingRatio = Spring.DampingRatioNoBouncy, stiffness = Spring.StiffnessMedium)
+                            )
+                            isAnimatingBack = false
                         }
                     }
                 )
             }
         }
 
-    Box(modifier = modifier.fillMaxSize().background(Color.Black)) {
+    val slideDistanceX = parentSize.width.toFloat().takeIf { it > 0f } ?: fallbackSlideDistanceXPx
+    val slideDistanceY = parentSize.height.toFloat().takeIf { it > 0f } ?: fallbackSlideDistanceYPx
+
+    val currentDragOffsetX = if (isAnimatingBack) dragOffset.value.x else dragOffsetState.x
+    val currentDragOffsetY = if (isAnimatingBack) dragOffset.value.y else dragOffsetState.y
+
+    Box(modifier = modifier
+        .fillMaxSize()
+        .background(Color.Black)
+        .onSizeChanged { parentSize = it }
+    ) {
         Box(modifier = baseModifier) {
             Image(
                 painter = backgroundPainter,
                 contentDescription = null,
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .graphicsLayer {
+                        val (bgOffsetX, bgOffsetY) = roomTransition?.let { transition ->
+                            val (directionX, directionY) = roomTransitionVector(transition.direction)
+                            val remaining = (1f - roomTransitionEasedProgress).coerceIn(0f, 1f)
+                            (-directionX * slideDistanceX * remaining) to
+                                (-directionY * slideDistanceY * remaining)
+                        } ?: (currentDragOffsetX to currentDragOffsetY)
+                        translationX = bgOffsetX
+                        translationY = bgOffsetY
+                    },
                 contentScale = ContentScale.Crop
             )
+            roomTransition?.let { transition ->
+                Image(
+                    painter = previousRoomBackgroundPainter,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .graphicsLayer {
+                            val (directionX, directionY) = roomTransitionVector(transition.direction)
+                            translationX = directionX * slideDistanceX * roomTransitionEasedProgress
+                            translationY = directionY * slideDistanceY * roomTransitionEasedProgress
+                            alpha = (1f - roomTransitionEasedProgress).coerceIn(0f, 1f)
+                            scaleX = 1f + 0.01f * roomTransitionEasedProgress
+                            scaleY = 1f + 0.01f * roomTransitionEasedProgress
+                        }
+                        .blur(radius = 16.dp * roomTransitionEasedProgress),
+                    contentScale = ContentScale.Crop
+                )
+            }
+            roomTransition?.let {
+                val midpoint = (1f - abs(roomTransitionProgress * 2f - 1f)).coerceIn(0f, 1f)
+                val entryMask = (1f - roomTransitionEasedProgress).coerceIn(0f, 1f)
+                Box(
+                    modifier = Modifier
+                        .matchParentSize()
+                        .background(Color.Black.copy(alpha = (0.56f * entryMask) + (0.12f * midpoint)))
+                )
+            }
             Box(
                 modifier = Modifier
                     .matchParentSize()
@@ -703,11 +933,66 @@ fun ExplorationScreen(
             visibleGroundItems.isNotEmpty() ||
             serviceQuickActions.isNotEmpty()
 
+        val hudQuest = uiState.questLogActive.firstOrNull { it.id == uiState.trackedQuestId }
+            ?: uiState.questLogActive.firstOrNull()
+        val persistentObjectiveHudVisible =
+            blockingOverlayActive &&
+                hudQuest != null &&
+                !uiState.isMenuOverlayVisible &&
+                !uiState.isQuestLogVisible &&
+                !uiState.isFullMapVisible &&
+                !uiState.isMapLegendVisible &&
+                !uiState.isMilestoneGalleryVisible &&
+                uiState.cinematic == null &&
+                uiState.skillTreeOverlay == null &&
+                uiState.partyMemberDetails == null &&
+                saveLoadMode == null
+        val objectiveHudLockedTopPadding = 136.dp
+
+
+
+        val (roomContentOffsetX, roomContentOffsetY) = roomTransition?.let { transition ->
+            val (directionX, directionY) = roomTransitionVector(transition.direction)
+            val remaining = (1f - roomTransitionContentEasedProgress).coerceIn(0f, 1f)
+            (-directionX * slideDistanceX * remaining) to
+                (-directionY * slideDistanceY * remaining)
+        } ?: (currentDragOffsetX to currentDragOffsetY)
+
+        val roomContentAlpha = if (roomTransition != null) {
+            roomTransitionContentEasedProgress.coerceIn(0f, 1f)
+        } else {
+            1f
+        }
+
+        val (roomPreviousContentOffsetX, roomPreviousContentOffsetY) = roomTransition?.let { transition ->
+            val (directionX, directionY) = roomTransitionVector(transition.direction)
+            (directionX * slideDistanceX * roomTransitionContentEasedProgress) to
+                (directionY * slideDistanceY * roomTransitionContentEasedProgress)
+        } ?: (0f to 0f)
+
+        val roomPreviousContentAlpha = if (roomTransition != null) {
+            (1f - roomTransitionContentEasedProgress).coerceIn(0f, 1f)
+        } else {
+            0f
+        }
+
         BoxWithConstraints(
             modifier = Modifier
                 .fillMaxSize()
                 .statusBarsPadding()
-            .padding(horizontal = 24.dp, vertical = 24.dp)
+                .padding(horizontal = 24.dp, vertical = 24.dp)
+                .graphicsLayer {
+                    alpha = roomContentAlpha
+                    translationX = roomContentOffsetX
+                    translationY = roomContentOffsetY
+                    val contentScale = if (roomTransition != null) {
+                        0.99f + 0.01f * roomTransitionContentEasedProgress
+                    } else {
+                        1f
+                    }
+                    scaleX = contentScale
+                    scaleY = contentScale
+                }
         ) {
             ThemeBandOverlay(
                 theme = activeTheme,
@@ -744,6 +1029,17 @@ fun ExplorationScreen(
                         viewModel.selectMenuTab(MenuTab.MAP)
                         viewModel.openMenuOverlay(MenuTab.MAP)
                     }
+                )
+
+                ObjectiveHud(
+                    quest = hudQuest,
+                    accentColor = actionAccentColor,
+                    borderColor = panelBorderColor,
+                    isDark = isRoomDark,
+                    onClick = { viewModel.openQuestLog() },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .alpha(if (persistentObjectiveHudVisible) 0f else 1f)
                 )
 
                 Column(
@@ -818,6 +1114,75 @@ fun ExplorationScreen(
                         .zIndex(8f)
                 )
             }
+        }
+
+        if (roomTransition != null && prevRoomId != null) {
+            BoxWithConstraints(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .statusBarsPadding()
+                    .padding(horizontal = 24.dp, vertical = 24.dp)
+                    .graphicsLayer {
+                        alpha = roomPreviousContentAlpha
+                        translationX = roomPreviousContentOffsetX
+                        translationY = roomPreviousContentOffsetY
+                        val prevContentScale = 1.0f - 0.01f * roomTransitionContentEasedProgress
+                        scaleX = prevContentScale
+                        scaleY = prevContentScale
+                    }
+            ) {
+                val titleColor = themeColor(activeTheme?.accent, Color(0xFFBEE9FF))
+                val warmTitleColor = Color(0xFFFF9F2E)
+                Column(
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .fillMaxWidth(0.9f),
+                    verticalArrangement = Arrangement.spacedBy(14.dp)
+                ) {
+                    RoomHeaderPanel(
+                        roomTitle = prevRoomTitle,
+                        isDark = isRoomDark,
+                        titleColor = titleColor,
+                        warmTitleColor = warmTitleColor,
+                        minimap = null,
+                        minimapSize = 78.dp,
+                        onTitleClick = {},
+                        onMapClick = {}
+                    )
+
+                    RoomDescriptionPanel(
+                        currentRoom = null,
+                        description = prevRoomDesc,
+                        plan = null,
+                        isDark = isRoomDark,
+                        onAction = {},
+                        onNpcClick = {},
+                        onEnemyClick = {},
+                        borderColor = panelBorderColor,
+                        accentColor = actionAccentColor,
+                        textColor = roomTextColor,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .heightIn(min = 104.dp, max = 280.dp)
+                    )
+                }
+            }
+        }
+
+        if (persistentObjectiveHudVisible) {
+            ObjectiveHud(
+                quest = hudQuest,
+                accentColor = actionAccentColor,
+                borderColor = panelBorderColor,
+                isDark = isRoomDark,
+                onClick = { viewModel.openQuestLog() },
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .statusBarsPadding()
+                    .padding(top = objectiveHudLockedTopPadding, start = 24.dp, end = 24.dp)
+                    .fillMaxWidth(0.9f)
+                    .zIndex(75f)
+            )
         }
 
         RestRecoveryOverlay(
@@ -3555,6 +3920,14 @@ private data class QuickMenuAction(
     val roomAction: RoomAction
 )
 
+
+private fun roomTransitionVector(direction: String?): Pair<Float, Float> = when (direction?.lowercase(Locale.getDefault())) {
+    "west" -> -1f to 0f
+    "east" -> 1f to 0f
+    "north" -> 0f to -1f
+    "south" -> 0f to 1f
+    else -> 0f to 0f
+}
 
 private const val ENEMY_FLAVOR_TAG = "enemy_flavor"
 

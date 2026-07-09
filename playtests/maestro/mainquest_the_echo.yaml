@@ -5,28 +5,29 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     visible: "New Game"
     timeout: 60000
-- swipe:
-    direction: UP
+- tapOn: "Debug Scenarios"
+- tapOn: "Search world, quest, room, or system"
+- inputText: "deep mine"
+- pressKey: BACK
 - extendedWaitUntil:
-    visible: "Debug: Deep Mine"
+    visible: "The Echo: Deep Mine"
     timeout: 10000
-- tapOn:
-    point: "50%,61%"
+- tapOn: "The Echo: Deep Mine"
 - extendedWaitUntil:
     visible: "Concourse Lobby"
     timeout: 15000
-- assertVisible: "Foreman Boggs"
-- tapOn: "Foreman Boggs"
+- assertVisible: "Boggs"
+- tapOn: "Boggs"
 - extendedWaitUntil:
-    visible: ".*caused that surge.*"
+    visible: ".*Training's logged.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: ".*grid instability.*"
+    visible: ".*Deep Elevator opens.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: ".*punishment duty.*"
+    visible: ".*expendable enough to send first.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
@@ -59,8 +60,7 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     notVisible: "Engage Echo Borer"
     timeout: 1000
-- tapOn:
-    point: "50%,9%"
+- tapOn: "Travel north.*"
 - extendedWaitUntil:
     visible: "Cavern Junction"
     timeout: 15000
@@ -144,19 +144,23 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 10000
 - tapOn: "Tap to continue.*"
 - extendedWaitUntil:
-    visible: "ITEM OBTAINED"
+    visible: ".*containment threat.*"
     timeout: 15000
-- assertVisible: "Acquired The Tuning Fork"
-- tapOn: "GOT IT"
+- tapOn: "Continue"
+- extendedWaitUntil:
+    visible: "Acquired The Tuning Fork"
+    timeout: 15000
+- tapOn: "DISMISS"
 - extendedWaitUntil:
     visible: "Source Art unlocked: Blast Wave.*"
     timeout: 15000
-- tapOn: "GOT IT"
+- tapOn: "CONTINUE"
 - extendedWaitUntil:
-    visible: "New Quest"
+    visible: "Quest Completed"
     timeout: 15000
+- assertVisible: "The Echo"
 - assertVisible: "Red Alert"
-- tapOn: "Dismiss"
+- tapOn: "Continue"
 - waitForAnimationToEnd:
     timeout: 2000
 - takeScreenshot: mainquest-the-echo

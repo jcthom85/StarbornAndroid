@@ -53,6 +53,7 @@ import com.example.starborn.domain.model.StatusDefinition
 import com.example.starborn.domain.model.Drop
 import com.example.starborn.domain.session.GameSessionStore
 import com.example.starborn.domain.session.GameSessionState
+import com.example.starborn.domain.telemetry.TelemetryLogger
 import com.example.starborn.domain.theme.EnvironmentThemeManager
 import com.example.starborn.domain.theme.defaultWeatherForEnvironment
 import java.util.Locale
@@ -98,7 +99,8 @@ class CombatViewModel(
     private val encounterCoordinator: EncounterCoordinator,
     enemyIds: List<String>,
     private val tutorialsEnabled: Boolean = true,
-    private val elapsedRealtime: () -> Long = SystemClock::elapsedRealtime
+    private val elapsedRealtime: () -> Long = SystemClock::elapsedRealtime,
+    private val telemetry: TelemetryLogger? = null
 ) : ViewModel() {
 
     val player: Player?
@@ -284,6 +286,11 @@ class CombatViewModel(
     }
 
     init {
+        telemetry?.log(
+            "combat_start",
+            "enemies" to enemyIds,
+            "room" to sessionStore.state.value.roomId
+        )
         itemCatalog.load()
         val players = worldAssets.loadCharacters()
         val allEnemies = worldAssets.loadEnemies()
@@ -2867,6 +2874,18 @@ class CombatViewModel(
 
     private fun CombatState.applyOutcomeResults(previous: CombatState): CombatState {
         val resolved = applyBossCoreOutcome()
+        val outcome = resolved.outcome
+        if (previous.outcome == null && outcome != null) {
+            telemetry?.log(
+                "combat_end",
+                "outcome" to outcome::class.simpleName,
+                "round" to resolved.round,
+                "room" to sessionStore.state.value.roomId,
+                "party_hp" to playerParty.associate { member ->
+                    member.id to (resolved.combatants[member.id]?.hp ?: 0)
+                }
+            )
+        }
         if (previous.outcome == null && resolved.outcome is CombatOutcome.Victory) {
             val rewards = (resolved.outcome as CombatOutcome.Victory).rewards
             val levelUps = applyVictoryRewards(rewards)

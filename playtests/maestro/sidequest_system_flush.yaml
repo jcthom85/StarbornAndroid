@@ -3,9 +3,20 @@ appId: com.junewiregames.starborn.prealpha
 - launchApp:
     clearState: true
 - extendedWaitUntil:
-    visible: "Debug: Room Items"
+    visible: "Debug Scenarios"
     timeout: 60000
-- tapOn: "Debug: Room Items"
+- tapOn:
+    point: "50%,73%"
+- extendedWaitUntil:
+    visible: "Launching replaces the current unsaved session."
+    timeout: 10000
+- tapOn: "Search world, quest, room, or system"
+- inputText: "storage room"
+- pressKey: BACK
+- extendedWaitUntil:
+    visible: "Room Items"
+    timeout: 10000
+- tapOn: "Room Items"
 - extendedWaitUntil:
     visible: "Med Supply Closet"
     timeout: 15000
@@ -37,15 +48,7 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     notVisible: "New Quest"
     timeout: 10000
-- extendedWaitUntil:
-    visible: "Quest Updated"
-    timeout: 10000
-- assertVisible: "Talk to Doc in the Med-Bay."
 - takeScreenshot: sidequest-system-flush-progress
-- tapOn: "Dismiss Quest Banner"
-- extendedWaitUntil:
-    notVisible: "Quest Updated"
-    timeout: 10000
 - tapOn: "Travel south"
 - extendedWaitUntil:
     visible: "Triage Hall"
@@ -55,39 +58,31 @@ appId: com.junewiregames.starborn.prealpha
     visible: "Ventilation Hub"
     timeout: 15000
 - extendedWaitUntil:
-    visible: "Quest Updated"
+    visible: "Inspect the cracked vent."
     timeout: 10000
-- assertVisible: "Enter the ventilation hub."
-- tapOn: "Dismiss Quest Banner"
+- tapOn: "vent"
 - extendedWaitUntil:
-    notVisible: "Quest Updated"
+    visible: "Continue"
     timeout: 10000
-- tapOn: "Inspect Vent"
+- tapOn: "Continue"
 - extendedWaitUntil:
-    visible: "Quest Updated"
+    visible: "Reroute the failing fans."
     timeout: 10000
-- assertVisible: "Inspect the cracked vent."
-- tapOn: "Dismiss Quest Banner"
+- tapOn: "fans"
 - extendedWaitUntil:
-    notVisible: "Quest Updated"
+    visible: "Continue"
     timeout: 10000
-- tapOn: "Inspect Fans"
+- tapOn: "Continue"
 - extendedWaitUntil:
-    visible: "Quest Updated"
+    visible: "Clear the toxic blockage."
     timeout: 10000
-- assertVisible: "Reroute the failing fans."
-- tapOn: "Dismiss Quest Banner"
+- tapOn: "toxic blockage"
 - extendedWaitUntil:
-    notVisible: "Quest Updated"
+    visible: "Continue"
     timeout: 10000
-- tapOn: "Inspect Toxic Blockage"
+- tapOn: "Continue"
 - extendedWaitUntil:
-    visible: "Quest Updated"
-    timeout: 10000
-- assertVisible: "Return to Doc."
-- tapOn: "Dismiss Quest Banner"
-- extendedWaitUntil:
-    notVisible: "Quest Updated"
+    visible: "Return to Doc."
     timeout: 10000
 - tapOn: "Travel west"
 - extendedWaitUntil:
@@ -110,6 +105,10 @@ appId: com.junewiregames.starborn.prealpha
     visible: ".*Corrosive rounds.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: "Acquired Corrosive Rounds"
+    timeout: 15000
+- tapOn: "DISMISS"
 - extendedWaitUntil:
     visible: "Quest Completed"
     timeout: 10000

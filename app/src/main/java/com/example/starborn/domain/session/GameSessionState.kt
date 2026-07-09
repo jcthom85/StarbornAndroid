@@ -48,7 +48,9 @@ data class GameSessionState(
     val completedNodes: Set<String> = emptySet(),
     val astraReturnWorldId: String? = null,
     val astraReturnHubId: String? = null,
-    val astraReturnRoomId: String? = null
+    val astraReturnRoomId: String? = null,
+    // Excluded from fingerprint(): it advances continuously and must not mark autosaves dirty.
+    val totalPlaytimeMs: Long = 0L
 )
 
 fun GameSessionState.fingerprint(): String {

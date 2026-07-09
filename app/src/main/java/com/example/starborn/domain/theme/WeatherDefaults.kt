@@ -5,7 +5,7 @@ fun defaultWeatherForEnvironment(environmentId: String?): String? {
         "mine" -> "dust"
         "logistics" -> "resonance"
         "space" -> "starfall"
-        "swamp" -> "fog"
+        "swamp" -> "mist"
         else -> null
     }
 }

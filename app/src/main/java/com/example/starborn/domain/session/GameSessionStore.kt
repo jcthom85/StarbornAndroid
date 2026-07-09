@@ -138,6 +138,11 @@ class GameSessionStore {
         _state.update { it.copy(playerAp = it.playerAp + amount) }
     }
 
+    fun addPlaytime(deltaMs: Long) {
+        if (deltaMs <= 0) return
+        _state.update { it.copy(totalPlaytimeMs = it.totalPlaytimeMs + deltaMs) }
+    }
+
     fun spendAp(amount: Int): Boolean {
         if (amount <= 0) return true
         var success = false

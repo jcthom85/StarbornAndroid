@@ -614,6 +614,33 @@
       "fade_out_ms": 140
     },
     {
+      "id": "ui_room_whoosh_1",
+      "category": "ui",
+      "priority": 0,
+      "gain": 0.58,
+      "fade_in_ms": 0,
+      "fade_out_ms": 120,
+      "duration_ms": 450
+    },
+    {
+      "id": "ui_room_whoosh_2",
+      "category": "ui",
+      "priority": 0,
+      "gain": 0.56,
+      "fade_in_ms": 0,
+      "fade_out_ms": 120,
+      "duration_ms": 450
+    },
+    {
+      "id": "ui_room_whoosh_3",
+      "category": "ui",
+      "priority": 0,
+      "gain": 0.57,
+      "fade_in_ms": 0,
+      "fade_out_ms": 120,
+      "duration_ms": 450
+    },
+    {
       "id": "quest_new_stinger",
       "category": "ui",
       "priority": 4,

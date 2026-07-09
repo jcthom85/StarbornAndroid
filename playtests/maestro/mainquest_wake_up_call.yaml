@@ -190,6 +190,6 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 15000
 - tapOn: "Continue"
 - extendedWaitUntil:
-    notVisible: "Shift Clearance"
+    visible: "Main Bench"
     timeout: 10000
 - takeScreenshot: mainquest-wake-up-call

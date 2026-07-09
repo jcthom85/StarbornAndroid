@@ -126,7 +126,9 @@ fun PartyRoster(
                             val baseModifier = Modifier.widthIn(min = 150.dp)
                             val canTap = onMemberTap != null && isAlive && (readyToAct || allowNonReadySelection)
                             val interactiveModifier = if (canTap) {
-                                baseModifier.clickable { onMemberTap(member.id) }
+                                baseModifier.clickable(onClickLabel = "Select ${member.name}") {
+                                    onMemberTap(member.id)
+                                }
                             } else {
                                 baseModifier
                             }

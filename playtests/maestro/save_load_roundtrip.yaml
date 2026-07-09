@@ -7,51 +7,71 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 60000
 - tapOn: "New Game"
 - extendedWaitUntil:
-    visible: "GOT IT"
+    visible: "bunk light"
     timeout: 20000
-- tapOn: "GOT IT"
-- extendedWaitUntil:
-    visible: "Nova's Bunk"
-    timeout: 10000
 - tapOn: "MENU"
 - extendedWaitUntil:
     visible: "FIELD MENU"
     timeout: 10000
+- swipe:
+    start: 88%, 18%
+    end: 12%, 18%
+    duration: 500
+- swipe:
+    start: 88%, 18%
+    end: 12%, 18%
+    duration: 500
 - tapOn: "Settings"
 - extendedWaitUntil:
-    visible: "AUDIO & DISPLAY"
+    visible: "Save Data"
     timeout: 10000
-- tapOn: "Open Save Slots"
+- tapOn: "Save"
 - extendedWaitUntil:
-    visible: "SELECT SLOT TO SAVE"
+    visible: "SAVE DATA"
     timeout: 10000
-- tapOn: "Save Slot 1"
+- tapOn: "Save"
 - extendedWaitUntil:
-    notVisible: "SELECT SLOT TO SAVE"
+    visible: "Quick Save"
     timeout: 10000
 - tapOn: "Close"
 - extendedWaitUntil:
     notVisible: "FIELD MENU"
     timeout: 10000
-- assertVisible: "Nova's Bunk"
+- assertVisible: "bunk light"
+- extendedWaitUntil:
+    visible: "CONTINUE"
+    timeout: 10000
+- tapOn: "CONTINUE"
 - tapOn: "MENU"
 - extendedWaitUntil:
     visible: "FIELD MENU"
     timeout: 10000
+- swipe:
+    start: 88%, 18%
+    end: 12%, 18%
+    duration: 500
+- swipe:
+    start: 88%, 18%
+    end: 12%, 18%
+    duration: 500
 - tapOn: "Settings"
 - extendedWaitUntil:
-    visible: "AUDIO & DISPLAY"
+    visible: "Save Data"
     timeout: 10000
-- tapOn: "Open Load Slots"
+- tapOn: "Load"
 - extendedWaitUntil:
-    visible: "SELECT SLOT TO LOAD"
+    visible: "LOAD DATA"
     timeout: 10000
-- tapOn: "Load Slot 1"
+- tapOn: "Load"
 - extendedWaitUntil:
-    notVisible: "SELECT SLOT TO LOAD"
+    notVisible: "LOAD DATA"
     timeout: 10000
 - tapOn: "Close"
 - extendedWaitUntil:
-    visible: "Nova's Bunk"
+    visible: "Continue"
+    timeout: 10000
+- tapOn: "Continue"
+- extendedWaitUntil:
+    visible: "bunk light"
     timeout: 10000
 - takeScreenshot: save-load-roundtrip

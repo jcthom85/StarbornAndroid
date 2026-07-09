@@ -336,8 +336,11 @@ class EventManager(
                 }
                 "add_party_member" -> {
                     action.itemId?.let { memberId ->
+                        val wasAlreadyInParty = memberId in sessionStore.state.value.partyMembers
                         sessionStore.addPartyMember(memberId)
-                        eventHooks.onPartyMemberJoined(memberId)
+                        if (!wasAlreadyInParty) {
+                            eventHooks.onPartyMemberJoined(memberId)
+                        }
                     }
                     true
                 }

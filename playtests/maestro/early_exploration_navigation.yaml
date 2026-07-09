@@ -27,9 +27,6 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     visible: "Pod Row"
     timeout: 60000
-- extendedWaitUntil:
-    notVisible: "Wake Up Call"
-    timeout: 10000
 - tapOn: "MENU"
 - extendedWaitUntil:
     visible: "FIELD MENU"

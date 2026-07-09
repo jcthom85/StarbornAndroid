@@ -41,6 +41,11 @@ sealed interface WeatherEffect {
         val density: Float
     ) : WeatherEffect
 
+    data class Mist(
+        val color: Color,
+        val density: Float
+    ) : WeatherEffect
+
     data class Gas(
         val color: Color
     ) : WeatherEffect
