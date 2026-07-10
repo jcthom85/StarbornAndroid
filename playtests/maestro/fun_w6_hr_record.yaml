@@ -5,9 +5,10 @@ appId: com.junewiregames.starborn.prealpha
     visible: "Debug Scenarios"
     timeout: 60000
 - tapOn: "Debug Scenarios"
-- tapOn: "Search world, quest, room, or system"
-- inputText: "The HR Record"
-- hideKeyboard
+- scrollUntilVisible:
+    element: "Fun Audit / The HR Record"
+    direction: DOWN
+    timeout: 30000
 - tapOn: "Fun Audit / The HR Record"
 - extendedWaitUntil:
     visible: "Infinite Cubicle"
@@ -47,6 +48,7 @@ appId: com.junewiregames.starborn.prealpha
       visible: "Continue"
     commands:
       - tapOn: "Continue"
+- assertVisible: "worker broadcast"
 - tapOn: "unauthorized exit"
 - extendedWaitUntil:
     visible: "QUEST COMPLETED"

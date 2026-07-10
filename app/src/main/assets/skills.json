@@ -172,7 +172,7 @@
     ],
     "base_power": 150,
     "scaling": "atk",
-    "cooldown": 1,
+    "cooldown": 2,
     "status_applications": []
   },
   {
@@ -200,7 +200,7 @@
     "combat_tags": [
       "dmg"
     ],
-    "base_power": 90,
+    "base_power": 75,
     "scaling": "atk",
     "cooldown": 0,
     "status_applications": []
@@ -437,7 +437,7 @@
     "combat_tags": [
       "dmg"
     ],
-    "base_power": 95,
+    "base_power": 80,
     "scaling": "atk",
     "cooldown": 1,
     "status_applications": []
@@ -452,7 +452,7 @@
     "combat_tags": [
       "dmg"
     ],
-    "base_power": 100,
+    "base_power": 80,
     "scaling": "atk",
     "status_applications": []
   },
@@ -650,16 +650,17 @@
     "name": "Rend Round",
     "character": "nova",
     "type": "active",
-    "description": "A precision round that slices armor, causing bleed.",
+    "description": "A precision finisher that tears open a staggered target and causes bleed.",
     "combat_tags": [
       "dmg"
     ],
-    "base_power": 140,
+    "base_power": 210,
     "scaling": "agility",
     "cooldown": 2,
     "status_applications": [
       "bleed"
-    ]
+    ],
+    "conditions": ["bonus_if_target_staggered"]
   },
   {
     "id": "zeke_shatter_blow",
@@ -715,14 +716,15 @@
     "name": "Quake Slam",
     "character": "zeke",
     "type": "active",
-    "description": "Smashes the ground, damaging all foes.",
+    "description": "Detonates Gh0st's stun window, crushing every foe while their formation is locked.",
     "combat_tags": [
       "aoe"
     ],
-    "base_power": 100,
+    "base_power": 190,
     "scaling": "strength",
     "cooldown": 3,
-    "status_applications": []
+    "status_applications": ["weak"],
+    "conditions": ["bonus_if_target_stunned"]
   },
   {
     "id": "orion_prism_lance",
@@ -893,15 +895,15 @@
     "name": "Pulse Grenade",
     "character": "nova",
     "type": "active",
-    "description": "Throws a mining explosive that deals area damage.",
+    "description": "Throws a mining pulse charge that damages and staggers an enemy formation.",
     "combat_tags": [
       "aoe",
       "physical"
     ],
-    "base_power": 100,
+    "base_power": 85,
     "scaling": "agility",
     "cooldown": 3,
-    "status_applications": []
+    "status_applications": ["stagger"]
   },
   {
     "id": "iron_warden_riot_shield",
@@ -977,7 +979,7 @@
     "combat_tags": [
       "dmg"
     ],
-    "base_power": 100,
+    "base_power": 70,
     "scaling": "agility",
     "cooldown": 0,
     "status_applications": []
@@ -1169,7 +1171,7 @@
     ],
     "base_power": 150,
     "scaling": "atk",
-    "cooldown": 0,
+    "cooldown": 2,
     "status_applications": []
   },
   {
@@ -1216,7 +1218,7 @@
     ],
     "base_power": 90,
     "scaling": "atk",
-    "cooldown": 1,
+    "cooldown": 2,
     "status_applications": [
       "stun"
     ]
@@ -1318,7 +1320,8 @@
     "base_power": 0,
     "scaling": "luck",
     "cooldown": 0,
-    "status_applications": []
+    "status_applications": [],
+    "conditions": ["hp_above_50"]
   },
   {
     "id": "orion_sunbeam",
@@ -1381,7 +1384,8 @@
     "base_power": 0,
     "scaling": "luck",
     "cooldown": 0,
-    "status_applications": []
+    "status_applications": [],
+    "conditions": ["hp_below_50"]
   },
   {
     "id": "zeke_unshackled",
@@ -1532,6 +1536,18 @@
     "status_applications": [
       "stagger"
     ]
+  },
+  {
+    "id": "zeke_guardian_covenant",
+    "name": "Guardian Covenant",
+    "character": "zeke",
+    "type": "support",
+    "description": "Zeke and the recovered guardian share protection across the party without either becoming the other's property.",
+    "combat_tags": ["support", "buff"],
+    "base_power": 0,
+    "scaling": "focus",
+    "cooldown": 4,
+    "status_applications": ["shield", "braced"]
   },
   {
     "id": "shadow_chorus",

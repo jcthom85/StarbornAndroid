@@ -1403,7 +1403,7 @@
               },
               {
                 "id": "leak_ledger",
-                "text": "Leak the ledger through the service network."
+            "text": "Choose whether to publish the ledger or weaponize it privately."
           }
         ]
       }
@@ -1851,7 +1851,7 @@
               },
               {
                 "id": "release_units",
-                "text": "Release the reprogrammed units from the conveyor."
+            "text": "Choose whether the units escape or stay to defend the workers."
           }
         ]
       }
@@ -2290,7 +2290,7 @@
               },
               {
                 "id": "restore_guardian",
-                "text": "Restore the backup as an independent guardian."
+            "text": "Choose whether the guardian stays independent or bonds with the crew."
           }
         ]
       }
@@ -2530,7 +2530,7 @@
               },
               {
                 "id": "leave_review",
-                "text": "Walk through the break-room exit without permission."
+            "text": "Choose what Zeke does with the records after rejecting their authority."
           }
         ]
       }

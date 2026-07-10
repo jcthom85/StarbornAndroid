@@ -5,9 +5,10 @@ appId: com.junewiregames.starborn.prealpha
     visible: "Debug Scenarios"
     timeout: 60000
 - tapOn: "Debug Scenarios"
-- tapOn: "Search world, quest, room, or system"
-- inputText: "Corporate Espionage"
-- hideKeyboard
+- scrollUntilVisible:
+    element: "Fun Audit / Corporate Espionage"
+    direction: DOWN
+    timeout: 30000
 - tapOn: "Fun Audit / Corporate Espionage"
 - extendedWaitUntil:
     visible: "Exec Lounge"
@@ -38,6 +39,7 @@ appId: com.junewiregames.starborn.prealpha
       visible: "Continue"
     commands:
       - tapOn: "Continue"
+- assertVisible: "private dead drop"
 - tapOn: "worker network uplink"
 - extendedWaitUntil:
     visible: "Acquired Encrypted Ledger"

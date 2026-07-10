@@ -542,7 +542,10 @@ class CombatActionProcessor(
                 skill == null -> SkillMode.Damage(freshAttackerState.effectiveStat("strength").coerceAtLeast(1), PHYSICAL_ELEMENT)
                 isHealSkill(skill) -> SkillMode.Heal(resolveSkillHeal(freshAttackerState, skill))
                 else -> SkillMode.Damage(
-                    baseDamage = resolveSkillDamage(freshAttackerState, skill),
+                    baseDamage = scaleDamage(
+                        resolveSkillDamage(freshAttackerState, skill),
+                        conditionalPayoffMultiplier(skill, working, explicitTargets)
+                    ),
                     element = element ?: PHYSICAL_ELEMENT
                 )
             }
@@ -1048,6 +1051,23 @@ class CombatActionProcessor(
         val multiplier = skill.basePower.coerceAtLeast(0) / 100.0
         val potency = CombatFormulas.skillPotencyMultiplier(attacker.effectiveStat("focus"))
         return (base * multiplier * potency).roundToInt().coerceAtLeast(if (skill.basePower > 0) 1 else 0)
+    }
+
+    private fun conditionalPayoffMultiplier(
+        skill: Skill,
+        state: CombatState,
+        targetIds: List<String>
+    ): Double {
+        val targetStatuses = targetIds
+            .mapNotNull(state.combatants::get)
+            .flatMap { it.statusEffects }
+            .map { it.id.lowercase() }
+            .toSet()
+        return when {
+            "bonus_if_target_staggered" in skill.conditions.orEmpty() && "stagger" in targetStatuses -> 1.65
+            "bonus_if_target_stunned" in skill.conditions.orEmpty() && targetStatuses.any { it == "stun" || it == "stagger" } -> 1.65
+            else -> 1.0
+        }
     }
 
     private fun resolveSkillHeal(attacker: CombatantState, skill: Skill): Int {

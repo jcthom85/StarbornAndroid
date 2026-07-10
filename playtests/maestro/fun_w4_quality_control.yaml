@@ -5,9 +5,10 @@ appId: com.junewiregames.starborn.prealpha
     visible: "Debug Scenarios"
     timeout: 60000
 - tapOn: "Debug Scenarios"
-- tapOn: "Search world, quest, room, or system"
-- inputText: "Quality Control"
-- hideKeyboard
+- scrollUntilVisible:
+    element: "Fun Audit / Quality Control"
+    direction: DOWN
+    timeout: 30000
 - tapOn: "Fun Audit / Quality Control"
 - extendedWaitUntil:
     visible: "Reject Bay"
@@ -38,6 +39,7 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 10000
 - takeScreenshot: fun-w4-complication
 - tapOn: ".*removes the obedience fault.*"
+- assertVisible: "worker defense relay"
 - tapOn: "conveyor release lock"
 - extendedWaitUntil:
     visible: "QUEST COMPLETED"

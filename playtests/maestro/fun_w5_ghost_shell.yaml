@@ -5,9 +5,10 @@ appId: com.junewiregames.starborn.prealpha
     visible: "Debug Scenarios"
     timeout: 60000
 - tapOn: "Debug Scenarios"
-- tapOn: "Search world, quest, room, or system"
-- inputText: "Ghost in the Shell"
-- hideKeyboard
+- scrollUntilVisible:
+    element: "Fun Audit / Ghost in the Shell"
+    direction: DOWN
+    timeout: 30000
 - tapOn: "Fun Audit / Ghost in the Shell"
 - extendedWaitUntil:
     visible: "Server Farm"
@@ -47,6 +48,7 @@ appId: com.junewiregames.starborn.prealpha
       visible: "Continue"
     commands:
       - tapOn: "Continue"
+- assertVisible: "crew covenant socket"
 - tapOn: "guardian ownership flag"
 - extendedWaitUntil:
     visible: "QUEST COMPLETED"

@@ -117,6 +117,7 @@ dependencies {
 }
 
 tasks.withType<Test>().configureEach {
+    inputs.files(fileTree("src/main/assets") { include("*.json") })
     val isolatedHome = layout.buildDirectory.dir("test-home")
     val isolatedTmp = layout.buildDirectory.dir("test-tmp")
     systemProperty("user.home", isolatedHome.get().asFile.absolutePath)

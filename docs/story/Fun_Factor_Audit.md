@@ -65,15 +65,28 @@ Findings:
 - Device testing found nine generic actions hidden because their names were absent from the active room description, including a World 6 post-main-quest description variant. The descriptions now expose every required action.
 - Quest update cards, narrative overlays, and quest-start cards can stack visually. They remain readable, but the layered notifications add friction and should be consolidated in a later UI pass.
 
+## Interactive Quest Pass
+
+The four representative arcs now end in explicit, persistent decisions instead of predetermined final taps:
+
+- **Corporate Espionage:** publish the ledger to every worker terminal or weaponize it privately for Phase Rounds.
+- **Quality Control:** release the waking units into the worker tunnels or let them volunteer as line defenders for a Rapid Capacitor.
+- **Ghost in the Shell:** restore an independent guardian for Data Shield or create a mutual crew covenant for Guardian Covenant.
+- **The HR Record:** leave the system behind or broadcast Zeke's revocation across every worker record.
+
+Each branch completes the same quest contract while recording a distinct milestone, reward, and world-state consequence. The representative Maestro flows assert that both final options are visible before selecting the original authored outcome.
+
 ## Combat and Skill Decision Baseline
 
 The deterministic harness resolves 25 main-quest victory gates and runs 20 fixed seeds under basic, greedy, and weakness/setup-aware policies. It uses normalized world snapshots and the production combat engine; its flags identify fights for device validation, not final balance decisions.
 
-- Nine encounters exceed six median rounds without an authored phase change in the normalized tactical baseline.
-- Four encounter gates produce baseline defeat risk, concentrated in the repeated Acoustic Bulwark route and Iron Warden.
-- Six encounters show a dominant player action in the tactical policy.
+- No required encounter now exceeds six tactical median rounds without an authored phase change in the normalized baseline.
+- The Acoustic Bulwark route now resolves in five tactical rounds instead of producing a normalized defeat.
+- Iron Warden and Source Beast remain normalized boss-risk flags. Their scripted encounter context and phase mechanics require the dedicated boss pass rather than further global stat reduction.
 - Several weakness encounters show no speed advantage over greedy damage, indicating that weakness reward value needs device verification.
-- The catalog audit found one exact player-skill duplicate (`corporate_insight` / `nova_legacy`), two potentially dominated player choices (`nova_pulse_grenade` / `nova_rend_round`, `zeke_quake_slam` / `zeke_shatter_blow`), and seven high-power zero/one-turn cooldown rotation risks.
-- No skill condition consumes a status produced by another skill. Setup/payoff currently comes from systemic weakness and status behavior rather than explicit party ability chains.
+- The catalog now contains 98 skills and produces no duplicate, dominated-choice, rotation-risk, or missing-payoff findings.
+- Pulse Grenade now establishes a formation-wide Stagger for Rend Round's conditional finisher.
+- Gh0st's System Crash creates a party setup window for Zeke's Quake Slam payoff.
+- Corporate Insight and Legacy now occupy different high-HP and low-HP decision spaces.
 
 Generated evidence lives in ignored `reports/fun-audit/` and `playtests/artifacts/fun-audit/`.

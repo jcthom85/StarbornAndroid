@@ -11092,5 +11092,69 @@
         "message": "The crew rests aboard the Astra. Wounds close, nerves settle, and the ship feels like home for a while."
       }
     ]
+  },
+  {
+    "id": "w3_sq14_weaponize_ledger",
+    "description": "Use the ledger privately against an executive security profile.",
+    "trigger": { "type": "player_action", "action": "w3_sq14_weaponize_ledger" },
+    "conditions": [
+      { "type": "milestone_set", "milestone": "ms_w3_ledger_stolen" },
+      { "type": "quest_not_completed", "quest_id": "w3_sq14" }
+    ],
+    "actions": [
+      { "type": "set_quest_task_done", "quest_id": "w3_sq14", "task_id": "leak_ledger" },
+      { "type": "give_item", "item_id": "phase_rounds", "quantity": 1 },
+      { "type": "complete_quest", "quest_id": "w3_sq14" },
+      { "type": "set_milestone", "milestone": "ms_w3_ledger_weaponized" },
+      { "type": "show_message", "message": "Quest Complete: Corporate Espionage\n\nNova keeps the workers out of the blast radius and feeds one executive's private security profile into a dead drop. Phase Rounds acquired." }
+    ]
+  },
+  {
+    "id": "w4_sq19_defend_workers",
+    "description": "Let the waking units remain as voluntary worker defenders.",
+    "trigger": { "type": "player_action", "action": "w4_sq19_defend_workers" },
+    "conditions": [
+      { "type": "milestone_set", "milestone": "ms_w4_defective_units_spared" },
+      { "type": "quest_not_completed", "quest_id": "w4_sq19" }
+    ],
+    "actions": [
+      { "type": "set_quest_task_done", "quest_id": "w4_sq19", "task_id": "release_units" },
+      { "type": "give_item", "item_id": "rapid_capacitor", "quantity": 1 },
+      { "type": "complete_quest", "quest_id": "w4_sq19" },
+      { "type": "set_milestone", "milestone": "ms_w4_units_defend_workers" },
+      { "type": "show_message", "message": "Quest Complete: Quality Control\n\nThe units choose to stay. Their first independent act is protecting the workers the Foundry ordered them to harm. Rapid Capacitor acquired." }
+    ]
+  },
+  {
+    "id": "w5_sq24_bind_guardian",
+    "description": "Replace ownership with a mutual crew covenant.",
+    "trigger": { "type": "player_action", "action": "w5_sq24_bind_guardian" },
+    "conditions": [
+      { "type": "milestone_set", "milestone": "ms_w5_backup_recovered" },
+      { "type": "quest_not_completed", "quest_id": "w5_sq24" }
+    ],
+    "actions": [
+      { "type": "set_quest_task_done", "quest_id": "w5_sq24", "task_id": "restore_guardian" },
+      { "type": "unlock_skill", "skill_id": "zeke_guardian_covenant" },
+      { "type": "complete_quest", "quest_id": "w5_sq24" },
+      { "type": "set_milestone", "milestone": "ms_w5_guardian_covenant" },
+      { "type": "show_message", "message": "Quest Complete: Ghost in the Shell\n\nThe guardian refuses an owner but accepts a covenant: protection flows both ways. Guardian Covenant unlocked." }
+    ]
+  },
+  {
+    "id": "w6_sq27_free_workers",
+    "description": "Broadcast Zeke's revocation across every worker record.",
+    "trigger": { "type": "player_action", "action": "w6_sq27_free_workers" },
+    "conditions": [
+      { "type": "milestone_set", "milestone": "ms_w6_hr_revoked" },
+      { "type": "quest_not_completed", "quest_id": "w6_sq27" }
+    ],
+    "actions": [
+      { "type": "set_quest_task_done", "quest_id": "w6_sq27", "task_id": "leave_review" },
+      { "type": "unlock_skill", "skill_id": "zeke_unshackled" },
+      { "type": "complete_quest", "quest_id": "w6_sq27" },
+      { "type": "set_milestone", "milestone": "ms_w6_workers_unshackled" },
+      { "type": "show_message", "message": "Quest Complete: The HR Record\n\nZeke broadcasts the revocation. Every worker file remains as evidence, and none of them can issue another order. Unshackled unlocked." }
+    ]
   }
 ]

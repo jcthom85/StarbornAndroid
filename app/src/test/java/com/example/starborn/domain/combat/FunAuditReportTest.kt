@@ -40,7 +40,7 @@ class FunAuditReportTest {
         File(reports, "skill-decisions.json").writeText(skill.toString(2))
         File(reports, "skill-decisions.md").writeText(skillMarkdown(skill))
 
-        assertEquals(97, skills.size)
+        assertEquals(98, skills.size)
         assertEquals(25, combat.getJSONArray("encounters").length())
         assertEquals(0, combat.getJSONArray("unresolved").length())
     }
@@ -176,13 +176,41 @@ class FunAuditReportTest {
     ): CombatAction {
         if (policy == Policy.BASIC) return CombatAction.BasicAttack(actor.combatant.id, target.combatant.id)
         val available = actor.combatant.skills.mapNotNull(skills::get)
-            .filter { it.basePower > 0 && actor.activeCooldowns.getOrDefault(it.id, 0) == 0 }
+            .filter {
+                it.basePower > 0 &&
+                    actor.activeCooldowns.getOrDefault(it.id, 0) == 0 &&
+                    conditionsMet(it, target)
+            }
+        val waitingPayoffStatuses = if (policy == Policy.TACTICAL) {
+            state.combatants.values
+                .filter { it.isAlive && it.combatant.side == actor.combatant.side }
+                .flatMap { ally -> ally.combatant.skills.mapNotNull(skills::get) }
+                .flatMap { it.conditions.orEmpty() }
+                .mapNotNull { condition ->
+                    when (condition.lowercase()) {
+                        "target_stunned", "bonus_if_target_stunned" -> "stun"
+                        "target_staggered", "bonus_if_target_staggered" -> "stagger"
+                        else -> null
+                    }
+                }
+                .toSet()
+        } else emptySet()
         val selected = available.maxByOrNull { skill: Skill ->
             val multiplier = if (policy == Policy.TACTICAL) affinity(target.combatant.resistances, skill) else 1.0
-            skill.basePower * multiplier + if (policy == Policy.TACTICAL) skill.statusApplications.orEmpty().size * 12.0 else 0.0
+            val setupBonus = if (skill.statusApplications.orEmpty().any { it.lowercase() in waitingPayoffStatuses }) 90.0 else 0.0
+            skill.basePower * multiplier + if (policy == Policy.TACTICAL) skill.statusApplications.orEmpty().size * 12.0 + setupBonus else 0.0
         }
         return selected?.let { CombatAction.SkillUse(actor.combatant.id, it.id, listOf(target.combatant.id)) }
             ?: CombatAction.BasicAttack(actor.combatant.id, target.combatant.id)
+    }
+
+    private fun conditionsMet(skill: Skill, target: CombatantState): Boolean = skill.conditions.orEmpty().all { condition ->
+        when (condition.lowercase()) {
+            "target_stunned" -> target.statusEffects.any { it.id.equals("stun", true) || it.id.equals("stagger", true) }
+            "target_staggered" -> target.statusEffects.any { it.id.equals("stagger", true) }
+            "bonus_if_target_stunned", "bonus_if_target_staggered" -> true
+            else -> true
+        }
     }
 
     private fun playerCombatant(player: Player, world: Int, skills: List<Skill>): Combatant {

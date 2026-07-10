@@ -4041,7 +4041,7 @@
     "env": "neon",
     "title": "Service Lift",
     "background_image": "images/rooms/world_3/spire_laundry_service.png",
-    "description": "A service lift rises through the bones of the Upper City. The lift panel lists floors with no public name, a worker network uplink blinks behind it, and an inspection hatch rattles overhead.",
+    "description": "A service lift rises through the bones of the Upper City. A worker network uplink can publish the ledger, while a private dead drop can turn it into a precise weapon against one executive.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -4081,6 +4081,13 @@
         "action_event": "w3_sq14_leak_ledger",
         "requires_milestones": ["ms_w3_ledger_stolen"],
         "condition_unmet_message": "The uplink can publish evidence only after Nova has the ledger."
+      },
+      {
+        "name": "private dead drop",
+        "type": "generic",
+        "action_event": "w3_sq14_weaponize_ledger",
+        "requires_milestones": ["ms_w3_ledger_stolen"],
+        "condition_unmet_message": "The dead drop needs the stolen ledger before it can isolate one executive's security profile."
       }
     ]
   },
@@ -5042,7 +5049,7 @@
     "env": "foundry",
     "title": "Conveyor Belt",
     "background_image": "images/rooms/world_4/foundry_conveyor_belt.png",
-    "description": "Conveyor belts carry half-assembled droids under hammering presses. A rejected droid waits beside the conveyor release lock while bins marked BIOLOGICAL COMPONENTS roll toward the furnace.",
+    "description": "Conveyor belts carry half-assembled droids under hammering presses. A rejected droid waits between two choices: the conveyor release lock opens the worker tunnels, while the worker defense relay lets the waking units stay and protect the line.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -5110,6 +5117,13 @@
         "action_event": "w4_sq19_release_units",
         "requires_milestones": ["ms_w4_defective_units_spared"],
         "condition_unmet_message": "The conveyor still cages every unit Gh0st repairs."
+      },
+      {
+        "name": "worker defense relay",
+        "type": "generic",
+        "action_event": "w4_sq19_defend_workers",
+        "requires_milestones": ["ms_w4_defective_units_spared"],
+        "condition_unmet_message": "The relay needs conscious units before it can accept volunteers."
       }
     ],
     "enemy_flavor": {
@@ -6038,7 +6052,7 @@
     "env": "void",
     "title": "Server Farm",
     "background_image": "images/rooms/world_5/orbital_server_farm.png",
-    "description": "Server columns vanish into cold mist. A purged backup rack pulses beneath the Dominion interface, and its guardian ownership flag still points toward Vale.",
+    "description": "Server columns vanish into cold mist around a purged backup rack. Once its routine is recovered, the guardian ownership flag can be erased for independence or replaced through the crew covenant socket for shared protection.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -6096,6 +6110,13 @@
         "action_event": "w5_sq24_restore_guardian",
         "requires_milestones": ["ms_w5_backup_recovered"],
         "condition_unmet_message": "The mainframe needs a recovered routine before it can remove Vale's ownership flag."
+      },
+      {
+        "name": "crew covenant socket",
+        "type": "generic",
+        "action_event": "w5_sq24_bind_guardian",
+        "requires_milestones": ["ms_w5_backup_recovered"],
+        "condition_unmet_message": "The socket needs a recovered guardian before the crew can offer a mutual covenant."
       },
       {
         "name": "dead sysadmin",
@@ -6634,7 +6655,7 @@
     "env": "source",
     "title": "Break Room Exit",
     "background_image": "images/rooms/world_6/source_zeke_nightmare.png",
-    "description": "A vending machine dispenses resignation letters instead of snacks. An unauthorized exit frames the Campfire beyond cracked glass and coffee gone cold.",
+    "description": "A vending machine dispenses resignation letters instead of snacks. Zeke can take the unauthorized exit and leave the system behind, or use the worker broadcast to revoke every record like his.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -6653,6 +6674,13 @@
         "action_event": "w6_sq27_leave_review",
         "requires_milestones": ["ms_w6_hr_revoked"],
         "condition_unmet_message": "The exit still asks for a manager's approval."
+      },
+      {
+        "name": "worker broadcast",
+        "type": "generic",
+        "action_event": "w6_sq27_free_workers",
+        "requires_milestones": ["ms_w6_hr_revoked"],
+        "condition_unmet_message": "The broadcast cannot help anyone until Zeke proves the records have no authority."
       }
     ],
     "description_variants": [
