@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -60,7 +61,7 @@ data class CompositeEnemyEntry(
 
 private val HUD_BAR_WIDTH = 156.dp
 private val TargetRippleColor = Color(0xFF3FE4FF)
-private val EnemyShadowDrop = 24.dp
+private val EnemyShadowDrop = 0.dp
 
 @Composable
 fun PartyRoster(
@@ -577,6 +578,7 @@ fun EnemyRoster(
                                             .size(portraitSize)
                                             .graphicsLayer {
                                                 compositingStrategy = CompositingStrategy.Offscreen
+                                                transformOrigin = TransformOrigin(0.5f, 1f)
                                                 if (enemyBroken) {
                                                     scaleX = spriteScale
                                                     scaleY = spriteScale

@@ -224,6 +224,12 @@ val validateDialogueEmotes = tasks.register<Exec>("validateDialogueEmotes") {
     )
 }
 
+val validateEnemySpriteBounds = registerPowerShellValidationTask(
+    "validateEnemySpriteBounds",
+    "Validates that combat enemy sprites share a consistent ground baseline.",
+    "scripts/validate_enemy_sprite_bounds.ps1"
+)
+
 val validateWorld1Assets = tasks.register("validateWorld1Assets") {
     description = "Runs all World 1 content, audio, progression, balance, and dialogue emote validators."
     group = "verification"
@@ -234,7 +240,8 @@ val validateWorld1Assets = tasks.register("validateWorld1Assets") {
         validateProgressionReferences,
         validateWorld1Balance,
         validateEnemyMovement,
-        validateDialogueEmotes
+        validateDialogueEmotes,
+        validateEnemySpriteBounds
     )
 }
 
