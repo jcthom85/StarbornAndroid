@@ -612,6 +612,23 @@
     ]
   },
   {
+    "id": "nova_cryo_vent",
+    "name": "Cryo Vent",
+    "character": "nova",
+    "type": "active",
+    "description": "Vents the rebuilt Cryo-Inductor through Nova's cutter, dealing light freeze damage and making the target Brittle. Physical attacks deal 50% more damage to Brittle targets for two turns.",
+    "combat_tags": [
+      "freeze",
+      "setup"
+    ],
+    "base_power": 55,
+    "scaling": "agility",
+    "cooldown": 3,
+    "status_applications": [
+      "brittle"
+    ]
+  },
+  {
     "id": "nova_plasma_burst",
     "name": "Plasma Burst",
     "character": "nova",

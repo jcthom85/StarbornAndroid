@@ -216,7 +216,7 @@
   {
     "id": "jed_w1_mq01_intro_1",
     "speaker": "Jed",
-    "text": "You look like a pressure leak with boots. Tell me you slept.",
+    "text": "You look like a pressure leak with boots, and you're listening to the walls again. Tell me you slept.",
     "condition": "quest_active:w1_mq01,milestone_not_set:ms_w1_mq01_jed_talked",
     "next": "jed_w1_mq01_intro_2"
   },
@@ -244,7 +244,7 @@
     "id": "jed_w1_mq01_intro_5",
     "speaker": "Jed",
     "text": "I know the math. I hate the math. Check your gear, then use the bench. After that, get to shift clearance before Boggs marks you absent. And take the ration bar before you pretend you aren't hungry.",
-    "trigger": "set_quest_task_done:w1_mq01:find_jed,set_quest_task_done:w1_mq01:talk_to_jed,give_item:mining_pistol,give_item:nova_flux_liner,give_item:cryo_inductor,give_item:scrap_metal*2,set_quest_task_done:w1_mq01:equip_starter_gear,set_milestone:ms_w1_mq01_jed_talked,give_item:ration_pack,system_tutorial:bag_basics|Jed's Workshop"
+    "trigger": "set_quest_task_done:w1_mq01:find_jed,set_quest_task_done:w1_mq01:talk_to_jed,player_action:w1_mq01_receive_starter_kit,set_quest_task_done:w1_mq01:equip_starter_gear,set_milestone:ms_w1_mq01_jed_talked"
   },
   {
     "id": "jed_w1_mq01_workshop_brief_1",

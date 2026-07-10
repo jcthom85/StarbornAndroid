@@ -74,12 +74,22 @@ class Hub9CriticalFlowTest {
         val harness = Hub9Harness()
 
         harness.events.handleTrigger("player_action", EventPayload.Action("w6_sq26_jed_echo"))
+        assertTrue(harness.store.state.value.completedQuests.contains("w6_sq26").not())
+        harness.events.handleTrigger("player_action", EventPayload.Action("w6_sq26_hear_lesson"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w6_sq26_carry_legacy"))
         harness.events.handleTrigger("player_action", EventPayload.Action("w6_sq27_delete_record"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w6_sq27_revoke_record"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w6_sq27_leave_review"))
         harness.events.handleTrigger("player_action", EventPayload.Action("w6_sq28_elara_song"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w6_sq28_break_command"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w6_sq28_preserve_song"))
 
         val state = harness.store.state.value
         assertTrue(state.completedQuests.containsAll(listOf("w6_sq26", "w6_sq27", "w6_sq28")))
         assertTrue(state.unlockedSkills.containsAll(listOf("nova_legacy", "zeke_unshackled", "gh0st_source_balance")))
+        assertTrue(state.questTasksCompleted["w6_sq26"].orEmpty().containsAll(listOf("find_tool_marks", "talk_to_jed", "carry_legacy")))
+        assertTrue(state.questTasksCompleted["w6_sq27"].orEmpty().containsAll(listOf("find_backups", "delete_record", "leave_review")))
+        assertTrue(state.questTasksCompleted["w6_sq28"].orEmpty().containsAll(listOf("isolate_voice", "break_command_layer", "recover_song")))
     }
 
     private class Hub9Harness {

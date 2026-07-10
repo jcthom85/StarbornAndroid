@@ -65,6 +65,7 @@ import com.example.starborn.domain.tutorial.TutorialRuntimeManager
 import com.example.starborn.domain.tutorial.TutorialScriptRepository
 import com.example.starborn.data.local.UserSettingsStore
 import com.example.starborn.domain.theme.EnvironmentThemeManager
+import com.example.starborn.domain.telemetry.LocalPlaytestTelemetry
 import com.example.starborn.ui.events.UiEventBus
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -108,6 +109,9 @@ class AppServices(context: Context) {
 
     val inventoryService = InventoryService(itemRepository).apply { loadItems() }
     val sessionStore = GameSessionStore()
+    val playtestTelemetry = LocalPlaytestTelemetry(File(appContext.noBackupFilesDir, "playtest")).apply {
+        startSession("app_launch")
+    }
     private val sessionPersistence = GameSessionPersistence(context)
     val craftingService = CraftingService(craftingDataSource, inventoryService, sessionStore)
     val events: List<GameEvent> = eventDataSource.loadEvents()
@@ -835,6 +839,10 @@ class AppServices(context: Context) {
                 unlockStartingSkillsForParty(party, players, baseLevel)
             }
             questRuntimeManager.resetAll()
+            playtestTelemetry.startSession(if (debugFullInventory) "debug_full_inventory" else "new_game")
+            sessionStore.startQuest("w1_mq01", track = true)
+            sessionStore.setQuestStage("w1_mq01", "wake_in_the_pit")
+            playtestTelemetry.questStarted("w1_mq01")
             resetAutosaveThrottle()
 
             val introSceneId = when {
@@ -899,6 +907,10 @@ class AppServices(context: Context) {
         "w6_crossing" -> startNewGameAtW6Crossing()
         "w6_spire" -> startNewGameAtW6Spire()
         "w6_finale" -> startNewGameAtW6Finale()
+        "fun_w3_corporate_espionage" -> startNewGameAtFunW3CorporateEspionage()
+        "fun_w4_quality_control" -> startNewGameAtFunW4QualityControl()
+        "fun_w5_ghost_shell" -> startNewGameAtFunW5GhostInTheShell()
+        "fun_w6_hr_record" -> startNewGameAtFunW6HrRecord()
         "node_progression_w1" -> startNewGameAtWorld1NodeProgression()
         "node_progression_w2" -> startNewGameAtWorld2NodeProgression()
         "astra_access" -> startNewGameAtAstraAccess()
@@ -1393,6 +1405,43 @@ class AppServices(context: Context) {
         sessionStore.setHub("hub_12_singularity")
         sessionStore.setRoom("source_center")
         visitDebugNodes("source_memory_stair_node", "source_spire_thought_node", "source_center_node")
+        true
+    }.getOrElse { false }
+
+    private fun startNewGameAtFunW3CorporateEspionage(): Boolean = runCatching {
+        if (!prepareWorld3DebugState(completedW3Quests = listOf("w3_mq11", "w3_mq12", "w3_mq13"))) return false
+        sessionStore.setWorld("world_3")
+        sessionStore.setHub("hub_6_upper_city")
+        sessionStore.setRoom("spire_exec_lounge_bar")
+        visitDebugNodes("spire_laundry", "spire_skypark", "spire_archive")
+        true
+    }.getOrElse { false }
+
+    private fun startNewGameAtFunW4QualityControl(): Boolean = runCatching {
+        if (!prepareWorld4DebugState(completedW4Quests = listOf("w4_mq16", "w4_mq17", "w4_mq18"))) return false
+        sessionStore.setWorld("world_4")
+        sessionStore.setHub("hub_8_assembly_line")
+        sessionStore.setRoom("foundry_reject_bay")
+        visitDebugNodes("foundry_conveyor_belt", "foundry_conditioning")
+        true
+    }.getOrElse { false }
+
+    private fun startNewGameAtFunW5GhostInTheShell(): Boolean = runCatching {
+        if (!prepareWorld5DebugState(completedW5Quests = listOf("w5_mq21", "w5_mq22", "w5_mq23"))) return false
+        sessionStore.setWorld("world_5")
+        sessionStore.setHub("hub_10_deep_ring")
+        sessionStore.setRoom("orbital_server_farm")
+        sessionStore.setRoomState("orbital_server_farm", debugEncounterClearedStateKey("void_turret", "void_turret"), true)
+        visitDebugNodes("deep_server_farm")
+        true
+    }.getOrElse { false }
+
+    private fun startNewGameAtFunW6HrRecord(): Boolean = runCatching {
+        if (!prepareWorld6DebugState(completedW6Quests = listOf("w6_mq26"))) return false
+        sessionStore.setWorld("world_6")
+        sessionStore.setHub("hub_11_event_horizon")
+        sessionStore.setRoom("source_zeke_nightmare")
+        visitDebugNodes("source_campfire_node", "source_zeke_nightmare_node")
         true
     }.getOrElse { false }
 

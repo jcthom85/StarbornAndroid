@@ -730,6 +730,7 @@ fun ExplorationScreen(
                 RoomHeaderPanel(
                     roomTitle = uiState.currentRoom?.title ?: "Unknown area",
                     isDark = isRoomDark,
+                    obscureTitle = isRoomDark && uiState.currentRoom?.revealTitleWhenDark != true,
                     titleColor = titleColor,
                     warmTitleColor = warmTitleColor,
                     minimap = uiState.minimap,
@@ -1292,6 +1293,7 @@ fun ExplorationScreen(
 private fun RoomHeaderPanel(
     roomTitle: String,
     isDark: Boolean,
+    obscureTitle: Boolean,
     titleColor: Color,
     warmTitleColor: Color,
     minimap: MinimapUiState?,
@@ -1335,7 +1337,7 @@ private fun RoomHeaderPanel(
                 verticalArrangement = Arrangement.spacedBy(7.dp)
             ) {
                 Text(
-                    text = if (isDark) "???" else roomTitle,
+                    text = if (obscureTitle) "???" else roomTitle,
                     style = MaterialTheme.typography.headlineSmall.copy(
                         fontSize = 26.sp,
                         lineHeight = 30.sp,

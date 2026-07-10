@@ -1456,7 +1456,7 @@
   {
     "id": "functional_cryo_inductor",
     "name": "Functional Cryo-Inductor",
-    "description": "A repaired cryo-inductor ready for mission-critical rigs.",
+    "description": "A repaired cryogenic loop wired into Nova's cutter. Unlocks Cryo Vent, a Brittle setup that makes physical follow-ups hit 50% harder for two turns.",
     "type": "component",
     "value": 45,
     "buy_price": 90,

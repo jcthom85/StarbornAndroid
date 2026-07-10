@@ -96,8 +96,8 @@
       "scrap_metal": 1
     },
     "result": "functional_cryo_inductor",
-    "description": "Repair the damaged Cryo-Inductor so Jed can bring the cold loop online.",
-    "success_message": "The Cryo-Inductor whirs back to life."
+    "description": "Repair the damaged Cryo-Inductor and wire its cold loop into Nova's cutter to unlock Cryo Vent.",
+    "success_message": "The Cryo-Inductor locks into the cutter. Cryo Vent is online: make targets Brittle, then follow with physical attacks."
   },
   {
     "id": "repaired_projector",

@@ -138,8 +138,9 @@ class Hub3CriticalFlowTest {
         // --- SQ12: Cold Case (Gh0st) ---
         harness.store.startQuest("w3_sq12")
 
-        // Access terminal
+        harness.events.handleTrigger("player_action", EventPayload.Action("w3_sq12_find_case_number"))
         harness.events.handleTrigger("player_action", EventPayload.Action("w3_sq12_access_terminal"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w3_sq12_expose_transfer"))
         state = harness.store.state.value
         assertTrue(state.completedQuests.contains("w3_sq12"))
         assertTrue(state.completedMilestones.contains("ms_w3_ghost_skill_unlocked"))
@@ -147,8 +148,9 @@ class Hub3CriticalFlowTest {
         // --- SQ13: Night Market Run (Mika) ---
         harness.store.startQuest("w3_sq13")
 
-        // Fix lanterns
+        harness.events.handleTrigger("player_action", EventPayload.Action("w3_sq13_trace_power_theft"))
         harness.events.handleTrigger("player_action", EventPayload.Action("w3_sq13_fix_market_lights"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w3_sq13_restore_market"))
         state = harness.store.state.value
         assertTrue(state.completedQuests.contains("w3_sq13"))
         assertTrue(state.completedMilestones.contains("ms_w3_market_lit"))
@@ -160,7 +162,9 @@ class Hub3CriticalFlowTest {
         assertTrue(state.activeQuests.contains("w3_sq14"))
         assertEquals("w3_sq14", state.trackedQuestId)
 
+        harness.events.handleTrigger("player_action", EventPayload.Action("w3_sq14_copy_concierge_key"))
         harness.events.handleTrigger("player_action", EventPayload.Action("w3_sq14_steal_ledger"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w3_sq14_leak_ledger"))
         state = harness.store.state.value
         assertTrue(state.completedQuests.contains("w3_sq14"))
         assertTrue(state.completedMilestones.contains("ms_w3_blackmail_unlocked"))
@@ -172,7 +176,9 @@ class Hub3CriticalFlowTest {
         assertTrue(state.activeQuests.contains("w3_sq15"))
         assertEquals("w3_sq15", state.trackedQuestId)
 
+        harness.events.handleTrigger("player_action", EventPayload.Action("w3_sq15_scan_targeting"))
         harness.events.handleTrigger("player_action", EventPayload.Action("w3_sq15_test_weapon"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w3_sq15_scrub_telemetry"))
         state = harness.store.state.value
         assertTrue(state.completedQuests.contains("w3_sq15"))
         assertTrue(state.completedMilestones.contains("ms_w3_prototype_tested"))

@@ -31,6 +31,8 @@ data class Room(
     @Json(name = "npc_presence")
     val npcPresence: List<NpcPresenceRule> = emptyList(),
     val dark: Boolean? = null,
+    @Json(name = "reveal_title_when_dark")
+    val revealTitleWhenDark: Boolean = false,
     @Json(name = "description_dark")
     val descriptionDark: String? = null,
     @Json(name = "description_variants")

@@ -81,22 +81,39 @@ class Hub7CriticalFlowTest {
     fun orbitalRingSideQuestFlows() {
         val harness = Hub7Harness()
 
+        harness.events.handleTrigger("player_action", EventPayload.Action("w5_sq21_find_redactions"))
         harness.events.handleTrigger("player_action", EventPayload.Action("w5_sq21_director_logs"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w5_sq21_publish_logs"))
         var state = harness.store.state.value
         assertTrue(state.completedQuests.contains("w5_sq21"))
         assertTrue(state.unlockedSkills.contains("corporate_insight"))
 
+        harness.events.handleTrigger("player_action", EventPayload.Action("w5_sq22_trace_false_sun"))
         val maintenance = harness.dialogue.startDialogue("Maintenance Bot")
         assertNotNull(maintenance)
         maintenance?.advanceUntilFinished()
+        harness.events.handleTrigger("player_action", EventPayload.Action("w5_sq22_restore_gardens"))
         state = harness.store.state.value
         assertTrue(state.completedQuests.contains("w5_sq22"))
         assertTrue(state.unlockedSkills.contains("orion_sunbeam"))
 
+        harness.events.handleTrigger("player_action", EventPayload.Action("w5_sq23_map_pressure_loss"))
         harness.events.handleTrigger("player_action", EventPayload.Action("w5_sq23_vacuum_seal"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w5_sq23_reopen_dock"))
         state = harness.store.state.value
         assertTrue(state.completedQuests.contains("w5_sq23"))
         assertTrue(state.inventory["mag_boots"].orZero() >= 1)
+
+        harness.events.handleTrigger("player_action", EventPayload.Action("w5_sq24_trace_purge"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w5_sq24_recover_backup"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w5_sq24_restore_guardian"))
+        state = harness.store.state.value
+        assertTrue(state.completedQuests.contains("w5_sq24"))
+        assertTrue(state.unlockedSkills.contains("data_shield"))
+        assertTrue(state.questTasksCompleted["w5_sq21"].orEmpty().containsAll(listOf("find_redactions", "read_logs", "publish_logs")))
+        assertTrue(state.questTasksCompleted["w5_sq22"].orEmpty().containsAll(listOf("trace_false_sun", "realign_mirrors", "restore_gardens")))
+        assertTrue(state.questTasksCompleted["w5_sq23"].orEmpty().containsAll(listOf("map_pressure_loss", "seal_breaches", "reopen_dock")))
+        assertTrue(state.questTasksCompleted["w5_sq24"].orEmpty().containsAll(listOf("trace_purge", "recover_backup", "restore_guardian")))
     }
 
     private class Hub7Harness {

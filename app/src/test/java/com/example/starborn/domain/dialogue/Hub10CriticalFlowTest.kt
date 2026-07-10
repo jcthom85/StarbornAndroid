@@ -66,12 +66,19 @@ class Hub10CriticalFlowTest {
         val harness = Hub10Harness()
 
         harness.events.handleTrigger("player_action", EventPayload.Action("w6_sq29_aethel_grave"))
+        assertTrue(harness.store.state.value.completedQuests.contains("w6_sq29").not())
+        harness.events.handleTrigger("player_action", EventPayload.Action("w6_sq29_tune_grave"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w6_sq29_carry_chorus"))
         harness.events.handleTrigger("player_action", EventPayload.Action("w6_sq30_final_scavenge"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w6_sq30_detach_hull"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w6_sq30_fit_hull"))
 
         val state = harness.store.state.value
         assertTrue(state.completedQuests.containsAll(listOf("w6_sq29", "w6_sq30")))
         assertTrue(state.unlockedSkills.contains("orion_ancestral_grace"))
         assertTrue(state.inventory["starborn_mod"].orZero() >= 1)
+        assertTrue(state.questTasksCompleted["w6_sq29"].orEmpty().containsAll(listOf("trace_names", "find_grave", "carry_chorus")))
+        assertTrue(state.questTasksCompleted["w6_sq30"].orEmpty().containsAll(listOf("identify_timeline", "recover_hull", "fit_hull")))
     }
 
     private class Hub10Harness {

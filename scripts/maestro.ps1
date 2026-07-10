@@ -18,6 +18,16 @@ if (-not (Test-Path $adbPath)) {
     throw "Android platform-tools not found at $adbPath. Install Android SDK platform-tools or set ANDROID_HOME."
 }
 
+if (-not $env:JAVA_HOME) {
+    $androidStudioJbr = "C:\Program Files\Android\Android Studio\jbr"
+    if (Test-Path (Join-Path $androidStudioJbr "bin\java.exe")) {
+        $env:JAVA_HOME = $androidStudioJbr
+    }
+}
+if ($env:JAVA_HOME) {
+    $env:PATH = "$(Join-Path $env:JAVA_HOME 'bin');$env:PATH"
+}
+
 $maestroHome = Join-Path $repoRoot ".maestro-home"
 $maestroLocalAppData = Join-Path $maestroHome "AppData\Local"
 $maestroRoaming = Join-Path $maestroHome "AppData\Roaming"
@@ -80,8 +90,12 @@ try {
     $hasFatalOutput = $fatalOutputPatterns | Where-Object { $combinedOutput.Contains($_) }
     $hasCompletedCommand = $combinedOutput.Contains("... COMPLETED")
     $hasPassedSuite = $combinedOutput -match "\d+/\d+ Flows Passed"
+    $isInformationalCommand = $MaestroArgs -contains "--version" -or
+        $MaestroArgs -contains "-v" -or
+        $MaestroArgs -contains "--help" -or
+        $MaestroArgs -contains "-h"
 
-    if ($hasFatalOutput -or (-not $hasCompletedCommand -and -not $hasPassedSuite)) {
+    if ($hasFatalOutput -or (-not $isInformationalCommand -and -not $hasCompletedCommand -and -not $hasPassedSuite)) {
         exit 1
     }
     exit 0

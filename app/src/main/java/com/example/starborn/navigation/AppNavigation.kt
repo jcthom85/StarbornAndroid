@@ -95,8 +95,19 @@ fun NavigationHost(
     DisposableEffect(lifecycleOwner, services) {
         val observer = LifecycleEventObserver { _, event ->
             when (event) {
-                Lifecycle.Event.ON_STOP -> services.audioCuePlayer.pauseForBackground()
-                Lifecycle.Event.ON_START -> services.audioCuePlayer.resumeFromBackground()
+                Lifecycle.Event.ON_STOP -> {
+                    services.audioCuePlayer.pauseForBackground()
+                    val state = services.sessionStore.state.value
+                    services.playtestTelemetry.endSession(
+                        exitPoint = state.trackedQuestId,
+                        worldId = state.worldId,
+                        roomId = state.roomId
+                    )
+                }
+                Lifecycle.Event.ON_START -> {
+                    services.audioCuePlayer.resumeFromBackground()
+                    services.playtestTelemetry.record("app_foregrounded")
+                }
                 else -> Unit
             }
         }

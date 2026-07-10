@@ -184,6 +184,30 @@
     "toast": "Bunk light restored."
   },
   {
+    "id": "ms_w1_mq01_resonance_visible",
+    "name": "The Wrong Note",
+    "description": "Nova's bunk light revealed a cold reflection pulsing against the machinery's rhythm.",
+    "toast": "Something impossible is hiding inside the light."
+  },
+  {
+    "id": "ms_w1_mq01_resonance_traced",
+    "name": "Three-Beat Opening",
+    "description": "Nova traced the resonance and learned to hear the open beat inside a machine cycle.",
+    "toast": "Two beats of noise. One opening."
+  },
+  {
+    "id": "ms_w1_mq01_loader_read",
+    "name": "Pattern Recognized",
+    "description": "Nova recognized the bunk's three-note pattern in Jed's faulted loader.",
+    "toast": "The loader is keeping the same bad rhythm."
+  },
+  {
+    "id": "ms_w1_mq01_loader_cleared",
+    "name": "Tempo Stolen",
+    "description": "Nova used the resonance opening to shut down the faulted loader and reach Jed's bench.",
+    "toast": "The impossible pattern works."
+  },
+  {
     "id": "ms_w1_mq01_netting_checked",
     "name": "Gear Accounted For",
     "description": "Nova checked the cargo netting before leaving her bunk.",
@@ -847,18 +871,24 @@
     "description": "Jed's echo reminded Nova what survival protects.",
     "toast": "Legacy unlocked."
   },
+  { "id": "ms_w6_jed_marks_found", "name": "Jed's Marks", "description": "Nova found the imperfections Vale could not counterfeit.", "toast": "Real tool marks found." },
+  { "id": "ms_w6_jed_lesson_heard", "name": "The Real Lesson", "description": "Nova chose Jed's lesson over preserving his ghost.", "toast": "Jed's lesson remembered." },
   {
     "id": "ms_w6_unshackled_unlocked",
     "name": "Unshackled",
     "description": "Zeke deleted the record that reduced him to company property.",
     "toast": "Unshackled unlocked."
   },
+  { "id": "ms_w6_hr_backups_found", "name": "Recursive Record", "description": "Zeke exposed the backups recreating his file.", "toast": "HR backups exposed." },
+  { "id": "ms_w6_hr_revoked", "name": "Authority Revoked", "description": "Zeke rejected the file's authority instead of deleting another copy.", "toast": "Record authority revoked." },
   {
     "id": "ms_w6_source_balance_unlocked",
     "name": "Source Balance",
     "description": "Gh0st recovered Elara's voice without Dominion command layers.",
     "toast": "Source Balance unlocked."
   },
+  { "id": "ms_w6_elara_voice_isolated", "name": "Buried Voice", "description": "Gh0st isolated Elara's voice beneath the orders.", "toast": "Elara's voice isolated." },
+  { "id": "ms_w6_elara_commands_broken", "name": "No Hidden Order", "description": "Gh0st broke the command carrier without erasing Elara.", "toast": "Command layer broken." },
   {
     "id": "ms_w6_mq29_complete",
     "name": "Center Reached",
@@ -889,10 +919,32 @@
     "description": "Orion found the first Architects' resting current.",
     "toast": "Ancestral Grace unlocked."
   },
+  { "id": "ms_w6_aethel_names_traced", "name": "Names Beneath", "description": "Orion traced the Aethel names beneath the threshold.", "toast": "Aethel names traced." },
+  { "id": "ms_w6_aethel_grave_tuned", "name": "Many-Voiced Grave", "description": "Orion tuned the grave as a chorus rather than one note.", "toast": "Aethel Grave tuned." },
   {
     "id": "ms_w6_final_scavenge_complete",
     "name": "Starborn Mod",
     "description": "You recovered the Astra's future hull and forged the ultimate weapon mod.",
     "toast": "The Final Scavenge complete."
-  }
+  },
+  { "id": "ms_w6_astra_timeline_identified", "name": "Preventable Future", "description": "The crew identified the doomed future Astra's timeline.", "toast": "Future timeline identified." },
+  { "id": "ms_w6_astra_hull_detached", "name": "Warning Salvaged", "description": "Zeke detached the hull without accepting its ending.", "toast": "Future hull detached." },
+  { "id": "ms_w3_case_number_found", "name": "Erased Index", "description": "Nova recovered an erased cold-case number.", "toast": "Case number recovered." },
+  { "id": "ms_w3_cold_case_records_found", "name": "Deleted Transfer", "description": "Gh0st found the witness transfer record.", "toast": "Transfer record found." },
+  { "id": "ms_w3_market_siphon_traced", "name": "Stolen Current", "description": "Nova traced the market's power into an executive sign.", "toast": "Power siphon traced." },
+  { "id": "ms_w3_market_grid_ready", "name": "Market Grid Ready", "description": "Executive power now feeds the Night Market.", "toast": "Market grid restored." },
+  { "id": "ms_w3_concierge_key_copied", "name": "Rotating Credential", "description": "Nova copied the lounge safe credential.", "toast": "Safe credential copied." },
+  { "id": "ms_w3_ledger_stolen", "name": "Private Evidence", "description": "Nova stole the encrypted executive ledger.", "toast": "Ledger acquired." },
+  { "id": "ms_w3_prototype_bias_scanned", "name": "Targeting Bias", "description": "Nova found and reversed the prototype's worker bias.", "toast": "Targeting bias corrected." },
+  { "id": "ms_w3_prototype_trial_complete", "name": "Prototype Trial", "description": "The corrected prototype survived its drone trial.", "toast": "Prototype trial complete." },
+  { "id": "ms_w4_worker_ping_traced", "name": "Final Ping", "description": "Nova traced the missing engineer toward the springs.", "toast": "Worker ping traced." },
+  { "id": "ms_w4_worker_shelter_found", "name": "Coolant Shelter", "description": "Nova found the engineer's hidden shelter and route map.", "toast": "Worker shelter found." },
+  { "id": "ms_w4_intake_jammed", "name": "Intake Jammed", "description": "Nova stopped the intake before it consumed the mech pile.", "toast": "Waste intake stopped." },
+  { "id": "ms_w4_rejection_codes_read", "name": "Empathic Hesitation", "description": "Gh0st learned why the units were rejected.", "toast": "Rejection codes read." },
+  { "id": "ms_w4_hazards_mapped", "name": "Heat Sequence", "description": "Nova mapped the overclock chamber's safe beat.", "toast": "Hazards mapped." },
+  { "id": "ms_w5_redactions_found", "name": "Redaction Map", "description": "The Director's removed lines can be reconstructed.", "toast": "Redactions mapped." },
+  { "id": "ms_w5_director_logs_decrypted", "name": "Unredacted Record", "description": "Thorne's private logs are ready to publish.", "toast": "Director logs decrypted." },
+  { "id": "ms_w5_mirrors_realigned", "name": "Mirrors Realigned", "description": "The false sun is restored but still misdirected.", "toast": "Mirror array restored." },
+  { "id": "ms_w5_backup_purge_traced", "name": "Purge Trail", "description": "Zeke traced the defensive backup into a cold rack.", "toast": "Backup purge traced." },
+  { "id": "ms_w5_backup_recovered", "name": "Guardian Recovered", "description": "Zeke recovered the defensive routine.", "toast": "Defensive backup recovered." }
 ]

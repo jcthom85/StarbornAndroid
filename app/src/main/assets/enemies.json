@@ -1,5 +1,45 @@
 [
   {
+  "id": "faulted_loader",
+    "name": "Faulted Loader",
+    "tier": "common",
+    "combat_behavior": "aggressive",
+    "combat_role": "striker",
+    "hp": 45,
+    "stability": 18,
+    "strength": 3,
+    "vitality": 1,
+    "agility": 1,
+    "focus": 1,
+    "luck": 0,
+    "speed": 7,
+    "element": "physical",
+    "resistances": {
+    "shock": -100,
+    "physical": 0
+    },
+    "tags": [
+      "machine",
+      "industrial",
+      "exposed_relay"
+    ],
+    "abilities": [
+      "slide_slam"
+    ],
+    "flavor": "A retired cargo loader with a split relay and no safety governor. Its motor repeats a three-beat fault: two armored cycles, then one exposed electrical opening.",
+    "xp_reward": 35,
+    "credit_reward": 0,
+    "drops": [
+      {
+        "id": "scrap_metal",
+        "chance": 1.0,
+        "quantity": 1
+      }
+    ],
+    "description": "Workshop loader with an exposed Shock weakness. Hit the relay to reduce active cooldowns and seize the next turn's tempo.",
+    "portrait": "images/enemies/heavy_loader_combat.png"
+  },
+  {
     "id": "echo_borer",
     "name": "Echo-Borer",
     "tier": "standard",

@@ -1,0 +1,51 @@
+appId: com.junewiregames.starborn.prealpha
+---
+- launchApp
+- extendedWaitUntil:
+    visible: "Debug Scenarios"
+    timeout: 60000
+- tapOn: "Debug Scenarios"
+- tapOn: "Search world, quest, room, or system"
+- inputText: "Corporate Espionage"
+- hideKeyboard
+- tapOn: "Fun Audit / Corporate Espionage"
+- extendedWaitUntil:
+    visible: "Exec Lounge"
+    timeout: 30000
+- tapOn: "concierge credential mirror"
+- extendedWaitUntil:
+    visible: ".*rotates the safe key.*"
+    timeout: 10000
+- takeScreenshot: fun-w3-discovery
+- tapOn: ".*rotates the safe key.*"
+- runFlow:
+    when:
+      visible: "Continue"
+    commands:
+      - tapOn: "Continue"
+- tapOn: "private safe"
+- extendedWaitUntil:
+    visible: ".*service lift can push every account line.*"
+    timeout: 10000
+- takeScreenshot: fun-w3-complication
+- tapOn: ".*service lift can push every account line.*"
+- tapOn: "Travel west"
+- extendedWaitUntil:
+    visible: "Service Lift"
+    timeout: 15000
+- runFlow:
+    when:
+      visible: "Continue"
+    commands:
+      - tapOn: "Continue"
+- tapOn: "worker network uplink"
+- extendedWaitUntil:
+    visible: "Acquired Encrypted Ledger"
+    timeout: 10000
+- tapOn: "DISMISS"
+- extendedWaitUntil:
+    visible: "QUEST COMPLETED"
+    timeout: 10000
+- assertVisible: "Corporate Espionage"
+- takeScreenshot: fun-w3-payoff
+- tapOn: "Continue"

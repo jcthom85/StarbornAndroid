@@ -1,0 +1,168 @@
+appId: com.junewiregames.starborn.prealpha
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "New Game"
+    timeout: 60000
+- tapOn: "New Game"
+- extendedWaitUntil:
+    visible: "Nova's Bunk"
+    timeout: 20000
+- tapOn: "bunk light"
+- tapOn: ".*The bunk light snaps on yellow.*"
+- tapOn: "impossible reflection"
+- extendedWaitUntil:
+    visible: ".*Lights don't cast reflections toward themselves.*"
+    timeout: 15000
+- tapOn: "Dialogue Popup. Tap to continue"
+- tapOn: "Tap to continue.*"
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: "Swipe toward any open exit to move.*"
+    timeout: 10000
+- tapOn: "CONTINUE"
+- tapOn: "Travel west"
+- extendedWaitUntil:
+    visible: "Pod Row"
+    timeout: 15000
+- tapOn: "Travel south"
+- extendedWaitUntil:
+    visible: "Lift Shaft"
+    timeout: 15000
+- tapOn: "Travel west"
+- extendedWaitUntil:
+    visible: "Jed's Bunk"
+    timeout: 15000
+- tapOn: "Jed"
+- extendedWaitUntil:
+    visible: ".*pressure leak.*"
+    timeout: 10000
+- repeat:
+    times: 5
+    commands:
+      - tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: "Acquired Mining Pistol.*Flux Liner.*Cryo-Inductor.*"
+    timeout: 15000
+- tapOn: "DISMISS"
+- tapOn: "Travel east"
+- extendedWaitUntil:
+    visible: "Lift Shaft"
+    timeout: 15000
+- extendedWaitUntil:
+    visible: "Head out of the Pit toward Jed's Workshop.*"
+    timeout: 10000
+- tapOn: "CONTINUE"
+- tapOn: "Travel south"
+- extendedWaitUntil:
+    visible: "Pit Landing"
+    timeout: 15000
+- tapOn: "LEAVE"
+- extendedWaitUntil:
+    visible: "Homestead Quarter"
+    timeout: 15000
+- tapOn: "Enter Jed's Workshop"
+- tapOn: "Enter"
+- extendedWaitUntil:
+    visible: ".*two beats of noise, then the relay opens.*"
+    timeout: 15000
+- tapOn: ".*two beats of noise, then the relay opens.*"
+- extendedWaitUntil:
+    visible: "Scrap Yard"
+    timeout: 15000
+- assertVisible: "Engage Faulted Loader"
+- tapOn: "Engage Faulted Loader"
+- extendedWaitUntil:
+    visible: "HOSTILE CONTACT"
+    timeout: 15000
+- extendedWaitUntil:
+    visible: "Nova"
+    timeout: 30000
+- tapOn: "Nova"
+- extendedWaitUntil:
+    visible: "Abilities"
+    timeout: 30000
+- tapOn: "Abilities"
+- extendedWaitUntil:
+    visible: "Arc Tether"
+    timeout: 15000
+- tapOn: "Use"
+- extendedWaitUntil:
+    visible: ".*Faulted Loader.*"
+    timeout: 15000
+- tapOn: ".*Faulted Loader.*"
+- extendedWaitUntil:
+    visible: "Tempo stolen"
+    timeout: 15000
+- takeScreenshot: fun-opening-tempo-stolen
+- repeat:
+    times: 2
+    commands:
+      - waitForAnimationToEnd:
+          timeout: 10000
+      - tapOn: "Nova"
+      - extendedWaitUntil:
+          visible: "Attack"
+          timeout: 30000
+      - tapOn: "Attack"
+      - extendedWaitUntil:
+          visible: ".*Faulted Loader.*"
+          timeout: 15000
+      - tapOn: ".*Faulted Loader.*"
+- runFlow:
+    when:
+      notVisible: "Spoils Recovered"
+    commands:
+      - waitForAnimationToEnd:
+          timeout: 10000
+      - tapOn: "Nova"
+      - extendedWaitUntil:
+          visible: "Attack"
+          timeout: 30000
+      - tapOn: "Attack"
+      - tapOn: ".*Faulted Loader.*"
+- extendedWaitUntil:
+    visible: "Spoils Recovered"
+    timeout: 60000
+- tapOn: "Continue"
+- extendedWaitUntil:
+    visible: ".*The third note lands.*"
+    timeout: 15000
+- tapOn: ".*The third note lands.*"
+- extendedWaitUntil:
+    visible: "Scrap Yard"
+    timeout: 15000
+- assertVisible: ".*faulted loader rests cold.*"
+- tapOn: "Travel north"
+- extendedWaitUntil:
+    visible: "Main Bench"
+    timeout: 15000
+- extendedWaitUntil:
+    visible: ".*Set the Cryo-Inductor.*"
+    timeout: 15000
+- tapOn: "Dialogue Popup. Tap to continue"
+- tapOn: "Dialogue Popup. Tap to continue"
+- tapOn: "Dialogue Popup. Tap to continue"
+- tapOn: "workbench action"
+- extendedWaitUntil:
+    visible: "Jed's Bench"
+    timeout: 15000
+- extendedWaitUntil:
+    visible: "At Jed's workbench.*"
+    timeout: 10000
+- tapOn: "CONTINUE"
+- extendedWaitUntil:
+    visible: "Check the requirements.*"
+    timeout: 15000
+- tapOn: "CONTINUE"
+- tapOn: "Schematics"
+- tapOn: "Repair 5"
+- extendedWaitUntil:
+    visible: "Functional Cryo-Inductor"
+    timeout: 10000
+- tapOn: "Craft Functional Cryo-Inductor"
+- extendedWaitUntil:
+    visible: ".*Cryo Vent is online.*Brittle.*"
+    timeout: 15000
+- takeScreenshot: fun-opening-build-changed

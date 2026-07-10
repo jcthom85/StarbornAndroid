@@ -40,6 +40,7 @@ class ExplorationViewModelFactory(
                 userSettingsStore = services.userSettingsStore,
                 bootstrapCinematics = services.drainPendingCinematics(),
                 bootstrapActions = services.drainPendingPlayerActions(),
+                telemetry = services.playtestTelemetry,
                 dialogueTriggerBinder = services::setDialogueTriggerListener
             ) as T
         }

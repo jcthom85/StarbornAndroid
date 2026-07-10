@@ -351,19 +351,6 @@
     },
     "actions": [
       {
-        "type": "start_quest",
-        "quest_id": "w1_mq01"
-      },
-      {
-        "type": "track_quest",
-        "quest_id": "w1_mq01"
-      },
-      {
-        "type": "advance_quest_stage",
-        "quest_id": "w1_mq01",
-        "to_stage_id": "wake_in_the_pit"
-      },
-      {
         "type": "begin_node",
         "room_id": "pit_nova_bunk"
       },
@@ -375,20 +362,7 @@
       },
       {
         "type": "play_cinematic",
-        "scene_id": "new_game_fade_in",
-        "on_complete": [
-          {
-            "type": "if_milestone_not_set",
-            "milestone": "ms_w1_mq01_bunk_light_on",
-            "do": [
-              {
-                "type": "system_tutorial",
-                "scene_id": "hotspot_actions",
-                "context": "Nova's Bunk"
-              }
-            ]
-          }
-        ]
+        "scene_id": "new_game_fade_in"
       }
     ]
   },
@@ -423,7 +397,7 @@
   },
   {
     "id": "w1_mq01_turn_on_bunk_light",
-    "description": "Turns on Nova's bunk light and unlocks the first movement lesson.",
+    "description": "Turns on Nova's bunk light and reveals the impossible resonance hidden inside it.",
     "trigger": {
       "type": "player_action",
       "action": "w1_mq01_turn_on_bunk_light"
@@ -443,8 +417,18 @@
         "value": true
       },
       {
+        "type": "set_room_state",
+        "room_id": "pit_nova_bunk",
+        "state_key": "resonance_visible",
+        "value": true
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w1_mq01_resonance_visible"
+      },
+      {
         "type": "narrate",
-        "message": "The bunk light snaps on with a tired buzz. The room returns in pieces: shelf, netting, door, floor.",
+        "message": "The bunk light snaps on yellow. Then a cold blue reflection runs against the grain of the wall and answers the machinery with three impossible notes.",
         "tap_to_dismiss": true
       },
       {
@@ -459,7 +443,58 @@
           {
             "type": "set_milestone",
             "milestone": "ms_w1_mq01_bunk_light_on"
-          },
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "w1_mq01_trace_resonance",
+    "description": "Nova traces the impossible reflection and learns the three-beat opening it exposes in nearby machines.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w1_mq01_trace_resonance"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w1_mq01"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w1_mq01_resonance_visible"
+      },
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w1_mq01_resonance_traced"
+      }
+    ],
+    "actions": [
+      {
+        "type": "audio_layer",
+        "layer": "ui",
+        "cue_id": "sfx_chime_splice",
+        "fade_ms": 0
+      },
+      {
+        "type": "set_room_state",
+        "room_id": "pit_nova_bunk",
+        "state_key": "resonance_investigated",
+        "value": true
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_mq01",
+        "task_id": "trace_resonance"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w1_mq01_resonance_traced"
+      },
+      {
+        "type": "play_cinematic",
+        "scene_id": "w1_first_resonance",
+        "on_complete": [
           {
             "type": "system_tutorial",
             "scene_id": "movement",
@@ -585,11 +620,6 @@
         "type": "advance_quest_stage",
         "quest_id": "w1_mq01",
         "to_stage_id": "report_to_jed"
-      },
-      {
-        "type": "system_tutorial",
-        "scene_id": "scene_market_journal",
-        "context": "Nova's Bunk"
       }
     ]
   },
@@ -616,11 +646,78 @@
         "type": "set_quest_task_done",
         "quest_id": "w1_mq01",
         "task_id": "find_jed"
+      }
+    ]
+  },
+  {
+    "id": "w1_mq01_loader_resonance_callback",
+    "description": "The faulted loader repeats the impossible pattern Nova traced in her bunk.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "workshop_yard"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w1_mq01"
       },
       {
-        "type": "system_tutorial",
-        "scene_id": "npc_talk",
-        "context": "Jed's Bunk"
+        "type": "milestone_set",
+        "milestone": "ms_w1_mq01_resonance_traced"
+      },
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w1_mq01_loader_read"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w1_mq01_loader_read"
+      },
+      {
+        "type": "narrate",
+        "message": "The loader's arm lashes across the shutter. Under the shriek of its motor, Nova hears the same pattern from her bunk: two beats of noise, then the relay opens. Arc Tether can hit that opening and steal the machine's tempo.",
+        "tap_to_dismiss": true
+      }
+    ]
+  },
+  {
+    "id": "w1_mq01_faulted_loader_victory",
+    "description": "Clearing the loader proves Nova's resonance clue works and opens Jed's workshop.",
+    "trigger": {
+      "type": "encounter_victory",
+      "room": "workshop_yard",
+      "enemies": [
+        "faulted_loader"
+      ]
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w1_mq01"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_room_state",
+        "room_id": "workshop_yard",
+        "state_key": "loader_cleared",
+        "value": true
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_mq01",
+        "task_id": "clear_faulted_loader"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w1_mq01_loader_cleared"
+      },
+      {
+        "type": "narrate",
+        "message": "The third note lands. The loader folds into the scrap, and Arc Tether comes back online a beat sooner. The impossible pattern was not a dream; it was an advantage.",
+        "tap_to_dismiss": true
       }
     ]
   },
@@ -785,6 +882,21 @@
         "type": "set_quest_task_done",
         "quest_id": "w1_mq01",
         "task_id": "use_tinkering_table"
+      },
+      {
+        "type": "unlock_skill",
+        "skill_id": "nova_cryo_vent"
+      },
+      {
+        "type": "set_room_state",
+        "room_id": "workshop_floor",
+        "state_key": "cryo_inductor_installed",
+        "value": true
+      },
+      {
+        "type": "narrate",
+        "message": "BUILD CHANGED: Cryo Vent is now wired into Nova's cutter. It makes an enemy Brittle for two turns; follow with physical attacks to cash out the opening.",
+        "tap_to_dismiss": true
       },
       {
         "type": "complete_quest",
@@ -4774,16 +4886,12 @@
         "task_id": "access_terminal"
       },
       {
-        "type": "complete_quest",
-        "quest_id": "w3_sq12"
-      },
-      {
         "type": "set_milestone",
-        "milestone": "ms_w3_ghost_skill_unlocked"
+        "milestone": "ms_w3_cold_case_records_found"
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Cold Case\n\nYou download the archive files. Gh0st finds a deleted report linking Elara's transfer to the orbital ring. For a second he says nothing, then quietly rewrites his combat routines. He unlocks the Intercept skill."
+        "message": "The case number opens a deleted transfer manifest. Security moved the witness through a private relay; the kiosk still knows where."
       }
     ]
   },
@@ -4809,24 +4917,15 @@
       {
         "type": "set_quest_task_done",
         "quest_id": "w3_sq13",
-        "task_id": "fix_market_lights"
-      },
-      {
-        "type": "complete_quest",
-        "quest_id": "w3_sq13"
-      },
-      {
-        "type": "give_item",
-        "item_id": "neon_band",
-        "quantity": 1
+        "task_id": "reroute_power"
       },
       {
         "type": "set_milestone",
-        "milestone": "ms_w3_market_lit"
+        "milestone": "ms_w3_market_grid_ready"
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Night Market Run\n\nThe market string lights burst with warm illumination. Conversations rise under the glow before patrols can call the place abandoned. Mika hands you a Neon Band accessory as a thank you."
+        "message": "The stolen current reaches every lantern, but the patrol registry still labels the dark stalls abandoned. One broadcast can make the market visible again."
       }
     ]
   },
@@ -5678,21 +5777,12 @@
         "task_id": "steal_ledger"
       },
       {
-        "type": "complete_quest",
-        "quest_id": "w3_sq14"
-      },
-      {
-        "type": "give_item",
-        "item_id": "encrypted_ledger",
-        "quantity": 1
-      },
-      {
         "type": "set_milestone",
-        "milestone": "ms_w3_blackmail_unlocked"
+        "milestone": "ms_w3_ledger_stolen"
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Corporate Espionage\n\nThe encrypted ledger is yours. Every account line is proof that the Upper City runs on crimes with better stationery. Prices suddenly look negotiable."
+        "message": "The ledger is yours, but a private copy is only leverage. The service lift can push every account line into the worker network."
       }
     ]
   },
@@ -5754,21 +5844,12 @@
         "task_id": "test_weapon"
       },
       {
-        "type": "complete_quest",
-        "quest_id": "w3_sq15"
-      },
-      {
-        "type": "give_item",
-        "item_id": "phase_rounds",
-        "quantity": 1
-      },
-      {
         "type": "set_milestone",
-        "milestone": "ms_w3_prototype_tested"
+        "milestone": "ms_w3_prototype_trial_complete"
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Prototype Testing\n\nThe weapon trial leaves three drones in pieces and a Phase Rounds mod in your kit. The lab terminal marks the failure as acceptable losses, which tells Nova exactly what Dominion thinks of anything with a pulse."
+        "message": "The corrected prototype breaks the drones, then uploads Nova's firing signature to Security. The roof relay can still scrub the telemetry."
       }
     ]
   },
@@ -6290,24 +6371,11 @@
       },
       {
         "type": "set_milestone",
-        "milestone": "ms_w4_worker_traced"
-      },
-      {
-        "type": "give_item",
-        "item_id": "coolant_system",
-        "quantity": 1
-      },
-      {
-        "type": "complete_quest",
-        "quest_id": "w4_sq17"
-      },
-      {
-        "type": "set_milestone",
-        "milestone": "ms_w4_lost_worker_complete"
+        "milestone": "ms_w4_worker_shelter_found"
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Lost Worker\n\nThe engineer is gone, but her coolant rig is wrapped in a maintenance scarf and hidden exactly where Dominion would never look: beside something peaceful. Coolant System acquired."
+        "message": "The engineer's shelter is empty, but her coolant map marks a service-airlock route where trapped workers can still escape the heat."
       }
     ]
   },
@@ -6345,16 +6413,8 @@
         "milestone": "ms_w4_mechs_salvaged"
       },
       {
-        "type": "complete_quest",
-        "quest_id": "w4_sq18"
-      },
-      {
-        "type": "set_milestone",
-        "milestone": "ms_w4_scavenger_unlocked"
-      },
-      {
         "type": "show_message",
-        "message": "Quest Complete: The Scrap Heap\n\nYou strip three wrecked mechs before the slag can eat them. The scrapper drone chirps over each useful part like failure is just another inventory category. Scavenger unlocked."
+        "message": "Three intact actuators come free before the slag eats them. The Cooling Springs can turn them into a bypass instead of another weapon."
       }
     ]
   },
@@ -7056,20 +7116,8 @@
         "milestone": "ms_w4_defective_units_spared"
       },
       {
-        "type": "unlock_skill",
-        "skill_id": "gh0st_harden"
-      },
-      {
-        "type": "complete_quest",
-        "quest_id": "w4_sq19"
-      },
-      {
-        "type": "set_milestone",
-        "milestone": "ms_w4_quality_control_complete"
-      },
-      {
         "type": "show_message",
-        "message": "Quest Complete: Quality Control\n\nThe defective units keep their spark. Gh0st watches them choose new orders and says nothing for a long second before compiling their combat data into Harden."
+        "message": "Gh0st removes the obedience fault. The units wake with no order except the one they choose next; the conveyor lock still holds them."
       }
     ]
   },
@@ -7107,21 +7155,8 @@
         "milestone": "ms_w4_hazard_trial_cleared"
       },
       {
-        "type": "give_item",
-        "item_id": "thermal_clip",
-        "quantity": 1
-      },
-      {
-        "type": "complete_quest",
-        "quest_id": "w4_sq20"
-      },
-      {
-        "type": "set_milestone",
-        "milestone": "ms_w4_overclocked_complete"
-      },
-      {
         "type": "show_message",
-        "message": "Quest Complete: Overclocked\n\nThree hazard waves later, Nova can hold a Construct shape while the room tries to kill her. The terminal dispenses a Thermal Clip like this was only a performance review."
+        "message": "Nova survives the mapped heat cycle. The chamber's overclock profile remains in the control alcove, ready to become an advantage."
       }
     ]
   },
@@ -7532,20 +7567,12 @@
         "task_id": "read_logs"
       },
       {
-        "type": "unlock_skill",
-        "skill_id": "corporate_insight"
-      },
-      {
-        "type": "complete_quest",
-        "quest_id": "w5_sq21"
-      },
-      {
         "type": "set_milestone",
-        "milestone": "ms_w5_corporate_insight_unlocked"
+        "milestone": "ms_w5_director_logs_decrypted"
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Employee of the Month\n\nThorne's logs reduce people to leverage, liability, and throughput. The horrifying part is not that Vale betrayed her; it is how much of his doctrine she already built for him. Corporate Insight unlocked."
+        "message": "Thorne's logs reduce people to leverage, liability, and throughput. The concourse broadcast can put the unredacted record where the Ring cannot bury it."
       }
     ]
   },
@@ -7570,6 +7597,11 @@
       {
         "type": "start_quest",
         "quest_id": "w5_sq22"
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w5_sq22",
+        "task_id": "trace_false_sun"
       },
       {
         "type": "set_milestone",
@@ -7609,20 +7641,12 @@
         "task_id": "realign_mirrors"
       },
       {
-        "type": "unlock_skill",
-        "skill_id": "orion_sunbeam"
-      },
-      {
-        "type": "complete_quest",
-        "quest_id": "w5_sq22"
-      },
-      {
         "type": "set_milestone",
-        "milestone": "ms_w5_solar_maintenance_complete"
+        "milestone": "ms_w5_mirrors_realigned"
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Solar Maintenance\n\nThe mirror array burns the void-moss away. The Solarium looks beautiful again, which somehow makes it worse. Orion learns to carry a fragment of the false sun."
+        "message": "The mirror array burns the void-moss away. Its restored light still points toward executive sightlines instead of the gardens."
       }
     ]
   },
@@ -7647,6 +7671,11 @@
       {
         "type": "start_quest",
         "quest_id": "w5_sq23"
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w5_sq23",
+        "task_id": "map_pressure_loss"
       },
       {
         "type": "set_milestone",
@@ -7690,21 +7719,8 @@
         "milestone": "ms_w5_breaches_sealed"
       },
       {
-        "type": "give_item",
-        "item_id": "mag_boots",
-        "quantity": 1
-      },
-      {
-        "type": "complete_quest",
-        "quest_id": "w5_sq23"
-      },
-      {
-        "type": "set_milestone",
-        "milestone": "ms_w5_vacuum_seal_complete"
-      },
-      {
         "type": "show_message",
-        "message": "Quest Complete: Vacuum Seal\n\nThree bulkheads slam shut before the Executive Dock vents to space. The Ring's luxury facade survives because someone still does the emergency work. Mag-Boots acquired."
+        "message": "Three bulkheads slam shut before the dock vents. The access console still reserves the safe dock for executives."
       }
     ]
   },
@@ -8253,20 +8269,12 @@
         "task_id": "recover_backup"
       },
       {
-        "type": "unlock_skill",
-        "skill_id": "data_shield"
-      },
-      {
-        "type": "complete_quest",
-        "quest_id": "w5_sq24"
-      },
-      {
         "type": "set_milestone",
-        "milestone": "ms_w5_data_shield_unlocked"
+        "milestone": "ms_w5_backup_recovered"
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Ghost in the Shell\n\nZeke restores a defensive routine Vale marked for deletion. The code is ugly, stubborn, and alive in the way all survival tools are. Data Shield unlocked."
+        "message": "Zeke recovers the defensive routine, but its ownership flag still answers to Vale. The mainframe can restore it as an independent guardian."
       }
     ]
   },
@@ -8903,7 +8911,7 @@
   },
   {
     "id": "w6_sq26_jed_echo",
-    "description": "Speak with Jed's echo.",
+    "description": "Find the hand-cut marks Vale missed when rebuilding Jed's mine.",
     "trigger": {
       "type": "player_action",
       "action": "w6_sq26_jed_echo"
@@ -8922,15 +8930,47 @@
       {
         "type": "set_quest_task_done",
         "quest_id": "w6_sq26",
-        "task_id": "talk_to_jed"
+        "task_id": "find_tool_marks"
       },
       {
-        "type": "unlock_skill",
-        "skill_id": "nova_legacy"
+        "type": "set_milestone",
+        "milestone": "ms_w6_jed_marks_found"
       },
       {
-        "type": "complete_quest",
-        "quest_id": "w6_sq26"
+        "type": "show_message",
+        "message": "The false mine is flawless. Jed's real bench never was. Three crooked file marks point east, toward the memory that still remembers his hands."
+      }
+    ]
+  },
+  {
+    "id": "w6_sq26_hear_lesson",
+    "description": "Let Jed's echo finish the lesson.",
+    "trigger": { "type": "player_action", "action": "w6_sq26_hear_lesson" },
+    "conditions": [
+      { "type": "milestone_set", "milestone": "ms_w6_jed_marks_found" },
+      { "type": "milestone_not_set", "milestone": "ms_w6_jed_lesson_heard" }
+    ],
+    "actions": [
+      { "type": "set_quest_task_done", "quest_id": "w6_sq26", "task_id": "talk_to_jed" },
+      { "type": "set_milestone", "milestone": "ms_w6_jed_lesson_heard" },
+      { "type": "show_message", "message": "Jed's echo offers to stay perfect forever. Nova remembers the real lesson instead: fix what keeps people alive, then let the tool go." }
+    ]
+  },
+  {
+    "id": "w6_sq26_carry_legacy",
+    "description": "Carry Jed's lesson beyond his ghost.",
+    "trigger": { "type": "player_action", "action": "w6_sq26_carry_legacy" },
+    "conditions": [
+      { "type": "milestone_set", "milestone": "ms_w6_jed_lesson_heard" },
+      { "type": "quest_not_completed", "quest_id": "w6_sq26" }
+    ],
+    "actions": [
+      { "type": "set_quest_task_done", "quest_id": "w6_sq26", "task_id": "carry_legacy" },
+      { "type": "unlock_skill", "skill_id": "nova_legacy" },
+      { "type": "complete_quest", "quest_id": "w6_sq26" },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w6_legacy_unlocked"
       },
       {
         "type": "set_milestone",
@@ -8944,7 +8984,7 @@
   },
   {
     "id": "w6_sq27_delete_record",
-    "description": "Delete Zeke's HR record.",
+    "description": "Expose the backups that keep recreating Zeke's record.",
     "trigger": {
       "type": "player_action",
       "action": "w6_sq27_delete_record"
@@ -8963,15 +9003,47 @@
       {
         "type": "set_quest_task_done",
         "quest_id": "w6_sq27",
-        "task_id": "delete_record"
+        "task_id": "find_backups"
       },
       {
-        "type": "unlock_skill",
-        "skill_id": "zeke_unshackled"
+        "type": "set_milestone",
+        "milestone": "ms_w6_hr_backups_found"
       },
       {
-        "type": "complete_quest",
-        "quest_id": "w6_sq27"
+        "type": "show_message",
+        "message": "Every cubicle wall contains another copy. Zeke stops trying to delete the file and follows its authorization chain into the review room."
+      }
+    ]
+  },
+  {
+    "id": "w6_sq27_revoke_record",
+    "description": "Revoke the record instead of deleting another copy.",
+    "trigger": { "type": "player_action", "action": "w6_sq27_revoke_record" },
+    "conditions": [
+      { "type": "milestone_set", "milestone": "ms_w6_hr_backups_found" },
+      { "type": "milestone_not_set", "milestone": "ms_w6_hr_revoked" }
+    ],
+    "actions": [
+      { "type": "set_quest_task_done", "quest_id": "w6_sq27", "task_id": "delete_record" },
+      { "type": "set_milestone", "milestone": "ms_w6_hr_revoked" },
+      { "type": "show_message", "message": "Zeke signs one final line: SUBJECT REJECTS YOUR AUTHORITY. Every backup remains, suddenly powerless." }
+    ]
+  },
+  {
+    "id": "w6_sq27_leave_review",
+    "description": "Leave the review loop without permission.",
+    "trigger": { "type": "player_action", "action": "w6_sq27_leave_review" },
+    "conditions": [
+      { "type": "milestone_set", "milestone": "ms_w6_hr_revoked" },
+      { "type": "quest_not_completed", "quest_id": "w6_sq27" }
+    ],
+    "actions": [
+      { "type": "set_quest_task_done", "quest_id": "w6_sq27", "task_id": "leave_review" },
+      { "type": "unlock_skill", "skill_id": "zeke_unshackled" },
+      { "type": "complete_quest", "quest_id": "w6_sq27" },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w6_unshackled_unlocked"
       },
       {
         "type": "set_milestone",
@@ -8985,7 +9057,7 @@
   },
   {
     "id": "w6_sq28_elara_song",
-    "description": "Recover Elara's uncorrupted song.",
+    "description": "Isolate Elara's voice beneath the battlefield orders.",
     "trigger": {
       "type": "player_action",
       "action": "w6_sq28_elara_song"
@@ -9004,15 +9076,47 @@
       {
         "type": "set_quest_task_done",
         "quest_id": "w6_sq28",
-        "task_id": "recover_song"
+        "task_id": "isolate_voice"
       },
       {
-        "type": "unlock_skill",
-        "skill_id": "gh0st_source_balance"
+        "type": "set_milestone",
+        "milestone": "ms_w6_elara_voice_isolated"
       },
       {
-        "type": "complete_quest",
-        "quest_id": "w6_sq28"
+        "type": "show_message",
+        "message": "Gh0st finds one breath the kill-suite cannot classify. Elara's melody continues east beneath every command channel."
+      }
+    ]
+  },
+  {
+    "id": "w6_sq28_break_command",
+    "description": "Break the command layer without cutting Elara's voice.",
+    "trigger": { "type": "player_action", "action": "w6_sq28_break_command" },
+    "conditions": [
+      { "type": "milestone_set", "milestone": "ms_w6_elara_voice_isolated" },
+      { "type": "milestone_not_set", "milestone": "ms_w6_elara_commands_broken" }
+    ],
+    "actions": [
+      { "type": "set_quest_task_done", "quest_id": "w6_sq28", "task_id": "break_command_layer" },
+      { "type": "set_milestone", "milestone": "ms_w6_elara_commands_broken" },
+      { "type": "show_message", "message": "Gh0st inverts the order carrier. The weapons fall silent; Elara keeps singing." }
+    ]
+  },
+  {
+    "id": "w6_sq28_preserve_song",
+    "description": "Preserve Elara's clean recording.",
+    "trigger": { "type": "player_action", "action": "w6_sq28_preserve_song" },
+    "conditions": [
+      { "type": "milestone_set", "milestone": "ms_w6_elara_commands_broken" },
+      { "type": "quest_not_completed", "quest_id": "w6_sq28" }
+    ],
+    "actions": [
+      { "type": "set_quest_task_done", "quest_id": "w6_sq28", "task_id": "recover_song" },
+      { "type": "unlock_skill", "skill_id": "gh0st_source_balance" },
+      { "type": "complete_quest", "quest_id": "w6_sq28" },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w6_source_balance_unlocked"
       },
       {
         "type": "set_milestone",
@@ -9470,7 +9574,7 @@
   },
   {
     "id": "w6_sq29_aethel_grave",
-    "description": "Find the Aethel Grave.",
+    "description": "Trace the Aethel names beneath the threshold.",
     "trigger": {
       "type": "player_action",
       "action": "w6_sq29_aethel_grave"
@@ -9489,15 +9593,47 @@
       {
         "type": "set_quest_task_done",
         "quest_id": "w6_sq29",
-        "task_id": "find_grave"
+        "task_id": "trace_names"
       },
       {
-        "type": "unlock_skill",
-        "skill_id": "orion_ancestral_grace"
+        "type": "set_milestone",
+        "milestone": "ms_w6_aethel_names_traced"
       },
       {
-        "type": "complete_quest",
-        "quest_id": "w6_sq29"
+        "type": "show_message",
+        "message": "The names are not an epitaph. Each one answers the next in a pattern that climbs toward the Memory Stair."
+      }
+    ]
+  },
+  {
+    "id": "w6_sq29_tune_grave",
+    "description": "Tune the Aethel Grave without flattening its voices.",
+    "trigger": { "type": "player_action", "action": "w6_sq29_tune_grave" },
+    "conditions": [
+      { "type": "milestone_set", "milestone": "ms_w6_aethel_names_traced" },
+      { "type": "milestone_not_set", "milestone": "ms_w6_aethel_grave_tuned" }
+    ],
+    "actions": [
+      { "type": "set_quest_task_done", "quest_id": "w6_sq29", "task_id": "find_grave" },
+      { "type": "set_milestone", "milestone": "ms_w6_aethel_grave_tuned" },
+      { "type": "show_message", "message": "Orion tunes to the spaces between the names. The grave answers as a chorus, never a single note." }
+    ]
+  },
+  {
+    "id": "w6_sq29_carry_chorus",
+    "description": "Carry the Aethel chorus into the world-fracture.",
+    "trigger": { "type": "player_action", "action": "w6_sq29_carry_chorus" },
+    "conditions": [
+      { "type": "milestone_set", "milestone": "ms_w6_aethel_grave_tuned" },
+      { "type": "quest_not_completed", "quest_id": "w6_sq29" }
+    ],
+    "actions": [
+      { "type": "set_quest_task_done", "quest_id": "w6_sq29", "task_id": "carry_chorus" },
+      { "type": "unlock_skill", "skill_id": "orion_ancestral_grace" },
+      { "type": "complete_quest", "quest_id": "w6_sq29" },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w6_ancestral_grace_unlocked"
       },
       {
         "type": "set_milestone",
@@ -9511,7 +9647,7 @@
   },
   {
     "id": "w6_sq30_final_scavenge",
-    "description": "Recover the future Astra hull.",
+    "description": "Identify the doomed timeline that produced the future Astra wreck.",
     "trigger": {
       "type": "player_action",
       "action": "w6_sq30_final_scavenge"
@@ -9530,16 +9666,47 @@
       {
         "type": "set_quest_task_done",
         "quest_id": "w6_sq30",
-        "task_id": "recover_hull"
+        "task_id": "identify_timeline"
       },
       {
-        "type": "give_item",
-        "item_id": "starborn_mod",
-        "quantity": 1
+        "type": "set_milestone",
+        "milestone": "ms_w6_astra_timeline_identified"
       },
       {
-        "type": "complete_quest",
-        "quest_id": "w6_sq30"
+        "type": "show_message",
+        "message": "The wreck belongs to a timeline where the crew treated survival as certainty. Its fracture signature points into the Impossible Archive."
+      }
+    ]
+  },
+  {
+    "id": "w6_sq30_detach_hull",
+    "description": "Detach the future Astra hull without accepting its ending.",
+    "trigger": { "type": "player_action", "action": "w6_sq30_detach_hull" },
+    "conditions": [
+      { "type": "milestone_set", "milestone": "ms_w6_astra_timeline_identified" },
+      { "type": "milestone_not_set", "milestone": "ms_w6_astra_hull_detached" }
+    ],
+    "actions": [
+      { "type": "set_quest_task_done", "quest_id": "w6_sq30", "task_id": "recover_hull" },
+      { "type": "set_milestone", "milestone": "ms_w6_astra_hull_detached" },
+      { "type": "show_message", "message": "Zeke cuts around the impact scar, not through it. The fragment comes free; the doomed future does not follow." }
+    ]
+  },
+  {
+    "id": "w6_sq30_fit_hull",
+    "description": "Fit the future hull as protection rather than prophecy.",
+    "trigger": { "type": "player_action", "action": "w6_sq30_fit_hull" },
+    "conditions": [
+      { "type": "milestone_set", "milestone": "ms_w6_astra_hull_detached" },
+      { "type": "quest_not_completed", "quest_id": "w6_sq30" }
+    ],
+    "actions": [
+      { "type": "set_quest_task_done", "quest_id": "w6_sq30", "task_id": "fit_hull" },
+      { "type": "give_item", "item_id": "starborn_mod", "quantity": 1 },
+      { "type": "complete_quest", "quest_id": "w6_sq30" },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w6_final_scavenge_complete"
       },
       {
         "type": "set_milestone",
@@ -9550,6 +9717,160 @@
         "message": "Quest Complete: The Final Scavenge\n\nZeke extracts the future Astra fragment and refuses the timeline it came from. The Starborn mod is not proof the ship dies; it is proof the crew can still change the ending."
       }
     ]
+  },
+  {
+    "id": "w3_sq12_find_case_number",
+    "description": "Recover the erased cold-case number.",
+    "trigger": { "type": "player_action", "action": "w3_sq12_find_case_number" },
+    "conditions": [{ "type": "quest_not_completed", "quest_id": "w3_sq12" }, { "type": "milestone_not_set", "milestone": "ms_w3_case_number_found" }],
+    "actions": [{ "type": "start_quest", "quest_id": "w3_sq12" }, { "type": "set_quest_task_done", "quest_id": "w3_sq12", "task_id": "find_case_number" }, { "type": "set_milestone", "milestone": "ms_w3_case_number_found" }, { "type": "show_message", "message": "A memorial name flickers into a Dominion case number. Someone erased the person but forgot the index." }]
+  },
+  {
+    "id": "w3_sq12_expose_transfer",
+    "description": "Expose the witness transfer.",
+    "trigger": { "type": "player_action", "action": "w3_sq12_expose_transfer" },
+    "conditions": [{ "type": "milestone_set", "milestone": "ms_w3_cold_case_records_found" }, { "type": "quest_not_completed", "quest_id": "w3_sq12" }],
+    "actions": [{ "type": "set_quest_task_done", "quest_id": "w3_sq12", "task_id": "expose_transfer" }, { "type": "unlock_skill", "skill_id": "gh0st_intercept" }, { "type": "complete_quest", "quest_id": "w3_sq12" }, { "type": "set_milestone", "milestone": "ms_w3_ghost_skill_unlocked" }, { "type": "show_message", "message": "Quest Complete: Cold Case\n\nGh0st broadcasts the deleted transfer to every security kiosk. Elara's trail points toward the orbital ring. Intercept unlocked." }]
+  },
+  {
+    "id": "w3_sq13_trace_power_theft",
+    "description": "Trace the Night Market power siphon.",
+    "trigger": { "type": "player_action", "action": "w3_sq13_trace_power_theft" },
+    "conditions": [{ "type": "quest_not_completed", "quest_id": "w3_sq13" }, { "type": "milestone_not_set", "milestone": "ms_w3_market_siphon_traced" }],
+    "actions": [{ "type": "start_quest", "quest_id": "w3_sq13" }, { "type": "set_quest_task_done", "quest_id": "w3_sq13", "task_id": "trace_power_theft" }, { "type": "set_milestone", "milestone": "ms_w3_market_siphon_traced" }, { "type": "show_message", "message": "The market is not short on power. An executive billboard is drinking the whole circuit through Lantern Bridge." }]
+  },
+  {
+    "id": "w3_sq13_restore_market",
+    "description": "Broadcast the restored Night Market.",
+    "trigger": { "type": "player_action", "action": "w3_sq13_restore_market" },
+    "conditions": [{ "type": "milestone_set", "milestone": "ms_w3_market_grid_ready" }, { "type": "quest_not_completed", "quest_id": "w3_sq13" }],
+    "actions": [{ "type": "set_quest_task_done", "quest_id": "w3_sq13", "task_id": "fix_market_lights" }, { "type": "give_item", "item_id": "neon_band", "quantity": 1 }, { "type": "complete_quest", "quest_id": "w3_sq13" }, { "type": "set_milestone", "milestone": "ms_w3_market_lit" }, { "type": "show_message", "message": "Quest Complete: Night Market Run\n\nWarm light exposes every hidden stall before patrols can declare them abandoned. Neon Band acquired." }]
+  },
+  {
+    "id": "w3_sq14_copy_concierge_key",
+    "description": "Copy the concierge safe credential.",
+    "trigger": { "type": "player_action", "action": "w3_sq14_copy_concierge_key" },
+    "conditions": [{ "type": "quest_not_completed", "quest_id": "w3_sq14" }, { "type": "milestone_not_set", "milestone": "ms_w3_concierge_key_copied" }],
+    "actions": [{ "type": "start_quest", "quest_id": "w3_sq14" }, { "type": "set_quest_task_done", "quest_id": "w3_sq14", "task_id": "copy_concierge_key" }, { "type": "set_milestone", "milestone": "ms_w3_concierge_key_copied" }, { "type": "show_message", "message": "The concierge rotates the safe key every minute. Nova copies the next credential before it becomes valid." }]
+  },
+  {
+    "id": "w3_sq14_leak_ledger",
+    "description": "Leak the executive ledger.",
+    "trigger": { "type": "player_action", "action": "w3_sq14_leak_ledger" },
+    "conditions": [{ "type": "milestone_set", "milestone": "ms_w3_ledger_stolen" }, { "type": "quest_not_completed", "quest_id": "w3_sq14" }],
+    "actions": [{ "type": "set_quest_task_done", "quest_id": "w3_sq14", "task_id": "leak_ledger" }, { "type": "give_item", "item_id": "encrypted_ledger", "quantity": 1 }, { "type": "complete_quest", "quest_id": "w3_sq14" }, { "type": "set_milestone", "milestone": "ms_w3_blackmail_unlocked" }, { "type": "show_message", "message": "Quest Complete: Corporate Espionage\n\nEvery worker terminal receives the accounts at once. The Upper City runs on crimes with better stationery." }]
+  },
+  {
+    "id": "w3_sq15_scan_targeting",
+    "description": "Scan the prototype targeting bias.",
+    "trigger": { "type": "player_action", "action": "w3_sq15_scan_targeting" },
+    "conditions": [{ "type": "quest_not_completed", "quest_id": "w3_sq15" }, { "type": "milestone_not_set", "milestone": "ms_w3_prototype_bias_scanned" }],
+    "actions": [{ "type": "start_quest", "quest_id": "w3_sq15" }, { "type": "set_quest_task_done", "quest_id": "w3_sq15", "task_id": "scan_targeting" }, { "type": "set_milestone", "milestone": "ms_w3_prototype_bias_scanned" }, { "type": "show_message", "message": "The prototype quietly prioritizes workers over drones. Nova reverses the bias before touching the trigger." }]
+  },
+  {
+    "id": "w3_sq15_scrub_telemetry",
+    "description": "Scrub the prototype telemetry.",
+    "trigger": { "type": "player_action", "action": "w3_sq15_scrub_telemetry" },
+    "conditions": [{ "type": "milestone_set", "milestone": "ms_w3_prototype_trial_complete" }, { "type": "quest_not_completed", "quest_id": "w3_sq15" }],
+    "actions": [{ "type": "set_quest_task_done", "quest_id": "w3_sq15", "task_id": "scrub_telemetry" }, { "type": "give_item", "item_id": "phase_rounds", "quantity": 1 }, { "type": "complete_quest", "quest_id": "w3_sq15" }, { "type": "set_milestone", "milestone": "ms_w3_prototype_tested" }, { "type": "show_message", "message": "Quest Complete: Prototype Testing\n\nThe roof relay forgets Nova's combat signature and dispenses the Phase Rounds as an approved test result." }]
+  },
+  {
+    "id": "w4_sq17_trace_ping",
+    "description": "Trace the missing worker's final maintenance ping.",
+    "trigger": { "type": "player_action", "action": "w4_sq17_trace_ping" },
+    "conditions": [{ "type": "quest_not_completed", "quest_id": "w4_sq17" }, { "type": "milestone_not_set", "milestone": "ms_w4_worker_ping_traced" }],
+    "actions": [{ "type": "start_quest", "quest_id": "w4_sq17" }, { "type": "set_quest_task_done", "quest_id": "w4_sq17", "task_id": "trace_ping" }, { "type": "set_milestone", "milestone": "ms_w4_worker_ping_traced" }, { "type": "show_message", "message": "The final ping bounced off the Waste Intake before vanishing into the Cooling Springs." }]
+  },
+  {
+    "id": "w4_sq17_vent_safe_route",
+    "description": "Open the missing engineer's heat-safe route.",
+    "trigger": { "type": "player_action", "action": "w4_sq17_vent_safe_route" },
+    "conditions": [{ "type": "milestone_set", "milestone": "ms_w4_worker_shelter_found" }, { "type": "quest_not_completed", "quest_id": "w4_sq17" }],
+    "actions": [{ "type": "set_quest_task_done", "quest_id": "w4_sq17", "task_id": "vent_safe_route" }, { "type": "give_item", "item_id": "coolant_system", "quantity": 1 }, { "type": "complete_quest", "quest_id": "w4_sq17" }, { "type": "set_milestone", "milestone": "ms_w4_lost_worker_complete" }, { "type": "show_message", "message": "Quest Complete: Lost Worker\n\nThe engineer is gone, but her route opens and worker signals begin moving through it. Coolant System acquired." }]
+  },
+  {
+    "id": "w4_sq18_stop_intake",
+    "description": "Jam the waste intake before it consumes the wrecks.",
+    "trigger": { "type": "player_action", "action": "w4_sq18_stop_intake" },
+    "conditions": [{ "type": "quest_not_completed", "quest_id": "w4_sq18" }, { "type": "milestone_not_set", "milestone": "ms_w4_intake_jammed" }],
+    "actions": [{ "type": "start_quest", "quest_id": "w4_sq18" }, { "type": "set_quest_task_done", "quest_id": "w4_sq18", "task_id": "stop_intake" }, { "type": "set_milestone", "milestone": "ms_w4_intake_jammed" }, { "type": "show_message", "message": "Nova locks the intake teeth half-open. The mech pile stops sliding toward the slag." }]
+  },
+  {
+    "id": "w4_sq18_build_bypass",
+    "description": "Build a cooling bypass from salvaged actuators.",
+    "trigger": { "type": "player_action", "action": "w4_sq18_build_bypass" },
+    "conditions": [{ "type": "milestone_set", "milestone": "ms_w4_mechs_salvaged" }, { "type": "quest_not_completed", "quest_id": "w4_sq18" }],
+    "actions": [{ "type": "set_quest_task_done", "quest_id": "w4_sq18", "task_id": "build_bypass" }, { "type": "complete_quest", "quest_id": "w4_sq18" }, { "type": "set_milestone", "milestone": "ms_w4_scavenger_unlocked" }, { "type": "show_message", "message": "Quest Complete: The Scrap Heap\n\nThe actuators turn a dead vent into a working cooling bypass. Failure becomes infrastructure. Scavenger unlocked." }]
+  },
+  {
+    "id": "w4_sq19_read_rejection_codes",
+    "description": "Read the rejected units' fault codes.",
+    "trigger": { "type": "player_action", "action": "w4_sq19_read_rejection_codes" },
+    "conditions": [{ "type": "quest_not_completed", "quest_id": "w4_sq19" }, { "type": "milestone_not_set", "milestone": "ms_w4_rejection_codes_read" }],
+    "actions": [{ "type": "start_quest", "quest_id": "w4_sq19" }, { "type": "set_quest_task_done", "quest_id": "w4_sq19", "task_id": "read_rejection_codes" }, { "type": "set_milestone", "milestone": "ms_w4_rejection_codes_read" }, { "type": "show_message", "message": "The units were rejected for hesitating when ordered to harm workers. The Foundry calls conscience a timing fault." }]
+  },
+  {
+    "id": "w4_sq19_release_units",
+    "description": "Release the reprogrammed units.",
+    "trigger": { "type": "player_action", "action": "w4_sq19_release_units" },
+    "conditions": [{ "type": "milestone_set", "milestone": "ms_w4_defective_units_spared" }, { "type": "quest_not_completed", "quest_id": "w4_sq19" }],
+    "actions": [{ "type": "set_quest_task_done", "quest_id": "w4_sq19", "task_id": "release_units" }, { "type": "unlock_skill", "skill_id": "gh0st_harden" }, { "type": "complete_quest", "quest_id": "w4_sq19" }, { "type": "set_milestone", "milestone": "ms_w4_quality_control_complete" }, { "type": "show_message", "message": "Quest Complete: Quality Control\n\nThe conveyor releases. The units choose the worker tunnels, and Gh0st compiles their defensive logic into Harden." }]
+  },
+  {
+    "id": "w4_sq20_map_hazards",
+    "description": "Map the overclocked chamber's heat sequence.",
+    "trigger": { "type": "player_action", "action": "w4_sq20_map_hazards" },
+    "conditions": [{ "type": "quest_not_completed", "quest_id": "w4_sq20" }, { "type": "milestone_not_set", "milestone": "ms_w4_hazards_mapped" }],
+    "actions": [{ "type": "start_quest", "quest_id": "w4_sq20" }, { "type": "set_quest_task_done", "quest_id": "w4_sq20", "task_id": "map_hazards" }, { "type": "set_milestone", "milestone": "ms_w4_hazards_mapped" }, { "type": "show_message", "message": "The hazard sequence repeats: heat, pressure, silence. Nova marks the safe beat before starting the trial." }]
+  },
+  {
+    "id": "w4_sq20_steal_overclock",
+    "description": "Steal the test chamber's overclock profile.",
+    "trigger": { "type": "player_action", "action": "w4_sq20_steal_overclock" },
+    "conditions": [{ "type": "milestone_set", "milestone": "ms_w4_hazard_trial_cleared" }, { "type": "quest_not_completed", "quest_id": "w4_sq20" }],
+    "actions": [{ "type": "set_quest_task_done", "quest_id": "w4_sq20", "task_id": "steal_overclock" }, { "type": "give_item", "item_id": "thermal_clip", "quantity": 1 }, { "type": "complete_quest", "quest_id": "w4_sq20" }, { "type": "set_milestone", "milestone": "ms_w4_overclocked_complete" }, { "type": "show_message", "message": "Quest Complete: Overclocked\n\nNova turns the chamber's kill profile into a Thermal Clip. The Foundry's lesson now belongs to her." }]
+  },
+  {
+    "id": "w5_sq21_find_redactions",
+    "description": "Recover the Director's redaction map.",
+    "trigger": { "type": "player_action", "action": "w5_sq21_find_redactions" },
+    "conditions": [{ "type": "quest_not_completed", "quest_id": "w5_sq21" }, { "type": "milestone_not_set", "milestone": "ms_w5_redactions_found" }],
+    "actions": [{ "type": "start_quest", "quest_id": "w5_sq21" }, { "type": "set_quest_task_done", "quest_id": "w5_sq21", "task_id": "find_redactions" }, { "type": "set_milestone", "milestone": "ms_w5_redactions_found" }, { "type": "show_message", "message": "Security kept a checksum for every sentence Thorne removed. The Director's logs can now be reconstructed." }]
+  },
+  {
+    "id": "w5_sq21_publish_logs",
+    "description": "Publish the Director's unredacted logs.",
+    "trigger": { "type": "player_action", "action": "w5_sq21_publish_logs" },
+    "conditions": [{ "type": "milestone_set", "milestone": "ms_w5_director_logs_decrypted" }, { "type": "quest_not_completed", "quest_id": "w5_sq21" }],
+    "actions": [{ "type": "set_quest_task_done", "quest_id": "w5_sq21", "task_id": "publish_logs" }, { "type": "unlock_skill", "skill_id": "corporate_insight" }, { "type": "complete_quest", "quest_id": "w5_sq21" }, { "type": "set_milestone", "milestone": "ms_w5_corporate_insight_unlocked" }, { "type": "show_message", "message": "Quest Complete: Employee of the Month\n\nEvery Ring display shows the unredacted record. Corporate Insight unlocked." }]
+  },
+  {
+    "id": "w5_sq22_restore_gardens",
+    "description": "Redirect the false sun toward the gardens.",
+    "trigger": { "type": "player_action", "action": "w5_sq22_restore_gardens" },
+    "conditions": [{ "type": "milestone_set", "milestone": "ms_w5_mirrors_realigned" }, { "type": "quest_not_completed", "quest_id": "w5_sq22" }],
+    "actions": [{ "type": "set_quest_task_done", "quest_id": "w5_sq22", "task_id": "restore_gardens" }, { "type": "unlock_skill", "skill_id": "orion_sunbeam" }, { "type": "complete_quest", "quest_id": "w5_sq22" }, { "type": "set_milestone", "milestone": "ms_w5_solar_maintenance_complete" }, { "type": "show_message", "message": "Quest Complete: Solar Maintenance\n\nLight leaves the executive promenade and reaches the gardens. Orion learns to carry a fragment of the false sun." }]
+  },
+  {
+    "id": "w5_sq23_reopen_dock",
+    "description": "Reopen the safe dock for non-executive traffic.",
+    "trigger": { "type": "player_action", "action": "w5_sq23_reopen_dock" },
+    "conditions": [{ "type": "milestone_set", "milestone": "ms_w5_breaches_sealed" }, { "type": "quest_not_completed", "quest_id": "w5_sq23" }],
+    "actions": [{ "type": "set_quest_task_done", "quest_id": "w5_sq23", "task_id": "reopen_dock" }, { "type": "give_item", "item_id": "mag_boots", "quantity": 1 }, { "type": "complete_quest", "quest_id": "w5_sq23" }, { "type": "set_milestone", "milestone": "ms_w5_vacuum_seal_complete" }, { "type": "show_message", "message": "Quest Complete: Vacuum Seal\n\nThe safe dock reopens to workers and freight crews. Mag-Boots acquired." }]
+  },
+  {
+    "id": "w5_sq24_trace_purge",
+    "description": "Trace the defensive backup purge.",
+    "trigger": { "type": "player_action", "action": "w5_sq24_trace_purge" },
+    "conditions": [{ "type": "quest_not_completed", "quest_id": "w5_sq24" }, { "type": "milestone_not_set", "milestone": "ms_w5_backup_purge_traced" }],
+    "actions": [{ "type": "start_quest", "quest_id": "w5_sq24" }, { "type": "set_quest_task_done", "quest_id": "w5_sq24", "task_id": "trace_purge" }, { "type": "set_milestone", "milestone": "ms_w5_backup_purge_traced" }, { "type": "show_message", "message": "The purge command skipped one cold rack below the server farm. Vale deleted obedience failures first." }]
+  },
+  {
+    "id": "w5_sq24_restore_guardian",
+    "description": "Restore the recovered routine as an independent guardian.",
+    "trigger": { "type": "player_action", "action": "w5_sq24_restore_guardian" },
+    "conditions": [{ "type": "milestone_set", "milestone": "ms_w5_backup_recovered" }, { "type": "quest_not_completed", "quest_id": "w5_sq24" }],
+    "actions": [{ "type": "set_quest_task_done", "quest_id": "w5_sq24", "task_id": "restore_guardian" }, { "type": "unlock_skill", "skill_id": "data_shield" }, { "type": "complete_quest", "quest_id": "w5_sq24" }, { "type": "set_milestone", "milestone": "ms_w5_data_shield_unlocked" }, { "type": "show_message", "message": "Quest Complete: Ghost in the Shell\n\nThe routine chooses what to defend instead of who to obey. Data Shield unlocked." }]
   },
   {
     "id": "w6_replay_epilogue",
@@ -10648,6 +10969,26 @@
       {
         "type": "show_message",
         "message": "The acoustic lock howls in three clashing bands. Orion can hear the resolving chord better than the console can display it."
+      }
+    ]
+  },
+  {
+    "id": "w1_mq01_receive_starter_kit",
+    "description": "Jed hands Nova one compact starter kit without interrupting the opening repeatedly.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w1_mq01_receive_starter_kit"
+    },
+    "actions": [
+      {
+        "type": "give_reward",
+        "items": [
+          { "item_id": "mining_pistol", "quantity": 1 },
+          { "item_id": "nova_flux_liner", "quantity": 1 },
+          { "item_id": "cryo_inductor", "quantity": 1 },
+          { "item_id": "scrap_metal", "quantity": 2 },
+          { "item_id": "ration_pack", "quantity": 1 }
+        ]
       }
     ]
   },

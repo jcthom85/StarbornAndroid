@@ -25,7 +25,8 @@ class CombatViewModelFactory(
                 environmentThemeManager = services.environmentThemeManager,
                 encounterCoordinator = services.encounterCoordinator,
                 enemyIds = enemyIds,
-                tutorialsEnabled = tutorialsEnabled
+                tutorialsEnabled = tutorialsEnabled,
+                telemetry = services.playtestTelemetry
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")

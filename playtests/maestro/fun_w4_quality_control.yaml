@@ -1,0 +1,47 @@
+appId: com.junewiregames.starborn.prealpha
+---
+- launchApp
+- extendedWaitUntil:
+    visible: "Debug Scenarios"
+    timeout: 60000
+- tapOn: "Debug Scenarios"
+- tapOn: "Search world, quest, room, or system"
+- inputText: "Quality Control"
+- hideKeyboard
+- tapOn: "Fun Audit / Quality Control"
+- extendedWaitUntil:
+    visible: "Reject Bay"
+    timeout: 30000
+- tapOn: "rejected droid"
+- extendedWaitUntil:
+    visible: ".*calls conscience a timing fault.*"
+    timeout: 10000
+- takeScreenshot: fun-w4-discovery
+- tapOn: ".*calls conscience a timing fault.*"
+- runFlow:
+    when:
+      visible: "Continue"
+    commands:
+      - tapOn: "Continue"
+- tapOn: "Travel east"
+- extendedWaitUntil:
+    visible: "Conveyor Belt"
+    timeout: 15000
+- runFlow:
+    when:
+      visible: "Continue"
+    commands:
+      - tapOn: "Continue"
+- tapOn: "rejected droid"
+- extendedWaitUntil:
+    visible: ".*removes the obedience fault.*"
+    timeout: 10000
+- takeScreenshot: fun-w4-complication
+- tapOn: ".*removes the obedience fault.*"
+- tapOn: "conveyor release lock"
+- extendedWaitUntil:
+    visible: "QUEST COMPLETED"
+    timeout: 10000
+- assertVisible: "Quality Control"
+- takeScreenshot: fun-w4-payoff
+- tapOn: "Continue"

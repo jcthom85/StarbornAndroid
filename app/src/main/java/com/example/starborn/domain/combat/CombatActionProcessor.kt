@@ -7,7 +7,6 @@ import com.example.starborn.domain.model.Skill
 import kotlin.math.roundToInt
 import java.util.LinkedHashMap
 import com.example.starborn.domain.model.StatusDefinition
-import kotlin.random.Random
 
 class CombatActionProcessor(
     private val engine: CombatEngine,
@@ -15,7 +14,8 @@ class CombatActionProcessor(
     private val skillLookup: (String) -> Skill?,
     private val consumeItem: ((String) -> ItemUseResult?)? = null,
     private val itemLookup: ((String) -> Item?)? = null,
-    private val forcePhysicalHit: (attackerId: String, targetId: String) -> Boolean = { _, _ -> false }
+    private val forcePhysicalHit: (attackerId: String, targetId: String) -> Boolean = { _, _ -> false },
+    private val random: CombatRandom = DefaultCombatRandom
 ) {
 
     fun execute(
@@ -332,7 +332,7 @@ class CombatActionProcessor(
             ?.trim()
             ?.lowercase()
         val statusChance = attacker.combatant.weapon?.statusChance ?: 0.0
-        val withStatus = if (!statusId.isNullOrBlank() && Random.nextDouble(0.0, 100.0) <= statusChance) {
+        val withStatus = if (!statusId.isNullOrBlank() && random.nextDouble(0.0, 100.0) <= statusChance) {
             engine.applyStatus(
                 state = damaged,
                 targetId = targetId,
@@ -943,10 +943,10 @@ class CombatActionProcessor(
     ): HitRoll {
         val hitChance = (attacker.accuracyRating() - target.evasionRating())
             .coerceIn(MIN_HIT_CHANCE, MAX_HIT_CHANCE)
-        val roll = Random.nextDouble(0.0, 100.0)
+        val roll = random.nextDouble(0.0, 100.0)
         if (roll > hitChance) return HitRoll.Miss
         val baseDamage = basePhysicalDamage(attacker, target)
-        val critRoll = Random.nextDouble(0.0, 100.0)
+        val critRoll = random.nextDouble(0.0, 100.0)
         val critChance = (attacker.critChance() + critBonus).coerceIn(0.0, 100.0)
         
         val forceCrit = target.statusEffects.any { status ->
@@ -963,7 +963,7 @@ class CombatActionProcessor(
     ): Int {
         val attack = CombatFormulas.attackPower(attacker.effectiveStat("strength"))
         val defense = CombatFormulas.defensePower(target.effectiveStat("vitality"))
-        val variance = Random.nextInt(PHYSICAL_VARIANCE_MIN, PHYSICAL_VARIANCE_MAX + 1)
+        val variance = random.nextInt(PHYSICAL_VARIANCE_MIN, PHYSICAL_VARIANCE_MAX + 1)
         val weaponDamage = rollWeaponDamage(attacker)
         return (attack + weaponDamage + variance - defense).coerceAtLeast(1)
     }
@@ -973,7 +973,7 @@ class CombatActionProcessor(
         val min = weapon.minDamage.coerceAtLeast(0)
         val max = weapon.maxDamage.coerceAtLeast(min)
         if (max <= 0) return 0
-        return Random.nextInt(min, max + 1)
+        return random.nextInt(min, max + 1)
     }
 
     private fun CombatantState.accuracyRating(): Double {
@@ -1145,6 +1145,15 @@ class CombatActionProcessor(
             (value - 1).coerceAtLeast(0)
         }.filterValues { it > 0 }
         val updatedSnackCooldown = (actorInResolved.snackCooldown - 1).coerceAtLeast(0)
+        val cooldownReductions = actorInResolved.activeCooldowns.mapNotNull { (skillId, fromTurns) ->
+            val toTurns = (fromTurns - 1).coerceAtLeast(0)
+            if (toTurns < fromTurns) {
+                CooldownReduction(skillId = skillId, fromTurns = fromTurns, toTurns = toTurns)
+            } else {
+                null
+            }
+        }
+        val snackCooldownReduced = updatedSnackCooldown < actorInResolved.snackCooldown
         val updatedActor = actorInResolved.copy(
             activeCooldowns = updatedCooldowns,
             snackCooldown = updatedSnackCooldown
@@ -1154,7 +1163,10 @@ class CombatActionProcessor(
             combatants = resolved.combatants + (action.actorId to updatedActor),
             log = resolved.log + CombatLogEntry.WeaknessReward(
                 turn = previous.round,
-                actorId = action.actorId
+                actorId = action.actorId,
+                cooldownReductions = cooldownReductions,
+                snackCooldownFrom = actorInResolved.snackCooldown.takeIf { snackCooldownReduced },
+                snackCooldownTo = updatedSnackCooldown.takeIf { snackCooldownReduced }
             )
         )
     }

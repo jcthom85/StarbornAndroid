@@ -19,27 +19,40 @@ import kotlinx.coroutines.runBlocking
 
 class Hub1CriticalFlowTest {
 
+    private fun openingState() = GameSessionState(
+        worldId = "world_1",
+        hubId = "hub_1_homestead",
+        roomId = "pit_nova_bunk",
+        playerId = "nova",
+        activeQuests = setOf("w1_mq01"),
+        trackedQuestId = "w1_mq01",
+        questStageById = mapOf("w1_mq01" to "wake_in_the_pit")
+    )
+
     @Test
-    fun newGameAndFirstRoomTransitionTeachHotspotsAndJournal() {
-        val harness = Hub1Harness()
+    fun openingResonancePrecedesMovementAndDefersJournal() {
+        val harness = Hub1Harness(initialState = openingState())
 
         harness.events.handleTrigger("player_action", EventPayload.Action("new_game_spawn_player_and_fade"))
-        assertTrue(harness.tutorialRequests.contains("hotspot_actions" to "Nova's Bunk"))
+        assertTrue(harness.tutorialRequests.none { it.first == "hotspot_actions" })
         assertTrue(harness.tutorialRequests.none { it.first == "movement" })
 
         harness.events.handleTrigger("player_action", EventPayload.Action("w1_mq01_check_bunk"))
         assertTrue(harness.tutorialRequests.none { it.first == "movement" })
 
         harness.events.handleTrigger("player_action", EventPayload.Action("w1_mq01_turn_on_bunk_light"))
+        assertTrue(harness.tutorialRequests.none { it.first == "movement" })
+        assertTrue(harness.store.state.value.completedMilestones.contains("ms_w1_mq01_resonance_visible"))
+
+        harness.events.handleTrigger("player_action", EventPayload.Action("w1_mq01_trace_resonance"))
         assertTrue(harness.tutorialRequests.contains("movement" to "Nova's Bunk"))
-        val hotspotIndex = harness.tutorialRequests.indexOf("hotspot_actions" to "Nova's Bunk")
-        val movementIndex = harness.tutorialRequests.indexOf("movement" to "Nova's Bunk")
-        assertTrue(hotspotIndex >= 0)
-        assertTrue(movementIndex > hotspotIndex)
         val state = harness.store.state.value
         assertTrue(state.questTasksCompleted["w1_mq01"].orEmpty().contains("turn_on_bunk_light"))
+        assertTrue(state.questTasksCompleted["w1_mq01"].orEmpty().contains("trace_resonance"))
         assertTrue(state.completedMilestones.contains("ms_w1_mq01_bunk_light_on"))
+        assertTrue(state.completedMilestones.contains("ms_w1_mq01_resonance_traced"))
         assertEquals(true, state.roomStates["pit_nova_bunk"].orEmpty()["light_on"])
+        assertEquals(true, state.roomStates["pit_nova_bunk"].orEmpty()["resonance_investigated"])
         assertEquals(false, state.roomStates["pit_nova_bunk"].orEmpty()["dark"])
         val movementTutorialCount = harness.tutorialRequests.count { it == "movement" to "Nova's Bunk" }
         harness.store.setRoomState("pit_nova_bunk", "light_on", false)
@@ -50,18 +63,19 @@ class Hub1CriticalFlowTest {
         assertEquals(false, relitState.roomStates["pit_nova_bunk"].orEmpty()["dark"])
         assertEquals(movementTutorialCount, harness.tutorialRequests.count { it == "movement" to "Nova's Bunk" })
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("pit_shaft"))
-        assertTrue(harness.tutorialRequests.contains("scene_market_journal" to "Nova's Bunk"))
+        assertTrue(harness.tutorialRequests.none { it.first == "scene_market_journal" })
     }
 
     @Test
     fun hotspotTutorialIsSkippedIfBunkLightTurnsOnBeforeFadeCompletes() {
-        val harness = Hub1Harness(autoCompleteCinematics = false)
+        val harness = Hub1Harness(initialState = openingState(), autoCompleteCinematics = false)
 
         harness.events.handleTrigger("player_action", EventPayload.Action("new_game_spawn_player_and_fade"))
         assertTrue(harness.tutorialRequests.none { it.first == "hotspot_actions" })
 
         harness.events.handleTrigger("player_action", EventPayload.Action("w1_mq01_turn_on_bunk_light"))
         assertTrue(harness.store.state.value.completedMilestones.contains("ms_w1_mq01_bunk_light_on"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w1_mq01_trace_resonance"))
 
         harness.completePendingCinematics()
         assertTrue(harness.tutorialRequests.none { it.first == "hotspot_actions" })
@@ -70,17 +84,17 @@ class Hub1CriticalFlowTest {
 
     @Test
     fun wakeUpCallCompletesFromBunkToJedToCryoInductorRepair() {
-        val harness = Hub1Harness()
+        val harness = Hub1Harness(initialState = openingState())
 
-        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("pit_nova_bunk"))
         harness.events.handleTrigger("player_action", EventPayload.Action("w1_mq01_turn_on_bunk_light"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w1_mq01_trace_resonance"))
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("pit_shaft"))
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("pit_jed_bunk"))
 
         var state = harness.store.state.value
         assertTrue(state.questTasksCompleted["w1_mq01"].orEmpty().contains("find_jed"))
         assertTrue(!state.questTasksCompleted["w1_mq01"].orEmpty().contains("reach_workshop"))
-        assertTrue(harness.tutorialRequests.contains("npc_talk" to "Jed's Bunk"))
+        assertTrue(harness.tutorialRequests.none { it.first == "npc_talk" })
 
         val jed = harness.dialogue.startDialogue("Jed")
         assertEquals("jed_w1_mq01_intro_1", jed?.current()?.id)
@@ -94,6 +108,16 @@ class Hub1CriticalFlowTest {
         assertTrue(state.inventory["scrap_metal"].orZero() >= 2)
 
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("pit_shaft"))
+        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("workshop_yard"))
+        assertTrue(harness.narrationMessages.any { it.contains("two beats of noise", ignoreCase = true) })
+        harness.events.handleTrigger(
+            "encounter_victory",
+            EventPayload.EncounterOutcome(
+                enemyIds = listOf("faulted_loader"),
+                outcome = EventPayload.EncounterOutcome.Outcome.VICTORY,
+                roomId = "workshop_yard"
+            )
+        )
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("workshop_floor"))
         assertTrue(harness.autoStartedDialogueIds.contains("jed_w1_mq01_workshop_brief_1"))
         harness.events.handleTrigger("player_action", EventPayload.Action("tinkering_screen_entered"))
@@ -104,6 +128,8 @@ class Hub1CriticalFlowTest {
         assertTrue(afterBenchEntry.questTasksCompleted["w1_mq01"].orEmpty().contains("reach_workshop"))
         assertTrue(!afterBenchEntry.questTasksCompleted["w1_mq01"].orEmpty().contains("use_tinkering_table"))
         assertTrue(afterBenchEntry.completedMilestones.contains("ms_w1_mq01_workshop_briefed"))
+        assertTrue(afterBenchEntry.completedMilestones.contains("ms_w1_mq01_loader_cleared"))
+        assertTrue(afterBenchEntry.questTasksCompleted["w1_mq01"].orEmpty().contains("clear_faulted_loader"))
         assertTrue(harness.tutorialRequests.none { it.first == "menu_save" })
 
         harness.events.handleTrigger("player_action", EventPayload.Action("tinkering_craft", "functional_cryo_inductor"))
@@ -112,6 +138,8 @@ class Hub1CriticalFlowTest {
         assertTrue(state.completedQuests.contains("w1_mq01"))
         assertTrue(state.completedMilestones.contains("ms_w1_mq01_complete"))
         assertTrue(state.questTasksCompleted["w1_mq01"].orEmpty().contains("use_tinkering_table"))
+        assertTrue(state.unlockedSkills.contains("nova_cryo_vent"))
+        assertEquals(true, state.roomStates["workshop_floor"].orEmpty()["cryo_inductor_installed"])
         assertTrue(harness.autoStartedDialogueIds.contains("jed_w1_mq01_repair_done_1"))
         assertTrue(state.completedMilestones.contains("ms_w1_mq02_clearance_ordered"))
         assertTrue(state.activeQuests.contains("w1_mq02"))
@@ -206,7 +234,7 @@ class Hub1CriticalFlowTest {
         assertTrue(state.completedQuests.contains("w1_sq03"))
         assertTrue(state.completedMilestones.contains("ms_w1_guardbreak_trained"))
         assertEquals("w1_mq03", state.trackedQuestId)
-        assertTrue(harness.messages.contains("Shield training complete. Report back to Boggs for Sector 4 authorization."))
+        assertTrue(harness.messages.any { it.contains("shield lesson is over", ignoreCase = true) })
 
         val assignment = harness.dialogue.startDialogue("Foreman Boggs")
         assertEquals("bogs_w1_mq03_intro_1", assignment?.current()?.id)
@@ -731,6 +759,17 @@ class Hub1CriticalFlowTest {
                         val current = store.state.value.inventory
                         val next = current + (itemId to (current[itemId].orZero() + quantity.coerceAtLeast(1)))
                         store.setInventory(next)
+                    },
+                    onReward = { reward ->
+                        reward.xp?.let(store::addXp)
+                        reward.credits?.let(store::addCredits)
+                        reward.items.forEach { item ->
+                            val current = store.state.value.inventory
+                            val quantity = item.quantity?.coerceAtLeast(1) ?: 1
+                            store.setInventory(
+                                current + (item.itemId to (current[item.itemId].orZero() + quantity))
+                            )
+                        }
                     },
                     onTakeItem = { itemId, quantity ->
                         val current = store.state.value.inventory

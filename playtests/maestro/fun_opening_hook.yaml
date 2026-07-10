@@ -1,0 +1,48 @@
+appId: com.junewiregames.starborn.prealpha
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "New Game"
+    timeout: 60000
+- tapOn: "New Game"
+- extendedWaitUntil:
+    visible: "Nova's Bunk"
+    timeout: 20000
+- assertNotVisible: "???"
+- assertVisible: "Nova knows every edge of this bunk.*"
+- assertVisible: "bunk light"
+- takeScreenshot: fun-opening-identified-nova
+- tapOn: "bunk light"
+- extendedWaitUntil:
+    visible: "The bunk light snaps on yellow.*"
+    timeout: 10000
+- tapOn: ".*The bunk light snaps on yellow.*"
+- extendedWaitUntil:
+    visible: ".*impossible reflection.*"
+    timeout: 10000
+- takeScreenshot: fun-opening-impossible-reflection
+- tapOn: "impossible reflection"
+- extendedWaitUntil:
+    visible: ".*Lights don't cast reflections toward themselves.*"
+    timeout: 15000
+- assertVisible: "Nova"
+- takeScreenshot: fun-opening-nova-resonance
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: ".*Two machine beats pass beneath them.*"
+    timeout: 10000
+- tapOn: "Tap to continue.*"
+- extendedWaitUntil:
+    visible: ".*Two beats of noise, then an opening.*"
+    timeout: 10000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: "Swipe toward any open exit to move.*"
+    timeout: 10000
+- tapOn: "CONTINUE"
+- extendedWaitUntil:
+    visible: ".*three-note pattern remains.*"
+    timeout: 10000
+- assertVisible: "Travel west"
+- takeScreenshot: fun-opening-hook-complete

@@ -19,10 +19,10 @@ class DialogueVoiceProfileTest {
 
     @Test
     fun characterMurmursKeepStableCuePrefixes() {
-        assertTrue(DialogueVoiceProfile.NOVA.randomCue(Random(1)).startsWith("voice_murmur_nova_"))
-        assertTrue(DialogueVoiceProfile.ORION.randomCue(Random(1)).startsWith("voice_murmur_orion_"))
-        assertTrue(DialogueVoiceProfile.ZEKE.randomCue(Random(1)).startsWith("voice_murmur_zeke_"))
-        assertTrue(DialogueVoiceProfile.GH0ST.randomCue(Random(1)).startsWith("voice_murmur_gh0st_"))
+        assertTrue(DialogueVoiceProfile.NOVA.randomCue(Random(1)).startsWith("voice_murmur_female_"))
+        assertTrue(DialogueVoiceProfile.ORION.randomCue(Random(1)).startsWith("voice_murmur_male_"))
+        assertTrue(DialogueVoiceProfile.ZEKE.randomCue(Random(1)).startsWith("voice_murmur_male_"))
+        assertTrue(DialogueVoiceProfile.GH0ST.randomCue(Random(1)).startsWith("voice_murmur_male_"))
     }
 
     @Test

@@ -1,0 +1,56 @@
+appId: com.junewiregames.starborn.prealpha
+---
+- launchApp
+- extendedWaitUntil:
+    visible: "Debug Scenarios"
+    timeout: 60000
+- tapOn: "Debug Scenarios"
+- tapOn: "Search world, quest, room, or system"
+- inputText: "Ghost in the Shell"
+- hideKeyboard
+- tapOn: "Fun Audit / Ghost in the Shell"
+- extendedWaitUntil:
+    visible: "Server Farm"
+    timeout: 30000
+- tapOn: "purged backup rack"
+- extendedWaitUntil:
+    visible: ".*skipped one cold rack.*"
+    timeout: 10000
+- takeScreenshot: fun-w5-discovery
+- tapOn: ".*skipped one cold rack.*"
+- runFlow:
+    when:
+      visible: "Continue"
+    commands:
+      - tapOn: "Continue"
+- tapOn: "Travel south"
+- extendedWaitUntil:
+    visible: "Purged Backup Rack"
+    timeout: 15000
+- runFlow:
+    when:
+      visible: "Continue"
+    commands:
+      - tapOn: "Continue"
+- tapOn: "purged backup rack"
+- extendedWaitUntil:
+    visible: ".*ownership flag still answers to Vale.*"
+    timeout: 10000
+- takeScreenshot: fun-w5-complication
+- tapOn: ".*ownership flag still answers to Vale.*"
+- tapOn: "Travel north"
+- extendedWaitUntil:
+    visible: "Server Farm"
+    timeout: 15000
+- runFlow:
+    when:
+      visible: "Continue"
+    commands:
+      - tapOn: "Continue"
+- tapOn: "guardian ownership flag"
+- extendedWaitUntil:
+    visible: "QUEST COMPLETED"
+    timeout: 10000
+- assertVisible: "Ghost in the Shell"
+- takeScreenshot: fun-w5-payoff
+- tapOn: "Continue"

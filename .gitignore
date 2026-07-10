@@ -84,3 +84,10 @@ local.properties
 /checkpoint-*.png
 /distribution/
 /world_assets/build/
+# Local playtest screenshots and Maestro output
+/playtests/artifacts/
+/fun-opening-*.png
+/fun-w*.png
+/play-service-account.json
+/starborn-upload.jks
+/Thumbs.db

@@ -43,5 +43,13 @@ class DebugScenarioCatalogTest {
         val sourceGate = DebugScenarioCatalog.find("w2_source_gate")
         assertNotNull(sourceGate)
         assertEquals(DebugScenarioDestination.EXPLORATION, sourceGate?.destination)
+        listOf(
+            "fun_w3_corporate_espionage",
+            "fun_w4_quality_control",
+            "fun_w5_ghost_shell",
+            "fun_w6_hr_record"
+        ).forEach { id ->
+            assertNotNull(DebugScenarioCatalog.find(id))
+        }
     }
 }

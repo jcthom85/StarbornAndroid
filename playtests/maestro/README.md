@@ -33,6 +33,12 @@ Then run a flow. If more than one Android device is connected, pass the device i
 .\scripts\verify_world1.ps1 -InstallDebug
 .\scripts\maestro.ps1 --device 46121JEKB11849 test .\playtests\maestro\smoke_launch.yaml
 .\scripts\maestro.ps1 --device 46121JEKB11849 test .\playtests\maestro\start_new_game.yaml
+.\scripts\maestro.ps1 --device 46121JEKB11849 test .\playtests\maestro\fun_opening_hook.yaml
+.\scripts\maestro.ps1 --device 46121JEKB11849 test .\playtests\maestro\fun_opening_mastery.yaml
+.\scripts\maestro.ps1 --device 46121JEKB11849 test .\playtests\maestro\fun_w3_corporate_espionage.yaml
+.\scripts\maestro.ps1 --device 46121JEKB11849 test .\playtests\maestro\fun_w4_quality_control.yaml
+.\scripts\maestro.ps1 --device 46121JEKB11849 test .\playtests\maestro\fun_w5_ghost_shell.yaml
+.\scripts\maestro.ps1 --device 46121JEKB11849 test .\playtests\maestro\fun_w6_hr_record.yaml
 .\scripts\maestro.ps1 --device 46121JEKB11849 test .\playtests\maestro\early_tutorial_dismiss.yaml
 .\scripts\maestro.ps1 --device 46121JEKB11849 test .\playtests\maestro\early_exploration_navigation.yaml
 .\scripts\maestro.ps1 --device 46121JEKB11849 test .\playtests\maestro\room_keyword_inspection.yaml
@@ -79,6 +85,12 @@ Start-Sleep -Seconds 2
 
 - `smoke_launch.yaml`: launches Starborn and verifies the title menu text/buttons are visible.
 - `start_new_game.yaml`: clears app state, starts a new game, waits for the main menu to disappear, and captures a screenshot.
+- `fun_opening_hook.yaml`: verifies the revised clean-save hook identifies Nova immediately, reveals the impossible bunk-light resonance, lets Nova trace its three-beat clue, and delays movement instruction until after the discovery payoff.
+- `fun_opening_mastery.yaml`: times and verifies the complete opening promise from resonance discovery through the Faulted Loader tempo lesson and Cryo-Inductor build reward.
+- `fun_w3_corporate_espionage.yaml`: plays the three-beat ledger theft and worker-network leak from a campaign-appropriate Upper City checkpoint.
+- `fun_w4_quality_control.yaml`: plays the rejected-unit discovery, reprogramming choice, and conveyor release.
+- `fun_w5_ghost_shell.yaml`: traces the purge, retrieves the cold backup, and restores the independent guardian.
+- `fun_w6_hr_record.yaml`: follows Zeke's recreated file through authorization revocation and the unauthorized exit payoff.
 - `early_tutorial_dismiss.yaml`: starts a fresh game, verifies the first tutorial prompt requires a tap, dismisses it with `GOT IT`, then verifies `Nova's Bunk` is visible.
 - `early_exploration_navigation.yaml`: dismisses the first tutorial, swipes west from `Nova's Bunk` to `Pod Row`, verifies the quest detail popup requires `Continue`, opens the field menu, closes it, and captures a screenshot.
 - `room_keyword_inspection.yaml`: starts a fresh game, moves to `Pod Row`, taps the highlighted `Sleeping pods` room keyword through its semantic selector (`Inspect Sleeping pods`), verifies its authored inspection text appears in a tap-to-dismiss overlay, and captures a screenshot.

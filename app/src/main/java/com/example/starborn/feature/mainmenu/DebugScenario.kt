@@ -55,6 +55,11 @@ object DebugScenarioCatalog {
         scenario("w6_spire", "W6 / Spire Ascent", "Resume The Spire of Thought at the Memory Stair.", DebugScenarioCategory.STORY),
         scenario("w6_finale", "W6 / Finale", "Resume The Final Note at the Center before confronting Vale.", DebugScenarioCategory.STORY),
 
+        scenario("fun_w3_corporate_espionage", "Fun Audit / Corporate Espionage", "Play the complete Upper City ledger side quest.", DebugScenarioCategory.CONTENT),
+        scenario("fun_w4_quality_control", "Fun Audit / Quality Control", "Play the complete rejected-unit side quest.", DebugScenarioCategory.CONTENT),
+        scenario("fun_w5_ghost_shell", "Fun Audit / Ghost in the Shell", "Play the complete purged-backup side quest.", DebugScenarioCategory.CONTENT),
+        scenario("fun_w6_hr_record", "Fun Audit / The HR Record", "Play the complete Infinite Cubicle side quest.", DebugScenarioCategory.CONTENT),
+
         hub("hub_1_homestead", "World 1 / Homestead Quarter", "The Mines", "Orient at the first World 1 hub."),
         hub("hub_2_logistics", "World 1 / Logistics Sector", "The Mines", "Orient at the second World 1 hub."),
         hub("hub_3_sector9", "World 2 / Jungle Ruins", "Sector 9", "Start the first main quest in Sector 9."),

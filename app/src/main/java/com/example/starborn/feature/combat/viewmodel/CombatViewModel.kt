@@ -54,6 +54,8 @@ import com.example.starborn.domain.model.Drop
 import com.example.starborn.domain.session.GameSessionStore
 import com.example.starborn.domain.session.GameSessionState
 import com.example.starborn.domain.theme.EnvironmentThemeManager
+import com.example.starborn.domain.telemetry.NoOpPlaytestTelemetry
+import com.example.starborn.domain.telemetry.PlaytestTelemetry
 import com.example.starborn.domain.theme.defaultWeatherForEnvironment
 import java.util.Locale
 import kotlin.random.Random
@@ -98,6 +100,7 @@ class CombatViewModel(
     private val encounterCoordinator: EncounterCoordinator,
     enemyIds: List<String>,
     private val tutorialsEnabled: Boolean = true,
+    private val telemetry: PlaytestTelemetry = NoOpPlaytestTelemetry,
     private val elapsedRealtime: () -> Long = SystemClock::elapsedRealtime
 ) : ViewModel() {
 
@@ -434,6 +437,14 @@ class CombatViewModel(
             } else {
                 seeded
             }
+            telemetry.record(
+                "combat_started",
+                mapOf(
+                    "room_id" to currentRoomId,
+                    "enemy_ids" to encounterEnemyIdList,
+                    "party_ids" to playerIdList
+                )
+            )
             startAtbTicker()
         }
         refreshSelection(_state.value)
@@ -504,6 +515,10 @@ class CombatViewModel(
             withRewards
         }
         if (executed) {
+            telemetry.record(
+                "combat_action",
+                mapOf("actor_id" to attackerId, "action_type" to "skill", "skill_id" to skill.id, "target_ids" to explicitTargets)
+            )
             val key = "$attackerId:${skill.id}"
             if (skill.usesPerBattle != null) {
                 skillUsageCounts[key] = skillUsageCounts.getOrDefault(key, 0) + 1
@@ -560,6 +575,10 @@ class CombatViewModel(
             resolved.applyOutcomeResults(current)
         }
         if (executed) {
+            telemetry.record(
+                "combat_action",
+                mapOf("actor_id" to attackerId, "action_type" to "basic_attack", "target_ids" to listOf(targetId))
+            )
             val style = if (attackMissed) AttackLungeStyle.MISS else AttackLungeStyle.MELEE
             triggerAttackLunge(attackerId, style)
             clearAwaitingAction(attackerId)
@@ -627,6 +646,10 @@ class CombatViewModel(
             resolved.applyOutcomeResults(current)
         }
         if (executed) {
+            telemetry.record(
+                "combat_action",
+                mapOf("actor_id" to attackerId, "action_type" to "item", "item_id" to entry.item.id, "target_ids" to listOfNotNull(targetId))
+            )
             triggerAttackLunge(attackerId, AttackLungeStyle.ITEM, ACTION_INTRO_PAUSE_MS)
             clearAwaitingAction(attackerId)
             concludeActorTurn(attackerId)
@@ -717,6 +740,10 @@ class CombatViewModel(
             resolved.applyOutcomeResults(current)
         }
         if (executed) {
+            telemetry.record(
+                "combat_action",
+                mapOf("actor_id" to attackerId, "action_type" to "snack", "item_id" to snackId, "target_ids" to listOfNotNull(targetIdOverride))
+            )
             val key = "$attackerId:$snackId"
             snack.effect?.usesPerBattle?.let {
                 snackUsageCounts[key] = snackUsageCounts.getOrDefault(key, 0) + 1
@@ -743,6 +770,7 @@ class CombatViewModel(
             resolved.applyOutcomeResults(current)
         }
         if (executed) {
+            telemetry.record("combat_action", mapOf("actor_id" to attackerId, "action_type" to "retreat"))
             clearAwaitingAction(attackerId)
             concludeActorTurn(attackerId)
         }
@@ -1610,6 +1638,15 @@ class CombatViewModel(
                 }
                 is CombatLogEntry.WeaknessReward -> {
                     playBattleCue("weakness_resolve")
+                    telemetry.record(
+                        "tempo_stolen",
+                        mapOf(
+                            "actor_id" to entry.actorId,
+                            "cooldown_skill_ids" to entry.cooldownReductions.map { it.skillId },
+                            "cooldown_count" to entry.cooldownReductions.size,
+                            "snack_reduced" to (entry.snackCooldownFrom != null)
+                        )
+                    )
                     setCombatBanner(entry, updated)
                 }
                 is CombatLogEntry.Heal -> {
@@ -2184,13 +2221,25 @@ class CombatViewModel(
 
     private fun bannerForWeaknessReward(entry: CombatLogEntry.WeaknessReward): CombatBannerMessage {
         bannerSession = null
+        val shiftedCooldowns = entry.cooldownReductions.map { shift ->
+            val skillName = skillById[shift.skillId]?.name ?: shift.skillId.replace('_', ' ')
+            "$skillName ${shift.fromTurns} -> ${shift.toTurns}"
+        }
+        val snackShift = if (entry.snackCooldownFrom != null && entry.snackCooldownTo != null) {
+            "Snack ${entry.snackCooldownFrom} -> ${entry.snackCooldownTo}"
+        } else {
+            null
+        }
+        val shiftSummary = (shiftedCooldowns + listOfNotNull(snackShift)).ifEmpty {
+            listOf("Active cooldowns moved 1 turn closer")
+        }.joinToString("  |  ")
         return CombatBannerMessage(
             id = UUID.randomUUID().toString(),
-            primary = "Weakness hit",
-            secondary = "Cooldowns reduced",
+            primary = "Tempo stolen",
+            secondary = shiftSummary,
             accent = CombatBannerAccent.SHOCK,
             icon = CombatBannerIcon.BURST,
-            tags = listOf("Cooldown -1"),
+            tags = listOf("Weakness hit", "Cooldown -1"),
             importance = CombatBannerImportance.IMPORTANT
         )
     }
@@ -2867,6 +2916,26 @@ class CombatViewModel(
 
     private fun CombatState.applyOutcomeResults(previous: CombatState): CombatState {
         val resolved = applyBossCoreOutcome()
+        if (previous.outcome == null && resolved.outcome != null) {
+            val outcomeLabel = when (resolved.outcome) {
+                is CombatOutcome.Victory -> "victory"
+                is CombatOutcome.Defeat -> "defeat"
+                CombatOutcome.Retreat -> "retreat"
+            }
+            val partyHp = resolved.combatants.values
+                .filter { it.combatant.side == CombatSide.PLAYER || it.combatant.side == CombatSide.ALLY }
+                .associate { it.combatant.id to it.hp }
+            telemetry.record(
+                "combat_completed",
+                mapOf(
+                    "room_id" to encounterRoomId,
+                    "enemy_ids" to encounterEnemyIdList,
+                    "outcome" to outcomeLabel,
+                    "round_count" to resolved.round,
+                    "party_hp" to partyHp
+                )
+            )
+        }
         if (previous.outcome == null && resolved.outcome is CombatOutcome.Victory) {
             val rewards = (resolved.outcome as CombatOutcome.Victory).rewards
             val levelUps = applyVictoryRewards(rewards)
@@ -3291,7 +3360,7 @@ private fun determineSkillTargeting(skill: Skill): SkillTargeting {
                 val actorName = state.combatants[entry.actorId]?.combatant?.name ?: entry.actorId
                 "$actorName lines up an action"
             }
-            is CombatLogEntry.WeaknessReward -> "Weakness hit. Cooldowns reduced."
+            is CombatLogEntry.WeaknessReward -> "Weakness hit. Tempo stolen; active cooldowns reduced by 1."
             is CombatLogEntry.Outcome -> when (entry.result) {
                 is CombatOutcome.Victory -> "All foes defeated!"
                 is CombatOutcome.Defeat -> "Party overwhelmed..."

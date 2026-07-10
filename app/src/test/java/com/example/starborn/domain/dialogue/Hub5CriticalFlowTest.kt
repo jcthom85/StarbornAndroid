@@ -86,13 +86,17 @@ class Hub5CriticalFlowTest {
         assertTrue(state.inventory["explosive_tip"].orZero() >= 1)
         assertTrue(state.completedMilestones.contains("ms_w4_sabotage_complete"))
 
+        harness.events.handleTrigger("player_action", EventPayload.Action("w4_sq17_trace_ping"))
         harness.events.handleTrigger("player_action", EventPayload.Action("w4_sq17_find_worker"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w4_sq17_vent_safe_route"))
         state = harness.store.state.value
         assertTrue(state.completedQuests.contains("w4_sq17"))
         assertTrue(state.inventory["coolant_system"].orZero() >= 1)
         assertTrue(state.completedMilestones.contains("ms_w4_lost_worker_complete"))
 
+        harness.events.handleTrigger("player_action", EventPayload.Action("w4_sq18_stop_intake"))
         harness.events.handleTrigger("player_action", EventPayload.Action("w4_sq18_salvage_mechs"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w4_sq18_build_bypass"))
         state = harness.store.state.value
         assertTrue(state.completedQuests.contains("w4_sq18"))
         assertTrue(state.completedMilestones.contains("ms_w4_scavenger_unlocked"))

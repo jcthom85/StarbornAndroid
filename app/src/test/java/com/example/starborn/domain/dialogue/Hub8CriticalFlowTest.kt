@@ -72,6 +72,7 @@ class Hub8CriticalFlowTest {
 
         harness.events.handleTrigger("player_action", EventPayload.Action("w5_sq22_trace_false_sun"))
         harness.events.handleTrigger("player_action", EventPayload.Action("w5_sq22_realign_mirrors"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w5_sq22_restore_gardens"))
         var state = harness.store.state.value
         assertTrue(state.completedQuests.contains("w5_sq22"))
         assertTrue(state.unlockedSkills.contains("orion_sunbeam"))
@@ -81,11 +82,14 @@ class Hub8CriticalFlowTest {
 
         harness.events.handleTrigger("player_action", EventPayload.Action("w5_sq23_map_pressure_loss"))
         harness.events.handleTrigger("player_action", EventPayload.Action("w5_sq23_vacuum_seal"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w5_sq23_reopen_dock"))
         state = harness.store.state.value
         assertTrue(state.completedQuests.contains("w5_sq23"))
         assertTrue(state.inventory["mag_boots"].orZero() >= 1)
 
+        harness.events.handleTrigger("player_action", EventPayload.Action("w5_sq24_trace_purge"))
         harness.events.handleTrigger("player_action", EventPayload.Action("w5_sq24_recover_backup"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w5_sq24_restore_guardian"))
         state = harness.store.state.value
         assertTrue(state.completedQuests.contains("w5_sq24"))
         assertTrue(state.unlockedSkills.contains("data_shield"))

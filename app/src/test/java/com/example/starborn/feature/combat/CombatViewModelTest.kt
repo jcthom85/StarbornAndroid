@@ -1,5 +1,6 @@
 package com.example.starborn.feature.combat
 
+import androidx.lifecycle.viewModelScope
 import com.example.starborn.data.assets.WorldAssetDataSource
 import com.example.starborn.data.repository.ThemeRepository
 import com.example.starborn.domain.audio.AudioCommand
@@ -46,6 +47,7 @@ import com.example.starborn.feature.combat.viewmodel.COMBAT_TUTORIAL_SKILL_ID
 import com.example.starborn.feature.combat.viewmodel.CombatTutorialStep
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
@@ -1218,17 +1220,20 @@ class CombatViewModelTest {
         runCurrent()
 
         val banner = viewModel.combatBanner.value
-        assertEquals("Weakness hit", banner?.primary)
-        assertEquals("Cooldowns reduced", banner?.secondary)
+        assertEquals("Tempo stolen", banner?.primary)
+        assertTrue(banner?.secondary.orEmpty().contains("Shock Probe"))
+        assertTrue(banner?.secondary.orEmpty().contains("->"))
         assertEquals(CombatBannerAccent.SHOCK, banner?.accent)
         assertEquals(CombatBannerIcon.BURST, banner?.icon)
         assertEquals(CombatBannerImportance.IMPORTANT, banner?.importance)
+        assertTrue(banner?.tags.orEmpty().contains("Weakness hit"))
         assertTrue(banner?.tags.orEmpty().contains("Cooldown -1"))
         assertTrue(
             audioEvents.flatMap { it.commands }.any {
                 it is AudioCommand.Play && it.cueId == "battle_weakness_resolve"
             }
         )
+        viewModel.viewModelScope.cancel()
     }
 
     @Test

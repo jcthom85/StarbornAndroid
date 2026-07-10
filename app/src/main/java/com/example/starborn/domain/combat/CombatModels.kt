@@ -186,6 +186,15 @@ sealed interface CombatLogEntry {
 
     data class WeaknessReward(
         override val turn: Int,
-        val actorId: String
+        val actorId: String,
+        val cooldownReductions: List<CooldownReduction> = emptyList(),
+        val snackCooldownFrom: Int? = null,
+        val snackCooldownTo: Int? = null
     ) : CombatLogEntry
 }
+
+data class CooldownReduction(
+    val skillId: String,
+    val fromTurns: Int,
+    val toTurns: Int
+)

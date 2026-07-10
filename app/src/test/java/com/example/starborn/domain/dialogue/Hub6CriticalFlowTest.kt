@@ -56,6 +56,12 @@ class Hub6CriticalFlowTest {
         assertNotNull(puzzle)
         assertEquals("orion_w4_mq19_puzzle_intro", puzzle?.current()?.id)
         puzzle?.advanceUntilFinished()
+        assertTrue(harness.store.state.value.questTasksCompleted["w4_mq19"].orEmpty().contains("solve_conveyor_puzzle").not())
+        harness.events.handleTrigger("player_action", EventPayload.Action("w4_mq19_read_pulse_board"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w4_mq19_read_grease_marks"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w4_mq19_throw_override_paddle"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w4_mq19_starve_breath_pistons"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w4_mq19_open_anvil_cradle"))
         assertEquals("claim_anvil", harness.store.state.value.questStageById["w4_mq19"])
 
         val anvil = harness.dialogue.startDialogue("Nova")
@@ -100,17 +106,36 @@ class Hub6CriticalFlowTest {
     fun assemblyLineSideQuestFlows() {
         val harness = Hub6Harness()
 
+        harness.events.handleTrigger("player_action", EventPayload.Action("w4_sq17_trace_ping"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w4_sq17_find_worker"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w4_sq17_vent_safe_route"))
+        assertTrue(harness.store.state.value.completedQuests.contains("w4_sq17"))
+
+        harness.events.handleTrigger("player_action", EventPayload.Action("w4_sq18_stop_intake"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w4_sq18_salvage_mechs"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w4_sq18_build_bypass"))
+        assertTrue(harness.store.state.value.completedQuests.contains("w4_sq18"))
+
+        harness.events.handleTrigger("player_action", EventPayload.Action("w4_sq19_read_rejection_codes"))
         harness.events.handleTrigger("player_action", EventPayload.Action("w4_sq19_reprogram_units"))
+        assertTrue(harness.store.state.value.completedQuests.contains("w4_sq19").not())
+        harness.events.handleTrigger("player_action", EventPayload.Action("w4_sq19_release_units"))
         var state = harness.store.state.value
         assertTrue(state.completedQuests.contains("w4_sq19"))
         assertTrue(state.unlockedSkills.contains("gh0st_harden"))
         assertTrue(state.completedMilestones.contains("ms_w4_quality_control_complete"))
 
+        harness.events.handleTrigger("player_action", EventPayload.Action("w4_sq20_map_hazards"))
         harness.events.handleTrigger("player_action", EventPayload.Action("w4_sq20_survive_waves"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w4_sq20_steal_overclock"))
         state = harness.store.state.value
         assertTrue(state.completedQuests.contains("w4_sq20"))
         assertTrue(state.inventory["thermal_clip"].orZero() >= 1)
         assertTrue(state.completedMilestones.contains("ms_w4_overclocked_complete"))
+        assertTrue(state.questTasksCompleted["w4_sq19"].orEmpty().containsAll(listOf("read_rejection_codes", "resolve_units", "release_units")))
+        assertTrue(state.questTasksCompleted["w4_sq20"].orEmpty().containsAll(listOf("map_hazards", "survive_waves", "steal_overclock")))
+        assertTrue(state.questTasksCompleted["w4_sq17"].orEmpty().containsAll(listOf("trace_ping", "find_worker", "vent_safe_route")))
+        assertTrue(state.questTasksCompleted["w4_sq18"].orEmpty().containsAll(listOf("stop_intake", "salvage_mechs", "build_bypass")))
     }
 
     private class Hub6Harness(initialState: GameSessionState? = null) {

@@ -216,20 +216,21 @@
     "title": "Nova's Bunk",
     "background_image": "images/rooms/world_1/pit_nova_bunk_v5.png",
     "description": "Your bunk is a narrow shelf in the colony wall, barely wide enough to dream sideways. The bunk light buzzes above cargo netting that holds your tools, your spare ration, and the little pieces of yourself Dominion has not inventoried yet.",
-    "description_dark": "The room is dead black except for the emergency glow around your bunk light.",
+    "reveal_title_when_dark": true,
+    "description_dark": "Nova knows every edge of this bunk by bruised memory. The room is dead black except for the emergency glow around the bunk light.",
     "description_variants": [
       {
         "requires_state": {
           "light_on": true,
-          "bunk_checked": true
+          "resonance_investigated": true
         },
-        "description": "The bunk light steadies into a cheap yellow halo. Your bunk is still hard and narrow, the netting still sags with tools and rations, but now the door seam is visible enough to leave without cracking your shin."
+        "description": "The bunk light has settled back to a cheap yellow buzz. The impossible reflection is gone, but the three-note pattern remains under Nova's fingertips: two machine beats, then an opening. The door seam is clear enough to leave."
       },
       {
         "requires_state": {
           "light_on": true
         },
-        "description": "The bunk light buzzes awake, sketching the room back into shape: your narrow bunk, the cargo netting, the scratched floor, and the door out to the sleeping level."
+        "description": "The bunk light buzzes awake, sketching the room back into shape. One detail refuses to belong: an impossible reflection runs along the wall seam in cold blue, pulsing three notes against the machinery's rhythm."
       }
     ],
     "npcs": [],
@@ -244,7 +245,9 @@
     ],
     "state": {
       "dark": true,
-      "light_on": false
+      "light_on": false,
+      "resonance_visible": false,
+      "resonance_investigated": false
     },
     "dark": true,
     "blocked_directions": {
@@ -255,10 +258,15 @@
             "room_id": "pit_nova_bunk",
             "state_key": "light_on",
             "value": true
+          },
+          {
+            "room_id": "pit_nova_bunk",
+            "state_key": "resonance_investigated",
+            "value": true
           }
         ],
-        "message_locked": "You can't pick a safe path through the bunkroom until the light is on.",
-        "message_unlock": "The bunk light steadies, and the way out is clear."
+        "message_locked": "The blue reflection is pulling against the light. Nova cannot leave without knowing whether it is warning her or calling her.",
+        "message_unlock": "The third note settles under Nova's fingertips, and the way out is clear."
       }
     },
     "actions": [
@@ -271,6 +279,13 @@
         "action_event_on": "w1_mq01_turn_on_bunk_light",
         "action_event_off": "w1_mq01_turn_off_bunk_light",
         "condition_unmet_message": "The wall switch is cold under your fingers."
+      },
+      {
+        "name": "impossible reflection",
+        "type": "generic",
+        "action_event": "w1_mq01_trace_resonance",
+        "requires_milestone": "ms_w1_mq01_resonance_visible",
+        "condition_unmet_message": "Only the bunk light's weak emergency glow touches the wall seam."
       },
       {
         "name": "bunk",
@@ -388,10 +403,28 @@
     "weather": "dust",
     "title": "Scrap Yard",
     "background_image": "images/rooms/world_1/workshop_yard_v3.png",
-    "description": "Rusted scrap, busted loaders, and retired drone shells pile up around Jed's shutter. It looks like junk until you know which pieces he has been saving for you.",
+    "description": "Rusted scrap and retired drone shells pile up around Jed's shutter. A faulted loader jerks across the only clear route inside; its exposed relay skips in the same three-note pattern Nova heard in her bunk.",
+    "description_variants": [
+      {
+        "requires_state": {
+          "loader_cleared": true
+        },
+        "description": "The faulted loader rests cold beside the shutter, its relay dark. A clean route now cuts through the scrap to Jed's bench, and the three-note opening Nova heard in her bunk has proved real."
+      }
+    ],
     "npcs": [],
     "items": [],
-    "enemies": [],
+    "enemies": [
+      "faulted_loader"
+    ],
+    "enemy_instances": [
+      {
+        "enemy_id": "faulted_loader",
+        "hp": 45,
+        "vitality": 1,
+        "stability": 18
+      }
+    ],
     "connections": {
       "north": "workshop_floor"
     },
@@ -399,7 +432,17 @@
       0,
       0
     ],
-    "state": {},
+    "state": {
+      "loader_cleared": false
+    },
+    "blocked_directions": {
+      "north": {
+        "type": "enemy",
+        "enemy_id": "faulted_loader",
+        "message_locked": "The loader's wild arm blocks the workshop shutter. Read its rhythm and shut it down first.",
+        "message_unlock": "The loader folds into the scrap, leaving the workshop route open."
+      }
+    },
     "actions": [
       {
         "name": "scrap",
@@ -419,6 +462,14 @@
     "title": "Main Bench",
     "background_image": "images/rooms/world_1/workshop_floor_v3.png",
     "description": "Warm work lights spill across Jed's workbench, catching on solder smoke and bright little tool handles. Your illegal mining cutter sits in the middle of it all, dangerous, necessary, and almost ready.",
+    "description_variants": [
+      {
+        "requires_state": {
+          "cryo_inductor_installed": true
+        },
+        "description": "The rebuilt Cryo-Inductor hums inside Nova's cutter, venting a clean thread of cold across Jed's workbench. The repair is visible in the frost line on the barrel and tangible in the new Cryo Vent tactic waiting behind the trigger."
+      }
+    ],
     "npcs": [],
     "npc_presence": [
       {
@@ -444,7 +495,9 @@
       0,
       1
     ],
-    "state": {},
+    "state": {
+      "cryo_inductor_installed": false
+    },
     "actions": [
       {
         "name": "workbench",
@@ -3592,7 +3645,15 @@
         "name": "lanterns",
         "type": "generic",
         "action_event": "w3_sq13_fix_market_lights",
+        "requires_milestones": ["ms_w3_market_siphon_traced"],
         "condition_unmet_message": "String lights hung across the alley. Some are flickering out."
+      },
+      {
+        "name": "market registry broadcast",
+        "type": "generic",
+        "action_event": "w3_sq13_restore_market",
+        "requires_milestones": ["ms_w3_market_grid_ready"],
+        "condition_unmet_message": "The registry still calls the dark stalls abandoned."
       }
     ],
     "npc_presence": [
@@ -3662,6 +3723,12 @@
         "name": "market drain",
         "type": "generic",
         "condition_unmet_message": "The market drain carries spilled rain and contraband wrappers toward the old sewer channels."
+      },
+      {
+        "name": "executive power siphon",
+        "type": "generic",
+        "action_event": "w3_sq13_trace_power_theft",
+        "condition_unmet_message": "A bright cable steals market current for an executive billboard."
       }
     ]
   },
@@ -3817,7 +3884,15 @@
         "name": "case records",
         "type": "generic",
         "action_event": "w3_sq12_access_terminal",
+        "requires_milestones": ["ms_w3_case_number_found"],
         "condition_unmet_message": "The case records include sealed entries Gh0st can pull apart for traces of Elara."
+      },
+      {
+        "name": "public kiosk relay",
+        "type": "generic",
+        "action_event": "w3_sq12_expose_transfer",
+        "requires_milestones": ["ms_w3_cold_case_records_found"],
+        "condition_unmet_message": "The relay can publish a deleted transfer only after Gh0st finds it."
       }
     ]
   },
@@ -3952,6 +4027,12 @@
         "name": "laundry tags",
         "type": "generic",
         "condition_unmet_message": "The laundry tags expose which staff routes reach the Archive level."
+      },
+      {
+        "name": "erased memorial name",
+        "type": "generic",
+        "action_event": "w3_sq12_find_case_number",
+        "condition_unmet_message": "A transit memorial has one name polished away more carefully than the others."
       }
     ]
   },
@@ -3960,7 +4041,7 @@
     "env": "neon",
     "title": "Service Lift",
     "background_image": "images/rooms/world_3/spire_laundry_service.png",
-    "description": "A service lift rises through the bones of the Upper City. The lift panel lists kitchens, gardens, galleries, and floors that have no public name, while an inspection hatch rattles overhead.",
+    "description": "A service lift rises through the bones of the Upper City. The lift panel lists floors with no public name, a worker network uplink blinks behind it, and an inspection hatch rattles overhead.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -3993,6 +4074,13 @@
         "name": "inspection hatch",
         "type": "generic",
         "condition_unmet_message": "The inspection hatch is narrow enough for Gh0st and worrying enough for everyone else."
+      },
+      {
+        "name": "worker network uplink",
+        "type": "generic",
+        "action_event": "w3_sq14_leak_ledger",
+        "requires_milestones": ["ms_w3_ledger_stolen"],
+        "condition_unmet_message": "The uplink can publish evidence only after Nova has the ledger."
       }
     ]
   },
@@ -4163,7 +4251,7 @@
     "env": "neon",
     "title": "Exec Lounge",
     "background_image": "images/rooms/world_3/spire_exec_lounge_bar.png",
-    "description": "The Exec Lounge floats on a grav-platform above a silent atrium. A private safe hides behind sculpture, the concierge terminal sells contempt, and every booth looks designed for blackmail.",
+    "description": "The Exec Lounge floats on a grav-platform above a silent atrium. A private safe hides behind sculpture, a concierge credential mirror flashes beside the terminal, and every booth looks designed for blackmail.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -4183,7 +4271,14 @@
         "name": "private safe",
         "type": "generic",
         "action_event": "w3_sq14_steal_ledger",
+        "requires_milestones": ["ms_w3_concierge_key_copied"],
         "condition_unmet_message": "A private executive safe hidden behind a decorative gravity-well sculpture."
+      },
+      {
+        "name": "concierge credential mirror",
+        "type": "generic",
+        "action_event": "w3_sq14_copy_concierge_key",
+        "condition_unmet_message": "The mirror flashes the concierge terminal's next rotating credential."
       },
       {
         "name": "concierge terminal",
@@ -4361,7 +4456,14 @@
         "name": "prototype rack",
         "type": "generic",
         "action_event": "w3_sq15_test_weapon",
+        "requires_milestones": ["ms_w3_prototype_bias_scanned"],
         "condition_unmet_message": "A dangerous experimental weapon rack waits beside a drone testing alcove."
+      },
+      {
+        "name": "prototype targeting audit",
+        "type": "generic",
+        "action_event": "w3_sq15_scan_targeting",
+        "condition_unmet_message": "The prototype's threat table is hidden behind a harmless calibration screen."
       },
       {
         "name": "security drones",
@@ -4428,6 +4530,13 @@
         "type": "generic",
         "action_event": "w3_mq15_launch_astra",
         "condition_unmet_message": "The Astra can slip the Shield only after the Administrator is down and the Lens has found the window."
+      },
+      {
+        "name": "test telemetry relay",
+        "type": "generic",
+        "action_event": "w3_sq15_scrub_telemetry",
+        "requires_milestones": ["ms_w3_prototype_trial_complete"],
+        "condition_unmet_message": "The relay has no prototype telemetry to scrub yet."
       }
     ],
     "enemy_flavor": {
@@ -4666,7 +4775,15 @@
         "name": "worker tablet",
         "type": "generic",
         "action_event": "w4_sq17_find_worker",
+        "requires_milestones": ["ms_w4_worker_ping_traced"],
         "condition_unmet_message": "The cracked tablet pings from beside a maintenance pool, wrapped in a scarf that smells faintly of coolant."
+      },
+      {
+        "name": "salvaged cooling bypass",
+        "type": "generic",
+        "action_event": "w4_sq18_build_bypass",
+        "requires_milestones": ["ms_w4_mechs_salvaged"],
+        "condition_unmet_message": "The springs need intact actuators before Nova can build a bypass."
       }
     ]
   },
@@ -4770,6 +4887,18 @@
         "condition_unmet_message": "Vent controls cycle scalding air through the service airlock."
       },
       {
+        "name": "worker maintenance ping",
+        "type": "generic",
+        "action_event": "w4_sq17_trace_ping",
+        "condition_unmet_message": "A weak maintenance ping repeats beneath the intake alarms."
+      },
+      {
+        "name": "waste intake brake",
+        "type": "generic",
+        "action_event": "w4_sq18_stop_intake",
+        "condition_unmet_message": "The brake can jam the intake long enough to salvage the wrecks."
+      },
+      {
         "name": "project phantom terminal",
         "type": "generic",
         "action_event": "w4_mq17_access_phantom_terminal",
@@ -4785,6 +4914,7 @@
         "name": "scrap mech pile",
         "type": "generic",
         "action_event": "w4_sq18_salvage_mechs",
+        "requires_milestones": ["ms_w4_intake_jammed"],
         "condition_unmet_message": "Three destroyed mechs lie half-melted in the lava-flow debris, still full of parts the Foundry wants erased."
       }
     ],
@@ -4870,6 +5000,13 @@
         "type": "generic",
         "action_event": "w4_sq16_destroy_crate_gamma",
         "condition_unmet_message": "A final ammo crate is stacked beside the decon pumps, where a worker left the resistance mark in soot."
+      },
+      {
+        "name": "engineer safe-route valve",
+        "type": "generic",
+        "action_event": "w4_sq17_vent_safe_route",
+        "requires_milestones": ["ms_w4_worker_shelter_found"],
+        "condition_unmet_message": "The valve needs the missing engineer's coolant map."
       }
     ]
   },
@@ -4905,7 +5042,7 @@
     "env": "foundry",
     "title": "Conveyor Belt",
     "background_image": "images/rooms/world_4/foundry_conveyor_belt.png",
-    "description": "Conveyor belts carry half-assembled droids under hammering presses. Some bins are stamped BIOLOGICAL COMPONENTS in language too clean for what it means.",
+    "description": "Conveyor belts carry half-assembled droids under hammering presses. A rejected droid waits beside the conveyor release lock while bins marked BIOLOGICAL COMPONENTS roll toward the furnace.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -4964,7 +5101,15 @@
         "name": "rejected droid",
         "type": "generic",
         "action_event": "w4_sq19_reprogram_units",
+        "requires_milestones": ["ms_w4_rejection_codes_read"],
         "condition_unmet_message": "A rejected droid twitches beside a bin of defective units."
+      },
+      {
+        "name": "conveyor release lock",
+        "type": "generic",
+        "action_event": "w4_sq19_release_units",
+        "requires_milestones": ["ms_w4_defective_units_spared"],
+        "condition_unmet_message": "The conveyor still cages every unit Gh0st repairs."
       }
     ],
     "enemy_flavor": {
@@ -5004,7 +5149,7 @@
     "env": "foundry",
     "title": "Reject Bay",
     "background_image": "images/rooms/world_4/foundry_conveyor_belt.png",
-    "description": "Defective units are dumped into a low bay before the furnace eats them. Some still twitch when the conveyor shudders, hands opening and closing around nothing.",
+    "description": "Defective units are dumped into a low bay before the furnace eats them. A rejected droid still twitches when the conveyor shudders, hands opening and closing around nothing.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -5030,7 +5175,7 @@
       {
         "name": "rejected droid",
         "type": "generic",
-        "action_event": "w4_sq19_reprogram_units",
+        "action_event": "w4_sq19_read_rejection_codes",
         "condition_unmet_message": "A rejected droid twitches beside a bin of defective units."
       }
     ]
@@ -5192,6 +5337,7 @@
         "name": "test chamber terminal",
         "type": "generic",
         "action_event": "w4_sq20_survive_waves",
+        "requires_milestones": ["ms_w4_hazards_mapped"],
         "condition_unmet_message": "The overclocked trial program was built to reject weak Constructs, which makes it useful practice for Nova."
       }
     ]
@@ -5225,6 +5371,19 @@
           "ms_w4_pistons_starved"
         ],
         "condition_unmet_message": "The cadence keeps refusing Nova's reach. The belt needs a mapped rhythm, a safe crawl window, an override pause, and starved breath pistons before the cradle will open."
+      },
+      {
+        "name": "hazard cycle map",
+        "type": "generic",
+        "action_event": "w4_sq20_map_hazards",
+        "condition_unmet_message": "The heat-cycle sequence repeats behind the Forge controls."
+      },
+      {
+        "name": "overclock profile",
+        "type": "generic",
+        "action_event": "w4_sq20_steal_overclock",
+        "requires_milestones": ["ms_w4_hazard_trial_cleared"],
+        "condition_unmet_message": "No survivable overclock profile has been recorded yet."
       }
     ]
   },
@@ -5498,6 +5657,13 @@
           "ms_w5_pressure_loss_mapped"
         ],
         "condition_unmet_message": "Three hull breach warnings pulse across the pressure map."
+      },
+      {
+        "name": "dock access priority",
+        "type": "generic",
+        "action_event": "w5_sq23_reopen_dock",
+        "requires_milestones": ["ms_w5_breaches_sealed"],
+        "condition_unmet_message": "The repaired dock still excludes everyone without executive priority."
       }
     ],
     "enemy_flavor": {
@@ -5578,7 +5744,15 @@
         "name": "director logs",
         "type": "generic",
         "action_event": "w5_sq21_director_logs",
+        "requires_milestones": ["ms_w5_redactions_found"],
         "condition_unmet_message": "A private archive waits behind the Director's biometric lock."
+      },
+      {
+        "name": "concourse public broadcast",
+        "type": "generic",
+        "action_event": "w5_sq21_publish_logs",
+        "requires_milestones": ["ms_w5_director_logs_decrypted"],
+        "condition_unmet_message": "The broadcast needs an unredacted record before it can expose anything."
       }
     ]
   },
@@ -5658,7 +5832,15 @@
         "name": "mirror array",
         "type": "generic",
         "action_event": "w5_sq22_realign_mirrors",
+        "requires_milestones": ["ms_w5_false_sun_traced"],
         "condition_unmet_message": "Void-moss crawls over the Solarium mirrors, dimming the false sun."
+      },
+      {
+        "name": "garden light priority",
+        "type": "generic",
+        "action_event": "w5_sq22_restore_gardens",
+        "requires_milestones": ["ms_w5_mirrors_realigned"],
+        "condition_unmet_message": "The repaired mirrors still prioritize executive sightlines."
       },
       {
         "name": "false tide fishing",
@@ -5751,7 +5933,14 @@
         ]
       }
     ],
-    "actions": []
+    "actions": [
+      {
+        "name": "Director redaction checksum",
+        "type": "generic",
+        "action_event": "w5_sq21_find_redactions",
+        "condition_unmet_message": "Security retained a checksum for every sentence the Director removed."
+      }
+    ]
   },
   {
     "id": "orbital_surveillance_pit",
@@ -5849,7 +6038,7 @@
     "env": "void",
     "title": "Server Farm",
     "background_image": "images/rooms/world_5/orbital_server_farm.png",
-    "description": "Server columns vanish into cold mist. A coolant-pulse map flickers beneath the Dominion interface, and someone is breathing inside the cooling vents.",
+    "description": "Server columns vanish into cold mist. A purged backup rack pulses beneath the Dominion interface, and its guardian ownership flag still points toward Vale.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -5898,8 +6087,15 @@
       {
         "name": "purged backup rack",
         "type": "generic",
-        "action_event": "w5_sq24_recover_backup",
+        "action_event": "w5_sq24_trace_purge",
         "condition_unmet_message": "A server marked PURGED still carries a faint diagnostic pulse."
+      },
+      {
+        "name": "guardian ownership flag",
+        "type": "generic",
+        "action_event": "w5_sq24_restore_guardian",
+        "requires_milestones": ["ms_w5_backup_recovered"],
+        "condition_unmet_message": "The mainframe needs a recovered routine before it can remove Vale's ownership flag."
       },
       {
         "name": "dead sysadmin",
@@ -6093,7 +6289,7 @@
     "env": "void",
     "title": "Purged Backup Rack",
     "background_image": "images/rooms/world_5/orbital_server_farm.png",
-    "description": "A low server rack marked PURGED still blinks through a layer of frost. Vale's deletion order missed one defensive routine hiding under old checksum names.",
+    "description": "A purged backup rack still blinks through a layer of frost. Vale's deletion order missed one defensive routine hiding under old checksum names.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -6118,6 +6314,7 @@
         "name": "purged backup rack",
         "type": "generic",
         "action_event": "w5_sq24_recover_backup",
+        "requires_milestones": ["ms_w5_backup_purge_traced"],
         "condition_unmet_message": "A server marked PURGED still carries a faint diagnostic pulse."
       }
     ]
@@ -6363,7 +6560,7 @@
     "env": "source",
     "title": "Infinite Cubicle",
     "background_image": "images/rooms/world_6/source_zeke_nightmare.png",
-    "description": "Identical desks stretch beyond sight beneath fluorescent panels. Every cubicle contains a version of Zeke smiling through another impossible evaluation.",
+    "description": "Identical desks stretch beyond sight beneath fluorescent panels. A backup lattice recreates Zeke's file in every cubicle while another version of him smiles through evaluation.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -6377,13 +6574,20 @@
       -1
     ],
     "state": {},
-    "actions": [],
+    "actions": [
+      {
+        "name": "backup lattice",
+        "type": "generic",
+        "action_event": "w6_sq27_delete_record",
+        "condition_unmet_message": "Copies of Zeke's file glow inside every cubicle wall."
+      }
+    ],
     "description_variants": [
       {
         "requires_milestones": [
           "ms_w6_mq26_complete"
         ],
-        "description": "The cubicles are still here, but the fluorescents have gone soft. Zeke's nameplate lies face-down on a desk he no longer needs to sit behind."
+        "description": "The cubicles are still here, but the fluorescents have gone soft. A backup lattice keeps rebuilding Zeke's file beside the nameplate he left face-down."
       }
     ]
   },
@@ -6392,7 +6596,7 @@
     "env": "source",
     "title": "Performance Review Loop",
     "background_image": "images/rooms/world_6/source_zeke_nightmare.png",
-    "description": "A conference table repeats into itself. The Manager projection grades Zeke against criteria that rewrite every time he meets them.",
+    "description": "A conference table repeats into itself. An authorization chain rewrites the criteria every time Zeke meets them, and the Manager projection marks him down anyway.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -6409,10 +6613,11 @@
     "state": {},
     "actions": [
       {
-        "name": "employee file",
-        "type": "generic",
-        "action_event": "w6_sq27_delete_record",
-        "condition_unmet_message": "Zeke's employee record refreshes every time someone tries to close it."
+          "name": "authorization chain",
+          "type": "generic",
+          "action_event": "w6_sq27_revoke_record",
+          "requires_milestones": ["ms_w6_hr_backups_found"],
+          "condition_unmet_message": "Deleting this copy is useless until Zeke finds what keeps authorizing the backups."
       }
     ],
     "enemy_parties": [
@@ -6429,7 +6634,7 @@
     "env": "source",
     "title": "Break Room Exit",
     "background_image": "images/rooms/world_6/source_zeke_nightmare.png",
-    "description": "A vending machine dispenses resignation letters instead of snacks. Beyond the cracked glass, the Campfire reflects in coffee gone cold.",
+    "description": "A vending machine dispenses resignation letters instead of snacks. An unauthorized exit frames the Campfire beyond cracked glass and coffee gone cold.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -6441,7 +6646,21 @@
       -3
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "unauthorized exit",
+        "type": "generic",
+        "action_event": "w6_sq27_leave_review",
+        "requires_milestones": ["ms_w6_hr_revoked"],
+        "condition_unmet_message": "The exit still asks for a manager's approval."
+      }
+    ],
+    "description_variants": [
+      {
+        "requires_milestones": ["ms_w6_unshackled_unlocked"],
+        "description": "The vending machine prints blank paper. The exit stands open, and no version of Zeke waits for permission to use it."
+      }
+    ]
   },
   {
     "id": "source_gh0st_nightmare",
@@ -6462,7 +6681,14 @@
       -1
     ],
     "state": {},
-    "actions": [],
+    "actions": [
+      {
+        "name": "buried voice",
+        "type": "generic",
+        "action_event": "w6_sq28_elara_song",
+        "condition_unmet_message": "One human breath repeats beneath the order channels."
+      }
+    ],
     "description_variants": [
       {
         "requires_milestones": [
@@ -6492,7 +6718,15 @@
       -1
     ],
     "state": {},
-    "actions": [],
+    "actions": [
+      {
+        "name": "command carrier",
+        "type": "generic",
+        "action_event": "w6_sq28_break_command",
+        "requires_milestones": ["ms_w6_elara_voice_isolated"],
+        "condition_unmet_message": "The carrier cannot be inverted until Gh0st isolates the voice worth protecting."
+      }
+    ],
     "enemy_parties": [
       [
         "endless_war_echo",
@@ -6524,8 +6758,15 @@
       {
         "name": "pure audio log",
         "type": "generic",
-        "action_event": "w6_sq28_elara_song",
-        "condition_unmet_message": "One clean recording of Elara survives beneath the kill-suite noise."
+          "action_event": "w6_sq28_preserve_song",
+          "requires_milestones": ["ms_w6_elara_commands_broken"],
+          "condition_unmet_message": "The clean recording is still fused to the kill-suite command layer."
+        }
+      ],
+    "description_variants": [
+      {
+        "requires_milestones": ["ms_w6_source_balance_unlocked"],
+        "description": "Elara's clean waveform crosses the alcove without targeting brackets or hidden orders. Gh0st lets the final note end on its own."
       }
     ]
   },
@@ -6605,7 +6846,14 @@
       -2
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "crooked tool marks",
+        "type": "generic",
+        "action_event": "w6_sq26_jed_echo",
+        "condition_unmet_message": "Three hand-cut marks survive beneath Vale's perfect reconstruction."
+      }
+    ]
   },
   {
     "id": "source_echo_mines",
@@ -6650,8 +6898,9 @@
       {
         "name": "jed echo",
         "type": "generic",
-        "action_event": "w6_sq26_jed_echo",
-        "condition_unmet_message": "Jed's workbench remains exactly where memory left it."
+          "action_event": "w6_sq26_hear_lesson",
+          "requires_milestones": ["ms_w6_jed_marks_found"],
+          "condition_unmet_message": "The echo remains polished and silent until Nova follows Jed's real tool marks."
       }
     ]
   },
@@ -6676,11 +6925,24 @@
     ],
     "state": {},
     "actions": [
-      {
-        "name": "manager patrol",
+        {
+          "name": "manager patrol",
         "type": "generic",
         "action_event": "w6_mq27_evade_manager",
-        "condition_unmet_message": "The projections reset the memory whenever they see Nova."
+          "condition_unmet_message": "The projections reset the memory whenever they see Nova."
+        },
+        {
+          "name": "open shift gate",
+          "type": "generic",
+          "action_event": "w6_sq26_carry_legacy",
+          "requires_milestones": ["ms_w6_jed_lesson_heard"],
+          "condition_unmet_message": "Nova cannot leave while she is still asking the echo to stay."
+        }
+      ],
+    "description_variants": [
+      {
+        "requires_milestones": ["ms_w6_legacy_unlocked"],
+        "description": "The projections still march, but Nova carries Jed's lesson past them without preserving his ghost as another locked room."
       }
     ]
   },
@@ -6814,12 +7076,18 @@
     ],
     "state": {},
     "actions": [
-      {
-        "name": "singularity threshold",
+        {
+          "name": "singularity threshold",
         "type": "generic",
         "action_event": "w6_mq28_reach_singularity",
-        "condition_unmet_message": "The path forward exists only when the whole circuit is ready."
-      }
+          "condition_unmet_message": "The path forward exists only when the whole circuit is ready."
+        },
+        {
+          "name": "names beneath the light",
+          "type": "generic",
+          "action_event": "w6_sq29_aethel_grave",
+          "condition_unmet_message": "Aethel names answer one another beneath the threshold."
+        }
     ]
   },
   {
@@ -6874,8 +7142,9 @@
       {
         "name": "aethel grave",
         "type": "generic",
-        "action_event": "w6_sq29_aethel_grave",
-        "condition_unmet_message": "Names written in resonance drift beneath the stair."
+          "action_event": "w6_sq29_tune_grave",
+          "requires_milestones": ["ms_w6_aethel_names_traced"],
+          "condition_unmet_message": "The grave will not answer until Orion traces the names beneath the threshold."
       }
     ]
   },
@@ -6901,7 +7170,21 @@
       1
     ],
     "state": {},
-    "actions": [],
+    "actions": [
+      {
+        "name": "answering chorus",
+        "type": "generic",
+        "action_event": "w6_sq29_carry_chorus",
+        "requires_milestones": ["ms_w6_aethel_grave_tuned"],
+        "condition_unmet_message": "The world-fracture cannot hold the chorus until the grave is tuned."
+      }
+    ],
+    "description_variants": [
+      {
+        "requires_milestones": ["ms_w6_ancestral_grace_unlocked"],
+        "description": "Mine dust, swamp moss, rain, slag, and ice rotate in time with the Aethel chorus. None becomes the only truth."
+      }
+    ],
     "enemy_parties": [
       [
         "source_shadow",
@@ -6929,7 +7212,14 @@
       1
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "wreck timeline",
+        "type": "generic",
+        "action_event": "w6_sq30_final_scavenge",
+        "condition_unmet_message": "A fracture signature links the distant hull to one preventable future."
+      }
+    ]
   },
   {
     "id": "source_spire_archive",
@@ -6953,8 +7243,9 @@
       {
         "name": "future astra hull",
         "type": "generic",
-        "action_event": "w6_sq30_final_scavenge",
-        "condition_unmet_message": "A scorched section of the Astra protrudes from a future the crew is still trying to refuse."
+          "action_event": "w6_sq30_detach_hull",
+          "requires_milestones": ["ms_w6_astra_timeline_identified"],
+          "condition_unmet_message": "Zeke needs the wreck's fracture signature before cutting into the future hull."
       }
     ]
   },
@@ -6979,12 +7270,26 @@
       1
     ],
     "state": {},
-    "actions": [],
+    "actions": [
+      {
+        "name": "empty armor socket",
+        "type": "generic",
+        "action_event": "w6_sq30_fit_hull",
+        "requires_milestones": ["ms_w6_astra_hull_detached"],
+        "condition_unmet_message": "The socket waits for armor recovered from a future the crew has refused."
+      }
+    ],
     "enemy_parties": [
       [
         "memory_leak",
         "nightmare_guard"
       ]
+    ],
+    "description_variants": [
+      {
+        "requires_milestones": ["ms_w6_final_scavenge_complete"],
+        "description": "The future hull fragment braces the arena's weakest seam. It is protection built from a warning, not proof of a fixed ending."
+      }
     ],
     "enemy_flavor": {
       "memory_leak": "The leak pulses with Jed, Thorne, and Elara in the same unfinished frame.",

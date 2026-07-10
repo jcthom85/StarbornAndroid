@@ -93,11 +93,9 @@ class Hub4CriticalFlowTest {
         harness.events.handleTrigger("player_action", EventPayload.Action("w3_scan_archive_tethers"))
         harness.events.handleTrigger("player_action", EventPayload.Action("w3_scan_prism_alarm_chords"))
         harness.events.handleTrigger("player_action", EventPayload.Action("w3_scan_drone_paths"))
-        harness.events.handleTrigger("player_action", EventPayload.Action("w3_scan_shield_gap"))
         assertTrue(harness.messages.any { it.contains("command tethers", ignoreCase = true) })
         assertTrue(harness.messages.any { it.contains("service route, drone alcove, roof", ignoreCase = true) })
         assertTrue(harness.messages.any { it.contains("drone nest", ignoreCase = true) })
-        assertTrue(harness.messages.any { it.contains("Administrator's targeting lattice", ignoreCase = true) })
 
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("spire_drone_test_alcove"))
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("spire_landing_pad_roof"))
@@ -118,7 +116,7 @@ class Hub4CriticalFlowTest {
         state = harness.store.state.value
         assertFalse(state.completedQuests.contains("w3_mq15"))
         assertFalse(state.roomId == "foundry_slag_landing")
-        assertTrue(harness.messages.any { it.contains("scan the shield gap", ignoreCase = true) })
+        assertTrue(harness.messages.any { it.contains("scan the Shield window", ignoreCase = true) })
 
         harness.events.handleTrigger("player_action", EventPayload.Action("w3_scan_shield_gap"))
         assertTrue(harness.store.state.value.questTasksCompleted["w3_mq15"].orEmpty().contains("scan_shield_gap"))
@@ -136,20 +134,40 @@ class Hub4CriticalFlowTest {
     fun upperCitySideQuestFlows() {
         val harness = Hub4Harness()
 
+        harness.events.handleTrigger("player_action", EventPayload.Action("w3_sq12_find_case_number"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w3_sq12_access_terminal"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w3_sq12_expose_transfer"))
+        assertTrue(harness.store.state.value.completedQuests.contains("w3_sq12"))
+
+        harness.events.handleTrigger("player_action", EventPayload.Action("w3_sq13_trace_power_theft"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w3_sq13_fix_market_lights"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w3_sq13_restore_market"))
+        assertTrue(harness.store.state.value.completedQuests.contains("w3_sq13"))
+
+        harness.events.handleTrigger("player_action", EventPayload.Action("w3_sq14_copy_concierge_key"))
         harness.events.handleTrigger("player_action", EventPayload.Action("w3_sq14_steal_ledger"))
+        assertTrue(harness.store.state.value.completedQuests.contains("w3_sq14").not())
+        harness.events.handleTrigger("player_action", EventPayload.Action("w3_sq14_leak_ledger"))
         var state = harness.store.state.value
         assertTrue(state.completedQuests.contains("w3_sq14"))
         assertTrue(state.inventory["encrypted_ledger"].orZero() >= 1)
         assertTrue(state.completedMilestones.contains("ms_w3_blackmail_unlocked"))
 
+        harness.events.handleTrigger("player_action", EventPayload.Action("w3_sq15_scan_targeting"))
         val terminal = harness.dialogue.startDialogue("Lab Terminal")
         assertNotNull(terminal)
         assertEquals("lab_terminal_w3_sq15_intro", terminal?.current()?.id)
         terminal?.advanceUntilFinished()
+        assertTrue(harness.store.state.value.completedQuests.contains("w3_sq15").not())
+        harness.events.handleTrigger("player_action", EventPayload.Action("w3_sq15_scrub_telemetry"))
         state = harness.store.state.value
         assertTrue(state.completedQuests.contains("w3_sq15"))
         assertTrue(state.inventory["phase_rounds"].orZero() >= 1)
         assertTrue(state.completedMilestones.contains("ms_w3_prototype_tested"))
+        assertTrue(state.questTasksCompleted["w3_sq14"].orEmpty().containsAll(listOf("copy_concierge_key", "steal_ledger", "leak_ledger")))
+        assertTrue(state.questTasksCompleted["w3_sq15"].orEmpty().containsAll(listOf("scan_targeting", "test_weapon", "scrub_telemetry")))
+        assertTrue(state.questTasksCompleted["w3_sq12"].orEmpty().containsAll(listOf("find_case_number", "access_terminal", "expose_transfer")))
+        assertTrue(state.questTasksCompleted["w3_sq13"].orEmpty().containsAll(listOf("trace_power_theft", "reroute_power", "fix_market_lights")))
     }
 
     private class Hub4Harness(initialState: GameSessionState? = null) {

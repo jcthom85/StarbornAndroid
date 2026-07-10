@@ -98,6 +98,8 @@ import com.example.starborn.domain.tutorial.TutorialEntry
 import com.example.starborn.domain.tutorial.TutorialRuntimeState
 import com.example.starborn.domain.tutorial.TutorialRuntimeManager
 import com.example.starborn.domain.theme.EnvironmentThemeManager
+import com.example.starborn.domain.telemetry.NoOpPlaytestTelemetry
+import com.example.starborn.domain.telemetry.PlaytestTelemetry
 import com.example.starborn.feature.fishing.viewmodel.FishingResultPayload
 import com.example.starborn.navigation.CombatResultPayload
 import com.example.starborn.feature.mainmenu.SaveSlotSummary
@@ -244,6 +246,7 @@ class ExplorationViewModel(
     bootstrapCinematics: List<String> = emptyList(),
     bootstrapActions: List<String> = emptyList(),
     private val dispatchers: DispatcherProvider = DefaultDispatcherProvider,
+    private val telemetry: PlaytestTelemetry = NoOpPlaytestTelemetry,
     private val dialogueTriggerBinder: (((String) -> Boolean)?) -> Unit = {}
 ) : ViewModel() {
 
@@ -438,6 +441,7 @@ class ExplorationViewModel(
             },
             onQuestStarted = { questId ->
                 questId?.let {
+                    telemetry.questStarted(it)
                     if (shouldDeferInitialQuestPresentation(it)) {
                         pendingInitialQuestPresentation = it
                     } else {
@@ -446,6 +450,7 @@ class ExplorationViewModel(
                 }
             },
             onQuestCompleted = { questId ->
+                questId?.let(telemetry::questCompleted)
                 handleEventQuestCompleted(questId)
             },
             onQuestFailed = { questId, reason ->
@@ -895,7 +900,9 @@ class ExplorationViewModel(
         postStatus(message)
     }
 
-    private fun handleRestParty(message: String? = null) {
+    private fun handleRestParty() = handleRestParty(null)
+
+    private fun handleRestParty(message: String?) {
         val state = sessionStore.state.value
         val partyIds = state.partyMembers.ifEmpty { listOfNotNull(state.playerId) }
         var restoredAmount = 0
@@ -1376,13 +1383,26 @@ class ExplorationViewModel(
             sessionStore.addCredits(amount)
             parts.add("$amount credits")
         }
-        reward.items.filter { it.itemId.isNotBlank() }.forEach { item ->
+        val grantedItems = reward.items.filter { it.itemId.isNotBlank() }.map { item ->
             val qty = item.quantity ?: 1
             inventoryService.addItem(item.itemId, qty)
             val name = inventoryService.itemDisplayName(item.itemId)
             parts.add("$qty x $name")
             emitEvent(ExplorationEvent.ItemGranted(name, qty))
-            promptManager.enqueue(ItemGrantedPrompt(name, qty))
+            name to qty
+        }
+        when (grantedItems.size) {
+            0 -> Unit
+            1 -> grantedItems.single().let { (name, qty) ->
+                promptManager.enqueue(ItemGrantedPrompt(name, qty))
+            }
+            else -> promptManager.enqueue(
+                ItemBatchGrantedPrompt(
+                    grantedItems.joinToString(" | ") { (name, qty) ->
+                        if (qty > 1) "$qty x $name" else name
+                    }
+                )
+            )
         }
         if (parts.isNotEmpty()) {
             postStatus("Reward: ${parts.joinToString(", ")}")
@@ -2094,6 +2114,15 @@ class ExplorationViewModel(
         playRoomAudio(nextHub?.id ?: sessionState.hubId, nextRoom.id)
         handleRoomEntryTutorials(nextRoom)
         eventManager.handleTrigger("enter_room", EventPayload.EnterRoom(nextRoom.id))
+        telemetry.record(
+            "room_entered",
+            mapOf(
+                "from_room_id" to currentRoom.id,
+                "room_id" to nextRoom.id,
+                "direction" to normalizedDirection,
+                "is_dark" to nextRoomIsDark
+            )
+        )
         reconcileMovementAfterRoomChange(nextRoom.id)
     }
 
@@ -2251,6 +2280,14 @@ class ExplorationViewModel(
 
     fun onDialogueChoiceSelected(optionId: String) {
         val session = activeDialogueSession ?: return
+        telemetry.record(
+            "dialogue_choice_selected",
+            mapOf(
+                "npc_id" to activeDialogueNpcName,
+                "line_id" to session.current()?.id,
+                "choice_id" to optionId
+            )
+        )
         playUiCue("confirm")
         val nextLine = session.choose(optionId)
         if (nextLine == null) {
@@ -2299,6 +2336,15 @@ class ExplorationViewModel(
 
     fun onActionSelected(action: RoomAction) {
         val actionHint = _uiState.value.actionHints[action.actionKey()]
+        telemetry.record(
+            "room_action_selected",
+            mapOf(
+                "room_id" to _uiState.value.currentRoom?.id,
+                "action_key" to action.actionKey(),
+                "action_type" to action.javaClass.simpleName,
+                "locked" to (actionHint?.locked == true)
+            )
+        )
         if (actionHint?.locked != true && !action.hasAuthoredAudioCue()) {
             playUiCue("click")
         }
@@ -3561,6 +3607,7 @@ class ExplorationViewModel(
         }
         if (itemId.isNullOrBlank()) {
             sessionStore.setEquippedItem(normalizedSlot, null, characterId)
+            telemetry.record("reward_equipped", mapOf("slot_id" to normalizedSlot, "item_id" to null, "character_id" to characterId))
             return
         }
         val entry = inventoryService.state.value.firstOrNull { it.item.id.equals(itemId, ignoreCase = true) } ?: return
@@ -3578,6 +3625,7 @@ class ExplorationViewModel(
         }
         if (!GearRules.matchesSlot(equipment, normalizedSlot, characterId, entry.item.type)) return
         sessionStore.setEquippedItem(normalizedSlot, entry.item.id, characterId)
+        telemetry.record("reward_equipped", mapOf("slot_id" to normalizedSlot, "item_id" to entry.item.id, "character_id" to characterId))
     }
 
     fun equipInventoryMod(slotId: String, itemId: String?, characterId: String? = null) {
@@ -3587,6 +3635,7 @@ class ExplorationViewModel(
         if (!GearRules.isModSlotUnlocked(normalizedSlot, completed)) return
         if (itemId.isNullOrBlank()) {
             sessionStore.setEquippedItem(normalizedSlot, null, characterId)
+            telemetry.record("reward_equipped", mapOf("slot_id" to normalizedSlot, "item_id" to null, "character_id" to characterId))
             return
         }
         val entry = inventoryService.state.value.firstOrNull { it.item.id.equals(itemId, ignoreCase = true) } ?: return
@@ -3594,6 +3643,7 @@ class ExplorationViewModel(
         val isMod = normalizedType == "mod" || entry.item.equipment?.slot?.equals("mod", true) == true
         if (!isMod) return
         sessionStore.setEquippedItem(normalizedSlot, entry.item.id, characterId)
+        telemetry.record("reward_equipped", mapOf("slot_id" to normalizedSlot, "item_id" to entry.item.id, "character_id" to characterId))
     }
 
     fun equipWeapon(characterId: String, weaponId: String?) {
@@ -3601,6 +3651,7 @@ class ExplorationViewModel(
         if (normalizedCharacter.isBlank()) return
         if (weaponId.isNullOrBlank()) {
             sessionStore.setEquippedWeapon(normalizedCharacter, null)
+            telemetry.record("reward_equipped", mapOf("slot_id" to "weapon", "item_id" to null, "character_id" to normalizedCharacter))
             return
         }
         val unlocked = sessionStore.state.value.unlockedWeapons
@@ -3608,6 +3659,7 @@ class ExplorationViewModel(
         val item = inventoryService.itemDetail(resolvedWeaponId) ?: return
         if (!isWeaponForCharacter(item, normalizedCharacter)) return
         sessionStore.setEquippedWeapon(normalizedCharacter, resolvedWeaponId)
+        telemetry.record("reward_equipped", mapOf("slot_id" to "weapon", "item_id" to resolvedWeaponId, "character_id" to normalizedCharacter))
     }
 
     fun equipArmor(characterId: String, armorId: String?) {
@@ -3615,6 +3667,7 @@ class ExplorationViewModel(
         if (normalizedCharacter.isBlank()) return
         if (armorId.isNullOrBlank()) {
             sessionStore.setEquippedArmor(normalizedCharacter, null)
+            telemetry.record("reward_equipped", mapOf("slot_id" to "armor", "item_id" to null, "character_id" to normalizedCharacter))
             return
         }
         val unlocked = sessionStore.state.value.unlockedArmors
@@ -3623,6 +3676,7 @@ class ExplorationViewModel(
         if (!isArmorItem(item)) return
         if (!isArmorForCharacter(item, normalizedCharacter)) return
         sessionStore.setEquippedArmor(normalizedCharacter, resolvedArmorId)
+        telemetry.record("reward_equipped", mapOf("slot_id" to "armor", "item_id" to resolvedArmorId, "character_id" to normalizedCharacter))
     }
 
     private fun isWeaponForCharacter(item: Item, characterId: String): Boolean {
@@ -3654,6 +3708,13 @@ class ExplorationViewModel(
     fun onTinkeringCrafted(itemId: String?) {
         val normalized = itemId?.trim()
         if (normalized.isNullOrEmpty()) return
+        telemetry.record(
+            "craft_completed",
+            mapOf(
+                "item_id" to normalized,
+                "room_id" to _uiState.value.currentRoom?.id
+            )
+        )
         triggerPlayerAction("tinkering_craft", normalized)
     }
 

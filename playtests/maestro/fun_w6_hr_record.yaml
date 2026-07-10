@@ -1,0 +1,56 @@
+appId: com.junewiregames.starborn.prealpha
+---
+- launchApp
+- extendedWaitUntil:
+    visible: "Debug Scenarios"
+    timeout: 60000
+- tapOn: "Debug Scenarios"
+- tapOn: "Search world, quest, room, or system"
+- inputText: "The HR Record"
+- hideKeyboard
+- tapOn: "Fun Audit / The HR Record"
+- extendedWaitUntil:
+    visible: "Infinite Cubicle"
+    timeout: 30000
+- tapOn: "backup lattice"
+- extendedWaitUntil:
+    visible: ".*follows its authorization chain.*"
+    timeout: 10000
+- takeScreenshot: fun-w6-discovery
+- tapOn: ".*follows its authorization chain.*"
+- runFlow:
+    when:
+      visible: "Continue"
+    commands:
+      - tapOn: "Continue"
+- tapOn: "Travel east"
+- extendedWaitUntil:
+    visible: "Performance Review Loop"
+    timeout: 15000
+- runFlow:
+    when:
+      visible: "Continue"
+    commands:
+      - tapOn: "Continue"
+- tapOn: "authorization chain"
+- extendedWaitUntil:
+    visible: ".*SUBJECT REJECTS YOUR AUTHORITY.*"
+    timeout: 10000
+- takeScreenshot: fun-w6-complication
+- tapOn: ".*SUBJECT REJECTS YOUR AUTHORITY.*"
+- tapOn: "Travel south"
+- extendedWaitUntil:
+    visible: "Break Room Exit"
+    timeout: 15000
+- runFlow:
+    when:
+      visible: "Continue"
+    commands:
+      - tapOn: "Continue"
+- tapOn: "unauthorized exit"
+- extendedWaitUntil:
+    visible: "QUEST COMPLETED"
+    timeout: 10000
+- assertVisible: "The HR Record"
+- takeScreenshot: fun-w6-payoff
+- tapOn: "Continue"
