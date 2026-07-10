@@ -222,15 +222,15 @@
       {
         "requires_state": {
           "light_on": true,
-          "resonance_investigated": true
+          "conduit_isolated": true
         },
-        "description": "The bunk light has settled back to a cheap yellow buzz. The impossible reflection is gone, but the three-note pattern remains under Nova's fingertips: two machine beats, then an opening. The door seam is clear enough to leave."
+        "description": "The bunk light has settled back to a cheap yellow buzz. The scorched conduit is dead, and the door release is safe to touch. The closed maintenance ticket remains exactly where Dominion left it."
       },
       {
         "requires_state": {
           "light_on": true
         },
-        "description": "The bunk light buzzes awake, sketching the room back into shape. One detail refuses to belong: an impossible reflection runs along the wall seam in cold blue, pulsing three notes against the machinery's rhythm."
+        "description": "The bunk light coughs awake. A scorched conduit spits blue-white sparks across the door release. Its maintenance ticket is stamped CLOSED: WITHIN QUOTA."
       }
     ],
     "npcs": [],
@@ -246,8 +246,8 @@
     "state": {
       "dark": true,
       "light_on": false,
-      "resonance_visible": false,
-      "resonance_investigated": false
+      "fault_visible": false,
+      "conduit_isolated": false
     },
     "dark": true,
     "blocked_directions": {
@@ -261,12 +261,12 @@
           },
           {
             "room_id": "pit_nova_bunk",
-            "state_key": "resonance_investigated",
+            "state_key": "conduit_isolated",
             "value": true
           }
         ],
-        "message_locked": "The blue reflection is pulling against the light. Nova cannot leave without knowing whether it is warning her or calling her.",
-        "message_unlock": "The third note settles under Nova's fingertips, and the way out is clear."
+        "message_locked": "The live conduit arcs across the door release. Nova needs to isolate it before she can leave safely.",
+        "message_unlock": "The conduit is dead. The door release is safe."
       }
     },
     "actions": [
@@ -281,10 +281,10 @@
         "condition_unmet_message": "The wall switch is cold under your fingers."
       },
       {
-        "name": "impossible reflection",
+        "name": "scorched conduit",
         "type": "generic",
-        "action_event": "w1_mq01_trace_resonance",
-        "requires_milestone": "ms_w1_mq01_resonance_visible",
+        "action_event": "w1_mq01_inspect_safety_fault",
+        "requires_milestone": "ms_w1_mq01_fault_visible",
         "condition_unmet_message": "Only the bunk light's weak emergency glow touches the wall seam."
       },
       {
@@ -403,13 +403,13 @@
     "weather": "dust",
     "title": "Scrap Yard",
     "background_image": "images/rooms/world_1/workshop_yard_v3.png",
-    "description": "Rusted scrap and retired drone shells pile up around Jed's shutter. A faulted loader jerks across the only clear route inside; its exposed relay skips in the same three-note pattern Nova heard in her bunk.",
+    "description": "Rusted scrap and retired drone shells pile up around Jed's shutter. A faulted loader jerks across the only clear route inside. A loader diagnostic strip strobes beside its cracked relay.",
     "description_variants": [
       {
         "requires_state": {
           "loader_cleared": true
         },
-        "description": "The faulted loader rests cold beside the shutter, its relay dark. A clean route now cuts through the scrap to Jed's bench, and the three-note opening Nova heard in her bunk has proved real."
+        "description": "The faulted loader rests cold beside the shutter, its relay dark. A clean route now cuts through the scrap to Jed's bench."
       }
     ],
     "npcs": [],
@@ -439,7 +439,7 @@
       "north": {
         "type": "enemy",
         "enemy_id": "faulted_loader",
-        "message_locked": "The loader's wild arm blocks the workshop shutter. Read its rhythm and shut it down first.",
+        "message_locked": "The loader's wild arm blocks the workshop shutter. Its diagnostic strip may expose a safe way to shut it down.",
         "message_unlock": "The loader folds into the scrap, leaving the workshop route open."
       }
     },
@@ -5948,6 +5948,12 @@
       }
     ],
     "actions": [
+      {
+        "name": "loader diagnostic strip",
+        "type": "generic",
+        "action_event": "w1_mq01_inspect_loader_relay",
+        "condition_unmet_message": "The strip flashes SAFETY GOVERNOR BYPASSED beside the cracked relay."
+      },
       {
         "name": "Director redaction checksum",
         "type": "generic",

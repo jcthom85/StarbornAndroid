@@ -15,34 +15,25 @@ appId: com.junewiregames.starborn.prealpha
 - takeScreenshot: fun-opening-identified-nova
 - tapOn: "bunk light"
 - extendedWaitUntil:
-    visible: "The bunk light snaps on yellow.*"
+    visible: "The bunk light coughs on.*"
     timeout: 10000
-- tapOn: ".*The bunk light snaps on yellow.*"
+- tapOn: ".*The bunk light coughs on.*"
 - extendedWaitUntil:
-    visible: ".*impossible reflection.*"
+    visible: ".*scorched conduit.*"
     timeout: 10000
-- takeScreenshot: fun-opening-impossible-reflection
-- tapOn: "impossible reflection"
+- takeScreenshot: fun-opening-suppressed-fault
+- tapOn: "scorched conduit"
 - extendedWaitUntil:
-    visible: ".*Lights don't cast reflections toward themselves.*"
+    visible: ".*Repeated repair requests.*"
     timeout: 15000
-- assertVisible: "Nova"
-- takeScreenshot: fun-opening-nova-resonance
-- tapOn: "Dialogue Popup. Tap to continue"
-- extendedWaitUntil:
-    visible: ".*Two machine beats pass beneath them.*"
-    timeout: 10000
-- tapOn: "Tap to continue.*"
-- extendedWaitUntil:
-    visible: ".*Two beats of noise, then an opening.*"
-    timeout: 10000
-- tapOn: "Dialogue Popup. Tap to continue"
+- takeScreenshot: fun-opening-cover-up
+- tapOn: ".*Repeated repair requests.*"
 - extendedWaitUntil:
     visible: "Swipe toward any open exit to move.*"
     timeout: 10000
 - tapOn: "CONTINUE"
 - extendedWaitUntil:
-    visible: ".*three-note pattern remains.*"
+    visible: ".*closed maintenance ticket remains.*"
     timeout: 10000
 - assertVisible: "Travel west"
 - takeScreenshot: fun-opening-hook-complete

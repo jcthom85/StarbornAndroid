@@ -43,6 +43,7 @@ import com.example.starborn.domain.event.EventPayload
 import com.example.starborn.domain.model.GameEvent
 import com.example.starborn.domain.model.MilestoneEffects
 import com.example.starborn.domain.model.Player
+import com.example.starborn.domain.session.migrateOpeningNarrativeState
 import com.example.starborn.domain.model.Item
 import com.example.starborn.domain.session.GameSessionPersistence
 import com.example.starborn.domain.session.GameSessionSlotInfo
@@ -231,7 +232,7 @@ class AppServices(context: Context) {
             // If the user starts a new game before the initial read completes, don't overwrite it.
             val stored = sessionPersistence.sessionFlow.first()
             if (sessionStore.state.value.needsFallbackImport()) {
-                sessionStore.restore(stored)
+                sessionStore.restore(stored.migrateOpeningNarrativeState())
                 inventoryService.restore(stored.inventory)
                 migrateLegacyWeapons(stored)
                 migrateLegacyArmors(stored)
@@ -653,7 +654,7 @@ class AppServices(context: Context) {
     suspend fun loadSlot(slot: Int): Boolean {
         val info = resolveSlotInfo(slot) ?: return false
         val state = info.state
-        sessionStore.restore(state)
+        sessionStore.restore(state.migrateOpeningNarrativeState())
         inventoryService.restore(state.inventory)
         migrateLegacyWeapons(state)
         migrateLegacyArmors(state)
@@ -672,7 +673,7 @@ class AppServices(context: Context) {
     suspend fun loadAutosave(): Boolean {
         val info = sessionPersistence.autosaveInfo() ?: return false
         val state = info.state
-        sessionStore.restore(state)
+        sessionStore.restore(state.migrateOpeningNarrativeState())
         inventoryService.restore(state.inventory)
         migrateLegacyWeapons(state)
         migrateLegacyArmors(state)
@@ -697,7 +698,7 @@ class AppServices(context: Context) {
     suspend fun loadQuickSave(): Boolean {
         val info = sessionPersistence.quickSaveInfo() ?: return false
         val state = info.state
-        sessionStore.restore(state)
+        sessionStore.restore(state.migrateOpeningNarrativeState())
         inventoryService.restore(state.inventory)
         migrateLegacyWeapons(state)
         migrateLegacyArmors(state)
@@ -717,7 +718,7 @@ class AppServices(context: Context) {
 
     suspend fun importLegacySave(file: File): Boolean {
         val imported = sessionPersistence.importLegacySave(file, itemRepository) ?: return false
-        sessionStore.restore(imported)
+        sessionStore.restore(imported.migrateOpeningNarrativeState())
         inventoryService.restore(imported.inventory)
         migrateLegacyWeapons(imported)
         migrateLegacyArmors(imported)
@@ -817,7 +818,7 @@ class AppServices(context: Context) {
                 equippedArmors = startingEquippedArmors,
                 equippedItems = startingEquippedItems
             )
-            sessionStore.restore(seedState)
+            sessionStore.restore(seedState.migrateOpeningNarrativeState())
             sessionStore.resetTutorialProgress()
             sessionStore.resetQuestProgress()
             if (debugFullInventory) {

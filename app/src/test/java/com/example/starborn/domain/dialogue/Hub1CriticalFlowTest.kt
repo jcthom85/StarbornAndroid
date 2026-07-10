@@ -30,7 +30,7 @@ class Hub1CriticalFlowTest {
     )
 
     @Test
-    fun openingResonancePrecedesMovementAndDefersJournal() {
+    fun openingSafetyFaultPrecedesMovementAndDefersJournal() {
         val harness = Hub1Harness(initialState = openingState())
 
         harness.events.handleTrigger("player_action", EventPayload.Action("new_game_spawn_player_and_fade"))
@@ -42,17 +42,17 @@ class Hub1CriticalFlowTest {
 
         harness.events.handleTrigger("player_action", EventPayload.Action("w1_mq01_turn_on_bunk_light"))
         assertTrue(harness.tutorialRequests.none { it.first == "movement" })
-        assertTrue(harness.store.state.value.completedMilestones.contains("ms_w1_mq01_resonance_visible"))
+        assertTrue(harness.store.state.value.completedMilestones.contains("ms_w1_mq01_fault_visible"))
 
-        harness.events.handleTrigger("player_action", EventPayload.Action("w1_mq01_trace_resonance"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w1_mq01_inspect_safety_fault"))
         assertTrue(harness.tutorialRequests.contains("movement" to "Nova's Bunk"))
         val state = harness.store.state.value
         assertTrue(state.questTasksCompleted["w1_mq01"].orEmpty().contains("turn_on_bunk_light"))
-        assertTrue(state.questTasksCompleted["w1_mq01"].orEmpty().contains("trace_resonance"))
+        assertTrue(state.questTasksCompleted["w1_mq01"].orEmpty().contains("inspect_safety_fault"))
         assertTrue(state.completedMilestones.contains("ms_w1_mq01_bunk_light_on"))
-        assertTrue(state.completedMilestones.contains("ms_w1_mq01_resonance_traced"))
+        assertTrue(state.completedMilestones.contains("ms_w1_mq01_safety_fault_inspected"))
         assertEquals(true, state.roomStates["pit_nova_bunk"].orEmpty()["light_on"])
-        assertEquals(true, state.roomStates["pit_nova_bunk"].orEmpty()["resonance_investigated"])
+        assertEquals(true, state.roomStates["pit_nova_bunk"].orEmpty()["conduit_isolated"])
         assertEquals(false, state.roomStates["pit_nova_bunk"].orEmpty()["dark"])
         val movementTutorialCount = harness.tutorialRequests.count { it == "movement" to "Nova's Bunk" }
         harness.store.setRoomState("pit_nova_bunk", "light_on", false)
@@ -75,7 +75,7 @@ class Hub1CriticalFlowTest {
 
         harness.events.handleTrigger("player_action", EventPayload.Action("w1_mq01_turn_on_bunk_light"))
         assertTrue(harness.store.state.value.completedMilestones.contains("ms_w1_mq01_bunk_light_on"))
-        harness.events.handleTrigger("player_action", EventPayload.Action("w1_mq01_trace_resonance"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w1_mq01_inspect_safety_fault"))
 
         harness.completePendingCinematics()
         assertTrue(harness.tutorialRequests.none { it.first == "hotspot_actions" })
@@ -87,7 +87,7 @@ class Hub1CriticalFlowTest {
         val harness = Hub1Harness(initialState = openingState())
 
         harness.events.handleTrigger("player_action", EventPayload.Action("w1_mq01_turn_on_bunk_light"))
-        harness.events.handleTrigger("player_action", EventPayload.Action("w1_mq01_trace_resonance"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w1_mq01_inspect_safety_fault"))
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("pit_shaft"))
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("pit_jed_bunk"))
 
@@ -109,7 +109,9 @@ class Hub1CriticalFlowTest {
 
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("pit_shaft"))
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("workshop_yard"))
-        assertTrue(harness.narrationMessages.any { it.contains("two beats of noise", ignoreCase = true) })
+        harness.events.handleTrigger("player_action", EventPayload.Action("w1_mq01_inspect_loader_relay"))
+        assertTrue(harness.narrationMessages.any { it.contains("safety governor bypassed", ignoreCase = true) })
+        assertTrue(harness.store.state.value.questTasksCompleted["w1_mq01"].orEmpty().contains("inspect_loader_relay"))
         harness.events.handleTrigger(
             "encounter_victory",
             EventPayload.EncounterOutcome(

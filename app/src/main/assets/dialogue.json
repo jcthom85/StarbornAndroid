@@ -216,7 +216,7 @@
   {
     "id": "jed_w1_mq01_intro_1",
     "speaker": "Jed",
-    "text": "You look like a pressure leak with boots, and you're listening to the walls again. Tell me you slept.",
+    "text": "You look like a pressure leak with boots. Tell me you slept.",
     "condition": "quest_active:w1_mq01,milestone_not_set:ms_w1_mq01_jed_talked",
     "next": "jed_w1_mq01_intro_2"
   },
@@ -224,13 +224,13 @@
     "id": "jed_w1_mq01_intro_2",
     "speaker": "Nova",
     "emote": "puzzled",
-    "text": "I slept enough. Quota doesn't care how rested I am.",
+    "text": "Enough. The conduit by my door nearly cooked me. Its repair ticket was already stamped closed.",
     "next": "jed_w1_mq01_intro_3"
   },
   {
     "id": "jed_w1_mq01_intro_3",
     "speaker": "Jed",
-    "text": "Quota also doesn't care if that cutter pops and takes your hand with it. I do.",
+    "text": "Within quota, right? They have been closing live-fault reports all week. Quota doesn't care if that cutter takes your hand. I do.",
     "next": "jed_w1_mq01_intro_4"
   },
   {

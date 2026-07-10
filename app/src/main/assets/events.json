@@ -397,7 +397,7 @@
   },
   {
     "id": "w1_mq01_turn_on_bunk_light",
-    "description": "Turns on Nova's bunk light and reveals the impossible resonance hidden inside it.",
+    "description": "Turns on Nova's bunk light and reveals a dangerous, suppressed maintenance fault.",
     "trigger": {
       "type": "player_action",
       "action": "w1_mq01_turn_on_bunk_light"
@@ -419,16 +419,16 @@
       {
         "type": "set_room_state",
         "room_id": "pit_nova_bunk",
-        "state_key": "resonance_visible",
+        "state_key": "fault_visible",
         "value": true
       },
       {
         "type": "set_milestone",
-        "milestone": "ms_w1_mq01_resonance_visible"
+        "milestone": "ms_w1_mq01_fault_visible"
       },
       {
         "type": "narrate",
-        "message": "The bunk light snaps on yellow. Then a cold blue reflection runs against the grain of the wall and answers the machinery with three impossible notes.",
+        "message": "The bunk light coughs on. A scorched conduit spits blue-white sparks across the door release. Someone has stamped its maintenance ticket CLOSED: WITHIN QUOTA.",
         "tap_to_dismiss": true
       },
       {
@@ -449,11 +449,11 @@
     ]
   },
   {
-    "id": "w1_mq01_trace_resonance",
-    "description": "Nova traces the impossible reflection and learns the three-beat opening it exposes in nearby machines.",
+    "id": "w1_mq01_inspect_safety_fault",
+    "description": "Nova isolates the live conduit and confirms Dominion suppressed repeated repair requests.",
     "trigger": {
       "type": "player_action",
-      "action": "w1_mq01_trace_resonance"
+      "action": "w1_mq01_inspect_safety_fault"
     },
     "conditions": [
       {
@@ -462,45 +462,38 @@
       },
       {
         "type": "milestone_set",
-        "milestone": "ms_w1_mq01_resonance_visible"
+        "milestone": "ms_w1_mq01_fault_visible"
       },
       {
         "type": "milestone_not_set",
-        "milestone": "ms_w1_mq01_resonance_traced"
+        "milestone": "ms_w1_mq01_safety_fault_inspected"
       }
     ],
     "actions": [
       {
-        "type": "audio_layer",
-        "layer": "ui",
-        "cue_id": "sfx_chime_splice",
-        "fade_ms": 0
-      },
-      {
         "type": "set_room_state",
         "room_id": "pit_nova_bunk",
-        "state_key": "resonance_investigated",
+        "state_key": "conduit_isolated",
         "value": true
       },
       {
         "type": "set_quest_task_done",
         "quest_id": "w1_mq01",
-        "task_id": "trace_resonance"
+        "task_id": "inspect_safety_fault"
       },
       {
         "type": "set_milestone",
-        "milestone": "ms_w1_mq01_resonance_traced"
+        "milestone": "ms_w1_mq01_safety_fault_inspected"
       },
       {
-        "type": "play_cinematic",
-        "scene_id": "w1_first_resonance",
-        "on_complete": [
-          {
-            "type": "system_tutorial",
-            "scene_id": "movement",
-            "context": "Nova's Bunk"
-          }
-        ]
+        "type": "narrate",
+        "message": "Nova kills the circuit and peels back the ticket. Repeated repair requests, each automatically closed. The fault was reported. Dominion chose shift numbers over the people sleeping beside it.",
+        "tap_to_dismiss": true
+      },
+      {
+        "type": "system_tutorial",
+        "scene_id": "movement",
+        "context": "Nova's Bunk"
       }
     ]
   },
@@ -650,11 +643,11 @@
     ]
   },
   {
-    "id": "w1_mq01_loader_resonance_callback",
-    "description": "The faulted loader repeats the impossible pattern Nova traced in her bunk.",
+    "id": "w1_mq01_inspect_loader_relay",
+    "description": "Nova reads the loader diagnostic and identifies its exposed Shock-sensitive relay.",
     "trigger": {
-      "type": "enter_room",
-      "room": "workshop_yard"
+      "type": "player_action",
+      "action": "w1_mq01_inspect_loader_relay"
     },
     "conditions": [
       {
@@ -663,28 +656,33 @@
       },
       {
         "type": "milestone_set",
-        "milestone": "ms_w1_mq01_resonance_traced"
+        "milestone": "ms_w1_mq01_safety_fault_inspected"
       },
       {
         "type": "milestone_not_set",
-        "milestone": "ms_w1_mq01_loader_read"
+        "milestone": "ms_w1_mq01_loader_inspected"
       }
     ],
     "actions": [
       {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_mq01",
+        "task_id": "inspect_loader_relay"
+      },
+      {
         "type": "set_milestone",
-        "milestone": "ms_w1_mq01_loader_read"
+        "milestone": "ms_w1_mq01_loader_inspected"
       },
       {
         "type": "narrate",
-        "message": "The loader's arm lashes across the shutter. Under the shriek of its motor, Nova hears the same pattern from her bunk: two beats of noise, then the relay opens. Arc Tether can hit that opening and steal the machine's tempo.",
+        "message": "The strip reports SAFETY GOVERNOR BYPASSED. The loader's cracked relay flashes bare when its arm drives forward. A Shock hit will interrupt it and bring Nova's active abilities back sooner.",
         "tap_to_dismiss": true
       }
     ]
   },
   {
     "id": "w1_mq01_faulted_loader_victory",
-    "description": "Clearing the loader proves Nova's resonance clue works and opens Jed's workshop.",
+    "description": "Clearing the loader proves Nova's diagnostic read and opens Jed's workshop.",
     "trigger": {
       "type": "encounter_victory",
       "room": "workshop_yard",
@@ -716,7 +714,7 @@
       },
       {
         "type": "narrate",
-        "message": "The third note lands. The loader folds into the scrap, and Arc Tether comes back online a beat sooner. The impossible pattern was not a dream; it was an advantage.",
+        "message": "Arc Tether punches through the exposed relay. The loader locks, shudders, and drops into the scrap. The workshop route is clear.",
         "tap_to_dismiss": true
       }
     ]

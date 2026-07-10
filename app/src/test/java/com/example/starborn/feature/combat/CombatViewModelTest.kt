@@ -1220,7 +1220,7 @@ class CombatViewModelTest {
         runCurrent()
 
         val banner = viewModel.combatBanner.value
-        assertEquals("Tempo stolen", banner?.primary)
+        assertEquals("Weakness exploited", banner?.primary)
         assertTrue(banner?.secondary.orEmpty().contains("Shock Probe"))
         assertTrue(banner?.secondary.orEmpty().contains("->"))
         assertEquals(CombatBannerAccent.SHOCK, banner?.accent)

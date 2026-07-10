@@ -36,7 +36,7 @@
         "quantity": 1
       }
     ],
-    "description": "Workshop loader with an exposed Shock weakness. Hit the relay to reduce active cooldowns and seize the next turn's tempo.",
+    "description": "Workshop loader with an exposed Shock weakness. Hit the relay to reduce active cooldowns and bring abilities back sooner.",
     "portrait": "images/enemies/heavy_loader_combat.png"
   },
   {

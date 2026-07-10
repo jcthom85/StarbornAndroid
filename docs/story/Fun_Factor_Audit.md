@@ -2,16 +2,17 @@
 
 ## Fun Thesis
 
-Starborn's core loop is **notice -> investigate -> prepare -> exploit -> earn -> witness change**. Discovery should give the player an actionable advantage, and combat mastery should turn that advantage into stolen tempo, a setup, and a payoff. Major arcs should deliver one meaningful discovery, decision, mastery moment, or payoff every 10-20 minutes.
+Starborn's core loop is **notice -> investigate -> prepare -> exploit -> earn -> witness change**. Discovery should give the player an actionable advantage, and combat mastery should turn that advantage into shorter cooldowns, a setup, and a payoff. Major arcs should deliver one meaningful discovery, decision, mastery moment, or payoff every 10-20 minutes.
 
 ## Implemented Opening Slice
 
 - Nova is identified immediately instead of presented as `???`.
-- The bunk light reveals an impossible resonance before movement instruction appears.
-- Investigating the anomaly teaches a three-beat clue that returns at the workshop loader.
+- The bunk light reveals a live conduit beside a maintenance ticket falsely closed as within quota.
+- Isolating the fault proves Dominion suppressed repair requests and establishes Nova through competence rather than destiny.
+- The workshop loader has a player-inspected diagnostic strip that identifies its bypassed governor and exposed Shock weakness.
 - Jed's starter gear arrives as one kit instead of five item interruptions plus an inventory tutorial.
 - The Faulted Loader is a short authored Shock-weak encounter that demonstrates weakness-driven cooldown acceleration.
-- Tempo feedback names the cooldown that moved and shows its previous and new values.
+- Weakness feedback names the cooldown that moved and shows its previous and new values.
 - Crafting the Cryo-Inductor unlocks Cryo Vent, a new brittle setup route, and permanently changes the workshop description.
 - Local JSONL playtest telemetry records room actions, dialogue choices, combat actions, retries, quest duration, equipment, arc scores, and session exits without player-entered text or network transport.
 

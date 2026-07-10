@@ -10,14 +10,12 @@ appId: com.junewiregames.starborn.prealpha
     visible: "Nova's Bunk"
     timeout: 20000
 - tapOn: "bunk light"
-- tapOn: ".*The bunk light snaps on yellow.*"
-- tapOn: "impossible reflection"
+- tapOn: ".*The bunk light coughs on.*"
+- tapOn: "scorched conduit"
 - extendedWaitUntil:
-    visible: ".*Lights don't cast reflections toward themselves.*"
+    visible: ".*Repeated repair requests.*"
     timeout: 15000
-- tapOn: "Dialogue Popup. Tap to continue"
-- tapOn: "Tap to continue.*"
-- tapOn: "Dialogue Popup. Tap to continue"
+- tapOn: ".*Repeated repair requests.*"
 - extendedWaitUntil:
     visible: "Swipe toward any open exit to move.*"
     timeout: 10000
@@ -65,9 +63,13 @@ appId: com.junewiregames.starborn.prealpha
 - tapOn: "Enter Jed's Workshop"
 - tapOn: "Enter"
 - extendedWaitUntil:
-    visible: ".*two beats of noise, then the relay opens.*"
+    visible: "Scrap Yard"
     timeout: 15000
-- tapOn: ".*two beats of noise, then the relay opens.*"
+- tapOn: "loader diagnostic strip"
+- extendedWaitUntil:
+    visible: ".*SAFETY GOVERNOR BYPASSED.*"
+    timeout: 15000
+- tapOn: ".*SAFETY GOVERNOR BYPASSED.*"
 - extendedWaitUntil:
     visible: "Scrap Yard"
     timeout: 15000
@@ -93,9 +95,9 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 15000
 - tapOn: ".*Faulted Loader.*"
 - extendedWaitUntil:
-    visible: "Tempo stolen"
+    visible: "Weakness exploited"
     timeout: 15000
-- takeScreenshot: fun-opening-tempo-stolen
+- takeScreenshot: fun-opening-weakness-exploited
 - repeat:
     times: 2
     commands:
@@ -127,9 +129,9 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 60000
 - tapOn: "Continue"
 - extendedWaitUntil:
-    visible: ".*The third note lands.*"
+    visible: ".*loader locks, shudders.*"
     timeout: 15000
-- tapOn: ".*The third note lands.*"
+- tapOn: ".*loader locks, shudders.*"
 - extendedWaitUntil:
     visible: "Scrap Yard"
     timeout: 15000

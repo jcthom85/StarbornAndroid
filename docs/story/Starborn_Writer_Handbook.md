@@ -6,6 +6,15 @@
 
 ---
 
+## Resonance and Destiny Guardrails
+
+- Before Nova encounters the Tuning Fork in W1_MQ03, write machinery as physical machinery: heat, vibration, sparks, pressure, diagnostics, wear, and documented failure.
+- Resonance is a measurable Source phenomenon introduced by relic contact. It is not a vague synonym for instinct, emotion, competence, or unusual lighting.
+- Relics do not choose Nova. Nova gains strength through observation, work, decisions, and the people who stand with her.
+- Musical language must be earned gradually after the Tuning Fork. World 1 establishes the phenomenon; later worlds may broaden the metaphor only when a concrete Source effect supports it.
+- Do not invent unexplained notes, counted beats, rhythms, harmonies, or anomalies to make ordinary scenes seem cosmic.
+- Before using a metaphor, ask: what physically happened, what does the player learn, and what can the player do differently? If those answers are unclear, rewrite it concretely.
+
 ## I. The Golden Rules (Global)
 
 1.  **The "Grunt" Test:** If a tired shift-worker wouldn't think it, don't write it. (Exception: Orion/Source).

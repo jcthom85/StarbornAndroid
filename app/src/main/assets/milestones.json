@@ -184,28 +184,28 @@
     "toast": "Bunk light restored."
   },
   {
-    "id": "ms_w1_mq01_resonance_visible",
-    "name": "The Wrong Note",
-    "description": "Nova's bunk light revealed a cold reflection pulsing against the machinery's rhythm.",
-    "toast": "Something impossible is hiding inside the light."
+    "id": "ms_w1_mq01_fault_visible",
+    "name": "Closed Within Quota",
+    "description": "Nova found a live electrical fault beside a maintenance ticket Dominion had already closed.",
+    "toast": "The fault was reported. Dominion left it live."
   },
   {
-    "id": "ms_w1_mq01_resonance_traced",
-    "name": "Three-Beat Opening",
-    "description": "Nova traced the resonance and learned to hear the open beat inside a machine cycle.",
-    "toast": "Two beats of noise. One opening."
+    "id": "ms_w1_mq01_safety_fault_inspected",
+    "name": "Fault Isolated",
+    "description": "Nova killed the conduit and found repeated repair requests automatically closed for quota compliance.",
+    "toast": "The door is safe. The cover-up is not."
   },
   {
-    "id": "ms_w1_mq01_loader_read",
-    "name": "Pattern Recognized",
-    "description": "Nova recognized the bunk's three-note pattern in Jed's faulted loader.",
-    "toast": "The loader is keeping the same bad rhythm."
+    "id": "ms_w1_mq01_loader_inspected",
+    "name": "Diagnostic Read",
+    "description": "Nova found the loader's bypassed safety governor and exposed Shock-sensitive relay.",
+    "toast": "Shock can interrupt the exposed relay."
   },
   {
     "id": "ms_w1_mq01_loader_cleared",
-    "name": "Tempo Stolen",
-    "description": "Nova used the resonance opening to shut down the faulted loader and reach Jed's bench.",
-    "toast": "The impossible pattern works."
+    "name": "Weakness Exploited",
+    "description": "Nova used the loader diagnostic to disable its exposed relay and reach Jed's bench.",
+    "toast": "The workshop route is clear."
   },
   {
     "id": "ms_w1_mq01_netting_checked",

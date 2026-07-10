@@ -2,9 +2,9 @@
   {
     "id": "w1_mq01",
     "title": "Wake Up Call",
-    "summary": "Nova wakes to a note no machine should be able to make, then follows its pattern toward another shift in the Pit.",
-    "description": "Trace the impossible resonance in Nova's bunk, reach Jed, and turn the discovery into an advantage before Dominion's shift clock closes in.",
-    "flavor": "The shift clock says wake up. Something under it says listen.",
+    "summary": "Nova wakes beside a dangerous electrical fault that Dominion has already marked closed, then reports for another shift in the Pit.",
+    "description": "Make Nova's bunk safe, reach Jed, and use a suppressed diagnostic to get through his faulted workshop loader.",
+    "flavor": "The shift clock says wake up. The closed maintenance ticket says the quota matters more than you do.",
     "giver": "Jed",
     "hub_id": "hub_1_homestead",
     "stages": [
@@ -18,8 +18,8 @@
             "text": "Turn on the bunk light."
           },
           {
-            "id": "trace_resonance",
-            "text": "Trace the impossible reflection hiding inside the light."
+            "id": "inspect_safety_fault",
+            "text": "Inspect and isolate the scorched conduit."
           },
           {
             "id": "leave_sleeping_level",
@@ -45,8 +45,12 @@
             "text": "Reach Jed's Workshop."
           },
           {
+            "id": "inspect_loader_relay",
+            "text": "Inspect the loader diagnostic strip."
+          },
+          {
             "id": "clear_faulted_loader",
-            "text": "Use the three-note opening to disable the faulted loader."
+            "text": "Exploit the loader's exposed Shock weakness."
           },
           {
             "id": "equip_starter_gear",

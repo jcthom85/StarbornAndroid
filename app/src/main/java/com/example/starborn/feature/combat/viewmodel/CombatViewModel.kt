@@ -1639,7 +1639,7 @@ class CombatViewModel(
                 is CombatLogEntry.WeaknessReward -> {
                     playBattleCue("weakness_resolve")
                     telemetry.record(
-                        "tempo_stolen",
+                        "weakness_cooldown_reduced",
                         mapOf(
                             "actor_id" to entry.actorId,
                             "cooldown_skill_ids" to entry.cooldownReductions.map { it.skillId },
@@ -2223,23 +2223,25 @@ class CombatViewModel(
         bannerSession = null
         val shiftedCooldowns = entry.cooldownReductions.map { shift ->
             val skillName = skillById[shift.skillId]?.name ?: shift.skillId.replace('_', ' ')
-            "$skillName ${shift.fromTurns} -> ${shift.toTurns}"
+            "$skillName cooldown: ${shift.fromTurns} -> ${shift.toTurns}"
         }
         val snackShift = if (entry.snackCooldownFrom != null && entry.snackCooldownTo != null) {
-            "Snack ${entry.snackCooldownFrom} -> ${entry.snackCooldownTo}"
+            "Snack cooldown: ${entry.snackCooldownFrom} -> ${entry.snackCooldownTo}"
         } else {
             null
         }
-        val shiftSummary = (shiftedCooldowns + listOfNotNull(snackShift)).ifEmpty {
-            listOf("Active cooldowns moved 1 turn closer")
-        }.joinToString("  |  ")
+        val reductions = shiftedCooldowns + listOfNotNull(snackShift)
+        val shiftSummary = when (reductions.size) {
+            1 -> reductions.single()
+            else -> "Active cooldowns reduced by 1"
+        }
         return CombatBannerMessage(
             id = UUID.randomUUID().toString(),
-            primary = "Tempo stolen",
+            primary = "Weakness exploited",
             secondary = shiftSummary,
             accent = CombatBannerAccent.SHOCK,
             icon = CombatBannerIcon.BURST,
-            tags = listOf("Weakness hit", "Cooldown -1"),
+            tags = listOf("Weakness", "Cooldown -1"),
             importance = CombatBannerImportance.IMPORTANT
         )
     }
@@ -3360,7 +3362,7 @@ private fun determineSkillTargeting(skill: Skill): SkillTargeting {
                 val actorName = state.combatants[entry.actorId]?.combatant?.name ?: entry.actorId
                 "$actorName lines up an action"
             }
-            is CombatLogEntry.WeaknessReward -> "Weakness hit. Tempo stolen; active cooldowns reduced by 1."
+            is CombatLogEntry.WeaknessReward -> "Weakness exploited. Active cooldowns reduced by 1."
             is CombatLogEntry.Outcome -> when (entry.result) {
                 is CombatOutcome.Victory -> "All foes defeated!"
                 is CombatOutcome.Defeat -> "Party overwhelmed..."

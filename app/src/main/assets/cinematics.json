@@ -1,27 +1,5 @@
 [
   {
-    "id": "w1_first_resonance",
-    "title": "The Wrong Note",
-    "steps": [
-      {
-        "type": "dialogue",
-        "speaker": "Nova",
-        "emote": "puzzled",
-        "text": "No. Lights don't cast reflections toward themselves."
-      },
-      {
-        "type": "narration",
-        "text": "Nova presses two fingers to the blue seam. Two machine beats pass beneath them. On the third, the note moves to meet her."
-      },
-      {
-        "type": "dialogue",
-        "speaker": "Nova",
-        "emote": "confident",
-        "text": "There you are. Two beats of noise, then an opening. Let's see what else in this colony is keeping the same bad rhythm."
-      }
-    ]
-  },
-  {
     "id": "cinematic_narrative_test",
     "title": "Cosmic Resonance",
     "steps": [
