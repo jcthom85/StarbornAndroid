@@ -582,6 +582,15 @@
   ],
   "cues": [
     {
+      "id": "ui_room_move",
+      "category": "ui",
+      "priority": 1,
+      "gain": 0.62,
+      "fade_in_ms": 0,
+      "fade_out_ms": 80,
+      "duration_ms": 500
+    },
+    {
       "id": "ui_click",
       "category": "ui",
       "priority": 0,

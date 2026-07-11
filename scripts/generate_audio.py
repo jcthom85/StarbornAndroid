@@ -98,6 +98,10 @@ MUSIC_CATALOG = {
 
 # Pre-configured SFX Prompts from Audio_Design_Guide.md
 SFX_CATALOG = {
+    "ui_room_move": {
+        "text": "Very short soft movement whoosh, quick rush of air with subtle cloth and light brushed-metal texture, grounded physical travel, restrained transient, clean short tail, no impact, no musical tone, no futuristic laser",
+        "duration": 0.5,
+    },
     "ui_title_start": {
         "text": "A bright, sparkling JRPG crystal chime rising in pitch, ending with a low, deep ocean wave whoosh, heavy sub-bass decay, magical transition sound",
         "duration": 2.5,

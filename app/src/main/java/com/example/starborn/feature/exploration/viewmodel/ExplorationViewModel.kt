@@ -2052,8 +2052,6 @@ class ExplorationViewModel(
         }
         evaluation.message?.let { postStatus(it) }
         dismissBlockedPrompt()
-        playUiCue("confirm")
-
         val nextRoomId = getConnection(currentRoom, direction) ?: return
         val nextRoom = roomsById[nextRoomId] ?: return
         val nextRoomIsDark = isRoomDark(nextRoom)
@@ -2087,6 +2085,12 @@ class ExplorationViewModel(
         _uiState.update {
             it.copy(
                 currentRoom = nextRoom,
+                roomTransition = RoomTransitionUi(
+                    id = System.nanoTime(),
+                    fromRoomId = currentRoom.id,
+                    toRoomId = nextRoom.id,
+                    direction = normalizedDirection
+                ),
                 currentHub = nextHub ?: it.currentHub,
                 currentWorld = nextWorld ?: it.currentWorld,
                 availableConnections = visibleConnections(nextRoom),

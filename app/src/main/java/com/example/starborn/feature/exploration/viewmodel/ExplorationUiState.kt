@@ -19,6 +19,7 @@ data class ExplorationUiState(
     val currentWorld: World? = null,
     val currentHub: Hub? = null,
     val currentRoom: Room? = null,
+    val roomTransition: RoomTransitionUi? = null,
     val availableConnections: Map<String, String?> = emptyMap(),
     val npcs: List<String> = emptyList(),
     val npcPresenceNames: Map<String, String> = emptyMap(),
@@ -87,6 +88,13 @@ data class ExplorationUiState(
     val fadeOverlay: FadeOverlayCommand? = null,
     val tutorialState: TutorialRuntimeState = TutorialRuntimeState(),
     val visualEnemyParties: List<VisualEnemyParty> = emptyList()
+)
+
+data class RoomTransitionUi(
+    val id: Long,
+    val fromRoomId: String,
+    val toRoomId: String,
+    val direction: String
 )
 
 data class EnemyIconUi(

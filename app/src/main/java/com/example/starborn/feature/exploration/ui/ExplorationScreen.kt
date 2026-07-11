@@ -92,6 +92,7 @@ import androidx.compose.material3.Switch
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -143,6 +144,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextIndent
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.util.lerp
 import androidx.compose.ui.unit.Dp
@@ -447,6 +449,29 @@ fun ExplorationScreen(
     var dragDelta by remember { mutableStateOf(Offset.Zero) }
 
     val backgroundPainter = rememberRoomBackgroundPainter(uiState.currentRoom?.backgroundImage)
+    var lastBackgroundPath by remember { mutableStateOf(uiState.currentRoom?.backgroundImage) }
+    var outgoingBackgroundPath by remember { mutableStateOf<String?>(null) }
+    var roomTransitionActive by remember { mutableStateOf(false) }
+    val roomTransitionProgress = remember { CoreAnimatable(1f) }
+    val roomTransition = uiState.roomTransition
+    val outgoingBackgroundPainter = rememberRoomBackgroundPainter(outgoingBackgroundPath)
+
+    LaunchedEffect(roomTransition?.id) {
+        val transition = roomTransition ?: return@LaunchedEffect
+        outgoingBackgroundPath = lastBackgroundPath
+        roomTransitionActive = true
+        audioCuePlayer.play("ui_room_move")
+        roomTransitionProgress.snapTo(0f)
+        roomTransitionProgress.animateTo(
+            targetValue = 1f,
+            animationSpec = tween(durationMillis = 240, easing = FastOutSlowInEasing)
+        )
+        outgoingBackgroundPath = null
+        roomTransitionActive = false
+    }
+    SideEffect {
+        lastBackgroundPath = uiState.currentRoom?.backgroundImage
+    }
     val actionAccentColor = themeColor(uiState.theme?.accent, Color(0xFF80E0FF))
     val fadeCommand = uiState.fadeOverlay
     val fadeOverlayAnim = remember(uiState.forceBlackScreen) {
@@ -471,8 +496,8 @@ fun ExplorationScreen(
 
     val baseModifier = Modifier.fillMaxSize()
     val swipeGestureModifier = Modifier
-        .pointerInput(uiState.availableConnections, uiState.blockedDirections, blockingOverlayActive) {
-            if (blockingOverlayActive) {
+        .pointerInput(uiState.availableConnections, uiState.blockedDirections, blockingOverlayActive, roomTransitionActive) {
+            if (blockingOverlayActive || roomTransitionActive) {
                 detectTapGestures(
                     onPress = {
                         tryAwaitRelease()
@@ -509,12 +534,59 @@ fun ExplorationScreen(
 
     Box(modifier = modifier.fillMaxSize().background(Color.Black)) {
         Box(modifier = baseModifier) {
+            val transitionDirection = roomTransition?.direction
+            val enterX = when (transitionDirection) {
+                "east" -> -1f
+                "west" -> 1f
+                else -> 0f
+            }
+            val enterY = when (transitionDirection) {
+                "north" -> 1f
+                "south" -> -1f
+                else -> 0f
+            }
             Image(
                 painter = backgroundPainter,
                 contentDescription = null,
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .graphicsLayer {
+                        val remaining = 1f - roomTransitionProgress.value
+                        translationX = enterX * size.width * 0.12f * remaining
+                        translationY = enterY * size.height * 0.12f * remaining
+                        scaleX = 0.99f + (0.01f * roomTransitionProgress.value)
+                        scaleY = scaleX
+                    },
                 contentScale = ContentScale.Crop
             )
+            if (outgoingBackgroundPath != null) {
+                val exitX = when (transitionDirection) {
+                    "east" -> 1f
+                    "west" -> -1f
+                    else -> 0f
+                }
+                val exitY = when (transitionDirection) {
+                    "north" -> -1f
+                    "south" -> 1f
+                    else -> 0f
+                }
+                Image(
+                    painter = outgoingBackgroundPainter,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .blur((3f * roomTransitionProgress.value).dp)
+                        .graphicsLayer {
+                            translationX = exitX * size.width * roomTransitionProgress.value
+                            translationY = exitY * size.height * roomTransitionProgress.value
+                            alpha = 1f - (0.18f * roomTransitionProgress.value)
+                            scaleX = 1f - (0.015f * roomTransitionProgress.value)
+                            scaleY = scaleX
+                        }
+                        .zIndex(0.5f),
+                    contentScale = ContentScale.Crop
+                )
+            }
             Box(
                 modifier = Modifier
                     .matchParentSize()
@@ -1275,7 +1347,9 @@ fun ExplorationScreen(
         if (!blockingOverlayActive && !showInventoryTargetDialog && saveLoadMode == null) {
             DirectionIndicatorsOverlay(
                 indicators = uiState.directionIndicators,
-                onTravel = viewModel::travel,
+                onTravel = { direction ->
+                    if (!roomTransitionActive) viewModel.travel(direction)
+                },
                 modifier = Modifier
                     .align(Alignment.Center)
                     .fillMaxSize()
