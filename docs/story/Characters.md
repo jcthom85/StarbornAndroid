@@ -1,5 +1,14 @@
 # Starborn — Main Characters
 
+## Writing Behavior
+
+The archetype labels below describe combat and arc function, not a dialogue formula. Current prose follows `Starborn_Writer_Handbook.md`.
+
+- Nova watches closely, guards her autonomy, and shows care through action. She is warmer and less certain with people she trusts.
+- Zeke uses policy language when frightened or avoiding responsibility. It falls away as he commits to the crew.
+- Orion is formal because he is displaced and careful. He can be uncertain and does not turn every observation into music.
+- Gh0st's brevity is learned self-erasure. Trust appears through volunteered detail, questions, preferences, and disagreement.
+
 ## Nova
 
 **Role:** Protagonist / The Spark (Accelerates Team Tempo - Cooldown Reduction)

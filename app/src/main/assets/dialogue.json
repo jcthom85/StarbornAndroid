@@ -183,7 +183,7 @@
   {
     "id": "jed_w1_mq04_sacrifice_1",
     "speaker": "Jed",
-    "text": "Nova! Thank the currents. I heard the alarm broadcast. The Warden's security is descending, sealing everything.",
+    "text": "Nova. Good. The Warden is sealing the lift.",
     "condition": "quest_active:w1_mq04,quest_stage:w1_mq04:cargo_lift_sacrifice",
     "next": "jed_w1_mq04_sacrifice_2"
   },
@@ -191,32 +191,32 @@
     "id": "jed_w1_mq04_sacrifice_2",
     "speaker": "Nova",
     "emote": "scared",
-    "text": "Jed, they're calling me a contaminant. Zeke's overriding the gates, but we have to move now. Come on!",
+    "text": "Zeke found us a route. Come on.",
     "next": "jed_w1_mq04_sacrifice_3"
   },
   {
     "id": "jed_w1_mq04_sacrifice_3",
     "speaker": "Jed",
-    "text": "I can't, girl. The manual override panel for this lift is failing. If I let go of this handle, the lift locks down, and they pin you in this shaft.",
+    "text": "The override won't hold itself. If I let go, the lift locks.",
     "next": "jed_w1_mq04_sacrifice_4"
   },
   {
     "id": "jed_w1_mq04_sacrifice_4",
     "speaker": "Nova",
     "emote": "crying",
-    "text": "No! We can jam the gears! I'm not leaving you behind!",
+    "text": "Then we jam it. Move your hand.",
     "next": "jed_w1_mq04_sacrifice_5"
   },
   {
     "id": "jed_w1_mq04_sacrifice_5",
     "speaker": "Jed",
-    "text": "This isn't a quota run, Nova. You have to launch. Here—take this Chime. It was in the generator core housing. It's the only thing that can spoof the launch frequency long enough to wake a pod. Now run, and don't look back.",
+    "text": "No time. Take the Chime. It should wake a pod.",
     "trigger": "set_quest_task_done:w1_mq04:receive_chime,player_action:jed_sacrifice"
   },
   {
     "id": "jed_w1_mq01_intro_1",
     "speaker": "Jed",
-    "text": "You look like a pressure leak with boots. Tell me you slept.",
+    "text": "You look awful. Sit down.",
     "condition": "quest_active:w1_mq01,milestone_not_set:ms_w1_mq01_jed_talked",
     "next": "jed_w1_mq01_intro_2"
   },
@@ -224,32 +224,32 @@
     "id": "jed_w1_mq01_intro_2",
     "speaker": "Nova",
     "emote": "puzzled",
-    "text": "Enough. The conduit by my door nearly cooked me. Its repair ticket was already stamped closed.",
+    "text": "The conduit by my door was live. The repair ticket said closed.",
     "next": "jed_w1_mq01_intro_3"
   },
   {
     "id": "jed_w1_mq01_intro_3",
     "speaker": "Jed",
-    "text": "Within quota, right? They have been closing live-fault reports all week. Quota doesn't care if that cutter takes your hand. I do.",
+    "text": "Same stamp as the others. Give me your cutter.",
     "next": "jed_w1_mq01_intro_4"
   },
   {
     "id": "jed_w1_mq01_intro_4",
     "speaker": "Nova",
     "emote": "worried",
-    "text": "If I don't push it, I miss count. If I miss count, I lose scrip. If I lose scrip...",
+    "text": "I need it for shift.",
     "next": "jed_w1_mq01_intro_5"
   },
   {
     "id": "jed_w1_mq01_intro_5",
     "speaker": "Jed",
-    "text": "I know the math. I hate the math. Check your gear, then use the bench. After that, get to shift clearance before Boggs marks you absent. And take the ration bar before you pretend you aren't hungry.",
+    "text": "I know. Eat this while I check the housing. Your kit is under the bench.",
     "trigger": "set_quest_task_done:w1_mq01:find_jed,set_quest_task_done:w1_mq01:talk_to_jed,player_action:w1_mq01_receive_starter_kit,set_quest_task_done:w1_mq01:equip_starter_gear,set_milestone:ms_w1_mq01_jed_talked"
   },
   {
     "id": "jed_w1_mq01_workshop_brief_1",
     "speaker": "Jed",
-    "text": "There you are. Set the Cryo-Inductor on the workbench before that cutter shakes itself apart.",
+    "text": "Cold loop's split. Bench is yours.",
     "condition": "quest_active:w1_mq01,milestone:ms_w1_mq01_jed_talked,milestone_not_set:ms_w1_mq01_workshop_briefed",
     "next": "jed_w1_mq01_workshop_brief_2"
   },
@@ -257,19 +257,19 @@
     "id": "jed_w1_mq01_workshop_brief_2",
     "speaker": "Nova",
     "emote": "puzzled",
-    "text": "The Cryo-Inductor? That's the cold-loop part, right?",
+    "text": "You kept a spare?",
     "next": "jed_w1_mq01_workshop_brief_3"
   },
   {
     "id": "jed_w1_mq01_workshop_brief_3",
     "speaker": "Jed",
-    "text": "Right. Use the workbench to repair it into a Functional Cryo-Inductor. One scrap plate, one steady hand. Then your cutter can survive shift clearance.",
+    "text": "Kept it for you. Try not to melt this one.",
     "trigger": "set_milestone:ms_w1_mq01_workshop_briefed"
   },
   {
     "id": "jed_w1_mq01_repair_done_1",
     "speaker": "Jed",
-    "text": "That's the hum. Good. Your cutter can pass a load check without cooking your wrist now.",
+    "text": "Clean hum. Let me see your wrist.",
     "condition": "quest_completed:w1_mq01,quest_not_started:w1_mq02",
     "next": "jed_w1_mq01_repair_done_2"
   },
@@ -277,26 +277,26 @@
     "id": "jed_w1_mq01_repair_done_2",
     "speaker": "Nova",
     "emote": "puzzled",
-    "text": "So I can work the mine.",
+    "text": "It's fine, Jed.",
     "next": "jed_w1_mq01_repair_done_3"
   },
   {
     "id": "jed_w1_mq01_repair_done_3",
     "speaker": "Jed",
-    "text": "If Dominion clears you. Hear that chime? Every Pit worker reports to Transit Checkpoint before the first cage drops. No clearance, no badge. No badge, no mine floor. No mine floor, no quota or scrip.",
+    "text": "Then get your clearance before the first cage drops.",
     "next": "jed_w1_mq01_repair_done_4"
   },
   {
     "id": "jed_w1_mq01_repair_done_4",
     "speaker": "Nova",
     "emote": "worried",
-    "text": "And Boggs marks me absent.",
+    "text": "I know.",
     "next": "jed_w1_mq01_repair_done_5"
   },
   {
     "id": "jed_w1_mq01_repair_done_5",
     "speaker": "Jed",
-    "text": "Exactly. Get to the checkpoint, let Hank's scanner reject whatever it wants, then find Zeke at the Admin window if the system gets stupid. Move.",
+    "text": "Checkpoint first. If the scanner stalls, find Zeke at the booth.",
     "trigger": "start_quest:w1_mq02,track_quest:w1_mq02,advance_quest_stage:w1_mq02:reach_checkpoint,set_milestone:ms_w1_mq02_clearance_ordered,unlock_node:admin_gate"
   },
   {
@@ -314,7 +314,7 @@
   {
     "id": "jed_energy_core_turnin_2",
     "speaker": "Jed",
-    "text": "Then we learn what they wanted. I'll crack the housing and see how far the signal goes. Nice work bringing it home."
+    "text": "I'll open the housing and see where the signal leads. Good work bringing it back."
   },
   {
     "id": "jed_return_wrapup",
@@ -391,25 +391,25 @@
   {
     "id": "hank_w1_mq02_denial_3",
     "speaker": "Guard Hank",
-    "text": "Morning costs extra. Badge is mandatory. Booth window, then maybe the door likes you.",
+    "text": "No badge, no entry. Try the booth.",
     "trigger": "set_quest_task_done:w1_mq02:request_clearance,set_milestone:ms_w1_mq02_hank_denied"
   },
   {
     "id": "hank_default_talk",
     "speaker": "Guard Hank",
-    "text": "Keep the line moving. The door doesn't care about your reasons."
+    "text": "Badge ready before you reach the scanner."
   },
   {
     "id": "zeke_w1_mq02_wait_for_hank",
     "speaker": "Zeke",
-    "text": "Hank has to reject your clearance before I can touch the file. Let the scanner make it official, then come back to my window.",
+    "text": "I can't open the file until Hank logs the rejection.",
     "condition": "quest_active:w1_mq02,milestone_not_set:ms_w1_mq02_hank_denied,milestone_not_set:ms_w1_mq02_zeke_override"
   },
   {
     "id": "zeke_w1_mq02_override_1",
     "speaker": "Zeke",
     "emote": "surprised",
-    "text": "Name? ID? Clearance sco--oh. It's you. The volunteer.",
+    "text": "Name, ID, clearance... Oh. You.",
     "condition": "quest_active:w1_mq02,milestone:ms_w1_mq02_hank_denied,milestone_not_set:ms_w1_mq02_zeke_override",
     "next": "zeke_w1_mq02_override_2"
   },
@@ -417,42 +417,42 @@
     "id": "zeke_w1_mq02_override_2",
     "speaker": "Nova",
     "emote": "cool",
-    "text": "I need a mining pass, suit. Shift starts in ten.",
+    "text": "I need the pass. Shift starts in ten.",
     "next": "zeke_w1_mq02_override_3"
   },
   {
     "id": "zeke_w1_mq02_override_3",
     "speaker": "Zeke",
     "emote": "worried",
-    "text": "Right. Eligibility check. Completely routine. Very normal.",
+    "text": "Right. One moment.",
     "next": "zeke_w1_mq02_override_4"
   },
   {
     "id": "zeke_w1_mq02_override_4",
     "speaker": "Zeke",
     "emote": "scared",
-    "text": "...Mandatory Retirement. Asset Liability exceeds projected value. Recycle.",
+    "text": "Your file says mandatory retirement. Bio-reclamation.",
     "next": "zeke_w1_mq02_override_5"
   },
   {
     "id": "zeke_w1_mq02_override_5",
     "speaker": "Nova",
     "emote": "surprised",
-    "text": "Recycle means fired, right?",
+    "text": "What does that mean?",
     "next": "zeke_w1_mq02_override_6"
   },
   {
     "id": "zeke_w1_mq02_override_6",
     "speaker": "Zeke",
     "emote": "sad",
-    "text": "It means bio-reclamation. Death. For a breaker surge.",
+    "text": "They kill you and reclaim the cost.",
     "next": "zeke_w1_mq02_override_choice"
   },
   {
     "id": "zeke_w1_mq02_override_choice",
     "speaker": "Zeke",
     "emote": "worried",
-    "text": "I can bury this if we give the system a culprit it likes better than a person. Pick the lie that sounds most like policy.",
+    "text": "I can change the cause. It has to blame the grid, not you.",
     "options": [
       {
         "id": "zeke_w1_mq02_choose_grid_instability",
@@ -475,27 +475,27 @@
     "id": "zeke_w1_mq02_override_wrong_operator",
     "speaker": "Zeke",
     "emote": "scared",
-    "text": "Operator Error pins it on you. The file goes straight back to recycling with your name underlined.",
+    "text": "Operator error leaves your name on it. Try again.",
     "next": "zeke_w1_mq02_override_choice"
   },
   {
     "id": "zeke_w1_mq02_override_wrong_mod",
     "speaker": "Zeke",
     "emote": "scared",
-    "text": "Unauthorized Modification gives them intent. Dominion loves intent. We need something it can blame on its own equipment.",
+    "text": "Unauthorized modification implies intent. We need an equipment failure.",
     "next": "zeke_w1_mq02_override_choice"
   },
   {
     "id": "zeke_w1_mq02_override_7",
     "speaker": "Zeke",
     "emote": "confident",
-    "text": "I'm flagging it as grid instability. Temporary override. It keeps you alive, but it routes your file to Logistics review before the override expires. Take the badge, get through the checkpoint, and find whoever owns the foreman review. I think that's Boggs. Sorry.",
+    "text": "Grid instability. The override is temporary, but you're alive. Take the badge. Logistics will review the rest.",
     "trigger": "set_quest_task_done:w1_mq02:meet_zeke,set_quest_task_done:w1_mq02:spoof_liability_form,set_quest_task_done:w1_mq02:receive_mine_access_badge,give_item:mine_access_badge,complete_quest:w1_mq02,set_milestone:ms_w1_mq02_zeke_override,set_milestone:ms_w1_mq02_complete,start_quest:w1_mq03,track_quest:w1_mq03,advance_quest_stage:w1_mq03:sector_four_assignment"
   },
   {
     "id": "zeke_default_talk",
     "speaker": "Zeke",
-    "text": "The system logged something. I should not have said that out loud."
+    "text": "Not here. The booth records audio."
   },
   {
     "id": "scrapper_w1_sq01_turnin_1",
@@ -513,7 +513,7 @@
   {
     "id": "scrapper_w1_sq01_turnin_3",
     "speaker": "Scrapper",
-    "text": "Then remember them quiet. Loud gets people recycled. Take the grenades and forget who told you.",
+    "text": "Keep the names to yourself. Take the grenades. You didn't get them from me.",
     "trigger": "set_quest_task_done:w1_sq01:return_cache_proof,give_item:pulse_grenade*2,give_xp:80,complete_quest:w1_sq01,set_milestone:ms_w1_sq01_complete"
   },
   {
@@ -538,13 +538,13 @@
   {
     "id": "scrapper_w1_sq01_complete",
     "speaker": "Scrapper",
-    "text": "Those grenades are loud history. Use them before history uses you.",
+    "text": "Keep them dry and away from the cheap detonators.",
     "condition": "quest_completed:w1_sq01"
   },
   {
     "id": "scrapper_default_talk",
     "speaker": "Scrapper",
-    "text": "Keep your voice down. Dominion buys echoes cheaper than scrap."
+    "text": "Keep your voice down."
   },
   {
     "id": "scrapper_shop_intro",
@@ -554,20 +554,20 @@
   {
     "id": "doc_w1_sq02_turnin_1",
     "speaker": "Doc",
-    "text": "The coughing stopped. Either you fixed the vents or everyone finally died.",
+    "text": "The coughing stopped. What did you find?",
     "condition": "quest_active:w1_sq02,milestone:ms_w1_sq02_vent_patched",
     "next": "doc_w1_sq02_turnin_2"
   },
   {
     "id": "doc_w1_sq02_turnin_2",
     "speaker": "Nova",
-    "text": "Fixed. Mostly. Dominion's maintenance request is still doing nothing.",
+    "text": "The fans were reversed. I cleared the blockage.",
     "next": "doc_w1_sq02_turnin_3"
   },
   {
     "id": "doc_w1_sq02_turnin_3",
     "speaker": "Doc",
-    "text": "Then this is faster than paperwork. Corrosive rounds. Ugly medicine for armored problems.",
+    "text": "Good. Take these corrosive rounds. I have no use for them in here.",
     "trigger": "set_quest_task_done:w1_sq02:return_to_doc,give_item:mod_corrosive_rounds,give_xp:90,complete_quest:w1_sq02,set_milestone:ms_w1_sq02_complete"
   },
   {
@@ -592,7 +592,7 @@
   {
     "id": "doc_w1_sq02_complete",
     "speaker": "Doc",
-    "text": "Air's still bad, but now it's regular bad. That's what passes for medicine here.",
+    "text": "Air's still bad. At least it isn't poisoning the ward.",
     "condition": "quest_completed:w1_sq02"
   },
   {
@@ -603,7 +603,7 @@
   {
     "id": "bogs_w1_mq03_review_1",
     "speaker": "Foreman Boggs",
-    "text": "You. Cutter girl. I'm Foreman Boggs, which means I decide whether that temporary badge becomes work or a holding cell.",
+    "text": "Nova. Your temporary badge landed on my review queue.",
     "condition": "quest_active:w1_mq03,milestone_not_set:ms_w1_guardbreak_trained,milestone_not_set:ms_w1_sq03_started",
     "next": "bogs_w1_mq03_review_2"
   },
@@ -616,19 +616,19 @@
   {
     "id": "bogs_w1_mq03_review_3",
     "speaker": "Foreman Boggs",
-    "text": "It did. Review says you're usable labor with a breaker surge on your record. Sector 4 needs bodies, but I'm not sending you down there until you can crack a shield.",
+    "text": "Sector 4 needs a cutter. Pass shield training and I'll clear the lift.",
     "next": "bogs_w1_mq03_review_4"
   },
   {
     "id": "bogs_w1_mq03_review_4",
     "speaker": "Foreman Boggs",
-    "text": "Loading Dock. Bring the loader online, move my cargo, and break the riot shield trainer with Hydraulic Kick. Pass that, then I'll authorize the Deep Elevator.",
+    "text": "Loading Dock. Clear the cargo and finish the shield drill.",
     "trigger": "start_quest:w1_sq03,track_quest:w1_sq03,set_quest_task_done:w1_sq03:talk_to_bogs,set_milestone:ms_w1_sq03_started"
   },
   {
     "id": "bogs_w1_mq03_guardbreak_gate_1",
     "speaker": "Foreman Boggs",
-    "text": "I said Loading Dock. Riot shield trainer. Sector 4 doesn't open until the training log says you can break a guard.",
+    "text": "The training log is still blank. Finish the shield drill.",
     "condition": "quest_active:w1_mq03,milestone:ms_w1_sq03_started,milestone_not_set:ms_w1_guardbreak_trained",
     "next": "bogs_w1_mq03_guardbreak_gate_2"
   },
@@ -641,7 +641,7 @@
   {
     "id": "bogs_w1_mq03_guardbreak_gate_3",
     "speaker": "Foreman Boggs",
-    "text": "Then the elevator keeps saying no, and I let the override clock eat you. Move.",
+    "text": "Then the lift stays locked and your override expires.",
     "trigger": "track_quest:w1_sq03"
   },
   {
@@ -660,7 +660,7 @@
   {
     "id": "bogs_w1_mq03_intro_3",
     "speaker": "Foreman Boggs",
-    "text": "It does. The interference is overloading the relays in Sector 4, and your temporary clearance makes you expendable enough to send first. Congratulations.",
+    "text": "It does. Sector 4's relays are failing, and you're the cutter I have.",
     "next": "bogs_w1_mq03_intro_4"
   },
   {
@@ -672,7 +672,7 @@
   {
     "id": "bogs_w1_mq03_intro_5",
     "speaker": "Foreman Boggs",
-    "text": "You've got that Mine Access Badge Zeke signed off on. My scanner's updated. Use the Deep Elevator, restore power at the Cavern Junction support pillar, then follow the relays until the humming stops. If you come back breathing, maybe the paperwork was worth it.",
+    "text": "The lift is open. Restore the junction power, then trace the failed relays.",
     "trigger": "set_quest_task_done:w1_mq03:talk_to_bogs,player_action:bogs_talked,set_milestone:ms_w1_mq03_bogs_talked,reveal_node:deep_mine,unlock_node:deep_mine"
   },
   {
@@ -691,13 +691,13 @@
   {
     "id": "bogs_w1_sq03_intro_3",
     "speaker": "Foreman Boggs",
-    "text": "Then move it faster. Shipment clock doesn't pause for feelings, and nobody gets Deep Elevator clearance without shield training.",
+    "text": "Then move the pile. Finish the shield drill while you're there.",
     "trigger": "start_quest:w1_sq03,track_quest:w1_sq03,set_quest_task_done:w1_sq03:talk_to_bogs,set_milestone:ms_w1_sq03_started"
   },
   {
     "id": "bogs_w1_sq03_complete",
     "speaker": "Foreman Boggs",
-    "text": "Route's clear, workers are breathing, and somehow I'm still behind schedule.",
+    "text": "Route's clear. Training is logged. Report when you're ready for Sector 4.",
     "condition": "quest_completed:w1_sq03"
   },
   {
@@ -713,7 +713,7 @@
   {
     "id": "warden_boss_intro_1",
     "speaker": "The Warden",
-    "text": "Nova. Asset 942-D. Retinal scan flagged for recycling, grid interference logs, and now unauthorized transit.",
+    "text": "Nova. Step away from the launch controls.",
     "condition": "quest_active:w1_mq05,quest_stage:w1_mq05:defeat_warden,quest_task_not_done:w1_mq05:survive_warden_intro",
     "next": "warden_boss_intro_2"
   },
@@ -721,20 +721,20 @@
     "id": "warden_boss_intro_2",
     "speaker": "Player",
     "emote": "angry",
-    "text": "You tried to turn me into paperwork. I'm done being processed.",
+    "text": "No.",
     "next": "warden_boss_intro_3"
   },
   {
     "id": "warden_boss_intro_3",
     "speaker": "The Warden",
-    "text": "Leave? There is nowhere to go. The dome isn't just physical. It's a lock. And I hold the frequency. You are a standing wave that has lost its pitch. I will quiet you myself.",
+    "text": "The shield is locked to this colony. You will not cross it.",
     "trigger": "set_quest_task_done:w1_mq05:fight_through_launch_access,set_quest_task_done:w1_mq05:reach_pod_bay,advance_quest_stage:w1_mq05:defeat_warden,set_quest_task_done:w1_mq05:survive_warden_intro"
   },
   {
     "id": "zeke_w1_mq05_defeat_warden_1",
     "speaker": "Zeke",
     "emote": "surprised",
-    "text": "Nova! You actually did it. The Warden's down. The way to the pod is clear, but security is going to reboot the grid any second.",
+    "text": "Warden's down. Security will reboot soon.",
     "condition": "quest_active:w1_mq05,quest_stage:w1_mq05:launch_pod,quest_task_not_done:w1_mq05:splice_chime,milestone_not_set:ms_w1_zeke_directed_to_pod",
     "next": "zeke_w1_mq05_defeat_warden_2"
   },
@@ -742,21 +742,21 @@
     "id": "zeke_w1_mq05_defeat_warden_2",
     "speaker": "Player",
     "emote": "worried",
-    "text": "Let's move. Jed said the Chime is the key.",
+    "text": "Get the hatch. I have the Chime.",
     "next": "zeke_w1_mq05_defeat_warden_3"
   },
   {
     "id": "zeke_w1_mq05_defeat_warden_3",
     "speaker": "Zeke",
     "emote": "worried",
-    "text": "Get inside the pod! I'll secure the hatch. We need to splice that Chime into the console inside.",
+    "text": "Inside. I'll seal the hatch.",
     "trigger": "set_milestone:ms_w1_zeke_directed_to_pod"
   },
   {
     "id": "zeke_w1_mq05_pod_core_1",
     "speaker": "Zeke",
     "emote": "worried",
-    "text": "Nova! Connect the Chime to that port on the console. If Jed's math is right, it should establish a resonance that overrides the colony's lock on the pod launchers.",
+    "text": "The console has a matching port. Try the Chime.",
     "condition": "quest_active:w1_mq05,quest_stage:w1_mq05:launch_pod,quest_task_not_done:w1_mq05:splice_chime,milestone:ms_w1_zeke_directed_to_pod",
     "next": "zeke_w1_mq05_pod_core_2"
   },
@@ -764,14 +764,14 @@
     "id": "zeke_w1_mq05_pod_core_2",
     "speaker": "Player",
     "emote": "worried",
-    "text": "I'm inserting it now. Let's hope the frequency matches.",
+    "text": "Here goes.",
     "next": "zeke_w1_mq05_pod_core_3"
   },
   {
     "id": "zeke_w1_mq05_pod_core_3",
     "speaker": "Zeke",
     "emote": "happy",
-    "text": "Yes! The core is spooling up. The console's active! We're green for launch. Nova, initiate the sequence on the navigation console!",
+    "text": "It took. Core is live. Start the launch sequence.",
     "trigger": "set_quest_task_done:w1_mq05:splice_chime,take_item:ghost_signal_cell,set_milestone:ms_w1_chime_spliced"
   },
   {

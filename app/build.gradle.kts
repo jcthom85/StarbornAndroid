@@ -24,8 +24,8 @@ android {
         applicationId = "com.junewiregames.starborn.prealpha"
         minSdk = 26
         targetSdk = 35
-        versionCode = 20
-        versionName = "1.1.18"
+        versionCode = 21
+        versionName = "1.1.19"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -231,6 +231,13 @@ val validateEnemySpriteBounds = registerPowerShellValidationTask(
     "scripts/validate_enemy_sprite_bounds.ps1"
 )
 
+val validateNarrativeProse = registerPowerShellValidationTask(
+    "validateNarrativeProse",
+    "Validates grounded World 1 prose, canonical guide status, and player-facing encoding.",
+    "scripts/validate_narrative_prose.ps1",
+    "-Strict"
+)
+
 val validateWorld1Assets = tasks.register("validateWorld1Assets") {
     description = "Runs all World 1 content, audio, progression, balance, and dialogue emote validators."
     group = "verification"
@@ -242,7 +249,8 @@ val validateWorld1Assets = tasks.register("validateWorld1Assets") {
         validateWorld1Balance,
         validateEnemyMovement,
         validateDialogueEmotes,
-        validateEnemySpriteBounds
+        validateEnemySpriteBounds,
+        validateNarrativeProse
     )
 }
 

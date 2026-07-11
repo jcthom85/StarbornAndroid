@@ -24,7 +24,7 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: ".*Chime is the key.*"
+    visible: ".*have the Chime.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
@@ -41,7 +41,7 @@ appId: com.junewiregames.starborn.prealpha
 - assertVisible: "Zeke"
 - tapOn: "Zeke"
 - extendedWaitUntil:
-    visible: ".*Connect the Chime.*"
+    visible: ".*matching port.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:

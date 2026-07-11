@@ -1,6 +1,6 @@
 # Character Arcs
 
-This document outlines the emotional journeys and structural development of the main cast. Each character is built around a "Lie" (their starting false belief) and a "Truth" (the realization that completes their arc).
+This document outlines the emotional journeys and structural development of the main cast. Lie/Truth labels are planning shorthand, not dialogue. Reveal them through repeated choices, avoidance, conflict, and changed behavior; characters should rarely state the lesson of their arc.
 
 ---
 
@@ -73,4 +73,4 @@ This document outlines the emotional journeys and structural development of the 
 To effectively establish these arcs, World 1 needs to emphasize the starting "Lies" for Nova and Zeke:
 
 1.  **Nova (The Survival Instinct):** Show her actively avoiding conflict or hiding. Establish that her primary goal is survival at all costs, setting up the contrast for her later leadership.
-2.  **Zeke (The Complicit Employee):** Include dialogue where Zeke parrots corporate policy or enforces rules he clearly dislikes, highlighting his internal struggle and his reliance on the system for safety.
+2.  **Zeke (The Complicit Employee):** Show him delaying, checking procedure, and protecting himself until Nova's file forces a choice. Policy language increases when he is afraid and falls away once he commits to helping.

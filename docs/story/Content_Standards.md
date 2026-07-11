@@ -72,9 +72,11 @@ Current world room-count targets:
 
 ## 5. Actionable Word Standards
 
+Prose quality is governed by `Starborn_Writer_Handbook.md`. Keyword requirements must not force decorative clauses, unnatural capitalization, or extra sentences. Prefer fewer useful actions over padding a room with flavor interactions.
+
 To support the "no typing" interaction model, room descriptions use a system of "Actionable Words" that are highlighted and tappable in the UI.
 
-*   **Keyword Density:** Every room description must contain **2–4 actionable keywords**.
+*   **Keyword Density:** Target **1-3 useful actionable keywords**. Critical actions must be present; rooms do not need decorative actions to meet a quota.
 *   **Implementation:** Keywords are defined in the room's `actions` array. The `name` field of the action must match the exact string (including casing) used in the description.
 *   **Casing Rule:** Use normal sentence casing. Keywords should not be artificially capitalized unless they start a sentence or are proper nouns.
 *   **Interaction Requirement:** Every keyword found in a description **must** have a corresponding entry in the `actions` array.

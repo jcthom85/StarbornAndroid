@@ -1,6 +1,6 @@
 # Starborn — Narrative Voice & Tone Guide
 
-**Status:** Canon
+**Status:** SUPERSEDED by `docs/story/Starborn_Writer_Handbook.md`. Retained only as historical design context.
 **Purpose:** To define the specific "voice" of the game's text, ensuring consistency across rooms, items, quests, and UI.
 
 ---

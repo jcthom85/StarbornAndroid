@@ -34,7 +34,7 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 15000
 - tapOn: "Jed"
 - extendedWaitUntil:
-    visible: ".*pressure leak.*"
+    visible: ".*look awful.*"
     timeout: 10000
 - repeat:
     times: 5
@@ -141,7 +141,7 @@ appId: com.junewiregames.starborn.prealpha
     visible: "Main Bench"
     timeout: 15000
 - extendedWaitUntil:
-    visible: ".*Set the Cryo-Inductor.*"
+    visible: ".*Cold loop's split.*"
     timeout: 15000
 - tapOn: "Dialogue Popup. Tap to continue"
 - tapOn: "Dialogue Popup. Tap to continue"

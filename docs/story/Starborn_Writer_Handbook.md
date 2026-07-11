@@ -1,170 +1,121 @@
-# Starborn — Writer's Handbook (The Canon Style)
+# Starborn Writer's Handbook
 
-**Status:** LOCKED  
-**Role:** The absolute source of truth for all text generation.  
-**Core Pillar:** "Blue Collar Cosmic." The universe is dirty, broken, and held together by duct tape—until the Source breaks it apart.
+**Status:** CANONICAL
+**Purpose:** The source of truth for all player-facing prose.
 
----
+## Core Principle
 
-## Resonance and Destiny Guardrails
+Starborn is a grounded adventure about ordinary people facing corporate violence and cosmic danger. People speak plainly. The world supplies the strangeness.
 
-- Before Nova encounters the Tuning Fork in W1_MQ03, write machinery as physical machinery: heat, vibration, sparks, pressure, diagnostics, wear, and documented failure.
-- Resonance is a measurable Source phenomenon introduced by relic contact. It is not a vague synonym for instinct, emotion, competence, or unusual lighting.
-- Relics do not choose Nova. Nova gains strength through observation, work, decisions, and the people who stand with her.
-- Musical language must be earned gradually after the Tuning Fork. World 1 establishes the phenomenon; later worlds may broaden the metaphor only when a concrete Source effect supports it.
-- Do not invent unexplained notes, counted beats, rhythms, harmonies, or anomalies to make ordinary scenes seem cosmic.
-- Before using a metaphor, ask: what physically happened, what does the player learn, and what can the player do differently? If those answers are unclear, rewrite it concretely.
+Clarity comes before style. A player should understand what physically happened, what a character wants, and what can be done next without translating a metaphor.
 
-## I. The Golden Rules (Global)
+## Prose Rules
 
-1.  **The "Grunt" Test:** If a tired shift-worker wouldn't think it, don't write it. (Exception: Orion/Source).
-2.  **Texture over Philosophy:** Don't describe the "concept" of poverty; describe the taste of recycled air.
-3.  **No Lore Dumps:** History belongs in datapads. Room text belongs to the now.
-4.  **The Actionable Word System:** Every Room Description must contain 2-4 tappable nouns (Interactables). 
-    *   **Implementation:** These words are NO LONGER bolded with `**` in the JSON. Instead, they are defined in the room's `actions` array.
-    *   **Matching:** The `name` field of the action must match the exact word (including casing) used in the `description` string.
-    *   **Standard Casing:** Use normal sentence casing for these words. If a word is not at the start of a sentence or a proper noun, it should be lowercase.
-    *   **Feedback:** If the action has no specific function (like a quest trigger), use `condition_unmet_message` to provide "examine" flavor text.
+1. Use concrete nouns and verbs. Describe the live wire, missed meal, locked gate, or shaking hand.
+2. Most lines should not contain a joke, slogan, metaphor, or thesis statement.
+3. Use at most one conspicuous metaphor or punchline in a scene. Save it for the turn that matters.
+4. Do not personify every machine, room, institution, or weather effect.
+5. Do not explain an emotion after behavior has shown it.
+6. Delete lines that only repeat an objective, a visible fact, or the preceding line.
+7. Avoid trailer-copy constructions such as "It does not hate you. It calculated you."
+8. Fix encoding damage rather than reproducing it. Player-facing text uses standard punctuation and valid UTF-8.
 
----
+## Dialogue
 
-## II. Room Descriptions (The "You" Camera)
+- One idea per dialogue box.
+- Most spoken lines should be under 18 words. Longer lines require genuine emotional or technical necessity.
+- Characters speak to change the other person's behavior, protect themselves, conceal something, test trust, or ask for something.
+- Put controls, recipes, exact task sequences, and combat rules in objectives or tutorials. Dialogue may establish stakes and point to a place or object.
+- Use interruption, silence, deflection, and unfinished thoughts where appropriate. Do not make every speaker deliver a complete argument.
+- Affection is demonstrated through attention and action: saved food, repaired gear, remembered habits, an offered seat, an argument taken seriously.
+- Humor releases pressure or reveals familiarity. It does not interrupt grief, danger, or every exchange.
 
-*   **Format:** Second Person ("You").
-*   **Length:** 2-3 sentences max.
-*   **Formula:** [Atmosphere/Smell] + [Dominant Feature/Interactable] + [Exit/Threat].
+### Character Ranges
 
-### The Biome Tones
+**Nova**
+- Wants autonomy and refuses to abandon people.
+- With authority: guarded, economical, occasionally provocative.
+- With trusted people: warmer, uncertain, willing to be teased.
+- Under fear: becomes practical and focuses on the next physical action.
+- She does not answer every threat with a heroic one-liner.
 
-*   **The Mines/Ship (Industrial):** Friction. Rust. Noise. Things vibrate.
-    *   *Bad:* "You are in a messy room."
-    *   *Good:* "The air smells of ozone and stale coffee. A **Workbench** rattles against the wall every time the engine cycles."
-*   **The Dominion (Corporate):** Sterile. Cold. Silent. Things are smooth and hostile.
-    *   *Bad:* "The room is very clean and high-tech."
-    *   *Good:* "The **Airlock** hisses open to a floor that looks like frozen milk. It is too clean to walk on. A **Camera** tracks your pulse."
-*   **The Source/Ruins (Esoteric):** Synesthesia. Senses are crossed.
-    *   *Bad:* "The magic energy is strong here."
-    *   *Good:* "The **Mural** shimmers like a waveform finding a speaker. The light coming from the **Archway** tastes like copper."
+**Jed**
+- Protects through maintenance, preparation, food, and unasked-for repairs.
+- Usually speaks directly and assumes Nova already knows the work.
+- Deflects fear into practical tasks. Serious emotion makes him quieter, not more eloquent.
 
----
+**Zeke**
+- Uses policy language when frightened or hiding behind his job.
+- As trust grows, the corporate vocabulary falls away.
+- His humor comes from noticing absurd rules, not inserting buzzwords into every sentence.
+- Under immediate danger, he is precise and surprisingly decisive.
 
-## III. Item Descriptions (Hand-Feel)
+**Orion**
+- Formal because he is displaced and careful, not because every thought is musical.
+- Uses Source terminology only when it adds precision.
+- Admits uncertainty. Ancient knowledge does not make him omniscient.
 
-*   **Format:** Third Person (Objective but opinionated).
-*   **Formula:** [Physical Sensation] + [Who held this last?]
+**Gh0st**
+- Speaks concisely because he was trained to minimize himself.
+- Literal language is a defense, not a comedy routine.
+- Growing trust appears as volunteered detail, questions, preferences, and eventually disagreement.
 
-### Categories
+**Dominion personnel**
+- Their speech reflects power. Guards can be bored, foremen rushed, executives polished, and frightened employees evasive.
+- Corporate language is most effective in official systems and when a person is avoiding responsibility.
+- Do not give every antagonist the same compliance joke.
 
-*   **Consumables:** Focus on the low quality of life.
-    *   *Street Bento:* "Real protein, allegedly. Tastes like rain and hot sauce."
-*   **Weapons:** Focus on the intent/weight.
-    *   *Pulse Grenade:* "Standard issue mining explosive. Heavy. Designed to crack rocks; equally effective on ribs."
-*   **Key Items:** Focus on the "vibe" or "hum."
-    *   *The Tuning Fork:* "It hums. Holding it feels like grabbing a live wire that sings."
+## Rooms and Interactions
 
----
+- Most room descriptions use two concrete sentences and stay under 45 words.
+- Establish the dominant physical feature, immediate condition, and useful interactables.
+- Room actions must still appear verbatim in active descriptions so they remain tappable.
+- A description may contain one memorable comparison when the room marks a major change.
+- Persistent consequences belong in description variants. Immediate motion belongs in interaction feedback.
+- Examine text should reward attention with evidence, character detail, risk, a useful clue, or a changed state. Pure decoration is optional and brief.
 
-## IV. Dialogue Voices (The Cast)
+## Quest and UI Copy
 
-### Nova (The Protagonist)
-*   **Role:** The Mechanic.
-*   **Tone:** Scrappy, cynical, protective.
-*   **Vocabulary:** Mining slang ("Slag," "Breach," "Core-deep").
-*   **The Rule:** She creates friction. She doesn't ask "What is that?"; she asks "Can I break it?"
-*   **Line:** "Zeke, if that thing beeps one more time, I'm putting a laser bolt through it."
+- Quest summaries state the human problem.
+- Quest descriptions state the concrete goal.
+- Flavor copy is optional. Use it only when it adds information or a genuinely distinctive perspective.
+- Objectives begin with direct verbs and carry procedural instructions removed from dialogue.
+- System messages are concise. Dominion phrasing is reserved for actual Dominion interfaces, not the entire game UI.
 
-### Zeke (The Insider)
-*   **Role:** The HR Manual (Panicked).
-*   **Tone:** Verbose, anxious, uses corporate buzzwords to hide fear.
-*   **Vocabulary:** "Optimization," "Compliance," "Asset," "Liability."
-*   **The Rule:** He over-explains. He tries to apply logic to magic.
-*   **Line:** "Technically, that beast is violating three separate zoning ordinances. Also, it's eating the hull."
+## Source and Resonance
 
-### Orion (The Ancient)
-*   **Role:** The Conductor.
-*   **Tone:** Melancholic, formal, resonant.
-*   **Vocabulary:** Musical/Signal metaphors ("Harmony," "Silence," "Tuning," "Echo").
-*   **The Rule:** He never uses contractions. He speaks about the universe like it's a song.
-*   **Line:** "The signal is faint here. Like a heartbeat slowing down."
+- Before the Tuning Fork in World 1, machinery is physical machinery: heat, sparks, vibration, pressure, diagnostics, and wear.
+- Resonance is a measurable Source phenomenon introduced through relic contact. It is not a synonym for instinct, emotion, or unusual lighting.
+- Describe the observable effect first: sound drops out, teeth ache, dust lifts, stone changes temperature, geometry shifts.
+- Interpretation comes later and may be wrong. Characters should not immediately explain a mystery in complete technical language.
+- Musical language is occasional vocabulary, not the grammar of every Source scene.
+- Relics do not choose Nova. Strength comes from observation, work, decisions, and relationships.
 
-### Gh0st (The Hardware)
-*   **Role:** The Operating System.
-*   **Tone:** Literal, concise, deadpan.
-*   **Vocabulary:** "Target," "Neutralized," "Inefficient," "Directive."
-*   **The Rule:** Statements of fact. No emotion (until the mask cracks).
-*   **Line:** "I have intimidated the beverage dispenser. It is now brewing."
+## Editing Test
 
----
+For every line, ask:
 
-## V. Interaction & Popups (The Feedback Loop)
+1. What does the speaker want right now?
+2. Is this information new to the listener and player?
+3. Could an objective or visible action carry it better?
+4. Is the line declaring an emotion already shown by behavior?
+5. Is the figurative language clearer and stronger than the concrete version?
+6. Can the scene lose this line without losing meaning?
 
-When the player taps an object, the result text must have weight.
+Cut first. Rewrite second.
 
-*   **Physical Actions:** Use violent/heavy verbs.
-    *   *Bad:* "The door opens."
-    *   *Good:* "The hydraulics scream, but the **blast door** grinds open."
-*   **Source Actions:** Use dream logic.
-    *   *Bad:* "The illusion fades."
-    *   *Good:* "The **wall** dissolves into mist. It was never there."
-*   **Fail States:** The "Polite Oppressor."
-    *   *Context:* Hacking/Tech failures.
-    *   *Voice:* Clean, polite, threatening.
-    *   *Text:* "Compliance Failure. Personnel unverified. Please remain stationary for arrest."
+## Benchmark
 
----
+**Overwritten:** "Quota doesn't care if that cutter takes your hand. I do."
 
-## VI. The Source Glossary (Synesthesia Table)
+**Grounded:** Jed takes the cutter, checks the cracked housing, and sets a ration beside Nova's tools. "Eat while I fix this."
 
-Use this table when describing Starborn magic (The Source/Relics).
+**Instruction disguised as dialogue:** "Use the workbench to repair it into a Functional Cryo-Inductor. One scrap plate, one steady hand."
 
-| Physical Sensation | Source Description (The Rewrite) |
-| :--- | :--- |
-| **Sound** | Described as Texture ("Grit in your teeth," "Sandpaper hum"). |
-| **Light** | Described as Sound ("Screaming white," "A quiet blue glow"). |
-| **Geometry** | Described as Emotion ("Hateful angles," "A lonely corridor"). |
-| **Pain** | Described as Data ("Erosion," "Static," "Memory Loss"). |
+**Grounded:** "Cold loop's split. Bench is yours." The objective supplies the required part and recipe.
 
----
+**Opaque Source prose:** "The room understands itself again."
 
-## VII. UI & System Text (The Corporate Overlay)
+**Grounded:** "The shutters align. Pressure drops behind the glass, and the lock releases."
 
-The game UI is a Dominion interface. It treats the player as an employee, not a hero.
-
-This is primarily a **text and framing rule**, not a command to make the UI visually severe. Starborn's actual visual language is chibi/anime sci-fi with bold outlines, saturated accents, expressive icons, and readable comic-game panels. The Dominion layer should add paperwork flavor, status labels, and dry compliance language on top of that playful foundation.
-
-*   **Quest Accepted:** "Assignment Logged."
-*   **Quest Complete:** "Ticket Closed. Performance Rating: Adequate."
-*   **Level Up:** "Asset Value Increased."
-*   **Game Over:** "Asset Liability Exceeded. Recycling..."
-
-### UI Visual Tone
-
-*   **Good:** Colorful icon tabs, chunky outlined controls, bright cyan/orange/yellow accents, compact status strips, and clear game-first hierarchy.
-*   **Good:** A quest panel that says "Assignment Logged" while still looking like a bold anime adventure interface.
-*   **Bad:** Grey-on-grey corporate minimalism that looks like a real enterprise dashboard.
-*   **Bad:** Oppressive terminal styling so heavy that it clashes with Nova's chibi portraits and the sticker-like enemy art.
-
----
-
-## VIII. Example: Putting it Together (The "Golden Sample")
-
-**Room:** The Server Farm (World 5)  
-**Context:** Nova enters the freezing cold server room to find Thorne.
-
-**Room Description:**
-"The air here is absolute zero. Miles of blue **Server Racks** hang in the void, humming with the data of a billion stolen thoughts. A frosted **Vent** rattles in the corner."
-
-**Interaction (Vent):**
-"You kick the grate. It clatters into the darkness. Inside, huddled in the thermal exhaust, is Director Thorne."
-
-**Dialogue (Thorne):**
-"You... you're the miner. The anomaly. You weren't supposed to get this far. The projection models said you'd die in Sector 9."
-
-**Dialogue (Zeke):**
-"Your projection models didn't account for Nova's stubbornness quotient. It is statistically significant."
-
-**Dialogue (Nova):**
-"Less math, Zeke. Thorne, get up. We're breaking you out of your own jail."
-
-**System Popup (Quest Update):**
-OBJECTIVE UPDATED: Escort the Asset (Thorne) to the Anchor Chamber. Note: Asset value is depreciating rapidly.
+The target is not flat minimalism. Most prose is quiet so that humor, tenderness, terror, and cosmic imagery can matter when they arrive.

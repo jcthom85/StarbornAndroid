@@ -4,7 +4,7 @@
     "title": "Wake Up Call",
     "summary": "Nova wakes beside a dangerous electrical fault that Dominion has already marked closed, then reports for another shift in the Pit.",
     "description": "Make Nova's bunk safe, reach Jed, and use a suppressed diagnostic to get through his faulted workshop loader.",
-    "flavor": "The shift clock says wake up. The closed maintenance ticket says the quota matters more than you do.",
+    "flavor": "A live fault was reported and closed without repair.",
     "giver": "Jed",
     "hub_id": "hub_1_homestead",
     "stages": [
@@ -75,7 +75,7 @@
     "title": "Shift Clearance",
     "summary": "Nova has to clear the Transit Checkpoint before Dominion's paperwork turns her into a liability.",
     "description": "Report for shift clearance at the Transit Checkpoint, get a mine badge, and survive the Dominion math that marked Nova for recycling.",
-    "flavor": "The system does not hate you. It calculated you.",
+    "flavor": "Nova's file marks her for bio-reclamation.",
     "giver": "Zeke",
     "hub_id": "hub_1_homestead",
     "stages": [
@@ -344,7 +344,7 @@
     "title": "The Scavenger's Stash",
     "summary": "Scrapper knows where a failed rebel cache is hidden, but paranoia keeps him from fetching it.",
     "description": "Follow Scrapper's lead through Trade Row, find the old cache, and recover the explosives the last resistance cell never got to use.",
-    "flavor": "The people who hid the stash are gone. Their warning still has teeth.",
+    "flavor": "The cache still contains the names of the people who filled it.",
     "giver": "Scrapper",
     "hub_id": "hub_1_homestead",
     "stages": [
@@ -396,7 +396,7 @@
     "title": "System Flush",
     "summary": "Doc's med-bay vents are backing up with toxic fumes because Dominion keeps denying repairs.",
     "description": "Clear the contaminated ventilation route, stop the fumes from poisoning the med-bay, and collect Doc's corrosive round mod.",
-    "flavor": "Dominion does not fix what it can replace.",
+    "flavor": "The med-bay repair requests have all been denied.",
     "giver": "Doc",
     "hub_id": "hub_1_homestead",
     "stages": [
@@ -854,7 +854,7 @@
     "title": "Lost Patrol",
     "summary": "Trace a lost patrol through three distress signatures, recover its transceiver, and repair its Thermal Cutter.",
     "description": "Locate the logs of a lost squad in the Sector 9 ruins and turn their damaged cutter into a useful field tool.",
-    "flavor": "Steel rusts faster than bones here.",
+    "flavor": "The patrol left three distress signatures and no survivors.",
     "giver": "Dead Soldier",
     "hub_id": "hub_3_sector9",
     "stages": [

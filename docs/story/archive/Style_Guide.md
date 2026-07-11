@@ -1,5 +1,7 @@
 # Starborn — Dialogue Style Guide
 
+**Status:** SUPERSEDED by `docs/story/Starborn_Writer_Handbook.md`. Retained only as historical design context; do not use it to author current text.
+
 **Goal:** Ensure consistent character voices across all quests and cutscenes.
 **Tone:** "Working Class Sci-Fi." Grounded, weary, but hopeful. Humor comes from character friction, not "jokes."
 
