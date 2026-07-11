@@ -575,12 +575,15 @@ fun ExplorationScreen(
                     contentDescription = null,
                     modifier = Modifier
                         .fillMaxSize()
-                        .blur((3f * roomTransitionProgress.value).dp)
+                        .blur(
+                            (6f * (roomTransitionProgress.value / 0.55f).coerceIn(0f, 1f)).dp
+                        )
                         .graphicsLayer {
-                            translationX = exitX * size.width * roomTransitionProgress.value
-                            translationY = exitY * size.height * roomTransitionProgress.value
-                            alpha = 1f - (0.18f * roomTransitionProgress.value)
-                            scaleX = 1f - (0.015f * roomTransitionProgress.value)
+                            val exitProgress = roomTransitionProgress.value
+                            translationX = exitX * size.width * 0.78f * exitProgress
+                            translationY = exitY * size.height * 0.78f * exitProgress
+                            alpha = (1f - (exitProgress / 0.82f)).coerceIn(0f, 1f)
+                            scaleX = 1f - (0.025f * exitProgress)
                             scaleY = scaleX
                         }
                         .zIndex(0.5f),
