@@ -35,6 +35,7 @@ object CinematicPlaybackManager {
             return CinematicUiState(
                 sceneId = playback.scene.id,
                 title = playback.scene.title,
+                backdrop = playback.scene.backdrop,
                 stepIndex = 0,
                 stepCount = 0,
                 step = CinematicStepUi(
@@ -59,6 +60,7 @@ object CinematicPlaybackManager {
         return CinematicUiState(
             sceneId = playback.scene.id,
             title = playback.scene.title,
+            backdrop = playback.scene.backdrop,
             stepIndex = safeIndex,
             stepCount = steps.size,
             step = stepUi

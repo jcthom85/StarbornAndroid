@@ -36,9 +36,17 @@ appId: com.junewiregames.starborn.prealpha
     commands:
       - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: "Acquired Mining Pistol.*Flux Liner.*Cryo-Inductor.*"
+    visible: "Item acquired: Mining Pistol.*"
     timeout: 15000
-- tapOn: "DISMISS"
+- tapOn: "Item acquired: Mining Pistol.*"
+- assertVisible: "Flux Liner"
+- tapOn: "Item acquired: Flux Liner.*"
+- assertVisible: "Cryo-Inductor"
+- tapOn: "Item acquired: Cryo-Inductor.*"
+- assertVisible: "Scrap Metal ×2"
+- tapOn: "Item acquired: Scrap Metal ×2.*"
+- assertVisible: "Ration Pack"
+- tapOn: "Item acquired: Ration Pack.*"
 - tapOn: "Travel east"
 - extendedWaitUntil:
     visible: "Lift Shaft"

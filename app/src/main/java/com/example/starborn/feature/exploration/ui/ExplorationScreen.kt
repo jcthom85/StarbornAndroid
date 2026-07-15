@@ -164,6 +164,7 @@ import androidx.constraintlayout.compose.Dimension
 import kotlin.math.roundToInt
 import com.example.starborn.R
 import com.example.starborn.domain.model.DialogueLine
+import com.example.starborn.domain.cinematic.CinematicBackdrop
 import com.example.starborn.domain.audio.AudioCommand
 import com.example.starborn.domain.audio.AudioCueType
 import com.example.starborn.domain.audio.AudioCuePlayer
@@ -1278,6 +1279,7 @@ fun ExplorationScreen(
             UIPromptOverlay(
                 prompt = uiState.prompt,
                 onDismiss = { viewModel.dismissPrompt() },
+                onCollectAll = { sequenceId -> viewModel.collectAllItemPrompts(sequenceId) },
                 modifier = Modifier.align(Alignment.BottomCenter)
             )
         }
@@ -5924,26 +5926,136 @@ fun MilestoneBanner(
 
 @Composable
 fun ItemGrantedBanner(
-    itemName: String,
-    quantity: Int,
+    prompt: com.example.starborn.domain.prompt.ItemGrantedPrompt,
     onDismiss: () -> Unit,
+    onCollectAll: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val message = if (quantity > 1) {
-        "Acquired $quantity x $itemName"
-    } else {
-        "Acquired $itemName"
+    val accentColor = Color(0xFFA5D6A7)
+    val shape = RoundedCornerShape(20.dp)
+    val category = prompt.category
+        ?.replace('_', ' ')
+        ?.replace('-', ' ')
+        ?.trim()
+        ?.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+        ?.takeIf { it.isNotBlank() }
+        ?: "Item"
+    val itemLabel = if (prompt.quantity > 1) "${prompt.itemName} ×${prompt.quantity}" else prompt.itemName
+    val hasSequence = prompt.sequenceTotal > 1 && !prompt.sequenceId.isNullOrBlank()
+    val iconRes = remember(prompt.itemId, prompt.category) { previewItemIconRes(prompt.category) }
+
+    Surface(
+        onClick = onDismiss,
+        modifier = modifier
+            .navigationBarsPadding()
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp, vertical = 12.dp)
+            .widthIn(min = 300.dp, max = 600.dp)
+            .semantics {
+                contentDescription = "Item acquired: $itemLabel. Tap to continue."
+            },
+        color = Color(0xFF07110D).copy(alpha = 0.97f),
+        contentColor = Color.White,
+        shape = shape,
+        border = BorderStroke(1.2.dp, accentColor.copy(alpha = 0.55f)),
+        shadowElevation = 16.dp
+    ) {
+        Column(
+            modifier = Modifier
+                .background(
+                    Brush.linearGradient(
+                        listOf(
+                            accentColor.copy(alpha = 0.16f),
+                            Color.Transparent,
+                            Color(0xFF07110D)
+                        )
+                    )
+                )
+                .padding(horizontal = 20.dp, vertical = 18.dp),
+            verticalArrangement = Arrangement.spacedBy(14.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "ITEM ACQUIRED",
+                    style = MaterialTheme.typography.labelSmall.copy(letterSpacing = 1.2.sp),
+                    color = accentColor
+                )
+                if (hasSequence) {
+                    Text(
+                        text = "${prompt.sequenceIndex} / ${prompt.sequenceTotal}",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = Color.White.copy(alpha = 0.58f)
+                    )
+                }
+            }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Surface(
+                    modifier = Modifier.size(68.dp),
+                    color = accentColor.copy(alpha = 0.12f),
+                    shape = RoundedCornerShape(16.dp),
+                    border = BorderStroke(1.dp, accentColor.copy(alpha = 0.32f))
+                ) {
+                    Image(
+                        painter = painterResource(iconRes),
+                        contentDescription = null,
+                        modifier = Modifier.padding(12.dp),
+                        contentScale = ContentScale.Fit
+                    )
+                }
+                Column(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(5.dp)
+                ) {
+                    Text(
+                        text = itemLabel,
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
+                    Text(
+                        text = category,
+                        style = MaterialTheme.typography.labelMedium,
+                        color = accentColor.copy(alpha = 0.82f)
+                    )
+                    prompt.description?.takeIf { it.isNotBlank() }?.let { description ->
+                        Text(
+                            text = description,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = Color.White.copy(alpha = 0.72f),
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+                }
+            }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (hasSequence) {
+                    TextButton(onClick = { onCollectAll(prompt.sequenceId!!) }) {
+                        Text("Collect all", color = accentColor.copy(alpha = 0.86f))
+                    }
+                } else {
+                    Spacer(modifier = Modifier.width(1.dp))
+                }
+                Text(
+                    text = if (prompt.sequenceIndex < prompt.sequenceTotal) "Tap for next" else "Tap to continue",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = Color.White.copy(alpha = 0.48f)
+                )
+            }
+        }
     }
-    PromptBanner(
-        title = "Item Obtained",
-        message = message,
-        accentColor = Color(0xFFA5D6A7),
-        actionLabel = "Dismiss",
-        onAction = onDismiss,
-        modifier = modifier,
-        showTitle = false,
-        tapToDismiss = true
-    )
 }
 
 @Composable
@@ -6356,7 +6468,10 @@ fun CinematicOverlay(
         Box(
             modifier = modifier
                 .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.72f)),
+                .background(
+                    if (state.backdrop == CinematicBackdrop.BLACK) Color.Black
+                    else Color.Black.copy(alpha = 0.72f)
+                ),
             contentAlignment = Alignment.BottomCenter
         ) {
             DialogueOverlay(
@@ -6395,7 +6510,7 @@ fun CinematicOverlay(
 
     // Scrim fade-in
     val scrimAlpha by animateFloatAsState(
-        targetValue = 0.72f,
+        targetValue = if (state.backdrop == CinematicBackdrop.BLACK) 1f else 0.72f,
         animationSpec = tween(durationMillis = 400, easing = FastOutSlowInEasing),
         label = "cinematicScrimAlpha"
     )
@@ -6509,22 +6624,49 @@ fun CinematicOverlay(
                             )
                     )
 
-                    // Narration text with typewriter reveal
-                    Text(
-                        text = displayedText,
-                        color = Color.White.copy(alpha = 0.92f),
-                        style = MaterialTheme.typography.bodyLarge.copy(
-                            fontStyle = FontStyle.Italic,
-                            lineHeight = 28.sp,
-                            letterSpacing = 0.3.sp
-                        ),
-                        modifier = Modifier.fillMaxWidth()
+                    // Measure the final wrapped copy from the first frame so the
+                    // card does not stretch as the typewriter reveal adds lines.
+                    val narrationStyle = MaterialTheme.typography.bodyLarge.copy(
+                        fontStyle = FontStyle.Italic,
+                        lineHeight = 28.sp,
+                        letterSpacing = 0.3.sp
                     )
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .heightIn(max = 360.dp)
+                            .verticalScroll(rememberScrollState())
+                    ) {
+                        Text(
+                            text = fullText,
+                            color = Color.Transparent,
+                            style = narrationStyle,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clearAndSetSemantics { }
+                        )
+                        Text(
+                            text = displayedText,
+                            color = Color.White.copy(alpha = 0.92f),
+                            style = narrationStyle,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
 
                     // Tap hint with ornament
-                    AnimatedVisibility(
-                        visible = revealFinished,
-                        enter = fadeIn(animationSpec = tween(durationMillis = 500))
+                    val hintAlpha by animateFloatAsState(
+                        targetValue = if (revealFinished) 1f else 0f,
+                        animationSpec = tween(durationMillis = 500),
+                        label = "cinematicHintAlpha"
+                    )
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .alpha(hintAlpha)
+                            .then(
+                                if (revealFinished) Modifier
+                                else Modifier.clearAndSetSemantics { }
+                            )
                     ) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),

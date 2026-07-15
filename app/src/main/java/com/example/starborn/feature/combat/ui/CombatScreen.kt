@@ -221,6 +221,7 @@ private fun CinematicPlaybackState.toUiState(): CinematicUiState {
         return CinematicUiState(
             sceneId = scene.id,
             title = scene.title,
+            backdrop = scene.backdrop,
             stepIndex = 0,
             stepCount = 0,
             step = CinematicStepUi(
@@ -235,6 +236,7 @@ private fun CinematicPlaybackState.toUiState(): CinematicUiState {
     return CinematicUiState(
         sceneId = scene.id,
         title = scene.title,
+        backdrop = scene.backdrop,
         stepIndex = safeIndex,
         stepCount = steps.size,
         step = CinematicStepUi(

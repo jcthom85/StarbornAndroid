@@ -29,6 +29,12 @@ data class MilestonePrompt(
 data class ItemGrantedPrompt(
     val itemName: String,
     val quantity: Int,
+    val itemId: String? = null,
+    val description: String? = null,
+    val category: String? = null,
+    val sequenceId: String? = null,
+    val sequenceIndex: Int = 1,
+    val sequenceTotal: Int = 1,
     private val onDismissCallback: (() -> Unit)? = null
 ) : UIPrompt {
     override val id: String = "item_granted_${itemName}_${quantity}_${java.util.UUID.randomUUID()}"

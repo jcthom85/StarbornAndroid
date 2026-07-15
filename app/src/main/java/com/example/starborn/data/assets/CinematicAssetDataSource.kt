@@ -1,6 +1,7 @@
 package com.example.starborn.data.assets
 
 import com.example.starborn.domain.cinematic.CinematicScene
+import com.example.starborn.domain.cinematic.CinematicBackdrop
 import com.example.starborn.domain.cinematic.CinematicStep
 import com.example.starborn.domain.cinematic.CinematicStepType
 import com.squareup.moshi.Moshi
@@ -23,6 +24,7 @@ class CinematicAssetDataSource(
         return CinematicScene(
             id = asset.id.orEmpty(),
             title = asset.title,
+            backdrop = CinematicBackdrop.fromRaw(asset.backdrop),
             steps = asset.steps.orEmpty()
                 .mapNotNull { step -> toDomainStep(step) }
         )
@@ -45,6 +47,7 @@ class CinematicAssetDataSource(
 data class CinematicSceneAsset(
     val id: String? = null,
     val title: String? = null,
+    val backdrop: String? = null,
     val steps: List<CinematicStepAsset>? = null
 )
 

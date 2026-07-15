@@ -561,6 +561,7 @@
   {
     "id": "intro_prologue",
     "title": "The Signal - Twenty Years Earlier",
+    "backdrop": "black",
     "steps": [
       { "type": "narration", "text": "SECTOR 9 - TWENTY YEARS EARLIER. Fresh Dominion braces are bolted across older Architect geometry." },
       { "type": "dialogue", "speaker": "Lab PA", "text": "SOURCE BEAST CONTAINMENT BREACH. FAR DOOR PRESSURE RISING." },

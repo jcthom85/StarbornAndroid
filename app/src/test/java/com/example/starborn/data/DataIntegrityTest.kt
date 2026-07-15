@@ -2,6 +2,7 @@ package com.example.starborn.data
 
 import com.example.starborn.core.MoshiProvider
 import com.example.starborn.data.assets.CinematicSceneAsset
+import com.example.starborn.domain.cinematic.CinematicBackdrop
 import com.example.starborn.data.assets.CinematicStepAsset
 import com.example.starborn.domain.cinematic.CinematicScene
 import com.example.starborn.domain.cinematic.CinematicStep
@@ -761,6 +762,7 @@ class DataIntegrityTest {
             CinematicScene(
                 id = asset.id.orEmpty(),
                 title = asset.title,
+                backdrop = CinematicBackdrop.fromRaw(asset.backdrop),
                 steps = asset.steps.orEmpty().mapNotNull { step -> step?.toDomainStep() }
             )
         }

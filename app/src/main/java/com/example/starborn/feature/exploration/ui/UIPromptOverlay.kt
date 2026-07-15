@@ -12,6 +12,7 @@ import com.example.starborn.domain.prompt.UIPrompt
 fun UIPromptOverlay(
     prompt: UIPrompt?,
     onDismiss: () -> Unit,
+    onCollectAll: (String) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     when (prompt) {
@@ -31,9 +32,9 @@ fun UIPromptOverlay(
         }
         is ItemGrantedPrompt -> {
             ItemGrantedBanner(
-                itemName = prompt.itemName,
-                quantity = prompt.quantity,
+                prompt = prompt,
                 onDismiss = onDismiss,
+                onCollectAll = onCollectAll,
                 modifier = modifier
             )
         }

@@ -220,6 +220,7 @@ data class InventoryPreviewItemUi(
 data class CinematicUiState(
     val sceneId: String,
     val title: String?,
+    val backdrop: com.example.starborn.domain.cinematic.CinematicBackdrop,
     val stepIndex: Int,
     val stepCount: Int,
     val step: CinematicStepUi

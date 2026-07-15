@@ -107,6 +107,7 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+import java.util.UUID
 import kotlin.collections.ArrayDeque
 import kotlin.math.abs
 import kotlin.math.max
@@ -405,7 +406,7 @@ class ExplorationViewModel(
                 val name = inventoryService.itemDisplayName(itemId)
                 refreshCurrentRoomBlockedDirections()
                 emitEvent(ExplorationEvent.ItemGranted(name, quantity))
-                promptManager.enqueue(ItemGrantedPrompt(name, quantity))
+                promptManager.enqueue(itemGrantedPrompt(itemId, quantity))
             },
             onTakeItem = { itemId, quantity ->
                 val normalizedQuantity = quantity.coerceAtLeast(1)
@@ -1391,31 +1392,58 @@ class ExplorationViewModel(
             sessionStore.addCredits(amount)
             parts.add("$amount credits")
         }
-        val grantedItems = reward.items.filter { it.itemId.isNotBlank() }.map { item ->
-            val qty = item.quantity ?: 1
-            inventoryService.addItem(item.itemId, qty)
-            val name = inventoryService.itemDisplayName(item.itemId)
+        val aggregatedItems = linkedMapOf<String, Int>()
+        reward.items.filter { it.itemId.isNotBlank() }.forEach { item ->
+            aggregatedItems[item.itemId] = aggregatedItems.getOrDefault(item.itemId, 0) +
+                (item.quantity ?: 1).coerceAtLeast(1)
+        }
+        val grantedItems = aggregatedItems.map { (itemId, qty) ->
+            inventoryService.addItem(itemId, qty)
+            val name = inventoryService.itemDisplayName(itemId)
             parts.add("$qty x $name")
             emitEvent(ExplorationEvent.ItemGranted(name, qty))
-            name to qty
+            Triple(itemId, name, qty)
         }
-        when (grantedItems.size) {
-            0 -> Unit
-            1 -> grantedItems.single().let { (name, qty) ->
-                promptManager.enqueue(ItemGrantedPrompt(name, qty))
-            }
-            else -> promptManager.enqueue(
-                ItemBatchGrantedPrompt(
-                    grantedItems.joinToString(" | ") { (name, qty) ->
-                        if (qty > 1) "$qty x $name" else name
-                    }
+        if (grantedItems.isNotEmpty()) {
+            val sequenceId = "reward_${UUID.randomUUID()}"
+            grantedItems.forEachIndexed { index, (itemId, _, qty) ->
+                promptManager.enqueue(
+                    itemGrantedPrompt(
+                        itemId = itemId,
+                        quantity = qty,
+                        sequenceId = sequenceId,
+                        sequenceIndex = index + 1,
+                        sequenceTotal = grantedItems.size
+                    )
                 )
-            )
+            }
         }
         if (parts.isNotEmpty()) {
             postStatus("Reward: ${parts.joinToString(", ")}")
         }
         refreshCurrentRoomBlockedDirections()
+    }
+
+    private fun itemGrantedPrompt(
+        itemId: String,
+        quantity: Int,
+        sequenceId: String? = null,
+        sequenceIndex: Int = 1,
+        sequenceTotal: Int = 1
+    ): ItemGrantedPrompt {
+        val item = inventoryService.itemDetail(itemId)
+        return ItemGrantedPrompt(
+            itemName = item?.name ?: inventoryService.itemDisplayName(itemId),
+            quantity = quantity.coerceAtLeast(1),
+            itemId = itemId,
+            description = item?.description,
+            category = item?.equipment?.slot
+                ?: item?.categoryOverride
+                ?: item?.type,
+            sequenceId = sequenceId,
+            sequenceIndex = sequenceIndex,
+            sequenceTotal = sequenceTotal
+        )
     }
 
     private fun handleItemAcquired(itemId: String) {
@@ -2590,6 +2618,10 @@ class ExplorationViewModel(
 
     fun dismissPrompt() {
         promptManager.dismissCurrent()
+    }
+
+    fun collectAllItemPrompts(sequenceId: String) {
+        promptManager.dismissItemSequence(sequenceId)
     }
 
     fun dismissNarration() {

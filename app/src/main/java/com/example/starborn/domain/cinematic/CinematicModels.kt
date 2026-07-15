@@ -3,8 +3,21 @@ package com.example.starborn.domain.cinematic
 data class CinematicScene(
     val id: String,
     val title: String? = null,
+    val backdrop: CinematicBackdrop = CinematicBackdrop.ROOM,
     val steps: List<CinematicStep> = emptyList()
 )
+
+enum class CinematicBackdrop {
+    ROOM,
+    BLACK;
+
+    companion object {
+        fun fromRaw(raw: String?): CinematicBackdrop = when (raw?.lowercase()) {
+            "black" -> BLACK
+            else -> ROOM
+        }
+    }
+}
 
 data class CinematicStep(
     val type: CinematicStepType,

@@ -41,6 +41,19 @@ class UIPromptManager {
         }
     }
 
+    fun dismissItemSequence(sequenceId: String) {
+        synchronized(lock) {
+            val current = _state.value.current
+            if (current is ItemGrantedPrompt && current.sequenceId == sequenceId) {
+                current.onDismiss()
+            }
+            queue.removeIf { prompt ->
+                prompt is ItemGrantedPrompt && prompt.sequenceId == sequenceId
+            }
+            promoteNextLocked()
+        }
+    }
+
     private fun promoteNextLocked() {
         val next = if (queue.isEmpty()) null else queue.removeFirst()
         _state.update { it.copy(current = next, queue = queue.toList()) }

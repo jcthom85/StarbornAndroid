@@ -21,10 +21,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.MaterialTheme
@@ -47,6 +50,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -185,10 +189,17 @@ fun DialogueOverlay(
                             .clip(RoundedCornerShape(999.dp))
                             .background(accentColor.copy(alpha = 0.7f))
                     )
-                    Box(modifier = Modifier.weight(1f)) {
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .heightIn(max = 240.dp)
+                            .verticalScroll(rememberScrollState())
+                    ) {
                         Text(
                             text = fullText,
-                            modifier = Modifier.alpha(0f),
+                            modifier = Modifier
+                                .alpha(0f)
+                                .clearAndSetSemantics { },
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onSurface,
                             textAlign = TextAlign.Left
@@ -202,13 +213,21 @@ fun DialogueOverlay(
                     }
                 }
 
-                if (choices.isNotEmpty() && revealFinished) {
-                    Text(
-                        text = "Responses",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = accentColor.copy(alpha = 0.8f)
-                    )
-                    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                if (choices.isNotEmpty()) {
+                    Column(
+                        modifier = Modifier
+                            .alpha(if (revealFinished) 1f else 0f)
+                            .then(
+                                if (revealFinished) Modifier
+                                else Modifier.clearAndSetSemantics { }
+                            ),
+                        verticalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        Text(
+                            text = "Responses",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = accentColor.copy(alpha = 0.8f)
+                        )
                         choices.forEachIndexed { index, choice ->
                             val parsed = remember(choice.label) { parseChoiceLabel(choice.label) }
                             DialogueChoiceButton(
@@ -216,7 +235,8 @@ fun DialogueOverlay(
                                 choice = choice,
                                 parsed = parsed,
                                 onChoice = onChoice,
-                                accentColor = accentColor
+                                accentColor = accentColor,
+                                enabled = revealFinished
                             )
                         }
                     }
@@ -359,10 +379,12 @@ private fun DialogueChoiceButton(
     choice: DialogueChoiceUi,
     parsed: ParsedChoiceLabel,
     onChoice: (String) -> Unit,
-    accentColor: Color
+    accentColor: Color,
+    enabled: Boolean
 ) {
     Surface(
         onClick = { onChoice(choice.id) },
+        enabled = enabled,
         modifier = Modifier.fillMaxWidth(),
         color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.45f),
         border = BorderStroke(1.dp, accentColor.copy(alpha = 0.16f)),
