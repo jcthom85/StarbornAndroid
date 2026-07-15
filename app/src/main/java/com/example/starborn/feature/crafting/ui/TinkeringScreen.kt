@@ -150,7 +150,6 @@ fun TinkeringRoute(
         UIPromptOverlay(
             prompt = promptState.current,
             onDismiss = { promptManager.dismissCurrent() },
-            onCollectAll = { sequenceId -> promptManager.dismissItemSequence(sequenceId) },
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(bottom = 12.dp)

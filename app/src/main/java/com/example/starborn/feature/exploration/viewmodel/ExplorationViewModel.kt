@@ -2125,7 +2125,8 @@ class ExplorationViewModel(
                     id = System.nanoTime(),
                     fromRoomId = currentRoom.id,
                     toRoomId = nextRoom.id,
-                    direction = normalizedDirection
+                    direction = normalizedDirection,
+                    fromBackgroundImage = currentRoom.backgroundImage
                 ),
                 currentHub = nextHub ?: it.currentHub,
                 currentWorld = nextWorld ?: it.currentWorld,
@@ -2618,10 +2619,6 @@ class ExplorationViewModel(
 
     fun dismissPrompt() {
         promptManager.dismissCurrent()
-    }
-
-    fun collectAllItemPrompts(sequenceId: String) {
-        promptManager.dismissItemSequence(sequenceId)
     }
 
     fun dismissNarration() {

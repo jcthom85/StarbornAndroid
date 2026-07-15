@@ -94,7 +94,8 @@ data class RoomTransitionUi(
     val id: Long,
     val fromRoomId: String,
     val toRoomId: String,
-    val direction: String
+    val direction: String,
+    val fromBackgroundImage: String?
 )
 
 data class EnemyIconUi(

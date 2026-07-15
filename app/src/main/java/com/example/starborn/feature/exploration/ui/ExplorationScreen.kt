@@ -3,6 +3,9 @@ package com.example.starborn.feature.exploration.ui
 import com.example.starborn.feature.exploration.ui.components.*
 import com.example.starborn.feature.exploration.ui.tabs.*
 import com.example.starborn.feature.exploration.ui.hud.*
+import com.example.starborn.feature.enemy.EnemyPresentationTier
+import com.example.starborn.feature.enemy.enemyPresentationTier
+import com.example.starborn.feature.enemy.explorationEnemySpriteScale
 
 import androidx.annotation.DrawableRes
 import androidx.activity.compose.BackHandler
@@ -94,7 +97,6 @@ import androidx.compose.material3.Switch
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -453,28 +455,24 @@ fun ExplorationScreen(
     var dragDelta by remember { mutableStateOf(Offset.Zero) }
 
     val backgroundPainter = rememberRoomBackgroundPainter(uiState.currentRoom?.backgroundImage)
-    var lastBackgroundPath by remember { mutableStateOf(uiState.currentRoom?.backgroundImage) }
-    var outgoingBackgroundPath by remember { mutableStateOf<String?>(null) }
-    var roomTransitionActive by remember { mutableStateOf(false) }
-    val roomTransitionProgress = remember { CoreAnimatable(1f) }
     val roomTransition = uiState.roomTransition
+    val outgoingBackgroundPath = roomTransition?.fromBackgroundImage
+    var roomTransitionActive by remember { mutableStateOf(false) }
+    val roomTransitionProgress = remember(roomTransition?.id) {
+        CoreAnimatable(if (roomTransition == null) 1f else 0f)
+    }
+    val roomTransitionInProgress = roomTransitionActive || roomTransitionProgress.value < 1f
     val outgoingBackgroundPainter = rememberRoomBackgroundPainter(outgoingBackgroundPath)
 
     LaunchedEffect(roomTransition?.id) {
-        val transition = roomTransition ?: return@LaunchedEffect
-        outgoingBackgroundPath = lastBackgroundPath
+        roomTransition ?: return@LaunchedEffect
         roomTransitionActive = true
         audioCuePlayer.play("ui_room_move")
-        roomTransitionProgress.snapTo(0f)
         roomTransitionProgress.animateTo(
             targetValue = 1f,
             animationSpec = tween(durationMillis = 240, easing = FastOutSlowInEasing)
         )
-        outgoingBackgroundPath = null
         roomTransitionActive = false
-    }
-    SideEffect {
-        lastBackgroundPath = uiState.currentRoom?.backgroundImage
     }
     val actionAccentColor = themeColor(uiState.theme?.accent, Color(0xFF80E0FF))
     val fadeCommand = uiState.fadeOverlay
@@ -500,8 +498,8 @@ fun ExplorationScreen(
 
     val baseModifier = Modifier.fillMaxSize()
     val swipeGestureModifier = Modifier
-        .pointerInput(uiState.availableConnections, uiState.blockedDirections, blockingOverlayActive, roomTransitionActive) {
-            if (blockingOverlayActive || roomTransitionActive) {
+        .pointerInput(uiState.availableConnections, uiState.blockedDirections, blockingOverlayActive, roomTransitionInProgress) {
+            if (blockingOverlayActive || roomTransitionInProgress) {
                 detectTapGestures(
                     onPress = {
                         tryAwaitRelease()
@@ -1279,7 +1277,6 @@ fun ExplorationScreen(
             UIPromptOverlay(
                 prompt = uiState.prompt,
                 onDismiss = { viewModel.dismissPrompt() },
-                onCollectAll = { sequenceId -> viewModel.collectAllItemPrompts(sequenceId) },
                 modifier = Modifier.align(Alignment.BottomCenter)
             )
         }
@@ -1356,7 +1353,7 @@ fun ExplorationScreen(
             DirectionIndicatorsOverlay(
                 indicators = uiState.directionIndicators,
                 onTravel = { direction ->
-                    if (!roomTransitionActive) viewModel.travel(direction)
+                    if (!roomTransitionInProgress) viewModel.travel(direction)
                 },
                 modifier = Modifier
                     .align(Alignment.Center)
@@ -4945,23 +4942,6 @@ private fun EnemyPresenceStage(
     }
 }
 
-private enum class EnemyTier { COMMON, ELITE, BOSS }
-
-private fun parseEnemyTier(value: String?): EnemyTier {
-    val normalized = value
-        ?.trim()
-        ?.lowercase(Locale.getDefault())
-        ?.replace("_", "")
-        ?.replace("-", "")
-        ?.replace(" ", "")
-        .orEmpty()
-    return when (normalized) {
-        "boss" -> EnemyTier.BOSS
-        "elite", "miniboss" -> EnemyTier.ELITE
-        else -> EnemyTier.COMMON
-    }
-}
-
 private val EnemyPresenceShadowDrop = 0.dp
 
 @Composable
@@ -5091,7 +5071,7 @@ private fun EnemyPartyCluster(
             EnemyPartyStandee(
                 enemyId = enemyId,
                 instanceKey = "${party.id}-$enemyId-$index",
-                tier = parseEnemyTier(enemyTiers[enemyId]),
+                tier = enemyPresentationTier(enemyTiers[enemyId]),
                 motionCycle = motionCycle,
                 accentColor = accentColor,
                 isDark = isDark,
@@ -5115,7 +5095,7 @@ private fun EnemyPartyCluster(
 private fun EnemyPartyStandee(
     enemyId: String,
     instanceKey: String,
-    tier: EnemyTier,
+    tier: EnemyPresentationTier,
     motionCycle: Float,
     accentColor: Color,
     isDark: Boolean,
@@ -5156,7 +5136,7 @@ private fun EnemyPartyStandee(
 private fun EnemyPartyLeaderIcon(
     enemyId: String,
     instanceKey: String,
-    tier: EnemyTier,
+    tier: EnemyPresentationTier,
     motionCycle: Float,
     accentColor: Color,
     isDark: Boolean,
@@ -5168,14 +5148,14 @@ private fun EnemyPartyLeaderIcon(
     val painter = rememberAssetPainter(iconPath, painterResource(R.drawable.inventory_icon), async = transitionActive)
     val tierAccent = enemyTierAccent(tier, accentColor)
     val tierBadge = when (tier) {
-        EnemyTier.BOSS -> "☠"
-        EnemyTier.ELITE -> "★"
-        EnemyTier.COMMON -> null
+        EnemyPresentationTier.BOSS -> "☠"
+        EnemyPresentationTier.ELITE -> "★"
+        EnemyPresentationTier.STANDARD -> null
     }
     val tierLabel = when (tier) {
-        EnemyTier.BOSS -> "☠"
-        EnemyTier.ELITE -> "★"
-        EnemyTier.COMMON -> null
+        EnemyPresentationTier.BOSS -> "☠"
+        EnemyPresentationTier.ELITE -> "★"
+        EnemyPresentationTier.STANDARD -> null
     }
     val density = LocalDensity.current
     val phaseOffset = remember(instanceKey) {
@@ -5187,11 +5167,7 @@ private fun EnemyPartyLeaderIcon(
     val bobAmplitude = if (isDark) 1.2.dp else 2.0.dp
     val bobPx = with(density) { bobAmplitude.toPx() } * wave
     val scale = 1f + (if (isDark) 0.012f else 0.02f) * wave
-    val spriteScale = when (tier) {
-        EnemyTier.BOSS -> 1.12f
-        EnemyTier.ELITE -> 1.06f
-        EnemyTier.COMMON -> 1.0f
-    }
+    val spriteScale = explorationEnemySpriteScale(tier)
     val shape = RoundedCornerShape(topStart = 20.dp, topEnd = 12.dp, bottomEnd = 20.dp, bottomStart = 12.dp)
     val background = remember {
         Brush.radialGradient(
@@ -5249,14 +5225,14 @@ private fun EnemyPartyLeaderIcon(
                     contentScale = ContentScale.Fit
                 )
             }
-        if (tier != EnemyTier.COMMON && !transitionActive) {
+        if (tier != EnemyPresentationTier.STANDARD && !transitionActive) {
             EnemyTierBadge(
                 tier = tier,
                 accentColor = tierAccent,
                 modifier = Modifier
                     .align(Alignment.TopStart)
                     .padding(4.dp)
-                    .size(if (tier == EnemyTier.BOSS) 30.dp else 24.dp)
+                    .size(if (tier == EnemyPresentationTier.BOSS) 30.dp else 24.dp)
             )
         }
     }
@@ -5266,7 +5242,7 @@ private fun EnemyPartyLeaderIcon(
 
 @Composable
 private fun EnemyTierBadge(
-    tier: EnemyTier,
+    tier: EnemyPresentationTier,
     accentColor: Color,
     modifier: Modifier = Modifier
 ) {
@@ -5289,7 +5265,7 @@ private fun EnemyTierBadge(
             center = Offset(size.width * 0.50f, size.height * 0.50f)
         )
         when (tier) {
-            EnemyTier.ELITE -> {
+            EnemyPresentationTier.ELITE -> {
                 val diamond = Path().apply {
                     moveTo(size.width * 0.50f, size.height * 0.18f)
                     lineTo(size.width * 0.74f, size.height * 0.50f)
@@ -5307,7 +5283,7 @@ private fun EnemyTierBadge(
                     cap = StrokeCap.Round
                 )
             }
-            EnemyTier.BOSS -> {
+            EnemyPresentationTier.BOSS -> {
                 val crest = Path().apply {
                     moveTo(size.width * 0.22f, size.height * 0.72f)
                     lineTo(size.width * 0.30f, size.height * 0.32f)
@@ -5328,7 +5304,7 @@ private fun EnemyTierBadge(
                     cap = StrokeCap.Round
                 )
             }
-            EnemyTier.COMMON -> Unit
+            EnemyPresentationTier.STANDARD -> Unit
         }
     }
 }
@@ -5352,10 +5328,10 @@ private fun EnemyPresenceShadow(
     }
 }
 
-private fun enemyTierAccent(tier: EnemyTier, accentColor: Color): Color = when (tier) {
-    EnemyTier.BOSS -> Color(0xFFFFD54F)
-    EnemyTier.ELITE -> Color(0xFFFFB74D)
-    EnemyTier.COMMON -> accentColor
+private fun enemyTierAccent(tier: EnemyPresentationTier, accentColor: Color): Color = when (tier) {
+    EnemyPresentationTier.BOSS -> Color(0xFFFFD54F)
+    EnemyPresentationTier.ELITE -> Color(0xFFFFB74D)
+    EnemyPresentationTier.STANDARD -> accentColor
 }
 
 private fun enemyDisplayLabel(enemyId: String): String = enemyId
@@ -5928,7 +5904,6 @@ fun MilestoneBanner(
 fun ItemGrantedBanner(
     prompt: com.example.starborn.domain.prompt.ItemGrantedPrompt,
     onDismiss: () -> Unit,
-    onCollectAll: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val accentColor = Color(0xFFA5D6A7)
@@ -6038,16 +6013,9 @@ fun ItemGrantedBanner(
             }
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
+                horizontalArrangement = Arrangement.End,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                if (hasSequence) {
-                    TextButton(onClick = { onCollectAll(prompt.sequenceId!!) }) {
-                        Text("Collect all", color = accentColor.copy(alpha = 0.86f))
-                    }
-                } else {
-                    Spacer(modifier = Modifier.width(1.dp))
-                }
                 Text(
                     text = if (prompt.sequenceIndex < prompt.sequenceTotal) "Tap for next" else "Tap to continue",
                     style = MaterialTheme.typography.labelSmall,

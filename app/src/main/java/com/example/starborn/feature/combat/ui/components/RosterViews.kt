@@ -48,6 +48,9 @@ import com.example.starborn.feature.combat.ui.animations.CombatSide
 import com.example.starborn.feature.combat.ui.animations.LungeAxis
 import com.example.starborn.feature.combat.ui.animations.Lungeable
 import com.example.starborn.feature.combat.viewmodel.AttackLungeStyle
+import com.example.starborn.feature.enemy.EnemyPresentationTier
+import com.example.starborn.feature.enemy.combatEnemySpriteScale
+import com.example.starborn.feature.enemy.enemyPresentationTier
 import com.example.starborn.ui.background.rememberAssetPainter
 import java.util.Locale
 import kotlin.math.*
@@ -464,11 +467,7 @@ fun EnemyRoster(
                         )
                         val shape = RoundedCornerShape(28.dp)
                         val atbProgress = atbMeters[combatantId] ?: 0f
-                        val spriteScale = when {
-                            isElite -> 1.6f
-                            isBoss -> 1f
-                            else -> 1.4f
-                        }
+                        val spriteScale = combatEnemySpriteScale(enemy.tier)
                         val rippleScale = 1f + (spriteScale - 1f) * 0.5f
                         val rippleSize = portraitSize * rippleScale
                         val labelSpacer = if (isElite) 8.dp else 4.dp
@@ -1198,21 +1197,11 @@ fun EnemyStatusLabel(
 }
 
 fun isEliteTier(tier: String): Boolean {
-    val normalized = tier.trim()
-        .lowercase(Locale.getDefault())
-        .replace("_", "")
-        .replace("-", "")
-        .replace(" ", "")
-    return normalized == "elite" || normalized == "miniboss"
+    return enemyPresentationTier(tier) == EnemyPresentationTier.ELITE
 }
 
 fun isBossTier(tier: String): Boolean {
-    val normalized = tier.trim()
-        .lowercase(Locale.getDefault())
-        .replace("_", "")
-        .replace("-", "")
-        .replace(" ", "")
-    return normalized == "boss"
+    return enemyPresentationTier(tier) == EnemyPresentationTier.BOSS
 }
 
 @Composable
