@@ -253,6 +253,7 @@ class CraftingViewModel(
 
     fun scrap(itemId: String) {
         val needle = normalizeToken(itemId)
+        val displayName = inventoryService.itemDetail(itemId)?.name ?: itemId.replace('_', ' ')
         val recipe = craftingService.tinkeringRecipes.find { recipe ->
             val tokens = listOf(
                 normalizeToken(recipe.result),
@@ -262,11 +263,11 @@ class CraftingViewModel(
             tokens.any { it == needle }
         }
         if (recipe == null) {
-            viewModelScope.launch { _messages.emit("No schematic to scrap $itemId.") }
+            viewModelScope.launch { _messages.emit("No scrap recipe for $displayName.") }
             return
         }
         if (!inventoryService.hasItem(itemId, 1)) {
-            viewModelScope.launch { _messages.emit("You don't have $itemId to scrap.") }
+            viewModelScope.launch { _messages.emit("You don't have $displayName.") }
             return
         }
         val requirements = mapOf(itemId to 1)
@@ -279,7 +280,7 @@ class CraftingViewModel(
         }
         sessionStore.setInventory(inventoryService.snapshot())
         viewModelScope.launch {
-            _messages.emit("Scrapped $itemId into parts.")
+            _messages.emit("Scrapped $displayName for parts.")
         }
         refreshState()
     }

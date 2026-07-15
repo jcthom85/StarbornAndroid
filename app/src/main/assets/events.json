@@ -428,7 +428,7 @@
       },
       {
         "type": "narrate",
-        "message": "The bunk light coughs on. A scorched conduit spits blue-white sparks across the door release. Someone has stamped its maintenance ticket CLOSED: WITHIN QUOTA.",
+        "message": "The bunk light coughs on. Blue-white sparks jump from the door conduit. Its maintenance ticket reads CLOSED: WITHIN QUOTA.",
         "tap_to_dismiss": true
       },
       {
@@ -487,7 +487,7 @@
       },
       {
         "type": "narrate",
-        "message": "Nova kills the circuit and peels back the ticket. Repeated repair requests, each automatically closed. The fault was reported more than once. Each request was closed without a repair.",
+        "message": "Nova kills the circuit and peels back the ticket. Three repair requests sit underneath it, each closed automatically without work.",
         "tap_to_dismiss": true
       },
       {
@@ -580,7 +580,7 @@
       },
       {
         "type": "narrate",
-        "message": "The cargo netting holds a few tools, a spare ration, and the small metal carving Jed made for you when you were younger. Jed's carving is still wrapped in the spare ration cloth.",
+        "message": "The cargo netting holds tools, one ration, and Jed's metal bird wrapped in spare cloth.",
         "tap_to_dismiss": true
       }
     ]
@@ -675,7 +675,7 @@
       },
       {
         "type": "narrate",
-        "message": "The strip reports SAFETY GOVERNOR BYPASSED. The loader's cracked relay flashes bare when its arm drives forward. A Shock hit will interrupt it and bring Nova's active abilities back sooner.",
+        "message": "SAFETY GOVERNOR BYPASSED. The cracked relay flashes during each forward swing. Shock it to interrupt the loader and shorten active cooldowns.",
         "tap_to_dismiss": true
       }
     ]
@@ -897,7 +897,7 @@
       },
       {
         "type": "narrate",
-        "message": "The rebuilt cold loop holds at 68%. The cutter still needs its Flux Liner grounded and its governor decision confirmed before a live test.",
+        "message": "Cold loop: 68%. Before the live test, ground the Flux Liner and confirm the governor bypass.",
         "tap_to_dismiss": true
       },
       {
@@ -1329,7 +1329,7 @@
       },
       {
         "type": "show_message",
-        "message": "The vent coughs, then clears. The med-bay can breathe again."
+        "message": "The blockage tears free. Clean airflow returns to the med-bay."
       }
     ]
   },
@@ -1486,7 +1486,7 @@
       },
       {
         "type": "show_message",
-        "message": "Boggs nods toward the loader bay gate. The shield lesson is over; now Nova knows how to make a heavy thing vulnerable before trying to break it."
+        "message": "Shield drill complete. Break Guard before committing heavy attacks."
       }
     ]
   },
@@ -2509,7 +2509,7 @@
       },
       {
         "type": "narrate",
-        "message": "Zeke: 'Nova! Do you hear me? I forced open a maintenance route, but the Warden is closing doors as fast as I can confuse them. Follow the red strobes to the cargo lift!'",
+        "message": "Zeke: 'Nova, maintenance route is open. Follow the red strobes to the cargo lift.'",
         "tap_to_dismiss": true
       }
     ]
@@ -2536,7 +2536,7 @@
     "actions": [
       {
         "type": "show_message",
-        "message": "Red strobes chase each other down the maintenance tunnel. Every alarm pulse makes the walls feel narrower."
+        "message": "Red strobes mark the maintenance route. Each alarm pulse closes another door behind Nova."
       }
     ]
   },
@@ -2568,7 +2568,7 @@
       },
       {
         "type": "narrate",
-        "message": "A blast door slams shut somewhere behind Nova. Zeke's voice crackles through the alarm: 'Keep moving. I can keep the lift gate confused, but not for long.'",
+        "message": "A blast door closes behind Nova. Zeke cuts through the alarm: 'Lift gate is open. Move.'",
         "tap_to_dismiss": true
       }
     ]
@@ -2595,7 +2595,7 @@
     "actions": [
       {
         "type": "narrate",
-        "message": "The cargo lift shudders awake under emergency power. Zeke: 'That lift is your window, Nova. Anything standing on it is part of the lockdown now.'",
+        "message": "The cargo lift takes emergency power. Zeke: 'That's your window. Anything on the platform is inside lockdown.'",
         "tap_to_dismiss": true
       }
     ]
@@ -2924,7 +2924,7 @@
               },
               {
                 "type": "show_message",
-                "message": "A new chapter begins."
+                "message": "The pod is down in Sector 9. Zeke is injured, and the wreck still has live circuits."
               }
             ]
           }
@@ -3025,7 +3025,7 @@
       },
       {
         "type": "show_message",
-        "message": "Nova warms the console contacts with a careful power bleed. The frozen keys wake one at a time, enough for the rebel spoof to accept input."
+        "message": "Nova warms the console contacts with a careful power bleed. The keys register cleanly, and the rebel spoof accepts input."
       }
     ]
   },
@@ -3207,7 +3207,7 @@
   },
   {
     "id": "w2_mq01_examine_pod",
-    "description": "Examine the sub-critical pod core and recover the Chime.",
+    "description": "Examine the wrecked navigation console and recover the Chime.",
     "trigger": {
       "type": "player_action",
       "action": "w2_mq01_examine_pod"
@@ -3265,7 +3265,7 @@
       },
       {
         "type": "show_message",
-        "message": "You open the steaming access panel of the pod core. Inside, the Chime is intact, humming in a quiet, stable resonance. You recover it along with an emergency medkit and compact field fishing kit from the crash reserves."
+        "message": "The Chime is locked in the burned navigation port. Nova pulls it free, then takes a medkit and compact fishing kit from emergency storage."
       }
     ]
   },

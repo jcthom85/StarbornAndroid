@@ -5,7 +5,7 @@
     "weather": "dust",
     "title": "Pit Landing",
     "background_image": "images/rooms/world_1/pit_L1_landing_v5.png",
-    "description": "A cramped landing bolts the Pit to the rest of the colony. The bulkhead wheezes with every pressure shift, and warm amber lights make the scuffed metal glow like old lunch trays.",
+    "description": "A cramped landing bolts the Pit to the rest of the colony. The bulkhead seal vents with each pressure shift, and amber lights make the scuffed metal shine like old lunch trays.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -50,7 +50,7 @@
         "name": "tables",
         "type": "rest_stop",
         "rest_event": "w1_rest_mess_hall",
-        "message": "Bolted tables and dented trays make the colony's first shared rest stop. A hot ration is not comfort, but it is a rhythm the body recognizes."
+        "message": "Nova eats a hot ration at the end of a shared table. Resting here restores the party."
       },
       {
         "name": "monitor",
@@ -183,7 +183,7 @@
     "env": "mine",
     "title": "Pod Row",
     "background_image": "images/rooms/world_1/pit_L2_corridor_v5.png",
-    "description": "Sleeping pods stack up the walls like drawers for tired people. Old posters curl beside loose cables, personal charms, and the low buzz of distant drills.",
+    "description": "Sleeping pods stack up the walls like drawers for tired people. Old posters curl beside loose cables, personal charms, and the low vibration of distant drills.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -201,7 +201,7 @@
       {
         "name": "sleeping pods",
         "type": "generic",
-        "condition_unmet_message": "The stacked pods look more like filing cabinets for people."
+        "condition_unmet_message": "Most doors carry a name, a shift code, and a repair tally."
       },
       {
         "name": "posters",
@@ -217,7 +217,7 @@
     "background_image": "images/rooms/world_1/pit_nova_bunk_v5.png",
     "description": "Your bunk is a narrow shelf in the colony wall. The bunk light hangs above cargo netting that holds your tools, a spare ration, and Jed's small metal carving.",
     "reveal_title_when_dark": true,
-    "description_dark": "Nova knows every edge of this bunk by bruised memory. The room is dead black except for the emergency glow around the bunk light.",
+    "description_dark": "Nova can find the bunk edge, netting, and door switch without light. Only the bunk light switch carries an emergency glow.",
     "description_variants": [
       {
         "requires_state": {
@@ -291,7 +291,7 @@
         "name": "bunk",
         "type": "rest_stop",
         "rest_event": "w1_rest_nova_bunk",
-        "message": "It's hard, it's small, but it's yours. Resting here steadies Nova before the colony starts asking for pieces of her again."
+        "message": "Nova sleeps until the shift alarm. Resting here restores the party."
       },
       {
         "name": "netting",
@@ -306,7 +306,7 @@
     "env": "mine",
     "title": "Supply Closet",
     "background_image": "images/rooms/world_1/pit_storage_v5.png",
-    "description": "Supplies crowd the closet in cracked bins, with filter units stacked beside drums of industrial soap. Behind them, your little scrap pile waits in the flicker of a bulb that sounds ready to quit.",
+    "description": "Cracked supply bins and filter units crowd the closet beside drums of industrial soap. Behind the supplies, your scrap pile sits under a bulb with a failing ballast.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -574,7 +574,7 @@
     "env": "mine",
     "title": "Parts Loft",
     "background_image": "images/rooms/world_1/workshop_loft_v3.png",
-    "description": "The loft hangs above the workshop floor on beams that complain about every step. Jed keeps the good parts up here, wrapped in cloth and labeled with a code only he pretends is obvious.",
+    "description": "The loft hangs above the workshop floor on beams that creak under every step. Jed keeps the good parts wrapped in cloth and labeled with a code only he calls obvious.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -604,7 +604,7 @@
     "env": "mine",
     "title": "Tool Shed",
     "background_image": "images/rooms/world_1/workshop_shed_v3.png",
-    "description": "Every set of tools has a hook, a shine, and probably a story about how Jed stole it back from Dominion twice. The heavy toolbox on the low shelf looks older than most of the colony.",
+    "description": "The tools have assigned hooks, polished edges, and probably stories about Jed stealing them back from Dominion twice. A heavy toolbox sits locked on the low shelf.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -783,7 +783,7 @@
     "env": "mine",
     "title": "Doc's Exam Room",
     "background_image": "images/rooms/world_1/medbay_exam1_v3.png",
-    "description": "Doc's exam room tries hard to look clean and loses by inches. A glitching monitor, taped scanner leads, and overused med trays turn every injury into paperwork with a pulse.",
+    "description": "Doc's exam room is clean only where the disinfectant still reaches. A glitching monitor, taped scanner leads, and overused med trays cover the remaining space.",
     "npcs": [
       "doc"
     ],
@@ -811,7 +811,7 @@
     "env": "mine",
     "title": "Med Supply Closet",
     "background_image": "images/rooms/world_1/medbay_storage_v3.png",
-    "description": "Supplies sit in thin, careful rows: expired packets, rationed bandages, and disinfectant bottles already half-empty. One locked cold cabinet still hums like it is guarding treasure.",
+    "description": "Supplies sit in thin rows: expired packets, rationed bandages, and half-empty disinfectant bottles. A locked cold cabinet holds the remaining vaccines at four degrees.",
     "npcs": [],
     "items": [
       "medkit_i"
@@ -849,13 +849,13 @@
         "requires_state": {
           "toxic_blockage_cleared": true
         },
-        "description": "The fans settle into a cleaner rhythm, and the cracked vent only ticks as it cools. The toxic blockage is gone; patched pipes still complain, but the med-bay can finally breathe."
+        "description": "The fans hold a steady speed, and the cracked vent ticks as it cools. The blockage is gone; clean air reaches the med-bay at normal pressure."
       },
       {
         "requires_state": {
           "airflow_rerouted": true
         },
-        "description": "The fans grind in reverse, pulling green haze away from the cracked vent and bunching it around the toxic blockage. Patched pipes shudder as the system tries to remember how clean air works."
+        "description": "The fans grind in reverse, pulling green haze away from the cracked vent and around the toxic blockage. Patched pipes shudder under the redirected pressure."
       },
       {
         "requires_state": {
@@ -909,7 +909,7 @@
     "env": "mine",
     "title": "Exhaust Mouth",
     "background_image": "images/rooms/world_1/medbay_exhaust_v3.png",
-    "description": "The vent pipe opens wide to the canyon, framing the orange mining pit far below. Wind claws through the grate, carrying dust, cold metal, and the faint roar of machines that never clock out.",
+    "description": "The vent pipe opens onto the canyon and the orange mining pit below. Cold wind drives dust through the grate over the continuous roar of the excavation rigs.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -1203,7 +1203,7 @@
     "env": "market",
     "title": "Cold Locker",
     "background_image": "images/rooms/world_1/trade_locker_v3.png",
-    "description": "A reinforced locker squats in the rock with an amber scanner and a nasty little hum. The door feels cold from three steps away, like whatever is inside is drinking the room's heat.",
+    "description": "A reinforced locker is set into the rock beside an amber scanner. Frost rims the door, and its cooling unit draws enough current to dim the corridor lights.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -1408,7 +1408,7 @@
       {
         "name": "graffiti",
         "type": "generic",
-        "condition_unmet_message": "Names and dates scratched into the paint. A history of people the system forgot."
+        "condition_unmet_message": "Names and dates are scratched through the paint. Several match closed liability records."
       },
       {
         "name": "bench",
@@ -1462,7 +1462,7 @@
     "env": "mine",
     "title": "Transit Tunnel",
     "background_image": "images/rooms/world_1/checkpoint_tunnel_v3.png",
-    "description": "The tunnel beyond the checkpoint is too clean for the Homestead. A moving walkway hums under your boots, carrying you toward colder lights and people who call cruelty policy.",
+    "description": "The tunnel beyond the checkpoint is cleaner and colder than the Homestead. A moving walkway carries workers toward Logistics under white inspection lights.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -1479,7 +1479,7 @@
       {
         "name": "walkway",
         "type": "generic",
-        "condition_unmet_message": "A steady, mechanical pull that makes you feel even more like an object on a belt."
+        "condition_unmet_message": "The belt moves at a fixed shift-change pace and has no stop control on this side."
       }
     ]
   },
@@ -1507,7 +1507,7 @@
       {
         "name": "windows",
         "type": "generic",
-        "condition_unmet_message": "The mining pit is a sea of orange lights and grinding steel, miles below. Somewhere down there, the system has already found a worse use for you."
+        "condition_unmet_message": "Orange work lights mark each drill cage below. Nova's temporary badge now routes her toward Sector 4."
       }
     ],
     "npc_presence": [
@@ -1527,7 +1527,7 @@
     "env": "market",
     "title": "Observation Deck",
     "background_image": "images/rooms/world_1/admin_deck.png",
-    "description": "Glass railings offer a dizzying view of the machines below. A row of holographic kiosks display productivity graphs that look more like warnings than statistics.",
+    "description": "Glass railings overlook the machinery below. Holographic kiosks show output graphs in red wherever a crew falls under quota.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -1582,7 +1582,7 @@
       {
         "name": "badges",
         "type": "generic",
-        "condition_unmet_message": "The sound of shift-clearance is the only music this sector knows."
+        "condition_unmet_message": "Each verified badge produces the same soft chime."
       }
     ],
     "npc_presence": [
@@ -1625,7 +1625,7 @@
       {
         "name": "map",
         "type": "generic",
-        "condition_unmet_message": "It shows the colony as a series of interconnected veins, with the heart at the Logistics Sector."
+        "condition_unmet_message": "The map traces power, freight, and worker traffic through Logistics."
       }
     ]
   },
@@ -1701,7 +1701,7 @@
     "env": "market",
     "title": "Elevator Lobby",
     "background_image": "images/rooms/world_1/admin_elevator.png",
-    "description": "The entry to the Deep Mine lift is marked by heavy warning signs and a biometric scanner. Boggs' authorization sits in the system like a dare, and the lift cables groan beneath the floor.",
+    "description": "Heavy warning signs and a biometric scanner mark the Deep Mine lift. Boggs' authorization shows green while the lift cables strain beneath the floor.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -1810,7 +1810,7 @@
     "env": "market",
     "title": "Aisle 01",
     "background_image": "images/rooms/world_1/server_aisle.png",
-    "description": "Miles of blue server racks hang in the void, humming with the data of the colony's every transaction. The floor is a metal grate that reveals a bottomless pit of cabling below.",
+    "description": "Blue server racks fill the chilled aisle from floor to ceiling. Through the metal grate, bundled power and data cable descend into the service level.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -1835,7 +1835,7 @@
       {
         "name": "grate",
         "type": "generic",
-        "condition_unmet_message": "Industrial-strength mesh. You can see the glow of power-conduits far below."
+        "condition_unmet_message": "Industrial mesh reveals labeled power conduits one level below."
       }
     ]
   },
@@ -1845,7 +1845,7 @@
     "weather": "snow",
     "title": "Cooling Unit B",
     "background_image": "images/rooms/world_1/server_cooling.png",
-    "description": "Massive fans pull freezing air through the stacks with a roar that drowns out all other sound. A layer of frost coats the walls, shimmering in the pale light of the server LEDs.",
+    "description": "Massive fans pull freezing air through the racks and drown out conversation. Frost coats the wall panels under the server LEDs.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -1866,7 +1866,7 @@
       {
         "name": "frost",
         "type": "generic",
-        "condition_unmet_message": "Beautiful cymatic patterns formed by the extreme cold."
+        "condition_unmet_message": "Fan vibration has worked the frost into repeating ridges."
       }
     ]
   },
@@ -1881,7 +1881,7 @@
         "requires_state": {
           "override_applied": true
         },
-        "description": "The mainframe terminal has gone carefully blank, hiding the stolen access route under ordinary Dominion silence. The console is thawed now, its last rebel command burned into a cracked circuit board."
+        "description": "The mainframe shows a standard login screen. The console is thawed, and its last rebel command is burned into a cracked circuit board."
       },
       {
         "requires_state": {
@@ -2019,7 +2019,7 @@
     "weather": "cave_drip",
     "title": "Elevator Landing",
     "background_image": "images/rooms/world_1/mine_landing.png",
-    "description": "The base of the industrial lift opens into raw rock, red safety beacons, and silent machinery, with a pressure that makes the ceiling feel closer than it is. The override got Nova down here; it does not promise a way back.",
+    "description": "The industrial lift opens into raw rock, red safety beacons, and idle drilling machinery. Boggs' override shows one authorized descent and no scheduled return.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -2036,7 +2036,7 @@
       {
         "name": "lift",
         "type": "generic",
-        "condition_unmet_message": "The only way back up. Boggs can pretend it is a work assignment because the lock agrees with him."
+        "condition_unmet_message": "The lift panel shows Nova's descent authorization. Return access is locked."
       },
       {
         "name": "beacons",
@@ -2055,7 +2055,7 @@
     "env": "mine",
     "title": "Main Tunnel Alpha",
     "background_image": "images/rooms/world_1/mine_alpha.png",
-    "description": "The start of the deep excavation tunnels where the walls are scarred by giant drills and an empty ore cart sits. The official route markers blink toward Sector 4, but the hum underneath them feels older than the mine.",
+    "description": "Scars from giant drills cut across the first excavation tunnel beside an empty ore cart. Route markers blink toward Sector 4 while a low vibration carries through the rock below them.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -2155,7 +2155,7 @@
         "label_off": "Cut power",
         "action_event_on": "evt_mine_power_on",
         "action_event_off": "evt_mine_power_off",
-        "condition_unmet_message": "The heart of the sector's structural integrity. If Nova brings the lights back, she also gives the thing under them a clearer path to sing."
+        "condition_unmet_message": "The pillar carries the sector's shoring load. Its relay is also conducting the repeating pulse deeper into the mine."
       }
     ]
   },
@@ -2337,7 +2337,7 @@
     "env": "mine",
     "title": "Ancient Threshold",
     "background_image": "images/rooms/world_1/mine_threshold.png",
-    "description": "The rock gives way to smooth, impossible geometry along the walls that does not belong in a mine. This is no longer punishment duty. This is something Dominion dug into and then lied about.",
+    "description": "Drilled rock ends at seamless black walls. Their geometry uses unfamiliar angles, and Dominion hazard tape covers the oldest survey marks.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -2356,7 +2356,7 @@
       {
         "name": "geometry",
         "type": "generic",
-        "condition_unmet_message": "Angles that shouldn't exist, formed from a single piece of unknown stone."
+        "condition_unmet_message": "The joints remain straight across corners where standard wall panels would need separate cuts."
       },
       {
         "name": "walls",
@@ -2417,7 +2417,7 @@
       {
         "name": "ceiling",
         "type": "generic",
-        "condition_unmet_message": "An infinite void above your head."
+        "condition_unmet_message": "The nearest work light cannot reach the ceiling."
       },
       {
         "name": "stone",
@@ -2431,7 +2431,7 @@
     "env": "space",
     "title": "Geometric Gap",
     "background_image": "images/rooms/world_1/echo_gap.png",
-    "description": "This is where the colony's industrial paint meets the ancient stone of the Architects. The transition line is surgically precise, and crossing it feels like stepping out of Dominion's story into something that was waiting first.",
+    "description": "Dominion floor paint ends at a straight seam in the Architect stone. Drill scoring stops at the same line without marking the black surface.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -2587,7 +2587,7 @@
     "env": "space",
     "title": "Emergency Exit",
     "background_image": "images/rooms/world_1/echo_exit.png",
-    "description": "A hidden door dissolves into mist as alarms bleed through the impossible quiet. Beyond it, a dark maintenance tunnel leads back into the colony that has finally noticed Nova.",
+    "description": "A hidden door breaks into white mist as lockdown alarms reach the chamber. Beyond it, a maintenance tunnel leads back toward the colony.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -2614,7 +2614,7 @@
       {
         "name": "maintenance tunnel",
         "type": "generic",
-        "condition_unmet_message": "Back into the grit. The sirens make it clear the mine is no longer a workplace; it is a trap closing around you."
+        "condition_unmet_message": "Red strobes mark the route. Containment doors are closing in sequence behind Nova."
       }
     ]
   },
@@ -2623,7 +2623,7 @@
     "env": "logistics",
     "title": "Maintenance Access",
     "background_image": "images/rooms/world_1/launch_access.png",
-    "description": "A final, narrow crawl through the colony's gut, filled with humming conduits, hot pipes, and red strobes racing toward the cargo lift. Zeke's route is open by seconds, not permission.",
+    "description": "A narrow service crawl follows hot pipes and loaded conduits toward the cargo lift. Red strobes mark the route Zeke forced open.",
     "description_variants": [
       {
         "requires_milestones": [
@@ -2632,7 +2632,7 @@
         "forbidden_milestones": [
           "ms_w1_mq04_complete"
         ],
-        "description": "Red strobes race along the conduits toward the cargo lift while pipes hammer hard enough to sound like pursuit. Zeke's spoof is holding the gate open somewhere ahead, but the route feels like it is shrinking behind you."
+        "description": "Red strobes mark the conduits toward the cargo lift. Pipes hammer against their brackets while Zeke's spoof holds the gate ahead."
       }
     ],
     "npcs": [],
@@ -2654,17 +2654,17 @@
       {
         "name": "conduits",
         "type": "generic",
-        "condition_unmet_message": "The conduits vibrate with lockdown power, every surge stealing light from somewhere behind you."
+        "condition_unmet_message": "The conduits carry enough lockdown current to dim the work lights on each surge."
       },
       {
         "name": "pipes",
         "type": "generic",
-        "condition_unmet_message": "The pipes clatter against their brackets hard enough to sound like boots in the walls."
+        "condition_unmet_message": "The pipes clatter against loose brackets under emergency pressure."
       },
       {
         "name": "lift",
         "type": "generic",
-        "condition_unmet_message": "The cargo lift shudders at the end of the route, half-open because Zeke is still lying to its gate."
+        "condition_unmet_message": "The cargo lift is half-open while Zeke's spoof keeps the gate sensor in a service loop."
       }
     ]
   },
@@ -2734,7 +2734,7 @@
     "env": "logistics",
     "title": "Cargo Lift",
     "background_image": "images/rooms/world_1/launch_lift.png",
-    "description": "A heavy industrial platform bucks beside a manual override panel. The hydraulics scream under emergency power, and security shutters keep trying to bite the lift closed.",
+    "description": "A heavy industrial platform bucks beside a manual override panel. The hydraulics strain under emergency power while security shutters cycle against the override.",
     "description_variants": [
       {
         "requires_milestones": [
@@ -2743,7 +2743,7 @@
         "forbidden_milestones": [
           "ms_w1_mq04_complete"
         ],
-        "description": "The cargo lift bucks under emergency power, trapped between the override panel and a hostile lockdown. The hydraulics scream as security shutters try to close around the platform."
+        "description": "The cargo lift bucks under emergency power. The override holds while the security shutters cycle against the platform."
       }
     ],
     "npcs": [],
@@ -2841,7 +2841,7 @@
     "env": "logistics",
     "title": "Pod Bay",
     "background_image": "images/rooms/world_1/launch_bay.png",
-    "description": "The massive cargo rails stretch up toward the planetary shield, glowing with emergency red. A single escape pod waits on the pad, ugly and barely alive. [npc:The Warden] blocks the hatch while [npc:Zeke] frantically lies to the controls.",
+    "description": "Cargo rails climb toward the planetary shield under emergency red lights. One escape pod waits on the pad. [npc:The Warden] blocks the hatch while [npc:Zeke] lies to the controls.",
     "npcs": [
       "the_warden"
     ],
@@ -2902,7 +2902,7 @@
     "env": "logistics",
     "title": "The Pod Core",
     "background_image": "images/rooms/world_1/launch_pod.png",
-    "description": "Inside the cramped pod, the air is thick with the scent of recycled oxygen and panic. Zeke hammers at the navigation console, his hands shaking as the countdown blares from the overhead speaker.",
+    "description": "The cramped pod smells of hot wiring and recycled oxygen. Zeke works the navigation console with shaking hands while the overhead speaker runs the countdown.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -2950,7 +2950,7 @@
     "env": "logistics",
     "title": "Launch Rail",
     "background_image": "images/rooms/world_1/launch_rail.png",
-    "description": "The pod shoots up the magnetic rail, pinning you against the seat as the colony falls away. Outside the viewport, the shimmering planetary shield blooms like a hateful flower.",
+    "description": "The magnetic rail pins Nova against the seat as the colony drops from view. The planetary shield brightens across the viewport ahead.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -2971,12 +2971,12 @@
       {
         "name": "viewport",
         "type": "generic",
-        "condition_unmet_message": "The colony is just a dot now. The sky is real... and very dangerous."
+        "condition_unmet_message": "The colony drops to a point of orange light while shield warnings fill the glass."
       },
       {
         "name": "planetary shield",
         "type": "generic",
-        "condition_unmet_message": "A cage made of light. It's solid enough to shred any ship without the right frequency."
+        "condition_unmet_message": "The shield rejects unauthorized traffic with enough force to break a cargo pod."
       }
     ]
   },
@@ -7453,7 +7453,7 @@
     "weather": "fog",
     "title": "Crash Site",
     "background_image": "images/rooms/world_2/crash_site.png",
-    "description": "The escape pod wreckage is half-submerged in warm glow-water. The cracked pod core ticks under a scorched access panel while thick vines hang from concrete struts. Zeke sits coughing on the hull, and a patch of scan moss pulses along the seams.",
+    "description": "The escape pod sits half-submerged in warm glow-water. A scorched navigation console ticks under an open panel. Zeke coughs on the hull while scan moss vibrates along the seams.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -7475,10 +7475,10 @@
         "condition_unmet_message": "The pod's thrusters are completely fused. It won't fly again."
       },
       {
-        "name": "pod core",
+        "name": "navigation console",
         "type": "generic",
         "action_event": "w2_mq01_examine_pod",
-        "condition_unmet_message": "Examining the pod's sub-critical core..."
+        "condition_unmet_message": "The Chime is still locked in the burned navigation port."
       },
       {
         "name": "glow-water",
@@ -7508,7 +7508,7 @@
         "requires_milestones": [
           "ms_w2_mq01_complete"
         ],
-        "description": "The escape pod wreckage has cooled in the glow-water. Zeke is stable now, the pod core is dead weight, and the scan moss points inland toward the first clean signal."
+        "description": "The escape pod has cooled in the glow-water. Zeke is stable, the navigation console is dead, and the scan moss registers a clean signal inland."
       }
     ]
   },

@@ -8,9 +8,9 @@ appId: com.junewiregames.starborn.prealpha
 - tapOn: ".*The bunk light coughs on.*"
 - tapOn: "scorched conduit"
 - extendedWaitUntil:
-    visible: ".*Repeated repair requests.*"
+    visible: ".*Three repair requests.*closed automatically.*"
     timeout: 15000
-- tapOn: ".*Repeated repair requests.*"
+- tapOn: ".*Three repair requests.*closed automatically.*"
 - extendedWaitUntil:
     visible: "Swipe toward any open exit to move.*"
     timeout: 10000

@@ -319,13 +319,13 @@
   {
     "id": "jed_return_wrapup",
     "speaker": "Jed",
-    "text": "Town runs smoother thanks to you. Keep pace like that and we'll stay ahead of the scrappers.",
+    "text": "Good. Fewer breakdowns means fewer people eating cold rations. Keep at it.",
     "condition": "quest_completed:stellarium_mine_investigation"
   },
   {
     "id": "jed_signal_complete",
     "speaker": "Jed",
-    "text": "Stellarium core is cooling on my workbench thanks to you. We'll make good use of it.",
+    "text": "Core's cooling on my bench. Once the casing stops ticking, I'll put it to work.",
     "condition": "milestone:ms_energy_core_returned"
   },
   {
@@ -337,13 +337,13 @@
   {
     "id": "jed_signal_instructions",
     "speaker": "Jed",
-    "text": "Track that pulse to its source. If the deep mine lit up, something below Sector 4 is chewing through power.",
+    "text": "Track the pulse. If the deep mine lit up, something under Sector 4 is drawing power.",
     "condition": "quest_active:w1_mq03,milestone_not_set:ms_w1_mq03_complete"
   },
   {
     "id": "jed_tinkering_complete",
     "speaker": "Jed",
-    "text": "Nice work. That's all of 'em. Now, get this gear back to their owners. They've been pestering me for days.",
+    "text": "That's all of them. Get this gear back before the owners start charging me storage.",
     "condition": "quest_active:gather_broken_gear"
   },
   {
@@ -719,7 +719,7 @@
   },
   {
     "id": "warden_boss_intro_2",
-    "speaker": "Player",
+    "speaker": "Nova",
     "emote": "angry",
     "text": "No.",
     "next": "warden_boss_intro_3"
@@ -740,7 +740,7 @@
   },
   {
     "id": "zeke_w1_mq05_defeat_warden_2",
-    "speaker": "Player",
+    "speaker": "Nova",
     "emote": "worried",
     "text": "Get the hatch. I have the Chime.",
     "next": "zeke_w1_mq05_defeat_warden_3"
@@ -762,7 +762,7 @@
   },
   {
     "id": "zeke_w1_mq05_pod_core_2",
-    "speaker": "Player",
+    "speaker": "Nova",
     "emote": "worried",
     "text": "Here goes.",
     "next": "zeke_w1_mq05_pod_core_3"

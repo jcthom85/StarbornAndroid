@@ -2,7 +2,7 @@
 
 Date: 2026-07-15
 
-Status: approved planning reference; implementation not yet started
+Status: Round 1 implemented and validated; paused for three blind playtests before Round 2
 
 ## Summary
 

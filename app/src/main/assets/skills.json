@@ -616,7 +616,7 @@
     "name": "Cryo Vent",
     "character": "nova",
     "type": "active",
-    "description": "Vents the rebuilt Cryo-Inductor through Nova's cutter, dealing light freeze damage and making the target Brittle. Physical attacks deal 50% more damage to Brittle targets for two turns.",
+    "description": "Deals freeze damage and applies Brittle for two turns. Physical attacks deal 50% more damage to Brittle targets. Cooldown: 3 turns.",
     "combat_tags": [
       "freeze",
       "setup"
@@ -842,7 +842,7 @@
     "name": "Blast Wave",
     "character": "nova",
     "type": "source_art",
-    "description": "Unleashes a wave of force that shatters shields and pushes enemies back.",
+    "description": "Hits all enemies with force, breaks Guard, and applies Stun. Cooldown: 4 turns.",
     "combat_tags": [
       "force",
       "aoe",
@@ -878,7 +878,7 @@
     "name": "Hydraulic Kick",
     "character": "nova",
     "type": "active",
-    "description": "A powered kick designed to break guards and dent armor.",
+    "description": "Deals heavy physical damage, breaks Guard, and applies Weak. Cooldown: 2 turns.",
     "combat_tags": [
       "dmg",
       "guard_break"

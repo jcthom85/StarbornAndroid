@@ -4,7 +4,7 @@ appId: com.junewiregames.starborn.prealpha
 - tapOn: "Tap to continue"
 - tapOn: "Back"
 - extendedWaitUntil:
-    visible: ".*cold loop holds at.*68%.*"
+    visible: ".*Cold loop: 68%.*ground the Flux Liner.*governor bypass.*"
     timeout: 20000
 - tapOn: "Continue"
 - repeat:
@@ -18,7 +18,7 @@ appId: com.junewiregames.starborn.prealpha
 - tapOn: "Flux Liner"
 - tapOn:
     point: "50%,55%"
-- tapOn: "DISMISS"
+- tapOn: "Item acquired: Flux Liner.*"
 - assertVisible: "mining cutter"
 - tapOn: "mining cutter"
 - extendedWaitUntil:

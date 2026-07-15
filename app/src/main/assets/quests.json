@@ -86,7 +86,7 @@
     "id": "w1_mq02",
     "title": "Shift Clearance",
     "summary": "Nova has to clear the Transit Checkpoint before Dominion's paperwork turns her into a liability.",
-    "description": "Report for shift clearance at the Transit Checkpoint, get a mine badge, and survive the Dominion math that marked Nova for recycling.",
+    "description": "Report to the Transit Checkpoint, get a mine badge, and clear the retirement flag attached to Nova's cutter fault.",
     "flavor": "Nova's file marks her for bio-reclamation.",
     "giver": "Zeke",
     "hub_id": "hub_1_homestead",
@@ -94,7 +94,7 @@
       {
         "id": "reach_checkpoint",
         "title": "Report for Shift Clearance",
-        "description": "Jed repaired Nova's cutter, but Dominion still makes every worker clear the Transit Checkpoint before entering the mine.",
+        "description": "Clear the Transit Checkpoint before entering the mine.",
         "tasks": [
           {
             "id": "approach_admin_gate",
@@ -142,7 +142,7 @@
     "id": "w1_mq03",
     "title": "The Echo",
     "summary": "Zeke's temporary override sends Nova to Logistics review, where Boggs turns her clearance into Sector 4 punishment duty.",
-    "description": "Follow the cutter fault record into Sector 4, identify the feedback, and counter-tune the signal Nova woke.",
+    "description": "Follow the cutter fault into Sector 4, trace the repeating signal, and counter-tune the damaged Fork.",
     "flavor": "The cutter is off. The 87 kHz return is still climbing.",
     "giver": "Foreman Boggs",
     "hub_id": "hub_2_logistics",
@@ -150,7 +150,7 @@
       {
         "id": "sector_four_assignment",
         "title": "Logistics Review",
-        "description": "Zeke kept Nova alive, but the override routes her through Foreman Boggs before she can work the mine.",
+        "description": "Report to Foreman Boggs for the Sector 4 assignment.",
         "tasks": [
           {
             "id": "enter_logistics_sector",
@@ -169,7 +169,7 @@
       {
         "id": "deep_mine_descent",
         "title": "Deep Mine Descent",
-        "description": "Restore the mine lights, push through the old tunnels, and feel the signal become stranger than a broken relay.",
+        "description": "Restore mine power and trace the repeating signal past the industrial tunnels.",
         "tasks": [
           {
             "id": "restore_deep_mine_power",
@@ -224,8 +224,8 @@
   {
     "id": "w1_mq04",
     "title": "Red Alert",
-    "summary": "The relic trips the lockdown and the colony Nova knew turns hostile.",
-    "description": "Escape the Deep Mine under lockdown, follow Zeke's comm guidance, and reach the Cargo Lift before the Warden turns Nova's anomaly into an execution order.",
+    "summary": "The Fork handshake triggers containment lockdown across the colony.",
+    "description": "Escape the Deep Mine under lockdown and follow Zeke's route to the Cargo Lift before the Warden seals it.",
     "flavor": "The system stopped ignoring Nova. That was worse.",
     "giver": "Zeke",
     "hub_id": "hub_2_logistics",
@@ -252,7 +252,7 @@
       {
         "id": "cargo_lift_sacrifice",
         "title": "Cargo Lift",
-        "description": "Jed catches up at the lift with one last piece of impossible scrap and makes Nova's escape bigger than quota.",
+        "description": "Reach Jed at the Cargo Lift, take the Chime, and get through before the override fails.",
         "tasks": [
           {
             "id": "reach_cargo_lift",
@@ -284,7 +284,7 @@
   {
     "id": "w1_mq05",
     "title": "The Launch",
-    "summary": "Nova and Zeke hijack a cargo pod, but the sky is another Dominion lock.",
+    "summary": "Nova and Zeke need a powered cargo pod, valid authorization, and a route through the launch rail.",
     "description": "Fight to the Pod Bay, defeat the Warden, splice the Chime into authorization/navigation, and launch on pod power.",
     "flavor": "Escaping the colony is not the same thing as escaping the planet.",
     "giver": "Zeke",
@@ -293,7 +293,7 @@
       {
         "id": "reach_pod_bay",
         "title": "Reach the Pod Bay",
-        "description": "Security is collapsing toward the launch rail, and the pod bay is the only direction left that is not a cell.",
+        "description": "Fight through Launch Access and reach the Pod Bay before security reboots.",
         "tasks": [
           {
             "id": "fight_through_launch_access",
@@ -308,7 +308,7 @@
       {
         "id": "defeat_warden",
         "title": "The Warden",
-        "description": "The Warden blocks the pod and forces Nova to prove what she learned in the mines.",
+        "description": "Break the Warden's guard and clear the pod hatch.",
         "tasks": [
           {
             "id": "survive_warden_intro",
@@ -407,7 +407,7 @@
     "id": "w1_sq02",
     "title": "System Flush",
     "summary": "Doc's med-bay vents are backing up with toxic fumes because Dominion keeps denying repairs.",
-    "description": "Clear the contaminated ventilation route, stop the fumes from poisoning the med-bay, and collect Doc's corrosive round mod.",
+    "description": "Reverse the med-bay fans, clear the toxic blockage, and report the repair to Doc.",
     "flavor": "The med-bay repair requests have all been denied.",
     "giver": "Doc",
     "hub_id": "hub_1_homestead",
@@ -442,7 +442,7 @@
       {
         "id": "doc_turn_in",
         "title": "Report to Doc",
-        "description": "Doc can finally breathe long enough to pay you.",
+        "description": "Return to Doc after the airflow stabilizes.",
         "tasks": [
           {
             "id": "return_to_doc",
@@ -467,7 +467,7 @@
     "id": "w1_sq03",
     "title": "Heavy Lifting: Required Training",
     "summary": "Required Logistics certification: Boggs will not authorize Sector 4 until Nova proves she can break a shield.",
-    "description": "Bring the loader online, clear Boggs' cargo, save the trapped workers, and complete the mandatory Guard Break drill before the Deep Elevator opens.",
+    "description": "Bring the loader online, clear the cargo, rescue the trapped workers, and complete Boggs' Guard Break drill.",
     "flavor": "Boggs calls it labor efficiency. Nova calls it not letting people die under a crate.",
     "giver": "Foreman Boggs",
     "hub_id": "hub_1_homestead",
@@ -531,7 +531,7 @@
   {
     "id": "w1_sq04",
     "title": "Protocol Override",
-    "summary": "A hacked terminal in the Server Room still carries code from a resistance cell that failed.",
+    "summary": "A scrubbed Server Room terminal still carries a rebel access spoof.",
     "description": "Find the old rebel terminal, restore its protocol spoof, and leave with admin access that can shave time off future security work.",
     "flavor": "If you are reading this, we failed. But the code still works.",
     "giver": "Hacked Terminal",
@@ -576,8 +576,8 @@
   {
     "id": "w1_sq05",
     "title": "The Lost Shift",
-    "summary": "A dead miner's datapad proves the colony stopped being employment long before Nova noticed.",
-    "description": "Track the missing shift through the Deep Mine, recover the datapad, and learn what Dominion does when workers stop producing.",
+    "summary": "A missing shift left its final record in a collapsed Deep Mine route.",
+    "description": "Find the collapsed side route, recover the missing crew's datapad, and read its final log.",
     "flavor": "They were not paying us anymore. They were just keeping us.",
     "giver": "Dead Miner's Datapad",
     "hub_id": "hub_2_logistics",
@@ -634,7 +634,7 @@
           },
           {
             "id": "examine_pod",
-            "text": "Examine the sub-critical pod core."
+            "text": "Examine the wrecked navigation console."
           },
           {
             "id": "stabilize_zeke",

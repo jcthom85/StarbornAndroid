@@ -56,9 +56,9 @@ appId: com.junewiregames.starborn.prealpha
     notVisible: "Zeke joined the party."
     timeout: 10000
 
-# 2. Examine the pod core in the wreckage
-- assertVisible: "pod core"
-- tapOn: "pod core"
+# 2. Examine the navigation console in the wreckage
+- assertVisible: "navigation console"
+- tapOn: "navigation console"
 - extendedWaitUntil:
     visible: "ITEM OBTAINED"
     timeout: 15000

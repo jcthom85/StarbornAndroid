@@ -227,9 +227,9 @@
   },
   {
     "id": "ms_w1_mq01_complete",
-    "name": "Homestead Operations",
-    "description": "You completed Nova's onboarding and tinkering training with Jed.",
-    "toast": "Homestead operations briefing completed."
+    "name": "Live Test Complete",
+    "description": "Nova's cutter test woke a buried conduit and logged the fault to her operator ID.",
+    "toast": "Wake Up Call complete. Shift clearance required."
   },
   {
     "id": "ms_w1_mq02_hank_denied",
@@ -251,9 +251,9 @@
   },
   {
     "id": "ms_w1_mq02_complete",
-    "name": "Admin Gate Breach",
-    "description": "You spoofed the liability form and bypassed Hank to unlock the Admin Gate.",
-    "toast": "Admin Gate breached. Logistics accessible."
+    "name": "Shift Clearance",
+    "description": "Zeke recoded Nova's cutter fault as grid instability and issued a temporary mine badge.",
+    "toast": "Mine badge issued. Logistics review required."
   },
   {
     "id": "ms_w1_mq03_bogs_talked",
@@ -263,33 +263,33 @@
   },
   {
     "id": "ms_w1_mq03_complete",
-    "name": "Relic Synchronized",
-    "description": "You synchronized with the Tuning Fork relic deep within the mines.",
-    "toast": "A heavy frequency vibrates in your mind."
+    "name": "Calibration Handshake",
+    "description": "Nova counter-tuned the damaged Fork and received an Architect protocol mark.",
+    "toast": "Tuning Fork recovered. Blast Wave unlocked."
   },
   {
     "id": "ms_w1_mq04_complete",
     "name": "Cargo Lift Escape",
-    "description": "Jed stayed behind to hold the lift controls, allowing you to escape to the Launch Bay with the Chime.",
-    "toast": "Jed stays behind. You hold the Chime."
+    "description": "Jed held the lift override while Nova escaped toward the Launch Bay with the Chime.",
+    "toast": "Jed holds the lift. Nova carries the Chime."
   },
   {
     "id": "ms_w1_chime_spliced",
-    "name": "Chime Spliced",
-    "description": "You connected Jed's Chime to the launch pod core and forced the colony systems to accept the escape route.",
-    "toast": "The Chime locks into the pod core."
+    "name": "Chime Authenticated",
+    "description": "Nova connected Orion's Chime to the pod's authorization and navigation bus. The pod supplies its own power.",
+    "toast": "Launch authorization accepted. Beacon route locked."
   },
   {
     "id": "ms_w1_zeke_directed_to_pod",
     "name": "Pod Path Clear",
-    "description": "Zeke opened the pod hatch after Nova defeated the Warden and moved to secure the launch core.",
+    "description": "Zeke opened the pod hatch after Nova defeated the Warden and moved to secure the navigation console.",
     "toast": "Zeke opens the pod hatch."
   },
   {
     "id": "ms_w1_mq05_complete",
     "name": "The Crash",
-    "description": "You launched the cargo pod and crashed into Sector 9 after colliding with the planetary resonance shield.",
-    "toast": "The sky was a wall. You crashed."
+    "description": "The planetary shield rejected the cargo pod and threw Nova and Zeke into Sector 9.",
+    "toast": "Pod down in Sector 9. Zeke is injured."
   },
   {
     "id": "ms_w1_sq01_started",
@@ -353,8 +353,8 @@
   {
     "id": "ms_w2_chime_recovered",
     "name": "Chime Recovered",
-    "description": "You recovered the Chime from the crashed pod core.",
-    "toast": "The Chime is safe."
+    "description": "Nova recovered the Chime from the wrecked navigation console.",
+    "toast": "Chime recovered from the navigation port."
   },
   {
     "id": "ms_w2_mq01_complete",
@@ -947,7 +947,7 @@
   { "id": "ms_w5_mirrors_realigned", "name": "Mirrors Realigned", "description": "The false sun is restored but still misdirected.", "toast": "Mirror array restored." },
   { "id": "ms_w5_backup_purge_traced", "name": "Purge Trail", "description": "Zeke traced the defensive backup into a cold rack.", "toast": "Backup purge traced." },
   { "id": "ms_w5_backup_recovered", "name": "Guardian Recovered", "description": "Zeke recovered the defensive routine.", "toast": "Defensive backup recovered." },
-  { "id": "ms_w1_mq01_cryo_repaired", "name": "Cold Loop Rebuilt", "description": "Nova rebuilt the Cryo-Inductor; Wake Up Call remains active until the live test.", "toast": "Cold loop holds at 68%." },
+  { "id": "ms_w1_mq01_cryo_repaired", "name": "Cold Loop Rebuilt", "description": "Nova rebuilt the Cryo-Inductor. The cutter still needs a grounded liner and a live test.", "toast": "Cold loop holds at 68%." },
   { "id": "ms_w1_mq01_test_briefed", "name": "Test Briefed", "description": "Jed required a grounded liner and deliberate governor confirmation before the live test.", "toast": "Test conditions recorded." },
   { "id": "ms_w1_mq01_cutter_surge", "name": "Operator Fault Logged", "description": "Nova's ungoverned cutter woke the buried conduit and logged her operator ID.", "toast": "Fault attached to NOVA VANCE." },
   { "id": "ms_w1_mq03_echo_marked", "name": "Protocol Mark", "description": "The damaged Fork wrote an Architect calibration signature into Nova's nervous system.", "toast": "Architect protocol signature detected." },

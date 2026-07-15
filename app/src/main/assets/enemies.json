@@ -66,7 +66,7 @@
       "gnaw",
       "burrow"
     ],
-    "flavor": "A subterranean skitterer that strikes its crystalline claws against the rock to emit focal soundwaves. It is highly sensitive to the neural rhythm of intruders, reacting with frenzied aggression to any disruption in the ambient hum.",
+    "flavor": "A subterranean skitterer with crystalline digging claws. It tracks footfall through the rock, burrows below the tunnel floor, and strikes from loose ground.",
     "xp_reward": 40,
     "credit_reward": 10,
     "drops": [
@@ -75,7 +75,7 @@
         "chance": 0.5
       }
     ],
-    "description": "Resonant cave dweller. Attracted to neural frequencies.",
+    "description": "Burrows, then attacks from below. Vulnerable to Burn; resists Shock.",
     "portrait": "images/enemies/echo_borer_combat.png"
   },
   {
@@ -105,7 +105,7 @@
       "sonic_shriek",
       "volatile_swell"
     ],
-    "flavor": "Hovering cave pests nesting near geothermal vents. They feed on the vibrations of pressurized steam and emit disorienting high-frequency standing waves that blur neural focus.",
+    "flavor": "Hovering cave pests nest around geothermal vents. Their throat sacs use pressurized steam for a shriek that overloads suit optics and balance sensors.",
     "xp_reward": 45,
     "credit_reward": 12,
     "drops": [
@@ -114,7 +114,7 @@
         "chance": 0.3
       }
     ],
-    "description": "Evasive aerial pest. Disrupts neural waves, causing Blind.",
+    "description": "Fast airborne controller. Its shriek applies Blind; Shock grounds it.",
     "portrait": "images/enemies/siren_skimmer_combat.png"
   },
   {
@@ -144,7 +144,7 @@
       "suppressive_fire",
       "flashbang"
     ],
-    "flavor": "Corporate security troopers enclosed in pressurized helmets designed to filter out the deafening roar of the deep drills. They use kinetic standing-wave launchers to pacify workers by dampening their neural resonance.",
+    "flavor": "Corporate security troopers wear sealed helmets against drill noise and mine gas. Their rifles pin workers behind cover while flashbangs disrupt an organized push.",
     "xp_reward": 60,
     "credit_reward": 25,
     "drops": [
@@ -157,7 +157,7 @@
         "chance": 0.5
       }
     ],
-    "description": "Pressurized corporate infantry. Emits kinetic waves.",
+    "description": "Uses suppressive fire and flashbangs. Vulnerable to Burn and Acid.",
     "portrait": "images/enemies/dominion_dampener_combat.png"
   },
   {
@@ -189,7 +189,7 @@
       "barrier_field",
       "slide_slam"
     ],
-    "flavor": "Heavy bulwarks equipped with acoustic-absorption shields. They absorb kinetic impacts and release them as concussive pressure shocks, using the mine's natural echo chamber to break resistance.",
+    "flavor": "A heavy security trooper carries an impact-damping riot shield and a powered ram. Breaking the guard exposes the operator and the shield's electrical controls.",
     "xp_reward": 100,
     "credit_reward": 40,
     "drops": [
@@ -198,7 +198,7 @@
         "chance": 0.4
       }
     ],
-    "description": "Harmonic-shield tank. Shielded until Staggered.",
+    "description": "Armored tank with an active barrier. Stagger it to drop Guard; vulnerable to Shock.",
     "portrait": "images/enemies/acoustic_bulwark_combat.png"
   },
   {
@@ -229,7 +229,7 @@
       "resonance_buoy_emp_burst",
       "static_burst"
     ],
-    "flavor": "A floating acoustic surveyor that tracks sonic ripples and maps local pressure density. Its constant pinging acts as a beacon, summoning Dominion reinforcements to restore order.",
+    "flavor": "A floating survey drone maps tunnel pressure with timed pings. Security uses the same transmitter to mark disturbances for backup teams.",
     "xp_reward": 50,
     "credit_reward": 15,
     "drops": [
@@ -242,7 +242,7 @@
         "chance": 0.4
       }
     ],
-    "description": "Acoustic surveyor drone. Beacon for backup dispatch.",
+    "description": "Fast support drone with EMP and Static bursts. Vulnerable to Shock and physical attacks.",
     "portrait": "images/enemies/resonance_buoy_combat.png"
   },
   {
@@ -275,7 +275,7 @@
       "hydraulic_overheat",
       "slide_slam"
     ],
-    "flavor": "A massive mining mech built to withstand high-pressure depths. It hums with heavy subsonic hydraulic pressure; each mechanical step sends ripples through the floor that shake down loose rock.",
+    "flavor": "A massive mining loader built for high-pressure depths. Its overloaded hydraulics heat the frame, and each step drives loose rock from the shoring.",
     "xp_reward": 250,
     "credit_reward": 100,
     "drops": [
@@ -288,7 +288,7 @@
         "chance": 0.3
       }
     ],
-    "description": "Industrial pressure loader. Emits subsonic shockwaves.",
+    "description": "Heavy loader with slam and overheat attacks. Resists physical and Burn; vulnerable to Acid and Shock.",
     "portrait": "images/enemies/pressure_hauler_combat.png"
   },
   {
@@ -322,7 +322,7 @@
       "iron_warden_drone_summon",
       "iron_warden_gas_grenade"
     ],
-    "flavor": "The Sector Commander, encased in pressurized atmospheric power armor to withstand the deep relic's current. He asserts absolute control by generating acoustic white-noise static that completely erodes neural coherence.",
+    "flavor": "The Sector Commander wears sealed power armor built for riot lines and mine pressure. He advances behind a powered shield, deploys drones, and floods escape routes with gas.",
     "xp_reward": 350,
     "credit_reward": 225,
     "drops": [
@@ -333,7 +333,7 @@
         "qty_max": 1
       }
     ],
-    "description": "Sector commander in pressurized dive-armor. Suppresses neural waves.",
+    "description": "Boss tank with a riot shield, burst fire, drones, and gas grenades. Shock disrupts the armor.",
     "portrait": "images/enemies/the_iron_warden_combat.png"
   },
   {

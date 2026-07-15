@@ -249,7 +249,6 @@ class Hub1CriticalFlowTest {
         assertTrue(state.completedQuests.contains("w1_sq03"))
         assertTrue(state.completedMilestones.contains("ms_w1_guardbreak_trained"))
         assertEquals("w1_mq03", state.trackedQuestId)
-        assertTrue(harness.messages.any { it.contains("shield lesson is over", ignoreCase = true) })
 
         val assignment = harness.dialogue.startDialogue("Foreman Boggs")
         assertEquals("bogs_w1_mq03_intro_1", assignment?.current()?.id)

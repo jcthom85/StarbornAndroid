@@ -4,7 +4,7 @@
     "name": "Jed",
     "aliases": [],
     "role": "Mentor",
-    "description": "A tall, gruff man with a low voice. He is a tinkerer and Nova's surrogate father.",
+    "description": "A gruff tinkerer who keeps Nova fed, patched, and supplied with parts Dominion says do not exist.",
     "portrait": "images/npcs/jed.png",
     "dialogue": {},
     "interactions": [
@@ -20,7 +20,7 @@
     "name": "Zeke",
     "aliases": [],
     "role": "Administrator",
-    "description": "A nervous Dominion clerk who chooses truth over safety.",
+    "description": "A Dominion clerk who hides his nerves behind policy language and increasingly unauthorized paperwork.",
     "portrait": "images/npcs/zeke.png",
     "dialogue": {},
     "interactions": [
@@ -161,7 +161,7 @@
     "name": "Orion",
     "aliases": [],
     "role": "Architect Tuner",
-    "description": "An ancient human awakened from stasis, possessing high focus and connection to Architect resonance.",
+    "description": "An Aethel navigator awakened from stasis, trained to read Architect signal structures and keep a crew alive inside them.",
     "portrait": "images/characters/orion_portrait.png",
     "dialogue": {},
     "interactions": [

@@ -478,7 +478,7 @@
   {
     "id": "nova_flux_liner",
     "name": "Flux Liner",
-    "description": "Suit-linked armor patched by Jed. Its replaceable ground strip can route one major discharge into a floor ground; the armor remains functional afterward.",
+    "description": "Suit-linked armor patched by Jed. A replaceable strip routes one major discharge into a floor ground; the armor plates remain intact.",
     "aliases": [
       "flux liner"
     ],
@@ -645,6 +645,7 @@
   {
     "id": "circuit_board",
     "name": "Circuit Board",
+    "description": "A populated control board with reusable relays, traces, and power regulators.",
     "type": "component",
     "value": 10,
     "buy_price": 20,
@@ -1176,6 +1177,7 @@
   {
     "id": "scrap_metal",
     "name": "Scrap Metal",
+    "description": "Cut plate, stripped fasteners, and clean alloy sorted for workshop use.",
     "type": "component",
     "value": 10,
     "buy_price": 20,
@@ -1284,7 +1286,7 @@
       "signal cell"
     ],
     "type": "key_item",
-    "description": "Orion's brass identity key and paired beacon. Dominion logged it as a Ghost Signal Cell; it authenticates compatible systems but supplies no power.",
+    "description": "Orion's brass identity key and paired beacon. It authenticates compatible systems through authorization and navigation buses.",
     "value": 0,
     "rarity": "mythic"
   },
@@ -1456,7 +1458,7 @@
   {
     "id": "functional_cryo_inductor",
     "name": "Functional Cryo-Inductor",
-    "description": "A repaired cutter cold loop set for the live test. It can absorb one severe thermal spike; a Source-scale handshake will fuse it.",
+    "description": "A repaired cutter cold loop set for the live test. It can absorb one severe thermal spike before the coil fuses.",
     "type": "component",
     "value": 45,
     "buy_price": 90,

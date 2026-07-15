@@ -1963,7 +1963,7 @@ class AppServices(context: Context) {
             sessionStore.setPartyMemberXp("zeke", 450)
             sessionStore.setWorld("world_1")
             sessionStore.setHub("hub_2_logistics")
-            sessionStore.setRoom("echo_exit")
+            sessionStore.setRoom("launch_access")
             sessionStore.markTutorialCompleted("swipe_move")
             sessionStore.markTutorialCompleted("movement")
             true

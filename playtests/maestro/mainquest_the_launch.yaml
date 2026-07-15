@@ -5,12 +5,20 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     visible: "New Game"
     timeout: 60000
-- swipe:
-    direction: UP
 - extendedWaitUntil:
-    visible: "Debug: The Launch"
+    visible: "Debug Scenarios"
     timeout: 10000
-- tapOn: "Debug: The Launch"
+- tapOn: "Debug Scenarios"
+- extendedWaitUntil:
+    visible: "Search world, quest, room, or system"
+    timeout: 10000
+- tapOn: "Search world, quest, room, or system"
+- inputText: "The Launch"
+- runScript: sleep.js
+- extendedWaitUntil:
+    visible: "Resume MQ05 in the launch bay.*"
+    timeout: 10000
+- tapOn: "Resume MQ05 in the launch bay.*"
 - extendedWaitUntil:
     visible: "Pod Bay"
     timeout: 15000
@@ -28,7 +36,7 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: ".*Get inside the pod.*"
+    visible: ".*Inside.*seal the hatch.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
@@ -45,11 +53,11 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: ".*inserting it now.*"
+    visible: ".*Here goes.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: ".*console's active.*"
+    visible: ".*Core is live.*Start the launch sequence.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
@@ -57,24 +65,24 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 10000
 - tapOn: "navigation console"
 - extendedWaitUntil:
-    visible: ".*pod clears the magnetic launch rail.*"
+    visible: ".*pod clears the launch rail.*own capacitors.*"
     timeout: 15000
 - takeScreenshot: planetary-impact-cinematic
 - tapOn: "Tap to continue.*"
 - extendedWaitUntil:
-    visible: ".*view out the viewport fractures.*"
+    visible: ".*forced route misses.*traffic corridor.*storm front.*"
     timeout: 10000
 - tapOn: "Tap to continue.*"
 - extendedWaitUntil:
-    visible: ".*hull begins to shriek.*"
+    visible: ".*Crosswind rolls the pod.*stabilizer.*"
     timeout: 10000
 - tapOn: "Tap to continue.*"
 - extendedWaitUntil:
-    visible: ".*frequency bypass isn't holding.*"
+    visible: ".*navigation bus is burning out.*route lock won't release.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: ".*Alarms scream.*"
+    visible: ".*navigation console arcs and dies.*hull starts tearing.*"
     timeout: 10000
 - tapOn: "Tap to continue.*"
 - extendedWaitUntil:
@@ -82,12 +90,21 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 10000
 - tapOn: "Tap to continue.*"
 - extendedWaitUntil:
-    visible: ".*Everything goes white.*"
+    visible: ".*pod drops through the canopy and hits hard.*"
     timeout: 10000
 - tapOn: "Tap to continue.*"
 - extendedWaitUntil:
+    visible: ".*pod is down in Sector 9.*Zeke is injured.*live circuits.*"
+    timeout: 10000
+- tapOn: "Continue"
+- extendedWaitUntil:
     visible: "Crash Site"
     timeout: 20000
+- extendedWaitUntil:
+    visible: "QUEST COMPLETED"
+    timeout: 10000
+- assertVisible: "The Launch"
+- tapOn: "Continue"
 - extendedWaitUntil:
     visible: "New Quest"
     timeout: 10000

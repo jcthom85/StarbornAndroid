@@ -199,9 +199,9 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 15000
 - tapOn: "Continue"
 - extendedWaitUntil:
-    visible: "Acquired The Tuning Fork"
+    visible: "Item acquired: The Tuning Fork.*"
     timeout: 15000
-- tapOn: "DISMISS"
+- tapOn: "Item acquired: The Tuning Fork.*"
 - extendedWaitUntil:
     visible: "Source Art unlocked: Blast Wave.*"
     timeout: 15000

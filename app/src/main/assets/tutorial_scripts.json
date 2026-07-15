@@ -35,11 +35,11 @@
         "id": "scene_tinkering_tutorial",
         "steps": [
             {
-                "message": "At Jed's workbench, choose the Functional Cryo-Inductor recipe or tap a slot to pick the item you want to repair.",
+                "message": "At Jed's workbench, choose Functional Cryo-Inductor or tap a slot to select a repair.",
                 "context": "Workbench"
             },
             {
-                "message": "Check the requirements, add any missing parts, then press Craft when the bench is ready.",
+                "message": "Check the requirements, add any missing parts, then press Craft.",
                 "context": "Workbench",
                 "delay_ms": 2500
             }
@@ -114,7 +114,7 @@
         "id": "source_art_unlock",
         "steps": [
             {
-                "message": "Source Art unlocked: Blast Wave. Relic techniques are powerful skills with longer cooldowns.",
+                "message": "Source Art unlocked: Blast Wave. It hits all enemies, breaks Guard, and applies Stun; cooldown four turns.",
                 "context": "Source Art"
             }
         ]

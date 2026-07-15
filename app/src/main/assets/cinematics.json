@@ -82,11 +82,11 @@
     "steps": [
       {
         "type": "narration",
-        "text": "The generator hums to life, flooding the tunnels with light."
+        "text": "The generator catches. Work lights snap on down the tunnel."
       },
       {
         "type": "narration",
-        "text": "Somewhere deeper within the mine, heavy locks release."
+        "text": "Heavy locks release farther down the mine."
       }
     ]
   },
@@ -126,7 +126,7 @@
     "steps": [
       {
         "type": "narration",
-        "text": "Jed celebrates as all three relics return to the workshop."
+        "text": "All three broken units are back on Jed's bench."
       }
     ]
   },
@@ -316,7 +316,7 @@
     "steps": [
       {
         "type": "narration",
-        "text": "The cutter settles into a steady hum. Jed tries not to look proud and fails by half an inch."
+        "text": "The cutter settles at a steady idle. Jed checks the gauge twice, then gives Nova a small nod."
       }
     ]
   },
@@ -488,7 +488,7 @@
     "steps": [
       {
         "type": "narration",
-        "text": "The pod clears the launch rail on its own capacitors. The Chime opens the authorization interlock and its paired beacon takes the navigation bus."
+        "text": "The pod clears the launch rail on its own capacitors. The Chime opens the authorization interlock; its paired beacon takes the navigation bus."
       },
       {
         "type": "narration",
@@ -502,11 +502,11 @@
         "type": "dialogue",
         "speaker": "Zeke",
         "emote": "scared",
-        "text": "Nova! Hold on! The navigation console is burning out—the frequency bypass isn't holding!"
+        "text": "Nova! Brace! The navigation bus is burning out—the route lock won't release!"
       },
       {
         "type": "narration",
-        "text": "Alarms scream. The navigation console sparks and dies. Zeke holds onto the frame, yelling over the sound of tearing metal."
+        "text": "The navigation console arcs and dies. Zeke hooks one arm through the frame as the hull starts tearing."
       },
       {
         "type": "narration",
@@ -514,7 +514,7 @@
       },
       {
         "type": "narration",
-        "text": "Everything goes white as the thrusters fail and the ground rushes up to meet you."
+        "text": "The thrusters cut. The pod drops through the canopy and hits hard."
       }
     ]
   },
@@ -524,7 +524,7 @@
     "steps": [
       {
         "type": "narration",
-        "text": "You plug your datapad into the console's debugging interface. The screen immediately cascades with thousands of lines of encrypted compiler scripts."
+        "text": "Nova plugs her datapad into the debugging port. Encrypted command blocks fill the terminal."
       },
       {
         "type": "narration",
@@ -532,7 +532,7 @@
       },
       {
         "type": "narration",
-        "text": "The terminal chimes. 'Protocol override successfully broadcast. Local admin privileges established.'"
+        "text": "The terminal confirms: PROTOCOL OVERRIDE BROADCAST. LOCAL ADMIN PRIVILEGES ACTIVE."
       }
     ]
   },
