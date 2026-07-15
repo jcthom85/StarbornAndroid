@@ -7,9 +7,9 @@ Canonical key item name: Mine Access Badge (UI can label it "Mining Pass" if nee
 
 | ID | Title | Primary Objective | Key Beats (canonical) | Rewards / Unlocks |
 | :--- | :--- | :--- | :--- | :--- |
-| **W1_MQ01** | **Wake Up Call** | Report to Jed | Wake -> Workshop tutorial -> basic hub onboarding | Opens Hub 1 exploration |
+| **W1_MQ01** | **Wake Up Call** | Prepare and test the cutter | Quota buzzer -> inspect cutter -> repair Cryo-Inductor -> patch/ground Flux Liner -> deliberately confirm governor bypass -> live test -> buried-conduit surge -> fault/operator record logged | Completes only after `scene_cutter_surge`; opens Hub 1 exploration and orders MQ02 |
 | **W1_MQ02** | **Shift Clearance** | Survive mine clearance | Hank/scanner rejection -> Zeke finds the Mandatory Retirement flag -> paperwork spoof saves Nova by moving the liability target -> Mine Access Badge granted as temporary usable-labor status | Mine Access Badge; unlocks Transit Checkpoint / Admin path |
-| **W1_MQ03** | **The Echo** | Punishment duty becomes discovery | Travel to Logistics -> Boggs reviews Nova's temporary override -> mandatory shield training through Heavy Lifting -> Boggs authorizes the Deep Elevator -> restore power -> push through Deep Mine -> Ancient Chamber -> sync with Relic | Relic acquired: The Tuning Fork (Echo Relic); Nova gains Source Art: Blast Wave |
+| **W1_MQ03** | **The Echo** | Counter-tune the signal Nova woke | Travel to Logistics -> Boggs follows the surviving cutter/operator damage record -> Deep Elevator -> restore power -> Ancient Chamber -> tune 87 kHz / 68% / 180 degrees -> survive cutter-suit-operator handshake | Tuning Fork and Blast; Echo mark; Cryo-Inductor consumed; Flux Liner retained with sacrificial ground strip spent |
 | **W1_MQ04** | **Red Alert** | Escape the lockdown | Relic exposes Nova as an anomaly -> sector lockdown -> Zeke guides via comms -> chase/gauntlet through tunnels -> Cargo Lift -> Jed's Chime handoff | Chime (Ghost Signal Cell); opens Launch Bay path |
 | **W1_MQ05** | **The Launch** | Hijack a pod and reject Dominion's asset lock | Fight through Logistics -> Pod Bay -> Boss: The Warden -> Chime spoofs the launch frequency -> launch sequence -> shield/nav lock -> crash | Zeke joins party; Zeke syncs -> Source Art: Signal Jammer (tutorialized in World 2); transition to World 2 (crash interlude) |
 

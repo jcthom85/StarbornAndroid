@@ -7,6 +7,21 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 60000
 - tapOn: "New Game"
 - extendedWaitUntil:
+    visible: ".*TWENTY YEARS EARLIER.*"
+    timeout: 20000
+- tapOn: "Tap to continue.*"
+- repeat:
+    times: 3
+    commands:
+      - runScript: sleep.js
+      - tapOn:
+          point: "50%,85%"
+      - runScript: sleep.js
+      - tapOn: "Tap to continue.*"
+- extendedWaitUntil:
+    visible: "Nova's Bunk"
+    timeout: 20000
+- extendedWaitUntil:
     notVisible: "New Game"
     timeout: 20000
 - takeScreenshot: start-new-game

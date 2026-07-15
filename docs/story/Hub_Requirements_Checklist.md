@@ -48,7 +48,7 @@ This document tracks the **Entry State** (prerequisites) and **Exit State** (del
     *   **Vehicle:** Stolen Cargo Pod.
     *   **Goal:** Escape the planetary shield.
 *   **Content Requirements:**
-*   **Action:** Zeke splices the Chime into the pod for a burst of Source thrust.
+*   **Action:** Zeke splices the Chime into the pod's authorization/navigation bus. The pod launches on its own power; the Chime opens the interlock and locks onto its paired Sanctuary receiver.
     *   **Beat:** Nav locks to Orion’s signal. Shield hits them.
 *   **Exit State:**
     *   **Status:** Crashed. Pod destroyed.

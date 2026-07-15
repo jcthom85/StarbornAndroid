@@ -8,7 +8,7 @@ This document defines the complete exploration, puzzle, and narrative structure 
 
 ### A. The Core Aesthetic
 *   **Visuals:** Concrete ruins of an ancient facility reclaimed by a thick, glowing, bioluminescent jungle. Giant crystalline ferns, spore-choked thickets, and pools of glowing "mineral-rich water" (Glow-Water).
-*   **Audio/Resonance:** The ambient design uses warm pads and acoustic orchestral swells. Hollow stone archways filter the wind into chords, and stone panels are tuned like resonators. Key metaphors use "Elara's Song," "chords," and "harmonic alignment."
+*   **Audio/Resonance:** Warm pads and restrained acoustic swells mark genuine Source contact. Wind through hollow arches and tuned stone stays physical. "Elara's Song" refers only to actual Elara recordings, never Nova's signal or Gh0st's choice.
 *   **Erosion (Mental/Neurological Strain):** The spark of the Source carries physical strain. Nova must practice focus and grounding via the **Anchor Drill** (routing static to Zeke as the ground, Gh0st as the shield, and Orion as the tuner) to avoid melting the wire.
 
 ### B. Gameplay Progression Spine
@@ -23,7 +23,7 @@ This document defines the complete exploration, puzzle, and narrative structure 
     *   Unlock the Hangar Bay by routing energy manifold breakers in the Power Grid to overload the Source Gate.
     *   Repair the Astra's fuel lines, boot her bridge systems, and launch.
 3.  **Planetary Breach (The Mesosphere):**
-    *   Attempt to breach low orbit, encounter the Planetary Shield's warning lightning, and establish the next chapter goal (heist the Lens from the Spire in World 3).
+    *   Fly a low-altitude service airlane through canopy storms to the Spire. Keep the outer Planetary Shield visible as a distant ceiling; the Lens is needed first to cross the internal curtain to the Foundry.
 
 ---
 
@@ -182,7 +182,7 @@ This document defines the complete exploration, puzzle, and narrative structure 
     *   *Connections:* `archive_vault` (west), `archive_tuning_bay` (south).
 *   **archive_tuning_bay (Matrix Puzzle):** Tuning columns (align matrix to C#m7).
     *   *Connections:* `archive_reading_room` (north), `archive_secret_stash` (east).
-*   **archive_secret_stash (Hidden Relic Room):** Contains the **Link Relic** upgrade.
+*   **archive_secret_stash (Hidden Record Room):** A labeled Bridge calibration record sits behind the pedestal glass, with diagrams for consent checks, separate carrier bands, and physical grounding.
     *   *Connections:* `archive_tuning_bay` (west).
 
 #### Area 11: Stasis Chamber Deck (4 Rooms)

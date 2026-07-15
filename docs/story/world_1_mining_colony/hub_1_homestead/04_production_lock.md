@@ -8,7 +8,7 @@ Hub 1 is structurally ready to design in detail.
 
 - Live data has 5 Hub 1 nodes and 40 Hub 1 rooms.
 - The story spine is now clear: wake in the Pit, report to Jed, open the colony, complete optional Trade Row and Med-Bay loops, learn Guard Break through Heavy Lifting, get denied at the checkpoint, then get Zeke's badge override.
-- `w1_mq01` has passing in-app Maestro coverage from new game through Jed's Workshop tinkering completion and the `Wake Up Call` quest-complete popup.
+- `w1_mq01` must remain active after Cryo-Inductor crafting. Completion is locked to the live cutter-test cinematic callback after the Flux Liner setup and explicit governor-bypass confirmation.
 - `w1_sq01` and `w1_sq02` have playable first-pass data and passing in-app Maestro coverage. They are no longer content-design blockers.
 - `w1_sq03` has passing in-app Maestro coverage through Bogs' intro, loader/cargo quest updates, Hydraulic Kick unlock, Acoustic Bulwark training victory, spoils, level-up, quest completion, and return to the room.
 - If the player reaches `The Echo` without Guard Break training, Bogs now redirects them into `Heavy Lifting` before the Deep Mine route.
@@ -33,7 +33,7 @@ Hub 1 is structurally ready to design in detail.
 | Wake in Nova's bunk | `pit_nova_bunk`, `pit_L2_corridor` | Quest starts on new game; bunk/netting actions exist. | In-app Maestro flow passes through bunk inspection and quest update. |
 | Move through home | `pit_shaft`, `pit_L1_landing`, `pit_mess` | Rooms exist with flavor actions. | Critical route passes; compact description/presence dock polish applied. |
 | Meet Jed | `workshop_floor` | Dialogue and task triggers exist. | In-app Maestro flow passes through Jed intro dialogue. |
-| Tinkering tutorial | `workshop_floor` | Tinkering entry completes `w1_mq01` after Jed talk. | In-app Maestro flow passes through Functional Cryo-Inductor crafting and quest completion. |
+| Cutter preparation | `workshop_floor` | Repair Cryo-Inductor, patch/ground Flux Liner, explicitly confirm governor bypass, then run live test. Crafting alone never completes `w1_mq01`. | Maestro must verify preparation, surge, fault logging, and callback completion. |
 | Scavenger's Stash | `trade_scrapper`, `trade_stash` | Scrapper starts `w1_sq01`; stash room/action advances quest; Scrapper turn-in completes it. | In-app Maestro flow passes through stash discovery, rebel-cache pickup, return dialogue, and completion. |
 | System Flush | `medbay_exam1`, `medbay_vents` | Doc starts `w1_sq02`; vent room/action advances quest; Doc turn-in completes it. | In-app Maestro flow passes; banner/backtracking polish applied. |
 | Heavy Lifting | `workshop_dock` | Bogs starts `w1_sq03`; loader/cargo actions exist; Acoustic Bulwark training victory completes quest. | In-app Maestro flow passes through Hydraulic Kick unlock, Acoustic Bulwark victory, spoils, level-up, quest completion, and return to exploration. |
@@ -62,7 +62,7 @@ Hub 1 is structurally ready to design in detail.
 | Room | Purpose | Quest/Beat | Status | Art Direction |
 | --- | --- | --- | --- | --- |
 | `workshop_yard` | Transition from colony grit into Jed's space. | `w1_mq01` route. | Art Ready | Scrap piles, rusted shutter, salvage silhouettes. |
-| `workshop_floor` | Core home-base room; Jed, tinkering, first quest completion. | `w1_mq01`. | Art Ready | Warmest Hub 1 room, cluttered workbench, patched lights. |
+| `workshop_floor` | Core home-base room; Jed, cutter preparation, live test, and first quest completion after cinematic callback. | `w1_mq01`. | Art Ready | Warmest Hub 1 room, cluttered workbench, patched lights. |
 | `workshop_office` | Private Jed lore and future emotional setup. | Flavor/Jed. | Flavor Later | Cramped desk, old parts, hidden Chime foreshadowing if needed. |
 | `workshop_loft` | Optional overlook/storage. | Flavor/loot. | Flavor Later | Rickety platform over shop floor. |
 | `workshop_shed` | Materials room and route to dock/basement. | Exploration. | Design First | Tool wall, crates, side door to loader area. |

@@ -1,5 +1,19 @@
 [
   {
+    "id": "w1_echo_counter_tune",
+    "title": "Counter-Tune the Fork",
+    "prompt": "Match the repeating cutter pulse before the cold loop overheats.",
+    "success_event": "w1_mq03_touch_relic",
+    "success_message": "The cutter, suit ground, and operator loop lock into phase.",
+    "failure_hint": "The signals beat against each other and the cold loop climbs. Adjust the sweep, coolant, and ground phase.",
+    "audio_cue": "ui_confirm",
+    "sliders": [
+      { "id": "frequency", "label": "Phase Sweep", "min": 40, "max": 120, "initial": 52, "target": 87, "tolerance": 2, "unit": " kHz" },
+      { "id": "coolant", "label": "Cold Loop", "min": 0, "max": 100, "initial": 35, "target": 68, "tolerance": 3, "unit": "%" },
+      { "id": "ground_phase", "label": "Ground Phase", "min": 0, "max": 360, "initial": 0, "target": 180, "tolerance": 6, "unit": "°" }
+    ]
+  },
+  {
     "id": "source_harmonic_focus",
     "title": "Harmonic Choir Lock",
     "prompt": "Hold Nova's heartbeat against the Chorus without flattening the other voices.",
@@ -20,7 +34,7 @@
       },
       {
         "id": "amplitude",
-        "label": "Memory Pressure",
+        "label": "Neural Pressure",
         "min": 0,
         "max": 100,
         "initial": 90,

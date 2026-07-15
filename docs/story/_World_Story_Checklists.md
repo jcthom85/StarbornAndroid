@@ -48,7 +48,7 @@ x# Starborn — World Story Checklists
 *   **Key Reveal:** The Chime isn’t a power cell—it’s a Source resonator beacon, and something out there is answering.
 *   **Character Turn:** Zeke realizes he can’t “hack” everything; Nova’s trust in him is tested when he can’t stop the lock.
 *   **Found-Family Beat:** In the chaos, they keep each other alive anyway—no more pretending this is a solo problem.
-*   **Relic / Key Item Use:** Zeke splices the **Chime** for a burst of Source thrust; the same splice hard-locks the nav to Orion’s signal.
+*   **Relic / Key Item Use:** Zeke splices the **Chime** into authorization/navigation. The pod supplies thrust; the Chime opens the interlock and its paired beacon hard-locks navigation toward Sanctuary.
 *   **Failure/Cost Beat (Nova):** She can’t “hero” the crash—gravity wins, and their first victory is simply surviving together.
 *   **Payoff (Emotional):** Panic → dread → determination.
 *   **Payoff (Mechanical):** Transitions the party into the World 2 survival/tutorial framing.
@@ -63,7 +63,7 @@ x# Starborn — World Story Checklists
 *   **Key Reveal:** The Chime is Orion’s jettisoned beacon from a lab breach twenty years ago; the ruins hint at Architect and Aethel history; Nova’s **Echo-marked** state includes a faint Source trace (compatibility, not destiny).
 *   **Character Turn:** Orion stops hiding (joins the fight); Gh0st breaks mission certainty (chooses truce/protection); Nova shifts from “reacting” to leading.
 *   **Found-Family Beat:** The crew saves one another *when it’s inconvenient*—then gets to breathe like a family at **Canopy Ridge** (mandatory) and **Tideglass Beach** (optional).
-*   **Relic / Key Item Use:** The **Chime** provides limited, local Source power to the Sanctuary—enough to release Orion from stasis, bring up minimal lighting and interfaces, and reinitialize *The Astra*’s **Bridge Relic**, but not sustain the Sanctuary long-term.
+*   **Relic / Key Item Use:** The **Chime** authenticates Orion at Sanctuary; reserve cells power the facility and release him. The separate **Bridge Echo** is recovered from its cradle, mounted in *The Astra*, powered by salvaged conduits and ship current, then authenticated with the Chime.
 *   **Failure/Cost Beat (Nova):** She tries to Link while unshielded and nearly blacks out; Orion forces the lesson: power is practice + focus, not willpower.
 *   **Payoff (Emotional):** Hope: the universe is bigger than Dominion, and the crew isn’t alone anymore.
 *   **Payoff (Mechanical):** Party expands (Orion, Gh0st); first support-style Source Art (**Link**).
@@ -82,7 +82,7 @@ x# Starborn — World Story Checklists
 *   **Failure/Cost Beat (Nova):** Touching the Lens tags her as an anomaly and blows the timeline—alarms rise early and the crew has to improvise under pressure.
 *   **Payoff (Emotional):** Validation: they can beat Dominion on its own turf.
 *   **Payoff (Mechanical):** Scan/True Sight utility and the “heist” structure proving the party split works.
-*   **Exit Logic / Hook:** They reach low orbit… but *not* the Orbital Ring. The next problem is propulsion: they need a Deep-Core Engine (Foundry).
+*   **Exit Logic / Hook:** The Lens reveals a timing seam through an internal curtain and the Astra crosses at low altitude to the Foundry. The later outer-Shield breach still requires the Deep-Core Engine and Phase-Cutter Arrays.
 
 ### World 4 — The Foundry (Vengeance)
 

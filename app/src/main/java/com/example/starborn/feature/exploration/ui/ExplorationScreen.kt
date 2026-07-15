@@ -57,6 +57,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
@@ -84,6 +85,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -133,6 +135,7 @@ import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.buildAnnotatedString
@@ -2271,7 +2274,10 @@ private fun TuningPuzzleDialog(
         modifier = modifier,
         title = { Text(puzzle.title) },
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
+            Column(
+                modifier = Modifier.verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(14.dp)
+            ) {
                 Text(puzzle.prompt)
                 puzzle.feedback?.takeIf { it.isNotBlank() }?.let { feedback ->
                     Text(
@@ -2281,6 +2287,9 @@ private fun TuningPuzzleDialog(
                     )
                 }
                 puzzle.sliders.forEach { slider ->
+                    var numericInput by remember(slider.id) {
+                        mutableStateOf(slider.value.roundToInt().toString())
+                    }
                     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                         val valueLabel = buildString {
                             append(slider.label)
@@ -2294,9 +2303,43 @@ private fun TuningPuzzleDialog(
                         )
                         Slider(
                             value = slider.value,
-                            onValueChange = { onSliderChange(slider.id, it) },
-                            valueRange = slider.min..slider.max
+                            onValueChange = {
+                                numericInput = it.roundToInt().toString()
+                                onSliderChange(slider.id, it)
+                            },
+                            valueRange = slider.min..slider.max,
+                            modifier = Modifier.semantics {
+                                contentDescription = "${slider.label} control"
+                            }
                         )
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            OutlinedTextField(
+                                value = numericInput,
+                                onValueChange = { candidate ->
+                                    if (candidate.isEmpty() || candidate.all(Char::isDigit)) {
+                                        numericInput = candidate
+                                    }
+                                },
+                                label = { Text("${slider.label} value") },
+                                singleLine = true,
+                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                                modifier = Modifier.weight(1f)
+                            )
+                            TextButton(
+                                onClick = {
+                                    numericInput.toFloatOrNull()?.let { entered ->
+                                        val applied = entered.coerceIn(slider.min, slider.max)
+                                        numericInput = applied.roundToInt().toString()
+                                        onSliderChange(slider.id, applied)
+                                    }
+                                }
+                            ) {
+                                Text("Apply")
+                            }
+                        }
                     }
                 }
             }

@@ -22,7 +22,7 @@ The player should feel the dramatic contrast from World 1's low-ceilinged, indus
 
 ### Audio Identity (Acoustic Resonance)
 - **The Wilds Ambient:** Warm orchestral pads, woodwinds, and acoustic string swells. Hollow stone archways filter the wind into chords, and stone panels act as acoustic resonators. The sound of running Glow-Water is a soft chord rather than a splash.
-- **The Facility (Sanctuary):** Humming silence. Shifting cymatic patterns on the floor. When Nova approaches the murals or stasis pods, the background audio fades, replaced by a deep pressure—an acoustic chord print (Elara's Song) vibrating through the environment.
+- **The Facility (Sanctuary):** Reserve-cell relays click on in sequence. Pressure builds behind the stasis glass, and instrument bands match the Fork protocol scar in Nova's nerves.
 - **The Shield:** The Planetary Shield emits a high, thin tension chord that ripples across the sky, crackling with defensive discharges whenever something tries to cross the hard deck.
 
 ### Ecology & Lore (The Resonance and the Ice)
@@ -52,7 +52,7 @@ The crew is not a happy team; they are a collection of loose ends. Zeke carries 
 | | State |
 |---|---|
 | **ENTRY** | Nova and Zeke have survived the crash. They are stranded, injured, and without a ship. Nova's Source Art is raw and unstable, causing painful Erosion. The Dominion's hunter is on their tail. |
-| **EXIT** | The party is assembled (Nova, Zeke, Orion, Gh0st). *The Astra* is repaired and flight-ready. They have hit the Planetary Shield and established that they cannot escape without the **Lens Relic** from World 3. |
+| **EXIT** | The party is assembled. The separate Bridge is installed and authenticated, Link is unlocked after the Anchor Drill, and *The Astra* follows a low-altitude service airlane to the Spire. The outer Shield remains a later problem. |
 | **THE SHIFT** | From "surviving the crash" to "planning a planetary heist." |
 
 ### Hub 3: Jungle Ruins (Hub 1 of World 2) — "Survive the Wilds"
@@ -60,7 +60,7 @@ The crew is not a happy team; they are a collection of loose ends. Zeke carries 
 | | State |
 |---|---|
 | **ENTRY** | Nova wakes at the crash site. Zeke is injured. The surrounding jungle is hostile. Nova must salvage parts, fight through the thickets, and reach the Canopy. |
-| **MIDPOINT** | Nova confronts the mutated Source Beast on Canopy Ridge. Gh0st ambushes them, but his programming conflicts when he hears **Elara's Song** from Nova. They fight the beast together and agree to a ceasefire. |
+| **MIDPOINT** | Gh0st confronts the crew on Canopy Ridge. Nova's Fork scar trips an Elara-calibrated Source Lock and pauses one trigger. The Beast attacks; Gh0st freely protects the crew. Beast victory recruits him but does not unlock Link or close the quest. |
 | **EXIT** | Nova uses the salvaged Chime to unlock the Temple Gate. They step through the stone threshold into the Sanctuary Facility, leaving the wild canopy behind. |
 | **THE SHIFT** | From "wild survival" to "uncovering the ancient facility." |
 | **WHAT THE PLAYER CARRIES FORWARD** | Gh0st as a temporary ally. The thermal cutter tool. Scavenged parts. Basic understanding of Erosion and stabilization. |
@@ -70,7 +70,7 @@ The crew is not a happy team; they are a collection of loose ends. Zeke carries 
 | | State |
 |---|---|
 | **ENTRY** | Entering the cold, silent halls of the Sanctuary. The murals hum with cymatic geometry. The gate to the hangar is blocked by an acoustic energy barrier. |
-| **MIDPOINT** | Nova awakens Orion from stasis by aligning the resonance rings. Orion suffers immediate grief but teaches Nova the **Anchor Drill** and unlocks the **Link Relic** (Source Art: Link). |
+| **MIDPOINT** | Sanctuary reserve cells wake Orion after Chime authentication. The crew recovers the separate Bridge. Later, after Beast victory, the Anchor Drill unlocks Link and closes The Hunter. |
 | **EXIT** | Rerouting the breakers in the power grid, they disable the gate barrier. They repair *The Astra*, board her bridge, and launch into the sky, only to be struck by the Planetary Shield's defensive discharge. |
 | **THE SHIFT** | From "rebuilding the ship" to "hitting the ceiling of the world." |
 | **WHAT THE PLAYER CARRIES FORWARD** | Orion and Gh0st as full party members. **Link** Relic (Source Art). The repaired *Astra* as their mobile base. The next goal: reach World 3 (The Spire) to steal the Lens. |

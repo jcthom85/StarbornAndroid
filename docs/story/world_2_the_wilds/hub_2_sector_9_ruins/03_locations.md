@@ -25,7 +25,7 @@ The ancient Aethel facility buried deep beneath the jungle. Constructed of smoot
     *   `sector9_archive_vault` (Cylinder Vault): Rows of storage cylinders holding ancient Aethel data.
     *   `sector9_archive_reading_room` (Interface Console): A stone terminal where the cylinder logs can be played.
     *   `sector9_archive_tuning_bay` (Matrix Puzzle): A column puzzle requiring the alignment of three frequencies to a C#m7 chord.
-    *   `sector9_archive_secret_stash` (Hidden Relic Room): The vault containing the **Link Relic** upgrade.
+    *   `sector9_archive_secret_stash` (Hidden Record Room): A labeled Bridge calibration record covering consent, separate carrier bands, and physical grounding. It contains no Echo or Link item.
 
 ---
 

@@ -3,9 +3,13 @@
 **Status:** CANONICAL
 **Purpose:** The source of truth for all player-facing prose.
 
+**Authority:** This document governs prose, dialogue, UI copy, and tonal execution. It is subordinate to the Master Story Bible, Lore Bible, and Character Arcs, and outranks supporting world/hub documents and production assets.
+
 ## Core Principle
 
 Starborn is a grounded adventure about ordinary people facing corporate violence and cosmic danger. People speak plainly. The world supplies the strangeness.
+
+Target roughly 70-80% concrete industrial language, 15-20% character-specific humor, slang, and personality, and no more than 5-10% overt lyricism. Reserve the strangest language for genuine Source contact and emotionally earned climaxes.
 
 Clarity comes before style. A player should understand what physically happened, what a character wants, and what can be done next without translating a metaphor.
 
@@ -34,6 +38,7 @@ Clarity comes before style. A player should understand what physically happened,
 
 **Nova**
 - Wants autonomy and refuses to abandon people.
+- Sounds tactile, sharp, practical, and mechanically fluent.
 - With authority: guarded, economical, occasionally provocative.
 - With trusted people: warmer, uncertain, willing to be teased.
 - Under fear: becomes practical and focuses on the next physical action.
@@ -46,17 +51,18 @@ Clarity comes before style. A player should understand what physically happened,
 
 **Zeke**
 - Uses policy language when frightened or hiding behind his job.
-- As trust grows, the corporate vocabulary falls away.
+- Corporate-HR cadence remains his humor and armor even as trust grows, but it becomes less evasive.
 - His humor comes from noticing absurd rules, not inserting buzzwords into every sentence.
 - Under immediate danger, he is precise and surprisingly decisive.
 
 **Orion**
-- Formal because he is displaced and careful, not because every thought is musical.
+- May carry more lyricism than the others, but immediate instructions remain intelligible.
 - Uses Source terminology only when it adds precision.
 - Admits uncertainty. Ancient knowledge does not make him omniscient.
 
 **Gh0st**
 - Speaks concisely because he was trained to minimize himself.
+- Remains clipped, literal, and action-led.
 - Literal language is a defense, not a comedy routine.
 - Growing trust appears as volunteered detail, questions, preferences, and eventually disagreement.
 
@@ -81,6 +87,7 @@ Clarity comes before style. A player should understand what physically happened,
 - Flavor copy is optional. Use it only when it adds information or a genuinely distinctive perspective.
 - Objectives begin with direct verbs and carry procedural instructions removed from dialogue.
 - System messages are concise. Dominion phrasing is reserved for actual Dominion interfaces, not the entire game UI.
+- Player-facing descriptions demonstrate corrected canon through observable behavior. Avoid defensive phrases such as "not another Echo," "not judging her," or "not a memory in Nova." Explicit negative guardrails remain appropriate in authority documents.
 
 ## Source and Resonance
 

@@ -8,8 +8,8 @@ This file is the single source of truth for World 2 quest IDs, titles, objective
 | :--- | :--- | :--- | :--- | :--- |
 | **w2_mq01** | **A Strange Coast** | Survive the crash site. | Wake in wreckage -> Check injured Zeke -> Recover Chime and emergency kit -> Stabilize Zeke -> Follow glow-water stream. | Chime recovered; opens path to the Wilds |
 | **w2_mq02** | **The Signal** | Track the distress beacon. | Track the pulse through thickets -> Arrive at Temple Gate -> Slot Chime into lock -> Enter Sanctuary. | Opens Sanctuary Facility; unlocks Event EVT_W2_01 |
-| **w2_mq03** | **Sleeping Giant** | Awake the Ancient. | Locate stasis pod -> Crawl through maintenance vents -> Align stasis ring arrays -> Orion wakes. | **Orion joins the party**; unlocks Event EVT_W2_02 |
-| **w2_mq04** | **The Hunter** | Deal with the stalker. | Scout sniper trail -> Confront Gh0st on Canopy Ridge -> Beast ambush -> Ceasefire. | **Gh0st joins the party**; Relic acquired: **Link**; Source Art: Link |
+| **w2_mq03** | **Sleeping Giant** | Awake the Ancient and recover the Bridge. | Authenticate Temple Gate with Chime -> power Sanctuary from reserve cells -> align stasis rings -> Orion wakes -> recover separate Bridge Echo from sealed cradle. | Orion joins; `bridge_relic`; `ms_w2_bridge_recovered` |
+| **w2_mq04** | **The Hunter** | Deal with the stalker and complete Link training. | Confront Gh0st -> Source Lock pauses one action -> Beast ambush -> Gh0st chooses to protect -> Beast victory recruits Gh0st but does not finish quest -> complete Anchor Drill. | Link unlocks and MQ05 starts only after Anchor Drill callback |
 | **w2_mq05** | **Liftoff** | Repair *The Astra*. | Calibrate coolant lines -> Overload breakers in Power Grid -> Overcome hangar security -> Launch bridge. | Repaired *Astra* accessible; world transition; hit Planetary Shield warning |
 
 ## Side Quests (World 2)

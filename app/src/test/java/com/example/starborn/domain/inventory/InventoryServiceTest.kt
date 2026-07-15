@@ -12,6 +12,8 @@ import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 
 class InventoryServiceTest {
 
@@ -34,6 +36,27 @@ class InventoryServiceTest {
     fun useItemReturnsNullWhenNotOwned() {
         val result = inventoryService.useItem("medkit_i")
         assertNull(result)
+    }
+
+    @Test
+    fun snapshotRemainsSafeWhileInventoryMutates() {
+        inventoryService.addItem("medkit_i", 1)
+        val executor = Executors.newFixedThreadPool(2)
+        try {
+            val mutations = executor.submit {
+                repeat(2_000) {
+                    inventoryService.addItem("medkit_i", 1)
+                    inventoryService.removeItem("medkit_i", 1)
+                }
+            }
+            val snapshots = executor.submit {
+                repeat(2_000) { inventoryService.snapshot() }
+            }
+            mutations.get(10, TimeUnit.SECONDS)
+            snapshots.get(10, TimeUnit.SECONDS)
+        } finally {
+            executor.shutdownNow()
+        }
     }
 
     @Test

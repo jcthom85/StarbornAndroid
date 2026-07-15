@@ -842,7 +842,7 @@
   },
   {
     "id": "w1_mq01_cryo_inductor_repaired",
-    "description": "Completes Wake Up Call and has Jed send Nova to shift clearance after the Cryo-Inductor repair.",
+    "description": "Records the repaired cold loop but keeps Wake Up Call active until the live cutter test finishes.",
     "trigger": {
       "type": "player_action",
       "action": "tinkering_craft",
@@ -882,6 +882,10 @@
         "task_id": "use_tinkering_table"
       },
       {
+        "type": "set_milestone",
+        "milestone": "ms_w1_mq01_cryo_repaired"
+      },
+      {
         "type": "unlock_skill",
         "skill_id": "nova_cryo_vent"
       },
@@ -893,24 +897,75 @@
       },
       {
         "type": "narrate",
-        "message": "BUILD CHANGED: Cryo Vent is now wired into Nova's cutter. It makes an enemy Brittle for two turns; follow with physical attacks to cash out the opening.",
+        "message": "The rebuilt cold loop holds at 68%. The cutter still needs its Flux Liner grounded and its governor decision confirmed before a live test.",
         "tap_to_dismiss": true
-      },
-      {
-        "type": "complete_quest",
-        "quest_id": "w1_mq01"
-      },
-      {
-        "type": "set_milestone",
-        "milestone": "ms_w1_mq01_complete"
-      },
-      {
-        "type": "unlock_node",
-        "node_id": "admin_gate"
       },
       {
         "type": "start_dialogue",
         "npc": "Jed"
+      }
+    ]
+  },
+  {
+    "id": "w1_mq01_patch_flux_liner",
+    "description": "Patches Nova's suit-linked Flux Liner and attaches its sacrificial ground strip.",
+    "trigger": { "type": "player_action", "action": "w1_mq01_patch_flux_liner" },
+    "conditions": [
+      { "type": "quest_active", "quest_id": "w1_mq01" },
+      { "type": "milestone_set", "milestone": "ms_w1_mq01_cryo_repaired" },
+      { "type": "quest_task_not_done", "quest_id": "w1_mq01", "task_id": "patch_flux_liner" }
+    ],
+    "actions": [
+      { "type": "set_quest_task_done", "quest_id": "w1_mq01", "task_id": "patch_flux_liner" },
+      { "type": "give_item", "item_id": "nova_flux_liner", "quantity": 1 },
+      { "type": "show_message", "message": "Jed crimps the suit link. Nova clamps the replaceable ground strip to the workshop floor bus." }
+    ]
+  },
+  {
+    "id": "w1_mq01_confirm_governor",
+    "description": "Records Nova's deliberate confirmation of the cutter governor bypass.",
+    "trigger": { "type": "player_action", "action": "w1_mq01_confirm_governor" },
+    "conditions": [
+      { "type": "quest_active", "quest_id": "w1_mq01" },
+      { "type": "milestone_set", "milestone": "ms_w1_mq01_cryo_repaired" },
+      { "type": "quest_task_not_done", "quest_id": "w1_mq01", "task_id": "confirm_governor_bypass" }
+    ],
+    "actions": [
+      { "type": "set_quest_task_done", "quest_id": "w1_mq01", "task_id": "confirm_governor_bypass" },
+      { "type": "show_message", "message": "Factory sweep limit: 61 kHz. Nova moves the bypass lead by hand and confirms the unrestricted phase range." }
+    ]
+  },
+  {
+    "id": "w1_mq01_cutter_surge",
+    "description": "Runs the grounded live cutter test and completes Wake Up Call only after the surge cinematic callback.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w1_mq01_cutter_surge"
+    },
+    "conditions": [
+      { "type": "quest_active", "quest_id": "w1_mq01" },
+      { "type": "quest_task_done", "quest_id": "w1_mq01", "task_id": "use_tinkering_table" },
+      { "type": "quest_task_done", "quest_id": "w1_mq01", "task_id": "patch_flux_liner" },
+      { "type": "quest_task_done", "quest_id": "w1_mq01", "task_id": "confirm_governor_bypass" },
+      { "type": "quest_task_not_done", "quest_id": "w1_mq01", "task_id": "test_cutter" },
+      { "type": "item", "item_id": "functional_cryo_inductor", "quantity": 1 }
+    ],
+    "actions": [
+      {
+        "type": "play_cinematic",
+        "scene_id": "scene_cutter_surge",
+        "on_complete": [
+          { "type": "set_quest_task_done", "quest_id": "w1_mq01", "task_id": "test_cutter" },
+          { "type": "set_room_state", "room_id": "workshop_floor", "state_key": "cutter_surge_complete", "value": true },
+          { "type": "set_milestone", "milestone": "ms_w1_mq01_cutter_surge" },
+          { "type": "complete_quest", "quest_id": "w1_mq01" },
+          { "type": "set_milestone", "milestone": "ms_w1_mq01_complete" },
+          { "type": "start_quest", "quest_id": "w1_mq02" },
+          { "type": "track_quest", "quest_id": "w1_mq02" },
+          { "type": "advance_quest_stage", "quest_id": "w1_mq02", "to_stage_id": "reach_checkpoint" },
+          { "type": "set_milestone", "milestone": "ms_w1_mq02_clearance_ordered" },
+          { "type": "unlock_node", "node_id": "admin_gate" }
+        ]
       }
     ]
   },
@@ -2286,10 +2341,10 @@
   },
   {
     "id": "w1_mq03_touch_relic",
-    "description": "Completes the relic touch and sync sequence when Nova interacts with the Tuning Fork.",
+    "description": "Completes the counter-tune and cutter-suit-operator handshake after correct puzzle values.",
     "trigger": {
       "type": "player_action",
-      "action": "touch_relic"
+      "action": "w1_mq03_touch_relic"
     },
     "conditions": [
       {
@@ -2300,6 +2355,16 @@
         "type": "quest_task_not_done",
         "quest_id": "w1_mq03",
         "task_id": "touch_tuning_fork"
+      },
+      {
+        "type": "item",
+        "item_id": "functional_cryo_inductor",
+        "quantity": 1
+      },
+      {
+        "type": "item",
+        "item_id": "nova_flux_liner",
+        "quantity": 1
       }
     ],
     "actions": [
@@ -2322,6 +2387,19 @@
             "room_id": "echo_heart",
             "state_key": "relic_synced",
             "value": true
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w1_mq03_echo_marked"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w1_mq03_liner_ground_spent"
+          },
+          {
+            "type": "take_item",
+            "item_id": "functional_cryo_inductor",
+            "quantity": 1
           },
           {
             "type": "give_item",
@@ -2790,7 +2868,7 @@
         "do": [
           {
             "type": "show_message",
-            "message": "The console is locked. It needs a physical Chime bypass to override the Dominion shield frequency."
+            "message": "The console is locked. The Chime can authenticate Orion's launch authority; pod capacitors must supply the current."
           }
         ]
       },
@@ -3575,6 +3653,20 @@
         "task_id": "talk_to_orion"
       },
       {
+        "type": "set_quest_task_done",
+        "quest_id": "w2_mq03",
+        "task_id": "recover_bridge_relic"
+      },
+      {
+        "type": "give_item",
+        "item_id": "bridge_relic",
+        "quantity": 1
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_bridge_recovered"
+      },
+      {
         "type": "add_party_member",
         "item_id": "orion"
       },
@@ -3596,7 +3688,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Sleeping Giant\n\nThe mural pattern, pod pressure, overview sockets, and coolant flow finally agree. The pod opens around a man who remembers Sector 9 before Dominion buried it. Orion joins because the signal was his, and because the Astra still knows the way through the shield."
+        "message": "Quest Complete: Sleeping Giant\n\nReserve cells open Orion's pod. A second cradle releases the Bridge into Nova's hands: a separate Architect Echo, cold and unpowered."
       }
     ]
   },
@@ -3657,7 +3749,26 @@
         "type": "set_quest_task_done",
         "quest_id": "w2_mq04",
         "task_id": "confront_stalker"
+      },
+      {
+        "type": "set_room_state",
+        "room_id": "sector9_canopy_ridge",
+        "state_key": "hunter_confronted",
+        "value": true
       }
+    ]
+  },
+  {
+    "id": "w2_mq04_beast_ambush",
+    "description": "Starts the Source Beast encounter only after Gh0st has been confronted.",
+    "trigger": { "type": "player_action", "action": "w2_mq04_beast_ambush" },
+    "conditions": [
+      { "type": "quest_active", "quest_id": "w2_mq04" },
+      { "type": "quest_task_done", "quest_id": "w2_mq04", "task_id": "confront_stalker" },
+      { "type": "quest_task_not_done", "quest_id": "w2_mq04", "task_id": "defeat_the_beast" }
+    ],
+    "actions": [
+      { "type": "spawn_encounter", "encounter_id": "the_beast", "room_id": "sector9_canopy_ridge" }
     ]
   },
   {
@@ -3696,24 +3807,41 @@
         "item_id": "gh0st"
       },
       {
-        "type": "complete_quest",
-        "quest_id": "w2_mq04"
-      },
-      {
-        "type": "set_milestone",
-        "milestone": "ms_w2_mq04_complete"
-      },
-      {
-        "type": "start_quest",
-        "quest_id": "w2_mq05"
-      },
-      {
-        "type": "track_quest",
-        "quest_id": "w2_mq05"
+        "type": "set_room_state",
+        "room_id": "sector9_canopy_ridge",
+        "state_key": "beast_defeated",
+        "value": true
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: The Hunter\n\nThe beast's death breaks Gh0st's clean order set. He lowers the rifle, not out of trust, but because Dominion's command no longer matches what he has seen. Gh0st has joined your party."
+        "message": "The Beast is down. Gh0st checks his trigger, then lowers the rifle. No command attached. Orion points to the Bridge: training comes next."
+      }
+    ]
+  },
+  {
+    "id": "w2_mq04_anchor_drill",
+    "description": "Completes grounded Link training after Beast victory, then closes The Hunter and starts Liftoff.",
+    "trigger": { "type": "player_action", "action": "w2_mq04_anchor_drill" },
+    "conditions": [
+      { "type": "quest_active", "quest_id": "w2_mq04" },
+      { "type": "quest_task_done", "quest_id": "w2_mq04", "task_id": "defeat_the_beast" },
+      { "type": "quest_task_not_done", "quest_id": "w2_mq04", "task_id": "complete_anchor_drill" }
+    ],
+    "actions": [
+      {
+        "type": "play_cinematic",
+        "scene_id": "scene_anchor_drill",
+        "on_complete": [
+          { "type": "set_quest_task_done", "quest_id": "w2_mq04", "task_id": "complete_anchor_drill" },
+          { "type": "set_room_state", "room_id": "sector9_canopy_ridge", "state_key": "anchor_drill_complete", "value": true },
+          { "type": "unlock_skill", "skill_id": "nova_link" },
+          { "type": "set_milestone", "milestone": "ms_w2_link_unlocked" },
+          { "type": "system_tutorial", "scene_id": "link_unlock", "context": "Canopy Ridge" },
+          { "type": "complete_quest", "quest_id": "w2_mq04" },
+          { "type": "set_milestone", "milestone": "ms_w2_mq04_complete" },
+          { "type": "start_quest", "quest_id": "w2_mq05" },
+          { "type": "track_quest", "quest_id": "w2_mq05" }
+        ]
       }
     ]
   },
@@ -3864,7 +3992,7 @@
   },
   {
     "id": "w2_mq05_reboot",
-    "description": "Triggered when rebooting the bridge relic.",
+    "description": "Mounts the Bridge, powers it from Astra conduits, and authenticates Orion with the Chime.",
     "trigger": {
       "type": "player_action",
       "action": "w2_mq05_reboot"
@@ -3883,6 +4011,16 @@
         "type": "quest_task_not_done",
         "quest_id": "w2_mq05",
         "task_id": "reboot_bridge_relic"
+      },
+      {
+        "type": "item",
+        "item_id": "bridge_relic",
+        "quantity": 1
+      },
+      {
+        "type": "item",
+        "item_id": "ghost_signal_cell",
+        "quantity": 1
       }
     ],
     "actions": [
@@ -3898,8 +4036,17 @@
         "task_id": "reboot_bridge_relic"
       },
       {
+        "type": "take_item",
+        "item_id": "bridge_relic",
+        "quantity": 1
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_bridge_installed"
+      },
+      {
         "type": "show_message",
-        "message": "You connect the conduits and place the Chime in the center slot. The Bridge Relic flares green, booting the primary systems of the Astra!"
+        "message": "Zeke bolts the Bridge into its cradle and feeds it from the Astra's conduit bus. The Chime supplies Orion's identity chord. Ship current brings the flight systems online."
       }
     ]
   },
@@ -5299,7 +5446,7 @@
       },
       {
         "type": "show_message",
-        "message": "The containment field, prism shutters, and command tether-lines finally agree. The braided chord slides through red pressure, blue return, and gold permission until the cage forgets how to call itself locked. The Lens hangs loose in the field, bright and waiting."
+        "message": "The field, prism shutters, and command tethers reach the same phase. Containment drops for six seconds, leaving the Lens unsupported."
       }
     ]
   },
@@ -5881,7 +6028,7 @@
       },
       {
         "type": "show_message",
-        "message": "The Astra settles onto volcanic glass, still hot from the Shield slip. Orion confirms the bad news: surviving low orbit is not the same as reaching high orbit."
+        "message": "The Astra clears the internal curtain at low altitude and settles onto volcanic glass. The outer Shield remains above them; reaching it still requires the Engine and Arrays."
       }
     ]
   },
@@ -9049,7 +9196,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: The HR Record\n\nZeke deletes the file, its backups, and the version of himself that still asks permission. Unshackled unlocked."
+        "message": "Quest Complete: The HR Record\n\nZeke deletes the active file and its backups, then closes the terminal without checking for approval. Unshackled unlocked."
       }
     ]
   },
@@ -9639,7 +9786,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: The Aethel Grave\n\nOrion hears the first Architects resting inside the current, not erased but carried. Ancestral Grace unlocked."
+        "message": "Quest Complete: The Aethel Grave\n\nOrion reads the names of Aethel victims and survivors held by Architect systems. Their continuity remains their own. Ancestral Grace unlocked."
       }
     ]
   },
@@ -10523,7 +10670,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Ancient Echoes\n\nThree crystal voices align the stasis mural. The song remembers humans as Ice held safely within the Ocean."
+        "message": "Quest Complete: Ancient Echoes\n\nThree crystals restore the mural's separate carrier bands. A concealed pedestal opens around a labeled Bridge calibration record."
       },
       {
         "type": "give_item",
@@ -10749,6 +10896,20 @@
         "type": "show_message",
         "message": "The reliquary pedestal is keyed to the facility chorus. It will not release anything until the mural chord is stable."
       }
+    ]
+  },
+  {
+    "id": "w2_sq04_decode_bridge_record",
+    "description": "Decodes the optional Bridge calibration record after Ancient Echoes is complete.",
+    "trigger": { "type": "player_action", "action": "w2_sq04_decode_bridge_record" },
+    "conditions": [
+      { "type": "quest_completed", "quest_id": "w2_sq04" },
+      { "type": "milestone_not_set", "milestone": "ms_w2_bridge_record_decoded" }
+    ],
+    "actions": [
+      { "type": "set_milestone", "milestone": "ms_w2_bridge_record_decoded" },
+      { "type": "set_room_state", "room_id": "sector9_archive_secret_stash", "state_key": "bridge_record_decoded", "value": true },
+      { "type": "show_message", "message": "BRIDGE CALIBRATION: verify consent on each carrier; keep identities on separate bands; attach a physical ground before opening the circuit." }
     ]
   },
   {
@@ -11064,7 +11225,7 @@
       },
       {
         "type": "show_message",
-        "message": "The last meal is simple, warm, and already fraying at the edges of Nova's memory."
+        "message": "The last meal is simple and warm. Nova's tinnitus rises with the Source pressure, but she remembers who cooked each part."
       }
     ]
   },

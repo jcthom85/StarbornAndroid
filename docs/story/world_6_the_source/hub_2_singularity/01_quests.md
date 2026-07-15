@@ -11,5 +11,5 @@
 
 | ID | Title | Hub | Quest Giver | Objective | Reward | Notes |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **SQ_29** | **The Aethel Grave** | Hub 2 | Orion | Find the burial ground of the first Architects in the Source. | **Passive: Ancestral Grace** | Orion gains high HP regeneration. |
+| **SQ_29** | **The Aethel Grave** | Hub 2 | Orion | Find the burial ground of Aethel victims and survivors held in the Source by Architect systems. | **Passive: Ancestral Grace** | Orion gains high HP regeneration. |
 | **SQ_30** | **The Final Scavenge** | Hub 2 | Scrapper Memory | Find a piece of *The Astra*'s hull from the future. | **Weapon Mod: Starborn** | Massive damage boost. The "Ultimate" weapon mod. |

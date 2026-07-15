@@ -269,35 +269,35 @@
   {
     "id": "jed_w1_mq01_repair_done_1",
     "speaker": "Jed",
-    "text": "Clean hum. Let me see your wrist.",
-    "condition": "quest_completed:w1_mq01,quest_not_started:w1_mq02",
+    "text": "Cold loop holds. Now the liner. Ground strip goes to the floor bus.",
+    "condition": "quest_active:w1_mq01,milestone:ms_w1_mq01_cryo_repaired,quest_task_not_done:w1_mq01:test_cutter",
     "next": "jed_w1_mq01_repair_done_2"
   },
   {
     "id": "jed_w1_mq01_repair_done_2",
     "speaker": "Nova",
     "emote": "puzzled",
-    "text": "It's fine, Jed.",
+    "text": "After I open the governor. Factory sweep misses quota by twelve percent.",
     "next": "jed_w1_mq01_repair_done_3"
   },
   {
     "id": "jed_w1_mq01_repair_done_3",
     "speaker": "Jed",
-    "text": "Then get your clearance before the first cage drops.",
+    "text": "Put the governor back. A hotter sweep buys ore by cooking your hand.",
     "next": "jed_w1_mq01_repair_done_4"
   },
   {
     "id": "jed_w1_mq01_repair_done_4",
     "speaker": "Nova",
     "emote": "worried",
-    "text": "I know.",
+    "text": "One test. Liner grounded, cold loop at sixty-eight. Then we argue.",
     "next": "jed_w1_mq01_repair_done_5"
   },
   {
     "id": "jed_w1_mq01_repair_done_5",
     "speaker": "Jed",
-    "text": "Checkpoint first. If the scanner stalls, find Zeke at the booth.",
-    "trigger": "start_quest:w1_mq02,track_quest:w1_mq02,advance_quest_stage:w1_mq02:reach_checkpoint,set_milestone:ms_w1_mq02_clearance_ordered,unlock_node:admin_gate"
+    "text": "Patch the liner. Confirm the bypass yourself. I want no accidental switches.",
+    "trigger": "set_milestone:ms_w1_mq01_test_briefed"
   },
   {
     "id": "jed_default_talk",
@@ -519,7 +519,7 @@
   {
     "id": "scrapper_w1_sq01_intro_1",
     "speaker": "Scrapper",
-    "text": "You want something useful, cutter girl? There's a cache behind the strip. Old resistance stock.",
+    "text": "You want something useful, Cutter? There's a cache behind the strip. Old resistance stock.",
     "condition": "quest_completed:w1_mq01,quest_not_started:w1_sq01",
     "next": "scrapper_w1_sq01_intro_2"
   },
@@ -678,7 +678,7 @@
   {
     "id": "bogs_w1_sq03_intro_1",
     "speaker": "Foreman Boggs",
-    "text": "You. Cutter girl. Loader's sitting idle, cargo's blocking my schedule, and your certification log is blank.",
+    "text": "You. Cutter. Loader's idle, cargo's blocking my schedule, and your certification log is blank.",
     "condition": "quest_completed:w1_mq01,quest_not_started:w1_sq03",
     "next": "bogs_w1_sq03_intro_2"
   },
@@ -796,13 +796,13 @@
   {
     "id": "zeke_w2_crash_4",
     "speaker": "Zeke",
-    "text": "Check the core housing in the wreckage. If the Chime is still intact, we need to recover it before this swamp water short-circuits it completely.",
+    "text": "I put the Chime on navigation without tracing the pair. That's on me. Check the wrecked nav console before the water gets in.",
     "trigger": "set_quest_task_done:w2_mq01:check_on_zeke,recruit:zeke"
   },
   {
     "id": "zeke_w2_crash_repeat_1",
     "speaker": "Zeke",
-    "text": "Check the wreckage of the pod core. We can't leave the Chime behind.",
+    "text": "Check the wrecked navigation console. We can't leave the Chime in the water.",
     "condition": "quest_active:w2_mq01,quest_task_done:w2_mq01:check_on_zeke,quest_task_not_done:w2_mq01:examine_pod"
   },
   {
@@ -826,7 +826,7 @@
   {
     "id": "zeke_w2_mq03_puzzle_hint_1",
     "speaker": "Zeke",
-    "text": "The pod is not asking for a password. It is asking for the room to stop fighting itself. Read the murals, map the pod pressure, check the overview sockets, and stabilize the coolant before you touch the ring console.",
+    "text": "No password field. The pod wants matching safety readings: mural pattern, pressure, sockets, and coolant.",
     "condition": "quest_active:w2_mq03,quest_task_not_done:w2_mq03:align_stasis_rings"
   },
   {
@@ -867,7 +867,7 @@
   {
     "id": "orion_w2_mq05_gate_1",
     "speaker": "Orion",
-    "text": "This barrier is not a lock so much as a living circuit in pain. Steady the horn, ground the cup, read the pressure roots, and starve the breakers. Then the acoustic lock will accept a resolving tone.",
+    "text": "Four feeds hold the barrier: horn vibration, an ungrounded cup, root pressure, and live breakers. Fix those first.",
     "condition": "quest_active:w2_mq05,quest_task_not_done:w2_mq05:bypass_source_gate"
   },
   {
@@ -1163,7 +1163,7 @@
   {
     "id": "orion_w3_mq14_puzzle_end",
     "speaker": "Orion",
-    "text": "When those three systems agree, the containment field will open because the room understands itself again. Do not mistake permission for mercy."
+    "text": "Match the field, shutters, and tether routing. The containment relays will drop for six seconds."
   },
   {
     "id": "zeke_w3_mq14_lens_warning",
@@ -1239,13 +1239,13 @@
     "id": "gh0st_w4_springs_intro",
     "speaker": "Gh0st",
     "condition": "quest_active:w4_mq17,quest_task_done:w4_mq17:access_phantom_terminal,quest_task_not_done:w4_mq17:regroup_springs",
-    "text": "My kill-suite reads Spectral IDs. When you channel the Source, you ring close enough to Elara that the failsafe grabs the wheel.",
+    "text": "My Source Lock matched the carrier structure in your Fork scar. It paused one trigger. No command followed.",
     "next": "gh0st_w4_springs_key"
   },
   {
     "id": "gh0st_w4_springs_key",
     "speaker": "Gh0st",
-    "text": "If I ever draw on you again, use this override key. No hesitation.",
+    "text": "This key pauses my kill suite. It does not steer me. If I lock up, use it and wait for my decision.",
     "trigger": "player_action:w4_mq17_regroup_springs"
   },
   {
@@ -1273,14 +1273,14 @@
     "id": "orion_w4_mq19_puzzle_intro",
     "speaker": "Orion",
     "condition": "quest_active:w4_mq19,quest_task_done:w4_mq19:reach_core_chamber,quest_task_not_done:w4_mq19:solve_conveyor_puzzle",
-    "text": "The Forge is breathing in rhythm. Belts, crushers, then silence. Find what controls the silence.",
+    "text": "Belts cycle, crushers cycle, then a three-second stop. Find the timing relay.",
     "trigger": "player_action:w4_mq19_open_anvil_cradle"
   },
   {
     "id": "nova_w4_mq19_anvil_intro",
     "speaker": "Nova",
     "condition": "quest_active:w4_mq19,quest_task_done:w4_mq19:solve_conveyor_puzzle,quest_task_not_done:w4_mq19:take_anvil",
-    "text": "It wants to build. I can feel it pulling shape out of me.",
+    "text": "The cradle is amplifying my Fork scar. Input is noisy. Keep clear until I stabilize it.",
     "trigger": "player_action:w4_mq19_take_anvil"
   },
   {
@@ -1393,7 +1393,7 @@
   {
     "id": "orion_w2_camp_rest",
     "speaker": "Orion",
-    "text": "Rest is not surrender. The Ocean presses against every thought; food, trusted voices, and a Neural Stabilizer give the Ice time to hold its shape.",
+    "text": "Eat. Hydrate. Take the stabilizer. Your tremor is worse, and the next channel will not care why.",
     "condition": "quest_completed:w2_mq03"
   },
   {

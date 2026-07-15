@@ -15,15 +15,18 @@ class InventoryService(
     val state: StateFlow<List<InventoryEntry>> = _state.asStateFlow()
     private val itemAddedListeners: MutableSet<(String, Int) -> Unit> = mutableSetOf()
 
+    @Synchronized
     fun loadItems() {
         itemCatalog.load()
         _state.value = items.values.toList()
     }
 
+    @Synchronized
     fun snapshot(): Map<String, Int> = items.mapValues { it.value.quantity }.filterValues { it > 0 }
 
     private val placeholderItems: MutableMap<String, Item> = mutableMapOf()
 
+    @Synchronized
     fun restore(entries: Map<String, Int>) {
         itemCatalog.load()
         items.clear()
@@ -36,6 +39,7 @@ class InventoryService(
         publish()
     }
 
+    @Synchronized
     fun addItem(idOrAlias: String, quantity: Int = 1) {
         if (quantity == 0) return
         val item = resolveItem(idOrAlias) ?: return
@@ -47,17 +51,20 @@ class InventoryService(
         publish()
     }
 
+    @Synchronized
     fun removeItem(idOrAlias: String, quantity: Int = 1) {
         val item = resolveItem(idOrAlias) ?: return
         removeItemById(item.id, quantity)
     }
 
+    @Synchronized
     fun hasItem(idOrAlias: String, quantity: Int = 1): Boolean {
         val item = resolveItem(idOrAlias) ?: return false
         val entry = items[item.id] ?: return false
         return entry.quantity >= quantity
     }
 
+    @Synchronized
     fun consumeItems(requirements: Map<String, Int>): Boolean {
         val resolved = mutableListOf<Pair<String, Int>>()
         for ((req, qty) in requirements) {
@@ -69,6 +76,7 @@ class InventoryService(
         return true
     }
 
+    @Synchronized
     fun useItem(idOrAlias: String): ItemUseResult? {
         val item = resolveItem(idOrAlias) ?: return null
         if (!hasItemDirect(item.id)) return null
@@ -104,10 +112,12 @@ class InventoryService(
         _state.value = items.values.sortedBy { it.item.name }.toList()
     }
 
+    @Synchronized
     fun addOnItemAddedListener(listener: (String, Int) -> Unit) {
         itemAddedListeners.add(listener)
     }
 
+    @Synchronized
     fun removeOnItemAddedListener(listener: (String, Int) -> Unit) {
         itemAddedListeners.remove(listener)
     }
@@ -117,10 +127,12 @@ class InventoryService(
         itemAddedListeners.toList().forEach { it(itemId, quantity) }
     }
 
+    @Synchronized
     fun itemDisplayName(idOrAlias: String): String {
         return resolveItem(idOrAlias)?.name ?: idOrAlias
     }
 
+    @Synchronized
     fun itemDetail(idOrAlias: String): Item? = resolveItem(idOrAlias)
 
     /**

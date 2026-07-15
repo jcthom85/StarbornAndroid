@@ -2,9 +2,9 @@
   {
     "id": "w1_mq01",
     "title": "Wake Up Call",
-    "summary": "Nova wakes beside a dangerous electrical fault that Dominion has already marked closed, then reports for another shift in the Pit.",
-    "description": "Make Nova's bunk safe, reach Jed, and use a suppressed diagnostic to get through his faulted workshop loader.",
-    "flavor": "A live fault was reported and closed without repair.",
+    "summary": "Quota is due at first cage. Nova needs the cutter cold, grounded, and running outside factory limits before shift.",
+    "description": "Reach Jed, rebuild the Cryo-Inductor, patch the Flux Liner, confirm the governor bypass, and finish a live cutter test.",
+    "flavor": "Four hours of sleep. One ration. The quota still wants a full shift.",
     "giver": "Jed",
     "hub_id": "hub_1_homestead",
     "stages": [
@@ -59,6 +59,18 @@
           {
             "id": "use_tinkering_table",
             "text": "Use Jed's workbench to craft the Functional Cryo-Inductor."
+          },
+          {
+            "id": "patch_flux_liner",
+            "text": "Patch the Flux Liner and clamp its sacrificial strip to the workshop ground."
+          },
+          {
+            "id": "confirm_governor_bypass",
+            "text": "Deliberately confirm the cutter governor bypass."
+          },
+          {
+            "id": "test_cutter",
+            "text": "Run the live cutter test and wait for the fault log."
           }
         ]
       }
@@ -130,8 +142,8 @@
     "id": "w1_mq03",
     "title": "The Echo",
     "summary": "Zeke's temporary override sends Nova to Logistics review, where Boggs turns her clearance into Sector 4 punishment duty.",
-    "description": "Report to Logistics, survive Boggs' required shield training, descend into the Deep Mine, and find the source of the impossible hum.",
-    "flavor": "The mine was never quiet. Nova just had not heard what was underneath.",
+    "description": "Follow the cutter fault record into Sector 4, identify the feedback, and counter-tune the signal Nova woke.",
+    "flavor": "The cutter is off. The 87 kHz return is still climbing.",
     "giver": "Foreman Boggs",
     "hub_id": "hub_2_logistics",
     "stages": [
@@ -180,7 +192,7 @@
       {
         "id": "relic_sync",
         "title": "The Tuning Fork",
-        "description": "The interference is a relic signal, and touching it changes Nova loudly enough for the colony to notice.",
+        "description": "The damaged Fork repeats the prohibited cutter sweep. Use the cutter-suit-operator loop to answer it.",
         "tasks": [
           {
             "id": "reach_echo_chamber",
@@ -188,11 +200,11 @@
           },
           {
             "id": "touch_tuning_fork",
-            "text": "Touch the Tuning Fork at the center of the signal."
+            "text": "Set 87 kHz phase sweep, 68% cold loop, and 180-degree ground phase."
           },
           {
             "id": "survive_source_sync",
-            "text": "Survive the Source sync and recover the relic."
+            "text": "Survive the calibration handshake and recover the Fork."
           }
         ]
       }
@@ -273,7 +285,7 @@
     "id": "w1_mq05",
     "title": "The Launch",
     "summary": "Nova and Zeke hijack a cargo pod, but the sky is another Dominion lock.",
-    "description": "Fight to the Pod Bay, defeat the Warden, splice the Chime into the pod core, and launch into the crash that ends Nova's old life.",
+    "description": "Fight to the Pod Bay, defeat the Warden, splice the Chime into authorization/navigation, and launch on pod power.",
     "flavor": "Escaping the colony is not the same thing as escaping the planet.",
     "giver": "Zeke",
     "hub_id": "hub_2_logistics",
@@ -315,11 +327,11 @@
       {
         "id": "launch_pod",
         "title": "Launch",
-        "description": "The Chime wakes the pod core, but the sky itself answers with another lock.",
+        "description": "The pod has power. The Chime can open the launch interlock, but its paired beacon controls the route.",
         "tasks": [
           {
             "id": "splice_chime",
-            "text": "Splice the Chime into the pod core."
+            "text": "Splice the Chime into the authorization/navigation bus."
           },
           {
             "id": "launch_from_colony",
@@ -327,7 +339,7 @@
           },
           {
             "id": "hit_planetary_shield",
-            "text": "Hit the Planetary Shield and crash toward Sector 9."
+            "text": "Miss the safe traffic corridor and crash toward Sector 9."
           }
         ]
       }
@@ -682,7 +694,7 @@
     "id": "w2_mq03",
     "title": "Sleeping Giant",
     "summary": "Someone has been asleep inside Sanctuary for twenty years, and the facility will not wake him without the right chord.",
-    "description": "Read the Hall of Echoes murals, locate Orion's stasis chamber, prove the pod safeties agree, and bring the tuner back into the world.",
+    "description": "Power Sanctuary from reserve cells, wake Orion after Chime authentication, and recover the separate Bridge Echo.",
     "flavor": "Twenty years of sleep, waiting for a chord that never came.",
     "giver": "Orion",
     "hub_id": "hub_4_facility",
@@ -714,6 +726,10 @@
           {
             "id": "talk_to_orion",
             "text": "Talk to the awakened Orion."
+          },
+          {
+            "id": "recover_bridge_relic",
+            "text": "Recover the Bridge Echo from its sealed cradle."
           }
         ]
       }
@@ -728,9 +744,9 @@
   {
     "id": "w2_mq04",
     "title": "The Hunter",
-    "summary": "A Dominion stalker is tracking the crew, but their orders are starting to fracture.",
-    "description": "Travel to Canopy Ridge, force Gh0st into the open, survive the Source Beast ambush, and turn a hunter into an uneasy ally.",
-    "flavor": "He has a code, but the armor wears the orders.",
+    "summary": "Gh0st can still fire after the failsafe pauses him. What he does next must be his choice.",
+    "description": "Confront Gh0st, survive the Beast, then finish Orion's grounded Anchor Drill before Link unlocks.",
+    "flavor": "No command attached. The next move is his.",
     "giver": "Gh0st",
     "hub_id": "hub_3_sector9",
     "stages": [
@@ -750,6 +766,10 @@
           {
             "id": "defeat_the_beast",
             "text": "Put down the mutated Source Beast."
+          },
+          {
+            "id": "complete_anchor_drill",
+            "text": "Complete Orion's cutter-Bridge grounding drill."
           }
         ]
       }
@@ -764,9 +784,9 @@
   {
     "id": "w2_mq05",
     "title": "Liftoff",
-    "summary": "The Astra is the only way off Sector 9, but Sanctuary's gate, dead power lines, and the orbital shield stand in the way.",
-    "description": "Settle the Source Gate's four feeding systems, inspect the Astra, salvage power conduits, wake the bridge relic with the Chime, and launch toward the Spire.",
-    "flavor": "A vessel of old songs, ready to fly again.",
+    "summary": "The Astra needs its Bridge mounted, powered, and authenticated before it can take the low service airlane.",
+    "description": "Settle the Source Gate, salvage conduits, install the Bridge, authenticate Orion with the Chime, and fly low to the Spire.",
+    "flavor": "Old frame. New wiring. Keep it below the hard deck.",
     "giver": "Orion",
     "hub_id": "hub_4_facility",
     "stages": [
@@ -789,7 +809,7 @@
           },
           {
             "id": "reboot_bridge_relic",
-            "text": "Reroute the Chime through the bridge relic."
+            "text": "Install the Bridge, power it from the Astra, and authenticate Orion with the Chime."
           },
           {
             "id": "launch_ship",
@@ -941,7 +961,7 @@
     "title": "Ancient Echoes",
     "summary": "Retrieve three wing crystals and use their harmonics to align the stasis chamber murals.",
     "description": "Calibrate the light-murals to hear their full song.",
-    "flavor": "The stones remember when the choir was whole.",
+    "flavor": "Three missing crystals leave three dead bands in the mural array.",
     "giver": "Orion",
     "hub_id": "hub_4_facility",
     "stages": [
@@ -1173,7 +1193,7 @@
     "title": "Cold Case",
     "summary": "Help Gh0st search Spire security databases for records on his sister Elara.",
     "description": "Examine terminal records in the Transit Plaza to find clues about Elara.",
-    "flavor": "A name is just data, until it becomes a song you can't stop humming.",
+    "flavor": "The transfer record still carries Elara's name and routing code.",
     "giver": "Gh0st",
     "hub_id": "hub_5_lower_city",
     "stages": [
@@ -1209,7 +1229,7 @@
     "title": "Night Market Run",
     "summary": "Help Mika repair the Night Market's string lanterns under patrol pressure.",
     "description": "Search the alleyways and fix the flickering lanterns to light up the market.",
-    "flavor": "Light doesn't just show the way; it shows we are still here.",
+    "flavor": "Restored market lights keep patrols from declaring the block abandoned.",
     "giver": "Mika",
     "hub_id": "hub_5_lower_city",
     "stages": [
@@ -1291,9 +1311,9 @@
   {
     "id": "w3_mq14",
     "title": "The Lens",
-    "summary": "Reach the Archive, make the Prism Gallery's containment route agree, and take the Lens even when it recognizes Nova first.",
+    "summary": "Reach the Archive, stabilize the Prism Gallery route, and survive when the Lens instruments match Nova's Fork protocol scar.",
     "description": "Enter the Archive, read the vault's light machinery with Orion and Zeke, and take the Lens knowing the relic will expose more than the crew planned to steal.",
-    "flavor": "Truth is not a light. It is a wound that glows.",
+    "flavor": "The archive log shows who signed the containment order.",
     "giver": "Orion",
     "hub_id": "hub_6_upper_city",
     "stages": [
@@ -2180,7 +2200,7 @@
     "title": "The Anchor",
     "summary": "Find Elara, prove she is not infrastructure, and steal the Anchor.",
     "description": "Enter the Anchor Chamber, reunite Gh0st with Elara, break the logic treating her as a living processor, and take the Anchor before Vale rewrites the root system.",
-    "flavor": "A person is not a key, a battery, or a weapon blueprint.",
+    "flavor": "The Virtuoso file lists a person as infrastructure. Elara's corrections remain in the margins.",
     "giver": "Gh0st",
     "hub_id": "hub_10_deep_ring",
     "stages": [
@@ -2690,7 +2710,7 @@
   {
     "id": "w6_sq29",
     "title": "The Aethel Grave",
-    "summary": "Find the first Architects' burial ground in the Source.",
+    "summary": "Find the burial current of Aethel victims and survivors held by Architect systems.",
     "description": "Help Orion identify the resonance where the first Aethel surrendered their bodies to the current.",
     "flavor": "A grave is also proof that someone was here.",
     "giver": "Orion",
@@ -2698,7 +2718,7 @@
     "stages": [
       {
         "id": "grave",
-        "title": "First Architects",
+        "title": "Aethel Burial Current",
             "description": "Trace the names, tune the grave, and carry its answer into the next memory.",
             "tasks": [
               {

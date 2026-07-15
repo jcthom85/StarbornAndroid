@@ -16,7 +16,7 @@ World 2 is the assembly of the crew. Nova is no longer in a structured society; 
 
 **Exit State:**
 - Party: Nova, Zeke, Orion, Gh0st.
-- Relics: Tuning Fork (Blast), Chime (Light), Link (Relic).
+- Artifacts: Tuning Fork (Blast), Orion's Chime (identity/pairing), separate Bridge Echo (Link).
 - Status: Repaired *Astra* locked under the Planetary Shield.
 
 ---
@@ -29,9 +29,9 @@ These are the primary narrative anchors for World 2.
 |---|---|---|---|
 | 1 | Waking at the Crash | Onboard survival pacing, Erosion tutorial, Zeke's injury. | `w2_mq01`, `landing_core`, `landing_pod`. |
 | 2 | Razor-Vine Gauntlet | First wilderness combat; introduction to wildlife threat. | `wilds_trailhead`, `wilds_thickets`. |
-| 3 | The Ceasefire | Ambush by Gh0st; Elara's Song override; Source Beast boss. | `EVT_W2_03`, `ridge_arena` boss encounter. |
+| 3 | The Choice | Gh0st confrontation; Source Lock pauses one action; Beast ambush; Gh0st freely protects. | `w2_mq04_confront`, `w2_mq04_beast_ambush`, Canopy Ridge state gates. |
 | 4 | Awakening the Ancient | Reconnecting with the past; Orion wakes up to a dead world. | `EVT_W2_02`, `stasis_pod_deck` ring alignment. |
-| 5 | The Anchor Drill | Learning to share the static; unlocking the **Link** Relic. | `EVT_W2_04`, first camp dialogue after Orion wakes. |
+| 5 | The Anchor Drill | Grounded, willing Bridge training; unlock Link only after Beast victory and the cinematic callback. | `w2_mq04_anchor_drill`, `scene_anchor_drill`. |
 | 6 | Stasis Observations | Reading light murals; learning about "Harmony" (Great Silence). | `EVT_W2_01`, `hall_main_gallery`. |
 | 7 | Hitting the Ceiling | Launch sequence fails when Planetary Shield discharges. | `EVT_W2_11`, launch cinematic in the mesosphere. |
 

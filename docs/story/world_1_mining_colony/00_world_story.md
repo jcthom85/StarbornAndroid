@@ -83,8 +83,8 @@ This is the structural frame for the **main quest line**. The entry and exit bea
 | | State |
 |---|---|
 | **ENTRY** | Bogs sends Nova to Sector 4 as punishment. She's descending into the mine — bureaucratic corridors giving way to rough tunnels, then to something older than the colony. The player's job shifts from social exploration to combat and discovery. |
-| **MIDPOINT** | Nova touches the Tuning Fork and syncs (EVT_W1_01). She gains Blast Wave. She loses a sliver of memory. The mine's "magnetic interference" was an ancient signal. Dominion didn't build this place — they built on top of it. Alarms go off. The Lockdown begins. |
-| **EXIT** | Jed is dead. The Warden is defeated. Zeke has left his booth. The Chime is spliced into the pod. Nova and Zeke launch — and the nav locks onto a signal they can't override. They hit the Planetary Shield and crash. World 1 is over. There is nothing left of Nova's old life. |
+| **MIDPOINT** | Nova counter-tunes the Fork at 87 kHz / 68% / 180 degrees. The cutter-suit-operator handshake fuses the Cryo-Inductor, spends only the Flux Liner's ground strip, writes the Echo mark, and unlocks Blast. Her suit clock skips half a second; her memory remains intact. |
+| **EXIT** | Jed is dead. The Warden is defeated. Zeke has left his booth. The Chime is spliced into authorization/navigation. The pod launches on its own power; its navigation locks to the paired Sanctuary receiver, misses a safe traffic corridor, and crashes in Sector 9. |
 | **THE SHIFT** | From "I'm going deeper into the mine" to "the mine was built on top of something cosmic, and now I'm falling out of the sky." |
 | **WHAT THE PLAYER CARRIES FORWARD** | The Tuning Fork (Echo Relic). Blast Wave (Source Art). The Chime (Ghost Signal Cell — Jed's last gift). Zeke as a party member. The knowledge that the Planetary Shield exists and is impassable. The memory of Jed's sacrifice. The question: what was that voice on the PA that wasn't the Warden? |
 
@@ -202,15 +202,13 @@ Nova tries to clear it. Touches it. Syncs.
 
 **EVT_W1_01: The Discovery**
 
-The mine goes silent. All ambient sound drops out. The hum isn't sound — it's pressure, felt in the teeth and sternum before the ears register it. The universe stops holding its breath.
+The mine goes silent. Pressure loads Nova's teeth and sternum while the cutter, suit, and damaged cradle close one circuit.
 
-For one impossible beat, Nova isn't standing in the room. She IS the room. The rock. The air. The relic. Then the connection snaps.
-
-She wakes on the floor, shivering, nosebleeding. Her head splits. For a beat, even Jed's name won't come — then it snaps back.
+The Cryo-Inductor fuses. The Flux Liner dumps the discharge through its replaceable ground strip, which burns open against the floor bus. Nova hits the stone shivering, with a nosebleed and a tremor in her hand.
 
 Somewhere far above, a Dominion sensor reads the spike and quietly screams.
 
-*What the player learns:* The Source is real, it's physical, and it hurts. Power has a cost — she lost a sliver of memory (Jed's name, for just a second). This seeds the finale's ultimate cost (Nova permanently loses her connection to the Source and pieces of herself).
+*What the player learns:* The Source is real, physical, and dangerous. The damaged cradle writes a reusable protocol mark into Nova's nervous system; it does not take her memories or identify her personally.
 
 *Reward:* Echo Relic: The Tuning Fork. Source Art: Blast Wave (Nova).
 
@@ -385,7 +383,7 @@ The Planetary Shield isn't a wall. It's a Phase Curtain. Outside the authorized 
 
 ### What the Player Should Feel
 
-Curiosity, not comprehension. World 1 doesn't explain the Architects. It shows the player that this mine — this whole planet — is built on top of something older and stranger than the corporation that runs it. The questions are the point: Who built this? Why is it here? Why does it respond to her?
+Curiosity, not comprehension. World 1 doesn't explain the Architects. It shows the player that this mine — this whole planet — is built on top of something older than the corporation that runs it. The questions are practical: Who built this? Why is it here? What circuit did Nova close, and what did it write into her?
 
 The answers come later. World 1 only asks the questions.
 

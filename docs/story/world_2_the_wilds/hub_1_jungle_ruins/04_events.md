@@ -85,7 +85,7 @@
         *   **Gh0st:** "Weapon system failure? Impossible."
         *   He draws his blade and charges Nova—physical override.
         *   He swings, but his arm freezes mid-air, inches from her neck. His servos whine, fighting his own suit.
-        *   Nova channels the Source. She doesn't just ping as Elara; she sings **Elara's Song**.
+        *   Nova's Fork protocol scar crosses the Elara-calibrated Source Lock's threshold. Gh0st's trigger pauses once; no command follows.
     *   Gh0st stumbles back, lowering his blade. "You sound like her. Why do you sound like her?"
     *   **Sudden Shift:** The trees behind Nova explode. The **Source Beast** (Mutated Silverback) lunges from the canopy, roaring.
     *   It swipes at Nova—a killing blow.

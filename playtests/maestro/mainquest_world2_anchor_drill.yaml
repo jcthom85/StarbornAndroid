@@ -1,0 +1,144 @@
+appId: com.junewiregames.starborn.prealpha
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "Debug Scenarios"
+    timeout: 60000
+- tapOn: "Debug Scenarios"
+- tapOn: "Search world, quest, room, or system"
+- inputText: "Hunter Canopy"
+- runFlow:
+    when:
+      visible: "Try out your stylus"
+    commands:
+      - tapOn: "Cancel"
+- tapOn: "W2 / Hunter Canopy"
+- extendedWaitUntil:
+    visible: ".*first clean angle on the stalker.*"
+    timeout: 15000
+- tapOn: "Continue"
+- extendedWaitUntil:
+    visible: "Canopy Ridge"
+    timeout: 30000
+- assertVisible: "Confront stalker"
+- assertNotVisible: "Anchor Drill"
+- tapOn: "Confront stalker"
+- extendedWaitUntil:
+    visible: ".*My orders are simple: erase the anomaly.*"
+    timeout: 15000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: ".*The Warden sent us.*"
+    timeout: 10000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: ".*System logic loop detected.*"
+    timeout: 10000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: "Face the Beast"
+    timeout: 15000
+- tapOn: "Face the Beast"
+- extendedWaitUntil:
+    visible: ".*Source Beast.*"
+    timeout: 30000
+- repeat:
+    times: 2
+    commands:
+      - runFlow:
+          when:
+            notVisible: "Spoils Recovered"
+          commands:
+            - waitForAnimationToEnd:
+                timeout: 10000
+            - runScript: sleep.js
+            - tapOn: "Nova"
+            - extendedWaitUntil:
+                visible: "Attack"
+                timeout: 15000
+            - tapOn: "Attack"
+            - tapOn: ".*Source Beast.*"
+      - runFlow:
+          when:
+            notVisible: "Spoils Recovered"
+          commands:
+            - waitForAnimationToEnd:
+                timeout: 10000
+            - runScript: sleep.js
+            - tapOn: "Zeke"
+            - extendedWaitUntil:
+                visible: "Attack"
+                timeout: 15000
+            - tapOn: "Attack"
+            - tapOn: ".*Source Beast.*"
+      - runFlow:
+          when:
+            notVisible: "Spoils Recovered"
+          commands:
+            - waitForAnimationToEnd:
+                timeout: 10000
+            - runScript: sleep.js
+            - tapOn: "Orion"
+            - extendedWaitUntil:
+                visible: "Attack"
+                timeout: 15000
+            - tapOn: "Attack"
+            - tapOn: ".*Source Beast.*"
+- extendedWaitUntil:
+    visible: "Spoils Recovered"
+    timeout: 60000
+- tapOn: "Continue"
+- extendedWaitUntil:
+    visible: ".*The Beast is down.*training comes next.*"
+    timeout: 20000
+- tapOn: "Continue"
+- extendedWaitUntil:
+    visible: "Gh0st joined the party.*"
+    timeout: 15000
+- tapOn: "Tap to continue.*"
+- extendedWaitUntil:
+    visible: "Anchor Drill"
+    timeout: 120000
+- tapOn: "Anchor Drill"
+- extendedWaitUntil:
+    visible: ".*Nova opens the Bridge alone.*"
+    timeout: 15000
+- tapOn: "Tap to continue.*"
+- extendedWaitUntil:
+    visible: ".*The Bridge connects.*"
+    timeout: 10000
+- tapOn:
+    point: "50%,85%"
+- extendedWaitUntil:
+    visible: ".*ground lead to Nova's bracer.*"
+    timeout: 10000
+- tapOn: "Tap to continue.*"
+- extendedWaitUntil:
+    visible: ".*No command attached. Proceed.*"
+    timeout: 10000
+- tapOn:
+    point: "50%,85%"
+- extendedWaitUntil:
+    visible: ".*current divides across four willing contacts.*"
+    timeout: 10000
+- tapOn: "Tap to continue.*"
+- extendedWaitUntil:
+    visible: ".*Link. Not merge. I get it.*"
+    timeout: 10000
+- tapOn:
+    point: "50%,85%"
+- extendedWaitUntil:
+    visible: ".*Link connects willing party members.*every thought remains its owner's.*"
+    timeout: 20000
+- tapOn: "CONTINUE"
+- extendedWaitUntil:
+    visible: ".*Use Link to restore the party.*does not merge health pools or identities.*"
+    timeout: 15000
+- tapOn: "CONTINUE"
+- extendedWaitUntil:
+    visible: "QUEST COMPLETED"
+    timeout: 15000
+- tapOn: "Continue"
+- assertVisible: "Liftoff"
+- takeScreenshot: mainquest-world2-anchor-drill

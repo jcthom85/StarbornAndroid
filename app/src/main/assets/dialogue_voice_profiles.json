@@ -15,6 +15,7 @@
     "Jax": "male",
     "Jed": "male",
     "Juno": "female",
+    "Lab PA": "none",
     "Lab Terminal": "none",
     "Maddie": "female",
     "Maintenance Bot": "none",
@@ -35,8 +36,9 @@
     "System": "none",
     "Tallo": "male",
     "The Warden": "male",
-    "Thorne": "male",
-    "Vale": "female",
+    "Thorne": "female",
+    "Unknown System": "none",
+    "Vale": "male",
     "Zeke": "male"
   }
 }

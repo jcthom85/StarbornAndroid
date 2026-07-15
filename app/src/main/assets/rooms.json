@@ -372,7 +372,7 @@
     "env": "mine",
     "title": "Shared Showers",
     "background_image": "images/rooms/world_1/pit_showers_v5.png",
-    "description": "Lukewarm water spits from dented shower heads and turns orange dust into lazy streaks across the tiles. The broken soap dispenser rattles with every vent cycle, as if offended by the idea of cleanliness.",
+    "description": "Lukewarm water spits from dented shower heads and cuts orange tracks across the tiles. A broken soap dispenser rattles with every vent cycle.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -445,6 +445,12 @@
     },
     "actions": [
       {
+        "name": "loader diagnostic strip",
+        "type": "generic",
+        "action_event": "w1_mq01_inspect_loader_relay",
+        "condition_unmet_message": "The strip flashes SAFETY GOVERNOR BYPASSED beside the cracked relay."
+      },
+      {
         "name": "scrap",
         "type": "generic",
         "condition_unmet_message": "Twisted girders and hulls from a dozen different ship classes. Jed never throws anything away."
@@ -461,13 +467,13 @@
     "env": "mine",
     "title": "Main Bench",
     "background_image": "images/rooms/world_1/workshop_floor_v3.png",
-    "description": "Warm work lights spill across Jed's workbench, catching on solder smoke and bright little tool handles. Your illegal mining cutter sits in the middle of it all, dangerous, necessary, and almost ready.",
+    "description": "Work lights show the workbench, scorched insulation, and Jed's tools laid out by size. The mining cutter and Flux Liner wait beside the floor clamp; the live cutter test comes last.",
     "description_variants": [
       {
         "requires_state": {
           "cryo_inductor_installed": true
         },
-        "description": "The rebuilt Cryo-Inductor hums inside Nova's cutter, venting a clean thread of cold across Jed's workbench. The repair is visible in the frost line on the barrel and tangible in the new Cryo Vent tactic waiting behind the trigger."
+        "description": "The workbench holds the rebuilt Cryo-Inductor at a clean 68% cold loop. Patch the Flux Liner, confirm the mining cutter bypass, then run the live cutter test."
       }
     ],
     "npcs": [],
@@ -507,7 +513,24 @@
       {
         "name": "mining cutter",
         "type": "generic",
-        "condition_unmet_message": "Your jury-rigged tool. It's built to cut rock, but it's currently held together by luck and Jed's patience."
+        "action_event": "w1_mq01_confirm_governor",
+        "show_when_milestone": "ms_w1_mq01_cryo_repaired",
+        "condition_unmet_message": "The factory governor blocks the sweep Nova needs for quota. The bypass lead is exposed and waiting for her confirmation."
+      },
+      {
+        "name": "Flux Liner",
+        "type": "generic",
+        "action_event": "w1_mq01_patch_flux_liner",
+        "show_when_milestone": "ms_w1_mq01_cryo_repaired",
+        "condition_unmet_message": "Patch the suit link and clamp the sacrificial strip to the floor ground."
+      },
+      {
+        "name": "live cutter test",
+        "type": "generic",
+        "action_event": "w1_mq01_cutter_surge",
+        "show_when_milestone": "ms_w1_mq01_cryo_repaired",
+        "hide_when_state": "cutter_surge_complete",
+        "condition_unmet_message": "Cold loop 68%. Liner grounded. Governor bypass confirmed. Fire one sweep."
       }
     ]
   },
@@ -820,7 +843,7 @@
     "env": "mine",
     "title": "Ventilation Hub",
     "background_image": "images/rooms/world_1/medbay_vents_v3.png",
-    "description": "Rusted fans and patched pipes keep the med-bay breathing by sheer habit. A cracked vent hisses chemical haze into the room, and a toxic blockage swells in the updraft while a skimmer circles overhead.",
+    "description": "Rusted fans and patched pipes keep air moving through the med-bay. A cracked vent leaks chemical haze while a toxic blockage swells in the updraft.",
     "description_variants": [
       {
         "requires_state": {
@@ -1465,7 +1488,7 @@
     "env": "market",
     "title": "Concourse Lobby",
     "background_image": "images/rooms/world_1/admin_lobby.png",
-    "description": "The grand entrance is a massive, open space with floor-to-ceiling windows overlooking the mining pit. The air is filtered and perfectly chilled, and every badge reader seems to remember Nova was almost erased from the roster.",
+    "description": "Floor-to-ceiling windows overlook the mining pit. Filtered air holds at eighteen degrees; each badge reader still flashes Nova's recent liability review.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -2471,7 +2494,7 @@
     "weather": "resonance",
     "title": "The Heart",
     "background_image": "images/rooms/world_1/echo_heart.png",
-    "description": "The tuning fork hums in the center of the room, held in a cradle of white geometry. The air here vibrates with a pressure that feels like a physical weight against your chest.",
+    "description": "The tuning fork repeats the cutter's prohibited sweep from its cracked geometry cradle. Diagnostics show phase drift, cold-loop heat, and an open ground angle.",
     "npcs": [],
     "items": [
       "tuning_fork"
@@ -2487,18 +2510,20 @@
       0,
       2
     ],
-    "state": {},
+    "state": {
+      "relic_synced": false
+    },
     "actions": [
       {
         "name": "tuning fork",
-        "type": "generic",
-        "action_event": "touch_relic",
-        "condition_unmet_message": "The Relic. It's calling to you."
+        "type": "tuning_puzzle",
+        "puzzle_id": "w1_echo_counter_tune",
+        "condition_unmet_message": "Answer the repeating pulse with the cutter, cold loop, and suit ground."
       },
       {
         "name": "geometry",
         "type": "generic",
-        "condition_unmet_message": "Smooth white blocks that seem to grow directly out of the floor."
+        "condition_unmet_message": "Cracked cradle blocks surround a calibration bus driven into the chamber floor."
       }
     ]
   },
@@ -2507,7 +2532,7 @@
     "env": "space",
     "title": "The Harmonic Well",
     "background_image": "images/rooms/world_1/echo_well.png",
-    "description": "A deep pit of resonant energy that glows with a screaming white light. A low-hanging mist swirls around the edge of the well, tasting like copper and lost memories.",
+    "description": "A deep service well glows white around a damaged conduit. Cold mist condenses on the rail and leaves a copper taste at the back of Nova's throat.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -2530,9 +2555,9 @@
   {
     "id": "echo_memory",
     "env": "space",
-    "title": "Memory Alcove",
+    "title": "Signal Alcove",
     "background_image": "images/rooms/world_1/echo_memory.png",
-    "description": "A small alcove where the past feels distant and blurred. The walls are covered in a fine layer of static that ripples when you move, as if the room is forgetting you.",
+    "description": "A small alcove carries the Fork's return pulse through warm walls. Static crosses Nova's visor as her suit clock drops half a second, then resumes without an error code.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -2553,7 +2578,7 @@
       {
         "name": "static",
         "type": "generic",
-        "condition_unmet_message": "Snow on a dead screen. It feels like your thoughts are being scattered."
+        "condition_unmet_message": "The static repeats at the cutter's bypass frequency."
       }
     ]
   },
@@ -2569,6 +2594,16 @@
     "connections": {
       "south": "echo_heart",
       "north": "launch_access"
+    },
+    "blocked_directions": {
+      "north": {
+        "type": "state",
+        "requires": [
+          { "room_id": "echo_heart", "state_key": "relic_synced", "value": true }
+        ],
+        "message_locked": "The emergency latch has no calibration confirmation.",
+        "message_unlock": "The synced cradle releases the emergency latch."
+      }
     },
     "pos": [
       0,
@@ -2889,7 +2924,7 @@
       {
         "name": "navigation console",
         "type": "generic",
-        "condition_unmet_message": "The console is locked. It needs a physical Chime bypass to override the Dominion shield frequency.",
+        "condition_unmet_message": "The console needs Orion's launch authorization from the Chime and current from the pod capacitors.",
         "action_event": "use_nav_console"
       },
       {
@@ -4338,7 +4373,7 @@
         ]
       },
       {
-        "description": "The Archive Vault rises in indexed crystal stacks over a glass floor two hundred stories high. The lens relic hangs in an open containment field, the resolved prism route humming through the glass like permission stolen from light.",
+        "description": "Indexed crystal stacks rise above a glass floor two hundred stories high. The Lens hangs unsupported after the resolved prism route drops containment.",
         "requires_milestones": [
           "ms_w3_prism_solved"
         ]
@@ -4880,7 +4915,7 @@
         ]
       },
       {
-        "description": "The intake breathes cooler now, hacked vents dragging the worst heat away from the service airlock. The piston rhythm exposes a protected terminal bay between compactor cycles.",
+        "description": "Hacked vents pull heat away from the service airlock. The piston cycle exposes a protected terminal bay for three seconds at a time.",
         "requires_milestones": [
           "ms_w4_cooling_vents_hacked"
         ]
@@ -5949,12 +5984,6 @@
     ],
     "actions": [
       {
-        "name": "loader diagnostic strip",
-        "type": "generic",
-        "action_event": "w1_mq01_inspect_loader_relay",
-        "condition_unmet_message": "The strip flashes SAFETY GOVERNOR BYPASSED beside the cracked relay."
-      },
-      {
         "name": "Director redaction checksum",
         "type": "generic",
         "action_event": "w5_sq21_find_redactions",
@@ -6570,7 +6599,7 @@
         "name": "memory oasis",
         "type": "rest_stop",
         "rest_event": "w6_rest_memory_oasis",
-        "message": "The blue fire is quiet enough to cook beside, but every shared bite carries a memory Nova can feel loosening."
+        "message": "The blue fire is quiet enough to cook beside. Source pressure lifts Nova's tinnitus while the crew argues over seasoning."
       }
     ],
     "description_variants": [
@@ -7388,7 +7417,7 @@
     "env": "source",
     "title": "New World",
     "background_image": "images/rooms/world_6/source_new_world.png",
-    "description": "Morning reaches the Colony without a Shield overhead. At Zeke's diner, a community board holds a beach photograph and the memories Nova can no longer access alone.",
+    "description": "Morning reaches the Colony through an open regional corridor. At Zeke's diner, Nova remembers the beach photograph while her tuning hand trembles against its frame.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -7414,7 +7443,7 @@
         "requires_milestones": [
           "ms_game_complete"
         ],
-        "description": "Morning reaches the Colony without a Shield overhead. At Zeke's diner, a community board holds a beach photograph and the memories Nova can no longer access alone."
+        "description": "Morning reaches the Colony through an open regional corridor. At Zeke's diner, Nova remembers the beach photograph while her tuning hand trembles against its frame."
       }
     ]
   },
@@ -8559,12 +8588,30 @@
     "weather": "resonance",
     "title": "Canopy Ridge",
     "background_image": "images/rooms/world_2/canopy_ridge.png",
-    "description": "A wind-carved stone shelf high above the jungle. Look at Shield catches the Planetary Shield lattice pulsing overhead, while Confront stalker marks the huge shadow shifting in the brush.",
+    "description": "A stone shelf stands above the canopy. The outer Shield is a distant ceiling; a rifle barrel tracks the ridge from the brush. Confront stalker before the angle closes.",
+    "description_variants": [
+      {
+        "requires_state": {
+          "anchor_drill_complete": true
+        },
+        "description": "The Beast is down and the grounding leads are packed. The completed Anchor Drill leaves four separate contact marks in the stone."
+      },
+      {
+        "requires_state": {
+          "beast_defeated": true
+        },
+        "description": "The Beast lies still beside Gh0st's unfired command channel. Orion sets a ground lead on the stone for the Anchor Drill."
+      },
+      {
+        "requires_state": {
+          "hunter_confronted": true
+        },
+        "description": "Gh0st lowers his rifle without accepting a command. Brush breaks behind him; Face the Beast before it reaches the ledge."
+      }
+    ],
     "npcs": [],
     "items": [],
-    "enemies": [
-      "the_beast"
-    ],
+    "enemies": [],
     "connections": {
       "south": "sector9_ridge_overhang",
       "east": "sector9_ridge_viewpoint"
@@ -8573,7 +8620,11 @@
       1,
       -2
     ],
-    "state": {},
+    "state": {
+      "hunter_confronted": false,
+      "beast_defeated": false,
+      "anchor_drill_complete": false
+    },
     "actions": [
       {
         "name": "Look at Shield",
@@ -8584,7 +8635,25 @@
         "name": "Confront stalker",
         "type": "generic",
         "action_event": "w2_mq04_confront",
+        "show_when_milestone": "ms_w2_mq03_complete",
+        "hide_when_state": "hunter_confronted",
         "condition_unmet_message": "Confront the hunter waiting in the shadows."
+      },
+      {
+        "name": "Face the Beast",
+        "type": "generic",
+        "action_event": "w2_mq04_beast_ambush",
+        "show_when_state": "hunter_confronted",
+        "hide_when_state": "beast_defeated",
+        "condition_unmet_message": "The Beast tears through the brush while Gh0st's trigger channel remains empty."
+      },
+      {
+        "name": "Anchor Drill",
+        "type": "generic",
+        "action_event": "w2_mq04_anchor_drill",
+        "show_when_state": "beast_defeated",
+        "hide_when_state": "anchor_drill_complete",
+        "condition_unmet_message": "Orion lays out a ground lead beside the unpowered Bridge."
       }
     ]
   },
@@ -9363,7 +9432,7 @@
     "weather": "resonance",
     "title": "Hidden Reliquary",
     "background_image": "images/rooms/world_2/archive_secret_stash.png",
-    "description": "A hidden reliquary vault. A glowing stone pedestal holds the **Link Relic** upgrade.",
+    "description": "A labeled calibration record sits behind the opened pedestal glass. Its diagrams separate four carrier bands around a physical ground lead.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -9379,8 +9448,8 @@
       {
         "name": "pedestal",
         "type": "generic",
-        "action_event": "w2_sq04_collect_relic",
-        "condition_unmet_message": "A pedestal holds the Link Relic upgrade."
+        "action_event": "w2_sq04_decode_bridge_record",
+        "condition_unmet_message": "The Bridge calibration record lists consent checks, separate carriers, and a mandatory ground."
       }
     ]
   },
@@ -11541,7 +11610,7 @@
     "env": "foundry",
     "title": "Basalt Switchback",
     "background_image": "images/rooms/world_4/foundry_slag_river.png",
-    "description": "A basalt switchback crawls along the slag river wall beside a heat ladder glowing red at the edges. The heat ladder expands and contracts like it is breathing.",
+    "description": "A basalt switchback follows the slag-river wall beside a heat ladder glowing red at the edges. Its joints expand and contract with each furnace cycle.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -11563,7 +11632,7 @@
       {
         "name": "heat ladder",
         "type": "generic",
-        "condition_unmet_message": "The ladder expands and contracts like it is breathing."
+        "condition_unmet_message": "The ladder joints expand and contract with the furnace cycle."
       }
     ]
   },
@@ -12562,7 +12631,7 @@
     "env": "foundry",
     "title": "Coolant Choir",
     "background_image": "images/rooms/world_4/foundry_power_core.png",
-    "description": "A coolant choir of blue pipes sings against the core heat in wavering chords. The blue pipes fall flat near a damaged valve.",
+    "description": "Blue coolant pipes knock against their clamps under core pressure. Flow drops sharply at a damaged valve.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -12752,7 +12821,7 @@
     "env": "void",
     "title": "Ring Pressure Gallery",
     "background_image": "images/rooms/world_5/orbital_executive_dock.png",
-    "description": "A pressure gallery runs behind the polished walls. Its warning strip flashes through the trim whenever the Ring remembers there is vacuum outside the hospitality layer.",
+    "description": "A pressure gallery runs behind the polished walls. Its warning strip flashes whenever exterior vacuum loads the hospitality seals.",
     "npcs": [],
     "items": [],
     "enemies": [

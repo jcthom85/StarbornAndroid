@@ -38,13 +38,13 @@
 *   **The Beat:** Surviving the jungle, finding Orion, recruiting Gh0st.
 *   **Emotional Tone:** **Wonder & Terror.** The beauty of the bioluminescence vs. the lethality of the beasts.
 *   **Breather Beat:** **Canopy Ridge** (mandatory) gives open-sky relief and a view of the Spire/Shield; **Tideglass Beach** (optional) lets the crew eat, joke, and feel human.
-*   **Flashback Beat:** When the Chime provides a burst of Source thrust, Nova catches a Source imprint—Orion launching it during the lab breach twenty years ago.
+*   **Recorded Imprint:** When the Chime's paired beacon locks navigation toward Sanctuary, the pod console replays a stored signal fragment: Orion launching it during the lab breach twenty years ago. The pod supplies its own thrust.
 *   **External Conflict:** **Man vs. Nature.** The Source Beast, the poison, the erosion.
 *   **Interpersonal Conflict:** **Trust.**
-    *   **Zeke vs. Nova:** Zeke blames her for the crash.
+    *   **Zeke vs. himself:** Zeke blames his unverified authorization/navigation splice for the crash and does not turn that guilt on Nova.
     *   **Gh0st vs. The Party:** He is literally hunting them.
 *   **Cost Beat:** Nova tries to use power like a shortcut and nearly collapses—Orion forces the “focus + practice” rule.
-*   **Emotional Climax:** **Empathy.** Gh0st is physically locked out of attacking by Elara's Song. He chooses to trust the anomaly rather than fight the lock. The enemy becomes a protector.
+*   **Emotional Climax:** **Agency.** The Elara-calibrated Source Lock pauses one lethal action. Gh0st confirms that no command is attached, then freely turns on the Beast when it attacks.
 *   **The Drive:** **Hope.** They found a ship (*The Astra*). They have a way out.
 
 ## World 3: The Spire (The Heist)
@@ -58,7 +58,7 @@
     *   **Homecoming:** Zeke returns to a city that erased him. The safehouse is not cozy; it is proof that systems forget people less completely than they intend.
     *   **The Plan:** Lower City prep should feel like turning overlooked labor routes, patched clothes, favors, and deleted records into a heist. This is where Nova becomes a coordinator, not just the person pressing buttons.
     *   **Social Engineering:** Upper City pressure is polite and sterile. The Skypark is mandatory because it teaches the player the emotional rule of the hub: cruelty here smiles and files paperwork.
-    *   **The Lens:** The relic recognizes Nova before she controls it. This is the point of no return and should feel like confidence crossing into arrogance.
+    *   **The Lens:** Nova's existing protocol mark closes the Lens interface circuit before she understands its controls. This is the point of no return and should feel like confidence crossing into arrogance.
     *   **Burn Notice:** The escape is not a clean win. Vale's compliance net reframes the threat from city security to orbital authority, and the crew survives by squeezing through a tiny Shield gap.
 *   **Cost Beat:** The Lens tags Nova as an anomaly—alarms rise early and the plan turns into improvisation.
 *   **Emotional Climax:** **Validation.** The Heist succeeds. The team clicks. They aren't just survivors anymore; they are a *crew*.

@@ -251,7 +251,7 @@ class ExplorationViewModel(
 ) : ViewModel() {
 
     private val eventsById: Map<String, GameEvent> = eventDefinitions.associateBy { it.id }
-    private val startWithBlackScreen: Boolean = bootstrapActions.any {
+    private val startWithBlackScreen: Boolean = bootstrapCinematics.isEmpty() && bootstrapActions.any {
         it.equals("new_game_spawn_player_and_fade", ignoreCase = true)
     }
     private val _uiState = MutableStateFlow(ExplorationUiState(forceBlackScreen = startWithBlackScreen))
@@ -386,6 +386,7 @@ class ExplorationViewModel(
             },
             onSpawnEncounter = { encounterId, roomId ->
                 emitEvent(ExplorationEvent.SpawnEncounter(encounterId, roomId))
+                enterEventEncounter(encounterId, roomId)
             },
             onGiveItem = { itemId, quantity ->
                 oneTimeGiftMilestoneByItemId[itemId]?.let { milestone ->
@@ -1137,12 +1138,19 @@ class ExplorationViewModel(
     private fun processBootstrapQueues() {
         if (bootstrapCinematicQueue.isEmpty() && bootstrapActionQueue.isEmpty()) return
         viewModelScope.launch(dispatchers.main) {
-            while (bootstrapCinematicQueue.isNotEmpty()) {
-                startCinematic(bootstrapCinematicQueue.removeFirst())
-            }
-            while (bootstrapActionQueue.isNotEmpty()) {
-                triggerPlayerAction(bootstrapActionQueue.removeFirst())
-            }
+            processNextBootstrapEntry()
+        }
+    }
+
+    private fun processNextBootstrapEntry() {
+        if (bootstrapCinematicQueue.isNotEmpty()) {
+            val sceneId = bootstrapCinematicQueue.removeFirst()
+            val started = startCinematic(sceneId) { processNextBootstrapEntry() }
+            if (!started) processNextBootstrapEntry()
+            return
+        }
+        while (bootstrapActionQueue.isNotEmpty()) {
+            triggerPlayerAction(bootstrapActionQueue.removeFirst())
         }
     }
 
@@ -3722,6 +3730,32 @@ class ExplorationViewModel(
         triggerPlayerAction("tinkering_craft", normalized)
     }
 
+    private fun enterEventEncounter(encounterId: String?, roomId: String?) {
+        val currentRoom = _uiState.value.currentRoom ?: return
+        val targetRoomId = roomId?.trim().takeUnless { it.isNullOrEmpty() } ?: currentRoom.id
+        if (!targetRoomId.equals(currentRoom.id, ignoreCase = true)) return
+        val enemyIds = encounterId
+            ?.split(',')
+            .orEmpty()
+            .map { it.trim() }
+            .filter { it.isNotEmpty() && enemyById.containsKey(it.lowercase(Locale.getDefault())) }
+            .distinct()
+        if (enemyIds.isEmpty()) return
+        if (
+            enemyIds == listOf("the_beast") &&
+            "ms_debug_w2_anchor_flow" in sessionStore.state.value.completedMilestones
+        ) {
+            encounterCoordinator.setPendingEncounter(
+                EncounterDescriptor(
+                    enemies = listOf(EncounterEnemyInstance(enemyId = "the_beast", hp = 12, vitality = 0))
+                )
+            )
+        } else {
+            preparePendingEncounter(currentRoom, enemyIds)
+        }
+        emitEvent(ExplorationEvent.EnterCombat(enemyIds))
+    }
+
     fun openTinkeringShortcut() {
         handleTinkeringAction(
             label = "Tinkering Table",
@@ -4956,6 +4990,7 @@ class ExplorationViewModel(
     private fun parseActions(room: Room?): List<RoomAction> {
         if (room == null) return emptyList()
         return room.actions.mapNotNull { action ->
+            if (!isActionVisible(room, action)) return@mapNotNull null
             val type = action["type"].asStringOrNull()?.lowercase()
             val name = action["name"].asStringOrNull() ?: return@mapNotNull null
             when (type) {
@@ -5025,6 +5060,35 @@ class ExplorationViewModel(
         }
     }
 
+    private fun isActionVisible(room: Room, action: Map<String, Any?>): Boolean {
+        val session = sessionStore.state.value
+        return narrativeActionVisible(
+            action = action,
+            staticState = room.state.mapValues { (_, value) -> value as? Boolean ?: false },
+            persistedState = session.roomStates[room.id].orEmpty(),
+            milestones = session.completedMilestones
+        )
+    }
+
+}
+
+internal fun narrativeActionVisible(
+    action: Map<String, Any?>,
+    staticState: Map<String, Boolean>,
+    persistedState: Map<String, Boolean>,
+    milestones: Set<String>
+): Boolean {
+    fun stateValue(key: String?): Boolean? {
+        if (key.isNullOrBlank()) return null
+        return persistedState[key] ?: staticState[key]
+    }
+    val showState = action["show_when_state"] as? String
+    if (!showState.isNullOrBlank() && stateValue(showState) != true) return false
+    val hideState = action["hide_when_state"] as? String
+    if (!hideState.isNullOrBlank() && stateValue(hideState) == true) return false
+    val showMilestone = action["show_when_milestone"] as? String
+    if (!showMilestone.isNullOrBlank() && showMilestone !in milestones) return false
+    return true
 }
 
 private fun buildQuestDetail(

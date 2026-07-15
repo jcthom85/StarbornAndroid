@@ -478,7 +478,7 @@
   {
     "id": "nova_flux_liner",
     "name": "Flux Liner",
-    "description": "Lightweight layers that keep Nova dancing between volleys.",
+    "description": "Suit-linked armor patched by Jed. Its replaceable ground strip can route one major discharge into a floor ground; the armor remains functional afterward.",
     "aliases": [
       "flux liner"
     ],
@@ -1103,7 +1103,7 @@
   {
     "id": "mining_pistol",
     "name": "Mining Pistol",
-    "description": "Standard issue energy cutter modified for personal defense.",
+    "description": "A Dominion phase cutter with its factory governor deliberately bypassed. The wider sweep makes quota and destabilizes old phase hardware.",
     "type": "weapon",
     "value": 45,
     "buy_price": 90,
@@ -1271,7 +1271,7 @@
       "relic"
     ],
     "type": "key_item",
-    "description": "An ancient Echo Relic. It hums with a frequency that makes your teeth ache.",
+    "description": "Architect Echo #1. Nova woke it with an ungoverned cutter and survived its damaged calibration handshake.",
     "value": 0,
     "rarity": "mythic"
   },
@@ -1284,7 +1284,7 @@
       "signal cell"
     ],
     "type": "key_item",
-    "description": "A resonant battery from the Old World. Dominion calls it a Ghost Signal Cell. Jed called it a Chime.",
+    "description": "Orion's brass identity key and paired beacon. Dominion logged it as a Ghost Signal Cell; it authenticates compatible systems but supplies no power.",
     "value": 0,
     "rarity": "mythic"
   },
@@ -1447,7 +1447,7 @@
   {
     "id": "cryo_inductor",
     "name": "Cryo-Inductor",
-    "description": "A cryogenic coil taken from damaged refrigeration rigs.",
+    "description": "A cracked cutter cold-loop coil. Rebuilt correctly, it can absorb one short thermal spike before fusing.",
     "type": "component",
     "value": 30,
     "buy_price": 60,
@@ -1456,7 +1456,7 @@
   {
     "id": "functional_cryo_inductor",
     "name": "Functional Cryo-Inductor",
-    "description": "A repaired cryogenic loop wired into Nova's cutter. Unlocks Cryo Vent, a Brittle setup that makes physical follow-ups hit 50% harder for two turns.",
+    "description": "A repaired cutter cold loop set for the live test. It can absorb one severe thermal spike; a Source-scale handshake will fuse it.",
     "type": "component",
     "value": 45,
     "buy_price": 90,
@@ -2517,7 +2517,7 @@
   {
     "id": "gh0st_override_key",
     "name": "Gh0st Override Key",
-    "description": "A small black chip Gh0st gives Nova after Project Phantom. It can interrupt his kill-suite if the failsafe takes control again.",
+    "description": "A small black chip Gh0st gives Nova after Project Phantom. It can pause his kill suite long enough for him to choose; it cannot control him.",
     "type": "quest",
     "value": 0,
     "rarity": "rare",
@@ -2559,7 +2559,7 @@
   {
     "id": "the_anvil",
     "name": "The Anvil",
-    "description": "A relic that shapes Source intent into temporary constructs. It answers confidence and punishes doubt.",
+    "description": "Architect Echo #4. Its damaged cradle amplifies unstable protocol input; clean constructs require stable signal and calibrated hardware.",
     "type": "quest",
     "value": 0,
     "rarity": "legendary",
@@ -2695,6 +2695,15 @@
         "luck": 3
       }
     }
+  },
+  {
+    "id": "bridge_relic",
+    "name": "The Bridge",
+    "aliases": ["bridge", "bridge relic", "sanctuary bridge"],
+    "description": "Architect Echo #2. It coordinates distinct willing signals without merging them and requires Astra power plus a recognized identity.",
+    "type": "key_item",
+    "value": 0,
+    "rarity": "mythic"
   },
   {
     "id": "thermal_cutter",

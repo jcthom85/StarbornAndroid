@@ -1,3 +1,58 @@
 appId: com.junewiregames.starborn.prealpha
 ---
 - runFlow: fun_opening_mastery.yaml
+- tapOn: "Tap to continue"
+- tapOn: "Back"
+- extendedWaitUntil:
+    visible: ".*cold loop holds at.*68%.*"
+    timeout: 20000
+- tapOn: "Continue"
+- repeat:
+    times: 5
+    commands:
+      - tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: "Main Bench"
+    timeout: 15000
+- assertVisible: "Flux Liner"
+- tapOn: "Flux Liner"
+- tapOn:
+    point: "50%,55%"
+- tapOn: "DISMISS"
+- assertVisible: "mining cutter"
+- tapOn: "mining cutter"
+- extendedWaitUntil:
+    visible: ".*Factory sweep limit: 61 kHz.*"
+    timeout: 10000
+- tapOn: ".*Factory sweep limit: 61 kHz.*"
+- tapOn: "live cutter test"
+- extendedWaitUntil:
+    visible: ".*Flux Liner's ground strip.*Governor: bypassed.*"
+    timeout: 15000
+- tapOn: "Tap to continue.*"
+- extendedWaitUntil:
+    visible: ".*Bypass confirmed.*"
+    timeout: 10000
+- tapOn:
+    point: "50%,85%"
+- extendedWaitUntil:
+    visible: ".*cutter fires.*buried.*conduit.*"
+    timeout: 10000
+- tapOn: "Tap to continue.*"
+- extendedWaitUntil:
+    visible: ".*Kill it.*"
+    timeout: 10000
+- tapOn:
+    point: "50%,85%"
+- extendedWaitUntil:
+    visible: ".*It is off. That hum is not mine.*"
+    timeout: 10000
+- tapOn:
+    point: "50%,85%"
+- extendedWaitUntil:
+    visible: ".*CUTTER FAULT 4C-117.*attaches operator NOVA VANCE.*"
+    timeout: 15000
+- tapOn: "Tap to continue.*"
+- extendedWaitUntil:
+    visible: "QUEST COMPLETED"
+    timeout: 15000

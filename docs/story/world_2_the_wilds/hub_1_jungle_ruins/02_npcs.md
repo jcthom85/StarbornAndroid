@@ -23,6 +23,6 @@
 *   **State of Mind:** **Useless.** He is an indoor creature. The jungle terrifies him.
 *   **Dialogue:** Complaining to mask fear.
 *   **Key Line:** "I can hack a bank mainframe in twelve seconds. I cannot, however, hack a mosquito. We are going to die here."
-    *   **Zeke vs. Nova:** Zeke blames her for the crash.
+    *   **Zeke vs. himself:** Zeke blames his unverified authorization/navigation splice for the crash. He never blames Nova.
     *   **Gh0st vs. The Party:** He is literally hunting them.
 

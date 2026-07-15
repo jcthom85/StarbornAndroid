@@ -1421,7 +1421,7 @@
     "name": "Ancestral Grace",
     "character": "orion",
     "type": "passive",
-    "description": "The first Architects' current continuously restores Orion while he remains in the fight.",
+    "description": "The Aethel burial current continuously restores Orion while he remains in the fight.",
     "combat_tags": [
       "heal",
       "buff"
@@ -1548,6 +1548,18 @@
     "scaling": "focus",
     "cooldown": 4,
     "status_applications": ["shield", "braced"]
+  },
+  {
+    "id": "nova_link",
+    "name": "Link",
+    "character": "nova",
+    "type": "support",
+    "description": "Routes recovery across distinct willing allies through the grounded Bridge circuit. No identity is merged.",
+    "combat_tags": ["source", "heal", "support", "aoe"],
+    "base_power": 90,
+    "scaling": "focus",
+    "cooldown": 4,
+    "status_applications": ["regen"]
   },
   {
     "id": "shadow_chorus",

@@ -1051,6 +1051,11 @@ class AppServices(context: Context) {
     private fun startNewGameAtW2HunterCanopy(): Boolean = runCatching {
         if (!prepareWorld2DebugState(completedW2Quests = listOf("w2_mq01", "w2_mq02", "w2_mq03"))) return false
         sessionStore.setPartyMembers(listOf("nova", "zeke", "orion"))
+        sessionStore.setPlayerLevel(12)
+        listOf("nova", "zeke", "orion").forEach { memberId ->
+            sessionStore.setPartyMemberLevel(memberId, 12)
+        }
+        sessionStore.setMilestone("ms_debug_w2_anchor_flow")
         sessionStore.startQuest("w2_mq04", track = true)
         sessionStore.setQuestStage("w2_mq04", "canopy_ridge")
         sessionStore.setWorld("world_2")
@@ -1579,6 +1584,8 @@ class AppServices(context: Context) {
             if (!startNewGame(debugFullInventory = true)) return false
             val inventory = sessionStore.state.value.inventory.toMutableMap()
             inventory["mine_access_badge"] = (inventory["mine_access_badge"] ?: 0).coerceAtLeast(1)
+            inventory["functional_cryo_inductor"] = (inventory["functional_cryo_inductor"] ?: 0).coerceAtLeast(1)
+            inventory["nova_flux_liner"] = (inventory["nova_flux_liner"] ?: 0).coerceAtLeast(1)
             inventoryService.restore(inventory)
             sessionStore.setInventory(inventory)
             sessionStore.completeQuest("w1_mq01")
@@ -1844,6 +1851,8 @@ class AppServices(context: Context) {
             bootstrapPlayerActions.clear()
             val inventory = sessionStore.state.value.inventory.toMutableMap()
             inventory["mine_access_badge"] = (inventory["mine_access_badge"] ?: 0).coerceAtLeast(1)
+            inventory["functional_cryo_inductor"] = (inventory["functional_cryo_inductor"] ?: 0).coerceAtLeast(1)
+            inventory["nova_flux_liner"] = (inventory["nova_flux_liner"] ?: 0).coerceAtLeast(1)
             inventoryService.restore(inventory)
             sessionStore.setInventory(inventory)
             listOf("w1_mq01", "w1_mq02", "w1_sq03").forEach(sessionStore::completeQuest)

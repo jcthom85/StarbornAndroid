@@ -43,7 +43,7 @@ These beats define World 1. If a build cut is needed, cut flavor rooms before cu
 | 6 | Paperwork death warrant | Reveal Nova is marked for recycling; Zeke defects morally. | `w1_mq02`, Zeke scene, Mine Access Badge. |
 | 7 | Bogs sends Nova to Sector 4 | Tie Nova's hustle to punishment and plot movement. | `w1_mq03`, Bogs dialogue, Deep Elevator gate. |
 | 8 | First dungeon descent | Shift from social hub to dangerous investigation. | Deep Mine encounters, Riot Guard tutorial, optional SQ05. |
-| 9 | Tuning Fork sync | Source reveal, memory cost, Blast Wave unlock. | `EVT_W1_01`, Echo Chamber cinematic, reward action. |
+| 9 | Tuning Fork counter-tune | 87 kHz / 68% / 180-degree cutter-suit-operator handshake; Cryo-Inductor fuses, Flux Liner ground strip is spent, Echo mark and Blast unlock. | `w1_echo_counter_tune`, `scene_relic_sync`, callback rewards. |
 | 10 | Lockdown | Turn known spaces hostile; introduce Warden and distant PA voice. | `EVT_W1_02`, hostile state, new enemies, Zeke comms. |
 | 11 | Zeke guides escape | Turn Zeke from clerk into active ally. | `w1_mq04`, comm dialogue, locked doors/gauntlet. |
 | 12 | Jed sacrifice + Chime | Emotional cost and World 2 connective tissue. | `EVT_W1_03`, Cargo Lift scene, Chime item. |

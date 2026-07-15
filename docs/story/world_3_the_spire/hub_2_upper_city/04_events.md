@@ -70,7 +70,7 @@
     *   Orion calls the timing.
     *   *The Astra* lifts off; the Shield ripples as they slip through.
     *   The engines sputter in thin orbit.
-    *   **Orion:** "We can reach low orbit, not the Ring."
+    *   **Orion:** "The Lens found the curtain seam. Keep us low and cross on my count."
     *   **Nova:** "So we get a bigger engine."
     *   They drop back through the gap and set course for the Foundry.
 

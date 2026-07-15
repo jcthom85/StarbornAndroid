@@ -12,6 +12,7 @@ import com.example.starborn.domain.event.EventHooks
 import com.example.starborn.domain.event.EventManager
 import com.example.starborn.domain.event.EventPayload
 import com.example.starborn.domain.prompt.TutorialPrompt
+import com.example.starborn.domain.model.TuningPuzzleAction
 import com.example.starborn.domain.prompt.UIPromptManager
 import com.example.starborn.domain.session.GameSessionState
 import com.example.starborn.domain.tutorial.TutorialEntry
@@ -120,6 +121,54 @@ class NarrativeSystemsInstrumentedTest {
                 inventorySnapshot["scrap_metal"] == 20 &&
                 inventorySnapshot["nano_filament"] == 20 &&
                 inventorySnapshot["circuit_board"] == 20
+        }
+    }
+
+    @Test
+    fun echoCounterTune_acceptsExactDiagnosticValuesAndStartsHandshake() {
+        lateinit var viewModel: ExplorationViewModel
+        runOnMainThread {
+            services.sessionStore.restore(
+                GameSessionState(
+                    activeQuests = setOf("w1_mq03"),
+                    inventory = mapOf(
+                        "functional_cryo_inductor" to 1,
+                        "nova_flux_liner" to 1
+                    )
+                )
+            )
+            services.inventoryService.restore(
+                mapOf(
+                    "functional_cryo_inductor" to 1,
+                    "nova_flux_liner" to 1
+                )
+            )
+            services.sessionStore.startQuest("w1_mq03", track = true)
+            viewModel = ExplorationViewModelFactory(services)
+                .create(ExplorationViewModel::class.java)
+        }
+
+        waitForCondition { !viewModel.uiState.value.isLoading }
+        runOnMainThread {
+            viewModel.onActionSelected(
+                TuningPuzzleAction(
+                    name = "Tuning fork",
+                    puzzleId = "w1_echo_counter_tune"
+                )
+            )
+        }
+        waitForCondition { viewModel.uiState.value.tuningPuzzle != null }
+
+        runOnMainThread {
+            viewModel.updateTuningSlider("frequency", 87f)
+            viewModel.updateTuningSlider("coolant", 68f)
+            viewModel.updateTuningSlider("ground_phase", 180f)
+            viewModel.submitTuningPuzzle()
+        }
+
+        waitForCondition {
+            viewModel.uiState.value.tuningPuzzle == null &&
+                services.cinematicCoordinator.state.value?.scene?.id == "scene_relic_sync"
         }
     }
 

@@ -5,37 +5,54 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     visible: "New Game"
     timeout: 60000
-- swipe:
-    direction: UP
 - extendedWaitUntil:
-    visible: "Debug: Deep Mine"
+    visible: "Debug Scenarios"
     timeout: 10000
-- tapOn:
-    point: "50%,61%"
+- tapOn: "Debug Scenarios"
+- extendedWaitUntil:
+    visible: "Search world, quest, room, or system"
+    timeout: 10000
+- tapOn: "Search world, quest, room, or system"
+- inputText: "Deep Mine"
+- runFlow:
+    when:
+      visible: "Try out your stylus"
+    commands:
+      - tapOn: "Cancel"
+- runScript: sleep.js
+- extendedWaitUntil:
+    visible: "The Echo: Deep Mine"
+    timeout: 10000
+- tapOn: "The Echo: Deep Mine"
 - extendedWaitUntil:
     visible: "Concourse Lobby"
     timeout: 15000
-- assertVisible: "Foreman Boggs"
-- tapOn: "Foreman Boggs"
+- assertVisible: "Boggs"
+- tapOn: "Boggs"
 - extendedWaitUntil:
-    visible: ".*caused that surge.*"
+    visible: ".*Training's logged.*"
     timeout: 10000
+- runScript: sleep.js
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: ".*grid instability.*"
+    visible: ".*Deep Elevator opens.*"
     timeout: 10000
+- runScript: sleep.js
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: ".*punishment duty.*"
+    visible: ".*relays are failing.*"
     timeout: 10000
+- runScript: sleep.js
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
     visible: ".*lift is locked.*"
     timeout: 10000
+- runScript: sleep.js
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: ".*restore power at the Cavern Junction support pillar.*"
+    visible: ".*Restore the junction power.*"
     timeout: 10000
+- runScript: sleep.js
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
     notVisible: "Dialogue Popup"
@@ -59,8 +76,7 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     notVisible: "Engage Echo Borer"
     timeout: 1000
-- tapOn:
-    point: "50%,9%"
+- tapOn: "Travel north.*"
 - extendedWaitUntil:
     visible: "Cavern Junction"
     timeout: 15000
@@ -73,6 +89,11 @@ appId: com.junewiregames.starborn.prealpha
     notVisible: "The Stellarium generator roars to life."
     timeout: 10000
 - tapOn: "Travel north.*"
+- runFlow:
+    when:
+      visible: "Cavern Junction"
+    commands:
+      - tapOn: "Travel north.*"
 - extendedWaitUntil:
     visible: "Riot Control Post"
     timeout: 15000
@@ -124,34 +145,71 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 15000
 - tapOn: "Tuning fork"
 - extendedWaitUntil:
-    visible: ".*hand touches the Tuning Fork.*"
+    visible: "Counter-Tune the Fork"
     timeout: 15000
-- tapOn: "Tap to continue.*"
+- tapOn: "Phase Sweep value"
+- eraseText: 2
+- inputText: "87"
+- tapOn:
+    text: "Apply"
+    index: 0
+- scrollUntilVisible:
+    element: "Cold Loop value"
+    direction: DOWN
+    timeout: 10000
+- tapOn: "Cold Loop value"
+- eraseText: 2
+- inputText: "68"
+- tapOn:
+    text: "Apply"
+    index: 1
+- scrollUntilVisible:
+    element: "Ground Phase value"
+    direction: DOWN
+    timeout: 10000
+- tapOn: "Ground Phase value"
+- eraseText: 1
+- inputText: "180"
+- tapOn:
+    text: "Apply"
+    index: 2
+- tapOn: "Tune"
 - extendedWaitUntil:
-    visible: ".*standing waves.*"
+    visible: ".*Phase sweep: 87 kHz.*"
     timeout: 10000
 - tapOn: "Tap to continue.*"
 - extendedWaitUntil:
-    visible: ".*cold current surges up your arm.*"
+    visible: ".*damaged cradle closes its circuit.*"
     timeout: 10000
 - tapOn: "Tap to continue.*"
 - extendedWaitUntil:
-    visible: ".*The Chorus.*"
+    visible: ".*Cryo-Inductor fuses.*sacrificial strip.*"
     timeout: 10000
 - tapOn: "Tap to continue.*"
 - extendedWaitUntil:
-    visible: ".*resonance stabilizes.*"
+    visible: ".*suit clock skips.*"
     timeout: 10000
 - tapOn: "Tap to continue.*"
 - extendedWaitUntil:
-    visible: "ITEM OBTAINED"
+    visible: ".*hand trembles.*"
+    timeout: 10000
+- tapOn: "Tap to continue.*"
+- extendedWaitUntil:
+    visible: ".*unregistered resonance event detected.*"
     timeout: 15000
-- assertVisible: "Acquired The Tuning Fork"
-- tapOn: "GOT IT"
+- tapOn: "Continue"
+- extendedWaitUntil:
+    visible: "Acquired The Tuning Fork"
+    timeout: 15000
+- tapOn: "DISMISS"
 - extendedWaitUntil:
     visible: "Source Art unlocked: Blast Wave.*"
     timeout: 15000
-- tapOn: "GOT IT"
+- tapOn: "CONTINUE"
+- extendedWaitUntil:
+    visible: "QUEST COMPLETED"
+    timeout: 15000
+- tapOn: "Continue"
 - extendedWaitUntil:
     visible: "New Quest"
     timeout: 15000

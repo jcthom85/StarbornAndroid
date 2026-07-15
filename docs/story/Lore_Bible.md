@@ -3,6 +3,18 @@
 **Status:** Canon Deep Dive
 **Confidential:** For Narrative Design Only
 
+**Authority:** This document governs cosmology, technology, artifacts, Source costs, and terminology. It is subordinate only to the Master Story Bible and outranks character summaries, world/hub documents, and production assets.
+
+## Canon locks
+
+- The Architects were engineers who made the six Echoes and used Aethel consciousness as living material during the Great Silence. Aethel were victims, survivors, operators, adapters, and preservers, not the Echoes' creators.
+- Nova has no Aethel ancestry, blood compatibility, chosen status, prophecy, or prior Chime exposure. The damaged Fork writes a reusable Architect protocol signature into her nervous system.
+- Later Echoes detect that protocol signature, not Nova personally. A handshake permits contact and danger, not mastery or obedience.
+- The Chime is Orion's identity key, paired beacon, and imprint carrier. It authenticates systems but supplies no sustained energy, fuel, thrust, attack, Bridge reboot current, or outer-Shield bypass.
+- The Bridge is separate Architect Echo #2 and connects distinct willing minds without merging them.
+- Routine Source use causes pain, fatigue, sensory crossover, signal lag, tinnitus, tremor, lost perceived seconds, and accumulating neurological instability. Memory is never routine fuel.
+- Unit 734 is a distinct person built around a partial derivative of Elara's neural map. The Elara-calibrated Source Lock pauses one lethal action and supplies no command.
+
 ---
 
 # I. The Cosmology: The Skin and The Ocean
@@ -56,6 +68,7 @@ This is the intended drip-feed of truth about the Architects. Each reveal should
 ### The Architects (Canon Truth)
 The Architects were not gods. They were engineers who tried to solve suffering with control.
 *   They built the six Echoes as admin instruments for the Source—tools that can network minds, reshape matter, and stabilize edits.
+*   They exploited Aethel consciousness as living material. Sanctuary is Architect-built and was later adapted and sealed by Aethel survivors.
 *   Their “Great Silence” was the first forced harmony attempt. It didn’t create peace; it erased people.
 *   The relic suite survived as scattered Echoes. Dominion is rebuilding the same ladder with a different logo.
 
@@ -67,36 +80,42 @@ Chimes are portable Source resonators keyed to a specific psionic signature.
 They can "handshake" with Source-era locks and dormant systems, but they do not generate sustained power or grant reality-editing on their own.
 *   **Orion's Chime:** Twenty years ago, when a Source Beast surfaced in Orion’s lab (Dominion classification), he **jettisoned** a Chime through a launch tube—then put himself into stasis to mute his signal and avoid its search.
 *   **How it reaches Nova:** Dominion later recovered it as salvage and it eventually filtered down to the Mining Colony as scrap, where Jed found it.
-*   **Function in the story:** It pulls Nova and Zeke's escape pod toward Sector 9 and provides limited Source power to reinitialize the Sanctuary—releasing Orion from stasis and rebooting *The Astra*'s Bridge Relic.
-*   **Chorus Response:** When a Chime reactivates, it’s audible inside Veyra. Orion’s people can’t steer ships, but they can **nudge the current**—strengthening the pull toward the Sanctuary once Orion’s signal returns.
+*   **Function in the story:** Zeke connects it to the pod's authorization/navigation bus. The pod supplies its own power; the Chime opens the interlock and locks navigation to its paired Sanctuary receiver. At Sanctuary it authenticates Orion while reserve cells release him. Later it authenticates Orion to the separate Bridge/Astra interface while salvaged conduits and ship systems supply current.
+*   **Chorus Response:** The Chorus may strengthen the beacon's direction like wind on water. It cannot supply thrust, steer a living pilot, or override one.
 
 ### Signalprints (Dominion: Spectral ID)
 Direct contact with the Source (especially via Relics) leaves a measurable Source fingerprint in the way a person "rings" when they act, panic, fight, or channel power.
 *   **Dominion term:** Spectral ID / Spectral Profile.
 *   **Orion's term:** Chordprint.
 *   **How it shows up in tech:** Locks, sensors, and weapons can key off the chordprint instead of DNA.
-*   **Project Phantom failsafe:** Gh0st-class units carry a **Source Lock** keyed to Elara’s relay-chordprint. If a target matches above threshold, lethal force is locked and a retrieval/protection routine engages.
-*   **Why Nova can trip it:** Nova’s output includes a faint Aethel Source thread; Elara’s relay augmentation imprinted a similar Source signature. When Nova channels the Source, she can ping a partial match. It’s not blood—it’s frequency.
+*   **Project Phantom failsafe:** Gh0st-class units carry an **Elara-calibrated Source Lock**. A threshold match pauses one lethal action. It issues no retrieval, recruitment, or protection command.
+*   **Why Nova can trip it:** The damaged Tuning Fork wrote an Architect protocol signature into Nova's nervous system. The lock detects compatible carrier structure in that scar. Gh0st remains able to act and chooses what follows.
 
 ---
 
 # III. The Imprinted: Anomalies
 
 **The Unknown**
-To the wider universe, "Relics" are rumors or folklore. Only the Dominion's top-level black program (Project Harmony) understands they are Aethel-made artifacts. The public has no words for them.
+To the wider universe, "Relics" are rumors or folklore. Only the Dominion's top-level black program understands they are Architect artifacts. The public has no reliable taxonomy for them.
 
 **Why Nova?**
-Nova is **not** a prophesied hero. She's unlucky, stubborn, and just compatible enough to survive.
-*   **The Echo Line:** Nova carries a faint Aethel imprint in her signal (distant ancestry). It doesn't make her powerful. It just means the Echo doesn't instantly reject her.
-*   **The Incident:** When she found the Tuning Fork in World 1, it should have disintegrated her (returned her data to the signal).
+Nova is a 22-year-old human miner and mechanic. Her importance comes from causing the wake-up, recognizing the mechanism, taking the risk, learning technique, and building trust.
+*   **The Wake-up:** Nova deliberately removes her cutter governor. After Jed repairs the Cryo-Inductor and Flux Liner, her live test sends a prohibited sweep through a buried conduit and wakes the dormant Tuning Fork.
+*   **The Counter-tune:** She recognizes harmonic feedback and answers with a cutter-suit-operator calibration loop: 87 kHz phase sweep, 68% cold loop, and 180 degrees ground phase.
+*   **The Incident:** The Cryo-Inductor absorbs the thermal spike and fuses. Only the Flux Liner's sacrificial ground strip burns open; its armor remains. The damaged Fork writes its protocol signature into Nova's nerves.
 *   **The Circuit:** A human mind cannot hold the Source alone; it burns out the nerves ("Noise"). To survive, the party forms a living circuit to share the load.
     *   **The Spark (Nova):** Opens the channel and invites the energy in.
     *   **The Ground (Zeke):** Dumps the excess static/heat so the Spark doesn't fry.
     *   **The Shield (Gh0st):** Physically contains the radiation field.
     *   **The Tuner (Orion):** Modulates the frequency so it's music, not chaos.
 *   **The Work:** Control isn't genetic. Orion can teach her to tune the signal, but she still has to earn it—discipline, practice, and trust in her team.
-*   **The Cost:** The cost is shared. If the circuit breaks, everyone burns.
-*   **The Hidden Layer:** Echo marks don’t just let Nova reach *into* the Source—they let the Source reach *back*. Most of the time it’s just pressure, dreams, and imprint-flashes… but it’s also how Orion’s people can touch the physical world at all.
+*   **The Cost:** Routine use causes pain, fatigue, sensory crossover, signal lag, tinnitus, tremor, lost perceived seconds, and accumulating neurological instability. Memory is never routine fuel. Catastrophic failure may threaten memory, but Nova's ending preserves her identity and recollections.
+*   **The Mark:** Later Echoes detect the Fork protocol signature, not Nova personally. A handshake permits contact and danger; it grants no mastery or obedience.
+
+### Bridge, Link, Gh0st, and Elara
+The Bridge is Architect Echo #2, physically separate from Orion's Chime and from its optional calibration record. It coordinates distinct consenting carrier bands without merging identities. Link requires willing participants, a physical ground, and a counter-tone.
+
+Unit 734 is a distinct person built around a partial derivative of Elara's neural map. The derivative supplied compatible relay architecture, not her memories, identity, soul, or destiny. Elara trained him and they formed a sibling relationship. "Backup" is a Dominion inventory label and Gh0st's fear, never the narrative truth. His override key can pause his kill suite long enough to choose; it cannot control him.
 
 ---
 

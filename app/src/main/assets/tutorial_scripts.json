@@ -143,6 +143,20 @@
         ]
     },
     {
+        "id": "link_unlock",
+        "steps": [
+            {
+                "message": "Link connects willing party members through the Bridge. A physical ground carries excess current; every thought remains its owner's.",
+                "context": "Source Art"
+            },
+            {
+                "message": "Use Link to restore the party and apply Regen. It does not merge health pools or identities.",
+                "context": "Combat",
+                "delay_ms": 1800
+            }
+        ]
+    },
+    {
         "id": "snack_slot",
         "steps": [
             {

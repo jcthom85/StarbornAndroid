@@ -99,6 +99,8 @@ class Hub2CriticalFlowTest {
         assertTrue(state.partyMembers.contains("orion"))
         assertTrue(state.completedQuests.contains("w2_mq03"))
         assertTrue(state.completedMilestones.contains("ms_w2_mq03_complete"))
+        assertTrue(state.completedMilestones.contains("ms_w2_bridge_recovered"))
+        assertTrue(state.inventory["bridge_relic"].orZero() == 1)
         assertTrue(state.activeQuests.contains("w2_mq04"))
 
         // --- MQ04: The Hunter ---
@@ -126,8 +128,18 @@ class Hub2CriticalFlowTest {
         state = harness.store.state.value
         assertTrue(state.questTasksCompleted["w2_mq04"].orEmpty().contains("defeat_the_beast"))
         assertTrue(state.partyMembers.contains("gh0st"))
+        assertFalse(state.completedQuests.contains("w2_mq04"))
+        assertFalse(state.completedMilestones.contains("ms_w2_mq04_complete"))
+        assertFalse(state.unlockedSkills.contains("nova_link"))
+        assertFalse(state.activeQuests.contains("w2_mq05"))
+
+        harness.events.handleTrigger("player_action", EventPayload.Action("w2_mq04_anchor_drill"))
+        state = harness.store.state.value
+        assertTrue(state.questTasksCompleted["w2_mq04"].orEmpty().contains("complete_anchor_drill"))
         assertTrue(state.completedQuests.contains("w2_mq04"))
         assertTrue(state.completedMilestones.contains("ms_w2_mq04_complete"))
+        assertTrue(state.completedMilestones.contains("ms_w2_link_unlocked"))
+        assertTrue(state.unlockedSkills.contains("nova_link"))
         assertTrue(state.activeQuests.contains("w2_mq05"))
 
         // --- MQ05: Liftoff ---
@@ -170,6 +182,9 @@ class Hub2CriticalFlowTest {
         // Reboot Bridge Relic
         harness.events.handleTrigger("player_action", EventPayload.Action("w2_mq05_reboot"))
         assertTrue(harness.store.state.value.questTasksCompleted["w2_mq05"].orEmpty().contains("reboot_bridge_relic"))
+        assertTrue(harness.store.state.value.completedMilestones.contains("ms_w2_bridge_installed"))
+        assertTrue(harness.store.state.value.inventory["bridge_relic"] == null)
+        assertTrue(harness.store.state.value.inventory["ghost_signal_cell"].orZero() == 1)
 
         // Launch ship (Astra) -> warps to the sky, complete quest, collisions, warps to admin lobby
         harness.events.handleTrigger("player_action", EventPayload.Action("w2_mq05_launch"))

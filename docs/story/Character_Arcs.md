@@ -2,21 +2,23 @@
 
 This document outlines the emotional journeys and structural development of the main cast. Lie/Truth labels are planning shorthand, not dialogue. Reveal them through repeated choices, avoidance, conflict, and changed behavior; characters should rarely state the lesson of their arc.
 
+**Authority:** This document governs beliefs, relationships, choices, and emotional progression. It is subordinate to the Master Story Bible and Lore Bible, and it outranks the Writer's Handbook, supporting summaries, world/hub documents, and production assets.
+
 ---
 
 ## 1. Nova — The Catalyst
 
-*   **The Lie:** "I’m just a rat in the walls. If I keep my head down and survive, that’s enough."
-*   **The Truth:** "I am part of something bigger. Power isn't about surviving; it's about choosing who you save. I reject ownership."
+*   **The Lie:** "No one is coming. If I stay useful and owe nobody, I can survive alone."
+*   **The Truth:** "Survival is shared. Needing people does not make me owned by them."
 
 | World | State of Mind | Key Beat / Action |
 | :--- | :--- | :--- |
-| **1: The Mines** | Survival. Scared, reactive. Wants to run away. | **Inciting Incident:** She grabs the Relic not to be a hero, but because she’s cornered. Loses Jed because she wasn't ready to fight. |
+| **1: The Mines** | Survival through overwork. Sharp, practical, and unwilling to admit need. | **Inciting Incident:** She removes the cutter governor to make quota, wakes the Fork, reads its feedback, and risks the counter-tune. Jed's repairs let her survive; his death is his deliberate choice under structural pressure. |
 | **2: The Wilds** | Overwhelmed. Tries to "brute force" the Source (panic-channelling). | **The Lesson:** Orion forces her to stop running. She learns to listen to the Source, not just scream at it. |
 | **3: The Spire** | Competent. Starts to enjoy the power. Feels like a "cool" rebel. | **The Test:** Leads the heist. Confidence borders on arrogance. She thinks she can outsmart the Administrator effortlessly. |
-| **4: The Foundry** | Responsibility. Realizes her power has consequences for others. | **The Pivot:** She uses her power to support Gh0st’s revenge, putting his needs above the mission. A leader’s choice. |
+| **4: The Foundry** | Responsibility. Realizes her power has consequences for others. | **The Pivot:** She creates room for Gh0st to choose what justice means instead of authoring his revenge. |
 | **5: The Void** | Failure. Tries to fix everything alone with "Stasis." Arrogant. | **Low Point:** Vale defeats her easily because she tries to control him. She realizes brute force (even Source power) can’t fix a broken soul. |
-| **6: The Source** | Acceptance. Rejects "Perfect Control." | **Climax:** She rejects Vale's claim on her soul ("You don't own me") and chooses to save her found family over becoming a god. |
+| **6: The Source** | Acceptance. Rejects perfect control. | **Climax:** She trusts the crew's circuit, relinquishes root access, and loses Source power without losing herself or her memories. |
 
 ---
 
@@ -28,11 +30,11 @@ This document outlines the emotional journeys and structural development of the 
 | World | State of Mind | Key Beat / Action |
 | :--- | :--- | :--- |
 | **1: The Mines** | Complicit. Watching Nova on screens. "Just doing my job." | **The Turn:** Deletes the footage of Nova. Physically leaves his safe booth to help her, burning his entire career/life in 5 minutes. |
-| **2: The Wilds** | Useless. Feels like dead weight in the jungle. Can’t "hack" a tree. | **The Growth:** Realizes his knowledge of history (not just code) helps them understand the ruins. He finds his new utility. |
+| **2: The Wilds** | Useless. He blames himself for the unverified navigation splice and tries to earn his place through repairs. | **The Growth:** He grounds Nova during the Anchor Drill and learns that care and belonging are not conditional on technical utility. |
 | **3: The Spire** | Haunted. Back in civilization, he’s terrified of being recognized. | **The Confrontation:** Has to bluff a Dominion guard using his old "HR voice." He realizes he can use his past as a weapon, not just a shame. |
 | **4: The Foundry** | Angry. Sees how the sausage is made (Gh0st’s creation). | **The Bond:** He connects with Gh0st—the "software guy" understanding the "hardware guy." He hacks the assembly line to save Gh0st. |
 | **5: The Void** | Regret. Sees the full scale of what he helped build. | **Low Point:** He is locked out of the system by Vale. His "Insider" status means nothing. He feels he has nothing left to offer. |
-| **6: The Source** | Resolved. He stops looking for a system to join. | **Climax:** He rejects Vale's "Harmony" as noise ("I'm not hiding anymore") and acts as the grounding wire that keeps the team connected. |
+| **6: The Source** | Resolved. He stops looking for a system to validate him. | **Climax:** When the interfaces reject him, he manually keeps the failing ground path open. |
 
 ---
 
@@ -44,11 +46,13 @@ This document outlines the emotional journeys and structural development of the 
 | World | State of Mind | Key Beat / Action |
 | :--- | :--- | :--- |
 | **1: The Mines** | Off-screen. | **Active Threat:** He is deployed by Thorne to hunt the Anomaly (Nova). |
-| **2: The Wilds** | The Haunting. Confused. Why can’t he pull the trigger? | **The Truce:** The song forces him to pause. He joins purely to observe/wait for the "kill command" to unlock. |
+| **2: The Wilds** | The interruption. An Elara-calibrated Source Lock pauses one lethal action. | **The Choice:** He verifies that no command is attached. When the Beast attacks, he freely turns his weapon and protects the crew, then volunteers for the grounded Anchor Drill. |
 | **3: The Spire** | The Watchdog. Protective of Nova, but claims it's "mission critical." | **The Crack:** He takes a hit meant for Nova without calculating it first. Logic says "dodge," body says "protect." |
 | **4: The Foundry** | The Reckoning. Confronts his production line. | **The Choice:** Meets his maker (Rylos). Rylos tries to use the command codes. Gh0st overrides them—not with code, but with will. |
-| **5: The Void** | The Brother. Desperate to find Elara. | **Low Point:** Finds Elara, but she is lost/gone. The "rescue" fails. He has to grieve the sister he never really knew. |
+| **5: The Void** | The Brother. Desperate to reach Elara. | **Recognition:** Elara calls him "brother," affirming the relationship they formed rather than a copied identity. |
 | **6: The Source** | The Shield. No more orders. | **Climax:** He calmly rejects Vale's user authority ("You are not my user") and stands as the lethal, free protector of his family. |
+
+Dominion built Gh0st around a partial derivative of Elara's neural map. He has none of her memories or identity. Their sibling bond comes from the time Elara spent training and knowing him.
 
 ---
 
@@ -61,10 +65,10 @@ This document outlines the emotional journeys and structural development of the 
 | :--- | :--- | :--- |
 | **1: The Mines** | Sleeping. | **Passive:** Stasis in the Wilds. Dreaming of the Chorus. |
 | **2: The Wilds** | Grief. Wakes up to a dead world. Wants to go back to sleep. | **The Awakening:** Sees Nova struggling with the Source. He can't let her die. He steps up as a reluctant teacher. |
-| **3: The Spire** | Judgment. Looks at the Dominion city with disgust. | **The Perspective:** He sees "Aethel tech" bastardized by humans. He has to get over his superiority complex to help them use the tech for good. |
+| **3: The Spire** | Judgment. Looks at the Dominion city with disgust. | **The Perspective:** He recognizes Architect technology built through exploitation of his people and helps human operators use it without repeating either empire's control logic. |
 | **4: The Foundry** | Connection. Bonding with the "Artificial" (Gh0st). | **The Wisdom:** He teaches Gh0st that having a "designed purpose" doesn't mean you lack a soul. |
-| **5: The Void** | Horror. Recognizes the "Great Silence" protocol. | **Low Point:** Realizes his people weren't just "quiet," they were silenced. The Chorus calls him to join them in death. |
-| **6: The Source** | Life. Rejects the Chorus. | **Climax:** He rejects the past and the Chorus. He chooses the human word for their bond, declaring "No. We are Starborn." |
+| **5: The Void** | Horror. Recognizes the Great Silence protocol. | **Low Point:** Learns the Architects exploited Aethel consciousness as living material. The Chorus offers real ancestral continuity. |
+| **6: The Source** | Life. Chooses the present. | **Climax:** He answers the Chorus "not yet," holds the crew's counter-tone, and remains embodied with the living. |
 
 ---
 
@@ -72,5 +76,5 @@ This document outlines the emotional journeys and structural development of the 
 
 To effectively establish these arcs, World 1 needs to emphasize the starting "Lies" for Nova and Zeke:
 
-1.  **Nova (The Survival Instinct):** Show her actively avoiding conflict or hiding. Establish that her primary goal is survival at all costs, setting up the contrast for her later leadership.
+1.  **Nova (The Survival Instinct):** Show her pushing tools and her body beyond safe limits because she trusts usefulness more than help. Her opening conflict with Jed is preservation and repair versus overextension.
 2.  **Zeke (The Complicit Employee):** Show him delaying, checking procedure, and protecting himself until Nova's file forces a choice. Policy language increases when he is afraid and falls away once he commits to helping.

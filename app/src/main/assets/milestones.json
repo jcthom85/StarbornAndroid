@@ -916,7 +916,7 @@
   {
     "id": "ms_w6_ancestral_grace_unlocked",
     "name": "Ancestral Grace",
-    "description": "Orion found the first Architects' resting current.",
+    "description": "Orion found an Aethel burial current held inside Architect systems.",
     "toast": "Ancestral Grace unlocked."
   },
   { "id": "ms_w6_aethel_names_traced", "name": "Names Beneath", "description": "Orion traced the Aethel names beneath the threshold.", "toast": "Aethel names traced." },
@@ -946,5 +946,14 @@
   { "id": "ms_w5_director_logs_decrypted", "name": "Unredacted Record", "description": "Thorne's private logs are ready to publish.", "toast": "Director logs decrypted." },
   { "id": "ms_w5_mirrors_realigned", "name": "Mirrors Realigned", "description": "The false sun is restored but still misdirected.", "toast": "Mirror array restored." },
   { "id": "ms_w5_backup_purge_traced", "name": "Purge Trail", "description": "Zeke traced the defensive backup into a cold rack.", "toast": "Backup purge traced." },
-  { "id": "ms_w5_backup_recovered", "name": "Guardian Recovered", "description": "Zeke recovered the defensive routine.", "toast": "Defensive backup recovered." }
+  { "id": "ms_w5_backup_recovered", "name": "Guardian Recovered", "description": "Zeke recovered the defensive routine.", "toast": "Defensive backup recovered." },
+  { "id": "ms_w1_mq01_cryo_repaired", "name": "Cold Loop Rebuilt", "description": "Nova rebuilt the Cryo-Inductor; Wake Up Call remains active until the live test.", "toast": "Cold loop holds at 68%." },
+  { "id": "ms_w1_mq01_test_briefed", "name": "Test Briefed", "description": "Jed required a grounded liner and deliberate governor confirmation before the live test.", "toast": "Test conditions recorded." },
+  { "id": "ms_w1_mq01_cutter_surge", "name": "Operator Fault Logged", "description": "Nova's ungoverned cutter woke the buried conduit and logged her operator ID.", "toast": "Fault attached to NOVA VANCE." },
+  { "id": "ms_w1_mq03_echo_marked", "name": "Protocol Mark", "description": "The damaged Fork wrote an Architect calibration signature into Nova's nervous system.", "toast": "Architect protocol signature detected." },
+  { "id": "ms_w1_mq03_liner_ground_spent", "name": "Ground Strip Spent", "description": "The Flux Liner routed the Fork discharge into the chamber floor; its armor remains intact.", "toast": "Sacrificial ground strip burned open." },
+  { "id": "ms_w2_bridge_recovered", "name": "Bridge Recovered", "description": "The crew recovered Architect Echo #2 from Sanctuary's sealed cradle.", "toast": "The Bridge recovered." },
+  { "id": "ms_w2_bridge_record_decoded", "name": "Bridge Calibration", "description": "The archive record confirms consent checks, separate carrier bands, and physical grounding.", "toast": "Bridge safety record decoded." },
+  { "id": "ms_w2_bridge_installed", "name": "Bridge Installed", "description": "The Bridge is mounted and powered by Astra systems; the Chime authenticated Orion.", "toast": "Astra Bridge online." },
+  { "id": "ms_w2_link_unlocked", "name": "Link Calibrated", "description": "The crew completed Orion's grounded, willing Anchor Drill.", "toast": "Source Art unlocked: Link." }
 ]

@@ -1219,21 +1219,24 @@ class CombatViewModelTest {
         viewModel.useSkill(shockSkill, listOf("shock_weak_drone"))
         runCurrent()
 
-        val banner = viewModel.combatBanner.value
-        assertEquals("Weakness exploited", banner?.primary)
-        assertTrue(banner?.secondary.orEmpty().contains("Shock Probe"))
-        assertTrue(banner?.secondary.orEmpty().contains("->"))
-        assertEquals(CombatBannerAccent.SHOCK, banner?.accent)
-        assertEquals(CombatBannerIcon.BURST, banner?.icon)
-        assertEquals(CombatBannerImportance.IMPORTANT, banner?.importance)
-        assertTrue(banner?.tags.orEmpty().contains("Weakness hit"))
-        assertTrue(banner?.tags.orEmpty().contains("Cooldown -1"))
-        assertTrue(
-            audioEvents.flatMap { it.commands }.any {
-                it is AudioCommand.Play && it.cueId == "battle_weakness_resolve"
-            }
-        )
-        viewModel.viewModelScope.cancel()
+        try {
+            val banner = viewModel.combatBanner.value
+            assertEquals("Weakness exploited", banner?.primary)
+            assertTrue(banner?.secondary.orEmpty().contains("Shock Probe"))
+            assertTrue(banner?.secondary.orEmpty().contains("->"))
+            assertEquals(CombatBannerAccent.SHOCK, banner?.accent)
+            assertEquals(CombatBannerIcon.BURST, banner?.icon)
+            assertEquals(CombatBannerImportance.IMPORTANT, banner?.importance)
+            assertTrue(banner?.tags.orEmpty().contains("Weakness"))
+            assertTrue(banner?.tags.orEmpty().contains("Cooldown -1"))
+            assertTrue(
+                audioEvents.flatMap { it.commands }.any {
+                    it is AudioCommand.Play && it.cueId == "battle_weakness_resolve"
+                }
+            )
+        } finally {
+            viewModel.viewModelScope.cancel()
+        }
     }
 
     @Test

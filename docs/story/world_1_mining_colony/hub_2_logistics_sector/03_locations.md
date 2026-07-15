@@ -69,7 +69,7 @@ The operational heart of the colony. Clean lines, cold lights, and the hum of ma
     2.  **Silent Walkway (echo_walkway):** Acoustically deadened corridor.
     3.  **The Harmonic Well (echo_well):** A deep pit of resonant energy.
     4.  **The Heart (echo_heart):** Relic Sync location (Tuning Fork).
-    5.  **Memory Alcove (echo_memory):** Small room where Nova loses a memory.
+    5.  **Signal Alcove (echo_memory):** Small room holding damaged machine logs; Nova retains her memories.
     6.  **Emergency Exit (echo_exit):** Leads to Maintenance Tunnels.
 *   **Purpose:** Obtain Relic (Tuning Fork).
 *   **Unlocks:** Stage 4 (Launch Bay).

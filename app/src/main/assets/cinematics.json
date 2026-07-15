@@ -266,7 +266,7 @@
     "steps": [
       {
         "type": "narration",
-        "text": "The bunk wall hums awake around you. Somewhere below, the colony drills begin their morning rhythm."
+        "text": "The shift buzzer hits after four hours of sleep. First drill cage drops in forty minutes; absence penalties begin at the bell. Nova has one ration and a cutter that cannot make quota at factory settings."
       }
     ]
   },
@@ -458,27 +458,27 @@
   },
   {
     "id": "scene_relic_sync",
-    "title": "The Tuning Fork Synchronized",
+    "title": "Calibration Handshake",
     "steps": [
       {
         "type": "narration",
-        "text": "Your hand touches the Tuning Fork. Instantly, the subsystem hum in your teeth flares into a deafening pressure. It isn't sound; it is weight, pushing down from the roof of the chamber."
+        "text": "Phase sweep: 87 kHz. Cold loop: 68%. Ground phase: 180 degrees. The three diagnostic bands lock."
       },
       {
         "type": "narration",
-        "text": "The stone under your fingers doesn't feel solid. It feels like standing waves, a vibration held in place by sheer resonance."
+        "text": "The damaged cradle closes its circuit through cutter, suit, and operator. Heat spikes past the Cryo-Inductor's limit."
       },
       {
         "type": "narration",
-        "text": "A cold current surges up your arm, rippling through your neural link. The old songs in your eyes flicker and warp, replaced by a deep, oceanic pressure."
+        "text": "The Cryo-Inductor fuses. The Flux Liner dumps the neural discharge into the chamber floor and burns its sacrificial strip open."
       },
       {
         "type": "narration",
-        "text": "You hear it. Not a protocol error. A song. The Chorus. Standing waves of a resonance older than the colony, pressing against your mind."
+        "text": "Pain crosses Nova's teeth and left hand. Her suit clock skips from 14:03:22.4 to 14:03:22.9. A new protocol carrier appears in her nerve telemetry."
       },
       {
         "type": "narration",
-        "text": "You pull your hand back as the resonance stabilizes. The hum remains, settled deep in your chest."
+        "text": "Nova releases the cutter. Her hand trembles. The Fork separates from the cradle while Harmony sensors flag a live Architect handshake."
       }
     ]
   },
@@ -488,15 +488,15 @@
     "steps": [
       {
         "type": "narration",
-        "text": "The pod clears the magnetic launch rail, shooting up into the upper atmosphere. The glowing canyons of the colony shrink into a tiny gray scar below."
+        "text": "The pod clears the launch rail on its own capacitors. The Chime opens the authorization interlock and its paired beacon takes the navigation bus."
       },
       {
         "type": "narration",
-        "text": "Suddenly, the view out the viewport fractures. A blinding web of blue resonance—the planetary shield—flashes in front of you."
+        "text": "Zeke's override fails. The forced route misses a permitted traffic corridor and drops the pod into a Sector 9 storm front."
       },
       {
         "type": "narration",
-        "text": "The pod's hull begins to shriek and buckle as it collides with the shield's standing wave frequency."
+        "text": "Crosswind rolls the pod. The upper canopy tears one stabilizer free."
       },
       {
         "type": "dialogue",
@@ -559,30 +559,67 @@
     ]
   },
   {
+    "id": "intro_prologue",
+    "title": "The Signal - Twenty Years Earlier",
+    "steps": [
+      { "type": "narration", "text": "SECTOR 9 - TWENTY YEARS EARLIER. Fresh Dominion braces are bolted across older Architect geometry." },
+      { "type": "dialogue", "speaker": "Lab PA", "text": "SOURCE BEAST CONTAINMENT BREACH. FAR DOOR PRESSURE RISING." },
+      { "type": "narration", "text": "The far doors buckle inward. Orion pulls a brass Chime from its signal cradle and locks it into the emergency tube." },
+      { "type": "dialogue", "speaker": "Orion", "text": "Broadcast my identity. Draw it away." },
+      { "type": "narration", "text": "The tube fires. The Chime's beacon moves into the dark, and the impact against the doors follows it." },
+      { "type": "dialogue", "speaker": "Orion", "text": "Mute my remaining signal. Begin stasis." },
+      { "type": "narration", "text": "The pod seals. Far outside, the Chime keeps transmitting." }
+    ]
+  },
+  {
+    "id": "scene_cutter_surge",
+    "title": "Live Cutter Test",
+    "steps": [
+      { "type": "narration", "text": "Nova clamps the Flux Liner's ground strip to the floor bus. Cold loop: 68%. Governor: bypassed." },
+      { "type": "dialogue", "speaker": "Nova", "text": "Bypass confirmed. One live sweep." },
+      { "type": "narration", "text": "The cutter fires. Its phase sweep enters the buried old conduit under Jed's bench. The sector breaker trips hard enough to shake dust from the rafters." },
+      { "type": "dialogue", "speaker": "Jed", "text": "Kill it!" },
+      { "type": "dialogue", "speaker": "Nova", "text": "It is off. That hum is not mine." },
+      { "type": "narration", "text": "A terminal prints CUTTER FAULT 4C-117 and attaches operator NOVA VANCE. Deep below the shop, a chamber seal cracks." }
+    ]
+  },
+  {
+    "id": "scene_anchor_drill",
+    "title": "Anchor Drill",
+    "steps": [
+      { "type": "narration", "text": "Nova opens the Bridge alone. Heat climbs her arm and her knees buckle." },
+      { "type": "dialogue", "speaker": "Orion", "text": "Close it. The Bridge connects; it does not make one body carry the circuit." },
+      { "type": "narration", "text": "Zeke clips a ground lead to Nova's bracer. Gh0st checks the empty command channel, then offers his armored hand." },
+      { "type": "dialogue", "speaker": "Gh0st", "text": "No command attached. Proceed." },
+      { "type": "narration", "text": "Orion holds the counter-tone. The current divides across four willing contacts, and Zeke's wound steadies." },
+      { "type": "dialogue", "speaker": "Nova", "text": "Link. Not merge. I get it." }
+    ]
+  },
+  {
     "id": "scene_w6_final_note",
     "title": "The Final Note",
     "steps": [
       {
         "type": "narration",
-        "text": "The Ascended falls, but Vale's code remains inside the collapsing Source. Six Echoes hum behind safety latches that cannot carry enough signal."
+        "text": "The Ascended falls, but Vale's forced network remains active. Five protocol signatures align through the crew's practiced circuit and complete the Key's access pattern."
       },
       {
         "type": "dialogue",
         "speaker": "Nova",
-        "text": "I am not a cup. I am a wire. Form the circuit."
+        "text": "Ground lead failed. Zeke, manual bus. Gh0st, brace left. Orion, hold the counter-tone."
       },
       {
         "type": "narration",
-        "text": "Zeke takes her right hand and grounds the current. Gh0st braces her back as his armor vents white heat. Orion grips her shoulder and tunes the chaos into one answer."
+        "text": "The interface rejects Zeke, so he holds the bare ground path by hand. Gh0st takes the force aimed at the crew. Orion keeps the counter-tone level."
       },
       {
         "type": "dialogue",
         "speaker": "Orion",
-        "text": "No. We are Starborn."
+        "text": "The Key is open. Release root access when the corridor clears."
       },
       {
         "type": "narration",
-        "text": "Nova opens the Key. The Source hits them like an ocean of white light. They hold together, fire the Tuned Note, and the Tear closes."
+        "text": "Nova opens a regional corridor, drops Vale's forced links, and releases root access. Her Source connection burns out as the network closes."
       },
       {
         "type": "narration",
@@ -596,16 +633,16 @@
     "steps": [
       {
         "type": "narration",
-        "text": "Morning in the Colony. The Shield is gone. The sky looks larger, as if someone finally removed a ceiling."
+        "text": "Morning in the Colony. One regional corridor stands open. Vale and Harmony are gone here; Dominion traffic still moves beyond the sector."
       },
       {
         "type": "narration",
-        "text": "At Zeke's diner, Nova studies a photograph of the crew at Tideglass Beach. She knows the face is hers, but the sand and salt are missing."
+        "text": "At Zeke's diner, Nova remembers Tideglass sand in her boots and Zeke complaining about salt in the filters. Her tuning hand trembles against the photograph."
       },
       {
         "type": "dialogue",
         "speaker": "Zeke",
-        "text": "Do not strain a processor. It was a Tuesday. It smelled like salt. You complained about the humidity."
+        "text": "For record accuracy: I complained about corrosion. The humidity was an associated grievance."
       },
       {
         "type": "dialogue",
@@ -615,7 +652,7 @@
       {
         "type": "dialogue",
         "speaker": "Nova",
-        "text": "I cannot hear the music anymore."
+        "text": "The Source is gone. The thin whine stayed. I remember the rest."
       },
       {
         "type": "dialogue",
