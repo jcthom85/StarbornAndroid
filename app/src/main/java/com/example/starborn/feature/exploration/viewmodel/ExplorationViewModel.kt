@@ -1129,6 +1129,10 @@ class ExplorationViewModel(
         cinematicCoordinator.advance()
     }
 
+    fun skipCinematic() {
+        cinematicCoordinator.skip()
+    }
+
     private fun CinematicPlaybackState.toUiState(): CinematicUiState =
         CinematicPlaybackManager.toUiState(
             playback = this,

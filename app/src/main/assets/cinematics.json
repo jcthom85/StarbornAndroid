@@ -263,10 +263,14 @@
   {
     "id": "new_game_fade_in",
     "title": "New Game Fade In",
+    "presentation": "illustrated",
+    "backdrop": "room",
     "steps": [
       {
         "type": "narration",
-        "text": "The shift buzzer hits after four hours of sleep. First drill cage drops in forty minutes; absence penalties begin at the bell. Nova has one ration and a cutter that cannot make quota at factory settings."
+        "text": "",
+        "caption_style": "none",
+        "duration_seconds": 0.9
       }
     ]
   },
@@ -562,14 +566,86 @@
     "id": "intro_prologue",
     "title": "The Signal - Twenty Years Earlier",
     "backdrop": "black",
+    "presentation": "illustrated",
+    "ambient_cue": "amb_intro_containment_pressure",
+    "skippable": true,
     "steps": [
-      { "type": "narration", "text": "SECTOR 9 - TWENTY YEARS EARLIER. Fresh Dominion braces are bolted across older Architect geometry." },
-      { "type": "dialogue", "speaker": "Lab PA", "text": "SOURCE BEAST CONTAINMENT BREACH. FAR DOOR PRESSURE RISING." },
-      { "type": "narration", "text": "The far doors buckle inward. Orion pulls a brass Chime from its signal cradle and locks it into the emergency tube." },
-      { "type": "dialogue", "speaker": "Orion", "text": "Broadcast my identity. Draw it away." },
-      { "type": "narration", "text": "The tube fires. The Chime's beacon moves into the dark, and the impact against the doors follows it." },
-      { "type": "dialogue", "speaker": "Orion", "text": "Mute my remaining signal. Begin stasis." },
-      { "type": "narration", "text": "The pod seals. Far outside, the Chime keeps transmitting." }
+      {
+        "type": "narration",
+        "text": "SECTOR 9 // TWENTY YEARS EARLIER",
+        "caption_style": "location",
+        "image": "images/cinematics/intro_sector9_breach_v1.png",
+        "camera_motion": "slow_push",
+        "duration_seconds": 3.0
+      },
+      {
+        "type": "message",
+        "speaker": "Lab PA",
+        "text": "CONTAINMENT FAILURE. FAR DOOR PRESSURE RISING.",
+        "caption_style": "system",
+        "image": "images/cinematics/intro_sector9_breach_v1.png",
+        "camera_motion": "slow_push",
+        "audio_cue": "sfx_intro_door_buckle",
+        "duration_seconds": 5.0
+      },
+      {
+        "type": "narration",
+        "text": "The doors bow inward. Orion tears a brass Chime from its cradle and locks it into the emergency tube.",
+        "image": "images/cinematics/intro_chime_launch_v1.png",
+        "camera_motion": "drift_right",
+        "duration_seconds": 5.5
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Orion",
+        "text": "Broadcast my identity. Draw it away.",
+        "caption_style": "dialogue",
+        "image": "images/cinematics/intro_chime_launch_v1.png",
+        "camera_motion": "slow_push",
+        "voice_cue": "voice_murmur_orion_03",
+        "duration_seconds": 4.0
+      },
+      {
+        "type": "narration",
+        "text": "The tube fires. The impacts turn and follow.",
+        "image": "images/cinematics/intro_chime_launch_v1.png",
+        "camera_motion": "drift_left",
+        "audio_cue": "sfx_intro_chime_launch",
+        "transition": "cut",
+        "duration_seconds": 4.5
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Orion",
+        "text": "Mute this room. Begin stasis.",
+        "caption_style": "dialogue",
+        "image": "images/cinematics/intro_orion_stasis_v1.png",
+        "camera_motion": "slow_push",
+        "audio_cue": "sfx_intro_stasis_seal",
+        "voice_cue": "voice_murmur_orion_02",
+        "duration_seconds": 4.0
+      },
+      {
+        "type": "narration",
+        "text": "The pod seals. The beacon keeps calling in the dark.",
+        "image": "images/cinematics/intro_orion_stasis_v1.png",
+        "camera_motion": "drift_right",
+        "duration_seconds": 4.5
+      },
+      {
+        "type": "message",
+        "speaker": "SHIFT SYSTEM",
+        "text": "FIRST DRILL CAGE: 00:40\nABSENCE PENALTIES BEGIN AT THE BELL.",
+        "caption_style": "system",
+        "transition": "cut",
+        "audio_cue": "sfx_intro_shift_buzzer",
+        "duration_seconds": 4.5
+      },
+      {
+        "type": "narration",
+        "text": "Nova got four hours of sleep. She has one ration and a cutter that cannot make quota at factory settings.",
+        "duration_seconds": 4.5
+      }
     ]
   },
   {

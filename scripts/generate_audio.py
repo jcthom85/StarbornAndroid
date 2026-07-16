@@ -98,6 +98,26 @@ MUSIC_CATALOG = {
 
 # Pre-configured SFX Prompts from Audio_Design_Guide.md
 SFX_CATALOG = {
+    "amb_intro_containment_pressure": {
+        "text": "Seamless loopable underground containment-lab ambience, deep ventilation pressure, distant stressed steel groans, low hydraulic vibration, faint electrical relay chatter, restrained and ominous, no impacts, no voices, no alarm, no music",
+        "duration": 30.0,
+    },
+    "sfx_intro_door_buckle": {
+        "text": "Massive reinforced pressure doors bow inward under one brutal impact, deep steel buckle, bolts strain and snap, dust falls, short concrete underground reverb, no creature vocalization, no music",
+        "duration": 2.0,
+    },
+    "sfx_intro_chime_launch": {
+        "text": "Heavy pneumatic emergency tube fires a compact brass device, clamp release, compressed-air blast, metal carrier accelerates down a pipe, one brief clean cyan-like resonant chime in the tail, no music",
+        "duration": 2.5,
+    },
+    "sfx_intro_stasis_seal": {
+        "text": "Industrial stasis pod closes and pressure-seals, segmented metal clamps lock in sequence, thick glass enclosure, hydraulic hiss, power relay drops to a low hum, no voice, no music",
+        "duration": 2.2,
+    },
+    "sfx_intro_shift_buzzer": {
+        "text": "Harsh old factory shift buzzer, one compact electromechanical blast through a cheap wall speaker, slight metal-room rattle, dry abrupt cutoff, no voice, no music",
+        "duration": 1.5,
+    },
     "ui_room_move": {
         "text": "Very short soft movement whoosh, quick rush of air with subtle cloth and light brushed-metal texture, grounded physical travel, restrained transient, clean short tail, no impact, no musical tone, no futuristic laser",
         "duration": 0.5,

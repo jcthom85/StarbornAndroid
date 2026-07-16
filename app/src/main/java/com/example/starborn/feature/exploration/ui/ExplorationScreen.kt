@@ -113,6 +113,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.geometry.RoundRect
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.ClipOp
@@ -129,7 +130,6 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.contentDescription
@@ -161,12 +161,19 @@ import androidx.compose.ui.zIndex
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import kotlin.math.roundToInt
 import com.example.starborn.R
 import com.example.starborn.domain.model.DialogueLine
 import com.example.starborn.domain.cinematic.CinematicBackdrop
+import com.example.starborn.domain.cinematic.CinematicCameraMotion
+import com.example.starborn.domain.cinematic.CinematicCaptionStyle
+import com.example.starborn.domain.cinematic.CinematicTransition
+import com.example.starborn.domain.cinematic.CinematicPresentation
 import com.example.starborn.domain.audio.AudioCommand
 import com.example.starborn.domain.audio.AudioCueType
 import com.example.starborn.domain.audio.AudioCuePlayer
@@ -1185,6 +1192,8 @@ fun ExplorationScreen(
             CinematicOverlay(
                 state = cinematic,
                 onAdvance = { viewModel.advanceCinematic() },
+                onSkip = { viewModel.skipCinematic() },
+                audioCuePlayer = audioCuePlayer,
                 modifier = Modifier.fillMaxSize()
             )
         }
@@ -6417,8 +6426,29 @@ fun CinematicOverlayHost(
 fun CinematicOverlay(
     state: CinematicUiState,
     onAdvance: () -> Unit,
+    onSkip: () -> Unit = {},
+    audioCuePlayer: AudioCuePlayer? = null,
     modifier: Modifier = Modifier
 ) {
+    if (state.presentation == CinematicPresentation.ILLUSTRATED) {
+        Dialog(
+            onDismissRequest = {},
+            properties = DialogProperties(
+                dismissOnBackPress = false,
+                dismissOnClickOutside = false,
+                usePlatformDefaultWidth = false
+            )
+        ) {
+            IllustratedCinematicOverlay(
+                state = state,
+                onAdvance = onAdvance,
+                onSkip = onSkip,
+                audioCuePlayer = audioCuePlayer,
+                modifier = modifier
+            )
+        }
+        return
+    }
     val speaker = state.step.speaker?.takeIf { it.isNotBlank() }
     if (speaker != null) {
         val dialogueLine = DialogueLine(
@@ -6677,6 +6707,239 @@ fun CinematicOverlay(
         }
     }
 }
+
+@Composable
+private fun IllustratedCinematicOverlay(
+    state: CinematicUiState,
+    onAdvance: () -> Unit,
+    onSkip: () -> Unit,
+    audioCuePlayer: AudioCuePlayer?,
+    modifier: Modifier = Modifier
+) {
+    val stepKey = "${state.sceneId}_${state.stepIndex}"
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    val durationMs = ((state.step.durationSeconds ?: 4.0) * 1000.0).toLong().coerceAtLeast(500L)
+
+    state.preloadImages.forEach { imagePath ->
+        rememberAssetPainter(imagePath, fallback = ColorPainter(Color.Black), async = true)
+    }
+
+    DisposableEffect(state.sceneId, state.ambientCue, audioCuePlayer) {
+        val cue = state.ambientCue
+        if (!cue.isNullOrBlank()) {
+            audioCuePlayer?.execute(
+                listOf(AudioCommand.Play(AudioCueType.AMBIENT, cue, loop = true, fadeMs = 350L))
+            )
+        }
+        onDispose {
+            if (!cue.isNullOrBlank()) {
+                audioCuePlayer?.execute(
+                    listOf(AudioCommand.Stop(AudioCueType.AMBIENT, cue, fadeMs = 450L))
+                )
+            }
+        }
+    }
+
+    LaunchedEffect(stepKey, audioCuePlayer) {
+        state.step.audioCue?.takeIf { it.isNotBlank() }?.let { cue ->
+            audioCuePlayer?.execute(
+                listOf(AudioCommand.Play(AudioCueType.UI, cue, loop = false, fadeMs = 0L))
+            )
+        }
+        state.step.voiceCue?.takeIf { it.isNotBlank() }?.let { cue ->
+            audioCuePlayer?.execute(
+                listOf(AudioCommand.Play(AudioCueType.VOICE, cue, loop = false, fadeMs = 0L))
+            )
+        }
+    }
+
+    LaunchedEffect(stepKey, durationMs, lifecycle) {
+        lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+            delay(durationMs)
+            onAdvance()
+        }
+    }
+
+    if (
+        state.step.captionStyle == CinematicCaptionStyle.NONE &&
+        state.step.imagePath.isNullOrBlank() &&
+        state.backdrop == CinematicBackdrop.ROOM
+    ) {
+        val reveal = remember(stepKey) { CoreAnimatable(1f) }
+        LaunchedEffect(stepKey) {
+            reveal.animateTo(0f, animationSpec = tween(durationMillis = durationMs.toInt(), easing = LinearEasing))
+        }
+        Box(
+            modifier = modifier
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = reveal.value))
+                .semantics { contentDescription = "Room fading in" }
+        )
+        return
+    }
+
+    val painter = rememberAssetPainter(
+        state.step.imagePath,
+        fallback = ColorPainter(Color.Black),
+        async = false
+    )
+    val motion = remember(stepKey) { CoreAnimatable(0f) }
+    LaunchedEffect(stepKey, durationMs) {
+        motion.animateTo(1f, animationSpec = tween(durationMillis = durationMs.toInt(), easing = LinearEasing))
+    }
+    val progress = motion.value
+    val scale = when (state.step.cameraMotion) {
+        CinematicCameraMotion.SLOW_PUSH -> 1.02f + progress * 0.06f
+        CinematicCameraMotion.DRIFT_LEFT,
+        CinematicCameraMotion.DRIFT_RIGHT -> 1.05f
+        CinematicCameraMotion.NONE -> 1f
+    }
+    val driftX = when (state.step.cameraMotion) {
+        CinematicCameraMotion.DRIFT_LEFT -> -32f * progress
+        CinematicCameraMotion.DRIFT_RIGHT -> 32f * progress
+        else -> 0f
+    }
+    var contentVisible by remember(stepKey) { mutableStateOf(false) }
+    LaunchedEffect(stepKey) { contentVisible = true }
+    val contentAlpha by animateFloatAsState(
+        targetValue = if (contentVisible) 1f else 0f,
+        animationSpec = tween(
+            durationMillis = if (state.step.transition == CinematicTransition.CUT) 1 else 420,
+            easing = FastOutSlowInEasing
+        ),
+        label = "illustratedCinematicFade"
+    )
+
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .background(Color.Black)
+            .semantics {
+                contentDescription = buildString {
+                    state.step.speaker?.takeIf { it.isNotBlank() }?.let { append("$it. ") }
+                    append(state.step.text)
+                }
+                onClick(label = "Advance cinematic") {
+                    onAdvance()
+                    true
+                }
+            }
+            .pointerInput(stepKey) {
+                detectTapGestures(onTap = { onAdvance() })
+            }
+    ) {
+        Image(
+            painter = painter,
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .fillMaxSize()
+                .graphicsLayer {
+                    alpha = contentAlpha
+                    scaleX = scale
+                    scaleY = scale
+                    translationX = driftX
+                }
+        )
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    Brush.verticalGradient(
+                        listOf(
+                            Color.Black.copy(alpha = 0.18f),
+                            Color.Transparent,
+                            Color.Black.copy(alpha = 0.10f),
+                            Color.Black.copy(alpha = 0.88f)
+                        )
+                    )
+                )
+        )
+
+        if (state.step.captionStyle != CinematicCaptionStyle.NONE) {
+            IllustratedCinematicCaption(
+                state = state,
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .navigationBarsPadding()
+                    .padding(start = 28.dp, end = 28.dp, bottom = 54.dp)
+            )
+        }
+
+        if (state.skippable) {
+            Surface(
+                color = Color.Black.copy(alpha = 0.52f),
+                shape = RoundedCornerShape(999.dp),
+                border = BorderStroke(1.dp, Color.White.copy(alpha = 0.24f)),
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .statusBarsPadding()
+                    .padding(18.dp)
+                    .semantics {
+                        contentDescription = "Skip intro"
+                        onClick(label = "Skip intro") {
+                            onSkip()
+                            true
+                        }
+                    }
+                    .pointerInput(state.sceneId) {
+                        detectTapGestures(onLongPress = { onSkip() })
+                    }
+            ) {
+                Text(
+                    "HOLD TO SKIP",
+                    color = Color.White.copy(alpha = 0.76f),
+                    style = MaterialTheme.typography.labelSmall.copy(letterSpacing = 1.sp),
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun IllustratedCinematicCaption(
+    state: CinematicUiState,
+    modifier: Modifier = Modifier
+) {
+    val accent = when (state.step.captionStyle) {
+        CinematicCaptionStyle.SYSTEM -> Color(0xFFFF8A65)
+        CinematicCaptionStyle.LOCATION -> Color(0xFF7BE8FF)
+        CinematicCaptionStyle.DIALOGUE -> Color(0xFF8DEBFF)
+        else -> Color.White
+    }
+    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        state.step.speaker?.takeIf { it.isNotBlank() }?.let { speaker ->
+            Text(
+                text = speaker.uppercase(),
+                color = accent,
+                style = MaterialTheme.typography.labelLarge.copy(
+                    fontWeight = FontWeight.Black,
+                    letterSpacing = 1.4.sp
+                )
+            )
+        }
+        Text(
+            text = state.step.text,
+            color = Color.White,
+            style = when (state.step.captionStyle) {
+                CinematicCaptionStyle.LOCATION -> MaterialTheme.typography.headlineSmall.copy(
+                    fontWeight = FontWeight.Black,
+                    letterSpacing = 1.2.sp
+                )
+                CinematicCaptionStyle.SYSTEM -> MaterialTheme.typography.titleLarge.copy(
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = 0.9.sp
+                )
+                else -> MaterialTheme.typography.titleLarge.copy(
+                    fontWeight = FontWeight.SemiBold,
+                    lineHeight = 31.sp
+                )
+            }
+        )
+    }
+}
+
 
 
 @Composable

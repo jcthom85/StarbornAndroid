@@ -222,6 +222,10 @@ private fun CinematicPlaybackState.toUiState(): CinematicUiState {
             sceneId = scene.id,
             title = scene.title,
             backdrop = scene.backdrop,
+            presentation = scene.presentation,
+            ambientCue = scene.ambientCue,
+            skippable = scene.skippable,
+            preloadImages = scene.steps.mapNotNull { it.imagePath }.distinct(),
             stepIndex = 0,
             stepCount = 0,
             step = CinematicStepUi(
@@ -237,13 +241,24 @@ private fun CinematicPlaybackState.toUiState(): CinematicUiState {
         sceneId = scene.id,
         title = scene.title,
         backdrop = scene.backdrop,
+        presentation = scene.presentation,
+        ambientCue = scene.ambientCue,
+        skippable = scene.skippable,
+        preloadImages = scene.steps.mapNotNull { it.imagePath }.distinct(),
         stepIndex = safeIndex,
         stepCount = steps.size,
         step = CinematicStepUi(
             type = step.type,
             speaker = step.speaker,
             text = step.text,
-            portrait = null
+            portrait = null,
+            durationSeconds = step.durationSeconds,
+            imagePath = step.imagePath,
+            cameraMotion = step.cameraMotion,
+            transition = step.transition,
+            audioCue = step.audioCue,
+            voiceCue = step.voiceCue,
+            captionStyle = step.captionStyle
         )
     )
 }

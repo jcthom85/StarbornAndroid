@@ -63,6 +63,13 @@ class CinematicCoordinator(
         }
     }
 
+    fun skip() {
+        synchronized(lock) {
+            if (activeScene == null) return
+            finishActiveScene()
+        }
+    }
+
     private fun startScene(scene: CinematicScene, completion: () -> Unit) {
         activeScene = scene
         activeCompletion = completion

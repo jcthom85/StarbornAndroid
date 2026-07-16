@@ -221,6 +221,20 @@
       ]
     },
     {
+      "id": "amb_intro_containment_pressure",
+      "type": "ambient",
+      "loop": true,
+      "fade_in_ms": 500,
+      "fade_out_ms": 700,
+      "gain": 0.72,
+      "tags": [
+        "intro",
+        "sector_9",
+        "containment",
+        "industrial"
+      ]
+    },
+    {
       "id": "amb_bunkroom_hum",
       "type": "ambient",
       "loop": true,
@@ -581,6 +595,30 @@
     }
   ],
   "cues": [
+    {
+      "id": "sfx_intro_door_buckle",
+      "category": "battle",
+      "gain": 0.88,
+      "tags": ["intro", "containment", "impact"]
+    },
+    {
+      "id": "sfx_intro_chime_launch",
+      "category": "battle",
+      "gain": 0.9,
+      "tags": ["intro", "chime", "pneumatic"]
+    },
+    {
+      "id": "sfx_intro_stasis_seal",
+      "category": "battle",
+      "gain": 0.84,
+      "tags": ["intro", "stasis", "industrial"]
+    },
+    {
+      "id": "sfx_intro_shift_buzzer",
+      "category": "ui",
+      "gain": 0.82,
+      "tags": ["intro", "quota", "industrial"]
+    },
     {
       "id": "ui_room_move",
       "category": "ui",

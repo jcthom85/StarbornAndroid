@@ -36,6 +36,10 @@ object CinematicPlaybackManager {
                 sceneId = playback.scene.id,
                 title = playback.scene.title,
                 backdrop = playback.scene.backdrop,
+                presentation = playback.scene.presentation,
+                ambientCue = playback.scene.ambientCue,
+                skippable = playback.scene.skippable,
+                preloadImages = playback.scene.steps.mapNotNull { it.imagePath }.distinct(),
                 stepIndex = 0,
                 stepCount = 0,
                 step = CinematicStepUi(
@@ -55,12 +59,23 @@ object CinematicPlaybackManager {
             type = step.type,
             speaker = step.speaker,
             text = step.text,
-            portrait = portrait
+            portrait = portrait,
+            durationSeconds = step.durationSeconds,
+            imagePath = step.imagePath,
+            cameraMotion = step.cameraMotion,
+            transition = step.transition,
+            audioCue = step.audioCue,
+            voiceCue = step.voiceCue,
+            captionStyle = step.captionStyle
         )
         return CinematicUiState(
             sceneId = playback.scene.id,
             title = playback.scene.title,
             backdrop = playback.scene.backdrop,
+            presentation = playback.scene.presentation,
+            ambientCue = playback.scene.ambientCue,
+            skippable = playback.scene.skippable,
+            preloadImages = playback.scene.steps.mapNotNull { it.imagePath }.distinct(),
             stepIndex = safeIndex,
             stepCount = steps.size,
             step = stepUi

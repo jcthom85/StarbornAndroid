@@ -222,6 +222,10 @@ data class CinematicUiState(
     val sceneId: String,
     val title: String?,
     val backdrop: com.example.starborn.domain.cinematic.CinematicBackdrop,
+    val presentation: com.example.starborn.domain.cinematic.CinematicPresentation = com.example.starborn.domain.cinematic.CinematicPresentation.CARD,
+    val ambientCue: String? = null,
+    val skippable: Boolean = false,
+    val preloadImages: List<String> = emptyList(),
     val stepIndex: Int,
     val stepCount: Int,
     val step: CinematicStepUi
@@ -231,7 +235,14 @@ data class CinematicStepUi(
     val type: com.example.starborn.domain.cinematic.CinematicStepType,
     val speaker: String?,
     val text: String,
-    val portrait: String? = null
+    val portrait: String? = null,
+    val durationSeconds: Double? = null,
+    val imagePath: String? = null,
+    val cameraMotion: com.example.starborn.domain.cinematic.CinematicCameraMotion = com.example.starborn.domain.cinematic.CinematicCameraMotion.NONE,
+    val transition: com.example.starborn.domain.cinematic.CinematicTransition = com.example.starborn.domain.cinematic.CinematicTransition.FADE,
+    val audioCue: String? = null,
+    val voiceCue: String? = null,
+    val captionStyle: com.example.starborn.domain.cinematic.CinematicCaptionStyle = com.example.starborn.domain.cinematic.CinematicCaptionStyle.NARRATION
 )
 
 data class DialogueUi(

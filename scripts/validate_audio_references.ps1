@@ -106,7 +106,7 @@ foreach ($sectionName in @("music", "ambience", "weather", "ui", "battle")) {
 }
 
 $audioKeys = New-Object System.Collections.Generic.HashSet[string]
-foreach ($key in @("voice", "vo_cue", "voice_cue", "voicecue", "audio_cue", "audiocue", "audio_cue_id", "audiocueid", "cue_id")) {
+foreach ($key in @("voice", "vo_cue", "voice_cue", "voicecue", "audio_cue", "audiocue", "audio_cue_id", "audiocueid", "ambient_cue", "ambientcue", "cue_id")) {
     [void]$audioKeys.Add($key)
 }
 
