@@ -3,9 +3,14 @@ appId: com.junewiregames.starborn.prealpha
 - launchApp:
     clearState: true
 - extendedWaitUntil:
-    visible: "Debug: Hub 1"
+    visible: "Debug Scenarios"
     timeout: 60000
-- tapOn: "Debug: Hub 1"
+- tapOn: "Debug Scenarios"
+- tapOn: "Systems"
+- extendedWaitUntil:
+    visible: "Node Progression / World 1"
+    timeout: 15000
+- tapOn: "Node Progression / World 1"
 - extendedWaitUntil:
     visible: "Homestead Quarter"
     timeout: 15000
@@ -14,4 +19,6 @@ appId: com.junewiregames.starborn.prealpha
 - assertVisible: "Med-Bay"
 - assertVisible: "Trade Row"
 - assertVisible: "Transit Checkpoint"
+- tapOn: "Trade Row"
+- assertVisible: "Hawkers, scrappers, and tired workers bargain under patched awnings while Dominion patrols pretend not to listen."
 - takeScreenshot: debug-hub1

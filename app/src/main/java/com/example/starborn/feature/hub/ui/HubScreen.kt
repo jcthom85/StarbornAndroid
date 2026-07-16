@@ -821,9 +821,14 @@ private fun HubNodeLayer(
             val markerHeightPx = with(density) { composition.height.toPx() }
             val centerX = widthPx * node.centerX
             val centerY = heightPx * node.centerY
-            val offsetX = (centerX - markerWidthPx * composition.anchorX)
-                .coerceIn(0f, (widthPx - markerWidthPx).coerceAtLeast(0f))
-                .roundToInt()
+            val rawOffsetX = centerX - markerWidthPx * composition.anchorX
+            val offsetX = if (node.id in WorldOneNodeIds) {
+                rawOffsetX.roundToInt()
+            } else {
+                rawOffsetX
+                    .coerceIn(0f, (widthPx - markerWidthPx).coerceAtLeast(0f))
+                    .roundToInt()
+            }
             val offsetY = (centerY - markerHeightPx * composition.anchorY)
                 .coerceIn(0f, (heightPx - markerHeightPx).coerceAtLeast(0f))
                 .roundToInt()
@@ -928,6 +933,9 @@ private fun HubNodeMarker(
                     modifier = Modifier
                         .fillMaxHeight()
                         .widthIn(max = composition.imageWidth)
+                        .graphicsLayer {
+                            if (node.id == "pit") scaleX = -1f
+                        }
                 )
             } else {
                 Box(
@@ -995,12 +1003,14 @@ private data class HubNodeComposition(
     val anchorY: Float = 0.5f
 )
 
+private val WorldOneNodeIds = setOf("pit", "workshop", "med_bay", "trade_row", "admin_gate")
+
 private fun hubNodeComposition(node: HubNodeUi): HubNodeComposition = when (node.id) {
-    "pit" -> HubNodeComposition(width = 132.dp, height = 132.dp, imageWidth = 116.dp, anchorX = 0.48f, anchorY = 0.68f)
-    "workshop" -> HubNodeComposition(width = 166.dp, height = 180.dp, anchorX = 0.5f, anchorY = 0.72f)
-    "med_bay" -> HubNodeComposition(width = 132.dp, height = 134.dp, imageWidth = 118.dp, anchorX = 0.5f, anchorY = 0.58f)
-    "trade_row" -> HubNodeComposition(width = 132.dp, height = 128.dp, imageWidth = 112.dp, anchorX = 0.5f, anchorY = 0.68f)
-    "admin_gate" -> HubNodeComposition(width = 150.dp, height = 126.dp, imageWidth = 110.dp, anchorX = 0.56f, anchorY = 0.62f)
+    "pit" -> HubNodeComposition(width = 120.dp, height = 120.dp, imageWidth = 96.dp, anchorX = 0.5f, anchorY = 0.72f)
+    "workshop" -> HubNodeComposition(width = 130.dp, height = 128.dp, imageWidth = 106.dp, anchorX = 0.5f, anchorY = 0.74f)
+    "med_bay" -> HubNodeComposition(width = 124.dp, height = 122.dp, imageWidth = 96.dp, anchorX = 0.5f, anchorY = 0.70f)
+    "trade_row" -> HubNodeComposition(width = 126.dp, height = 126.dp, imageWidth = 100.dp, anchorX = 0.5f, anchorY = 0.74f)
+    "admin_gate" -> HubNodeComposition(width = 126.dp, height = 118.dp, imageWidth = 92.dp, anchorX = 0.5f, anchorY = 0.69f)
     "admin_concourse" -> HubNodeComposition(width = 142.dp, height = 126.dp, imageWidth = 106.dp, anchorX = 0.5f, anchorY = 0.62f)
     "server_room" -> HubNodeComposition(width = 136.dp, height = 132.dp, imageWidth = 108.dp, anchorX = 0.5f, anchorY = 0.68f)
     "deep_mine" -> HubNodeComposition(width = 132.dp, height = 138.dp, imageWidth = 114.dp, anchorX = 0.5f, anchorY = 0.66f)

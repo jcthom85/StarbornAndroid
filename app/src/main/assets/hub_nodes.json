@@ -7,8 +7,8 @@
     "entry_room": "pit_L1_landing",
     "icon_image": "images/nodes/pit_hub1_v3.png",
     "pos_hint": {
-      "center_x": 0.14,
-      "center_y": 0.43
+      "center_x": 0.1,
+      "center_y": 0.59
     },
     "size": [
       215,
@@ -40,7 +40,7 @@
     "icon_image": "images/nodes/workshop_hub1_v3.png",
     "pos_hint": {
       "center_x": 0.5,
-      "center_y": 0.68
+      "center_y": 0.72
     },
     "size": [
       220,
@@ -69,8 +69,8 @@
     "entry_room": "medbay_hall",
     "icon_image": "images/nodes/medbay_hub1_v3.png",
     "pos_hint": {
-      "center_x": 0.48,
-      "center_y": 0.34
+      "center_x": 0.46,
+      "center_y": 0.2
     },
     "size": [
       190,
@@ -98,8 +98,8 @@
     "entry_room": "trade_entrance",
     "icon_image": "images/nodes/trade_row_hub1_v3.png",
     "pos_hint": {
-      "center_x": 0.81,
-      "center_y": 0.61
+      "center_x": 0.82,
+      "center_y": 0.54
     },
     "size": [
       230,
@@ -129,8 +129,8 @@
     "entry_room": "checkpoint_queue",
     "icon_image": "images/nodes/checkpoint_hub1_v3.png",
     "pos_hint": {
-      "center_x": 0.84,
-      "center_y": 0.25
+      "center_x": 0.88,
+      "center_y": 0.27
     },
     "size": [
       205,
