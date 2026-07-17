@@ -252,7 +252,9 @@ class ExplorationViewModel(
 ) : ViewModel() {
 
     private val eventsById: Map<String, GameEvent> = eventDefinitions.associateBy { it.id }
-    private val startWithBlackScreen: Boolean = bootstrapCinematics.isEmpty() && bootstrapActions.any {
+    // The exploration destination is composed before its queued cinematic is promoted to UI state.
+    // Keep its very first frame black so the starting room cannot flash behind the intro.
+    private val startWithBlackScreen: Boolean = bootstrapActions.any {
         it.equals("new_game_spawn_player_and_fade", ignoreCase = true)
     }
     private val _uiState = MutableStateFlow(ExplorationUiState(forceBlackScreen = startWithBlackScreen))
