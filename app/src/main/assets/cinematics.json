@@ -597,7 +597,7 @@
       },
       {
         "type": "narration",
-        "text": "The doors bow inward. The technician locks a brass Chime into the emergency tube.",
+        "text": "The doors bow inward. The operator locks a brass Chime into the emergency tube.",
         "image": "images/cinematics/intro_chime_launch_v1.png",
         "camera_start_scale": 1.0,
         "camera_end_scale": 1.06,
@@ -609,6 +609,7 @@
         "type": "dialogue",
         "speaker": "???",
         "text": "Broadcast my identity. Draw it away.",
+        "portrait": "images/characters/emotes/orion_angry.png",
         "caption_style": "dialogue",
         "image": "images/cinematics/intro_chime_launch_v1.png",
         "camera_start_scale": 1.06,
@@ -623,7 +624,7 @@
       },
       {
         "type": "narration",
-        "text": "The tube fires. The impacts follow it down the line.",
+        "text": "The tube fires. Three impacts track it through the conduit.",
         "image": "images/cinematics/intro_chime_launch_v1.png",
         "camera_start_scale": 1.13,
         "camera_end_scale": 1.18,
@@ -639,6 +640,7 @@
         "type": "dialogue",
         "speaker": "???",
         "text": "Mute this room. Begin stasis.",
+        "portrait": "images/characters/emotes/orion_worried.png",
         "caption_style": "dialogue",
         "image": "images/cinematics/intro_orion_stasis_v1.png",
         "camera_start_scale": 1.0,

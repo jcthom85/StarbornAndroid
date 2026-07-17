@@ -48,6 +48,10 @@ class IntroCinematicAssetIntegrityTest {
             "Spoken intro lines must use dialogue presentation",
             unknownDialogue.all { it.type == "dialogue" && it.captionStyle == "dialogue" }
         )
+        assertTrue(
+            "Unknown speaker lines must use contextual portraits without revealing the name",
+            unknownDialogue.all { !it.portrait.isNullOrBlank() && it.portrait!!.contains("orion_") }
+        )
         val illustratedSteps = steps.filter { it.imagePath != null }
         illustratedSteps.zipWithNext().forEach { (current, next) ->
             if (current.imagePath == next.imagePath) {
@@ -60,6 +64,10 @@ class IntroCinematicAssetIntegrityTest {
         steps.mapNotNull { it.imagePath }.distinct().forEach { imagePath ->
             val file = File("../world_assets/src/main/assets/$imagePath")
             assertTrue("Missing cinematic image: $imagePath", file.isFile && file.length() > 100_000L)
+        }
+        steps.mapNotNull { it.portrait }.distinct().forEach { portraitPath ->
+            val file = File("../world_assets/src/main/assets/$portraitPath")
+            assertTrue("Missing cinematic portrait: $portraitPath", file.isFile && file.length() > 100_000L)
         }
     }
 }

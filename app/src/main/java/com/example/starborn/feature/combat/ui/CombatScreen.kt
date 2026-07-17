@@ -251,7 +251,7 @@ private fun CinematicPlaybackState.toUiState(): CinematicUiState {
             type = step.type,
             speaker = step.speaker,
             text = step.text,
-            portrait = null,
+            portrait = step.portrait,
             durationSeconds = step.durationSeconds,
             imagePath = step.imagePath,
             cameraMotion = step.cameraMotion,

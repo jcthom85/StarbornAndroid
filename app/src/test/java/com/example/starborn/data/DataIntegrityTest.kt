@@ -775,6 +775,7 @@ class DataIntegrityTest {
             type = type,
             speaker = speaker,
             text = stepText,
+            portrait = portrait,
             durationSeconds = durationSeconds
         )
     }

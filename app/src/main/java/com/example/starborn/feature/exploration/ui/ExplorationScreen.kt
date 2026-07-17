@@ -99,6 +99,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -6719,6 +6720,10 @@ private fun IllustratedCinematicOverlay(
     val stepKey = "${state.sceneId}_${state.stepIndex}"
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     val durationMs = ((state.step.durationSeconds ?: 4.0) * 1000.0).toLong().coerceAtLeast(500L)
+    val waitsForTextReveal = state.step.captionStyle == CinematicCaptionStyle.DIALOGUE ||
+        state.step.captionStyle == CinematicCaptionStyle.NARRATION
+    var captionRevealFinished by remember(stepKey) { mutableStateOf(!waitsForTextReveal) }
+    var revealAllRequest by remember(stepKey) { mutableIntStateOf(0) }
 
     state.preloadImages.forEach { imagePath ->
         rememberAssetPainter(imagePath, fallback = ColorPainter(Color.Black), async = true)
@@ -6753,7 +6758,8 @@ private fun IllustratedCinematicOverlay(
         }
     }
 
-    LaunchedEffect(stepKey, durationMs, lifecycle) {
+    LaunchedEffect(stepKey, durationMs, lifecycle, captionRevealFinished) {
+        if (!captionRevealFinished) return@LaunchedEffect
         lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
             delay(durationMs)
             onAdvance()
@@ -6827,24 +6833,40 @@ private fun IllustratedCinematicOverlay(
         ),
         label = "illustratedCinematicFade"
     )
-
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color.Black)
+    val advanceOrReveal: () -> Unit = {
+        if (waitsForTextReveal && !captionRevealFinished) {
+            revealAllRequest += 1
+        } else {
+            onAdvance()
+        }
+    }
+    val cinematicTapInteraction = remember(stepKey) { MutableInteractionSource() }
+    val cinematicInteractionModifier = if (state.step.captionStyle == CinematicCaptionStyle.DIALOGUE) {
+        Modifier
+    } else {
+        Modifier
             .semantics {
                 contentDescription = buildString {
                     state.step.speaker?.takeIf { it.isNotBlank() }?.let { append("$it. ") }
                     append(state.step.text)
                 }
                 onClick(label = "Advance cinematic") {
-                    onAdvance()
+                    advanceOrReveal()
                     true
                 }
             }
-            .pointerInput(stepKey) {
-                detectTapGestures(onTap = { onAdvance() })
-            }
+            .clickable(
+                interactionSource = cinematicTapInteraction,
+                indication = null,
+                onClick = advanceOrReveal
+            )
+    }
+
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .background(Color.Black)
+            .then(cinematicInteractionModifier)
     ) {
         Image(
             painter = painter,
@@ -6878,6 +6900,9 @@ private fun IllustratedCinematicOverlay(
         if (state.step.captionStyle != CinematicCaptionStyle.NONE) {
             IllustratedCinematicCaption(
                 state = state,
+                revealAllRequest = revealAllRequest,
+                onRevealFinished = { captionRevealFinished = true },
+                onAdvance = onAdvance,
                 modifier = Modifier
                     .align(Alignment.BottomStart)
                     .navigationBarsPadding()
@@ -6919,50 +6944,93 @@ private fun IllustratedCinematicOverlay(
 @Composable
 private fun IllustratedCinematicCaption(
     state: CinematicUiState,
+    revealAllRequest: Int,
+    onRevealFinished: () -> Unit,
+    onAdvance: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     if (state.step.captionStyle == CinematicCaptionStyle.DIALOGUE) {
-        val dialogueAccent = Color(0xFF62D8FF)
+        val speaker = state.step.speaker.orEmpty()
+        DialogueOverlay(
+            dialogue = DialogueUi(
+                line = DialogueLine(
+                    id = "${state.sceneId}_${state.stepIndex}",
+                    speaker = speaker,
+                    text = state.step.text,
+                    portrait = state.step.portrait,
+                    voiceCue = null
+                ),
+                portrait = state.step.portrait,
+                voiceCue = null
+            ),
+            choices = emptyList(),
+            onAdvance = onAdvance,
+            onChoice = { onAdvance() },
+            onPlayVoice = {},
+            onPlayMurmur = {},
+            onRevealFinished = onRevealFinished,
+            revealAllRequest = revealAllRequest,
+            modifier = modifier
+        )
+        return
+    }
+
+    if (state.step.captionStyle == CinematicCaptionStyle.NARRATION) {
+        IllustratedNarrationCaption(
+            text = state.step.text,
+            stepKey = "${state.sceneId}_${state.stepIndex}",
+            revealAllRequest = revealAllRequest,
+            onRevealFinished = onRevealFinished,
+            modifier = modifier
+        )
+        return
+    }
+
+    if (state.step.captionStyle == CinematicCaptionStyle.SYSTEM) {
+        val alert = Color(0xFFFFA45B)
         Surface(
-            modifier = modifier.fillMaxWidth(),
-            color = Color(0xF20A1018),
+            modifier = modifier
+                .fillMaxWidth()
+                .widthIn(max = 720.dp),
+            color = Color(0xF2070B10),
             contentColor = Color.White,
-            shadowElevation = 10.dp,
-            tonalElevation = 2.dp,
-            border = BorderStroke(1.dp, dialogueAccent.copy(alpha = 0.58f)),
-            shape = RoundedCornerShape(18.dp)
+            border = BorderStroke(1.dp, alert.copy(alpha = 0.72f)),
+            shadowElevation = 12.dp,
+            shape = RoundedCornerShape(10.dp)
         ) {
-            Column(
-                modifier = Modifier.padding(horizontal = 18.dp, vertical = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(10.dp)
+            Row(
+                modifier = Modifier
+                    .padding(horizontal = 18.dp, vertical = 15.dp)
+                    .height(IntrinsicSize.Min),
+                horizontalArrangement = Arrangement.spacedBy(14.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                state.step.speaker?.takeIf { it.isNotBlank() }?.let { speaker ->
-                    Text(
-                        text = speaker,
-                        color = dialogueAccent,
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Black
-                    )
-                }
-                Row(
+                Box(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .height(IntrinsicSize.Min),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .width(3.dp)
-                            .fillMaxHeight()
-                            .clip(RoundedCornerShape(999.dp))
-                            .background(dialogueAccent.copy(alpha = 0.78f))
-                    )
+                        .width(4.dp)
+                        .fillMaxHeight()
+                        .clip(RoundedCornerShape(999.dp))
+                        .background(alert)
+                )
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    state.step.speaker?.takeIf { it.isNotBlank() }?.let { speaker ->
+                        Text(
+                            text = speaker.uppercase(Locale.getDefault()),
+                            color = alert,
+                            style = MaterialTheme.typography.titleSmall.copy(
+                                fontWeight = FontWeight.Black,
+                                letterSpacing = 1.2.sp
+                            )
+                        )
+                    }
                     Text(
                         text = state.step.text,
                         color = Color.White.copy(alpha = 0.96f),
-                        style = MaterialTheme.typography.titleLarge.copy(
+                        style = MaterialTheme.typography.bodyLarge.copy(
                             fontWeight = FontWeight.Medium,
-                            lineHeight = 31.sp
+                            fontSize = 17.sp,
+                            lineHeight = 23.sp,
+                            letterSpacing = 0.2.sp
                         )
                     )
                 }
@@ -6970,16 +7038,12 @@ private fun IllustratedCinematicCaption(
         }
         return
     }
-    val accent = when (state.step.captionStyle) {
-        CinematicCaptionStyle.SYSTEM -> Color(0xFFFF8A65)
-        CinematicCaptionStyle.LOCATION -> Color(0xFF7BE8FF)
-        else -> Color.White
-    }
+
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
         state.step.speaker?.takeIf { it.isNotBlank() }?.let { speaker ->
             Text(
                 text = speaker.uppercase(),
-                color = accent,
+                color = Color(0xFF7BE8FF),
                 style = MaterialTheme.typography.labelLarge.copy(
                     fontWeight = FontWeight.Black,
                     letterSpacing = 1.4.sp
@@ -6989,21 +7053,92 @@ private fun IllustratedCinematicCaption(
         Text(
             text = state.step.text,
             color = Color.White,
-            style = when (state.step.captionStyle) {
-                CinematicCaptionStyle.LOCATION -> MaterialTheme.typography.headlineSmall.copy(
-                    fontWeight = FontWeight.Black,
-                    letterSpacing = 1.2.sp
+            style = MaterialTheme.typography.headlineSmall.copy(
+                fontWeight = FontWeight.Black,
+                letterSpacing = 1.2.sp
+            )
+        )
+    }
+}
+
+@Composable
+private fun IllustratedNarrationCaption(
+    text: String,
+    stepKey: String,
+    revealAllRequest: Int,
+    onRevealFinished: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    var revealedCount by remember(stepKey) { mutableIntStateOf(0) }
+    val revealFinished = revealedCount >= text.length
+    val displayedText = text.take(revealedCount.coerceIn(0, text.length))
+
+    LaunchedEffect(stepKey, text) {
+        revealedCount = 0
+        if (text.isBlank()) {
+            revealedCount = text.length
+            return@LaunchedEffect
+        }
+        for (index in text.indices) {
+            if (revealedCount >= text.length) return@LaunchedEffect
+            revealedCount = index + 1
+            delay(24L)
+        }
+    }
+    LaunchedEffect(stepKey, revealAllRequest) {
+        if (revealAllRequest > 0) revealedCount = text.length
+    }
+    LaunchedEffect(stepKey, revealFinished) {
+        if (revealFinished) onRevealFinished()
+    }
+
+    val accent = Color(0xFF8DE2FF)
+    val narrationStyle = MaterialTheme.typography.bodyLarge.copy(
+        lineHeight = 28.sp,
+        letterSpacing = 0.2.sp
+    )
+    Surface(
+        modifier = modifier
+            .fillMaxWidth()
+            .widthIn(max = 680.dp),
+        color = Color(0xF2050B12),
+        contentColor = Color.White,
+        border = BorderStroke(1.dp, Color.White.copy(alpha = 0.56f)),
+        shadowElevation = 14.dp,
+        shape = RoundedCornerShape(18.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .background(
+                    Brush.horizontalGradient(
+                        listOf(accent.copy(alpha = 0.12f), Color.Transparent)
+                    )
                 )
-                CinematicCaptionStyle.SYSTEM -> MaterialTheme.typography.titleLarge.copy(
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = 0.9.sp
+                .padding(horizontal = 20.dp, vertical = 18.dp)
+                .height(IntrinsicSize.Min),
+            horizontalArrangement = Arrangement.spacedBy(14.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .width(4.dp)
+                    .fillMaxHeight()
+                    .clip(RoundedCornerShape(999.dp))
+                    .background(accent.copy(alpha = 0.85f))
+            )
+            Box(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = text,
+                    color = Color.Transparent,
+                    style = narrationStyle,
+                    modifier = Modifier.clearAndSetSemantics { }
                 )
-                else -> MaterialTheme.typography.titleLarge.copy(
-                    fontWeight = FontWeight.SemiBold,
-                    lineHeight = 31.sp
+                Text(
+                    text = displayedText,
+                    color = Color.White.copy(alpha = 0.94f),
+                    style = narrationStyle
                 )
             }
-        )
+        }
     }
 }
 

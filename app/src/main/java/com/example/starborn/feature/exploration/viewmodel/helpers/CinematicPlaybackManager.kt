@@ -52,7 +52,7 @@ object CinematicPlaybackManager {
         }
         val safeIndex = playback.stepIndex.coerceIn(0, steps.lastIndex)
         val step = steps[safeIndex]
-        val portrait = step.speaker?.let { speaker ->
+        val portrait = step.portrait ?: step.speaker?.let { speaker ->
             resolveEmotePortrait(speaker, step.emote) ?: resolvePortraitKey(speaker)
         }
         val stepUi = CinematicStepUi(

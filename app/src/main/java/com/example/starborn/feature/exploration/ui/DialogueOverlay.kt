@@ -75,6 +75,8 @@ fun DialogueOverlay(
     onChoice: (String) -> Unit,
     onPlayVoice: (String) -> Unit,
     onPlayMurmur: (String) -> Unit = {},
+    onRevealFinished: () -> Unit = {},
+    revealAllRequest: Int = 0,
     modifier: Modifier = Modifier
 ) {
     val line = dialogue.line
@@ -84,6 +86,7 @@ fun DialogueOverlay(
     val displayedText = fullText.take(revealedCount.coerceIn(0, fullText.length))
     val voiceProfile = remember(line.speaker) { DialogueVoiceProfile.forSpeaker(line.speaker) }
     val latestOnPlayMurmur by rememberUpdatedState(onPlayMurmur)
+    val latestOnRevealFinished by rememberUpdatedState(onRevealFinished)
 
     LaunchedEffect(line.id, fullText, voiceProfile) {
         revealedCount = 0
@@ -101,6 +104,14 @@ fun DialogueOverlay(
             }
             delay(revealDelayMs(char))
         }
+    }
+
+    LaunchedEffect(line.id, revealFinished) {
+        if (revealFinished) latestOnRevealFinished()
+    }
+
+    LaunchedEffect(line.id, revealAllRequest) {
+        if (revealAllRequest > 0) revealedCount = fullText.length
     }
 
     val portraitPath = remember(dialogue.portrait) {

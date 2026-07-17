@@ -13,6 +13,10 @@ appId: com.junewiregames.starborn.prealpha
     visible: ".*CONTAINMENT FAILURE.*FAR DOOR PRESSURE RISING.*"
     timeout: 12000
 - extendedWaitUntil:
+    visible: ".*doors bow inward.*operator locks a brass Chime.*"
+    timeout: 12000
+- takeScreenshot: intro-narration-caption
+- extendedWaitUntil:
     visible: ".*Broadcast my identity.*Draw it away.*"
     timeout: 20000
 - takeScreenshot: intro-unknown-dialogue
