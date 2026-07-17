@@ -15,6 +15,7 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     visible: ".*Broadcast my identity.*Draw it away.*"
     timeout: 20000
+- takeScreenshot: intro-unknown-dialogue
 - extendedWaitUntil:
     visible: "Nova's Bunk"
     timeout: 45000

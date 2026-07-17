@@ -42,6 +42,12 @@ class IntroCinematicAssetIntegrityTest {
         assertTrue("The prologue must not reveal the unknown speaker", steps.none { it.speaker == "Orion" })
         assertTrue("The prologue must not identify Orion in narration", !completeCopy.contains("Orion"))
         assertTrue("The prologue should cut directly into the bunk", !completeCopy.contains("Nova got"))
+        val unknownDialogue = steps.filter { it.speaker == "???" }
+        assertEquals(2, unknownDialogue.size)
+        assertTrue(
+            "Spoken intro lines must use dialogue presentation",
+            unknownDialogue.all { it.type == "dialogue" && it.captionStyle == "dialogue" }
+        )
         val illustratedSteps = steps.filter { it.imagePath != null }
         illustratedSteps.zipWithNext().forEach { (current, next) ->
             if (current.imagePath == next.imagePath) {

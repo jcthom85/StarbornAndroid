@@ -6921,10 +6921,58 @@ private fun IllustratedCinematicCaption(
     state: CinematicUiState,
     modifier: Modifier = Modifier
 ) {
+    if (state.step.captionStyle == CinematicCaptionStyle.DIALOGUE) {
+        val dialogueAccent = Color(0xFF62D8FF)
+        Surface(
+            modifier = modifier.fillMaxWidth(),
+            color = Color(0xF20A1018),
+            contentColor = Color.White,
+            shadowElevation = 10.dp,
+            tonalElevation = 2.dp,
+            border = BorderStroke(1.dp, dialogueAccent.copy(alpha = 0.58f)),
+            shape = RoundedCornerShape(18.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(horizontal = 18.dp, vertical = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                state.step.speaker?.takeIf { it.isNotBlank() }?.let { speaker ->
+                    Text(
+                        text = speaker,
+                        color = dialogueAccent,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Black
+                    )
+                }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(IntrinsicSize.Min),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .width(3.dp)
+                            .fillMaxHeight()
+                            .clip(RoundedCornerShape(999.dp))
+                            .background(dialogueAccent.copy(alpha = 0.78f))
+                    )
+                    Text(
+                        text = state.step.text,
+                        color = Color.White.copy(alpha = 0.96f),
+                        style = MaterialTheme.typography.titleLarge.copy(
+                            fontWeight = FontWeight.Medium,
+                            lineHeight = 31.sp
+                        )
+                    )
+                }
+            }
+        }
+        return
+    }
     val accent = when (state.step.captionStyle) {
         CinematicCaptionStyle.SYSTEM -> Color(0xFFFF8A65)
         CinematicCaptionStyle.LOCATION -> Color(0xFF7BE8FF)
-        CinematicCaptionStyle.DIALOGUE -> Color(0xFF8DEBFF)
         else -> Color.White
     }
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {

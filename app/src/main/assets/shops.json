@@ -385,7 +385,7 @@
   },
   "scrappers_contraband": {
     "name": "Scrapper's Contraband",
-    "portrait": "images/portraits/scrapper.png",
+    "portrait": "images/npcs/scrapper.png",
     "greeting": "Scrapper: Keep your voice down. Good salvage costs extra when it has a story.",
     "pricing": {
       "sell_markup": 1.25,

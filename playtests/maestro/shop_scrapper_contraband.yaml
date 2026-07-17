@@ -3,13 +3,24 @@ appId: com.junewiregames.starborn.prealpha
 - launchApp:
     clearState: true
 - extendedWaitUntil:
-    visible: "Debug: Scavenger"
+    visible: "Debug Scenarios"
     timeout: 60000
-- tapOn: "Debug: Scavenger"
+- tapOn: "Debug Scenarios"
+- extendedWaitUntil:
+    visible: "Content"
+    timeout: 10000
+- tapOn: "Content"
+- scrollUntilVisible:
+    element:
+      text: "Scavenger's Stash"
+    direction: DOWN
+    timeout: 10000
+    visibilityPercentage: 70
+- tapOn: "Scavenger's Stash"
 - extendedWaitUntil:
     visible: "Scrapper's Stall"
     timeout: 15000
-- tapOn: "Open Contraband"
+- tapOn: "Contraband action"
 - extendedWaitUntil:
     visible: "Scrapper's Contraband"
     timeout: 10000
@@ -18,11 +29,14 @@ appId: com.junewiregames.starborn.prealpha
 - assertVisible: "Scrap Metal"
 - assertVisible: "Buy"
 - assertVisible: "Sell"
+- assertVisible: "Scrapper"
+- assertVisible: "No labels, no receipts, no refunds.*"
+- takeScreenshot: scrapper-contraband-dialogue
 - tapOn: "Sell"
 - extendedWaitUntil:
     visible: "You have nothing to sell."
     timeout: 10000
-- tapOn: "Leave"
+- tapOn: "Back"
 - extendedWaitUntil:
     visible: "Scrapper's Stall"
     timeout: 10000

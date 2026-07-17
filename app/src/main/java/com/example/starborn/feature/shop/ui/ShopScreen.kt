@@ -1,6 +1,5 @@
 package com.example.starborn.feature.shop.ui
 
-import android.content.Context
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -8,8 +7,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -17,6 +18,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -51,7 +53,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -66,6 +67,7 @@ import com.example.starborn.feature.shop.ShopUiState
 import com.example.starborn.domain.audio.VoiceoverController
 import com.example.starborn.feature.shop.ShopDialogueLineUi
 import com.example.starborn.feature.shop.ShopViewModel
+import com.example.starborn.ui.background.rememberAssetPainter
 import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -96,7 +98,6 @@ fun ShopRoute(
         voiceoverController = voiceoverController
     )
 }
-
 private data class ShopColors(
     val accent: Color,
     val accentAlt: Color,
@@ -144,7 +145,6 @@ private fun ShopScreen(
     largeTouchTargets: Boolean,
     voiceoverController: VoiceoverController
 ) {
-    val context = LocalContext.current
     val colors = rememberShopColors(highContrastMode)
     var lastVoiceLineId by remember { mutableStateOf<String?>(null) }
     LaunchedEffect(state.conversationLog) {
@@ -159,9 +159,6 @@ private fun ShopScreen(
                 voiceoverController.enqueue(cue)
             }
         }
-    }
-    val portraitRes = remember(state.portraitPath) {
-        resolvePortraitResource(state.portraitPath, context)
     }
     var pendingPurchase by remember { mutableStateOf<ShopItemUi?>(null) }
     var pendingSale by remember { mutableStateOf<SellItemUi?>(null) }
@@ -256,7 +253,7 @@ private fun ShopScreen(
                 ShopDialogueBar(
                     lines = state.conversationLog,
                     shopName = state.shopName,
-                    portraitRes = portraitRes,
+                    portraitPath = state.portraitPath,
                     colors = colors,
                     largeTouchTargets = largeTouchTargets,
                     modifier = Modifier.fillMaxWidth()
@@ -766,7 +763,7 @@ private fun CreditsPill(
 private fun ShopDialogueBar(
     lines: List<ShopDialogueLineUi>,
     shopName: String,
-    portraitRes: Int?,
+    portraitPath: String?,
     colors: ShopColors,
     largeTouchTargets: Boolean,
     modifier: Modifier = Modifier
@@ -774,6 +771,10 @@ private fun ShopDialogueBar(
     val line = lines.lastOrNull() ?: return
     val speaker = line.speaker?.takeIf { it.isNotBlank() } ?: shopName.ifBlank { "Shopkeeper" }
     val portraitSize = if (largeTouchTargets) 68.dp else 60.dp
+    val portraitPainter = rememberAssetPainter(
+        portraitPath,
+        fallback = painterResource(R.drawable.main_menu_background)
+    )
     Box(modifier = modifier.padding(top = portraitSize * 0.42f)) {
         Surface(
             modifier = Modifier.fillMaxWidth(),
@@ -799,27 +800,27 @@ private fun ShopDialogueBar(
                     .padding(start = 18.dp, top = 40.dp, end = 18.dp, bottom = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                Box(
+                Row(
                     modifier = Modifier
-                        .height(2.dp)
                         .fillMaxWidth()
-                        .background(
-                            Brush.horizontalGradient(
-                                listOf(
-                                    colors.accent.copy(alpha = 0.70f),
-                                    colors.accent.copy(alpha = 0.10f),
-                                    Color.Transparent
-                                )
-                            )
-                        )
-                )
-                Text(
-                    text = line.text,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = Color.White.copy(alpha = 0.93f),
-                    maxLines = 4,
-                    overflow = TextOverflow.Ellipsis
-                )
+                        .height(IntrinsicSize.Min),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .width(3.dp)
+                            .fillMaxHeight()
+                            .clip(RoundedCornerShape(999.dp))
+                            .background(colors.accent.copy(alpha = 0.78f))
+                    )
+                    Text(
+                        text = line.text,
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = Color.White.copy(alpha = 0.96f),
+                        maxLines = 4,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
             }
         }
         Row(
@@ -830,23 +831,29 @@ private fun ShopDialogueBar(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            if (portraitRes != null) {
-                Image(
-                    painter = painterResource(id = portraitRes),
-                    contentDescription = speaker,
-                    modifier = Modifier
-                        .size(portraitSize)
-                        .clip(CircleShape)
-                        .background(Color.Black.copy(alpha = 0.34f)),
-                    contentScale = ContentScale.Crop
-                )
+            if (!portraitPath.isNullOrBlank()) {
+                Surface(
+                    modifier = Modifier.size(portraitSize),
+                    color = Color(0xFF080C11),
+                    shape = RoundedCornerShape(12.dp),
+                    tonalElevation = 1.dp,
+                    shadowElevation = 4.dp,
+                    border = BorderStroke(1.dp, colors.accent.copy(alpha = 0.55f))
+                ) {
+                    Image(
+                        painter = portraitPainter,
+                        contentDescription = speaker,
+                        contentScale = ContentScale.Crop
+                    )
+                }
             } else {
                 Surface(
-                    modifier = Modifier
-                        .size(portraitSize)
-                        .clip(CircleShape),
-                    color = colors.accent.copy(alpha = 0.14f),
-                    border = BorderStroke(1.dp, colors.accent.copy(alpha = 0.36f))
+                    modifier = Modifier.size(portraitSize),
+                    color = Color(0xFF080C11),
+                    shape = RoundedCornerShape(12.dp),
+                    tonalElevation = 1.dp,
+                    shadowElevation = 4.dp,
+                    border = BorderStroke(1.dp, colors.accent.copy(alpha = 0.55f))
                 ) {
                     Box(contentAlignment = Alignment.Center) {
                         val initial = speaker.firstOrNull()?.uppercaseChar()?.toString() ?: "?"
@@ -971,27 +978,4 @@ private fun QuantityPickerDialog(
             }
         }
     )
-}
-
-private fun resolvePortraitResource(path: String?, context: Context): Int? {
-    if (path.isNullOrBlank()) return null
-    val base = path.substringBeforeLast('.', missingDelimiterValue = path)
-    val afterImages = base.substringAfter("images/", base)
-    val candidates = buildList {
-        add(afterImages.substringAfterLast('/'))
-        add(afterImages.replace('/', '_'))
-        add(base.substringAfterLast('/'))
-        add(afterImages.replace('-', '_').replace('/', '_'))
-    }.map { candidate ->
-        candidate
-            .replace('-', '_')
-            .filter { it.isLowerCase() || it.isDigit() || it == '_' }
-    }.filter { it.isNotBlank() }
-
-    for (name in candidates.distinct()) {
-        val normalized = if (name.first().isDigit()) "portrait_$name" else name
-        val id = context.resources.getIdentifier(normalized, "drawable", context.packageName)
-        if (id != 0) return id
-    }
-    return null
 }
