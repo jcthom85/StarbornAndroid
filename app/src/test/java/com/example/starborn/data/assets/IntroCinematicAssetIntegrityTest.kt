@@ -33,10 +33,22 @@ class IntroCinematicAssetIntegrityTest {
             "CONTAINMENT FAILURE",
             "Broadcast my identity. Draw it away.",
             "Mute this room. Begin stasis.",
-            "FIRST DRILL CAGE: 00:40",
-            "cannot make quota at factory settings"
+            "CAGE ONE DESCENT: 00:40",
+            "QUOTA STATUS: SHORT"
         ).forEach { required ->
             assertTrue("Intro is missing required beat: $required", completeCopy.contains(required))
+        }
+
+        assertTrue("The prologue must not reveal the unknown speaker", steps.none { it.speaker == "Orion" })
+        assertTrue("The prologue must not identify Orion in narration", !completeCopy.contains("Orion"))
+        assertTrue("The prologue should cut directly into the bunk", !completeCopy.contains("Nova got"))
+        val illustratedSteps = steps.filter { it.imagePath != null }
+        illustratedSteps.zipWithNext().forEach { (current, next) ->
+            if (current.imagePath == next.imagePath) {
+                assertEquals(current.cameraEndScale, next.cameraStartScale)
+                assertEquals(current.cameraEndX ?: 0.0, next.cameraStartX ?: 0.0, 0.001)
+                assertEquals(current.cameraEndY ?: 0.0, next.cameraStartY ?: 0.0, 0.001)
+            }
         }
 
         steps.mapNotNull { it.imagePath }.distinct().forEach { imagePath ->

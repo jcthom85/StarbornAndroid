@@ -6788,17 +6788,35 @@ private fun IllustratedCinematicOverlay(
         motion.animateTo(1f, animationSpec = tween(durationMillis = durationMs.toInt(), easing = LinearEasing))
     }
     val progress = motion.value
-    val scale = when (state.step.cameraMotion) {
-        CinematicCameraMotion.SLOW_PUSH -> 1.02f + progress * 0.06f
+    val legacyStartScale = when (state.step.cameraMotion) {
+        CinematicCameraMotion.SLOW_PUSH -> 1.02f
         CinematicCameraMotion.DRIFT_LEFT,
         CinematicCameraMotion.DRIFT_RIGHT -> 1.05f
         CinematicCameraMotion.NONE -> 1f
     }
-    val driftX = when (state.step.cameraMotion) {
-        CinematicCameraMotion.DRIFT_LEFT -> -32f * progress
-        CinematicCameraMotion.DRIFT_RIGHT -> 32f * progress
+    val legacyEndScale = when (state.step.cameraMotion) {
+        CinematicCameraMotion.SLOW_PUSH -> 1.08f
+        CinematicCameraMotion.DRIFT_LEFT,
+        CinematicCameraMotion.DRIFT_RIGHT -> 1.05f
+        CinematicCameraMotion.NONE -> 1f
+    }
+    val legacyEndX = when (state.step.cameraMotion) {
+        CinematicCameraMotion.DRIFT_LEFT -> -32f
+        CinematicCameraMotion.DRIFT_RIGHT -> 32f
         else -> 0f
     }
+    val scale = lerp(
+        state.step.cameraStartScale?.toFloat() ?: legacyStartScale,
+        state.step.cameraEndScale?.toFloat() ?: legacyEndScale,
+        progress
+    )
+    val density = LocalDensity.current
+    val startX = with(density) { (state.step.cameraStartX ?: 0.0).toFloat().dp.toPx() }
+    val endX = with(density) { (state.step.cameraEndX?.toFloat() ?: legacyEndX).dp.toPx() }
+    val startY = with(density) { (state.step.cameraStartY ?: 0.0).toFloat().dp.toPx() }
+    val endY = with(density) { (state.step.cameraEndY ?: 0.0).toFloat().dp.toPx() }
+    val driftX = lerp(startX, endX, progress)
+    val driftY = lerp(startY, endY, progress)
     var contentVisible by remember(stepKey) { mutableStateOf(false) }
     LaunchedEffect(stepKey) { contentVisible = true }
     val contentAlpha by animateFloatAsState(
@@ -6839,6 +6857,7 @@ private fun IllustratedCinematicOverlay(
                     scaleX = scale
                     scaleY = scale
                     translationX = driftX
+                    translationY = driftY
                 }
         )
         Box(

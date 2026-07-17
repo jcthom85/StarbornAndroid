@@ -1962,6 +1962,7 @@ class ExplorationViewModel(
             sessionStore.setWorld(initialWorld?.id)
             sessionStore.setHub(initialHub?.id)
             sessionStore.setRoom(initialRoom?.id)
+            markContainingNodeVisited(initialRoom?.id, nodeIdByRoomId, sessionStore)
             sessionStore.setPlayer(player?.id)
             val resolvedPlayerLevel = sessionSnapshot.partyMemberLevels[player?.id] ?: player?.level ?: 1
             val resolvedPlayerXp = sessionSnapshot.partyMemberXp[player?.id] ?: player?.xp ?: 0
@@ -2108,6 +2109,7 @@ class ExplorationViewModel(
         }
 
         sessionStore.setRoom(nextRoom.id)
+        markContainingNodeVisited(nextRoom.id, nodeIdByRoomId, sessionStore)
         if (!nextRoomIsDark) {
             markVisited(nextRoom.id)
             markDiscovered(nextRoom)
@@ -2211,6 +2213,7 @@ class ExplorationViewModel(
         if (nextWorld != null && nextWorld.id != sessionStore.state.value.worldId) {
             sessionStore.setWorld(nextWorld.id)
         }
+        markContainingNodeVisited(nextRoom.id, nodeIdByRoomId, sessionStore)
 
         if (!nextRoomIsDark) {
             markVisited(nextRoom.id)
@@ -5382,6 +5385,17 @@ private fun Any?.asStringOrNull(): String? = when (this) {
     is String -> this
     is Number -> toString()
     else -> this.toString()
+}
+
+internal fun markContainingNodeVisited(
+    roomId: String?,
+    nodeIdByRoomId: Map<String, String>,
+    sessionStore: GameSessionStore
+) {
+    val nodeId = roomId?.let(nodeIdByRoomId::get) ?: return
+    if (nodeId !in sessionStore.state.value.visitedNodes) {
+        sessionStore.visitNode(nodeId)
+    }
 }
 
 private fun Any?.asListOrNull(): List<String>? = when (this) {

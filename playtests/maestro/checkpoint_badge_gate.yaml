@@ -1,27 +1,35 @@
 appId: com.junewiregames.starborn.prealpha
 ---
 - launchApp:
-    clearState: false
+    clearState: true
 - extendedWaitUntil:
-    visible: "New Game"
+    visible: "Debug Scenarios"
     timeout: 60000
-- swipe:
-    direction: UP
+- tapOn: "Debug Scenarios"
 - extendedWaitUntil:
-    visible: "Debug: Checkpoint"
+    visible: "Content"
     timeout: 10000
-- tapOn: "Debug: Checkpoint"
+- tapOn: "Content"
+- scrollUntilVisible:
+    element:
+      text: "Transit Checkpoint"
+    direction: DOWN
+    timeout: 10000
+    visibilityPercentage: 70
+- tapOn: "Transit Checkpoint"
 - extendedWaitUntil:
     visible: "Shift Queue"
     timeout: 15000
 - extendedWaitUntil:
     visible: "New Quest"
     timeout: 10000
-- assertVisible: "Paperwork"
-- tapOn: "Dismiss"
+- assertVisible: "Shift Clearance"
+- tapOn: "Continue"
 - extendedWaitUntil:
     notVisible: "New Quest"
     timeout: 10000
+- waitForAnimationToEnd:
+    timeout: 2000
 - tapOn: "Travel north"
 - extendedWaitUntil:
     visible: "Search Bay"
@@ -36,7 +44,7 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: ".*Booth window.*"
+    visible: "No badge, no entry. Try the booth."
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
@@ -50,47 +58,53 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 15000
 - tapOn: "Zeke"
 - extendedWaitUntil:
-    visible: ".*It's you. The volunteer.*"
+    visible: "Name, ID, clearance... Oh. You."
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: ".*mining pass.*"
+    visible: "I need the pass. Shift starts in ten."
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: ".*Completely routine.*"
+    visible: "Right. One moment."
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: ".*Mandatory Retirement.*"
+    visible: ".*mandatory retirement.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: "Recycle means fired, right?"
+    visible: "What does that mean?"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: ".*bio-reclamation.*"
+    visible: "They kill you and reclaim the cost."
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: "Grid Instability"
+    visible: "I can change the cause. It has to blame the grid, not you."
     timeout: 10000
-- tapOn: "Grid Instability"
+- extendedWaitUntil:
+    visible: ".*Grid Instability.*"
+    timeout: 10000
+- tapOn: ".*Grid Instability.*"
 - extendedWaitUntil:
     visible: ".*Take the badge.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: "ITEM OBTAINED"
+    visible: "ITEM ACQUIRED"
     timeout: 15000
-- assertVisible: "Acquired Mine Access Badge"
-- tapOn: "GOT IT"
+- assertVisible: "Mine Access Badge"
+- tapOn: "Tap to continue"
+- extendedWaitUntil:
+    visible: "QUEST COMPLETED"
+    timeout: 15000
+- tapOn: "Continue"
 - extendedWaitUntil:
     visible: "New Quest"
     timeout: 15000
 - assertVisible: "The Echo"
-- assertVisible: ".*Enter the Logistics Sector.*"
 - tapOn: "Continue"
 - extendedWaitUntil:
     notVisible: "New Quest"
@@ -109,29 +123,47 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 15000
 - tapOn: "Travel north"
 - extendedWaitUntil:
+    visible: ".*FOREMAN REVIEW REQUIRED.*"
+    timeout: 15000
+- tapOn: "Continue"
+- extendedWaitUntil:
     visible: "Concourse Lobby"
     timeout: 15000
 - waitForAnimationToEnd:
     timeout: 2000
-- tapOn: "Foreman Boggs"
+- tapOn: "Boggs"
 - extendedWaitUntil:
-    visible: ".*without shield training.*"
+    visible: ".*temporary badge landed on my review queue.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: "Shield training?"
+    visible: ".*routed to Logistics review.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: ".*learn Hydraulic Kick.*"
+    visible: ".*Pass shield training and I'll clear the lift.*"
+    timeout: 10000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: ".*Clear the cargo and finish the shield drill.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
     visible: "New Quest"
     timeout: 10000
-- assertVisible: "Heavy Lifting"
-- tapOn: "Dismiss"
+- assertVisible: ".*Heavy Lifting.*"
+- tapOn: "Continue"
 - extendedWaitUntil:
     notVisible: "New Quest"
     timeout: 10000
+- tapOn: "LEAVE"
+- extendedWaitUntil:
+    visible: "Logistics Sector"
+    timeout: 15000
+- assertVisible: "Enter Admin Concourse"
+- tapOn: "Enter Admin Concourse"
+- tapOn: "Enter"
+- extendedWaitUntil:
+    visible: "Concourse Lobby"
+    timeout: 15000
 - takeScreenshot: checkpoint-badge-gate

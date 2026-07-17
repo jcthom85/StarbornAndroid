@@ -575,8 +575,11 @@
         "text": "SECTOR 9 // TWENTY YEARS EARLIER",
         "caption_style": "location",
         "image": "images/cinematics/intro_sector9_breach_v1.png",
-        "camera_motion": "slow_push",
-        "duration_seconds": 3.0
+        "camera_start_scale": 1.0,
+        "camera_end_scale": 1.035,
+        "camera_start_y": 6.0,
+        "camera_end_y": 0.0,
+        "duration_seconds": 2.5
       },
       {
         "type": "message",
@@ -584,66 +587,90 @@
         "text": "CONTAINMENT FAILURE. FAR DOOR PRESSURE RISING.",
         "caption_style": "system",
         "image": "images/cinematics/intro_sector9_breach_v1.png",
-        "camera_motion": "slow_push",
+        "camera_start_scale": 1.035,
+        "camera_end_scale": 1.10,
+        "camera_start_y": 0.0,
+        "camera_end_y": 12.0,
+        "transition": "cut",
         "audio_cue": "sfx_intro_door_buckle",
-        "duration_seconds": 5.0
+        "duration_seconds": 4.0
       },
       {
         "type": "narration",
-        "text": "The doors bow inward. Orion tears a brass Chime from its cradle and locks it into the emergency tube.",
+        "text": "The doors bow inward. The technician locks a brass Chime into the emergency tube.",
         "image": "images/cinematics/intro_chime_launch_v1.png",
-        "camera_motion": "drift_right",
-        "duration_seconds": 5.5
+        "camera_start_scale": 1.0,
+        "camera_end_scale": 1.06,
+        "camera_start_x": -18.0,
+        "camera_end_x": 0.0,
+        "duration_seconds": 4.5
       },
       {
         "type": "dialogue",
-        "speaker": "Orion",
+        "speaker": "???",
         "text": "Broadcast my identity. Draw it away.",
         "caption_style": "dialogue",
         "image": "images/cinematics/intro_chime_launch_v1.png",
-        "camera_motion": "slow_push",
+        "camera_start_scale": 1.06,
+        "camera_end_scale": 1.13,
+        "camera_start_x": 0.0,
+        "camera_end_x": 18.0,
+        "camera_start_y": 0.0,
+        "camera_end_y": -10.0,
+        "transition": "cut",
         "voice_cue": "voice_murmur_orion_03",
-        "duration_seconds": 4.0
+        "duration_seconds": 3.5
       },
       {
         "type": "narration",
-        "text": "The tube fires. The impacts turn and follow.",
+        "text": "The tube fires. The impacts follow it down the line.",
         "image": "images/cinematics/intro_chime_launch_v1.png",
-        "camera_motion": "drift_left",
+        "camera_start_scale": 1.13,
+        "camera_end_scale": 1.18,
+        "camera_start_x": 18.0,
+        "camera_end_x": 30.0,
+        "camera_start_y": -10.0,
+        "camera_end_y": -18.0,
         "audio_cue": "sfx_intro_chime_launch",
         "transition": "cut",
-        "duration_seconds": 4.5
+        "duration_seconds": 3.5
       },
       {
         "type": "dialogue",
-        "speaker": "Orion",
+        "speaker": "???",
         "text": "Mute this room. Begin stasis.",
         "caption_style": "dialogue",
         "image": "images/cinematics/intro_orion_stasis_v1.png",
-        "camera_motion": "slow_push",
+        "camera_start_scale": 1.0,
+        "camera_end_scale": 1.07,
+        "camera_start_x": 0.0,
+        "camera_end_x": 8.0,
+        "camera_start_y": 0.0,
+        "camera_end_y": -8.0,
         "audio_cue": "sfx_intro_stasis_seal",
         "voice_cue": "voice_murmur_orion_02",
-        "duration_seconds": 4.0
+        "duration_seconds": 3.5
       },
       {
         "type": "narration",
-        "text": "The pod seals. The beacon keeps calling in the dark.",
+        "text": "The pod seals. The beacon continues in the dark.",
         "image": "images/cinematics/intro_orion_stasis_v1.png",
-        "camera_motion": "drift_right",
-        "duration_seconds": 4.5
+        "camera_start_scale": 1.07,
+        "camera_end_scale": 1.14,
+        "camera_start_x": 8.0,
+        "camera_end_x": 22.0,
+        "camera_start_y": -8.0,
+        "camera_end_y": -18.0,
+        "transition": "cut",
+        "duration_seconds": 4.0
       },
       {
         "type": "message",
         "speaker": "SHIFT SYSTEM",
-        "text": "FIRST DRILL CAGE: 00:40\nABSENCE PENALTIES BEGIN AT THE BELL.",
+        "text": "CAGE ONE DESCENT: 00:40\nQUOTA STATUS: SHORT\nABSENCE PENALTIES AT THE BELL.",
         "caption_style": "system",
         "transition": "cut",
         "audio_cue": "sfx_intro_shift_buzzer",
-        "duration_seconds": 4.5
-      },
-      {
-        "type": "narration",
-        "text": "Nova got four hours of sleep. She has one ration and a cutter that cannot make quota at factory settings.",
         "duration_seconds": 4.5
       }
     ]
