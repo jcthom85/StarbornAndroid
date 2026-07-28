@@ -26,22 +26,29 @@ class IntroCinematicAssetIntegrityTest {
         assertEquals("illustrated", intro.presentation)
         assertEquals(true, intro.skippable)
         assertEquals("amb_intro_containment_pressure", intro.ambientCue)
-        assertTrue(steps.sumOf { it.durationSeconds ?: 0.0 } in 30.0..40.0)
+        assertTrue(steps.sumOf { it.durationSeconds ?: 0.0 } in 25.0..35.0)
 
         val completeCopy = steps.joinToString("\n") { it.text.orEmpty() }
         listOf(
             "CONTAINMENT FAILURE",
             "Broadcast my identity. Draw it away.",
-            "Mute this room. Begin stasis.",
-            "CAGE ONE DESCENT: 00:40",
-            "QUOTA STATUS: SHORT"
+            "Mute this room. Begin stasis."
         ).forEach { required ->
             assertTrue("Intro is missing required beat: $required", completeCopy.contains(required))
         }
 
         assertTrue("The prologue must not reveal the unknown speaker", steps.none { it.speaker == "Orion" })
         assertTrue("The prologue must not identify Orion in narration", !completeCopy.contains("Orion"))
+        assertTrue("The prologue should end on the beacon image", steps.last().text == "The pod seals. The beacon continues in the dark.")
+        assertTrue("The redundant Shift System card should remain removed", steps.none { it.speaker == "SHIFT SYSTEM" })
         assertTrue("The prologue should cut directly into the bunk", !completeCopy.contains("Nova got"))
+        val fadeIn = scenes.single { it.id == "new_game_fade_in" }.steps.orEmpty().filterNotNull().single()
+        assertEquals("sfx_intro_shift_buzzer", fadeIn.audioCue)
+
+        val questCopy = File("src/main/assets/quests.json").readText()
+        val roomCopy = File("src/main/assets/rooms.json").readText()
+        assertTrue("Opening quest must retain immediate quota pressure", questCopy.contains("Quota is due at first cage"))
+        assertTrue("Bunk reveal must retain the suppressed quota ticket", roomCopy.contains("CLOSED: WITHIN QUOTA"))
         val unknownDialogue = steps.filter { it.speaker == "???" }
         assertEquals(2, unknownDialogue.size)
         assertTrue(

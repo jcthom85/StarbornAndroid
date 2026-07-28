@@ -9,6 +9,7 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     visible: ".*SECTOR 9.*TWENTY YEARS EARLIER.*"
     timeout: 20000
+- takeScreenshot: intro-location-plate
 - extendedWaitUntil:
     visible: ".*CONTAINMENT FAILURE.*FAR DOOR PRESSURE RISING.*"
     timeout: 12000

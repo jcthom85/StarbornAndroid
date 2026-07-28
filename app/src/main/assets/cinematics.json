@@ -270,6 +270,7 @@
         "type": "narration",
         "text": "",
         "caption_style": "none",
+        "audio_cue": "sfx_intro_shift_buzzer",
         "duration_seconds": 0.9
       }
     ]
@@ -665,15 +666,6 @@
         "camera_end_y": -18.0,
         "transition": "cut",
         "duration_seconds": 4.0
-      },
-      {
-        "type": "message",
-        "speaker": "SHIFT SYSTEM",
-        "text": "CAGE ONE DESCENT: 00:40\nQUOTA STATUS: SHORT\nABSENCE PENALTIES AT THE BELL.",
-        "caption_style": "system",
-        "transition": "cut",
-        "audio_cue": "sfx_intro_shift_buzzer",
-        "duration_seconds": 4.5
       }
     ]
   },

@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.NavHostController
@@ -38,6 +39,7 @@ import com.example.starborn.navigation.NavigationDestination.Shop
 import com.example.starborn.navigation.NavigationDestination.Fishing
 import com.example.starborn.di.AppServices
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.starborn.feature.exploration.viewmodel.ExplorationViewModel
 import com.example.starborn.feature.exploration.viewmodel.ExplorationViewModelFactory
@@ -74,12 +76,22 @@ fun NavigationHost(
     showCombatActionText: Boolean = true
 ) {
     val context = LocalContext.current
+    val hostView = LocalView.current
     val lifecycleOwner = LocalLifecycleOwner.current
+    val currentBackStackEntry by navController.currentBackStackEntryAsState()
+    val keepScreenAwake = shouldKeepScreenAwake(currentBackStackEntry?.destination?.route)
     val services = remember { AppServices(context) }
     val userSettings by services.userSettingsStore.settings.collectAsState(initial = UserSettings())
     val sessionState by services.sessionStore.state.collectAsState()
     val environmentThemeState by services.environmentThemeManager.state.collectAsState()
     val settingsScope = rememberCoroutineScope()
+
+    DisposableEffect(hostView, keepScreenAwake) {
+        hostView.keepScreenOn = keepScreenAwake
+        onDispose {
+            hostView.keepScreenOn = false
+        }
+    }
 
     LaunchedEffect(
         services.audioCuePlayer,
@@ -493,3 +505,6 @@ fun NavigationHost(
         }
     }
 }
+
+internal fun shouldKeepScreenAwake(route: String?): Boolean =
+    !route.isNullOrBlank() && route != MainMenu.route

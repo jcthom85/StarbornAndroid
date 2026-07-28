@@ -6514,32 +6514,6 @@ fun CinematicOverlay(
         label = "cinematicScrimAlpha"
     )
 
-    // Card slide-up + fade-in
-    val cardAlpha by animateFloatAsState(
-        targetValue = 1f,
-        animationSpec = tween(durationMillis = 500, delayMillis = 100, easing = FastOutSlowInEasing),
-        label = "cinematicCardAlpha"
-    )
-    val cardOffsetY by animateFloatAsState(
-        targetValue = 0f,
-        animationSpec = tween(durationMillis = 500, delayMillis = 100, easing = FastOutSlowInEasing),
-        label = "cinematicCardOffsetY"
-    )
-
-    // Accent glow pulse
-    val infiniteTransition = rememberInfiniteTransition(label = "cinematicGlow")
-    val glowAlpha by infiniteTransition.animateFloat(
-        initialValue = 0.25f,
-        targetValue = 0.55f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 2200, easing = FastOutSlowInEasing),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "cinematicGlowPulse"
-    )
-
-    val accentColor = Color(0xFF7BE8FF)
-    val cardShape = RoundedCornerShape(28.dp)
     val tapInteraction = remember { MutableInteractionSource() }
 
     Box(
@@ -6559,154 +6533,156 @@ fun CinematicOverlay(
             },
         contentAlignment = Alignment.Center
     ) {
+        CinematicNarrationCard(
+            fullText = fullText,
+            displayedText = displayedText,
+            revealFinished = revealFinished,
+            isLastStep = state.stepIndex + 1 >= state.stepCount
+        )
+    }
+}
+
+@Composable
+private fun CinematicNarrationCard(
+    fullText: String,
+    displayedText: String,
+    revealFinished: Boolean,
+    isLastStep: Boolean,
+    modifier: Modifier = Modifier
+) {
+    val cardAlpha by animateFloatAsState(
+        targetValue = 1f,
+        animationSpec = tween(durationMillis = 500, delayMillis = 100, easing = FastOutSlowInEasing),
+        label = "cinematicCardAlpha"
+    )
+    val glowAlpha by rememberInfiniteTransition(label = "cinematicGlow").animateFloat(
+        initialValue = 0.25f,
+        targetValue = 0.55f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 2200, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "cinematicGlowPulse"
+    )
+    val hintAlpha by animateFloatAsState(
+        targetValue = if (revealFinished) 1f else 0f,
+        animationSpec = tween(durationMillis = 500),
+        label = "cinematicHintAlpha"
+    )
+    val accentColor = Color(0xFF7BE8FF)
+    val cardShape = RoundedCornerShape(28.dp)
+    val narrationStyle = MaterialTheme.typography.bodyLarge.copy(
+        fontStyle = FontStyle.Italic,
+        lineHeight = 28.sp,
+        letterSpacing = 0.3.sp
+    )
+
+    Box(
+        modifier = modifier
+            .fillMaxWidth(0.88f)
+            .graphicsLayer {
+                alpha = cardAlpha
+                translationY = (1f - cardAlpha) * 48f
+            }
+    ) {
         Box(
             modifier = Modifier
-                .fillMaxWidth(0.88f)
-                .graphicsLayer {
-                    alpha = cardAlpha
-                    translationY = (1f - cardAlpha) * 48f + cardOffsetY
-                }
+                .matchParentSize()
+                .graphicsLayer { alpha = glowAlpha }
+                .background(
+                    brush = Brush.radialGradient(
+                        colors = listOf(accentColor.copy(alpha = 0.12f), Color.Transparent),
+                        radius = 400f
+                    ),
+                    shape = cardShape
+                )
+        )
+        Surface(
+            color = Color(0xFF060B14).copy(alpha = 0.96f),
+            shape = cardShape,
+            border = BorderStroke(
+                1.2.dp,
+                Brush.linearGradient(
+                    listOf(
+                        accentColor.copy(alpha = 0.45f),
+                        accentColor.copy(alpha = 0.12f),
+                        accentColor.copy(alpha = 0.30f)
+                    )
+                )
+            ),
+            shadowElevation = 16.dp
         ) {
-            // Outer glow
-            Box(
+            Column(
                 modifier = Modifier
-                    .matchParentSize()
-                    .graphicsLayer { alpha = glowAlpha }
-                    .background(
-                        brush = Brush.radialGradient(
-                            colors = listOf(
-                                accentColor.copy(alpha = 0.12f),
-                                Color.Transparent
-                            ),
-                            radius = 400f
-                        ),
-                        shape = cardShape
-                    )
-            )
-
-            Surface(
-                color = Color(0xFF060B14).copy(alpha = 0.96f),
-                shape = cardShape,
-                border = BorderStroke(
-                    1.2.dp,
-                    Brush.linearGradient(
-                        listOf(
-                            accentColor.copy(alpha = 0.45f),
-                            accentColor.copy(alpha = 0.12f),
-                            accentColor.copy(alpha = 0.30f)
-                        )
-                    )
-                ),
-                shadowElevation = 16.dp
+                    .fillMaxWidth()
+                    .padding(horizontal = 28.dp, vertical = 26.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                Column(
+                CinematicAccentBar(accentColor)
+                Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 28.dp, vertical = 26.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                        .heightIn(max = 360.dp)
+                        .verticalScroll(rememberScrollState())
                 ) {
-                    // Decorative top accent bar
-                    Box(
-                        modifier = Modifier
-                            .width(40.dp)
-                            .height(3.dp)
-                            .clip(RoundedCornerShape(999.dp))
-                            .background(
-                                Brush.horizontalGradient(
-                                    listOf(
-                                        accentColor.copy(alpha = 0.0f),
-                                        accentColor.copy(alpha = 0.7f),
-                                        accentColor.copy(alpha = 0.0f)
-                                    )
-                                )
-                            )
-                    )
-
-                    // Measure the final wrapped copy from the first frame so the
-                    // card does not stretch as the typewriter reveal adds lines.
-                    val narrationStyle = MaterialTheme.typography.bodyLarge.copy(
-                        fontStyle = FontStyle.Italic,
-                        lineHeight = 28.sp,
-                        letterSpacing = 0.3.sp
-                    )
-                    Box(
+                    Text(
+                        text = fullText,
+                        color = Color.Transparent,
+                        style = narrationStyle,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .heightIn(max = 360.dp)
-                            .verticalScroll(rememberScrollState())
-                    ) {
-                        Text(
-                            text = fullText,
-                            color = Color.Transparent,
-                            style = narrationStyle,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clearAndSetSemantics { }
-                        )
-                        Text(
-                            text = displayedText,
-                            color = Color.White.copy(alpha = 0.92f),
-                            style = narrationStyle,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                    }
-
-                    // Tap hint with ornament
-                    val hintAlpha by animateFloatAsState(
-                        targetValue = if (revealFinished) 1f else 0f,
-                        animationSpec = tween(durationMillis = 500),
-                        label = "cinematicHintAlpha"
+                            .clearAndSetSemantics { }
                     )
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .alpha(hintAlpha)
-                            .then(
-                                if (revealFinished) Modifier
-                                else Modifier.clearAndSetSemantics { }
-                            )
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.End,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = "✦  ",
-                                color = accentColor.copy(alpha = 0.35f),
-                                style = MaterialTheme.typography.labelSmall
-                            )
-                            Text(
-                                text = if (state.stepIndex + 1 >= state.stepCount) "Tap to continue" else "Tap to continue ▸",
-                                color = accentColor.copy(alpha = 0.5f),
-                                style = MaterialTheme.typography.labelSmall.copy(
-                                    letterSpacing = 1.sp
-                                )
-                            )
-                        }
-                    }
-
-                    // Decorative bottom accent bar
-                    Box(
-                        modifier = Modifier
-                            .width(40.dp)
-                            .height(3.dp)
-                            .clip(RoundedCornerShape(999.dp))
-                            .background(
-                                Brush.horizontalGradient(
-                                    listOf(
-                                        accentColor.copy(alpha = 0.0f),
-                                        accentColor.copy(alpha = 0.7f),
-                                        accentColor.copy(alpha = 0.0f)
-                                    )
-                                )
-                            )
+                    Text(
+                        text = displayedText,
+                        color = Color.White.copy(alpha = 0.92f),
+                        style = narrationStyle,
+                        modifier = Modifier.fillMaxWidth()
                     )
                 }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .alpha(hintAlpha)
+                        .then(if (revealFinished) Modifier else Modifier.clearAndSetSemantics { }),
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "✦  ",
+                        color = accentColor.copy(alpha = 0.35f),
+                        style = MaterialTheme.typography.labelSmall
+                    )
+                    Text(
+                        text = if (isLastStep) "Tap to continue" else "Tap to continue ▸",
+                        color = accentColor.copy(alpha = 0.5f),
+                        style = MaterialTheme.typography.labelSmall.copy(letterSpacing = 1.sp)
+                    )
+                }
+                CinematicAccentBar(accentColor)
             }
         }
     }
+}
+
+@Composable
+private fun CinematicAccentBar(accentColor: Color) {
+    Box(
+        modifier = Modifier
+            .width(40.dp)
+            .height(3.dp)
+            .clip(RoundedCornerShape(999.dp))
+            .background(
+                Brush.horizontalGradient(
+                    listOf(
+                        accentColor.copy(alpha = 0f),
+                        accentColor.copy(alpha = 0.7f),
+                        accentColor.copy(alpha = 0f)
+                    )
+                )
+            )
+    )
 }
 
 @Composable
@@ -6981,6 +6957,15 @@ private fun IllustratedCinematicCaption(
             stepKey = "${state.sceneId}_${state.stepIndex}",
             revealAllRequest = revealAllRequest,
             onRevealFinished = onRevealFinished,
+            isLastStep = state.stepIndex + 1 >= state.stepCount,
+            modifier = modifier
+        )
+        return
+    }
+
+    if (state.step.captionStyle == CinematicCaptionStyle.LOCATION) {
+        IllustratedLocationPlate(
+            text = state.step.text,
             modifier = modifier
         )
         return
@@ -7062,11 +7047,74 @@ private fun IllustratedCinematicCaption(
 }
 
 @Composable
+private fun IllustratedLocationPlate(
+    text: String,
+    modifier: Modifier = Modifier
+) {
+    val parts = remember(text) { text.split("//", limit = 2).map(String::trim) }
+    val location = parts.firstOrNull().orEmpty()
+    val time = parts.getOrNull(1).orEmpty()
+    val accent = Color(0xFF7BE8FF)
+
+    Box(
+        modifier = modifier.fillMaxWidth(),
+        contentAlignment = Alignment.Center
+    ) {
+        Surface(
+            color = Color(0xE8060B14),
+            contentColor = Color.White,
+            shape = RoundedCornerShape(16.dp),
+            border = BorderStroke(1.dp, accent.copy(alpha = 0.52f)),
+            shadowElevation = 14.dp,
+            modifier = Modifier.widthIn(min = 280.dp, max = 520.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(horizontal = 28.dp, vertical = 20.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(9.dp)
+            ) {
+                Text(
+                    text = location,
+                    color = Color.White,
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.headlineSmall.copy(
+                        fontWeight = FontWeight.Black,
+                        letterSpacing = 1.2.sp
+                    )
+                )
+                Box(
+                    modifier = Modifier
+                        .width(72.dp)
+                        .height(2.dp)
+                        .background(
+                            Brush.horizontalGradient(
+                                listOf(Color.Transparent, accent.copy(alpha = 0.82f), Color.Transparent)
+                            )
+                        )
+                )
+                if (time.isNotBlank()) {
+                    Text(
+                        text = time,
+                        color = accent.copy(alpha = 0.86f),
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.labelLarge.copy(
+                            fontWeight = FontWeight.Medium,
+                            letterSpacing = 1.1.sp
+                        )
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
 private fun IllustratedNarrationCaption(
     text: String,
     stepKey: String,
     revealAllRequest: Int,
     onRevealFinished: () -> Unit,
+    isLastStep: Boolean,
     modifier: Modifier = Modifier
 ) {
     var revealedCount by remember(stepKey) { mutableIntStateOf(0) }
@@ -7092,54 +7140,13 @@ private fun IllustratedNarrationCaption(
         if (revealFinished) onRevealFinished()
     }
 
-    val accent = Color(0xFF8DE2FF)
-    val narrationStyle = MaterialTheme.typography.bodyLarge.copy(
-        lineHeight = 28.sp,
-        letterSpacing = 0.2.sp
-    )
-    Surface(
+    CinematicNarrationCard(
+        fullText = text,
+        displayedText = displayedText,
+        revealFinished = revealFinished,
+        isLastStep = isLastStep,
         modifier = modifier
-            .fillMaxWidth()
-            .widthIn(max = 680.dp),
-        color = Color(0xF2050B12),
-        contentColor = Color.White,
-        border = BorderStroke(1.dp, Color.White.copy(alpha = 0.56f)),
-        shadowElevation = 14.dp,
-        shape = RoundedCornerShape(18.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .background(
-                    Brush.horizontalGradient(
-                        listOf(accent.copy(alpha = 0.12f), Color.Transparent)
-                    )
-                )
-                .padding(horizontal = 20.dp, vertical = 18.dp)
-                .height(IntrinsicSize.Min),
-            horizontalArrangement = Arrangement.spacedBy(14.dp)
-        ) {
-            Box(
-                modifier = Modifier
-                    .width(4.dp)
-                    .fillMaxHeight()
-                    .clip(RoundedCornerShape(999.dp))
-                    .background(accent.copy(alpha = 0.85f))
-            )
-            Box(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = text,
-                    color = Color.Transparent,
-                    style = narrationStyle,
-                    modifier = Modifier.clearAndSetSemantics { }
-                )
-                Text(
-                    text = displayedText,
-                    color = Color.White.copy(alpha = 0.94f),
-                    style = narrationStyle
-                )
-            }
-        }
-    }
+    )
 }
 
 
