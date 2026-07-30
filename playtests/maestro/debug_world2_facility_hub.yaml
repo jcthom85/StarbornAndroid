@@ -10,6 +10,7 @@ appId: com.junewiregames.starborn.prealpha
     visible: "Search world, quest, room, or system"
     timeout: 10000
 - tapOn: "Search world, quest, room, or system"
+- eraseText
 - inputText: "Sector 9 Ruins"
 - hideKeyboard
 - tapOn: "World 2 / Sector 9 Ruins"

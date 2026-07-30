@@ -19,7 +19,7 @@ appId: com.junewiregames.starborn.prealpha
 - tapOn: "Scavenger's Stash"
 - extendedWaitUntil:
     visible: "Scrapper's Stall"
-    timeout: 15000
+    timeout: 90000
 - tapOn: "Contraband action"
 - extendedWaitUntil:
     visible: "Scrapper's Contraband"

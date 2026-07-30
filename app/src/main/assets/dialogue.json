@@ -533,7 +533,7 @@
     "id": "scrapper_w1_sq01_intro_3",
     "speaker": "Scrapper",
     "text": "Because I like breathing. Find the crate, open it clean, and bring me proof it wasn't a trap.",
-    "trigger": "start_quest:w1_sq01,track_quest:w1_sq01,set_quest_task_done:w1_sq01:talk_to_scrapper,set_milestone:ms_w1_sq01_started"
+    "trigger": "start_quest:w1_sq01,track_quest:w1_sq01,set_milestone:ms_w1_sq01_started"
   },
   {
     "id": "scrapper_w1_sq01_complete",
@@ -587,7 +587,7 @@
     "id": "doc_w1_sq02_intro_3",
     "speaker": "Doc",
     "text": "Dominion denies repairs faster than I can file them. Patch the cracked vent before the ward turns blue.",
-    "trigger": "start_quest:w1_sq02,track_quest:w1_sq02,set_quest_task_done:w1_sq02:talk_to_doc,set_milestone:ms_w1_sq02_started"
+    "trigger": "start_quest:w1_sq02,track_quest:w1_sq02,set_milestone:ms_w1_sq02_started"
   },
   {
     "id": "doc_w1_sq02_complete",

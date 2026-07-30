@@ -366,10 +366,6 @@
         "description": "Scrapper has a lead on a hidden cache from a failed rebel operation.",
         "tasks": [
           {
-            "id": "talk_to_scrapper",
-            "text": "Talk to Scrapper in Trade Row."
-          },
-          {
             "id": "find_hidden_stash",
             "text": "Find the hidden stash."
           },
@@ -417,10 +413,6 @@
         "title": "Clear the Vents",
         "description": "Doc needs the med-bay vents cleared before more patients start coughing blood.",
         "tasks": [
-          {
-            "id": "talk_to_doc",
-            "text": "Talk to Doc in the Med-Bay."
-          },
           {
             "id": "enter_ventilation_hub",
             "text": "Enter the ventilation hub."

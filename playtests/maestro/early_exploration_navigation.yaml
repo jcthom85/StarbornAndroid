@@ -1,5 +1,12 @@
 appId: com.junewiregames.starborn.prealpha
 ---
+# Verifies early exploration: swipe navigation between rooms and the field menu
+# open/close cycle.
+#
+# The onboarding pass removed the up-front interruptions, so there is no
+# "Wake Up Call" quest card or CONTINUE chain after New Game — the prologue
+# plays and drops the player straight into the bunk. The movement tutorial
+# fires only after acting on the bunk light and the conduit.
 - launchApp:
     clearState: true
 - extendedWaitUntil:
@@ -7,19 +14,22 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 60000
 - tapOn: "New Game"
 - extendedWaitUntil:
-    visible: "Wake Up Call"
-    timeout: 20000
-- tapOn: "Continue"
-- tapOn: "CONTINUE"
+    visible: "Nova's Bunk"
+    timeout: 90000
 - assertVisible: "bunk light"
 - tapOn: "bunk light"
 - extendedWaitUntil:
-    visible: "The bunk light snaps on.*"
+    visible: ".*The bunk light coughs on.*"
     timeout: 10000
-- tapOn: ".*The bunk light snaps on.*"
+- tapOn: ".*The bunk light coughs on.*"
+- tapOn: "scorched conduit"
 - extendedWaitUntil:
-    visible: "Nova's Bunk"
-    timeout: 10000
+    visible: ".*Three repair requests.*closed automatically.*"
+    timeout: 15000
+- tapOn: ".*Three repair requests.*closed automatically.*"
+- extendedWaitUntil:
+    visible: "Swipe toward any open exit to move.*"
+    timeout: 15000
 - tapOn: "CONTINUE"
 - swipe:
     direction: LEFT
@@ -27,9 +37,6 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     visible: "Pod Row"
     timeout: 60000
-- extendedWaitUntil:
-    notVisible: "Wake Up Call"
-    timeout: 10000
 - tapOn: "MENU"
 - extendedWaitUntil:
     visible: "FIELD MENU"

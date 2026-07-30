@@ -6,52 +6,107 @@ appId: com.junewiregames.starborn.prealpha
     visible: "New Game"
     timeout: 60000
 - tapOn: "New Game"
-- extendedWaitUntil:
-    visible: "GOT IT"
-    timeout: 20000
-- tapOn: "GOT IT"
+# No tutorial card fires on arrival any more; the prologue plays and drops the
+# player straight into the bunk. Generous timeout: clearState forces a cold
+# start (dex optimisation on a freshly installed ~1.15 GB debug APK) before the
+# ~45s prologue even begins.
 - extendedWaitUntil:
     visible: "Nova's Bunk"
-    timeout: 10000
+    timeout: 180000
 - tapOn: "MENU"
+- waitForAnimationToEnd:
+    timeout: 3000
 - extendedWaitUntil:
     visible: "FIELD MENU"
     timeout: 10000
+# The FIELD MENU tab row is a Compose horizontalScroll holding six chips
+# (min 92.dp each), so Stats/Settings sit off-screen right on a phone viewport.
+# scrollUntilVisible cannot drive it; swipe the row itself (~15% screen height).
+- swipe:
+    start: "85%, 15%"
+    end: "20%, 15%"
+    duration: 400
+- waitForAnimationToEnd:
+    timeout: 2000
 - tapOn: "Settings"
+- waitForAnimationToEnd:
+    timeout: 3000
 - extendedWaitUntil:
     visible: "AUDIO & DISPLAY"
     timeout: 10000
-- tapOn: "Open Save Slots"
+# The Settings panel now exposes plain "Save" / "Load" buttons; the old
+# "Open Save Slots" semantic labels were dropped in the panel redesign.
+- tapOn: "Save"
 - extendedWaitUntil:
-    visible: "SELECT SLOT TO SAVE"
+    visible: "SAVE DATA"
     timeout: 10000
+# Quicksave/Autosave rows can push the numbered slots below the fold, so
+# the row is scrolled into view before tapping (vertical LazyColumn).
+- scrollUntilVisible:
+    element:
+      text: "Save Slot 1"
+    direction: DOWN
+    timeout: 15000
+    visibilityPercentage: 60
+    centerElement: false
 - tapOn: "Save Slot 1"
 - extendedWaitUntil:
-    notVisible: "SELECT SLOT TO SAVE"
-    timeout: 10000
+    notVisible: "SAVE DATA"
+    timeout: 30000
 - tapOn: "Close"
+- waitForAnimationToEnd:
+    timeout: 3000
 - extendedWaitUntil:
     notVisible: "FIELD MENU"
     timeout: 10000
-- assertVisible: "Nova's Bunk"
+# Wait for exploration to re-render rather than asserting immediately.
+- extendedWaitUntil:
+    visible: "Nova's Bunk"
+    timeout: 15000
 - tapOn: "MENU"
+- waitForAnimationToEnd:
+    timeout: 3000
 - extendedWaitUntil:
     visible: "FIELD MENU"
     timeout: 10000
+# The FIELD MENU tab row is a Compose horizontalScroll holding six chips
+# (min 92.dp each), so Stats/Settings sit off-screen right on a phone viewport.
+# scrollUntilVisible cannot drive it; swipe the row itself (~15% screen height).
+- swipe:
+    start: "85%, 15%"
+    end: "20%, 15%"
+    duration: 400
+- waitForAnimationToEnd:
+    timeout: 2000
 - tapOn: "Settings"
+- waitForAnimationToEnd:
+    timeout: 3000
 - extendedWaitUntil:
     visible: "AUDIO & DISPLAY"
     timeout: 10000
-- tapOn: "Open Load Slots"
+- tapOn: "Load"
 - extendedWaitUntil:
-    visible: "SELECT SLOT TO LOAD"
+    visible: "LOAD DATA"
     timeout: 10000
+# Quicksave/Autosave rows can push the numbered slots below the fold, so
+# the row is scrolled into view before tapping (vertical LazyColumn).
+- scrollUntilVisible:
+    element:
+      text: "Load Slot 1"
+    direction: DOWN
+    timeout: 15000
+    visibilityPercentage: 60
+    centerElement: false
 - tapOn: "Load Slot 1"
 - extendedWaitUntil:
-    notVisible: "SELECT SLOT TO LOAD"
-    timeout: 10000
+    notVisible: "LOAD DATA"
+    timeout: 30000
 - tapOn: "Close"
+- waitForAnimationToEnd:
+    timeout: 3000
+# Loading restores a full session snapshot and re-enters exploration, so allow
+# for the rebuild rather than asserting immediately.
 - extendedWaitUntil:
     visible: "Nova's Bunk"
-    timeout: 10000
+    timeout: 30000
 - takeScreenshot: save-load-roundtrip

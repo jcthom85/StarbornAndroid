@@ -1,5 +1,12 @@
 appId: com.junewiregames.starborn.prealpha
 ---
+# Verifies inline room-description keywords are discoverable and tappable,
+# including "netting" — which must remain reachable after the bunk light is on,
+# since the lit-bunk description variant governs whether the keyword renders.
+#
+# The up-front "Wake Up Call" quest card no longer appears after New Game (the
+# onboarding pass removed those interruptions), so this lands in the bunk and
+# goes straight to the keywords.
 - launchApp:
     clearState: true
 - extendedWaitUntil:
@@ -7,21 +14,16 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 60000
 - tapOn: "New Game"
 - extendedWaitUntil:
-    visible: "Wake Up Call"
-    timeout: 20000
-- tapOn: "Continue"
-- tapOn: "CONTINUE"
-- extendedWaitUntil:
-    notVisible: "Wake Up Call"
-    timeout: 10000
+    visible: "Nova's Bunk"
+    timeout: 90000
 - extendedWaitUntil:
     visible: "bunk light"
     timeout: 10000
 - tapOn: "bunk light"
 - extendedWaitUntil:
-    visible: "The bunk light snaps on.*"
+    visible: ".*The bunk light coughs on.*"
     timeout: 10000
-- tapOn: ".*The bunk light snaps on.*"
+- tapOn: ".*The bunk light coughs on.*"
 - extendedWaitUntil:
     visible: "Nova's Bunk"
     timeout: 10000
@@ -33,6 +35,14 @@ appId: com.junewiregames.starborn.prealpha
     visible: "The cargo netting holds.*"
     timeout: 10000
 - tapOn: ".*The cargo netting holds.*"
+- tapOn: "scorched conduit"
+- extendedWaitUntil:
+    visible: ".*Three repair requests.*closed automatically.*"
+    timeout: 15000
+- tapOn: ".*Three repair requests.*closed automatically.*"
+- extendedWaitUntil:
+    visible: "Swipe toward any open exit to move.*"
+    timeout: 15000
 - tapOn: "CONTINUE"
 - swipe:
     direction: LEFT
@@ -45,10 +55,10 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 10000
 - tapOn: "sleeping pods"
 - extendedWaitUntil:
-    visible: ".*filing cabinets for people.*"
+    visible: ".*a name, a shift code, and a repair tally.*"
     timeout: 10000
-- tapOn: ".*filing cabinets for people.*"
+- tapOn: ".*a name, a shift code, and a repair tally.*"
 - extendedWaitUntil:
-    notVisible: ".*filing cabinets for people.*"
+    notVisible: ".*a name, a shift code, and a repair tally.*"
     timeout: 10000
 - takeScreenshot: room-keyword-inspection

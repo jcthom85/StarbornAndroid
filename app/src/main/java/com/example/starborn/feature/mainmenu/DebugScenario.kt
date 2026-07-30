@@ -83,6 +83,7 @@ object DebugScenarioCatalog {
         scenario("checkpoint", "Transit Checkpoint", "Test the guarded checkpoint sequence.", DebugScenarioCategory.CONTENT),
         scenario("room_items", "Room Items", "Open the Med-Bay storage room with a full inventory.", DebugScenarioCategory.CONTENT),
         scenario("lift_shaft", "Lift Shaft", "Enter the Pit shaft directly for traversal testing.", DebugScenarioCategory.CONTENT),
+        scenario("hub2_overview", "Hub 2 Overview", "Open the Logistics Sector map with every node revealed.", DebugScenarioCategory.CONTENT),
 
         scenario("full_inventory", "Full Inventory", "Start at the beginning with all gear, skills, party members, and credits.", DebugScenarioCategory.SYSTEM),
         scenario("weather_lab", "Weather Lab", "Open the dedicated weather-effects test room.", DebugScenarioCategory.SYSTEM),

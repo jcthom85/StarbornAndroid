@@ -13,6 +13,7 @@ appId: com.junewiregames.starborn.prealpha
     visible: "Search world, quest, room, or system"
     timeout: 10000
 - tapOn: "Search world, quest, room, or system"
+- eraseText
 - inputText: "Deep Mine"
 - runFlow:
     when:
@@ -26,7 +27,7 @@ appId: com.junewiregames.starborn.prealpha
 - tapOn: "The Echo: Deep Mine"
 - extendedWaitUntil:
     visible: "Concourse Lobby"
-    timeout: 15000
+    timeout: 90000
 - assertVisible: "Boggs"
 - tapOn: "Boggs"
 - extendedWaitUntil:

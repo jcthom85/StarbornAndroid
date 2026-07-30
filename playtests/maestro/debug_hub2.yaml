@@ -1,14 +1,55 @@
+# Verifies the Logistics Sector hub map renders its full node list.
+#
+# Uses the dedicated "Hub 2 Overview" debug scenario, which reveals all five
+# Hub 2 nodes. Node visibility is otherwise story-gated (echo_chamber by
+# w1_mq03_reach_threshold, launch_bay by w1_mq04_complete) and by the time both
+# are set the player is inside the escape sequence with no route back to the
+# hub map.
 appId: com.junewiregames.starborn.prealpha
 ---
 - launchApp:
     clearState: true
 - extendedWaitUntil:
-    visible: "Debug: Hub 2"
+    visible: "New Game"
     timeout: 60000
-- tapOn: "Debug: Hub 2"
+- extendedWaitUntil:
+    visible: "Debug Scenarios"
+    timeout: 10000
+- tapOn: "Debug Scenarios"
+- extendedWaitUntil:
+    visible: "Search world, quest, room, or system"
+    timeout: 15000
+- tapOn: "Search world, quest, room, or system"
+- eraseText
+- inputText: "Hub 2"
+- runScript: sleep.js
+- extendedWaitUntil:
+    visible: "Hub 2 Overview"
+    timeout: 15000
+- tapOn: "Hub 2 Overview"
+# Seeding the MQ03/MQ04 milestones (needed to reveal every node) also fires the
+# quest-start card and a gate message on entry. Clear whatever stacks up before
+# asserting the room.
+- extendedWaitUntil:
+    visible: "Continue"
+    timeout: 90000
+- repeat:
+    times: 3
+    commands:
+      - runFlow:
+          when:
+            visible: "Continue"
+          commands:
+            - tapOn: "Continue"
+            - waitForAnimationToEnd:
+                timeout: 2000
+- extendedWaitUntil:
+    visible: "Concourse Lobby"
+    timeout: 20000
+- tapOn: "LEAVE"
 - extendedWaitUntil:
     visible: "Logistics Sector"
-    timeout: 15000
+    timeout: 20000
 - assertVisible: "Admin Concourse"
 - assertVisible: "Server Room"
 - assertVisible: "Deep Mine"

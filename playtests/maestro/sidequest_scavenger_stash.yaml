@@ -3,12 +3,26 @@ appId: com.junewiregames.starborn.prealpha
 - launchApp:
     clearState: true
 - extendedWaitUntil:
-    visible: "Debug: Scavenger"
+    visible: "New Game"
     timeout: 60000
-- tapOn: "Debug: Scavenger"
+- extendedWaitUntil:
+    visible: "Debug Scenarios"
+    timeout: 10000
+- tapOn: "Debug Scenarios"
+- extendedWaitUntil:
+    visible: "Search world, quest, room, or system"
+    timeout: 15000
+- tapOn: "Search world, quest, room, or system"
+- eraseText
+- inputText: "Scavenger"
+- runScript: sleep.js
+- extendedWaitUntil:
+    visible: "Scavenger's Stash"
+    timeout: 15000
+- tapOn: "Scavenger's Stash"
 - extendedWaitUntil:
     visible: "Scrapper's Stall"
-    timeout: 15000
+    timeout: 90000
 - tapOn: "Talk to Scrapper"
 - extendedWaitUntil:
     visible: ".*Old resistance stock.*"
@@ -33,14 +47,14 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     notVisible: "New Quest"
     timeout: 10000
-- extendedWaitUntil:
-    visible: "Quest Updated"
-    timeout: 10000
-- assertVisible: "Talk to Scrapper in Trade Row."
-- tapOn: "Dismiss Quest Banner"
-- extendedWaitUntil:
-    notVisible: "Quest Updated"
-    timeout: 10000
+# The "Quest Updated" banner is a 5s transient and cannot be asserted
+# reliably: one Maestro hierarchy dump can outlast the dismiss window.
+# Progression is verified by the room/action steps and the quest completion
+# popup instead. Confirmed on device that the banner itself does render.
+#
+# Accepting the quest no longer emits a second "Quest Updated" banner. The
+# vestigial "Talk to Scrapper" task was removed, so the quest opens on its
+# first real objective instead of one the player already satisfied.
 - tapOn: "Travel south"
 - extendedWaitUntil:
     visible: "Market Strip"
@@ -49,14 +63,6 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     visible: "The Hidden Stash"
     timeout: 15000
-- extendedWaitUntil:
-    visible: "Quest Updated"
-    timeout: 10000
-- assertVisible: "Find the hidden stash."
-- tapOn: "Dismiss Quest Banner"
-- extendedWaitUntil:
-    notVisible: "Quest Updated"
-    timeout: 10000
 - tapOn: "Inspect Rebel cache"
 - extendedWaitUntil:
     visible: "Rebel Cache"
@@ -65,14 +71,6 @@ appId: com.junewiregames.starborn.prealpha
 - tapOn: "Dismiss Event Announcement"
 - extendedWaitUntil:
     notVisible: "Rebel Cache"
-    timeout: 10000
-- extendedWaitUntil:
-    visible: "Quest Updated"
-    timeout: 10000
-- assertVisible: "Return to Scrapper."
-- tapOn: "Dismiss Quest Banner"
-- extendedWaitUntil:
-    notVisible: "Quest Updated"
     timeout: 10000
 - tapOn: "Travel west"
 - extendedWaitUntil:

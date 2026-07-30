@@ -1,5 +1,10 @@
 appId: com.junewiregames.starborn.prealpha
 ---
+# Verifies the route from Nova's bunk to Jed and his opening dialogue.
+#
+# The onboarding pass removed the up-front quest card / CONTINUE chain after
+# New Game, and the canon migration rewrote Jed's greeting. The room route
+# below matches the one exercised by fun_opening_mastery.yaml.
 - launchApp:
     clearState: true
 - extendedWaitUntil:
@@ -7,19 +12,22 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 60000
 - tapOn: "New Game"
 - extendedWaitUntil:
-    visible: "Wake Up Call"
-    timeout: 20000
-- tapOn: "Continue"
-- tapOn: "CONTINUE"
+    visible: "Nova's Bunk"
+    timeout: 90000
 - assertVisible: "bunk light"
 - tapOn: "bunk light"
 - extendedWaitUntil:
-    visible: "The bunk light snaps on.*"
+    visible: ".*The bunk light coughs on.*"
     timeout: 10000
-- tapOn: ".*The bunk light snaps on.*"
+- tapOn: ".*The bunk light coughs on.*"
+- tapOn: "scorched conduit"
 - extendedWaitUntil:
-    visible: "Nova's Bunk"
-    timeout: 10000
+    visible: ".*Three repair requests.*closed automatically.*"
+    timeout: 15000
+- tapOn: ".*Three repair requests.*closed automatically.*"
+- extendedWaitUntil:
+    visible: "Swipe toward any open exit to move.*"
+    timeout: 15000
 - tapOn: "CONTINUE"
 - tapOn: "Travel west"
 - extendedWaitUntil:
@@ -29,36 +37,13 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     visible: "Lift Shaft"
     timeout: 15000
-- extendedWaitUntil:
-    visible: "CONTINUE"
-    timeout: 10000
-- tapOn: "CONTINUE"
-- extendedWaitUntil:
-    visible: "CONTINUE"
-    timeout: 10000
-- tapOn: "CONTINUE"
 - tapOn: "Travel west"
 - extendedWaitUntil:
     visible: "Jed's Bunk"
     timeout: 15000
-- extendedWaitUntil:
-    visible: "QUEST UPDATED"
-    timeout: 10000
-- tapOn: "Dismiss Quest Banner"
-- extendedWaitUntil:
-    notVisible: "QUEST UPDATED"
-    timeout: 10000
-- extendedWaitUntil:
-    visible: "CONTINUE"
-    timeout: 10000
-- tapOn: "CONTINUE"
 - tapOn: "Jed"
 - extendedWaitUntil:
-    visible: "CONTINUE"
-    timeout: 10000
-- tapOn: "CONTINUE"
-- extendedWaitUntil:
-    visible: ".*You look like.*"
-    timeout: 10000
+    visible: ".*look awful.*"
+    timeout: 15000
 - assertVisible: "Jed"
 - takeScreenshot: early-jed-dialogue

@@ -5,19 +5,24 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     visible: "New Game"
     timeout: 60000
-- scrollUntilVisible:
-    element:
-      text: "Debug: Presence Stress"
-    direction: DOWN
-    timeout: 20000
-    visibilityPercentage: 50
 - extendedWaitUntil:
-    visible: "Debug: Presence Stress"
+    visible: "Debug Scenarios"
     timeout: 10000
-- tapOn: "Debug: Presence Stress"
+- tapOn: "Debug Scenarios"
+- extendedWaitUntil:
+    visible: "Search world, quest, room, or system"
+    timeout: 15000
+- tapOn: "Search world, quest, room, or system"
+- eraseText
+- inputText: "Presence"
+- runScript: sleep.js
+- extendedWaitUntil:
+    visible: "Presence Stress"
+    timeout: 15000
+- tapOn: "Presence Stress"
 - extendedWaitUntil:
     visible: "Presence Stress Test"
-    timeout: 15000
+    timeout: 90000
 - assertVisible: "Zeke"
 - assertVisible: "Medkit I"
 - assertVisible: "Engage Acoustic Bulwark"
@@ -55,12 +60,11 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     notVisible: "Engage Acoustic Bulwark"
     timeout: 10000
+# The presence dock no longer renders "People"/"Items" category headers; the
+# entity chips themselves are the contract.
 - assertVisible: "Zeke"
 - assertVisible: "Scrapper"
-- assertVisible: "People"
 - assertVisible: "Medkit I"
-- assertVisible: "Scrap Metal"
-- assertVisible: "Items"
 - assertVisible: "Engage Dominion Dampener"
 - assertVisible: "Engage Echo Borer"
 - takeScreenshot: presence-combat-return

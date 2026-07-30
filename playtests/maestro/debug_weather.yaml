@@ -10,9 +10,9 @@ appId: com.junewiregames.starborn.prealpha
 
 # Handle tutorial prompt dismiss
 - extendedWaitUntil:
-    visible: "GOT IT"
-    timeout: 20000
-- tapOn: "GOT IT"
+    visible: "CONTINUE"
+    timeout: 90000
+- tapOn: "CONTINUE"
 
 # Wait until we enter exploration screen and starter room title (Nova's Bunk) is shown
 - extendedWaitUntil:

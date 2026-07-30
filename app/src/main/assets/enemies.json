@@ -56,6 +56,7 @@
     "element": "physical",
     "resistances": {
       "burn": -100,
+      "freeze": -50,
       "shock": 50
     },
     "tags": [
@@ -66,7 +67,7 @@
       "gnaw",
       "burrow"
     ],
-    "flavor": "A subterranean skitterer with crystalline digging claws. It tracks footfall through the rock, burrows below the tunnel floor, and strikes from loose ground.",
+    "flavor": "A subterranean skitterer with crystalline digging claws. It tracks footfall through the rock, burrows below the tunnel floor, and strikes from loose ground. Its claws crystallize as they cool, and a chilled borer cannot grip stone.",
     "xp_reward": 40,
     "credit_reward": 10,
     "drops": [
@@ -75,7 +76,7 @@
         "chance": 0.5
       }
     ],
-    "description": "Burrows, then attacks from below. Vulnerable to Burn; resists Shock.",
+    "description": "Burrows, then attacks from below. Insulated against Shock. Burn opens it up; Freeze locks its claws and keeps it above ground.",
     "portrait": "images/enemies/echo_borer_combat.png"
   },
   {
@@ -94,7 +95,7 @@
     "speed": 14,
     "element": "acid",
     "resistances": {
-      "shock": -100,
+      "freeze": -100,
       "physical": 50
     },
     "tags": [
@@ -105,7 +106,7 @@
       "sonic_shriek",
       "volatile_swell"
     ],
-    "flavor": "Hovering cave pests nest around geothermal vents. Their throat sacs use pressurized steam for a shriek that overloads suit optics and balance sensors.",
+    "flavor": "Hovering cave pests nest around geothermal vents. Their throat sacs hold pressurized steam for a shriek that overloads suit optics and balance sensors. The sac only works hot.",
     "xp_reward": 45,
     "credit_reward": 12,
     "drops": [
@@ -114,7 +115,7 @@
         "chance": 0.3
       }
     ],
-    "description": "Fast airborne controller. Its shriek applies Blind; Shock grounds it.",
+    "description": "Fast airborne controller. Its shriek applies Blind. Too quick to reliably shoot, but Freeze collapses the steam sac and drops it.",
     "portrait": "images/enemies/siren_skimmer_combat.png"
   },
   {
@@ -134,7 +135,8 @@
     "element": "physical",
     "resistances": {
       "acid": -100,
-      "burn": -100
+      "burn": -100,
+      "shock": -50
     },
     "tags": [
       "human",
@@ -144,8 +146,8 @@
       "suppressive_fire",
       "flashbang"
     ],
-    "flavor": "Corporate security troopers wear sealed helmets against drill noise and mine gas. Their rifles pin workers behind cover while flashbangs disrupt an organized push.",
-    "xp_reward": 60,
+    "flavor": "Corporate security troopers wear sealed helmets against drill noise and mine gas. Their rifles pin workers behind cover while flashbangs disrupt an organized push. The seals that keep the gas out also keep a charge in.",
+    "xp_reward": 50,
     "credit_reward": 25,
     "drops": [
       {
@@ -157,7 +159,7 @@
         "chance": 0.5
       }
     ],
-    "description": "Uses suppressive fire and flashbangs. Vulnerable to Burn and Acid.",
+    "description": "Uses suppressive fire and flashbangs. Acid eats the helmet seal and Burn gets underneath it; Shock carries well through sealed gear.",
     "portrait": "images/enemies/dominion_dampener_combat.png"
   },
   {
@@ -176,8 +178,8 @@
     "speed": 7,
     "element": "physical",
     "resistances": {
-      "shock": -100,
-      "physical": 0
+      "physical": 0,
+      "freeze": -50
     },
     "tags": [
       "human",
@@ -189,7 +191,7 @@
       "barrier_field",
       "slide_slam"
     ],
-    "flavor": "A heavy security trooper carries an impact-damping riot shield and a powered ram. Breaking the guard exposes the operator and the shield's electrical controls.",
+    "flavor": "A heavy security trooper carries an impact-damping riot shield and a powered ram. The shield is rated for every element the mine can throw at it. It is not rated for being knocked open.",
     "xp_reward": 100,
     "credit_reward": 40,
     "drops": [
@@ -198,7 +200,7 @@
         "chance": 0.4
       }
     ],
-    "description": "Armored tank with an active barrier. Stagger it to drop Guard; vulnerable to Shock.",
+    "description": "Armored tank with an active barrier and no elemental weakness. Break its Guard, then punish the opening. Freeze makes it Brittle, which turns a physical hit into a real one.",
     "portrait": "images/enemies/acoustic_bulwark_combat.png"
   },
   {
@@ -218,7 +220,7 @@
     "element": "shock",
     "resistances": {
       "shock": -100,
-      "physical": -100,
+      "physical": 0,
       "acid": 50
     },
     "tags": [
@@ -229,8 +231,8 @@
       "resonance_buoy_emp_burst",
       "static_burst"
     ],
-    "flavor": "A floating survey drone maps tunnel pressure with timed pings. Security uses the same transmitter to mark disturbances for backup teams.",
-    "xp_reward": 50,
+    "flavor": "A floating survey drone maps tunnel pressure with timed pings. Security uses the same transmitter to mark disturbances for backup teams. Every ping it finishes brings someone else down the tunnel.",
+    "xp_reward": 30,
     "credit_reward": 15,
     "drops": [
       {
@@ -242,7 +244,7 @@
         "chance": 0.4
       }
     ],
-    "description": "Fast support drone with EMP and Static bursts. Vulnerable to Shock and physical attacks.",
+    "description": "Fast support drone with EMP and Static bursts. It calls in whatever else is nearby, so it dies first. Shock drops it in one; its casing shrugs off Acid.",
     "portrait": "images/enemies/resonance_buoy_combat.png"
   },
   {

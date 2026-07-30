@@ -101,32 +101,27 @@ appId: com.junewiregames.starborn.prealpha
     visible: "Weakness exploited"
     timeout: 15000
 - takeScreenshot: fun-opening-weakness-exploited
+# Combat damage is unseeded (weapon roll + ~6.6% crit), so the loader dies in a
+# variable number of basic attacks. Every follow-up swing is guarded so an early
+# kill cannot over-run the flow.
 - repeat:
-    times: 2
+    times: 4
     commands:
-      - waitForAnimationToEnd:
-          timeout: 10000
-      - tapOn: "Nova"
-      - extendedWaitUntil:
-          visible: "Attack"
-          timeout: 30000
-      - tapOn: "Attack"
-      - extendedWaitUntil:
-          visible: ".*Faulted Loader.*"
-          timeout: 15000
-      - tapOn: ".*Faulted Loader.*"
-- runFlow:
-    when:
-      notVisible: "Spoils Recovered"
-    commands:
-      - waitForAnimationToEnd:
-          timeout: 10000
-      - tapOn: "Nova"
-      - extendedWaitUntil:
-          visible: "Attack"
-          timeout: 30000
-      - tapOn: "Attack"
-      - tapOn: ".*Faulted Loader.*"
+      - runFlow:
+          when:
+            notVisible: "Spoils Recovered"
+          commands:
+            - waitForAnimationToEnd:
+                timeout: 10000
+            - tapOn: "Nova"
+            - extendedWaitUntil:
+                visible: "Attack"
+                timeout: 30000
+            - tapOn: "Attack"
+            - extendedWaitUntil:
+                visible: ".*Faulted Loader.*"
+                timeout: 15000
+            - tapOn: ".*Faulted Loader.*"
 - extendedWaitUntil:
     visible: "Spoils Recovered"
     timeout: 60000

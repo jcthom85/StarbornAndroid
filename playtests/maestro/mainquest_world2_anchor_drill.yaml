@@ -7,6 +7,7 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 60000
 - tapOn: "Debug Scenarios"
 - tapOn: "Search world, quest, room, or system"
+- eraseText
 - inputText: "Hunter Canopy"
 - runFlow:
     when:

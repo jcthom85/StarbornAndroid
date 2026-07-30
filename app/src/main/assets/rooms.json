@@ -6,6 +6,14 @@
     "title": "Pit Landing",
     "background_image": "images/rooms/world_1/pit_L1_landing_v5.png",
     "description": "A cramped landing bolts the Pit to the rest of the colony. The bulkhead seal vents with each pressure shift, and amber lights make the scuffed metal shine like old lunch trays.",
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w1_mq01_cutter_surge"
+        ],
+        "description": "A cramped landing bolts the Pit to the rest of the colony. The amber lights run at half power now, and the bulkhead seal cycles twice before it catches. Someone chalked SECTOR BREAKER - DO NOT RESET on the frame."
+      }
+    ],
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -32,6 +40,14 @@
     "title": "Mess Hall",
     "background_image": "images/rooms/world_1/pit_mess_v5.png",
     "description": "Bolted tables, dented trays, and crooked amber lights turn dinner into another shift. Miners trade jokes under their breath while a cracked Dominion monitor chirps about gratitude.",
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w1_mq01_cutter_surge"
+        ],
+        "description": "The monitor is dead and the tables have gone loud without it. Miners argue about whose shift lost the grid. An outage notice lists the fault against an operator ID, and nobody reads that far down."
+      }
+    ],
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -96,6 +112,14 @@
     "title": "Lift Shaft",
     "background_image": "images/rooms/world_1/pit_shaft_v5.png",
     "description": "A rusted ladder and narrow lift cage climb through the Pit's stacked levels. A sweating pipe vents steam around the rails, turning the hazard stripes glossy and slick.",
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w1_mq01_cutter_surge"
+        ],
+        "description": "Emergency strips light the ladder in red instead of amber. The sweating pipe has stopped venting entirely, no pressure behind it since the breaker went, and the hazard stripes are dry for the first time Nova can remember."
+      }
+    ],
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -184,6 +208,14 @@
     "title": "Pod Row",
     "background_image": "images/rooms/world_1/pit_L2_corridor_v5.png",
     "description": "Sleeping pods stack up the walls like drawers for tired people. Old posters curl beside loose cables, personal charms, and the low vibration of distant drills.",
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w1_mq01_cutter_surge"
+        ],
+        "description": "Half the sleeping pods run dark, their occupants awake and irritable in the corridor. The posters are the only thing still lit. Someone has taped a handwritten outage notice over Efficiency Is Safety."
+      }
+    ],
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -224,13 +256,13 @@
           "light_on": true,
           "conduit_isolated": true
         },
-        "description": "The bunk light has settled back to a cheap yellow buzz. The scorched conduit is dead, and the door release is safe to touch. The closed maintenance ticket remains exactly where Dominion left it."
+        "description": "The bunk light has settled back to a cheap yellow buzz. The scorched conduit is dead and the door release is safe to touch. The netting still holds Jed's carving. The closed maintenance ticket remains where Dominion left it."
       },
       {
         "requires_state": {
           "light_on": true
         },
-        "description": "The bunk light coughs awake. A scorched conduit spits blue-white sparks across the door release. Its maintenance ticket is stamped CLOSED: WITHIN QUOTA."
+        "description": "The bunk light coughs awake over the cargo netting and its small hoard: tools, a spare ration, Jed's metal carving. A scorched conduit spits blue-white sparks across the door release. Its maintenance ticket is stamped CLOSED: WITHIN QUOTA."
       }
     ],
     "npcs": [],
@@ -843,13 +875,13 @@
     "env": "mine",
     "title": "Ventilation Hub",
     "background_image": "images/rooms/world_1/medbay_vents_v3.png",
-    "description": "Rusted fans and patched pipes keep air moving through the med-bay. A cracked vent leaks chemical haze while a toxic blockage swells in the updraft.",
+    "description": "Rusted fans and patched pipes keep air moving through the med-bay. A cracked vent leaks chemical haze while a toxic blockage swells in the updraft. Two skimmers hang in the warm column above it, throat sacs working, waiting for something to walk under them.",
     "description_variants": [
       {
         "requires_state": {
           "toxic_blockage_cleared": true
         },
-        "description": "The fans hold a steady speed, and the cracked vent ticks as it cools. The blockage is gone; clean air reaches the med-bay at normal pressure."
+        "description": "The fans hold a steady speed and the patched pipes run quiet. The cracked vent ticks as it cools. The blockage is gone; clean air reaches the med-bay at normal pressure."
       },
       {
         "requires_state": {
@@ -867,7 +899,14 @@
     "npcs": [],
     "items": [],
     "enemies": [
+      "siren_skimmer",
       "siren_skimmer"
+    ],
+    "enemy_parties": [
+      [
+        "siren_skimmer",
+        "siren_skimmer"
+      ]
     ],
     "connections": {
       "west": "medbay_hall",
@@ -996,6 +1035,14 @@
     "title": "Trade Row Gate",
     "background_image": "images/rooms/world_1/trade_entrance_v3.png",
     "description": "A crooked archway and a stack of flickering signs mark the start of Trade Row, buzzing bright against the carved rock. Beyond them, voices, power cells, and sizzling food all compete to sell you something.",
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w1_mq01_cutter_surge"
+        ],
+        "description": "Half the signs above the archway have gone dark, and the stalls beyond run off rattling backup cells. Trade Row is louder than usual. An outage is good business for anyone selling light."
+      }
+    ],
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -1752,11 +1799,18 @@
     "env": "market",
     "title": "Security Post",
     "background_image": "images/rooms/world_1/admin_security.png",
-    "description": "A room full of flickering monitors and weapon racks that smell of gun oil. A deactivated security drone hangs from a charging dock, its lens tracking your movement.",
+    "description": "A room full of flickering monitors and weapon racks that smell of gun oil. Two Dominion troopers work the desk in sealed helmets, rifles clipped at the shoulder. Neither of them looks up. Neither of them has to.",
     "npcs": [],
     "items": [],
     "enemies": [
-      "resonance_buoy"
+      "dominion_dampener",
+      "dominion_dampener"
+    ],
+    "enemy_parties": [
+      [
+        "dominion_dampener",
+        "dominion_dampener"
+      ]
     ],
     "connections": {
       "west": "admin_window"
@@ -1810,11 +1864,18 @@
     "env": "market",
     "title": "Aisle 01",
     "background_image": "images/rooms/world_1/server_aisle.png",
-    "description": "Blue server racks fill the chilled aisle from floor to ceiling. Through the metal grate, bundled power and data cable descend into the service level.",
+    "description": "Blue server racks fill the chilled aisle from floor to ceiling. A pair of survey buoys drift the row on opposite headings, pinging each other across the cold air. Through the metal grate, bundled power and data cable descend into the service level.",
     "npcs": [],
     "items": [],
     "enemies": [
+      "resonance_buoy",
       "resonance_buoy"
+    ],
+    "enemy_parties": [
+      [
+        "resonance_buoy",
+        "resonance_buoy"
+      ]
     ],
     "connections": {
       "south": "server_airlock",
@@ -2055,11 +2116,18 @@
     "env": "mine",
     "title": "Main Tunnel Alpha",
     "background_image": "images/rooms/world_1/mine_alpha.png",
-    "description": "Scars from giant drills cut across the first excavation tunnel beside an empty ore cart. Route markers blink toward Sector 4 while a low vibration carries through the rock below them.",
+    "description": "Scars from giant drills cut across the first excavation tunnel beside an empty ore cart. Route markers blink toward Sector 4. The vibration under the rock is not machinery. It is two of them, circling below the floor, tracking her footfall.",
     "npcs": [],
     "items": [],
     "enemies": [
+      "echo_borer",
       "echo_borer"
+    ],
+    "enemy_parties": [
+      [
+        "echo_borer",
+        "echo_borer"
+      ]
     ],
     "connections": {
       "south": "mine_landing",
@@ -2197,11 +2265,18 @@
     "env": "mine",
     "title": "Riot Control Post",
     "background_image": "images/rooms/world_1/mine_checkpoint.png",
-    "description": "A fortified sentry post with reinforced walls, a discarded riot shield, and high-intensity floodlights aimed inward. Dominion did not build this to keep monsters out; it built it to keep workers moving.",
+    "description": "A fortified sentry post with reinforced walls, a discarded riot shield, and high-intensity floodlights aimed inward. A bulwark holds the lane behind a braced barrier; a trooper covers the gap beside it. Dominion built this to keep workers moving.",
     "npcs": [],
     "items": [],
     "enemies": [
-      "acoustic_bulwark"
+      "acoustic_bulwark",
+      "dominion_dampener"
+    ],
+    "enemy_parties": [
+      [
+        "acoustic_bulwark",
+        "dominion_dampener"
+      ]
     ],
     "connections": {
       "south": "mine_junction",
@@ -2495,6 +2570,14 @@
     "title": "The Heart",
     "background_image": "images/rooms/world_1/echo_heart.png",
     "description": "The tuning fork repeats the cutter's prohibited sweep from its cracked geometry cradle. Diagnostics show phase drift, cold-loop heat, and an open ground angle.",
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w1_mq03_echo_marked"
+        ],
+        "description": "The tuning fork is quiet now, its cradle geometry dark and spent. The silence is not silence. Underneath it Nova can hear the room breathing, the rock settling, her own blood; everything the noise was covering."
+      }
+    ],
     "npcs": [],
     "items": [
       "tuning_fork"
@@ -2623,7 +2706,7 @@
     "env": "logistics",
     "title": "Maintenance Access",
     "background_image": "images/rooms/world_1/launch_access.png",
-    "description": "A narrow service crawl follows hot pipes and loaded conduits toward the cargo lift. Red strobes mark the route Zeke forced open.",
+    "description": "A narrow service crawl follows hot pipes and loaded conduits toward the cargo lift. The strobes pulled the mine's own tenants in behind Nova: a skimmer riding the warm updraft, and something heavier working the loose floor. Red strobes mark the route Zeke forced open.",
     "description_variants": [
       {
         "requires_milestones": [
@@ -2638,7 +2721,14 @@
     "npcs": [],
     "items": [],
     "enemies": [
-      "resonance_buoy"
+      "siren_skimmer",
+      "echo_borer"
+    ],
+    "enemy_parties": [
+      [
+        "siren_skimmer",
+        "echo_borer"
+      ]
     ],
     "connections": {
       "south": "echo_exit",
@@ -2674,6 +2764,17 @@
     "title": "Gantry Level 1",
     "background_image": "images/rooms/world_1/launch_gantry.png",
     "description": "A vertical climb up rusted metal gantries that shake with every vibration of the mine. A row of fuel drums are stacked near the rail, their labels warning of 'High Volatility'.",
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w1_mq03_complete"
+        ],
+        "forbidden_milestones": [
+          "ms_w1_mq04_complete"
+        ],
+        "description": "Red strobes chase up the gantries and turn the stacked fuel drums into a warning of their own. The vibration is not the mine now. It is boots, somewhere above, working their way down."
+      }
+    ],
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -2705,6 +2806,17 @@
     "title": "Refueling Bay",
     "background_image": "images/rooms/world_1/launch_fuel.png",
     "description": "The air is thick with the smell of high-grade propellant and industrial grease. A heavy refueling hose snaking across the floor, its nozzle leaking a shimmering, blue liquid.",
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w1_mq03_complete"
+        ],
+        "forbidden_milestones": [
+          "ms_w1_mq04_complete"
+        ],
+        "description": "Emergency lighting turns the propellant haze red. The refueling hose lies kicked aside mid-shift, still leaking, left running by whoever was working here when the containment order came down."
+      }
+    ],
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -2734,7 +2846,7 @@
     "env": "logistics",
     "title": "Cargo Lift",
     "background_image": "images/rooms/world_1/launch_lift.png",
-    "description": "A heavy industrial platform bucks beside a manual override panel. The hydraulics strain under emergency power while security shutters cycle against the override.",
+    "description": "A heavy industrial platform bucks beside a manual override panel. A bulwark plants itself across the loading edge with a buoy circling above its shoulder, tagging the car for whoever comes next. The hydraulics strain under emergency power while security shutters cycle against the override.",
     "description_variants": [
       {
         "requires_milestones": [
@@ -2743,13 +2855,20 @@
         "forbidden_milestones": [
           "ms_w1_mq04_complete"
         ],
-        "description": "The cargo lift bucks under emergency power. The override holds while the security shutters cycle against the platform."
+        "description": "The cargo lift bucks under emergency power. The manual override panel sits open at the platform edge, and the hydraulics strain as the security shutters cycle against it. Whatever is coming is coming through that door."
       }
     ],
     "npcs": [],
     "items": [],
     "enemies": [
-      "acoustic_bulwark"
+      "acoustic_bulwark",
+      "resonance_buoy"
+    ],
+    "enemy_parties": [
+      [
+        "acoustic_bulwark",
+        "resonance_buoy"
+      ]
     ],
     "connections": {
       "south": "launch_access",

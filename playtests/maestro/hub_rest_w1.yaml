@@ -10,6 +10,7 @@ appId: com.junewiregames.starborn.prealpha
     visible: "Search world, quest, room, or system"
     timeout: 10000
 - tapOn: "Search world, quest, room, or system"
+- eraseText
 - inputText: "W1 Rest"
 - hideKeyboard
 - tapOn: "Hub QA / W1 Rest"

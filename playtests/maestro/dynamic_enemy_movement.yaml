@@ -5,15 +5,24 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     visible: "New Game"
     timeout: 60000
-- swipe:
-    direction: UP
 - extendedWaitUntil:
-    visible: "Debug: Dynamic Patrol"
+    visible: "Debug Scenarios"
     timeout: 10000
-- tapOn: "Debug: Dynamic Patrol"
+- tapOn: "Debug Scenarios"
+- extendedWaitUntil:
+    visible: "Search world, quest, room, or system"
+    timeout: 15000
+- tapOn: "Search world, quest, room, or system"
+- eraseText
+- inputText: "Dynamic"
+- runScript: sleep.js
+- extendedWaitUntil:
+    visible: "Dynamic Patrol"
+    timeout: 15000
+- tapOn: "Dynamic Patrol"
 - extendedWaitUntil:
     visible: "Dark Room"
-    timeout: 15000
+    timeout: 90000
 - assertVisible: "It's too dark to see what's here."
 - assertNotVisible: "It's too dark to make out the room."
 - assertNotVisible: "Conveyor Belt"

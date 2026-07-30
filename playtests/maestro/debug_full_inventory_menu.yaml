@@ -3,16 +3,26 @@ appId: com.junewiregames.starborn.prealpha
 - launchApp:
     clearState: true
 - extendedWaitUntil:
-    visible: "Debug: Full Inventory"
+    visible: "New Game"
     timeout: 60000
-- tapOn: "Debug: Full Inventory"
 - extendedWaitUntil:
-    visible: "GOT IT"
-    timeout: 30000
-- tapOn: "GOT IT"
+    visible: "Debug Scenarios"
+    timeout: 10000
+- tapOn: "Debug Scenarios"
+- extendedWaitUntil:
+    visible: "Search world, quest, room, or system"
+    timeout: 15000
+- tapOn: "Search world, quest, room, or system"
+- eraseText
+- inputText: "Full"
+- runScript: sleep.js
+- extendedWaitUntil:
+    visible: "Full Inventory"
+    timeout: 15000
+- tapOn: "Full Inventory"
 - extendedWaitUntil:
     visible: "Nova's Bunk"
-    timeout: 15000
+    timeout: 90000
 - tapOn: "MENU"
 - extendedWaitUntil:
     visible: "FIELD MENU"
@@ -21,6 +31,15 @@ appId: com.junewiregames.starborn.prealpha
 - assertVisible: "Supplies"
 - assertVisible: "Gear"
 - assertVisible: "Key Items"
+# The FIELD MENU tab row is a Compose horizontalScroll holding six chips
+# (min 92.dp each), so Stats/Settings sit off-screen right on a phone viewport.
+# scrollUntilVisible cannot drive it; swipe the row itself (~15% screen height).
+- swipe:
+    start: "85%, 15%"
+    end: "20%, 15%"
+    duration: 400
+- waitForAnimationToEnd:
+    timeout: 2000
 - tapOn: "Stats"
 - extendedWaitUntil:
     visible: "Party Status"

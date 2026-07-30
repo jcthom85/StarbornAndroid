@@ -13,6 +13,7 @@ appId: com.junewiregames.starborn.prealpha
     visible: "Search world, quest, room, or system"
     timeout: 10000
 - tapOn: "Search world, quest, room, or system"
+- eraseText
 - inputText: "Red Alert"
 - runScript: sleep.js
 - extendedWaitUntil:

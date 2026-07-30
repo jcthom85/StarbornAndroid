@@ -876,6 +876,7 @@ class AppServices(context: Context) {
         "scavenger" -> startNewGameAtScavengerStash()
         "heavy_lifting" -> startNewGameAtHeavyLifting()
         "lift_shaft" -> startNewGameAtLiftShaft()
+        "hub2_overview" -> startNewGameAtHub2Overview()
         "weather_lab" -> startNewGameAtWeatherLab()
         "checkpoint" -> startNewGameAtCheckpoint()
         "deep_mine" -> startNewGameAtDeepMine()
@@ -1787,6 +1788,51 @@ class AppServices(context: Context) {
         }
     }
 
+    /**
+     * Opens the Logistics Sector hub map with every Hub 2 node revealed.
+     *
+     * Node visibility is story-gated: `echo_chamber` is revealed by
+     * `w1_mq03_reach_threshold` and `launch_bay` by `w1_mq04_complete`, and by the
+     * time both are set the player is inside the escape sequence, where no room
+     * offers a route back to the hub map. This scenario exists so hub-map layout
+     * can be inspected with the full node list present.
+     */
+    fun startNewGameAtHub2Overview(): Boolean {
+        return runCatching {
+            if (!startNewGame(debugFullInventory = true)) return false
+            bootstrapCinematics.clear()
+            bootstrapPlayerActions.clear()
+            listOf("w1_mq01", "w1_mq02", "w1_sq03").forEach(sessionStore::completeQuest)
+            listOf(
+                "ms_w1_mq01_complete",
+                "ms_w1_mq02_complete",
+                "ms_w1_guardbreak_trained",
+                "ms_w1_mq03_complete",
+                "ms_w1_mq04_complete"
+            ).forEach(sessionStore::setMilestone)
+            listOf(
+                "admin_concourse",
+                "server_room",
+                "deep_mine",
+                "echo_chamber",
+                "launch_bay"
+            ).forEach { nodeId ->
+                sessionStore.revealNode(nodeId)
+                sessionStore.unlockNode(nodeId)
+            }
+            sessionStore.setPartyMembers(listOf("nova", "zeke"))
+            sessionStore.setWorld("world_1")
+            sessionStore.setHub("hub_2_logistics")
+            sessionStore.setRoom("admin_lobby")
+            sessionStore.markTutorialCompleted("swipe_move")
+            sessionStore.markTutorialCompleted("movement")
+            true
+        }.getOrElse { err ->
+            Log.e("AppServices", "Failed to start debug Hub 2 Overview game.", err)
+            false
+        }
+    }
+
     fun startNewGameAtLiftShaft(): Boolean {
         return runCatching {
             if (!startNewGame(debugFullInventory = false)) return false
@@ -1873,8 +1919,8 @@ class AppServices(context: Context) {
                     "break_riot_guard"
                 )
             )
-            sessionStore.setRoomState("mine_alpha", debugEncounterClearedStateKey("echo_borer"), true)
-            sessionStore.setRoomState("mine_checkpoint", debugEncounterClearedStateKey("acoustic_bulwark"), true)
+            sessionStore.setRoomState("mine_alpha", debugEncounterClearedStateKey("echo_borer", "echo_borer"), true)
+            sessionStore.setRoomState("mine_checkpoint", debugEncounterClearedStateKey("acoustic_bulwark", "dominion_dampener"), true)
             sessionStore.setRoomState("mine_conveyor", debugEncounterClearedStateKey("pressure_hauler"), true)
             sessionStore.setEnemyPartyStates(
                 mapOf(
@@ -1952,8 +1998,8 @@ class AppServices(context: Context) {
                     "clear_escape_gauntlet"
                 )
             )
-            sessionStore.setRoomState("launch_access", debugEncounterClearedStateKey("resonance_buoy"), true)
-            sessionStore.setRoomState("launch_lift", debugEncounterClearedStateKey("acoustic_bulwark"), true)
+            sessionStore.setRoomState("launch_access", debugEncounterClearedStateKey("siren_skimmer", "echo_borer"), true)
+            sessionStore.setRoomState("launch_lift", debugEncounterClearedStateKey("acoustic_bulwark", "resonance_buoy"), true)
             sessionStore.setPlayerLevel(4)
             sessionStore.setPlayerXp(450)
             sessionStore.setPartyMembers(listOf("nova", "zeke"))

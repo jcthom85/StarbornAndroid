@@ -3,16 +3,31 @@ appId: com.junewiregames.starborn.prealpha
 - launchApp:
     clearState: false
 - extendedWaitUntil:
-    visible: "Debug: Heavy Lifting"
+    visible: "New Game"
     timeout: 60000
-- tapOn: "Debug: Heavy Lifting"
+- extendedWaitUntil:
+    visible: "Debug Scenarios"
+    timeout: 10000
+- tapOn: "Debug Scenarios"
+- extendedWaitUntil:
+    visible: "Search world, quest, room, or system"
+    timeout: 15000
+- tapOn: "Search world, quest, room, or system"
+- eraseText
+- inputText: "Heavy"
+- runScript: sleep.js
+- extendedWaitUntil:
+    visible: "Heavy Lifting"
+    timeout: 15000
+- tapOn: "Heavy Lifting"
 - extendedWaitUntil:
     visible: "Loading Dock"
     timeout: 15000
 - assertVisible: "Engage Acoustic Bulwark"
-- tapOn: "Foreman Boggs"
+# The presence chip renders the NPC short_name ("Boggs"), not the full name.
+- tapOn: "Boggs"
 - extendedWaitUntil:
-    visible: ".*Loader's sitting idle.*"
+    visible: ".*Loader's idle.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
@@ -20,7 +35,7 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: ".*Shipment clock doesn't pause.*"
+    visible: ".*Then move the pile.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
@@ -29,7 +44,7 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     visible: "New Quest"
     timeout: 10000
-- assertVisible: "Heavy Lifting"
+- assertVisible: ".*Heavy Lifting.*"
 - tapOn: "Dismiss"
 - extendedWaitUntil:
     notVisible: "New Quest"
@@ -38,6 +53,12 @@ appId: com.junewiregames.starborn.prealpha
 - waitForAnimationToEnd:
     timeout: 2000
 - tapOn: "cargo rail"
+# Moving the cargo grants Hydraulic Kick and raises a Continue card over the
+# room; the presence dock is not reachable until it is dismissed.
+- extendedWaitUntil:
+    visible: ".*Hydraulic Kick online.*"
+    timeout: 15000
+- tapOn: "Continue"
 - waitForAnimationToEnd:
     timeout: 2000
 - assertVisible: "Engage Acoustic Bulwark"
@@ -101,24 +122,24 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 10000
 - takeScreenshot: combat-level-up-redesign
 - tapOn: "Continue"
+# The item-acquisition overlay was redesigned: it now renders a tap-to-continue
+# card labelled "Item acquired: <item>" instead of an ITEM OBTAINED / GOT IT dialog.
 - extendedWaitUntil:
-    visible: "ITEM OBTAINED"
+    visible: "Item acquired: Hydraulic Fluid.*"
     timeout: 15000
-- assertVisible: "Acquired Hydraulic Fluid"
-- tapOn: "GOT IT"
+- tapOn: "Item acquired: Hydraulic Fluid.*"
 - extendedWaitUntil:
-    visible: "ITEM OBTAINED"
+    visible: "Item acquired: Heavy Gear.*"
     timeout: 15000
-- assertVisible: "Acquired Heavy Gear"
-- tapOn: "GOT IT"
+- tapOn: "Item acquired: Heavy Gear.*"
 - extendedWaitUntil:
     visible: "Quest Completed"
     timeout: 30000
-- assertVisible: "Heavy Lifting"
+- assertVisible: ".*Heavy Lifting.*"
 - tapOn: "Continue"
 - extendedWaitUntil:
     notVisible: "Quest Completed"
     timeout: 10000
 - assertVisible: "Loading Dock"
-- assertVisible: "Foreman Boggs"
+- assertVisible: "Boggs"
 - takeScreenshot: heavy-lifting-complete

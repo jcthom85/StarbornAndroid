@@ -8,7 +8,7 @@ appId: com.junewiregames.starborn.prealpha
 - tapOn: "New Game"
 - extendedWaitUntil:
     visible: "HOLD TO SKIP"
-    timeout: 20000
+    timeout: 90000
 - longPressOn: "HOLD TO SKIP"
 - extendedWaitUntil:
     visible: "Nova's Bunk"

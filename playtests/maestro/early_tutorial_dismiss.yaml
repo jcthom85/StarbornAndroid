@@ -1,5 +1,9 @@
 appId: com.junewiregames.starborn.prealpha
 ---
+# The first tutorial no longer fires immediately after New Game. The fun-factor
+# onboarding pass removed the up-front interruptions, so the movement tutorial
+# now appears only once the player has acted in the bunk (light, then conduit).
+# The dismiss button is "Continue"; the old "GOT IT" label no longer exists.
 - launchApp:
     clearState: true
 - extendedWaitUntil:
@@ -7,12 +11,22 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 60000
 - tapOn: "New Game"
 - extendedWaitUntil:
-    visible: "TUTORIAL"
-    timeout: 20000
-- assertVisible: "GOT IT"
-- tapOn: "GOT IT"
+    visible: "Nova's Bunk"
+    timeout: 90000
+- tapOn: "bunk light"
+- tapOn: ".*The bunk light coughs on.*"
+- tapOn: "scorched conduit"
 - extendedWaitUntil:
-    notVisible: "GOT IT"
+    visible: ".*Three repair requests.*closed automatically.*"
+    timeout: 15000
+- tapOn: ".*Three repair requests.*closed automatically.*"
+- extendedWaitUntil:
+    visible: "Swipe toward any open exit to move.*"
+    timeout: 15000
+- assertVisible: "CONTINUE"
+- tapOn: "CONTINUE"
+- extendedWaitUntil:
+    notVisible: "CONTINUE"
     timeout: 10000
 - assertVisible: "Nova's Bunk"
 - takeScreenshot: early-tutorial-dismissed

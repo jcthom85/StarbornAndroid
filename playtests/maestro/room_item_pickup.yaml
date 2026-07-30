@@ -3,18 +3,38 @@ appId: com.junewiregames.starborn.prealpha
 - launchApp:
     clearState: true
 - extendedWaitUntil:
-    visible: "Debug: Room Items"
+    visible: "New Game"
     timeout: 60000
-- tapOn: "Debug: Room Items"
+- extendedWaitUntil:
+    visible: "Debug Scenarios"
+    timeout: 10000
+- tapOn: "Debug Scenarios"
+- extendedWaitUntil:
+    visible: "Search world, quest, room, or system"
+    timeout: 15000
+- tapOn: "Search world, quest, room, or system"
+- eraseText
+- inputText: "Room"
+- runScript: sleep.js
+- extendedWaitUntil:
+    visible: "Room Items"
+    timeout: 15000
+- tapOn: "Room Items"
 - extendedWaitUntil:
     visible: "Med Supply Closet"
-    timeout: 15000
+    timeout: 90000
 - extendedWaitUntil:
     visible: "Medkit I"
     timeout: 10000
 - assertVisible: "Medkit I"
 - takeScreenshot: room-item-chip
 - tapOn: "Medkit I"
+# Pickup raises an "Item acquired" tap-to-continue card that also contains the
+# item name, so the chip can only be asserted gone after the card is dismissed.
+- extendedWaitUntil:
+    visible: "Item acquired: Medkit I.*"
+    timeout: 10000
+- tapOn: "Item acquired: Medkit I.*"
 - extendedWaitUntil:
     notVisible: "Medkit I"
     timeout: 10000

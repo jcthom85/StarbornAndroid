@@ -442,25 +442,34 @@ These are non-interactive or lightly-interactive details that build the world wi
 
 ## XI. Week Prep Notes
 
-### For Tuesday: Enemy Design
+### Enemy Design
 
 World 1's enemy roster reflects the colony ecosystem: mining wildlife + Dominion security + automation.
 
-**Current roster (from existing docs — 8 total, within the 6-8 Content Standard):**
-- **Common (5):** Rock-Borer (beast/melee/burrow), Security Drone (machine/ranged/alert), Dominion Guard (human/ranged/cover), Riot Guard (human/shield — Guard Break teacher), Fume Bat (beast/swarm/blind)
-- **Elite (2):** Heavy Automaton (machine/tank/claw), Overseer Drone (machine/support/buff+heal)
-- **Boss (1):** The Warden (human/tank/shield/summoner)
+**Shipped roster (7 placed types + 1 optional elite — within the 6-8 Content Standard).** The names below are canon and match `enemies.json`. An earlier draft of this section listed a different roster (Rock-Borer, Security Drone, Dominion Guard, Riot Guard, Fume Bat, Heavy Automaton, Overseer Drone); those names were superseded when the roster was re-keyed to the acoustic/resonance motif that ties the colony to the Tuning Fork. Do not reintroduce them.
 
-**Narrative roles to develop Tuesday:**
-- *Rock-Borers* are wildlife — the mine disturbed their habitat. They're not evil, just territorial. Possible environmental storytelling: Dominion doesn't exterminate them because the miners do it for free.
-- *Security Drones and Guards* are the system's enforcers — faceless, replaceable, doing their shift. Guards use cover and flashbangs. Drones alert other enemies if not killed fast.
-- *Riot Guards* exist specifically to teach Guard Break/Stagger. Their shields are overkill for a mining colony — these are riot-suppression units, meaning the colony has had riots before.
-- *Fume Bats* are the mine's ambient threat — fast, erratic, attack in swarms, apply Blind. AoE (Pulse Grenade) is the answer.
-- *Heavy Automaton* is the first real "wall" enemy — high HP, heavy armor, slow. Stagger/Guard Break opens damage windows.
-- *Overseer Drone* is the first "support" enemy — buffs and heals other machines. Kill it first or the fight drags.
+| Enemy | Tier | Role | Exploitable axis |
+|---|---|---|---|
+| Faulted Loader | common | striker | Shock (tutorial: the exposed relay) |
+| Echo-Borer | standard | striker/burrower | Burn best, **Freeze** is the World 1 answer; resists Shock |
+| Siren Skimmer | standard | controller | **Freeze** collapses the steam sac; resists physical |
+| Resonance Buoy | standard | support | **Shock**; resists Acid. Kill first — it calls backup |
+| Dominion Dampener | standard | striker | **Acid** (SQ02 mod) best, Shock vantage through sealed gear |
+| Acoustic Bulwark | elite | tank | **No elemental weakness** — Guard Break, then Brittle + physical |
+| Pressure Hauler | elite | striker | Acid; optional roaming patrol |
+| The Iron Warden | boss | tank/summoner | Mechanical: Guard Break, AoE for drones, Blast Wave |
+
+**Narrative roles:**
+- *Echo-Borers* are wildlife — the mine disturbed their habitat. They're not evil, just territorial. Dominion doesn't exterminate them because the miners do it for free.
+- *Dampeners and Buoys* are the system's enforcers — faceless, replaceable, doing their shift. Dampeners use suppressive fire and flashbangs. Buoys tag disturbances for backup if not killed fast.
+- *Acoustic Bulwarks* exist specifically to teach Guard Break/Stagger. Their shields are overkill for a mining colony — these are riot-suppression units, meaning the colony has had riots before. They deliberately have **no elemental weakness** so the lesson stays mechanical rather than elemental.
+- *Siren Skimmers* are the mine's ambient threat — fast, erratic, attack in pairs, apply Blind. Freeze and AoE are the answers.
+- *Pressure Hauler* is the first real "wall" enemy — high HP, heavy armor, slow. Optional patrol content.
 - *The Warden* combines all lessons: Shield (Guard Break), Drones (AoE), Zones (positioning), and Source (Blast Wave).
 
-**Teaching priority for Tuesday design:** Physical / Shock / Burn elements. Delay Freeze and Source-heavy interactions. Delay Jammed and Marked (Zeke joins too late in W1).
+**Element teaching priority:** Physical / Shock / Freeze, with Acid as the side-quest payoff (SQ02's Corrosive Rounds). Burn is deliberately introduced as a weakness Nova *cannot yet exploit* — Echo-Borers and Dampeners are burn-weak, which pays off when burn access arrives in World 2. Delay Jammed and Marked (Zeke joins too late in W1).
+
+See `docs/story/Encounter_Design_Standard.md` for the encounter composition rules this roster is balanced against.
 
 ### For Wednesday: Gameplay Gimmick
 
