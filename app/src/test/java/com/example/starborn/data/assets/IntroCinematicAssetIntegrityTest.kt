@@ -30,8 +30,14 @@ class IntroCinematicAssetIntegrityTest {
 
         val completeCopy = steps.joinToString("\n") { it.text.orEmpty() }
         listOf(
-            "CONTAINMENT FAILURE",
+            // The cold open must name its antagonist. The story bible specifies this
+            // PA line verbatim; without it the only signal of danger is a pressure
+            // readout, and the scene has no threat in it at all.
+            "SOURCE BEAST CONTAINMENT BREACH",
             "Broadcast my identity. Draw it away.",
+            // The Chorus answering the Chime is the thematic seed of World 1's
+            // "First Sound" pillar and pays off across the campaign.
+            "many notes agreeing to carry it",
             "Mute this room. Begin stasis."
         ).forEach { required ->
             assertTrue("Intro is missing required beat: $required", completeCopy.contains(required))
@@ -39,7 +45,23 @@ class IntroCinematicAssetIntegrityTest {
 
         assertTrue("The prologue must not reveal the unknown speaker", steps.none { it.speaker == "Orion" })
         assertTrue("The prologue must not identify Orion in narration", !completeCopy.contains("Orion"))
-        assertTrue("The prologue should end on the beacon image", steps.last().text == "The pod seals. The beacon continues in the dark.")
+        // The beacon line is the quiet beat, but it resolves rather than hooks. The
+        // cold open ends on a threat and then lands on the title, so the drop into a
+        // mining bunk reads as a deliberate cut rather than an abrupt one.
+        assertTrue(
+            "The prologue must still include the beacon beat",
+            completeCopy.contains("The pod seals. The beacon continues in the dark.")
+        )
+        assertTrue(
+            "The cold open must end on a threat, not a resolution",
+            completeCopy.contains("Something reaches the glass.")
+        )
+        val titleCard = steps.last()
+        assertEquals("The prologue must land on the title card", "none", titleCard.captionStyle)
+        assertTrue(
+            "The title card must use the shipped Starborn wordmark",
+            titleCard.imagePath == "images/cinematics/intro_title_card_v1.png"
+        )
         assertTrue("The redundant Shift System card should remain removed", steps.none { it.speaker == "SHIFT SYSTEM" })
         assertTrue("The prologue should cut directly into the bunk", !completeCopy.contains("Nova got"))
         val fadeIn = scenes.single { it.id == "new_game_fade_in" }.steps.orEmpty().filterNotNull().single()

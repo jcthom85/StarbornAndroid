@@ -580,12 +580,12 @@
         "camera_end_scale": 1.035,
         "camera_start_y": 6.0,
         "camera_end_y": 0.0,
-        "duration_seconds": 2.5
+        "duration_seconds": 3.5
       },
       {
         "type": "message",
         "speaker": "Lab PA",
-        "text": "CONTAINMENT FAILURE. FAR DOOR PRESSURE RISING.",
+        "text": "SOURCE BEAST CONTAINMENT BREACH. FAR DOOR PRESSURE RISING.",
         "caption_style": "system",
         "image": "images/cinematics/intro_sector9_breach_v1.png",
         "camera_start_scale": 1.035,
@@ -594,7 +594,7 @@
         "camera_end_y": 12.0,
         "transition": "cut",
         "audio_cue": "sfx_intro_door_buckle",
-        "duration_seconds": 4.0
+        "duration_seconds": 3.0
       },
       {
         "type": "narration",
@@ -635,7 +635,20 @@
         "camera_end_y": -18.0,
         "audio_cue": "sfx_intro_chime_launch",
         "transition": "cut",
-        "duration_seconds": 3.5
+        "duration_seconds": 3.0
+      },
+      {
+        "type": "narration",
+        "text": "For one impossible beat, something far away answers. Not a voice. A chord, many notes agreeing to carry it.",
+        "image": "images/cinematics/intro_chime_launch_v1.png",
+        "camera_start_scale": 1.18,
+        "camera_end_scale": 1.22,
+        "camera_start_x": 30.0,
+        "camera_end_x": 36.0,
+        "camera_start_y": -18.0,
+        "camera_end_y": -22.0,
+        "transition": "fade",
+        "duration_seconds": 4.5
       },
       {
         "type": "dialogue",
@@ -665,7 +678,29 @@
         "camera_start_y": -8.0,
         "camera_end_y": -18.0,
         "transition": "cut",
-        "duration_seconds": 4.0
+        "duration_seconds": 3.5
+      },
+      {
+        "type": "narration",
+        "text": "Something reaches the glass.",
+        "image": "images/cinematics/intro_beast_glass_v1.png",
+        "camera_start_scale": 1.0,
+        "camera_end_scale": 1.22,
+        "camera_start_y": 0.0,
+        "camera_end_y": -6.0,
+        "transition": "cut",
+        "audio_cue": "sfx_intro_beast_strike",
+        "duration_seconds": 2.0
+      },
+      {
+        "type": "narration",
+        "text": "STARBORN",
+        "caption_style": "none",
+        "image": "images/cinematics/intro_title_card_v1.png",
+        "camera_start_scale": 1.06,
+        "camera_end_scale": 1.0,
+        "transition": "fade",
+        "duration_seconds": 3.5
       }
     ]
   },

@@ -52,6 +52,10 @@ $haystack = @(
     Read-AssetText "skills.json"
     Read-AssetText "enemies.json"
     Read-AssetText "statuses.json"
+    Read-AssetText "recipes_tinkering.json"
+    Read-AssetText "recipes_firstaid.json"
+    Read-AssetText "recipes_fishing.json"
+    Read-AssetText "tuning_puzzles.json"
     ($sourceText -join "`n")
 ) -join "`n"
 
@@ -81,8 +85,27 @@ foreach ($flow in Get-ChildItem -Path $flowDir -Filter *.yaml) {
         if ($probe.Length -lt 25) { continue }
         if ($probe -notmatch '\s') { continue }
         if ($probe -cmatch '^[A-Z0-9 ,&:''-]+$') { continue }   # ALL-CAPS headers
-        # Interior regex wildcards mean the literal never appears contiguously.
-        if ($probe -match '\.\*') { continue }
+        # Interior regex wildcards mean the literal never appears contiguously, so
+        # the whole selector cannot be matched as one string. Check each literal
+        # segment between wildcards instead -- skipping these outright is exactly
+        # where drift hides (a renamed line inside ".*A.*B.*" went undetected).
+        if ($probe -match '\.\*') {
+            # Segments use a lower bar than whole selectors, and deliberately do NOT
+            # skip ALL-CAPS: system/PA lines like "SOURCE BEAST CONTAINMENT BREACH"
+            # are authored copy that changes. The ALL-CAPS filter was only needed
+            # before the Kotlin source joined the haystack; real UI chrome now
+            # matches there instead of being reported.
+            foreach ($segment in ($probe -split '\.\*')) {
+                $seg = $segment.Trim()
+                if ($seg.Length -lt 12) { continue }
+                if ($seg -notmatch '\s') { continue }
+                $checked++
+                if (-not $normalizedHaystack.Contains($seg)) {
+                    $findings.Add("$($flow.Name) line $($i + 1): selector segment not found in any authored asset -- `"$seg`"")
+                }
+            }
+            continue
+        }
 
         # Labels the UI composes at runtime ("Item acquired: $item") never exist
         # as a whole literal in either source or assets; only the prefix does.

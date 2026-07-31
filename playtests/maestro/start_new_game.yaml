@@ -11,7 +11,7 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 90000
 - takeScreenshot: intro-location-plate
 - extendedWaitUntil:
-    visible: ".*CONTAINMENT FAILURE.*FAR DOOR PRESSURE RISING.*"
+    visible: ".*SOURCE BEAST CONTAINMENT BREACH.*FAR DOOR PRESSURE RISING.*"
     timeout: 12000
 - extendedWaitUntil:
     visible: ".*doors bow inward.*operator locks a brass Chime.*"
@@ -21,9 +21,11 @@ appId: com.junewiregames.starborn.prealpha
     visible: ".*Broadcast my identity.*Draw it away.*"
     timeout: 20000
 - takeScreenshot: intro-unknown-dialogue
+# The cold open runs ~34.5s (it gained the Chorus beat, the threat beat, and the
+# title card), so the tail after this point is longer than the old 45s allowance.
 - extendedWaitUntil:
     visible: "Nova's Bunk"
-    timeout: 45000
+    timeout: 120000
 - extendedWaitUntil:
     notVisible: "New Game"
     timeout: 20000

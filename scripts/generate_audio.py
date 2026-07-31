@@ -106,6 +106,10 @@ SFX_CATALOG = {
         "text": "Massive reinforced pressure doors bow inward under one brutal impact, deep steel buckle, bolts strain and snap, dust falls, short concrete underground reverb, no creature vocalization, no music",
         "duration": 2.0,
     },
+    "sfx_intro_beast_strike": {
+        "text": "One single heavy impact against thick armored glass, sharp crack and spiderweb fracture spreading, deep low body thud behind it, small shards tinkling, brief metallic ring in a cramped chamber, abrupt cut to silence, no creature vocalization, no music",
+        "duration": 2.0,
+    },
     "sfx_intro_chime_launch": {
         "text": "Heavy pneumatic emergency tube fires a compact brass device, clamp release, compressed-air blast, metal carrier accelerates down a pipe, one brief clean cyan-like resonant chime in the tail, no music",
         "duration": 2.5,

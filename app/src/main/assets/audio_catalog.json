@@ -602,6 +602,12 @@
       "tags": ["intro", "containment", "impact"]
     },
     {
+      "id": "sfx_intro_beast_strike",
+      "category": "battle",
+      "gain": 0.95,
+      "tags": ["intro", "beast", "impact"]
+    },
+    {
       "id": "sfx_intro_chime_launch",
       "category": "battle",
       "gain": 0.9,
