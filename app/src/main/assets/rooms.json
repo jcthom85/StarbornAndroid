@@ -2353,8 +2353,12 @@
     "title": "Toxic Pocket",
     "background_image": "images/rooms/world_1/mine_gas.png",
     "description": "Corrosive fumes fill the air, turning the lights into blurred, orange smears. A cracked pipe hisses with a yellow gas that tastes like copper and makes your eyes water.",
+    "reveal_title_when_dark": true,
+    "description_dark": "Unlit. The gas is louder than it looks: a cracked pipe hisses somewhere off to the left, and the air tastes of copper. Nova's respirator holds. Whatever else is in here, she cannot see it.",
     "npcs": [],
-    "items": [],
+    "items": [
+      "medkit_i"
+    ],
     "enemies": [],
     "connections": {
       "east": "mine_checkpoint"
@@ -2616,6 +2620,8 @@
     "title": "The Harmonic Well",
     "background_image": "images/rooms/world_1/echo_well.png",
     "description": "A deep service well glows white around a damaged conduit. Cold mist condenses on the rail and leaves a copper taste at the back of Nova's throat.",
+    "reveal_title_when_dark": true,
+    "description_dark": "No light reaches the well. Nova finds the rail by touch, and cold mist beads on her glove. Dominion strung lamps down here at some point. None of them are burning.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -2626,7 +2632,9 @@
       1,
       2
     ],
-    "state": {},
+    "state": {
+      "dark": true
+    },
     "actions": [
       {
         "name": "mist",
@@ -2641,6 +2649,8 @@
     "title": "Signal Alcove",
     "background_image": "images/rooms/world_1/echo_memory.png",
     "description": "A small alcove carries the Fork's return pulse through warm walls. Static crosses Nova's visor as her suit clock drops half a second, then resumes without an error code.",
+    "reveal_title_when_dark": true,
+    "description_dark": "The alcove gives nothing back to a lamp. Nova reads it with her hands instead: warm walls that should be cold, and a static she feels in her teeth before she hears it.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -2651,7 +2661,9 @@
       -1,
       2
     ],
-    "state": {},
+    "state": {
+      "dark": true
+    },
     "actions": [
       {
         "name": "walls",

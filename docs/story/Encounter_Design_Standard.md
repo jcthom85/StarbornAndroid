@@ -148,7 +148,35 @@ Removed from `w1_sq01` and `w1_sq02` on 2026-07-29. Both now open on their first
 
 This is the same instinct as the fun-factor onboarding pass: the first thing the game says after the player commits to something should tell them where to go next.
 
-## 8. Validation gate
+## 8. Dark rooms
+
+Darkness is a complete, data-driven mechanic. **No engine work is needed to add a dark room** — `darkCapableRoomIds` is derived from the data (`ExplorationViewModel.kt`), so authoring `"dark": true` (or `state.dark: true`) is sufficient.
+
+While a room is dark: NPCs are hidden, ground items are hidden, quick actions are suppressed, the environment theme is suppressed, and **exits are restricted to perceivable directions**.
+
+Darkness resolves in this order (`ExplorationScreen.kt`): room state `dark` → room state `light_on` → the authored `dark` flag. Then two overrides: a room that is not dark-capable is never dark, and an `env: "mine"` room is lit whenever the Stellarium generator (`mine_junction`, state `power_on`) is on. Setting `power_on` writes `dark`/`light_on` across **every** dark-capable `env: "mine"` room at once, which is why environment matters when choosing a light source.
+
+Three usable light sources:
+
+| Source | Scope | Use for |
+| --- | --- | --- |
+| `toggle` action bound to `light_on` | one room | self-contained rooms; see `pit_nova_bunk` |
+| Generator `power_on` on `mine_junction` | every dark-capable `env: "mine"` room | payoff for MQ03's "Restore power at the Cavern Junction" beat |
+| `set_room_state` from any event | whichever rooms you name | story-driven lighting, e.g. the Fork sync lighting the Architect rooms |
+
+**Reference implementation: `pit_nova_bunk`.** It shows the whole toolkit — `dark`, `reveal_title_when_dark`, `description_dark`, `state.light_on`, a `toggle` action, `blocked_directions` gated on room state, and `description_variants` keyed on the lit state.
+
+### The rule that matters
+
+**Every action the player must use while a room is dark has to be named in `description_dark`.** Only `description_dark` renders when unlit, and inline actions are matched against the *currently rendered* description. `validate_world1_content.ps1 -StrictInlineActions` will **not** catch a violation, because it checks whether the name appears in *any* description — so a keyword present only in the lit copy passes validation while being unreachable in play. This is the same trap as `description_variants` (see `World1_Vertical_Slice_Status.md`).
+
+Omit a keyword deliberately only when the action *should* be undiscoverable until there is light — `pit_nova_bunk` does this with `scorched conduit`, which is milestone-gated behind turning the light on.
+
+Also: a dark room with no `description_dark` falls back to the bare string `"It's too dark to make out the room."` and exposes no interactions at all. `mine_gas` shipped in that state — flagged dark, never finished.
+
+Other constraints: the 45-word cap applies to `description_dark`; and because exits are restricted while dark, every dark room needs a way back out, or a deliberately gated exit with a clear `message_locked`.
+
+## 9. Validation gate
 
 Run before committing any encounter change:
 

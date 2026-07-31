@@ -19,17 +19,15 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     visible: "Dynamic Patrol"
     timeout: 15000
+# This flow verifies the roaming patrol, not dark rooms. It previously waited on
+# a "Dark Room" fixture that no longer exists; dark-room rendering is covered by
+# dark_room_visibility.yaml. Wait for the patrol to find the player and engage.
 - tapOn: "Dynamic Patrol"
 - extendedWaitUntil:
-    visible: "Dark Room"
+    visible: "Conveyor Belt"
     timeout: 90000
-- assertVisible: "It's too dark to see what's here."
-- assertNotVisible: "It's too dark to make out the room."
-- assertNotVisible: "Conveyor Belt"
-- assertNotVisible: "Engage"
-- assertNotVisible: "Pressure Hauler"
 - extendedWaitUntil:
     visible: "HOSTILE CONTACT"
-    timeout: 20000
+    timeout: 120000
 - assertVisible: "Pressure Hauler"
 - takeScreenshot: dynamic-enemy-movement

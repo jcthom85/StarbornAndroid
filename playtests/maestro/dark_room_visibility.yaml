@@ -1,7 +1,14 @@
+# Verifies dark-room rendering: an unlit room shows its authored description_dark
+# (not the generic engine fallback), keeps its title via reveal_title_when_dark,
+# and still exposes the inline actions named in the dark copy.
+#
+# Uses Nova's Bunk, which starts dark with the bunk light off. Enters through the
+# Wake Up Call scenario rather than New Game so the ~45s prologue is skipped.
+# Previously this flow targeted a "Dark Room" debug fixture that no longer exists.
 appId: com.junewiregames.starborn.prealpha
 ---
 - launchApp:
-    clearState: true
+    clearState: false
 - extendedWaitUntil:
     visible: "New Game"
     timeout: 60000
@@ -14,18 +21,30 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 15000
 - tapOn: "Search world, quest, room, or system"
 - eraseText
-- inputText: "Dynamic"
+- inputText: "Wake Up"
 - runScript: sleep.js
 - extendedWaitUntil:
-    visible: "Dynamic Patrol"
+    visible: "Wake Up Call"
     timeout: 15000
-- tapOn: "Dynamic Patrol"
+- tapOn: "Wake Up Call"
 - extendedWaitUntil:
-    visible: "Dark Room"
+    visible: "Nova's Bunk"
     timeout: 90000
-- assertVisible: "It's too dark to see what's here."
+# Authored dark copy renders, not the engine fallback.
+- assertVisible: ".*find the bunk edge, netting, and door switch without light.*"
 - assertNotVisible: "It's too dark to make out the room."
-- assertNotVisible: "Conveyor Belt"
-- assertNotVisible: "Pressure Hauler"
-- assertNotVisible: "Engage"
+# Actions named in description_dark stay reachable while unlit.
+- assertVisible: "netting"
+- assertVisible: "bunk light"
 - takeScreenshot: dark-room-visibility
+# Lighting the room swaps to the lit description.
+- tapOn: "bunk light"
+- extendedWaitUntil:
+    visible: ".*The bunk light coughs on.*"
+    timeout: 15000
+- tapOn: ".*The bunk light coughs on.*"
+- extendedWaitUntil:
+    visible: ".*scorched conduit spits blue-white sparks.*"
+    timeout: 15000
+- assertNotVisible: ".*find the bunk edge, netting, and door switch without light.*"
+- takeScreenshot: dark-room-lit

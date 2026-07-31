@@ -2389,6 +2389,18 @@
             "value": true
           },
           {
+            "type": "set_room_state",
+            "room_id": "echo_well",
+            "state_key": "dark",
+            "value": false
+          },
+          {
+            "type": "set_room_state",
+            "room_id": "echo_memory",
+            "state_key": "dark",
+            "value": false
+          },
+          {
             "type": "set_milestone",
             "milestone": "ms_w1_mq03_echo_marked"
           },
