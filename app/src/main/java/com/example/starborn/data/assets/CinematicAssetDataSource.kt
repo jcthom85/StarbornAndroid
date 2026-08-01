@@ -60,6 +60,8 @@ class CinematicAssetDataSource(
             transition = CinematicTransition.fromRaw(step.transition),
             audioCue = step.audioCue,
             voiceCue = step.voiceCue,
+            musicCue = step.musicCue,
+            fadeOutSeconds = step.fadeOutSeconds,
             captionStyle = CinematicCaptionStyle.fromRaw(step.captionStyle, type)
         )
     }
@@ -94,5 +96,7 @@ data class CinematicStepAsset(
     val transition: String? = null,
     @Json(name = "audio_cue") val audioCue: String? = null,
     @Json(name = "voice_cue") val voiceCue: String? = null,
+    @Json(name = "music_cue") val musicCue: String? = null,
+    @Json(name = "fade_out_seconds") val fadeOutSeconds: Double? = null,
     @Json(name = "caption_style") val captionStyle: String? = null
 )

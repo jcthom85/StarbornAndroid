@@ -72,6 +72,8 @@ object CinematicPlaybackManager {
             transition = step.transition,
             audioCue = step.audioCue,
             voiceCue = step.voiceCue,
+            musicCue = step.musicCue,
+            fadeOutSeconds = step.fadeOutSeconds,
             captionStyle = step.captionStyle
         )
         return CinematicUiState(

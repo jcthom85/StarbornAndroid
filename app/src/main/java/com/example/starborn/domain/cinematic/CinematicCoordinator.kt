@@ -35,6 +35,13 @@ class CinematicCoordinator(
         }
     }
 
+    /**
+     * Looks up a scene without playing it. Scenes that are rendered by something
+     * other than the cinematic overlay (the new-game fade, for example) still
+     * author their timing and audio in cinematics.json, and need to read it.
+     */
+    fun scene(sceneId: String?): CinematicScene? = cinematicService.scene(sceneId)
+
     fun play(sceneId: String?, onComplete: () -> Unit = {}): Boolean {
         val scene = cinematicService.scene(sceneId)
         if (scene == null || scene.steps.isEmpty()) {

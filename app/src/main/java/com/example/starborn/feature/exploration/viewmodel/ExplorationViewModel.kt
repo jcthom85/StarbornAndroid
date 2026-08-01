@@ -127,6 +127,10 @@ import kotlinx.coroutines.withContext
 
 private const val DEFAULT_PORTRAIT = "images/characters/communicator_portrait.png"
 private const val LOG_TAG = "ExplorationVM"
+
+// Fallback only. The real value is authored on the `new_game_fade_in` step in
+// cinematics.json so the wake-up can be tuned without a rebuild.
+private const val DEFAULT_NEW_GAME_FADE_MILLIS = 5000
 private const val MILESTONE_BAND_LIMIT = 3
 private const val FULL_MAP_COLUMNS = 16
 private const val FULL_MAP_ROWS = 8
@@ -682,6 +686,7 @@ class ExplorationViewModel(
     private var entryRoomIds: Set<String> = emptySet()
     private val darkRoomEntryDirection: MutableMap<String, String> = mutableMapOf()
     private var fadeOverlayCommandId: Long = 0L
+    private var lastCinematicMusicStepKey: String? = null
     private var initialFadePrimed: Boolean = startWithBlackScreen
     private val pendingFadeCallbacks: MutableMap<Long, () -> Unit> = mutableMapOf()
     private var userMusicVolume: Float = 1f
@@ -976,12 +981,28 @@ class ExplorationViewModel(
         if (sceneId.isNullOrBlank()) return false
         return when (sceneId) {
             "new_game_fade_in" -> {
+                // This scene is rendered as a bare fade overlay rather than through the
+                // cinematic overlay, so its step never reaches the normal audio/timing
+                // path. Read both off the asset so the fade stays authorable in
+                // cinematics.json instead of being a constant buried here.
+                val fadeStep = cinematicCoordinator.scene(sceneId)?.steps?.firstOrNull()
+                val durationMillis = fadeStep?.durationSeconds
+                    ?.takeIf { it > 0.0 }
+                    ?.let { (it * 1000).toInt() }
+                    ?: DEFAULT_NEW_GAME_FADE_MILLIS
                 _uiState.update { it.copy(forceBlackScreen = true) }
                 initialFadePrimed = true
+                // The shift buzzer is what wakes Nova; it has to land as the fade
+                // starts, while the screen is still black.
+                fadeStep?.audioCue?.takeIf { it.isNotBlank() }?.let { cue ->
+                    emitAudioCommands(
+                        listOf(AudioCommand.Play(AudioCueType.UI, cue, loop = false, fadeMs = 0L))
+                    )
+                }
                 triggerFadeOverlay(
                     fromAlpha = 1f,
                     toAlpha = 0f,
-                    durationMillis = 5000,
+                    durationMillis = durationMillis,
                     onComplete = onComplete
                 )
                 true
@@ -1734,9 +1755,33 @@ class ExplorationViewModel(
 
         viewModelScope.launch(dispatchers.main) {
             cinematicCoordinator.state.collect { playback ->
+                applyCinematicMusicCue(playback)
                 _uiState.update { it.copy(cinematic = playback?.toUiState()) }
             }
         }
+    }
+
+    /**
+     * Cinematic music is routed through [audioRouter] rather than played directly by
+     * the overlay, so the router's notion of the current track stays accurate. Without
+     * that, the next room's audio has no idea a cinematic track is playing and cannot
+     * hand over from it — the track would simply keep looping under the room.
+     */
+    private fun applyCinematicMusicCue(playback: CinematicPlaybackState?) {
+        if (playback == null) {
+            lastCinematicMusicStepKey = null
+            return
+        }
+        val stepKey = "${playback.scene.id}:${playback.stepIndex}"
+        if (stepKey == lastCinematicMusicStepKey) return
+        lastCinematicMusicStepKey = stepKey
+        val cue = playback.scene.steps.getOrNull(playback.stepIndex)
+            ?.musicCue
+            ?.takeIf { it.isNotBlank() }
+            ?: return
+        emitAudioCommands(
+            audioRouter.commandsForLayerOverride(AudioCueType.MUSIC, cueId = cue)
+        )
     }
 
     init {

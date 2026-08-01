@@ -52,6 +52,18 @@ data class CinematicStep(
     val transition: CinematicTransition = CinematicTransition.FADE,
     val audioCue: String? = null,
     val voiceCue: String? = null,
+    /**
+     * Starts a music track on the music layer for the rest of the scene. Unlike
+     * [audioCue] (a one-shot on the UI layer) this is routed through AudioRouter so
+     * the track is handed over cleanly when the next room's audio applies.
+     */
+    val musicCue: String? = null,
+    /**
+     * Dims this step's frame to black over the final N seconds of its duration.
+     * Steps otherwise only fade in, so without this the last step of a scene pops
+     * off in a single frame.
+     */
+    val fadeOutSeconds: Double? = null,
     val captionStyle: CinematicCaptionStyle = CinematicCaptionStyle.NARRATION
 )
 

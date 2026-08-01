@@ -271,7 +271,7 @@
         "text": "",
         "caption_style": "none",
         "audio_cue": "sfx_intro_shift_buzzer",
-        "duration_seconds": 0.9
+        "duration_seconds": 8.0
       }
     ]
   },
@@ -700,6 +700,8 @@
         "camera_start_scale": 1.06,
         "camera_end_scale": 1.0,
         "transition": "fade",
+        "music_cue": "music_title_theme",
+        "fade_out_seconds": 1.2,
         "duration_seconds": 3.5
       }
     ]

@@ -248,6 +248,8 @@ data class CinematicStepUi(
     val transition: com.example.starborn.domain.cinematic.CinematicTransition = com.example.starborn.domain.cinematic.CinematicTransition.FADE,
     val audioCue: String? = null,
     val voiceCue: String? = null,
+    val musicCue: String? = null,
+    val fadeOutSeconds: Double? = null,
     val captionStyle: com.example.starborn.domain.cinematic.CinematicCaptionStyle = com.example.starborn.domain.cinematic.CinematicCaptionStyle.NARRATION
 )
 

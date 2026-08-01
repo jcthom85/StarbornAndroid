@@ -6734,10 +6734,21 @@ private fun IllustratedCinematicOverlay(
         }
     }
 
+    // Dims the frame over the tail of the step. Steps otherwise only fade in, so the
+    // last step of a scene would pop off in a single frame.
+    val fadeOutMs = ((state.step.fadeOutSeconds ?: 0.0) * 1000.0)
+        .toLong()
+        .coerceIn(0L, durationMs)
+    var contentDimmed by remember(stepKey) { mutableStateOf(false) }
+
     LaunchedEffect(stepKey, durationMs, lifecycle, captionRevealFinished) {
         if (!captionRevealFinished) return@LaunchedEffect
         lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
-            delay(durationMs)
+            delay(durationMs - fadeOutMs)
+            if (fadeOutMs > 0L) {
+                contentDimmed = true
+                delay(fadeOutMs)
+            }
             onAdvance()
         }
     }
@@ -6801,12 +6812,19 @@ private fun IllustratedCinematicOverlay(
     val driftY = lerp(startY, endY, progress)
     var contentVisible by remember(stepKey) { mutableStateOf(false) }
     LaunchedEffect(stepKey) { contentVisible = true }
+    val shown = contentVisible && !contentDimmed
     val contentAlpha by animateFloatAsState(
-        targetValue = if (contentVisible) 1f else 0f,
-        animationSpec = tween(
-            durationMillis = if (state.step.transition == CinematicTransition.CUT) 1 else 420,
-            easing = FastOutSlowInEasing
-        ),
+        targetValue = if (shown) 1f else 0f,
+        animationSpec = if (contentDimmed) {
+            // Linear on the way out: an eased dim reads as the image stalling at the
+            // top of the curve rather than settling into black.
+            tween(durationMillis = fadeOutMs.toInt(), easing = LinearEasing)
+        } else {
+            tween(
+                durationMillis = if (state.step.transition == CinematicTransition.CUT) 1 else 420,
+                easing = FastOutSlowInEasing
+            )
+        },
         label = "illustratedCinematicFade"
     )
     val advanceOrReveal: () -> Unit = {
@@ -6880,6 +6898,9 @@ private fun IllustratedCinematicOverlay(
                 onRevealFinished = { captionRevealFinished = true },
                 onAdvance = onAdvance,
                 modifier = Modifier
+                    // Only follows the frame on the way out; captions keep their own
+                    // reveal animation on the way in.
+                    .graphicsLayer { alpha = if (contentDimmed) contentAlpha else 1f }
                     .align(Alignment.BottomStart)
                     .navigationBarsPadding()
                     .padding(start = 28.dp, end = 28.dp, bottom = 54.dp)

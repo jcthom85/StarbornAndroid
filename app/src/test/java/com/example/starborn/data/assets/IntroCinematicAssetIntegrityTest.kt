@@ -62,10 +62,27 @@ class IntroCinematicAssetIntegrityTest {
             "The title card must use the shipped Starborn wordmark",
             titleCard.imagePath == "images/cinematics/intro_title_card_v1.png"
         )
+        // The cold open runs on ambience and impacts alone; the theme entering on the
+        // wordmark is what makes the title land instead of playing as wallpaper. The
+        // bunk suppresses music while the light is off, so the room's audio hands the
+        // theme out again on its own.
+        assertEquals("music_title_theme", titleCard.musicCue)
+        val titleFadeOut = titleCard.fadeOutSeconds ?: 0.0
+        assertTrue(
+            "The title card must dim into the bunk fade rather than cutting",
+            titleFadeOut > 0.0 && titleFadeOut < (titleCard.durationSeconds ?: 0.0)
+        )
         assertTrue("The redundant Shift System card should remain removed", steps.none { it.speaker == "SHIFT SYSTEM" })
         assertTrue("The prologue should cut directly into the bunk", !completeCopy.contains("Nova got"))
         val fadeIn = scenes.single { it.id == "new_game_fade_in" }.steps.orEmpty().filterNotNull().single()
         assertEquals("sfx_intro_shift_buzzer", fadeIn.audioCue)
+        // This step is not played through the cinematic overlay; ExplorationViewModel
+        // reads its duration to time the fade up on the bunk. A short value here reads
+        // as a snap cut off the title card, so keep it deliberately slow.
+        assertTrue(
+            "The wake-up fade must stay slow enough to read as waking, not a cut",
+            (fadeIn.durationSeconds ?: 0.0) >= 5.0
+        )
 
         val questCopy = File("src/main/assets/quests.json").readText()
         val roomCopy = File("src/main/assets/rooms.json").readText()
