@@ -3,7 +3,7 @@
 
 The cold open cuts to black and lands on the title. Rather than generating
 typography (unreliable, and it would drift from the brand), this reuses the
-same wordmark the main menu uses: app/src/main/res/drawable/title_logo_starborn.png.
+same wordmark the main menu uses: app/src/main/res/drawable-nodpi/title_logo_starborn.webp.
 
 The card is deliberately near-black rather than the busy main-menu background,
 so it reads as a hard cut out of the breach and into the title.
@@ -17,7 +17,7 @@ from pathlib import Path
 from PIL import Image, ImageFilter
 
 ROOT = Path(__file__).resolve().parent.parent
-LOGO = ROOT / "app/src/main/res/drawable/title_logo_starborn.png"
+LOGO = ROOT / "app/src/main/res/drawable-nodpi/title_logo_starborn.webp"
 OUT = ROOT / "world_assets/src/main/assets/images/cinematics/intro_title_card_v1.webp"
 
 W, H = 944, 1665

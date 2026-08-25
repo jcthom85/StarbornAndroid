@@ -52,6 +52,34 @@ Two things to know before converting anything else:
 
 Dimension guards survive the change: `validate_world1_content.ps1` parses VP8/VP8L/VP8X headers, so a bad export is still caught by size.
 
+### Bundled UI art lives in `res/drawable-nodpi`, sized for its call site
+
+`res/drawable/` with no density qualifier is the **mdpi baseline**, so Android upscales anything in
+it to the device density on decode: 3x linear on an xxhdpi phone, which is 9x the pixels. That is not
+a disk-size issue, it is a heap issue, and it is invisible until a device runs out of memory.
+
+On 2026-08-25 every raster in `res/drawable/` was doing this. `item_icon_sword.png` was a 1024x1536
+RGBA PNG decoding to **56.6 MB** on a 3x phone in order to draw an icon at 56.dp. `beach_bg.png` cost
+75 MB. The whole bucket totalled ~1.24 GB if resident. The inventory screen was one screen away from
+a guaranteed OOM.
+
+Three rules, in priority order:
+
+1. **Raster art belongs in `res/drawable-nodpi/`,** which is never density-scaled. Only vectors and
+   XML stay in plain `res/drawable/`. Resource *names* are identical either way, so `R.drawable.foo`
+   and `getIdentifier("foo", "drawable", pkg)` both keep working after a move.
+2. **Size the source to the call site, not to the source render.** Grep the `.size(N.dp)` at every use
+   and multiply by 4 for xxxhdpi. Item icons top out at 56.dp, so 256px is already generous; they were
+   shipping at 1024x1536.
+3. **Ship WebP.** Same settings as the asset pack.
+
+Together these took `res/` from 142 MB to 50 MB -- and 39 MB of what is left is `raw/` audio, not art.
+`item_icon_sword` went from 2,307 KB to 7 KB on disk and from 56.6 MB to 175 KB decoded.
+
+**Known follow-up:** `main_menu_background` is used in eleven places and *every one of them* is a
+portrait fallback, never a background -- a full-screen image stretched into a 60.dp circle whenever an
+asset is missing. It wants a purpose-made placeholder portrait instead.
+
 ### Chroma-key removal
 
 `scripts/remove_chroma_key.py` lifts the flat `#00ff00` background. It used to live in a per-machine

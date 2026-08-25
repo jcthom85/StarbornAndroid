@@ -93,10 +93,14 @@ def collect_icons(root: Path) -> List[str]:
     # Assuming standard android structure relative to assets
     # root is assets_dir -> ../res/drawable
     res_dir = root.parent / "res"
-    drawable_dir = res_dir / "drawable"
-    
+    # Raster drawables live in drawable-nodpi so Android does not upscale them from the
+    # mdpi baseline; only the vector/XML ones remain in plain drawable.
+    drawable_dirs = [res_dir / "drawable", res_dir / "drawable-nodpi"]
+
     icons = set()
-    if drawable_dir.exists():
+    for drawable_dir in drawable_dirs:
+        if not drawable_dir.exists():
+            continue
         for f in drawable_dir.iterdir():
             if f.suffix.lower() in (".png", ".jpg", ".xml", ".webp"):
                 icons.add(f.stem)
