@@ -6760,10 +6760,9 @@ private fun IllustratedCinematicOverlay(
         .coerceIn(0L, durationMs)
     var contentDimmed by remember(stepKey) { mutableStateOf(false) }
 
-    LaunchedEffect(stepKey, durationMs, lifecycle, captionRevealFinished) {
-        if (!captionRevealFinished) return@LaunchedEffect
+    LaunchedEffect(stepKey, durationMs, lifecycle) {
         lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
-            delay(durationMs - fadeOutMs)
+            delay((durationMs - fadeOutMs).coerceAtLeast(0L))
             if (fadeOutMs > 0L) {
                 contentDimmed = true
                 delay(fadeOutMs)
@@ -6952,6 +6951,7 @@ private fun IllustratedCinematicOverlay(
                 revealAllRequest = revealAllRequest,
                 onRevealFinished = { captionRevealFinished = true },
                 onAdvance = onAdvance,
+                audioCuePlayer = audioCuePlayer,
                 modifier = Modifier
                     // Only follows the frame on the way out; captions keep their own
                     // reveal animation on the way in.
@@ -6999,6 +6999,7 @@ private fun IllustratedCinematicCaption(
     revealAllRequest: Int,
     onRevealFinished: () -> Unit,
     onAdvance: () -> Unit,
+    audioCuePlayer: AudioCuePlayer? = null,
     modifier: Modifier = Modifier
 ) {
     if (state.step.captionStyle == CinematicCaptionStyle.DIALOGUE) {
@@ -7019,7 +7020,11 @@ private fun IllustratedCinematicCaption(
             onAdvance = onAdvance,
             onChoice = { onAdvance() },
             onPlayVoice = {},
-            onPlayMurmur = {},
+            onPlayMurmur = { cue ->
+                audioCuePlayer?.execute(
+                    listOf(AudioCommand.Play(AudioCueType.VOICE, cue, loop = false, fadeMs = 0L))
+                )
+            },
             onRevealFinished = onRevealFinished,
             revealAllRequest = revealAllRequest,
             modifier = modifier

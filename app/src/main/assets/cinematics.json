@@ -581,7 +581,8 @@
         "camera_start_y": 6.0,
         "camera_end_y": 0.0,
         "duration_seconds": 3.0,
-        "transition": "fade"
+        "transition": "fade",
+        "music_cue": "music_intro_breach"
       },
       {
         "type": "message",
@@ -595,8 +596,7 @@
         "camera_end_y": 12.0,
         "transition": "cut",
         "audio_cue": "sfx_intro_door_buckle",
-        "duration_seconds": 3.0,
-        "voice_cue": "vo_intro_pa_breach"
+        "duration_seconds": 3.0
       },
       {
         "type": "narration",
@@ -623,7 +623,6 @@
         "camera_start_y": 0.0,
         "camera_end_y": -10.0,
         "transition": "cut",
-        "voice_cue": "vo_intro_orion_01",
         "duration_seconds": 2.8
       },
       {
@@ -668,7 +667,6 @@
         "camera_start_y": 0.0,
         "camera_end_y": -8.0,
         "audio_cue": "sfx_intro_stasis_seal",
-        "voice_cue": "vo_intro_orion_02",
         "duration_seconds": 2.8,
         "transition": "fade"
       },
@@ -705,9 +703,9 @@
         "camera_start_scale": 1.06,
         "camera_end_scale": 1.0,
         "transition": "fade",
-        "music_cue": "music_title_theme",
         "fade_out_seconds": 1.2,
-        "duration_seconds": 4.0
+        "duration_seconds": 4.0,
+        "music_cue": "music_title_theme"
       }
     ]
   },

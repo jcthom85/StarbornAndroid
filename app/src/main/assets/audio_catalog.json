@@ -592,6 +592,22 @@
         "archive",
         "corporate"
       ]
+    },
+    {
+      "id": "music_intro_breach",
+      "title": "Sector 9 Breach",
+      "category": "exploration",
+      "loop": false,
+      "gain": 0.88,
+      "fade_in_ms": 200,
+      "fade_out_ms": 1200,
+      "tags": [
+        "intro",
+        "cinematic",
+        "breach",
+        "orchestral",
+        "action"
+      ]
     }
   ],
   "cues": [
@@ -1215,39 +1231,6 @@
         "intro",
         "chorus",
         "resonance"
-      ]
-    },
-    {
-      "id": "vo_intro_pa_breach",
-      "category": "voice",
-      "priority": 3,
-      "gain": 0.95,
-      "tags": [
-        "voice",
-        "intro",
-        "pa"
-      ]
-    },
-    {
-      "id": "vo_intro_orion_01",
-      "category": "voice",
-      "priority": 3,
-      "gain": 0.95,
-      "tags": [
-        "voice",
-        "intro",
-        "orion"
-      ]
-    },
-    {
-      "id": "vo_intro_orion_02",
-      "category": "voice",
-      "priority": 3,
-      "gain": 0.95,
-      "tags": [
-        "voice",
-        "intro",
-        "orion"
       ]
     }
   ]

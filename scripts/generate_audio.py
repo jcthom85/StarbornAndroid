@@ -30,6 +30,10 @@ CHARACTER_VOICE_MAP = {
 
 # Pre-configured Music Prompts from Audio_Design_Guide.md
 MUSIC_CATALOG = {
+    "music_intro_breach": {
+        "prompt": "Cinematic high-stakes sci-fi action orchestral music, 135 BPM. Rapid heart-pounding drum ostinato, screaming urgent strings, heavy rising containment alarm synth chords, intense emergency containment breach. At 14 seconds, sudden dramatic drop to ethereal sacred wide-stereo harmonic choir pads with shimmering crystal resonance. Followed by muffled low-pass silence and a shocking climactic orchestral dissonance hit at 23 seconds, resolving into a soaring 5-note ascending title theme melody on acoustic guitar and strings. Loopable: false.",
+        "duration_ms": 32000, # 32 seconds
+    },
     "music_title_theme": {
         "prompt": "A pensive JRPG title theme, 75 BPM, solo acoustic fingerpicked guitar intro, slowly swelling into warm orchestral strings, ethereal choir pads, and distant echoing electric guitar harmonies, vast cathedral reverb. Mysterious, hopeful, and emotional. Loopable.",
         "duration_ms": 120000, # 2 minutes
@@ -493,18 +497,6 @@ VOICE_CATALOG = {
     "shop_general_vo": {
         "character": "nova",
         "text": "Check your supplies. The road ahead won't offer any free handouts.",
-    },
-    "vo_intro_pa_breach": {
-        "character": "thorne",
-        "text": "Source beast containment breach. Far door pressure rising.",
-    },
-    "vo_intro_orion_01": {
-        "character": "orion",
-        "text": "Broadcast my identity. Draw it away.",
-    },
-    "vo_intro_orion_02": {
-        "character": "orion",
-        "text": "Mute this room. Begin stasis.",
     },
 }
 
