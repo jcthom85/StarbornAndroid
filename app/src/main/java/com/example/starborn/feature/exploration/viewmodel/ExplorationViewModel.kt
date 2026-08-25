@@ -687,6 +687,12 @@ class ExplorationViewModel(
     private val darkRoomEntryDirection: MutableMap<String, String> = mutableMapOf()
     private var fadeOverlayCommandId: Long = 0L
     private var lastCinematicMusicStepKey: String? = null
+
+    /**
+     * Whether the scene currently playing started its own music track. A scene that does has to
+     * hand back to the room when it ends, or its track keeps playing over whatever comes next.
+     */
+    private var cinematicMusicActive: Boolean = false
     private var initialFadePrimed: Boolean = startWithBlackScreen
     private val pendingFadeCallbacks: MutableMap<Long, () -> Unit> = mutableMapOf()
     private var userMusicVolume: Float = 1f
@@ -1770,6 +1776,14 @@ class ExplorationViewModel(
     private fun applyCinematicMusicCue(playback: CinematicPlaybackState?) {
         if (playback == null) {
             lastCinematicMusicStepKey = null
+            if (cinematicMusicActive) {
+                cinematicMusicActive = false
+                // Hand the music layer back to the room. Without this the cold open's title theme
+                // kept playing straight through the wake-up fade and into Nova's dark bunk: room
+                // audio is applied once during load, before the cinematic runs, so the bunk's
+                // "stay silent until the light is on" rule was never re-evaluated afterwards.
+                playRoomAudio(sessionStore.state.value.hubId, _uiState.value.currentRoom?.id)
+            }
             return
         }
         val stepKey = "${playback.scene.id}:${playback.stepIndex}"
@@ -1779,6 +1793,7 @@ class ExplorationViewModel(
             ?.musicCue
             ?.takeIf { it.isNotBlank() }
             ?: return
+        cinematicMusicActive = true
         emitAudioCommands(
             audioRouter.commandsForLayerOverride(AudioCueType.MUSIC, cueId = cue)
         )

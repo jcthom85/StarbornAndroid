@@ -44,6 +44,49 @@ class AudioRouterTest {
     }
 
     @Test
+    fun suppressedRoomStopsATrackACinematicStarted() {
+        // The cold open's title theme is started on the music layer by the last cinematic step.
+        // When the scene ends, the room has to be able to take the layer back and silence it --
+        // Nova's bunk stays quiet until the light is on. Before this was wired up, room audio was
+        // only applied once during load, before the cinematic ran, so the theme played straight
+        // through the wake-up fade and into the dark bunk.
+        val bindings = AudioBindings(
+            music = mapOf("hub_1_homestead" to "music_w1_homestead_explore"),
+            ambience = mapOf("pit_nova_bunk" to "amb_bunkroom_hum")
+        )
+        val router = AudioRouter(bindings)
+        router.commandsForLayerOverride(AudioCueType.MUSIC, cueId = "music_title_theme")
+
+        val darkBunk = router.commandsForRoom(
+            hubId = "hub_1_homestead",
+            roomId = "pit_nova_bunk",
+            suppressMusic = true
+        )
+        assertTrue(
+            "The cinematic's theme must stop when the room suppresses music",
+            darkBunk.any { it is AudioCommand.Stop && it.cueId == "music_title_theme" }
+        )
+        assertTrue(
+            "Nothing should start on the music layer while the bunk is dark",
+            darkBunk.none { it is AudioCommand.Play && it.cueId == "music_w1_homestead_explore" }
+        )
+        assertTrue(
+            "Room ambience still plays while music is suppressed",
+            darkBunk.any { it is AudioCommand.Play && it.cueId == "amb_bunkroom_hum" }
+        )
+
+        val lightOn = router.commandsForRoom(
+            hubId = "hub_1_homestead",
+            roomId = "pit_nova_bunk",
+            suppressMusic = false
+        )
+        assertTrue(
+            "Turning the light on hands the music layer to the hub track",
+            lightOn.any { it is AudioCommand.Play && it.cueId == "music_w1_homestead_explore" }
+        )
+    }
+
+    @Test
     fun commandsForLayerOverrideStopsMusicImmediately() {
         val bindings = AudioBindings(
             music = mapOf("hub_alpha" to "theme_alpha")
