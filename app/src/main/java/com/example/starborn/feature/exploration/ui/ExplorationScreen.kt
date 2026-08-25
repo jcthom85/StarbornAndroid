@@ -101,6 +101,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -6693,6 +6694,14 @@ private fun CinematicAccentBar(accentColor: Color) {
     )
 }
 
+/** The last frame drawn by [IllustratedCinematicOverlay], held so the next step can dissolve over it. */
+private data class RenderedCinematicFrame(
+    val imagePath: String?,
+    val scale: Float,
+    val translationX: Float,
+    val translationY: Float
+)
+
 @Composable
 private fun IllustratedCinematicOverlay(
     state: CinematicUiState,
@@ -6702,6 +6711,8 @@ private fun IllustratedCinematicOverlay(
     modifier: Modifier = Modifier
 ) {
     val stepKey = "${state.sceneId}_${state.stepIndex}"
+    // Survives step changes on purpose: it is the outgoing frame for the next dissolve.
+    val lastRenderedFrame = remember { mutableStateOf<RenderedCinematicFrame?>(null) }
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     val durationMs = ((state.step.durationSeconds ?: 4.0) * 1000.0).toLong().coerceAtLeast(500L)
     val waitsForTextReveal = state.step.captionStyle == CinematicCaptionStyle.DIALOGUE ||
@@ -6818,23 +6829,36 @@ private fun IllustratedCinematicOverlay(
     val endY = with(density) { (state.step.cameraEndY ?: 0.0).toFloat().dp.toPx() }
     val driftX = lerp(startX, endX, progress)
     val driftY = lerp(startY, endY, progress)
-    var contentVisible by remember(stepKey) { mutableStateOf(false) }
-    LaunchedEffect(stepKey) { contentVisible = true }
-    val shown = contentVisible && !contentDimmed
-    val contentAlpha by animateFloatAsState(
-        targetValue = if (shown) 1f else 0f,
-        animationSpec = if (contentDimmed) {
-            // Linear on the way out: an eased dim reads as the image stalling at the
-            // top of the curve rather than settling into black.
-            tween(durationMillis = fadeOutMs.toInt(), easing = LinearEasing)
-        } else {
-            tween(
-                durationMillis = if (state.step.transition == CinematicTransition.CUT) 1 else 420,
-                easing = FastOutSlowInEasing
-            )
-        },
-        label = "illustratedCinematicFade"
+    // Cross-dissolve, not a re-fade. Previously the frame was a single Image whose alpha came
+    // from an animateFloatAsState that was NOT keyed to the step, so on a step change the target
+    // dipped to 0 for one frame and recovered before the eased tween had moved: every authored
+    // "fade" rendered as a hard cut with a one-frame flicker, and the whole cold open played as a
+    // slideshow. The outgoing frame is now held underneath, frozen at its end transform, and the
+    // incoming frame dissolves over it.
+    val transitionMs = if (state.step.transition == CinematicTransition.CUT) 0 else 520
+    val outgoing = remember(stepKey) { lastRenderedFrame.value }
+    val enter = remember(stepKey) { CoreAnimatable(if (transitionMs == 0) 1f else 0f) }
+    LaunchedEffect(stepKey) {
+        if (transitionMs > 0) {
+            enter.animateTo(1f, animationSpec = tween(durationMillis = transitionMs, easing = FastOutSlowInEasing))
+        }
+    }
+    val dimAlpha by animateFloatAsState(
+        targetValue = if (contentDimmed) 0f else 1f,
+        // Linear on the way out: an eased dim reads as the image stalling at the
+        // top of the curve rather than settling into black.
+        animationSpec = tween(durationMillis = fadeOutMs.toInt().coerceAtLeast(1), easing = LinearEasing),
+        label = "illustratedCinematicDim"
     )
+    val contentAlpha = enter.value * dimAlpha
+    SideEffect {
+        lastRenderedFrame.value = RenderedCinematicFrame(
+            imagePath = state.step.imagePath,
+            scale = state.step.cameraEndScale?.toFloat() ?: legacyEndScale,
+            translationX = endX,
+            translationY = endY
+        )
+    }
     val advanceOrReveal: () -> Unit = {
         if (waitsForTextReveal && !captionRevealFinished) {
             revealAllRequest += 1
@@ -6870,6 +6894,29 @@ private fun IllustratedCinematicOverlay(
             .background(Color.Black)
             .then(cinematicInteractionModifier)
     ) {
+        // Outgoing frame, frozen where the previous step left it. Drawn only while the
+        // dissolve is running, and skipped entirely on a cut.
+        if (outgoing != null && contentAlpha < 1f && !outgoing.imagePath.isNullOrBlank()) {
+            val outgoingPainter = rememberAssetPainter(
+                outgoing.imagePath,
+                fallback = ColorPainter(Color.Black),
+                async = false
+            )
+            Image(
+                painter = outgoingPainter,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .graphicsLayer {
+                        alpha = (1f - enter.value) * dimAlpha
+                        scaleX = outgoing.scale
+                        scaleY = outgoing.scale
+                        translationX = outgoing.translationX
+                        translationY = outgoing.translationY
+                    }
+            )
+        }
         Image(
             painter = painter,
             contentDescription = null,

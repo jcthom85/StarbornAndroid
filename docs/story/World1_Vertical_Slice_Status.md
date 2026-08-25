@@ -23,6 +23,33 @@ Defects found this way, all since fixed:
 - 2026-07-28 — turning on the bunk light (the first action in the game) permanently hid the `netting` holding Jed's carving; the Red Alert variant on `launch_lift` hid both `override panel` and `hydraulics` for the entire Cargo Lift sacrifice sequence.
 - 2026-08-25 — the dead-end room pass reintroduced it twice: `server_backup`'s ungated `archive terminal` (Dominion termination ledgers) became unreachable the moment the player looted the cases, and `medbay_storage`'s `supplies` went the same way. **The trap recurring within one month is why it is now a gate and not a note.**
 
+### Authoring rule: cinematic timing is dwell, not screen time
+
+Two things about `cinematics.json` that are not obvious from the data:
+
+**A step's `duration_seconds` starts only after its caption finishes typing.** Narration and dialogue
+captions reveal at 24ms per character, and the advance timer waits for that. So the field is *dwell
+after the line lands*, not the beat's screen time, and long lines get charged twice. The intro read
+as 34.5s in the data and ran 43.8s on screen. When levelling pacing, budget dwell and compute the
+real number separately.
+
+**Transitions render as a cross-dissolve between panels.** They did not until 2026-08-25: the frame
+was a single `Image` whose alpha came from an `animateFloatAsState` that was not keyed to the step,
+so on a step change the target dipped to 0 for one frame and recovered before the eased tween had
+moved. Every authored `fade` played as a hard cut with a one-frame flicker, and the cold open read as
+a slideshow. The overlay now holds the outgoing frame underneath, frozen at its end transform, and
+dissolves the incoming one over it. `cut` skips the dissolve and is still the right call for a shock
+beat -- the beast reaching the glass is authored as a cut on purpose.
+
+Because a dissolve is real now, a `fade` between two camera framings of the *same* panel is a soft
+move rather than a hitch, so it is a legitimate choice. Use `cut` within a panel when you want the
+camera to jump.
+
+**Pacing is locked by `IntroCinematicAssetIntegrityTest`:** at least five distinct panels, no panel
+holding more than 35% of the scene, and the payoff beat never the shortest. The cold open had spent
+22 of its 44 seconds on one still across four consecutive beats while the beast reaching the glass --
+the image the whole scene builds to, and the strongest panel in the set -- got 2.0s.
+
 ### Authoring rule: area power lights the area it powers
 
 World 1 themes almost all of its interiors as env `mine` — the Pit, the workshop, the med-bay and the checkpoint all use the mine tileset. Area lighting must therefore scope by **node**, never by env.

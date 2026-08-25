@@ -124,6 +124,33 @@ class IntroCinematicAssetIntegrityTest {
             // placeholder or a truncated export, which is all this check was ever for.
             assertTrue("Missing cinematic image: $imagePath", file.isFile && file.length() > 20_000L)
         }
+        // Pacing lock. The cold open used to spend 22 of its ~44 seconds on a single still --
+        // four consecutive beats on the chime panel -- while the beast reaching the glass, the
+        // payoff the whole scene builds to, was the shortest beat in the scene at 2.0s. Both are
+        // authoring decisions that drift back silently, because nothing else measures them.
+        val panelSeconds = steps
+            .filter { !it.imagePath.isNullOrBlank() }
+            .groupBy { it.imagePath!! }
+            .mapValues { (_, panelSteps) -> panelSteps.sumOf { it.durationSeconds ?: 0.0 } }
+        val totalSeconds = panelSeconds.values.sum()
+
+        assertTrue(
+            "The cold open should carry at least five distinct panels, found ${panelSeconds.size}",
+            panelSeconds.size >= 5
+        )
+        val hog = panelSeconds.maxByOrNull { it.value }
+        assertTrue(
+            "No single panel should hold more than 35% of the intro; ${hog?.key} holds " +
+                "${"%.0f".format(100.0 * (hog?.value ?: 0.0) / totalSeconds)}%",
+            (hog?.value ?: 0.0) / totalSeconds <= 0.35
+        )
+        val beastStep = steps.single { it.imagePath?.contains("intro_beast_glass") == true }
+        val shortest = steps.minOf { it.durationSeconds ?: 0.0 }
+        assertTrue(
+            "The beast reaching the glass is the payoff and must not be the shortest beat in the scene",
+            (beastStep.durationSeconds ?: 0.0) > shortest
+        )
+
         steps.mapNotNull { it.portrait }.distinct().forEach { portraitPath ->
             val file = File("../world_assets/src/main/assets/$portraitPath")
             assertTrue("Missing cinematic portrait: $portraitPath", file.isFile && file.length() > 100_000L)

@@ -580,7 +580,8 @@
         "camera_end_scale": 1.035,
         "camera_start_y": 6.0,
         "camera_end_y": 0.0,
-        "duration_seconds": 3.5
+        "duration_seconds": 3.0,
+        "transition": "fade"
       },
       {
         "type": "message",
@@ -589,7 +590,7 @@
         "caption_style": "system",
         "image": "images/cinematics/intro_sector9_breach_v1.webp",
         "camera_start_scale": 1.035,
-        "camera_end_scale": 1.10,
+        "camera_end_scale": 1.1,
         "camera_start_y": 0.0,
         "camera_end_y": 12.0,
         "transition": "cut",
@@ -604,7 +605,8 @@
         "camera_end_scale": 1.06,
         "camera_start_x": -18.0,
         "camera_end_x": 0.0,
-        "duration_seconds": 4.5
+        "duration_seconds": 2.8,
+        "transition": "fade"
       },
       {
         "type": "dialogue",
@@ -621,34 +623,35 @@
         "camera_end_y": -10.0,
         "transition": "cut",
         "voice_cue": "voice_murmur_orion_03",
-        "duration_seconds": 3.5
+        "duration_seconds": 2.8
       },
       {
         "type": "narration",
         "text": "The tube fires. Three impacts track it through the conduit.",
         "image": "images/cinematics/intro_chime_launch_v1.webp",
         "camera_start_scale": 1.13,
-        "camera_end_scale": 1.18,
+        "camera_end_scale": 1.22,
         "camera_start_x": 18.0,
-        "camera_end_x": 30.0,
+        "camera_end_x": 36.0,
         "camera_start_y": -10.0,
         "camera_end_y": -18.0,
         "audio_cue": "sfx_intro_chime_launch",
         "transition": "cut",
-        "duration_seconds": 3.0
+        "duration_seconds": 2.6
       },
       {
         "type": "narration",
         "text": "For one impossible beat, something far away answers. Not a voice. A chord, many notes agreeing to carry it.",
-        "image": "images/cinematics/intro_chime_launch_v1.webp",
-        "camera_start_scale": 1.18,
-        "camera_end_scale": 1.22,
-        "camera_start_x": 30.0,
-        "camera_end_x": 36.0,
-        "camera_start_y": -18.0,
-        "camera_end_y": -22.0,
+        "image": "images/cinematics/intro_chorus_answer_v1.webp",
+        "camera_start_scale": 1.0,
+        "camera_end_scale": 1.08,
+        "camera_start_x": 0.0,
+        "camera_end_x": 0.0,
+        "camera_start_y": 10.0,
+        "camera_end_y": -6.0,
         "transition": "fade",
-        "duration_seconds": 4.5
+        "duration_seconds": 3.2,
+        "audio_cue": "sfx_chime_splice"
       },
       {
         "type": "dialogue",
@@ -665,7 +668,8 @@
         "camera_end_y": -8.0,
         "audio_cue": "sfx_intro_stasis_seal",
         "voice_cue": "voice_murmur_orion_02",
-        "duration_seconds": 3.5
+        "duration_seconds": 2.8,
+        "transition": "fade"
       },
       {
         "type": "narration",
@@ -678,19 +682,19 @@
         "camera_start_y": -8.0,
         "camera_end_y": -18.0,
         "transition": "cut",
-        "duration_seconds": 3.5
+        "duration_seconds": 2.6
       },
       {
         "type": "narration",
         "text": "Something reaches the glass.",
         "image": "images/cinematics/intro_beast_glass_v1.webp",
         "camera_start_scale": 1.0,
-        "camera_end_scale": 1.22,
+        "camera_end_scale": 1.14,
         "camera_start_y": 0.0,
         "camera_end_y": -6.0,
         "transition": "cut",
         "audio_cue": "sfx_intro_beast_strike",
-        "duration_seconds": 2.0
+        "duration_seconds": 3.4
       },
       {
         "type": "narration",
@@ -702,7 +706,7 @@
         "transition": "fade",
         "music_cue": "music_title_theme",
         "fade_out_seconds": 1.2,
-        "duration_seconds": 3.5
+        "duration_seconds": 4.0
       }
     ]
   },
@@ -710,24 +714,66 @@
     "id": "scene_cutter_surge",
     "title": "Live Cutter Test",
     "steps": [
-      { "type": "narration", "text": "Nova clamps the Flux Liner's ground strip to the floor bus. Cold loop: 68%. Governor: bypassed." },
-      { "type": "dialogue", "speaker": "Nova", "text": "Bypass confirmed. One live sweep." },
-      { "type": "narration", "text": "The cutter fires. Its phase sweep enters the buried old conduit under Jed's bench. The sector breaker trips hard enough to shake dust from the rafters." },
-      { "type": "dialogue", "speaker": "Jed", "text": "Kill it!" },
-      { "type": "dialogue", "speaker": "Nova", "text": "It is off. That hum is not mine." },
-      { "type": "narration", "text": "A terminal prints CUTTER FAULT 4C-117 and attaches operator NOVA VANCE. Deep below the shop, a chamber seal cracks." }
+      {
+        "type": "narration",
+        "text": "Nova clamps the Flux Liner's ground strip to the floor bus. Cold loop: 68%. Governor: bypassed."
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Nova",
+        "text": "Bypass confirmed. One live sweep."
+      },
+      {
+        "type": "narration",
+        "text": "The cutter fires. Its phase sweep enters the buried old conduit under Jed's bench. The sector breaker trips hard enough to shake dust from the rafters."
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Jed",
+        "text": "Kill it!"
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Nova",
+        "text": "It is off. That hum is not mine."
+      },
+      {
+        "type": "narration",
+        "text": "A terminal prints CUTTER FAULT 4C-117 and attaches operator NOVA VANCE. Deep below the shop, a chamber seal cracks."
+      }
     ]
   },
   {
     "id": "scene_anchor_drill",
     "title": "Anchor Drill",
     "steps": [
-      { "type": "narration", "text": "Nova opens the Bridge alone. Heat climbs her arm and her knees buckle." },
-      { "type": "dialogue", "speaker": "Orion", "text": "Close it. The Bridge connects; it does not make one body carry the circuit." },
-      { "type": "narration", "text": "Zeke clips a ground lead to Nova's bracer. Gh0st checks the empty command channel, then offers his armored hand." },
-      { "type": "dialogue", "speaker": "Gh0st", "text": "No command attached. Proceed." },
-      { "type": "narration", "text": "Orion holds the counter-tone. The current divides across four willing contacts, and Zeke's wound steadies." },
-      { "type": "dialogue", "speaker": "Nova", "text": "Link. Not merge. I get it." }
+      {
+        "type": "narration",
+        "text": "Nova opens the Bridge alone. Heat climbs her arm and her knees buckle."
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Orion",
+        "text": "Close it. The Bridge connects; it does not make one body carry the circuit."
+      },
+      {
+        "type": "narration",
+        "text": "Zeke clips a ground lead to Nova's bracer. Gh0st checks the empty command channel, then offers his armored hand."
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Gh0st",
+        "text": "No command attached. Proceed."
+      },
+      {
+        "type": "narration",
+        "text": "Orion holds the counter-tone. The current divides across four willing contacts, and Zeke's wound steadies."
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Nova",
+        "text": "Link. Not merge. I get it."
+      }
     ]
   },
   {
