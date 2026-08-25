@@ -4,7 +4,7 @@
     "world_id": "world_1",
     "title": "Homestead Quarter",
     "description": "A dense cluster of sleeping pods and industrial workshops.",
-    "background_image": "images/hubs/homestead_v6.png",
+    "background_image": "images/hubs/homestead_v6.webp",
     "discovered": true
   },
   {
@@ -12,7 +12,7 @@
     "world_id": "world_1",
     "title": "Logistics Sector",
     "description": "The operational heart of the colony, leading to the deep mines.",
-    "background_image": "images/hubs/logistics.png",
+    "background_image": "images/hubs/logistics.webp",
     "discovered": true
   },
   {
@@ -20,7 +20,7 @@
     "world_id": "world_2",
     "title": "Jungle Ruins",
     "description": "Bioluminescent jungle reclaiming ancient Aethel stone ruins.",
-    "background_image": "images/hubs/sector9.png",
+    "background_image": "images/hubs/sector9.webp",
     "discovered": true
   },
   {
@@ -28,7 +28,7 @@
     "world_id": "world_2",
     "title": "Sector 9 Ruins",
     "description": "The ancient Aethel facility buried beneath the jungle.",
-    "background_image": "images/hubs/facility.png",
+    "background_image": "images/hubs/facility.webp",
     "discovered": false
   },
   {
@@ -36,7 +36,7 @@
     "world_id": "world_3",
     "title": "Lower City",
     "description": "Lower Spire streets, market roofs, sewer ratlines, and safehouse routes where the heist is assembled from overlooked lives.",
-    "background_image": "images/hubs/hub_5_lower_city.png",
+    "background_image": "images/hubs/hub_5_lower_city.webp",
     "discovered": false
   },
   {
@@ -44,7 +44,7 @@
     "world_id": "world_3",
     "title": "Upper City",
     "description": "Executive parks, service corridors, lounges, archives, and rooftop escape paths where politeness becomes the security system.",
-    "background_image": "images/hubs/hub_6_upper_city.png",
+    "background_image": "images/hubs/hub_6_upper_city.webp",
     "discovered": false
   },
   {
@@ -52,7 +52,7 @@
     "world_id": "world_4",
     "title": "Slag Pits",
     "description": "A dangerous Foundry outskirts network of slag routes, coolant shelters, waste machinery, and airlock systems around the Astra landing site.",
-    "background_image": "images/hubs/hub_7_slag_pits.png",
+    "background_image": "images/hubs/hub_7_slag_pits.webp",
     "discovered": false
   },
   {
@@ -60,7 +60,7 @@
     "world_id": "world_4",
     "title": "Assembly Line",
     "description": "The Foundry interior: conveyor timing, conditioning chambers, forge machinery, power-core theft, and the Titan escape route.",
-    "background_image": "images/hubs/hub_8_assembly_line.png",
+    "background_image": "images/hubs/hub_8_assembly_line.webp",
     "discovered": false
   },
   {
@@ -68,7 +68,7 @@
     "world_id": "world_5",
     "title": "Dominion Orbital Ring",
     "description": "The Ring surface: forced-dock scars, executive luxury, false paradise, security control, and zero-g service routes.",
-    "background_image": "images/hubs/hub_9_orbital_ring.png",
+    "background_image": "images/hubs/hub_9_orbital_ring.webp",
     "discovered": false
   },
   {
@@ -76,7 +76,7 @@
     "world_id": "world_5",
     "title": "Deep Ring",
     "description": "The frozen core of the Orbital Ring: server crypts, firewall infrastructure, Elara's Anchor cathedral, Vale's throne, and the breach beyond reality.",
-    "background_image": "images/hubs/hub_10_deep_ring.png",
+    "background_image": "images/hubs/hub_10_deep_ring.webp",
     "discovered": false
   },
   {
@@ -84,7 +84,7 @@
     "world_id": "world_6",
     "title": "Event Horizon",
     "description": "A fractured realm where perception replaces physics, crew fears become walkable places, and the way forward is built from trust.",
-    "background_image": "images/hubs/hub_11_event_horizon.png",
+    "background_image": "images/hubs/hub_11_event_horizon.webp",
     "discovered": false
   },
   {
@@ -92,7 +92,7 @@
     "world_id": "world_6",
     "title": "The Singularity",
     "description": "The final ascent through every memory the crew survived, ending at the white center where Vale tries to turn silence into salvation.",
-    "background_image": "images/hubs/hub_12_singularity.png",
+    "background_image": "images/hubs/hub_12_singularity.webp",
     "discovered": false
   },
   {

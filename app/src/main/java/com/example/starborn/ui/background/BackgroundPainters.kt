@@ -17,12 +17,53 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import com.example.starborn.R
-import java.util.concurrent.ConcurrentHashMap
 import java.util.Locale
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-private val assetImageCache = ConcurrentHashMap<String, ImageBitmap>()
+/**
+ * Decoded asset bitmaps, bounded by a byte budget rather than an entry count.
+ *
+ * A room background is 1088x1920 ARGB_8888 (~8 MB); an emote is a fraction of that, so counting
+ * entries would be meaningless. World 1 alone has 88 rooms, and an unbounded cache retained every
+ * background the player had ever walked into for the life of the process -- roughly 330 MB after
+ * forty rooms, against a heap that is 192-512 MB on most devices.
+ */
+private object AssetImageCache {
+    private const val MIN_BUDGET_BYTES = 16L * 1024 * 1024
+    private const val MAX_BUDGET_BYTES = 128L * 1024 * 1024
+
+    private val budgetBytes: Long = run {
+        val quarterHeap = Runtime.getRuntime().maxMemory() / 4
+        quarterHeap.coerceIn(MIN_BUDGET_BYTES, MAX_BUDGET_BYTES)
+    }
+
+    private var retainedBytes = 0L
+
+    // accessOrder = true makes iteration order least-recently-used first.
+    private val entries = object : LinkedHashMap<String, ImageBitmap>(16, 0.75f, true) {}
+
+    private fun sizeOf(bitmap: ImageBitmap): Long =
+        bitmap.width.toLong() * bitmap.height.toLong() * 4L
+
+    @Synchronized
+    operator fun get(path: String): ImageBitmap? = entries[path]
+
+    @Synchronized
+    fun put(path: String, bitmap: ImageBitmap) {
+        val size = sizeOf(bitmap)
+        // A single image larger than the whole budget is served but never retained.
+        if (size > budgetBytes) return
+        entries.put(path, bitmap)?.let { retainedBytes -= sizeOf(it) }
+        retainedBytes += size
+        val iterator = entries.entries.iterator()
+        while (retainedBytes > budgetBytes && iterator.hasNext()) {
+            val evicted = iterator.next()
+            iterator.remove()
+            retainedBytes -= sizeOf(evicted.value)
+        }
+    }
+}
 
 @Composable
 fun rememberAssetPainter(
@@ -43,7 +84,7 @@ fun rememberAssetPainter(
     if (resolvedId != 0) return painterResource(resolvedId)
 
     if (async) {
-        var imageBitmap by remember(imagePath) { mutableStateOf(assetImageCache[imagePath]) }
+        var imageBitmap by remember(imagePath) { mutableStateOf(AssetImageCache[imagePath]) }
         LaunchedEffect(imagePath) {
             if (imageBitmap == null) {
                 imageBitmap = withContext(Dispatchers.IO) {
@@ -112,12 +153,12 @@ private fun loadAssetImage(
     context: android.content.Context,
     imagePath: String
 ): ImageBitmap? {
-    assetImageCache[imagePath]?.let { return it }
+    AssetImageCache[imagePath]?.let { return it }
     return runCatching {
         context.assets.open(imagePath).use { stream ->
             BitmapFactory.decodeStream(stream)?.asImageBitmap()
         }
     }.getOrNull()?.also { bitmap ->
-        assetImageCache[imagePath] = bitmap
+        AssetImageCache.put(imagePath, bitmap)
     }
 }

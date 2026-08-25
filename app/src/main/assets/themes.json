@@ -159,7 +159,7 @@
       0.25,
       1
     ],
-    "background_image": "images/hubs/mining_colony.png"
+    "background_image": "images/hubs/mining_colony.webp"
   },
   "dark_room": {
     "bg": [
@@ -402,7 +402,7 @@
       0.82,
       1
     ],
-    "background_image": "images/rooms/world_1/server_aisle.png"
+    "background_image": "images/rooms/world_1/server_aisle.webp"
   },
   "source": {
     "bg": [

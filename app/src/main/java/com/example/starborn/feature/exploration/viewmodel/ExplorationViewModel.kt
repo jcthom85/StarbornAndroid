@@ -2075,6 +2075,7 @@ class ExplorationViewModel(
                     theme = initialTheme,
                     themeStyle = initialThemeStyle,
                     darkCapableRooms = darkCapableRoomIds,
+                    generatorLitRooms = stellariumGeneratorLitRoomIds(),
                     canReturnToHub = canReturnToHub(initialRoom),
                     partyStatus = partyStatus,
                     progressionSummary = progressionSummary,
@@ -4037,25 +4038,29 @@ class ExplorationViewModel(
         roomsById = updated
     }
 
+    /** Rooms the Stellarium generator is wired to. See [generatorLitRoomIds]. */
+    private fun stellariumGeneratorLitRoomIds(): Set<String> = generatorLitRoomIds(
+        generatorRoomId = STELLARIUM_GENERATOR_ROOM_ID,
+        nodeIdByRoomId = nodeIdByRoomId,
+        darkCapableRoomIds = darkCapableRoomIds
+    )
+
     private fun updateMineLighting(powerOn: Boolean) {
-        val generatorEnv = roomsById[STELLARIUM_GENERATOR_ROOM_ID]?.env ?: return
-        val targetEnvKey = environmentKey(generatorEnv)
+        val litRoomIds = stellariumGeneratorLitRoomIds()
+        if (litRoomIds.isEmpty()) return
         val currentRoom = _uiState.value.currentRoom
 
-        roomsById.values
-            .filter { room ->
-                environmentKey(room.env) == targetEnvKey &&
-                    darkCapableRoomIds.contains(room.id)
-            }
-            .forEach { room ->
-                setRoomStateValue(room.id, "dark", !powerOn, notify = false)
-                setRoomStateValue(room.id, "light_on", powerOn, notify = false)
-            }
+        litRoomIds.forEach { roomId ->
+            setRoomStateValue(roomId, "dark", !powerOn, notify = false)
+            setRoomStateValue(roomId, "light_on", powerOn, notify = false)
+        }
 
-        if (currentRoom != null && environmentKey(currentRoom.env) == targetEnvKey) {
+        if (currentRoom != null && litRoomIds.contains(currentRoom.id)) {
             updateActionHints(currentRoom)
         }
-        _uiState.update { it.copy(mineGeneratorOnline = powerOn) }
+        _uiState.update {
+            it.copy(mineGeneratorOnline = powerOn, generatorLitRooms = litRoomIds)
+        }
     }
 
     private fun isMineGeneratorOnline(): Boolean =

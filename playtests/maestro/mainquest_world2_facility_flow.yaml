@@ -726,10 +726,10 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 20000
 
 # 20. Inspect the Astra Console
-- assertVisible: "Astra Console"
-- tapOn: "Astra Console"
+- assertVisible: "dark console"
+- tapOn: "dark console"
 - extendedWaitUntil:
-    visible: "The ship's main console. The primary power conduit is completely severed."
+    visible: "The dark console accepts touch.*"
     timeout: 15000
 
 # Walk from Hangar Bay to Pod Fragment (Crash Site area)
@@ -1019,16 +1019,16 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 15000
 
 # 21. Reboot the Bridge
-- assertVisible: "Reboot Bridge"
-- tapOn: "Reboot Bridge"
+- assertVisible: "bridge relic"
+- tapOn: "bridge relic"
 - extendedWaitUntil:
-    visible: "Connecting conduits and rebooting bridge systems..."
+    visible: "Zeke bolts the Bridge into its cradle.*"
     timeout: 15000
-- tapOn: "Connecting conduits and rebooting bridge systems..."
+- tapOn: "Zeke bolts the Bridge into its cradle.*"
 
 # 22. Launch the Astra
-- assertVisible: "Launch the Astra"
-- tapOn: "Launch the Astra"
+- assertVisible: "launch cradle"
+- tapOn: "launch cradle"
 - extendedWaitUntil:
     visible: "Quest Completed"
     timeout: 30000

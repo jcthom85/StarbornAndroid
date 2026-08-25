@@ -23,7 +23,7 @@ appId: com.junewiregames.starborn.prealpha
     visible: "A Quiet Rest"
     timeout: 10000
 - extendedWaitUntil:
-    visible: "Nova rests in the narrow bunk.*"
+    visible: "Nova rests until the shift alarm.*"
     timeout: 10000
 - assertNotVisible: "Rested"
 - assertNotVisible: "Cook"

@@ -24,8 +24,8 @@ android {
         applicationId = "com.junewiregames.starborn.prealpha"
         minSdk = 26
         targetSdk = 35
-        versionCode = 36
-        versionName = "1.1.34"
+        versionCode = 37
+        versionName = "1.1.35"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -238,14 +238,14 @@ val validateNarrativeProse = registerPowerShellValidationTask(
     "-Strict"
 )
 
-// Not -Strict yet: six known selectors still quote removed copy (the deleted
-// "Dark Room" debug fixture, a World 1 rest message, and three World 2 facility
-// lines). Flip to -Strict once those are resolved so prose edits that orphan a
-// flow fail the gate instead of surfacing on device.
+// -Strict: prose edits that orphan a flow selector now fail the gate instead of
+// surfacing on device. The last holdouts (the "Dark Room" debug fixture, a World 1
+// rest message, and three World 2 facility lines) are resolved.
 val validateMaestroSelectors = registerPowerShellValidationTask(
     "validateMaestroSelectors",
     "Validates that Maestro flow selectors quoting authored prose still match the assets.",
-    "scripts/validate_maestro_selectors.ps1"
+    "scripts/validate_maestro_selectors.ps1",
+    "-Strict"
 )
 
 val validateWorld1Assets = tasks.register("validateWorld1Assets") {

@@ -5,7 +5,7 @@
     "aliases": [],
     "role": "Mentor",
     "description": "A gruff tinkerer who keeps Nova fed, patched, and supplied with parts Dominion says do not exist.",
-    "portrait": "images/npcs/jed.png",
+    "portrait": "images/npcs/jed.webp",
     "dialogue": {},
     "interactions": [
       {
@@ -21,7 +21,7 @@
     "aliases": [],
     "role": "Administrator",
     "description": "A Dominion clerk who hides his nerves behind policy language and increasingly unauthorized paperwork.",
-    "portrait": "images/npcs/zeke.png",
+    "portrait": "images/npcs/zeke.webp",
     "dialogue": {},
     "interactions": [
       {
@@ -37,7 +37,7 @@
     "aliases": [],
     "role": "Fence",
     "description": "A paranoid black-market vendor who deals in illegal tech.",
-    "portrait": "images/npcs/scrapper.png",
+    "portrait": "images/npcs/scrapper.webp",
     "dialogue": {},
     "interactions": [
       {
@@ -59,7 +59,7 @@
     "aliases": [],
     "role": "Medic",
     "description": "The colony's cynical and overworked medical officer.",
-    "portrait": "images/npcs/doc.png",
+    "portrait": "images/npcs/doc.webp",
     "dialogue": {},
     "interactions": [
       {
@@ -79,7 +79,7 @@
     "short_name": "Boggs",
     "role": "Supervisor",
     "description": "A loud, bureaucratic bully who prioritizes quotas over lives.",
-    "portrait": "images/npcs/bogs.png",
+    "portrait": "images/npcs/bogs.webp",
     "dialogue": {},
     "interactions": [
       {
@@ -95,7 +95,7 @@
     "aliases": [],
     "role": "Security",
     "description": "A bored Dominion guard who's seen it all.",
-    "portrait": "images/npcs/guard_hank.png",
+    "portrait": "images/npcs/guard_hank.webp",
     "dialogue": {},
     "interactions": [
       {
@@ -111,7 +111,7 @@
     "aliases": [],
     "role": "Worker",
     "description": "A weary miner who spends his meager scrip at the bar.",
-    "portrait": "images/npcs/miner_bill.png",
+    "portrait": "images/npcs/miner_bill.webp",
     "dialogue": {},
     "interactions": [
       {
@@ -146,7 +146,7 @@
     ],
     "role": "Dominion Commander",
     "description": "The armored Sector Commander who enforces Dominion asset policy with ritual calm.",
-    "portrait": "images/npcs/the_warden.png",
+    "portrait": "images/npcs/the_warden.webp",
     "dialogue": {},
     "interactions": [
       {
@@ -196,7 +196,7 @@
     "aliases": [],
     "role": "Bartender",
     "description": "A gruff information broker and bartender at The Static with a cybernetic loader claw.",
-    "portrait": "images/npcs/jax.png",
+    "portrait": "images/npcs/jax.webp",
     "dialogue": {},
     "interactions": [
       {
@@ -212,7 +212,7 @@
     "aliases": [],
     "role": "Street Vendor",
     "description": "An optimistic street food vendor in the Night Market.",
-    "portrait": "images/npcs/mika.png",
+    "portrait": "images/npcs/mika.webp",
     "dialogue": {},
     "interactions": [
       {
@@ -230,7 +230,7 @@
     ],
     "role": "Upper City Curator",
     "description": "A velvet-robed cultural gatekeeper who treats living people like mislabeled exhibits.",
-    "portrait": "images/npcs/curator.png",
+    "portrait": "images/npcs/curator.webp",
     "dialogue": {},
     "interactions": [
       {
@@ -248,7 +248,7 @@
     ],
     "role": "Prototype Console",
     "description": "A lab terminal running weapon trials with the liability flags disabled.",
-    "portrait": "images/npcs/lab_terminal.png",
+    "portrait": "images/npcs/lab_terminal.webp",
     "dialogue": {},
     "interactions": [
       {
@@ -267,7 +267,7 @@
     ],
     "role": "Deposed Director",
     "description": "The former Dominion director, stripped of command and hiding in her own Server Farm.",
-    "portrait": "images/npcs/thorne.png",
+    "portrait": "images/npcs/thorne.webp",
     "dialogue": {},
     "interactions": [
       {
@@ -285,7 +285,7 @@
     ],
     "role": "Solarium Caretaker",
     "description": "A dented horticultural machine still trying to keep executive paradise alive.",
-    "portrait": "images/npcs/maintenance_bot.png",
+    "portrait": "images/npcs/maintenance_bot.webp",
     "dialogue": {},
     "interactions": [
       {
@@ -301,7 +301,7 @@
     "aliases": [],
     "role": "Living CPU",
     "description": "Gh0st's sister, conscious inside the Source while Dominion uses her body and chordprint as Ring infrastructure.",
-    "portrait": "images/npcs/elara.png",
+    "portrait": "images/npcs/elara.webp",
     "dialogue": {},
     "interactions": [
       {
@@ -320,7 +320,7 @@
     ],
     "role": "Orbital Compliance Commander",
     "description": "The calm architect of the coup, now using Harmony to replace every voice with his own.",
-    "portrait": "images/npcs/vale.png",
+    "portrait": "images/npcs/vale.webp",
     "dialogue": {},
     "interactions": [
       {
@@ -340,7 +340,7 @@
     ],
     "role": "Tuner Drone",
     "description": "An ancient, glitchy Architect drone that speaks in acoustic tuning terminology. It operates as a local scrap merchant.",
-    "portrait": "images/npcs/sentinel_3.png",
+    "portrait": "images/npcs/sentinel_3.webp",
     "dialogue": {},
     "interactions": [
       {

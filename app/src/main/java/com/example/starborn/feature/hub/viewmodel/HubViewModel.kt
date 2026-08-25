@@ -231,7 +231,7 @@ class HubViewModel(
         centerY = 0.88f,
         sizeHint = 240f,
         discovered = true,
-        iconPath = "images/nodes/world_2/hangar_bay.png",
+        iconPath = "images/nodes/world_2/hangar_bay.webp",
         description = "A battered ship with warm lights in the windows and enough scars to count as history.",
         visited = true,
         special = SPECIAL_ASTRA

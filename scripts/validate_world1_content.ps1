@@ -62,6 +62,68 @@ function Get-PngInfo($path) {
     }
 }
 
+function Read-LittleEndianUInt24($bytes, [int]$offset) {
+    return [uint32]$bytes[$offset] -bor ([uint32]$bytes[$offset + 1] -shl 8) -bor ([uint32]$bytes[$offset + 2] -shl 16)
+}
+
+function Read-LittleEndianUInt16($bytes, [int]$offset) {
+    return [uint32]$bytes[$offset] -bor ([uint32]$bytes[$offset + 1] -shl 8)
+}
+
+# Room and node art ships as lossy WebP. Without this the dimension guard below silently stops
+# checking the moment an asset is converted, which is exactly when a bad export would slip through.
+function Get-WebPInfo($path) {
+    $header = Read-FileHeader $path 32
+    if ($null -eq $header) {
+        return [pscustomobject]@{ Valid = $false; Width = 0; Height = 0; Reason = "file is shorter than a WebP header" }
+    }
+    $riff = [System.Text.Encoding]::ASCII.GetString($header, 0, 4)
+    $webp = [System.Text.Encoding]::ASCII.GetString($header, 8, 4)
+    if ($riff -ne "RIFF" -or $webp -ne "WEBP") {
+        return [pscustomobject]@{ Valid = $false; Width = 0; Height = 0; Reason = "missing RIFF/WEBP signature" }
+    }
+    $fourCC = [System.Text.Encoding]::ASCII.GetString($header, 12, 4)
+    switch ($fourCC) {
+        "VP8X" {
+            # Extended format: 24-bit canvas width-1 / height-1 at offset 24.
+            return [pscustomobject]@{
+                Valid = $true
+                Width = [int]((Read-LittleEndianUInt24 $header 24) + 1)
+                Height = [int]((Read-LittleEndianUInt24 $header 27) + 1)
+                Reason = ""
+            }
+        }
+        "VP8 " {
+            # Simple lossy: 3-byte start code 9D 01 2A, then 14-bit width / height.
+            if ($header[23] -ne 0x9D -or $header[24] -ne 0x01 -or $header[25] -ne 0x2A) {
+                return [pscustomobject]@{ Valid = $false; Width = 0; Height = 0; Reason = "missing VP8 start code" }
+            }
+            return [pscustomobject]@{
+                Valid = $true
+                Width = [int]((Read-LittleEndianUInt16 $header 26) -band 0x3FFF)
+                Height = [int]((Read-LittleEndianUInt16 $header 28) -band 0x3FFF)
+                Reason = ""
+            }
+        }
+        "VP8L" {
+            # Lossless: signature byte 0x2F, then 14-bit width-1 / height-1 bit-packed.
+            if ($header[20] -ne 0x2F) {
+                return [pscustomobject]@{ Valid = $false; Width = 0; Height = 0; Reason = "missing VP8L signature" }
+            }
+            $bits = [uint32]$header[21] -bor ([uint32]$header[22] -shl 8) -bor ([uint32]$header[23] -shl 16) -bor ([uint32]$header[24] -shl 24)
+            return [pscustomobject]@{
+                Valid = $true
+                Width = [int](($bits -band 0x3FFF) + 1)
+                Height = [int](((($bits -shr 14)) -band 0x3FFF) + 1)
+                Reason = ""
+            }
+        }
+        default {
+            return [pscustomobject]@{ Valid = $false; Width = 0; Height = 0; Reason = "unrecognized WebP chunk '$fourCC'" }
+        }
+    }
+}
+
 function Get-AssetFile($relativePath) {
     if ([string]::IsNullOrWhiteSpace($relativePath)) { return $null }
     foreach ($assetRoot in @($assets, $assetPackAssets)) {
@@ -90,14 +152,14 @@ function Validate-ImageAsset($label, $relativePath, [int]$minimumWidth, [int]$mi
     if ($file.Length -lt $minImageBytes) {
         $warnings.Add("Invalid World 1 image: $label -> $relativePath is only $($file.Length) bytes.")
     }
-    if ($file.Extension -ieq ".png") {
-        $info = Get-PngInfo $file.FullName
+    if ($file.Extension -ieq ".png" -or $file.Extension -ieq ".webp") {
+        $info = if ($file.Extension -ieq ".png") { Get-PngInfo $file.FullName } else { Get-WebPInfo $file.FullName }
         if (-not $info.Valid) {
             $warnings.Add("Invalid World 1 image: $label -> $relativePath ($($info.Reason)).")
         } elseif ($info.Width -lt $minimumWidth -or $info.Height -lt $minimumHeight) {
             $warnings.Add("Invalid World 1 image: $label -> $relativePath is $($info.Width)x$($info.Height), expected at least ${minimumWidth}x${minimumHeight}.")
         }
-    } elseif ($file.Extension -notin @(".jpg", ".jpeg", ".webp")) {
+    } elseif ($file.Extension -notin @(".jpg", ".jpeg")) {
         $warnings.Add("Invalid World 1 image: $label -> $relativePath uses unsupported extension '$($file.Extension)'.")
     }
 }
@@ -238,6 +300,48 @@ function Test-InlineActionNameAppearsInAnyDescription([string]$label, $room) {
     return $false
 }
 
+# An inline action is only tappable while its name appears in the description that is currently
+# rendered. A description_variant that omits an action's name therefore makes that action
+# unreachable for as long as the variant is active -- unless the same condition that activates the
+# variant also disables the action, which is legitimate authoring (the object is gone from fiction).
+$script:AcknowledgedVariantStrandings = @(
+    # "<room>|<variant requires>|<action>" -- the state change removes the object from the world.
+    "workshop_yard|loader_cleared|loader diagnostic strip",
+    "medbay_vents|toxic_blockage_cleared|toxic blockage",
+    "server_hub|override_applied|terminal"
+)
+
+function Test-InlineActionIsInline($action) {
+    $type = ([string]$action.type).Trim().ToLowerInvariant()
+    if ($type -in @("shop", "tinkering", "firstaid", "first_aid", "rest_stop", "reststop", "rest", "fish", "fishing")) { return $false }
+    return $true
+}
+
+function Get-VariantConditionKey($variant) {
+    $parts = New-Object System.Collections.Generic.List[string]
+    foreach ($milestone in As-Array $variant.requires_milestones) { [void]$parts.Add([string]$milestone) }
+    foreach ($entry in $variant.requires_state.PSObject.Properties) { [void]$parts.Add([string]$entry.Name) }
+    foreach ($milestone in As-Array $variant.forbidden_milestones) { [void]$parts.Add("!" + [string]$milestone) }
+    return ($parts -join ",")
+}
+
+function Test-VariantDisablesAction($variant, $action) {
+    $variantMilestones = @(As-Array $variant.requires_milestones | ForEach-Object { [string]$_ })
+    $variantForbidden = @(As-Array $variant.forbidden_milestones | ForEach-Object { [string]$_ })
+
+    # requires_milestone_not_set: the variant fires on the very milestone that retires the action.
+    $notSet = [string]$action.requires_milestone_not_set
+    if (-not [string]::IsNullOrWhiteSpace($notSet) -and $variantMilestones -contains $notSet) { return $true }
+
+    # requires_milestone(s): the variant forbids a milestone the action needs.
+    foreach ($required in @(As-Array $action.requires_milestones) + @([string]$action.requires_milestone)) {
+        if ([string]::IsNullOrWhiteSpace([string]$required)) { continue }
+        if ($variantForbidden -contains [string]$required) { return $true }
+    }
+
+    return $false
+}
+
 function Validate-PolishedCopy($context, $text) {
     if (Has-PlaceholderCopy $text) {
         $errors.Add("$context contains placeholder copy: '$text'.")
@@ -355,6 +459,21 @@ foreach ($room in $world1Rooms) {
         Validate-OptionalCopy "$actionContext popup_title" $action.popup_title
         if (-not (Test-InlineActionNameAppearsInAnyDescription ([string]$action.name) $room)) {
             $warnings.Add("$actionContext is not mentioned in any room description, so it cannot be highlighted or tapped inline.")
+        }
+
+        # Per-variant reachability: appearing in *some* description is not enough. While a variant is
+        # rendered, an action whose name is absent from that variant is untappable.
+        if (Test-InlineActionIsInline $action) {
+            foreach ($variant in As-Array $room.description_variants) {
+                $variantDescription = [string]$variant.description
+                if ([string]::IsNullOrWhiteSpace($variantDescription)) { continue }
+                if (Test-InlineActionNameAppearsInDescription ([string]$action.name) $variantDescription) { continue }
+                if (Test-VariantDisablesAction $variant $action) { continue }
+                $conditionKey = Get-VariantConditionKey $variant
+                $acknowledgement = "$($room.id)|$conditionKey|$($action.name)"
+                if ($script:AcknowledgedVariantStrandings -contains $acknowledgement) { continue }
+                $warnings.Add("$actionContext is missing from the description variant gated on '$conditionKey', so it cannot be highlighted or tapped inline while that variant is active. Name it in the variant, gate the action on the same condition, or add '$acknowledgement' to `$script:AcknowledgedVariantStrandings.")
+            }
         }
     }
 }

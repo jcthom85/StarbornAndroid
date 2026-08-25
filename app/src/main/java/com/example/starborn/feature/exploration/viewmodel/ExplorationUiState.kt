@@ -58,6 +58,7 @@ data class ExplorationUiState(
     val themeStyle: ThemeStyle? = null,
     val mineGeneratorOnline: Boolean = false,
     val darkCapableRooms: Set<String> = emptySet(),
+    val generatorLitRooms: Set<String> = emptySet(),
     val canReturnToHub: Boolean = false,
     val isMapLegendVisible: Boolean = false,
     val isQuestLogVisible: Boolean = false,

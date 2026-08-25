@@ -8,7 +8,7 @@ same wordmark the main menu uses: app/src/main/res/drawable/title_logo_starborn.
 The card is deliberately near-black rather than the busy main-menu background,
 so it reads as a hard cut out of the breach and into the title.
 
-Output: world_assets/.../images/cinematics/intro_title_card_v1.png at 944x1665,
+Output: world_assets/.../images/cinematics/intro_title_card_v1.webp at 944x1665,
 matching the other intro stills.
 """
 
@@ -18,7 +18,7 @@ from PIL import Image, ImageFilter
 
 ROOT = Path(__file__).resolve().parent.parent
 LOGO = ROOT / "app/src/main/res/drawable/title_logo_starborn.png"
-OUT = ROOT / "world_assets/src/main/assets/images/cinematics/intro_title_card_v1.png"
+OUT = ROOT / "world_assets/src/main/assets/images/cinematics/intro_title_card_v1.webp"
 
 W, H = 944, 1665
 LOGO_WIDTH_FRAC = 0.86      # logo width as a fraction of the card
@@ -53,7 +53,8 @@ def main() -> None:
     card.paste(logo, (x, y), logo)
 
     OUT.parent.mkdir(parents=True, exist_ok=True)
-    card.save(OUT, "PNG")
+    # The asset pack ships WebP; emitting PNG here would orphan the cinematics.json path.
+    card.save(OUT, "WEBP", quality=90, method=6)
     print(f"saved {OUT.relative_to(ROOT)} at {card.size[0]}x{card.size[1]}"
           f" ({OUT.stat().st_size / 1048576:.2f} MB)")
 

@@ -58,9 +58,18 @@ class IntroCinematicAssetIntegrityTest {
         )
         val titleCard = steps.last()
         assertEquals("The prologue must land on the title card", "none", titleCard.captionStyle)
-        assertTrue(
+        // Pins the asset, not its container format: the wordmark card is the locked intent, and the
+        // asset pack ships WebP. Also assert the file is really there -- an extension-only check
+        // would happily pass on a path that resolves to nothing.
+        val titleCardPath = titleCard.imagePath.orEmpty()
+        assertEquals(
             "The title card must use the shipped Starborn wordmark",
-            titleCard.imagePath == "images/cinematics/intro_title_card_v1.png"
+            "images/cinematics/intro_title_card_v1",
+            titleCardPath.substringBeforeLast('.')
+        )
+        assertTrue(
+            "The title card asset must exist in the asset pack: $titleCardPath",
+            File("../world_assets/src/main/assets/$titleCardPath").isFile
         )
         // The cold open runs on ambience and impacts alone; the theme entering on the
         // wordmark is what makes the title land instead of playing as wallpaper. The
@@ -109,7 +118,11 @@ class IntroCinematicAssetIntegrityTest {
 
         steps.mapNotNull { it.imagePath }.distinct().forEach { imagePath ->
             val file = File("../world_assets/src/main/assets/$imagePath")
-            assertTrue("Missing cinematic image: $imagePath", file.isFile && file.length() > 100_000L)
+            // A stub floor, not a quality bar. It was 100 KB when these panels were multi-megabyte
+            // PNGs; the pack now ships WebP at roughly a tenth of that, and the title card -- a
+            // wordmark on near-black -- compresses hardest of all at ~90 KB. 20 KB still catches a
+            // placeholder or a truncated export, which is all this check was ever for.
+            assertTrue("Missing cinematic image: $imagePath", file.isFile && file.length() > 20_000L)
         }
         steps.mapNotNull { it.portrait }.distinct().forEach { portraitPath ->
             val file = File("../world_assets/src/main/assets/$portraitPath")

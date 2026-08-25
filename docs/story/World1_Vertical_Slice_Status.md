@@ -10,18 +10,28 @@
 
 **A `description_variants` entry that omits an action's name makes that action untappable while the variant is active.** Inline actions are discovered by matching the action `name` against the *currently rendered* description.
 
-`validate_world1_content.ps1 -StrictInlineActions` will **not** catch this: it checks whether the name appears in *any* description (base, dark, or variant), so a keyword present only in the base passes validation while being unreachable in play.
+**This is now gated.** `validate_world1_content.ps1 -StrictInlineActions` used to check only whether the name appeared in *any* description (base, dark, or variant), so a keyword present only in the base passed validation while being unreachable in play. It now checks **per variant**, and the gate runs strict.
 
-When writing a variant, carry every still-relevant action keyword into the new text. Omit a keyword only when the action is genuinely finished (a cleared blockage, a completed hack). Audit with:
+The rule the check encodes:
 
-```
-for each World 1 room, for each variant:
-    missing = [action.name for action in room.actions if action.name.lower() not in variant.description.lower()]
-```
+> An action stranded by a variant is a defect **unless the same condition that activates the variant also disables the action.**
 
-Two real defects found this way on 2026-07-28, both since fixed: turning on the bunk light (the first action in the game) permanently hid the `netting` holding Jed's carving, and the Red Alert variant on `launch_lift` hid both `override panel` and `hydraulics` for the entire Cargo Lift sacrifice sequence.
+The validator resolves that automatically for the two provable cases — an action gated `requires_milestone_not_set: M` under a variant gated `requires_milestones: [M]`, and an action needing a milestone the variant forbids. Everything else must either name the keyword in the variant, gate the action on the same condition, or be declared in `$script:AcknowledgedVariantStrandings` with a reason. Three entries are acknowledged today, all cases where a state change removes the object from fiction: `workshop_yard`'s loader strip, `medbay_vents`' toxic blockage, and `server_hub`'s terminal.
 
-Last updated: 2026-07-28
+Defects found this way, all since fixed:
+
+- 2026-07-28 — turning on the bunk light (the first action in the game) permanently hid the `netting` holding Jed's carving; the Red Alert variant on `launch_lift` hid both `override panel` and `hydraulics` for the entire Cargo Lift sacrifice sequence.
+- 2026-08-25 — the dead-end room pass reintroduced it twice: `server_backup`'s ungated `archive terminal` (Dominion termination ledgers) became unreachable the moment the player looted the cases, and `medbay_storage`'s `supplies` went the same way. **The trap recurring within one month is why it is now a gate and not a note.**
+
+### Authoring rule: area power lights the area it powers
+
+World 1 themes almost all of its interiors as env `mine` — the Pit, the workshop, the med-bay and the checkpoint all use the mine tileset. Area lighting must therefore scope by **node**, never by env.
+
+Scoping by env meant restoring power at the Cavern Junction (MQ03) silently switched off the darkness in Nova's bunk, the Pit supply closet, Jed's basement and med-bay storage — four authored mechanics deleted mid-world with nothing in the logs. The rule now lives in one place, `generatorLitRoomIds()` in `feature/exploration/viewmodel/helpers/AreaLighting.kt`, used by both the view model and the darkness resolution in `ExplorationScreen`, and is locked by `GeneratorLightingIntegrityTest`.
+
+**When adding a dark room, ask which power source owns it.** A room whose darkness is worked by its own switch must not share a node with the generator.
+
+Last updated: 2026-08-25
 
 ## Verified Gates
 

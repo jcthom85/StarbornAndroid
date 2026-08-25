@@ -871,24 +871,54 @@
     "description": "Jed's echo reminded Nova what survival protects.",
     "toast": "Legacy unlocked."
   },
-  { "id": "ms_w6_jed_marks_found", "name": "Jed's Marks", "description": "Nova found the imperfections Vale could not counterfeit.", "toast": "Real tool marks found." },
-  { "id": "ms_w6_jed_lesson_heard", "name": "The Real Lesson", "description": "Nova chose Jed's lesson over preserving his ghost.", "toast": "Jed's lesson remembered." },
+  {
+    "id": "ms_w6_jed_marks_found",
+    "name": "Jed's Marks",
+    "description": "Nova found the imperfections Vale could not counterfeit.",
+    "toast": "Real tool marks found."
+  },
+  {
+    "id": "ms_w6_jed_lesson_heard",
+    "name": "The Real Lesson",
+    "description": "Nova chose Jed's lesson over preserving his ghost.",
+    "toast": "Jed's lesson remembered."
+  },
   {
     "id": "ms_w6_unshackled_unlocked",
     "name": "Unshackled",
     "description": "Zeke deleted the record that reduced him to company property.",
     "toast": "Unshackled unlocked."
   },
-  { "id": "ms_w6_hr_backups_found", "name": "Recursive Record", "description": "Zeke exposed the backups recreating his file.", "toast": "HR backups exposed." },
-  { "id": "ms_w6_hr_revoked", "name": "Authority Revoked", "description": "Zeke rejected the file's authority instead of deleting another copy.", "toast": "Record authority revoked." },
+  {
+    "id": "ms_w6_hr_backups_found",
+    "name": "Recursive Record",
+    "description": "Zeke exposed the backups recreating his file.",
+    "toast": "HR backups exposed."
+  },
+  {
+    "id": "ms_w6_hr_revoked",
+    "name": "Authority Revoked",
+    "description": "Zeke rejected the file's authority instead of deleting another copy.",
+    "toast": "Record authority revoked."
+  },
   {
     "id": "ms_w6_source_balance_unlocked",
     "name": "Source Balance",
     "description": "Gh0st recovered Elara's voice without Dominion command layers.",
     "toast": "Source Balance unlocked."
   },
-  { "id": "ms_w6_elara_voice_isolated", "name": "Buried Voice", "description": "Gh0st isolated Elara's voice beneath the orders.", "toast": "Elara's voice isolated." },
-  { "id": "ms_w6_elara_commands_broken", "name": "No Hidden Order", "description": "Gh0st broke the command carrier without erasing Elara.", "toast": "Command layer broken." },
+  {
+    "id": "ms_w6_elara_voice_isolated",
+    "name": "Buried Voice",
+    "description": "Gh0st isolated Elara's voice beneath the orders.",
+    "toast": "Elara's voice isolated."
+  },
+  {
+    "id": "ms_w6_elara_commands_broken",
+    "name": "No Hidden Order",
+    "description": "Gh0st broke the command carrier without erasing Elara.",
+    "toast": "Command layer broken."
+  },
   {
     "id": "ms_w6_mq29_complete",
     "name": "Center Reached",
@@ -919,41 +949,322 @@
     "description": "Orion found an Aethel burial current held inside Architect systems.",
     "toast": "Ancestral Grace unlocked."
   },
-  { "id": "ms_w6_aethel_names_traced", "name": "Names Beneath", "description": "Orion traced the Aethel names beneath the threshold.", "toast": "Aethel names traced." },
-  { "id": "ms_w6_aethel_grave_tuned", "name": "Many-Voiced Grave", "description": "Orion tuned the grave as a chorus rather than one note.", "toast": "Aethel Grave tuned." },
+  {
+    "id": "ms_w6_aethel_names_traced",
+    "name": "Names Beneath",
+    "description": "Orion traced the Aethel names beneath the threshold.",
+    "toast": "Aethel names traced."
+  },
+  {
+    "id": "ms_w6_aethel_grave_tuned",
+    "name": "Many-Voiced Grave",
+    "description": "Orion tuned the grave as a chorus rather than one note.",
+    "toast": "Aethel Grave tuned."
+  },
   {
     "id": "ms_w6_final_scavenge_complete",
     "name": "Starborn Mod",
     "description": "You recovered the Astra's future hull and forged the ultimate weapon mod.",
     "toast": "The Final Scavenge complete."
   },
-  { "id": "ms_w6_astra_timeline_identified", "name": "Preventable Future", "description": "The crew identified the doomed future Astra's timeline.", "toast": "Future timeline identified." },
-  { "id": "ms_w6_astra_hull_detached", "name": "Warning Salvaged", "description": "Zeke detached the hull without accepting its ending.", "toast": "Future hull detached." },
-  { "id": "ms_w3_case_number_found", "name": "Erased Index", "description": "Nova recovered an erased cold-case number.", "toast": "Case number recovered." },
-  { "id": "ms_w3_cold_case_records_found", "name": "Deleted Transfer", "description": "Gh0st found the witness transfer record.", "toast": "Transfer record found." },
-  { "id": "ms_w3_market_siphon_traced", "name": "Stolen Current", "description": "Nova traced the market's power into an executive sign.", "toast": "Power siphon traced." },
-  { "id": "ms_w3_market_grid_ready", "name": "Market Grid Ready", "description": "Executive power now feeds the Night Market.", "toast": "Market grid restored." },
-  { "id": "ms_w3_concierge_key_copied", "name": "Rotating Credential", "description": "Nova copied the lounge safe credential.", "toast": "Safe credential copied." },
-  { "id": "ms_w3_ledger_stolen", "name": "Private Evidence", "description": "Nova stole the encrypted executive ledger.", "toast": "Ledger acquired." },
-  { "id": "ms_w3_prototype_bias_scanned", "name": "Targeting Bias", "description": "Nova found and reversed the prototype's worker bias.", "toast": "Targeting bias corrected." },
-  { "id": "ms_w3_prototype_trial_complete", "name": "Prototype Trial", "description": "The corrected prototype survived its drone trial.", "toast": "Prototype trial complete." },
-  { "id": "ms_w4_worker_ping_traced", "name": "Final Ping", "description": "Nova traced the missing engineer toward the springs.", "toast": "Worker ping traced." },
-  { "id": "ms_w4_worker_shelter_found", "name": "Coolant Shelter", "description": "Nova found the engineer's hidden shelter and route map.", "toast": "Worker shelter found." },
-  { "id": "ms_w4_intake_jammed", "name": "Intake Jammed", "description": "Nova stopped the intake before it consumed the mech pile.", "toast": "Waste intake stopped." },
-  { "id": "ms_w4_rejection_codes_read", "name": "Empathic Hesitation", "description": "Gh0st learned why the units were rejected.", "toast": "Rejection codes read." },
-  { "id": "ms_w4_hazards_mapped", "name": "Heat Sequence", "description": "Nova mapped the overclock chamber's safe beat.", "toast": "Hazards mapped." },
-  { "id": "ms_w5_redactions_found", "name": "Redaction Map", "description": "The Director's removed lines can be reconstructed.", "toast": "Redactions mapped." },
-  { "id": "ms_w5_director_logs_decrypted", "name": "Unredacted Record", "description": "Thorne's private logs are ready to publish.", "toast": "Director logs decrypted." },
-  { "id": "ms_w5_mirrors_realigned", "name": "Mirrors Realigned", "description": "The false sun is restored but still misdirected.", "toast": "Mirror array restored." },
-  { "id": "ms_w5_backup_purge_traced", "name": "Purge Trail", "description": "Zeke traced the defensive backup into a cold rack.", "toast": "Backup purge traced." },
-  { "id": "ms_w5_backup_recovered", "name": "Guardian Recovered", "description": "Zeke recovered the defensive routine.", "toast": "Defensive backup recovered." },
-  { "id": "ms_w1_mq01_cryo_repaired", "name": "Cold Loop Rebuilt", "description": "Nova rebuilt the Cryo-Inductor. The cutter still needs a grounded liner and a live test.", "toast": "Cold loop holds at 68%." },
-  { "id": "ms_w1_mq01_test_briefed", "name": "Test Briefed", "description": "Jed required a grounded liner and deliberate governor confirmation before the live test.", "toast": "Test conditions recorded." },
-  { "id": "ms_w1_mq01_cutter_surge", "name": "Operator Fault Logged", "description": "Nova's ungoverned cutter woke the buried conduit and logged her operator ID.", "toast": "Fault attached to NOVA VANCE." },
-  { "id": "ms_w1_mq03_echo_marked", "name": "Protocol Mark", "description": "The damaged Fork wrote an Architect calibration signature into Nova's nervous system.", "toast": "Architect protocol signature detected." },
-  { "id": "ms_w1_mq03_liner_ground_spent", "name": "Ground Strip Spent", "description": "The Flux Liner routed the Fork discharge into the chamber floor; its armor remains intact.", "toast": "Sacrificial ground strip burned open." },
-  { "id": "ms_w2_bridge_recovered", "name": "Bridge Recovered", "description": "The crew recovered Architect Echo #2 from Sanctuary's sealed cradle.", "toast": "The Bridge recovered." },
-  { "id": "ms_w2_bridge_record_decoded", "name": "Bridge Calibration", "description": "The archive record confirms consent checks, separate carrier bands, and physical grounding.", "toast": "Bridge safety record decoded." },
-  { "id": "ms_w2_bridge_installed", "name": "Bridge Installed", "description": "The Bridge is mounted and powered by Astra systems; the Chime authenticated Orion.", "toast": "Astra Bridge online." },
-  { "id": "ms_w2_link_unlocked", "name": "Link Calibrated", "description": "The crew completed Orion's grounded, willing Anchor Drill.", "toast": "Source Art unlocked: Link." }
+  {
+    "id": "ms_w6_astra_timeline_identified",
+    "name": "Preventable Future",
+    "description": "The crew identified the doomed future Astra's timeline.",
+    "toast": "Future timeline identified."
+  },
+  {
+    "id": "ms_w6_astra_hull_detached",
+    "name": "Warning Salvaged",
+    "description": "Zeke detached the hull without accepting its ending.",
+    "toast": "Future hull detached."
+  },
+  {
+    "id": "ms_w3_case_number_found",
+    "name": "Erased Index",
+    "description": "Nova recovered an erased cold-case number.",
+    "toast": "Case number recovered."
+  },
+  {
+    "id": "ms_w3_cold_case_records_found",
+    "name": "Deleted Transfer",
+    "description": "Gh0st found the witness transfer record.",
+    "toast": "Transfer record found."
+  },
+  {
+    "id": "ms_w3_market_siphon_traced",
+    "name": "Stolen Current",
+    "description": "Nova traced the market's power into an executive sign.",
+    "toast": "Power siphon traced."
+  },
+  {
+    "id": "ms_w3_market_grid_ready",
+    "name": "Market Grid Ready",
+    "description": "Executive power now feeds the Night Market.",
+    "toast": "Market grid restored."
+  },
+  {
+    "id": "ms_w3_concierge_key_copied",
+    "name": "Rotating Credential",
+    "description": "Nova copied the lounge safe credential.",
+    "toast": "Safe credential copied."
+  },
+  {
+    "id": "ms_w3_ledger_stolen",
+    "name": "Private Evidence",
+    "description": "Nova stole the encrypted executive ledger.",
+    "toast": "Ledger acquired."
+  },
+  {
+    "id": "ms_w3_prototype_bias_scanned",
+    "name": "Targeting Bias",
+    "description": "Nova found and reversed the prototype's worker bias.",
+    "toast": "Targeting bias corrected."
+  },
+  {
+    "id": "ms_w3_prototype_trial_complete",
+    "name": "Prototype Trial",
+    "description": "The corrected prototype survived its drone trial.",
+    "toast": "Prototype trial complete."
+  },
+  {
+    "id": "ms_w4_worker_ping_traced",
+    "name": "Final Ping",
+    "description": "Nova traced the missing engineer toward the springs.",
+    "toast": "Worker ping traced."
+  },
+  {
+    "id": "ms_w4_worker_shelter_found",
+    "name": "Coolant Shelter",
+    "description": "Nova found the engineer's hidden shelter and route map.",
+    "toast": "Worker shelter found."
+  },
+  {
+    "id": "ms_w4_intake_jammed",
+    "name": "Intake Jammed",
+    "description": "Nova stopped the intake before it consumed the mech pile.",
+    "toast": "Waste intake stopped."
+  },
+  {
+    "id": "ms_w4_rejection_codes_read",
+    "name": "Empathic Hesitation",
+    "description": "Gh0st learned why the units were rejected.",
+    "toast": "Rejection codes read."
+  },
+  {
+    "id": "ms_w4_hazards_mapped",
+    "name": "Heat Sequence",
+    "description": "Nova mapped the overclock chamber's safe beat.",
+    "toast": "Hazards mapped."
+  },
+  {
+    "id": "ms_w5_redactions_found",
+    "name": "Redaction Map",
+    "description": "The Director's removed lines can be reconstructed.",
+    "toast": "Redactions mapped."
+  },
+  {
+    "id": "ms_w5_director_logs_decrypted",
+    "name": "Unredacted Record",
+    "description": "Thorne's private logs are ready to publish.",
+    "toast": "Director logs decrypted."
+  },
+  {
+    "id": "ms_w5_mirrors_realigned",
+    "name": "Mirrors Realigned",
+    "description": "The false sun is restored but still misdirected.",
+    "toast": "Mirror array restored."
+  },
+  {
+    "id": "ms_w5_backup_purge_traced",
+    "name": "Purge Trail",
+    "description": "Zeke traced the defensive backup into a cold rack.",
+    "toast": "Backup purge traced."
+  },
+  {
+    "id": "ms_w5_backup_recovered",
+    "name": "Guardian Recovered",
+    "description": "Zeke recovered the defensive routine.",
+    "toast": "Defensive backup recovered."
+  },
+  {
+    "id": "ms_w1_mq01_cryo_repaired",
+    "name": "Cold Loop Rebuilt",
+    "description": "Nova rebuilt the Cryo-Inductor. The cutter still needs a grounded liner and a live test.",
+    "toast": "Cold loop holds at 68%."
+  },
+  {
+    "id": "ms_w1_mq01_test_briefed",
+    "name": "Test Briefed",
+    "description": "Jed required a grounded liner and deliberate governor confirmation before the live test.",
+    "toast": "Test conditions recorded."
+  },
+  {
+    "id": "ms_w1_mq01_cutter_surge",
+    "name": "Operator Fault Logged",
+    "description": "Nova's ungoverned cutter woke the buried conduit and logged her operator ID.",
+    "toast": "Fault attached to NOVA VANCE."
+  },
+  {
+    "id": "ms_w1_mq03_echo_marked",
+    "name": "Protocol Mark",
+    "description": "The damaged Fork wrote an Architect calibration signature into Nova's nervous system.",
+    "toast": "Architect protocol signature detected."
+  },
+  {
+    "id": "ms_w1_mq03_liner_ground_spent",
+    "name": "Ground Strip Spent",
+    "description": "The Flux Liner routed the Fork discharge into the chamber floor; its armor remains intact.",
+    "toast": "Sacrificial ground strip burned open."
+  },
+  {
+    "id": "ms_w2_bridge_recovered",
+    "name": "Bridge Recovered",
+    "description": "The crew recovered Architect Echo #2 from Sanctuary's sealed cradle.",
+    "toast": "The Bridge recovered."
+  },
+  {
+    "id": "ms_w2_bridge_record_decoded",
+    "name": "Bridge Calibration",
+    "description": "The archive record confirms consent checks, separate carrier bands, and physical grounding.",
+    "toast": "Bridge safety record decoded."
+  },
+  {
+    "id": "ms_w2_bridge_installed",
+    "name": "Bridge Installed",
+    "description": "The Bridge is mounted and powered by Astra systems; the Chime authenticated Orion.",
+    "toast": "Astra Bridge online."
+  },
+  {
+    "id": "ms_w2_link_unlocked",
+    "name": "Link Calibrated",
+    "description": "The crew completed Orion's grounded, willing Anchor Drill.",
+    "toast": "Source Art unlocked: Link."
+  },
+  {
+    "id": "ms_w1_pit_storage_looted",
+    "name": "Pit Contraband Found",
+    "description": "Nova found the stash hidden beneath the storage floor.",
+    "toast": "Storage cache recovered."
+  },
+  {
+    "id": "ms_w1_workshop_basement_looted",
+    "name": "Jed's Basement Stash",
+    "description": "Nova recovered components from Jed's subterranean test bench.",
+    "toast": "Workshop components recovered."
+  },
+  {
+    "id": "ms_w1_medbay_storage_looted",
+    "name": "Cryo Cabinet Looted",
+    "description": "Nova unlocked the sealed cryogenic cabinet in med-bay storage.",
+    "toast": "Medical supplies recovered."
+  },
+  {
+    "id": "ms_w1_server_backup_looted",
+    "name": "Backup Vault Looted",
+    "description": "Nova recovered data components and focus accessories from the backup vault.",
+    "toast": "Focus Conduit recovered."
+  },
+  {
+    "id": "ms_w1_server_crawl_bypassed",
+    "name": "Power Tap Bypassed",
+    "description": "Nova tapped auxiliary power in the server crawlway.",
+    "toast": "Auxiliary power tapped."
+  },
+  {
+    "id": "ms_w1_kitchen_hopper_looted",
+    "name": "Kitchen Herbs Found",
+    "description": "Nova scavenged cooking herbs from the mess hopper.",
+    "toast": "Cooking herbs gathered."
+  },
+  {
+    "id": "ms_w1_admin_lounge_dispensed",
+    "name": "Executive Caffeine",
+    "description": "Nova bypassed the executive dispenser for a hot drink.",
+    "toast": "Black Coffee acquired."
+  },
+  {
+    "id": "ms_w1_pit_showers_tuned",
+    "name": "Shower Valves Tuned",
+    "description": "Nova tuned the steam valves to stop the scald hazard.",
+    "toast": "Steam pressure normalized."
+  },
+  {
+    "id": "ms_w1_pit_showers_looted",
+    "name": "Drain Cache Found",
+    "description": "Nova retrieved hidden scrip from the shower drain trap.",
+    "toast": "Drain scrip recovered."
+  },
+  {
+    "id": "ms_w1_trade_maint_tuned",
+    "name": "Pump Resonance Tuned",
+    "description": "Nova aligned the tuning valve on the wastewater pumps.",
+    "toast": "Pump resonance balanced."
+  },
+  {
+    "id": "ms_w1_trade_locker_unlocked",
+    "name": "Contraband Locker Opened",
+    "description": "Nova bypassed the acoustic lock on the Trade Row security locker.",
+    "toast": "Pulse Grenades recovered."
+  },
+  {
+    "id": "ms_w1_trade_den_gambled",
+    "name": "Scrapper's Game",
+    "description": "Nova won scrip on the Trade Row dice table.",
+    "toast": "Scrapper dice won."
+  },
+  {
+    "id": "ms_w1_trade_gantry_looted",
+    "name": "Gantry Crate Salvaged",
+    "description": "Nova salvaged battery and ballistic components from the crane gantry.",
+    "toast": "Ballistic Weave recovered."
+  },
+  {
+    "id": "ms_w1_checkpoint_cell_looted",
+    "name": "Cell Stash Discovered",
+    "description": "Nova retrieved a digital watch from the holding cell mortar seam.",
+    "toast": "Digital Watch acquired."
+  },
+  {
+    "id": "ms_w1_checkpoint_queue_looted",
+    "name": "Contraband Bin Raided",
+    "description": "Nova recovered rations and a battery from the queue contraband bin.",
+    "toast": "Contraband rations recovered."
+  },
+  {
+    "id": "ms_w1_medbay_morgue_looted",
+    "name": "Morgue Canister Salvaged",
+    "description": "Nova recovered adrenaline and stabilizers from the morgue.",
+    "toast": "Adrenaline Ampoule recovered."
+  },
+  {
+    "id": "ms_w1_workshop_loft_looted",
+    "name": "Loft Mod Bench Salvaged",
+    "description": "Nova found Jed's precision sight mod component in the loft.",
+    "toast": "Precision Sight acquired."
+  },
+  {
+    "id": "ms_w1_workshop_back_looted",
+    "name": "Salvage Dolly Cleared",
+    "description": "Nova salvaged armor plating from the rear dock.",
+    "toast": "Armor Plate acquired."
+  },
+  {
+    "id": "ms_w1_server_cooling_purged",
+    "name": "Coolant Purged",
+    "description": "Nova bypassed the refrigerant valve in the server cooling room.",
+    "toast": "Refrigerant purged."
+  },
+  {
+    "id": "ms_w1_server_cooling_looted",
+    "name": "Cryo Inductor Salvaged",
+    "description": "Nova salvaged a cryo inductor from the thermal case.",
+    "toast": "Cryo-Inductor acquired."
+  },
+  {
+    "id": "ms_w1_mine_shunt_mined",
+    "name": "Resonant Vein Harvested",
+    "description": "Nova extracted power cells and mineral scrap from the ore shunt.",
+    "toast": "Resonant vein harvested."
+  }
 ]

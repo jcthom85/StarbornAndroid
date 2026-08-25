@@ -618,7 +618,13 @@ fun ExplorationScreen(
             val nextIndex = Math.floorMod(currentIndex + offset, weatherCycles.size)
             debugWeatherOverride = weatherCycles[nextIndex]
         }
-        val isRoomDark = remember(currentRoom, uiState.roomState, uiState.mineGeneratorOnline, uiState.darkCapableRooms) {
+        val isRoomDark = remember(
+            currentRoom,
+            uiState.roomState,
+            uiState.mineGeneratorOnline,
+            uiState.darkCapableRooms,
+            uiState.generatorLitRooms
+        ) {
             val darkState = uiState.roomState["dark"]
             val lightState = uiState.roomState["light_on"]
             var resolved = when {
@@ -628,11 +634,13 @@ fun ExplorationScreen(
                 lightState == true -> false
                 else -> currentRoom?.dark == true
             }
-            val isMineRoom = currentRoom?.env.equals("mine", ignoreCase = true)
             val isDarkCapable = currentRoom?.id?.let { uiState.darkCapableRooms.contains(it) } == true
+            // Area power lights only the rooms the generator is wired to (its node), never every
+            // room sharing the generator's art environment.
+            val isGeneratorLit = currentRoom?.id?.let { uiState.generatorLitRooms.contains(it) } == true
             if (!isDarkCapable) {
                 resolved = false
-            } else if (isMineRoom && uiState.mineGeneratorOnline) {
+            } else if (isGeneratorLit && uiState.mineGeneratorOnline) {
                 resolved = false
             }
             resolved

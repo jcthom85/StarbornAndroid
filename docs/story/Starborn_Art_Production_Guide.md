@@ -16,6 +16,19 @@ Before generating or editing art:
 
 The game is mobile-first and played in portrait orientation. Art must remain readable behind compact mobile UI.
 
+### Shipping format: generate PNG, ship WebP
+
+Generate and iterate in PNG. **Everything the asset pack ships is WebP** — `quality=90, method=6`, with `exact=True` for anything carrying alpha so transparent pixels keep their RGB and sprites do not halo.
+
+On the 2026-08-25 pass this took `world_assets` from 1078 MB to 148 MB: 709 MB of art became 71 MB at roughly a tenth the bytes, and 153 MB of superseded `_v2`/`_v3` renders that nothing referenced were deleted outright. WebP decodes natively via `BitmapFactory` on our `minSdk 26`, so no loader work was needed. Two directories stay PNG on purpose — `images/characters/emotes/` and `images/enemies/` are addressed by Kotlin string templates and checked by a byte-level PNG validator (`validate_enemy_sprite_bounds.ps1`), so converting them is a larger job than it looks.
+
+Two things to know before converting anything else:
+
+- **Rewrite every reference in the same change.** Paths live in `app/src/main/assets/*.json`, occasionally as Kotlin literals, and in generator scripts that *write* assets (`build_intro_title_card.py` emits the title card). A generator still writing PNG will silently orphan its own JSON path.
+- **Byte-size floors stop meaning what they meant.** `IntroCinematicAssetIntegrityTest` used a 100 KB floor as a stub detector; at a tenth the bytes the legitimate title card fell under it. Re-point such floors rather than deleting them — the check is still worth having.
+
+Dimension guards survive the change: `validate_world1_content.ps1` parses VP8/VP8L/VP8X headers, so a bad export is still caught by size.
+
 ## 2. Visual North Star
 
 Starborn is a colorful chibi-anime/comic science-fiction adventure with:
