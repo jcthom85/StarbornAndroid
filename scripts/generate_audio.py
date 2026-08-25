@@ -20,12 +20,12 @@ DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "app" / "src" / "main" / "res" / "raw"
 
 # Base ElevenLabs voices for characters (Public voice IDs or custom overrides)
 CHARACTER_VOICE_MAP = {
-    "nova": "EXAVITQu4vr4xnSDxMaL",     # Bella (Young, textured female)
-    "zeke": "pNInz6obpgfrhhF2Ewqi",     # Giovanni (Rugged, warm male)
-    "orion": "N2lVS1w7qi65JdC5uCcR",    # Brian (Deep, resonant male)
+    "nova": "EXAVITQu4vr4xnSDxMaL",     # Sarah (Young, textured female)
+    "zeke": "pNInz6obpgDQGcFmaJgB",     # Adam (Rugged, warm male)
+    "orion": "nPczCjzI2devNBz1zQrb",    # Brian (Deep, resonant male)
     "gh0st": "IKne3meq5aSn9XLyUdCD",    # Charlie (Clipped, low male)
-    "thorne": "AZnzlk1XvdvUeBnXmlld",   # Dom (Corporate, professional female)
-    "vale": "ErXwobaYiN019PkySvjV",     # Antoni (Melodic, smooth male)
+    "thorne": "EXAVITQu4vr4xnSDxMaL",   # Sarah (Corporate, professional female)
+    "vale": "cjVigY5qzO86Huf0OWal",     # Eric (Melodic, smooth male)
 }
 
 # Pre-configured Music Prompts from Audio_Design_Guide.md
@@ -99,24 +99,28 @@ MUSIC_CATALOG = {
 # Pre-configured SFX Prompts from Audio_Design_Guide.md
 SFX_CATALOG = {
     "amb_intro_containment_pressure": {
-        "text": "Seamless loopable underground containment-lab ambience, deep ventilation pressure, distant stressed steel groans, low hydraulic vibration, faint electrical relay chatter, restrained and ominous, no impacts, no voices, no alarm, no music",
-        "duration": 30.0,
+        "text": "Seamless loopable high-tension underground laboratory emergency ambience, deep sub-bass structural pressure hum, distant pulsing red alarm klaxon, vibrating metal conduits, ominous and urgent, no voices, no music",
+        "duration": 25.0,
     },
     "sfx_intro_door_buckle": {
-        "text": "Massive reinforced pressure doors bow inward under one brutal impact, deep steel buckle, bolts strain and snap, dust falls, short concrete underground reverb, no creature vocalization, no music",
-        "duration": 2.0,
-    },
-    "sfx_intro_beast_strike": {
-        "text": "One single heavy impact against thick armored glass, sharp crack and spiderweb fracture spreading, deep low body thud behind it, small shards tinkling, brief metallic ring in a cramped chamber, abrupt cut to silence, no creature vocalization, no music",
-        "duration": 2.0,
-    },
-    "sfx_intro_chime_launch": {
-        "text": "Heavy pneumatic emergency tube fires a compact brass device, clamp release, compressed-air blast, metal carrier accelerates down a pipe, one brief clean cyan-like resonant chime in the tail, no music",
+        "text": "Massive reinforced pressure vault doors bow inward under one brutal impact, deep steel buckling and groaning, bolts snap, concrete underground reverb, urgent klaxon pulse, no music",
         "duration": 2.5,
     },
+    "sfx_intro_beast_strike": {
+        "text": "A terrifying monstrous physical impact slamming against reinforced glass, heavy sub-bass thud, loud glass spiderweb crack, psionic distortion shockwave, sudden cut to black, no music",
+        "duration": 2.5,
+    },
+    "sfx_intro_chime_launch": {
+        "text": "Heavy industrial pneumatic emergency launch tube fires with a powerful compressed-air thump, metal capsule accelerates rapidly through a conduit with three distinct resonant pipe impacts, no music",
+        "duration": 2.5,
+    },
+    "sfx_intro_chorus_answer": {
+        "text": "An ethereal wide-stereo harmonic choir chord pad, sacred 3-chord ambient resonance, crystalline overtones, magical vocal harmony blooming in a vast space, sudden peaceful acoustic contrast, no beat, no percussion",
+        "duration": 3.0,
+    },
     "sfx_intro_stasis_seal": {
-        "text": "Industrial stasis pod closes and pressure-seals, segmented metal clamps lock in sequence, thick glass enclosure, hydraulic hiss, power relay drops to a low hum, no voice, no music",
-        "duration": 2.2,
+        "text": "High-tech cryogenic stasis pod closes with heavy pneumatic hiss, vacuum seal locks, acoustic low-pass muting effect dampening all external sound into underwater silence, no music",
+        "duration": 2.5,
     },
     "sfx_intro_shift_buzzer": {
         "text": "Harsh old factory shift buzzer, one compact electromechanical blast through a cheap wall speaker, slight metal-room rattle, dry abrupt cutoff, no voice, no music",
@@ -490,6 +494,18 @@ VOICE_CATALOG = {
         "character": "nova",
         "text": "Check your supplies. The road ahead won't offer any free handouts.",
     },
+    "vo_intro_pa_breach": {
+        "character": "thorne",
+        "text": "Source beast containment breach. Far door pressure rising.",
+    },
+    "vo_intro_orion_01": {
+        "character": "orion",
+        "text": "Broadcast my identity. Draw it away.",
+    },
+    "vo_intro_orion_02": {
+        "character": "orion",
+        "text": "Mute this room. Begin stasis.",
+    },
 }
 
 
@@ -609,7 +625,7 @@ def generate_voice(cue_id: str, api_key: str, output_dir: Path):
     
     payload = {
         "text": config["text"],
-        "model_id": "eleven_monolingual_v1",
+        "model_id": "eleven_multilingual_v2",
         "voice_settings": {
             "stability": 0.5,
             "similarity_boost": 0.8

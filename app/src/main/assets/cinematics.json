@@ -595,7 +595,8 @@
         "camera_end_y": 12.0,
         "transition": "cut",
         "audio_cue": "sfx_intro_door_buckle",
-        "duration_seconds": 3.0
+        "duration_seconds": 3.0,
+        "voice_cue": "vo_intro_pa_breach"
       },
       {
         "type": "narration",
@@ -622,7 +623,7 @@
         "camera_start_y": 0.0,
         "camera_end_y": -10.0,
         "transition": "cut",
-        "voice_cue": "voice_murmur_orion_03",
+        "voice_cue": "vo_intro_orion_01",
         "duration_seconds": 2.8
       },
       {
@@ -651,7 +652,7 @@
         "camera_end_y": -6.0,
         "transition": "fade",
         "duration_seconds": 3.2,
-        "audio_cue": "sfx_chime_splice"
+        "audio_cue": "sfx_intro_chorus_answer"
       },
       {
         "type": "dialogue",
@@ -667,7 +668,7 @@
         "camera_start_y": 0.0,
         "camera_end_y": -8.0,
         "audio_cue": "sfx_intro_stasis_seal",
-        "voice_cue": "voice_murmur_orion_02",
+        "voice_cue": "vo_intro_orion_02",
         "duration_seconds": 2.8,
         "transition": "fade"
       },

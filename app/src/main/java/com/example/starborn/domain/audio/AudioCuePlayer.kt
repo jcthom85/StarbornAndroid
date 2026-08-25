@@ -42,7 +42,7 @@ class AudioCuePlayer(
                 .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
                 .build()
         )
-        .setMaxStreams(8)
+        .setMaxStreams(16)
         .build()
 
     private val musicPlayer: ExoPlayer = ExoPlayer.Builder(context).build()
@@ -152,7 +152,12 @@ class AudioCuePlayer(
             else -> userSfxGain
         }
         val scaledGain = (baseGain * userGain).coerceIn(0f, 1f)
-        val streamId = soundPool.play(soundId, scaledGain, scaledGain, /*priority*/ 1, loopMode, /*rate*/ 1f)
+        val streamPriority = when (type) {
+            AudioCueType.VOICE -> 3
+            AudioCueType.BATTLE, AudioCueType.UI -> 2
+            else -> 1
+        }
+        val streamId = soundPool.play(soundId, scaledGain, scaledGain, streamPriority, loopMode, /*rate*/ 1f)
         if (streamId == 0) {
             queuePendingShort(soundId, type, cueId, command)
             return
