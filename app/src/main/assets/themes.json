@@ -24,7 +24,7 @@
       1,
       1
     ],
-    "background_image": "images/rooms/mine_5.png"
+    "background_image": "images/rooms/world_1/mine_landing.webp"
   },
   "spaceship": {
     "bg": [
@@ -51,7 +51,7 @@
       1,
       1
     ],
-    "background_image": "images/rooms/mine_4.png"
+    "background_image": "images/rooms/astra/bridge.webp"
   },
   "forest": {
     "bg": [
@@ -78,7 +78,7 @@
       0.3,
       1
     ],
-    "background_image": "images/rooms/mine_3.png"
+    "background_image": "images/rooms/world_2/canopy_ridge.webp"
   },
   "beach": {
     "bg": [
@@ -105,7 +105,7 @@
       0.4,
       1
     ],
-    "background_image": "images/rooms/mine_2.png"
+    "background_image": "images/rooms/world_2/beach_cove.webp"
   },
   "maintenance_tunnels": {
     "bg": [
@@ -132,7 +132,7 @@
       0.4,
       1
     ],
-    "background_image": "images/rooms/mine_2.png"
+    "background_image": "images/rooms/world_1/mine_shoring.webp"
   },
   "market": {
     "bg": [
@@ -213,7 +213,7 @@
       0.28,
       1
     ],
-    "background_image": "images/rooms/world_1/town_center_1.png"
+    "background_image": "images/hubs/homestead_v6.webp"
   },
   "mine": {
     "bg": [
@@ -240,7 +240,7 @@
       0.2,
       1
     ],
-    "background_image": "images/rooms/mine_2.png"
+    "background_image": "images/rooms/world_1/mine_alpha.webp"
   },
   "starborn": {
     "bg": [
@@ -429,6 +429,6 @@
       1,
       1
     ],
-    "background_image": "images/rooms/world_2/sector9_crash_site.png"
+    "background_image": "images/rooms/world_2/crash_site.webp"
   }
 }

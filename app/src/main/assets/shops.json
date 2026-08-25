@@ -1,7 +1,7 @@
 {
   "mechanic_shop": {
     "name": "Mechanic's Wares",
-    "portrait": "images/portraits/mechanic.png",
+    "portrait": "images/npcs/mechanic.webp",
     "greeting": "Mechanic: Hey there, Nova! I've got parts polished and ready to bolt on.",
     "pricing": {
       "sell_markup": 1.2,
@@ -83,7 +83,7 @@
   },
   "weapon_shop": {
     "name": "Blades & Blasters",
-    "portrait": "images/portraits/weaponsmith.png",
+    "portrait": "images/npcs/weaponsmith.webp",
     "greeting": "Weaponsmith: Looking to upgrade your bite? I've got fresh steel and plasma.",
     "pricing": {
       "sell_markup": 1.2,
@@ -167,7 +167,7 @@
   },
   "armor_shop": {
     "name": "The Aegis",
-    "portrait": "images/portraits/armorer.png",
+    "portrait": "images/npcs/armorer.webp",
     "greeting": "Armorer: Step in and suit up—no frontier scrape should catch you unshielded.",
     "pricing": {
       "sell_markup": 1.2,
@@ -262,7 +262,7 @@
   },
   "accessory_shop": {
     "name": "Trinkets & Tech",
-    "portrait": "images/portraits/jeweler.png",
+    "portrait": "images/npcs/jeweler.webp",
     "pricing": {
       "sell_markup": 1.2,
       "buy_markdown": 0.35
@@ -312,7 +312,7 @@
   },
   "general_store": {
     "name": "General Store",
-    "portrait": "images/portraits/shopkeep.png",
+    "portrait": "images/npcs/shopkeep.webp",
     "greeting": "Shopkeep: Supplies, snacks, emergency fixes—if you need it, I stock it.",
     "pricing": {
       "sell_markup": 1.2,
@@ -497,7 +497,7 @@
   },
   "upper_city_lounge": {
     "name": "Upper City Concierge",
-    "portrait": "images/portraits/jeweler.png",
+    "portrait": "images/npcs/concierge.webp",
     "greeting": "Concierge: Premium equipment is available to guests with verified altitude clearance.",
     "pricing": {
       "sell_markup": 1.35,
@@ -560,7 +560,7 @@
   },
   "sentinel_scraps": {
     "name": "Sentinel Scraps",
-    "portrait": "images/portraits/sentinel_3.png",
+    "portrait": "images/npcs/sentinel_3.webp",
     "greeting": "Sentinel-3: [Static crackle]... Resonant frequencies aligned. Salvaged materials catalogued and ready for distribution.",
     "pricing": {
       "sell_markup": 1.15,

@@ -16,6 +16,29 @@ Before generating or editing art:
 
 The game is mobile-first and played in portrait orientation. Art must remain readable behind compact mobile UI.
 
+### Before generating: check whether the reference is live
+
+A path in JSON is not proof anything renders it. On the 2026-08-25 pass, twelve image references
+resolved to nothing, and only three of them were real:
+
+- **`themes.json` `background_image` is never read.** `Theme` supplies colours and band styles only;
+  room art comes from `Room.background_image` and hub art from `Hub.background_image`. Seven of the
+  twelve dangling paths were this field. Generating art for them would have produced work no player
+  could ever see.
+- **Six shop portraits belonged to shops nothing references.** Only three of the nine entries in
+  `shops.json` are reachable from a room action; the rest are authored but unwired.
+- **One was already installed under a different path.** `sentinel_scraps` pointed at a stale
+  `images/portraits/sentinel_3.png` while the canon portrait sat at `images/npcs/sentinel_3.webp`,
+  wired through `npcs.json`. That one needed a path fix, not a new asset - and regenerating it
+  overwrote an approved portrait until it was restored from git.
+
+So before prompting: grep the path, find the field that consumes it, and confirm the code actually
+reads that field. Then check whether the asset already exists somewhere else. `images/portraits/` was
+a dead directory; shop portraits live in `images/npcs/` alongside every other NPC.
+
+**Archive before overwriting.** The rule already existed for NPC portraits and it earned its place
+here. If a target file exists, look at it first.
+
 ### Shipping format: generate PNG, ship WebP
 
 Generate and iterate in PNG. **Everything the asset pack ships is WebP** — `quality=90, method=6`, with `exact=True` for anything carrying alpha so transparent pixels keep their RGB and sprites do not halo.
@@ -28,6 +51,28 @@ Two things to know before converting anything else:
 - **Byte-size floors stop meaning what they meant.** `IntroCinematicAssetIntegrityTest` used a 100 KB floor as a stub detector; at a tenth the bytes the legitimate title card fell under it. Re-point such floors rather than deleting them — the check is still worth having.
 
 Dimension guards survive the change: `validate_world1_content.ps1` parses VP8/VP8L/VP8X headers, so a bad export is still caught by size.
+
+### Chroma-key removal
+
+`scripts/remove_chroma_key.py` lifts the flat `#00ff00` background. It used to live in a per-machine
+Codex skills directory, so it is in the repo now and portrait generation is reproducible:
+
+    python scripts/generate_images.py --model gpt-image-2 --quality low --size 1024x1024 --output tmp/x_keyed.png --prompt "..."
+    python scripts/remove_chroma_key.py --input tmp/x_keyed.png --out tmp/x.png
+
+Three details in it are not optional, and each fixes a failure seen on real output:
+
+- **Despill is confined to a few pixels around the cut.** Applied globally it flattens genuinely
+  green subject matter *and* drags cyan toward blue, because cyan has a high green channel. The first
+  run turned Starborn's signature cyan resonance into flat blue across an entire portrait.
+- **Only green connected to the border is cut**, so a green prop or highlight inside the subject does
+  not become a hole.
+- **Opaque colour is bled outward under the transparent pixels.** The RGB beneath a transparent pixel
+  is still key-green and bilinear filtering samples it, so thin features fringe green when scaled to a
+  60dp dialogue portrait. This is why alpha images save with `exact=True` - it preserves that padding.
+
+Verify a keyed portrait by downscaling it to dialogue size and checking for green-dominant pixels on
+the alpha edge. It should be 0.00%.
 
 ## 2. Visual North Star
 

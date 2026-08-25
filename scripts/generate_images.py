@@ -30,6 +30,15 @@ def main():
     parser.add_argument("--output", required=True, help="Output image file path")
     parser.add_argument("--model", default="dall-e-3", help="DALL-E model to use")
     parser.add_argument("--size", default="1024x1024", help="Image size (default: 1024x1024)")
+    parser.add_argument(
+        "--quality",
+        default="low",
+        help=(
+            "Image quality for gpt-image-* models (default: low). 'low' is the canonical Starborn "
+            "default -- see docs/story/Starborn_Art_Production_Guide.md section 3. Raise it only "
+            "with explicit user approval."
+        )
+    )
     parser.add_argument("--key", help="OpenAI API Key override")
 
     args = parser.parse_args()
@@ -41,13 +50,17 @@ def main():
     print(f"  {args.prompt}")
 
     try:
-        response = client.images.generate(
-            model=args.model,
-            prompt=args.prompt,
-            n=1,
-            size=args.size,
-            quality="standard" if args.model == "dall-e-3" else None
-        )
+        request = {
+            "model": args.model,
+            "prompt": args.prompt,
+            "n": 1,
+            "size": args.size,
+        }
+        if args.model == "dall-e-3":
+            request["quality"] = "standard"
+        elif args.model.startswith("gpt-image"):
+            request["quality"] = args.quality
+        response = client.images.generate(**request)
         
         output_path = Path(args.output).resolve()
         output_path.parent.mkdir(parents=True, exist_ok=True)
