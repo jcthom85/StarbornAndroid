@@ -600,13 +600,13 @@
       },
       {
         "type": "narration",
-        "text": "The doors bow inward. The operator locks a brass Chime into the emergency tube.",
+        "text": "The inner doors buckle. An operator locks the brass Chime into the tube.",
         "image": "images/cinematics/intro_chime_launch_v1.webp",
         "camera_start_scale": 1.0,
         "camera_end_scale": 1.06,
         "camera_start_x": -18.0,
         "camera_end_x": 0.0,
-        "duration_seconds": 2.8,
+        "duration_seconds": 3.4,
         "transition": "fade"
       },
       {
@@ -623,7 +623,7 @@
         "camera_start_y": 0.0,
         "camera_end_y": -10.0,
         "transition": "cut",
-        "duration_seconds": 2.8
+        "duration_seconds": 2.2
       },
       {
         "type": "narration",
@@ -641,7 +641,7 @@
       },
       {
         "type": "narration",
-        "text": "For one impossible beat, something far away answers. Not a voice. A chord, many notes agreeing to carry it.",
+        "text": "Something answers across the dark. Not a voice—a chord, many notes agreeing to carry it.",
         "image": "images/cinematics/intro_chorus_answer_v1.webp",
         "camera_start_scale": 1.0,
         "camera_end_scale": 1.08,
@@ -650,7 +650,7 @@
         "camera_start_y": 10.0,
         "camera_end_y": -6.0,
         "transition": "fade",
-        "duration_seconds": 3.2,
+        "duration_seconds": 3.8,
         "audio_cue": "sfx_intro_chorus_answer"
       },
       {
@@ -667,7 +667,7 @@
         "camera_start_y": 0.0,
         "camera_end_y": -8.0,
         "audio_cue": "sfx_intro_stasis_seal",
-        "duration_seconds": 2.8,
+        "duration_seconds": 2.2,
         "transition": "fade"
       },
       {

@@ -7213,7 +7213,7 @@ private fun IllustratedNarrationCaption(
         for (index in text.indices) {
             if (revealedCount >= text.length) return@LaunchedEffect
             revealedCount = index + 1
-            delay(24L)
+            delay(12L)
         }
     }
     LaunchedEffect(stepKey, revealAllRequest) {

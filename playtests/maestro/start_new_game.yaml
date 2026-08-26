@@ -14,7 +14,7 @@ appId: com.junewiregames.starborn.prealpha
     visible: ".*SOURCE BEAST CONTAINMENT BREACH.*FAR DOOR PRESSURE RISING.*"
     timeout: 12000
 - extendedWaitUntil:
-    visible: ".*doors bow inward.*operator locks a brass Chime.*"
+    visible: ".*inner doors buckle.*locks the brass Chime.*"
     timeout: 12000
 - takeScreenshot: intro-narration-caption
 - extendedWaitUntil:
