@@ -6930,20 +6930,22 @@ private fun IllustratedCinematicOverlay(
                     translationY = driftY
                 }
         )
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(
-                    Brush.verticalGradient(
-                        listOf(
-                            Color.Black.copy(alpha = 0.18f),
-                            Color.Transparent,
-                            Color.Black.copy(alpha = 0.10f),
-                            Color.Black.copy(alpha = 0.88f)
+        if (state.step.captionStyle != CinematicCaptionStyle.NONE) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(
+                        Brush.verticalGradient(
+                            listOf(
+                                Color.Black.copy(alpha = 0.18f),
+                                Color.Transparent,
+                                Color.Black.copy(alpha = 0.10f),
+                                Color.Black.copy(alpha = 0.88f)
+                            )
                         )
                     )
-                )
-        )
+            )
+        }
 
         if (state.step.captionStyle != CinematicCaptionStyle.NONE) {
             IllustratedCinematicCaption(

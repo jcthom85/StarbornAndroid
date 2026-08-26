@@ -71,11 +71,11 @@ class IntroCinematicAssetIntegrityTest {
             "The title card asset must exist in the asset pack: $titleCardPath",
             File("../world_assets/src/main/assets/$titleCardPath").isFile
         )
-        // The cold open runs on ambience and impacts alone; the theme entering on the
-        // wordmark is what makes the title land instead of playing as wallpaper. The
-        // bunk suppresses music while the light is off, so the room's audio hands the
-        // theme out again on its own.
-        assertEquals("music_title_theme", titleCard.musicCue)
+        // The cold open uses the custom continuous orchestral-electronic breach track
+        // (music_intro_breach) which plays from Beat 1 all the way through the title card,
+        // resolving into the 5-note Starborn motif before fading into the silent dark bunk.
+        assertEquals(null, titleCard.musicCue)
+        assertEquals("music_intro_breach", steps.first().musicCue)
         val titleFadeOut = titleCard.fadeOutSeconds ?: 0.0
         assertTrue(
             "The title card must dim into the bunk fade rather than cutting",

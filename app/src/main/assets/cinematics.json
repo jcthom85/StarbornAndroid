@@ -700,12 +700,11 @@
         "text": "STARBORN",
         "caption_style": "none",
         "image": "images/cinematics/intro_title_card_v1.webp",
-        "camera_start_scale": 1.06,
-        "camera_end_scale": 1.0,
+        "camera_start_scale": 0.98,
+        "camera_end_scale": 1.03,
         "transition": "fade",
-        "fade_out_seconds": 1.2,
-        "duration_seconds": 4.0,
-        "music_cue": "music_title_theme"
+        "fade_out_seconds": 1.4,
+        "duration_seconds": 4.5
       }
     ]
   },
