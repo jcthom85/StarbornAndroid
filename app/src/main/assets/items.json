@@ -1339,15 +1339,6 @@
     }
   },
   {
-    "id": "portable_stove",
-    "name": "Portable Stove",
-    "description": "A compact thermal burner for cooking meals in the field. Reusable.",
-    "type": "utility",
-    "value": 150,
-    "buy_price": 300,
-    "rarity": "uncommon"
-  },
-  {
     "id": "energy_core",
     "name": "Energy Core",
     "aliases": [
@@ -2701,7 +2692,11 @@
   {
     "id": "bridge_relic",
     "name": "The Bridge",
-    "aliases": ["bridge", "bridge relic", "sanctuary bridge"],
+    "aliases": [
+      "bridge",
+      "bridge relic",
+      "sanctuary bridge"
+    ],
     "description": "Architect Echo #2. It coordinates distinct willing signals without merging them and requires Astra power plus a recognized identity.",
     "type": "key_item",
     "value": 0,

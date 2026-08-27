@@ -435,7 +435,6 @@ private fun SchematicsSection(
             TinkeringFilter.ALL -> all
             TinkeringFilter.REPAIR -> all.filter { it.category.equals("repair", ignoreCase = true) }
             TinkeringFilter.GEAR -> all.filter { it.category.equals("gear", ignoreCase = true) }
-            TinkeringFilter.PROVISION -> all.filter { it.category.equals("provision", ignoreCase = true) }
         }
     }
     Column(
@@ -1108,8 +1107,7 @@ private fun RecipeFilterRow(
     val filters = listOf(
         TinkeringFilter.ALL to "All ${recipes.size}",
         TinkeringFilter.REPAIR to "Repair ${recipes.countCategory("repair")}",
-        TinkeringFilter.GEAR to "Gear ${recipes.countCategory("gear")}",
-        TinkeringFilter.PROVISION to "Food ${recipes.countCategory("provision")}"
+        TinkeringFilter.GEAR to "Gear ${recipes.countCategory("gear")}"
     )
     Row(
         horizontalArrangement = Arrangement.spacedBy(6.dp),

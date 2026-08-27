@@ -372,7 +372,6 @@ fun NavigationHost(
         ) { tinkeringEntry ->
             val source = tinkeringEntry.arguments?.getString("source")
             val initialFilter = when (tinkeringEntry.arguments?.getString("filter")?.lowercase()) {
-                "provision", "food", "cooking" -> TinkeringFilter.PROVISION
                 "repair" -> TinkeringFilter.REPAIR
                 "gear" -> TinkeringFilter.GEAR
                 "all" -> TinkeringFilter.ALL

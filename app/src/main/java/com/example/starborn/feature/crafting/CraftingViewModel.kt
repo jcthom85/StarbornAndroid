@@ -76,7 +76,7 @@ data class TinkeringPreview(
     val learned: Boolean
 )
 
-enum class TinkeringFilter { ALL, REPAIR, GEAR, PROVISION }
+enum class TinkeringFilter { ALL, REPAIR, GEAR }
 
 class CraftingViewModel(
     private val craftingService: CraftingService,
