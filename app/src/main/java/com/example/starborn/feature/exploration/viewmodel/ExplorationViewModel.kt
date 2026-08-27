@@ -1577,6 +1577,11 @@ class ExplorationViewModel(
                 updateActionHints(_uiState.value.currentRoom)
                 updateUnlockedAreas(newState.unlockedAreas)
                 updateUnlockedExits(newState.unlockedExits)
+                if (!_uiState.value.isLoading) {
+                    roomsById.keys.forEach { roomId ->
+                        reevaluateBlockedDirections(roomId, silent = false)
+                    }
+                }
                 val currentRoomId = _uiState.value.currentRoom?.id
                 if (!_uiState.value.isLoading && newState.roomId != null && newState.roomId != currentRoomId) {
                     warpToRoom(newState.roomId)
@@ -5107,6 +5112,24 @@ class ExplorationViewModel(
                     directionIndicators = indicators,
                     canReturnToHub = canReturnToHub(resolvedRoom)
                 )
+            }
+        }
+
+        if (!silent) {
+            val isCurrentRoom = _uiState.value.currentRoom?.id == roomId
+            val blockType = block?.type?.lowercase(Locale.getDefault()) ?: ""
+            if (blockType == "enemy") {
+                emitAudioCommands(audioRouter.commandsForUi("sfx_path_cleared"))
+                val notify = message ?: if (isCurrentRoom) "The passage $normalized is now clear." else null
+                notify?.let { postStatus(it) }
+            } else if (isCurrentRoom) {
+                emitAudioCommands(audioRouter.commandsForUi("sfx_door_unlock"))
+                val notify = message ?: "The passage $normalized unlocks with a mechanical click."
+                postStatus(notify)
+            } else {
+                emitAudioCommands(audioRouter.commandsForUi("sfx_distant_gate_rumble"))
+                val notify = message ?: "A distant mechanical rumble echoes... A passage has unlocked."
+                postStatus(notify)
             }
         }
 
