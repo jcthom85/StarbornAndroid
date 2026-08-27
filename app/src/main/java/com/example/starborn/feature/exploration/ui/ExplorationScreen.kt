@@ -918,8 +918,9 @@ fun ExplorationScreen(
         RestRecoveryOverlay(
             notice = restRecoveryNotice,
             accentColor = actionAccentColor,
+            onDismiss = { restRecoveryNotice = null },
             modifier = Modifier
-                .align(Alignment.Center)
+                .fillMaxSize()
                 .zIndex(46f)
         )
         uiState.narrationPrompt?.let { narration ->
@@ -3529,158 +3530,196 @@ private data class RestRecoveryNotice(
 private fun RestRecoveryOverlay(
     notice: RestRecoveryNotice?,
     accentColor: Color,
+    onDismiss: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     AnimatedVisibility(
         visible = notice != null,
-        enter = fadeIn(animationSpec = tween(260)) + scaleIn(
-            animationSpec = tween(420, easing = FastOutSlowInEasing),
-            initialScale = 0.88f
-        ),
-        exit = fadeOut(animationSpec = tween(300)) + scaleOut(
-            animationSpec = tween(280, easing = FastOutSlowInEasing),
-            targetScale = 1.04f
-        ),
+        enter = fadeIn(animationSpec = tween(400, easing = FastOutSlowInEasing)),
+        exit = fadeOut(animationSpec = tween(350, easing = FastOutSlowInEasing)),
         modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 30.dp)
-            .zIndex(12f)
     ) {
         val currentNotice = notice ?: return@AnimatedVisibility
         val transition = rememberInfiniteTransition(label = "restRecoveryBreath")
         val breath by transition.animateFloat(
-            initialValue = 0.985f,
-            targetValue = 1.0f,
+            initialValue = 0.98f,
+            targetValue = 1.02f,
             animationSpec = infiniteRepeatable(
-                animation = tween(1200, easing = FastOutSlowInEasing),
+                animation = tween(1600, easing = FastOutSlowInEasing),
                 repeatMode = RepeatMode.Reverse
             ),
             label = "restRecoveryScale"
         )
         val glow by transition.animateFloat(
-            initialValue = 0.34f,
-            targetValue = 0.78f,
+            initialValue = 0.40f,
+            targetValue = 0.85f,
             animationSpec = infiniteRepeatable(
-                animation = tween(1400, easing = FastOutSlowInEasing),
+                animation = tween(1500, easing = FastOutSlowInEasing),
                 repeatMode = RepeatMode.Reverse
             ),
             label = "restRecoveryGlow"
         )
         val sweep by animateFloatAsState(
             targetValue = 1f,
-            animationSpec = tween(1200, easing = FastOutSlowInEasing),
+            animationSpec = tween(1400, easing = FastOutSlowInEasing),
             label = "restRecoverySweep"
         )
-        Surface(
-            shape = RoundedCornerShape(22.dp),
-            color = Color(0xF2071018),
-            border = BorderStroke(1.dp, accentColor.copy(alpha = 0.46f + glow * 0.18f)),
-            shadowElevation = 18.dp,
+
+        Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .widthIn(max = 560.dp)
-                .graphicsLayer {
-                    scaleX = breath
-                    scaleY = breath
-                }
+                .fillMaxSize()
+                .background(Color(0xE6020509))
+                .clickable { onDismiss() }
+                .padding(horizontal = 24.dp),
+            contentAlignment = Alignment.Center
         ) {
-            Box(
+            Surface(
+                shape = RoundedCornerShape(26.dp),
+                color = Color(0xF5060D15),
+                border = BorderStroke(1.2.dp, accentColor.copy(alpha = 0.52f + glow * 0.22f)),
+                shadowElevation = 24.dp,
                 modifier = Modifier
-                    .background(
-                        Brush.radialGradient(
-                            listOf(
-                                accentColor.copy(alpha = 0.18f + glow * 0.12f),
-                                Color(0xFF102033).copy(alpha = 0.42f),
-                                Color.Transparent
-                            ),
-                            radius = 620f
-                        )
-                    )
-                    .padding(horizontal = 24.dp, vertical = 24.dp)
+                    .fillMaxWidth()
+                    .widthIn(max = 520.dp)
+                    .graphicsLayer {
+                        scaleX = breath
+                        scaleY = breath
+                    }
             ) {
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(14.dp)
+                Box(
+                    modifier = Modifier
+                        .background(
+                            Brush.radialGradient(
+                                listOf(
+                                    accentColor.copy(alpha = 0.22f + glow * 0.14f),
+                                    Color(0xFF0F1E2E).copy(alpha = 0.50f),
+                                    Color.Transparent
+                                ),
+                                radius = 700f
+                            )
+                        )
+                        .padding(horizontal = 26.dp, vertical = 28.dp)
                 ) {
-                    Surface(
-                        shape = CircleShape,
-                        color = accentColor.copy(alpha = 0.12f + glow * 0.12f),
-                        border = BorderStroke(1.dp, accentColor.copy(alpha = 0.46f + glow * 0.28f)),
-                        modifier = Modifier.size(62.dp)
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        Box(contentAlignment = Alignment.Center) {
-                            Icon(
-                                imageVector = Icons.Rounded.Hotel,
-                                contentDescription = null,
-                                tint = Color.White,
-                                modifier = Modifier
-                                    .size(32.dp)
-                                    .graphicsLayer {
-                                        scaleX = 0.94f + glow * 0.08f
-                                        scaleY = 0.94f + glow * 0.08f
-                                        translationY = -1.5f + glow * 3f
-                                    }
+                        Surface(
+                            shape = CircleShape,
+                            color = accentColor.copy(alpha = 0.15f + glow * 0.15f),
+                            border = BorderStroke(1.5.dp, accentColor.copy(alpha = 0.60f + glow * 0.30f)),
+                            modifier = Modifier.size(68.dp)
+                        ) {
+                            Box(contentAlignment = Alignment.Center) {
+                                Icon(
+                                    imageVector = Icons.Rounded.Hotel,
+                                    contentDescription = null,
+                                    tint = Color.White,
+                                    modifier = Modifier
+                                        .size(34.dp)
+                                        .graphicsLayer {
+                                            scaleX = 0.95f + glow * 0.08f
+                                            scaleY = 0.95f + glow * 0.08f
+                                            translationY = -1.5f + glow * 2.5f
+                                        }
+                                )
+                            }
+                        }
+
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            Text(
+                                text = currentNotice.title,
+                                color = Color.White,
+                                style = MaterialTheme.typography.headlineSmall.copy(
+                                    fontWeight = FontWeight.Black,
+                                    letterSpacing = 0.sp
+                                ),
+                                textAlign = TextAlign.Center
+                            )
+                            Text(
+                                text = "PARTY VITALS RESTORED",
+                                color = accentColor.copy(alpha = 0.85f),
+                                style = MaterialTheme.typography.labelMedium.copy(
+                                    fontWeight = FontWeight.Bold,
+                                    letterSpacing = 1.2.sp
+                                ),
+                                textAlign = TextAlign.Center
                             )
                         }
-                    }
-                    Text(
-                        text = currentNotice.title,
-                        color = Color.White,
-                        style = MaterialTheme.typography.headlineSmall.copy(
-                            fontWeight = FontWeight.Black,
-                            letterSpacing = 0.sp
-                        ),
-                        textAlign = TextAlign.Center
-                    )
-                    Text(
-                        text = currentNotice.detail,
-                        color = Color.White.copy(alpha = 0.82f),
-                        style = MaterialTheme.typography.bodyLarge.copy(lineHeight = 25.sp),
-                        textAlign = TextAlign.Center,
-                        maxLines = 4,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth(0.72f)
-                            .height(3.dp)
-                            .clip(RoundedCornerShape(999.dp))
-                            .background(Color.White.copy(alpha = 0.08f))
-                    ) {
+
+                        Text(
+                            text = currentNotice.detail,
+                            color = Color.White.copy(alpha = 0.85f),
+                            style = MaterialTheme.typography.bodyLarge.copy(lineHeight = 25.sp),
+                            textAlign = TextAlign.Center,
+                            maxLines = 4,
+                            overflow = TextOverflow.Ellipsis
+                        )
+
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Surface(
+                                shape = RoundedCornerShape(12.dp),
+                                color = Color(0x3310B981),
+                                border = BorderStroke(1.dp, Color(0x6610B981))
+                            ) {
+                                Text(
+                                    text = "✦ 100% HP",
+                                    color = Color(0xFF34D399),
+                                    style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.SemiBold),
+                                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp)
+                                )
+                            }
+                            Surface(
+                                shape = RoundedCornerShape(12.dp),
+                                color = Color(0x3306B6D4),
+                                border = BorderStroke(1.dp, Color(0x6606B6D4))
+                            ) {
+                                Text(
+                                    text = "✦ Neural Static Cleared",
+                                    color = Color(0xFF22D3EE),
+                                    style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.SemiBold),
+                                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp)
+                                )
+                            }
+                        }
+
                         Box(
                             modifier = Modifier
-                                .fillMaxHeight()
-                                .fillMaxWidth(sweep)
-                                .background(
-                                    Brush.horizontalGradient(
-                                        listOf(
-                                            Color.Transparent,
-                                            accentColor.copy(alpha = 0.42f + glow * 0.32f),
-                                            Color.White.copy(alpha = 0.28f + glow * 0.22f)
+                                .fillMaxWidth(0.76f)
+                                .height(3.dp)
+                                .clip(RoundedCornerShape(999.dp))
+                                .background(Color.White.copy(alpha = 0.08f))
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxHeight()
+                                    .fillMaxWidth(sweep)
+                                    .background(
+                                        Brush.horizontalGradient(
+                                            listOf(
+                                                Color.Transparent,
+                                                accentColor.copy(alpha = 0.45f + glow * 0.35f),
+                                                Color.White.copy(alpha = 0.35f + glow * 0.25f)
+                                            )
                                         )
                                     )
-                                )
+                            )
+                        }
+
+                        Text(
+                            text = "Tap anywhere to continue",
+                            color = Color.White.copy(alpha = 0.38f),
+                            style = MaterialTheme.typography.labelSmall,
+                            textAlign = TextAlign.Center
                         )
                     }
-                }
-                Canvas(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(122.dp)
-                        .align(Alignment.Center)
-                        .alpha(0.36f)
-                ) {
-                    val stroke = Stroke(width = 2.5f, cap = StrokeCap.Round)
-                    drawArc(
-                        color = accentColor.copy(alpha = 0.18f + glow * 0.14f),
-                        startAngle = 205f,
-                        sweepAngle = 130f * sweep,
-                        useCenter = false,
-                        topLeft = Offset(size.width * 0.08f, size.height * 0.06f),
-                        size = Size(size.width * 0.84f, size.height * 1.25f),
-                        style = stroke
-                    )
                 }
             }
         }

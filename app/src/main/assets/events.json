@@ -12564,7 +12564,7 @@
       },
       {
         "type": "show_message",
-        "message": "Nova pries loose the floor panel, uncovering 50 credits, a Neural Stabilizer, and 2 scrap metal."
+        "message": "Nova pries loose the floor panel, uncovering a hidden smuggler's stash beneath the shelves."
       }
     ]
   },
@@ -12603,7 +12603,7 @@
       },
       {
         "type": "show_message",
-        "message": "Jed's chest yields 2 wiring bundles, a battery pack, and 3 scrap metal."
+        "message": "Nova pops the latch on Jed's components chest, salvaging a stash of spare electrical parts."
       }
     ]
   },
@@ -12642,7 +12642,7 @@
       },
       {
         "type": "show_message",
-        "message": "The cryo locker yields 2 Medkit I, a Neural Stabilizer, and a chemical catalyst."
+        "message": "The cryo locker hiss-releases, exposing a sealed cache of emergency medical supplies."
       }
     ]
   },
@@ -12741,10 +12741,19 @@
       "type": "player_action",
       "action": "w1_cook_ration_soup"
     },
+    "conditions": [
+      {
+        "type": "has_item",
+        "item_id": "ration_pack",
+        "quantity": 1
+      }
+    ],
     "repeatable": true,
     "actions": [
       {
-        "type": "rest_party"
+        "type": "take_item",
+        "item_id": "ration_pack",
+        "quantity": 1
       },
       {
         "type": "give_item",
@@ -12753,7 +12762,7 @@
       },
       {
         "type": "show_message",
-        "message": "Nova simmers a hot bowl of ration soup. The warm meal restores the party and eases neurological tension."
+        "message": "Nova simmers a hot bowl of ration soup using a ration pack and kitchen seasonings."
       }
     ]
   },
@@ -12882,7 +12891,7 @@
       },
       {
         "type": "show_message",
-        "message": "Nova pulls 35 credits and 2 scrap metal from the drain trap."
+        "message": "Nova reaches into the loosened drain trap and pulls out an oily scrapper stash."
       }
     ]
   },
@@ -12916,7 +12925,7 @@
       },
       {
         "type": "show_message",
-        "message": "Nova balances the pump frequency. The clatter smooths out, yielding 2 heavy gears and hydraulic fluid."
+        "message": "Nova balances the pump frequency. The clatter smooths out as loose machine components drop into the catch basin."
       }
     ]
   },
@@ -12950,7 +12959,7 @@
       },
       {
         "type": "show_message",
-        "message": "The acoustic lock pops open, revealing 2 Pulse Grenades and a Neural Stabilizer."
+        "message": "The acoustic lock pops open with a crisp click, revealing Scrapper's contraband cache."
       }
     ]
   },
@@ -13012,7 +13021,7 @@
       },
       {
         "type": "show_message",
-        "message": "The crane crate yields ballistic weave and a battery pack."
+        "message": "Nova levers open the abandoned crane crate, finding salvage packed inside the foam."
       }
     ]
   },
@@ -13041,7 +13050,7 @@
       },
       {
         "type": "show_message",
-        "message": "Tucked inside the mortar seam is an inmate's Digital Watch accessory."
+        "message": "Tucked inside the mortar seam behind the bench is a prisoner's hidden keepsake."
       }
     ]
   },
@@ -13075,7 +13084,7 @@
       },
       {
         "type": "show_message",
-        "message": "Nova opens the contraband bin and recovers 2 ration packs and a battery."
+        "message": "Nova pops the security seal on the confiscation bin, siphoning out contraband supplies."
       }
     ]
   },
@@ -13109,7 +13118,7 @@
       },
       {
         "type": "show_message",
-        "message": "Nova recovers an Adrenaline Ampoule and a Neural Stabilizer from the canister."
+        "message": "Nova unseals the cold bio-containment canister, retrieving an emergency stimulant cache."
       }
     ]
   },
@@ -13158,7 +13167,7 @@
       },
       {
         "type": "show_message",
-        "message": "Jed's loft mod bench yields a Precision Sight accessory and 2 scrap metal."
+        "message": "Nova clears the dust tarp from Jed's loft bench, uncovering a customized weapon mod."
       }
     ]
   },
@@ -13192,7 +13201,7 @@
       },
       {
         "type": "show_message",
-        "message": "Nova salvages an Armor Plate and 3 scrap metal from the dolly."
+        "message": "Nova rummages through the rear dolly and salvages heavy plating scrap."
       }
     ]
   },
@@ -13250,7 +13259,7 @@
       },
       {
         "type": "show_message",
-        "message": "The thermal case yields a Cryo-Inductor and a circuit board."
+        "message": "Nova unlatches the thermal casing, retrieving an insulated sub-zero core."
       }
     ]
   },
@@ -13299,7 +13308,109 @@
       },
       {
         "type": "show_message",
-        "message": "Nova fires her mining cutter into the resonant mineral seam, harvesting a power cell and 3 scrap metal."
+        "message": "Nova fires her mining cutter into the resonant mineral seam, harvesting the exposed geode."
+      }
+    ]
+  },
+  {
+    "id": "w1_loot_jed_bunk_tools",
+    "description": "Loots Jed's tool case in his bunk.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w1_loot_jed_bunk_tools"
+    },
+    "conditions": [
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w1_jed_bunk_tools_looted"
+      }
+    ],
+    "actions": [
+      {
+        "type": "give_item",
+        "item_id": "wiring_bundle",
+        "quantity": 1
+      },
+      {
+        "type": "give_item",
+        "item_id": "battery_pack",
+        "quantity": 1
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w1_jed_bunk_tools_looted"
+      },
+      {
+        "type": "show_message",
+        "message": "Nova opens Jed's tool case, sorting through his spare electrical components."
+      }
+    ]
+  },
+  {
+    "id": "w1_loot_pit_vents_crawl",
+    "description": "Loots the crawlspace beneath the Pit vents.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w1_loot_pit_vents_crawl"
+    },
+    "conditions": [
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w1_pit_vents_looted"
+      }
+    ],
+    "actions": [
+      {
+        "type": "give_item",
+        "item_id": "ballistic_weave",
+        "quantity": 1
+      },
+      {
+        "type": "give_item",
+        "item_id": "pulse_grenade",
+        "quantity": 1
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w1_pit_vents_looted"
+      },
+      {
+        "type": "show_message",
+        "message": "Nova reaches into the dark crawlspace and pulls out a bundle tucked behind the duct."
+      }
+    ]
+  },
+  {
+    "id": "w1_loot_workshop_shed_toolbox",
+    "description": "Loots Jed's spare toolbox in the workshop shed.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w1_loot_workshop_shed_toolbox"
+    },
+    "conditions": [
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w1_workshop_shed_looted"
+      }
+    ],
+    "actions": [
+      {
+        "type": "give_item",
+        "item_id": "hydraulic_fluid",
+        "quantity": 1
+      },
+      {
+        "type": "give_item",
+        "item_id": "scrap_metal",
+        "quantity": 2
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w1_workshop_shed_looted"
+      },
+      {
+        "type": "show_message",
+        "message": "Nova opens the heavy toolbox and sorts out spare maintenance supplies."
       }
     ]
   }

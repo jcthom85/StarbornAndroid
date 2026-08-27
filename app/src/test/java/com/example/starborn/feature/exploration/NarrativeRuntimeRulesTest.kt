@@ -40,4 +40,16 @@ class NarrativeRuntimeRulesTest {
             )
         )
     }
+
+    @Test
+    fun milestoneNegationHidesExhaustedActions() {
+        val action = mapOf<String, Any?>(
+            "name" to "tool case",
+            "type" to "generic",
+            "requires_milestone_not_set" to "ms_w1_jed_bunk_tools_looted"
+        )
+
+        assertTrue(narrativeActionVisible(action, emptyMap(), emptyMap(), emptySet()))
+        assertFalse(narrativeActionVisible(action, emptyMap(), emptyMap(), setOf("ms_w1_jed_bunk_tools_looted")))
+    }
 }

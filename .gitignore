@@ -38,6 +38,7 @@ __pycache__/
 *.hprof
 # Local mobile automation tooling/state
 /tools/maestro/
+scripts/.remote_device.json
 /.maestro-home/
 /.gradle-codex/
 /early-*.png

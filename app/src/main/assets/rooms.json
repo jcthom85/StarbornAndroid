@@ -97,7 +97,7 @@
         "name": "thermal cooker",
         "type": "generic",
         "action_event": "w1_cook_ration_soup",
-        "condition_unmet_message": "The cooker is hot and ready. Nova can brew ration soup here if she has a ration pack."
+        "condition_unmet_message": "The thermal cooker is hot and ready. Nova needs a ration pack to brew hot soup."
       },
       {
         "name": "ingredient hopper",
@@ -190,9 +190,11 @@
         "condition_unmet_message": "'Advanced Hydraulics' and 'Ship Engine Maintenance'. They are well-thumbed."
       },
       {
-        "name": "gadgets",
+        "name": "tool case",
         "type": "generic",
-        "condition_unmet_message": "Small sensors, battery packs, and modified cutters. Jed's retirement hobby is a full-time job."
+        "action_event": "w1_loot_jed_bunk_tools",
+        "requires_milestone_not_set": "ms_w1_jed_bunk_tools_looted",
+        "condition_unmet_message": "Jed's tool case is neatly organized, with spare components collected."
       }
     ],
     "npc_presence": [
@@ -202,6 +204,14 @@
         "forbidden_milestones": [
           "ms_w1_mq01_jed_talked"
         ]
+      }
+    ],
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w1_jed_bunk_tools_looted"
+        ],
+        "description": "Jed has filled his pod with manuals, empty gadget casings, and half-built repairs. Beside the clear mattress strip, his tool case sits unlatched and organized."
       }
     ]
   },
@@ -394,7 +404,15 @@
     "env": "mine",
     "title": "Vent Crawl",
     "background_image": "images/rooms/world_1/pit_vents_v5.webp",
-    "description": "A low maintenance crawl runs warm and stale beneath the Pit. Spoons, conversation, and an occasional laugh carry through the mess hall grates.",
+    "description": "A low maintenance crawl runs warm beneath the Pit. Spoons and voices carry through the mess hall grates into the maintenance crawl.",
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w1_pit_vents_looted"
+        ],
+        "description": "A low maintenance crawl runs warm beneath the Pit. The cleared duct is quiet, and conversation carries softly through the mess hall grates."
+      }
+    ],
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -409,9 +427,11 @@
     "state": {},
     "actions": [
       {
-        "name": "mess hall",
+        "name": "maintenance crawl",
         "type": "generic",
-        "condition_unmet_message": "The voices of your coworkers echo up through the ducts."
+        "action_event": "w1_loot_pit_vents_crawl",
+        "requires_milestone_not_set": "ms_w1_pit_vents_looted",
+        "condition_unmet_message": "The maintenance crawlspace is clear."
       },
       {
         "name": "grates",
@@ -638,6 +658,14 @@
     "title": "Parts Loft",
     "background_image": "images/rooms/world_1/workshop_loft_v3.webp",
     "description": "The storage loft hangs above the shop on creaking beams. An organized mod bench sits under dust tarps beside neat rows of machine parts.",
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w1_workshop_loft_looted"
+        ],
+        "description": "The storage loft hangs above the shop on creaking beams. Jed's loft bench sits cleared under dust tarps beside neat rows of machine parts."
+      }
+    ],
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -670,6 +698,14 @@
     "title": "Tool Shed",
     "background_image": "images/rooms/world_1/workshop_shed_v3.webp",
     "description": "The tools have assigned hooks, polished edges, and probably stories about Jed stealing them back from Dominion twice. A heavy toolbox sits locked on the low shelf.",
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w1_workshop_shed_looted"
+        ],
+        "description": "The tools have assigned hooks and polished edges. On the low shelf, Jed's spare toolbox sits unlatched and sorted."
+      }
+    ],
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -692,7 +728,9 @@
       {
         "name": "toolbox",
         "type": "generic",
-        "condition_unmet_message": "A heavy steel box. It's locked tight."
+        "action_event": "w1_loot_workshop_shed_toolbox",
+        "requires_milestone_not_set": "ms_w1_workshop_shed_looted",
+        "condition_unmet_message": "Jed's spare toolbox has already been sorted."
       }
     ]
   },
@@ -807,6 +845,14 @@
     "title": "Back Alley",
     "background_image": "images/rooms/world_1/workshop_back_v3.webp",
     "description": "A narrow service dock runs from Jed's shop toward the lower tunnels. Grease, scrap plates, and a motorized salvage dolly crowd the wall.",
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w1_workshop_back_looted"
+        ],
+        "description": "A narrow service dock runs from Jed's shop toward the lower tunnels. Stacked scrap plates lean beside the cleared dolly."
+      }
+    ],
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -953,25 +999,25 @@
     "env": "mine",
     "title": "Ventilation Hub",
     "background_image": "images/rooms/world_1/medbay_vents_v3.webp",
-    "description": "Rusted fans and patched pipes keep air moving through the med-bay. A cracked vent leaks chemical haze while a toxic blockage swells in the updraft. Two skimmers hang in the warm column above it, throat sacs working, waiting for something to walk under them.",
+    "description": "Rusted fans and patched conduits keep air moving through the med-bay. A cracked vent leaks chemical haze while a toxic blockage swells in the updraft. Two skimmers hang in the warm column above it, throat sacs working, waiting for something to walk under them.",
     "description_variants": [
       {
         "requires_state": {
           "toxic_blockage_cleared": true
         },
-        "description": "The fans hold a steady speed and the patched pipes run quiet. The cracked vent ticks as it cools. The blockage is gone; clean air reaches the med-bay at normal pressure."
+        "description": "The fans hold a steady speed and the patched conduits run quiet. The cracked vent ticks as it cools. The blockage is gone; clean air reaches the med-bay at normal pressure."
       },
       {
         "requires_state": {
           "airflow_rerouted": true
         },
-        "description": "The fans grind in reverse, pulling green haze away from the cracked vent and around the toxic blockage. Patched pipes shudder under the redirected pressure."
+        "description": "The fans grind in reverse, pulling green haze away from the cracked vent and around the toxic blockage. Patched conduits shudder under the redirected pressure."
       },
       {
         "requires_state": {
           "vent_inspected": true
         },
-        "description": "The cracked vent leaks because pressure is trapped behind the fans. Patched pipes hammer in the walls, and the toxic blockage swells each time the airflow stutters."
+        "description": "The cracked vent leaks because pressure is trapped behind the fans. Patched conduits hammer in the walls, and the toxic blockage swells each time the airflow stutters."
       }
     ],
     "npcs": [],
@@ -996,11 +1042,6 @@
     ],
     "state": {},
     "actions": [
-      {
-        "name": "pipes",
-        "type": "generic",
-        "condition_unmet_message": "The metal is hot to the touch and vibrating with the force of the pumps."
-      },
       {
         "name": "fans",
         "type": "generic",
@@ -1197,7 +1238,7 @@
     "env": "market",
     "title": "Scrapper's Stall",
     "background_image": "images/rooms/world_1/trade_scrapper_v3.webp",
-    "description": "Salvaged weapons and illegal tech crowd Scrapper's reinforced stall. Contraband and a locked datapad sit under the counter within easy reach.",
+    "description": "Salvaged armaments and modified equipment crowd Scrapper's reinforced stall. Contraband and a datapad sit under the counter within easy reach.",
     "npcs": [
       "scrapper"
     ],
@@ -1214,19 +1255,9 @@
     "state": {},
     "actions": [
       {
-        "name": "tech",
-        "type": "generic",
-        "condition_unmet_message": "Modified sensors, cracked encryption keys, and a few things you don't even recognize."
-      },
-      {
-        "name": "weapons",
-        "type": "generic",
-        "condition_unmet_message": "Old mining pistols and modified stun-batons. Scrapper's specialty."
-      },
-      {
         "name": "datapad",
         "type": "generic",
-        "condition_unmet_message": "Encrypted and password-protected. Scrapper keeps his business to himself."
+        "condition_unmet_message": "Encrypted and password-protected. Scrapper's ledger lists black-market contraband serial numbers."
       },
       {
         "name": "Contraband",
@@ -1343,6 +1374,14 @@
     "title": "Cold Locker",
     "background_image": "images/rooms/world_1/trade_locker_v3.webp",
     "description": "A reinforced security locker is set into the rock wall beside an amber scanner. Its magnetic latch pulses with a low acoustic hum.",
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w1_trade_locker_unlocked"
+        ],
+        "description": "A reinforced security locker stands open beside the amber scanner, its acoustic latch disarmed and emptied."
+      }
+    ],
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -1439,6 +1478,14 @@
     "title": "Shift Queue",
     "background_image": "images/rooms/world_1/checkpoint_queue_v3.webp",
     "description": "A low corridor funnels miners toward the gate under white lights. A locked contraband bin sits bolted beside the biometric scanner.",
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w1_checkpoint_queue_looted"
+        ],
+        "description": "A low corridor funnels miners toward the gate under white lights. Beside the biometric scanner, the emptied contraband box sits unlatched."
+      }
+    ],
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -1545,6 +1592,14 @@
     "title": "Holding Cell",
     "background_image": "images/rooms/world_1/checkpoint_cell_v3.webp",
     "description": "A temporary holding cell beside the security gate. Scratched graffiti and names cover the wall behind a loose mortar seam under the bench.",
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w1_checkpoint_cell_looted"
+        ],
+        "description": "A temporary holding cell beside the security gate. Scratched graffiti and names cover the wall behind the cleared stone seam under the bench."
+      }
+    ],
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -2021,6 +2076,14 @@
     "title": "Cooling Unit B",
     "background_image": "images/rooms/world_1/server_cooling.webp",
     "description": "Massive condenser fans pull freezing air through the racks. Thick frost coats an emergency bypass valve beside an insulated thermal case.",
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w1_server_cooling_looted"
+        ],
+        "description": "Massive condenser fans pull cold air through the racks. The purged bypass valve runs quiet beside the unlatched, empty thermal case."
+      }
+    ],
     "npcs": [],
     "items": [],
     "enemies": [],

@@ -1266,5 +1266,23 @@
     "name": "Resonant Vein Harvested",
     "description": "Nova extracted power cells and mineral scrap from the ore shunt.",
     "toast": "Resonant vein harvested."
+  },
+  {
+    "id": "ms_w1_jed_bunk_tools_looted",
+    "name": "Jed's Tool Case Salvaged",
+    "description": "Nova retrieved spare wiring and batteries from Jed's tool case.",
+    "toast": "Wiring bundle and battery pack acquired."
+  },
+  {
+    "id": "ms_w1_pit_vents_looted",
+    "name": "Pit Crawlspace Salvaged",
+    "description": "Nova found ballistic weave and a pulse grenade in the maintenance ducts.",
+    "toast": "Pulse Grenade acquired."
+  },
+  {
+    "id": "ms_w1_workshop_shed_looted",
+    "name": "Tool Shed Salvaged",
+    "description": "Nova sorted Jed's toolbox for spare scrap and hydraulic fluid.",
+    "toast": "Hydraulic fluid and scrap metal acquired."
   }
 ]

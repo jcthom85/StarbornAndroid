@@ -929,6 +929,7 @@ class ExplorationViewModel(
         }.toMap()
         if (restoredHp.isEmpty()) return
         sessionStore.updatePartyVitals(restoredHp)
+        emitAudioCommands(audioRouter.commandsForUi("sfx_bunk_light_on"))
         emitEvent(
             ExplorationEvent.RestRecovered(
                 restoredHp = restoredAmount,
@@ -5189,8 +5190,17 @@ internal fun narrativeActionVisible(
     if (!showState.isNullOrBlank() && stateValue(showState) != true) return false
     val hideState = action["hide_when_state"] as? String
     if (!hideState.isNullOrBlank() && stateValue(hideState) == true) return false
-    val showMilestone = action["show_when_milestone"] as? String
+    val showMilestone = (action["show_when_milestone"] as? String)
+        ?: (action["requires_milestone"] as? String)
     if (!showMilestone.isNullOrBlank() && showMilestone !in milestones) return false
+    val requiredMilestones = (action["requires_milestones"] as? List<*>)?.filterIsInstance<String>().orEmpty()
+    if (requiredMilestones.any { it !in milestones }) return false
+    val hideMilestone = (action["hide_when_milestone"] as? String)
+        ?: (action["requires_milestone_not_set"] as? String)
+        ?: (action["forbidden_milestone"] as? String)
+    if (!hideMilestone.isNullOrBlank() && hideMilestone in milestones) return false
+    val forbiddenMilestones = (action["forbidden_milestones"] as? List<*>)?.filterIsInstance<String>().orEmpty()
+    if (forbiddenMilestones.any { it in milestones }) return false
     return true
 }
 
