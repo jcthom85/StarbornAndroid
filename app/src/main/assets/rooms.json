@@ -550,13 +550,13 @@
     "env": "mine",
     "title": "Main Bench",
     "background_image": "images/rooms/world_1/workshop_floor_v3.webp",
-    "description": "Work lights show the workbench, scorched insulation, and Jed's tools laid out by size. The mining cutter and Flux Liner wait beside the floor clamp; the live cutter test comes last.",
+    "description": "Work lights show the Workbench, scorched insulation, and Jed's tools laid out by size. The mining cutter and Flux Liner wait beside the floor clamp; the live cutter test comes last.",
     "description_variants": [
       {
         "requires_state": {
           "cryo_inductor_installed": true
         },
-        "description": "The workbench holds the rebuilt Cryo-Inductor at a clean 68% cold loop. Patch the Flux Liner, confirm the mining cutter bypass, then run the live cutter test."
+        "description": "The Workbench holds the rebuilt Cryo-Inductor at a clean 68% cold loop. Patch the Flux Liner, confirm the mining cutter bypass, then run the live cutter test."
       }
     ],
     "npcs": [],
@@ -589,9 +589,9 @@
     },
     "actions": [
       {
-        "name": "workbench",
+        "name": "Workbench",
         "type": "tinkering",
-        "condition_unmet_message": "Jed's workbench is ready. Repair the Cryo-Inductor into a Functional Cryo-Inductor before shift clearance."
+        "condition_unmet_message": "Jed's Workbench is ready. Repair the Cryo-Inductor into a Functional Cryo-Inductor before shift clearance."
       },
       {
         "name": "mining cutter",

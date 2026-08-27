@@ -2507,14 +2507,20 @@ private fun FieldKitTabContent(
         border = BorderStroke(1.dp, borderColor.copy(alpha = 0.45f))
     ) {
         Column(
-            modifier = Modifier.padding(14.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             Text(
-                text = "Portable Stove",
-                style = MaterialTheme.typography.titleMedium,
+                text = "Field Tinkering Kit",
+                style = MaterialTheme.typography.titleMedium.copy(fontWeight = androidx.compose.ui.text.font.FontWeight.Bold),
                 color = Color.White
             )
+            Text(
+                text = "Assemble weapon modifications, reinforce suits, and repair scrap components directly in the field.",
+                style = MaterialTheme.typography.bodySmall,
+                color = Color(0xFFA0AEC0)
+            )
+            Spacer(modifier = Modifier.height(4.dp))
             Button(
                 onClick = onOpenFieldKit,
                 colors = ButtonDefaults.buttonColors(
@@ -2522,9 +2528,10 @@ private fun FieldKitTabContent(
                     contentColor = Color.White
                 ),
                 border = BorderStroke(1.dp, accentColor.copy(alpha = 0.55f)),
-                shape = RoundedCornerShape(10.dp)
+                shape = RoundedCornerShape(10.dp),
+                modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Cook")
+                Text("Open Tinkering Workbench")
             }
         }
     }
