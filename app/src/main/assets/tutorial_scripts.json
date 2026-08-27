@@ -164,5 +164,19 @@
                 "context": "Combat"
             }
         ]
+    },
+    {
+        "id": "combat_basics_opener",
+        "steps": [
+            {
+                "message": "When your turn bar fills, choose an action. Skills go on turn cooldowns after use.",
+                "context": "Combat"
+            },
+            {
+                "message": "Enemies with cracked relays or exposed circuits are weak to Shock. Exploit weaknesses to crack Stability and stun them!",
+                "context": "Combat",
+                "delay_ms": 2500
+            }
+        ]
     }
 ]

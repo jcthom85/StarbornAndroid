@@ -714,7 +714,7 @@
       },
       {
         "type": "narrate",
-        "message": "Arc Tether punches through the exposed relay. The loader locks, shudders, and drops into the scrap. The workshop route is clear.",
+        "message": "The loader's cracked relay flares out in a shower of sparks. The machine locks, shudders, and collapses into the scrap. The workshop route is clear.",
         "tap_to_dismiss": true
       }
     ]
