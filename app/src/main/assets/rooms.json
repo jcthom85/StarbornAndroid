@@ -9330,6 +9330,14 @@
     "title": "Left Tuner Column",
     "background_image": "images/rooms/world_2/temple_left_wing.webp",
     "description": "The left resonator battery column holds the western resonance crystal in a copper-wired pillar that vibrates in low harmony.",
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w2_crystal_west_seated"
+        ],
+        "description": "The left resonator battery column hums in steady low harmony around the aligned western resonance crystal."
+      }
+    ],
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -9346,6 +9354,7 @@
         "name": "western resonance crystal",
         "type": "generic",
         "action_event": "w2_sq04_crystal_west",
+        "requires_milestone_not_set": "ms_w2_crystal_west_seated",
         "condition_unmet_message": "A violet crystal stores the low harmony missing from the stasis mural."
       }
     ]
@@ -9357,6 +9366,14 @@
     "title": "Right Tuner Column",
     "background_image": "images/rooms/world_2/temple_right_wing.webp",
     "description": "The right frequency dampener column holds the eastern resonance crystal, filtering local seismic noise into an answering harmonic.",
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w2_crystal_east_seated"
+        ],
+        "description": "The right frequency dampener column hums with a focused answering harmonic around the seated eastern resonance crystal."
+      }
+    ],
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -9373,6 +9390,7 @@
         "name": "eastern resonance crystal",
         "type": "generic",
         "action_event": "w2_sq04_crystal_east",
+        "requires_milestone_not_set": "ms_w2_crystal_east_seated",
         "condition_unmet_message": "A cyan crystal holds the answering harmonic from the facility east wing."
       }
     ]
@@ -9746,6 +9764,14 @@
     "title": "Acoustics Lab",
     "background_image": "images/rooms/world_2/hall_acoustics_lab.webp",
     "description": "A laboratory bay containing Dominion logging sensors focused on cymatic pool fluctuations. The northern resonance crystal hums inside a sealed acoustic rack.",
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w2_crystal_north_seated"
+        ],
+        "description": "A laboratory bay containing Dominion logging sensors. The northern resonance crystal hums in harmonic alignment within the open acoustic rack."
+      }
+    ],
     "npcs": [],
     "items": [],
     "enemies": [
@@ -9764,6 +9790,7 @@
         "name": "northern resonance crystal",
         "type": "generic",
         "action_event": "w2_sq04_crystal_north",
+        "requires_milestone_not_set": "ms_w2_crystal_north_seated",
         "condition_unmet_message": "A gold crystal vibrates at the mural alignment frequency."
       }
     ]
