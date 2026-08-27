@@ -7946,7 +7946,8 @@
         "name": "navigation console",
         "type": "generic",
         "action_event": "w2_mq01_examine_pod",
-        "condition_unmet_message": "The Chime is still locked in the burned navigation port."
+        "condition_unmet_message": "Objective completed.",
+        "requires_milestone_not_set": "ms_w2_pod_examined"
       },
       {
         "name": "glow-water",
@@ -7984,6 +7985,12 @@
           "ms_w2_flora_moss_scanned"
         ],
         "description": "The escape pod sits wedged into the swamp silt, trailing steam into the humid air. The acoustic moss has been surveyed, and the navigation console remains active inside."
+      },
+      {
+        "requires_milestones": [
+          "ms_w2_pod_examined"
+        ],
+        "description": "The escape pod sits wedged into the swamp silt, trailing steam into the humid air. The impact telemetry has been extracted from the dark navigation console."
       }
     ]
   },
@@ -8015,7 +8022,16 @@
         "name": "emergency medkit",
         "type": "generic",
         "action_event": "w2_mq01_stabilize_zeke",
-        "condition_unmet_message": "You carry the emergency medkit back to Zeke and work until his breathing steadies."
+        "condition_unmet_message": "Objective completed.",
+        "requires_milestone_not_set": "ms_w2_zeke_stabilized"
+      }
+    ],
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w2_zeke_stabilized"
+        ],
+        "description": "The cramped interior of the escape pod smells of ozone and scorched wire. Zeke rests against the reinforced bulkhead, breathing steadily."
       }
     ]
   },
@@ -8170,7 +8186,16 @@
         "name": "salvage conduits",
         "type": "generic",
         "action_event": "w2_mq05_collect_conduits",
-        "condition_unmet_message": "Salvaging power conduits from the pod wreckage..."
+        "condition_unmet_message": "Salvaging power conduits from the pod wreckage...",
+        "requires_milestone_not_set": "ms_w2_conduits_collected"
+      }
+    ],
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w2_conduits_collected"
+        ],
+        "description": "A muddy slope littered with debris from the crash. The superconducting power conduits have been salvaged."
       }
     ]
   },
@@ -9218,6 +9243,12 @@
           "hunter_confronted": true
         },
         "description": "Gh0st lowers his rifle without accepting a command. Brush breaks behind him; Face the Beast before it reaches the ledge."
+      },
+      {
+        "requires_milestones": [
+          "ms_w2_mq04_complete"
+        ],
+        "description": "A narrow limestone ridge suspended high in the canopy. The heavy mining drill stands securely anchored into the bedrock."
       }
     ],
     "npcs": [],
@@ -9264,7 +9295,8 @@
         "action_event": "w2_mq04_anchor_drill",
         "show_when_state": "beast_defeated",
         "hide_when_state": "anchor_drill_complete",
-        "condition_unmet_message": "Orion lays out a ground lead beside the unpowered Bridge."
+        "condition_unmet_message": "Objective completed.",
+        "requires_milestone_not_set": "ms_w2_mq04_complete"
       }
     ]
   },
@@ -9571,7 +9603,8 @@
         "name": "stone lock",
         "type": "generic",
         "action_event": "w2_mq02_use_chime",
-        "condition_unmet_message": "The stone lock hums softly, waiting for the Chime to answer it."
+        "condition_unmet_message": "Objective completed.",
+        "requires_milestone_not_set": "ms_w2_mq02_complete"
       }
     ],
     "description_variants": [
@@ -9580,6 +9613,12 @@
           "ms_w2_mq02_complete"
         ],
         "description": "The Temple Gate stands open, its cymatic patterns still glowing around the Chime slot. The resonator hums with a frequency that feels less like machinery than memory."
+      },
+      {
+        "requires_milestones": [
+          "ms_w2_mq02_complete"
+        ],
+        "description": "The Temple Gate stands open, its cymatic patterns humming with harmonic resonance around the unsealed chime lock."
       }
     ]
   },
@@ -9876,7 +9915,8 @@
         "name": "murals",
         "type": "generic",
         "action_event": "w2_mq03_inspect_murals",
-        "condition_unmet_message": "Shifting murals made of light. They shimmer when you approach."
+        "condition_unmet_message": "Objective completed.",
+        "requires_milestone_not_set": "ms_w2_murals_inspected"
       },
       {
         "name": "central relief",
@@ -9888,6 +9928,14 @@
           "ms_w2_crystal_north_seated"
         ],
         "condition_unmet_message": "The central relief hums out of tune. It needs the west, east, and north crystal voices seated before the mural chord can hold."
+      }
+    ],
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w2_murals_inspected"
+        ],
+        "description": "A soaring gallery lined with vibrating acoustic pillars. The deciphered cymatic murals glow with stable turquoise light."
       }
     ]
   },
@@ -10135,7 +10183,8 @@
         "name": "stasis pod",
         "type": "generic",
         "action_event": "w2_mq03_inspect_pod",
-        "condition_unmet_message": "The sealed pod is protecting a sleeping figure by holding his memory inside three pressure rings."
+        "condition_unmet_message": "Objective completed.",
+        "requires_milestone_not_set": "ms_w2_pod_inspected"
       },
       {
         "name": "root lattice",
@@ -10174,6 +10223,12 @@
           "ms_w2_roots_scanned"
         ],
         "description": "A vast circular chamber centered on a suspended stasis cylinder. The deep root lattice has been mapped into your logs."
+      },
+      {
+        "requires_milestones": [
+          "ms_w2_pod_inspected"
+        ],
+        "description": "A vast circular chamber centered on a suspended stasis cylinder. The slumbering Architect's bio-readings are logged."
       }
     ]
   },
@@ -10208,7 +10263,8 @@
           "ms_w2_stasis_overview_read",
           "ms_w2_coolant_stabilized"
         ],
-        "condition_unmet_message": "The rings refuse to move until the murals are read, the pod pressure is understood, the overview sockets are mapped, and the coolant flow is stabilized."
+        "condition_unmet_message": "The rings refuse to move until all four alignment frequencies are in phase.",
+        "requires_milestone_not_set": "ms_w2_mq03_complete"
       }
     ],
     "description_variants": [
@@ -10223,6 +10279,12 @@
           "ms_w2_mq03_complete"
         ],
         "description": "The three concentric stasis rings hum in a stable pattern now. The ring console is no longer guessing at a code; it is waiting for Nova to let the room breathe in sequence."
+      },
+      {
+        "requires_milestones": [
+          "ms_w2_mq03_complete"
+        ],
+        "description": "A concentric ring array vibrating with harmonic frequencies. The alignment rings spin in perfect synchronization."
       }
     ]
   },
@@ -10250,7 +10312,8 @@
         "name": "coolant garden",
         "type": "generic",
         "action_event": "w2_mq03_stabilize_coolant",
-        "condition_unmet_message": "Facility coolant nourishes the same luminous vines seen outside, proving both ecosystems share one circulation."
+        "condition_unmet_message": "Objective completed.",
+        "requires_milestone_not_set": "ms_w2_coolant_stabilized"
       }
     ],
     "description_variants": [
@@ -10259,6 +10322,12 @@
           "ms_w2_coolant_stabilized"
         ],
         "description": "The coolant lines run steady through the maintenance bay. Luminous vines pulse with the same rhythm as the stasis rings instead of fighting them."
+      },
+      {
+        "requires_milestones": [
+          "ms_w2_coolant_stabilized"
+        ],
+        "description": "A garden of translucent coolant tubes glowing with cyan frost. The stabilized coolant flows steadily into the stasis core."
       }
     ]
   },
@@ -10504,7 +10573,8 @@
         "name": "generator breakers",
         "type": "generic",
         "action_event": "w2_mq05_overload_breakers",
-        "condition_unmet_message": "The breakers can starve the barrier, but the root pressure needs a safe bleed path before the circuit can be cut back."
+        "condition_unmet_message": "Objective completed.",
+        "requires_milestone_not_set": "ms_w2_breakers_overloaded"
       }
     ],
     "description_variants": [
@@ -10513,6 +10583,12 @@
           "ms_w2_source_breakers_starved"
         ],
         "description": "The generator breakers sit in a staggered emergency pattern. The gate circuit still has shape, but it no longer has enough power to lash out."
+      },
+      {
+        "requires_milestones": [
+          "ms_w2_breakers_overloaded"
+        ],
+        "description": "A heavy industrial catwalk above the power turbines. The overloaded breakers hum quietly in bypass mode."
       }
     ]
   },
@@ -10539,7 +10615,8 @@
         "name": "root pressure gauge",
         "type": "generic",
         "action_event": "w2_mq05_read_pressure_gauge",
-        "condition_unmet_message": "Roots outside regulate pressure inside. Severing either system would kill both."
+        "condition_unmet_message": "Objective completed.",
+        "requires_milestone_not_set": "ms_w2_pressure_gauge_read"
       }
     ],
     "description_variants": [
@@ -10548,6 +10625,12 @@
           "ms_w2_source_pressure_mapped"
         ],
         "description": "The root pressure gauge holds a readable pattern now: bleed, ground, starve, resolve. The living roots need relief, not violence."
+      },
+      {
+        "requires_milestones": [
+          "ms_w2_pressure_gauge_read"
+        ],
+        "description": "A massive bronze valve manifold wrapped in ancient root growth. The root pressure gauge is calibrated."
       }
     ]
   },
@@ -10583,7 +10666,8 @@
           "ms_w2_source_pressure_mapped",
           "ms_w2_source_breakers_starved"
         ],
-        "condition_unmet_message": "The acoustic lock will not resolve until the horn is steadied, the cup is grounded, the pressure roots are mapped, and the breakers are starved."
+        "condition_unmet_message": "The acoustic lock will not resolve until both harmonic emitters are stabilized and grounded.",
+        "requires_milestone_not_set": "ms_w2_gate_bypassed"
       }
     ],
     "npc_presence": [
@@ -10615,6 +10699,12 @@
           "ms_w2_mq05_complete"
         ],
         "description": "The Source Gate still blocks the hangar, but the acoustic lock's three howling bands have fallen into a tense, readable chord. The horn, cup, roots, and breakers are finally ready for Orion's resolving tone."
+      },
+      {
+        "requires_milestones": [
+          "ms_w2_gate_bypassed"
+        ],
+        "description": "A colossal portal framed in dark alloy and resonance crystals. The acoustic lock is unsealed, revealing the path ahead."
       }
     ]
   },
@@ -10641,7 +10731,8 @@
         "name": "emitter memory",
         "type": "generic",
         "action_event": "w2_mq05_stabilize_horn",
-        "condition_unmet_message": "The emitter remembers thousands of minds crossing toward the Ocean, each held distinct like ice in current."
+        "condition_unmet_message": "Objective completed.",
+        "requires_milestone_not_set": "ms_w2_horn_stabilized"
       }
     ],
     "description_variants": [
@@ -10650,6 +10741,12 @@
           "ms_w2_source_horn_stabilized"
         ],
         "description": "The left emitter tower has stopped shaking against its copper stays. The harmonic horn now breathes in a low, steady band."
+      },
+      {
+        "requires_milestones": [
+          "ms_w2_horn_stabilized"
+        ],
+        "description": "A flared acoustic emitter focused on the gate archway. The left emitter is tuned and stable."
       }
     ]
   },
@@ -10676,7 +10773,8 @@
         "name": "emitter service log",
         "type": "generic",
         "action_event": "w2_mq05_ground_cup",
-        "condition_unmet_message": "Technicians used Neural Stabilizers only as anchors; lasting recovery required rest and trusted voices."
+        "condition_unmet_message": "Objective completed.",
+        "requires_milestone_not_set": "ms_w2_cup_grounded"
       }
     ],
     "description_variants": [
@@ -10685,6 +10783,12 @@
           "ms_w2_source_cup_grounded"
         ],
         "description": "The receiver cup no longer glows white-hot. A blue pulse runs around its lip, grounding the barrier without burning the stone."
+      },
+      {
+        "requires_milestones": [
+          "ms_w2_cup_grounded"
+        ],
+        "description": "A cupped dish emitter collecting static discharge. The right emitter is securely grounded."
       }
     ]
   },
@@ -10713,7 +10817,8 @@
         "name": "dark console",
         "type": "generic",
         "action_event": "w2_mq05_inspect_astra",
-        "condition_unmet_message": "The ship's main console is cold. The primary power conduit is completely severed."
+        "condition_unmet_message": "Objective completed.",
+        "requires_milestone_not_set": "ms_w2_astra_inspected"
       },
       {
         "name": "bridge relic",
@@ -10745,6 +10850,12 @@
           "ms_w2_mq05_complete"
         ],
         "description": "The Astra's launch cradle is empty. Scorched conduits, cracked scaffolding, and a cooling bridge relic mark the place where the crew clawed a route back to the sky."
+      },
+      {
+        "requires_milestones": [
+          "ms_w2_astra_inspected"
+        ],
+        "description": "A cavernous launch hangar housing the ancient Astra shuttle. The flight bridge console hums with active telemetry."
       }
     ]
   },

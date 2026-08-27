@@ -1428,5 +1428,89 @@
     "name": "Guard Systems Spliced",
     "description": "Nova rerouted the automated guard bypass circuit.",
     "toast": "Guard systems spliced."
+  },
+  {
+    "id": "ms_w2_pod_examined",
+    "name": "Pod Telemetry Recovered",
+    "description": "Nova extracted the impact telemetry from the escape pod navigation console.",
+    "toast": "Impact telemetry recovered."
+  },
+  {
+    "id": "ms_w2_zeke_stabilized",
+    "name": "Zeke Stabilized",
+    "description": "Nova applied emergency first aid to stabilize Zeke after the crash.",
+    "toast": "Zeke stabilized."
+  },
+  {
+    "id": "ms_w2_murals_inspected",
+    "name": "Sanctuary Murals Deciphered",
+    "description": "Nova studied the cymatic wave murals in the Hall of Echoes.",
+    "toast": "Sanctuary Murals deciphered."
+  },
+  {
+    "id": "ms_w2_pod_inspected",
+    "name": "Stasis Pod Scanned",
+    "description": "Nova examined the Architect slumbering inside the stasis pod.",
+    "toast": "Stasis Pod scanned."
+  },
+  {
+    "id": "ms_w2_coolant_stabilized",
+    "name": "Stasis Coolant Stabilized",
+    "description": "Nova purged the bio-coolant loops around the stasis cylinder.",
+    "toast": "Stasis Coolant stabilized."
+  },
+  {
+    "id": "ms_w2_stalker_confronted",
+    "name": "Canopy Stalker Confronted",
+    "description": "Nova tracked the resonance disturbance across the canopy ridge.",
+    "toast": "Disturbance tracked."
+  },
+  {
+    "id": "ms_w2_beast_defeated",
+    "name": "Source Beast Repelled",
+    "description": "Nova broke the Source Beast's resonance surge.",
+    "toast": "Source Beast repelled."
+  },
+  {
+    "id": "ms_w2_conduits_collected",
+    "name": "Power Conduits Salvaged",
+    "description": "Nova salvaged intact superconducting conduits from the landing drop.",
+    "toast": "Power Conduits salvaged."
+  },
+  {
+    "id": "ms_w2_breakers_overloaded",
+    "name": "Facility Breakers Overloaded",
+    "description": "Nova forced the power manifold breakers into secondary bypass.",
+    "toast": "Breakers overloaded."
+  },
+  {
+    "id": "ms_w2_pressure_gauge_read",
+    "name": "Root Pressure Calibrated",
+    "description": "Nova calibrated the hydraulic root valve against the core gate.",
+    "toast": "Root Pressure calibrated."
+  },
+  {
+    "id": "ms_w2_gate_bypassed",
+    "name": "Source Gate Unsealed",
+    "description": "Nova synchronized the acoustic lock on the Source Gate.",
+    "toast": "Source Gate unsealed."
+  },
+  {
+    "id": "ms_w2_horn_stabilized",
+    "name": "Left Gate Emitter Synced",
+    "description": "Nova tuned the harmonic frequency on the left gate emitter.",
+    "toast": "Left Emitter synced."
+  },
+  {
+    "id": "ms_w2_cup_grounded",
+    "name": "Right Gate Emitter Grounded",
+    "description": "Nova grounded the static discharge on the right gate emitter.",
+    "toast": "Right Emitter grounded."
+  },
+  {
+    "id": "ms_w2_astra_inspected",
+    "name": "Astra Shuttle Surveyed",
+    "description": "Nova powered on the primary flight bridge console of the Astra shuttle.",
+    "toast": "Astra flight bridge online."
   }
 ]

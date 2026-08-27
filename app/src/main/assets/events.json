@@ -3379,6 +3379,10 @@
       {
         "type": "show_message",
         "message": "The Chime is locked in the burned navigation port. Nova pulls it free, then takes a medkit and compact fishing kit from emergency storage."
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_pod_examined"
       }
     ]
   },
@@ -3423,6 +3427,10 @@
       {
         "type": "show_message",
         "message": "You seal Zeke's worst cuts and steady his breathing. He can move again, but the crash site is no place to stay."
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_zeke_stabilized"
       }
     ]
   },
@@ -3681,6 +3689,10 @@
       {
         "type": "show_message",
         "message": "The murals are not decoration. They show a stasis system built around memory, identity, and a tuner named Orion. The rings protect the mind by letting pressure move around it instead of through it. The central relief repeats three shapes: memory, pressure, return."
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_murals_inspected"
       }
     ]
   },
@@ -3868,6 +3880,10 @@
         "room_id": "sector9_canopy_ridge",
         "state_key": "hunter_confronted",
         "value": true
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_stalker_confronted"
       }
     ]
   },
@@ -3899,6 +3915,10 @@
         "type": "spawn_encounter",
         "encounter_id": "the_beast",
         "room_id": "sector9_canopy_ridge"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_beast_defeated"
       }
     ]
   },
@@ -4018,6 +4038,10 @@
             "quest_id": "w2_mq05"
           }
         ]
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_mq04_complete"
       }
     ]
   },
@@ -4093,6 +4117,10 @@
       {
         "type": "show_message",
         "message": "The horn steadies, the receiver cup grounds, the pressure roots bleed safely, and the breakers starve the last howl from the lock. Orion gives the system one clean resolving tone, and the barrier dissolves into blue mist."
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_gate_bypassed"
       }
     ]
   },
@@ -4128,6 +4156,10 @@
       {
         "type": "show_message",
         "message": "The dark console accepts touch, then dies under Nova's fingers. Zeke traces the dead line to a severed conduit bus: the crashed pod still has the same gauge of power conduit, if the wreck has not swallowed it."
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_astra_inspected"
       }
     ]
   },
@@ -4163,6 +4195,10 @@
       {
         "type": "show_message",
         "message": "You recover the power conduits from the pod wreckage. The insulation is scorched, but the cores still sing when the Chime gets close. The same crash that stranded you is going to help the Astra leave."
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_conduits_collected"
       }
     ]
   },
@@ -12153,6 +12189,10 @@
       {
         "type": "show_message",
         "message": "The pod is not a prison. It is a pressure shell, keeping Orion's memories distinct while the Source pushes at them from every side."
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_pod_inspected"
       }
     ]
   },
@@ -12249,6 +12289,10 @@
       {
         "type": "show_message",
         "message": "Orion braces the harmonic horn while Nova loosens the copper stays. The left band stops screaming and begins to breathe."
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_horn_stabilized"
       }
     ]
   },
@@ -12276,6 +12320,10 @@
       {
         "type": "show_message",
         "message": "The receiver cup cools as Gh0st grounds the casing. Its white-hot glow drops into a steady blue pulse."
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_cup_grounded"
       }
     ]
   },
@@ -12303,6 +12351,10 @@
       {
         "type": "show_message",
         "message": "The root pressure gauge reveals the trick: the barrier is not powered by the roots, it is choking them. The pressure needs a bleed, not a cut."
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_pressure_gauge_read"
       }
     ]
   },
@@ -12330,6 +12382,10 @@
       {
         "type": "show_message",
         "message": "Nova throws the generator breakers in a staggered pattern. The gate keeps glowing, but the last band loses the power to bite."
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_breakers_overloaded"
       }
     ]
   },
