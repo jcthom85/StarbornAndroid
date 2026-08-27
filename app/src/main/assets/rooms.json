@@ -1622,7 +1622,7 @@
       {
         "name": "graffiti",
         "type": "generic",
-        "condition_unmet_message": "'If you reach Sector 4, follow the blue cables — not the signs.'"
+        "condition_unmet_message": "'If you reach Sector 4, follow the blue cables \u2014 not the signs.'"
       },
       {
         "name": "bench",
@@ -8625,7 +8625,7 @@
     "npcs": [],
     "items": [],
     "enemies": [
-      "echo_borer"
+      "stalker_vine"
     ],
     "connections": {
       "north": "sector9_crash_site",
@@ -8660,6 +8660,11 @@
         "action_event": "w2_sq02_trace_alpha",
         "condition_unmet_message": "A fallen Dominion scout lies tangled in the vines."
       }
+    ],
+    "enemy_parties": [
+      [
+        "stalker_vine"
+      ]
     ]
   },
   {
@@ -8672,7 +8677,7 @@
     "npcs": [],
     "items": [],
     "enemies": [
-      "spore_spitter"
+      "razor_vine"
     ],
     "connections": {
       "north": "sector9_canopy",
@@ -8691,6 +8696,11 @@
         "action_event": "w2_sq02_trace_alpha",
         "condition_unmet_message": "The first beacon signature repeats beneath the spore hiss. Its vector points toward the patrol hollow."
       }
+    ],
+    "enemy_parties": [
+      [
+        "razor_vine"
+      ]
     ]
   },
   {
@@ -9470,7 +9480,7 @@
     "npcs": [],
     "items": [],
     "enemies": [
-      "shard_hound"
+      "ruin_guardian"
     ],
     "connections": {
       "south": "sector9_foyer_grand_hall",
@@ -9487,6 +9497,11 @@
         "type": "generic",
         "condition_unmet_message": "The log confirms the swamp was cultivated to filter Source resonance, not allowed to overtake the facility."
       }
+    ],
+    "enemy_parties": [
+      [
+        "ruin_guardian"
+      ]
     ]
   },
   {
@@ -9606,7 +9621,7 @@
     "npcs": [],
     "items": [],
     "enemies": [
-      "echo_borer"
+      "sentinel_orb"
     ],
     "connections": {
       "west": "sector9_conduit_crawlspace",
@@ -9624,6 +9639,11 @@
         "type": "generic",
         "condition_unmet_message": "The map reveals a return duct linking the Hall of Echoes to the foyer security hub."
       }
+    ],
+    "enemy_parties": [
+      [
+        "sentinel_orb"
+      ]
     ]
   },
   {
@@ -10139,7 +10159,7 @@
     "npcs": [],
     "items": [],
     "enemies": [
-      "shard_hound"
+      "sentinel_orb"
     ],
     "connections": {
       "south": "sector9_conduit_access_shaft",
@@ -10166,7 +10186,12 @@
         "message_locked": "Razor-vines choke the shaft. The barbed stems will burst into toxic spores if cut cold.",
         "message_unlock": "The Thermal Cutter cauterizes the razor-vines. The shaft route is open."
       }
-    }
+    },
+    "enemy_parties": [
+      [
+        "sentinel_orb"
+      ]
+    ]
   },
   {
     "id": "sector9_vents_access_grate",
@@ -11237,7 +11262,9 @@
     "description": "The pump gallery beats under the city like a bad heart. A pressure map flashes routes the official grid denies exist, and the pump rhythm covers small mistakes.",
     "npcs": [],
     "items": [],
-    "enemies": [],
+    "enemies": [
+      "sewer_crawler"
+    ],
     "connections": {
       "south": "spire_sewers_landing",
       "north": "spire_sewers_scale_02"
@@ -11258,6 +11285,11 @@
         "type": "generic",
         "condition_unmet_message": "The pressure map proves the lower city has always had hidden arteries."
       }
+    ],
+    "enemy_parties": [
+      [
+        "sewer_crawler"
+      ]
     ]
   },
   {
@@ -11268,7 +11300,10 @@
     "description": "A filter sluice strains glittering trash from black water. A caught badge spins behind the grate, too damaged to pass but clean enough to copy.",
     "npcs": [],
     "items": [],
-    "enemies": [],
+    "enemies": [
+      "sewer_crawler",
+      "sewer_crawler"
+    ],
     "connections": {
       "south": "spire_sewers_scale_01",
       "north": "spire_sewers_scale_03"
@@ -11289,6 +11324,12 @@
         "type": "generic",
         "condition_unmet_message": "The badge is ruined, but its access pattern can still teach Zeke something."
       }
+    ],
+    "enemy_parties": [
+      [
+        "sewer_crawler",
+        "sewer_crawler"
+      ]
     ]
   },
   {
@@ -11729,7 +11770,7 @@
     "npcs": [],
     "items": [],
     "enemies": [
-      "aero_drone"
+      "sentinel_mki"
     ],
     "connections": {
       "west": "spire_exec_lounge_scale_01",
@@ -11751,6 +11792,11 @@
         "type": "generic",
         "condition_unmet_message": "The glass has lipstick on one side and tremor marks on the other."
       }
+    ],
+    "enemy_parties": [
+      [
+        "sentinel_mki"
+      ]
     ]
   },
   {
