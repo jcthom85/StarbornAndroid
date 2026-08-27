@@ -78,7 +78,7 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 2000
 - tapOn: "Map"
 - extendedWaitUntil:
-    visible: "Navigation"
+    visible: "Area Map"
     timeout: 10000
 - takeScreenshot: menu-audit-8-map
 
