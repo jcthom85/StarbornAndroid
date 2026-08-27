@@ -522,7 +522,7 @@
       "north": {
         "type": "enemy",
         "enemy_id": "faulted_loader",
-        "message_locked": "The loader's wild arm blocks the workshop shutter. Its diagnostic strip may expose a safe way to shut it down.",
+        "message_locked": "The loader's wild arm blocks the workshop shutter. Tap the Faulted Loader to engage in combat!",
         "message_unlock": "The loader folds into the scrap, leaving the workshop route open."
       }
     },

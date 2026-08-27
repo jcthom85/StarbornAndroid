@@ -433,7 +433,7 @@ class CombatViewModel(
                 )
             )
             _state.value = if (tutorialTracker.isCombatTutorialEligible(encounterEnemyIdList, sessionSnapshot, currentRoomId)) {
-                tutorialTracker.seedCombatTutorial(seeded, enemyIdList)
+                tutorialTracker.seedCombatTutorial(seeded, enemyIdList, currentRoomId)
             } else {
                 seeded
             }
@@ -476,8 +476,13 @@ class CombatViewModel(
         if (tutorial != null) {
             val targetId = explicitTargets?.singleOrNull()
             if (tutorial.step != CombatTutorialStep.TARGET_HYDRAULIC_KICK) return
+            val expectedSkill = if (tutorial.tutorialType == CombatTutorialType.LOADER_WEAKNESS) {
+                COMBAT_LOADER_SKILL_ID
+            } else {
+                COMBAT_TUTORIAL_SKILL_ID
+            }
             if (attackerId != COMBAT_TUTORIAL_PLAYER_ID ||
-                skill.id != COMBAT_TUTORIAL_SKILL_ID ||
+                skill.id != expectedSkill ||
                 targetId != tutorial.targetId
             ) {
                 return
@@ -1625,13 +1630,13 @@ class CombatViewModel(
                     if (shouldEmitShieldBreak(entry, currentAction, previous, updated)) {
                         emitShieldBreak(entry.targetId, effectDelayMs)
                         maybePlayShieldBreakCue()
-                        val tutorial = _combatTutorial.value
-                        if (tutorial?.step == CombatTutorialStep.AWAIT_SHIELD_BREAK &&
-                            entry.sourceId == COMBAT_TUTORIAL_PLAYER_ID &&
-                            entry.targetId == tutorial.targetId
-                        ) {
-                            tutorialTracker.setCombatTutorialStep(CombatTutorialStep.SUCCESS)
-                        }
+                    }
+                    val tutorial = _combatTutorial.value
+                    if (tutorial?.step == CombatTutorialStep.AWAIT_SHIELD_BREAK &&
+                        entry.sourceId == COMBAT_TUTORIAL_PLAYER_ID &&
+                        entry.targetId == tutorial.targetId
+                    ) {
+                        tutorialTracker.setCombatTutorialStep(CombatTutorialStep.SUCCESS)
                     }
                     emitImpact(entry, fxElement, showAttackFx, targetDefeated, effectDelayMs)
                     setCombatBanner(entry, updated)

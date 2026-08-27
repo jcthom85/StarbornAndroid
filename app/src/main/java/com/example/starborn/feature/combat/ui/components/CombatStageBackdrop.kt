@@ -135,28 +135,40 @@ fun CombatTutorialOverlay(
     val accent = themeColor(theme?.accent, Color(0xFF7BE4FF))
     val border = themeColor(theme?.border, Color(0xFF5CCBE8))
     val panel = themeColor(theme?.bg, Color(0xFF061018))
+    val isLoader = tutorial.tutorialType == com.example.starborn.feature.combat.viewmodel.CombatTutorialType.LOADER_WEAKNESS
     val title = when (tutorial.step) {
-        CombatTutorialStep.BRIEF -> "Guard Break Training"
+        CombatTutorialStep.BRIEF -> if (isLoader) "First Battle: Faulted Loader" else "Guard Break Training"
         CombatTutorialStep.BLOCKED_EXPLANATION -> "Direct Hit: Blocked"
-        CombatTutorialStep.SUCCESS -> "Guard Broken"
+        CombatTutorialStep.SUCCESS -> if (isLoader) "Stability Broken!" else "Guard Broken"
         else -> "Training"
     }
     val message = when (tutorial.step) {
         CombatTutorialStep.BRIEF ->
-            "That trainer eats direct hits. First, test the shield, then break its guard with Hydraulic Kick."
+            if (isLoader)
+                "When your turn bar fills, choose an action. That loader has a cracked relay—open Abilities and cast Arc Tether to exploit its Shock weakness!"
+            else
+                "That trainer eats direct hits. First, test the shield, then break its guard with Hydraulic Kick."
         CombatTutorialStep.SELECT_NOVA_ATTACK -> "Tap Nova when her action is ready."
         CombatTutorialStep.CHOOSE_ATTACK -> "Choose Attack. First, test the shield."
         CombatTutorialStep.TARGET_BASIC_ATTACK -> "Choose the Acoustic Bulwark."
         CombatTutorialStep.AWAIT_BASIC_RESULT -> "Watch how the shield handles a direct hit."
         CombatTutorialStep.BLOCKED_EXPLANATION ->
             "The shield reduced the attack to zero. Guard Break strips protection before you commit damage."
-        CombatTutorialStep.SELECT_NOVA_SKILL -> "Nova is ready again. Tap Nova to break the guard."
-        CombatTutorialStep.CHOOSE_SKILLS -> "Open Abilities to find a guard-breaking move."
-        CombatTutorialStep.CHOOSE_HYDRAULIC_KICK -> "Use Hydraulic Kick."
-        CombatTutorialStep.TARGET_HYDRAULIC_KICK -> "Choose an enemy for Hydraulic Kick."
-        CombatTutorialStep.AWAIT_SHIELD_BREAK -> "Watch the guard break."
+        CombatTutorialStep.SELECT_NOVA_SKILL ->
+            if (isLoader) "Nova is ready. Tap Nova to open her actions." else "Nova is ready again. Tap Nova to break the guard."
+        CombatTutorialStep.CHOOSE_SKILLS ->
+            if (isLoader) "Open Abilities to find Nova's Shock move." else "Open Abilities to find a guard-breaking move."
+        CombatTutorialStep.CHOOSE_HYDRAULIC_KICK ->
+            if (isLoader) "Use Arc Tether." else "Use Hydraulic Kick."
+        CombatTutorialStep.TARGET_HYDRAULIC_KICK ->
+            if (isLoader) "Choose the Faulted Loader." else "Choose an enemy for Hydraulic Kick."
+        CombatTutorialStep.AWAIT_SHIELD_BREAK ->
+            if (isLoader) "Watch the electrical pulse break its stability." else "Watch the guard break."
         CombatTutorialStep.SUCCESS ->
-            "Hydraulic Kick stripped the shield. Now finish the fight."
+            if (isLoader)
+                "Arc Tether cracked the loader's stability and stunned it! Skills go on turn cooldowns—finish the fight with standard Attacks."
+            else
+                "Hydraulic Kick stripped the shield. Now finish the fight."
     }
     if (tutorial.showsModal) {
         Box(modifier = modifier, contentAlignment = Alignment.Center) {

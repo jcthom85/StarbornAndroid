@@ -5196,6 +5196,27 @@ private fun EnemyPartyStandee(
             icon = icon,
             iconSize = size
         )
+        if (!transitionActive) {
+            Surface(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .offset(y = 2.dp),
+                shape = RoundedCornerShape(6.dp),
+                color = Color(0xFF7F1D1D).copy(alpha = 0.90f),
+                border = BorderStroke(1.dp, Color(0xFFEF4444).copy(alpha = 0.85f))
+            ) {
+                Text(
+                    text = "⚔ FIGHT",
+                    style = MaterialTheme.typography.labelSmall.copy(
+                        fontSize = 9.sp,
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = 0.5.sp
+                    ),
+                    color = Color.White,
+                    modifier = Modifier.padding(horizontal = 5.dp, vertical = 1.dp)
+                )
+            }
+        }
     }
 }
 

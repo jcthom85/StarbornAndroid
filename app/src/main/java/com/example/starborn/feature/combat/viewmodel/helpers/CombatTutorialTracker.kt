@@ -8,8 +8,11 @@ import com.example.starborn.domain.combat.CombatSide
 import com.example.starborn.domain.combat.StatusEffect
 import com.example.starborn.feature.combat.viewmodel.CombatTutorialState
 import com.example.starborn.feature.combat.viewmodel.CombatTutorialStep
+import com.example.starborn.feature.combat.viewmodel.CombatTutorialType
+import com.example.starborn.feature.combat.viewmodel.COMBAT_LOADER_TUTORIAL_ID
 import com.example.starborn.feature.combat.viewmodel.COMBAT_BASICS_TUTORIAL_ID
 import com.example.starborn.feature.combat.viewmodel.COMBAT_TUTORIAL_SKILL_ID
+import com.example.starborn.feature.combat.viewmodel.COMBAT_LOADER_SKILL_ID
 
 const val COMBAT_TUTORIAL_PLAYER_ID = "nova"
 const val COMBAT_TUTORIAL_ENEMY_ID = "acoustic_bulwark"
@@ -27,10 +30,15 @@ class CombatTutorialTracker(
     private val primeTutorialTurn: () -> Unit
 ) {
     fun onCombatTutorialContinue() {
-        when (getCombatTutorial()?.step) {
+        val current = getCombatTutorial() ?: return
+        when (current.step) {
             CombatTutorialStep.BRIEF -> {
                 primeTutorialTurn()
-                setCombatTutorialStep(CombatTutorialStep.SELECT_NOVA_ATTACK)
+                if (current.tutorialType == CombatTutorialType.LOADER_WEAKNESS) {
+                    setCombatTutorialStep(CombatTutorialStep.SELECT_NOVA_SKILL)
+                } else {
+                    setCombatTutorialStep(CombatTutorialStep.SELECT_NOVA_ATTACK)
+                }
             }
             CombatTutorialStep.BLOCKED_EXPLANATION -> {
                 primeTutorialTurn()
@@ -47,33 +55,52 @@ class CombatTutorialTracker(
         currentRoomId: String?
     ): Boolean {
         if (!tutorialsEnabled) return false
-        if (!currentRoomId.equals(COMBAT_TUTORIAL_ROOM_ID, ignoreCase = true)) return false
-        if (encounterEnemyIdList.size != 1 ||
-            !encounterEnemyIdList.first().equals(COMBAT_TUTORIAL_ENEMY_ID, ignoreCase = true)
-        ) {
-            return false
-        }
-        if (session.questStageById[COMBAT_TUTORIAL_QUEST_ID] != COMBAT_TUTORIAL_QUEST_STAGE) return false
-        if (COMBAT_TUTORIAL_SKILL_ID !in session.unlockedSkills) return false
-        return session.tutorialCompleted.none { it.equals(COMBAT_BASICS_TUTORIAL_ID, ignoreCase = true) }
+        val isLoaderEligible = currentRoomId.equals("workshop_yard", ignoreCase = true) &&
+            encounterEnemyIdList.size == 1 &&
+            encounterEnemyIdList.first().equals("faulted_loader", ignoreCase = true) &&
+            session.tutorialCompleted.none { it.equals(COMBAT_LOADER_TUTORIAL_ID, ignoreCase = true) }
+        if (isLoaderEligible) return true
+
+        val isBulwarkEligible = currentRoomId.equals(COMBAT_TUTORIAL_ROOM_ID, ignoreCase = true) &&
+            encounterEnemyIdList.size == 1 &&
+            encounterEnemyIdList.first().equals(COMBAT_TUTORIAL_ENEMY_ID, ignoreCase = true) &&
+            session.questStageById[COMBAT_TUTORIAL_QUEST_ID] == COMBAT_TUTORIAL_QUEST_STAGE &&
+            COMBAT_TUTORIAL_SKILL_ID in session.unlockedSkills &&
+            session.tutorialCompleted.none { it.equals(COMBAT_BASICS_TUTORIAL_ID, ignoreCase = true) }
+        return isBulwarkEligible
     }
 
-    fun seedCombatTutorial(state: CombatState, enemyIdList: List<String>): CombatState {
+    fun seedCombatTutorial(state: CombatState, enemyIdList: List<String>, currentRoomId: String? = null): CombatState {
         val targetId = enemyIdList.singleOrNull() ?: return state
         val target = state.combatants[targetId] ?: return state
-        val shieldedTarget = target.copy(
-            statusEffects = target.statusEffects
-                .filterNot { it.id.equals("invulnerable", ignoreCase = true) } +
-                StatusEffect(id = "invulnerable", remainingTurns = 99)
-        )
-        setCombatTutorial(
-            CombatTutorialState(
-                step = CombatTutorialStep.BRIEF,
-                targetId = targetId
+        val isLoader = currentRoomId.equals("workshop_yard", ignoreCase = true)
+
+        if (isLoader) {
+            setCombatTutorial(
+                CombatTutorialState(
+                    step = CombatTutorialStep.BRIEF,
+                    targetId = targetId,
+                    tutorialType = CombatTutorialType.LOADER_WEAKNESS
+                )
             )
-        )
-        sessionStore.markTutorialSeen(COMBAT_BASICS_TUTORIAL_ID)
-        return state.copy(combatants = state.combatants + (targetId to shieldedTarget))
+            sessionStore.markTutorialSeen(COMBAT_LOADER_TUTORIAL_ID)
+            return state
+        } else {
+            val shieldedTarget = target.copy(
+                statusEffects = target.statusEffects
+                    .filterNot { it.id.equals("invulnerable", ignoreCase = true) } +
+                    StatusEffect(id = "invulnerable", remainingTurns = 99)
+            )
+            setCombatTutorial(
+                CombatTutorialState(
+                    step = CombatTutorialStep.BRIEF,
+                    targetId = targetId,
+                    tutorialType = CombatTutorialType.BULWARK_GUARD_BREAK
+                )
+            )
+            sessionStore.markTutorialSeen(COMBAT_BASICS_TUTORIAL_ID)
+            return state.copy(combatants = state.combatants + (targetId to shieldedTarget))
+        }
     }
 
     fun setCombatTutorialStep(step: CombatTutorialStep) {
@@ -82,7 +109,13 @@ class CombatTutorialTracker(
     }
 
     fun completeCombatTutorial() {
-        sessionStore.markTutorialCompleted(COMBAT_BASICS_TUTORIAL_ID)
+        val current = getCombatTutorial()
+        val tutorialId = if (current?.tutorialType == CombatTutorialType.LOADER_WEAKNESS) {
+            COMBAT_LOADER_TUTORIAL_ID
+        } else {
+            COMBAT_BASICS_TUTORIAL_ID
+        }
+        sessionStore.markTutorialCompleted(tutorialId)
         setCombatTutorial(null)
         if (!isAtbPaused()) {
             tryProcessEnemyTurns()
@@ -113,11 +146,13 @@ class CombatTutorialTracker(
 
     fun onCombatTutorialSkillSelected(skillId: String): Boolean {
         val tutorial = getCombatTutorial() ?: return true
-        if (tutorial.step != CombatTutorialStep.CHOOSE_HYDRAULIC_KICK ||
-            skillId != COMBAT_TUTORIAL_SKILL_ID
-        ) {
-            return false
+        if (tutorial.step != CombatTutorialStep.CHOOSE_HYDRAULIC_KICK) return false
+        val expectedSkill = if (tutorial.tutorialType == CombatTutorialType.LOADER_WEAKNESS) {
+            COMBAT_LOADER_SKILL_ID
+        } else {
+            COMBAT_TUTORIAL_SKILL_ID
         }
+        if (skillId != expectedSkill) return false
         setCombatTutorialStep(CombatTutorialStep.TARGET_HYDRAULIC_KICK)
         return true
     }
