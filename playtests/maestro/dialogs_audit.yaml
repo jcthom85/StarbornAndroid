@@ -1,0 +1,90 @@
+appId: com.junewiregames.starborn.prealpha
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "Debug Scenarios"
+    timeout: 30000
+- tapOn: "Debug Scenarios"
+- extendedWaitUntil:
+    visible: "Search world, quest, room, or system"
+    timeout: 15000
+- tapOn: "Search world, quest, room, or system"
+- eraseText
+- inputText: "Full"
+- hideKeyboard
+- runScript:
+    file: sleep.js
+- extendedWaitUntil:
+    visible: "Full Inventory"
+    timeout: 15000
+- tapOn: "Full Inventory"
+- extendedWaitUntil:
+    visible: "Nova's Bunk"
+    timeout: 90000
+- tapOn: "MENU"
+- extendedWaitUntil:
+    visible: "FIELD MENU"
+    timeout: 10000
+
+# 1. Open Stats and click Nova's card to open PartyMemberDetailsDialog
+- tapOn: "Stats"
+- extendedWaitUntil:
+    visible: "PARTY OVERVIEW"
+    timeout: 10000
+- tapOn: "Nova"
+- extendedWaitUntil:
+    visible: "PRIMARY ATTRIBUTES"
+    timeout: 10000
+- takeScreenshot: details-dialog-audit
+- tapOn: "Close"
+- waitForAnimationToEnd:
+    timeout: 1000
+
+# 2. Go to Gear and tap Weapon
+- tapOn: "Gear"
+- extendedWaitUntil:
+    visible: "EQUIPMENT & LOADOUT"
+    timeout: 10000
+- tapOn: "WEAPON"
+- extendedWaitUntil:
+    visible: "Weapon Loadout"
+    timeout: 10000
+- takeScreenshot: weapon-loadout-audit
+- tapOn:
+    point: "90%,10%"
+- waitForAnimationToEnd:
+    timeout: 1000
+
+# 3. Tap Armor
+- tapOn: "ARMOR"
+- extendedWaitUntil:
+    visible: "Armor Loadout"
+    timeout: 10000
+- takeScreenshot: armor-loadout-audit
+- tapOn:
+    point: "90%,10%"
+- waitForAnimationToEnd:
+    timeout: 1000
+
+# 4. Tap Accessory
+- tapOn: "ACCESSORY"
+- extendedWaitUntil:
+    visible: "Accessory Loadout"
+    timeout: 10000
+- takeScreenshot: accessory-loadout-audit
+- tapOn:
+    point: "90%,10%"
+- waitForAnimationToEnd:
+    timeout: 1000
+
+# 5. Tap Snack
+- tapOn: "SNACK"
+- extendedWaitUntil:
+    visible: "Snack Loadout"
+    timeout: 10000
+- takeScreenshot: snack-loadout-audit
+- tapOn:
+    point: "90%,10%"
+- waitForAnimationToEnd:
+    timeout: 1000
