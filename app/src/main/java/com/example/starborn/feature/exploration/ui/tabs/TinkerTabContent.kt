@@ -175,9 +175,9 @@ private fun TinkerModeToggle(
             .padding(3.dp),
         horizontalArrangement = Arrangement.spacedBy(3.dp)
     ) {
-        TinkerModeButton("⚡ Workbench", current == TinkerTabMode.WORKBENCH, accentColor, { onSelect(TinkerTabMode.WORKBENCH) }, Modifier.weight(1f))
-        TinkerModeButton("📜 Schematics", current == TinkerTabMode.SCHEMATICS, accentColor, { onSelect(TinkerTabMode.SCHEMATICS) }, Modifier.weight(1f))
-        TinkerModeButton("♻️ Scrap", current == TinkerTabMode.SCRAP, accentColor, { onSelect(TinkerTabMode.SCRAP) }, Modifier.weight(1f))
+        TinkerModeButton("Workbench", current == TinkerTabMode.WORKBENCH, accentColor, { onSelect(TinkerTabMode.WORKBENCH) }, Modifier.weight(1f))
+        TinkerModeButton("Schematics", current == TinkerTabMode.SCHEMATICS, accentColor, { onSelect(TinkerTabMode.SCHEMATICS) }, Modifier.weight(1f))
+        TinkerModeButton("Scrap", current == TinkerTabMode.SCRAP, accentColor, { onSelect(TinkerTabMode.SCRAP) }, Modifier.weight(1f))
     }
 }
 

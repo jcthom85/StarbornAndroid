@@ -1226,6 +1226,8 @@ fun ExplorationScreen(
         uiState.partyMemberDetails?.let { details ->
             PartyMemberDetailsDialog(
                 details = details,
+                accentColor = themeColor(activeTheme?.accent, Color(0xFF7BE4FF)),
+                borderColor = themeColor(activeTheme?.border, Color.White.copy(alpha = 0.3f)),
                 onDismiss = { viewModel.closePartyMemberDetails() }
             )
         }
