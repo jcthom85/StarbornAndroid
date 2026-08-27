@@ -232,18 +232,48 @@ private fun RecipeListPanel(
         }
         if (lockedRecipes.isNotEmpty()) {
             item {
-                Text(
-                    text = "LOCKED SCHEMATICS (${lockedRecipes.size})",
-                    style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
-                    color = Color.White.copy(alpha = 0.5f),
-                    modifier = Modifier.padding(top = 8.dp, bottom = 4.dp)
-                )
-            }
-            items(lockedRecipes, key = { "locked_${it.id}" }) { locked ->
-                LockedRecipeCard(
-                    recipe = locked,
-                    borderColor = borderColor
-                )
+                var expanded by remember { mutableStateOf(false) }
+                Surface(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(10.dp))
+                        .clickable { expanded = !expanded },
+                    shape = RoundedCornerShape(10.dp),
+                    color = Color(0xFF040A10).copy(alpha = 0.5f),
+                    border = BorderStroke(1.dp, borderColor.copy(alpha = 0.2f))
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 12.dp, vertical = 10.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Undiscovered Schematics (${lockedRecipes.size})",
+                            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                            color = Color.White.copy(alpha = 0.65f)
+                        )
+                        Text(
+                            text = if (expanded) "▲ Hide" else "▼ Show",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = accentColor.copy(alpha = 0.75f)
+                        )
+                    }
+                }
+                if (expanded) {
+                    Column(
+                        modifier = Modifier.padding(top = 8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        lockedRecipes.forEach { locked ->
+                            LockedRecipeCard(
+                                recipe = locked,
+                                borderColor = borderColor
+                            )
+                        }
+                    }
+                }
             }
         }
     }

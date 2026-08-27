@@ -84,7 +84,18 @@ fun InventoryTabContent(
             accentColor = accentColor,
             borderColor = borderColor
         )
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(10.dp))
+        InventoryResourceBar(
+            itemCount = when (page) {
+                InventoryCarouselPage.SUPPLIES -> supplies.size
+                InventoryCarouselPage.GEAR -> inventoryItems.count { it.type.lowercase().contains("weapon") || it.type.lowercase().contains("armor") || it.type.lowercase().contains("mod") }
+                InventoryCarouselPage.KEY_ITEMS -> keyItems.size
+            },
+            creditsLabel = creditsLabel,
+            accentColor = accentColor,
+            borderColor = borderColor
+        )
+        Spacer(modifier = Modifier.height(10.dp))
         when (page) {
             InventoryCarouselPage.SUPPLIES -> InventoryItemsPreview(
                 items = supplies,
@@ -120,13 +131,6 @@ fun InventoryTabContent(
                 onShowDetails = { detailItem = it }
             )
         }
-        Spacer(modifier = Modifier.height(8.dp))
-        WalletPill(
-            creditsLabel = creditsLabel,
-            accentColor = accentColor,
-            borderColor = borderColor,
-            modifier = Modifier.align(Alignment.End)
-        )
     }
     detailItem?.let { item ->
         PreviewItemDetailsDialog(
@@ -444,31 +448,39 @@ private fun PreviewDetailRow(label: String, value: String, accentColor: Color) {
 }
 
 @Composable
-private fun WalletPill(
+private fun InventoryResourceBar(
+    itemCount: Int,
     creditsLabel: String,
     accentColor: Color,
     borderColor: Color,
     modifier: Modifier = Modifier
 ) {
-    val compactLabel = remember(creditsLabel) {
-        creditsLabel.replace(Regex("\\s*credits", RegexOption.IGNORE_CASE), " c").trim()
+    val compactCredits = remember(creditsLabel) {
+        val clean = creditsLabel.replace(Regex("\\s*credits", RegexOption.IGNORE_CASE), "").trim()
+        "$clean ¢"
     }
     Surface(
-        modifier = modifier,
-        shape = RoundedCornerShape(14.dp),
-        color = Color.Black.copy(alpha = 0.15f),
-        border = BorderStroke(1.dp, borderColor.copy(alpha = 0.45f))
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(10.dp),
+        color = Color(0xFF061018).copy(alpha = 0.5f),
+        border = BorderStroke(1.dp, borderColor.copy(alpha = 0.25f))
     ) {
         Row(
             modifier = Modifier
+                .fillMaxWidth()
                 .padding(horizontal = 12.dp, vertical = 6.dp),
-            horizontalArrangement = Arrangement.Center,
+            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = compactLabel,
-                style = MaterialTheme.typography.titleSmall,
-                color = accentColor.copy(alpha = 0.9f)
+                text = "ITEMS: $itemCount",
+                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                color = Color.White.copy(alpha = 0.8f)
+            )
+            Text(
+                text = compactCredits,
+                style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                color = Color(0xFFFFC857)
             )
         }
     }

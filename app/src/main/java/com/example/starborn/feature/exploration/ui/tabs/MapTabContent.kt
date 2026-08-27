@@ -32,7 +32,7 @@ fun MapTabContent(
     onOpenFullMap: () -> Unit
 ) {
     MenuSectionCard(
-        title = "Navigation",
+        title = "Area Map",
         accentColor = accentColor,
         borderColor = borderColor
     ) {

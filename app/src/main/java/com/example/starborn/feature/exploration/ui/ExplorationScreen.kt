@@ -2223,6 +2223,14 @@ private fun MenuTabRow(
     accentColor: Color,
     borderColor: Color
 ) {
+    val scrollState = rememberScrollState()
+
+    LaunchedEffect(selectedTab) {
+        val tabIndex = selectedTab.ordinal
+        val offset = tabIndex * 220
+        scrollState.animateScrollTo(offset)
+    }
+
     Row(
         modifier = Modifier
             .widthIn(max = 1200.dp)
@@ -2231,7 +2239,7 @@ private fun MenuTabRow(
             .background(Color(0xFF061018).copy(alpha = 0.38f))
             .border(1.dp, accentColor.copy(alpha = 0.28f), RoundedCornerShape(12.dp))
             .padding(3.dp)
-            .horizontalScroll(rememberScrollState()),
+            .horizontalScroll(scrollState),
         horizontalArrangement = Arrangement.spacedBy(3.dp)
     ) {
         MenuTab.values().forEach { tab ->

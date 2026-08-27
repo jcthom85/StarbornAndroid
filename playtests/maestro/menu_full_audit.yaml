@@ -1,0 +1,97 @@
+appId: com.junewiregames.starborn.prealpha
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "New Game"
+    timeout: 60000
+- extendedWaitUntil:
+    visible: "Debug Scenarios"
+    timeout: 10000
+- tapOn: "Debug Scenarios"
+- extendedWaitUntil:
+    visible: "Search world, quest, room, or system"
+    timeout: 15000
+- tapOn: "Search world, quest, room, or system"
+- eraseText
+- inputText: "Full"
+- runScript: sleep.js
+- extendedWaitUntil:
+    visible: "Full Inventory"
+    timeout: 15000
+- tapOn: "Full Inventory"
+- extendedWaitUntil:
+    visible: "Nova's Bunk"
+    timeout: 90000
+
+# 1. Open MENU -> Inventory Tab
+- tapOn: "MENU"
+- extendedWaitUntil:
+    visible: "FIELD MENU"
+    timeout: 10000
+- takeScreenshot: menu-audit-1-inventory-supplies
+
+# Tap Gear Tab inside Inventory
+- tapOn: "Gear"
+- waitForAnimationToEnd:
+    timeout: 1000
+- takeScreenshot: menu-audit-2-inventory-gear
+
+# Tap Key Items Tab inside Inventory
+- tapOn: "Key Items"
+- waitForAnimationToEnd:
+    timeout: 1000
+- takeScreenshot: menu-audit-3-inventory-key-items
+
+# 2. Tap Tinker Tab
+- tapOn: "Tinker"
+- extendedWaitUntil:
+    visible: "Tinkering & Assembly"
+    timeout: 10000
+- takeScreenshot: menu-audit-4-tinker-all
+
+# Tap Scrap inside Tinker
+- tapOn: "Scrap"
+- waitForAnimationToEnd:
+    timeout: 1000
+- takeScreenshot: menu-audit-5-tinker-scrap
+
+# 3. Tap Journal Tab
+- tapOn: "Journal"
+- extendedWaitUntil:
+    visible: "Quest Journal"
+    timeout: 10000
+- takeScreenshot: menu-audit-6-journal-active
+
+# Tap Completed in Journal
+- tapOn: "Completed"
+- waitForAnimationToEnd:
+    timeout: 1000
+- takeScreenshot: menu-audit-7-journal-completed
+
+# 4. Scroll Menu Tab row and Tap Map
+- swipe:
+    start: "85%, 15%"
+    end: "20%, 15%"
+    duration: 400
+- waitForAnimationToEnd:
+    timeout: 2000
+- tapOn: "Map"
+- extendedWaitUntil:
+    visible: "Navigation"
+    timeout: 10000
+- takeScreenshot: menu-audit-8-map
+
+# 5. Tap Stats Tab
+- tapOn: "Stats"
+- extendedWaitUntil:
+    visible: "Party Status"
+    timeout: 10000
+- takeScreenshot: menu-audit-9-stats
+
+# 6. Tap Settings Tab
+- tapOn: "Settings"
+- extendedWaitUntil:
+    visible: "Save Data"
+    timeout: 10000
+- takeScreenshot: menu-audit-10-settings
