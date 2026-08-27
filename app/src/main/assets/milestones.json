@@ -1296,5 +1296,53 @@
     "name": "Supervisor Audits Decrypted",
     "description": "Nova reviewed the supervisor's disciplinary audit logs and quota warnings.",
     "toast": "Audit datapads decrypted."
+  },
+  {
+    "id": "ms_w2_herb_landing_foraged",
+    "name": "Starleaf Harvested",
+    "description": "Nova gathered charred starleaf from the landing brush.",
+    "toast": "Charred Starleaf acquired."
+  },
+  {
+    "id": "ms_w2_herb_glade_foraged",
+    "name": "Luminous Mushrooms Harvested",
+    "description": "Nova harvested luminous mushroom caps in the glade.",
+    "toast": "Luminous Mushrooms acquired."
+  },
+  {
+    "id": "ms_w2_herb_reeds_foraged",
+    "name": "Reed Bulbs Harvested",
+    "description": "Nova harvested fragrant reed bulbs from the stream pools.",
+    "toast": "Reed Bulbs acquired."
+  },
+  {
+    "id": "ms_w2_herb_ridge_foraged",
+    "name": "Blue Fronds Harvested",
+    "description": "Nova harvested blue-frond clusters along the ridge.",
+    "toast": "Blue Fronds acquired."
+  },
+  {
+    "id": "ms_w2_meat_tidepool_foraged",
+    "name": "Tidepool Crawler Caught",
+    "description": "Nova caught a crawler from the saltwater tidepools.",
+    "toast": "Crawler Meat acquired."
+  },
+  {
+    "id": "ms_w2_meat_cave_foraged",
+    "name": "Cave Meat Foraged",
+    "description": "Nova harvested edible cave meat from the echo nest.",
+    "toast": "Beast Meat acquired."
+  },
+  {
+    "id": "ms_w2_meat_dunes_foraged",
+    "name": "Dune Grazer Caught",
+    "description": "Nova captured a burrowing grazer in the coastal dunes.",
+    "toast": "Grazer Meat acquired."
+  },
+  {
+    "id": "ms_w2_meat_nest_foraged",
+    "name": "Shard-Hound Nest Cleared",
+    "description": "Nova scavenged beast meat from the shard-hound nest.",
+    "toast": "Beast Meat acquired."
   }
 ]

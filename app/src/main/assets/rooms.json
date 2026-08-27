@@ -8036,7 +8036,16 @@
         "name": "charred starleaf",
         "type": "generic",
         "action_event": "w2_forage_herb_landing",
-        "condition_unmet_message": "Beneath the scorched canopy, starleaf shoots glow blue where Source-rich water reaches them."
+        "condition_unmet_message": "Already harvested.",
+        "requires_milestone_not_set": "ms_w2_herb_landing_foraged"
+      }
+    ],
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w2_herb_landing_foraged"
+        ],
+        "description": "Charred brush and twisted crash debris line the ridge. The starleaf has been harvested, leaving only brittle black stems."
       }
     ]
   },
@@ -8064,7 +8073,16 @@
         "name": "luminous mushrooms",
         "type": "generic",
         "action_event": "w2_forage_herb_glade",
-        "condition_unmet_message": "The mushrooms pulse in a slow rhythm. Their caps are edible once the toxic silver gills are removed."
+        "condition_unmet_message": "Already harvested.",
+        "requires_milestone_not_set": "ms_w2_herb_glade_foraged"
+      }
+    ],
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w2_herb_glade_foraged"
+        ],
+        "description": "A quiet mossy clearing lit by dim bioluminescence. The harvested mushroom stalks fade back into the dark moss."
       }
     ]
   },
@@ -8176,7 +8194,16 @@
         "name": "reed bulbs",
         "type": "generic",
         "action_event": "w2_forage_herb_reeds",
-        "condition_unmet_message": "You cut away two resonant reed bulbs before their defensive spores can open."
+        "condition_unmet_message": "Already harvested.",
+        "requires_milestone_not_set": "ms_w2_herb_reeds_foraged"
+      }
+    ],
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w2_herb_reeds_foraged"
+        ],
+        "description": "Slow freshwater pools ripple beneath the canopy. The harvested reed stalks sway gently in the stream current."
       }
     ]
   },
@@ -8289,7 +8316,16 @@
         "name": "tidepool crawler",
         "type": "generic",
         "action_event": "w2_forage_meat_tidepool",
-        "condition_unmet_message": "A plated crawler is trapped between mineral spines; its clean flank can be dressed for the fire."
+        "condition_unmet_message": "Already harvested.",
+        "requires_milestone_not_set": "ms_w2_meat_tidepool_foraged"
+      }
+    ],
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w2_meat_tidepool_foraged"
+        ],
+        "description": "Saltwater tidepools carved into black volcanic stone. Clear water laps against empty shells where the crawlers fed."
       }
     ]
   },
@@ -8346,7 +8382,16 @@
         "name": "echo nest",
         "type": "generic",
         "action_event": "w2_forage_meat_cave",
-        "condition_unmet_message": "Fresh claw marks ring a nest lined with bioluminescent moss."
+        "condition_unmet_message": "Already harvested.",
+        "requires_milestone_not_set": "ms_w2_meat_cave_foraged"
+      }
+    ],
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w2_meat_cave_foraged"
+        ],
+        "description": "A cavern opening where deep seismic hums vibrate through the stone. The echo nest is cleared."
       }
     ]
   },
@@ -8611,7 +8656,16 @@
         "name": "burrowing grazer",
         "type": "generic",
         "action_event": "w2_forage_meat_dunes",
-        "condition_unmet_message": "You flush a small grazer from the warm sand and preserve enough meat for a trail meal."
+        "condition_unmet_message": "Already harvested.",
+        "requires_milestone_not_set": "ms_w2_meat_dunes_foraged"
+      }
+    ],
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w2_meat_dunes_foraged"
+        ],
+        "description": "Sweeping sand dunes facing the ocean breeze. Empty burrow mounds dot the slope where grazers nested."
       }
     ]
   },
@@ -8728,7 +8782,16 @@
         "name": "shard-hound remains",
         "type": "generic",
         "action_event": "w2_forage_meat_nest",
-        "condition_unmet_message": "The nest contains a recent kill untouched by the spores. You salvage a clean cut."
+        "condition_unmet_message": "Already harvested.",
+        "requires_milestone_not_set": "ms_w2_meat_nest_foraged"
+      }
+    ],
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w2_meat_nest_foraged"
+        ],
+        "description": "A clearing surrounded by jagged stone slabs. The shard-hound nest is picked clean of salvageable cuts."
       }
     ]
   },
@@ -9029,7 +9092,16 @@
         "name": "blue-frond cluster",
         "type": "generic",
         "action_event": "w2_forage_herb_ridge",
-        "condition_unmet_message": "Hardy blue fronds grow beyond the spore line and make a bitter but safe cooking herb."
+        "condition_unmet_message": "Already harvested.",
+        "requires_milestone_not_set": "ms_w2_herb_ridge_foraged"
+      }
+    ],
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w2_herb_ridge_foraged"
+        ],
+        "description": "Narrow rocky ledges overlook the steaming jungle floor. The blue-frond cluster has been carefully gathered."
       }
     ]
   },

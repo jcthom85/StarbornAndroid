@@ -11121,12 +11121,21 @@
       "type": "player_action",
       "action": "w2_forage_herb_landing"
     },
-    "conditions": [],
+    "conditions": [
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w2_herb_landing_foraged"
+      }
+    ],
     "actions": [
       {
         "type": "give_item",
         "item_id": "herb",
         "quantity": 1
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_herb_landing_foraged"
       },
       {
         "type": "show_message",
@@ -11140,12 +11149,21 @@
       "type": "player_action",
       "action": "w2_forage_herb_glade"
     },
-    "conditions": [],
+    "conditions": [
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w2_herb_glade_foraged"
+      }
+    ],
     "actions": [
       {
         "type": "give_item",
         "item_id": "herb",
         "quantity": 1
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_herb_glade_foraged"
       },
       {
         "type": "show_message",
@@ -11159,12 +11177,21 @@
       "type": "player_action",
       "action": "w2_forage_herb_reeds"
     },
-    "conditions": [],
+    "conditions": [
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w2_herb_reeds_foraged"
+      }
+    ],
     "actions": [
       {
         "type": "give_item",
         "item_id": "herb",
         "quantity": 1
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_herb_reeds_foraged"
       },
       {
         "type": "show_message",
@@ -11178,12 +11205,21 @@
       "type": "player_action",
       "action": "w2_forage_herb_ridge"
     },
-    "conditions": [],
+    "conditions": [
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w2_herb_ridge_foraged"
+      }
+    ],
     "actions": [
       {
         "type": "give_item",
         "item_id": "herb",
         "quantity": 1
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_herb_ridge_foraged"
       },
       {
         "type": "show_message",
@@ -11197,12 +11233,21 @@
       "type": "player_action",
       "action": "w2_forage_meat_tidepool"
     },
-    "conditions": [],
+    "conditions": [
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w2_meat_tidepool_foraged"
+      }
+    ],
     "actions": [
       {
         "type": "give_item",
         "item_id": "beast_meat",
         "quantity": 1
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_meat_tidepool_foraged"
       },
       {
         "type": "show_message",
@@ -11216,12 +11261,21 @@
       "type": "player_action",
       "action": "w2_forage_meat_cave"
     },
-    "conditions": [],
+    "conditions": [
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w2_meat_cave_foraged"
+      }
+    ],
     "actions": [
       {
         "type": "give_item",
         "item_id": "beast_meat",
         "quantity": 1
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_meat_cave_foraged"
       },
       {
         "type": "show_message",
@@ -11235,12 +11289,21 @@
       "type": "player_action",
       "action": "w2_forage_meat_dunes"
     },
-    "conditions": [],
+    "conditions": [
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w2_meat_dunes_foraged"
+      }
+    ],
     "actions": [
       {
         "type": "give_item",
         "item_id": "beast_meat",
         "quantity": 1
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_meat_dunes_foraged"
       },
       {
         "type": "show_message",
@@ -11254,12 +11317,21 @@
       "type": "player_action",
       "action": "w2_forage_meat_nest"
     },
-    "conditions": [],
+    "conditions": [
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w2_meat_nest_foraged"
+      }
+    ],
     "actions": [
       {
         "type": "give_item",
         "item_id": "beast_meat",
         "quantity": 1
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_meat_nest_foraged"
       },
       {
         "type": "show_message",
