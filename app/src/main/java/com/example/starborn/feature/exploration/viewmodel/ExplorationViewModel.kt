@@ -930,14 +930,32 @@ class ExplorationViewModel(
         if (restoredHp.isEmpty()) return
         sessionStore.updatePartyVitals(restoredHp)
         emitAudioCommands(audioRouter.commandsForUi("sfx_bunk_light_on"))
+        val resolvedMessage = message?.takeIf { it.isNotBlank() } ?: computeRestBanter(state)
         emitEvent(
             ExplorationEvent.RestRecovered(
                 restoredHp = restoredAmount,
                 partySize = restoredHp.size,
                 alreadyFull = restoredAmount == 0,
-                message = message?.takeIf { it.isNotBlank() }
+                message = resolvedMessage
             )
         )
+    }
+
+    private fun computeRestBanter(state: com.example.starborn.domain.session.GameSessionState): String {
+        val party = state.partyMembers
+        val milestones = state.completedMilestones
+        return when {
+            "gh0st" in party ->
+                "Gh0st keeps her back to the corner partition: 'Perimeter sweep is clear for four hours. Sleep while the Dominion sensors are blind.'"
+            "orion" in party ->
+                "Orion watches the ambient glow: 'Your kind requires quiet to knit flesh. In the Spire, silence only meant the engines were dying.'"
+            "zeke" in party ->
+                "Zeke sets down his datapad with a sigh: 'Sleep fast, Nova. Shift logs don't forgive a late alarm, rebellion or no rebellion.'"
+            "ms_w1_mq01_cutter_surge" in milestones ->
+                "Nova rests against the bulkhead. The electric ringing in her ears dims to a distant hum, and her pulse steadies."
+            else ->
+                "Nova rests on the steel bunk. The distant vibration of rock drills slows to a rhythmic hum, and her breathing steadies."
+        }
     }
 
     private fun postStatus(message: String) {
