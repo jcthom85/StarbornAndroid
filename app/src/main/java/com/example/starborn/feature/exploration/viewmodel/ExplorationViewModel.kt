@@ -4576,7 +4576,11 @@ class ExplorationViewModel(
     }
 
     private fun handleRestStopAction(action: RestStopAction) {
-        action.restEvent?.takeIf { it.isNotBlank() }?.let { triggerPlayerAction(it) } ?: handleRestParty()
+        if (action.cookSource != null || action.name.contains("cook", ignoreCase = true) || action.name.contains("kitchen", ignoreCase = true)) {
+            emitEvent(ExplorationEvent.OpenCooking(action.cookSource ?: action.name))
+        } else {
+            action.restEvent?.takeIf { it.isNotBlank() }?.let { triggerPlayerAction(it) } ?: handleRestParty()
+        }
     }
 
     private fun handleTuningPuzzleAction(action: TuningPuzzleAction) {
@@ -5458,6 +5462,7 @@ sealed interface ExplorationEvent {
         val message: String? = null
     ) : ExplorationEvent
     data class OpenTinkering(val sourceId: String?) : ExplorationEvent
+    data class OpenCooking(val sourceId: String?) : ExplorationEvent
     data class OpenFirstAid(val stationId: String?) : ExplorationEvent
     data class OpenFishing(val zoneId: String?) : ExplorationEvent
     data class OpenShop(val shopId: String) : ExplorationEvent

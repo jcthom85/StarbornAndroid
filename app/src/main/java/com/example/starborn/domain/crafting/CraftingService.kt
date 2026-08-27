@@ -3,6 +3,7 @@ package com.example.starborn.domain.crafting
 import com.example.starborn.data.assets.CraftingRecipeSource
 import com.example.starborn.domain.inventory.InventoryService
 import com.example.starborn.domain.session.GameSessionStore
+import com.example.starborn.domain.model.CookingRecipe
 import com.example.starborn.domain.model.FirstAidRecipe
 import com.example.starborn.domain.model.TinkeringRecipe
 
@@ -13,6 +14,23 @@ class CraftingService(
 ) {
     val tinkeringRecipes: List<TinkeringRecipe> by lazy { craftingDataSource.loadTinkeringRecipes() }
     val firstAidRecipes: List<FirstAidRecipe> by lazy { craftingDataSource.loadFirstAidRecipes() }
+    val cookingRecipes: List<CookingRecipe> by lazy { craftingDataSource.loadCookingRecipes() }
+
+    fun canCook(recipe: CookingRecipe): Boolean {
+        val requirementCounts = recipe.ingredients.mapKeys { (item, _) -> normalizeToken(item) }
+        val inventoryCounts = inventoryTokenCounts()
+        return requirementCounts.all { (id, needed) -> (inventoryCounts[id] ?: 0) >= needed }
+    }
+
+    fun cookMeal(recipeId: String): CraftingOutcome {
+        val recipe = cookingRecipes.find { it.id == recipeId } ?: return CraftingOutcome.Failure("Unknown recipe")
+        if (!canCook(recipe)) return CraftingOutcome.Failure("Missing ingredients")
+        if (!inventoryService.consumeItems(recipe.ingredients)) return CraftingOutcome.Failure("Unable to consume ingredients")
+        inventoryService.addItem(recipe.result, recipe.resultQuantity.coerceAtLeast(1))
+        sessionStore.setInventory(inventoryService.snapshot())
+        recipe.successMessage?.let { return CraftingOutcome.Success(recipe.result, it) }
+        return CraftingOutcome.Success(recipe.result, "Prepared ${recipe.name}")
+    }
 
     fun canCraft(recipe: TinkeringRecipe): Boolean {
         val requirements = ingredientsFor(recipe)

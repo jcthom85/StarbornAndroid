@@ -37,6 +37,8 @@ import com.example.starborn.navigation.NavigationDestination.Tinkering
 import com.example.starborn.navigation.NavigationDestination.FirstAid
 import com.example.starborn.navigation.NavigationDestination.Shop
 import com.example.starborn.navigation.NavigationDestination.Fishing
+import com.example.starborn.navigation.NavigationDestination.Cooking
+import com.example.starborn.feature.crafting.ui.CookingScreen
 import com.example.starborn.di.AppServices
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -318,10 +320,13 @@ fun NavigationHost(
                         backStackEntry.savedStateHandle["tinkering_craft"] = ""
                         navController.navigate(Tinkering.create(source))
                     },
+                    onOpenCooking = { source ->
+                        navController.navigate(Cooking.create(source))
+                    },
                     onOpenFieldKit = {
                         backStackEntry.savedStateHandle["tinkering_closed"] = false
                         backStackEntry.savedStateHandle["tinkering_craft"] = ""
-                        navController.navigate(Tinkering.create("field_kit", "provision"))
+                        navController.navigate(Tinkering.create("field_kit"))
                     },
                     onOpenFirstAid = { navController.navigate(FirstAid.route) },
                     onOpenFishing = { zoneId -> navController.navigate(Fishing.create(zoneId)) },
@@ -416,6 +421,24 @@ fun NavigationHost(
                 onTriggerFx = services.uiFxBus::trigger,
                 highContrastMode = userSettings.highContrastMode,
                 largeTouchTargets = userSettings.largeTouchTargets
+            )
+        }
+        composable(
+            route = Cooking.route,
+            arguments = listOf(
+                navArgument("source") {
+                    type = NavType.StringType
+                    nullable = true
+                    defaultValue = null
+                }
+            )
+        ) { backStackEntry ->
+            val source = backStackEntry.arguments?.getString("source")
+            CookingScreen(
+                craftingService = services.craftingService,
+                inventoryService = services.inventoryService,
+                source = source,
+                onBack = { navController.popBackStack() }
             )
         }
         composable(

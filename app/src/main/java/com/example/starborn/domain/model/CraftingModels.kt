@@ -61,3 +61,17 @@ data class FirstAidOutput(
     val success: String,
     val failure: String? = null
 )
+
+@JsonClass(generateAdapter = true)
+data class CookingRecipe(
+    val id: String,
+    val name: String,
+    val description: String? = null,
+    val ingredients: Map<String, Int> = emptyMap(),
+    val result: String,
+    @Json(name = "result_quantity")
+    val resultQuantity: Int = 1,
+    @Json(name = "success_message")
+    val successMessage: String? = null
+)
+

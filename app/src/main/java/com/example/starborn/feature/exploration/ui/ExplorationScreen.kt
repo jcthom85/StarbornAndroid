@@ -300,6 +300,7 @@ fun ExplorationScreen(
     modifier: Modifier = Modifier,
     onEnemySelected: (List<String>) -> Unit = {},
     onOpenTinkering: (String?) -> Unit = {},
+    onOpenCooking: (String?) -> Unit = {},
     onOpenFieldKit: () -> Unit = {},
     onOpenFirstAid: (String?) -> Unit = {},
     onOpenFishing: (String?) -> Unit = {},
@@ -406,6 +407,7 @@ fun ExplorationScreen(
                     )
                 }
                 is ExplorationEvent.OpenTinkering -> onOpenTinkering(event.sourceId)
+                is ExplorationEvent.OpenCooking -> onOpenCooking(event.sourceId)
                 is ExplorationEvent.OpenFirstAid -> onOpenFirstAid(event.stationId)
                 is ExplorationEvent.OpenFishing -> onOpenFishing(event.zoneId)
                 is ExplorationEvent.OpenShop -> onOpenShop(event.shopId)

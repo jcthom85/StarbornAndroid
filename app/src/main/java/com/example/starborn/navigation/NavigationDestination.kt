@@ -33,4 +33,9 @@ sealed class NavigationDestination(val route: String) {
             return "shop/$payload"
         }
     }
+    data object Cooking : NavigationDestination("cooking?source={source}") {
+        fun create(source: String? = null): String =
+            if (source.isNullOrBlank()) "cooking"
+            else "cooking?source=${Uri.encode(source)}"
+    }
 }

@@ -3,6 +3,7 @@ package com.example.starborn.domain.crafting
 import com.example.starborn.data.assets.CraftingRecipeSource
 import com.example.starborn.domain.inventory.InventoryService
 import com.example.starborn.domain.inventory.ItemCatalog
+import com.example.starborn.domain.model.CookingRecipe
 import com.example.starborn.domain.model.FirstAidRecipe
 import com.example.starborn.domain.model.Item
 import com.example.starborn.domain.model.TinkeringRecipe
@@ -280,6 +281,44 @@ class CraftingServiceTest {
         assertFalse(inventory.hasItem("Broken Projector"))
         assertFalse(inventory.hasItem("Circuit Board"))
     }
+
+    @Test
+    fun cookMeal_consumes_ingredients_and_adds_meal() {
+        val inventory = InventoryService(
+            TestItemCatalog(
+                listOf(
+                    item("ration_pack", "Ration Pack"),
+                    item("herb", "Herb"),
+                    item("ration_soup", "Ration Soup", type = "consumable")
+                )
+            )
+        ).apply {
+            loadItems()
+            addItem("ration_pack", 1)
+            addItem("herb", 1)
+        }
+        val recipes = TestRecipeSource(
+            cooking = listOf(
+                CookingRecipe(
+                    id = "provision_ration_soup",
+                    name = "Ration Soup",
+                    ingredients = mapOf("ration_pack" to 1, "herb" to 1),
+                    result = "ration_soup",
+                    successMessage = "Simmered Ration Soup."
+                )
+            )
+        )
+        val service = CraftingService(recipes, inventory, GameSessionStore())
+
+        assertTrue(service.canCook(recipes.loadCookingRecipes().first()))
+        val outcome = service.cookMeal("provision_ration_soup")
+
+        assertTrue(outcome is CraftingOutcome.Success)
+        assertEquals("ration_soup", (outcome as CraftingOutcome.Success).itemId)
+        assertTrue(inventory.hasItem("ration_soup"))
+        assertFalse(inventory.hasItem("ration_pack"))
+        assertFalse(inventory.hasItem("herb"))
+    }
 }
 
 private class EmptyItemCatalog : ItemCatalog {
@@ -293,6 +332,7 @@ private class EmptyItemCatalog : ItemCatalog {
 private class EmptyRecipeSource : CraftingRecipeSource {
     override fun loadTinkeringRecipes(): List<TinkeringRecipe> = emptyList()
     override fun loadFirstAidRecipes(): List<FirstAidRecipe> = emptyList()
+    override fun loadCookingRecipes(): List<CookingRecipe> = emptyList()
 }
 
 private class TestItemCatalog(private val items: List<Item>) : ItemCatalog {
@@ -314,10 +354,12 @@ private class TestItemCatalog(private val items: List<Item>) : ItemCatalog {
 
 private class TestRecipeSource(
     private val tinkering: List<TinkeringRecipe> = emptyList(),
-    private val firstAid: List<FirstAidRecipe> = emptyList()
+    private val firstAid: List<FirstAidRecipe> = emptyList(),
+    private val cooking: List<CookingRecipe> = emptyList()
 ) : CraftingRecipeSource {
     override fun loadTinkeringRecipes(): List<TinkeringRecipe> = tinkering
     override fun loadFirstAidRecipes(): List<FirstAidRecipe> = firstAid
+    override fun loadCookingRecipes(): List<CookingRecipe> = cooking
 }
 
 private fun item(
