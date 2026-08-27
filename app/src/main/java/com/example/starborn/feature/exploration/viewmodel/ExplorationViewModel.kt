@@ -5419,10 +5419,7 @@ private fun QuestJournalEntry.toUiSummary(): QuestSummaryUi = QuestSummaryUi(
     summary = summary,
     stageTitle = stageTitle,
     stageDescription = stageDescription,
-    objectives = objectives.map { objective ->
-        val status = if (objective.completed) "✓" else "○"
-        "$status ${objective.text}"
-    },
+    objectives = objectives.map { it.text },
     completed = completed,
     stageIndex = stageIndex,
     totalStages = totalStages
@@ -5444,7 +5441,6 @@ private fun buildQuestSummariesFromSession(
                 ?: quest.stages.firstOrNull()
         }
         val stageIndex = stage?.let { quest.stages.indexOf(it).takeIf { index -> index >= 0 } } ?: 0
-        val completedTasks = session.questTasksCompleted[quest.id].orEmpty()
         QuestSummaryUi(
             id = quest.id,
             title = quest.title,
@@ -5453,13 +5449,10 @@ private fun buildQuestSummariesFromSession(
                 ?: "",
             stageTitle = stage?.title,
             stageDescription = stage?.description?.takeIf { it.isNotBlank() },
-            objectives = stage?.tasks.orEmpty().map { task ->
-                val status = if (completed || task.done || completedTasks.contains(task.id)) "âœ“" else "â—‹"
-                "$status ${task.text}"
-            },
+            objectives = stage?.tasks.orEmpty().map { it.text },
             completed = completed,
             stageIndex = stageIndex,
-            totalStages = quest.stages.size.coerceAtLeast(1)
+            totalStages = quest.stages.size
         )
     }
 }

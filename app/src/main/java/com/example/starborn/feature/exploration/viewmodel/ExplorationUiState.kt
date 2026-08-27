@@ -490,7 +490,7 @@ enum class MenuTab {
 
     fun label(): String = when (this) {
         INVENTORY -> "Inventory"
-        FIELD_KIT -> "Field Kit"
+        FIELD_KIT -> "Tinker"
         JOURNAL -> "Journal"
         MAP -> "Map"
         STATS -> "Stats"
