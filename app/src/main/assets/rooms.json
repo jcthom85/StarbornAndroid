@@ -7957,7 +7957,8 @@
         "name": "scan moss",
         "type": "generic",
         "action_event": "w2_sq01_scan_moss",
-        "condition_unmet_message": "The moss on the hull vibrates under your scanner."
+        "condition_unmet_message": "Objective completed.",
+        "requires_milestone_not_set": "ms_w2_flora_moss_scanned"
       }
     ],
     "npc_presence": [
@@ -7977,6 +7978,12 @@
           "ms_w2_mq01_complete"
         ],
         "description": "The escape pod has cooled in the glow-water. Zeke is stable, the navigation console is dead, and the scan moss registers a clean signal inland."
+      },
+      {
+        "requires_milestones": [
+          "ms_w2_flora_moss_scanned"
+        ],
+        "description": "The escape pod sits wedged into the swamp silt, trailing steam into the humid air. The acoustic moss has been surveyed, and the navigation console remains active inside."
       }
     ]
   },
@@ -8514,13 +8521,22 @@
         "name": "scan weeds",
         "type": "generic",
         "action_event": "w2_sq01_scan_weeds",
-        "condition_unmet_message": "The bioluminescent weeds glow when scanned."
+        "condition_unmet_message": "Objective completed.",
+        "requires_milestone_not_set": "ms_w2_flora_weeds_scanned"
       },
       {
         "name": "gather tideglass",
         "type": "generic",
         "action_event": "w2_sq03_gather_tideglass",
         "condition_unmet_message": "Glowing tideglass skewers are harvested from the shore."
+      }
+    ],
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w2_flora_weeds_scanned"
+        ],
+        "description": "Shallow tidal pools glisten against the volcanic sand. The bioluminescent weeds have been cataloged."
       }
     ]
   },
@@ -8629,7 +8645,16 @@
         "name": "cache",
         "type": "generic",
         "action_event": "w2_sq03_gather_relic",
-        "condition_unmet_message": "A weathered stone pedestal holds the Source Resin weapon mod."
+        "condition_unmet_message": "Objective completed.",
+        "requires_milestone_not_set": "ms_w2_grotto_relic_gathered"
+      }
+    ],
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w2_grotto_relic_gathered"
+        ],
+        "description": "A hidden sea cave lit by glowing anemones. The submerged Architect relic cache has been salvaged."
       }
     ]
   },
@@ -8700,7 +8725,8 @@
         "name": "Scan ferns",
         "type": "generic",
         "action_event": "w2_sq01_scan_ferns",
-        "condition_unmet_message": "The giant crystalline ferns echo in harmony."
+        "condition_unmet_message": "Objective completed.",
+        "requires_milestone_not_set": "ms_w2_flora_ferns_scanned"
       },
       {
         "name": "Scan spores",
@@ -8719,6 +8745,14 @@
       [
         "stalker_vine"
       ]
+    ],
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w2_flora_ferns_scanned"
+        ],
+        "description": "The canopy is covered in giant crystalline ferns that hum in low frequency. The resonant survey readings have been logged."
+      }
     ]
   },
   {
@@ -8748,13 +8782,22 @@
         "name": "distress signature alpha",
         "type": "generic",
         "action_event": "w2_sq02_trace_alpha",
-        "condition_unmet_message": "The first beacon signature repeats beneath the spore hiss. Its vector points toward the patrol hollow."
+        "condition_unmet_message": "Objective completed.",
+        "requires_milestone_not_set": "ms_w2_beacon_alpha_traced"
       }
     ],
     "enemy_parties": [
       [
         "razor_vine"
       ]
+    ],
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w2_beacon_alpha_traced"
+        ],
+        "description": "A dense tangle of glowing vines and thorned thickets. Distress signature alpha has been logged and traced toward the hollow."
+      }
     ]
   },
   {
@@ -8819,7 +8862,16 @@
         "name": "distress signature beta",
         "type": "generic",
         "action_event": "w2_sq02_trace_beta",
-        "condition_unmet_message": "A second beacon is wedged inside a root. Its final packet names a cutter team near the ridge."
+        "condition_unmet_message": "Objective completed.",
+        "requires_milestone_not_set": "ms_w2_beacon_beta_traced"
+      }
+    ],
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w2_beacon_beta_traced"
+        ],
+        "description": "A sunken depression carpeted with purple moss. Distress signature beta has been traced toward the clearance."
       }
     ]
   },
@@ -8997,7 +9049,16 @@
         "name": "patrol transceiver",
         "type": "generic",
         "action_event": "w2_sq02_recover_transceiver",
-        "condition_unmet_message": "The last distress signal resolves under a collapsed slab. Beside it lies the patrol Thermal Cutter."
+        "condition_unmet_message": "Objective completed.",
+        "requires_milestone_not_set": "ms_w2_transceiver_recovered"
+      }
+    ],
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w2_transceiver_recovered"
+        ],
+        "description": "A wide stone plaza clearing in the jungle. The lost patrol's master transceiver has been secured."
       }
     ]
   },
@@ -9258,7 +9319,16 @@
         "name": "distress signature gamma",
         "type": "generic",
         "action_event": "w2_sq02_trace_gamma",
-        "condition_unmet_message": "A directional scope confirms the patrol signal terminates in the clearance below."
+        "condition_unmet_message": "Objective completed.",
+        "requires_milestone_not_set": "ms_w2_beacon_gamma_traced"
+      }
+    ],
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w2_beacon_gamma_traced"
+        ],
+        "description": "A high stone outcrop overlooking the canopy. Distress signature gamma has been triangulated."
       }
     ]
   },
@@ -10071,7 +10141,8 @@
         "name": "root lattice",
         "type": "generic",
         "action_event": "w2_sq01_scan_roots",
-        "condition_unmet_message": "The ancient roots pulse in slow rhythm, feeding the pod without drowning it."
+        "condition_unmet_message": "Objective completed.",
+        "requires_milestone_not_set": "ms_w2_roots_scanned"
       },
       {
         "name": "ceiling vent",
@@ -10097,6 +10168,12 @@
           "ms_w2_mq03_complete"
         ],
         "description": "Orion's stasis pod hangs open in the circular chamber. The root lattice pulses through the floor as if the ruins are waking up with him."
+      },
+      {
+        "requires_milestones": [
+          "ms_w2_roots_scanned"
+        ],
+        "description": "A vast circular chamber centered on a suspended stasis cylinder. The deep root lattice has been mapped into your logs."
       }
     ]
   },
@@ -10247,7 +10324,8 @@
         "name": "security grid",
         "type": "generic",
         "action_event": "w2_sq05_hack_grid",
-        "condition_unmet_message": "Guard sensors sweep the vent junction. Gh0st can ghost their timing while you breach the grid."
+        "condition_unmet_message": "Objective completed.",
+        "requires_milestone_not_set": "ms_w2_grid_hacked"
       }
     ],
     "blocked_directions": {
@@ -10263,6 +10341,14 @@
       [
         "sentinel_orb"
       ]
+    ],
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w2_grid_hacked"
+        ],
+        "description": "A catwalk overlooking the stasis chamber. The security laser grid has been spliced and deactivated."
+      }
     ]
   },
   {
@@ -10290,7 +10376,16 @@
         "name": "guard-system bypass",
         "type": "generic",
         "action_event": "w2_sq05_bypass_guards",
-        "condition_unmet_message": "You crawl between scan pulses, using Gh0st's timing marks to pass the dormant sentries."
+        "condition_unmet_message": "Objective completed.",
+        "requires_milestone_not_set": "ms_w2_guards_bypassed"
+      }
+    ],
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w2_guards_bypassed"
+        ],
+        "description": "A heavy metal access grate overlooking the lower conduits. The automated guard circuit has been bypassed."
       }
     ]
   },
@@ -10317,7 +10412,16 @@
         "name": "case",
         "type": "generic",
         "action_event": "w2_sq05_search_vents",
-        "condition_unmet_message": "A cargo case contains the Dominion transmitter core."
+        "condition_unmet_message": "Objective completed.",
+        "requires_milestone_not_set": "ms_w2_vent_case_looted"
+      }
+    ],
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w2_vent_case_looted"
+        ],
+        "description": "A cramped maintenance alcove inside the ducting. The component case has been opened and emptied."
       }
     ]
   },

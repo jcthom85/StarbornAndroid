@@ -4314,6 +4314,10 @@
       {
         "type": "show_message",
         "message": "You scan the giant crystalline ferns. Their structure resonates with the background wind chords."
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_flora_ferns_scanned"
       }
     ]
   },
@@ -4344,6 +4348,10 @@
       {
         "type": "show_message",
         "message": "You scan the bioluminescent weeds. The light emission is synchronized with the stream's sound waves."
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_flora_weeds_scanned"
       }
     ]
   },
@@ -4374,6 +4382,10 @@
       {
         "type": "show_message",
         "message": "You scan the moss. It emits a soft, slow vibration that dampens ambient sound."
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_flora_moss_scanned"
       }
     ]
   },
@@ -4404,6 +4416,10 @@
       {
         "type": "show_message",
         "message": "You scan the razor-vine spores. They hum with a high-pitched alarm frequency."
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_spores_scanned"
       }
     ]
   },
@@ -4434,6 +4450,10 @@
       {
         "type": "show_message",
         "message": "You scan the ancient roots. The deep resonance suggests they are drawing power directly from the facility core."
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_roots_scanned"
       }
     ]
   },
@@ -11485,6 +11505,10 @@
       {
         "type": "show_message",
         "message": "First distress signature triangulated."
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_beacon_alpha_traced"
       }
     ]
   },
@@ -11514,6 +11538,10 @@
       {
         "type": "show_message",
         "message": "Second distress signature decoded."
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_beacon_beta_traced"
       }
     ]
   },
@@ -11543,6 +11571,10 @@
       {
         "type": "show_message",
         "message": "Third signature confirms the patrol cache location."
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_beacon_gamma_traced"
       }
     ]
   },
@@ -11626,6 +11658,10 @@
         "type": "give_item",
         "item_id": "mod_corrosive_rounds",
         "quantity": 1
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_transceiver_recovered"
       }
     ]
   },
@@ -11862,6 +11898,10 @@
       {
         "type": "show_message",
         "message": "Gh0st folds your signal into the grid noise. Security is blind for ninety seconds."
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_grid_hacked"
       }
     ]
   },
@@ -11896,6 +11936,10 @@
       {
         "type": "show_message",
         "message": "You pass between the guard-system sweeps without raising an alert."
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_guards_bypassed"
       }
     ]
   },
@@ -12009,6 +12053,10 @@
       {
         "type": "show_message",
         "message": "The grotto crystals are inert. Orion's Source Resin comes from living tideglass materials, not a finished relic waiting on a pedestal."
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_grotto_relic_gathered"
       }
     ]
   },

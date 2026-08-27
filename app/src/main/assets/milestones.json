@@ -1344,5 +1344,89 @@
     "name": "Shard-Hound Nest Cleared",
     "description": "Nova scavenged beast meat from the shard-hound nest.",
     "toast": "Beast Meat acquired."
+  },
+  {
+    "id": "ms_w2_flora_ferns_scanned",
+    "name": "Canopy Ferns Scanned",
+    "description": "Nova surveyed the resonant crystalline ferns in the canopy.",
+    "toast": "Crystalline Ferns logged."
+  },
+  {
+    "id": "ms_w2_flora_weeds_scanned",
+    "name": "Tidepool Weeds Scanned",
+    "description": "Nova analyzed the bioluminescent stream weeds.",
+    "toast": "Bioluminescent Weeds logged."
+  },
+  {
+    "id": "ms_w2_flora_moss_scanned",
+    "name": "Crash Moss Scanned",
+    "description": "Nova cataloged the damp acoustic moss near the crash site.",
+    "toast": "Acoustic Moss logged."
+  },
+  {
+    "id": "ms_w2_spores_scanned",
+    "name": "Canopy Spores Scanned",
+    "description": "Nova analyzed the psychoactive spore clouds in the canopy.",
+    "toast": "Canopy Spores logged."
+  },
+  {
+    "id": "ms_w2_roots_scanned",
+    "name": "Stasis Roots Scanned",
+    "description": "Nova surveyed the deep root lattice penetrating the stasis chamber.",
+    "toast": "Root Lattice logged."
+  },
+  {
+    "id": "ms_w2_beacon_alpha_traced",
+    "name": "Distress Alpha Traced",
+    "description": "Nova triangulated the first patrol beacon signature in the thickets.",
+    "toast": "Beacon Alpha triangulated."
+  },
+  {
+    "id": "ms_w2_beacon_beta_traced",
+    "name": "Distress Beta Traced",
+    "description": "Nova recovered the second patrol beacon log in the hollow.",
+    "toast": "Beacon Beta triangulated."
+  },
+  {
+    "id": "ms_w2_beacon_gamma_traced",
+    "name": "Distress Gamma Traced",
+    "description": "Nova scanned the final patrol beacon atop the sniper perch.",
+    "toast": "Beacon Gamma triangulated."
+  },
+  {
+    "id": "ms_w2_transceiver_recovered",
+    "name": "Patrol Transceiver Recovered",
+    "description": "Nova secured the lost Dominion patrol's master transceiver.",
+    "toast": "Patrol Transceiver acquired."
+  },
+  {
+    "id": "ms_w2_tideglass_gathered",
+    "name": "Tideglass Harvested",
+    "description": "Nova harvested prismatic tideglass shards from the beach pools.",
+    "toast": "Tideglass acquired."
+  },
+  {
+    "id": "ms_w2_grotto_relic_gathered",
+    "name": "Grotto Cache Salvaged",
+    "description": "Nova uncovered the submerged Architect relic cache in the grotto.",
+    "toast": "Architect Relic acquired."
+  },
+  {
+    "id": "ms_w2_vent_case_looted",
+    "name": "Vent Alcove Salvaged",
+    "description": "Nova retrieved spare components from the facility vent cache.",
+    "toast": "Sub-level components acquired."
+  },
+  {
+    "id": "ms_w2_grid_hacked",
+    "name": "Vent Grid Overridden",
+    "description": "Nova bypassed the security grid inside the ventilation gantry.",
+    "toast": "Security Grid overridden."
+  },
+  {
+    "id": "ms_w2_guards_bypassed",
+    "name": "Guard Systems Spliced",
+    "description": "Nova rerouted the automated guard bypass circuit.",
+    "toast": "Guard systems spliced."
   }
 ]
