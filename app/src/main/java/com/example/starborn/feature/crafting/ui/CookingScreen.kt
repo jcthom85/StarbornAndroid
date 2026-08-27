@@ -60,6 +60,7 @@ fun CookingScreen(
     inventoryService: InventoryService,
     source: String?,
     onBack: () -> Unit,
+    onPlayAudio: (String) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val inventoryState by inventoryService.state.collectAsState()
@@ -259,10 +260,11 @@ fun CookingScreen(
                                     scope.launch {
                                         when (outcome) {
                                             is CraftingOutcome.Success -> {
-                                                snackbarHostState.showSnackbar("?? ${outcome.message}")
+                                                onPlayAudio("sfx_cooking_sizzle")
+                                                snackbarHostState.showSnackbar("🍲 ${outcome.message}")
                                             }
                                             is CraftingOutcome.Failure -> {
-                                                snackbarHostState.showSnackbar("? ${outcome.message}")
+                                                snackbarHostState.showSnackbar("❌ ${outcome.message}")
                                             }
                                         }
                                     }

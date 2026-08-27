@@ -1259,6 +1259,51 @@
       "fade_in_ms": 0,
       "fade_out_ms": 400,
       "duration_ms": 1800
+    },
+    {
+      "id": "sfx_loot_cache",
+      "category": "battle",
+      "priority": 5,
+      "gain": 0.95,
+      "fade_in_ms": 0,
+      "fade_out_ms": 300,
+      "duration_ms": 1500
+    },
+    {
+      "id": "sfx_forage_gather",
+      "category": "battle",
+      "priority": 5,
+      "gain": 0.90,
+      "fade_in_ms": 0,
+      "fade_out_ms": 300,
+      "duration_ms": 1200
+    },
+    {
+      "id": "sfx_datapad_read",
+      "category": "battle",
+      "priority": 4,
+      "gain": 0.88,
+      "fade_in_ms": 0,
+      "fade_out_ms": 200,
+      "duration_ms": 1000
+    },
+    {
+      "id": "sfx_cooking_sizzle",
+      "category": "battle",
+      "priority": 5,
+      "gain": 0.92,
+      "fade_in_ms": 0,
+      "fade_out_ms": 400,
+      "duration_ms": 2000
+    },
+    {
+      "id": "sfx_tinkering_wrench",
+      "category": "battle",
+      "priority": 5,
+      "gain": 0.92,
+      "fade_in_ms": 0,
+      "fade_out_ms": 300,
+      "duration_ms": 1500
     }
   ]
 }

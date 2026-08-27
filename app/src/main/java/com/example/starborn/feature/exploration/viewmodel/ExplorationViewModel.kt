@@ -4704,6 +4704,27 @@ class ExplorationViewModel(
                 if (eventId == null) {
                     showInspection(status)
                 } else {
+                    val actionNameLower = action.name.lowercase(Locale.getDefault())
+                    val eventLower = eventId.lowercase(Locale.getDefault())
+                    when {
+                        actionNameLower.contains("stash") || actionNameLower.contains("cache") ||
+                            actionNameLower.contains("chest") || actionNameLower.contains("crate") ||
+                            actionNameLower.contains("locker") || actionNameLower.contains("salvage") ||
+                            eventLower.contains("loot") || eventLower.contains("salvage") || eventLower.contains("cache") -> {
+                            emitAudioCommands(audioRouter.commandsForUi("sfx_loot_cache"))
+                        }
+                        actionNameLower.contains("forage") || actionNameLower.contains("gather") ||
+                            actionNameLower.contains("flora") || actionNameLower.contains("harvest") ||
+                            actionNameLower.contains("starleaf") || actionNameLower.contains("mushroom") ||
+                            actionNameLower.contains("meat") || eventLower.contains("forage") || eventLower.contains("gather") -> {
+                            emitAudioCommands(audioRouter.commandsForUi("sfx_forage_gather"))
+                        }
+                        actionNameLower.contains("datapad") || actionNameLower.contains("terminal") ||
+                            actionNameLower.contains("log") || actionNameLower.contains("audit") ||
+                            actionNameLower.contains("read") || eventLower.contains("datapad") || eventLower.contains("log") -> {
+                            emitAudioCommands(audioRouter.commandsForUi("sfx_datapad_read"))
+                        }
+                    }
                     postStatus(status)
                     triggerPlayerAction(eventId)
                 }

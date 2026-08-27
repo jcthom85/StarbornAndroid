@@ -407,7 +407,10 @@ fun NavigationHost(
                 promptManager = services.promptManager,
                 highContrastMode = userSettings.highContrastMode,
                 largeTouchTargets = userSettings.largeTouchTargets,
-                theme = environmentThemeState.theme
+                theme = environmentThemeState.theme,
+                onPlayAudio = { cue ->
+                    services.audioCuePlayer.execute(services.audioRouter.commandsForUi(cue))
+                }
             )
         }
         composable(FirstAid.route) {
@@ -438,7 +441,10 @@ fun NavigationHost(
                 craftingService = services.craftingService,
                 inventoryService = services.inventoryService,
                 source = source,
-                onBack = { navController.popBackStack() }
+                onBack = { navController.popBackStack() },
+                onPlayAudio = { cue ->
+                    services.audioCuePlayer.execute(services.audioRouter.commandsForUi(cue))
+                }
             )
         }
         composable(

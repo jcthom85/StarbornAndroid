@@ -95,7 +95,8 @@ fun TinkeringRoute(
     promptManager: UIPromptManager,
     highContrastMode: Boolean,
     largeTouchTargets: Boolean,
-    theme: Theme? = null
+    theme: Theme? = null,
+    onPlayAudio: (String) -> Unit = {}
 ){
     val uiState by viewModel.uiState.collectAsState()
     val snackbarHost = remember { SnackbarHostState() }
@@ -119,7 +120,10 @@ fun TinkeringRoute(
             }
         }
         launch {
-            viewModel.craftResults.collectLatest { onCrafted(it) }
+            viewModel.craftResults.collectLatest {
+                onPlayAudio("sfx_tinkering_wrench")
+                onCrafted(it)
+            }
         }
     }
 
