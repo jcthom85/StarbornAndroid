@@ -2007,7 +2007,15 @@
     "env": "market",
     "title": "Air-Lock Entrance",
     "background_image": "images/rooms/world_1/server_airlock.webp",
-    "description": "The airlock hisses as it cycles, releasing a blast of sub-zero air. The inner door is a solid block of frosted alloy that looks like it was carved from an ice shelf.",
+    "description": "The airlock hisses as it cycles, releasing a blast of sub-zero air. An emergency locker sits mounted beside the thick inner door.",
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w1_server_airlock_locker_looted"
+        ],
+        "description": "The airlock hisses as it cycles, releasing a blast of sub-zero air. The open emergency locker hangs beside the frosted inner door."
+      }
+    ],
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -2022,9 +2030,16 @@
     "state": {},
     "actions": [
       {
-        "name": "door",
+        "name": "emergency locker",
         "type": "generic",
-        "condition_unmet_message": "Heavy and reinforced. It keeps the cold in and the contaminants out."
+        "action_event": "w1_loot_server_airlock_locker",
+        "requires_milestone_not_set": "ms_w1_server_airlock_locker_looted",
+        "condition_unmet_message": "The emergency locker has been emptied."
+      },
+      {
+        "name": "inner door",
+        "type": "generic",
+        "condition_unmet_message": "Heavy and reinforced. It keeps the sub-zero chill sealed inside Sector 4."
       }
     ]
   },
@@ -2233,6 +2248,14 @@
     "title": "Admin Office",
     "background_image": "images/rooms/world_1/server_office.webp",
     "description": "A windowless supervisor's office overlooking the array. An active executive terminal glows on the desk beside a stack of audit datapads.",
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w1_server_office_datapads_read"
+        ],
+        "description": "A windowless supervisor's office overlooking the array. An active executive terminal glows on the desk beside the decrypted audit datapads."
+      }
+    ],
     "npcs": [],
     "items": [
       "admin_badge"
@@ -2256,7 +2279,9 @@
       {
         "name": "audit datapads",
         "type": "generic",
-        "condition_unmet_message": "Spreadsheets detailing worker quotas and disciplinary flags."
+        "action_event": "w1_read_server_office_datapads",
+        "requires_milestone_not_set": "ms_w1_server_office_datapads_read",
+        "condition_unmet_message": "The supervisor's quota audits have already been logged."
       }
     ]
   },

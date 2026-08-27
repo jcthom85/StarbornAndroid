@@ -1284,5 +1284,17 @@
     "name": "Tool Shed Salvaged",
     "description": "Nova sorted Jed's toolbox for spare scrap and hydraulic fluid.",
     "toast": "Hydraulic fluid and scrap metal acquired."
+  },
+  {
+    "id": "ms_w1_server_airlock_locker_looted",
+    "name": "Airlock Locker Salvaged",
+    "description": "Nova salvaged medical emergency supplies from the airlock locker.",
+    "toast": "Medkit and wiring bundle acquired."
+  },
+  {
+    "id": "ms_w1_server_office_datapads_read",
+    "name": "Supervisor Audits Decrypted",
+    "description": "Nova reviewed the supervisor's disciplinary audit logs and quota warnings.",
+    "toast": "Audit datapads decrypted."
   }
 ]

@@ -13279,6 +13279,64 @@
     ]
   },
   {
+    "id": "w1_loot_server_airlock_locker",
+    "description": "Loots the emergency locker in the server airlock.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w1_loot_server_airlock_locker"
+    },
+    "conditions": [
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w1_server_airlock_locker_looted"
+      }
+    ],
+    "actions": [
+      {
+        "type": "give_item",
+        "item_id": "medkit",
+        "quantity": 1
+      },
+      {
+        "type": "give_item",
+        "item_id": "wiring_bundle",
+        "quantity": 1
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w1_server_airlock_locker_looted"
+      },
+      {
+        "type": "show_message",
+        "message": "Nova pops the emergency latch, recovering sealed medical supplies and a wiring harness."
+      }
+    ]
+  },
+  {
+    "id": "w1_read_server_office_datapads",
+    "description": "Reads audit datapads in supervisor office.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w1_read_server_office_datapads"
+    },
+    "conditions": [
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w1_server_office_datapads_read"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w1_server_office_datapads_read"
+      },
+      {
+        "type": "show_message",
+        "message": "Nova skims the supervisor's audit logs. Quotas are doubled across Lower Sector 4, with several miner accounts flagged for 'unauthorized listening.'"
+      }
+    ]
+  },
+  {
     "id": "w1_mine_shunt_vein",
     "description": "Harvests the resonant mineral vein in mine shunt.",
     "trigger": {
