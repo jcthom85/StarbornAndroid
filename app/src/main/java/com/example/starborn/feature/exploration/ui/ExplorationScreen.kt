@@ -279,6 +279,8 @@ import com.example.starborn.feature.exploration.ui.components.previewItemIconRes
 import com.example.starborn.feature.exploration.ui.components.PartyMemberDetailsDialog
 import com.example.starborn.feature.exploration.ui.components.EventAnnouncementOverlay
 import com.example.starborn.feature.exploration.ui.components.TogglePromptDialog
+import com.example.starborn.feature.crafting.CraftingViewModel
+import com.example.starborn.feature.exploration.ui.tabs.TinkerTabContent
 import com.example.starborn.feature.exploration.ui.tabs.InventoryTabContent
 import com.example.starborn.feature.exploration.ui.tabs.JournalTabContent
 import com.example.starborn.feature.exploration.ui.tabs.MapTabContent
@@ -289,15 +291,13 @@ import com.example.starborn.feature.exploration.ui.tabs.QuestJournalSectionCard
 import com.example.starborn.feature.exploration.ui.tabs.QuestJournalToggle
 import com.example.starborn.feature.exploration.ui.tabs.QuestJournalPage
 
-
-
-
 @Composable
 fun ExplorationScreen(
     viewModel: ExplorationViewModel,
     audioCuePlayer: AudioCuePlayer,
     uiEventBus: UiEventBus,
     modifier: Modifier = Modifier,
+    craftingViewModel: CraftingViewModel? = null,
     onEnemySelected: (List<String>) -> Unit = {},
     onOpenTinkering: (String?) -> Unit = {},
     onOpenCooking: (String?) -> Unit = {},
@@ -306,6 +306,7 @@ fun ExplorationScreen(
     onOpenFishing: (String?) -> Unit = {},
     onOpenShop: (String) -> Unit = {},
     onReturnToHub: () -> Unit = {},
+    onPlayAudio: (String) -> Unit = {},
     fxEvents: Flow<String>? = null
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle(
@@ -1096,6 +1097,8 @@ fun ExplorationScreen(
                 onShowQuestDetails = { questId ->
                     viewModel.openQuestDetails(questId)
                 },
+                craftingViewModel = craftingViewModel,
+                onPlayAudio = onPlayAudio,
                 modifier = Modifier.statusBarsPadding()
             )
         }
@@ -1969,6 +1972,8 @@ private fun MenuOverlay(
     resolveArmorItem: (String) -> Item?,
     onUseInventoryItem: (InventoryPreviewItemUi) -> Unit,
     onShowQuestDetails: (String) -> Unit,
+    craftingViewModel: CraftingViewModel? = null,
+    onPlayAudio: (String) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val themeBase = themeColor(theme?.bg, Color(0xFF071018))
@@ -2113,6 +2118,7 @@ private fun MenuOverlay(
                     MenuTabRow(
                         selectedTab = selectedTab,
                         onSelectTab = onSelectTab,
+                        activeQuestsCount = activeQuests.size,
                         accentColor = accentColor,
                         borderColor = panelBorder
                     )
@@ -2161,6 +2167,8 @@ private fun MenuOverlay(
                         resolveArmorItem = resolveArmorItem,
                         onUseInventoryItem = onUseInventoryItem,
                         onShowQuestDetails = onShowQuestDetails,
+                        craftingViewModel = craftingViewModel,
+                        onPlayAudio = onPlayAudio,
                         creditsLabel = creditsLabel
                     )
                 }
@@ -2211,6 +2219,7 @@ private fun MenuOverlay(
 private fun MenuTabRow(
     selectedTab: MenuTab,
     onSelectTab: (MenuTab) -> Unit,
+    activeQuestsCount: Int,
     accentColor: Color,
     borderColor: Color
 ) {
@@ -2226,9 +2235,14 @@ private fun MenuTabRow(
         horizontalArrangement = Arrangement.spacedBy(3.dp)
     ) {
         MenuTab.values().forEach { tab ->
+            val hasBadge = when (tab) {
+                MenuTab.JOURNAL -> activeQuestsCount > 0
+                else -> false
+            }
             MenuTabChip(
                 tab = tab,
                 isSelected = tab == selectedTab,
+                hasBadge = hasBadge,
                 accentColor = accentColor,
                 borderColor = borderColor,
                 onSelect = { onSelectTab(tab) }
@@ -2241,6 +2255,7 @@ private fun MenuTabRow(
 private fun MenuTabChip(
     tab: MenuTab,
     isSelected: Boolean,
+    hasBadge: Boolean = false,
     accentColor: Color,
     borderColor: Color,
     onSelect: () -> Unit
@@ -2271,13 +2286,25 @@ private fun MenuTabChip(
                 .padding(horizontal = 10.dp, vertical = 8.dp),
             contentAlignment = Alignment.Center
         ) {
-            Text(
-                text = tab.label(),
-                color = contentColor,
-                style = MaterialTheme.typography.labelLarge.copy(fontSize = 18.sp, lineHeight = 22.sp),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                Text(
+                    text = tab.label(),
+                    color = contentColor,
+                    style = MaterialTheme.typography.labelLarge.copy(fontSize = 18.sp, lineHeight = 22.sp),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                if (hasBadge && !isSelected) {
+                    Box(
+                        modifier = Modifier
+                            .size(6.dp)
+                            .background(Color(0xFFFFC857), CircleShape)
+                    )
+                }
+            }
         }
     }
 }
@@ -2423,6 +2450,8 @@ private fun MenuTabContentArea(
     resolveArmorItem: (String) -> Item?,
     onUseInventoryItem: (InventoryPreviewItemUi) -> Unit,
     onShowQuestDetails: (String) -> Unit,
+    craftingViewModel: CraftingViewModel? = null,
+    onPlayAudio: (String) -> Unit = {},
     creditsLabel: String
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
@@ -2447,11 +2476,22 @@ private fun MenuTabContentArea(
                 onUseConsumable = onUseInventoryItem,
                 creditsLabel = creditsLabel
             )
-            MenuTab.FIELD_KIT -> FieldKitTabContent(
-                accentColor = accentColor,
-                borderColor = borderColor,
-                onOpenFieldKit = onOpenFieldKit
-            )
+            MenuTab.FIELD_KIT -> {
+                if (craftingViewModel != null) {
+                    TinkerTabContent(
+                        craftingViewModel = craftingViewModel,
+                        accentColor = accentColor,
+                        borderColor = borderColor,
+                        onPlayAudio = onPlayAudio
+                    )
+                } else {
+                    FieldKitTabContent(
+                        accentColor = accentColor,
+                        borderColor = borderColor,
+                        onOpenFieldKit = onOpenFieldKit
+                    )
+                }
+            }
             MenuTab.JOURNAL -> JournalTabContent(
                 trackedQuest = trackedQuest,
                 activeQuests = activeQuests,

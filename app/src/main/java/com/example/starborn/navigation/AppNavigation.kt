@@ -215,6 +215,13 @@ fun NavigationHost(
         }
         composable(Exploration.route) { backStackEntry ->
             val explorationViewModel: ExplorationViewModel = viewModel(factory = ExplorationViewModelFactory(services))
+            val craftingViewModel: CraftingViewModel = viewModel(
+                factory = CraftingViewModelFactory(
+                    services.craftingService,
+                    services.inventoryService,
+                    services.sessionStore
+                )
+            )
             var combatTransitionVisible by remember { mutableStateOf(false) }
             var pendingCombatEnemyIds by remember { mutableStateOf<List<String>?>(null) }
             val pulseScale = remember { androidx.compose.animation.core.Animatable(1f) }
@@ -338,6 +345,10 @@ fun NavigationHost(
                             popUpTo(Exploration.route) { inclusive = true }
                             launchSingleTop = true
                         }
+                    },
+                    craftingViewModel = craftingViewModel,
+                    onPlayAudio = { audioCueId ->
+                        services.audioCuePlayer.play(audioCueId)
                     },
                     fxEvents = services.uiFxBus.fxEvents
                 )
