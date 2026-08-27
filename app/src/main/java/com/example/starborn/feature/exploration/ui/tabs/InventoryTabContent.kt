@@ -84,27 +84,41 @@ fun InventoryTabContent(
             accentColor = accentColor,
             borderColor = borderColor
         )
-        Spacer(modifier = Modifier.height(10.dp))
-        InventoryResourceBar(
-            itemCount = when (page) {
-                InventoryCarouselPage.SUPPLIES -> supplies.size
-                InventoryCarouselPage.GEAR -> inventoryItems.count { it.type.lowercase().contains("weapon") || it.type.lowercase().contains("armor") || it.type.lowercase().contains("mod") }
-                InventoryCarouselPage.KEY_ITEMS -> keyItems.size
-            },
-            creditsLabel = creditsLabel,
-            accentColor = accentColor,
-            borderColor = borderColor
-        )
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(12.dp))
         when (page) {
-            InventoryCarouselPage.SUPPLIES -> InventoryItemsPreview(
-                items = supplies,
-                accentColor = accentColor,
-                borderColor = borderColor,
-                emptyMessage = "No supplies collected yet. Explore rooms to gather materials.",
-                onItemClick = onUseConsumable,
-                onShowDetails = { detailItem = it }
-            )
+            InventoryCarouselPage.SUPPLIES -> {
+                InventoryItemsPreview(
+                    items = supplies,
+                    accentColor = accentColor,
+                    borderColor = borderColor,
+                    emptyMessage = "No supplies collected yet. Explore rooms to gather materials.",
+                    onItemClick = onUseConsumable,
+                    onShowDetails = { detailItem = it }
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    val compactCredits = remember(creditsLabel) {
+                        val clean = creditsLabel.replace(Regex("\\s*credits", RegexOption.IGNORE_CASE), "").trim()
+                        "$clean ¢"
+                    }
+                    Surface(
+                        shape = RoundedCornerShape(8.dp),
+                        color = Color.Black.copy(alpha = 0.25f),
+                        border = BorderStroke(1.dp, borderColor.copy(alpha = 0.35f))
+                    ) {
+                        Text(
+                            text = compactCredits,
+                            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                            color = Color(0xFFFFC857),
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp)
+                        )
+                    }
+                }
+            }
             InventoryCarouselPage.GEAR -> InventoryEquipmentPreview(
                 inventoryItems = inventoryItems,
                 equippedItems = equippedItems,
@@ -444,45 +458,6 @@ private fun PreviewDetailRow(label: String, value: String, accentColor: Color) {
             color = accentColor,
             textAlign = TextAlign.End
         )
-    }
-}
-
-@Composable
-private fun InventoryResourceBar(
-    itemCount: Int,
-    creditsLabel: String,
-    accentColor: Color,
-    borderColor: Color,
-    modifier: Modifier = Modifier
-) {
-    val compactCredits = remember(creditsLabel) {
-        val clean = creditsLabel.replace(Regex("\\s*credits", RegexOption.IGNORE_CASE), "").trim()
-        "$clean ¢"
-    }
-    Surface(
-        modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(10.dp),
-        color = Color(0xFF061018).copy(alpha = 0.5f),
-        border = BorderStroke(1.dp, borderColor.copy(alpha = 0.25f))
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 12.dp, vertical = 6.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "ITEMS: $itemCount",
-                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
-                color = Color.White.copy(alpha = 0.8f)
-            )
-            Text(
-                text = compactCredits,
-                style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
-                color = Color(0xFFFFC857)
-            )
-        }
     }
 }
 
