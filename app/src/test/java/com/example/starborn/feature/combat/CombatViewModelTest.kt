@@ -43,8 +43,11 @@ import com.example.starborn.feature.combat.viewmodel.CombatBannerIcon
 import com.example.starborn.feature.combat.viewmodel.CombatBannerImportance
 import com.example.starborn.feature.combat.viewmodel.CombatFxEvent
 import com.example.starborn.feature.combat.viewmodel.COMBAT_BASICS_TUTORIAL_ID
+import com.example.starborn.feature.combat.viewmodel.COMBAT_LOADER_TUTORIAL_ID
+import com.example.starborn.feature.combat.viewmodel.COMBAT_LOADER_SKILL_ID
 import com.example.starborn.feature.combat.viewmodel.COMBAT_TUTORIAL_SKILL_ID
 import com.example.starborn.feature.combat.viewmodel.CombatTutorialStep
+import com.example.starborn.feature.combat.viewmodel.CombatTutorialType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
@@ -56,6 +59,7 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
@@ -1197,6 +1201,65 @@ class CombatViewModelTest {
     }
 
     @Test
+    fun faultedLoaderTutorialGuidesArcTetherWeaknessAndPreventsSkipping() {
+        val fixture = createLoaderTutorialViewModel()
+        val viewModel = fixture.viewModel
+
+        val tutorialState = viewModel.combatTutorial.value
+        assertNotNull(tutorialState)
+        assertEquals(CombatTutorialStep.BRIEF, tutorialState?.step)
+        assertEquals(CombatTutorialType.LOADER_WEAKNESS, tutorialState?.tutorialType)
+        assertFalse(tutorialState?.canSkip == true)
+
+        // Verify skipping does not bypass the mandatory loader tutorial
+        viewModel.skipCombatTutorial()
+        assertEquals(CombatTutorialStep.BRIEF, viewModel.combatTutorial.value?.step)
+
+        // Continue to select Nova
+        viewModel.onCombatTutorialContinue()
+        assertEquals(CombatTutorialStep.SELECT_NOVA_SKILL, viewModel.combatTutorial.value?.step)
+        assertFalse(viewModel.isCombatTutorialCommandEnabled("Attack"))
+        assertFalse(viewModel.isCombatTutorialCommandEnabled("Retreat"))
+
+        // Select Nova -> Open action menu
+        viewModel.selectReadyPlayer("nova")
+        assertEquals(CombatTutorialStep.CHOOSE_SKILLS, viewModel.combatTutorial.value?.step)
+        assertFalse(viewModel.isCombatTutorialCommandEnabled("Attack"))
+        assertTrue(viewModel.isCombatTutorialCommandEnabled("Skills"))
+
+        // Select Skills / Abilities
+        assertTrue(viewModel.onCombatTutorialCommand("Skills"))
+        assertEquals(CombatTutorialStep.CHOOSE_HYDRAULIC_KICK, viewModel.combatTutorial.value?.step)
+        assertEquals(COMBAT_LOADER_SKILL_ID, viewModel.combatTutorial.value?.expectedSkillId)
+
+        // Dismissing skills dialog returns to CHOOSE_SKILLS step
+        viewModel.onCombatTutorialSkillDialogDismissed()
+        assertEquals(CombatTutorialStep.CHOOSE_SKILLS, viewModel.combatTutorial.value?.step)
+        assertTrue(viewModel.onCombatTutorialCommand("Skills"))
+
+        // Selecting Arc Tether proceeds to targeting Faulted Loader
+        assertTrue(viewModel.onCombatTutorialSkillSelected(COMBAT_LOADER_SKILL_ID))
+        assertEquals(CombatTutorialStep.TARGET_HYDRAULIC_KICK, viewModel.combatTutorial.value?.step)
+        assertTrue(viewModel.isCombatTutorialTargetEnabled("faulted_loader"))
+
+        // Cancelling target returns to CHOOSE_SKILLS
+        viewModel.onCombatTutorialTargetCancelled()
+        assertEquals(CombatTutorialStep.CHOOSE_SKILLS, viewModel.combatTutorial.value?.step)
+        assertTrue(viewModel.onCombatTutorialCommand("Skills"))
+        assertTrue(viewModel.onCombatTutorialSkillSelected(COMBAT_LOADER_SKILL_ID))
+
+        // Cast Arc Tether
+        val arcTether = viewModel.skillsForPlayer("nova").first { it.id == COMBAT_LOADER_SKILL_ID }
+        viewModel.useSkill(arcTether, listOf("faulted_loader"))
+
+        // Completes Arc Tether hit -> SUCCESS modal
+        assertEquals(CombatTutorialStep.SUCCESS, viewModel.combatTutorial.value?.step)
+        viewModel.onCombatTutorialContinue()
+        assertNull(viewModel.combatTutorial.value)
+        assertTrue(COMBAT_LOADER_TUTORIAL_ID in fixture.sessionStore.state.value.tutorialCompleted)
+    }
+
+    @Test
     fun weaknessHitShowsCooldownRewardBanner() = runTest {
         val viewModel = createWeaknessRewardViewModel()
         val audioEvents = mutableListOf<CombatFxEvent.Audio>()
@@ -1617,6 +1680,117 @@ class CombatViewModelTest {
             startQuest("w1_sq03", track = true)
             setQuestStage("w1_sq03", "guard_break_training")
             unlockSkill(COMBAT_TUTORIAL_SKILL_ID)
+        }
+        val inventoryService = InventoryService(FakeItemCatalog()).apply { loadItems() }
+        val themeRepository = mock<ThemeRepository> {
+            on { getTheme(any()) } doReturn null
+            on { getStyle(any()) } doReturn null
+        }
+        val viewModel = CombatViewModel(
+            worldAssets = worldAssets,
+            combatEngine = CombatEngine(statusRegistry = statusRegistry),
+            statusRegistry = statusRegistry,
+            sessionStore = sessionStore,
+            inventoryService = inventoryService,
+            itemCatalog = FakeItemCatalog(),
+            levelingManager = LevelingManager(LevelingData(mapOf("1" to 0, "2" to 100))),
+            progressionData = ProgressionData(),
+            audioRouter = AudioRouter(AudioBindings()),
+            themeRepository = themeRepository,
+            environmentThemeManager = EnvironmentThemeManager(themeRepository),
+            encounterCoordinator = EncounterCoordinator(),
+            enemyIds = listOf(enemy.id),
+            tutorialsEnabled = true,
+            elapsedRealtime = { 1_000L }
+        )
+        return TutorialFixture(viewModel, sessionStore)
+    }
+
+    private fun createLoaderTutorialViewModel(): TutorialFixture {
+        val player = Player(
+            id = "nova",
+            name = "Nova",
+            level = 1,
+            xp = 0,
+            hp = 120,
+            strength = 10,
+            vitality = 8,
+            agility = 6,
+            focus = 5,
+            luck = 4,
+            skills = listOf("nova_strike", COMBAT_LOADER_SKILL_ID),
+            miniIconPath = "images/portraits/nova.png"
+        )
+        val enemy = Enemy(
+            id = "faulted_loader",
+            name = "Faulted Loader",
+            tier = "standard",
+            hp = 45,
+            strength = 5,
+            vitality = 1,
+            stability = 18,
+            agility = 1,
+            focus = 5,
+            luck = 1,
+            speed = 5,
+            element = "physical",
+            resistances = Resistances(shock = -50),
+            abilities = emptyList(),
+            flavor = "",
+            xpReward = 50,
+            creditReward = 20,
+            drops = emptyList(),
+            description = "Workshop loader.",
+            portrait = "",
+            sprite = emptyList(),
+            attack = 6,
+            apReward = 0
+        )
+        val strike = Skill(
+            id = "nova_strike",
+            name = "Attack",
+            character = "nova",
+            type = "attack",
+            basePower = 20,
+            cooldown = 0,
+            description = "A direct hit."
+        )
+        val arcTether = Skill(
+            id = COMBAT_LOADER_SKILL_ID,
+            name = "Arc Tether",
+            character = "nova",
+            type = "active",
+            description = "Shock attack.",
+            combatTags = listOf("dmg", "shock"),
+            basePower = 40,
+            cooldown = 2
+        )
+        val room = Room(
+            id = "workshop_yard",
+            env = "mine",
+            title = "Scrap Yard",
+            backgroundImage = "",
+            description = "",
+            npcs = emptyList(),
+            items = emptyList(),
+            enemies = listOf(enemy.id),
+            connections = emptyMap(),
+            pos = listOf(0, 0),
+            state = emptyMap(),
+            actions = emptyList()
+        )
+        val worldAssets = mock<WorldAssetDataSource> {
+            on { loadCharacters() } doReturn listOf(player)
+            on { loadEnemies() } doReturn listOf(enemy)
+            on { loadSkills() } doReturn listOf(strike, arcTether)
+            on { loadRooms() } doReturn listOf(room)
+            on { loadSkillNodes() } doReturn emptyMap()
+        }
+        val statusRegistry = StatusRegistry(emptyList())
+        val sessionStore = GameSessionStore().apply {
+            setRoom("workshop_yard")
+            startQuest("w1_mq01", track = true)
+            unlockSkill(COMBAT_LOADER_SKILL_ID)
         }
         val inventoryService = InventoryService(FakeItemCatalog()).apply { loadItems() }
         val themeRepository = mock<ThemeRepository> {

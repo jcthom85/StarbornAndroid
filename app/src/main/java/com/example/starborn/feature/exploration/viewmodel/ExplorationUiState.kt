@@ -88,6 +88,7 @@ data class ExplorationUiState(
     val forceBlackScreen: Boolean = false,
     val fadeOverlay: FadeOverlayCommand? = null,
     val tutorialState: TutorialRuntimeState = TutorialRuntimeState(),
+    val isTinkeringTutorialActive: Boolean = false,
     val visualEnemyParties: List<VisualEnemyParty> = emptyList()
 )
 

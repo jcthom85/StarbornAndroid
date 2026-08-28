@@ -52,7 +52,7 @@ appId: com.junewiregames.starborn.prealpha
     visible: "Lift Shaft"
     timeout: 15000
 - extendedWaitUntil:
-    visible: "Head out of the Pit toward Jed's Workshop.*"
+    visible: "Head out of the Pit toward Jed.*"
     timeout: 10000
 - tapOn: "CONTINUE"
 - tapOn: "Travel south"

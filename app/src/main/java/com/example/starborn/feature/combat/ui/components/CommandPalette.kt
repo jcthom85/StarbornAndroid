@@ -105,6 +105,7 @@ fun CommandPalette(
     canSnack: Boolean,
     snackCooldown: Int,
     onSnack: () -> Unit,
+    canRetreat: Boolean = true,
     onRetreat: () -> Unit,
     highContrastMode: Boolean,
     largeTouchTargets: Boolean,
@@ -209,7 +210,7 @@ fun CommandPalette(
                             CommandEntry("Abilities", Icons.Rounded.AutoAwesome, hasSkills, onSkills),
                             CommandEntry("Items", Icons.Rounded.Inventory2, hasItems, onItems),
                             CommandEntry(snackLabel, Icons.Rounded.Restaurant, canSnack, onSnack, cooldown = snackCooldown),
-                            CommandEntry("Retreat", Icons.Rounded.ExitToApp, true, onRetreat)
+                            CommandEntry("Retreat", Icons.Rounded.ExitToApp, canRetreat, onRetreat)
                         )
                         val rows = listOf(commands.take(2), commands.drop(2))
                         rows.forEach { chunk ->

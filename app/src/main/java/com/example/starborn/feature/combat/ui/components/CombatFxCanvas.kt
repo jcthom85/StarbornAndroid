@@ -943,61 +943,97 @@ fun DamageNumberBubble(
                 )
             }
         }
-        Box(
-            contentAlignment = Alignment.Center
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(1.dp)
         ) {
-            val outlineColor = Color.Black.copy(alpha = 0.8f)
-            val outlineOffset = 1.5.dp
-            val textStyle = MaterialTheme.typography.titleLarge.copy(
-                fontSize = if (fx.critical) 28.sp else 24.sp,
-                fontFamily = CombatNameFont,
-                letterSpacing = if (isMiss || isBlocked) 0.85.sp else 0.sp,
-                fontStyle = if (isHealing) FontStyle.Italic else FontStyle.Normal,
-                fontWeight = FontWeight.Black
-            )
-            val textModifier = if (isBlocked) {
-                Modifier.requiredWidth(112.dp)
-            } else {
-                Modifier
+            if (fx.isWeakness || fx.critical || fx.isGuardBreak) {
+                val calloutText = when {
+                    fx.isGuardBreak -> "GUARD BREAK!"
+                    fx.isWeakness -> "WEAKNESS!"
+                    fx.critical -> "CRITICAL!"
+                    else -> ""
+                }
+                val calloutColor = when {
+                    fx.isGuardBreak -> Color(0xFF64B5F6)
+                    fx.isWeakness -> Color(0xFFFFD54F)
+                    fx.critical -> Color(0xFFFF8A65)
+                    else -> Color.White
+                }
+                Surface(
+                    shape = RoundedCornerShape(4.dp),
+                    color = Color.Black.copy(alpha = 0.75f),
+                    border = BorderStroke(1.dp, calloutColor.copy(alpha = 0.85f))
+                ) {
+                    Text(
+                        text = calloutText,
+                        color = calloutColor,
+                        style = MaterialTheme.typography.labelSmall.copy(
+                            fontSize = 9.sp,
+                            fontWeight = FontWeight.Black,
+                            letterSpacing = 0.6.sp
+                        ),
+                        modifier = Modifier.padding(horizontal = 4.dp, vertical = 1.dp)
+                    )
+                }
             }
 
-            // Outline layers
-            listOf(
-                Offset(-1f, -1f), Offset(1f, -1f),
-                Offset(-1f, 1f), Offset(1f, 1f),
-                Offset(0f, -1.2f), Offset(0f, 1.2f),
-                Offset(-1.2f, 0f), Offset(1.2f, 0f)
-            ).forEach { offset ->
+            Box(
+                contentAlignment = Alignment.Center
+            ) {
+                val outlineColor = Color.Black.copy(alpha = 0.8f)
+                val outlineOffset = 1.5.dp
+                val textStyle = MaterialTheme.typography.titleLarge.copy(
+                    fontSize = if (fx.critical) 28.sp else 24.sp,
+                    fontFamily = CombatNameFont,
+                    letterSpacing = if (isMiss || isBlocked) 0.85.sp else 0.sp,
+                    fontStyle = if (isHealing) FontStyle.Italic else FontStyle.Normal,
+                    fontWeight = FontWeight.Black
+                )
+                val textModifier = if (isBlocked) {
+                    Modifier.requiredWidth(112.dp)
+                } else {
+                    Modifier
+                }
+
+                // Outline layers
+                listOf(
+                    Offset(-1f, -1f), Offset(1f, -1f),
+                    Offset(-1f, 1f), Offset(1f, 1f),
+                    Offset(0f, -1.2f), Offset(0f, 1.2f),
+                    Offset(-1.2f, 0f), Offset(1.2f, 0f)
+                ).forEach { offset ->
+                    Text(
+                        text = headline,
+                        style = textStyle,
+                        color = outlineColor,
+                        modifier = textModifier.offset(
+                            x = (offset.x * outlineOffset.value).dp,
+                            y = (offset.y * outlineOffset.value).dp
+                        ),
+                        maxLines = 1,
+                        softWrap = false,
+                        textAlign = TextAlign.Center
+                    )
+                }
+
+                // Main Text
                 Text(
                     text = headline,
-                    style = textStyle,
-                    color = outlineColor,
-                    modifier = textModifier.offset(
-                        x = (offset.x * outlineOffset.value).dp,
-                        y = (offset.y * outlineOffset.value).dp
+                    style = textStyle.copy(
+                        shadow = Shadow(
+                            color = bottomColor.copy(alpha = 0.9f),
+                            offset = Offset(0f, 4f),
+                            blurRadius = 12f
+                        )
                     ),
+                    color = topColor,
+                    modifier = textModifier,
                     maxLines = 1,
                     softWrap = false,
                     textAlign = TextAlign.Center
                 )
             }
-
-            // Main Text
-            Text(
-                text = headline,
-                style = textStyle.copy(
-                    shadow = Shadow(
-                        color = bottomColor.copy(alpha = 0.9f),
-                        offset = Offset(0f, 4f),
-                        blurRadius = 12f
-                    )
-                ),
-                color = topColor,
-                modifier = textModifier,
-                maxLines = 1,
-                softWrap = false,
-                textAlign = TextAlign.Center
-            )
         }
     }
 }

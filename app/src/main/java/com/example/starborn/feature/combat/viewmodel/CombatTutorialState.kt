@@ -35,4 +35,14 @@ data class CombatTutorialState(
         get() = step == CombatTutorialStep.BRIEF ||
             step == CombatTutorialStep.BLOCKED_EXPLANATION ||
             step == CombatTutorialStep.SUCCESS
+
+    val canSkip: Boolean
+        get() = tutorialType != CombatTutorialType.LOADER_WEAKNESS
+
+    val expectedSkillId: String
+        get() = if (tutorialType == CombatTutorialType.LOADER_WEAKNESS) {
+            COMBAT_LOADER_SKILL_ID
+        } else {
+            COMBAT_TUTORIAL_SKILL_ID
+        }
 }

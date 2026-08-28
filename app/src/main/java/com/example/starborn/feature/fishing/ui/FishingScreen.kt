@@ -573,7 +573,7 @@ private fun FishingHookSection(
             color = if (highContrastMode) Color.White.copy(alpha = 0.8f) else MaterialTheme.colorScheme.tertiary
         )
         Text(
-            text = "Time remaining: ${String.format("%.1f", seconds)}s",
+            text = "Time remaining: ${String.format(java.util.Locale.ROOT, "%.1f", seconds)}s",
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.error
         )

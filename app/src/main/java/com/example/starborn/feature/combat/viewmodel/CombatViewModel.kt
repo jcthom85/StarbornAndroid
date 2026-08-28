@@ -1749,6 +1749,7 @@ class CombatViewModel(
                     amount = entry.amount,
                     element = elementOverride ?: entry.element,
                     critical = entry.critical,
+                    isWeakness = entry.isWeakness,
                     showAttackFx = showAttackFx,
                     targetDefeated = targetDefeated
                 )
@@ -1767,6 +1768,7 @@ class CombatViewModel(
                     amount = entry.amount,
                     element = elementOverride ?: entry.element,
                     critical = entry.critical,
+                    isWeakness = entry.isWeakness,
                     showAttackFx = showAttackFx,
                     targetDefeated = targetDefeated
                 )

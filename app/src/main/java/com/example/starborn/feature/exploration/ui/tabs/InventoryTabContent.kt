@@ -65,6 +65,7 @@ fun InventoryTabContent(
     onEquipArmor: (String, String?) -> Unit,
     resolveArmorItem: (String) -> Item?,
     onUseConsumable: (InventoryPreviewItemUi) -> Unit,
+    onShowItemDetails: (InventoryPreviewItemUi) -> Unit,
     creditsLabel: String
 ) {
     var page by rememberSaveable { mutableStateOf(InventoryCarouselPage.SUPPLIES) }
@@ -72,7 +73,6 @@ fun InventoryTabContent(
         inventoryItems.filterNot { it.isKeyItem() }
     }
     val keyItems = remember(inventoryItems) { inventoryItems.filter { it.isKeyItem() } }
-    var detailItem by remember { mutableStateOf<InventoryPreviewItemUi?>(null) }
     MenuSectionCard(
         title = "Inventory Overview",
         accentColor = accentColor,
@@ -93,7 +93,7 @@ fun InventoryTabContent(
                     borderColor = borderColor,
                     emptyMessage = "No supplies collected yet. Explore rooms to gather materials.",
                     onItemClick = onUseConsumable,
-                    onShowDetails = { detailItem = it }
+                    onShowDetails = onShowItemDetails
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Row(
@@ -142,23 +142,9 @@ fun InventoryTabContent(
                 accentColor = accentColor,
                 borderColor = borderColor,
                 emptyMessage = "No key items collected yet.",
-                onShowDetails = { detailItem = it }
+                onShowDetails = onShowItemDetails
             )
         }
-    }
-    detailItem?.let { item ->
-        PreviewItemDetailsDialog(
-            item = item,
-            accentColor = accentColor,
-            borderColor = borderColor,
-            onUse = if (item.effect != null && !item.isKeyItem()) {
-                {
-                    detailItem = null
-                    onUseConsumable(item)
-                }
-            } else null,
-            onDismiss = { detailItem = null }
-        )
     }
 }
 
@@ -322,21 +308,15 @@ private fun InventoryItemsPreview(
 }
 
 @Composable
-private fun PreviewItemDetailsDialog(
+fun InventoryItemDetailsContent(
     item: InventoryPreviewItemUi,
     accentColor: Color,
     borderColor: Color,
     onUse: (() -> Unit)?,
-    onDismiss: () -> Unit
+    modifier: Modifier = Modifier
 ) {
-    Dialog(
-        onDismissRequest = onDismiss,
-        properties = DialogProperties(usePlatformDefaultWidth = false)
-    ) {
         Surface(
-            modifier = Modifier
-                .fillMaxWidth(0.92f)
-                .widthIn(max = 560.dp),
+            modifier = modifier.fillMaxWidth(),
             shape = RoundedCornerShape(18.dp),
             color = Color(0xF0061018),
             border = BorderStroke(1.dp, accentColor.copy(alpha = 0.48f)),
@@ -414,20 +394,12 @@ private fun PreviewItemDetailsDialog(
                 }
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    horizontalArrangement = Arrangement.End
                 ) {
-                    OutlinedButton(
-                        onClick = onDismiss,
-                        modifier = Modifier.weight(1f),
-                        shape = RoundedCornerShape(10.dp),
-                        border = BorderStroke(1.dp, Color.White.copy(alpha = 0.22f))
-                    ) {
-                        Text("Close")
-                    }
                     Button(
                         onClick = { onUse?.invoke() },
                         enabled = onUse != null,
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(10.dp),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = accentColor,
@@ -441,7 +413,6 @@ private fun PreviewItemDetailsDialog(
                 }
             }
         }
-    }
 }
 
 @Composable

@@ -290,6 +290,8 @@ import com.example.starborn.feature.exploration.ui.tabs.QuestJournalRow
 import com.example.starborn.feature.exploration.ui.tabs.QuestJournalSectionCard
 import com.example.starborn.feature.exploration.ui.tabs.QuestJournalToggle
 import com.example.starborn.feature.exploration.ui.tabs.QuestJournalPage
+import com.example.starborn.feature.exploration.ui.menu.FieldMenuDesign
+import com.example.starborn.feature.exploration.ui.menu.MenuDetailKind
 
 @Composable
 fun ExplorationScreen(
@@ -1021,6 +1023,7 @@ fun ExplorationScreen(
             val trackedQuest = uiState.questLogActive.firstOrNull { it.id == uiState.trackedQuestId }
             MenuOverlay(
                 selectedTab = uiState.menuTab,
+                isTinkeringTutorialActive = uiState.isTinkeringTutorialActive,
                 onSelectTab = { viewModel.selectMenuTab(it) },
                 onClose = { viewModel.closeMenuOverlay() },
                 onOpenInventory = {
@@ -1097,6 +1100,16 @@ fun ExplorationScreen(
                 onShowQuestDetails = { questId ->
                     viewModel.openQuestDetails(questId)
                 },
+                questDetail = uiState.questDetail,
+                onCloseQuestDetails = { viewModel.closeQuestDetails() },
+                onToggleQuestTracking = { viewModel.toggleQuestTracking(it) },
+                partyMemberDetails = uiState.partyMemberDetails,
+                onClosePartyMemberDetails = { viewModel.closePartyMemberDetails() },
+                skillTreeOverlay = uiState.skillTreeOverlay,
+                onCloseSkillTree = { viewModel.closeSkillTreeOverlay() },
+                onUnlockSkill = { viewModel.unlockSkillNode(it) },
+                onCloseMapLegend = { viewModel.closeMapLegend() },
+                onCloseFullMap = { viewModel.closeFullMapOverlay() },
                 craftingViewModel = craftingViewModel,
                 onPlayAudio = onPlayAudio,
                 modifier = Modifier.statusBarsPadding()
@@ -1123,10 +1136,10 @@ fun ExplorationScreen(
                     pendingInventoryItem = null
                     showInventoryTargetDialog = false
                 },
-                backgroundColor = themeColor(activeTheme?.bg, Color.Black).copy(alpha = 0.7f),
-                borderColor = themeColor(activeTheme?.border, Color.White.copy(alpha = 0.3f)),
-                textColor = themeColor(activeTheme?.fg, Color.White),
-                accentColor = themeColor(activeTheme?.accent, Color.White)
+                backgroundColor = FieldMenuDesign.panel.copy(alpha = 0.98f),
+                borderColor = FieldMenuDesign.border.copy(alpha = 0.55f),
+                textColor = FieldMenuDesign.text,
+                accentColor = FieldMenuDesign.cyan
             )
         }
         if (saveLoadMode != null) {
@@ -1153,10 +1166,10 @@ fun ExplorationScreen(
                     }
                 },
                 onDismiss = { saveLoadMode = null },
-                accentColor = themeColor(activeTheme?.accent, Color(0xFF7BE4FF)),
-                panelColor = themeColor(activeTheme?.bg, Color(0xFF0B111A)),
-                borderColor = themeColor(activeTheme?.border, Color.White.copy(alpha = 0.16f)),
-                textColor = themeColor(activeTheme?.fg, Color.White),
+                accentColor = FieldMenuDesign.cyan,
+                panelColor = FieldMenuDesign.panel,
+                borderColor = FieldMenuDesign.border.copy(alpha = 0.45f),
+                textColor = FieldMenuDesign.text,
                 modifier = Modifier
                     .align(Alignment.Center)
                     .zIndex(90f)
@@ -1192,6 +1205,7 @@ fun ExplorationScreen(
                 }
                 MenuToggleButton(
                     isOpen = uiState.isMenuOverlayVisible,
+                    isTutorialBeacon = uiState.isTinkeringTutorialActive,
                     onToggle = {
                         if (uiState.isMenuOverlayVisible) {
                             viewModel.closeMenuOverlay()
@@ -1214,20 +1228,20 @@ fun ExplorationScreen(
             )
         }
 
-        uiState.skillTreeOverlay?.let { overlay ->
+        uiState.skillTreeOverlay?.takeUnless { uiState.isMenuOverlayVisible }?.let { overlay ->
             SkillTreeOverlay(
                 overlay = overlay,
-                theme = activeTheme,
+                theme = null,
                 onClose = { viewModel.closeSkillTreeOverlay() },
                 onUnlockSkill = { viewModel.unlockSkillNode(it) }
             )
         }
 
-        uiState.partyMemberDetails?.let { details ->
+        uiState.partyMemberDetails?.takeUnless { uiState.isMenuOverlayVisible }?.let { details ->
             PartyMemberDetailsDialog(
                 details = details,
-                accentColor = themeColor(activeTheme?.accent, Color(0xFF7BE4FF)),
-                borderColor = themeColor(activeTheme?.border, Color.White.copy(alpha = 0.3f)),
+                accentColor = FieldMenuDesign.cyan,
+                borderColor = FieldMenuDesign.border,
                 onDismiss = { viewModel.closePartyMemberDetails() }
             )
         }
@@ -1271,14 +1285,14 @@ fun ExplorationScreen(
             )
         }
 
-        if (uiState.isFullMapVisible) {
+        if (uiState.isFullMapVisible && !uiState.isMenuOverlayVisible) {
             FullMapOverlay(
                 fullMap = uiState.fullMap,
                 onClose = { viewModel.closeFullMapOverlay() }
             )
         }
 
-        if (uiState.isMapLegendVisible) {
+        if (uiState.isMapLegendVisible && !uiState.isMenuOverlayVisible) {
             MapLegendOverlay(
                 onClose = { viewModel.closeMapLegend() },
                 modifier = Modifier
@@ -1357,7 +1371,7 @@ fun ExplorationScreen(
             }
         )
 
-        uiState.questDetail?.let { detail ->
+        uiState.questDetail?.takeUnless { uiState.isMenuOverlayVisible }?.let { detail ->
             QuestDetailSheet(
                 detail = detail,
                 accentColor = questAccentColor,
@@ -1500,6 +1514,7 @@ private fun QuestDetailSheet(
     accentColor: Color,
     onClose: () -> Unit,
     onToggleTrack: (String) -> Unit,
+    embedded: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     val scrollState = rememberScrollState()
@@ -1517,7 +1532,7 @@ private fun QuestDetailSheet(
         )
     }
     Surface(
-        modifier = modifier
+        modifier = if (embedded) modifier.fillMaxWidth() else modifier
             .fillMaxWidth(0.92f)
             .fillMaxHeight(0.85f),
         shape = RoundedCornerShape(16.dp),
@@ -1605,12 +1620,14 @@ private fun QuestDetailSheet(
                         }
                     }
                 }
-                IconButton(onClick = onClose) {
-                    Icon(
-                        imageVector = Icons.Filled.Close,
-                        contentDescription = "Close",
-                        tint = Color.White.copy(alpha = 0.74f)
-                    )
+                if (!embedded) {
+                    IconButton(onClick = onClose) {
+                        Icon(
+                            imageVector = Icons.Filled.Close,
+                            contentDescription = "Close",
+                            tint = Color.White.copy(alpha = 0.74f)
+                        )
+                    }
                 }
             }
             HorizontalDivider(color = accentColor.copy(alpha = 0.22f))
@@ -1702,13 +1719,15 @@ private fun QuestDetailSheet(
                 ) {
                     Text(trackLabel)
                 }
-                OutlinedButton(
-                    onClick = onClose,
-                    modifier = Modifier.weight(1f),
-                    shape = RoundedCornerShape(10.dp),
-                    border = BorderStroke(1.dp, Color.White.copy(alpha = 0.22f))
-                ) {
-                    Text("Close")
+                if (!embedded) {
+                    OutlinedButton(
+                        onClick = onClose,
+                        modifier = Modifier.weight(1f),
+                        shape = RoundedCornerShape(10.dp),
+                        border = BorderStroke(1.dp, Color.White.copy(alpha = 0.22f))
+                    ) {
+                        Text("Close")
+                    }
                 }
             }
         }
@@ -1974,21 +1993,63 @@ private fun MenuOverlay(
     resolveArmorItem: (String) -> Item?,
     onUseInventoryItem: (InventoryPreviewItemUi) -> Unit,
     onShowQuestDetails: (String) -> Unit,
+    questDetail: QuestDetailUi?,
+    onCloseQuestDetails: () -> Unit,
+    onToggleQuestTracking: (String) -> Unit,
+    partyMemberDetails: PartyMemberDetailsUi?,
+    onClosePartyMemberDetails: () -> Unit,
+    skillTreeOverlay: SkillTreeOverlayUi?,
+    onCloseSkillTree: () -> Unit,
+    onUnlockSkill: (String) -> Unit,
+    onCloseMapLegend: () -> Unit,
+    onCloseFullMap: () -> Unit,
     craftingViewModel: CraftingViewModel? = null,
+    isTinkeringTutorialActive: Boolean = false,
     onPlayAudio: (String) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
-    val themeBase = themeColor(theme?.bg, Color(0xFF071018))
-    val panelColor = Color(
-        red = themeBase.red * 0.45f,
-        green = themeBase.green * 0.45f,
-        blue = themeBase.blue * 0.45f,
-        alpha = 0.97f
-    )
-    val panelBorder = Color(0xFF7FE6FF)
-    val accentColor = Color(0xFF7FE6FF)
-    val warmAccent = Color(0xFFFFC857)
+    val panelColor = FieldMenuDesign.shell.copy(alpha = 0.98f)
+    val panelBorder = FieldMenuDesign.border
+    val accentColor = FieldMenuDesign.cyan
+    val warmAccent = FieldMenuDesign.gold
+    val roomAtmosphere = themeColor(theme?.accent, accentColor)
+    var detailKind by rememberSaveable { mutableStateOf<MenuDetailKind?>(null) }
+    var detailId by rememberSaveable { mutableStateOf<String?>(null) }
+    var detailItem by remember { mutableStateOf<InventoryPreviewItemUi?>(null) }
+    var rootScrollPosition by rememberSaveable { mutableIntStateOf(0) }
     val sheetScroll = rememberScrollState()
+    val menuScope = rememberCoroutineScope()
+
+    fun openDetail(
+        kind: MenuDetailKind,
+        id: String? = null,
+        item: InventoryPreviewItemUi? = null,
+        onOpen: () -> Unit = {}
+    ) {
+        rootScrollPosition = sheetScroll.value
+        detailKind = kind
+        detailId = id
+        detailItem = item
+        menuScope.launch { sheetScroll.scrollTo(0) }
+        onOpen()
+    }
+
+    fun closeDetail() {
+        when (detailKind) {
+            MenuDetailKind.QUEST -> onCloseQuestDetails()
+            MenuDetailKind.PARTY_MEMBER -> onClosePartyMemberDetails()
+            MenuDetailKind.SKILL_TREE -> onCloseSkillTree()
+            MenuDetailKind.MAP_LEGEND -> onCloseMapLegend()
+            MenuDetailKind.FULL_MAP -> onCloseFullMap()
+            else -> Unit
+        }
+        detailKind = null
+        detailId = null
+        detailItem = null
+        menuScope.launch { sheetScroll.scrollTo(rootScrollPosition) }
+    }
+
+    BackHandler(enabled = detailKind != null) { closeDetail() }
     val cornerRadius = 14.dp
     val borderWidth = 1.dp
     val borderColor = panelBorder.copy(alpha = 0.62f)
@@ -2054,6 +2115,7 @@ private fun MenuOverlay(
                                 Color.Transparent,
                                 accentColor.copy(alpha = 0.72f),
                                 warmAccent.copy(alpha = 0.34f),
+                                roomAtmosphere.copy(alpha = 0.06f),
                                 Color.Transparent
                             )
                         )
@@ -2086,13 +2148,19 @@ private fun MenuOverlay(
                                 color = warmAccent.copy(alpha = 0.74f)
                             )
                             Text(
-                                text = selectedTab.label(),
+                                text = menuDetailTitle(
+                                    detailKind = detailKind,
+                                    selectedTab = selectedTab
+                                ),
                                 style = MaterialTheme.typography.titleLarge.copy(fontSize = 30.sp, lineHeight = 34.sp),
                                 color = warmAccent
                             )
                         }
                         Surface(
-                            onClick = onClose,
+                            onClick = {
+                                if (detailKind != null) closeDetail()
+                                onClose()
+                            },
                             shape = RoundedCornerShape(10.dp),
                             color = Color(0xFF061018).copy(alpha = 0.42f),
                             border = BorderStroke(1.dp, accentColor.copy(alpha = 0.45f))
@@ -2117,15 +2185,23 @@ private fun MenuOverlay(
                         }
                     }
 
-                    MenuTabRow(
-                        selectedTab = selectedTab,
-                        onSelectTab = onSelectTab,
-                        activeQuestsCount = activeQuests.size,
-                        accentColor = accentColor,
-                        borderColor = panelBorder
-                    )
+                    if (detailKind == null) {
+                        MenuTabRow(
+                            selectedTab = selectedTab,
+                            onSelectTab = onSelectTab,
+                            accentColor = accentColor,
+                            borderColor = panelBorder,
+                            isTinkeringTutorialActive = isTinkeringTutorialActive
+                        )
+                    } else {
+                        MenuDetailNavigationBar(
+                            parentLabel = selectedTab.label(),
+                            onBack = ::closeDetail,
+                            accentColor = accentColor
+                        )
+                    }
 
-                    MenuTabContentArea(
+                    if (detailKind == null) MenuTabContentArea(
                         tab = selectedTab,
                         accentColor = accentColor,
                         borderColor = panelBorder,
@@ -2141,8 +2217,12 @@ private fun MenuOverlay(
                         onMenuAction = onMenuAction,
                         onOpenInventory = onOpenInventory,
                         onOpenJournal = onOpenJournal,
-                        onOpenMapLegend = onOpenMapLegend,
-                        onOpenFullMap = onOpenFullMap,
+                        onOpenMapLegend = {
+                            openDetail(MenuDetailKind.MAP_LEGEND, onOpen = onOpenMapLegend)
+                        },
+                        onOpenFullMap = {
+                            openDetail(MenuDetailKind.FULL_MAP, onOpen = onOpenFullMap)
+                        },
                         onOpenFieldKit = onOpenFieldKit,
                         onMusicVolumeChange = onMusicVolumeChange,
                         onSfxVolumeChange = onSfxVolumeChange,
@@ -2152,8 +2232,16 @@ private fun MenuOverlay(
                         onQuickSave = onQuickSave,
                         onSaveGame = onSaveGame,
                         onLoadGame = onLoadGame,
-                        onShowSkillTree = onShowSkillTree,
-                        onShowDetails = onShowDetails,
+                        onShowSkillTree = { memberId ->
+                            openDetail(MenuDetailKind.SKILL_TREE, id = memberId) {
+                                onShowSkillTree(memberId)
+                            }
+                        },
+                        onShowDetails = { memberId ->
+                            openDetail(MenuDetailKind.PARTY_MEMBER, id = memberId) {
+                                onShowDetails(memberId)
+                            }
+                        },
                         inventoryItems = inventoryItems,
                         equippedItems = equippedItems,
                         completedMilestones = completedMilestones,
@@ -2168,10 +2256,34 @@ private fun MenuOverlay(
                         onEquipArmor = onEquipArmor,
                         resolveArmorItem = resolveArmorItem,
                         onUseInventoryItem = onUseInventoryItem,
-                        onShowQuestDetails = onShowQuestDetails,
+                        onShowQuestDetails = { questId ->
+                            openDetail(MenuDetailKind.QUEST, id = questId) {
+                                onShowQuestDetails(questId)
+                            }
+                        },
+                        onShowItemDetails = { item ->
+                            openDetail(MenuDetailKind.INVENTORY_ITEM, id = item.id, item = item)
+                        },
                         craftingViewModel = craftingViewModel,
                         onPlayAudio = onPlayAudio,
                         creditsLabel = creditsLabel
+                    ) else MenuNestedDetailContent(
+                        detailKind = detailKind,
+                        detailId = detailId,
+                        detailItem = detailItem,
+                        questDetail = questDetail,
+                        partyMemberDetails = partyMemberDetails,
+                        skillTreeOverlay = skillTreeOverlay,
+                        fullMap = fullMap,
+                        accentColor = accentColor,
+                        borderColor = panelBorder,
+                        onBack = ::closeDetail,
+                        onToggleQuestTracking = onToggleQuestTracking,
+                        onUnlockSkill = onUnlockSkill,
+                        onUseItem = { item ->
+                            closeDetail()
+                            onUseInventoryItem(item)
+                        }
                     )
                 }
             }
@@ -2217,13 +2329,137 @@ private fun MenuOverlay(
     }
 }
 
+private fun menuDetailTitle(
+    detailKind: MenuDetailKind?,
+    selectedTab: MenuTab
+): String = when (detailKind) {
+    MenuDetailKind.QUEST -> "Quest Details"
+    MenuDetailKind.INVENTORY_ITEM -> "Item Details"
+    MenuDetailKind.PARTY_MEMBER -> "Party Details"
+    MenuDetailKind.SKILL_TREE -> "Skill Tree"
+    MenuDetailKind.FULL_MAP -> "Full Map"
+    MenuDetailKind.MAP_LEGEND -> "Map Legend"
+    null -> selectedTab.label()
+}
+
+@Composable
+private fun MenuDetailNavigationBar(
+    parentLabel: String,
+    onBack: () -> Unit,
+    accentColor: Color
+) {
+    Surface(
+        onClick = onBack,
+        shape = RoundedCornerShape(FieldMenuDesign.controlRadius),
+        color = FieldMenuDesign.panel.copy(alpha = 0.72f),
+        border = BorderStroke(1.dp, accentColor.copy(alpha = 0.38f)),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 14.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            Text("‹", color = accentColor, style = MaterialTheme.typography.titleLarge)
+            Column {
+                Text("BACK", color = accentColor, style = MaterialTheme.typography.labelSmall)
+                Text(parentLabel, color = FieldMenuDesign.text, style = MaterialTheme.typography.labelLarge)
+            }
+        }
+    }
+}
+
+@Composable
+private fun MenuNestedDetailContent(
+    detailKind: MenuDetailKind?,
+    detailId: String?,
+    detailItem: InventoryPreviewItemUi?,
+    questDetail: QuestDetailUi?,
+    partyMemberDetails: PartyMemberDetailsUi?,
+    skillTreeOverlay: SkillTreeOverlayUi?,
+    fullMap: FullMapUiState?,
+    accentColor: Color,
+    borderColor: Color,
+    onBack: () -> Unit,
+    onToggleQuestTracking: (String) -> Unit,
+    onUnlockSkill: (String) -> Unit,
+    onUseItem: (InventoryPreviewItemUi) -> Unit
+) {
+    when (detailKind) {
+        MenuDetailKind.QUEST -> if (questDetail?.id.equals(detailId, ignoreCase = true)) {
+            QuestDetailSheet(
+                detail = questDetail!!,
+                accentColor = accentColor,
+                onClose = onBack,
+                onToggleTrack = onToggleQuestTracking,
+                embedded = true,
+                modifier = Modifier.heightIn(max = 700.dp)
+            )
+        } else MenuDetailLoading("Loading quest file…", accentColor)
+
+        MenuDetailKind.INVENTORY_ITEM -> if (detailItem != null) {
+            InventoryItemDetailsContent(
+                item = detailItem,
+                accentColor = accentColor,
+                borderColor = borderColor,
+                onUse = detailItem.effect?.let { { onUseItem(detailItem) } }
+            )
+        } else MenuDetailLoading("Item details unavailable.", accentColor)
+
+        MenuDetailKind.PARTY_MEMBER -> if (partyMemberDetails?.id.equals(detailId, ignoreCase = true)) {
+            PartyMemberDetailsContent(
+                details = partyMemberDetails!!,
+                accentColor = accentColor,
+                borderColor = borderColor
+            )
+        } else MenuDetailLoading("Loading party file…", accentColor)
+
+        MenuDetailKind.SKILL_TREE -> if (skillTreeOverlay?.characterId.equals(detailId, ignoreCase = true)) {
+            SkillTreeContent(
+                overlay = skillTreeOverlay!!,
+                accentColor = accentColor,
+                borderColor = borderColor,
+                onUnlockSkill = onUnlockSkill,
+                modifier = Modifier.heightIn(max = 700.dp)
+            )
+        } else MenuDetailLoading("Loading skill tree…", accentColor)
+
+        MenuDetailKind.FULL_MAP -> FullMapOverlay(fullMap = fullMap, onClose = onBack, embedded = true)
+        MenuDetailKind.MAP_LEGEND -> MapLegendOverlay(
+            onClose = onBack,
+            accentColor = accentColor,
+            panelColor = FieldMenuDesign.panel,
+            borderColor = borderColor.copy(alpha = 0.62f),
+            textColor = FieldMenuDesign.text,
+            embedded = true
+        )
+        null -> Unit
+    }
+}
+
+@Composable
+private fun MenuDetailLoading(message: String, accentColor: Color) {
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(FieldMenuDesign.cardRadius),
+        color = FieldMenuDesign.panel,
+        border = BorderStroke(1.dp, accentColor.copy(alpha = 0.35f))
+    ) {
+        Text(
+            text = message,
+            color = FieldMenuDesign.textMuted,
+            modifier = Modifier.padding(24.dp)
+        )
+    }
+}
+
 @Composable
 private fun MenuTabRow(
     selectedTab: MenuTab,
     onSelectTab: (MenuTab) -> Unit,
-    activeQuestsCount: Int,
     accentColor: Color,
-    borderColor: Color
+    borderColor: Color,
+    isTinkeringTutorialActive: Boolean = false
 ) {
     val scrollState = rememberScrollState()
 
@@ -2245,14 +2481,10 @@ private fun MenuTabRow(
         horizontalArrangement = Arrangement.spacedBy(3.dp)
     ) {
         MenuTab.values().forEach { tab ->
-            val hasBadge = when (tab) {
-                MenuTab.JOURNAL -> activeQuestsCount > 0
-                else -> false
-            }
             MenuTabChip(
                 tab = tab,
                 isSelected = tab == selectedTab,
-                hasBadge = hasBadge,
+                isTutorialBeacon = isTinkeringTutorialActive && tab == MenuTab.FIELD_KIT && tab != selectedTab,
                 accentColor = accentColor,
                 borderColor = borderColor,
                 onSelect = { onSelectTab(tab) }
@@ -2265,28 +2497,62 @@ private fun MenuTabRow(
 private fun MenuTabChip(
     tab: MenuTab,
     isSelected: Boolean,
-    hasBadge: Boolean = false,
     accentColor: Color,
     borderColor: Color,
+    isTutorialBeacon: Boolean = false,
     onSelect: () -> Unit
 ) {
-    val background = if (isSelected) {
-        Brush.horizontalGradient(
-            colors = listOf(
-                accentColor.copy(alpha = 0.28f),
-                Color(0xFFFFC857).copy(alpha = 0.12f)
+    val pulseTransition = rememberInfiniteTransition(label = "tab_beacon_pulse")
+    val pulseAlpha by pulseTransition.animateFloat(
+        initialValue = 0.4f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(700, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "pulseAlpha"
+    )
+
+    val background = when {
+        isSelected -> {
+            Brush.horizontalGradient(
+                colors = listOf(
+                    accentColor.copy(alpha = 0.28f),
+                    Color(0xFFFFC857).copy(alpha = 0.12f)
+                )
             )
-        )
-    } else {
-        Brush.horizontalGradient(
-            colors = listOf(Color.Transparent, Color.Transparent)
-        )
+        }
+        isTutorialBeacon -> {
+            Brush.horizontalGradient(
+                colors = listOf(
+                    Color(0xFFFFC857).copy(alpha = 0.25f * pulseAlpha),
+                    Color(0xFFFFC857).copy(alpha = 0.08f)
+                )
+            )
+        }
+        else -> {
+            Brush.horizontalGradient(
+                colors = listOf(Color.Transparent, Color.Transparent)
+            )
+        }
     }
-    val contentColor = if (isSelected) Color.White else accentColor.copy(alpha = 0.78f)
+
+    val chipBorderColor = when {
+        isSelected -> borderColor.copy(alpha = 0.72f)
+        isTutorialBeacon -> Color(0xFFFFC857).copy(alpha = pulseAlpha)
+        else -> Color.Transparent
+    }
+
+    val contentColor = when {
+        isSelected -> Color.White
+        isTutorialBeacon -> Color(0xFFFFC857)
+        else -> accentColor.copy(alpha = 0.78f)
+    }
+
     Surface(
         onClick = onSelect,
         shape = RoundedCornerShape(9.dp),
-        border = BorderStroke(1.dp, borderColor.copy(alpha = if (isSelected) 0.72f else 0.0f)),
+        border = BorderStroke(1.dp, chipBorderColor),
         color = Color.Transparent
     ) {
         Box(
@@ -2300,20 +2566,22 @@ private fun MenuTabChip(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
+                if (isTutorialBeacon) {
+                    Text(
+                        text = "●",
+                        color = Color(0xFFFFC857),
+                        fontSize = 9.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
                 Text(
                     text = tab.label(),
                     color = contentColor,
                     style = MaterialTheme.typography.labelLarge.copy(fontSize = 18.sp, lineHeight = 22.sp),
+                    fontWeight = if (isSelected || isTutorialBeacon) FontWeight.Bold else FontWeight.Medium,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
-                if (hasBadge && !isSelected) {
-                    Box(
-                        modifier = Modifier
-                            .size(6.dp)
-                            .background(Color(0xFFFFC857), CircleShape)
-                    )
-                }
             }
         }
     }
@@ -2460,6 +2728,7 @@ private fun MenuTabContentArea(
     resolveArmorItem: (String) -> Item?,
     onUseInventoryItem: (InventoryPreviewItemUi) -> Unit,
     onShowQuestDetails: (String) -> Unit,
+    onShowItemDetails: (InventoryPreviewItemUi) -> Unit,
     craftingViewModel: CraftingViewModel? = null,
     onPlayAudio: (String) -> Unit = {},
     creditsLabel: String
@@ -2484,6 +2753,7 @@ private fun MenuTabContentArea(
                 onEquipArmor = onEquipArmor,
                 resolveArmorItem = resolveArmorItem,
                 onUseConsumable = onUseInventoryItem,
+                onShowItemDetails = onShowItemDetails,
                 creditsLabel = creditsLabel
             )
             MenuTab.FIELD_KIT -> {
@@ -2581,7 +2851,7 @@ private fun FieldKitTabContent(
                 shape = RoundedCornerShape(10.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Open Tinkering Workbench")
+                Text("Open Tinkering")
             }
         }
     }
@@ -2936,17 +3206,18 @@ private fun FullMapCard(
 @Composable
 private fun FullMapOverlay(
     fullMap: FullMapUiState?,
-    onClose: () -> Unit
+    onClose: () -> Unit,
+    embedded: Boolean = false
 ) {
     Box(
-        modifier = Modifier
+        modifier = (if (embedded) Modifier.fillMaxWidth() else Modifier
             .fillMaxSize()
             .background(Color.Black.copy(alpha = 0.65f))
-            .padding(16.dp),
+            .padding(16.dp)),
         contentAlignment = Alignment.Center
     ) {
         Surface(
-            shape = RoundedCornerShape(28.dp),
+            shape = RoundedCornerShape(if (embedded) FieldMenuDesign.cardRadius else 28.dp),
             tonalElevation = 10.dp,
             color = MaterialTheme.colorScheme.surface.copy(alpha = 0.98f),
             modifier = Modifier.fillMaxWidth()
@@ -2967,8 +3238,10 @@ private fun FullMapOverlay(
                         style = MaterialTheme.typography.titleLarge,
                         color = MaterialTheme.colorScheme.onSurface
                     )
-                    TextButton(onClick = onClose) {
-                        Text("Close")
+                    if (!embedded) {
+                        TextButton(onClick = onClose) {
+                            Text("Close")
+                        }
                     }
                 }
                 if (fullMap == null || fullMap.cells.isEmpty()) {
@@ -3017,11 +3290,13 @@ private fun FullMapOverlay(
                         ) {
                             Text("Recenter")
                         }
-                        Button(
-                            onClick = onClose,
-                            modifier = Modifier.align(Alignment.CenterEnd)
-                        ) {
-                            Text("Done")
+                        if (!embedded) {
+                            Button(
+                                onClick = onClose,
+                                modifier = Modifier.align(Alignment.CenterEnd)
+                            ) {
+                                Text("Done")
+                            }
                         }
                     }
                 }
@@ -3037,7 +3312,8 @@ private fun MapLegendOverlay(
     accentColor: Color,
     panelColor: Color,
     borderColor: Color,
-    textColor: Color
+    textColor: Color,
+    embedded: Boolean = false
 ) {
     val visitedColor = textColor.copy(alpha = 0.7f)
     val discoveredColor = textColor.copy(alpha = 0.4f)
@@ -3048,7 +3324,7 @@ private fun MapLegendOverlay(
     val darkHatchColor = Color.White.copy(alpha = 0.08f)
 
     Box(
-        modifier = modifier
+        modifier = if (embedded) modifier.fillMaxWidth() else modifier
             .background(Color.Black.copy(alpha = 0.65f))
             .padding(horizontal = 24.dp, vertical = 32.dp),
         contentAlignment = Alignment.Center
@@ -3057,7 +3333,7 @@ private fun MapLegendOverlay(
             modifier = Modifier
                 .widthIn(max = 640.dp)
                 .wrapContentHeight(),
-            shape = RoundedCornerShape(24.dp),
+            shape = RoundedCornerShape(if (embedded) FieldMenuDesign.cardRadius else 24.dp),
             color = panelColor,
             border = BorderStroke(1.dp, borderColor),
             tonalElevation = 10.dp
@@ -3168,14 +3444,16 @@ private fun MapLegendOverlay(
                     )
                 }
 
-                Spacer(modifier = Modifier.height(6.dp))
-                Button(
-                    onClick = onClose,
-                    modifier = Modifier.align(Alignment.End),
-                    shape = RoundedCornerShape(999.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = accentColor)
-                ) {
-                    Text("Close", color = textColor)
+                if (!embedded) {
+                    Spacer(modifier = Modifier.height(6.dp))
+                    Button(
+                        onClick = onClose,
+                        modifier = Modifier.align(Alignment.End),
+                        shape = RoundedCornerShape(999.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = accentColor)
+                    ) {
+                        Text("Close", color = textColor)
+                    }
                 }
             }
         }
@@ -3446,13 +3724,28 @@ private fun MenuToggleButton(
     isOpen: Boolean,
     onToggle: () -> Unit,
     modifier: Modifier = Modifier,
-    enabled: Boolean = true
+    enabled: Boolean = true,
+    isTutorialBeacon: Boolean = false
 ) {
     val description = if (isOpen) "Close menu" else "Open menu"
     val baseAlpha = if (isOpen) 0.75f else 1f
     val alpha = if (enabled) baseAlpha else baseAlpha * 0.35f
     val accentColor = Color(0xFF7FE6FF)
     val warmColor = Color(0xFFFFC857)
+
+    val pulseTransition = rememberInfiniteTransition(label = "menu_btn_pulse")
+    val pulseAlpha by pulseTransition.animateFloat(
+        initialValue = 0.45f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(750, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "pulseAlpha"
+    )
+
+    val showBeacon = isTutorialBeacon && !isOpen
+
     Surface(
         modifier = modifier
             .height(54.dp)
@@ -3462,18 +3755,29 @@ private fun MenuToggleButton(
             .clickable(enabled = enabled, onClick = onToggle),
         shape = RoundedCornerShape(14.dp),
         color = Color(0xFF061018).copy(alpha = 0.58f),
-        border = BorderStroke(1.dp, accentColor.copy(alpha = if (isOpen) 0.86f else 0.48f))
+        border = BorderStroke(
+            if (showBeacon) 1.5.dp else 1.dp,
+            if (showBeacon) warmColor.copy(alpha = pulseAlpha) else accentColor.copy(alpha = if (isOpen) 0.86f else 0.48f)
+        )
     ) {
         Row(
             modifier = Modifier
                 .height(54.dp)
                 .background(
                     Brush.horizontalGradient(
-                        colors = listOf(
-                            accentColor.copy(alpha = if (isOpen) 0.18f else 0.10f),
-                            warmColor.copy(alpha = if (isOpen) 0.08f else 0.04f),
-                            Color.Transparent
-                        )
+                        colors = if (showBeacon) {
+                            listOf(
+                                warmColor.copy(alpha = 0.22f * pulseAlpha),
+                                accentColor.copy(alpha = 0.10f),
+                                Color.Transparent
+                            )
+                        } else {
+                            listOf(
+                                accentColor.copy(alpha = if (isOpen) 0.18f else 0.10f),
+                                warmColor.copy(alpha = if (isOpen) 0.08f else 0.04f),
+                                Color.Transparent
+                            )
+                        }
                     )
                 )
                 .padding(horizontal = 14.dp),
@@ -3490,7 +3794,7 @@ private fun MenuToggleButton(
                 val endX = size.width * 0.88f
                 listOf(0.28f, 0.50f, 0.72f).forEach { yFactor ->
                     drawLine(
-                        color = accentColor,
+                        color = if (showBeacon) warmColor else accentColor,
                         start = Offset(startX, size.height * yFactor),
                         end = Offset(endX, size.height * yFactor),
                         strokeWidth = strokeWidth,
@@ -3499,8 +3803,8 @@ private fun MenuToggleButton(
                 }
             }
             Text(
-                text = "MENU",
-                color = Color.White.copy(alpha = if (enabled) 0.94f else 0.55f),
+                text = if (showBeacon) "TINKER" else "MENU",
+                color = if (showBeacon) warmColor else Color.White.copy(alpha = if (enabled) 0.94f else 0.55f),
                 style = MaterialTheme.typography.labelLarge,
                 fontWeight = FontWeight.Black,
                 letterSpacing = 0.sp

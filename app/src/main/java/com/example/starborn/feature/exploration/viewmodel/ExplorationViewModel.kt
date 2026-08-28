@@ -1571,7 +1571,10 @@ class ExplorationViewModel(
                         equippedWeapons = newState.equippedWeapons,
                         unlockedArmors = newState.unlockedArmors,
                         equippedArmors = newState.equippedArmors,
-                        skillTreeOverlay = overlay
+                        skillTreeOverlay = overlay,
+                        isTinkeringTutorialActive = tutorialsEnabled &&
+                            "ms_w1_mq01_workshop_briefed" in newState.completedMilestones &&
+                            "ms_w1_mq01_cryo_repaired" !in newState.completedMilestones
                     )
                 }
                 updateActionHints(_uiState.value.currentRoom)
@@ -2850,17 +2853,30 @@ class ExplorationViewModel(
     fun openMenuOverlay(defaultTab: MenuTab? = null) {
         viewModelScope.launch(dispatchers.main) {
             playUiCue("menu_open")
-            val tab = defaultTab ?: lastMenuTab
+            val isTinkeringTut = _uiState.value.isTinkeringTutorialActive
+            val tab = defaultTab ?: if (isTinkeringTut) MenuTab.FIELD_KIT else lastMenuTab
             lastMenuTab = tab
             _uiState.update { it.copy(isMenuOverlayVisible = true, menuTab = tab) }
             maybeShowInventoryTutorial(tab)
+            if (tab == MenuTab.FIELD_KIT) {
+                triggerPlayerAction("tinkering_screen_entered")
+            }
         }
     }
 
     fun closeMenuOverlay() {
         viewModelScope.launch(dispatchers.main) {
             playUiCue("menu_close")
-            _uiState.update { it.copy(isMenuOverlayVisible = false) }
+            _uiState.update {
+                it.copy(
+                    isMenuOverlayVisible = false,
+                    questDetail = null,
+                    partyMemberDetails = null,
+                    skillTreeOverlay = null,
+                    isMapLegendVisible = false,
+                    isFullMapVisible = false
+                )
+            }
         }
     }
 
@@ -3183,6 +3199,9 @@ class ExplorationViewModel(
         lastMenuTab = tab
         _uiState.update { it.copy(menuTab = tab) }
         maybeShowInventoryTutorial(tab)
+        if (tab == MenuTab.FIELD_KIT) {
+            triggerPlayerAction("tinkering_screen_entered")
+        }
     }
 
     fun updateMusicVolume(volume: Float) {
@@ -3880,11 +3899,7 @@ class ExplorationViewModel(
     }
 
     fun openTinkeringShortcut() {
-        handleTinkeringAction(
-            label = "Tinkering Table",
-            shopId = null,
-            lockedMessage = null
-        )
+        openMenuOverlay(MenuTab.FIELD_KIT)
     }
 
     fun collectGroundItem(itemId: String) {

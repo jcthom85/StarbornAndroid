@@ -1,6 +1,8 @@
 package com.example.starborn.feature.exploration.ui.tabs
 
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -26,6 +28,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -41,6 +44,7 @@ import com.example.starborn.feature.crafting.TinkeringFilter
 import com.example.starborn.feature.crafting.TinkeringItemChoice
 import com.example.starborn.feature.crafting.TinkeringRecipeUi
 import com.example.starborn.feature.crafting.TinkeringRequirementStatus
+import com.example.starborn.feature.crafting.TinkeringTutorialStep
 import com.example.starborn.feature.exploration.ui.MenuSectionCard
 import com.example.starborn.feature.exploration.ui.components.previewItemIconRes
 
@@ -59,7 +63,7 @@ fun TinkerTabContent(
     var activeSlot by remember { mutableStateOf(ActiveBenchSlot.BASE) }
 
     MenuSectionCard(
-        title = "Tinkering & Assembly",
+        title = "Tinkering",
         accentColor = accentColor,
         borderColor = borderColor
     ) {
@@ -67,6 +71,14 @@ fun TinkerTabContent(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
+            // Tutorial Banner
+            if (state.isTutorialActive && state.tutorialStep != null) {
+                TinkeringTutorialBanner(
+                    step = state.tutorialStep!!,
+                    accentColor = accentColor
+                )
+            }
+
             // Mode Sub-Tab Toggles
             TinkerModeToggle(
                 current = mode,
@@ -84,6 +96,7 @@ fun TinkerTabContent(
                         activeSlot = activeSlot,
                         accentColor = accentColor,
                         borderColor = borderColor,
+                        tutorialStep = if (state.isTutorialActive) state.tutorialStep else null,
                         onSelectSlot = { activeSlot = it },
                         onClearSlot = { slot ->
                             when (slot) {
@@ -160,6 +173,155 @@ fun TinkerTabContent(
 }
 
 @Composable
+private fun TinkeringTutorialBanner(
+    step: TinkeringTutorialStep,
+    accentColor: Color,
+    modifier: Modifier = Modifier
+) {
+    val transition = rememberInfiniteTransition(label = "tut_banner_pulse")
+    val glowAlpha by transition.animateFloat(
+        initialValue = 0.4f,
+        targetValue = 0.95f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(1200, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "glowAlpha"
+    )
+
+    val (stepLabel, instructionText) = when (step) {
+        TinkeringTutorialStep.SLOT_BASE ->
+            "STEP 1/3" to "Tap your damaged Cryo-Inductor in the tray below to place it into the Base socket."
+        TinkeringTutorialStep.SLOT_COMPONENT ->
+            "STEP 2/3" to "Tap Scrap Metal in your tray to supply replacement conduit alloy for the cold loop."
+        TinkeringTutorialStep.SYNTHESIZE ->
+            "STEP 3/3" to "Blueprint discovered! Tap SYNTHESIZE to calibrate and seal the cold loop."
+        TinkeringTutorialStep.COMPLETE ->
+            "COMPLETED" to "Cold loop repaired! Nova unlocked Cryo Vent."
+    }
+
+    Surface(
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(10.dp),
+        color = Color(0xFF051722).copy(alpha = 0.95f),
+        border = BorderStroke(1.5.dp, Color(0xFFFFC857).copy(alpha = glowAlpha))
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(32.dp)
+                    .clip(CircleShape)
+                    .background(Color(0xFFFFC857).copy(alpha = 0.2f))
+                    .border(1.dp, Color(0xFFFFC857), CircleShape),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Build,
+                    contentDescription = null,
+                    tint = Color(0xFFFFC857),
+                    modifier = Modifier.size(16.dp)
+                )
+            }
+            Column(modifier = Modifier.weight(1f)) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    Text(
+                        text = "TINKERING TUTORIAL",
+                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold, letterSpacing = 1.sp),
+                        color = Color(0xFFFFC857)
+                    )
+                    Surface(
+                        shape = RoundedCornerShape(4.dp),
+                        color = Color(0xFFFFC857).copy(alpha = 0.25f),
+                        border = BorderStroke(1.dp, Color(0xFFFFC857).copy(alpha = 0.5f))
+                    ) {
+                        Text(
+                            text = stepLabel,
+                            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.ExtraBold, fontSize = 9.sp),
+                            color = Color(0xFFFFE082),
+                            modifier = Modifier.padding(horizontal = 5.dp, vertical = 1.dp)
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.height(2.dp))
+                Text(
+                    text = instructionText,
+                    style = MaterialTheme.typography.bodySmall.copy(fontSize = 11.sp, lineHeight = 15.sp),
+                    color = Color.White.copy(alpha = 0.95f)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun TutorialGuideArrow(
+    isVertical: Boolean = true,
+    color: Color = Color(0xFFFFC857)
+) {
+    val transition = rememberInfiniteTransition(label = "arrow_bounce")
+    val offset by transition.animateFloat(
+        initialValue = -3f,
+        targetValue = 3f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(550, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "offset"
+    )
+    Text(
+        text = if (isVertical) "▲" else "►",
+        style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold, fontSize = 12.sp),
+        color = color,
+        modifier = Modifier.offset(
+            x = if (!isVertical) offset.dp else 0.dp,
+            y = if (isVertical) offset.dp else 0.dp
+        )
+    )
+}
+
+@Composable
+fun TutorialSparkleCanvas(
+    modifier: Modifier = Modifier,
+    particleCount: Int = 6,
+    color: Color = Color(0xFFFFC857)
+) {
+    val transition = rememberInfiniteTransition(label = "sparkles")
+    val time by transition.animateFloat(
+        initialValue = 0f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(1800, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart
+        ),
+        label = "time"
+    )
+
+    Canvas(modifier = modifier.fillMaxSize()) {
+        val width = size.width
+        val height = size.height
+        for (i in 0 until particleCount) {
+            val phase = (time + i.toFloat() / particleCount) % 1f
+            val x = (Math.sin(phase * Math.PI * 2 + i * 1.7).toFloat() * 0.35f + 0.5f) * width
+            val y = (1f - phase) * height
+            val alpha = (Math.sin(phase * Math.PI).toFloat()).coerceIn(0f, 1f)
+            val radius = 2.dp.toPx() * (1f - phase * 0.4f)
+            drawCircle(
+                color = color.copy(alpha = alpha * 0.85f),
+                radius = radius,
+                center = Offset(x, y)
+            )
+        }
+    }
+}
+
+@Composable
 private fun TinkerModeToggle(
     current: TinkerTabMode,
     onSelect: (TinkerTabMode) -> Unit,
@@ -169,15 +331,33 @@ private fun TinkerModeToggle(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(50.dp))
-            .background(Color(0xFF040A10).copy(alpha = 0.6f))
-            .border(BorderStroke(1.dp, borderColor.copy(alpha = 0.45f)), RoundedCornerShape(50.dp))
-            .padding(3.dp),
-        horizontalArrangement = Arrangement.spacedBy(3.dp)
+            .clip(RoundedCornerShape(8.dp))
+            .background(Color(0xFF081420).copy(alpha = 0.6f))
+            .border(1.dp, borderColor.copy(alpha = 0.25f), RoundedCornerShape(8.dp))
+            .padding(4.dp),
+        horizontalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        TinkerModeButton("Workbench", current == TinkerTabMode.WORKBENCH, accentColor, { onSelect(TinkerTabMode.WORKBENCH) }, Modifier.weight(1f))
-        TinkerModeButton("Schematics", current == TinkerTabMode.SCHEMATICS, accentColor, { onSelect(TinkerTabMode.SCHEMATICS) }, Modifier.weight(1f))
-        TinkerModeButton("Scrap", current == TinkerTabMode.SCRAP, accentColor, { onSelect(TinkerTabMode.SCRAP) }, Modifier.weight(1f))
+        TinkerModeButton(
+            label = "Tinker",
+            selected = current == TinkerTabMode.WORKBENCH,
+            accentColor = accentColor,
+            onClick = { onSelect(TinkerTabMode.WORKBENCH) },
+            modifier = Modifier.weight(1f)
+        )
+        TinkerModeButton(
+            label = "Schematics",
+            selected = current == TinkerTabMode.SCHEMATICS,
+            accentColor = accentColor,
+            onClick = { onSelect(TinkerTabMode.SCHEMATICS) },
+            modifier = Modifier.weight(1f)
+        )
+        TinkerModeButton(
+            label = "Scrap",
+            selected = current == TinkerTabMode.SCRAP,
+            accentColor = accentColor,
+            onClick = { onSelect(TinkerTabMode.SCRAP) },
+            modifier = Modifier.weight(1f)
+        )
     }
 }
 
@@ -189,25 +369,23 @@ private fun TinkerModeButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val background = if (selected) accentColor.copy(alpha = 0.22f) else Color.Transparent
     Surface(
+        onClick = onClick,
         modifier = modifier
-            .clip(RoundedCornerShape(40.dp))
-            .clickable { onClick() },
-        color = background,
-        shape = RoundedCornerShape(40.dp)
+            .clip(RoundedCornerShape(6.dp))
+            .height(34.dp),
+        shape = RoundedCornerShape(6.dp),
+        color = if (selected) accentColor.copy(alpha = 0.25f) else Color.Transparent,
+        border = if (selected) BorderStroke(1.dp, accentColor) else null
     ) {
         Box(
-            modifier = Modifier.padding(vertical = 7.dp),
+            modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
             Text(
                 text = label,
-                style = MaterialTheme.typography.labelMedium.copy(
-                    fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,
-                    fontSize = 12.sp
-                ),
-                color = if (selected) Color.White else Color.White.copy(alpha = 0.7f)
+                style = MaterialTheme.typography.titleSmall,
+                color = if (selected) Color.White else Color.White.copy(alpha = 0.8f)
             )
         }
     }
@@ -221,6 +399,7 @@ private fun WorkbenchTerminalView(
     activeSlot: ActiveBenchSlot,
     accentColor: Color,
     borderColor: Color,
+    tutorialStep: TinkeringTutorialStep?,
     onSelectSlot: (ActiveBenchSlot) -> Unit,
     onClearSlot: (ActiveBenchSlot) -> Unit,
     onClearBench: () -> Unit,
@@ -230,6 +409,10 @@ private fun WorkbenchTerminalView(
 ) {
     val preview = bench.preview
     val hasItems = bench.mainItemId != null || bench.componentIds.any { it.isNotBlank() }
+
+    val isBaseTutorialTarget = tutorialStep == TinkeringTutorialStep.SLOT_BASE
+    val isCompTutorialTarget = tutorialStep == TinkeringTutorialStep.SLOT_COMPONENT
+    val isSynthTutorialTarget = tutorialStep == TinkeringTutorialStep.SYNTHESIZE
 
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         // TOP CHAMBER: Interactive Sockets + Reaction Result
@@ -294,6 +477,7 @@ private fun WorkbenchTerminalView(
                         itemName = bench.mainItemName,
                         itemId = bench.mainItemId,
                         isActive = activeSlot == ActiveBenchSlot.BASE,
+                        isTutorialHighlighted = isBaseTutorialTarget,
                         accentColor = accentColor,
                         borderColor = borderColor,
                         onClick = { onSelectSlot(ActiveBenchSlot.BASE) },
@@ -310,6 +494,7 @@ private fun WorkbenchTerminalView(
                         itemName = bench.componentNames.getOrNull(0)?.takeIf { it.isNotBlank() },
                         itemId = bench.componentIds.getOrNull(0)?.takeIf { it.isNotBlank() },
                         isActive = activeSlot == ActiveBenchSlot.COMPONENT_1,
+                        isTutorialHighlighted = isCompTutorialTarget,
                         accentColor = accentColor,
                         borderColor = borderColor,
                         onClick = { onSelectSlot(ActiveBenchSlot.COMPONENT_1) },
@@ -326,6 +511,7 @@ private fun WorkbenchTerminalView(
                         itemName = bench.componentNames.getOrNull(1)?.takeIf { it.isNotBlank() },
                         itemId = bench.componentIds.getOrNull(1)?.takeIf { it.isNotBlank() },
                         isActive = activeSlot == ActiveBenchSlot.COMPONENT_2,
+                        isTutorialHighlighted = false,
                         accentColor = accentColor,
                         borderColor = borderColor,
                         onClick = { onSelectSlot(ActiveBenchSlot.COMPONENT_2) },
@@ -340,8 +526,8 @@ private fun WorkbenchTerminalView(
                     shape = RoundedCornerShape(10.dp),
                     color = if (preview != null) accentColor.copy(alpha = 0.12f) else Color(0xFF03070C).copy(alpha = 0.6f),
                     border = BorderStroke(
-                        1.dp,
-                        if (preview != null) Color(0xFFFFC857).copy(alpha = 0.6f) else borderColor.copy(alpha = 0.2f)
+                        if (isSynthTutorialTarget) 1.5.dp else 1.dp,
+                        if (isSynthTutorialTarget) Color(0xFFFFC857) else if (preview != null) Color(0xFFFFC857).copy(alpha = 0.6f) else borderColor.copy(alpha = 0.2f)
                     )
                 ) {
                     Column(
@@ -371,28 +557,41 @@ private fun WorkbenchTerminalView(
                                     }
                                 }
                                 Spacer(modifier = Modifier.width(8.dp))
-                                Button(
-                                    onClick = onAssemble,
-                                    enabled = bench.canCraftSelection,
-                                    shape = RoundedCornerShape(8.dp),
-                                    colors = ButtonDefaults.buttonColors(
-                                        containerColor = Color(0xFFFFC857),
-                                        contentColor = Color.Black,
-                                        disabledContainerColor = Color.White.copy(alpha = 0.08f),
-                                        disabledContentColor = Color.White.copy(alpha = 0.3f)
-                                    ),
-                                    contentPadding = PaddingValues(horizontal = 14.dp, vertical = 7.dp)
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Filled.Build,
-                                        contentDescription = null,
-                                        modifier = Modifier.size(13.dp)
-                                    )
-                                    Spacer(modifier = Modifier.width(5.dp))
-                                    Text(
-                                        text = "SYNTHESIZE",
-                                        style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold)
-                                    )
+                                Box(contentAlignment = Alignment.Center) {
+                                    if (isSynthTutorialTarget) {
+                                        TutorialSparkleCanvas(
+                                            modifier = Modifier.matchParentSize(),
+                                            particleCount = 5
+                                        )
+                                    }
+                                    Button(
+                                        onClick = onAssemble,
+                                        enabled = bench.canCraftSelection,
+                                        shape = RoundedCornerShape(8.dp),
+                                        colors = ButtonDefaults.buttonColors(
+                                            containerColor = Color(0xFFFFC857),
+                                            contentColor = Color.Black,
+                                            disabledContainerColor = Color.White.copy(alpha = 0.08f),
+                                            disabledContentColor = Color.White.copy(alpha = 0.3f)
+                                        ),
+                                        border = if (isSynthTutorialTarget) BorderStroke(1.5.dp, Color.White) else null,
+                                        contentPadding = PaddingValues(horizontal = 14.dp, vertical = 7.dp)
+                                    ) {
+                                        if (isSynthTutorialTarget) {
+                                            TutorialGuideArrow(isVertical = false, color = Color.Black)
+                                            Spacer(modifier = Modifier.width(4.dp))
+                                        }
+                                        Icon(
+                                            imageVector = Icons.Filled.Build,
+                                            contentDescription = null,
+                                            modifier = Modifier.size(13.dp)
+                                        )
+                                        Spacer(modifier = Modifier.width(5.dp))
+                                        Text(
+                                            text = "SYNTHESIZE",
+                                            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold)
+                                        )
+                                    }
                                 }
                             }
                             if (bench.requirements.isNotEmpty()) {
@@ -470,10 +669,13 @@ private fun WorkbenchTerminalView(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     items(availableItems, key = { it.id }) { item ->
+                        val isItemTutorialTarget = (isBaseTutorialTarget && item.id == "cryo_inductor") ||
+                            (isCompTutorialTarget && item.id == "scrap_metal")
                         InventoryMaterialChip(
                             item = item,
                             accentColor = accentColor,
                             borderColor = borderColor,
+                            isTutorialTarget = isItemTutorialTarget,
                             onClick = { onItemTapped(item.id) }
                         )
                     }
@@ -541,6 +743,7 @@ private fun BenchSocket(
     itemName: String?,
     itemId: String?,
     isActive: Boolean,
+    isTutorialHighlighted: Boolean,
     accentColor: Color,
     borderColor: Color,
     onClick: () -> Unit,
@@ -548,98 +751,123 @@ private fun BenchSocket(
     modifier: Modifier = Modifier
 ) {
     val filled = !itemName.isNullOrBlank()
+    val pulseTransition = rememberInfiniteTransition(label = "socket_pulse")
+    val pulseAlpha by pulseTransition.animateFloat(
+        initialValue = 0.4f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(800, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "pulseAlpha"
+    )
+
     val socketBorderColor = when {
+        isTutorialHighlighted -> Color(0xFFFFC857).copy(alpha = pulseAlpha)
         isActive -> Color(0xFFFFC857)
         filled -> accentColor.copy(alpha = 0.7f)
         else -> borderColor.copy(alpha = 0.3f)
     }
     val background = when {
+        isTutorialHighlighted -> Color(0xFFFFC857).copy(alpha = 0.18f)
         isActive -> Color(0xFFFFC857).copy(alpha = 0.12f)
         filled -> accentColor.copy(alpha = 0.12f)
         else -> Color.Black.copy(alpha = 0.4f)
     }
 
-    Surface(
-        modifier = modifier
-            .clip(RoundedCornerShape(10.dp))
-            .clickable { onClick() }
-            .height(84.dp),
-        shape = RoundedCornerShape(10.dp),
-        color = background,
-        border = BorderStroke(if (isActive) 1.5.dp else 1.dp, socketBorderColor)
-    ) {
-        Column(
-            modifier = Modifier.padding(6.dp),
-            verticalArrangement = Arrangement.SpaceBetween
+    Box(modifier = modifier) {
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(10.dp))
+                .clickable { onClick() }
+                .height(84.dp),
+            shape = RoundedCornerShape(10.dp),
+            color = background,
+            border = BorderStroke(if (isActive || isTutorialHighlighted) 1.5.dp else 1.dp, socketBorderColor)
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+            Column(
+                modifier = Modifier.padding(6.dp),
+                verticalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(
-                    text = label,
-                    style = MaterialTheme.typography.labelSmall.copy(
-                        fontSize = 9.sp,
-                        fontWeight = FontWeight.Bold
-                    ),
-                    color = if (isActive) Color(0xFFFFC857) else accentColor.copy(alpha = 0.8f)
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = label,
+                        style = MaterialTheme.typography.labelSmall.copy(
+                            fontSize = 9.sp,
+                            fontWeight = FontWeight.Bold
+                        ),
+                        color = if (isActive || isTutorialHighlighted) Color(0xFFFFC857) else accentColor.copy(alpha = 0.8f)
+                    )
+                    if (filled) {
+                        IconButton(
+                            onClick = onUnslot,
+                            modifier = Modifier.size(16.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Close,
+                                contentDescription = "Remove",
+                                tint = Color.White.copy(alpha = 0.7f),
+                                modifier = Modifier.size(12.dp)
+                            )
+                        }
+                    }
+                }
+
                 if (filled) {
-                    IconButton(
-                        onClick = onUnslot,
-                        modifier = Modifier.size(16.dp)
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(5.dp)
+                    ) {
+                        Image(
+                            painter = painterResource(previewItemIconRes(itemId)),
+                            contentDescription = itemName,
+                            modifier = Modifier.size(20.dp)
+                        )
+                        Text(
+                            text = itemName ?: "",
+                            style = MaterialTheme.typography.bodySmall.copy(
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Bold
+                            ),
+                            color = Color.White,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+                } else {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
                     ) {
                         Icon(
-                            imageVector = Icons.Filled.Close,
-                            contentDescription = "Remove",
-                            tint = Color.White.copy(alpha = 0.7f),
-                            modifier = Modifier.size(12.dp)
+                            imageVector = Icons.Filled.Add,
+                            contentDescription = null,
+                            tint = if (isActive || isTutorialHighlighted) Color(0xFFFFC857).copy(alpha = 0.9f) else Color.White.copy(alpha = 0.35f),
+                            modifier = Modifier.size(16.dp)
+                        )
+                        Text(
+                            text = if (isTutorialHighlighted) "TARGET" else if (isActive) "SELECTING" else "EMPTY",
+                            style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp, fontWeight = FontWeight.Bold),
+                            color = if (isActive || isTutorialHighlighted) Color(0xFFFFC857) else Color.White.copy(alpha = 0.35f)
                         )
                     }
                 }
             }
+        }
 
-            if (filled) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(5.dp)
-                ) {
-                    Image(
-                        painter = painterResource(previewItemIconRes(itemId)),
-                        contentDescription = itemName,
-                        modifier = Modifier.size(20.dp)
-                    )
-                    Text(
-                        text = itemName ?: "",
-                        style = MaterialTheme.typography.bodySmall.copy(
-                            fontSize = 11.sp,
-                            fontWeight = FontWeight.Bold
-                        ),
-                        color = Color.White,
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
-            } else {
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Add,
-                        contentDescription = null,
-                        tint = if (isActive) Color(0xFFFFC857).copy(alpha = 0.8f) else Color.White.copy(alpha = 0.35f),
-                        modifier = Modifier.size(16.dp)
-                    )
-                    Text(
-                        text = if (isActive) "SELECTING" else "EMPTY",
-                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp, fontWeight = FontWeight.Bold),
-                        color = if (isActive) Color(0xFFFFC857) else Color.White.copy(alpha = 0.35f)
-                    )
-                }
-            }
+        if (isTutorialHighlighted) {
+            TutorialSparkleCanvas(
+                modifier = Modifier
+                    .matchParentSize()
+                    .clip(RoundedCornerShape(10.dp)),
+                particleCount = 4
+            )
         }
     }
 }
@@ -668,58 +896,105 @@ private fun InventoryMaterialChip(
     item: TinkeringItemChoice,
     accentColor: Color,
     borderColor: Color,
+    isTutorialTarget: Boolean = false,
     onClick: () -> Unit
 ) {
-    Surface(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(8.dp))
-            .clickable { onClick() }
-            .height(54.dp),
-        shape = RoundedCornerShape(8.dp),
-        color = Color(0xFF081420).copy(alpha = 0.8f),
-        border = BorderStroke(1.dp, borderColor.copy(alpha = 0.3f))
-    ) {
-        Row(
+    val pulseTransition = rememberInfiniteTransition(label = "chip_pulse")
+    val pulseAlpha by pulseTransition.animateFloat(
+        initialValue = 0.5f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(700, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "pulseAlpha"
+    )
+
+    Box(modifier = Modifier.fillMaxWidth()) {
+        Surface(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 8.dp, vertical = 6.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Image(
-                painter = painterResource(previewItemIconRes(item.id)),
-                contentDescription = item.name,
-                modifier = Modifier.size(24.dp)
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(8.dp))
+                .clickable { onClick() }
+                .height(56.dp),
+            shape = RoundedCornerShape(8.dp),
+            color = if (isTutorialTarget) Color(0xFF0D2535).copy(alpha = 0.95f) else Color(0xFF081420).copy(alpha = 0.8f),
+            border = BorderStroke(
+                if (isTutorialTarget) 1.5.dp else 1.dp,
+                if (isTutorialTarget) Color(0xFFFFC857).copy(alpha = pulseAlpha) else borderColor.copy(alpha = 0.3f)
             )
-            Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.Center) {
-                Text(
-                    text = item.name,
-                    style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold, fontSize = 11.sp),
-                    color = Color.White,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Text(
-                    text = item.description?.takeIf { it.isNotBlank() } ?: "Component",
-                    style = MaterialTheme.typography.bodySmall.copy(fontSize = 9.sp),
-                    color = Color.White.copy(alpha = 0.6f),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
-            Surface(
-                shape = RoundedCornerShape(4.dp),
-                color = accentColor.copy(alpha = 0.15f),
-                border = BorderStroke(1.dp, accentColor.copy(alpha = 0.35f))
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 8.dp, vertical = 6.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Text(
-                    text = "x${item.quantity}",
-                    style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold, fontSize = 10.sp),
-                    color = accentColor,
-                    modifier = Modifier.padding(horizontal = 5.dp, vertical = 2.dp)
+                Image(
+                    painter = painterResource(previewItemIconRes(item.id)),
+                    contentDescription = item.name,
+                    modifier = Modifier.size(24.dp)
                 )
+                Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.Center) {
+                    Text(
+                        text = item.name,
+                        style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold, fontSize = 11.sp),
+                        color = if (isTutorialTarget) Color(0xFFFFC857) else Color.White,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Text(
+                        text = item.description?.takeIf { it.isNotBlank() } ?: "Component",
+                        style = MaterialTheme.typography.bodySmall.copy(fontSize = 9.sp),
+                        color = Color.White.copy(alpha = 0.6f),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+                if (isTutorialTarget) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(2.dp)
+                    ) {
+                        TutorialGuideArrow(isVertical = false, color = Color(0xFFFFC857))
+                        Surface(
+                            shape = RoundedCornerShape(4.dp),
+                            color = Color(0xFFFFC857).copy(alpha = 0.2f),
+                            border = BorderStroke(1.dp, Color(0xFFFFC857))
+                        ) {
+                            Text(
+                                text = "SLOT",
+                                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold, fontSize = 9.sp),
+                                color = Color(0xFFFFC857),
+                                modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp)
+                            )
+                        }
+                    }
+                } else {
+                    Surface(
+                        shape = RoundedCornerShape(4.dp),
+                        color = accentColor.copy(alpha = 0.15f),
+                        border = BorderStroke(1.dp, accentColor.copy(alpha = 0.35f))
+                    ) {
+                        Text(
+                            text = "x${item.quantity}",
+                            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold, fontSize = 10.sp),
+                            color = accentColor,
+                            modifier = Modifier.padding(horizontal = 5.dp, vertical = 2.dp)
+                        )
+                    }
+                }
             }
+        }
+
+        if (isTutorialTarget) {
+            TutorialSparkleCanvas(
+                modifier = Modifier
+                    .matchParentSize()
+                    .clip(RoundedCornerShape(8.dp)),
+                particleCount = 4
+            )
         }
     }
 }
@@ -733,162 +1008,161 @@ private fun SchematicsCatalogPanel(
     onLoadRecipe: (String) -> Unit,
     onCraftDirect: (String) -> Unit
 ) {
-    if (recipes.isEmpty() && lockedRecipes.isEmpty()) {
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Text(
-            text = "No schematics discovered yet.",
-            color = Color.White.copy(alpha = 0.75f),
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.padding(vertical = 12.dp)
+            text = "DISCOVERED BLUEPRINTS (${recipes.size})",
+            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+            color = Color.White.copy(alpha = 0.7f)
         )
-        return
-    }
 
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxWidth()
-            .heightIn(max = 420.dp),
-        verticalArrangement = Arrangement.spacedBy(10.dp)
-    ) {
-        items(recipes, key = { it.id }) { recipe ->
+        if (recipes.isEmpty()) {
             Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(12.dp),
-                color = Color(0xFF061018).copy(alpha = 0.65f),
-                border = BorderStroke(1.dp, if (recipe.canCraft) accentColor.copy(alpha = 0.55f) else borderColor.copy(alpha = 0.28f))
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(120.dp),
+                shape = RoundedCornerShape(10.dp),
+                color = Color(0xFF040A10).copy(alpha = 0.4f),
+                border = BorderStroke(1.dp, borderColor.copy(alpha = 0.15f))
             ) {
-                Column(
-                    modifier = Modifier.padding(12.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Column(modifier = Modifier.weight(1f)) {
-                            Text(
-                                text = recipe.name,
-                                style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
-                                color = Color.White
-                            )
-                            recipe.description?.takeIf { it.isNotBlank() }?.let { desc ->
-                                Text(
-                                    text = desc,
-                                    style = MaterialTheme.typography.bodySmall.copy(fontSize = 11.sp),
-                                    color = Color.White.copy(alpha = 0.72f),
-                                    maxLines = 2,
-                                    overflow = TextOverflow.Ellipsis
-                                )
-                            }
-                        }
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                            OutlinedButton(
-                                onClick = { onLoadRecipe(recipe.id) },
-                                shape = RoundedCornerShape(8.dp),
-                                border = BorderStroke(1.dp, accentColor.copy(alpha = 0.6f)),
-                                contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp)
-                            ) {
-                                Text(
-                                    text = "BENCH",
-                                    style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
-                                    color = accentColor
-                                )
-                            }
-                            Button(
-                                onClick = { onCraftDirect(recipe.id) },
-                                enabled = recipe.canCraft,
-                                shape = RoundedCornerShape(8.dp),
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = accentColor,
-                                    contentColor = Color.Black,
-                                    disabledContainerColor = Color.White.copy(alpha = 0.08f),
-                                    disabledContentColor = Color.White.copy(alpha = 0.35f)
-                                ),
-                                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp)
-                            ) {
-                                Text(
-                                    text = "CRAFT",
-                                    style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold)
-                                )
-                            }
-                        }
-                    }
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(6.dp)
-                    ) {
-                        recipe.ingredients.forEach { req ->
-                            RequirementChip(req = req, accentColor = accentColor)
-                        }
-                    }
+                Box(contentAlignment = Alignment.Center) {
+                    Text(
+                        text = "No blueprints discovered yet. Combine parts at the workbench!",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color.White.copy(alpha = 0.5f),
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(16.dp)
+                    )
+                }
+            }
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(max = 280.dp),
+                verticalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                items(recipes, key = { it.id }) { recipe ->
+                    BlueprintRecipeCard(
+                        recipe = recipe,
+                        accentColor = accentColor,
+                        borderColor = borderColor,
+                        onLoad = { onLoadRecipe(recipe.id) },
+                        onCraftDirect = { onCraftDirect(recipe.id) }
+                    )
                 }
             }
         }
 
         if (lockedRecipes.isNotEmpty()) {
-            item {
-                var expanded by remember { mutableStateOf(false) }
-                Surface(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(10.dp))
-                        .clickable { expanded = !expanded },
-                    shape = RoundedCornerShape(10.dp),
-                    color = Color(0xFF040A10).copy(alpha = 0.5f),
-                    border = BorderStroke(1.dp, borderColor.copy(alpha = 0.2f))
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 12.dp, vertical = 10.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+            Text(
+                text = "UNKNOWN BLUEPRINTS (${lockedRecipes.size} locked)",
+                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                color = Color.White.copy(alpha = 0.4f)
+            )
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(max = 140.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                items(lockedRecipes, key = { it.id }) { recipe ->
+                    Surface(
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(6.dp),
+                        color = Color.Black.copy(alpha = 0.25f),
+                        border = BorderStroke(1.dp, Color.White.copy(alpha = 0.08f))
                     ) {
-                        Text(
-                            text = "Undiscovered Schematics (${lockedRecipes.size})",
-                            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
-                            color = Color.White.copy(alpha = 0.65f)
-                        )
-                        Text(
-                            text = if (expanded) "▲ Hide" else "▼ Show",
-                            style = MaterialTheme.typography.labelSmall,
-                            color = accentColor.copy(alpha = 0.75f)
-                        )
-                    }
-                }
-                if (expanded) {
-                    Column(
-                        modifier = Modifier.padding(top = 8.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        lockedRecipes.forEach { locked ->
-                            Surface(
-                                modifier = Modifier.fillMaxWidth(),
-                                shape = RoundedCornerShape(10.dp),
-                                color = Color(0xFF040A10).copy(alpha = 0.4f),
-                                border = BorderStroke(1.dp, borderColor.copy(alpha = 0.15f))
-                            ) {
-                                Row(
-                                    modifier = Modifier.padding(10.dp),
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                                ) {
-                                    Box(
-                                        modifier = Modifier
-                                            .size(8.dp)
-                                            .background(Color.White.copy(alpha = 0.25f), CircleShape)
-                                    )
-                                    Text(
-                                        text = "Undiscovered Schematic",
-                                        style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Medium),
-                                        color = Color.White.copy(alpha = 0.45f)
-                                    )
-                                }
-                            }
+                        Row(
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                text = "??? [Encrypted Schematic]",
+                                style = MaterialTheme.typography.bodySmall.copy(fontSize = 10.sp),
+                                color = Color.White.copy(alpha = 0.35f)
+                            )
+                            Text(
+                                text = "LOCKED",
+                                style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp),
+                                color = Color.White.copy(alpha = 0.25f)
+                            )
                         }
                     }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun BlueprintRecipeCard(
+    recipe: TinkeringRecipeUi,
+    accentColor: Color,
+    borderColor: Color,
+    onLoad: () -> Unit,
+    onCraftDirect: () -> Unit
+) {
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(8.dp),
+        color = Color(0xFF061018).copy(alpha = 0.7f),
+        border = BorderStroke(1.dp, if (recipe.canCraft) accentColor.copy(alpha = 0.4f) else borderColor.copy(alpha = 0.15f))
+    ) {
+        Row(
+            modifier = Modifier.padding(10.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = recipe.name,
+                    style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold, fontSize = 12.sp),
+                    color = if (recipe.canCraft) Color.White else Color.White.copy(alpha = 0.6f)
+                )
+                recipe.description?.takeIf { it.isNotBlank() }?.let { desc ->
+                    Text(
+                        text = desc,
+                        style = MaterialTheme.typography.bodySmall.copy(fontSize = 10.sp),
+                        color = Color.White.copy(alpha = 0.5f),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+                Spacer(modifier = Modifier.height(4.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    recipe.ingredients.forEach { req ->
+                        RequirementChip(req = req, accentColor = accentColor)
+                    }
+                }
+            }
+            Spacer(modifier = Modifier.width(8.dp))
+            Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                OutlinedButton(
+                    onClick = onLoad,
+                    shape = RoundedCornerShape(6.dp),
+                    contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
+                    modifier = Modifier.height(28.dp)
+                ) {
+                    Text(text = "Socket", style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp))
+                }
+                Button(
+                    onClick = onCraftDirect,
+                    enabled = recipe.canCraft,
+                    shape = RoundedCornerShape(6.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = accentColor,
+                        contentColor = Color.Black,
+                        disabledContainerColor = Color.White.copy(alpha = 0.08f),
+                        disabledContentColor = Color.White.copy(alpha = 0.3f)
+                    ),
+                    contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
+                    modifier = Modifier.height(28.dp)
+                ) {
+                    Text(text = "Craft", style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp, fontWeight = FontWeight.Bold))
                 }
             }
         }
@@ -902,71 +1176,97 @@ private fun ScrapListPanel(
     borderColor: Color,
     onScrapItem: (String) -> Unit
 ) {
-    if (scrapChoices.isEmpty()) {
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Text(
-            text = "No salvageable scrap in inventory.",
-            color = Color.White.copy(alpha = 0.75f),
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.padding(vertical = 12.dp)
+            text = "SALVAGE & DISASSEMBLY",
+            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+            color = Color.White.copy(alpha = 0.7f)
         )
-        return
-    }
 
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxWidth()
-            .heightIn(max = 420.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        items(scrapChoices, key = { it.id }) { item ->
+        if (scrapChoices.isEmpty()) {
             Surface(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(140.dp),
                 shape = RoundedCornerShape(10.dp),
-                color = Color(0xFF061018).copy(alpha = 0.55f),
-                border = BorderStroke(1.dp, borderColor.copy(alpha = 0.28f))
+                color = Color(0xFF040A10).copy(alpha = 0.4f),
+                border = BorderStroke(1.dp, borderColor.copy(alpha = 0.15f))
             ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(12.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = "${item.name} (${item.quantity})",
-                            style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
-                            color = Color.White
-                        )
-                        item.description?.takeIf { it.isNotBlank() }?.let { desc ->
-                            Text(
-                                text = desc,
-                                style = MaterialTheme.typography.bodySmall.copy(fontSize = 11.sp),
-                                color = Color.White.copy(alpha = 0.65f),
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
-                            )
-                        }
-                    }
-                    OutlinedButton(
-                        onClick = { onScrapItem(item.id) },
+                Box(contentAlignment = Alignment.Center) {
+                    Text(
+                        text = "No scrapable gear or crafted items currently in inventory.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color.White.copy(alpha = 0.5f),
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(16.dp)
+                    )
+                }
+            }
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(max = 280.dp),
+                verticalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                items(scrapChoices, key = { it.id }) { item ->
+                    Surface(
+                        modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(8.dp),
-                        border = BorderStroke(1.dp, Color(0xFFEF4444).copy(alpha = 0.6f)),
-                        colors = ButtonDefaults.outlinedButtonColors(
-                            contentColor = Color(0xFFFF6B6B)
-                        ),
-                        contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp)
+                        color = Color(0xFF061018).copy(alpha = 0.7f),
+                        border = BorderStroke(1.dp, borderColor.copy(alpha = 0.2f))
                     ) {
-                        Icon(
-                            imageVector = Icons.Filled.Delete,
-                            contentDescription = null,
-                            modifier = Modifier.size(13.dp)
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text(
-                            text = "SCRAP",
-                            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold)
-                        )
+                        Row(
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                Image(
+                                    painter = painterResource(previewItemIconRes(item.id)),
+                                    contentDescription = item.name,
+                                    modifier = Modifier.size(22.dp)
+                                )
+                                Column {
+                                    Text(
+                                        text = "${item.name} (x${item.quantity})",
+                                        style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold, fontSize = 11.sp),
+                                        color = Color.White
+                                    )
+                                    Text(
+                                        text = "Breaks down into raw constituent alloys",
+                                        style = MaterialTheme.typography.bodySmall.copy(fontSize = 9.sp),
+                                        color = Color.White.copy(alpha = 0.5f)
+                                    )
+                                }
+                            }
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Button(
+                                onClick = { onScrapItem(item.id) },
+                                shape = RoundedCornerShape(6.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = Color(0xFFE57373).copy(alpha = 0.8f),
+                                    contentColor = Color.White
+                                ),
+                                contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp),
+                                modifier = Modifier.height(28.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.Delete,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(11.dp)
+                                )
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Text(
+                                    text = "Scrap",
+                                    style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                                )
+                            }
+                        }
                     }
                 }
             }
@@ -979,27 +1279,33 @@ private fun RequirementChip(
     req: TinkeringRequirementStatus,
     accentColor: Color
 ) {
-    val met = req.available >= req.required
+    val satisfied = req.available >= req.required
     Surface(
-        shape = RoundedCornerShape(6.dp),
-        color = if (met) accentColor.copy(alpha = 0.14f) else Color(0xFF7F1D1D).copy(alpha = 0.35f),
-        border = BorderStroke(1.dp, if (met) accentColor.copy(alpha = 0.38f) else Color(0xFFEF4444).copy(alpha = 0.35f))
+        shape = RoundedCornerShape(4.dp),
+        color = if (satisfied) accentColor.copy(alpha = 0.12f) else Color.Red.copy(alpha = 0.12f),
+        border = BorderStroke(
+            1.dp,
+            if (satisfied) accentColor.copy(alpha = 0.4f) else Color.Red.copy(alpha = 0.4f)
+        )
     ) {
         Row(
-            modifier = Modifier.padding(horizontal = 6.dp, vertical = 3.dp),
+            modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(4.dp)
+            horizontalArrangement = Arrangement.spacedBy(3.dp)
         ) {
             Icon(
-                imageVector = if (met) Icons.Filled.Check else Icons.Filled.Close,
+                imageVector = if (satisfied) Icons.Filled.Check else Icons.Filled.Close,
                 contentDescription = null,
-                tint = if (met) accentColor else Color(0xFFEF4444),
-                modifier = Modifier.size(11.dp)
+                tint = if (satisfied) accentColor else Color(0xFFEF5350),
+                modifier = Modifier.size(9.dp)
             )
             Text(
-                text = "${req.label} ${req.available}/${req.required}",
-                style = MaterialTheme.typography.bodySmall.copy(fontSize = 11.sp),
-                color = if (met) Color.White.copy(alpha = 0.9f) else Color.White.copy(alpha = 0.65f)
+                text = "${req.label} (${req.available}/${req.required})",
+                style = MaterialTheme.typography.labelSmall.copy(
+                    fontSize = 9.sp,
+                    fontWeight = FontWeight.Bold
+                ),
+                color = if (satisfied) Color.White.copy(alpha = 0.9f) else Color(0xFFEF5350)
             )
         }
     }

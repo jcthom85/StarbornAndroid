@@ -18,6 +18,13 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+enum class TinkeringTutorialStep {
+    SLOT_BASE,
+    SLOT_COMPONENT,
+    SYNTHESIZE,
+    COMPLETE
+}
+
 data class TinkeringUiState(
     val isLoading: Boolean = true,
     val filter: TinkeringFilter = TinkeringFilter.ALL,
@@ -25,7 +32,9 @@ data class TinkeringUiState(
     val lockedRecipes: List<TinkeringRecipeUi> = emptyList(),
     val bench: TinkeringBenchState = TinkeringBenchState(),
     val inventory: List<TinkeringItemChoice> = emptyList(),
-    val scrapChoices: List<TinkeringItemChoice> = emptyList()
+    val scrapChoices: List<TinkeringItemChoice> = emptyList(),
+    val isTutorialActive: Boolean = false,
+    val tutorialStep: TinkeringTutorialStep? = null
 )
 
 data class TinkeringRecipeUi(
@@ -115,6 +124,23 @@ class CraftingViewModel(
         }
     }
 
+    private fun evaluateTutorialStep(bench: TinkeringBenchState): Pair<Boolean, TinkeringTutorialStep?> {
+        val session = sessionStore.state.value
+        val isTutorial = "ms_w1_mq01_workshop_briefed" in session.completedMilestones &&
+            "ms_w1_mq01_cryo_repaired" !in session.completedMilestones
+        val tutStep = if (isTutorial) {
+            when {
+                bench.mainItemId != "cryo_inductor" -> TinkeringTutorialStep.SLOT_BASE
+                !bench.componentIds.contains("scrap_metal") -> TinkeringTutorialStep.SLOT_COMPONENT
+                bench.canCraftSelection -> TinkeringTutorialStep.SYNTHESIZE
+                else -> TinkeringTutorialStep.SLOT_BASE
+            }
+        } else {
+            null
+        }
+        return isTutorial to tutStep
+    }
+
     private fun refreshState() {
         val learnedIds = sessionStore.state.value.learnedSchematics
         val learned = mutableListOf<TinkeringRecipeUi>()
@@ -151,6 +177,7 @@ class CraftingViewModel(
             choiceTokens.any { token -> recipeResults.any { it == token } }
         }
         val currentBench = rebuildBench(_uiState.value.bench)
+        val (isTutorial, tutStep) = evaluateTutorialStep(currentBench)
         _uiState.update {
             it.copy(
                 learnedRecipes = learned,
@@ -158,7 +185,9 @@ class CraftingViewModel(
                 bench = currentBench,
                 inventory = inventoryChoices,
                 scrapChoices = scrapables,
-                isLoading = false
+                isLoading = false,
+                isTutorialActive = isTutorial,
+                tutorialStep = tutStep
             )
         }
     }
@@ -195,7 +224,9 @@ class CraftingViewModel(
 
     fun autoFill(recipeId: String) {
         val recipe = craftingService.tinkeringRecipes.find { it.id == recipeId } ?: return
-        _uiState.update { it.copy(bench = benchFromRecipe(recipe)) }
+        val newBench = benchFromRecipe(recipe)
+        val (isTut, step) = evaluateTutorialStep(newBench)
+        _uiState.update { it.copy(bench = newBench, isTutorialActive = isTut, tutorialStep = step) }
     }
 
     fun autoFillBest() {
@@ -208,7 +239,9 @@ class CraftingViewModel(
             craftable.firstOrNull()
         }
         if (match != null) {
-            _uiState.update { it.copy(bench = benchFromRecipe(match)) }
+            val newBench = benchFromRecipe(match)
+            val (isTut, step) = evaluateTutorialStep(newBench)
+            _uiState.update { it.copy(bench = newBench, isTutorialActive = isTut, tutorialStep = step) }
         } else {
             viewModelScope.launch {
                 _messages.emit("No craftable schematics with current supplies.")
@@ -217,7 +250,9 @@ class CraftingViewModel(
     }
 
     fun clearBench() {
-        _uiState.update { it.copy(bench = TinkeringBenchState()) }
+        val emptyBench = TinkeringBenchState()
+        val (isTut, step) = evaluateTutorialStep(emptyBench)
+        _uiState.update { it.copy(bench = emptyBench, isTutorialActive = isTut, tutorialStep = step) }
     }
 
     fun setFilter(filter: TinkeringFilter) {
@@ -234,7 +269,9 @@ class CraftingViewModel(
             mainItemId = itemId,
             mainItemName = itemId?.let { inventoryService.itemDetail(it)?.name ?: it }
         )
-        _uiState.update { it.copy(bench = rebuildBench(bench)) }
+        val rebuilt = rebuildBench(bench)
+        val (isTut, step) = evaluateTutorialStep(rebuilt)
+        _uiState.update { it.copy(bench = rebuilt, isTutorialActive = isTut, tutorialStep = step) }
     }
 
     fun selectComponent(slot: Int, itemId: String?) {
@@ -248,7 +285,9 @@ class CraftingViewModel(
             componentIds = components.map { it.takeIf { comp -> comp.isNotBlank() } ?: "" },
             componentNames = names
         )
-        _uiState.update { it.copy(bench = rebuildBench(bench)) }
+        val rebuilt = rebuildBench(bench)
+        val (isTut, step) = evaluateTutorialStep(rebuilt)
+        _uiState.update { it.copy(bench = rebuilt, isTutorialActive = isTut, tutorialStep = step) }
     }
 
     fun scrap(itemId: String) {

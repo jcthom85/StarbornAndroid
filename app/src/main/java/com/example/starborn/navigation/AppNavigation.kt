@@ -206,6 +206,9 @@ fun NavigationHost(
                 onQuickSave = {
                     settingsScope.launch { services.quickSave() }
                 },
+                onPlayAudio = { cue ->
+                    services.audioCuePlayer.execute(services.audioRouter.commandsForUi(cue))
+                },
                 onEnterNode = { node ->
                     navController.navigate(Exploration.route) {
                         popUpTo(Hub.route) { inclusive = false }

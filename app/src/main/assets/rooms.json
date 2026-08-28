@@ -548,15 +548,15 @@
   {
     "id": "workshop_floor",
     "env": "mine",
-    "title": "Main Bench",
+    "title": "Jed's Shutter",
     "background_image": "images/rooms/world_1/workshop_floor_v3.webp",
-    "description": "Work lights show the Workbench, scorched insulation, and Jed's tools laid out by size. The mining cutter and Flux Liner wait beside the floor clamp; the live cutter test comes last.",
+    "description": "Work lights show scorched insulation and Jed's tools laid out by size. The mining cutter and Flux Liner wait beside the floor clamp; the live cutter test comes last.",
     "description_variants": [
       {
         "requires_state": {
           "cryo_inductor_installed": true
         },
-        "description": "The Workbench holds the rebuilt Cryo-Inductor at a clean 68% cold loop. Patch the Flux Liner, confirm the mining cutter bypass, then run the live cutter test."
+        "description": "The rebuilt Cryo-Inductor hums at a clean 68% cold loop. Patch the Flux Liner, confirm the mining cutter bypass, then run the live cutter test."
       }
     ],
     "npcs": [],
@@ -588,11 +588,6 @@
       "cryo_inductor_installed": false
     },
     "actions": [
-      {
-        "name": "Workbench",
-        "type": "tinkering",
-        "condition_unmet_message": "Jed's Workbench is ready. Repair the Cryo-Inductor into a Functional Cryo-Inductor before shift clearance."
-      },
       {
         "name": "mining cutter",
         "type": "generic",
@@ -3465,11 +3460,6 @@
         "name": "debug manifest",
         "type": "generic",
         "condition_unmet_message": "This room exists only to inspect one-, two-, and three-member enemy party layouts."
-      },
-      {
-        "name": "Workbench",
-        "type": "tinkering",
-        "condition_unmet_message": "Jed's workbench is ready. Time to prove you remember which end of the soldering iron gets hot."
       },
       {
         "name": "Contraband",
@@ -11116,6 +11106,7 @@
       {
         "name": "nav console",
         "type": "generic",
+        "action_event": "astra_nav_console",
         "condition_unmet_message": "The atmospheric route map is online. Inter-world travel will unlock as destinations and the Astra flight systems become available."
       },
       {
@@ -11228,11 +11219,6 @@
     "state": {},
     "actions": [
       {
-        "name": "repair bench",
-        "type": "tinkering",
-        "condition_unmet_message": "The Astra bench supports field modifications between missions."
-      },
-      {
         "name": "storage terminal",
         "type": "generic",
         "condition_unmet_message": "Long-term cargo storage is still offline while Zeke rebuilds its index."
@@ -11261,6 +11247,7 @@
       {
         "name": "archive console",
         "type": "generic",
+        "action_event": "astra_launch_simulation",
         "condition_unmet_message": "Combat replay and cinematic archives are installed but await the simulation runtime."
       }
     ]

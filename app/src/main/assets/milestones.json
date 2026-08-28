@@ -204,8 +204,8 @@
   {
     "id": "ms_w1_mq01_loader_cleared",
     "name": "Weakness Exploited",
-    "description": "Nova used the loader diagnostic to disable its exposed relay and reach Jed's bench.",
-    "toast": "The workshop route is clear."
+    "description": "Nova used the loader diagnostic to disable its exposed relay and reach Jed.",
+    "toast": "The route to Jed is clear."
   },
   {
     "id": "ms_w1_mq01_netting_checked",
@@ -221,9 +221,9 @@
   },
   {
     "id": "ms_w1_mq01_workshop_briefed",
-    "name": "Workbench Briefing",
-    "description": "Jed told Nova to repair the Cryo-Inductor at his workbench.",
-    "toast": "Jed points you to the workbench."
+    "name": "Tinkering Briefing",
+    "description": "Jed told Nova to tinker the Cryo-Inductor repair in her menu.",
+    "toast": "Jed points you to the Tinker menu."
   },
   {
     "id": "ms_w1_mq01_complete",

@@ -353,36 +353,38 @@ fun CombatScreen(
     LaunchedEffect(Unit) {
         launch {
             viewModel.fxEvents.collect { event ->
-            when (event) {
-                is CombatFxEvent.Impact -> {
-                    val fx = DamageFxUi(
-                        id = UUID.randomUUID().toString(),
-                        targetId = event.targetId,
-                        amount = event.amount,
-                        element = event.element,
-                        critical = event.critical
-                    )
-                    damageFx += fx
-                    launch {
-                        delay(720)
-                        damageFx.remove(fx)
-                    }
-                    if (event.showAttackFx) {
-                        val resolvedStyle = resolveAttackStyle(
-                            sourceId = event.sourceId,
-                            combatState = currentCombatState,
-                            playerIdSet = playerIdSet
+                when (event) {
+                    is CombatFxEvent.Impact -> {
+                        val fx = DamageFxUi(
+                            id = UUID.randomUUID().toString(),
+                            targetId = event.targetId,
+                            amount = event.amount,
+                            element = event.element,
+                            critical = event.critical,
+                            isWeakness = event.isWeakness,
+                            isGuardBreak = event.isGuardBreak
                         )
-                        val style = resolvedStyle
-                            ?: lastPlayerActionStyle?.takeIf { event.targetId in enemyCombatantIds }
-                        if (style != null) {
-                            val attackDuration = attackFxDurationFor(style)
-                            val hitFx = AttackHitFxUi(
-                                id = UUID.randomUUID().toString(),
-                                targetId = event.targetId,
-                                style = style,
-                                critical = event.critical
+                        damageFx += fx
+                        launch {
+                            delay(720)
+                            damageFx.remove(fx)
+                        }
+                        if (event.showAttackFx) {
+                            val resolvedStyle = resolveAttackStyle(
+                                sourceId = event.sourceId,
+                                combatState = currentCombatState,
+                                playerIdSet = playerIdSet
                             )
+                            val style = resolvedStyle
+                                ?: lastPlayerActionStyle?.takeIf { event.targetId in enemyCombatantIds }
+                            if (style != null) {
+                                val attackDuration = attackFxDurationFor(style)
+                                val hitFx = AttackHitFxUi(
+                                    id = UUID.randomUUID().toString(),
+                                    targetId = event.targetId,
+                                    style = style,
+                                    critical = event.critical
+                                )
                             attackHitFx += hitFx
                             launch {
                                 delay(attackDuration)
@@ -632,6 +634,7 @@ fun CombatScreen(
         fun clearPendingRequest() {
             pendingTargetRequest = null
             pendingInstruction = null
+            viewModel.onCombatTutorialTargetCancelled()
         }
 
         fun requestTarget(request: PendingTargetRequest) {
@@ -751,15 +754,24 @@ fun CombatScreen(
         }
 
         if (showSkillsDialog.value && menuActor != null && !combatLocked && !menuActorCannotAct) {
+            val tutorial = combatTutorial
+            val tutorialSkillId = tutorial?.takeIf { it.step == CombatTutorialStep.CHOOSE_HYDRAULIC_KICK }?.expectedSkillId
             SkillsDialog(
                 player = menuActor,
                 skills = menuActorSkills,
                 viewModel = viewModel,
-                onDismiss = { showSkillsDialog.value = false },
+                onDismiss = {
+                    showSkillsDialog.value = false
+                    viewModel.onCombatTutorialSkillDialogDismissed()
+                },
                 onSkillSelected = { skill ->
                     showSkillsDialog.value = false
                     handleSkillSelection(skill)
-                }
+                },
+                allowedSkillIds = tutorialSkillId?.let { setOf(it) },
+                highlightedSkillId = tutorialSkillId,
+                theme = viewModel.theme,
+                highContrastMode = highContrastMode
             )
         }
 
@@ -992,9 +1004,9 @@ fun CombatScreen(
                 currentHp = commandCurrentHp,
                 maxHp = commandMaxHp,
                 atbProgress = commandActor?.let { atbMeters[it.id] } ?: 0f,
-                canAttack = hasTargets,
-                hasSkills = menuActorSkills.isNotEmpty(),
-                hasItems = battleUsableItems.isNotEmpty(),
+                canAttack = hasTargets && viewModel.isCombatTutorialCommandEnabled("Attack"),
+                hasSkills = menuActorSkills.isNotEmpty() && viewModel.isCombatTutorialCommandEnabled("Skills"),
+                hasItems = battleUsableItems.isNotEmpty() && viewModel.isCombatTutorialCommandEnabled("Items"),
                 onAttack = {
                     if (viewModel.onCombatTutorialCommand("Attack")) {
                         requestTarget(PendingTargetRequest.Attack)
@@ -1013,7 +1025,7 @@ fun CombatScreen(
                     pendingInstruction = null
                 },
                 snackLabel = snackLabel,
-                canSnack = canSnack,
+                canSnack = canSnack && viewModel.isCombatTutorialCommandEnabled("Snack"),
                 snackCooldown = snackCooldown,
                 onSnack = {
                     when (snackRequirement) {
@@ -1045,6 +1057,7 @@ fun CombatScreen(
                         }
                     }
                 },
+                canRetreat = viewModel.isCombatTutorialCommandEnabled("Retreat"),
                 onRetreat = {
                     pendingTargetRequest = null
                     pendingInstruction = null

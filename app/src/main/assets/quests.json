@@ -30,7 +30,7 @@
       {
         "id": "report_to_jed",
         "title": "Report to Jed",
-        "description": "Find Jed in the Pit, then follow his directions to the Workshop.",
+        "description": "Find Jed in the Pit, then follow his directions to his place.",
         "tasks": [
           {
             "id": "find_jed",
@@ -42,7 +42,7 @@
           },
           {
             "id": "reach_workshop",
-            "text": "Reach Jed's Workshop."
+            "text": "Reach Jed's place."
           },
           {
             "id": "inspect_loader_relay",
@@ -58,11 +58,11 @@
           },
           {
             "id": "use_tinkering_table",
-            "text": "Use Jed's workbench to craft the Functional Cryo-Inductor."
+            "text": "Tinker the Functional Cryo-Inductor from the menu."
           },
           {
             "id": "patch_flux_liner",
-            "text": "Patch the Flux Liner and clamp its sacrificial strip to the workshop ground."
+            "text": "Patch the Flux Liner and clamp its sacrificial ground strip."
           },
           {
             "id": "confirm_governor_bypass",

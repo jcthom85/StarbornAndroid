@@ -123,7 +123,8 @@ class CombatTutorialTracker(
     }
 
     fun skipCombatTutorial() {
-        if (getCombatTutorial() == null) return
+        val current = getCombatTutorial() ?: return
+        if (!current.canSkip) return
         completeCombatTutorial()
     }
 

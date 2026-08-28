@@ -12,10 +12,14 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     visible: "Search world, quest, room, or system"
     timeout: 15000
-- tapOn: "Search world, quest, room, or system"
-- eraseText
-- inputText: "Full"
+- tapOn: "Systems"
 - runScript: sleep.js
+- scrollUntilVisible:
+    element:
+      text: "Full Inventory"
+    direction: DOWN
+    timeout: 10000
+    visibilityPercentage: 70
 - extendedWaitUntil:
     visible: "Full Inventory"
     timeout: 15000
@@ -45,8 +49,35 @@ appId: com.junewiregames.starborn.prealpha
     visible: "Party Status"
     timeout: 10000
 - assertVisible: "Nova"
+- tapOn:
+    text: "Details"
+    index: 0
+- extendedWaitUntil:
+    visible: "PRIMARY ATTRIBUTES"
+    timeout: 10000
+- assertVisible: "BACK"
+- takeScreenshot: debug-full-inventory-menu-party-details
+- tapOn: "BACK"
+- extendedWaitUntil:
+    visible: "Party Status"
+    timeout: 10000
 - swipe:
     direction: UP
     duration: 350
 - assertVisible: "Zeke"
 - takeScreenshot: debug-full-inventory-menu
+- tapOn: "Journal"
+- extendedWaitUntil:
+    visible: "Quest Journal"
+    timeout: 10000
+- assertVisible: "Wake Up Call"
+- tapOn: "Wake Up Call"
+- extendedWaitUntil:
+    visible: "QUEST FILE"
+    timeout: 10000
+- assertVisible: "BACK"
+- takeScreenshot: debug-full-inventory-menu-quest-details
+- tapOn: "BACK"
+- extendedWaitUntil:
+    visible: "Quest Journal"
+    timeout: 10000

@@ -5,7 +5,9 @@ data class DamageFxUi(
     val targetId: String,
     val amount: Int,
     val element: String?,
-    val critical: Boolean
+    val critical: Boolean,
+    val isWeakness: Boolean = false,
+    val isGuardBreak: Boolean = false
 )
 
 data class HealFxUi(

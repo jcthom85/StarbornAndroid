@@ -217,6 +217,27 @@ class ExplorationViewModelTest {
     }
 
     @Test
+    fun closingFieldMenuClearsMenuOwnedNestedPresentation() {
+        val viewModel = createViewModel()
+
+        viewModel.openMenuOverlay(MenuTab.MAP)
+        viewModel.openMapLegend()
+        dispatcher.scheduler.advanceUntilIdle()
+
+        assertTrue(viewModel.uiState.value.isMenuOverlayVisible)
+        assertTrue(viewModel.uiState.value.isMapLegendVisible)
+
+        viewModel.closeMenuOverlay()
+        dispatcher.scheduler.advanceUntilIdle()
+
+        assertFalse(viewModel.uiState.value.isMenuOverlayVisible)
+        assertFalse(viewModel.uiState.value.isMapLegendVisible)
+        assertNull(viewModel.uiState.value.questDetail)
+        assertNull(viewModel.uiState.value.partyMemberDetails)
+        assertNull(viewModel.uiState.value.skillTreeOverlay)
+    }
+
+    @Test
     fun fullMapCellsCoverEntireNodeAndPreserveDiscoveryState() {
         val viewModel = createViewModel()
         val roomA = testRoom(

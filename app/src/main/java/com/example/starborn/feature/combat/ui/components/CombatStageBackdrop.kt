@@ -145,7 +145,7 @@ fun CombatTutorialOverlay(
     val message = when (tutorial.step) {
         CombatTutorialStep.BRIEF ->
             if (isLoader)
-                "When your turn bar fills, choose an action. That loader has a cracked relay—open Abilities and cast Arc Tether to exploit its Shock weakness!"
+                "The loader's cracked relay is vulnerable to Shock. Open Abilities and cast Arc Tether to exploit its weakness."
             else
                 "That trainer eats direct hits. First, test the shield, then break its guard with Hydraulic Kick."
         CombatTutorialStep.SELECT_NOVA_ATTACK -> "Tap Nova when her action is ready."
@@ -155,18 +155,18 @@ fun CombatTutorialOverlay(
         CombatTutorialStep.BLOCKED_EXPLANATION ->
             "The shield reduced the attack to zero. Guard Break strips protection before you commit damage."
         CombatTutorialStep.SELECT_NOVA_SKILL ->
-            if (isLoader) "Nova is ready. Tap Nova to open her actions." else "Nova is ready again. Tap Nova to break the guard."
+            if (isLoader) "Nova is ready. Tap Nova to choose an action." else "Nova is ready again. Tap Nova to break the guard."
         CombatTutorialStep.CHOOSE_SKILLS ->
-            if (isLoader) "Open Abilities to find Nova's Shock move." else "Open Abilities to find a guard-breaking move."
+            if (isLoader) "Select Abilities." else "Open Abilities to find a guard-breaking move."
         CombatTutorialStep.CHOOSE_HYDRAULIC_KICK ->
-            if (isLoader) "Use Arc Tether." else "Use Hydraulic Kick."
+            if (isLoader) "Select Arc Tether." else "Use Hydraulic Kick."
         CombatTutorialStep.TARGET_HYDRAULIC_KICK ->
-            if (isLoader) "Choose the Faulted Loader." else "Choose an enemy for Hydraulic Kick."
+            if (isLoader) "Target the Faulted Loader." else "Choose an enemy for Hydraulic Kick."
         CombatTutorialStep.AWAIT_SHIELD_BREAK ->
-            if (isLoader) "Watch the electrical pulse break its stability." else "Watch the guard break."
+            if (isLoader) "Watch the Shock pulse break its stability." else "Watch the guard break."
         CombatTutorialStep.SUCCESS ->
             if (isLoader)
-                "Arc Tether cracked the loader's stability and stunned it! Skills go on turn cooldowns—finish the fight with standard Attacks."
+                "Stability broken! The loader is stunned. Arc Tether is on cooldown—finish the fight with standard Attacks."
             else
                 "Hydraulic Kick stripped the shield. Now finish the fight."
     }
@@ -203,8 +203,10 @@ fun CombatTutorialOverlay(
                         horizontalArrangement = Arrangement.End,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        TextButton(onClick = onSkip) {
-                            Text("Skip Training", color = Color.White.copy(alpha = 0.72f))
+                        if (tutorial.canSkip) {
+                            TextButton(onClick = onSkip) {
+                                Text("Skip Training", color = Color.White.copy(alpha = 0.72f))
+                            }
                         }
                         Button(
                             onClick = onContinue,
@@ -215,9 +217,9 @@ fun CombatTutorialOverlay(
                         ) {
                             Text(
                                 text = when (tutorial.step) {
-                                    CombatTutorialStep.BRIEF -> "Start Training"
+                                    CombatTutorialStep.BRIEF -> if (isLoader) "Engage" else "Start Training"
                                     CombatTutorialStep.BLOCKED_EXPLANATION -> "Break The Guard"
-                                    CombatTutorialStep.SUCCESS -> "Finish The Fight"
+                                    CombatTutorialStep.SUCCESS -> if (isLoader) "Finish Combat" else "Finish The Fight"
                                     else -> "Continue"
                                 },
                                 fontWeight = FontWeight.Bold

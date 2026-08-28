@@ -35,12 +35,12 @@
         "id": "scene_tinkering_tutorial",
         "steps": [
             {
-                "message": "At Jed's workbench, choose Functional Cryo-Inductor or tap a slot to select a repair.",
-                "context": "Workbench"
+                "message": "In the Tinker menu, choose Functional Cryo-Inductor or tap a slot to select a repair.",
+                "context": "Tinker"
             },
             {
-                "message": "Check the requirements, add any missing parts, then press Craft.",
-                "context": "Workbench",
+                "message": "Check the requirements, add any missing parts, then press Tinker.",
+                "context": "Tinker",
                 "delay_ms": 2500
             }
         ]
@@ -59,7 +59,7 @@
         "id": "scene_market_locator",
         "steps": [
             {
-                "message": "Head out of the Pit toward Jed's Workshop. Tap highlighted exits or swipe toward open connections to keep moving.",
+                "message": "Head out of the Pit toward Jed. Tap highlighted exits or swipe toward open connections to keep moving.",
                 "context": "Homestead"
             }
         ]
@@ -162,6 +162,15 @@
             {
                 "message": "Snacks are reusable combat tools. Use them like skills - they recharge after a cooldown.",
                 "context": "Combat"
+            }
+        ]
+    },
+    {
+        "id": "gear_equip_basics",
+        "steps": [
+            {
+                "message": "Open the Menu and choose Inventory -> Gear to equip Nova's cutter, armor, and mods before heading into the mines.",
+                "context": "Gear"
             }
         ]
     },

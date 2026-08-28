@@ -102,6 +102,7 @@ fun HubScreen(
     onToggleTutorials: (Boolean) -> Unit,
     onToggleVignette: (Boolean) -> Unit,
     onQuickSave: () -> Unit,
+    onPlayAudio: (String) -> Unit = {},
     onEnterNode: (HubNodeUi) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -119,8 +120,14 @@ fun HubScreen(
     HubScreenContent(
         uiState = uiState,
         settings = settings,
-        onNodeFocused = { node -> viewModel.selectNode(node.id) },
-        onEnterSelectedNode = { node -> viewModel.enterNode(node.id, onEnterNode) },
+        onNodeFocused = { node ->
+            onPlayAudio("sfx_hub_node_select")
+            viewModel.selectNode(node.id)
+        },
+        onEnterSelectedNode = { node ->
+            onPlayAudio("sfx_room_transition")
+            viewModel.enterNode(node.id, onEnterNode)
+        },
         onLockedPromptDismiss = viewModel::dismissLockedPrompt,
         onMusicVolumeChange = onMusicVolumeChange,
         onSfxVolumeChange = onSfxVolumeChange,
@@ -128,6 +135,7 @@ fun HubScreen(
         onToggleTutorials = onToggleTutorials,
         onToggleVignette = onToggleVignette,
         onQuickSave = onQuickSave,
+        onPlayAudio = onPlayAudio,
         modifier = modifier
     )
 }
@@ -145,6 +153,7 @@ private fun HubScreenContent(
     onToggleTutorials: (Boolean) -> Unit,
     onToggleVignette: (Boolean) -> Unit,
     onQuickSave: () -> Unit,
+    onPlayAudio: (String) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val backgroundPainter = rememberHubBackgroundPainter(uiState.backgroundImage)
@@ -426,30 +435,45 @@ private fun HubDestinationPanel(
                 maxLines = 3,
                 overflow = TextOverflow.Ellipsis
             )
-            Surface(
-                onClick = onEnter,
-                enabled = node.canEnter,
-                modifier = Modifier.align(Alignment.End),
-                shape = RoundedCornerShape(9.dp),
-                color = if (node.canEnter) accent.copy(alpha = 0.18f) else Color.White.copy(alpha = 0.05f),
-                border = BorderStroke(1.dp, accent.copy(alpha = if (node.canEnter) 0.58f else 0.22f))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(
-                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(6.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        imageVector = if (node.canEnter) Icons.Filled.PlayArrow else Icons.Filled.Lock,
-                        contentDescription = null,
-                        tint = if (node.canEnter) Color.White else Color.White.copy(alpha = 0.42f),
-                        modifier = Modifier.size(17.dp)
-                    )
+                if (node.canEnter) {
                     Text(
-                        text = if (node.canEnter) "Enter" else "Locked",
-                        style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
-                        color = if (node.canEnter) Color.White else Color.White.copy(alpha = 0.42f)
+                        text = "Double-tap marker or tap Enter",
+                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp),
+                        color = Color.White.copy(alpha = 0.5f)
                     )
+                } else {
+                    Spacer(modifier = Modifier.weight(1f))
+                }
+
+                Surface(
+                    onClick = onEnter,
+                    enabled = node.canEnter,
+                    shape = RoundedCornerShape(9.dp),
+                    color = if (node.canEnter) accent.copy(alpha = 0.24f) else Color.White.copy(alpha = 0.05f),
+                    border = BorderStroke(1.dp, accent.copy(alpha = if (node.canEnter) 0.72f else 0.22f))
+                ) {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = if (node.canEnter) Icons.Filled.PlayArrow else Icons.Filled.Lock,
+                            contentDescription = null,
+                            tint = if (node.canEnter) Color.White else Color.White.copy(alpha = 0.42f),
+                            modifier = Modifier.size(17.dp)
+                        )
+                        Text(
+                            text = if (node.canEnter) "Enter" else "Locked",
+                            style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
+                            color = if (node.canEnter) Color.White else Color.White.copy(alpha = 0.42f)
+                        )
+                    }
                 }
             }
         }

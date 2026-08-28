@@ -243,13 +243,13 @@
   {
     "id": "jed_w1_mq01_intro_5",
     "speaker": "Jed",
-    "text": "I know. Eat this while I check the housing. Your kit is under the bench.",
+    "text": "I know. Eat this while I check the housing. Your field kit is ready.",
     "trigger": "set_quest_task_done:w1_mq01:find_jed,set_quest_task_done:w1_mq01:talk_to_jed,player_action:w1_mq01_receive_starter_kit,set_quest_task_done:w1_mq01:equip_starter_gear,set_milestone:ms_w1_mq01_jed_talked"
   },
   {
     "id": "jed_w1_mq01_workshop_brief_1",
     "speaker": "Jed",
-    "text": "Cold loop's split. Bench is yours.",
+    "text": "Cold loop's split. Patch it from your menu.",
     "condition": "quest_active:w1_mq01,milestone:ms_w1_mq01_jed_talked,milestone_not_set:ms_w1_mq01_workshop_briefed",
     "next": "jed_w1_mq01_workshop_brief_2"
   },

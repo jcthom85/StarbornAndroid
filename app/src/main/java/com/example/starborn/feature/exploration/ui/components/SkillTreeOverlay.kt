@@ -33,7 +33,36 @@ fun SkillTreeOverlay(
 ) {
     val accentColor = themeColor(theme?.accent, Color(0xFF7BE4FF))
     val borderColor = themeColor(theme?.border, Color.White.copy(alpha = 0.65f))
-    val scrimColor = Color.Black.copy(alpha = 0.82f)
+    Dialog(onDismissRequest = onClose, properties = DialogProperties(usePlatformDefaultWidth = false)) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.82f))
+                .padding(20.dp)
+        ) {
+            SkillTreeContent(
+                overlay = overlay,
+                accentColor = accentColor,
+                borderColor = borderColor,
+                onClose = onClose,
+                onUnlockSkill = onUnlockSkill,
+                showClose = true,
+                modifier = Modifier.align(Alignment.Center)
+            )
+        }
+    }
+}
+
+@Composable
+fun SkillTreeContent(
+    overlay: SkillTreeOverlayUi,
+    accentColor: Color,
+    borderColor: Color,
+    onClose: () -> Unit = {},
+    onUnlockSkill: (String) -> Unit,
+    showClose: Boolean = false,
+    modifier: Modifier = Modifier
+) {
     val scrollState = rememberScrollState()
     val portraitPainter = rememberAssetPainter(
         imagePath = overlay.portraitPath,
@@ -57,34 +86,26 @@ fun SkillTreeOverlay(
     val selectedNode = selectedBranch?.nodes?.firstOrNull { it.id == selectedNodeId }
         ?: selectedBranch?.nodes?.firstOrNull()
 
-    Dialog(onDismissRequest = onClose, properties = DialogProperties(usePlatformDefaultWidth = false)) {
-        Box(
+    Surface(
+        modifier = modifier
+            .fillMaxWidth()
+            .widthIn(max = 900.dp),
+        shape = RoundedCornerShape(14.dp),
+        color = Color(0xFF02070E).copy(alpha = 0.96f),
+        border = BorderStroke(1.dp, borderColor)
+    ) {
+        Column(
             modifier = Modifier
-                .fillMaxSize()
-                .background(scrimColor)
-                .padding(20.dp)
+                .verticalScroll(scrollState)
+                .padding(24.dp),
+            verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            Surface(
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .fillMaxWidth()
-                    .widthIn(max = 900.dp),
-                shape = RoundedCornerShape(28.dp),
-                color = Color(0xFF02070E).copy(alpha = 0.96f),
-                border = BorderStroke(1.dp, borderColor)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Column(
-                    modifier = Modifier
-                        .verticalScroll(scrollState)
-                        .padding(24.dp),
-                    verticalArrangement = Arrangement.spacedBy(20.dp)
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Row(
+                Row(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(14.dp)
                         ) {
@@ -110,8 +131,10 @@ fun SkillTreeOverlay(
                                 )
                             }
                         }
-                        TextButton(onClick = onClose) {
-                            Text("Close", color = accentColor)
+                        if (showClose) {
+                            TextButton(onClick = onClose) {
+                                Text("Close", color = accentColor)
+                            }
                         }
                     }
 
@@ -161,8 +184,6 @@ fun SkillTreeOverlay(
                     )
                 }
             }
-        }
-    }
 }
 
 @Composable

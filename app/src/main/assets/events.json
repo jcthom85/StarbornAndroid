@@ -714,14 +714,14 @@
       },
       {
         "type": "narrate",
-        "message": "The loader's cracked relay flares out in a shower of sparks. The machine locks, shudders, and collapses into the scrap. The workshop route is clear.",
+        "message": "The loader's cracked relay flares out in a shower of sparks. The machine locks, shudders, and collapses into the scrap. The route to Jed is clear.",
         "tap_to_dismiss": true
       }
     ]
   },
   {
     "id": "w1_mq01_reach_workshop",
-    "description": "Marks arrival at Jed's Workshop and has Jed brief Nova on the bench repair.",
+    "description": "Marks arrival at Jed's place and has Jed brief Nova on tinkering the repair.",
     "trigger": {
       "type": "enter_room",
       "room": "workshop_floor"
@@ -751,7 +751,7 @@
   },
   {
     "id": "w1_mq02_save_prompt_after_workshop",
-    "description": "Shows the save tutorial after Nova leaves Jed's Workshop with Shift Clearance active.",
+    "description": "Shows the save tutorial after Nova leaves Jed's place with Shift Clearance active.",
     "trigger": {
       "type": "enter_room",
       "room": "pit_shaft"
@@ -774,13 +774,13 @@
       {
         "type": "system_tutorial",
         "scene_id": "menu_save",
-        "context": "Jed's Workshop"
+        "context": "Jed's Place"
       }
     ]
   },
   {
     "id": "w1_mq01_route_to_workshop_hint",
-    "description": "Shows the route locator after Jed points Nova toward the Workshop.",
+    "description": "Shows the route locator after Jed points Nova toward his place.",
     "trigger": {
       "type": "enter_room",
       "room": "pit_shaft"
@@ -805,13 +805,13 @@
       {
         "type": "system_tutorial",
         "scene_id": "scene_market_locator",
-        "context": "Jed's Workshop"
+        "context": "Jed's Place"
       }
     ]
   },
   {
     "id": "w1_mq01_tinkering_entered",
-    "description": "Shows the workbench tutorial when Nova opens Jed's workbench after talking to him.",
+    "description": "Shows the tinkering tutorial when Nova opens the Tinker menu.",
     "trigger": {
       "type": "player_action",
       "action": "tinkering_screen_entered"
@@ -836,7 +836,7 @@
       {
         "type": "system_tutorial",
         "scene_id": "scene_tinkering_tutorial",
-        "context": "Tinkering"
+        "context": "Tinker"
       }
     ]
   },
@@ -941,7 +941,7 @@
       },
       {
         "type": "show_message",
-        "message": "Jed crimps the suit link. Nova clamps the replaceable ground strip to the workshop floor bus."
+        "message": "Jed crimps the suit link. Nova clamps the replaceable ground strip to the floor bus."
       }
     ]
   },
@@ -12537,6 +12537,36 @@
       {
         "type": "show_message",
         "message": "The crew rests aboard the Astra. Wounds close, nerves settle, and the ship feels like home for a while."
+      }
+    ]
+  },
+  {
+    "id": "astra_nav_console",
+    "description": "Engage the Astra's forward navigation terminal.",
+    "trigger": {
+      "type": "player_action",
+      "action": "astra_nav_console"
+    },
+    "repeatable": true,
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "The navigation console glows amber. Stellar coordinates and atmospheric approach vectors are plotted across the glass."
+      }
+    ]
+  },
+  {
+    "id": "astra_launch_simulation",
+    "description": "Engages the simulation deck training grid.",
+    "trigger": {
+      "type": "player_action",
+      "action": "astra_launch_simulation"
+    },
+    "repeatable": true,
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "Hard-light emitters power up across the simulation grid. Virtual target telemetry is ready for combat training."
       }
     ]
   },

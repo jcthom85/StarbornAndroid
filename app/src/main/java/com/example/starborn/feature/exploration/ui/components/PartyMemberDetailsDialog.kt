@@ -43,19 +43,37 @@ fun PartyMemberDetailsDialog(
     borderColor: Color = Color(0x3D7FE6FF),
     onDismiss: () -> Unit
 ) {
-    val scrollState = rememberScrollState()
     Dialog(
         onDismissRequest = onDismiss,
         properties = DialogProperties(usePlatformDefaultWidth = false)
     ) {
-        Surface(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            shape = RoundedCornerShape(20.dp),
-            color = Color(0xFF071018),
-            border = BorderStroke(1.dp, borderColor.copy(alpha = 0.65f))
-        ) {
+        PartyMemberDetailsContent(
+            details = details,
+            accentColor = accentColor,
+            borderColor = borderColor,
+            onClose = onDismiss,
+            showClose = true,
+            modifier = Modifier.padding(horizontal = 16.dp)
+        )
+    }
+}
+
+@Composable
+fun PartyMemberDetailsContent(
+    details: PartyMemberDetailsUi,
+    accentColor: Color,
+    borderColor: Color,
+    onClose: () -> Unit = {},
+    showClose: Boolean = false,
+    modifier: Modifier = Modifier
+) {
+    val scrollState = rememberScrollState()
+    Surface(
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(20.dp),
+        color = Color(0xFF071018),
+        border = BorderStroke(1.dp, borderColor.copy(alpha = 0.65f))
+    ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -92,16 +110,18 @@ fun PartyMemberDetailsDialog(
                             )
                         }
                     }
-                    IconButton(
-                        onClick = onDismiss,
-                        modifier = Modifier.size(28.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Close,
-                            contentDescription = "Close",
-                            tint = Color.White.copy(alpha = 0.75f),
-                            modifier = Modifier.size(20.dp)
-                        )
+                    if (showClose) {
+                        IconButton(
+                            onClick = onClose,
+                            modifier = Modifier.size(48.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Close,
+                                contentDescription = "Close",
+                                tint = Color.White.copy(alpha = 0.75f),
+                                modifier = Modifier.size(20.dp)
+                            )
+                        }
                     }
                 }
 
@@ -262,7 +282,6 @@ fun PartyMemberDetailsDialog(
                 }
             }
         }
-    }
 }
 
 @Composable
