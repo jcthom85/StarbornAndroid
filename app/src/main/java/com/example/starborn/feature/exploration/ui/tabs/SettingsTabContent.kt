@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.ExitToApp
 import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material.icons.rounded.FlashOn
 import androidx.compose.material.icons.rounded.Save
@@ -33,9 +34,15 @@ fun SettingsTabContent(
     onVoiceVolumeChange: (Float) -> Unit,
     onToggleTutorials: (Boolean) -> Unit,
     onToggleVignette: (Boolean) -> Unit,
+    onToggleHighContrast: (Boolean) -> Unit = {},
+    onToggleLargeTouchTargets: (Boolean) -> Unit = {},
+    onToggleScreenshakeDisabled: (Boolean) -> Unit = {},
+    onToggleFlashesDisabled: (Boolean) -> Unit = {},
+    onToggleHapticsDisabled: (Boolean) -> Unit = {},
     onQuickSave: () -> Unit,
     onSaveGame: () -> Unit,
-    onLoadGame: () -> Unit
+    onLoadGame: () -> Unit,
+    onReturnToTitle: (() -> Unit)? = null
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
         if (showSaveData) {
@@ -49,7 +56,8 @@ fun SettingsTabContent(
                     borderColor = borderColor,
                     onQuickSave = onQuickSave,
                     onSaveGame = onSaveGame,
-                    onLoadGame = onLoadGame
+                    onLoadGame = onLoadGame,
+                    onReturnToTitle = onReturnToTitle
                 )
             }
         }
@@ -65,6 +73,123 @@ fun SettingsTabContent(
                 onVoiceVolumeChange = onVoiceVolumeChange,
                 onToggleTutorials = onToggleTutorials,
                 onToggleVignette = onToggleVignette
+            )
+        }
+        MenuSectionCard(
+            title = "Accessibility & Comfort",
+            accentColor = accentColor,
+            borderColor = borderColor
+        ) {
+            AccessibilityPanel(
+                settings = settings,
+                onToggleHighContrast = onToggleHighContrast,
+                onToggleLargeTouchTargets = onToggleLargeTouchTargets,
+                onToggleScreenshakeDisabled = onToggleScreenshakeDisabled,
+                onToggleFlashesDisabled = onToggleFlashesDisabled,
+                onToggleHapticsDisabled = onToggleHapticsDisabled
+            )
+        }
+    }
+}
+
+@Composable
+private fun AccessibilityPanel(
+    settings: SettingsUiState,
+    onToggleHighContrast: (Boolean) -> Unit,
+    onToggleLargeTouchTargets: (Boolean) -> Unit,
+    onToggleScreenshakeDisabled: (Boolean) -> Unit,
+    onToggleFlashesDisabled: (Boolean) -> Unit,
+    onToggleHapticsDisabled: (Boolean) -> Unit
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text("High Contrast Mode", color = Color.White, style = MaterialTheme.typography.bodyMedium)
+                Text(
+                    text = if (settings.highContrastMode) "Enabled — Enhanced outlines and text" else "Disabled — Standard theme",
+                    color = Color.White.copy(alpha = 0.7f),
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+            Switch(
+                checked = settings.highContrastMode,
+                onCheckedChange = onToggleHighContrast
+            )
+        }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text("Large Touch Targets", color = Color.White, style = MaterialTheme.typography.bodyMedium)
+                Text(
+                    text = if (settings.largeTouchTargets) "Enabled — Larger action & menu buttons" else "Disabled — Compact layout",
+                    color = Color.White.copy(alpha = 0.7f),
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+            Switch(
+                checked = settings.largeTouchTargets,
+                onCheckedChange = onToggleLargeTouchTargets
+            )
+        }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text("Haptic Feedback", color = Color.White, style = MaterialTheme.typography.bodyMedium)
+                Text(
+                    text = if (!settings.disableHaptics) "Enabled — Vibration rumble" else "Disabled — Vibration muted",
+                    color = Color.White.copy(alpha = 0.7f),
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+            Switch(
+                checked = !settings.disableHaptics,
+                onCheckedChange = { onToggleHapticsDisabled(!it) }
+            )
+        }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text("Screen Shake", color = Color.White, style = MaterialTheme.typography.bodyMedium)
+                Text(
+                    text = if (!settings.disableScreenshake) "Enabled — Dynamic camera impact" else "Disabled — Steady camera",
+                    color = Color.White.copy(alpha = 0.7f),
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+            Switch(
+                checked = !settings.disableScreenshake,
+                onCheckedChange = { onToggleScreenshakeDisabled(!it) }
+            )
+        }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text("Combat Flashes", color = Color.White, style = MaterialTheme.typography.bodyMedium)
+                Text(
+                    text = if (!settings.disableFlashes) "Enabled — Visual flash bursts" else "Disabled — Flashes suppressed",
+                    color = Color.White.copy(alpha = 0.7f),
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+            Switch(
+                checked = !settings.disableFlashes,
+                onCheckedChange = { onToggleFlashesDisabled(!it) }
             )
         }
     }
@@ -161,7 +286,8 @@ private fun SaveDataPanel(
     borderColor: Color,
     onQuickSave: () -> Unit,
     onSaveGame: () -> Unit,
-    onLoadGame: () -> Unit
+    onLoadGame: () -> Unit,
+    onReturnToTitle: (() -> Unit)? = null
 ) {
     Surface(
         modifier = Modifier.fillMaxWidth(),
@@ -236,6 +362,19 @@ private fun SaveDataPanel(
                 onClick = onQuickSave,
                 modifier = Modifier.fillMaxWidth()
             )
+            if (onReturnToTitle != null) {
+                SaveActionButton(
+                    label = "Save & Return to Title",
+                    detail = "Quicksave and exit to the main menu",
+                    icon = Icons.AutoMirrored.Rounded.ExitToApp,
+                    accentColor = Color(0xFFFFB300),
+                    onClick = {
+                        onQuickSave()
+                        onReturnToTitle()
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
         }
     }
 }

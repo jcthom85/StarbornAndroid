@@ -852,49 +852,66 @@ fun DamageNumberBubble(
     val isBlocked = normalizedElement == "blocked" && fx.amount == 0
     val isHealing = fx.amount < 0
     val displayAmount = abs(fx.amount)
-    val verticalOffset = remember { Animatable(0f) }
-    val alphaAnim = remember { Animatable(1f) }
-    val scaleAnim = remember { Animatable(1f) }
-    val driftX = remember(fx.id, isMiss, isBlocked) { (Random.nextFloat() - 0.5f) * if (isMiss || isBlocked) 22f else 48f }
+
+    val progress = remember(fx.id) { Animatable(0f) }
+    val scaleAnim = remember(fx.id) { Animatable(1f) }
+    val driftX = remember(fx.id, isMiss, isBlocked) { (Random.nextFloat() - 0.5f) * if (isMiss || isBlocked) 24f else 52f }
     val tilt = remember(fx.id, isHealing, isMiss, isBlocked) {
         when {
             isHealing -> 0f
             isMiss -> 0f
             isBlocked -> 0f
-            else -> (Random.nextFloat() - 0.5f) * if (fx.critical) 18f else 10f
+            else -> (Random.nextFloat() - 0.5f) * if (fx.critical) 14f else 8f
         }
     }
+
     LaunchedEffect(fx.id) {
-        verticalOffset.snapTo(0f)
-        alphaAnim.snapTo(1f)
+        progress.snapTo(0f)
         val initialScale = when {
-            isMiss -> 1.12f
-            isBlocked -> 1.12f
-            isHealing -> 1.05f
-            fx.critical -> 1.25f
-            else -> 1.1f
+            fx.critical -> 1.75f
+            isMiss || isBlocked -> 1.15f
+            isHealing -> 1.20f
+            else -> 1.38f
         }
         scaleAnim.snapTo(initialScale)
+
         launch {
-            verticalOffset.animateTo(
-                targetValue = when {
-                    isMiss -> -64f
-                    isBlocked -> -64f
-                    isHealing -> -60f
-                    fx.critical -> -96f
-                    else -> -72f
-                },
-                animationSpec = tween(durationMillis = 680, easing = LinearEasing)
+            scaleAnim.animateTo(
+                targetValue = 1.0f,
+                animationSpec = tween(durationMillis = 180, easing = EaseOutBack)
             )
         }
         launch {
-            delay(350)
-            alphaAnim.animateTo(0f, tween(durationMillis = 400, easing = LinearEasing))
-        }
-        launch {
-            scaleAnim.animateTo(1f, tween(durationMillis = 420, easing = EaseOutBack))
+            progress.animateTo(
+                targetValue = 1f,
+                animationSpec = tween(durationMillis = 720, easing = LinearEasing)
+            )
         }
     }
+
+    val t = progress.value
+    // Parabolic Ballistic Motion: y(t) = v0*t + 0.5*g*t^2
+    val v0 = when {
+        fx.critical -> -160f
+        isMiss || isBlocked -> -80f
+        isHealing -> -100f
+        else -> -130f
+    }
+    val gravity = when {
+        fx.critical -> 220f
+        isMiss || isBlocked -> 110f
+        isHealing -> 140f
+        else -> 180f
+    }
+    val currentY = v0 * t + 0.5f * gravity * (t * t)
+    val currentX = driftX * (1f - (1f - t) * (1f - t)) // Smooth initial drift
+
+    val currentAlpha = if (t < 0.42f) {
+        1f
+    } else {
+        (1f - (t - 0.42f) / 0.58f).coerceIn(0f, 1f)
+    }
+
     val headline = when {
         isMiss -> "MISS!"
         isBlocked -> "BLOCKED"
@@ -904,9 +921,9 @@ fun DamageNumberBubble(
     }
     val (topColor, bottomColor) = damageNumberColors(fx.element, fx.critical, isHealing)
     val bubbleModifier = modifier.graphicsLayer {
-        translationY = verticalOffset.value
-        translationX = driftX
-        alpha = alphaAnim.value
+        translationY = currentY
+        translationX = currentX
+        alpha = currentAlpha
         scaleX = scaleAnim.value
         scaleY = scaleAnim.value
         rotationZ = tilt
@@ -915,6 +932,32 @@ fun DamageNumberBubble(
         modifier = bubbleModifier,
         contentAlignment = Alignment.Center
     ) {
+        // Weakness / Crit sparkle flare particles (first 280ms)
+        if ((fx.isWeakness || fx.critical) && t < 0.38f) {
+            val sparkProgress = (t / 0.38f)
+            val sparkAlpha = (1f - sparkProgress) * 0.9f
+            Canvas(modifier = Modifier.size(72.dp)) {
+                val sparkDist = size.minDimension * 0.45f * sparkProgress
+                val sparkColor = if (fx.isWeakness) Color(0xFFFFD54F) else Color(0xFFFFCC80)
+                val seedVal = (abs(fx.id.hashCode()) % 100).toFloat()
+                for (i in 0 until 6) {
+                    val angle = (i * (PI.toFloat() / 3f) + (seedVal * 0.1f))
+                    val sx = center.x + cos(angle.toDouble()).toFloat() * sparkDist
+                    val sy = center.y + sin(angle.toDouble()).toFloat() * sparkDist
+                    drawCircle(
+                        color = sparkColor.copy(alpha = sparkAlpha),
+                        radius = (3.5f * (1f - sparkProgress)).coerceAtLeast(1f),
+                        center = Offset(sx, sy)
+                    )
+                    drawCircle(
+                        color = Color.White.copy(alpha = sparkAlpha),
+                        radius = (1.8f * (1f - sparkProgress)).coerceAtLeast(0.5f),
+                        center = Offset(sx, sy)
+                    )
+                }
+            }
+        }
+
         if (isBlocked) {
             Icon(
                 imageVector = Icons.Rounded.Shield,
@@ -1054,13 +1097,13 @@ fun damageNumberColors(
     val normalized = element?.trim()?.lowercase(Locale.getDefault())
     val base = when (normalized) {
         "burn", "fire" -> Color(0xFFFF7043)
-        "freeze", "ice" -> Color(0xFF90CAF9)
-        "shock", "lightning" -> Color(0xFF42A5F5)
-        "acid", "poison" -> Color(0xFF81C784)
-        "source", "harmonic", "psychic", "psionic", "void" -> Color(0xFFBA68C8)
-        "physical" -> null
+        "freeze", "ice", "cryo", "cold" -> Color(0xFF80DEEA)
+        "shock", "lightning" -> Color(0xFF80D8FF)
+        "acid", "poison", "corrosive" -> Color(0xFFAED581)
+        "source", "harmonic", "psychic", "psionic", "void", "aethel", "resonance" -> Color(0xFFBA68C8)
+        "physical", "kinetic" -> null
         "miss" -> Color(0xFFB0BEC5)
-        "blocked" -> Color(0xFF90A4AE)
+        "blocked" -> Color(0xFF90CAF9)
         else -> null
     }
     if (base == null) {
@@ -1075,39 +1118,48 @@ fun damageNumberColors(
     return top to bottom
 }
 
+private fun seed(id: String): Float = (abs(id.hashCode()) % 100).toFloat()
+
 @Composable
 fun HealNumberBubble(
     fx: HealFxUi,
     modifier: Modifier = Modifier
 ) {
-    val verticalOffset = remember { Animatable(0f) }
-    val alphaAnim = remember { Animatable(1f) }
+    val progress = remember(fx.id) { Animatable(0f) }
+    val scaleAnim = remember(fx.id) { Animatable(1.22f) }
+
     LaunchedEffect(fx.id) {
-        verticalOffset.snapTo(0f)
-        alphaAnim.snapTo(1f)
+        progress.snapTo(0f)
+        scaleAnim.snapTo(1.22f)
         launch {
-            verticalOffset.animateTo(-52f, tween(durationMillis = 560, easing = LinearEasing))
+            scaleAnim.animateTo(1.0f, tween(durationMillis = 160, easing = FastOutSlowInEasing))
         }
         launch {
-            delay(350)
-            alphaAnim.animateTo(0f, tween(durationMillis = 400, easing = LinearEasing))
+            progress.animateTo(1f, tween(durationMillis = 620, easing = LinearEasing))
         }
     }
+
+    val t = progress.value
+    val currentY = -90f * t + 0.5f * 120f * (t * t)
+    val currentAlpha = if (t < 0.40f) 1f else (1f - (t - 0.40f) / 0.60f).coerceIn(0f, 1f)
+
     Box(
         modifier = modifier.graphicsLayer {
-            translationY = verticalOffset.value
-            alpha = alphaAnim.value
+            translationY = currentY
+            alpha = currentAlpha
+            scaleX = scaleAnim.value
+            scaleY = scaleAnim.value
         },
         contentAlignment = Alignment.Center
     ) {
         val text = "+${fx.amount}"
         val textStyle = MaterialTheme.typography.titleLarge.copy(
-            fontSize = 22.sp,
+            fontSize = 24.sp,
             fontFamily = CombatNameFont,
             fontWeight = FontWeight.Black
         )
-        val outlineColor = Color.Black.copy(alpha = 0.75f)
-        val outlineOffset = 1.2.dp
+        val outlineColor = Color.Black.copy(alpha = 0.8f)
+        val outlineOffset = 1.4.dp
 
         // Outline
         listOf(
@@ -1127,8 +1179,14 @@ fun HealNumberBubble(
 
         Text(
             text = text,
-            style = textStyle,
-            color = Color(0xFF81C784)
+            style = textStyle.copy(
+                shadow = Shadow(
+                    color = Color(0xFF81C784).copy(alpha = 0.85f),
+                    offset = Offset(0f, 2f),
+                    blurRadius = 8f
+                )
+            ),
+            color = Color(0xFFA5D6A7)
         )
     }
 }
@@ -1396,7 +1454,7 @@ fun TimedPromptOverlay(
                     textAlign = TextAlign.Center
                 )
                 LinearProgressIndicator(
-                    progress = progress.coerceIn(0f, 1f),
+                    progress = { progress.coerceIn(0f, 1f) },
                     modifier = Modifier
                         .widthIn(min = 220.dp)
                         .height(8.dp)

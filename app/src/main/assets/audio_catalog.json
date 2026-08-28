@@ -608,6 +608,136 @@
         "orchestral",
         "action"
       ]
+    },
+    {
+      "id": "gf_01_unpayable_debt",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 1200,
+      "fade_out_ms": 1000,
+      "gain": 0.85,
+      "tags": [
+        "great_frontier",
+        "vhs",
+        "track_01"
+      ]
+    },
+    {
+      "id": "gf_02_memories_of_another_life",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 1200,
+      "fade_out_ms": 1000,
+      "gain": 0.85,
+      "tags": [
+        "great_frontier",
+        "vhs",
+        "track_02"
+      ]
+    },
+    {
+      "id": "gf_03_showdown_in_the_rain",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 1200,
+      "fade_out_ms": 1000,
+      "gain": 0.85,
+      "tags": [
+        "great_frontier",
+        "vhs",
+        "track_03"
+      ]
+    },
+    {
+      "id": "gf_04_the_road_at_night",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 1200,
+      "fade_out_ms": 1000,
+      "gain": 0.85,
+      "tags": [
+        "great_frontier",
+        "vhs",
+        "track_04"
+      ]
+    },
+    {
+      "id": "gf_05_the_black_city",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 1200,
+      "fade_out_ms": 1000,
+      "gain": 0.85,
+      "tags": [
+        "great_frontier",
+        "vhs",
+        "track_05"
+      ]
+    },
+    {
+      "id": "gf_06_refuge",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 1200,
+      "fade_out_ms": 1000,
+      "gain": 0.85,
+      "tags": [
+        "great_frontier",
+        "vhs",
+        "track_06"
+      ]
+    },
+    {
+      "id": "gf_07_reclamation",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 1200,
+      "fade_out_ms": 1000,
+      "gain": 0.85,
+      "tags": [
+        "great_frontier",
+        "vhs",
+        "track_07"
+      ]
+    },
+    {
+      "id": "gf_08_the_end_of_the_beginning",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 1200,
+      "fade_out_ms": 1000,
+      "gain": 0.85,
+      "tags": [
+        "great_frontier",
+        "vhs",
+        "track_08"
+      ]
+    },
+    {
+      "id": "gf_09_reconciliation",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 1200,
+      "fade_out_ms": 1000,
+      "gain": 0.85,
+      "tags": [
+        "great_frontier",
+        "vhs",
+        "track_09"
+      ]
+    },
+    {
+      "id": "gf_10_shackles",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 1200,
+      "fade_out_ms": 1000,
+      "gain": 0.85,
+      "tags": [
+        "great_frontier",
+        "vhs",
+        "track_10"
+      ]
     }
   ],
   "cues": [
@@ -1246,7 +1376,7 @@
       "id": "sfx_distant_gate_rumble",
       "category": "ambient",
       "priority": 5,
-      "gain": 0.90,
+      "gain": 0.9,
       "fade_in_ms": 0,
       "fade_out_ms": 500,
       "duration_ms": 2500
@@ -1273,7 +1403,7 @@
       "id": "sfx_forage_gather",
       "category": "battle",
       "priority": 5,
-      "gain": 0.90,
+      "gain": 0.9,
       "fade_in_ms": 0,
       "fade_out_ms": 300,
       "duration_ms": 1200

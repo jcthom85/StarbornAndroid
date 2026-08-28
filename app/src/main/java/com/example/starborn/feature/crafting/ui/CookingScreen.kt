@@ -1,20 +1,12 @@
 package com.example.starborn.feature.crafting.ui
 
+import androidx.compose.animation.core.*
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -24,34 +16,26 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.OutdoorGrill
 import androidx.compose.material.icons.filled.Restaurant
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.starborn.domain.crafting.CraftingOutcome
 import com.example.starborn.domain.crafting.CraftingService
 import com.example.starborn.domain.inventory.InventoryService
+import com.example.starborn.feature.exploration.ui.components.previewItemIconRes
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.math.PI
+import kotlin.math.sin
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -66,227 +50,317 @@ fun CookingScreen(
     val inventoryState by inventoryService.state.collectAsState()
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
+    var recentlyCookedRecipeId by remember { mutableStateOf<String?>(null) }
 
     val recipes = remember { craftingService.cookingRecipes }
     val isCampfire = source?.contains("camp", ignoreCase = true) == true || source?.contains("fire", ignoreCase = true) == true
-    val headerTitle = if (isCampfire) "Campfire Cooking" else "Kitchen Provisions"
-    val headerSubtitle = if (isCampfire) "Prepare hot trail meals over the open flame." else "Prepare nutritious field rations and restorative broths."
+    val isThermalCooker = source?.contains("thermal", ignoreCase = true) == true || source?.contains("cooker", ignoreCase = true) == true
+    val headerTitle = when {
+        isThermalCooker -> "Thermal Cooker"
+        isCampfire -> "Campfire Cooking"
+        else -> "Kitchen Provisions"
+    }
+    val headerSubtitle = when {
+        isThermalCooker -> "Convert raw ingredients and forage into field rations and nutritional preserves."
+        isCampfire -> "Prepare hot trail meals over the open flame."
+        else -> "Prepare nutritious field rations and restorative broths."
+    }
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
         snackbarHost = { SnackbarHost(snackbarHostState) },
         containerColor = Color(0xFF121418)
     ) { innerPadding ->
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(16.dp)
         ) {
-            // Top Bar
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 12.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                IconButton(
-                    onClick = onBack,
+            if (isCampfire) {
+                CookingEmberCanvas(
                     modifier = Modifier
-                        .size(44.dp)
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(Color(0xFF1E232B))
+                        .fillMaxWidth()
+                        .height(180.dp)
+                        .align(Alignment.TopCenter)
+                )
+            }
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
+            ) {
+                // Top Bar
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 12.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Back",
-                        tint = Color(0xFFE2E8F0)
-                    )
-                }
-
-                Spacer(modifier = Modifier.width(12.dp))
-
-                Column {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
+                    IconButton(
+                        onClick = onBack,
+                        modifier = Modifier
+                            .size(44.dp)
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(Color(0xFF1E232B))
+                    ) {
                         Icon(
-                            imageVector = if (isCampfire) Icons.Default.OutdoorGrill else Icons.Default.Restaurant,
-                            contentDescription = null,
-                            tint = Color(0xFFF6AD55),
-                            modifier = Modifier.size(20.dp)
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back",
+                            tint = Color(0xFFE2E8F0)
                         )
-                        Spacer(modifier = Modifier.width(6.dp))
+                    }
+
+                    Spacer(modifier = Modifier.width(12.dp))
+
+                    Column {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                imageVector = if (isCampfire) Icons.Default.OutdoorGrill else Icons.Default.Restaurant,
+                                contentDescription = null,
+                                tint = Color(0xFFF6AD55),
+                                modifier = Modifier.size(20.dp)
+                            )
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text(
+                                text = headerTitle,
+                                style = MaterialTheme.typography.titleLarge.copy(
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color(0xFFF7FAFC)
+                                )
+                            )
+                        }
                         Text(
-                            text = headerTitle,
-                            style = MaterialTheme.typography.titleLarge.copy(
-                                fontWeight = FontWeight.Bold,
-                                color = Color(0xFFF7FAFC)
+                            text = headerSubtitle,
+                            style = MaterialTheme.typography.bodySmall.copy(
+                                color = Color(0xFFA0AEC0)
                             )
                         )
                     }
-                    Text(
-                        text = headerSubtitle,
-                        style = MaterialTheme.typography.bodySmall.copy(
-                            color = Color(0xFFA0AEC0)
-                        )
-                    )
                 }
-            }
 
-            // Recipe List
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                items(recipes, key = { it.id }) { recipe ->
-                    val canCook = craftingService.canCook(recipe)
+                // Recipe List
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    items(recipes, key = { it.id }) { recipe ->
+                        val canCook = craftingService.canCook(recipe)
+                        val isRecentlyCooked = recentlyCookedRecipeId == recipe.id
 
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .border(
-                                width = 1.dp,
-                                color = if (canCook) Color(0xFFED8936).copy(alpha = 0.5f) else Color(0xFF2D3748),
-                                shape = RoundedCornerShape(16.dp)
-                            ),
-                        shape = RoundedCornerShape(16.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = Color(0xFF1A202C)
-                        )
-                    ) {
-                        Column(
+                        val cardScale = remember(isRecentlyCooked) { Animatable(if (isRecentlyCooked) 1.04f else 1f) }
+                        LaunchedEffect(isRecentlyCooked) {
+                            if (isRecentlyCooked) {
+                                cardScale.snapTo(1.04f)
+                                cardScale.animateTo(1f, tween(durationMillis = 350, easing = EaseOutBack))
+                            }
+                        }
+
+                        Card(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(16.dp)
+                                .graphicsLayer {
+                                    scaleX = cardScale.value
+                                    scaleY = cardScale.value
+                                }
+                                .border(
+                                    width = if (isRecentlyCooked) 1.5.dp else 1.dp,
+                                    color = when {
+                                        isRecentlyCooked -> Color(0xFFFFD54F)
+                                        canCook -> Color(0xFFED8936).copy(alpha = 0.6f)
+                                        else -> Color(0xFF2D3748)
+                                    },
+                                    shape = RoundedCornerShape(16.dp)
+                                ),
+                            shape = RoundedCornerShape(16.dp),
+                            colors = CardDefaults.cardColors(
+                                containerColor = if (isRecentlyCooked) Color(0xFF24221E) else Color(0xFF1A202C)
+                            )
                         ) {
-                            // Title & Yield
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp)
                             ) {
+                                // Title, Icon & Yield
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                                    ) {
+                                        Image(
+                                            painter = painterResource(previewItemIconRes(recipe.result)),
+                                            contentDescription = recipe.name,
+                                            modifier = Modifier.size(28.dp)
+                                        )
+                                        Text(
+                                            text = recipe.name,
+                                            style = MaterialTheme.typography.titleMedium.copy(
+                                                fontWeight = FontWeight.SemiBold,
+                                                color = Color(0xFFF7FAFC)
+                                            )
+                                        )
+                                    }
+                                    Surface(
+                                        color = Color(0xFF2D3748),
+                                        shape = RoundedCornerShape(8.dp)
+                                    ) {
+                                        Text(
+                                            text = "Yield: ${recipe.resultQuantity}",
+                                            style = MaterialTheme.typography.labelSmall.copy(
+                                                color = Color(0xFFCBD5E0)
+                                            ),
+                                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                                        )
+                                    }
+                                }
+
+                                // Description
+                                recipe.description?.let { desc ->
+                                    Spacer(modifier = Modifier.height(4.dp))
+                                    Text(
+                                        text = desc,
+                                        style = MaterialTheme.typography.bodySmall.copy(
+                                            color = Color(0xFFA0AEC0)
+                                        )
+                                    )
+                                }
+
+                                Spacer(modifier = Modifier.height(12.dp))
+
+                                // Ingredients required
                                 Text(
-                                    text = recipe.name,
-                                    style = MaterialTheme.typography.titleMedium.copy(
-                                        fontWeight = FontWeight.SemiBold,
-                                        color = Color(0xFFF7FAFC)
+                                    text = "Ingredients",
+                                    style = MaterialTheme.typography.labelSmall.copy(
+                                        fontWeight = FontWeight.Bold,
+                                        color = Color(0xFF718096),
+                                        fontSize = 11.sp
                                     )
                                 )
-                                Surface(
-                                    color = Color(0xFF2D3748),
-                                    shape = RoundedCornerShape(8.dp)
+
+                                Spacer(modifier = Modifier.height(6.dp))
+
+                                FlowRow(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                    verticalArrangement = Arrangement.spacedBy(6.dp)
+                                ) {
+                                    recipe.ingredients.forEach { (ingredientId, count) ->
+                                        val currentQty = inventoryState.find {
+                                            it.item.id.equals(ingredientId, ignoreCase = true) ||
+                                                it.item.name.equals(ingredientId, ignoreCase = true) ||
+                                                it.item.aliases.any { alias -> alias.equals(ingredientId, ignoreCase = true) }
+                                        }?.quantity ?: 0
+                                        val hasEnough = currentQty >= count
+                                        val formattedName = ingredientId.replace("_", " ").replaceFirstChar { it.uppercase() }
+
+                                        Surface(
+                                            shape = RoundedCornerShape(8.dp),
+                                            color = if (hasEnough) Color(0xFF22543D).copy(alpha = 0.6f) else Color(0xFF2D3748),
+                                            border = if (hasEnough) BorderStroke(1.dp, Color(0xFF48BB78).copy(alpha = 0.5f)) else null
+                                        ) {
+                                            Row(
+                                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                                                verticalAlignment = Alignment.CenterVertically
+                                            ) {
+                                                Icon(
+                                                    imageVector = if (hasEnough) Icons.Default.Check else Icons.Default.Close,
+                                                    contentDescription = null,
+                                                    tint = if (hasEnough) Color(0xFF48BB78) else Color(0xFFE53E3E),
+                                                    modifier = Modifier.size(12.dp)
+                                                )
+                                                Spacer(modifier = Modifier.width(4.dp))
+                                                Text(
+                                                    text = "$formattedName $currentQty/$count",
+                                                    style = MaterialTheme.typography.labelSmall.copy(
+                                                        color = if (hasEnough) Color(0xFFE2E8F0) else Color(0xFFA0AEC0)
+                                                    )
+                                                )
+                                            }
+                                        }
+                                    }
+                                }
+
+                                Spacer(modifier = Modifier.height(12.dp))
+
+                                // Cook Button
+                                Button(
+                                    onClick = {
+                                        val outcome = craftingService.cookMeal(recipe.id)
+                                        scope.launch {
+                                            when (outcome) {
+                                                is CraftingOutcome.Success -> {
+                                                    onPlayAudio("sfx_cooking_sizzle")
+                                                    recentlyCookedRecipeId = recipe.id
+                                                    snackbarHostState.showSnackbar("🍲 ${outcome.message}")
+                                                    delay(1200)
+                                                    if (recentlyCookedRecipeId == recipe.id) {
+                                                        recentlyCookedRecipeId = null
+                                                    }
+                                                }
+                                                is CraftingOutcome.Failure -> {
+                                                    snackbarHostState.showSnackbar("❌ ${outcome.message}")
+                                                }
+                                            }
+                                        }
+                                    },
+                                    enabled = canCook,
+                                    modifier = Modifier.fillMaxWidth(),
+                                    shape = RoundedCornerShape(12.dp),
+                                    colors = ButtonDefaults.buttonColors(
+                                        containerColor = Color(0xFFDD6B20),
+                                        disabledContainerColor = Color(0xFF2D3748)
+                                    )
                                 ) {
                                     Text(
-                                        text = "Yield: ${recipe.resultQuantity}",
-                                        style = MaterialTheme.typography.labelSmall.copy(
-                                            color = Color(0xFFCBD5E0)
-                                        ),
-                                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                                        text = if (canCook) "Cook ${recipe.name}" else "Missing Ingredients",
+                                        fontWeight = FontWeight.Bold,
+                                        color = if (canCook) Color.White else Color(0xFF718096)
                                     )
                                 }
-                            }
-
-                            // Description
-                            recipe.description?.let { desc ->
-                                Spacer(modifier = Modifier.height(4.dp))
-                                Text(
-                                    text = desc,
-                                    style = MaterialTheme.typography.bodySmall.copy(
-                                        color = Color(0xFFA0AEC0)
-                                    )
-                                )
-                            }
-
-                            Spacer(modifier = Modifier.height(12.dp))
-
-                            // Ingredients required
-                            Text(
-                                text = "Ingredients",
-                                style = MaterialTheme.typography.labelSmall.copy(
-                                    fontWeight = FontWeight.Bold,
-                                    color = Color(0xFF718096),
-                                    fontSize = 11.sp
-                                )
-                            )
-
-                            Spacer(modifier = Modifier.height(6.dp))
-
-                            FlowRow(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                verticalArrangement = Arrangement.spacedBy(6.dp)
-                            ) {
-                                recipe.ingredients.forEach { (ingredientId, count) ->
-                                    val currentQty = inventoryState.find {
-                                        it.item.id.equals(ingredientId, ignoreCase = true) ||
-                                            it.item.name.equals(ingredientId, ignoreCase = true) ||
-                                            it.item.aliases.any { alias -> alias.equals(ingredientId, ignoreCase = true) }
-                                    }?.quantity ?: 0
-                                    val hasEnough = currentQty >= count
-                                    val formattedName = ingredientId.replace("_", " ").replaceFirstChar { it.uppercase() }
-
-                                    Surface(
-                                        shape = RoundedCornerShape(8.dp),
-                                        color = if (hasEnough) Color(0xFF22543D).copy(alpha = 0.6f) else Color(0xFF2D3748),
-                                        border = if (hasEnough) androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF48BB78).copy(alpha = 0.5f)) else null
-                                    ) {
-                                        Row(
-                                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                                            verticalAlignment = Alignment.CenterVertically
-                                        ) {
-                                            Icon(
-                                                imageVector = if (hasEnough) Icons.Default.Check else Icons.Default.Close,
-                                                contentDescription = null,
-                                                tint = if (hasEnough) Color(0xFF48BB78) else Color(0xFFE53E3E),
-                                                modifier = Modifier.size(12.dp)
-                                            )
-                                            Spacer(modifier = Modifier.width(4.dp))
-                                            Text(
-                                                text = "$formattedName $currentQty/$count",
-                                                style = MaterialTheme.typography.labelSmall.copy(
-                                                    color = if (hasEnough) Color(0xFFE2E8F0) else Color(0xFFA0AEC0)
-                                                )
-                                            )
-                                        }
-                                    }
-                                }
-                            }
-
-                            Spacer(modifier = Modifier.height(12.dp))
-
-                            // Cook Button
-                            Button(
-                                onClick = {
-                                    val outcome = craftingService.cookMeal(recipe.id)
-                                    scope.launch {
-                                        when (outcome) {
-                                            is CraftingOutcome.Success -> {
-                                                onPlayAudio("sfx_cooking_sizzle")
-                                                snackbarHostState.showSnackbar("🍲 ${outcome.message}")
-                                            }
-                                            is CraftingOutcome.Failure -> {
-                                                snackbarHostState.showSnackbar("❌ ${outcome.message}")
-                                            }
-                                        }
-                                    }
-                                },
-                                enabled = canCook,
-                                modifier = Modifier.fillMaxWidth(),
-                                shape = RoundedCornerShape(12.dp),
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = Color(0xFFDD6B20),
-                                    disabledContainerColor = Color(0xFF2D3748)
-                                )
-                            ) {
-                                Text(
-                                    text = if (canCook) "Cook ${recipe.name}" else "Missing Ingredients",
-                                    fontWeight = FontWeight.Bold,
-                                    color = if (canCook) Color.White else Color(0xFF718096)
-                                )
                             }
                         }
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun CookingEmberCanvas(
+    modifier: Modifier = Modifier,
+    particleCount: Int = 10
+) {
+    val transition = rememberInfiniteTransition(label = "campfire_embers")
+    val time by transition.animateFloat(
+        initialValue = 0f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(2400, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart
+        ),
+        label = "ember_time"
+    )
+
+    Canvas(modifier = modifier) {
+        val width = size.width
+        val height = size.height
+        for (i in 0 until particleCount) {
+            val phase = (time + i.toFloat() / particleCount) % 1f
+            val x = (sin(phase * PI * 2.0 + i * 1.5).toFloat() * 0.4f + 0.5f) * width
+            val y = (1f - phase) * height
+            val alpha = (sin(phase * PI).toFloat()).coerceIn(0f, 1f)
+            val radius = 2.5.dp.toPx() * (1f - phase * 0.5f)
+            drawCircle(
+                color = if (i % 2 == 0) Color(0xFFFF9800).copy(alpha = alpha * 0.45f) else Color(0xFFFFD54F).copy(alpha = alpha * 0.6f),
+                radius = radius,
+                center = Offset(x, y)
+            )
         }
     }
 }

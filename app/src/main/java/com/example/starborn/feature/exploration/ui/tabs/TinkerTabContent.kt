@@ -31,6 +31,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -762,6 +763,21 @@ private fun BenchSocket(
         label = "pulseAlpha"
     )
 
+    val snapAnim = remember(itemId) { Animatable(if (!itemId.isNullOrBlank()) 1.12f else 1.0f) }
+    val flareAnim = remember(itemId) { Animatable(if (!itemId.isNullOrBlank()) 1.0f else 0f) }
+    LaunchedEffect(itemId) {
+        if (!itemId.isNullOrBlank()) {
+            snapAnim.snapTo(1.14f)
+            snapAnim.animateTo(1.0f, tween(durationMillis = 220, easing = EaseOutBack))
+        }
+    }
+    LaunchedEffect(itemId) {
+        if (!itemId.isNullOrBlank()) {
+            flareAnim.snapTo(1.0f)
+            flareAnim.animateTo(0f, tween(durationMillis = 360, easing = FastOutSlowInEasing))
+        }
+    }
+
     val socketBorderColor = when {
         isTutorialHighlighted -> Color(0xFFFFC857).copy(alpha = pulseAlpha)
         isActive -> Color(0xFFFFC857)
@@ -775,7 +791,21 @@ private fun BenchSocket(
         else -> Color.Black.copy(alpha = 0.4f)
     }
 
-    Box(modifier = modifier) {
+    Box(
+        modifier = modifier.graphicsLayer {
+            scaleX = snapAnim.value
+            scaleY = snapAnim.value
+        }
+    ) {
+        if (flareAnim.value > 0f) {
+            Canvas(modifier = Modifier.matchParentSize()) {
+                drawRoundRect(
+                    color = accentColor.copy(alpha = 0.65f * flareAnim.value),
+                    cornerRadius = androidx.compose.ui.geometry.CornerRadius(10.dp.toPx(), 10.dp.toPx()),
+                    style = androidx.compose.ui.graphics.drawscope.Stroke(width = 3.dp.toPx() * flareAnim.value)
+                )
+            }
+        }
         Surface(
             modifier = Modifier
                 .fillMaxWidth()

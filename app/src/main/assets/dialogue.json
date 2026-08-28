@@ -243,13 +243,19 @@
   {
     "id": "jed_w1_mq01_intro_5",
     "speaker": "Jed",
-    "text": "I know. Eat this while I check the housing. Your field kit is ready.",
+    "text": "Take these rations and your kit. Meet me at my workshop with the cutter parts.",
+    "next": "jed_w1_mq01_intro_6"
+  },
+  {
+    "id": "jed_w1_mq01_intro_6",
+    "speaker": "Jed",
+    "text": "Watch the yard. A faulted scrap loader is swinging at anything that moves.",
     "trigger": "set_quest_task_done:w1_mq01:find_jed,set_quest_task_done:w1_mq01:talk_to_jed,player_action:w1_mq01_receive_starter_kit,set_quest_task_done:w1_mq01:equip_starter_gear,set_milestone:ms_w1_mq01_jed_talked"
   },
   {
     "id": "jed_w1_mq01_workshop_brief_1",
     "speaker": "Jed",
-    "text": "Cold loop's split. Patch it from your menu.",
+    "text": "Good, you made it. Cold loop's split. Patch it from your menu.",
     "condition": "quest_active:w1_mq01,milestone:ms_w1_mq01_jed_talked,milestone_not_set:ms_w1_mq01_workshop_briefed",
     "next": "jed_w1_mq01_workshop_brief_2"
   },
@@ -1407,5 +1413,20 @@
     "speaker": "Gh0st",
     "text": "Do not touch the transmitter yet. First blind the security grid on the gantry, then cross the grate between guard sweeps.",
     "condition": "quest_active:w2_sq05,quest_task_not_done:w2_sq05:hack_security_grid"
+  },
+  {
+    "id": "miner_orlo_default_talk",
+    "speaker": "Orlo",
+    "text": "Keep your boots dry, kid. The lower drift is humming deeper every cycle."
+  },
+  {
+    "id": "cook_vance_default_talk",
+    "speaker": "Vance",
+    "text": "Eat up. It is synthetic paste, but it will keep your boots moving under heavy gravity."
+  },
+  {
+    "id": "mechanic_mira_default_talk",
+    "speaker": "Mira",
+    "text": "Watch your fingers near the loader tracks. Dominion does not issue replacement knuckles."
   }
 ]

@@ -579,7 +579,12 @@ class ExplorationViewModel(
                     sfxVolume = userSfxVolume,
                     voiceVolume = userVoiceVolume,
                     vignetteEnabled = isVignetteEnabled,
-                    tutorialsEnabled = tutorialsEnabled
+                    tutorialsEnabled = tutorialsEnabled,
+                    highContrastMode = settings.highContrastMode,
+                    largeTouchTargets = settings.largeTouchTargets,
+                    disableScreenshake = settings.disableScreenshake,
+                    disableFlashes = settings.disableFlashes,
+                    disableHaptics = settings.disableHaptics
                 )
             )
         }
@@ -1519,7 +1524,38 @@ class ExplorationViewModel(
             initialFadePrimed = true
             _uiState.update { it.copy(forceBlackScreen = true) }
         }
+        if (actionId.equals("astra_launch_simulation", ignoreCase = true)) {
+            _uiState.update { it.copy(isSimulationDeckVisible = true) }
+        }
+        if (actionId.equals("astra_open_tape_deck", ignoreCase = true)) {
+            _uiState.update { it.copy(isTapeDeckVisible = true) }
+        }
         eventManager.handleTrigger("player_action", EventPayload.Action(actionId, itemId))
+    }
+
+    fun dismissSimulationDeck() {
+        _uiState.update { it.copy(isSimulationDeckVisible = false) }
+    }
+
+    fun launchSimulationCombat(enemyIds: List<String>) {
+        dismissSimulationDeck()
+        emitEvent(ExplorationEvent.EnterCombat(enemyIds))
+    }
+
+    fun dismissTapeDeck() {
+        _uiState.update { it.copy(isTapeDeckVisible = false) }
+    }
+
+    fun playTapeTrack(tapeId: String, trackCueId: String) {
+        _uiState.update { it.copy(playingTapeId = tapeId) }
+        emitAudioCommands(audioRouter.commandsForLayerOverride(AudioCueType.MUSIC, cueId = trackCueId, loop = true))
+        postStatus("Now Playing: $tapeId")
+    }
+
+    fun stopTapeTrack() {
+        _uiState.update { it.copy(playingTapeId = null) }
+        emitAudioCommands(audioRouter.commandsForLayerOverride(AudioCueType.MUSIC, stop = true))
+        playRoomAudio(null, _uiState.value.currentRoom?.id)
     }
 
     init {
@@ -1543,6 +1579,7 @@ class ExplorationViewModel(
                     val visibleNpcs = current.currentRoom?.let { room ->
                         visibleNpcsForRoom(room, newState.completedMilestones)
                     } ?: current.npcs
+                    val updatedActions = current.currentRoom?.let { parseActions(it) } ?: current.actions
                     val activeJournal = buildQuestSummariesFromSession(
                         questIds = newState.activeQuests,
                         session = newState,
@@ -1564,6 +1601,8 @@ class ExplorationViewModel(
                         questLogActive = activeJournal,
                         questLogCompleted = completedJournal,
                         npcs = visibleNpcs,
+                        actions = updatedActions,
+                        actionHints = current.currentRoom?.let { buildActionHints(it, updatedActions) } ?: current.actionHints,
                         partyStatus = partyStatus,
                         progressionSummary = progressionSummary,
                         equippedItems = newState.equippedItems,
@@ -2484,7 +2523,7 @@ class ExplorationViewModel(
             )
         )
         if (actionHint?.locked != true && !action.hasAuthoredAudioCue()) {
-            playUiCue("click")
+            playUiCue("action_inspect")
         }
         dismissBlockedPrompt()
         if (actionHint?.locked == true) {
@@ -3296,6 +3335,51 @@ class ExplorationViewModel(
         }
     }
 
+    fun setHighContrastMode(enabled: Boolean) {
+        _uiState.update { state ->
+            state.copy(settings = state.settings.copy(highContrastMode = enabled))
+        }
+        viewModelScope.launch(dispatchers.io) {
+            userSettingsStore.setHighContrastMode(enabled)
+        }
+    }
+
+    fun setLargeTouchTargets(enabled: Boolean) {
+        _uiState.update { state ->
+            state.copy(settings = state.settings.copy(largeTouchTargets = enabled))
+        }
+        viewModelScope.launch(dispatchers.io) {
+            userSettingsStore.setLargeTouchTargets(enabled)
+        }
+    }
+
+    fun setScreenshakeDisabled(disabled: Boolean) {
+        _uiState.update { state ->
+            state.copy(settings = state.settings.copy(disableScreenshake = disabled))
+        }
+        viewModelScope.launch(dispatchers.io) {
+            userSettingsStore.setScreenshakeDisabled(disabled)
+        }
+    }
+
+    fun setFlashesDisabled(disabled: Boolean) {
+        _uiState.update { state ->
+            state.copy(settings = state.settings.copy(disableFlashes = disabled))
+        }
+        viewModelScope.launch(dispatchers.io) {
+            userSettingsStore.setFlashesDisabled(disabled)
+        }
+    }
+
+    fun setHapticsDisabled(disabled: Boolean) {
+        _uiState.update { state ->
+            state.copy(settings = state.settings.copy(disableHaptics = disabled))
+        }
+        viewModelScope.launch(dispatchers.io) {
+            userSettingsStore.setHapticsDisabled(disabled)
+        }
+    }
+
     private fun startEnemyMovementTicker() {
         if (enemyMovementJob != null) return
         enemyMovementJob = viewModelScope.launch(dispatchers.main) {
@@ -3584,8 +3668,11 @@ class ExplorationViewModel(
                 }
             }
             updateMinimap(resolvedRoom)
+            val updatedActions = parseActions(resolvedRoom)
             _uiState.update { state ->
                 state.copy(
+                    actions = updatedActions,
+                    actionHints = buildActionHints(resolvedRoom, updatedActions),
                     availableConnections = visibleConnections(resolvedRoom),
                     blockedDirections = computeBlockedDirections(resolvedRoom),
                     directionIndicators = buildDirectionIndicators(resolvedRoom),
@@ -5267,6 +5354,11 @@ internal fun narrativeActionVisible(
         if (key.isNullOrBlank()) return null
         return persistedState[key] ?: staticState[key]
     }
+    val type = action["type"] as? String
+    val stateKey = action["state_key"] as? String
+    if (type.equals("container", ignoreCase = true) && !stateKey.isNullOrBlank() && stateValue(stateKey) == true) {
+        return false
+    }
     val showState = action["show_when_state"] as? String
     if (!showState.isNullOrBlank() && stateValue(showState) != true) return false
     val hideState = action["hide_when_state"] as? String
@@ -5528,6 +5620,7 @@ sealed interface ExplorationEvent {
         val sfxVolume: Float,
         val voiceVolume: Float
     ) : ExplorationEvent
+    data class TriggerVisualFx(val fxId: String, val message: String? = null) : ExplorationEvent
     data object ReturnToHub : ExplorationEvent
 }
 

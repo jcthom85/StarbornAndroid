@@ -495,8 +495,8 @@ class EventManager(
                 "tutorial_not_completed" -> condition.tutorialId?.let { id ->
                     id !in state.tutorialCompleted
                 } ?: false
-                "item" -> condition.hasInventory(state)
-                "item_not" -> !condition.hasInventory(state)
+                "item", "has_item", "item_in_inventory" -> condition.hasInventory(state)
+                "item_not", "has_not_item", "not_has_item" -> !condition.hasInventory(state)
                 else -> true
             }
         }

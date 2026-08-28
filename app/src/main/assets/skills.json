@@ -660,7 +660,9 @@
     "status_applications": [
       "bleed"
     ],
-    "conditions": ["bonus_if_target_staggered"]
+    "conditions": [
+      "bonus_if_target_staggered"
+    ]
   },
   {
     "id": "zeke_shatter_blow",
@@ -723,8 +725,12 @@
     "base_power": 190,
     "scaling": "strength",
     "cooldown": 3,
-    "status_applications": ["weak"],
-    "conditions": ["bonus_if_target_stunned"]
+    "status_applications": [
+      "weak"
+    ],
+    "conditions": [
+      "bonus_if_target_stunned"
+    ]
   },
   {
     "id": "orion_prism_lance",
@@ -903,7 +909,9 @@
     "base_power": 85,
     "scaling": "agility",
     "cooldown": 3,
-    "status_applications": ["stagger"]
+    "status_applications": [
+      "stagger"
+    ]
   },
   {
     "id": "iron_warden_riot_shield",
@@ -1321,7 +1329,9 @@
     "scaling": "luck",
     "cooldown": 0,
     "status_applications": [],
-    "conditions": ["hp_above_50"]
+    "conditions": [
+      "hp_above_50"
+    ]
   },
   {
     "id": "orion_sunbeam",
@@ -1385,7 +1395,9 @@
     "scaling": "luck",
     "cooldown": 0,
     "status_applications": [],
-    "conditions": ["hp_below_50"]
+    "conditions": [
+      "hp_below_50"
+    ]
   },
   {
     "id": "zeke_unshackled",
@@ -1543,11 +1555,17 @@
     "character": "zeke",
     "type": "support",
     "description": "Zeke and the recovered guardian share protection across the party without either becoming the other's property.",
-    "combat_tags": ["support", "buff"],
+    "combat_tags": [
+      "support",
+      "buff"
+    ],
     "base_power": 0,
     "scaling": "focus",
     "cooldown": 4,
-    "status_applications": ["shield", "braced"]
+    "status_applications": [
+      "shield",
+      "braced"
+    ]
   },
   {
     "id": "nova_link",
@@ -1555,11 +1573,18 @@
     "character": "nova",
     "type": "support",
     "description": "Routes recovery across distinct willing allies through the grounded Bridge circuit. No identity is merged.",
-    "combat_tags": ["source", "heal", "support", "aoe"],
+    "combat_tags": [
+      "source",
+      "heal",
+      "support",
+      "aoe"
+    ],
     "base_power": 90,
     "scaling": "focus",
     "cooldown": 4,
-    "status_applications": ["regen"]
+    "status_applications": [
+      "regen"
+    ]
   },
   {
     "id": "shadow_chorus",
@@ -1576,6 +1601,368 @@
     "cooldown": 3,
     "status_applications": [
       "confuse"
+    ]
+  },
+  {
+    "id": "stun_pulse",
+    "name": "Stun Pulse",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Discharges an ionizing pulse that disorients targets.",
+    "combat_tags": [
+      "shock",
+      "disrupt"
+    ],
+    "base_power": 45,
+    "scaling": "focus",
+    "cooldown": 3,
+    "status_applications": [
+      "stun"
+    ]
+  },
+  {
+    "id": "evasive_maneuver",
+    "name": "Evasive Maneuver",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Executes rapid thruster bursts to avoid incoming attacks.",
+    "combat_tags": [
+      "speed",
+      "defensive"
+    ],
+    "base_power": 0,
+    "scaling": "spd",
+    "cooldown": 3,
+    "status_applications": [
+      "guard"
+    ]
+  },
+  {
+    "id": "critical_lunge",
+    "name": "Critical Lunge",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Strikes precisely at vital weak points.",
+    "combat_tags": [
+      "physical",
+      "strike"
+    ],
+    "base_power": 85,
+    "scaling": "atk",
+    "cooldown": 2,
+    "status_applications": [
+      "marked"
+    ]
+  },
+  {
+    "id": "smoke_step",
+    "name": "Smoke Step",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Deploys a dense vapor canister and shifts position.",
+    "combat_tags": [
+      "stealth",
+      "tactical"
+    ],
+    "base_power": 0,
+    "scaling": "spd",
+    "cooldown": 3,
+    "status_applications": [
+      "guard"
+    ]
+  },
+  {
+    "id": "flame_sweep",
+    "name": "Flame Sweep",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Sweeps a wide cone of high-temperature fire across the field.",
+    "combat_tags": [
+      "fire",
+      "area"
+    ],
+    "base_power": 65,
+    "scaling": "focus",
+    "cooldown": 2,
+    "status_applications": [
+      "meltdown"
+    ]
+  },
+  {
+    "id": "guard_protocol",
+    "name": "Guard Protocol",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Hardens internal alloy plating to mitigate damage.",
+    "combat_tags": [
+      "defensive",
+      "armor"
+    ],
+    "base_power": 0,
+    "scaling": "def",
+    "cooldown": 3,
+    "status_applications": [
+      "guard",
+      "shield"
+    ]
+  },
+  {
+    "id": "mandatory_happiness",
+    "name": "Mandatory Happiness",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Broadcasts high-frequency neuro-compliance signals.",
+    "combat_tags": [
+      "psionic",
+      "disrupt"
+    ],
+    "base_power": 75,
+    "scaling": "focus",
+    "cooldown": 3,
+    "status_applications": [
+      "confuse"
+    ]
+  },
+  {
+    "id": "drone_summon",
+    "name": "Deploy Drone",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Launches automated support drones into the battle space.",
+    "combat_tags": [
+      "support",
+      "tech"
+    ],
+    "base_power": 0,
+    "scaling": "focus",
+    "cooldown": 4,
+    "status_applications": [
+      "overdrive"
+    ]
+  },
+  {
+    "id": "laser_lattice",
+    "name": "Laser Lattice",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Fires an intersecting grid of high-intensity cutting lasers.",
+    "combat_tags": [
+      "laser",
+      "pierce"
+    ],
+    "base_power": 90,
+    "scaling": "focus",
+    "cooldown": 3,
+    "status_applications": [
+      "exposed"
+    ]
+  },
+  {
+    "id": "heat_burst",
+    "name": "Heat Burst",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Vents thermal energy in a rapid radial shockwave.",
+    "combat_tags": [
+      "fire",
+      "burst"
+    ],
+    "base_power": 60,
+    "scaling": "focus",
+    "cooldown": 2,
+    "status_applications": [
+      "meltdown"
+    ]
+  },
+  {
+    "id": "molten_slam",
+    "name": "Molten Slam",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Brings down a superheated fist infused with boiling slag.",
+    "combat_tags": [
+      "fire",
+      "crush"
+    ],
+    "base_power": 95,
+    "scaling": "atk",
+    "cooldown": 3,
+    "status_applications": [
+      "meltdown",
+      "stagger"
+    ]
+  },
+  {
+    "id": "torch_cut",
+    "name": "Torch Cut",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Applies an industrial plasma cutter directly to armor plating.",
+    "combat_tags": [
+      "plasma",
+      "pierce"
+    ],
+    "base_power": 70,
+    "scaling": "atk",
+    "cooldown": 1,
+    "status_applications": [
+      "erosion"
+    ]
+  },
+  {
+    "id": "death_burst",
+    "name": "Death Burst",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Detonates overloaded internal power cells in a violent blast.",
+    "combat_tags": [
+      "explosive",
+      "desperation"
+    ],
+    "base_power": 110,
+    "scaling": "focus",
+    "cooldown": 5,
+    "status_applications": [
+      "meltdown"
+    ]
+  },
+  {
+    "id": "flame_cone",
+    "name": "Flame Cone",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Unleashes an incinerating jet of pressurized liquid fuel.",
+    "combat_tags": [
+      "fire",
+      "area"
+    ],
+    "base_power": 75,
+    "scaling": "focus",
+    "cooldown": 2,
+    "status_applications": [
+      "meltdown"
+    ]
+  },
+  {
+    "id": "armor_lock",
+    "name": "Armor Lock",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Magnifies inertial stabilizers to completely lock defense plates in place.",
+    "combat_tags": [
+      "defense",
+      "brace"
+    ],
+    "base_power": 0,
+    "scaling": "def",
+    "cooldown": 3,
+    "status_applications": [
+      "guard",
+      "invulnerable"
+    ]
+  },
+  {
+    "id": "phase_slash",
+    "name": "Phase Slash",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Blinks through spatial distortion to deliver a frictionless cut.",
+    "combat_tags": [
+      "phase",
+      "slash"
+    ],
+    "base_power": 90,
+    "scaling": "atk",
+    "cooldown": 2,
+    "status_applications": [
+      "bleed"
+    ]
+  },
+  {
+    "id": "cloak_step",
+    "name": "Cloak Step",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Activates optical cloaking fields to evade counter-attacks.",
+    "combat_tags": [
+      "stealth",
+      "evasion"
+    ],
+    "base_power": 0,
+    "scaling": "spd",
+    "cooldown": 3,
+    "status_applications": [
+      "guard"
+    ]
+  },
+  {
+    "id": "rhythm_slam",
+    "name": "Rhythm Slam",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Times a devastating pneumatic hammer strike with conveyor cadence.",
+    "combat_tags": [
+      "heavy",
+      "crush"
+    ],
+    "base_power": 80,
+    "scaling": "atk",
+    "cooldown": 2,
+    "status_applications": [
+      "stagger"
+    ]
+  },
+  {
+    "id": "missile_barrage",
+    "name": "Missile Barrage",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Fires a swarm of high-explosive micro-missiles.",
+    "combat_tags": [
+      "explosive",
+      "heavy"
+    ],
+    "base_power": 100,
+    "scaling": "focus",
+    "cooldown": 3,
+    "status_applications": [
+      "meltdown",
+      "exposed"
+    ]
+  },
+  {
+    "id": "vent_exposure",
+    "name": "Vent Heat",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Purges thermal exhausts, exposing core radiators briefly.",
+    "combat_tags": [
+      "thermal",
+      "tactical"
+    ],
+    "base_power": 0,
+    "scaling": "focus",
+    "cooldown": 3,
+    "status_applications": [
+      "exposed"
+    ]
+  },
+  {
+    "id": "titan_stomp",
+    "name": "Titan Stomp",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Brings down monolithic hydraulic legs, fracturing the ground.",
+    "combat_tags": [
+      "earthquake",
+      "crush"
+    ],
+    "base_power": 120,
+    "scaling": "atk",
+    "cooldown": 3,
+    "status_applications": [
+      "stagger",
+      "stun"
     ]
   }
 ]

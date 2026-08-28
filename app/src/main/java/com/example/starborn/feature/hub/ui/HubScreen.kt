@@ -170,6 +170,17 @@ private fun HubScreenContent(
         }
     }
 
+    val infiniteTransition = rememberInfiniteTransition(label = "hub_atmosphere")
+    val parallaxScale by infiniteTransition.animateFloat(
+        initialValue = 1.0f,
+        targetValue = 1.035f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 14000, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "hub_parallax_scale"
+    )
+
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -178,8 +189,16 @@ private fun HubScreenContent(
         Image(
             painter = backgroundPainter,
             contentDescription = null,
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .graphicsLayer {
+                    scaleX = parallaxScale
+                    scaleY = parallaxScale
+                },
             contentScale = ContentScale.Crop
+        )
+        HubAtmosphereCanvas(
+            modifier = Modifier.fillMaxSize()
         )
         Box(
             modifier = Modifier
@@ -1127,7 +1146,7 @@ private fun lerpColor(start: Color, end: Color, t: Float): Color {
     return Color(
         red = start.red + (end.red - start.red) * clamped,
         green = start.green + (end.green - start.green) * clamped,
-        blue = start.blue + (end.blue - start.blue) * clamped,
+blue = start.blue + (end.blue - start.blue) * clamped,
         alpha = start.alpha + (end.alpha - start.alpha) * clamped
     )
 }
@@ -1148,4 +1167,43 @@ private fun rememberHubBackgroundPainter(imagePath: String?): Painter {
         }
     }
     return painter ?: fallback
+}
+
+@Composable
+private fun HubAtmosphereCanvas(modifier: Modifier = Modifier) {
+    val transition = rememberInfiniteTransition(label = "hub_motes")
+    val time by transition.animateFloat(
+        initialValue = 0f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 18000, easing = androidx.compose.animation.core.LinearEasing),
+            repeatMode = RepeatMode.Restart
+        ),
+        label = "hub_mote_time"
+    )
+
+    androidx.compose.foundation.Canvas(modifier = modifier) {
+        val width = size.width
+        val height = size.height
+        val particleCount = 18
+        for (i in 0 until particleCount) {
+            val seedX = ((i * 137.5f) % 100f) / 100f
+            val seedY = ((i * 243.1f) % 100f) / 100f
+            val speed = 0.4f + ((i % 5) * 0.15f)
+            val currentY = (seedY - (time * speed)) % 1f
+            val normalizedY = if (currentY < 0f) currentY + 1f else currentY
+            val sway = kotlin.math.sin((time * 6.283f * 2f) + (i * 1.5f)) * 14f
+
+            val x = (seedX * width) + sway
+            val y = normalizedY * height
+            val alpha = (kotlin.math.sin(normalizedY * 3.14159f) * 0.35f).coerceIn(0f, 0.4f)
+            val radius = 1.2f + (i % 3) * 0.8f
+
+            drawCircle(
+                color = Color(0xFF7BE4FF).copy(alpha = alpha),
+                radius = radius,
+                center = androidx.compose.ui.geometry.Offset(x, y)
+            )
+        }
+    }
 }

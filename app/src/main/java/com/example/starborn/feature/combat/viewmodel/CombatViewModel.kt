@@ -1693,7 +1693,6 @@ class CombatViewModel(
                 }
                 is CombatLogEntry.StatusExpired,
                 is CombatLogEntry.TurnSkipped -> setCombatBanner(entry, updated)
-                else -> Unit
             }
         }
         if (currentAction != null) {
@@ -2443,7 +2442,7 @@ class CombatViewModel(
             val action = selectEnemyAction(snapshot, enemyStateSnapshot)
             val skillUse = action as? CombatAction.SkillUse
             val telegraphSkill = skillUse?.let { skillById[it.skillId] }
-            if (telegraphSkill != null && shouldTelegraph(telegraphSkill) && skillUse != null) {
+            if (telegraphSkill != null && shouldTelegraph(telegraphSkill)) {
                 combatFxEvents.tryEmit(
                     CombatFxEvent.Telegraph(
                         actorId = enemyId,

@@ -72,6 +72,9 @@ data class ExplorationUiState(
     val menuTab: MenuTab = MenuTab.INVENTORY,
     val togglePrompt: TogglePromptUi? = null,
     val tuningPuzzle: TuningPuzzleUi? = null,
+    val isSimulationDeckVisible: Boolean = false,
+    val isTapeDeckVisible: Boolean = false,
+    val playingTapeId: String? = null,
     val settings: SettingsUiState = SettingsUiState(),
     val inventoryPreview: List<InventoryPreviewItemUi> = emptyList(),
     val equippedItems: Map<String, String> = emptyMap(),
@@ -365,7 +368,12 @@ data class SettingsUiState(
     val sfxVolume: Float = 1f,
     val voiceVolume: Float = 1f,
     val vignetteEnabled: Boolean = true,
-    val tutorialsEnabled: Boolean = true
+    val tutorialsEnabled: Boolean = true,
+    val highContrastMode: Boolean = false,
+    val largeTouchTargets: Boolean = false,
+    val disableScreenshake: Boolean = false,
+    val disableFlashes: Boolean = false,
+    val disableHaptics: Boolean = false
 )
 
 data class PartyStatusUi(

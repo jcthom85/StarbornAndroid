@@ -56,7 +56,7 @@ fun MinimapWidget(
     Surface(
         modifier = modifier
             .clip(RoundedCornerShape(12.dp))
-            .clickable(onClick = onLegend),
+            .clickable(enabled = !obscured, onClick = onLegend),
         color = Color.Transparent,
         shape = RoundedCornerShape(12.dp)
     ) {

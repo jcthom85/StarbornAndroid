@@ -3,15 +3,23 @@ package com.example.starborn.feature.mainmenu.ui
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.keyframes
 import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.border
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.clickable
@@ -41,6 +49,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -101,11 +110,17 @@ fun MainMenuScreen(
     onVoiceVolumeChange: (Float) -> Unit,
     onToggleTutorials: (Boolean) -> Unit,
     onToggleVignette: (Boolean) -> Unit,
+    onToggleHighContrast: (Boolean) -> Unit = {},
+    onToggleLargeTouchTargets: (Boolean) -> Unit = {},
+    onToggleScreenshakeDisabled: (Boolean) -> Unit = {},
+    onToggleFlashesDisabled: (Boolean) -> Unit = {},
+    onToggleHapticsDisabled: (Boolean) -> Unit = {},
     onStartGame: () -> Unit,
     onStartHub: () -> Unit,
     onSlotLoaded: () -> Unit
 ) {
     var startingGame by remember { mutableStateOf(false) }
+    var showNewGameConfirm by remember { mutableStateOf(false) }
     var pendingScenario by remember { mutableStateOf<DebugScenario?>(null) }
     var pendingLoadSlot by remember { mutableStateOf<Int?>(null) }
     var showDebugBrowser by remember { mutableStateOf(false) }
@@ -237,11 +252,63 @@ fun MainMenuScreen(
     BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
         val compactHeight = maxHeight < 760.dp
 
+        val bgTransition = rememberInfiniteTransition(label = "title_bg_motion")
+        val bgScale by bgTransition.animateFloat(
+            initialValue = 1.0f,
+            targetValue = 1.035f,
+            animationSpec = infiniteRepeatable(
+                animation = tween(durationMillis = 14000, easing = FastOutSlowInEasing),
+                repeatMode = RepeatMode.Reverse
+            ),
+            label = "title_bg_scale"
+        )
+        val bgPanY by bgTransition.animateFloat(
+            initialValue = -4f,
+            targetValue = 4f,
+            animationSpec = infiniteRepeatable(
+                animation = tween(durationMillis = 18000, easing = FastOutSlowInEasing),
+                repeatMode = RepeatMode.Reverse
+            ),
+            label = "title_bg_pan"
+        )
+        val ambientBloom by bgTransition.animateFloat(
+            initialValue = 0.04f,
+            targetValue = 0.11f,
+            animationSpec = infiniteRepeatable(
+                animation = tween(durationMillis = 8000, easing = FastOutSlowInEasing),
+                repeatMode = RepeatMode.Reverse
+            ),
+            label = "title_ambient_bloom"
+        )
+
         Image(
             painter = painterResource(id = R.drawable.title_background_starborn),
             contentDescription = null,
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .graphicsLayer {
+                    scaleX = bgScale
+                    scaleY = bgScale
+                    translationY = bgPanY
+                },
             contentScale = ContentScale.Crop
+        )
+
+        // Soft ambient celestial bloom
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    Brush.radialGradient(
+                        colors = listOf(
+                            TitleCyan.copy(alpha = ambientBloom),
+                            TitleGold.copy(alpha = ambientBloom * 0.45f),
+                            Color.Transparent
+                        ),
+                        center = Offset(200f, 150f),
+                        radius = 1100f
+                    )
+                )
         )
 
         Box(
@@ -290,9 +357,16 @@ fun MainMenuScreen(
             verticalArrangement = Arrangement.spacedBy(13.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            val hasExistingSave = slots.any { !it.isEmpty }
             StarbornTitleButton(
                 text = "New Game",
-                onClick = { startingGame = true },
+                onClick = {
+                    if (hasExistingSave) {
+                        showNewGameConfirm = true
+                    } else {
+                        startingGame = true
+                    }
+                },
                 enabled = !startingGame && pendingScenario == null && pendingLoadSlot == null,
                 primary = true
             )
@@ -312,6 +386,40 @@ fun MainMenuScreen(
                 text = "Settings",
                 onClick = { showSettings = true },
                 enabled = !startingGame && pendingScenario == null && pendingLoadSlot == null
+            )
+        }
+
+        if (showNewGameConfirm) {
+            AlertDialog(
+                onDismissRequest = { showNewGameConfirm = false },
+                title = {
+                    Text("Start New Game?", color = Color.White, fontWeight = FontWeight.Bold)
+                },
+                text = {
+                    Text(
+                        "Starting a new game will begin a fresh run and overwrite your current autosave.",
+                        color = Color.White.copy(alpha = 0.85f)
+                    )
+                },
+                confirmButton = {
+                    Button(
+                        onClick = {
+                            showNewGameConfirm = false
+                            startingGame = true
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = accentColor, contentColor = Color.Black)
+                    ) {
+                        Text("Begin New Game", fontWeight = FontWeight.Bold)
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showNewGameConfirm = false }) {
+                        Text("Cancel", color = Color.White.copy(alpha = 0.7f))
+                    }
+                },
+                containerColor = Color(0xFF141C24),
+                shape = RoundedCornerShape(16.dp),
+                modifier = Modifier.border(1.dp, accentColor.copy(alpha = 0.4f), RoundedCornerShape(16.dp))
             )
         }
 
@@ -379,7 +487,12 @@ fun MainMenuScreen(
                     sfxVolume = userSettings.sfxVolume,
                     voiceVolume = userSettings.voiceVolume,
                     vignetteEnabled = userSettings.vignetteEnabled,
-                    tutorialsEnabled = userSettings.tutorialsEnabled
+                    tutorialsEnabled = userSettings.tutorialsEnabled,
+                    highContrastMode = userSettings.highContrastMode,
+                    largeTouchTargets = userSettings.largeTouchTargets,
+                    disableScreenshake = userSettings.disableScreenshake,
+                    disableFlashes = userSettings.disableFlashes,
+                    disableHaptics = userSettings.disableHaptics
                 ),
                 accentColor = accentColor,
                 borderColor = borderColor,
@@ -388,6 +501,11 @@ fun MainMenuScreen(
                 onVoiceVolumeChange = onVoiceVolumeChange,
                 onToggleTutorials = onToggleTutorials,
                 onToggleVignette = onToggleVignette,
+                onToggleHighContrast = onToggleHighContrast,
+                onToggleLargeTouchTargets = onToggleLargeTouchTargets,
+                onToggleScreenshakeDisabled = onToggleScreenshakeDisabled,
+                onToggleFlashesDisabled = onToggleFlashesDisabled,
+                onToggleHapticsDisabled = onToggleHapticsDisabled,
                 onDismiss = { showSettings = false }
             )
         }
@@ -420,6 +538,11 @@ private fun TitleSettingsDialog(
     onVoiceVolumeChange: (Float) -> Unit,
     onToggleTutorials: (Boolean) -> Unit,
     onToggleVignette: (Boolean) -> Unit,
+    onToggleHighContrast: (Boolean) -> Unit = {},
+    onToggleLargeTouchTargets: (Boolean) -> Unit = {},
+    onToggleScreenshakeDisabled: (Boolean) -> Unit = {},
+    onToggleFlashesDisabled: (Boolean) -> Unit = {},
+    onToggleHapticsDisabled: (Boolean) -> Unit = {},
     onDismiss: () -> Unit
 ) {
     AlertDialog(
@@ -442,6 +565,11 @@ private fun TitleSettingsDialog(
                     onVoiceVolumeChange = onVoiceVolumeChange,
                     onToggleTutorials = onToggleTutorials,
                     onToggleVignette = onToggleVignette,
+                    onToggleHighContrast = onToggleHighContrast,
+                    onToggleLargeTouchTargets = onToggleLargeTouchTargets,
+                    onToggleScreenshakeDisabled = onToggleScreenshakeDisabled,
+                    onToggleFlashesDisabled = onToggleFlashesDisabled,
+                    onToggleHapticsDisabled = onToggleHapticsDisabled,
                     onQuickSave = {},
                     onSaveGame = {},
                     onLoadGame = {}
@@ -608,11 +736,28 @@ private fun StarbornTitleButton(
     primary: Boolean = false,
     modifier: Modifier = Modifier
 ) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+    val buttonScale by animateFloatAsState(
+        targetValue = if (isPressed) 0.965f else 1.0f,
+        animationSpec = spring(stiffness = Spring.StiffnessMedium),
+        label = "btn_scale"
+    )
+
+    val buttonModifier = modifier
+        .fillMaxWidth()
+        .height(if (primary) 60.dp else 56.dp)
+        .graphicsLayer {
+            scaleX = buttonScale
+            scaleY = buttonScale
+        }
+
     if (primary) {
         Button(
             onClick = onClick,
             enabled = enabled,
-            shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
+            interactionSource = interactionSource,
+            shape = RoundedCornerShape(16.dp),
             elevation = ButtonDefaults.buttonElevation(
                 defaultElevation = 10.dp,
                 pressedElevation = 14.dp,
@@ -624,9 +769,7 @@ private fun StarbornTitleButton(
                 disabledContainerColor = TitlePanel.copy(alpha = 0.58f),
                 disabledContentColor = TitleMutedText.copy(alpha = 0.62f)
             ),
-            modifier = modifier
-                .fillMaxWidth()
-                .height(60.dp)
+            modifier = buttonModifier
         ) {
             Text(
                 text = text,
@@ -639,16 +782,15 @@ private fun StarbornTitleButton(
         OutlinedButton(
             onClick = onClick,
             enabled = enabled,
-            shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
+            interactionSource = interactionSource,
+            shape = RoundedCornerShape(16.dp),
             border = BorderStroke(1.5.dp, if (enabled) TitleCyan.copy(alpha = 0.82f) else TitleCyan.copy(alpha = 0.22f)),
             colors = ButtonDefaults.outlinedButtonColors(
                 containerColor = TitlePanel.copy(alpha = if (enabled) 0.70f else 0.42f),
                 contentColor = if (enabled) TitleText else TitleMutedText.copy(alpha = 0.56f),
                 disabledContentColor = TitleMutedText.copy(alpha = 0.56f)
             ),
-            modifier = modifier
-                .fillMaxWidth()
-                .height(56.dp)
+            modifier = buttonModifier
                 .background(
                     Brush.horizontalGradient(
                         colors = listOf(
@@ -657,7 +799,7 @@ private fun StarbornTitleButton(
                             Color.Transparent
                         )
                     ),
-                    shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp)
+                    shape = RoundedCornerShape(16.dp)
                 )
         ) {
             Text(

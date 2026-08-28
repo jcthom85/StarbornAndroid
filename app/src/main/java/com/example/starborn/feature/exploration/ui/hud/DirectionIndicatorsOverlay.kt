@@ -64,6 +64,18 @@ fun DirectionIndicatorsOverlay(
             val baseAlphaRange = if (indicator.status == DirectionIndicatorStatus.ENEMY) 0.55f..0.98f else 0.65f..0.95f
             val alpha = lerp(baseAlphaRange.start, baseAlphaRange.endInclusive, pulse)
             val scale = 1f + 0.08f * pulse
+            val nudgePx = with(androidx.compose.ui.platform.LocalDensity.current) { (3.5.dp * pulse).toPx() }
+            val (nudgeX, nudgeY) = when (direction) {
+                "north" -> 0f to -nudgePx
+                "south" -> 0f to nudgePx
+                "east" -> nudgePx to 0f
+                "west" -> -nudgePx to 0f
+                "northeast" -> (nudgePx * 0.7f) to (-nudgePx * 0.7f)
+                "southeast" -> (nudgePx * 0.7f) to (nudgePx * 0.7f)
+                "southwest" -> (-nudgePx * 0.7f) to (nudgePx * 0.7f)
+                "northwest" -> (-nudgePx * 0.7f) to (-nudgePx * 0.7f)
+                else -> 0f to 0f
+            }
             val canTravel = indicator.status == DirectionIndicatorStatus.UNEXPLORED ||
                 indicator.status == DirectionIndicatorStatus.EXPLORED
             val actionLabel = when (indicator.status) {
@@ -81,6 +93,8 @@ fun DirectionIndicatorsOverlay(
                         this.scaleX = scale
                         this.scaleY = scale
                         this.alpha = alpha
+                        this.translationX = nudgeX
+                        this.translationY = nudgeY
                     }
                     .clearAndSetSemantics {
                         contentDescription = actionLabel

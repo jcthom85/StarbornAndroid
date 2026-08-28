@@ -2,6 +2,7 @@ package com.example.starborn.ui.vfx
 
 import android.graphics.BitmapFactory
 import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -14,6 +15,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -647,120 +650,129 @@ private fun spawnDustParticle(random: Random, color: Color): Particle {
     )
 }
 
+private data class SteamJetVent(
+    val nozzleX: Float,
+    val nozzleY: Float,
+    val angleDeg: Float,
+    val widthDp: Float,
+    val heightDp: Float,
+    val playbackFps: Float,
+    val frameOffset: Int,
+    val baseAlpha: Float
+)
+
 @Composable
 fun SteamEffect(
     modifier: Modifier = Modifier,
     color: Color
 ) {
-    val particles = remember { mutableStateListOf<Particle>() }
-    val random = remember { Random(System.currentTimeMillis()) }
-    val ventColumns = remember { listOf(0.10f, 0.28f, 0.47f, 0.66f, 0.86f) }
-    val sprites = rememberSteamSprites()
+    val frames = rememberSteamJetFrames()
+    var timeSeconds by remember { androidx.compose.runtime.mutableFloatStateOf(0f) }
 
     LaunchedEffect(Unit) {
+        val startNanos = androidx.compose.runtime.withFrameNanos { it }
         while (true) {
-            val survivors = particles.filter { it.life > 0 }
-            particles.clear()
-            particles.addAll(survivors)
-
-            val targetCount = 34
-            val initialFill = particles.isEmpty()
-            val spawnCount = if (initialFill) targetCount else 2
-            repeat(spawnCount.coerceAtMost(targetCount - particles.size)) {
-                val columnIndex = random.nextInt(ventColumns.size)
-                val sourceX = ventColumns[columnIndex] + (random.nextFloat() - 0.5f) * 0.16f
-                val startY = if (initialFill) random.nextFloat() * 0.56f + 0.50f else 1.08f
-                val width = random.nextFloat() * 0.095f + 0.070f
-                val height = random.nextFloat() * 0.16f + 0.14f
-                val vx = (random.nextFloat() - 0.5f) * 0.00016f
-                val vy = -(random.nextFloat() * 0.00046f + 0.00034f)
-                val maxLife = random.nextFloat() * 2.8f + 4.2f
-                val life = if (initialFill) maxLife * (random.nextFloat() * 0.75f + 0.20f) else maxLife
-                val amplitude = random.nextFloat() * 0.004f + 0.002f
-                val frequency = random.nextFloat() * 0.30f + 0.12f
-                val phase = random.nextFloat() * (2f * PI).toFloat()
-                val spriteIndex = random.nextInt(6).toFloat()
-                val rotation = random.nextFloat() * 70f - 35f
-                particles.add(
-                    Particle(
-                        position = Offset(sourceX, startY),
-                        velocity = Offset(vx, vy),
-                        size = width to height,
-                        color = color.copy(alpha = random.nextFloat() * 0.11f + 0.08f),
-                        life = life,
-                        maxLife = maxLife,
-                        angle = rotation,
-                        turbulence = listOf(amplitude, frequency, phase, spriteIndex, columnIndex.toFloat())
-                    )
-                )
+            androidx.compose.runtime.withFrameNanos { frameNanos ->
+                timeSeconds = (frameNanos - startNanos) / 1_000_000_000f
             }
-
-            for (p in particles) {
-                val elapsed = p.maxLife - p.life
-                val amp = p.turbulence?.get(0) ?: 0.003f
-                val freq = p.turbulence?.get(1) ?: 0.08f
-                val phase = p.turbulence?.get(2) ?: 0f
-                val sway = amp * kotlin.math.sin(elapsed * freq + phase)
-                p.position = Offset(p.position.x + p.velocity.x + sway, p.position.y + p.velocity.y)
-                p.life -= 0.016f
-            }
-            delay(16)
         }
     }
 
+    val vents = remember {
+        listOf(
+            // Lower left sweating pipe (shoots up & slightly inward into the shaft)
+            SteamJetVent(nozzleX = 0.385f, nozzleY = 0.690f, angleDeg = 14f, widthDp = 104f, heightDp = 158f, playbackFps = 20.0f, frameOffset = 0, baseAlpha = 0.52f),
+            // Lower right pipe seam (shoots up & slightly inward into the shaft)
+            SteamJetVent(nozzleX = 0.615f, nozzleY = 0.690f, angleDeg = -14f, widthDp = 104f, heightDp = 158f, playbackFps = 19.0f, frameOffset = 14, baseAlpha = 0.52f),
+            // Mid-left shaft rail vent
+            SteamJetVent(nozzleX = 0.360f, nozzleY = 0.490f, angleDeg = 12f, widthDp = 84f, heightDp = 126f, playbackFps = 21.0f, frameOffset = 26, baseAlpha = 0.42f),
+            // Mid-right shaft rail vent
+            SteamJetVent(nozzleX = 0.640f, nozzleY = 0.490f, angleDeg = -12f, widthDp = 84f, heightDp = 126f, playbackFps = 20.0f, frameOffset = 38, baseAlpha = 0.42f),
+            // Central floor grate main plume (tall vertical eruption)
+            SteamJetVent(nozzleX = 0.500f, nozzleY = 0.730f, angleDeg = 0f, widthDp = 125f, heightDp = 185f, playbackFps = 18.0f, frameOffset = 8, baseAlpha = 0.48f)
+        )
+    }
+
     Canvas(modifier = modifier.fillMaxSize()) {
-        particles.forEach { p ->
-            if (sprites.isEmpty()) return@forEach
-            val remaining = (p.life / p.maxLife).coerceIn(0f, 1f)
-            val age = 1f - remaining
-            val fadeIn = (age / 0.12f).coerceIn(0f, 1f)
-            val fadeOut = (remaining / 0.52f).coerceIn(0f, 1f)
-            val alpha = (p.color.alpha * fadeIn * fadeOut).coerceIn(0f, 0.30f)
-            val baseWidthPx = (p.size.first * size.width * (1f + age * 2.4f)).coerceAtLeast(82f)
-            val baseHeightPx = (p.size.second * size.height * (1f + age * 1.25f)).coerceAtLeast(96f)
-            val base = Offset(p.position.x * size.width, p.position.y * size.height)
-            val phase = p.turbulence?.getOrNull(2) ?: 0f
-            val spriteIndex = (p.turbulence?.getOrNull(3)?.toInt() ?: 0).coerceIn(0, sprites.lastIndex)
-            val sprite = sprites[spriteIndex]
-            val curl = kotlin.math.sin(age * PI.toFloat() * 2.0f + phase)
-            val center = Offset(
-                x = base.x + curl * baseWidthPx * 0.18f,
-                y = base.y - baseHeightPx * 0.18f
-            )
-            val widthPx = baseWidthPx * (1.10f + (spriteIndex % 3) * 0.13f)
-            val heightPx = baseHeightPx * (0.95f + (spriteIndex % 2) * 0.16f)
+        if (frames.isEmpty()) return@Canvas
+        val w = size.width
+        val h = size.height
+        val tSec = timeSeconds
+        val totalFrames = frames.size
+
+        // Ambient floor steam condensation glow
+        val fogPulse = 0.12f + 0.04f * kotlin.math.sin(tSec * 0.75f)
+        drawCircle(
+            brush = Brush.radialGradient(
+                colors = listOf(
+                    Color.White.copy(alpha = fogPulse * 0.9f),
+                    color.copy(alpha = fogPulse * 0.5f),
+                    Color.Transparent
+                ),
+                center = Offset(w * 0.50f, h * 0.70f),
+                radius = w * 0.38f
+            ),
+            center = Offset(w * 0.50f, h * 0.70f),
+            radius = w * 0.38f
+        )
+
+        vents.forEach { vent ->
+            val rawPos = tSec * vent.playbackFps + vent.frameOffset
+            val floorPos = kotlin.math.floor(rawPos).toInt()
+            val frac = (rawPos - floorPos).toFloat()
+            val frameIndexA = ((floorPos % totalFrames) + totalFrames) % totalFrames
+            val frameIndexB = (frameIndexA + 1) % totalFrames
+            val spriteA = frames[frameIndexA]
+            val spriteB = frames[frameIndexB]
+
+            val widthPx = vent.widthDp.dp.toPx()
+            val heightPx = vent.heightDp.dp.toPx()
+            val nozzleCenter = Offset(vent.nozzleX * w, vent.nozzleY * h)
+
+            val pulse = 1.0f + 0.08f * kotlin.math.sin(tSec * 1.0f + vent.frameOffset)
+            val finalWidthPx = widthPx * pulse
+            val finalHeightPx = heightPx * pulse
+
+            val dstLeft = nozzleCenter.x - (finalWidthPx / 2f)
+            val dstTop = nozzleCenter.y - finalHeightPx
+            val baseAlpha = (vent.baseAlpha * (0.92f + 0.12f * kotlin.math.sin(tSec * 0.9f + vent.frameOffset))).coerceIn(0f, 0.75f)
+
             rotate(
-                degrees = p.angle + kotlin.math.sin(age * 2.0f + phase) * 10f,
-                pivot = center
+                degrees = vent.angleDeg + kotlin.math.sin(tSec * 0.6f + vent.frameOffset) * 2.5f,
+                pivot = nozzleCenter
             ) {
-                drawImage(
-                    image = sprite,
-                    srcOffset = IntOffset.Zero,
-                    srcSize = IntSize(sprite.width, sprite.height),
-                    dstOffset = IntOffset(
-                        x = (center.x - widthPx / 2f).toInt(),
-                        y = (center.y - heightPx / 2f).toInt()
-                    ),
-                    dstSize = IntSize(widthPx.toInt().coerceAtLeast(1), heightPx.toInt().coerceAtLeast(1)),
-                    alpha = alpha
-                )
+                // High-framerate 60fps/120fps sub-frame blending between adjacent frames
+                if (1f - frac > 0.01f) {
+                    drawImage(
+                        image = spriteA,
+                        srcOffset = IntOffset.Zero,
+                        srcSize = IntSize(spriteA.width, spriteA.height),
+                        dstOffset = IntOffset(dstLeft.toInt(), dstTop.toInt()),
+                        dstSize = IntSize(finalWidthPx.toInt().coerceAtLeast(1), finalHeightPx.toInt().coerceAtLeast(1)),
+                        alpha = baseAlpha * (1f - frac)
+                    )
+                }
+                if (frac > 0.01f) {
+                    drawImage(
+                        image = spriteB,
+                        srcOffset = IntOffset.Zero,
+                        srcSize = IntSize(spriteB.width, spriteB.height),
+                        dstOffset = IntOffset(dstLeft.toInt(), dstTop.toInt()),
+                        dstSize = IntSize(finalWidthPx.toInt().coerceAtLeast(1), finalHeightPx.toInt().coerceAtLeast(1)),
+                        alpha = baseAlpha * frac
+                    )
+                }
             }
         }
     }
 }
 
 @Composable
-private fun rememberSteamSprites(): List<ImageBitmap> {
+private fun rememberSteamJetFrames(): List<ImageBitmap> {
     val context = LocalContext.current
     return remember(context) {
-        listOf(
-            "images/vfx/kenney_smoke/steam_puff_00.png",
-            "images/vfx/kenney_smoke/steam_puff_05.png",
-            "images/vfx/kenney_smoke/steam_puff_07.png",
-            "images/vfx/kenney_smoke/steam_puff_12.png",
-            "images/vfx/kenney_smoke/steam_puff_14.png",
-            "images/vfx/kenney_smoke/steam_puff_18.png"
-        ).mapNotNull { path ->
+        (0 until 48).mapNotNull { idx ->
+            val path = String.format("images/vfx/steam_jet/steam_frame_%02d.png", idx)
             runCatching {
                 context.assets.open(path).use { stream ->
                     BitmapFactory.decodeStream(stream)?.asImageBitmap()

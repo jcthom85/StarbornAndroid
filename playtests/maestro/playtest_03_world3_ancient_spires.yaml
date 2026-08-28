@@ -1,0 +1,41 @@
+appId: com.junewiregames.starborn.prealpha
+---
+# ==========================================================
+# Playtest Flow 03: World 3 Ancient Spires Infiltration
+# ==========================================================
+- launchApp:
+    clearState: true
+
+# 1. Title Screen -> Debug Scenarios -> W3 / Checkpoint Infiltration
+- extendedWaitUntil:
+    visible: "Debug Scenarios"
+    timeout: 15000
+- tapOn: "Debug Scenarios"
+- scrollUntilVisible:
+    element: "W3 / Checkpoint Infiltration"
+    direction: DOWN
+    timeout: 30000
+    speed: 60
+- tapOn: "W3 / Checkpoint Infiltration"
+
+# 2. Verify Laundry Service HUD
+- extendedWaitUntil:
+    visible: "Laundry Service"
+    timeout: 15000
+- takeScreenshot: playtest-03-spire-exploration
+
+# 3. Check Quest Journal
+- tapOn: "MENU"
+- extendedWaitUntil:
+    visible: "FIELD MENU"
+    timeout: 10000
+- tapOn: "Journal"
+- extendedWaitUntil:
+    visible: "Quest Journal"
+    timeout: 10000
+- takeScreenshot: playtest-03-quest-journal
+
+# 4. Dismiss menu
+- tapOn: "Close"
+- waitForAnimationToEnd:
+    timeout: 1000

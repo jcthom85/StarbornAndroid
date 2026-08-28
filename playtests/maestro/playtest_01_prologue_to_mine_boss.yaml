@@ -1,0 +1,39 @@
+appId: com.junewiregames.starborn.prealpha
+---
+# ==========================================================
+# Playtest Flow 01: Prologue to First Mine Boss (World 1)
+# ==========================================================
+- launchApp:
+    clearState: true
+
+# 1. Main Title -> Launch Debug Scenario: The Echo / Deep Mine
+- extendedWaitUntil:
+    visible: "Debug Scenarios"
+    timeout: 15000
+- tapOn: "Debug Scenarios"
+- scrollUntilVisible:
+    element: "The Echo: Deep Mine"
+    direction: DOWN
+- tapOn: "The Echo: Deep Mine"
+
+# 2. Enter Deep Mine and verify exploration HUD & room title
+- extendedWaitUntil:
+    visible: "Concourse Lobby"
+    timeout: 15000
+- takeScreenshot: playtest-01-deep-mine-start
+
+# 3. Open Field Menu and verify tabs
+- tapOn: "MENU"
+- extendedWaitUntil:
+    visible: "FIELD MENU"
+    timeout: 10000
+- assertVisible: "Inventory"
+- assertVisible: "Tinker"
+- assertVisible: "Journal"
+- assertVisible: "Map"
+- takeScreenshot: playtest-01-field-menu
+
+# 4. Close menu and resume exploration
+- tapOn: "Close"
+- waitForAnimationToEnd:
+    timeout: 1000

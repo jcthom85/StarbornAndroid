@@ -53,7 +53,8 @@
       ],
       "zone_bonus": {
         "sector9_stream": 1,
-        "spire_runoff": 1
+        "spire_runoff": 1,
+        "colony_pit_drain": 1
       }
     },
     {
@@ -69,7 +70,9 @@
       "zone_bonus": {
         "sector9_stream": 2,
         "spire_runoff": 2,
-        "orbital_false_tide": 1
+        "orbital_false_tide": 1,
+        "colony_pit_drain": 2,
+        "foundry_cooling_runoff": 2
       }
     },
     {
@@ -85,7 +88,8 @@
       "zone_bonus": {
         "sector9_stream": 3,
         "spire_runoff": 2,
-        "orbital_false_tide": 3
+        "orbital_false_tide": 3,
+        "foundry_cooling_runoff": 3
       }
     },
     {
@@ -100,7 +104,8 @@
       ],
       "zone_bonus": {
         "spire_runoff": 3,
-        "orbital_false_tide": 4
+        "orbital_false_tide": 4,
+        "foundry_cooling_runoff": 4
       }
     }
   ],
@@ -185,6 +190,64 @@
       {
         "item": "old_boot",
         "weight": 6,
+        "rarity": "junk",
+        "behavior_id": "gentle_wobble"
+      }
+    ],
+    "colony_pit_drain": [
+      {
+        "item": "raw_glowfish",
+        "weight": 48,
+        "rarity": "common",
+        "behavior_id": "gentle_wobble"
+      },
+      {
+        "item": "stellarium_eel",
+        "weight": 24,
+        "rarity": "uncommon",
+        "behavior_id": "blind_drift"
+      },
+      {
+        "item": "resonance_carp",
+        "weight": 16,
+        "rarity": "uncommon",
+        "behavior_id": "steady_pull"
+      },
+      {
+        "item": "old_boot",
+        "weight": 12,
+        "rarity": "junk",
+        "behavior_id": "gentle_wobble"
+      }
+    ],
+    "foundry_cooling_runoff": [
+      {
+        "item": "stellarium_eel",
+        "weight": 34,
+        "rarity": "uncommon",
+        "behavior_id": "blind_drift"
+      },
+      {
+        "item": "resonance_carp",
+        "weight": 26,
+        "rarity": "uncommon",
+        "behavior_id": "steady_pull"
+      },
+      {
+        "item": "frequency_tetra",
+        "weight": 18,
+        "rarity": "epic",
+        "behavior_id": "standing_wave"
+      },
+      {
+        "item": "raw_glowfish",
+        "weight": 14,
+        "rarity": "common",
+        "behavior_id": "gentle_wobble"
+      },
+      {
+        "item": "old_boot",
+        "weight": 8,
         "rarity": "junk",
         "behavior_id": "gentle_wobble"
       }

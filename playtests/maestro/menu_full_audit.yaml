@@ -9,20 +9,13 @@ appId: com.junewiregames.starborn.prealpha
     visible: "Debug Scenarios"
     timeout: 10000
 - tapOn: "Debug Scenarios"
+- scrollUntilVisible:
+    element: "The Echo: Deep Mine"
+    direction: DOWN
+- tapOn: "The Echo: Deep Mine"
 - extendedWaitUntil:
-    visible: "Search world, quest, room, or system"
+    visible: "Concourse Lobby"
     timeout: 15000
-- tapOn: "Search world, quest, room, or system"
-- eraseText
-- inputText: "Full"
-- runScript: sleep.js
-- extendedWaitUntil:
-    visible: "Full Inventory"
-    timeout: 15000
-- tapOn: "Full Inventory"
-- extendedWaitUntil:
-    visible: "Nova's Bunk"
-    timeout: 90000
 
 # 1. Open MENU -> Inventory Tab
 - tapOn: "MENU"
@@ -46,7 +39,7 @@ appId: com.junewiregames.starborn.prealpha
 # 2. Tap Tinker Tab
 - tapOn: "Tinker"
 - extendedWaitUntil:
-    visible: "Tinkering & Assembly"
+    visible: "Tinkering"
     timeout: 10000
 - takeScreenshot: menu-audit-4-tinker-all
 

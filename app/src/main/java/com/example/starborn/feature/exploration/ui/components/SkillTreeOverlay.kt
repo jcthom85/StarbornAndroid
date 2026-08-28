@@ -1,5 +1,6 @@
 package com.example.starborn.feature.exploration.ui.components
 
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -10,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -281,45 +283,84 @@ private fun SkillTreeGridCell(
         return
     }
     val status = node.status
+    val nodeTransition = rememberInfiniteTransition(label = "node_pulse")
+    val pulseGlow by nodeTransition.animateFloat(
+        initialValue = 0.7f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            animation = androidx.compose.animation.core.tween(1200, easing = androidx.compose.animation.core.FastOutSlowInEasing),
+            repeatMode = androidx.compose.animation.core.RepeatMode.Reverse
+        ),
+        label = "pulse_glow"
+    )
+
     val background = when {
-        status.unlocked -> accentColor.copy(alpha = 0.25f)
+        status.unlocked -> accentColor.copy(alpha = 0.22f * pulseGlow)
         status.canPurchase -> Color.White.copy(alpha = 0.08f)
         else -> Color.White.copy(alpha = 0.03f)
     }
     val borderColor = when {
         selected -> accentColor
-        status.unlocked -> accentColor.copy(alpha = 0.9f)
+        status.unlocked -> accentColor.copy(alpha = 0.85f * pulseGlow)
         status.canPurchase -> accentColor.copy(alpha = 0.7f)
         else -> Color.White.copy(alpha = 0.3f)
     }
     Surface(
         onClick = { onSelect(node) },
         shape = RoundedCornerShape(18.dp),
-        border = BorderStroke(1.dp, borderColor),
+        border = BorderStroke(if (selected || status.unlocked) 1.5.dp else 1.dp, borderColor),
         color = background,
         modifier = modifier.aspectRatio(1f)
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(10.dp),
-            verticalArrangement = Arrangement.SpaceBetween,
-            horizontalAlignment = Alignment.Start
-        ) {
-            Text(
-                text = node.name,
-                color = Color.White,
-                style = MaterialTheme.typography.labelLarge,
-                maxLines = 2
-            )
-            Text(
-                text = when {
-                    status.unlocked -> "Learned"
-                    else -> "Cost: ${node.costAp} AP"
-                },
-                color = Color.White.copy(alpha = if (status.canPurchase) 0.9f else 0.6f),
-                style = MaterialTheme.typography.bodySmall
-            )
+        Box(modifier = Modifier.fillMaxSize()) {
+            if (status.unlocked) {
+                Box(
+                    modifier = Modifier
+                        .matchParentSize()
+                        .graphicsLayer { alpha = 0.45f * pulseGlow }
+                        .background(
+                            androidx.compose.ui.graphics.Brush.radialGradient(
+                                colors = listOf(accentColor.copy(alpha = 0.35f), Color.Transparent)
+                            )
+                        )
+                )
+            }
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(10.dp),
+                verticalArrangement = Arrangement.SpaceBetween,
+                horizontalAlignment = Alignment.Start
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.Top
+                ) {
+                    Text(
+                        text = node.name,
+                        color = Color.White,
+                        style = MaterialTheme.typography.labelLarge,
+                        maxLines = 2,
+                        modifier = Modifier.weight(1f)
+                    )
+                    if (status.unlocked) {
+                        Text(
+                            text = "✦",
+                            color = accentColor.copy(alpha = pulseGlow),
+                            style = MaterialTheme.typography.labelSmall.copy(fontSize = 11.sp)
+                        )
+                    }
+                }
+                Text(
+                    text = when {
+                        status.unlocked -> "Learned"
+                        else -> "Cost: ${node.costAp} AP"
+                    },
+                    color = Color.White.copy(alpha = if (status.canPurchase) 0.9f else 0.6f),
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
         }
     }
 }

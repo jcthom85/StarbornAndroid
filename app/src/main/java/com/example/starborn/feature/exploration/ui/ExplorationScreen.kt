@@ -25,12 +25,15 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.window.Dialog
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -38,6 +41,13 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -124,6 +134,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.drawscope.withTransform
@@ -421,6 +432,11 @@ fun ExplorationScreen(
                     audioCuePlayer.setUserSfxGain(event.sfxVolume)
                     audioCuePlayer.setUserVoiceGain(event.voiceVolume)
                 }
+                is ExplorationEvent.TriggerVisualFx -> {
+                    val visual = fxVisualInfo(event.fxId)
+                    val message = event.message ?: visual.label
+                    fxBursts += UiFxBurst(System.nanoTime(), message, visual.color)
+                }
                 is ExplorationEvent.ReturnToHub -> onReturnToHub()
             }
         }
@@ -468,6 +484,11 @@ fun ExplorationScreen(
     val swipeThresholdPx = with(LocalDensity.current) { 72.dp.toPx() }
     var dragDelta by remember { mutableStateOf(Offset.Zero) }
 
+    val keyboardFocusRequester = remember { FocusRequester() }
+    LaunchedEffect(Unit) {
+        keyboardFocusRequester.requestFocus()
+    }
+
     val backgroundPainter = rememberRoomBackgroundPainter(uiState.currentRoom?.backgroundImage)
     val roomTransition = uiState.roomTransition
     val outgoingBackgroundPath = roomTransition?.fromBackgroundImage
@@ -504,9 +525,29 @@ fun ExplorationScreen(
         viewModel.onFadeOverlayFinished(command.id)
     }
 
-    BackHandler {
-        if (uiState.isMenuOverlayVisible) {
-            viewModel.closeMenuOverlay()
+    val isAnyOverlayOpen = uiState.isMenuOverlayVisible ||
+        uiState.isTapeDeckVisible ||
+        uiState.isSimulationDeckVisible ||
+        uiState.isMilestoneGalleryVisible ||
+        uiState.isQuestLogVisible ||
+        uiState.skillTreeOverlay != null ||
+        uiState.togglePrompt != null ||
+        uiState.tuningPuzzle != null ||
+        uiState.narrationPrompt != null ||
+        saveLoadMode != null
+
+    BackHandler(enabled = isAnyOverlayOpen) {
+        when {
+            saveLoadMode != null -> saveLoadMode = null
+            uiState.isTapeDeckVisible -> viewModel.dismissTapeDeck()
+            uiState.isSimulationDeckVisible -> viewModel.dismissSimulationDeck()
+            uiState.isMilestoneGalleryVisible -> viewModel.closeMilestoneGallery()
+            uiState.isQuestLogVisible -> viewModel.closeQuestLog()
+            uiState.skillTreeOverlay != null -> viewModel.closeSkillTreeOverlay()
+            uiState.togglePrompt != null -> viewModel.dismissTogglePrompt()
+            uiState.tuningPuzzle != null -> viewModel.dismissTuningPuzzle()
+            uiState.narrationPrompt != null -> viewModel.dismissNarration()
+            uiState.isMenuOverlayVisible -> viewModel.closeMenuOverlay()
         }
     }
 
@@ -548,7 +589,39 @@ fun ExplorationScreen(
             }
         }
 
-    Box(modifier = modifier.fillMaxSize().background(Color.Black)) {
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .background(Color.Black)
+            .focusRequester(keyboardFocusRequester)
+            .focusable()
+            .onKeyEvent { keyEvent ->
+                if (keyEvent.type == KeyEventType.KeyDown &&
+                    !blockingOverlayActive &&
+                    !roomTransitionInProgress &&
+                    !uiState.isMenuOverlayVisible
+                ) {
+                    val direction = when (keyEvent.key) {
+                        Key.W, Key.DirectionUp -> "north"
+                        Key.S, Key.DirectionDown -> "south"
+                        Key.A, Key.DirectionLeft -> "west"
+                        Key.D, Key.DirectionRight -> "east"
+                        else -> null
+                    }
+                    if (direction != null) {
+                        val targetDir = uiState.availableConnections.keys.firstOrNull { key ->
+                            key.equals(direction, ignoreCase = true)
+                        }
+                        val blocked = uiState.blockedDirections.any { it.equals(direction, ignoreCase = true) }
+                        if (targetDir != null && !blocked) {
+                            viewModel.travel(targetDir)
+                            return@onKeyEvent true
+                        }
+                    }
+                }
+                false
+            }
+    ) {
         Box(modifier = baseModifier) {
             val transitionDirection = roomTransition?.direction
             val enterX = when (transitionDirection) {
@@ -714,7 +787,7 @@ fun ExplorationScreen(
                     is ShopAction -> {
                         val shopId = action.shopId ?: return@forEach
                         if (unique.add("shop:$shopId")) {
-                            val label = action.name.takeIf { it.isNotBlank() } ?: "Shop"
+                            val label = action.name.takeIf { it.isNotBlank() }?.toActionTitleCase() ?: "Shop"
                             items += QuickMenuAction(
                                 iconRes = R.drawable.shop_icon,
                                 label = label,
@@ -725,7 +798,7 @@ fun ExplorationScreen(
                     is TinkeringAction -> {
                         val key = "tinkering:${action.shopId.orEmpty()}"
                         if (unique.add(key)) {
-                            val label = action.name.takeIf { it.isNotBlank() } ?: "Tinkering"
+                            val label = action.name.takeIf { it.isNotBlank() }?.toActionTitleCase() ?: "Tinkering"
                             items += QuickMenuAction(
                                 iconRes = R.drawable.tinkering_icon,
                                 label = label,
@@ -736,7 +809,7 @@ fun ExplorationScreen(
                     is FirstAidAction -> {
                         val key = "firstaid:${action.stationId.orEmpty()}"
                         if (unique.add(key)) {
-                            val label = action.name.takeIf { it.isNotBlank() } ?: "First Aid"
+                            val label = action.name.takeIf { it.isNotBlank() }?.toActionTitleCase() ?: "First Aid"
                             items += QuickMenuAction(
                                 iconRes = R.drawable.firstaid_icon,
                                 label = label,
@@ -751,6 +824,7 @@ fun ExplorationScreen(
                             val label = actionName
                                 .takeUnless { it.equals("bunk", ignoreCase = true) }
                                 ?.takeIf { it.isNotBlank() }
+                                ?.toActionTitleCase()
                                 ?: "Rest"
                             val detail = actionName
                                 .takeIf {
@@ -758,7 +832,7 @@ fun ExplorationScreen(
                                         !it.equals("bunk", ignoreCase = true) &&
                                         !it.equals(label, ignoreCase = true)
                                 }
-                                ?.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+                                ?.toActionTitleCase()
                             items += QuickMenuAction(
                                 imageVector = Icons.Rounded.Hotel,
                                 label = label,
@@ -770,7 +844,7 @@ fun ExplorationScreen(
                     is TuningPuzzleAction -> {
                         val key = "tuning:${action.puzzleId}"
                         if (unique.add(key)) {
-                            val label = action.name.takeIf { it.isNotBlank() } ?: "Tuning"
+                            val label = action.name.takeIf { it.isNotBlank() }?.toActionTitleCase() ?: "Tuning"
                             items += QuickMenuAction(
                                 iconRes = R.drawable.tinkering_icon,
                                 label = label,
@@ -784,7 +858,7 @@ fun ExplorationScreen(
                             val zone = action.zoneId ?: currentRoom?.id.orEmpty()
                             val key = "fish:$zone"
                             if (unique.add(key)) {
-                                val label = action.name.takeIf { it.isNotBlank() } ?: "Fishing"
+                                val label = action.name.takeIf { it.isNotBlank() }?.toActionTitleCase() ?: "Fishing"
                                 items += QuickMenuAction(
                                     iconRes = R.drawable.fishing_icon,
                                     label = label,
@@ -841,8 +915,10 @@ fun ExplorationScreen(
                         }
                     },
                     onMapClick = {
-                        viewModel.selectMenuTab(MenuTab.MAP)
-                        viewModel.openMenuOverlay(MenuTab.MAP)
+                        if (!isRoomDark) {
+                            viewModel.selectMenuTab(MenuTab.MAP)
+                            viewModel.openMenuOverlay(MenuTab.MAP)
+                        }
                     }
                 )
 
@@ -955,6 +1031,23 @@ fun ExplorationScreen(
                 modifier = Modifier.align(Alignment.Center)
             )
         }
+        if (uiState.isSimulationDeckVisible) {
+            SimulationDeckDialog(
+                onSelectSimulation = { enemyIds -> viewModel.launchSimulationCombat(enemyIds) },
+                onDismiss = { viewModel.dismissSimulationDeck() },
+                modifier = Modifier.align(Alignment.Center)
+            )
+        }
+        if (uiState.isTapeDeckVisible) {
+            TapeDeckDialog(
+                inventory = uiState.inventoryPreview,
+                playingTapeId = uiState.playingTapeId,
+                onPlayTrack = { tapeId, cueId -> viewModel.playTapeTrack(tapeId, cueId) },
+                onStopTrack = { viewModel.stopTapeTrack() },
+                onDismiss = { viewModel.dismissTapeDeck() },
+                modifier = Modifier.align(Alignment.Center)
+            )
+        }
         uiState.activeDialogue?.let { dialogue ->
             DialogueOverlay(
                 dialogue = dialogue,
@@ -1049,6 +1142,11 @@ fun ExplorationScreen(
                 onVoiceVolumeChange = { viewModel.updateVoiceVolume(it) },
                 onToggleTutorials = { viewModel.updateTutorialsEnabled(it) },
                 onToggleVignette = { viewModel.setVignetteEnabled(it) },
+                onToggleHighContrast = { viewModel.setHighContrastMode(it) },
+                onToggleLargeTouchTargets = { viewModel.setLargeTouchTargets(it) },
+                onToggleScreenshakeDisabled = { viewModel.setScreenshakeDisabled(it) },
+                onToggleFlashesDisabled = { viewModel.setFlashesDisabled(it) },
+                onToggleHapticsDisabled = { viewModel.setHapticsDisabled(it) },
                 onQuickSave = { viewModel.quickSave() },
                 onSaveGame = {
                     coroutineScope.launch {
@@ -1062,6 +1160,7 @@ fun ExplorationScreen(
                         saveLoadMode = "load"
                     }
                 },
+                onReturnToTitle = onReturnToHub,
                 partyStatus = uiState.partyStatus,
                 onShowSkillTree = { memberId -> viewModel.openSkillTree(memberId) },
                 onShowDetails = { memberId -> viewModel.openPartyMemberDetails(memberId) },
@@ -1318,7 +1417,10 @@ fun ExplorationScreen(
             UIPromptOverlay(
                 prompt = uiState.prompt,
                 onDismiss = { viewModel.dismissPrompt() },
-                modifier = Modifier.align(Alignment.BottomCenter)
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 76.dp, start = 16.dp, end = 16.dp)
+                    .zIndex(25f)
             )
         }
 
@@ -1962,9 +2064,15 @@ private fun MenuOverlay(
     onVoiceVolumeChange: (Float) -> Unit,
     onToggleTutorials: (Boolean) -> Unit,
     onToggleVignette: (Boolean) -> Unit,
+    onToggleHighContrast: (Boolean) -> Unit = {},
+    onToggleLargeTouchTargets: (Boolean) -> Unit = {},
+    onToggleScreenshakeDisabled: (Boolean) -> Unit = {},
+    onToggleFlashesDisabled: (Boolean) -> Unit = {},
+    onToggleHapticsDisabled: (Boolean) -> Unit = {},
     onQuickSave: () -> Unit,
     onSaveGame: () -> Unit,
     onLoadGame: () -> Unit,
+    onReturnToTitle: (() -> Unit)? = null,
     partyStatus: PartyStatusUi,
     onShowSkillTree: (String) -> Unit,
     onShowDetails: (String) -> Unit,
@@ -2229,9 +2337,15 @@ private fun MenuOverlay(
                         onVoiceVolumeChange = onVoiceVolumeChange,
                         onToggleTutorials = onToggleTutorials,
                         onToggleVignette = onToggleVignette,
+                        onToggleHighContrast = onToggleHighContrast,
+                        onToggleLargeTouchTargets = onToggleLargeTouchTargets,
+                        onToggleScreenshakeDisabled = onToggleScreenshakeDisabled,
+                        onToggleFlashesDisabled = onToggleFlashesDisabled,
+                        onToggleHapticsDisabled = onToggleHapticsDisabled,
                         onQuickSave = onQuickSave,
                         onSaveGame = onSaveGame,
                         onLoadGame = onLoadGame,
+                        onReturnToTitle = onReturnToTitle,
                         onShowSkillTree = { memberId ->
                             openDetail(MenuDetailKind.SKILL_TREE, id = memberId) {
                                 onShowSkillTree(memberId)
@@ -2684,6 +2798,322 @@ private fun TuningPuzzleDialog(
 }
 
 @Composable
+private fun SimulationDeckDialog(
+    onSelectSimulation: (List<String>) -> Unit,
+    onDismiss: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Dialog(onDismissRequest = onDismiss) {
+        Surface(
+            modifier = modifier
+                .fillMaxWidth(0.95f)
+                .wrapContentHeight(),
+            shape = RoundedCornerShape(18.dp),
+            color = Color(0xFF070F18),
+            border = BorderStroke(1.5.dp, Color(0xFF00E5FF).copy(alpha = 0.7f))
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(18.dp)
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(14.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "ASTRA TACTICAL SIMULATION",
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontWeight = FontWeight.Bold,
+                            letterSpacing = 1.sp
+                        ),
+                        color = Color(0xFFE0F7FA)
+                    )
+                    IconButton(
+                        onClick = onDismiss,
+                        modifier = Modifier.size(28.dp)
+                    ) {
+                        androidx.compose.material3.Icon(
+                            imageVector = Icons.Filled.Close,
+                            contentDescription = "Close",
+                            tint = Color.White.copy(alpha = 0.7f),
+                            modifier = Modifier.size(18.dp)
+                        )
+                    }
+                }
+
+                Text(
+                    text = "Select a hard-light combat program to test party equipment, abilities, and tactical synergies without mortal peril:",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color.White.copy(alpha = 0.75f)
+                )
+
+                val programs = listOf(
+                    Triple("Sentinel Target Droid", listOf("sentinel_mki"), "Basic targeting calibration & ATB cadence."),
+                    Triple("Faulted Loader Sub-Routine", listOf("faulted_loader"), "Three-beat armored cycle with exposed Shock openings."),
+                    Triple("Ruin-Guardian Defense Matrix", listOf("ruin_guardian"), "Heavy armor barrier penetration and stability shattering."),
+                    Triple("Apex Boss Sim: The Iron Warden", listOf("the_iron_warden"), "Apex heavy enforcer simulation benchmark.")
+                )
+
+                programs.forEach { (title, enemyIds, desc) ->
+                    Surface(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(12.dp))
+                            .clickable { onSelectSimulation(enemyIds) },
+                        shape = RoundedCornerShape(12.dp),
+                        color = Color(0xFF0C1B2A),
+                        border = BorderStroke(1.dp, Color(0xFF00E5FF).copy(alpha = 0.35f))
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(12.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(
+                                    text = title,
+                                    style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
+                                    color = Color(0xFF00E5FF)
+                                )
+                                Spacer(modifier = Modifier.height(2.dp))
+                                Text(
+                                    text = desc,
+                                    style = MaterialTheme.typography.bodySmall.copy(fontSize = 11.sp),
+                                    color = Color.White.copy(alpha = 0.7f)
+                                )
+                            }
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Surface(
+                                shape = RoundedCornerShape(8.dp),
+                                color = Color(0xFF00E5FF).copy(alpha = 0.15f),
+                                border = BorderStroke(1.dp, Color(0xFF00E5FF).copy(alpha = 0.6f))
+                            ) {
+                                Text(
+                                    text = "ENGAGE",
+                                    style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                                    color = Color(0xFF00E5FF),
+                                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun TapeDeckDialog(
+    inventory: List<InventoryPreviewItemUi>,
+    playingTapeId: String?,
+    onPlayTrack: (String, String) -> Unit,
+    onStopTrack: () -> Unit,
+    onDismiss: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val ownedTapeIds = remember(inventory) { inventory.map { it.id }.toSet() }
+
+    val tapes = listOf(
+        Triple("vhs_tape_01", "gf_01_unpayable_debt", "Tape 01: Unpayable Debt" to "Mining Pit - Bunk Locker"),
+        Triple("vhs_tape_02", "gf_02_memories_of_another_life", "Tape 02: Memories of Another Life" to "Colony - Jed's Office"),
+        Triple("vhs_tape_03", "gf_03_showdown_in_the_rain", "Tape 03: Showdown in the Rain" to "Coast - Glow-Moss Cavern"),
+        Triple("vhs_tape_04", "gf_04_the_road_at_night", "Tape 04: The Road at Night" to "Sector 9 - Ridge Plateau"),
+        Triple("vhs_tape_05", "gf_05_the_black_city", "Tape 05: The Black City" to "Spire - Night Market"),
+        Triple("vhs_tape_06", "gf_06_refuge", "Tape 06: Refuge" to "Spire - SkyPark Pavilion"),
+        Triple("vhs_tape_07", "gf_07_reclamation", "Tape 07: Reclamation" to "Foundry - Smelter Waste"),
+        Triple("vhs_tape_08", "gf_08_the_end_of_the_beginning", "Tape 08: The End of the Beginning" to "Foundry - Titan Dock"),
+        Triple("vhs_tape_09", "gf_09_reconciliation", "Tape 09: Reconciliation" to "Void Ring - Solarium"),
+        Triple("vhs_tape_10", "gf_10_shackles", "Tape 10: Shackles" to "Source - Memory Bridge")
+    )
+
+    Dialog(onDismissRequest = onDismiss) {
+        Surface(
+            modifier = modifier
+                .fillMaxWidth(0.96f)
+                .fillMaxHeight(0.85f),
+            shape = RoundedCornerShape(18.dp),
+            color = Color(0xFF141210),
+            border = BorderStroke(1.5.dp, Color(0xFFFFB300).copy(alpha = 0.8f))
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column {
+                        Text(
+                            text = "GREAT FRONTIER // ANALOG DECK",
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                fontWeight = FontWeight.Bold,
+                                letterSpacing = 1.sp
+                            ),
+                            color = Color(0xFFFFD54F)
+                        )
+                        Text(
+                            text = "Discovered: ${tapes.count { it.first in ownedTapeIds }} / 10 Magnetic Tapes",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = Color.White.copy(alpha = 0.6f)
+                        )
+                    }
+                    IconButton(
+                        onClick = onDismiss,
+                        modifier = Modifier.size(28.dp)
+                    ) {
+                        androidx.compose.material3.Icon(
+                            imageVector = Icons.Filled.Close,
+                            contentDescription = "Close",
+                            tint = Color.White.copy(alpha = 0.7f),
+                            modifier = Modifier.size(18.dp)
+                        )
+                    }
+                }
+
+                // Currently Playing Status Bar
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(10.dp),
+                    color = Color(0xFF211E1A),
+                    border = BorderStroke(1.dp, if (playingTapeId != null) Color(0xFFFFB300) else Color.White.copy(alpha = 0.2f))
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 12.dp, vertical = 8.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text(
+                                text = if (playingTapeId != null) "▶ NOW PLAYING:" else "■ STANDBY:",
+                                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                                color = if (playingTapeId != null) Color(0xFFFFB300) else Color.White.copy(alpha = 0.5f)
+                            )
+                            Text(
+                                text = tapes.firstOrNull { it.first == playingTapeId }?.third?.first ?: "No tape inserted",
+                                style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.SemiBold),
+                                color = Color.White,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
+                        if (playingTapeId != null) {
+                            Surface(
+                                shape = RoundedCornerShape(6.dp),
+                                color = Color(0xFFFF5252).copy(alpha = 0.2f),
+                                border = BorderStroke(1.dp, Color(0xFFFF5252).copy(alpha = 0.7f)),
+                                modifier = Modifier.clickable { onStopTrack() }
+                            ) {
+                                Text(
+                                    text = "EJECT",
+                                    style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                                    color = Color(0xFFFF8A80),
+                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                                )
+                            }
+                        }
+                    }
+                }
+
+                // Tape List
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(tapes) { (tapeId, cueId, info) ->
+                        val (title, location) = info
+                        val isOwned = tapeId in ownedTapeIds
+                        val isPlaying = playingTapeId == tapeId
+
+                        Surface(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(10.dp))
+                                .then(
+                                    if (isOwned) Modifier.clickable {
+                                        if (isPlaying) onStopTrack() else onPlayTrack(tapeId, cueId)
+                                    } else Modifier
+                                ),
+                            shape = RoundedCornerShape(10.dp),
+                            color = when {
+                                isPlaying -> Color(0xFF332711)
+                                isOwned -> Color(0xFF1E1B17)
+                                else -> Color(0xFF161514)
+                            },
+                            border = BorderStroke(
+                                1.dp,
+                                when {
+                                    isPlaying -> Color(0xFFFFD54F)
+                                    isOwned -> Color(0xFFFFB300).copy(alpha = 0.4f)
+                                    else -> Color.White.copy(alpha = 0.1f)
+                                }
+                            )
+                        ) {
+                            Row(
+                                modifier = Modifier.padding(10.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Text(
+                                        text = if (isOwned) title else "[Unindexed Tape Cartridge]",
+                                        style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
+                                        color = if (isOwned) Color(0xFFFFD54F) else Color.White.copy(alpha = 0.35f)
+                                    )
+                                    Spacer(modifier = Modifier.height(2.dp))
+                                    Text(
+                                        text = if (isOwned) location else "Hidden in: $location",
+                                        style = MaterialTheme.typography.bodySmall.copy(fontSize = 11.sp),
+                                        color = if (isOwned) Color.White.copy(alpha = 0.7f) else Color.White.copy(alpha = 0.3f)
+                                    )
+                                }
+                                Spacer(modifier = Modifier.width(8.dp))
+                                if (isOwned) {
+                                    Surface(
+                                        shape = RoundedCornerShape(8.dp),
+                                        color = if (isPlaying) Color(0xFFFFB300).copy(alpha = 0.3f) else Color(0xFFFFB300).copy(alpha = 0.15f),
+                                        border = BorderStroke(1.dp, Color(0xFFFFB300).copy(alpha = 0.7f))
+                                    ) {
+                                        Text(
+                                            text = if (isPlaying) "STOP" else "PLAY",
+                                            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                                            color = Color(0xFFFFD54F),
+                                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
+                                        )
+                                    }
+                                } else {
+                                    Text(
+                                        text = "LOCKED",
+                                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Medium),
+                                        color = Color.White.copy(alpha = 0.25f),
+                                        modifier = Modifier.padding(horizontal = 8.dp)
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
 private fun MenuTabContentArea(
     tab: MenuTab,
     accentColor: Color,
@@ -2708,9 +3138,15 @@ private fun MenuTabContentArea(
     onVoiceVolumeChange: (Float) -> Unit,
     onToggleTutorials: (Boolean) -> Unit,
     onToggleVignette: (Boolean) -> Unit,
+    onToggleHighContrast: (Boolean) -> Unit = {},
+    onToggleLargeTouchTargets: (Boolean) -> Unit = {},
+    onToggleScreenshakeDisabled: (Boolean) -> Unit = {},
+    onToggleFlashesDisabled: (Boolean) -> Unit = {},
+    onToggleHapticsDisabled: (Boolean) -> Unit = {},
     onQuickSave: () -> Unit,
     onSaveGame: () -> Unit,
     onLoadGame: () -> Unit,
+    onReturnToTitle: (() -> Unit)? = null,
     onShowSkillTree: (String) -> Unit,
     onShowDetails: (String) -> Unit,
     inventoryItems: List<InventoryPreviewItemUi>,
@@ -2806,9 +3242,15 @@ private fun MenuTabContentArea(
                 onVoiceVolumeChange = onVoiceVolumeChange,
                 onToggleTutorials = onToggleTutorials,
                 onToggleVignette = onToggleVignette,
+                onToggleHighContrast = onToggleHighContrast,
+                onToggleLargeTouchTargets = onToggleLargeTouchTargets,
+                onToggleScreenshakeDisabled = onToggleScreenshakeDisabled,
+                onToggleFlashesDisabled = onToggleFlashesDisabled,
+                onToggleHapticsDisabled = onToggleHapticsDisabled,
                 onQuickSave = onQuickSave,
                 onSaveGame = onSaveGame,
-                onLoadGame = onLoadGame
+                onLoadGame = onLoadGame,
+                onReturnToTitle = onReturnToTitle
             )
         }
     }
@@ -4089,6 +4531,14 @@ private fun RestRecoveryOverlay(
     }
 }
 
+private fun String.toActionTitleCase(): String {
+    return this.split(" ")
+        .filter { it.isNotBlank() }
+        .joinToString(" ") { word ->
+            word.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+        }
+}
+
 private data class QuickMenuAction(
     @DrawableRes val iconRes: Int? = null,
     val imageVector: ImageVector? = null,
@@ -4733,14 +5183,46 @@ private fun NpcPresenceChip(
     isDark: Boolean,
     onClick: () -> Unit
 ) {
+    var visibleState by remember(npc) { mutableStateOf(false) }
+    val shimmer = remember(npc) { androidx.compose.animation.core.Animatable(0f) }
+
+    LaunchedEffect(npc) {
+        visibleState = true
+        shimmer.snapTo(0f)
+        shimmer.animateTo(
+            targetValue = 1f,
+            animationSpec = tween(durationMillis = 650, easing = androidx.compose.animation.core.FastOutSlowInEasing)
+        )
+    }
+
+    val animAlpha by animateFloatAsState(
+        targetValue = if (visibleState) 1f else 0f,
+        animationSpec = tween(durationMillis = 280, easing = androidx.compose.animation.core.LinearOutSlowInEasing),
+        label = "npcChipAlpha"
+    )
+    val animOffsetY by animateFloatAsState(
+        targetValue = if (visibleState) 0f else 6f,
+        animationSpec = tween(durationMillis = 320, easing = androidx.compose.animation.core.FastOutSlowInEasing),
+        label = "npcChipOffsetY"
+    )
+
+    val halo = (kotlin.math.sin(shimmer.value * Math.PI.toFloat())).coerceIn(0f, 1f)
+
     Surface(
         onClick = onClick,
         shape = RoundedCornerShape(12.dp),
         color = Color(0xFF071018).copy(alpha = if (isDark) 0.88f else 0.76f),
-        border = BorderStroke(1.dp, accentColor.copy(alpha = if (isDark) 0.68f else 0.54f)),
+        border = BorderStroke(
+            1.dp,
+            accentColor.copy(alpha = if (isDark) (0.68f + 0.30f * halo).coerceAtMost(1f) else (0.54f + 0.38f * halo).coerceAtMost(1f))
+        ),
         modifier = Modifier
             .widthIn(min = 136.dp, max = 176.dp)
             .height(46.dp)
+            .graphicsLayer {
+                alpha = animAlpha
+                translationY = animOffsetY * density
+            }
             .semantics { contentDescription = "Talk to $label" }
     ) {
         Row(
@@ -4749,6 +5231,7 @@ private fun NpcPresenceChip(
                     Brush.horizontalGradient(
                         colors = listOf(
                             accentColor.copy(alpha = if (isDark) 0.22f else 0.18f),
+                            accentColor.copy(alpha = (0.28f * halo)),
                             borderColor.copy(alpha = 0.08f),
                             Color.Transparent
                         )
@@ -4761,7 +5244,7 @@ private fun NpcPresenceChip(
             Box(
                 modifier = Modifier
                     .size(32.dp)
-                    .border(1.dp, accentColor.copy(alpha = 0.72f), CircleShape)
+                    .border((1f + 0.5f * halo).dp, accentColor.copy(alpha = (0.72f + 0.28f * halo).coerceAtMost(1f)), CircleShape)
                     .padding(2.dp)
             ) {
                 if (portraitPath.isNullOrBlank()) {
@@ -4769,7 +5252,7 @@ private fun NpcPresenceChip(
                         modifier = Modifier
                             .fillMaxSize()
                             .clip(CircleShape)
-                            .background(accentColor.copy(alpha = 0.18f)),
+                            .background(accentColor.copy(alpha = 0.18f + 0.12f * halo)),
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
@@ -5882,6 +6365,8 @@ private fun buildInlineActionPlan(
         if (label.isBlank()) return emptyList()
         return buildList {
             add(label)
+            val normalizedUnderscore = label.replace('_', ' ')
+            if (normalizedUnderscore != label) add(normalizedUnderscore)
             val normalizedDash = label.replace('-', ' ')
             if (normalizedDash != label) add(normalizedDash)
             val normalizedApostrophe = label.replace('’', '\'')
@@ -6342,14 +6827,26 @@ fun MilestoneBanner(
     )
 }
 
+private fun itemCategoryAccentColor(category: String?): Color {
+    val norm = category?.lowercase(Locale.getDefault())?.trim().orEmpty()
+    return when {
+        norm.contains("key") || norm.contains("relic") || norm.contains("core") || norm.contains("quest") -> Color(0xFFFFD54F) // Golden Amber
+        norm.contains("weapon") || norm.contains("gun") || norm.contains("sword") || norm.contains("armor") || norm.contains("gear") || norm.contains("accessory") -> Color(0xFF7BE8FF) // Cyber Cyan
+        norm.contains("consumable") || norm.contains("food") || norm.contains("ration") || norm.contains("heal") || norm.contains("stim") || norm.contains("firstaid") -> Color(0xFF81C784) // Medical Jade
+        norm.contains("void") || norm.contains("erosion") || norm.contains("anomaly") -> Color(0xFFCE93D8) // Void Violet
+        norm.contains("material") || norm.contains("ingredient") || norm.contains("scrap") || norm.contains("ore") || norm.contains("fish") -> Color(0xFFB0BEC5) // Industrial Steel Slate
+        else -> Color(0xFFA5D6A7)
+    }
+}
+
 @Composable
 fun ItemGrantedBanner(
     prompt: com.example.starborn.domain.prompt.ItemGrantedPrompt,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val accentColor = Color(0xFFA5D6A7)
-    val shape = RoundedCornerShape(20.dp)
+    val accentColor = remember(prompt.category, prompt.itemId) { itemCategoryAccentColor(prompt.category) }
+    val shape = RoundedCornerShape(18.dp)
     val category = prompt.category
         ?.replace('_', ' ')
         ?.replace('-', ' ')
@@ -6364,89 +6861,100 @@ fun ItemGrantedBanner(
     Surface(
         onClick = onDismiss,
         modifier = modifier
-            .navigationBarsPadding()
             .fillMaxWidth()
-            .padding(horizontal = 20.dp, vertical = 12.dp)
-            .widthIn(min = 300.dp, max = 600.dp)
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .widthIn(min = 300.dp, max = 560.dp)
             .semantics {
                 contentDescription = "Item acquired: $itemLabel. Tap to continue."
             },
-        color = Color(0xFF07110D).copy(alpha = 0.97f),
+        color = Color(0xFF060B13).copy(alpha = 0.98f),
         contentColor = Color.White,
         shape = shape,
-        border = BorderStroke(1.2.dp, accentColor.copy(alpha = 0.55f)),
-        shadowElevation = 16.dp
+        border = BorderStroke(1.2.dp, accentColor.copy(alpha = 0.60f)),
+        shadowElevation = 14.dp
     ) {
         Column(
             modifier = Modifier
                 .background(
                     Brush.linearGradient(
                         listOf(
-                            accentColor.copy(alpha = 0.16f),
+                            accentColor.copy(alpha = 0.18f),
                             Color.Transparent,
-                            Color(0xFF07110D)
+                            Color(0xFF060B13)
                         )
                     )
                 )
-                .padding(horizontal = 20.dp, vertical = 18.dp),
-            verticalArrangement = Arrangement.spacedBy(14.dp)
+                .padding(horizontal = 18.dp, vertical = 14.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = "ITEM ACQUIRED",
-                    style = MaterialTheme.typography.labelSmall.copy(letterSpacing = 1.2.sp),
-                    color = accentColor
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .background(accentColor.copy(alpha = 0.20f), RoundedCornerShape(999.dp))
+                            .padding(horizontal = 8.dp, vertical = 3.dp)
+                    ) {
+                        Text(
+                            text = "ITEM ACQUIRED",
+                            style = MaterialTheme.typography.labelSmall.copy(letterSpacing = 1.1.sp, fontWeight = FontWeight.Bold),
+                            color = accentColor
+                        )
+                    }
+                }
                 if (hasSequence) {
                     Text(
                         text = "${prompt.sequenceIndex} / ${prompt.sequenceTotal}",
-                        style = MaterialTheme.typography.labelMedium,
-                        color = Color.White.copy(alpha = 0.58f)
+                        style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
+                        color = Color.White.copy(alpha = 0.68f)
                     )
                 }
             }
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                horizontalArrangement = Arrangement.spacedBy(14.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Surface(
-                    modifier = Modifier.size(68.dp),
-                    color = accentColor.copy(alpha = 0.12f),
-                    shape = RoundedCornerShape(16.dp),
-                    border = BorderStroke(1.dp, accentColor.copy(alpha = 0.32f))
+                    modifier = Modifier.size(56.dp),
+                    color = accentColor.copy(alpha = 0.14f),
+                    shape = RoundedCornerShape(14.dp),
+                    border = BorderStroke(1.dp, accentColor.copy(alpha = 0.40f))
                 ) {
                     Image(
                         painter = painterResource(iconRes),
                         contentDescription = null,
-                        modifier = Modifier.padding(12.dp),
+                        modifier = Modifier.padding(10.dp),
                         contentScale = ContentScale.Fit
                     )
                 }
                 Column(
                     modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(5.dp)
+                    verticalArrangement = Arrangement.spacedBy(3.dp)
                 ) {
                     Text(
                         text = itemLabel,
-                        style = MaterialTheme.typography.titleLarge,
+                        style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = Color.White
                     )
                     Text(
                         text = category,
-                        style = MaterialTheme.typography.labelMedium,
-                        color = accentColor.copy(alpha = 0.82f)
+                        style = MaterialTheme.typography.labelSmall,
+                        color = accentColor.copy(alpha = 0.90f),
+                        fontWeight = FontWeight.SemiBold
                     )
                     prompt.description?.takeIf { it.isNotBlank() }?.let { description ->
                         Text(
                             text = description,
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = Color.White.copy(alpha = 0.72f),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = Color.White.copy(alpha = 0.74f),
                             maxLines = 2,
                             overflow = TextOverflow.Ellipsis
                         )
@@ -6461,7 +6969,7 @@ fun ItemGrantedBanner(
                 Text(
                     text = if (prompt.sequenceIndex < prompt.sequenceTotal) "Tap for next" else "Tap to continue",
                     style = MaterialTheme.typography.labelSmall,
-                    color = Color.White.copy(alpha = 0.48f)
+                    color = Color.White.copy(alpha = 0.52f)
                 )
             }
         }
@@ -6477,7 +6985,7 @@ fun ItemBatchGrantedBanner(
     PromptBanner(
         title = "Items Obtained",
         message = "Acquired $summary",
-        accentColor = Color(0xFFA5D6A7),
+        accentColor = Color(0xFF7BE8FF),
         actionLabel = "Dismiss",
         onAction = onDismiss,
         modifier = modifier,
@@ -6511,13 +7019,12 @@ private fun PromptBanner(
 
     Surface(
         modifier = modifier
-            .navigationBarsPadding()
             .fillMaxWidth()
-            .padding(horizontal = if (showTitle) 12.dp else 20.dp)
-            .widthIn(min = if (showTitle) 320.dp else 280.dp, max = if (showTitle) 860.dp else 560.dp),
+            .padding(horizontal = if (showTitle) 8.dp else 16.dp)
+            .widthIn(min = if (showTitle) 300.dp else 260.dp, max = if (showTitle) 620.dp else 520.dp),
         color = Color.Transparent,
         shape = shape,
-        shadowElevation = if (showTitle) 10.dp else 14.dp
+        shadowElevation = if (showTitle) 8.dp else 12.dp
     ) {
         Box(
             modifier = Modifier
@@ -6531,46 +7038,46 @@ private fun PromptBanner(
                 .background(
                     brush = Brush.linearGradient(
                         listOf(
-                            backgroundColor.copy(alpha = 0.94f),
-                            backgroundColor.copy(alpha = 0.90f),
-                            if (showTitle) backgroundColor.copy(alpha = 0.94f) else accentColor.copy(alpha = 0.14f)
+                            backgroundColor.copy(alpha = 0.96f),
+                            backgroundColor.copy(alpha = 0.92f),
+                            if (showTitle) backgroundColor.copy(alpha = 0.96f) else accentColor.copy(alpha = 0.14f)
                         )
                     )
                 )
-                .border(if (showTitle) 1.2.dp else 1.dp, accentColor.copy(alpha = if (showTitle) 0.50f else 0.42f), shape)
+                .border(if (showTitle) 1.dp else 1.dp, accentColor.copy(alpha = if (showTitle) 0.50f else 0.42f), shape)
         ) {
             if (showTitle) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 24.dp, vertical = 18.dp),
-                    verticalArrangement = Arrangement.spacedBy(14.dp)
+                        .padding(horizontal = 16.dp, vertical = 12.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(14.dp)
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
                         Box(
                             modifier = Modifier
-                                .size(50.dp)
-                                .clip(RoundedCornerShape(16.dp))
+                                .size(36.dp)
+                                .clip(RoundedCornerShape(10.dp))
                                 .background(
                                     brush = Brush.linearGradient(
                                         listOf(
-                                            accentColor.copy(alpha = 0.62f),
-                                            accentColor.copy(alpha = 0.18f)
+                                            accentColor.copy(alpha = 0.55f),
+                                            accentColor.copy(alpha = 0.15f)
                                         )
                                     )
                                 )
-                                .border(1.dp, accentColor.copy(alpha = 0.55f), RoundedCornerShape(16.dp)),
+                                .border(1.dp, accentColor.copy(alpha = 0.45f), RoundedCornerShape(10.dp)),
                             contentAlignment = Alignment.Center
                         ) {
                             Icon(
                                 imageVector = badgeIcon,
                                 contentDescription = null,
                                 tint = Color.White,
-                                modifier = Modifier.size(24.dp)
+                                modifier = Modifier.size(18.dp)
                             )
                         }
                         Row(
@@ -6584,7 +7091,7 @@ private fun PromptBanner(
                                         color = accentColor.copy(alpha = 0.18f),
                                         shape = RoundedCornerShape(999.dp)
                                     )
-                                    .padding(horizontal = 12.dp, vertical = 4.dp)
+                                    .padding(horizontal = 10.dp, vertical = 3.dp)
                             ) {
                                 Text(
                                     text = badgeLabel,
@@ -6604,7 +7111,7 @@ private fun PromptBanner(
                     Text(
                         text = message,
                         color = Color.White,
-                        style = MaterialTheme.typography.bodyLarge,
+                        style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Normal,
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -6619,9 +7126,13 @@ private fun PromptBanner(
                                 containerColor = accentColor,
                                 contentColor = Color.Black.copy(alpha = 0.85f)
                             ),
-                            shape = RoundedCornerShape(18.dp)
+                            shape = RoundedCornerShape(12.dp),
+                            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 6.dp)
                         ) {
-                            Text(actionLabel.uppercase(Locale.getDefault()))
+                            Text(
+                                text = actionLabel.uppercase(Locale.getDefault()),
+                                style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold)
+                            )
                         }
                     }
                 }
@@ -7273,6 +7784,24 @@ private fun IllustratedCinematicOverlay(
         label = "illustratedCinematicDim"
     )
     val contentAlpha = enter.value * dimAlpha
+
+    val impactShakeX = remember(stepKey) { CoreAnimatable(0f) }
+    val impactShakeY = remember(stepKey) { CoreAnimatable(0f) }
+    LaunchedEffect(stepKey) {
+        val cue = state.step.audioCue
+        if (cue == "sfx_intro_door_buckle" || cue == "sfx_intro_beast_strike" || cue == "sfx_intro_chime_launch") {
+            val amp = with(density) { (if (cue == "sfx_intro_beast_strike") 14.dp else 8.dp).toPx() }
+            launch {
+                impactShakeX.snapTo(amp)
+                impactShakeX.animateTo(0f, animationSpec = tween(durationMillis = 260, easing = FastOutSlowInEasing))
+            }
+            launch {
+                impactShakeY.snapTo(-amp * 0.4f)
+                impactShakeY.animateTo(0f, animationSpec = tween(durationMillis = 260, easing = FastOutSlowInEasing))
+            }
+        }
+    }
+
     SideEffect {
         lastRenderedFrame.value = RenderedCinematicFrame(
             imagePath = state.step.imagePath,
@@ -7349,10 +7878,73 @@ private fun IllustratedCinematicOverlay(
                     alpha = contentAlpha
                     scaleX = scale
                     scaleY = scale
-                    translationX = driftX
-                    translationY = driftY
+                    translationX = driftX + impactShakeX.value
+                    translationY = driftY + impactShakeY.value
                 }
         )
+
+        // Atmospheric Layer 1: Emergency breach alarm strobe
+        val isEmergency = state.step.captionStyle == CinematicCaptionStyle.SYSTEM ||
+            state.step.imagePath?.contains("breach") == true
+        if (isEmergency) {
+            val strobeTransition = rememberInfiniteTransition(label = "emergency_strobe")
+            val strobeAlpha by strobeTransition.animateFloat(
+                initialValue = 0.04f,
+                targetValue = 0.24f,
+                animationSpec = infiniteRepeatable(
+                    animation = tween(durationMillis = 500, easing = FastOutSlowInEasing),
+                    repeatMode = RepeatMode.Reverse
+                ),
+                label = "strobe_alpha"
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .graphicsLayer { alpha = strobeAlpha * contentAlpha }
+                    .background(
+                        Brush.radialGradient(
+                            colors = listOf(
+                                Color(0xFFFF3D00).copy(alpha = 0.55f),
+                                Color(0xFFFF5722).copy(alpha = 0.18f),
+                                Color.Transparent
+                            ),
+                            center = Offset.Zero,
+                            radius = 900f
+                        )
+                    )
+            )
+        }
+
+        // Atmospheric Layer 2: Cryogenic stasis chamber mist
+        val isStasisPod = state.step.imagePath?.contains("stasis") == true
+        if (isStasisPod) {
+            val mistTransition = rememberInfiniteTransition(label = "stasis_mist")
+            val mistPulse by mistTransition.animateFloat(
+                initialValue = 0.18f,
+                targetValue = 0.38f,
+                animationSpec = infiniteRepeatable(
+                    animation = tween(durationMillis = 2400, easing = FastOutSlowInEasing),
+                    repeatMode = RepeatMode.Reverse
+                ),
+                label = "mist_pulse"
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .graphicsLayer { alpha = mistPulse * contentAlpha }
+                    .background(
+                        Brush.verticalGradient(
+                            colors = listOf(
+                                Color.Transparent,
+                                Color(0xFF4DD0E1).copy(alpha = 0.12f),
+                                Color(0xFF00E5FF).copy(alpha = 0.38f)
+                            ),
+                            startY = 400f
+                        )
+                    )
+            )
+        }
+
         if (state.step.captionStyle != CinematicCaptionStyle.NONE) {
             Box(
                 modifier = Modifier
@@ -7696,6 +8288,12 @@ fun ShopGreetingOverlay(
     }
 }
 
+private data class UiFxBurst(
+    val id: Long,
+    val label: String,
+    val color: Color
+)
+
 @Composable
 private fun CraftingFxOverlay(
     bursts: List<UiFxBurst>,
@@ -7704,13 +8302,13 @@ private fun CraftingFxOverlay(
 ) {
     Box(modifier = modifier, contentAlignment = Alignment.Center) {
         bursts.forEach { burst ->
-            FxBurstView(burst = burst, onExpired = onExpired)
+            GenericFxBurstView(burst = burst, onExpired = onExpired)
         }
     }
 }
 
 @Composable
-private fun FxBurstView(
+private fun GenericFxBurstView(
     burst: UiFxBurst,
     onExpired: (Long) -> Unit
 ) {
@@ -7751,12 +8349,6 @@ private fun FxBurstView(
     }
 }
 
-private data class UiFxBurst(
-    val id: Long,
-    val label: String,
-    val color: Color
-)
-
 private data class FxVisualInfo(val label: String, val color: Color)
 
 private fun fxVisualInfo(fxId: String): FxVisualInfo {
@@ -7765,6 +8357,7 @@ private fun fxVisualInfo(fxId: String): FxVisualInfo {
         "craft_first_aid_success" -> FxVisualInfo("Med kit assembled", Color(0xFF66BB6A))
         "craft_first_aid_perfect" -> FxVisualInfo("Perfect med kit!", Color(0xFF81C784))
         "craft_first_aid_failure" -> FxVisualInfo("First aid failed", Color(0xFFE53935))
+        "electric_sparks" -> FxVisualInfo("⚡ Conduit Grounded", Color(0xFF80D8FF))
         else -> FxVisualInfo(
             label = normalized.replace('_', ' ').replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() },
             color = Color(0xFF90CAF9)

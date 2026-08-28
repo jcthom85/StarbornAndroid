@@ -1,0 +1,41 @@
+appId: com.junewiregames.starborn.prealpha
+---
+# ==========================================================
+# Playtest Flow 04: World 4 Foundry & Titan Walker Climax
+# ==========================================================
+- launchApp:
+    clearState: true
+
+# 1. Title Screen -> Debug Scenarios -> W4 / Meltdown Escape
+- extendedWaitUntil:
+    visible: "Debug Scenarios"
+    timeout: 15000
+- tapOn: "Debug Scenarios"
+- scrollUntilVisible:
+    element: "W4 / Meltdown Escape"
+    direction: DOWN
+    timeout: 30000
+    speed: 60
+- tapOn: "W4 / Meltdown Escape"
+
+# 2. Verify Foundry Power Core HUD
+- extendedWaitUntil:
+    visible: "Power Core"
+    timeout: 15000
+- takeScreenshot: playtest-04-foundry-meltdown
+
+# 3. Check Tinker Tab
+- tapOn: "MENU"
+- extendedWaitUntil:
+    visible: "FIELD MENU"
+    timeout: 10000
+- tapOn: "Tinker"
+- extendedWaitUntil:
+    visible: "Tinkering"
+    timeout: 10000
+- takeScreenshot: playtest-04-foundry-tinkering
+
+# 4. Close menu
+- tapOn: "Close"
+- waitForAnimationToEnd:
+    timeout: 1000

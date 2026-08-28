@@ -1,6 +1,9 @@
-﻿package com.example.starborn.ui.overlay
+package com.example.starborn.ui.overlay
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.FastOutLinearInEasing
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
@@ -8,6 +11,9 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.draggable
+import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -66,7 +72,7 @@ private data class Banner(
     val remainingObjectiveCount: Int
 )
 
-private const val QUEST_BANNER_AUTO_DISMISS_MS = 5_000L
+private const val QUEST_BANNER_AUTO_DISMISS_MS = 3_200L
 
 @Composable
 fun QuestBannerOverlay(
@@ -132,19 +138,20 @@ fun QuestBannerOverlay(
         }
     }
 
-
     val visible = isShowing && current != null
 
     Box(
         modifier = modifier
             .statusBarsPadding()
-            .padding(top = 56.dp, start = 16.dp, end = 16.dp),
+            .padding(top = 12.dp, start = 16.dp, end = 16.dp),
         contentAlignment = Alignment.TopCenter
     ) {
         AnimatedVisibility(
             visible = visible,
-            enter = slideInVertically(initialOffsetY = { -it / 2 }) + fadeIn(),
-            exit = slideOutVertically(targetOffsetY = { -it / 2 }) + fadeOut()
+            enter = slideInVertically(animationSpec = tween(220, easing = LinearOutSlowInEasing)) { -it } +
+                fadeIn(animationSpec = tween(220)),
+            exit = slideOutVertically(animationSpec = tween(180, easing = FastOutLinearInEasing)) { -it } +
+                fadeOut(animationSpec = tween(180))
         ) {
             current?.let { banner ->
                 QuestBannerCard(
@@ -185,12 +192,18 @@ private fun QuestBannerCard(
     Card(
         modifier = Modifier
             .fillMaxWidth(0.92f)
-            .widthIn(max = 520.dp)
+            .widthIn(max = 500.dp)
+            .draggable(
+                state = rememberDraggableState { delta ->
+                    if (delta < -12f) onDismiss()
+                },
+                orientation = Orientation.Vertical
+            )
             .clickable(onClick = onDismiss)
             .semantics { contentDescription = "Quest Banner" },
-        shape = RoundedCornerShape(14.dp),
+        shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-        border = BorderStroke(1.dp, accent.copy(alpha = 0.38f)),
+        border = BorderStroke(1.dp, accent.copy(alpha = 0.42f)),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF061018).copy(alpha = 0.98f))
     ) {
         Row(
@@ -198,12 +211,12 @@ private fun QuestBannerCard(
                 .background(
                     Brush.horizontalGradient(
                         colors = listOf(
-                            accent.copy(alpha = 0.35f),
+                            accent.copy(alpha = 0.30f),
                             Color.Transparent
                         )
                     )
                 )
-                .padding(horizontal = 12.dp, vertical = 10.dp),
+                .padding(horizontal = 12.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
@@ -211,9 +224,9 @@ private fun QuestBannerCard(
                 imageVector = icon,
                 contentDescription = null,
                 tint = accent,
-                modifier = Modifier.size(20.dp)
+                modifier = Modifier.size(18.dp)
             )
-            Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
+            Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
                 Text(
                     text = heading.uppercase(),
                     style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
@@ -243,12 +256,15 @@ private fun QuestBannerCard(
                     }
                 }
             }
-            IconButton(onClick = onDismiss) {
+            IconButton(
+                onClick = onDismiss,
+                modifier = Modifier.size(28.dp)
+            ) {
                 Icon(
                     imageVector = Icons.Filled.Close,
                     contentDescription = "Dismiss Quest Banner",
                     tint = Color.White.copy(alpha = 0.68f),
-                    modifier = Modifier.size(20.dp)
+                    modifier = Modifier.size(16.dp)
                 )
             }
         }

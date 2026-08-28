@@ -1,0 +1,36 @@
+appId: com.junewiregames.starborn.prealpha
+---
+# ==========================================================
+# Playtest Flow 05: Multi-Biome Fishing & Inventory Integration
+# ==========================================================
+- launchApp:
+    clearState: true
+
+# 1. Title Screen -> Debug Scenarios -> W2 / Crash Start
+- extendedWaitUntil:
+    visible: "Debug Scenarios"
+    timeout: 15000
+- tapOn: "Debug Scenarios"
+- scrollUntilVisible:
+    element: "W2 / Crash Start"
+    direction: DOWN
+- tapOn: "W2 / Crash Start"
+
+# 2. Verify Crash Site HUD
+- extendedWaitUntil:
+    visible: "Crash Site"
+    timeout: 15000
+- takeScreenshot: playtest-05-crash-site-start
+
+# 3. Open Inventory Tab and verify items
+- tapOn: "MENU"
+- extendedWaitUntil:
+    visible: "FIELD MENU"
+    timeout: 10000
+- tapOn: "Inventory"
+- takeScreenshot: playtest-05-inventory-preview
+
+# 4. Close menu
+- tapOn: "Close"
+- waitForAnimationToEnd:
+    timeout: 1000

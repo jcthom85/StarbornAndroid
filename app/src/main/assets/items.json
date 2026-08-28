@@ -2710,5 +2710,144 @@
     "value": 0,
     "rarity": "uncommon",
     "unsellable": true
+  },
+  {
+    "id": "vhs_tape_01",
+    "name": "Tape 01: Unpayable Debt",
+    "description": "An analog magnetic tape labeled 'Great Frontier - Track 01: Unpayable Debt'. Found hidden in the colony mining pit.",
+    "aliases": [
+      "unpayable debt",
+      "tape 1",
+      "tape 01",
+      "vhs 1"
+    ],
+    "type": "key_item",
+    "value": 100,
+    "rarity": "rare"
+  },
+  {
+    "id": "vhs_tape_02",
+    "name": "Tape 02: Memories of Another Life",
+    "description": "An analog magnetic tape labeled 'Great Frontier - Track 02: Memories of Another Life'. Preserved in the colony workshop.",
+    "aliases": [
+      "memories of another life",
+      "tape 2",
+      "tape 02",
+      "vhs 2"
+    ],
+    "type": "key_item",
+    "value": 100,
+    "rarity": "rare"
+  },
+  {
+    "id": "vhs_tape_03",
+    "name": "Tape 03: Showdown in the Rain",
+    "description": "An analog magnetic tape labeled 'Great Frontier - Track 03: Showdown in the Rain'. Recovered from the coastal crash shallows.",
+    "aliases": [
+      "showdown in the rain",
+      "tape 3",
+      "tape 03",
+      "vhs 3"
+    ],
+    "type": "key_item",
+    "value": 100,
+    "rarity": "rare"
+  },
+  {
+    "id": "vhs_tape_04",
+    "name": "Tape 04: The Road at Night",
+    "description": "An analog magnetic tape labeled 'Great Frontier - Track 04: The Road at Night'. Left at the high sanctuary overlook.",
+    "aliases": [
+      "the road at night",
+      "tape 4",
+      "tape 04",
+      "vhs 4"
+    ],
+    "type": "key_item",
+    "value": 100,
+    "rarity": "rare"
+  },
+  {
+    "id": "vhs_tape_05",
+    "name": "Tape 05: The Black City",
+    "description": "An analog magnetic tape labeled 'Great Frontier - Track 05: The Black City'. Hidden in a locked lockbox in the neon night market.",
+    "aliases": [
+      "the black city",
+      "tape 5",
+      "tape 05",
+      "vhs 5"
+    ],
+    "type": "key_item",
+    "value": 100,
+    "rarity": "rare"
+  },
+  {
+    "id": "vhs_tape_06",
+    "name": "Tape 06: Refuge",
+    "description": "An analog magnetic tape labeled 'Great Frontier - Track 06: Refuge'. Recovered from the quiet skypark pavilion.",
+    "aliases": [
+      "refuge",
+      "tape 6",
+      "tape 06",
+      "vhs 6"
+    ],
+    "type": "key_item",
+    "value": 100,
+    "rarity": "rare"
+  },
+  {
+    "id": "vhs_tape_07",
+    "name": "Tape 07: Reclamation",
+    "description": "An analog magnetic tape labeled 'Great Frontier - Track 07: Reclamation'. Discovered inside an old industrial smelter scrap pile.",
+    "aliases": [
+      "reclamation",
+      "tape 7",
+      "tape 07",
+      "vhs 7"
+    ],
+    "type": "key_item",
+    "value": 100,
+    "rarity": "rare"
+  },
+  {
+    "id": "vhs_tape_08",
+    "name": "Tape 08: The End of the Beginning",
+    "description": "An analog magnetic tape labeled 'Great Frontier - Track 08: The End of the Beginning'. Stashed at the Titan Dock gantry.",
+    "aliases": [
+      "the end of the beginning",
+      "tape 8",
+      "tape 08",
+      "vhs 8"
+    ],
+    "type": "key_item",
+    "value": 100,
+    "rarity": "rare"
+  },
+  {
+    "id": "vhs_tape_09",
+    "name": "Tape 09: Reconciliation",
+    "description": "An analog magnetic tape labeled 'Great Frontier - Track 09: Reconciliation'. Resting beside the solarium tide pool.",
+    "aliases": [
+      "reconciliation",
+      "tape 9",
+      "tape 09",
+      "vhs 9"
+    ],
+    "type": "key_item",
+    "value": 100,
+    "rarity": "rare"
+  },
+  {
+    "id": "vhs_tape_10",
+    "name": "Tape 10: Shackles",
+    "description": "An analog magnetic tape labeled 'Great Frontier - Track 10: Shackles'. Placed on the memory altar at the event horizon.",
+    "aliases": [
+      "shackles",
+      "tape 10",
+      "vhs 10"
+    ],
+    "type": "key_item",
+    "value": 100,
+    "rarity": "rare"
   }
 ]

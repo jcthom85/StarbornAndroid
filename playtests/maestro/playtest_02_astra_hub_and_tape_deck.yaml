@@ -1,0 +1,45 @@
+appId: com.junewiregames.starborn.prealpha
+---
+# ==========================================================
+# Playtest Flow 02: Astra Home Base & Analog Tape Deck
+# ==========================================================
+- launchApp:
+    clearState: true
+
+# 1. Title Screen -> Debug Scenarios -> Red Alert
+- extendedWaitUntil:
+    visible: "Debug Scenarios"
+    timeout: 15000
+- tapOn: "Debug Scenarios"
+- scrollUntilVisible:
+    element: "Red Alert"
+    direction: DOWN
+- tapOn: "Red Alert"
+
+# 2. Verify Maintenance Access Interior HUD
+- extendedWaitUntil:
+    visible: "Maintenance Access"
+    timeout: 15000
+- takeScreenshot: playtest-02-room-interior
+
+# 3. Open Settings and inspect Accessibility toggles
+- tapOn: "MENU"
+- extendedWaitUntil:
+    visible: "FIELD MENU"
+    timeout: 10000
+- swipe:
+    start: "85%, 15%"
+    end: "20%, 15%"
+    duration: 400
+- waitForAnimationToEnd:
+    timeout: 2000
+- tapOn: "Settings"
+- extendedWaitUntil:
+    visible: "Save Data"
+    timeout: 10000
+- takeScreenshot: playtest-02-settings-panel
+
+# 4. Return to room
+- tapOn: "Close"
+- waitForAnimationToEnd:
+    timeout: 1000

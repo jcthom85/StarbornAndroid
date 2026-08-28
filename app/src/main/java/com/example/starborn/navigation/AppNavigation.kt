@@ -157,6 +157,21 @@ fun NavigationHost(
                 onToggleVignette = { enabled ->
                     settingsScope.launch { services.userSettingsStore.setVignetteEnabled(enabled) }
                 },
+                onToggleHighContrast = { enabled ->
+                    settingsScope.launch { services.userSettingsStore.setHighContrastMode(enabled) }
+                },
+                onToggleLargeTouchTargets = { enabled ->
+                    settingsScope.launch { services.userSettingsStore.setLargeTouchTargets(enabled) }
+                },
+                onToggleScreenshakeDisabled = { disabled ->
+                    settingsScope.launch { services.userSettingsStore.setScreenshakeDisabled(disabled) }
+                },
+                onToggleFlashesDisabled = { disabled ->
+                    settingsScope.launch { services.userSettingsStore.setFlashesDisabled(disabled) }
+                },
+                onToggleHapticsDisabled = { disabled ->
+                    settingsScope.launch { services.userSettingsStore.setHapticsDisabled(disabled) }
+                },
                 onStartGame = {
                     navController.navigate(Exploration.route) {
                         popUpTo(MainMenu.route) { inclusive = true }
@@ -344,8 +359,8 @@ fun NavigationHost(
                         navController.navigate(Shop.create(shopId))
                     },
                     onReturnToHub = {
-                        navController.navigate(Hub.route) {
-                            popUpTo(Exploration.route) { inclusive = true }
+                        navController.navigate(MainMenu.route) {
+                            popUpTo(0) { inclusive = true }
                             launchSingleTop = true
                         }
                     },

@@ -1,0 +1,12 @@
+appId: com.junewiregames.starborn.prealpha
+---
+# ==========================================================
+# Master Playtest Suite: Worlds 1 through 6 & Systems
+# ==========================================================
+- runFlow: playtest_01_prologue_to_mine_boss.yaml
+- runFlow: playtest_02_astra_hub_and_tape_deck.yaml
+- runFlow: playtest_03_world3_ancient_spires.yaml
+- runFlow: playtest_04_world4_foundry_titan.yaml
+- runFlow: playtest_05_fishing_multi_biome.yaml
+- runFlow: playtest_06_world6_climax_and_ending.yaml
+- runFlow: menu_full_audit.yaml

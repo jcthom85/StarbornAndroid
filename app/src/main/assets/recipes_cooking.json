@@ -79,5 +79,27 @@
     "result": "frequency_tetra_consomme",
     "description": "Clarify false-tide fish and herbs into a precise broth that rings at the edge of hearing.",
     "success_message": "You finish a Frequency Tetra Consomme that hums in the cup."
+  },
+  {
+    "id": "provision_field_ration_press",
+    "name": "Field Ration Press",
+    "ingredients": {
+      "beast_meat": 1,
+      "herb": 1
+    },
+    "result": "ration_pack",
+    "description": "Thermal-press harvested meat and wild herbs into a compact, shelf-stable ration pack.",
+    "success_message": "You thermal-press a fresh Standard Ration Pack."
+  },
+  {
+    "id": "provision_spiced_ration_cache",
+    "name": "Spiced Ration Press",
+    "ingredients": {
+      "beast_meat": 2,
+      "fiery_pepper": 1
+    },
+    "result": "ration_pack",
+    "description": "Cure hearty beast cuts with fiery pepper to yield dense survival rations.",
+    "success_message": "You pack two dense Spiced Rations for the trail."
   }
 ]

@@ -54,6 +54,7 @@ import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.material.icons.automirrored.rounded.ExitToApp
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -1313,7 +1314,7 @@ private fun bannerIcon(icon: CombatBannerIcon?): ImageVector? =
         CombatBannerIcon.ITEM -> Icons.Rounded.Inventory2
         CombatBannerIcon.SNACK -> Icons.Rounded.Restaurant
         CombatBannerIcon.GUARD -> Icons.Rounded.Shield
-        CombatBannerIcon.RETREAT -> Icons.Rounded.ExitToApp
+        CombatBannerIcon.RETREAT -> Icons.AutoMirrored.Rounded.ExitToApp
         CombatBannerIcon.HEAL -> Icons.Filled.CheckCircle
         CombatBannerIcon.STATUS -> Icons.Filled.Flag
         CombatBannerIcon.BURST -> Icons.Rounded.Whatshot

@@ -57,15 +57,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.starborn.R
+import com.example.starborn.domain.audio.VoiceoverController
 import com.example.starborn.feature.common.ui.StationBackground
 import com.example.starborn.feature.common.ui.StationHeader
 import com.example.starborn.feature.shop.SellItemUi
+import com.example.starborn.feature.shop.ShopDialogueLineUi
 import com.example.starborn.feature.shop.ShopItemUi
 import com.example.starborn.feature.shop.ShopTab
 import com.example.starborn.feature.shop.ShopUiState
-import com.example.starborn.domain.audio.VoiceoverController
-import com.example.starborn.feature.shop.ShopDialogueLineUi
 import com.example.starborn.feature.shop.ShopViewModel
 import com.example.starborn.ui.background.rememberAssetPainter
 import kotlinx.coroutines.flow.collectLatest
@@ -98,6 +99,7 @@ fun ShopRoute(
         voiceoverController = voiceoverController
     )
 }
+
 private data class ShopColors(
     val accent: Color,
     val accentAlt: Color,
@@ -113,12 +115,11 @@ private data class ShopColors(
 private fun rememberShopColors(highContrastMode: Boolean): ShopColors {
     val scheme = MaterialTheme.colorScheme
     return remember(highContrastMode, scheme) {
-        val accent = if (highContrastMode) scheme.primary else Color(0xFFFFC857)
-        val accentAlt = if (highContrastMode) scheme.secondary else Color(0xFF5EE6F2)
-        val base = if (highContrastMode) Color(0xFF0A1018) else Color(0xFF060A0D)
-        val panel = base.copy(alpha = if (highContrastMode) 0.96f else 0.84f)
-        val card = if (highContrastMode) Color(0xFF121A28) else Color(0xFF12100D).copy(alpha = 0.80f)
-        val border = if (highContrastMode) Color.White.copy(alpha = 0.32f) else Color(0xFFFFD17A).copy(alpha = 0.22f)
+        val accent = if (highContrastMode) Color(0xFFFFD54F) else Color(0xFFFFC857)
+        val accentAlt = if (highContrastMode) Color(0xFF64D2FF) else Color(0xFF5EE6F2)
+        val panel = if (highContrastMode) Color(0xFF0C1522).copy(alpha = 0.98f) else Color(0xFF0D1929).copy(alpha = 0.92f)
+        val card = if (highContrastMode) Color(0xFF14243B) else Color(0xFF132238).copy(alpha = 0.92f)
+        val border = if (highContrastMode) Color.White.copy(alpha = 0.40f) else Color(0xFF3B5878).copy(alpha = 0.55f)
         ShopColors(
             accent = accent,
             accentAlt = accentAlt,
@@ -126,7 +127,7 @@ private fun rememberShopColors(highContrastMode: Boolean): ShopColors {
             card = card,
             border = border,
             textPrimary = Color.White,
-            textSecondary = Color.White.copy(alpha = 0.76f),
+            textSecondary = Color(0xFFB8D0E8),
             danger = if (highContrastMode) Color(0xFFFF6B6B) else scheme.error
         )
     }
@@ -304,8 +305,8 @@ private fun ShopControlPanel(
     Surface(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(18.dp),
-        color = colors.panel.copy(alpha = 0.76f),
-        border = BorderStroke(1.dp, colors.border.copy(alpha = 0.75f)),
+        color = colors.panel,
+        border = BorderStroke(1.dp, colors.border),
         shadowElevation = 8.dp
     ) {
         Column(
@@ -313,8 +314,8 @@ private fun ShopControlPanel(
                 .background(
                     Brush.verticalGradient(
                         colors = listOf(
-                            colors.accent.copy(alpha = 0.13f),
-                            colors.accentAlt.copy(alpha = 0.04f),
+                            colors.accent.copy(alpha = 0.15f),
+                            colors.accentAlt.copy(alpha = 0.05f),
                             Color.Transparent
                         )
                     )
@@ -361,9 +362,9 @@ private fun ShopInventoryPanel(
     val title = if (activeTab == ShopTab.BUY) "Available Stock" else "Buyback Manifest"
     Surface(
         modifier = modifier,
-        color = colors.panel.copy(alpha = 0.82f),
+        color = colors.panel,
         shape = RoundedCornerShape(20.dp),
-        border = BorderStroke(1.dp, colors.border.copy(alpha = 0.72f)),
+        border = BorderStroke(1.dp, colors.border),
         shadowElevation = 10.dp
     ) {
         Column(
@@ -440,7 +441,7 @@ private fun ShopItemCard(
         modifier = modifier.fillMaxWidth(),
         color = colors.card,
         shape = RoundedCornerShape(16.dp),
-        border = BorderStroke(1.dp, if (canBuy) colors.accent.copy(alpha = 0.32f) else colors.border)
+        border = BorderStroke(1.dp, if (canBuy) colors.accent.copy(alpha = 0.45f) else colors.border)
     ) {
         Column(
             modifier = Modifier
@@ -448,7 +449,7 @@ private fun ShopItemCard(
                 .background(
                     Brush.horizontalGradient(
                         colors = listOf(
-                            colors.accent.copy(alpha = if (canBuy) 0.11f else 0.04f),
+                            colors.accent.copy(alpha = if (canBuy) 0.14f else 0.04f),
                             Color.Transparent
                         )
                     )
@@ -480,9 +481,9 @@ private fun ShopItemCard(
                         )
                         if (item.rotating) {
                             Surface(
-                                color = colors.accentAlt.copy(alpha = 0.16f),
+                                color = colors.accentAlt.copy(alpha = 0.20f),
                                 shape = RoundedCornerShape(999.dp),
-                                border = BorderStroke(1.dp, colors.accentAlt.copy(alpha = 0.38f))
+                                border = BorderStroke(1.dp, colors.accentAlt.copy(alpha = 0.50f))
                             ) {
                                 Text(
                                     text = "FRESH",
@@ -549,24 +550,24 @@ private fun PriceChip(
 ) {
     Surface(
         modifier = modifier,
-        color = Color.Black.copy(alpha = 0.42f),
+        color = Color(0xFF08121D),
         shape = RoundedCornerShape(12.dp),
-        border = BorderStroke(1.dp, colors.accent.copy(alpha = 0.34f))
+        border = BorderStroke(1.dp, colors.accent.copy(alpha = 0.50f))
     ) {
         Column(
             modifier = Modifier.padding(horizontal = 10.dp, vertical = 7.dp),
             horizontalAlignment = Alignment.End
         ) {
             Text(
-                text = price.toString(),
+                text = "◈ $price",
                 style = MaterialTheme.typography.labelLarge,
                 fontWeight = FontWeight.Bold,
-                color = colors.textPrimary
+                color = colors.accent
             )
             Text(
-                text = "CRED",
-                style = MaterialTheme.typography.labelSmall,
-                color = colors.accent.copy(alpha = 0.82f)
+                text = "CREDITS",
+                style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp),
+                color = colors.textSecondary
             )
         }
     }
@@ -585,7 +586,7 @@ private fun SellItemCard(
         modifier = modifier.fillMaxWidth(),
         color = colors.card,
         shape = RoundedCornerShape(16.dp),
-        border = BorderStroke(1.dp, if (canSell) colors.accentAlt.copy(alpha = 0.30f) else colors.border)
+        border = BorderStroke(1.dp, if (canSell) colors.accentAlt.copy(alpha = 0.40f) else colors.border)
     ) {
         Column(
             modifier = Modifier
@@ -593,7 +594,7 @@ private fun SellItemCard(
                 .background(
                     Brush.horizontalGradient(
                         colors = listOf(
-                            colors.accentAlt.copy(alpha = if (canSell) 0.10f else 0.04f),
+                            colors.accentAlt.copy(alpha = if (canSell) 0.12f else 0.04f),
                             Color.Transparent
                         )
                     )
@@ -688,14 +689,14 @@ private fun ShopTabSelector(
     Surface(
         modifier = modifier,
         shape = RoundedCornerShape(14.dp),
-        color = Color.Black.copy(alpha = 0.28f),
-        border = BorderStroke(1.dp, colors.border.copy(alpha = 0.65f))
+        color = Color(0xFF071018).copy(alpha = 0.60f),
+        border = BorderStroke(1.dp, colors.border)
     ) {
         Row(
             modifier = Modifier.padding(4.dp),
             horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            listOf(ShopTab.BUY to "Buy", ShopTab.SELL to "Sell").forEach { (tab, label) ->
+            listOf(ShopTab.BUY to "Buy Stock", ShopTab.SELL to "Sell Items").forEach { (tab, label) ->
                 val active = activeTab == tab
                 Surface(
                     modifier = Modifier
@@ -704,10 +705,10 @@ private fun ShopTabSelector(
                         .clip(RoundedCornerShape(10.dp))
                         .clickable { onTabSelected(tab) },
                     shape = RoundedCornerShape(10.dp),
-                    color = if (active) colors.accent.copy(alpha = 0.18f) else Color.Transparent,
+                    color = if (active) colors.accent.copy(alpha = 0.22f) else Color.Transparent,
                     border = BorderStroke(
                         1.dp,
-                        if (active) colors.accent.copy(alpha = 0.50f) else Color.Transparent
+                        if (active) colors.accent.copy(alpha = 0.60f) else Color.Transparent
                     )
                 ) {
                     Box(contentAlignment = Alignment.Center) {
@@ -734,27 +735,38 @@ private fun CreditsPill(
 ) {
     Surface(
         modifier = modifier,
-        color = Color.Black.copy(alpha = 0.46f),
+        color = Color(0xFF071018).copy(alpha = 0.70f),
         shape = RoundedCornerShape(14.dp),
-        border = BorderStroke(1.dp, colors.accent.copy(alpha = 0.42f))
+        border = BorderStroke(1.dp, colors.accent.copy(alpha = 0.50f))
     ) {
-        Column(
-            modifier = Modifier.padding(horizontal = 12.dp, vertical = 7.dp),
-            horizontalAlignment = Alignment.End
+        Row(
+            modifier = Modifier.padding(horizontal = 14.dp, vertical = 9.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = credits.toString(),
-                style = MaterialTheme.typography.titleSmall,
-                fontWeight = FontWeight.Bold,
-                color = colors.textPrimary,
-                maxLines = 1
-            )
-            Text(
-                text = "CREDITS",
+                text = "BALANCE",
                 style = MaterialTheme.typography.labelSmall,
-                color = colors.accent.copy(alpha = 0.86f),
-                maxLines = 1
+                color = colors.textSecondary,
+                fontWeight = FontWeight.SemiBold
             )
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "◈ $credits",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = colors.accent
+                )
+                Text(
+                    text = "CR",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = colors.accent.copy(alpha = 0.85f),
+                    fontWeight = FontWeight.Bold
+                )
+            }
         }
     }
 }
@@ -778,7 +790,7 @@ private fun ShopDialogueBar(
     Box(modifier = modifier.padding(top = portraitSize * 0.42f)) {
         Surface(
             modifier = Modifier.fillMaxWidth(),
-            color = colors.panel.copy(alpha = 0.94f),
+            color = colors.panel,
             contentColor = Color.White,
             shadowElevation = 10.dp,
             tonalElevation = 3.dp,

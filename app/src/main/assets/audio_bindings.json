@@ -201,6 +201,7 @@
   },
   "ui": {
     "click": "ui_click",
+    "action_inspect": "ui_click",
     "confirm": "ui_confirm",
     "error": "ui_error",
     "back": "ui_back",

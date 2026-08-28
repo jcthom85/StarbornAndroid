@@ -63,15 +63,14 @@
     "state": {},
     "actions": [
       {
-        "name": "tables",
-        "type": "rest_stop",
-        "rest_event": "w1_rest_mess_hall",
-        "message": "Nova eats a hot ration at the end of a shared table. Resting here restores the party."
-      },
-      {
         "name": "monitor",
         "type": "generic",
         "condition_unmet_message": "'YOUR SHIFT IS YOUR CONTRIBUTION.' The screen is spider-webbed with cracks."
+      }
+    ],
+    "npc_presence": [
+      {
+        "npc": "miner_orlo"
       }
     ]
   },
@@ -96,8 +95,7 @@
       {
         "name": "thermal cooker",
         "type": "generic",
-        "action_event": "w1_cook_ration_soup",
-        "condition_unmet_message": "The thermal cooker is hot and ready. Nova needs a ration pack to brew hot soup."
+        "condition_unmet_message": "The industrial cooker hums with lukewarm colony broth. Cook Vance glares if anyone touches the regulator valve."
       },
       {
         "name": "ingredient hopper",
@@ -105,6 +103,11 @@
         "action_event": "w1_loot_kitchen_hopper",
         "requires_milestone_not_set": "ms_w1_kitchen_hopper_looted",
         "condition_unmet_message": "The ingredient hopper is scraped clean."
+      }
+    ],
+    "npc_presence": [
+      {
+        "npc": "cook_vance"
       }
     ]
   },
@@ -260,22 +263,22 @@
     "env": "mine",
     "title": "Nova's Bunk",
     "background_image": "images/rooms/world_1/pit_nova_bunk_v5.webp",
-    "description": "Your bunk is a narrow shelf in the colony wall. The bunk light hangs above cargo netting that holds your tools, a spare ration, and Jed's small metal carving.",
+    "description": "Your bunk is a narrow shelf in the colony wall. The bunk light hangs above cargo netting and a rusty locker holding your tools, a spare ration, and Jed's small metal carving.",
     "reveal_title_when_dark": true,
-    "description_dark": "Nova can find the bunk edge, netting, and door switch without light. Only the bunk light switch carries an emergency glow.",
+    "description_dark": "Nova can find the bunk edge, netting, rusty locker, and door switch without light. Only the bunk light switch carries an emergency glow.",
     "description_variants": [
       {
         "requires_state": {
           "light_on": true,
           "conduit_isolated": true
         },
-        "description": "The bunk light has settled back to a cheap yellow buzz. The scorched conduit is dead and the door release is safe to touch. The netting still holds Jed's carving. The closed maintenance ticket remains where Dominion left it."
+        "description": "The bunk light has settled back to a cheap yellow buzz. The scorched conduit is dead and the door release is safe to touch. The netting and rusty locker still hold Jed's carving. The closed maintenance ticket remains where Dominion left it."
       },
       {
         "requires_state": {
           "light_on": true
         },
-        "description": "The bunk light coughs awake over the cargo netting and its small hoard: tools, a spare ration, Jed's metal carving. A scorched conduit spits blue-white sparks across the door release. Its maintenance ticket is stamped CLOSED: WITHIN QUOTA."
+        "description": "The bunk light coughs awake over the cargo netting and rusty locker with its small hoard: tools, a spare ration, Jed's metal carving. A scorched conduit spits blue-white sparks across the door release. Its maintenance ticket is stamped CLOSED: WITHIN QUOTA."
       }
     ],
     "npcs": [],
@@ -330,6 +333,7 @@
         "type": "generic",
         "action_event": "w1_mq01_inspect_safety_fault",
         "requires_milestone": "ms_w1_mq01_fault_visible",
+        "hide_when_state": "conduit_isolated",
         "condition_unmet_message": "Only the bunk light's weak emergency glow touches the wall seam."
       },
       {
@@ -343,6 +347,12 @@
         "type": "generic",
         "action_event": "w1_mq01_check_netting",
         "condition_unmet_message": "A few tools, a spare ration, and a small metal carving Jed gave you."
+      },
+      {
+        "name": "rusty locker",
+        "type": "generic",
+        "action_event": "find_vhs_tape_01",
+        "condition_unmet_message": "A locked metal locker tucked under the ventilation grate."
       }
     ]
   },
@@ -543,6 +553,14 @@
         "type": "generic",
         "condition_unmet_message": "The motor is old and loud, but it keeps the Dominion inspectors out."
       }
+    ],
+    "npc_presence": [
+      {
+        "npc": "mechanic_mira",
+        "requires_state": {
+          "loader_cleared": true
+        }
+      }
     ]
   },
   {
@@ -617,7 +635,7 @@
     "env": "mine",
     "title": "Jed's Office",
     "background_image": "images/rooms/world_1/workshop_office_v3.webp",
-    "description": "Ancient screens, hand-drawn schematics, and locked parts bins crowd Jed's windowless office. His worn chair still holds the shape of someone who keeps choosing one more repair over sleep.",
+    "description": "Ancient screens, hand-drawn schematics, and a diagnostic bench drawer crowd Jed's windowless office. His worn chair still holds the shape of someone who keeps choosing one more repair over sleep.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -644,6 +662,12 @@
         "name": "chair",
         "type": "generic",
         "condition_unmet_message": "Smells like machine oil and Jed's cheap tobacco."
+      },
+      {
+        "name": "diagnostic bench drawer",
+        "type": "generic",
+        "action_event": "find_vhs_tape_02",
+        "condition_unmet_message": "An old diagnostic bench with a sealed drawer."
       }
     ]
   },
@@ -1617,7 +1641,7 @@
       {
         "name": "graffiti",
         "type": "generic",
-        "condition_unmet_message": "'If you reach Sector 4, follow the blue cables \u2014 not the signs.'"
+        "condition_unmet_message": "'If you reach Sector 4, follow the blue cables — not the signs.'"
       },
       {
         "name": "bench",
@@ -2323,7 +2347,7 @@
     "weather": "cave_drip",
     "title": "Elevator Landing",
     "background_image": "images/rooms/world_1/mine_landing.webp",
-    "description": "The industrial lift opens into raw rock, red safety beacons, and idle drilling machinery. Boggs' override shows one authorized descent and no scheduled return.",
+    "description": "The industrial lift opens into raw rock, red safety beacons, and idle drilling machinery. Boggs' override shows one authorized descent and no scheduled return. A quiet drain pool fishing spot gathers in the corner.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -2351,6 +2375,12 @@
         "name": "machinery",
         "type": "generic",
         "condition_unmet_message": "Massive drills and ore-crushers, currently silent during the shift-change."
+      },
+      {
+        "name": "drain pool fishing",
+        "type": "fishing",
+        "zone_id": "colony_pit_drain",
+        "condition_unmet_message": "A deep mineral runoff pool calm enough to drop a line."
       }
     ]
   },
@@ -4860,7 +4890,7 @@
     "env": "neon",
     "title": "Drone Test Alcove",
     "background_image": "images/rooms/world_3/spire_archive_vault.webp",
-    "description": "The drone test alcove is sealed behind scratched glass and warning tape. A prototype rack waits beside a row of sleeping security drones. Their targeting paths are invisible for now, but the Lens has made invisible things a temporary problem.",
+    "description": "The drone test alcove is sealed behind scratched glass and warning tape. A prototype rack waits beside a row of sleeping security drones. Their targeting paths are invisible for now, but the Lens has made invisible things a temporary problem. A flight telemetry log flashes on the testing rack screen.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -4907,6 +4937,11 @@
         "type": "generic",
         "action_event": "w3_scan_drone_paths",
         "condition_unmet_message": "The targeting paths are invisible until the Lens turns threat into geometry."
+      },
+      {
+        "name": "flight telemetry log",
+        "type": "generic",
+        "condition_unmet_message": "Recorded drone flight telemetry showing high combat lethality during initial trials."
       }
     ]
   },
@@ -5156,7 +5191,7 @@
     "env": "foundry",
     "title": "Cooling Springs",
     "background_image": "images/rooms/world_4/foundry_cooling_springs.webp",
-    "description": "A hidden maintenance pocket where condensed steam collects in clear hot pools. The factory noise drops to a distant pulse, giving the crew room to breathe.",
+    "description": "A hidden maintenance pocket where condensed steam collects in clear hot pools. The factory noise drops to a distant pulse, giving the crew room to breathe. A cooling basin collects mineral runoff.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -5222,6 +5257,12 @@
           "ms_w4_mechs_salvaged"
         ],
         "condition_unmet_message": "The springs need intact actuators before Nova can build a bypass."
+      },
+      {
+        "name": "cooling basin fishing",
+        "type": "fishing",
+        "zone_id": "foundry_cooling_runoff",
+        "condition_unmet_message": "A blue condensation basin where heat-resistant fish gather."
       }
     ]
   },
@@ -5356,6 +5397,12 @@
           "ms_w4_intake_jammed"
         ],
         "condition_unmet_message": "Three destroyed mechs lie half-melted in the lava-flow debris, still full of parts the Foundry wants erased."
+      },
+      {
+        "name": "wrecked loader stash",
+        "type": "generic",
+        "action_event": "find_vhs_tape_07",
+        "condition_unmet_message": "A heat-scorched salvage compartment inside a ruined loader mech."
       }
     ],
     "enemy_flavor": {
@@ -5367,7 +5414,7 @@
     "env": "foundry",
     "title": "Intake Overlook",
     "background_image": "images/rooms/world_4/foundry_waste_intake.webp",
-    "description": "A grated balcony watches the intake pistons chew ruined machines into feedstock. Every impact shakes loose sparks, serial plates, and pieces of stories Dominion filed as material.",
+    "description": "A grated balcony watches the intake pistons chew ruined machines into feedstock. Every impact shakes loose sparks, serial plates, and pieces of stories Dominion filed as material. The safety railing is pitted by hot slag.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -5384,6 +5431,11 @@
         "name": "intake pistons",
         "type": "generic",
         "condition_unmet_message": "The pistons are timed to waste nothing: broken armor, failed prototypes, worker tools, all of it becomes heat."
+      },
+      {
+        "name": "safety railing",
+        "type": "generic",
+        "condition_unmet_message": "A reinforced steel barrier pitted by decades of flying slag droplets."
       }
     ]
   },
@@ -5843,6 +5895,18 @@
           "ms_w4_hazard_trial_cleared"
         ],
         "condition_unmet_message": "No survivable overclock profile has been recorded yet."
+      },
+      {
+        "name": "smelter break station",
+        "type": "rest_stop",
+        "cook_source": "Thermal Cooker",
+        "message": "A maintenance thermal lunch station still holds steady heat to simmer restorative broths."
+      },
+      {
+        "name": "control alcove cot",
+        "type": "rest_stop",
+        "rest_event": "w4_camp_forge_alcove",
+        "message": "A reinforced alcove offers respite from the crushing cadence of the forge."
       }
     ]
   },
@@ -6004,6 +6068,12 @@
         "type": "generic",
         "action_event": "w4_mq20_escape_launch",
         "condition_unmet_message": "The Astra can launch once the engine and arrays are aboard."
+      },
+      {
+        "name": "gantry footlocker",
+        "type": "generic",
+        "action_event": "find_vhs_tape_08",
+        "condition_unmet_message": "A locked footlocker bolted to the escape gantry rail."
       }
     ],
     "enemy_flavor": {
@@ -6167,6 +6237,13 @@
         "name": "compliance greeting",
         "type": "generic",
         "condition_unmet_message": "Vale's voice is warm, precise, and already edited to remove the possibility of refusal."
+      },
+      {
+        "id": "inspect_airlock_manifest",
+        "name": "airlock manifest",
+        "type": "inspect",
+        "description": "Examine the luxury transport manifest stamped with Director Thorne's priority clearance.",
+        "inspect_message": "The manifest records seven executive evacuation shuttles that departed within twelve minutes of the breach. Below the passenger roster, a cold administrative footnote orders all atmospheric scrubbers in lower decks sealed to preserve oxygen reserves for the penthouse spire."
       }
     ]
   },
@@ -6218,6 +6295,13 @@
           "ms_w5_director_logs_decrypted"
         ],
         "condition_unmet_message": "The broadcast needs an unredacted record before it can expose anything."
+      },
+      {
+        "id": "inspect_holographic_directory",
+        "name": "holographic directory",
+        "type": "inspect",
+        "description": "Inspect the flickering Ring Concourse holo-map.",
+        "inspect_message": "A translucent ring of light hovers over the pedestal. Three entire residential quadrants are labeled 'DECOMMISSIONED - DO NOT VENTILATE'. A blinking yellow line traces the route to the Executive Core, bypasses security checkpoints, and terminates at the Anchor Chamber."
       }
     ]
   },
@@ -6245,6 +6329,18 @@
         "name": "biometric gates",
         "type": "generic",
         "condition_unmet_message": "The gates do not check identity so much as ownership, priority, and whether a body is approved to keep moving."
+      },
+      {
+        "name": "executive galley recycler",
+        "type": "rest_stop",
+        "cook_source": "Thermal Cooker",
+        "message": "A passenger galley dispenser ready to reconstitute nutrient blocks and hot spiced broths."
+      },
+      {
+        "name": "lounge seating",
+        "type": "rest_stop",
+        "rest_event": "w5_camp_customs_lounge",
+        "message": "Plush seating in the silent customs lounge provides vital rest before the deep void ring."
       }
     ]
   },
@@ -6316,6 +6412,12 @@
         "type": "fishing",
         "zone_id": "orbital_false_tide",
         "condition_unmet_message": "The Solarium's artificial tide cycles slowly enough to cast a line."
+      },
+      {
+        "name": "solarium tide cache",
+        "type": "generic",
+        "action_event": "find_vhs_tape_09",
+        "condition_unmet_message": "A sealed container wedged beneath the artificial coral ledges."
       }
     ]
   },
@@ -6361,6 +6463,13 @@
           "ms_w5_false_sun_traced"
         ],
         "condition_unmet_message": "The panels can burn away the void-moss if their angles are restored."
+      },
+      {
+        "id": "inspect_solar_reflector_hub",
+        "name": "solar reflector hub",
+        "type": "inspect",
+        "description": "Calibrate the solar reflector alignment controls.",
+        "inspect_message": "The polished gold mirrors outside the hull angle smoothly against the starfield, concentrating synthetic sunlight onto the Executive Gardens below. A manual control lever feels warm to the touch, humming with channeled orbital solar flux."
       }
     ]
   },
@@ -6408,6 +6517,13 @@
         "type": "generic",
         "action_event": "w5_sq21_find_redactions",
         "condition_unmet_message": "Security retained a checksum for every sentence the Director removed."
+      },
+      {
+        "id": "inspect_automated_turret_rack",
+        "name": "armory diagnostics",
+        "type": "inspect",
+        "description": "Audit the automated defense rack diagnostics.",
+        "inspect_message": "Rack telemetry indicates sixty percent of perimeter turrets jammed during the initial breach because their target profiles could not classify Chorus-altered bioforms as non-employees. The system defaulted to holding fire until overridden by physical force."
       }
     ]
   },
@@ -6436,6 +6552,13 @@
         "name": "red lenses",
         "type": "generic",
         "condition_unmet_message": "The lenses measure behavior, not guilt. Dominion has always preferred predictions to people."
+      },
+      {
+        "id": "inspect_panopticon_feed",
+        "name": "panopticon archive",
+        "type": "inspect",
+        "description": "Examine the surveillance pit's recorded camera feeds.",
+        "inspect_message": "Thousands of split screens flicker across the curved wall. In one feed, Nova and the crew are visible walking down the corridor three minutes ago. In another, empty offices in the Spire sit silent beneath emergency beacon strobe light."
       }
     ]
   },
@@ -6473,6 +6596,13 @@
         "type": "generic",
         "action_event": "w5_mq22_traverse_shaft",
         "condition_unmet_message": "The drop requires careful movement between patrol sweeps."
+      },
+      {
+        "id": "inspect_conduit_junction",
+        "name": "superconductor junction",
+        "type": "inspect",
+        "description": "Check the high-voltage zero-G conduit junction.",
+        "inspect_message": "Heavy insulated cables float in lazy arcs across the microgravity shaft. Liquid helium frost coats the brass fittings. You carefully brush aside the frost, finding pristine superconductor wiring intact beneath the ice."
       }
     ]
   },
@@ -6499,6 +6629,13 @@
         "type": "generic",
         "action_event": "w5_mq22_traverse_shaft",
         "condition_unmet_message": "The Hunter-Killer sweeps leave exactly enough dead space for a careful crew."
+      },
+      {
+        "id": "inspect_gravity_stabilizer",
+        "name": "gyroscope stabilizer",
+        "type": "inspect",
+        "description": "Examine the massive orbital gyroscope stabilizer.",
+        "inspect_message": "The three-story brass gimbal rotates with a deep, bone-rattling thrum, keeping the artificial gravity rings synchronized. Tiny counterweights click against magnetic stops as the station slowly corrects for orbital drag."
       }
     ]
   },
@@ -6636,6 +6773,13 @@
         "type": "generic",
         "action_event": "w5_mq22_find_thorne",
         "condition_unmet_message": "Thorne's emergency trace is buried behind the Great Silence log."
+      },
+      {
+        "id": "inspect_quantum_core",
+        "name": "quantum core lattice",
+        "type": "inspect",
+        "description": "Inspect the pulsing quantum core lattice.",
+        "inspect_message": "A cage of optical glass encases hundreds of suspended crystalline processors. Light pulses through the lattice like neural synapses firing in rapid sequence, processing millions of compliance simulations per second."
       }
     ]
   },
@@ -6945,6 +7089,13 @@
         "type": "generic",
         "action_event": "w5_sq25_open_armory",
         "condition_unmet_message": "The executive armory requires a station administrator's keycard."
+      },
+      {
+        "id": "inspect_executive_pedestal",
+        "name": "director's desk",
+        "type": "inspect",
+        "description": "Inspect Director Thorne's gold-inlaid executive desk.",
+        "inspect_message": "A fountain pen rests beside an unfinished executive order commanding the unconditional disarmament of all colony defense units. A leather-bound notebook contains hand-drawn sketches of the Precursor Anchor with notes questioning whether the Chorus can truly be commanded."
       }
     ]
   },
@@ -6987,6 +7138,13 @@
         "type": "generic",
         "action_event": "w5_mq25_enter_tear",
         "condition_unmet_message": "The Compliance Avatar still anchors Vale's control of the breach."
+      },
+      {
+        "id": "inspect_spatial_distortion",
+        "name": "spatial shear",
+        "type": "inspect",
+        "description": "Analyze the gravitational shear at the edge of the tear.",
+        "inspect_message": "Space here folds like wet paper. Looking straight ahead, you see the back of your own jacket, warped through a gravitational lens. Particles of blue light drift backward against gravity into the silent event horizon."
       }
     ],
     "enemy_flavor": {
@@ -7563,6 +7721,12 @@
         "type": "rest_stop",
         "rest_event": "w6_rest_final_meal",
         "message": "The last safe span holds long enough for a final shared meal before the Source takes the words apart."
+      },
+      {
+        "name": "memory altar box",
+        "type": "generic",
+        "action_event": "find_vhs_tape_10",
+        "condition_unmet_message": "A crystal repository glowing with warm pre-collapse harmonics."
       }
     ]
   },
@@ -8051,6 +8215,11 @@
         "action_event": "w2_forage_herb_landing",
         "condition_unmet_message": "Already harvested.",
         "requires_milestone_not_set": "ms_w2_herb_landing_foraged"
+      },
+      {
+        "name": "muddy clearing",
+        "type": "generic",
+        "condition_unmet_message": "Torn soil and crushed ferns mark the escape pod's violent deceleration trench."
       }
     ],
     "description_variants": [
@@ -8088,6 +8257,11 @@
         "action_event": "w2_forage_herb_glade",
         "condition_unmet_message": "Already harvested.",
         "requires_milestone_not_set": "ms_w2_herb_glade_foraged"
+      },
+      {
+        "name": "broadleaf canopy",
+        "type": "generic",
+        "condition_unmet_message": "Giant fronds filter the alien sunlight into a dappled teal glow, humming with ambient spore drift."
       }
     ],
     "description_variants": [
@@ -8124,6 +8298,11 @@
         "name": "glow-water current",
         "type": "generic",
         "condition_unmet_message": "The current carries warm notes through the roots, like the Ocean breathing under the swamp."
+      },
+      {
+        "name": "smooth pebbles",
+        "type": "generic",
+        "condition_unmet_message": "Water-rounded quartz crystals and silt shards coat the riverbank, warm to the touch."
       }
     ]
   },
@@ -8150,6 +8329,11 @@
         "name": "drone",
         "type": "generic",
         "condition_unmet_message": "The chassis is crushed, but its recording cells hum faintly."
+      },
+      {
+        "name": "scanner lens",
+        "type": "generic",
+        "condition_unmet_message": "The fractured optics still flicker with faint infrared sweeps, tracking heat signatures across the brush."
       }
     ]
   },
@@ -8178,6 +8362,11 @@
         "action_event": "w2_mq05_collect_conduits",
         "condition_unmet_message": "Salvaging power conduits from the pod wreckage...",
         "requires_milestone_not_set": "ms_w2_conduits_collected"
+      },
+      {
+        "name": "cargo panel",
+        "type": "generic",
+        "condition_unmet_message": "Reinforced alloy stenciled with Dominion emergency release instructions. The hydraulic latch is crushed shut."
       }
     ],
     "description_variants": [
@@ -8218,6 +8407,11 @@
         "action_event": "w2_forage_herb_reeds",
         "condition_unmet_message": "Already harvested.",
         "requires_milestone_not_set": "ms_w2_herb_reeds_foraged"
+      },
+      {
+        "name": "still basins",
+        "type": "generic",
+        "condition_unmet_message": "Bioluminescent water settles into mirror-like pools reflecting the misty canopy above."
       }
     ],
     "description_variants": [
@@ -8254,6 +8448,11 @@
         "name": "spore warning",
         "type": "generic",
         "condition_unmet_message": "Amber sacs inflate along the path. Aethel markers identify the cloud as neurotoxic and harmful to Erosion control."
+      },
+      {
+        "name": "wind-sung reeds",
+        "type": "generic",
+        "condition_unmet_message": "Hollow reed stalks whistle with harmonic frequencies as the coastal breeze passes through them."
       }
     ]
   },
@@ -8282,6 +8481,11 @@
         "name": "half-sunken causeway",
         "type": "generic",
         "condition_unmet_message": "Carved stones under the mud form an Aethel causeway aimed toward the Sanctuary Facility."
+      },
+      {
+        "name": "crystalline sand",
+        "type": "generic",
+        "condition_unmet_message": "Fine blue silica crunches underfoot, sparkling with residual energy discharged by the tide."
       }
     ]
   },
@@ -8309,8 +8513,14 @@
       {
         "name": "sheltered cookfire",
         "type": "rest_stop",
+        "cook_source": "Campfire",
+        "message": "A dry recess behind the falls stays warm and sheltered. Preparing hot broth over the flame restores focus."
+      },
+      {
+        "name": "recess shelter",
+        "type": "rest_stop",
         "rest_event": "w2_camp_stream_falls",
-        "message": "A dry recess behind the falls makes a defensible campsite. The steady water-chord quiets the mental strain."
+        "message": "The steady water-chord quiets the mental strain, letting your squad rest and recharge."
       }
     ]
   },
@@ -8340,6 +8550,11 @@
         "action_event": "w2_forage_meat_tidepool",
         "condition_unmet_message": "Already harvested.",
         "requires_milestone_not_set": "ms_w2_meat_tidepool_foraged"
+      },
+      {
+        "name": "star crystals",
+        "type": "generic",
+        "condition_unmet_message": "Faceted mineral clusters grow in geometric clusters around the warm tide pools."
       }
     ],
     "description_variants": [
@@ -8375,6 +8590,11 @@
         "name": "cave glyphs",
         "type": "generic",
         "condition_unmet_message": "A light-mural maps surface water into the facility cooling system, joining swamp and Sanctuary as one machine."
+      },
+      {
+        "name": "waterfall curtain",
+        "type": "generic",
+        "condition_unmet_message": "A sheet of rushing water masks the cave mouth in a cool, misty spray."
       }
     ]
   },
@@ -8406,6 +8626,17 @@
         "action_event": "w2_forage_meat_cave",
         "condition_unmet_message": "Already harvested.",
         "requires_milestone_not_set": "ms_w2_meat_cave_foraged"
+      },
+      {
+        "name": "glowing moss",
+        "type": "generic",
+        "condition_unmet_message": "Thick velvet sheets of cyan moss illuminate the stone chamber in soothing ambient light."
+      },
+      {
+        "name": "waterproof cargo case",
+        "type": "generic",
+        "action_event": "find_vhs_tape_03",
+        "condition_unmet_message": "A buoyant cargo canister washed against the glow-moss rocks."
       }
     ],
     "description_variants": [
@@ -8441,6 +8672,11 @@
         "name": "drowned console",
         "type": "generic",
         "condition_unmet_message": "The Aethel console still projects one phrase: THE OCEAN ENTERS THROUGH EVERY CRACK."
+      },
+      {
+        "name": "warm current",
+        "type": "generic",
+        "condition_unmet_message": "Subterranean runoff warms the passage, carrying faint mineral notes from deep below."
       }
     ]
   },
@@ -8469,6 +8705,11 @@
         "type": "generic",
         "action_event": "w2_sq02_trace_cliffs",
         "condition_unmet_message": "Three distant beacon reflections stutter across the tideglass. One carries a Dominion patrol code."
+      },
+      {
+        "name": "basalt cliffs",
+        "type": "generic",
+        "condition_unmet_message": "Sheer volcanic columns rise against the tidal surf, worn smooth by centuries of mineral spray."
       }
     ]
   },
@@ -8496,6 +8737,11 @@
         "name": "campfire",
         "type": "generic",
         "condition_unmet_message": "The fire burns with a warm, steady glow, throwing long shadows on the stone walls."
+      },
+      {
+        "name": "warm sand",
+        "type": "generic",
+        "condition_unmet_message": "Deep volcanic sand retains daytime heat, sheltered from high winds by coastal bluffs."
       }
     ]
   },
@@ -8544,6 +8790,11 @@
         "type": "generic",
         "action_event": "w2_sq03_gather_tideglass",
         "condition_unmet_message": "Glowing tideglass skewers are harvested from the shore."
+      },
+      {
+        "name": "luminescent anemones",
+        "type": "generic",
+        "condition_unmet_message": "Delicate tidepool flora pulse in rhythmic intervals synchronized with the distant barrier frequency."
       }
     ],
     "description_variants": [
@@ -8579,6 +8830,11 @@
         "name": "crates",
         "type": "generic",
         "condition_unmet_message": "The crates contain heavy scrap metal and industrial spare parts."
+      },
+      {
+        "name": "rusted hull",
+        "type": "generic",
+        "condition_unmet_message": "Barnacles and salt crystals encrust the shipping container's battered exterior."
       }
     ]
   },
@@ -8662,6 +8918,11 @@
         "action_event": "w2_sq03_gather_relic",
         "condition_unmet_message": "Objective completed.",
         "requires_milestone_not_set": "ms_w2_grotto_relic_gathered"
+      },
+      {
+        "name": "sea-worn arches",
+        "type": "generic",
+        "condition_unmet_message": "Twin stone arches form a natural amphitheater where incoming waves echo in deep hollow notes."
       }
     ],
     "description_variants": [
@@ -8698,6 +8959,11 @@
         "action_event": "w2_forage_meat_dunes",
         "condition_unmet_message": "Already harvested.",
         "requires_milestone_not_set": "ms_w2_meat_dunes_foraged"
+      },
+      {
+        "name": "wind-sculpted ridges",
+        "type": "generic",
+        "condition_unmet_message": "Shifting blue dunes create sweeping wave patterns across the coastal expanse."
       }
     ],
     "description_variants": [
@@ -8879,6 +9145,11 @@
         "action_event": "w2_sq02_trace_beta",
         "condition_unmet_message": "Objective completed.",
         "requires_milestone_not_set": "ms_w2_beacon_beta_traced"
+      },
+      {
+        "name": "ancient stump",
+        "type": "generic",
+        "condition_unmet_message": "A hollowed tree trunk large enough to shelter an expedition team from sudden squalls."
       }
     ],
     "description_variants": [
@@ -8943,6 +9214,11 @@
         "name": "canopy route",
         "type": "generic",
         "condition_unmet_message": "From here the luminous waterways reveal a continuous route from crash site to temple ruins."
+      },
+      {
+        "name": "canopy vista",
+        "type": "generic",
+        "condition_unmet_message": "From this high vantage, the vast swamp stretches to the coastal horizon under a double ring of starlight."
       }
     ]
   },
@@ -8972,6 +9248,11 @@
         "name": "razor-vine shortcut",
         "type": "generic",
         "condition_unmet_message": "The Thermal Cutter burns a clean path through the razor-vines, reopening the old canopy loop."
+      },
+      {
+        "name": "aerial root bridges",
+        "type": "generic",
+        "condition_unmet_message": "Thick braided roots stretch between ancient trees, forming natural elevated catwalks."
       }
     ],
     "blocked_directions": {
@@ -9066,6 +9347,11 @@
         "action_event": "w2_sq02_recover_transceiver",
         "condition_unmet_message": "Objective completed.",
         "requires_milestone_not_set": "ms_w2_transceiver_recovered"
+      },
+      {
+        "name": "shattered trunks",
+        "type": "generic",
+        "condition_unmet_message": "Felled timber and torn roots show signs of recent heavy kinetic impacts."
       }
     ],
     "description_variants": [
@@ -9098,10 +9384,16 @@
     "state": {},
     "actions": [
       {
+        "name": "heat ring cookfire",
+        "type": "rest_stop",
+        "cook_source": "Campfire",
+        "message": "The Dominion heat ring provides steady cooking heat to roast skewers and prepare provisions."
+      },
+      {
         "name": "ridge campsite",
         "type": "rest_stop",
         "rest_event": "w2_camp_wilds_lookout",
-        "message": "A Dominion heat ring still works. Resting beside it lets a Neural Stabilizer settle the worst Erosion tremors."
+        "message": "Resting beside the heat ring lets your party recover from the trail."
       }
     ],
     "blocked_directions": {
@@ -9378,6 +9670,11 @@
         "name": "razor-vine cache",
         "type": "generic",
         "condition_unmet_message": "The Thermal Cutter parts the thorn mat without bursting its toxic seed pods, exposing an old supply niche."
+      },
+      {
+        "name": "fault line",
+        "type": "generic",
+        "condition_unmet_message": "A jagged split in the bedrock reveals strata rich in conducting crystal veins."
       }
     ]
   },
@@ -9402,10 +9699,22 @@
     "state": {},
     "actions": [
       {
+        "name": "stone cookfire",
+        "type": "rest_stop",
+        "cook_source": "Campfire",
+        "message": "The warm stone plateau makes an ideal spot to boil water and cook restorative fish stew."
+      },
+      {
         "name": "plateau camp",
         "type": "rest_stop",
         "rest_event": "w2_camp_ridge_plateau",
-        "message": "The stone remains warm after sunset. A small cookfire and shared food restore focus before the temple."
+        "message": "Shared rest and quiet contemplation on the warm stone restore focus before the temple."
+      },
+      {
+        "name": "ridge overlook cache",
+        "type": "generic",
+        "action_event": "find_vhs_tape_04",
+        "condition_unmet_message": "A stone cache overlooking the dark canopy and ocean swells."
       }
     ]
   },
@@ -9436,6 +9745,11 @@
         "name": "processional mural",
         "type": "generic",
         "condition_unmet_message": "Light figures carry bowls of Ocean-water inward while crystalline human shapes carry memory outward."
+      },
+      {
+        "name": "flagstone courtyard",
+        "type": "generic",
+        "condition_unmet_message": "Weathered geometric tiles align toward the temple portal with uncanny precision."
       }
     ]
   },
@@ -10508,6 +10822,11 @@
         "name": "turbine inscription",
         "type": "generic",
         "condition_unmet_message": "Power was tuned like music here; every machine was expected to harmonize with the living swamp."
+      },
+      {
+        "name": "dynamo housing",
+        "type": "generic",
+        "condition_unmet_message": "Massive induction coils rotate smoothly despite heavy mineral patina along the shaft."
       }
     ]
   },
@@ -10532,10 +10851,16 @@
     "state": {},
     "actions": [
       {
+        "name": "manifold cooker",
+        "type": "rest_stop",
+        "cook_source": "Thermal Cooker",
+        "message": "A maintenance thermal plate offers sterile heat to press rations and simmer preserves."
+      },
+      {
         "name": "facility camp station",
         "type": "rest_stop",
         "rest_event": "w2_camp_power_manifold",
-        "message": "A maintenance heat plate offers sterile shelter. Food and a Neural Stabilizer bring Erosion back under control."
+        "message": "Food and quiet rest bring party stamina back under control."
       }
     ]
   },
@@ -10565,6 +10890,11 @@
         "action_event": "w2_mq05_overload_breakers",
         "condition_unmet_message": "Objective completed.",
         "requires_milestone_not_set": "ms_w2_breakers_overloaded"
+      },
+      {
+        "name": "bus bar array",
+        "type": "generic",
+        "condition_unmet_message": "High-voltage conduit rails hum with power diverted from the primary sector core."
       }
     ],
     "description_variants": [
@@ -11155,6 +11485,18 @@
         "name": "central table",
         "type": "generic",
         "condition_unmet_message": "Meals, arguments, route plans, and the quiet work of becoming a crew all collect here."
+      },
+      {
+        "name": "galley kitchenette",
+        "type": "rest_stop",
+        "cook_source": "Kitchen Provisions",
+        "message": "A patched electric hotplate and kettle station ready to brew tea and cook nutritious rations for the voyage."
+      },
+      {
+        "name": "analog tape deck",
+        "type": "generic",
+        "action_event": "astra_open_tape_deck",
+        "condition_unmet_message": "A vintage magnetic tape player with amber stereo meters and CRT display."
       }
     ],
     "npc_presence": [
@@ -11222,6 +11564,11 @@
         "name": "storage terminal",
         "type": "generic",
         "condition_unmet_message": "Long-term cargo storage is still offline while Zeke rebuilds its index."
+      },
+      {
+        "name": "repair workbench",
+        "type": "generic",
+        "condition_unmet_message": "A sturdy titanium bench equipped with laser soldering tools and schematic vices."
       }
     ]
   },
@@ -11464,6 +11811,24 @@
         "name": "anchor knots",
         "type": "generic",
         "condition_unmet_message": "The knots are sailor work, not electrician work."
+      },
+      {
+        "name": "lantern roof kitchen",
+        "type": "rest_stop",
+        "cook_source": "Thermal Cooker",
+        "message": "A street vendor's thermal burner sits beneath string lights, ready for hot noodles and rations."
+      },
+      {
+        "name": "market refuge",
+        "type": "rest_stop",
+        "rest_event": "w3_camp_night_market",
+        "message": "Sheltered from drone patrols beneath the market awnings, your squad catches their breath."
+      },
+      {
+        "name": "vendor lockbox",
+        "type": "generic",
+        "action_event": "find_vhs_tape_05",
+        "condition_unmet_message": "A heavy metal lockbox chained beneath string lights."
       }
     ]
   },
@@ -11472,7 +11837,7 @@
     "env": "neon",
     "title": "Spice Alley",
     "background_image": "images/rooms/world_3/spire_night_market.webp",
-    "description": "Spice alley smells like heat, fried protein, and ozone. Vendor codes are scratched under every awning, telling locals which stalls sell food, data, or silence.",
+    "description": "Spice alley smells like heat, fried protein, and ozone. Vendor codes are scratched under every awning, telling locals which stalls sell food, data, or silence. A vendor ledger sits weighted down by an iron hex nut.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -11495,6 +11860,11 @@
         "name": "vendor codes",
         "type": "generic",
         "condition_unmet_message": "The codes mark which sellers move food, data, or favors."
+      },
+      {
+        "name": "vendor ledger",
+        "type": "generic",
+        "condition_unmet_message": "A waterlogged notebook listing black-market prices for contraband batteries and synthesized spices."
       }
     ]
   },
@@ -11571,7 +11941,7 @@
     "env": "neon",
     "title": "Filter Sluice",
     "background_image": "images/rooms/world_3/spire_sewers_landing.webp",
-    "description": "A filter sluice strains glittering trash from black water. A caught badge spins behind the grate, too damaged to pass but clean enough to copy.",
+    "description": "A filter sluice strains glittering trash from black water. A caught badge spins behind the grate, too damaged to pass but clean enough to copy. A drainage marker glows faintly above the water line.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -11597,6 +11967,11 @@
         "name": "caught badge",
         "type": "generic",
         "condition_unmet_message": "The badge is ruined, but its access pattern can still teach Zeke something."
+      },
+      {
+        "name": "drainage marker",
+        "type": "generic",
+        "condition_unmet_message": "A fluorescent spray-painted chalk arrow marking runoff toward the lower filter sump."
       }
     ],
     "enemy_parties": [
@@ -11825,7 +12200,7 @@
     "env": "neon",
     "title": "Orchid Walk",
     "background_image": "images/rooms/world_3/spire_skypark_dome.webp",
-    "description": "The orchid walk blooms under artificial rain. A donor plaque thanks families who bought their way above the smog, while root sensors drink more clean water than Trade Row sees in a week.",
+    "description": "The orchid walk blooms under artificial rain. A donor plaque thanks families who bought their way above the smog, while root sensors drink more clean water than Trade Row sees in a week. A hydroponic mist nozzle hisses fine vapor into the humid breeze.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -11848,6 +12223,11 @@
         "name": "donor plaque",
         "type": "generic",
         "condition_unmet_message": "The plaque lists names worth avoiding."
+      },
+      {
+        "name": "hydroponic mist nozzle",
+        "type": "generic",
+        "condition_unmet_message": "A brass nozzle hissing nutrient moisture across genetically engineered ferns."
       }
     ]
   },
@@ -11879,6 +12259,24 @@
         "name": "guest ledger",
         "type": "generic",
         "condition_unmet_message": "The ledger shows which false identity can survive the next checkpoint."
+      },
+      {
+        "name": "skypark cookfire",
+        "type": "rest_stop",
+        "cook_source": "Campfire",
+        "message": "A quiet pavilion overlooking the cloudline offers a peaceful spot to boil herbs and prepare trail meals."
+      },
+      {
+        "name": "pavilion shelter",
+        "type": "rest_stop",
+        "rest_event": "w3_camp_skypark",
+        "message": "Resting above the spire rain restores party stamina and focus."
+      },
+      {
+        "name": "pavilion bench cache",
+        "type": "generic",
+        "action_event": "find_vhs_tape_06",
+        "condition_unmet_message": "A forgotten wooden case tucked under a skypark bench."
       }
     ]
   },
@@ -11917,7 +12315,7 @@
     "env": "neon",
     "title": "Catalog Atrium",
     "background_image": "images/rooms/world_3/spire_archive_vault.webp",
-    "description": "The catalog atrium sings file numbers in a soft index choir. Each note points to a life Dominion turned into property, and the index choir never wonders who is listening.",
+    "description": "The catalog atrium sings file numbers in a soft index choir. Each note points to a life Dominion turned into property, and the index choir never wonders who is listening. An index terminal flashes amber in the dark.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -11940,6 +12338,11 @@
         "name": "index choir",
         "type": "generic",
         "condition_unmet_message": "The choir treats people like folders because that is what it was built to do."
+      },
+      {
+        "name": "index terminal",
+        "type": "generic",
+        "condition_unmet_message": "An amber screen indexing executive personnel records, redacted down to blank lines."
       }
     ]
   },
@@ -11948,7 +12351,7 @@
     "env": "neon",
     "title": "Prism Service Bay",
     "background_image": "images/rooms/world_3/spire_archive_vault.webp",
-    "description": "The prism service bay stores a light wrench and replacement lenses for the gallery array. The light wrench proves the holy-looking Archive still needs maintenance.",
+    "description": "The prism service bay stores a light wrench and replacement lenses for the gallery array. The light wrench proves the holy-looking Archive still needs maintenance. A lens polishing cloth lies on the technician's tray.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -11971,6 +12374,11 @@
         "name": "light wrench",
         "type": "generic",
         "condition_unmet_message": "The wrench bends light just enough to lie to a sensor."
+      },
+      {
+        "name": "lens polishing cloth",
+        "type": "generic",
+        "condition_unmet_message": "A velvet cloth flecked with fine optical abrasive dust."
       }
     ]
   },
@@ -12009,7 +12417,7 @@
     "env": "neon",
     "title": "Velvet Hall",
     "background_image": "images/rooms/world_3/spire_exec_lounge_bar.webp",
-    "description": "A velvet hall swallows footsteps with expensive sound baffles. The sound baffles make every conversation private until someone pays more.",
+    "description": "A velvet hall swallows footsteps with expensive sound baffles. The sound baffles make every conversation private until someone pays more. Sticky crystallized liquor glazes the tabletop.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -12032,6 +12440,11 @@
         "name": "sound baffles",
         "type": "generic",
         "condition_unmet_message": "The baffles can hide a crew moving fast."
+      },
+      {
+        "name": "crystallized liquor",
+        "type": "generic",
+        "condition_unmet_message": "Centuries-old imported brandy turned to amber crystals in the broken stemware."
       }
     ]
   },
@@ -12040,7 +12453,7 @@
     "env": "neon",
     "title": "Private Booth",
     "background_image": "images/rooms/world_3/spire_exec_lounge_bar.webp",
-    "description": "A private booth overlooks the atrium. A half-empty glass sweats beside a terminal still logged into a director account.",
+    "description": "A private booth overlooks the atrium. A half-empty glass sweats beside a terminal still logged into a director account. The safe keypad is scorched and dead.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -12065,6 +12478,11 @@
         "name": "half-empty glass",
         "type": "generic",
         "condition_unmet_message": "The glass has lipstick on one side and tremor marks on the other."
+      },
+      {
+        "name": "safe keypad",
+        "type": "generic",
+        "condition_unmet_message": "A hardened biometric keypad burned out by a deliberate EMP burst."
       }
     ],
     "enemy_parties": [
@@ -12299,7 +12717,7 @@
     "env": "foundry",
     "title": "Ash Survey Point",
     "background_image": "images/rooms/world_4/foundry_slag_landing.webp",
-    "description": "An ash survey point overlooks the Astra's landing scorch and a field of black glass. The landing scorch shows how hard the Astra hit, while the survey marker rates the shelf as disposable.",
+    "description": "An ash survey point overlooks the Astra's landing scorch and a field of black glass. The landing scorch shows how hard the Astra hit, while the survey marker rates the shelf as disposable. A basalt core sample rests on the surveyor's tripod.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -12322,6 +12740,11 @@
         "name": "landing scorch",
         "type": "generic",
         "condition_unmet_message": "The scorch shows how hard the Astra hit and how little margin remains."
+      },
+      {
+        "name": "basalt core sample",
+        "type": "generic",
+        "condition_unmet_message": "A cylinder of volcanic glass with high thermal conductivity."
       }
     ]
   },
@@ -12355,6 +12778,18 @@
         "name": "coolant tags",
         "type": "generic",
         "condition_unmet_message": "The tags mark coolant batches diverted from worker safety."
+      },
+      {
+        "name": "geothermal induction plate",
+        "type": "rest_stop",
+        "cook_source": "Thermal Cooker",
+        "message": "A shielded induction plate taps volcanic heat, perfect for searing meat and pressing rations."
+      },
+      {
+        "name": "heat shadow refuge",
+        "type": "rest_stop",
+        "rest_event": "w4_camp_heat_shadow",
+        "message": "Shielded from furnace slag, your squad cools down and recovers from combat fatigue."
       }
     ]
   },
@@ -12425,7 +12860,7 @@
     "env": "foundry",
     "title": "Basalt Switchback",
     "background_image": "images/rooms/world_4/foundry_slag_river.webp",
-    "description": "A basalt switchback follows the slag-river wall beside a heat ladder glowing red at the edges. Its joints expand and contract with each furnace cycle.",
+    "description": "A basalt switchback follows the slag-river wall beside a heat ladder glowing red at the edges. Its joints expand and contract with each furnace cycle. A heavy heat tether secures the hull against the glowing flow.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -12448,6 +12883,11 @@
         "name": "heat ladder",
         "type": "generic",
         "condition_unmet_message": "The ladder joints expand and contract with the furnace cycle."
+      },
+      {
+        "name": "heat tether",
+        "type": "generic",
+        "condition_unmet_message": "A woven tungsten cable anchoring the ferry against the violent slag current."
       }
     ]
   },
@@ -12553,7 +12993,7 @@
     "env": "foundry",
     "title": "Mist Basin",
     "background_image": "images/rooms/world_4/foundry_cooling_springs.webp",
-    "description": "A mist basin steams under mineral crust thick enough to write in. The mineral crust records every surge in brittle rings.",
+    "description": "A mist basin steams under mineral crust thick enough to write in. The mineral crust records every surge in brittle rings. A condensation trap drips steadily into a steel bucket.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -12576,6 +13016,11 @@
         "name": "mineral crust",
         "type": "generic",
         "condition_unmet_message": "The crust records every surge in brittle rings."
+      },
+      {
+        "name": "condensation trap",
+        "type": "generic",
+        "condition_unmet_message": "A copper catch-basin collecting clean distilled water from cooling steam."
       }
     ]
   },
@@ -12679,7 +13124,7 @@
     "env": "foundry",
     "title": "Crusher Throat",
     "background_image": "images/rooms/world_4/foundry_waste_intake.webp",
-    "description": "The crusher throat opens below the intake platform. A jammed tooth holds back a mountain of rejected parts.",
+    "description": "The crusher throat opens below the intake platform. A jammed tooth holds back a mountain of rejected parts. A chipped crusher tooth groans against jammed titanium.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -12702,6 +13147,11 @@
         "name": "jammed tooth",
         "type": "generic",
         "condition_unmet_message": "The tooth is cracked by something too large to be scrap."
+      },
+      {
+        "name": "crusher tooth",
+        "type": "generic",
+        "condition_unmet_message": "A hardened carbide wedge chipped by the reinforced armor of a military chassis."
       }
     ]
   },
@@ -12807,7 +13257,7 @@
     "env": "foundry",
     "title": "Seal Control Nook",
     "background_image": "images/rooms/world_4/foundry_service_airlock.webp",
-    "description": "A seal control nook watches the airlock doors with a cycle lever polished by emergency use. The cycle lever sticks halfway between safe and fast.",
+    "description": "A seal control nook watches the airlock doors with a cycle lever polished by emergency use. The cycle lever sticks halfway between safe and fast. A cycle logbook hangs from a rusty chain.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -12830,6 +13280,11 @@
         "name": "cycle lever",
         "type": "generic",
         "condition_unmet_message": "The lever sticks halfway between safe and fast."
+      },
+      {
+        "name": "cycle logbook",
+        "type": "generic",
+        "condition_unmet_message": "A grease-stained logbook recording thousands of furnace worker shifts."
       }
     ]
   },
@@ -12933,7 +13388,7 @@
     "env": "foundry",
     "title": "Timing Tower",
     "background_image": "images/rooms/world_4/foundry_conveyor_belt.webp",
-    "description": "A timing tower ticks above the conveyor, its pulse board turning worker mistakes into production data. The pulse board predicts crush points before they happen.",
+    "description": "A timing tower ticks above the conveyor, its pulse board turning worker mistakes into production data. The pulse board predicts crush points before they happen. A belt speed dial is locked in place with a security seal.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -12965,6 +13420,11 @@
         "type": "generic",
         "action_event": "w4_mq19_read_pulse_board",
         "condition_unmet_message": "The board predicts crush points before they happen."
+      },
+      {
+        "name": "belt speed dial",
+        "type": "generic",
+        "condition_unmet_message": "A lockable governor dial set to maximum feed rate."
       }
     ]
   },
@@ -13088,7 +13548,7 @@
     "env": "foundry",
     "title": "Heat-Soak Chamber",
     "background_image": "images/rooms/world_4/foundry_conditioning_chamber.webp",
-    "description": "A heat-soak chamber wraps Phantom frames in orange coils until their armor remembers pain. The orange coils pulse in sequence with the fabrication line.",
+    "description": "A heat-soak chamber wraps Phantom frames in orange coils until their armor remembers pain. The orange coils pulse in sequence with the fabrication line. An empty thermal clamp still radiates blistering heat.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -13111,6 +13571,11 @@
         "name": "orange coils",
         "type": "generic",
         "condition_unmet_message": "The coils pulse in sequence with the fabrication line."
+      },
+      {
+        "name": "thermal clamp",
+        "type": "generic",
+        "condition_unmet_message": "Pneumatic vises designed to hold prototype combat frames while armor plates heat-soak."
       }
     ]
   },
@@ -13214,7 +13679,7 @@
     "env": "foundry",
     "title": "Bellows Walk",
     "background_image": "images/rooms/world_4/foundry_forge_anvil.webp",
-    "description": "The bellows walk rises beside breath pistons that feed the Forge like lungs. The breath pistons can starve the fire if timed correctly.",
+    "description": "The bellows walk rises beside breath pistons that feed the Forge like lungs. The breath pistons can starve the fire if timed correctly. An iron bellows valve trembles under forced draft.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -13246,6 +13711,11 @@
         "type": "generic",
         "action_event": "w4_mq19_starve_breath_pistons",
         "condition_unmet_message": "The pistons can starve the fire if timed correctly."
+      },
+      {
+        "name": "bellows valve",
+        "type": "generic",
+        "condition_unmet_message": "An iron valve wheel controlling oxygen feed to the primary smelting furnace."
       }
     ]
   },
@@ -13351,7 +13821,7 @@
     "env": "foundry",
     "title": "Turbine Balcony",
     "background_image": "images/rooms/world_4/foundry_power_core.webp",
-    "description": "A turbine balcony hangs over spin blur so fast the air becomes a wall. The spin blur hides which blades are damaged.",
+    "description": "A turbine balcony hangs over spin blur so fast the air becomes a wall. The spin blur hides which blades are damaged. A turbine tachometer vibrates violently against its bracket.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -13374,6 +13844,11 @@
         "name": "spin blur",
         "type": "generic",
         "condition_unmet_message": "The blur hides which blades are damaged."
+      },
+      {
+        "name": "turbine tachometer",
+        "type": "generic",
+        "condition_unmet_message": "A mechanical dial pinned past redline, measuring thousands of RPM."
       }
     ]
   },
@@ -13446,7 +13921,7 @@
     "env": "foundry",
     "title": "Coolant Choir",
     "background_image": "images/rooms/world_4/foundry_power_core.webp",
-    "description": "Blue coolant pipes knock against their clamps under core pressure. Flow drops sharply at a damaged valve.",
+    "description": "Blue coolant pipes knock against their clamps under core pressure. Flow drops sharply at a damaged valve. A pressure relief lever is clamped in the open position.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -13469,6 +13944,11 @@
         "name": "blue pipes",
         "type": "generic",
         "condition_unmet_message": "The chord falls flat near a damaged valve."
+      },
+      {
+        "name": "pressure relief lever",
+        "type": "generic",
+        "condition_unmet_message": "A heavy steel handle wired shut with copper safety wire."
       }
     ]
   },
@@ -13477,7 +13957,7 @@
     "env": "foundry",
     "title": "Walker Scaffold",
     "background_image": "images/rooms/world_4/foundry_titan_dock.webp",
-    "description": "A walker scaffold wraps the Titan dock in hydraulic scars and fresh weld smoke. The hydraulic scars show where earlier test pilots lost arguments.",
+    "description": "A walker scaffold wraps the Titan dock in hydraulic scars and fresh weld smoke. The hydraulic scars show where earlier test pilots lost arguments. A weld inspection stencil marks dangerous stress fractures.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -13500,6 +13980,11 @@
         "name": "hydraulic scars",
         "type": "generic",
         "condition_unmet_message": "The scars show where earlier test pilots lost arguments."
+      },
+      {
+        "name": "weld inspection stencil",
+        "type": "generic",
+        "condition_unmet_message": "White spray chalk marking structural stress fractures on the Titan gantry."
       }
     ]
   },
@@ -14808,6 +15293,18 @@
         "name": "scratched route",
         "type": "generic",
         "condition_unmet_message": "The scratches point away from the tank and toward the throne deck."
+      },
+      {
+        "name": "thermal conduit heater",
+        "type": "rest_stop",
+        "cook_source": "Thermal Cooker",
+        "message": "Warm radiant coils provide heat to prepare hot rations in the frozen orbital depths."
+      },
+      {
+        "name": "thaw gallery shelter",
+        "type": "rest_stop",
+        "rest_event": "w5_camp_thaw_gallery",
+        "message": "Resting near the radiant pipes allows the party to thaw and recover from the void chill."
       }
     ]
   },
@@ -15501,6 +15998,13 @@
         "name": "plastic smile",
         "type": "generic",
         "condition_unmet_message": "The smile is mandatory, laminated, and finally breaking."
+      },
+      {
+        "id": "inspect_performance_review",
+        "name": "corporate termination notice",
+        "type": "inspect",
+        "description": "Examine the stamped termination notice floating between cubicle dividers.",
+        "inspect_message": "The document lists impossible metrics: 'Failed to demonstrate total emotional indifference under terminal quota conditions.' Zeke's signature at the bottom has been violently crossed out with a heavy black grease pencil."
       }
     ]
   },
@@ -15595,6 +16099,13 @@
         "name": "command static",
         "type": "generic",
         "condition_unmet_message": "The static has authority but no truth."
+      },
+      {
+        "id": "inspect_warden_dogtag_pile",
+        "name": "phantom dogtags",
+        "type": "inspect",
+        "description": "Examine the pile of blackened Warden dogtags hanging from the command terminal.",
+        "inspect_message": "Each metal tag is stamped with a callsign that never returned from the breach. As Gh0st steps close, the radio static in his helmet softens, resolving into a brief, clear squad salute before fading into the hum of the Source."
       }
     ]
   },
@@ -15689,6 +16200,13 @@
         "name": "salt stars",
         "type": "generic",
         "condition_unmet_message": "The stars are waiting for an answer from below, not above."
+      },
+      {
+        "id": "inspect_drowned_chronometer",
+        "name": "salt-crusted chronometer",
+        "type": "inspect",
+        "description": "Inspect the brass chronometer resting on the black tide shelf.",
+        "inspect_message": "The hands are permanently fused at 04:17—the exact minute the First Tide flooded the lower observatory. The glass lens is frosted with brine, yet the ticking spring inside still beats like a slow, stubborn heart."
       }
     ]
   },
@@ -15781,6 +16299,13 @@
         "name": "Jed's sticker",
         "type": "generic",
         "condition_unmet_message": "The old sticker is badly placed, badly drawn, and absolutely real."
+      },
+      {
+        "id": "inspect_overman_signpost",
+        "name": "shift quota chalkboard",
+        "type": "inspect",
+        "description": "Examine the faded shift tally board on the locker room wall.",
+        "inspect_message": "Columns of chalk tallies mark ore carts hauled per 16-hour shift. Near the bottom, where Nova's old employee number was painted over, someone scraped a crude star symbol into the wood with a screwdriver."
       }
     ]
   },
@@ -15907,6 +16432,13 @@
         "name": "beach photo",
         "type": "generic",
         "condition_unmet_message": "No one in the image is posed correctly. The Source cannot fake that."
+      },
+      {
+        "id": "inspect_crystallized_footprint",
+        "name": "tideglass footprints",
+        "type": "inspect",
+        "description": "Examine the crystallized footprints hardening across the bridge span.",
+        "inspect_message": "Six sets of boot prints press into the tideglass, side by side rather than in single file. The glass beneath them glows with a warm, steady luminescence that refuses to scatter in the surrounding void."
       }
     ]
   },
@@ -16031,6 +16563,13 @@
         "name": "Jed's handprint",
         "type": "generic",
         "condition_unmet_message": "The print is smudged by work, not symbolism."
+      },
+      {
+        "id": "inspect_pickaxe_carving",
+        "name": "miner's motto carving",
+        "type": "inspect",
+        "description": "Inspect the hand-carved inscription cut into the stone riser.",
+        "inspect_message": "'The rock gives nothing that sweat didn't buy.' The carving is deep and unpolished, cut with an iron pick. Vale's light passes over it without smoothing a single groove."
       }
     ]
   },
@@ -16159,6 +16698,13 @@
         "name": "fingerprints",
         "type": "generic",
         "condition_unmet_message": "The marks are messy, overlapping, and impossible to standardize."
+      },
+      {
+        "id": "inspect_unwritten_charter",
+        "name": "liberation blueprint",
+        "type": "inspect",
+        "description": "Examine the architectural blueprint resting on the thought pedestal.",
+        "inspect_message": "The drafted city has no security checkpoints, no biometric gates, and no rationing chutes. Wide public gardens link the industrial smelters directly to the coastal docks under an open, unshielded sky."
       }
     ]
   },
@@ -16286,6 +16832,13 @@
         "name": "still tide",
         "type": "generic",
         "condition_unmet_message": "The tide is waiting for consent it does not understand."
+      },
+      {
+        "id": "inspect_chorus_resonance_tuning",
+        "name": "ocean resonance",
+        "type": "inspect",
+        "description": "Attune to the gentle harmonics of the white shore.",
+        "inspect_message": "The tide rolls in without water, carrying thousands of whispers from six worlds. They are no longer screaming in unison; each voice sings its own independent song, blending into an unyielding chord of shared survival."
       }
     ]
   },
@@ -16386,6 +16939,13 @@
         "name": "shared menu",
         "type": "generic",
         "condition_unmet_message": "Choice feels overwhelming after a life of rations, and that is part of the victory."
+      },
+      {
+        "id": "inspect_warm_coffee_pot",
+        "name": "diner coffee pot",
+        "type": "inspect",
+        "description": "Examine the steaming glass coffee pot on the diner counter.",
+        "inspect_message": "The aroma of chicory and roasted grain fills the air. A handwritten label taped to the handle reads: 'Free refills for anyone who walked out of the mines.'"
       }
     ]
   },
@@ -16448,6 +17008,13 @@
         "name": "real sky",
         "type": "generic",
         "condition_unmet_message": "No corporate ceiling, no planetary lock, no permission layer."
+      },
+      {
+        "id": "inspect_horizon_sunrise",
+        "name": "horizon sunrise",
+        "type": "inspect",
+        "description": "Look out the open window toward the eastern sky.",
+        "inspect_message": "Morning light spills across green hills and unpaved roads. No siren sounds for shift change. No curfew drone drifts through the clouds. The wind carries the clean scent of damp cedar and open ocean."
       }
     ]
   },

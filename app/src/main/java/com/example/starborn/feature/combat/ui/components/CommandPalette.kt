@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.ExitToApp
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
@@ -210,7 +211,7 @@ fun CommandPalette(
                             CommandEntry("Abilities", Icons.Rounded.AutoAwesome, hasSkills, onSkills),
                             CommandEntry("Items", Icons.Rounded.Inventory2, hasItems, onItems),
                             CommandEntry(snackLabel, Icons.Rounded.Restaurant, canSnack, onSnack, cooldown = snackCooldown),
-                            CommandEntry("Retreat", Icons.Rounded.ExitToApp, canRetreat, onRetreat)
+                            CommandEntry("Retreat", Icons.AutoMirrored.Rounded.ExitToApp, canRetreat, onRetreat)
                         )
                         val rows = listOf(commands.take(2), commands.drop(2))
                         rows.forEach { chunk ->
@@ -497,25 +498,93 @@ fun ReadyAura(
 ) {
     val transition = rememberInfiniteTransition(label = "ready_aura_transition")
     val pulse by transition.animateFloat(
-        initialValue = 0.94f,
-        targetValue = 1.08f,
+        initialValue = 0.96f,
+        targetValue = 1.10f,
         animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 900, easing = FastOutSlowInEasing),
+            animation = tween(durationMillis = 850, easing = FastOutSlowInEasing),
             repeatMode = RepeatMode.Reverse
         ),
         label = "ready_aura_pulse"
     )
-    Box(
-        modifier = modifier
-            .graphicsLayer {
-                scaleX = pulse
-                scaleY = pulse
-                alpha = 0.42f + (pulse - 0.94f) * 1.4f
-            }
-            .clip(CircleShape)
-            .background(color.copy(alpha = 0.2f))
-            .border(BorderStroke(2.dp, color.copy(alpha = 0.65f)), CircleShape)
-    )
+    val pingAnim = remember { Animatable(0f) }
+    LaunchedEffect(Unit) {
+        pingAnim.snapTo(0f)
+        pingAnim.animateTo(
+            targetValue = 1f,
+            animationSpec = tween(durationMillis = 480, easing = FastOutSlowInEasing)
+        )
+    }
+
+    Box(modifier = modifier, contentAlignment = Alignment.Center) {
+        // 1. Initial outward expansion ping shockwave
+        if (pingAnim.value < 1f) {
+            val pingScale = 1f + 0.35f * pingAnim.value
+            val pingAlpha = (1f - pingAnim.value) * 0.8f
+            Box(
+                modifier = Modifier
+                    .matchParentSize()
+                    .graphicsLayer {
+                        scaleX = pingScale
+                        scaleY = pingScale
+                        alpha = pingAlpha
+                    }
+                    .clip(CircleShape)
+                    .border(BorderStroke(2.dp, color), CircleShape)
+            )
+        }
+
+        // 2. Outer atmospheric radial corona
+        Canvas(
+            modifier = Modifier
+                .matchParentSize()
+                .graphicsLayer {
+                    scaleX = pulse
+                    scaleY = pulse
+                }
+        ) {
+            val radius = size.minDimension / 2f
+            drawCircle(
+                brush = Brush.radialGradient(
+                    colors = listOf(
+                        color.copy(alpha = 0.38f),
+                        color.copy(alpha = 0.16f),
+                        Color.Transparent
+                    ),
+                    center = center,
+                    radius = radius * 1.18f
+                ),
+                radius = radius * 1.18f
+            )
+        }
+
+        // 3. Inner pulsing energy border with luminous sweep gradient
+        Box(
+            modifier = Modifier
+                .matchParentSize()
+                .graphicsLayer {
+                    scaleX = 0.98f + 0.04f * pulse
+                    scaleY = 0.98f + 0.04f * pulse
+                    alpha = 0.60f + 0.40f * (pulse - 0.96f) / 0.14f
+                }
+                .clip(CircleShape)
+                .background(color.copy(alpha = 0.14f))
+                .border(
+                    BorderStroke(
+                        width = 2.dp,
+                        brush = Brush.sweepGradient(
+                            colors = listOf(
+                                color.copy(alpha = 0.4f),
+                                Color.White.copy(alpha = 0.95f),
+                                color.copy(alpha = 0.9f),
+                                color.copy(alpha = 0.3f),
+                                color.copy(alpha = 0.4f)
+                            )
+                        )
+                    ),
+                    CircleShape
+                )
+        )
+    }
 }
 
 @Composable

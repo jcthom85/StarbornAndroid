@@ -137,10 +137,10 @@ fun CombatTutorialOverlay(
     val panel = themeColor(theme?.bg, Color(0xFF061018))
     val isLoader = tutorial.tutorialType == com.example.starborn.feature.combat.viewmodel.CombatTutorialType.LOADER_WEAKNESS
     val title = when (tutorial.step) {
-        CombatTutorialStep.BRIEF -> if (isLoader) "First Battle: Faulted Loader" else "Guard Break Training"
+        CombatTutorialStep.BRIEF -> "Combat Tutorial"
         CombatTutorialStep.BLOCKED_EXPLANATION -> "Direct Hit: Blocked"
         CombatTutorialStep.SUCCESS -> if (isLoader) "Stability Broken!" else "Guard Broken"
-        else -> "Training"
+        else -> "Combat Tutorial"
     }
     val message = when (tutorial.step) {
         CombatTutorialStep.BRIEF ->
@@ -232,24 +232,34 @@ fun CombatTutorialOverlay(
     } else {
         Box(
             modifier = modifier,
-            contentAlignment = Alignment.BottomCenter
+            contentAlignment = Alignment.Center
         ) {
             Surface(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .navigationBarsPadding()
-                    .padding(bottom = 190.dp),
-                shape = RoundedCornerShape(12.dp),
-                color = panel.copy(alpha = if (highContrastMode) 0.96f else 0.88f),
-                border = BorderStroke(1.dp, accent.copy(alpha = 0.62f)),
-                shadowElevation = 8.dp
+                    .wrapContentWidth()
+                    .widthIn(min = 240.dp, max = 480.dp)
+                    .padding(horizontal = 20.dp),
+                shape = RoundedCornerShape(999.dp),
+                color = panel.copy(alpha = if (highContrastMode) 0.98f else 0.92f),
+                border = BorderStroke(1.2.dp, accent.copy(alpha = 0.85f)),
+                shadowElevation = 10.dp
             ) {
-                Text(
-                    text = message,
-                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 12.dp),
-                    style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold),
-                    color = Color.White
-                )
+                Row(
+                    modifier = Modifier.padding(horizontal = 18.dp, vertical = 9.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(8.dp)
+                            .background(accent, RoundedCornerShape(999.dp))
+                    )
+                    Text(
+                        text = message,
+                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
+                        color = Color.White
+                    )
+                }
             }
         }
     }

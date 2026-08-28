@@ -19,6 +19,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -34,6 +35,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -72,6 +77,7 @@ fun SaveLoadDialog(
     val kicker = if (isSave) "Choose where this run is written." else "Choose a timeline to resume."
     val actionLabel = if (isSave) "Save" else "Load"
     val solidPanel = Color(0xFF07111A)
+    var confirmAction by remember { mutableStateOf<Pair<String, () -> Unit>?>(null) }
 
     Box(
         modifier = modifier
@@ -183,9 +189,17 @@ fun SaveLoadDialog(
                         SaveSlotRow(
                             summary = summary,
                             isSave = isSave,
-                            onSave = onSave,
+                            onRequestSave = { slot, isOverwrite ->
+                                if (isOverwrite) {
+                                    confirmAction = "Overwrite Save Slot $slot?\nPrevious save data will be replaced." to { onSave(slot) }
+                                } else {
+                                    onSave(slot)
+                                }
+                            },
                             onLoad = onLoad,
-                            onDelete = onDelete,
+                            onRequestDelete = { slot, label ->
+                                confirmAction = "$label?\nSaved progress will be permanently erased." to { onDelete(slot) }
+                            },
                             accent = accentColor,
                             textColor = textColor,
                             borderColor = borderColor,
@@ -196,6 +210,48 @@ fun SaveLoadDialog(
                 HorizontalDivider(color = Color.White.copy(alpha = 0.12f))
             }
         }
+
+        confirmAction?.let { (prompt, action) ->
+            AlertDialog(
+                onDismissRequest = { confirmAction = null },
+                title = {
+                    Text(
+                        text = "Confirm Action",
+                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                        color = Color.White
+                    )
+                },
+                text = {
+                    Text(
+                        text = prompt,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.White.copy(alpha = 0.85f)
+                    )
+                },
+                confirmButton = {
+                    Button(
+                        onClick = {
+                            confirmAction = null
+                            action()
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFFFF5252),
+                            contentColor = Color.White
+                        )
+                    ) {
+                        Text("Confirm", fontWeight = FontWeight.Bold)
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { confirmAction = null }) {
+                        Text("Cancel", color = Color.White.copy(alpha = 0.7f))
+                    }
+                },
+                containerColor = Color(0xFF141C24),
+                shape = RoundedCornerShape(16.dp),
+                modifier = Modifier.border(1.dp, Color(0xFFFF5252).copy(alpha = 0.4f), RoundedCornerShape(16.dp))
+            )
+        }
     }
 }
 
@@ -203,9 +259,9 @@ fun SaveLoadDialog(
 private fun SaveSlotRow(
     summary: SaveSlotSummary,
     isSave: Boolean,
-    onSave: (Int) -> Unit,
+    onRequestSave: (Int, Boolean) -> Unit,
     onLoad: (Int) -> Unit,
-    onDelete: (Int) -> Unit,
+    onRequestDelete: (Int, String) -> Unit,
     accent: Color,
     textColor: Color,
     borderColor: Color,
@@ -281,8 +337,9 @@ private fun SaveSlotRow(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 if (isSave && !summary.isAutosave) {
+                    val isOverwrite = !summary.isEmpty
                     Button(
-                        onClick = { onSave(summary.slot) },
+                        onClick = { onRequestSave(summary.slot, isOverwrite) },
                         modifier = Modifier
                             .widthIn(min = 112.dp)
                             .semantics { contentDescription = "Save $slotLabel" },
@@ -305,7 +362,10 @@ private fun SaveSlotRow(
                 }
                 val deleteEnabled = !summary.isEmpty || summary.isQuickSave || summary.isAutosave
                 TextButton(
-                    onClick = { onDelete(summary.slot) },
+                    onClick = {
+                        val actionText = if (summary.isAutosave) "Clear Autosave" else "Delete $slotLabel"
+                        onRequestDelete(summary.slot, actionText)
+                    },
                     enabled = deleteEnabled
                 ) {
                     Icon(

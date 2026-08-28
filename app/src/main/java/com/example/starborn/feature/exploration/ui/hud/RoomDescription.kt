@@ -1,5 +1,19 @@
 package com.example.starborn.feature.exploration.ui.hud
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.FastOutLinearInEasing
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -18,6 +32,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -128,7 +143,8 @@ fun RoomDescription(
     accentColor: Color,
     modifier: Modifier = Modifier
 ) {
-    if (description.isNullOrBlank()) {
+    val currentDescription = plan?.description ?: description ?: ""
+    if (currentDescription.isBlank()) {
         Text(
             text = "No description available.",
             style = MaterialTheme.typography.bodyLarge,
@@ -138,17 +154,51 @@ fun RoomDescription(
         )
         return
     }
-    if (plan == null) {
-        Text(
-            text = description,
-            style = MaterialTheme.typography.bodyLarge,
-            color = textColor,
-            textAlign = TextAlign.Start,
-            modifier = modifier
-        )
-        return
-    }
 
+    AnimatedContent(
+        targetState = plan to currentDescription,
+        transitionSpec = {
+            (fadeIn(animationSpec = tween(220, easing = LinearOutSlowInEasing)) +
+                slideInVertically(animationSpec = tween(220, easing = LinearOutSlowInEasing)) { it / 14 })
+                .togetherWith(fadeOut(animationSpec = tween(150, easing = FastOutLinearInEasing)))
+        },
+        label = "roomDescriptionTransition",
+        modifier = modifier
+    ) { (targetPlan, targetDescription) ->
+        if (targetPlan == null) {
+            Text(
+                text = targetDescription,
+                style = MaterialTheme.typography.bodyLarge,
+                color = textColor,
+                textAlign = TextAlign.Start,
+                modifier = Modifier.fillMaxWidth()
+            )
+        } else {
+            SinglePlanDescription(
+                plan = targetPlan,
+                isDark = isDark,
+                textColor = textColor,
+                accentColor = accentColor,
+                onAction = onAction,
+                onNpcClick = onNpcClick,
+                onEnemyClick = onEnemyClick,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+    }
+}
+
+@Composable
+private fun SinglePlanDescription(
+    plan: InlineActionPlan,
+    isDark: Boolean,
+    textColor: Color,
+    accentColor: Color,
+    onAction: (RoomAction) -> Unit,
+    onNpcClick: (String) -> Unit,
+    onEnemyClick: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
     val defaultColor = textColor
     val highlightColor = accentColor.copy(alpha = if (isDark) 0.78f else 0.92f)
     val disabledColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.45f)
@@ -223,6 +273,7 @@ fun RoomDescription(
             val segment = hitBox.segment
             val label = segment.accessibilityLabel()
             val interactionSource = remember(segment.id, hitBox.line) { MutableInteractionSource() }
+
             Box(
                 modifier = Modifier
                     .offset {
@@ -275,11 +326,31 @@ fun RoomDescriptionPanel(
     LaunchedEffect(currentRoom?.id) {
         scrollState.scrollTo(0)
     }
+
+    val stateShiftAnim = remember { Animatable(0f) }
+    var lastDescription by remember { mutableStateOf(description) }
+    var lastRoomId by remember { mutableStateOf(currentRoom?.id) }
+
+    LaunchedEffect(description, currentRoom?.id) {
+        if (lastRoomId == currentRoom?.id && lastDescription != description && !lastDescription.isNullOrBlank()) {
+            stateShiftAnim.snapTo(1f)
+            stateShiftAnim.animateTo(0f, animationSpec = tween(500, easing = FastOutSlowInEasing))
+        }
+        lastDescription = description
+        lastRoomId = currentRoom?.id
+    }
+
+    val activeBorder = lerp(
+        borderColor.copy(alpha = if (isDark) 0.72f else 0.42f),
+        accentColor.copy(alpha = 0.95f),
+        stateShiftAnim.value
+    )
+
     Surface(
         modifier = modifier,
         color = Color(0xFF061018).copy(alpha = if (isDark) 0.76f else 0.50f),
         shape = RoundedCornerShape(12.dp),
-        border = BorderStroke(1.dp, borderColor.copy(alpha = if (isDark) 0.72f else 0.42f))
+        border = BorderStroke(1.dp, activeBorder)
     ) {
         Column(
             modifier = Modifier
@@ -287,7 +358,11 @@ fun RoomDescriptionPanel(
                 .background(
                     Brush.verticalGradient(
                         colors = listOf(
-                            accentColor.copy(alpha = if (isDark) 0.05f else 0.07f),
+                            lerp(
+                                accentColor.copy(alpha = if (isDark) 0.05f else 0.07f),
+                                accentColor.copy(alpha = 0.18f),
+                                stateShiftAnim.value
+                            ),
                             Color.Transparent,
                             Color.Black.copy(alpha = if (isDark) 0.10f else 0.04f)
                         )
@@ -303,7 +378,7 @@ fun RoomDescriptionPanel(
                     .background(
                         Brush.horizontalGradient(
                             colors = listOf(
-                                Color(0xFFFF9F2E).copy(alpha = 0.50f),
+                                lerp(Color(0xFFFF9F2E).copy(alpha = 0.50f), accentColor, stateShiftAnim.value),
                                 accentColor.copy(alpha = 0.26f),
                                 Color.Transparent
                             )

@@ -355,5 +355,62 @@
         "dialogue_id": "sentinel_default_talk"
       }
     ]
+  },
+  {
+    "id": "miner_orlo",
+    "name": "Orlo",
+    "aliases": [
+      "miner orlo",
+      "old orlo"
+    ],
+    "role": "Drill-Hand",
+    "description": "A seasoned shaft miner with scarred knuckles and sharp ears for shifting rock.",
+    "portrait": "images/npcs/orlo.webp",
+    "dialogue": {},
+    "interactions": [
+      {
+        "label": "Talk",
+        "type": "talk",
+        "dialogue_id": "miner_orlo_default_talk"
+      }
+    ]
+  },
+  {
+    "id": "cook_vance",
+    "name": "Vance",
+    "aliases": [
+      "cook vance",
+      "vance"
+    ],
+    "role": "Ration Cook",
+    "description": "A dry-witted mess cook who turns synth protein bricks into hot trail meals.",
+    "portrait": "images/npcs/vance.webp",
+    "dialogue": {},
+    "interactions": [
+      {
+        "label": "Talk",
+        "type": "talk",
+        "dialogue_id": "cook_vance_default_talk"
+      }
+    ]
+  },
+  {
+    "id": "mechanic_mira",
+    "name": "Mira",
+    "aliases": [
+      "mira",
+      "welder mira"
+    ],
+    "role": "Scrapyard Welder",
+    "description": "A pragmatic scrapper who spends more time yelling at hydraulic seals than sleeping.",
+    "portrait": "images/npcs/mira.webp",
+    "dialogue": {},
+    "interactions": [
+      {
+        "label": "Talk",
+        "type": "talk",
+        "dialogue_id": "mechanic_mira_default_talk"
+      }
+    ]
   }
 ]
