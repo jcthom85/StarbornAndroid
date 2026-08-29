@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Starborn — Master Soundtrack Review Board</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --card-bg: #161b22;
+      --border: #30363d;
+      --accent: #58a6ff;
+      --accent-green: #2ea043;
+      --text: #c9d1d9;
+      --text-dim: #8b949e;
+      --header: #f0f6fc;
+    }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 24px;
+    }
+    header {
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    h1 {
+      color: var(--header);
+      margin: 0 0 8px 0;
+      font-size: 28px;
+    }
+    p.subtitle {
+      color: var(--text-dim);
+      margin: 0;
+      font-size: 14px;
+    }
+    .filters {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.2s;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      background: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 16px;
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .card-title {
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--header);
+      margin: 0;
+    }
+    .card-id {
+      font-family: monospace;
+      font-size: 12px;
+      color: var(--accent);
+      margin-top: 2px;
+    }
+    .badge {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 12px;
+      background: #21262d;
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      text-transform: uppercase;
+    }
+    .prompt-box {
+      background: #0d1117;
+      padding: 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      color: var(--text-dim);
+      line-height: 1.4;
+      max-height: 70px;
+      overflow-y: auto;
+      border: 1px solid #21262d;
+    }
+    audio {
+      width: 100%;
+      height: 32px;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🌌 Starborn Master Soundtrack Review Board</h1>
+    <p class="subtitle">37 Production-Grade Themes Composed with ElevenLabs <code>music_v2</code> (90s–150s Studio Mixes)</p>
+  </header>
+
+  <div class="filters" id="filters">
+    <button class="filter-btn active" onclick="filterCategory('all')">All Tracks (37)</button>
+    <button class="filter-btn" onclick="filterCategory('core')">Core & Ships</button>
+    <button class="filter-btn" onclick="filterCategory('w1')">World 1 (Homestead)</button>
+    <button class="filter-btn" onclick="filterCategory('w2')">World 2 (Sector 9)</button>
+    <button class="filter-btn" onclick="filterCategory('w3')">World 3 (Spire)</button>
+    <button class="filter-btn" onclick="filterCategory('w4')">World 4 (Foundry)</button>
+    <button class="filter-btn" onclick="filterCategory('w5')">World 5 (Void Ring)</button>
+    <button class="filter-btn" onclick="filterCategory('w6')">World 6 (The Source)</button>
+    <button class="filter-btn" onclick="filterCategory('combat')">Combat</button>
+    <button class="filter-btn" onclick="filterCategory('boss')">Boss Battles</button>
+    <button class="filter-btn" onclick="filterCategory('activities')">Mini-Games & Activities</button>
+    <button class="filter-btn" onclick="filterCategory('cinematic')">Cinematics & Credits</button>
+  </div>
+
+  <div class="grid" id="track-grid"></div>
+
+  <script>
+    const tracks = [
+      { id: "music_title_theme", title: "Starborn Main Title (The Spark in the Dark)", cat: "core", prompt: "Cinematic Sci-Fi Acoustic-Orchestral Synthwave. BPM: 82. Resonant acoustic guitar playing an ascending 4-note motif over warm Prophet-5 synth pads and soaring cello." },
+      { id: "music_astra_common_room", title: "The Astra Lounge (Coffee & Cassettes)", cat: "core", prompt: "Lo-Fi Chill Synthwave & Downtempo. BPM: 74. Warm Fender Rhodes piano, mellow acoustic slide guitar, dusty vinyl crackle, cozy tape hiss." },
+      { id: "music_astra_bridge", title: "Flight Bridge (Navigating the Frontier)", cat: "core", prompt: "Ambient Space Synthwave & Downtempo. BPM: 88. Pulsing sequencer synths, clean rhythmic delay electric guitar plucks, ethereal vocal pads." },
+      { id: "music_victory_standard", title: "Victory Fanfare (Battle Won)", cat: "core", prompt: "16-bit JRPG Victory Fanfare & Uplifting Rock Fusion. BPM: 124. Triumphant brass stabs, soaring electric guitar lead, punchy bass groove." },
+      { id: "music_game_over", title: "The Signal Fades (Defeat & Memory)", cat: "core", prompt: "Melancholy Ambient Piano & Tape Drone. BPM: 60. Distant upright piano with felt muting, slow decaying reverb, low cello drone." },
+      { id: "music_w1_homestead_explore", title: "Homestead Crater Exploration", cat: "w1", prompt: "Industrial Blues & Frontier Acoustic Slag-Rock. BPM: 90. Resonator slide guitar, dusty blues harmonica, rhythmic anvil hammer percussion." },
+      { id: "music_w1_deep_mine", title: "Sub-Level 4 (Descent into Slag)", cat: "w1", prompt: "Dark Industrial Ambient & Sub-Bass Drone. BPM: 72. Low subterranean bass hum, metallic clinking in deep reverb, rhythmic pneumatic valve releases." },
+      { id: "music_w1_combat", title: "Homestead Scrap Skirmish", cat: "combat", prompt: "Aggressive Industrial Rock & Synth-Metal. BPM: 132. Heavy distorted electric guitar riffs, pounding industrial drums, energetic slap bass." },
+      { id: "music_w1_boss_warden", title: "The Pit Warden (Overclocked Sentry)", cat: "boss", prompt: "Fast-Paced Cyber-Metal Boss Theme. BPM: 142. Screeching guitar harmonics, thundering double-kick drums, blaring emergency sirens." },
+      { id: "music_w2_sector9_explore", title: "Sector 9 Canopy Walk", cat: "w2", prompt: "Organic Dark Folk & Shamanic World Ambient. BPM: 76. Wooden pan flute, bowed acoustic contrabass, swamp water drips, lush poly-synth sweeps." },
+      { id: "music_w2_ancient_gateway", title: "Tideglass Shore & Stone Relics", cat: "w2", prompt: "Tribal Ambient & Ethereal Mystery Folk. BPM: 80. Resonant kalimba, deep taiko drum heartbeat, wind synth harmonics, singing bowls." },
+      { id: "music_w2_combat", title: "Swamp Ambush & Predator Strike", cat: "combat", prompt: "Tribal Shamanic Electro-Battle. BPM: 128. Rapid taiko and djembe percussion, distorted bass synth wobble, frantic wooden flute trills." },
+      { id: "music_w2_boss_guardian", title: "Ruin Guardian (Ancient Harmonic Strike)", cat: "boss", prompt: "Epic Orchestral World Boss Theme. BPM: 136. Massive tribal war drums, soaring choir chants, heavy cello Ostinato, mystical synths." },
+      { id: "music_w3_spire_explore", title: "Neon Rain & Night Market", cat: "w3", prompt: "Cyberpunk Synthwave & Dark Jazz-Noir. BPM: 106. Pulsing analog bassline, smoky tenor saxophone solo with slapback delay, 808 trap hi-hats." },
+      { id: "music_w3_upper_city", title: "The Glass Spire (Cloud District)", cat: "w3", prompt: "Minimalist Cyber-Luxury & Glass Synthwave. BPM: 98. Crystal synthesizer arpeggios, cold sterile string orchestra, deep sub-bass pulses." },
+      { id: "music_w3_combat", title: "Spire Security Encounter", cat: "combat", prompt: "High-Octane Cyberpunk Darksynth. BPM: 135. Screaming saw-wave synth leads, heavy sidechained sub-bass, industrial electronic drum loops." },
+      { id: "music_w3_boss_phantom", title: "Phantom Prototype (Phase Blade Duel)", cat: "boss", prompt: "Darkwave Synth-Metal Boss Theme. BPM: 144. Dual dueling electric guitars, blistering synth arpeggiators, aggressive slap bass." },
+      { id: "music_w4_foundry_explore", title: "Slag Run & Conveyor Lines", cat: "w4", prompt: "Industrial Machine Techno & Slag Rhythms. BPM: 124. Pounding hydraulic four-on-the-floor beat, distorted synth bass, clanging steel machinery." },
+      { id: "music_w4_power_core", title: "The Meltdown Core", cat: "w4", prompt: "Ominous Dark Techno & Alarm Pulse. BPM: 130. Heavy analog Moog bass pulses, screaming radioactive synth sirens, rapid sequencer arpeggios." },
+      { id: "music_w4_combat", title: "Foundry Line Battle", cat: "combat", prompt: "Industrial Metal & Cyber Metal Groove. BPM: 140. Down-tuned 8-string metal guitars, pneumatic hammer percussion, relentless double-bass drumming." },
+      { id: "music_w4_boss_titan", title: "Titan Walker (Overheat Catastrophe)", cat: "boss", prompt: "Colossal Industrial Metal Boss Symphony. BPM: 148. Massive mechanical stomps, screaming guitar solos, blaring industrial horns." },
+      { id: "music_w5_void_explore", title: "The Silent Ring Walk", cat: "w5", prompt: "Zero-G Ambient Drone & Cosmic Space Music. BPM: 64. Massive lush reverb synth pads, delicate echo harp plucks, subtle radio static." },
+      { id: "music_w5_security_hub", title: "Command Bastion (Dominion Control)", cat: "w5", prompt: "Authoritarian Military Synthwave. BPM: 112. Cold mechanical synth brass stabs, precise electronic percussion, deep bass pulse." },
+      { id: "music_w5_combat", title: "Zero-G Skirmish", cat: "combat", prompt: "High-Tech Space Drum & Bass Breakbeat Battle. BPM: 165. Lightning-fast breakbeats, floating ambient synth chords, deep Reese bassline." },
+      { id: "music_w6_source_explore", title: "The Event Horizon", cat: "w6", prompt: "Sacred Choral Ambient & Cosmic Pipe Organ. BPM: 60. Ethereal soprano choir chords, massive celestial pipe organ, low church bell chimes." },
+      { id: "music_w6_the_center", title: "Singularity Nexus", cat: "w6", prompt: "Avant-Garde Orchestral Drone & Harmonic Resonance. BPM: 54. Soaring solo cello, harmonic glass harmonica, swirling ethereal synth textures." },
+      { id: "music_w6_boss_final", title: "Ascended Vale (The Source Symphony)", cat: "boss", prompt: "Full Symphonic Metal & Sacred Choral Masterpiece. BPM: 152. 60-piece orchestra, full operatic choir, lead guitar, church organ." },
+      { id: "music_cinematic_prologue", title: "The Launch & The Fall", cat: "cinematic", prompt: "Emotional Cinematic Narrative Score. BPM: 78. Solo acoustic guitar evolving into French horn, rising orchestra, timpani rolls." },
+      { id: "music_cinematic_crash", title: "Planetary Impact", cat: "cinematic", prompt: "Ambient Disaster Score & Deep Resonance. BPM: 50. Deep sub-bass impact thump, descending string glissandos, entry synths." },
+      { id: "music_elaras_song", title: "Elara's Complete Song (Tape 08)", cat: "cinematic", prompt: "80s Vintage Lofi Folk-Pop Cassette with Soft Female Vocals. BPM: 86. Fingerpicked acoustic guitar, celesta, warm bass, soft soprano vocals." },
+      { id: "music_credits_ending", title: "The Great Frontier (End Credits Suite)", cat: "cinematic", prompt: "80s Nostalgic Synth-Pop / Soft Rock Anthem. BPM: 104. Simmons 80s drum kit, 12-string acoustic guitar, soaring saxophone solo." },
+      { id: "music_epilogue", title: "A New Orbit (Post-Game Reflection)", cat: "cinematic", prompt: "Peaceful Ambient Guitar & Celestial Tape Loop. BPM: 68. Gentle acoustic guitar picking, Fender Rhodes piano echoing into space reverb." },
+      { id: "music_fishing_ambient", title: "Tideglass Angler (Relaxing Fishing)", cat: "activities", prompt: "Relaxing Acoustic Water Folk & Lofi Chill. BPM: 72. Fingerstyle nylon guitar, wooden kalimba chimes, atmospheric water ripples." },
+      { id: "music_arcade_cabinet", title: "Hyperion 1986 (Arcade Cabinet Theme)", cat: "activities", prompt: "1980s Chiptune & Upbeat FM Synth Theme. BPM: 130. Bouncy 8-bit square-wave lead melody, punchy FM slap bass, 16-bit arcade snare." },
+      { id: "music_tinkering_focus", title: "Workstation Flow (Tinkering)", cat: "activities", prompt: "Cozy Mechanical Downtempo & Lofi Study Beats. BPM: 80. Mellow electric piano chords, soft metallic clinks, tape delay guitar." },
+      { id: "music_cooking_kitchen", title: "Mess Hall Stew (Cooking Mini-Game)", cat: "activities", prompt: "Playful Acoustic Kitchen Swing & Django Jazz. BPM: 110. Upbeat gypsy jazz guitar, pizzicato strings, wooden spoon clacks." },
+      { id: "music_shop_cozy", title: "Wandering Trader (Shops & Markets)", cat: "activities", prompt: "Exotic Frontier Trade Groove & World Lofi. BPM: 88. Middle-Eastern oud, hand drums, Fender Rhodes chords, synth flute." }
+    ];
+
+    const grid = document.getElementById("track-grid");
+
+    function renderTracks(filter = 'all') {
+      grid.innerHTML = "";
+      const filtered = filter === 'all' ? tracks : tracks.filter(t => t.cat === filter);
+      
+      filtered.forEach(t => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+          <div class="card-header">
+            <div>
+              <h3 class="card-title">${t.title}</h3>
+              <div class="card-id">${t.id}.mp3</div>
+            </div>
+            <span class="badge">${t.cat}</span>
+          </div>
+          <div class="prompt-box">${t.prompt}</div>
+          <audio controls preload="none" src="../app/src/main/res/raw/${t.id}.mp3"></audio>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function filterCategory(cat) {
+      document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+      event.target.classList.add("active");
+      renderTracks(cat);
+    }
+
+    renderTracks('all');
+  </script>
+</body>
+</html>
