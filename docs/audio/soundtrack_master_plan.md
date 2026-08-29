@@ -144,7 +144,7 @@ The complete soundtrack requires **32 bespoke musical tracks**:
 * [ ] `music_w6_the_center`: *The White Shore (The Source Core)*
 
 ### Category C: Combat & Boss Battles (10 Tracks)
-* [ ] `music_w1_combat`: *Mining Drill Skirmish*
+* [ ] `music_w1_combat`: *Homestead Scrap Skirmish* (Southern Hard Rock / Blues Groove)
 * [ ] `music_w1_boss_warden`: *The Iron Warden (Heavy Duty)*
 * [ ] `music_w2_combat`: *Swamp Ambush*
 * [ ] `music_w2_boss_guardian`: *Ruin Guardian (Ancient Harmonic Strike)*

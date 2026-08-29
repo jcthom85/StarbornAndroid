@@ -227,14 +227,14 @@ To achieve the signature **Starborn** sound across all generated tracks, every p
 
 ### Category C: Combat & Boss Battle Themes
 
-#### Track 18: `music_w1_combat` (*Mining Drill Skirmish*)
+#### Track 18: `music_w1_combat` (*Homestead Scrap Skirmish*)
 * **Prompt**:
   ```
-  Genre: Fast Industrial Blues-Rock Battle Theme.
-  BPM: 132. Key: E Minor.
-  Instrumentation: Driving rock drums, gritty overdrive bass guitar, overdriven blues slide guitar riffs, clanging metal percussion, fast Juno synth arpeggios.
-  Texture: Punchy, urgent, dusty action, live-band feel.
-  Mood: Scrappy, energetic, fast tactical combat.
+  Genre: High-Octane Southern Hard Rock & Heavy Blues-Rock Groove (Style: 'Get Trucked' by Ollie Steel / Moray Pringle).
+  BPM: 140. Key: E Pentatonic.
+  Instrumentation: Chunky overdriven electric guitar riffs, swaggering blues-rock slide guitar hooks, punchy driving four-on-the-floor rock drums with crisp open hi-hats and snare cracks, fat overdriven P-bass groove, catchy twin guitar harmonies.
+  Texture: Raw energetic live-band production, heavy pickup twang and dirty overdrive.
+  Mood: Pure high-speed southern rock adrenaline, dusty junkyard brawl.
   ```
 
 #### Track 19: `music_w1_boss_warden` (*The Iron Warden - Heavy Duty*)
