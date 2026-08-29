@@ -104,6 +104,7 @@ fun HubScreen(
     onQuickSave: () -> Unit,
     onPlayAudio: (String) -> Unit = {},
     onEnterNode: (HubNodeUi) -> Unit,
+    onReturnToTitle: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -136,6 +137,7 @@ fun HubScreen(
         onToggleVignette = onToggleVignette,
         onQuickSave = onQuickSave,
         onPlayAudio = onPlayAudio,
+        onReturnToTitle = onReturnToTitle,
         modifier = modifier
     )
 }
@@ -154,6 +156,7 @@ private fun HubScreenContent(
     onToggleVignette: (Boolean) -> Unit,
     onQuickSave: () -> Unit,
     onPlayAudio: (String) -> Unit = {},
+    onReturnToTitle: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     val backgroundPainter = rememberHubBackgroundPainter(uiState.backgroundImage)
@@ -268,6 +271,7 @@ private fun HubScreenContent(
                 onToggleTutorials = onToggleTutorials,
                 onToggleVignette = onToggleVignette,
                 onQuickSave = onQuickSave,
+                onReturnToTitle = onReturnToTitle,
                 onDismiss = { menuVisible = false },
                 modifier = Modifier.fillMaxSize()
             )
@@ -524,6 +528,7 @@ private fun HubMenuOverlay(
     onToggleTutorials: (Boolean) -> Unit,
     onToggleVignette: (Boolean) -> Unit,
     onQuickSave: () -> Unit,
+    onReturnToTitle: (() -> Unit)? = null,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -583,7 +588,8 @@ private fun HubMenuOverlay(
                     onSfxVolumeChange = onSfxVolumeChange,
                     onVoiceVolumeChange = onVoiceVolumeChange,
                     onToggleTutorials = onToggleTutorials,
-                    onToggleVignette = onToggleVignette
+                    onToggleVignette = onToggleVignette,
+                    onReturnToTitle = onReturnToTitle
                 )
             }
         }
@@ -652,7 +658,8 @@ private fun HubMenuSettings(
     onSfxVolumeChange: (Float) -> Unit,
     onVoiceVolumeChange: (Float) -> Unit,
     onToggleTutorials: (Boolean) -> Unit,
-    onToggleVignette: (Boolean) -> Unit
+    onToggleVignette: (Boolean) -> Unit,
+    onReturnToTitle: (() -> Unit)? = null
 ) {
     HubMenuSection(title = "Settings", icon = Icons.Rounded.Settings) {
         HubSliderRow("Music", settings.musicVolume, onMusicVolumeChange)
@@ -660,6 +667,28 @@ private fun HubMenuSettings(
         HubSliderRow("Voice", settings.voiceVolume, onVoiceVolumeChange)
         HubSwitchRow("Room Vignette", settings.vignetteEnabled, onToggleVignette)
         HubSwitchRow("Tutorials", settings.tutorialsEnabled, onToggleTutorials)
+        if (onReturnToTitle != null) {
+            Surface(
+                onClick = onReturnToTitle,
+                shape = RoundedCornerShape(8.dp),
+                color = Color(0xFF281014),
+                border = BorderStroke(1.dp, Color(0xFFFF5D4F).copy(alpha = 0.5f))
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp, vertical = 10.dp),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "Return to Title",
+                        style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
+                        color = Color(0xFFFF8E83)
+                    )
+                }
+            }
+        }
     }
 }
 

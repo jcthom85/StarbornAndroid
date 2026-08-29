@@ -228,6 +228,12 @@ fun NavigationHost(
                     navController.navigate(Exploration.route) {
                         popUpTo(Hub.route) { inclusive = false }
                     }
+                },
+                onReturnToTitle = {
+                    navController.navigate(MainMenu.route) {
+                        popUpTo(0) { inclusive = true }
+                        launchSingleTop = true
+                    }
                 }
             )
         }
@@ -359,6 +365,12 @@ fun NavigationHost(
                         navController.navigate(Shop.create(shopId))
                     },
                     onReturnToHub = {
+                        navController.navigate(Hub.route) {
+                            popUpTo(Exploration.route) { inclusive = true }
+                            launchSingleTop = true
+                        }
+                    },
+                    onReturnToTitle = {
                         navController.navigate(MainMenu.route) {
                             popUpTo(0) { inclusive = true }
                             launchSingleTop = true

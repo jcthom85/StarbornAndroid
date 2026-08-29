@@ -319,6 +319,7 @@ fun ExplorationScreen(
     onOpenFishing: (String?) -> Unit = {},
     onOpenShop: (String) -> Unit = {},
     onReturnToHub: () -> Unit = {},
+    onReturnToTitle: () -> Unit = {},
     onPlayAudio: (String) -> Unit = {},
     fxEvents: Flow<String>? = null
 ) {
@@ -1160,7 +1161,7 @@ fun ExplorationScreen(
                         saveLoadMode = "load"
                     }
                 },
-                onReturnToTitle = onReturnToHub,
+                onReturnToTitle = onReturnToTitle,
                 partyStatus = uiState.partyStatus,
                 onShowSkillTree = { memberId -> viewModel.openSkillTree(memberId) },
                 onShowDetails = { memberId -> viewModel.openPartyMemberDetails(memberId) },
