@@ -504,23 +504,25 @@ def generate_track_elevenlabs(api_key, track_info, dry_run=False):
         print(f"  [SAVED] -> {output_file} ({os.path.getsize(output_file)} bytes)")
         return True
 
-    url = "https://api.elevenlabs.io/v1/sound-generation"
+    url = "https://api.elevenlabs.io/v1/music"
     headers = {
         "xi-api-key": api_key,
         "Content-Type": "application/json"
     }
+    is_vocal = "vocal" in track_info.get("tags", []) or "tape" in track_info.get("tags", [])
     payload = {
-        "text": track_info["prompt"],
-        "duration_seconds": 22.0,
-        "prompt_influence": 0.4
+        "prompt": track_info["prompt"],
+        "music_length_ms": 30000,
+        "model_id": "music_v2",
+        "force_instrumental": not is_vocal
     }
 
     try:
-        response = requests.post(url, json=payload, headers=headers, timeout=60)
+        response = requests.post(url, json=payload, headers=headers, timeout=90)
         if response.status_code == 200:
             with open(output_file, "wb") as f:
                 f.write(response.content)
-            print(f"  [SUCCESS ELEVENLABS] -> {output_file} ({len(response.content)} bytes)")
+            print(f"  [SUCCESS MUSIC_V2] -> {output_file} ({len(response.content)} bytes)")
             return True
         else:
             print(f"  [API ERROR {response.status_code}]: {response.text}")
