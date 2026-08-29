@@ -2760,6 +2760,51 @@ class ExplorationViewModel(
         promptManager.dismissCurrent()
     }
 
+    fun onTinkerTutorialStep(step: com.example.starborn.feature.crafting.TinkeringTutorialStep) {
+        val entry = when (step) {
+            com.example.starborn.feature.crafting.TinkeringTutorialStep.SLOT_BASE -> com.example.starborn.domain.tutorial.TutorialEntry(
+                key = "tut_tinker_base",
+                context = "Workbench",
+                message = "Tinkering lets you assemble, repair, and modify gear. Tap your broken Cryo-Inductor in the tray below to place it into the Base socket."
+            )
+            com.example.starborn.feature.crafting.TinkeringTutorialStep.SLOT_COMPONENT -> com.example.starborn.domain.tutorial.TutorialEntry(
+                key = "tut_tinker_comp",
+                context = "Workbench",
+                message = "Now tap Scrap Metal in your tray to supply replacement conduit alloy for the cold loop."
+            )
+            com.example.starborn.feature.crafting.TinkeringTutorialStep.SYNTHESIZE -> com.example.starborn.domain.tutorial.TutorialEntry(
+                key = "tut_tinker_synth",
+                context = "Workbench",
+                message = "Blueprint discovered! Tap SYNTHESIZE to calibrate and seal the cold loop."
+            )
+            com.example.starborn.feature.crafting.TinkeringTutorialStep.COMPLETE -> null
+        }
+        if (entry != null) {
+            promptManager.enqueue(com.example.starborn.domain.prompt.TutorialPrompt(entry))
+        }
+    }
+
+    fun debugTriggerTinkeringTutorial() {
+        viewModelScope.launch(dispatchers.main) {
+            inventoryService.addItem("cryo_inductor", 1)
+            inventoryService.addItem("scrap_metal", 2)
+            sessionStore.startQuest("w1_mq01", track = true)
+            questRuntimeManager.markTaskComplete("w1_mq01", "talk_to_jed")
+            questRuntimeManager.markTaskComplete("w1_mq01", "equip_starter_gear")
+            sessionStore.setMilestone("ms_w1_mq01_workshop_briefed")
+            sessionStore.clearMilestone("ms_w1_mq01_cryo_repaired")
+            sessionStore.setRoom("pit_workshop")
+            warpToRoom("pit_workshop")
+            _uiState.update {
+                it.copy(
+                    isMenuOverlayVisible = true,
+                    menuTab = MenuTab.FIELD_KIT
+                )
+            }
+            postStatus("⚡ FAST TEST: Tinkering Tutorial primed & Field Kit opened!")
+        }
+    }
+
     fun dismissNarration() {
         viewModelScope.launch(dispatchers.main) {
             _uiState.update { it.copy(narrationPrompt = null) }

@@ -469,6 +469,12 @@ fun ExplorationScreen(
         }
     }
 
+    LaunchedEffect(craftingViewModel) {
+        craftingViewModel?.craftResults?.collect { outcome ->
+            viewModel.onTinkeringCrafted(outcome.itemId)
+        }
+    }
+
     val menuPartyMembers = uiState.partyStatus.members
     val onUsePreviewItem: (InventoryPreviewItemUi) -> Unit = { item ->
         val effect = item.effect
@@ -1228,6 +1234,8 @@ fun ExplorationScreen(
                 onCloseMapLegend = { viewModel.closeMapLegend() },
                 onCloseFullMap = { viewModel.closeFullMapOverlay() },
                 craftingViewModel = craftingViewModel,
+                onTinkerTutorialStep = { viewModel.onTinkerTutorialStep(it) },
+                onDebugTinkeringTutorial = { viewModel.debugTriggerTinkeringTutorial() },
                 onPlayAudio = onPlayAudio,
                 modifier = Modifier.statusBarsPadding()
             )
@@ -1431,14 +1439,14 @@ fun ExplorationScreen(
             )
         }
 
-        if (uiState.eventAnnouncement == null && !uiState.isMenuOverlayVisible && !importantQuestPopupVisible) {
+        if (uiState.eventAnnouncement == null && !importantQuestPopupVisible) {
             UIPromptOverlay(
                 prompt = uiState.prompt,
                 onDismiss = { viewModel.dismissPrompt() },
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .padding(bottom = 76.dp, start = 16.dp, end = 16.dp)
-                    .zIndex(25f)
+                    .zIndex(200f)
             )
         }
 
@@ -2130,7 +2138,9 @@ private fun MenuOverlay(
     onCloseMapLegend: () -> Unit,
     onCloseFullMap: () -> Unit,
     craftingViewModel: CraftingViewModel? = null,
+    onTinkerTutorialStep: ((com.example.starborn.feature.crafting.TinkeringTutorialStep) -> Unit)? = null,
     isTinkeringTutorialActive: Boolean = false,
+    onDebugTinkeringTutorial: (() -> Unit)? = null,
     onPlayAudio: (String) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
@@ -2397,6 +2407,8 @@ private fun MenuOverlay(
                             openDetail(MenuDetailKind.INVENTORY_ITEM, id = item.id, item = item)
                         },
                         craftingViewModel = craftingViewModel,
+                        onTinkerTutorialStep = onTinkerTutorialStep,
+                        onDebugTinkeringTutorial = onDebugTinkeringTutorial,
                         onPlayAudio = onPlayAudio,
                         creditsLabel = creditsLabel
                     ) else MenuNestedDetailContent(
@@ -2803,16 +2815,159 @@ private fun TuningPuzzleDialog(
             }
         },
         confirmButton = {
-            TextButton(onClick = onSubmit) {
-                Text("Tune")
-            }
+            Button(onClick = onSubmit) { Text("Submit") }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Cancel")
-            }
+            TextButton(onClick = onDismiss) { Text("Cancel") }
         }
     )
+}
+
+@Composable
+private fun MenuTabContentArea(
+    tab: MenuTab,
+    accentColor: Color,
+    borderColor: Color,
+    isCurrentRoomDark: Boolean,
+    statusMessage: String?,
+    partyStatus: PartyStatusUi,
+    trackedQuest: QuestSummaryUi?,
+    activeQuests: List<QuestSummaryUi>,
+    completedQuests: List<QuestSummaryUi>,
+    minimap: MinimapUiState?,
+    fullMap: FullMapUiState?,
+    settings: SettingsUiState,
+    onMenuAction: () -> Unit,
+    onOpenInventory: () -> Unit,
+    onOpenJournal: () -> Unit,
+    onOpenMapLegend: () -> Unit,
+    onOpenFullMap: () -> Unit,
+    onOpenFieldKit: () -> Unit,
+    onMusicVolumeChange: (Float) -> Unit,
+    onSfxVolumeChange: (Float) -> Unit,
+    onVoiceVolumeChange: (Float) -> Unit,
+    onToggleTutorials: (Boolean) -> Unit,
+    onToggleVignette: (Boolean) -> Unit,
+    onToggleHighContrast: (Boolean) -> Unit = {},
+    onToggleLargeTouchTargets: (Boolean) -> Unit = {},
+    onToggleScreenshakeDisabled: (Boolean) -> Unit = {},
+    onToggleFlashesDisabled: (Boolean) -> Unit = {},
+    onToggleHapticsDisabled: (Boolean) -> Unit = {},
+    onQuickSave: () -> Unit,
+    onSaveGame: () -> Unit,
+    onLoadGame: () -> Unit,
+    onReturnToTitle: (() -> Unit)? = null,
+    onShowSkillTree: (String) -> Unit,
+    onShowDetails: (String) -> Unit,
+    inventoryItems: List<InventoryPreviewItemUi>,
+    equippedItems: Map<String, String>,
+    completedMilestones: Set<String>,
+    unlockedWeapons: Set<String>,
+    equippedWeapons: Map<String, String>,
+    unlockedArmors: Set<String>,
+    equippedArmors: Map<String, String>,
+    onEquipItem: (String, String?, String) -> Unit,
+    onEquipMod: (String, String?, String) -> Unit,
+    onEquipWeapon: (String, String?) -> Unit,
+    resolveWeaponItem: (String) -> Item?,
+    onEquipArmor: (String, String?) -> Unit,
+    resolveArmorItem: (String) -> Item?,
+    onUseInventoryItem: (InventoryPreviewItemUi) -> Unit,
+    onShowQuestDetails: (String) -> Unit,
+    onShowItemDetails: (InventoryPreviewItemUi) -> Unit,
+    craftingViewModel: CraftingViewModel? = null,
+    onTinkerTutorialStep: ((com.example.starborn.feature.crafting.TinkeringTutorialStep) -> Unit)? = null,
+    onDebugTinkeringTutorial: (() -> Unit)? = null,
+    onPlayAudio: (String) -> Unit = {},
+    creditsLabel: String
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+        when (tab) {
+            MenuTab.INVENTORY -> InventoryTabContent(
+                inventoryItems = inventoryItems,
+                equippedItems = equippedItems,
+                completedMilestones = completedMilestones,
+                unlockedWeapons = unlockedWeapons,
+                equippedWeapons = equippedWeapons,
+                unlockedArmors = unlockedArmors,
+                equippedArmors = equippedArmors,
+                partyMembers = partyStatus.members,
+                accentColor = accentColor,
+                borderColor = borderColor,
+                onEquipItem = onEquipItem,
+                onEquipMod = onEquipMod,
+                onEquipWeapon = onEquipWeapon,
+                resolveWeaponItem = resolveWeaponItem,
+                onEquipArmor = onEquipArmor,
+                resolveArmorItem = resolveArmorItem,
+                onUseConsumable = onUseInventoryItem,
+                onShowItemDetails = onShowItemDetails,
+                creditsLabel = creditsLabel
+            )
+            MenuTab.FIELD_KIT -> {
+                if (craftingViewModel != null) {
+                    TinkerTabContent(
+                        craftingViewModel = craftingViewModel,
+                        onTutorialStepChanged = onTinkerTutorialStep,
+                        accentColor = accentColor,
+                        borderColor = borderColor,
+                        onPlayAudio = onPlayAudio
+                    )
+                } else {
+                    FieldKitTabContent(
+                        accentColor = accentColor,
+                        borderColor = borderColor,
+                        onOpenFieldKit = onOpenFieldKit
+                    )
+                }
+            }
+            MenuTab.JOURNAL -> JournalTabContent(
+                trackedQuest = trackedQuest,
+                activeQuests = activeQuests,
+                completedQuests = completedQuests,
+                accentColor = accentColor,
+                borderColor = borderColor,
+                onQuestSelected = onShowQuestDetails
+            )
+            MenuTab.MAP -> MapTabContent(
+                minimap = minimap,
+                fullMap = fullMap,
+                isCurrentRoomDark = isCurrentRoomDark,
+                accentColor = accentColor,
+                borderColor = borderColor,
+                onMenuAction = onMenuAction,
+                onOpenMapLegend = onOpenMapLegend,
+                onOpenFullMap = onOpenFullMap
+            )
+            MenuTab.STATS -> StatsTabContent(
+                partyStatus = partyStatus,
+                accentColor = accentColor,
+                borderColor = borderColor,
+                onShowSkillTree = onShowSkillTree,
+                onShowDetails = onShowDetails
+            )
+            MenuTab.SETTINGS -> SettingsTabContent(
+                settings = settings,
+                accentColor = accentColor,
+                borderColor = borderColor,
+                onMusicVolumeChange = onMusicVolumeChange,
+                onSfxVolumeChange = onSfxVolumeChange,
+                onVoiceVolumeChange = onVoiceVolumeChange,
+                onToggleTutorials = onToggleTutorials,
+                onToggleVignette = onToggleVignette,
+                onToggleHighContrast = onToggleHighContrast,
+                onToggleLargeTouchTargets = onToggleLargeTouchTargets,
+                onToggleScreenshakeDisabled = onToggleScreenshakeDisabled,
+                onToggleFlashesDisabled = onToggleFlashesDisabled,
+                onToggleHapticsDisabled = onToggleHapticsDisabled,
+                onQuickSave = onQuickSave,
+                onSaveGame = onSaveGame,
+                onLoadGame = onLoadGame,
+                onReturnToTitle = onReturnToTitle,
+                onDebugTinkeringTutorial = onDebugTinkeringTutorial
+            )
+        }
+    }
 }
 
 @Composable
@@ -3127,149 +3282,6 @@ private fun TapeDeckDialog(
                     }
                 }
             }
-        }
-    }
-}
-
-@Composable
-private fun MenuTabContentArea(
-    tab: MenuTab,
-    accentColor: Color,
-    borderColor: Color,
-    isCurrentRoomDark: Boolean,
-    statusMessage: String?,
-    partyStatus: PartyStatusUi,
-    trackedQuest: QuestSummaryUi?,
-    activeQuests: List<QuestSummaryUi>,
-    completedQuests: List<QuestSummaryUi>,
-    minimap: MinimapUiState?,
-    fullMap: FullMapUiState?,
-    settings: SettingsUiState,
-    onMenuAction: () -> Unit,
-    onOpenInventory: () -> Unit,
-    onOpenJournal: () -> Unit,
-    onOpenMapLegend: () -> Unit,
-    onOpenFullMap: () -> Unit,
-    onOpenFieldKit: () -> Unit,
-    onMusicVolumeChange: (Float) -> Unit,
-    onSfxVolumeChange: (Float) -> Unit,
-    onVoiceVolumeChange: (Float) -> Unit,
-    onToggleTutorials: (Boolean) -> Unit,
-    onToggleVignette: (Boolean) -> Unit,
-    onToggleHighContrast: (Boolean) -> Unit = {},
-    onToggleLargeTouchTargets: (Boolean) -> Unit = {},
-    onToggleScreenshakeDisabled: (Boolean) -> Unit = {},
-    onToggleFlashesDisabled: (Boolean) -> Unit = {},
-    onToggleHapticsDisabled: (Boolean) -> Unit = {},
-    onQuickSave: () -> Unit,
-    onSaveGame: () -> Unit,
-    onLoadGame: () -> Unit,
-    onReturnToTitle: (() -> Unit)? = null,
-    onShowSkillTree: (String) -> Unit,
-    onShowDetails: (String) -> Unit,
-    inventoryItems: List<InventoryPreviewItemUi>,
-    equippedItems: Map<String, String>,
-    completedMilestones: Set<String>,
-    unlockedWeapons: Set<String>,
-    equippedWeapons: Map<String, String>,
-    unlockedArmors: Set<String>,
-    equippedArmors: Map<String, String>,
-    onEquipItem: (String, String?, String) -> Unit,
-    onEquipMod: (String, String?, String) -> Unit,
-    onEquipWeapon: (String, String?) -> Unit,
-    resolveWeaponItem: (String) -> Item?,
-    onEquipArmor: (String, String?) -> Unit,
-    resolveArmorItem: (String) -> Item?,
-    onUseInventoryItem: (InventoryPreviewItemUi) -> Unit,
-    onShowQuestDetails: (String) -> Unit,
-    onShowItemDetails: (InventoryPreviewItemUi) -> Unit,
-    craftingViewModel: CraftingViewModel? = null,
-    onPlayAudio: (String) -> Unit = {},
-    creditsLabel: String
-) {
-    Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-        when (tab) {
-            MenuTab.INVENTORY -> InventoryTabContent(
-                inventoryItems = inventoryItems,
-                equippedItems = equippedItems,
-                completedMilestones = completedMilestones,
-                unlockedWeapons = unlockedWeapons,
-                equippedWeapons = equippedWeapons,
-                unlockedArmors = unlockedArmors,
-                equippedArmors = equippedArmors,
-                partyMembers = partyStatus.members,
-                accentColor = accentColor,
-                borderColor = borderColor,
-                onEquipItem = onEquipItem,
-                onEquipMod = onEquipMod,
-                onEquipWeapon = onEquipWeapon,
-                resolveWeaponItem = resolveWeaponItem,
-                onEquipArmor = onEquipArmor,
-                resolveArmorItem = resolveArmorItem,
-                onUseConsumable = onUseInventoryItem,
-                onShowItemDetails = onShowItemDetails,
-                creditsLabel = creditsLabel
-            )
-            MenuTab.FIELD_KIT -> {
-                if (craftingViewModel != null) {
-                    TinkerTabContent(
-                        craftingViewModel = craftingViewModel,
-                        accentColor = accentColor,
-                        borderColor = borderColor,
-                        onPlayAudio = onPlayAudio
-                    )
-                } else {
-                    FieldKitTabContent(
-                        accentColor = accentColor,
-                        borderColor = borderColor,
-                        onOpenFieldKit = onOpenFieldKit
-                    )
-                }
-            }
-            MenuTab.JOURNAL -> JournalTabContent(
-                trackedQuest = trackedQuest,
-                activeQuests = activeQuests,
-                completedQuests = completedQuests,
-                accentColor = accentColor,
-                borderColor = borderColor,
-                onQuestSelected = onShowQuestDetails
-            )
-            MenuTab.MAP -> MapTabContent(
-                minimap = minimap,
-                fullMap = fullMap,
-                isCurrentRoomDark = isCurrentRoomDark,
-                accentColor = accentColor,
-                borderColor = borderColor,
-                onMenuAction = onMenuAction,
-                onOpenMapLegend = onOpenMapLegend,
-                onOpenFullMap = onOpenFullMap
-            )
-            MenuTab.STATS -> StatsTabContent(
-                partyStatus = partyStatus,
-                accentColor = accentColor,
-                borderColor = borderColor,
-                onShowSkillTree = onShowSkillTree,
-                onShowDetails = onShowDetails
-            )
-            MenuTab.SETTINGS -> SettingsTabContent(
-                settings = settings,
-                accentColor = accentColor,
-                borderColor = borderColor,
-                onMusicVolumeChange = onMusicVolumeChange,
-                onSfxVolumeChange = onSfxVolumeChange,
-                onVoiceVolumeChange = onVoiceVolumeChange,
-                onToggleTutorials = onToggleTutorials,
-                onToggleVignette = onToggleVignette,
-                onToggleHighContrast = onToggleHighContrast,
-                onToggleLargeTouchTargets = onToggleLargeTouchTargets,
-                onToggleScreenshakeDisabled = onToggleScreenshakeDisabled,
-                onToggleFlashesDisabled = onToggleFlashesDisabled,
-                onToggleHapticsDisabled = onToggleHapticsDisabled,
-                onQuickSave = onQuickSave,
-                onSaveGame = onSaveGame,
-                onLoadGame = onLoadGame,
-                onReturnToTitle = onReturnToTitle
-            )
         }
     }
 }

@@ -57,11 +57,23 @@ fun TinkerTabContent(
     craftingViewModel: CraftingViewModel,
     accentColor: Color,
     borderColor: Color,
+    onTutorialStepChanged: ((TinkeringTutorialStep) -> Unit)? = null,
     onPlayAudio: (String) -> Unit = {}
 ) {
     val state by craftingViewModel.uiState.collectAsState()
     var mode by rememberSaveable { mutableStateOf(TinkerTabMode.WORKBENCH) }
     var activeSlot by remember { mutableStateOf(ActiveBenchSlot.BASE) }
+    val shownTutorialSteps = remember { mutableSetOf<TinkeringTutorialStep>() }
+
+    LaunchedEffect(state.isTutorialActive, state.tutorialStep) {
+        if (state.isTutorialActive) {
+            val step = state.tutorialStep
+            if (step != null && !shownTutorialSteps.contains(step)) {
+                shownTutorialSteps.add(step)
+                onTutorialStepChanged?.invoke(step)
+            }
+        }
+    }
 
     MenuSectionCard(
         title = "Tinkering",
@@ -72,14 +84,6 @@ fun TinkerTabContent(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            // Tutorial Banner
-            if (state.isTutorialActive && state.tutorialStep != null) {
-                TinkeringTutorialBanner(
-                    step = state.tutorialStep!!,
-                    accentColor = accentColor
-                )
-            }
-
             // Mode Sub-Tab Toggles
             TinkerModeToggle(
                 current = mode,
@@ -168,94 +172,6 @@ fun TinkerTabContent(
                         }
                     )
                 }
-            }
-        }
-    }
-}
-
-@Composable
-private fun TinkeringTutorialBanner(
-    step: TinkeringTutorialStep,
-    accentColor: Color,
-    modifier: Modifier = Modifier
-) {
-    val transition = rememberInfiniteTransition(label = "tut_banner_pulse")
-    val glowAlpha by transition.animateFloat(
-        initialValue = 0.4f,
-        targetValue = 0.95f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(1200, easing = FastOutSlowInEasing),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "glowAlpha"
-    )
-
-    val (stepLabel, instructionText) = when (step) {
-        TinkeringTutorialStep.SLOT_BASE ->
-            "STEP 1/3" to "Tap your damaged Cryo-Inductor in the tray below to place it into the Base socket."
-        TinkeringTutorialStep.SLOT_COMPONENT ->
-            "STEP 2/3" to "Tap Scrap Metal in your tray to supply replacement conduit alloy for the cold loop."
-        TinkeringTutorialStep.SYNTHESIZE ->
-            "STEP 3/3" to "Blueprint discovered! Tap SYNTHESIZE to calibrate and seal the cold loop."
-        TinkeringTutorialStep.COMPLETE ->
-            "COMPLETED" to "Cold loop repaired! Nova unlocked Cryo Vent."
-    }
-
-    Surface(
-        modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(10.dp),
-        color = Color(0xFF051722).copy(alpha = 0.95f),
-        border = BorderStroke(1.5.dp, Color(0xFFFFC857).copy(alpha = glowAlpha))
-    ) {
-        Row(
-            modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(10.dp)
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(32.dp)
-                    .clip(CircleShape)
-                    .background(Color(0xFFFFC857).copy(alpha = 0.2f))
-                    .border(1.dp, Color(0xFFFFC857), CircleShape),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Build,
-                    contentDescription = null,
-                    tint = Color(0xFFFFC857),
-                    modifier = Modifier.size(16.dp)
-                )
-            }
-            Column(modifier = Modifier.weight(1f)) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(6.dp)
-                ) {
-                    Text(
-                        text = "TINKERING TUTORIAL",
-                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold, letterSpacing = 1.sp),
-                        color = Color(0xFFFFC857)
-                    )
-                    Surface(
-                        shape = RoundedCornerShape(4.dp),
-                        color = Color(0xFFFFC857).copy(alpha = 0.25f),
-                        border = BorderStroke(1.dp, Color(0xFFFFC857).copy(alpha = 0.5f))
-                    ) {
-                        Text(
-                            text = stepLabel,
-                            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.ExtraBold, fontSize = 9.sp),
-                            color = Color(0xFFFFE082),
-                            modifier = Modifier.padding(horizontal = 5.dp, vertical = 1.dp)
-                        )
-                    }
-                }
-                Spacer(modifier = Modifier.height(2.dp))
-                Text(
-                    text = instructionText,
-                    style = MaterialTheme.typography.bodySmall.copy(fontSize = 11.sp, lineHeight = 15.sp),
-                    color = Color.White.copy(alpha = 0.95f)
-                )
             }
         }
     }

@@ -42,7 +42,8 @@ fun SettingsTabContent(
     onQuickSave: () -> Unit,
     onSaveGame: () -> Unit,
     onLoadGame: () -> Unit,
-    onReturnToTitle: (() -> Unit)? = null
+    onReturnToTitle: (() -> Unit)? = null,
+    onDebugTinkeringTutorial: (() -> Unit)? = null
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
         if (showSaveData) {
@@ -88,6 +89,25 @@ fun SettingsTabContent(
                 onToggleFlashesDisabled = onToggleFlashesDisabled,
                 onToggleHapticsDisabled = onToggleHapticsDisabled
             )
+        }
+        if (onDebugTinkeringTutorial != null) {
+            MenuSectionCard(
+                title = "Testing & Diagnostics",
+                accentColor = Color(0xFF7BE8FF),
+                borderColor = borderColor
+            ) {
+                Button(
+                    onClick = onDebugTinkeringTutorial,
+                    modifier = Modifier.fillMaxWidth().height(48.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF007799),
+                        contentColor = Color.White
+                    )
+                ) {
+                    Text("⚡ FAST TEST: Tinkering Tutorial (Cryo-Inductor)", fontWeight = FontWeight.Bold)
+                }
+            }
         }
     }
 }
