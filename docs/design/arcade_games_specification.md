@@ -34,7 +34,9 @@ graph TD
 ---
 
 ### Cabinet 1: *Deep Mine Asteroid Drill*
-* **World**: World 1 (Mining Colony — Tyson's Recreation Bay)
+* **World**: World 1 (Mining Colony — The Pit)
+* **Exact Room Location**: `pit_mess` (Title: *"Mess Hall"*) — sitting in the corner of the miner recreation cafeteria where Tyson and the workers take their breaks.
+* **Astra Destination**: `astra_common_room` (Title: *"Astra Common Room"*) — Recreation Bay Arcade Corner.
 * **Genre**: 2D Lunar Lander / Asteroid Thrust Miner
 * **Theme**: Pilot a retro mining probe through crumbling mine shafts, managing fuel and thruster momentum to drill glittering ore crystals while avoiding falling slag stalactites.
 
@@ -52,7 +54,9 @@ graph TD
 ---
 
 ### Cabinet 2: *Canopy Hopper*
-* **World**: World 2 (Sector 9 Jungle & Swamp — Scrapper Encampment)
+* **World**: World 2 (Sector 9 Jungle & Swamp)
+* **Exact Room Location**: `sector9_pod_interior` (Title: *"Escape Pod Interior"*) — salvaged from the crashed emergency survival pod electronics bay.
+* **Astra Destination**: `astra_common_room` (Title: *"Astra Common Room"*) — Recreation Bay Arcade Corner.
 * **Genre**: Frogger / River Raid / Timing Lane Jumper
 * **Theme**: Guide a tiny bioluminescent bog hopper across treacherous swamp rivers, navigating rotating spore pads, dodging electric eels, and leaping past predatory vine traps.
 
@@ -70,7 +74,9 @@ graph TD
 ---
 
 ### Cabinet 3: *Spire Gridrunner*
-* **World**: World 3 (Ancient Spires & Upper City — Jax's Neon Bar)
+* **World**: World 3 (Ancient Spires & Upper City)
+* **Exact Room Location**: `spire_exec_lounge_bar` (Title: *"Exec Lounge"*) — glowing behind the velvet curtain in the VIP lounge corner.
+* **Astra Destination**: `astra_common_room` (Title: *"Astra Common Room"*) — Recreation Bay Arcade Corner.
 * **Genre**: Cyberpunk Snake / Lightcycle ICE Matrix
 * **Theme**: Infiltrate the Spire's central mainframe. Guide an overclocked data packet through high-density server grids, eating encryption nodes while avoiding security firewalls and your own expanding data tail.
 
@@ -88,7 +94,9 @@ graph TD
 ---
 
 ### Cabinet 4: *Slag Catcher*
-* **World**: World 4 (The Foundry — Assembly Breakroom)
+* **World**: World 4 (The Foundry)
+* **Exact Room Location**: `foundry_conditioning_observation` (Title: *"Observation Booth"*) — abandoned in the supervisory observation booth above the cooling vats.
+* **Astra Destination**: `astra_common_room` (Title: *"Astra Common Room"*) — Recreation Bay Arcade Corner.
 * **Genre**: Kaboom! / High-Speed Paddle Bucket Catcher
 * **Theme**: Operate an emergency molten slag containment dolly beneath the malfunctioning Foundry crucible. Catch cooling white-hot metal ingots while deflecting volatile plasma bombs into cooling chutes.
 
@@ -106,7 +114,9 @@ graph TD
 ---
 
 ### Cabinet 5: *Orbital Defense 2000*
-* **World**: World 5 (Orbital Void Ring — Ring Concourse Arcade)
+* **World**: World 5 (Orbital Void Ring)
+* **Exact Room Location**: `orbital_customs_lounge` (Title: *"Customs Lounge"*) — positioned by the starview bay window in the passenger concourse.
+* **Astra Destination**: `astra_common_room` (Title: *"Astra Common Room"*) — Recreation Bay Arcade Corner.
 * **Genre**: Fixed Top-Down Wave Shmup (Space Invaders / Galaga)
 * **Theme**: Pilot the legendary starfighter *Astra Mark I* to defend the orbital station against swarms of rogue drone fleets and massive dreadnought flagships.
 
@@ -124,7 +134,9 @@ graph TD
 ---
 
 ### Cabinet 6: *Harmonic Resonance*
-* **World**: World 6 (The Source — Echo Diner Memory Archive)
+* **World**: World 6 (The Source)
+* **Exact Room Location**: `source_memory_fragments` (Title: *"World-Fracture Landing"*) — a surreal, floating pre-war memory manifestation crystallized on the landing platform.
+* **Astra Destination**: `astra_common_room` (Title: *"Astra Common Room"*) — Recreation Bay Arcade Corner.
 * **Genre**: Multi-Tone Simon / Harmonic Rhythm Memory
 * **Theme**: Reconstruct the forgotten melodies of the Source. Watch and listen to harmonic resonance pillars light up in sequence, then reproduce the chords with increasing speed and polyphonic complexity.
 
