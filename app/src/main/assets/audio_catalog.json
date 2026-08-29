@@ -48,7 +48,7 @@
       "loop": true,
       "fade_in_ms": 600,
       "fade_out_ms": 800,
-      "gain": 1,
+      "gain": 1.0,
       "tags": [
         "world_1",
         "combat",
@@ -78,8 +78,8 @@
       "tags": [
         "world_2",
         "explore",
-        "acoustic",
-        "orchestral"
+        "swamp",
+        "ambient"
       ]
     },
     {
@@ -88,12 +88,11 @@
       "loop": true,
       "fade_in_ms": 600,
       "fade_out_ms": 800,
-      "gain": 1,
+      "gain": 1.0,
       "tags": [
         "world_2",
         "combat",
-        "tribal",
-        "orchestral"
+        "tribal"
       ]
     },
     {
@@ -106,8 +105,8 @@
       "tags": [
         "world_3",
         "explore",
-        "jazz",
-        "rock"
+        "cyberpunk",
+        "jazz"
       ]
     },
     {
@@ -116,26 +115,25 @@
       "loop": true,
       "fade_in_ms": 600,
       "fade_out_ms": 800,
-      "gain": 1,
+      "gain": 1.0,
       "tags": [
         "world_3",
         "combat",
-        "funk",
-        "rock"
+        "synthwave"
       ]
     },
     {
       "id": "music_w4_foundry_explore",
       "type": "music",
       "loop": true,
-      "fade_in_ms": 1000,
+      "fade_in_ms": 1200,
       "fade_out_ms": 1000,
       "gain": 0.85,
       "tags": [
         "world_4",
         "explore",
         "industrial",
-        "drone"
+        "foundry"
       ]
     },
     {
@@ -144,26 +142,25 @@
       "loop": true,
       "fade_in_ms": 600,
       "fade_out_ms": 800,
-      "gain": 1,
+      "gain": 1.0,
       "tags": [
         "world_4",
         "combat",
-        "metal",
-        "punk"
+        "metal"
       ]
     },
     {
       "id": "music_w5_void_explore",
       "type": "music",
       "loop": true,
-      "fade_in_ms": 1500,
-      "fade_out_ms": 1500,
+      "fade_in_ms": 1400,
+      "fade_out_ms": 1200,
       "gain": 0.8,
       "tags": [
         "world_5",
         "explore",
-        "piano",
-        "classical"
+        "void",
+        "space"
       ]
     },
     {
@@ -172,26 +169,25 @@
       "loop": true,
       "fade_in_ms": 600,
       "fade_out_ms": 800,
-      "gain": 1,
+      "gain": 1.0,
       "tags": [
         "world_5",
         "combat",
-        "metal",
-        "orchestral"
+        "dnb"
       ]
     },
     {
       "id": "music_w6_source_explore",
       "type": "music",
       "loop": true,
-      "fade_in_ms": 1600,
-      "fade_out_ms": 1600,
+      "fade_in_ms": 1500,
+      "fade_out_ms": 1400,
       "gain": 0.85,
       "tags": [
         "world_6",
         "explore",
-        "choral",
-        "modal"
+        "source",
+        "transcendental"
       ]
     },
     {
@@ -737,6 +733,344 @@
         "great_frontier",
         "vhs",
         "track_10"
+      ]
+    },
+    {
+      "id": "music_astra_common_room",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 1400,
+      "fade_out_ms": 1200,
+      "gain": 0.85,
+      "tags": [
+        "astra",
+        "hub",
+        "lofi",
+        "chill"
+      ]
+    },
+    {
+      "id": "music_astra_bridge",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 1200,
+      "fade_out_ms": 1000,
+      "gain": 0.85,
+      "tags": [
+        "astra",
+        "bridge",
+        "synthwave"
+      ]
+    },
+    {
+      "id": "music_victory_standard",
+      "type": "music",
+      "loop": false,
+      "fade_in_ms": 200,
+      "fade_out_ms": 800,
+      "gain": 0.88,
+      "tags": [
+        "combat",
+        "victory",
+        "fanfare"
+      ]
+    },
+    {
+      "id": "music_game_over",
+      "type": "music",
+      "loop": false,
+      "fade_in_ms": 400,
+      "fade_out_ms": 1000,
+      "gain": 0.82,
+      "tags": [
+        "game_over",
+        "ambient",
+        "somber"
+      ]
+    },
+    {
+      "id": "music_w1_deep_mine",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 1200,
+      "fade_out_ms": 1000,
+      "gain": 0.85,
+      "tags": [
+        "world_1",
+        "explore",
+        "mine",
+        "industrial"
+      ]
+    },
+    {
+      "id": "music_w2_ancient_gateway",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 1400,
+      "fade_out_ms": 1200,
+      "gain": 0.85,
+      "tags": [
+        "world_2",
+        "explore",
+        "relic",
+        "ancient"
+      ]
+    },
+    {
+      "id": "music_w3_upper_city",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 1200,
+      "fade_out_ms": 1000,
+      "gain": 0.85,
+      "tags": [
+        "world_3",
+        "explore",
+        "corporate",
+        "luxury"
+      ]
+    },
+    {
+      "id": "music_w4_power_core",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 1200,
+      "fade_out_ms": 1000,
+      "gain": 0.85,
+      "tags": [
+        "world_4",
+        "explore",
+        "forge",
+        "metal"
+      ]
+    },
+    {
+      "id": "music_w5_security_hub",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 1200,
+      "fade_out_ms": 1000,
+      "gain": 0.8,
+      "tags": [
+        "world_5",
+        "explore",
+        "stealth",
+        "electronica"
+      ]
+    },
+    {
+      "id": "music_w6_the_center",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 1500,
+      "fade_out_ms": 1400,
+      "gain": 0.85,
+      "tags": [
+        "world_6",
+        "explore",
+        "center",
+        "choral"
+      ]
+    },
+    {
+      "id": "music_w1_boss_warden",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 600,
+      "fade_out_ms": 800,
+      "gain": 1.0,
+      "tags": [
+        "world_1",
+        "boss",
+        "metal"
+      ]
+    },
+    {
+      "id": "music_w2_boss_guardian",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 600,
+      "fade_out_ms": 800,
+      "gain": 1.0,
+      "tags": [
+        "world_2",
+        "boss",
+        "orchestral"
+      ]
+    },
+    {
+      "id": "music_w3_boss_phantom",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 600,
+      "fade_out_ms": 800,
+      "gain": 1.0,
+      "tags": [
+        "world_3",
+        "boss",
+        "darkwave"
+      ]
+    },
+    {
+      "id": "music_w4_boss_titan",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 600,
+      "fade_out_ms": 800,
+      "gain": 1.0,
+      "tags": [
+        "world_4",
+        "boss",
+        "metal"
+      ]
+    },
+    {
+      "id": "music_w6_boss_final",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 600,
+      "fade_out_ms": 800,
+      "gain": 1.0,
+      "tags": [
+        "world_6",
+        "boss",
+        "symphonic"
+      ]
+    },
+    {
+      "id": "music_cinematic_prologue",
+      "type": "music",
+      "loop": false,
+      "fade_in_ms": 500,
+      "fade_out_ms": 800,
+      "gain": 0.88,
+      "tags": [
+        "cinematic",
+        "prologue",
+        "orchestral"
+      ]
+    },
+    {
+      "id": "music_cinematic_crash",
+      "type": "music",
+      "loop": false,
+      "fade_in_ms": 300,
+      "fade_out_ms": 800,
+      "gain": 0.9,
+      "tags": [
+        "cinematic",
+        "crash",
+        "ambient"
+      ]
+    },
+    {
+      "id": "music_elaras_song",
+      "type": "music",
+      "loop": false,
+      "fade_in_ms": 800,
+      "fade_out_ms": 1200,
+      "gain": 0.85,
+      "tags": [
+        "tape",
+        "vocal",
+        "acoustic",
+        "lofi"
+      ]
+    },
+    {
+      "id": "music_credits_ending",
+      "type": "music",
+      "loop": false,
+      "fade_in_ms": 800,
+      "fade_out_ms": 1500,
+      "gain": 0.85,
+      "tags": [
+        "credits",
+        "ending",
+        "synthpop"
+      ]
+    },
+    {
+      "id": "music_epilogue",
+      "type": "music",
+      "loop": false,
+      "fade_in_ms": 1000,
+      "fade_out_ms": 1500,
+      "gain": 0.82,
+      "tags": [
+        "epilogue",
+        "ambient",
+        "peaceful"
+      ]
+    },
+    {
+      "id": "music_fishing_ambient",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 1200,
+      "fade_out_ms": 1000,
+      "gain": 0.85,
+      "tags": [
+        "fishing",
+        "minigame",
+        "chill",
+        "acoustic"
+      ]
+    },
+    {
+      "id": "music_arcade_cabinet",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 800,
+      "fade_out_ms": 800,
+      "gain": 0.88,
+      "tags": [
+        "arcade",
+        "chiptune",
+        "retro",
+        "8bit"
+      ]
+    },
+    {
+      "id": "music_tinkering_focus",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 1000,
+      "fade_out_ms": 1000,
+      "gain": 0.85,
+      "tags": [
+        "crafting",
+        "tinkering",
+        "lofi",
+        "study"
+      ]
+    },
+    {
+      "id": "music_cooking_kitchen",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 800,
+      "fade_out_ms": 800,
+      "gain": 0.85,
+      "tags": [
+        "cooking",
+        "minigame",
+        "jazz",
+        "acoustic"
+      ]
+    },
+    {
+      "id": "music_shop_cozy",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 1000,
+      "fade_out_ms": 1000,
+      "gain": 0.85,
+      "tags": [
+        "shop",
+        "market",
+        "world",
+        "lofi"
       ]
     }
   ],

@@ -68,6 +68,7 @@ import com.example.starborn.feature.hub.viewmodel.HubViewModel
 import com.example.starborn.feature.hub.viewmodel.HubViewModelFactory
 import com.example.starborn.data.local.UserSettings
 import com.example.starborn.ui.events.UiEvent
+import com.example.starborn.domain.audio.AudioCueType
 import androidx.compose.runtime.DisposableEffect
 import com.example.starborn.feature.exploration.ui.TransitionMode
 import androidx.compose.ui.draw.scale
@@ -434,6 +435,12 @@ fun NavigationHost(
                     services.sessionStore
                 )
             )
+            DisposableEffect(Unit) {
+                services.audioCuePlayer.execute(
+                    services.audioRouter.commandsForLayerOverride(AudioCueType.MUSIC, cueId = "music_tinkering_focus", loop = true)
+                )
+                onDispose { }
+            }
             TinkeringRoute(
                 viewModel = craftingViewModel,
                 onBack = { navController.popBackStack() },
@@ -482,6 +489,12 @@ fun NavigationHost(
             )
         ) { backStackEntry ->
             val source = backStackEntry.arguments?.getString("source")
+            DisposableEffect(Unit) {
+                services.audioCuePlayer.execute(
+                    services.audioRouter.commandsForLayerOverride(AudioCueType.MUSIC, cueId = "music_cooking_kitchen", loop = true)
+                )
+                onDispose { }
+            }
             CookingScreen(
                 craftingService = services.craftingService,
                 inventoryService = services.inventoryService,
@@ -505,6 +518,12 @@ fun NavigationHost(
             val zoneId = backStackEntry.arguments?.getString("zoneId")
             if (zoneId != null) {
                 val fishingViewModel: FishingViewModel = viewModel(factory = FishingViewModelFactory(services.fishingService, zoneId))
+                DisposableEffect(Unit) {
+                    services.audioCuePlayer.execute(
+                        services.audioRouter.commandsForLayerOverride(AudioCueType.MUSIC, cueId = "music_fishing_ambient", loop = true)
+                    )
+                    onDispose { }
+                }
                 FishingRoute(
                     viewModel = fishingViewModel,
                     onBack = { navController.popBackStack() },
@@ -529,6 +548,12 @@ fun NavigationHost(
         ) { backStackEntry ->
             val cabinetId = backStackEntry.arguments?.getString("cabinetId")?.let(Uri::decode)
             if (cabinetId == ArcadeIds.DEEP_MINE) {
+                DisposableEffect(Unit) {
+                    services.audioCuePlayer.execute(
+                        services.audioRouter.commandsForLayerOverride(AudioCueType.MUSIC, cueId = "music_arcade_cabinet", loop = true)
+                    )
+                    onDispose { }
+                }
                 DeepMineArcadeScreen(
                     arcadeService = services.arcadeService,
                     onBack = { navController.popBackStack() },
@@ -582,6 +607,12 @@ fun NavigationHost(
                 val shopViewModel: ShopViewModel = viewModel(
                     factory = ShopViewModelFactory(services, shopId)
                 )
+                DisposableEffect(Unit) {
+                    services.audioCuePlayer.execute(
+                        services.audioRouter.commandsForLayerOverride(AudioCueType.MUSIC, cueId = "music_shop_cozy", loop = true)
+                    )
+                    onDispose { }
+                }
                 ShopRoute(
                     viewModel = shopViewModel,
                     onBack = { navController.popBackStack() },
