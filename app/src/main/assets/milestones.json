@@ -12,6 +12,12 @@
     "toast": "Astra recreation bay updated: Deep Mine installed"
   },
   {
+    "id": "ms_arcade_deep_mine_install_seen",
+    "name": "A Corner of Our Own",
+    "description": "Saw Ollie's installation of the restored Deep Mine cabinet aboard the Astra.",
+    "toast": "Ollie finishes the Astra's first arcade cabinet"
+  },
+  {
     "id": "ms_arcade_deep_mine_silver",
     "name": "Deep Mine Operator",
     "description": "Reached the silver score tier in Deep Mine Asteroid Drill.",

@@ -81,6 +81,22 @@ class RoomDescriptionResolverTest {
         )
     }
 
+    @Test
+    fun milestoneVariantCanReplaceRoomBackground() {
+        val room = testRoom(
+            variants = listOf(
+                RoomDescriptionVariant(
+                    description = "Arcade installed.",
+                    backgroundImage = "images/test_arcade.png",
+                    requiresMilestones = listOf("arcade_repaired")
+                )
+            )
+        )
+
+        assertEquals("images/test.png", resolveRoomBackground(room, emptyMap(), emptySet()))
+        assertEquals("images/test_arcade.png", resolveRoomBackground(room, emptyMap(), setOf("arcade_repaired")))
+    }
+
     private fun testRoom(
         description: String = "Base text.",
         descriptionDark: String? = null,

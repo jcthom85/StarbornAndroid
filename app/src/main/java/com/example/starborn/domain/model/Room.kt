@@ -43,6 +43,8 @@ data class Room(
 
 data class RoomDescriptionVariant(
     val description: String,
+    @Json(name = "background_image")
+    val backgroundImage: String? = null,
     @Json(name = "requires_state")
     val requiresState: Map<String, Boolean> = emptyMap(),
     @Json(name = "forbidden_state")

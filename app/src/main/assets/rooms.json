@@ -11467,6 +11467,13 @@
     "title": "Astra Common Room",
     "background_image": "images/rooms/astra/common_room.webp",
     "description": "Coffee rings stain the central table. A patched kitchenette faces a couch bolted to the deck, and the shielded relic array occupies one warm corner. This is where the crew stops being a formation and becomes a family.",
+    "description_variants": [
+      {
+        "requires_milestones": ["ms_arcade_cabinet_01_repaired"],
+        "background_image": "images/rooms/astra/common_room_arcade_v1.webp",
+        "description": "Coffee rings stain the central table. Beside the patched kitchenette, the restored Deep Mine cabinet paints the recreation corner amber while its attract tune chirps beneath the ship's hum. This is where the crew stops being a formation and becomes a family."
+      }
+    ],
     "npcs": [],
     "items": [],
     "enemies": [],

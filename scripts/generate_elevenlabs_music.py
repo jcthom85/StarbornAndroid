@@ -565,12 +565,16 @@ def main():
     os.makedirs(RAW_AUDIO_DIR, exist_ok=True)
 
     success_count = 0
-    for t in targets:
-        dest = os.path.join(RAW_AUDIO_DIR, f"{t['id']}.mp3")
-        if os.path.exists(dest) and not args.preview_stems and not args.api_key:
-            print(f"  [EXISTS] {t['id']}.mp3 ({os.path.getsize(dest)} bytes)")
-            success_count += 1
-            continue
+        if os.path.exists(dest):
+            size = os.path.getsize(dest)
+            if size > 100000 and not args.api_key:
+                print(f"  [PRESERVED REAL AUDIO] {t['id']}.mp3 ({size} bytes)")
+                success_count += 1
+                continue
+            elif not args.preview_stems and not args.api_key:
+                print(f"  [EXISTS] {t['id']}.mp3 ({size} bytes)")
+                success_count += 1
+                continue
         if generate_track_elevenlabs(args.api_key, t, dry_run=args.dry_run):
             success_count += 1
         time.sleep(0.1)

@@ -4802,7 +4802,14 @@ class ExplorationViewModel(
             "arcade_discovery" -> handleArcadeDiscovery()
             "arcade" -> {
                 val progress = arcadeService.progress(ArcadeIds.DEEP_MINE)
-                if (progress.installed) emitEvent(ExplorationEvent.OpenArcade(ArcadeIds.DEEP_MINE))
+                if (progress.installed && "ms_arcade_deep_mine_install_seen" !in sessionStore.state.value.completedMilestones) {
+                    sessionStore.setMilestone("ms_arcade_deep_mine_install_seen")
+                    showInspection(
+                        "Ollie rocks back on his heels beside the cabinet, grease across both gloves. " +
+                            "\"Had to shave three centimeters off the coin box. Worth it. Listen to that thing breathe.\" " +
+                            "The amber attract screen rolls over, and for once the common room feels built for staying."
+                    )
+                } else if (progress.installed) emitEvent(ExplorationEvent.OpenArcade(ArcadeIds.DEEP_MINE))
                 else showInspection(action.conditionUnmetMessage ?: "The cabinet is still awaiting restoration.")
             }
             else -> {

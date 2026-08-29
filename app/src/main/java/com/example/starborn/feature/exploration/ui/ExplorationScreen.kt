@@ -493,7 +493,12 @@ fun ExplorationScreen(
         keyboardFocusRequester.requestFocus()
     }
 
-    val backgroundPainter = rememberRoomBackgroundPainter(uiState.currentRoom?.backgroundImage)
+    val resolvedBackgroundPath = resolveRoomBackground(
+        room = uiState.currentRoom,
+        roomState = uiState.roomState,
+        completedMilestones = uiState.completedMilestones
+    )
+    val backgroundPainter = rememberRoomBackgroundPainter(resolvedBackgroundPath)
     val roomTransition = uiState.roomTransition
     val outgoingBackgroundPath = roomTransition?.fromBackgroundImage
     var roomTransitionActive by remember { mutableStateOf(false) }
@@ -6462,6 +6467,22 @@ fun resolveRoomDescription(
             variant.forbiddenMilestones.none { it in completedMilestones }
     }
     return variant?.description ?: room.description
+}
+
+internal fun resolveRoomBackground(
+    room: Room?,
+    roomState: Map<String, Boolean>,
+    completedMilestones: Set<String>
+): String? {
+    room ?: return null
+    val variant = room.descriptionVariants.firstOrNull { variant ->
+        !variant.backgroundImage.isNullOrBlank() &&
+            variant.requiresState.all { (key, expected) -> roomState[key] == expected } &&
+            variant.forbiddenState.none { (key, forbidden) -> roomState[key] == forbidden } &&
+            variant.requiresMilestones.all { it in completedMilestones } &&
+            variant.forbiddenMilestones.none { it in completedMilestones }
+    }
+    return variant?.backgroundImage ?: room.backgroundImage
 }
 
 private fun RoomAction.isInlineDescriptionAction(): Boolean = when (this) {
