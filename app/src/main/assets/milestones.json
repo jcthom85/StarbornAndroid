@@ -1,5 +1,29 @@
 [
   {
+    "id": "ms_arcade_deep_mine_discovered",
+    "name": "A Dead Machine Dreaming",
+    "description": "Recovered the intact logic board from the Pit's forgotten Hyperion cabinet.",
+    "toast": "Arcade project discovered: Deep Mine Asteroid Drill"
+  },
+  {
+    "id": "ms_arcade_cabinet_01_repaired",
+    "name": "Deep Mine Restored",
+    "description": "Restored the first Hyperion cabinet and installed it aboard the Astra.",
+    "toast": "Astra recreation bay updated: Deep Mine installed"
+  },
+  {
+    "id": "ms_arcade_deep_mine_silver",
+    "name": "Deep Mine Operator",
+    "description": "Reached the silver score tier in Deep Mine Asteroid Drill.",
+    "toast": "Arcade reward: Miner's Gyro Mod"
+  },
+  {
+    "id": "ms_arcade_deep_mine_gold",
+    "name": "Chief Driller",
+    "description": "Mastered Deep Mine Asteroid Drill with a gold-tier score.",
+    "toast": "Title earned: Chief Driller"
+  },
+  {
     "id": "ms_talked_to_jed",
     "name": "Jed's Briefing",
     "description": "You listened to Jed outline the plan inside Nova's House.",

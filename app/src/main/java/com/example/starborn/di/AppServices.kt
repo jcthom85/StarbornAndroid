@@ -65,6 +65,7 @@ import com.example.starborn.domain.prompt.UIPromptManager
 import com.example.starborn.domain.tutorial.TutorialRuntimeManager
 import com.example.starborn.domain.tutorial.TutorialScriptRepository
 import com.example.starborn.data.local.UserSettingsStore
+import com.example.starborn.feature.arcade.domain.ArcadeService
 import com.example.starborn.domain.theme.EnvironmentThemeManager
 import com.example.starborn.domain.telemetry.LocalPlaytestTelemetry
 import com.example.starborn.ui.events.UiEventBus
@@ -110,6 +111,7 @@ class AppServices(context: Context) {
 
     val inventoryService = InventoryService(itemRepository).apply { loadItems() }
     val sessionStore = GameSessionStore()
+    val arcadeService = ArcadeService(sessionStore, inventoryService)
     val playtestTelemetry = LocalPlaytestTelemetry(File(appContext.noBackupFilesDir, "playtest")).apply {
         startSession("app_launch")
     }
@@ -917,6 +919,7 @@ class AppServices(context: Context) {
         "node_progression_w2" -> startNewGameAtWorld2NodeProgression()
         "astra_access" -> startNewGameAtAstraAccess()
         "astra_home" -> startNewGameAboardAstra()
+        "arcade_deep_mine" -> startNewGameAtDeepMineArcade()
         else -> if (id.startsWith("hub_")) startNewGameAtDebugHub(id) else false
     }
 
@@ -1149,6 +1152,18 @@ class AppServices(context: Context) {
         sessionStore.setHub("hub_astra")
         sessionStore.setRoom("astra_bridge")
         sessionStore.visitNode("astra_bridge_node")
+        true
+    }.getOrElse { false }
+
+    private fun startNewGameAtDeepMineArcade(): Boolean = runCatching {
+        if (!startNewGameAboardAstra()) return false
+        sessionStore.setMilestone("ms_arcade_deep_mine_discovered")
+        sessionStore.setMilestone("ms_arcade_cabinet_01_repaired")
+        sessionStore.updateArcadeProgress("deep_mine_asteroid_drill") {
+            it.copy(discovered = true, repaired = true, installed = true)
+        }
+        sessionStore.setRoom("astra_common_room")
+        sessionStore.visitNode("astra_common_node")
         true
     }.getOrElse { false }
 

@@ -183,6 +183,23 @@ class GameSessionPersistenceTest {
     }
 
     @Test
+    fun arcadeProgressPersistsWithoutDuplicatingClaims() = runBlocking {
+        val progress = ArcadeCabinetProgress(
+            discovered = true,
+            repaired = true,
+            installed = true,
+            highScore = 31_250,
+            claimedTiers = setOf("BRONZE", "SILVER", "GOLD"),
+            playCount = 12
+        )
+        persistence.writeSlot(1, GameSessionState(arcadeProgress = mapOf("deep_mine_asteroid_drill" to progress)))
+
+        val restored = requireNotNull(persistence.slotInfo(1)?.state)
+
+        assertEquals(progress, restored.arcadeProgress["deep_mine_asteroid_drill"])
+    }
+
+    @Test
     fun quickSaveRoundTrip() = runBlocking {
         val state = GameSessionState(
             worldId = "nova_prime",

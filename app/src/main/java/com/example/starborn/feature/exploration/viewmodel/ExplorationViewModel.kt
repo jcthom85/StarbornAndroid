@@ -101,6 +101,8 @@ import com.example.starborn.domain.theme.EnvironmentThemeManager
 import com.example.starborn.domain.telemetry.NoOpPlaytestTelemetry
 import com.example.starborn.domain.telemetry.PlaytestTelemetry
 import com.example.starborn.feature.fishing.viewmodel.FishingResultPayload
+import com.example.starborn.feature.arcade.domain.ArcadeIds
+import com.example.starborn.feature.arcade.domain.ArcadeService
 import com.example.starborn.navigation.CombatResultPayload
 import com.example.starborn.feature.mainmenu.SaveSlotSummary
 import java.time.Instant
@@ -254,6 +256,7 @@ class ExplorationViewModel(
     private val telemetry: PlaytestTelemetry = NoOpPlaytestTelemetry,
     private val dialogueTriggerBinder: (((String) -> Boolean)?) -> Unit = {}
 ) : ViewModel() {
+    private val arcadeService = ArcadeService(sessionStore, inventoryService)
 
     private val eventsById: Map<String, GameEvent> = eventDefinitions.associateBy { it.id }
     // The exploration destination is composed before its queued cinematic is promoted to UI state.
@@ -3957,6 +3960,10 @@ class ExplorationViewModel(
             )
         )
         triggerPlayerAction("tinkering_craft", normalized)
+        if (normalized.equals(ArcadeIds.REPAIRED_CORE, ignoreCase = true) && arcadeService.completeDeepMineRepair()) {
+            postStatus("The Hyperion cabinet wakes with an amber pulse. Ollie whistles: transport to the Astra is handled.")
+            updateActionHints(_uiState.value.currentRoom)
+        }
     }
 
     private fun enterEventEncounter(encounterId: String?, roomId: String?) {
@@ -4792,6 +4799,12 @@ class ExplorationViewModel(
     private fun handleGenericAction(action: GenericAction) {
         when (action.type.lowercase(Locale.getDefault())) {
             "fishing" -> handleFishingAction(action)
+            "arcade_discovery" -> handleArcadeDiscovery()
+            "arcade" -> {
+                val progress = arcadeService.progress(ArcadeIds.DEEP_MINE)
+                if (progress.installed) emitEvent(ExplorationEvent.OpenArcade(ArcadeIds.DEEP_MINE))
+                else showInspection(action.conditionUnmetMessage ?: "The cabinet is still awaiting restoration.")
+            }
             else -> {
                 val required = collectRequiredMilestones(action.requiresMilestone, action.requiresMilestones)
                 val completed = sessionStore.state.value.completedMilestones
@@ -4831,6 +4844,18 @@ class ExplorationViewModel(
                     triggerPlayerAction(eventId)
                 }
             }
+        }
+    }
+
+    private fun handleArcadeDiscovery() {
+        if (arcadeService.discoverDeepMine()) {
+            showInspection(
+                "Behind the cracked Hyperion marquee, one amber diagnostic still blinks. " +
+                    "You ease out an intact logic board and copy the cabinet repair schematic to your field kit."
+            )
+            emitEvent(ExplorationEvent.ItemGranted("Hyperion Logic Board", 1))
+        } else {
+            showInspection("The stripped Hyperion cabinet waits for the logic board in your field kit to give it a second life.")
         }
     }
 
@@ -5608,6 +5633,7 @@ sealed interface ExplorationEvent {
     data class OpenCooking(val sourceId: String?) : ExplorationEvent
     data class OpenFirstAid(val stationId: String?) : ExplorationEvent
     data class OpenFishing(val zoneId: String?) : ExplorationEvent
+    data class OpenArcade(val cabinetId: String) : ExplorationEvent
     data class OpenShop(val shopId: String) : ExplorationEvent
     data class CombatOutcome(
         val outcome: CombatResultPayload.Outcome,

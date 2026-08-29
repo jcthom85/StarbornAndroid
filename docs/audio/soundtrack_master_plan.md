@@ -161,3 +161,43 @@ The complete soundtrack requires **32 bespoke musical tracks**:
 * [ ] `music_elaras_song`: *Elara's Complete Song (Cassette Tape 08)*
 * [ ] `music_credits_ending`: *The Great Frontier (End Credits Suite)*
 * [ ] `music_epilogue`: *A New Orbit (Post-Game Reflection)*
+
+### Category E: Mini-Games, Crafting & Activity Screens (5 Tracks)
+* [ ] `music_fishing_ambient`: *Tideglass Angler (Relaxing Multi-Biome Fishing)*
+* [ ] `music_arcade_cabinet`: *Hyperion 1986 (Arcade Cabinet Gameplay & Attract)*
+* [ ] `music_tinkering_focus`: *Workstation Flow (Tinkering & Mod Assembly)*
+* [ ] `music_cooking_kitchen`: *Mess Hall Stew (Cooking Mini-Game)*
+* [ ] `music_shop_cozy`: *Wandering Trader (Night Market & Frontier Shops)*
+
+---
+
+## 6. Looping Engineering Standards
+
+### Seamless vs. One-Shot Classification:
+* **Seamless Loops (`loop: true`)**:
+  * **Scope**: All Exploration Suites, Combat Battles, Bosses, Ship Hub, Menu, and Mini-Games.
+  * **Fade In**: `1000ms – 1500ms`
+  * **Fade Out**: `800ms – 1200ms`
+  * **Looping Rule**: Tracks must end on a harmonic resolution that connects seamlessly back to measure 1 without click, pop, or volume dip. The last measure should allow reverb tails to ring naturally into the head.
+* **One-Shot Tracks (`loop: false`)**:
+  * **Scope**: Victory Fanfares, Game Over stings, Cinematics, Epilogue, and Great Frontier Tapes.
+  * **Fade Out**: Let natural audio decay finish (`fade_out_ms: 0` or natural release).
+
+---
+
+## 7. Master Audio Catalog Schema Reference
+
+Every track in `audio_catalog.json` must adhere to this structure:
+
+```json
+{
+  "id": "music_w1_homestead_explore",
+  "type": "music",
+  "loop": true,
+  "fade_in_ms": 1200,
+  "fade_out_ms": 1000,
+  "gain": 0.85,
+  "tags": ["world_1", "explore", "blues", "acoustic"]
+}
+```
+

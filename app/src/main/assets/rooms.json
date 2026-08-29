@@ -66,6 +66,12 @@
         "name": "monitor",
         "type": "generic",
         "condition_unmet_message": "'YOUR SHIFT IS YOUR CONTRIBUTION.' The screen is spider-webbed with cracks."
+      },
+      {
+        "name": "broken Hyperion cabinet",
+        "type": "arcade_discovery",
+        "hide_when_milestone": "ms_arcade_cabinet_01_repaired",
+        "condition_unmet_message": "A dead pre-Dominion arcade cabinet leans beneath a miner's coat. One amber diagnostic blinks behind the cracked glass."
       }
     ],
     "npc_presence": [
@@ -11497,6 +11503,12 @@
         "type": "generic",
         "action_event": "astra_open_tape_deck",
         "condition_unmet_message": "A vintage magnetic tape player with amber stereo meters and CRT display."
+      },
+      {
+        "name": "Deep Mine Asteroid Drill",
+        "type": "arcade",
+        "show_when_milestone": "ms_arcade_cabinet_01_repaired",
+        "condition_unmet_message": "The restored Hyperion cabinet warms the recreation corner with an amber attract screen."
       }
     ],
     "npc_presence": [

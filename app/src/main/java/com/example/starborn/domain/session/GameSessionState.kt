@@ -48,7 +48,17 @@ data class GameSessionState(
     val completedNodes: Set<String> = emptySet(),
     val astraReturnWorldId: String? = null,
     val astraReturnHubId: String? = null,
-    val astraReturnRoomId: String? = null
+    val astraReturnRoomId: String? = null,
+    val arcadeProgress: Map<String, ArcadeCabinetProgress> = emptyMap()
+)
+
+data class ArcadeCabinetProgress(
+    val discovered: Boolean = false,
+    val repaired: Boolean = false,
+    val installed: Boolean = false,
+    val highScore: Int = 0,
+    val claimedTiers: Set<String> = emptySet(),
+    val playCount: Int = 0
 )
 
 fun GameSessionState.fingerprint(): String {
@@ -111,6 +121,17 @@ fun GameSessionState.fingerprint(): String {
     builder.append("ASTRA_RETURN_WORLD:").append(astraReturnWorldId.orEmpty()).append('|')
     builder.append("ASTRA_RETURN_HUB:").append(astraReturnHubId.orEmpty()).append('|')
     builder.append("ASTRA_RETURN_ROOM:").append(astraReturnRoomId.orEmpty()).append('|')
+    arcadeProgress.entries.sortedBy { it.key }.forEach { (id, progress) ->
+        builder.append("ARCADE:").append(id.lowercase(normalizedLocale)).append('=')
+            .append(if (progress.discovered) '1' else '0')
+            .append(if (progress.repaired) '1' else '0')
+            .append(if (progress.installed) '1' else '0').append(':')
+            .append(progress.highScore).append(':').append(progress.playCount).append(':')
+        progress.claimedTiers.map { it.lowercase(normalizedLocale) }.sorted().forEach { tier ->
+            builder.append(tier).append(',')
+        }
+        builder.append('|')
+    }
     completedEvents.map { it.lowercase(normalizedLocale) }.sorted().forEach {
         builder.append("EVT:").append(it).append('|')
     }

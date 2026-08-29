@@ -10,6 +10,7 @@ import com.example.starborn.datastore.EnemyPartyStateProto
 import com.example.starborn.datastore.InventoryEntryProto
 import com.example.starborn.datastore.QuestTaskListProto
 import com.example.starborn.datastore.RoomStateProto
+import com.example.starborn.datastore.ArcadeProgressProto
 import com.example.starborn.domain.inventory.GearRules
 import com.example.starborn.domain.inventory.ItemCatalog
 import com.example.starborn.domain.movement.EnemyPartyRuntimeState
@@ -260,6 +261,16 @@ private fun GameSessionProto.toState(): GameSessionState = GameSessionState(
     astraReturnWorldId = astraReturnWorldId.takeIf { it.isNotBlank() },
     astraReturnHubId = astraReturnHubId.takeIf { it.isNotBlank() },
     astraReturnRoomId = astraReturnRoomId.takeIf { it.isNotBlank() },
+    arcadeProgress = arcadeProgressMap.mapValues { (_, progress) ->
+        ArcadeCabinetProgress(
+            discovered = progress.discovered,
+            repaired = progress.repaired,
+            installed = progress.installed,
+            highScore = progress.highScore.coerceAtLeast(0),
+            claimedTiers = progress.claimedTiersList.filter { it.isNotBlank() }.toSet(),
+            playCount = progress.playCount.coerceAtLeast(0)
+        )
+    },
     roomStates = roomStatesMap
         .filterKeys { it.isNotBlank() }
         .mapValues { (_, stateProto) ->
@@ -338,6 +349,22 @@ private fun GameSessionState.toProto(savedAt: Long = System.currentTimeMillis())
     astraReturnWorldId = this@toProto.astraReturnWorldId.orEmpty()
     astraReturnHubId = this@toProto.astraReturnHubId.orEmpty()
     astraReturnRoomId = this@toProto.astraReturnRoomId.orEmpty()
+    clearArcadeProgress()
+    this@toProto.arcadeProgress.forEach { (cabinetId, progress) ->
+        if (cabinetId.isNotBlank()) {
+            putArcadeProgress(
+                cabinetId,
+                ArcadeProgressProto.newBuilder()
+                    .setDiscovered(progress.discovered)
+                    .setRepaired(progress.repaired)
+                    .setInstalled(progress.installed)
+                    .setHighScore(progress.highScore.coerceAtLeast(0))
+                    .addAllClaimedTiers(progress.claimedTiers.filter { it.isNotBlank() })
+                    .setPlayCount(progress.playCount.coerceAtLeast(0))
+                    .build()
+            )
+        }
+    }
     clearRoomStates()
     this@toProto.roomStates.forEach { (roomId, states) ->
         val normalizedRoom = roomId.trim()

@@ -238,6 +238,14 @@ class GameSessionStore {
         }
     }
 
+    fun updateArcadeProgress(cabinetId: String, transform: (ArcadeCabinetProgress) -> ArcadeCabinetProgress) {
+        val id = cabinetId.trim().lowercase(Locale.US).takeIf { it.isNotBlank() } ?: return
+        _state.update { state ->
+            val current = state.arcadeProgress[id] ?: ArcadeCabinetProgress()
+            state.copy(arcadeProgress = state.arcadeProgress + (id to transform(current)))
+        }
+    }
+
     fun unlockExit(roomId: String?, direction: String?) {
         val key = buildExitKey(roomId, direction) ?: return
         _state.update { it.copy(unlockedExits = it.unlockedExits + key) }

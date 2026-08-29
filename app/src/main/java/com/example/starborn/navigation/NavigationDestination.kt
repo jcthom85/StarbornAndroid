@@ -27,6 +27,9 @@ sealed class NavigationDestination(val route: String) {
             if (zoneId.isNullOrBlank()) "fishing"
             else "fishing?zoneId=${Uri.encode(zoneId)}"
     }
+    data object Arcade : NavigationDestination("arcade/{cabinetId}") {
+        fun create(cabinetId: String): String = "arcade/${Uri.encode(cabinetId)}"
+    }
     data object Shop : NavigationDestination("shop/{shopId}") {
         fun create(shopId: String): String {
             val payload = Uri.encode(shopId)

@@ -48,11 +48,21 @@ message GameSessionProto {
   string astra_return_world_id = 47;
   string astra_return_hub_id = 48;
   string astra_return_room_id = 49;
+  map<string, ArcadeProgressProto> arcade_progress = 50;
 
   reserved 19;
   reserved 28, 29, 30, 31;
   reserved "party_member_rp";
   reserved "resonance", "resonance_min", "resonance_max", "resonance_start_base";
+}
+
+message ArcadeProgressProto {
+  bool discovered = 1;
+  bool repaired = 2;
+  bool installed = 3;
+  int32 high_score = 4;
+  repeated string claimed_tiers = 5;
+  int32 play_count = 6;
 }
 
 message EnemyPartyStateProto {

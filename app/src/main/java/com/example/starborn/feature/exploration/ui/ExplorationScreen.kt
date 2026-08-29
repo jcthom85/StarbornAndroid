@@ -88,6 +88,7 @@ import androidx.compose.material.icons.filled.Flag
 import androidx.compose.material.icons.outlined.School
 import androidx.compose.material.icons.rounded.AutoAwesome
 import androidx.compose.material.icons.rounded.Hotel
+import androidx.compose.material.icons.rounded.SportsEsports
 import androidx.compose.material.icons.outlined.RadioButtonUnchecked
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -317,6 +318,7 @@ fun ExplorationScreen(
     onOpenFieldKit: () -> Unit = {},
     onOpenFirstAid: (String?) -> Unit = {},
     onOpenFishing: (String?) -> Unit = {},
+    onOpenArcade: (String) -> Unit = {},
     onOpenShop: (String) -> Unit = {},
     onReturnToHub: () -> Unit = {},
     onReturnToTitle: () -> Unit = {},
@@ -425,6 +427,7 @@ fun ExplorationScreen(
                 is ExplorationEvent.OpenCooking -> onOpenCooking(event.sourceId)
                 is ExplorationEvent.OpenFirstAid -> onOpenFirstAid(event.stationId)
                 is ExplorationEvent.OpenFishing -> onOpenFishing(event.zoneId)
+                is ExplorationEvent.OpenArcade -> onOpenArcade(event.cabinetId)
                 is ExplorationEvent.OpenShop -> onOpenShop(event.shopId)
                 is ExplorationEvent.CombatOutcome -> viewModel.showStatusMessage(event.message)
                 is ExplorationEvent.AudioCommands -> audioCuePlayer.execute(event.commands)
@@ -855,7 +858,16 @@ fun ExplorationScreen(
                     }
                     is GenericAction -> {
                         val type = action.type.lowercase(Locale.getDefault())
-                        if (type.contains("fish")) {
+                        if (type.startsWith("arcade")) {
+                            val key = "arcade:${action.name}"
+                            if (unique.add(key)) {
+                                items += QuickMenuAction(
+                                    imageVector = Icons.Rounded.SportsEsports,
+                                    label = action.name.toActionTitleCase(),
+                                    roomAction = action
+                                )
+                            }
+                        } else if (type.contains("fish")) {
                             val zone = action.zoneId ?: currentRoom?.id.orEmpty()
                             val key = "fish:$zone"
                             if (unique.add(key)) {
@@ -6458,7 +6470,8 @@ private fun RoomAction.isInlineDescriptionAction(): Boolean = when (this) {
     is FirstAidAction,
     is RestStopAction -> false
     is GenericAction -> !type.equals("fish", ignoreCase = true) &&
-        !type.equals("fishing", ignoreCase = true)
+        !type.equals("fishing", ignoreCase = true) &&
+        !type.startsWith("arcade", ignoreCase = true)
     else -> true
 }
 

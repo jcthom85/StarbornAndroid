@@ -38,6 +38,9 @@ import com.example.starborn.navigation.NavigationDestination.FirstAid
 import com.example.starborn.navigation.NavigationDestination.Shop
 import com.example.starborn.navigation.NavigationDestination.Fishing
 import com.example.starborn.navigation.NavigationDestination.Cooking
+import com.example.starborn.navigation.NavigationDestination.Arcade
+import com.example.starborn.feature.arcade.ui.DeepMineArcadeScreen
+import com.example.starborn.feature.arcade.domain.ArcadeIds
 import com.example.starborn.feature.crafting.ui.CookingScreen
 import com.example.starborn.di.AppServices
 import androidx.compose.ui.platform.LocalContext
@@ -361,6 +364,7 @@ fun NavigationHost(
                     },
                     onOpenFirstAid = { navController.navigate(FirstAid.route) },
                     onOpenFishing = { zoneId -> navController.navigate(Fishing.create(zoneId)) },
+                    onOpenArcade = { cabinetId -> navController.navigate(Arcade.create(cabinetId)) },
                     onOpenShop = { shopId ->
                         navController.navigate(Shop.create(shopId))
                     },
@@ -517,6 +521,23 @@ fun NavigationHost(
                 )
             } else {
                 navController.popBackStack()
+            }
+        }
+        composable(
+            route = Arcade.route,
+            arguments = listOf(navArgument("cabinetId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val cabinetId = backStackEntry.arguments?.getString("cabinetId")?.let(Uri::decode)
+            if (cabinetId == ArcadeIds.DEEP_MINE) {
+                DeepMineArcadeScreen(
+                    arcadeService = services.arcadeService,
+                    onBack = { navController.popBackStack() },
+                    largeTouchTargets = userSettings.largeTouchTargets,
+                    reducedFlashes = userSettings.disableFlashes,
+                    onPlayCue = { cue -> services.audioCuePlayer.execute(services.audioRouter.commandsForUi(cue)) }
+                )
+            } else {
+                LaunchedEffect(cabinetId) { navController.popBackStack() }
             }
         }
         composable(

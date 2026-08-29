@@ -381,3 +381,58 @@ To achieve the signature **Starborn** sound across all generated tracks, every p
   Texture: Pristine peace, soft cassette flutter, meditative calm.
   Mood: Calm after the adventure, peaceful future, lasting companionship.
   ```
+
+---
+
+### Category E: Mini-Games, Crafting & Activity Screens
+
+#### Track 33: `music_fishing_ambient` (*Tideglass Angler - Relaxing Fishing*)
+* **Prompt**:
+  ```
+  Genre: Relaxing Acoustic Water Folk & Lofi Chill.
+  BPM: 72. Key: C Major.
+  Instrumentation: Fingerstyle acoustic nylon guitar, gentle wooden kalimba chimes, warm bass, atmospheric water ripples, soft ambient wind chime pad.
+  Texture: Sunny, serene, peaceful lake breeze, seamless loop.
+  Mood: Meditative, stress-free, peaceful fishing on the water.
+  ```
+
+#### Track 34: `music_arcade_cabinet` (*Hyperion 1986 - Arcade Cabinet Theme*)
+* **Prompt**:
+  ```
+  Genre: 1980s Chiptune & Upbeat FM Synth Arcade Theme.
+  BPM: 130. Key: F Major.
+  Instrumentation: Bouncy 8-bit square-wave lead melody, punchy FM slap bass, 16-bit arcade snare and hi-hats, playful coin-op arpeggios.
+  Texture: Authentic retro coin-op CRT speaker tone, high energy, seamless loop.
+  Mood: Nostalgic, exciting, arcade high-score rush, retro fun.
+  ```
+
+#### Track 35: `music_tinkering_focus` (*Workstation Flow - Tinkering & Modding*)
+* **Prompt**:
+  ```
+  Genre: Cozy Mechanical Downtempo & Lofi Study Beats.
+  BPM: 80. Key: G Major.
+  Instrumentation: Mellow electric piano chords, soft metallic clinks used as rhythm, muted bass groove, subtle tape delay guitar harmonics.
+  Texture: Intimate workbench ambiance, warm analog pre-amp, seamless loop.
+  Mood: Focused, satisfying, inventive, cozy tinkering at the bench.
+  ```
+
+#### Track 36: `music_cooking_kitchen` (*Mess Hall Stew - Cooking Mini-Game*)
+* **Prompt**:
+  ```
+  Genre: Playful Acoustic Kitchen Swing & Django Jazz.
+  BPM: 110. Key: Bb Major.
+  Instrumentation: Upbeat gypsy jazz acoustic guitar, playful pizzicato strings, wooden spoon clacks, bouncy upright bass, bright accordion accents.
+  Texture: Cheerful kitchen sizzle, warm acoustic room, seamless loop.
+  Mood: Fun, culinary rhythm, appetizing, lighthearted.
+  ```
+
+#### Track 37: `music_shop_cozy` (*Wandering Trader - Market & Shops*)
+* **Prompt**:
+  ```
+  Genre: Exotic Frontier Trade Groove & World Lofi.
+  BPM: 88. Key: D Minor.
+  Instrumentation: Middle-Eastern inspired oud or acoustic lute, gentle hand drums, warm Fender Rhodes chords, intriguing synth flute melody.
+  Texture: Dusty marketplace vibe, cozy merchant chatter texture, seamless loop.
+  Mood: Curious, welcoming, exotic wares, bargaining for rare gear.
+  ```
+

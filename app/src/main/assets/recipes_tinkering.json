@@ -1,5 +1,17 @@
 [
   {
+    "id": "repair_deep_mine_cabinet",
+    "name": "Restore Deep Mine Cabinet",
+    "category": "repair",
+    "method": "repair",
+    "base": "hyperion_logic_board",
+    "components": ["scrap_metal", "wiring_bundle"],
+    "ingredients": { "hyperion_logic_board": 1, "scrap_metal": 2, "wiring_bundle": 1 },
+    "result": "deep_mine_cabinet_core",
+    "description": "Re-seat the Hyperion score bus, replace its corroded traces, and bring a lost piece of the Pit back to life.",
+    "success_message": "The board wakes in warm amber bands. DEEP MINE ASTEROID DRILL scrolls across its tiny diagnostic display."
+  },
+  {
     "id": "mod_power_lens_1",
     "name": "Power Lens Mk. I",
     "category": "gear",

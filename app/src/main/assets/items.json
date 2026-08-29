@@ -1,5 +1,49 @@
 [
   {
+    "id": "hyperion_logic_board",
+    "name": "Hyperion Logic Board",
+    "description": "The intact amber logic board from a pre-Dominion arcade cabinet. Its hand-soldered score bus still remembers thousands of vanished lunch breaks.",
+    "type": "quest",
+    "value": 0,
+    "rarity": "rare",
+    "unsellable": true
+  },
+  {
+    "id": "deep_mine_cabinet_core",
+    "name": "Restored Deep Mine Cabinet Core",
+    "description": "A repaired Hyperion control core ready for Ollie to install aboard the Astra.",
+    "type": "quest",
+    "value": 0,
+    "rarity": "rare",
+    "unsellable": true
+  },
+  {
+    "id": "miner_gyro_mod",
+    "name": "Miner's Gyro Mod",
+    "description": "A cabinet-grade stabilization loop adapted for field gear. It rewards calm hands under pressure.",
+    "type": "accessory",
+    "value": 500,
+    "rarity": "rare",
+    "unsellable": true,
+    "equipment": {
+      "slot": "accessory",
+      "stat_mods": { "accuracy": 4, "foc": 1 }
+    }
+  },
+  {
+    "id": "drill_bit_mod",
+    "name": "Champion Drill Bit",
+    "description": "A miniature tungsten drill from the restored cabinet, reforged as an armor-breaking field accessory.",
+    "type": "accessory",
+    "value": 900,
+    "rarity": "epic",
+    "unsellable": true,
+    "equipment": {
+      "slot": "accessory",
+      "stat_mods": { "str": 2, "accuracy": 2 }
+    }
+  },
+  {
     "id": "nova_laser_blaster",
     "name": "Laser Blaster",
     "description": "A crisp beam emitter built for precision takedowns.",
