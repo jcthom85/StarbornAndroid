@@ -216,14 +216,14 @@ TRACK_REGISTRY = [
     # Category C: Combat & Boss Battles
     {
         "id": "music_w1_combat",
-        "title": "Mining Drill Skirmish",
+        "title": "Homestead Scrap Skirmish",
         "category": "combat",
         "loop": True,
         "fade_in_ms": 600,
         "fade_out_ms": 800,
         "gain": 1.0,
-        "tags": ["world_1", "combat", "rock"],
-        "prompt": "Fast Industrial Blues-Rock Battle Theme. BPM: 132. Key: E Minor. Driving rock drums, gritty overdrive bass guitar, overdriven blues slide guitar riffs, clanging metal percussion, fast Juno synth arpeggios. Punchy, urgent, dusty action, live-band feel. Scrappy, energetic, fast tactical combat."
+        "tags": ["world_1", "combat", "rock", "southern"],
+        "prompt": "A high-octane southern hard rock and heavy blues-rock groove at 140 BPM in E Pentatonic, featuring chunky overdriven electric guitar riffs, swaggering blues-rock slide guitar hooks, punchy driving four-on-the-floor rock drums with crisp open hi-hats and snare cracks, fat overdriven P-bass groove, southern rock attitude, catchy twin guitar harmonies, and raw energetic live-band production. Pure high-speed southern rock adrenaline with a dusty junkyard brawl vibe."
     },
     {
         "id": "music_w1_boss_warden",

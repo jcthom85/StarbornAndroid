@@ -46,6 +46,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.example.starborn.domain.prompt.TutorialPrompt
+import com.example.starborn.domain.tutorial.TutorialEntry
 import com.example.starborn.feature.crafting.TinkeringTutorialStep
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -110,9 +112,40 @@ fun TinkeringRoute(
     val promptState by promptManager.state.collectAsState()
     var announcement by remember { mutableStateOf<EventAnnouncementUi?>(null) }
     val accentColor = themeColor(theme?.accent, Color(0xFFF5B437))
+    val shownTutorialSteps = remember { mutableSetOf<TinkeringTutorialStep>() }
 
     LaunchedEffect(initialFilter) {
         viewModel.setInitialFilter(initialFilter)
+    }
+
+    LaunchedEffect(uiState.isTutorialActive, uiState.tutorialStep) {
+        if (uiState.isTutorialActive) {
+            val step = uiState.tutorialStep
+            if (step != null && !shownTutorialSteps.contains(step)) {
+                shownTutorialSteps.add(step)
+                val entry = when (step) {
+                    TinkeringTutorialStep.SLOT_BASE -> TutorialEntry(
+                        key = "tut_tinker_base",
+                        context = "Workbench",
+                        message = "Tinkering lets you assemble, repair, and modify gear. Tap the [Base] slot to insert the broken Cryo-Inductor."
+                    )
+                    TinkeringTutorialStep.SLOT_COMPONENT -> TutorialEntry(
+                        key = "tut_tinker_component",
+                        context = "Workbench",
+                        message = "Now tap [Part A] to add Scrap Metal to rebuild the cooling coils."
+                    )
+                    TinkeringTutorialStep.SYNTHESIZE -> TutorialEntry(
+                        key = "tut_tinker_synth",
+                        context = "Workbench",
+                        message = "Schematic complete! Tap [Craft] to calibrate the repaired Cryo-Inductor."
+                    )
+                    TinkeringTutorialStep.COMPLETE -> null
+                }
+                if (entry != null) {
+                    promptManager.enqueue(TutorialPrompt(entry))
+                }
+            }
+        }
     }
 
     LaunchedEffect(Unit) {
@@ -218,7 +251,6 @@ private fun TinkeringScreen(
     }
     var pickerTarget by remember { mutableStateOf<PickerTarget?>(null) }
     var scrapSelection by remember { mutableStateOf<String?>(null) }
-    var showTutorialDialog by remember(state.isTutorialActive) { mutableStateOf(state.isTutorialActive) }
     val fieldKitMode = source?.trim()?.equals("field_kit", ignoreCase = true) == true
     var selectedSection by remember(source) {
         mutableStateOf(if (fieldKitMode) TinkeringSection.Schematics else TinkeringSection.Tinker)
@@ -276,8 +308,7 @@ private fun TinkeringScreen(
                             onClearBench = onClearBench,
                             onSelectMain = { pickerTarget = PickerTarget.Main },
                             onSelectComponent1 = { pickerTarget = PickerTarget.Component1 },
-                            onSelectComponent2 = { pickerTarget = PickerTarget.Component2 },
-                            onOpenTutorialGuide = { showTutorialDialog = true }
+                            onSelectComponent2 = { pickerTarget = PickerTarget.Component2 }
                         )
                         TinkeringSection.Schematics -> SchematicsSection(
                             state = state,
@@ -305,14 +336,6 @@ private fun TinkeringScreen(
                 }
             }
         }
-    }
-
-    if (showTutorialDialog) {
-        TinkeringTutorialDialog(
-            onDismiss = { showTutorialDialog = false },
-            colors = colors,
-            highContrastMode = highContrastMode
-        )
     }
 
     pickerTarget?.let { target ->
@@ -423,8 +446,7 @@ private fun TinkerSection(
     onClearBench: () -> Unit,
     onSelectMain: () -> Unit,
     onSelectComponent1: () -> Unit,
-    onSelectComponent2: () -> Unit,
-    onOpenTutorialGuide: () -> Unit
+    onSelectComponent2: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -432,13 +454,6 @@ private fun TinkerSection(
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        if (state.isTutorialActive && state.tutorialStep != null) {
-            TutorialInstructionBanner(
-                step = state.tutorialStep,
-                colors = colors,
-                onOpenGuide = onOpenTutorialGuide
-            )
-        }
         TinkeringBenchCard(
             bench = state.bench,
             colors = colors,
@@ -1041,201 +1056,6 @@ private fun RowScope.SlotTile(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
-        }
-    }
-}
-
-@Composable
-private fun TinkeringTutorialDialog(
-    onDismiss: () -> Unit,
-    colors: TinkeringColors,
-    highContrastMode: Boolean
-) {
-    Dialog(onDismissRequest = onDismiss) {
-        Surface(
-            modifier = Modifier
-                .fillMaxWidth(0.96f)
-                .wrapContentHeight(),
-            shape = RoundedCornerShape(20.dp),
-            color = if (highContrastMode) Color(0xFF0C1520) else Color(0xFF101724),
-            border = BorderStroke(1.5.dp, colors.accent.copy(alpha = 0.8f))
-        ) {
-            Column(
-                modifier = Modifier
-                    .padding(20.dp)
-                    .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(14.dp)
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    Text("🔧", fontSize = 24.sp)
-                    Column {
-                        Text(
-                            text = "WORKBENCH GUIDE",
-                            style = MaterialTheme.typography.titleMedium,
-                            color = colors.accent,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Text(
-                            text = "Assembly, modifications, and repairs",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = colors.textSecondary
-                        )
-                    }
-                }
-
-                HorizontalDivider(color = colors.border.copy(alpha = 0.3f))
-
-                TutorialStepCard(
-                    stepNumber = "1",
-                    title = "Base Chassis",
-                    description = "Slot the primary equipment, broken device, or weapon frame into the Base slot (e.g. Cryo-Inductor).",
-                    colors = colors
-                )
-
-                TutorialStepCard(
-                    stepNumber = "2",
-                    title = "Component Parts",
-                    description = "Add required materials, scrap metal, or modifiers into Part A & Part B sockets.",
-                    colors = colors
-                )
-
-                TutorialStepCard(
-                    stepNumber = "3",
-                    title = "Synthesize & Calibrate",
-                    description = "When parts match a valid schematic, tap Craft to calibrate the item with 100% stability.",
-                    colors = colors
-                )
-
-                Button(
-                    onClick = onDismiss,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(48.dp),
-                    shape = RoundedCornerShape(12.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = colors.accent,
-                        contentColor = Color.Black
-                    )
-                ) {
-                    Text(
-                        text = "Got It — Start Tinkering",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 15.sp
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun TutorialStepCard(
-    stepNumber: String,
-    title: String,
-    description: String,
-    colors: TinkeringColors
-) {
-    Surface(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
-        color = colors.card.copy(alpha = 0.9f),
-        border = BorderStroke(1.dp, colors.border.copy(alpha = 0.3f))
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalAlignment = Alignment.Top
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(28.dp)
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(colors.accent.copy(alpha = 0.2f)),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = stepNumber,
-                    style = MaterialTheme.typography.labelLarge,
-                    color = colors.accent,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-            Column(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(2.dp)
-            ) {
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.titleSmall,
-                    color = colors.textPrimary,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = description,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = colors.textSecondary
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun TutorialInstructionBanner(
-    step: TinkeringTutorialStep,
-    colors: TinkeringColors,
-    onOpenGuide: () -> Unit
-) {
-    val instruction = when (step) {
-        TinkeringTutorialStep.SLOT_BASE -> "Tap the [Base] slot and select the broken Cryo-Inductor."
-        TinkeringTutorialStep.SLOT_COMPONENT -> "Tap [Part A] and add Scrap Metal to reinforce the cold loop."
-        TinkeringTutorialStep.SYNTHESIZE -> "Schematic complete! Tap [Craft] to calibrate the Cryo-Inductor."
-        TinkeringTutorialStep.COMPLETE -> "Cryo-Inductor repaired! Return to Jed to report your progress."
-    }
-
-    Surface(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(14.dp),
-        color = colors.accent.copy(alpha = 0.15f),
-        border = BorderStroke(1.5.dp, colors.accent.copy(alpha = 0.7f))
-    ) {
-        Row(
-            modifier = Modifier
-                .padding(horizontal = 14.dp, vertical = 10.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(10.dp)
-        ) {
-            Text("💡", fontSize = 20.sp)
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = "TUTORIAL: REPAIR CRYO-INDUCTOR",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = colors.accent,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = instruction,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color.White,
-                    fontWeight = FontWeight.SemiBold
-                )
-            }
-            IconButton(
-                onClick = onOpenGuide,
-                modifier = Modifier.size(32.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Info,
-                    contentDescription = "Help Guide",
-                    tint = colors.accent
-                )
-            }
         }
     }
 }
