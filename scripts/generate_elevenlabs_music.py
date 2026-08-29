@@ -357,7 +357,7 @@ TRACK_REGISTRY = [
         "fade_out_ms": 1200,
         "gain": 0.85,
         "tags": ["tape", "vocal", "acoustic", "lofi"],
-        "prompt": "80s Vintage Lofi Folk-Pop Cassette Track with Soft Female Vocals. BPM: 86. Key: F# Major. Fingerpicked acoustic guitar, delicate music box celesta, warm chorus bass, gentle cassette tape hiss and wow/flutter. Soft, breathy, beautiful female soprano singing a nostalgic lullaby about starlight and brotherly love. Authentic 1980s analog 4-track cassette recording, tape warble, intimate vocal presence. Heart-melting nostalgia, deep love, bittersweet memory."
+        "prompt": "80s Vintage Lofi Folk-Pop Cassette with Soft Female Vocals. BPM: 86. Key: F# Major. Fingerpicked acoustic guitar, delicate music box celesta, warm chorus bass, gentle tape hiss. Soft, breathy female soprano singing a nostalgic lullaby about starlight. Authentic 80s analog 4-track recording, intimate bittersweet warmth."
     },
     {
         "id": "music_credits_ending",
@@ -504,14 +504,14 @@ def generate_track_elevenlabs(api_key, track_info, dry_run=False):
         print(f"  [SAVED] -> {output_file} ({os.path.getsize(output_file)} bytes)")
         return True
 
-    url = "https://api.elevenlabs.io/v1/sound-generation" # or music generation endpoint
+    url = "https://api.elevenlabs.io/v1/sound-generation"
     headers = {
         "xi-api-key": api_key,
         "Content-Type": "application/json"
     }
     payload = {
         "text": track_info["prompt"],
-        "duration_seconds": 30.0,
+        "duration_seconds": 22.0,
         "prompt_influence": 0.4
     }
 
@@ -520,7 +520,7 @@ def generate_track_elevenlabs(api_key, track_info, dry_run=False):
         if response.status_code == 200:
             with open(output_file, "wb") as f:
                 f.write(response.content)
-            print(f"  [SUCCESS] -> {output_file} ({len(response.content)} bytes)")
+            print(f"  [SUCCESS ELEVENLABS] -> {output_file} ({len(response.content)} bytes)")
             return True
         else:
             print(f"  [API ERROR {response.status_code}]: {response.text}")
@@ -534,13 +534,25 @@ def generate_track_elevenlabs(api_key, track_info, dry_run=False):
 
 def main():
     parser = argparse.ArgumentParser(description="Starborn ElevenLabs Music Generation & Wiring Tool")
-    parser.add_argument("--api-key", default=os.getenv("ELEVENLABS_API_KEY", ""), help="ElevenLabs API Key")
+    parser.add_argument("--api-key", default="", help="ElevenLabs API Key")
     parser.add_argument("--category", choices=["all", "core", "w1", "w2", "w3", "w4", "w5", "w6", "combat", "boss", "cinematic", "tape", "activities"], default="all", help="Generate tracks by category")
     parser.add_argument("--track", help="Generate specific track ID")
     parser.add_argument("--dry-run", action="store_true", help="Print prompts and check catalog without calling API")
     parser.add_argument("--sync-catalog-only", action="store_true", help="Update audio_catalog.json and exit")
     parser.add_argument("--preview-stems", action="store_true", help="Generate valid preview stems for all missing tracks")
+    parser.add_argument("--force", action="store_true", help="Force regenerate tracks even if real audio exists")
     args = parser.parse_args()
+
+    api_key = args.api_key.strip()
+    if not api_key:
+        api_key = os.getenv("ELEVENLABS_API_KEY", "").strip()
+    if not api_key:
+        key_file = os.path.join(ROOT_DIR, "elevenlabs_api_key.txt")
+        if os.path.exists(key_file):
+            with open(key_file, "r", encoding="utf-8") as f:
+                api_key = f.read().strip()
+                if api_key:
+                    print(f"Loaded ElevenLabs API Key from {key_file} (prefix: {api_key[:6]}...)")
 
     # Step 1: Sync Audio Catalog
     print("=== STEP 1: SYNCING AUDIO CATALOG ===")
@@ -565,19 +577,17 @@ def main():
     os.makedirs(RAW_AUDIO_DIR, exist_ok=True)
 
     success_count = 0
-        if os.path.exists(dest):
+    for t in targets:
+        dest = os.path.join(RAW_AUDIO_DIR, f"{t['id']}.mp3")
+        if os.path.exists(dest) and not args.force and not args.track:
             size = os.path.getsize(dest)
-            if size > 100000 and not args.api_key:
+            if size > 100000 and not api_key:
                 print(f"  [PRESERVED REAL AUDIO] {t['id']}.mp3 ({size} bytes)")
                 success_count += 1
                 continue
-            elif not args.preview_stems and not args.api_key:
-                print(f"  [EXISTS] {t['id']}.mp3 ({size} bytes)")
-                success_count += 1
-                continue
-        if generate_track_elevenlabs(args.api_key, t, dry_run=args.dry_run):
+        if generate_track_elevenlabs(api_key, t, dry_run=args.dry_run):
             success_count += 1
-        time.sleep(0.1)
+        time.sleep(0.5)
 
     print(f"\n=== SUMMARY: {success_count}/{len(targets)} TRACKS PROCESSED ===")
 
