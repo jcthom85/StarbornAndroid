@@ -1213,12 +1213,12 @@
     },
     {
       "id": "sfx_terminal_boot",
-      "category": "ui",
-      "priority": 3,
-      "gain": 0.78,
+      "category": "sfx",
+      "priority": 5,
+      "gain": 0.88,
       "fade_in_ms": 0,
-      "fade_out_ms": 260,
-      "duration_ms": 1600
+      "fade_out_ms": 200,
+      "duration_ms": 3000
     },
     {
       "id": "sfx_workshop_success",
@@ -1753,12 +1753,12 @@
     },
     {
       "id": "sfx_cooking_sizzle",
-      "category": "battle",
+      "category": "sfx",
       "priority": 5,
-      "gain": 0.92,
+      "gain": 0.9,
       "fade_in_ms": 0,
-      "fade_out_ms": 400,
-      "duration_ms": 2000
+      "fade_out_ms": 200,
+      "duration_ms": 2500
     },
     {
       "id": "sfx_tinkering_wrench",
@@ -1768,6 +1768,276 @@
       "fade_in_ms": 0,
       "fade_out_ms": 300,
       "duration_ms": 1500
+    },
+    {
+      "id": "sfx_ui_button_click",
+      "category": "ui",
+      "priority": 5,
+      "gain": 0.9,
+      "fade_in_ms": 0,
+      "fade_out_ms": 200,
+      "duration_ms": 500
+    },
+    {
+      "id": "sfx_ui_confirm",
+      "category": "ui",
+      "priority": 5,
+      "gain": 0.9,
+      "fade_in_ms": 0,
+      "fade_out_ms": 200,
+      "duration_ms": 800
+    },
+    {
+      "id": "sfx_ui_cancel",
+      "category": "ui",
+      "priority": 5,
+      "gain": 0.85,
+      "fade_in_ms": 0,
+      "fade_out_ms": 200,
+      "duration_ms": 500
+    },
+    {
+      "id": "sfx_ui_error",
+      "category": "ui",
+      "priority": 5,
+      "gain": 0.9,
+      "fade_in_ms": 0,
+      "fade_out_ms": 200,
+      "duration_ms": 1000
+    },
+    {
+      "id": "sfx_ui_tab_switch",
+      "category": "ui",
+      "priority": 5,
+      "gain": 0.85,
+      "fade_in_ms": 0,
+      "fade_out_ms": 200,
+      "duration_ms": 500
+    },
+    {
+      "id": "sfx_ui_equip_item",
+      "category": "ui",
+      "priority": 5,
+      "gain": 0.9,
+      "fade_in_ms": 0,
+      "fade_out_ms": 200,
+      "duration_ms": 1000
+    },
+    {
+      "id": "sfx_ui_item_pickup",
+      "category": "ui",
+      "priority": 5,
+      "gain": 0.9,
+      "fade_in_ms": 0,
+      "fade_out_ms": 200,
+      "duration_ms": 1000
+    },
+    {
+      "id": "sfx_door_airlock_open",
+      "category": "sfx",
+      "priority": 5,
+      "gain": 0.95,
+      "fade_in_ms": 0,
+      "fade_out_ms": 200,
+      "duration_ms": 3000
+    },
+    {
+      "id": "sfx_door_airlock_close",
+      "category": "sfx",
+      "priority": 5,
+      "gain": 0.95,
+      "fade_in_ms": 0,
+      "fade_out_ms": 200,
+      "duration_ms": 2500
+    },
+    {
+      "id": "sfx_terminal_hack_success",
+      "category": "sfx",
+      "priority": 5,
+      "gain": 0.9,
+      "fade_in_ms": 0,
+      "fade_out_ms": 200,
+      "duration_ms": 2500
+    },
+    {
+      "id": "sfx_loot_crate_open",
+      "category": "sfx",
+      "priority": 5,
+      "gain": 0.9,
+      "fade_in_ms": 0,
+      "fade_out_ms": 200,
+      "duration_ms": 2500
+    },
+    {
+      "id": "sfx_tape_insert",
+      "category": "sfx",
+      "priority": 5,
+      "gain": 0.9,
+      "fade_in_ms": 0,
+      "fade_out_ms": 200,
+      "duration_ms": 1500
+    },
+    {
+      "id": "sfx_scavenge_metal",
+      "category": "sfx",
+      "priority": 5,
+      "gain": 0.9,
+      "fade_in_ms": 0,
+      "fade_out_ms": 200,
+      "duration_ms": 2000
+    },
+    {
+      "id": "sfx_combat_blaster_fire",
+      "category": "battle",
+      "priority": 5,
+      "gain": 0.95,
+      "fade_in_ms": 0,
+      "fade_out_ms": 200,
+      "duration_ms": 1000
+    },
+    {
+      "id": "sfx_combat_heavy_wrench",
+      "category": "battle",
+      "priority": 5,
+      "gain": 0.95,
+      "fade_in_ms": 0,
+      "fade_out_ms": 200,
+      "duration_ms": 1200
+    },
+    {
+      "id": "sfx_combat_plasma_arc",
+      "category": "battle",
+      "priority": 5,
+      "gain": 0.95,
+      "fade_in_ms": 0,
+      "fade_out_ms": 200,
+      "duration_ms": 1800
+    },
+    {
+      "id": "sfx_combat_phase_blade",
+      "category": "battle",
+      "priority": 5,
+      "gain": 0.95,
+      "fade_in_ms": 0,
+      "fade_out_ms": 200,
+      "duration_ms": 1500
+    },
+    {
+      "id": "sfx_combat_shield_deflect",
+      "category": "battle",
+      "priority": 5,
+      "gain": 0.95,
+      "fade_in_ms": 0,
+      "fade_out_ms": 200,
+      "duration_ms": 1500
+    },
+    {
+      "id": "sfx_combat_crit_hit",
+      "category": "battle",
+      "priority": 5,
+      "gain": 1.0,
+      "fade_in_ms": 0,
+      "fade_out_ms": 200,
+      "duration_ms": 2000
+    },
+    {
+      "id": "sfx_combat_enemy_screech",
+      "category": "battle",
+      "priority": 5,
+      "gain": 0.95,
+      "fade_in_ms": 0,
+      "fade_out_ms": 200,
+      "duration_ms": 2000
+    },
+    {
+      "id": "sfx_combat_robot_stomp",
+      "category": "battle",
+      "priority": 5,
+      "gain": 1.0,
+      "fade_in_ms": 0,
+      "fade_out_ms": 200,
+      "duration_ms": 2500
+    },
+    {
+      "id": "sfx_fishing_cast",
+      "category": "sfx",
+      "priority": 5,
+      "gain": 0.9,
+      "fade_in_ms": 0,
+      "fade_out_ms": 200,
+      "duration_ms": 1500
+    },
+    {
+      "id": "sfx_fishing_splash",
+      "category": "sfx",
+      "priority": 5,
+      "gain": 0.9,
+      "fade_in_ms": 0,
+      "fade_out_ms": 200,
+      "duration_ms": 1200
+    },
+    {
+      "id": "sfx_fishing_bite",
+      "category": "sfx",
+      "priority": 5,
+      "gain": 0.9,
+      "fade_in_ms": 0,
+      "fade_out_ms": 200,
+      "duration_ms": 1200
+    },
+    {
+      "id": "sfx_fishing_catch",
+      "category": "sfx",
+      "priority": 5,
+      "gain": 0.95,
+      "fade_in_ms": 0,
+      "fade_out_ms": 200,
+      "duration_ms": 2000
+    },
+    {
+      "id": "sfx_arcade_coin_insert",
+      "category": "ui",
+      "priority": 5,
+      "gain": 0.9,
+      "fade_in_ms": 0,
+      "fade_out_ms": 200,
+      "duration_ms": 1500
+    },
+    {
+      "id": "sfx_arcade_jump",
+      "category": "ui",
+      "priority": 5,
+      "gain": 0.9,
+      "fade_in_ms": 0,
+      "fade_out_ms": 200,
+      "duration_ms": 500
+    },
+    {
+      "id": "sfx_arcade_laser",
+      "category": "ui",
+      "priority": 5,
+      "gain": 0.9,
+      "fade_in_ms": 0,
+      "fade_out_ms": 200,
+      "duration_ms": 500
+    },
+    {
+      "id": "sfx_arcade_game_over",
+      "category": "ui",
+      "priority": 5,
+      "gain": 0.9,
+      "fade_in_ms": 0,
+      "fade_out_ms": 200,
+      "duration_ms": 2500
+    },
+    {
+      "id": "sfx_tinkering_ratchet",
+      "category": "sfx",
+      "priority": 5,
+      "gain": 0.9,
+      "fade_in_ms": 0,
+      "fade_out_ms": 200,
+      "duration_ms": 1800
     }
   ]
 }
