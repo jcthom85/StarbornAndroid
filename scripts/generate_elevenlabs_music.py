@@ -509,16 +509,39 @@ def generate_track_elevenlabs(api_key, track_info, dry_run=False):
         "xi-api-key": api_key,
         "Content-Type": "application/json"
     }
+    
+    category = track_info.get("category", "")
+    if category in ["w1", "w2", "w3", "w4", "w5", "w6"]:
+        duration_ms = 90000  # 90s exploration loops
+    elif category == "boss":
+        duration_ms = 120000  # 2 min multi-phase boss suites
+    elif category == "combat":
+        duration_ms = 75000   # 75s battle loops
+    elif category == "activities":
+        duration_ms = 75000   # 75s mini-games (fishing, arcade, crafting)
+    elif category in ["tape", "cinematic"]:
+        if track_info["id"] in ["music_credits_ending", "music_elaras_song", "music_epilogue"]:
+            duration_ms = 150000  # 2.5 min complete vocal / credit suites
+        else:
+            duration_ms = 45000   # 45s cinematic prologue / crash
+    elif category == "core":
+        if track_info["id"] in ["music_title_theme", "music_astra_common_room", "music_astra_bridge"]:
+            duration_ms = 90000   # 90s title and ship lounges
+        else:
+            duration_ms = 30000   # 30s fanfares and game overs
+    else:
+        duration_ms = 60000
+
     is_vocal = "vocal" in track_info.get("tags", []) or "tape" in track_info.get("tags", [])
     payload = {
         "prompt": track_info["prompt"],
-        "music_length_ms": 30000,
+        "music_length_ms": duration_ms,
         "model_id": "music_v2",
         "force_instrumental": not is_vocal
     }
 
     try:
-        response = requests.post(url, json=payload, headers=headers, timeout=90)
+        response = requests.post(url, json=payload, headers=headers, timeout=180)
         if response.status_code == 200:
             with open(output_file, "wb") as f:
                 f.write(response.content)
