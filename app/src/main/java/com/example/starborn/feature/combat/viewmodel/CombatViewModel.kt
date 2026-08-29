@@ -1670,10 +1670,7 @@ class CombatViewModel(
                         CombatOutcome.Retreat -> CombatFxEvent.CombatOutcomeFx.OutcomeType.RETREAT
                     }
                     when (outcomeType) {
-                        CombatFxEvent.CombatOutcomeFx.OutcomeType.VICTORY -> {
-                            playBattleCue("victory")
-                            playVictoryMusic()
-                        }
+                        CombatFxEvent.CombatOutcomeFx.OutcomeType.VICTORY -> playVictoryMusic()
                         CombatFxEvent.CombatOutcomeFx.OutcomeType.DEFEAT -> playBattleCue("defeat")
                         CombatFxEvent.CombatOutcomeFx.OutcomeType.RETREAT -> playBattleCue("retreat")
                     }

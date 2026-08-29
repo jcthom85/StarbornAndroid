@@ -24,14 +24,18 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
@@ -40,6 +44,9 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import com.example.starborn.feature.crafting.TinkeringTutorialStep
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -211,6 +218,7 @@ private fun TinkeringScreen(
     }
     var pickerTarget by remember { mutableStateOf<PickerTarget?>(null) }
     var scrapSelection by remember { mutableStateOf<String?>(null) }
+    var showTutorialDialog by remember(state.isTutorialActive) { mutableStateOf(state.isTutorialActive) }
     val fieldKitMode = source?.trim()?.equals("field_kit", ignoreCase = true) == true
     var selectedSection by remember(source) {
         mutableStateOf(if (fieldKitMode) TinkeringSection.Schematics else TinkeringSection.Tinker)
@@ -268,7 +276,8 @@ private fun TinkeringScreen(
                             onClearBench = onClearBench,
                             onSelectMain = { pickerTarget = PickerTarget.Main },
                             onSelectComponent1 = { pickerTarget = PickerTarget.Component1 },
-                            onSelectComponent2 = { pickerTarget = PickerTarget.Component2 }
+                            onSelectComponent2 = { pickerTarget = PickerTarget.Component2 },
+                            onOpenTutorialGuide = { showTutorialDialog = true }
                         )
                         TinkeringSection.Schematics -> SchematicsSection(
                             state = state,
@@ -298,7 +307,21 @@ private fun TinkeringScreen(
         }
     }
 
+    if (showTutorialDialog) {
+        TinkeringTutorialDialog(
+            onDismiss = { showTutorialDialog = false },
+            colors = colors,
+            highContrastMode = highContrastMode
+        )
+    }
+
     pickerTarget?.let { target ->
+        val recommendedId = when {
+            !state.isTutorialActive -> null
+            target == PickerTarget.Main -> "cryo_inductor"
+            target == PickerTarget.Component1 -> "scrap_metal"
+            else -> null
+        }
         ItemPickerDialog(
             title = when (target) {
                 PickerTarget.Main -> "Select Main Item"
@@ -306,6 +329,7 @@ private fun TinkeringScreen(
                 PickerTarget.Component2 -> "Select Component 2"
             },
             choices = state.inventory,
+            recommendedId = recommendedId,
             highContrastMode = highContrastMode,
             onSelect = { id ->
                 when (target) {
@@ -399,7 +423,8 @@ private fun TinkerSection(
     onClearBench: () -> Unit,
     onSelectMain: () -> Unit,
     onSelectComponent1: () -> Unit,
-    onSelectComponent2: () -> Unit
+    onSelectComponent2: () -> Unit,
+    onOpenTutorialGuide: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -407,6 +432,13 @@ private fun TinkerSection(
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
+        if (state.isTutorialActive && state.tutorialStep != null) {
+            TutorialInstructionBanner(
+                step = state.tutorialStep,
+                colors = colors,
+                onOpenGuide = onOpenTutorialGuide
+            )
+        }
         TinkeringBenchCard(
             bench = state.bench,
             colors = colors,
@@ -416,7 +448,9 @@ private fun TinkerSection(
             onSelectComponent1 = onSelectComponent1,
             onSelectComponent2 = onSelectComponent2,
             onCraft = onBenchCraft,
-            onClear = onClearBench
+            onClear = onClearBench,
+            isTutorialActive = state.isTutorialActive,
+            tutorialStep = state.tutorialStep
         )
     }
 }
@@ -807,6 +841,8 @@ private fun TinkeringBenchCard(
     onSelectComponent2: () -> Unit,
     onCraft: () -> Unit,
     onClear: () -> Unit,
+    isTutorialActive: Boolean = false,
+    tutorialStep: TinkeringTutorialStep? = null,
     modifier: Modifier = Modifier
 ) {
     val buttonHeight = if (largeTouchTargets) 52.dp else 44.dp
@@ -824,6 +860,10 @@ private fun TinkeringBenchCard(
         "No match" -> MaterialTheme.colorScheme.error
         else -> colors.textSecondary
     }
+    val isMainHighlighted = isTutorialActive && tutorialStep == TinkeringTutorialStep.SLOT_BASE
+    val isComp1Highlighted = isTutorialActive && tutorialStep == TinkeringTutorialStep.SLOT_COMPONENT
+    val isCraftHighlighted = isTutorialActive && tutorialStep == TinkeringTutorialStep.SYNTHESIZE
+
     Surface(
         tonalElevation = 2.dp,
         shape = RoundedCornerShape(18.dp),
@@ -870,6 +910,7 @@ private fun TinkeringBenchCard(
                     label = "Base",
                     value = bench.mainItemName ?: "Choose item",
                     selected = bench.mainItemName != null,
+                    isHighlighted = isMainHighlighted,
                     icon = if (bench.mainItemName != null) Icons.Filled.Close else Icons.Filled.Add,
                     colors = colors,
                     onClick = onSelectMain
@@ -878,6 +919,7 @@ private fun TinkeringBenchCard(
                     label = "Part A",
                     value = bench.componentNames.getOrNull(0)?.takeIf { it.isNotBlank() } ?: "Optional",
                     selected = bench.componentNames.getOrNull(0)?.isNotBlank() == true,
+                    isHighlighted = isComp1Highlighted,
                     icon = if (bench.componentNames.getOrNull(0)?.isNotBlank() == true) Icons.Filled.Close else Icons.Filled.Add,
                     colors = colors,
                     onClick = onSelectComponent1
@@ -928,6 +970,7 @@ private fun TinkeringBenchCard(
                         .heightIn(min = buttonHeight)
                         .defaultMinSize(minWidth = 120.dp),
                     shape = RoundedCornerShape(12.dp),
+                    border = if (isCraftHighlighted) BorderStroke(2.dp, Color.White) else null,
                     colors = ButtonDefaults.buttonColors(
                         containerColor = colors.accent,
                         contentColor = Color.Black
@@ -947,6 +990,7 @@ private fun RowScope.SlotTile(
     selected: Boolean,
     icon: ImageVector,
     colors: TinkeringColors,
+    isHighlighted: Boolean = false,
     onClick: () -> Unit
 ) {
     Surface(
@@ -955,8 +999,11 @@ private fun RowScope.SlotTile(
             .heightIn(min = 84.dp)
             .clickable { onClick() },
         shape = RoundedCornerShape(14.dp),
-        color = if (selected) colors.accent.copy(alpha = 0.12f) else colors.slot.copy(alpha = 0.72f),
-        border = BorderStroke(1.dp, if (selected) colors.accent.copy(alpha = 0.48f) else colors.border.copy(alpha = 0.38f))
+        color = if (isHighlighted) colors.accent.copy(alpha = 0.22f) else if (selected) colors.accent.copy(alpha = 0.12f) else colors.slot.copy(alpha = 0.72f),
+        border = BorderStroke(
+            width = if (isHighlighted) 2.dp else 1.dp,
+            color = if (isHighlighted) colors.accent else if (selected) colors.accent.copy(alpha = 0.48f) else colors.border.copy(alpha = 0.38f)
+        )
     ) {
         Column(
             modifier = Modifier
@@ -969,35 +1016,226 @@ private fun RowScope.SlotTile(
                 modifier = Modifier
                     .size(30.dp)
                     .clip(RoundedCornerShape(9.dp))
-                    .background(if (selected) colors.accent.copy(alpha = 0.18f) else colors.border.copy(alpha = 0.16f)),
+                    .background(if (isHighlighted || selected) colors.accent.copy(alpha = 0.24f) else colors.border.copy(alpha = 0.16f)),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     imageVector = icon,
                     contentDescription = null,
-                    tint = if (selected) colors.accent else colors.textPrimary,
+                    tint = if (isHighlighted || selected) colors.accent else colors.textPrimary,
                     modifier = Modifier.size(18.dp)
                 )
             }
-            Spacer(modifier = Modifier.height(6.dp))
+            Spacer(modifier = Modifier.height(4.dp))
             Text(
-                label,
-                style = MaterialTheme.typography.labelMedium,
-                color = colors.textSecondary,
+                text = label,
+                style = MaterialTheme.typography.labelSmall,
+                color = if (isHighlighted) colors.accent else colors.textSecondary,
+                fontWeight = if (isHighlighted) FontWeight.Bold else FontWeight.Normal
+            )
+            Text(
+                text = value,
+                style = MaterialTheme.typography.bodySmall,
+                color = colors.textPrimary,
                 fontWeight = FontWeight.SemiBold,
-                textAlign = TextAlign.Center,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
-            Text(
-                value,
-                style = MaterialTheme.typography.bodySmall,
-                color = colors.textPrimary,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis
-            )
+        }
+    }
+}
+
+@Composable
+private fun TinkeringTutorialDialog(
+    onDismiss: () -> Unit,
+    colors: TinkeringColors,
+    highContrastMode: Boolean
+) {
+    Dialog(onDismissRequest = onDismiss) {
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth(0.96f)
+                .wrapContentHeight(),
+            shape = RoundedCornerShape(20.dp),
+            color = if (highContrastMode) Color(0xFF0C1520) else Color(0xFF101724),
+            border = BorderStroke(1.5.dp, colors.accent.copy(alpha = 0.8f))
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(20.dp)
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(14.dp)
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    Text("🔧", fontSize = 24.sp)
+                    Column {
+                        Text(
+                            text = "WORKBENCH GUIDE",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = colors.accent,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            text = "Assembly, modifications, and repairs",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = colors.textSecondary
+                        )
+                    }
+                }
+
+                HorizontalDivider(color = colors.border.copy(alpha = 0.3f))
+
+                TutorialStepCard(
+                    stepNumber = "1",
+                    title = "Base Chassis",
+                    description = "Slot the primary equipment, broken device, or weapon frame into the Base slot (e.g. Cryo-Inductor).",
+                    colors = colors
+                )
+
+                TutorialStepCard(
+                    stepNumber = "2",
+                    title = "Component Parts",
+                    description = "Add required materials, scrap metal, or modifiers into Part A & Part B sockets.",
+                    colors = colors
+                )
+
+                TutorialStepCard(
+                    stepNumber = "3",
+                    title = "Synthesize & Calibrate",
+                    description = "When parts match a valid schematic, tap Craft to calibrate the item with 100% stability.",
+                    colors = colors
+                )
+
+                Button(
+                    onClick = onDismiss,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = colors.accent,
+                        contentColor = Color.Black
+                    )
+                ) {
+                    Text(
+                        text = "Got It — Start Tinkering",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 15.sp
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun TutorialStepCard(
+    stepNumber: String,
+    title: String,
+    description: String,
+    colors: TinkeringColors
+) {
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(12.dp),
+        color = colors.card.copy(alpha = 0.9f),
+        border = BorderStroke(1.dp, colors.border.copy(alpha = 0.3f))
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalAlignment = Alignment.Top
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(28.dp)
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(colors.accent.copy(alpha = 0.2f)),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = stepNumber,
+                    style = MaterialTheme.typography.labelLarge,
+                    color = colors.accent,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(2.dp)
+            ) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleSmall,
+                    color = colors.textPrimary,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = description,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = colors.textSecondary
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun TutorialInstructionBanner(
+    step: TinkeringTutorialStep,
+    colors: TinkeringColors,
+    onOpenGuide: () -> Unit
+) {
+    val instruction = when (step) {
+        TinkeringTutorialStep.SLOT_BASE -> "Tap the [Base] slot and select the broken Cryo-Inductor."
+        TinkeringTutorialStep.SLOT_COMPONENT -> "Tap [Part A] and add Scrap Metal to reinforce the cold loop."
+        TinkeringTutorialStep.SYNTHESIZE -> "Schematic complete! Tap [Craft] to calibrate the Cryo-Inductor."
+        TinkeringTutorialStep.COMPLETE -> "Cryo-Inductor repaired! Return to Jed to report your progress."
+    }
+
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(14.dp),
+        color = colors.accent.copy(alpha = 0.15f),
+        border = BorderStroke(1.5.dp, colors.accent.copy(alpha = 0.7f))
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(horizontal = 14.dp, vertical = 10.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            Text("💡", fontSize = 20.sp)
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = "TUTORIAL: REPAIR CRYO-INDUCTOR",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = colors.accent,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = instruction,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color.White,
+                    fontWeight = FontWeight.SemiBold
+                )
+            }
+            IconButton(
+                onClick = onOpenGuide,
+                modifier = Modifier.size(32.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Info,
+                    contentDescription = "Help Guide",
+                    tint = colors.accent
+                )
+            }
         }
     }
 }
@@ -1277,6 +1515,7 @@ private fun ScrapCard(
 private fun ItemPickerDialog(
     title: String,
     choices: List<TinkeringItemChoice>,
+    recommendedId: String? = null,
     highContrastMode: Boolean,
     onSelect: (String) -> Unit,
     onClear: () -> Unit,
@@ -1292,16 +1531,39 @@ private fun ItemPickerDialog(
             } else {
                 LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     items(choices, key = { it.id }) { choice ->
+                        val isRecommended = choice.id.equals(recommendedId, ignoreCase = true)
                         Surface(
-                            tonalElevation = 1.dp,
+                            tonalElevation = if (isRecommended) 4.dp else 1.dp,
                             shape = RoundedCornerShape(12.dp),
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clickable { onSelect(choice.id) },
-                            color = if (highContrastMode) Color(0xFF0E1623) else MaterialTheme.colorScheme.surface
+                            color = if (isRecommended) Color(0xFF1B2A3D) else if (highContrastMode) Color(0xFF0E1623) else MaterialTheme.colorScheme.surface,
+                            border = if (isRecommended) BorderStroke(1.5.dp, Color(0xFFF5B437)) else null
                         ) {
                             Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                                Text(choice.name, style = MaterialTheme.typography.titleSmall, color = if (highContrastMode) Color.White else MaterialTheme.colorScheme.onSurface)
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(choice.name, style = MaterialTheme.typography.titleSmall, color = if (isRecommended) Color(0xFFF5B437) else if (highContrastMode) Color.White else MaterialTheme.colorScheme.onSurface, fontWeight = if (isRecommended) FontWeight.Bold else FontWeight.SemiBold)
+                                    if (isRecommended) {
+                                        Surface(
+                                            shape = RoundedCornerShape(6.dp),
+                                            color = Color(0xFFF5B437).copy(alpha = 0.2f),
+                                            border = BorderStroke(1.dp, Color(0xFFF5B437))
+                                        ) {
+                                            Text(
+                                                text = "Quest Item",
+                                                style = MaterialTheme.typography.labelSmall,
+                                                color = Color(0xFFF5B437),
+                                                fontWeight = FontWeight.Bold,
+                                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                                            )
+                                        }
+                                    }
+                                }
                                 Text("Qty: ${choice.quantity}", style = MaterialTheme.typography.labelSmall, color = if (highContrastMode) Color.White.copy(alpha = 0.7f) else MaterialTheme.colorScheme.onSurfaceVariant)
                                 choice.description?.takeIf { it.isNotBlank() }?.let {
                                     Text(it, style = MaterialTheme.typography.bodySmall, color = if (highContrastMode) Color.White.copy(alpha = 0.8f) else MaterialTheme.colorScheme.onSurfaceVariant)

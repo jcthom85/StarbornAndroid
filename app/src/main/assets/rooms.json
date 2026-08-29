@@ -357,8 +357,7 @@
       {
         "name": "rusty locker",
         "type": "generic",
-        "action_event": "find_vhs_tape_01",
-        "condition_unmet_message": "A locked metal locker tucked under the ventilation grate."
+        "condition_unmet_message": "Nova's personal locker holds spare mining gloves, a ration bar, and Jed's metal carving."
       }
     ]
   },
@@ -393,9 +392,9 @@
       {
         "name": "loose floor panel",
         "type": "generic",
-        "action_event": "w1_loot_pit_storage_panel",
-        "requires_milestone_not_set": "ms_w1_pit_storage_looted",
-        "condition_unmet_message": "The floor panel has already been pried open."
+        "action_event": "find_vhs_tape_01",
+        "requires_milestone_not_set": "ms_tape_01_found",
+        "condition_unmet_message": "The floor panel has already been pried open and emptied."
       },
       {
         "name": "filter units",

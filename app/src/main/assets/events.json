@@ -13812,7 +13812,7 @@
   },
   {
     "id": "find_vhs_tape_01",
-    "description": "Recovers Great Frontier Tape 01.",
+    "description": "Recovers Great Frontier Tape 01 from the supply closet stash.",
     "trigger": {
       "type": "player_action",
       "action": "find_vhs_tape_01"
@@ -13825,8 +13825,22 @@
         "quantity": 1
       },
       {
+        "type": "set_milestone",
+        "milestone": "ms_tape_01_found"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w1_pit_storage_looted"
+      },
+      {
+        "type": "audio_layer",
+        "layer": "ui",
+        "cue_id": "sfx_ui_item_pickup",
+        "fade_ms": 0
+      },
+      {
         "type": "show_message",
-        "message": "Recovered Tape 01: 'Unpayable Debt' from the Great Frontier album."
+        "message": "Prying up the loose floor panel reveals a hidden contraband stash: Tape 01: 'Unpayable Debt' from the Great Frontier album."
       }
     ]
   },

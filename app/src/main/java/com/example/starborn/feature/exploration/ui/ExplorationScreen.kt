@@ -2936,7 +2936,7 @@ private fun TapeDeckDialog(
     val ownedTapeIds = remember(inventory) { inventory.map { it.id }.toSet() }
 
     val tapes = listOf(
-        Triple("vhs_tape_01", "gf_01_unpayable_debt", "Tape 01: Unpayable Debt" to "Mining Pit - Bunk Locker"),
+        Triple("vhs_tape_01", "gf_01_unpayable_debt", "Tape 01: Unpayable Debt" to "Mining Pit - Supply Stash"),
         Triple("vhs_tape_02", "gf_02_memories_of_another_life", "Tape 02: Memories of Another Life" to "Colony - Jed's Office"),
         Triple("vhs_tape_03", "gf_03_showdown_in_the_rain", "Tape 03: Showdown in the Rain" to "Coast - Glow-Moss Cavern"),
         Triple("vhs_tape_04", "gf_04_the_road_at_night", "Tape 04: The Road at Night" to "Sector 9 - Ridge Plateau"),
