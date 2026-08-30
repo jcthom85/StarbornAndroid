@@ -92,6 +92,7 @@ object DebugScenarioCatalog {
         scenario("party_sizes", "Enemy Party Sizes", "Compare supported enemy party layouts.", DebugScenarioCategory.SYSTEM),
         scenario("presence_stress", "Presence Stress", "Stress-test room NPC and entity presence.", DebugScenarioCategory.SYSTEM),
         scenario("arcade_deep_mine", "Arcade / Deep Mine", "Open the restored Deep Mine cabinet aboard the Astra for gameplay and reward testing.", DebugScenarioCategory.SYSTEM),
+        scenario("fishing_beach_pools", "Fishing / Sector 9 Beach", "Open the Sector 9 Beach tide pools with fishing rods and lures for instant minigame testing.", DebugScenarioCategory.SYSTEM),
         scenario("hub_qa_w1_rest", "Hub QA / W1 Rest", "Open Nova's bunk for rest/cook hub testing.", DebugScenarioCategory.SYSTEM),
         scenario("hub_qa_w2_cookfire", "Hub QA / W2 Cookfire", "Open the Sector 9 falls cookfire for rest/cook hub testing.", DebugScenarioCategory.SYSTEM),
         scenario("hub_qa_w3_tuning", "Hub QA / W3 Tuning", "Open the Prism Gallery tuning puzzle.", DebugScenarioCategory.SYSTEM),

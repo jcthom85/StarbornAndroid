@@ -920,6 +920,7 @@ class AppServices(context: Context) {
         "astra_access" -> startNewGameAtAstraAccess()
         "astra_home" -> startNewGameAboardAstra()
         "arcade_deep_mine" -> startNewGameAtDeepMineArcade()
+        "fishing_beach_pools" -> startNewGameAtFishingBeachPools()
         else -> if (id.startsWith("hub_")) startNewGameAtDebugHub(id) else false
     }
 
@@ -1164,6 +1165,22 @@ class AppServices(context: Context) {
         }
         sessionStore.setRoom("astra_common_room")
         sessionStore.visitNode("astra_common_node")
+        true
+    }.getOrElse { false }
+
+    private fun startNewGameAtFishingBeachPools(): Boolean = runCatching {
+        if (!prepareWorld2DebugState(completedW2Quests = listOf("w2_mq01"))) return false
+        sessionStore.setWorld("world_2")
+        sessionStore.setHub("hub_3_sector9")
+        sessionStore.setRoom("sector9_beach_pools")
+        visitDebugNodes("sector9_landing", "sector9_stream_path", "tideglass_beach")
+        inventoryService.addItem("wooden_rod", 1)
+        inventoryService.addItem("fiberglass_rod", 1)
+        inventoryService.addItem("carbon_rod", 1)
+        inventoryService.addItem("basic_lure", 5)
+        inventoryService.addItem("shiny_lure", 5)
+        inventoryService.addItem("mystery_lure", 5)
+        sessionStore.setInventory(inventoryService.snapshot())
         true
     }.getOrElse { false }
 
