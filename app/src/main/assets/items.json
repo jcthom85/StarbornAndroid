@@ -18,6 +18,213 @@
     "unsellable": true
   },
   {
+    "id": "sector9_optic_board",
+    "name": "Sector 9 Optic Board",
+    "description": "The moisture-sealed optic board from a crashed survival pod arcade console. Emerald phosphor chips line the waterproof bus.",
+    "type": "quest",
+    "value": 0,
+    "rarity": "rare",
+    "unsellable": true
+  },
+  {
+    "id": "canopy_hopper_cabinet_core",
+    "name": "Restored Canopy Hopper Core",
+    "description": "A repaired survival pod arcade core ready for Ollie to install aboard the Astra.",
+    "type": "quest",
+    "value": 0,
+    "rarity": "rare",
+    "unsellable": true
+  },
+  {
+    "id": "tideglass_delight",
+    "name": "Tideglass Delight",
+    "description": "A delicate, glowing swamp dish that restores health and sharpens sensory reflexes.",
+    "type": "consumable",
+    "value": 300,
+    "rarity": "rare"
+  },
+  {
+    "id": "bioluminescent_lure",
+    "name": "Bioluminescent Lure",
+    "description": "A glowing swamp lure recovered from Canopy Hopper mastery. Attracts rare nocturnal and deep-water fish.",
+    "type": "accessory",
+    "value": 900,
+    "rarity": "epic",
+    "unsellable": true
+  },
+  {
+    "id": "hyperion_mainframe_chip",
+    "name": "Hyperion Mainframe Chip",
+    "description": "The overclocked processing chip salvaged from the Spire VIP lounge arcade cabinet. Neon circuitry traces hum with residual ICE cycles.",
+    "type": "quest",
+    "value": 0,
+    "rarity": "rare",
+    "unsellable": true
+  },
+  {
+    "id": "spire_infiltrator_cabinet_core",
+    "name": "Restored Spire Infiltrator Core",
+    "description": "A repaired Spire Infiltrator arcade core ready for Ollie to install aboard the Astra.",
+    "type": "quest",
+    "value": 0,
+    "rarity": "rare",
+    "unsellable": true
+  },
+  {
+    "id": "phase_rounds",
+    "name": "Phase Rounds Mod",
+    "description": "Cabinet reward ammo mod that phase-shifts kinetic rounds through robotic shielding, ignoring 25% armor.",
+    "type": "accessory",
+    "value": 750,
+    "rarity": "rare",
+    "equipment": {
+      "slot": "accessory",
+      "stat_mods": { "accuracy": 3, "str": 2 }
+    }
+  },
+  {
+    "id": "cyber_visor",
+    "name": "ICE Breaker Cyber Visor",
+    "description": "A neon targeting visor awarded for mastering Spire Infiltrator. Enhances vulnerability detection (+10% Crit Chance).",
+    "type": "accessory",
+    "value": 1200,
+    "rarity": "epic",
+    "unsellable": true,
+    "equipment": {
+      "slot": "accessory",
+      "stat_mods": { "foc": 3, "accuracy": 4 }
+    }
+  },
+  {
+    "id": "thermite_logic_gate",
+    "name": "Thermite Logic Gate",
+    "description": "A scorched ceramic logic gate salvaged from the Foundry reject bay. Heat-resistant tungsten filaments still hold shift record memory.",
+    "type": "quest",
+    "value": 0,
+    "rarity": "rare",
+    "unsellable": true
+  },
+  {
+    "id": "slag_catcher_cabinet_core",
+    "name": "Restored Slag Catcher Core",
+    "description": "A repaired Foundry smelter arcade core ready for Ollie to install aboard the Astra.",
+    "type": "quest",
+    "value": 0,
+    "rarity": "rare",
+    "unsellable": true
+  },
+  {
+    "id": "foundry_crucible_lining",
+    "name": "Crucible Heat Shield",
+    "description": "A heavy ceramic crucible mod that insulates the wearer (+15% Fire/Burn Resistance, +25 Max HP).",
+    "type": "accessory",
+    "value": 850,
+    "rarity": "rare",
+    "equipment": {
+      "slot": "accessory",
+      "stat_mods": { "vit": 3, "str": 2 }
+    }
+  },
+  {
+    "id": "thermal_solder_gun",
+    "name": "Master Smelter Solder Gun",
+    "description": "An industrial high-temp precision tool earned by mastering Slag Catcher (+5 ATK, +3 INT).",
+    "type": "accessory",
+    "value": 1400,
+    "rarity": "epic",
+    "unsellable": true,
+    "equipment": {
+      "slot": "accessory",
+      "stat_mods": { "atk": 5, "foc": 3 }
+    }
+  },
+  {
+    "id": "zenith_telemetry_array",
+    "name": "Zenith Telemetry Array",
+    "description": "A crystal-tuned telemetry array salvaged from the Zenith customs lounge arcade cabinet. Deep orbital wave coordinates glow in its read-only buffer.",
+    "type": "quest",
+    "value": 0,
+    "rarity": "rare",
+    "unsellable": true
+  },
+  {
+    "id": "orbital_defense_cabinet_core",
+    "name": "Restored Orbital Defense Core",
+    "description": "A repaired Zenith orbital starfighter arcade core ready for Ollie to install aboard the Astra.",
+    "type": "quest",
+    "value": 0,
+    "rarity": "rare",
+    "unsellable": true
+  },
+  {
+    "id": "plasma_lens_mod",
+    "name": "Zenith Plasma Lens",
+    "description": "A precision focus crystal awarded from Orbital Defense (+4 Accuracy, +3 Attack Power).",
+    "type": "accessory",
+    "value": 1000,
+    "rarity": "rare",
+    "equipment": {
+      "slot": "accessory",
+      "stat_mods": { "accuracy": 4, "atk": 3 }
+    }
+  },
+  {
+    "id": "orbital_deflector_matrix",
+    "name": "Orbital Deflector Matrix",
+    "description": "An advanced shielding matrix earned by mastering Orbital Defense 2000 (+15 Max HP, +4 FOC, +3 VIT).",
+    "type": "accessory",
+    "value": 1600,
+    "rarity": "epic",
+    "unsellable": true,
+    "equipment": {
+      "slot": "accessory",
+      "stat_mods": { "foc": 4, "vit": 3 }
+    }
+  },
+  {
+    "id": "prismatic_tuning_fork",
+    "name": "Prismatic Tuning Fork",
+    "description": "A primordial resonant tuning fork recovered from the Source echo workbench. It hums with the foundational frequencies of the galaxy.",
+    "type": "quest",
+    "value": 0,
+    "rarity": "legendary",
+    "unsellable": true
+  },
+  {
+    "id": "harmonic_pulse_cabinet_core",
+    "name": "Restored Harmonic Pulse Core",
+    "description": "A repaired primordial rhythm arcade core ready for Ollie to install aboard the Astra.",
+    "type": "quest",
+    "value": 0,
+    "rarity": "legendary",
+    "unsellable": true
+  },
+  {
+    "id": "harmonic_resonator_tome",
+    "name": "Harmonic Resonator Codex",
+    "description": "An ancient resonance codex awarded from Harmonic Pulse (+4 Focus, +3 Intelligence).",
+    "type": "accessory",
+    "value": 1250,
+    "rarity": "rare",
+    "equipment": {
+      "slot": "accessory",
+      "stat_mods": { "foc": 4, "int": 3 }
+    }
+  },
+  {
+    "id": "source_cadence_crown",
+    "name": "Crown of the Primordial Cadence",
+    "description": "A legendary radiant diadem awarded for mastering Harmonic Pulse. Resonates with all 6 cosmic frequencies (+6 Focus, +6 Intelligence, +20 Max HP).",
+    "type": "accessory",
+    "value": 2500,
+    "rarity": "legendary",
+    "unsellable": true,
+    "equipment": {
+      "slot": "accessory",
+      "stat_mods": { "foc": 6, "int": 6 }
+    }
+  },
+  {
     "id": "miner_gyro_mod",
     "name": "Miner's Gyro Mod",
     "description": "A cabinet-grade stabilization loop adapted for field gear. It rewards calm hands under pressure.",

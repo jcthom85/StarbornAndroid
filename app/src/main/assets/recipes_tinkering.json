@@ -12,6 +12,66 @@
     "success_message": "The board wakes in warm amber bands. DEEP MINE ASTEROID DRILL scrolls across its tiny diagnostic display."
   },
   {
+    "id": "repair_canopy_hopper_cabinet",
+    "name": "Restore Canopy Hopper Cabinet",
+    "category": "repair",
+    "method": "repair",
+    "base": "sector9_optic_board",
+    "components": ["scrap_metal", "wiring_bundle"],
+    "ingredients": { "sector9_optic_board": 1, "scrap_metal": 2, "wiring_bundle": 1 },
+    "result": "canopy_hopper_cabinet_core",
+    "description": "Re-solder the moisture-sealed optic board, calibrate the phosphor CRT raster, and restore the Sector 9 emergency survival pod arcade cabinet.",
+    "success_message": "Emerald phosphor ripples across the screen. CANOPY HOPPER glows with bioluminescent swamp hues."
+  },
+  {
+    "id": "repair_spire_infiltrator_cabinet",
+    "name": "Restore Spire Infiltrator Cabinet",
+    "category": "repair",
+    "method": "repair",
+    "base": "hyperion_mainframe_chip",
+    "components": ["circuit_board", "wiring_bundle"],
+    "ingredients": { "hyperion_mainframe_chip": 1, "circuit_board": 2, "wiring_bundle": 1 },
+    "result": "spire_infiltrator_cabinet_core",
+    "description": "Bridge the severed data bus on the Spire VIP chip and overclock the vector display to restore SPIRE INFILTRATOR.",
+    "success_message": "Electric cyan circuitry pulses across the screen. SPIRE INFILTRATOR boots into high-speed mainframe overdrive."
+  },
+  {
+    "id": "repair_slag_catcher_cabinet",
+    "name": "Restore Slag Catcher Cabinet",
+    "category": "repair",
+    "method": "repair",
+    "base": "thermite_logic_gate",
+    "components": ["pure_iron", "wiring_bundle"],
+    "ingredients": { "thermite_logic_gate": 1, "pure_iron": 2, "wiring_bundle": 1 },
+    "result": "slag_catcher_cabinet_core",
+    "description": "Replace scorched heat shielding on the ceramic gate and re-mount the analog slider paddle to restore SLAG CATCHER.",
+    "success_message": "Molten ember light surges into the glass. SLAG CATCHER roars with the rhythm of the Foundry blast furnace."
+  },
+  {
+    "id": "repair_orbital_defense_cabinet",
+    "name": "Restore Orbital Defense Cabinet",
+    "category": "repair",
+    "method": "repair",
+    "base": "zenith_telemetry_array",
+    "components": ["composite_plate", "wiring_bundle"],
+    "ingredients": { "zenith_telemetry_array": 1, "composite_plate": 2, "wiring_bundle": 1 },
+    "result": "orbital_defense_cabinet_core",
+    "description": "Re-align the crystal optics, recharge the EMP capacitor bank, and restore the Zenith station ORBITAL DEFENSE 2000 cabinet.",
+    "success_message": "Deep cobalt starfields ignite across the CRT. ORBITAL DEFENSE 2000 boots with a triumphant synthesized fan-fare."
+  },
+  {
+    "id": "repair_harmonic_pulse_cabinet",
+    "name": "Restore Harmonic Pulse Cabinet",
+    "category": "repair",
+    "method": "repair",
+    "base": "prismatic_tuning_fork",
+    "components": ["astral_thread", "wiring_bundle"],
+    "ingredients": { "prismatic_tuning_fork": 1, "astral_thread": 2, "wiring_bundle": 1 },
+    "result": "harmonic_pulse_cabinet_core",
+    "description": "Weave astral resonator filaments through the crystal frequency matrix and restore HARMONIC PULSE.",
+    "success_message": "Radiant iridescent frequency highways surge to life across the glass. HARMONIC PULSE resounds with the music of the cosmos."
+  },
+  {
     "id": "mod_power_lens_1",
     "name": "Power Lens Mk. I",
     "category": "gear",

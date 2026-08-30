@@ -1646,7 +1646,7 @@
       {
         "name": "graffiti",
         "type": "generic",
-        "condition_unmet_message": "'If you reach Sector 4, follow the blue cables \u2014 not the signs.'"
+        "condition_unmet_message": "'If you reach Sector 4, follow the blue cables — not the signs.'"
       },
       {
         "name": "bench",
@@ -2397,7 +2397,7 @@
         "type": "fishing",
         "zone_id": "colony_pit_drain",
         "requires_milestone": "ms_w2_pod_examined",
-        "condition_unmet_message": "Hazard tape seals off the mineral drainage basin. Deep, stagnant runoff gathers beneath the safety beacons\u2014too murky to fish without proper survival gear."
+        "condition_unmet_message": "Hazard tape seals off the mineral drainage basin. Deep, stagnant runoff gathers beneath the safety beacons—too murky to fish without proper survival gear."
       }
     ]
   },
@@ -4763,6 +4763,12 @@
         "shop_id": "upper_city_lounge",
         "dialogue_id": "upper_city_lounge_shop_intro",
         "condition_unmet_message": "A silent concierge terminal offering premium equipment with premium contempt."
+      },
+      {
+        "name": "VIP vector arcade cabinet",
+        "type": "arcade_discovery",
+        "hide_when_milestone": "ms_arcade_cabinet_03_repaired",
+        "condition_unmet_message": "A sleek chrome arcade console sits behind the velvet curtain. An overclocked mainframe chip hums with high-speed ICE cycles."
       }
     ],
     "npc_presence": [
@@ -5701,6 +5707,12 @@
         "type": "generic",
         "action_event": "w4_sq19_read_rejection_codes",
         "condition_unmet_message": "A rejected droid twitches beside a bin of defective units."
+      },
+      {
+        "name": "scorched smelter console",
+        "type": "arcade_discovery",
+        "hide_when_milestone": "ms_arcade_cabinet_04_repaired",
+        "condition_unmet_message": "A heavy ceramic arcade console sits amidst discarded machine scrap. A thermite logic gate still holds shift records."
       }
     ]
   },
@@ -6358,6 +6370,12 @@
         "type": "rest_stop",
         "rest_event": "w5_camp_customs_lounge",
         "message": "Plush seating in the silent customs lounge provides vital rest before the deep void ring."
+      },
+      {
+        "name": "customs observation console",
+        "type": "arcade_discovery",
+        "hide_when_milestone": "ms_arcade_cabinet_05_repaired",
+        "condition_unmet_message": "A decommissioned customs arcade terminal is mounted in the passenger waiting niche. A Zenith telemetry array still hums in its memory slot."
       }
     ]
   },
@@ -7581,6 +7599,12 @@
           "ms_w6_jed_marks_found"
         ],
         "condition_unmet_message": "The echo remains polished and silent until Nova follows Jed's real tool marks."
+      },
+      {
+        "name": "crystalline arcade console",
+        "type": "arcade_discovery",
+        "hide_when_milestone": "ms_arcade_cabinet_06_repaired",
+        "condition_unmet_message": "An ancient crystalline arcade console stands in the harmonic resonance field. A prismatic tuning fork hums within its core housing."
       }
     ]
   },
@@ -8195,6 +8219,12 @@
         "action_event": "w2_mq01_stabilize_zeke",
         "condition_unmet_message": "Objective completed.",
         "requires_milestone_not_set": "ms_w2_zeke_stabilized"
+      },
+      {
+        "name": "waterlogged survival console",
+        "type": "arcade_discovery",
+        "hide_when_milestone": "ms_arcade_cabinet_02_repaired",
+        "condition_unmet_message": "An emerald optic board glimmers in the waterproof survival pod console."
       }
     ],
     "description_variants": [
@@ -11529,6 +11559,36 @@
         "type": "arcade",
         "show_when_milestone": "ms_arcade_cabinet_01_repaired",
         "condition_unmet_message": "The restored Hyperion cabinet warms the recreation corner with an amber attract screen."
+      },
+      {
+        "name": "Canopy Hopper",
+        "type": "arcade",
+        "show_when_milestone": "ms_arcade_cabinet_02_repaired",
+        "condition_unmet_message": "The restored Sector 9 pod cabinet glows with emerald swamp phosphor."
+      },
+      {
+        "name": "Spire Infiltrator",
+        "type": "arcade",
+        "show_when_milestone": "ms_arcade_cabinet_03_repaired",
+        "condition_unmet_message": "The restored Spire mainframe cabinet hums with neon cyan overdrive."
+      },
+      {
+        "name": "Slag Catcher",
+        "type": "arcade",
+        "show_when_milestone": "ms_arcade_cabinet_04_repaired",
+        "condition_unmet_message": "The restored Foundry smelter cabinet radiates steady ember heat."
+      },
+      {
+        "name": "Orbital Defense 2000",
+        "type": "arcade",
+        "show_when_milestone": "ms_arcade_cabinet_05_repaired",
+        "condition_unmet_message": "The restored Zenith starfighter cabinet glows with cobalt blue telemetry."
+      },
+      {
+        "name": "Harmonic Pulse",
+        "type": "arcade",
+        "show_when_milestone": "ms_arcade_cabinet_06_repaired",
+        "condition_unmet_message": "The restored Source rhythm cabinet radiates deep harmonic resonance."
       }
     ],
     "npc_presence": [
@@ -16238,7 +16298,7 @@
         "name": "salt-crusted chronometer",
         "type": "inspect",
         "description": "Inspect the brass chronometer resting on the black tide shelf.",
-        "inspect_message": "The hands are permanently fused at 04:17\u2014the exact minute the First Tide flooded the lower observatory. The glass lens is frosted with brine, yet the ticking spring inside still beats like a slow, stubborn heart."
+        "inspect_message": "The hands are permanently fused at 04:17—the exact minute the First Tide flooded the lower observatory. The glass lens is frosted with brine, yet the ticking spring inside still beats like a slow, stubborn heart."
       }
     ]
   },

@@ -30,6 +30,162 @@
     "toast": "Title earned: Chief Driller"
   },
   {
+    "id": "ms_arcade_canopy_hopper_discovered",
+    "name": "Emerald Phosphor in the Bog",
+    "description": "Recovered the waterproof optic board from the Sector 9 emergency survival pod arcade console.",
+    "toast": "Arcade project discovered: Canopy Hopper"
+  },
+  {
+    "id": "ms_arcade_cabinet_02_repaired",
+    "name": "Canopy Hopper Restored",
+    "description": "Restored the Sector 9 survival pod arcade cabinet and installed it aboard the Astra.",
+    "toast": "Astra recreation bay updated: Canopy Hopper installed"
+  },
+  {
+    "id": "ms_arcade_canopy_hopper_install_seen",
+    "name": "Swamp Lights on the Astra",
+    "description": "Saw Ollie's installation of the restored Canopy Hopper cabinet aboard the Astra.",
+    "toast": "Ollie finishes installing Canopy Hopper"
+  },
+  {
+    "id": "ms_arcade_canopy_hopper_silver",
+    "name": "Swamp Navigator",
+    "description": "Reached the silver score tier in Canopy Hopper.",
+    "toast": "Arcade reward: Tideglass Delight"
+  },
+  {
+    "id": "ms_arcade_canopy_hopper_gold",
+    "name": "Swamp Stalker",
+    "description": "Mastered Canopy Hopper with a gold-tier score.",
+    "toast": "Title earned: Swamp Stalker"
+  },
+  {
+    "id": "ms_arcade_spire_infiltrator_discovered",
+    "name": "Neon in the High Spire",
+    "description": "Recovered the overclocked mainframe chip from the Spire VIP lounge arcade cabinet.",
+    "toast": "Arcade project discovered: Spire Infiltrator"
+  },
+  {
+    "id": "ms_arcade_cabinet_03_repaired",
+    "name": "Spire Infiltrator Restored",
+    "description": "Restored the Spire mainframe arcade cabinet and installed it aboard the Astra.",
+    "toast": "Astra recreation bay updated: Spire Infiltrator installed"
+  },
+  {
+    "id": "ms_arcade_spire_infiltrator_install_seen",
+    "name": "High-Speed Overdrive on the Astra",
+    "description": "Saw Ollie's installation of the restored Spire Infiltrator cabinet aboard the Astra.",
+    "toast": "Ollie finishes installing Spire Infiltrator"
+  },
+  {
+    "id": "ms_arcade_spire_infiltrator_silver",
+    "name": "Grid Runner",
+    "description": "Reached the silver score tier in Spire Infiltrator.",
+    "toast": "Arcade reward: Phase Rounds Mod"
+  },
+  {
+    "id": "ms_arcade_spire_infiltrator_gold",
+    "name": "Master Infiltrator",
+    "description": "Mastered Spire Infiltrator with a gold-tier score.",
+    "toast": "Title earned: Master Infiltrator"
+  },
+  {
+    "id": "ms_arcade_slag_catcher_discovered",
+    "name": "Ember Glass in the Rejects",
+    "description": "Recovered the thermite logic gate from the Foundry reject bay arcade console.",
+    "toast": "Arcade project discovered: Slag Catcher"
+  },
+  {
+    "id": "ms_arcade_cabinet_04_repaired",
+    "name": "Slag Catcher Restored",
+    "description": "Restored the Foundry blast crucible arcade cabinet and installed it aboard the Astra.",
+    "toast": "Astra recreation bay updated: Slag Catcher installed"
+  },
+  {
+    "id": "ms_arcade_slag_catcher_install_seen",
+    "name": "Smelter Heat on the Astra",
+    "description": "Saw Ollie's installation of the restored Slag Catcher cabinet aboard the Astra.",
+    "toast": "Ollie finishes installing Slag Catcher"
+  },
+  {
+    "id": "ms_arcade_slag_catcher_silver",
+    "name": "Crucible Tender",
+    "description": "Reached the silver score tier in Slag Catcher.",
+    "toast": "Arcade reward: Crucible Heat Shield"
+  },
+  {
+    "id": "ms_arcade_slag_catcher_gold",
+    "name": "Master Smelter",
+    "description": "Mastered Slag Catcher with a gold-tier score.",
+    "toast": "Title earned: Master Smelter"
+  },
+  {
+    "id": "ms_arcade_orbital_defense_discovered",
+    "name": "Starlight on the Ring",
+    "description": "Recovered the crystal telemetry array from the Zenith customs lounge arcade console.",
+    "toast": "Arcade project discovered: Orbital Defense 2000"
+  },
+  {
+    "id": "ms_arcade_cabinet_05_repaired",
+    "name": "Orbital Defense Restored",
+    "description": "Restored the Zenith station starfighter arcade cabinet and installed it aboard the Astra.",
+    "toast": "Astra recreation bay updated: Orbital Defense installed"
+  },
+  {
+    "id": "ms_arcade_orbital_defense_install_seen",
+    "name": "Zenith Blue on the Astra",
+    "description": "Saw Ollie's installation of the restored Orbital Defense 2000 cabinet aboard the Astra.",
+    "toast": "Ollie finishes installing Orbital Defense"
+  },
+  {
+    "id": "ms_arcade_orbital_defense_silver",
+    "name": "Orbital Interceptor",
+    "description": "Reached the silver score tier in Orbital Defense 2000.",
+    "toast": "Arcade reward: Zenith Plasma Lens"
+  },
+  {
+    "id": "ms_arcade_orbital_defense_gold",
+    "name": "Ace of the Ring",
+    "description": "Mastered Orbital Defense 2000 with a gold-tier score.",
+    "toast": "Title earned: Ace of the Ring"
+  },
+  {
+    "id": "ms_arcade_harmonic_pulse_discovered",
+    "name": "Primordial Tuning",
+    "description": "Recovered the prismatic tuning fork from the Source echo workbench.",
+    "toast": "Arcade project discovered: Harmonic Pulse"
+  },
+  {
+    "id": "ms_arcade_cabinet_06_repaired",
+    "name": "Harmonic Pulse Restored",
+    "description": "Restored the ancient Source rhythm arcade cabinet and installed it aboard the Astra.",
+    "toast": "Astra recreation bay updated: Harmonic Pulse installed"
+  },
+  {
+    "id": "ms_arcade_harmonic_pulse_install_seen",
+    "name": "Resonance on the Astra",
+    "description": "Saw Ollie's installation of the restored Harmonic Pulse cabinet aboard the Astra.",
+    "toast": "Ollie finishes installing Harmonic Pulse"
+  },
+  {
+    "id": "ms_arcade_harmonic_pulse_silver",
+    "name": "Cadence Adept",
+    "description": "Reached the silver score tier in Harmonic Pulse.",
+    "toast": "Arcade reward: Harmonic Resonator Codex"
+  },
+  {
+    "id": "ms_arcade_harmonic_pulse_gold",
+    "name": "Master of the Source",
+    "description": "Mastered Harmonic Pulse with a gold-tier score.",
+    "toast": "Title earned: Master of the Source"
+  },
+  {
+    "id": "ms_all_arcade_cabinets_restored",
+    "name": "Arcade Legend of the Reach",
+    "description": "Restored and installed all 6 vintage arcade cabinets across the entire Astra recreation bay.",
+    "toast": "Achievement: All 6 Arcade Cabinets Restored!"
+  },
+  {
     "id": "ms_talked_to_jed",
     "name": "Jed's Briefing",
     "description": "You listened to Jed outline the plan inside Nova's House.",

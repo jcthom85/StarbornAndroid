@@ -113,7 +113,9 @@ data class GenericAction(
     @Json(name = "requires_milestone")
     val requiresMilestone: String? = null,
     @Json(name = "condition_unmet_message")
-    val conditionUnmetMessage: String? = null
+    val conditionUnmetMessage: String? = null,
+    @Json(name = "cabinet_id")
+    val cabinetId: String? = null
 ) : RoomAction
 
 fun RoomAction.actionKey(): String = when (this) {

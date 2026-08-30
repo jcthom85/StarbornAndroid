@@ -40,6 +40,11 @@ import com.example.starborn.navigation.NavigationDestination.Fishing
 import com.example.starborn.navigation.NavigationDestination.Cooking
 import com.example.starborn.navigation.NavigationDestination.Arcade
 import com.example.starborn.feature.arcade.ui.DeepMineArcadeScreen
+import com.example.starborn.feature.arcade.ui.CanopyHopperArcadeScreen
+import com.example.starborn.feature.arcade.ui.SpireInfiltratorArcadeScreen
+import com.example.starborn.feature.arcade.ui.SlagCatcherArcadeScreen
+import com.example.starborn.feature.arcade.ui.OrbitalDefenseArcadeScreen
+import com.example.starborn.feature.arcade.ui.HarmonicPulseArcadeScreen
 import com.example.starborn.feature.arcade.domain.ArcadeIds
 import com.example.starborn.feature.crafting.ui.CookingScreen
 import com.example.starborn.di.AppServices
@@ -570,13 +575,62 @@ fun NavigationHost(
                         )
                     }
                 }
-                DeepMineArcadeScreen(
-                    arcadeService = services.arcadeService,
-                    onBack = { navController.popBackStack() },
-                    largeTouchTargets = userSettings.largeTouchTargets,
-                    reducedFlashes = userSettings.disableFlashes,
-                    onPlayCue = { cue -> services.audioCuePlayer.execute(services.audioRouter.commandsForUi(cue)) }
-                )
+                when (cabinetId) {
+                    ArcadeIds.CANOPY_HOPPER -> {
+                        CanopyHopperArcadeScreen(
+                            arcadeService = services.arcadeService,
+                            onBack = { navController.popBackStack() },
+                            largeTouchTargets = userSettings.largeTouchTargets,
+                            reducedFlashes = userSettings.disableFlashes,
+                            onPlayCue = { cue -> services.audioCuePlayer.execute(services.audioRouter.commandsForUi(cue)) }
+                        )
+                    }
+                    ArcadeIds.SPIRE_INFILTRATOR -> {
+                        SpireInfiltratorArcadeScreen(
+                            arcadeService = services.arcadeService,
+                            onBack = { navController.popBackStack() },
+                            largeTouchTargets = userSettings.largeTouchTargets,
+                            reducedFlashes = userSettings.disableFlashes,
+                            onPlayCue = { cue -> services.audioCuePlayer.execute(services.audioRouter.commandsForUi(cue)) }
+                        )
+                    }
+                    ArcadeIds.SLAG_CATCHER -> {
+                        SlagCatcherArcadeScreen(
+                            arcadeService = services.arcadeService,
+                            onBack = { navController.popBackStack() },
+                            largeTouchTargets = userSettings.largeTouchTargets,
+                            reducedFlashes = userSettings.disableFlashes,
+                            onPlayCue = { cue -> services.audioCuePlayer.execute(services.audioRouter.commandsForUi(cue)) }
+                        )
+                    }
+                    ArcadeIds.ORBITAL_DEFENSE -> {
+                        OrbitalDefenseArcadeScreen(
+                            arcadeService = services.arcadeService,
+                            onBack = { navController.popBackStack() },
+                            largeTouchTargets = userSettings.largeTouchTargets,
+                            reducedFlashes = userSettings.disableFlashes,
+                            onPlayCue = { cue -> services.audioCuePlayer.execute(services.audioRouter.commandsForUi(cue)) }
+                        )
+                    }
+                    ArcadeIds.HARMONIC_PULSE -> {
+                        HarmonicPulseArcadeScreen(
+                            arcadeService = services.arcadeService,
+                            onBack = { navController.popBackStack() },
+                            largeTouchTargets = userSettings.largeTouchTargets,
+                            reducedFlashes = userSettings.disableFlashes,
+                            onPlayCue = { cue -> services.audioCuePlayer.execute(services.audioRouter.commandsForUi(cue)) }
+                        )
+                    }
+                    else -> {
+                        DeepMineArcadeScreen(
+                            arcadeService = services.arcadeService,
+                            onBack = { navController.popBackStack() },
+                            largeTouchTargets = userSettings.largeTouchTargets,
+                            reducedFlashes = userSettings.disableFlashes,
+                            onPlayCue = { cue -> services.audioCuePlayer.execute(services.audioRouter.commandsForUi(cue)) }
+                        )
+                    }
+                }
             } else {
                 LaunchedEffect(cabinetId) { navController.popBackStack() }
             }

@@ -4840,18 +4840,142 @@ class ExplorationViewModel(
     private fun handleGenericAction(action: GenericAction) {
         when (action.type.lowercase(Locale.getDefault())) {
             "fishing" -> handleFishingAction(action)
-            "arcade_discovery" -> handleArcadeDiscovery()
+            "arcade_discovery" -> {
+                val room = _uiState.value.currentRoom?.id.orEmpty().lowercase(Locale.getDefault())
+                val actionName = action.name.lowercase(Locale.getDefault())
+                when {
+                    room.contains("source") || actionName.contains("harmonic") || actionName.contains("pulse") || actionName.contains("tuning") -> {
+                        if (arcadeService.discoverHarmonicPulse()) {
+                            showInspection(
+                                "Embedded in the crystal grain of the ancient workbench, a prismatic tuning fork hums with primordial frequencies. " +
+                                    "You salvage the fork and copy the Harmonic Pulse repair schematic to your field kit."
+                            )
+                            emitEvent(ExplorationEvent.ItemGranted("Prismatic Tuning Fork", 1))
+                        } else {
+                            showInspection("The primordial workbench is quiet; the tuning fork is already safely in your field kit.")
+                        }
+                    }
+                    room.contains("orbital") || actionName.contains("orbital") || actionName.contains("starfighter") -> {
+                        if (arcadeService.discoverOrbitalDefense()) {
+                            showInspection(
+                                "Inside the locked customs observation niche, a crystal-tuned telemetry array blinks with deep orbital telemetry. " +
+                                    "You salvage the array and copy the Orbital Defense 2000 repair schematic to your field kit."
+                            )
+                            emitEvent(ExplorationEvent.ItemGranted("Zenith Telemetry Array", 1))
+                        } else {
+                            showInspection("The observation console is stripped; the telemetry array is already safely in your field kit.")
+                        }
+                    }
+                    room.contains("foundry") || actionName.contains("slag") || actionName.contains("smelter") -> {
+                        if (arcadeService.discoverSlagCatcher()) {
+                            showInspection(
+                                "Buried under rejected chassis in the scrap bin, a scorched thermite logic gate still holds its memory. " +
+                                    "You salvage the gate and copy the Slag Catcher repair schematic to your field kit."
+                            )
+                            emitEvent(ExplorationEvent.ItemGranted("Thermite Logic Gate", 1))
+                        } else {
+                            showInspection("The reject bay console is stripped; the thermite gate is already safely in your field kit.")
+                        }
+                    }
+                    room.contains("spire") || actionName.contains("spire") || actionName.contains("infiltrator") -> {
+                        if (arcadeService.discoverSpireInfiltrator()) {
+                            showInspection(
+                                "Behind the VIP velvet curtain, an overclocked Hyperion mainframe chip pulses with residual ICE cycles. " +
+                                    "You salvage the chip and copy the Spire Infiltrator repair schematic to your field kit."
+                            )
+                            emitEvent(ExplorationEvent.ItemGranted("Hyperion Mainframe Chip", 1))
+                        } else {
+                            showInspection("The VIP cabinet is stripped; the mainframe chip is already safely in your field kit.")
+                        }
+                    }
+                    room.contains("sector9") || room.contains("pod") || actionName.contains("canopy") || actionName.contains("pod") -> {
+                        if (arcadeService.discoverCanopyHopper()) {
+                            showInspection(
+                                "Inside the waterlogged escape pod console, an emerald optic board is sealed in watertight resin. " +
+                                    "You salvage the board and copy the Canopy Hopper repair schematic to your field kit."
+                            )
+                            emitEvent(ExplorationEvent.ItemGranted("Sector 9 Optic Board", 1))
+                        } else {
+                            showInspection("The survival pod console is stripped; the optic board is already safely in your field kit.")
+                        }
+                    }
+                    else -> {
+                        handleArcadeDiscovery()
+                    }
+                }
+            }
             "arcade" -> {
-                val progress = arcadeService.progress(ArcadeIds.DEEP_MINE)
-                if (progress.installed && "ms_arcade_deep_mine_install_seen" !in sessionStore.state.value.completedMilestones) {
-                    sessionStore.setMilestone("ms_arcade_deep_mine_install_seen")
-                    showInspection(
-                        "Ollie rocks back on his heels beside the cabinet, grease across both gloves. " +
-                            "\"Had to shave three centimeters off the coin box. Worth it. Listen to that thing breathe.\" " +
-                            "The amber attract screen rolls over, and for once the common room feels built for staying."
-                    )
-                } else if (progress.installed) emitEvent(ExplorationEvent.OpenArcade(ArcadeIds.DEEP_MINE))
-                else showInspection(action.conditionUnmetMessage ?: "The cabinet is still awaiting restoration.")
+                val cabinetId = action.cabinetId?.takeIf { it.isNotBlank() }
+                    ?: when {
+                        action.name.contains("Harmonic", ignoreCase = true) || action.name.contains("Pulse", ignoreCase = true) -> ArcadeIds.HARMONIC_PULSE
+                        action.name.contains("Orbital", ignoreCase = true) || action.name.contains("Defense", ignoreCase = true) -> ArcadeIds.ORBITAL_DEFENSE
+                        action.name.contains("Slag", ignoreCase = true) || action.name.contains("Smelter", ignoreCase = true) -> ArcadeIds.SLAG_CATCHER
+                        action.name.contains("Spire", ignoreCase = true) || action.name.contains("Infiltrator", ignoreCase = true) -> ArcadeIds.SPIRE_INFILTRATOR
+                        action.name.contains("Canopy", ignoreCase = true) -> ArcadeIds.CANOPY_HOPPER
+                        else -> ArcadeIds.DEEP_MINE
+                    }
+                val progress = arcadeService.progress(cabinetId)
+                if (progress.installed) {
+                    val installSeenKey = when (cabinetId) {
+                        ArcadeIds.HARMONIC_PULSE -> "ms_arcade_harmonic_pulse_install_seen"
+                        ArcadeIds.ORBITAL_DEFENSE -> "ms_arcade_orbital_defense_install_seen"
+                        ArcadeIds.SLAG_CATCHER -> "ms_arcade_slag_catcher_install_seen"
+                        ArcadeIds.SPIRE_INFILTRATOR -> "ms_arcade_spire_infiltrator_install_seen"
+                        ArcadeIds.CANOPY_HOPPER -> "ms_arcade_canopy_hopper_install_seen"
+                        else -> "ms_arcade_deep_mine_install_seen"
+                    }
+                    if (installSeenKey !in sessionStore.state.value.completedMilestones) {
+                        sessionStore.setMilestone(installSeenKey)
+                        when (cabinetId) {
+                            ArcadeIds.HARMONIC_PULSE -> {
+                                showInspection(
+                                    "Ollie touches the radiant crystal bezel as harmonious chimes echo through the common room deck. " +
+                                        "\"Listen to that resonance... all six cabinets are humming together like a choir. We've built an arcade legend.\" " +
+                                        "HARMONIC PULSE completes the Astra arcade collection!"
+                                )
+                            }
+                            ArcadeIds.ORBITAL_DEFENSE -> {
+                                showInspection(
+                                    "Ollie steps back with a wide grin as the deep cobalt starfield flares into life. " +
+                                        "\"Calibrated the twin plasma triggers for instant response. That starfield scroll looks like looking straight out the airlock.\" " +
+                                        "ORBITAL DEFENSE 2000 joins the Astra arcade line-up."
+                                )
+                            }
+                            ArcadeIds.SLAG_CATCHER -> {
+                                showInspection(
+                                    "Ollie wipes a soot smudge off the ceramic marquee. " +
+                                        "\"Had to reinforce the lower heat shielding so it doesn't melt through the bulkhead deck. That paddle has zero dead-zone.\" " +
+                                        "SLAG CATCHER joins the Astra arcade line-up."
+                                )
+                            }
+                            ArcadeIds.SPIRE_INFILTRATOR -> {
+                                showInspection(
+                                    "Ollie tests the vector glow on the CRT. " +
+                                        "\"Overclocked the flyback transformer so the cyan circuits bleed right off the glass. Look at that mainframe hum.\" " +
+                                        "SPIRE INFILTRATOR joins the Astra arcade line-up."
+                                )
+                            }
+                            ArcadeIds.CANOPY_HOPPER -> {
+                                showInspection(
+                                    "Ollie grins as the emerald marquee flares to life. " +
+                                        "\"Gave the audio amp extra juice so you can hear the bog-hopper chirp across the mess deck.\" " +
+                                        "CANOPY HOPPER joins the Astra arcade line-up."
+                                )
+                            }
+                            else -> {
+                                showInspection(
+                                    "Ollie rocks back on his heels beside the cabinet, grease across both gloves. " +
+                                        "\"Had to shave three centimeters off the coin box. Worth it. Listen to that thing breathe.\" " +
+                                        "The amber attract screen rolls over, and for once the common room feels built for staying."
+                                )
+                            }
+                        }
+                    } else {
+                        emitEvent(ExplorationEvent.OpenArcade(cabinetId))
+                    }
+                } else {
+                    showInspection(action.conditionUnmetMessage ?: "The cabinet is still awaiting restoration.")
+                }
             }
             else -> {
                 val required = collectRequiredMilestones(action.requiresMilestone, action.requiresMilestones)

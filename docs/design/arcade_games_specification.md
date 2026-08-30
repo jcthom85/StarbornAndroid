@@ -73,23 +73,24 @@ graph TD
 
 ---
 
-### Cabinet 3: *Spire Gridrunner*
+### Cabinet 3: *Spire Infiltrator*
 * **World**: World 3 (Ancient Spires & Upper City)
 * **Exact Room Location**: `spire_exec_lounge_bar` (Title: *"Exec Lounge"*) — glowing behind the velvet curtain in the VIP lounge corner.
 * **Astra Destination**: `astra_common_room` (Title: *"Astra Common Room"*) — Recreation Bay Arcade Corner.
-* **Genre**: Cyberpunk Snake / Lightcycle ICE Matrix
-* **Theme**: Infiltrate the Spire's central mainframe. Guide an overclocked data packet through high-density server grids, eating encryption nodes while avoiding security firewalls and your own expanding data tail.
+* **Genre**: Cyberpunk Maze Infiltrator / Pac-Man ICE
+* **Theme**: Infiltrate the Spire's high-security central mainframe. Guide a rogue data packet through glowing neon circuitry mazes, collecting unencrypted data fragments while evading patrolling ICE Sentinel programs.
+* **Special Mechanics**: Snagging an **OVERCLOCK Node** triggers temporary system vulnerability, turning the ICE Sentinels vulnerable to dereferencing for massive combo multiplier points.
 
 #### Gameplay Rules:
-* **Controls**: 4-Way Directional Touch / Swipe.
-* **Objective**: Collect unencrypted data cores to grow multiplier length. Speed increases incrementally with every 5 nodes collected.
-* **Special Mechanics**: Turbo Boost button allows temporary dashing through firewall corners with precise frame timing.
-* **Hazards**: Moving ICE security sweeps, glitching corrupted tiles, perimeter laser borders.
+* **Controls**: 4-Way Directional D-Pad / Buffer Swiping.
+* **Objective**: Clear all data nodes in the security sector while dodging 4 unique ICE Sentinel AI behaviors (Aggressive, Flanker, Ambusher, Drifter).
+* **Power-Ups**: Overclock Node (Sentinel vulnerable), Cloak Pulse (Temporary invisibility), Buffer Flush (Clears local maze hazard).
+* **Hazards**: Glitching corrupted walls, security laser gates, accelerated Sentinel overdrive states.
 
 #### Reward Tiers:
 * **Bronze (6,000 pts)**: 750 Credits + 2x `circuit_board` + 2x `nano_filament`.
 * **Silver (18,000 pts)**: Ammo Accessory: `phase_rounds` (Ignores 25% of robotic enemy armor).
-* **Gold / Champion (35,000 pts)**: Headgear Accessory: `cyber_visor` (+10% Critical Hit Chance for Gh0st) + Milestone Title: *"ICE Breaker"*.
+* **Gold / Champion (35,000 pts)**: Headgear Accessory: `cyber_visor` (+10% Critical Hit Chance for Gh0st) + Milestone Title: *"Master Infiltrator"*.
 
 ---
 
@@ -101,7 +102,7 @@ graph TD
 * **Theme**: Operate an emergency molten slag containment dolly beneath the malfunctioning Foundry crucible. Catch cooling white-hot metal ingots while deflecting volatile plasma bombs into cooling chutes.
 
 #### Gameplay Rules:
-* **Controls**: Analog Horizontal Slider / Rotary Touch Wheel.
+* **Controls**: 1:1 Analog Horizontal Slider / Finger Tracking.
 * **Objective**: Catch consecutive descending metal ingots with matching container buckets (Iron, Titanium, Plasma).
 * **Multiplier**: Consecutive catches build the "Overheat Multiplier" (up to 8x). Dropping an ingot resets the multiplier and heats the floor.
 * **Hazards**: Volatile explosive canisters (must be deflected with side bumper shields, not caught in buckets).
@@ -133,22 +134,23 @@ graph TD
 
 ---
 
-### Cabinet 6: *Harmonic Resonance*
+### Cabinet 6: *Harmonic Pulse*
 * **World**: World 6 (The Source)
 * **Exact Room Location**: `source_memory_fragments` (Title: *"World-Fracture Landing"*) — a surreal, floating pre-war memory manifestation crystallized on the landing platform.
 * **Astra Destination**: `astra_common_room` (Title: *"Astra Common Room"*) — Recreation Bay Arcade Corner.
-* **Genre**: Multi-Tone Simon / Harmonic Rhythm Memory
-* **Theme**: Reconstruct the forgotten melodies of the Source. Watch and listen to harmonic resonance pillars light up in sequence, then reproduce the chords with increasing speed and polyphonic complexity.
+* **Genre**: Arcade Rhythm / Polyphonic Beat Matcher
+* **Theme**: Harmonize with the crystalline pulse of the Source. Streamlines of harmonic resonance flow into 4 sacred rune conduits in sync with the celestial soundtrack. Tap and sustain notes on beat to weave cosmic melodies.
 
 #### Gameplay Rules:
-* **Controls**: 4 Harmonic Source Runes (Lens, Anvil, Anchor, Key).
-* **Objective**: Memorize ascending pattern sequences. Later rounds introduce simultaneous chord presses and tempo shifts.
-* **Audio Feedback**: Each rune corresponds to an authentic synth chord mapped to the *Starborn* musical scale.
+* **Controls**: 4 Harmonic Conduits (Lens, Anvil, Anchor, Key).
+* **Objective**: Hit incoming harmonic notes with precise timing (PERFECT, GREAT, GOOD) to build the Resonance Groove Multiplier up to 10x.
+* **Special Notes**: Sustained Beam Holds, Polyphonic Chords (simultaneous double taps), and Starburst Fever Mode.
+* **Audio Feedback**: Dynamic procedural synthesizer layers trigger on successful notes, completing the song orchestration in real-time.
 
 #### Reward Tiers:
-* **Bronze (10 Sequences)**: 1,000 Credits + 3x `source_resin`.
-* **Silver (20 Sequences)**: Accessory: `focus_conduit` (+15 Max MP / Tech Points).
-* **Gold / Champion (35 Sequences)**: Vanity Accessory: `starborn_ribbon` (+10% all stats across party) + Milestone Title: *"Architect of Sound"*.
+* **Bronze (10,000 pts)**: 1,000 Credits + 3x `source_resin`.
+* **Silver (25,000 pts)**: Accessory: `focus_conduit` (+15 Max MP / Tech Points).
+* **Gold / Champion (50,000 pts)**: Vanity Accessory: `starborn_ribbon` (+10% all stats across party) + Milestone Title: *"Maestro of the Source"*.
 
 ---
 
@@ -156,62 +158,42 @@ graph TD
 
 ```
 app/src/main/java/com/example/starborn/feature/arcade/
-├── model/
-│   ├── ArcadeGameType.kt              # Enum of all 6 cabinets + metadata
-│   ├── ArcadeGameState.kt             # Generic score, lives, game-over, highscore state
-│   ├── AsteroidDrillModels.kt         # Ship physics, fuel, ore vectors
-│   ├── GridrunnerModels.kt            # Grid positions, snake tail, firewalls
-│   └── ShmupModels.kt                 # Player ship, enemy waves, bullets, powerups
-├── viewmodel/
-│   ├── ArcadeViewModel.kt             # Game loop coordinator, high score persistence, reward granter
-│   └── ArcadeViewModelFactory.kt
+├── domain/
+│   ├── ArcadeIds.kt                   # Cabinet IDs, recipes, items, and milestones
+│   └── ArcadeService.kt               # Discovery, repair completion, high scores, reward claims
+├── games/
+│   ├── deepmine/                      # World 1: Deep Mine Asteroid Drill
+│   │   └── DeepMineEngine.kt
+│   ├── canopyhopper/                  # World 2: Canopy Hopper
+│   │   └── CanopyHopperEngine.kt
+│   ├── spireinfiltrator/              # World 3: Spire Infiltrator
+│   │   └── SpireInfiltratorEngine.kt
+│   ├── slagcatcher/                   # World 4: Slag Catcher
+│   │   └── SlagCatcherEngine.kt
+│   ├── orbitaldefense/                # World 5: Orbital Defense 2000
+│   │   └── OrbitalDefenseEngine.kt
+│   └── harmonicpulse/                 # World 6: Harmonic Pulse
+│       └── HarmonicPulseEngine.kt
 └── ui/
-    ├── ArcadeScreen.kt                # Main screen container with cabinet selection
-    ├── components/
-    │   ├── ArcadeCabinetBezel.kt      # CRT curved frame, scanlines, marquee glow
-    │   ├── ArcadeVirtualControls.kt   # Tactile joystick, d-pad, turbo buttons with haptics
-    │   └── ArcadeLeaderboardOverlay.kt# High score tables & claimable reward banners
-    └── games/
-        ├── AsteroidDrillCanvas.kt     # Deep Mine Asteroid Drill 60fps renderer
-        ├── CanopyHopperCanvas.kt      # Canopy Hopper 60fps renderer
-        ├── GridrunnerCanvas.kt        # Spire Gridrunner 60fps renderer
-        ├── SlagCatcherCanvas.kt       # Slag Catcher 60fps renderer
-        ├── OrbitalDefenseCanvas.kt    # Orbital Defense 2000 60fps renderer
-        └── HarmonicResonanceCanvas.kt # Harmonic Resonance 60fps renderer
+    ├── ArcadeCabinetHubScreen.kt      # Selection hub in Astra Common Room
+    ├── DeepMineArcadeScreen.kt        # World 1 Screen & Canvas
+    ├── CanopyHopperArcadeScreen.kt    # World 2 Screen & Canvas
+    ├── SpireInfiltratorArcadeScreen.kt# World 3 Screen & Canvas
+    ├── SlagCatcherArcadeScreen.kt     # World 4 Screen & Canvas
+    ├── OrbitalDefenseArcadeScreen.kt  # World 5 Screen & Canvas
+    └── HarmonicPulseArcadeScreen.kt   # World 6 Screen & Canvas
 ```
 
 ---
 
-## 5. UI / CRT Visual Styling
+## 5. Milestones & Achievements Integration
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    HYPERION AMUSEMENTS                      │
-│   [ COIN-OP RECREATION BAY // CABINET 03: SPIRE GRIDRUNNER ]│
-├─────────────────────────────────────────────────────────────┤
-│  SCORE: 028,450         HIGH: 035,000         CREDITS: 04   │
-│ ┌─────────────────────────────────────────────────────────┐ │
-│ │  ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ │ │
-│ │  ▓                [ CRT SCANLINES ]                  ▓ │ │
-│ │  ▓       ■──■──■──■──► [NODE]                        ▓ │ │
-│ │  ▓       │                                           ▓ │ │
-│ │  ▓       ■ [FIREWALL]                                ▓ │ │
-│ │  ▓                                                   ▓ │ │
-│ │  ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ │ │
-│ └─────────────────────────────────────────────────────────┘ │
-│                                                             │
-│         [ D-PAD ]                           ( TURBO ) ( B ) │
-│            ▲                                     [O]   [O]  │
-│         ◄  ●  ►                                             │
-│            ▼                                 [ INSERT COIN ]│
-└─────────────────────────────────────────────────────────────┘
-```
-
----
-
-## 6. Milestones & Achievements Integration
-
-The following milestones will be registered in `milestones.json`:
+The following milestones are registered:
 * `ms_arcade_cabinet_01_repaired`: *"Deep Mine Restored"* (Repaired Cabinet 1).
+* `ms_arcade_cabinet_02_repaired`: *"Canopy Hopper Restored"* (Repaired Cabinet 2).
+* `ms_arcade_cabinet_03_repaired`: *"Spire Infiltrator Restored"* (Repaired Cabinet 3).
+* `ms_arcade_cabinet_04_repaired`: *"Slag Catcher Restored"* (Repaired Cabinet 4).
+* `ms_arcade_cabinet_05_repaired`: *"Orbital Defense Restored"* (Repaired Cabinet 5).
+* `ms_arcade_cabinet_06_repaired`: *"Harmonic Pulse Restored"* (Repaired Cabinet 6).
 * `ms_arcade_all_repaired`: *"Arcade Restoration Complete"* (Repaired all 6 cabinets).
 * `ms_arcade_champion_all`: *"Hyperion Grand Master"* (Attained Gold Champion score on all 6 arcade machines).
