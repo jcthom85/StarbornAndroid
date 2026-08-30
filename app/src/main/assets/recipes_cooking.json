@@ -101,5 +101,17 @@
     "result": "ration_pack",
     "description": "Cure hearty beast cuts with fiery pepper to yield dense survival rations.",
     "success_message": "You pack two dense Spiced Rations for the trail."
+  },
+  {
+    "id": "provision_tideglass_delight",
+    "name": "Tideglass Skewer",
+    "ingredients": {
+      "raw_glowfish": 1,
+      "beast_meat": 1,
+      "herb": 1
+    },
+    "result": "tideglass_delight",
+    "description": "Skewer fresh swamp glowfish and seasoned meat with fragrant marsh herbs over camp coals.",
+    "success_message": "You roast a sizzling plate of Tideglass Delight that glows warmly in the swamp dark."
   }
 ]

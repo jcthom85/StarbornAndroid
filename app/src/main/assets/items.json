@@ -225,6 +225,30 @@
     }
   },
   {
+    "id": "herbal_poultice",
+    "name": "Herbal Poultice",
+    "description": "A soothing botanical compress made from crushed Sector 9 swamp herbs. Restores 45 HP and cleanses Weakness.",
+    "type": "consumable",
+    "value": 60,
+    "rarity": "common"
+  },
+  {
+    "id": "antidote_flask",
+    "name": "Antidote Flask",
+    "description": "A neutralizing serum brewed from swamp herbs and venom extracts. Cleanses Acid, Poison, and Erosion.",
+    "type": "consumable",
+    "value": 120,
+    "rarity": "uncommon"
+  },
+  {
+    "id": "burn_salve",
+    "name": "Cooling Burn Salve",
+    "description": "A cooling topical gel that immediately quenches thermal burns and restores 35 HP.",
+    "type": "consumable",
+    "value": 90,
+    "rarity": "common"
+  },
+  {
     "id": "miner_gyro_mod",
     "name": "Miner's Gyro Mod",
     "description": "A cabinet-grade stabilization loop adapted for field gear. It rewards calm hands under pressure.",
