@@ -198,8 +198,8 @@
   {
     "id": "ms_mine_power_on",
     "name": "Restored Mine Power",
-    "description": "The Stellarium generator roared back to life.",
-    "toast": "The Stellarium generator roars to life."
+    "description": "Power restored at the Cavern Junction breaker box.",
+    "toast": "Power restored. Deep mine lighting online."
   },
   {
     "id": "ms_w1_mq01_jed_talked",

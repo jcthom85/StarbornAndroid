@@ -70,7 +70,6 @@ fun TinkerTabContent(
             val step = state.tutorialStep
             if (step != null && !shownTutorialSteps.contains(step)) {
                 shownTutorialSteps.add(step)
-                onTutorialStepChanged?.invoke(step)
             }
         }
     }
@@ -115,24 +114,39 @@ fun TinkerTabContent(
                             activeSlot = ActiveBenchSlot.BASE
                         },
                         onItemTapped = { itemId ->
-                            // Insert into currently active slot and auto-advance
-                            when (activeSlot) {
-                                ActiveBenchSlot.BASE -> {
+                            if (state.isTutorialActive) {
+                                if (itemId == "cryo_inductor") {
                                     craftingViewModel.selectMain(itemId)
-                                    if (state.bench.componentIds.getOrNull(0).isNullOrBlank()) {
-                                        activeSlot = ActiveBenchSlot.COMPONENT_1
-                                    } else if (state.bench.componentIds.getOrNull(1).isNullOrBlank()) {
-                                        activeSlot = ActiveBenchSlot.COMPONENT_2
-                                    }
-                                }
-                                ActiveBenchSlot.COMPONENT_1 -> {
+                                    activeSlot = ActiveBenchSlot.COMPONENT_1
+                                } else if (itemId == "scrap_metal") {
                                     craftingViewModel.selectComponent(0, itemId)
-                                    if (state.bench.componentIds.getOrNull(1).isNullOrBlank()) {
-                                        activeSlot = ActiveBenchSlot.COMPONENT_2
+                                    activeSlot = ActiveBenchSlot.BASE
+                                } else {
+                                    when (activeSlot) {
+                                        ActiveBenchSlot.BASE -> craftingViewModel.selectMain(itemId)
+                                        ActiveBenchSlot.COMPONENT_1 -> craftingViewModel.selectComponent(0, itemId)
+                                        ActiveBenchSlot.COMPONENT_2 -> craftingViewModel.selectComponent(1, itemId)
                                     }
                                 }
-                                ActiveBenchSlot.COMPONENT_2 -> {
-                                    craftingViewModel.selectComponent(1, itemId)
+                            } else {
+                                when (activeSlot) {
+                                    ActiveBenchSlot.BASE -> {
+                                        craftingViewModel.selectMain(itemId)
+                                        if (state.bench.componentIds.getOrNull(0).isNullOrBlank()) {
+                                            activeSlot = ActiveBenchSlot.COMPONENT_1
+                                        } else if (state.bench.componentIds.getOrNull(1).isNullOrBlank()) {
+                                            activeSlot = ActiveBenchSlot.COMPONENT_2
+                                        }
+                                    }
+                                    ActiveBenchSlot.COMPONENT_1 -> {
+                                        craftingViewModel.selectComponent(0, itemId)
+                                        if (state.bench.componentIds.getOrNull(1).isNullOrBlank()) {
+                                            activeSlot = ActiveBenchSlot.COMPONENT_2
+                                        }
+                                    }
+                                    ActiveBenchSlot.COMPONENT_2 -> {
+                                        craftingViewModel.selectComponent(1, itemId)
+                                    }
                                 }
                             }
                         },
@@ -332,6 +346,10 @@ private fun WorkbenchTerminalView(
     val isSynthTutorialTarget = tutorialStep == TinkeringTutorialStep.SYNTHESIZE
 
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        if (tutorialStep != null) {
+            TinkeringTutorialGuideBanner(step = tutorialStep)
+        }
+
         // TOP CHAMBER: Interactive Sockets + Reaction Result
         Surface(
             modifier = Modifier.fillMaxWidth(),
@@ -1253,6 +1271,88 @@ private fun RequirementChip(
                 ),
                 color = if (satisfied) Color.White.copy(alpha = 0.9f) else Color(0xFFEF5350)
             )
+        }
+    }
+}
+
+@Composable
+fun TinkeringTutorialGuideBanner(
+    step: TinkeringTutorialStep,
+    modifier: Modifier = Modifier
+) {
+    val infiniteTransition = rememberInfiniteTransition(label = "tinker_tut_pulse")
+    val borderAlpha by infiniteTransition.animateFloat(
+        initialValue = 0.45f,
+        targetValue = 0.95f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(1100, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "borderAlpha"
+    )
+
+    val (badgeText, title, instruction) = when (step) {
+        TinkeringTutorialStep.SLOT_BASE -> Triple(
+            "STEP 1 OF 3",
+            "SLOT BASE ITEM",
+            "Tap the Broken Cryo-Inductor in your tray below to mount it into the Base socket."
+        )
+        TinkeringTutorialStep.SLOT_COMPONENT -> Triple(
+            "STEP 2 OF 3",
+            "ADD REPLACEMENT ALLOY",
+            "Tap Scrap Metal in your tray to supply replacement conduit alloy for the cold loop."
+        )
+        TinkeringTutorialStep.SYNTHESIZE -> Triple(
+            "STEP 3 OF 3",
+            "SYNTHESIZE BLUEPRINT",
+            "Reaction detected! Tap the glowing SYNTHESIZE button to seal the cold loop."
+        )
+        TinkeringTutorialStep.COMPLETE -> Triple(
+            "COMPLETE",
+            "REPAIR FINISHED",
+            "Cryo-Inductor restored! Cryo Vent is now online and available in combat."
+        )
+    }
+
+    Surface(
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(12.dp),
+        color = Color(0xFF071420).copy(alpha = 0.95f),
+        border = BorderStroke(1.5.dp, Color(0xFF7BE8FF).copy(alpha = borderAlpha))
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            Surface(
+                shape = RoundedCornerShape(8.dp),
+                color = Color(0xFF7BE8FF).copy(alpha = 0.18f),
+                border = BorderStroke(1.dp, Color(0xFF7BE8FF).copy(alpha = 0.7f))
+            ) {
+                Text(
+                    text = badgeText,
+                    style = MaterialTheme.typography.labelSmall.copy(
+                        fontSize = 10.sp,
+                        fontWeight = FontWeight.Black,
+                        letterSpacing = 0.8.sp
+                    ),
+                    color = Color(0xFF7BE8FF),
+                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 4.dp)
+                )
+            }
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold, letterSpacing = 0.5.sp),
+                    color = Color.White
+                )
+                Text(
+                    text = instruction,
+                    style = MaterialTheme.typography.bodySmall.copy(fontSize = 11.5.sp, lineHeight = 15.sp),
+                    color = Color.White.copy(alpha = 0.88f)
+                )
+            }
         }
     }
 }

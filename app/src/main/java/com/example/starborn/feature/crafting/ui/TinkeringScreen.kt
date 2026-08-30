@@ -49,6 +49,7 @@ import androidx.compose.ui.window.Dialog
 import com.example.starborn.domain.prompt.TutorialPrompt
 import com.example.starborn.domain.tutorial.TutorialEntry
 import com.example.starborn.feature.crafting.TinkeringTutorialStep
+import com.example.starborn.feature.exploration.ui.tabs.TinkeringTutorialGuideBanner
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -123,27 +124,6 @@ fun TinkeringRoute(
             val step = uiState.tutorialStep
             if (step != null && !shownTutorialSteps.contains(step)) {
                 shownTutorialSteps.add(step)
-                val entry = when (step) {
-                    TinkeringTutorialStep.SLOT_BASE -> TutorialEntry(
-                        key = "tut_tinker_base",
-                        context = "Workbench",
-                        message = "Tinkering lets you assemble, repair, and modify gear. Tap the [Base] slot to insert the broken Cryo-Inductor."
-                    )
-                    TinkeringTutorialStep.SLOT_COMPONENT -> TutorialEntry(
-                        key = "tut_tinker_component",
-                        context = "Workbench",
-                        message = "Now tap [Part A] to add Scrap Metal to rebuild the cooling coils."
-                    )
-                    TinkeringTutorialStep.SYNTHESIZE -> TutorialEntry(
-                        key = "tut_tinker_synth",
-                        context = "Workbench",
-                        message = "Schematic complete! Tap [Craft] to calibrate the repaired Cryo-Inductor."
-                    )
-                    TinkeringTutorialStep.COMPLETE -> null
-                }
-                if (entry != null) {
-                    promptManager.enqueue(TutorialPrompt(entry))
-                }
             }
         }
     }
@@ -892,6 +872,9 @@ private fun TinkeringBenchCard(
                 .padding(12.dp),
             verticalArrangement = Arrangement.spacedBy(11.dp)
         ) {
+            if (isTutorialActive && tutorialStep != null) {
+                TinkeringTutorialGuideBanner(step = tutorialStep)
+            }
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(10.dp),

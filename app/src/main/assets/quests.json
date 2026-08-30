@@ -173,7 +173,7 @@
         "tasks": [
           {
             "id": "restore_deep_mine_power",
-            "text": "Restore power at the Cavern Junction support pillar."
+            "text": "Restore power at the Cavern Junction breaker box."
           },
           {
             "id": "clear_first_mine_encounter",
@@ -458,35 +458,35 @@
   {
     "id": "w1_sq03",
     "title": "Heavy Lifting: Required Training",
-    "summary": "Required Logistics certification: Boggs will not authorize Sector 4 until Nova proves she can break a shield.",
-    "description": "Bring the loader online, clear the cargo, rescue the trapped workers, and complete Boggs' Guard Break drill.",
-    "flavor": "Boggs calls it labor efficiency. Nova calls it not letting people die under a crate.",
+    "summary": "Required Logistics certification: Boggs will not authorize Sector 4 until Nova proves she can break a shield in the Security Post.",
+    "description": "Proceed to the Security Post east of Customer Service, engage the Shielded Trainer, and complete Boggs' Guard Break certification.",
+    "flavor": "Boggs calls it labor efficiency. Nova calls it bureaucratic obstructionism.",
     "giver": "Foreman Boggs",
-    "hub_id": "hub_1_homestead",
+    "hub_id": "hub_2_logistics",
     "stages": [
       {
         "id": "clear_cargo_collapse",
         "title": "Required Logistics Certification",
-        "description": "Boggs folds Nova's shield certification into cargo cleanup. The Deep Elevator stays locked until the training log clears.",
+        "description": "Boggs requires a logged Guard Break certification before opening the Deep Mine elevator.",
         "tasks": [
           {
             "id": "talk_to_bogs",
-            "text": "Report to Foreman Boggs for mandatory shield training."
+            "text": "Report to Foreman Boggs in the Concourse Lobby."
           },
           {
             "id": "start_loader",
-            "text": "Start the loader."
+            "text": "Start the loader or drill system."
           },
           {
             "id": "move_cargo",
-            "text": "Move the collapsed cargo."
+            "text": "Prepare the training area."
           }
         ]
       },
       {
         "id": "guard_break_training",
         "title": "Mandatory Guard Break Drill",
-        "description": "The loader route becomes a controlled lesson in breaking a shield before attacking.",
+        "description": "Break the trainer's shield with Guard Break before attacking.",
         "tasks": [
           {
             "id": "learn_hydraulic_kick",
@@ -494,11 +494,11 @@
           },
           {
             "id": "break_training_shield",
-            "text": "Use Guard Break or Stagger against a shielded target."
+            "text": "Enter the Security Post (East) and defeat the Shielded Trainer with Guard Break."
           },
           {
             "id": "rescue_trapped_workers",
-            "text": "Clear the final debris and free the trapped workers."
+            "text": "Complete the drill."
           }
         ]
       }
@@ -1195,16 +1195,16 @@
         "description": "Search Dominion security databases in the plaza.",
         "tasks": [
           {
-                "id": "find_case_number",
-                "text": "Recover the erased case number from the transit memorial."
-              },
-              {
-                "id": "access_terminal",
-                "text": "Use the case number to search Dominion security records."
-              },
-              {
-                "id": "expose_transfer",
-                "text": "Expose where security transferred the missing witness."
+            "id": "find_case_number",
+            "text": "Recover the erased case number from the transit memorial."
+          },
+          {
+            "id": "access_terminal",
+            "text": "Use the case number to search Dominion security records."
+          },
+          {
+            "id": "expose_transfer",
+            "text": "Expose where security transferred the missing witness."
           }
         ]
       }
@@ -1231,16 +1231,16 @@
         "description": "Fix the flickering market lanterns.",
         "tasks": [
           {
-                "id": "trace_power_theft",
-                "text": "Trace who is siphoning power from the Night Market."
-              },
-              {
-                "id": "reroute_power",
-                "text": "Reroute executive sign power into the market grid."
-              },
-              {
-                "id": "fix_market_lights",
-                "text": "Relight the market and reveal the hidden stalls."
+            "id": "trace_power_theft",
+            "text": "Trace who is siphoning power from the Night Market."
+          },
+          {
+            "id": "reroute_power",
+            "text": "Reroute executive sign power into the market grid."
+          },
+          {
+            "id": "fix_market_lights",
+            "text": "Relight the market and reveal the hidden stalls."
           }
         ]
       }
@@ -1410,15 +1410,15 @@
         "description": "Crack the lounge safe and take the ledger.",
         "tasks": [
           {
-                "id": "copy_concierge_key",
-                "text": "Copy the concierge's rotating safe credential."
-              },
-              {
-                "id": "steal_ledger",
-                "text": "Use the credential to steal the encrypted ledger."
-              },
-              {
-                "id": "leak_ledger",
+            "id": "copy_concierge_key",
+            "text": "Copy the concierge's rotating safe credential."
+          },
+          {
+            "id": "steal_ledger",
+            "text": "Use the credential to steal the encrypted ledger."
+          },
+          {
+            "id": "leak_ledger",
             "text": "Choose whether to publish the ledger or weaponize it privately."
           }
         ]
@@ -1451,16 +1451,16 @@
         "description": "Run the prototype against drones in the Archive test alcove.",
         "tasks": [
           {
-                "id": "scan_targeting",
-                "text": "Scan the prototype's hidden targeting bias."
-              },
-              {
-                "id": "test_weapon",
-                "text": "Test the corrected prototype on security drones."
-              },
-              {
-                "id": "scrub_telemetry",
-                "text": "Scrub Nova's combat signature from the test telemetry."
+            "id": "scan_targeting",
+            "text": "Scan the prototype's hidden targeting bias."
+          },
+          {
+            "id": "test_weapon",
+            "text": "Test the corrected prototype on security drones."
+          },
+          {
+            "id": "scrub_telemetry",
+            "text": "Scrub Nova's combat signature from the test telemetry."
           }
         ]
       }
@@ -1629,16 +1629,16 @@
         "description": "Trace the engineer's final maintenance ping through the only quiet place in the Foundry.",
         "tasks": [
           {
-                "id": "trace_ping",
-                "text": "Trace the worker's final maintenance ping."
-              },
-              {
-                "id": "find_worker",
-                "text": "Find the engineer's hidden coolant shelter."
-              },
-              {
-                "id": "vent_safe_route",
-                "text": "Open a heat-safe route for trapped workers."
+            "id": "trace_ping",
+            "text": "Trace the worker's final maintenance ping."
+          },
+          {
+            "id": "find_worker",
+            "text": "Find the engineer's hidden coolant shelter."
+          },
+          {
+            "id": "vent_safe_route",
+            "text": "Open a heat-safe route for trapped workers."
           }
         ]
       }
@@ -1670,16 +1670,16 @@
         "description": "Turn Dominion wreckage into survival tools before the intake eats it.",
         "tasks": [
           {
-                "id": "stop_intake",
-                "text": "Jam the waste intake before it consumes the wrecks."
-              },
-              {
-                "id": "salvage_mechs",
-                "text": "Extract intact actuators from the mech pile."
-              },
-              {
-                "id": "build_bypass",
-                "text": "Build a cooling bypass from the salvaged parts."
+            "id": "stop_intake",
+            "text": "Jam the waste intake before it consumes the wrecks."
+          },
+          {
+            "id": "salvage_mechs",
+            "text": "Extract intact actuators from the mech pile."
+          },
+          {
+            "id": "build_bypass",
+            "text": "Build a cooling bypass from the salvaged parts."
           }
         ]
       }
@@ -1858,15 +1858,15 @@
         "description": "Choose what to do with the waking units.",
         "tasks": [
           {
-                "id": "read_rejection_codes",
-                "text": "Read why the Foundry rejected the waking units."
-              },
-              {
-                "id": "resolve_units",
-                "text": "Remove the obedience fault instead of scrapping the units."
-              },
-              {
-                "id": "release_units",
+            "id": "read_rejection_codes",
+            "text": "Read why the Foundry rejected the waking units."
+          },
+          {
+            "id": "resolve_units",
+            "text": "Remove the obedience fault instead of scrapping the units."
+          },
+          {
+            "id": "release_units",
             "text": "Choose whether the units escape or stay to defend the workers."
           }
         ]
@@ -1894,16 +1894,16 @@
         "description": "Use the Foundry's own hazard program as practice before the Titan fight.",
         "tasks": [
           {
-                "id": "map_hazards",
-                "text": "Map the test chamber's heat-cycle sequence."
-              },
-              {
-                "id": "survive_waves",
-                "text": "Survive three overclocked hazard waves."
-              },
-              {
-                "id": "steal_overclock",
-                "text": "Steal the chamber's overclock profile after surviving it."
+            "id": "map_hazards",
+            "text": "Map the test chamber's heat-cycle sequence."
+          },
+          {
+            "id": "survive_waves",
+            "text": "Survive three overclocked hazard waves."
+          },
+          {
+            "id": "steal_overclock",
+            "text": "Steal the chamber's overclock profile after surviving it."
           }
         ]
       }
@@ -2038,16 +2038,16 @@
         "description": "Read the Director's logs.",
         "tasks": [
           {
-                "id": "find_redactions",
-                "text": "Find what the Director removed from the public record."
-              },
-              {
-                "id": "read_logs",
-                "text": "Decrypt the Director's personal logs."
-              },
-              {
-                "id": "publish_logs",
-                "text": "Publish the unredacted logs across the Ring."
+            "id": "find_redactions",
+            "text": "Find what the Director removed from the public record."
+          },
+          {
+            "id": "read_logs",
+            "text": "Decrypt the Director's personal logs."
+          },
+          {
+            "id": "publish_logs",
+            "text": "Publish the unredacted logs across the Ring."
           }
         ]
       }
@@ -2074,16 +2074,16 @@
         "description": "Restore the Solarium mirror array.",
         "tasks": [
           {
-                "id": "trace_false_sun",
-                "text": "Trace where the false sun's energy is being spent."
-              },
-              {
-                "id": "realign_mirrors",
-                "text": "Burn the void-moss and realign the mirror array."
-              },
-              {
-                "id": "restore_gardens",
-                "text": "Redirect the repaired light from executive sightlines to the gardens."
+            "id": "trace_false_sun",
+            "text": "Trace where the false sun's energy is being spent."
+          },
+          {
+            "id": "realign_mirrors",
+            "text": "Burn the void-moss and realign the mirror array."
+          },
+          {
+            "id": "restore_gardens",
+            "text": "Redirect the repaired light from executive sightlines to the gardens."
           }
         ]
       }
@@ -2110,16 +2110,16 @@
         "description": "Seal the damaged hull sections.",
         "tasks": [
           {
-                "id": "map_pressure_loss",
-                "text": "Map the dock's pressure-loss sequence."
-              },
-              {
-                "id": "seal_breaches",
-                "text": "Seal the three hull breaches in collapse order."
-              },
-              {
-                "id": "reopen_dock",
-                "text": "Reopen the dock for non-executive traffic."
+            "id": "map_pressure_loss",
+            "text": "Map the dock's pressure-loss sequence."
+          },
+          {
+            "id": "seal_breaches",
+            "text": "Seal the three hull breaches in collapse order."
+          },
+          {
+            "id": "reopen_dock",
+            "text": "Reopen the dock for non-executive traffic."
           }
         ]
       }
@@ -2297,15 +2297,15 @@
         "description": "Recover the defensive backup.",
         "tasks": [
           {
-                "id": "trace_purge",
-                "text": "Trace the purge command through the server farm."
-              },
-              {
-                "id": "recover_backup",
-                "text": "Recover the defensive backup data."
-              },
-              {
-                "id": "restore_guardian",
+            "id": "trace_purge",
+            "text": "Trace the purge command through the server farm."
+          },
+          {
+            "id": "recover_backup",
+            "text": "Recover the defensive backup data."
+          },
+          {
+            "id": "restore_guardian",
             "text": "Choose whether the guardian stays independent or bonds with the crew."
           }
         ]
@@ -2498,19 +2498,19 @@
       {
         "id": "workbench",
         "title": "Old Workbench",
-            "description": "Follow the details Vale cannot fake, then decide what Jed's memory should leave behind.",
-            "tasks": [
-              {
-                "id": "find_tool_marks",
-                "text": "Find Jed's real tool marks in the false mine."
-              },
-              {
-                "id": "talk_to_jed",
-                "text": "Let Jed's echo finish the lesson."
-              },
-              {
-                "id": "carry_legacy",
-                "text": "Carry the lesson forward instead of preserving the ghost."
+        "description": "Follow the details Vale cannot fake, then decide what Jed's memory should leave behind.",
+        "tasks": [
+          {
+            "id": "find_tool_marks",
+            "text": "Find Jed's real tool marks in the false mine."
+          },
+          {
+            "id": "talk_to_jed",
+            "text": "Let Jed's echo finish the lesson."
+          },
+          {
+            "id": "carry_legacy",
+            "text": "Carry the lesson forward instead of preserving the ghost."
           }
         ]
       }
@@ -2534,18 +2534,18 @@
       {
         "id": "delete_record",
         "title": "Personnel File",
-            "description": "Expose the file's authority, let Zeke revoke it, and prove the loop no longer controls the exit.",
-            "tasks": [
-              {
-                "id": "find_backups",
-                "text": "Find the backups that keep recreating Zeke's file."
-              },
-              {
-                "id": "delete_record",
-                "text": "Let Zeke revoke the record's authority."
-              },
-              {
-                "id": "leave_review",
+        "description": "Expose the file's authority, let Zeke revoke it, and prove the loop no longer controls the exit.",
+        "tasks": [
+          {
+            "id": "find_backups",
+            "text": "Find the backups that keep recreating Zeke's file."
+          },
+          {
+            "id": "delete_record",
+            "text": "Let Zeke revoke the record's authority."
+          },
+          {
+            "id": "leave_review",
             "text": "Choose what Zeke does with the records after rejecting their authority."
           }
         ]
@@ -2570,19 +2570,19 @@
       {
         "id": "recover_song",
         "title": "Clean Signal",
-            "description": "Separate Elara's voice from the order loop before preserving the clean signal.",
-            "tasks": [
-              {
-                "id": "isolate_voice",
-                "text": "Isolate Elara's voice beneath the battlefield orders."
-              },
-              {
-                "id": "break_command_layer",
-                "text": "Break the command layer without erasing her voice."
-              },
-              {
-                "id": "recover_song",
-                "text": "Preserve the clean recording."
+        "description": "Separate Elara's voice from the order loop before preserving the clean signal.",
+        "tasks": [
+          {
+            "id": "isolate_voice",
+            "text": "Isolate Elara's voice beneath the battlefield orders."
+          },
+          {
+            "id": "break_command_layer",
+            "text": "Break the command layer without erasing her voice."
+          },
+          {
+            "id": "recover_song",
+            "text": "Preserve the clean recording."
           }
         ]
       }
@@ -2711,19 +2711,19 @@
       {
         "id": "grave",
         "title": "Aethel Burial Current",
-            "description": "Trace the names, tune the grave, and carry its answer into the next memory.",
-            "tasks": [
-              {
-                "id": "trace_names",
-                "text": "Trace the Aethel names beneath the threshold."
-              },
-              {
-                "id": "find_grave",
-                "text": "Tune the Aethel Grave without flattening its voices."
-              },
-              {
-                "id": "carry_chorus",
-                "text": "Carry the answering chorus into the world-fracture."
+        "description": "Trace the names, tune the grave, and carry its answer into the next memory.",
+        "tasks": [
+          {
+            "id": "trace_names",
+            "text": "Trace the Aethel names beneath the threshold."
+          },
+          {
+            "id": "find_grave",
+            "text": "Tune the Aethel Grave without flattening its voices."
+          },
+          {
+            "id": "carry_chorus",
+            "text": "Carry the answering chorus into the world-fracture."
           }
         ]
       }
@@ -2748,18 +2748,18 @@
         "id": "future_hull",
         "title": "Future Wreckage",
         "description": "Find the Astra fragment from a future the crew still has time to refuse.",
-            "tasks": [
-              {
-                "id": "identify_timeline",
-                "text": "Identify the doomed timeline that produced the wreck."
-              },
-              {
-                "id": "recover_hull",
-                "text": "Detach the future Astra hull fragment."
-              },
-              {
-                "id": "fit_hull",
-                "text": "Fit the fragment as protection, not prophecy."
+        "tasks": [
+          {
+            "id": "identify_timeline",
+            "text": "Identify the doomed timeline that produced the wreck."
+          },
+          {
+            "id": "recover_hull",
+            "text": "Detach the future Astra hull fragment."
+          },
+          {
+            "id": "fit_hull",
+            "text": "Fit the fragment as protection, not prophecy."
           }
         ]
       }

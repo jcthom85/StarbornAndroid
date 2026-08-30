@@ -622,19 +622,19 @@
   {
     "id": "bogs_w1_mq03_review_3",
     "speaker": "Foreman Boggs",
-    "text": "Sector 4 needs a cutter. Pass shield training and I'll clear the lift.",
+    "text": "Sector 4 needs a cutter. Pass shield training in the Security Post and I'll clear the lift.",
     "next": "bogs_w1_mq03_review_4"
   },
   {
     "id": "bogs_w1_mq03_review_4",
     "speaker": "Foreman Boggs",
-    "text": "Loading Dock. Clear the cargo and finish the shield drill.",
-    "trigger": "start_quest:w1_sq03,track_quest:w1_sq03,set_quest_task_done:w1_sq03:talk_to_bogs,set_milestone:ms_w1_sq03_started"
+    "text": "East through Customer Service to the Security Post. Break the trainer's shield and log your certification.",
+    "trigger": "start_quest:w1_sq03,track_quest:w1_sq03,set_quest_task_done:w1_sq03:talk_to_bogs,set_milestone:ms_w1_sq03_started,set_milestone:ms_w1_sq03_hydraulic_kick_ready,unlock_skill:nova_hydraulic_kick,advance_quest_stage:w1_sq03:guard_break_training"
   },
   {
     "id": "bogs_w1_mq03_guardbreak_gate_1",
     "speaker": "Foreman Boggs",
-    "text": "The training log is still blank. Finish the shield drill.",
+    "text": "The training log is still blank. Hit the Security Post to the east and finish the shield drill.",
     "condition": "quest_active:w1_mq03,milestone:ms_w1_sq03_started,milestone_not_set:ms_w1_guardbreak_trained",
     "next": "bogs_w1_mq03_guardbreak_gate_2"
   },

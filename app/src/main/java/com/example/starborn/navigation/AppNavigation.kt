@@ -439,7 +439,11 @@ fun NavigationHost(
                 services.audioCuePlayer.execute(
                     services.audioRouter.commandsForLayerOverride(AudioCueType.MUSIC, cueId = "music_tinkering_focus", loop = true)
                 )
-                onDispose { }
+                onDispose {
+                    services.audioCuePlayer.execute(
+                        services.audioRouter.commandsForLayerOverride(AudioCueType.MUSIC, stop = true)
+                    )
+                }
             }
             TinkeringRoute(
                 viewModel = craftingViewModel,
@@ -493,7 +497,11 @@ fun NavigationHost(
                 services.audioCuePlayer.execute(
                     services.audioRouter.commandsForLayerOverride(AudioCueType.MUSIC, cueId = "music_cooking_kitchen", loop = true)
                 )
-                onDispose { }
+                onDispose {
+                    services.audioCuePlayer.execute(
+                        services.audioRouter.commandsForLayerOverride(AudioCueType.MUSIC, stop = true)
+                    )
+                }
             }
             CookingScreen(
                 craftingService = services.craftingService,
@@ -522,7 +530,11 @@ fun NavigationHost(
                     services.audioCuePlayer.execute(
                         services.audioRouter.commandsForLayerOverride(AudioCueType.MUSIC, cueId = "music_fishing_ambient", loop = true)
                     )
-                    onDispose { }
+                    onDispose {
+                        services.audioCuePlayer.execute(
+                            services.audioRouter.commandsForLayerOverride(AudioCueType.MUSIC, stop = true)
+                        )
+                    }
                 }
                 FishingRoute(
                     viewModel = fishingViewModel,
@@ -552,7 +564,11 @@ fun NavigationHost(
                     services.audioCuePlayer.execute(
                         services.audioRouter.commandsForLayerOverride(AudioCueType.MUSIC, cueId = "music_arcade_cabinet", loop = true)
                     )
-                    onDispose { }
+                    onDispose {
+                        services.audioCuePlayer.execute(
+                            services.audioRouter.commandsForLayerOverride(AudioCueType.MUSIC, stop = true)
+                        )
+                    }
                 }
                 DeepMineArcadeScreen(
                     arcadeService = services.arcadeService,
@@ -611,7 +627,11 @@ fun NavigationHost(
                     services.audioCuePlayer.execute(
                         services.audioRouter.commandsForLayerOverride(AudioCueType.MUSIC, cueId = "music_shop_cozy", loop = true)
                     )
-                    onDispose { }
+                    onDispose {
+                        services.audioCuePlayer.execute(
+                            services.audioRouter.commandsForLayerOverride(AudioCueType.MUSIC, stop = true)
+                        )
+                    }
                 }
                 ShopRoute(
                     viewModel = shopViewModel,

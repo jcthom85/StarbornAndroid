@@ -61,11 +61,10 @@ class CombatTutorialTracker(
             session.tutorialCompleted.none { it.equals(COMBAT_LOADER_TUTORIAL_ID, ignoreCase = true) }
         if (isLoaderEligible) return true
 
-        val isBulwarkEligible = currentRoomId.equals(COMBAT_TUTORIAL_ROOM_ID, ignoreCase = true) &&
+        val isBulwarkEligible = (currentRoomId.equals(COMBAT_TUTORIAL_ROOM_ID, ignoreCase = true) || currentRoomId.equals("admin_security", ignoreCase = true)) &&
             encounterEnemyIdList.size == 1 &&
             encounterEnemyIdList.first().equals(COMBAT_TUTORIAL_ENEMY_ID, ignoreCase = true) &&
-            session.questStageById[COMBAT_TUTORIAL_QUEST_ID] == COMBAT_TUTORIAL_QUEST_STAGE &&
-            COMBAT_TUTORIAL_SKILL_ID in session.unlockedSkills &&
+            (session.questStageById[COMBAT_TUTORIAL_QUEST_ID] == COMBAT_TUTORIAL_QUEST_STAGE || session.activeQuests.contains(COMBAT_TUTORIAL_QUEST_ID)) &&
             session.tutorialCompleted.none { it.equals(COMBAT_BASICS_TUTORIAL_ID, ignoreCase = true) }
         return isBulwarkEligible
     }
@@ -86,6 +85,9 @@ class CombatTutorialTracker(
             sessionStore.markTutorialSeen(COMBAT_LOADER_TUTORIAL_ID)
             return state
         } else {
+            if (COMBAT_TUTORIAL_SKILL_ID !in sessionStore.state.value.unlockedSkills) {
+                sessionStore.unlockSkill(COMBAT_TUTORIAL_SKILL_ID)
+            }
             val shieldedTarget = target.copy(
                 statusEffects = target.statusEffects
                     .filterNot { it.id.equals("invulnerable", ignoreCase = true) } +

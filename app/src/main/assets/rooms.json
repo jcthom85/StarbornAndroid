@@ -1646,7 +1646,7 @@
       {
         "name": "graffiti",
         "type": "generic",
-        "condition_unmet_message": "'If you reach Sector 4, follow the blue cables — not the signs.'"
+        "condition_unmet_message": "'If you reach Sector 4, follow the blue cables \u2014 not the signs.'"
       },
       {
         "name": "bench",
@@ -1992,17 +1992,15 @@
     "env": "market",
     "title": "Security Post",
     "background_image": "images/rooms/world_1/admin_security.webp",
-    "description": "A room full of flickering monitors and weapon racks that smell of gun oil. Two Dominion troopers work the desk in sealed helmets, rifles clipped at the shoulder. Neither of them looks up. Neither of them has to.",
+    "description": "A room full of flickering monitors and weapon racks that smell of gun oil. In the center, an automated Shield Trainer frame hums with an active barrier, waiting for guard certification.",
     "npcs": [],
     "items": [],
     "enemies": [
-      "dominion_dampener",
-      "dominion_dampener"
+      "acoustic_bulwark"
     ],
     "enemy_parties": [
       [
-        "dominion_dampener",
-        "dominion_dampener"
+        "acoustic_bulwark"
       ]
     ],
     "connections": {
@@ -2015,6 +2013,11 @@
     "state": {},
     "actions": [
       {
+        "name": "shield trainer",
+        "type": "generic",
+        "condition_unmet_message": "A reinforced Dominion riot shield drill frame used for mandatory guard certification."
+      },
+      {
         "name": "monitors",
         "type": "generic",
         "condition_unmet_message": "They show camera feeds from every hallway in the sector."
@@ -2022,7 +2025,15 @@
       {
         "name": "racks",
         "type": "generic",
-        "condition_unmet_message": "Empty racks for stun-batons and riot shields. The guards must be on patrol."
+        "condition_unmet_message": "Racks for stun-batons and riot shields around the training frame."
+      }
+    ],
+    "enemy_instances": [
+      {
+        "enemy_id": "acoustic_bulwark",
+        "hp": 30,
+        "vitality": 0,
+        "stability": 12
       }
     ]
   },
@@ -2352,7 +2363,7 @@
     "weather": "cave_drip",
     "title": "Elevator Landing",
     "background_image": "images/rooms/world_1/mine_landing.webp",
-    "description": "The industrial lift opens into raw rock, red safety beacons, and idle drilling machinery. Boggs' override shows one authorized descent and no scheduled return. A quiet drain pool fishing spot gathers in the corner.",
+    "description": "The industrial lift opens into raw rock, red safety beacons, and idle drilling machinery. Boggs' override shows one authorized descent and no scheduled return. A taped-off drain pool gathers in the corner.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -2382,10 +2393,11 @@
         "condition_unmet_message": "Massive drills and ore-crushers, currently silent during the shift-change."
       },
       {
-        "name": "drain pool fishing",
+        "name": "drain pool",
         "type": "fishing",
         "zone_id": "colony_pit_drain",
-        "condition_unmet_message": "A deep mineral runoff pool calm enough to drop a line."
+        "requires_milestone": "ms_w2_pod_examined",
+        "condition_unmet_message": "Hazard tape seals off the mineral drainage basin. Deep, stagnant runoff gathers beneath the safety beacons\u2014too murky to fish without proper survival gear."
       }
     ]
   },
@@ -2476,7 +2488,7 @@
     "env": "mine",
     "title": "Cavern Junction",
     "background_image": "images/rooms/world_1/mine_junction.webp",
-    "description": "Mine tunnels branch from a cavernous junction around a central support pillar. Its display flashes EQUIPMENT FAILURE while a second pulse runs through the relay housing.",
+    "description": "Mine tunnels branch from a cavernous junction around a central support pillar. A mounted junction breaker box hums while an intermittent pulse runs through the power relay.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -2494,15 +2506,15 @@
     },
     "actions": [
       {
-        "name": "support pillar",
+        "name": "junction breaker box",
         "type": "toggle",
         "state_key": "power_on",
-        "popup_title": "Stellarium Generator",
+        "popup_title": "Junction Power Relay",
         "label_on": "Restore power",
         "label_off": "Cut power",
         "action_event_on": "evt_mine_power_on",
         "action_event_off": "evt_mine_power_off",
-        "condition_unmet_message": "The pillar carries the sector's shoring load. Its relay is also conducting the repeating pulse deeper into the mine."
+        "condition_unmet_message": "The mounted junction breaker box routes auxiliary power to the surrounding mine tunnels."
       }
     ]
   },
@@ -11468,7 +11480,9 @@
     "description": "Coffee rings stain the central table. A patched kitchenette faces a couch bolted to the deck, and the shielded relic array occupies one warm corner. This is where the crew stops being a formation and becomes a family.",
     "description_variants": [
       {
-        "requires_milestones": ["ms_arcade_cabinet_01_repaired"],
+        "requires_milestones": [
+          "ms_arcade_cabinet_01_repaired"
+        ],
         "background_image": "images/rooms/astra/common_room_arcade_v1.webp",
         "description": "Coffee rings stain the central table. Beside the patched kitchenette, the restored Deep Mine cabinet paints the recreation corner amber while its attract tune chirps beneath the ship's hum. This is where the crew stops being a formation and becomes a family."
       }
@@ -16224,7 +16238,7 @@
         "name": "salt-crusted chronometer",
         "type": "inspect",
         "description": "Inspect the brass chronometer resting on the black tide shelf.",
-        "inspect_message": "The hands are permanently fused at 04:17—the exact minute the First Tide flooded the lower observatory. The glass lens is frosted with brine, yet the ticking spring inside still beats like a slow, stubborn heart."
+        "inspect_message": "The hands are permanently fused at 04:17\u2014the exact minute the First Tide flooded the lower observatory. The glass lens is frosted with brine, yet the ticking spring inside still beats like a slow, stubborn heart."
       }
     ]
   },

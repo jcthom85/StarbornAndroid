@@ -793,52 +793,81 @@ fun ShieldBreakBurst(
         anim.snapTo(0f)
         anim.animateTo(
             targetValue = 1f,
-            animationSpec = tween(durationMillis = 380, easing = FastOutSlowInEasing)
+            animationSpec = tween(durationMillis = 520, easing = FastOutSlowInEasing)
         )
     }
     val t = anim.value.coerceIn(0f, 1f)
-    val alpha = (1f - t).coerceIn(0f, 1f)
-    val shieldColor = Color(0xFF42A5F5)
-    Canvas(modifier = modifier.graphicsLayer { this.alpha = alpha }) {
-        val minSize = size.minDimension
-        if (minSize <= 0f) return@Canvas
-        val center = Offset(size.width / 2f, size.height / 2f)
-        val radius = minSize * (0.18f + 0.42f * t)
-        val stroke = (minSize * 0.018f).coerceAtLeast(2f)
+    val alpha = (1f - t * t).coerceIn(0f, 1f)
+    val shieldColor = Color(0xFF00E5FF)
+    val coreColor = Color(0xFFE0F7FA)
 
-        drawCircle(
-            color = shieldColor.copy(alpha = 0.65f * alpha),
-            radius = radius,
-            center = center,
-            style = Stroke(width = stroke)
-        )
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Canvas(modifier = Modifier.matchParentSize().graphicsLayer { this.alpha = alpha }) {
+            val minSize = size.minDimension
+            if (minSize <= 0f) return@Canvas
+            val center = Offset(size.width / 2f, size.height / 2f)
 
-        val arcSize = Size(radius * 2f, radius * 2f)
-        val arcTopLeft = Offset(center.x - radius, center.y - radius)
-        drawArc(
-            color = Color.White.copy(alpha = 0.35f * alpha),
-            startAngle = 360f * t,
-            sweepAngle = 80f,
-            useCenter = false,
-            topLeft = arcTopLeft,
-            size = arcSize,
-            style = Stroke(width = stroke * 0.75f, cap = StrokeCap.Round)
-        )
-
-        val shardCount = 7
-        repeat(shardCount) { index ->
-            val angle = (index / shardCount.toFloat()) * (PI.toFloat() * 2f) + t * 1.1f
-            val dir = Offset(cos(angle.toDouble()).toFloat(), sin(angle.toDouble()).toFloat())
-            val start = center + dir * radius * 0.62f
-            val end = center + dir * radius * (0.92f + 0.18f * t)
-            drawLine(
-                color = shieldColor.copy(alpha = 0.55f * alpha),
-                start = start,
-                end = end,
-                strokeWidth = stroke * 0.7f,
-                cap = StrokeCap.Round
+            // 1. Central Shockwave
+            val shockwaveRadius = minSize * (0.15f + 0.65f * t)
+            drawCircle(
+                color = shieldColor.copy(alpha = 0.8f * (1f - t)),
+                radius = shockwaveRadius,
+                center = center,
+                style = Stroke(width = (minSize * 0.035f * (1f - t * 0.5f)).coerceAtLeast(3f))
             )
+            drawCircle(
+                color = Color.White.copy(alpha = 0.5f * (1f - t * 1.2f).coerceAtLeast(0f)),
+                radius = shockwaveRadius * 0.85f,
+                center = center,
+                style = Stroke(width = 2.dp.toPx())
+            )
+
+            // 2. Polygonal Shattered Shards
+            val shardCount = 12
+            repeat(shardCount) { index ->
+                val baseAngle = (index / shardCount.toFloat()) * (PI.toFloat() * 2f)
+                val wobble = sin(index.toFloat() * 3.7f) * 0.35f
+                val angle = baseAngle + wobble
+                val dir = Offset(cos(angle), sin(angle))
+                val flightDist = minSize * (0.25f + 0.55f * t)
+                val shardCenter = center + dir * flightDist
+                val shardSize = minSize * (0.045f + 0.02f * sin(index.toFloat())) * (1f - t * 0.6f)
+                val rot = (index * 45f + t * 360f) * (PI.toFloat() / 180f)
+
+                val p1 = shardCenter + Offset(cos(rot), sin(rot)) * shardSize
+                val p2 = shardCenter + Offset(cos(rot + 2.1f), sin(rot + 2.1f)) * (shardSize * 0.8f)
+                val p3 = shardCenter + Offset(cos(rot + 4.2f), sin(rot + 4.2f)) * (shardSize * 0.6f)
+
+                val shardPath = Path().apply {
+                    moveTo(p1.x, p1.y)
+                    lineTo(p2.x, p2.y)
+                    lineTo(p3.x, p3.y)
+                    close()
+                }
+                drawPath(shardPath, color = coreColor.copy(alpha = 0.9f * alpha))
+                drawPath(shardPath, color = shieldColor.copy(alpha = alpha), style = Stroke(width = 1.5.dp.toPx()))
+            }
         }
+
+        // 3. Floating "BREAK!" badge
+        val badgeScale = (1f + 0.4f * sin(t * PI.toFloat())).coerceAtLeast(0.8f)
+        val badgeOffset = (-36).dp * (t * 0.8f)
+        Text(
+            text = "SHIELD BREAK!",
+            color = Color(0xFF00E5FF).copy(alpha = alpha),
+            fontWeight = FontWeight.Black,
+            fontSize = 13.sp,
+            letterSpacing = 1.2.sp,
+            modifier = Modifier
+                .offset(y = badgeOffset)
+                .graphicsLayer {
+                    scaleX = badgeScale
+                    scaleY = badgeScale
+                }
+        )
     }
 }
 

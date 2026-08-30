@@ -573,6 +573,13 @@ fun ExplorationScreen(
                 detectTapGestures(
                     onPress = {
                         tryAwaitRelease()
+                    },
+                    onTap = {
+                        if (uiState.narrationPrompt != null) {
+                            viewModel.dismissNarration()
+                        } else if (uiState.prompt != null) {
+                            viewModel.dismissPrompt()
+                        }
                     }
                 )
             } else {
@@ -1311,7 +1318,7 @@ fun ExplorationScreen(
             )
         }
 
-        if (uiState.prompt == null && !blockingOverlayActive && !uiState.isMenuOverlayVisible) {
+        if (!uiState.isMenuOverlayVisible && uiState.cinematic == null) {
             Row(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
@@ -1321,7 +1328,7 @@ fun ExplorationScreen(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                if (uiState.canReturnToHub) {
+                if (uiState.canReturnToHub && uiState.prompt == null && !blockingOverlayActive) {
                     ReturnHubButton(
                         onClick = { viewModel.requestReturnToHub() }
                     )
@@ -1338,7 +1345,7 @@ fun ExplorationScreen(
                             viewModel.openMenuOverlay()
                         }
                     },
-                    enabled = !blockingOverlayActive
+                    enabled = uiState.tuningPuzzle == null && uiState.activeDialogue == null
                 )
             }
         }
@@ -4275,7 +4282,7 @@ private fun MenuToggleButton(
                 }
             }
             Text(
-                text = if (showBeacon) "TINKER" else "MENU",
+                text = "MENU",
                 color = if (showBeacon) warmColor else Color.White.copy(alpha = if (enabled) 0.94f else 0.55f),
                 style = MaterialTheme.typography.labelLarge,
                 fontWeight = FontWeight.Black,
@@ -6012,6 +6019,7 @@ private fun EnemyPartyCluster(
                 transitionActive = transitionActive,
                 icon = enemyIcons[enemyId],
                 size = memberSize,
+                showFightBadge = (index == 0),
                 modifier = Modifier
                     .zIndex((party.enemies.size - index).toFloat())
                     .offset(x = offsetX, y = offsetY)
@@ -6036,6 +6044,7 @@ private fun EnemyPartyStandee(
     transitionActive: Boolean,
     icon: EnemyIconUi?,
     size: Dp,
+    showFightBadge: Boolean = true,
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
@@ -6063,7 +6072,7 @@ private fun EnemyPartyStandee(
             icon = icon,
             iconSize = size
         )
-        if (!transitionActive) {
+        if (!transitionActive && showFightBadge) {
             Surface(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)

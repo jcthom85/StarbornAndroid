@@ -141,8 +141,8 @@ private const val STELLARIUM_GENERATOR_ROOM_ID = "mine_junction"
 private const val STELLARIUM_ENV_ID = "mine"
 private const val STELLARIUM_GENERATOR_ON_EVENT = "evt_mine_power_on"
 private const val STELLARIUM_GENERATOR_OFF_EVENT = "evt_mine_power_off"
-private const val STELLARIUM_GENERATOR_ON_MESSAGE_FALLBACK = "The Stellarium generator roars to life."
-private const val STELLARIUM_GENERATOR_OFF_MESSAGE = "The Stellarium generator winds down into silence."
+private const val STELLARIUM_GENERATOR_ON_MESSAGE_FALLBACK = "Power restored. Deep mine lighting online."
+private const val STELLARIUM_GENERATOR_OFF_MESSAGE = "Power cut. Deep mine lighting offline."
 private const val STELLARIUM_GENERATOR_OFF_ACCENT = 0xFFFF5252
 private const val STELLARIUM_BREAKER_W_ROOM_ID = "mine_gas"
 private const val STELLARIUM_BREAKER_E_ROOM_ID = "mine_sifter"
@@ -652,7 +652,7 @@ class ExplorationViewModel(
         "ms_repair_bundle_delivered" to "Jed received the bundle of broken devices.",
         "ms_tinkering_prompt_active" to "Jed unlocked tinkering. Head to the table to continue.",
         "ms_talked_to_jed" to "Jed's briefing is complete.",
-        "ms_mine_power_on" to "The Stellarium generator roars to life.",
+        "ms_mine_power_on" to "Power restored. Deep mine lighting online.",
         "ms_breaker_alert_shown" to "You hear machinery unlocking nearby."
     )
 
@@ -1617,6 +1617,21 @@ class ExplorationViewModel(
                         isTinkeringTutorialActive = tutorialsEnabled &&
                             "ms_w1_mq01_workshop_briefed" in newState.completedMilestones &&
                             "ms_w1_mq01_cryo_repaired" !in newState.completedMilestones
+                    )
+                }
+                val isTinkeringTutActive = tutorialsEnabled &&
+                    "ms_w1_mq01_workshop_briefed" in newState.completedMilestones &&
+                    "ms_w1_mq01_cryo_repaired" !in newState.completedMilestones
+                if (isTinkeringTutActive && "tut_tinker_open_menu_shown" !in newState.completedMilestones) {
+                    sessionStore.setMilestone("tut_tinker_open_menu_shown")
+                    promptManager.enqueue(
+                        TutorialPrompt(
+                            TutorialEntry(
+                                key = "tut_tinker_open_menu",
+                                context = "Tinkering",
+                                message = "Open the MENU and navigate to your Field Kit to repair the broken Cryo-Inductor."
+                            )
+                        )
                     )
                 }
                 updateActionHints(_uiState.value.currentRoom)
@@ -2596,12 +2611,14 @@ class ExplorationViewModel(
             ?: action.name.ifBlank { formatStateKey(stateKey) }
         val enableLabel = action.labelOn.ifBlank { "Turn on" }
         val disableLabel = action.labelOff.ifBlank { "Turn off" }
+        val roomId = _uiState.value.currentRoom?.id
+        val applied = setRoomStateValue(roomId, stateKey, targetState)
         val eventId = if (targetState) {
             action.actionEventOn?.takeIf { it.isNotBlank() }
         } else {
             action.actionEventOff?.takeIf { it.isNotBlank() }
         }
-        if (eventId != null) {
+        if (eventId != null && eventsById.containsKey(eventId)) {
             val event = eventsById[eventId]
             val message = if (targetState) {
                 event?.onMessage ?: enableLabel
@@ -2616,13 +2633,9 @@ class ExplorationViewModel(
                 suppressNextStateMessage = false
             }
             triggerPlayerAction(eventId)
-        } else {
-            val roomId = _uiState.value.currentRoom?.id
-            val applied = setRoomStateValue(roomId, stateKey, targetState)
-            if (applied != null && !shouldSuppressStateAnnouncement(stateKey)) {
-                val message = if (targetState) enableLabel else disableLabel
-                postStatus(message)
-            }
+        } else if (applied != null && !shouldSuppressStateAnnouncement(stateKey)) {
+            val message = if (targetState) enableLabel else disableLabel
+            postStatus(message)
         }
         showGeneratorAnnouncementIfNeeded(action, targetState, title)
     }
@@ -2630,21 +2643,24 @@ class ExplorationViewModel(
     private fun showGeneratorAnnouncementIfNeeded(action: ToggleAction, targetState: Boolean, title: String) {
         if (!isStellariumGeneratorToggle(action)) return
         val message = if (targetState) {
+            sessionStore.setMilestone("ms_mine_power_on")
             milestoneMessages["ms_mine_power_on"] ?: STELLARIUM_GENERATOR_ON_MESSAGE_FALLBACK
         } else {
             STELLARIUM_GENERATOR_OFF_MESSAGE
         }
-        val accentColor = if (targetState) EVENT_ANNOUNCEMENT_ACCENT else STELLARIUM_GENERATOR_OFF_ACCENT
-        enqueueEventAnnouncement(title = null, message = message, accentColor = accentColor)
+        playUiCue("sfx_bunk_light_on")
+        showInspection(message)
     }
 
     private fun isStellariumGeneratorToggle(action: ToggleAction): Boolean {
-        val titleContainsGenerator = action.popupTitle?.contains("generator", ignoreCase = true) == true
-        val nameContainsGenerator = action.name.contains("generator", ignoreCase = true)
+        val titleContainsRelayOrGen = action.popupTitle?.contains("relay", ignoreCase = true) == true ||
+            action.popupTitle?.contains("generator", ignoreCase = true) == true
+        val nameContainsBreakerOrGen = action.name.contains("breaker", ignoreCase = true) ||
+            action.name.contains("generator", ignoreCase = true)
         val eventOnMatches = action.actionEventOn?.equals(STELLARIUM_GENERATOR_ON_EVENT, ignoreCase = true) == true
         val eventOffMatches = action.actionEventOff?.equals(STELLARIUM_GENERATOR_OFF_EVENT, ignoreCase = true) == true
         return action.stateKey.equals("power_on", ignoreCase = true) &&
-            (titleContainsGenerator || nameContainsGenerator || eventOnMatches || eventOffMatches)
+            (titleContainsRelayOrGen || nameContainsBreakerOrGen || eventOnMatches || eventOffMatches)
     }
 
     fun onTogglePromptSelection(enable: Boolean) {
@@ -2761,27 +2777,7 @@ class ExplorationViewModel(
     }
 
     fun onTinkerTutorialStep(step: com.example.starborn.feature.crafting.TinkeringTutorialStep) {
-        val entry = when (step) {
-            com.example.starborn.feature.crafting.TinkeringTutorialStep.SLOT_BASE -> com.example.starborn.domain.tutorial.TutorialEntry(
-                key = "tut_tinker_base",
-                context = "Workbench",
-                message = "Tinkering lets you assemble, repair, and modify gear. Tap your broken Cryo-Inductor in the tray below to place it into the Base socket."
-            )
-            com.example.starborn.feature.crafting.TinkeringTutorialStep.SLOT_COMPONENT -> com.example.starborn.domain.tutorial.TutorialEntry(
-                key = "tut_tinker_comp",
-                context = "Workbench",
-                message = "Now tap Scrap Metal in your tray to supply replacement conduit alloy for the cold loop."
-            )
-            com.example.starborn.feature.crafting.TinkeringTutorialStep.SYNTHESIZE -> com.example.starborn.domain.tutorial.TutorialEntry(
-                key = "tut_tinker_synth",
-                context = "Workbench",
-                message = "Blueprint discovered! Tap SYNTHESIZE to calibrate and seal the cold loop."
-            )
-            com.example.starborn.feature.crafting.TinkeringTutorialStep.COMPLETE -> null
-        }
-        if (entry != null) {
-            promptManager.enqueue(com.example.starborn.domain.prompt.TutorialPrompt(entry))
-        }
+        // In-context tutorial guide banner renders directly within the Workbench interface
     }
 
     fun debugTriggerTinkeringTutorial() {
@@ -4912,6 +4908,12 @@ class ExplorationViewModel(
     }
 
     private fun handleFishingAction(action: GenericAction) {
+        val required = collectRequiredMilestones(action.requiresMilestone, action.requiresMilestones)
+        val completed = sessionStore.state.value.completedMilestones
+        if (required.any { it !in completed }) {
+            showInspection(action.conditionUnmetMessage ?: "You need fishing gear to fish here.")
+            return
+        }
         val zoneId = action.zoneId?.takeIf { it.isNotBlank() } ?: _uiState.value.currentRoom?.id
         val status = action.conditionUnmetMessage?.takeIf { it.isNotBlank() }
             ?: if (action.name.isNotBlank()) action.name else "Time to fish"

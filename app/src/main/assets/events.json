@@ -1505,7 +1505,6 @@
     "description": "Completes Heavy Lifting when Nova defeats the shielded training guard.",
     "trigger": {
       "type": "encounter_victory",
-      "room": "workshop_dock",
       "enemies": [
         "acoustic_bulwark"
       ]
@@ -1557,7 +1556,6 @@
     "description": "Returns tracking to The Echo after mandatory shield training on the main path.",
     "trigger": {
       "type": "encounter_victory",
-      "room": "workshop_dock",
       "enemies": [
         "acoustic_bulwark"
       ]

@@ -1218,7 +1218,7 @@ fun rememberDamageFlash(
     LaunchedEffect(lastDamage) {
         if (lastDamage != null) {
             anim.snapTo(1f)
-            anim.animateTo(0f, animationSpec = tween(durationMillis = 350))
+            anim.animateTo(0f, animationSpec = tween(durationMillis = 240, easing = FastOutSlowInEasing))
         }
     }
     return anim.value
@@ -1229,6 +1229,11 @@ fun rememberDamageShake(
     targetId: String,
     log: List<CombatLogEntry>
 ): Float {
+    val lastHit = log.lastOrNull {
+        it is CombatLogEntry.Damage &&
+            it.targetId == targetId &&
+            !(it.amount == 0 && it.element == "miss")
+    } as? CombatLogEntry.Damage
     val damageIndex = log.indexOfLast {
         it is CombatLogEntry.Damage &&
             it.targetId == targetId &&
@@ -1237,12 +1242,16 @@ fun rememberDamageShake(
     val lastIndex = remember { mutableStateOf(-1) }
     val anim = remember { Animatable(0f) }
     val direction = remember { mutableStateOf(1f) }
+    val isCrit = lastHit?.critical == true
     LaunchedEffect(damageIndex) {
         if (damageIndex >= 0 && damageIndex > lastIndex.value) {
             lastIndex.value = damageIndex
             direction.value = if (Random.nextBoolean()) 1f else -1f
-            anim.snapTo(1f)
-            anim.animateTo(0f, animationSpec = tween(durationMillis = 320, easing = EaseOutBack))
+            anim.snapTo(if (isCrit) 1.6f else 1f)
+            anim.animateTo(
+                targetValue = 0f,
+                animationSpec = spring(dampingRatio = 0.38f, stiffness = Spring.StiffnessMedium)
+            )
         }
     }
     return anim.value * direction.value
@@ -1268,14 +1277,15 @@ fun rememberHitRecoil(
     val anim = remember { Animatable(0f) }
     val density = LocalDensity.current
     val critical = lastHit?.critical == true
-    val distance = if (critical) 12.dp else 8.dp
-    val holdMs = if (critical) 90L else 60L
+    val distance = if (critical) 24.dp else 14.dp
     LaunchedEffect(hitIndex) {
         if (hitIndex >= 0 && hitIndex > lastIndex.value) {
             lastIndex.value = hitIndex
             anim.snapTo(1f)
-            delay(holdMs)
-            anim.animateTo(0f, animationSpec = tween(durationMillis = 180, easing = FastOutSlowInEasing))
+            anim.animateTo(
+                targetValue = 0f,
+                animationSpec = spring(dampingRatio = 0.42f, stiffness = Spring.StiffnessMediumLow)
+            )
         }
     }
     val distancePx = with(density) { distance.toPx() }
@@ -1300,14 +1310,14 @@ fun rememberHitPulse(
     val lastIndex = remember { mutableStateOf(-1) }
     val anim = remember { Animatable(0f) }
     val critical = lastHit?.critical == true
-    val holdMs = if (critical) 90L else 60L
-    val returnMs = if (critical) 240 else 200
     LaunchedEffect(hitIndex) {
         if (hitIndex >= 0 && hitIndex > lastIndex.value) {
             lastIndex.value = hitIndex
-            anim.snapTo(1f)
-            delay(holdMs)
-            anim.animateTo(0f, animationSpec = tween(durationMillis = returnMs, easing = FastOutSlowInEasing))
+            anim.snapTo(if (critical) 1.8f else 1f)
+            anim.animateTo(
+                targetValue = 0f,
+                animationSpec = spring(dampingRatio = 0.5f, stiffness = Spring.StiffnessMedium)
+            )
         }
     }
     return anim.value

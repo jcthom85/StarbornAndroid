@@ -3269,7 +3269,13 @@ private fun determineSkillTargeting(skill: Skill): SkillTargeting {
             "world_6" -> "music_w6_combat"
             else -> "music_w1_combat"
         }
-        val commands = audioRouter.commandsForLayerOverride(
+        val commands = mutableListOf<com.example.starborn.domain.audio.AudioCommand>()
+        commands += audioRouter.commandsForLayerOverride(
+            layer = AudioCueType.AMBIENT,
+            stop = true,
+            fadeMs = 300L
+        )
+        commands += audioRouter.commandsForLayerOverride(
             layer = AudioCueType.MUSIC,
             cueId = trackId,
             fadeMs = 400L,
@@ -3281,7 +3287,7 @@ private fun determineSkillTargeting(skill: Skill): SkillTargeting {
     private fun playVictoryMusic() {
         val commands = audioRouter.commandsForLayerOverride(
             layer = AudioCueType.MUSIC,
-            cueId = "music_victory_theme",
+            cueId = "music_victory_standard",
             fadeMs = 250L,
             loop = true
         )

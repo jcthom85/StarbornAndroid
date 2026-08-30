@@ -170,7 +170,7 @@
       "dmg",
       "pierce"
     ],
-    "base_power": 150,
+    "base_power": 95,
     "scaling": "atk",
     "cooldown": 2,
     "status_applications": []
@@ -452,7 +452,7 @@
     "combat_tags": [
       "dmg"
     ],
-    "base_power": 80,
+    "base_power": 70,
     "scaling": "atk",
     "status_applications": []
   },
@@ -604,7 +604,7 @@
     "combat_tags": [
       "shock"
     ],
-    "base_power": 120,
+    "base_power": 80,
     "scaling": "agility",
     "cooldown": 2,
     "status_applications": [
@@ -673,7 +673,7 @@
     "combat_tags": [
       "dmg"
     ],
-    "base_power": 150,
+    "base_power": 90,
     "scaling": "strength",
     "cooldown": 2,
     "status_applications": [
@@ -741,7 +741,7 @@
     "combat_tags": [
       "acid"
     ],
-    "base_power": 120,
+    "base_power": 85,
     "scaling": "focus",
     "cooldown": 2,
     "status_applications": []
@@ -889,7 +889,7 @@
       "dmg",
       "guard_break"
     ],
-    "base_power": 110,
+    "base_power": 90,
     "scaling": "agility",
     "cooldown": 2,
     "status_applications": [

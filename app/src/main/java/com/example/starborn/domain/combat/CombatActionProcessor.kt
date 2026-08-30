@@ -770,23 +770,16 @@ class CombatActionProcessor(
                 element = damageMode.element
             )
             val damage = adjustIncomingDamage(targetState, rawDamage, damageMode.element)
-            if (damage > 0) {
-                working = engine.applyDamage(
-                    state = working,
-                    attackerId = attackerId,
-                    targetId = targetId,
-                    amount = damage,
-                    element = damageMode.element
-                )
+            val finalDamage = if (outgoing > 0 && !targetState.hasBlockingStatus()) damage.coerceAtLeast(1) else damage
+            working = engine.applyDamage(
+                state = working,
+                attackerId = attackerId,
+                targetId = targetId,
+                amount = finalDamage,
+                element = damageMode.element
+            )
+            if (finalDamage > 0) {
                 working = working.consumeForceCritIfPresent(targetId)
-            } else if (outgoing > 0 && targetState.hasBlockingStatus()) {
-                working = engine.applyDamage(
-                    state = working,
-                    attackerId = attackerId,
-                    targetId = targetId,
-                    amount = 0,
-                    element = damageMode.element
-                )
             }
         }
         return working
@@ -968,7 +961,8 @@ class CombatActionProcessor(
         val defense = CombatFormulas.defensePower(target.effectiveStat("vitality"))
         val variance = random.nextInt(PHYSICAL_VARIANCE_MIN, PHYSICAL_VARIANCE_MAX + 1)
         val weaponDamage = rollWeaponDamage(attacker)
-        return (attack + weaponDamage + variance - defense).coerceAtLeast(1)
+        val unarmedBonus = if (attacker.combatant.weapon == null) kotlin.math.max(3, attacker.effectiveStat("strength")) else 0
+        return (attack + weaponDamage + unarmedBonus + variance - (defense / 2)).coerceAtLeast(1)
     }
 
     private fun rollWeaponDamage(attacker: CombatantState): Int {
@@ -1039,7 +1033,7 @@ class CombatActionProcessor(
         attacker: CombatantState,
         skill: Skill
     ): Int {
-        val base = when (skill.scaling?.lowercase()) {
+        val statValue = when (skill.scaling?.lowercase()) {
             "atk", "attack", "str", "strength" -> attacker.effectiveStat("strength")
             "agi", "agility" -> attacker.effectiveStat("agility")
             "speed", "spd" -> attacker.effectiveStat("speed")
@@ -1048,6 +1042,9 @@ class CombatActionProcessor(
             "luck", "lck" -> attacker.effectiveStat("luck")
             else -> attacker.effectiveStat("strength")
         }
+        val attackPower = CombatFormulas.attackPower(statValue).coerceAtLeast(statValue)
+        val weaponDmg = rollWeaponDamage(attacker)
+        val base = (attackPower + weaponDmg).coerceAtLeast(1)
         val multiplier = skill.basePower.coerceAtLeast(0) / 100.0
         val potency = CombatFormulas.skillPotencyMultiplier(attacker.effectiveStat("focus"))
         return (base * multiplier * potency).roundToInt().coerceAtLeast(if (skill.basePower > 0) 1 else 0)

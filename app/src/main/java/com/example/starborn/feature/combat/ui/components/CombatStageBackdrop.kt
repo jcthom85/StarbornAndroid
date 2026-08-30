@@ -150,7 +150,7 @@ fun CombatTutorialOverlay(
                 "That trainer eats direct hits. First, test the shield, then break its guard with Hydraulic Kick."
         CombatTutorialStep.SELECT_NOVA_ATTACK -> "Tap Nova when her action is ready."
         CombatTutorialStep.CHOOSE_ATTACK -> "Choose Attack. First, test the shield."
-        CombatTutorialStep.TARGET_BASIC_ATTACK -> "Choose the Acoustic Bulwark."
+        CombatTutorialStep.TARGET_BASIC_ATTACK -> "Choose the Shield Trainer."
         CombatTutorialStep.AWAIT_BASIC_RESULT -> "Watch how the shield handles a direct hit."
         CombatTutorialStep.BLOCKED_EXPLANATION ->
             "The shield reduced the attack to zero. Guard Break strips protection before you commit damage."
