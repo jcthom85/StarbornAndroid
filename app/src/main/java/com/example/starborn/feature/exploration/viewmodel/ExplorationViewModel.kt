@@ -952,11 +952,71 @@ class ExplorationViewModel(
     private fun computeRestBanter(state: com.example.starborn.domain.session.GameSessionState): String {
         val party = state.partyMembers
         val milestones = state.completedMilestones
+        val room = _uiState.value.currentRoom?.id.orEmpty().lowercase(Locale.getDefault())
+
         return when {
-            "gh0st" in party ->
-                "Gh0st keeps her back to the corner partition: 'Perimeter sweep is clear for four hours. Sleep while the Dominion sensors are blind.'"
-            "orion" in party ->
-                "Orion watches the ambient glow: 'Your kind requires quiet to knit flesh. In the Spire, silence only meant the engines were dying.'"
+            room.contains("astra") -> {
+                when {
+                    "ms_all_arcade_cabinets_restored" in milestones ->
+                        "The crew rests in the common room as all six restored cabinets hum their colorful attract tunes. Zeke shares hot tea, Gh0st leans against the bulkhead with a rare smirk, and the Astra truly feels like home."
+                    "ms_arcade_cabinet_01_repaired" in milestones ->
+                        "Nova rests on the common room couch. The amber and emerald CRT glows from the restored arcade corner dance across the deck plates as the ship's engines hum in harmony."
+                    else ->
+                        "The crew rests around the central common room table. Warm tea steams from battered tin cups, and for once, the silence feels earned."
+                }
+            }
+            room.contains("source") -> {
+                when {
+                    "orion" in party ->
+                        "Orion sits cross-legged as the crystal floor shimmers: 'The primordial chords are clearest when the mind is quiet. Rest, Nova—the Source listens with us.'"
+                    "gh0st" in party ->
+                        "Gh0st monitors her scanner with a soft hum: 'Even my cybernetic HUD is picking up melodic frequency harmonics. Safe to sleep for six hours.'"
+                    else ->
+                        "Nova rests against the crystalline wall. The ambient resonance of the Source washes over her tired muscles, restoring focus and resolve."
+                }
+            }
+            room.contains("orbital") || room.contains("zenith") -> {
+                when {
+                    "zeke" in party ->
+                        "Zeke looks out the observation viewport at the planet below: 'Zenith air scrubbers always taste like ozone and copper. Still beats breathing slag dust. Sleep fast.'"
+                    "orion" in party ->
+                        "Orion gazes into the starry void: 'Looking out at the curve of the stars... from up here, all the Dominion's iron fortresses look so small.'"
+                    else ->
+                        "Nova rests in the quiet observation alcove. The silent expanse of the stars drifts past the reinforced glass."
+                }
+            }
+            room.contains("foundry") -> {
+                when {
+                    "zeke" in party ->
+                        "Zeke uncaps a water canteen with a tired sigh: 'The heat convection in this sector will bake your rations to dry ash. Hydrate up before you sleep, Nova.'"
+                    "gh0st" in party ->
+                        "Gh0st listens to the cooling pipes: 'Foundry thermal exhaust masks our heat signature completely. We have a clean resting window.'"
+                    else ->
+                        "Nova rests in the warm shadow of the forge heat shields, letting the steady thermal radiation soothe aching joints."
+                }
+            }
+            room.contains("spire") -> {
+                when {
+                    "gh0st" in party ->
+                        "Gh0st keeps watch near the conduit junction: 'Sub-level ICE routines re-index every two hours. I've spoofed our biometric traces. Get some sleep.'"
+                    "orion" in party ->
+                        "Orion listens to the distant hum of neon traffic: 'A million lights in this city, yet so much darkness in between. Rest, Nova—tomorrow we climb higher.'"
+                    else ->
+                        "Nova rests in the shadowed maintenance niche, sheltered from corporate surveillance drones and neon glare."
+                }
+            }
+            room.contains("sector9") || room.contains("swamp") -> {
+                when {
+                    "zeke" in party ->
+                        "Zeke inspects his boot seals: 'Keep your gear off the moss, Nova. Swamp rot eats through insulation faster than frostbite. Sleep with one eye on the canopy.'"
+                    "orion" in party ->
+                        "Orion watches the glowing marsh reeds: 'The bioluminescent spores pulse in rhythm with our breathing. In Sanctuary, we called that harmony.'"
+                    "gh0st" in party ->
+                        "Gh0st leans against a petrified root: 'Thermal sensors wash out in this swamp mist. Good for resting; better for ambushes. I'll take first watch.'"
+                    else ->
+                        "Nova rests on the dry roots above the mist pools. Bioluminescent spores drift past like green embers, steadying her heartbeat."
+                }
+            }
             "zeke" in party ->
                 "Zeke sets down his datapad with a sigh: 'Sleep fast, Nova. Shift logs don't forgive a late alarm, rebellion or no rebellion.'"
             "ms_w1_mq01_cutter_surge" in milestones ->
