@@ -11511,6 +11511,27 @@
     "description_variants": [
       {
         "requires_milestones": [
+          "ms_all_arcade_cabinets_restored"
+        ],
+        "background_image": "images/rooms/astra/common_room_arcade_v1.webp",
+        "description": "Coffee rings stain the central table. The entire recreation bay has transformed into a legendary vintage arcade gallery: all six cabinets—Deep Mine, Canopy Hopper, Spire Infiltrator, Slag Catcher, Orbital Defense 2000, and Harmonic Pulse—hum, chime, and cast kaleidoscopic neon ribbons across the deck plates. This is where the crew stops being a formation and becomes a family."
+      },
+      {
+        "requires_milestones": [
+          "ms_arcade_cabinet_05_repaired"
+        ],
+        "background_image": "images/rooms/astra/common_room_arcade_v1.webp",
+        "description": "Coffee rings stain the central table. Five restored cabinets stand in an impressive row along the bulkhead—Deep Mine, Canopy Hopper, Spire Infiltrator, Slag Catcher, and Orbital Defense 2000—casting cobalt and amber reflections across the deck. This is where the crew stops being a formation and becomes a family."
+      },
+      {
+        "requires_milestones": [
+          "ms_arcade_cabinet_03_repaired"
+        ],
+        "background_image": "images/rooms/astra/common_room_arcade_v1.webp",
+        "description": "Coffee rings stain the central table. Beside the kitchenette, Deep Mine, Canopy Hopper, and Spire Infiltrator form a vibrant row of amber, emerald, and cyan CRT screens humming with retro energy. This is where the crew stops being a formation and becomes a family."
+      },
+      {
+        "requires_milestones": [
           "ms_arcade_cabinet_01_repaired"
         ],
         "background_image": "images/rooms/astra/common_room_arcade_v1.webp",
