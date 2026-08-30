@@ -56,7 +56,6 @@ import com.example.starborn.domain.model.ContainerAction
 import com.example.starborn.domain.model.DialogueLine
 import com.example.starborn.domain.model.EventAction
 import com.example.starborn.domain.model.EventReward
-import com.example.starborn.domain.model.FirstAidAction
 import com.example.starborn.domain.model.GameEvent
 import com.example.starborn.domain.model.GenericAction
 import com.example.starborn.domain.model.Item
@@ -1297,7 +1296,6 @@ class ExplorationViewModel(
                 parseActions(room).mapNotNull { action ->
                     when (action) {
                         is ShopAction -> MinimapService.SHOP
-                        is FirstAidAction -> MinimapService.FIRST_AID
                         is TinkeringAction -> MinimapService.TINKERING
                         is RestStopAction -> MinimapService.COOKING
                         else -> null
@@ -1320,7 +1318,6 @@ class ExplorationViewModel(
                 parseActions(room).mapNotNull { action ->
                     when (action) {
                         is ShopAction -> MinimapService.SHOP
-                        is FirstAidAction -> MinimapService.FIRST_AID
                         is TinkeringAction -> MinimapService.TINKERING
                         is RestStopAction -> MinimapService.COOKING
                         else -> null
@@ -2620,7 +2617,6 @@ class ExplorationViewModel(
                 lockedMessage = action.conditionUnmetMessage
             )
             is ShopAction -> handleShopAction(action)
-            is FirstAidAction -> handleFirstAidAction(action)
             is RestStopAction -> handleRestStopAction(action)
             is TuningPuzzleAction -> handleTuningPuzzleAction(action)
             is GenericAction -> handleGenericAction(action)
@@ -2639,7 +2635,6 @@ class ExplorationViewModel(
             listOfNotNull(eventId?.takeIf { it.isNotBlank() })
         }
         is ContainerAction -> listOfNotNull(actionEvent?.takeIf { it.isNotBlank() })
-        is FirstAidAction -> listOfNotNull(actionEvent?.takeIf { it.isNotBlank() })
         is ShopAction -> listOfNotNull(actionEvent?.takeIf { it.isNotBlank() })
         is RestStopAction -> listOfNotNull(restEvent?.takeIf { it.isNotBlank() })
         is TuningPuzzleAction -> listOfNotNull(tuningPuzzlesById[puzzleId]?.successEvent?.takeIf { it.isNotBlank() })
@@ -4775,21 +4770,6 @@ class ExplorationViewModel(
         _uiState.update { it.copy(shopGreeting = null, pendingShopId = null) }
     }
 
-    private fun handleFirstAidAction(action: FirstAidAction) {
-        val required = collectRequiredMilestones(action.requiresMilestone, action.requiresMilestones)
-        val completed = sessionStore.state.value.completedMilestones
-        val locked = required.any { it !in completed }
-        if (locked) {
-            val message = action.conditionUnmetMessage?.takeIf { it.isNotBlank() }
-                ?: "You haven't unlocked this med station yet."
-            postStatus(message)
-            return
-        }
-        action.actionEvent?.takeIf { it.isNotBlank() }?.let { triggerPlayerAction(it) }
-        postStatus("Opening ${action.name.ifBlank { "Med Station" }}")
-        emitEvent(ExplorationEvent.OpenFirstAid(action.stationId))
-    }
-
     private fun handleRestStopAction(action: RestStopAction) {
         if (action.cookSource != null || action.name.contains("cook", ignoreCase = true) || action.name.contains("kitchen", ignoreCase = true)) {
             emitEvent(ExplorationEvent.OpenCooking(action.cookSource ?: action.name))
@@ -5553,14 +5533,6 @@ class ExplorationViewModel(
                     shopId = action["shop_id"].asStringOrNull()?.takeIf { it.isNotBlank() },
                     conditionUnmetMessage = action["condition_unmet_message"].asStringOrNull()
                 )
-                "first_aid", "firstaid" -> FirstAidAction(
-                    name = name,
-                    stationId = action["station_id"].asStringOrNull()?.takeIf { it.isNotBlank() },
-                    requiresMilestones = action["requires_milestones"].asListOrNull(),
-                    requiresMilestone = action["requires_milestone"].asStringOrNull(),
-                    conditionUnmetMessage = action["condition_unmet_message"].asStringOrNull(),
-                    actionEvent = action["action_event"].asStringOrNull()
-                )
                 "rest_stop", "rest", "camp", "cookfire" -> RestStopAction(
                     name = name,
                     restEvent = action["rest_event"].asStringOrNull()
@@ -5869,7 +5841,6 @@ sealed interface ExplorationEvent {
     ) : ExplorationEvent
     data class OpenTinkering(val sourceId: String?) : ExplorationEvent
     data class OpenCooking(val sourceId: String?) : ExplorationEvent
-    data class OpenFirstAid(val stationId: String?) : ExplorationEvent
     data class OpenFishing(val zoneId: String?) : ExplorationEvent
     data class OpenArcade(val cabinetId: String) : ExplorationEvent
     data class OpenShop(val shopId: String) : ExplorationEvent

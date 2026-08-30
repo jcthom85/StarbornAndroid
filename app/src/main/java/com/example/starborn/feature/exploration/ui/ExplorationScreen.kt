@@ -196,7 +196,6 @@ import com.example.starborn.domain.inventory.ItemUseResult
 import com.example.starborn.domain.milestone.MilestoneEvent
 import com.example.starborn.domain.model.ContainerAction
 import com.example.starborn.domain.model.EventReward
-import com.example.starborn.domain.model.FirstAidAction
 import com.example.starborn.data.local.Theme
 import com.example.starborn.domain.model.Room
 import com.example.starborn.domain.model.RoomAction
@@ -316,7 +315,6 @@ fun ExplorationScreen(
     onOpenTinkering: (String?) -> Unit = {},
     onOpenCooking: (String?) -> Unit = {},
     onOpenFieldKit: () -> Unit = {},
-    onOpenFirstAid: (String?) -> Unit = {},
     onOpenFishing: (String?) -> Unit = {},
     onOpenArcade: (String) -> Unit = {},
     onOpenShop: (String) -> Unit = {},
@@ -425,7 +423,6 @@ fun ExplorationScreen(
                 }
                 is ExplorationEvent.OpenTinkering -> onOpenTinkering(event.sourceId)
                 is ExplorationEvent.OpenCooking -> onOpenCooking(event.sourceId)
-                is ExplorationEvent.OpenFirstAid -> onOpenFirstAid(event.stationId)
                 is ExplorationEvent.OpenFishing -> onOpenFishing(event.zoneId)
                 is ExplorationEvent.OpenArcade -> onOpenArcade(event.cabinetId)
                 is ExplorationEvent.OpenShop -> onOpenShop(event.shopId)
@@ -823,17 +820,6 @@ fun ExplorationScreen(
                             val label = action.name.takeIf { it.isNotBlank() }?.toActionTitleCase() ?: "Tinkering"
                             items += QuickMenuAction(
                                 iconRes = R.drawable.tinkering_icon,
-                                label = label,
-                                roomAction = action
-                            )
-                        }
-                    }
-                    is FirstAidAction -> {
-                        val key = "firstaid:${action.stationId.orEmpty()}"
-                        if (unique.add(key)) {
-                            val label = action.name.takeIf { it.isNotBlank() }?.toActionTitleCase() ?: "First Aid"
-                            items += QuickMenuAction(
-                                iconRes = R.drawable.firstaid_icon,
                                 label = label,
                                 roomAction = action
                             )
@@ -2015,18 +2001,6 @@ private fun DrawScope.drawServiceGlyph(service: MinimapService, centerX: Float, 
                 close()
             }
             drawPath(path, color)
-        }
-        MinimapService.FIRST_AID -> {
-            drawRect(
-                color = color,
-                topLeft = center.copy(x = center.x - size * 0.3f, y = center.y - size),
-                size = androidx.compose.ui.geometry.Size(size * 0.6f, size * 2f)
-            )
-            drawRect(
-                color = color,
-                topLeft = center.copy(x = center.x - size, y = center.y - size * 0.3f),
-                size = androidx.compose.ui.geometry.Size(size * 2f, size * 0.6f)
-            )
         }
         MinimapService.TINKERING -> {
             val path = Path().apply {
@@ -5466,7 +5440,6 @@ private fun actionLabelFallback(action: RoomAction): String = when (action) {
     is ContainerAction -> "Search"
     is ToggleAction -> "Toggle"
     is TinkeringAction -> "Tinkering"
-    is FirstAidAction -> "First Aid"
     is RestStopAction -> "Rest"
     is TuningPuzzleAction -> "Tune"
     is ShopAction -> "Shop"
@@ -6509,7 +6482,6 @@ internal fun resolveRoomBackground(
 private fun RoomAction.isInlineDescriptionAction(): Boolean = when (this) {
     is ShopAction,
     is TinkeringAction,
-    is FirstAidAction,
     is RestStopAction -> false
     is GenericAction -> !type.equals("fish", ignoreCase = true) &&
         !type.equals("fishing", ignoreCase = true) &&
@@ -8410,9 +8382,6 @@ private data class FxVisualInfo(val label: String, val color: Color)
 private fun fxVisualInfo(fxId: String): FxVisualInfo {
     val normalized = fxId.trim().lowercase(Locale.getDefault())
     return when (normalized) {
-        "craft_first_aid_success" -> FxVisualInfo("Med kit assembled", Color(0xFF66BB6A))
-        "craft_first_aid_perfect" -> FxVisualInfo("Perfect med kit!", Color(0xFF81C784))
-        "craft_first_aid_failure" -> FxVisualInfo("First aid failed", Color(0xFFE53935))
         "electric_sparks" -> FxVisualInfo("⚡ Conduit Grounded", Color(0xFF80D8FF))
         else -> FxVisualInfo(
             label = normalized.replace('_', ' ').replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() },
@@ -8424,6 +8393,5 @@ private fun fxVisualInfo(fxId: String): FxVisualInfo {
 private fun minimapServiceColor(service: MinimapService): Color = when (service) {
     MinimapService.SHOP -> Color(0xFFFFC107)
     MinimapService.COOKING -> Color(0xFFFF8A65)
-    MinimapService.FIRST_AID -> Color(0xFF66BB6A)
     MinimapService.TINKERING -> Color(0xFFBA68C8)
 }

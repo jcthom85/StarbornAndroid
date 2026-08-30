@@ -20,7 +20,7 @@ class ScreenAwakePolicyTest {
             NavigationDestination.Exploration.route,
             NavigationDestination.Combat.route,
             NavigationDestination.Tinkering.route,
-            NavigationDestination.FirstAid.route,
+            NavigationDestination.Cooking.route,
             NavigationDestination.Fishing.route,
             NavigationDestination.Shop.route
         ).forEach { route ->

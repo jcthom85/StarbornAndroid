@@ -21,7 +21,6 @@ sealed class NavigationDestination(val route: String) {
             return if (params.isEmpty()) "tinkering" else "tinkering?${params.joinToString("&")}"
         }
     }
-    data object FirstAid : NavigationDestination("first_aid")
     data object Fishing : NavigationDestination("fishing?zoneId={zoneId}") {
         fun create(zoneId: String?): String =
             if (zoneId.isNullOrBlank()) "fishing"

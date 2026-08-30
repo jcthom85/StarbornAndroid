@@ -46,16 +46,6 @@
         ]
     },
     {
-        "id": "first_aid_failure",
-        "steps": [
-            {
-                "key": "first_aid_timing",
-                "message": "That bandage slipped. Hold until the pulse enters the green window.",
-                "context": "First Aid"
-            }
-        ]
-    },
-    {
         "id": "scene_market_locator",
         "steps": [
             {

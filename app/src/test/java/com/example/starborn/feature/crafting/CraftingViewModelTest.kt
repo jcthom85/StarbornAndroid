@@ -5,7 +5,6 @@ import com.example.starborn.domain.crafting.CraftingService
 import com.example.starborn.domain.inventory.InventoryService
 import com.example.starborn.domain.inventory.ItemCatalog
 import com.example.starborn.domain.model.CookingRecipe
-import com.example.starborn.domain.model.FirstAidRecipe
 import com.example.starborn.domain.model.Item
 import com.example.starborn.domain.model.TinkeringRecipe
 import com.example.starborn.domain.session.GameSessionStore
@@ -63,7 +62,6 @@ class CraftingViewModelTest {
             )
         )
         override fun loadCookingRecipes(): List<CookingRecipe> = emptyList()
-        override fun loadFirstAidRecipes(): List<FirstAidRecipe> = emptyList()
     }
 
     @Before

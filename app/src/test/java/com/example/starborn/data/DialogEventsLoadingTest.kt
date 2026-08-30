@@ -18,7 +18,7 @@ import org.junit.Test
 import java.io.File
 import com.example.starborn.domain.fishing.FishingData
 import com.example.starborn.domain.model.TinkeringRecipe
-import com.example.starborn.domain.model.FirstAidRecipe
+import com.example.starborn.domain.model.CookingRecipe
 
 class DialogEventsLoadingTest {
 
@@ -66,10 +66,10 @@ class DialogEventsLoadingTest {
     @Test
     fun craftingRecipesLoad() {
         val tinkering = readList("src/main/assets/recipes_tinkering.json", TinkeringRecipe::class.java)
-        val firstAid = readList("src/main/assets/recipes_firstaid.json", FirstAidRecipe::class.java)
+        val cooking = readList("src/main/assets/recipes_cooking.json", CookingRecipe::class.java)
         val fishing = readObject("src/main/assets/recipes_fishing.json", FishingData::class.java)
         assertTrue(tinkering.isNotEmpty())
-        assertTrue(firstAid.isNotEmpty())
+        assertTrue(cooking.isNotEmpty())
         assertTrue(fishing.zones.containsKey("sector9_stream"))
         assertTrue(fishing.zones.containsKey("spire_runoff"))
         assertTrue(fishing.zones.containsKey("orbital_false_tide"))

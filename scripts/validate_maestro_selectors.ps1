@@ -53,7 +53,7 @@ $haystack = @(
     Read-AssetText "enemies.json"
     Read-AssetText "statuses.json"
     Read-AssetText "recipes_tinkering.json"
-    Read-AssetText "recipes_firstaid.json"
+    Read-AssetText "recipes_cooking.json"
     Read-AssetText "recipes_fishing.json"
     Read-AssetText "tuning_puzzles.json"
     ($sourceText -join "`n")

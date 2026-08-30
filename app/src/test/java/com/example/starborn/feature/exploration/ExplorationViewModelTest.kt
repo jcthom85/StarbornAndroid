@@ -432,8 +432,8 @@ class ExplorationViewModelTest {
         doAnswer { }.whenever(inventoryService).addOnItemAddedListener(any())
         doAnswer { }.whenever(inventoryService).removeOnItemAddedListener(any())
         val craftingService = mock<CraftingService> {
-            on { firstAidRecipes } doReturn emptyList()
             on { tinkeringRecipes } doReturn emptyList()
+            on { cookingRecipes } doReturn emptyList()
         }
         val cinematicService = mock<CinematicService>()
         val cinematicCoordinator = CinematicCoordinator(cinematicService)

@@ -293,7 +293,6 @@ data class MinimapCellUi(
 enum class MinimapService {
     SHOP,
     COOKING,
-    FIRST_AID,
     TINKERING
 }
 

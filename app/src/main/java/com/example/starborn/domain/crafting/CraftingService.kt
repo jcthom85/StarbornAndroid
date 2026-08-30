@@ -4,7 +4,6 @@ import com.example.starborn.data.assets.CraftingRecipeSource
 import com.example.starborn.domain.inventory.InventoryService
 import com.example.starborn.domain.session.GameSessionStore
 import com.example.starborn.domain.model.CookingRecipe
-import com.example.starborn.domain.model.FirstAidRecipe
 import com.example.starborn.domain.model.TinkeringRecipe
 
 class CraftingService(
@@ -13,7 +12,6 @@ class CraftingService(
     private val sessionStore: GameSessionStore
 ) {
     val tinkeringRecipes: List<TinkeringRecipe> by lazy { craftingDataSource.loadTinkeringRecipes() }
-    val firstAidRecipes: List<FirstAidRecipe> by lazy { craftingDataSource.loadFirstAidRecipes() }
     val cookingRecipes: List<CookingRecipe> by lazy { craftingDataSource.loadCookingRecipes() }
 
     fun canCook(recipe: CookingRecipe): Boolean {
@@ -61,10 +59,6 @@ class CraftingService(
             }
         }
         return inventoryCounts
-    }
-
-    fun canCraft(recipe: FirstAidRecipe): Boolean = recipe.ingredients.all { (itemId, qty) ->
-        inventoryService.hasItem(itemId, qty)
     }
 
     fun learnSchematic(schematicId: String): Boolean {
@@ -130,53 +124,6 @@ class CraftingService(
             inventoryService.addItem(resolvedId, recipe.resultQuantity.coerceAtLeast(1))
         }
         return inventoryService.itemDetail(resolvedId)?.id ?: resolvedId
-    }
-
-    fun craftFirstAid(recipeId: String, outcome: MinigameResult = MinigameResult.SUCCESS): CraftingOutcome {
-        val recipe = firstAidRecipes.find { it.id == recipeId } ?: return CraftingOutcome.Failure("Unknown recipe")
-        if (!canCraft(recipe)) return CraftingOutcome.Failure("Missing ingredients")
-        if (!inventoryService.consumeItems(recipe.ingredients)) return CraftingOutcome.Failure("Unable to consume ingredients")
-        val minigame = recipe.minigame
-        return when (outcome) {
-            MinigameResult.FAILURE -> {
-                val failureId = recipe.output.failure
-                if (failureId.isNullOrBlank()) {
-                    CraftingOutcome.Failure(
-                        message = "The kit falls apart in your hands.",
-                        audioCue = minigame?.failureCue,
-                        fxId = minigame?.failureFx
-                    )
-                } else {
-                    inventoryService.addItem(failureId, 1)
-                    CraftingOutcome.Success(
-                        itemId = failureId,
-                        message = "You salvage $failureId from the failed attempt.",
-                        audioCue = minigame?.failureCue,
-                        fxId = minigame?.failureFx
-                    )
-                }
-            }
-            MinigameResult.SUCCESS -> {
-                val resultId = recipe.output.success
-                inventoryService.addItem(resultId, 1)
-                CraftingOutcome.Success(
-                    itemId = resultId,
-                    message = "Prepared ${recipe.name}",
-                    audioCue = minigame?.successCue,
-                    fxId = minigame?.successFx
-                )
-            }
-            MinigameResult.PERFECT -> {
-                val perfectId = recipe.output.perfect ?: recipe.output.success
-                inventoryService.addItem(perfectId, 1)
-                CraftingOutcome.Success(
-                    itemId = perfectId,
-                    message = "Perfectly prepared ${recipe.name}!",
-                    audioCue = minigame?.perfectCue ?: minigame?.successCue,
-                    fxId = minigame?.successFx
-                )
-            }
-        }
     }
 }
 

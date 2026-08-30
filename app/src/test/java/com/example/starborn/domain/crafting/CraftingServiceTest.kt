@@ -4,10 +4,8 @@ import com.example.starborn.data.assets.CraftingRecipeSource
 import com.example.starborn.domain.inventory.InventoryService
 import com.example.starborn.domain.inventory.ItemCatalog
 import com.example.starborn.domain.model.CookingRecipe
-import com.example.starborn.domain.model.FirstAidRecipe
 import com.example.starborn.domain.model.Item
 import com.example.starborn.domain.model.TinkeringRecipe
-import com.example.starborn.domain.model.FirstAidOutput
 import com.example.starborn.domain.session.GameSessionStore
 import com.example.starborn.domain.crafting.MinigameResult
 import org.junit.Assert.assertFalse
@@ -200,46 +198,6 @@ class CraftingServiceTest {
     }
 
     @Test
-    fun craftFirstAidPerfectUsesPerfectOutput() {
-        val catalog = TestItemCatalog(
-            listOf(
-                item(id = "synth_gel", name = "Synth-Gel"),
-                item(id = "bandages", name = "Sterile Bandages"),
-                item(id = "medkit", name = "Medkit"),
-                item(id = "medkit_plus", name = "Medkit+")
-            )
-        )
-        val inventory = InventoryService(catalog).apply {
-            loadItems()
-            addItem("Synth-Gel", 2)
-            addItem("Sterile Bandages", 1)
-        }
-        val recipes = TestRecipeSource(
-            firstAid = listOf(
-                FirstAidRecipe(
-                    id = "medkit",
-                    name = "Medkit",
-                    description = null,
-                    ingredients = mapOf("Synth-Gel" to 2, "Sterile Bandages" to 1),
-                    minigame = null,
-                    output = FirstAidOutput(
-                        perfect = "Medkit+",
-                        success = "Medkit",
-                        failure = "Sloppy Bandages"
-                    )
-                )
-            )
-        )
-        val service = CraftingService(recipes, inventory, GameSessionStore())
-
-        val outcome = service.craftFirstAid("medkit", MinigameResult.PERFECT)
-
-        assertTrue(outcome is CraftingOutcome.Success)
-        assertEquals("Medkit+", outcome.itemId)
-        assertTrue(inventory.hasItem("Medkit+"))
-    }
-
-    @Test
     fun craftTinkeringAddsResultAndConsumesParts() {
         val catalog = TestItemCatalog(
             listOf(
@@ -331,7 +289,6 @@ private class EmptyItemCatalog : ItemCatalog {
 
 private class EmptyRecipeSource : CraftingRecipeSource {
     override fun loadTinkeringRecipes(): List<TinkeringRecipe> = emptyList()
-    override fun loadFirstAidRecipes(): List<FirstAidRecipe> = emptyList()
     override fun loadCookingRecipes(): List<CookingRecipe> = emptyList()
 }
 
@@ -354,11 +311,9 @@ private class TestItemCatalog(private val items: List<Item>) : ItemCatalog {
 
 private class TestRecipeSource(
     private val tinkering: List<TinkeringRecipe> = emptyList(),
-    private val firstAid: List<FirstAidRecipe> = emptyList(),
     private val cooking: List<CookingRecipe> = emptyList()
 ) : CraftingRecipeSource {
     override fun loadTinkeringRecipes(): List<TinkeringRecipe> = tinkering
-    override fun loadFirstAidRecipes(): List<FirstAidRecipe> = firstAid
     override fun loadCookingRecipes(): List<CookingRecipe> = cooking
 }
 

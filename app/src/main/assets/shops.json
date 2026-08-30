@@ -322,6 +322,9 @@
       "items": [
         "medkit_i",
         "medkit",
+        "herbal_poultice",
+        "burn_salve",
+        "antidote_flask",
         "ration_pack",
         "power_cell",
         "scrap_metal",
@@ -388,8 +391,8 @@
     "portrait": "images/npcs/scrapper.webp",
     "greeting": "Scrapper: Keep your voice down. Good salvage costs extra when it has a story.",
     "pricing": {
-      "sell_markup": 1.25,
-      "buy_markdown": 0.4
+      "sell_markup": 1.4,
+      "buy_markdown": 0.5
     },
     "sells": {
       "items": [
@@ -451,6 +454,8 @@
         "ration_pack",
         "black_coffee",
         "medkit_i",
+        "herbal_poultice",
+        "antidote_flask",
         "battery_pack",
         "scrap_metal",
         "wiring_bundle"
@@ -505,7 +510,9 @@
     },
     "sells": {
       "items": [
+        "medkit_plus",
         "medkit",
+        "adrenaline",
         "battery_pack",
         "precision_sight",
         "focus_conduit",
