@@ -113,5 +113,42 @@
     "result": "tideglass_delight",
     "description": "Skewer fresh swamp glowfish and seasoned meat with fragrant marsh herbs over camp coals.",
     "success_message": "You roast a sizzling plate of Tideglass Delight that glows warmly in the swamp dark."
+  },
+  {
+    "id": "provision_foundry_smoked_brisket",
+    "name": "Foundry Smoked Brisket",
+    "ingredients": {
+      "beast_meat": 2,
+      "fiery_pepper": 1,
+      "noodles": 1
+    },
+    "result": "foundry_smoked_brisket",
+    "description": "Slow-smoke dense beast cuts with fiery spices and hearty noodles over smelting embers.",
+    "success_message": "You carve a rich platter of Foundry Smoked Brisket that fuels heavy combat power."
+  },
+  {
+    "id": "provision_orbital_glimmer_tonic",
+    "name": "Orbital Glimmer Tonic",
+    "ingredients": {
+      "chime_minnow": 1,
+      "herb": 2,
+      "raw_glowfish": 1
+    },
+    "result": "orbital_glimmer_tonic",
+    "description": "Steep chime minnows and fresh restorative herbs into an effervescent station focus tonic.",
+    "success_message": "You bottle a luminous Orbital Glimmer Tonic that fizzes with electric clarity."
+  },
+  {
+    "id": "provision_source_astral_feast",
+    "name": "Source Astral Feast",
+    "ingredients": {
+      "frequency_tetra": 1,
+      "stellarium_eel": 1,
+      "fiery_pepper": 1,
+      "herb": 1
+    },
+    "result": "source_astral_feast",
+    "description": "Prepare a master banquet of rare frequency tetra, charred stellarium eel, fiery spices, and herbs over the Source campfire.",
+    "success_message": "You cook an unforgettable Source Astral Feast that fills the entire crew with resonant vitality."
   }
 ]

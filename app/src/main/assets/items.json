@@ -79,7 +79,10 @@
     "rarity": "rare",
     "equipment": {
       "slot": "accessory",
-      "stat_mods": { "accuracy": 3, "str": 2 }
+      "stat_mods": {
+        "accuracy": 3,
+        "str": 2
+      }
     }
   },
   {
@@ -92,7 +95,10 @@
     "unsellable": true,
     "equipment": {
       "slot": "accessory",
-      "stat_mods": { "foc": 3, "accuracy": 4 }
+      "stat_mods": {
+        "foc": 3,
+        "accuracy": 4
+      }
     }
   },
   {
@@ -122,7 +128,10 @@
     "rarity": "rare",
     "equipment": {
       "slot": "accessory",
-      "stat_mods": { "vit": 3, "str": 2 }
+      "stat_mods": {
+        "vit": 3,
+        "str": 2
+      }
     }
   },
   {
@@ -135,7 +144,10 @@
     "unsellable": true,
     "equipment": {
       "slot": "accessory",
-      "stat_mods": { "atk": 5, "foc": 3 }
+      "stat_mods": {
+        "atk": 5,
+        "foc": 3
+      }
     }
   },
   {
@@ -165,7 +177,10 @@
     "rarity": "rare",
     "equipment": {
       "slot": "accessory",
-      "stat_mods": { "accuracy": 4, "atk": 3 }
+      "stat_mods": {
+        "accuracy": 4,
+        "atk": 3
+      }
     }
   },
   {
@@ -178,7 +193,10 @@
     "unsellable": true,
     "equipment": {
       "slot": "accessory",
-      "stat_mods": { "foc": 4, "vit": 3 }
+      "stat_mods": {
+        "foc": 4,
+        "vit": 3
+      }
     }
   },
   {
@@ -208,7 +226,10 @@
     "rarity": "rare",
     "equipment": {
       "slot": "accessory",
-      "stat_mods": { "foc": 4, "int": 3 }
+      "stat_mods": {
+        "foc": 4,
+        "int": 3
+      }
     }
   },
   {
@@ -221,7 +242,10 @@
     "unsellable": true,
     "equipment": {
       "slot": "accessory",
-      "stat_mods": { "foc": 6, "int": 6 }
+      "stat_mods": {
+        "foc": 6,
+        "int": 6
+      }
     }
   },
   {
@@ -258,7 +282,10 @@
     "unsellable": true,
     "equipment": {
       "slot": "accessory",
-      "stat_mods": { "accuracy": 4, "foc": 1 }
+      "stat_mods": {
+        "accuracy": 4,
+        "foc": 1
+      }
     }
   },
   {
@@ -271,7 +298,10 @@
     "unsellable": true,
     "equipment": {
       "slot": "accessory",
-      "stat_mods": { "str": 2, "accuracy": 2 }
+      "stat_mods": {
+        "str": 2,
+        "accuracy": 2
+      }
     }
   },
   {
@@ -3124,5 +3154,130 @@
     "type": "key_item",
     "value": 100,
     "rarity": "rare"
+  },
+  {
+    "id": "thermite_core_mod",
+    "name": "Thermite Core Mod",
+    "description": "A superheated Foundry core that channels kinetic impacts into searing thermal critical strikes.",
+    "type": "mod",
+    "value": 520,
+    "buy_price": 1040,
+    "rarity": "epic",
+    "equipment": {
+      "slot": "mod",
+      "stat_mods": {
+        "strength": 8,
+        "luck": 5
+      }
+    }
+  },
+  {
+    "id": "orbital_deflector_mod",
+    "name": "Orbital Deflector Mod",
+    "description": "A polarized composite emitter derived from station shields that absorbs high-energy discharges.",
+    "type": "mod",
+    "value": 560,
+    "buy_price": 1120,
+    "rarity": "epic",
+    "equipment": {
+      "slot": "mod",
+      "stat_mods": {
+        "defense": 9,
+        "vitality": 6
+      }
+    }
+  },
+  {
+    "id": "astral_weave_mod",
+    "name": "Astral Weave Mod",
+    "description": "A harmonic lattice of astral threads and stabilized resin that attunes the wearer's reflexes to quantum shifts.",
+    "type": "mod",
+    "value": 680,
+    "buy_price": 1360,
+    "rarity": "legendary",
+    "equipment": {
+      "slot": "mod",
+      "stat_mods": {
+        "agility": 8,
+        "focus": 8
+      }
+    }
+  },
+  {
+    "id": "foundry_smoked_brisket",
+    "name": "Foundry Smoked Brisket",
+    "description": "Dense beast cuts cured over furnace heat. Restores 160 HP and boosts strength.",
+    "type": "consumable",
+    "value": 140,
+    "buy_price": 280,
+    "rarity": "rare",
+    "effect": {
+      "restore_hp": 160,
+      "buffs": [
+        {
+          "stat": "strength",
+          "value": 7,
+          "duration": 3
+        }
+      ]
+    }
+  },
+  {
+    "id": "orbital_glimmer_tonic",
+    "name": "Orbital Glimmer Tonic",
+    "description": "An effervescent station infusion brewed with chime minnows and fresh herbs. Restores 140 HP and heightens speed and focus.",
+    "type": "consumable",
+    "value": 150,
+    "buy_price": 300,
+    "rarity": "rare",
+    "effect": {
+      "restore_hp": 140,
+      "buffs": [
+        {
+          "stat": "speed",
+          "value": 6,
+          "duration": 3
+        },
+        {
+          "stat": "focus",
+          "value": 6,
+          "duration": 3
+        }
+      ]
+    }
+  },
+  {
+    "id": "source_astral_feast",
+    "name": "Source Astral Feast",
+    "description": "A master campfire banquet infused with harmonic resonance and fiery spice. Restores 250 HP and empowers all party capabilities.",
+    "type": "consumable",
+    "value": 300,
+    "buy_price": 600,
+    "rarity": "legendary",
+    "effect": {
+      "restore_hp": 250,
+      "buffs": [
+        {
+          "stat": "strength",
+          "value": 6,
+          "duration": 3
+        },
+        {
+          "stat": "defense",
+          "value": 6,
+          "duration": 3
+        },
+        {
+          "stat": "agility",
+          "value": 6,
+          "duration": 3
+        },
+        {
+          "stat": "focus",
+          "value": 6,
+          "duration": 3
+        }
+      ]
+    }
   }
 ]

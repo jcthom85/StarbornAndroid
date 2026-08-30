@@ -54,7 +54,7 @@
           "response": [
             {
               "speaker": "Mechanic",
-              "text": "Scavvers dragged in a crate of micro-cores—perfect for overclocking your drone."
+              "text": "Scavvers dragged in a crate of micro-cores\u2014perfect for overclocking your drone."
             },
             {
               "speaker": "Mechanic",
@@ -72,7 +72,7 @@
             },
             {
               "speaker": "Mechanic",
-              "text": "Last crew brought back slagged plating—whatever's down there hits hard."
+              "text": "Last crew brought back slagged plating\u2014whatever's down there hits hard."
             }
           ]
         }
@@ -168,7 +168,7 @@
   "armor_shop": {
     "name": "The Aegis",
     "portrait": "images/npcs/armorer.webp",
-    "greeting": "Armorer: Step in and suit up—no frontier scrape should catch you unshielded.",
+    "greeting": "Armorer: Step in and suit up\u2014no frontier scrape should catch you unshielded.",
     "pricing": {
       "sell_markup": 1.2,
       "buy_markdown": 0.35
@@ -313,7 +313,7 @@
   "general_store": {
     "name": "General Store",
     "portrait": "images/npcs/shopkeep.webp",
-    "greeting": "Shopkeep: Supplies, snacks, emergency fixes—if you need it, I stock it.",
+    "greeting": "Shopkeep: Supplies, snacks, emergency fixes\u2014if you need it, I stock it.",
     "pricing": {
       "sell_markup": 1.2,
       "buy_markdown": 0.35
@@ -328,7 +328,8 @@
         "ration_pack",
         "power_cell",
         "scrap_metal",
-        "wiring_bundle"
+        "wiring_bundle",
+        "foundry_smoked_brisket"
       ],
       "rules": {
         "types_in": [],
@@ -357,7 +358,7 @@
       "preface": [
         {
           "speaker": "Shopkeep",
-          "text": "Supplies, snacks, emergency fixes—if you need it, I stock it."
+          "text": "Supplies, snacks, emergency fixes\u2014if you need it, I stock it."
         }
       ],
       "smalltalk": [
@@ -377,7 +378,7 @@
           "response": [
             {
               "speaker": "Shopkeep",
-              "text": "If you see blue chalk on a doorframe, that's a scout mark—follow it for safe rooms."
+              "text": "If you see blue chalk on a doorframe, that's a scout mark\u2014follow it for safe rooms."
             }
           ]
         }
@@ -458,7 +459,8 @@
         "antidote_flask",
         "battery_pack",
         "scrap_metal",
-        "wiring_bundle"
+        "wiring_bundle",
+        "foundry_smoked_brisket"
       ],
       "rules": {
         "types_in": [],
@@ -516,7 +518,9 @@
         "battery_pack",
         "precision_sight",
         "focus_conduit",
-        "phase_rounds"
+        "phase_rounds",
+        "orbital_glimmer_tonic",
+        "foundry_smoked_brisket"
       ],
       "rules": {
         "types_in": [],
