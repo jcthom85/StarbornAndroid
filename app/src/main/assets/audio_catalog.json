@@ -1119,6 +1119,7 @@
       "id": "sfx_intro_shift_buzzer",
       "category": "ui",
       "gain": 0.82,
+      "fade_in_ms": 500,
       "tags": [
         "intro",
         "quota",

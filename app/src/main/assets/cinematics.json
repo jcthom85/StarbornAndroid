@@ -623,7 +623,7 @@
         "camera_start_y": 0.0,
         "camera_end_y": -10.0,
         "transition": "cut",
-        "duration_seconds": 2.2
+        "duration_seconds": 2.8
       },
       {
         "type": "narration",
@@ -667,7 +667,7 @@
         "camera_start_y": 0.0,
         "camera_end_y": -8.0,
         "audio_cue": "sfx_intro_stasis_seal",
-        "duration_seconds": 2.2,
+        "duration_seconds": 2.8,
         "transition": "fade"
       },
       {
@@ -704,7 +704,7 @@
         "camera_end_scale": 1.03,
         "transition": "fade",
         "fade_out_seconds": 1.4,
-        "duration_seconds": 4.5
+        "duration_seconds": 3.3
       }
     ]
   },

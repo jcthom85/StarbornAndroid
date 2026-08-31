@@ -7980,10 +7980,10 @@ private fun IllustratedCinematicOverlay(
                     .background(
                         Brush.verticalGradient(
                             listOf(
-                                Color.Black.copy(alpha = 0.18f),
+                                Color.Black.copy(alpha = 0.28f),
                                 Color.Transparent,
-                                Color.Black.copy(alpha = 0.10f),
-                                Color.Black.copy(alpha = 0.88f)
+                                Color.Black.copy(alpha = 0.32f),
+                                Color.Black.copy(alpha = 0.94f)
                             )
                         )
                     )
