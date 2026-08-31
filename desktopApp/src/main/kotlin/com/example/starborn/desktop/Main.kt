@@ -1,10 +1,7 @@
 package com.example.starborn.desktop
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -12,10 +9,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.*
-import com.example.starborn.domain.audio.AudioCommand
-import com.example.starborn.domain.audio.AudioCueType
+import com.example.starborn.desktop.ui.DesktopGameScreen
+import com.example.starborn.desktop.ui.DesktopMainMenuScreen
+
+enum class DesktopScreenState {
+    MAIN_MENU, IN_GAME, SETTINGS
+}
 
 fun main() = application {
     val services = remember { DesktopAppServices() }
@@ -42,52 +42,40 @@ fun main() = application {
                         }
                         true
                     }
-                    Key.Escape -> {
-                        // Desktop Escape / Back handler
-                        true
-                    }
                     else -> false
                 }
             } else false
         }
     ) {
-        DesktopGameApp(services)
+        DesktopGameApp(services, onExit = {
+            services.audioDriver.release()
+            exitApplication()
+        })
     }
 }
 
 @Composable
-fun DesktopGameApp(services: DesktopAppServices) {
+fun DesktopGameApp(
+    services: DesktopAppServices,
+    onExit: () -> Unit
+) {
+    var screenState by remember { mutableStateOf(DesktopScreenState.MAIN_MENU) }
+
     Surface(
         modifier = Modifier.fillMaxSize(),
-        color = Color(0xFF07040A)
+        color = Color(0xFF05070D)
     ) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = "STARBORN",
-                    color = Color(0xFF4DEEEA),
-                    fontSize = 42.sp,
-                    style = MaterialTheme.typography.headlineLarge
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = "Windows Desktop Edition (Active)",
-                    color = Color.LightGray,
-                    fontSize = 16.sp
-                )
-                Spacer(modifier = Modifier.height(24.dp))
-                Text(
-                    text = "Press [F11] for Fullscreen | Loaded ${services.worldDataSource.loadRooms().size} rooms",
-                    color = Color(0xFFFFB703),
-                    fontSize = 14.sp
-                )
-            }
+        when (screenState) {
+            DesktopScreenState.MAIN_MENU, DesktopScreenState.SETTINGS -> DesktopMainMenuScreen(
+                services = services,
+                onStartGame = { screenState = DesktopScreenState.IN_GAME },
+                onOpenSettings = { screenState = DesktopScreenState.SETTINGS },
+                onQuit = onExit
+            )
+            DesktopScreenState.IN_GAME -> DesktopGameScreen(
+                services = services,
+                onReturnToMenu = { screenState = DesktopScreenState.MAIN_MENU }
+            )
         }
     }
 }
