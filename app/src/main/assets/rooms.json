@@ -271,20 +271,20 @@
     "background_image": "images/rooms/world_1/pit_nova_bunk_v5.webp",
     "description": "Your bunk is a narrow shelf in the colony wall. The bunk light hangs above cargo netting and a rusty locker holding your tools, a spare ration, and Jed's small metal carving.",
     "reveal_title_when_dark": true,
-    "description_dark": "Nova can find the bunk edge, netting, rusty locker, and door switch without light. Only the bunk light switch carries an emergency glow.",
+    "description_dark": "Nova can find the bunk edge and door switch without light. Only the bunk light switch carries an emergency glow.",
     "description_variants": [
       {
         "requires_state": {
           "light_on": true,
           "conduit_isolated": true
         },
-        "description": "The bunk light has settled back to a cheap yellow buzz. The scorched conduit is dead and the door release is safe to touch. The netting and rusty locker still hold Jed's carving. The closed maintenance ticket remains where Dominion left it."
+        "description": "The bunk light has settled back to a cheap yellow buzz. The scorched conduit is dead and the door release is safe to touch. The closed maintenance ticket remains where Dominion left it."
       },
       {
         "requires_state": {
           "light_on": true
         },
-        "description": "The bunk light coughs awake over the cargo netting and rusty locker with its small hoard: tools, a spare ration, Jed's metal carving. A scorched conduit spits blue-white sparks across the door release. Its maintenance ticket is stamped CLOSED: WITHIN QUOTA."
+        "description": "The bunk light coughs awake over the cargo netting and rusty locker. A scorched conduit spits blue-white sparks across the door release. Its maintenance ticket is stamped CLOSED: WITHIN QUOTA."
       }
     ],
     "npcs": [],
@@ -347,17 +347,6 @@
         "type": "rest_stop",
         "rest_event": "w1_rest_nova_bunk",
         "message": "Nova sleeps until the shift alarm. Resting here restores the party."
-      },
-      {
-        "name": "netting",
-        "type": "generic",
-        "action_event": "w1_mq01_check_netting",
-        "condition_unmet_message": "A few tools, a spare ration, and a small metal carving Jed gave you."
-      },
-      {
-        "name": "rusty locker",
-        "type": "generic",
-        "condition_unmet_message": "Nova's personal locker holds spare mining gloves, a ration bar, and Jed's metal carving."
       }
     ]
   },

@@ -863,7 +863,25 @@ class AppServices(context: Context) {
     }
 
     fun startDebugScenario(id: String): Boolean = when (id) {
+        // --- TUTORIAL SHORTCUTS ---
+        "tut_movement" -> startNewGame()
+        "tut_npc_dialogue" -> startNewGameAtTutNpcDialogue()
+        "tut_gear_inventory" -> startNewGameAtTutGearInventory()
+        "tut_tinkering" -> startNewGameAtTinkeringTutorial()
+        "tut_save_system" -> startNewGameAtTutSaveSystem()
+        "tut_journal_quests" -> startNewGameAtTutJournalQuests()
+        "tut_combat_loader" -> startNewGameAtFirstCombat()
+        "tut_combat_guard" -> startNewGameAtDeepMine()
+        "tut_combat_snacks" -> startNewGameAtTutCombatSnacks()
+        "tut_party_combat" -> startNewGameAtTutPartyCombat()
+        "tut_world2_debuffs" -> startNewGameAtTutWorld2Debuffs()
+        "tut_source_blast_wave" -> startNewGameAtTutSourceBlastWave()
+        "tut_source_link" -> startNewGameAtTutSourceLink()
+        "tut_rest_recovery" -> startNewGameAtTutRestRecovery()
+
+        // --- STORY & SYSTEM SCENARIOS ---
         "story_w1_start" -> startNewGame()
+        "tinkering_tutorial" -> startNewGameAtTinkeringTutorial()
         "full_inventory" -> startNewGame(debugFullInventory = true)
         "first_combat" -> startNewGameAtFirstCombat()
         "enemy_party" -> startNewGameAtEnemyPartyCombat()
@@ -923,6 +941,178 @@ class AppServices(context: Context) {
         "fishing_beach_pools" -> startNewGameAtFishingBeachPools()
         else -> if (id.startsWith("hub_")) startNewGameAtDebugHub(id) else false
     }
+
+    private fun startNewGameAtTinkeringTutorial(): Boolean = runCatching {
+        if (!startNewGame(debugFullInventory = false)) return false
+        clearDebugBootstrap()
+        sessionStore.setWorld("world_1")
+        sessionStore.setHub("hub_1_homestead")
+        sessionStore.setRoom("workshop_floor")
+        sessionStore.visitNode("pit")
+        sessionStore.visitNode("workshop")
+        sessionStore.revealNode("workshop")
+        sessionStore.startQuest("w1_mq01", track = true)
+        sessionStore.setQuestStage("w1_mq01", "inspect_cutter")
+        sessionStore.setQuestTasksCompleted(
+            questId = "w1_mq01",
+            taskIds = setOf("find_jed", "talk_to_jed", "equip_starter_gear")
+        )
+        sessionStore.setMilestone("ms_w1_mq01_jed_talked")
+        sessionStore.setMilestone("ms_w1_mq01_workshop_briefed")
+        val inv = mapOf(
+            "cryo_inductor" to 1,
+            "scrap_metal" to 2,
+            "flux_liner" to 1,
+            "ration_pack" to 2,
+            "starbar_crunch" to 2
+        )
+        inventoryService.restore(inv)
+        sessionStore.setInventory(inv)
+        sessionStore.markTutorialCompleted("movement")
+        sessionStore.markTutorialCompleted("swipe_move")
+        sessionStore.markTutorialCompleted("bag_basics")
+        sessionStore.markTutorialCompleted("npc_interaction")
+        true
+    }.getOrElse { false }
+
+    private fun startNewGameAtTutNpcDialogue(): Boolean = runCatching {
+        if (!startNewGame(debugFullInventory = false)) return false
+        clearDebugBootstrap()
+        sessionStore.setWorld("world_1")
+        sessionStore.setHub("hub_1_homestead")
+        sessionStore.setRoom("bunk_jed")
+        sessionStore.visitNode("pit")
+        sessionStore.resetTutorialProgress()
+        true
+    }.getOrElse { false }
+
+    private fun startNewGameAtTutGearInventory(): Boolean = runCatching {
+        if (!startNewGame(debugFullInventory = false)) return false
+        clearDebugBootstrap()
+        sessionStore.setWorld("world_1")
+        sessionStore.setHub("hub_1_homestead")
+        sessionStore.setRoom("pit_landing")
+        sessionStore.visitNode("pit")
+        sessionStore.startQuest("w1_mq01", track = true)
+        sessionStore.setQuestStage("w1_mq01", "equip_starter_gear")
+        val inv = mapOf("plasma_cutter" to 1, "miner_jumpsuit" to 1, "starbar_crunch" to 2)
+        inventoryService.restore(inv)
+        sessionStore.setInventory(inv)
+        sessionStore.setEquippedItem("weapon", null, "nova")
+        sessionStore.setEquippedItem("armor", null, "nova")
+        sessionStore.setEquippedWeapon("nova", null)
+        sessionStore.setEquippedArmor("nova", null)
+        sessionStore.resetTutorialProgress()
+        true
+    }.getOrElse { false }
+
+    private fun startNewGameAtTutSaveSystem(): Boolean = runCatching {
+        if (!startNewGame(debugFullInventory = false)) return false
+        clearDebugBootstrap()
+        sessionStore.setWorld("world_1")
+        sessionStore.setHub("hub_1_homestead")
+        sessionStore.completeQuest("w1_mq01")
+        sessionStore.setMilestone("ms_w1_mq01_complete")
+        sessionStore.startQuest("w1_mq02", track = true)
+        sessionStore.setQuestStage("w1_mq02", "leave_workshop")
+        sessionStore.setRoom("workshop_yard")
+        sessionStore.visitNode("pit")
+        sessionStore.visitNode("workshop")
+        sessionStore.resetTutorialProgress()
+        true
+    }.getOrElse { false }
+
+    private fun startNewGameAtTutJournalQuests(): Boolean = runCatching {
+        if (!startNewGame(debugFullInventory = false)) return false
+        clearDebugBootstrap()
+        sessionStore.setWorld("world_1")
+        sessionStore.setHub("hub_1_homestead")
+        sessionStore.completeQuest("w1_mq01")
+        sessionStore.setMilestone("ms_w1_mq01_complete")
+        sessionStore.startQuest("w1_mq02", track = true)
+        sessionStore.setQuestStage("w1_mq02", "find_tyson")
+        sessionStore.setRoom("market_plaza")
+        sessionStore.visitNode("market")
+        sessionStore.resetTutorialProgress()
+        true
+    }.getOrElse { false }
+
+    private fun startNewGameAtTutCombatSnacks(): Boolean = runCatching {
+        if (!startNewGame(debugFullInventory = true)) return false
+        clearDebugBootstrap()
+        sessionStore.setWorld("world_1")
+        sessionStore.setHub("hub_2_logistics")
+        sessionStore.setRoom("mine_descent_shaft")
+        sessionStore.completeQuest("w1_mq01")
+        sessionStore.completeQuest("w1_mq02")
+        sessionStore.startQuest("w1_mq03", track = true)
+        sessionStore.setQuestStage("w1_mq03", "deep_mine_descent")
+        sessionStore.resetTutorialProgress()
+        true
+    }.getOrElse { false }
+
+    private fun startNewGameAtTutPartyCombat(): Boolean = runCatching {
+        if (!startNewGame(debugFullInventory = true)) return false
+        clearDebugBootstrap()
+        (1..5).forEach { number ->
+            val questId = "w1_mq0$number"
+            sessionStore.completeQuest(questId)
+            sessionStore.setMilestone("ms_${questId}_complete")
+        }
+        sessionStore.setPartyMembers(listOf("nova", "zeke"))
+        sessionStore.startQuest("w2_mq01", track = true)
+        sessionStore.setWorld("world_2")
+        sessionStore.setHub("hub_3_sector9")
+        sessionStore.setRoom("sector9_crash_site")
+        sessionStore.resetTutorialProgress()
+        true
+    }.getOrElse { false }
+
+    private fun startNewGameAtTutWorld2Debuffs(): Boolean = runCatching {
+        if (!startNewGame(debugFullInventory = true)) return false
+        clearDebugBootstrap()
+        (1..5).forEach { number ->
+            val questId = "w1_mq0$number"
+            sessionStore.completeQuest(questId)
+            sessionStore.setMilestone("ms_${questId}_complete")
+        }
+        sessionStore.setPartyMembers(listOf("nova", "zeke"))
+        sessionStore.startQuest("w2_mq01", track = true)
+        sessionStore.setWorld("world_2")
+        sessionStore.setHub("hub_3_sector9")
+        sessionStore.setRoom("sector9_canopy_path")
+        sessionStore.resetTutorialProgress()
+        true
+    }.getOrElse { false }
+
+    private fun startNewGameAtTutSourceBlastWave(): Boolean = runCatching {
+        if (!startNewGame(debugFullInventory = true)) return false
+        clearDebugBootstrap()
+        sessionStore.setWorld("world_1")
+        sessionStore.setHub("hub_2_logistics")
+        sessionStore.setRoom("deep_mine_sublevel2")
+        sessionStore.unlockSkill("nova_blast_wave")
+        sessionStore.resetTutorialProgress()
+        true
+    }.getOrElse { false }
+
+    private fun startNewGameAtTutSourceLink(): Boolean = runCatching {
+        if (!prepareWorld2DebugState(completedW2Quests = listOf("w2_mq01", "w2_mq02", "w2_mq03", "w2_mq04"))) return false
+        sessionStore.setPartyMembers(listOf("nova", "zeke", "orion"))
+        sessionStore.setWorld("world_2")
+        sessionStore.setHub("hub_4_facility")
+        sessionStore.setRoom("facility_source_chamber")
+        sessionStore.unlockSkill("nova_link")
+        sessionStore.resetTutorialProgress()
+        true
+    }.getOrElse { false }
+
+    private fun startNewGameAtTutRestRecovery(): Boolean = runCatching {
+        if (!startNewGameAboardAstra()) return false
+        sessionStore.setRoom("astra_quarters")
+        sessionStore.resetTutorialProgress()
+        true
+    }.getOrElse { false }
 
     private fun startNewGameAtHubQaW1Rest(): Boolean = runCatching {
         if (!startNewGame(debugFullInventory = true)) return false

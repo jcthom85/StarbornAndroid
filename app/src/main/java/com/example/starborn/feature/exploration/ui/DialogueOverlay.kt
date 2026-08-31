@@ -77,6 +77,7 @@ fun DialogueOverlay(
     onPlayMurmur: (String) -> Unit = {},
     onRevealFinished: () -> Unit = {},
     revealAllRequest: Int = 0,
+    canDismissByTap: Boolean = true,
     modifier: Modifier = Modifier
 ) {
     val line = dialogue.line
@@ -122,13 +123,13 @@ fun DialogueOverlay(
     val accentColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.85f)
     val outlineColor = accentColor.copy(alpha = 0.55f)
     val surfaceColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.98f)
-    val canDismissByTap = choices.isEmpty() || !revealFinished
+    val tapToAdvanceAllowed = canDismissByTap && (choices.isEmpty() || !revealFinished)
     val tapInteraction = remember { MutableInteractionSource() }
     val containerModifier = Modifier
         .fillMaxWidth()
-        .semantics { contentDescription = if (canDismissByTap) "Dialogue Popup. Tap to continue" else "Dialogue Popup" }
+        .semantics { contentDescription = if (tapToAdvanceAllowed) "Dialogue Popup. Tap to continue" else "Dialogue Popup" }
         .let { base ->
-            if (canDismissByTap) {
+            if (tapToAdvanceAllowed) {
                 base.clickable(
                     interactionSource = tapInteraction,
                     indication = null

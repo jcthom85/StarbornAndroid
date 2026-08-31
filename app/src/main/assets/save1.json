@@ -30,22 +30,28 @@
       "nova"
     ],
     "inventory": {
+      "cryo_inductor": 1,
+      "scrap_metal": 2,
+      "flux_liner": 1,
+      "plasma_cutter": 1,
+      "miner_jumpsuit": 1,
+      "ration_pack": 2,
       "starbar_crunch": 2
     },
     "equipment": {
-      "weapon": null,
-      "armor": null,
+      "weapon": "plasma_cutter",
+      "armor": "miner_jumpsuit",
       "accessory": null,
       "snack": "starbar_crunch"
     },
-    "credits": 0,
+    "credits": 50,
     "map": {
       "current_world_id": "world_1",
       "current_hub_id": "hub_1_homestead",
-      "current_node_id": "pit",
-      "current_room_id": "pit_nova_bunk",
+      "current_node_id": "workshop",
+      "current_room_id": "workshop_floor",
       "room_positions": {
-        "pit_nova_bunk": [
+        "workshop_floor": [
           1,
           2
         ]
@@ -57,9 +63,9 @@
         ]
       ],
       "node_maps": {
-        "pit": {
+        "workshop": {
           "room_positions": {
-            "pit_nova_bunk": [
+            "workshop_floor": [
               1,
               2
             ]
@@ -80,7 +86,7 @@
         {
           "id": "w1_mq01",
           "status": "active",
-          "current_objective_index": 0
+          "current_objective_index": 1
         }
       ]
     },
@@ -92,7 +98,8 @@
         "hub_1_homestead": true
       },
       "nodes": {
-        "pit": true
+        "pit": true,
+        "workshop": true
       }
     },
     "learned_schematics": [],
@@ -100,8 +107,20 @@
     "played_cutscenes": []
   },
   "tutorials": {
-    "seen": [],
-    "completed": [],
-    "rooms_seen": []
+    "seen": [
+      "movement",
+      "swipe_move",
+      "bag_basics",
+      "npc_interaction"
+    ],
+    "completed": [
+      "movement",
+      "swipe_move",
+      "bag_basics",
+      "npc_interaction"
+    ],
+    "rooms_seen": [
+      "workshop_floor"
+    ]
   }
 }

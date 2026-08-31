@@ -471,6 +471,12 @@
     ],
     "actions": [
       {
+        "type": "audio_layer",
+        "layer": "ui",
+        "cue_id": "sfx_door_unlock",
+        "fade_ms": 0
+      },
+      {
         "type": "set_room_state",
         "room_id": "pit_nova_bunk",
         "state_key": "conduit_isolated",
@@ -487,7 +493,7 @@
       },
       {
         "type": "narrate",
-        "message": "Nova kills the circuit and peels back the ticket. Three repair requests sit underneath it, each closed automatically without work.",
+        "message": "Nova isolates the circuit and peels back the ticket. Three repair requests sit underneath it, each closed automatically without work. The sparks die, and the bunk door unlocks.",
         "tap_to_dismiss": true
       },
       {
@@ -1034,6 +1040,10 @@
           {
             "type": "unlock_node",
             "node_id": "admin_gate"
+          },
+          {
+            "type": "start_dialogue",
+            "npc": "Jed"
           }
         ]
       }

@@ -109,6 +109,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.collectAsState
+import com.example.starborn.feature.exploration.ui.tabs.TinkeringTutorialOverlay
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -2480,6 +2482,29 @@ private fun MenuOverlay(
                         )
                 )
             }
+
+            // SEPARATE POPUP OVERTOP THE ENTIRE FIELD MENU DIALOG
+            if (isTinkeringTutorialActive && selectedTab == MenuTab.FIELD_KIT && craftingViewModel != null) {
+                val craftState by craftingViewModel.uiState.collectAsState()
+                val currentStep = craftState.tutorialStep
+                LaunchedEffect(currentStep) {
+                    if (currentStep != null) {
+                        onPlayAudio("sfx_hub_node_select")
+                    }
+                }
+                if (craftState.isTutorialActive && currentStep != null) {
+                    TinkeringTutorialOverlay(
+                        step = currentStep,
+                        accentColor = accentColor,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .align(Alignment.TopCenter)
+                            .statusBarsPadding()
+                            .padding(top = 16.dp, start = 16.dp, end = 16.dp)
+                            .zIndex(999f)
+                    )
+                }
+            }
         }
     }
 }
@@ -4363,16 +4388,16 @@ private fun ReturnHubButton(
             ) {
                 Text(
                     text = "OVERWORLD",
-                    color = Color.White.copy(alpha = 0.96f),
-                    style = MaterialTheme.typography.labelLarge,
-                    fontWeight = FontWeight.Black,
-                    letterSpacing = 0.5.sp
+                    color = Color.White.copy(alpha = 0.92f),
+                    style = MaterialTheme.typography.labelMedium,
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = 0.6.sp
                 )
                 destinationName?.takeIf { it.isNotBlank() }?.let { dest ->
                     Text(
                         text = dest,
-                        color = accentColor.copy(alpha = 0.90f),
-                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp, fontWeight = FontWeight.Bold),
+                        color = accentColor.copy(alpha = 0.82f),
+                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp, fontWeight = FontWeight.Medium),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -5180,23 +5205,12 @@ private fun OverworldGatewayCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val shape = RoundedCornerShape(12.dp)
+    val shape = RoundedCornerShape(10.dp)
     val mapCyan = Color(0xFF00E5FF)
-    val warmGold = Color(0xFFFFC857)
-    val pulse = rememberInfiniteTransition(label = "overworldGatewayPulse")
-    val glowAlpha by pulse.animateFloat(
-        initialValue = 0.55f,
-        targetValue = 0.95f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 1100, easing = FastOutSlowInEasing),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "gatewayGlow"
-    )
     Surface(
         shape = shape,
-        color = Color(0xFF06121E).copy(alpha = if (isDark) 0.94f else 0.84f),
-        border = BorderStroke(1.2.dp, mapCyan.copy(alpha = glowAlpha)),
+        color = Color(0xFF060F17).copy(alpha = if (isDark) 0.88f else 0.76f),
+        border = BorderStroke(1.dp, mapCyan.copy(alpha = 0.35f)),
         modifier = modifier
             .fillMaxWidth()
             .clip(shape)
@@ -5214,13 +5228,12 @@ private fun OverworldGatewayCard(
                 .background(
                     Brush.horizontalGradient(
                         colors = listOf(
-                            mapCyan.copy(alpha = 0.22f),
-                            warmGold.copy(alpha = 0.09f),
-                            Color(0xFF081A2A).copy(alpha = 0.40f)
+                            mapCyan.copy(alpha = 0.08f),
+                            Color(0xFF061018).copy(alpha = 0.40f)
                         )
                     )
                 )
-                .padding(horizontal = 12.dp, vertical = 9.dp),
+                .padding(horizontal = 12.dp, vertical = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -5231,27 +5244,27 @@ private fun OverworldGatewayCard(
             ) {
                 Surface(
                     shape = CircleShape,
-                    color = mapCyan.copy(alpha = 0.20f),
-                    border = BorderStroke(1.2.dp, mapCyan.copy(alpha = 0.8f)),
-                    modifier = Modifier.size(34.dp)
+                    color = mapCyan.copy(alpha = 0.12f),
+                    border = BorderStroke(1.dp, mapCyan.copy(alpha = 0.45f)),
+                    modifier = Modifier.size(30.dp)
                 ) {
                     Box(contentAlignment = Alignment.Center) {
-                        Canvas(modifier = Modifier.size(20.dp)) {
-                            val strokeWidth = 2.dp.toPx()
+                        Canvas(modifier = Modifier.size(16.dp)) {
+                            val strokeWidth = 1.5.dp.toPx()
                             drawCircle(
-                                color = mapCyan,
+                                color = mapCyan.copy(alpha = 0.85f),
                                 radius = size.minDimension * 0.44f,
                                 style = Stroke(width = strokeWidth)
                             )
                             drawLine(
-                                color = mapCyan,
+                                color = mapCyan.copy(alpha = 0.85f),
                                 start = Offset(size.width * 0.5f, size.height * 0.10f),
                                 end = Offset(size.width * 0.5f, size.height * 0.90f),
                                 strokeWidth = strokeWidth,
                                 cap = StrokeCap.Round
                             )
                             drawLine(
-                                color = mapCyan,
+                                color = mapCyan.copy(alpha = 0.85f),
                                 start = Offset(size.width * 0.10f, size.height * 0.5f),
                                 end = Offset(size.width * 0.90f, size.height * 0.5f),
                                 strokeWidth = strokeWidth,
@@ -5262,18 +5275,21 @@ private fun OverworldGatewayCard(
                 }
                 Column(verticalArrangement = Arrangement.Center) {
                     Text(
-                        text = "Overworld: ${sectorTitle ?: "Colony Map"}",
-                        color = Color.White,
-                        style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
+                        text = "Overworld • ${sectorTitle ?: "Colony Map"}",
+                        color = Color.White.copy(alpha = 0.94f),
+                        style = MaterialTheme.typography.labelMedium.copy(
+                            fontWeight = FontWeight.SemiBold,
+                            letterSpacing = 0.2.sp
+                        ),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
                     Text(
-                        text = "Surface Exit",
-                        color = warmGold,
+                        text = "Surface Transit Gate",
+                        color = Color(0xFF7BE8FF).copy(alpha = 0.70f),
                         style = MaterialTheme.typography.labelSmall.copy(
                             fontSize = 10.sp,
-                            fontWeight = FontWeight.SemiBold
+                            fontWeight = FontWeight.Medium
                         ),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
@@ -5281,18 +5297,19 @@ private fun OverworldGatewayCard(
                 }
             }
             Surface(
-                shape = RoundedCornerShape(8.dp),
-                color = mapCyan.copy(alpha = 0.22f),
-                border = BorderStroke(1.dp, mapCyan.copy(alpha = 0.80f))
+                shape = RoundedCornerShape(6.dp),
+                color = mapCyan.copy(alpha = 0.12f),
+                border = BorderStroke(1.dp, mapCyan.copy(alpha = 0.38f))
             ) {
                 Text(
-                    text = "DEPART ➜",
-                    color = Color.White,
+                    text = "SURFACE ➜",
+                    color = Color.White.copy(alpha = 0.90f),
                     style = MaterialTheme.typography.labelSmall.copy(
-                        fontWeight = FontWeight.Black,
-                        fontSize = 9.5.sp
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 9.sp,
+                        letterSpacing = 0.6.sp
                     ),
-                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 5.dp)
+                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                 )
             }
         }
@@ -7703,6 +7720,7 @@ private fun CinematicNarrationCard(
     displayedText: String,
     revealFinished: Boolean,
     isLastStep: Boolean,
+    showTapToContinue: Boolean = true,
     modifier: Modifier = Modifier
 ) {
     val cardAlpha by animateFloatAsState(
@@ -7796,24 +7814,26 @@ private fun CinematicNarrationCard(
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .alpha(hintAlpha)
-                        .then(if (revealFinished) Modifier else Modifier.clearAndSetSemantics { }),
-                    horizontalArrangement = Arrangement.End,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "✦  ",
-                        color = accentColor.copy(alpha = 0.35f),
-                        style = MaterialTheme.typography.labelSmall
-                    )
-                    Text(
-                        text = if (isLastStep) "Tap to continue" else "Tap to continue ▸",
-                        color = accentColor.copy(alpha = 0.5f),
-                        style = MaterialTheme.typography.labelSmall.copy(letterSpacing = 1.sp)
-                    )
+                if (showTapToContinue) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .alpha(hintAlpha)
+                            .then(if (revealFinished) Modifier else Modifier.clearAndSetSemantics { }),
+                        horizontalArrangement = Arrangement.End,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "✦  ",
+                            color = accentColor.copy(alpha = 0.35f),
+                            style = MaterialTheme.typography.labelSmall
+                        )
+                        Text(
+                            text = if (isLastStep) "Tap to continue" else "Tap to continue ▸",
+                            color = accentColor.copy(alpha = 0.5f),
+                            style = MaterialTheme.typography.labelSmall.copy(letterSpacing = 1.sp)
+                        )
+                    }
                 }
                 CinematicAccentBar(accentColor)
             }
@@ -8036,8 +8056,9 @@ private fun IllustratedCinematicOverlay(
             onAdvance()
         }
     }
+    val isIntroPrologue = state.sceneId == "intro_prologue"
     val cinematicTapInteraction = remember(stepKey) { MutableInteractionSource() }
-    val cinematicInteractionModifier = if (state.step.captionStyle == CinematicCaptionStyle.DIALOGUE) {
+    val cinematicInteractionModifier = if (isIntroPrologue || state.step.captionStyle == CinematicCaptionStyle.DIALOGUE) {
         Modifier
     } else {
         Modifier
@@ -8291,6 +8312,7 @@ private fun IllustratedCinematicCaption(
 ) {
     if (state.step.captionStyle == CinematicCaptionStyle.DIALOGUE) {
         val speaker = state.step.speaker.orEmpty()
+        val isIntro = state.sceneId == "intro_prologue"
         DialogueOverlay(
             dialogue = DialogueUi(
                 line = DialogueLine(
@@ -8304,9 +8326,10 @@ private fun IllustratedCinematicCaption(
                 voiceCue = null
             ),
             choices = emptyList(),
-            onAdvance = onAdvance,
+            onAdvance = if (isIntro) ({}) else onAdvance,
             onChoice = { onAdvance() },
             onPlayVoice = {},
+            canDismissByTap = !isIntro,
             onPlayMurmur = { cue ->
                 audioCuePlayer?.execute(
                     listOf(AudioCommand.Play(AudioCueType.VOICE, cue, loop = false, fadeMs = 0L))
@@ -8326,6 +8349,7 @@ private fun IllustratedCinematicCaption(
             revealAllRequest = revealAllRequest,
             onRevealFinished = onRevealFinished,
             isLastStep = state.stepIndex + 1 >= state.stepCount,
+            showTapToContinue = state.sceneId != "intro_prologue",
             modifier = modifier
         )
         return
@@ -8483,6 +8507,7 @@ private fun IllustratedNarrationCaption(
     revealAllRequest: Int,
     onRevealFinished: () -> Unit,
     isLastStep: Boolean,
+    showTapToContinue: Boolean = true,
     modifier: Modifier = Modifier
 ) {
     var revealedCount by remember(stepKey) { mutableIntStateOf(0) }
@@ -8513,6 +8538,7 @@ private fun IllustratedNarrationCaption(
         displayedText = displayedText,
         revealFinished = revealFinished,
         isLastStep = isLastStep,
+        showTapToContinue = showTapToContinue,
         modifier = modifier
     )
 }

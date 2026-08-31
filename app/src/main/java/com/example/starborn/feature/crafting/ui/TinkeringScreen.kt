@@ -49,7 +49,10 @@ import androidx.compose.ui.window.Dialog
 import com.example.starborn.domain.prompt.TutorialPrompt
 import com.example.starborn.domain.tutorial.TutorialEntry
 import com.example.starborn.feature.crafting.TinkeringTutorialStep
+import com.example.starborn.feature.exploration.ui.tabs.TinkeringTutorialOverlay
+import com.example.starborn.feature.exploration.ui.tabs.TinkeringTutorialFloatingPopup
 import com.example.starborn.feature.exploration.ui.tabs.TinkeringTutorialGuideBanner
+import androidx.compose.ui.zIndex
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -170,6 +173,18 @@ fun TinkeringRoute(
             theme = theme,
             modifier = Modifier.fillMaxSize()
         )
+
+        if (uiState.isTutorialActive && uiState.tutorialStep != null) {
+            TinkeringTutorialOverlay(
+                step = uiState.tutorialStep!!,
+                accentColor = accentColor,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.TopCenter)
+                    .padding(top = 54.dp, start = 12.dp, end = 12.dp)
+                    .zIndex(100f)
+            )
+        }
 
         UIPromptOverlay(
             prompt = promptState.current,
@@ -872,9 +887,6 @@ private fun TinkeringBenchCard(
                 .padding(12.dp),
             verticalArrangement = Arrangement.spacedBy(11.dp)
         ) {
-            if (isTutorialActive && tutorialStep != null) {
-                TinkeringTutorialGuideBanner(step = tutorialStep)
-            }
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(10.dp),

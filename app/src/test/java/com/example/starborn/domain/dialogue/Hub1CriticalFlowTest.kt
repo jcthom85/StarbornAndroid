@@ -161,6 +161,7 @@ class Hub1CriticalFlowTest {
         assertEquals("w1_mq02", state.trackedQuestId)
         assertEquals("reach_checkpoint", state.questStageById["w1_mq02"])
         assertTrue(state.inventory["ration_pack"].orZero() >= 1)
+        assertTrue(harness.autoStartedDialogueIds.contains("jed_w1_mq02_handoff_1"))
         assertTrue(harness.narrationMessages.none { it.contains("Transit Checkpoint") })
 
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("pit_shaft"))

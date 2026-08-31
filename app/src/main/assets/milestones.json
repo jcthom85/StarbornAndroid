@@ -415,7 +415,7 @@
     "id": "ms_w1_mq01_complete",
     "name": "Live Test Complete",
     "description": "Nova's cutter test woke a buried conduit and logged the fault to her operator ID.",
-    "toast": "Wake Up Call complete. Shift clearance required."
+    "toast": "Wake Up Call Complete! Next: Report to Transit Checkpoint (North through Market)."
   },
   {
     "id": "ms_w1_mq02_hank_denied",
@@ -427,7 +427,7 @@
     "id": "ms_w1_mq02_clearance_ordered",
     "name": "Shift Clearance Ordered",
     "description": "Jed sent Nova to the Transit Checkpoint for mandatory mine clearance.",
-    "toast": "Jed sends you to shift clearance."
+    "toast": "Shift Clearance Assigned: Head North through Market to Transit Checkpoint."
   },
   {
     "id": "ms_w1_mq02_zeke_override",
@@ -1770,5 +1770,11 @@
     "name": "Master Angler",
     "description": "Fished native species across all 5 campaign fishing holes.",
     "toast": "Master Angler: Frontier Waters Conquered!"
+  },
+  {
+    "id": "ms_w1_mq02_jed_advised",
+    "name": "Jed's Advice",
+    "description": "Consulted Jed regarding clearance protocols in the Colony.",
+    "toast": "Objective updated: Consulted Jed"
   }
 ]

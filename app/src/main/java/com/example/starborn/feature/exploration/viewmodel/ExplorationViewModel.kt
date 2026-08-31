@@ -3328,13 +3328,12 @@ class ExplorationViewModel(
             world,
             "Level ${state.playerLevel}",
             "${state.playerCredits} credits"
-        ).joinToString(" - ")
+        ).joinToString(" • ")
     }
 
     private fun String.readableSaveLabel(): String =
-        replace('_', ' ')
-            .replace('-', ' ')
-            .split(' ')
+        replace("_", " ")
+            .split(" ")
             .filter { it.isNotBlank() }
             .joinToString(" ") { token ->
                 token.lowercase(Locale.getDefault()).replaceFirstChar { ch ->

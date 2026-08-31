@@ -8,6 +8,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.ui.zIndex
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -346,10 +347,6 @@ private fun WorkbenchTerminalView(
     val isSynthTutorialTarget = tutorialStep == TinkeringTutorialStep.SYNTHESIZE
 
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        if (tutorialStep != null) {
-            TinkeringTutorialGuideBanner(step = tutorialStep)
-        }
-
         // TOP CHAMBER: Interactive Sockets + Reaction Result
         Surface(
             modifier = Modifier.fillMaxWidth(),
@@ -1276,20 +1273,33 @@ private fun RequirementChip(
 }
 
 @Composable
-fun TinkeringTutorialGuideBanner(
+fun TinkeringTutorialOverlay(
     step: TinkeringTutorialStep,
+    accentColor: Color = Color(0xFF7BE8FF),
     modifier: Modifier = Modifier
 ) {
     val infiniteTransition = rememberInfiniteTransition(label = "tinker_tut_pulse")
     val borderAlpha by infiniteTransition.animateFloat(
-        initialValue = 0.45f,
-        targetValue = 0.95f,
+        initialValue = 0.55f,
+        targetValue = 1.0f,
         animationSpec = infiniteRepeatable(
-            animation = tween(1100, easing = FastOutSlowInEasing),
+            animation = tween(950, easing = FastOutSlowInEasing),
             repeatMode = RepeatMode.Reverse
         ),
         label = "borderAlpha"
     )
+    val glowScale by infiniteTransition.animateFloat(
+        initialValue = 0.92f,
+        targetValue = 1.08f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(950, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "glowScale"
+    )
+
+    val isSynthesis = step == TinkeringTutorialStep.SYNTHESIZE
+    val themeAccent = if (isSynthesis) Color(0xFFFFC857) else accentColor
 
     val (badgeText, title, instruction) = when (step) {
         TinkeringTutorialStep.SLOT_BASE -> Triple(
@@ -1314,45 +1324,141 @@ fun TinkeringTutorialGuideBanner(
         )
     }
 
+    val currentStepNumber = when (step) {
+        TinkeringTutorialStep.SLOT_BASE -> 1
+        TinkeringTutorialStep.SLOT_COMPONENT -> 2
+        TinkeringTutorialStep.SYNTHESIZE -> 3
+        TinkeringTutorialStep.COMPLETE -> 3
+    }
+
     Surface(
-        modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
-        color = Color(0xFF071420).copy(alpha = 0.95f),
-        border = BorderStroke(1.5.dp, Color(0xFF7BE8FF).copy(alpha = borderAlpha))
+        modifier = modifier
+            .fillMaxWidth()
+            .widthIn(min = 300.dp, max = 560.dp),
+        shape = RoundedCornerShape(18.dp),
+        color = Color(0xFF030910).copy(alpha = 0.98f),
+        border = BorderStroke(1.5.dp, themeAccent.copy(alpha = borderAlpha)),
+        shadowElevation = 24.dp
     ) {
-        Row(
-            modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(
+                    Brush.verticalGradient(
+                        listOf(
+                            themeAccent.copy(alpha = 0.16f),
+                            themeAccent.copy(alpha = 0.03f),
+                            Color.Transparent
+                        )
+                    )
+                )
         ) {
-            Surface(
-                shape = RoundedCornerShape(8.dp),
-                color = Color(0xFF7BE8FF).copy(alpha = 0.18f),
-                border = BorderStroke(1.dp, Color(0xFF7BE8FF).copy(alpha = 0.7f))
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 14.dp, vertical = 10.dp),
+                verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
-                Text(
-                    text = badgeText,
-                    style = MaterialTheme.typography.labelSmall.copy(
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.Black,
-                        letterSpacing = 0.8.sp
-                    ),
-                    color = Color(0xFF7BE8FF),
-                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 4.dp)
-                )
-            }
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold, letterSpacing = 0.5.sp),
-                    color = Color.White
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(32.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(themeAccent.copy(alpha = 0.25f))
+                            .border(1.dp, themeAccent.copy(alpha = 0.75f), RoundedCornerShape(8.dp)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Build,
+                            contentDescription = null,
+                            tint = themeAccent,
+                            modifier = Modifier.size(16.dp)
+                        )
+                    }
+
+                    Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Text(
+                                text = "TUTORIAL • $badgeText",
+                                style = MaterialTheme.typography.labelSmall.copy(
+                                    fontSize = 9.5.sp,
+                                    fontWeight = FontWeight.Black,
+                                    letterSpacing = 1.sp
+                                ),
+                                color = themeAccent
+                            )
+
+                            // Segmented Step Progress Pips
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(3.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                (1..3).forEach { index ->
+                                    Box(
+                                        modifier = Modifier
+                                            .width(11.dp)
+                                            .height(3.5.dp)
+                                            .clip(RoundedCornerShape(2.dp))
+                                            .background(
+                                                if (index <= currentStepNumber) themeAccent
+                                                else themeAccent.copy(alpha = 0.22f)
+                                            )
+                                    )
+                                }
+                            }
+                        }
+
+                        Text(
+                            text = title,
+                            style = MaterialTheme.typography.titleSmall.copy(
+                                fontWeight = FontWeight.Bold,
+                                letterSpacing = 0.5.sp
+                            ),
+                            color = Color.White
+                        )
+                    }
+
+                    Box(
+                        modifier = Modifier
+                            .size(10.dp)
+                            .graphicsLayer(scaleX = glowScale, scaleY = glowScale)
+                            .background(themeAccent, CircleShape)
+                    )
+                }
+
                 Text(
                     text = instruction,
-                    style = MaterialTheme.typography.bodySmall.copy(fontSize = 11.5.sp, lineHeight = 15.sp),
-                    color = Color.White.copy(alpha = 0.88f)
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        fontSize = 12.sp,
+                        lineHeight = 16.sp
+                    ),
+                    color = Color.White.copy(alpha = 0.92f)
                 )
             }
         }
     }
+}
+
+@Composable
+fun TinkeringTutorialFloatingPopup(
+    step: TinkeringTutorialStep,
+    accentColor: Color = Color(0xFF7BE8FF),
+    modifier: Modifier = Modifier
+) {
+    TinkeringTutorialOverlay(step = step, accentColor = accentColor, modifier = modifier)
+}
+
+@Composable
+fun TinkeringTutorialGuideBanner(
+    step: TinkeringTutorialStep,
+    modifier: Modifier = Modifier
+) {
+    TinkeringTutorialOverlay(step = step, modifier = modifier)
 }

@@ -306,6 +306,32 @@
     "trigger": "set_milestone:ms_w1_mq01_test_briefed"
   },
   {
+    "id": "jed_w1_mq02_handoff_1",
+    "speaker": "Jed",
+    "text": "That surge tripped the local breaker and logged a fault to your operator ID. Dominion will flag you at the checkpoint.",
+    "condition": "quest_active:w1_mq02,milestone:ms_w1_mq02_clearance_ordered,milestone_not_set:ms_w1_mq02_hank_denied,milestone_not_set:ms_w1_mq02_jed_advised",
+    "next": "jed_w1_mq02_handoff_2"
+  },
+  {
+    "id": "jed_w1_mq02_handoff_2",
+    "speaker": "Nova",
+    "emote": "worried",
+    "text": "If I'm flagged, they'll pull my shift clearance. I need that quota.",
+    "next": "jed_w1_mq02_handoff_3"
+  },
+  {
+    "id": "jed_w1_mq02_handoff_3",
+    "speaker": "Jed",
+    "text": "Head north through the market to the Transit Checkpoint. If Hank's scanner rejects you, find Zeke at the Admin window—he knows how to bury liability paperwork.",
+    "trigger": "set_milestone:ms_w1_mq02_jed_advised"
+  },
+  {
+    "id": "jed_w1_mq02_reminder",
+    "speaker": "Jed",
+    "text": "Head north through the market to the Transit Checkpoint. If Hank's gate scanner kicks you out, talk to Zeke at the Admin window.",
+    "condition": "quest_active:w1_mq02,milestone:ms_w1_mq02_jed_advised,milestone_not_set:ms_w1_mq02_hank_denied"
+  },
+  {
     "id": "jed_default_talk",
     "speaker": "Jed",
     "text": "Grab a seat if you're sticking around. If something starts smoking, hand me the wrench first."

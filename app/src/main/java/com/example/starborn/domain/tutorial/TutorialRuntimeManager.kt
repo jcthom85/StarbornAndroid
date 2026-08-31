@@ -82,6 +82,23 @@ class TutorialRuntimeManager(
         sessionStore.markTutorialCompleted(key)
     }
 
+    fun dismissTutorialIfActive(predicate: (TutorialEntry) -> Boolean) {
+        val currentPrompt = promptManager.state.value.current as? TutorialPrompt
+        if (currentPrompt != null && predicate(currentPrompt.entry)) {
+            promptManager.dismissCurrent()
+        }
+    }
+
+    fun completeAndDismiss(vararg scriptOrKeyIds: String) {
+        val idSet = scriptOrKeyIds.map { it.lowercase(Locale.getDefault()) }.toSet()
+        scriptOrKeyIds.forEach { markCompleted(it) }
+        dismissTutorialIfActive { entry ->
+            val key = entry.key?.lowercase(Locale.getDefault())
+            val scriptId = entry.metadata["script_id"]?.lowercase(Locale.getDefault())
+            (key != null && key in idSet) || (scriptId != null && scriptId in idSet)
+        }
+    }
+
     fun showOnce(
         key: String,
         message: String,

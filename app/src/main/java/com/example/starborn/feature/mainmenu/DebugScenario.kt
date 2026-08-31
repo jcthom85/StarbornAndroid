@@ -2,6 +2,7 @@ package com.example.starborn.feature.mainmenu
 
 enum class DebugScenarioCategory(val label: String) {
     STORY("Story"),
+    TUTORIAL("Tutorials"),
     WORLD("Worlds"),
     CONTENT("Content"),
     SYSTEM("Systems")
@@ -23,7 +24,25 @@ data class DebugScenario(
 
 object DebugScenarioCatalog {
     val scenarios: List<DebugScenario> = listOf(
+        // --- TUTORIAL SCENARIOS ---
+        scenario("tut_movement", "Tutorial: Movement & Bunks", "Start in Nova's bunk with swipe movement and light switch hints.", DebugScenarioCategory.TUTORIAL),
+        scenario("tut_npc_dialogue", "Tutorial: NPC & Dialogue", "Start in Jed's bunk with the NPC interaction and dialogue prompt.", DebugScenarioCategory.TUTORIAL),
+        scenario("tut_gear_inventory", "Tutorial: Gear & Inventory", "Start in Pit Corridor with unequipped starter gear and inventory tutorial.", DebugScenarioCategory.TUTORIAL),
+        scenario("tut_tinkering", "Tutorial: Tinkering Workbench", "Start in Jed's Workshop with Broken Cryo-Inductor, Scrap Metal, and Flux Liner.", DebugScenarioCategory.TUTORIAL),
+        scenario("tut_save_system", "Tutorial: Save System", "Start in Workshop Yard with Shift Clearance active to test the save prompt.", DebugScenarioCategory.TUTORIAL),
+        scenario("tut_journal_quests", "Tutorial: Journal & Quests", "Start in Market Plaza with active errands to test journal tracking.", DebugScenarioCategory.TUTORIAL),
+        scenario("tut_combat_loader", "Tutorial: Combat Weakness & Shock", "Enter Deep Mine combat vs Faulted Loader to test weakness, stability, and Arc Tether shock.", DebugScenarioCategory.TUTORIAL),
+        scenario("tut_combat_guard", "Tutorial: Combat Guard Break", "Enter Deep Mine combat vs Shield Bulwark to test shield blocking and Hydraulic Kick guard break.", DebugScenarioCategory.TUTORIAL),
+        scenario("tut_combat_snacks", "Tutorial: Combat Snacks", "Enter combat with snack tutorial prompt and Starbar Crunch snack slot ready.", DebugScenarioCategory.TUTORIAL),
+        scenario("tut_party_combat", "Tutorial: Party Switching", "Enter combat with Nova & Zeke to test character switching and turn rotation.", DebugScenarioCategory.TUTORIAL),
+        scenario("tut_world2_debuffs", "Tutorial: Status Debuffs", "Enter Sector 9 combat with status debuff tutorial prompt active.", DebugScenarioCategory.TUTORIAL),
+        scenario("tut_source_blast_wave", "Tutorial: Source Art - Blast Wave", "Enter combat with Blast Wave unlocked to test AOE guard break and stun.", DebugScenarioCategory.TUTORIAL),
+        scenario("tut_source_link", "Tutorial: Source Art - Link", "Enter combat with Link unlocked to test party regen and bridge tutorial.", DebugScenarioCategory.TUTORIAL),
+        scenario("tut_rest_recovery", "Tutorial: Rest & Recovery", "Start aboard the Astra with damaged party to test rest recovery.", DebugScenarioCategory.TUTORIAL),
+
+        // --- STORY SCENARIOS ---
         scenario("story_w1_start", "Wake Up Call", "Start World 1 from Nova's bunk with normal starting gear.", DebugScenarioCategory.STORY),
+        scenario("tinkering_tutorial", "Wake Up Call: Jed's Bench", "Start in Jed's Workshop with the Broken Cryo-Inductor, Scrap Metal, and Flux Liner ready to tinker.", DebugScenarioCategory.STORY),
         scenario("first_combat", "The Echo: First Combat", "Begin the Deep Mine descent at the first authored combat checkpoint.", DebugScenarioCategory.STORY),
         scenario("deep_mine", "The Echo: Deep Mine", "Resume MQ03 after the early mine encounters and guard-break training.", DebugScenarioCategory.STORY),
         scenario("red_alert", "Red Alert", "Resume MQ04 during the escape from the Logistics lockdown.", DebugScenarioCategory.STORY),

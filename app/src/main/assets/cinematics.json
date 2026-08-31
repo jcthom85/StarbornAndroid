@@ -270,7 +270,6 @@
         "type": "narration",
         "text": "",
         "caption_style": "none",
-        "audio_cue": "sfx_intro_shift_buzzer",
         "duration_seconds": 8.0
       }
     ]
