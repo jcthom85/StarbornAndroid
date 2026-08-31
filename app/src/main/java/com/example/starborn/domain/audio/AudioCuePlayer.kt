@@ -16,7 +16,7 @@ import androidx.media3.common.Player
 import androidx.media3.datasource.RawResourceDataSource
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
-import androidx.core.content.getSystemService
+import com.example.starborn.core.platform.AudioDriver
 import java.util.EnumMap
 import java.util.concurrent.ConcurrentHashMap
 
@@ -33,7 +33,7 @@ private data class PendingShortCue(
 class AudioCuePlayer(
     private val context: Context,
     preloadCueIds: Collection<String> = emptyList()
-) {
+) : AudioDriver {
 
     private val soundPool: SoundPool = SoundPool.Builder()
         .setAudioAttributes(
@@ -62,7 +62,7 @@ class AudioCuePlayer(
     private var pausedForBackground: Boolean = false
     private var resumeMusicAfterBackground: Boolean = false
     private var resumeAmbientAfterBackground: Boolean = false
-    private val vibrator: Vibrator? = context.getSystemService()
+    private val vibrator: Vibrator? = context.getSystemService(Context.VIBRATOR_SERVICE) as? Vibrator
 
     init {
         soundPool.setOnLoadCompleteListener { _, sampleId, status ->
@@ -244,7 +244,7 @@ class AudioCuePlayer(
         }
     }
 
-    fun release() {
+    override fun release() {
         soundPool.release()
         musicPlayer.release()
         ambientPlayers.values.forEach { player ->
@@ -254,6 +254,9 @@ class AudioCuePlayer(
         ambientPlayers.clear()
         fadeAnimators.values.forEach(ValueAnimator::cancel)
         fadeAnimators.clear()
+        soundCache.clear()
+        pendingShortCues.clear()
+        activeStreams.clear()
     }
 
     fun pauseForBackground() {
@@ -460,4 +463,15 @@ class AudioCuePlayer(
         }
     }
 
+    override fun execute(command: AudioCommand) {
+        execute(listOf(command))
+    }
+
+    override fun setUserGain(type: AudioCueType, gain: Float) {
+        when (type) {
+            AudioCueType.MUSIC, AudioCueType.AMBIENT -> setUserMusicGain(gain)
+            AudioCueType.VOICE -> setUserVoiceGain(gain)
+            AudioCueType.UI, AudioCueType.BATTLE -> setUserSfxGain(gain)
+        }
+    }
 }

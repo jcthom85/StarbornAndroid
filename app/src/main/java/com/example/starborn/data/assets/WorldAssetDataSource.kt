@@ -49,18 +49,12 @@ class WorldAssetDataSource(
     fun loadProgressionData(): ProgressionData? = assetReader.readObject("progression.json")
 
     fun loadSkillTrees(): List<SkillTreeDefinition> {
-        val assetManager = assetReader.context.assets
-        val files = runCatching { assetManager.list(SKILL_TREE_DIR) }.getOrNull().orEmpty()
+        val files = assetReader.list(SKILL_TREE_DIR)
         if (files.isEmpty()) return emptyList()
-        val adapter = assetReader.moshi.adapter(SkillTreeDefinition::class.java)
         val trees = mutableListOf<SkillTreeDefinition>()
         files.filter { it.endsWith(".json") }.forEach { name ->
             val path = "$SKILL_TREE_DIR/$name"
-            val definition = runCatching {
-                assetManager.open(path).bufferedReader().use { reader ->
-                    adapter.fromJson(reader.readText())
-                }
-            }.getOrNull()
+            val definition = assetReader.readObject<SkillTreeDefinition>(path)
             if (definition != null) {
                 trees += definition
             }
