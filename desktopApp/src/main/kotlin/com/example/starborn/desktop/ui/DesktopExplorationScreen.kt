@@ -2,6 +2,8 @@ package com.example.starborn.desktop.ui
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.*
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
@@ -9,10 +11,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -34,13 +32,11 @@ import com.example.starborn.desktop.DesktopAppServices
 import com.example.starborn.domain.model.Room
 
 private val NeonCyan = Color(0xFF00F5D4)
-private val NeonPink = Color(0xFFFF007F)
 private val NeonAmber = Color(0xFFFFB703)
-private val DeepSpaceDark = Color(0xFF05070D)
-private val PanelDark = Color(0xFF090E18)
-private val PanelBorder = Color(0xFF1B283E)
+private val GlassDark = Color(0xDD090E18)
+private val GlassBorder = Color(0x4400F5D4)
 private val TextWhite = Color(0xFFF0F4FA)
-private val TextMuted = Color(0xFF8FA1B7)
+private val TextMuted = Color(0xFFA0B3C6)
 private val HealthGreen = Color(0xFF00E676)
 private val ShieldBlue = Color(0xFF2979FF)
 
@@ -79,9 +75,8 @@ fun DesktopExplorationScreen(
     var activeDialogue by remember { mutableStateOf<ActiveDialogueSession?>(null) }
     var inspectedKeyword by remember { mutableStateOf<String?>(null) }
     val sessionState by services.sessionStore.state.collectAsState()
-    val questEntries = remember { services.questRepository.allQuests().toList() }
 
-    // Audio Room routing
+    // Room audio routing
     LaunchedEffect(currentRoom.id) {
         val cmds = services.audioRouter.commandsForRoom(
             hubId = currentRoom.env,
@@ -94,7 +89,7 @@ fun DesktopExplorationScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(DeepSpaceDark)
+            .background(Color(0xFF04060C))
             .onKeyEvent { keyEvent ->
                 if (keyEvent.type == KeyEventType.KeyDown) {
                     when (keyEvent.key) {
@@ -143,7 +138,7 @@ fun DesktopExplorationScreen(
                 } else false
             }
     ) {
-        // 1. Panoramic Room Artwork Backdrop
+        // 1. Full-Bleed 100% Panoramic Room Artwork
         val roomBgPainter = rememberDesktopAssetPainter(currentRoom.backgroundImage, services.assetProvider)
         Image(
             painter = roomBgPainter,
@@ -152,210 +147,178 @@ fun DesktopExplorationScreen(
             contentScale = ContentScale.Crop
         )
 
-        // 2. Dynamic Weather Particle Overlay (Dust, Rain, Starfall, Sparks)
+        // 2. Dynamic Atmospheric Weather Particles
         DesktopWeatherParticleCanvas(currentRoom.weather)
 
-        // 3. Vignette gradient
+        // 3. Subtle Vignette
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(
-                    Brush.verticalGradient(
-                        colors = listOf(
-                            Color(0xBB05070D),
-                            Color(0x4405070D),
-                            Color(0xF005070D)
-                        )
+                    Brush.radialGradient(
+                        colors = listOf(Color.Transparent, Color(0x66000000), Color(0xD004060C)),
+                        radius = 1100f
                     )
                 )
         )
 
-        Column(modifier = Modifier.fillMaxSize()) {
-            // Header Bar
-            DesktopHeaderBar(
-                currentRoom = currentRoom,
-                onOpenFieldKit = onOpenFieldKit,
-                onMenuClick = onReturnToMenu
-            )
+        // 4. Minimal Floating Top HUD
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 28.dp, vertical = 20.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // Top Left: Sleek Crew Chip
+            DesktopFloatingCrewChip(services, sessionState)
 
-            // Main 16:9 Panoramic Split (Left Viewport + Right Telemetry)
-            Row(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth()
-                    .padding(20.dp),
-                horizontalArrangement = Arrangement.spacedBy(20.dp)
+            // Top Right: Minimal Controls
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                DesktopMinimalPillButton("[I] CARGO", onClick = onOpenFieldKit)
+                DesktopMinimalPillButton("[ESC] MENU", onClick = onReturnToMenu)
+            }
+        }
+
+        // 5. Center-Bottom Atmospheric Narrative & Action Deck
+        Column(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth(0.85f)
+                .padding(bottom = 28.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            // Keyword Lore Popup if active
+            AnimatedVisibility(
+                visible = inspectedKeyword != null,
+                enter = fadeIn(),
+                exit = fadeOut()
             ) {
-                // Left Column: Panoramic Sector Narrative & Entity Action Tray (60% width)
-                Column(
-                    modifier = Modifier
-                        .weight(1.4f)
-                        .fillMaxHeight(),
-                    verticalArrangement = Arrangement.SpaceBetween
-                ) {
-                    // Room Narrative Card with Keyword Highlighting
+                inspectedKeyword?.let { lore ->
                     Box(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(14.dp))
-                            .background(PanelDark.copy(alpha = 0.94f))
-                            .border(BorderStroke(1.dp, PanelBorder), RoundedCornerShape(14.dp))
-                            .padding(22.dp)
+                            .fillMaxWidth(0.9f)
+                            .clip(RoundedCornerShape(10.dp))
+                            .background(Color(0xE6081424))
+                            .border(BorderStroke(1.dp, NeonCyan), RoundedCornerShape(10.dp))
+                            .padding(horizontal = 18.dp, vertical = 10.dp)
                     ) {
-                        Column {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(
-                                    text = "SECTOR: ${currentRoom.title.uppercase()}",
-                                    color = NeonPink,
-                                    fontSize = 12.sp,
-                                    fontWeight = FontWeight.Black,
-                                    letterSpacing = 2.sp
-                                )
-                                Text(
-                                    text = "ENVIRONMENT: ${currentRoom.env.uppercase()}",
-                                    color = NeonAmber,
-                                    fontSize = 11.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    fontFamily = FontFamily.Monospace
-                                )
-                            }
-
-                            Spacer(modifier = Modifier.height(10.dp))
-
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(text = "✦ $lore", color = NeonCyan, fontSize = 13.sp, fontWeight = FontWeight.Medium)
                             Text(
-                                text = currentRoom.description.ifBlank { "Deep-space sensor readings detect no atmospheric disturbances." },
-                                color = TextWhite,
-                                fontSize = 15.sp,
-                                lineHeight = 23.sp
+                                text = "✕",
+                                color = TextMuted,
+                                fontSize = 14.sp,
+                                modifier = Modifier.clickable { inspectedKeyword = null }.padding(4.dp)
                             )
-
-                            // Interactive Keywords Row
-                            Spacer(modifier = Modifier.height(16.dp))
-                            Row(
-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(text = "INVESTIGATE:", color = TextMuted, fontSize = 11.sp, fontWeight = FontWeight.Bold)
-                                DesktopKeywordTag("Anomalous Array") { inspectedKeyword = "Ancient perimeter relay array emitting subharmonic distress beacons." }
-                                DesktopKeywordTag("Security Terminal") { inspectedKeyword = "Locked with clearance code Sigma-9. Requires decryption mod." }
-                            }
                         }
                     }
-
-                    // Keyword Lore Popup
-                    AnimatedVisibility(visible = inspectedKeyword != null) {
-                        inspectedKeyword?.let { lore ->
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clip(RoundedCornerShape(10.dp))
-                                    .background(Color(0xFF0C1628))
-                                    .border(BorderStroke(1.dp, NeonCyan.copy(alpha = 0.6f)), RoundedCornerShape(10.dp))
-                                    .padding(14.dp)
-                            ) {
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Text(text = "🔍 $lore", color = NeonCyan, fontSize = 13.sp)
-                                    Text(text = "[ESC: CLOSE]", color = TextMuted, fontSize = 10.sp, modifier = Modifier.clickable { inspectedKeyword = null })
-                                }
-                            }
-                        }
-                    }
-
-                    // Entities & Sector Action Tray
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(14.dp))
-                            .background(PanelDark.copy(alpha = 0.94f))
-                            .border(BorderStroke(1.dp, PanelBorder), RoundedCornerShape(14.dp))
-                            .padding(18.dp)
-                    ) {
-                        Column {
-                            Text(
-                                text = "ACTIVE ENTITIES & WAYPOINTS",
-                                color = NeonAmber,
-                                fontSize = 11.sp,
-                                fontWeight = FontWeight.Black,
-                                letterSpacing = 1.5.sp
-                            )
-                            Spacer(modifier = Modifier.height(12.dp))
-
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(12.dp)
-                            ) {
-                                // NPC Button
-                                if (currentRoom.npcs.isNotEmpty()) {
-                                    DesktopActionBadge(
-                                        title = "[1] Talk to Dr. Aris",
-                                        subtitle = "Dialogue Tree",
-                                        color = NeonCyan,
-                                        onClick = {
-                                            activeDialogue = ActiveDialogueSession(
-                                                npcName = "Dr. Aris",
-                                                npcRole = "Chief Xenologist",
-                                                portraitId = "dr_aris",
-                                                text = "The anomalous energy signatures are rising exponentially across the lower sectors. We need to stabilize the primary array before resonance collapse.",
-                                                choices = listOf("I'll investigate Sector 4 immediately.", "What kind of hostiles should we expect?", "Step back for now.")
-                                            )
-                                        }
-                                    )
-                                }
-
-                                // Combat Trigger Button
-                                if (currentRoom.enemies.isNotEmpty()) {
-                                    DesktopActionBadge(
-                                        title = "[2] Engage Hostile Patrol",
-                                        subtitle = "Turn-Based Combat",
-                                        color = Color(0xFFFF3366),
-                                        onClick = { onEnterCombat(currentRoom.enemies) }
-                                    )
-                                }
-
-                                // Next Room Waypoint
-                                DesktopActionBadge(
-                                    title = "[3] Next Sector Gateway",
-                                    subtitle = "Traverse Waypoint",
-                                    color = NeonAmber,
-                                    onClick = {
-                                        if (rooms.isNotEmpty()) {
-                                            currentRoomIndex = (currentRoomIndex + 1) % rooms.size
-                                        }
-                                    }
-                                )
-                            }
-                        }
-                    }
-                }
-
-                // Right Column: Persistent Crew Status, Stellar Radar, Directives (40% width)
-                Column(
-                    modifier = Modifier
-                        .weight(0.95f)
-                        .fillMaxHeight(),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    // Crew Vitals Card
-                    DesktopCrewVitalsCard(services, sessionState)
-
-                    // Stellar Cartography Radar
-                    DesktopCartographyCard(rooms, currentRoomIndex) { currentRoomIndex = it }
-
-                    // Mission Directives Tracker
-                    DesktopQuestDirectivesCard(questEntries)
                 }
             }
 
-            // Bottom Hotkey Palette
-            DesktopExplorationBottomBar(onOpenFieldKit)
+            // Main Narrative Card
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .shadow(16.dp, RoundedCornerShape(16.dp), spotColor = NeonCyan)
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(GlassDark)
+                    .border(BorderStroke(1.dp, GlassBorder), RoundedCornerShape(16.dp))
+                    .padding(horizontal = 28.dp, vertical = 22.dp)
+            ) {
+                Column {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = currentRoom.title.uppercase(),
+                            color = NeonAmber,
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.Black,
+                            letterSpacing = 2.sp
+                        )
+                        Text(
+                            text = currentRoom.env.uppercase(),
+                            color = TextMuted,
+                            fontSize = 11.sp,
+                            fontFamily = FontFamily.Monospace
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Text(
+                        text = currentRoom.description.ifBlank { "Sensors report stable atmospheric pressures and clear stellar vectors." },
+                        color = TextWhite,
+                        fontSize = 15.sp,
+                        lineHeight = 23.sp
+                    )
+
+                    // Clickable Keyword Chips
+                    Spacer(modifier = Modifier.height(14.dp))
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(10.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(text = "Inspect:", color = TextMuted, fontSize = 12.sp)
+                        DesktopInlineKeyword("[Distress Beacon]") {
+                            inspectedKeyword = "An automated perimeter frequency repeating a distress loop."
+                        }
+                        DesktopInlineKeyword("[Console Interface]") {
+                            inspectedKeyword = "Active console displaying navigational vector routes to Sector 4."
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(18.dp))
+
+                    // Minimal Action Pills
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        if (currentRoom.npcs.isNotEmpty()) {
+                            DesktopActionPill(
+                                label = "[1] Talk to Dr. Aris",
+                                color = NeonCyan,
+                                onClick = {
+                                    activeDialogue = ActiveDialogueSession(
+                                        npcName = "Dr. Aris",
+                                        npcRole = "Chief Xenologist",
+                                        portraitId = "dr_aris",
+                                        text = "The anomalous energy signatures are rising exponentially across the lower sectors. We need to stabilize the primary array before resonance collapse.",
+                                        choices = listOf("I'll investigate Sector 4 immediately.", "What kind of hostiles should we expect?", "Step back for now.")
+                                    )
+                                }
+                            )
+                        }
+
+                        if (currentRoom.enemies.isNotEmpty()) {
+                            DesktopActionPill(
+                                label = "[2] Hostile Patrol (Combat)",
+                                color = Color(0xFFFF3366),
+                                onClick = { onEnterCombat(currentRoom.enemies) }
+                            )
+                        }
+
+                        DesktopActionPill(
+                            label = "[3] Sector Gateway →",
+                            color = NeonAmber,
+                            onClick = {
+                                if (rooms.isNotEmpty()) {
+                                    currentRoomIndex = (currentRoomIndex + 1) % rooms.size
+                                }
+                            }
+                        )
+                    }
+                }
+            }
         }
 
         // Dialogue Modal Overlay
@@ -371,106 +334,7 @@ fun DesktopExplorationScreen(
 }
 
 @Composable
-private fun DesktopHeaderBar(
-    currentRoom: Room,
-    onOpenFieldKit: () -> Unit,
-    onMenuClick: () -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color(0xF0050812))
-            .border(BorderStroke(1.dp, PanelBorder))
-            .padding(horizontal = 24.dp, vertical = 10.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(14.dp)
-        ) {
-            Text(
-                text = "STARBORN",
-                color = NeonCyan,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Black,
-                letterSpacing = 2.sp
-            )
-            Box(modifier = Modifier.size(5.dp).clip(CircleShape).background(NeonAmber))
-            Text(
-                text = currentRoom.title.ifBlank { "Uncharted Sector" },
-                color = TextWhite,
-                fontSize = 15.sp,
-                fontWeight = FontWeight.Bold
-            )
-        }
-
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            Button(
-                onClick = onOpenFieldKit,
-                shape = RoundedCornerShape(8.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF142036), contentColor = NeonCyan),
-                border = BorderStroke(1.dp, NeonCyan.copy(alpha = 0.6f))
-            ) {
-                Text(text = "FIELD KIT & CARGO [I]", fontSize = 12.sp, fontWeight = FontWeight.Bold)
-            }
-
-            Button(
-                onClick = onMenuClick,
-                shape = RoundedCornerShape(8.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF141A26), contentColor = TextMuted),
-                border = BorderStroke(1.dp, PanelBorder)
-            ) {
-                Text(text = "MENU [ESC]", fontSize = 12.sp, fontWeight = FontWeight.Bold)
-            }
-        }
-    }
-}
-
-@Composable
-private fun DesktopKeywordTag(text: String, onClick: () -> Unit) {
-    Box(
-        modifier = Modifier
-            .clip(RoundedCornerShape(6.dp))
-            .background(NeonCyan.copy(alpha = 0.12f))
-            .border(BorderStroke(1.dp, NeonCyan.copy(alpha = 0.5f)), RoundedCornerShape(6.dp))
-            .clickable(onClick = onClick)
-            .padding(horizontal = 8.dp, vertical = 3.dp)
-    ) {
-        Text(
-            text = "[$text]",
-            color = NeonCyan,
-            fontSize = 11.sp,
-            fontWeight = FontWeight.Bold,
-            fontFamily = FontFamily.Monospace
-        )
-    }
-}
-
-@Composable
-private fun DesktopActionBadge(
-    title: String,
-    subtitle: String,
-    color: Color,
-    onClick: () -> Unit
-) {
-    Box(
-        modifier = Modifier
-            .clip(RoundedCornerShape(10.dp))
-            .background(color.copy(alpha = 0.14f))
-            .border(BorderStroke(1.dp, color.copy(alpha = 0.7f)), RoundedCornerShape(10.dp))
-            .clickable(onClick = onClick)
-            .padding(horizontal = 14.dp, vertical = 10.dp)
-    ) {
-        Column {
-            Text(text = title, color = color, fontSize = 13.sp, fontWeight = FontWeight.Bold)
-            Text(text = subtitle, color = TextWhite.copy(alpha = 0.75f), fontSize = 10.sp)
-        }
-    }
-}
-
-@Composable
-private fun DesktopCrewVitalsCard(
+private fun DesktopFloatingCrewChip(
     services: DesktopAppServices,
     sessionState: com.example.starborn.domain.session.GameSessionState
 ) {
@@ -478,108 +342,119 @@ private fun DesktopCrewVitalsCard(
 
     Box(
         modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(12.dp))
-            .background(PanelDark.copy(alpha = 0.94f))
-            .border(BorderStroke(1.dp, PanelBorder), RoundedCornerShape(12.dp))
-            .padding(16.dp)
+            .clip(RoundedCornerShape(30.dp))
+            .background(Color(0xDD090E18))
+            .border(BorderStroke(1.dp, Color(0x3300F5D4)), RoundedCornerShape(30.dp))
+            .padding(horizontal = 14.dp, vertical = 8.dp)
     ) {
-        Row(horizontalArrangement = Arrangement.spacedBy(14.dp), verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
             Image(
                 painter = portrait,
                 contentDescription = null,
                 modifier = Modifier
-                    .size(56.dp)
-                    .clip(RoundedCornerShape(8.dp))
-                    .border(BorderStroke(1.dp, NeonCyan.copy(alpha = 0.6f)), RoundedCornerShape(8.dp)),
+                    .size(36.dp)
+                    .clip(CircleShape)
+                    .border(BorderStroke(1.dp, NeonCyan), CircleShape),
                 contentScale = ContentScale.Crop
             )
 
-            Column(modifier = Modifier.weight(1f)) {
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                    Text(text = "Commander Nova", color = TextWhite, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+            Column {
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(text = "Nova", color = TextWhite, fontSize = 13.sp, fontWeight = FontWeight.Bold)
                     Text(text = "Lv. ${sessionState.playerLevel}", color = NeonAmber, fontSize = 12.sp, fontWeight = FontWeight.Bold)
                 }
-
-                Spacer(modifier = Modifier.height(6.dp))
-
-                Text(text = "HULL INTEGRITY", color = TextMuted, fontSize = 9.sp)
-                LinearProgressIndicator(
-                    progress = { 1f },
-                    modifier = Modifier.fillMaxWidth().height(5.dp).clip(RoundedCornerShape(3.dp)),
-                    color = HealthGreen,
-                    trackColor = Color(0xFF14242A)
-                )
-
-                Spacer(modifier = Modifier.height(4.dp))
-
-                Text(text = "SHIELD MATRIX", color = TextMuted, fontSize = 9.sp)
-                LinearProgressIndicator(
-                    progress = { 0.85f },
-                    modifier = Modifier.fillMaxWidth().height(4.dp).clip(RoundedCornerShape(2.dp)),
-                    color = ShieldBlue,
-                    trackColor = Color(0xFF101B2E)
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun DesktopCartographyCard(
-    rooms: List<Room>,
-    currentIndex: Int,
-    onSelectRoom: (Int) -> Unit
-) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(130.dp)
-            .clip(RoundedCornerShape(12.dp))
-            .background(PanelDark.copy(alpha = 0.94f))
-            .border(BorderStroke(1.dp, PanelBorder), RoundedCornerShape(12.dp))
-            .padding(14.dp)
-    ) {
-        Column {
-            Text(text = "STELLAR CARTOGRAPHY", color = NeonCyan, fontSize = 11.sp, fontWeight = FontWeight.Bold, letterSpacing = 1.2.sp)
-            Spacer(modifier = Modifier.height(8.dp))
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                itemsIndexed(rooms.take(8)) { idx, r ->
-                    Text(
-                        text = "${if (idx == currentIndex) "▶ " else "  "}${r.title}",
-                        color = if (idx == currentIndex) NeonCyan else TextMuted,
-                        fontSize = 11.sp,
-                        fontWeight = if (idx == currentIndex) FontWeight.Bold else FontWeight.Normal,
-                        modifier = Modifier.clickable { onSelectRoom(idx) }
+                Spacer(modifier = Modifier.height(3.dp))
+                Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
+                    LinearProgressIndicator(
+                        progress = { 1f },
+                        modifier = Modifier.width(60.dp).height(4.dp).clip(RoundedCornerShape(2.dp)),
+                        color = HealthGreen,
+                        trackColor = Color(0xFF14242A)
+                    )
+                    LinearProgressIndicator(
+                        progress = { 0.85f },
+                        modifier = Modifier.width(40.dp).height(4.dp).clip(RoundedCornerShape(2.dp)),
+                        color = ShieldBlue,
+                        trackColor = Color(0xFF101B2E)
                     )
                 }
             }
+
+            Box(
+                modifier = Modifier
+                    .width(1.dp)
+                    .height(24.dp)
+                    .background(Color(0x33FFFFFF))
+            )
+
+            Text(
+                text = "${sessionState.playerCredits} CR",
+                color = NeonAmber,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Bold
+            )
         }
     }
 }
 
 @Composable
-private fun DesktopQuestDirectivesCard(quests: List<com.example.starborn.domain.model.Quest>) {
+private fun DesktopMinimalPillButton(text: String, onClick: () -> Unit) {
     Box(
         modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(12.dp))
-            .background(PanelDark.copy(alpha = 0.94f))
-            .border(BorderStroke(1.dp, PanelBorder), RoundedCornerShape(12.dp))
-            .padding(14.dp)
+            .clip(RoundedCornerShape(20.dp))
+            .background(Color(0xCC090E18))
+            .border(BorderStroke(1.dp, Color(0x3300F5D4)), RoundedCornerShape(20.dp))
+            .clickable(onClick = onClick)
+            .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
-        Column {
-            Text(text = "ACTIVE DIRECTIVES", color = NeonAmber, fontSize = 11.sp, fontWeight = FontWeight.Bold, letterSpacing = 1.2.sp)
-            Spacer(modifier = Modifier.height(8.dp))
-            quests.take(2).forEach { q ->
-                Text(text = "• ${q.title}", color = TextWhite, fontSize = 12.sp, fontWeight = FontWeight.Bold)
-                Text(text = q.description.orEmpty(), color = TextMuted, fontSize = 11.sp, maxLines = 2)
-                Spacer(modifier = Modifier.height(6.dp))
-            }
-        }
+        Text(
+            text = text,
+            color = NeonCyan,
+            fontSize = 12.sp,
+            fontWeight = FontWeight.Bold,
+            fontFamily = FontFamily.Monospace
+        )
+    }
+}
+
+@Composable
+private fun DesktopInlineKeyword(text: String, onClick: () -> Unit) {
+    Text(
+        text = text,
+        color = NeonCyan,
+        fontSize = 13.sp,
+        fontWeight = FontWeight.Bold,
+        modifier = Modifier
+            .clip(RoundedCornerShape(4.dp))
+            .background(Color(0x2200F5D4))
+            .clickable(onClick = onClick)
+            .padding(horizontal = 6.dp, vertical = 2.dp)
+    )
+}
+
+@Composable
+private fun DesktopActionPill(
+    label: String,
+    color: Color,
+    onClick: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .clip(RoundedCornerShape(10.dp))
+            .background(color.copy(alpha = 0.18f))
+            .border(BorderStroke(1.dp, color.copy(alpha = 0.8f)), RoundedCornerShape(10.dp))
+            .clickable(onClick = onClick)
+            .padding(horizontal = 18.dp, vertical = 10.dp)
+    ) {
+        Text(
+            text = label,
+            color = color,
+            fontSize = 13.sp,
+            fontWeight = FontWeight.Bold
+        )
     }
 }
 
@@ -595,17 +470,17 @@ private fun DesktopDialogueOverlay(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xCC04060E))
+            .background(Color(0xCC030408))
             .clickable(onClick = onClose),
         contentAlignment = Alignment.BottomCenter
     ) {
         Row(
             modifier = Modifier
-                .fillMaxWidth(0.9f)
+                .fillMaxWidth(0.85f)
                 .padding(bottom = 32.dp)
                 .clip(RoundedCornerShape(16.dp))
-                .background(Color(0xFF0C1220))
-                .border(BorderStroke(1.5.dp, NeonCyan.copy(alpha = 0.7f)), RoundedCornerShape(16.dp))
+                .background(Color(0xF5090E18))
+                .border(BorderStroke(1.dp, NeonCyan), RoundedCornerShape(16.dp))
                 .padding(24.dp)
                 .clickable(enabled = false) {},
             horizontalArrangement = Arrangement.spacedBy(20.dp),
@@ -615,7 +490,7 @@ private fun DesktopDialogueOverlay(
                 painter = portrait,
                 contentDescription = null,
                 modifier = Modifier
-                    .size(96.dp)
+                    .size(90.dp)
                     .clip(RoundedCornerShape(12.dp))
                     .border(BorderStroke(1.dp, NeonCyan), RoundedCornerShape(12.dp)),
                 contentScale = ContentScale.Crop
@@ -623,7 +498,7 @@ private fun DesktopDialogueOverlay(
 
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = "${session.npcName.uppercase()} // ${session.npcRole.uppercase()}",
+                    text = "${session.npcName.uppercase()}  •  ${session.npcRole.uppercase()}",
                     color = NeonAmber,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Black,
@@ -639,19 +514,22 @@ private fun DesktopDialogueOverlay(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Dialogue Choices
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     session.choices.forEachIndexed { index, choice ->
-                        Button(
-                            onClick = { onSelectChoice(index) },
-                            shape = RoundedCornerShape(8.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(0xFF14243A),
-                                contentColor = NeonCyan
-                            ),
-                            border = BorderStroke(1.dp, NeonCyan.copy(alpha = 0.5f))
+                        Box(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(8.dp))
+                                .background(Color(0x2200F5D4))
+                                .border(BorderStroke(1.dp, NeonCyan.copy(alpha = 0.6f)), RoundedCornerShape(8.dp))
+                                .clickable { onSelectChoice(index) }
+                                .padding(horizontal = 14.dp, vertical = 8.dp)
                         ) {
-                            Text(text = "[${index + 1}] $choice", fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                            Text(
+                                text = "[${index + 1}] $choice",
+                                color = NeonCyan,
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold
+                            )
                         }
                     }
                 }
@@ -662,57 +540,29 @@ private fun DesktopDialogueOverlay(
 
 @Composable
 private fun DesktopWeatherParticleCanvas(weather: String?) {
-    val transition = rememberInfiniteTransition(label = "weather_motion")
+    val transition = rememberInfiniteTransition(label = "weather_drift")
     val progress by transition.animateFloat(
         initialValue = 0f,
         targetValue = 1f,
         animationSpec = infiniteRepeatable(
-            animation = tween(4000, easing = LinearEasing),
+            animation = tween(5000, easing = LinearEasing),
             repeatMode = RepeatMode.Restart
         ),
-        label = "weather_progress"
+        label = "weather_p"
     )
 
     Canvas(modifier = Modifier.fillMaxSize()) {
         val width = size.width
         val height = size.height
 
-        // Subtle drifting particles
-        for (i in 0 until 40) {
-            val startX = (i * 47f) % width
-            val curY = ((i * 73f) + progress * height * 0.8f) % height
+        for (i in 0 until 35) {
+            val startX = (i * 51f) % width
+            val curY = ((i * 79f) + progress * height * 0.7f) % height
             drawCircle(
-                color = if (weather == "rain") Color(0x6663E6FF) else Color(0x33FFB703),
+                color = if (weather == "rain") Color(0x5563E6FF) else Color(0x28FFB703),
                 radius = if (weather == "rain") 1.8f else 1.2f,
                 center = Offset(startX, curY)
             )
         }
-    }
-}
-
-@Composable
-private fun DesktopExplorationBottomBar(onOpenFieldKit: () -> Unit) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color(0xFF04060E))
-            .border(BorderStroke(1.dp, PanelBorder))
-            .padding(horizontal = 24.dp, vertical = 8.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = "HOTKEYS: [1] Dialogue  •  [2] Engage Enemy  •  [3] Traversal Waypoint  •  [I] Field Kit  •  [ESC] Menu",
-            color = TextMuted,
-            fontSize = 11.sp,
-            fontFamily = FontFamily.Monospace
-        )
-
-        Text(
-            text = "WIDESCREEN 16:9 • 60 FPS",
-            color = TextMuted.copy(alpha = 0.6f),
-            fontSize = 11.sp,
-            fontFamily = FontFamily.Monospace
-        )
     }
 }

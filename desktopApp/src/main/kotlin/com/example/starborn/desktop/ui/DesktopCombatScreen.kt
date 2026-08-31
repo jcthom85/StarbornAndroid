@@ -1,18 +1,12 @@
 package com.example.starborn.desktop.ui
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -29,24 +23,19 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.starborn.core.platform.AudioDriver
 import com.example.starborn.desktop.DesktopAppServices
-import com.example.starborn.domain.audio.AudioCueType
-import com.example.starborn.domain.combat.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 private val NeonCyan = Color(0xFF00F5D4)
-private val NeonPink = Color(0xFFFF007F)
 private val NeonAmber = Color(0xFFFFB703)
-private val DeepSpaceDark = Color(0xFF060913)
-private val PanelDark = Color(0xFF0A0F1E)
-private val PanelBorder = Color(0xFF1B283E)
-private val TextWhite = Color(0xFFF0F4FA)
-private val TextMuted = Color(0xFF8FA1B7)
 private val HealthGreen = Color(0xFF00E676)
 private val HealthRed = Color(0xFFFF3366)
 private val ShieldBlue = Color(0xFF2979FF)
+private val GlassDark = Color(0xDD090E18)
+private val GlassBorder = Color(0x3300F5D4)
+private val TextWhite = Color(0xFFF0F4FA)
+private val TextMuted = Color(0xFFA0B3C6)
 
 data class FloatingCombatText(
     val id: Long,
@@ -55,8 +44,18 @@ data class FloatingCombatText(
     val isCritical: Boolean = false
 )
 
+data class DesktopEnemyState(
+    val id: String,
+    val name: String,
+    val hp: Int,
+    val maxHp: Int,
+    val shield: Int,
+    val maxShield: Int,
+    val intent: String
+)
+
 enum class CombatActionMenu {
-    ROOT, SKILLS, ITEMS
+    ROOT, SKILLS
 }
 
 @Composable
@@ -69,7 +68,6 @@ fun DesktopCombatScreen(
 ) {
     val coroutineScope = rememberCoroutineScope()
 
-    // 1. Initialize Combat Encounter State
     var playerHp by remember { mutableStateOf(240) }
     val playerMaxHp = 240
     var playerShield by remember { mutableStateOf(100) }
@@ -77,7 +75,6 @@ fun DesktopCombatScreen(
     var playerEnergy by remember { mutableStateOf(60) }
     val playerMaxEnergy = 80
 
-    // Enemy States
     var enemies by remember {
         mutableStateOf(
             listOf(
@@ -89,7 +86,6 @@ fun DesktopCombatScreen(
 
     var selectedEnemyIndex by remember { mutableStateOf(0) }
     var actionMenu by remember { mutableStateOf(CombatActionMenu.ROOT) }
-    var combatLog by remember { mutableStateOf(listOf("Tactical encounter initialized. Commander holds initiative.")) }
     val floatingTexts = remember { mutableStateListOf<FloatingCombatText>() }
     var isPlayerTurn by remember { mutableStateOf(true) }
 
@@ -99,13 +95,11 @@ fun DesktopCombatScreen(
         services.audioDriver.executeAll(cmds)
     }
 
-    // Execute Player Attack
     val executePlayerAttack: (Int, String) -> Unit = { damage, skillName ->
         if (isPlayerTurn && enemies.isNotEmpty()) {
             val targetIndex = selectedEnemyIndex.coerceIn(0, enemies.size - 1)
             val target = enemies[targetIndex]
 
-            // Calculate damage on target
             val shieldDmg = minOf(target.shield, damage)
             val remainDmg = damage - shieldDmg
             val newShield = (target.shield - shieldDmg).coerceAtLeast(0)
@@ -120,10 +114,7 @@ fun DesktopCombatScreen(
                 )
             )
 
-            combatLog = combatLog + "Nova executed [$skillName] on ${target.name} for $damage DMG!"
-
             if (newHp <= 0) {
-                combatLog = combatLog + "${target.name} was neutralized!"
                 enemies = enemies.filterIndexed { idx, _ -> idx != targetIndex }
                 selectedEnemyIndex = 0
             } else {
@@ -134,16 +125,15 @@ fun DesktopCombatScreen(
 
             // Check Victory
             if (enemies.isEmpty()) {
-                combatLog = combatLog + ">> VICTORY: All hostiles eliminated!"
                 coroutineScope.launch {
-                    delay(1500)
+                    delay(1200)
                     onVictory()
                 }
             } else {
-                // Enemy Turn Counterattack
+                // Enemy Counterattack
                 isPlayerTurn = false
                 coroutineScope.launch {
-                    delay(900)
+                    delay(700)
                     enemies.forEach { enemy ->
                         val enemyDmg = (20..35).random()
                         val pShieldDmg = minOf(playerShield, enemyDmg)
@@ -158,16 +148,13 @@ fun DesktopCombatScreen(
                                 color = HealthRed
                             )
                         )
-                        combatLog = combatLog + "${enemy.name} used [${enemy.intent}] for $enemyDmg DMG on Nova!"
-                        delay(600)
+                        delay(500)
                     }
 
                     if (playerHp <= 0) {
-                        combatLog = combatLog + ">> DEFEAT: Hull integrity compromised!"
-                        delay(1500)
+                        delay(1200)
                         onDefeat()
                     } else {
-                        // Restore energy & return to player turn
                         playerEnergy = minOf(playerMaxEnergy, playerEnergy + 15)
                         isPlayerTurn = true
                         actionMenu = CombatActionMenu.ROOT
@@ -180,7 +167,7 @@ fun DesktopCombatScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(DeepSpaceDark)
+            .background(Color(0xFF04060C))
             .onKeyEvent { keyEvent ->
                 if (keyEvent.type == KeyEventType.KeyDown) {
                     when (keyEvent.key) {
@@ -220,21 +207,17 @@ fun DesktopCombatScreen(
                         }
                         Key.Three -> {
                             if (actionMenu == CombatActionMenu.ROOT) {
-                                // Defend / Shield Restore
                                 playerShield = minOf(playerMaxShield, playerShield + 35)
-                                combatLog = combatLog + "Nova raised Defense Matrix (+35 Shield)!"
                                 isPlayerTurn = false
                                 coroutineScope.launch {
-                                    delay(800)
+                                    delay(700)
                                     isPlayerTurn = true
                                 }
                             }
                             true
                         }
                         Key.Four -> {
-                            // Nano-Injector Item
                             playerHp = minOf(playerMaxHp, playerHp + 60)
-                            combatLog = combatLog + "Nova injected Nano-Repair (+60 HP)!"
                             true
                         }
                         Key.Five, Key.Escape -> {
@@ -250,232 +233,157 @@ fun DesktopCombatScreen(
                 } else false
             }
     ) {
-        // Battle Backdrop Artwork
-        val backdrop = rememberDesktopAssetPainter("images/rooms/combat_arena.webp", services.assetProvider)
+        // 1. Full-Bleed Combat Arena Background Art
+        val arenaBg = rememberDesktopAssetPainter("images/rooms/combat_arena.webp", services.assetProvider)
         Image(
-            painter = backdrop,
+            painter = arenaBg,
             contentDescription = null,
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
         )
 
-        // Dark atmospheric gradient
+        // 2. Subtle Arena Gradient Vignette
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(
-                    Brush.verticalGradient(
-                        colors = listOf(
-                            Color(0xDD060913),
-                            Color(0x77060913),
-                            Color(0xF0060913)
-                        )
+                    Brush.radialGradient(
+                        colors = listOf(Color.Transparent, Color(0x7704060C), Color(0xDD04060C)),
+                        radius = 1000f
                     )
                 )
         )
 
-        Column(modifier = Modifier.fillMaxSize()) {
-            // Top Timeline Bar: Turn Order Sequence
-            DesktopCombatTimelineBar(enemies, isPlayerTurn)
-
-            // Main Battle Stage: Left (Enemies) vs Right (Player Crew)
-            Row(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth()
-                    .padding(horizontal = 32.dp, vertical = 12.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                // Left Flank: Enemy Party
-                Column(
-                    modifier = Modifier.weight(1.2f),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
-                    horizontalAlignment = Alignment.Start
-                ) {
-                    Text(
-                        text = "HOSTILE TARGETS [TAB: CYCLE]",
-                        color = HealthRed,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Black,
-                        letterSpacing = 1.5.sp
-                    )
-
-                    enemies.forEachIndexed { index, enemy ->
-                        DesktopEnemyCard(
-                            enemy = enemy,
-                            isSelected = selectedEnemyIndex == index,
-                            services = services,
-                            onClick = { selectedEnemyIndex = index }
-                        )
-                    }
-                }
-
-                // Center Combat Action / Floating Damage Display
-                Column(
-                    modifier = Modifier.weight(0.9f),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    floatingTexts.takeLast(3).forEach { ft ->
-                        Text(
-                            text = ft.text,
-                            color = ft.color,
-                            fontSize = if (ft.isCritical) 32.sp else 24.sp,
-                            fontWeight = FontWeight.Black,
-                            fontFamily = FontFamily.Monospace,
-                            modifier = Modifier.padding(vertical = 2.dp)
-                        )
-                    }
-                }
-
-                // Right Flank: Player Crew Battlers
-                Column(
-                    modifier = Modifier.weight(1.2f),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
-                    horizontalAlignment = Alignment.End
-                ) {
-                    Text(
-                        text = "VANGUARD SQUAD",
-                        color = NeonCyan,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Black,
-                        letterSpacing = 1.5.sp
-                    )
-
-                    DesktopCrewBattlerCard(
-                        name = "Nova (Commander)",
-                        role = "Vanguard Operative",
-                        hp = playerHp,
-                        maxHp = playerMaxHp,
-                        shield = playerShield,
-                        maxShield = playerMaxShield,
-                        energy = playerEnergy,
-                        maxEnergy = playerMaxEnergy,
-                        isActiveTurn = isPlayerTurn,
-                        services = services
-                    )
-                }
-            }
-
-            // Bottom Console: Tactical Hotkey Console & Combat Directives
-            DesktopTacticalCommandConsole(
-                actionMenu = actionMenu,
-                isPlayerTurn = isPlayerTurn,
-                playerEnergy = playerEnergy,
-                combatLog = combatLog,
-                onAttack = { executePlayerAttack(45, "Kinetic Strike") },
-                onOpenSkills = { actionMenu = CombatActionMenu.SKILLS },
-                onSkill1 = {
-                    if (playerEnergy >= 25) {
-                        playerEnergy -= 25
-                        executePlayerAttack(85, "Plasma Burst")
-                    }
-                },
-                onSkill2 = {
-                    if (playerEnergy >= 40) {
-                        playerEnergy -= 40
-                        executePlayerAttack(130, "Supercharge Railgun")
-                    }
-                },
-                onDefend = {
-                    playerShield = minOf(playerMaxShield, playerShield + 35)
-                    combatLog = combatLog + "Nova raised Defense Matrix (+35 Shield)!"
-                    isPlayerTurn = false
-                    coroutineScope.launch {
-                        delay(800)
-                        isPlayerTurn = true
-                    }
-                },
-                onItem = {
-                    playerHp = minOf(playerMaxHp, playerHp + 60)
-                    combatLog = combatLog + "Nova injected Nano-Repair (+60 HP)!"
-                },
-                onBack = { actionMenu = CombatActionMenu.ROOT },
-                onFlee = onFlee
-            )
-        }
-    }
-}
-
-data class DesktopEnemyState(
-    val id: String,
-    val name: String,
-    val hp: Int,
-    val maxHp: Int,
-    val shield: Int,
-    val maxShield: Int,
-    val intent: String
-)
-
-@Composable
-private fun DesktopCombatTimelineBar(enemies: List<DesktopEnemyState>, isPlayerTurn: Boolean) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color(0xF0050812))
-            .border(BorderStroke(1.dp, PanelBorder))
-            .padding(horizontal = 24.dp, vertical = 8.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        // 3. Top Floating Turn Timeline
+        Box(
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .padding(top = 20.dp)
+                .clip(RoundedCornerShape(20.dp))
+                .background(GlassDark)
+                .border(BorderStroke(1.dp, GlassBorder), RoundedCornerShape(20.dp))
+                .padding(horizontal = 20.dp, vertical = 8.dp)
         ) {
-            Text(
-                text = "TURN TIMELINE:",
-                color = NeonAmber,
-                fontSize = 11.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = FontFamily.Monospace
-            )
-
-            // Timeline badges
-            Box(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(6.dp))
-                    .background(if (isPlayerTurn) NeonCyan.copy(alpha = 0.25f) else Color(0xFF141F32))
-                    .border(BorderStroke(1.dp, if (isPlayerTurn) NeonCyan else PanelBorder), RoundedCornerShape(6.dp))
-                    .padding(horizontal = 8.dp, vertical = 4.dp)
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
+                Text(text = "TURN:", color = NeonAmber, fontSize = 11.sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace)
+
+                // Nova active pill
                 Text(
-                    text = "1. NOVA (ACTIVE)",
+                    text = "▶ NOVA",
                     color = if (isPlayerTurn) NeonCyan else TextMuted,
-                    fontSize = 11.sp,
+                    fontSize = 12.sp,
                     fontWeight = FontWeight.Bold
                 )
-            }
 
-            enemies.forEachIndexed { idx, enemy ->
-                Box(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(6.dp))
-                        .background(if (!isPlayerTurn && idx == 0) HealthRed.copy(alpha = 0.25f) else Color(0xFF141F32))
-                        .border(BorderStroke(1.dp, if (!isPlayerTurn && idx == 0) HealthRed else PanelBorder), RoundedCornerShape(6.dp))
-                        .padding(horizontal = 8.dp, vertical = 4.dp)
-                ) {
+                enemies.forEachIndexed { idx, enemy ->
                     Text(
-                        text = "${idx + 2}. ${enemy.name.uppercase()}",
+                        text = "• ${enemy.name.uppercase()}",
                         color = if (!isPlayerTurn && idx == 0) HealthRed else TextMuted,
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.SemiBold
+                        fontSize = 12.sp,
+                        fontWeight = if (!isPlayerTurn && idx == 0) FontWeight.Bold else FontWeight.Normal
                     )
                 }
             }
         }
 
-        Text(
-            text = "TURN-BASED TACTICAL SIMULATION",
-            color = TextMuted.copy(alpha = 0.6f),
-            fontSize = 11.sp,
-            fontFamily = FontFamily.Monospace
-        )
+        // 4. Main Side-by-Side Combat Flanks (Enemies on Left, Battler on Right)
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 64.dp, vertical = 60.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // Left Flank: Enemies with floating overhead health bars
+            Column(
+                verticalArrangement = Arrangement.spacedBy(24.dp),
+                horizontalAlignment = Alignment.Start
+            ) {
+                enemies.forEachIndexed { index, enemy ->
+                    DesktopFloatingEnemyUnit(
+                        enemy = enemy,
+                        isSelected = selectedEnemyIndex == index,
+                        services = services,
+                        onClick = { selectedEnemyIndex = index }
+                    )
+                }
+            }
+
+            // Center Floating Damage Numbers
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                floatingTexts.takeLast(2).forEach { ft ->
+                    Text(
+                        text = ft.text,
+                        color = ft.color,
+                        fontSize = if (ft.isCritical) 36.sp else 26.sp,
+                        fontWeight = FontWeight.Black,
+                        fontFamily = FontFamily.Monospace
+                    )
+                }
+            }
+
+            // Right Flank: Nova Player Battler
+            DesktopFloatingPlayerUnit(
+                name = "Commander Nova",
+                hp = playerHp,
+                maxHp = playerMaxHp,
+                shield = playerShield,
+                maxShield = playerMaxShield,
+                energy = playerEnergy,
+                maxEnergy = playerMaxEnergy,
+                isActiveTurn = isPlayerTurn,
+                services = services
+            )
+        }
+
+        // 5. Minimal Bottom Floating Command Console
+        Box(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth(0.7f)
+                .padding(bottom = 28.dp)
+                .shadow(16.dp, RoundedCornerShape(16.dp), spotColor = NeonCyan)
+                .clip(RoundedCornerShape(16.dp))
+                .background(GlassDark)
+                .border(BorderStroke(1.dp, GlassBorder), RoundedCornerShape(16.dp))
+                .padding(horizontal = 20.dp, vertical = 14.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (actionMenu == CombatActionMenu.ROOT) {
+                    DesktopCombatActionButton("[1] STRIKE", NeonCyan, enabled = isPlayerTurn, onClick = { executePlayerAttack(45, "Kinetic Strike") })
+                    DesktopCombatActionButton("[2] SKILLS", NeonAmber, enabled = isPlayerTurn, onClick = { actionMenu = CombatActionMenu.SKILLS })
+                    DesktopCombatActionButton("[3] DEFEND", ShieldBlue, enabled = isPlayerTurn, onClick = {
+                        playerShield = minOf(playerMaxShield, playerShield + 35)
+                        isPlayerTurn = false
+                        coroutineScope.launch { delay(700); isPlayerTurn = true }
+                    })
+                    DesktopCombatActionButton("[4] REPAIR", HealthGreen, enabled = isPlayerTurn, onClick = { playerHp = minOf(playerMaxHp, playerHp + 60) })
+                    DesktopCombatActionButton("[5] FLEE", HealthRed, enabled = isPlayerTurn, onClick = onFlee)
+                } else {
+                    DesktopCombatActionButton("[1] Plasma Burst (25 EN)", NeonCyan, enabled = isPlayerTurn && playerEnergy >= 25, onClick = {
+                        playerEnergy -= 25
+                        executePlayerAttack(85, "Plasma Burst")
+                    })
+                    DesktopCombatActionButton("[2] Railgun (40 EN)", NeonAmber, enabled = isPlayerTurn && playerEnergy >= 40, onClick = {
+                        playerEnergy -= 40
+                        executePlayerAttack(130, "Supercharge Railgun")
+                    })
+                    DesktopCombatActionButton("[ESC] BACK", TextMuted, enabled = true, onClick = { actionMenu = CombatActionMenu.ROOT })
+                }
+            }
+        }
     }
 }
 
 @Composable
-private fun DesktopEnemyCard(
+private fun DesktopFloatingEnemyUnit(
     enemy: DesktopEnemyState,
     isSelected: Boolean,
     services: DesktopAppServices,
@@ -483,86 +391,57 @@ private fun DesktopEnemyCard(
 ) {
     val enemySprite = rememberDesktopAssetPainter("images/enemies/${enemy.id}.webp", services.assetProvider)
 
-    Box(
-        modifier = Modifier
-            .fillMaxWidth(0.92f)
-            .shadow(if (isSelected) 10.dp else 2.dp, RoundedCornerShape(12.dp), spotColor = HealthRed)
-            .clip(RoundedCornerShape(12.dp))
-            .background(if (isSelected) Color(0xFF1C1322) else PanelDark.copy(alpha = 0.9f))
-            .border(
-                BorderStroke(if (isSelected) 1.5.dp else 1.dp, if (isSelected) HealthRed else PanelBorder),
-                RoundedCornerShape(12.dp)
-            )
-            .clickable(onClick = onClick)
-            .padding(14.dp)
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.clickable(onClick = onClick)
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(14.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Image(
-                painter = enemySprite,
-                contentDescription = null,
-                modifier = Modifier
-                    .size(60.dp)
-                    .clip(RoundedCornerShape(8.dp))
-                    .border(BorderStroke(1.dp, if (isSelected) HealthRed else PanelBorder), RoundedCornerShape(8.dp)),
-                contentScale = ContentScale.Crop
+        // Floating Name & Overhead Health Gauge
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                text = enemy.name,
+                color = if (isSelected) HealthRed else TextWhite,
+                fontSize = 13.sp,
+                fontWeight = FontWeight.Bold
             )
-
-            Column(modifier = Modifier.weight(1f)) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = enemy.name,
-                        color = if (isSelected) HealthRed else TextWhite,
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text(
-                        text = "INTENT: ${enemy.intent.uppercase()}",
-                        color = NeonAmber,
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = FontFamily.Monospace
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(6.dp))
-
-                // HP Bar
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                    Text(text = "HP", color = TextMuted, fontSize = 10.sp, fontWeight = FontWeight.Bold)
-                    Text(text = "${enemy.hp}/${enemy.maxHp}", color = TextWhite, fontSize = 10.sp)
-                }
-                LinearProgressIndicator(
-                    progress = { enemy.hp.toFloat() / enemy.maxHp.toFloat() },
-                    modifier = Modifier.fillMaxWidth().height(6.dp).clip(RoundedCornerShape(3.dp)),
-                    color = HealthRed,
-                    trackColor = Color(0xFF22121C)
-                )
-
-                if (enemy.maxShield > 0) {
-                    Spacer(modifier = Modifier.height(4.dp))
-                    LinearProgressIndicator(
-                        progress = { enemy.shield.toFloat() / enemy.maxShield.toFloat() },
-                        modifier = Modifier.fillMaxWidth().height(4.dp).clip(RoundedCornerShape(2.dp)),
-                        color = ShieldBlue,
-                        trackColor = Color(0xFF131E30)
-                    )
-                }
-            }
+            Text(
+                text = "⚔ ${enemy.intent}",
+                color = NeonAmber,
+                fontSize = 10.sp,
+                fontFamily = FontFamily.Monospace
+            )
         }
+
+        Spacer(modifier = Modifier.height(4.dp))
+
+        // Overhead HP bar
+        LinearProgressIndicator(
+            progress = { enemy.hp.toFloat() / enemy.maxHp.toFloat() },
+            modifier = Modifier.width(110.dp).height(5.dp).clip(RoundedCornerShape(2.dp)),
+            color = HealthRed,
+            trackColor = Color(0x55FF3366)
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Enemy Sprite standing directly in scene
+        Image(
+            painter = enemySprite,
+            contentDescription = null,
+            modifier = Modifier
+                .size(100.dp)
+                .clip(RoundedCornerShape(12.dp))
+                .border(
+                    BorderStroke(if (isSelected) 2.dp else 1.dp, if (isSelected) HealthRed else Color(0x33FFFFFF)),
+                    RoundedCornerShape(12.dp)
+                ),
+            contentScale = ContentScale.Crop
+        )
     }
 }
 
 @Composable
-private fun DesktopCrewBattlerCard(
+private fun DesktopFloatingPlayerUnit(
     name: String,
-    role: String,
     hp: Int,
     maxHp: Int,
     shield: Int,
@@ -574,184 +453,64 @@ private fun DesktopCrewBattlerCard(
 ) {
     val portrait = rememberDesktopAssetPainter("nova_portrait", services.assetProvider)
 
-    Box(
-        modifier = Modifier
-            .fillMaxWidth(0.92f)
-            .shadow(if (isActiveTurn) 12.dp else 2.dp, RoundedCornerShape(12.dp), spotColor = NeonCyan)
-            .clip(RoundedCornerShape(12.dp))
-            .background(if (isActiveTurn) Color(0xFF0F1E33) else PanelDark.copy(alpha = 0.9f))
-            .border(
-                BorderStroke(if (isActiveTurn) 1.5.dp else 1.dp, if (isActiveTurn) NeonCyan else PanelBorder),
-                RoundedCornerShape(12.dp)
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        // Overhead Vitals
+        Text(text = name, color = NeonCyan, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+
+        Spacer(modifier = Modifier.height(4.dp))
+
+        Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            LinearProgressIndicator(
+                progress = { hp.toFloat() / maxHp.toFloat() },
+                modifier = Modifier.width(70.dp).height(5.dp).clip(RoundedCornerShape(2.dp)),
+                color = HealthGreen,
+                trackColor = Color(0xFF14242A)
             )
-            .padding(14.dp)
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(14.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Image(
-                painter = portrait,
-                contentDescription = null,
-                modifier = Modifier
-                    .size(64.dp)
-                    .clip(RoundedCornerShape(8.dp))
-                    .border(BorderStroke(1.5.dp, NeonCyan.copy(alpha = 0.7f)), RoundedCornerShape(8.dp)),
-                contentScale = ContentScale.Crop
+            LinearProgressIndicator(
+                progress = { shield.toFloat() / maxShield.toFloat() },
+                modifier = Modifier.width(45.dp).height(5.dp).clip(RoundedCornerShape(2.dp)),
+                color = ShieldBlue,
+                trackColor = Color(0xFF101B2E)
             )
-
-            Column(modifier = Modifier.weight(1f)) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(text = name, color = NeonCyan, fontSize = 14.sp, fontWeight = FontWeight.Bold)
-                    Text(text = if (isActiveTurn) "ACTIVE TURN" else "WAITING", color = if (isActiveTurn) NeonAmber else TextMuted, fontSize = 10.sp, fontWeight = FontWeight.Bold)
-                }
-
-                Spacer(modifier = Modifier.height(6.dp))
-
-                // HP Bar
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                    Text(text = "HULL INTEGRITY", color = TextMuted, fontSize = 10.sp)
-                    Text(text = "$hp/$maxHp", color = TextWhite, fontSize = 10.sp)
-                }
-                LinearProgressIndicator(
-                    progress = { hp.toFloat() / maxHp.toFloat() },
-                    modifier = Modifier.fillMaxWidth().height(6.dp).clip(RoundedCornerShape(3.dp)),
-                    color = HealthGreen,
-                    trackColor = Color(0xFF14242A)
-                )
-
-                Spacer(modifier = Modifier.height(4.dp))
-
-                // Shield Bar
-                LinearProgressIndicator(
-                    progress = { shield.toFloat() / maxShield.toFloat() },
-                    modifier = Modifier.fillMaxWidth().height(4.dp).clip(RoundedCornerShape(2.dp)),
-                    color = ShieldBlue,
-                    trackColor = Color(0xFF101B2E)
-                )
-
-                Spacer(modifier = Modifier.height(4.dp))
-
-                // Energy Bar
-                LinearProgressIndicator(
-                    progress = { energy.toFloat() / maxEnergy.toFloat() },
-                    modifier = Modifier.fillMaxWidth().height(4.dp).clip(RoundedCornerShape(2.dp)),
-                    color = NeonAmber,
-                    trackColor = Color(0xFF2E2210)
-                )
-            }
         }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Battler Sprite / Portrait standing directly in scene
+        Image(
+            painter = portrait,
+            contentDescription = null,
+            modifier = Modifier
+                .size(110.dp)
+                .clip(RoundedCornerShape(12.dp))
+                .border(
+                    BorderStroke(if (isActiveTurn) 2.dp else 1.dp, if (isActiveTurn) NeonCyan else Color(0x4400F5D4)),
+                    RoundedCornerShape(12.dp)
+                ),
+            contentScale = ContentScale.Crop
+        )
     }
 }
 
 @Composable
-private fun DesktopTacticalCommandConsole(
-    actionMenu: CombatActionMenu,
-    isPlayerTurn: Boolean,
-    playerEnergy: Int,
-    combatLog: List<String>,
-    onAttack: () -> Unit,
-    onOpenSkills: () -> Unit,
-    onSkill1: () -> Unit,
-    onSkill2: () -> Unit,
-    onDefend: () -> Unit,
-    onItem: () -> Unit,
-    onBack: () -> Unit,
-    onFlee: () -> Unit
-) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color(0xFA060914))
-            .border(BorderStroke(1.dp, PanelBorder))
-            .padding(16.dp)
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(20.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            // Combat Directives Log Feed
-            Column(
-                modifier = Modifier
-                    .weight(1.1f)
-                    .height(90.dp)
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(Color(0xFF04060C))
-                    .border(BorderStroke(1.dp, PanelBorder), RoundedCornerShape(8.dp))
-                    .padding(10.dp)
-            ) {
-                Text(text = "MISSION COMBAT LOG", color = NeonCyan, fontSize = 10.sp, fontWeight = FontWeight.Bold)
-                Spacer(modifier = Modifier.height(4.dp))
-                combatLog.takeLast(3).forEach { entry ->
-                    Text(
-                        text = "> $entry",
-                        color = TextWhite.copy(alpha = 0.85f),
-                        fontSize = 11.sp,
-                        fontFamily = FontFamily.Monospace,
-                        maxLines = 1
-                    )
-                }
-            }
-
-            // Command Deck Buttons
-            Row(
-                modifier = Modifier.weight(1.5f),
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
-            ) {
-                if (actionMenu == CombatActionMenu.ROOT) {
-                    DesktopCommandButton("[1] STRIKE", NeonCyan, enabled = isPlayerTurn, onClick = onAttack)
-                    DesktopCommandButton("[2] SKILLS", NeonAmber, enabled = isPlayerTurn, onClick = onOpenSkills)
-                    DesktopCommandButton("[3] DEFEND", ShieldBlue, enabled = isPlayerTurn, onClick = onDefend)
-                    DesktopCommandButton("[4] REPAIR", HealthGreen, enabled = isPlayerTurn, onClick = onItem)
-                    DesktopCommandButton("[5] RETREAT", HealthRed, enabled = isPlayerTurn, onClick = onFlee)
-                } else if (actionMenu == CombatActionMenu.SKILLS) {
-                    DesktopCommandButton(
-                        "[1] Plasma Burst (25 EN)",
-                        NeonCyan,
-                        enabled = isPlayerTurn && playerEnergy >= 25,
-                        onClick = onSkill1
-                    )
-                    DesktopCommandButton(
-                        "[2] Railgun (40 EN)",
-                        NeonAmber,
-                        enabled = isPlayerTurn && playerEnergy >= 40,
-                        onClick = onSkill2
-                    )
-                    DesktopCommandButton("[ESC] BACK", TextMuted, enabled = true, onClick = onBack)
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun DesktopCommandButton(
+private fun DesktopCombatActionButton(
     text: String,
     color: Color,
     enabled: Boolean,
     onClick: () -> Unit
 ) {
-    Button(
-        onClick = onClick,
-        enabled = enabled,
-        shape = RoundedCornerShape(10.dp),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = color.copy(alpha = 0.2f),
-            contentColor = color,
-            disabledContainerColor = Color(0xFF0C1220),
-            disabledContentColor = TextMuted.copy(alpha = 0.4f)
-        ),
-        border = BorderStroke(1.dp, if (enabled) color.copy(alpha = 0.8f) else PanelBorder),
-        modifier = Modifier.height(56.dp)
+    Box(
+        modifier = Modifier
+            .clip(RoundedCornerShape(10.dp))
+            .background(if (enabled) color.copy(alpha = 0.18f) else Color(0x11FFFFFF))
+            .border(BorderStroke(1.dp, if (enabled) color.copy(alpha = 0.7f) else Color(0x22FFFFFF)), RoundedCornerShape(10.dp))
+            .clickable(enabled = enabled, onClick = onClick)
+            .padding(horizontal = 16.dp, vertical = 10.dp)
     ) {
         Text(
             text = text,
-            fontSize = 13.sp,
+            color = if (enabled) color else TextMuted.copy(alpha = 0.5f),
+            fontSize = 12.sp,
             fontWeight = FontWeight.Bold,
             fontFamily = FontFamily.Monospace
         )
