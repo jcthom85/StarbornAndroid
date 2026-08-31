@@ -1190,9 +1190,9 @@ class CombatActionProcessor(
 
     private fun skipReason(combatant: CombatantState): SkipInfo? {
         combatant.statusEffects.forEach { status ->
-            val definition = statusRegistry.definition(status.id)
-            if (!definition?.skipReason.isNullOrBlank()) {
-                return SkipInfo(definition!!.skipReason!!)
+            val reason = statusRegistry.definition(status.id)?.skipReason
+            if (!reason.isNullOrBlank()) {
+                return SkipInfo(reason)
             }
         }
         return null

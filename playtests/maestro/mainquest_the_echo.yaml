@@ -81,14 +81,11 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     visible: "Cavern Junction"
     timeout: 15000
-- tapOn: "support pillar"
+- tapOn: "junction breaker box"
 - extendedWaitUntil:
-    visible: "The Stellarium generator roars to life."
+    visible: "Restore power"
     timeout: 10000
-- tapOn: "The Stellarium generator roars to life."
-- extendedWaitUntil:
-    notVisible: "The Stellarium generator roars to life."
-    timeout: 10000
+- tapOn: "Restore power"
 - tapOn: "Travel north.*"
 - runFlow:
     when:

@@ -133,6 +133,7 @@ fun NavigationHost(
         lifecycleOwner.lifecycle.addObserver(observer)
         onDispose {
             lifecycleOwner.lifecycle.removeObserver(observer)
+            services.release()
         }
     }
 

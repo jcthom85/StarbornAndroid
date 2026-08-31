@@ -98,7 +98,7 @@ fun EventAnnouncementOverlay(
                 )
                 if (hasEyebrow) {
                     Text(
-                        text = announcement.eyebrow!!.uppercase(Locale.getDefault()),
+                        text = announcement.eyebrow.orEmpty().uppercase(Locale.getDefault()),
                         style = MaterialTheme.typography.labelSmall.copy(
                             fontWeight = FontWeight.SemiBold,
                             letterSpacing = 1.2.sp
@@ -109,7 +109,7 @@ fun EventAnnouncementOverlay(
                 }
                 if (hasTitle) {
                     Text(
-                        text = announcement.title!!,
+                        text = announcement.title.orEmpty(),
                         style = MaterialTheme.typography.titleMedium.copy(
                             fontWeight = FontWeight.SemiBold,
                             shadow = Shadow(color = accentColor.copy(alpha = 0.35f), blurRadius = 12f)

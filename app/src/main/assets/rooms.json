@@ -39,13 +39,13 @@
     "env": "mine",
     "title": "Mess Hall",
     "background_image": "images/rooms/world_1/pit_mess_v5.webp",
-    "description": "Bolted tables, dented trays, and crooked amber lights turn dinner into another shift. Miners trade jokes under their breath while a cracked Dominion monitor chirps about gratitude.",
+    "description": "Bolted tables, dented trays, and crooked amber lights turn dinner into another shift. Miners trade jokes under their breath while a cracked Dominion monitor chirps about gratitude, casting dim light on a broken Hyperion cabinet in the corner.",
     "description_variants": [
       {
         "requires_milestones": [
           "ms_w1_mq01_cutter_surge"
         ],
-        "description": "The monitor is dead and the tables have gone loud without it. Miners argue about whose shift lost the grid. An outage notice lists the fault against an operator ID, and nobody reads that far down."
+        "description": "The monitor is dead and the tables have gone loud without it. Miners argue about whose shift lost the grid, crowding past the dark broken Hyperion cabinet in the corner."
       }
     ],
     "npcs": [],
@@ -399,7 +399,7 @@
         "requires_milestones": [
           "ms_w1_pit_storage_looted"
         ],
-        "description": "A cramped storage bay. The emergency breaker hums, illuminating empty filter units and the pried-open floor panel."
+        "description": "A cramped storage bay. The emergency breaker hums, illuminating empty filter units and the pried-open loose floor panel."
       }
     ]
   },

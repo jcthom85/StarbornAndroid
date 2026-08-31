@@ -141,11 +141,11 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: ".*Pass shield training and I'll clear the lift.*"
+    visible: ".*Sector 4 needs a cutter.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: ".*Clear the cargo and finish the shield drill.*"
+    visible: ".*East through Customer Service to the Security Post.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:

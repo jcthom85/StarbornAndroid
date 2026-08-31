@@ -31,7 +31,7 @@ appId: com.junewiregames.starborn.prealpha
     visible: "Nova's Bunk"
     timeout: 90000
 # Authored dark copy renders, not the engine fallback.
-- assertVisible: ".*find the bunk edge, netting, and door switch without light.*"
+- assertVisible: ".*Nova can find the bunk edge and door switch without light.*"
 - assertNotVisible: "It's too dark to make out the room."
 # Actions named in description_dark stay reachable while unlit.
 - assertVisible: "netting"

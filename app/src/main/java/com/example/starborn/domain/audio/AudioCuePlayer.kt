@@ -45,7 +45,15 @@ class AudioCuePlayer(
         .setMaxStreams(16)
         .build()
 
-    private val musicPlayer: ExoPlayer = ExoPlayer.Builder(context).build()
+    private val musicPlayer: ExoPlayer = ExoPlayer.Builder(context)
+        .setAudioAttributes(
+            androidx.media3.common.AudioAttributes.Builder()
+                .setContentType(androidx.media3.common.C.AUDIO_CONTENT_TYPE_MUSIC)
+                .setUsage(androidx.media3.common.C.USAGE_GAME)
+                .build(),
+            true
+        )
+        .build()
     private val ambientPlayers = ConcurrentHashMap<String, ExoPlayer>()
 
     private val soundCache = ConcurrentHashMap<String, Int>()

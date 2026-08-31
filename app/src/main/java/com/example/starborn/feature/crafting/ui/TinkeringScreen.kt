@@ -174,9 +174,10 @@ fun TinkeringRoute(
             modifier = Modifier.fillMaxSize()
         )
 
-        if (uiState.isTutorialActive && uiState.tutorialStep != null) {
+        val currentStep = uiState.tutorialStep
+        if (uiState.isTutorialActive && currentStep != null) {
             TinkeringTutorialOverlay(
-                step = uiState.tutorialStep!!,
+                step = currentStep,
                 accentColor = accentColor,
                 modifier = Modifier
                     .fillMaxWidth()

@@ -539,6 +539,8 @@ fun ExplorationScreen(
         viewModel.onFadeOverlayFinished(command.id)
     }
 
+    var showExitConfirmDialog by remember { mutableStateOf(false) }
+
     val isAnyOverlayOpen = uiState.isMenuOverlayVisible ||
         uiState.isTapeDeckVisible ||
         uiState.isSimulationDeckVisible ||
@@ -548,10 +550,12 @@ fun ExplorationScreen(
         uiState.togglePrompt != null ||
         uiState.tuningPuzzle != null ||
         uiState.narrationPrompt != null ||
-        saveLoadMode != null
+        saveLoadMode != null ||
+        showExitConfirmDialog
 
-    BackHandler(enabled = isAnyOverlayOpen) {
+    BackHandler(enabled = true) {
         when {
+            showExitConfirmDialog -> showExitConfirmDialog = false
             saveLoadMode != null -> saveLoadMode = null
             uiState.isTapeDeckVisible -> viewModel.dismissTapeDeck()
             uiState.isSimulationDeckVisible -> viewModel.dismissSimulationDeck()
@@ -562,6 +566,7 @@ fun ExplorationScreen(
             uiState.tuningPuzzle != null -> viewModel.dismissTuningPuzzle()
             uiState.narrationPrompt != null -> viewModel.dismissNarration()
             uiState.isMenuOverlayVisible -> viewModel.closeMenuOverlay()
+            else -> showExitConfirmDialog = true
         }
     }
 
@@ -1248,23 +1253,26 @@ fun ExplorationScreen(
                     detail = it.hpLabel
                 )
             }
-            ItemTargetSelectionDialog(
-                itemName = pendingInventoryItem!!.name,
-                targets = targetOptions,
-                onSelect = { targetId ->
-                    viewModel.useInventoryItem(pendingInventoryItem!!.id, targetId)
-                    pendingInventoryItem = null
-                    showInventoryTargetDialog = false
-                },
-                onDismiss = {
-                    pendingInventoryItem = null
-                    showInventoryTargetDialog = false
-                },
-                backgroundColor = FieldMenuDesign.panel.copy(alpha = 0.98f),
-                borderColor = FieldMenuDesign.border.copy(alpha = 0.55f),
-                textColor = FieldMenuDesign.text,
-                accentColor = FieldMenuDesign.cyan
-            )
+            val pendingItem = pendingInventoryItem
+            if (pendingItem != null) {
+                ItemTargetSelectionDialog(
+                    itemName = pendingItem.name,
+                    targets = targetOptions,
+                    onSelect = { targetId ->
+                        viewModel.useInventoryItem(pendingItem.id, targetId)
+                        pendingInventoryItem = null
+                        showInventoryTargetDialog = false
+                    },
+                    onDismiss = {
+                        pendingInventoryItem = null
+                        showInventoryTargetDialog = false
+                    },
+                    backgroundColor = FieldMenuDesign.panel.copy(alpha = 0.98f),
+                    borderColor = FieldMenuDesign.border.copy(alpha = 0.55f),
+                    textColor = FieldMenuDesign.text,
+                    accentColor = FieldMenuDesign.cyan
+                )
+            }
         }
         if (saveLoadMode != null) {
             SaveLoadDialog(
@@ -1297,6 +1305,45 @@ fun ExplorationScreen(
                 modifier = Modifier
                     .align(Alignment.Center)
                     .zIndex(90f)
+            )
+        }
+
+        if (showExitConfirmDialog) {
+            androidx.compose.material3.AlertDialog(
+                onDismissRequest = { showExitConfirmDialog = false },
+                title = {
+                    Text(
+                        text = "Return to Title?",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = FieldMenuDesign.text
+                    )
+                },
+                text = {
+                    Text(
+                        text = "Any unsaved progress since your last checkpoint will be lost.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = FieldMenuDesign.textMuted
+                    )
+                },
+                confirmButton = {
+                    androidx.compose.material3.TextButton(
+                        onClick = {
+                            showExitConfirmDialog = false
+                            onReturnToTitle()
+                        }
+                    ) {
+                        Text("Exit to Title", color = FieldMenuDesign.cyan)
+                    }
+                },
+                dismissButton = {
+                    androidx.compose.material3.TextButton(
+                        onClick = { showExitConfirmDialog = false }
+                    ) {
+                        Text("Stay", color = FieldMenuDesign.textMuted)
+                    }
+                },
+                containerColor = FieldMenuDesign.panel,
+                modifier = Modifier.zIndex(100f)
             )
         }
 

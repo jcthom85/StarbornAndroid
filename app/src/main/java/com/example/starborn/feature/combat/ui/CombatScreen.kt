@@ -641,6 +641,18 @@ fun CombatScreen(
         val menuActorSkills = menuActor?.let { viewModel.skillsForPlayer(it.id) }.orEmpty()
         val victoryEmotes = pendingOutcome is CombatOutcome.Victory
 
+        BackHandler(enabled = showSkillsDialog.value || showItemsDialog.value || pendingTargetRequest != null) {
+            when {
+                showSkillsDialog.value -> showSkillsDialog.value = false
+                showItemsDialog.value -> showItemsDialog.value = false
+                pendingTargetRequest != null -> {
+                    pendingTargetRequest = null
+                    pendingInstruction = null
+                    viewModel.onCombatTutorialTargetCancelled()
+                }
+            }
+        }
+
         if (awaitingActionId == null && pendingTargetRequest != null) {
             pendingTargetRequest = null
             pendingInstruction = null

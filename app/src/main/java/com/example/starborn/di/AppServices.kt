@@ -2424,6 +2424,10 @@ class AppServices(context: Context) {
         skills.filter { skill -> party.contains(skill.character) }
             .forEach { skill -> sessionStore.unlockSkill(skill.id) }
     }
+
+    fun release() {
+        audioCuePlayer.release()
+    }
 }
 
 internal fun isDialogueConditionMet(
