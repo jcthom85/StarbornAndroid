@@ -1,10 +1,8 @@
 package com.example.starborn.domain.session
 
-import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
-import androidx.datastore.dataStoreFile
 import com.example.starborn.datastore.GameSessionProto
 import com.example.starborn.datastore.EnemyPartyStateProto
 import com.example.starborn.datastore.InventoryEntryProto
@@ -29,13 +27,11 @@ import org.json.JSONObject
 
 private const val MAX_BACKUPS = 3
 
-class GameSessionPersistence private constructor(
+class GameSessionPersistence(
     private val fileForName: (String) -> File
 ) {
 
-    constructor(context: Context) : this({ name -> context.applicationContext.dataStoreFile(name) })
-
-    internal constructor(baseDir: File) : this({ name -> File(baseDir, name) })
+    constructor(baseDir: File) : this({ name -> File(baseDir, name) })
 
     private val dataStoreFile = fileForName(DATASTORE_FILE)
     private val autosaveFile = fileForName(AUTOSAVE_FILE)

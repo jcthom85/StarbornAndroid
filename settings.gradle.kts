@@ -25,3 +25,4 @@ dependencyResolutionManagement {
 rootProject.name = "Starborn"
 include(":app")
 include(":world_assets")
+include(":desktopApp")

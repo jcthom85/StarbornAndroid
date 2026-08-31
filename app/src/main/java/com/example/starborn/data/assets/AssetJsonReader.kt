@@ -1,7 +1,5 @@
 package com.example.starborn.data.assets
 
-import android.content.Context
-import com.example.starborn.core.platform.AndroidAssetProvider
 import com.example.starborn.core.platform.AssetProvider
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
@@ -12,8 +10,6 @@ class AssetJsonReader(
     @PublishedApi internal val assetProvider: AssetProvider,
     @PublishedApi internal val moshi: Moshi
 ) {
-
-    constructor(context: Context, moshi: Moshi) : this(AndroidAssetProvider(context), moshi)
 
     fun <T> read(fileName: String, type: Type): T? {
         val json = assetProvider.readText(fileName) ?: return null

@@ -87,7 +87,7 @@ import kotlin.random.Random
 class AppServices(context: Context) {
     private val appContext = context.applicationContext
     private val moshi = MoshiProvider.instance
-    private val assetReader = AssetJsonReader(context, moshi)
+    private val assetReader = AssetJsonReader(com.example.starborn.core.platform.AndroidAssetProvider(context), moshi)
 
     val worldDataSource = WorldAssetDataSource(assetReader)
     private val themeDataSource = ThemeAssetDataSource(assetReader)
@@ -115,7 +115,7 @@ class AppServices(context: Context) {
     val playtestTelemetry = LocalPlaytestTelemetry(File(appContext.noBackupFilesDir, "playtest")).apply {
         startSession("app_launch")
     }
-    private val sessionPersistence = GameSessionPersistence(context)
+    private val sessionPersistence = GameSessionPersistence(File(appContext.filesDir, "datastore"))
     val craftingService = CraftingService(craftingDataSource, inventoryService, sessionStore)
     val events: List<GameEvent> = eventDataSource.loadEvents()
     val statusRegistry = StatusRegistry(worldDataSource.loadStatuses())

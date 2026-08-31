@@ -1,18 +1,28 @@
-package com.example.starborn.data.local
+package com.example.starborn.desktop
 
-import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.preferencesDataStore
+import androidx.datastore.preferences.core.floatPreferencesKey
+import com.example.starborn.data.local.UserSettings
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.io.File
 
-private val Context.userSettingsDataStore by preferencesDataStore(name = "user_settings")
-
-class UserSettingsStore(context: Context) {
-    private val dataStore = context.userSettingsDataStore
+/**
+ * Desktop implementation of UserSettingsStore using file-backed DataStore.
+ */
+class DesktopUserSettingsStore(
+    baseDir: File = File(System.getProperty("user.home"), ".starborn")
+) {
+    private val dataStore: DataStore<Preferences> = PreferenceDataStoreFactory.create(
+        produceFile = {
+            baseDir.mkdirs()
+            File(baseDir, "user_settings.preferences_pb")
+        }
+    )
 
     val settings: Flow<UserSettings> = dataStore.data.map { prefs ->
         UserSettings(
@@ -23,7 +33,7 @@ class UserSettingsStore(context: Context) {
             tutorialsEnabled = prefs[TUTORIALS_ENABLED] ?: true,
             disableScreenshake = prefs[DISABLE_SCREENSHAKE] ?: false,
             disableFlashes = prefs[DISABLE_FLASHES] ?: false,
-            disableHaptics = prefs[DISABLE_HAPTICS] ?: false,
+            disableHaptics = prefs[DISABLE_HAPTICS] ?: true,
             highContrastMode = prefs[HIGH_CONTRAST_MODE] ?: false,
             largeTouchTargets = prefs[LARGE_TOUCH_TARGETS] ?: false,
             themeBandsEnabled = prefs[THEME_BANDS_ENABLED] ?: false
@@ -58,16 +68,8 @@ class UserSettingsStore(context: Context) {
         dataStore.edit { it[DISABLE_FLASHES] = disabled }
     }
 
-    suspend fun setHapticsDisabled(disabled: Boolean) {
-        dataStore.edit { it[DISABLE_HAPTICS] = disabled }
-    }
-
     suspend fun setHighContrastMode(enabled: Boolean) {
         dataStore.edit { it[HIGH_CONTRAST_MODE] = enabled }
-    }
-
-    suspend fun setLargeTouchTargets(enabled: Boolean) {
-        dataStore.edit { it[LARGE_TOUCH_TARGETS] = enabled }
     }
 
     suspend fun setThemeBandsEnabled(enabled: Boolean) {
@@ -75,16 +77,16 @@ class UserSettingsStore(context: Context) {
     }
 
     companion object {
-        private val MUSIC_VOLUME: Preferences.Key<Float> = floatPreferencesKey("music_volume")
-        private val SFX_VOLUME: Preferences.Key<Float> = floatPreferencesKey("sfx_volume")
-        private val VIGNETTE_ENABLED: Preferences.Key<Boolean> = booleanPreferencesKey("vignette_enabled")
-        private val TUTORIALS_ENABLED: Preferences.Key<Boolean> = booleanPreferencesKey("tutorials_enabled")
-        private val DISABLE_SCREENSHAKE: Preferences.Key<Boolean> = booleanPreferencesKey("disable_screenshake")
-        private val DISABLE_FLASHES: Preferences.Key<Boolean> = booleanPreferencesKey("disable_flashes")
-        private val DISABLE_HAPTICS: Preferences.Key<Boolean> = booleanPreferencesKey("disable_haptics")
-        private val HIGH_CONTRAST_MODE: Preferences.Key<Boolean> = booleanPreferencesKey("high_contrast_mode")
-        private val LARGE_TOUCH_TARGETS: Preferences.Key<Boolean> = booleanPreferencesKey("large_touch_targets")
-        private val THEME_BANDS_ENABLED: Preferences.Key<Boolean> = booleanPreferencesKey("theme_bands_enabled")
-        private val VOICE_VOLUME: Preferences.Key<Float> = floatPreferencesKey("voice_volume")
+        private val MUSIC_VOLUME = floatPreferencesKey("music_volume")
+        private val SFX_VOLUME = floatPreferencesKey("sfx_volume")
+        private val VIGNETTE_ENABLED = booleanPreferencesKey("vignette_enabled")
+        private val TUTORIALS_ENABLED = booleanPreferencesKey("tutorials_enabled")
+        private val DISABLE_SCREENSHAKE = booleanPreferencesKey("disable_screenshake")
+        private val DISABLE_FLASHES = booleanPreferencesKey("disable_flashes")
+        private val DISABLE_HAPTICS = booleanPreferencesKey("disable_haptics")
+        private val HIGH_CONTRAST_MODE = booleanPreferencesKey("high_contrast_mode")
+        private val LARGE_TOUCH_TARGETS = booleanPreferencesKey("large_touch_targets")
+        private val THEME_BANDS_ENABLED = booleanPreferencesKey("theme_bands_enabled")
+        private val VOICE_VOLUME = floatPreferencesKey("voice_volume")
     }
 }
