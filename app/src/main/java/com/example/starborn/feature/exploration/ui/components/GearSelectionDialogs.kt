@@ -214,6 +214,41 @@ fun GearSelectionDialog(
                                                 overflow = TextOverflow.Ellipsis
                                             )
                                         }
+                                        if (!isEquipped && equippedNormalized.isNotBlank()) {
+                                            val currentEquipped = remember(equippedNormalized, options) {
+                                                options.firstOrNull { it.id.lowercase(Locale.getDefault()) == equippedNormalized }
+                                            }
+                                            val diffs = remember(option, currentEquipped) {
+                                                computeStatDiffs(option, currentEquipped)
+                                            }
+                                            if (diffs.isNotEmpty()) {
+                                                Row(
+                                                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                                    modifier = Modifier.padding(top = 2.dp)
+                                                ) {
+                                                    diffs.take(3).forEach { diff ->
+                                                        val isPositive = diff.delta > 0
+                                                        val diffColor = if (isPositive) Color(0xFF4EFA9E) else Color(0xFFFF6B6B)
+                                                        val diffText = if (isPositive) "+${diff.delta} ${diff.label} ▲" else "${diff.delta} ${diff.label} ▼"
+                                                        Surface(
+                                                            shape = RoundedCornerShape(4.dp),
+                                                            color = diffColor.copy(alpha = 0.15f),
+                                                            border = BorderStroke(0.5.dp, diffColor.copy(alpha = 0.5f))
+                                                        ) {
+                                                            Text(
+                                                                text = diffText,
+                                                                style = MaterialTheme.typography.labelSmall.copy(
+                                                                    fontSize = 9.sp,
+                                                                    fontWeight = FontWeight.Bold
+                                                                ),
+                                                                color = diffColor,
+                                                                modifier = Modifier.padding(horizontal = 4.dp, vertical = 1.dp)
+                                                            )
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
                                     }
                                     if (isEquipped) {
                                         Surface(
@@ -237,6 +272,49 @@ fun GearSelectionDialog(
             }
         }
     }
+}
+
+private data class StatDiffUi(
+    val label: String,
+    val delta: Int
+)
+
+private fun computeStatDiffs(
+    candidate: InventoryPreviewItemUi,
+    equipped: InventoryPreviewItemUi?
+): List<StatDiffUi> {
+    if (equipped == null) return emptyList()
+    val diffs = mutableListOf<StatDiffUi>()
+    
+    val candDmg = candidate.equipment?.damageMax ?: candidate.equipment?.damageMin
+    val eqDmg = equipped.equipment?.damageMax ?: equipped.equipment?.damageMin
+    if (candDmg != null && eqDmg != null) {
+        val diff = candDmg - eqDmg
+        if (diff != 0) diffs += StatDiffUi("DMG", diff)
+    }
+    
+    val candDef = candidate.equipment?.defense
+    val eqDef = equipped.equipment?.defense
+    if (candDef != null && eqDef != null) {
+        val diff = candDef - eqDef
+        if (diff != 0) diffs += StatDiffUi("DEF", diff)
+    }
+
+    val candHp = candidate.equipment?.hpBonus
+    val eqHp = equipped.equipment?.hpBonus
+    if (candHp != null && eqHp != null) {
+        val diff = candHp - eqHp
+        if (diff != 0) diffs += StatDiffUi("HP", diff)
+    }
+
+    val candMods = candidate.equipment?.statMods ?: emptyMap()
+    val eqMods = equipped.equipment?.statMods ?: emptyMap()
+    val allKeys = (candMods.keys + eqMods.keys).distinct()
+    allKeys.forEach { key ->
+        val diff = candMods.getOrDefault(key, 0) - eqMods.getOrDefault(key, 0)
+        if (diff != 0) diffs += StatDiffUi(key.uppercase(Locale.getDefault()), diff)
+    }
+    return diffs
 }
 
 @DrawableRes

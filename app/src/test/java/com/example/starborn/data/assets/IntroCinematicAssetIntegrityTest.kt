@@ -54,7 +54,7 @@ class IntroCinematicAssetIntegrityTest {
         )
         assertTrue(
             "The cold open must end on a threat, not a resolution",
-            completeCopy.contains("Something reaches the glass.")
+            completeCopy.contains("Then something massive slams against the glass.")
         )
         val titleCard = steps.last()
         assertEquals("The prologue must land on the title card", "none", titleCard.captionStyle)

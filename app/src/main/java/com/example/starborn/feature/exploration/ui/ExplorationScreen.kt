@@ -891,7 +891,8 @@ fun ExplorationScreen(
         }
         val hasRoomEntities = visibleNpcs.isNotEmpty() ||
             visibleGroundItems.isNotEmpty() ||
-            serviceQuickActions.isNotEmpty()
+            serviceQuickActions.isNotEmpty() ||
+            uiState.canReturnToHub
 
         BoxWithConstraints(
             modifier = Modifier
@@ -965,6 +966,8 @@ fun ExplorationScreen(
                             npcPortraitPaths = uiState.npcPortraitPaths,
                             groundItems = visibleGroundItems,
                             serviceActions = serviceQuickActions,
+                            canReturnToHub = uiState.canReturnToHub && !blockingOverlayActive,
+                            onReturnToHub = { viewModel.requestReturnToHub() },
                             itemDisplayName = { itemId -> viewModel.itemDisplayName(itemId) },
                             itemDetailLabel = { itemId -> viewModel.roomItemDetailLabel(itemId) },
                             itemIsEquipment = { itemId -> viewModel.roomItemIsEquipment(itemId) },
@@ -4271,16 +4274,16 @@ private fun ReturnHubButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val accentColor = Color(0xFFFFC857)
-    val dangerColor = Color(0xFFFF5D4F)
+    val accentColor = Color(0xFF00E5FF)
+    val warmColor = Color(0xFFFFC857)
     Surface(
         modifier = modifier
             .height(54.dp)
-            .widthIn(min = 116.dp)
+            .widthIn(min = 138.dp)
             .clickable(onClick = onClick),
         shape = RoundedCornerShape(14.dp),
-        color = Color(0xFF061018).copy(alpha = 0.58f),
-        border = BorderStroke(1.dp, accentColor.copy(alpha = 0.52f))
+        color = Color(0xFF061018).copy(alpha = 0.65f),
+        border = BorderStroke(1.dp, accentColor.copy(alpha = 0.62f))
     ) {
         Row(
             modifier = Modifier
@@ -4288,45 +4291,47 @@ private fun ReturnHubButton(
                 .background(
                     Brush.horizontalGradient(
                         colors = listOf(
-                            dangerColor.copy(alpha = 0.16f),
-                            accentColor.copy(alpha = 0.08f),
+                            accentColor.copy(alpha = 0.18f),
+                            warmColor.copy(alpha = 0.08f),
                             Color.Transparent
                         )
                     )
                 )
-                .padding(horizontal = 13.dp),
+                .padding(horizontal = 14.dp),
             horizontalArrangement = Arrangement.spacedBy(9.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Canvas(
                 modifier = Modifier.size(22.dp)
             ) {
-                val strokeWidth = 2.8.dp.toPx()
-                val centerY = size.height * 0.5f
+                val strokeWidth = 2.2.dp.toPx()
+                drawCircle(
+                    color = accentColor,
+                    radius = size.minDimension * 0.44f,
+                    style = Stroke(width = strokeWidth)
+                )
+                drawCircle(
+                    color = accentColor.copy(alpha = 0.5f),
+                    radius = size.minDimension * 0.22f,
+                    style = Stroke(width = strokeWidth * 0.8f)
+                )
                 drawLine(
                     color = accentColor,
-                    start = Offset(size.width * 0.18f, centerY),
-                    end = Offset(size.width * 0.84f, centerY),
-                    strokeWidth = strokeWidth,
+                    start = Offset(size.width * 0.5f, size.height * 0.08f),
+                    end = Offset(size.width * 0.5f, size.height * 0.92f),
+                    strokeWidth = strokeWidth * 0.8f,
                     cap = StrokeCap.Round
                 )
                 drawLine(
                     color = accentColor,
-                    start = Offset(size.width * 0.18f, centerY),
-                    end = Offset(size.width * 0.46f, size.height * 0.24f),
-                    strokeWidth = strokeWidth,
-                    cap = StrokeCap.Round
-                )
-                drawLine(
-                    color = accentColor,
-                    start = Offset(size.width * 0.18f, centerY),
-                    end = Offset(size.width * 0.46f, size.height * 0.76f),
-                    strokeWidth = strokeWidth,
+                    start = Offset(size.width * 0.08f, size.height * 0.5f),
+                    end = Offset(size.width * 0.92f, size.height * 0.5f),
+                    strokeWidth = strokeWidth * 0.8f,
                     cap = StrokeCap.Round
                 )
             }
             Text(
-                text = "LEAVE",
+                text = "SECTOR MAP",
                 color = Color.White.copy(alpha = 0.94f),
                 style = MaterialTheme.typography.labelLarge,
                 fontWeight = FontWeight.Black,
@@ -4924,6 +4929,8 @@ private fun RoomEntitySection(
     npcPortraitPaths: Map<String, String>,
     groundItems: Map<String, Int>,
     serviceActions: List<QuickMenuAction> = emptyList(),
+    canReturnToHub: Boolean = false,
+    onReturnToHub: () -> Unit = {},
     itemDisplayName: (String) -> String,
     itemDetailLabel: (String) -> String?,
     itemIsEquipment: (String) -> Boolean,
@@ -4952,6 +4959,16 @@ private fun RoomEntitySection(
                 .padding(horizontal = 8.dp, vertical = 6.dp),
             verticalArrangement = Arrangement.spacedBy(5.dp)
         ) {
+            if (canReturnToHub) {
+                PresenceRailRow {
+                    SectorMapPresenceChip(
+                        accentColor = Color(0xFF00E5FF),
+                        borderColor = borderColor,
+                        isDark = isDark,
+                        onClick = onReturnToHub
+                    )
+                }
+            }
             if (npcs.isNotEmpty()) {
                 PresenceRailRow {
                     npcs.forEach { npc ->
@@ -5110,6 +5127,103 @@ private fun ServicePresenceChip(
                         overflow = TextOverflow.Ellipsis
                     )
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun SectorMapPresenceChip(
+    accentColor: Color,
+    borderColor: Color,
+    isDark: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val shape = RoundedCornerShape(12.dp)
+    val mapCyan = Color(0xFF00E5FF)
+    val warmGold = Color(0xFFFFC857)
+    Surface(
+        shape = shape,
+        color = Color(0xFF071018).copy(alpha = if (isDark) 0.88f else 0.76f),
+        border = BorderStroke(1.dp, mapCyan.copy(alpha = if (isDark) 0.65f else 0.52f)),
+        modifier = modifier
+            .widthIn(min = 148.dp)
+            .height(46.dp)
+            .clip(shape)
+            .clickable(onClick = onClick)
+            .clearAndSetSemantics {
+                contentDescription = "Sector Map action"
+                onClick(label = "Sector Map") {
+                    onClick()
+                    true
+                }
+            }
+    ) {
+        Row(
+            modifier = Modifier
+                .background(
+                    Brush.horizontalGradient(
+                        colors = listOf(
+                            mapCyan.copy(alpha = if (isDark) 0.20f else 0.16f),
+                            warmGold.copy(alpha = 0.08f),
+                            Color.Transparent
+                        )
+                    )
+                )
+                .padding(horizontal = 9.dp, vertical = 7.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Surface(
+                shape = CircleShape,
+                color = mapCyan.copy(alpha = 0.18f),
+                border = BorderStroke(1.dp, mapCyan.copy(alpha = 0.7f)),
+                modifier = Modifier.size(32.dp)
+            ) {
+                Box(contentAlignment = Alignment.Center) {
+                    Canvas(modifier = Modifier.size(18.dp)) {
+                        val strokeWidth = 1.8.dp.toPx()
+                        drawCircle(
+                            color = mapCyan,
+                            radius = size.minDimension * 0.44f,
+                            style = Stroke(width = strokeWidth)
+                        )
+                        drawLine(
+                            color = mapCyan,
+                            start = Offset(size.width * 0.5f, size.height * 0.12f),
+                            end = Offset(size.width * 0.5f, size.height * 0.88f),
+                            strokeWidth = strokeWidth,
+                            cap = StrokeCap.Round
+                        )
+                        drawLine(
+                            color = mapCyan,
+                            start = Offset(size.width * 0.12f, size.height * 0.5f),
+                            end = Offset(size.width * 0.88f, size.height * 0.5f),
+                            strokeWidth = strokeWidth,
+                            cap = StrokeCap.Round
+                        )
+                    }
+                }
+            }
+            Column(
+                modifier = Modifier.weight(1f, fill = false),
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = "Sector Map",
+                    color = Color.White,
+                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Text(
+                    text = "Depart Zone",
+                    color = mapCyan.copy(alpha = 0.85f),
+                    style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp, fontWeight = FontWeight.SemiBold),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
             }
         }
     }
@@ -7815,6 +7929,7 @@ private fun IllustratedCinematicOverlay(
 
     val impactShakeX = remember(stepKey) { CoreAnimatable(0f) }
     val impactShakeY = remember(stepKey) { CoreAnimatable(0f) }
+    val impactFlash = remember(stepKey) { CoreAnimatable(0f) }
     LaunchedEffect(stepKey) {
         val cue = state.step.audioCue
         if (cue == "sfx_intro_door_buckle" || cue == "sfx_intro_beast_strike" || cue == "sfx_intro_chime_launch") {
@@ -7826,6 +7941,12 @@ private fun IllustratedCinematicOverlay(
             launch {
                 impactShakeY.snapTo(-amp * 0.4f)
                 impactShakeY.animateTo(0f, animationSpec = tween(durationMillis = 260, easing = FastOutSlowInEasing))
+            }
+        }
+        if (cue == "sfx_intro_beast_strike") {
+            launch {
+                impactFlash.snapTo(0.7f)
+                impactFlash.animateTo(0f, animationSpec = tween(durationMillis = 240, easing = LinearEasing))
             }
         }
     }
@@ -7911,7 +8032,17 @@ private fun IllustratedCinematicOverlay(
                 }
         )
 
-        // Atmospheric Layer 1: Emergency breach alarm strobe
+        // Impact flash on violent beast strike
+        if (impactFlash.value > 0f) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .graphicsLayer { alpha = impactFlash.value }
+                    .background(Color.White)
+            )
+        }
+
+        // Atmospheric Layer 1: Emergency breach alarm strobe & telemetry scanlines
         val isEmergency = state.step.captionStyle == CinematicCaptionStyle.SYSTEM ||
             state.step.imagePath?.contains("breach") == true
         if (isEmergency) {
@@ -7941,9 +8072,26 @@ private fun IllustratedCinematicOverlay(
                         )
                     )
             )
+            Canvas(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .graphicsLayer { alpha = 0.15f * contentAlpha }
+            ) {
+                val stepPx = 4.dp.toPx()
+                var y = 0f
+                while (y < size.height) {
+                    drawLine(
+                        color = Color.Black,
+                        start = Offset(0f, y),
+                        end = Offset(size.width, y),
+                        strokeWidth = 1.dp.toPx()
+                    )
+                    y += stepPx
+                }
+            }
         }
 
-        // Atmospheric Layer 2: Cryogenic stasis chamber mist
+        // Atmospheric Layer 2: Cryogenic stasis chamber mist & frost creep
         val isStasisPod = state.step.imagePath?.contains("stasis") == true
         if (isStasisPod) {
             val mistTransition = rememberInfiniteTransition(label = "stasis_mist")
@@ -7968,6 +8116,23 @@ private fun IllustratedCinematicOverlay(
                                 Color(0xFF00E5FF).copy(alpha = 0.38f)
                             ),
                             startY = 400f
+                        )
+                    )
+            )
+            // Frost creeping in around the viewport edge during stasis freeze
+            val frostAlpha = (progress * 0.45f).coerceIn(0f, 0.45f)
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .graphicsLayer { alpha = frostAlpha * contentAlpha }
+                    .background(
+                        Brush.radialGradient(
+                            colors = listOf(
+                                Color.Transparent,
+                                Color(0xFFB2EBF2).copy(alpha = 0.05f),
+                                Color(0xFF80DEEA).copy(alpha = 0.35f),
+                                Color(0xFFE0F7FA).copy(alpha = 0.70f)
+                            )
                         )
                     )
             )

@@ -685,7 +685,7 @@
       },
       {
         "type": "narration",
-        "text": "Something reaches the glass.",
+        "text": "Then something massive slams against the glass.",
         "image": "images/cinematics/intro_beast_glass_v1.webp",
         "camera_start_scale": 1.0,
         "camera_end_scale": 1.14,

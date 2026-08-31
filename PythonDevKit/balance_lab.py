@@ -70,7 +70,14 @@ class DataLoader:
     def load(self) -> GameData:
         chars = _load_json(self.cfg.path("characters"), [])
         enemies = _load_json(self.cfg.path("enemies"), [])
-        skills = _load_json(self.cfg.path("skills"), {})
+        raw_skills = _load_json(self.cfg.path("skills"), {})
+        skills: Dict[str, Any] = {}
+        if isinstance(raw_skills, list):
+            for s in raw_skills:
+                if isinstance(s, dict) and "id" in s:
+                    skills[s["id"]] = s
+        elif isinstance(raw_skills, dict):
+            skills = raw_skills
         leveling = _load_json(self.cfg.path("leveling"), {})
         progression = _load_json(self.cfg.path("progression"), {})
         trees_dir = self.cfg.path("skill_trees_dir")

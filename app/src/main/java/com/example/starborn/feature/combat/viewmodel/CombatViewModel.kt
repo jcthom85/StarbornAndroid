@@ -3284,12 +3284,13 @@ private fun determineSkillTargeting(skill: Skill): SkillTargeting {
         emitAudio(commands)
     }
 
-    private fun playVictoryMusic() {
-        val commands = audioRouter.commandsForLayerOverride(
+    fun playVictoryMusic() {
+        val commands = mutableListOf<com.example.starborn.domain.audio.AudioCommand>()
+        commands += audioRouter.commandsForLayerOverride(
             layer = AudioCueType.MUSIC,
             cueId = "music_victory_standard",
-            fadeMs = 250L,
-            loop = true
+            fadeMs = 200L,
+            loop = false
         )
         emitAudio(commands)
     }

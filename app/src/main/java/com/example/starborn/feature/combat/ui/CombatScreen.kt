@@ -4,6 +4,9 @@ import android.graphics.Paint
 import android.graphics.Typeface
 import android.os.SystemClock
 import androidx.activity.compose.BackHandler
+import androidx.compose.ui.platform.LocalContext
+import com.example.starborn.ui.haptics.Haptics
+import com.example.starborn.ui.haptics.HapticType
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.EaseOutBack
@@ -336,6 +339,7 @@ fun CombatScreen(
     var pendingTargetRequest by remember { mutableStateOf<PendingTargetRequest?>(null) }
     var pendingInstruction by remember { mutableStateOf<String?>(null) }
     val density = LocalDensity.current
+    val context = LocalContext.current
     val shakeOffset = remember { Animatable(Offset.Zero, Offset.VectorConverter) }
 
     val playerIdSet = remember(playerParty) {
@@ -356,6 +360,12 @@ fun CombatScreen(
             viewModel.fxEvents.collect { event ->
                 when (event) {
                     is CombatFxEvent.Impact -> {
+                        val haptic = when {
+                            event.critical -> HapticType.ALERT
+                            event.isWeakness || event.isGuardBreak -> HapticType.SUCCESS
+                            else -> HapticType.TICK
+                        }
+                        Haptics.pulse(context, haptic)
                         val fx = DamageFxUi(
                             id = UUID.randomUUID().toString(),
                             targetId = event.targetId,
@@ -459,6 +469,7 @@ fun CombatScreen(
                 }
 
                 is CombatFxEvent.Knockout -> {
+                    Haptics.pulse(context, HapticType.SUCCESS)
                     val fx = KnockoutFxUi(
                         id = UUID.randomUUID().toString(),
                         targetId = event.targetId
@@ -484,6 +495,7 @@ fun CombatScreen(
                     }
                 }
                 is CombatFxEvent.Telegraph -> {
+                    Haptics.pulse(context, HapticType.ALERT)
                     val fx = TelegraphFxUi(
                         id = UUID.randomUUID().toString(),
                         actorId = event.actorId,
@@ -492,11 +504,12 @@ fun CombatScreen(
                     )
                     telegraphFx += fx
                     launch {
-                        delay(800)
+                        delay(1200)
                         telegraphFx.remove(fx)
                     }
                 }
                 is CombatFxEvent.ShieldBreak -> {
+                    Haptics.pulse(context, HapticType.ALERT)
                     val fx = ShieldBreakFxUi(
                         id = UUID.randomUUID().toString(),
                         targetId = event.targetId
@@ -519,6 +532,7 @@ fun CombatScreen(
         val resolved = pendingOutcome ?: return@LaunchedEffect
         val handle = navController.previousBackStackEntry?.savedStateHandle
         if (resolved is CombatOutcome.Victory) {
+            viewModel.playVictoryMusic()
             handle?.set("combat_victory", ArrayList(viewModel.encounterEnemyIds))
         }
         val waitMillis = when (resolved) {

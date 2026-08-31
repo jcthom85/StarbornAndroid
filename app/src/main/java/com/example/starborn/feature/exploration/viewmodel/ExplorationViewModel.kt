@@ -4322,7 +4322,7 @@ class ExplorationViewModel(
         return when {
             roomId.equals(PIT_ENTRY_ROOM_ID, ignoreCase = true) && !hasJedSentNovaToWorkshop() ->
                 "Jed is waiting upstairs. Nova should check in before heading out."
-            else -> "You can only leave from the area entrance."
+            else -> "You can only open the Sector Map from the zone entrance."
         }
     }
 

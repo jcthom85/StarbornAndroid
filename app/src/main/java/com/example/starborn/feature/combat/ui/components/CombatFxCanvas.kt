@@ -92,13 +92,13 @@ fun CombatFxOverlay(
         if (showTelegraphHighlight && activeTelegraph != null) {
             val isAethel = activeTelegraph.skillName.lowercase(Locale.getDefault()).contains("aethel") ||
                 activeTelegraph.skillName.lowercase(Locale.getDefault()).contains("resonance")
-            val baseColor = if (isAethel) Color(0xFFBA68C8) else Color(0xFFE57373)
+            val baseColor = if (isAethel) Color(0xFFBA68C8) else Color(0xFFFF5252)
             val borderPulse = rememberInfiniteTransition(label = "telegraph_pulse")
             val alphaPulse by borderPulse.animateFloat(
                 initialValue = 0.35f,
-                targetValue = 0.82f,
+                targetValue = 0.88f,
                 animationSpec = infiniteRepeatable(
-                    animation = tween(durationMillis = 850, easing = FastOutSlowInEasing),
+                    animation = tween(durationMillis = 650, easing = FastOutSlowInEasing),
                     repeatMode = RepeatMode.Reverse
                 ),
                 label = "telegraph_alpha"
@@ -107,9 +107,28 @@ fun CombatFxOverlay(
                 modifier = Modifier
                     .matchParentSize()
                     .clip(shape)
-                    .background(baseColor.copy(alpha = 0.08f))
-                    .border(BorderStroke(2.2.dp, baseColor.copy(alpha = alphaPulse)), shape)
+                    .background(baseColor.copy(alpha = 0.10f))
+                    .border(BorderStroke(2.4.dp, baseColor.copy(alpha = alphaPulse)), shape)
             )
+            Surface(
+                shape = RoundedCornerShape(6.dp),
+                color = Color(0xFF1A0606).copy(alpha = 0.92f),
+                border = BorderStroke(1.dp, baseColor.copy(alpha = alphaPulse)),
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .offset(y = (-10).dp)
+                    .zIndex(70f)
+            ) {
+                Text(
+                    text = "⚡ TARGETED",
+                    color = baseColor,
+                    style = MaterialTheme.typography.labelSmall.copy(
+                        fontSize = 8.5.sp,
+                        fontWeight = FontWeight.Black
+                    ),
+                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                )
+            }
         }
         if (showKnockout) {
             Box(
