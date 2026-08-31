@@ -1,11 +1,14 @@
 package com.example.starborn.desktop.ui
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,23 +17,28 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.*
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.starborn.desktop.DesktopAppServices
+import com.example.starborn.domain.audio.AudioCommand
+import com.example.starborn.domain.audio.AudioCueType
 import com.example.starborn.domain.model.Room
 
 private val NeonCyan = Color(0xFF00F5D4)
 private val NeonPink = Color(0xFFFF007F)
 private val NeonAmber = Color(0xFFFFB703)
-private val DeepSpaceDark = Color(0xFF070A12)
-private val PanelDark = Color(0xFF0E1322)
-private val PanelBorder = Color(0xFF1B2438)
+private val DeepSpaceDark = Color(0xFF05070D)
+private val PanelDark = Color(0xFF090E18)
+private val PanelBorder = Color(0xFF1B283E)
 private val TextWhite = Color(0xFFF0F4FA)
-private val TextMuted = Color(0xFF8899B0)
+private val TextMuted = Color(0xFF8FA1B7)
 private val HealthGreen = Color(0xFF00E676)
 private val ShieldBlue = Color(0xFF2979FF)
 
@@ -61,10 +69,19 @@ fun DesktopGameScreen(
     )
 
     var activeTab by remember { mutableStateOf(DesktopActiveTab.EXPLORATION) }
-    var selectedNodeIndex by remember { mutableStateOf(0) }
-
     val sessionState by services.sessionStore.state.collectAsState()
     val questEntries = remember { services.questRepository.allQuests().toList() }
+    val items = remember { services.itemRepository.allItems() }
+
+    // Play Room background ambience & music when entering room
+    LaunchedEffect(currentRoom.id) {
+        val cmds = services.audioRouter.commandsForRoom(
+            hubId = currentRoom.env,
+            roomId = currentRoom.id,
+            weatherId = currentRoom.weather
+        )
+        services.audioDriver.executeAll(cmds)
+    }
 
     Box(
         modifier = Modifier
@@ -104,8 +121,32 @@ fun DesktopGameScreen(
                 } else false
             }
     ) {
+        // Room Background Art with atmospheric backdrop
+        val roomBgPainter = rememberDesktopAssetPainter(currentRoom.backgroundImage, services.assetProvider)
+        Image(
+            painter = roomBgPainter,
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
+
+        // Dark gradient tint to guarantee UI legibility
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(
+                            Color(0xCC05070D),
+                            Color(0x8805070D),
+                            Color(0xEE05070D)
+                        )
+                    )
+                )
+        )
+
         Column(modifier = Modifier.fillMaxSize()) {
-            // Top Navigation / Sector Header Bar
+            // Header Bar
             DesktopHeaderBar(
                 currentRoom = currentRoom,
                 activeTab = activeTab,
@@ -121,59 +162,60 @@ fun DesktopGameScreen(
                     .padding(16.dp),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Left Column: Room & Node Exploration Viewport
+                // Left Column: Room Narrative & Sector Traversal Viewport
                 Box(
                     modifier = Modifier
-                        .weight(1f)
+                        .weight(1.1f)
                         .fillMaxHeight()
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(PanelDark)
-                        .border(BorderStroke(1.dp, PanelBorder), RoundedCornerShape(12.dp))
-                        .padding(18.dp)
+                        .clip(RoundedCornerShape(14.dp))
+                        .background(PanelDark.copy(alpha = 0.92f))
+                        .border(BorderStroke(1.dp, PanelBorder), RoundedCornerShape(14.dp))
+                        .padding(20.dp)
                 ) {
                     when (activeTab) {
                         DesktopActiveTab.EXPLORATION -> DesktopExplorationPanel(
                             room = currentRoom,
+                            services = services,
                             onNextRoom = {
                                 if (rooms.isNotEmpty()) {
                                     currentRoomIndex = (currentRoomIndex + 1) % rooms.size
                                 }
                             }
                         )
-                        DesktopActiveTab.INVENTORY -> DesktopInventoryPanel(services)
+                        DesktopActiveTab.INVENTORY -> DesktopInventoryPanel(items)
                         DesktopActiveTab.JOURNAL -> DesktopJournalPanel(questEntries)
                         DesktopActiveTab.MAP -> DesktopMapPanel(rooms, currentRoomIndex) { currentRoomIndex = it }
                     }
                 }
 
-                // Center Column: Interactive Stage / Combat & Narrative Terminal
+                // Center Column: Visual Scene Stage & Environmental Encounters
                 Box(
                     modifier = Modifier
-                        .weight(1.3f)
+                        .weight(1.4f)
                         .fillMaxHeight()
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(PanelDark)
-                        .border(BorderStroke(1.dp, PanelBorder), RoundedCornerShape(12.dp))
-                        .padding(18.dp)
+                        .clip(RoundedCornerShape(14.dp))
+                        .background(PanelDark.copy(alpha = 0.88f))
+                        .border(BorderStroke(1.dp, PanelBorder), RoundedCornerShape(14.dp))
+                        .padding(20.dp)
                 ) {
-                    DesktopStageTerminal(currentRoom)
+                    DesktopStageTerminal(currentRoom, services)
                 }
 
-                // Right Column: Party Status & Active Mission Telemetry
+                // Right Column: Party Vitals & Mission Telemetry
                 Box(
                     modifier = Modifier
-                        .weight(0.9f)
+                        .weight(0.95f)
                         .fillMaxHeight()
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(PanelDark)
-                        .border(BorderStroke(1.dp, PanelBorder), RoundedCornerShape(12.dp))
-                        .padding(18.dp)
+                        .clip(RoundedCornerShape(14.dp))
+                        .background(PanelDark.copy(alpha = 0.92f))
+                        .border(BorderStroke(1.dp, PanelBorder), RoundedCornerShape(14.dp))
+                        .padding(20.dp)
                 ) {
                     DesktopTelemetryPanel(services, sessionState)
                 }
             }
 
-            // Bottom Hotkey Action Bar
+            // Bottom Command Palette
             DesktopBottomBar(activeTab) { activeTab = it }
         }
     }
@@ -189,7 +231,7 @@ private fun DesktopHeaderBar(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color(0xFF050810))
+            .background(Color(0xF0050812))
             .border(BorderStroke(1.dp, PanelBorder))
             .padding(horizontal = 24.dp, vertical = 10.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -197,7 +239,7 @@ private fun DesktopHeaderBar(
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
+            horizontalArrangement = Arrangement.spacedBy(14.dp)
         ) {
             Text(
                 text = "STARBORN",
@@ -208,23 +250,23 @@ private fun DesktopHeaderBar(
             )
             Box(
                 modifier = Modifier
-                    .size(4.dp)
+                    .size(5.dp)
                     .clip(CircleShape)
-                    .background(TextMuted)
+                    .background(NeonAmber)
             )
             Text(
                 text = currentRoom.title.ifBlank { "Uncharted Sector" },
                 color = TextWhite,
-                fontSize = 14.sp,
+                fontSize = 15.sp,
                 fontWeight = FontWeight.Bold
             )
         }
 
-        // Tab Navigation Buttons with Hotkey hints
+        // Tab Navigation Buttons
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             DesktopTabButton("EXPLORE", activeTab == DesktopActiveTab.EXPLORATION) { onTabSelect(DesktopActiveTab.EXPLORATION) }
-            DesktopTabButton("INVENTORY [I]", activeTab == DesktopActiveTab.INVENTORY) { onTabSelect(DesktopActiveTab.INVENTORY) }
-            DesktopTabButton("JOURNAL [J]", activeTab == DesktopActiveTab.JOURNAL) { onTabSelect(DesktopActiveTab.JOURNAL) }
+            DesktopTabButton("CARGO [I]", activeTab == DesktopActiveTab.INVENTORY) { onTabSelect(DesktopActiveTab.INVENTORY) }
+            DesktopTabButton("LOG [J]", activeTab == DesktopActiveTab.JOURNAL) { onTabSelect(DesktopActiveTab.JOURNAL) }
             DesktopTabButton("MAP [M]", activeTab == DesktopActiveTab.MAP) { onTabSelect(DesktopActiveTab.MAP) }
             DesktopTabButton("MENU [ESC]", false, onClick = onMenuClick)
         }
@@ -239,20 +281,20 @@ private fun DesktopTabButton(
 ) {
     Box(
         modifier = Modifier
-            .clip(RoundedCornerShape(6.dp))
-            .background(if (isSelected) NeonCyan.copy(alpha = 0.15f) else Color.Transparent)
+            .clip(RoundedCornerShape(8.dp))
+            .background(if (isSelected) NeonCyan.copy(alpha = 0.16f) else Color.Transparent)
             .border(
                 BorderStroke(1.dp, if (isSelected) NeonCyan else PanelBorder),
-                RoundedCornerShape(6.dp)
+                RoundedCornerShape(8.dp)
             )
             .clickable(onClick = onClick)
-            .padding(horizontal = 12.dp, vertical = 6.dp)
+            .padding(horizontal = 14.dp, vertical = 6.dp)
     ) {
         Text(
             text = title,
             color = if (isSelected) NeonCyan else TextMuted,
             fontSize = 12.sp,
-            fontWeight = FontWeight.SemiBold,
+            fontWeight = FontWeight.Bold,
             fontFamily = FontFamily.Monospace
         )
     }
@@ -261,85 +303,86 @@ private fun DesktopTabButton(
 @Composable
 private fun DesktopExplorationPanel(
     room: Room,
+    services: DesktopAppServices,
     onNextRoom: () -> Unit
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
         Text(
-            text = "ROOM SECTOR",
+            text = "CURRENT SECTOR",
             color = NeonPink,
             fontSize = 11.sp,
             fontWeight = FontWeight.Bold,
-            letterSpacing = 1.2.sp
+            letterSpacing = 1.4.sp
         )
         Text(
             text = room.title.ifBlank { "Sector Chamber" },
             color = TextWhite,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
+            fontSize = 22.sp,
+            fontWeight = FontWeight.Black,
             modifier = Modifier.padding(top = 4.dp, bottom = 12.dp)
         )
         Text(
-            text = room.description.ifBlank { "Deep-space sensor readings detect no atmospheric disturbances." },
+            text = room.description.ifBlank { "Sensors report stable atmospheric pressures and clear stellar vectors." },
             color = TextMuted,
-            fontSize = 13.sp,
-            lineHeight = 19.sp
+            fontSize = 14.sp,
+            lineHeight = 21.sp
         )
 
         Spacer(modifier = Modifier.height(24.dp))
 
         Text(
-            text = "WAYPOINTS & ACTIONS",
+            text = "SECTOR WAYPOINTS & EXITS",
             color = NeonAmber,
             fontSize = 11.sp,
             fontWeight = FontWeight.Bold,
-            letterSpacing = 1.2.sp
+            letterSpacing = 1.4.sp
         )
         Spacer(modifier = Modifier.height(10.dp))
 
         Button(
             onClick = onNextRoom,
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF142036)),
-            border = BorderStroke(1.dp, NeonCyan.copy(alpha = 0.5f)),
-            shape = RoundedCornerShape(8.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF14223A)),
+            border = BorderStroke(1.dp, NeonCyan.copy(alpha = 0.6f)),
+            shape = RoundedCornerShape(10.dp),
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
                 text = "[1] Traverse to Next Sector",
                 color = NeonCyan,
-                fontSize = 13.sp,
-                fontWeight = FontWeight.SemiBold
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold
             )
         }
     }
 }
 
 @Composable
-private fun DesktopInventoryPanel(services: DesktopAppServices) {
-    val items = remember { services.itemRepository.allItems() }
+private fun DesktopInventoryPanel(items: List<com.example.starborn.domain.model.Item>) {
     Column(modifier = Modifier.fillMaxSize()) {
         Text(
-            text = "CARGO & INVENTORY [I]",
+            text = "CARGO HOLD & INVENTORY [I]",
             color = NeonCyan,
             fontSize = 14.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Black,
+            letterSpacing = 1.sp
         )
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(14.dp))
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            itemsIndexed(items.take(15)) { index, item ->
+            itemsIndexed(items.take(20)) { _, item ->
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clip(RoundedCornerShape(6.dp))
-                        .background(Color(0xFF090D18))
-                        .border(BorderStroke(1.dp, PanelBorder), RoundedCornerShape(6.dp))
-                        .padding(10.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(Color(0xFF0C1322))
+                        .border(BorderStroke(1.dp, PanelBorder), RoundedCornerShape(8.dp))
+                        .padding(12.dp)
                 ) {
                     Column {
                         Text(text = item.name, color = TextWhite, fontSize = 13.sp, fontWeight = FontWeight.Bold)
-                        Text(text = item.description.orEmpty(), color = TextMuted, fontSize = 11.sp, maxLines = 1)
+                        Text(text = item.description.orEmpty(), color = TextMuted, fontSize = 11.sp, maxLines = 2)
                     }
                 }
             }
@@ -351,12 +394,13 @@ private fun DesktopInventoryPanel(services: DesktopAppServices) {
 private fun DesktopJournalPanel(quests: List<com.example.starborn.domain.model.Quest>) {
     Column(modifier = Modifier.fillMaxSize()) {
         Text(
-            text = "MISSION LOG [J]",
+            text = "MISSION LOG & DIRECTIVES [J]",
             color = NeonAmber,
             fontSize = 14.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Black,
+            letterSpacing = 1.sp
         )
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(14.dp))
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -365,10 +409,10 @@ private fun DesktopJournalPanel(quests: List<com.example.starborn.domain.model.Q
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clip(RoundedCornerShape(6.dp))
-                        .background(Color(0xFF090D18))
-                        .border(BorderStroke(1.dp, PanelBorder), RoundedCornerShape(6.dp))
-                        .padding(10.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(Color(0xFF0C1322))
+                        .border(BorderStroke(1.dp, PanelBorder), RoundedCornerShape(8.dp))
+                        .padding(12.dp)
                 ) {
                     Column {
                         Text(text = quest.title, color = NeonAmber, fontSize = 13.sp, fontWeight = FontWeight.Bold)
@@ -391,9 +435,10 @@ private fun DesktopMapPanel(
             text = "STELLAR CARTOGRAPHY [M]",
             color = NeonCyan,
             fontSize = 14.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Black,
+            letterSpacing = 1.sp
         )
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(14.dp))
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(6.dp)
@@ -402,19 +447,19 @@ private fun DesktopMapPanel(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clip(RoundedCornerShape(6.dp))
-                        .background(if (index == currentIndex) NeonCyan.copy(alpha = 0.15f) else Color(0xFF090D18))
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(if (index == currentIndex) NeonCyan.copy(alpha = 0.18f) else Color(0xFF0C1322))
                         .border(
                             BorderStroke(1.dp, if (index == currentIndex) NeonCyan else PanelBorder),
-                            RoundedCornerShape(6.dp)
+                            RoundedCornerShape(8.dp)
                         )
                         .clickable { onSelectRoom(index) }
-                        .padding(10.dp)
+                        .padding(12.dp)
                 ) {
                     Text(
                         text = "${index + 1}. ${room.title.ifBlank { "Uncharted Sector" }}",
                         color = if (index == currentIndex) NeonCyan else TextWhite,
-                        fontSize = 12.sp,
+                        fontSize = 13.sp,
                         fontWeight = if (index == currentIndex) FontWeight.Bold else FontWeight.Normal
                     )
                 }
@@ -424,46 +469,53 @@ private fun DesktopMapPanel(
 }
 
 @Composable
-private fun DesktopStageTerminal(room: Room) {
+private fun DesktopStageTerminal(room: Room, services: DesktopAppServices) {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Column {
             Text(
-                text = "STAGE VIEWPORT • TACTICAL SIMULATION",
+                text = "STAGE VIEWPORT • LIVE SENSOR FEED",
                 color = NeonCyan,
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Bold,
-                letterSpacing = 1.2.sp
+                letterSpacing = 1.4.sp
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(14.dp))
 
+            // Live Room Artwork Frame
+            val stageBg = rememberDesktopAssetPainter(room.backgroundImage, services.assetProvider)
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(260.dp)
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(Color(0xFF04060C))
-                    .border(BorderStroke(1.dp, PanelBorder), RoundedCornerShape(8.dp)),
-                contentAlignment = Alignment.Center
+                    .height(280.dp)
+                    .clip(RoundedCornerShape(10.dp))
+                    .border(BorderStroke(1.dp, PanelBorder), RoundedCornerShape(10.dp))
             ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(
-                        text = "[ SCANNER ACTIVE ]",
-                        color = NeonCyan,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = FontFamily.Monospace
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = "Sector: ${room.id}",
-                        color = TextMuted,
-                        fontSize = 12.sp,
-                        fontFamily = FontFamily.Monospace
-                    )
-                }
+                Image(
+                    painter = stageBg,
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
+                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(
+                            Brush.verticalGradient(
+                                listOf(Color.Transparent, Color(0xCC05070D))
+                            )
+                        )
+                )
+                Text(
+                    text = "SECTOR: ${room.id.uppercase()}",
+                    color = NeonCyan,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = FontFamily.Monospace,
+                    modifier = Modifier.align(Alignment.BottomStart).padding(12.dp)
+                )
             }
         }
 
@@ -471,13 +523,13 @@ private fun DesktopStageTerminal(room: Room) {
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(8.dp))
-                .background(Color(0xFF050810))
+                .background(Color(0xFF050812))
                 .border(BorderStroke(1.dp, PanelBorder), RoundedCornerShape(8.dp))
                 .padding(12.dp)
         ) {
             Text(
-                text = "> System status nominal. Ready for commands.",
-                color = NeonGreen,
+                text = "> Sublight drives standing by. Environment: ${room.env.uppercase()}",
+                color = HealthGreen,
                 fontSize = 12.sp,
                 fontFamily = FontFamily.Monospace
             )
@@ -485,68 +537,72 @@ private fun DesktopStageTerminal(room: Room) {
     }
 }
 
-private val NeonGreen = Color(0xFF00E676)
-
 @Composable
 private fun DesktopTelemetryPanel(
     services: DesktopAppServices,
     sessionState: com.example.starborn.domain.session.GameSessionState
 ) {
+    val portraitPainter = rememberDesktopAssetPainter("nova_portrait", services.assetProvider)
+
     Column(modifier = Modifier.fillMaxSize()) {
         Text(
-            text = "CREW STATUS",
+            text = "CREW STATUS & VITALS",
             color = NeonCyan,
             fontSize = 11.sp,
             fontWeight = FontWeight.Bold,
-            letterSpacing = 1.2.sp
+            letterSpacing = 1.4.sp
         )
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(14.dp))
 
-        // Commander Vitals Card
+        // Commander Card with Authentic Portrait
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(8.dp))
-                .background(Color(0xFF090D18))
-                .border(BorderStroke(1.dp, PanelBorder), RoundedCornerShape(8.dp))
-                .padding(12.dp)
+                .clip(RoundedCornerShape(10.dp))
+                .background(Color(0xFF0C1322))
+                .border(BorderStroke(1.dp, PanelBorder), RoundedCornerShape(10.dp))
+                .padding(14.dp)
         ) {
-            Column {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(text = "Commander (Vanguard)", color = TextWhite, fontSize = 13.sp, fontWeight = FontWeight.Bold)
-                    Text(text = "Lv. ${sessionState.playerLevel}", color = NeonAmber, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+            Row(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
+                Image(
+                    painter = portraitPainter,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(52.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .border(BorderStroke(1.dp, NeonCyan.copy(alpha = 0.5f)), RoundedCornerShape(8.dp)),
+                    contentScale = ContentScale.Crop
+                )
+
+                Column(modifier = Modifier.weight(1f)) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(text = "Commander", color = TextWhite, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                        Text(text = "Lv. ${sessionState.playerLevel}", color = NeonAmber, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                    }
+
+                    Spacer(modifier = Modifier.height(6.dp))
+
+                    Text(text = "HULL INTEGRITY", color = TextMuted, fontSize = 10.sp)
+                    LinearProgressIndicator(
+                        progress = { 1f },
+                        modifier = Modifier.fillMaxWidth().height(6.dp).clip(RoundedCornerShape(3.dp)),
+                        color = HealthGreen,
+                        trackColor = Color(0xFF182236)
+                    )
+
+                    Spacer(modifier = Modifier.height(4.dp))
+
+                    Text(text = "SHIELD MATRIX", color = TextMuted, fontSize = 10.sp)
+                    LinearProgressIndicator(
+                        progress = { 0.85f },
+                        modifier = Modifier.fillMaxWidth().height(6.dp).clip(RoundedCornerShape(3.dp)),
+                        color = ShieldBlue,
+                        trackColor = Color(0xFF182236)
+                    )
                 }
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                // HP Bar
-                Text(text = "HULL INTEGRITY (HP)", color = TextMuted, fontSize = 10.sp)
-                LinearProgressIndicator(
-                    progress = { 1f },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(6.dp)
-                        .clip(RoundedCornerShape(3.dp)),
-                    color = HealthGreen,
-                    trackColor = Color(0xFF1B2438)
-                )
-
-                Spacer(modifier = Modifier.height(6.dp))
-
-                // Energy / Shield Bar
-                Text(text = "SHIELD MATRIX", color = TextMuted, fontSize = 10.sp)
-                LinearProgressIndicator(
-                    progress = { 0.85f },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(6.dp)
-                        .clip(RoundedCornerShape(3.dp)),
-                    color = ShieldBlue,
-                    trackColor = Color(0xFF1B2438)
-                )
             }
         }
 
@@ -557,14 +613,14 @@ private fun DesktopTelemetryPanel(
             color = NeonAmber,
             fontSize = 11.sp,
             fontWeight = FontWeight.Bold,
-            letterSpacing = 1.2.sp
+            letterSpacing = 1.4.sp
         )
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
             text = "Credits: ${sessionState.playerCredits} CR",
             color = TextWhite,
-            fontSize = 13.sp,
+            fontSize = 14.sp,
             fontWeight = FontWeight.SemiBold
         )
     }
@@ -578,21 +634,21 @@ private fun DesktopBottomBar(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color(0xFF04060C))
+            .background(Color(0xFF04060E))
             .border(BorderStroke(1.dp, PanelBorder))
             .padding(horizontal = 24.dp, vertical = 8.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = "HOTKEYS: [1] Sector Action  •  [I] Inventory  •  [M] Map  •  [J] Journal  •  [ESC] Menu",
+            text = "CONTROLS: [1] Sector Action  •  [I] Cargo  •  [M] Cartography  •  [J] Mission Log  •  [ESC] Menu",
             color = TextMuted,
             fontSize = 11.sp,
             fontFamily = FontFamily.Monospace
         )
 
         Text(
-            text = "FPS: 60 • Windows x64",
+            text = "FPS: 60 • Windows Widescreen",
             color = TextMuted.copy(alpha = 0.6f),
             fontSize = 11.sp,
             fontFamily = FontFamily.Monospace

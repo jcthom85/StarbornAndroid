@@ -12,6 +12,14 @@ class DesktopAssetProvider(
     private val devAssetDirs: List<File> = listOf(
         File("app/src/main/assets"),
         File("world_assets/src/main/assets"),
+        File("app/src/main/res"),
+        File("app/src/main/res/drawable-nodpi"),
+        File("app/src/main/res/raw"),
+        File("../app/src/main/assets"),
+        File("../world_assets/src/main/assets"),
+        File("../app/src/main/res"),
+        File("../app/src/main/res/drawable-nodpi"),
+        File("../app/src/main/res/raw"),
         File("assets")
     )
 ) : AssetProvider {
