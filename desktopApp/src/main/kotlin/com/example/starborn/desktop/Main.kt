@@ -10,11 +10,13 @@ import androidx.compose.ui.input.key.*
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.*
-import com.example.starborn.desktop.ui.DesktopGameScreen
+import com.example.starborn.desktop.ui.DesktopCombatScreen
+import com.example.starborn.desktop.ui.DesktopExplorationScreen
+import com.example.starborn.desktop.ui.DesktopFieldKitScreen
 import com.example.starborn.desktop.ui.DesktopMainMenuScreen
 
 enum class DesktopScreenState {
-    MAIN_MENU, IN_GAME, SETTINGS
+    MAIN_MENU, EXPLORATION, COMBAT, FIELD_KIT
 }
 
 fun main() = application {
@@ -60,21 +62,38 @@ fun DesktopGameApp(
     onExit: () -> Unit
 ) {
     var screenState by remember { mutableStateOf(DesktopScreenState.MAIN_MENU) }
+    var activeCombatEnemies by remember { mutableStateOf(listOf("scrapper_guard", "scrapper_drone")) }
 
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = Color(0xFF05070D)
     ) {
         when (screenState) {
-            DesktopScreenState.MAIN_MENU, DesktopScreenState.SETTINGS -> DesktopMainMenuScreen(
+            DesktopScreenState.MAIN_MENU -> DesktopMainMenuScreen(
                 services = services,
-                onStartGame = { screenState = DesktopScreenState.IN_GAME },
-                onOpenSettings = { screenState = DesktopScreenState.SETTINGS },
+                onStartGame = { screenState = DesktopScreenState.EXPLORATION },
+                onOpenSettings = { /* Handled inside menu dialog */ },
                 onQuit = onExit
             )
-            DesktopScreenState.IN_GAME -> DesktopGameScreen(
+            DesktopScreenState.EXPLORATION -> DesktopExplorationScreen(
                 services = services,
+                onEnterCombat = { enemies ->
+                    activeCombatEnemies = enemies
+                    screenState = DesktopScreenState.COMBAT
+                },
+                onOpenFieldKit = { screenState = DesktopScreenState.FIELD_KIT },
                 onReturnToMenu = { screenState = DesktopScreenState.MAIN_MENU }
+            )
+            DesktopScreenState.COMBAT -> DesktopCombatScreen(
+                services = services,
+                enemyIds = activeCombatEnemies,
+                onVictory = { screenState = DesktopScreenState.EXPLORATION },
+                onDefeat = { screenState = DesktopScreenState.MAIN_MENU },
+                onFlee = { screenState = DesktopScreenState.EXPLORATION }
+            )
+            DesktopScreenState.FIELD_KIT -> DesktopFieldKitScreen(
+                services = services,
+                onClose = { screenState = DesktopScreenState.EXPLORATION }
             )
         }
     }
