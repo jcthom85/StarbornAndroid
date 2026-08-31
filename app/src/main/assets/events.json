@@ -2433,16 +2433,6 @@
         "type": "quest_task_not_done",
         "quest_id": "w1_mq03",
         "task_id": "touch_tuning_fork"
-      },
-      {
-        "type": "item",
-        "item_id": "functional_cryo_inductor",
-        "quantity": 1
-      },
-      {
-        "type": "item",
-        "item_id": "nova_flux_liner",
-        "quantity": 1
       }
     ],
     "actions": [

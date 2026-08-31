@@ -2840,20 +2840,50 @@ private fun TuningPuzzleDialog(
                     )
                 }
                 puzzle.sliders.forEach { slider ->
+                    val isLocked = kotlin.math.abs(slider.value - slider.target) <= slider.tolerance
                     var numericInput by remember(slider.id) {
                         mutableStateOf(slider.value.roundToInt().toString())
                     }
-                    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                        val valueLabel = buildString {
-                            append(slider.label)
-                            append(": ")
-                            append(slider.value.roundToInt())
-                            slider.unit?.takeIf { it.isNotBlank() }?.let { append(it) }
+                    LaunchedEffect(slider.value) {
+                        val str = slider.value.roundToInt().toString()
+                        if (numericInput != str && numericInput.toFloatOrNull() != slider.value) {
+                            numericInput = str
                         }
-                        Text(
-                            text = valueLabel,
-                            style = MaterialTheme.typography.labelLarge
-                        )
+                    }
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(4.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(
+                                if (isLocked) Color(0xFF1B382B).copy(alpha = 0.4f) else Color.Transparent,
+                                shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp)
+                            )
+                            .padding(6.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            val valueLabel = buildString {
+                                append(slider.label)
+                                append(": ")
+                                append(slider.value.roundToInt())
+                                slider.unit?.takeIf { it.isNotBlank() }?.let { append(it) }
+                            }
+                            Text(
+                                text = valueLabel,
+                                style = MaterialTheme.typography.labelLarge,
+                                color = if (isLocked) Color(0xFF69F0AE) else MaterialTheme.colorScheme.onSurface
+                            )
+                            if (isLocked) {
+                                Text(
+                                    text = "● IN PHASE",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = Color(0xFF69F0AE)
+                                )
+                            }
+                        }
                         Slider(
                             value = slider.value,
                             onValueChange = {
@@ -2865,40 +2895,28 @@ private fun TuningPuzzleDialog(
                                 contentDescription = "${slider.label} control"
                             }
                         )
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            OutlinedTextField(
-                                value = numericInput,
-                                onValueChange = { candidate ->
-                                    if (candidate.isEmpty() || candidate.all(Char::isDigit)) {
-                                        numericInput = candidate
-                                    }
-                                },
-                                label = { Text("${slider.label} value") },
-                                singleLine = true,
-                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                                modifier = Modifier.weight(1f)
-                            )
-                            TextButton(
-                                onClick = {
-                                    numericInput.toFloatOrNull()?.let { entered ->
+                        OutlinedTextField(
+                            value = numericInput,
+                            onValueChange = { candidate ->
+                                if (candidate.isEmpty() || candidate.all(Char::isDigit)) {
+                                    numericInput = candidate
+                                    candidate.toFloatOrNull()?.let { entered ->
                                         val applied = entered.coerceIn(slider.min, slider.max)
-                                        numericInput = applied.roundToInt().toString()
                                         onSliderChange(slider.id, applied)
                                     }
                                 }
-                            ) {
-                                Text("Apply")
-                            }
-                        }
+                            },
+                            label = { Text("${slider.label} value (${slider.min.toInt()} - ${slider.max.toInt()})") },
+                            singleLine = true,
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                            modifier = Modifier.fillMaxWidth()
+                        )
                     }
                 }
             }
         },
         confirmButton = {
-            Button(onClick = onSubmit) { Text("Submit") }
+            Button(onClick = onSubmit) { Text("Engage Handshake") }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) { Text("Cancel") }
