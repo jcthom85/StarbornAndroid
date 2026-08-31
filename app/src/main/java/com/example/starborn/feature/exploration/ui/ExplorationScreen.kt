@@ -5260,27 +5260,21 @@ private fun OverworldGatewayCard(
                         }
                     }
                 }
-                Column(verticalArrangement = Arrangement.spacedBy(1.dp)) {
+                Column(verticalArrangement = Arrangement.Center) {
                     Text(
-                        text = "🚪 SURFACE AIRLOCK",
-                        color = warmGold,
-                        style = MaterialTheme.typography.labelSmall.copy(
-                            fontSize = 9.5.sp,
-                            fontWeight = FontWeight.Black,
-                            letterSpacing = 0.5.sp
-                        )
-                    )
-                    Text(
-                        text = "Exit to Overworld: ${sectorTitle ?: "Sector Map"}",
+                        text = "Overworld: ${sectorTitle ?: "Colony Map"}",
                         color = Color.White,
-                        style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                        style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
                     Text(
-                        text = "Step outside to travel between colony buildings",
-                        color = Color.White.copy(alpha = 0.70f),
-                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.5.sp),
+                        text = "Surface Exit",
+                        color = warmGold,
+                        style = MaterialTheme.typography.labelSmall.copy(
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.SemiBold
+                        ),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -8204,6 +8198,7 @@ private fun IllustratedCinematicOverlay(
             } else {
                 0.45f
             }
+            // Cryogenic fog and frost covering the entire screen naturally without hollow center hole
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -8211,10 +8206,9 @@ private fun IllustratedCinematicOverlay(
                     .background(
                         Brush.radialGradient(
                             colors = listOf(
-                                Color.Transparent,
-                                Color(0xFFB2EBF2).copy(alpha = 0.05f),
-                                Color(0xFF80DEEA).copy(alpha = 0.35f),
-                                Color(0xFFE0F7FA).copy(alpha = 0.70f)
+                                Color(0xFF80DEEA).copy(alpha = 0.28f),
+                                Color(0xFFB2EBF2).copy(alpha = 0.42f),
+                                Color(0xFFE0F7FA).copy(alpha = 0.72f)
                             )
                         )
                     )

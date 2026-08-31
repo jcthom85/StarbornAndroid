@@ -52,10 +52,9 @@ class IntroCinematicAssetIntegrityTest {
             "The prologue must still include the beacon beat",
             completeCopy.contains("The pod seals. The beacon continues in the dark.")
         )
-        assertTrue(
-            "The cold open must end on a threat, not a resolution",
-            completeCopy.contains("Then something massive slams against the glass.")
-        )
+        val beastStrikeStep = steps.single { it.imagePath?.contains("intro_beast_glass") == true }
+        assertEquals("none", beastStrikeStep.captionStyle)
+        assertEquals("sfx_intro_beast_strike", beastStrikeStep.audioCue)
         val titleCard = steps.last()
         assertEquals("The prologue must land on the title card", "none", titleCard.captionStyle)
         // Pins the asset, not its container format: the wordmark card is the locked intent, and the
