@@ -1,12 +1,16 @@
 package com.example.starborn.desktop.ui
 
+import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -15,8 +19,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontFamily
@@ -24,38 +31,41 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.starborn.desktop.DesktopAppServices
+import com.example.starborn.feature.exploration.ui.menu.FieldMenuDesign
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.random.Random
 
-private val NeonCyan = Color(0xFF00F5D4)
-private val NeonAmber = Color(0xFFFFB703)
+private val NeonCyan = Color(0xFF63E6FF)
+private val NeonAmber = Color(0xFFFF9F2E)
 private val HealthGreen = Color(0xFF00E676)
 private val HealthRed = Color(0xFFFF3366)
 private val ShieldBlue = Color(0xFF2979FF)
-private val GlassDark = Color(0xDD090E18)
-private val GlassBorder = Color(0x3300F5D4)
-private val TextWhite = Color(0xFFF0F4FA)
-private val TextMuted = Color(0xFFA0B3C6)
+private val EnergyYellow = Color(0xFFFFD54F)
+private val LocalCombatPink = Color(0xFFFF007F)
 
 data class FloatingCombatText(
     val id: Long,
     val text: String,
     val color: Color,
-    val isCritical: Boolean = false
+    val isCritical: Boolean = false,
+    val targetEnemyId: String? = null
 )
 
-data class DesktopEnemyState(
+data class DesktopCombatant(
     val id: String,
     val name: String,
-    val hp: Int,
+    var hp: Int,
     val maxHp: Int,
-    val shield: Int,
+    var shield: Int,
     val maxShield: Int,
-    val intent: String
+    val intent: String,
+    val speed: Int,
+    val isBoss: Boolean = false
 )
 
-enum class CombatActionMenu {
-    ROOT, SKILLS
+enum class CombatSubMenu {
+    ROOT, SKILLS, ITEMS
 }
 
 @Composable
@@ -74,90 +84,123 @@ fun DesktopCombatScreen(
     val playerMaxShield = 100
     var playerEnergy by remember { mutableStateOf(60) }
     val playerMaxEnergy = 80
+    var isGuarding by remember { mutableStateOf(false) }
 
     var enemies by remember {
         mutableStateOf(
             listOf(
-                DesktopEnemyState("scrapper_guard", "Scrapper Vanguard", 160, 160, 50, 50, "Heavy Strike"),
-                DesktopEnemyState("scrapper_drone", "Automaton Scout", 110, 110, 20, 20, "Pulse Laser")
+                DesktopCombatant("scrapper_guard", "Scrapper Vanguard", 160, 160, 50, 50, "Heavy Strike (-40 DMG)", 8),
+                DesktopCombatant("scrapper_drone", "Automaton Scout", 110, 110, 20, 20, "Pulse Laser (-25 DMG)", 12)
             )
         )
     }
 
     var selectedEnemyIndex by remember { mutableStateOf(0) }
-    var actionMenu by remember { mutableStateOf(CombatActionMenu.ROOT) }
+    var currentSubMenu by remember { mutableStateOf(CombatSubMenu.ROOT) }
     val floatingTexts = remember { mutableStateListOf<FloatingCombatText>() }
+    val battleLogs = remember { mutableStateListOf("◆ ENGAGED HOSTILE SECTOR ENCOUNTER // BATTLE STATIONS ACTIVE") }
     var isPlayerTurn by remember { mutableStateOf(true) }
+    var showVictoryDialog by remember { mutableStateOf(false) }
+    var showDefeatDialog by remember { mutableStateOf(false) }
 
-    // Start Combat BGM
+    // Screen Shake state
+    val shakeOffsetX = remember { Animatable(0f) }
+    val shakeOffsetY = remember { Animatable(0f) }
+
+    fun triggerScreenShake() {
+        coroutineScope.launch {
+            shakeOffsetX.snapTo(12f)
+            shakeOffsetY.snapTo(-8f)
+            shakeOffsetX.animateTo(0f, tween(180, easing = FastOutSlowInEasing))
+            shakeOffsetY.animateTo(0f, tween(180, easing = FastOutSlowInEasing))
+        }
+    }
+
+    fun spawnFloatingText(text: String, color: Color, isCritical: Boolean = false, targetId: String? = null) {
+        val entry = FloatingCombatText(System.currentTimeMillis() + Random.nextLong(1000), text, color, isCritical, targetId)
+        floatingTexts.add(entry)
+        coroutineScope.launch {
+            delay(1100)
+            floatingTexts.remove(entry)
+        }
+    }
+
+    // Battle Start Audio
     LaunchedEffect(Unit) {
         val cmds = services.audioRouter.commandsForBattle("battle_start")
         services.audioDriver.executeAll(cmds)
     }
 
-    val executePlayerAttack: (Int, String) -> Unit = { damage, skillName ->
-        if (isPlayerTurn && enemies.isNotEmpty()) {
-            val targetIndex = selectedEnemyIndex.coerceIn(0, enemies.size - 1)
-            val target = enemies[targetIndex]
+    // Execute Player Attack
+    val executePlayerAttack: (Int, String, Int) -> Unit = { damage, skillName, energyCost ->
+        if (isPlayerTurn && enemies.isNotEmpty() && playerEnergy >= energyCost) {
+            playerEnergy = (playerEnergy - energyCost).coerceAtLeast(0)
+            val targetIdx = selectedEnemyIndex.coerceIn(0, enemies.size - 1)
+            val target = enemies[targetIdx]
+            isPlayerTurn = false
+            currentSubMenu = CombatSubMenu.ROOT
 
-            val shieldDmg = minOf(target.shield, damage)
-            val remainDmg = damage - shieldDmg
-            val newShield = (target.shield - shieldDmg).coerceAtLeast(0)
-            val newHp = (target.hp - remainDmg).coerceAtLeast(0)
+            val isCrit = Random.nextFloat() < 0.25f
+            val actualDmg = if (isCrit) (damage * 1.5f).toInt() else damage
 
-            floatingTexts.add(
-                FloatingCombatText(
-                    id = System.currentTimeMillis(),
-                    text = "-$damage",
-                    color = if (skillName == "Plasma Burst") NeonCyan else NeonAmber,
-                    isCritical = damage > 70
-                )
-            )
+            battleLogs.add(0, "▸ Nova used [$skillName] on ${target.name} for $actualDmg damage!${if (isCrit) " (CRITICAL HIT)" else ""}")
+            spawnFloatingText("-$actualDmg", if (isCrit) HealthRed else NeonCyan, isCritical = isCrit, targetId = target.id)
+            if (isCrit) triggerScreenShake()
 
-            if (newHp <= 0) {
-                enemies = enemies.filterIndexed { idx, _ -> idx != targetIndex }
-                selectedEnemyIndex = 0
-            } else {
-                enemies = enemies.mapIndexed { idx, e ->
-                    if (idx == targetIndex) e.copy(hp = newHp, shield = newShield) else e
-                }
+            // Apply damage to Shield then HP
+            var remaining = actualDmg
+            if (target.shield > 0) {
+                val shieldDmg = remaining.coerceAtMost(target.shield)
+                target.shield -= shieldDmg
+                remaining -= shieldDmg
             }
+            target.hp = (target.hp - remaining).coerceAtLeast(0)
 
-            // Check Victory
+            // Check Enemy Defeat
+            val updated = enemies.toMutableList()
+            if (target.hp <= 0) {
+                battleLogs.add(0, "☠ ${target.name} was neutralized!")
+                updated.removeAt(targetIdx)
+                selectedEnemyIndex = 0
+            }
+            enemies = updated
+
             if (enemies.isEmpty()) {
-                coroutineScope.launch {
-                    delay(1200)
-                    onVictory()
-                }
+                showVictoryDialog = true
+                battleLogs.add(0, "★ COMBAT VICTORY! Sector secured. Gained +120 XP and +65 Credits.")
+                services.sessionStore.addCredits(65)
+                services.sessionStore.restore(services.sessionStore.state.value.copy(playerXp = services.sessionStore.state.value.playerXp + 120))
             } else {
-                // Enemy Counterattack
-                isPlayerTurn = false
+                // Enemy Counter-Turn Loop
                 coroutineScope.launch {
-                    delay(700)
+                    delay(900)
                     enemies.forEach { enemy ->
-                        val enemyDmg = (20..35).random()
-                        val pShieldDmg = minOf(playerShield, enemyDmg)
-                        val pRemainDmg = enemyDmg - pShieldDmg
-                        playerShield = (playerShield - pShieldDmg).coerceAtLeast(0)
-                        playerHp = (playerHp - pRemainDmg).coerceAtLeast(0)
+                        if (playerHp > 0) {
+                            val enemyDmg = if (enemy.id == "scrapper_guard") 35 else 22
+                            val mitigatedDmg = if (isGuarding) (enemyDmg * 0.35f).toInt() else enemyDmg
 
-                        floatingTexts.add(
-                            FloatingCombatText(
-                                id = System.currentTimeMillis() + (1..100).random(),
-                                text = "-$enemyDmg",
-                                color = HealthRed
-                            )
-                        )
-                        delay(500)
+                            battleLogs.add(0, "▸ ${enemy.name} used [${enemy.intent.split(" ").first()}] hitting Nova for $mitigatedDmg damage!")
+                            spawnFloatingText("-$mitigatedDmg", HealthRed)
+
+                            var rem = mitigatedDmg
+                            if (playerShield > 0) {
+                                val sDmg = rem.coerceAtMost(playerShield)
+                                playerShield -= sDmg
+                                rem -= sDmg
+                            }
+                            playerHp = (playerHp - rem).coerceAtLeast(0)
+                            delay(600)
+                        }
                     }
 
+                    isGuarding = false
+                    playerEnergy = (playerEnergy + 20).coerceAtMost(playerMaxEnergy)
+
                     if (playerHp <= 0) {
-                        delay(1200)
-                        onDefeat()
+                        showDefeatDialog = true
+                        battleLogs.add(0, "✖ CRITICAL FAILURE: Nova has fallen in combat.")
                     } else {
-                        playerEnergy = minOf(playerMaxEnergy, playerEnergy + 15)
                         isPlayerTurn = true
-                        actionMenu = CombatActionMenu.ROOT
                     }
                 }
             }
@@ -167,63 +210,80 @@ fun DesktopCombatScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF04060C))
+            .background(Color.Black)
+            .graphicsLayer {
+                translationX = shakeOffsetX.value
+                translationY = shakeOffsetY.value
+            }
             .onKeyEvent { keyEvent ->
                 if (keyEvent.type == KeyEventType.KeyDown) {
                     when (keyEvent.key) {
-                        Key.Tab, Key.DirectionRight -> {
+                        Key.Escape -> {
+                            if (currentSubMenu != CombatSubMenu.ROOT) {
+                                currentSubMenu = CombatSubMenu.ROOT
+                                true
+                            } else false
+                        }
+                        Key.Tab -> {
                             if (enemies.isNotEmpty()) {
                                 selectedEnemyIndex = (selectedEnemyIndex + 1) % enemies.size
                             }
                             true
                         }
-                        Key.DirectionLeft -> {
-                            if (enemies.isNotEmpty()) {
-                                selectedEnemyIndex = if (selectedEnemyIndex - 1 < 0) enemies.size - 1 else selectedEnemyIndex - 1
-                            }
-                            true
-                        }
                         Key.One -> {
-                            if (actionMenu == CombatActionMenu.ROOT) {
-                                executePlayerAttack(45, "Kinetic Strike")
-                            } else if (actionMenu == CombatActionMenu.SKILLS) {
-                                if (playerEnergy >= 25) {
-                                    playerEnergy -= 25
-                                    executePlayerAttack(85, "Plasma Burst")
+                            if (isPlayerTurn) {
+                                when (currentSubMenu) {
+                                    CombatSubMenu.ROOT -> executePlayerAttack(35, "Kinetic Pulse", 0)
+                                    CombatSubMenu.SKILLS -> executePlayerAttack(60, "Plasma Overcharge", 30)
+                                    CombatSubMenu.ITEMS -> {
+                                        playerHp = (playerHp + 70).coerceAtMost(playerMaxHp)
+                                        battleLogs.add(0, "▸ Used [Nanite Medkit] restoring +70 HP!")
+                                        spawnFloatingText("+70 HP", HealthGreen)
+                                        currentSubMenu = CombatSubMenu.ROOT
+                                        isPlayerTurn = false
+                                    }
                                 }
                             }
                             true
                         }
                         Key.Two -> {
-                            if (actionMenu == CombatActionMenu.ROOT) {
-                                actionMenu = CombatActionMenu.SKILLS
-                            } else if (actionMenu == CombatActionMenu.SKILLS) {
-                                if (playerEnergy >= 40) {
-                                    playerEnergy -= 40
-                                    executePlayerAttack(130, "Supercharge Railgun")
+                            if (isPlayerTurn) {
+                                when (currentSubMenu) {
+                                    CombatSubMenu.ROOT -> currentSubMenu = CombatSubMenu.SKILLS
+                                    CombatSubMenu.SKILLS -> executePlayerAttack(95, "Cosmic Railgun", 50)
+                                    CombatSubMenu.ITEMS -> {
+                                        playerShield = (playerShield + 50).coerceAtMost(playerMaxShield)
+                                        battleLogs.add(0, "▸ Used [Shield Battery] restoring +50 Shield!")
+                                        spawnFloatingText("+50 SHIELD", ShieldBlue)
+                                        currentSubMenu = CombatSubMenu.ROOT
+                                        isPlayerTurn = false
+                                    }
                                 }
                             }
                             true
                         }
                         Key.Three -> {
-                            if (actionMenu == CombatActionMenu.ROOT) {
-                                playerShield = minOf(playerMaxShield, playerShield + 35)
-                                isPlayerTurn = false
-                                coroutineScope.launch {
-                                    delay(700)
-                                    isPlayerTurn = true
+                            if (isPlayerTurn) {
+                                when (currentSubMenu) {
+                                    CombatSubMenu.ROOT -> currentSubMenu = CombatSubMenu.ITEMS
+                                    CombatSubMenu.SKILLS -> currentSubMenu = CombatSubMenu.ROOT
+                                    CombatSubMenu.ITEMS -> currentSubMenu = CombatSubMenu.ROOT
                                 }
                             }
                             true
                         }
                         Key.Four -> {
-                            playerHp = minOf(playerMaxHp, playerHp + 60)
+                            if (isPlayerTurn && currentSubMenu == CombatSubMenu.ROOT) {
+                                isGuarding = true
+                                playerEnergy = (playerEnergy + 25).coerceAtMost(playerMaxEnergy)
+                                battleLogs.add(0, "▸ Nova assumed [DEFENSIVE GUARD] position (+25 Energy, -65% Damage).")
+                                spawnFloatingText("GUARDING", ShieldBlue)
+                                isPlayerTurn = false
+                            }
                             true
                         }
-                        Key.Five, Key.Escape -> {
-                            if (actionMenu != CombatActionMenu.ROOT) {
-                                actionMenu = CombatActionMenu.ROOT
-                            } else {
+                        Key.Five -> {
+                            if (isPlayerTurn && currentSubMenu == CombatSubMenu.ROOT) {
                                 onFlee()
                             }
                             true
@@ -233,284 +293,440 @@ fun DesktopCombatScreen(
                 } else false
             }
     ) {
-        // 1. Full-Bleed Combat Arena Background Art
-        val arenaBg = rememberDesktopAssetPainter("images/rooms/combat_arena.webp", services.assetProvider)
+        // 1. Panoramic Combat Arena Backdrop
+        val bgPainter = rememberDesktopAssetPainter("bg_combat_arena", services.assetProvider)
         Image(
-            painter = arenaBg,
+            painter = bgPainter,
             contentDescription = null,
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
         )
 
-        // 2. Subtle Arena Gradient Vignette
-        Box(
+        // 2. CRT Scanline & Cinematic Vignette Overlays
+        DesktopVignetteOverlay(intensity = 0.75f)
+        DesktopCrtScanlineOverlay(scanlineAlpha = 0.06f)
+
+        // 3. Main Combat UI Viewport
+        Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(
-                    Brush.radialGradient(
-                        colors = listOf(Color.Transparent, Color(0x7704060C), Color(0xDD04060C)),
-                        radius = 1000f
-                    )
-                )
-        )
-
-        // 3. Top Floating Turn Timeline
-        Box(
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .padding(top = 20.dp)
-                .clip(RoundedCornerShape(20.dp))
-                .background(GlassDark)
-                .border(BorderStroke(1.dp, GlassBorder), RoundedCornerShape(20.dp))
-                .padding(horizontal = 20.dp, vertical = 8.dp)
+                .padding(horizontal = 36.dp, vertical = 24.dp),
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
-            ) {
-                Text(text = "TURN:", color = NeonAmber, fontSize = 11.sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace)
+            // Top Section: Turn Timeline Track (Matching Android initiative order)
+            DesktopCombatTurnTrack(
+                isPlayerTurn = isPlayerTurn,
+                enemies = enemies,
+                selectedEnemyIndex = selectedEnemyIndex
+            )
 
-                // Nova active pill
-                Text(
-                    text = "▶ NOVA",
-                    color = if (isPlayerTurn) NeonCyan else TextMuted,
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Bold
+            // Middle Section: Combat Arena (Enemy Formations & Player Stage)
+            Row(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Left: Nova Player Vitals Card
+                DesktopPlayerCombatCard(
+                    playerHp = playerHp,
+                    playerMaxHp = playerMaxHp,
+                    playerShield = playerShield,
+                    playerMaxShield = playerMaxShield,
+                    playerEnergy = playerEnergy,
+                    playerMaxEnergy = playerMaxEnergy,
+                    isGuarding = isGuarding,
+                    isPlayerTurn = isPlayerTurn,
+                    services = services
                 )
 
-                enemies.forEachIndexed { idx, enemy ->
-                    Text(
-                        text = "• ${enemy.name.uppercase()}",
-                        color = if (!isPlayerTurn && idx == 0) HealthRed else TextMuted,
-                        fontSize = 12.sp,
-                        fontWeight = if (!isPlayerTurn && idx == 0) FontWeight.Bold else FontWeight.Normal
-                    )
+                // Center Floating FX Canvas
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    floatingTexts.forEach { fx ->
+                        Text(
+                            text = fx.text,
+                            color = fx.color,
+                            fontSize = if (fx.isCritical) 32.sp else 24.sp,
+                            fontWeight = FontWeight.Black,
+                            fontFamily = FontFamily.Monospace,
+                            modifier = Modifier.graphicsLayer {
+                                shadowElevation = 12f
+                            }
+                        )
+                    }
+                }
+
+                // Right: Enemy Formation Cards
+                Column(
+                    modifier = Modifier.width(360.dp),
+                    verticalArrangement = Arrangement.spacedBy(14.dp)
+                ) {
+                    enemies.forEachIndexed { idx, enemy ->
+                        val isSelected = selectedEnemyIndex == idx
+                        DesktopEnemyCombatCard(
+                            enemy = enemy,
+                            isSelected = isSelected,
+                            onSelect = { selectedEnemyIndex = idx }
+                        )
+                    }
+                }
+            }
+
+            // Bottom Section: Tactical Action Command Deck & Live Battle Log
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                verticalAlignment = Alignment.Bottom
+            ) {
+                // Left Command Action Deck
+                Box(
+                    modifier = Modifier
+                        .weight(1.3f)
+                        .clip(RoundedCornerShape(FieldMenuDesign.cardRadius))
+                        .background(FieldMenuDesign.panel.copy(alpha = 0.95f))
+                        .border(BorderStroke(1.2.dp, FieldMenuDesign.border.copy(alpha = 0.5f)), RoundedCornerShape(FieldMenuDesign.cardRadius))
+                        .padding(18.dp)
+                ) {
+                    when (currentSubMenu) {
+                        CombatSubMenu.ROOT -> {
+                            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                                Text(
+                                    text = if (isPlayerTurn) "TACTICAL COMBAT DECK // SELECT COMMAND" else "ENEMY TURN IN PROGRESS...",
+                                    color = if (isPlayerTurn) NeonCyan else NeonAmber,
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    fontFamily = FontFamily.Monospace
+                                )
+
+                                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                    DesktopCombatActionButton("[1] ATTACK", NeonCyan, isPlayerTurn) { executePlayerAttack(35, "Kinetic Pulse", 0) }
+                                    DesktopCombatActionButton("[2] SKILLS", EnergyYellow, isPlayerTurn) { currentSubMenu = CombatSubMenu.SKILLS }
+                                    DesktopCombatActionButton("[3] ITEMS", HealthGreen, isPlayerTurn) { currentSubMenu = CombatSubMenu.ITEMS }
+                                    DesktopCombatActionButton("[4] GUARD", ShieldBlue, isPlayerTurn) {
+                                        isGuarding = true
+                                        playerEnergy = (playerEnergy + 25).coerceAtMost(playerMaxEnergy)
+                                        battleLogs.add(0, "▸ Nova assumed [DEFENSIVE GUARD] (+25 Energy, -65% Damage).")
+                                        spawnFloatingText("GUARDING", ShieldBlue)
+                                        isPlayerTurn = false
+                                    }
+                                    DesktopCombatActionButton("[5] FLEE", LocalCombatPink, isPlayerTurn) { onFlee() }
+                                }
+                            }
+                        }
+                        CombatSubMenu.SKILLS -> {
+                            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                                    Text(text = "SELECT ADVANCED SKILL", color = EnergyYellow, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                                    Text(text = "[ESC] BACK", color = FieldMenuDesign.textMuted, fontSize = 11.sp, modifier = Modifier.clickable { currentSubMenu = CombatSubMenu.ROOT })
+                                }
+                                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                    DesktopCombatActionButton("PLASMA OVERCHARGE [30 EP]", EnergyYellow, playerEnergy >= 30) { executePlayerAttack(60, "Plasma Overcharge", 30) }
+                                    DesktopCombatActionButton("COSMIC RAILGUN [50 EP]", NeonAmber, playerEnergy >= 50) { executePlayerAttack(95, "Cosmic Railgun", 50) }
+                                }
+                            }
+                        }
+                        CombatSubMenu.ITEMS -> {
+                            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                                    Text(text = "SELECT COMBAT ITEM", color = HealthGreen, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                                    Text(text = "[ESC] BACK", color = FieldMenuDesign.textMuted, fontSize = 11.sp, modifier = Modifier.clickable { currentSubMenu = CombatSubMenu.ROOT })
+                                }
+                                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                    DesktopCombatActionButton("NANITE MEDKIT (+70 HP)", HealthGreen, true) {
+                                        playerHp = (playerHp + 70).coerceAtMost(playerMaxHp)
+                                        battleLogs.add(0, "▸ Used [Nanite Medkit] restoring +70 HP!")
+                                        spawnFloatingText("+70 HP", HealthGreen)
+                                        currentSubMenu = CombatSubMenu.ROOT
+                                        isPlayerTurn = false
+                                    }
+                                    DesktopCombatActionButton("SHIELD BATTERY (+50 SHIELD)", ShieldBlue, true) {
+                                        playerShield = (playerShield + 50).coerceAtMost(playerMaxShield)
+                                        battleLogs.add(0, "▸ Used [Shield Battery] restoring +50 Shield!")
+                                        spawnFloatingText("+50 SHIELD", ShieldBlue)
+                                        currentSubMenu = CombatSubMenu.ROOT
+                                        isPlayerTurn = false
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Right Live Battle Log Panel (matching Android CombatLogPanel)
+                Box(
+                    modifier = Modifier
+                        .weight(1.0f)
+                        .height(115.dp)
+                        .clip(RoundedCornerShape(FieldMenuDesign.cardRadius))
+                        .background(Color(0xDD060A12))
+                        .border(BorderStroke(1.dp, FieldMenuDesign.border.copy(alpha = 0.3f)), RoundedCornerShape(FieldMenuDesign.cardRadius))
+                        .padding(12.dp)
+                ) {
+                    LazyColumn(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                        items(battleLogs) { log ->
+                            Text(text = log, color = FieldMenuDesign.textMuted, fontSize = 11.sp, fontFamily = FontFamily.Monospace)
+                        }
+                    }
                 }
             }
         }
 
-        // 4. Main Side-by-Side Combat Flanks (Enemies on Left, Battler on Right)
+        // Victory Dialog Modal
+        if (showVictoryDialog) {
+            AlertDialog(
+                onDismissRequest = onVictory,
+                title = {
+                    Text(text = "SECTOR SECURED // COMBAT VICTORY", color = NeonAmber, fontWeight = FontWeight.Black, fontFamily = FontFamily.Monospace)
+                },
+                text = {
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Text(text = "All hostile signatures eliminated from the combat perimeter.", color = FieldMenuDesign.text, fontSize = 13.sp)
+                        Text(text = "Rewards Awarded: +120 XP  •  +65 Credits  •  1x Tech Scrap", color = NeonCyan, fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                    }
+                },
+                confirmButton = {
+                    Button(onClick = onVictory, colors = ButtonDefaults.buttonColors(containerColor = NeonCyan)) {
+                        Text(text = "CONTINUE EXPEDITION", color = Color.Black, fontWeight = FontWeight.Bold)
+                    }
+                },
+                containerColor = FieldMenuDesign.shell,
+                shape = RoundedCornerShape(16.dp),
+                modifier = Modifier.border(1.5.dp, NeonCyan, RoundedCornerShape(16.dp))
+            )
+        }
+
+        // Defeat Dialog Modal
+        if (showDefeatDialog) {
+            AlertDialog(
+                onDismissRequest = onDefeat,
+                title = {
+                    Text(text = "CRITICAL FAILURE // VITAL SIGNS LOST", color = HealthRed, fontWeight = FontWeight.Black, fontFamily = FontFamily.Monospace)
+                },
+                text = {
+                    Text(text = "Nova sustained critical hull trauma and was extracted to stasis emergency recovery.", color = FieldMenuDesign.text)
+                },
+                confirmButton = {
+                    Button(onClick = onDefeat, colors = ButtonDefaults.buttonColors(containerColor = HealthRed)) {
+                        Text(text = "RETURN TO TITLE MENU", color = Color.White, fontWeight = FontWeight.Bold)
+                    }
+                },
+                containerColor = FieldMenuDesign.shell,
+                shape = RoundedCornerShape(16.dp),
+                modifier = Modifier.border(1.5.dp, HealthRed, RoundedCornerShape(16.dp))
+            )
+        }
+    }
+}
+
+@Composable
+private fun DesktopCombatTurnTrack(
+    isPlayerTurn: Boolean,
+    enemies: List<DesktopCombatant>,
+    selectedEnemyIndex: Int
+) {
+    Surface(
+        shape = RoundedCornerShape(10.dp),
+        color = Color(0xFF061018).copy(alpha = 0.85f),
+        border = BorderStroke(1.dp, FieldMenuDesign.cyan.copy(alpha = 0.35f)),
+        modifier = Modifier.fillMaxWidth()
+    ) {
         Row(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 64.dp, vertical = 60.dp),
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Left Flank: Enemies with floating overhead health bars
-            Column(
-                verticalArrangement = Arrangement.spacedBy(24.dp),
-                horizontalAlignment = Alignment.Start
-            ) {
-                enemies.forEachIndexed { index, enemy ->
-                    DesktopFloatingEnemyUnit(
-                        enemy = enemy,
-                        isSelected = selectedEnemyIndex == index,
-                        services = services,
-                        onClick = { selectedEnemyIndex = index }
-                    )
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.CenterVertically) {
+                Text(text = "INITIATIVE TURN TRACK:", color = FieldMenuDesign.cyan, fontSize = 11.sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace)
+
+                // Player Turn Chip
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(6.dp))
+                        .background(if (isPlayerTurn) FieldMenuDesign.cyan.copy(alpha = 0.25f) else Color(0xFF101724))
+                        .border(BorderStroke(1.dp, if (isPlayerTurn) FieldMenuDesign.cyan else Color(0xFF222C3E)), RoundedCornerShape(6.dp))
+                        .padding(horizontal = 10.dp, vertical = 4.dp)
+                ) {
+                    Text(text = "NOVA (YOU)", color = if (isPlayerTurn) FieldMenuDesign.cyan else FieldMenuDesign.textMuted, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                }
+
+                // Enemy Turn Chips
+                enemies.forEachIndexed { idx, enemy ->
+                    val isTargeted = selectedEnemyIndex == idx
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(6.dp))
+                            .background(if (!isPlayerTurn && isTargeted) LocalCombatPink.copy(alpha = 0.25f) else Color(0xFF101724))
+                            .border(BorderStroke(1.dp, if (isTargeted) NeonAmber else Color(0xFF222C3E)), RoundedCornerShape(6.dp))
+                            .padding(horizontal = 10.dp, vertical = 4.dp)
+                    ) {
+                        Text(text = enemy.name.uppercase(), color = if (isTargeted) NeonAmber else FieldMenuDesign.textMuted, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                    }
                 }
             }
 
-            // Center Floating Damage Numbers
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                floatingTexts.takeLast(2).forEach { ft ->
-                    Text(
-                        text = ft.text,
-                        color = ft.color,
-                        fontSize = if (ft.isCritical) 36.sp else 26.sp,
-                        fontWeight = FontWeight.Black,
-                        fontFamily = FontFamily.Monospace
-                    )
-                }
-            }
-
-            // Right Flank: Nova Player Battler
-            DesktopFloatingPlayerUnit(
-                name = "Commander Nova",
-                hp = playerHp,
-                maxHp = playerMaxHp,
-                shield = playerShield,
-                maxShield = playerMaxShield,
-                energy = playerEnergy,
-                maxEnergy = playerMaxEnergy,
-                isActiveTurn = isPlayerTurn,
-                services = services
-            )
-        }
-
-        // 5. Minimal Bottom Floating Command Console
-        Box(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth(0.7f)
-                .padding(bottom = 28.dp)
-                .shadow(16.dp, RoundedCornerShape(16.dp), spotColor = NeonCyan)
-                .clip(RoundedCornerShape(16.dp))
-                .background(GlassDark)
-                .border(BorderStroke(1.dp, GlassBorder), RoundedCornerShape(16.dp))
-                .padding(horizontal = 20.dp, vertical = 14.dp)
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(10.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                if (actionMenu == CombatActionMenu.ROOT) {
-                    DesktopCombatActionButton("[1] STRIKE", NeonCyan, enabled = isPlayerTurn, onClick = { executePlayerAttack(45, "Kinetic Strike") })
-                    DesktopCombatActionButton("[2] SKILLS", NeonAmber, enabled = isPlayerTurn, onClick = { actionMenu = CombatActionMenu.SKILLS })
-                    DesktopCombatActionButton("[3] DEFEND", ShieldBlue, enabled = isPlayerTurn, onClick = {
-                        playerShield = minOf(playerMaxShield, playerShield + 35)
-                        isPlayerTurn = false
-                        coroutineScope.launch { delay(700); isPlayerTurn = true }
-                    })
-                    DesktopCombatActionButton("[4] REPAIR", HealthGreen, enabled = isPlayerTurn, onClick = { playerHp = minOf(playerMaxHp, playerHp + 60) })
-                    DesktopCombatActionButton("[5] FLEE", HealthRed, enabled = isPlayerTurn, onClick = onFlee)
-                } else {
-                    DesktopCombatActionButton("[1] Plasma Burst (25 EN)", NeonCyan, enabled = isPlayerTurn && playerEnergy >= 25, onClick = {
-                        playerEnergy -= 25
-                        executePlayerAttack(85, "Plasma Burst")
-                    })
-                    DesktopCombatActionButton("[2] Railgun (40 EN)", NeonAmber, enabled = isPlayerTurn && playerEnergy >= 40, onClick = {
-                        playerEnergy -= 40
-                        executePlayerAttack(130, "Supercharge Railgun")
-                    })
-                    DesktopCombatActionButton("[ESC] BACK", TextMuted, enabled = true, onClick = { actionMenu = CombatActionMenu.ROOT })
-                }
-            }
+            Text(text = "[TAB] SWITCH TARGET", color = FieldMenuDesign.textMuted, fontSize = 11.sp, fontFamily = FontFamily.Monospace)
         }
     }
 }
 
 @Composable
-private fun DesktopFloatingEnemyUnit(
-    enemy: DesktopEnemyState,
-    isSelected: Boolean,
-    services: DesktopAppServices,
-    onClick: () -> Unit
-) {
-    val enemySprite = rememberDesktopAssetPainter("images/enemies/${enemy.id}.webp", services.assetProvider)
-
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.clickable(onClick = onClick)
-    ) {
-        // Floating Name & Overhead Health Gauge
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
-            Text(
-                text = enemy.name,
-                color = if (isSelected) HealthRed else TextWhite,
-                fontSize = 13.sp,
-                fontWeight = FontWeight.Bold
-            )
-            Text(
-                text = "⚔ ${enemy.intent}",
-                color = NeonAmber,
-                fontSize = 10.sp,
-                fontFamily = FontFamily.Monospace
-            )
-        }
-
-        Spacer(modifier = Modifier.height(4.dp))
-
-        // Overhead HP bar
-        LinearProgressIndicator(
-            progress = { enemy.hp.toFloat() / enemy.maxHp.toFloat() },
-            modifier = Modifier.width(110.dp).height(5.dp).clip(RoundedCornerShape(2.dp)),
-            color = HealthRed,
-            trackColor = Color(0x55FF3366)
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        // Enemy Sprite standing directly in scene
-        Image(
-            painter = enemySprite,
-            contentDescription = null,
-            modifier = Modifier
-                .size(100.dp)
-                .clip(RoundedCornerShape(12.dp))
-                .border(
-                    BorderStroke(if (isSelected) 2.dp else 1.dp, if (isSelected) HealthRed else Color(0x33FFFFFF)),
-                    RoundedCornerShape(12.dp)
-                ),
-            contentScale = ContentScale.Crop
-        )
-    }
-}
-
-@Composable
-private fun DesktopFloatingPlayerUnit(
-    name: String,
-    hp: Int,
-    maxHp: Int,
-    shield: Int,
-    maxShield: Int,
-    energy: Int,
-    maxEnergy: Int,
-    isActiveTurn: Boolean,
+private fun DesktopPlayerCombatCard(
+    playerHp: Int,
+    playerMaxHp: Int,
+    playerShield: Int,
+    playerMaxShield: Int,
+    playerEnergy: Int,
+    playerMaxEnergy: Int,
+    isGuarding: Boolean,
+    isPlayerTurn: Boolean,
     services: DesktopAppServices
 ) {
     val portrait = rememberDesktopAssetPainter("nova_portrait", services.assetProvider)
 
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        // Overhead Vitals
-        Text(text = name, color = NeonCyan, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+    Box(
+        modifier = Modifier
+            .width(300.dp)
+            .clip(RoundedCornerShape(FieldMenuDesign.cardRadius))
+            .background(FieldMenuDesign.panel.copy(alpha = 0.95f))
+            .border(BorderStroke(1.5.dp, if (isPlayerTurn) FieldMenuDesign.cyan else FieldMenuDesign.border.copy(alpha = 0.35f)), RoundedCornerShape(FieldMenuDesign.cardRadius))
+            .padding(18.dp)
+    ) {
+        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            Row(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
+                Image(
+                    painter = portrait,
+                    contentDescription = "Nova",
+                    modifier = Modifier
+                        .size(54.dp)
+                        .clip(CircleShape)
+                        .border(BorderStroke(1.5.dp, FieldMenuDesign.cyan), CircleShape),
+                    contentScale = ContentScale.Crop
+                )
 
-        Spacer(modifier = Modifier.height(4.dp))
+                Column {
+                    Text(text = "NOVA // SPECIALIST", color = FieldMenuDesign.text, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                    if (isGuarding) {
+                        Text(text = "🛡 GUARD ACTIVE (-65%)", color = ShieldBlue, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                    } else {
+                        Text(text = if (isPlayerTurn) "READY FOR COMMAND" else "STANDBY", color = if (isPlayerTurn) HealthGreen else FieldMenuDesign.textMuted, fontSize = 11.sp)
+                    }
+                }
+            }
 
-        Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            LinearProgressIndicator(
-                progress = { hp.toFloat() / maxHp.toFloat() },
-                modifier = Modifier.width(70.dp).height(5.dp).clip(RoundedCornerShape(2.dp)),
-                color = HealthGreen,
-                trackColor = Color(0xFF14242A)
-            )
-            LinearProgressIndicator(
-                progress = { shield.toFloat() / maxShield.toFloat() },
-                modifier = Modifier.width(45.dp).height(5.dp).clip(RoundedCornerShape(2.dp)),
-                color = ShieldBlue,
-                trackColor = Color(0xFF101B2E)
-            )
+            // Health Bar
+            Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                    Text(text = "HEALTH", color = HealthGreen, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                    Text(text = "$playerHp / $playerMaxHp", color = FieldMenuDesign.text, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                }
+                LinearProgressIndicator(
+                    progress = { playerHp.toFloat() / playerMaxHp },
+                    modifier = Modifier.fillMaxWidth().height(6.dp).clip(RoundedCornerShape(3.dp)),
+                    color = HealthGreen,
+                    trackColor = Color(0xFF102018)
+                )
+            }
+
+            // Shield Bar
+            Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                    Text(text = "SHIELD", color = ShieldBlue, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                    Text(text = "$playerShield / $playerMaxShield", color = FieldMenuDesign.text, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                }
+                LinearProgressIndicator(
+                    progress = { playerShield.toFloat() / playerMaxShield },
+                    modifier = Modifier.fillMaxWidth().height(6.dp).clip(RoundedCornerShape(3.dp)),
+                    color = ShieldBlue,
+                    trackColor = Color(0xFF0F1828)
+                )
+            }
+
+            // Energy Bar
+            Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                    Text(text = "ENERGY (EP)", color = EnergyYellow, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                    Text(text = "$playerEnergy / $playerMaxEnergy", color = FieldMenuDesign.text, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                }
+                LinearProgressIndicator(
+                    progress = { playerEnergy.toFloat() / playerMaxEnergy },
+                    modifier = Modifier.fillMaxWidth().height(6.dp).clip(RoundedCornerShape(3.dp)),
+                    color = EnergyYellow,
+                    trackColor = Color(0xFF221E10)
+                )
+            }
         }
+    }
+}
 
-        Spacer(modifier = Modifier.height(8.dp))
+@Composable
+private fun DesktopEnemyCombatCard(
+    enemy: DesktopCombatant,
+    isSelected: Boolean,
+    onSelect: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(FieldMenuDesign.cardRadius))
+            .background(if (isSelected) Color(0x33FF9F2E) else FieldMenuDesign.panel.copy(alpha = 0.90f))
+            .border(
+                BorderStroke(1.5.dp, if (isSelected) NeonAmber else FieldMenuDesign.border.copy(alpha = 0.25f)),
+                RoundedCornerShape(FieldMenuDesign.cardRadius)
+            )
+            .clickable(onClick = onSelect)
+            .padding(14.dp)
+    ) {
+        Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                Text(text = enemy.name.uppercase(), color = if (isSelected) NeonAmber else FieldMenuDesign.text, fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                if (isSelected) {
+                    Text(text = "[TARGET LOCK]", color = NeonAmber, fontSize = 10.sp, fontWeight = FontWeight.Black, fontFamily = FontFamily.Monospace)
+                }
+            }
 
-        // Battler Sprite / Portrait standing directly in scene
-        Image(
-            painter = portrait,
-            contentDescription = null,
-            modifier = Modifier
-                .size(110.dp)
-                .clip(RoundedCornerShape(12.dp))
-                .border(
-                    BorderStroke(if (isActiveTurn) 2.dp else 1.dp, if (isActiveTurn) NeonCyan else Color(0x4400F5D4)),
-                    RoundedCornerShape(12.dp)
-                ),
-            contentScale = ContentScale.Crop
-        )
+            // Health
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                Text(text = "HP: ${enemy.hp}/${enemy.maxHp}", color = HealthRed, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                Text(text = "SHIELD: ${enemy.shield}/${enemy.maxShield}", color = ShieldBlue, fontSize = 11.sp)
+            }
+            LinearProgressIndicator(
+                progress = { enemy.hp.toFloat() / enemy.maxHp },
+                modifier = Modifier.fillMaxWidth().height(5.dp).clip(RoundedCornerShape(2.dp)),
+                color = HealthRed,
+                trackColor = Color(0xFF241018)
+            )
+
+            // Intent Forecast
+            Text(text = "INTENT: ${enemy.intent}", color = FieldMenuDesign.textMuted, fontSize = 11.sp, fontStyle = androidx.compose.ui.text.font.FontStyle.Italic)
+        }
     }
 }
 
 @Composable
 private fun DesktopCombatActionButton(
-    text: String,
-    color: Color,
+    label: String,
+    accentColor: Color,
     enabled: Boolean,
     onClick: () -> Unit
 ) {
     Box(
         modifier = Modifier
-            .clip(RoundedCornerShape(10.dp))
-            .background(if (enabled) color.copy(alpha = 0.18f) else Color(0x11FFFFFF))
-            .border(BorderStroke(1.dp, if (enabled) color.copy(alpha = 0.7f) else Color(0x22FFFFFF)), RoundedCornerShape(10.dp))
+            .clip(RoundedCornerShape(FieldMenuDesign.controlRadius))
+            .background(if (enabled) accentColor.copy(alpha = 0.18f) else Color(0xFF101520))
+            .border(BorderStroke(1.dp, if (enabled) accentColor else Color(0xFF1E2838)), RoundedCornerShape(FieldMenuDesign.controlRadius))
             .clickable(enabled = enabled, onClick = onClick)
-            .padding(horizontal = 16.dp, vertical = 10.dp)
+            .padding(horizontal = 14.dp, vertical = 10.dp)
     ) {
         Text(
-            text = text,
-            color = if (enabled) color else TextMuted.copy(alpha = 0.5f),
-            fontSize = 12.sp,
+            text = label,
+            color = if (enabled) accentColor else FieldMenuDesign.textMuted.copy(alpha = 0.4f),
+            fontSize = 11.sp,
             fontWeight = FontWeight.Bold,
             fontFamily = FontFamily.Monospace
         )

@@ -132,12 +132,15 @@ class DesktopAudioDriver(
 
     private fun findAudioStream(cueId: String): InputStream? {
         val candidates = listOf(
+            "raw/$cueId.mp3",
+            "raw/$cueId.wav",
+            "raw/$cueId.ogg",
+            "$cueId.mp3",
+            "$cueId.wav",
+            "$cueId.ogg",
             "audio/$cueId.wav",
             "audio/$cueId.mp3",
-            "audio/$cueId.ogg",
-            "$cueId.wav",
-            "$cueId.mp3",
-            "$cueId.ogg"
+            "audio/$cueId.ogg"
         )
         for (candidate in candidates) {
             val stream = assetProvider.open(candidate)

@@ -3425,7 +3425,7 @@ class ExplorationViewModel(
                 entry = TutorialEntry(
                     key = BAG_TUTORIAL_ID,
                     context = "Inventory",
-                    message = "Use the bottom menu button, then choose Inventory.\nUse the Supplies, Gear, and Key Items tabs across the top."
+                    message = "Use the Supplies, Gear, and Key Items tabs across the top to inspect items, equip weapons and armor, or use consumables."
                 ),
                 allowDuplicates = false,
                 onDismiss = { tutorialManager.markCompleted(BAG_TUTORIAL_ID) }

@@ -810,37 +810,6 @@
     ]
   },
   {
-    "id": "w1_mq01_tinkering_entered",
-    "description": "Shows the tinkering tutorial when Nova opens the Tinker menu.",
-    "trigger": {
-      "type": "player_action",
-      "action": "tinkering_screen_entered"
-    },
-    "conditions": [
-      {
-        "type": "quest_active",
-        "quest_id": "w1_mq01"
-      },
-      {
-        "type": "quest_task_done",
-        "quest_id": "w1_mq01",
-        "task_id": "talk_to_jed"
-      },
-      {
-        "type": "quest_task_done",
-        "quest_id": "w1_mq01",
-        "task_id": "equip_starter_gear"
-      }
-    ],
-    "actions": [
-      {
-        "type": "system_tutorial",
-        "scene_id": "scene_tinkering_tutorial",
-        "context": "Tinker"
-      }
-    ]
-  },
-  {
     "id": "w1_mq01_cryo_inductor_repaired",
     "description": "Records the repaired cold loop but keeps Wake Up Call active until the live cutter test finishes.",
     "trigger": {

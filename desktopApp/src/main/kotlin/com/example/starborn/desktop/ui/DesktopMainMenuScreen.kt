@@ -18,7 +18,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithContent
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
@@ -31,6 +30,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.starborn.data.local.UserSettings
 import com.example.starborn.desktop.DesktopAppServices
 import com.example.starborn.domain.audio.AudioCueType
 import com.example.starborn.feature.mainmenu.DebugScenario
@@ -49,7 +49,7 @@ private val TitleMutedText = Color(0xFFD7EAF4)
 fun DesktopMainMenuScreen(
     services: DesktopAppServices,
     onStartGame: () -> Unit,
-    onOpenSettings: () -> Unit,
+    onOpenSettings: () -> Unit = {},
     onQuit: () -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -59,7 +59,7 @@ fun DesktopMainMenuScreen(
     var showNewGameConfirm by remember { mutableStateOf(false) }
 
     val userSettings by services.userSettingsStore.settings.collectAsState(
-        initial = com.example.starborn.data.local.UserSettings()
+        initial = UserSettings()
     )
 
     // Trigger Title Music on launch
@@ -76,7 +76,12 @@ fun DesktopMainMenuScreen(
                 if (keyEvent.type == KeyEventType.KeyDown) {
                     when (keyEvent.key) {
                         Key.N, Key.One -> {
-                            onStartGame()
+                            if (services.hasExistingSave()) {
+                                showNewGameConfirm = true
+                            } else {
+                                services.startNewGame()
+                                onStartGame()
+                            }
                             true
                         }
                         Key.L, Key.Two -> {
@@ -184,7 +189,7 @@ fun DesktopMainMenuScreen(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Left Hero: Authentic Animated Starborn Logo
+            // Left Hero: Authentic Animated Starborn Logo & Overview
             Column(
                 modifier = Modifier
                     .weight(1.3f)
@@ -199,9 +204,9 @@ fun DesktopMainMenuScreen(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth(0.88f)
-                        .clip(RoundedCornerShape(12.dp))
+                        .clip(RoundedCornerShape(14.dp))
                         .background(TitlePanel.copy(alpha = 0.85f))
-                        .border(BorderStroke(1.dp, TitleCyan.copy(alpha = 0.35f)), RoundedCornerShape(12.dp))
+                        .border(BorderStroke(1.dp, TitleCyan.copy(alpha = 0.35f)), RoundedCornerShape(14.dp))
                         .padding(20.dp)
                 ) {
                     Column {
@@ -225,7 +230,7 @@ fun DesktopMainMenuScreen(
                         }
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = "Explore the uncharted perimeter sectors. Assemble your crew, master real-time turn manipulation, craft high-tier technologies, and uncover ancient cosmic anomalies.",
+                            text = "Explore the uncharted perimeter sectors. Assemble your crew, master tactical combat manipulation, craft high-tier technologies, and uncover ancient cosmic anomalies.",
                             color = TitleMutedText,
                             fontSize = 13.sp,
                             lineHeight = 19.sp
@@ -247,31 +252,38 @@ fun DesktopMainMenuScreen(
                     verticalArrangement = Arrangement.spacedBy(14.dp)
                 ) {
                     AuthenticTitleButton(
-                        text = "NEW ODYSSEY [N]",
+                        text = "New Game",
                         primary = true,
-                        onClick = onStartGame
+                        onClick = {
+                            if (services.hasExistingSave()) {
+                                showNewGameConfirm = true
+                            } else {
+                                services.startNewGame()
+                                onStartGame()
+                            }
+                        }
                     )
 
                     AuthenticTitleButton(
-                        text = "LOAD GAME [L]",
+                        text = "Load Game",
                         primary = false,
                         onClick = { showLoadGame = true }
                     )
 
                     AuthenticTitleButton(
-                        text = "DEBUG SCENARIOS [D]",
+                        text = "Debug Scenarios",
                         primary = false,
                         onClick = { showDebugScenarios = true }
                     )
 
                     AuthenticTitleButton(
-                        text = "SETTINGS [S]",
+                        text = "Settings",
                         primary = false,
                         onClick = { showSettingsDialog = true }
                     )
 
                     AuthenticTitleButton(
-                        text = "EXIT TO DESKTOP [ESC]",
+                        text = "Exit to Desktop",
                         primary = false,
                         onClick = onQuit
                     )
@@ -288,7 +300,7 @@ fun DesktopMainMenuScreen(
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "STARBORN v1.0.0 (Widescreen Edition)  •  [F11] Fullscreen  •  [N] New Game  •  [L] Load  •  [D] Scenarios  •  [S] Settings",
+                text = "STARBORN (Desktop Edition)  •  [F11] Fullscreen  •  [N] New Game  •  [L] Load  •  [D] Scenarios  •  [S] Settings",
                 color = TitleMutedText.copy(alpha = 0.6f),
                 fontSize = 11.sp,
                 fontFamily = FontFamily.Monospace
@@ -296,11 +308,46 @@ fun DesktopMainMenuScreen(
         }
 
         // Dialogs
+        if (showNewGameConfirm) {
+            AlertDialog(
+                onDismissRequest = { showNewGameConfirm = false },
+                title = {
+                    Text("Start New Game?", color = Color.White, fontWeight = FontWeight.Bold)
+                },
+                text = {
+                    Text(
+                        "Starting a new game will begin a fresh run and overwrite your current autosave.",
+                        color = Color.White.copy(alpha = 0.85f)
+                    )
+                },
+                confirmButton = {
+                    Button(
+                        onClick = {
+                            showNewGameConfirm = false
+                            services.startNewGame()
+                            onStartGame()
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = TitleGold, contentColor = Color(0xFF1B1608))
+                    ) {
+                        Text("Begin New Game", fontWeight = FontWeight.Bold)
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showNewGameConfirm = false }) {
+                        Text("Cancel", color = Color.White.copy(alpha = 0.7f))
+                    }
+                },
+                containerColor = Color(0xFF141C24),
+                shape = RoundedCornerShape(16.dp),
+                modifier = Modifier.border(1.dp, TitleCyan.copy(alpha = 0.4f), RoundedCornerShape(16.dp))
+            )
+        }
+
         if (showDebugScenarios) {
             DesktopDebugScenarioDialog(
                 onLaunch = { scenario ->
                     showDebugScenarios = false
-                    services.sessionStore.setRoom(scenario.id)
+                    services.startDebugScenario(scenario.id)
                     onStartGame()
                 },
                 onDismiss = { showDebugScenarios = false }
@@ -308,9 +355,10 @@ fun DesktopMainMenuScreen(
         }
 
         if (showLoadGame) {
-            DesktopLoadGameDialog(
+            DesktopSaveLoadDialog(
                 services = services,
-                onLoad = {
+                initialMode = SaveDialogMode.LOAD,
+                onLoadState = {
                     showLoadGame = false
                     onStartGame()
                 },
@@ -437,7 +485,7 @@ private fun AuthenticTitleButton(
                 text = text,
                 fontWeight = FontWeight.Black,
                 fontSize = 17.sp,
-                letterSpacing = 1.sp
+                letterSpacing = 0.5.sp
             )
         }
     } else {
@@ -447,7 +495,7 @@ private fun AuthenticTitleButton(
             shape = RoundedCornerShape(14.dp),
             border = BorderStroke(1.5.dp, TitleCyan.copy(alpha = 0.75f)),
             colors = ButtonDefaults.outlinedButtonColors(
-                containerColor = TitlePanel.copy(alpha = 0.75f),
+                containerColor = TitlePanel.copy(alpha = 0.70f),
                 contentColor = TitleText
             ),
             modifier = buttonModifier
@@ -466,7 +514,7 @@ private fun AuthenticTitleButton(
                 text = text,
                 fontWeight = FontWeight.Bold,
                 fontSize = 15.sp,
-                letterSpacing = 0.8.sp
+                letterSpacing = 0.5.sp
             )
         }
     }
@@ -556,113 +604,33 @@ private fun DesktopDebugScenarioDialog(
 }
 
 @Composable
-private fun DesktopLoadGameDialog(
-    services: DesktopAppServices,
-    onLoad: (Int) -> Unit,
-    onDismiss: () -> Unit
-) {
-    val coroutineScope = rememberCoroutineScope()
-    val slots = remember {
-        listOf(
-            DesktopSaveSlot(1, "Orbital Station Alpha", 1, 50, "Autosave"),
-            DesktopSaveSlot(2, "Perimeter Sector 4", 2, 240, "Checkpoint"),
-            DesktopSaveSlot(3, "Deep Space Anomaly", 3, 500, "Manual Save")
-        )
-    }
-
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text("LOAD SAVED JOURNEY", color = TitleGold, fontWeight = FontWeight.Black) },
-        text = {
-            Column(
-                modifier = Modifier.width(550.dp),
-                verticalArrangement = Arrangement.spacedBy(10.dp)
-            ) {
-                slots.forEach { slot ->
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(10.dp))
-                            .background(Color(0xFF0D1424))
-                            .border(BorderStroke(1.dp, TitleCyan.copy(alpha = 0.4f)), RoundedCornerShape(10.dp))
-                            .clickable {
-                                onLoad(slot.slotIndex)
-                            }
-                            .padding(14.dp)
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Column {
-                                Text(
-                                    text = "SLOT ${slot.slotIndex}: ${slot.title}",
-                                    color = TitleText,
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 14.sp
-                                )
-                                Spacer(modifier = Modifier.height(2.dp))
-                                Text(
-                                    text = "Level ${slot.level}  •  ${slot.credits} Credits  •  ${slot.timestamp}",
-                                    color = TitleMutedText,
-                                    fontSize = 12.sp
-                                )
-                            }
-                            Button(
-                                onClick = {
-                                    onLoad(slot.slotIndex)
-                                },
-                                colors = ButtonDefaults.buttonColors(containerColor = TitleCyan, contentColor = Color.Black)
-                            ) {
-                                Text("LOAD", fontWeight = FontWeight.Bold)
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        confirmButton = {},
-        dismissButton = { OutlinedButton(onClick = onDismiss) { Text("Cancel") } },
-        containerColor = TitlePanel,
-        shape = RoundedCornerShape(16.dp),
-        modifier = Modifier.border(1.dp, TitleGold.copy(alpha = 0.4f), RoundedCornerShape(16.dp))
-    )
-}
-
-private data class DesktopSaveSlot(
-    val slotIndex: Int,
-    val title: String,
-    val level: Int,
-    val credits: Int,
-    val timestamp: String
-)
-
-@Composable
 private fun DesktopSettingsDialog(
     services: DesktopAppServices,
-    userSettings: com.example.starborn.data.local.UserSettings,
+    userSettings: UserSettings,
     onDismiss: () -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
     var musicVol by remember { mutableStateOf(userSettings.musicVolume) }
     var sfxVol by remember { mutableStateOf(userSettings.sfxVolume) }
+    var voiceVol by remember { mutableStateOf(userSettings.voiceVolume) }
+    var highContrast by remember { mutableStateOf(userSettings.highContrastMode) }
+    var screenFlashes by remember { mutableStateOf(!userSettings.disableFlashes) }
+    var tutorialsEnabled by remember { mutableStateOf(userSettings.tutorialsEnabled) }
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("AUDIO & DISPLAY SETTINGS", color = TitleCyan, fontWeight = FontWeight.Black) },
+        title = { Text("SETTINGS & ACCESSIBILITY", color = TitleCyan, fontWeight = FontWeight.Black) },
         text = {
             Column(
-                modifier = Modifier.width(480.dp),
+                modifier = Modifier.width(520.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
+                Text("Audio Volumes", color = TitleGold, fontWeight = FontWeight.Bold, fontSize = 14.sp)
+
                 Column {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text("Music Volume", color = TitleText, fontWeight = FontWeight.SemiBold)
-                        Text("${(musicVol * 100).toInt()}%", color = TitleGold)
+                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                        Text("Music Volume", color = TitleText, fontSize = 13.sp)
+                        Text("${(musicVol * 100).toInt()}%", color = TitleCyan, fontSize = 13.sp)
                     }
                     Slider(
                         value = musicVol,
@@ -677,12 +645,9 @@ private fun DesktopSettingsDialog(
                 }
 
                 Column {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text("Sound FX Volume", color = TitleText, fontWeight = FontWeight.SemiBold)
-                        Text("${(sfxVol * 100).toInt()}%", color = TitleGold)
+                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                        Text("Sound Effects (SFX)", color = TitleText, fontSize = 13.sp)
+                        Text("${(sfxVol * 100).toInt()}%", color = TitleCyan, fontSize = 13.sp)
                     }
                     Slider(
                         value = sfxVol,
@@ -691,6 +656,79 @@ private fun DesktopSettingsDialog(
                             coroutineScope.launch {
                                 services.userSettingsStore.setSfxVolume(it)
                                 services.audioDriver.setUserGain(AudioCueType.UI, it)
+                                services.audioDriver.setUserGain(AudioCueType.BATTLE, it)
+                            }
+                        }
+                    )
+                }
+
+                Column {
+                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                        Text("Voiceover & Radio", color = TitleText, fontSize = 13.sp)
+                        Text("${(voiceVol * 100).toInt()}%", color = TitleCyan, fontSize = 13.sp)
+                    }
+                    Slider(
+                        value = voiceVol,
+                        onValueChange = {
+                            voiceVol = it
+                            coroutineScope.launch {
+                                services.userSettingsStore.setVoiceVolume(it)
+                                services.audioDriver.setUserGain(AudioCueType.VOICE, it)
+                            }
+                        }
+                    )
+                }
+
+                HorizontalDivider(color = TitleCyan.copy(alpha = 0.2f))
+
+                Text("Display & Gameplay", color = TitleGold, fontWeight = FontWeight.Bold, fontSize = 14.sp)
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text("Tutorial & Guide Prompts", color = TitleText, fontSize = 13.sp)
+                    Switch(
+                        checked = tutorialsEnabled,
+                        onCheckedChange = {
+                            tutorialsEnabled = it
+                            coroutineScope.launch {
+                                services.userSettingsStore.setTutorialsEnabled(it)
+                            }
+                        }
+                    )
+                }
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text("High Contrast UI Badges", color = TitleText, fontSize = 13.sp)
+                    Switch(
+                        checked = highContrast,
+                        onCheckedChange = {
+                            highContrast = it
+                            coroutineScope.launch {
+                                services.userSettingsStore.setHighContrastMode(it)
+                            }
+                        }
+                    )
+                }
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text("Combat Flashes & Visual FX", color = TitleText, fontSize = 13.sp)
+                    Switch(
+                        checked = screenFlashes,
+                        onCheckedChange = {
+                            screenFlashes = it
+                            coroutineScope.launch {
+                                services.userSettingsStore.setFlashesDisabled(!it)
                             }
                         }
                     )
@@ -698,7 +736,10 @@ private fun DesktopSettingsDialog(
             }
         },
         confirmButton = {
-            Button(onClick = onDismiss, colors = ButtonDefaults.buttonColors(containerColor = TitleCyan, contentColor = Color.Black)) {
+            Button(
+                onClick = onDismiss,
+                colors = ButtonDefaults.buttonColors(containerColor = TitleCyan, contentColor = Color.Black)
+            ) {
                 Text("Done", fontWeight = FontWeight.Bold)
             }
         },

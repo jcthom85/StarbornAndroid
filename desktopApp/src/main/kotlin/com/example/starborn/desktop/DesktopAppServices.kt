@@ -106,6 +106,7 @@ class DesktopAppServices(
     val fishingService = FishingService(fishingDataSource, inventoryService)
     val tutorialScripts = TutorialScriptRepository(assetReader)
     val userSettingsStore = DesktopUserSettingsStore(saveDirectory)
+    val saveManager = DesktopSaveManager(saveDirectory)
 
     private val runtimeScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
@@ -144,6 +145,45 @@ class DesktopAppServices(
             )
         }
     )
+
+    fun hasExistingSave(): Boolean {
+        return (0..3).any { saveManager.hasSave(it) }
+    }
+
+    fun startNewGame(): Boolean {
+        val rooms = worldDataSource.loadRooms()
+        val startingRoom = rooms.firstOrNull { it.id == "room_bunk" }?.id ?: rooms.firstOrNull()?.id ?: "room_bunk"
+        val initialState = GameSessionState(
+            roomId = startingRoom,
+            playerLevel = 1,
+            playerCredits = 0
+        )
+        sessionStore.restore(initialState)
+        inventoryService.restore(emptyMap())
+        inventoryService.addItem("medkit", 2)
+        saveManager.saveGame(0, sessionStore.state.value, "Living Quarters")
+        return true
+    }
+
+    fun startDebugScenario(scenarioId: String): Boolean {
+        val scenario = com.example.starborn.feature.mainmenu.DebugScenarioCatalog.scenarios.firstOrNull { it.id == scenarioId } ?: return false
+        val initialState = GameSessionState(
+            roomId = "room_bunk",
+            playerLevel = 2,
+            playerCredits = 250
+        )
+        sessionStore.restore(initialState)
+        inventoryService.restore(emptyMap())
+        inventoryService.addItem("medkit", 3)
+        return true
+    }
+
+    fun loadSlot(slotIndex: Int): Boolean {
+        val loaded = saveManager.loadGame(slotIndex) ?: return false
+        sessionStore.restore(loaded)
+        inventoryService.restore(loaded.inventory)
+        return true
+    }
 
     private fun applyMilestoneEffects(effects: MilestoneEffects) {
         effects.unlockAbilities.orEmpty().forEach { abilityId ->

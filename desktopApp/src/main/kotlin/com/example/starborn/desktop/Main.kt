@@ -10,13 +10,15 @@ import androidx.compose.ui.input.key.*
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.*
+import com.example.starborn.desktop.ui.DesktopArcadeScreen
 import com.example.starborn.desktop.ui.DesktopCombatScreen
 import com.example.starborn.desktop.ui.DesktopExplorationScreen
 import com.example.starborn.desktop.ui.DesktopFieldKitScreen
+import com.example.starborn.desktop.ui.DesktopFishingScreen
 import com.example.starborn.desktop.ui.DesktopMainMenuScreen
 
 enum class DesktopScreenState {
-    MAIN_MENU, EXPLORATION, COMBAT, FIELD_KIT
+    MAIN_MENU, EXPLORATION, COMBAT, FIELD_KIT, FISHING, ARCADE
 }
 
 fun main() = application {
@@ -82,6 +84,8 @@ fun DesktopGameApp(
                     screenState = DesktopScreenState.COMBAT
                 },
                 onOpenFieldKit = { screenState = DesktopScreenState.FIELD_KIT },
+                onOpenFishing = { screenState = DesktopScreenState.FISHING },
+                onOpenArcade = { screenState = DesktopScreenState.ARCADE },
                 onReturnToMenu = { screenState = DesktopScreenState.MAIN_MENU }
             )
             DesktopScreenState.COMBAT -> DesktopCombatScreen(
@@ -92,6 +96,14 @@ fun DesktopGameApp(
                 onFlee = { screenState = DesktopScreenState.EXPLORATION }
             )
             DesktopScreenState.FIELD_KIT -> DesktopFieldKitScreen(
+                services = services,
+                onClose = { screenState = DesktopScreenState.EXPLORATION }
+            )
+            DesktopScreenState.FISHING -> DesktopFishingScreen(
+                services = services,
+                onClose = { screenState = DesktopScreenState.EXPLORATION }
+            )
+            DesktopScreenState.ARCADE -> DesktopArcadeScreen(
                 services = services,
                 onClose = { screenState = DesktopScreenState.EXPLORATION }
             )

@@ -7,13 +7,15 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.layout.ContentScale
@@ -22,19 +24,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.starborn.desktop.DesktopAppServices
+import com.example.starborn.domain.inventory.GearRules
 import com.example.starborn.domain.model.Item
-
-private val NeonCyan = Color(0xFF00F5D4)
-private val NeonPink = Color(0xFFFF007F)
-private val NeonAmber = Color(0xFFFFB703)
-private val DeepSpaceDark = Color(0xFF05070D)
-private val PanelDark = Color(0xFF090E18)
-private val PanelBorder = Color(0xFF1B283E)
-private val TextWhite = Color(0xFFF0F4FA)
-private val TextMuted = Color(0xFF8FA1B7)
+import com.example.starborn.feature.exploration.ui.menu.FieldMenuDesign
 
 enum class FieldKitTab {
-    CARGO, CRAFTING, PROGRESSION
+    LOADOUT, CARGO, CRAFTING
 }
 
 @Composable
@@ -42,15 +37,31 @@ fun DesktopFieldKitScreen(
     services: DesktopAppServices,
     onClose: () -> Unit
 ) {
-    val items = remember { services.itemRepository.allItems() }
-    var selectedTab by remember { mutableStateOf(FieldKitTab.CARGO) }
-    var selectedItemIndex by remember { mutableStateOf(0) }
-    val selectedItem = items.getOrNull(selectedItemIndex) ?: items.firstOrNull()
+    var activeTab by remember { mutableStateOf(FieldKitTab.LOADOUT) }
+    val allItems = remember { services.itemRepository.allItems().associateBy { it.id } }
+    val sessionState by services.sessionStore.state.collectAsState()
+
+    // Equip State from session
+    val equippedWeapons = sessionState.equippedWeapons
+    val equippedArmors = sessionState.equippedArmors
+    val equippedItems = sessionState.equippedItems
+
+    val activeWeaponId = equippedWeapons["nova"] ?: sessionState.equippedItems["weapon"]
+    val activeArmorId = equippedArmors["nova"] ?: sessionState.equippedItems["armor"]
+    val activeAccessoryId = sessionState.equippedItems["accessory"]
+    val activeSnackId = sessionState.equippedItems["snack"]
+
+    val activeWeapon = activeWeaponId?.let { allItems[it] }
+    val activeArmor = activeArmorId?.let { allItems[it] }
+    val activeAccessory = activeAccessoryId?.let { allItems[it] }
+    val activeSnack = activeSnackId?.let { allItems[it] }
+
+    var selectedItemForDetail by remember { mutableStateOf<Item?>(activeWeapon ?: allItems.values.firstOrNull()) }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(DeepSpaceDark)
+            .background(Color(0xFF04060E))
             .onKeyEvent { keyEvent ->
                 if (keyEvent.type == KeyEventType.KeyDown) {
                     when (keyEvent.key) {
@@ -58,20 +69,16 @@ fun DesktopFieldKitScreen(
                             onClose()
                             true
                         }
-                        Key.Tab -> {
-                            selectedTab = if (selectedTab == FieldKitTab.CARGO) FieldKitTab.CRAFTING else FieldKitTab.CARGO
+                        Key.One -> {
+                            activeTab = FieldKitTab.LOADOUT
                             true
                         }
-                        Key.DirectionDown -> {
-                            if (items.isNotEmpty()) {
-                                selectedItemIndex = (selectedItemIndex + 1) % items.size
-                            }
+                        Key.Two -> {
+                            activeTab = FieldKitTab.CARGO
                             true
                         }
-                        Key.DirectionUp -> {
-                            if (items.isNotEmpty()) {
-                                selectedItemIndex = if (selectedItemIndex - 1 < 0) items.size - 1 else selectedItemIndex - 1
-                            }
+                        Key.Three -> {
+                            activeTab = FieldKitTab.CRAFTING
                             true
                         }
                         else -> false
@@ -84,247 +91,289 @@ fun DesktopFieldKitScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color(0xF0050812))
-                    .border(BorderStroke(1.dp, PanelBorder))
-                    .padding(horizontal = 24.dp, vertical = 12.dp),
+                    .background(FieldMenuDesign.shell)
+                    .border(BorderStroke(1.dp, FieldMenuDesign.border.copy(alpha = 0.3f)))
+                    .padding(horizontal = 28.dp, vertical = 14.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
+                Row(horizontalArrangement = Arrangement.spacedBy(18.dp), verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        text = "FIELD KIT & WORKBENCH",
-                        color = NeonCyan,
+                        text = "FIELD KIT & LOADOUT MANAGER",
+                        color = FieldMenuDesign.cyan,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Black,
-                        letterSpacing = 2.sp
+                        fontFamily = FontFamily.Monospace,
+                        letterSpacing = 1.2.sp
                     )
 
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        DesktopFieldKitTabButton("CARGO HOLD", selectedTab == FieldKitTab.CARGO) { selectedTab = FieldKitTab.CARGO }
-                        DesktopFieldKitTabButton("ENGINEERING", selectedTab == FieldKitTab.CRAFTING) { selectedTab = FieldKitTab.CRAFTING }
+                        DesktopKitTabButton("[1] LOADOUT & GEAR", activeTab == FieldKitTab.LOADOUT) { activeTab = FieldKitTab.LOADOUT }
+                        DesktopKitTabButton("[2] CARGO HOLD", activeTab == FieldKitTab.CARGO) { activeTab = FieldKitTab.CARGO }
+                        DesktopKitTabButton("[3] FABRICATION", activeTab == FieldKitTab.CRAFTING) { activeTab = FieldKitTab.CRAFTING }
                     }
                 }
 
                 Button(
                     onClick = onClose,
-                    shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF141F32), contentColor = NeonCyan),
-                    border = BorderStroke(1.dp, NeonCyan.copy(alpha = 0.5f))
+                    colors = ButtonDefaults.buttonColors(containerColor = FieldMenuDesign.elevatedPanel),
+                    border = BorderStroke(1.dp, FieldMenuDesign.cyan.copy(alpha = 0.5f)),
+                    shape = RoundedCornerShape(8.dp)
                 ) {
-                    Text(text = "CLOSE [ESC]", fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                    Text(text = "[ESC] RETURN", color = FieldMenuDesign.cyan, fontSize = 11.sp, fontWeight = FontWeight.Bold)
                 }
             }
 
-            // Main 2-Column Workbench Layout
-            Row(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth()
-                    .padding(20.dp),
-                horizontalArrangement = Arrangement.spacedBy(20.dp)
-            ) {
-                // Left Column: Item / Recipe List
-                Box(
-                    modifier = Modifier
-                        .weight(1.1f)
-                        .fillMaxHeight()
-                        .clip(RoundedCornerShape(14.dp))
-                        .background(PanelDark.copy(alpha = 0.94f))
-                        .border(BorderStroke(1.dp, PanelBorder), RoundedCornerShape(14.dp))
-                        .padding(18.dp)
-                ) {
-                    Column {
-                        Text(
-                            text = if (selectedTab == FieldKitTab.CARGO) "CARGO MANIFEST (${items.size} ITEMS)" else "AVAILABLE SCHEMATICS",
-                            color = NeonAmber,
-                            fontSize = 11.sp,
-                            fontWeight = FontWeight.Black,
-                            letterSpacing = 1.4.sp
-                        )
-                        Spacer(modifier = Modifier.height(12.dp))
-
-                        LazyColumn(
-                            modifier = Modifier.fillMaxSize(),
-                            verticalArrangement = Arrangement.spacedBy(8.dp)
+            // Main Body Area
+            when (activeTab) {
+                FieldKitTab.LOADOUT -> {
+                    Row(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxWidth()
+                            .padding(24.dp),
+                        horizontalArrangement = Arrangement.spacedBy(20.dp)
+                    ) {
+                        // Left Paper Doll Character Card
+                        Box(
+                            modifier = Modifier
+                                .weight(1.1f)
+                                .fillMaxHeight()
+                                .clip(RoundedCornerShape(FieldMenuDesign.cardRadius))
+                                .background(FieldMenuDesign.panel)
+                                .border(BorderStroke(1.2.dp, FieldMenuDesign.border.copy(alpha = 0.4f)), RoundedCornerShape(FieldMenuDesign.cardRadius))
+                                .padding(20.dp)
                         ) {
-                            itemsIndexed(items) { index, item ->
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .clip(RoundedCornerShape(8.dp))
-                                        .background(if (index == selectedItemIndex) NeonCyan.copy(alpha = 0.16f) else Color(0xFF0C1322))
-                                        .border(
-                                            BorderStroke(1.dp, if (index == selectedItemIndex) NeonCyan else PanelBorder),
-                                            RoundedCornerShape(8.dp)
-                                        )
-                                        .clickable { selectedItemIndex = index }
-                                        .padding(12.dp)
+                            Column(
+                                modifier = Modifier.fillMaxSize(),
+                                verticalArrangement = Arrangement.SpaceBetween,
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                // Character Portrait & Vitals
+                                Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                                    val portrait = rememberDesktopAssetPainter("nova_portrait", services.assetProvider)
+                                    Image(
+                                        painter = portrait,
+                                        contentDescription = "Nova",
+                                        modifier = Modifier
+                                            .size(120.dp)
+                                            .clip(CircleShape)
+                                            .border(BorderStroke(2.dp, FieldMenuDesign.cyan), CircleShape),
+                                        contentScale = ContentScale.Crop
+                                    )
+
+                                    Text(text = "NOVA // EXPEDITION SPECIALIST", color = FieldMenuDesign.text, fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                                    Text(text = "Level ${sessionState.playerLevel}  •  ${sessionState.playerCredits} CR  •  ${sessionState.playerXp} XP", color = FieldMenuDesign.gold, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                                }
+
+                                // 4 Paper Doll Equipment Slots (Weapon, Armor, Accessory, Snack)
+                                Column(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    verticalArrangement = Arrangement.spacedBy(8.dp)
                                 ) {
-                                    Row(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        horizontalArrangement = Arrangement.SpaceBetween,
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        Column(modifier = Modifier.weight(1f)) {
-                                            Text(
-                                                text = item.name,
-                                                color = if (index == selectedItemIndex) NeonCyan else TextWhite,
-                                                fontSize = 13.sp,
-                                                fontWeight = FontWeight.Bold
-                                            )
-                                            Text(
-                                                text = item.description.orEmpty(),
-                                                color = TextMuted,
-                                                fontSize = 11.sp,
-                                                maxLines = 1
-                                            )
-                                        }
-                                        Text(
-                                            text = "${item.value} CR",
-                                            color = NeonAmber,
-                                            fontSize = 11.sp,
-                                            fontWeight = FontWeight.Bold
-                                        )
-                                    }
+                                    DesktopPaperDollSlot(
+                                        slotName = "PRIMARY WEAPON",
+                                        item = activeWeapon,
+                                        defaultName = "Standard Kinetic Blaster",
+                                        accentColor = FieldMenuDesign.gold,
+                                        onClick = { selectedItemForDetail = activeWeapon }
+                                    )
+
+                                    DesktopPaperDollSlot(
+                                        slotName = "BODY ARMOR",
+                                        item = activeArmor,
+                                        defaultName = "Nano-Weave Field Suit",
+                                        accentColor = Color(0xFF2979FF),
+                                        onClick = { selectedItemForDetail = activeArmor }
+                                    )
+
+                                    DesktopPaperDollSlot(
+                                        slotName = "TACTICAL ACCESSORY",
+                                        item = activeAccessory,
+                                        defaultName = "Sensor Targeting Matrix",
+                                        accentColor = FieldMenuDesign.cyan,
+                                        onClick = { selectedItemForDetail = activeAccessory }
+                                    )
+
+                                    DesktopPaperDollSlot(
+                                        slotName = "FIELD SNACK / STIMPACK",
+                                        item = activeSnack,
+                                        defaultName = "Nutrient Ration Block",
+                                        accentColor = Color(0xFF00E676),
+                                        onClick = { selectedItemForDetail = activeSnack }
+                                    )
                                 }
                             }
                         }
-                    }
-                }
 
-                // Right Column: Selected Item Inspection, Stats & Action Panel
-                Box(
-                    modifier = Modifier
-                        .weight(1.3f)
-                        .fillMaxHeight()
-                        .clip(RoundedCornerShape(14.dp))
-                        .background(PanelDark.copy(alpha = 0.94f))
-                        .border(BorderStroke(1.dp, PanelBorder), RoundedCornerShape(14.dp))
-                        .padding(24.dp)
-                ) {
-                    if (selectedItem != null) {
-                        Column(
-                            modifier = Modifier.fillMaxSize(),
-                            verticalArrangement = Arrangement.SpaceBetween
+                        // Right Inventory Equip Drawer
+                        Box(
+                            modifier = Modifier
+                                .weight(1.3f)
+                                .fillMaxHeight()
+                                .clip(RoundedCornerShape(FieldMenuDesign.cardRadius))
+                                .background(FieldMenuDesign.panel)
+                                .border(BorderStroke(1.2.dp, FieldMenuDesign.border.copy(alpha = 0.4f)), RoundedCornerShape(FieldMenuDesign.cardRadius))
+                                .padding(20.dp)
                         ) {
-                            Column {
-                                Text(
-                                    text = "ITEM SCHEMATIC & TELEMETRY",
-                                    color = NeonPink,
-                                    fontSize = 11.sp,
-                                    fontWeight = FontWeight.Black,
-                                    letterSpacing = 1.5.sp
-                                )
-                                Spacer(modifier = Modifier.height(8.dp))
-
-                                Text(
-                                    text = selectedItem.name,
-                                    color = TextWhite,
-                                    fontSize = 24.sp,
-                                    fontWeight = FontWeight.Black
-                                )
-
-                                Spacer(modifier = Modifier.height(10.dp))
-
-                                Text(
-                                    text = selectedItem.description.orEmpty(),
-                                    color = TextMuted,
-                                    fontSize = 14.sp,
-                                    lineHeight = 21.sp
-                                )
-
-                                Spacer(modifier = Modifier.height(24.dp))
-
-                                // Item Specifications Card
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .clip(RoundedCornerShape(10.dp))
-                                        .background(Color(0xFF0C1322))
-                                        .border(BorderStroke(1.dp, PanelBorder), RoundedCornerShape(10.dp))
-                                        .padding(16.dp)
-                                ) {
-                                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                                            Text(text = "Base Market Value", color = TextMuted, fontSize = 12.sp)
-                                            Text(text = "${selectedItem.value} Credits", color = NeonAmber, fontSize = 12.sp, fontWeight = FontWeight.Bold)
-                                        }
-                                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                                            Text(text = "Rarity Tier", color = TextMuted, fontSize = 12.sp)
-                                            Text(text = "Standard Issue", color = NeonCyan, fontSize = 12.sp, fontWeight = FontWeight.Bold)
-                                        }
-                                    }
-                                }
-                            }
-
-                            // Action Button
-                            Button(
-                                onClick = { /* Equip / Use */ },
-                                shape = RoundedCornerShape(12.dp),
-                                colors = ButtonDefaults.buttonColors(containerColor = NeonCyan, contentColor = Color.Black),
-                                modifier = Modifier.fillMaxWidth().height(52.dp)
+                            Column(
+                                modifier = Modifier.fillMaxSize(),
+                                verticalArrangement = Arrangement.spacedBy(12.dp)
                             ) {
                                 Text(
-                                    text = if (selectedTab == FieldKitTab.CARGO) "EQUIP TO VANGUARD [ENTER]" else "SYNTHESIZE SCHEMATIC [ENTER]",
-                                    fontSize = 14.sp,
-                                    fontWeight = FontWeight.Black
+                                    text = "AVAILABLE FIELD GEAR // CLICK TO EQUIP",
+                                    color = FieldMenuDesign.gold,
+                                    fontSize = 13.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    fontFamily = FontFamily.Monospace
                                 )
+
+                                val equippableItems = sessionState.inventory.keys
+                                    .mapNotNull { allItems[it] }
+                                    .filter { it.equipment != null || it.type == "weapon" || it.type == "armor" || it.type == "snack" }
+
+                                if (equippableItems.isEmpty()) {
+                                    Box(modifier = Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) {
+                                        Text(text = "— No compatible gear modules in cargo. Fabricate schematics or scavenge sectors. —", color = FieldMenuDesign.textMuted, fontSize = 12.sp)
+                                    }
+                                } else {
+                                    LazyColumn(
+                                        modifier = Modifier.weight(1f),
+                                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                                    ) {
+                                        items(equippableItems) { item ->
+                                            val isEquipped = activeWeaponId == item.id || activeArmorId == item.id || activeAccessoryId == item.id || activeSnackId == item.id
+                                            Box(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .clip(RoundedCornerShape(8.dp))
+                                                    .background(if (isEquipped) FieldMenuDesign.cyan.copy(alpha = 0.15f) else FieldMenuDesign.elevatedPanel)
+                                                    .border(BorderStroke(1.dp, if (isEquipped) FieldMenuDesign.cyan else FieldMenuDesign.border.copy(alpha = 0.2f)), RoundedCornerShape(8.dp))
+                                                    .clickable {
+                                                        selectedItemForDetail = item
+                                                        // Toggle Equip
+                                                        val slot = item.equipment?.slot ?: if (item.type == "weapon") "weapon" else if (item.type == "armor") "armor" else "accessory"
+                                                        val updatedEquipped = sessionState.equippedItems.toMutableMap()
+                                                        if (isEquipped) {
+                                                            updatedEquipped.remove(slot)
+                                                        } else {
+                                                            updatedEquipped[slot] = item.id
+                                                        }
+                                                        services.sessionStore.restore(sessionState.copy(equippedItems = updatedEquipped))
+                                                    }
+                                                    .padding(12.dp)
+                                            ) {
+                                                Row(
+                                                    modifier = Modifier.fillMaxWidth(),
+                                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                                    verticalAlignment = Alignment.CenterVertically
+                                                ) {
+                                                    Column {
+                                                        Text(text = item.name, color = FieldMenuDesign.text, fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                                                        Text(text = item.description.orEmpty(), color = FieldMenuDesign.textMuted, fontSize = 11.sp, maxLines = 1)
+                                                    }
+
+                                                    Text(
+                                                        text = if (isEquipped) "EQUIPPED" else "EQUIP",
+                                                        color = if (isEquipped) Color(0xFF00E676) else FieldMenuDesign.cyan,
+                                                        fontSize = 11.sp,
+                                                        fontWeight = FontWeight.Bold
+                                                    )
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                // Detail Inspector Footer
+                                selectedItemForDetail?.let { item ->
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .clip(RoundedCornerShape(8.dp))
+                                            .background(Color(0xFF060D18))
+                                            .border(BorderStroke(1.dp, FieldMenuDesign.cyan.copy(alpha = 0.4f)), RoundedCornerShape(8.dp))
+                                            .padding(14.dp)
+                                    ) {
+                                        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                            Text(text = item.name.uppercase(), color = FieldMenuDesign.cyan, fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                                            Text(text = item.description.orEmpty(), color = FieldMenuDesign.textMuted, fontSize = 11.sp)
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
                 }
-            }
-
-            // Bottom Controls Bar
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color(0xFF04060E))
-                    .border(BorderStroke(1.dp, PanelBorder))
-                    .padding(horizontal = 24.dp, vertical = 8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "CONTROLS: [↑/↓] Select Item  •  [TAB] Switch Tab  •  [ENTER] Action  •  [ESC] Close",
-                    color = TextMuted,
-                    fontSize = 11.sp,
-                    fontFamily = FontFamily.Monospace
-                )
-                Text(
-                    text = "ENGINEERING MODULE ACTIVE",
-                    color = TextMuted.copy(alpha = 0.6f),
-                    fontSize = 11.sp,
-                    fontFamily = FontFamily.Monospace
-                )
+                FieldKitTab.CARGO -> {
+                    Box(modifier = Modifier.fillMaxSize().padding(24.dp)) {
+                        DesktopInventoryTabBody(sessionState = sessionState, allItems = allItems)
+                    }
+                }
+                FieldKitTab.CRAFTING -> {
+                    Box(modifier = Modifier.fillMaxSize().padding(24.dp)) {
+                        DesktopTinkeringFabricatorTabContent(services = services, sessionState = sessionState, allItems = allItems)
+                    }
+                }
             }
         }
     }
 }
 
 @Composable
-private fun DesktopFieldKitTabButton(
-    title: String,
+private fun DesktopPaperDollSlot(
+    slotName: String,
+    item: Item?,
+    defaultName: String,
+    accentColor: Color,
+    onClick: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(8.dp))
+            .background(FieldMenuDesign.elevatedPanel)
+            .border(BorderStroke(1.dp, accentColor.copy(alpha = 0.4f)), RoundedCornerShape(8.dp))
+            .clickable(onClick = onClick)
+            .padding(12.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column {
+                Text(text = slotName, color = accentColor, fontSize = 10.sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace)
+                Text(text = item?.name ?: defaultName, color = FieldMenuDesign.text, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
+            }
+
+            Box(
+                modifier = Modifier
+                    .size(10.dp)
+                    .clip(CircleShape)
+                    .background(if (item != null) Color(0xFF00E676) else FieldMenuDesign.textMuted.copy(alpha = 0.3f))
+            )
+        }
+    }
+}
+
+@Composable
+private fun DesktopKitTabButton(
+    label: String,
     isSelected: Boolean,
     onClick: () -> Unit
 ) {
     Box(
         modifier = Modifier
-            .clip(RoundedCornerShape(6.dp))
-            .background(if (isSelected) NeonCyan.copy(alpha = 0.16f) else Color.Transparent)
-            .border(
-                BorderStroke(1.dp, if (isSelected) NeonCyan else PanelBorder),
-                RoundedCornerShape(6.dp)
-            )
+            .clip(RoundedCornerShape(FieldMenuDesign.controlRadius))
+            .background(if (isSelected) FieldMenuDesign.cyan.copy(alpha = 0.2f) else Color.Transparent)
+            .border(BorderStroke(1.dp, if (isSelected) FieldMenuDesign.cyan else Color(0x337FE6FF)), RoundedCornerShape(FieldMenuDesign.controlRadius))
             .clickable(onClick = onClick)
-            .padding(horizontal = 12.dp, vertical = 6.dp)
+            .padding(horizontal = 12.dp, vertical = 7.dp)
     ) {
         Text(
-            text = title,
-            color = if (isSelected) NeonCyan else TextMuted,
+            text = label,
+            color = if (isSelected) FieldMenuDesign.cyan else FieldMenuDesign.textMuted,
             fontSize = 11.sp,
             fontWeight = FontWeight.Bold,
             fontFamily = FontFamily.Monospace

@@ -19,6 +19,8 @@ kotlin {
                 "com/example/starborn/data/**",
                 "com/example/starborn/domain/**",
                 "com/example/starborn/feature/arcade/domain/**",
+                "com/example/starborn/feature/arcade/games/**",
+                "com/example/starborn/feature/exploration/ui/menu/FieldMenuDesign.kt",
                 "com/example/starborn/feature/mainmenu/DebugScenario*",
                 "com/example/starborn/feature/enemy/**",
                 "com/example/starborn/ui/events/**"
