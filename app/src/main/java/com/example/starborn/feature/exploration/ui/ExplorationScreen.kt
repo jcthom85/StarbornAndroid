@@ -967,6 +967,7 @@ fun ExplorationScreen(
                             groundItems = visibleGroundItems,
                             serviceActions = serviceQuickActions,
                             canReturnToHub = uiState.canReturnToHub && !blockingOverlayActive,
+                            sectorTitle = uiState.currentHub?.title,
                             onReturnToHub = { viewModel.requestReturnToHub() },
                             itemDisplayName = { itemId -> viewModel.itemDisplayName(itemId) },
                             itemDetailLabel = { itemId -> viewModel.roomItemDetailLabel(itemId) },
@@ -1319,6 +1320,7 @@ fun ExplorationScreen(
             ) {
                 if (uiState.canReturnToHub && uiState.prompt == null && !blockingOverlayActive) {
                     ReturnHubButton(
+                        destinationName = uiState.currentHub?.title,
                         onClick = { viewModel.requestReturnToHub() }
                     )
                 } else {
@@ -2014,6 +2016,31 @@ private fun DrawScope.drawServiceGlyph(service: MinimapService, centerX: Float, 
                 close()
             }
             drawPath(path, color, style = Stroke(width = size * 0.3f))
+        }
+        MinimapService.EXIT -> {
+            val strokeWidth = size * 0.45f
+            drawCircle(color, radius = size * 1.15f, center = center, style = Stroke(width = strokeWidth))
+            drawLine(
+                color = color,
+                start = center.copy(y = center.y + size * 0.65f),
+                end = center.copy(y = center.y - size * 0.65f),
+                strokeWidth = strokeWidth,
+                cap = StrokeCap.Round
+            )
+            drawLine(
+                color = color,
+                start = center.copy(y = center.y - size * 0.65f),
+                end = androidx.compose.ui.geometry.Offset(center.x - size * 0.45f, center.y - size * 0.15f),
+                strokeWidth = strokeWidth,
+                cap = StrokeCap.Round
+            )
+            drawLine(
+                color = color,
+                start = center.copy(y = center.y - size * 0.65f),
+                end = androidx.compose.ui.geometry.Offset(center.x + size * 0.45f, center.y - size * 0.15f),
+                strokeWidth = strokeWidth,
+                cap = StrokeCap.Round
+            )
         }
     }
 }
@@ -4271,6 +4298,7 @@ private fun MenuToggleButton(
 
 @Composable
 private fun ReturnHubButton(
+    destinationName: String? = null,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -4279,11 +4307,11 @@ private fun ReturnHubButton(
     Surface(
         modifier = modifier
             .height(54.dp)
-            .widthIn(min = 138.dp)
+            .widthIn(min = 148.dp)
             .clickable(onClick = onClick),
         shape = RoundedCornerShape(14.dp),
-        color = Color(0xFF061018).copy(alpha = 0.65f),
-        border = BorderStroke(1.dp, accentColor.copy(alpha = 0.62f))
+        color = Color(0xFF061018).copy(alpha = 0.75f),
+        border = BorderStroke(1.2.dp, accentColor.copy(alpha = 0.70f))
     ) {
         Row(
             modifier = Modifier
@@ -4291,18 +4319,18 @@ private fun ReturnHubButton(
                 .background(
                     Brush.horizontalGradient(
                         colors = listOf(
-                            accentColor.copy(alpha = 0.18f),
+                            accentColor.copy(alpha = 0.22f),
                             warmColor.copy(alpha = 0.08f),
                             Color.Transparent
                         )
                     )
                 )
-                .padding(horizontal = 14.dp),
-            horizontalArrangement = Arrangement.spacedBy(9.dp),
+                .padding(horizontal = 14.dp, vertical = 6.dp),
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Canvas(
-                modifier = Modifier.size(22.dp)
+                modifier = Modifier.size(24.dp)
             ) {
                 val strokeWidth = 2.2.dp.toPx()
                 drawCircle(
@@ -4330,13 +4358,26 @@ private fun ReturnHubButton(
                     cap = StrokeCap.Round
                 )
             }
-            Text(
-                text = "SECTOR MAP",
-                color = Color.White.copy(alpha = 0.94f),
-                style = MaterialTheme.typography.labelLarge,
-                fontWeight = FontWeight.Black,
-                letterSpacing = 0.sp
-            )
+            Column(
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = "OVERWORLD",
+                    color = Color.White.copy(alpha = 0.96f),
+                    style = MaterialTheme.typography.labelLarge,
+                    fontWeight = FontWeight.Black,
+                    letterSpacing = 0.5.sp
+                )
+                destinationName?.takeIf { it.isNotBlank() }?.let { dest ->
+                    Text(
+                        text = dest,
+                        color = accentColor.copy(alpha = 0.90f),
+                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp, fontWeight = FontWeight.Bold),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+            }
         }
     }
 }
@@ -4930,6 +4971,7 @@ private fun RoomEntitySection(
     groundItems: Map<String, Int>,
     serviceActions: List<QuickMenuAction> = emptyList(),
     canReturnToHub: Boolean = false,
+    sectorTitle: String? = null,
     onReturnToHub: () -> Unit = {},
     itemDisplayName: (String) -> String,
     itemDetailLabel: (String) -> String?,
@@ -4960,14 +5002,12 @@ private fun RoomEntitySection(
             verticalArrangement = Arrangement.spacedBy(5.dp)
         ) {
             if (canReturnToHub) {
-                PresenceRailRow {
-                    SectorMapPresenceChip(
-                        accentColor = Color(0xFF00E5FF),
-                        borderColor = borderColor,
-                        isDark = isDark,
-                        onClick = onReturnToHub
-                    )
-                }
+                OverworldGatewayCard(
+                    sectorTitle = sectorTitle,
+                    borderColor = borderColor,
+                    isDark = isDark,
+                    onClick = onReturnToHub
+                )
             }
             if (npcs.isNotEmpty()) {
                 PresenceRailRow {
@@ -5133,8 +5173,8 @@ private fun ServicePresenceChip(
 }
 
 @Composable
-private fun SectorMapPresenceChip(
-    accentColor: Color,
+private fun OverworldGatewayCard(
+    sectorTitle: String?,
     borderColor: Color,
     isDark: Boolean,
     onClick: () -> Unit,
@@ -5143,18 +5183,27 @@ private fun SectorMapPresenceChip(
     val shape = RoundedCornerShape(12.dp)
     val mapCyan = Color(0xFF00E5FF)
     val warmGold = Color(0xFFFFC857)
+    val pulse = rememberInfiniteTransition(label = "overworldGatewayPulse")
+    val glowAlpha by pulse.animateFloat(
+        initialValue = 0.55f,
+        targetValue = 0.95f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 1100, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "gatewayGlow"
+    )
     Surface(
         shape = shape,
-        color = Color(0xFF071018).copy(alpha = if (isDark) 0.88f else 0.76f),
-        border = BorderStroke(1.dp, mapCyan.copy(alpha = if (isDark) 0.65f else 0.52f)),
+        color = Color(0xFF06121E).copy(alpha = if (isDark) 0.94f else 0.84f),
+        border = BorderStroke(1.2.dp, mapCyan.copy(alpha = glowAlpha)),
         modifier = modifier
-            .widthIn(min = 148.dp)
-            .height(46.dp)
+            .fillMaxWidth()
             .clip(shape)
             .clickable(onClick = onClick)
             .clearAndSetSemantics {
-                contentDescription = "Sector Map action"
-                onClick(label = "Sector Map") {
+                contentDescription = "Exit to Overworld: ${sectorTitle ?: "Colony Map"}"
+                onClick(label = "Exit to Overworld") {
                     onClick()
                     true
                 }
@@ -5165,64 +5214,91 @@ private fun SectorMapPresenceChip(
                 .background(
                     Brush.horizontalGradient(
                         colors = listOf(
-                            mapCyan.copy(alpha = if (isDark) 0.20f else 0.16f),
-                            warmGold.copy(alpha = 0.08f),
-                            Color.Transparent
+                            mapCyan.copy(alpha = 0.22f),
+                            warmGold.copy(alpha = 0.09f),
+                            Color(0xFF081A2A).copy(alpha = 0.40f)
                         )
                     )
                 )
-                .padding(horizontal = 9.dp, vertical = 7.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                .padding(horizontal = 12.dp, vertical = 9.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Surface(
-                shape = CircleShape,
-                color = mapCyan.copy(alpha = 0.18f),
-                border = BorderStroke(1.dp, mapCyan.copy(alpha = 0.7f)),
-                modifier = Modifier.size(32.dp)
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.weight(1f, fill = false)
             ) {
-                Box(contentAlignment = Alignment.Center) {
-                    Canvas(modifier = Modifier.size(18.dp)) {
-                        val strokeWidth = 1.8.dp.toPx()
-                        drawCircle(
-                            color = mapCyan,
-                            radius = size.minDimension * 0.44f,
-                            style = Stroke(width = strokeWidth)
-                        )
-                        drawLine(
-                            color = mapCyan,
-                            start = Offset(size.width * 0.5f, size.height * 0.12f),
-                            end = Offset(size.width * 0.5f, size.height * 0.88f),
-                            strokeWidth = strokeWidth,
-                            cap = StrokeCap.Round
-                        )
-                        drawLine(
-                            color = mapCyan,
-                            start = Offset(size.width * 0.12f, size.height * 0.5f),
-                            end = Offset(size.width * 0.88f, size.height * 0.5f),
-                            strokeWidth = strokeWidth,
-                            cap = StrokeCap.Round
-                        )
+                Surface(
+                    shape = CircleShape,
+                    color = mapCyan.copy(alpha = 0.20f),
+                    border = BorderStroke(1.2.dp, mapCyan.copy(alpha = 0.8f)),
+                    modifier = Modifier.size(34.dp)
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        Canvas(modifier = Modifier.size(20.dp)) {
+                            val strokeWidth = 2.dp.toPx()
+                            drawCircle(
+                                color = mapCyan,
+                                radius = size.minDimension * 0.44f,
+                                style = Stroke(width = strokeWidth)
+                            )
+                            drawLine(
+                                color = mapCyan,
+                                start = Offset(size.width * 0.5f, size.height * 0.10f),
+                                end = Offset(size.width * 0.5f, size.height * 0.90f),
+                                strokeWidth = strokeWidth,
+                                cap = StrokeCap.Round
+                            )
+                            drawLine(
+                                color = mapCyan,
+                                start = Offset(size.width * 0.10f, size.height * 0.5f),
+                                end = Offset(size.width * 0.90f, size.height * 0.5f),
+                                strokeWidth = strokeWidth,
+                                cap = StrokeCap.Round
+                            )
+                        }
                     }
                 }
+                Column(verticalArrangement = Arrangement.spacedBy(1.dp)) {
+                    Text(
+                        text = "🚪 SURFACE AIRLOCK",
+                        color = warmGold,
+                        style = MaterialTheme.typography.labelSmall.copy(
+                            fontSize = 9.5.sp,
+                            fontWeight = FontWeight.Black,
+                            letterSpacing = 0.5.sp
+                        )
+                    )
+                    Text(
+                        text = "Exit to Overworld: ${sectorTitle ?: "Sector Map"}",
+                        color = Color.White,
+                        style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Text(
+                        text = "Step outside to travel between colony buildings",
+                        color = Color.White.copy(alpha = 0.70f),
+                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.5.sp),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
             }
-            Column(
-                modifier = Modifier.weight(1f, fill = false),
-                verticalArrangement = Arrangement.Center
+            Surface(
+                shape = RoundedCornerShape(8.dp),
+                color = mapCyan.copy(alpha = 0.22f),
+                border = BorderStroke(1.dp, mapCyan.copy(alpha = 0.80f))
             ) {
                 Text(
-                    text = "Sector Map",
+                    text = "DEPART ➜",
                     color = Color.White,
-                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Text(
-                    text = "Depart Zone",
-                    color = mapCyan.copy(alpha = 0.85f),
-                    style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp, fontWeight = FontWeight.SemiBold),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    style = MaterialTheme.typography.labelSmall.copy(
+                        fontWeight = FontWeight.Black,
+                        fontSize = 9.5.sp
+                    ),
+                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 5.dp)
                 )
             }
         }
@@ -8119,8 +8195,15 @@ private fun IllustratedCinematicOverlay(
                         )
                     )
             )
-            // Frost creeping in around the viewport edge during stasis freeze
-            val frostAlpha = (progress * 0.45f).coerceIn(0f, 0.45f)
+            // Frost creeping in around the viewport edge during stasis freeze on dialogue step,
+            // then holding steady when the pod is sealed so it doesn't jarringly clear and re-freeze.
+            val isInitialStasisDialogue = state.step.captionStyle == CinematicCaptionStyle.DIALOGUE ||
+                !state.step.speaker.isNullOrBlank()
+            val frostAlpha = if (isInitialStasisDialogue) {
+                (progress * 0.45f).coerceIn(0f, 0.45f)
+            } else {
+                0.45f
+            }
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -8559,4 +8642,5 @@ private fun minimapServiceColor(service: MinimapService): Color = when (service)
     MinimapService.SHOP -> Color(0xFFFFC107)
     MinimapService.COOKING -> Color(0xFFFF8A65)
     MinimapService.TINKERING -> Color(0xFFBA68C8)
+    MinimapService.EXIT -> Color(0xFF00E5FF)
 }

@@ -46,7 +46,7 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     visible: "Concourse Lobby"
     timeout: 20000
-- tapOn: "SECTOR MAP"
+- tapOn: "OVERWORLD"
 - extendedWaitUntil:
     visible: "Logistics Sector"
     timeout: 20000

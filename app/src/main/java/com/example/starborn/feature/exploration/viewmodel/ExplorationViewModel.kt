@@ -1293,14 +1293,19 @@ class ExplorationViewModel(
             roomHasEnemies = { roomEnemyParties(it).isNotEmpty() },
             computeBlockedDirections = ::computeBlockedDirections,
             parseRoomServices = { room ->
-                parseActions(room).mapNotNull { action ->
+                val services = mutableSetOf<MinimapService>()
+                if (entryRoomIds.contains(room.id)) {
+                    services += MinimapService.EXIT
+                }
+                parseActions(room).forEach { action ->
                     when (action) {
-                        is ShopAction -> MinimapService.SHOP
-                        is TinkeringAction -> MinimapService.TINKERING
-                        is RestStopAction -> MinimapService.COOKING
-                        else -> null
+                        is ShopAction -> services += MinimapService.SHOP
+                        is TinkeringAction -> services += MinimapService.TINKERING
+                        is RestStopAction -> services += MinimapService.COOKING
+                        else -> Unit
                     }
-                }.toSet()
+                }
+                services
             }
         )
     }
@@ -1315,14 +1320,19 @@ class ExplorationViewModel(
             roomHasEnemies = { roomEnemyParties(it).isNotEmpty() },
             computeBlockedDirections = ::computeBlockedDirections,
             parseRoomServices = { room ->
-                parseActions(room).mapNotNull { action ->
+                val services = mutableSetOf<MinimapService>()
+                if (entryRoomIds.contains(room.id)) {
+                    services += MinimapService.EXIT
+                }
+                parseActions(room).forEach { action ->
                     when (action) {
-                        is ShopAction -> MinimapService.SHOP
-                        is TinkeringAction -> MinimapService.TINKERING
-                        is RestStopAction -> MinimapService.COOKING
-                        else -> null
+                        is ShopAction -> services += MinimapService.SHOP
+                        is TinkeringAction -> services += MinimapService.TINKERING
+                        is RestStopAction -> services += MinimapService.COOKING
+                        else -> Unit
                     }
-                }.toSet()
+                }
+                services
             }
         )
     }
@@ -4322,7 +4332,7 @@ class ExplorationViewModel(
         return when {
             roomId.equals(PIT_ENTRY_ROOM_ID, ignoreCase = true) && !hasJedSentNovaToWorkshop() ->
                 "Jed is waiting upstairs. Nova should check in before heading out."
-            else -> "You can only open the Sector Map from the zone entrance."
+            else -> "You can only exit to the Overworld from the zone entrance."
         }
     }
 

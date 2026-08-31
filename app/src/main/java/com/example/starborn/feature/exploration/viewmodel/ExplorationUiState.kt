@@ -293,7 +293,8 @@ data class MinimapCellUi(
 enum class MinimapService {
     SHOP,
     COOKING,
-    TINKERING
+    TINKERING,
+    EXIT
 }
 
 data class MilestoneBandUi(
