@@ -44,6 +44,17 @@ class FunAuditReportTest {
         assertTrue(skills.any { it.id == "nova_link" })
         assertEquals(25, combat.getJSONArray("encounters").length())
         assertEquals(0, combat.getJSONArray("unresolved").length())
+
+        val encounters = combat.getJSONArray("encounters")
+        for (i in 0 until encounters.length()) {
+            val enc = encounters.getJSONObject(i)
+            val tactical = enc.getJSONObject("policies").getJSONObject("tactical")
+            val winRate = tactical.getDouble("win_rate")
+            val medianRounds = tactical.getDouble("median_rounds")
+            val questId = enc.getString("quest_id")
+            assertTrue("Encounter $questId win rate must be >= 0.85 (was $winRate)", winRate >= 0.85)
+            assertTrue("Encounter $questId median rounds must be <= 7.0 (was $medianRounds)", medianRounds <= 7.0)
+        }
     }
 
     private fun combatAudit(
@@ -146,13 +157,17 @@ class FunAuditReportTest {
             val actor = state.activeCombatant ?: break
             val enemiesAlive = state.combatants.values.filter { it.isAlive && it.combatant.side == CombatSide.ENEMY }
             val playersAlive = state.combatants.values.filter { it.isAlive && it.combatant.side != CombatSide.ENEMY }
-            val target = if (actor.combatant.side == CombatSide.ENEMY) playersAlive.firstOrNull() else enemiesAlive.minByOrNull { it.hp }
-            if (target == null) {
+            if (enemiesAlive.isEmpty() || playersAlive.isEmpty()) {
                 state = engine.resolveOutcome(state) { CombatReward() }
                 continue
             }
+            val target = if (actor.combatant.side == CombatSide.ENEMY) {
+                playersAlive.minByOrNull { it.hp } ?: playersAlive.first()
+            } else {
+                selectPlayerTarget(actor, enemiesAlive, policy)
+            }
             val action = if (actor.combatant.side == CombatSide.ENEMY) {
-                CombatAction.BasicAttack(actor.combatant.id, target.combatant.id)
+                selectEnemyAction(actor, target, state, skillById)
             } else {
                 selectPlayerAction(actor, target, state, policy, skillById)
             }
@@ -166,6 +181,41 @@ class FunAuditReportTest {
         }
         val victory = state.outcome is CombatOutcome.Victory
         return RunResult(state.round.coerceAtMost(99), victory, actions)
+    }
+
+    private fun selectPlayerTarget(
+        actor: CombatantState,
+        enemiesAlive: List<CombatantState>,
+        policy: Policy
+    ): CombatantState {
+        if (policy != Policy.TACTICAL) return enemiesAlive.minByOrNull { it.hp } ?: enemiesAlive.first()
+        // Priority 1: Fragile summoners / support buoys / controllers
+        val highPriority = enemiesAlive.firstOrNull { 
+            it.combatant.name.contains("Buoy", true) || 
+            it.combatant.name.contains("Drone", true) ||
+            it.combatant.stats.maxHp <= 50
+        }
+        if (highPriority != null) return highPriority
+        // Priority 2: Staggered / broken targets for burst damage
+        val broken = enemiesAlive.firstOrNull { it.stability <= 0 || it.statusEffects.any { s -> s.id.equals("stagger", true) } }
+        if (broken != null) return broken
+        // Priority 3: Lowest remaining HP
+        return enemiesAlive.minByOrNull { it.hp } ?: enemiesAlive.first()
+    }
+
+    private fun selectEnemyAction(
+        actor: CombatantState,
+        target: CombatantState,
+        state: CombatState,
+        skills: Map<String, Skill>
+    ): CombatAction {
+        val usable = actor.combatant.skills.mapNotNull(skills::get).filter { skill ->
+            actor.activeCooldowns.getOrDefault(skill.id, 0) == 0 &&
+                (skill.conditions.isNullOrEmpty() || conditionsMet(skill, target))
+        }
+        val chosen = usable.firstOrNull()
+        return chosen?.let { CombatAction.SkillUse(actor.combatant.id, it.id, listOf(target.combatant.id)) }
+            ?: CombatAction.BasicAttack(actor.combatant.id, target.combatant.id)
     }
 
     private fun selectPlayerAction(
@@ -182,6 +232,7 @@ class FunAuditReportTest {
                     actor.activeCooldowns.getOrDefault(it.id, 0) == 0 &&
                     conditionsMet(it, target)
             }
+        val targetShielded = target.statusEffects.any { it.id.equals("guard", true) || it.id.equals("shield", true) }
         val waitingPayoffStatuses = if (policy == Policy.TACTICAL) {
             state.combatants.values
                 .filter { it.isAlive && it.combatant.side == actor.combatant.side }
@@ -199,7 +250,8 @@ class FunAuditReportTest {
         val selected = available.maxByOrNull { skill: Skill ->
             val multiplier = if (policy == Policy.TACTICAL) affinity(target.combatant.resistances, skill) else 1.0
             val setupBonus = if (skill.statusApplications.orEmpty().any { it.lowercase() in waitingPayoffStatuses }) 90.0 else 0.0
-            skill.basePower * multiplier + if (policy == Policy.TACTICAL) skill.statusApplications.orEmpty().size * 12.0 + setupBonus else 0.0
+            val guardBreakBonus = if (policy == Policy.TACTICAL && targetShielded && skill.combatTags.orEmpty().any { it.equals("guard_break", true) }) 150.0 else 0.0
+            skill.basePower * multiplier + if (policy == Policy.TACTICAL) skill.statusApplications.orEmpty().size * 12.0 + setupBonus + guardBreakBonus else 0.0
         }
         return selected?.let { CombatAction.SkillUse(actor.combatant.id, it.id, listOf(target.combatant.id)) }
             ?: CombatAction.BasicAttack(actor.combatant.id, target.combatant.id)
@@ -215,20 +267,23 @@ class FunAuditReportTest {
     }
 
     private fun playerCombatant(player: Player, world: Int, skills: List<Skill>): Combatant {
-        val growth = (world - 1) * 3
+        val level = (world * 3)
+        val growth = (world - 1) * 4
+        val gearWeaponAtk = world * 12
+        val gearArmorDef = world * 8
         val owned = skills.filter { it.character == player.id && it.type != "passive" }.map { it.id }
         return Combatant(
             id = player.id,
             name = player.name,
             side = CombatSide.PLAYER,
             stats = StatBlock(
-                maxHp = CombatFormulas.maxHp(player.hp + world * 35, player.vitality + growth),
-                strength = player.strength + growth,
-                vitality = player.vitality + growth,
+                maxHp = CombatFormulas.maxHp(player.hp + world * 50, player.vitality + growth),
+                strength = player.strength + growth + gearWeaponAtk,
+                vitality = player.vitality + growth + gearArmorDef,
                 agility = player.agility + growth,
                 focus = player.focus + growth,
                 luck = player.luck + growth,
-                speed = CombatFormulas.speed(world * 2, player.agility + growth).toInt(),
+                speed = CombatFormulas.speed(world * 2 + 8, player.agility + growth).toInt(),
                 stability = 100
             ),
             skills = owned
