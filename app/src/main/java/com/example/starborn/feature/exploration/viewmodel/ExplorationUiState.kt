@@ -74,6 +74,7 @@ data class ExplorationUiState(
     val tuningPuzzle: TuningPuzzleUi? = null,
     val isSimulationDeckVisible: Boolean = false,
     val isTapeDeckVisible: Boolean = false,
+    val isAstraNavConsoleVisible: Boolean = false,
     val playingTapeId: String? = null,
     val settings: SettingsUiState = SettingsUiState(),
     val inventoryPreview: List<InventoryPreviewItemUi> = emptyList(),

@@ -104,6 +104,22 @@ class MainMenuViewModel(
         }
     }
 
+    fun startNewGamePlus(
+        onComplete: (() -> Unit)? = null,
+        onFailure: (() -> Unit)? = null
+    ) {
+        viewModelScope.launch {
+            val success = services.startNewGamePlus()
+            if (success) {
+                services.syncInventoryFromSession()
+                onComplete?.invoke()
+            } else {
+                emitMessage("Failed to start Master Protocol. Check save state.")
+                onFailure?.invoke()
+            }
+        }
+    }
+
     fun startDebugScenario(
         scenario: DebugScenario,
         onComplete: (() -> Unit)? = null,

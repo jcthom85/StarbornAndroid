@@ -355,6 +355,7 @@ class CombatViewModel(
         }
         val duplicateCounts = encounterEnemyIdList.groupingBy { it }.eachCount()
         val instanceCounters = mutableMapOf<String, Int>()
+        val isMasterProtocol = "ms_master_protocol_active" in sessionSnapshot.completedMilestones
         enemyCombatants = encounterEnemySlots.map { slot ->
             val canonicalId = slot.canonicalId
             val enemy = slot.enemy
@@ -363,14 +364,18 @@ class CombatViewModel(
             val requireSuffix = (duplicateCounts[canonicalId] ?: 0) > 1
             val instanceId = if (requireSuffix) "${canonicalId}#$nextIndex" else canonicalId
             enemyDefinitions[instanceId] = enemy
+            val baseHp = slot.hp ?: enemy.hp
+            val finalHp = if (isMasterProtocol) (baseHp * 1.35).toInt() else slot.hp
+            val finalVit = if (isMasterProtocol) slot.vitality?.let { (it * 1.25).toInt() } else slot.vitality
             enemy.toCombatant(
                 combatantId = instanceId,
-                hpOverride = slot.hp,
-                vitalityOverride = slot.vitality,
+                hpOverride = finalHp,
+                vitalityOverride = finalVit,
                 stabilityOverride = slot.stability
             )
         }
-        encounterTitle = buildEncounterTitle(encounterEnemySlots.map { it.enemy })
+        val rawTitle = buildEncounterTitle(encounterEnemySlots.map { it.enemy })
+        encounterTitle = if (isMasterProtocol) "⚡ MASTER: $rawTitle" else rawTitle
         playerIdList = playerCombatants.map { it.id }
         enemyIdList = enemyCombatants.map { it.id }
         bossCoreCombatantIds = encounterEnemySlots.mapIndexedNotNull { index, slot ->

@@ -544,6 +544,7 @@ fun ExplorationScreen(
     val isAnyOverlayOpen = uiState.isMenuOverlayVisible ||
         uiState.isTapeDeckVisible ||
         uiState.isSimulationDeckVisible ||
+        uiState.isAstraNavConsoleVisible ||
         uiState.isMilestoneGalleryVisible ||
         uiState.isQuestLogVisible ||
         uiState.skillTreeOverlay != null ||
@@ -559,6 +560,7 @@ fun ExplorationScreen(
             saveLoadMode != null -> saveLoadMode = null
             uiState.isTapeDeckVisible -> viewModel.dismissTapeDeck()
             uiState.isSimulationDeckVisible -> viewModel.dismissSimulationDeck()
+            uiState.isAstraNavConsoleVisible -> viewModel.dismissAstraNavConsole()
             uiState.isMilestoneGalleryVisible -> viewModel.closeMilestoneGallery()
             uiState.isQuestLogVisible -> viewModel.closeQuestLog()
             uiState.skillTreeOverlay != null -> viewModel.closeSkillTreeOverlay()
@@ -1063,6 +1065,15 @@ fun ExplorationScreen(
             SimulationDeckDialog(
                 onSelectSimulation = { enemyIds -> viewModel.launchSimulationCombat(enemyIds) },
                 onDismiss = { viewModel.dismissSimulationDeck() },
+                modifier = Modifier.align(Alignment.Center)
+            )
+        }
+        if (uiState.isAstraNavConsoleVisible) {
+            AstraNavConsoleDialog(
+                onSelectDestination = { worldId, hubId, roomId, nodeId ->
+                    viewModel.travelToWorldFromAstra(worldId, hubId, roomId, nodeId)
+                },
+                onDismiss = { viewModel.dismissAstraNavConsole() },
                 modifier = Modifier.align(Alignment.Center)
             )
         }
@@ -3077,6 +3088,32 @@ private fun SimulationDeckDialog(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var selectedCategory by remember { mutableStateOf("THE RESONANCE CRUCIBLE") }
+
+    val allPrograms = listOf(
+        SimulationProgram("Sentinel Target Droid", "TRAINING PROTOCOLS", listOf("sentinel_mki"), "Basic targeting calibration & ATB cadence.", Color(0xFF00E5FF)),
+        SimulationProgram("Faulted Loader Sub-Routine", "TRAINING PROTOCOLS", listOf("faulted_loader"), "Three-beat armored cycle with exposed Shock openings.", Color(0xFF00E5FF)),
+        SimulationProgram("Ruin-Guardian Defense Matrix", "TRAINING PROTOCOLS", listOf("ruin_guardian"), "Heavy armor barrier penetration and stability shattering.", Color(0xFF00E5FF)),
+
+        SimulationProgram("Apex I: The Iron Warden", "APEX BOSS ARCHIVES", listOf("the_iron_warden"), "World 1 heavy enforcer benchmark. Ground slams & seismic pulse.", Color(0xFFFFB703)),
+        SimulationProgram("Apex II: The Mire Beast", "APEX BOSS ARCHIVES", listOf("the_beast"), "World 2 jungle apex bio-construct. High vitality and acid spit.", Color(0xFFFFB703)),
+        SimulationProgram("Apex III: Dominion Administrator", "APEX BOSS ARCHIVES", listOf("administrator_boss"), "World 3 corporate mastermind with defensive subroutines.", Color(0xFFFFB703)),
+        SimulationProgram("Apex IV: Titan Walker Siegemaster", "APEX BOSS ARCHIVES", listOf("titan_walker_boss"), "World 4 foundry dreadnought with explosive artillery.", Color(0xFFFFB703)),
+        SimulationProgram("Apex V: Compliance Avatar", "APEX BOSS ARCHIVES", listOf("compliance_avatar"), "World 5 digital construct of executive control.", Color(0xFFFFB703)),
+        SimulationProgram("Apex VI: Ascended Vale", "APEX BOSS ARCHIVES", listOf("ascended_vale"), "World 6 pre-singularity manifestation with psionic power.", Color(0xFFFFB703)),
+
+        SimulationProgram("Crucible I: Foundry Smelter Hazard", "THE RESONANCE CRUCIBLE", listOf("magma_drone", "slag_golem", "welder_bot"), "Thermal combat against high-heat automated factory defenders.", Color(0xFFFF5252)),
+        SimulationProgram("Crucible II: Corporate Strike Team", "THE RESONANCE CRUCIBLE", listOf("riot_guard", "corporate_assassin", "heavy_mech"), "Coordinated suppression assault. Prioritize high-threat targets.", Color(0xFFFF5252)),
+        SimulationProgram("Crucible III: Void Security Overdrive", "THE RESONANCE CRUCIBLE", listOf("elite_guard", "void_turret", "hk_droid"), "Dominion supreme hunter-killer droid with 900 HP chassis.", Color(0xFFFF5252)),
+        SimulationProgram("Crucible IV: Twin Titans of Steel", "THE RESONANCE CRUCIBLE", listOf("the_iron_warden", "titan_walker_boss"), "Simultaneous dual-boss encounter testing ultimate defensive survival.", Color(0xFFFF5252)),
+        SimulationProgram("Crucible Omega: The Ascended God", "THE RESONANCE CRUCIBLE", listOf("ascended_god"), "The supreme combat challenge. 1,800 HP cosmic singularity testing build perfection.", Color(0xFFFF1744))
+    )
+
+    val categories = listOf("THE RESONANCE CRUCIBLE", "APEX BOSS ARCHIVES", "TRAINING PROTOCOLS")
+    val currentPrograms = remember(selectedCategory) {
+        allPrograms.filter { it.category == selectedCategory }
+    }
+
     Dialog(onDismissRequest = onDismiss) {
         Surface(
             modifier = modifier
@@ -3090,7 +3127,7 @@ private fun SimulationDeckDialog(
                 modifier = Modifier
                     .padding(18.dp)
                     .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(14.dp)
+                verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -3098,7 +3135,7 @@ private fun SimulationDeckDialog(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "ASTRA TACTICAL SIMULATION",
+                        text = "ASTRA SIMULATION DECK",
                         style = MaterialTheme.typography.titleMedium.copy(
                             fontWeight = FontWeight.Bold,
                             letterSpacing = 1.sp
@@ -3119,27 +3156,53 @@ private fun SimulationDeckDialog(
                 }
 
                 Text(
-                    text = "Select a hard-light combat program to test party equipment, abilities, and tactical synergies without mortal peril:",
+                    text = "Select a combat simulation program or Crucible trial to test party equipment, abilities, and tactical synergies:",
                     style = MaterialTheme.typography.bodySmall,
                     color = Color.White.copy(alpha = 0.75f)
                 )
 
-                val programs = listOf(
-                    Triple("Sentinel Target Droid", listOf("sentinel_mki"), "Basic targeting calibration & ATB cadence."),
-                    Triple("Faulted Loader Sub-Routine", listOf("faulted_loader"), "Three-beat armored cycle with exposed Shock openings."),
-                    Triple("Ruin-Guardian Defense Matrix", listOf("ruin_guardian"), "Heavy armor barrier penetration and stability shattering."),
-                    Triple("Apex Boss Sim: The Iron Warden", listOf("the_iron_warden"), "Apex heavy enforcer simulation benchmark.")
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    categories.forEach { cat ->
+                        val isSelected = cat == selectedCategory
+                        Surface(
+                            modifier = Modifier
+                                .weight(1f)
+                                .clip(RoundedCornerShape(8.dp))
+                                .clickable { selectedCategory = cat },
+                            shape = RoundedCornerShape(8.dp),
+                            color = if (isSelected) Color(0xFF00E5FF).copy(alpha = 0.2f) else Color(0xFF0C1B2A),
+                            border = BorderStroke(
+                                1.dp,
+                                if (isSelected) Color(0xFF00E5FF) else Color.White.copy(alpha = 0.15f)
+                            )
+                        ) {
+                            Text(
+                                text = when (cat) {
+                                    "THE RESONANCE CRUCIBLE" -> "CRUCIBLE"
+                                    "APEX BOSS ARCHIVES" -> "APEX BOSS"
+                                    else -> "TRAINING"
+                                },
+                                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                                color = if (isSelected) Color(0xFF00E5FF) else Color.White.copy(alpha = 0.6f),
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.padding(vertical = 8.dp)
+                            )
+                        }
+                    }
+                }
 
-                programs.forEach { (title, enemyIds, desc) ->
+                currentPrograms.forEach { program ->
                     Surface(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(12.dp))
-                            .clickable { onSelectSimulation(enemyIds) },
+                            .clickable { onSelectSimulation(program.enemyIds) },
                         shape = RoundedCornerShape(12.dp),
                         color = Color(0xFF0C1B2A),
-                        border = BorderStroke(1.dp, Color(0xFF00E5FF).copy(alpha = 0.35f))
+                        border = BorderStroke(1.dp, program.accentColor.copy(alpha = 0.4f))
                     ) {
                         Row(
                             modifier = Modifier.padding(12.dp),
@@ -3148,13 +3211,13 @@ private fun SimulationDeckDialog(
                         ) {
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
-                                    text = title,
+                                    text = program.title,
                                     style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
-                                    color = Color(0xFF00E5FF)
+                                    color = program.accentColor
                                 )
                                 Spacer(modifier = Modifier.height(2.dp))
                                 Text(
-                                    text = desc,
+                                    text = program.description,
                                     style = MaterialTheme.typography.bodySmall.copy(fontSize = 11.sp),
                                     color = Color.White.copy(alpha = 0.7f)
                                 )
@@ -3162,13 +3225,13 @@ private fun SimulationDeckDialog(
                             Spacer(modifier = Modifier.width(8.dp))
                             Surface(
                                 shape = RoundedCornerShape(8.dp),
-                                color = Color(0xFF00E5FF).copy(alpha = 0.15f),
-                                border = BorderStroke(1.dp, Color(0xFF00E5FF).copy(alpha = 0.6f))
+                                color = program.accentColor.copy(alpha = 0.15f),
+                                border = BorderStroke(1.dp, program.accentColor.copy(alpha = 0.7f))
                             ) {
                                 Text(
                                     text = "ENGAGE",
                                     style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
-                                    color = Color(0xFF00E5FF),
+                                    color = program.accentColor,
                                     modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
                                 )
                             }
@@ -3179,6 +3242,134 @@ private fun SimulationDeckDialog(
         }
     }
 }
+
+private data class SimulationProgram(
+    val title: String,
+    val category: String,
+    val enemyIds: List<String>,
+    val description: String,
+    val accentColor: Color
+)
+
+@Composable
+private fun AstraNavConsoleDialog(
+    onSelectDestination: (worldId: String, hubId: String, roomId: String, nodeId: String) -> Unit,
+    onDismiss: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Dialog(onDismissRequest = onDismiss) {
+        Surface(
+            modifier = modifier
+                .fillMaxWidth(0.95f)
+                .wrapContentHeight(),
+            shape = RoundedCornerShape(18.dp),
+            color = Color(0xFF070F18),
+            border = BorderStroke(1.5.dp, Color(0xFFFFB703).copy(alpha = 0.7f))
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(18.dp)
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(14.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "ASTRA NAVIGATION TERMINAL",
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontWeight = FontWeight.Bold,
+                            letterSpacing = 1.sp
+                        ),
+                        color = Color(0xFFFFE082)
+                    )
+                    IconButton(
+                        onClick = onDismiss,
+                        modifier = Modifier.size(28.dp)
+                    ) {
+                        androidx.compose.material3.Icon(
+                            imageVector = Icons.Filled.Close,
+                            contentDescription = "Close",
+                            tint = Color.White.copy(alpha = 0.7f),
+                            modifier = Modifier.size(18.dp)
+                        )
+                    }
+                }
+
+                Text(
+                    text = "Select an atmospheric landing sector to deploy the crew via Astra transport:",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color.White.copy(alpha = 0.75f)
+                )
+
+                val destinations = listOf(
+                    AstraDestination("World 1: The Outskirts", "Mining colony perimeter, repair workshops, and deep scrap shafts.", "world_1", "hub_1_homestead", "pit_L1_landing", "pit"),
+                    AstraDestination("World 2: Tideglass Coast", "Bioluminescent coastal shallows, ancient ruins, and jungle canopies.", "world_2", "hub_3_sector9", "sector9_crash_site", "sector9_landing"),
+                    AstraDestination("World 3: Zenith Spire", "Corporate megacity towers, monorail lines, and sewer ratlines.", "world_3", "hub_5_lower_city", "spire_vent_output", "spire_vent_output"),
+                    AstraDestination("World 4: The Slag Foundry", "Heavy industrial smelters, conveyor networks, and magma conduits.", "world_4", "hub_7_slag_pits", "foundry_slag_river", "foundry_slag_river"),
+                    AstraDestination("World 5: Dominion Orbital Ring", "Zero-G executive facilities, server crypts, and frozen void corridors.", "world_5", "hub_9_orbital_ring", "orbital_executive_dock", "orbital_executive_dock"),
+                    AstraDestination("World 6: Source Singularity", "Post-singularity morning streets, memory bridges, and the new world.", "world_6", "hub_11_event_horizon", "source_campfire", "source_campfire_node")
+                )
+
+                destinations.forEach { dest ->
+                    Surface(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(12.dp))
+                            .clickable { onSelectDestination(dest.worldId, dest.hubId, dest.roomId, dest.nodeId) },
+                        shape = RoundedCornerShape(12.dp),
+                        color = Color(0xFF141F2C),
+                        border = BorderStroke(1.dp, Color(0xFFFFB703).copy(alpha = 0.35f))
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(12.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(
+                                    text = dest.title,
+                                    style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
+                                    color = Color(0xFFFFD54F)
+                                )
+                                Spacer(modifier = Modifier.height(2.dp))
+                                Text(
+                                    text = dest.desc,
+                                    style = MaterialTheme.typography.bodySmall.copy(fontSize = 11.sp),
+                                    color = Color.White.copy(alpha = 0.7f)
+                                )
+                            }
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Surface(
+                                shape = RoundedCornerShape(8.dp),
+                                color = Color(0xFFFFB703).copy(alpha = 0.15f),
+                                border = BorderStroke(1.dp, Color(0xFFFFB703).copy(alpha = 0.6f))
+                            ) {
+                                Text(
+                                    text = "TRANSIT",
+                                    style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                                    color = Color(0xFFFFD54F),
+                                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+private data class AstraDestination(
+    val title: String,
+    val desc: String,
+    val worldId: String,
+    val hubId: String,
+    val roomId: String,
+    val nodeId: String
+)
 
 @Composable
 private fun TapeDeckDialog(

@@ -120,6 +120,7 @@ fun MainMenuScreen(
     onSlotLoaded: () -> Unit
 ) {
     var startingGame by remember { mutableStateOf(false) }
+    var startingGamePlus by remember { mutableStateOf(false) }
     var showNewGameConfirm by remember { mutableStateOf(false) }
     var pendingScenario by remember { mutableStateOf<DebugScenario?>(null) }
     var pendingLoadSlot by remember { mutableStateOf<Int?>(null) }
@@ -191,8 +192,8 @@ fun MainMenuScreen(
         }
     }
 
-    LaunchedEffect(startingGame, pendingScenario, pendingLoadSlot) {
-        if (!startingGame && pendingScenario == null && pendingLoadSlot == null) {
+    LaunchedEffect(startingGame, startingGamePlus, pendingScenario, pendingLoadSlot) {
+        if (!startingGame && !startingGamePlus && pendingScenario == null && pendingLoadSlot == null) {
             fadeOutAlpha.animateTo(
                 targetValue = 0f,
                 animationSpec = tween(durationMillis = 260, easing = FastOutSlowInEasing)
@@ -217,6 +218,7 @@ fun MainMenuScreen(
         delay(120)
         val onFailure: () -> Unit = {
             startingGame = false
+            startingGamePlus = false
             pendingScenario = null
             pendingLoadSlot = null
         }
@@ -243,6 +245,9 @@ fun MainMenuScreen(
             } else {
                 onFailure()
             }
+        } else if (startingGamePlus) {
+            delay(TITLE_LOAD_BLACKOUT_HOLD_MS)
+            viewModel.startNewGamePlus(onComplete = { onStartGame() }, onFailure = onFailure)
         } else if (startingGame) {
             delay(TITLE_LOAD_BLACKOUT_HOLD_MS)
             viewModel.startNewGame(onComplete = { onStartGame() }, onFailure = onFailure)
@@ -393,23 +398,42 @@ fun MainMenuScreen(
             AlertDialog(
                 onDismissRequest = { showNewGameConfirm = false },
                 title = {
-                    Text("Start New Game?", color = Color.White, fontWeight = FontWeight.Bold)
+                    Text("Select Campaign Protocol", color = Color.White, fontWeight = FontWeight.Bold)
                 },
                 text = {
-                    Text(
-                        "Starting a new game will begin a fresh run and overwrite your current autosave.",
-                        color = Color.White.copy(alpha = 0.85f)
-                    )
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Text(
+                            "Choose your deployment protocol. Master Protocol carries over your party levels, weapons, armor, skills, and inventory into an enhanced difficulty run with instant Astra access.",
+                            color = Color.White.copy(alpha = 0.85f),
+                            fontSize = 13.sp
+                        )
+                    }
                 },
                 confirmButton = {
-                    Button(
-                        onClick = {
-                            showNewGameConfirm = false
-                            startingGame = true
-                        },
-                        colors = ButtonDefaults.buttonColors(containerColor = accentColor, contentColor = Color.Black)
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Text("Begin New Game", fontWeight = FontWeight.Bold)
+                        Button(
+                            onClick = {
+                                showNewGameConfirm = false
+                                startingGame = true
+                            },
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2A394A), contentColor = Color.White),
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text("Standard", fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                        }
+                        Button(
+                            onClick = {
+                                showNewGameConfirm = false
+                                startingGamePlus = true
+                            },
+                            colors = ButtonDefaults.buttonColors(containerColor = accentColor, contentColor = Color.Black),
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text("Master (NG+)", fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                        }
                     }
                 },
                 dismissButton = {

@@ -14006,5 +14006,21 @@
         "message": "The analog tape deck hums to life, ready to play recovered magnetic tapes."
       }
     ]
+  },
+  {
+    "id": "source_board_astra",
+    "description": "Board the Astra shuttle from Source Morning Street.",
+    "trigger": {
+      "type": "player_action",
+      "action": "source_board_astra"
+    },
+    "repeatable": true,
+    "conditions": [],
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "The shuttle climbs through the morning atmosphere, docking smoothly with the Astra in high orbit."
+      }
+    ]
   }
 ]

@@ -625,5 +625,57 @@
       "trade_label": "Tune resonance (Shop)",
       "leave_label": "Disconnect"
     }
+  },
+  "arcade_prize_shop": {
+    "name": "Arcade Prize Dispenser",
+    "portrait": "images/npcs/mechanic.webp",
+    "greeting": "PRIZE DISPENSER ONLINE: Insert tokens to redeem rare modifications and consumables.",
+    "pricing": {
+      "sell_markup": 1.0,
+      "buy_markdown": 0.5
+    },
+    "sells": {
+      "items": [
+        "miner_gyro_mod",
+        "drill_bit_mod",
+        "relic_retro_overclock",
+        "medkit",
+        "pulse_grenade"
+      ],
+      "rules": {
+        "types_in": [],
+        "subtypes_in": []
+      },
+      "gates": {}
+    },
+    "buys": {
+      "accept_types": [
+        "consumable",
+        "component"
+      ],
+      "blacklist": []
+    },
+    "dialogue": {
+      "preface": [
+        {
+          "speaker": "Arcade Dispenser",
+          "text": "Insert Astra arcade tokens to claim rare components."
+        }
+      ],
+      "smalltalk": [
+        {
+          "id": "arcade_dispenser_info",
+          "label": "Dispenser diagnostics",
+          "response": [
+            {
+              "speaker": "Arcade Dispenser",
+              "text": "High scores recorded across all restored cabinets earn tokens."
+            }
+          ]
+        }
+      ]
+    },
+    "trade_label": "Insert Tokens (Shop)",
+    "leave_label": "Step Away"
   }
 }

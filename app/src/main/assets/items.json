@@ -3279,5 +3279,31 @@
         }
       ]
     }
+  },
+  {
+    "id": "item_arcade_token",
+    "name": "Arcade Token",
+    "description": "A shiny brass token stamped with the Astra flight insignia. Redeemable at the Common Room prize dispenser.",
+    "type": "consumable",
+    "value": 25,
+    "buy_price": 50,
+    "rarity": "uncommon"
+  },
+  {
+    "id": "relic_retro_overclock",
+    "name": "Retro Overclock Core",
+    "description": "An authentic arcade logic coprocessor wired to the combat harness. Enhances tactical agility and critical strikes.",
+    "type": "accessory",
+    "value": 500,
+    "buy_price": 1000,
+    "rarity": "legendary",
+    "equipment": {
+      "slot": "accessory",
+      "crit_rate": 10,
+      "stat_mods": {
+        "agility": 4,
+        "focus": 4
+      }
+    }
   }
 ]

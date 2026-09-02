@@ -34,6 +34,7 @@ object ArcadeIds {
     const val REPAIR_HARMONIC_RECIPE = "repair_harmonic_pulse_cabinet"
     const val REPAIRED_HARMONIC_CORE = "harmonic_pulse_cabinet_core"
     const val HARMONIC_LOGIC_BOARD = "prismatic_tuning_fork"
+    const val TOKEN_ITEM_ID = "item_arcade_token"
 }
 
 enum class ArcadeRewardTier(val threshold: Int) {
@@ -106,6 +107,9 @@ class ArcadeService(
         val newlyClaimed = earned.filter { it.name !in current.claimedTiers }
         newlyClaimed.forEach(::grantDeepMineReward)
         val claimed = current.claimedTiers + newlyClaimed.map { it.name }
+        if (score >= 1000) {
+            inventoryService.addItem(ArcadeIds.TOKEN_ITEM_ID, (score / 4000).coerceIn(1, 6))
+        }
         sessionStore.updateArcadeProgress(ArcadeIds.DEEP_MINE) {
             it.copy(
                 highScore = maxOf(it.highScore, score),
@@ -121,14 +125,17 @@ class ArcadeService(
         when (tier) {
             ArcadeRewardTier.BRONZE -> {
                 sessionStore.addCredits(500)
+                inventoryService.addItem(ArcadeIds.TOKEN_ITEM_ID, 2)
                 inventoryService.addItem("scrap_metal", 3)
                 inventoryService.addItem("wiring_bundle", 2)
             }
             ArcadeRewardTier.SILVER -> {
+                inventoryService.addItem(ArcadeIds.TOKEN_ITEM_ID, 5)
                 inventoryService.addItem("miner_gyro_mod")
                 sessionStore.setMilestone("ms_arcade_deep_mine_silver")
             }
             ArcadeRewardTier.GOLD -> {
+                inventoryService.addItem(ArcadeIds.TOKEN_ITEM_ID, 10)
                 inventoryService.addItem("drill_bit_mod")
                 sessionStore.setMilestone("ms_arcade_deep_mine_gold")
             }
@@ -168,6 +175,9 @@ class ArcadeService(
         val newlyClaimed = earned.filter { it.name !in current.claimedTiers }
         newlyClaimed.forEach(::grantCanopyReward)
         val claimed = current.claimedTiers + newlyClaimed.map { it.name }
+        if (score >= 1000) {
+            inventoryService.addItem(ArcadeIds.TOKEN_ITEM_ID, (score / 4000).coerceIn(1, 6))
+        }
         sessionStore.updateArcadeProgress(ArcadeIds.CANOPY_HOPPER) {
             it.copy(
                 highScore = maxOf(it.highScore, score),
@@ -183,14 +193,17 @@ class ArcadeService(
         when (tier) {
             CanopyRewardTier.BRONZE -> {
                 sessionStore.addCredits(500)
+                inventoryService.addItem(ArcadeIds.TOKEN_ITEM_ID, 2)
                 inventoryService.addItem("herb", 3)
                 inventoryService.addItem("beast_meat", 2)
             }
             CanopyRewardTier.SILVER -> {
+                inventoryService.addItem(ArcadeIds.TOKEN_ITEM_ID, 5)
                 inventoryService.addItem("tideglass_delight", 2)
                 sessionStore.setMilestone("ms_arcade_canopy_hopper_silver")
             }
             CanopyRewardTier.GOLD -> {
+                inventoryService.addItem(ArcadeIds.TOKEN_ITEM_ID, 10)
                 inventoryService.addItem("bioluminescent_lure")
                 sessionStore.setMilestone("ms_arcade_canopy_hopper_gold")
             }
@@ -230,6 +243,9 @@ class ArcadeService(
         val newlyClaimed = earned.filter { it.name !in current.claimedTiers }
         newlyClaimed.forEach(::grantSpireReward)
         val claimed = current.claimedTiers + newlyClaimed.map { it.name }
+        if (score >= 1000) {
+            inventoryService.addItem(ArcadeIds.TOKEN_ITEM_ID, (score / 4000).coerceIn(1, 6))
+        }
         sessionStore.updateArcadeProgress(ArcadeIds.SPIRE_INFILTRATOR) {
             it.copy(
                 highScore = maxOf(it.highScore, score),
@@ -245,14 +261,17 @@ class ArcadeService(
         when (tier) {
             SpireRewardTier.BRONZE -> {
                 sessionStore.addCredits(750)
+                inventoryService.addItem(ArcadeIds.TOKEN_ITEM_ID, 2)
                 inventoryService.addItem("circuit_board", 2)
                 inventoryService.addItem("nano_filament", 2)
             }
             SpireRewardTier.SILVER -> {
+                inventoryService.addItem(ArcadeIds.TOKEN_ITEM_ID, 5)
                 inventoryService.addItem("phase_rounds")
                 sessionStore.setMilestone("ms_arcade_spire_infiltrator_silver")
             }
             SpireRewardTier.GOLD -> {
+                inventoryService.addItem(ArcadeIds.TOKEN_ITEM_ID, 10)
                 inventoryService.addItem("cyber_visor")
                 sessionStore.setMilestone("ms_arcade_spire_infiltrator_gold")
             }
@@ -292,6 +311,9 @@ class ArcadeService(
         val newlyClaimed = earned.filter { it.name !in current.claimedTiers }
         newlyClaimed.forEach(::grantSlagReward)
         val claimed = current.claimedTiers + newlyClaimed.map { it.name }
+        if (score >= 1000) {
+            inventoryService.addItem(ArcadeIds.TOKEN_ITEM_ID, (score / 4000).coerceIn(1, 6))
+        }
         sessionStore.updateArcadeProgress(ArcadeIds.SLAG_CATCHER) {
             it.copy(
                 highScore = maxOf(it.highScore, score),
@@ -307,14 +329,17 @@ class ArcadeService(
         when (tier) {
             SlagRewardTier.BRONZE -> {
                 sessionStore.addCredits(850)
+                inventoryService.addItem(ArcadeIds.TOKEN_ITEM_ID, 2)
                 inventoryService.addItem("pure_iron", 3)
                 inventoryService.addItem("scrap_metal", 4)
             }
             SlagRewardTier.SILVER -> {
+                inventoryService.addItem(ArcadeIds.TOKEN_ITEM_ID, 5)
                 inventoryService.addItem("foundry_crucible_lining")
                 sessionStore.setMilestone("ms_arcade_slag_catcher_silver")
             }
             SlagRewardTier.GOLD -> {
+                inventoryService.addItem(ArcadeIds.TOKEN_ITEM_ID, 10)
                 inventoryService.addItem("thermal_solder_gun")
                 sessionStore.setMilestone("ms_arcade_slag_catcher_gold")
             }
@@ -354,6 +379,9 @@ class ArcadeService(
         val newlyClaimed = earned.filter { it.name !in current.claimedTiers }
         newlyClaimed.forEach(::grantOrbitalReward)
         val claimed = current.claimedTiers + newlyClaimed.map { it.name }
+        if (score >= 1000) {
+            inventoryService.addItem(ArcadeIds.TOKEN_ITEM_ID, (score / 4000).coerceIn(1, 6))
+        }
         sessionStore.updateArcadeProgress(ArcadeIds.ORBITAL_DEFENSE) {
             it.copy(
                 highScore = maxOf(it.highScore, score),
@@ -369,14 +397,17 @@ class ArcadeService(
         when (tier) {
             OrbitalRewardTier.BRONZE -> {
                 sessionStore.addCredits(1000)
+                inventoryService.addItem(ArcadeIds.TOKEN_ITEM_ID, 2)
                 inventoryService.addItem("composite_plate", 3)
                 inventoryService.addItem("nano_filament", 3)
             }
             OrbitalRewardTier.SILVER -> {
+                inventoryService.addItem(ArcadeIds.TOKEN_ITEM_ID, 5)
                 inventoryService.addItem("plasma_lens_mod")
                 sessionStore.setMilestone("ms_arcade_orbital_defense_silver")
             }
             OrbitalRewardTier.GOLD -> {
+                inventoryService.addItem(ArcadeIds.TOKEN_ITEM_ID, 10)
                 inventoryService.addItem("orbital_deflector_matrix")
                 sessionStore.setMilestone("ms_arcade_orbital_defense_gold")
             }
@@ -416,6 +447,9 @@ class ArcadeService(
         val newlyClaimed = earned.filter { it.name !in current.claimedTiers }
         newlyClaimed.forEach(::grantHarmonicReward)
         val claimed = current.claimedTiers + newlyClaimed.map { it.name }
+        if (score >= 1000) {
+            inventoryService.addItem(ArcadeIds.TOKEN_ITEM_ID, (score / 4000).coerceIn(1, 6))
+        }
         sessionStore.updateArcadeProgress(ArcadeIds.HARMONIC_PULSE) {
             it.copy(
                 highScore = maxOf(it.highScore, score),
@@ -431,14 +465,17 @@ class ArcadeService(
         when (tier) {
             HarmonicRewardTier.BRONZE -> {
                 sessionStore.addCredits(1500)
+                inventoryService.addItem(ArcadeIds.TOKEN_ITEM_ID, 2)
                 inventoryService.addItem("astral_thread", 3)
                 inventoryService.addItem("nano_filament", 4)
             }
             HarmonicRewardTier.SILVER -> {
+                inventoryService.addItem(ArcadeIds.TOKEN_ITEM_ID, 5)
                 inventoryService.addItem("harmonic_resonator_tome")
                 sessionStore.setMilestone("ms_arcade_harmonic_pulse_silver")
             }
             HarmonicRewardTier.GOLD -> {
+                inventoryService.addItem(ArcadeIds.TOKEN_ITEM_ID, 10)
                 inventoryService.addItem("source_cadence_crown")
                 sessionStore.setMilestone("ms_arcade_harmonic_pulse_gold")
             }

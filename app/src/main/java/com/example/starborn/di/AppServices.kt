@@ -862,6 +862,80 @@ class AppServices(context: Context) {
         }
     }
 
+    fun startNewGamePlus(): Boolean {
+        return runCatching {
+            val previousSession = sessionStore.state.value
+            bootstrapCinematics.clear()
+            bootstrapPlayerActions.clear()
+            promptManager.dismissCurrent()
+            tutorialManager.cancelAllScheduled()
+            milestoneManager.clearHistory()
+
+            val players = runCatching { worldDataSource.loadCharacters() }.getOrNull().orEmpty()
+            val defaultPlayer = players.firstOrNull()
+            val playerId = defaultPlayer?.id ?: SAMPLE_PARTY.firstOrNull()
+            val startingRoomId = "pit_nova_bunk"
+
+            val party = if (previousSession.partyMembers.isNotEmpty()) previousSession.partyMembers else playerId?.let { listOf(it) } ?: emptyList()
+            val partyMemberLevels = if (previousSession.partyMemberLevels.isNotEmpty()) previousSession.partyMemberLevels else party.associateWith { defaultPlayer?.level ?: 1 }
+            val partyMemberXp = if (previousSession.partyMemberXp.isNotEmpty()) previousSession.partyMemberXp else party.associateWith { defaultPlayer?.xp ?: 0 }
+            val playerLevel = previousSession.playerLevel.coerceAtLeast(defaultPlayer?.level ?: 1)
+            val playerXp = previousSession.playerXp
+
+            val (defaultUnlockedWeapons, defaultEquippedWeapons) = buildStartingWeaponState(characterIds = party, unlockAll = false)
+            val (defaultUnlockedArmors, defaultEquippedArmors) = buildStartingArmorState(characterIds = party, unlockAll = false)
+
+            val unlockedWeapons = (previousSession.unlockedWeapons + defaultUnlockedWeapons).distinct().toSet()
+            val unlockedArmors = (previousSession.unlockedArmors + defaultUnlockedArmors).distinct().toSet()
+            val equippedWeapons = if (previousSession.equippedWeapons.isNotEmpty()) previousSession.equippedWeapons else defaultEquippedWeapons
+            val equippedArmors = if (previousSession.equippedArmors.isNotEmpty()) previousSession.equippedArmors else defaultEquippedArmors
+
+            val seedState = GameSessionState(
+                worldId = "world_1",
+                hubId = "hub_1_homestead",
+                roomId = startingRoomId,
+                playerId = playerId,
+                playerLevel = playerLevel,
+                playerXp = playerXp,
+                playerCredits = previousSession.playerCredits.coerceAtLeast(5000),
+                unlockedWeapons = unlockedWeapons,
+                unlockedArmors = unlockedArmors,
+                partyMembers = party,
+                partyMemberLevels = partyMemberLevels,
+                partyMemberXp = partyMemberXp,
+                equippedWeapons = equippedWeapons,
+                equippedArmors = equippedArmors,
+                equippedItems = previousSession.equippedItems,
+                completedMilestones = setOf("ms_master_protocol_active", "ms_w2_mq05_complete")
+            )
+            sessionStore.restore(seedState.migrateOpeningNarrativeState())
+            sessionStore.resetTutorialProgress()
+            sessionStore.resetQuestProgress()
+
+            inventoryService.restore(previousSession.inventory)
+            sessionStore.setInventory(previousSession.inventory)
+
+            questRuntimeManager.resetAll()
+            playtestTelemetry.startSession("new_game_plus_master")
+            sessionStore.startQuest("w1_mq01", track = true)
+            sessionStore.setQuestStage("w1_mq01", "wake_in_the_pit")
+            playtestTelemetry.questStarted("w1_mq01")
+            resetAutosaveThrottle()
+
+            val introSceneId = when {
+                cinematicService.scene("intro_prologue") != null -> "intro_prologue"
+                cinematicService.scene("new_game_intro") != null -> "new_game_intro"
+                else -> null
+            }
+            introSceneId?.let { bootstrapCinematics.add(it) }
+            bootstrapPlayerActions.add("new_game_spawn_player_and_fade")
+            true
+        }.getOrElse { err ->
+            Log.e("AppServices", "Failed to start New Game+ (Master Protocol)", err)
+            false
+        }
+    }
+
     fun startDebugScenario(id: String): Boolean = when (id) {
         // --- TUTORIAL SHORTCUTS ---
         "tut_movement" -> startNewGame()

@@ -11595,6 +11595,12 @@
         "type": "arcade",
         "show_when_milestone": "ms_arcade_cabinet_06_repaired",
         "condition_unmet_message": "The restored Source rhythm cabinet radiates deep harmonic resonance."
+      },
+      {
+        "name": "arcade prize dispenser",
+        "type": "shop",
+        "shop_id": "arcade_prize_shop",
+        "condition_unmet_message": "A retro chrome prize terminal glows with prizes for high arcade scores."
       }
     ],
     "npc_presence": [
@@ -17759,6 +17765,12 @@
         "name": "real weather",
         "type": "generic",
         "condition_unmet_message": "The weather arrives without permission and leaves mud on the street."
+      },
+      {
+        "name": "call astra shuttle",
+        "type": "generic",
+        "action_event": "source_board_astra",
+        "condition_unmet_message": "The Astra shuttle ramp hums softly, ready to ferry the crew back to the ship."
       }
     ]
   }

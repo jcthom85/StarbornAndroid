@@ -1600,7 +1600,42 @@ class ExplorationViewModel(
         if (actionId.equals("astra_open_tape_deck", ignoreCase = true)) {
             _uiState.update { it.copy(isTapeDeckVisible = true) }
         }
+        if (actionId.equals("astra_nav_console", ignoreCase = true)) {
+            _uiState.update { it.copy(isAstraNavConsoleVisible = true) }
+        }
+        if (actionId.equals("source_board_astra", ignoreCase = true)) {
+            boardAstraFromWorld()
+        }
         eventManager.handleTrigger("player_action", EventPayload.Action(actionId, itemId))
+    }
+
+    fun dismissAstraNavConsole() {
+        _uiState.update { it.copy(isAstraNavConsoleVisible = false) }
+    }
+
+    fun travelToWorldFromAstra(worldId: String, hubId: String, roomId: String, nodeId: String) {
+        dismissAstraNavConsole()
+        viewModelScope.launch(dispatchers.main) {
+            sessionStore.setWorld(worldId)
+            sessionStore.setHub(hubId)
+            sessionStore.visitNode(nodeId)
+            warpToRoom(roomId)
+            playUiCue("menu_action")
+            postStatus("Astra transit sequence complete.")
+        }
+    }
+
+    private fun boardAstraFromWorld() {
+        viewModelScope.launch(dispatchers.main) {
+            val session = sessionStore.state.value
+            sessionStore.setAstraReturnLocation(session.worldId, session.hubId, session.roomId)
+            sessionStore.setWorld("world_astra")
+            sessionStore.setHub("hub_astra")
+            sessionStore.visitNode("astra_bridge_node")
+            warpToRoom("astra_bridge")
+            playUiCue("menu_action")
+            postStatus("Astra boarding sequence complete.")
+        }
     }
 
     fun dismissSimulationDeck() {
@@ -4321,7 +4356,7 @@ class ExplorationViewModel(
 
     private fun canReturnToHub(room: Room?): Boolean {
         val roomId = room?.id ?: return false
-        if (!entryRoomIds.contains(roomId)) return false
+        if (!entryRoomIds.contains(roomId) && roomId != "source_new_world_node_scale_final") return false
         if (roomId.equals(PIT_ENTRY_ROOM_ID, ignoreCase = true) && !hasJedSentNovaToWorkshop()) return false
         return true
     }

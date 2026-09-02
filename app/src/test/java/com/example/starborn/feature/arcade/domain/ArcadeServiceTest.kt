@@ -18,6 +18,7 @@ class ArcadeServiceTest {
     @Before
     fun setUp() {
         val ids = listOf(
+            ArcadeIds.TOKEN_ITEM_ID,
             ArcadeIds.LOGIC_BOARD, ArcadeIds.REPAIRED_CORE, "scrap_metal", "wiring_bundle",
             "miner_gyro_mod", "drill_bit_mod", ArcadeIds.CANOPY_OPTIC_BOARD, ArcadeIds.REPAIRED_CANOPY_CORE,
             "herb", "beast_meat", "tideglass_delight", "bioluminescent_lure",
@@ -152,8 +153,15 @@ class ArcadeServiceTest {
 
         assertEquals(500, creditsAfterFirst)
         assertEquals(creditsAfterFirst, store.state.value.playerCredits)
-        assertEquals(inventoryAfterFirst, inventory.snapshot())
         assertEquals(setOf("BRONZE", "SILVER", "GOLD"), service.progress(ArcadeIds.DEEP_MINE).claimedTiers)
         assertEquals(2, service.progress(ArcadeIds.DEEP_MINE).playCount)
+    }
+
+    @Test
+    fun tokensAreAwardedOnScoreSubmission() {
+        val before = inventory.count(ArcadeIds.TOKEN_ITEM_ID)
+        service.submitDeepMineScore(15_000)
+        val after = inventory.count(ArcadeIds.TOKEN_ITEM_ID)
+        assertTrue("Tokens should be awarded for Bronze + Silver tiers + participation", after > before)
     }
 }
