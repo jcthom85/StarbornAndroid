@@ -128,6 +128,7 @@ class FishingService(
             FishingRarity.UNCOMMON -> 1 + 0.05 * bonus
             FishingRarity.RARE -> 1 + 0.1 * bonus
             FishingRarity.EPIC -> 1 + 0.15 * bonus
+            FishingRarity.EXOTIC -> 1 + 0.25 * bonus
         }
     }
 
@@ -137,6 +138,7 @@ class FishingService(
         FishingRarity.UNCOMMON -> "Not bad at all."
         FishingRarity.RARE -> "That one feels special."
         FishingRarity.EPIC -> "An incredible catch!"
+        FishingRarity.EXOTIC -> "An impossible catch!"
     }
 
     private fun formatZoneName(zoneId: String): String =

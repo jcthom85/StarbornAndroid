@@ -103,7 +103,10 @@ enum class FishingRarity {
     RARE,
 
     @Json(name = "epic")
-    EPIC
+    EPIC,
+
+    @Json(name = "exotic")
+    EXOTIC
 }
 
 enum class FishPattern {
