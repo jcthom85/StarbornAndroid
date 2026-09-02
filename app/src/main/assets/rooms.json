@@ -3944,6 +3944,13 @@
         "name": "mail slots",
         "type": "generic",
         "condition_unmet_message": "The mail slots still hold notices addressed to people Dominion says never lived here."
+      },
+      {
+        "name": "chrono coil console",
+        "type": "tuning_puzzle",
+        "puzzle_id": "w3_chrono_flux_tune",
+        "requires_milestone_not_set": "ms_relic_w3_chrono_solved",
+        "condition_unmet_message": "A humming spire console monitors temporal flux lines across the landing."
       }
     ]
   },
@@ -5271,6 +5278,13 @@
         "type": "fishing",
         "zone_id": "foundry_cooling_runoff",
         "condition_unmet_message": "A blue condensation basin where heat-resistant fish gather."
+      },
+      {
+        "name": "magma regulator",
+        "type": "tuning_puzzle",
+        "puzzle_id": "w4_magma_conduit_tune",
+        "requires_milestone_not_set": "ms_relic_w4_magma_solved",
+        "condition_unmet_message": "Superheated magma pulses through heavy adamantine valves."
       }
     ]
   },
@@ -7048,6 +7062,13 @@
         "type": "generic",
         "action_event": "w5_mq24_take_anchor",
         "condition_unmet_message": "The Anchor remains locked to Elara's failing firewall."
+      },
+      {
+        "name": "graviton well",
+        "type": "tuning_puzzle",
+        "puzzle_id": "w5_graviton_matrix_tune",
+        "requires_milestone_not_set": "ms_relic_w5_graviton_solved",
+        "condition_unmet_message": "Distorted gravity warps light around an ancient subterranean vault."
       }
     ],
     "enemy_flavor": {
@@ -8955,6 +8976,13 @@
         "name": "sea-worn arches",
         "type": "generic",
         "condition_unmet_message": "Twin stone arches form a natural amphitheater where incoming waves echo in deep hollow notes."
+      },
+      {
+        "name": "bioluminescent prism",
+        "type": "tuning_puzzle",
+        "puzzle_id": "w2_biolum_matrix_tune",
+        "requires_milestone_not_set": "ms_relic_w2_biolum_solved",
+        "condition_unmet_message": "The ancient crystal prism glows faintly in the sea cavern mist."
       }
     ],
     "description_variants": [

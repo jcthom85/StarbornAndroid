@@ -53,5 +53,61 @@
         "unit": "deg"
       }
     ]
+  },
+  {
+    "id": "w2_biolum_matrix_tune",
+    "title": "Calibrate Bioluminescent Prism",
+    "prompt": "Refract the glowing grotto frequencies across the ancient crystal lattice.",
+    "success_event": "w2_relic_biolum_solved",
+    "success_message": "The crystal lattice illuminates with resonant green light, revealing an ancient focus component.",
+    "failure_hint": "The prism beam flickers out of phase. Balance the lux level, angle, and crystal frequency.",
+    "audio_cue": "ui_confirm",
+    "sliders": [
+      { "id": "angle", "label": "Refraction Angle", "min": 0, "max": 360, "initial": 45, "target": 135, "tolerance": 5, "unit": "°" },
+      { "id": "lux", "label": "Lux Intensity", "min": 0, "max": 100, "initial": 20, "target": 64, "tolerance": 4, "unit": "%" },
+      { "id": "freq", "label": "Crystal Frequency", "min": 20, "max": 150, "initial": 40, "target": 92, "tolerance": 3, "unit": " kHz" }
+    ]
+  },
+  {
+    "id": "w3_chrono_flux_tune",
+    "title": "Synchronize Chrono Coils",
+    "prompt": "Align the tachyon oscillation loop before the archive crystals decohere.",
+    "success_event": "w3_relic_chrono_solved",
+    "success_message": "The tachyon loop locks into crystalline harmony, expelling an overclocked core.",
+    "failure_hint": "Temporal jitter is distorting the loop. Dampen the flux and steady the pitch.",
+    "audio_cue": "ui_confirm",
+    "sliders": [
+      { "id": "damping", "label": "Flux Damping", "min": 0, "max": 100, "initial": 15, "target": 45, "tolerance": 4, "unit": "%" },
+      { "id": "pitch", "label": "Tachyon Pitch", "min": 50, "max": 200, "initial": 140, "target": 108, "tolerance": 3, "unit": " kHz" },
+      { "id": "dilation", "label": "Harmonic Dilation", "min": 0, "max": 360, "initial": 90, "target": 240, "tolerance": 6, "unit": "°" }
+    ]
+  },
+  {
+    "id": "w4_magma_conduit_tune",
+    "title": "Balance Magma Conduit",
+    "prompt": "Regulate the smelting conduit pressure to unlock the ancient cooling cradle.",
+    "success_event": "w4_relic_magma_solved",
+    "success_message": "Pressure stabilizes with a heavy hiss, releasing a pristine thermal armor plate.",
+    "failure_hint": "Conduit pressure is spiking dangerously. Bleed the excess heat and reseal the valve.",
+    "audio_cue": "ui_confirm",
+    "sliders": [
+      { "id": "bleed", "label": "Thermal Bleed", "min": 0, "max": 100, "initial": 30, "target": 76, "tolerance": 4, "unit": "%" },
+      { "id": "viscosity", "label": "Slag Viscosity", "min": 10, "max": 100, "initial": 85, "target": 55, "tolerance": 4, "unit": " cP" },
+      { "id": "seal", "label": "Pressure Seal", "min": 0, "max": 360, "initial": 0, "target": 180, "tolerance": 6, "unit": "°" }
+    ]
+  },
+  {
+    "id": "w5_graviton_matrix_tune",
+    "title": "Phase-Lock Graviton Well",
+    "prompt": "Neutralize gravitational shearing forces to stabilize the ancient subterranean vault.",
+    "success_event": "w5_relic_graviton_solved",
+    "success_message": "Gravity normalizes with a deep hum, unsealing the graviton inertia matrix.",
+    "failure_hint": "The gravity well pulls violently off-axis. Stabilize the mass dampener and spin frequency.",
+    "audio_cue": "ui_confirm",
+    "sliders": [
+      { "id": "spin", "label": "Graviton Spin", "min": 0, "max": 100, "initial": 25, "target": 62, "tolerance": 4, "unit": " RPM" },
+      { "id": "freq", "label": "Horizon Frequency", "min": 40, "max": 200, "initial": 80, "target": 144, "tolerance": 3, "unit": " kHz" },
+      { "id": "damp", "label": "Mass Dampener", "min": 0, "max": 100, "initial": 40, "target": 80, "tolerance": 4, "unit": "%" }
+    ]
   }
 ]

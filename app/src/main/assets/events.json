@@ -14022,5 +14022,97 @@
         "message": "The shuttle climbs through the morning atmosphere, docking smoothly with the Astra in high orbit."
       }
     ]
+  },
+  {
+    "id": "w2_relic_biolum_solved",
+    "description": "Unlock ancient Bioluminescent Focus mod from the coastal grotto prism.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_relic_biolum_solved"
+    },
+    "actions": [
+      {
+        "type": "give_item",
+        "item_id": "relic_mod_biolum_focus",
+        "quantity": 1
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_relic_w2_biolum_solved"
+      },
+      {
+        "type": "show_message",
+        "message": "Recovered Ancient Relic Mod: Bioluminescent Focus."
+      }
+    ]
+  },
+  {
+    "id": "w3_relic_chrono_solved",
+    "description": "Unlock ancient Tachyon Overclock Core mod from the archive vault coils.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w3_relic_chrono_solved"
+    },
+    "actions": [
+      {
+        "type": "give_item",
+        "item_id": "relic_mod_tachyon_core",
+        "quantity": 1
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_relic_w3_chrono_solved"
+      },
+      {
+        "type": "show_message",
+        "message": "Recovered Ancient Relic Mod: Tachyon Overclock Core."
+      }
+    ]
+  },
+  {
+    "id": "w4_relic_magma_solved",
+    "description": "Unlock ancient Thermal Aegis Plating mod from the foundry magma conduit.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w4_relic_magma_solved"
+    },
+    "actions": [
+      {
+        "type": "give_item",
+        "item_id": "relic_mod_thermal_aegis",
+        "quantity": 1
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_relic_w4_magma_solved"
+      },
+      {
+        "type": "show_message",
+        "message": "Recovered Ancient Relic Mod: Thermal Aegis Plating."
+      }
+    ]
+  },
+  {
+    "id": "w5_relic_graviton_solved",
+    "description": "Unlock ancient Graviton Inertia Matrix mod from the mining abyss well.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w5_relic_graviton_solved"
+    },
+    "actions": [
+      {
+        "type": "give_item",
+        "item_id": "relic_mod_graviton_matrix",
+        "quantity": 1
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_relic_w5_graviton_solved"
+      },
+      {
+        "type": "show_message",
+        "message": "Recovered Ancient Relic Mod: Graviton Inertia Matrix."
+      }
+    ]
   }
 ]

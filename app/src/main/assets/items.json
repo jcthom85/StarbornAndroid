@@ -2497,6 +2497,80 @@
     }
   },
   {
+    "id": "relic_mod_biolum_focus",
+    "name": "Bioluminescent Focus",
+    "description": "An ancient bioluminescent prism that converts weapon discharges into crackling electric arcs.",
+    "type": "mod",
+    "value": 450,
+    "buy_price": 900,
+    "rarity": "exotic",
+    "equipment": {
+      "slot": "mod",
+      "attack_element": "electric",
+      "status_on_hit": "shock",
+      "status_chance": 25.0,
+      "crit_rate": 0.10,
+      "accuracy": 5.0,
+      "stat_mods": {
+        "focus": 6
+      }
+    }
+  },
+  {
+    "id": "relic_mod_tachyon_core",
+    "name": "Tachyon Overclock Core",
+    "description": "A tachyon-oscillating coil that chills surrounding air and accelerates strike timing.",
+    "type": "mod",
+    "value": 520,
+    "buy_price": 1040,
+    "rarity": "exotic",
+    "equipment": {
+      "slot": "mod",
+      "attack_element": "cryo",
+      "status_on_hit": "freeze",
+      "status_chance": 20.0,
+      "accuracy": 8.0,
+      "stat_mods": {
+        "speed": 8,
+        "strength": 5
+      }
+    }
+  },
+  {
+    "id": "relic_mod_thermal_aegis",
+    "name": "Thermal Aegis Plating",
+    "description": "Ancient foundry weave radiating counter-thermal fields to absorb punishing kinetic and heat impacts.",
+    "type": "mod",
+    "value": 480,
+    "buy_price": 960,
+    "rarity": "exotic",
+    "equipment": {
+      "slot": "mod",
+      "hp_bonus": 45,
+      "defense": 6,
+      "stat_mods": {
+        "vitality": 5
+      }
+    }
+  },
+  {
+    "id": "relic_mod_graviton_matrix",
+    "name": "Graviton Inertia Matrix",
+    "description": "Heavy subterranean matrix harnessing localized gravity to anchor against stagger and concussive blasts.",
+    "type": "mod",
+    "value": 560,
+    "buy_price": 1120,
+    "rarity": "exotic",
+    "equipment": {
+      "slot": "mod",
+      "hp_bonus": 55,
+      "stat_mods": {
+        "vitality": 6,
+        "stability": 5
+      }
+    }
+  },
+  {
     "id": "recoil_dampener",
     "name": "Recoil Dampener",
     "description": "Mag-brace that tames kick and keeps shots true.",
