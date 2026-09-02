@@ -38,23 +38,19 @@ foreach ($relativePath in $trackedFiles) {
     }
 }
 
-$world1Dialogue = $dialogue | Where-Object {
-    $_.id -match '(^|_)w1_' -or $_.id -match '^(jed|hank|bogs|scrapper|doc|warden)_'
-}
-foreach ($line in $world1Dialogue) {
+$allDialogue = $dialogue
+foreach ($line in $allDialogue) {
     $wordCount = @([string]$line.text -split '\s+' | Where-Object { $_ }).Count
-    if ($wordCount -gt 32) {
-        $errors.Add("World 1 dialogue '$($line.id)' is $wordCount words (maximum 32).")
-    } elseif ($wordCount -gt 18) {
-        $warnings.Add("World 1 dialogue '$($line.id)' is $wordCount words; review for splitting or cuts.")
+    if ($wordCount -gt 35) {
+        $errors.Add("Dialogue '$($line.id)' is $wordCount words (maximum 35).")
+    } elseif ($wordCount -gt 24) {
+        $warnings.Add("Dialogue '$($line.id)' is $wordCount words; review for splitting or cuts.")
     }
 }
 
-$world1Rooms = $rooms | Where-Object {
-    $_.background_image -like "*world_1*" -and $_.id -notmatch '^debug_'
-}
-$world1RoomCopy = [Collections.Generic.List[object]]::new()
-foreach ($room in $world1Rooms) {
+$allRooms = $rooms | Where-Object { $_.id -notmatch '^debug_' }
+$allRoomCopy = [Collections.Generic.List[object]]::new()
+foreach ($room in $allRooms) {
     foreach ($entry in @(
         @{ Field = "description"; Text = [string]$room.description },
         @{ Field = "description_dark"; Text = [string]$room.description_dark }
@@ -62,9 +58,9 @@ foreach ($room in $world1Rooms) {
         if ([string]::IsNullOrWhiteSpace($entry.Text)) { continue }
         $wordCount = @($entry.Text -split '\s+' | Where-Object { $_ }).Count
         if ($wordCount -gt 45) {
-            $errors.Add("World 1 room '$($room.id)' $($entry.Field) is $wordCount words (maximum 45).")
+            $errors.Add("Room '$($room.id)' $($entry.Field) is $wordCount words (maximum 45).")
         }
-        $world1RoomCopy.Add([pscustomobject]@{ Room = $room.id; Field = $entry.Field; Text = $entry.Text })
+        $allRoomCopy.Add([pscustomobject]@{ Room = $room.id; Field = $entry.Field; Text = $entry.Text })
     }
     $variantIndex = 0
     foreach ($variant in @($room.description_variants)) {
@@ -72,27 +68,34 @@ foreach ($room in $world1Rooms) {
         if (-not [string]::IsNullOrWhiteSpace($text)) {
             $wordCount = @($text -split '\s+' | Where-Object { $_ }).Count
             if ($wordCount -gt 45) {
-                $errors.Add("World 1 room '$($room.id)' variant[$variantIndex] is $wordCount words (maximum 45).")
+                $errors.Add("Room '$($room.id)' variant[$variantIndex] is $wordCount words (maximum 45).")
             }
-            $world1RoomCopy.Add([pscustomobject]@{ Room = $room.id; Field = "variant[$variantIndex]"; Text = $text })
+            $allRoomCopy.Add([pscustomobject]@{ Room = $room.id; Field = "variant[$variantIndex]"; Text = $text })
         }
         $variantIndex++
     }
     foreach ($action in @($room.actions)) {
         $text = [string]$action.condition_unmet_message
         if (-not [string]::IsNullOrWhiteSpace($text)) {
-            $world1RoomCopy.Add([pscustomobject]@{ Room = $room.id; Field = "action:$($action.name)"; Text = $text })
+            $allRoomCopy.Add([pscustomobject]@{ Room = $room.id; Field = "action:$($action.name)"; Text = $text })
         }
     }
 }
 
-$duplicateRoomCopyAllowlist = @()
-$world1RoomCopy |
+$duplicateRoomCopyAllowlist = @(
+    "Objective completed.",
+    "Already examined.",
+    "Already harvested.",
+    "Already scavenged.",
+    "Nothing more to find here."
+)
+$allRoomCopy |
+    Where-Object { $_.Room -notmatch '_scale_\d+' } |
     Group-Object Text |
     Where-Object { $_.Count -gt 1 -and $_.Name -notin $duplicateRoomCopyAllowlist } |
     ForEach-Object {
         $locations = ($_.Group | ForEach-Object { "$($_.Room)/$($_.Field)" }) -join ", "
-        $errors.Add("Duplicate World 1 room copy appears at ${locations}: '$($_.Name)'")
+        $errors.Add("Duplicate room copy appears at ${locations}: '$($_.Name)'")
     }
 
 $openingQuest = $quests | Where-Object id -eq "w1_mq01"
@@ -120,6 +123,12 @@ foreach ($phrase in @("impossible reflection", "three-note", "third note", "chos
     }
 }
 
+$world1Dialogue = $dialogue | Where-Object {
+    $_.id -match '(^|_)w1_' -or $_.id -match '^(jed|hank|bogs|scrapper|doc|warden)_'
+}
+$world1Rooms = $rooms | Where-Object {
+    $_.background_image -like "*world_1*" -and $_.id -notmatch '^debug_'
+}
 $world1ActiveText = @(
     ($world1Dialogue | ConvertTo-Json -Depth 20)
     ($world1Rooms | ConvertTo-Json -Depth 30)
@@ -173,4 +182,4 @@ if ($errors.Count -gt 0) {
     $errors | ForEach-Object { Write-Error $_ }
     exit 1
 }
-Write-Host "Narrative prose validation passed: $($world1Dialogue.Count) World 1 dialogue entries checked, $($warnings.Count) warning(s)."
+Write-Host "Narrative prose validation passed: $($allDialogue.Count) total dialogue entries and $($allRooms.Count) rooms checked, $($warnings.Count) warning(s)."

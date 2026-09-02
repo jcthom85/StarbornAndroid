@@ -45,12 +45,12 @@ import kotlinx.coroutines.launch
 import java.util.Locale
 
 enum class DesktopMenuTab(val label: String, val shortcut: String) {
-    INVENTORY("INVENTORY", "[1]"),
-    JOURNAL("JOURNAL", "[2]"),
-    MAP("MAP", "[3]"),
-    FIELD_KIT("FIELD KIT", "[4]"),
-    STATS("STATS", "[5]"),
-    SETTINGS("SETTINGS", "[6]")
+    INVENTORY("Inventory", "[1]"),
+    FIELD_KIT("Tinker", "[2]"),
+    JOURNAL("Journal", "[3]"),
+    MAP("Map", "[4]"),
+    STATS("Stats", "[5]"),
+    SETTINGS("Settings", "[6]")
 }
 
 private enum class InventoryCategory { SUPPLIES, GEAR, KEY_ITEMS }
@@ -65,6 +65,27 @@ fun DesktopFieldMenuDialog(
     onReturnToTitle: () -> Unit,
     onDismiss: () -> Unit
 ) {
+    Dialog(onDismissRequest = onDismiss) {
+        DesktopFieldMenuContent(
+            services = services,
+            initialTab = initialTab,
+            currentRoomTitle = currentRoomTitle,
+            onOpenFieldKit = onOpenFieldKit,
+            onReturnToTitle = onReturnToTitle,
+            onDismiss = onDismiss
+        )
+    }
+}
+
+@Composable
+fun DesktopFieldMenuContent(
+    services: DesktopAppServices,
+    initialTab: DesktopMenuTab = DesktopMenuTab.INVENTORY,
+    currentRoomTitle: String? = null,
+    onOpenFieldKit: () -> Unit,
+    onReturnToTitle: () -> Unit,
+    onDismiss: () -> Unit
+) {
     var activeTab by remember { mutableStateOf(initialTab) }
     val sessionState by services.sessionStore.state.collectAsState()
     val allQuests = remember { services.questRepository.allQuests().toList() }
@@ -72,21 +93,20 @@ fun DesktopFieldMenuDialog(
     val allRooms = remember { services.worldDataSource.loadRooms() }
     val userSettings by services.userSettingsStore.settings.collectAsState(initial = UserSettings())
 
-    Dialog(onDismissRequest = onDismiss) {
-        Surface(
+    Surface(
+        modifier = Modifier
+            .width(1060.dp)
+            .height(680.dp),
+        shape = RoundedCornerShape(FieldMenuDesign.shellRadius),
+        color = FieldMenuDesign.shell,
+        border = BorderStroke(1.5.dp, FieldMenuDesign.cyan.copy(alpha = 0.85f))
+    ) {
+        Column(
             modifier = Modifier
-                .width(1060.dp)
-                .height(680.dp),
-            shape = RoundedCornerShape(FieldMenuDesign.shellRadius),
-            color = FieldMenuDesign.shell,
-            border = BorderStroke(1.5.dp, FieldMenuDesign.cyan.copy(alpha = 0.85f))
+                .fillMaxSize()
+                .padding(22.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(22.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
                 // Header Bar
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -95,17 +115,17 @@ fun DesktopFieldMenuDialog(
                 ) {
                     Column {
                         Text(
-                            text = "FIELD TACTICAL TERMINAL // [M] MENU",
+                            text = "FIELD MENU",
                             color = FieldMenuDesign.cyan,
-                            fontSize = 17.sp,
-                            fontWeight = FontWeight.Black,
-                            letterSpacing = 1.5.sp,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
                             fontFamily = FontFamily.Monospace
                         )
                         Text(
-                            text = "Sector: ${currentRoomTitle ?: "Active Zone"}  •  Level ${sessionState.playerLevel}  •  ${sessionState.playerCredits} CR",
+                            text = "SECTOR: ${currentRoomTitle?.uppercase() ?: "UNKNOWN SECTOR"}",
                             color = FieldMenuDesign.textMuted,
-                            fontSize = 11.sp
+                            fontSize = 11.sp,
+                            fontFamily = FontFamily.Monospace
                         )
                     }
 
@@ -197,7 +217,6 @@ fun DesktopFieldMenuDialog(
                 }
             }
         }
-    }
 }
 
 @Composable
@@ -326,16 +345,15 @@ private fun DesktopMenuTabChip(
         Box(
             modifier = Modifier
                 .background(background)
-                .padding(horizontal = 14.dp, vertical = 8.dp),
+                .widthIn(min = 96.dp)
+                .padding(horizontal = 16.dp, vertical = 8.dp),
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "${tab.label} ${tab.shortcut}",
+                text = tab.label,
                 color = contentColor,
-                style = MaterialTheme.typography.labelMedium.copy(
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = FontFamily.Monospace
-                )
+                style = MaterialTheme.typography.labelLarge.copy(fontSize = 16.sp, lineHeight = 20.sp),
+                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
             )
         }
     }
@@ -348,9 +366,10 @@ private fun DesktopInventoryTabContent(
     services: DesktopAppServices
 ) {
     var category by remember { mutableStateOf(InventoryCategory.SUPPLIES) }
+    var selectedItemId by remember { mutableStateOf<String?>(null) }
 
-    Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        // Toggle Pills
+    Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        // Authentic Android Carousel Toggle Bar (50.dp radius pill)
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -358,43 +377,253 @@ private fun DesktopInventoryTabContent(
                 .padding(4.dp),
             horizontalArrangement = Arrangement.spacedBy(6.dp)
         ) {
-            DesktopSubTogglePill("SUPPLIES & CONSUMABLES", category == InventoryCategory.SUPPLIES) { category = InventoryCategory.SUPPLIES }
-            DesktopSubTogglePill("GEAR & LOADOUT", category == InventoryCategory.GEAR) { category = InventoryCategory.GEAR }
-            DesktopSubTogglePill("KEY ITEMS", category == InventoryCategory.KEY_ITEMS) { category = InventoryCategory.KEY_ITEMS }
+            DesktopSubTogglePill("Supplies", category == InventoryCategory.SUPPLIES, modifier = Modifier.weight(1f)) {
+                category = InventoryCategory.SUPPLIES
+                selectedItemId = null
+            }
+            DesktopSubTogglePill("Gear", category == InventoryCategory.GEAR, modifier = Modifier.weight(1f)) {
+                category = InventoryCategory.GEAR
+                selectedItemId = null
+            }
+            DesktopSubTogglePill("Key Items", category == InventoryCategory.KEY_ITEMS, modifier = Modifier.weight(1f)) {
+                category = InventoryCategory.KEY_ITEMS
+                selectedItemId = null
+            }
         }
 
         when (category) {
             InventoryCategory.SUPPLIES -> {
-                DesktopInventoryTabBody(sessionState = sessionState, allItems = allItems)
+                val supplies = sessionState.inventory.entries
+                    .filterNot { allItems[it.key]?.type == "key" || allItems[it.key]?.categoryOverride == "key" }
+                    .toList()
+                DesktopInventorySplitLayout(
+                    entries = supplies,
+                    selectedItemId = selectedItemId,
+                    allItems = allItems,
+                    emptyMessage = "No supplies collected yet. Explore sectors to gather materials.",
+                    sessionState = sessionState,
+                    onSelectItem = { selectedItemId = it }
+                )
             }
             InventoryCategory.GEAR -> {
                 DesktopGearEquipSubContent(sessionState = sessionState, allItems = allItems, services = services)
             }
             InventoryCategory.KEY_ITEMS -> {
-                val keyItemEntries = sessionState.inventory.entries.filter { allItems[it.key]?.type == "key" || allItems[it.key]?.categoryOverride == "key" }
-                if (keyItemEntries.isEmpty()) {
-                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        Text(text = "— No key mission items in cargo. Key passcodes and stasis tokens will appear here. —", color = FieldMenuDesign.textMuted, fontSize = 12.sp)
-                    }
-                } else {
-                    LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        items(keyItemEntries) { entry ->
-                            val item = allItems[entry.key]
-                            Box(
+                val keyItems = sessionState.inventory.entries
+                    .filter { allItems[it.key]?.type == "key" || allItems[it.key]?.categoryOverride == "key" }
+                    .toList()
+                DesktopInventorySplitLayout(
+                    entries = keyItems,
+                    selectedItemId = selectedItemId,
+                    allItems = allItems,
+                    emptyMessage = "— No key mission items in cargo. Key passcodes and stasis tokens will appear here. —",
+                    sessionState = sessionState,
+                    onSelectItem = { selectedItemId = it }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun DesktopInventorySplitLayout(
+    entries: List<Map.Entry<String, Int>>,
+    selectedItemId: String?,
+    allItems: Map<String, Item>,
+    emptyMessage: String,
+    sessionState: com.example.starborn.domain.session.GameSessionState,
+    onSelectItem: (String) -> Unit
+) {
+    val activeSelection = selectedItemId ?: entries.firstOrNull()?.key
+    val selectedItem = activeSelection?.let { allItems[it] }
+
+    Row(modifier = Modifier.fillMaxSize(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+        // Left: Item list in authentic Android card styling
+        Column(modifier = Modifier.weight(1.3f).fillMaxHeight(), verticalArrangement = Arrangement.SpaceBetween) {
+            if (entries.isEmpty()) {
+                Box(modifier = Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) {
+                    Text(text = emptyMessage, color = FieldMenuDesign.textMuted, fontSize = 13.sp)
+                }
+            } else {
+                LazyColumn(
+                    modifier = Modifier.weight(1f).fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(entries) { entry ->
+                        val item = allItems[entry.key]
+                        val isSelected = entry.key == activeSelection
+                        val shape = RoundedCornerShape(14.dp)
+
+                        Surface(
+                            shape = shape,
+                            color = if (isSelected) FieldMenuDesign.cyan.copy(alpha = 0.15f) else Color.White.copy(alpha = 0.04f),
+                            border = BorderStroke(1.dp, if (isSelected) FieldMenuDesign.cyan else FieldMenuDesign.border.copy(alpha = 0.35f)),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(shape)
+                                .clickable { onSelectItem(entry.key) }
+                        ) {
+                            Row(
                                 modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clip(RoundedCornerShape(8.dp))
-                                    .background(FieldMenuDesign.elevatedPanel)
-                                    .border(BorderStroke(1.dp, FieldMenuDesign.gold.copy(alpha = 0.4f)), RoundedCornerShape(8.dp))
-                                    .padding(12.dp)
+                                    .padding(horizontal = 14.dp, vertical = 10.dp)
+                                    .fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween
                             ) {
-                                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                                    Text(text = item?.name ?: entry.key, color = FieldMenuDesign.gold, fontWeight = FontWeight.Bold, fontSize = 13.sp)
-                                    Text(text = item?.description.orEmpty(), color = FieldMenuDesign.textMuted, fontSize = 11.sp)
+                                Row(
+                                    modifier = Modifier.weight(1f),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                                ) {
+                                    Surface(
+                                        shape = CircleShape,
+                                        color = FieldMenuDesign.cyan.copy(alpha = 0.16f),
+                                        border = BorderStroke(1.dp, FieldMenuDesign.cyan.copy(alpha = 0.4f)),
+                                        modifier = Modifier.size(28.dp)
+                                    ) {
+                                        Box(contentAlignment = Alignment.Center) {
+                                            Text(text = "◆", color = FieldMenuDesign.cyan, fontSize = 11.sp)
+                                        }
+                                    }
+
+                                    Column {
+                                        Text(
+                                            text = item?.name ?: entry.key.replace("_", " ").uppercase(),
+                                            style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.SemiBold),
+                                            color = if (isSelected) FieldMenuDesign.cyan else Color.White
+                                        )
+                                        Text(
+                                            text = (item?.type ?: "Resource").uppercase(Locale.getDefault()),
+                                            style = MaterialTheme.typography.bodySmall.copy(fontSize = 10.sp),
+                                            color = Color.White.copy(alpha = 0.55f)
+                                        )
+                                    }
+                                }
+
+                                Text(
+                                    text = "x${entry.value}",
+                                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                                    color = Color.White
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Bottom Credits Chip (matching Android)
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Surface(
+                    shape = RoundedCornerShape(8.dp),
+                    color = Color.Black.copy(alpha = 0.45f),
+                    border = BorderStroke(1.dp, FieldMenuDesign.border.copy(alpha = 0.5f))
+                ) {
+                    Text(
+                        text = "${sessionState.playerCredits} ¢",
+                        style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                        color = Color(0xFFFFC857),
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                    )
+                }
+            }
+        }
+
+        // Right: Rich Item Inspector (matching Android Item Detail Sheet)
+        Surface(
+            modifier = Modifier.weight(1f).fillMaxHeight(),
+            shape = RoundedCornerShape(14.dp),
+            color = Color(0xFF061018).copy(alpha = 0.90f),
+            border = BorderStroke(1.dp, FieldMenuDesign.border.copy(alpha = 0.45f))
+        ) {
+            if (selectedItem != null) {
+                Column(
+                    modifier = Modifier.fillMaxSize().padding(18.dp),
+                    verticalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(10.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Surface(
+                                shape = RoundedCornerShape(8.dp),
+                                color = FieldMenuDesign.cyan.copy(alpha = 0.2f),
+                                border = BorderStroke(1.dp, FieldMenuDesign.cyan),
+                                modifier = Modifier.size(36.dp)
+                            ) {
+                                Box(contentAlignment = Alignment.Center) {
+                                    Text(text = "◆", color = FieldMenuDesign.cyan, fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                                }
+                            }
+                            Column {
+                                Text(
+                                    text = selectedItem.name,
+                                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                                    color = Color.White
+                                )
+                                Text(
+                                    text = selectedItem.type.uppercase(Locale.getDefault()),
+                                    style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                                    color = FieldMenuDesign.cyan
+                                )
+                            }
+                        }
+
+                        HorizontalDivider(color = FieldMenuDesign.border.copy(alpha = 0.35f))
+
+                        Text(
+                            text = selectedItem.description?.ifBlank { "Standard issue field item with no additional notes." } ?: "Standard issue field item with no additional notes.",
+                            style = MaterialTheme.typography.bodyMedium.copy(fontSize = 12.5.sp, lineHeight = 18.sp),
+                            color = Color.White.copy(alpha = 0.85f)
+                        )
+
+                        if (selectedItem.equipment != null) {
+                            Surface(
+                                shape = RoundedCornerShape(8.dp),
+                                color = Color.White.copy(alpha = 0.04f),
+                                border = BorderStroke(1.dp, Color.White.copy(alpha = 0.1f)),
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Column(modifier = Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                    Text(
+                                        text = "EQUIPMENT SPECIFICATIONS",
+                                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                                        color = Color(0xFFFFC857)
+                                    )
+                                    Text(
+                                        text = "Slot: ${selectedItem.equipment.slot.uppercase()}  •  Damage: ${selectedItem.equipment.damageMin ?: 0}-${selectedItem.equipment.damageMax ?: 0}",
+                                        style = MaterialTheme.typography.bodySmall.copy(fontSize = 11.sp),
+                                        color = Color.White.copy(alpha = 0.8f)
+                                    )
                                 }
                             }
                         }
                     }
+
+                    // Use Button
+                    Button(
+                        onClick = {},
+                        enabled = selectedItem.effect != null,
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(8.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = FieldMenuDesign.cyan,
+                            contentColor = Color(0xFF040810),
+                            disabledContainerColor = Color.White.copy(alpha = 0.08f),
+                            disabledContentColor = Color.White.copy(alpha = 0.35f)
+                        )
+                    ) {
+                        Text(text = if (selectedItem.effect != null) "USE ITEM" else "CANNOT USE IN FIELD", fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                    }
+                }
+            } else {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text(text = "Select an item to inspect details", color = FieldMenuDesign.textMuted, fontSize = 12.sp)
                 }
             }
         }
@@ -415,15 +644,15 @@ private fun DesktopGearEquipSubContent(
     Row(modifier = Modifier.fillMaxSize(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
         // Left 4 Paper Doll Slots
         Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            DesktopSlotBadge("PRIMARY WEAPON", activeWeaponId?.let { allItems[it]?.name } ?: "Kinetic Blaster", FieldMenuDesign.gold)
-            DesktopSlotBadge("BODY ARMOR", activeArmorId?.let { allItems[it]?.name } ?: "Nano-Weave Field Suit", Color(0xFF2979FF))
-            DesktopSlotBadge("TACTICAL ACCESSORY", activeAccessoryId?.let { allItems[it]?.name } ?: "Sensor Targeting Matrix", FieldMenuDesign.cyan)
-            DesktopSlotBadge("FIELD SNACK / STIM", activeSnackId?.let { allItems[it]?.name } ?: "Nutrient Ration Block", Color(0xFF00E676))
+            DesktopSlotBadge("Primary Weapon", activeWeaponId?.let { allItems[it]?.name } ?: "Kinetic Blaster", FieldMenuDesign.gold)
+            DesktopSlotBadge("Body Armor", activeArmorId?.let { allItems[it]?.name } ?: "Nano-Weave Field Suit", Color(0xFF2979FF))
+            DesktopSlotBadge("Tactical Accessory", activeAccessoryId?.let { allItems[it]?.name } ?: "Sensor Targeting Matrix", FieldMenuDesign.cyan)
+            DesktopSlotBadge("Field Snack / Stim", activeSnackId?.let { allItems[it]?.name } ?: "Nutrient Ration Block", Color(0xFF00E676))
         }
 
         // Right Available Gear to Equip
         Column(modifier = Modifier.weight(1.3f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Text(text = "AVAILABLE GEAR IN CARGO", color = FieldMenuDesign.cyan, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+            Text(text = "Available Equipment", color = FieldMenuDesign.cyan, fontSize = 13.sp, fontWeight = FontWeight.Bold)
             val equippable = sessionState.inventory.keys.mapNotNull { allItems[it] }.filter { it.equipment != null || it.type == "weapon" || it.type == "armor" }
 
             if (equippable.isEmpty()) {
@@ -437,19 +666,19 @@ private fun DesktopGearEquipSubContent(
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clip(RoundedCornerShape(6.dp))
-                                .background(if (isEquipped) FieldMenuDesign.cyan.copy(alpha = 0.15f) else FieldMenuDesign.elevatedPanel)
-                                .border(BorderStroke(1.dp, if (isEquipped) FieldMenuDesign.cyan else FieldMenuDesign.border.copy(alpha = 0.2f)), RoundedCornerShape(6.dp))
+                                .clip(RoundedCornerShape(10.dp))
+                                .background(if (isEquipped) FieldMenuDesign.cyan.copy(alpha = 0.15f) else Color.White.copy(alpha = 0.04f))
+                                .border(BorderStroke(1.dp, if (isEquipped) FieldMenuDesign.cyan else FieldMenuDesign.border.copy(alpha = 0.35f)), RoundedCornerShape(10.dp))
                                 .clickable {
                                     val slot = item.equipment?.slot ?: if (item.type == "weapon") "weapon" else "armor"
                                     val updated = sessionState.equippedItems.toMutableMap()
                                     if (isEquipped) updated.remove(slot) else updated[slot] = item.id
                                     services.sessionStore.restore(sessionState.copy(equippedItems = updated))
                                 }
-                                .padding(10.dp)
+                                .padding(12.dp)
                         ) {
                             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                                Text(text = item.name, color = FieldMenuDesign.text, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                                Text(text = item.name, color = FieldMenuDesign.text, fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
                                 Text(text = if (isEquipped) "EQUIPPED" else "EQUIP", color = if (isEquipped) Color(0xFF00E676) else FieldMenuDesign.cyan, fontSize = 11.sp, fontWeight = FontWeight.Bold)
                             }
                         }
@@ -465,27 +694,33 @@ private fun DesktopSlotBadge(slot: String, name: String, color: Color) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(8.dp))
-            .background(FieldMenuDesign.elevatedPanel)
-            .border(BorderStroke(1.dp, color.copy(alpha = 0.35f)), RoundedCornerShape(8.dp))
-            .padding(10.dp)
+            .clip(RoundedCornerShape(10.dp))
+            .background(Color.White.copy(alpha = 0.04f))
+            .border(BorderStroke(1.dp, color.copy(alpha = 0.4f)), RoundedCornerShape(10.dp))
+            .padding(12.dp)
     ) {
-        Column {
-            Text(text = slot, color = color, fontSize = 10.sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace)
-            Text(text = name, color = FieldMenuDesign.text, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
+        Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+            Text(text = slot, color = color, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+            Text(text = name, color = FieldMenuDesign.text, fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
         }
     }
 }
 
 @Composable
-private fun DesktopSubTogglePill(label: String, isSelected: Boolean, onClick: () -> Unit) {
+private fun DesktopSubTogglePill(
+    label: String,
+    isSelected: Boolean,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .clip(RoundedCornerShape(50.dp))
             .background(if (isSelected) FieldMenuDesign.cyan.copy(alpha = 0.22f) else Color.Transparent)
             .border(BorderStroke(1.dp, if (isSelected) FieldMenuDesign.cyan else Color.Transparent), RoundedCornerShape(50.dp))
             .clickable(onClick = onClick)
-            .padding(horizontal = 14.dp, vertical = 6.dp)
+            .padding(horizontal = 14.dp, vertical = 6.dp),
+        contentAlignment = Alignment.Center
     ) {
         Text(
             text = label,
@@ -508,7 +743,7 @@ private fun DesktopJournalTabContent(
     val displayQuests = if (journalPage == JournalCategory.ACTIVE) (if (activeQuests.isNotEmpty()) activeQuests else allQuests.take(10)) else completedQuests
     var selectedQuest by remember(displayQuests) { mutableStateOf(displayQuests.firstOrNull()) }
 
-    Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+    Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -516,42 +751,88 @@ private fun DesktopJournalTabContent(
                 .padding(4.dp),
             horizontalArrangement = Arrangement.spacedBy(6.dp)
         ) {
-            DesktopSubTogglePill("ACTIVE DIRECTIVES (${displayQuests.size})", journalPage == JournalCategory.ACTIVE) { journalPage = JournalCategory.ACTIVE }
-            DesktopSubTogglePill("COMPLETED LOGS (${completedQuests.size})", journalPage == JournalCategory.COMPLETED) { journalPage = JournalCategory.COMPLETED }
+            DesktopSubTogglePill("Active (${displayQuests.size})", journalPage == JournalCategory.ACTIVE, modifier = Modifier.weight(1f)) {
+                journalPage = JournalCategory.ACTIVE
+                selectedQuest = displayQuests.firstOrNull()
+            }
+            DesktopSubTogglePill("Completed (${completedQuests.size})", journalPage == JournalCategory.COMPLETED, modifier = Modifier.weight(1f)) {
+                journalPage = JournalCategory.COMPLETED
+                selectedQuest = completedQuests.firstOrNull()
+            }
         }
 
         Row(modifier = Modifier.weight(1f).fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-            Column(modifier = Modifier.weight(1f).fillMaxHeight(), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                LazyColumn(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+            Column(modifier = Modifier.weight(1.2f).fillMaxHeight(), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     items(displayQuests) { quest ->
                         val isSelected = quest.id == selectedQuest?.id
-                        Box(
+                        val isCompleted = journalPage == JournalCategory.COMPLETED
+                        val shape = RoundedCornerShape(12.dp)
+
+                        Surface(
+                            shape = shape,
+                            color = if (isSelected) FieldMenuDesign.cyan.copy(alpha = 0.15f) else Color.White.copy(alpha = 0.04f),
+                            border = BorderStroke(1.dp, if (isSelected) FieldMenuDesign.cyan else FieldMenuDesign.border.copy(alpha = 0.35f)),
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clip(RoundedCornerShape(6.dp))
-                                .background(if (isSelected) FieldMenuDesign.cyan.copy(alpha = 0.15f) else FieldMenuDesign.elevatedPanel)
-                                .border(BorderStroke(1.dp, if (isSelected) FieldMenuDesign.cyan else FieldMenuDesign.border.copy(alpha = 0.2f)), RoundedCornerShape(6.dp))
+                                .clip(shape)
                                 .clickable { selectedQuest = quest }
-                                .padding(10.dp)
                         ) {
-                            Text(text = quest.title, color = if (isSelected) FieldMenuDesign.cyan else FieldMenuDesign.text, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
+                            Row(
+                                modifier = Modifier.padding(horizontal = 14.dp, vertical = 12.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(10.dp)
+                            ) {
+                                Text(
+                                    text = if (isCompleted) "✓" else "⚑",
+                                    color = if (isCompleted) Color(0xFF00E676) else FieldMenuDesign.cyan,
+                                    fontSize = 13.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Text(
+                                    text = quest.title,
+                                    color = if (isSelected) FieldMenuDesign.cyan else FieldMenuDesign.text,
+                                    fontSize = 13.sp,
+                                    fontWeight = FontWeight.SemiBold
+                                )
+                            }
                         }
                     }
                 }
             }
 
-            Box(
+            Surface(
                 modifier = Modifier
                     .weight(1.3f)
-                    .fillMaxHeight()
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(FieldMenuDesign.elevatedPanel)
-                    .padding(16.dp)
+                    .fillMaxHeight(),
+                shape = RoundedCornerShape(14.dp),
+                color = Color(0xFF061018).copy(alpha = 0.90f),
+                border = BorderStroke(1.dp, FieldMenuDesign.border.copy(alpha = 0.45f))
             ) {
-                selectedQuest?.let { quest ->
-                    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                        Text(text = quest.title, color = FieldMenuDesign.text, fontSize = 16.sp, fontWeight = FontWeight.Bold)
-                        Text(text = quest.description.ifBlank { quest.summary }, color = FieldMenuDesign.textMuted, fontSize = 13.sp, lineHeight = 20.sp)
+                if (selectedQuest != null) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(18.dp),
+                        verticalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        Text(
+                            text = selectedQuest!!.title,
+                            color = Color.White,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        HorizontalDivider(color = FieldMenuDesign.border.copy(alpha = 0.35f))
+                        Text(
+                            text = selectedQuest!!.description.ifBlank { selectedQuest!!.summary },
+                            color = Color.White.copy(alpha = 0.85f),
+                            fontSize = 13.sp,
+                            lineHeight = 20.sp
+                        )
+                    }
+                } else {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        Text(text = "Select a mission directive to inspect log details", color = FieldMenuDesign.textMuted, fontSize = 12.sp)
                     }
                 }
             }
@@ -798,24 +1079,153 @@ private fun DesktopStatsTabBody(
     services: DesktopAppServices,
     sessionState: com.example.starborn.domain.session.GameSessionState
 ) {
-    val portrait = rememberDesktopAssetPainter("nova_portrait", services.assetProvider)
+    val partyMembers = listOf(
+        Triple("Nova", "nova_portrait", "Expedition Specialist"),
+        Triple("Zeke", "zeke_portrait", "Scrapper Vanguard"),
+        Triple("Orion", "orion_portrait", "Aegis Tactical Officer"),
+        Triple("Gh0st", "gh0st_portrait", "Covert Infiltrator")
+    )
+    var selectedMemberId by remember { mutableStateOf("Nova") }
 
-    Row(modifier = Modifier.fillMaxSize(), horizontalArrangement = Arrangement.spacedBy(20.dp), verticalAlignment = Alignment.CenterVertically) {
-        Image(
-            painter = portrait,
-            contentDescription = "Nova",
-            modifier = Modifier
-                .size(140.dp)
-                .clip(CircleShape)
-                .border(BorderStroke(2.dp, FieldMenuDesign.cyan), CircleShape),
-            contentScale = ContentScale.Crop
-        )
+    Row(modifier = Modifier.fillMaxSize(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+        // Left Roster List (Matching Android PartyMemberCard styling)
+        LazyColumn(
+            modifier = Modifier.weight(1.2f).fillMaxHeight(),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            items(partyMembers) { (name, portraitId, role) ->
+                val isSelected = name == selectedMemberId
+                val portrait = rememberDesktopAssetPainter(portraitId, services.assetProvider)
+                val shape = RoundedCornerShape(14.dp)
 
-        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Text(text = "NOVA // EXPEDITION SPECIALIST", color = FieldMenuDesign.text, fontSize = 18.sp, fontWeight = FontWeight.Black)
-            Text(text = "Level: ${sessionState.playerLevel}  •  XP: ${sessionState.playerXp}  •  Credits: ${sessionState.playerCredits} CR", color = FieldMenuDesign.gold, fontSize = 13.sp, fontWeight = FontWeight.Bold)
-            Text(text = "Active Directives: ${sessionState.activeQuests.size}  •  Completed: ${sessionState.completedQuests.size}", color = FieldMenuDesign.textMuted, fontSize = 12.sp)
+                Surface(
+                    shape = shape,
+                    color = if (isSelected) FieldMenuDesign.cyan.copy(alpha = 0.15f) else Color.White.copy(alpha = 0.04f),
+                    border = BorderStroke(1.dp, if (isSelected) FieldMenuDesign.cyan else FieldMenuDesign.border.copy(alpha = 0.35f)),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(shape)
+                        .clickable { selectedMemberId = name }
+                ) {
+                    Row(
+                        modifier = Modifier.padding(12.dp).fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        Image(
+                            painter = portrait,
+                            contentDescription = name,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .size(56.dp)
+                                .clip(RoundedCornerShape(12.dp))
+                                .border(1.dp, FieldMenuDesign.cyan.copy(alpha = 0.6f), RoundedCornerShape(12.dp))
+                        )
+
+                        Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                                Text(text = name, color = Color.White, style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold))
+                                Text(text = "Lv. ${sessionState.playerLevel}", color = Color(0xFFFFC857), style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold))
+                            }
+
+                            Text(text = role, color = Color.White.copy(alpha = 0.6f), style = MaterialTheme.typography.bodySmall.copy(fontSize = 11.sp))
+
+                            // Mini HP & XP Bars (Matching Android)
+                            Column(verticalArrangement = Arrangement.spacedBy(3.dp)) {
+                                LinearProgressIndicator(
+                                    progress = { 1f },
+                                    modifier = Modifier.fillMaxWidth().height(4.dp).clip(RoundedCornerShape(2.dp)),
+                                    color = Color(0xFF00E676),
+                                    trackColor = Color(0xFF102818)
+                                )
+                                LinearProgressIndicator(
+                                    progress = { (sessionState.playerXp % 100) / 100f },
+                                    modifier = Modifier.fillMaxWidth().height(3.dp).clip(RoundedCornerShape(2.dp)),
+                                    color = Color(0xFF7C4DFF),
+                                    trackColor = Color(0xFF1E1035)
+                                )
+                            }
+                        }
+                    }
+                }
+            }
         }
+
+        // Right Inspector Detail Sheet
+        Surface(
+            modifier = Modifier.weight(1.3f).fillMaxHeight(),
+            shape = RoundedCornerShape(14.dp),
+            color = Color(0xFF061018).copy(alpha = 0.90f),
+            border = BorderStroke(1.dp, FieldMenuDesign.border.copy(alpha = 0.45f))
+        ) {
+            val current = partyMembers.first { it.first == selectedMemberId }
+            val currentPortrait = rememberDesktopAssetPainter(current.second, services.assetProvider)
+
+            Column(
+                modifier = Modifier.fillMaxSize().padding(18.dp),
+                verticalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(14.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Image(
+                            painter = currentPortrait,
+                            contentDescription = current.first,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .size(72.dp)
+                                .clip(RoundedCornerShape(14.dp))
+                                .border(1.5.dp, FieldMenuDesign.cyan, RoundedCornerShape(14.dp))
+                        )
+                        Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                            Text(text = current.first, color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                            Text(text = current.third, color = FieldMenuDesign.cyan, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
+                            Text(text = "Level ${sessionState.playerLevel}  •  ${sessionState.playerCredits} CR", color = Color(0xFFFFC857), fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                        }
+                    }
+
+                    HorizontalDivider(color = FieldMenuDesign.border.copy(alpha = 0.35f))
+
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Text(text = "COMBAT ATTRIBUTES", color = FieldMenuDesign.cyan, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+
+                        DesktopAttributeRow("Health Points (HP)", "120 / 120", Color(0xFF00E676))
+                        DesktopAttributeRow("Kinetic Shield", "80 / 80", Color(0xFF2979FF))
+                        DesktopAttributeRow("ATB Cadence Speed", "100%", Color(0xFFFFC857))
+                        DesktopAttributeRow("Active Weapon Slot", sessionState.equippedItems["weapon"]?.uppercase() ?: "KINETIC BLASTER", Color.White)
+                    }
+                }
+
+                Surface(
+                    shape = RoundedCornerShape(8.dp),
+                    color = Color.White.copy(alpha = 0.04f),
+                    border = BorderStroke(1.dp, Color.White.copy(alpha = 0.1f)),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = "Tactical combat abilities scale with party level. Use the Tinker tab to upgrade weapon mods and field equipment.",
+                        style = MaterialTheme.typography.bodySmall.copy(fontSize = 11.sp),
+                        color = Color.White.copy(alpha = 0.7f),
+                        modifier = Modifier.padding(10.dp)
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun DesktopAttributeRow(label: String, value: String, accentColor: Color) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(text = label, style = MaterialTheme.typography.bodySmall, color = Color.White.copy(alpha = 0.65f))
+        Text(text = value, style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold), color = accentColor)
     }
 }
 
@@ -868,6 +1278,47 @@ private fun DesktopSettingsAndStasisTabContent(
                         }
                     }
                 )
+            }
+
+            HorizontalDivider(color = FieldMenuDesign.border.copy(alpha = 0.35f))
+
+            val currentDisplayMode by services.userSettingsStore.displayMode.collectAsState(initial = com.example.starborn.desktop.DesktopDisplayMode.WINDOWED)
+            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                Text(text = "SCREEN MODE [F11]", color = FieldMenuDesign.cyan, fontSize = 12.sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    com.example.starborn.desktop.DesktopDisplayMode.values().forEach { mode ->
+                        val isSelected = mode == currentDisplayMode
+                        Surface(
+                            modifier = Modifier
+                                .weight(1f)
+                                .clickable {
+                                    coroutineScope.launch {
+                                        services.userSettingsStore.setDisplayMode(mode)
+                                    }
+                                },
+                            shape = RoundedCornerShape(6.dp),
+                            color = if (isSelected) FieldMenuDesign.cyan.copy(alpha = 0.20f) else Color.White.copy(alpha = 0.04f),
+                            border = BorderStroke(1.dp, if (isSelected) FieldMenuDesign.cyan else FieldMenuDesign.border.copy(alpha = 0.3f))
+                        ) {
+                            Text(
+                                text = when (mode) {
+                                    com.example.starborn.desktop.DesktopDisplayMode.WINDOWED -> "Window"
+                                    com.example.starborn.desktop.DesktopDisplayMode.BORDERLESS -> "Border"
+                                    com.example.starborn.desktop.DesktopDisplayMode.FULLSCREEN -> "Full"
+                                },
+                                color = if (isSelected) FieldMenuDesign.cyan else FieldMenuDesign.textMuted,
+                                fontSize = 10.5.sp,
+                                fontWeight = FontWeight.Bold,
+                                fontFamily = FontFamily.Monospace,
+                                textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                                modifier = Modifier.padding(vertical = 6.dp)
+                            )
+                        }
+                    }
+                }
             }
         }
 

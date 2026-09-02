@@ -4898,7 +4898,7 @@
     "env": "neon",
     "title": "Drone Test Alcove",
     "background_image": "images/rooms/world_3/spire_archive_vault.webp",
-    "description": "The drone test alcove is sealed behind scratched glass and warning tape. A prototype rack waits beside a row of sleeping security drones. Their targeting paths are invisible for now, but the Lens has made invisible things a temporary problem. A flight telemetry log flashes on the testing rack screen.",
+    "description": "Scratched glass and warning tape seal the alcove. A prototype rack waits beside sleeping security drones, their dormant sensor paths revealed by the Lens. A flight telemetry log flashes on the rack screen.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -4958,7 +4958,7 @@
     "env": "neon",
     "title": "Landing Pad Roof",
     "background_image": "images/rooms/world_3/spire_landing_pad_roof.webp",
-    "description": "The Landing Pad Roof shudders under violent wind and red lockdown light. The Astra waits beyond the drone test alcove while the Planetary Shield rotates overhead in impossible chords. Somewhere inside that sky is a shield gap small enough to miss and important enough to die for.",
+    "description": "The roof shudders under violent wind and red lockdown light. The Astra waits across the pad while the Planetary Shield rotates overhead in heavy resonance bands, guarding the sky.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -5606,7 +5606,7 @@
         "requires_milestones": [
           "ms_w4_rejection_codes_read"
         ],
-        "condition_unmet_message": "A rejected droid twitches beside a bin of defective units."
+        "condition_unmet_message": "A defective droid sits on the conveyor, waiting for code overrides."
       },
       {
         "name": "conveyor release lock",
@@ -6702,7 +6702,7 @@
         "name": "mainframe terminal",
         "type": "generic",
         "action_event": "w5_mq22_access_mainframe",
-        "condition_unmet_message": "The terminal carries both Harmony and Architect root directories."
+        "condition_unmet_message": "The server farm terminal routes through Harmony and Architect directory trees."
       },
       {
         "name": "coolant-pulse map",
@@ -6961,7 +6961,7 @@
         "requires_milestones": [
           "ms_w5_backup_purge_traced"
         ],
-        "condition_unmet_message": "A server marked PURGED still carries a faint diagnostic pulse."
+        "condition_unmet_message": "The isolated backup rack blinks under frost, waiting for routine extraction."
       }
     ]
   },
@@ -6995,7 +6995,7 @@
         "name": "dead sysadmin",
         "type": "generic",
         "action_event": "w5_sq25_find_keycard",
-        "condition_unmet_message": "A station administrator floats behind a coolant pipe, keycard still clipped to the uniform."
+        "condition_unmet_message": "An administrator's body drifts in the nest, holding a high-clearance keycard."
       }
     ]
   },
@@ -8091,7 +8091,7 @@
         "requires_milestones": [
           "ms_game_complete"
         ],
-        "description": "Morning reaches the Colony through an open regional corridor. At Zeke's diner, Nova remembers the beach photograph while her tuning hand trembles against its frame."
+        "description": "Sunlight spills across the counter at Zeke's diner. Outside, the bells of an unscripted morning echo down the street while Nova rests her hand against the photograph."
       }
     ]
   },
@@ -11499,28 +11499,28 @@
           "ms_all_arcade_cabinets_restored"
         ],
         "background_image": "images/rooms/astra/common_room_arcade_v1.webp",
-        "description": "Coffee rings stain the central table. The entire recreation bay has transformed into a legendary vintage arcade gallery: all six cabinets\u2014Deep Mine, Canopy Hopper, Spire Infiltrator, Slag Catcher, Orbital Defense 2000, and Harmonic Pulse\u2014hum, chime, and cast kaleidoscopic neon ribbons across the deck plates. This is where the crew stops being a formation and becomes a family."
+        "description": "Coffee rings stain the central table. All six restored arcade cabinets hum in a glowing row along the bulkhead, casting bright neon ribbons across the deck. The crew stops being a formation and becomes a family."
       },
       {
         "requires_milestones": [
           "ms_arcade_cabinet_05_repaired"
         ],
         "background_image": "images/rooms/astra/common_room_arcade_v1.webp",
-        "description": "Coffee rings stain the central table. Five restored cabinets stand in an impressive row along the bulkhead\u2014Deep Mine, Canopy Hopper, Spire Infiltrator, Slag Catcher, and Orbital Defense 2000\u2014casting cobalt and amber reflections across the deck. This is where the crew stops being a formation and becomes a family."
+        "description": "Coffee rings stain the central table. Five restored arcade cabinets stand along the bulkhead, casting cobalt and amber reflections across the deck. The crew stops being a formation and becomes a family."
       },
       {
         "requires_milestones": [
           "ms_arcade_cabinet_03_repaired"
         ],
         "background_image": "images/rooms/astra/common_room_arcade_v1.webp",
-        "description": "Coffee rings stain the central table. Beside the kitchenette, Deep Mine, Canopy Hopper, and Spire Infiltrator form a vibrant row of amber, emerald, and cyan CRT screens humming with retro energy. This is where the crew stops being a formation and becomes a family."
+        "description": "Coffee rings stain the central table. Deep Mine, Canopy Hopper, and Spire Infiltrator hum in an amber and cyan row beside the kitchenette. The crew stops being a formation and becomes a family."
       },
       {
         "requires_milestones": [
           "ms_arcade_cabinet_01_repaired"
         ],
         "background_image": "images/rooms/astra/common_room_arcade_v1.webp",
-        "description": "Coffee rings stain the central table. Beside the patched kitchenette, the restored Deep Mine cabinet paints the recreation corner amber while its attract tune chirps beneath the ship's hum. This is where the crew stops being a formation and becomes a family."
+        "description": "Coffee rings stain the central table. Beside the kitchenette, the restored Deep Mine cabinet paints the corner in warm amber light. The crew stops being a formation and becomes a family."
       }
     ],
     "npcs": [],

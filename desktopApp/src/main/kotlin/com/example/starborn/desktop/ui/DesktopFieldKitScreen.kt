@@ -40,16 +40,19 @@ fun DesktopFieldKitScreen(
     var activeTab by remember { mutableStateOf(FieldKitTab.LOADOUT) }
     val allItems = remember { services.itemRepository.allItems().associateBy { it.id } }
     val sessionState by services.sessionStore.state.collectAsState()
+    val partyMembers = remember(sessionState.partyMembers) {
+        if (sessionState.partyMembers.isNotEmpty()) sessionState.partyMembers else listOf("nova")
+    }
+    var activeCharId by remember { mutableStateOf("nova") }
 
     // Equip State from session
     val equippedWeapons = sessionState.equippedWeapons
     val equippedArmors = sessionState.equippedArmors
-    val equippedItems = sessionState.equippedItems
 
-    val activeWeaponId = equippedWeapons["nova"] ?: sessionState.equippedItems["weapon"]
-    val activeArmorId = equippedArmors["nova"] ?: sessionState.equippedItems["armor"]
-    val activeAccessoryId = sessionState.equippedItems["accessory"]
-    val activeSnackId = sessionState.equippedItems["snack"]
+    val activeWeaponId = equippedWeapons[activeCharId] ?: sessionState.equippedItems["$activeCharId:weapon"] ?: sessionState.equippedItems["weapon"]
+    val activeArmorId = equippedArmors[activeCharId] ?: sessionState.equippedItems["$activeCharId:armor"] ?: sessionState.equippedItems["armor"]
+    val activeAccessoryId = sessionState.equippedItems["$activeCharId:accessory"] ?: sessionState.equippedItems["accessory"]
+    val activeSnackId = sessionState.equippedItems["$activeCharId:snack"] ?: sessionState.equippedItems["snack"]
 
     val activeWeapon = activeWeaponId?.let { allItems[it] }
     val activeArmor = activeArmorId?.let { allItems[it] }
@@ -149,21 +152,58 @@ fun DesktopFieldKitScreen(
                                 verticalArrangement = Arrangement.SpaceBetween,
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
+                                // Character Selector Tabs
+                                if (partyMembers.size > 1) {
+                                    Row(
+                                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                                        modifier = Modifier.fillMaxWidth()
+                                    ) {
+                                        partyMembers.forEach { memberId ->
+                                            val isSelected = memberId == activeCharId
+                                            Surface(
+                                                modifier = Modifier
+                                                    .weight(1f)
+                                                    .clickable { activeCharId = memberId },
+                                                shape = RoundedCornerShape(6.dp),
+                                                color = if (isSelected) FieldMenuDesign.cyan.copy(alpha = 0.20f) else Color.White.copy(alpha = 0.05f),
+                                                border = BorderStroke(1.dp, if (isSelected) FieldMenuDesign.cyan else Color.White.copy(alpha = 0.15f))
+                                            ) {
+                                                Text(
+                                                    text = memberId.uppercase(),
+                                                    color = if (isSelected) FieldMenuDesign.cyan else Color.White.copy(alpha = 0.70f),
+                                                    fontSize = 11.sp,
+                                                    fontWeight = FontWeight.Bold,
+                                                    fontFamily = FontFamily.Monospace,
+                                                    textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                                                    modifier = Modifier.padding(vertical = 4.dp)
+                                                )
+                                            }
+                                        }
+                                    }
+                                }
+
                                 // Character Portrait & Vitals
                                 Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                                    val portrait = rememberDesktopAssetPainter("nova_portrait", services.assetProvider)
+                                    val portrait = rememberDesktopAssetPainter("${activeCharId}_portrait", services.assetProvider)
                                     Image(
                                         painter = portrait,
-                                        contentDescription = "Nova",
+                                        contentDescription = activeCharId,
                                         modifier = Modifier
-                                            .size(120.dp)
+                                            .size(110.dp)
                                             .clip(CircleShape)
                                             .border(BorderStroke(2.dp, FieldMenuDesign.cyan), CircleShape),
                                         contentScale = ContentScale.Crop
                                     )
 
-                                    Text(text = "NOVA // EXPEDITION SPECIALIST", color = FieldMenuDesign.text, fontSize = 16.sp, fontWeight = FontWeight.Bold)
-                                    Text(text = "Level ${sessionState.playerLevel}  •  ${sessionState.playerCredits} CR  •  ${sessionState.playerXp} XP", color = FieldMenuDesign.gold, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                                    val charLevel = sessionState.partyMemberLevels[activeCharId] ?: sessionState.playerLevel
+                                    val charRole = when (activeCharId) {
+                                        "zeke" -> "VANGUARD"
+                                        "orion" -> "MYSTIC"
+                                        "gh0st" -> "INFILTRATOR"
+                                        else -> "EXPEDITION SPECIALIST"
+                                    }
+                                    Text(text = "${activeCharId.uppercase()} // $charRole", color = FieldMenuDesign.text, fontSize = 15.sp, fontWeight = FontWeight.Bold)
+                                    Text(text = "Level $charLevel  •  ${sessionState.playerCredits} CR", color = FieldMenuDesign.gold, fontSize = 12.sp, fontWeight = FontWeight.Bold)
                                 }
 
                                 // 4 Paper Doll Equipment Slots (Weapon, Armor, Accessory, Snack)

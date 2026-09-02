@@ -173,6 +173,17 @@ fun PartyRoster(
                                                     )
                                             )
                                         }
+                                        val partyIdleTransition = rememberInfiniteTransition(label = "party_idle_${member.id}")
+                                        val partyIdleWave by partyIdleTransition.animateFloat(
+                                            initialValue = 0f,
+                                            targetValue = (2f * Math.PI).toFloat(),
+                                            animationSpec = infiniteRepeatable(
+                                                animation = tween(durationMillis = 2800, easing = LinearEasing),
+                                                repeatMode = RepeatMode.Restart
+                                            ),
+                                            label = "party_idle_wave"
+                                        )
+                                        val isLowHp = isAlive && (currentHp.toFloat() / maxHp.coerceAtLeast(1)) <= 0.25f
                                         Box(
                                             modifier = Modifier
                                                 .size(100.dp)
@@ -181,9 +192,18 @@ fun PartyRoster(
                                                 .graphicsLayer {
                                                     compositingStrategy = CompositingStrategy.Offscreen
                                                     val pulse = 1f + 0.06f * hitPulse
-                                                    scaleX = pulse
-                                                    scaleY = pulse
-                                                    translationY = hitRecoilY
+                                                    if (isAlive) {
+                                                        val breath = sin(partyIdleWave)
+                                                        val idleBob = breath * 1.5f
+                                                        scaleX = pulse * (1f + 0.008f * breath)
+                                                        scaleY = pulse * (1f + 0.012f * breath)
+                                                        translationY = hitRecoilY + idleBob
+                                                        rotationZ = if (isLowHp) -4f else 0f
+                                                    } else {
+                                                        scaleX = pulse
+                                                        scaleY = pulse
+                                                        translationY = hitRecoilY
+                                                    }
                                                 },
                                             contentAlignment = Alignment.Center
                                         ) {

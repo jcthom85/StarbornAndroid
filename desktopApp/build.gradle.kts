@@ -72,6 +72,11 @@ dependencies {
     implementation(libs.androidx.datastore.core)
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.protobuf.javalite)
+    implementation("com.googlecode.soundlibs:mp3spi:1.9.5.4")
+    implementation("com.googlecode.soundlibs:jlayer:1.0.1.4")
+    implementation("com.googlecode.soundlibs:tritonus-share:0.3.7.4")
+    testImplementation(libs.junit)
+    testImplementation(compose.desktop.uiTestJUnit4)
 }
 
 compose.desktop {

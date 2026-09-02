@@ -262,10 +262,34 @@ private fun DesktopArcadeCabinetSelector(
                                     .padding(14.dp)
                             ) {
                                 Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                                    Text(text = "CONTROLS:", color = NeonCyan, fontSize = 11.sp, fontWeight = FontWeight.Bold)
-                                    Text(text = "• [A] / [D] or Arrow Keys: Maneuver Ship", color = TextWhite, fontSize = 12.sp)
-                                    Text(text = "• [SPACEBAR]: Pulse Laser Cannon", color = TextWhite, fontSize = 12.sp)
-                                    Text(text = "• [E]: Tactical EMP Shockwave", color = TextWhite, fontSize = 12.sp)
+                                    Text(text = "CABINET CONTROLS:", color = NeonCyan, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                                    when (selectedCabinet.id) {
+                                        "deep_mine" -> {
+                                            Text(text = "• [A] / [D] / Arrow Keys: Steer Drill Bit", color = TextWhite, fontSize = 12.sp)
+                                            Text(text = "• [SPACEBAR]: Turbo Boost", color = TextWhite, fontSize = 12.sp)
+                                        }
+                                        "slag_catcher" -> {
+                                            Text(text = "• [A] / [D] / Arrow Keys: Move Magnetic Hopper", color = TextWhite, fontSize = 12.sp)
+                                            Text(text = "• [SPACEBAR]: Dump Coolant", color = TextWhite, fontSize = 12.sp)
+                                        }
+                                        "spire_infiltrator" -> {
+                                            Text(text = "• [W][A][S][D] / Arrows: Stealth Grid Navigation", color = TextWhite, fontSize = 12.sp)
+                                            Text(text = "• [SPACEBAR]: Decrypt Node", color = TextWhite, fontSize = 12.sp)
+                                        }
+                                        "canopy_hopper" -> {
+                                            Text(text = "• [A] / [D] / Arrow Keys: Lean & Drift", color = TextWhite, fontSize = 12.sp)
+                                            Text(text = "• [SPACEBAR]: Thruster Jump", color = TextWhite, fontSize = 12.sp)
+                                        }
+                                        "harmonic_pulse" -> {
+                                            Text(text = "• [1][2][3][4] or [D][F][J][K]: Strike Frequency Beats", color = TextWhite, fontSize = 12.sp)
+                                            Text(text = "• [SPACEBAR]: Resonance Burst", color = TextWhite, fontSize = 12.sp)
+                                        }
+                                        else -> {
+                                            Text(text = "• [A] / [D] or Arrow Keys: Maneuver Ship", color = TextWhite, fontSize = 12.sp)
+                                            Text(text = "• [SPACEBAR]: Pulse Laser Cannon", color = TextWhite, fontSize = 12.sp)
+                                            Text(text = "• [E]: Tactical EMP Shockwave", color = TextWhite, fontSize = 12.sp)
+                                        }
+                                    }
                                 }
                             }
                         }

@@ -681,7 +681,51 @@ private fun DesktopSettingsDialog(
 
                 HorizontalDivider(color = TitleCyan.copy(alpha = 0.2f))
 
-                Text("Display & Gameplay", color = TitleGold, fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                Text("Display & Window Configuration", color = TitleGold, fontWeight = FontWeight.Bold, fontSize = 14.sp)
+
+                val currentDisplayMode by services.userSettingsStore.displayMode.collectAsState(initial = com.example.starborn.desktop.DesktopDisplayMode.WINDOWED)
+
+                Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Text("Screen Mode (or press F11)", color = TitleText, fontSize = 13.sp)
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        com.example.starborn.desktop.DesktopDisplayMode.values().forEach { mode ->
+                            val isSelected = mode == currentDisplayMode
+                            Surface(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .clickable {
+                                        coroutineScope.launch {
+                                            services.userSettingsStore.setDisplayMode(mode)
+                                        }
+                                    },
+                                shape = RoundedCornerShape(8.dp),
+                                color = if (isSelected) TitleCyan.copy(alpha = 0.20f) else Color.White.copy(alpha = 0.05f),
+                                border = BorderStroke(1.2.dp, if (isSelected) TitleCyan else Color.White.copy(alpha = 0.15f))
+                            ) {
+                                Text(
+                                    text = when (mode) {
+                                        com.example.starborn.desktop.DesktopDisplayMode.WINDOWED -> "Windowed"
+                                        com.example.starborn.desktop.DesktopDisplayMode.BORDERLESS -> "Borderless"
+                                        com.example.starborn.desktop.DesktopDisplayMode.FULLSCREEN -> "Fullscreen"
+                                    },
+                                    color = if (isSelected) TitleCyan else TitleMutedText,
+                                    fontSize = 11.5.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    fontFamily = FontFamily.Monospace,
+                                    textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                                    modifier = Modifier.padding(vertical = 8.dp)
+                                )
+                            }
+                        }
+                    }
+                }
+
+                HorizontalDivider(color = TitleCyan.copy(alpha = 0.2f))
+
+                Text("Gameplay & Accessibility", color = TitleGold, fontWeight = FontWeight.Bold, fontSize = 14.sp)
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),

@@ -7,6 +7,7 @@ import com.example.starborn.domain.audio.AudioCueType
 import java.io.BufferedInputStream
 import java.io.InputStream
 import java.util.concurrent.ConcurrentHashMap
+import javax.sound.sampled.AudioFormat
 import javax.sound.sampled.AudioSystem
 import javax.sound.sampled.Clip
 import javax.sound.sampled.FloatControl
@@ -55,7 +56,22 @@ class DesktopAudioDriver(
 
         try {
             val stream = findAudioStream(normalizedCue) ?: return
-            val audioStream = AudioSystem.getAudioInputStream(BufferedInputStream(stream))
+            val inStream = AudioSystem.getAudioInputStream(BufferedInputStream(stream))
+            val baseFormat = inStream.format
+            val decodedFormat = AudioFormat(
+                AudioFormat.Encoding.PCM_SIGNED,
+                baseFormat.sampleRate,
+                16,
+                baseFormat.channels,
+                baseFormat.channels * 2,
+                baseFormat.sampleRate,
+                false
+            )
+            val audioStream = if (baseFormat.encoding != AudioFormat.Encoding.PCM_SIGNED) {
+                AudioSystem.getAudioInputStream(decodedFormat, inStream)
+            } else {
+                inStream
+            }
             val clip = AudioSystem.getClip()
             clip.open(audioStream)
 

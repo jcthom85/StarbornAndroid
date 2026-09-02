@@ -68,7 +68,7 @@ fun DesktopFishingScreen(
     var lastCatch by remember { mutableStateOf<FishCatchSummary?>(null) }
     var isHoldingReel by remember { mutableStateOf(false) }
 
-    val bgPainter = rememberDesktopAssetPainter("images/rooms/glow_moss_cavern.webp", services.assetProvider)
+    val bgPainter = rememberDesktopAssetPainter("images/rooms/world_1/pit_shaft_v5.webp", services.assetProvider)
 
     // Fishing Simulation Loop
     LaunchedEffect(fishingState, isHoldingReel) {
@@ -101,13 +101,37 @@ fun DesktopFishingScreen(
                     }
 
                     if (reelProgress >= 1.0f) {
-                        // Successfully caught
+                        // Successfully caught from zone data
+                        val zone = services.fishingService.getFishingZone(zoneId)
+                            ?: services.fishingService.getFishingZone("glow_moss_cavern")
+                        val defaultRod = services.fishingService.getAvailableRods().firstOrNull()
+                            ?: com.example.starborn.domain.fishing.FishingRod(id = "basic_rod", name = "Basic Rod", fishingPower = 1.0)
+                        val defaultLure = services.fishingService.getAvailableLures().firstOrNull()
+                            ?: com.example.starborn.domain.fishing.FishingLure(id = "fiber_lure", name = "Fiber Lure")
+
+                        val result = if (zone != null) {
+                            services.fishingService.getCatchResult(
+                                zone = zone,
+                                rod = defaultRod,
+                                lure = defaultLure,
+                                minigameResult = com.example.starborn.domain.fishing.MinigameResult.PERFECT
+                            )
+                        } else null
+
+                        val itemId = result?.itemId ?: "bioluminescent_ray"
+                        val displayName = services.itemRepository.findItem(itemId)?.name
+                            ?: result?.itemId?.replace("_", " ")?.capitalize()
+                            ?: "Bioluminescent Abyssal Ray"
+
+                        services.inventoryService.addItem(itemId, 1)
+                        services.sessionStore.setInventory(services.inventoryService.snapshot())
+
                         lastCatch = FishCatchSummary(
-                            name = "Bioluminescent Abyssal Ray",
-                            rarity = "RARE",
-                            weightKg = 4.8f,
-                            valueCredits = 120,
-                            lore = "Emits a pulsating indigo glow. Highly prized by Astra station researchers."
+                            name = displayName,
+                            rarity = result?.rarity?.name ?: "RARE",
+                            weightKg = 3.5f + Random.nextFloat() * 2.5f,
+                            valueCredits = (services.itemRepository.findItem(itemId)?.value ?: 75),
+                            lore = result?.flavorText ?: "Recovered from resonant waters."
                         )
                         fishingState = FishingState.CAUGHT
                         break
@@ -198,13 +222,13 @@ fun DesktopFishingScreen(
             when (fishingState) {
                 FishingState.IDLE -> {
                     Surface(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(16.dp))
-                            .background(GlassDark)
-                            .border(BorderStroke(1.dp, GlassBorder), RoundedCornerShape(16.dp))
-                            .padding(horizontal = 32.dp, vertical = 24.dp)
+                        modifier = Modifier.clip(RoundedCornerShape(16.dp)),
+                        color = GlassDark,
+                        shape = RoundedCornerShape(16.dp),
+                        border = BorderStroke(1.dp, GlassBorder)
                     ) {
                         Column(
+                            modifier = Modifier.padding(horizontal = 32.dp, vertical = 24.dp),
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.spacedBy(12.dp)
                         ) {
@@ -232,13 +256,13 @@ fun DesktopFishingScreen(
 
                 FishingState.WAITING_FOR_BITE -> {
                     Surface(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(16.dp))
-                            .background(GlassDark)
-                            .border(BorderStroke(1.dp, GlassBorder), RoundedCornerShape(16.dp))
-                            .padding(horizontal = 32.dp, vertical = 20.dp)
+                        modifier = Modifier.clip(RoundedCornerShape(16.dp)),
+                        color = GlassDark,
+                        shape = RoundedCornerShape(16.dp),
+                        border = BorderStroke(1.dp, GlassBorder)
                     ) {
                         Column(
+                            modifier = Modifier.padding(horizontal = 32.dp, vertical = 20.dp),
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {

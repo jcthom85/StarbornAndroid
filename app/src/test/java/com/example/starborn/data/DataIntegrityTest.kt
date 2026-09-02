@@ -7,6 +7,7 @@ import com.example.starborn.data.assets.CinematicStepAsset
 import com.example.starborn.domain.cinematic.CinematicScene
 import com.example.starborn.domain.cinematic.CinematicStep
 import com.example.starborn.domain.cinematic.CinematicStepType
+import com.example.starborn.domain.model.DialogueLine
 import com.example.starborn.domain.model.EventAction
 import com.example.starborn.domain.model.GameEvent
 import com.example.starborn.domain.model.HubNode
@@ -806,6 +807,97 @@ class DataIntegrityTest {
         return requireNotNull(adapter.fromJson(file.readText())) {
             "Failed to parse $path"
         }
+    }
+
+    @Test
+    fun allQuestsProvideInWorldSpatialDirectionAndLandmarks() {
+        val quests = readList("src/main/assets/quests.json", Quest::class.java)
+        val dialogue = readList("src/main/assets/dialogue.json", DialogueLine::class.java).associateBy { it.id }
+        val events = readList("src/main/assets/events.json", GameEvent::class.java)
+
+        val directionalCues = setOf(
+            "north", "south", "east", "west", "northeast", "northwest", "southeast", "southwest",
+            "up", "down", "across", "through", "head", "meet", "find", "reach", "dock", "hall",
+            "yard", "bunk", "gate", "lift", "deck", "plaza", "station", "beach", "vault", "gallery",
+            "chamber", "conveyor", "aisle", "nest", "roof", "corridor", "tower", "spire", "pit",
+            "checkpoint", "booth", "window", "security", "market", "counter", "workshop", "shore",
+            "scanner", "terminal", "generator", "console", "elevator", "patrol", "mine"
+        )
+
+        val unguidedQuests = mutableListOf<String>()
+
+        quests.forEach { quest ->
+            val firstStage = quest.stages.firstOrNull() ?: return@forEach
+            val firstTask = firstStage.tasks.firstOrNull() ?: return@forEach
+
+            val triggeringEvents = events.filter { event ->
+                event.actions.any { action ->
+                    action.type.equals("start_quest", ignoreCase = true) && action.questId == quest.id
+                } || event.id.startsWith(quest.id)
+            }
+
+            val relatedDialogue = dialogue.values.filter { dlg ->
+                dlg.id.contains(quest.id) ||
+                    dlg.trigger?.contains(quest.id) == true ||
+                    dlg.condition?.contains(quest.id) == true
+            }
+
+            val allAssociatedText = buildString {
+                append(firstStage.title).append(" ")
+                append(firstStage.description.orEmpty()).append(" ")
+                append(firstTask.text).append(" ")
+                triggeringEvents.forEach { ev ->
+                    append(ev.id).append(" ")
+                    ev.actions.forEach { act ->
+                        append(act.type).append(" ")
+                        append(act.message.orEmpty()).append(" ")
+                    }
+                }
+                relatedDialogue.forEach { dlg ->
+                    append(dlg.text).append(" ")
+                }
+            }.lowercase()
+
+            val hasDirectionalOrLandmarkCue = directionalCues.any { cue ->
+                allAssociatedText.contains(cue)
+            }
+
+            if (!hasDirectionalOrLandmarkCue) {
+                unguidedQuests.add("${quest.id} (${quest.title})")
+            }
+        }
+
+        assertTrue(
+            "All quests must provide clear in-world landmarks or directional cues: $unguidedQuests",
+            unguidedQuests.isEmpty()
+        )
+    }
+
+    @Test
+    fun questDialogueAvoidsMonotonousRoboticTemplates() {
+        val dialogue = readList("src/main/assets/dialogue.json", DialogueLine::class.java)
+
+        val roboticPatterns = listOf(
+            "first the .* then the .*",
+            "first you must .* then you must .*",
+            "go to .* and talk to .*, then go to .*",
+            "your objective is to .*"
+        ).map { Regex(it, RegexOption.IGNORE_CASE) }
+
+        val flaggedLines = mutableListOf<String>()
+
+        dialogue.forEach { line ->
+            roboticPatterns.forEach { pattern ->
+                if (pattern.containsMatchIn(line.text)) {
+                    flaggedLines.add("${line.id} (${line.speaker}): '${line.text}'")
+                }
+            }
+        }
+
+        assertTrue(
+            "Dialogue should avoid monotonous/robotic quest templating: $flaggedLines",
+            flaggedLines.isEmpty()
+        )
     }
 }
 

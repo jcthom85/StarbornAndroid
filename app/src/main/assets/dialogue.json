@@ -322,7 +322,7 @@
   {
     "id": "jed_w1_mq02_handoff_3",
     "speaker": "Jed",
-    "text": "Head north through the market to the Transit Checkpoint. If Hank's scanner rejects you, find Zeke at the Admin window—he knows how to bury liability paperwork.",
+    "text": "Head north through the market to Transit. If Hank's scanner rejects you, find Zeke at Admin—he knows how to bury liability paperwork.",
     "trigger": "set_milestone:ms_w1_mq02_jed_advised"
   },
   {
@@ -822,7 +822,7 @@
   {
     "id": "zeke_w2_crash_3",
     "speaker": "Zeke",
-    "text": "Everything is bruised, but my suit's recycler is still pumping. We're on the surface, Nova. We actually crossed the barrier... but the pod's core is completely fried.",
+    "text": "Bruised, but my suit's recycler is still pumping. We made it to the surface, Nova. Crossed the barrier... but the pod's core is fried.",
     "next": "zeke_w2_crash_4"
   },
   {
@@ -852,7 +852,7 @@
   {
     "id": "zeke_w2_mq02_intro_1",
     "speaker": "Zeke",
-    "text": "The beacon's pulse is strong. It's coming from that massive stone gate up ahead. But the path is covered in thick razor-vines. Be careful, Nova.",
+    "text": "The beacon's pulse is strong, coming from that massive stone gate ahead. But thick razor-vines block the path. Watch your step, Nova.",
     "condition": "quest_active:w2_mq02,quest_task_not_done:w2_mq02:locate_temple_gate"
   },
   {
@@ -882,7 +882,7 @@
   {
     "id": "zeke_w2_sq01_intro_1",
     "speaker": "Zeke",
-    "text": "Nova, this surface is incredible. The plants here respond directly to resonance frequencies. If you scan 5 unique flora specimens, I can compile an ecological catalog. Can you do that?",
+    "text": "Nova, the plants here respond directly to resonance frequencies. Scan five unique flora specimens and I can compile an ecological catalog. Sound good?",
     "condition": "quest_not_started:w2_sq01,quest_completed:w2_mq01",
     "options": [
       {
@@ -916,7 +916,7 @@
   {
     "id": "orion_w2_sq04_tune_1",
     "speaker": "Orion",
-    "text": "All three crystal voices are seated. The mural is ready for the resonator columns; let the room carry the chord instead of forcing it by hand.",
+    "text": "All three crystal voices are seated. The mural is ready; let the room carry the chord instead of forcing it by hand.",
     "condition": "quest_active:w2_sq04,quest_task_done:w2_sq04:crystal_west,quest_task_done:w2_sq04:crystal_east,quest_task_done:w2_sq04:crystal_north,quest_task_not_done:w2_sq04:mural_tuning",
     "trigger": "player_action:w2_sq04_complete"
   },
@@ -934,7 +934,7 @@
   {
     "id": "orion_w2_sq03_intro_1",
     "speaker": "Orion",
-    "text": "Nova, Tideglass Beach is nearby. The wet shore grows herbs that can bind Source residue into something useful. Gather the clean materials and I'll show you how to make resin that will not poison your hands.",
+    "text": "Tideglass Beach is nearby. The wet shore grows herbs that bind Source residue into clean resin. Gather the materials and we can start.",
     "condition": "quest_not_started:w2_sq03,quest_completed:w2_mq03",
     "options": [
       {
@@ -951,7 +951,7 @@
   {
     "id": "orion_w2_sq04_intro_1",
     "speaker": "Orion",
-    "text": "The stasis mural is missing three resonance crystals from the Sanctuary wings. Recover their voices, then we can align the chord without letting the Ocean overwhelm us.",
+    "text": "The stasis mural needs three resonance crystals from the Sanctuary wings. Recover their voices so we can align the chord safely.",
     "condition": "quest_not_started:w2_sq04,quest_completed:w2_mq03",
     "options": [
       {
@@ -992,7 +992,7 @@
   {
     "id": "ghost_w2_sq05_intro_1",
     "speaker": "Gh0st",
-    "text": "The transmitter is beyond an active vent security grid. Blind its timing, pass the guard systems without an alert, then retrieve the core. You can build something faster from its timing crystal.",
+    "text": "The transmitter sits beyond a security grid. Blind its sensors, bypass the guards, and grab the core. Its timing crystal can build something faster.",
     "condition": "quest_not_started:w2_sq05,quest_completed:w2_mq04",
     "options": [
       {
@@ -1015,7 +1015,7 @@
     "id": "zeke_w3_mq11_safehouse_intro",
     "speaker": "Zeke",
     "condition": "quest_active:w3_mq11,quest_stage:w3_mq11:find_safehouse,quest_task_not_done:w3_mq11:establish_shield",
-    "text": "Welcome to my safehouse... or what's left of it. They scrubbed my lease, my work history, my access tags. But the pipes still know me, and the walls still carry my old wiring.",
+    "text": "Welcome to my safehouse. They scrubbed my lease, work history, and access tags. But the pipes still know me; the walls carry my wiring.",
     "next": "zeke_w3_mq11_safehouse_next"
   },
   {
@@ -1034,7 +1034,7 @@
     "id": "w3_mq12_jax_intro",
     "speaker": "Jax",
     "condition": "quest_active:w3_mq12,quest_task_not_done:w3_mq12:talk_jax",
-    "text": "You want the Upper City? Then you want six things: timing, credentials, a route, a costume, a terminal pull, and the nerve to look bored while people decide whether you count as human.",
+    "text": "You want the Upper City? You need timing, credentials, a route, disguises, and the nerve to look bored while they judge your humanity.",
     "options": [
       {
         "id": "jax_w3_mq12_request_codes",
@@ -1046,14 +1046,14 @@
   {
     "id": "w3_mq12_jax_success",
     "speaker": "Jax",
-    "text": "Schedules are on this drive. The rich don't guard what workers touch, so start there: underrail map, plaza kiosk, service gate, safehouse roof laundry lines, then Zeke's workstation. Bring it all back to the planning table before courage turns stupid.",
+    "text": "Schedules are on this drive. Gather the underrail timing, badges, and disguises, then assemble everything at the planning table.",
     "trigger": "player_action:w3_mq12_talk_jax"
   },
   {
     "id": "w3_sq11_jax_intro",
     "speaker": "Jax",
     "condition": "quest_not_started:w3_sq11,quest_completed:w3_mq11",
-    "text": "The neon sign outside is dead. Can't run a bar in the dark, and I don't mean ambience. Patrols ignore a place that looks open and watched. Bring me a neon core from the street sweepers, and I'll make it worth your while.",
+    "text": "The neon sign outside is dead. Patrols ignore places that look open and watched. Bring me a neon core for good pay.",
     "options": [
       {
         "id": "jax_w3_sq11_accept",
@@ -1083,7 +1083,7 @@
     "id": "w3_sq12_ghost_intro",
     "speaker": "Gh0st",
     "condition": "quest_not_started:w3_sq12,quest_completed:w3_mq11",
-    "text": "Nova. Dominion databases at the Transit Plaza might hold records on... Elara. My sister. If I touch the terminal, old flags may wake up. If you search it, maybe I learn whether grief has an address.",
+    "text": "Nova. Transit Plaza databases might hold records on Elara, my sister. If I log in, alarms trigger. Search it for me.",
     "options": [
       {
         "id": "ghost_w3_sq12_accept",
@@ -1107,7 +1107,7 @@
     "id": "w3_sq13_mika_intro",
     "speaker": "Mika",
     "condition": "quest_not_started:w3_sq13,quest_completed:w3_mq11",
-    "text": "Try the skewers! Real protein today, I promise. No recycled paste. Also... can you help me fix these lanterns? When the lights fail, patrols call us a hazard and clear the stalls.",
+    "text": "Try the skewers! Real protein today. Also... can you fix these lanterns? When lights fail, patrols call us a hazard and clear the stalls.",
     "options": [
       {
         "id": "mika_w3_sq13_accept",
@@ -1137,14 +1137,14 @@
     "id": "w3_mq12_workstation_dialogue",
     "speaker": "System",
     "condition": "quest_active:w3_mq12,quest_task_done:w3_mq12:talk_jax,quest_task_done:w3_mq12:map_patrols,quest_task_done:w3_mq12:interrogate_guard,quest_task_done:w3_mq12:copy_badges,quest_task_done:w3_mq12:source_disguises,quest_task_not_done:w3_mq12:hack_blueprints",
-    "text": "Zeke's workstation accepts the stolen timing, badge pattern, disguise notes, and plaza pull. The old employee profile it builds from his erased life compiles into a service-elevator route.",
+    "text": "Zeke's workstation accepts the stolen timing, badges, and disguise notes. His restored employee profile compiles into a service-elevator route.",
     "trigger": "player_action:w3_mq12_hack_blueprints"
   },
   {
     "id": "w3_mq12_planning_table_dialogue",
     "speaker": "System",
     "condition": "quest_active:w3_mq12,quest_task_done:w3_mq12:talk_jax,quest_task_done:w3_mq12:map_patrols,quest_task_done:w3_mq12:interrogate_guard,quest_task_done:w3_mq12:copy_badges,quest_task_done:w3_mq12:source_disguises,quest_task_done:w3_mq12:hack_blueprints,quest_task_not_done:w3_mq12:assemble_table",
-    "text": "The planning table lights every thread at once: patrol timing, badges, uniforms, security records, and the elevator route. Nova sees the weak part of the whole system: it depends on everyone staying in their assigned place.",
+    "text": "The planning table maps the infiltration route: patrol timing, badges, and disguises align into a clear path upward.",
     "options": [
       {
         "id": "w3_mq12_assemble_confirm",
@@ -1169,14 +1169,14 @@
   {
     "id": "zeke_w3_mq13_cover",
     "speaker": "Zeke",
-    "text": "Sir, this is a commemorative installation. Very lifelike. Very expensive. Touch it again and I will have to invent paperwork neither of us wants to read.",
+    "text": "Sir, this commemorative installation is delicate. Touch it again and I will have to file paperwork neither of us wants to read.",
     "trigger": "player_action:w3_mq13_blend_in"
   },
   {
     "id": "zeke_w3_mq13_console_intro",
     "speaker": "Zeke",
     "condition": "quest_active:w3_mq13,quest_task_done:w3_mq13:blend_in,quest_task_not_done:w3_mq13:disable_sensors",
-    "text": "Standard Dominion scanner grid, routed through Laundry Service because the people who clean their lives are invisible by design. That makes us ugly, useful math.",
+    "text": "Standard Dominion scanner grid. They routed it through Laundry because maintenance staff are invisible by design. That makes us useful math.",
     "next": "zeke_w3_mq13_console_end"
   },
   {
@@ -1189,7 +1189,7 @@
     "id": "orion_w3_mq14_puzzle_intro",
     "speaker": "Orion",
     "condition": "quest_active:w3_mq14,quest_task_done:w3_mq14:enter_archive,quest_task_not_done:w3_mq14:solve_light_puzzle",
-    "text": "The Prism Gallery is not solving light. It is forcing pressure to become visible. Dominion wrapped a cage in beauty and called it scholarship. Read the containment field, the prism shutters, and the tether-line routing before touching the Lens.",
+    "text": "The Prism Gallery forces pressure into light. Read the containment field, shutters, and tether routing before touching the Lens.",
     "next": "orion_w3_mq14_puzzle_end"
   },
   {
@@ -1201,7 +1201,7 @@
     "id": "zeke_w3_mq14_lens_warning",
     "speaker": "Zeke",
     "condition": "quest_active:w3_mq14,quest_task_done:w3_mq14:solve_light_puzzle,quest_task_not_done:w3_mq14:take_lens",
-    "text": "Wait. Energy density is spiking before you even touch it. Nova, it is reading you back. If you grab that thing, the feedback loop lights us up like a flare.",
+    "text": "Wait. Energy density is spiking before you touch it. It's reading you back, Nova. Grab it, and the feedback lights us up.",
     "next": "nova_w3_mq14_lens_take"
   },
   {
@@ -1220,13 +1220,13 @@
   {
     "id": "thorne_w3_mq14_trap_vale",
     "speaker": "Thorne",
-    "text": "He is coming. And he does not leave survivors. I cannot let him find you here. He is not city security. He is what city security fears."
+    "text": "He is coming, and leaves no survivors. You cannot let him find you. He isn't city security—he's what city security fears."
   },
   {
     "id": "vale_w3_mq15_override",
     "speaker": "Vale",
     "condition": "quest_active:w3_mq15,quest_task_not_done:w3_mq15:defeat_administrator",
-    "text": "Anomaly detected in the Archive. Administrator, lock the district. Seal the drone test alcove and the roof. I want no ungoverned noise leaving Sector 0, especially if it has learned to sing."
+    "text": "Archive anomaly detected. Administrator, lock the district. Seal the roof. I want no ungoverned noise leaving Sector 0, especially if it sings."
   },
   {
     "id": "upper_city_lounge_shop_intro",
@@ -1346,7 +1346,7 @@
     "id": "thorne_w5_mq22_intro",
     "speaker": "Thorne",
     "condition": "quest_active:w5_mq22,quest_task_done:w5_mq22:access_mainframe,quest_task_not_done:w5_mq22:find_thorne",
-    "text": "I built the cage. I thought Harmony would be controllable. Sellable. Vale is not trying to own the world. He is trying to erase every voice but his.",
+    "text": "I built the cage, thinking Harmony was sellable. Vale isn't trying to own the world—he's trying to erase every voice but his.",
     "trigger": "player_action:w5_mq22_find_thorne"
   },
   {
@@ -1359,7 +1359,7 @@
     "id": "thorne_w5_mq23_core",
     "speaker": "Thorne",
     "condition": "quest_active:w5_mq23,quest_task_not_done:w5_mq23:navigate_maze",
-    "text": "Three firewall nodes. I designed the server route to keep everyone else out. Vale changed the locks and left me inside it. Map the coolant pulse first, then follow Alpha, Beta, Gamma in order."
+    "text": "Three firewall nodes. Vale changed the locks and trapped me inside my own route. Map the coolant pulse, then clear Alpha, Beta, Gamma."
   },
   {
     "id": "elara_w5_mq24_reunion",
@@ -1397,7 +1397,7 @@
     "id": "vale_w6_final_confrontation",
     "speaker": "Vale",
     "condition": "quest_active:w6_mq30,quest_task_not_done:w6_mq30:confront_vale",
-    "text": "Thorne wanted to bottle the ocean. I will break the glass. No bodies to starve. No minds to break. Why do you struggle to add the friction back?",
+    "text": "Thorne wanted to bottle the ocean. I will break the glass. No bodies to starve, no minds to break. Why fight for friction?",
     "trigger": "player_action:w6_mq30_confront_vale"
   },
   {
@@ -1431,13 +1431,13 @@
   {
     "id": "orion_w2_vine_gate",
     "speaker": "Orion",
-    "text": "Those razor-vines carry toxic spores. A heated edge could cauterize them as it cuts. The lost patrol transceiver may lead us to a cutter you can repair.",
+    "text": "Those razor-vines carry toxic spores. A heated blade could cauterize them. The patrol transceiver may lead us to a repairable cutter.",
     "condition": "quest_active:w2_sq02,quest_task_not_done:w2_sq02:recover_transceiver"
   },
   {
     "id": "ghost_w2_sq05_grid_hint",
     "speaker": "Gh0st",
-    "text": "Do not touch the transmitter yet. First blind the security grid on the gantry, then cross the grate between guard sweeps.",
+    "text": "Hold position. Blind the gantry grid before you step onto the grate. Guard sweeps cycle fast.",
     "condition": "quest_active:w2_sq05,quest_task_not_done:w2_sq05:hack_security_grid"
   },
   {

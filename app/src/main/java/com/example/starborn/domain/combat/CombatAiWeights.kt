@@ -52,5 +52,9 @@ data class CombatAiWeights(
     val diversityRepeatPenalty: Double = 7.0,      // Penalty per previous use in history
     val diversityConsecutivePenalty: Double = 10.0,// Penalty if used immediately prior
     val basicAttackBaseConstant: Double = 35.0,
-    val basicAttackRepeatPenalty: Double = 6.0
+    val basicAttackRepeatPenalty: Double = 6.0,
+
+    // --- Round 1 Ambush Grace (Fairness Pacing) ---
+    val roundOneLethalBurstPenalty: Double = -20.0, // Discourages lethal nuke on round 1 before player acts
+    val roundOneSetupBonus: Double = 12.0           // Favors scanning, buffing, or light control on round 1
 )

@@ -1,5 +1,9 @@
 package com.example.starborn.feature.exploration.ui.components
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -9,9 +13,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.graphicsLayer
+import kotlinx.coroutines.launch
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
@@ -39,10 +47,27 @@ fun EventAnnouncementOverlay(
     val backgroundColor = themeColor(theme?.bg, Color(0xFF060B14)).copy(alpha = 0.96f)
     val hasTitle = !announcement.title.isNullOrBlank()
     val hasEyebrow = !announcement.eyebrow.isNullOrBlank()
+    val entranceProgress = remember { Animatable(0.85f) }
+    val entranceAlpha = remember { Animatable(0f) }
+    LaunchedEffect(announcement.id) {
+        entranceProgress.snapTo(0.85f)
+        entranceAlpha.snapTo(0f)
+        launch {
+            entranceAlpha.animateTo(1f, animationSpec = tween<Float>(150))
+        }
+        entranceProgress.animateTo(
+            1f,
+            animationSpec = spring<Float>(
+                dampingRatio = Spring.DampingRatioMediumBouncy,
+                stiffness = Spring.StiffnessMediumLow
+            )
+        )
+    }
+
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(Color.Black.copy(alpha = 0.30f))
+            .background(Color.Black.copy(alpha = 0.30f * entranceAlpha.value))
             .padding(horizontal = 24.dp, vertical = 32.dp),
         contentAlignment = Alignment.Center
     ) {
@@ -50,6 +75,11 @@ fun EventAnnouncementOverlay(
             modifier = Modifier
                 .fillMaxWidth()
                 .widthIn(max = 540.dp)
+                .graphicsLayer {
+                    scaleX = entranceProgress.value
+                    scaleY = entranceProgress.value
+                    alpha = entranceAlpha.value
+                }
                 .semantics { contentDescription = "Event Announcement. Tap to continue" }
                 .clickable(onClick = onDismiss),
             shape = RoundedCornerShape(6.dp),

@@ -118,7 +118,7 @@ fun DesktopCinematicScreen(
             }
     ) {
         // 1. Cinematic Visual Art Canvas with Motion Dynamics
-        val bgImage = currentStep.imagePath ?: "bg_station"
+        val bgImage = currentStep.imagePath ?: "images/rooms/glow_moss_cavern.webp"
         val bgPainter = rememberDesktopAssetPainter(bgImage, services.assetProvider)
 
         val motionScale = when (currentStep.cameraMotion) {
@@ -131,18 +131,36 @@ fun DesktopCinematicScreen(
             else -> 0f
         }
 
-        Image(
-            painter = bgPainter,
-            contentDescription = null,
-            modifier = Modifier
-                .fillMaxSize()
-                .graphicsLayer {
-                    scaleX = motionScale
-                    scaleY = motionScale
-                    translationX = motionTranslateX
-                },
-            contentScale = ContentScale.Crop
-        )
+        Box(modifier = Modifier.fillMaxSize()) {
+            Image(
+                painter = bgPainter,
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .graphicsLayer {
+                        scaleX = motionScale
+                        scaleY = motionScale
+                        translationX = motionTranslateX
+                    },
+                contentScale = ContentScale.Crop
+            )
+
+            // Ambient Vignette & Atmosphere Wash
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(
+                        Brush.verticalGradient(
+                            listOf(
+                                Color.Black.copy(alpha = 0.55f),
+                                Color.Transparent,
+                                Color.Transparent,
+                                Color.Black.copy(alpha = 0.70f)
+                            )
+                        )
+                    )
+            )
+        }
 
         // 2. Cinematic Letterbox Borders (21:9 anamorphic presentation)
         Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.SpaceBetween) {
@@ -150,7 +168,7 @@ fun DesktopCinematicScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(64.dp)
+                    .height(60.dp)
                     .background(Color.Black)
                     .padding(horizontal = 28.dp),
                 contentAlignment = Alignment.CenterStart
@@ -165,8 +183,8 @@ fun DesktopCinematicScreen(
                         fontFamily = FontFamily.Monospace
                     )
                     Text(
-                        text = "[SPACE] ADVANCE  •  [ESC] SKIP",
-                        color = FieldMenuDesign.textMuted.copy(alpha = 0.6f),
+                        text = "[SPACE / ENTER] ADVANCE  •  [ESC] SKIP",
+                        color = FieldMenuDesign.textMuted.copy(alpha = 0.7f),
                         fontSize = 11.sp,
                         fontFamily = FontFamily.Monospace
                     )
@@ -178,47 +196,54 @@ fun DesktopCinematicScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(Color.Black)
-                    .padding(horizontal = 36.dp, vertical = 24.dp),
+                    .padding(horizontal = 36.dp, vertical = 20.dp),
                 contentAlignment = Alignment.Center
             ) {
-                Row(
+                Surface(
                     modifier = Modifier.fillMaxWidth(0.85f),
-                    horizontalArrangement = Arrangement.spacedBy(24.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                    color = Color(0xFF070B14).copy(alpha = 0.92f),
+                    shape = RoundedCornerShape(14.dp),
+                    border = BorderStroke(1.dp, FieldMenuDesign.cyan.copy(alpha = 0.4f))
                 ) {
-                    // Speaker Portrait if present
-                    if (currentStep.portrait != null) {
-                        val portraitPainter = rememberDesktopAssetPainter(currentStep.portrait, services.assetProvider)
-                        Image(
-                            painter = portraitPainter,
-                            contentDescription = currentStep.speaker,
-                            modifier = Modifier
-                                .size(72.dp)
-                                .clip(CircleShape)
-                                .border(BorderStroke(2.dp, FieldMenuDesign.cyan), CircleShape),
-                            contentScale = ContentScale.Crop
-                        )
-                    }
-
-                    Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                        if (currentStep.speaker != null) {
-                            Text(
-                                text = currentStep.speaker.uppercase(),
-                                color = FieldMenuDesign.cyan,
-                                fontSize = 13.sp,
-                                fontWeight = FontWeight.Black,
-                                letterSpacing = 1.2.sp,
-                                fontFamily = FontFamily.Monospace
+                    Row(
+                        modifier = Modifier.padding(horizontal = 20.dp, vertical = 14.dp),
+                        horizontalArrangement = Arrangement.spacedBy(18.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        // Speaker Portrait if present
+                        if (currentStep.portrait != null) {
+                            val portraitPainter = rememberDesktopAssetPainter(currentStep.portrait, services.assetProvider)
+                            Image(
+                                painter = portraitPainter,
+                                contentDescription = currentStep.speaker,
+                                modifier = Modifier
+                                    .size(68.dp)
+                                    .clip(RoundedCornerShape(10.dp))
+                                    .border(BorderStroke(1.5.dp, FieldMenuDesign.cyan), RoundedCornerShape(10.dp)),
+                                contentScale = ContentScale.Crop
                             )
                         }
 
-                        Text(
-                            text = fullText.take(displayedChars),
-                            color = FieldMenuDesign.text,
-                            fontSize = 16.sp,
-                            lineHeight = 24.sp,
-                            fontWeight = FontWeight.Medium
-                        )
+                        Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                            if (currentStep.speaker != null) {
+                                Text(
+                                    text = currentStep.speaker.uppercase(),
+                                    color = FieldMenuDesign.cyan,
+                                    fontSize = 13.sp,
+                                    fontWeight = FontWeight.Black,
+                                    letterSpacing = 1.2.sp,
+                                    fontFamily = FontFamily.Monospace
+                                )
+                            }
+
+                            Text(
+                                text = fullText.take(displayedChars),
+                                color = FieldMenuDesign.text,
+                                fontSize = 15.sp,
+                                lineHeight = 22.sp,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
                     }
                 }
             }

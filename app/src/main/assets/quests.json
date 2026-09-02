@@ -1667,11 +1667,11 @@
       {
         "id": "salvage_mechs",
         "title": "Useful Failures",
-        "description": "Turn Dominion wreckage into survival tools before the intake eats it.",
+        "description": "Head down into the Slag Trench intake and salvage Dominion wreckage before the furnace consumes it.",
         "tasks": [
           {
             "id": "stop_intake",
-            "text": "Jam the waste intake before it consumes the wrecks."
+            "text": "Jam the waste intake at the Slag Trench before it consumes the wrecks."
           },
           {
             "id": "salvage_mechs",

@@ -69,6 +69,20 @@ fun DesktopRestStopDialog(
                 ) {
                     Button(
                         onClick = {
+                            val state = services.sessionStore.state.value
+                            val party = if (state.partyMembers.isNotEmpty()) state.partyMembers else listOf("nova")
+                            val fullHpMap = party.associateWith { charId ->
+                                val level = state.partyMemberLevels[charId] ?: state.playerLevel
+                                100 + level * 20
+                            }
+                            services.sessionStore.restore(state.copy(partyMemberHp = fullHpMap))
+                            services.audioDriver.execute(
+                                com.example.starborn.domain.audio.AudioCommand.Play(
+                                    com.example.starborn.domain.audio.AudioCueType.UI,
+                                    "sfx_rest_recovery",
+                                    loop = false
+                                )
+                            )
                             hasRested = true
                         },
                         enabled = !hasRested,

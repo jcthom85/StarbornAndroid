@@ -6,10 +6,17 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.floatPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
 import com.example.starborn.data.local.UserSettings
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import java.io.File
+
+enum class DesktopDisplayMode(val label: String) {
+    WINDOWED("Windowed (1280x800)"),
+    BORDERLESS("Borderless Windowed"),
+    FULLSCREEN("Exclusive Fullscreen")
+}
 
 /**
  * Desktop implementation of UserSettingsStore using file-backed DataStore.
@@ -72,6 +79,19 @@ class DesktopUserSettingsStore(
         dataStore.edit { it[HIGH_CONTRAST_MODE] = enabled }
     }
 
+    val displayMode: Flow<DesktopDisplayMode> = dataStore.data.map { prefs ->
+        val modeStr = prefs[DISPLAY_MODE] ?: DesktopDisplayMode.WINDOWED.name
+        try {
+            DesktopDisplayMode.valueOf(modeStr)
+        } catch (_: Throwable) {
+            DesktopDisplayMode.WINDOWED
+        }
+    }
+
+    suspend fun setDisplayMode(mode: DesktopDisplayMode) {
+        dataStore.edit { it[DISPLAY_MODE] = mode.name }
+    }
+
     suspend fun setThemeBandsEnabled(enabled: Boolean) {
         dataStore.edit { it[THEME_BANDS_ENABLED] = enabled }
     }
@@ -88,5 +108,6 @@ class DesktopUserSettingsStore(
         private val LARGE_TOUCH_TARGETS = booleanPreferencesKey("large_touch_targets")
         private val THEME_BANDS_ENABLED = booleanPreferencesKey("theme_bands_enabled")
         private val VOICE_VOLUME = floatPreferencesKey("voice_volume")
+        private val DISPLAY_MODE = stringPreferencesKey("display_mode")
     }
 }

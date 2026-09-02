@@ -11,6 +11,9 @@ appId: com.junewiregames.starborn.prealpha
     visible: "New Game"
     timeout: 60000
 - tapOn: "New Game"
+- tapOn:
+    text: "Begin New Game"
+    optional: true
 - extendedWaitUntil:
     visible: "Nova's Bunk"
     timeout: 90000

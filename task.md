@@ -110,5 +110,5 @@ This file tracks the step-by-step implementation of World 3 Hub 2 ("Upper City /
     - `[x]` Replace borrowed NPC portraits for `the_warden`, `jax`, `mika`, `curator`, `lab_terminal`, `thorne`, `maintenance_bot`, `elara`, and `vale`
     - `[x]` Create missing enemy files: `core_drill_behemoth_combat.png`, `mutated_crawler_combat.png`, `sentinel_droid_combat.png`, `aero_drone_combat.png`, `sentinel_orb_combat.png`, `ruin_guardian_combat.png`, and `phantom_assassin_combat.png`
     - `[x]` Wire identity-specific NPC portraits and run `validate_dialogue_emotes.py`
-- `[ ]` Complete audio production and assignment
-- `[ ]` Run full campaign playtest and balance pass
+- `[x]` Complete audio production and assignment
+- `[x]` Run full campaign playtest and balance pass

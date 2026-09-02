@@ -9,15 +9,22 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Keyboard
+import androidx.compose.material.icons.rounded.Map
+import androidx.compose.material.icons.rounded.SportsEsports
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -55,6 +62,7 @@ data class ActiveDialogueSession(
 fun DesktopExplorationScreen(
     services: DesktopAppServices,
     onEnterCombat: (List<String>) -> Unit,
+    onOpenHub: () -> Unit,
     onOpenFieldKit: () -> Unit,
     onOpenFishing: () -> Unit,
     onOpenArcade: () -> Unit,
@@ -62,22 +70,50 @@ fun DesktopExplorationScreen(
 ) {
     val rooms = remember { services.worldDataSource.loadRooms() }
     val roomsById = remember(rooms) { rooms.associateBy { it.id } }
-    var currentRoomId by remember { mutableStateOf(rooms.firstOrNull()?.id ?: "default_hub") }
+    val npcs = remember { services.worldDataSource.loadNpcs() }
+    val npcsById = remember(npcs) { npcs.mapNotNull { npc -> npc.id?.let { it to npc } }.toMap() }
 
+    val sessionState by services.sessionStore.state.collectAsState()
+    val currentRoomId = sessionState.roomId
     val currentRoom = roomsById[currentRoomId] ?: rooms.firstOrNull() ?: Room(
         id = "default_hub",
         env = "station",
         title = "Orbital Station Alpha",
         backgroundImage = "bg_station",
         description = "A humming perimeter docking bay looking out over the ringed planet below.",
-        npcs = listOf("dr_aris"),
-        items = listOf("medkit"),
-        enemies = listOf("scrapper_guard"),
+        npcs = emptyList(),
+        items = emptyList(),
+        enemies = emptyList(),
         connections = emptyMap(),
         pos = listOf(0, 0),
         state = emptyMap(),
         actions = emptyList()
     )
+
+    // Compute dynamic description based on variants and state/milestones
+    val displayDescription = remember(currentRoom, sessionState) {
+        val matchingVariant = currentRoom.descriptionVariants.firstOrNull { variant ->
+            val stateMatches = variant.requiresState.all { (k, v) ->
+                (sessionState.roomStates[currentRoom.id]?.get(k) as? Boolean) == v ||
+                (currentRoom.state[k] as? Boolean) == v
+            }
+            val milestoneMatches = variant.requiresMilestones.all { it in sessionState.completedMilestones }
+            val forbiddenMilestoneMatches = variant.forbiddenMilestones.none { it in sessionState.completedMilestones }
+            stateMatches && milestoneMatches && forbiddenMilestoneMatches
+        }
+        matchingVariant?.description ?: currentRoom.description
+    }
+
+    // Dynamic NPCs present in current room
+    val activeRoomNpcs = remember(currentRoom, sessionState) {
+        val staticNpcs = currentRoom.npcs
+        val ruleNpcs = currentRoom.npcPresence.filter { rule ->
+            val req = rule.requiresMilestones.all { it in sessionState.completedMilestones }
+            val forb = rule.forbiddenMilestones.none { it in sessionState.completedMilestones }
+            req && forb
+        }.map { it.npc }
+        (staticNpcs + ruleNpcs).distinct()
+    }
 
     val currentTheme = remember(currentRoom.env) { services.themeRepository.getTheme(currentRoom.env) }
     val themeAccent = remember(currentTheme) {
@@ -85,13 +121,30 @@ fun DesktopExplorationScreen(
         if (rgb != null && rgb.size >= 3) Color(rgb[0], rgb[1], rgb[2]) else TitleCyanColor
     }
 
-    var activeDialogue by remember { mutableStateOf<ActiveDialogueSession?>(null) }
+    var activeDialogueSession by remember { mutableStateOf<com.example.starborn.domain.dialogue.DialogueSession?>(null) }
+    var currentDialogueSpeakerId by remember { mutableStateOf<String?>(null) }
     var inspectedKeyword by remember { mutableStateOf<String?>(null) }
+    var actionNotification by remember { mutableStateOf<String?>(null) }
     var isTapeDeckOpen by remember { mutableStateOf(false) }
     var isShopOpen by remember { mutableStateOf(false) }
     var isRestOpen by remember { mutableStateOf(false) }
     var isFieldMenuOpen by remember { mutableStateOf(false) }
-    val sessionState by services.sessionStore.state.collectAsState()
+    var isControlsOpen by remember { mutableStateOf(false) }
+    val allTuningPuzzles = remember { services.worldDataSource.loadTuningPuzzles().associateBy { it.id } }
+    var activeTuningPuzzle by remember { mutableStateOf<com.example.starborn.domain.model.TuningPuzzle?>(null) }
+
+    // Start NPC dialogue using DialogueService
+    fun talkToNpc(npcId: String) {
+        val session = services.dialogueService.startDialogue(npcId)
+        if (session != null) {
+            activeDialogueSession = session
+            currentDialogueSpeakerId = npcId
+        } else {
+            // Fallback to default talk if no structured dialogue tree found
+            val npcDef = npcsById[npcId]
+            actionNotification = "${npcDef?.name ?: npcId}: \"...\""
+        }
+    }
 
     // Room contextual station detection (matches Android in-world rules)
     val hasArcadeStation = remember(currentRoom.id, currentRoom.actions) {
@@ -122,12 +175,69 @@ fun DesktopExplorationScreen(
             currentRoom.actions.any { (it["type"] as? String)?.contains("rest", ignoreCase = true) == true }
     }
 
-    // Traversal helper
+    // Traversal helper with locked/blocked direction checks
     fun travelDirection(dir: String) {
+        val blocked = currentRoom.blockedDirections?.get(dir.lowercase(Locale.getDefault()))
+        if (blocked != null) {
+            val reqsMet = blocked.requires?.all { req ->
+                val roomState = sessionState.roomStates[req.roomId]
+                val currentVal = roomState?.get(req.stateKey) ?: currentRoom.state[req.stateKey]
+                (currentVal as? Boolean) == req.value
+            } ?: false
+
+            if (!reqsMet) {
+                actionNotification = blocked.messageLocked ?: "The passage is blocked."
+                return
+            }
+        }
+
         val targetRoomId = currentRoom.connections[dir.lowercase(Locale.getDefault())]
         if (targetRoomId != null && roomsById.containsKey(targetRoomId)) {
-            currentRoomId = targetRoomId
             services.sessionStore.setRoom(targetRoomId)
+        }
+    }
+
+    // Room action execution
+    fun executeRoomAction(action: Map<String, Any?>) {
+        val type = action["type"] as? String ?: "generic"
+        val actionEvent = action["action_event"] as? String
+        val stateKey = action["state_key"] as? String
+        val name = action["name"] as? String ?: "Object"
+
+        if (type == "toggle" && stateKey != null) {
+            val currentVal = (sessionState.roomStates[currentRoom.id]?.get(stateKey) as? Boolean)
+                ?: (currentRoom.state[stateKey] as? Boolean) ?: false
+            val newVal = !currentVal
+            val currentRoomState = ((sessionState.roomStates[currentRoom.id] ?: currentRoom.state.mapNotNull { (k, v) ->
+                (v as? Boolean)?.let { k to it }
+            }.toMap())).toMutableMap()
+            currentRoomState[stateKey] = newVal
+            val updatedMap = sessionState.roomStates.toMutableMap()
+            updatedMap[currentRoom.id] = currentRoomState
+            services.sessionStore.restore(sessionState.copy(roomStates = updatedMap))
+
+            val toggleEvent = if (newVal) action["action_event_on"] as? String else action["action_event_off"] as? String
+            val label = if (newVal) action["label_on"] as? String ?: "Activated" else action["label_off"] as? String ?: "Deactivated"
+            actionNotification = "$name: $label"
+            return
+        }
+
+        val puzzleId = action["puzzle_id"] as? String ?: action["tuning_puzzle_id"] as? String
+        if (type == "puzzle" || type == "tuning_puzzle" || puzzleId != null) {
+            val puzzle = puzzleId?.let { allTuningPuzzles[it] }
+                ?: allTuningPuzzles.values.firstOrNull { it.id.contains(currentRoom.id, ignoreCase = true) }
+                ?: allTuningPuzzles.values.firstOrNull()
+            if (puzzle != null) {
+                activeTuningPuzzle = puzzle
+                return
+            }
+        }
+
+        if (actionEvent != null) {
+            actionNotification = "Interacted with $name."
+        } else {
+            val message = action["condition_unmet_message"] as? String ?: action["description"] as? String ?: "Inspected $name."
+            actionNotification = message
         }
     }
 
@@ -149,7 +259,9 @@ fun DesktopExplorationScreen(
                 if (keyEvent.type == KeyEventType.KeyDown) {
                     when (keyEvent.key) {
                         Key.Escape -> {
-                            if (isFieldMenuOpen) {
+                            if (isControlsOpen) {
+                                isControlsOpen = false
+                            } else if (isFieldMenuOpen) {
                                 isFieldMenuOpen = false
                             } else if (isShopOpen) {
                                 isShopOpen = false
@@ -157,13 +269,20 @@ fun DesktopExplorationScreen(
                                 isRestOpen = false
                             } else if (isTapeDeckOpen) {
                                 isTapeDeckOpen = false
-                            } else if (activeDialogue != null) {
-                                activeDialogue = null
+                            } else if (activeDialogueSession != null) {
+                                activeDialogueSession = null
+                                currentDialogueSpeakerId = null
                             } else if (inspectedKeyword != null) {
                                 inspectedKeyword = null
+                            } else if (actionNotification != null) {
+                                actionNotification = null
                             } else {
                                 isFieldMenuOpen = true
                             }
+                            true
+                        }
+                        Key.H, Key.Slash -> {
+                            isControlsOpen = !isControlsOpen
                             true
                         }
                         Key.M -> {
@@ -176,6 +295,7 @@ fun DesktopExplorationScreen(
                         }
                         Key.F5 -> {
                             services.saveManager.saveGame(1, sessionState, currentRoom.title)
+                            actionNotification = "Game saved to Slot 1."
                             true
                         }
                         Key.W, Key.DirectionUp -> {
@@ -215,22 +335,63 @@ fun DesktopExplorationScreen(
                             true
                         }
                         Key.One -> {
-                            if (activeDialogue != null) {
-                                activeDialogue = null
-                            } else if (currentRoom.npcs.isNotEmpty()) {
-                                activeDialogue = ActiveDialogueSession(
-                                    npcName = "Dr. Aris",
-                                    npcRole = "Chief Xenologist",
-                                    portraitId = "dr_aris",
-                                    text = "The anomalous energy signatures are rising exponentially across the lower sectors. We need to stabilize the primary array before resonance collapse.",
-                                    choices = listOf("I'll investigate Sector 4 immediately.", "What kind of hostiles should we expect?", "Step back for now.")
-                                )
+                            if (activeDialogueSession != null) {
+                                val choices = activeDialogueSession!!.choices()
+                                if (choices.isNotEmpty()) {
+                                    activeDialogueSession!!.choose(choices[0].id)
+                                    if (activeDialogueSession!!.isFinished()) {
+                                        activeDialogueSession = null
+                                        currentDialogueSpeakerId = null
+                                    }
+                                } else {
+                                    activeDialogueSession!!.advance()
+                                    if (activeDialogueSession!!.isFinished()) {
+                                        activeDialogueSession = null
+                                        currentDialogueSpeakerId = null
+                                    }
+                                }
+                            } else if (activeRoomNpcs.isNotEmpty()) {
+                                talkToNpc(activeRoomNpcs.first())
                             }
                             true
                         }
                         Key.Two -> {
-                            if (activeDialogue == null && currentRoom.enemies.isNotEmpty()) {
+                            if (activeDialogueSession != null) {
+                                val choices = activeDialogueSession!!.choices()
+                                if (choices.size > 1) {
+                                    activeDialogueSession!!.choose(choices[1].id)
+                                    if (activeDialogueSession!!.isFinished()) {
+                                        activeDialogueSession = null
+                                        currentDialogueSpeakerId = null
+                                    }
+                                }
+                            } else if (currentRoom.enemies.isNotEmpty()) {
                                 onEnterCombat(currentRoom.enemies)
+                            }
+                            true
+                        }
+                        Key.Three -> {
+                            if (activeDialogueSession != null) {
+                                val choices = activeDialogueSession!!.choices()
+                                if (choices.size > 2) {
+                                    activeDialogueSession!!.choose(choices[2].id)
+                                    if (activeDialogueSession!!.isFinished()) {
+                                        activeDialogueSession = null
+                                        currentDialogueSpeakerId = null
+                                    }
+                                }
+                            }
+                            true
+                        }
+                        Key.E, Key.Spacebar, Key.Enter -> {
+                            if (activeDialogueSession != null) {
+                                activeDialogueSession!!.advance()
+                                if (activeDialogueSession!!.isFinished()) {
+                                    activeDialogueSession = null
+                                    currentDialogueSpeakerId = null
+                                }
+                            } else if (currentRoom.actions.isNotEmpty()) {
+                                executeRoomAction(currentRoom.actions.first())
                             }
                             true
                         }
@@ -239,102 +400,478 @@ fun DesktopExplorationScreen(
                 } else false
             }
     ) {
-        // 1. Fullscreen Panoramic Room Artwork (matching Android backgroundPainter)
+        // 1. Ambient Widescreen Extension: Full-Bleed Artwork with Gentle Vignette & Telemetry Grids
         val roomBgPainter = rememberDesktopAssetPainter(currentRoom.backgroundImage, services.assetProvider)
-        Image(
-            painter = roomBgPainter,
-            contentDescription = null,
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop
-        )
+        Box(modifier = Modifier.fillMaxSize().background(Color(0xFF02060B))) {
+            // Fullscreen Panoramic Artwork
+            Image(
+                painter = roomBgPainter,
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
+            )
 
-        // 2. Dynamic Atmospheric Weather Particles (matching Android WeatherOverlay)
+            // Side HUD Telemetry Grid & Reticle Graphics
+            Canvas(modifier = Modifier.fillMaxSize()) {
+                val gridAlpha = 0.05f
+                val step = 48.dp.toPx()
+                var x = 0f
+                while (x < size.width) {
+                    drawLine(
+                        color = themeAccent.copy(alpha = gridAlpha),
+                        start = Offset(x, 0f),
+                        end = Offset(x, size.height),
+                        strokeWidth = 1f
+                    )
+                    x += step
+                }
+                var y = 0f
+                while (y < size.height) {
+                    drawLine(
+                        color = themeAccent.copy(alpha = gridAlpha),
+                        start = Offset(0f, y),
+                        end = Offset(size.width, y),
+                        strokeWidth = 1f
+                    )
+                    y += step
+                }
+
+                // Left & Right subtle telemetry rings
+                drawCircle(
+                    color = themeAccent.copy(alpha = 0.04f),
+                    radius = 160f,
+                    center = Offset(140f, size.height * 0.45f),
+                    style = Stroke(width = 1.2f)
+                )
+                drawCircle(
+                    color = TitleWarmColor.copy(alpha = 0.04f),
+                    radius = 180f,
+                    center = Offset(size.width - 140f, size.height * 0.55f),
+                    style = Stroke(width = 1.2f)
+                )
+            }
+        }
+
+        // 2. Dynamic Atmospheric Weather Particles
         DesktopWeatherOverlay(currentRoom.weather)
 
         // 3. Vignette & CRT Scanline Overlays
-        DesktopVignetteOverlay(intensity = 0.65f)
-        DesktopCrtScanlineOverlay(scanlineAlpha = 0.05f)
+        DesktopVignetteOverlay(intensity = 0.55f)
+        DesktopCrtScanlineOverlay(scanlineAlpha = 0.03f)
 
-        // 4. Dynamic Theme Glow Bands (matching Android ThemeBandOverlay)
+        // 4. Dynamic Theme Glow Bands
         DesktopThemeBandOverlay(theme = currentTheme)
 
-        // 5. Directional Compass Chevrons around screen edges (matching Android DirectionIndicatorsOverlay)
+        // 5. Directional Compass Chevrons around screen edges
         DesktopDirectionIndicatorsOverlay(
             connections = currentRoom.connections,
             accentColor = themeAccent,
             onTravel = { dir -> travelDirection(dir) }
         )
 
-        // 6. Authentic Android Top HUD Stack (TopCenter alignment)
-        Column(
+        // 6. Widescreen 3-Panel Tactical Command Deck Layout
+        Row(
             modifier = Modifier
-                .align(Alignment.TopCenter)
-                .fillMaxWidth(0.92f)
-                .padding(top = 20.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
+                .fillMaxSize()
+                .padding(horizontal = 24.dp, vertical = 24.dp),
+            horizontalArrangement = Arrangement.spacedBy(18.dp)
         ) {
-            // Room Header Panel
-            DesktopRoomHeaderPanel(
-                roomTitle = currentRoom.title,
-                env = currentRoom.env,
-                titleColor = themeAccent,
-                warmTitleColor = TitleWarmColor,
-                currentRoom = currentRoom,
-                onOpenMap = { isFieldMenuOpen = true }
-            )
+            // LEFT PANEL: MAP & STATS
+            Column(
+                modifier = Modifier
+                    .weight(0.95f)
+                    .fillMaxHeight(),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                // Map Panel (5x5 Local Sector Grid)
+                Surface(
+                    shape = RoundedCornerShape(12.dp),
+                    color = Color(0xFF040A12).copy(alpha = 0.72f),
+                    border = BorderStroke(1.dp, themeAccent.copy(alpha = 0.45f)),
+                    modifier = Modifier.fillMaxWidth().weight(1f)
+                ) {
+                    Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "MAP",
+                                color = themeAccent,
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Bold,
+                                fontFamily = FontFamily.Monospace
+                            )
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Surface(
+                                    modifier = Modifier.clickable(onClick = onOpenHub),
+                                    shape = RoundedCornerShape(4.dp),
+                                    color = themeAccent.copy(alpha = 0.15f),
+                                    border = BorderStroke(1.dp, themeAccent.copy(alpha = 0.5f))
+                                ) {
+                                    Row(
+                                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Rounded.Map,
+                                            contentDescription = "Open Star Map",
+                                            tint = themeAccent,
+                                            modifier = Modifier.size(12.dp)
+                                        )
+                                        Text(
+                                            text = "STAR MAP",
+                                            color = themeAccent,
+                                            fontSize = 9.sp,
+                                            fontWeight = FontWeight.Bold,
+                                            fontFamily = FontFamily.Monospace
+                                        )
+                                    }
+                                }
+                                Text(
+                                    text = "${currentRoom.connections.size} EXITS",
+                                    color = Color.White.copy(alpha = 0.6f),
+                                    fontSize = 10.sp,
+                                    fontFamily = FontFamily.Monospace
+                                )
+                            }
+                        }
 
-            // Room Description Panel
-            DesktopRoomDescriptionPanel(
-                description = currentRoom.description,
-                accentColor = themeAccent,
-                inspectedKeyword = inspectedKeyword,
-                onInspectKeyword = { lore -> inspectedKeyword = lore }
-            )
+                        Box(modifier = Modifier.weight(1f).fillMaxWidth().clip(RoundedCornerShape(8.dp)).background(Color(0xFF03080E).copy(alpha = 0.85f))) {
+                            DesktopMiniMapCanvas(
+                                allRooms = rooms,
+                                currentRoom = currentRoom,
+                                accentColor = themeAccent
+                            )
+                        }
+                    }
+                }
 
-            // Room Entity Presence Rail (NPCs, Ground Loot, In-world Stations)
-            DesktopRoomEntitySection(
-                currentRoom = currentRoom,
-                hasArcadeStation = hasArcadeStation,
-                hasFishingSpot = hasFishingSpot,
-                hasTapeDeckStation = hasTapeDeckStation,
-                hasShopStation = hasShopStation,
-                hasRestStation = hasRestStation,
-                accentColor = themeAccent,
-                onNpcClick = {
-                    activeDialogue = ActiveDialogueSession(
-                        npcName = "Dr. Aris",
-                        npcRole = "Chief Xenologist",
-                        portraitId = "dr_aris",
-                        text = "The anomalous energy signatures are rising exponentially across the lower sectors. We need to stabilize the primary array before resonance collapse.",
-                        choices = listOf("I'll investigate Sector 4 immediately.", "What kind of hostiles should we expect?", "Step back for now.")
-                    )
-                },
-                onEnemiesClick = { onEnterCombat(currentRoom.enemies) },
-                onArcadeClick = onOpenArcade,
-                onFishingClick = onOpenFishing,
-                onTapeDeckClick = { isTapeDeckOpen = true },
-                onShopClick = { isShopOpen = true },
-                onRestClick = { isRestOpen = true },
-                onOpenMap = { isFieldMenuOpen = true }
-            )
+                // Stats Panel
+                Surface(
+                    shape = RoundedCornerShape(12.dp),
+                    color = Color(0xFF040A12).copy(alpha = 0.72f),
+                    border = BorderStroke(1.dp, themeAccent.copy(alpha = 0.45f)),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Text(
+                            text = "STATS",
+                            color = TitleWarmColor,
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = FontFamily.Monospace
+                        )
+
+                        DesktopCrewVitalsRow("Nova", "Lv. ${sessionState.playerLevel}", 1f, 0.85f, rememberDesktopAssetPainter("nova_portrait", services.assetProvider))
+                        DesktopCrewVitalsRow("Zeke", "Lv. 1", 1f, 0.60f, rememberDesktopAssetPainter("zeke_portrait", services.assetProvider))
+                    }
+                }
+            }
+
+            // CENTER STAGE: Room Narrative, Points of Interest & Environmental Actions
+            Column(
+                modifier = Modifier
+                    .weight(1.85f)
+                    .fillMaxHeight(),
+                verticalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                // Room Header Panel
+                DesktopRoomHeaderPanel(
+                    roomTitle = currentRoom.title,
+                    env = currentRoom.env,
+                    titleColor = themeAccent,
+                    warmTitleColor = TitleWarmColor,
+                    currentRoom = currentRoom,
+                    onOpenMap = { isFieldMenuOpen = true }
+                )
+
+                // Room Description Panel
+                DesktopRoomDescriptionPanel(
+                    description = displayDescription,
+                    actions = currentRoom.actions,
+                    accentColor = themeAccent,
+                    warmAccentColor = TitleWarmColor,
+                    onActionClick = { act -> executeRoomAction(act) }
+                )
+
+                // Room Entity Presence Rail (NPCs, Stations, POIs)
+                DesktopRoomEntitySection(
+                    currentRoom = currentRoom,
+                    activeNpcs = activeRoomNpcs,
+                    npcsById = npcsById,
+                    hasArcadeStation = hasArcadeStation,
+                    hasFishingSpot = hasFishingSpot,
+                    hasTapeDeckStation = hasTapeDeckStation,
+                    hasShopStation = hasShopStation,
+                    hasRestStation = hasRestStation,
+                    accentColor = themeAccent,
+                    onNpcClick = { npcId -> talkToNpc(npcId) },
+                    onActionClick = { act -> executeRoomAction(act) },
+                    onEnemiesClick = { onEnterCombat(currentRoom.enemies) },
+                    onArcadeClick = onOpenArcade,
+                    onFishingClick = onOpenFishing,
+                    onTapeDeckClick = { isTapeDeckOpen = true },
+                    onShopClick = { isShopOpen = true },
+                    onRestClick = { isRestOpen = true },
+                    onOpenMap = { isFieldMenuOpen = true }
+                )
+
+                // Notification Banner for Actions & Feedback
+                if (actionNotification != null) {
+                    Surface(
+                        shape = RoundedCornerShape(8.dp),
+                        color = Color(0xEE0A1624),
+                        border = BorderStroke(1.dp, themeAccent.copy(alpha = 0.8f)),
+                        modifier = Modifier.fillMaxWidth().clickable { actionNotification = null }
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                text = actionNotification!!,
+                                color = Color(0xFFF7FBFF),
+                                fontSize = 13.sp,
+                                lineHeight = 18.sp,
+                                modifier = Modifier.weight(1f)
+                            )
+                            Text(
+                                text = "✕",
+                                color = Color.White.copy(alpha = 0.6f),
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(start = 12.dp)
+                            )
+                        }
+                    }
+                }
+
+                // Spacer to push Menu button to bottom-right of Center Stage
+                Spacer(modifier = Modifier.weight(1f))
+
+                // Bottom-Right Center Stage Menu & Controls Buttons
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    OutlinedButton(
+                        onClick = { isControlsOpen = true },
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            contentColor = Color(0xFF63E6FF)
+                        ),
+                        border = BorderStroke(1.dp, Color(0xFF63E6FF).copy(alpha = 0.5f)),
+                        shape = RoundedCornerShape(10.dp),
+                        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp)
+                    ) {
+                        Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                imageVector = Icons.Rounded.Keyboard,
+                                contentDescription = null,
+                                tint = Color(0xFF63E6FF),
+                                modifier = Modifier.size(14.dp)
+                            )
+                            Text(
+                                text = "CONTROLS",
+                                color = Color(0xFF63E6FF),
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Bold,
+                                fontFamily = FontFamily.Monospace
+                            )
+                            Text(
+                                text = "[H]",
+                                color = Color.White.copy(alpha = 0.5f),
+                                fontSize = 10.sp,
+                                fontFamily = FontFamily.Monospace
+                            )
+                        }
+                    }
+
+                    Button(
+                        onClick = { isFieldMenuOpen = true },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFF040A12).copy(alpha = 0.88f),
+                            contentColor = themeAccent
+                        ),
+                        border = BorderStroke(1.2.dp, themeAccent.copy(alpha = 0.75f)),
+                        shape = RoundedCornerShape(10.dp),
+                        contentPadding = PaddingValues(horizontal = 14.dp, vertical = 8.dp),
+                        elevation = ButtonDefaults.buttonElevation(defaultElevation = 6.dp)
+                    ) {
+                        Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
+                            Text(
+                                text = "MENU",
+                                color = themeAccent,
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Black,
+                                fontFamily = FontFamily.Monospace
+                            )
+                            Text(
+                                text = "[ESC]",
+                                color = Color.White.copy(alpha = 0.5f),
+                                fontSize = 10.sp,
+                                fontFamily = FontFamily.Monospace
+                            )
+                        }
+                    }
+                }
+            }
+
+            // RIGHT PANEL: JOURNAL & INVENTORY
+            Column(
+                modifier = Modifier
+                    .weight(1.05f)
+                    .fillMaxHeight(),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                // Journal Panel
+                Surface(
+                    shape = RoundedCornerShape(12.dp),
+                    color = Color(0xFF040A12).copy(alpha = 0.72f),
+                    border = BorderStroke(1.dp, themeAccent.copy(alpha = 0.45f)),
+                    modifier = Modifier.fillMaxWidth().weight(1.2f)
+                ) {
+                    Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "JOURNAL",
+                                color = TitleWarmColor,
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Bold,
+                                fontFamily = FontFamily.Monospace
+                            )
+                            Text(
+                                text = "${sessionState.activeQuests.size} ACTIVE",
+                                color = Color(0xFF00E676),
+                                fontSize = 10.sp,
+                                fontWeight = FontWeight.Bold,
+                                fontFamily = FontFamily.Monospace
+                            )
+                        }
+
+                        if (sessionState.activeQuests.isEmpty()) {
+                            Text(
+                                text = "No active directives. Explore surroundings or consult local inhabitants.",
+                                color = Color.White.copy(alpha = 0.5f),
+                                fontSize = 11.sp
+                            )
+                        } else {
+                            LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                val activeList = sessionState.activeQuests.toList()
+                                items(activeList) { questId ->
+                                    val quest = services.questRepository.allQuests().firstOrNull { it.id == questId }
+                                    Surface(
+                                        shape = RoundedCornerShape(8.dp),
+                                        color = Color.White.copy(alpha = 0.04f),
+                                        border = BorderStroke(1.dp, Color.White.copy(alpha = 0.08f)),
+                                        modifier = Modifier.fillMaxWidth()
+                                    ) {
+                                        Column(modifier = Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                            Text(
+                                                text = quest?.title ?: questId.replace("_", " ").uppercase(),
+                                                color = Color.White,
+                                                fontSize = 12.sp,
+                                                fontWeight = FontWeight.Bold
+                                            )
+                                            Text(
+                                                text = quest?.description ?: "Proceed with mission objectives in current sector.",
+                                                color = Color.White.copy(alpha = 0.65f),
+                                                fontSize = 10.sp,
+                                                maxLines = 2,
+                                                overflow = TextOverflow.Ellipsis
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Inventory Panel
+                Surface(
+                    shape = RoundedCornerShape(12.dp),
+                    color = Color(0xFF040A12).copy(alpha = 0.72f),
+                    border = BorderStroke(1.dp, themeAccent.copy(alpha = 0.45f)),
+                    modifier = Modifier.fillMaxWidth().weight(0.8f)
+                ) {
+                    Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "INVENTORY",
+                                color = themeAccent,
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Bold,
+                                fontFamily = FontFamily.Monospace
+                            )
+                            Text(
+                                text = "${sessionState.playerCredits} CR",
+                                color = TitleWarmColor,
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Bold,
+                                fontFamily = FontFamily.Monospace
+                            )
+                        }
+
+                        val nonZeroItems = sessionState.inventory.filter { it.value > 0 }.toList().take(4)
+                        val allItemsMap = remember { services.itemRepository.allItems().associateBy { it.id } }
+                        if (nonZeroItems.isEmpty()) {
+                            Text(
+                                text = "Field pack empty.",
+                                color = Color.White.copy(alpha = 0.5f),
+                                fontSize = 11.sp
+                            )
+                        } else {
+                            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                nonZeroItems.forEach { (itemId, qty) ->
+                                    val item = allItemsMap[itemId]
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Text(
+                                            text = "• ${item?.name ?: itemId}",
+                                            color = Color.White.copy(alpha = 0.85f),
+                                            fontSize = 11.sp,
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis
+                                        )
+                                        Text(
+                                            text = "x$qty",
+                                            color = themeAccent,
+                                            fontSize = 11.sp,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
 
-        // 7. Authentic Android Bottom Navigation / Party Status Strip
-        Box(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth(0.92f)
-                .padding(bottom = 16.dp)
-        ) {
-            DesktopPartyStatusBar(
-                services = services,
-                sessionState = sessionState,
-                onOpenFieldMenu = { isFieldMenuOpen = true },
-                onOpenFieldKit = onOpenFieldKit
-            )
+        // 7. Overlays & Modals
+        if (isControlsOpen) {
+            DesktopControlsDialog(onDismiss = { isControlsOpen = false }, accentColor = themeAccent)
         }
 
-        // 8. Overlays & Modals
         if (isTapeDeckOpen) {
             DesktopTapeDeckDialog(services = services, onDismiss = { isTapeDeckOpen = false })
         }
@@ -347,6 +884,20 @@ fun DesktopExplorationScreen(
             DesktopRestStopDialog(services = services, onDismiss = { isRestOpen = false })
         }
 
+        if (activeTuningPuzzle != null) {
+            val puzzle = activeTuningPuzzle!!
+            DesktopTuningPuzzleDialog(
+                services = services,
+                puzzle = puzzle,
+                onSuccess = {
+                    val msg = puzzle.successMessage ?: "Resonance alignment achieved. Mechanism activated."
+                    actionNotification = msg
+                    activeTuningPuzzle = null
+                },
+                onDismiss = { activeTuningPuzzle = null }
+            )
+        }
+
         if (isFieldMenuOpen) {
             DesktopFieldMenuDialog(
                 services = services,
@@ -357,13 +908,46 @@ fun DesktopExplorationScreen(
             )
         }
 
-        if (activeDialogue != null) {
-            DesktopDialogueOverlay(
-                session = activeDialogue!!,
-                services = services,
-                onSelectChoice = { activeDialogue = null },
-                onClose = { activeDialogue = null }
-            )
+        if (activeDialogueSession != null) {
+            val currentLine = activeDialogueSession!!.current()
+            if (currentLine != null) {
+                val speakerNpc = npcsById[currentDialogueSpeakerId ?: ""]
+                val speakerName = currentLine.speaker.ifBlank { speakerNpc?.name ?: "Speaker" }
+                val speakerRole = speakerNpc?.role ?: "Inhabitant"
+                val portrait = speakerNpc?.portrait ?: speakerNpc?.id ?: currentDialogueSpeakerId ?: "default_avatar"
+                val choices = activeDialogueSession!!.choices()
+
+                DesktopDialogueOverlay(
+                    speakerName = speakerName,
+                    speakerRole = speakerRole,
+                    portraitId = portrait,
+                    text = currentLine.text,
+                    choices = choices.map { it.text },
+                    services = services,
+                    onSelectChoice = { index ->
+                        if (choices.isNotEmpty() && index in choices.indices) {
+                            activeDialogueSession!!.choose(choices[index].id)
+                        } else {
+                            activeDialogueSession!!.advance()
+                        }
+                        if (activeDialogueSession!!.isFinished()) {
+                            activeDialogueSession = null
+                            currentDialogueSpeakerId = null
+                        }
+                    },
+                    onAdvance = {
+                        activeDialogueSession!!.advance()
+                        if (activeDialogueSession!!.isFinished()) {
+                            activeDialogueSession = null
+                            currentDialogueSpeakerId = null
+                        }
+                    },
+                    onClose = {
+                        activeDialogueSession = null
+                        currentDialogueSpeakerId = null
+                    }
+                )
+            }
         }
     }
 }
@@ -440,19 +1024,12 @@ private fun DesktopRoomHeaderPanel(
                 )
 
                 Text(
-                    text = "ENVIRONMENT: ${env.uppercase()} // ACTIVE PERIMETER SECTOR",
+                    text = "ENVIRONMENT: ${env.uppercase()}",
                     color = FieldMenuDesign.textMuted,
                     fontSize = 11.sp,
                     fontFamily = FontFamily.Monospace
                 )
             }
-
-            // Interactive Minimap Radar (matching Android MinimapWidget)
-            DesktopMinimapRadarWidget(
-                currentRoom = currentRoom,
-                onOpenMap = onOpenMap,
-                modifier = Modifier.size(78.dp)
-            )
         }
     }
 }
@@ -460,10 +1037,61 @@ private fun DesktopRoomHeaderPanel(
 @Composable
 private fun DesktopRoomDescriptionPanel(
     description: String,
+    actions: List<Map<String, Any?>>,
     accentColor: Color,
-    inspectedKeyword: String?,
-    onInspectKeyword: (String?) -> Unit
+    warmAccentColor: Color,
+    onActionClick: (Map<String, Any?>) -> Unit
 ) {
+    val rawText = description.ifBlank { "Sensors report stable atmospheric pressures and clear stellar vectors." }
+    
+    // Scan for action keywords in text
+    val actionMap = remember(actions, rawText) {
+        val matches = mutableListOf<Triple<Int, Int, Map<String, Any?>>>()
+        actions.forEach { act ->
+            val name = act["name"] as? String
+            if (!name.isNullOrBlank()) {
+                var startIndex = 0
+                while (startIndex < rawText.length) {
+                    val idx = rawText.indexOf(name, startIndex, ignoreCase = true)
+                    if (idx == -1) break
+                    matches.add(Triple(idx, idx + name.length, act))
+                    startIndex = idx + name.length
+                }
+            }
+        }
+        matches.sortedBy { it.first }
+    }
+
+    val annotatedString = remember(rawText, actionMap, warmAccentColor) {
+        androidx.compose.ui.text.buildAnnotatedString {
+            if (actionMap.isEmpty()) {
+                append(rawText)
+            } else {
+                var lastIndex = 0
+                actionMap.forEach { (start, end, act) ->
+                    if (start >= lastIndex) {
+                        append(rawText.substring(lastIndex, start))
+                        pushStringAnnotation(tag = "action", annotation = act["name"] as? String ?: "")
+                        pushStyle(
+                            androidx.compose.ui.text.SpanStyle(
+                                color = warmAccentColor,
+                                fontWeight = FontWeight.Bold,
+                                textDecoration = androidx.compose.ui.text.style.TextDecoration.Underline
+                            )
+                        )
+                        append(rawText.substring(start, end))
+                        pop()
+                        pop()
+                        lastIndex = end
+                    }
+                }
+                if (lastIndex < rawText.length) {
+                    append(rawText.substring(lastIndex))
+                }
+            }
+        }
+    }
+
     Surface(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(10.dp),
@@ -476,37 +1104,23 @@ private fun DesktopRoomDescriptionPanel(
                 .padding(horizontal = 18.dp, vertical = 14.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Text(
-                text = description.ifBlank { "Sensors report stable atmospheric pressures and clear stellar vectors." },
-                color = FieldMenuDesign.text,
-                fontSize = 14.sp,
-                lineHeight = 22.sp
-            )
-
-            if (inspectedKeyword != null) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(6.dp))
-                        .background(Color(0x3300F5D4))
-                        .border(BorderStroke(1.dp, TitleCyanColor), RoundedCornerShape(6.dp))
-                        .padding(horizontal = 12.dp, vertical = 6.dp)
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(text = "✦ $inspectedKeyword", color = TitleCyanColor, fontSize = 12.sp, fontWeight = FontWeight.Medium)
-                        Text(
-                            text = "✕",
-                            color = FieldMenuDesign.textMuted,
-                            fontSize = 12.sp,
-                            modifier = Modifier.clickable { onInspectKeyword(null) }
-                        )
-                    }
+            androidx.compose.foundation.text.ClickableText(
+                text = annotatedString,
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    color = FieldMenuDesign.text,
+                    fontSize = 14.sp,
+                    lineHeight = 22.sp
+                ),
+                onClick = { offset ->
+                    annotatedString.getStringAnnotations(tag = "action", start = offset, end = offset)
+                        .firstOrNull()?.let { annotation ->
+                            val clickedAction = actions.find { (it["name"] as? String).equals(annotation.item, ignoreCase = true) }
+                            if (clickedAction != null) {
+                                onActionClick(clickedAction)
+                            }
+                        }
                 }
-            }
+            )
         }
     }
 }
@@ -514,13 +1128,16 @@ private fun DesktopRoomDescriptionPanel(
 @Composable
 private fun DesktopRoomEntitySection(
     currentRoom: Room,
+    activeNpcs: List<String>,
+    npcsById: Map<String, com.example.starborn.domain.model.Npc>,
     hasArcadeStation: Boolean,
     hasFishingSpot: Boolean,
     hasTapeDeckStation: Boolean,
     hasShopStation: Boolean,
     hasRestStation: Boolean,
     accentColor: Color,
-    onNpcClick: () -> Unit,
+    onNpcClick: (String) -> Unit,
+    onActionClick: (Map<String, Any?>) -> Unit,
     onEnemiesClick: () -> Unit,
     onArcadeClick: () -> Unit,
     onFishingClick: () -> Unit,
@@ -529,8 +1146,9 @@ private fun DesktopRoomEntitySection(
     onRestClick: () -> Unit,
     onOpenMap: () -> Unit
 ) {
-    val hasEntities = currentRoom.npcs.isNotEmpty() ||
+    val hasEntities = activeNpcs.isNotEmpty() ||
         currentRoom.enemies.isNotEmpty() ||
+        currentRoom.actions.isNotEmpty() ||
         hasArcadeStation ||
         hasFishingSpot ||
         hasTapeDeckStation ||
@@ -562,13 +1180,32 @@ private fun DesktopRoomEntitySection(
                 }
             }
 
-            if (currentRoom.npcs.isNotEmpty()) {
+            // Real In-World Room Actions (Switches, Panels, Terminals, Cabinets)
+            currentRoom.actions.forEachIndexed { idx, action ->
+                val actionName = (action["name"] as? String)?.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() } ?: "Inspect"
+                val actionType = action["type"] as? String ?: "generic"
+                item {
+                    DesktopServicePresenceChip(
+                        label = if (idx == 0) "$actionName [E]" else actionName,
+                        detail = if (actionType == "toggle") "Switch" else "Interact",
+                        accentColor = TitleWarmColor,
+                        onClick = { onActionClick(action) }
+                    )
+                }
+            }
+
+            // Real Active NPCs
+            activeNpcs.forEachIndexed { index, npcId ->
+                val npcDef = npcsById[npcId]
+                val name = npcDef?.name ?: npcId.replace('_', ' ').replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+                val role = npcDef?.role ?: "Inhabitant"
                 item {
                     DesktopNpcPresenceChip(
-                        npcName = "Dr. Aris",
-                        role = "Chief Xenologist",
+                        npcName = name,
+                        role = role,
+                        shortcutKey = if (index == 0) "1" else null,
                         accentColor = TitleCyanColor,
-                        onClick = onNpcClick
+                        onClick = { onNpcClick(npcId) }
                     )
                 }
             }
@@ -750,6 +1387,7 @@ private fun DesktopOverworldGatewayCard(
 private fun DesktopNpcPresenceChip(
     npcName: String,
     role: String,
+    shortcutKey: String? = null,
     accentColor: Color,
     onClick: () -> Unit
 ) {
@@ -780,7 +1418,12 @@ private fun DesktopNpcPresenceChip(
             }
 
             Column(verticalArrangement = Arrangement.Center) {
-                Text(text = "$npcName [1]", color = Color.White, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                Text(
+                    text = if (shortcutKey != null) "$npcName [$shortcutKey]" else npcName,
+                    color = Color.White,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold
+                )
                 Text(text = role, color = Color.White.copy(alpha = 0.66f), fontSize = 10.sp)
             }
         }
@@ -816,7 +1459,7 @@ private fun DesktopServicePresenceChip(
                 modifier = Modifier.size(28.dp)
             ) {
                 Box(contentAlignment = Alignment.Center) {
-                    Text(text = "◆", color = accentColor, fontSize = 12.sp)
+                    Text(text = "◆", color = accentColor, fontSize = 12.sp, fontWeight = FontWeight.Bold)
                 }
             }
 
@@ -835,70 +1478,45 @@ private fun DesktopPartyStatusBar(
     onOpenFieldMenu: () -> Unit,
     onOpenFieldKit: () -> Unit
 ) {
-    val portrait = rememberDesktopAssetPainter("nova_portrait", services.assetProvider)
-
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(10.dp))
-            .background(FieldMenuDesign.shell.copy(alpha = 0.92f))
+            .background(Color(0xFF040A12).copy(alpha = 0.80f))
             .border(BorderStroke(1.dp, FieldMenuDesign.border.copy(alpha = 0.35f)), RoundedCornerShape(10.dp))
-            .padding(horizontal = 18.dp, vertical = 10.dp)
+            .padding(horizontal = 18.dp, vertical = 8.dp)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Left: Nova status
-            Row(horizontalArrangement = Arrangement.spacedBy(14.dp), verticalAlignment = Alignment.CenterVertically) {
-                Image(
-                    painter = portrait,
-                    contentDescription = "Nova",
+            // Left: Status Feed
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.CenterVertically) {
+                Box(
                     modifier = Modifier
-                        .size(38.dp)
+                        .size(8.dp)
                         .clip(CircleShape)
-                        .border(BorderStroke(1.5.dp, TitleCyanColor), CircleShape),
-                    contentScale = ContentScale.Crop
+                        .background(HealthGreen)
                 )
-
-                Column(verticalArrangement = Arrangement.spacedBy(3.dp)) {
-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Text(text = "NOVA", color = FieldMenuDesign.text, fontSize = 12.sp, fontWeight = FontWeight.Bold)
-                        Text(text = "LV. ${sessionState.playerLevel}", color = TitleWarmColor, fontSize = 11.sp, fontWeight = FontWeight.Bold)
-                    }
-
-                    Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
-                        LinearProgressIndicator(
-                            progress = { 1f },
-                            modifier = Modifier.width(70.dp).height(4.dp).clip(RoundedCornerShape(2.dp)),
-                            color = HealthGreen,
-                            trackColor = Color(0xFF102018)
-                        )
-                        LinearProgressIndicator(
-                            progress = { 0.85f },
-                            modifier = Modifier.width(50.dp).height(4.dp).clip(RoundedCornerShape(2.dp)),
-                            color = ShieldBlue,
-                            trackColor = Color(0xFF0F1828)
-                        )
-                    }
-                }
-
-                Box(modifier = Modifier.width(1.dp).height(24.dp).background(Color(0x33FFFFFF)))
-
                 Text(
-                    text = "${sessionState.playerCredits} CR",
-                    color = TitleWarmColor,
-                    fontSize = 13.sp,
+                    text = "SECTOR ONLINE",
+                    color = Color.White.copy(alpha = 0.70f),
+                    fontSize = 11.sp,
                     fontWeight = FontWeight.Bold,
                     fontFamily = FontFamily.Monospace
                 )
             }
 
-            // Right: Field Menu & Cargo Controls
-            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                DesktopMinimalPillButton("[I] GEAR", onClick = onOpenFieldKit)
-                DesktopMinimalPillButton("[M] FIELD MENU", onClick = onOpenFieldMenu)
+            // Right: Field Menu Action Button
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = "[ESC] or [M]",
+                    color = Color.White.copy(alpha = 0.45f),
+                    fontSize = 10.sp,
+                    fontFamily = FontFamily.Monospace
+                )
+                DesktopMinimalPillButton("Menu", onClick = onOpenFieldMenu)
             }
         }
     }
@@ -1027,20 +1645,29 @@ private fun DesktopCompassChevron(
     }
 }
 
+
+
 @Composable
 fun DesktopDialogueOverlay(
-    session: ActiveDialogueSession,
+    speakerName: String,
+    speakerRole: String,
+    portraitId: String,
+    text: String,
+    choices: List<String>,
     services: DesktopAppServices,
     onSelectChoice: (Int) -> Unit,
+    onAdvance: () -> Unit,
     onClose: () -> Unit
 ) {
-    val portraitPainter = rememberDesktopAssetPainter(session.portraitId, services.assetProvider)
+    val portraitPainter = rememberDesktopAssetPainter(portraitId, services.assetProvider)
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0x88000000))
-            .clickable(onClick = onClose),
+            .clickable(onClick = {
+                if (choices.isEmpty()) onAdvance() else onClose()
+            }),
         contentAlignment = Alignment.BottomCenter
     ) {
         Box(
@@ -1060,7 +1687,7 @@ fun DesktopDialogueOverlay(
             ) {
                 Image(
                     painter = portraitPainter,
-                    contentDescription = session.npcName,
+                    contentDescription = speakerName,
                     modifier = Modifier
                         .size(110.dp)
                         .clip(RoundedCornerShape(12.dp))
@@ -1078,7 +1705,7 @@ fun DesktopDialogueOverlay(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "${session.npcName.uppercase()}  //  ${session.npcRole.uppercase()}",
+                            text = "${speakerName.uppercase()}  //  ${speakerRole.uppercase()}",
                             color = TitleWarmColor,
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Bold,
@@ -1095,7 +1722,7 @@ fun DesktopDialogueOverlay(
                     }
 
                     Text(
-                        text = session.text,
+                        text = text,
                         color = FieldMenuDesign.text,
                         fontSize = 15.sp,
                         lineHeight = 23.sp
@@ -1103,24 +1730,36 @@ fun DesktopDialogueOverlay(
 
                     Spacer(modifier = Modifier.height(6.dp))
 
-                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        session.choices.forEachIndexed { index, choiceText ->
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clip(RoundedCornerShape(FieldMenuDesign.controlRadius))
-                                    .background(FieldMenuDesign.elevatedPanel)
-                                    .border(BorderStroke(1.dp, FieldMenuDesign.border.copy(alpha = 0.35f)), RoundedCornerShape(FieldMenuDesign.controlRadius))
-                                    .clickable { onSelectChoice(index) }
-                                    .padding(horizontal = 14.dp, vertical = 10.dp)
-                            ) {
-                                Text(
-                                    text = "◆ [${index + 1}] $choiceText",
-                                    color = TitleCyanColor,
-                                    fontSize = 13.sp,
-                                    fontWeight = FontWeight.SemiBold
-                                )
+                    if (choices.isNotEmpty()) {
+                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            choices.forEachIndexed { index, choiceText ->
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clip(RoundedCornerShape(FieldMenuDesign.controlRadius))
+                                        .background(FieldMenuDesign.elevatedPanel)
+                                        .border(BorderStroke(1.dp, FieldMenuDesign.border.copy(alpha = 0.35f)), RoundedCornerShape(FieldMenuDesign.controlRadius))
+                                        .clickable { onSelectChoice(index) }
+                                        .padding(horizontal = 14.dp, vertical = 10.dp)
+                                ) {
+                                    Text(
+                                        text = "◆ [${index + 1}] $choiceText",
+                                        color = TitleCyanColor,
+                                        fontSize = 13.sp,
+                                        fontWeight = FontWeight.SemiBold
+                                    )
+                                }
                             }
+                        }
+                    } else {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.End
+                        ) {
+                            DesktopMinimalPillButton(
+                                text = "Continue ➜",
+                                onClick = onAdvance
+                            )
                         }
                     }
                 }
@@ -1149,5 +1788,149 @@ fun DesktopMinimalPillButton(
             fontWeight = FontWeight.Bold,
             fontFamily = FontFamily.Monospace
         )
+    }
+}
+
+@Composable
+private fun DesktopCrewVitalsRow(
+    name: String,
+    levelText: String,
+    hpProgress: Float,
+    shieldProgress: Float,
+    portrait: androidx.compose.ui.graphics.painter.Painter
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(8.dp))
+            .background(Color.White.copy(alpha = 0.04f))
+            .padding(8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        Image(
+            painter = portrait,
+            contentDescription = name,
+            modifier = Modifier
+                .size(36.dp)
+                .clip(RoundedCornerShape(8.dp))
+                .border(1.dp, TitleCyanColor.copy(alpha = 0.6f), RoundedCornerShape(8.dp)),
+            contentScale = ContentScale.Crop
+        )
+
+        Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                Text(text = name, color = Color.White, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                Text(text = levelText, color = TitleWarmColor, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+            }
+
+            LinearProgressIndicator(
+                progress = { hpProgress },
+                modifier = Modifier.fillMaxWidth().height(3.dp).clip(RoundedCornerShape(2.dp)),
+                color = HealthGreen,
+                trackColor = Color(0xFF102018)
+            )
+            LinearProgressIndicator(
+                progress = { shieldProgress },
+                modifier = Modifier.fillMaxWidth().height(3.dp).clip(RoundedCornerShape(2.dp)),
+                color = ShieldBlue,
+                trackColor = Color(0xFF0F1828)
+            )
+        }
+    }
+}
+
+@Composable
+private fun DesktopMiniMapCanvas(
+    allRooms: List<Room>,
+    currentRoom: Room,
+    accentColor: Color
+) {
+    Canvas(modifier = Modifier.fillMaxSize().padding(12.dp)) {
+        val w = size.width
+        val h = size.height
+        val cx = w / 2f
+        val cy = h / 2f
+
+        val step = (minOf(w, h) / 5.5f).coerceAtLeast(24f)
+        val roomsById = allRooms.associateBy { it.id }
+
+        // 1. Draw 5x5 Grid Lines
+        val gridAlpha = 0.12f
+        for (i in -2..2) {
+            drawLine(
+                color = accentColor.copy(alpha = gridAlpha),
+                start = Offset(cx + i * step, cy - 2.5f * step),
+                end = Offset(cx + i * step, cy + 2.5f * step),
+                strokeWidth = 1f
+            )
+            drawLine(
+                color = accentColor.copy(alpha = gridAlpha),
+                start = Offset(cx - 2.5f * step, cy + i * step),
+                end = Offset(cx + 2.5f * step, cy + i * step),
+                strokeWidth = 1f
+            )
+        }
+
+        // 2. Compute local cells based on direct exits from current room
+        val basePosX = if (currentRoom.pos.size >= 2) currentRoom.pos[0] else 0
+        val basePosY = if (currentRoom.pos.size >= 2) currentRoom.pos[1] else 0
+
+        // In minimap viewport: only current room + connected target rooms in same local area
+        val connectedRoomIds = currentRoom.connections.values.toSet()
+        val visibleRooms = allRooms.filter { room ->
+            room.id == currentRoom.id || connectedRoomIds.contains(room.id)
+        }
+
+        // Draw Route Lines from Current Room to Connected Exits
+        val currentCenter = Offset(cx, cy)
+        currentRoom.connections.forEach { (dir, targetId) ->
+            val target = roomsById[targetId]
+            val targetOffset = when {
+                target != null && target.pos.size >= 2 -> {
+                    val dx = target.pos[0] - basePosX
+                    val dy = target.pos[1] - basePosY
+                    Offset(cx + dx * step, cy - dy * step)
+                }
+                dir.equals("north", ignoreCase = true) -> Offset(cx, cy - step)
+                dir.equals("south", ignoreCase = true) -> Offset(cx, cy + step)
+                dir.equals("east", ignoreCase = true) -> Offset(cx + step, cy)
+                dir.equals("west", ignoreCase = true) -> Offset(cx - step, cy)
+                else -> null
+            }
+
+            if (targetOffset != null) {
+                drawLine(
+                    color = accentColor.copy(alpha = 0.65f),
+                    start = currentCenter,
+                    end = targetOffset,
+                    strokeWidth = 2.5f,
+                    cap = StrokeCap.Round
+                )
+                // Target Preview Node
+                drawCircle(
+                    color = accentColor.copy(alpha = 0.70f),
+                    radius = 5.5f,
+                    center = targetOffset
+                )
+            }
+        }
+
+        // Draw Player Location (Current Room) Center Node
+        drawCircle(
+            color = TitleWarmColor.copy(alpha = 0.30f),
+            radius = 16f,
+            center = currentCenter
+        )
+        drawCircle(
+            color = TitleWarmColor,
+            radius = 7f,
+            center = currentCenter
+        )
+
+        // Subtle Crosshair on Player
+        val crosshair = 10f
+        drawLine(TitleWarmColor, Offset(cx - crosshair, cy), Offset(cx + crosshair, cy), strokeWidth = 1.5f)
+        drawLine(TitleWarmColor, Offset(cx, cy - crosshair), Offset(cx, cy + crosshair), strokeWidth = 1.5f)
     }
 }

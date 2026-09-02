@@ -782,9 +782,9 @@
     "tier": "elite",
     "combat_behavior": "aggressive",
     "combat_role": "striker",
-    "hp": 180,
+    "hp": 260,
     "strength": 16,
-    "vitality": 9,
+    "vitality": 11,
     "agility": 18,
     "focus": 10,
     "luck": 12,
@@ -793,7 +793,7 @@
     "element": "physical",
     "resistances": {
       "physical": 10,
-      "shock": -20,
+      "shock": -50,
       "source": -10
     },
     "tags": [
@@ -884,7 +884,7 @@
     "element": "source",
     "resistances": {
       "source": 30,
-      "shock": -20,
+      "shock": -50,
       "physical": 10
     },
     "tags": [
@@ -1192,7 +1192,7 @@
     "resistances": {
       "physical": 25,
       "burn": 40,
-      "shock": -20,
+      "shock": -50,
       "source": -10
     },
     "tags": [

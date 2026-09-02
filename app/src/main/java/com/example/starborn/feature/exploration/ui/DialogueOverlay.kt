@@ -11,6 +11,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -369,12 +370,29 @@ private fun PortraitCard(
     accentColor: Color,
     modifier: Modifier = Modifier
 ) {
+    val portraitScale = remember { androidx.compose.animation.core.Animatable(0.92f) }
+    LaunchedEffect(painter) {
+        portraitScale.snapTo(0.92f)
+        portraitScale.animateTo(
+            targetValue = 1.0f,
+            animationSpec = androidx.compose.animation.core.spring(
+                dampingRatio = androidx.compose.animation.core.Spring.DampingRatioMediumBouncy,
+                stiffness = androidx.compose.animation.core.Spring.StiffnessLow
+            )
+        )
+    }
+
     Surface(
         shape = RoundedCornerShape(12.dp),
         tonalElevation = 1.dp,
         shadowElevation = 4.dp,
         border = BorderStroke(1.dp, accentColor.copy(alpha = 0.35f)),
-        modifier = modifier.size(PortraitSize)
+        modifier = modifier
+            .size(PortraitSize)
+            .graphicsLayer {
+                scaleX = portraitScale.value
+                scaleY = portraitScale.value
+            }
     ) {
         Image(
             painter = painter,

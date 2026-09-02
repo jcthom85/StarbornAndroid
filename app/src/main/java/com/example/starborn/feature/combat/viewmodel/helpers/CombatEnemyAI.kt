@@ -318,6 +318,16 @@ class CombatEnemyAI(
 
         total -= skill.cooldown.coerceAtLeast(0) * aiWeights.cooldownPenaltyPerTurn
         total -= diversityPenalty(enemyState.combatant.id, skill.id)
+
+        // Round 1 Ambush Grace: Favor setup/buff/status and penalize massive lethal burst on turn 1
+        if (state.round <= 1) {
+            if (buffIntent || debuffIntent || isSummon) {
+                total += aiWeights.roundOneSetupBonus
+            } else if (hasDamage && skill.basePower >= 120) {
+                total += aiWeights.roundOneLethalBurstPenalty
+            }
+        }
+
         return total
     }
 
