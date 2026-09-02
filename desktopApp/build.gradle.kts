@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.protobuf)
 }
@@ -61,6 +62,7 @@ protobuf {
 
 dependencies {
     implementation(project(":shared"))
+    implementation(libs.kotlinx.serialization.json)
     implementation(compose.desktop.currentOs)
     implementation(compose.material3)
     implementation(compose.materialIconsExtended)

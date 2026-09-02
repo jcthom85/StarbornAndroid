@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.android.library)
 }
 
@@ -34,10 +35,12 @@ kotlin {
             implementation(compose.material3)
             implementation(compose.materialIconsExtended)
             implementation(compose.components.resources)
-            implementation("com.squareup.moshi:moshi:1.15.1")
-            implementation("com.squareup.moshi:moshi-kotlin:1.15.1")
+            implementation(libs.kotlinx.serialization.json)
             implementation(libs.androidx.datastore.core)
             implementation(libs.androidx.datastore.preferences)
+        }
+        commonTest.dependencies {
+            implementation(kotlin("test"))
         }
     }
 }
