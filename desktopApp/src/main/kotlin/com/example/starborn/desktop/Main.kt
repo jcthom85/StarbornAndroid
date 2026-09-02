@@ -29,6 +29,7 @@ fun main() = application {
     val services = remember { DesktopAppServices() }
     val displayMode by services.userSettingsStore.displayMode.collectAsState(initial = DesktopDisplayMode.WINDOWED)
     val coroutineScope = rememberCoroutineScope()
+    var screenState by remember { mutableStateOf(DesktopScreenState.MAIN_MENU) }
 
     val windowState = rememberWindowState(
         size = DpSize(1280.dp, 800.dp),
@@ -78,24 +79,68 @@ fun main() = application {
                         }
                         true
                     }
+                    Key.Escape -> {
+                        when (screenState) {
+                            DesktopScreenState.FIELD_KIT,
+                            DesktopScreenState.FISHING,
+                            DesktopScreenState.ARCADE,
+                            DesktopScreenState.HUB -> {
+                                screenState = DesktopScreenState.EXPLORATION
+                                true
+                            }
+                            else -> false
+                        }
+                    }
+                    Key.Tab, Key.I -> {
+                        when (screenState) {
+                            DesktopScreenState.EXPLORATION -> {
+                                screenState = DesktopScreenState.FIELD_KIT
+                                true
+                            }
+                            DesktopScreenState.FIELD_KIT -> {
+                                screenState = DesktopScreenState.EXPLORATION
+                                true
+                            }
+                            else -> false
+                        }
+                    }
+                    Key.M -> {
+                        when (screenState) {
+                            DesktopScreenState.EXPLORATION -> {
+                                screenState = DesktopScreenState.HUB
+                                true
+                            }
+                            DesktopScreenState.HUB -> {
+                                screenState = DesktopScreenState.EXPLORATION
+                                true
+                            }
+                            else -> false
+                        }
+                    }
                     else -> false
                 }
             } else false
         }
     ) {
-        DesktopGameApp(services, onExit = {
-            services.audioDriver.release()
-            exitApplication()
-        })
+        DesktopGameApp(
+            services = services,
+            screenState = screenState,
+            onScreenStateChange = { screenState = it },
+            onExit = {
+                services.audioDriver.release()
+                exitApplication()
+            }
+        )
     }
 }
 
 @Composable
 fun DesktopGameApp(
     services: DesktopAppServices,
+    screenState: DesktopScreenState,
+    onScreenStateChange: (DesktopScreenState) -> Unit,
     onExit: () -> Unit
 ) {
-    var screenState by remember { mutableStateOf(DesktopScreenState.MAIN_MENU) }
     var activeCombatEnemies by remember { mutableStateOf(listOf("scrapper_guard", "scrapper_drone")) }
     var activeCinematicScene by remember { mutableStateOf<CinematicScene?>(null) }
 
@@ -111,9 +156,9 @@ fun DesktopGameApp(
                         ?: services.cinematicService.scene("new_game_intro")
                     if (intro != null) {
                         activeCinematicScene = intro
-                        screenState = DesktopScreenState.CINEMATIC
+                        onScreenStateChange(DesktopScreenState.CINEMATIC)
                     } else {
-                        screenState = DesktopScreenState.EXPLORATION
+                        onScreenStateChange(DesktopScreenState.EXPLORATION)
                     }
                 },
                 onOpenSettings = { /* Handled inside menu dialog */ },
@@ -123,28 +168,28 @@ fun DesktopGameApp(
                 services = services,
                 onEnterRoom = { roomId ->
                     services.sessionStore.setRoom(roomId)
-                    screenState = DesktopScreenState.EXPLORATION
+                    onScreenStateChange(DesktopScreenState.EXPLORATION)
                 },
-                onBackToExploration = { screenState = DesktopScreenState.EXPLORATION }
+                onBackToExploration = { onScreenStateChange(DesktopScreenState.EXPLORATION) }
             )
             DesktopScreenState.EXPLORATION -> DesktopExplorationScreen(
                 services = services,
                 onEnterCombat = { enemies ->
                     activeCombatEnemies = enemies
-                    screenState = DesktopScreenState.COMBAT
+                    onScreenStateChange(DesktopScreenState.COMBAT)
                 },
-                onOpenHub = { screenState = DesktopScreenState.HUB },
-                onOpenFieldKit = { screenState = DesktopScreenState.FIELD_KIT },
-                onOpenFishing = { screenState = DesktopScreenState.FISHING },
-                onOpenArcade = { screenState = DesktopScreenState.ARCADE },
-                onReturnToMenu = { screenState = DesktopScreenState.MAIN_MENU }
+                onOpenHub = { onScreenStateChange(DesktopScreenState.HUB) },
+                onOpenFieldKit = { onScreenStateChange(DesktopScreenState.FIELD_KIT) },
+                onOpenFishing = { onScreenStateChange(DesktopScreenState.FISHING) },
+                onOpenArcade = { onScreenStateChange(DesktopScreenState.ARCADE) },
+                onReturnToMenu = { onScreenStateChange(DesktopScreenState.MAIN_MENU) }
             )
             DesktopScreenState.COMBAT -> DesktopCombatScreen(
                 services = services,
                 enemyIds = activeCombatEnemies,
-                onVictory = { screenState = DesktopScreenState.EXPLORATION },
-                onDefeat = { screenState = DesktopScreenState.MAIN_MENU },
-                onFlee = { screenState = DesktopScreenState.EXPLORATION }
+                onVictory = { onScreenStateChange(DesktopScreenState.EXPLORATION) },
+                onDefeat = { onScreenStateChange(DesktopScreenState.MAIN_MENU) },
+                onFlee = { onScreenStateChange(DesktopScreenState.EXPLORATION) }
             )
             DesktopScreenState.CINEMATIC -> {
                 val scene = activeCinematicScene
@@ -154,24 +199,24 @@ fun DesktopGameApp(
                         scene = scene,
                         onComplete = {
                             activeCinematicScene = null
-                            screenState = DesktopScreenState.EXPLORATION
+                            onScreenStateChange(DesktopScreenState.EXPLORATION)
                         }
                     )
                 } else {
-                    screenState = DesktopScreenState.EXPLORATION
+                    onScreenStateChange(DesktopScreenState.EXPLORATION)
                 }
             }
             DesktopScreenState.FIELD_KIT -> DesktopFieldKitScreen(
                 services = services,
-                onClose = { screenState = DesktopScreenState.EXPLORATION }
+                onClose = { onScreenStateChange(DesktopScreenState.EXPLORATION) }
             )
             DesktopScreenState.FISHING -> DesktopFishingScreen(
                 services = services,
-                onClose = { screenState = DesktopScreenState.EXPLORATION }
+                onClose = { onScreenStateChange(DesktopScreenState.EXPLORATION) }
             )
             DesktopScreenState.ARCADE -> DesktopArcadeScreen(
                 services = services,
-                onClose = { screenState = DesktopScreenState.EXPLORATION }
+                onClose = { onScreenStateChange(DesktopScreenState.EXPLORATION) }
             )
         }
     }
