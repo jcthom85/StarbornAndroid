@@ -154,7 +154,7 @@ fun DesktopFishingScreen(
                             onClose()
                             true
                         }
-                        Key.Spacebar -> {
+                        Key.Spacebar, Key.Enter, Key.NumPadEnter, Key.E -> {
                             if (fishingState == FishingState.IDLE) {
                                 fishingState = FishingState.WAITING_FOR_BITE
                             } else if (fishingState == FishingState.REELING) {
@@ -167,7 +167,7 @@ fun DesktopFishingScreen(
                         else -> false
                     }
                 } else if (keyEvent.type == KeyEventType.KeyUp) {
-                    if (keyEvent.key == Key.Spacebar) {
+                    if (keyEvent.key == Key.Spacebar || keyEvent.key == Key.Enter || keyEvent.key == Key.NumPadEnter || keyEvent.key == Key.E) {
                         isHoldingReel = false
                         true
                     } else false

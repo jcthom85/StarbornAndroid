@@ -159,9 +159,9 @@ class ArcadeServiceTest {
 
     @Test
     fun tokensAreAwardedOnScoreSubmission() {
-        val before = inventory.count(ArcadeIds.TOKEN_ITEM_ID)
+        val before = inventory.snapshot()[ArcadeIds.TOKEN_ITEM_ID] ?: 0
         service.submitDeepMineScore(15_000)
-        val after = inventory.count(ArcadeIds.TOKEN_ITEM_ID)
+        val after = inventory.snapshot()[ArcadeIds.TOKEN_ITEM_ID] ?: 0
         assertTrue("Tokens should be awarded for Bronze + Silver tiers + participation", after > before)
     }
 }

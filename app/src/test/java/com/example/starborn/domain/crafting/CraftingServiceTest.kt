@@ -277,6 +277,82 @@ class CraftingServiceTest {
         assertFalse(inventory.hasItem("ration_pack"))
         assertFalse(inventory.hasItem("herb"))
     }
+
+    @Test
+    fun batchCookingConsumesScaledIngredientsAndMultipliesYield() {
+        val catalog = TestItemCatalog(
+            listOf(
+                item(id = "ration_pack", name = "Ration Pack"),
+                item(id = "herb", name = "Herb"),
+                item(id = "ration_soup", name = "Ration Soup")
+            )
+        )
+        val inventory = InventoryService(catalog).apply {
+            loadItems()
+            addItem("ration_pack", 5)
+            addItem("herb", 5)
+        }
+        val recipes = TestRecipeSource(
+            cooking = listOf(
+                CookingRecipe(
+                    id = "provision_ration_soup",
+                    name = "Ration Soup",
+                    ingredients = mapOf("ration_pack" to 1, "herb" to 1),
+                    result = "ration_soup",
+                    resultQuantity = 1,
+                    successMessage = "Simmered Ration Soup."
+                )
+            )
+        )
+        val service = CraftingService(recipes, inventory, GameSessionStore())
+
+        assertTrue(service.canCook(recipes.loadCookingRecipes().first(), batch = 3))
+        val outcome = service.cookMeal("provision_ration_soup", batch = 3)
+
+        assertTrue(outcome is CraftingOutcome.Success)
+        // Yield is at least 3 (or 4 if 15% masterwork procced)
+        val soupCount = inventory.snapshot()["ration_soup"] ?: 0
+        assertTrue("Expected at least 3 soups, got $soupCount", soupCount >= 3)
+        // Ingredients remaining: 5 - 3 = 2
+        assertEquals(2, inventory.snapshot()["ration_pack"])
+        assertEquals(2, inventory.snapshot()["herb"])
+    }
+
+    @Test
+    fun chefSelectionAppliesUniquePerkToSessionStore() {
+        val catalog = TestItemCatalog(
+            listOf(
+                item(id = "ration_pack", name = "Ration Pack"),
+                item(id = "herb", name = "Herb"),
+                item(id = "ration_soup", name = "Ration Soup")
+            )
+        )
+        val inventory = InventoryService(catalog).apply {
+            loadItems()
+            addItem("ration_pack", 1)
+            addItem("herb", 1)
+        }
+        val recipes = TestRecipeSource(
+            cooking = listOf(
+                CookingRecipe(
+                    id = "provision_ration_soup",
+                    name = "Ration Soup",
+                    ingredients = mapOf("ration_pack" to 1, "herb" to 1),
+                    result = "ration_soup"
+                )
+            )
+        )
+        val store = GameSessionStore()
+        val service = CraftingService(recipes, inventory, store)
+
+        service.cookMeal("provision_ration_soup", chefId = "nova")
+
+        val activeBuff = store.state.value.activeMealBuff
+        org.junit.Assert.assertNotNull(activeBuff)
+        assertEquals("nova", activeBuff?.chefId)
+        assertEquals(10, activeBuff?.focusBonus)
+        assertEquals(3, activeBuff?.remainingEncounters)
+    }
 }
 
 private class EmptyItemCatalog : ItemCatalog {

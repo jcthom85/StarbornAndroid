@@ -282,7 +282,21 @@ private fun GameSessionProto.toState(): GameSessionState = GameSessionState(
             retreatGraceRemainingMs = state.retreatGraceRemainingMs,
             defeated = state.defeated
         )
-    }
+    },
+    activeMealBuff = if (hasActiveMealBuff() && activeMealBuff.recipeId.isNotBlank()) {
+        ActiveMealBuff(
+            recipeId = activeMealBuff.recipeId,
+            recipeName = activeMealBuff.recipeName,
+            chefId = activeMealBuff.chefId.takeIf { it.isNotBlank() },
+            remainingEncounters = activeMealBuff.remainingEncounters.coerceAtLeast(1),
+            hpBonus = activeMealBuff.hpBonus,
+            speedBonus = activeMealBuff.speedBonus,
+            focusBonus = activeMealBuff.focusBonus,
+            critBonus = activeMealBuff.critBonus,
+            stabilityBonus = activeMealBuff.stabilityBonus,
+            statusResistBonus = activeMealBuff.statusResistBonus
+        )
+    } else null
 )
 
 private fun GameSessionState.toProto(savedAt: Long = System.currentTimeMillis()): GameSessionProto = GameSessionProto.newBuilder().apply {
@@ -404,6 +418,20 @@ private fun GameSessionState.toProto(savedAt: Long = System.currentTimeMillis())
                     .build()
             )
         }
+    }
+    this@toProto.activeMealBuff?.let { buff ->
+        activeMealBuff = com.example.starborn.datastore.ActiveMealBuffProto.newBuilder().apply {
+            recipeId = buff.recipeId
+            recipeName = buff.recipeName
+            chefId = buff.chefId.orEmpty()
+            remainingEncounters = buff.remainingEncounters
+            hpBonus = buff.hpBonus
+            speedBonus = buff.speedBonus
+            focusBonus = buff.focusBonus
+            critBonus = buff.critBonus
+            stabilityBonus = buff.stabilityBonus
+            statusResistBonus = buff.statusResistBonus
+        }.build()
     }
     lastSavedMs = savedAt
 }.build()

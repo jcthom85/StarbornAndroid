@@ -150,5 +150,29 @@
     "result": "source_astral_feast",
     "description": "Prepare a master banquet of rare frequency tetra, charred stellarium eel, fiery spices, and herbs over the Source campfire.",
     "success_message": "You cook an unforgettable Source Astral Feast that fills the entire crew with resonant vitality."
+  },
+  {
+    "id": "provision_celestial_fillet",
+    "name": "Celestial Fillet",
+    "ingredients": {
+      "void_ray": 1,
+      "herb": 1,
+      "fiery_pepper": 1
+    },
+    "result": "celestial_fillet",
+    "description": "Sear ether-infused void ray with wild herbs and fiery pepper over stellar heat.",
+    "success_message": "You sear a crisp Celestial Fillet that hums with raw void energy."
+  },
+  {
+    "id": "provision_chronos_stew",
+    "name": "Chronos Stew",
+    "ingredients": {
+      "chronos_guppy": 1,
+      "noodles": 1,
+      "herb": 1
+    },
+    "result": "chronos_stew",
+    "description": "Simmer quicksilver chronos guppy with hearty noodles and fragrant wild herbs.",
+    "success_message": "You prepare a warm bowl of Chronos Stew that hastens your reflex."
   }
 ]

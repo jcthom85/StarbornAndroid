@@ -14,20 +14,76 @@ class CraftingService(
     val tinkeringRecipes: List<TinkeringRecipe> by lazy { craftingDataSource.loadTinkeringRecipes() }
     val cookingRecipes: List<CookingRecipe> by lazy { craftingDataSource.loadCookingRecipes() }
 
-    fun canCook(recipe: CookingRecipe): Boolean {
+    fun canCook(recipe: CookingRecipe, batch: Int = 1): Boolean {
+        val multiplier = batch.coerceAtLeast(1)
         val requirementCounts = recipe.ingredients.mapKeys { (item, _) -> normalizeToken(item) }
         val inventoryCounts = inventoryTokenCounts()
-        return requirementCounts.all { (id, needed) -> (inventoryCounts[id] ?: 0) >= needed }
+        return requirementCounts.all { (id, needed) -> (inventoryCounts[id] ?: 0) >= (needed * multiplier) }
     }
 
-    fun cookMeal(recipeId: String): CraftingOutcome {
+    fun cookMeal(recipeId: String, chefId: String? = null, batch: Int = 1): CraftingOutcome {
         val recipe = cookingRecipes.find { it.id == recipeId } ?: return CraftingOutcome.Failure("Unknown recipe")
-        if (!canCook(recipe)) return CraftingOutcome.Failure("Missing ingredients")
-        if (!inventoryService.consumeItems(recipe.ingredients)) return CraftingOutcome.Failure("Unable to consume ingredients")
-        inventoryService.addItem(recipe.result, recipe.resultQuantity.coerceAtLeast(1))
+        val multiplier = batch.coerceAtLeast(1)
+        if (!canCook(recipe, multiplier)) return CraftingOutcome.Failure("Missing ingredients")
+        val scaledIngredients = recipe.ingredients.mapValues { it.value * multiplier }
+        if (!inventoryService.consumeItems(scaledIngredients)) return CraftingOutcome.Failure("Unable to consume ingredients")
+
+        val isMasterwork = (Math.random() < 0.15)
+        val extraYield = if (isMasterwork) 1 else 0
+        val totalYield = (recipe.resultQuantity.coerceAtLeast(1) * multiplier) + extraYield
+        inventoryService.addItem(recipe.result, totalYield)
         sessionStore.setInventory(inventoryService.snapshot())
-        recipe.successMessage?.let { return CraftingOutcome.Success(recipe.result, it) }
-        return CraftingOutcome.Success(recipe.result, "Prepared ${recipe.name}")
+
+        // If a chef is designated, record active meal perk for the session
+        if (chefId != null) {
+            val chefPerkBuff = when (chefId.lowercase(java.util.Locale.getDefault())) {
+                "nova" -> com.example.starborn.domain.session.ActiveMealBuff(
+                    recipeId = recipe.id,
+                    recipeName = recipe.name,
+                    chefId = "nova",
+                    remainingEncounters = 3,
+                    focusBonus = 10
+                )
+                "zeke" -> com.example.starborn.domain.session.ActiveMealBuff(
+                    recipeId = recipe.id,
+                    recipeName = recipe.name,
+                    chefId = "zeke",
+                    remainingEncounters = 3,
+                    hpBonus = 25,
+                    stabilityBonus = 3
+                )
+                "gh0st" -> com.example.starborn.domain.session.ActiveMealBuff(
+                    recipeId = recipe.id,
+                    recipeName = recipe.name,
+                    chefId = "gh0st",
+                    remainingEncounters = 3,
+                    speedBonus = 5,
+                    statusResistBonus = 20
+                )
+                "orion" -> com.example.starborn.domain.session.ActiveMealBuff(
+                    recipeId = recipe.id,
+                    recipeName = recipe.name,
+                    chefId = "orion",
+                    remainingEncounters = 3,
+                    critBonus = 0.08
+                )
+                else -> null
+            }
+            if (chefPerkBuff != null) {
+                sessionStore.applyMealBuff(chefPerkBuff)
+            }
+        }
+
+        val masterworkMsg = if (isMasterwork) " ⭐ Masterwork Sizzle! (+1 extra portion)" else ""
+        val chefMsg = when (chefId?.lowercase(java.util.Locale.getDefault())) {
+            "nova" -> " Nova balanced the macros (+Focus)."
+            "zeke" -> " Zeke charred it over iron (+HP & Stability)."
+            "gh0st" -> " Gh0st steeped pungent herbs (+Spd & Resist)."
+            "orion" -> " Orion plated with precision (+Crit)."
+            else -> ""
+        }
+        val baseMsg = recipe.successMessage ?: "Prepared ${recipe.name}"
+        return CraftingOutcome.Success(recipe.result, "$baseMsg (x$totalYield)$masterworkMsg$chefMsg")
     }
 
     fun canCraft(recipe: TinkeringRecipe): Boolean {

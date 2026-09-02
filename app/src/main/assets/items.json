@@ -1923,6 +1923,72 @@
     "rarity": "epic"
   },
   {
+    "id": "void_ray",
+    "name": "Void Ray",
+    "description": "An ether-born ray caught from the Singularity Well, shimmering with dimensional currents.",
+    "type": "ingredient",
+    "value": 180,
+    "buy_price": 360,
+    "rarity": "exotic"
+  },
+  {
+    "id": "chronos_guppy",
+    "name": "Chronos Guppy",
+    "description": "A quicksilver fish from temporal currents, flickering slightly in and out of phase.",
+    "type": "ingredient",
+    "value": 130,
+    "buy_price": 260,
+    "rarity": "rare"
+  },
+  {
+    "id": "celestial_fillet",
+    "name": "Celestial Fillet",
+    "description": "Sear of void ray with herbs. Restores 150 HP and grants Well-Fed Focus.",
+    "type": "consumable",
+    "value": 240,
+    "buy_price": 480,
+    "rarity": "exotic",
+    "effect": {
+      "restore_hp": 150,
+      "buffs": [
+        {
+          "stat": "focus",
+          "value": 12,
+          "duration": 3
+        },
+        {
+          "stat": "crit",
+          "value": 8,
+          "duration": 3
+        }
+      ]
+    }
+  },
+  {
+    "id": "chronos_stew",
+    "name": "Chronos Stew",
+    "description": "Quicksilver broth with noodles. Restores 130 HP and grants Well-Fed Speed.",
+    "type": "consumable",
+    "value": 210,
+    "buy_price": 420,
+    "rarity": "rare",
+    "effect": {
+      "restore_hp": 130,
+      "buffs": [
+        {
+          "stat": "speed",
+          "value": 8,
+          "duration": 3
+        },
+        {
+          "stat": "resist",
+          "value": 15,
+          "duration": 3
+        }
+      ]
+    }
+  },
+  {
     "id": "old_boot",
     "name": "Old Boot",
     "description": "Waterlogged, sturdy, and probably not edible.",

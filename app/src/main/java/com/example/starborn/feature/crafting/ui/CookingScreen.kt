@@ -6,6 +6,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -51,6 +52,7 @@ fun CookingScreen(
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     var recentlyCookedRecipeId by remember { mutableStateOf<String?>(null) }
+    var selectedChef by remember { mutableStateOf("nova") }
 
     val recipes = remember { craftingService.cookingRecipes }
     val isCampfire = source?.contains("camp", ignoreCase = true) == true || source?.contains("fire", ignoreCase = true) == true
@@ -136,6 +138,51 @@ fun CookingScreen(
                                 color = Color(0xFFA0AEC0)
                             )
                         )
+                    }
+                }
+
+                // Companion Head Chef Selection
+                val chefs = listOf(
+                    Triple("nova", "Nova", "⚡ +10 Focus"),
+                    Triple("zeke", "Zeke", "🛡️ +25 HP / +3 Stab"),
+                    Triple("gh0st", "Gh0st", "💨 +5 Spd / +20% Res"),
+                    Triple("orion", "Orion", "🎯 +8% Crit")
+                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 12.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    chefs.forEach { (id, name, perk) ->
+                        val isSelected = selectedChef == id
+                        Surface(
+                            modifier = Modifier
+                                .weight(1f)
+                                .clip(RoundedCornerShape(10.dp))
+                                .clickable { selectedChef = id },
+                            color = if (isSelected) Color(0xFFED8936).copy(alpha = 0.25f) else Color(0xFF1A202C),
+                            border = BorderStroke(1.dp, if (isSelected) Color(0xFFED8936) else Color(0xFF2D3748)),
+                            shape = RoundedCornerShape(10.dp)
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(horizontal = 4.dp, vertical = 6.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(
+                                    text = name,
+                                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                                    color = if (isSelected) Color(0xFFFFD54F) else Color(0xFFE2E8F0),
+                                    fontSize = 12.sp
+                                )
+                                Text(
+                                    text = perk,
+                                    fontSize = 8.sp,
+                                    color = if (isSelected) Color(0xFFFBD38D) else Color(0xFF718096),
+                                    maxLines = 1
+                                )
+                            }
+                        }
                     }
                 }
 
@@ -285,12 +332,49 @@ fun CookingScreen(
                                     }
                                 }
 
-                                Spacer(modifier = Modifier.height(12.dp))
+                                Spacer(modifier = Modifier.height(10.dp))
+
+                                var selectedBatch by remember(recipe.id) { mutableStateOf(1) }
+                                val canCookCurrentBatch = craftingService.canCook(recipe, selectedBatch)
+
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 4.dp),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(
+                                        text = "Portions:",
+                                        style = MaterialTheme.typography.labelSmall.copy(color = Color(0xFFA0AEC0))
+                                    )
+                                    Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                                        listOf(1, 2, 3, 5).forEach { qty ->
+                                            val isSelected = selectedBatch == qty
+                                            val canCookQty = craftingService.canCook(recipe, qty)
+                                            Surface(
+                                                shape = RoundedCornerShape(6.dp),
+                                                color = if (isSelected) Color(0xFFED8936) else Color(0xFF2D3748),
+                                                modifier = Modifier.clickable(enabled = canCookQty) { selectedBatch = qty }
+                                            ) {
+                                                Text(
+                                                    text = "x$qty",
+                                                    fontSize = 11.sp,
+                                                    fontWeight = FontWeight.Bold,
+                                                    color = if (!canCookQty) Color(0xFF718096) else if (isSelected) Color.Black else Color.White,
+                                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
+                                                )
+                                            }
+                                        }
+                                    }
+                                }
+
+                                Spacer(modifier = Modifier.height(8.dp))
 
                                 // Cook Button
                                 Button(
                                     onClick = {
-                                        val outcome = craftingService.cookMeal(recipe.id)
+                                        val outcome = craftingService.cookMeal(recipe.id, chefId = selectedChef, batch = selectedBatch)
                                         scope.launch {
                                             when (outcome) {
                                                 is CraftingOutcome.Success -> {
@@ -308,7 +392,7 @@ fun CookingScreen(
                                             }
                                         }
                                     },
-                                    enabled = canCook,
+                                    enabled = canCookCurrentBatch,
                                     modifier = Modifier.fillMaxWidth(),
                                     shape = RoundedCornerShape(12.dp),
                                     colors = ButtonDefaults.buttonColors(
@@ -317,9 +401,9 @@ fun CookingScreen(
                                     )
                                 ) {
                                     Text(
-                                        text = if (canCook) "Cook ${recipe.name}" else "Missing Ingredients",
+                                        text = if (canCookCurrentBatch) "Cook ${recipe.name} (x$selectedBatch)" else "Missing Ingredients",
                                         fontWeight = FontWeight.Bold,
-                                        color = if (canCook) Color.White else Color(0xFF718096)
+                                        color = if (canCookCurrentBatch) Color.White else Color(0xFF718096)
                                     )
                                 }
                             }

@@ -601,6 +601,35 @@ class GameSessionStore {
         }
     }
 
+    fun applyMealBuff(buff: ActiveMealBuff) {
+        _state.update { it.copy(activeMealBuff = buff) }
+    }
+
+    fun clearMealBuff() {
+        _state.update { it.copy(activeMealBuff = null) }
+    }
+
+    fun decrementMealBuffEncounter(): ActiveMealBuff? {
+        var currentBuff: ActiveMealBuff? = null
+        _state.update { state ->
+            val buff = state.activeMealBuff
+            if (buff == null) {
+                state
+            } else {
+                val nextCount = buff.remainingEncounters - 1
+                if (nextCount <= 0) {
+                    currentBuff = null
+                    state.copy(activeMealBuff = null)
+                } else {
+                    val updated = buff.copy(remainingEncounters = nextCount)
+                    currentBuff = updated
+                    state.copy(activeMealBuff = updated)
+                }
+            }
+        }
+        return currentBuff
+    }
+
     private fun normalizeEquipment(state: GameSessionState): GameSessionState {
         val normalized = normalizeScopedEquipment(state)
         return if (normalized == state.equippedItems) state else state.copy(equippedItems = normalized)

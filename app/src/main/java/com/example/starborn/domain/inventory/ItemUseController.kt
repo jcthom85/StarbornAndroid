@@ -55,13 +55,18 @@ class ItemUseController(
                 val parts = mutableListOf<String>()
                 if (result.hp > 0) parts += "${result.hp} HP"
                 val label = formatTargetLabel(resolvedTargets, characters)
+                if (result.buffs.isNotEmpty()) {
+                    applyMealBuff(result.item.id, result.item.name, result.buffs)
+                    parts += "Well-Fed (${result.buffs.joinToString { "${it.stat}+${it.value}" }})"
+                }
                 if (parts.isEmpty()) "Used ${result.item.name}."
                 else "Restored ${parts.joinToString(" and ")} to $label"
             }
             is ItemUseResult.Damage -> "${result.item.name} can't be used outside combat."
             is ItemUseResult.Buff -> {
+                applyMealBuff(result.item.id, result.item.name, result.buffs)
                 val buffs = result.buffs.joinToString { "${it.stat}+${it.value}" }
-                "Buffs applied: $buffs"
+                "Well-Fed: $buffs (active for 3 encounters)"
             }
             is ItemUseResult.LearnSchematic -> {
                 val learned = craftingService.learnSchematic(result.schematicId)
@@ -73,6 +78,42 @@ class ItemUseController(
             }
         }
         return Result.Success(result, message)
+    }
+
+    private fun applyMealBuff(
+        itemId: String,
+        itemName: String,
+        buffs: List<com.example.starborn.domain.model.BuffEffect>
+    ) {
+        var hpBonus = 0
+        var speedBonus = 0
+        var focusBonus = 0
+        var critBonus = 0.0
+        var stabilityBonus = 0
+        var statusResistBonus = 0
+
+        buffs.forEach { buff ->
+            when (buff.stat.lowercase(java.util.Locale.getDefault())) {
+                "hp", "max_hp" -> hpBonus += buff.value
+                "speed", "spd" -> speedBonus += buff.value
+                "focus" -> focusBonus += buff.value
+                "crit", "crit_chance" -> critBonus += buff.value / 100.0
+                "stability" -> stabilityBonus += buff.value
+                "resist", "status_resist" -> statusResistBonus += buff.value
+            }
+        }
+        val mealBuff = com.example.starborn.domain.session.ActiveMealBuff(
+            recipeId = itemId,
+            recipeName = itemName,
+            remainingEncounters = 3,
+            hpBonus = hpBonus,
+            speedBonus = speedBonus,
+            focusBonus = focusBonus,
+            critBonus = critBonus,
+            stabilityBonus = stabilityBonus,
+            statusResistBonus = statusResistBonus
+        )
+        sessionStore.applyMealBuff(mealBuff)
     }
 
     private fun applyRestoration(

@@ -83,10 +83,17 @@ class InventoryService(
         val effect = item.effect
         val result = when {
             effect == null -> ItemUseResult.None(item)
-            (effect.restoreHp ?: 0) > 0 -> ItemUseResult.Restore(
-                item = item,
-                hp = effect.restoreHp ?: 0
-            )
+            (effect.restoreHp ?: 0) > 0 -> {
+                val buffs = buildList {
+                    effect.singleBuff?.let { add(it) }
+                    effect.buffs?.let { addAll(it) }
+                }
+                ItemUseResult.Restore(
+                    item = item,
+                    hp = effect.restoreHp ?: 0,
+                    buffs = buffs
+                )
+            }
             (effect.damage ?: 0) > 0 -> ItemUseResult.Damage(
                 item = item,
                 amount = effect.damage ?: 0
@@ -254,7 +261,11 @@ sealed interface ItemUseResult {
     val item: Item
 
     data class None(override val item: Item) : ItemUseResult
-    data class Restore(override val item: Item, val hp: Int) : ItemUseResult
+    data class Restore(
+        override val item: Item,
+        val hp: Int,
+        val buffs: List<com.example.starborn.domain.model.BuffEffect> = emptyList()
+    ) : ItemUseResult
     data class Damage(override val item: Item, val amount: Int) : ItemUseResult
     data class Buff(override val item: Item, val buffs: List<com.example.starborn.domain.model.BuffEffect>) : ItemUseResult
     data class LearnSchematic(override val item: Item, val schematicId: String) : ItemUseResult

@@ -17771,6 +17771,12 @@
         "type": "generic",
         "action_event": "source_board_astra",
         "condition_unmet_message": "The Astra shuttle ramp hums softly, ready to ferry the crew back to the ship."
+      },
+      {
+        "name": "ether well",
+        "type": "fishing",
+        "zone_id": "singularity_ether_well",
+        "condition_unmet_message": "A crystalline well pulses with temporal resonance, its luminous depths harboring elusive chronal creatures."
       }
     ]
   }

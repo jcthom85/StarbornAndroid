@@ -49,7 +49,21 @@ data class GameSessionState(
     val astraReturnWorldId: String? = null,
     val astraReturnHubId: String? = null,
     val astraReturnRoomId: String? = null,
-    val arcadeProgress: Map<String, ArcadeCabinetProgress> = emptyMap()
+    val arcadeProgress: Map<String, ArcadeCabinetProgress> = emptyMap(),
+    val activeMealBuff: ActiveMealBuff? = null
+)
+
+data class ActiveMealBuff(
+    val recipeId: String = "",
+    val recipeName: String = "",
+    val chefId: String? = null,
+    val remainingEncounters: Int = 3,
+    val hpBonus: Int = 0,
+    val speedBonus: Int = 0,
+    val focusBonus: Int = 0,
+    val critBonus: Double = 0.0,
+    val stabilityBonus: Int = 0,
+    val statusResistBonus: Int = 0
 )
 
 data class ArcadeCabinetProgress(

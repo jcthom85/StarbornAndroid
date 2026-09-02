@@ -251,6 +251,32 @@
         "rarity": "junk",
         "behavior_id": "gentle_wobble"
       }
+    ],
+    "singularity_ether_well": [
+      {
+        "item": "void_ray",
+        "weight": 20,
+        "rarity": "exotic",
+        "behavior_id": "ether_teleport"
+      },
+      {
+        "item": "chronos_guppy",
+        "weight": 35,
+        "rarity": "rare",
+        "behavior_id": "erratic_burst"
+      },
+      {
+        "item": "frequency_tetra",
+        "weight": 30,
+        "rarity": "epic",
+        "behavior_id": "standing_wave"
+      },
+      {
+        "item": "resonance_carp",
+        "weight": 15,
+        "rarity": "uncommon",
+        "behavior_id": "steady_pull"
+      }
     ]
   },
   "fish_behaviors": {
@@ -283,6 +309,12 @@
       "base_pull": 0.52,
       "burst_pull": 0.42,
       "stamina": 18.0
+    },
+    "ether_teleport": {
+      "pattern": "burst",
+      "base_pull": 0.62,
+      "burst_pull": 0.48,
+      "stamina": 22.0
     }
   },
   "minigame_rules": {

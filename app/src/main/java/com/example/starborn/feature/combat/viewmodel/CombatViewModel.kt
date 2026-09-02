@@ -345,12 +345,14 @@ class CombatViewModel(
         skillById = allSkills.associateBy { it.id }
         skillNodesById = worldAssets.loadSkillNodes()
 
+        val activeMeal = sessionSnapshot.activeMealBuff
         playerCombatants = playerParty.map {
             it.toCombatant(
                 equippedItemsSnapshot,
                 equippedWeaponsSnapshot,
                 equippedArmorsSnapshot,
-                unlockedWeaponsSnapshot
+                unlockedWeaponsSnapshot,
+                activeMeal
             )
         }
         val duplicateCounts = encounterEnemyIdList.groupingBy { it }.eachCount()
@@ -2609,36 +2611,47 @@ class CombatViewModel(
         equippedItems: Map<String, String>,
         equippedWeapons: Map<String, String>,
         equippedArmors: Map<String, String>,
-        unlockedWeapons: Set<String>
+        unlockedWeapons: Set<String>,
+        mealBuff: com.example.starborn.domain.session.ActiveMealBuff? = null
     ): Combatant =
         run {
             val bonuses = equipmentBonuses(id, equippedItems, equippedWeapons, equippedArmors)
             val adjustedStrength = (strength + bonuses.strength).coerceAtLeast(0)
             val adjustedVitality = (vitality + bonuses.vitality).coerceAtLeast(0)
             val adjustedAgility = (agility + bonuses.agility).coerceAtLeast(0)
-            val adjustedFocus = (focus + bonuses.focus).coerceAtLeast(0)
+            val adjustedFocus = (focus + bonuses.focus + (mealBuff?.focusBonus ?: 0)).coerceAtLeast(0)
             val adjustedLuck = (luck + bonuses.luck).coerceAtLeast(0)
-            val adjustedSpeed = CombatFormulas.speed(bonuses.speed, adjustedAgility).roundToInt().coerceAtLeast(0)
+            val mealSpeedBonus = mealBuff?.speedBonus ?: 0
+            val adjustedSpeed = CombatFormulas.speed(bonuses.speed + mealSpeedBonus, adjustedAgility).roundToInt().coerceAtLeast(0)
+            val mealHpBonus = mealBuff?.hpBonus ?: 0
+            val mealCritBonus = mealBuff?.critBonus ?: 0.0
+            val mealStabilityBonus = mealBuff?.stabilityBonus ?: 0
+            val mealResistBonus = mealBuff?.statusResistBonus ?: 0
 
             Combatant(
             id = id,
             name = name,
             side = CombatSide.PLAYER,
             stats = StatBlock(
-                maxHp = CombatFormulas.maxHp(hp, adjustedVitality) + bonuses.hpBonus,
+                maxHp = CombatFormulas.maxHp(hp, adjustedVitality) + bonuses.hpBonus + mealHpBonus,
                 strength = adjustedStrength,
                 vitality = adjustedVitality,
                 agility = adjustedAgility,
                 focus = adjustedFocus,
                 luck = adjustedLuck,
                 speed = adjustedSpeed,
-                stability = 100,
+                stability = 100 + mealStabilityBonus,
                 accuracyBonus = bonuses.accuracyBonus,
                 evasionBonus = bonuses.evasionBonus,
-                critBonus = bonuses.critBonus,
+                critBonus = bonuses.critBonus + mealCritBonus,
                 flatDamageReduction = bonuses.flatDamageReduction
             ),
-            resistances = ResistanceProfile(),
+            resistances = ResistanceProfile(
+                burn = mealResistBonus,
+                freeze = mealResistBonus,
+                shock = mealResistBonus,
+                acid = mealResistBonus
+            ),
             skills = skills,
             weapon = resolveCombatWeapon(id, equippedItems, equippedWeapons, unlockedWeapons),
             brokenTurns = 1
@@ -2952,6 +2965,7 @@ class CombatViewModel(
             if (levelUps.isNotEmpty()) {
                 pendingLevelUps.addAll(levelUps)
             }
+            sessionStore.decrementMealBuffEncounter()
             persistPartyVitals(resolved)
         } else if (resolved.outcome != null) {
             persistPartyVitals(resolved)

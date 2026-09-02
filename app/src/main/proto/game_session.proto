@@ -49,6 +49,7 @@ message GameSessionProto {
   string astra_return_hub_id = 48;
   string astra_return_room_id = 49;
   map<string, ArcadeProgressProto> arcade_progress = 50;
+  ActiveMealBuffProto active_meal_buff = 51;
 
   reserved 19;
   reserved 28, 29, 30, 31;
@@ -70,6 +71,7 @@ message EnemyPartyStateProto {
   int32 route_index = 2;
   int32 route_direction = 3;
   int64 move_remaining_ms = 4;
+
   int64 aggression_remaining_ms = 5;
   bool has_aggression_timer = 6;
   int64 retreat_grace_remaining_ms = 7;
@@ -87,4 +89,17 @@ message InventoryEntryProto {
 
 message QuestTaskListProto {
   repeated string completed_task_ids = 1;
+}
+
+message ActiveMealBuffProto {
+  string recipe_id = 1;
+  string recipe_name = 2;
+  string chef_id = 3;
+  int32 remaining_encounters = 4;
+  int32 hp_bonus = 5;
+  int32 speed_bonus = 6;
+  int32 focus_bonus = 7;
+  double crit_bonus = 8;
+  int32 stability_bonus = 9;
+  int32 status_resist_bonus = 10;
 }
