@@ -185,7 +185,7 @@ fun MainMenuScreen(
             launch {
                 buttonsFadeAlpha.animateTo(
                     targetValue = 1f,
-                    animationSpec = tween(durationMillis = 2000, easing = FastOutSlowInEasing)
+                    animationSpec = tween(durationMillis = 2000, easing = LinearEasing)
                 )
             }
             launch {
@@ -219,11 +219,11 @@ fun MainMenuScreen(
         // Stage 3: Starts at 5850ms (exactly 2925ms after stage 2 start)
         delay(2925) // Total elapsed: 5850ms
 
-        // Buttons fade in naturally and smoothly over ~2.2s
+        // Buttons fade in naturally and smoothly over ~3.2s
         launch {
             buttonsFadeAlpha.animateTo(
                 targetValue = 1f,
-                animationSpec = tween(durationMillis = 2200, easing = FastOutSlowInEasing)
+                animationSpec = tween(durationMillis = 3200, easing = LinearEasing)
             )
         }
 
@@ -905,13 +905,13 @@ private fun StarbornTitleButton(
             elevation = ButtonDefaults.buttonElevation(
                 defaultElevation = 10.dp,
                 pressedElevation = 14.dp,
-                disabledElevation = 0.dp
+                disabledElevation = 10.dp
             ),
             colors = ButtonDefaults.buttonColors(
                 containerColor = TitleGold,
                 contentColor = Color(0xFF1B1608),
-                disabledContainerColor = TitlePanel.copy(alpha = 0.58f),
-                disabledContentColor = TitleMutedText.copy(alpha = 0.62f)
+                disabledContainerColor = TitleGold,
+                disabledContentColor = Color(0xFF1B1608)
             ),
             modifier = buttonModifier
         ) {
@@ -928,18 +928,19 @@ private fun StarbornTitleButton(
             enabled = enabled,
             interactionSource = interactionSource,
             shape = RoundedCornerShape(16.dp),
-            border = BorderStroke(1.5.dp, if (enabled) TitleCyan.copy(alpha = 0.82f) else TitleCyan.copy(alpha = 0.22f)),
+            border = BorderStroke(1.5.dp, TitleCyan.copy(alpha = 0.82f)),
             colors = ButtonDefaults.outlinedButtonColors(
-                containerColor = TitlePanel.copy(alpha = if (enabled) 0.70f else 0.42f),
-                contentColor = if (enabled) TitleText else TitleMutedText.copy(alpha = 0.56f),
-                disabledContentColor = TitleMutedText.copy(alpha = 0.56f)
+                containerColor = TitlePanel.copy(alpha = 0.70f),
+                contentColor = TitleText,
+                disabledContainerColor = TitlePanel.copy(alpha = 0.70f),
+                disabledContentColor = TitleText
             ),
             modifier = buttonModifier
                 .background(
                     Brush.horizontalGradient(
                         colors = listOf(
-                            TitleCyan.copy(alpha = if (enabled) 0.13f else 0.04f),
-                            TitleAmber.copy(alpha = if (enabled) 0.08f else 0.02f),
+                            TitleCyan.copy(alpha = 0.13f),
+                            TitleAmber.copy(alpha = 0.08f),
                             Color.Transparent
                         )
                     ),
