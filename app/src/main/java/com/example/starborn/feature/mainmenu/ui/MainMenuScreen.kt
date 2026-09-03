@@ -145,12 +145,12 @@ fun MainMenuScreen(
     val textColor = remember(menuTheme) {
         themeColor(menuTheme?.fg, Color.White)
     }
-    // Choreographed entrance timing aligned to 82 BPM (1 bar = ~2927ms)
-    // 1. Logo fades in alone against black over 2 bars (~5854ms)
+    // Choreographed entrance timing aligned to 82 BPM (1 bar = ~2927ms, half-note/bar intervals)
+    // 1. Logo begins at 0ms and completes fade-in over 5850ms (2 bars)
     val logoFadeAlpha = remember { Animatable(0f) }
-    // 2. Starfield fades in over next 2 bars (~5854ms)
+    // 2. Starfield starts at 2925ms (1 bar in) and fades in over 2925ms (completing at 5850ms)
     val starfieldFadeAlpha = remember { Animatable(0f) }
-    // 3. Background image (4 bars = ~11707ms) & Buttons (1000ms) fade in together
+    // 3. Stage 3 starts at 5850ms: background fades in over 5850ms (2 bars), buttons fade in gracefully over 2200ms
     val bgFadeAlpha = remember { Animatable(0f) }
     val buttonsFadeAlpha = remember { Animatable(0f) }
     var bgZoomEnabled by remember { mutableStateOf(false) }
@@ -161,27 +161,40 @@ fun MainMenuScreen(
     }
 
     LaunchedEffect(Unit) {
-        // 1. Starborn logo fades in by itself on black over 2 bars (5850ms)
-        logoFadeAlpha.animateTo(
-            targetValue = 1f,
-            animationSpec = tween(durationMillis = 5850, easing = FastOutSlowInEasing)
-        )
-        // 2. Starfield behind the logo fades in over next 2 bars (5850ms)
-        starfieldFadeAlpha.animateTo(
-            targetValue = 1f,
-            animationSpec = tween(durationMillis = 5850, easing = FastOutSlowInEasing)
-        )
-        // 3. Background image and buttons fade in together (buttons: 1000ms, bg: 11700ms)
+        // Stage 1: Starborn logo fades in smoothly over 2 bars (5850ms)
+        launch {
+            logoFadeAlpha.animateTo(
+                targetValue = 1f,
+                animationSpec = tween(durationMillis = 5850, easing = FastOutSlowInEasing)
+            )
+        }
+
+        // Stage 2: Cosmic starfield starts at 2925ms (behind the logo) and fades in over 2925ms
+        delay(2925)
+        launch {
+            starfieldFadeAlpha.animateTo(
+                targetValue = 1f,
+                animationSpec = tween(durationMillis = 2925, easing = FastOutSlowInEasing)
+            )
+        }
+
+        // Stage 3: Starts at 5850ms (exactly 2925ms after stage 2 start)
+        delay(2925) // Total elapsed: 5850ms
+
+        // Buttons fade in naturally and smoothly over ~2.2s
         launch {
             buttonsFadeAlpha.animateTo(
                 targetValue = 1f,
-                animationSpec = tween(durationMillis = 1000, easing = FastOutSlowInEasing)
+                animationSpec = tween(durationMillis = 2200, easing = FastOutSlowInEasing)
             )
         }
+
+        // Background image fades in over 2 bars (5850ms)
         bgFadeAlpha.animateTo(
             targetValue = 1f,
-            animationSpec = tween(durationMillis = 11700, easing = LinearEasing)
+            animationSpec = tween(durationMillis = 5850, easing = LinearEasing)
         )
+
         // Once background is fully faded in, start the slight zoom motion
         bgZoomEnabled = true
     }
