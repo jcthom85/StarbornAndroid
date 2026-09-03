@@ -28,6 +28,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.starborn.R
 import com.example.starborn.domain.inventory.GearRules
 import com.example.starborn.domain.model.Equipment
@@ -66,9 +67,12 @@ fun InventoryTabContent(
     resolveArmorItem: (String) -> Item?,
     onUseConsumable: (InventoryPreviewItemUi) -> Unit,
     onShowItemDetails: (InventoryPreviewItemUi) -> Unit,
-    creditsLabel: String
+    creditsLabel: String,
+    isGearTutorialActive: Boolean = false
 ) {
-    var page by rememberSaveable { mutableStateOf(InventoryCarouselPage.SUPPLIES) }
+    var page by rememberSaveable {
+        mutableStateOf(if (isGearTutorialActive) InventoryCarouselPage.GEAR else InventoryCarouselPage.SUPPLIES)
+    }
     val supplies = remember(inventoryItems) {
         inventoryItems.filterNot { it.isKeyItem() }
     }
@@ -82,7 +86,8 @@ fun InventoryTabContent(
             current = page,
             onSelect = { page = it },
             accentColor = accentColor,
-            borderColor = borderColor
+            borderColor = borderColor,
+            isGearTutorialActive = isGearTutorialActive
         )
         Spacer(modifier = Modifier.height(12.dp))
         when (page) {
@@ -153,7 +158,8 @@ private fun InventoryCarouselToggle(
     current: InventoryCarouselPage,
     onSelect: (InventoryCarouselPage) -> Unit,
     accentColor: Color,
-    borderColor: Color
+    borderColor: Color,
+    isGearTutorialActive: Boolean = false
 ) {
     Row(
         modifier = Modifier
@@ -172,6 +178,7 @@ private fun InventoryCarouselToggle(
         InventoryCarouselButton(
             label = "Gear",
             selected = current == InventoryCarouselPage.GEAR,
+            isTutorialBeacon = isGearTutorialActive && current != InventoryCarouselPage.GEAR,
             onClick = { onSelect(InventoryCarouselPage.GEAR) },
             accentColor = accentColor,
             modifier = Modifier.weight(1f)
@@ -192,9 +199,14 @@ private fun InventoryCarouselButton(
     selected: Boolean,
     onClick: () -> Unit,
     accentColor: Color,
+    isTutorialBeacon: Boolean = false,
     modifier: Modifier = Modifier
 ) {
-    val background = if (selected) accentColor.copy(alpha = 0.2f) else Color.Transparent
+    val background = when {
+        selected -> accentColor.copy(alpha = 0.2f)
+        isTutorialBeacon -> Color(0xFFFFC857).copy(alpha = 0.18f)
+        else -> Color.Transparent
+    }
     Surface(
         modifier = modifier
             .clip(RoundedCornerShape(40.dp))
@@ -207,11 +219,28 @@ private fun InventoryCarouselButton(
                 .padding(vertical = 10.dp),
             contentAlignment = Alignment.Center
         ) {
-            Text(
-                text = label,
-                style = MaterialTheme.typography.titleSmall,
-                color = if (selected) Color.White else Color.White.copy(alpha = 0.8f)
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                if (isTutorialBeacon) {
+                    Text(
+                        text = "●",
+                        color = Color(0xFFFFC857),
+                        fontSize = 9.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+                Text(
+                    text = label,
+                    style = MaterialTheme.typography.titleSmall,
+                    color = when {
+                        selected -> Color.White
+                        isTutorialBeacon -> Color(0xFFFFC857)
+                        else -> Color.White.copy(alpha = 0.8f)
+                    }
+                )
+            }
         }
     }
 }

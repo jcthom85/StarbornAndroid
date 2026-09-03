@@ -153,6 +153,7 @@ private const val STELLARIUM_BREAKER_SECOND_MESSAGE = "You hear something loud i
 private const val EXIT_KEY_SEPARATOR = "::"
 private const val ENCOUNTER_CLEARED_STATE_PREFIX = "encounter_cleared:"
 private const val BAG_TUTORIAL_ID = "bag_basics"
+private const val GEAR_TUTORIAL_ID = "gear_equip_basics"
 private const val PIT_ENTRY_ROOM_ID = "pit_L1_landing"
 
 
@@ -1719,7 +1720,10 @@ class ExplorationViewModel(
                         skillTreeOverlay = overlay,
                         isTinkeringTutorialActive = tutorialsEnabled &&
                             "ms_w1_mq01_workshop_briefed" in newState.completedMilestones &&
-                            "ms_w1_mq01_cryo_repaired" !in newState.completedMilestones
+                            "ms_w1_mq01_cryo_repaired" !in newState.completedMilestones,
+                        isGearTutorialActive = tutorialsEnabled &&
+                            "ms_w1_mq01_jed_talked" in newState.completedMilestones &&
+                            newState.equippedWeapons["nova"].isNullOrBlank()
                     )
                 }
                 val isTinkeringTutActive = tutorialsEnabled &&
@@ -3469,12 +3473,16 @@ class ExplorationViewModel(
             "ms_w1_mq01_jed_talked" in session.completedMilestones ||
                 "w1_mq01" in session.completedQuests
         if (!receivedStarterSupplies) return
-        if (tutorialManager.hasCompleted(BAG_TUTORIAL_ID)) return
+        if (tutorialManager.hasCompleted(BAG_TUTORIAL_ID)) {
+            maybeShowGearTutorial()
+            return
+        }
         val scheduled = tutorialManager.playScript(
             scriptId = BAG_TUTORIAL_ID,
             allowDuplicates = false
         ) {
             tutorialManager.markCompleted(BAG_TUTORIAL_ID)
+            maybeShowGearTutorial()
         }
         if (!scheduled) {
             tutorialManager.showOnce(
@@ -3484,7 +3492,35 @@ class ExplorationViewModel(
                     message = "Use the Supplies, Gear, and Key Items tabs across the top to inspect items, equip weapons and armor, or use consumables."
                 ),
                 allowDuplicates = false,
-                onDismiss = { tutorialManager.markCompleted(BAG_TUTORIAL_ID) }
+                onDismiss = {
+                    tutorialManager.markCompleted(BAG_TUTORIAL_ID)
+                    maybeShowGearTutorial()
+                }
+            )
+        }
+    }
+
+    private fun maybeShowGearTutorial() {
+        if (!tutorialsEnabled) return
+        val session = sessionStore.state.value
+        val hasStarterKit = "ms_w1_mq01_jed_talked" in session.completedMilestones
+        if (!hasStarterKit || !session.equippedWeapons["nova"].isNullOrBlank()) return
+        if (tutorialManager.hasCompleted(GEAR_TUTORIAL_ID)) return
+        val scheduled = tutorialManager.playScript(
+            scriptId = GEAR_TUTORIAL_ID,
+            allowDuplicates = false
+        ) {
+            tutorialManager.markCompleted(GEAR_TUTORIAL_ID)
+        }
+        if (!scheduled) {
+            tutorialManager.showOnce(
+                entry = TutorialEntry(
+                    key = GEAR_TUTORIAL_ID,
+                    context = "Gear",
+                    message = "Open the Menu and choose Inventory -> Gear to equip Nova's cutter, armor, and mods before heading into the mines."
+                ),
+                allowDuplicates = false,
+                onDismiss = { tutorialManager.markCompleted(GEAR_TUTORIAL_ID) }
             )
         }
     }

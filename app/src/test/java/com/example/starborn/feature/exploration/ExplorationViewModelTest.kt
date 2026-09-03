@@ -211,9 +211,18 @@ class ExplorationViewModelTest {
         promptManager.dismissCurrent()
         dispatcher.scheduler.advanceUntilIdle()
 
+        val nextPrompt = promptManager.state.value.current as? TutorialPrompt
+        assertNotNull(nextPrompt)
+        assertEquals("gear_equip_basics", nextPrompt?.entry?.key)
+
+        promptManager.dismissCurrent()
+        dispatcher.scheduler.advanceUntilIdle()
+
         val state = sessionStore.state.value
         assertTrue(state.tutorialSeen.contains("bag_basics"))
         assertTrue(state.tutorialCompleted.contains("bag_basics"))
+        assertTrue(state.tutorialSeen.contains("gear_equip_basics"))
+        assertTrue(state.tutorialCompleted.contains("gear_equip_basics"))
     }
 
     @Test

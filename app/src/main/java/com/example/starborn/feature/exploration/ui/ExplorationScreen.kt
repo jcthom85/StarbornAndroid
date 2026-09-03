@@ -1213,6 +1213,7 @@ fun ExplorationScreen(
             MenuOverlay(
                 selectedTab = uiState.menuTab,
                 isTinkeringTutorialActive = uiState.isTinkeringTutorialActive,
+                isGearTutorialActive = uiState.isGearTutorialActive,
                 onSelectTab = { viewModel.selectMenuTab(it) },
                 onClose = { viewModel.closeMenuOverlay() },
                 onOpenInventory = {
@@ -1444,7 +1445,7 @@ fun ExplorationScreen(
                 }
                 MenuToggleButton(
                     isOpen = uiState.isMenuOverlayVisible,
-                    isTutorialBeacon = uiState.isTinkeringTutorialActive,
+                    isTutorialBeacon = uiState.isTinkeringTutorialActive || uiState.isGearTutorialActive,
                     onToggle = {
                         if (uiState.isMenuOverlayVisible) {
                             viewModel.closeMenuOverlay()
@@ -2267,6 +2268,7 @@ private fun MenuOverlay(
     craftingViewModel: CraftingViewModel? = null,
     onTinkerTutorialStep: ((com.example.starborn.feature.crafting.TinkeringTutorialStep) -> Unit)? = null,
     isTinkeringTutorialActive: Boolean = false,
+    isGearTutorialActive: Boolean = false,
     onDebugTinkeringTutorial: (() -> Unit)? = null,
     onPlayAudio: (String) -> Unit = {},
     modifier: Modifier = Modifier
@@ -2454,7 +2456,8 @@ private fun MenuOverlay(
                             onSelectTab = onSelectTab,
                             accentColor = accentColor,
                             borderColor = panelBorder,
-                            isTinkeringTutorialActive = isTinkeringTutorialActive
+                            isTinkeringTutorialActive = isTinkeringTutorialActive,
+                            isGearTutorialActive = isGearTutorialActive
                         )
                     } else {
                         MenuDetailNavigationBar(
@@ -2537,7 +2540,8 @@ private fun MenuOverlay(
                         onTinkerTutorialStep = onTinkerTutorialStep,
                         onDebugTinkeringTutorial = onDebugTinkeringTutorial,
                         onPlayAudio = onPlayAudio,
-                        creditsLabel = creditsLabel
+                        creditsLabel = creditsLabel,
+                        isGearTutorialActive = isGearTutorialActive
                     ) else MenuNestedDetailContent(
                         detailKind = detailKind,
                         detailId = detailId,
@@ -2753,7 +2757,8 @@ private fun MenuTabRow(
     onSelectTab: (MenuTab) -> Unit,
     accentColor: Color,
     borderColor: Color,
-    isTinkeringTutorialActive: Boolean = false
+    isTinkeringTutorialActive: Boolean = false,
+    isGearTutorialActive: Boolean = false
 ) {
     val scrollState = rememberScrollState()
 
@@ -2775,10 +2780,12 @@ private fun MenuTabRow(
         horizontalArrangement = Arrangement.spacedBy(3.dp)
     ) {
         MenuTab.values().forEach { tab ->
+            val isBeacon = (isTinkeringTutorialActive && tab == MenuTab.FIELD_KIT && tab != selectedTab) ||
+                (isGearTutorialActive && tab == MenuTab.INVENTORY && tab != selectedTab)
             MenuTabChip(
                 tab = tab,
                 isSelected = tab == selectedTab,
-                isTutorialBeacon = isTinkeringTutorialActive && tab == MenuTab.FIELD_KIT && tab != selectedTab,
+                isTutorialBeacon = isBeacon,
                 accentColor = accentColor,
                 borderColor = borderColor,
                 onSelect = { onSelectTab(tab) }
@@ -3041,13 +3048,14 @@ private fun MenuTabContentArea(
     onEquipArmor: (String, String?) -> Unit,
     resolveArmorItem: (String) -> Item?,
     onUseInventoryItem: (InventoryPreviewItemUi) -> Unit,
-    onShowQuestDetails: (String) -> Unit,
+        onShowQuestDetails: (String) -> Unit,
     onShowItemDetails: (InventoryPreviewItemUi) -> Unit,
     craftingViewModel: CraftingViewModel? = null,
     onTinkerTutorialStep: ((com.example.starborn.feature.crafting.TinkeringTutorialStep) -> Unit)? = null,
     onDebugTinkeringTutorial: (() -> Unit)? = null,
     onPlayAudio: (String) -> Unit = {},
-    creditsLabel: String
+    creditsLabel: String,
+    isGearTutorialActive: Boolean = false
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         when (tab) {
@@ -3070,7 +3078,8 @@ private fun MenuTabContentArea(
                 resolveArmorItem = resolveArmorItem,
                 onUseConsumable = onUseInventoryItem,
                 onShowItemDetails = onShowItemDetails,
-                creditsLabel = creditsLabel
+                creditsLabel = creditsLabel,
+                isGearTutorialActive = isGearTutorialActive
             )
             MenuTab.FIELD_KIT -> {
                 if (craftingViewModel != null) {
@@ -8322,15 +8331,32 @@ private fun IllustratedCinematicOverlay(
     val impactFlash = remember(stepKey) { CoreAnimatable(0f) }
     LaunchedEffect(stepKey) {
         val cue = state.step.audioCue
-        if (cue == "sfx_intro_door_buckle" || cue == "sfx_intro_beast_strike" || cue == "sfx_intro_chime_launch") {
-            val amp = with(density) { (if (cue == "sfx_intro_beast_strike") 14.dp else 8.dp).toPx() }
+        if (cue == "sfx_intro_door_buckle" || cue == "sfx_intro_door_collapse" || cue == "sfx_intro_beast_strike") {
+            val amp = with(density) { (if (cue == "sfx_intro_beast_strike") 14.dp else 9.dp).toPx() }
             launch {
                 impactShakeX.snapTo(amp)
-                impactShakeX.animateTo(0f, animationSpec = tween(durationMillis = 260, easing = FastOutSlowInEasing))
+                impactShakeX.animateTo(0f, animationSpec = tween(durationMillis = 280, easing = FastOutSlowInEasing))
             }
             launch {
                 impactShakeY.snapTo(-amp * 0.4f)
-                impactShakeY.animateTo(0f, animationSpec = tween(durationMillis = 260, easing = FastOutSlowInEasing))
+                impactShakeY.animateTo(0f, animationSpec = tween(durationMillis = 280, easing = FastOutSlowInEasing))
+            }
+        } else if (cue == "sfx_intro_chime_launch") {
+            // Three distinct conduit impacts: initial launch + 3 conduit wall strikes
+            val conduitDelays = listOf(0L, 380L, 800L, 1220L)
+            val conduitAmps = listOf(6.dp, 8.dp, 10.dp, 12.dp)
+            launch {
+                for (i in conduitDelays.indices) {
+                    if (i > 0) {
+                        delay(conduitDelays[i] - conduitDelays[i - 1])
+                    }
+                    val amp = with(density) { conduitAmps[i].toPx() }
+                    val dir = if (i % 2 == 0) 1f else -1f
+                    impactShakeX.snapTo(amp * dir)
+                    impactShakeY.snapTo(-amp * 0.4f * dir)
+                    impactShakeX.animateTo(0f, animationSpec = tween(durationMillis = 220, easing = FastOutSlowInEasing))
+                    impactShakeY.animateTo(0f, animationSpec = tween(durationMillis = 220, easing = FastOutSlowInEasing))
+                }
             }
         }
         if (cue == "sfx_intro_beast_strike") {

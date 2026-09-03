@@ -1086,6 +1086,17 @@
       ]
     },
     {
+      "id": "sfx_intro_door_collapse",
+      "category": "battle",
+      "gain": 0.92,
+      "tags": [
+        "intro",
+        "containment",
+        "door_break",
+        "impact"
+      ]
+    },
+    {
       "id": "sfx_intro_beast_strike",
       "category": "battle",
       "gain": 0.95,

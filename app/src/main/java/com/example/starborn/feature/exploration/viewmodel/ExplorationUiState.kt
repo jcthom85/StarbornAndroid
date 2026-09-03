@@ -93,6 +93,7 @@ data class ExplorationUiState(
     val fadeOverlay: FadeOverlayCommand? = null,
     val tutorialState: TutorialRuntimeState = TutorialRuntimeState(),
     val isTinkeringTutorialActive: Boolean = false,
+    val isGearTutorialActive: Boolean = false,
     val visualEnemyParties: List<VisualEnemyParty> = emptyList()
 )
 

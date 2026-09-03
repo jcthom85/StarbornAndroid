@@ -153,14 +153,52 @@ fun MainMenuScreen(
     // 3. Stage 3 starts at 5850ms: background fades in over 5850ms (2 bars), buttons fade in gracefully over 2200ms
     val bgFadeAlpha = remember { Animatable(0f) }
     val buttonsFadeAlpha = remember { Animatable(0f) }
-    var bgZoomEnabled by remember { mutableStateOf(false) }
+    val bgZoomFactor = remember { Animatable(0f) }
+    var introFastForward by remember { mutableStateOf(false) }
 
     val fadeOutAlpha = remember { Animatable(0f) }
     val versionLabel = remember {
         "v${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
     }
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(introFastForward) {
+        if (introFastForward) {
+            // Tapping the title screen during intro fast-forwards all elements to full fade-in over ~2s
+            launch {
+                logoFadeAlpha.animateTo(
+                    targetValue = 1f,
+                    animationSpec = tween(durationMillis = 2000, easing = FastOutSlowInEasing)
+                )
+            }
+            launch {
+                starfieldFadeAlpha.animateTo(
+                    targetValue = 1f,
+                    animationSpec = tween(durationMillis = 2000, easing = FastOutSlowInEasing)
+                )
+            }
+            launch {
+                bgFadeAlpha.animateTo(
+                    targetValue = 1f,
+                    animationSpec = tween(durationMillis = 2000, easing = FastOutSlowInEasing)
+                )
+            }
+            launch {
+                buttonsFadeAlpha.animateTo(
+                    targetValue = 1f,
+                    animationSpec = tween(durationMillis = 2000, easing = FastOutSlowInEasing)
+                )
+            }
+            launch {
+                delay(2000)
+                bgZoomFactor.animateTo(
+                    targetValue = 1f,
+                    animationSpec = tween(durationMillis = 5000, easing = FastOutSlowInEasing)
+                )
+            }
+            return@LaunchedEffect
+        }
+
+        // Normal sequence:
         // Stage 1: Starborn logo fades in smoothly over 2 bars (5850ms)
         launch {
             logoFadeAlpha.animateTo(
@@ -195,8 +233,11 @@ fun MainMenuScreen(
             animationSpec = tween(durationMillis = 5850, easing = LinearEasing)
         )
 
-        // Once background is fully faded in, start the slight zoom motion
-        bgZoomEnabled = true
+        // Once background is fully faded in, smoothly and gradually ease into the ambient zoom
+        bgZoomFactor.animateTo(
+            targetValue = 1f,
+            animationSpec = tween(durationMillis = 6000, easing = FastOutSlowInEasing)
+        )
     }
 
     LaunchedEffect(audioCuePlayer, audioRouter) {
@@ -297,7 +338,17 @@ fun MainMenuScreen(
         }
     }
 
-    BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+    BoxWithConstraints(
+        modifier = Modifier
+            .fillMaxSize()
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+                enabled = buttonsFadeAlpha.value < 0.95f
+            ) {
+                introFastForward = true
+            }
+    ) {
         val compactHeight = maxHeight < 760.dp
 
         val bgTransition = rememberInfiniteTransition(label = "title_bg_motion")
@@ -339,9 +390,10 @@ fun MainMenuScreen(
         // Stage 2: Starfield behind the logo
         TitleCosmicStarfield(alpha = starfieldFadeAlpha.value)
 
-        // Stage 3: Background image (fades in over 4 bars) with zoom/pan starting once fully faded in
-        val effectiveBgScale = if (bgZoomEnabled) bgScale else 1.0f
-        val effectiveBgPanY = if (bgZoomEnabled) bgPanY else 0f
+        // Stage 3: Background image with slow, gradual zoom/pan easing in seamlessly
+        val zoomFactor = bgZoomFactor.value
+        val effectiveBgScale = 1.0f + (bgScale - 1.0f) * zoomFactor
+        val effectiveBgPanY = bgPanY * zoomFactor
         val bgAlpha = bgFadeAlpha.value
 
         if (bgAlpha > 0.001f) {
@@ -409,7 +461,8 @@ fun MainMenuScreen(
                 }
         )
 
-        // Stage 3: Title screen buttons fade in over ~1s alongside background start
+        // Stage 3: Title screen buttons fade in over ~2.2s alongside background start
+        val buttonsInteractable = buttonsFadeAlpha.value >= 0.95f && !startingGame && pendingScenario == null && pendingLoadSlot == null
         Column(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
@@ -440,25 +493,25 @@ fun MainMenuScreen(
                         startingGame = true
                     }
                 },
-                enabled = !startingGame && pendingScenario == null && pendingLoadSlot == null,
+                enabled = buttonsInteractable,
                 primary = true
             )
             if (BuildConfig.DEBUG) {
                 StarbornTitleButton(
                     text = "Debug Scenarios",
                     onClick = { showDebugBrowser = true },
-                    enabled = !startingGame && pendingScenario == null && pendingLoadSlot == null
+                    enabled = buttonsInteractable
                 )
             }
             StarbornTitleButton(
                 text = "Load Game",
                 onClick = { saveLoadMode = "load" },
-                enabled = !startingGame && pendingScenario == null && pendingLoadSlot == null
+                enabled = buttonsInteractable
             )
             StarbornTitleButton(
                 text = "Settings",
                 onClick = { showSettings = true },
-                enabled = !startingGame && pendingScenario == null && pendingLoadSlot == null
+                enabled = buttonsInteractable
             )
         }
 

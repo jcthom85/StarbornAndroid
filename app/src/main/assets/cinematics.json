@@ -606,7 +606,8 @@
         "camera_start_x": -18.0,
         "camera_end_x": 0.0,
         "duration_seconds": 3.4,
-        "transition": "fade"
+        "transition": "fade",
+        "audio_cue": "sfx_intro_door_collapse"
       },
       {
         "type": "dialogue",
