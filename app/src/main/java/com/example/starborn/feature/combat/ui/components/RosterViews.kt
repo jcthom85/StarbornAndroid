@@ -1199,7 +1199,7 @@ fun EnemyStatusLabel(
             ) {
                 Icon(
                     imageVector = Icons.Rounded.Shield,
-                    contentDescription = null,
+                    contentDescription = if (isBroken) "Broken: takes 25% more direct damage" else "Stability",
                     tint = if (isBroken) Color(0xFFFF8A80) else Color(0xFFB39DDB).copy(alpha = 0.9f),
                     modifier = Modifier.size(12.dp)
                 )

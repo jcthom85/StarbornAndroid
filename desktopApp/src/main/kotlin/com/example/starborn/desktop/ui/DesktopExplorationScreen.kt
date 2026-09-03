@@ -1185,7 +1185,6 @@ private fun DesktopRoomEntitySection(
             if (currentRoom.id.contains("landing", ignoreCase = true) || currentRoom.id.contains("entry", ignoreCase = true) || currentRoom.id.contains("bunk", ignoreCase = true)) {
                 item {
                     DesktopOverworldGatewayCard(
-                        sectorTitle = currentRoom.env.replace('_', ' ').uppercase(),
                         accentColor = accentColor,
                         onClick = onOpenMap
                     )
@@ -1280,7 +1279,7 @@ private fun DesktopRoomEntitySection(
             if (hasTapeDeckStation) {
                 item {
                     DesktopServicePresenceChip(
-                        label = "Cassette Deck [T]",
+                        label = "Film Archive [T]",
                         detail = "Hi-Fi Audio",
                         accentColor = TitleWarmColor,
                         onClick = onTapeDeckClick
@@ -1293,14 +1292,12 @@ private fun DesktopRoomEntitySection(
 
 @Composable
 private fun DesktopOverworldGatewayCard(
-    sectorTitle: String?,
     accentColor: Color,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val shape = RoundedCornerShape(12.dp)
     val mapCyan = Color(0xFF00E5FF)
-    val warmGold = Color(0xFFFFC857)
 
     Surface(
         shape = shape,
@@ -1316,12 +1313,12 @@ private fun DesktopOverworldGatewayCard(
                     Brush.horizontalGradient(
                         colors = listOf(
                             mapCyan.copy(alpha = 0.18f),
-                            warmGold.copy(alpha = 0.08f),
+                            accentColor.copy(alpha = 0.08f),
                             Color.Transparent
                         )
                     )
                 )
-                .padding(horizontal = 14.dp, vertical = 8.dp),
+                .padding(horizontal = 12.dp, vertical = 6.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -1329,7 +1326,7 @@ private fun DesktopOverworldGatewayCard(
                 shape = CircleShape,
                 color = mapCyan.copy(alpha = 0.20f),
                 border = BorderStroke(1.2.dp, mapCyan.copy(alpha = 0.8f)),
-                modifier = Modifier.size(30.dp)
+                modifier = Modifier.size(26.dp)
             ) {
                 Box(contentAlignment = Alignment.Center) {
                     Canvas(modifier = Modifier.size(16.dp)) {
@@ -1356,25 +1353,16 @@ private fun DesktopOverworldGatewayCard(
                     }
                 }
             }
-            Column(verticalArrangement = Arrangement.Center) {
-                Text(
-                    text = "Overworld: ${sectorTitle ?: "Colony Map"}",
-                    color = Color.White,
-                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Text(
-                    text = "Surface Exit",
-                    color = warmGold,
-                    style = MaterialTheme.typography.labelSmall.copy(
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.SemiBold
-                    ),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
+            Text(
+                text = "OVERWORLD MAP",
+                color = Color.White,
+                style = MaterialTheme.typography.labelMedium.copy(
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = 0.5.sp
+                ),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
 
             Surface(
                 shape = RoundedCornerShape(8.dp),
@@ -1382,13 +1370,13 @@ private fun DesktopOverworldGatewayCard(
                 border = BorderStroke(1.dp, mapCyan.copy(alpha = 0.80f))
             ) {
                 Text(
-                    text = "DEPART ➜",
+                    text = "OPEN >",
                     color = Color.White,
                     style = MaterialTheme.typography.labelSmall.copy(
                         fontWeight = FontWeight.Black,
                         fontSize = 9.5.sp
                     ),
-                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 5.dp)
+                    modifier = Modifier.padding(horizontal = 7.dp, vertical = 4.dp)
                 )
             }
         }

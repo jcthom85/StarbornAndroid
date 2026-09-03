@@ -981,7 +981,7 @@ fun DamageNumberBubble(
         contentAlignment = Alignment.Center
     ) {
         // Weakness / Crit sparkle flare particles (first 280ms)
-        if ((fx.isWeakness || fx.critical) && t < 0.38f) {
+        if ((fx.isWeakness || fx.critical || fx.isBrokenBonus) && t < 0.38f) {
             val sparkProgress = (t / 0.38f)
             val sparkAlpha = (1f - sparkProgress) * 0.9f
             Canvas(modifier = Modifier.size(72.dp)) {
@@ -1038,15 +1038,17 @@ fun DamageNumberBubble(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(1.dp)
         ) {
-            if (fx.isWeakness || fx.critical || fx.isGuardBreak) {
+            if (fx.isWeakness || fx.critical || fx.isBrokenBonus || fx.isGuardBreak) {
                 val calloutText = when {
                     fx.isGuardBreak -> "GUARD BREAK!"
+                    fx.isBrokenBonus -> "BROKEN +25%"
                     fx.isWeakness -> "WEAKNESS!"
                     fx.critical -> "CRITICAL!"
                     else -> ""
                 }
                 val calloutColor = when {
                     fx.isGuardBreak -> Color(0xFF64B5F6)
+                    fx.isBrokenBonus -> Color(0xFFFF8A80)
                     fx.isWeakness -> Color(0xFFFFD54F)
                     fx.critical -> Color(0xFFFF8A65)
                     else -> Color.White

@@ -363,11 +363,10 @@ fun MainMenuScreen(
             verticalArrangement = Arrangement.spacedBy(13.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            val hasExistingSave = slots.any { !it.isEmpty }
             StarbornTitleButton(
                 text = "New Game",
                 onClick = {
-                    if (hasExistingSave) {
+                    if (newGamePlusUnlocked) {
                         showNewGameConfirm = true
                     } else {
                         startingGame = true
@@ -395,7 +394,7 @@ fun MainMenuScreen(
             )
         }
 
-        if (showNewGameConfirm) {
+        if (showNewGameConfirm && newGamePlusUnlocked) {
             AlertDialog(
                 onDismissRequest = { showNewGameConfirm = false },
                 title = {
@@ -404,11 +403,7 @@ fun MainMenuScreen(
                 text = {
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         Text(
-                            if (newGamePlusUnlocked) {
-                                "Choose your deployment protocol. Master Protocol carries over your party levels, weapons, armor, skills, and inventory into an enhanced difficulty run with instant Astra access."
-                            } else {
-                                "Master Protocol unlocks after completing the campaign. Start a Standard deployment or load a completed save."
-                            },
+                            "Choose your deployment protocol. Master Protocol carries over your party levels, weapons, armor, skills, and inventory into an enhanced difficulty run with instant Astra access.",
                             color = Color.White.copy(alpha = 0.85f),
                             fontSize = 13.sp
                         )
@@ -434,12 +429,11 @@ fun MainMenuScreen(
                                 showNewGameConfirm = false
                                 startingGamePlus = true
                             },
-                            enabled = newGamePlusUnlocked,
                             colors = ButtonDefaults.buttonColors(containerColor = accentColor, contentColor = Color.Black),
                             modifier = Modifier.weight(1f)
                         ) {
                             Text(
-                                if (newGamePlusUnlocked) "Master (NG+)" else "Master (Locked)",
+                                "Master (NG+)",
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 12.sp
                             )

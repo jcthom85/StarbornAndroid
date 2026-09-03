@@ -148,7 +148,9 @@ class CombatActionProcessor(
         val critAdjusted = if (hit.critical) {
             (rawDamage * CombatFormulas.CRIT_DAMAGE_MULT).roundToInt().coerceAtLeast(1)
         } else rawDamage
-        val finalDamage = adjustIncomingDamage(target, critAdjusted, PHYSICAL_ELEMENT)
+        val brokenBonus = qualifiesForBrokenDamageBonus(attacker, target)
+        val breakAdjusted = applyBrokenDamageBonus(critAdjusted, brokenBonus)
+        val finalDamage = adjustIncomingDamage(target, breakAdjusted, PHYSICAL_ELEMENT)
         val appliedDamage = finalDamage.coerceAtLeast(0)
         return engine.applyDamage(
             state = state,
@@ -156,7 +158,8 @@ class CombatActionProcessor(
             targetId = targetId,
             amount = appliedDamage,
             element = PHYSICAL_ELEMENT,
-            critical = hit.critical
+            critical = hit.critical,
+            brokenBonus = brokenBonus
         ).consumeTargetLockIfPresent(targetId)
     }
 
@@ -318,7 +321,9 @@ class CombatActionProcessor(
         val critAdjusted = if (allowCrit && hit.critical) {
             (rawDamage * CombatFormulas.CRIT_DAMAGE_MULT).roundToInt().coerceAtLeast(1)
         } else rawDamage
-        val finalDamage = adjustIncomingDamage(target, critAdjusted, element)
+        val brokenBonus = qualifiesForBrokenDamageBonus(attacker, target)
+        val breakAdjusted = applyBrokenDamageBonus(critAdjusted, brokenBonus)
+        val finalDamage = adjustIncomingDamage(target, breakAdjusted, element)
         val appliedDamage = finalDamage.coerceAtLeast(0)
         val damaged = engine.applyDamage(
             state = this,
@@ -326,7 +331,8 @@ class CombatActionProcessor(
             targetId = targetId,
             amount = appliedDamage,
             element = element,
-            critical = allowCrit && hit.critical
+            critical = allowCrit && hit.critical,
+            brokenBonus = brokenBonus
         )
         val statusId = attacker.combatant.weapon?.statusOnHit
             ?.trim()
@@ -769,14 +775,17 @@ class CombatActionProcessor(
                 baseDamage = outgoing,
                 element = damageMode.element
             )
-            val damage = adjustIncomingDamage(targetState, rawDamage, damageMode.element)
+            val brokenBonus = qualifiesForBrokenDamageBonus(currentAttacker, targetState)
+            val breakAdjusted = applyBrokenDamageBonus(rawDamage, brokenBonus)
+            val damage = adjustIncomingDamage(targetState, breakAdjusted, damageMode.element)
             val finalDamage = if (outgoing > 0 && !targetState.hasBlockingStatus()) damage.coerceAtLeast(1) else damage
             working = engine.applyDamage(
                 state = working,
                 attackerId = attackerId,
                 targetId = targetId,
                 amount = finalDamage,
-                element = damageMode.element
+                element = damageMode.element,
+                brokenBonus = brokenBonus
             )
             if (finalDamage > 0) {
                 working = working.consumeForceCritIfPresent(targetId)
@@ -1258,6 +1267,17 @@ class CombatActionProcessor(
         return normalized == canonical
     }
 
+    private fun applyBrokenDamageBonus(damage: Int, targetAlreadyBroken: Boolean): Int {
+        if (!targetAlreadyBroken || damage <= 0) return damage
+        return (damage * BROKEN_DAMAGE_MULTIPLIER).roundToInt().coerceAtLeast(1)
+    }
+
+    private fun qualifiesForBrokenDamageBonus(attacker: CombatantState, target: CombatantState): Boolean {
+        val attackerIsFriendly = attacker.combatant.side == CombatSide.PLAYER ||
+            attacker.combatant.side == CombatSide.ALLY
+        return attackerIsFriendly && target.combatant.side == CombatSide.ENEMY && target.breakTurns > 0
+    }
+
     private data class SkipInfo(val reason: String)
 
     private data class SpecialCaseResult(
@@ -1382,6 +1402,7 @@ class CombatActionProcessor(
 
     companion object {
         private const val PHYSICAL_ELEMENT = "physical"
+        private const val BROKEN_DAMAGE_MULTIPLIER = 1.25
         private const val DEFEND_BONUS = 20
         private const val DEFEND_DURATION = 2
         private const val DEFEND_STATUS_ID = "defend"

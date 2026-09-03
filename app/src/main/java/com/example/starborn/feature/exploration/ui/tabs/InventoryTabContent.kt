@@ -523,6 +523,7 @@ private fun InventoryEquipmentPreview(
                 name = item.name,
                 quantity = 1,
                 type = item.type,
+                description = item.description,
                 effect = item.effect,
                 equipment = item.equipment
             )

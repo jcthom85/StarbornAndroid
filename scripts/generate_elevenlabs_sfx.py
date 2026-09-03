@@ -243,6 +243,96 @@ SFX_REGISTRY = [
         "tags": ["combat", "enemy", "mech"],
         "prompt": "Gigantic multi-ton mechanical robot step, heavy ground shake impact, hydraulic piston hiss."
     },
+    {
+        "id": "sfx_combat_enemy_melee_slash",
+        "title": "Beast Claw Slash",
+        "category": "combat",
+        "type": "battle",
+        "gain": 0.95,
+        "duration": 1.2,
+        "tags": ["combat", "enemy", "claw", "slash"],
+        "prompt": "Feral beast aggressive claw swipe and vicious biological slash tearing through fabric and flesh."
+    },
+    {
+        "id": "sfx_combat_enemy_bite",
+        "title": "Feral Snapping Bite",
+        "category": "combat",
+        "type": "battle",
+        "gain": 0.95,
+        "duration": 1.0,
+        "tags": ["combat", "enemy", "bite", "gnaw"],
+        "prompt": "Vicious feral creature snapping jaw bite, wet bone-crunching gnash and guttural growl."
+    },
+    {
+        "id": "sfx_combat_enemy_spit_acid",
+        "title": "Corrosive Acid Spit",
+        "category": "combat",
+        "type": "battle",
+        "gain": 0.95,
+        "duration": 1.5,
+        "tags": ["combat", "enemy", "acid", "spit"],
+        "prompt": "Alien creature spitting corrosive acid projectile, wet throat launch and sizzling acidic sizzle splatter."
+    },
+    {
+        "id": "sfx_combat_enemy_spore_blast",
+        "title": "Spore Spitter Burst",
+        "category": "combat",
+        "type": "battle",
+        "gain": 0.95,
+        "duration": 1.5,
+        "tags": ["combat", "enemy", "spore", "flora"],
+        "prompt": "Mutated flora pod bursting with fungal spore blast, organic gas expulsion and whistling toxic dust puff."
+    },
+    {
+        "id": "sfx_combat_enemy_drone_pulse",
+        "title": "Drone Energy Pulse",
+        "category": "combat",
+        "type": "battle",
+        "gain": 0.95,
+        "duration": 1.2,
+        "tags": ["combat", "enemy", "drone", "energy"],
+        "prompt": "High-tech security combat drone charging up and firing a sharp electronic laser pulse burst."
+    },
+    {
+        "id": "sfx_combat_enemy_heavy_slam",
+        "title": "Loader Industrial Slam",
+        "category": "combat",
+        "type": "battle",
+        "gain": 1.0,
+        "duration": 1.6,
+        "tags": ["combat", "enemy", "industrial", "slam"],
+        "prompt": "Heavy industrial loader piston slam, metallic machinery crushing impact with pneumatic hiss."
+    },
+    {
+        "id": "sfx_combat_enemy_gunshot",
+        "title": "Dominion Kinetic Rifle",
+        "category": "combat",
+        "type": "battle",
+        "gain": 0.95,
+        "duration": 1.0,
+        "tags": ["combat", "enemy", "gunshot", "soldier"],
+        "prompt": "Tactical sci-fi military kinetic assault rifle single gunshot crack, sharp ballistic cartridge fire."
+    },
+    {
+        "id": "sfx_combat_enemy_void_blast",
+        "title": "Void Source Blast",
+        "category": "combat",
+        "type": "battle",
+        "gain": 0.95,
+        "duration": 1.8,
+        "tags": ["combat", "enemy", "void", "shadow"],
+        "prompt": "Dark cosmic void energy blast, eerie phase-distortion supernatural whoosh and shadowy spectral impact."
+    },
+    {
+        "id": "sfx_combat_enemy_flamethrower",
+        "title": "Flamethrower Ignited Burst",
+        "category": "combat",
+        "type": "battle",
+        "gain": 0.95,
+        "duration": 1.6,
+        "tags": ["combat", "enemy", "fire", "flame"],
+        "prompt": "Industrial military flamethrower ignited gas whoosh, roaring burst of scorching hot flame."
+    },
 
     # Category D: Activities & Mini-Games
     {

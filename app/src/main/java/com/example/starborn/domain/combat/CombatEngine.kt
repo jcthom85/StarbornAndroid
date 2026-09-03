@@ -65,7 +65,8 @@ class CombatEngine(
         targetId: String,
         amount: Int,
         element: String?,
-        critical: Boolean = false
+        critical: Boolean = false,
+        brokenBonus: Boolean = false
     ): CombatState {
         val targetState = state.combatants[targetId] ?: return state
         val tier = resolveAffinityTier(targetState, element)
@@ -94,7 +95,8 @@ class CombatEngine(
             amount = clamped,
             element = element,
             critical = critical,
-            isWeakness = isWeakness
+            isWeakness = isWeakness,
+            isBrokenBonus = brokenBonus
         )
         var working = state.copy(
             combatants = state.combatants + (targetId to updated),

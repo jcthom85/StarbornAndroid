@@ -329,7 +329,7 @@ To achieve the signature **Starborn** sound across all generated tracks, every p
 
 ---
 
-### Category D: Narrative Endings & The Great Frontier Analog Tapes
+### Category D: Narrative Endings & The Great Frontier Film Collection
 
 #### Track 28: `music_cinematic_prologue` (*The Launch & The Fall*)
 * **Prompt**:
@@ -351,7 +351,7 @@ To achieve the signature **Starborn** sound across all generated tracks, every p
   Mood: Shock, survival, silence after the storm.
   ```
 
-#### Track 30: `music_elaras_song` (*Elara's Complete Song - Great Frontier Tape 08*)
+#### Track 30: `music_elaras_song` (*Elara's Complete Song - Narrative Soundtrack Cue*)
 * **Prompt**:
   ```
   Genre: 80s Vintage Lofi Folk-Pop Cassette Track (with Female Vocals).
@@ -435,4 +435,3 @@ To achieve the signature **Starborn** sound across all generated tracks, every p
   Texture: Dusty marketplace vibe, cozy merchant chatter texture, seamless loop.
   Mood: Curious, welcoming, exotic wares, bargaining for rare gear.
   ```
-

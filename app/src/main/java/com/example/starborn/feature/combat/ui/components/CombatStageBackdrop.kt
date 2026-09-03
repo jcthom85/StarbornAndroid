@@ -145,15 +145,18 @@ fun CombatTutorialOverlay(
     val message = when (tutorial.step) {
         CombatTutorialStep.BRIEF ->
             if (isLoader)
-                "The loader's cracked relay is vulnerable to Shock. Open Abilities and cast Arc Tether to exploit its weakness."
+                "When Nova is ready, tap her to choose an action. Start with a standard Attack and select the Faulted Loader."
             else
                 "That trainer eats direct hits. First, test the shield, then break its guard with Hydraulic Kick."
         CombatTutorialStep.SELECT_NOVA_ATTACK -> "Tap Nova when her action is ready."
         CombatTutorialStep.CHOOSE_ATTACK -> "Choose Attack. First, test the shield."
-        CombatTutorialStep.TARGET_BASIC_ATTACK -> "Choose the Shield Trainer."
-        CombatTutorialStep.AWAIT_BASIC_RESULT -> "Watch how the shield handles a direct hit."
+        CombatTutorialStep.TARGET_BASIC_ATTACK -> if (isLoader) "Choose the Faulted Loader." else "Choose the Shield Trainer."
+        CombatTutorialStep.AWAIT_BASIC_RESULT -> if (isLoader) "Watch the standard Attack connect." else "Watch how the shield handles a direct hit."
         CombatTutorialStep.BLOCKED_EXPLANATION ->
-            "The shield reduced the attack to zero. Guard Break strips protection before you commit damage."
+            if (isLoader)
+                "Standard Attacks are always available. The loader's cracked relay is weak to Shock—use Arc Tether to damage its Stability and accelerate cooldowns."
+            else
+                "The shield reduced the attack to zero. Guard Break strips protection before you commit damage."
         CombatTutorialStep.SELECT_NOVA_SKILL ->
             if (isLoader) "Nova is ready. Tap Nova to choose an action." else "Nova is ready again. Tap Nova to break the guard."
         CombatTutorialStep.CHOOSE_SKILLS ->
@@ -166,7 +169,7 @@ fun CombatTutorialOverlay(
             if (isLoader) "Watch the Shock pulse break its stability." else "Watch the guard break."
         CombatTutorialStep.SUCCESS ->
             if (isLoader)
-                "Stability broken! The loader is stunned. Arc Tether is on cooldown—finish the fight with standard Attacks."
+                "Stability broken! Broken targets take 25% more direct damage. Arc Tether is on cooldown—finish it with Attacks."
             else
                 "Hydraulic Kick stripped the shield. Now finish the fight."
     }
@@ -218,7 +221,7 @@ fun CombatTutorialOverlay(
                             Text(
                                 text = when (tutorial.step) {
                                     CombatTutorialStep.BRIEF -> if (isLoader) "Engage" else "Start Training"
-                                    CombatTutorialStep.BLOCKED_EXPLANATION -> "Break The Guard"
+                                    CombatTutorialStep.BLOCKED_EXPLANATION -> if (isLoader) "Exploit Weakness" else "Break The Guard"
                                     CombatTutorialStep.SUCCESS -> if (isLoader) "Finish Combat" else "Finish The Fight"
                                     else -> "Continue"
                                 },

@@ -377,10 +377,10 @@
   },
   {
     "id": "cook_vance",
-    "name": "Vance",
+    "name": "Rourke",
     "aliases": [
-      "cook vance",
-      "vance"
+      "cook rourke",
+      "rourke"
     ],
     "role": "Ration Cook",
     "description": "A dry-witted mess cook who turns synth protein bricks into hot trail meals.",

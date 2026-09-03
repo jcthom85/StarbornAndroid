@@ -13779,7 +13779,7 @@
   },
   {
     "id": "find_vhs_tape_01",
-    "description": "Recovers Great Frontier Tape 01 from the supply closet stash.",
+    "description": "Recovers Great Frontier Film 01 from the supply closet stash.",
     "trigger": {
       "type": "player_action",
       "action": "find_vhs_tape_01"
@@ -13807,13 +13807,13 @@
       },
       {
         "type": "show_message",
-        "message": "Prying up the loose floor panel reveals a hidden contraband stash: Tape 01: 'Unpayable Debt' from the Great Frontier album."
+        "message": "Prying up the loose floor panel reveals a hidden contraband stash: Film 01, 'Unpayable Debt,' from The Great Frontier movie collection."
       }
     ]
   },
   {
     "id": "find_vhs_tape_02",
-    "description": "Recovers Great Frontier Tape 02.",
+    "description": "Recovers Great Frontier Film 02.",
     "trigger": {
       "type": "player_action",
       "action": "find_vhs_tape_02"
@@ -13827,13 +13827,13 @@
       },
       {
         "type": "show_message",
-        "message": "Recovered Tape 02: 'Memories of Another Life' from the Great Frontier album."
+        "message": "Recovered Film 02, 'Memories of Another Life,' from The Great Frontier movie collection."
       }
     ]
   },
   {
     "id": "find_vhs_tape_03",
-    "description": "Recovers Great Frontier Tape 03.",
+    "description": "Recovers Great Frontier Film 03.",
     "trigger": {
       "type": "player_action",
       "action": "find_vhs_tape_03"
@@ -13847,13 +13847,13 @@
       },
       {
         "type": "show_message",
-        "message": "Recovered Tape 03: 'Showdown in the Rain' from the Great Frontier album."
+        "message": "Recovered Film 03, 'Showdown in the Rain,' from The Great Frontier movie collection."
       }
     ]
   },
   {
     "id": "find_vhs_tape_04",
-    "description": "Recovers Great Frontier Tape 04.",
+    "description": "Recovers Great Frontier Film 04.",
     "trigger": {
       "type": "player_action",
       "action": "find_vhs_tape_04"
@@ -13867,13 +13867,13 @@
       },
       {
         "type": "show_message",
-        "message": "Recovered Tape 04: 'The Road at Night' from the Great Frontier album."
+        "message": "Recovered Film 04, 'The Road at Night,' from The Great Frontier movie collection."
       }
     ]
   },
   {
     "id": "find_vhs_tape_05",
-    "description": "Recovers Great Frontier Tape 05.",
+    "description": "Recovers Great Frontier Film 05.",
     "trigger": {
       "type": "player_action",
       "action": "find_vhs_tape_05"
@@ -13887,13 +13887,13 @@
       },
       {
         "type": "show_message",
-        "message": "Recovered Tape 05: 'The Black City' from the Great Frontier album."
+        "message": "Recovered Film 05, 'The Black City,' from The Great Frontier movie collection."
       }
     ]
   },
   {
     "id": "find_vhs_tape_06",
-    "description": "Recovers Great Frontier Tape 06.",
+    "description": "Recovers Great Frontier Film 06.",
     "trigger": {
       "type": "player_action",
       "action": "find_vhs_tape_06"
@@ -13907,13 +13907,13 @@
       },
       {
         "type": "show_message",
-        "message": "Recovered Tape 06: 'Refuge' from the Great Frontier album."
+        "message": "Recovered Film 06, 'Refuge,' from The Great Frontier movie collection."
       }
     ]
   },
   {
     "id": "find_vhs_tape_07",
-    "description": "Recovers Great Frontier Tape 07.",
+    "description": "Recovers Great Frontier Film 07.",
     "trigger": {
       "type": "player_action",
       "action": "find_vhs_tape_07"
@@ -13927,13 +13927,13 @@
       },
       {
         "type": "show_message",
-        "message": "Recovered Tape 07: 'Reclamation' from the Great Frontier album."
+        "message": "Recovered Film 07, 'Reclamation,' from The Great Frontier movie collection."
       }
     ]
   },
   {
     "id": "find_vhs_tape_08",
-    "description": "Recovers Great Frontier Tape 08.",
+    "description": "Recovers Great Frontier Film 08.",
     "trigger": {
       "type": "player_action",
       "action": "find_vhs_tape_08"
@@ -13947,13 +13947,13 @@
       },
       {
         "type": "show_message",
-        "message": "Recovered Tape 08: 'The End of the Beginning' from the Great Frontier album."
+        "message": "Recovered Film 08, 'The End of the Beginning,' from The Great Frontier movie collection."
       }
     ]
   },
   {
     "id": "find_vhs_tape_09",
-    "description": "Recovers Great Frontier Tape 09.",
+    "description": "Recovers Great Frontier Film 09.",
     "trigger": {
       "type": "player_action",
       "action": "find_vhs_tape_09"
@@ -13967,13 +13967,13 @@
       },
       {
         "type": "show_message",
-        "message": "Recovered Tape 09: 'Reconciliation' from the Great Frontier album."
+        "message": "Recovered Film 09, 'Reconciliation,' from The Great Frontier movie collection."
       }
     ]
   },
   {
     "id": "find_vhs_tape_10",
-    "description": "Recovers Great Frontier Tape 10.",
+    "description": "Recovers Great Frontier Film 10.",
     "trigger": {
       "type": "player_action",
       "action": "find_vhs_tape_10"
@@ -13987,13 +13987,13 @@
       },
       {
         "type": "show_message",
-        "message": "Recovered Tape 10: 'Shackles' from the Great Frontier album."
+        "message": "Recovered Film 10, 'Shackles,' from The Great Frontier movie collection."
       }
     ]
   },
   {
     "id": "astra_open_tape_deck",
-    "description": "Opens the Astra analog tape deck.",
+    "description": "Opens the Astra Great Frontier film archive.",
     "trigger": {
       "type": "player_action",
       "action": "astra_open_tape_deck"
@@ -14003,7 +14003,7 @@
     "actions": [
       {
         "type": "show_message",
-        "message": "The analog tape deck hums to life, ready to play recovered magnetic tapes."
+        "message": "The Astra cinema deck hums to life, ready to screen recovered Great Frontier films."
       }
     ]
   },

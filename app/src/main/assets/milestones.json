@@ -1701,69 +1701,69 @@
   },
   {
     "id": "ms_tape_01_found",
-    "name": "Tape Found: A New Frontier",
-    "description": "Recovered the first Great Frontier analog tape from Nova's workshop.",
-    "toast": "Cassette recovered: A New Frontier"
+    "name": "Film Found: Unpayable Debt",
+    "description": "Recovered the first film in The Great Frontier collection on analog video cassette.",
+    "toast": "Film recovered: Unpayable Debt"
   },
   {
     "id": "ms_tape_02_found",
-    "name": "Tape Found: Starborn Anthem",
-    "description": "Recovered the Starborn Anthem tape from the Logistics maintenance cache.",
-    "toast": "Cassette recovered: Starborn Anthem"
+    "name": "Film Found: Memories of Another Life",
+    "description": "Recovered Memories of Another Life from The Great Frontier film collection.",
+    "toast": "Film recovered: Memories of Another Life"
   },
   {
     "id": "ms_tape_03_found",
-    "name": "Tape Found: Sector 9 Drifter",
-    "description": "Recovered the Sector 9 Drifter tape from the overgrown jungle canopy.",
-    "toast": "Cassette recovered: Sector 9 Drifter"
+    "name": "Film Found: Showdown in the Rain",
+    "description": "Recovered Showdown in the Rain from The Great Frontier film collection.",
+    "toast": "Film recovered: Showdown in the Rain"
   },
   {
     "id": "ms_tape_04_found",
-    "name": "Tape Found: Temple Echoes",
-    "description": "Recovered the Temple Echoes tape from the Ancient Gateway ruins.",
-    "toast": "Cassette recovered: Temple Echoes"
+    "name": "Film Found: The Road at Night",
+    "description": "Recovered The Road at Night from The Great Frontier film collection.",
+    "toast": "Film recovered: The Road at Night"
   },
   {
     "id": "ms_tape_05_found",
-    "name": "Tape Found: Lower City Nights",
-    "description": "Recovered the Lower City Nights tape from Jax's Neon Bar safe.",
-    "toast": "Cassette recovered: Lower City Nights"
+    "name": "Film Found: The Black City",
+    "description": "Recovered The Black City from The Great Frontier film collection.",
+    "toast": "Film recovered: The Black City"
   },
   {
     "id": "ms_tape_06_found",
-    "name": "Tape Found: Spire of Glass",
-    "description": "Recovered the Spire of Glass tape from the Upper City Archive Approach.",
-    "toast": "Cassette recovered: Spire of Glass"
+    "name": "Film Found: Refuge",
+    "description": "Recovered Refuge from The Great Frontier film collection.",
+    "toast": "Film recovered: Refuge"
   },
   {
     "id": "ms_tape_07_found",
-    "name": "Tape Found: Slag & Iron",
-    "description": "Recovered the Slag & Iron tape from the Slag Pits intake duct.",
-    "toast": "Cassette recovered: Slag & Iron"
+    "name": "Film Found: Reclamation",
+    "description": "Recovered Reclamation from The Great Frontier film collection.",
+    "toast": "Film recovered: Reclamation"
   },
   {
     "id": "ms_tape_08_found",
-    "name": "Tape Found: Deep Core Fire",
-    "description": "Recovered the Deep Core Fire tape from the Foundry Forge Chamber.",
-    "toast": "Cassette recovered: Deep Core Fire"
+    "name": "Film Found: The End of the Beginning",
+    "description": "Recovered The End of the Beginning from The Great Frontier film collection.",
+    "toast": "Film recovered: The End of the Beginning"
   },
   {
     "id": "ms_tape_09_found",
-    "name": "Tape Found: Orbital Static",
-    "description": "Recovered the Orbital Static tape from the Ring Airlock Gallery.",
-    "toast": "Cassette recovered: Orbital Static"
+    "name": "Film Found: Reconciliation",
+    "description": "Recovered Reconciliation from The Great Frontier film collection.",
+    "toast": "Film recovered: Reconciliation"
   },
   {
     "id": "ms_tape_10_found",
-    "name": "Tape Found: The Infinite Shore",
-    "description": "Recovered the final Great Frontier tape from The Source Center platform.",
-    "toast": "Cassette recovered: The Infinite Shore"
+    "name": "Film Found: Shackles",
+    "description": "Recovered the final film in The Great Frontier collection from The Source Center platform.",
+    "toast": "Film recovered: Shackles"
   },
   {
     "id": "ms_great_frontier_complete",
     "name": "The Great Frontier: Master Archivist",
-    "description": "Collected all 10 cassette tapes from the forgotten era across every world.",
-    "toast": "Analog Collection Complete: All 10 Great Frontier Tapes!"
+    "description": "Collected all 10 Great Frontier films on analog video cassette from across every world.",
+    "toast": "Film Collection Complete: All 10 Great Frontier Features!"
   },
   {
     "id": "ms_master_angler",

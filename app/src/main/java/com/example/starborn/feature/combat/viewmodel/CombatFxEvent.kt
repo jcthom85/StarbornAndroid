@@ -8,6 +8,7 @@ sealed interface CombatFxEvent {
         val element: String? = null,
         val critical: Boolean = false,
         val isWeakness: Boolean = false,
+        val isBrokenBonus: Boolean = false,
         val isGuardBreak: Boolean = false,
         val showAttackFx: Boolean = false,
         val targetDefeated: Boolean = false

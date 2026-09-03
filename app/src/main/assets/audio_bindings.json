@@ -282,6 +282,15 @@
     "wpn_nova_laser": "sfx_combat_blaster_fire",
     "wpn_zeke_punch": "sfx_combat_heavy_wrench",
     "wpn_orion_resonance": "sfx_combat_plasma_arc",
-    "wpn_gh0st_slash": "sfx_combat_phase_blade"
+    "wpn_gh0st_slash": "sfx_combat_phase_blade",
+    "enemy_attack_slash": "sfx_combat_enemy_melee_slash",
+    "enemy_attack_bite": "sfx_combat_enemy_bite",
+    "enemy_attack_acid": "sfx_combat_enemy_spit_acid",
+    "enemy_attack_spore": "sfx_combat_enemy_spore_blast",
+    "enemy_attack_drone": "sfx_combat_enemy_drone_pulse",
+    "enemy_attack_slam": "sfx_combat_enemy_heavy_slam",
+    "enemy_attack_gunshot": "sfx_combat_enemy_gunshot",
+    "enemy_attack_void": "sfx_combat_enemy_void_blast",
+    "enemy_attack_flame": "sfx_combat_enemy_flamethrower"
   }
 }

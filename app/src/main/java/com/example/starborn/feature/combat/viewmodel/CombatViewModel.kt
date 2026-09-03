@@ -3323,10 +3323,33 @@ private fun determineSkillTargeting(skill: Skill): SkillTargeting {
             normalized.startsWith("zeke") -> "wpn_zeke_punch"
             normalized.startsWith("orion") -> "wpn_orion_resonance"
             normalized.startsWith("gh0st") || normalized.startsWith("ghost") -> "wpn_gh0st_slash"
-            else -> null
+            else -> resolveEnemyAttackCue(sourceId, base, normalized)
         }
         if (cue != null) {
             playBattleCue(cue)
+        }
+    }
+
+    private fun resolveEnemyAttackCue(sourceId: String, base: String, normalized: String): String? {
+        val enemy = enemyDefinitions[sourceId] ?: enemyDefinitions[base]
+        val tags = enemy?.tags.orEmpty().map { it.lowercase(Locale.getDefault()) }
+        val element = enemy?.element?.lowercase(Locale.getDefault())
+
+        return when {
+            "massive" in tags || "industrial" in tags || normalized.contains("loader") -> "enemy_attack_slam"
+            "robotic" in tags || "machine" in tags || "mech" in tags -> {
+                if ("flying" in tags || "drone" in tags) "enemy_attack_drone" else "robot_stomp"
+            }
+            "crawler" in tags || "beast" in tags || normalized.contains("hound") || normalized.contains("borer") -> {
+                if (normalized.contains("borer") || normalized.contains("crawler")) "enemy_attack_bite" else "enemy_attack_slash"
+            }
+            "flora" in tags || normalized.contains("spitter") || normalized.contains("vine") -> "enemy_attack_spore"
+            element == "acid" -> "enemy_attack_acid"
+            element == "fire" || element == "burn" || "foundry" in tags -> "enemy_attack_flame"
+            "source" in tags || "shadow" in tags || "nightmare" in tags || "digital" in tags -> "enemy_attack_void"
+            "human" in tags || "dominion" in tags -> "enemy_attack_gunshot"
+            "biological" in tags -> "enemy_screech"
+            else -> "enemy_attack_slash"
         }
     }
 

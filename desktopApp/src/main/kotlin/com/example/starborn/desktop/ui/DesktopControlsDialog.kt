@@ -131,7 +131,7 @@ fun DesktopControlsDialog(
                         )
 
                         KeybindRow("[F]", "Cast Angling Rod (Fishing)")
-                        KeybindRow("[T]", "Tape Deck Hi-Fi Cassette Player")
+                        KeybindRow("[T]", "The Great Frontier Film Archive")
                         KeybindRow("[V]", "Outpost Merchant / Shop")
                         KeybindRow("[R]", "Stasis Rest Pod (Heal Squad)")
                         KeybindRow("[ESC]", "Field Menu / Pause / Back")

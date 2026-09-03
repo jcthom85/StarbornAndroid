@@ -61,6 +61,38 @@ class DataIntegrityTest {
     }
 
     @Test
+    fun messHallHyperionCabinetDisappearsAfterDiscovery() {
+        val rooms = readList("src/main/assets/rooms.json", Room::class.java)
+        val messHall = rooms.single { it.id == "pit_mess" }
+        val cabinet = messHall.actions.single { it["name"] == "broken Hyperion cabinet" }
+
+        assertEquals("arcade_discovery", cabinet["type"])
+        assertEquals("ms_arcade_deep_mine_discovered", cabinet["hide_when_milestone"])
+    }
+
+    @Test
+    fun cardDenDiceTableDisappearsAfterGamblingReward() {
+        val rooms = readList("src/main/assets/rooms.json", Room::class.java)
+        val cardDen = rooms.single { it.id == "trade_den" }
+        val diceTable = cardDen.actions.single { it["name"] == "dice table" }
+
+        assertEquals("w1_gamble_trade_den", diceTable["action_event"])
+        assertEquals("ms_w1_trade_den_gambled", diceTable["hide_when_milestone"])
+    }
+
+    @Test
+    fun securityPostIsTheOnlyShieldTrainerTutorialEncounter() {
+        val rooms = readList("src/main/assets/rooms.json", Room::class.java)
+        val trainingRooms = rooms.filter { room ->
+            room.enemies.any { it.equals("acoustic_bulwark", ignoreCase = true) } &&
+                room.id in setOf("workshop_dock", "admin_security")
+        }
+
+        assertEquals(listOf("admin_security"), trainingRooms.map { it.id })
+        assertTrue(rooms.single { it.id == "workshop_dock" }.enemies.isEmpty())
+    }
+
+    @Test
     fun dialogueVoiceProfilesCoverAuthoredSpeakers() {
         val dialogueText = File("src/main/assets/dialogue.json").readText()
         val speakers = Regex("\"speaker\"\\s*:\\s*\"([^\"]+)\"")

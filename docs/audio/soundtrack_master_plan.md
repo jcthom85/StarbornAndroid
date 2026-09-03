@@ -5,7 +5,7 @@
 Music in **Starborn** is not background filler—it is the emotional spine of the narrative. The soundtrack blends 80s/90s analog tape nostalgia, futuristic synthesized soundscapes, organic world instrumentation, and classical leitmotif storytelling (in the tradition of Nobuo Uematsu, Austin Wintory, and Yasunori Mitsuda).
 
 ### Core Aesthetic Pillars:
-1. **Analog Warmth & Cassette Grit**: All tracks feature subtle analog tape characteristics—warm harmonic saturation, gentle wow/flutter, and tape head presence—anchoring the game to the *Great Frontier* analog tape lore.
+1. **Analog Warmth & Cassette Grit**: All tracks feature subtle analog tape characteristics—warm harmonic saturation, gentle wow/flutter, and tape head presence—supporting the sound of *The Great Frontier* films preserved on analog video cassettes.
 2. **Multi-Genre World Biomes**: Every world in the frontier possesses a distinct musical language and genre fusion reflecting its environment, society, and struggles.
 3. **Dynamic Leitmotif Storytelling**: Character themes and regional melodies evolve, collide, and merge to tell the story through music.
 
@@ -180,7 +180,7 @@ The complete soundtrack requires **32 bespoke musical tracks**:
   * **Fade Out**: `800ms – 1200ms`
   * **Looping Rule**: Tracks must end on a harmonic resolution that connects seamlessly back to measure 1 without click, pop, or volume dip. The last measure should allow reverb tails to ring naturally into the head.
 * **One-Shot Tracks (`loop: false`)**:
-  * **Scope**: Victory Fanfares, Game Over stings, Cinematics, Epilogue, and Great Frontier Tapes.
+  * **Scope**: Victory fanfares, Game Over stings, cinematics, epilogue, and the soundtracks heard while Great Frontier films are screened.
   * **Fade Out**: Let natural audio decay finish (`fade_out_ms: 0` or natural release).
 
 ---
@@ -200,4 +200,3 @@ Every track in `audio_catalog.json` must adhere to this structure:
   "tags": ["world_1", "explore", "blues", "acoustic"]
 }
 ```
-

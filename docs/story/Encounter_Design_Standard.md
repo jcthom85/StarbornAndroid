@@ -40,6 +40,8 @@ Before composing an encounter, know what the engine actually rewards.
 
 That third one is Starborn's signature. Exploiting a weakness does not just deal more damage — it accelerates your entire rotation. Every encounter should be composed so the player has a reason to find that acceleration.
 
+**Break creates a direct-damage window.** A target that was already Broken when an Attack or damaging skill connects takes **25% more direct damage**. The hit that empties Stability creates the window but does not receive the bonus. Damage-over-time, environmental damage, and self-damage do not receive it. This makes Break a setup-and-payoff choice without causing status ticks to snowball.
+
 ---
 
 ## 3. Composition rules

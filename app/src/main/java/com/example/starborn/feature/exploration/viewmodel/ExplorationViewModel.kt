@@ -302,6 +302,7 @@ class ExplorationViewModel(
                     name = item?.name ?: inventoryService.itemDisplayName(id),
                     quantity = qty,
                     type = item?.type ?: "misc",
+                    description = item?.description,
                     effect = item?.effect,
                     equipment = item?.equipment
                 )
@@ -1654,7 +1655,7 @@ class ExplorationViewModel(
     fun playTapeTrack(tapeId: String, trackCueId: String) {
         _uiState.update { it.copy(playingTapeId = tapeId) }
         emitAudioCommands(audioRouter.commandsForLayerOverride(AudioCueType.MUSIC, cueId = trackCueId, loop = true))
-        postStatus("Now Playing: $tapeId")
+        postStatus("Great Frontier screening started.")
     }
 
     fun stopTapeTrack() {
@@ -1761,6 +1762,7 @@ class ExplorationViewModel(
                             name = entry.item.name,
                             quantity = entry.quantity,
                             type = entry.item.type,
+                            description = entry.item.description,
                             effect = entry.item.effect,
                             equipment = entry.item.equipment
                         )
@@ -1780,6 +1782,7 @@ class ExplorationViewModel(
                             name = entry.item.name,
                             quantity = entry.quantity,
                             type = entry.item.type,
+                            description = entry.item.description,
                             effect = entry.item.effect,
                             equipment = entry.item.equipment
                         )
@@ -3251,14 +3254,33 @@ class ExplorationViewModel(
     }
 
     fun loadGame(slot: Int = 1) {
-        viewModelScope.launch(dispatchers.io) {
-            val success = when (slot) {
-                GameSaveRepository.QUICKSAVE_SLOT -> runCatching { saveRepository.loadQuickSave() }.getOrElse { false }
-                else -> runCatching { saveRepository.load(slot) }.getOrElse { false }
+        viewModelScope.launch(dispatchers.main) {
+            triggerFadeOverlay(
+                fromAlpha = 0f,
+                toAlpha = 1f,
+                durationMillis = 350
+            ) {
+                viewModelScope.launch(dispatchers.io) {
+                    val success = when (slot) {
+                        GameSaveRepository.QUICKSAVE_SLOT -> runCatching { saveRepository.loadQuickSave() }.getOrElse { false }
+                        else -> runCatching { saveRepository.load(slot) }.getOrElse { false }
+                    }
+                    val label = if (slot == GameSaveRepository.QUICKSAVE_SLOT) "quicksave" else "slot $slot"
+                    val message = if (success) "Loaded $label." else "Load failed."
+                    withContext(dispatchers.main) {
+                        postStatus(message)
+                        val targetRoomId = sessionStore.state.value.roomId
+                        if (targetRoomId != null) {
+                            warpToRoom(targetRoomId)
+                        }
+                        triggerFadeOverlay(
+                            fromAlpha = 1f,
+                            toAlpha = 0f,
+                            durationMillis = 400
+                        ) {}
+                    }
+                }
             }
-            val label = if (slot == GameSaveRepository.QUICKSAVE_SLOT) "quicksave" else "slot $slot"
-            val message = if (success) "Loaded $label." else "Load failed."
-            postStatus(message)
         }
     }
 

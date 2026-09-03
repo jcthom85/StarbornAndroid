@@ -1354,10 +1354,9 @@ fun ExplorationScreen(
                     }
                 },
                 onLoad = { slot ->
-                    coroutineScope.launch {
-                        viewModel.loadGame(slot)
-                        saveLoadMode = null
-                    }
+                    saveLoadMode = null
+                    viewModel.closeMenuOverlay()
+                    viewModel.loadGame(slot)
                 },
                 onDelete = { slot ->
                     coroutineScope.launch {
@@ -1421,7 +1420,7 @@ fun ExplorationScreen(
                     .fillMaxSize()
                     .background(Color.Black.copy(alpha = fadeOverlayAnim.value))
                     .align(Alignment.Center)
-                    .zIndex(10f)
+                    .zIndex(150f)
             )
         }
 
@@ -3440,16 +3439,16 @@ private fun TapeDeckDialog(
     val ownedTapeIds = remember(inventory) { inventory.map { it.id }.toSet() }
 
     val tapes = listOf(
-        Triple("vhs_tape_01", "gf_01_unpayable_debt", "Tape 01: Unpayable Debt" to "Mining Pit - Supply Stash"),
-        Triple("vhs_tape_02", "gf_02_memories_of_another_life", "Tape 02: Memories of Another Life" to "Colony - Jed's Office"),
-        Triple("vhs_tape_03", "gf_03_showdown_in_the_rain", "Tape 03: Showdown in the Rain" to "Coast - Glow-Moss Cavern"),
-        Triple("vhs_tape_04", "gf_04_the_road_at_night", "Tape 04: The Road at Night" to "Sector 9 - Ridge Plateau"),
-        Triple("vhs_tape_05", "gf_05_the_black_city", "Tape 05: The Black City" to "Spire - Night Market"),
-        Triple("vhs_tape_06", "gf_06_refuge", "Tape 06: Refuge" to "Spire - SkyPark Pavilion"),
-        Triple("vhs_tape_07", "gf_07_reclamation", "Tape 07: Reclamation" to "Foundry - Smelter Waste"),
-        Triple("vhs_tape_08", "gf_08_the_end_of_the_beginning", "Tape 08: The End of the Beginning" to "Foundry - Titan Dock"),
-        Triple("vhs_tape_09", "gf_09_reconciliation", "Tape 09: Reconciliation" to "Void Ring - Solarium"),
-        Triple("vhs_tape_10", "gf_10_shackles", "Tape 10: Shackles" to "Source - Memory Bridge")
+        Triple("vhs_tape_01", "gf_01_unpayable_debt", "Film 01: Unpayable Debt" to "Mining Pit - Supply Stash"),
+        Triple("vhs_tape_02", "gf_02_memories_of_another_life", "Film 02: Memories of Another Life" to "Colony - Jed's Office"),
+        Triple("vhs_tape_03", "gf_03_showdown_in_the_rain", "Film 03: Showdown in the Rain" to "Coast - Glow-Moss Cavern"),
+        Triple("vhs_tape_04", "gf_04_the_road_at_night", "Film 04: The Road at Night" to "Sector 9 - Ridge Plateau"),
+        Triple("vhs_tape_05", "gf_05_the_black_city", "Film 05: The Black City" to "Spire - Night Market"),
+        Triple("vhs_tape_06", "gf_06_refuge", "Film 06: Refuge" to "Spire - SkyPark Pavilion"),
+        Triple("vhs_tape_07", "gf_07_reclamation", "Film 07: Reclamation" to "Foundry - Smelter Waste"),
+        Triple("vhs_tape_08", "gf_08_the_end_of_the_beginning", "Film 08: The End of the Beginning" to "Foundry - Titan Dock"),
+        Triple("vhs_tape_09", "gf_09_reconciliation", "Film 09: Reconciliation" to "Void Ring - Solarium"),
+        Triple("vhs_tape_10", "gf_10_shackles", "Film 10: Shackles" to "Source - Memory Bridge")
     )
 
     Dialog(onDismissRequest = onDismiss) {
@@ -3474,7 +3473,7 @@ private fun TapeDeckDialog(
                 ) {
                     Column {
                         Text(
-                            text = "GREAT FRONTIER // ANALOG DECK",
+                            text = "THE GREAT FRONTIER // FILM ARCHIVE",
                             style = MaterialTheme.typography.titleMedium.copy(
                                 fontWeight = FontWeight.Bold,
                                 letterSpacing = 1.sp
@@ -3482,7 +3481,7 @@ private fun TapeDeckDialog(
                             color = Color(0xFFFFD54F)
                         )
                         Text(
-                            text = "Discovered: ${tapes.count { it.first in ownedTapeIds }} / 10 Magnetic Tapes",
+                            text = "Recovered: ${tapes.count { it.first in ownedTapeIds }} / 10 Films",
                             style = MaterialTheme.typography.labelSmall,
                             color = Color.White.copy(alpha = 0.6f)
                         )
@@ -3520,12 +3519,12 @@ private fun TapeDeckDialog(
                             modifier = Modifier.weight(1f)
                         ) {
                             Text(
-                                text = if (playingTapeId != null) "▶ NOW PLAYING:" else "■ STANDBY:",
+                                text = if (playingTapeId != null) "▶ NOW SCREENING:" else "■ CINEMA STANDBY:",
                                 style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
                                 color = if (playingTapeId != null) Color(0xFFFFB300) else Color.White.copy(alpha = 0.5f)
                             )
                             Text(
-                                text = tapes.firstOrNull { it.first == playingTapeId }?.third?.first ?: "No tape inserted",
+                                text = tapes.firstOrNull { it.first == playingTapeId }?.third?.first ?: "No film loaded",
                                 style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.SemiBold),
                                 color = Color.White,
                                 maxLines = 1,
@@ -3593,7 +3592,7 @@ private fun TapeDeckDialog(
                             ) {
                                 Column(modifier = Modifier.weight(1f)) {
                                     Text(
-                                        text = if (isOwned) title else "[Unindexed Tape Cartridge]",
+                                        text = if (isOwned) title else "[Unindexed Film Cassette]",
                                         style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
                                         color = if (isOwned) Color(0xFFFFD54F) else Color.White.copy(alpha = 0.35f)
                                     )
@@ -3612,7 +3611,7 @@ private fun TapeDeckDialog(
                                         border = BorderStroke(1.dp, Color(0xFFFFB300).copy(alpha = 0.7f))
                                     ) {
                                         Text(
-                                            text = if (isPlaying) "STOP" else "PLAY",
+                                            text = if (isPlaying) "STOP" else "WATCH",
                                             style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
                                             color = Color(0xFFFFD54F),
                                             modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
@@ -5546,7 +5545,7 @@ private fun OverworldGatewayCard(
                         )
                     )
                 )
-                .padding(horizontal = 12.dp, vertical = 8.dp),
+                .padding(horizontal = 10.dp, vertical = 6.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -5559,7 +5558,7 @@ private fun OverworldGatewayCard(
                     shape = CircleShape,
                     color = mapCyan.copy(alpha = 0.12f),
                     border = BorderStroke(1.dp, mapCyan.copy(alpha = 0.45f)),
-                    modifier = Modifier.size(30.dp)
+                    modifier = Modifier.size(26.dp)
                 ) {
                     Box(contentAlignment = Alignment.Center) {
                         Canvas(modifier = Modifier.size(16.dp)) {
@@ -5586,28 +5585,16 @@ private fun OverworldGatewayCard(
                         }
                     }
                 }
-                Column(verticalArrangement = Arrangement.Center) {
-                    Text(
-                        text = "Overworld • ${sectorTitle ?: "Colony Map"}",
-                        color = Color.White.copy(alpha = 0.94f),
-                        style = MaterialTheme.typography.labelMedium.copy(
-                            fontWeight = FontWeight.SemiBold,
-                            letterSpacing = 0.2.sp
-                        ),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                    Text(
-                        text = "Surface Transit Gate",
-                        color = Color(0xFF7BE8FF).copy(alpha = 0.70f),
-                        style = MaterialTheme.typography.labelSmall.copy(
-                            fontSize = 10.sp,
-                            fontWeight = FontWeight.Medium
-                        ),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
+                Text(
+                    text = "OVERWORLD MAP",
+                    color = Color.White.copy(alpha = 0.94f),
+                    style = MaterialTheme.typography.labelMedium.copy(
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = 0.5.sp
+                    ),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
             }
             Surface(
                 shape = RoundedCornerShape(6.dp),
@@ -5615,14 +5602,14 @@ private fun OverworldGatewayCard(
                 border = BorderStroke(1.dp, mapCyan.copy(alpha = 0.38f))
             ) {
                 Text(
-                    text = "SURFACE ➜",
+                    text = "OPEN >",
                     color = Color.White.copy(alpha = 0.90f),
                     style = MaterialTheme.typography.labelSmall.copy(
                         fontWeight = FontWeight.Bold,
                         fontSize = 9.sp,
                         letterSpacing = 0.6.sp
                     ),
-                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                    modifier = Modifier.padding(horizontal = 7.dp, vertical = 3.dp)
                 )
             }
         }

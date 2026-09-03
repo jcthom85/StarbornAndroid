@@ -4,7 +4,7 @@
 
 In the retro-futuristic world of **Starborn**, analog entertainment is a cherished relic of the pre-Dominion era. Scattered across the six campaign worlds are forgotten, damaged coin-op arcade cabinets originally manufactured by *Hyperion Amusements*. 
 
-Players can discover these machines in regional hubs, repair them using the **Tinkering Workbench**, and have Ollie transport them back to the **Astra Recreation Bay**. Alongside the *Great Frontier Analog Tape Deck*, the Astra becomes a lively vintage arcade hub where players can compete for high scores, earn exclusive crafting recipes, weapon mods, and collector titles.
+Players can discover these machines in regional hubs, repair them using the **Tinkering Workbench**, and have Ollie transport them back to the **Astra Recreation Bay**. Alongside *The Great Frontier Film Archive*, the Astra becomes a lively vintage media-and-arcade hub where players can screen recovered movies, compete for high scores, earn exclusive crafting recipes, weapon mods, and collector titles.
 
 ---
 

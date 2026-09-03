@@ -2039,6 +2039,87 @@
       "fade_in_ms": 0,
       "fade_out_ms": 200,
       "duration_ms": 1800
+    },
+    {
+      "id": "sfx_combat_enemy_melee_slash",
+      "category": "battle",
+      "priority": 5,
+      "gain": 0.95,
+      "fade_in_ms": 0,
+      "fade_out_ms": 200,
+      "duration_ms": 1200
+    },
+    {
+      "id": "sfx_combat_enemy_bite",
+      "category": "battle",
+      "priority": 5,
+      "gain": 0.95,
+      "fade_in_ms": 0,
+      "fade_out_ms": 200,
+      "duration_ms": 1000
+    },
+    {
+      "id": "sfx_combat_enemy_spit_acid",
+      "category": "battle",
+      "priority": 5,
+      "gain": 0.95,
+      "fade_in_ms": 0,
+      "fade_out_ms": 200,
+      "duration_ms": 1500
+    },
+    {
+      "id": "sfx_combat_enemy_spore_blast",
+      "category": "battle",
+      "priority": 5,
+      "gain": 0.95,
+      "fade_in_ms": 0,
+      "fade_out_ms": 200,
+      "duration_ms": 1500
+    },
+    {
+      "id": "sfx_combat_enemy_drone_pulse",
+      "category": "battle",
+      "priority": 5,
+      "gain": 0.95,
+      "fade_in_ms": 0,
+      "fade_out_ms": 200,
+      "duration_ms": 1200
+    },
+    {
+      "id": "sfx_combat_enemy_heavy_slam",
+      "category": "battle",
+      "priority": 5,
+      "gain": 1.0,
+      "fade_in_ms": 0,
+      "fade_out_ms": 200,
+      "duration_ms": 1600
+    },
+    {
+      "id": "sfx_combat_enemy_gunshot",
+      "category": "battle",
+      "priority": 5,
+      "gain": 0.95,
+      "fade_in_ms": 0,
+      "fade_out_ms": 200,
+      "duration_ms": 1000
+    },
+    {
+      "id": "sfx_combat_enemy_void_blast",
+      "category": "battle",
+      "priority": 5,
+      "gain": 0.95,
+      "fade_in_ms": 0,
+      "fade_out_ms": 200,
+      "duration_ms": 1800
+    },
+    {
+      "id": "sfx_combat_enemy_flamethrower",
+      "category": "battle",
+      "priority": 5,
+      "gain": 0.95,
+      "fade_in_ms": 0,
+      "fade_out_ms": 200,
+      "duration_ms": 1600
     }
   ]
 }

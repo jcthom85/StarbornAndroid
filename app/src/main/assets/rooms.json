@@ -70,7 +70,7 @@
       {
         "name": "broken Hyperion cabinet",
         "type": "arcade_discovery",
-        "hide_when_milestone": "ms_arcade_cabinet_01_repaired",
+        "hide_when_milestone": "ms_arcade_deep_mine_discovered",
         "condition_unmet_message": "A dead pre-Dominion arcade cabinet leans beneath a miner's coat. One amber diagnostic blinks behind the cracked glass."
       }
     ],
@@ -101,7 +101,7 @@
       {
         "name": "thermal cooker",
         "type": "generic",
-        "condition_unmet_message": "The industrial cooker hums with lukewarm colony broth. Cook Vance glares if anyone touches the regulator valve."
+        "condition_unmet_message": "The industrial cooker hums with lukewarm colony broth. Cook Rourke glares if anyone touches the regulator valve."
       },
       {
         "name": "ingredient hopper",
@@ -800,20 +800,10 @@
     "env": "mine",
     "title": "Loading Dock",
     "background_image": "images/rooms/world_1/workshop_dock_v3.webp",
-    "description": "A cargo rail disappears beyond the shutter. A battered loader waits beside a fresh scrap pile and a scarred riot shield trainer.",
+    "description": "A cargo rail disappears beyond the shutter. A battered loader waits beside a fresh scrap pile and a jammed salvage rig.",
     "npcs": [],
     "items": [],
-    "enemies": [
-      "acoustic_bulwark"
-    ],
-    "enemy_instances": [
-      {
-        "enemy_id": "acoustic_bulwark",
-        "hp": 9,
-        "vitality": 0,
-        "stability": 6
-      }
-    ],
+    "enemies": [],
     "connections": {
       "west": "workshop_shed",
       "east": "workshop_back"
@@ -1372,6 +1362,7 @@
         "name": "dice table",
         "type": "generic",
         "action_event": "w1_gamble_trade_den",
+        "hide_when_milestone": "ms_w1_trade_den_gambled",
         "condition_unmet_message": "Miners roll dice across the scratched felt."
       },
       {
@@ -11583,10 +11574,10 @@
         "message": "A patched electric hotplate and kettle station ready to brew tea and cook nutritious rations for the voyage."
       },
       {
-        "name": "analog tape deck",
+        "name": "Great Frontier film archive",
         "type": "generic",
         "action_event": "astra_open_tape_deck",
-        "condition_unmet_message": "A vintage magnetic tape player with amber stereo meters and CRT display."
+        "condition_unmet_message": "A vintage video-cassette cinema deck with amber meters and a widescreen CRT display."
       },
       {
         "name": "Deep Mine Asteroid Drill",

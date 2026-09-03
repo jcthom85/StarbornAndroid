@@ -380,6 +380,7 @@ fun CombatScreen(
                             element = event.element,
                             critical = event.critical,
                             isWeakness = event.isWeakness,
+                            isBrokenBonus = event.isBrokenBonus,
                             isGuardBreak = event.isGuardBreak
                         )
                         damageFx += fx

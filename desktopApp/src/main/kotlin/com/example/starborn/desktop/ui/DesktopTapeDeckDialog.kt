@@ -41,8 +41,7 @@ data class TapeDeckEntry(
     val id: String,
     val audioCue: String,
     val title: String,
-    val locationFound: String,
-    val durationText: String
+    val locationFound: String
 )
 
 @Composable
@@ -52,16 +51,16 @@ fun DesktopTapeDeckDialog(
 ) {
     val tapes = remember {
         listOf(
-            TapeDeckEntry("vhs_tape_01", "gf_01_unpayable_debt", "Tape 01: Unpayable Debt", "Mining Pit - Supply Stash", "03:42"),
-            TapeDeckEntry("vhs_tape_02", "gf_02_memories_of_another_life", "Tape 02: Memories of Another Life", "Colony - Jed's Office", "04:15"),
-            TapeDeckEntry("vhs_tape_03", "gf_03_showdown_in_the_rain", "Tape 03: Showdown in the Rain", "Coast - Glow-Moss Cavern", "03:58"),
-            TapeDeckEntry("vhs_tape_04", "gf_04_the_road_at_night", "Tape 04: The Road at Night", "Sector 9 - Ridge Plateau", "04:30"),
-            TapeDeckEntry("vhs_tape_05", "gf_05_the_black_city", "Tape 05: The Black City", "Spire - Night Market", "05:12"),
-            TapeDeckEntry("vhs_tape_06", "gf_06_refuge", "Tape 06: Refuge", "Spire - SkyPark Pavilion", "03:34"),
-            TapeDeckEntry("vhs_tape_07", "gf_07_reclamation", "Tape 07: Reclamation", "Foundry - Smelter Waste", "04:45"),
-            TapeDeckEntry("vhs_tape_08", "gf_08_the_end_of_the_beginning", "Tape 08: The End of the Beginning", "Foundry - Titan Dock", "06:01"),
-            TapeDeckEntry("vhs_tape_09", "gf_09_reconciliation", "Tape 09: Reconciliation", "Void Ring - Solarium", "04:22"),
-            TapeDeckEntry("vhs_tape_10", "gf_10_shackles", "Tape 10: Shackles", "Source - Memory Bridge", "05:18")
+            TapeDeckEntry("vhs_tape_01", "gf_01_unpayable_debt", "Film 01: Unpayable Debt", "Mining Pit - Supply Stash"),
+            TapeDeckEntry("vhs_tape_02", "gf_02_memories_of_another_life", "Film 02: Memories of Another Life", "Colony - Jed's Office"),
+            TapeDeckEntry("vhs_tape_03", "gf_03_showdown_in_the_rain", "Film 03: Showdown in the Rain", "Coast - Glow-Moss Cavern"),
+            TapeDeckEntry("vhs_tape_04", "gf_04_the_road_at_night", "Film 04: The Road at Night", "Sector 9 - Ridge Plateau"),
+            TapeDeckEntry("vhs_tape_05", "gf_05_the_black_city", "Film 05: The Black City", "Spire - Night Market"),
+            TapeDeckEntry("vhs_tape_06", "gf_06_refuge", "Film 06: Refuge", "Spire - SkyPark Pavilion"),
+            TapeDeckEntry("vhs_tape_07", "gf_07_reclamation", "Film 07: Reclamation", "Foundry - Smelter Waste"),
+            TapeDeckEntry("vhs_tape_08", "gf_08_the_end_of_the_beginning", "Film 08: The End of the Beginning", "Foundry - Titan Dock"),
+            TapeDeckEntry("vhs_tape_09", "gf_09_reconciliation", "Film 09: Reconciliation", "Void Ring - Solarium"),
+            TapeDeckEntry("vhs_tape_10", "gf_10_shackles", "Film 10: Shackles", "Source - Memory Bridge")
         )
     }
 
@@ -90,7 +89,7 @@ fun DesktopTapeDeckDialog(
                 ) {
                     Column {
                         Text(
-                            text = "GREAT FRONTIER // ANALOG CASSETTE DECK",
+                            text = "THE GREAT FRONTIER // FILM ARCHIVE",
                             color = Color(0xFFFFD54F),
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Black,
@@ -98,7 +97,7 @@ fun DesktopTapeDeckDialog(
                             fontFamily = FontFamily.Monospace
                         )
                         Text(
-                            text = "Astra Habitat Media Deck • Widescreen Hi-Fi System",
+                            text = "Astra Habitat Cinema Deck • Analog Widescreen Archive",
                             color = Color.White.copy(alpha = 0.6f),
                             fontSize = 12.sp
                         )
@@ -217,20 +216,20 @@ private fun DesktopCassetteReelVisualizer(
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 Text(
-                    text = if (isSpinning) "● PLAYING ANALOG TRACK" else "■ DECK IDLE",
+                    text = if (isSpinning) "● FEATURE SCREENING" else "■ CINEMA STANDBY",
                     color = if (isSpinning) Color(0xFF00F5D4) else Color.White.copy(alpha = 0.4f),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Bold,
                     fontFamily = FontFamily.Monospace
                 )
                 Text(
-                    text = activeTape?.title ?: "No Tape Inserted",
+                    text = activeTape?.title ?: "No Film Loaded",
                     color = if (isSpinning) Color(0xFFFFD54F) else Color.White,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Black
                 )
                 Text(
-                    text = activeTape?.locationFound ?: "Select a cassette from your Astra habitat archives below",
+                    text = activeTape?.locationFound ?: "Select a recovered film from the Astra cinema archive below",
                     color = Color.White.copy(alpha = 0.5f),
                     fontSize = 12.sp
                 )
@@ -254,7 +253,7 @@ private fun DesktopCassetteReelVisualizer(
                     ) {
                         Icon(
                             imageVector = Icons.Filled.Stop,
-                            contentDescription = "Stop",
+                            contentDescription = "Stop screening",
                             tint = Color(0xFFFF3366),
                             modifier = Modifier.size(18.dp)
                         )
@@ -339,13 +338,6 @@ private fun DesktopTapeItemRow(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Text(
-                text = tape.durationText,
-                color = Color.White.copy(alpha = 0.4f),
-                fontSize = 12.sp,
-                fontFamily = FontFamily.Monospace
-            )
-
             Box(
                 modifier = Modifier
                     .size(32.dp)
@@ -356,7 +348,7 @@ private fun DesktopTapeItemRow(
             ) {
                 Icon(
                     imageVector = if (isPlaying) Icons.Filled.Stop else Icons.Filled.PlayArrow,
-                    contentDescription = if (isPlaying) "Stop" else "Play",
+                    contentDescription = if (isPlaying) "Stop screening" else "Start screening",
                     tint = if (isPlaying) Color.Black else Color(0xFFFFB300),
                     modifier = Modifier.size(18.dp)
                 )
