@@ -186,6 +186,36 @@ def main():
         ).execute()
         print("  [OK] Listing text updated")
 
+        # 4. Upload Phone Screenshots
+        screenshots = [
+            ("screenshot1_title.png", "Title Screen"),
+            ("screenshot2_cinematic.png", "Intro Cinematic"),
+            ("screenshot3_exploration.png", "Exploration UI"),
+            ("screenshot4_combat.png", "Turn-Based Combat")
+        ]
+        # Clear existing screenshots first to prevent duplicates
+        try:
+            edits.images().deleteall(
+                packageName=PACKAGE, editId=edit_id,
+                language="en-US", imageType="phoneScreenshots"
+            ).execute()
+        except Exception:
+            pass
+
+        print("Uploading phone screenshots...")
+        for file_name, label in screenshots:
+            shot_path = os.path.join(OUT_DIR, file_name)
+            if os.path.exists(shot_path):
+                media_shot = MediaFileUpload(shot_path, mimetype="image/png")
+                edits.images().upload(
+                    packageName=PACKAGE, editId=edit_id,
+                    language="en-US", imageType="phoneScreenshots",
+                    media_body=media_shot
+                ).execute()
+                print("  [OK] Uploaded %s (%s)" % (label, file_name))
+            else:
+                print("  [WARN] Missing screenshot: %s" % shot_path)
+
         if args.commit:
             print()
             print("Committing edit...")
