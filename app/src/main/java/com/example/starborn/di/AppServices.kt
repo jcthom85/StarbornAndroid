@@ -159,6 +159,8 @@ class AppServices(context: Context) {
         private const val AUTOSAVE_INTERVAL_MS = 90_000L
         private const val AUTOSAVE_SLOT = 0
         private const val SAMPLE_SLOT_ID = -1
+        private const val MAX_MANUAL_SAVE_SLOT = 3
+        private const val GAME_COMPLETE_MILESTONE = "ms_game_complete"
         private val SAMPLE_PARTY = setOf("nova", "zeke", "orion", "gh0st")
         private const val SAMPLE_WORLD_ID = "nova_prime"
         private const val SAMPLE_HUB_ID = "mining_colony"
@@ -710,6 +712,8 @@ class AppServices(context: Context) {
 
     suspend fun quickSaveInfo(): GameSessionSlotInfo? = sessionPersistence.quickSaveInfo()
 
+    suspend fun isNewGamePlusUnlocked(): Boolean = completedGameStateForNewGamePlus() != null
+
     suspend fun clearQuickSave() {
         sessionPersistence.clearQuickSave()
     }
@@ -862,9 +866,9 @@ class AppServices(context: Context) {
         }
     }
 
-    fun startNewGamePlus(): Boolean {
+    suspend fun startNewGamePlus(): Boolean {
+        val previousSession = completedGameStateForNewGamePlus() ?: return false
         return runCatching {
-            val previousSession = sessionStore.state.value
             bootstrapCinematics.clear()
             bootstrapPlayerActions.clear()
             promptManager.dismissCurrent()
@@ -934,6 +938,25 @@ class AppServices(context: Context) {
             Log.e("AppServices", "Failed to start New Game+ (Master Protocol)", err)
             false
         }
+    }
+
+    private suspend fun completedGameStateForNewGamePlus(): GameSessionState? {
+        val currentState = sessionStore.state.value
+        if (GAME_COMPLETE_MILESTONE in currentState.completedMilestones) {
+            return currentState
+        }
+
+        val completedSaves = buildList {
+            sessionPersistence.autosaveInfo()?.let(::add)
+            sessionPersistence.quickSaveInfo()?.let(::add)
+            for (slot in 1..MAX_MANUAL_SAVE_SLOT) {
+                resolveSlotInfo(slot)?.let(::add)
+            }
+        }.filter { GAME_COMPLETE_MILESTONE in it.state.completedMilestones }
+
+        return completedSaves
+            .maxByOrNull { it.savedAtMillis ?: Long.MIN_VALUE }
+            ?.state
     }
 
     fun startDebugScenario(id: String): Boolean = when (id) {

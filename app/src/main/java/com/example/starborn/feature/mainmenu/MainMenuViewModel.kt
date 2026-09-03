@@ -39,6 +39,9 @@ class MainMenuViewModel(
     private val _slots = MutableStateFlow<List<SaveSlotSummary>>(emptyList())
     val slots: StateFlow<List<SaveSlotSummary>> = _slots.asStateFlow()
 
+    private val _newGamePlusUnlocked = MutableStateFlow(false)
+    val newGamePlusUnlocked: StateFlow<Boolean> = _newGamePlusUnlocked.asStateFlow()
+
     private val _messages = MutableSharedFlow<String>(extraBufferCapacity = 4)
     val messages: SharedFlow<String> = _messages.asSharedFlow()
 
@@ -66,6 +69,9 @@ class MainMenuViewModel(
                 add(autosave)
                 addAll(summaries)
             }
+            _newGamePlusUnlocked.value = runCatching {
+                services.isNewGamePlusUnlocked()
+            }.getOrDefault(false)
         }
     }
 

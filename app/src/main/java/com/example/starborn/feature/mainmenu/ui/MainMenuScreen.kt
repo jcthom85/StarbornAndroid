@@ -129,6 +129,7 @@ fun MainMenuScreen(
     var saveLoadMode by remember { mutableStateOf<String?>(null) }
     val snackbarHostState = remember { SnackbarHostState() }
     val slots by viewModel.slots.collectAsStateWithLifecycle()
+    val newGamePlusUnlocked by viewModel.newGamePlusUnlocked.collectAsStateWithLifecycle()
     val scope = rememberCoroutineScope()
     val menuTheme = remember { viewModel.mainMenuTheme }
     val accentColor = remember(menuTheme) {
@@ -403,7 +404,11 @@ fun MainMenuScreen(
                 text = {
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         Text(
-                            "Choose your deployment protocol. Master Protocol carries over your party levels, weapons, armor, skills, and inventory into an enhanced difficulty run with instant Astra access.",
+                            if (newGamePlusUnlocked) {
+                                "Choose your deployment protocol. Master Protocol carries over your party levels, weapons, armor, skills, and inventory into an enhanced difficulty run with instant Astra access."
+                            } else {
+                                "Master Protocol unlocks after completing the campaign. Start a Standard deployment or load a completed save."
+                            },
                             color = Color.White.copy(alpha = 0.85f),
                             fontSize = 13.sp
                         )
@@ -429,10 +434,15 @@ fun MainMenuScreen(
                                 showNewGameConfirm = false
                                 startingGamePlus = true
                             },
+                            enabled = newGamePlusUnlocked,
                             colors = ButtonDefaults.buttonColors(containerColor = accentColor, contentColor = Color.Black),
                             modifier = Modifier.weight(1f)
                         ) {
-                            Text("Master (NG+)", fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                            Text(
+                                if (newGamePlusUnlocked) "Master (NG+)" else "Master (Locked)",
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 12.sp
+                            )
                         }
                     }
                 },

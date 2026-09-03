@@ -57,14 +57,19 @@ fun main() = application {
         }
     }
 
-    Window(
+    val useUndecoratedWindow = displayMode != DesktopDisplayMode.WINDOWED
+
+    // AWT cannot change a frame's decoration after its native peer is displayable.
+    // Recreate the native window whenever a display mode changes that property.
+    key(useUndecoratedWindow) {
+        Window(
         onCloseRequest = {
             services.audioDriver.release()
             exitApplication()
         },
         title = "Starborn",
         state = windowState,
-        undecorated = displayMode == DesktopDisplayMode.BORDERLESS,
+        undecorated = useUndecoratedWindow,
         onKeyEvent = { keyEvent ->
             if (keyEvent.type == KeyEventType.KeyDown) {
                 when (keyEvent.key) {
@@ -79,7 +84,7 @@ fun main() = application {
                         }
                         true
                     }
-                    Key.Escape -> {
+                    Key.Escape, Key.ButtonB -> {
                         when (screenState) {
                             DesktopScreenState.FIELD_KIT,
                             DesktopScreenState.FISHING,
@@ -91,7 +96,7 @@ fun main() = application {
                             else -> false
                         }
                     }
-                    Key.Tab, Key.I -> {
+                    Key.Tab, Key.I, Key.ButtonX -> {
                         when (screenState) {
                             DesktopScreenState.EXPLORATION -> {
                                 screenState = DesktopScreenState.FIELD_KIT
@@ -104,7 +109,7 @@ fun main() = application {
                             else -> false
                         }
                     }
-                    Key.M -> {
+                    Key.M, Key.ButtonY -> {
                         when (screenState) {
                             DesktopScreenState.EXPLORATION -> {
                                 screenState = DesktopScreenState.HUB
@@ -131,6 +136,7 @@ fun main() = application {
                 exitApplication()
             }
         )
+        }
     }
 }
 

@@ -383,7 +383,7 @@ fun DesktopExplorationScreen(
                             }
                             true
                         }
-                        Key.E, Key.Spacebar, Key.Enter -> {
+                        Key.E, Key.Spacebar, Key.Enter, Key.ButtonA -> {
                             if (activeDialogueSession != null) {
                                 activeDialogueSession!!.advance()
                                 if (activeDialogueSession!!.isFinished()) {
@@ -394,6 +394,18 @@ fun DesktopExplorationScreen(
                                 executeRoomAction(currentRoom.actions.first())
                             }
                             true
+                        }
+                        Key.ButtonB -> {
+                            if (activeDialogueSession != null) {
+                                activeDialogueSession = null
+                                currentDialogueSpeakerId = null
+                                true
+                            } else if (isTapeDeckOpen || isShopOpen || isRestOpen) {
+                                isTapeDeckOpen = false
+                                isShopOpen = false
+                                isRestOpen = false
+                                true
+                            } else false
                         }
                         else -> false
                     }

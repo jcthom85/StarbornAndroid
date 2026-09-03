@@ -464,19 +464,25 @@ fun DesktopCombatScreen(
             .onKeyEvent { keyEvent ->
                 if (keyEvent.type == KeyEventType.KeyDown) {
                     when (keyEvent.key) {
-                        Key.Escape -> {
+                        Key.Escape, Key.ButtonB -> {
                             if (currentSubMenu != CombatSubMenu.ROOT) {
                                 currentSubMenu = CombatSubMenu.ROOT
                                 true
                             } else false
                         }
-                        Key.Tab -> {
+                        Key.Tab, Key.ButtonR1 -> {
                             if (enemies.isNotEmpty()) {
                                 selectedEnemyIndex = (selectedEnemyIndex + 1) % enemies.size
                             }
                             true
                         }
-                        Key.One -> {
+                        Key.ButtonL1 -> {
+                            if (enemies.isNotEmpty()) {
+                                selectedEnemyIndex = if (selectedEnemyIndex <= 0) enemies.lastIndex else selectedEnemyIndex - 1
+                            }
+                            true
+                        }
+                        Key.One, Key.ButtonA -> {
                             if (isPlayerTurn) {
                                 when (currentSubMenu) {
                                     CombatSubMenu.ROOT -> executePlayerAttack(35, "Kinetic Pulse", 0)
@@ -499,7 +505,7 @@ fun DesktopCombatScreen(
                             }
                             true
                         }
-                        Key.Two -> {
+                        Key.Two, Key.ButtonX -> {
                             if (isPlayerTurn) {
                                 when (currentSubMenu) {
                                     CombatSubMenu.ROOT -> currentSubMenu = CombatSubMenu.SKILLS
@@ -516,7 +522,7 @@ fun DesktopCombatScreen(
                             }
                             true
                         }
-                        Key.Three -> {
+                        Key.Three, Key.ButtonY -> {
                             if (isPlayerTurn && currentSubMenu == CombatSubMenu.ROOT) {
                                 currentSubMenu = CombatSubMenu.ITEMS
                             }

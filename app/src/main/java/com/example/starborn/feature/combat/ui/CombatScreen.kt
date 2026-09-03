@@ -24,7 +24,14 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.focusable
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
@@ -815,12 +822,118 @@ fun CombatScreen(
             )
         }
 
+        val combatFocusRequester = remember { FocusRequester() }
+        LaunchedEffect(Unit) {
+            combatFocusRequester.requestFocus()
+        }
+
         val backgroundPainter = rememberRoomBackgroundPainter(viewModel.roomBackground)
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color(0xFF05070B))
                 .clipToBounds()
+                .focusRequester(combatFocusRequester)
+                .focusable()
+                .onKeyEvent { keyEvent ->
+                    if (keyEvent.type == KeyEventType.KeyDown) {
+                        when (keyEvent.key) {
+                            Key.ButtonB, Key.Escape -> {
+                                when {
+                                    showSkillsDialog.value -> {
+                                        showSkillsDialog.value = false
+                                        viewModel.onCombatTutorialSkillDialogDismissed()
+                                        return@onKeyEvent true
+                                    }
+                                    showItemsDialog.value -> {
+                                        showItemsDialog.value = false
+                                        return@onKeyEvent true
+                                    }
+                                    pendingTargetRequest != null -> {
+                                        clearPendingRequest()
+                                        return@onKeyEvent true
+                                    }
+                                    pendingVictoryPayload != null -> {
+                                        advanceVictoryDialog()
+                                        return@onKeyEvent true
+                                    }
+                                }
+                            }
+                            Key.ButtonA, Key.Enter, Key.Spacebar -> {
+                                when {
+                                    pendingVictoryPayload != null -> {
+                                        advanceVictoryDialog()
+                                        return@onKeyEvent true
+                                    }
+                                    timedPromptState != null -> {
+                                        viewModel.registerTimedPromptTap()
+                                        return@onKeyEvent true
+                                    }
+                                    pendingTargetRequest != null -> {
+                                        handleEnemyTap(focusEnemyCombatantId)
+                                        return@onKeyEvent true
+                                    }
+                                    menuActor != null && !combatLocked && !menuActorCannotAct -> {
+                                        if (viewModel.isCombatTutorialCommandEnabled("Attack")) {
+                                            requestTarget(PendingTargetRequest.Attack)
+                                            return@onKeyEvent true
+                                        }
+                                    }
+                                }
+                            }
+                            Key.ButtonX -> {
+                                if (menuActor != null && !combatLocked && !menuActorCannotAct && menuActorSkills.isNotEmpty()) {
+                                    if (viewModel.isCombatTutorialCommandEnabled("Skills")) {
+                                        showSkillsDialog.value = !showSkillsDialog.value
+                                        pendingTargetRequest = null
+                                        pendingInstruction = null
+                                        return@onKeyEvent true
+                                    }
+                                }
+                            }
+                            Key.ButtonY -> {
+                                if (menuActor != null && !combatLocked && !menuActorCannotAct && battleUsableItems.isNotEmpty()) {
+                                    if (viewModel.isCombatTutorialCommandEnabled("Items")) {
+                                        showItemsDialog.value = !showItemsDialog.value
+                                        pendingTargetRequest = null
+                                        pendingInstruction = null
+                                        return@onKeyEvent true
+                                    }
+                                }
+                            }
+                            Key.ButtonL1 -> {
+                                if (enemyCombatantIds.isNotEmpty() && !combatLocked) {
+                                    val livingEnemies = enemyEntries.filter { entry ->
+                                        val combatant = state.combatants[entry.second]
+                                        combatant == null || combatant.hp > 0
+                                    }
+                                    if (livingEnemies.isNotEmpty()) {
+                                        val currentIndex = livingEnemies.indexOfFirst { it.second == focusEnemyCombatantId }
+                                        val prevIndex = if (currentIndex <= 0) livingEnemies.lastIndex else currentIndex - 1
+                                        viewModel.focusEnemyTarget(livingEnemies[prevIndex].second)
+                                        return@onKeyEvent true
+                                    }
+                                }
+                            }
+                            Key.ButtonR1, Key.Tab -> {
+                                if (enemyCombatantIds.isNotEmpty() && !combatLocked) {
+                                    val livingEnemies = enemyEntries.filter { entry ->
+                                        val combatant = state.combatants[entry.second]
+                                        combatant == null || combatant.hp > 0
+                                    }
+                                    if (livingEnemies.isNotEmpty()) {
+                                        val currentIndex = livingEnemies.indexOfFirst { it.second == focusEnemyCombatantId }
+                                        val nextIndex = if (currentIndex < 0 || currentIndex >= livingEnemies.lastIndex) 0 else currentIndex + 1
+                                        viewModel.focusEnemyTarget(livingEnemies[nextIndex].second)
+                                        return@onKeyEvent true
+                                    }
+                                }
+                            }
+                            else -> {}
+                        }
+                    }
+                    false
+                }
         ) {
             Box(
                 modifier = Modifier

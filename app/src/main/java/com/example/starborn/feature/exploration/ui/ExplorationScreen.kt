@@ -624,26 +624,83 @@ fun ExplorationScreen(
             .focusRequester(keyboardFocusRequester)
             .focusable()
             .onKeyEvent { keyEvent ->
-                if (keyEvent.type == KeyEventType.KeyDown &&
-                    !blockingOverlayActive &&
-                    !roomTransitionInProgress &&
-                    !uiState.isMenuOverlayVisible
-                ) {
-                    val direction = when (keyEvent.key) {
-                        Key.W, Key.DirectionUp -> "north"
-                        Key.S, Key.DirectionDown -> "south"
-                        Key.A, Key.DirectionLeft -> "west"
-                        Key.D, Key.DirectionRight -> "east"
-                        else -> null
-                    }
-                    if (direction != null) {
-                        val targetDir = uiState.availableConnections.keys.firstOrNull { key ->
-                            key.equals(direction, ignoreCase = true)
-                        }
-                        val blocked = uiState.blockedDirections.any { it.equals(direction, ignoreCase = true) }
-                        if (targetDir != null && !blocked) {
-                            viewModel.travel(targetDir)
+                if (keyEvent.type == KeyEventType.KeyDown) {
+                    when (keyEvent.key) {
+                        Key.ButtonB, Key.Escape -> {
+                            when {
+                                showExitConfirmDialog -> showExitConfirmDialog = false
+                                saveLoadMode != null -> saveLoadMode = null
+                                uiState.isTapeDeckVisible -> viewModel.dismissTapeDeck()
+                                uiState.isSimulationDeckVisible -> viewModel.dismissSimulationDeck()
+                                uiState.isAstraNavConsoleVisible -> viewModel.dismissAstraNavConsole()
+                                uiState.isMilestoneGalleryVisible -> viewModel.closeMilestoneGallery()
+                                uiState.isQuestLogVisible -> viewModel.closeQuestLog()
+                                uiState.skillTreeOverlay != null -> viewModel.closeSkillTreeOverlay()
+                                uiState.togglePrompt != null -> viewModel.dismissTogglePrompt()
+                                uiState.tuningPuzzle != null -> viewModel.dismissTuningPuzzle()
+                                uiState.narrationPrompt != null -> viewModel.dismissNarration()
+                                uiState.prompt != null -> viewModel.dismissPrompt()
+                                uiState.isMenuOverlayVisible -> viewModel.closeMenuOverlay()
+                                else -> showExitConfirmDialog = true
+                            }
                             return@onKeyEvent true
+                        }
+                        Key.ButtonA, Key.Enter, Key.Spacebar -> {
+                            when {
+                                uiState.narrationPrompt != null -> {
+                                    viewModel.dismissNarration()
+                                    return@onKeyEvent true
+                                }
+                                uiState.prompt != null -> {
+                                    viewModel.dismissPrompt()
+                                    return@onKeyEvent true
+                                }
+                                !blockingOverlayActive && !roomTransitionInProgress && !uiState.isMenuOverlayVisible -> {
+                                    val action = uiState.actions.firstOrNull()
+                                    if (action != null) {
+                                        viewModel.onActionSelected(action)
+                                        return@onKeyEvent true
+                                    }
+                                }
+                            }
+                        }
+                        Key.ButtonX -> {
+                            if (!blockingOverlayActive && !roomTransitionInProgress) {
+                                onOpenFieldKit()
+                                return@onKeyEvent true
+                            }
+                        }
+                        Key.ButtonY -> {
+                            if (!blockingOverlayActive && !roomTransitionInProgress && !uiState.isMenuOverlayVisible) {
+                                if (uiState.isAstraNavConsoleVisible) {
+                                    viewModel.dismissAstraNavConsole()
+                                    return@onKeyEvent true
+                                }
+                            }
+                        }
+                        else -> {}
+                    }
+
+                    if (!blockingOverlayActive &&
+                        !roomTransitionInProgress &&
+                        !uiState.isMenuOverlayVisible
+                    ) {
+                        val direction = when (keyEvent.key) {
+                            Key.W, Key.DirectionUp -> "north"
+                            Key.S, Key.DirectionDown -> "south"
+                            Key.A, Key.DirectionLeft -> "west"
+                            Key.D, Key.DirectionRight -> "east"
+                            else -> null
+                        }
+                        if (direction != null) {
+                            val targetDir = uiState.availableConnections.keys.firstOrNull { key ->
+                                key.equals(direction, ignoreCase = true)
+                            }
+                            val blocked = uiState.blockedDirections.any { it.equals(direction, ignoreCase = true) }
+                            if (targetDir != null && !blocked) {
+                                viewModel.travel(targetDir)
+                                return@onKeyEvent true
+                            }
                         }
                     }
                 }
