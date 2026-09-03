@@ -434,5 +434,37 @@ fun BrokenFieldOverlay(
             center = shardCenter + Offset(glintRadius * 0.2f, -glintRadius * 0.2f),
             blendMode = maskBlend
         )
+
+        // Orbiting dizzy / dazed stars around the top of the combatant
+        val haloCenter = Offset(size.width * 0.5f, size.height * 0.16f)
+        val orbitRadiusX = size.width * 0.32f
+        val orbitRadiusY = size.height * 0.08f
+        val starCount = 3
+        repeat(starCount) { i ->
+            val starAngle = sweep + (i * 2f * Math.PI.toFloat() / starCount)
+            val starX = haloCenter.x + cos(starAngle) * orbitRadiusX
+            val starY = haloCenter.y + sin(starAngle) * orbitRadiusY
+            val starSize = size.minDimension * 0.038f
+            val starAlpha = (0.5f + 0.5f * sin(starAngle)).coerceIn(0.2f, 1f)
+            val starColor = Color(0xFFFFD54F).copy(alpha = starAlpha)
+            // Draw 4-point spark
+            drawLine(
+                color = starColor,
+                start = Offset(starX - starSize, starY),
+                end = Offset(starX + starSize, starY),
+                strokeWidth = crackStroke * 0.6f
+            )
+            drawLine(
+                color = starColor,
+                start = Offset(starX, starY - starSize),
+                end = Offset(starX, starY + starSize),
+                strokeWidth = crackStroke * 0.6f
+            )
+            drawCircle(
+                color = Color.White.copy(alpha = starAlpha),
+                radius = starSize * 0.35f,
+                center = Offset(starX, starY)
+            )
+        }
     }
 }

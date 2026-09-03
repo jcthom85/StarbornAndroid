@@ -142,6 +142,16 @@ fun PartyRoster(
                                 directionSign = 1f
                             )
                             val suppressLunge = damageFlash > 0f
+                            val activeStepY by animateFloatAsState(
+                                targetValue = if (isActive && isAlive) -6f else 0f,
+                                animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy, stiffness = Spring.StiffnessLow),
+                                label = "party_active_step_${member.id}"
+                            )
+                            val activeScale by animateFloatAsState(
+                                targetValue = if (isActive && isAlive) 1.04f else 1f,
+                                animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy, stiffness = Spring.StiffnessLow),
+                                label = "party_active_scale_${member.id}"
+                            )
                             Box(
                                 modifier = interactiveModifier.padding(horizontal = 4.dp)
                             ) {
@@ -161,14 +171,24 @@ fun PartyRoster(
                                             )
                                         }
                                         if (isActive) {
+                                            val activePulseTransition = rememberInfiniteTransition(label = "party_active_glow_${member.id}")
+                                            val activeGlowAlpha by activePulseTransition.animateFloat(
+                                                initialValue = 0.45f,
+                                                targetValue = 0.95f,
+                                                animationSpec = infiniteRepeatable(
+                                                    animation = tween(durationMillis = 750, easing = FastOutSlowInEasing),
+                                                    repeatMode = RepeatMode.Reverse
+                                                ),
+                                                label = "active_glow_pulse"
+                                            )
                                             Box(
                                                 modifier = Modifier
                                                     .matchParentSize()
                                                     .clip(CircleShape)
-                                                    .background(Color.White.copy(alpha = 0.12f))
+                                                    .background(Color(0xFF3FE4FF).copy(alpha = 0.16f * activeGlowAlpha))
                                                     .border(
-                                                        width = 2.dp,
-                                                        color = Color.White.copy(alpha = 0.55f),
+                                                        width = 2.5.dp,
+                                                        color = Color(0xFF3FE4FF).copy(alpha = activeGlowAlpha),
                                                         shape = CircleShape
                                                     )
                                             )
@@ -194,11 +214,12 @@ fun PartyRoster(
                                                     val pulse = 1f + 0.06f * hitPulse
                                                     if (isAlive) {
                                                         val breath = sin(partyIdleWave)
-                                                        val idleBob = breath * 1.5f
-                                                        scaleX = pulse * (1f + 0.008f * breath)
-                                                        scaleY = pulse * (1f + 0.012f * breath)
-                                                        translationY = hitRecoilY + idleBob
-                                                        rotationZ = if (isLowHp) -4f else 0f
+                                                        val idleBob = if (isLowHp) breath * 2.8f else breath * 1.5f
+                                                        val breathScaleY = if (isLowHp) 0.024f else 0.012f
+                                                        scaleX = pulse * activeScale * (1f + 0.008f * breath)
+                                                        scaleY = pulse * activeScale * (1f + breathScaleY * breath)
+                                                        translationY = hitRecoilY + idleBob + activeStepY
+                                                        rotationZ = if (isLowHp) (-3.5f + sin(partyIdleWave * 1.5f) * 1.8f) else 0f
                                                     } else {
                                                         scaleX = pulse
                                                         scaleY = pulse
@@ -599,9 +620,12 @@ fun EnemyRoster(
                                                 compositingStrategy = CompositingStrategy.Offscreen
                                                 transformOrigin = TransformOrigin(0.5f, 1f)
                                                 if (enemyBroken) {
-                                                    scaleX = spriteScale
-                                                    scaleY = spriteScale
-                                                    translationY = hitRecoilY
+                                                    val brokenDazeWave = sin(idleWave * 2f + idlePhase)
+                                                    val brokenSway = sin(idleWave * 1.3f + idlePhase)
+                                                    scaleX = spriteScale * (1f + 0.015f * brokenDazeWave)
+                                                    scaleY = spriteScale * (0.96f - 0.01f * brokenDazeWave)
+                                                    translationY = hitRecoilY + 6f + brokenDazeWave * 3.5f
+                                                    rotationZ = brokenSway * 4.2f
                                                 } else {
                                                     val idleBreath = sin(idleWave + idlePhase)
                                                     val idleBob = idleBreath * 2.2f
@@ -609,6 +633,7 @@ fun EnemyRoster(
                                                     scaleX = spriteScale * (1f + 0.006f * idleBreath)
                                                     scaleY = spriteScale * idlePuff
                                                     translationY = hitRecoilY + idleBob
+                                                    rotationZ = 0f
                                                 }
                                             }
                                     ) {
@@ -920,9 +945,12 @@ fun CompositeEnemyRoster(
                                     val combined = glowScale * hitScale
                                     val isBroken = (enemyState?.breakTurns ?: 0) > 0
                                     if (isBroken) {
-                                        scaleX = combined
-                                        scaleY = combined
-                                        translationY = hitRecoilY
+                                        val brokenDazeWave = sin(idleWave * 2f + idlePhase)
+                                        val brokenSway = sin(idleWave * 1.3f + idlePhase)
+                                        scaleX = combined * (1f + 0.015f * brokenDazeWave)
+                                        scaleY = combined * (0.96f - 0.01f * brokenDazeWave)
+                                        translationY = hitRecoilY + 6f + brokenDazeWave * 3.5f
+                                        rotationZ = brokenSway * 4.2f
                                     } else {
                                         val idleBreath = sin(idleWave + idlePhase)
                                         val idleBob = idleBreath * 2.0f
@@ -930,6 +958,7 @@ fun CompositeEnemyRoster(
                                         scaleX = combined * (1f + 0.006f * idleBreath)
                                         scaleY = combined * idlePuff
                                         translationY = hitRecoilY + idleBob
+                                        rotationZ = 0f
                                     }
                                 }
                         ) {

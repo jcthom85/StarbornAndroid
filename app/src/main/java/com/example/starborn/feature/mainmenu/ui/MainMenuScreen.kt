@@ -58,6 +58,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import kotlinx.coroutines.launch
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
@@ -144,17 +145,45 @@ fun MainMenuScreen(
     val textColor = remember(menuTheme) {
         themeColor(menuTheme?.fg, Color.White)
     }
-    val fadeInAlpha = remember { Animatable(1f) }
+    // Choreographed entrance timing aligned to 82 BPM (1 bar = ~2927ms)
+    // 1. Logo fades in alone against black over 2 bars (~5854ms)
+    val logoFadeAlpha = remember { Animatable(0f) }
+    // 2. Starfield fades in over next 2 bars (~5854ms)
+    val starfieldFadeAlpha = remember { Animatable(0f) }
+    // 3. Background image (4 bars = ~11707ms) & Buttons (1000ms) fade in together
+    val bgFadeAlpha = remember { Animatable(0f) }
+    val buttonsFadeAlpha = remember { Animatable(0f) }
+    var bgZoomEnabled by remember { mutableStateOf(false) }
+
     val fadeOutAlpha = remember { Animatable(0f) }
     val versionLabel = remember {
         "v${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
     }
 
     LaunchedEffect(Unit) {
-        fadeInAlpha.animateTo(
-            targetValue = 0f,
-            animationSpec = tween(durationMillis = 1000, easing = FastOutSlowInEasing)
+        // 1. Starborn logo fades in by itself on black over 2 bars (5850ms)
+        logoFadeAlpha.animateTo(
+            targetValue = 1f,
+            animationSpec = tween(durationMillis = 5850, easing = FastOutSlowInEasing)
         )
+        // 2. Starfield behind the logo fades in over next 2 bars (5850ms)
+        starfieldFadeAlpha.animateTo(
+            targetValue = 1f,
+            animationSpec = tween(durationMillis = 5850, easing = FastOutSlowInEasing)
+        )
+        // 3. Background image and buttons fade in together (buttons: 1000ms, bg: 11700ms)
+        launch {
+            buttonsFadeAlpha.animateTo(
+                targetValue = 1f,
+                animationSpec = tween(durationMillis = 1000, easing = FastOutSlowInEasing)
+            )
+        }
+        bgFadeAlpha.animateTo(
+            targetValue = 1f,
+            animationSpec = tween(durationMillis = 11700, easing = LinearEasing)
+        )
+        // Once background is fully faded in, start the slight zoom motion
+        bgZoomEnabled = true
     }
 
     LaunchedEffect(audioCuePlayer, audioRouter) {
@@ -287,51 +316,70 @@ fun MainMenuScreen(
             label = "title_ambient_bloom"
         )
 
-        Image(
-            painter = painterResource(id = R.drawable.title_background_starborn),
-            contentDescription = null,
-            modifier = Modifier
-                .fillMaxSize()
-                .graphicsLayer {
-                    scaleX = bgScale
-                    scaleY = bgScale
-                    translationY = bgPanY
-                },
-            contentScale = ContentScale.Crop
-        )
-
-        // Soft ambient celestial bloom
+        // Base solid black canvas to support seamless sequential reveals
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(
-                    Brush.radialGradient(
-                        colors = listOf(
-                            TitleCyan.copy(alpha = ambientBloom),
-                            TitleGold.copy(alpha = ambientBloom * 0.45f),
-                            Color.Transparent
-                        ),
-                        center = Offset(200f, 150f),
-                        radius = 1100f
-                    )
-                )
+                .background(Color.Black)
         )
 
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(
-                    Brush.verticalGradient(
-                        colorStops = arrayOf(
-                            0f to Color.Black.copy(alpha = 0.18f),
-                            0.32f to Color.Transparent,
-                            0.62f to Color.Transparent,
-                            1f to Color.Black.copy(alpha = 0.66f)
+        // Stage 2: Starfield behind the logo
+        TitleCosmicStarfield(alpha = starfieldFadeAlpha.value)
+
+        // Stage 3: Background image (fades in over 4 bars) with zoom/pan starting once fully faded in
+        val effectiveBgScale = if (bgZoomEnabled) bgScale else 1.0f
+        val effectiveBgPanY = if (bgZoomEnabled) bgPanY else 0f
+        val bgAlpha = bgFadeAlpha.value
+
+        if (bgAlpha > 0.001f) {
+            Image(
+                painter = painterResource(id = R.drawable.title_background_starborn),
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .graphicsLayer {
+                        scaleX = effectiveBgScale
+                        scaleY = effectiveBgScale
+                        translationY = effectiveBgPanY
+                        alpha = bgAlpha
+                    },
+                contentScale = ContentScale.Crop
+            )
+
+            // Soft ambient celestial bloom
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(
+                        Brush.radialGradient(
+                            colors = listOf(
+                                TitleCyan.copy(alpha = ambientBloom * bgAlpha),
+                                TitleGold.copy(alpha = ambientBloom * 0.45f * bgAlpha),
+                                Color.Transparent
+                            ),
+                            center = Offset(200f, 150f),
+                            radius = 1100f
                         )
                     )
-                )
-        )
+            )
 
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(
+                        Brush.verticalGradient(
+                            colorStops = arrayOf(
+                                0f to Color.Black.copy(alpha = 0.18f * bgAlpha),
+                                0.32f to Color.Transparent,
+                                0.62f to Color.Transparent,
+                                1f to Color.Black.copy(alpha = 0.66f * bgAlpha)
+                            )
+                        )
+                    )
+            )
+        }
+
+        // Stage 1: Starborn logo fades in first over 2 bars
         StarbornTitleLogo(
             modifier = Modifier
                 .align(Alignment.TopCenter)
@@ -343,8 +391,12 @@ fun MainMenuScreen(
                 )
                 .fillMaxWidth()
                 .heightIn(max = if (compactHeight) 180.dp else 240.dp)
+                .graphicsLayer {
+                    alpha = logoFadeAlpha.value
+                }
         )
 
+        // Stage 3: Title screen buttons fade in over ~1s alongside background start
         Column(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
@@ -359,7 +411,10 @@ fun MainMenuScreen(
                     top = if (compactHeight) 22.dp else 34.dp,
                     end = 30.dp,
                     bottom = if (compactHeight) 22.dp else 34.dp
-                ),
+                )
+                .graphicsLayer {
+                    alpha = buttonsFadeAlpha.value
+                },
             verticalArrangement = Arrangement.spacedBy(13.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -461,6 +516,9 @@ fun MainMenuScreen(
                 .align(Alignment.BottomCenter)
                 .systemBarsPadding()
                 .padding(bottom = 10.dp)
+                .graphicsLayer {
+                    alpha = buttonsFadeAlpha.value
+                }
         )
 
         SnackbarHost(
@@ -543,14 +601,6 @@ fun MainMenuScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Color.Black.copy(alpha = fadeOutAlpha.value))
-            )
-        }
-
-        if (fadeInAlpha.value > 0.01f) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Black.copy(alpha = fadeInAlpha.value))
             )
         }
     }
@@ -835,6 +885,140 @@ private fun StarbornTitleButton(
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp,
                 letterSpacing = 0.sp
+            )
+        }
+    }
+}
+
+private data class TitleStar(
+    val relX: Float,
+    val relY: Float,
+    val radius: Float,
+    val baseAlpha: Float,
+    val r: Float,
+    val g: Float,
+    val b: Float
+)
+
+@Composable
+private fun TitleCosmicStarfield(
+    modifier: Modifier = Modifier,
+    alpha: Float
+) {
+    if (alpha <= 0.001f) return
+
+    val stars = remember {
+        val rnd = java.util.Random(42L)
+        List(120) {
+            val rx = rnd.nextFloat()
+            val ry = rnd.nextFloat()
+            val size = if (rnd.nextFloat() > 0.82f) 2.2f else 1.2f
+            val brightness = 0.35f + rnd.nextFloat() * 0.65f
+            TitleStar(
+                relX = rx,
+                relY = ry,
+                radius = size,
+                baseAlpha = brightness,
+                r = (0.65f + rnd.nextFloat() * 0.35f).coerceIn(0f, 1f),
+                g = (0.85f + rnd.nextFloat() * 0.15f).coerceIn(0f, 1f),
+                b = 1.0f
+            )
+        }
+    }
+
+    val twinkleTransition = rememberInfiniteTransition(label = "title_star_twinkle")
+    val twinklePulse by twinkleTransition.animateFloat(
+        initialValue = 0.82f,
+        targetValue = 1.18f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(3800, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "twinkle_pulse"
+    )
+
+    Canvas(
+        modifier = modifier
+            .fillMaxSize()
+            .graphicsLayer { this.alpha = alpha }
+    ) {
+        val cx = size.width / 2f
+        val cy = size.height * 0.22f // Centers behind the Starborn title logo
+
+        // 1. Cosmic radial nebula glow (outer teal -> mid cyan -> inner bright core)
+        drawCircle(
+            brush = Brush.radialGradient(
+                colors = listOf(
+                    Color(0xFF008CDC).copy(alpha = 0.40f),
+                    Color(0xFF0B3A5A).copy(alpha = 0.22f),
+                    Color.Transparent
+                ),
+                center = Offset(cx, cy),
+                radius = size.width * 0.65f
+            ),
+            center = Offset(cx, cy),
+            radius = size.width * 0.65f
+        )
+        drawCircle(
+            brush = Brush.radialGradient(
+                colors = listOf(
+                    Color(0xFF1EC8FF).copy(alpha = 0.45f),
+                    Color(0xFF008CDC).copy(alpha = 0.20f),
+                    Color.Transparent
+                ),
+                center = Offset(cx, cy),
+                radius = size.width * 0.35f
+            ),
+            center = Offset(cx, cy),
+            radius = size.width * 0.35f
+        )
+        drawCircle(
+            brush = Brush.radialGradient(
+                colors = listOf(
+                    Color(0xFFA0F0FF).copy(alpha = 0.50f),
+                    Color.Transparent
+                ),
+                center = Offset(cx, cy),
+                radius = size.width * 0.15f
+            ),
+            center = Offset(cx, cy),
+            radius = size.width * 0.15f
+        )
+
+        // 2. Anamorphic horizontal streak through the central star
+        val streakWidth = size.width * 0.88f
+        val streakHeight = 5.dp.toPx()
+        drawOval(
+            brush = Brush.radialGradient(
+                colors = listOf(
+                    Color(0xFF78DCFF).copy(alpha = 0.65f),
+                    Color(0xFF1EC8FF).copy(alpha = 0.25f),
+                    Color.Transparent
+                ),
+                center = Offset(cx, cy),
+                radius = streakWidth / 2f
+            ),
+            topLeft = Offset(cx - streakWidth / 2f, cy - streakHeight / 2f),
+            size = androidx.compose.ui.geometry.Size(streakWidth, streakHeight)
+        )
+
+        // 3. Deterministic cosmic starfield
+        for (star in stars) {
+            val sx = star.relX * size.width
+            val sy = star.relY * size.height
+            val dist = kotlin.math.hypot(sx - cx, (sy - cy) * 1.5f)
+            val centerSuppression = if (dist < 140f) 0.35f else 1f
+            val starAlpha = (star.baseAlpha * centerSuppression * twinklePulse).coerceIn(0f, 1f)
+
+            drawCircle(
+                color = Color(
+                    red = star.r,
+                    green = star.g,
+                    blue = star.b,
+                    alpha = starAlpha
+                ),
+                radius = star.radius,
+                center = Offset(sx, sy)
             )
         }
     }

@@ -426,10 +426,11 @@ fun CombatScreen(
                         }
                     }
                     val normalizedSource = normalizeAttackSourceId(event.sourceId)
-                    val allowShake = normalizedSource in playerIdSet && event.critical
+                    val allowShake = (normalizedSource in playerIdSet || event.isGuardBreak) && (event.critical || event.isGuardBreak || event.isBrokenBonus)
                     if (!suppressScreenshake && allowShake) {
                         launch {
-                            val amplitude = with(density) { 12.dp.toPx() }
+                            val baseShakeDp = if (event.isGuardBreak) 14.dp else 10.dp
+                            val amplitude = with(density) { baseShakeDp.toPx() }
                             val offset = Offset(
                                 x = if (Random.nextBoolean()) amplitude else -amplitude,
                                 y = if (Random.nextBoolean()) amplitude * 0.5f else -amplitude * 0.5f
@@ -438,7 +439,7 @@ fun CombatScreen(
                             shakeOffset.snapTo(offset)
                             shakeOffset.animateTo(
                                 targetValue = Offset.Zero,
-                                animationSpec = tween(durationMillis = 140)
+                                animationSpec = tween(durationMillis = 150)
                             )
                         }
                     }

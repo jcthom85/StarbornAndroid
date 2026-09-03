@@ -336,5 +336,21 @@ fun BattleStageBackdrop(
                 cap = StrokeCap.Round
             )
         }
+
+        // Ambient floating battle motes / embers
+        val moteCount = 12
+        repeat(moteCount) { i ->
+            val moteSeed = i * 0.0833f
+            val moteProgress = (phase + moteSeed) % 1f
+            val moteX = size.width * (0.05f + 0.9f * ((moteSeed * 7.3f) % 1f)) + (sin(moteProgress * 2f * PI.toFloat() + i) * 14.dp.toPx())
+            val moteY = size.height * (1f - moteProgress)
+            val moteAlpha = (sin(moteProgress * PI.toFloat()) * (if (highContrastMode) 0.35f else 0.24f)).coerceIn(0f, 1f)
+            val moteRadius = if (i % 3 == 0) 2.2.dp.toPx() else 1.4.dp.toPx()
+            drawCircle(
+                color = accentColor.copy(alpha = moteAlpha),
+                radius = moteRadius,
+                center = Offset(moteX, moteY)
+            )
+        }
     }
 }
