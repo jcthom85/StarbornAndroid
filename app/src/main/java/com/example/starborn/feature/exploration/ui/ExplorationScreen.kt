@@ -8342,9 +8342,9 @@ private fun IllustratedCinematicOverlay(
                 impactShakeY.animateTo(0f, animationSpec = tween(durationMillis = 280, easing = FastOutSlowInEasing))
             }
         } else if (cue == "sfx_intro_chime_launch") {
-            // Three distinct conduit impacts: initial launch + 3 conduit wall strikes
-            val conduitDelays = listOf(0L, 380L, 800L, 1220L)
-            val conduitAmps = listOf(6.dp, 8.dp, 10.dp, 12.dp)
+            // Pneumatic launch (0ms) followed by three distinct conduit impacts (450ms, 1050ms, 1650ms)
+            val conduitDelays = listOf(0L, 450L, 1050L, 1650L)
+            val conduitAmps = listOf(5.dp, 8.dp, 10.dp, 13.dp)
             launch {
                 for (i in conduitDelays.indices) {
                     if (i > 0) {
@@ -8353,9 +8353,9 @@ private fun IllustratedCinematicOverlay(
                     val amp = with(density) { conduitAmps[i].toPx() }
                     val dir = if (i % 2 == 0) 1f else -1f
                     impactShakeX.snapTo(amp * dir)
-                    impactShakeY.snapTo(-amp * 0.4f * dir)
-                    impactShakeX.animateTo(0f, animationSpec = tween(durationMillis = 220, easing = FastOutSlowInEasing))
-                    impactShakeY.animateTo(0f, animationSpec = tween(durationMillis = 220, easing = FastOutSlowInEasing))
+                    impactShakeY.snapTo(-amp * 0.45f * dir)
+                    impactShakeX.animateTo(0f, animationSpec = tween(durationMillis = 240, easing = FastOutSlowInEasing))
+                    impactShakeY.animateTo(0f, animationSpec = tween(durationMillis = 240, easing = FastOutSlowInEasing))
                 }
             }
         }
