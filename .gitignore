@@ -19,7 +19,7 @@ local.properties
 /node_modules/
 /.npm-cache/
 /.appium/
-/.kotlin/errors/
+/.kotlin/
 /PythonDevKit/__pycache__/
 __pycache__/
 *.pyc

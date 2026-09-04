@@ -5,13 +5,13 @@
     "weather": "dust",
     "title": "Pit Landing",
     "background_image": "images/rooms/world_1/pit_L1_landing_v5.webp",
-    "description": "A cramped landing bolts the Pit to the rest of the colony. The bulkhead seal vents with each pressure shift, and amber lights make the scuffed metal shine like old lunch trays.",
+    "description": "A narrow steel mezzanine links the Pit's residential shaft to the rest of the mining colony. Every few seconds the ventilation bulkhead sighs, releasing a gust of recycled air that smells of sulfur, machine grease, and stale synth-broth. Jaundiced amber work strips buzz overhead, casting sickly halos across the scuffed deck plating.",
     "description_variants": [
       {
         "requires_milestones": [
           "ms_w1_mq01_cutter_surge"
         ],
-        "description": "A cramped landing bolts the Pit to the rest of the colony. The amber lights run at half power now, and the bulkhead seal cycles twice before it catches. Someone chalked SECTOR BREAKER - DO NOT RESET on the frame."
+        "description": "The mezzanine is bathed in emergency rust-red. Amber tubes flicker at half power, and the main bulkhead seal groans through three sluggish cycles before shuddering shut. Someone scrawled SECTOR BREAKER BLOWN - DO NOT RESET in yellow chalk across the doorframe."
       }
     ],
     "npcs": [],
@@ -30,7 +30,7 @@
       {
         "name": "bulkhead",
         "type": "generic",
-        "condition_unmet_message": "Standard Dominion seal. It won't open until the shift-change siren sounds."
+        "condition_unmet_message": "Standard Dominion blast seal, pitted with corrosion. Its hydraulic locking pins remain engaged until the shift siren."
       }
     ]
   },
@@ -39,13 +39,13 @@
     "env": "mine",
     "title": "Mess Hall",
     "background_image": "images/rooms/world_1/pit_mess_v5.webp",
-    "description": "Bolted tables, dented trays, and crooked amber lights turn dinner into another shift. Miners trade jokes under their breath while a cracked Dominion monitor chirps about gratitude, casting dim light on a broken Hyperion cabinet in the corner.",
+    "description": "Greasy composite tables are bolted directly to the rock floor. Miners in salt-stained coveralls huddle over tin trays, trading cynical quips under their breath. In the corner, an antique Dominion CRT monitor buzzes with cheerful corporate reminders of daily quotas, casting a sickly glow over a dark pre-Dominion arcade cabinet.",
     "description_variants": [
       {
         "requires_milestones": [
           "ms_w1_mq01_cutter_surge"
         ],
-        "description": "The monitor is dead and the tables have gone loud without it. Miners argue about whose shift lost the grid, crowding past the dark broken Hyperion cabinet in the corner."
+        "description": "The corporate monitor is dead and dark, leaving the mess hall rowdier than usual. Off-shift crews argue loudly over which drill line tripped the regional grid, their voices echoing off the rock walls around the dormant arcade cabinet."
       }
     ],
     "npcs": [],
@@ -65,7 +65,7 @@
       {
         "name": "monitor",
         "type": "generic",
-        "condition_unmet_message": "'YOUR SHIFT IS YOUR CONTRIBUTION.' The screen is spider-webbed with cracks."
+        "condition_unmet_message": "'EFFICIENCY IS SURVIVAL. QUOTA IS HONOR.' The monitor screen is spider-webbed with cracks from an errant wrench."
       },
       {
         "name": "broken Hyperion cabinet",
@@ -85,7 +85,7 @@
     "env": "mine",
     "title": "Ration Sink",
     "background_image": "images/rooms/world_1/pit_kitchen_v5.webp",
-    "description": "The mess kitchen smells of scorched grease and stale broth. An industrial thermal cooker sits on the counter beside a dented ingredient hopper.",
+    "description": "The ration sink smells of scorched grease, boiled yeast cakes, and bitter chickweed tea. A dented industrial cooker hums on the steel counter, venting thin steam against grease-stained rock.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -101,7 +101,7 @@
       {
         "name": "thermal cooker",
         "type": "generic",
-        "condition_unmet_message": "The industrial cooker hums with lukewarm colony broth. Cook Rourke glares if anyone touches the regulator valve."
+        "condition_unmet_message": "The industrial vat gurgles with lukewarm gray broth. Cook Vance glares at anyone reaching toward the regulator valve."
       },
       {
         "name": "ingredient hopper",
@@ -123,13 +123,13 @@
     "weather": "steam",
     "title": "Lift Shaft",
     "background_image": "images/rooms/world_1/pit_shaft_v5.webp",
-    "description": "A rusted ladder and narrow lift cage climb through the Pit's stacked levels. A sweating pipe vents steam around the rails, turning the hazard stripes glossy and slick.",
+    "description": "A rusted iron ladder and open-cage hoist climb through the Pit's vertical spine. High-pressure steam hisses from a weeping seam in the pipes, leaving slick condensate on the black-and-yellow hazard rungs.",
     "description_variants": [
       {
         "requires_milestones": [
           "ms_w1_mq01_cutter_surge"
         ],
-        "description": "Emergency strips light the ladder in red instead of amber. The sweating pipe has stopped venting entirely, no pressure behind it since the breaker went, and the hazard stripes are dry for the first time Nova can remember."
+        "description": "Emergency beacon strips bathe the ladder in low crimson. The sweating bypass pipe has fallen silent—no steam pressure remains behind it since the breaker popped—and the rungs are cold and dry for the first time in years."
       }
     ],
     "npcs": [],
@@ -149,12 +149,12 @@
       {
         "name": "ladder",
         "type": "generic",
-        "condition_unmet_message": "Rusted and slick with condensation. Watch your step."
+        "condition_unmet_message": "Rusted and slick with mineral condensate. One loose grip means a thirty-meter drop into the drainage sump."
       },
       {
         "name": "pipe",
         "type": "generic",
-        "condition_unmet_message": "The steam is hot and smells like old copper."
+        "condition_unmet_message": "The escaping steam is scorching hot and carries the metallic bite of ionized copper."
       }
     ]
   },
@@ -180,7 +180,7 @@
     "env": "mine",
     "title": "Jed's Bunk",
     "background_image": "images/rooms/world_1/pit_jed_bunk_v5.webp",
-    "description": "Jed has filled his pod with manuals, gadgets, and half-built repairs. A narrow strip of mattress remains clear beside his tool case.",
+    "description": "Jed's bunk pod is crammed floor to ceiling with dog-eared service manuals, cannibalized solenoids, and half-soldered relays. A narrow strip of grease-darkened foam serves as a bed beside his steel tool case.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -196,7 +196,7 @@
       {
         "name": "manuals",
         "type": "generic",
-        "condition_unmet_message": "'Advanced Hydraulics' and 'Ship Engine Maintenance'. They are well-thumbed."
+        "condition_unmet_message": "'Advanced Hydraulics' and 'Ship Engine Maintenance'—their margins are packed with Jed's handwritten bypass schematics."
       },
       {
         "name": "tool case",
@@ -220,7 +220,7 @@
         "requires_milestones": [
           "ms_w1_jed_bunk_tools_looted"
         ],
-        "description": "Jed has filled his pod with manuals, empty gadget casings, and half-built repairs. Beside the clear mattress strip, his tool case sits unlatched and organized."
+        "description": "Jed's bunk pod is packed with dog-eared manuals, empty casings, and half-soldered relays. Beside the narrow foam mattress, his steel tool case sits unlatched and organized."
       }
     ]
   },
@@ -229,13 +229,13 @@
     "env": "mine",
     "title": "Pod Row",
     "background_image": "images/rooms/world_1/pit_L2_corridor_v5.webp",
-    "description": "Sleeping pods stack up the walls like drawers for tired people. Old posters curl beside loose cables, personal charms, and the low vibration of distant drills.",
+    "description": "Stacked modular sleeping berths line the corridor like morgue drawers for the living. Frayed insulation hangs between exposed conduits, and the deck plates hum with the relentless subsonic pulse of the deep drills.",
     "description_variants": [
       {
         "requires_milestones": [
           "ms_w1_mq01_cutter_surge"
         ],
-        "description": "Half the sleeping pods run dark, their occupants awake and irritable in the corridor. The posters are the only thing still lit. Someone has taped a handwritten outage notice over Efficiency Is Safety."
+        "description": "Half the sleeper berths have lost primary power, leaving irritable miners milling in the corridor under amber emergency strips. Someone has taped a furious handwritten complaint over the corporate poster that reads 'Compliance Brings Peace.'"
       }
     ],
     "npcs": [],
@@ -269,22 +269,22 @@
     "env": "mine",
     "title": "Nova's Bunk",
     "background_image": "images/rooms/world_1/pit_nova_bunk_v5.webp",
-    "description": "Your bunk is a narrow shelf in the colony wall. The bunk light hangs above cargo netting and a rusty locker holding your tools, a spare ration, and Jed's small metal carving.",
+    "description": "Your bunk is a recessed metal cubby carved into the colony's rock face. Overhead, an unshielded bulb dangles above frayed cargo netting and a rusted locker holding your cutter tools, a hard ration bar, and the brass sparrow Jed hammered out of spent casing.",
     "reveal_title_when_dark": true,
-    "description_dark": "Nova can find the bunk edge and door switch without light. Only the bunk light switch carries an emergency glow.",
+    "description_dark": "Even blind in the black, Nova knows every rough seam in the bulkhead. Only the toggle for the bunk light glows with a phosphor fleck of emergency green.",
     "description_variants": [
       {
         "requires_state": {
           "light_on": true,
           "conduit_isolated": true
         },
-        "description": "The bunk light has settled back to a cheap yellow buzz. The scorched conduit is dead and the door release is safe to touch. The closed maintenance ticket remains where Dominion left it."
+        "description": "The overhead bulb has settled into a dim amber drone. The frayed conduit hangs cold and dead, leaving the door release safe to touch beside Dominion's closed maintenance tag."
       },
       {
         "requires_state": {
           "light_on": true
         },
-        "description": "The bunk light coughs awake over the cargo netting and rusty locker. A scorched conduit spits blue-white sparks across the door release. Its maintenance ticket is stamped CLOSED: WITHIN QUOTA."
+        "description": "The overhead bulb sputters awake, humming with dirty current. A severed high-voltage conduit snaps and crackles across the door latch, spitting blue-white sparks across a corporate slip stamped: CLOSED: WITHIN QUOTA. Dominion deferred the repair and stamped the hazard acceptable."
       }
     ],
     "npcs": [],
@@ -355,7 +355,7 @@
     "env": "mine",
     "title": "Supply Closet",
     "background_image": "images/rooms/world_1/pit_storage_v5.webp",
-    "description": "A cramped storage bay crammed with spare filter units and industrial soap. With the emergency breaker thrown, a loose floor panel is visible under the shelves.",
+    "description": "A cramped maintenance alcove choked with calcified particulate filters, barrels of caustic degreaser, and rusted racking. With the auxiliary light engaged, a pried floor plate rattles beneath the lowest shelf.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -388,18 +388,18 @@
       {
         "name": "filter units",
         "type": "generic",
-        "condition_unmet_message": "Heavy particulate filters clogged with rock dust."
+        "condition_unmet_message": "Heavy fiberglass filtration blocks, caked solid with gray granite dust."
       }
     ],
     "dark": true,
     "reveal_title_when_dark": true,
-    "description_dark": "Unlit storage bay. Nova can feel metal shelving, cold filter units, and an emergency breaker on the side wall.",
+    "description_dark": "Suffocating dark that smells of dry rock dust and lye. Nova's fingertips trace cold steel racking, stacked filter blocks, and the heavy toggle of a breaker box.",
     "description_variants": [
       {
         "requires_milestones": [
           "ms_w1_pit_storage_looted"
         ],
-        "description": "A cramped storage bay. The emergency breaker hums, illuminating empty filter units and the pried-open loose floor panel."
+        "description": "A cramped maintenance alcove. The emergency breaker hums, shedding harsh amber light over empty filter racks and the hollow void beneath the pried floor plate."
       }
     ]
   },
@@ -408,13 +408,13 @@
     "env": "mine",
     "title": "Vent Crawl",
     "background_image": "images/rooms/world_1/pit_vents_v5.webp",
-    "description": "A low maintenance crawl runs warm beneath the Pit. Spoons and voices carry through the mess hall grates into the maintenance crawl.",
+    "description": "A claustrophobic service duct running directly beneath the mess hall. Warm air drafts along the galvanized sheet metal, carrying the metallic clatter of spoons and murmurs of tired miners through the overhead grates.",
     "description_variants": [
       {
         "requires_milestones": [
           "ms_w1_pit_vents_looted"
         ],
-        "description": "A low maintenance crawl runs warm beneath the Pit. The cleared duct is quiet, and conversation carries softly through the mess hall grates."
+        "description": "A low service duct running warm beneath the mess hall. With the loose debris cleared from the intake bend, the duct hums with steady air while voices filter softly through the grates."
       }
     ],
     "npcs": [],
@@ -440,7 +440,7 @@
       {
         "name": "grates",
         "type": "generic",
-        "condition_unmet_message": "Bolted shut, but the gaps are wide enough to peer through."
+        "condition_unmet_message": "Heavy iron slats bolted shut, stained yellow from decades of fried ration smoke."
       }
     ]
   },
@@ -449,7 +449,7 @@
     "env": "mine",
     "title": "Shared Showers",
     "background_image": "images/rooms/world_1/pit_showers_v5.webp",
-    "description": "Cracked tiles and dense steam fill the communal showers. Three rusted steam valves shudder loudly above a vibrating drainage grate.",
+    "description": "Swirling mineral steam and slick ceramic tiles define the communal washroom. Heavy bronze valves chatter violently against pipe brackets, feeding lukewarm water toward a groaning central drain.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -480,7 +480,7 @@
       {
         "name": "tiles",
         "type": "generic",
-        "condition_unmet_message": "Orange rust stains cut across the lime-scaled ceramic tiles."
+        "condition_unmet_message": "Streaked with ferric rust stains and hard-water scale from the recycled mine aquifers."
       }
     ]
   },
@@ -490,13 +490,13 @@
     "weather": "dust",
     "title": "Scrap Yard",
     "background_image": "images/rooms/world_1/workshop_yard_v3.webp",
-    "description": "Rusted scrap and retired drone shells pile up around Jed's shutter. A faulted loader jerks across the only clear route inside. A loader diagnostic strip strobes beside its cracked relay.",
+    "description": "Mountains of rusted structural girders and gutted drone chassis surround Jed's garage shutter. A malfunctioning hydraulic loader twitches erratically across the narrow pathway, its shattered optical sensor strobing warning pulses beside a burnt actuator.",
     "description_variants": [
       {
         "requires_state": {
           "loader_cleared": true
         },
-        "description": "The faulted loader rests cold beside the shutter, its relay dark. A clean route now cuts through the scrap to Jed's bench."
+        "description": "The disabled loader slumps cold against a heap of sheared armor plates. With the walkway cleared of thrashing pistons, the path straight into Jed's garage lies wide open."
       }
     ],
     "npcs": [],
@@ -526,8 +526,8 @@
       "north": {
         "type": "enemy",
         "enemy_id": "faulted_loader",
-        "message_locked": "The loader's wild arm blocks the workshop shutter. Tap the Faulted Loader to engage in combat!",
-        "message_unlock": "The loader folds into the scrap, leaving the workshop route open."
+        "message_locked": "The loader's thrashing hydraulic arm blocks the shutter. Engage the faulted unit to clear the route!",
+        "message_unlock": "The loader collapses into scrap, clearing the way into the workshop."
       }
     },
     "actions": [
@@ -535,17 +535,17 @@
         "name": "loader diagnostic strip",
         "type": "generic",
         "action_event": "w1_mq01_inspect_loader_relay",
-        "condition_unmet_message": "The strip flashes SAFETY GOVERNOR BYPASSED beside the cracked relay."
+        "condition_unmet_message": "The strip flashes: CRITICAL OVERLOAD - SAFETY GOVERNOR COMPROMISED beside the cracked relay."
       },
       {
         "name": "scrap",
         "type": "generic",
-        "condition_unmet_message": "Twisted girders and hulls from a dozen different ship classes. Jed never throws anything away."
+        "condition_unmet_message": "Twisted structural bulkheads and hulls from a dozen forgotten freighters. Jed never discards usable alloy."
       },
       {
         "name": "shutter",
         "type": "generic",
-        "condition_unmet_message": "The motor is old and loud, but it keeps the Dominion inspectors out."
+        "condition_unmet_message": "Heavy armored corrugated steel. Its noisy winch is enough to wake the dead, but it keeps Dominion sweeps off the threshold."
       }
     ],
     "npc_presence": [
@@ -562,13 +562,13 @@
     "env": "mine",
     "title": "Jed's Shutter",
     "background_image": "images/rooms/world_1/workshop_floor_v3.webp",
-    "description": "Work lights show scorched insulation and Jed's tools laid out by size. The mining cutter and Flux Liner wait beside the floor clamp; the live cutter test comes last.",
+    "description": "Overhead halogens beat down on workbenches charred by plasma torches and chemical burns. Jed's hand tools are meticulously racked by caliber above the heavy steel floor clamp, where the stripped mining cutter awaits final calibration.",
     "description_variants": [
       {
         "requires_state": {
           "cryo_inductor_installed": true
         },
-        "description": "The rebuilt Cryo-Inductor hums at a clean 68% cold loop. Patch the Flux Liner, confirm the mining cutter bypass, then run the live cutter test."
+        "description": "The rebuilt Cryo-Inductor purrs at a clean 68% loop pressure, frosting the copper feed lines. With the Flux Liner grounded, the bypassed cutter is primed for live firing."
       }
     ],
     "npcs": [],
@@ -629,7 +629,7 @@
     "env": "mine",
     "title": "Jed's Office",
     "background_image": "images/rooms/world_1/workshop_office_v3.webp",
-    "description": "Ancient screens, hand-drawn schematics, and a diagnostic bench drawer crowd Jed's windowless office. His worn chair still holds the shape of someone who keeps choosing one more repair over sleep.",
+    "description": "Flickering amber phosphor screens, hand-annotated blueprints, and overflowing component drawers swallow Jed's windowless cubicle. His greasy swivel chair still bears the impression of someone who stubbornly trades sleep for another circuit repair.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -645,17 +645,17 @@
       {
         "name": "screens",
         "type": "generic",
-        "condition_unmet_message": "Flickering CRTs displaying local sensor feeds and shipment manifests."
+        "condition_unmet_message": "Flickering cathode-ray monitors displaying local seismograph feeds and hijacked Dominion shipping schedules."
       },
       {
         "name": "schematics",
         "type": "generic",
-        "condition_unmet_message": "Jed's own hand-drawn plans for engine modifications. They're more art than engineering."
+        "condition_unmet_message": "Jed's grease-smudged drafting sheets for custom plasma cutters and heat-sink governors. They read more like defiant art than corporate engineering."
       },
       {
         "name": "chair",
         "type": "generic",
-        "condition_unmet_message": "Smells like machine oil and Jed's cheap tobacco."
+        "condition_unmet_message": "Stiff synthetic leather saturated with machine lubricants and stale pipe weed."
       },
       {
         "name": "diagnostic bench drawer",
@@ -887,7 +887,7 @@
     "env": "mine",
     "title": "Triage Hall",
     "background_image": "images/rooms/world_1/medbay_hall_v3.webp",
-    "description": "Grimy benches line the hall under flickering clinical lights. A tired bio-scanner blinks near Doc's door while a chemical haze seeps from the vent access to the east.",
+    "description": "Scuffed steel gurneys and rust-streaked benches line the triage corridor beneath shuddering fluorescent lights. A battered biometric gate chirps weakly beside Doc's office, while an acrid chemical fog drifts from the compromised air ducts to the east.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -905,12 +905,12 @@
       {
         "name": "lights",
         "type": "generic",
-        "condition_unmet_message": "They buzz and flicker, casting long, sickly shadows across the hall."
+        "condition_unmet_message": "Faulty ballast transformers buzz at sixty cycles, casting jittery shadows across the blood-stained deck."
       },
       {
         "name": "bio-scanner",
         "type": "generic",
-        "condition_unmet_message": "An older model, struggling to process the sheer volume of cases."
+        "condition_unmet_message": "A decommissioned triage arch struggling to tabulate silicosis rates and burn casualties."
       }
     ]
   },
@@ -919,7 +919,7 @@
     "env": "mine",
     "title": "Doc's Exam Room",
     "background_image": "images/rooms/world_1/medbay_exam1_v3.webp",
-    "description": "Doc's exam room is clean only where the disinfectant still reaches. A glitching monitor, taped scanner leads, and overused med trays cover the remaining space.",
+    "description": "Doc's examination bay is sanitized only where his rationed carbolic scrub can reach. An error-spitting vital monitor, frayed neuro-lead cables, and trays of repurposed dental tools crowd the operating table.",
     "npcs": [
       "doc"
     ],
@@ -938,7 +938,7 @@
       {
         "name": "monitor",
         "type": "generic",
-        "condition_unmet_message": "The display is covered in status errors. Dominion's latest update seems to have broken the diagnostic tools."
+        "condition_unmet_message": "The screen flashes endless buffer overflows: 'DIAGNOSTIC FIRMWARE EXPIRED - CONTRACT RENEWAL REQUIRED.'"
       }
     ]
   },
@@ -947,7 +947,7 @@
     "env": "mine",
     "title": "Med Supply Closet",
     "background_image": "images/rooms/world_1/medbay_storage_v3.webp",
-    "description": "Emergency medical storage. The emergency terminal hums softly over rows of supplies and an unlocked cryogenic locker.",
+    "description": "A frost-lined pharmaceutical closet. The emergency terminal hums softly in the chill, overlooking stripped shelves and a dented cryogenic storage locker.",
     "npcs": [],
     "items": [
       "medkit_i"
@@ -982,18 +982,18 @@
       {
         "name": "supplies",
         "type": "generic",
-        "condition_unmet_message": "Expired antiseptic packets and rationed field dressings."
+        "condition_unmet_message": "Yellowed antiseptic ampoules and rigid coagulant patches stamped with expired corporate seals."
       }
     ],
     "dark": true,
     "reveal_title_when_dark": true,
-    "description_dark": "Cold and silent. Nova feels thin rows of supplies, an emergency terminal, and a sealed cryogenic locker.",
+    "description_dark": "Freezing dark that smells of dry frost and iodine. Nova's gloves brush against picked-over supply bins, a cold terminal casing, and the latch of a cryo-vault.",
     "description_variants": [
       {
         "requires_milestones": [
           "ms_w1_medbay_storage_looted"
         ],
-        "description": "Emergency medical storage. The emergency terminal flickers over picked-through supplies and the open cryogenic locker."
+        "description": "Emergency medical storage. The auxiliary terminal flickers over plundered racks and the gaping, thawed cryogenic locker."
       }
     ]
   },
@@ -1002,25 +1002,25 @@
     "env": "mine",
     "title": "Ventilation Hub",
     "background_image": "images/rooms/world_1/medbay_vents_v3.webp",
-    "description": "Rusted fans and patched conduits keep air moving through the med-bay. A cracked vent leaks chemical haze while a toxic blockage swells in the updraft. Two skimmers hang in the warm column above it, throat sacs working, waiting for something to walk under them.",
+    "description": "Massive corrosion-pitted turbine fans struggle against fouled intake ducts. A ruptured expansion sleeve bleeds greasy sulfur fog into the shaft, while a pulsating fungal obstruction chokes the thermal updraft. Clinging above in the warm exhaust, two ravenous skimmers expand their acoustic throat sacs, waiting for prey.",
     "description_variants": [
       {
         "requires_state": {
           "toxic_blockage_cleared": true
         },
-        "description": "The fans hold a steady speed and the patched conduits run quiet. The cracked vent ticks as it cools. The blockage is gone; clean air reaches the med-bay at normal pressure."
+        "description": "The restored ventilation turbine whirs with a steady mechanical drone. The cooling sleeve ticks quietly as clean canyon air flushes through to the triage ward below."
       },
       {
         "requires_state": {
           "airflow_rerouted": true
         },
-        "description": "The fans grind in reverse, pulling green haze away from the cracked vent and around the toxic blockage. Patched conduits shudder under the redirected pressure."
+        "description": "The primary turbine roars in reverse, violently sucking the bilious haze away from the torn ducting. Rerouted duct baffles groan under the sudden surge of reversed pressure."
       },
       {
         "requires_state": {
           "vent_inspected": true
         },
-        "description": "The cracked vent leaks because pressure is trapped behind the fans. Patched conduits hammer in the walls, and the toxic blockage swells each time the airflow stutters."
+        "description": "The torn intake sleeve leaks poison because backpressure is trapped behind seized turbine blades. Patched conduits hammer against rock brackets with every stutter of the motor."
       }
     ],
     "npcs": [],
@@ -1049,19 +1049,19 @@
         "name": "fans",
         "type": "generic",
         "action_event": "w1_sq02_reroute_airflow",
-        "condition_unmet_message": "The fans cough and stutter, shoving pressure through the wrong part of the vent line."
+        "condition_unmet_message": "The seized turbine blades shudder and grind, fighting the blocked exhaust line."
       },
       {
         "name": "vent",
         "type": "generic",
         "action_event": "w1_sq02_patch_vent",
-        "condition_unmet_message": "The cracked vent is leaking poison because pressure is backed up behind the fans."
+        "condition_unmet_message": "The ruptured sleeve continues spewing toxic exhaust because backpressure is trapped behind the fan housing."
       },
       {
         "name": "toxic blockage",
         "type": "generic",
         "action_event": "w1_sq02_clear_toxic_blockage",
-        "condition_unmet_message": "The toxic blockage pulses in the redirected updraft, close enough to clear if the airflow is stable."
+        "condition_unmet_message": "The festering biomass quivers in the redirected updraft, now within reach of a cutter blast."
       }
     ]
   },
@@ -1070,7 +1070,7 @@
     "env": "mine",
     "title": "Exhaust Mouth",
     "background_image": "images/rooms/world_1/medbay_exhaust_v3.webp",
-    "description": "The vent pipe opens onto the canyon and the orange mining pit below. Cold wind drives dust through the grate over the continuous roar of the excavation rigs.",
+    "description": "The ventilation flue terminates at a dizzying aperture overlooking the orange abyss of the open-pit mine. Freezing gusts whip red mineral grit through the heavy iron grating, accompanied by the ceaseless thunder of deep excavation crawlers far below.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -1086,12 +1086,12 @@
       {
         "name": "vent pipe",
         "type": "generic",
-        "condition_unmet_message": "The scale of the mining operation is breathtaking... and terrifying."
+        "condition_unmet_message": "The sheer industrial scale of the Dominion excavation pit is staggering... and horrifying."
       },
       {
         "name": "grate",
         "type": "generic",
-        "condition_unmet_message": "Bolted firmly into the canyon wall. No way out through here."
+        "condition_unmet_message": "Industrial steel bars anchored with anchor bolts deep into the bedrock. There is no route out this way."
       }
     ]
   },
@@ -1100,7 +1100,7 @@
     "env": "mine",
     "title": "Decon Lock",
     "background_image": "images/rooms/world_1/medbay_decon_v3.webp",
-    "description": "This cramped airlock is built to blast mining suits, not people. The nozzles drip sterilant that smells like burnt lemons and bad decisions.",
+    "description": "A reinforced chemical airlock engineered to scour toxic rock dust from heavy hazard suits. Overhead spray jets drip acidic decontamination wash that smells of burnt citrus and caustic bleach.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -1117,12 +1117,12 @@
       {
         "name": "nozzles",
         "type": "generic",
-        "condition_unmet_message": "Ready to spray. Just don't breathe while the sterilant is active."
+        "condition_unmet_message": "Pressurized wash nozzles ready to douse anyone crossing the threshold. Inhaling the vapor would sear your lungs."
       },
       {
         "name": "sterilant",
         "type": "generic",
-        "condition_unmet_message": "A chemical that can strip the paint off a ship and the skin off a miner."
+        "condition_unmet_message": "Industrial solvent strong enough to dissolve reactor slag and strip skin to the bone."
       }
     ]
   },
@@ -1131,7 +1131,7 @@
     "env": "mine",
     "title": "The Morgue",
     "background_image": "images/rooms/world_1/medbay_morgue_v3.webp",
-    "description": "Cold air settles over rows of stainless drawers. A Dominion recycling terminal blinks beside an unsealed bio-containment canister on the tray.",
+    "description": "Sub-zero mist hangs over stacked tiers of stainless steel cadaver drawers. A Dominion Reclamation terminal pulses in the corner beside an unsealed bio-containment canister left on an autopsy gurney.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -1169,13 +1169,13 @@
     "env": "market",
     "title": "Trade Row Gate",
     "background_image": "images/rooms/world_1/trade_entrance_v3.webp",
-    "description": "A crooked archway and a stack of flickering signs mark the start of Trade Row, buzzing bright against the carved rock. Beyond them, voices, power cells, and sizzling food all compete to sell you something.",
+    "description": "A canted structural archway draped in stuttering neon marquees marks the entrance to Trade Row. The air grows abruptly warmer, thick with the aroma of flash-fried protein paste, ozone from black-market charging banks, and the desperate chatter of off-shift barterers.",
     "description_variants": [
       {
         "requires_milestones": [
           "ms_w1_mq01_cutter_surge"
         ],
-        "description": "Half the signs above the archway have gone dark, and the stalls beyond run off rattling backup cells. Trade Row is louder than usual. An outage is good business for anyone selling light."
+        "description": "Half the neon signs have browned out from the substation surge, leaving the market illuminated by sputtering kerosene lanterns and sputtering generator rigs. An outage is always lucrative for traders selling batteries."
       }
     ],
     "npcs": [],
@@ -1194,12 +1194,12 @@
       {
         "name": "signs",
         "type": "generic",
-        "condition_unmet_message": "They advertise everything from black-market rations to illegal engine mods."
+        "condition_unmet_message": "Neon tubes hawking counterfeit filtration wafers, bootleg stimulant tabs, and untraceable plasma torches."
       },
       {
         "name": "archway",
         "type": "generic",
-        "condition_unmet_message": "Bolted directly into the canyon wall, it marks the boundary of the 'official' colony."
+        "condition_unmet_message": "Bolted directly into the shale stratum, marking the perimeter where Dominion enforcers stop pretending to patrol."
       }
     ]
   },
@@ -1208,7 +1208,7 @@
     "env": "market",
     "title": "Market Strip",
     "background_image": "images/rooms/world_1/trade_strip_v3.webp",
-    "description": "Makeshift stalls crowd the corridor with patched tarps, power cells, and noodles fried in questionable oil. Scrapper's stall sits north behind a curtain of hanging cables, and a scanner-dead corner waits to the east.",
+    "description": "Improvised stalls crafted from cargo tarps and corrugated steel narrow the thoroughfare. Miners haggle over synthetic yeast rolls, salvaged copper coils, and reclaimed drone power packs. Scrapper's reinforced stall lurks to the north behind a curtain of frayed electrical conduits.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -1227,12 +1227,12 @@
       {
         "name": "stalls",
         "type": "generic",
-        "condition_unmet_message": "A chaotic collection of tents and crates where anything can be bought for the right price."
+        "condition_unmet_message": "A sprawling bazaar of stolen company issue and jury-rigged survival gear."
       },
       {
         "name": "power cells",
         "type": "generic",
-        "condition_unmet_message": "Standard issue cells with the Dominion logos scratched off."
+        "condition_unmet_message": "Dominion lithium-cadmium cells with the corporate crests ground off with an angle grinder."
       }
     ]
   },
@@ -1241,7 +1241,7 @@
     "env": "market",
     "title": "Scrapper's Stall",
     "background_image": "images/rooms/world_1/trade_scrapper_v3.webp",
-    "description": "Salvaged armaments and modified equipment crowd Scrapper's reinforced stall. Contraband and a datapad sit under the counter within easy reach.",
+    "description": "Reinforced with bullet-dented armor plating, Scrapper's counter bristling with disassembled firearms and military-grade pulse modules. A shielded contraband safe and an encrypted transaction pad sit within arm's reach of his shotgun.",
     "npcs": [
       "scrapper"
     ],
@@ -1260,7 +1260,7 @@
       {
         "name": "datapad",
         "type": "generic",
-        "condition_unmet_message": "Encrypted and password-protected. Scrapper's ledger lists black-market contraband serial numbers."
+        "condition_unmet_message": "Heavily encrypted with military ciphers. Scrapper's private ledger of wiped serial numbers and weapons caches."
       },
       {
         "name": "Contraband",
@@ -1275,7 +1275,7 @@
     "env": "market",
     "title": "The Hidden Stash",
     "background_image": "images/rooms/world_1/trade_stash_v3.webp",
-    "description": "The back corner is dark, damp, and just boring enough to be useful. Under a heap of industrial netting, a rebel cache buzzes softly behind a security field meant to make scanners look elsewhere.",
+    "description": "A damp drainage culvert masked behind tangled industrial netting. Hidden beneath a false floor plate, a forgotten resistance munitions locker hums with a dampening field engineered to deceive Dominion sweep drones.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -1296,13 +1296,13 @@
           "pulse_grenade"
         ],
         "action_event": "w1_sq01_open_rebel_cache",
-        "already_open_message": "The rebel cache is empty except for old names scratched into the lid.",
+        "already_open_message": "The rebel cache is empty except for twelve miner names scratched into the lid.",
         "popup_title": "Rebel Cache"
       },
       {
         "name": "security field",
         "type": "generic",
-        "condition_unmet_message": "A basic damping field to hide the contents from corporate scanners."
+        "condition_unmet_message": "A harmonic distortion field masking the metal density from orbital radar sweeps."
       }
     ]
   },
@@ -1311,7 +1311,7 @@
     "env": "market",
     "title": "Recyc Bar",
     "background_image": "images/rooms/world_1/trade_bar_v3.webp",
-    "description": "Dented glasses, sticky counters, and recyc-whiskey give the bar its proud chemical bite. A broken jukebox fights the ventilation with a synth-country tune nobody admits they like.",
+    "description": "Cloudy plastic tumblers and a zinc counter sticky with industrial grain alcohol define this subterranean watering hole. A battered jukebox hums in the corner, its cracked speaker rattling out melancholic synth-ballads against the roar of the ventilation shafts.",
     "npcs": [
       "miner_bill"
     ],
@@ -1331,12 +1331,12 @@
       {
         "name": "glasses",
         "type": "generic",
-        "condition_unmet_message": "Cloudy and chipped. The recyc-whiskey probably does most of the cleaning."
+        "condition_unmet_message": "Hazy and scarred. The sixty-percent reclaimed ethanol cleans whatever the rinse water missed."
       },
       {
         "name": "jukebox",
         "type": "generic",
-        "condition_unmet_message": "It skips every few beats, making the singer sound like they're hiccuping."
+        "condition_unmet_message": "The optical drive skips every few bars, warping the steel-guitar chords into mournful digital wails."
       }
     ]
   },
@@ -1345,7 +1345,7 @@
     "env": "market",
     "title": "Card Den",
     "background_image": "images/rooms/world_1/trade_den_v3.webp",
-    "description": "Miners gather around a scarred dice table in the haze, wagering scrip on card games while an off-shift dealer shuffles metal chits.",
+    "description": "Tucked away in a tobacco-choked alcove, off-duty drillers gather around a green-felt table to gamble their meager paychits on dice and high-stakes holographic cards.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -1363,12 +1363,12 @@
         "type": "generic",
         "action_event": "w1_gamble_trade_den",
         "hide_when_milestone": "ms_w1_trade_den_gambled",
-        "condition_unmet_message": "Miners roll dice across the scratched felt."
+        "condition_unmet_message": "Miners roll weighted tungsten dice across the stained felt."
       },
       {
         "name": "card games",
         "type": "generic",
-        "condition_unmet_message": "Holo-cards dealing bad odds with bright, cheerful animations."
+        "condition_unmet_message": "Holographic card displays projecting gaudy animations designed to bleed workers of their overtime pay."
       }
     ]
   },
@@ -1481,13 +1481,13 @@
     "env": "mine",
     "title": "Shift Queue",
     "background_image": "images/rooms/world_1/checkpoint_queue_v3.webp",
-    "description": "A low corridor funnels miners toward the gate under white lights. A locked contraband bin sits bolted beside the biometric scanner.",
+    "description": "A claustrophobic concrete choke-point funnels bleary-eyed workers toward the search gate. Glaring mercury-vapor floodlights wash out all color, while a padlocked contraband receptacle sits anchored beside the turnstile scanner.",
     "description_variants": [
       {
         "requires_milestones": [
           "ms_w1_checkpoint_queue_looted"
         ],
-        "description": "A low corridor funnels miners toward the gate under white lights. Beside the biometric scanner, the emptied contraband box sits unlatched."
+        "description": "A stark transit chute under buzzing white lamps. Beside the biometric scanner pillar, the forced contraband bin hangs wide open and looted."
       }
     ],
     "npcs": [],
@@ -1512,7 +1512,7 @@
       {
         "name": "lights",
         "type": "generic",
-        "condition_unmet_message": "Harsh fluorescent floodlights bleaching color from the corridor."
+        "condition_unmet_message": "Industrial mercury floodlights humming with a headache-inducing buzz."
       }
     ]
   },
@@ -1521,7 +1521,7 @@
     "env": "mine",
     "title": "Search Bay",
     "background_image": "images/rooms/world_1/checkpoint_bay_v3.webp",
-    "description": "Scanning arches hum at a pitch that makes your teeth itch. The reinforced counter is polished clean, but the shock-baton marks on the floor tell the older story.",
+    "description": "Pulsing biometric scanning arches emit a high-pitched acoustic drone that sets your teeth on edge. The steel barrier counter is polished by thousands of sliding tool belts, but carbon burns on the floor tiles speak of past pacifications.",
     "npcs": [
       "guard_hank"
     ],
@@ -1541,12 +1541,12 @@
       {
         "name": "arches",
         "type": "generic",
-        "condition_unmet_message": "Dominion biometric scanners. They're looking for contraband and 'unauthorized biological anomalies'."
+        "condition_unmet_message": "Dominion biometric gates calibrated to flag undeclared minerals, weaponized tools, and elevated worker heart rates."
       },
       {
         "name": "counter",
         "type": "generic",
-        "condition_unmet_message": "Scratched and dented, built to withstand the weight of a hundred mining rigs a day."
+        "condition_unmet_message": "Heavy reinforced plate built to stop a riot before it reaches the administrative concourse."
       }
     ]
   },
@@ -1555,7 +1555,7 @@
     "env": "mine",
     "title": "Zeke's Booth",
     "background_image": "images/rooms/world_1/checkpoint_booth_v3.webp",
-    "description": "Zeke's window sits behind reinforced glass, surrounded by badge readers and liability screens. The booth speaker crackles above the document slot.",
+    "description": "Zeke's cramped administrative cell is sealed behind double-paned ballistic glass, surrounded by chattering badge embossers and glowing liability audit screens. A tinny directional intercom squawks above the document slot.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -1572,12 +1572,12 @@
       {
         "name": "window",
         "type": "generic",
-        "condition_unmet_message": "Smudged with fingerprints and covered in corporate status icons."
+        "condition_unmet_message": "Grease-filmed bulletproof glass plastered with corporate warnings about falsifying overtime logs."
       },
       {
         "name": "speaker",
         "type": "generic",
-        "condition_unmet_message": "A cheap, buzzing intercom. It's the only way to talk to the clerks."
+        "condition_unmet_message": "A buzzing intercom grill that picks up every frantic breath inside the booth."
       }
     ],
     "npc_presence": [
@@ -1595,13 +1595,13 @@
     "env": "mine",
     "title": "Holding Cell",
     "background_image": "images/rooms/world_1/checkpoint_cell_v3.webp",
-    "description": "A temporary holding cell beside the security gate. Scratched graffiti and names cover the wall behind a loose mortar seam under the bench.",
+    "description": "A damp holding cage for shift violators and suspected union sympathizers. Defiant miner graffiti covers the stone, while a chipped mortar seam hides beneath the bolted steel bench.",
     "description_variants": [
       {
         "requires_milestones": [
           "ms_w1_checkpoint_cell_looted"
         ],
-        "description": "A temporary holding cell beside the security gate. Scratched graffiti and names cover the wall behind the cleared stone seam under the bench."
+        "description": "A cold detention cage beside the search bay. Scratched names cover the stone wall behind the emptied hollow in the floor mortar."
       }
     ],
     "npcs": [],
@@ -1640,7 +1640,7 @@
     "env": "mine",
     "title": "Blast Door A",
     "background_image": "images/rooms/world_1/checkpoint_door_v3.webp",
-    "description": "Blast Door A fills the passage with scarred alloy. Red status lights frame a locked console beside the seal.",
+    "description": "Blast Door A seals the transit artery with half a meter of scarred composite armor. Crimson warning strobes pulse rhythmically over the magnetic card terminal.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -1666,12 +1666,12 @@
       {
         "name": "blast door",
         "type": "generic",
-        "condition_unmet_message": "Three meters of solid steel. You aren't getting through this without authorization."
+        "condition_unmet_message": "Armored hydraulic blast barrier. It won't budge without valid worker clearance."
       },
       {
         "name": "console",
         "type": "generic",
-        "condition_unmet_message": "Access Denied. Liability score exceeds shift parameters."
+        "condition_unmet_message": "Terminal displays: 'ACCESS REVOKED. PROCEED TO ADMINISTRATIVE REVIEW.'"
       }
     ]
   },
@@ -1706,7 +1706,7 @@
     "env": "market",
     "title": "Concourse Lobby",
     "background_image": "images/rooms/world_1/admin_lobby.webp",
-    "description": "Floor-to-ceiling windows overlook the mining pit. Filtered air holds at eighteen degrees; each badge reader still flashes Nova's recent liability review.",
+    "description": "Floor-to-ceiling sheets of reinforced observation glass overlook the sprawling terraced pit below. Climate controls maintain a sterile eighteen degrees, while overhead annunciators repeat daily production quotas. Every terminal in the concourse blinks with Nova's pending liability review.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -1725,7 +1725,7 @@
       {
         "name": "windows",
         "type": "generic",
-        "condition_unmet_message": "Orange work lights mark each drill cage below. Nova's temporary badge now routes her toward Sector 4."
+        "condition_unmet_message": "Miles of excavation scaffolding and drill rigs glow below in the dust. Nova's temporary clearance card routes her down toward Sector 4."
       }
     ],
     "npc_presence": [
@@ -1745,7 +1745,7 @@
     "env": "market",
     "title": "Observation Deck",
     "background_image": "images/rooms/world_1/admin_deck.webp",
-    "description": "Glass railings overlook the machinery below. Holographic kiosks show output graphs in red wherever a crew falls under quota.",
+    "description": "Polished steel railings line the dizzying overlook above the industrial crushers. Holographic kiosks shimmer with real-time telemetry graphs, painting the air in crimson wherever a mining shift falls below quota.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -1763,12 +1763,12 @@
       {
         "name": "railings",
         "type": "generic",
-        "condition_unmet_message": "Reinforced glass. It's the only thing between you and a very long fall."
+        "condition_unmet_message": "Reinforced ballistic glass. The sheer vertical drop into the rock-crushing hoppers is hundreds of meters."
       },
       {
         "name": "kiosks",
         "type": "generic",
-        "condition_unmet_message": "They're comparing current output to the 'Optimal Asset Model'. You aren't meeting the curve."
+        "condition_unmet_message": "Dominion actuarial models comparing living worker output against automated drone replacement costs."
       }
     ]
   },
@@ -1777,7 +1777,7 @@
     "env": "market",
     "title": "Customer Service",
     "background_image": "images/rooms/world_1/admin_window.webp",
-    "description": "A row of identical glass booths where the colony's bureaucracy processes the living and the dead. The silence is broken only by the soft chime of verified badges.",
+    "description": "A row of identical armored tellers where Dominion administrators coldly adjudicate worker disputes, ration cuts, and shift assignments. The oppressive silence is punctuated only by the cheerful digital chime of approved transit passes.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -1795,12 +1795,12 @@
       {
         "name": "booths",
         "type": "generic",
-        "condition_unmet_message": "Each booth is a small island of corporate authority."
+        "condition_unmet_message": "Impassive clerks stamping electronic transit permits and routing reprimands."
       },
       {
         "name": "badges",
         "type": "generic",
-        "condition_unmet_message": "Each verified badge produces the same soft chime."
+        "condition_unmet_message": "Each verified badge produces the same identical chime, registering a worker's biometric footprint on the central server."
       }
     ],
     "npc_presence": [
@@ -1820,7 +1820,7 @@
     "env": "market",
     "title": "Foreman's Office",
     "background_image": "images/rooms/world_1/admin_office.webp",
-    "description": "Boggs' local HQ is filled with humming server racks and stacks of physical shipment logs. A large map of the colony is projected onto the wall, glowing with Dominion blue.",
+    "description": "Foreman Boggs' dispatch sanctum smells of ozone, cold coffee, and industrial grease. Roaring server towers process regional ore manifests, while a holographic cross-section of the entire mining facility rotates above his desk.",
     "npcs": [],
     "items": [
       "shipment_log"
@@ -1838,12 +1838,12 @@
       {
         "name": "server racks",
         "type": "generic",
-        "condition_unmet_message": "They store the data for every ounce of ore moved in this sector."
+        "condition_unmet_message": "Encrypted servers logging tonnage, shift deductions, and equipment loss reports."
       },
       {
         "name": "map",
         "type": "generic",
-        "condition_unmet_message": "The map traces power, freight, and worker traffic through Logistics."
+        "condition_unmet_message": "The volumetric hologram outlines power conduits, ventilation flues, and dark, red-flagged zones marked: COLLAPSE HAZARD - ACCESS CONDEMNED."
       }
     ]
   },
@@ -2343,7 +2343,7 @@
     "weather": "cave_drip",
     "title": "Elevator Landing",
     "background_image": "images/rooms/world_1/mine_landing.webp",
-    "description": "The industrial lift opens into raw rock, red safety beacons, and idle drilling machinery. Boggs' override shows one authorized descent and no scheduled return. A taped-off drain pool gathers in the corner.",
+    "description": "The heavy industrial hoist clangs to a halt in the raw bedrock of the lower levels. Water drips from hanging stalactites into an oily sump, reflecting rotating crimson safety beacons. The hoist terminal flashes Boggs' one-way override: descent cleared, ascent locked.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -2360,17 +2360,17 @@
       {
         "name": "lift",
         "type": "generic",
-        "condition_unmet_message": "The lift panel shows Nova's descent authorization. Return access is locked."
+        "condition_unmet_message": "The hoist interface is locked out from above. There is no return to Logistics without Boggs' console key."
       },
       {
         "name": "beacons",
         "type": "generic",
-        "condition_unmet_message": "Flickering amber lights warning of the hazards deeper in the sector."
+        "condition_unmet_message": "Rotating emergency flashers warning of seismic instability and atmospheric toxins."
       },
       {
         "name": "machinery",
         "type": "generic",
-        "condition_unmet_message": "Massive drills and ore-crushers, currently silent during the shift-change."
+        "condition_unmet_message": "Abandoned pneumatic core drills coated in damp saltpeter."
       },
       {
         "name": "drain pool",
@@ -2386,7 +2386,7 @@
     "env": "mine",
     "title": "Main Tunnel Alpha",
     "background_image": "images/rooms/world_1/mine_alpha.webp",
-    "description": "Scars from giant drills cut across the first excavation tunnel beside an empty ore cart. Route markers blink toward Sector 4. The vibration under the rock is not machinery. It is two of them, circling below the floor, tracking her footfall.",
+    "description": "Massive spiral gouges from planetary tunnel borers scar the granite walls beside an overturned ore hopper. Emergency hazard chevrons blink feebly toward Sector 4. The vibration humming through the floor is rhythmic and biological: two burrowing borers circling beneath the stone, stalking the vibration of her boots.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -2413,12 +2413,12 @@
       {
         "name": "drills",
         "type": "generic",
-        "condition_unmet_message": "Colossal diamond-tipped bits, designed to chew through the canyon's hardest rock."
+        "condition_unmet_message": "Diamond-toothed borer heads jammed in fractured quartz."
       },
       {
         "name": "ore cart",
         "type": "generic",
-        "condition_unmet_message": "Empty and forgotten. A relic of a sector that ran dry years ago."
+        "condition_unmet_message": "Crushed beneath a ceiling collapse years ago, its steel rusted through."
       }
     ]
   },
@@ -2427,7 +2427,7 @@
     "env": "mine",
     "title": "Side Shunt 4",
     "background_image": "images/rooms/world_1/mine_shunt.webp",
-    "description": "A dead-end tunnel littered with shattered ore crates. Through cracked support beams, Nova's mining lamp catches the shimmer of an exposed resonant vein.",
+    "description": "A collapsed spur littered with shattered support timbers and crushed freight pallets. In the damp crevice beyond the timber shoring, your mining beam catches the eerie cyan luminescence of an exposed crystalline seam.",
     "npcs": [],
     "items": [
       "crew_datapad"
@@ -2454,12 +2454,12 @@
       {
         "name": "crates",
         "type": "generic",
-        "condition_unmet_message": "Splintered cargo crates crushed under ancient rockfall."
+        "condition_unmet_message": "Rotting packing crates crushed under tons of fallen shale."
       },
       {
         "name": "support beams",
         "type": "generic",
-        "condition_unmet_message": "Heavy timber and iron shoring groaning under canyon pressure."
+        "condition_unmet_message": "Strained timber props bowing under enormous tectonic weight."
       }
     ]
   },
@@ -2468,7 +2468,7 @@
     "env": "mine",
     "title": "Cavern Junction",
     "background_image": "images/rooms/world_1/mine_junction.webp",
-    "description": "Mine tunnels branch from a cavernous junction around a central support pillar. A mounted junction breaker box hums while an intermittent pulse runs through the power relay.",
+    "description": "Multiple excavation bores converge around a gargantuan central rock pillar wrapped in heavy power cabling. The wall-mounted substation breaker hums with dirty voltage, occasionally pulsing in time with an unseen frequency deeper down the shaft.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -3245,7 +3245,7 @@
     "env": "logistics",
     "title": "Pod Bay",
     "background_image": "images/rooms/world_1/launch_bay.webp",
-    "description": "Cargo rails climb toward the planetary shield under emergency red lights. One escape pod waits on the pad. [npc:The Warden] blocks the hatch while [npc:Zeke] lies to the controls.",
+    "description": "Massive electromagnetic launch rails angle upward through the atmospheric venting aperture toward the shimmering dome of the planetary shield. A single stripped survival pod rests on the launch cradle. [npc:The Warden] stands immovable before the hatch, while [npc:Zeke] frantically overrides the ignition relays.",
     "npcs": [
       "the_warden"
     ],
@@ -3266,27 +3266,27 @@
       {
         "name": "cargo rails",
         "type": "generic",
-        "condition_unmet_message": "Magnetic launchers designed to shoot ore into orbit. Dominion built them for cargo, not escape."
+        "condition_unmet_message": "Superconducting rail accelerators engineered to catapult raw ore canisters into orbit. Dominion built them for freight, never for evacuation."
       },
       {
         "name": "escape pod",
         "type": "generic",
-        "condition_unmet_message": "A cargo pod with life-support bolted in like an afterthought. It looks less like rescue than a chance."
+        "condition_unmet_message": "A converted surveyor canister with life support jury-rigged into the hull. It looks less like a starship and more like a desperate wager."
       }
     ],
     "blocked_directions": {
       "north": {
         "type": "lock",
         "consume": false,
-        "message_locked": "The Warden stands in front of the escape pod, blocking the access hatch.",
-        "message_unlock": "The Warden is defeated. Zeke has opened the pod hatch.",
         "requires": [
           {
             "room_id": "launch_bay",
             "state_key": "warden_defeated",
             "value": true
           }
-        ]
+        ],
+        "message_locked": "The Warden stands immovable before the escape pod, blocking the access hatch with his acoustic halberd.",
+        "message_unlock": "The Warden collapses in a shower of sparks. Zeke wrenches the pod hatch open."
       }
     },
     "npc_presence": [
@@ -3306,7 +3306,7 @@
     "env": "logistics",
     "title": "The Pod Core",
     "background_image": "images/rooms/world_1/launch_pod.webp",
-    "description": "The cramped pod smells of hot wiring and recycled oxygen. Zeke works the navigation console with shaking hands while the overhead speaker runs the countdown.",
+    "description": "The claustrophobic cockpit smells of scorched insulation, cold sweat, and stale canned oxygen. Zeke keys the navigation console with trembling fingers while the emergency klaxon blares through the overhead speakers.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -3323,7 +3323,7 @@
       {
         "name": "pod",
         "type": "generic",
-        "condition_unmet_message": "The metal walls feel thin enough to poke a finger through."
+        "condition_unmet_message": "The outer shielding is perilously thin. Any direct flak strike in high orbit will pierce the cabin."
       },
       {
         "name": "navigation console",

@@ -186,20 +186,8 @@ private fun DirectionArrowIndicator(direction: String, size: Dp, color: Color, i
 
 @Composable
 private fun DirectionLockIndicator(direction: String, size: Dp, color: Color) {
-    val rotation = when (direction.lowercase(Locale.getDefault())) {
-        "northeast" -> 45f
-        "east" -> 90f
-        "southeast" -> 135f
-        "south" -> 180f
-        "southwest" -> 225f
-        "west" -> 270f
-        "northwest" -> 315f
-        else -> 0f
-    }
     Canvas(
-        modifier = Modifier
-            .size(size)
-            .graphicsLayer { rotationZ = rotation }
+        modifier = Modifier.size(size)
     ) {
         val w = size.toPx()
         val bodyWidth = w * 0.62f

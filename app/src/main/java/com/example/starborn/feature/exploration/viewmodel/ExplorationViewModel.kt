@@ -5387,7 +5387,7 @@ class ExplorationViewModel(
             val normalized = direction.lowercase(Locale.getDefault())
             if (isDirectionUnlocked(roomId, normalized)) return@forEach
             when (block.type.lowercase(Locale.getDefault())) {
-                "lock", "key" -> {
+                "lock", "key", "state" -> {
                     val requirementsMet = requirementsMet(block.requires)
                     val needsKey = !block.keyId.isNullOrBlank()
                     if (requirementsMet && !needsKey) {
@@ -5455,7 +5455,7 @@ class ExplorationViewModel(
                     DirectionEvaluation(blocked = false)
                 }
             }
-            "lock", "key" -> {
+            "lock", "key", "state" -> {
                 if (!requirementsMet(block.requires)) {
                     if (mode == DirectionEvaluationMode.ATTEMPT) {
                         handleBlockedDirectionCinematic(room.id, normalized, block)

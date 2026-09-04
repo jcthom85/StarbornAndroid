@@ -154,6 +154,7 @@ import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.buildAnnotatedString
@@ -2969,22 +2970,57 @@ private fun TuningPuzzleDialog(
                                 contentDescription = "${slider.label} control"
                             }
                         )
-                        OutlinedTextField(
-                            value = numericInput,
-                            onValueChange = { candidate ->
-                                if (candidate.isEmpty() || candidate.all(Char::isDigit)) {
-                                    numericInput = candidate
-                                    candidate.toFloatOrNull()?.let { entered ->
-                                        val applied = entered.coerceIn(slider.min, slider.max)
-                                        onSliderChange(slider.id, applied)
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            OutlinedButton(
+                                onClick = {
+                                    val step = if ((slider.max - slider.min) > 100) 5f else 1f
+                                    val newVal = (slider.value - step).coerceIn(slider.min, slider.max)
+                                    numericInput = newVal.roundToInt().toString()
+                                    onSliderChange(slider.id, newVal)
+                                },
+                                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
+                                modifier = Modifier.height(48.dp)
+                            ) {
+                                Text("-", style = MaterialTheme.typography.titleMedium)
+                            }
+
+                            OutlinedTextField(
+                                value = numericInput,
+                                onValueChange = { candidate ->
+                                    if (candidate.isEmpty() || candidate.all(Char::isDigit)) {
+                                        numericInput = candidate
+                                        candidate.toFloatOrNull()?.let { entered ->
+                                            val applied = entered.coerceIn(slider.min, slider.max)
+                                            onSliderChange(slider.id, applied)
+                                        }
                                     }
-                                }
-                            },
-                            label = { Text("${slider.label} value (${slider.min.toInt()} - ${slider.max.toInt()})") },
-                            singleLine = true,
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                            modifier = Modifier.fillMaxWidth()
-                        )
+                                },
+                                label = { Text("${slider.min.toInt()}–${slider.max.toInt()}") },
+                                singleLine = true,
+                                keyboardOptions = KeyboardOptions(
+                                    keyboardType = KeyboardType.Number,
+                                    imeAction = ImeAction.Done
+                                ),
+                                modifier = Modifier.weight(1f)
+                            )
+
+                            OutlinedButton(
+                                onClick = {
+                                    val step = if ((slider.max - slider.min) > 100) 5f else 1f
+                                    val newVal = (slider.value + step).coerceIn(slider.min, slider.max)
+                                    numericInput = newVal.roundToInt().toString()
+                                    onSliderChange(slider.id, newVal)
+                                },
+                                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
+                                modifier = Modifier.height(48.dp)
+                            ) {
+                                Text("+", style = MaterialTheme.typography.titleMedium)
+                            }
+                        }
                     }
                 }
             }
@@ -8342,9 +8378,9 @@ private fun IllustratedCinematicOverlay(
                 impactShakeY.animateTo(0f, animationSpec = tween(durationMillis = 280, easing = FastOutSlowInEasing))
             }
         } else if (cue == "sfx_intro_chime_launch") {
-            // Pneumatic launch (0ms) followed by three distinct conduit impacts (450ms, 1050ms, 1650ms)
-            val conduitDelays = listOf(0L, 450L, 1050L, 1650L)
-            val conduitAmps = listOf(5.dp, 8.dp, 10.dp, 13.dp)
+            // Pneumatic launch (0ms) followed by three distinct heavy conduit impacts (500ms, 1050ms, 1720ms)
+            val conduitDelays = listOf(0L, 500L, 1050L, 1720L)
+            val conduitAmps = listOf(6.dp, 10.dp, 13.dp, 17.dp)
             launch {
                 for (i in conduitDelays.indices) {
                     if (i > 0) {
@@ -8353,9 +8389,9 @@ private fun IllustratedCinematicOverlay(
                     val amp = with(density) { conduitAmps[i].toPx() }
                     val dir = if (i % 2 == 0) 1f else -1f
                     impactShakeX.snapTo(amp * dir)
-                    impactShakeY.snapTo(-amp * 0.45f * dir)
-                    impactShakeX.animateTo(0f, animationSpec = tween(durationMillis = 240, easing = FastOutSlowInEasing))
-                    impactShakeY.animateTo(0f, animationSpec = tween(durationMillis = 240, easing = FastOutSlowInEasing))
+                    impactShakeY.snapTo(-amp * 0.5f * dir)
+                    impactShakeX.animateTo(0f, animationSpec = tween(durationMillis = 260, easing = FastOutSlowInEasing))
+                    impactShakeY.animateTo(0f, animationSpec = tween(durationMillis = 260, easing = FastOutSlowInEasing))
                 }
             }
         }
