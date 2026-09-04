@@ -8596,15 +8596,16 @@ private fun IllustratedCinematicOverlay(
                     .background(
                         Brush.verticalGradient(
                             colors = listOf(
-                                Color.Transparent,
-                                Color(0xFF4DD0E1).copy(alpha = 0.12f),
+                                Color(0xFF00E5FF).copy(alpha = 0.22f),
+                                Color(0xFF4DD0E1).copy(alpha = 0.16f),
                                 Color(0xFF00E5FF).copy(alpha = 0.38f)
                             ),
-                            startY = 400f
+                            startY = 0f,
+                            endY = Float.POSITIVE_INFINITY
                         )
                     )
             )
-            // Frost creeping in around the viewport edge during stasis freeze on dialogue step,
+            // Frost creeping in across the entire viewport during stasis freeze on dialogue step,
             // then holding steady when the pod is sealed so it doesn't jarringly clear and re-freeze.
             val isInitialStasisDialogue = state.step.captionStyle == CinematicCaptionStyle.DIALOGUE ||
                 !state.step.speaker.isNullOrBlank()
@@ -8613,18 +8614,22 @@ private fun IllustratedCinematicOverlay(
             } else {
                 0.45f
             }
-            // Cryogenic fog and frost covering the entire screen naturally without hollow center hole
+            // Cryogenic fog and frost covering the entire screen seamlessly from top to bottom edge
             Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .graphicsLayer { alpha = frostAlpha * contentAlpha }
                     .background(
-                        Brush.radialGradient(
+                        Brush.verticalGradient(
                             colors = listOf(
-                                Color(0xFF80DEEA).copy(alpha = 0.28f),
-                                Color(0xFFB2EBF2).copy(alpha = 0.42f),
-                                Color(0xFFE0F7FA).copy(alpha = 0.72f)
-                            )
+                                Color(0xFFE0F7FA).copy(alpha = 0.65f),
+                                Color(0xFFB2EBF2).copy(alpha = 0.40f),
+                                Color(0xFF80DEEA).copy(alpha = 0.35f),
+                                Color(0xFFB2EBF2).copy(alpha = 0.55f),
+                                Color(0xFFE0F7FA).copy(alpha = 0.75f)
+                            ),
+                            startY = 0f,
+                            endY = Float.POSITIVE_INFINITY
                         )
                     )
             )
