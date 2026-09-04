@@ -627,7 +627,7 @@
       },
       {
         "type": "narration",
-        "text": "The tube fires. Three impacts track it through the conduit.",
+        "text": "The tube fires, rocketing through the conduit.",
         "image": "images/cinematics/intro_chime_launch_v1.webp",
         "camera_start_scale": 1.13,
         "camera_end_scale": 1.22,

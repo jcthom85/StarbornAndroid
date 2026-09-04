@@ -8364,11 +8364,14 @@ private fun IllustratedCinematicOverlay(
         CinematicCameraMotion.DRIFT_RIGHT -> 32f
         else -> 0f
     }
-    val scale = lerp(
+    // Enforce a minimum safe bleed scale (1.06f) so camera drift Y and screen shake
+    // never pull the cropped image edge away from the top or bottom on tall aspect ratio displays.
+    val rawScale = lerp(
         state.step.cameraStartScale?.toFloat() ?: legacyStartScale,
         state.step.cameraEndScale?.toFloat() ?: legacyEndScale,
         progress
     )
+    val scale = rawScale.coerceAtLeast(1.06f)
     val density = LocalDensity.current
     val startX = with(density) { (state.step.cameraStartX ?: 0.0).toFloat().dp.toPx() }
     val endX = with(density) { (state.step.cameraEndX?.toFloat() ?: legacyEndX).dp.toPx() }
@@ -8415,21 +8418,13 @@ private fun IllustratedCinematicOverlay(
                 impactShakeY.animateTo(0f, animationSpec = tween(durationMillis = 280, easing = FastOutSlowInEasing))
             }
         } else if (cue == "sfx_intro_chime_launch") {
-            // Pneumatic launch (0ms) followed by three distinct heavy conduit impacts (500ms, 1050ms, 1720ms)
-            val conduitDelays = listOf(0L, 500L, 1050L, 1720L)
-            val conduitAmps = listOf(6.dp, 10.dp, 13.dp, 17.dp)
+            // Clean pneumatic tube launch impulse without repetitive dragging conduit shakes
+            val launchAmp = with(density) { 5.dp.toPx() }
             launch {
-                for (i in conduitDelays.indices) {
-                    if (i > 0) {
-                        delay(conduitDelays[i] - conduitDelays[i - 1])
-                    }
-                    val amp = with(density) { conduitAmps[i].toPx() }
-                    val dir = if (i % 2 == 0) 1f else -1f
-                    impactShakeX.snapTo(amp * dir)
-                    impactShakeY.snapTo(-amp * 0.5f * dir)
-                    impactShakeX.animateTo(0f, animationSpec = tween(durationMillis = 260, easing = FastOutSlowInEasing))
-                    impactShakeY.animateTo(0f, animationSpec = tween(durationMillis = 260, easing = FastOutSlowInEasing))
-                }
+                impactShakeX.snapTo(launchAmp)
+                impactShakeY.snapTo(-launchAmp * 0.4f)
+                impactShakeX.animateTo(0f, animationSpec = tween(durationMillis = 220, easing = FastOutSlowInEasing))
+                impactShakeY.animateTo(0f, animationSpec = tween(durationMillis = 220, easing = FastOutSlowInEasing))
             }
         }
         if (cue == "sfx_intro_beast_strike") {
@@ -8443,7 +8438,7 @@ private fun IllustratedCinematicOverlay(
     SideEffect {
         lastRenderedFrame.value = RenderedCinematicFrame(
             imagePath = state.step.imagePath,
-            scale = state.step.cameraEndScale?.toFloat() ?: legacyEndScale,
+            scale = (state.step.cameraEndScale?.toFloat() ?: legacyEndScale).coerceAtLeast(1.06f),
             translationX = endX,
             translationY = endY
         )
