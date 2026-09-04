@@ -349,6 +349,24 @@ fun NavigationHost(
                     modifier = Modifier.scale(pulseScale.value),
                     onEnemySelected = { enemyIds ->
                         if (enemyIds.isEmpty() || combatTransitionVisible) return@ExplorationScreen
+                        services.audioCuePlayer.execute(
+                            listOf(
+                                services.audioRouter.commandsForLayerOverride(
+                                    AudioCueType.MUSIC,
+                                    stop = true,
+                                    fadeMs = 150L
+                                ),
+                                services.audioRouter.commandsForLayerOverride(
+                                    AudioCueType.AMBIENT,
+                                    stop = true,
+                                    fadeMs = 150L
+                                ),
+                                services.audioRouter.commandsForLayerOverride(
+                                    AudioCueType.BATTLE,
+                                    cueId = "sfx_combat_transition_slam"
+                                )
+                            ).flatten()
+                        )
                         pendingCombatEnemyIds = enemyIds
                         combatTransitionVisible = true
                     },

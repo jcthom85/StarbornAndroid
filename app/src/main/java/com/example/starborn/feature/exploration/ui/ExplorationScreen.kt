@@ -555,7 +555,7 @@ fun ExplorationScreen(
         saveLoadMode != null ||
         showExitConfirmDialog
 
-    BackHandler(enabled = true) {
+    BackHandler(enabled = isAnyOverlayOpen) {
         when {
             showExitConfirmDialog -> showExitConfirmDialog = false
             saveLoadMode != null -> saveLoadMode = null
@@ -569,7 +569,7 @@ fun ExplorationScreen(
             uiState.tuningPuzzle != null -> viewModel.dismissTuningPuzzle()
             uiState.narrationPrompt != null -> viewModel.dismissNarration()
             uiState.isMenuOverlayVisible -> viewModel.closeMenuOverlay()
-            else -> showExitConfirmDialog = true
+            else -> Unit
         }
     }
 
@@ -1416,7 +1416,7 @@ fun ExplorationScreen(
             )
         }
 
-        if (fadeOverlayAnim.value > 0.01f) {
+        if (fadeOverlayAnim.value > 0.01f && uiState.cinematic == null) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -1465,7 +1465,9 @@ fun ExplorationScreen(
                 onAdvance = { viewModel.advanceCinematic() },
                 onSkip = { viewModel.skipCinematic() },
                 audioCuePlayer = audioCuePlayer,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier
+                    .fillMaxSize()
+                    .zIndex(200f)
             )
         }
 
@@ -7986,22 +7988,13 @@ fun CinematicOverlay(
     modifier: Modifier = Modifier
 ) {
     if (state.presentation == CinematicPresentation.ILLUSTRATED) {
-        Dialog(
-            onDismissRequest = {},
-            properties = DialogProperties(
-                dismissOnBackPress = false,
-                dismissOnClickOutside = false,
-                usePlatformDefaultWidth = false
-            )
-        ) {
-            IllustratedCinematicOverlay(
-                state = state,
-                onAdvance = onAdvance,
-                onSkip = onSkip,
-                audioCuePlayer = audioCuePlayer,
-                modifier = modifier
-            )
-        }
+        IllustratedCinematicOverlay(
+            state = state,
+            onAdvance = onAdvance,
+            onSkip = onSkip,
+            audioCuePlayer = audioCuePlayer,
+            modifier = modifier
+        )
         return
     }
     val speaker = state.step.speaker?.takeIf { it.isNotBlank() }
@@ -8290,9 +8283,21 @@ private fun IllustratedCinematicOverlay(
 
     LaunchedEffect(stepKey, audioCuePlayer) {
         state.step.audioCue?.takeIf { it.isNotBlank() }?.let { cue ->
-            audioCuePlayer?.execute(
-                listOf(AudioCommand.Play(AudioCueType.UI, cue, loop = false, fadeMs = 0L))
-            )
+            val isHeavyImpact = cue == "sfx_intro_door_buckle" || cue == "sfx_intro_door_collapse" || cue == "sfx_intro_beast_strike"
+            val commands = mutableListOf<AudioCommand>()
+            if (isHeavyImpact) {
+                // Momentarily duck music down to 0.58 so the explosive acoustic transient and sub-bass hit cleanly
+                commands += AudioCommand.Duck(AudioCueType.MUSIC, gain = 0.58f, fadeMs = 60L)
+            }
+            commands += AudioCommand.Play(AudioCueType.UI, cue, loop = false, fadeMs = 0L)
+            audioCuePlayer?.execute(commands)
+            if (isHeavyImpact) {
+                // Let the initial impact hit through, then smoothly restore score over the reverb tail
+                launch {
+                    delay(700L)
+                    audioCuePlayer?.execute(listOf(AudioCommand.Restore(AudioCueType.MUSIC, fadeMs = 900L)))
+                }
+            }
         }
         state.step.voiceCue?.takeIf { it.isNotBlank() }?.let { cue ->
             audioCuePlayer?.execute(
@@ -8408,14 +8413,46 @@ private fun IllustratedCinematicOverlay(
     LaunchedEffect(stepKey) {
         val cue = state.step.audioCue
         if (cue == "sfx_intro_door_buckle" || cue == "sfx_intro_door_collapse" || cue == "sfx_intro_beast_strike") {
-            val amp = with(density) { (if (cue == "sfx_intro_beast_strike") 14.dp else 9.dp).toPx() }
+            val isBeast = cue == "sfx_intro_beast_strike"
+            val initialAmp = with(density) { (if (isBeast) 16.dp else 10.dp).toPx() }
+            val tremorAmp = with(density) { (if (isBeast) 4.dp else 2.5.dp).toPx() }
+            // 1. Initial high-energy violent transient slam
             launch {
-                impactShakeX.snapTo(amp)
-                impactShakeX.animateTo(0f, animationSpec = tween(durationMillis = 280, easing = FastOutSlowInEasing))
+                impactShakeX.snapTo(initialAmp)
+                impactShakeX.animateTo(0f, animationSpec = tween(durationMillis = 260, easing = FastOutSlowInEasing))
+                // 2. Residual structural tremor decaying alongside the acoustic reverberation tail
+                val tremorCycles = 8
+                val cycleDuration = 120
+                for (cycle in tremorCycles downTo 1) {
+                    val decayRatio = cycle.toFloat() / tremorCycles
+                    val sign = if (cycle % 2 == 0) 1f else -1f
+                    impactShakeX.animateTo(
+                        targetValue = tremorAmp * decayRatio * sign,
+                        animationSpec = tween(durationMillis = cycleDuration / 2, easing = LinearEasing)
+                    )
+                    impactShakeX.animateTo(
+                        targetValue = 0f,
+                        animationSpec = tween(durationMillis = cycleDuration / 2, easing = LinearEasing)
+                    )
+                }
             }
             launch {
-                impactShakeY.snapTo(-amp * 0.4f)
-                impactShakeY.animateTo(0f, animationSpec = tween(durationMillis = 280, easing = FastOutSlowInEasing))
+                impactShakeY.snapTo(-initialAmp * 0.45f)
+                impactShakeY.animateTo(0f, animationSpec = tween(durationMillis = 260, easing = FastOutSlowInEasing))
+                val tremorCycles = 8
+                val cycleDuration = 120
+                for (cycle in tremorCycles downTo 1) {
+                    val decayRatio = cycle.toFloat() / tremorCycles
+                    val sign = if (cycle % 2 == 0) -1f else 1f
+                    impactShakeY.animateTo(
+                        targetValue = tremorAmp * 0.4f * decayRatio * sign,
+                        animationSpec = tween(durationMillis = cycleDuration / 2, easing = LinearEasing)
+                    )
+                    impactShakeY.animateTo(
+                        targetValue = 0f,
+                        animationSpec = tween(durationMillis = cycleDuration / 2, easing = LinearEasing)
+                    )
+                }
             }
         } else if (cue == "sfx_intro_chime_launch") {
             // Clean pneumatic tube launch impulse without repetitive dragging conduit shakes
@@ -8642,7 +8679,7 @@ private fun IllustratedCinematicOverlay(
                     .background(
                         Brush.verticalGradient(
                             listOf(
-                                Color.Black.copy(alpha = 0.28f),
+                                if (isStasisPod) Color.Transparent else Color.Black.copy(alpha = 0.28f),
                                 Color.Transparent,
                                 Color.Black.copy(alpha = 0.32f),
                                 Color.Black.copy(alpha = 0.94f)

@@ -107,12 +107,16 @@ SFX_CATALOG = {
         "duration": 25.0,
     },
     "sfx_intro_door_buckle": {
-        "text": "Massive reinforced pressure vault doors bow inward under one brutal impact, deep steel buckling and groaning, bolts snap, concrete underground reverb, urgent klaxon pulse, no music",
-        "duration": 2.5,
+        "text": "A colossal terrifying physical blow slams against reinforced underground blast doors, earth-shaking sub-bass boom, violently groaning buckling titanium plates, shearing structural stress, reverberating through a vast cavernous subterranean concrete bunker with immense deep echo and long rumbling acoustic tail, no music",
+        "duration": 3.2,
+    },
+    "sfx_intro_door_collapse": {
+        "text": "Catastrophic vault door failure under immense explosive force, colossal metal blast gate caves inward, buckling iron beams, violent pneumatic rupture, heavy concrete wall cracking, booming sub-bass concussion echoing through a massive cavernous subterranean silo with rich wet reverb and long decaying rumble, no music",
+        "duration": 3.4,
     },
     "sfx_intro_beast_strike": {
-        "text": "A terrifying monstrous physical impact slamming against reinforced glass, heavy sub-bass thud, loud glass spiderweb crack, psionic distortion shockwave, sudden cut to black, no music",
-        "duration": 2.5,
+        "text": "A monstrous apex predator violently crashes into reinforced blast glass at full speed, deafening low-frequency sub-bass shockwave impact, glass spiderwebs loudly, immense echoing boom reverberating through a vast dark cavern with deep acoustic resonance and ominous sub-bass tail, sudden abrupt silence, no music",
+        "duration": 3.2,
     },
     "sfx_intro_chime_launch": {
         "text": "Heavy industrial pneumatic emergency launch tube fires with a powerful compressed-air thump, metal capsule accelerates rapidly through a conduit with three distinct resonant pipe impacts, no music",
@@ -205,6 +209,10 @@ SFX_CATALOG = {
     "battle_start": {
         "text": "A dramatic orchestral brass stab, rising energy, JRPG combat transition sound, low rumble impact",
         "duration": 1.5,
+    },
+    "sfx_combat_transition_slam": {
+        "text": "A massive sci-fi blade slash impact, violent metallic steel slam, deep low sub bass boom, followed immediately by a sharp urgent electronic warning alert beep, high-tech tactical danger sting",
+        "duration": 1.8,
     },
     "shield_block": {
         "text": "A heavy metal plate slamming shut, high-impact clank, metallic resonance ringing out, solid barrier",

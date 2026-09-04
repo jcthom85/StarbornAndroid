@@ -3297,7 +3297,7 @@ private fun determineSkillTargeting(skill: Skill): SkillTargeting {
         commands += audioRouter.commandsForLayerOverride(
             layer = AudioCueType.MUSIC,
             cueId = trackId,
-            fadeMs = 400L,
+            fadeMs = 0L,
             loop = true
         )
         emitAudio(commands)

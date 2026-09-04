@@ -46,7 +46,7 @@
       "id": "music_w1_combat",
       "type": "music",
       "loop": true,
-      "fade_in_ms": 600,
+      "fade_in_ms": 0,
       "fade_out_ms": 800,
       "gain": 1.0,
       "tags": [
@@ -86,7 +86,7 @@
       "id": "music_w2_combat",
       "type": "music",
       "loop": true,
-      "fade_in_ms": 600,
+      "fade_in_ms": 0,
       "fade_out_ms": 800,
       "gain": 1.0,
       "tags": [
@@ -113,7 +113,7 @@
       "id": "music_w3_combat",
       "type": "music",
       "loop": true,
-      "fade_in_ms": 600,
+      "fade_in_ms": 0,
       "fade_out_ms": 800,
       "gain": 1.0,
       "tags": [
@@ -140,7 +140,7 @@
       "id": "music_w4_combat",
       "type": "music",
       "loop": true,
-      "fade_in_ms": 600,
+      "fade_in_ms": 0,
       "fade_out_ms": 800,
       "gain": 1.0,
       "tags": [
@@ -167,7 +167,7 @@
       "id": "music_w5_combat",
       "type": "music",
       "loop": true,
-      "fade_in_ms": 600,
+      "fade_in_ms": 0,
       "fade_out_ms": 800,
       "gain": 1.0,
       "tags": [
@@ -194,7 +194,7 @@
       "id": "music_w6_combat",
       "type": "music",
       "loop": true,
-      "fade_in_ms": 600,
+      "fade_in_ms": 0,
       "fade_out_ms": 800,
       "gain": 1,
       "tags": [
@@ -1078,7 +1078,7 @@
     {
       "id": "sfx_intro_door_buckle",
       "category": "battle",
-      "gain": 0.88,
+      "gain": 1.0,
       "tags": [
         "intro",
         "containment",
@@ -1088,7 +1088,7 @@
     {
       "id": "sfx_intro_door_collapse",
       "category": "battle",
-      "gain": 0.92,
+      "gain": 1.0,
       "tags": [
         "intro",
         "containment",
@@ -1099,7 +1099,7 @@
     {
       "id": "sfx_intro_beast_strike",
       "category": "battle",
-      "gain": 0.95,
+      "gain": 1.0,
       "tags": [
         "intro",
         "beast",
@@ -1124,6 +1124,17 @@
         "intro",
         "stasis",
         "industrial"
+      ]
+    },
+    {
+      "id": "sfx_intro_stasis_lock",
+      "category": "battle",
+      "gain": 0.88,
+      "tags": [
+        "intro",
+        "stasis",
+        "lock",
+        "pneumatic"
       ]
     },
     {
@@ -1285,6 +1296,14 @@
       "fade_in_ms": 0,
       "fade_out_ms": 420,
       "duration_ms": 2000
+    },
+    {
+      "id": "sfx_combat_transition_slam",
+      "category": "battle",
+      "priority": 5,
+      "gain": 1,
+      "fade_in_ms": 0,
+      "fade_out_ms": 200
     },
     {
       "id": "battle_start",

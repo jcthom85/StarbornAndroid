@@ -595,7 +595,7 @@
         "camera_end_y": 12.0,
         "transition": "cut",
         "audio_cue": "sfx_intro_door_buckle",
-        "duration_seconds": 3.0
+        "duration_seconds": 3.4
       },
       {
         "type": "narration",
@@ -623,7 +623,7 @@
         "camera_start_y": 0.0,
         "camera_end_y": -10.0,
         "transition": "cut",
-        "duration_seconds": 2.8
+        "duration_seconds": 2.5
       },
       {
         "type": "narration",
@@ -637,7 +637,7 @@
         "camera_end_y": -18.0,
         "audio_cue": "sfx_intro_chime_launch",
         "transition": "cut",
-        "duration_seconds": 2.6
+        "duration_seconds": 2.2
       },
       {
         "type": "narration",
@@ -680,6 +680,7 @@
         "camera_end_x": 22.0,
         "camera_start_y": -8.0,
         "camera_end_y": -18.0,
+        "audio_cue": "sfx_intro_stasis_lock",
         "transition": "cut",
         "duration_seconds": 2.6
       },
