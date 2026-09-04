@@ -20,6 +20,7 @@ import com.example.starborn.domain.model.TuningPuzzle
 import com.example.starborn.data.local.Theme
 import com.squareup.moshi.Types
 import java.io.File
+import java.util.Locale
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -182,6 +183,39 @@ class DataIntegrityTest {
         assertTrue(
             "Room action labels should be in-world nouns, not meta puzzle terms: $offenders",
             offenders.isEmpty()
+        )
+    }
+
+    @Test
+    fun worldOneRoomActionNamesAppearInDescriptions() {
+        val rooms = readList("src/main/assets/rooms.json", Room::class.java)
+        val w1Prefixes = listOf("pit_", "workshop_", "medbay_", "trade_", "checkpoint_", "admin_", "mine_", "launch_")
+        val w1Rooms = rooms.filter { room -> w1Prefixes.any { room.id.startsWith(it) } }
+
+        val missing = mutableListOf<String>()
+        for (room in w1Rooms) {
+            val allDescs = listOf(room.description.orEmpty()) + room.descriptionVariants.map { it.description }
+            val combinedText = allDescs.joinToString(" ").lowercase(Locale.getDefault())
+
+            for (action in room.actions) {
+                val name = action["name"] as? String ?: continue
+                if (name.isBlank()) continue
+                val variants = listOf(
+                    name,
+                    name.replace('_', ' '),
+                    name.replace('-', ' '),
+                    name.replace('’', '\'')
+                )
+                val found = variants.any { combinedText.contains(it.lowercase(Locale.getDefault())) }
+                if (!found) {
+                    missing.add("${room.id} -> action '${name}'")
+                }
+            }
+        }
+
+        assertTrue(
+            "All World 1 room action names must appear verbatim in room description or variants to be interactive: $missing",
+            missing.isEmpty()
         )
     }
 
@@ -930,6 +964,24 @@ class DataIntegrityTest {
             "Dialogue should avoid monotonous/robotic quest templating: $flaggedLines",
             flaggedLines.isEmpty()
         )
+    }
+
+    @Test
+    fun dialogueTriggersAndConditionsDoNotContainDanglingReferences() {
+        val dialogue = readList("src/main/assets/dialogue.json", DialogueLine::class.java)
+        val quests = readList("src/main/assets/quests.json", Quest::class.java).map { it.id }.toSet()
+        val milestones = readList("src/main/assets/milestones.json", MilestoneDefinition::class.java).map { it.id }.toSet()
+        val allDialogueIds = dialogue.map { it.id }.toSet()
+
+        val errors = mutableListOf<String>()
+        dialogue.forEach { line ->
+            line.next?.let { nextId ->
+                if (nextId !in allDialogueIds) {
+                    errors.add("Dialogue '${line.id}' next points to non-existent id '$nextId'")
+                }
+            }
+        }
+        assertTrue("All dialogue next references must exist: $errors", errors.isEmpty())
     }
 }
 
