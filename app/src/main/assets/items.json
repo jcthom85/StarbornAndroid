@@ -1566,7 +1566,7 @@
       "mining keycard"
     ],
     "type": "quest",
-    "description": "A magnetic pass that unlocks sealed sections of the Stellarium mines.",
+    "description": "A magnetic keychit stamped with Dominion safety chevrons and Zeke's unauthorized substation override. Grants access to the deep mine blast doors.",
     "value": 0
   },
   {
@@ -1578,7 +1578,7 @@
       "relic"
     ],
     "type": "key_item",
-    "description": "Architect Echo #1. Nova woke it with an ungoverned cutter and survived its damaged calibration handshake.",
+    "description": "Architect Echo #1. A bifurcated spire of warm, seamless black alloy. It awoke when Nova bypassed the factory governor on her cutter, vibrating with a subsonic frequency that rattles bone.",
     "value": 0,
     "rarity": "mythic"
   },
@@ -1591,14 +1591,14 @@
       "signal cell"
     ],
     "type": "key_item",
-    "description": "Orion's brass identity key and paired beacon. It authenticates compatible systems through authorization and navigation buses.",
+    "description": "Orion's antique brass Chime. Launched from Sector 9 twenty years ago, its etched acoustic pins authenticate compatible starship launch telemetry and navigation arrays.",
     "value": 0,
     "rarity": "mythic"
   },
   {
     "id": "mod_corrosive_rounds",
     "name": "Corrosive Rounds",
-    "description": "Ammo modification that drips with molecular acid.",
+    "description": "An illegal munitions mod scavenged from an enforcer's sidearm. Micro-injectors coat plasma slugs in acid capable of dissolving composite armor plates.",
     "type": "mod",
     "value": 250,
     "buy_price": 500,
@@ -1618,7 +1618,7 @@
     "aliases": [
       "pulse grenade"
     ],
-    "description": "Standard issue mining explosive. Designed to crack rocks; equally effective on ribs.",
+    "description": "A military-grade EMP canister from old resistance stock. Emits an intense electromagnetic detonation engineered to shatter combat barriers and fry drone circuits.",
     "type": "consumable",
     "value": 60,
     "buy_price": 120,
@@ -1637,7 +1637,7 @@
       "nova rations"
     ],
     "type": "consumable",
-    "description": "Compressed protein slabs, caffeine chews, and a flask of electrolyte soup. Restores 40 HP.",
+    "description": "Vacuum-sealed yeast paste, chewable glucose blocks, and an electrolyte pouch. Tastes like chalk and salt, but restores 40 HP.",
     "value": 35,
     "effect": {
       "restore_hp": 40
@@ -1651,13 +1651,13 @@
       "energy core"
     ],
     "type": "quest",
-    "description": "A stabilized energy core destined for Jed's workshop.",
+    "description": "A heavy magnetic containment cell recovered from an abandoned generator nest. Still ticks with residual electromagnetic potential.",
     "value": 0
   },
   {
     "id": "herb",
     "name": "Herb",
-    "description": "A fragrant herb that brightens most dishes.",
+    "description": "Wild subterranean lichen harvested from dripping cave seams. Adds a pungent, peppery kick to rations.",
     "type": "ingredient",
     "value": 6,
     "buy_price": 12,
@@ -1666,7 +1666,7 @@
   {
     "id": "noodles",
     "name": "Noodles",
-    "description": "Compressed noodles that boil quickly in the field.",
+    "description": "Dry bricks of compressed starch dough that reconstitute in boiling graywater.",
     "type": "ingredient",
     "value": 6,
     "buy_price": 12,
@@ -1675,7 +1675,7 @@
   {
     "id": "fiery_pepper",
     "name": "Fiery Pepper",
-    "description": "A scorching pepper harvested near geothermal vents.",
+    "description": "A scorched, sulfur-tolerant nightshade grown in thermal exhaust ducts. Burns hot enough to clear dust from your sinuses.",
     "type": "ingredient",
     "value": 9,
     "buy_price": 18,
@@ -1684,7 +1684,7 @@
   {
     "id": "beast_meat",
     "name": "Beast Meat",
-    "description": "Lean meat carved from the local megafauna.",
+    "description": "Fibrous, iron-rich muscle tissue carved from subterranean fauna. Chewy, but calorie-dense.",
     "type": "ingredient",
     "value": 14,
     "buy_price": 28,
@@ -1693,7 +1693,7 @@
   {
     "id": "spicy_ramen",
     "name": "Spicy Ramen",
-    "description": "A blazing broth that clears the mind and sharpens focus.",
+    "description": "A piping bowl of noodles in fiery red broth. Ignites the blood and sharpens combat reflexes (+5 Speed for 2 turns).",
     "type": "consumable",
     "value": 55,
     "buy_price": 110,
@@ -1712,7 +1712,7 @@
   {
     "id": "ballistic_weave",
     "name": "Ballistic Weave",
-    "description": "Reinforced fiber sheets used as a base for armor mods.",
+    "description": "High-density carbon-fiber mesh scavenged from surveyor pressure suits. Resists shrapnel and piercing rounds.",
     "type": "component",
     "value": 24,
     "buy_price": 48,
@@ -1721,7 +1721,7 @@
   {
     "id": "wiring_bundle",
     "name": "Wiring Bundle",
-    "description": "A bundle of insulated wiring for delicate repairs.",
+    "description": "Insulated copper-lead harness salvaged from a drill carriage. Indispensable for field electronics and relay repairs.",
     "type": "component",
     "value": 18,
     "buy_price": 36,
