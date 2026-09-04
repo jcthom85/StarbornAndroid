@@ -2306,7 +2306,11 @@ class ExplorationViewModel(
                             VisualEnemyParty(id = "static_$index", enemies = members)
                         }
                         val movingVisuals = enemyMovementManager?.partiesInRoom(room.id, sessionState).orEmpty().map { party ->
-                            VisualEnemyParty(id = "moving_${party.id}", enemies = party.enemies)
+                            VisualEnemyParty(
+                                id = "moving_${party.id}",
+                                enemies = party.enemies,
+                                isAggressive = party.aggression.equals("aggressive", ignoreCase = true)
+                            )
                         }
                         staticVisuals + movingVisuals
                     }.orEmpty(),
@@ -3633,7 +3637,11 @@ class ExplorationViewModel(
             VisualEnemyParty(id = "static_$index", enemies = members)
         }
         val movingVisuals = manager.partiesInRoom(roomId, sessionStore.state.value).map { party ->
-            VisualEnemyParty(id = "moving_${party.id}", enemies = party.enemies)
+            VisualEnemyParty(
+                id = "moving_${party.id}",
+                enemies = party.enemies,
+                isAggressive = party.aggression.equals("aggressive", ignoreCase = true)
+            )
         }
         _uiState.update { it.copy(visualEnemyParties = staticVisuals + movingVisuals) }
         refreshMovementPresence()
@@ -3700,7 +3708,8 @@ class ExplorationViewModel(
                         VisualEnemyParty(
                             id = partyId,
                             enemies = activeParty.enemies,
-                            enteringFrom = enteringFrom
+                            enteringFrom = enteringFrom,
+                            isAggressive = activeParty.aggression.equals("aggressive", ignoreCase = true)
                         )
                     )
                 }
@@ -3734,7 +3743,11 @@ class ExplorationViewModel(
 
             val finalVisuals = if (prevVisuals.isEmpty()) {
                 val movingVisuals = activeMovingParties.map { party ->
-                    VisualEnemyParty(id = "moving_${party.id}", enemies = party.enemies)
+                    VisualEnemyParty(
+                        id = "moving_${party.id}",
+                        enemies = party.enemies,
+                        isAggressive = party.aggression.equals("aggressive", ignoreCase = true)
+                    )
                 }
                 staticVisuals + movingVisuals
             } else {

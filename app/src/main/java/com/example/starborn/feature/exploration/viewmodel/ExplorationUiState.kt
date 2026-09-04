@@ -513,5 +513,6 @@ data class VisualEnemyParty(
     val id: String,
     val enemies: List<String>,
     val enteringFrom: String? = null,
-    val leavingTo: String? = null
+    val leavingTo: String? = null,
+    val isAggressive: Boolean = false
 )

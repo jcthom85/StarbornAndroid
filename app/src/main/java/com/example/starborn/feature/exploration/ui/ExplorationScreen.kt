@@ -6479,35 +6479,19 @@ private fun EnemyPartyCluster(
                 animAlpha.snapTo(1f)
                 animX.snapTo(transitionOffsetX)
                 animY.snapTo(transitionOffsetY)
-
                 coroutineScope {
                     launch {
-                        animX.animateTo(0f, animationSpec = tween(500, easing = androidx.compose.animation.core.LinearOutSlowInEasing))
+                        animX.animateTo(0f, animationSpec = tween(460, easing = androidx.compose.animation.core.LinearOutSlowInEasing))
                     }
                     launch {
-                        animY.animateTo(0f, animationSpec = tween(500, easing = androidx.compose.animation.core.LinearOutSlowInEasing))
+                        animY.animateTo(0f, animationSpec = tween(460, easing = androidx.compose.animation.core.LinearOutSlowInEasing))
                     }
-                }
-
-                val wiggleSpeed = 60
-                if (verticalWiggle) {
-                    animY.animateTo(-12f, animationSpec = tween(wiggleSpeed, easing = androidx.compose.animation.core.LinearEasing))
-                    animY.animateTo(12f, animationSpec = tween(wiggleSpeed, easing = androidx.compose.animation.core.LinearEasing))
-                    animY.animateTo(-6f, animationSpec = tween(wiggleSpeed, easing = androidx.compose.animation.core.LinearEasing))
-                    animY.animateTo(6f, animationSpec = tween(wiggleSpeed, easing = androidx.compose.animation.core.LinearEasing))
-                    animY.animateTo(0f, animationSpec = tween(wiggleSpeed, easing = androidx.compose.animation.core.LinearEasing))
-                } else {
-                    animX.animateTo(-12f, animationSpec = tween(wiggleSpeed, easing = androidx.compose.animation.core.LinearEasing))
-                    animX.animateTo(12f, animationSpec = tween(wiggleSpeed, easing = androidx.compose.animation.core.LinearEasing))
-                    animX.animateTo(-6f, animationSpec = tween(wiggleSpeed, easing = androidx.compose.animation.core.LinearEasing))
-                    animX.animateTo(6f, animationSpec = tween(wiggleSpeed, easing = androidx.compose.animation.core.LinearEasing))
-                    animX.animateTo(0f, animationSpec = tween(wiggleSpeed, easing = androidx.compose.animation.core.LinearEasing))
                 }
             }
             else -> {
+                animAlpha.snapTo(1f)
                 animX.snapTo(0f)
                 animY.snapTo(0f)
-                animAlpha.snapTo(1f)
             }
         }
     }
@@ -6515,8 +6499,8 @@ private fun EnemyPartyCluster(
     Box(
         modifier = modifier
             .graphicsLayer {
-                translationX = with(density) { animX.value.dp.toPx() }
-                translationY = with(density) { animY.value.dp.toPx() }
+                translationX = animX.value * density.density
+                translationY = animY.value * density.density
                 alpha = animAlpha.value
             },
         contentAlignment = Alignment.BottomCenter
@@ -6539,6 +6523,7 @@ private fun EnemyPartyCluster(
                 icon = enemyIcons[enemyId],
                 size = memberSize,
                 showFightBadge = (index == 0),
+                isAggressive = party.isAggressive,
                 modifier = Modifier
                     .zIndex((party.enemies.size - index).toFloat())
                     .offset(x = offsetX, y = offsetY)
@@ -6564,10 +6549,27 @@ private fun EnemyPartyStandee(
     icon: EnemyIconUi?,
     size: Dp,
     showFightBadge: Boolean = true,
+    isAggressive: Boolean = false,
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
     val interactionSource = remember(instanceKey) { MutableInteractionSource() }
+    val aggressivePulse = if (isAggressive && !transitionActive) {
+        val pulseTransition = rememberInfiniteTransition(label = "aggroPulse-$instanceKey")
+        val pulse by pulseTransition.animateFloat(
+            initialValue = 0.5f,
+            targetValue = 1f,
+            animationSpec = infiniteRepeatable(
+                animation = tween(durationMillis = 800, easing = FastOutSlowInEasing),
+                repeatMode = RepeatMode.Reverse
+            ),
+            label = "aggroPulseAlpha-$instanceKey"
+        )
+        pulse
+    } else {
+        1f
+    }
+
     Box(
         modifier = modifier
             .width(size)
@@ -6585,31 +6587,66 @@ private fun EnemyPartyStandee(
             instanceKey = instanceKey,
             tier = tier,
             motionCycle = motionCycle,
-            accentColor = accentColor,
+            accentColor = if (isAggressive) Color(0xFFFF3B30) else accentColor,
             isDark = isDark,
             transitionActive = transitionActive,
             icon = icon,
             iconSize = size
         )
         if (!transitionActive && showFightBadge) {
-            Surface(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .offset(y = 2.dp),
-                shape = RoundedCornerShape(6.dp),
-                color = Color(0xFF7F1D1D).copy(alpha = 0.90f),
-                border = BorderStroke(1.dp, Color(0xFFEF4444).copy(alpha = 0.85f))
-            ) {
-                Text(
-                    text = "⚔ FIGHT",
-                    style = MaterialTheme.typography.labelSmall.copy(
-                        fontSize = 9.sp,
-                        fontWeight = FontWeight.Bold,
-                        letterSpacing = 0.5.sp
-                    ),
-                    color = Color.White,
-                    modifier = Modifier.padding(horizontal = 5.dp, vertical = 1.dp)
-                )
+            if (isAggressive) {
+                Surface(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .offset(y = 2.dp),
+                    shape = RoundedCornerShape(6.dp),
+                    color = Color(0xFFB91C1C).copy(alpha = 0.95f),
+                    border = BorderStroke(1.dp, Color(0xFFFFA39E).copy(alpha = aggressivePulse))
+                ) {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(3.dp)
+                    ) {
+                        Text(
+                            text = "⚠",
+                            style = MaterialTheme.typography.labelSmall.copy(
+                                fontSize = 8.sp,
+                                fontWeight = FontWeight.Black
+                            ),
+                            color = Color(0xFFFFD591)
+                        )
+                        Text(
+                            text = "HOSTILE",
+                            style = MaterialTheme.typography.labelSmall.copy(
+                                fontSize = 9.sp,
+                                fontWeight = FontWeight.Black,
+                                letterSpacing = 0.6.sp
+                            ),
+                            color = Color.White
+                        )
+                    }
+                }
+            } else {
+                Surface(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .offset(y = 2.dp),
+                    shape = RoundedCornerShape(6.dp),
+                    color = Color(0xFF7F1D1D).copy(alpha = 0.90f),
+                    border = BorderStroke(1.dp, Color(0xFFEF4444).copy(alpha = 0.85f))
+                ) {
+                    Text(
+                        text = "⚔ FIGHT",
+                        style = MaterialTheme.typography.labelSmall.copy(
+                            fontSize = 9.sp,
+                            fontWeight = FontWeight.Bold,
+                            letterSpacing = 0.5.sp
+                        ),
+                        color = Color.White,
+                        modifier = Modifier.padding(horizontal = 5.dp, vertical = 1.dp)
+                    )
+                }
             }
         }
     }

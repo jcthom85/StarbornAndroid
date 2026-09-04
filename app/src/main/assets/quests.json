@@ -367,11 +367,11 @@
         "tasks": [
           {
             "id": "find_hidden_stash",
-            "text": "Find the hidden stash."
+            "text": "Head into Trade Row and search the recessed alcove for the hidden stash."
           },
           {
             "id": "open_rebel_cache",
-            "text": "Open the old rebel cache."
+            "text": "Pry open the corroded seal on the old rebel cache."
           }
         ]
       },
@@ -382,7 +382,7 @@
         "tasks": [
           {
             "id": "return_cache_proof",
-            "text": "Return to Scrapper."
+            "text": "Return to Scrapper at his scrap pile before his nerve breaks."
           }
         ]
       }
@@ -415,19 +415,19 @@
         "tasks": [
           {
             "id": "enter_ventilation_hub",
-            "text": "Enter the ventilation hub."
+            "text": "Enter the ventilation hub through the low service hatch."
           },
           {
             "id": "inspect_cracked_vent",
-            "text": "Inspect the cracked vent."
+            "text": "Inspect the cracked vent housing leaking sulfuric fumes."
           },
           {
             "id": "reroute_airflow",
-            "text": "Reroute the failing fans."
+            "text": "Reroute the failing fans at the manual bypass lever."
           },
           {
             "id": "clear_toxic_blockage",
-            "text": "Clear the toxic blockage."
+            "text": "Clear the toxic blockage fouling the primary intake grate."
           }
         ]
       },
@@ -438,7 +438,7 @@
         "tasks": [
           {
             "id": "return_to_doc",
-            "text": "Return to Doc."
+            "text": "Return to Doc in the Med-Bay with the air quality report."
           }
         ]
       }
