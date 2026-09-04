@@ -600,7 +600,7 @@
     "name": "Arc Tether",
     "character": "nova",
     "type": "active",
-    "description": "Lashes a high-voltage wire between target and ground, dealing lightning damage and applying Shock.",
+    "description": "Tethers a target with arcing current, dealing lightning damage and shocking them.",
     "combat_tags": [
       "shock"
     ],
@@ -616,7 +616,7 @@
     "name": "Cryo Vent",
     "character": "nova",
     "type": "active",
-    "description": "Purges pressurized coolant through the cutter shroud, freezing armor plates and applying Brittle for 2 turns. Physical attacks deal +50% damage to Brittle targets.",
+    "description": "Deals freeze damage and applies Brittle for two turns. Physical attacks deal 50% more damage to Brittle targets. Cooldown: 3 turns.",
     "combat_tags": [
       "freeze",
       "setup"
@@ -633,7 +633,7 @@
     "name": "Plasma Burst",
     "character": "nova",
     "type": "active",
-    "description": "Overdrives the cutter nozzle to hose the enemy formation in superheated gas, triggering Meltdown.",
+    "description": "Detonates a plasma burst across the enemy line, igniting targets.",
     "combat_tags": [
       "burn",
       "aoe"
@@ -650,7 +650,7 @@
     "name": "Rend Round",
     "character": "nova",
     "type": "active",
-    "description": "A barbed flechette round calibrated to bite deep into armor seams. Deals massive bonus damage and Bleed against staggered targets.",
+    "description": "A precision finisher that tears open a staggered target and causes bleed.",
     "combat_tags": [
       "dmg"
     ],
@@ -669,7 +669,7 @@
     "name": "Shatter Blow",
     "character": "zeke",
     "type": "active",
-    "description": "A heavy pneumatic piston strike that fractures enemy armor and applies Weak.",
+    "description": "A crushing strike that weakens the target.",
     "combat_tags": [
       "dmg"
     ],
@@ -685,7 +685,7 @@
     "name": "Bulwark Stance",
     "character": "zeke",
     "type": "active",
-    "description": "Plants magnetic boots and locks reinforced forearm plates into place, granting Guard and Braced.",
+    "description": "Braces for impact, reducing incoming damage.",
     "combat_tags": [
       "support"
     ],
@@ -702,7 +702,7 @@
     "name": "Overload Fists",
     "character": "zeke",
     "type": "active",
-    "description": "Shorts maintenance capacitors through his gauntlets, delivering a concussive jolt that shocks the target.",
+    "description": "Surges with electricity to shock the target.",
     "combat_tags": [
       "shock"
     ],
@@ -718,7 +718,7 @@
     "name": "Quake Slam",
     "character": "zeke",
     "type": "active",
-    "description": "Slams the deck with full pneumatic force, sending a shockwave across the enemy line that applies Weak, with devastating bonus damage against stunned targets.",
+    "description": "Detonates Gh0st's stun window, crushing every foe while their formation is locked.",
     "combat_tags": [
       "aoe"
     ],
@@ -737,7 +737,7 @@
     "name": "Prism Lance",
     "character": "orion",
     "type": "active",
-    "description": "Channels coherent harmonic light through a focusing crystal, delivering an armor-piercing beam.",
+    "description": "Fires a focused lance of radiant energy.",
     "combat_tags": [
       "acid"
     ],
@@ -751,7 +751,7 @@
     "name": "Nano Repair",
     "character": "orion",
     "type": "active",
-    "description": "Deploys an aerosol of medical nanites that knit flesh and seal torn suits over time.",
+    "description": "Nanites stabilize the body, restoring health over time.",
     "combat_tags": [
       "support"
     ],
@@ -767,7 +767,7 @@
     "name": "Disruption Pulse",
     "character": "orion",
     "type": "active",
-    "description": "Emitters pulse an inverted resonance wave that scrambles targeting sensors and leaves all foes Weakened.",
+    "description": "A disruptive wave that weakens every enemy.",
     "combat_tags": [
       "aoe"
     ],
@@ -783,7 +783,7 @@
     "name": "Stasis Field",
     "character": "orion",
     "type": "active",
-    "description": "Generates a localized cryogenic dampening sphere that flash-freezes the opposing vanguard.",
+    "description": "Freezes the battlefield in a burst of cold energy.",
     "combat_tags": [
       "freeze",
       "aoe"
@@ -800,7 +800,7 @@
     "name": "Venom Edge",
     "character": "gh0st",
     "type": "active",
-    "description": "Coats a vibroblade in caustic slag runoff, carving open armor seams and leaving lingering Erosion.",
+    "description": "A septic cut that seeps into the wound.",
     "combat_tags": [
       "acid"
     ],
@@ -816,7 +816,7 @@
     "name": "System Crash",
     "character": "gh0st",
     "type": "active",
-    "description": "Injects an overload virus into target kinetic systems, shutting down their response loop with Stun.",
+    "description": "A void surge that stuns the target.",
     "combat_tags": [
       "source"
     ],
@@ -832,7 +832,7 @@
     "name": "Shadow Flurry",
     "character": "gh0st",
     "type": "active",
-    "description": "Steps through blind spots in a blur of blade strikes, leaving the entire enemy squad Bleeding.",
+    "description": "A rapid strike that hits every enemy.",
     "combat_tags": [
       "aoe"
     ],
@@ -848,7 +848,7 @@
     "name": "Blast Wave",
     "character": "nova",
     "type": "source_art",
-    "description": "Unleashes a concussive pulse of raw Source kinetic energy, shattering Guard across all enemies and inflicting Stun.",
+    "description": "Hits all enemies with force, breaks Guard, and applies Stun. Cooldown: 4 turns.",
     "combat_tags": [
       "force",
       "aoe",
@@ -866,7 +866,7 @@
     "name": "Signal Jammer",
     "character": "zeke",
     "type": "source_art",
-    "description": "Floods tactical frequencies with screeching white noise, silencing automated systems and confusing organic targets.",
+    "description": "Floods the area with noise, silencing tech and confusing organics.",
     "combat_tags": [
       "tech",
       "aoe"
@@ -884,7 +884,7 @@
     "name": "Hydraulic Kick",
     "character": "nova",
     "type": "active",
-    "description": "A reinforced work-boot strike powered by pressurized pneumatic servos. Shatters enemy Guard and leaves the target Weakened.",
+    "description": "Deals heavy physical damage, breaks Guard, and applies Weak. Cooldown: 2 turns.",
     "combat_tags": [
       "dmg",
       "guard_break"
@@ -901,7 +901,7 @@
     "name": "Pulse Grenade",
     "character": "nova",
     "type": "active",
-    "description": "Lobs a repurposed acoustic excavation charge into the enemy squad, dealing physical concussive damage and Staggering the formation.",
+    "description": "Throws a mining pulse charge that damages and staggers an enemy formation.",
     "combat_tags": [
       "aoe",
       "physical"
@@ -983,7 +983,7 @@
     "name": "Scrap Shot",
     "character": "nova",
     "type": "active",
-    "description": "Fires a rapid spray of jagged slag debris from the cutter muzzle. Fast and dependable, but lacks armor penetration.",
+    "description": "Fires a quick, dirty shot. Reliable but low damage.",
     "combat_tags": [
       "dmg"
     ],
@@ -997,7 +997,7 @@
     "name": "Cheap Shot",
     "character": "nova",
     "type": "active",
-    "description": "Kicks up a blinding flurry of metal filings into the target's optics, lowering enemy accuracy and granting bonus Evasion.",
+    "description": "A dirty strike that lowers target accuracy and increases your evasion.",
     "combat_tags": [
       "debuff"
     ],
@@ -1013,7 +1013,7 @@
     "name": "Synergy Pitch",
     "character": "zeke",
     "type": "active",
-    "description": "Hurls a deployable hard-light emitter, anchoring an auxiliary kinetic Barrier around a frontline ally.",
+    "description": "Projects a kinetic barrier to protect an ally.",
     "combat_tags": [
       "support"
     ],
@@ -1029,7 +1029,7 @@
     "name": "Stasis Stitch",
     "character": "orion",
     "type": "active",
-    "description": "Directs a tether of repair nanites to stitch torn flesh and weave an emergency sub-dermal shield.",
+    "description": "Uses nanites to heal an ally and grant a minor barrier.",
     "combat_tags": [
       "heal",
       "support"
@@ -1046,7 +1046,7 @@
     "name": "Target Lock",
     "character": "gh0st",
     "type": "active",
-    "description": "Paints the enemy's structural seams with a targeting laser, drastically boosting critical strike vulnerability while raising personal defenses.",
+    "description": "Tags an enemy for increased critical hits while shielding yourself.",
     "combat_tags": [
       "debuff",
       "support"
@@ -1063,7 +1063,7 @@
     "name": "Slide Kick",
     "character": "nova",
     "type": "active",
-    "description": "Drops low across the metal grating to sweep the target's legs or treads, shattering Guard and causing Stagger.",
+    "description": "A low slide that trips the enemy, causing stagger.",
     "combat_tags": [
       "dmg",
       "stagger",

@@ -291,7 +291,7 @@
         "chance": 0.3
       }
     ],
-    "description": "Heavy mechanized loader that retaliates with hydraulic slam and venting steam. Its dense chassis shrugs off physical impacts and fire; corrode its casing with Acid or short out its drive system with Shock.",
+    "description": "Heavy loader with slam and overheat attacks. Resists physical and Burn; vulnerable to Acid and Shock.",
     "portrait": "images/enemies/pressure_hauler_combat.png"
   },
   {

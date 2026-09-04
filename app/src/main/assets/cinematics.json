@@ -24,11 +24,11 @@
     "steps": [
       {
         "type": "narration",
-        "text": "The party breaks contact to regroup and patch wounded plating."
+        "text": "The squad retreats to regroup after the defeat."
       },
       {
         "type": "narration",
-        "text": "Check your field kit: apply coagulant dressings, cycle shield batteries, and coordinate companion combat buffs before engaging again."
+        "text": "Patch up, recharge shields, and consider buffing allies before re-engaging. Status items and defensive skills can swing the next encounter."
       }
     ]
   },
@@ -38,11 +38,11 @@
     "steps": [
       {
         "type": "narration",
-        "text": "A security bulkhead halts your advance."
+        "text": "A security lock halts your progress."
       },
       {
         "type": "narration",
-        "text": "Inspect the surrounding corridor—some hydraulic blast doors require local substation power, while others demand authorized clearance chits."
+        "text": "Check your objectives or inventory—certain rooms need power restored or a keycard before they open."
       }
     ]
   },
@@ -52,11 +52,11 @@
     "steps": [
       {
         "type": "narration",
-        "text": "Seismic sensors detect heavy movement directly beyond the portal."
+        "text": "Sensors flag movement beyond the doorway."
       },
       {
         "type": "narration",
-        "text": "Ready your sidearms: automated security gates remain sealed until all hostiles in the sector are neutralized."
+        "text": "Clear nearby threats or prepare a pre-emptive strike—some exits stay sealed until the ambush is dealt with."
       }
     ]
   },
@@ -72,7 +72,7 @@
       {
         "type": "dialogue",
         "speaker": "Ollie",
-        "text": "Come on, talk to me quick so we can catch up to him before he locks the shutter."
+        "text": "Touch my name on your HUD, choose Talk, and let's catch up to him before he locks up."
       }
     ]
   },
@@ -586,7 +586,7 @@
       {
         "type": "message",
         "speaker": "Lab PA",
-        "text": "SOURCE BEAST CONTAINMENT BREACH // SECTOR 9 BULKHEAD INTEGRITY COMPROMISED",
+        "text": "SOURCE BEAST CONTAINMENT BREACH. FAR DOOR PRESSURE RISING.",
         "caption_style": "system",
         "image": "images/cinematics/intro_sector9_breach_v1.webp",
         "camera_start_scale": 1.035,
@@ -627,7 +627,7 @@
       },
       {
         "type": "narration",
-        "text": "The tube fires. Three heavy impacts echo through the conduit.",
+        "text": "The tube fires. Three impacts track it through the conduit.",
         "image": "images/cinematics/intro_chime_launch_v1.webp",
         "camera_start_scale": 1.13,
         "camera_end_scale": 1.22,
