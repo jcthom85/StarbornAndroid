@@ -323,7 +323,8 @@
       "iron_warden_riot_shield",
       "triple_burst",
       "iron_warden_drone_summon",
-      "iron_warden_gas_grenade"
+      "iron_warden_gas_grenade",
+      "iron_warden_overclock"
     ],
     "flavor": "The Sector Commander wears sealed power armor built for riot lines and mine pressure. He advances behind a powered shield, deploys drones, and floods escape routes with gas.",
     "xp_reward": 350,

@@ -1496,7 +1496,7 @@ class CombatViewModel(
     private fun shouldTelegraph(skill: Skill): Boolean {
         val tags = skill.combatTags.orEmpty().map { it.lowercase(Locale.getDefault()) }
         if (skill.basePower >= 140) return true
-        if (tags.any { it == "aoe" || it == "burst" || it == "summon" }) return true
+        if (tags.any { it == "aoe" || it == "burst" || it == "summon" || it == "overdrive" }) return true
         if (tags.any { it == "stun" || it == "stagger" || it == "guard_break" }) return true
         val statusIds = skillStatusDefinitions(skill).map { it.id.lowercase(Locale.getDefault()) }
         return statusIds.any { it in HIGH_IMPACT_STATUS_IDS }
@@ -1652,7 +1652,13 @@ class CombatViewModel(
                     setCombatBanner(entry, updated)
                 }
                 is CombatLogEntry.Damage -> {
-                    playCharacterAttackSound(entry.sourceId)
+                    val skillUse = currentAction as? CombatAction.SkillUse
+                    val skillId = skillUse?.skillId?.lowercase(Locale.getDefault())
+                    if (skillId != null && skillId.contains("drone")) {
+                        playBattleCue("enemy_attack_drone")
+                    } else {
+                        playCharacterAttackSound(entry.sourceId)
+                    }
                     val effectDelayMs = actionEffectDelayMs(currentAction)
                     if (entry.amount == 0 && entry.element == "miss") {
                         val targetIsPlayer = entry.targetId in playerIdList
@@ -1749,6 +1755,7 @@ class CombatViewModel(
         }
         if (newlyBroken.isNotEmpty()) {
             maybePlayStabilityBreakCue()
+            newlyBroken.forEach { emitShieldBreak(it, 0L) }
             _atbMeters.update { existing ->
                 if (existing.isEmpty()) existing else existing + newlyBroken.associateWith { 0f }
             }
@@ -3314,20 +3321,40 @@ private fun determineSkillTargeting(skill: Skill): SkillTargeting {
     fun onScreenReady() {
         if (!audioStarted) {
             audioStarted = true
-            playBattleCue("start")
+            val hasWarden = enemyDefinitions.keys.any { it.contains("the_iron_warden") }
+            if (hasWarden) {
+                playBattleCue("warden_entry")
+            } else {
+                playBattleCue("start")
+            }
             playCombatMusic()
         }
     }
 
     private fun playCombatMusic() {
         val worldId = sessionStore.state.value.worldId ?: "world_1"
-        val trackId = when (worldId) {
-            "world_2" -> "music_w2_combat"
-            "world_3" -> "music_w3_combat"
-            "world_4" -> "music_w4_combat"
-            "world_5" -> "music_w5_combat"
-            "world_6" -> "music_w6_combat"
-            else -> "music_w1_combat"
+        val hasBoss = enemyDefinitions.values.any { it.tier.equals("boss", ignoreCase = true) } ||
+            enemyDefinitions.keys.any { key ->
+                val norm = key.lowercase(Locale.getDefault())
+                norm.contains("boss") || norm.contains("warden") || norm.contains("beast")
+            }
+        val trackId = if (hasBoss) {
+            when (worldId) {
+                "world_2" -> "music_w2_boss_guardian"
+                "world_3" -> "music_w3_boss_phantom"
+                "world_4" -> "music_w4_boss_titan"
+                "world_6" -> "music_w6_boss_final"
+                else -> "music_w1_boss_warden"
+            }
+        } else {
+            when (worldId) {
+                "world_2" -> "music_w2_combat"
+                "world_3" -> "music_w3_combat"
+                "world_4" -> "music_w4_combat"
+                "world_5" -> "music_w5_combat"
+                "world_6" -> "music_w6_combat"
+                else -> "music_w1_combat"
+            }
         }
         val commands = mutableListOf<com.example.starborn.domain.audio.AudioCommand>()
         commands += audioRouter.commandsForLayerOverride(
@@ -3513,7 +3540,8 @@ private fun determineSkillTargeting(skill: Skill): SkillTargeting {
             "jammed",
             "meltdown",
             "erosion",
-            "short"
+            "short",
+            "overdrive"
         )
         private val EROSION_AUDIO_STATUS_IDS = setOf("erosion", "burnout", "meltdown")
     }

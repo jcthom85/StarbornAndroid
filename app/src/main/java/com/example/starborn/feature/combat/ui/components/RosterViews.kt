@@ -10,6 +10,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Bolt
+import androidx.compose.material.icons.rounded.FlashOn
 import androidx.compose.material.icons.rounded.Shield
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -1273,8 +1275,8 @@ fun EnemyStatusLabel(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
-                    imageVector = Icons.Rounded.Shield,
-                    contentDescription = if (isBroken) "Broken: takes 25% more direct damage" else "Stability",
+                    imageVector = if (isBroken) Icons.Rounded.FlashOn else Icons.Rounded.Bolt,
+                    contentDescription = if (isBroken) "Broken: takes 25% more direct damage" else "Stability (Stagger)",
                     tint = if (isBroken) Color(0xFFFF8A80) else Color(0xFFB39DDB).copy(alpha = 0.9f),
                     modifier = Modifier.size(12.dp)
                 )

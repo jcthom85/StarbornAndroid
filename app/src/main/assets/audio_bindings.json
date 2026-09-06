@@ -270,10 +270,11 @@
   },
   "battle": {
     "start": "battle_start",
+    "warden_entry": "sfx_warden_entry",
     "shield_block": "sfx_combat_shield_deflect",
     "shield_break": "sfx_combat_crit_hit",
     "weakness_resolve": "battle_weakness_resolve",
-    "stability_break": "sfx_combat_crit_hit",
+    "stability_break": "battle_stability_shatter",
     "erosion_warning": "battle_erosion_warning",
     "enemy_screech": "sfx_combat_enemy_screech",
     "robot_stomp": "sfx_combat_robot_stomp",

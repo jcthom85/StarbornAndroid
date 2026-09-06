@@ -150,7 +150,7 @@ class CombatEnemyAI(
     fun parseBehavior(raw: String?): CombatBehavior? {
         val normalized = raw?.trim()?.lowercase(Locale.getDefault()) ?: return null
         return when (normalized) {
-            "aggressive", "berserk", "offense" -> CombatBehavior.AGGRESSIVE
+            "aggressive", "berserk", "offense", "oppressive" -> CombatBehavior.AGGRESSIVE
             "defensive", "defense", "guarded" -> CombatBehavior.DEFENSIVE
             "trickster", "controller", "debuffer" -> CombatBehavior.TRICKSTER
             "summoner", "summon" -> CombatBehavior.SUMMONER
@@ -163,7 +163,7 @@ class CombatEnemyAI(
         val normalized = raw?.trim()?.lowercase(Locale.getDefault()) ?: return null
         return when (normalized) {
             "striker", "damage", "dps" -> CombatRole.STRIKER
-            "tank", "defender", "guard" -> CombatRole.TANK
+            "tank", "defender", "guard", "tank_summoner" -> CombatRole.TANK
             "support", "healer" -> CombatRole.SUPPORT
             "controller", "debuffer", "trickster" -> CombatRole.CONTROLLER
             "summoner", "summon" -> CombatRole.SUMMONER
@@ -315,6 +315,7 @@ class CombatEnemyAI(
         if (debuffIntent) total += statusScore * weights.debuff
         if (isGuardBreak) total += guardBreakScore * weights.guardBreak
         if (isSummon) total += summonScore * weights.summon
+        if (tags.contains("overdrive")) total += 45.0
 
         total -= skill.cooldown.coerceAtLeast(0) * aiWeights.cooldownPenaltyPerTurn
         total -= diversityPenalty(enemyState.combatant.id, skill.id)

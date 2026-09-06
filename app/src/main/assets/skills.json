@@ -69,15 +69,16 @@
     "name": "Barrier Field",
     "character": "enemy",
     "type": "enemy",
-    "description": "Projects a defensive field.",
+    "description": "Projects an active riot barrier, blocking incoming frontal attacks until guard broken.",
     "combat_tags": [
       "support"
     ],
     "base_power": 0,
-    "scaling": "focus",
+    "scaling": "defense",
     "cooldown": 3,
     "status_applications": [
-      "shield"
+      "guard",
+      "invulnerable"
     ]
   },
   {
@@ -932,17 +933,21 @@
   },
   {
     "id": "iron_warden_drone_summon",
-    "name": "Summon Drone",
+    "name": "Drone Support Protocol",
     "character": "the_iron_warden",
     "type": "enemy",
-    "description": "Calls for backup.",
+    "description": "Deploys an automated combat drone that strafes the party with electric pulse fire, shorting out tech.",
     "combat_tags": [
-      "summon"
+      "aoe",
+      "tech",
+      "shock"
     ],
-    "base_power": 0,
+    "base_power": 65,
     "scaling": "tech",
-    "cooldown": 4,
-    "status_applications": []
+    "cooldown": 3,
+    "status_applications": [
+      "short"
+    ]
   },
   {
     "id": "iron_warden_gas_grenade",
@@ -959,6 +964,27 @@
     "cooldown": 3,
     "status_applications": [
       "erosion"
+    ]
+  },
+  {
+    "id": "iron_warden_overclock",
+    "name": "Emergency Overclock",
+    "character": "the_iron_warden",
+    "type": "enemy",
+    "description": "Bypasses armor safety limiters and vents reactor heat, entering an enraged Overdrive state.",
+    "combat_tags": [
+      "support",
+      "buff",
+      "overdrive"
+    ],
+    "base_power": 0,
+    "scaling": "defense",
+    "cooldown": 99,
+    "conditions": [
+      "hp_below_40"
+    ],
+    "status_applications": [
+      "overdrive"
     ]
   },
   {
