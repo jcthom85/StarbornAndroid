@@ -53,7 +53,8 @@ data class CombatantState(
     val statusEffects: List<StatusEffect> = emptyList(),
     val weaponCharge: WeaponChargeState? = null,
     val activeCooldowns: Map<String, Int> = emptyMap(),
-    val snackCooldown: Int = 0
+    val snackCooldown: Int = 0,
+    val momentum: Int = 0
 ) {
     val isAlive: Boolean get() = hp > 0
 }
@@ -145,14 +146,16 @@ sealed interface CombatLogEntry {
         val element: String? = null,
         val critical: Boolean = false,
         val isWeakness: Boolean = false,
-        val isBrokenBonus: Boolean = false
+        val isBrokenBonus: Boolean = false,
+        val momentumSpent: Int = 0
     ) : CombatLogEntry
 
     data class Heal(
         override val turn: Int,
         val sourceId: String,
         val targetId: String,
-        val amount: Int
+        val amount: Int,
+        val momentumSpent: Int = 0
     ) : CombatLogEntry
 
     data class StatusApplied(

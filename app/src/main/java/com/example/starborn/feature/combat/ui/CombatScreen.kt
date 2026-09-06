@@ -1146,6 +1146,7 @@ fun CombatScreen(
                 currentHp = commandCurrentHp,
                 maxHp = commandMaxHp,
                 atbProgress = commandActor?.let { atbMeters[it.id] } ?: 0f,
+                momentum = commandActor?.let { viewModel.momentumFor(it.id) } ?: 0,
                 canAttack = hasTargets && viewModel.isCombatTutorialCommandEnabled("Attack"),
                 hasSkills = menuActorSkills.isNotEmpty() && viewModel.isCombatTutorialCommandEnabled("Skills"),
                 hasItems = battleUsableItems.isNotEmpty() && viewModel.isCombatTutorialCommandEnabled("Items"),

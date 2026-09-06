@@ -113,6 +113,7 @@ fun CommandPalette(
     theme: Theme?,
     targetInstruction: String? = null,
     onCancelTarget: (() -> Unit)? = null,
+    momentum: Int = 0,
     modifier: Modifier = Modifier
 ) {
     if (actor == null) return
@@ -206,9 +207,23 @@ fun CommandPalette(
                             modifier = Modifier.fillMaxWidth()
                         )
                     } else {
+                        val overchargeBadge = when (momentum) {
+                            1 -> "+25%"
+                            2 -> "+50%"
+                            3 -> "MAX"
+                            else -> null
+                        }
                         val commands = listOf(
                             CommandEntry("Attack", Icons.Rounded.Whatshot, canAttack, onAttack),
-                            CommandEntry("Abilities", Icons.Rounded.AutoAwesome, hasSkills, onSkills),
+                            CommandEntry(
+                                label = "Abilities",
+                                icon = Icons.Rounded.AutoAwesome,
+                                enabled = hasSkills,
+                                onClick = onSkills,
+                                badge = overchargeBadge,
+                                isOvercharged = momentum > 0,
+                                isMaxOvercharge = momentum >= 3
+                            ),
                             CommandEntry("Items", Icons.Rounded.Inventory2, hasItems, onItems),
                             CommandEntry(snackLabel, Icons.Rounded.Restaurant, canSnack, onSnack, cooldown = snackCooldown),
                             CommandEntry("Retreat", Icons.AutoMirrored.Rounded.ExitToApp, canRetreat, onRetreat)
@@ -228,6 +243,9 @@ fun CommandPalette(
                                             onClick = entry.onClick,
                                             largeTouchTargets = largeTouchTargets,
                                             cooldownRemaining = entry.cooldown,
+                                            badge = entry.badge,
+                                            isOvercharged = entry.isOvercharged,
+                                            isMaxOvercharge = entry.isMaxOvercharge,
                                             modifier = Modifier.weight(1f)
                                         )
                                     }
@@ -250,7 +268,10 @@ data class CommandEntry(
     val icon: ImageVector,
     val enabled: Boolean,
     val onClick: () -> Unit,
-    val cooldown: Int = 0
+    val cooldown: Int = 0,
+    val badge: String? = null,
+    val isOvercharged: Boolean = false,
+    val isMaxOvercharge: Boolean = false
 )
 
 @Composable
@@ -261,11 +282,20 @@ fun CombatCommandButton(
     onClick: () -> Unit,
     largeTouchTargets: Boolean,
     cooldownRemaining: Int = 0,
+    badge: String? = null,
+    isOvercharged: Boolean = false,
+    isMaxOvercharge: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     val minHeight = if (largeTouchTargets) 62.dp else 54.dp
     val interactionSource = remember { MutableInteractionSource() }
     val background = if (enabled) Color(0xFF1E2534) else Color(0xFF1B1F29)
+    val borderStroke = when {
+        !enabled -> null
+        isMaxOvercharge -> BorderStroke(1.5.dp, Color(0xFFFFD700))
+        isOvercharged -> BorderStroke(1.dp, Color(0xFF00E5FF).copy(alpha = 0.85f))
+        else -> null
+    }
     Box(
         modifier = modifier
             .widthIn(min = 88.dp)
@@ -274,6 +304,7 @@ fun CombatCommandButton(
         Surface(
             shape = RoundedCornerShape(16.dp),
             color = background,
+            border = borderStroke,
             tonalElevation = if (enabled) 4.dp else 0.dp,
             modifier = Modifier
                 .fillMaxWidth()
@@ -305,6 +336,26 @@ fun CombatCommandButton(
                     color = Color.White,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
+                )
+            }
+        }
+        if (badge != null && enabled) {
+            val badgeBg = if (isMaxOvercharge) Color(0xFFFFD700) else Color(0xFF00E5FF)
+            Box(
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(top = 4.dp, end = 6.dp)
+                    .clip(RoundedCornerShape(4.dp))
+                    .background(badgeBg)
+                    .padding(horizontal = 4.dp, vertical = 1.dp)
+            ) {
+                Text(
+                    text = badge,
+                    style = MaterialTheme.typography.labelSmall.copy(
+                        fontWeight = FontWeight.Black,
+                        fontSize = 9.sp,
+                        color = Color(0xFF080D14)
+                    )
                 )
             }
         }

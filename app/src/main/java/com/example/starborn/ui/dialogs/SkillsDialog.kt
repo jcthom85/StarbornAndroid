@@ -62,6 +62,8 @@ fun SkillsDialog(
     val accent = themeColor(theme?.accent, Color(0xFF7BE4FF))
     val border = themeColor(theme?.border, Color(0xFF5CCBE8))
     val panel = themeColor(theme?.bg, Color(0xFF061018))
+    val momentum = viewModel.momentumFor(player.id)
+    val (infusedElement, infusedStatus) = viewModel.weaponInfusionFor(player.id)
     var detailSkill by remember { mutableStateOf<Skill?>(null) }
 
     AlertDialog(
@@ -96,6 +98,35 @@ fun SkillsDialog(
                             )
                         )
                 )
+                if (momentum > 0) {
+                    val (bannerBg, overchargeText) = when (momentum) {
+                        1 -> Color(0xFF00E5FF).copy(alpha = 0.20f) to "⚡ OVERCHARGE: +25% Power / Healing"
+                        2 -> Color(0xFF00E5FF).copy(alpha = 0.25f) to "⚡ OVERCHARGE: +50% Power + 1-Turn CD Refund"
+                        3 -> Color(0xFFFFD700).copy(alpha = 0.28f) to "⚡ MAX OVERCHARGE: +80% Power + 1-Turn CD Refund + Guaranteed CRIT!"
+                        else -> Color.Transparent to ""
+                    }
+                    val borderColor = if (momentum >= 3) Color(0xFFFFD700) else Color(0xFF00E5FF)
+                    Surface(
+                        shape = RoundedCornerShape(8.dp),
+                        color = bannerBg,
+                        border = BorderStroke(1.dp, borderColor.copy(alpha = 0.7f)),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            text = overchargeText,
+                            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                            color = Color.White,
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 5.dp)
+                        )
+                    }
+                } else {
+                    Text(
+                        text = "⚡ Basic attacks build Momentum to Overcharge abilities (up to 3x)",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = Color.White.copy(alpha = 0.5f),
+                        modifier = Modifier.padding(vertical = 2.dp)
+                    )
+                }
             }
         },
         text = {
@@ -120,6 +151,9 @@ fun SkillsDialog(
                             cooldownRemaining = cooldown,
                             canUse = canUse,
                             highlighted = highlighted,
+                            momentum = momentum,
+                            infusedElement = infusedElement,
+                            infusedStatus = infusedStatus,
                             accent = accent,
                             border = border,
                             highContrastMode = highContrastMode,
@@ -148,6 +182,9 @@ fun SkillsDialog(
             skill = skill,
             targetRequirement = viewModel.targetRequirementFor(skill),
             cooldownRemaining = viewModel.skillCooldownRemaining(player.id, skill.id),
+            momentum = momentum,
+            infusedElement = infusedElement,
+            infusedStatus = infusedStatus,
             accent = accent,
             border = border,
             panel = panel,
@@ -163,22 +200,31 @@ private fun AbilityRow(
     cooldownRemaining: Int,
     canUse: Boolean,
     highlighted: Boolean,
+    momentum: Int = 0,
+    infusedElement: String? = null,
+    infusedStatus: String? = null,
     accent: Color,
     border: Color,
     highContrastMode: Boolean,
     onDetails: () -> Unit,
     onUse: () -> Unit
 ) {
-    val rowBorder = if (highlighted) accent else border.copy(alpha = 0.34f)
+    val rowBorder = when {
+        highlighted -> accent
+        momentum >= 3 -> Color(0xFFFFD700).copy(alpha = 0.7f)
+        momentum > 0 -> Color(0xFF00E5FF).copy(alpha = 0.6f)
+        else -> border.copy(alpha = 0.34f)
+    }
     Surface(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
-        color = if (highlighted) {
-            accent.copy(alpha = if (highContrastMode) 0.18f else 0.12f)
-        } else {
-            Color.White.copy(alpha = if (highContrastMode) 0.10f else 0.07f)
+        color = when {
+            highlighted -> accent.copy(alpha = if (highContrastMode) 0.18f else 0.12f)
+            momentum >= 3 -> Color(0xFFFFD700).copy(alpha = 0.08f)
+            momentum > 0 -> Color(0xFF00E5FF).copy(alpha = 0.06f)
+            else -> Color.White.copy(alpha = if (highContrastMode) 0.10f else 0.07f)
         },
-        border = BorderStroke(if (highlighted) 2.dp else 1.dp, rowBorder)
+        border = BorderStroke(if (highlighted || momentum > 0) 1.5.dp else 1.dp, rowBorder)
     ) {
         Row(
             modifier = Modifier
@@ -199,7 +245,7 @@ private fun AbilityRow(
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
-                    text = abilitySummary(skill, cooldownRemaining),
+                    text = abilitySummary(skill, cooldownRemaining, momentum, infusedElement, infusedStatus),
                     style = MaterialTheme.typography.labelMedium,
                     color = if (cooldownRemaining > 0) {
                         Color(0xFFFFC857)
@@ -232,6 +278,9 @@ private fun AbilityDetailsDialog(
     skill: Skill,
     targetRequirement: TargetRequirement,
     cooldownRemaining: Int,
+    momentum: Int = 0,
+    infusedElement: String? = null,
+    infusedStatus: String? = null,
     accent: Color,
     border: Color,
     panel: Color,
@@ -268,6 +317,70 @@ private fun AbilityDetailsDialog(
                         style = MaterialTheme.typography.bodyLarge,
                         color = Color.White
                     )
+                }
+                if (momentum > 0) {
+                    item {
+                        val bonusText = when (momentum) {
+                            1 -> "+25% Power / Healing"
+                            2 -> "+50% Power / Healing & -1 Turn Cooldown Refund"
+                            3 -> "+80% Power / Healing, -1 Turn Cooldown Refund & Guaranteed Critical Hit"
+                            else -> ""
+                        }
+                        val overchargeBorder = if (momentum >= 3) Color(0xFFFFD700) else Color(0xFF00E5FF)
+                        Surface(
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(10.dp),
+                            color = overchargeBorder.copy(alpha = 0.15f),
+                            border = BorderStroke(1.dp, overchargeBorder.copy(alpha = 0.6f))
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(10.dp),
+                                verticalArrangement = Arrangement.spacedBy(4.dp)
+                            ) {
+                                Text(
+                                    text = "⚡ Overcharge Active (Level $momentum)",
+                                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                                    color = overchargeBorder
+                                )
+                                Text(
+                                    text = bonusText,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = Color.White
+                                )
+                            }
+                        }
+                    }
+                }
+                val isHeal = skill.type.equals("heal", ignoreCase = true) ||
+                    skill.combatTags?.any { it.equals("heal", ignoreCase = true) || it.equals("support", ignoreCase = true) } == true
+                if (!isHeal && (infusedElement != null || infusedStatus != null)) {
+                    item {
+                        Surface(
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(10.dp),
+                            color = accent.copy(alpha = 0.12f),
+                            border = BorderStroke(1.dp, accent.copy(alpha = 0.4f))
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(10.dp),
+                                verticalArrangement = Arrangement.spacedBy(4.dp)
+                            ) {
+                                Text(
+                                    text = "Weapon Synergy Infusion",
+                                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                                    color = accent
+                                )
+                                Text(
+                                    text = buildString {
+                                        if (infusedElement != null) append("Element: ${infusedElement.toDisplayLabel()}  ")
+                                        if (infusedStatus != null) append("Status Proc: ${infusedStatus.toDisplayLabel()}")
+                                    },
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = Color.White
+                                )
+                            }
+                        }
+                    }
                 }
                 item {
                     Surface(
@@ -384,14 +497,49 @@ private fun AbilityDetailSection(title: String, values: List<String>, accent: Co
     }
 }
 
-private fun abilitySummary(skill: Skill, cooldownRemaining: Int): String {
+private fun abilitySummary(
+    skill: Skill,
+    cooldownRemaining: Int,
+    momentum: Int = 0,
+    infusedElement: String? = null,
+    infusedStatus: String? = null
+): String {
     val parts = buildList {
-        if (skill.basePower > 0) add("${skill.basePower} power")
+        if (skill.basePower > 0) {
+            val powerText = if (momentum > 0) {
+                val mult = when (momentum) {
+                    1 -> 1.25
+                    2 -> 1.50
+                    3 -> 1.80
+                    else -> 1.0
+                }
+                val boosted = (skill.basePower * mult).toInt()
+                "${skill.basePower} (${boosted}⚡) power"
+            } else {
+                "${skill.basePower} power"
+            }
+            add(powerText)
+        }
         skill.scaling?.takeIf { it.isNotBlank() }?.let { add(it.toDisplayLabel()) }
         when {
             cooldownRemaining > 0 -> add("$cooldownRemaining turn cooldown")
-            skill.cooldown > 0 -> add("${skill.cooldown} turn cooldown")
+            skill.cooldown > 0 -> {
+                if (momentum >= 2) {
+                    val refundCd = (skill.cooldown - 1).coerceAtLeast(0)
+                    add("${skill.cooldown} (${refundCd}⚡) turn cooldown")
+                } else {
+                    add("${skill.cooldown} turn cooldown")
+                }
+            }
             else -> add("No cooldown")
+        }
+        val isHeal = skill.type.equals("heal", ignoreCase = true) ||
+            skill.combatTags?.any { it.equals("heal", ignoreCase = true) || it.equals("support", ignoreCase = true) } == true
+        if (!isHeal) {
+            val infusions = listOfNotNull(infusedElement?.toDisplayLabel(), infusedStatus?.toDisplayLabel())
+            if (infusions.isNotEmpty()) {
+                add("Infused: " + infusions.joinToString("+"))
+            }
         }
     }
     return parts.joinToString("  |  ")

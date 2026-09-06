@@ -8298,19 +8298,32 @@ private fun IllustratedCinematicOverlay(
 
     LaunchedEffect(stepKey, audioCuePlayer) {
         state.step.audioCue?.takeIf { it.isNotBlank() }?.let { cue ->
-            val isHeavyImpact = cue == "sfx_intro_door_buckle" || cue == "sfx_intro_door_collapse" || cue == "sfx_intro_beast_strike"
+            val isBeast = cue == "sfx_intro_beast_strike"
+            val isBuckle = cue == "sfx_intro_door_buckle"
+            val isCollapse = cue == "sfx_intro_door_collapse"
+            val isStasisLock = cue == "sfx_intro_stasis_lock"
+            val isHeavyImpact = isBeast || isBuckle || isCollapse || isStasisLock
             val commands = mutableListOf<AudioCommand>()
             if (isHeavyImpact) {
-                // Momentarily duck music down to 0.58 so the explosive acoustic transient and sub-bass hit cleanly
-                commands += AudioCommand.Duck(AudioCueType.MUSIC, gain = 0.58f, fadeMs = 60L)
+                val duckGain = when {
+                    isBeast -> 0.04f // Pod sealed ("Mute this room"): drop score into near silence for jump-scare glass smash
+                    isBuckle -> 0.18f // Let all 5 pounding impacts and cavern reverb dominate
+                    isCollapse -> 0.20f // Catastrophic blast door collapse
+                    else -> 0.30f // Stasis lock engaged: muffle external score inside insulated cryogenic pod
+                }
+                commands += AudioCommand.Duck(AudioCueType.MUSIC, gain = duckGain, fadeMs = if (isBeast) 30L else if (isStasisLock) 350L else 40L)
             }
             commands += AudioCommand.Play(AudioCueType.UI, cue, loop = false, fadeMs = 0L)
             audioCuePlayer?.execute(commands)
-            if (isHeavyImpact) {
-                // Let the initial impact hit through, then smoothly restore score over the reverb tail
+            if (isHeavyImpact && !isStasisLock) {
+                val (holdMs, restoreFadeMs) = when {
+                    isBeast -> 2200L to 1200L // Hold during glass smack & shudder, then swell into Starborn title card
+                    isBuckle -> 2800L to 600L  // Hold across all 5 pounding hits
+                    else -> 2500L to 800L     // Hold across door collapse and metal rumble
+                }
                 launch {
-                    delay(700L)
-                    audioCuePlayer?.execute(listOf(AudioCommand.Restore(AudioCueType.MUSIC, fadeMs = 900L)))
+                    delay(holdMs)
+                    audioCuePlayer?.execute(listOf(AudioCommand.Restore(AudioCueType.MUSIC, fadeMs = restoreFadeMs)))
                 }
             }
         }
@@ -8427,10 +8440,49 @@ private fun IllustratedCinematicOverlay(
     val impactFlash = remember(stepKey) { CoreAnimatable(0f) }
     LaunchedEffect(stepKey) {
         val cue = state.step.audioCue
-        if (cue == "sfx_intro_door_buckle" || cue == "sfx_intro_door_collapse" || cue == "sfx_intro_beast_strike") {
+        if (cue == "sfx_intro_door_buckle") {
+            // 5 accelerating, escalating pounding impacts against the reinforced blast doors
+            val buckleHits = listOf(
+                0L to 7,
+                850L to 9,
+                1600L to 11,
+                2200L to 13,
+                2700L to 18
+            )
+            launch {
+                var lastTime = 0L
+                for ((atMs, ampDp) in buckleHits) {
+                    val waitTime = atMs - lastTime
+                    if (waitTime > 0L) {
+                        delay(waitTime)
+                    }
+                    lastTime = atMs
+                    val amp = with(density) { ampDp.dp.toPx() }
+                    impactShakeX.snapTo(amp)
+                    impactShakeY.snapTo(-amp * 0.45f)
+                    impactShakeX.animateTo(0f, animationSpec = tween(durationMillis = 180, easing = FastOutSlowInEasing))
+                    impactShakeY.animateTo(0f, animationSpec = tween(durationMillis = 180, easing = FastOutSlowInEasing))
+                    // Subtle residual structural tremor between hits
+                    val cycles = if (ampDp >= 18) 6 else 3
+                    val tremorAmp = with(density) { (ampDp * 0.22f).dp.toPx() }
+                    for (cycle in cycles downTo 1) {
+                        val decayRatio = cycle.toFloat() / cycles
+                        val sign = if (cycle % 2 == 0) 1f else -1f
+                        impactShakeX.animateTo(
+                            targetValue = tremorAmp * decayRatio * sign,
+                            animationSpec = tween(durationMillis = 40, easing = LinearEasing)
+                        )
+                        impactShakeX.animateTo(
+                            targetValue = 0f,
+                            animationSpec = tween(durationMillis = 40, easing = LinearEasing)
+                        )
+                    }
+                }
+            }
+        } else if (cue == "sfx_intro_door_collapse" || cue == "sfx_intro_beast_strike") {
             val isBeast = cue == "sfx_intro_beast_strike"
-            val initialAmp = with(density) { (if (isBeast) 16.dp else 10.dp).toPx() }
-            val tremorAmp = with(density) { (if (isBeast) 4.dp else 2.5.dp).toPx() }
+            val initialAmp = with(density) { (if (isBeast) 18.dp else 13.dp).toPx() }
+            val tremorAmp = with(density) { (if (isBeast) 4.5.dp else 3.dp).toPx() }
             // 1. Initial high-energy violent transient slam
             launch {
                 impactShakeX.snapTo(initialAmp)

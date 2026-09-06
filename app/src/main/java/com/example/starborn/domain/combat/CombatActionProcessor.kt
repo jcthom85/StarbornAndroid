@@ -89,7 +89,7 @@ class CombatActionProcessor(
     ): CombatState {
         val attacker = state.combatants[action.actorId] ?: return state
         val weapon = attacker.combatant.weapon
-        return when (val attack = weapon?.attack) {
+        val attacked = when (val attack = weapon?.attack) {
             null -> processBasicAttackUnarmed(state, action, attacker)
             is WeaponAttack.SingleTarget -> {
                 state.clearWeaponCharge(action.actorId).applyWeaponAttack(
@@ -117,6 +117,22 @@ class CombatActionProcessor(
                 )
             }
         }
+        val finalAttacker = attacked.combatants[action.actorId]
+        if (finalAttacker?.weaponCharge != null) {
+            return attacked
+        }
+        return grantAttackMomentum(attacked, action.actorId)
+    }
+
+    private fun grantAttackMomentum(state: CombatState, actorId: String): CombatState {
+        val combatant = state.combatants[actorId] ?: return state
+        if (combatant.combatant.side != CombatSide.PLAYER) return state
+        val currentMomentum = combatant.momentum
+        val newMomentum = (currentMomentum + 1).coerceAtMost(MAX_MOMENTUM)
+        if (newMomentum == currentMomentum) return state
+        return state.copy(
+            combatants = state.combatants + (actorId to combatant.copy(momentum = newMomentum))
+        )
     }
 
     private fun processBasicAttackUnarmed(
@@ -526,13 +542,34 @@ class CombatActionProcessor(
             return state
         }
 
+        val momentumSpent = if (attackerState.combatant.side == CombatSide.PLAYER) attackerState.momentum else 0
+        val momentumMultiplier = when (momentumSpent) {
+            1 -> 1.25
+            2 -> 1.50
+            3 -> 1.80
+            else -> 1.0
+        }
+        val cooldownRefund = if (momentumSpent >= 2) 1 else 0
+        val forceCrit = momentumSpent >= 3
+
         val stateWithCooldown = if (skill != null && skill.cooldown > 0) {
+            val effectiveCooldown = (skill.cooldown - cooldownRefund).coerceAtLeast(0)
             val updatedAttacker = attackerState.copy(
-                activeCooldowns = attackerState.activeCooldowns + (skill.id to skill.cooldown + 1)
+                activeCooldowns = if (effectiveCooldown > 0) {
+                    attackerState.activeCooldowns + (skill.id to effectiveCooldown + 1)
+                } else {
+                    attackerState.activeCooldowns - skill.id
+                },
+                momentum = 0
             )
             state.copy(combatants = state.combatants + (attackerId to updatedAttacker))
         } else {
-            state
+            if (attackerState.momentum != 0) {
+                val updatedAttacker = attackerState.copy(momentum = 0)
+                state.copy(combatants = state.combatants + (attackerId to updatedAttacker))
+            } else {
+                state
+            }
         }
 
         val freshAttackerState = stateWithCooldown.combatants[attackerId] ?: attackerState
@@ -542,26 +579,43 @@ class CombatActionProcessor(
         working = special.state
 
         if (!special.handled) {
-            val element = resolveElement(skill)
+            val skillElement = resolveElement(skill)
+            val weaponElement = if (freshAttackerState.combatant.side == CombatSide.PLAYER) {
+                freshAttackerState.combatant.weapon?.attack?.element?.takeIf { it.isNotBlank() && it != PHYSICAL_ELEMENT }
+            } else null
+            val effectiveElement = if (skillElement != null && skillElement != PHYSICAL_ELEMENT) {
+                skillElement
+            } else {
+                weaponElement ?: skillElement ?: PHYSICAL_ELEMENT
+            }
             val explicitTargets = action.targetIds
             val mode = when {
-                skill == null -> SkillMode.Damage(freshAttackerState.effectiveStat("strength").coerceAtLeast(1), PHYSICAL_ELEMENT)
-                isHealSkill(skill) -> SkillMode.Heal(resolveSkillHeal(freshAttackerState, skill))
+                skill == null -> SkillMode.Damage(
+                    baseDamage = scaleDamage(freshAttackerState.effectiveStat("strength").coerceAtLeast(1), momentumMultiplier),
+                    element = effectiveElement
+                )
+                isHealSkill(skill) -> SkillMode.Heal(
+                    scaleDamage(resolveSkillHeal(freshAttackerState, skill), momentumMultiplier)
+                )
                 else -> SkillMode.Damage(
                     baseDamage = scaleDamage(
-                        resolveSkillDamage(freshAttackerState, skill),
-                        conditionalPayoffMultiplier(skill, working, explicitTargets)
+                        scaleDamage(
+                            resolveSkillDamage(freshAttackerState, skill),
+                            conditionalPayoffMultiplier(skill, working, explicitTargets)
+                        ),
+                        momentumMultiplier
                     ),
-                    element = element ?: PHYSICAL_ELEMENT
+                    element = effectiveElement
                 )
             }
 
             working = when (mode) {
                 is SkillMode.Heal -> applyHealing(
-                    working,
-                    attackerId,
-                    explicitTargets,
-                    mode
+                    state = working,
+                    sourceId = attackerId,
+                    explicitTargets = explicitTargets,
+                    healMode = mode,
+                    momentumSpent = momentumSpent
                 )
                 is SkillMode.Damage -> {
                     if (mode.baseDamage <= 0) {
@@ -582,10 +636,12 @@ class CombatActionProcessor(
                             working
                         }
                         applyDamage(
-                            prepared,
-                            attackerId,
-                            resolvedTargets,
-                            mode
+                            state = prepared,
+                            attackerId = attackerId,
+                            explicitTargets = resolvedTargets,
+                            damageMode = mode,
+                            forceCrit = forceCrit,
+                            momentumSpent = momentumSpent
                         )
                     }
                 }
@@ -610,7 +666,16 @@ class CombatActionProcessor(
             }
         }
 
-        return working
+        return if (momentumSpent > 0) {
+            val current = working.combatants[attackerId]
+            if (current != null && current.momentum != 0) {
+                working.copy(combatants = working.combatants + (attackerId to current.copy(momentum = 0)))
+            } else {
+                working
+            }
+        } else {
+            working
+        }
     }
 
     private fun applyGuardBreak(
@@ -739,7 +804,8 @@ class CombatActionProcessor(
         state: CombatState,
         sourceId: String,
         explicitTargets: List<String>,
-        healMode: SkillMode.Heal
+        healMode: SkillMode.Heal,
+        momentumSpent: Int = 0
     ): CombatState {
         if (healMode.amount <= 0) return state
         val source = state.combatants[sourceId]
@@ -750,7 +816,8 @@ class CombatActionProcessor(
                 state = working,
                 sourceId = sourceId,
                 targetId = targetId,
-                amount = healMode.amount
+                amount = healMode.amount,
+                momentumSpent = momentumSpent
             )
         }
         return working
@@ -760,7 +827,9 @@ class CombatActionProcessor(
         state: CombatState,
         attackerId: String,
         explicitTargets: List<String>,
-        damageMode: SkillMode.Damage
+        damageMode: SkillMode.Damage,
+        forceCrit: Boolean = false,
+        momentumSpent: Int = 0
     ): CombatState {
         var working = state
         val attacker = working.combatants[attackerId]
@@ -775,8 +844,14 @@ class CombatActionProcessor(
                 baseDamage = outgoing,
                 element = damageMode.element
             )
+            val isCrit = forceCrit || targetState.statusEffects.any { status ->
+                statusRegistry.definition(status.id)?.forceCrit == true
+            }
+            val critAdjusted = if (isCrit) {
+                (rawDamage * CombatFormulas.CRIT_DAMAGE_MULT).roundToInt().coerceAtLeast(1)
+            } else rawDamage
             val brokenBonus = qualifiesForBrokenDamageBonus(currentAttacker, targetState)
-            val breakAdjusted = applyBrokenDamageBonus(rawDamage, brokenBonus)
+            val breakAdjusted = applyBrokenDamageBonus(critAdjusted, brokenBonus)
             val damage = adjustIncomingDamage(targetState, breakAdjusted, damageMode.element)
             val finalDamage = if (outgoing > 0 && !targetState.hasBlockingStatus()) damage.coerceAtLeast(1) else damage
             working = engine.applyDamage(
@@ -785,7 +860,9 @@ class CombatActionProcessor(
                 targetId = targetId,
                 amount = finalDamage,
                 element = damageMode.element,
-                brokenBonus = brokenBonus
+                critical = isCrit,
+                brokenBonus = brokenBonus,
+                momentumSpent = momentumSpent
             )
             if (finalDamage > 0) {
                 working = working.consumeForceCritIfPresent(targetId)
@@ -1097,6 +1174,15 @@ class CombatActionProcessor(
         skill.combatTags.orEmpty().forEach { tag ->
             statusRegistry.definition(tag)?.let { definitions.putIfAbsent(it.id, it) }
         }
+        if (attackerState.combatant.side == CombatSide.PLAYER && !isHealSkill(skill)) {
+            val weaponStatusId = attackerState.combatant.weapon?.statusOnHit?.trim()?.lowercase()
+            val weaponStatusChance = attackerState.combatant.weapon?.statusChance ?: 0.0
+            if (!weaponStatusId.isNullOrBlank() && random.nextDouble(0.0, 100.0) <= weaponStatusChance) {
+                statusRegistry.definition(weaponStatusId)?.let {
+                    definitions.putIfAbsent(it.id, it)
+                }
+            }
+        }
         if (definitions.isEmpty()) return emptyList()
 
         val enemyTargets = explicitTargets.ifEmpty {
@@ -1401,6 +1487,7 @@ class CombatActionProcessor(
     }
 
     companion object {
+        const val MAX_MOMENTUM = 3
         private const val PHYSICAL_ELEMENT = "physical"
         private const val BROKEN_DAMAGE_MULTIPLIER = 1.25
         private const val DEFEND_BONUS = 20

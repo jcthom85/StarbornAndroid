@@ -516,6 +516,7 @@ class CombatViewModel(
             return
         }
         var executed = false
+        var momentumSpent = 0
         updateState { current ->
             val attackerState = current.combatants[attackerId] ?: return@updateState current
             if (!attackerState.isAlive) {
@@ -526,6 +527,7 @@ class CombatViewModel(
             val targets = explicitTargets?.takeIf { it.isNotEmpty() }
                 ?: resolveSkillTargets(skill, current, attackerId).ifEmpty { resolveEnemyTargets(current) }
             if (targets.isEmpty()) return@updateState current
+            momentumSpent = attackerState.momentum
             playUiCue("confirm")
             val action = CombatAction.SkillUse(attackerId, skill.id, targets)
             val supportTargets = if (isSupportSkill(skill)) {
@@ -549,6 +551,9 @@ class CombatViewModel(
             val key = "$attackerId:${skill.id}"
             if (skill.usesPerBattle != null) {
                 skillUsageCounts[key] = skillUsageCounts.getOrDefault(key, 0) + 1
+            }
+            if (momentumSpent > 0) {
+                playBattleCue("weakness_resolve")
             }
             val animStyle = resolveSkillAnimationStyle(skill)
             triggerAttackLunge(attackerId, animStyle, ACTION_INTRO_PAUSE_MS)
@@ -606,6 +611,10 @@ class CombatViewModel(
                 "combat_action",
                 mapOf("actor_id" to attackerId, "action_type" to "basic_attack", "target_ids" to listOf(targetId))
             )
+            val currentMomentum = _state.value?.combatants?.get(attackerId)?.momentum ?: 0
+            if (currentMomentum == CombatActionProcessor.MAX_MOMENTUM) {
+                playBattleCue("weakness_resolve")
+            }
             val style = if (attackMissed) AttackLungeStyle.MISS else AttackLungeStyle.MELEE
             triggerAttackLunge(attackerId, style)
             clearAwaitingAction(attackerId)
@@ -1050,6 +1059,23 @@ class CombatViewModel(
         val state = _state.value ?: return 0
         val actorState = state.combatants[actorId] ?: return 0
         return actorState.activeCooldowns.getOrDefault(skillId, 0)
+    }
+
+    fun momentumFor(actorId: String): Int {
+        val state = _state.value ?: return 0
+        return state.combatants[actorId]?.momentum ?: 0
+    }
+
+    fun isOverchargeReady(actorId: String): Boolean {
+        return momentumFor(actorId) > 0
+    }
+
+    fun weaponInfusionFor(actorId: String): Pair<String?, String?> {
+        val state = _state.value ?: return null to null
+        val weapon = state.combatants[actorId]?.combatant?.weapon ?: return null to null
+        val element = weapon.attack.element?.takeIf { it.isNotBlank() && it != "physical" }
+        val status = weapon.statusOnHit?.takeIf { it.isNotBlank() }
+        return element to status
     }
 
     private fun checkSkillConditions(

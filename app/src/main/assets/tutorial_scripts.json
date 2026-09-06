@@ -163,7 +163,7 @@
         "id": "combat_basics_opener",
         "steps": [
             {
-                "message": "When your turn bar fills, choose an action. Skills go on turn cooldowns after use.",
+                "message": "When your turn bar fills, choose an action. Basic attacks build Momentum to Overcharge abilities with increased power, cooldown refunds, and elemental infusion.",
                 "context": "Combat"
             },
             {

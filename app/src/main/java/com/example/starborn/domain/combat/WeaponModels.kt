@@ -12,21 +12,24 @@ data class CombatWeapon(
 )
 
 sealed interface WeaponAttack {
+    val powerMultiplier: Double
+    val element: String?
+
     data class SingleTarget(
-        val powerMultiplier: Double = 1.0,
-        val element: String? = null
+        override val powerMultiplier: Double = 1.0,
+        override val element: String? = null
     ) : WeaponAttack
 
     data class AllEnemies(
-        val powerMultiplier: Double = 0.7,
-        val element: String? = null
+        override val powerMultiplier: Double = 0.7,
+        override val element: String? = null
     ) : WeaponAttack
 
     data class ChargedSplash(
         val chargeTurns: Int = 1,
-        val powerMultiplier: Double = 1.8,
+        override val powerMultiplier: Double = 1.8,
         val splashMultiplier: Double = 0.5,
-        val element: String? = null
+        override val element: String? = null
     ) : WeaponAttack
 }
 

@@ -154,9 +154,9 @@ fun CombatTutorialOverlay(
         CombatTutorialStep.AWAIT_BASIC_RESULT -> if (isLoader) "Watch the standard Attack connect." else "Watch how the shield handles a direct hit."
         CombatTutorialStep.BLOCKED_EXPLANATION ->
             if (isLoader)
-                "Standard Attacks are always available. The loader's cracked relay is weak to Shock—use Arc Tether to damage its Stability and accelerate cooldowns."
+                "Standard Attacks build Momentum (the pips beneath your HP bar). Use Arc Tether to Overcharge it for boosted damage and exploit the loader's Shock weakness!"
             else
-                "The shield reduced the attack to zero. Guard Break strips protection before you commit damage."
+                "The shield reduced the attack to zero. Your Attack still built Momentum! Guard Break strips protection before you commit damage."
         CombatTutorialStep.SELECT_NOVA_SKILL ->
             if (isLoader) "Nova is ready. Tap Nova to choose an action." else "Nova is ready again. Tap Nova to break the guard."
         CombatTutorialStep.CHOOSE_SKILLS ->
@@ -169,9 +169,9 @@ fun CombatTutorialOverlay(
             if (isLoader) "Watch the Shock pulse break its stability." else "Watch the guard break."
         CombatTutorialStep.SUCCESS ->
             if (isLoader)
-                "Stability broken! Broken targets take 25% more direct damage. Arc Tether is on cooldown—finish it with Attacks."
+                "Stability broken! Broken targets take 25% more direct damage. Arc Tether is on cooldown—use Attacks to finish it and build Momentum for your next Overcharge!"
             else
-                "Hydraulic Kick stripped the shield. Now finish the fight."
+                "Hydraulic Kick stripped the shield. Attack to finish the fight and build Momentum for your next Overcharge!"
     }
     if (tutorial.showsModal) {
         Box(modifier = modifier, contentAlignment = Alignment.Center) {

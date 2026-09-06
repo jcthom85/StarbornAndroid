@@ -300,6 +300,12 @@ fun PartyRoster(
                                         height = 12.dp,
                                         modifier = Modifier.width(HUD_BAR_WIDTH)
                                     )
+                                    MomentumGauge(
+                                        momentum = memberState?.momentum ?: 0,
+                                        modifier = Modifier
+                                            .width(HUD_BAR_WIDTH)
+                                            .padding(top = 2.dp)
+                                    )
                                 }
                                 val statuses = memberState?.statusEffects.orEmpty()
                                 val buffs = memberState?.buffs.orEmpty()
@@ -352,6 +358,46 @@ fun PartyRoster(
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun MomentumGauge(
+    momentum: Int,
+    modifier: Modifier = Modifier
+) {
+    val isMax = momentum >= 3
+    val infiniteTransition = rememberInfiniteTransition(label = "momentum_pulse")
+    val pulseAlpha by infiniteTransition.animateFloat(
+        initialValue = 0.65f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(600, easing = LinearEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "pulseAlpha"
+    )
+
+    Row(
+        modifier = modifier.height(5.dp),
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        for (i in 1..3) {
+            val filled = momentum >= i
+            val pipColor = when {
+                !filled -> Color.White.copy(alpha = 0.14f)
+                isMax -> Color(0xFFFFD700).copy(alpha = pulseAlpha)
+                else -> Color(0xFF00E5FF)
+            }
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .height(4.dp)
+                    .clip(RoundedCornerShape(2.dp))
+                    .background(pipColor)
+            )
         }
     }
 }
