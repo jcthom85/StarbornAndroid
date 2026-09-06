@@ -623,7 +623,7 @@
         "camera_start_y": 0.0,
         "camera_end_y": -10.0,
         "transition": "cut",
-        "duration_seconds": 2.5
+        "duration_seconds": 2.1
       },
       {
         "type": "narration",
@@ -637,7 +637,7 @@
         "camera_end_y": -18.0,
         "audio_cue": "sfx_intro_chime_launch",
         "transition": "cut",
-        "duration_seconds": 2.2
+        "duration_seconds": 1.6
       },
       {
         "type": "narration",

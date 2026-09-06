@@ -98,6 +98,19 @@ def fft_convolve2d(x: np.ndarray, ir: np.ndarray) -> np.ndarray:
         out[:, ch] = np.fft.irfft(X * H, n_fft)[:n]
     return out
 
+def fft_bandpass(x: np.ndarray, low_hz: float, high_hz: float, sr: int = 44100) -> np.ndarray:
+    n = len(x)
+    X = np.fft.rfft(x)
+    freqs = np.fft.rfftfreq(n, 1.0 / sr)
+    mask = np.zeros_like(freqs)
+    pass_idx = (freqs >= low_hz) & (freqs <= high_hz)
+    mask[pass_idx] = 1.0
+    low_taper = (freqs >= low_hz * 0.7) & (freqs < low_hz)
+    mask[low_taper] = 0.5 * (1 + np.cos(np.pi * (freqs[low_taper] - low_hz) / (low_hz * 0.3)))
+    high_taper = (freqs > high_hz) & (freqs <= high_hz * 1.25)
+    mask[high_taper] = 0.5 * (1 + np.cos(np.pi * (freqs[high_taper] - high_hz) / (high_hz * 0.25)))
+    return np.fft.irfft(X * mask, n)
+
 def save_mastered_mp3(data: np.ndarray, out_path: Path, ffmpeg_filter: str | None = None) -> None:
     with tempfile.TemporaryDirectory() as tmp:
         wpath = Path(tmp) / "pre.wav"
@@ -145,11 +158,11 @@ def rebuild_door_buckle() -> None:
         stop = min(start + len(shaped), total_len)
         dry_track[start:stop] += shaped[:stop - start]
         
-    ir = generate_cavern_ir(SR, duration=1.8)
+    ir = generate_cavern_ir(SR, duration=1.2)
     wet = fft_convolve2d(dry_track, ir)[:total_len]
     
-    # Full dry transient punch preserved at 1.0 + parallel wet reverberation at 0.40
-    mixed = dry_track * 1.0 + wet * 0.40
+    # Reverb cut in half (from 0.40 down to 0.20) for maximum transient power and punch
+    mixed = dry_track * 1.0 + wet * 0.20
     
     out_file = RAW_DIR / "sfx_intro_door_buckle.mp3"
     save_mastered_mp3(mixed, out_file, "compand=attacks=0.002:decays=0.08:points=-80/-80|-30/-18|-15/-8|0/-0.1:gain=2,alimiter=limit=0.99:attack=4:release=45:asc=1")
@@ -173,55 +186,66 @@ def rebuild_beast_strike() -> None:
     total_len = int(SR * 3.4)
     t = np.linspace(0, 3.4, total_len, endpoint=False)
     
-    beast_body = pad_or_cut(read_wav_stereo(ROOT / "scratch_beast_old.mp3"), total_len)
-    crash = pad_or_cut(read_wav_stereo(RAW_DIR / "sfx_crash_impact.mp3"), total_len)
-    screech = pad_or_cut(read_wav_stereo(RAW_DIR / "sfx_combat_enemy_screech.mp3"), total_len)
+    # 1. Primary Hard Glass Smack / Slap (Hand slapping flat glass)
+    rng = np.random.RandomState(1337)
+    noise = rng.randn(total_len)
     
-    # 1. Visceral, brittle glass strike transient (1kHz - 8kHz)
-    rng = np.random.RandomState(42)
-    white_noise = rng.randn(total_len)
+    # Immediate, aggressive slap transient: fast attack (0.4ms), tight decay
+    slap_env1 = np.exp(-t / 0.022) * (1.0 - np.exp(-t / 0.0004))
+    slap_env2 = 0.55 * np.exp(-np.maximum(0, t - 0.008) / 0.020) * (t >= 0.008)
+    slap_env3 = 0.35 * np.exp(-np.maximum(0, t - 0.016) / 0.025) * (t >= 0.016)
+    slap_total_env = slap_env1 + slap_env2 + slap_env3
+    # Bandpass slap strictly between 350Hz and 1800Hz (the distinct wet/hard meat-on-glass smack range, ZERO shimmer)
+    slap_meat = fft_bandpass(noise * slap_total_env, 350, 1800, SR) * 4.5
     
-    crack_env = np.exp(-t / 0.035) * (1.0 - np.exp(-t / 0.0003))
-    crack_env += 0.85 * np.exp(-np.maximum(0, t - 0.012) / 0.022) * (t >= 0.012)
-    crack_env += 0.70 * np.exp(-np.maximum(0, t - 0.028) / 0.028) * (t >= 0.028)
-    crack_env += 0.55 * np.exp(-np.maximum(0, t - 0.055) / 0.035) * (t >= 0.055)
-    crack_env += 0.40 * np.exp(-np.maximum(0, t - 0.095) / 0.045) * (t >= 0.095)
+    # 2. Hard Glass Plane Surface Strike (Acoustic impact of flat plate glass, NO high ringing)
+    plate_env = np.exp(-t / 0.025) * (1.0 - np.exp(-t / 0.0003))
+    plate_freq = 550.0 * np.exp(-t / 0.008) + 280.0
+    plate_hit = np.sin(2 * np.pi * plate_freq * t) * plate_env * 2.8
     
-    glass_modes = [1650, 2180, 2850, 3720, 4850, 6100, 7800]
-    glass_ring = np.zeros(total_len)
-    for i, f in enumerate(glass_modes):
-        decay = 0.32 / (1.0 + i * 0.2)
-        env = np.exp(-t / decay) * (1.0 - np.exp(-t / 0.0005))
-        glass_ring += np.sin(2 * np.pi * f * t) * env * (1.0 / (1.0 + 0.15 * i))
-        
-    fracture_hp = np.diff(white_noise * crack_env, prepend=0) * 2.5
-    glass_stereo = np.column_stack([
-        fracture_hp * 0.95 + glass_ring * 0.42,
-        fracture_hp * 0.90 - glass_ring * 0.40
+    # 3. Heavy Physical Beast Concussion (Colossal muscular mass slamming forward)
+    punch_env = np.exp(-t / 0.35) * (1.0 - np.exp(-t / 0.002))
+    punch_freq = 170.0 * np.exp(-t / 0.06) + 48.0
+    punch_sub = np.sin(2 * np.pi * punch_freq * t) * punch_env * 3.2
+    
+    # 4. Integrate physical punch body from existing game asset (low-passed)
+    body_path = RAW_DIR / "wpn_zeke_body_impact.mp3"
+    body_data = np.zeros(total_len)
+    if body_path.exists():
+        with tempfile.TemporaryDirectory() as tmp:
+            wp = Path(tmp) / "b.wav"
+            subprocess.run(["ffmpeg", "-y", "-i", str(body_path), "-ar", str(SR), "-ac", "1", str(wp)], capture_output=True)
+            with wave.open(str(wp), "rb") as w:
+                b_raw = np.frombuffer(w.readframes(w.getnframes()), dtype=np.int16).astype(np.float64) / 32768.0
+                body_data[:min(len(b_raw), total_len)] = b_raw[:min(len(b_raw), total_len)]
+    body_filtered = fft_bandpass(body_data, 70, 1400, SR) * 2.0
+    
+    # 5. Pod Structural Vibration (Low-frequency frame resonance 54Hz decaying over 1.2s)
+    frame_env = np.exp(-t / 0.90) * (1.0 - np.exp(-t / 0.015))
+    frame_sub = np.sin(2 * np.pi * 54.0 * t) * frame_env * 1.5
+    
+    # Sum components
+    raw_mono = slap_meat * 1.4 + plate_hit * 1.2 + punch_sub * 1.1 + body_filtered * 1.2 + frame_sub * 0.9
+    
+    # Strict lowpass brickwall at 2200 Hz: absolutely ZERO shimmer, hiss, or high-frequency ringing
+    clean_mono = fft_bandpass(raw_mono, 20, 2200, SR)
+    
+    # Stereo image: centered impact with subtle spatial spread on the slap reflections
+    stereo = np.column_stack([
+        clean_mono + slap_meat * 0.10,
+        clean_mono - slap_meat * 0.10
     ])
-    
-    # 2. Concussive physical body punch
-    punch_env = np.exp(-t / 0.8) * (1.0 - np.exp(-t / 0.002))
-    punch_layer = (beast_body * 2.2 + crash * 1.6) * punch_env[:, None]
-    
-    # 3. Terrifying close-up monster screech
-    screech_env = np.exp(-t / 0.75) * (1.0 - np.exp(-t / 0.01))
-    screech_layer = screech * screech_env[:, None] * 1.1
-    
-    # 4. Low-frequency stasis pod structural shudder
-    pod_shudder = np.sin(2 * np.pi * (160.0 * np.exp(-t / 0.2) + 50.0) * t) * np.exp(-t / 0.7)
-    pod_layer = np.column_stack([pod_shudder, pod_shudder]) * 0.8
-    
-    combined = glass_stereo * 1.6 + punch_layer + screech_layer + pod_layer
     
     out_file = RAW_DIR / "sfx_intro_beast_strike.mp3"
     save_mastered_mp3(
-        combined, out_file,
-        "compand=attacks=0.002:decays=0.08:points=-80/-80|-35/-18|-15/-6|0/-0.1:gain=4,alimiter=limit=0.99:attack=3:release=40:asc=1"
+        stereo, out_file,
+        "compand=attacks=0.002:decays=0.06:points=-80/-80|-30/-14|-12/-4|0/-0.1:gain=2,alimiter=limit=0.99:attack=3:release=40:asc=1"
     )
 
 if __name__ == "__main__":
-    rebuild_door_buckle()
-    rebuild_door_collapse()
+    if (ROOT / "scratch_buckle_old.mp3").exists():
+        rebuild_door_buckle()
+    if (ROOT / "scratch_collapse_old.mp3").exists():
+        rebuild_door_collapse()
     rebuild_beast_strike()
-    print("\nAll cold open audio assets successfully rebuilt.")
+    print("\nCold open beast strike rebuilt successfully.")
