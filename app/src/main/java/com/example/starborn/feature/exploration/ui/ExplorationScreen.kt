@@ -8298,34 +8298,9 @@ private fun IllustratedCinematicOverlay(
 
     LaunchedEffect(stepKey, audioCuePlayer) {
         state.step.audioCue?.takeIf { it.isNotBlank() }?.let { cue ->
-            val isBeast = cue == "sfx_intro_beast_strike"
-            val isBuckle = cue == "sfx_intro_door_buckle"
-            val isCollapse = cue == "sfx_intro_door_collapse"
-            val isStasisLock = cue == "sfx_intro_stasis_lock"
-            val isHeavyImpact = isBeast || isBuckle || isCollapse || isStasisLock
-            val commands = mutableListOf<AudioCommand>()
-            if (isHeavyImpact) {
-                val duckGain = when {
-                    isBeast -> 0.04f // Pod sealed ("Mute this room"): drop score into near silence for jump-scare glass smash
-                    isBuckle -> 0.18f // Let all 5 pounding impacts and cavern reverb dominate
-                    isCollapse -> 0.20f // Catastrophic blast door collapse
-                    else -> 0.30f // Stasis lock engaged: muffle external score inside insulated cryogenic pod
-                }
-                commands += AudioCommand.Duck(AudioCueType.MUSIC, gain = duckGain, fadeMs = if (isBeast) 30L else if (isStasisLock) 350L else 40L)
-            }
-            commands += AudioCommand.Play(AudioCueType.UI, cue, loop = false, fadeMs = 0L)
-            audioCuePlayer?.execute(commands)
-            if (isHeavyImpact && !isStasisLock) {
-                val (holdMs, restoreFadeMs) = when {
-                    isBeast -> 2200L to 1200L // Hold during glass smack & shudder, then swell into Starborn title card
-                    isBuckle -> 2800L to 600L  // Hold across all 5 pounding hits
-                    else -> 2500L to 800L     // Hold across door collapse and metal rumble
-                }
-                launch {
-                    delay(holdMs)
-                    audioCuePlayer?.execute(listOf(AudioCommand.Restore(AudioCueType.MUSIC, fadeMs = restoreFadeMs)))
-                }
-            }
+            audioCuePlayer?.execute(
+                listOf(AudioCommand.Play(AudioCueType.UI, cue, loop = false, fadeMs = 0L))
+            )
         }
         state.step.voiceCue?.takeIf { it.isNotBlank() }?.let { cue ->
             audioCuePlayer?.execute(
