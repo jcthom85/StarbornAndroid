@@ -3224,6 +3224,10 @@
       {
         "type": "quest_not_started",
         "quest_id": "w1_sq05"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_mine_power_on"
       }
     ],
     "actions": [
@@ -3278,6 +3282,15 @@
         "type": "give_item",
         "item_id": "recoil_dampener",
         "quantity": 1
+      },
+      {
+        "type": "give_item",
+        "item_id": "crew_datapad",
+        "quantity": 1
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w1_sq05_completed"
       },
       {
         "type": "complete_quest",

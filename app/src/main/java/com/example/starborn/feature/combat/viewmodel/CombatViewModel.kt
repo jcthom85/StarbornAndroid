@@ -433,13 +433,28 @@ class CombatViewModel(
         initializeEnemyBrains()
 
         if (playerCombatants.isNotEmpty() && enemyCombatants.isNotEmpty()) {
-            val seeded = combatEngine.beginEncounter(
+            val baseSeeded = combatEngine.beginEncounter(
                 CombatSetup(
                     playerParty = playerCombatants,
                     enemyParty = enemyCombatants
                 )
             )
-            _state.value = if (tutorialTracker.isCombatTutorialEligible(encounterEnemyIdList, sessionSnapshot, currentRoomId)) {
+            val updatedCombatants = baseSeeded?.combatants?.mapValues { (id, combatantState) ->
+                if (combatantState.combatant.side == CombatSide.PLAYER) {
+                    val maxHp = combatantState.combatant.stats.maxHp
+                    val persistedHp = sessionSnapshot.partyMemberHp[id] ?: maxHp
+                    val initialHp = persistedHp.coerceIn(1, maxHp)
+                    combatantState.copy(hp = initialHp)
+                } else {
+                    combatantState
+                }
+            }
+            val seeded = if (baseSeeded != null && updatedCombatants != null) {
+                baseSeeded.copy(combatants = updatedCombatants)
+            } else {
+                baseSeeded
+            }
+            _state.value = if (seeded != null && tutorialTracker.isCombatTutorialEligible(encounterEnemyIdList, sessionSnapshot, currentRoomId)) {
                 tutorialTracker.seedCombatTutorial(seeded, enemyIdList, currentRoomId)
             } else {
                 seeded
@@ -2992,7 +3007,7 @@ class CombatViewModel(
         val snapshot = buildMap {
             playerParty.forEach { member ->
                 state.combatants[member.id]?.let { combatantState ->
-                    put(member.id, combatantState.hp)
+                    put(member.id, combatantState.hp.coerceAtLeast(1))
                 }
             }
         }

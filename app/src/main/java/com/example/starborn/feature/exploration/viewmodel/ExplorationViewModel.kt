@@ -5527,10 +5527,7 @@ class ExplorationViewModel(
     }
 
     private fun hasBlockingEnemies(room: Room, direction: String): Boolean {
-        if (roomEnemyParties(room).isNotEmpty()) return true
-        val destId = getConnection(room, direction) ?: return false
-        val destRoom = roomsById[destId] ?: return false
-        return roomEnemyParties(destRoom).isNotEmpty()
+        return roomEnemyParties(room).isNotEmpty()
     }
 
     private fun getConnection(room: Room, direction: String): String? {

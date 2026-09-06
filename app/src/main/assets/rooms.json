@@ -2428,10 +2428,16 @@
     "title": "Side Shunt 4",
     "background_image": "images/rooms/world_1/mine_shunt.webp",
     "description": "A dead-end tunnel littered with shattered ore crates. Through cracked support beams, Nova's mining lamp catches the shimmer of an exposed resonant vein.",
-    "npcs": [],
-    "items": [
-      "crew_datapad"
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_mine_power_on"
+        ],
+        "description": "Now illuminated by restored mine power, Side Shunt 4 reveals the full extent of the collapse. Shattered crates and crushed shoring flank a dead miner's datapad resting beside the sealed rockfall."
+      }
     ],
+    "npcs": [],
+    "items": [],
     "enemies": [],
     "connections": {
       "west": "mine_alpha"
@@ -2450,6 +2456,14 @@
         "action_event": "w1_mine_shunt_vein",
         "requires_milestone_not_set": "ms_w1_mine_shunt_mined",
         "condition_unmet_message": "The resonant mineral vein has been harvested."
+      },
+      {
+        "name": "crew datapad",
+        "type": "generic",
+        "action_event": "read_datapad_sq05",
+        "show_when_milestone": "ms_mine_power_on",
+        "requires_milestone_not_set": "ms_w1_sq05_completed",
+        "condition_unmet_message": "The final log of the lost shift has already been downloaded."
       },
       {
         "name": "crates",

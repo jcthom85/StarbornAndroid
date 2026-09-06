@@ -555,7 +555,7 @@ fun ExplorationScreen(
         saveLoadMode != null ||
         showExitConfirmDialog
 
-    BackHandler(enabled = isAnyOverlayOpen) {
+    BackHandler(enabled = true) {
         when {
             showExitConfirmDialog -> showExitConfirmDialog = false
             saveLoadMode != null -> saveLoadMode = null
@@ -7954,6 +7954,7 @@ fun BlockedPromptCard(
 fun CinematicOverlayHost(
     state: CinematicUiState?,
     onAdvance: () -> Unit,
+    audioCuePlayer: AudioCuePlayer? = null,
     modifier: Modifier = Modifier
 ) {
     var displayedState by remember { mutableStateOf(state) }
@@ -7973,6 +7974,7 @@ fun CinematicOverlayHost(
             CinematicOverlay(
                 state = cinematic,
                 onAdvance = onAdvance,
+                audioCuePlayer = audioCuePlayer,
                 modifier = Modifier.fillMaxSize()
             )
         }
@@ -8026,6 +8028,19 @@ fun CinematicOverlay(
                 onAdvance = onAdvance,
                 onChoice = { onAdvance() },
                 onPlayVoice = {},
+                onPlayMurmur = { cue ->
+                    audioCuePlayer?.execute(
+                        listOf(
+                            AudioCommand.Play(
+                                AudioCueType.VOICE,
+                                cue,
+                                loop = false,
+                                fadeMs = 0L,
+                                gain = 0.85f
+                            )
+                        )
+                    )
+                },
                 modifier = Modifier
                     .navigationBarsPadding()
                     .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 24.dp)

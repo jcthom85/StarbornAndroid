@@ -383,9 +383,18 @@ class Hub1CriticalFlowTest {
         harness.store.startQuest("w1_mq03")
         harness.store.setInventory(mapOf("mine_access_badge" to 1))
 
+        // Entering while dark/unpowered must NOT start the quest
+        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("mine_shunt"))
+        var state = harness.store.state.value
+        assertTrue(!state.activeQuests.contains("w1_sq05"))
+
+        // Power restored
+        harness.store.setMilestone("ms_mine_power_on")
+
+        // Entering after power is restored starts the quest
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("mine_shunt"))
 
-        var state = harness.store.state.value
+        state = harness.store.state.value
         assertTrue(state.activeQuests.contains("w1_sq05"))
         assertEquals("w1_sq05", state.trackedQuestId)
         assertTrue(state.questTasksCompleted["w1_sq05"].orEmpty().contains("find_collapsed_tunnel"))
@@ -400,6 +409,8 @@ class Hub1CriticalFlowTest {
         assertTrue(completedTasks.contains("recover_datapad"))
         assertTrue(completedTasks.contains("read_final_letter"))
         assertTrue(state.inventory["recoil_dampener"].orZero() >= 1)
+        assertTrue(state.inventory["crew_datapad"].orZero() >= 1)
+        assertTrue(state.completedMilestones.contains("ms_w1_sq05_completed"))
     }
 
     @Test

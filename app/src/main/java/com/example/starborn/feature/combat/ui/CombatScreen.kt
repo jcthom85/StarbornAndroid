@@ -1257,6 +1257,7 @@ fun CombatScreen(
             CinematicOverlayHost(
                 state = cinematicPlayback?.toUiState(),
                 onAdvance = { onAdvanceCinematic?.invoke() },
+                audioCuePlayer = audioCuePlayer,
                 modifier = Modifier
                     .fillMaxSize()
                     .zIndex(80f)
