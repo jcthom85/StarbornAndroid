@@ -650,8 +650,7 @@
         "camera_start_y": 10.0,
         "camera_end_y": -6.0,
         "transition": "fade",
-        "duration_seconds": 3.8,
-        "audio_cue": "sfx_intro_chorus_answer"
+        "duration_seconds": 3.8
       },
       {
         "type": "dialogue",
