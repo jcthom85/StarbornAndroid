@@ -552,13 +552,19 @@ fun ExplorationScreen(
         uiState.togglePrompt != null ||
         uiState.tuningPuzzle != null ||
         uiState.narrationPrompt != null ||
+        uiState.prompt != null ||
         saveLoadMode != null ||
-        showExitConfirmDialog
+        showExitConfirmDialog ||
+        showInventoryTargetDialog
 
     BackHandler(enabled = true) {
         when {
             showExitConfirmDialog -> showExitConfirmDialog = false
             saveLoadMode != null -> saveLoadMode = null
+            showInventoryTargetDialog -> {
+                showInventoryTargetDialog = false
+                pendingInventoryItem = null
+            }
             uiState.isTapeDeckVisible -> viewModel.dismissTapeDeck()
             uiState.isSimulationDeckVisible -> viewModel.dismissSimulationDeck()
             uiState.isAstraNavConsoleVisible -> viewModel.dismissAstraNavConsole()
@@ -568,6 +574,7 @@ fun ExplorationScreen(
             uiState.togglePrompt != null -> viewModel.dismissTogglePrompt()
             uiState.tuningPuzzle != null -> viewModel.dismissTuningPuzzle()
             uiState.narrationPrompt != null -> viewModel.dismissNarration()
+            uiState.prompt != null -> viewModel.dismissPrompt()
             uiState.isMenuOverlayVisible -> viewModel.closeMenuOverlay()
             else -> Unit
         }

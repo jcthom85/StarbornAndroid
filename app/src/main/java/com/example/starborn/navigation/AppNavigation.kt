@@ -232,7 +232,8 @@ fun NavigationHost(
                 },
                 onEnterNode = { node ->
                     navController.navigate(Exploration.route) {
-                        popUpTo(Hub.route) { inclusive = false }
+                        popUpTo(Hub.route) { inclusive = true }
+                        launchSingleTop = true
                     }
                 },
                 onReturnToTitle = {
