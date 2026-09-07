@@ -466,10 +466,28 @@
     "toast": "Launch authorization accepted. Beacon route locked."
   },
   {
+    "id": "ms_w1_warden_defeated",
+    "name": "Warden Overcome",
+    "description": "Defeated the Dominion Iron Warden guarding the escape pod.",
+    "toast": "The Warden is defeated.",
+    "unlock_exits": [
+      {
+        "room_id": "launch_bay",
+        "direction": "north"
+      }
+    ]
+  },
+  {
     "id": "ms_w1_zeke_directed_to_pod",
     "name": "Pod Path Clear",
     "description": "Zeke opened the pod hatch after Nova defeated the Warden and moved to secure the navigation console.",
-    "toast": "Zeke opens the pod hatch."
+    "toast": "Zeke opens the pod hatch.",
+    "unlock_exits": [
+      {
+        "room_id": "launch_bay",
+        "direction": "north"
+      }
+    ]
   },
   {
     "id": "ms_w1_mq05_complete",

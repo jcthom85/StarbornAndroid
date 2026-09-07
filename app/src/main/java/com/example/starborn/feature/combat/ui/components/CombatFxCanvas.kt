@@ -1340,7 +1340,7 @@ fun OutcomeOverlay(
     }
     val subtitle = when (outcomeType) {
         CombatFxEvent.CombatOutcomeFx.OutcomeType.VICTORY -> "Hostile contact resolved"
-        CombatFxEvent.CombatOutcomeFx.OutcomeType.DEFEAT -> "The party collapses"
+        CombatFxEvent.CombatOutcomeFx.OutcomeType.DEFEAT -> "The party collapses in defeat"
         CombatFxEvent.CombatOutcomeFx.OutcomeType.RETREAT -> "Disengaged from combat"
     }
     Box(

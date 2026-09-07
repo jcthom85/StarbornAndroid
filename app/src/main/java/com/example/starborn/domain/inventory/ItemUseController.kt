@@ -34,7 +34,7 @@ class ItemUseController(
         }
         val targetMode = effect.target?.lowercase(Locale.getDefault()) ?: "any"
         val resolvedTargets = when (targetMode) {
-            "party" -> party
+            "party", "all_allies" -> party
             else -> {
                 val fallbackTarget = targetId
                     ?: party.firstOrNull()

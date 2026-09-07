@@ -1426,7 +1426,7 @@
   {
     "id": "medkit",
     "name": "Medkit",
-    "description": "A basic first aid kit with bio-sealant and painkillers.",
+    "description": "A field trauma kit with bio-sealant, antiseptic spray, and pressure bandages. Restores 75 HP to one ally.",
     "aliases": [
       "medkit",
       "first aid"
@@ -1435,8 +1435,9 @@
     "value": 25,
     "buy_price": 50,
     "effect": {
-      "restore_hp": 50,
-      "damage": 0
+      "restore_hp": 75,
+      "damage": 0,
+      "target": "ally"
     }
   },
   {
@@ -1637,10 +1638,12 @@
       "nova rations"
     ],
     "type": "consumable",
-    "description": "Vacuum-sealed yeast paste, chewable glucose blocks, and an electrolyte pouch. Tastes like chalk and salt, but restores 40 HP.",
+    "description": "Vacuum-sealed yeast paste, chewable glucose blocks, and electrolyte pouches. Shared among the squad to restore 35 HP to all allies.",
     "value": 35,
+    "buy_price": 70,
     "effect": {
-      "restore_hp": 40
+      "restore_hp": 35,
+      "target": "party"
     }
   },
   {
@@ -2713,13 +2716,14 @@
       "medkit i",
       "basic medkit"
     ],
-    "description": "A compact Dominion first-aid pack stocked for minor burns, cuts, and pressure bruises.",
+    "description": "A compact Dominion first-aid pack stocked with bio-sealant, antiseptic spray, and trauma dressing. Restores 75 HP to one ally.",
     "type": "consumable",
     "value": 25,
     "buy_price": 50,
     "rarity": "common",
     "effect": {
-      "restore_hp": 45
+      "restore_hp": 75,
+      "target": "ally"
     }
   },
   {

@@ -3278,9 +3278,7 @@
     "title": "Pod Bay",
     "background_image": "images/rooms/world_1/launch_bay.webp",
     "description": "Cargo rails climb toward the planetary shield under emergency red lights. One escape pod waits on the pad. [npc:The Warden] blocks the hatch while [npc:Zeke] lies to the controls.",
-    "npcs": [
-      "the_warden"
-    ],
+    "npcs": [],
     "items": [],
     "enemies": [
       "the_iron_warden"
@@ -3322,6 +3320,12 @@
       }
     },
     "npc_presence": [
+      {
+        "npc": "the_warden",
+        "forbidden_milestones": [
+          "ms_w1_warden_defeated"
+        ]
+      },
       {
         "npc": "zeke",
         "requires_milestones": [

@@ -2932,6 +2932,10 @@
         "state_key": "warden_defeated"
       },
       {
+        "type": "set_milestone",
+        "milestone": "ms_w1_warden_defeated"
+      },
+      {
         "type": "set_quest_task_done",
         "quest_id": "w1_mq05",
         "task_id": "survive_warden_intro"

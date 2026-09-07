@@ -77,7 +77,7 @@ class ExplorationCombatHandler(
                 roomId = sessionStore.state.value.roomId
             )
         )
-        val message = "Overwhelmed by the enemy. Regroup and recover."
+        val message = "The party collapses in defeat. Regrouped and stabilized."
         postStatus(message)
         onDefeatProcessed()
         emitEvent(

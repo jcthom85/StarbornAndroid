@@ -895,10 +895,26 @@ class ExplorationViewModel(
         combatHandler.processDefeat(
             enemyIds = enemyIds,
             onDefeatProcessed = {
+                stabilizePartyAfterDefeat()
                 refreshCurrentRoomBlockedDirections()
             }
         )
         playRoomAudio(sessionStore.state.value.hubId, _uiState.value.currentRoom?.id)
+    }
+
+    private fun stabilizePartyAfterDefeat() {
+        val state = sessionStore.state.value
+        val partyIds = state.partyMembers.ifEmpty { listOfNotNull(state.playerId) }
+        val updatedHp = partyIds.mapNotNull { memberId ->
+            val maxHp = charactersById[memberId]?.hp?.takeIf { it > 0 } ?: 100
+            val currentHp = state.partyMemberHp[memberId] ?: 1
+            val floorHp = ((maxHp * 35) / 100).coerceAtLeast(25)
+            val recovered = maxOf(currentHp, floorHp).coerceAtMost(maxHp)
+            memberId to recovered
+        }.toMap()
+        if (updatedHp.isNotEmpty()) {
+            sessionStore.updatePartyVitals(updatedHp)
+        }
     }
 
     fun onCombatRetreat(enemyIds: List<String>) {
@@ -5553,6 +5569,7 @@ class ExplorationViewModel(
         if (!unlocked.add(normalized)) {
             return null
         }
+        sessionStore.unlockExit(roomId, normalized)
 
         val message = block?.messageUnlock?.takeIf { !silent && !it.isNullOrBlank() }
 
@@ -5568,6 +5585,7 @@ class ExplorationViewModel(
         val opposite = oppositeDirection(normalized)
         if (destId != null && opposite != null) {
             unlockedDirections.getOrPut(destId) { mutableSetOf() }.add(opposite)
+            sessionStore.unlockExit(destId, opposite)
             val destRoom = roomsById[destId]
             if (destRoom != null) {
                 val updatedBlocked = destRoom.blockedDirections?.toMutableMap()?.apply { remove(opposite) }

@@ -575,7 +575,7 @@ fun CombatScreen(
                 )
                 handle?.set("combat_result", payload)
                 pendingOutcome = null
-                exitMainText = "The party collapses in defeat..."
+                exitMainText = "The party collapses in defeat... Regrouping to recover."
                 isExiting = true
             }
             CombatOutcome.Retreat -> {
@@ -1503,7 +1503,7 @@ private fun InventoryEntry.targetFilter(): TargetFilter? {
         declared == "enemy" || declared == "single_enemy" -> TargetFilter.ENEMY
         declared == "ally" || declared == "single_ally" -> TargetFilter.ALLY
         declared == "any" -> TargetFilter.ANY
-        declared == "self" || declared == "party" || declared == "enemy_group" || declared == "all_enemies" -> null
+        declared == "self" || declared == "party" || declared == "all_allies" || declared == "enemy_group" || declared == "all_enemies" -> null
         effect.damage?.let { it > 0 } == true -> TargetFilter.ENEMY
         effect.restoreHp?.let { it > 0 } == true -> TargetFilter.ALLY
         effect.singleBuff != null || !effect.buffs.isNullOrEmpty() -> TargetFilter.ALLY

@@ -623,7 +623,7 @@
         "camera_start_y": 0.0,
         "camera_end_y": -10.0,
         "transition": "cut",
-        "duration_seconds": 2.1
+        "duration_seconds": 2.3
       },
       {
         "type": "narration",
@@ -637,7 +637,7 @@
         "camera_end_y": -18.0,
         "audio_cue": "sfx_intro_chime_launch",
         "transition": "cut",
-        "duration_seconds": 1.6
+        "duration_seconds": 2.1
       },
       {
         "type": "narration",
@@ -650,7 +650,7 @@
         "camera_start_y": 10.0,
         "camera_end_y": -6.0,
         "transition": "fade",
-        "duration_seconds": 3.8
+        "duration_seconds": 3.6
       },
       {
         "type": "dialogue",
@@ -666,7 +666,7 @@
         "camera_start_y": 0.0,
         "camera_end_y": -8.0,
         "audio_cue": "sfx_intro_stasis_seal",
-        "duration_seconds": 2.8,
+        "duration_seconds": 3.4,
         "transition": "fade"
       },
       {
@@ -681,7 +681,7 @@
         "camera_end_y": -18.0,
         "audio_cue": "sfx_intro_stasis_lock",
         "transition": "cut",
-        "duration_seconds": 2.6
+        "duration_seconds": 3.6
       },
       {
         "type": "narration",
@@ -694,7 +694,7 @@
         "camera_end_y": -6.0,
         "transition": "cut",
         "audio_cue": "sfx_intro_beast_strike",
-        "duration_seconds": 3.4
+        "duration_seconds": 3.1
       },
       {
         "type": "narration",
@@ -704,8 +704,8 @@
         "camera_start_scale": 0.98,
         "camera_end_scale": 1.03,
         "transition": "fade",
-        "fade_out_seconds": 1.4,
-        "duration_seconds": 3.3
+        "fade_out_seconds": 1.6,
+        "duration_seconds": 4.1
       }
     ]
   },

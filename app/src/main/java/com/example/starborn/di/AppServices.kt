@@ -762,6 +762,11 @@ class AppServices(context: Context) {
                 info = sessionPersistence.slotInfo(slot)
             }
         }
+        if (slot == 2 && (info == null || info.state.worldId == "nova_prime" || info.state.roomId != "launch_bay" || !info.state.unlockedExits.contains("launch_bay::north"))) {
+            if (importLegacySlotFromAssets(slot)) {
+                info = sessionPersistence.slotInfo(slot)
+            }
+        }
         return info
     }
 
@@ -2356,7 +2361,9 @@ class AppServices(context: Context) {
                 "ms_w1_sq03_started",
                 "ms_w1_guardbreak_trained",
                 "ms_w1_mq03_complete",
-                "ms_w1_mq04_complete"
+                "ms_w1_mq04_complete",
+                "ms_w1_warden_defeated",
+                "ms_w1_zeke_directed_to_pod"
             ).forEach(sessionStore::setMilestone)
             sessionStore.unlockSkill("nova_hydraulic_kick")
             sessionStore.unlockSkill("nova_blast_wave")
@@ -2375,6 +2382,7 @@ class AppServices(context: Context) {
             sessionStore.setRoomState("launch_checkpoint", debugEncounterClearedStateKey("dominion_dampener", "resonance_buoy"), true)
             sessionStore.setRoomState("launch_bay", debugEncounterClearedStateKey("the_iron_warden"), true)
             sessionStore.setRoomState("launch_bay", "warden_defeated", true)
+            sessionStore.unlockExit("launch_bay", "north")
             sessionStore.setPlayerLevel(5)
             sessionStore.setPlayerXp(700)
             sessionStore.setPartyMembers(listOf("nova", "zeke"))

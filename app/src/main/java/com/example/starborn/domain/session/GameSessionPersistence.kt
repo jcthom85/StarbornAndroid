@@ -535,6 +535,8 @@ fun GameSessionPersistence.importLegacySave(file: File, itemCatalog: ItemCatalog
     val activeQuests = mutableSetOf<String>()
     val completedQuests = mutableSetOf<String>()
     val failedQuests = mutableSetOf<String>()
+    val questStageById = mutableMapOf<String, String>()
+    val questTasksCompleted = mutableMapOf<String, Set<String>>()
     val quests = gameState.optJSONObject("quests")
     var trackedQuestId: String? = quests?.optString("tracked")?.takeIf { it.isNotBlank() }
     val questArray = quests?.optJSONArray("quests")
@@ -547,7 +549,27 @@ fun GameSessionPersistence.importLegacySave(file: File, itemCatalog: ItemCatalog
                 "active", "in_progress", "ongoing" -> activeQuests += id
                 "failed", "fail" -> failedQuests += id
             }
+            val stage = entry.optString("stage").takeIf { it.isNotBlank() }
+                ?: entry.optString("current_stage").takeIf { it.isNotBlank() }
+            if (stage != null) {
+                questStageById[id] = stage
+            }
+            val tasksArray = entry.optJSONArray("completed_tasks") ?: entry.optJSONArray("tasks")
+            if (tasksArray != null) {
+                val tasks = mutableSetOf<String>()
+                for (j in 0 until tasksArray.length()) {
+                    tasksArray.optString(j)?.takeIf { it.isNotBlank() }?.let { tasks += it }
+                }
+                if (tasks.isNotEmpty()) {
+                    questTasksCompleted[id] = tasks
+                }
+            }
         }
+    }
+    val questStagesObj = gameState.optJSONObject("quest_stages") ?: quests?.optJSONObject("stages")
+    questStagesObj?.keys()?.forEachRemaining { qId ->
+        val stage = questStagesObj.optString(qId)
+        if (stage.isNotBlank()) questStageById[qId] = stage
     }
 
     val completedMilestones = mutableSetOf<String>()
@@ -580,10 +602,111 @@ fun GameSessionPersistence.importLegacySave(file: File, itemCatalog: ItemCatalog
         }
     }
 
+    val unlockedSkills = mutableSetOf<String>()
+    characters.keys().forEachRemaining { id ->
+        val entry = characters.optJSONObject(id) ?: return@forEachRemaining
+        val skills = entry.optJSONArray("unlocked_abilities") ?: entry.optJSONArray("unlocked_skills")
+        if (skills != null) {
+            for (i in 0 until skills.length()) {
+                skills.optString(i)?.takeIf { it.isNotBlank() }?.let { unlockedSkills += it }
+            }
+        }
+    }
+    val rootSkills = gameState.optJSONArray("unlocked_skills") ?: root.optJSONArray("unlocked_skills")
+    if (rootSkills != null) {
+        for (i in 0 until rootSkills.length()) {
+            rootSkills.optString(i)?.takeIf { it.isNotBlank() }?.let { unlockedSkills += it }
+        }
+    }
+
+    val unlockedExits = mutableSetOf<String>()
+    val exitsArray = gameState.optJSONArray("unlocked_exits") ?: root.optJSONArray("unlocked_exits")
+    if (exitsArray != null) {
+        for (i in 0 until exitsArray.length()) {
+            exitsArray.optString(i)?.takeIf { it.isNotBlank() }?.let { unlockedExits += it }
+        }
+    }
+    val exitsObj = gameState.optJSONObject("unlocked_exits") ?: root.optJSONObject("unlocked_exits")
+    exitsObj?.keys()?.forEachRemaining { key ->
+        if (exitsObj.optBoolean(key, false) && key.isNotBlank()) {
+            unlockedExits += key
+        }
+    }
+
+    val roomStates = mutableMapOf<String, Map<String, Boolean>>()
+    val roomStatesJson = gameState.optJSONObject("room_states") ?: root.optJSONObject("room_states")
+    roomStatesJson?.keys()?.forEachRemaining { rId ->
+        val stateObj = roomStatesJson.optJSONObject(rId)
+        if (stateObj != null) {
+            val flags = mutableMapOf<String, Boolean>()
+            stateObj.keys().forEachRemaining { flagKey ->
+                flags[flagKey] = stateObj.optBoolean(flagKey, false)
+            }
+            roomStates[rId] = flags
+        }
+    }
+
+    val completedEvents = mutableSetOf<String>()
+    val firedEventsArray = gameState.optJSONArray("fired_events") ?: gameState.optJSONArray("completed_events")
+    if (firedEventsArray != null) {
+        for (i in 0 until firedEventsArray.length()) {
+            firedEventsArray.optString(i)?.takeIf { it.isNotBlank() }?.let { completedEvents += it }
+        }
+    }
+
+    val tutorialSeen = mutableSetOf<String>()
+    val tutorialCompleted = mutableSetOf<String>()
+    val tutorialRoomsSeen = mutableSetOf<String>()
+    val tutObj = root.optJSONObject("tutorials") ?: gameState.optJSONObject("tutorials")
+    if (tutObj != null) {
+        val seenArr = tutObj.optJSONArray("seen")
+        if (seenArr != null) {
+            for (i in 0 until seenArr.length()) {
+                seenArr.optString(i)?.takeIf { it.isNotBlank() }?.let { tutorialSeen += it }
+            }
+        }
+        val compArr = tutObj.optJSONArray("completed")
+        if (compArr != null) {
+            for (i in 0 until compArr.length()) {
+                compArr.optString(i)?.takeIf { it.isNotBlank() }?.let { tutorialCompleted += it }
+            }
+        }
+        val roomsArr = tutObj.optJSONArray("rooms_seen")
+        if (roomsArr != null) {
+            for (i in 0 until roomsArr.length()) {
+                roomsArr.optString(i)?.takeIf { it.isNotBlank() }?.let { tutorialRoomsSeen += it }
+            }
+        }
+    }
+
     val mapState = gameState.optJSONObject("map")
     val worldId = mapState?.optString("current_world_id")?.takeIf { it.isNotBlank() }
     val hubId = mapState?.optString("current_hub_id")?.takeIf { it.isNotBlank() }
     val roomId = mapState?.optString("current_room_id")?.takeIf { it.isNotBlank() }
+
+    val unlockedAreas = mutableSetOf<String>()
+    val unlockedNodes = mutableSetOf<String>()
+    val routesObj = gameState.optJSONObject("routes")
+    if (routesObj != null) {
+        val worldsObj = routesObj.optJSONObject("worlds")
+        worldsObj?.keys()?.forEachRemaining { if (worldsObj.optBoolean(it, false)) unlockedAreas += it }
+        val hubsObj = routesObj.optJSONObject("hubs")
+        hubsObj?.keys()?.forEachRemaining { if (hubsObj.optBoolean(it, false)) unlockedAreas += it }
+        val nodesObj = routesObj.optJSONObject("nodes")
+        nodesObj?.keys()?.forEachRemaining { if (nodesObj.optBoolean(it, false)) unlockedNodes += it }
+    }
+    val revealedNodes = mutableSetOf<String>()
+    val visitedNodes = mutableSetOf<String>()
+    val nodeMaps = mapState?.optJSONObject("node_maps")
+    nodeMaps?.keys()?.forEachRemaining { nId ->
+        revealedNodes += nId
+        visitedNodes += nId
+    }
+    val currentNodeId = mapState?.optString("current_node_id")?.takeIf { it.isNotBlank() }
+    if (currentNodeId != null) {
+        revealedNodes += currentNodeId
+        visitedNodes += currentNodeId
+    }
 
     val credits = gameState.optInt("credits", 0)
     val playerLevel = playerId?.let { partyLevels[it] } ?: partyLevels.values.firstOrNull() ?: 1
@@ -635,6 +758,19 @@ fun GameSessionPersistence.importLegacySave(file: File, itemCatalog: ItemCatalog
         equippedItems = equippedItems,
         unlockedWeapons = unlockedWeapons,
         equippedWeapons = equippedWeapons,
+        unlockedSkills = unlockedSkills,
+        unlockedAreas = unlockedAreas,
+        unlockedExits = unlockedExits,
+        tutorialSeen = tutorialSeen,
+        tutorialCompleted = tutorialCompleted,
+        tutorialRoomsSeen = tutorialRoomsSeen,
+        questStageById = questStageById,
+        questTasksCompleted = questTasksCompleted,
+        completedEvents = completedEvents,
+        roomStates = roomStates,
+        revealedNodes = revealedNodes,
+        unlockedNodes = unlockedNodes,
+        visitedNodes = visitedNodes,
         trackedQuestId = trackedQuestId,
         activeQuests = activeQuests,
         completedQuests = completedQuests,
@@ -727,6 +863,13 @@ private fun importSimpleSave(root: JSONObject, itemCatalog: ItemCatalog): GameSe
                 }
             }
     }
+    val unlockedExits = mutableSetOf<String>()
+    val exitsArray = root.optJSONArray("unlocked_exits")
+    if (exitsArray != null) {
+        for (i in 0 until exitsArray.length()) {
+            exitsArray.optString(i)?.takeIf { it.isNotBlank() }?.let { unlockedExits += it }
+        }
+    }
     val equipped = (baseEquipment + scopedEquipment).toMutableMap()
     val playerId = partyMembers.firstOrNull()
     return GameSessionState(
@@ -737,6 +880,7 @@ private fun importSimpleSave(root: JSONObject, itemCatalog: ItemCatalog): GameSe
         equippedItems = equipped,
         unlockedWeapons = unlockedWeapons,
         equippedWeapons = equippedWeapons,
+        unlockedExits = unlockedExits,
         playerLevel = 1,
         playerXp = 0
     )

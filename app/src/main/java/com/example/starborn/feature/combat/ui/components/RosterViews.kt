@@ -669,7 +669,7 @@ fun EnemyRoster(
                                                 transformOrigin = TransformOrigin(0.5f, 1f)
                                                 if (enemyBroken) {
                                                     val brokenDazeWave = sin(idleWave * 2f + idlePhase)
-                                                    val brokenSway = sin(idleWave * 1.3f + idlePhase)
+                                                    val brokenSway = sin(idleWave + idlePhase)
                                                     scaleX = spriteScale * (1f + 0.015f * brokenDazeWave)
                                                     scaleY = spriteScale * (0.96f - 0.01f * brokenDazeWave)
                                                     translationY = hitRecoilY + 6f + brokenDazeWave * 3.5f
@@ -994,7 +994,7 @@ fun CompositeEnemyRoster(
                                     val isBroken = (enemyState?.breakTurns ?: 0) > 0
                                     if (isBroken) {
                                         val brokenDazeWave = sin(idleWave * 2f + idlePhase)
-                                        val brokenSway = sin(idleWave * 1.3f + idlePhase)
+                                        val brokenSway = sin(idleWave + idlePhase)
                                         scaleX = combined * (1f + 0.015f * brokenDazeWave)
                                         scaleY = combined * (0.96f - 0.01f * brokenDazeWave)
                                         translationY = hitRecoilY + 6f + brokenDazeWave * 3.5f

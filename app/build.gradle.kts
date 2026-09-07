@@ -25,8 +25,8 @@ android {
         applicationId = "com.junewiregames.starborn.prealpha"
         minSdk = 26
         targetSdk = 36
-        versionCode = 98
-        versionName = "1.3.14"
+        versionCode = 99
+        versionName = "1.3.15"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
