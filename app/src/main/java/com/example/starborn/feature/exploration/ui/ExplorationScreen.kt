@@ -8425,11 +8425,11 @@ private fun IllustratedCinematicOverlay(
         if (cue == "sfx_intro_door_buckle") {
             // 5 accelerating, escalating pounding impacts against the reinforced blast doors
             val buckleHits = listOf(
-                0L to 7,
-                850L to 9,
-                1600L to 11,
-                2200L to 13,
-                2700L to 18
+                240L to 7,
+                1009L to 9,
+                1845L to 11,
+                2296L to 13,
+                2690L to 18
             )
             launch {
                 var lastTime = 0L
