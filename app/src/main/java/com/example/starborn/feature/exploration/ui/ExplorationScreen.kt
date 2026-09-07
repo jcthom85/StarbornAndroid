@@ -8431,33 +8431,31 @@ private fun IllustratedCinematicOverlay(
                 2296L to 13,
                 2690L to 18
             )
-            launch {
-                var lastTime = 0L
-                for ((atMs, ampDp) in buckleHits) {
-                    val waitTime = atMs - lastTime
-                    if (waitTime > 0L) {
-                        delay(waitTime)
-                    }
-                    lastTime = atMs
+            for ((atMs, ampDp) in buckleHits) {
+                launch {
+                    delay(atMs)
                     val amp = with(density) { ampDp.dp.toPx() }
                     impactShakeX.snapTo(amp)
                     impactShakeY.snapTo(-amp * 0.45f)
-                    impactShakeX.animateTo(0f, animationSpec = tween(durationMillis = 180, easing = FastOutSlowInEasing))
-                    impactShakeY.animateTo(0f, animationSpec = tween(durationMillis = 180, easing = FastOutSlowInEasing))
-                    // Subtle residual structural tremor between hits
-                    val cycles = if (ampDp >= 18) 6 else 3
-                    val tremorAmp = with(density) { (ampDp * 0.22f).dp.toPx() }
-                    for (cycle in cycles downTo 1) {
-                        val decayRatio = cycle.toFloat() / cycles
-                        val sign = if (cycle % 2 == 0) 1f else -1f
-                        impactShakeX.animateTo(
-                            targetValue = tremorAmp * decayRatio * sign,
-                            animationSpec = tween(durationMillis = 40, easing = LinearEasing)
-                        )
-                        impactShakeX.animateTo(
-                            targetValue = 0f,
-                            animationSpec = tween(durationMillis = 40, easing = LinearEasing)
-                        )
+                    launch {
+                        impactShakeX.animateTo(0f, animationSpec = tween(durationMillis = 160, easing = FastOutSlowInEasing))
+                        val cycles = if (ampDp >= 18) 6 else 3
+                        val tremorAmp = with(density) { (ampDp * 0.22f).dp.toPx() }
+                        for (cycle in cycles downTo 1) {
+                            val decayRatio = cycle.toFloat() / cycles
+                            val sign = if (cycle % 2 == 0) 1f else -1f
+                            impactShakeX.animateTo(
+                                targetValue = tremorAmp * decayRatio * sign,
+                                animationSpec = tween(durationMillis = 35, easing = LinearEasing)
+                            )
+                            impactShakeX.animateTo(
+                                targetValue = 0f,
+                                animationSpec = tween(durationMillis = 35, easing = LinearEasing)
+                            )
+                        }
+                    }
+                    launch {
+                        impactShakeY.animateTo(0f, animationSpec = tween(durationMillis = 160, easing = FastOutSlowInEasing))
                     }
                 }
             }
