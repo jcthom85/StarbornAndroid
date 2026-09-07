@@ -72,6 +72,12 @@
         "type": "arcade_discovery",
         "hide_when_milestone": "ms_arcade_deep_mine_discovered",
         "condition_unmet_message": "A dead pre-Dominion arcade cabinet leans beneath a miner's coat. One amber diagnostic blinks behind the cracked glass."
+      },
+      {
+        "name": "tables",
+        "type": "rest_stop",
+        "rest_event": "w1_rest_mess_hall",
+        "message": "Nova eats a hot ration and rests at the end of the mess table."
       }
     ],
     "npc_presence": [
@@ -3117,7 +3123,11 @@
       }
     ],
     "npcs": [],
-    "items": [],
+    "items": [
+      "medkit",
+      "medkit_i",
+      "ration_pack"
+    ],
     "enemies": [],
     "connections": {
       "north": "launch_gantry"
@@ -3188,6 +3198,11 @@
         "name": "hydraulics",
         "type": "generic",
         "condition_unmet_message": "The hydraulics are failing under the strain of the lockdown, but they are still moving."
+      },
+      {
+        "name": "cargo lift",
+        "type": "rest_stop",
+        "message": "Nova and Zeke take cover behind the cargo lift hydraulics to dress wounds and catch their breath before breaching the checkpoint."
       }
     ],
     "blocked_directions": {
@@ -3215,7 +3230,10 @@
     "background_image": "images/rooms/world_1/launch_checkpoint.webp",
     "description": "A Dominion dampener and hovering security drone guard the fortified checkpoint. Floodlights sweep the access lane beneath an active alarm.",
     "npcs": [],
-    "items": [],
+    "items": [
+      "medkit_i",
+      "ration_pack"
+    ],
     "enemies": [
       "dominion_dampener",
       "resonance_buoy"

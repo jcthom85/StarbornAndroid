@@ -397,6 +397,9 @@
     },
     "sells": {
       "items": [
+        "medkit_i",
+        "medkit",
+        "ration_pack",
         "pulse_grenade",
         "battery_pack",
         "scrap_metal",

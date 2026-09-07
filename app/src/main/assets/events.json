@@ -1013,6 +1013,16 @@
             "milestone": "ms_w1_mq01_cutter_surge"
           },
           {
+            "type": "give_item",
+            "item_id": "ration_pack",
+            "quantity": 2
+          },
+          {
+            "type": "give_item",
+            "item_id": "medkit_i",
+            "quantity": 1
+          },
+          {
             "type": "complete_quest",
             "quest_id": "w1_mq01"
           },
@@ -2496,6 +2506,16 @@
             "context": "The Heart"
           },
           {
+            "type": "give_item",
+            "item_id": "medkit_i",
+            "quantity": 2
+          },
+          {
+            "type": "give_item",
+            "item_id": "ration_pack",
+            "quantity": 2
+          },
+          {
             "type": "complete_quest",
             "quest_id": "w1_mq03"
           },
@@ -2776,6 +2796,16 @@
         "type": "give_item",
         "item_id": "ghost_signal_cell",
         "quantity": 1
+      },
+      {
+        "type": "give_item",
+        "item_id": "medkit",
+        "quantity": 1
+      },
+      {
+        "type": "give_item",
+        "item_id": "ration_pack",
+        "quantity": 2
       },
       {
         "type": "complete_quest",

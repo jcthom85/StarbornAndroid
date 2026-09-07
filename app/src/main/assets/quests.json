@@ -79,6 +79,16 @@
       {
         "type": "xp",
         "amount": 50
+      },
+      {
+        "type": "item",
+        "item_id": "ration_pack",
+        "quantity": 2
+      },
+      {
+        "type": "item",
+        "item_id": "medkit_i",
+        "quantity": 1
       }
     ]
   },
@@ -135,6 +145,16 @@
         "type": "item",
         "item_id": "mine_access_badge",
         "quantity": 1
+      },
+      {
+        "type": "item",
+        "item_id": "medkit_i",
+        "quantity": 2
+      },
+      {
+        "type": "item",
+        "item_id": "ration_pack",
+        "quantity": 2
       }
     ]
   },
@@ -218,6 +238,16 @@
         "type": "item",
         "item_id": "tuning_fork",
         "quantity": 1
+      },
+      {
+        "type": "item",
+        "item_id": "medkit_i",
+        "quantity": 2
+      },
+      {
+        "type": "item",
+        "item_id": "ration_pack",
+        "quantity": 2
       }
     ]
   },
@@ -278,6 +308,16 @@
         "type": "item",
         "item_id": "ghost_signal_cell",
         "quantity": 1
+      },
+      {
+        "type": "item",
+        "item_id": "medkit",
+        "quantity": 1
+      },
+      {
+        "type": "item",
+        "item_id": "ration_pack",
+        "quantity": 2
       }
     ]
   },

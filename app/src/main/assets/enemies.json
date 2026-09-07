@@ -34,6 +34,10 @@
         "id": "scrap_metal",
         "chance": 1.0,
         "quantity": 1
+      },
+      {
+        "id": "ration_pack",
+        "chance": 0.35
       }
     ],
     "description": "Workshop loader with an exposed Shock weakness. Hit the relay to reduce active cooldowns and bring abilities back sooner.",
@@ -45,8 +49,8 @@
     "tier": "standard",
     "combat_behavior": "aggressive",
     "combat_role": "striker",
-    "hp": 85,
-    "stability": 45,
+    "hp": 70,
+    "stability": 35,
     "strength": 5,
     "vitality": 4,
     "agility": 2,
@@ -73,7 +77,7 @@
     "drops": [
       {
         "id": "beast_meat",
-        "chance": 0.5
+        "chance": 0.75
       }
     ],
     "description": "Burrows, then attacks from below. Insulated against Shock. Burn opens it up; Freeze locks its claws and keeps it above ground.",
@@ -113,6 +117,10 @@
       {
         "id": "vial_of_venom",
         "chance": 0.3
+      },
+      {
+        "id": "ration_pack",
+        "chance": 0.35
       }
     ],
     "description": "Fast airborne controller. Its shriek applies Blind. Too quick to reliably shoot, but Freeze collapses the steam sac and drops it.",
@@ -124,9 +132,9 @@
     "tier": "standard",
     "combat_behavior": "balanced",
     "combat_role": "striker",
-    "hp": 130,
-    "stability": 55,
-    "strength": 6,
+    "hp": 90,
+    "stability": 35,
+    "strength": 5,
     "vitality": 5,
     "agility": 3,
     "focus": 4,
@@ -151,8 +159,12 @@
     "credit_reward": 25,
     "drops": [
       {
+        "id": "medkit_i",
+        "chance": 0.6
+      },
+      {
         "id": "ration_pack",
-        "chance": 0.25
+        "chance": 0.8
       },
       {
         "id": "scrap_metal",
@@ -168,8 +180,8 @@
     "tier": "elite",
     "combat_behavior": "defensive",
     "combat_role": "tank",
-    "hp": 95,
-    "stability": 35,
+    "hp": 75,
+    "stability": 25,
     "strength": 4,
     "vitality": 4,
     "agility": 1,
@@ -197,6 +209,10 @@
     "credit_reward": 40,
     "drops": [
       {
+        "id": "ration_pack",
+        "chance": 0.6
+      },
+      {
         "id": "armor_plate",
         "chance": 0.4
       }
@@ -210,8 +226,8 @@
     "tier": "standard",
     "combat_behavior": "avoidant",
     "combat_role": "support",
-    "hp": 40,
-    "stability": 36,
+    "hp": 35,
+    "stability": 24,
     "strength": 2,
     "vitality": 2,
     "agility": 5,
@@ -243,6 +259,10 @@
       {
         "id": "battery",
         "chance": 0.4
+      },
+      {
+        "id": "ration_pack",
+        "chance": 0.35
       }
     ],
     "description": "Fast support drone with EMP and Static bursts. It calls in whatever else is nearby, so it dies first. Shock drops it in one; its casing shrugs off Acid.",
@@ -289,6 +309,10 @@
       {
         "id": "heavy_gear",
         "chance": 0.3
+      },
+      {
+        "id": "medkit_i",
+        "chance": 0.4
       }
     ],
     "description": "Heavy mechanized loader that retaliates with hydraulic slam and venting steam. Its dense chassis shrugs off physical impacts and fire; corrode its casing with Acid or short out its drive system with Shock.",
@@ -300,10 +324,10 @@
     "tier": "boss",
     "combat_behavior": "oppressive",
     "combat_role": "tank_summoner",
-    "hp": 350,
-    "stability": 110,
-    "strength": 8,
-    "vitality": 8,
+    "hp": 250,
+    "stability": 65,
+    "strength": 6,
+    "vitality": 6,
     "agility": 3,
     "focus": 8,
     "luck": 4,
@@ -347,7 +371,7 @@
     "combat_behavior": "aggressive",
     "combat_role": "striker",
     "hp": 65,
-    "stability": 69,
+    "stability": 38,
     "strength": 8,
     "vitality": 5,
     "agility": 5,

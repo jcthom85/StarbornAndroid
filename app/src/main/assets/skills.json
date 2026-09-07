@@ -544,9 +544,9 @@
     "combat_tags": [
       "dmg"
     ],
-    "base_power": 105,
+    "base_power": 75,
     "scaling": "atk",
-    "cooldown": 2,
+    "cooldown": 3,
     "status_applications": []
   },
   {
@@ -919,16 +919,16 @@
     "name": "Riot Shield",
     "character": "the_iron_warden",
     "type": "enemy",
-    "description": "Raises a heavy shield, becoming immune to frontal attacks.",
+    "description": "Raises a heavy riot barrier, fortifying defensive posture and bracing against frontal assaults.",
     "combat_tags": [
       "support"
     ],
     "base_power": 0,
     "scaling": "defense",
-    "cooldown": 3,
+    "cooldown": 4,
     "status_applications": [
       "guard",
-      "invulnerable"
+      "shield"
     ]
   },
   {
@@ -942,9 +942,9 @@
       "tech",
       "shock"
     ],
-    "base_power": 65,
+    "base_power": 40,
     "scaling": "tech",
-    "cooldown": 3,
+    "cooldown": 4,
     "status_applications": [
       "short"
     ]
@@ -959,9 +959,9 @@
       "aoe",
       "erosion"
     ],
-    "base_power": 80,
+    "base_power": 45,
     "scaling": "tech",
-    "cooldown": 3,
+    "cooldown": 4,
     "status_applications": [
       "erosion"
     ]
