@@ -563,6 +563,7 @@ class Hub1CriticalFlowTest {
         assertTrue(state.completedMilestones.contains("ms_w1_chime_spliced"))
         assertTrue(state.questTasksCompleted["w1_mq05"].orEmpty().contains("splice_chime"))
         assertTrue(state.inventory["ghost_signal_cell"].orZero() == 0)
+        assertTrue(state.partyMembers.contains("zeke"))
 
         harness.events.handleTrigger("player_action", EventPayload.Action("use_nav_console"))
 

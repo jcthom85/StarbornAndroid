@@ -837,15 +837,6 @@
         "type": "generic",
         "condition_unmet_message": "A fresh delivery of salvaged engine parts, still warm from use."
       }
-    ],
-    "npc_presence": [
-      {
-        "npc": "foreman_bogs",
-        "requires_milestones": [],
-        "forbidden_milestones": [
-          "ms_w1_mq02_complete"
-        ]
-      }
     ]
   },
   {

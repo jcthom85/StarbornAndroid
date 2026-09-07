@@ -299,11 +299,12 @@ Acceptance:
 
 ### 14. Party basics and Zeke
 
-Status: Zeke now joins mechanically during the W2 crash-site check-in, after the player talks to him and completes `check_on_zeke`. Party basics still should not be taught in W1 because there is no Nova+Zeke combat before the crash.
+Status: Zeke joins mechanically inside the World 1 escape pod (`zeke_w1_mq05_pod_core_4`) via `recruit:zeke` as Nova and Zeke agree to stick together and launch. This triggers the `"Zeke joined the party."` announcement popup and audio stinger. Party basics still should not be taught in W1 because there is no Nova+Zeke combat before the crash.
 
 Decision:
 
-- Keep the Zeke join at `zeke_w2_crash_4` via `recruit:zeke`.
+- Trigger the Zeke party join at `zeke_w1_mq05_pod_core_4` via `recruit:zeke` right before launching.
+- Keep the crash site check-in idempotent in World 2 (`zeke_w2_crash_4` also maintains party presence).
 - Move party basics to the first actual Nova+Zeke combat in World 2.
 - If a post-Warden/pre-launch fight is added later, revisit this placement.
 
@@ -313,7 +314,7 @@ Recommended:
 
 Acceptance:
 
-- `Hub1CriticalFlowTest.sector9CrashSiteAndStrangeCoastQuestFlow` asserts Zeke is in `partyMembers` after the crash-site check-in.
+- `Hub1CriticalFlowTest` asserts Zeke is in `partyMembers` after the pod core dialogue and after the crash-site check-in.
 - The party tutorial appears only when the player can actually use party mechanics.
 
 ## Phase 3: Quest Text and Objective Polish
