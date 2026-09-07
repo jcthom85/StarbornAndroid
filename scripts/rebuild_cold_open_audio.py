@@ -186,60 +186,40 @@ def rebuild_beast_strike() -> None:
     total_len = int(SR * 3.4)
     t = np.linspace(0, 3.4, total_len, endpoint=False)
     
-    # 1. Primary Hard Glass Smack / Slap (Hand slapping flat glass)
-    rng = np.random.RandomState(1337)
-    noise = rng.randn(total_len)
-    
-    # Immediate, aggressive slap transient: fast attack (0.4ms), tight decay
-    slap_env1 = np.exp(-t / 0.022) * (1.0 - np.exp(-t / 0.0004))
-    slap_env2 = 0.55 * np.exp(-np.maximum(0, t - 0.008) / 0.020) * (t >= 0.008)
-    slap_env3 = 0.35 * np.exp(-np.maximum(0, t - 0.016) / 0.025) * (t >= 0.016)
-    slap_total_env = slap_env1 + slap_env2 + slap_env3
-    # Bandpass slap strictly between 350Hz and 1800Hz (the distinct wet/hard meat-on-glass smack range, ZERO shimmer)
-    slap_meat = fft_bandpass(noise * slap_total_env, 350, 1800, SR) * 4.5
-    
-    # 2. Hard Glass Plane Surface Strike (Acoustic impact of flat plate glass, NO high ringing)
-    plate_env = np.exp(-t / 0.025) * (1.0 - np.exp(-t / 0.0003))
-    plate_freq = 550.0 * np.exp(-t / 0.008) + 280.0
-    plate_hit = np.sin(2 * np.pi * plate_freq * t) * plate_env * 2.8
-    
-    # 3. Heavy Physical Beast Concussion (Colossal muscular mass slamming forward)
-    punch_env = np.exp(-t / 0.35) * (1.0 - np.exp(-t / 0.002))
-    punch_freq = 170.0 * np.exp(-t / 0.06) + 48.0
-    punch_sub = np.sin(2 * np.pi * punch_freq * t) * punch_env * 3.2
-    
-    # 4. Integrate physical punch body from existing game asset (low-passed)
-    body_path = RAW_DIR / "wpn_zeke_body_impact.mp3"
-    body_data = np.zeros(total_len)
-    if body_path.exists():
+    # Extract original apex predator body from canonical commit 5422bc9
+    base_src = ROOT / "beast_history_5422bc9.wav"
+    if not base_src.exists():
+        res = subprocess.run(['git', 'show', '5422bc9:app/src/main/res/raw/sfx_intro_beast_strike.mp3'], capture_output=True, check=True)
         with tempfile.TemporaryDirectory() as tmp:
-            wp = Path(tmp) / "b.wav"
-            subprocess.run(["ffmpeg", "-y", "-i", str(body_path), "-ar", str(SR), "-ac", "1", str(wp)], capture_output=True)
-            with wave.open(str(wp), "rb") as w:
-                b_raw = np.frombuffer(w.readframes(w.getnframes()), dtype=np.int16).astype(np.float64) / 32768.0
-                body_data[:min(len(b_raw), total_len)] = b_raw[:min(len(b_raw), total_len)]
-    body_filtered = fft_bandpass(body_data, 70, 1400, SR) * 2.0
+            tmp_mp3 = Path(tmp) / "tmp542.mp3"
+            tmp_mp3.write_bytes(res.stdout)
+            subprocess.run(['ffmpeg', '-y', '-i', str(tmp_mp3), str(base_src)], capture_output=True, check=True)
+            
+    with wave.open(str(base_src), "rb") as w:
+        data_542 = np.frombuffer(w.readframes(w.getnframes()), dtype=np.int16).astype(np.float64) / 32768.0
+        if w.getnchannels() == 1:
+            data_542 = np.column_stack([data_542, data_542])
+        elif w.getnchannels() == 2:
+            data_542 = data_542.reshape(-1, 2)
+            
+    data_542_padded = np.zeros((total_len, 2))
+    data_542_padded[:min(len(data_542), total_len)] = data_542[:min(len(data_542), total_len)]
     
-    # 5. Pod Structural Vibration (Low-frequency frame resonance 54Hz decaying over 1.2s)
-    frame_env = np.exp(-t / 0.90) * (1.0 - np.exp(-t / 0.015))
-    frame_sub = np.sin(2 * np.pi * 54.0 * t) * frame_env * 1.5
+    # Add a sharp, solid armored-glass smack crack at t=0 (450Hz - 2000Hz, ZERO shimmer above 2200Hz)
+    rng = np.random.RandomState(42)
+    crack_noise = rng.randn(total_len)
+    crack_env = np.exp(-t / 0.020) * (1.0 - np.exp(-t / 0.0003))
+    crack_env += 0.5 * np.exp(-np.maximum(0, t - 0.010) / 0.018) * (t >= 0.010)
+    crack_filtered = fft_bandpass(crack_noise * crack_env, 450, 2000, SR)
     
-    # Sum components
-    raw_mono = slap_meat * 1.4 + plate_hit * 1.2 + punch_sub * 1.1 + body_filtered * 1.2 + frame_sub * 0.9
+    # Layer the terrifying sub-bass monster shockwave with the visceral glass smack transient
+    blend = data_542_padded * 1.0 + np.column_stack([crack_filtered * 1.8, crack_filtered * 1.8])
     
-    # Strict lowpass brickwall at 2200 Hz: absolutely ZERO shimmer, hiss, or high-frequency ringing
-    clean_mono = fft_bandpass(raw_mono, 20, 2200, SR)
-    
-    # Stereo image: centered impact with subtle spatial spread on the slap reflections
-    stereo = np.column_stack([
-        clean_mono + slap_meat * 0.10,
-        clean_mono - slap_meat * 0.10
-    ])
-    
+    # Master with compand and true peak limiter at -0.2 dB
     out_file = RAW_DIR / "sfx_intro_beast_strike.mp3"
     save_mastered_mp3(
-        stereo, out_file,
-        "compand=attacks=0.002:decays=0.06:points=-80/-80|-30/-14|-12/-4|0/-0.1:gain=2,alimiter=limit=0.99:attack=3:release=40:asc=1"
+        blend, out_file,
+        "compand=attacks=0.002:decays=0.06:points=-80/-80|-30/-12|-10/-2|0/-0.1:gain=2,alimiter=limit=0.99:attack=2:release=35:asc=1"
     )
 
 if __name__ == "__main__":
