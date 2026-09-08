@@ -8006,6 +8006,16 @@ fun CinematicOverlay(
         )
         return
     }
+
+    val stepKey = remember(state.sceneId, state.stepIndex) { "${state.sceneId}_${state.stepIndex}" }
+    LaunchedEffect(stepKey, audioCuePlayer) {
+        state.step.audioCue?.takeIf { it.isNotBlank() }?.let { cue ->
+            audioCuePlayer?.execute(
+                listOf(AudioCommand.Play(AudioCueType.UI, cue, loop = false, fadeMs = 0L))
+            )
+        }
+    }
+
     val speaker = state.step.speaker?.takeIf { it.isNotBlank() }
     if (speaker != null) {
         val dialogueLine = DialogueLine(

@@ -474,7 +474,8 @@
       },
       {
         "type": "narration",
-        "text": "The Cryo-Inductor fuses. The Flux Liner dumps the neural discharge into the chamber floor and burns its sacrificial strip open."
+        "text": "The Cryo-Inductor fuses. The Flux Liner dumps the neural discharge into the chamber floor and burns its sacrificial strip open.",
+        "audio_cue": "sfx_combat_plasma_arc"
       },
       {
         "type": "narration",
@@ -482,7 +483,8 @@
       },
       {
         "type": "narration",
-        "text": "Nova releases the cutter. Her hand trembles. The Fork separates from the cradle while Harmony sensors flag a live Architect handshake."
+        "text": "Nova releases the cutter. Her hand trembles. The Fork separates from the cradle while Harmony sensors flag a live Architect handshake.",
+        "audio_cue": "wpn_orion_bowl_resonance"
       }
     ]
   },
@@ -492,7 +494,8 @@
     "steps": [
       {
         "type": "narration",
-        "text": "The pod clears the launch rail on its own capacitors. The Chime opens the authorization interlock; its paired beacon takes the navigation bus."
+        "text": "The pod clears the launch rail on its own capacitors. The Chime opens the authorization interlock; its paired beacon takes the navigation bus.",
+        "audio_cue": "sfx_pod_launch"
       },
       {
         "type": "narration",
@@ -506,11 +509,13 @@
         "type": "dialogue",
         "speaker": "Zeke",
         "emote": "worried",
-        "text": "Nova! Brace! The navigation bus is burning out—the route lock won't release!"
+        "text": "Nova! Brace! The navigation bus is burning out—the route lock won't release!",
+        "audio_cue": "sfx_security_lockdown"
       },
       {
         "type": "narration",
-        "text": "The navigation console arcs and dies. Zeke hooks one arm through the frame as the hull starts tearing."
+        "text": "The navigation console arcs and dies. Zeke hooks one arm through the frame as the hull starts tearing.",
+        "audio_cue": "sfx_combat_plasma_arc"
       },
       {
         "type": "narration",
@@ -518,7 +523,8 @@
       },
       {
         "type": "narration",
-        "text": "The thrusters cut. The pod drops through the canopy and hits hard."
+        "text": "The thrusters cut. The pod drops through the canopy and hits hard.",
+        "audio_cue": "sfx_crash_impact"
       }
     ]
   },
@@ -724,7 +730,8 @@
       },
       {
         "type": "narration",
-        "text": "The cutter fires. Its phase sweep enters the buried old conduit under Jed's bench. The sector breaker trips hard enough to shake dust from the rafters."
+        "text": "The cutter fires. Its phase sweep enters the buried old conduit under Jed's bench. The sector breaker trips hard enough to shake dust from the rafters.",
+        "audio_cue": "sfx_combat_plasma_arc"
       },
       {
         "type": "dialogue",
@@ -734,11 +741,13 @@
       {
         "type": "dialogue",
         "speaker": "Nova",
+        "emote": "worried",
         "text": "It is off. That hum is not mine."
       },
       {
         "type": "narration",
-        "text": "A terminal prints CUTTER FAULT 4C-117 and attaches operator NOVA VANCE. Deep below the shop, a chamber seal cracks."
+        "text": "A terminal prints CUTTER FAULT 4C-117 and attaches operator NOVA VANCE. Deep below the shop, a chamber seal cracks.",
+        "audio_cue": "sfx_distant_gate_rumble"
       }
     ]
   },
