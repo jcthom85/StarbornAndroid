@@ -933,6 +933,7 @@
       }
     ]
   },
+
   {
     "id": "orion_w2_mq05_gate_1",
     "speaker": "Orion",
@@ -1024,6 +1025,7 @@
     "text": "The Astra's hull breathes like an old friend. Once we clear the upper troposphere, I will tune the navigation array for the Spire.",
     "condition": "milestone:ms_w2_mq05_complete,quest_not_started:w3_mq11"
   },
+
   {
     "id": "orion_default_talk",
     "speaker": "Orion",
@@ -1077,6 +1079,7 @@
     "text": "Perimeter scanned. The Astra's airlocks are sealed, and my rifle is tuned. I will watch the cargo ramp while you rest.",
     "condition": "milestone:ms_w2_mq05_complete,quest_not_started:w3_mq11"
   },
+
   {
     "id": "ghost_default_talk",
     "speaker": "Gh0st",
@@ -1299,10 +1302,87 @@
     "condition": "quest_active:w3_mq15,quest_task_not_done:w3_mq15:defeat_administrator",
     "text": "Archive anomaly detected. Administrator, lock the district. Seal the roof. I want no ungoverned noise leaving Sector 0, especially if it sings."
   },
+
   {
     "id": "upper_city_lounge_shop_intro",
     "speaker": "Concierge",
     "text": "Welcome to the altitude where price is proof of citizenship."
+  },
+  {
+    "id": "zeke_w3_post_shield_idle",
+    "speaker": "Zeke",
+    "emote": "worried",
+    "text": "This safehouse smells like ozone and recycled steam. They erased my name, but the conduits still bleed into my old terminals.",
+    "condition": "milestone:ms_w3_mq11_complete,milestone_not_set:ms_w3_mq12_complete"
+  },
+  {
+    "id": "zeke_w3_post_plan_idle",
+    "speaker": "Zeke",
+    "emote": "confident",
+    "text": "The service-elevator timing is tight down to four seconds. If we miss the freight switch, we're climbing laundry chutes under spotlight.",
+    "condition": "milestone:ms_w3_mq12_complete,milestone_not_set:ms_w3_mq13_complete"
+  },
+  {
+    "id": "zeke_w3_post_social_idle",
+    "speaker": "Zeke",
+    "emote": "worried",
+    "text": "Upper City execs sip synthetic wine while the Lower City suffocates in smog. Stealing their precious Lens feels like overdue rent.",
+    "condition": "milestone:ms_w3_mq13_complete,milestone_not_set:ms_w3_mq14_complete"
+  },
+  {
+    "id": "zeke_w3_post_lens_idle",
+    "speaker": "Zeke",
+    "emote": "scared",
+    "text": "Thorne wasn't kidding. The entire Spire grid is howling. We need to reach the landing pad and get the Astra flying.",
+    "condition": "milestone:ms_w3_mq14_complete,milestone_not_set:ms_w3_mq15_complete"
+  },
+  {
+    "id": "orion_w3_post_shield_idle",
+    "speaker": "Orion",
+    "text": "The resonance lock is holding. Outside, this tower screams with millions of artificial frequencies, but here, our harmonics remain undisturbed.",
+    "condition": "milestone:ms_w3_mq11_complete,milestone_not_set:ms_w3_mq12_complete"
+  },
+  {
+    "id": "orion_w3_post_plan_idle",
+    "speaker": "Orion",
+    "text": "The heist blueprint feels like music. Every route is an entry in counterpoint. When the signal drops, we must strike in unison.",
+    "condition": "milestone:ms_w3_mq12_complete,milestone_not_set:ms_w3_mq13_complete"
+  },
+  {
+    "id": "orion_w3_post_social_idle",
+    "speaker": "Orion",
+    "text": "The light in the Archive is trapped, forced through prisms to bend to the Curator's will. The Lens deserves to be liberated.",
+    "condition": "milestone:ms_w3_mq13_complete,milestone_not_set:ms_w3_mq14_complete"
+  },
+  {
+    "id": "orion_w3_post_lens_idle",
+    "speaker": "Orion",
+    "text": "The Lens hums in Nova's grasp. It is calling toward something far deeper—toward the Foundry and the heart of the machine.",
+    "condition": "milestone:ms_w3_mq14_complete,milestone_not_set:ms_w3_mq15_complete"
+  },
+  {
+    "id": "ghost_w3_post_shield_idle",
+    "speaker": "Gh0st",
+    "text": "The safehouse has two blind entryways through the vents. If patrols breach the stairwell, I can hold the corridor for ninety seconds.",
+    "condition": "milestone:ms_w3_mq11_complete,milestone_not_set:ms_w3_mq12_complete"
+  },
+  {
+    "id": "ghost_w3_post_plan_idle",
+    "speaker": "Gh0st",
+    "text": "The heist route avoids primary optic sensors, but patrol dogs still roam the service elevator sub-level. I will take the point.",
+    "condition": "milestone:ms_w3_mq12_complete,milestone_not_set:ms_w3_mq13_complete"
+  },
+  {
+    "id": "ghost_w3_post_social_idle",
+    "speaker": "Gh0st",
+    "text": "The Curator spoke of Sector 9 as salvage. They categorized Elara the same way before transferring her file.",
+    "condition": "milestone:ms_w3_mq13_complete,milestone_not_set:ms_w3_mq14_complete"
+  },
+  {
+    "id": "ghost_w3_post_lens_idle",
+    "speaker": "Gh0st",
+    "text": "Thorne signaled Vale directly. Compliance units are mobilizing from the Upper Ring. We cannot be here when they land.",
+    "condition": "milestone:ms_w3_mq14_complete,milestone_not_set:ms_w3_mq15_complete"
   },
   {
     "id": "lab_terminal_w3_sq15_intro",
