@@ -1480,6 +1480,82 @@
     "text": "Commander Rylos. Audit complete. Denied. Director Thorne is relieved. All sectors: lockdown."
   },
   {
+    "id": "zeke_w4_post_airlock_idle",
+    "speaker": "Zeke",
+    "emote": "worried",
+    "text": "The heat here is chewing through our seals. Slag rivers, automated crushers... Dominion didn't build a factory, they built a crematorium.",
+    "condition": "milestone:ms_w4_mq16_complete,milestone_not_set:ms_w4_mq17_complete"
+  },
+  {
+    "id": "zeke_w4_post_phantom_idle",
+    "speaker": "Zeke",
+    "emote": "sad",
+    "text": "Project Phantom wasn't an accident. They cloned and weaponized living recruits. We have to tear down that fabrication line.",
+    "condition": "milestone:ms_w4_mq17_complete,milestone_not_set:ms_w4_mq18_complete"
+  },
+  {
+    "id": "zeke_w4_post_assembly_idle",
+    "speaker": "Zeke",
+    "emote": "confident",
+    "text": "Matrix overloaded. No more phantom units crawling off the belts. Now let's crack the Forge and take their Anvil.",
+    "condition": "milestone:ms_w4_mq18_complete,milestone_not_set:ms_w4_mq19_complete"
+  },
+  {
+    "id": "zeke_w4_post_anvil_idle",
+    "speaker": "Zeke",
+    "emote": "scared",
+    "text": "Rylos is powering up the Titan Walker on the dock. If we don't grab that Deep-Core Engine now, we melt with the facility.",
+    "condition": "milestone:ms_w4_mq19_complete,milestone_not_set:ms_w4_mq20_complete"
+  },
+  {
+    "id": "orion_w4_post_airlock_idle",
+    "speaker": "Orion",
+    "text": "The Source burns like molten glass here. The heat is raw and distorted, crying out against the metal caging it.",
+    "condition": "milestone:ms_w4_mq16_complete,milestone_not_set:ms_w4_mq17_complete"
+  },
+  {
+    "id": "orion_w4_post_phantom_idle",
+    "speaker": "Orion",
+    "text": "Gh0st's resonance was shattered and forcibly welded to Dominion commands. Yet his true chord endured beneath the static.",
+    "condition": "milestone:ms_w4_mq17_complete,milestone_not_set:ms_w4_mq18_complete"
+  },
+  {
+    "id": "orion_w4_post_assembly_idle",
+    "speaker": "Orion",
+    "text": "The discordant pulse of the cloning matrix is silenced. Ahead, in the Forge, the Anvil beats with deep formative rhythm.",
+    "condition": "milestone:ms_w4_mq18_complete,milestone_not_set:ms_w4_mq19_complete"
+  },
+  {
+    "id": "orion_w4_post_anvil_idle",
+    "speaker": "Orion",
+    "text": "Construct is awakened. With the Anvil, Nova can shape the intangible. But Rylos's machine stands between us and flight.",
+    "condition": "milestone:ms_w4_mq19_complete,milestone_not_set:ms_w4_mq20_complete"
+  },
+  {
+    "id": "ghost_w4_post_airlock_idle",
+    "speaker": "Gh0st",
+    "text": "The airlock pressure cycled. I remember these maintenance pipes. Every vent leads to an intake or an incinerator.",
+    "condition": "milestone:ms_w4_mq16_complete,milestone_not_set:ms_w4_mq17_complete"
+  },
+  {
+    "id": "ghost_w4_post_phantom_idle",
+    "speaker": "Gh0st",
+    "text": "They gave me a number and called me vat-born. Now I know Elara was real. I am not their weapon.",
+    "condition": "milestone:ms_w4_mq17_complete,milestone_not_set:ms_w4_mq18_complete"
+  },
+  {
+    "id": "ghost_w4_post_assembly_idle",
+    "speaker": "Gh0st",
+    "text": "The fabrication tanks are empty. No more hollow shells will wear my face. The debt moves to Rylos now.",
+    "condition": "milestone:ms_w4_mq18_complete,milestone_not_set:ms_w4_mq19_complete"
+  },
+  {
+    "id": "ghost_w4_post_anvil_idle",
+    "speaker": "Gh0st",
+    "text": "Rylos brought the Titan Walker to the dock. He wants to execute us where he built me. Let him try.",
+    "condition": "milestone:ms_w4_mq19_complete,milestone_not_set:ms_w4_mq20_complete"
+  },
+  {
     "id": "gh0st_w5_mq21_airlock",
     "speaker": "Gh0st",
     "condition": "quest_active:w5_mq21,quest_task_done:w5_mq21:force_dock,quest_task_not_done:w5_mq21:hack_airlock",
