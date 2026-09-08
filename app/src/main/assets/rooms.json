@@ -2430,7 +2430,7 @@
         "requires_milestones": [
           "ms_mine_power_on"
         ],
-        "description": "Now illuminated by restored mine power, Side Shunt 4 reveals the full extent of the collapse. Shattered crates and crushed shoring flank a crew datapad resting beside the sealed rockfall."
+        "description": "Now illuminated by restored mine power, Side Shunt 4 reveals cracked support beams holding back ancient rockfall. Shattered crates flank an exposed resonant vein, while a crew datapad rests beside the sealed collapse."
       }
     ],
     "npcs": [],
@@ -3268,7 +3268,7 @@
     "env": "logistics",
     "title": "Pod Bay",
     "background_image": "images/rooms/world_1/launch_bay.webp",
-    "description": "Cargo rails climb toward the planetary shield under emergency red lights. One escape pod waits on the pad. [npc:The Warden] blocks the hatch while [npc:Zeke] lies to the controls.",
+    "description": "Cargo rails climb toward the planetary shield under emergency red lights. One escape pod waits on the pad. [npc:The Warden] blocks the hatch while [npc:Zeke] works the controls.",
     "npcs": [],
     "items": [],
     "enemies": [

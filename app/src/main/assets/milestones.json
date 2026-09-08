@@ -555,6 +555,12 @@
     "toast": "Guard Break training complete."
   },
   {
+    "id": "ms_w1_sq05_completed",
+    "name": "Lost Voices Recovered",
+    "description": "Nova recovered the final datapad log from the collapsed mine shaft.",
+    "toast": "Lost Voices complete."
+  },
+  {
     "id": "ms_w2_chime_recovered",
     "name": "Chime Recovered",
     "description": "Nova recovered the Chime from the wrecked navigation console.",

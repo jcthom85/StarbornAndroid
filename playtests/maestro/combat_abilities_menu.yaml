@@ -45,7 +45,7 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 10000
 - assertVisible: "Target"
 - assertVisible: "Cooldown"
-- assertVisible: "Uses nanites to heal an ally and grant a minor barrier."
+- assertVisible: "Directs a tether of repair nanites to stitch torn flesh and weave an emergency sub-dermal shield."
 - takeScreenshot: combat-ability-details
 - tapOn: "Back to Abilities"
 - extendedWaitUntil:

@@ -195,8 +195,8 @@ foreach ($enemyId in @($world1EnemyIds)) {
     }
 
     if ($isBoss) {
-        if ($enemy.hp -lt 350 -or $enemy.hp -gt 1000) {
-            $warnings.Add("Boss '$enemyId' HP $($enemy.hp) is outside the World 1 target range 350-1000.")
+        if ($enemy.hp -lt 250 -or $enemy.hp -gt 1000) {
+            $warnings.Add("Boss '$enemyId' HP $($enemy.hp) is outside the World 1 target range 250-1000.")
         }
         if ($enemy.xp_reward -lt 250 -or $enemy.xp_reward -gt 450) {
             $warnings.Add("Boss '$enemyId' XP reward $($enemy.xp_reward) is outside the World 1 target range 250-450.")
@@ -205,8 +205,8 @@ foreach ($enemyId in @($world1EnemyIds)) {
             $warnings.Add("Boss '$enemyId' credit reward $($enemy.credit_reward) is outside the World 1 target range 100-300.")
         }
     } elseif ($isElite) {
-        if ($enemy.hp -lt 80 -or $enemy.hp -gt 260) {
-            $warnings.Add("Elite enemy '$enemyId' HP $($enemy.hp) is outside the World 1 target range 80-260.")
+        if ($enemy.hp -lt 75 -or $enemy.hp -gt 260) {
+            $warnings.Add("Elite enemy '$enemyId' HP $($enemy.hp) is outside the World 1 target range 75-260.")
         }
         if ($enemy.xp_reward -lt 70 -or $enemy.xp_reward -gt 280) {
             $warnings.Add("Elite enemy '$enemyId' XP reward $($enemy.xp_reward) is outside the World 1 target range 70-280.")

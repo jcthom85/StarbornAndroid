@@ -816,7 +816,7 @@
   {
     "id": "zeke_w1_mq05_pod_core_4",
     "speaker": "Nova",
-    "emote": "determined",
+    "emote": "confident",
     "text": "Agreed. Watch my back and I'll watch yours. Start the launch sequence.",
     "trigger": "set_quest_task_done:w1_mq05:splice_chime,take_item:ghost_signal_cell,set_milestone:ms_w1_chime_spliced,recruit:zeke"
   },

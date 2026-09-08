@@ -685,7 +685,7 @@ function Validate-DialogueExpression($raw, $context) {
                     $errors.Add("$tokenContext references unknown node '$value'.")
                 }
             }
-            { $_ -in @("give_xp", "give_credits", "player_action", "untrack_quest") } {
+            { $_ -in @("give_xp", "give_credits", "player_action", "untrack_quest", "recruit", "add_party_member") } {
                 if ($type -eq "give_xp") { Validate-RequiredInteger "$tokenContext amount" $value 1 }
                 if ($type -eq "give_credits") { Validate-RequiredInteger "$tokenContext amount" $value 1 }
             }
