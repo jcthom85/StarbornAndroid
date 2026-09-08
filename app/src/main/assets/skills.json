@@ -1430,7 +1430,7 @@
     "name": "Unshackled",
     "character": "zeke",
     "type": "passive",
-    "description": "Zeke moves faster once usefulness is no longer the price of belonging.",
+    "description": "Increases Zeke's Agility and action recovery speed.",
     "combat_tags": [
       "buff"
     ],
@@ -1444,7 +1444,7 @@
     "name": "Source Balance",
     "character": "gh0st",
     "type": "passive",
-    "description": "Elara's uncorrupted song stabilizes Gh0st against physical and Source pressure.",
+    "description": "A clean carrier signal grants Defense scaling against physical and Source pressure.",
     "combat_tags": [
       "defend",
       "buff"
@@ -1580,7 +1580,7 @@
     "name": "Guardian Covenant",
     "character": "zeke",
     "type": "support",
-    "description": "Zeke and the recovered guardian share protection across the party without either becoming the other's property.",
+    "description": "Apply Shield and Braced across the party through the recovered guardian bus.",
     "combat_tags": [
       "support",
       "buff"
@@ -1598,7 +1598,7 @@
     "name": "Link",
     "character": "nova",
     "type": "support",
-    "description": "Routes recovery across distinct willing allies through the grounded Bridge circuit. No identity is merged.",
+    "description": "Restore party HP and apply Regen through the Bridge ground. Does not share damage.",
     "combat_tags": [
       "source",
       "heal",

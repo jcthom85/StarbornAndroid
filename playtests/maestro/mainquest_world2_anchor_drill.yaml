@@ -130,11 +130,11 @@ appId: com.junewiregames.starborn.prealpha
 - tapOn:
     point: "50%,85%"
 - extendedWaitUntil:
-    visible: ".*Link connects willing party members.*every thought remains its owner's.*"
+    visible: ".*Link connects party members through the Bridge circuit.*carries excess current safely away.*"
     timeout: 20000
 - tapOn: "CONTINUE"
 - extendedWaitUntil:
-    visible: ".*Use Link to restore the party.*does not merge health pools or identities.*"
+    visible: ".*Use Link to restore party HP and apply Regen.*Damage and status effects remain separate.*"
     timeout: 15000
 - tapOn: "CONTINUE"
 - extendedWaitUntil:
