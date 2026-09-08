@@ -1603,6 +1603,78 @@
     "trigger": "player_action:w5_mq25_soloist"
   },
   {
+    "id": "zeke_w5_post_docking_idle",
+    "speaker": "Zeke",
+    "text": "Ring docks are pressurized with false gravity and real arrogance. Watch your boots on the magnetic deck.",
+    "condition": "milestone:ms_w5_mq21_complete,milestone_not_set:ms_w5_mq22_complete"
+  },
+  {
+    "id": "zeke_w5_post_zerog_idle",
+    "speaker": "Zeke",
+    "text": "Thorne thought she owned the leash until Vale slipped it around her neck. Poetic, but still disgusting.",
+    "condition": "milestone:ms_w5_mq22_complete,milestone_not_set:ms_w5_mq23_complete"
+  },
+  {
+    "id": "zeke_w5_post_firewall_idle",
+    "speaker": "Zeke",
+    "text": "Coolant maze is burned out. Those firewall nodes had enough juice to fry a cruiser's nav core.",
+    "condition": "milestone:ms_w5_mq23_complete,milestone_not_set:ms_w5_mq24_complete"
+  },
+  {
+    "id": "zeke_w5_post_anchor_idle",
+    "speaker": "Zeke",
+    "text": "Turning a living person into station wiring. Thorne and Vale deserve whatever is coming through that Tear.",
+    "condition": "milestone:ms_w5_mq24_complete,milestone_not_set:ms_w5_mq25_complete"
+  },
+  {
+    "id": "orion_w5_post_docking_idle",
+    "speaker": "Orion",
+    "text": "The orbital ring hums with forced order. It stifles the void's pulse like a copper choke collar.",
+    "condition": "milestone:ms_w5_mq21_complete,milestone_not_set:ms_w5_mq22_complete"
+  },
+  {
+    "id": "orion_w5_post_zerog_idle",
+    "speaker": "Orion",
+    "text": "The Great Silence log proved Thorne twisted the song. But Vale wants to extinguish even the echoes.",
+    "condition": "milestone:ms_w5_mq22_complete,milestone_not_set:ms_w5_mq23_complete"
+  },
+  {
+    "id": "orion_w5_post_firewall_idle",
+    "speaker": "Orion",
+    "text": "The construct shattered into clean light. The server core is bare. Elara's wavelength is waiting ahead.",
+    "condition": "milestone:ms_w5_mq23_complete,milestone_not_set:ms_w5_mq24_complete"
+  },
+  {
+    "id": "orion_w5_post_anchor_idle",
+    "speaker": "Orion",
+    "text": "Elara gave everything to anchor this station. The Tear ripples violently now that the lock is broken.",
+    "condition": "milestone:ms_w5_mq24_complete,milestone_not_set:ms_w5_mq25_complete"
+  },
+  {
+    "id": "ghost_w5_post_docking_idle",
+    "speaker": "Gh0st",
+    "text": "Recognized Thorne's security handshake at the dock. Same protocols she used when she tagged me Unit 734.",
+    "condition": "milestone:ms_w5_mq21_complete,milestone_not_set:ms_w5_mq22_complete"
+  },
+  {
+    "id": "ghost_w5_post_zerog_idle",
+    "speaker": "Gh0st",
+    "text": "Thorne stripped of her own station. I wanted vengeance, but seeing her powerless feels almost hollow.",
+    "condition": "milestone:ms_w5_mq22_complete,milestone_not_set:ms_w5_mq23_complete"
+  },
+  {
+    "id": "ghost_w5_post_firewall_idle",
+    "speaker": "Gh0st",
+    "text": "I can hear Elara's cipher pinging beyond the gate. She is still fighting in there. We are coming, Elara.",
+    "condition": "milestone:ms_w5_mq23_complete,milestone_not_set:ms_w5_mq24_complete"
+  },
+  {
+    "id": "ghost_w5_post_anchor_idle",
+    "speaker": "Gh0st",
+    "text": "Her hands were freezing when I unhooked the neural feed. She ordered me to leave. Not this time.",
+    "condition": "milestone:ms_w5_mq24_complete,milestone_not_set:ms_w5_mq25_complete"
+  },
+  {
     "id": "zeke_w6_nightmare_release",
     "speaker": "Zeke",
     "condition": "quest_active:w6_mq26,quest_task_done:w6_mq26:rescue_zeke",
