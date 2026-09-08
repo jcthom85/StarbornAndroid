@@ -486,6 +486,10 @@ class IntelligentGamePlaytesterTest {
                 "milestone", "milestone_set" -> value in state.completedMilestones
                 "milestone_not_set" -> value !in state.completedMilestones
                 "quest", "quest_active" -> value in state.activeQuests
+                "quest_not_started" -> value.isNotBlank() &&
+                    value !in state.activeQuests &&
+                    value !in state.completedQuests &&
+                    value !in state.failedQuests
                 "quest_completed" -> value in state.completedQuests
                 "quest_not_completed" -> value !in state.completedQuests
                 "quest_task_done" -> {

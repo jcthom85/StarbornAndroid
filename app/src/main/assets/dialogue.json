@@ -864,6 +864,27 @@
     "condition": "quest_active:w2_mq01,quest_task_done:w2_mq01:stabilize_zeke,quest_task_not_done:w2_mq01:follow_stream"
   },
   {
+    "id": "zeke_w2_post_orion_idle",
+    "speaker": "Zeke",
+    "emote": "worried",
+    "text": "An Aethel navigator... sleeping twenty years in a cold tank. My Dominion handbooks definitely did not cover this contingency.",
+    "condition": "milestone:ms_w2_mq03_complete,milestone_not_set:ms_w2_mq04_complete"
+  },
+  {
+    "id": "zeke_w2_post_ghost_idle",
+    "speaker": "Zeke",
+    "emote": "worried",
+    "text": "Nova, our new sharpshooter does not blink. I checked his rifle casing. If he twitches near the controls, I am grabbing the wrench.",
+    "condition": "milestone:ms_w2_mq04_complete,milestone_not_set:ms_w2_mq05_complete"
+  },
+  {
+    "id": "zeke_astra_bridge_idle",
+    "speaker": "Zeke",
+    "emote": "confident",
+    "text": "Atmospheric route calibrated. The Astra handles heavier than a cargo hopper, but she will fly clean beneath Dominion radar.",
+    "condition": "milestone:ms_w2_mq05_complete,quest_not_started:w3_mq11"
+  },
+  {
     "id": "zeke_w2_mq02_intro_1",
     "speaker": "Zeke",
     "text": "The beacon's pulse is strong, coming from that massive stone gate ahead. But thick razor-vines block the path. Watch your step, Nova.",
@@ -986,6 +1007,24 @@
     ]
   },
   {
+    "id": "orion_w2_post_stasis_idle",
+    "speaker": "Orion",
+    "text": "Twenty cycles asleep while the canopy swallowed Sanctuary. But your Chime... it carried the authentic tone of my people.",
+    "condition": "milestone:ms_w2_mq03_complete,milestone_not_set:ms_w2_mq04_complete"
+  },
+  {
+    "id": "orion_w2_post_ghost_idle",
+    "speaker": "Orion",
+    "text": "Gh0st carries severe neural interference, but his intent is clear. When we linked during the drill, his frequency held steady.",
+    "condition": "milestone:ms_w2_mq04_complete,milestone_not_set:ms_w2_mq05_complete"
+  },
+  {
+    "id": "orion_astra_lounge_idle",
+    "speaker": "Orion",
+    "text": "The Astra's hull breathes like an old friend. Once we clear the upper troposphere, I will tune the navigation array for the Spire.",
+    "condition": "milestone:ms_w2_mq05_complete,quest_not_started:w3_mq11"
+  },
+  {
     "id": "orion_default_talk",
     "speaker": "Orion",
     "text": "The current of this place is strong, Nova. I can hear the ocean's resonance."
@@ -1025,6 +1064,18 @@
         "text": "Maybe later."
       }
     ]
+  },
+  {
+    "id": "ghost_w2_post_beast_idle",
+    "speaker": "Gh0st",
+    "text": "Command frequency offline. No ping from Compliance. The silence in my neural array... it feels unfamiliar.",
+    "condition": "milestone:ms_w2_mq04_complete,milestone_not_set:ms_w2_mq05_complete"
+  },
+  {
+    "id": "ghost_astra_lounge_idle",
+    "speaker": "Gh0st",
+    "text": "Perimeter scanned. The Astra's airlocks are sealed, and my rifle is tuned. I will watch the cargo ramp while you rest.",
+    "condition": "milestone:ms_w2_mq05_complete,quest_not_started:w3_mq11"
   },
   {
     "id": "ghost_default_talk",
